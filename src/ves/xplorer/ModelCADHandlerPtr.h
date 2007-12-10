@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class ModelCADHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<ModelCADHandler>::type  ModelCADHandlerPtr;
-   typedef ves::util::SharedPtrDef<ModelCADHandler>::type ModelCADHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<ModelCADHandler>::type   ModelCADHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<ModelCADHandler>::type ModelCADHandlerScopedPtr;
+class ModelCADHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<ModelCADHandler>::type  ModelCADHandlerPtr;
+typedef ves::util::SharedPtrDef<ModelCADHandler>::type ModelCADHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<ModelCADHandler>::type   ModelCADHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<ModelCADHandler>::type ModelCADHandlerScopedPtr;
 }
 }
 #endif

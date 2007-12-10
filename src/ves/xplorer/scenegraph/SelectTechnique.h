@@ -49,7 +49,7 @@ class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 public:
     SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet );
     ~SelectTechnique();
-  
+
 protected:
     virtual void DefinePasses();
 

@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Network::NetworkPtr.  To get the full 
+ * VE_XML::VE_Network::NetworkPtr.  To get the full
  * declaration of VE_XML::VE_Network::Network
  * VE_Open/XML/Network/Network.h must be included, too.
  */
@@ -52,12 +52,12 @@ namespace xml
 {
 namespace model
 {
-   class Network;
-   /// Typedef for a SmartPtr type for the Network.
-   typedef ves::util::ClassPtrDef<Network>::type  NetworkPtr;
-   typedef ves::util::SharedPtrDef<Network>::type NetworkSharedPtr;
-   typedef ves::util::WeakPtrDef<Network>::type   NetworkWeakPtr;
-   typedef ves::util::ScopedPtrDef<Network>::type NetworkScopedPtr;
+class Network;
+/// Typedef for a SmartPtr type for the Network.
+typedef ves::util::ClassPtrDef<Network>::type  NetworkPtr;
+typedef ves::util::SharedPtrDef<Network>::type NetworkSharedPtr;
+typedef ves::util::WeakPtrDef<Network>::type   NetworkWeakPtr;
+typedef ves::util::ScopedPtrDef<Network>::type NetworkScopedPtr;
 }
 }
 }

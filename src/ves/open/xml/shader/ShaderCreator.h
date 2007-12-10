@@ -45,7 +45,7 @@ namespace open
 {
 namespace xml
 {
-   class XMLObject;
+class XMLObject;
 }
 }
 }
@@ -64,22 +64,24 @@ namespace shader
 class VE_SHADER_EXPORTS ShaderCreator : public ves::open::xml::CreationEventHandler
 {
 public:
-   ///Constructor
-   ShaderCreator(){}
+    ///Constructor
+    ShaderCreator()
+    {}
 
-   ///Destructor
-   virtual ~ShaderCreator(){}
+    ///Destructor
+    virtual ~ShaderCreator()
+    {}
 
-   ///Create a new XMLObject.
-   ///\param objectType The type of object to create.
-   virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
-   
-   ///Create a copy of a new CAD object
-   ///\param objectType The type of object to create.
-   ///\param objectToCopy The object to copy.
-   //virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
-   //virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
-   virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy(std::string objectType, ves::open::xml::XMLObject* objectToCopy);
+    ///Create a new XMLObject.
+    ///\param objectType The type of object to create.
+    virtual ves::open::xml::XMLObject* CreateNewXMLObject( std::string objectType );
+
+    ///Create a copy of a new CAD object
+    ///\param objectType The type of object to create.
+    ///\param objectToCopy The object to copy.
+    //virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
+    //virtual ves::open::xml::XMLObject* CreateNewXMLObject(std::string objectType);
+    virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObject* objectToCopy );
 protected:
 };
 }

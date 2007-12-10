@@ -56,46 +56,46 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 CenterPointJumpEventHandler::CenterPointJumpEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CenterPointJumpEventHandler::CenterPointJumpEventHandler( const CenterPointJumpEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CenterPointJumpEventHandler::~CenterPointJumpEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CenterPointJumpEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command = dynamic_cast< Command* >( veXMLObject );
-   
-   std::string mode;
-   command->GetDataValuePair( "Mode" )->GetData( mode );
+    Command* command = dynamic_cast< Command* >( veXMLObject );
 
-   ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
+    std::string mode;
+    command->GetDataValuePair( "Mode" )->GetData( mode );
+
+    ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CenterPointJumpEventHandler& CenterPointJumpEventHandler::operator=( const CenterPointJumpEventHandler& rhs )
 {
-   if( this != &rhs )
-   {
-      ves::xplorer::event::EventHandler::operator=( rhs );
-   }
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
 
-   return *this;
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

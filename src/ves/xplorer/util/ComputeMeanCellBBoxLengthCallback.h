@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef COMPUTE_MEAN_CELL_BBOX_LENGTH_CALLBACK 
+#ifndef COMPUTE_MEAN_CELL_BBOX_LENGTH_CALLBACK
 #define  COMPUTE_MEAN_CELL_BBOX_LENGTH_CALLBACK
 /*!\file ComputeMeanCellBBoxLengthCallback.h
 ComputeMeanCellBBoxLengthCallback API.
@@ -52,17 +52,18 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ComputeMeanCellBBoxLengthCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     ComputeMeanCellBBoxLengthCallback();
     ///Destructor
-    virtual ~ComputeMeanCellBBoxLengthCallback(){};
+    virtual ~ComputeMeanCellBBoxLengthCallback()
+    {};
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Get the Mean Cell BBox length
     double GetMeanCellBBLength();
 protected:

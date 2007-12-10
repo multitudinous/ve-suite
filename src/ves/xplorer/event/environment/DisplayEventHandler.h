@@ -50,28 +50,28 @@ namespace event
  */
 class DisplayEventHandler : public EventHandler
 {
-   public:
-      //Constructor
-      DisplayEventHandler();
+public:
+    //Constructor
+    DisplayEventHandler();
 
-      //Copy Constructor
-      DisplayEventHandler(const DisplayEventHandler& ceh);
+    //Copy Constructor
+    DisplayEventHandler( const DisplayEventHandler& ceh );
 
-      //Destructor
-      virtual ~DisplayEventHandler();
+    //Destructor
+    virtual ~DisplayEventHandler();
 
-      //Set the cfdModel
-      //param model The ModelHandler to execute the Command on
-      void SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler);
+    //Set the cfdModel
+    //param model The ModelHandler to execute the Command on
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-      //Exectute the event
-      //param xmlObject The current xmlObject event.
-      void Execute(ves::open::xml::XMLObject* command); 
+    //Exectute the event
+    //param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-      //Equal operator
-      DisplayEventHandler& operator=(const DisplayEventHandler& rhs);
+    //Equal operator
+    DisplayEventHandler& operator=( const DisplayEventHandler& rhs );
 
-   private:
+private:
 
 };
 

@@ -49,35 +49,35 @@ namespace event
   WireframeEventHandler API
   */
 /*!\class WireframeEventHandler
- * 
+ *
  */
 class VE_XPLORER_EXPORTS WireframeEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   WireframeEventHandler();
+    ///Constructor
+    WireframeEventHandler();
 
-   ///Copy Constructor
-   WireframeEventHandler(const WireframeEventHandler& rhs);
+    ///Copy Constructor
+    WireframeEventHandler( const WireframeEventHandler& rhs );
 
-   ///Destructor
-   virtual ~WireframeEventHandler();
+    ///Destructor
+    virtual ~WireframeEventHandler();
 
-   ///Equal operator
-   WireframeEventHandler& operator=(const WireframeEventHandler& rhs);
+    ///Equal operator
+    WireframeEventHandler& operator=( const WireframeEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
-   
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
+
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
-   ves::xplorer::Model* _activeModel; ///<The current active model 
+    ves::xplorer::Model* _activeModel; ///<The current active model
 };
 
 }

@@ -43,8 +43,8 @@
 
 using namespace ves::xplorer::scenegraph;
 // forward declare functions to use later.
-bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr);
-bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw);
+bool VESwitch_readLocalData( osg::Object& obj, osgDB::Input& fr );
+bool VESwitch_writeLocalData( const osg::Object& obj, osgDB::Output& fw );
 
 // register the read and write functions with the osgDB::Registry.
 osgDB::RegisterDotOsgWrapperProxy g_SwitchProxy
@@ -56,106 +56,106 @@ osgDB::RegisterDotOsgWrapperProxy g_SwitchProxy
     &VESwitch_writeLocalData
 );
 ///////////////////////////////////////////////////////////////
-bool VESwitch_readLocalData(osg::Object& obj, osgDB::Input& fr)
+bool VESwitch_readLocalData( osg::Object& obj, osgDB::Input& fr )
 {
     bool iteratorAdvanced = false;
 
-    ves::xplorer::scenegraph::Switch& sw = static_cast<ves::xplorer::scenegraph::Switch&>(obj);
+    ves::xplorer::scenegraph::Switch& sw = static_cast<ves::xplorer::scenegraph::Switch&>( obj );
 
-    if (fr.matchSequence("value"))
+    if( fr.matchSequence( "value" ) )
     {
-        if (fr[1].matchWord("ALL_CHILDREN_ON"))
+        if( fr[1].matchWord( "ALL_CHILDREN_ON" ) )
         {
             sw.setAllChildrenOn();
             iteratorAdvanced = true;
-            fr+=2;
+            fr += 2;
         }
-        else if (fr[1].matchWord("ALL_CHILDREN_OFF"))
+        else if( fr[1].matchWord( "ALL_CHILDREN_OFF" ) )
         {
             sw.setAllChildrenOff();
             iteratorAdvanced = true;
-            fr+=2;
+            fr += 2;
         }
-        else if (fr[1].isInt())
+        else if( fr[1].isInt() )
         {
             unsigned int value;
-            fr[1].getUInt(value);
-            sw.setSingleChildOn(value);
+            fr[1].getUInt( value );
+            sw.setSingleChildOn( value );
             iteratorAdvanced = true;
-            fr+=2;
+            fr += 2;
         }
     }
 
-    if (fr[0].matchWord("NewChildDefaultValue"))
+    if( fr[0].matchWord( "NewChildDefaultValue" ) )
     {
-        if (fr[1].matchWord("TRUE")) 
+        if( fr[1].matchWord( "TRUE" ) )
         {
-            sw.setNewChildDefaultValue(true);
+            sw.setNewChildDefaultValue( true );
             iteratorAdvanced = true;
             fr += 2;
         }
-        else if (fr[1].matchWord("FALSE"))
+        else if( fr[1].matchWord( "FALSE" ) )
         {
-            sw.setNewChildDefaultValue(false);
+            sw.setNewChildDefaultValue( false );
             iteratorAdvanced = true;
             fr += 2;
         }
-        else if (fr[1].isInt())
+        else if( fr[1].isInt() )
         {
             int value;
-            fr[1].getInt(value);
-            sw.setNewChildDefaultValue(value!=0);
+            fr[1].getInt( value );
+            sw.setNewChildDefaultValue( value != 0 );
             iteratorAdvanced = true;
             fr += 2;
         }
     }
 
-    if (fr.matchSequence("ValueList {"))
+    if( fr.matchSequence( "ValueList {" ) )
     {
         int entry = fr[0].getNoNestedBrackets();
 
         // move inside the brakets.
         fr += 2;
 
-        unsigned int pos=0;
-        while (!fr.eof() && fr[0].getNoNestedBrackets()>entry)
+        unsigned int pos = 0;
+        while( !fr.eof() && fr[0].getNoNestedBrackets() > entry )
         {
             int value;
-            if (fr[0].getInt(value))
+            if( fr[0].getInt( value ) )
             {
-                sw.setValue(pos,value!=0);
+                sw.setValue( pos, value != 0 );
                 ++pos;
             }
             ++fr;
         }
 
         ++fr;
-        
+
         iteratorAdvanced = true;
-        
+
     }
 
     return iteratorAdvanced;
 }
 ///////////////////////////////////////////////////////////
-bool VESwitch_writeLocalData(const osg::Object& obj, osgDB::Output& fw)
+bool VESwitch_writeLocalData( const osg::Object& obj, osgDB::Output& fw )
 {
-   const ves::xplorer::scenegraph::Switch& sw = static_cast<const ves::xplorer::scenegraph::Switch&>(obj);
-   //fw.writeObject(sw);
+    const ves::xplorer::scenegraph::Switch& sw = static_cast<const ves::xplorer::scenegraph::Switch&>( obj );
+    //fw.writeObject(sw);
 
-    fw.indent()<<"NewChildDefaultValue "<<sw.getNewChildDefaultValue()<<std::endl;
+    fw.indent() << "NewChildDefaultValue " << sw.getNewChildDefaultValue() << std::endl;
 
-    fw.indent()<<"ValueList {"<< std::endl;
+    fw.indent() << "ValueList {" << std::endl;
     fw.moveIn();
     const Switch::ValueList& values = sw.getValueList();
-    for(Switch::ValueList::const_iterator itr=values.begin();
-        itr!=values.end();
-        ++itr)
+    for( Switch::ValueList::const_iterator itr = values.begin();
+            itr != values.end();
+            ++itr )
     {
-        fw.indent()<<*itr<<std::endl;
+        fw.indent() << *itr << std::endl;
     }
     fw.moveOut();
-    fw.indent()<<"}"<< std::endl;
+    fw.indent() << "}" << std::endl;
 
     return true;
 }

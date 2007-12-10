@@ -37,7 +37,7 @@
  */
 
 /*!\class MainToolBar
- * 
+ *
  */
 
 // --- wxWidgets Includes --- //
@@ -58,7 +58,7 @@ public:
     virtual ~MainToolBar();
 
     ///\enum The enums for MainToolBar
-    enum 
+    enum
     {
         TOOLBAR_NEW,///<ID for new tool
         TOOLBAR_OPEN,///<ID for open tool
@@ -109,7 +109,7 @@ private:
     ///Handles events for changing the centerpoint jump distance
     ///\param event The wxCommand event
     void OnChangeCenterPointJump( wxCommandEvent& event );
-    
+
     ///Handles the event to unselect all objects in xplorer
     ///\param event The wxCommand event
     void OnUnselectObjects( wxCommandEvent& event );

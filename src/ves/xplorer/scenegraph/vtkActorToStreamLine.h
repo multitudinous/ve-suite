@@ -49,11 +49,11 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    osg::ref_ptr< osg::Geode > vtkActorToStreamLine( vtkActor* actor, osg::ref_ptr< osg::Geode > geode = NULL, int verbose = 0 );
+osg::ref_ptr< osg::Geode > vtkActorToStreamLine( vtkActor* actor, osg::ref_ptr< osg::Geode > geode = NULL, int verbose = 0 );
 
-    osg::ref_ptr< osg::Geometry > ProcessPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
+osg::ref_ptr< osg::Geometry > ProcessPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
 
-    osg::ref_ptr< osg::Program > GetShader();
+osg::ref_ptr< osg::Program > GetShader();
 }
 }
 }

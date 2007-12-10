@@ -51,43 +51,43 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS Polygon
 {
 public:
-   ///Constructor
-   Polygon( void );
-   ///Destructor
-   ~Polygon( void );
-   ///Copy Constructor
-   Polygon( const Polygon& );
-   ///equal operator
-   Polygon& operator= ( const Polygon& );
+    ///Constructor
+    Polygon( void );
+    ///Destructor
+    ~Polygon( void );
+    ///Copy Constructor
+    Polygon( const Polygon& );
+    ///equal operator
+    Polygon& operator= ( const Polygon& );
 
-   ///Get the polygon
-   std::vector< wxPoint >* GetPolygon( void );
-   ///Get the i'th point from the polygon
-   ///\param i i'th point
-   wxPoint* GetPoint( size_t i );
-   ///Add new point to the polygon
-   ///\param newPoint The point to be added
-   void SetPoint( wxPoint newPoint );
-   size_t GetNumberOfPoints( void );
-   ///Translates this polygon from oldpoly by x and y
-   ///\param oldpoly polygon that you are translating from
-   ///\param x x translation distance
-   ///\param y y translation distance
-   //void TransPoly( Polygon oldpoly, int x, int y );
-   double nearpnt( wxPoint pt, Polygon poly, Polygon& Near);
-   ///Is this point inside this polygon
-   int inside( wxPoint pt );
-   double nearpnt( wxPoint pt, Polygon& Near );
-   void TransPoly( int x, int y, Polygon& newpoly );
-   void clear(); //clear all points out.
-   ///Print the list of points
-   void print();
+    ///Get the polygon
+    std::vector< wxPoint >* GetPolygon( void );
+    ///Get the i'th point from the polygon
+    ///\param i i'th point
+    wxPoint* GetPoint( size_t i );
+    ///Add new point to the polygon
+    ///\param newPoint The point to be added
+    void SetPoint( wxPoint newPoint );
+    size_t GetNumberOfPoints( void );
+    ///Translates this polygon from oldpoly by x and y
+    ///\param oldpoly polygon that you are translating from
+    ///\param x x translation distance
+    ///\param y y translation distance
+    //void TransPoly( Polygon oldpoly, int x, int y );
+    double nearpnt( wxPoint pt, Polygon poly, Polygon& Near );
+    ///Is this point inside this polygon
+    int inside( wxPoint pt );
+    double nearpnt( wxPoint pt, Polygon& Near );
+    void TransPoly( int x, int y, Polygon& newpoly );
+    void clear(); //clear all points out.
+    ///Print the list of points
+    void print();
 
 private:
-   int ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 );
-   double computenorm( wxPoint pt1, wxPoint pt2 );
-   int intersect( Polygon l1, Polygon l2 );
-   std::vector< wxPoint > poly;
+    int ccw( wxPoint* pt1, wxPoint* pt2, wxPoint* pt3 );
+    double computenorm( wxPoint pt1, wxPoint pt2 );
+    int intersect( Polygon l1, Polygon l2 );
+    std::vector< wxPoint > poly;
 };
 }
 }

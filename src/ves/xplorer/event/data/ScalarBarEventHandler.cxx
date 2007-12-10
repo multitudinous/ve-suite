@@ -59,69 +59,69 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ScalarBarEventHandler::ScalarBarEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ScalarBarEventHandler::ScalarBarEventHandler(const ScalarBarEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+ScalarBarEventHandler::ScalarBarEventHandler( const ScalarBarEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 ScalarBarEventHandler::~ScalarBarEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-ScalarBarEventHandler& ScalarBarEventHandler::operator=(const ScalarBarEventHandler& rhs)
+ScalarBarEventHandler& ScalarBarEventHandler::operator=( const ScalarBarEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ScalarBarEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if ( model )
-      {
-         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 void ScalarBarEventHandler::Execute( XMLObject* xmlObject )
 {
-   Command* command = dynamic_cast< Command* >( xmlObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Scalar Bar State" );
-   
-   unsigned int state = 0;
-   activeModelDVP->GetData( state );
-   if ( _activeModel )
-   {
-      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-      if ( dataSet )
-      {
-         dataSet->SetDataSetScalarState( state );
-      }
-   }
-   
+    Command* command = dynamic_cast< Command* >( xmlObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Scalar Bar State" );
+
+    unsigned int state = 0;
+    activeModelDVP->GetData( state );
+    if( _activeModel )
+    {
+        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( dataSet )
+        {
+            dataSet->SetDataSetScalarState( state );
+        }
+    }
+
 }

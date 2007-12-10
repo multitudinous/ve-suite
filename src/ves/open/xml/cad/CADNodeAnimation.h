@@ -55,81 +55,81 @@ namespace cad
 class VE_CAD_EXPORTS CADNodeAnimation: public ves::open::xml::XMLObject
 {
 public:
-   ///Constructor
-   CADNodeAnimation();
-   virtual ~CADNodeAnimation();
+    ///Constructor
+    CADNodeAnimation();
+    virtual ~CADNodeAnimation();
 
-   ///Set the source of animation file .
-   ///\param attributeType The type of attribute.
-   void SetAnimationFileName(std::string fileName);
+    ///Set the source of animation file .
+    ///\param attributeType The type of attribute.
+    void SetAnimationFileName( std::string fileName );
 
-   ///Set the source of animation file based on file extension.
-   ///Currently valid sources are "osg" "txt".
-   ///\param fileSourceType The type of attribute.
-   void SetFileType(std::string fileSourceType);
+    ///Set the source of animation file based on file extension.
+    ///Currently valid sources are "osg" "txt".
+    ///\param fileSourceType The type of attribute.
+    void SetFileType( std::string fileSourceType );
 
-   ///Set the name of the animation
-   ///\param name The name of the animation
-   void SetAnimationName(std::string name);
+    ///Set the name of the animation
+    ///\param name The name of the animation
+    void SetAnimationName( std::string name );
 
-   ///Set the play mode.
-   ///Valid types are "Loop" or "Once".
-   ///\param playMode The play mode for the animation.
-   void SetPlayMode(std::string playMode);
+    ///Set the play mode.
+    ///Valid types are "Loop" or "Once".
+    ///\param playMode The play mode for the animation.
+    void SetPlayMode( std::string playMode );
 
-   ///Set the object from XML data
-   ///\param xmlNode Node to set this object from
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode);
+    ///Set the object from XML data
+    ///\param xmlNode Node to set this object from
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode );
 
-   ///Specify if we have a header
-   ///\param hasHeader The header flag
-   void SetHasHeader(bool hasHeader);
+    ///Specify if we have a header
+    ///\param hasHeader The header flag
+    void SetHasHeader( bool hasHeader );
 
-   ///Set the number of lines in the header, if it exists
-   ///\param nHeaderLines Number of lines the header contains
-   void SetNumberOfHeaderLines(unsigned int nHeaderLines);
+    ///Set the number of lines in the header, if it exists
+    ///\param nHeaderLines Number of lines the header contains
+    void SetNumberOfHeaderLines( unsigned int nHeaderLines );
 
-   ///Get the file type. 
-   std::string GetFileType();
+    ///Get the file type.
+    std::string GetFileType();
 
-   ///Get the name of this animation.
-   std::string GetAnimationName();
+    ///Get the name of this animation.
+    std::string GetAnimationName();
 
-   ///The play mode of the animation.
-   std::string GetPlayMode();
+    ///The play mode of the animation.
+    std::string GetPlayMode();
 
-   ///Get the name of animation file.
-   std::string GetAnimationFileName();
+    ///Get the name of animation file.
+    std::string GetAnimationFileName();
 
-   ///Check for a header
-   bool HasHeader();
+    ///Check for a header
+    bool HasHeader();
 
-   ///Get the number of lines in the header
-   unsigned int GetNumberOfHeaderLines();
+    ///Get the number of lines in the header
+    unsigned int GetNumberOfHeaderLines();
 
-   ///Copy constructor
-   CADNodeAnimation(const CADNodeAnimation& rhs);
+    ///Copy constructor
+    CADNodeAnimation( const CADNodeAnimation& rhs );
 
-   ///Equal operator
-   CADNodeAnimation& operator=(const CADNodeAnimation& rhs);
+    ///Equal operator
+    CADNodeAnimation& operator=( const CADNodeAnimation& rhs );
 
 protected:
-   
-   ///Internally update the XML data for this element.
-   ///\param input The XML element information
-   virtual void _updateVEElement(std::string input);
 
-   std::string _fileSourceType;///<The type of attribute
-   std::string _animationFileName;///<The actual name of the file.
-   std::string _playMode;///<The play mode of the animation.
-   std::string _name;///<The name of the animation.
-   
-   bool _hasHeader;///<Flag specifying header lines in file
-   unsigned int _numberOfHeaderLines;///<The number of line in the header
+    ///Internally update the XML data for this element.
+    ///\param input The XML element information
+    virtual void _updateVEElement( std::string input );
+
+    std::string _fileSourceType;///<The type of attribute
+    std::string _animationFileName;///<The actual name of the file.
+    std::string _playMode;///<The play mode of the animation.
+    std::string _name;///<The name of the animation.
+
+    bool _hasHeader;///<Flag specifying header lines in file
+    unsigned int _numberOfHeaderLines;///<The number of line in the header
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADNodeAnimation* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADNodeAnimation* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

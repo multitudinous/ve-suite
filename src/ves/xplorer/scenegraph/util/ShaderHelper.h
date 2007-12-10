@@ -47,8 +47,8 @@
 
 namespace osg
 {
-   class Shader;
-   class Program;
+class Shader;
+class Program;
 }
 #include <osg/Texture>
 #elif _PERFORMER
@@ -61,9 +61,9 @@ namespace xml
 {
 namespace shader
 {
-   class Program;
-   class Uniform;
-   class TextureImage;
+class Program;
+class Uniform;
+class TextureImage;
 }
 }
 }
@@ -84,71 +84,71 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS ShaderHelper
 {
 public:
-   ///Constructor
-   ShaderHelper();
+    ///Constructor
+    ShaderHelper();
 
-   ///Copy Constructor
-   ShaderHelper(const ShaderHelper& rhs);
-  
-   ///Destructor
-   virtual ~ShaderHelper();
+    ///Copy Constructor
+    ShaderHelper( const ShaderHelper& rhs );
 
-   ///Load and create the stateset from the input XML data
-   void LoadGLSLProgram(ves::open::xml::shader::Program* glslProgram);
-   
-   ///Load and create the stateset for transparency shader
-   void LoadTransparencyProgram();
+    ///Destructor
+    virtual ~ShaderHelper();
+
+    ///Load and create the stateset from the input XML data
+    void LoadGLSLProgram( ves::open::xml::shader::Program* glslProgram );
+
+    ///Load and create the stateset for transparency shader
+    void LoadTransparencyProgram();
 #ifdef _OSG
-   ///Get the created state set representing the shader
-   osg::StateSet* GetProgramStateSet();
+    ///Get the created state set representing the shader
+    osg::StateSet* GetProgramStateSet();
 
-   ///The state set that we want to load the shader into
-   ///\param shader The state set representing the shader.
-   void SetStateSet(osg::StateSet* shader);
+    ///The state set that we want to load the shader into
+    ///\param shader The state set representing the shader.
+    void SetStateSet( osg::StateSet* shader );
 
 #elif _PERFORMER
 #endif
-   ///Update a uniform.
-   ///\param The uniform to update.
-   void UpdateUniform(ves::open::xml::shader::Uniform* uniformToUpdate);
+    ///Update a uniform.
+    ///\param The uniform to update.
+    void UpdateUniform( ves::open::xml::shader::Uniform* uniformToUpdate );
 
-   ///Equal operator
-   ///\param rhs Right hand side.
-   ShaderHelper& operator=(const ShaderHelper& rhs);
+    ///Equal operator
+    ///\param rhs Right hand side.
+    ShaderHelper& operator=( const ShaderHelper& rhs );
 protected:
-   ///helper functions
-   ///Utility function to create a shader.
-   ///\param shaderData The XML shader data.
-   void _createGLSLShader(ves::open::xml::shader::ShaderPtr shaderData);
-  
-   ///Attach the program to the stateset
-   ///\param override Flag to override the stateset above
-   void _attachGLSLProgramToStateSet(bool override = false);
+    ///helper functions
+    ///Utility function to create a shader.
+    ///\param shaderData The XML shader data.
+    void _createGLSLShader( ves::open::xml::shader::ShaderPtr shaderData );
 
-   ///Extract uniforms from the shader.
-   ///\param The shader to extract uniforms from.
-   void _extractUniformsFromShader(ves::open::xml::shader::ShaderPtr shader);
+    ///Attach the program to the stateset
+    ///\param override Flag to override the stateset above
+    void _attachGLSLProgramToStateSet( bool override = false );
 
-   ///Extract the texture images from the shader information.
-   ///\param textureImage The texture image data.
-   void _extractTextureFromShader(ves::open::xml::shader::TextureImage textureImage);
+    ///Extract uniforms from the shader.
+    ///\param The shader to extract uniforms from.
+    void _extractUniformsFromShader( ves::open::xml::shader::ShaderPtr shader );
+
+    ///Extract the texture images from the shader information.
+    ///\param textureImage The texture image data.
+    void _extractTextureFromShader( ves::open::xml::shader::TextureImage textureImage );
 
 #ifdef _OSG
-   ///Extract the wrap modes for the texture images
-   ///\param texture The texture.
-   ///\param param The wrap parameter
-   ///\param wrapMode The wrap mode.
-   void _setWrapOnTexture(osg::Texture* texture,
-                       osg::Texture::WrapParameter param,
-                       std::string wrapMode);
+    ///Extract the wrap modes for the texture images
+    ///\param texture The texture.
+    ///\param param The wrap parameter
+    ///\param wrapMode The wrap mode.
+    void _setWrapOnTexture( osg::Texture* texture,
+                            osg::Texture::WrapParameter param,
+                            std::string wrapMode );
 #endif
-   std::vector<std::string> _vertexUniformNames;///<Vertex program uniform names.
-   std::vector<std::string> _fragmentUniformNames;///<Fragment program uniform names.
+    std::vector<std::string> _vertexUniformNames;///<Vertex program uniform names.
+    std::vector<std::string> _fragmentUniformNames;///<Fragment program uniform names.
 #ifdef _OSG
-   osg::ref_ptr<osg::Shader> _vshader;///<The vertex shader.
-   osg::ref_ptr<osg::Shader> _fshader;///<The fragment shader.
-   osg::ref_ptr<osg::Program> _glslProgram;///<The GLSL program.
-   osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
+    osg::ref_ptr<osg::Shader> _vshader;///<The vertex shader.
+    osg::ref_ptr<osg::Shader> _fshader;///<The fragment shader.
+    osg::ref_ptr<osg::Program> _glslProgram;///<The GLSL program.
+    osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
 #elif _PERFORMER
 #endif
 };

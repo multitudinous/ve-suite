@@ -53,27 +53,27 @@ namespace event
 class VE_XPLORER_EXPORTS SoundActivateEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   SoundActivateEventHandler();
+    ///Constructor
+    SoundActivateEventHandler();
 
-   ///Copy Constructor
-   SoundActivateEventHandler(const SoundActivateEventHandler& ceh);
-   ///Destructor
-   virtual ~SoundActivateEventHandler();
+    ///Copy Constructor
+    SoundActivateEventHandler( const SoundActivateEventHandler& ceh );
+    ///Destructor
+    virtual ~SoundActivateEventHandler();
 
-   ///Equal operator
-   SoundActivateEventHandler& operator=(const SoundActivateEventHandler& rhs);
+    ///Equal operator
+    SoundActivateEventHandler& operator=( const SoundActivateEventHandler& rhs );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   virtual void Execute(ves::open::xml::XMLObject* xmlObject);
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    virtual void Execute( ves::open::xml::XMLObject* xmlObject );
 
-   ///Set the active model
-   ///\param baseObject Active model
-   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
+    ///Set the active model
+    ///\param baseObject Active model
+    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
 protected:
-   ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

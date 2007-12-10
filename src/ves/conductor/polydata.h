@@ -37,7 +37,7 @@
 *polydata API
 */
 /*!\class Polydata
-* 
+*
 */
 #include <vector>
 #include <string>
@@ -52,7 +52,7 @@ namespace open
 {
 namespace xml
 {
-   class Command;
+class Command;
 }
 }
 }
@@ -75,28 +75,28 @@ namespace ves
 namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS Polydata: public wxDialog
-{    
+{
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
     Polydata( );
-    Polydata(  wxWindow* parent, 
-                  wxWindowID id = SYMBOL_POLYDATA_IDNAME, 
-                  const wxString& caption = SYMBOL_POLYDATA_TITLE,
-                  const wxPoint& pos = SYMBOL_POLYDATA_POSITION,
-                  const wxSize& size = SYMBOL_POLYDATA_SIZE, 
-                  long style = SYMBOL_POLYDATA_STYLE);
+    Polydata( wxWindow* parent,
+              wxWindowID id = SYMBOL_POLYDATA_IDNAME,
+              const wxString& caption = SYMBOL_POLYDATA_TITLE,
+              const wxPoint& pos = SYMBOL_POLYDATA_POSITION,
+              const wxSize& size = SYMBOL_POLYDATA_SIZE,
+              long style = SYMBOL_POLYDATA_STYLE );
 
-   enum POLYDATA_IDS
-   {
-      POLYDATA_RBUTTON,
-      WARPED_SURFACE_CHK,
-      POLYDATA_PLANE_SLIDER,
-      ADD_POLYDATA_BUTTON,
-      ADVANCED_POLYDATA_BUTTON
-   };
+    enum POLYDATA_IDS
+    {
+        POLYDATA_RBUTTON,
+        WARPED_SURFACE_CHK,
+        POLYDATA_PLANE_SLIDER,
+        ADD_POLYDATA_BUTTON,
+        ADVANCED_POLYDATA_BUTTON
+    };
 
     void SendCommandsToXplorer( void );
     /// Creation
@@ -112,11 +112,11 @@ public:
 
     ///The name of the available scalars.
     ///\param scalarNames all the scalars in this dataset
-    void SetAvailableScalars(wxArrayString scalarNames);
-    
+    void SetAvailableScalars( wxArrayString scalarNames );
+
     ///Set the active scalar
     ///\param activeScalarName The active scalar name
-    void SetActiveScalar(std::string activeScalarName);
+    void SetActiveScalar( std::string activeScalarName );
 
 
     /// Retrieves bitmap resources
@@ -129,35 +129,35 @@ public:
     static bool ShowToolTips();
 
 protected:
-   std::string _colorByScalarName;///<The name of the scalar to color by.
-   std::string _activeScalar;///The scalar that is active on the vistab
-   wxArrayString _scalarNames;///<The available scalars.
-   wxCheckBox* _useWarpedSurfaceCheckBox;
-   wxSlider* _polydataSlider;///<Set the value of the iso-surface
-   wxButton* _advancedButton;///<Display the color by scalar dialog
-   wxButton* _computeButton;///<Compute the iso-surface
-   
-   void _onPolydata( wxCommandEvent& event );
+    std::string _colorByScalarName;///<The name of the scalar to color by.
+    std::string _activeScalar;///The scalar that is active on the vistab
+    wxArrayString _scalarNames;///<The available scalars.
+    wxCheckBox* _useWarpedSurfaceCheckBox;
+    wxSlider* _polydataSlider;///<Set the value of the iso-surface
+    wxButton* _advancedButton;///<Display the color by scalar dialog
+    wxButton* _computeButton;///<Compute the iso-surface
 
-   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-   void _onWarpedSurface( wxCommandEvent& event );
+    void _onPolydata( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-   void _onPolydataPlane( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+    void _onWarpedSurface( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAddPolydata( wxCommandEvent& event );
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onPolydataPlane( wxCommandEvent& event );
 
-   ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAdvanced(wxCommandEvent& event);
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAddPolydata( wxCommandEvent& event );
 
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
+    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAdvanced( wxCommandEvent& event );
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }
 #endif
-    // _POLYDATA_H_
+// _POLYDATA_H_

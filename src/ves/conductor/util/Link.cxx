@@ -71,31 +71,31 @@ BEGIN_EVENT_TABLE( Link, wxEvtHandler )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-Link::Link( wxScrolledWindow* designCanvas ) 
-:
-Fr_mod( 1000000 ),
-To_mod( 1000000 ),
-Fr_port( 1000000 ),
-To_port( 1000000 ),
-networkFrame( designCanvas ),
-userScale( 0 ),
-m_veLink( 0 )
+Link::Link( wxScrolledWindow* designCanvas )
+        :
+        Fr_mod( 1000000 ),
+        To_mod( 1000000 ),
+        Fr_port( 1000000 ),
+        To_port( 1000000 ),
+        networkFrame( designCanvas ),
+        userScale( 0 ),
+        m_veLink( 0 )
 {
-    double a = atan(3.0/10.0);
+    double a = atan( 3.0 / 10.0 );
     double b = -a;
-    sinb = sin(b); 
-    cosb = cos(b);
-    sina = sin(a); 
-    cosa = cos(a);
+    sinb = sin( b );
+    cosb = cos( b );
+    sina = sin( a );
+    cosa = cos( a );
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
     m_uuid = "notSet";
-	highlightFlag = false;
-	m_veLink = new ves::open::xml::model::Link();
+    highlightFlag = false;
+    m_veLink = new ves::open::xml::model::Link();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
 {
-   cons.clear();
+    cons.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::Link( const Link& input )
@@ -104,13 +104,13 @@ Link::Link( const Link& input )
     To_mod = input.To_mod;
     Fr_port = input.Fr_port;
     To_port = input.To_port;
-    sinb = input.sinb; 
+    sinb = input.sinb;
     cosb = input.cosb;
-    sina = input.sina; 
+    sina = input.sina;
     cosa = input.cosa;
     if( input.m_veLink )
     {
-		m_veLink = new ves::open::xml::model::Link( *(input.m_veLink) );
+        m_veLink = new ves::open::xml::model::Link( *( input.m_veLink ) );
     }
     cons = input.cons;
     poly = input.poly;
@@ -119,9 +119,9 @@ Link::Link( const Link& input )
     userScale = input.userScale;
     action_point = input.action_point;
     m_uuid = input.m_uuid;
-	highlightFlag = false;
-	maxPointX = 0;
-	maxPointY = 0;
+    highlightFlag = false;
+    maxPointX = 0;
+    maxPointY = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link& Link::operator= ( const Link& input )
@@ -132,13 +132,13 @@ Link& Link::operator= ( const Link& input )
         To_mod = input.To_mod;
         Fr_port = input.Fr_port;
         To_port = input.To_port;
-        sinb = input.sinb; 
+        sinb = input.sinb;
         cosb = input.cosb;
-        sina = input.sina; 
+        sina = input.sina;
         cosa = input.cosa;
         if( input.m_veLink )
         {
-			m_veLink = new ves::open::xml::model::Link( *(input.m_veLink) );
+            m_veLink = new ves::open::xml::model::Link( *( input.m_veLink ) );
         }
         cons.clear();
         cons = input.cons;
@@ -148,7 +148,7 @@ Link& Link::operator= ( const Link& input )
         userScale = input.userScale;
         action_point = input.action_point;
         m_uuid = input.m_uuid;
-		highlightFlag = false;
+        highlightFlag = false;
 
         maxPointX = input.maxPointX;
         maxPointY = input.maxPointY;
@@ -158,173 +158,173 @@ Link& Link::operator= ( const Link& input )
 ////////////////////////////////////////////////////////////////////////////////
 wxPoint* Link::GetPoint( size_t i )
 {
-   try
-   {
-      return &(cons.at( i ));
-   }
-   catch( ... )
-   {
-      cons.push_back( wxPoint() );
-      return &(cons.at( i ));
-   }
+    try
+    {
+        return &( cons.at( i ) );
+    }
+    catch ( ... )
+    {
+        cons.push_back( wxPoint() );
+        return &( cons.at( i ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetPoint( wxPoint* pnt )
 {
-   cons.push_back( wxPoint() );
-   cons.back().x = pnt->x;
-   cons.back().y = pnt->y;
+    cons.push_back( wxPoint() );
+    cons.back().x = pnt->x;
+    cons.back().y = pnt->y;
 
-   if( pnt->x > maxPointX )
-   {
-	   maxPointX = pnt->x;
-   }
-   if( pnt->y > maxPointY )
-   {
-	   maxPointY = pnt->y;
-   }
+    if( pnt->x > maxPointX )
+    {
+        maxPointX = pnt->x;
+    }
+    if( pnt->y > maxPointY )
+    {
+        maxPointY = pnt->y;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t Link::GetNumberOfPoints( void )
 {
-   return cons.size();
+    return cons.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< wxPoint >* Link::GetPoints( void )
 {
-   return &(cons);
+    return &( cons );
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Link::GetFromPort( void )
 {
-   return Fr_port;
+    return Fr_port;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Link::GetToPort( void )
 {
-   return To_port;
+    return To_port;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned long Link::GetFromModule( void )
 {
-   return Fr_mod;
+    return Fr_mod;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned long Link::GetToModule( void )
 {
-   return To_mod;
+    return To_mod;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetFromPort( unsigned int input )
 {
-   Fr_port = input;
-    *(m_veLink->GetFromPort()) = static_cast< long int >( input );
+    Fr_port = input;
+    *( m_veLink->GetFromPort() ) = static_cast< long int >( input );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetToPort( unsigned int input )
 {
-   To_port = input;
-   *(m_veLink->GetToPort()) = static_cast< long int >( input );
+    To_port = input;
+    *( m_veLink->GetToPort() ) = static_cast< long int >( input );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetFromModule( unsigned long input )
 {
     Fr_mod = input;
-    m_veLink->GetFromModule()->SetData( "FromModule", 
-        static_cast< long int >( Fr_mod ) );
+    m_veLink->GetFromModule()->SetData( "FromModule",
+                                        static_cast< long int >( Fr_mod ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetToModule( unsigned long input )
 {
     To_mod = input;
-    m_veLink->GetToModule()->SetData( "ToModule", 
-        static_cast< long int >( To_mod ) );
+    m_veLink->GetToModule()->SetData( "ToModule",
+                                      static_cast< long int >( To_mod ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetName(wxString name)
+void Link::SetName( wxString name )
 {
-	linkName = name;
+    linkName = name;
     m_veLink->SetLinkName( ConvertUnicode( name.c_str() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString Link::GetName()
 {
-	return linkName;
+    return linkName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::conductor::util::Polygon* Link::GetPolygon( void )
 {
-   return &(poly);
+    return &( poly );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::DrawLinkCon( wxDC* dc )
 {
-   wxBrush old_brush = dc->GetBrush();
-   wxPen old_pen = dc->GetPen();
-   dc->SetBrush( *wxGREEN_BRUSH );
-   dc->SetPen( *wxBLACK_PEN );
-  
-   wxPoint bport[4];
-   bport[ 0 ] = wxPoint( 0, 0 );
-   bport[ 1 ] = wxPoint( 6, 0 );
-   bport[ 2 ] = wxPoint( 6, 6 );
-   bport[ 3 ] = wxPoint( 0, 6 );
-  
-   //Draw the connectors for the particular link
-   wxCoord xoff;
-   wxCoord yoff;
-   for( size_t i = 0; i < cons.size(); ++i )
-   { 
-       xoff = cons[ i ].x - 3;
-       yoff = cons[ i ].y - 3;
+    wxBrush old_brush = dc->GetBrush();
+    wxPen old_pen = dc->GetPen();
+    dc->SetBrush( *wxGREEN_BRUSH );
+    dc->SetPen( *wxBLACK_PEN );
 
-      dc->DrawPolygon( 4, bport, xoff, yoff );      
-   }
+    wxPoint bport[4];
+    bport[ 0 ] = wxPoint( 0, 0 );
+    bport[ 1 ] = wxPoint( 6, 0 );
+    bport[ 2 ] = wxPoint( 6, 6 );
+    bport[ 3 ] = wxPoint( 0, 6 );
 
-   dc->SetBrush( old_brush );
-   dc->SetPen( old_pen );
+    //Draw the connectors for the particular link
+    wxCoord xoff;
+    wxCoord yoff;
+    for( size_t i = 0; i < cons.size(); ++i )
+    {
+        xoff = cons[ i ].x - 3;
+        yoff = cons[ i ].y - 3;
+
+        dc->DrawPolygon( 4, bport, xoff, yoff );
+    }
+
+    dc->SetBrush( old_brush );
+    dc->SetPen( old_pen );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::CalcLinkPoly()
 {
-   // -3 so that we end up getting a 6 point wide line
-	poly.clear();
-   for( size_t i = 0; i < cons.size(); i++ )
-   {
-	   int x = cons[i].x;
-	   int y = cons[i].y-3;
-      poly.SetPoint( wxPoint( x, y ) );
-   }
+    // -3 so that we end up getting a 6 point wide line
+    poly.clear();
+    for( size_t i = 0; i < cons.size(); i++ )
+    {
+        int x = cons[i].x;
+        int y = cons[i].y - 3;
+        poly.SetPoint( wxPoint( x, y ) );
+    }
 
-   // +3 so that we end up getting a 6 point wide line
-   for( int j = (cons.size()-1); j >=0 ; j-- )
-   {
-	   int x = cons[j].x;
-	   int y = cons[j].y+3;
-	   poly.SetPoint( wxPoint( x, y ) );
-   }
-/*   std::vector< wxPoint >::iterator iter;
-   for ( iter = cons.end()-1; iter >= cons.begin(); --iter )
-   {
-		int x = iter->x;
-		int y = iter->y+3;
-	   poly.SetPoint( wxPoint( iter->x, iter->y+3 ) );
-   }
-   */
+    // +3 so that we end up getting a 6 point wide line
+    for( int j = ( cons.size() - 1 ); j >= 0 ; j-- )
+    {
+        int x = cons[j].x;
+        int y = cons[j].y + 3;
+        poly.SetPoint( wxPoint( x, y ) );
+    }
+    /*   std::vector< wxPoint >::iterator iter;
+       for(iter = cons.end()-1; iter >= cons.begin(); --iter )
+       {
+      int x = iter->x;
+      int y = iter->y+3;
+        poly.SetPoint( wxPoint( iter->x, iter->y+3 ) );
+       }
+       */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::DrawLinkLine( wxDC* dc )
-{ 
+{
     wxBrush old_brush = dc->GetBrush();
     wxPen old_pen = dc->GetPen();
 
-    wxPoint* points = new wxPoint[ cons.size() ];
+    wxPoint* points = new wxPoint[ cons.size()];
 
     //std::cout << Fr_mod << " " <<  To_mod << " " << Fr_port << " " <<  To_port <<std::endl;
     //reverse the order of the points
     size_t maxSize = cons.size() - 1;
-    for ( size_t i = 0; i < cons.size(); i++ )
-	{   
+    for( size_t i = 0; i < cons.size(); i++ )
+    {
         points[ i ] = cons[ maxSize - i ];
         //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
     }
@@ -339,32 +339,32 @@ void Link::DrawLinkLine( wxDC* dc )
 
     wxPoint arrow[ 3 ];
     arrow[0] = points[0];
-    double dist=sqrt( double( (points[1].y-points[0].y)*
-        (points[1].y-points[0].y) + (points[1].x-points[0].x)*
-        (points[1].x-points[0].x) ) );
+    double dist = sqrt( double(( points[1].y - points[0].y ) *
+                               ( points[1].y - points[0].y ) + ( points[1].x - points[0].x ) *
+                               ( points[1].x - points[0].x ) ) );
     //Make sure we do not divide by zero
     if( dist <= 0.0001f )
     {
         dist = 1;
     }
-    
-    arrow[1].x = (int)( cosa*12.0/dist * (points[1].x-points[0].x)-
-        sina*12.0/dist*(points[1].y-points[0].y)+points[0].x );
-    arrow[1].y = (int)( sina*12.0/dist * (points[1].x-points[0].x)+
-        cosa*12.0/dist*(points[1].y-points[0].y)+points[0].y );
 
-    arrow[2].x = (int)( cosb*12.0/dist * (points[1].x-points[0].x)-
-        sinb*12.0/dist*(points[1].y-points[0].y)+points[0].x );
-    arrow[2].y = (int)( sinb*12.0/dist * (points[1].x-points[0].x)+
-        cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y );
+    arrow[1].x = ( int )( cosa * 12.0 / dist * ( points[1].x - points[0].x ) -
+                          sina * 12.0 / dist * ( points[1].y - points[0].y ) + points[0].x );
+    arrow[1].y = ( int )( sina * 12.0 / dist * ( points[1].x - points[0].x ) +
+                          cosa * 12.0 / dist * ( points[1].y - points[0].y ) + points[0].y );
 
-    dc->DrawPolygon(3, arrow);
-    dc->SetPen(old_pen);
-    dc->SetBrush(old_brush);
+    arrow[2].x = ( int )( cosb * 12.0 / dist * ( points[1].x - points[0].x ) -
+                          sinb * 12.0 / dist * ( points[1].y - points[0].y ) + points[0].x );
+    arrow[2].y = ( int )( sinb * 12.0 / dist * ( points[1].x - points[0].x ) +
+                          cosb * 12.0 / dist * ( points[1].y - points[0].y ) + points[0].y );
+
+    dc->DrawPolygon( 3, arrow );
+    dc->SetPen( old_pen );
+    dc->SetBrush( old_brush );
     delete [] points;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::OnShowLinkContent(wxCommandEvent& event )
+void Link::OnShowLinkContent( wxCommandEvent& event )
 {
     UILINK_CHECKID( event )
 
@@ -372,195 +372,195 @@ void Link::OnShowLinkContent(wxCommandEvent& event )
     //The to Mod are actually the from module for the data flow
     int mod = GetFromModule();
     int port = GetFromPort();
-    
-	if ( !ves::conductor::util::CORBAServiceList::instance()->IsConnectedToCE() )
+
+    if( !ves::conductor::util::CORBAServiceList::instance()->IsConnectedToCE() )
     {
         return;
     }
-    
-    try 
+
+    try
     {
         //linkresult = exec->GetExportData(mod, port);
     }
-    catch ( CORBA::Exception& ) 
+    catch ( CORBA::Exception& )
     {
-		ves::conductor::util::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n");
+        ves::conductor::util::CORBAServiceList::instance()->GetMessageLog()->SetMessage( "Maybe Engine is down\n" );
         return;
     }
-    
-    if ( std::string(linkresult) !=std::string(""))
+
+    if( std::string( linkresult ) != std::string( "" ) )
     {
         /* Package p;
         p.SetSysId("linkresult.xml");
         p.Load( linkresult, strlen(linkresult) );
-        
+
         // In the new code this would pass in a datavalue pair
         UIDialog* port_dlg = 0;//modules[mod].GetPlugin()->PortData( NULL, &(p.intfs[0]) );
-        
-        if ( port_dlg != NULL )
+
+        if(port_dlg != NULL )
         port_dlg->Show();*/
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::OnShowAspenName(wxCommandEvent& event )
+void Link::OnShowAspenName( wxCommandEvent& event )
 {
     UILINK_CHECKID( event )
 
     //CORBAServiceList* serviceList = VE_Conductor::CORBAServiceList::instance();
-	//for( int i = 0; i < links.size(); i++)
-	//{
-	//	serviceList->GetMessageLog()->SetMessage( "link:_ " );
-	//	serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
-	//	serviceList->GetMessageLog()->SetMessage( "_\n" );
-	//}
-        
-	wxString title;
-	title << wxT("Aspen Name");
-	wxString desc( GetName().c_str(), wxConvUTF8);
-	wxMessageDialog( networkFrame, desc, title).ShowModal();
+    //for( int i = 0; i < links.size(); i++)
+    //{
+    // serviceList->GetMessageLog()->SetMessage( "link:_ " );
+    // serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
+    // serviceList->GetMessageLog()->SetMessage( "_\n" );
+    //}
+
+    wxString title;
+    title << wxT( "Aspen Name" );
+    wxString desc( GetName().c_str(), wxConvUTF8 );
+    wxMessageDialog( networkFrame, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::OnQueryStreamInputs(wxCommandEvent& event )
-{  
-    UILINK_CHECKID( event )
-
-	std::string compName = ConvertUnicode( GetName().c_str() );
-	compName = "Data.Streams." + compName;
-
-    //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
-    while(parentTraverser != NULL)
-    {
-       //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-       compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-       parentTraverser = parentTraverser->GetParentModel();
-    }
-
-	ves::open::xml::Command returnState;
-	returnState.SetCommandName("getStreamInputModuleParamList");
-	ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
-	data->SetData(std::string("ModuleName"), compName);
-    returnState.AddDataValuePair( data );
-	
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	ves::open::xml::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	
-	//Get results
-	CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
-	std::string nw_str = serviceList->Query( status );
-	wxString title( compName.c_str(),wxConvUTF8);
-	
-	ParamsDlg* params = new ParamsDlg( networkFrame );
-	params->SetIsBlock(false);
-    //params->SetSize( dialogSize );
-	ves::open::xml::XMLReaderWriter networkReader;
-	networkReader.UseStandaloneDOMDocumentManager();
-	networkReader.ReadFromString();
-	
-	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-    
-	ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
-	ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
-	std::vector< std::string > temp_vector;
-	pair->GetData(temp_vector);
-    
-	params->SetCompName(compName.c_str());
-	params->SetServiceList(serviceList);
-	params->SetDialogType("input");
-	for( size_t i=0; i < temp_vector.size(); i++) 
-	{	
-        params->AppendList(temp_vector[i].c_str());
-    }
-	params->ShowModal();
-}
-////////////////////////////////////////////////////////////////////////////////
-void Link::OnQueryStreamOutputs(wxCommandEvent& event )
-{  
-    UILINK_CHECKID( event )
-		
-	CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
-	//serviceList->GetMessageLog()->SetMessage( "QueryOutput" );
-    
-	//UIPLUGIN_CHECKID( event )
-	std::string compName = ConvertUnicode( GetName().c_str() );
-	compName = "Data.Streams." + compName;
-
-    //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
-    while(parentTraverser != NULL)
-    {
-       //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-       compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-       parentTraverser = parentTraverser->GetParentModel();
-    }
-    
-	ves::open::xml::Command returnState;
-	returnState.SetCommandName("getStreamOutputModuleParamList");
-	ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
-	data->SetData(std::string("ModuleName"), compName);
-    returnState.AddDataValuePair( data );
-	
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-	nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ));
-	
-	ves::open::xml::XMLReaderWriter commandWriter;
-	std::string status="returnString";
-	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "Command" );
-	
-	//Get results
-	std::string nw_str = serviceList->Query( status );
-	wxString title( compName.c_str(),wxConvUTF8);
-    
-	ParamsDlg * params = new ParamsDlg( networkFrame );
-	params->SetIsBlock(false);
-    //params->SetSize( dialogSize );
-	ves::open::xml::XMLReaderWriter networkReader;
-	networkReader.UseStandaloneDOMDocumentManager();
-	networkReader.ReadFromString();
-	networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-	std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-	ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
-	ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair(0);
-	std::vector< std::string > temp_vector;
-	pair->GetData(temp_vector);
-    
-	params->SetCompName(compName.c_str());
-	params->SetServiceList(serviceList);
-	params->SetDialogType("output");
-	for( size_t i=0; i < temp_vector.size(); i++) 
-		params->AppendList(temp_vector[i].c_str());
-	params->ShowModal();
-}
-/////////////////////////////////////////////////////
-void Link::OnDelLinkCon(wxCommandEvent& event )
+void Link::OnQueryStreamInputs( wxCommandEvent& event )
 {
     UILINK_CHECKID( event )
 
-    int answer = 
-        wxMessageBox( _("Do you really want to delete this link connector?"), 
-        _("Confirmation"), wxYES_NO);
-        
-    if (answer!=wxYES)
+    std::string compName = ConvertUnicode( GetName().c_str() );
+    compName = "Data.Streams." + compName;
+
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+    while( parentTraverser != NULL )
+    {
+        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+        compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+        parentTraverser = parentTraverser->GetParentModel();
+    }
+
+    ves::open::xml::Command returnState;
+    returnState.SetCommandName( "getStreamInputModuleParamList" );
+    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    data->SetData( std::string( "ModuleName" ), compName );
+    returnState.AddDataValuePair( data );
+
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    //Get results
+    CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
+    std::string nw_str = serviceList->Query( status );
+    wxString title( compName.c_str(), wxConvUTF8 );
+
+    ParamsDlg* params = new ParamsDlg( networkFrame );
+    params->SetIsBlock( false );
+    //params->SetSize( dialogSize );
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+
+    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
+    std::vector< std::string > temp_vector;
+    pair->GetData( temp_vector );
+
+    params->SetCompName( compName.c_str() );
+    params->SetServiceList( serviceList );
+    params->SetDialogType( "input" );
+    for( size_t i = 0; i < temp_vector.size(); i++ )
+    {
+        params->AppendList( temp_vector[i].c_str() );
+    }
+    params->ShowModal();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Link::OnQueryStreamOutputs( wxCommandEvent& event )
+{
+    UILINK_CHECKID( event )
+
+    CORBAServiceList* serviceList = ves::conductor::util::CORBAServiceList::instance();
+    //serviceList->GetMessageLog()->SetMessage( "QueryOutput" );
+
+    //UIPLUGIN_CHECKID( event )
+    std::string compName = ConvertUnicode( GetName().c_str() );
+    compName = "Data.Streams." + compName;
+
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+    while( parentTraverser != NULL )
+    {
+        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+        compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+        parentTraverser = parentTraverser->GetParentModel();
+    }
+
+    ves::open::xml::Command returnState;
+    returnState.SetCommandName( "getStreamOutputModuleParamList" );
+    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    data->SetData( std::string( "ModuleName" ), compName );
+    returnState.AddDataValuePair( data );
+
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    //Get results
+    std::string nw_str = serviceList->Query( status );
+    wxString title( compName.c_str(), wxConvUTF8 );
+
+    ParamsDlg * params = new ParamsDlg( networkFrame );
+    params->SetIsBlock( false );
+    //params->SetSize( dialogSize );
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
+    std::vector< std::string > temp_vector;
+    pair->GetData( temp_vector );
+
+    params->SetCompName( compName.c_str() );
+    params->SetServiceList( serviceList );
+    params->SetDialogType( "output" );
+    for( size_t i = 0; i < temp_vector.size(); i++ )
+        params->AppendList( temp_vector[i].c_str() );
+    params->ShowModal();
+}
+/////////////////////////////////////////////////////
+void Link::OnDelLinkCon( wxCommandEvent& event )
+{
+    UILINK_CHECKID( event )
+
+    int answer =
+        wxMessageBox( _( "Do you really want to delete this link connector?" ),
+                      _( "Confirmation" ), wxYES_NO );
+
+    if( answer != wxYES )
     {
         return;
     }
 
     std::vector<wxPoint>::iterator iter;
     int i;
-    for( iter=cons.begin(), i=0; iter!=cons.end(); i++)
-    {    
-        if ( i == m_selLinkCon )
+    for( iter = cons.begin(), i = 0; iter != cons.end(); i++ )
+    {
+        if( i == m_selLinkCon )
         {
             iter = cons.erase( iter );
             CalcLinkPoly();
-            m_selLinkCon=-1;
+            m_selLinkCon = -1;
             break;
         }
         else
@@ -569,67 +569,67 @@ void Link::OnDelLinkCon(wxCommandEvent& event )
         }
     }
 
-    networkFrame->Refresh(true);
+    networkFrame->Refresh( true );
 
     ///Update the link
     GetLink();
 }
 /////////////////////////////////////////////////////
-void Link::OnDelLink(wxCommandEvent& event )
+void Link::OnDelLink( wxCommandEvent& event )
 {
     UILINK_CHECKID( event )
-    
-    int answer=wxMessageBox(_("Do you really want to delete this link?"), _("Confirmation"), wxYES_NO);
-    if (answer!=wxYES)
+
+    int answer = wxMessageBox( _( "Do you really want to delete this link?" ), _( "Confirmation" ), wxYES_NO );
+    if( answer != wxYES )
         return;
 
     networkFrame->RemoveEventHandler( this );
-    networkFrame->Refresh(true);
+    networkFrame->Refresh( true );
     //Post this so that network can delete "this" out of the vector of links
     event.SetClientData( &m_uuid );
     ::wxPostEvent( networkFrame, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::OnAddLinkCon(wxCommandEvent& event )
-{  
+void Link::OnAddLinkCon( wxCommandEvent& event )
+{
     UILINK_CHECKID( event )
-		
-	ves::conductor::util::Polygon linkline;
-    *(linkline.GetPolygon()) = cons;
-    
-	ves::conductor::util::Polygon Near;
+
+    ves::conductor::util::Polygon linkline;
+    *( linkline.GetPolygon() ) = cons;
+
+    ves::conductor::util::Polygon Near;
     linkline.nearpnt( action_point, Near );
-    
+
     size_t i;
-    for ( i=0; i < linkline.GetNumberOfPoints()-1; i++)
-    {    
-        if (  ( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x && 
-                linkline.GetPoint( i+1 )->x >= Near.GetPoint( 0 )->x ) ||
-              ( linkline.GetPoint( i )->x >= Near.GetPoint( 0 )->x && 
-                linkline.GetPoint( i+1 )->x <= Near.GetPoint( 0 )->x )
-              )
+    for( i = 0; i < linkline.GetNumberOfPoints() - 1; i++ )
+    {
+        if (( linkline.GetPoint( i )->x <= Near.GetPoint( 0 )->x &&
+                linkline.GetPoint( i + 1 )->x >= Near.GetPoint( 0 )->x ) ||
+                ( linkline.GetPoint( i )->x >= Near.GetPoint( 0 )->x &&
+                  linkline.GetPoint( i + 1 )->x <= Near.GetPoint( 0 )->x )
+           )
         {
             break;
         }
     }
-    
-	ves::conductor::util::Polygon temp;
-    for( size_t j=0; j < linkline.GetNumberOfPoints(); ++j )
+
+    ves::conductor::util::Polygon temp;
+    for( size_t j = 0; j < linkline.GetNumberOfPoints(); ++j )
     {
-        temp.SetPoint( *(linkline.GetPoint( j )) );
+        temp.SetPoint( *( linkline.GetPoint( j ) ) );
         //i can never be the last point
         if( j == i )
-        {    
-            temp.SetPoint( *(Near.GetPoint( 0 )) );
+        {
+            temp.SetPoint( *( Near.GetPoint( 0 ) ) );
         }
     }
-    
-    cons = *(temp.GetPolygon());
+
+    cons = *( temp.GetPolygon() );
     CalcLinkPoly();
     m_selLinkCon = -1;
-    
-    networkFrame->Refresh(true);
-    
+
+    networkFrame->Refresh( true );
+
     ///Update the link
     GetLink();
 }
@@ -643,71 +643,71 @@ void Link::OnMRightDown( wxMouseEvent &event )
     wxPoint evtpos = event.GetLogicalPosition( dc );
     action_point = evtpos;
     //If this is not the plugin then move on to the next one
-    if ( !SelectLink( evtpos.x, evtpos.y ) )
+    if( !SelectLink( evtpos.x, evtpos.y ) )
     {
         event.Skip();
         return;
     }
-	highlightFlag = true;
-	networkFrame->Refresh();
+    highlightFlag = true;
+    networkFrame->Refresh();
 
     //send the active id so that each plugin knows what to do
     wxUpdateUIEvent setActiveLinkName;
     setActiveLinkName.SetClientData( &m_uuid );
     setActiveLinkName.SetId( SET_ACTIVE_LINK );
     networkFrame->GetEventHandler()->ProcessEvent( setActiveLinkName );
-    
+
     wxString menuName = linkName + wxString( " Menu", wxConvUTF8 );
     wxMenu the_pop_menu( menuName );
-    
-    the_pop_menu.Append(SHOW_LINK_CONT, _("Show Link Content") );
-    the_pop_menu.Append(ADD_LINK_CON, _("Add Link Connector") );
-    the_pop_menu.Append(DEL_LINK_CON, _("Delete Link Connector") );
-    the_pop_menu.Append(DEL_LINK, _("Delete Link") );
 
-    the_pop_menu.Enable(ADD_LINK_CON, false);
-    the_pop_menu.Enable(DEL_LINK_CON, false);
-    the_pop_menu.Enable(DEL_LINK, false);
+    the_pop_menu.Append( SHOW_LINK_CONT, _( "Show Link Content" ) );
+    the_pop_menu.Append( ADD_LINK_CON, _( "Add Link Connector" ) );
+    the_pop_menu.Append( DEL_LINK_CON, _( "Delete Link Connector" ) );
+    the_pop_menu.Append( DEL_LINK, _( "Delete Link" ) );
 
-    the_pop_menu.Enable(SHOW_LINK_CONT, false);
+    the_pop_menu.Enable( ADD_LINK_CON, false );
+    the_pop_menu.Enable( DEL_LINK_CON, false );
+    the_pop_menu.Enable( DEL_LINK, false );
+
+    the_pop_menu.Enable( SHOW_LINK_CONT, false );
 
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append(SHOW_LINK_NAME, _("Aspen Name") );
-    aspen_menu->Enable(SHOW_LINK_NAME, true);
-    aspen_menu->Append(LINK_INPUTS, _("Query Inputs") );
-    aspen_menu->Enable(LINK_INPUTS, true);
-    aspen_menu->Append(LINK_OUTPUTS, _("Query Outputs") );
-    aspen_menu->Enable(LINK_OUTPUTS, true);
-    the_pop_menu.Append( LINK_MENU,   _("Aspen"), aspen_menu, _("Used in conjunction with Aspen") );
-    the_pop_menu.Enable(LINK_MENU, false);
+    aspen_menu->Append( SHOW_LINK_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( SHOW_LINK_NAME, true );
+    aspen_menu->Append( LINK_INPUTS, _( "Query Inputs" ) );
+    aspen_menu->Enable( LINK_INPUTS, true );
+    aspen_menu->Append( LINK_OUTPUTS, _( "Query Outputs" ) );
+    aspen_menu->Enable( LINK_OUTPUTS, true );
+    the_pop_menu.Append( LINK_MENU,   _( "Aspen" ), aspen_menu, _( "Used in conjunction with Aspen" ) );
+    the_pop_menu.Enable( LINK_MENU, false );
 
     m_selLinkCon = -1;
-    for ( size_t i=0; i< GetPoints()->size(); i++)
-    {    
-        if( computenorm( evtpos, *(GetPoint( i )) )<=3)
+    for( size_t i = 0; i < GetPoints()->size(); i++ )
+    {
+        if( computenorm( evtpos, *( GetPoint( i ) ) ) <= 3 )
         {
-            m_selLinkCon=i;
+            m_selLinkCon = i;
             break;
         }
     }
 
-    the_pop_menu.Enable(DEL_LINK, true);
+    the_pop_menu.Enable( DEL_LINK, true );
     //the_pop_menu.Enable(SHOW_LINK_CONT, true);
-    if (m_selLinkCon>=0) 
-        the_pop_menu.Enable(DEL_LINK_CON, true);
+    if( m_selLinkCon >= 0 )
+        the_pop_menu.Enable( DEL_LINK_CON, true );
     else
-        the_pop_menu.Enable(ADD_LINK_CON, true);
-    
-    the_pop_menu.Enable(LINK_MENU, true);
+        the_pop_menu.Enable( ADD_LINK_CON, true );
+
+    the_pop_menu.Enable( LINK_MENU, true );
     //the_pop_menu.SetClientData( &id );
-    networkFrame->PopupMenu(&the_pop_menu, event.GetPosition());
+    networkFrame->PopupMenu( &the_pop_menu, event.GetPosition() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool Link::SelectLink(int x, int y)
+bool Link::SelectLink( int x, int y )
 {
     wxPoint temp;
-    temp.x = x; 
+    temp.x = x;
     temp.y = y;
     if( GetPolygon()->inside( temp ) )
     {
@@ -718,7 +718,7 @@ bool Link::SelectLink(int x, int y)
 ////////////////////////////////////////////////////////////////////////////////
 double Link::computenorm( wxPoint pt1, wxPoint pt2 )
 {
-    return sqrt(double((pt1.x - pt2.x)*(pt1.x - pt2.x) + (pt1.y - pt2.y)*(pt1.y - pt2.y)));
+    return sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetDCScale( std::pair< double, double >* scale )
@@ -771,30 +771,30 @@ void Link::DrawLink( wxDC* dc )
 void Link::SetLink( ves::open::xml::model::LinkWeakPtr inputLink )
 {
     m_veLink = inputLink;
-    
-    SetFromPort( *(m_veLink->GetFromPort()) );
-    SetToPort( *(m_veLink->GetToPort()) );
-    
+
+    SetFromPort( *( m_veLink->GetFromPort() ) );
+    SetToPort( *( m_veLink->GetToPort() ) );
+
     long moduleID;
     m_veLink->GetFromModule()->GetData( moduleID );
     SetFromModule( moduleID );
     m_veLink->GetToModule()->GetData( moduleID );
     SetToModule( moduleID );
-    
+
     size_t numberOfPoints = m_veLink->GetNumberOfLinkPoints();
     for( size_t j = 0; j < numberOfPoints; ++j )
     {
-        std::pair< unsigned int, unsigned int > rawPoint = 
+        std::pair< unsigned int, unsigned int > rawPoint =
             m_veLink->GetLinkPoint( j )->GetPoint();
         wxPoint point;
         point.x = rawPoint.first;
         point.y = rawPoint.second;
         SetPoint( &point );
         /*if( point.x > maxX )
-        {	
+        { 
             maxX = point.x + 100;
         }
-        
+
         if( point.y > maxY )
         {
             maxY = point.y + 100;
@@ -803,8 +803,8 @@ void Link::SetLink( ves::open::xml::model::LinkWeakPtr inputLink )
     // Create the polygon for links
     CalcLinkPoly();
     parentModel = m_veLink->GetParentModel();
-    SetName( wxString( m_veLink->GetLinkName().c_str(), wxConvUTF8) );
-    SetUUID( m_veLink->GetID() );    
+    SetName( wxString( m_veLink->GetLinkName().c_str(), wxConvUTF8 ) );
+    SetUUID( m_veLink->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::model::LinkWeakPtr Link::GetLink()
@@ -821,11 +821,11 @@ ves::open::xml::model::LinkWeakPtr Link::GetLink()
     //Try to store link cons,
     //link cons are (x,y) wxpoint
     //here I store x in one vector and y in the other
-    for ( size_t j = 0; j < GetNumberOfPoints(); ++j )
+    for( size_t j = 0; j < GetNumberOfPoints(); ++j )
     {
-        m_veLink->GetLinkPoint( j )->SetPoint( 
-            std::pair< unsigned int, unsigned int >( 
-            GetPoint( j )->x, GetPoint( j )->y ) );
+        m_veLink->GetLinkPoint( j )->SetPoint(
+            std::pair< unsigned int, unsigned int >(
+                GetPoint( j )->x, GetPoint( j )->y ) );
     }
     return m_veLink;
 }

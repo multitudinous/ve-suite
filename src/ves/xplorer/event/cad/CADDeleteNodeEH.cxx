@@ -51,65 +51,61 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADDeleteNodeEventHandler::CADDeleteNodeEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADDeleteNodeEventHandler::CADDeleteNodeEventHandler(const CADDeleteNodeEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADDeleteNodeEventHandler::CADDeleteNodeEventHandler( const CADDeleteNodeEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADDeleteNodeEventHandler::~CADDeleteNodeEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADDeleteNodeEventHandler& CADDeleteNodeEventHandler::operator=(const CADDeleteNodeEventHandler& rhs)
+CADDeleteNodeEventHandler& CADDeleteNodeEventHandler::operator=( const CADDeleteNodeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADDeleteNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADDeleteNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr parentID = command->GetDataValuePair("Parent ID");
-      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+    try
+    {
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr parentID = command->GetDataValuePair( "Parent ID" );
+        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
 
-      //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
-      std::cout<<"---Deleting node---"<<std::endl;
-      ves::xplorer::scenegraph::DCS* parentAssembly = 0;
-      parentAssembly = m_cadHandler->GetAssembly(parentID->GetDataString());
+        //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
+        std::cout << "---Deleting node---" << std::endl;
+        ves::xplorer::scenegraph::DCS* parentAssembly = 0;
+        parentAssembly = m_cadHandler->GetAssembly( parentID->GetDataString() );
 
-      //This assumes the part/assembly isn't there already
-      if(nodeType->GetDataString() == std::string("Assembly"))
-      {
-         parentAssembly->RemoveChild(m_cadHandler->GetAssembly(nodeID->GetDataString()));
-      }
-      else if(nodeType->GetDataString() == std::string("Part"))
-      {
-         parentAssembly->RemoveChild(m_cadHandler->GetPart(nodeID->GetDataString())->GetDCS());
-      }
-      else if(nodeType->GetDataString() == std::string("Clone"))
-      {
-         parentAssembly->RemoveChild(m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph());
-      }
-      //Need to also remove the node from ModelCADHandler node maps
-      m_cadHandler->RemoveNode(nodeID->GetDataString(),nodeType->GetDataString());
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!"<<std::endl;
-      std::cout<<"---Invalid node specified to remove!---"<<std::endl;
-   }
+        //This assumes the part/assembly isn't there already
+        if( nodeType->GetDataString() == std::string( "Assembly" ) )
+        {
+            parentAssembly->RemoveChild( m_cadHandler->GetAssembly( nodeID->GetDataString() ) );
+        }
+        else if( nodeType->GetDataString() == std::string( "Part" ) )
+        {
+            parentAssembly->RemoveChild( m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS() );
+        }
+        else if( nodeType->GetDataString() == std::string( "Clone" ) )
+        {
+            parentAssembly->RemoveChild( m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph() );
+        }
+        //Need to also remove the node from ModelCADHandler node maps
+        m_cadHandler->RemoveNode( nodeID->GetDataString(), nodeType->GetDataString() );
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "---Invalid node specified to remove!---" << std::endl;
+    }
 }

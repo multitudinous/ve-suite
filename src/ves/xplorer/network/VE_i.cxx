@@ -37,188 +37,187 @@
 using namespace ves::xplorer::network;
 
 // Implementation skeleton constructor
-Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
-  : executive_(Body::Executive::_duplicate(exec))
-  {
-    UIName_=name;
-  }
-  
+Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
+        : executive_( Body::Executive::_duplicate( exec ) )
+{
+    UIName_ = name;
+}
+
 // Implementation skeleton destructor
-Body_UI_i::~Body_UI_i (void)
-  {
-  }
-  
-// This returns the latest network string 
-// This is here so that the drawing sequence in vrjuggler 
+Body_UI_i::~Body_UI_i( void )
+{}
+
+// This returns the latest network string
+// This is here so that the drawing sequence in vrjuggler
 // doesn't thread lock with executive CORBA calls
 std::string Body_UI_i::GetNetworkString( void )
 {
-   vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
-   std::string temp;
-   temp.clear();
-   if ( !networkStringBuffer.empty() )
-   {
-      std::vector< std::string >::iterator iter;
-      iter = networkStringBuffer.begin();
-      temp = (*iter);
-      networkStringBuffer.erase( iter );
-   }
-   return temp;
+    vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
+    std::string temp;
+    temp.clear();
+    if( !networkStringBuffer.empty() )
+    {
+        std::vector< std::string >::iterator iter;
+        iter = networkStringBuffer.begin();
+        temp = ( *iter );
+        networkStringBuffer.erase( iter );
+    }
+    return temp;
 }
 
 // Complimentary function to the above function
 void Body_UI_i::SetNetworkString( std::string tempString )
 {
-   vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
-   networkStringBuffer.push_back( tempString );
+    vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
+    networkStringBuffer.push_back( tempString );
 }
 
 bool Body_UI_i::GetNetworkFlag( void )
 {
-   vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
-   if ( networkStringBuffer.empty() )
-   {
-      return false;
-   }
-   else
-   {
-      return true;
-   }
+    vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
+    if( networkStringBuffer.empty() )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 std::string Body_UI_i::GetStatusString( void )
 {
-   vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
-   std::string temp;
-   temp.clear();
-   if ( !statusStringBuffer.empty() )
-   {
-      std::vector< std::string >::iterator iter;
-      iter = statusStringBuffer.begin();
-      temp = (*iter);
-      statusStringBuffer.erase( iter );
-   }
-   return temp;
+    vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+    std::string temp;
+    temp.clear();
+    if( !statusStringBuffer.empty() )
+    {
+        std::vector< std::string >::iterator iter;
+        iter = statusStringBuffer.begin();
+        temp = ( *iter );
+        statusStringBuffer.erase( iter );
+    }
+    return temp;
 }
 
-void Body_UI_i::UpdateNetwork (
+void Body_UI_i::UpdateNetwork(
     const char * network
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (network!=NULL)
-      std::cout<<network<<std::endl;
-    std::cout<<UIName_<<" :UpdateNetwork called"<<std::endl;
-  }
-  
-void Body_UI_i::UpdateModuleUI (
+    if( network != NULL )
+        std::cout << network << std::endl;
+    std::cout << UIName_ << " :UpdateNetwork called" << std::endl;
+}
+
+void Body_UI_i::UpdateModuleUI(
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (msg!=NULL)
-      std::cout<<module_id<<" : "<<msg<<std::endl;
-    std::cout<<UIName_<<" :UpdateModuleUI called"<<std::endl;
-  }
-  
-void Body_UI_i::UpdateModuleResult (
+    if( msg != NULL )
+        std::cout << module_id << " : " << msg << std::endl;
+    std::cout << UIName_ << " :UpdateModuleUI called" << std::endl;
+}
+
+void Body_UI_i::UpdateModuleResult(
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (msg!=NULL)
-      std::cout<<module_id<<" : "<<msg<<std::endl;
-    std::cout<<UIName_<<" :UpdateModuleResult called"<<std::endl;
-  }
-  
-void Body_UI_i::UpdateLinkContent (
+    if( msg != NULL )
+        std::cout << module_id << " : " << msg << std::endl;
+    std::cout << UIName_ << " :UpdateModuleResult called" << std::endl;
+}
+
+void Body_UI_i::UpdateLinkContent(
     CORBA::Long id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (msg!=NULL)
+    if( msg != NULL )
     {
-        std::cout<<id<<" : "<<msg<<std::endl;
+        std::cout << id << " : " << msg << std::endl;
     }
-    std::cout<<UIName_<<" :UpdateLinkContent called"<<std::endl;
-  }
-  
-void Body_UI_i::Raise (
+    std::cout << UIName_ << " :UpdateLinkContent called" << std::endl;
+}
+
+void Body_UI_i::Raise(
     const char * notification
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
-      // Add your implementation here
-      if ( notification == NULL )
-      {
-         return;
-      }
-      
-      std::cout << "|\tNotification Message : " << notification
-                  << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
-      
-      std::string temp( notification );
-      if ( !temp.compare(0,30,"VES Network Execution Complete") ||
-           !temp.compare(0,34,"Successfully Scheduled VES Network" ) ||
-           //!temp.compare(0,22,"Connected to Executive") ||
-           !temp.compare(0,21,"Error in VES Schedule") )
-      {
-         GetNetworkFromCE();
-      }
-      else
-      {
-         std::cout << "|\tNot Going To Do Anything" << std::endl;
-      }
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
+    // Add your implementation here
+    if( notification == NULL )
+    {
+        return;
+    }
 
-      {
-          vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
-          statusStringBuffer.push_back( std::string( notification ) );
-      }
-      
-      std::cout << "|\tEnd Raise " << std::endl;  
-   }
-////////////////////////////////////////////////////////////////////////////////  
+    std::cout << "|\tNotification Message : " << notification
+    << "|\tModule Being Called : " << UIName_ << " : Raise called" << std::endl;
+
+    std::string temp( notification );
+    if( !temp.compare( 0, 30, "VES Network Execution Complete" ) ||
+            !temp.compare( 0, 34, "Successfully Scheduled VES Network" ) ||
+            //!temp.compare(0,22,"Connected to Executive") ||
+            !temp.compare( 0, 21, "Error in VES Schedule" ) )
+    {
+        GetNetworkFromCE();
+    }
+    else
+    {
+        std::cout << "|\tNot Going To Do Anything" << std::endl;
+    }
+
+    {
+        vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+        statusStringBuffer.push_back( std::string( notification ) );
+    }
+
+    std::cout << "|\tEnd Raise " << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::GetNetworkFromCE( void )
 {
-    try 
-    { 
+    try
+    {
         const char* tempNetwork = executive_->GetNetwork( UIName_.c_str() );
         std::string network( tempNetwork );
-        if ( !network.empty() )
+        if( !network.empty() )
         {
             this->SetNetworkString( network );
             std::cout << "|\tGoing To Do Something" << std::endl;
         }
         delete tempNetwork;
-    } 
-    catch (CORBA::Exception &) 
+    }
+    catch ( CORBA::Exception & )
     {
         std::cerr << "Bod_UI_i::GetNetworkFromCE : no exec found! " << std::endl;
     }

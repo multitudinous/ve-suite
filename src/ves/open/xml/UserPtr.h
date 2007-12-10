@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML:UserPtr.  To get the full 
+ * VE_XML:UserPtr.  To get the full
  * declaration of VE_XML::UserPtr
  * VE_Open/XML/User.h must be included, too.
  */
@@ -50,12 +50,12 @@ namespace open
 {
 namespace xml
 {
-   class User;
-   /// Typedef for a SmartPtr type for the User.
-   typedef ves::util::ClassPtrDef<User>::type  UserPtr;
-   typedef ves::util::SharedPtrDef<User>::type UserSharedPtr;
-   typedef ves::util::WeakPtrDef<User>::type   UserWeakPtr;
-   typedef ves::util::ScopedPtrDef<User>::type UserScopedPtr;
+class User;
+/// Typedef for a SmartPtr type for the User.
+typedef ves::util::ClassPtrDef<User>::type  UserPtr;
+typedef ves::util::SharedPtrDef<User>::type UserSharedPtr;
+typedef ves::util::WeakPtrDef<User>::type   UserWeakPtr;
+typedef ves::util::ScopedPtrDef<User>::type UserScopedPtr;
 }
 }
 }

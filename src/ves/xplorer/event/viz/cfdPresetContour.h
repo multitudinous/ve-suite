@@ -42,7 +42,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCuttingPlane;
+class cfdCuttingPlane;
 }
 }
 
@@ -54,7 +54,7 @@ namespace xplorer
 cfdPresetContour API
 */
 /*!\class ves::xplorer::cfdPresetContour
-* A class that takes input data set(s) and generates a 
+* A class that takes input data set(s) and generates a
 * cutting plane based on the position and direction
 * selected. Update member function will update
 * the plane position and direction.
@@ -62,14 +62,14 @@ cfdPresetContour API
 class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase
 {
 public:
-   ///Initialize the pipeline, (and set the number of cutting plane increments for blue menu)
-   ///\param xyx
-   ///\param numSteps
-   cfdPresetContour( const int xyz, const int numSteps = 10 );
-   ///Destructor
-   virtual ~cfdPresetContour();
-   ///Update
-   virtual void Update( void );
+    ///Initialize the pipeline, (and set the number of cutting plane increments for blue menu)
+    ///\param xyx
+    ///\param numSteps
+    cfdPresetContour( const int xyz, const int numSteps = 10 );
+    ///Destructor
+    virtual ~cfdPresetContour();
+    ///Update
+    virtual void Update( void );
 
 private:
 };

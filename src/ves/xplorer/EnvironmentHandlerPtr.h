@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class EnvironmentHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<EnvironmentHandler>::type  EnvironmentHandlerPtr;
-   typedef ves::util::SharedPtrDef<EnvironmentHandler>::type EnvironmentHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<EnvironmentHandler>::type   EnvironmentHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<EnvironmentHandler>::type EnvironmentHandlerScopedPtr;
+class EnvironmentHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<EnvironmentHandler>::type  EnvironmentHandlerPtr;
+typedef ves::util::SharedPtrDef<EnvironmentHandler>::type EnvironmentHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<EnvironmentHandler>::type   EnvironmentHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<EnvironmentHandler>::type EnvironmentHandlerScopedPtr;
 }
 }
 #endif

@@ -53,34 +53,34 @@ namespace xplorer
 cfdMomentum API
 */
 /*!\class ves::xplorer::cfdMomentum
-*   A class to takes input data set(s) and generates a 
-*   cutting planes of momentum profile based on the position 
+*   A class to takes input data set(s) and generates a
+*   cutting planes of momentum profile based on the position
 *   and direction selected. Update member function will be update
 *   the position and direction as each "Update" being called.
 */
 class VE_XPLORER_EXPORTS cfdMomentum : public cfdContourBase
 {
 public:
-   ///Initialize the VTK objects and pipeline.
-   cfdMomentum( void );
-   ///Destructor
-   virtual ~cfdMomentum( void );
+    ///Initialize the VTK objects and pipeline.
+    cfdMomentum( void );
+    ///Destructor
+    virtual ~cfdMomentum( void );
 
-   ///Update the position, x, and normal direction to cut.
-   ///Output a updated pfGeoSet. 
-   virtual void Update( void );
+    ///Update the position, x, and normal direction to cut.
+    ///Output a updated pfGeoSet.
+    virtual void Update( void );
 
-private:  
+private:
 #ifdef USE_OMP
-   vtkPlane *plane[MAX_MOMENTUM];///<Momenutum plane
-   vtkCutter *cutter[MAX_MOMENTUM];///<Momenutum plane cutter
-   vtkAppendPolyData *append;///<append to polydata
-   float nData;///<number of datasets
+    vtkPlane *plane[MAX_MOMENTUM];///<Momenutum plane
+    vtkCutter *cutter[MAX_MOMENTUM];///<Momenutum plane cutter
+    vtkAppendPolyData *append;///<append to polydata
+    float nData;///<number of datasets
 #else
-   vtkPlane *plane;///<plane for vtk
-   vtkCutter *cutter;///<cutter for vtk
+    vtkPlane *plane;///<plane for vtk
+    vtkCutter *cutter;///<cutter for vtk
 #endif
-   vtkWarpVector *warper;///<warper for vtk
+    vtkWarpVector *warper;///<warper for vtk
 };
 }
 }

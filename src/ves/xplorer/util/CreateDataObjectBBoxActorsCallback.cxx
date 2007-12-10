@@ -42,37 +42,35 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////////////////////
 CreateDataObjectBBoxActorsCallback::CreateDataObjectBBoxActorsCallback()
-{
-  
-}
+{}
 ///////////////////////////////////////////////////////////////////////
 CreateDataObjectBBoxActorsCallback::~CreateDataObjectBBoxActorsCallback()
 {
     size_t nActors = m_bboxActors.size();
-    for(size_t i = 0; i < nActors; ++i)
+    for( size_t i = 0; i < nActors; ++i )
     {
-        m_bboxActors.at(i)->Delete();
+        m_bboxActors.at( i )->Delete();
     }
     m_bboxActors.clear();
 }
 /////////////////////////////////////////////////////////////////////////////
-void CreateDataObjectBBoxActorsCallback::OperateOnDataset(vtkDataSet* dataset)
+void CreateDataObjectBBoxActorsCallback::OperateOnDataset( vtkDataSet* dataset )
 {
     vtkOutlineFilter* outlineData = vtkOutlineFilter::New();
-   
+
     outlineData->SetInput( dataset );
-   
+
     vtkPolyDataMapper* mapOutline = vtkPolyDataMapper::New();
     mapOutline->SetInput( outlineData->GetOutput() );
-   
+
     m_bboxActors.push_back( vtkActor::New() );
 
     m_bboxActors.back()->SetMapper( mapOutline );
-    m_bboxActors.back()->GetProperty()->SetColor(1,0,0);
-   
+    m_bboxActors.back()->GetProperty()->SetColor( 1, 0, 0 );
+
     outlineData->Delete();
     mapOutline->Delete();
-    
+
 }
 ////////////////////////////////////////////////////////////////////////////
 std::vector< vtkActor* > CreateDataObjectBBoxActorsCallback::GetBBoxActors()

@@ -56,46 +56,46 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::DeviceModeEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::DeviceModeEventHandler( const DeviceModeEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler::~DeviceModeEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceModeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceModeEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command = dynamic_cast< Command* >( veXMLObject );
-   
-   std::string mode;
-   command->GetDataValuePair( "Mode" )->GetData( mode );
+    Command* command = dynamic_cast< Command* >( veXMLObject );
 
-   ves::xplorer::DeviceHandler::instance()->SetDeviceMode( mode );
+    std::string mode;
+    command->GetDataValuePair( "Mode" )->GetData( mode );
+
+    ves::xplorer::DeviceHandler::instance()->SetDeviceMode( mode );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceModeEventHandler& DeviceModeEventHandler::operator=( const DeviceModeEventHandler& rhs )
 {
-   if( this != &rhs )
-   {
-      ves::xplorer::event::EventHandler::operator=( rhs );
-   }
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
 
-   return *this;
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

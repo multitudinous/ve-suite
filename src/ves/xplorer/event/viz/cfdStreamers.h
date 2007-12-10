@@ -52,7 +52,7 @@ cfdStreamers API
 */
 
 /*!\class ves::xplorer::cfdStreamers
-*   A class to takes input data set(s) and generates streamlines 
+*   A class to takes input data set(s) and generates streamlines
 *   based on the active glyph. Update member function will update
 *   the position and direction.
 */
@@ -94,7 +94,7 @@ private:
     vtkStreamTracer* streamTracer;
     vtkTubeFilter* tubeFilter;
     vtkPolyDataMapper* mapper;
-    vtkRungeKutta45* integ;  
+    vtkRungeKutta45* integ;
     vtkPolyData* seedPoints;///>PolyData for the seed points
     vtkPoints* points;///>Seed Points raw data
 

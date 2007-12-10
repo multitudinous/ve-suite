@@ -46,37 +46,37 @@ class Connection;
 class Module;
 
 ///Port base class
-class VE_CE_UTILS_EXPORTS Port 
+class VE_CE_UTILS_EXPORTS Port
 {
 public:
-   ///??
-   Port( int, Module* );
-   ///??
-   Port( const Port& );
-   virtual ~Port();
+    ///??
+    Port( int, Module* );
+    ///??
+    Port( const Port& );
+    virtual ~Port();
 
-   ///??
-   void copy (const Port&);
+    ///??
+    void copy( const Port& );
 
-   ///??
-   int         nconnections   ();
-   ///??
-   Connection* connection     (int);
-   ///??
-   void        add_connection (Connection*);
+    ///??
+    int         nconnections();
+    ///??
+    Connection* connection( int );
+    ///??
+    void        add_connection( Connection* );
 
-   ///??
-   Module* get_module( void );
-   ///Get the port id
-   int get_id( void );
+    ///??
+    Module* get_module( void );
+    ///Get the port id
+    int get_id( void );
 
 protected:
-   ///??
-   std::vector<Connection*> _connections;
-   /// Module this port is connected to
-   Module* _module;
-   /// id of the port
-   int _id;
+    ///??
+    std::vector<Connection*> _connections;
+    /// Module this port is connected to
+    Module* _module;
+    /// id of the port
+    int _id;
 };
 }
 }

@@ -60,11 +60,11 @@ namespace xml
 {
 namespace shader
 {
-    class Uniform;
+class Uniform;
 }
 namespace cad
 {
-    class CADAttribute;
+class CADAttribute;
 }
 }
 }
@@ -79,60 +79,65 @@ namespace scenegraph
 namespace util
 {
 #ifdef _OSG
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute : public osg::StateSet{
+class VE_SCENEGRAPH_UTILS_EXPORTS Attribute : public osg::StateSet
+{
 #elif _PERFORMER
-class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public pfGeoState{
+class VE_SCENEGRAPH_UTILS_EXPORTS Attribute: public pfGeoState
+{
 #endif
-public:   
-   ///Constructor
-   Attribute();
+public:
+    ///Constructor
+    Attribute();
 #ifdef _OSG
-   ///Copy Constructor for OpenSceneGraph object
-   Attribute(const Attribute& pbQuad,
-             const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
+    ///Copy Constructor for OpenSceneGraph object
+    Attribute( const Attribute& pbQuad,
+               const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-   ///OSG defines this macro
-   META_Object(ves::xplorer::scenegraph::util,Attribute);
-   Attribute& operator=(const osg::StateSet& rhs);
+    ///OSG defines this macro
+    META_Object( ves::xplorer::scenegraph::util, Attribute );
+    Attribute& operator=( const osg::StateSet& rhs );
 #elif _PERFORMER
-    Attribute(const Attribute& cfdSeq);
+    Attribute( const Attribute& cfdSeq );
     //to make this a performer class
     static void init();
 
-    static pfType* getClassType( void ){ return _classType; }
-    Attribute& operator=(const Attribute& rhs);
-    Attribute& operator=(const pfGeoState& rhs);
+    static pfType* getClassType( void )
+    {
+        return _classType;
+    }
+    Attribute& operator=( const Attribute& rhs );
+    Attribute& operator=( const pfGeoState& rhs );
 
-#endif 
-   
-   ///Destructor
-   virtual ~Attribute();
+#endif
 
-   ///Create a StateSet from a CADAttribute.
-   ///\param attribute The CADAttribute.
-   void CreateStateSetFromAttribute(ves::open::xml::cad::CADAttribute* attribute);
+    ///Destructor
+    virtual ~Attribute();
 
-   ///Sets this stateset to be the transparency shader.
-   void CreateTransparencyStateSet();
+    ///Create a StateSet from a CADAttribute.
+    ///\param attribute The CADAttribute.
+    void CreateStateSetFromAttribute( ves::open::xml::cad::CADAttribute* attribute );
 
-   ///Update a Uniform value.
-   ///\param uniformToUpdate The new uniform information.
-   void UpdateShaderUniform(ves::open::xml::shader::Uniform* uniformToUpdate);
+    ///Sets this stateset to be the transparency shader.
+    void CreateTransparencyStateSet();
 
-   ///Update a the components of a CADMaterial
-   ///\param componentName The name of the component to update
-   ///\param values The new values 
-   ///\param face The material face 
-   void UpdateMaterial(std::string componentName,std::string face,std::vector<double> values);
+    ///Update a Uniform value.
+    ///\param uniformToUpdate The new uniform information.
+    void UpdateShaderUniform( ves::open::xml::shader::Uniform* uniformToUpdate );
 
-   ///Update a the modes of a CADMaterial
-   ///\param type The mode type\n
-   ///Color and Face are valid values. 
-   ///\param mode The mode to set 
-   void UpdateMaterialMode(std::string type,std::string mode);
+    ///Update a the components of a CADMaterial
+    ///\param componentName The name of the component to update
+    ///\param values The new values
+    ///\param face The material face
+    void UpdateMaterial( std::string componentName, std::string face, std::vector<double> values );
+
+    ///Update a the modes of a CADMaterial
+    ///\param type The mode type\n
+    ///Color and Face are valid values.
+    ///\param mode The mode to set
+    void UpdateMaterialMode( std::string type, std::string mode );
 protected:
 #ifdef _PERFORMER
-   static pfType* _classType;
+    static pfType* _classType;
 #endif
 
 };

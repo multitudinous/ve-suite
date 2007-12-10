@@ -42,12 +42,12 @@ using namespace ves::open::xml::model;
 //Constructor                                     //
 ////////////////////////////////////////////////////
 Point::Point()
-:XMLObject()
+        : XMLObject()
 {
     point.first = 0;
     point.second = 0;
-    SetObjectType("Point");
-    SetObjectNamespace("Model");
+    SetObjectType( "Point" );
+    SetObjectNamespace( "Model" );
 }
 /////////////////////////////
 //Destructor               //
@@ -58,17 +58,17 @@ Point::~Point()
 }
 ///////////////////////////////////////////
 Point::Point( const Point& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
     point = input.point;
 }
 /////////////////////////////////////////////////////
-Point& Point::operator=( const Point& input)
+Point& Point::operator=( const Point& input )
 {
     if( this != &input )
     {
         //biv-- make sure to call the parent =
-        XMLObject::operator =(input);
+        XMLObject::operator =( input );
         point = input.point;
     }
     return *this;
@@ -92,7 +92,7 @@ void Point::_updateVEElement( std::string input )
     SetAttribute( "yLocation", point.second );
 }
 ////////////////////////////////////////////////////////////
-void Point::SetObjectFromXMLData(DOMNode* xmlInput)
+void Point::SetObjectFromXMLData( DOMNode* xmlInput )
 {
     //TODO:fill in the values for the double array
     //this is currently maxed out at 4 in the schema but
@@ -100,16 +100,16 @@ void Point::SetObjectFromXMLData(DOMNode* xmlInput)
     //has to be at least 2 elements according to the schema
     //_nElements = xerces->();
     DOMElement* currentElement = 0;
-    if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
+    if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
     {
         currentElement = static_cast< DOMElement* >( xmlInput );
     }
-   
+
     if( !currentElement )
-    { 
-        std::cerr << " ERROR : Point::SetObjectFromXMLData :" << 
-            "This node has no children which means there is probably a problem." 
-            << std::endl;
+    {
+        std::cerr << " ERROR : Point::SetObjectFromXMLData :" <<
+        "This node has no children which means there is probably a problem."
+        << std::endl;
     }
 
     // Let's get the X location
@@ -121,7 +121,7 @@ void Point::SetObjectFromXMLData(DOMNode* xmlInput)
     }
     else
     {
-        GetAttribute( currentElement, "xLocation", point.first );  
+        GetAttribute( currentElement, "xLocation", point.first );
     }
 
     // Let's get the Y location
@@ -133,7 +133,7 @@ void Point::SetObjectFromXMLData(DOMNode* xmlInput)
     }
     else
     {
-        GetAttribute( currentElement, "yLocation", point.second );  
+        GetAttribute( currentElement, "yLocation", point.second );
     }
 }
 

@@ -37,7 +37,7 @@
 */
 
 /*!\class SoundsPane
-* 
+*
 */
 
 // --- wxWidgets Includes --- //
@@ -71,8 +71,11 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
-	SoundsPane( ves::open::xml::model::ModelWeakPtr model );
-    virtual ~SoundsPane(){;}
+    SoundsPane( ves::open::xml::model::ModelWeakPtr model );
+    virtual ~SoundsPane()
+    {
+        ;
+    }
 
     enum SOUNDS_TAB_IDS
     {
@@ -84,7 +87,7 @@ public:
 
     ///Set the active ves::open::xml::model::Model
     ///\param model The active model;
-    void SetActiveModel(ves::open::xml::model::ModelWeakPtr model);
+    void SetActiveModel( ves::open::xml::model::ModelWeakPtr model );
 
 protected:
     void _buildPage();
@@ -112,8 +115,8 @@ protected:
     void _loadSoundsInXplorer( wxString soundFileName );
 
     //event handlers
-    void _onSounds( wxCommandEvent& event );  
-    void _onLoadAndUpdate( wxCommandEvent& event );  
+    void _onSounds( wxCommandEvent& event );
+    void _onLoadAndUpdate( wxCommandEvent& event );
 
     std::string ConvertUnicode( const wxChar* data )
     {

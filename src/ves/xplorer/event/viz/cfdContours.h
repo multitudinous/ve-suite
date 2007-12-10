@@ -39,7 +39,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdPlanes;
+class cfdPlanes;
 }
 }
 
@@ -52,7 +52,7 @@ namespace xplorer
 cfdContours API
 */
 /*!\class ves::xplorer::cfdContours
-* 
+*
 */
 class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
 {

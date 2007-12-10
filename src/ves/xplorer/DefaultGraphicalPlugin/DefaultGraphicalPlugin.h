@@ -54,7 +54,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class DCS;
+class DCS;
 }
 }
 }
@@ -65,13 +65,13 @@ namespace xplorer
 {
 namespace DefaultGraphicalPlugin
 {
-class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass 
+class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass
 {
 public:
-   DefaultGraphicalPlugin( void );
-   virtual ~DefaultGraphicalPlugin( void );
+    DefaultGraphicalPlugin( void );
+    virtual ~DefaultGraphicalPlugin( void );
 
-   virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
+    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
 private:
 };
 }
@@ -80,4 +80,4 @@ private:
 //VE_GRAPHICALPLUGIN_CLASS( DefaultGraphicalPlugin );
 
 #endif // DEFAULT_GRAPHICAL_PLUGIN_H
-   
+

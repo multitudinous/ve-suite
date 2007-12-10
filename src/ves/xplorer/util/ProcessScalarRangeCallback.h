@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PROCESS_SCALAR_RANGE_CALLBACK 
+#ifndef PROCESS_SCALAR_RANGE_CALLBACK
 #define PROCESS_SCALAR_RANGE_CALLBACK
 /*!\file ProcessScalarRangeCallback.h
 ProcessScalarRangeCallback API.
@@ -54,23 +54,23 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ProcessScalarRangeCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     ProcessScalarRangeCallback();
     ///Destructor
     virtual ~ProcessScalarRangeCallback();
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Get scalar range for a specified scalar
     ///\param scalarName The name of the scalar to find the range
     ///\param  range The scalar range
-    void GetScalarRange(std::string scalarName,double range[2]);
+    void GetScalarRange( std::string scalarName, double range[2] );
 protected:
-    std::map<std::string, double* > m_scalarRanges;///<The scalar names	
+    std::map<std::string, double* > m_scalarRanges;///<The scalar names
 };
 }// end of util namesapce
 }// end of xplorer namesapce

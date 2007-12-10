@@ -54,21 +54,21 @@ public:
     KeyboardMouseEventHandler();
 
     //Copy Constructor
-    KeyboardMouseEventHandler(const KeyboardMouseEventHandler& ceh);
+    KeyboardMouseEventHandler( const KeyboardMouseEventHandler& ceh );
 
     //Destructor
     virtual ~KeyboardMouseEventHandler();
 
     //Set the cfdModel
     //param model The ModelHandler to execute the Command on
-    void SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler);
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute(ves::open::xml::XMLObject* command); 
+    void Execute( ves::open::xml::XMLObject* command );
 
     //Equal operator
-    KeyboardMouseEventHandler& operator=(const KeyboardMouseEventHandler& rhs);
+    KeyboardMouseEventHandler& operator=( const KeyboardMouseEventHandler& rhs );
 
 protected:
 

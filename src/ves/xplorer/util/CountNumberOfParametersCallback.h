@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef COUNT_NUMBER_OF_PARAMETERS_CALLBACK 
+#ifndef COUNT_NUMBER_OF_PARAMETERS_CALLBACK
 #define  COUNT_NUMBER_OF_PARAMETERS_CALLBACK
 /*!\file CountNumberOfParametersCallback.h
 CountNumberOfParametersCallback API.
@@ -53,28 +53,28 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS CountNumberOfParametersCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     CountNumberOfParametersCallback();
     ///Destructor
     virtual ~CountNumberOfParametersCallback();
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Get the number of vectors or scalars
-    ///\param  isVector The determining which type to count 
-    unsigned int GetNumberOfParameters(bool isVector=false);
+    ///\param  isVector The determining which type to count
+    unsigned int GetNumberOfParameters( bool isVector = false );
 
     ///Get the names of the scalars and vectors
-    ///\param  isVector The determining which type to count 
-    std::vector<std::string> GetParameterNames(bool isVector=false);
+    ///\param  isVector The determining which type to count
+    std::vector<std::string> GetParameterNames( bool isVector = false );
 protected:
     unsigned int m_numberOfParameters[2];///<The number of parameters in the vtkDataObject;
-	std::vector<std::string> m_scalarNames;///<The scalar names
-	std::vector<std::string> m_vectorNames;///<The vector names
+    std::vector<std::string> m_scalarNames;///<The scalar names
+    std::vector<std::string> m_vectorNames;///<The vector names
 };
 }// end of util namesapce
 }// end of xplorer namesapce

@@ -36,7 +36,7 @@
 cfdTeacher API
 */
 /*!\class ves::xplorer::cfdTeacher
-* 
+*
 */
 #include <ves/xplorer/scenegraph/DCS.h>
 
@@ -46,7 +46,7 @@ cfdTeacher API
 #include <ves/xplorer/GlobalBase.h>
 
 #ifdef _OSG
-    #include <osg/ref_ptr>
+#include <osg/ref_ptr>
 #elif _PERFORMER
 #endif
 
@@ -54,7 +54,7 @@ namespace ves
 {
 namespace xplorer
 {
-    class cfdWriteTraverser;
+class cfdWriteTraverser;
 }
 }
 
@@ -64,8 +64,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class CADEntityHelper;
+class DCS;
+class CADEntityHelper;
 }
 }
 }
@@ -89,9 +89,9 @@ public:
 
     ///Write out a performer bindary file
     ///\param SceneNode* and file name
-    void writePFBFile( ves::xplorer::scenegraph::SceneNode* graph,std::string fileName);
+    void writePFBFile( ves::xplorer::scenegraph::SceneNode* graph, std::string fileName );
 
-    ///Get DCS 
+    ///Get DCS
     ves::xplorer::scenegraph::DCS* GetDCS( );
     ///Get a performer node output
     ///\param node ID
@@ -106,12 +106,12 @@ public:
     void ClearStoredScenes();
     ///Switch the active scene
     ///\param whichScene The scene to display
-    void LoadScene(unsigned int whichScene);
+    void LoadScene( unsigned int whichScene );
     ///Save out the scene
     void RecordScene();
     ///Reset Teacher so that the new application's scenes can be loaded
     void Reset();
-    
+
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;

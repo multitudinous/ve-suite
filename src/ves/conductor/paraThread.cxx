@@ -38,26 +38,25 @@
 using namespace ves::conductor;
 
 
-paraThread::paraThread(Network* network) : wxThread(wxTHREAD_JOINABLE)
+paraThread::paraThread( Network* network ) : wxThread( wxTHREAD_JOINABLE )
 {
 //  nw = network;
 }
 paraThread::~paraThread()
-{
-}
+{}
 
 bool paraThread::Do()
 {
-  //if (nw->paraview == true)
-  //  return false;
-  //std::cout<<"starting paraview"<<std::endl;
-  //nw->paraview = true;
-  //system("paraview");
-  //::wxShell("paraview");
-  wxArrayString output;
-  ::wxExecute( _("paraview"), output);
+    //if (nw->paraview == true)
+    //  return false;
+    //std::cout<<"starting paraview"<<std::endl;
+    //nw->paraview = true;
+    //system("paraview");
+    //::wxShell("paraview");
+    wxArrayString output;
+    ::wxExecute( _( "paraview" ), output );
 
-  //nw->paraview = false;
-  return true;
+    //nw->paraview = false;
+    return true;
 }
-  
+

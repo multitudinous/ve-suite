@@ -122,6 +122,6 @@ void Technique::TraverseImplementation( osg::NodeVisitor& nv, ves::xplorer::scen
         {
             cv->popStateSet();
         }
-    }        
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

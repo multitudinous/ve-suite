@@ -59,76 +59,76 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 DeleteObjectFromNetworkEventHandler::DeleteObjectFromNetworkEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DeleteObjectFromNetworkEventHandler::DeleteObjectFromNetworkEventHandler(const DeleteObjectFromNetworkEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+DeleteObjectFromNetworkEventHandler::DeleteObjectFromNetworkEventHandler( const DeleteObjectFromNetworkEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 DeleteObjectFromNetworkEventHandler::~DeleteObjectFromNetworkEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-DeleteObjectFromNetworkEventHandler& DeleteObjectFromNetworkEventHandler::operator=(const DeleteObjectFromNetworkEventHandler& rhs)
+DeleteObjectFromNetworkEventHandler& DeleteObjectFromNetworkEventHandler::operator=( const DeleteObjectFromNetworkEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      DeleteObjectFromNetworkEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        DeleteObjectFromNetworkEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   ;
+    ;
 }
 //////////////////////////////////////////////////////////////////////////
 void DeleteObjectFromNetworkEventHandler::Execute( XMLObject* xmlObject )
 {
-   // Get the active object
-   Command* command = dynamic_cast< Command* >( xmlObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Object ID" );   
-   unsigned int id = 0;
-   activeModelDVP->GetData( id );
+    // Get the active object
+    Command* command = dynamic_cast< Command* >( xmlObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Object ID" );
+    unsigned int id = 0;
+    activeModelDVP->GetData( id );
 
-   _plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
+    _plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
 
-   // Remove any plugins that aren't present in the current network
-   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-   foundPlugin = _plugins->find( id );
+    // Remove any plugins that aren't present in the current network
+    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+    foundPlugin = _plugins->find( id );
 
-   if ( foundPlugin != _plugins->end() )
-   {
-      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << foundPlugin->first 
-                              << " ]-> " << foundPlugin->second 
-                              << " is being deleted."
-                              << std::endl << vprDEBUG_FLUSH;
-      // if a module is on the plugins map then remove it
-      foundPlugin->second->RemoveSelfFromSG();
-      ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
-      // Must delete current instance of vebaseclass object
-      delete foundPlugin->second;
-      _plugins->erase( foundPlugin );
-   }
-   else
-   {
-      vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << id 
-                              << " ] not present."
-                              << std::endl << vprDEBUG_FLUSH;
-   }
-   //Set active model to null so that if the previous active model is deleted
-   //that we don't get errors in our code other places.
-   ModelHandler::instance()->SetActiveModel( 0 );
-   vprDEBUG(vesDBG,1) << "|\t\tPlugin is deleted if present."
-                           << std::endl << vprDEBUG_FLUSH;
+    if( foundPlugin != _plugins->end() )
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin [ " << foundPlugin->first
+        << " ]-> " << foundPlugin->second
+        << " is being deleted."
+        << std::endl << vprDEBUG_FLUSH;
+        // if a module is on the plugins map then remove it
+        foundPlugin->second->RemoveSelfFromSG();
+        ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
+        // Must delete current instance of vebaseclass object
+        delete foundPlugin->second;
+        _plugins->erase( foundPlugin );
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin [ " << id
+        << " ] not present."
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    ModelHandler::instance()->SetActiveModel( 0 );
+    vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin is deleted if present."
+    << std::endl << vprDEBUG_FLUSH;
 }

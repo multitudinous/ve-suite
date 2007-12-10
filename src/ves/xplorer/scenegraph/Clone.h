@@ -53,8 +53,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class SceneNode;
+class DCS;
+class SceneNode;
 }
 }
 }
@@ -62,7 +62,7 @@ namespace scenegraph
 // --- OSG Includes --- //
 namespace osg
 {
-    class Node;
+class Node;
 }
 
 namespace ves
@@ -102,7 +102,7 @@ public:
 
     ///Return the cloned structure including the transform
     ves::xplorer::scenegraph::DCS* GetClonedGraph();
-   
+
 protected:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_cloneTransform;///<The cloned structure including the transform
 

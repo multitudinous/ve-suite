@@ -55,16 +55,16 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( std::string geomFile, 
+CADEntity::CADEntity( std::string geomFile,
                       ves::xplorer::scenegraph::DCS* parentDCS,
                       bool isStream,
                       bool occlude,
                       PhysicsSimulator* physicsSimulator )
-:
-m_physicsRigidBody( 0 ),
-m_physicsFlag( false ),
-m_transparencyFlag( false ),
-m_physicsSimulator( physicsSimulator )
+        :
+        m_physicsRigidBody( 0 ),
+        m_physicsFlag( false ),
+        m_transparencyFlag( false ),
+        m_physicsSimulator( physicsSimulator )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -85,11 +85,11 @@ m_physicsSimulator( physicsSimulator )
 CADEntity::CADEntity( osg::Node* node,
                       ves::xplorer::scenegraph::DCS* parentDCS,
                       PhysicsSimulator* physicsSimulator )
-:
-m_physicsRigidBody( 0 ),
-m_physicsFlag( false ),
-m_transparencyFlag( false ),
-m_physicsSimulator( physicsSimulator )
+        :
+        m_physicsRigidBody( 0 ),
+        m_physicsFlag( false ),
+        m_transparencyFlag( false ),
+        m_physicsSimulator( physicsSimulator )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -103,14 +103,14 @@ m_physicsSimulator( physicsSimulator )
     parentDCS->AddChild( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy, 
+CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
                       ves::xplorer::scenegraph::DCS* parentDCS,
                       PhysicsSimulator* physicsSimulator )
-:
-m_physicsRigidBody( 0 ),
-m_physicsFlag( false ),
-m_transparencyFlag( false ),
-m_physicsSimulator( physicsSimulator )
+        :
+        m_physicsRigidBody( 0 ),
+        m_physicsFlag( false ),
+        m_transparencyFlag( false ),
+        m_physicsSimulator( physicsSimulator )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -134,7 +134,7 @@ void CADEntity::InitPhysics()
     if( !m_physicsRigidBody )
     {
         m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
-            m_dcs.get(), m_physicsSimulator );
+                                 m_dcs.get(), m_physicsSimulator );
         m_dcs->SetPhysicsRigidBody( m_physicsRigidBody );
     }
 }

@@ -40,140 +40,141 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-OneDStringArray::OneDStringArray(unsigned int nElements)
-:XMLObject()
+OneDStringArray::OneDStringArray( unsigned int nElements )
+        : XMLObject()
 {
-   _nElements  = nElements;
-   // These should match the schema for min and max occurances 
-   // of the float array
-   minIndex = 1;
-   SetObjectType("OneDStringArray");
+    _nElements  = nElements;
+    // These should match the schema for min and max occurances
+    // of the float array
+    minIndex = 1;
+    SetObjectType( "OneDStringArray" );
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
 OneDStringArray::~OneDStringArray()
 {
-   ;
+    ;
 }
 ///////////////////////////////////////////
 OneDStringArray::OneDStringArray( const OneDStringArray& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
-   _nElements = input._nElements;
-   _array = input._array;
-   minIndex = input.minIndex;
+    _nElements = input._nElements;
+    _array = input._array;
+    minIndex = input.minIndex;
 }
 /////////////////////////////////////////////////////
-OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input)
+OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input )
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-      _nElements = input._nElements;
-      _array = input._array;
-      minIndex = input.minIndex;
-   }
-   return *this;
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =( input );
+        _nElements = input._nElements;
+        _array = input._array;
+        minIndex = input.minIndex;
+    }
+    return *this;
 }
 /////////////////////////////////////////////////
-void OneDStringArray::AddElementToArray(std::string value)
+void OneDStringArray::AddElementToArray( std::string value )
 {
-   _array.push_back(value);
-   _nElements = static_cast< unsigned int >( _array.size() );
+    _array.push_back( value );
+    _nElements = static_cast< unsigned int >( _array.size() );
 }
 /////////////////////////////////////////////////////////////////
 void OneDStringArray::SetArray( std::vector< std::string > input )
 {
-   _array.clear();
-   _array = input;
-   _nElements = static_cast< unsigned int >( _array.size() );;
+    _array.clear();
+    _array = input;
+    _nElements = static_cast< unsigned int >( _array.size() );
+    ;
 }
 //////////////////////////////////////////////////
-std::string OneDStringArray::GetElement(unsigned int index)
+std::string OneDStringArray::GetElement( unsigned int index )
 {
-   try
-   {
-      return _array.at(index);
-   }
-   catch (...)
-   {
-      std::cout<<"ERROR!!!"<<std::endl;
-      std::cout<<"Invalid index: "<<index<<" in OneDStringArray::GetElement!!!"<<std::endl;
-      return 0;
-   }
+    try
+    {
+        return _array.at( index );
+    }
+    catch ( ... )
+    {
+        std::cout << "ERROR!!!" << std::endl;
+        std::cout << "Invalid index: " << index << " in OneDStringArray::GetElement!!!" << std::endl;
+        return 0;
+    }
 }
 ///////////////////////////////////////////////////
 std::vector< std::string > OneDStringArray::GetArray( void )
 {
-   return _array;
+    return _array;
 }
 ////////////////////////////////////
 void OneDStringArray::_updateVEElement( std::string input )
 {
-   //Be sure to set the number of children (_nChildren) 
-   //either here or in the updating subElements code
-   //this will be based on the size of the string array
-   //_nChildren = static_cast< unsigned int >( _array.size() );
+    //Be sure to set the number of children (_nChildren)
+    //either here or in the updating subElements code
+    //this will be based on the size of the string array
+    //_nChildren = static_cast< unsigned int >( _array.size() );
 
-   //Add code here to update the specific sub elements
-   for ( unsigned int i = 0; i < _array.size(); ++i )
-   {
-      // name comes from verg.xsd
-      DOMElement* valueTag  = _rootDocument->createElement( xercesString("data") );
-      _veElement->appendChild( valueTag );      
-      DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
-      valueTag->appendChild( valueNum );
-   }
+    //Add code here to update the specific sub elements
+    for( unsigned int i = 0; i < _array.size(); ++i )
+    {
+        // name comes from verg.xsd
+        DOMElement* valueTag  = _rootDocument->createElement( xercesString( "data" ) );
+        _veElement->appendChild( valueTag );
+        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
+        valueTag->appendChild( valueNum );
+    }
 }
 ////////////////////////////////////////////////////////////
-void OneDStringArray::SetObjectFromXMLData(DOMNode* xmlInput)
+void OneDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
 {
-   //TODO:fill in the values for the string array
-   //this is currently maxed out at 4 in the schema but
-   //we can adjust this to be larger if needed. Also it
-   //has to be at least 2 elements according to the schema
-   //_nElements = xerces->();
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast< DOMElement* >(xmlInput);
-   }
-   
-   if(currentElement)
-   {   
-      _array.clear();
-      
-      // do we need to delete the old one or does xerces handle this???
-      //_nElements = xmlInput->getChildNodes()->getLength();
-      DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("data"));
-      XMLSize_t numNodes = nodeList->getLength();
-      _nElements = numNodes;
-      if ( ( minIndex > numNodes ) )
-      {
-         std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" << 
-                     " This node has too few or too many children." << std::endl;
-      }
-   
-      // This for loop may be wrong since the the text node and 
-      // element may be seprate entities.
-      // if that is the case then inside the for loop
-      // we just need to get each text node child
-      for ( XMLSize_t i = 0; i < numNodes; ++i )
-      {
-         //We know this about the node so we can cast it...
-         DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
-         char* tempText = XMLString::transcode( temp->getData() );
-         std::string stringVal( tempText );
-         _array.push_back( stringVal );
-         XMLString::release( &tempText );
-      }
-   }
-   else
-   {
-      std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" << 
-                  " This node has no children which means there is probably a problem." << std::endl;
-   }
+    //TODO:fill in the values for the string array
+    //this is currently maxed out at 4 in the schema but
+    //we can adjust this to be larger if needed. Also it
+    //has to be at least 2 elements according to the schema
+    //_nElements = xerces->();
+    DOMElement* currentElement = 0;
+    if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast< DOMElement* >( xmlInput );
+    }
+
+    if( currentElement )
+    {
+        _array.clear();
+
+        // do we need to delete the old one or does xerces handle this???
+        //_nElements = xmlInput->getChildNodes()->getLength();
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "data" ) );
+        XMLSize_t numNodes = nodeList->getLength();
+        _nElements = numNodes;
+        if (( minIndex > numNodes ) )
+        {
+            std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" <<
+            " This node has too few or too many children." << std::endl;
+        }
+
+        // This for loop may be wrong since the the text node and
+        // element may be seprate entities.
+        // if that is the case then inside the for loop
+        // we just need to get each text node child
+        for( XMLSize_t i = 0; i < numNodes; ++i )
+        {
+            //We know this about the node so we can cast it...
+            DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
+            char* tempText = XMLString::transcode( temp->getData() );
+            std::string stringVal( tempText );
+            _array.push_back( stringVal );
+            XMLString::release( &tempText );
+        }
+    }
+    else
+    {
+        std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" <<
+        " This node has no children which means there is probably a problem." << std::endl;
+    }
 }
 

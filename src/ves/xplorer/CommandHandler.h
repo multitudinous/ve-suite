@@ -35,7 +35,7 @@
 /*!\file CommandHandler.h
 */
 /*!\class ves::xplorer::CommandHandler
-* 
+*
 */
 #include <ves/VEConfig.h>
 #include <ves/xplorer/CommandHandlerPtr.h>
@@ -53,40 +53,43 @@ namespace xplorer
 class VE_XPLORER_EXPORTS CommandHandler
 {
 private:
-   CommandHandler( void );
-   ~CommandHandler( void ){ ; }
-   vprSingletonHeader( CommandHandler );
+    CommandHandler( void );
+    ~CommandHandler( void )
+    {
+        ;
+    }
+    vprSingletonHeader( CommandHandler );
 
 public:
-   ///Initialize environment.
-   void Initialize( void );
+    ///Initialize environment.
+    void Initialize( void );
 
-   ///Clean up environment.
-   void CleanUp( void );
+    ///Clean up environment.
+    void CleanUp( void );
 
-   ///Initialize scene.
-   void InitScene( void );
+    ///Initialize scene.
+    void InitScene( void );
 
-   ///Pre frame update.
-   void PreFrameUpdate( void );
+    ///Pre frame update.
+    void PreFrameUpdate( void );
 
-   ///Set command from Xplorer
-   ///\param inputCommand 
-   bool SetXMLCommand( ves::open::xml::Command* inputCommand );
+    ///Set command from Xplorer
+    ///\param inputCommand
+    bool SetXMLCommand( ves::open::xml::Command* inputCommand );
 
-   ///Get command from Xplorer
-   ves::open::xml::Command* GetXMLCommand( void );
+    ///Get command from Xplorer
+    ves::open::xml::Command* GetXMLCommand( void );
 
-   ///
-   void SetXplorer( Body_VEXplorer_i* xplorer );
+    ///
+    void SetXplorer( Body_VEXplorer_i* xplorer );
 
-   ///Send a text message to all conductors
-   void SendConductorMessage( std::string message );
+    ///Send a text message to all conductors
+    void SendConductorMessage( std::string message );
 
 private:
-   ves::open::xml::Command* m_input;///<XML command
+    ves::open::xml::Command* m_input;///<XML command
 
-   Body_VEXplorer_i* m_xplorer;
+    Body_VEXplorer_i* m_xplorer;
 };
 }
 }

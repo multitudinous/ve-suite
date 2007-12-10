@@ -115,18 +115,18 @@ void Tablet::UpdateNavigation()
     worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
     worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
     worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
-   
-    if( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )         
+
+    if( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )
     {
         SetHeadRotationFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )         
+    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )
     {
         SetSubZeroFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )         
+    else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
-        for ( unsigned int i = 0; i < 3; ++i )
+        for( unsigned int i = 0; i < 3; ++i )
         {
             worldTrans[ i ] = 0.0f;
             world_quat.set( 0, 0, 0, 1 );
@@ -135,65 +135,65 @@ void Tablet::UpdateNavigation()
 
         center_point->mData[ 1 ] = worldTrans[ 1 ] = 2.0f;
     }
-    else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
+    else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
     {
         //This equation returns a range of ~ 0.01' -> 220'
         //the equation is 1/100 * e ^ ( x / 10 ) where 1 < x < 100
-        translationStepSize = 0.01f * exp( cfdIso_value * 0.10f );   
+        translationStepSize = 0.01f * exp( cfdIso_value * 0.10f );
     }
-    else if( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )         
+    else if( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )
     {
         //This equation returns a range of ~ 0.00029' -> 1.586' NOTE: These are in degrees
-        //This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50 
-        rotationStepSize = ( 0.001333f ) * powf( ( cfdIso_value * 0.5f ), 2.2f );
+        //This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50
+        rotationStepSize = ( 0.001333f ) * powf(( cfdIso_value * 0.5f ), 2.2f );
     }
     else if( !newCommand.compare( "GUI_NAV" ) )
     {
         //Forward translate
-        if( cfdIso_value == NAV_FWD ) 
-        { 
+        if( cfdIso_value == NAV_FWD )
+        {
             worldTrans[ 1 ] += translationStepSize;
             center_point->mData[ 1 ] -= translationStepSize;
         }
         //Backward translate
         else if( cfdIso_value == NAV_BKWD )
-        { 
+        {
             worldTrans[ 1 ] -= translationStepSize;
             center_point->mData[ 1 ] += translationStepSize;
         }
         //Right translate
         else if( cfdIso_value == NAV_RIGHT )
-        { 
+        {
             worldTrans[ 0 ] += translationStepSize;
             center_point->mData[ 0 ] -= translationStepSize;
         }
         //Left translate
         else if( cfdIso_value == NAV_LEFT )
-        { 
+        {
             worldTrans[ 0 ] -= translationStepSize;
             center_point->mData[ 0 ] += translationStepSize;
         }
         //Upward translate
-        else if( cfdIso_value == NAV_UP ) 
-        { 
+        else if( cfdIso_value == NAV_UP )
+        {
             worldTrans[ 2 ] += translationStepSize;
             center_point->mData[ 2 ] -= translationStepSize;
         }
         //Downward translate
         else if( cfdIso_value == NAV_DOWN )
-        { 
+        {
             worldTrans[ 2 ] -= translationStepSize;
             center_point->mData[ 2 ] += translationStepSize;
         }
         //CCW rotation
-        else if( cfdIso_value == YAW_CCW )   
+        else if( cfdIso_value == YAW_CCW )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( rotationStepSize ), osg::Vec3d( 0, 0, 1 ) );
 
             if( rotationFlag )
             {
                 vjHeadMat = convertTo< double >( head->getData() );
- 
+
                 //Get juggler Matrix of worldDCS
                 //Note:: for pf we are in juggler land
                 //       for osg we are in z up land
@@ -271,7 +271,7 @@ void Tablet::UpdateNavigation()
             }
         }
         //CW rotation
-        else if( cfdIso_value == YAW_CW  )
+        else if( cfdIso_value == YAW_CW )
         {
             rot_quat = osg::Quat( osg::DegreesToRadians( -rotationStepSize ), osg::Vec3d( 0, 0, 1 ) );
 
@@ -497,7 +497,7 @@ void Tablet::UpdateNavigation()
 
     //Set the DCS postion based off of previous manipulation of the worldTrans array
     for( unsigned int i = 0; i < 3; ++i )
-    {   
+    {
         worldTrans[ i ] = -worldTrans[ i ];
     }
 
@@ -515,7 +515,7 @@ void Tablet::UpdateNavigation()
     world->SetTranslationArray( worldTrans );
     world->SetQuat( world_quat );
 
-    vprDEBUG( vesDBG,3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd Tablet Navigate" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tablet::SetHeadRotationFlag( int input )

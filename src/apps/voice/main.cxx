@@ -35,15 +35,15 @@
 #include <iostream>
 #include "SAPIVoiceInterpreter.h"
 
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
-   SAPIVoiceInterpreter *vI = new SAPIVoiceInterpreter(argc, argv);
+    SAPIVoiceInterpreter *vI = new SAPIVoiceInterpreter( argc, argv );
 
-   if(vI->SAPIInit())
-   {
-	  vI->Listen();
-   }
+    if( vI->SAPIInit() )
+    {
+        vI->Listen();
+    }
 
-   delete vI;
-   return 0;
+    delete vI;
+    return 0;
 }

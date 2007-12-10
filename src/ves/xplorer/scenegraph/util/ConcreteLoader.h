@@ -48,7 +48,7 @@
 #include <string>
 #include <vector>
 ///////////////////////////////////////////////////////////////////////
-//this class is used to create a stateset representing a phong shader// 
+//this class is used to create a stateset representing a phong shader//
 ///////////////////////////////////////////////////////////////////////
 namespace ves
 {
@@ -59,32 +59,32 @@ namespace scenegraph
 namespace util
 {
 class PerlinNoiseTexture;
-class VE_SCENEGRAPH_UTILS_EXPORTS ConcreteLoader : 
-	public ves::xplorer::scenegraph::util::ShaderHelper
+class VE_SCENEGRAPH_UTILS_EXPORTS ConcreteLoader :
+            public ves::xplorer::scenegraph::util::ShaderHelper
 {
 public:
-   ///Constructor
-   ConcreteLoader();
+    ///Constructor
+    ConcreteLoader();
 
-   ///Copy Constructor
-   ConcreteLoader(const ConcreteLoader& rhs);
-  
-   ///Destructor
-   virtual ~ConcreteLoader();
-  
-   ///Sync up the active stateset with the current shader
-   virtual void SyncShaderAndStateSet(); 
+    ///Copy Constructor
+    ConcreteLoader( const ConcreteLoader& rhs );
 
-   ///Equal operator
-   ///\param rhs Right hand side.
-   ConcreteLoader& operator=(const ConcreteLoader& rhs);
+    ///Destructor
+    virtual ~ConcreteLoader();
+
+    ///Sync up the active stateset with the current shader
+    virtual void SyncShaderAndStateSet();
+
+    ///Equal operator
+    ///\param rhs Right hand side.
+    ConcreteLoader& operator=( const ConcreteLoader& rhs );
 protected:
-   ///Load and create the stateset for phong shader
-   ///\param vertexSource The vertex shader source code
-   ///\param fragSource The fragment shader source code
-   virtual void _loadShader(std::string vertexSource, std::string fragSource);
+    ///Load and create the stateset for phong shader
+    ///\param vertexSource The vertex shader source code
+    ///\param fragSource The fragment shader source code
+    virtual void _loadShader( std::string vertexSource, std::string fragSource );
 
-   PerlinNoiseTexture* m_noise;///<The noise texture
+    PerlinNoiseTexture* m_noise;///<The noise texture
 };
 }
 }

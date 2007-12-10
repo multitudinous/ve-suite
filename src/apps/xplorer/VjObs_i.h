@@ -69,7 +69,7 @@ namespace open
 {
 namespace xml
 {
-    class DOMDocumentManager;
+class DOMDocumentManager;
 }
 }
 }
@@ -81,13 +81,16 @@ namespace ves
 namespace xplorer
 {
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
-    public PortableServer::RefCountServantBase
+            public PortableServer::RefCountServantBase
 {
 public:
     ///Constructor
     VjObs_i();
     ///Destructor
-    virtual ~VjObs_i(){;}
+    virtual ~VjObs_i()
+    {
+        ;
+    }
     ///Creates the geom info transfered to conductor
     ///may not be needed anymore
     void CreateGeometryInfo( void );
@@ -112,22 +115,22 @@ public:
     ///Determine if we are in cluster mode or not
     bool GetClusterMode( void );
     ///Get the teacher name files
-    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
+    VjObs::scalar_p* get_teacher_name() throw( CORBA::SystemException );
     ///Get the models in IDL format
-    VjObs::Models* GetModels() throw (CORBA::SystemException);
+    VjObs::Models* GetModels() throw( CORBA::SystemException );
     ///Get the model with a specific id
     ///\param modelID the model id to get
-    VjObs::Model* GetModel( CORBA::Long modelID ) throw (CORBA::SystemException);
+    VjObs::Model* GetModel( CORBA::Long modelID ) throw( CORBA::SystemException );
     ///Get the number of teacher files
-    short get_teacher_num() throw (CORBA::SystemException);
+    short get_teacher_num() throw( CORBA::SystemException );
     ///Set the client info flag
     ///\param flag the client info flags
-    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
+    void SetClientInfoFlag( short ) throw( CORBA::SystemException );
     ///Set the client info data
     ///\param value the client info data
-    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
+    void SetClientInfoData( const VjObs::obj_pd &value ) throw( CORBA::SystemException );
     ///Get the client info data
-    VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
+    VjObs::obj_pd* GetClientInfoData() throw( CORBA::SystemException );
     ///Called in latepreframe to sync state variables
     void GetCfdStateVariables( void );
     ///Create the vector with XML Commands to be used by Xplorer
@@ -136,48 +139,48 @@ public:
     double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
 
 protected:
-   VjObs::scalar_p_var teacher_name; ///< hold the list of teacher file names
-   VjObs::Models* _models;///< fold the list of IDL models
+    VjObs::scalar_p_var teacher_name; ///< hold the list of teacher file names
+    VjObs::Models* _models;///< fold the list of IDL models
 
-   VjObs::obj_pd_var clientInfoObserverDataArray; ///< hold the list of double arrays may not be needed
-   int numOfClientInfo;///< number of teacher files
-   //bool _unusedNewData;
-   float time_since_start;///< start time
-   float quatCamIncrement;///< should be removed
-   long frameNumber;///< frame number
+    VjObs::obj_pd_var clientInfoObserverDataArray; ///< hold the list of double arrays may not be needed
+    int numOfClientInfo;///< number of teacher files
+    //bool _unusedNewData;
+    float time_since_start;///< start time
+    float quatCamIncrement;///< should be removed
+    long frameNumber;///< frame number
 
-   ///Get 2d double array for a given input
-   ///\param input the given input
-   VjObs::obj_pd* getDouble1D( const char* input ) throw (CORBA::SystemException);
-   ///Get 2d double array for a given input
-   ///\param input the given input to get
-   VjObs::double2DArray* getDouble2D( const char* input ) throw (CORBA::SystemException);
-   ///Set the command string from conductor
-   ///\param value the command
-   void SetCommandString( const char* value) throw (CORBA::SystemException);
-   ///The iso value to get from xplorer
-   CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
-   ///Set sc
-   ///\param value the sc
-   void setSc( CORBA::Long value) throw (CORBA::SystemException);
-   ///get post data
-  
-   vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
+    ///Get 2d double array for a given input
+    ///\param input the given input
+    VjObs::obj_pd* getDouble1D( const char* input ) throw( CORBA::SystemException );
+    ///Get 2d double array for a given input
+    ///\param input the given input to get
+    VjObs::double2DArray* getDouble2D( const char* input ) throw( CORBA::SystemException );
+    ///Set the command string from conductor
+    ///\param value the command
+    void SetCommandString( const char* value ) throw( CORBA::SystemException );
+    ///The iso value to get from xplorer
+    CORBA::Long getIsoValue( void ) throw( CORBA::SystemException );
+    ///Set sc
+    ///\param value the sc
+    void setSc( CORBA::Long value ) throw( CORBA::SystemException );
+    ///get post data
 
-   /// Buffer variables...always right
-   short mNumScalars;///< scalar number
-   short mNnumVectors;///< vector number
-   short mNumGeoArrays;///< geo numerber
-   short mNumTeacherArrays;///< teacher number
-   short mGetClientInfo;///< client info number
-   double mShort_data_array[ 9 ];///< buffer data
+    vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
 
-   ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
-   std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
-   std::vector< std::string > commandStringQueue;///< command queue with raw string data
-   // Cluster Stuff for the above state variables
-   cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
-   bool isCluster;///<cluster mode
+    /// Buffer variables...always right
+    short mNumScalars;///< scalar number
+    short mNnumVectors;///< vector number
+    short mNumGeoArrays;///< geo numerber
+    short mNumTeacherArrays;///< teacher number
+    short mGetClientInfo;///< client info number
+    double mShort_data_array[ 9 ];///< buffer data
+
+    ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
+    std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
+    std::vector< std::string > commandStringQueue;///< command queue with raw string data
+    // Cluster Stuff for the above state variables
+    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
+    bool isCluster;///<cluster mode
 };
 }
 }

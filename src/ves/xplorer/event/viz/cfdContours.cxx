@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdContours.h>
@@ -55,85 +55,84 @@ using namespace ves::xplorer::scenegraph;
 
 cfdContours::cfdContours( const int xyz )
 {
-   this->xyz = xyz;
+    this->xyz = xyz;
 }
 
 cfdContours::~cfdContours()
-{ 
-}
+{}
 
 void cfdContours::Update( void )
 {
-   vprDEBUG(vesDBG,1) << "cfdContours::Update" 
-                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "cfdContours::Update"
+    << std::endl << vprDEBUG_FLUSH;
 
-   cfdPlanes* precomputedPlanes = 
-       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
-   if (!precomputedPlanes)
-   {
-      vprDEBUG(vesDBG, 0) 
-          << "Dataset contains no precomputed contour planes." 
-         << std::endl << vprDEBUG_FLUSH;
-      ves::xplorer::CommandHandler::instance()
-             ->SendConductorMessage("Dataset contains no precomputed contour planes.\n");
-      return;
-   }
- 
-   //make sure that there are planesData and that the cursorType is correct...
-   if ( this->mapper && this->cursorType == NONE )
-   {   
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
+    cfdPlanes* precomputedPlanes =
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+    if( !precomputedPlanes )
+    {
+        vprDEBUG( vesDBG, 0 )
+        << "Dataset contains no precomputed contour planes."
+        << std::endl << vprDEBUG_FLUSH;
+        ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Dataset contains no precomputed contour planes.\n" );
+        return;
+    }
 
-      //std::string vectorName = this->GetActiveDataSet()->
-      //                         GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
-      //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-      //   ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+    //make sure that there are planesData and that the cursorType is correct...
+    if( this->mapper && this->cursorType == NONE )
+    {
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-      std::string scalarName = this->GetActiveDataSet()->
-                              GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-            ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
+        //std::string vectorName = this->GetActiveDataSet()->
+        //                         GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
+        //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        //   ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
 
-      this->SetMapperInput( this->GetActiveDataSet()
-                     ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        std::string scalarName = this->GetActiveDataSet()->
+                                 GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
 
-      this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
+        this->SetMapperInput( this->GetActiveDataSet()
+                              ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
 
-      //this->mapper->Update();
-      vtkActor* temp = vtkActor::New();
-      temp->SetMapper( this->mapper );
-      temp->GetProperty()->SetSpecularPower( 20.0f );
-      temp->GetProperty()->SetOpacity( contourOpacity );
-      //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-      //geodes.back()->TranslateToGeode( temp );
-      //this->updateFlag = true;
-      try
-      {
-			osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-         tempGeode->TranslateToGeode( temp );
-         geodes.push_back( tempGeode.get() );
-         this->updateFlag = true;
-      }
-      catch( std::bad_alloc )
-      {
-         mapper->Delete();
-         mapper = vtkMultiGroupPolyDataMapper::New();
+        this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
+        this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
 
-         vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdContours" 
-                              << std::endl << vprDEBUG_FLUSH;
-      }
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
-      temp->Delete();
-   }
-   else
-   {
-      vprDEBUG(vesDBG, 0) 
-         << "cfdContours: !(mapper && cursorType == NONE)"
-         << std::endl << vprDEBUG_FLUSH;
+        //this->mapper->Update();
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( this->mapper );
+        temp->GetProperty()->SetSpecularPower( 20.0f );
+        temp->GetProperty()->SetOpacity( contourOpacity );
+        //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+        //geodes.back()->TranslateToGeode( temp );
+        //this->updateFlag = true;
+        try
+        {
+            osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+            tempGeode->TranslateToGeode( temp );
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch ( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkMultiGroupPolyDataMapper::New();
 
-      this->updateFlag = false;
-   }
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdContours"
+            << std::endl << vprDEBUG_FLUSH;
+        }
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+        temp->Delete();
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 0 )
+        << "cfdContours: !(mapper && cursorType == NONE)"
+        << std::endl << vprDEBUG_FLUSH;
+
+        this->updateFlag = false;
+    }
 }
 

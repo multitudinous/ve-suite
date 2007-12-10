@@ -73,7 +73,7 @@ public:
     ///Apply function that gets called during the traversal
     ///\param node A parent node of the node being traversed
     virtual void apply( osg::Node& node );
-    
+
 private:
     ///Get the material string to write out
     ///\param node Node to look at

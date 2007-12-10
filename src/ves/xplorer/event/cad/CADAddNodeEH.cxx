@@ -51,102 +51,97 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADAddNodeEventHandler::CADAddNodeEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADAddNodeEventHandler::CADAddNodeEventHandler(const CADAddNodeEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-
-}
+CADAddNodeEventHandler::CADAddNodeEventHandler( const CADAddNodeEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADAddNodeEventHandler::~CADAddNodeEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADAddNodeEventHandler& CADAddNodeEventHandler::operator=(const CADAddNodeEventHandler& rhs)
+CADAddNodeEventHandler& CADAddNodeEventHandler::operator=( const CADAddNodeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADAddNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr cadNode = command->GetDataValuePair("New Node");
-      std::string nodeType = dynamic_cast<CADNode*>(cadNode->GetDataXMLObject())->GetNodeType();
+    try
+    {
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr cadNode = command->GetDataValuePair( "New Node" );
+        std::string nodeType = dynamic_cast<CADNode*>( cadNode->GetDataXMLObject() )->GetNodeType();
 
-      CADNode* node = 0;
-      CADAssembly* assembly = 0; 
-      CADPart* part = 0;
-       ves::xplorer::scenegraph::DCS* parentAssembly = 0;
+        CADNode* node = 0;
+        CADAssembly* assembly = 0;
+        CADPart* part = 0;
+        ves::xplorer::scenegraph::DCS* parentAssembly = 0;
 
-      if(nodeType == "Assembly")
-      {
-         
-         assembly = dynamic_cast<CADAssembly*>(cadNode->GetDataXMLObject());
-         node = dynamic_cast<CADNode*>(assembly);
-         if(m_cadHandler->AssemblyExists(node->GetID()))
-         {
-            throw("Assembly already exists");
-         }
-      }
-      else if(nodeType == "Part")
-      {
-         part = dynamic_cast<CADPart*>(cadNode->GetDataXMLObject());
-         node = dynamic_cast<CADNode*>(part);
-         if(m_cadHandler->PartExists(node->GetID()))
-         {
-            throw("Part already exists");
-         }
-      }
+        if( nodeType == "Assembly" )
+        {
 
-      ///This is the root
-      if(node->GetParent().empty())
-      {
-         ///add the root to the VEBaseClass DCS
-         node->SetParent("rootNode");
-         m_cadHandler->SetRootCADNodeID(node->GetID());
-      }
-      else
-      {
-         //need to check if parent is on the graph already
-         if(!m_cadHandler->AssemblyExists(node->GetParent()))
-         {
-            m_cadHandler->CreateAssembly(node->GetParent());
-            //We have to initialize some properties on the root node since
-            //we are not creating it from xml data.
-            //From intial creation, the top level node is called Model_Geometry in the GUI.
-            //After that, CADSetNameEH handles the name appropriately.
-            m_cadHandler->GetAssembly(node->GetParent())->setName("Model_Geometry");
+            assembly = dynamic_cast<CADAssembly*>( cadNode->GetDataXMLObject() );
+            node = dynamic_cast<CADNode*>( assembly );
+            if( m_cadHandler->AssemblyExists( node->GetID() ) )
+            {
+                throw( "Assembly already exists" );
+            }
+        }
+        else if( nodeType == "Part" )
+        {
+            part = dynamic_cast<CADPart*>( cadNode->GetDataXMLObject() );
+            node = dynamic_cast<CADNode*>( part );
+            if( m_cadHandler->PartExists( node->GetID() ) )
+            {
+                throw( "Part already exists" );
+            }
+        }
 
-            //update the top level node descriptors
-            SetNodeDescriptors(node->GetParent(),"Assembly","VE_XML_ID",node->GetParent());
-            //Add the top level CAD to the VEBaseClass
-            m_activeModel->GetDCS()->addChild(m_cadHandler->GetAssembly(node->GetParent()));
-         }
-      }
-      
-      if(nodeType == "Assembly")
-         _addNodeToNode(node->GetParent(),assembly);
-      else if(nodeType == "Part")
-         _addNodeToNode(node->GetParent(),part);
-   }
-   catch(char* str)
-   {
-      std::cout<<str<<std::endl;
-   }
-   catch(...)
-   {
-   }
-   
+        ///This is the root
+        if( node->GetParent().empty() )
+        {
+            ///add the root to the VEBaseClass DCS
+            node->SetParent( "rootNode" );
+            m_cadHandler->SetRootCADNodeID( node->GetID() );
+        }
+        else
+        {
+            //need to check if parent is on the graph already
+            if( !m_cadHandler->AssemblyExists( node->GetParent() ) )
+            {
+                m_cadHandler->CreateAssembly( node->GetParent() );
+                //We have to initialize some properties on the root node since
+                //we are not creating it from xml data.
+                //From intial creation, the top level node is called Model_Geometry in the GUI.
+                //After that, CADSetNameEH handles the name appropriately.
+                m_cadHandler->GetAssembly( node->GetParent() )->setName( "Model_Geometry" );
+
+                //update the top level node descriptors
+                SetNodeDescriptors( node->GetParent(), "Assembly", "VE_XML_ID", node->GetParent() );
+                //Add the top level CAD to the VEBaseClass
+                m_activeModel->GetDCS()->addChild( m_cadHandler->GetAssembly( node->GetParent() ) );
+            }
+        }
+
+        if( nodeType == "Assembly" )
+            _addNodeToNode( node->GetParent(), assembly );
+        else if( nodeType == "Part" )
+            _addNodeToNode( node->GetParent(), part );
+    }
+    catch ( char* str )
+    {
+        std::cout << str << std::endl;
+    }
+    catch ( ... )
+    {}
+
 }

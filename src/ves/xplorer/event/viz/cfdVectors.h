@@ -50,18 +50,18 @@ cfdVectors API
 class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
 {
 public:
-   // Initialize the multiple vector plots for a particular plane direction
-   ///Constructor
-   cfdVectors( const int xyz );
+    // Initialize the multiple vector plots for a particular plane direction
+    ///Constructor
+    cfdVectors( const int xyz );
 
-   ///Destructor
-   virtual ~cfdVectors();
+    ///Destructor
+    virtual ~cfdVectors();
 
-   ///Virtual update function
-   virtual void Update( void );
+    ///Virtual update function
+    virtual void Update( void );
 
 private:
-   int xyz;
+    int xyz;
 };
 }
 }

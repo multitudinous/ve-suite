@@ -52,7 +52,7 @@ public:
 
     virtual void Traverse( osg::NodeVisitor& nv,
                            ves::xplorer::scenegraph::SceneNode* node );
-  
+
 protected:
     virtual void DefinePasses();
 

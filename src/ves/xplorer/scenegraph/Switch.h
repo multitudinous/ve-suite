@@ -69,14 +69,17 @@ public:
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy.
     Switch( const Switch&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-   
+
     META_Node( ves::xplorer::scenegraph, Switch );
 
 protected:
     virtual ~Switch();
-   
+
 public:
-    enum Value{ OFF = -1, ON };
+    enum Value
+    {
+        OFF = -1, ON
+    };
 
     //probably need more functions but
     //this is all we need for now

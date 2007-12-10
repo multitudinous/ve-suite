@@ -49,67 +49,66 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler::SeedPointDimensionsEventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler
-::SeedPointDimensionsEventHandler(const SeedPointDimensionsEventHandler& ceh)
+::SeedPointDimensionsEventHandler( const SeedPointDimensionsEventHandler& ceh )
 {
-   _activeModel = ceh._activeModel;
+    _activeModel = ceh._activeModel;
 }
 /////////////////////////////////////////////////////////////////////
 SeedPointDimensionsEventHandler::~SeedPointDimensionsEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-SeedPointDimensionsEventHandler& 
-SeedPointDimensionsEventHandler::operator=(const SeedPointDimensionsEventHandler& rhs)
+SeedPointDimensionsEventHandler&
+SeedPointDimensionsEventHandler::operator=( const SeedPointDimensionsEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        _activeModel = rhs._activeModel;
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
-void SeedPointDimensionsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if(model)
-      {
-         _activeModel = dynamic_cast<ves::xplorer::Model*>(model);
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to SeedPointDimensionsEventHandler!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast<ves::xplorer::Model*>( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to SeedPointDimensionsEventHandler!" << std::endl;
+    }
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void SeedPointDimensionsEventHandler::Execute(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void SeedPointDimensionsEventHandler::Execute( XMLObject* veXMLObject )
 {
-   if(!_activeModel)
-      throw;
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-     
-     std::vector<long> allDimensions;
-     DataValuePairWeakPtr dimensions = command->GetDataValuePair("Dimensions");
-     dimensions->GetData(allDimensions);
-     ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetDimensions(allDimensions[0],
-                                                                                   allDimensions[1],
-                                                                                   allDimensions[2]);
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid Bounds!!"<<std::endl;
-      std::cout<<"SeedPointDimensionsEventHandler::Execute()"<<std::endl;
-   }
+    if( !_activeModel )
+        throw;
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+
+        std::vector<long> allDimensions;
+        DataValuePairWeakPtr dimensions = command->GetDataValuePair( "Dimensions" );
+        dimensions->GetData( allDimensions );
+        ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetDimensions( allDimensions[0],
+                allDimensions[1],
+                allDimensions[2] );
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid Bounds!!" << std::endl;
+        std::cout << "SeedPointDimensionsEventHandler::Execute()" << std::endl;
+    }
 }

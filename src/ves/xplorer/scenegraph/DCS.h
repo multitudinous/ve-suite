@@ -53,7 +53,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class TransferPhysicsDataCallback;
+class TransferPhysicsDataCallback;
 }
 }
 }
@@ -90,7 +90,7 @@ convertTo( const gmtl::Matrix< DATA_TYPE_IN, ROWS, COLS >& in )
     DATA_TYPE_OUT* out_data( out.mData );
 
     boost::mpl::for_each< boost::mpl::range_c< unsigned int, 0, ROWS * COLS> >
-        ( *( out_data + _1 ) = *( in_data + _1 ) );
+    ( *( out_data + _1 ) = *( in_data + _1 ) );
 
     return out;
 }
@@ -227,7 +227,7 @@ public:
     ///Set the Bullet rigid body for this node, typically is set from CADEntity
     ///\param rigidBody The btRigidBody*
     void SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody );
-   
+
 protected:
     double m_Rotation[ 3 ];///<The rotation array
     double m_Translation[ 3 ];///<The translation array

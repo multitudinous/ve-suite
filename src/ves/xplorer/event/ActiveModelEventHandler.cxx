@@ -44,41 +44,36 @@ using namespace ves::xplorer::event;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 ActiveModelEventHandler::ActiveModelEventHandler()
-:ves::xplorer::event::EventHandler()
-{
-}
+        : ves::xplorer::event::EventHandler()
+{}
 ////////////////////////////////////////////////////////////////////////////////
-ActiveModelEventHandler::ActiveModelEventHandler(const ActiveModelEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
-{
-}
+ActiveModelEventHandler::ActiveModelEventHandler( const ActiveModelEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
+{}
 ////////////////////////////////////
 ///Destructor                     //
 ////////////////////////////////////
 ActiveModelEventHandler::~ActiveModelEventHandler()
-{
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void ActiveModelEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
-{
-}
+{}
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void ActiveModelEventHandler::Execute(ves::open::xml::XMLObject* veXMLObject)
+void ActiveModelEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
 {
-   ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( veXMLObject );
-   ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
-   unsigned int newModel;
-   activeModelDVP->GetData( newModel );
-   ves::xplorer::ModelHandler::instance()->SetActiveModel( newModel );
+    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( veXMLObject );
+    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
+    unsigned int newModel;
+    activeModelDVP->GetData( newModel );
+    ves::xplorer::ModelHandler::instance()->SetActiveModel( newModel );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ActiveModelEventHandler& ActiveModelEventHandler::operator=(const ActiveModelEventHandler& rhs)
+ActiveModelEventHandler& ActiveModelEventHandler::operator=( const ActiveModelEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-   }
-   return *this;
+    if( this != &rhs )
+    {}
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -34,23 +34,20 @@
 #include <ves/ce/util/Network.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
-node_base::node_base(VE_CE::Utilities::Network *n, int t)
-  : _net(n), _type(t)
-{
-}
+node_base::node_base( VE_CE::Utilities::Network *n, int t )
+        : _net( n ), _type( t )
+{}
 ////////////////////////////////////////////////////////////////////////////////
-node_base::node_base(const node_base &nb)
+node_base::node_base( const node_base &nb )
 {
-  _net = nb._net;
+    _net = nb._net;
 }
 ////////////////////////////////////////////////////////////////////////////////
 node_base::~node_base()
-{
-
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void node_base::set_net( VE_CE::Utilities::Network *n )
 {
-  _net = n;
+    _net = n;
 }
 

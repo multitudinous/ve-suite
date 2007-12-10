@@ -53,21 +53,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedTransientModeUpdateEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedTransientModeUpdateEventHandler();
+    ///Constructor
+    TextureBasedTransientModeUpdateEventHandler();
 
-   ///Copy Constructor
-   TextureBasedTransientModeUpdateEventHandler(const TextureBasedTransientModeUpdateEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedTransientModeUpdateEventHandler();
+    ///Copy Constructor
+    TextureBasedTransientModeUpdateEventHandler( const TextureBasedTransientModeUpdateEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedTransientModeUpdateEventHandler();
 
-   ///Equal operator
-   TextureBasedTransientModeUpdateEventHandler& operator=(const TextureBasedTransientModeUpdateEventHandler& rhs);
+    ///Equal operator
+    TextureBasedTransientModeUpdateEventHandler& operator=( const TextureBasedTransientModeUpdateEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

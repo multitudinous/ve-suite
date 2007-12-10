@@ -46,30 +46,30 @@ namespace event
  */
 
 /*!\class CenterPointJumpEventHandler
- * 
+ *
  */
 class CenterPointJumpEventHandler : public EventHandler
 {
 public:
-   //Constructor
-   CenterPointJumpEventHandler();
+    //Constructor
+    CenterPointJumpEventHandler();
 
-   //Copy Constructor
-   CenterPointJumpEventHandler( const CenterPointJumpEventHandler& ceh );
+    //Copy Constructor
+    CenterPointJumpEventHandler( const CenterPointJumpEventHandler& ceh );
 
-   //Destructor
-   virtual ~CenterPointJumpEventHandler();
+    //Destructor
+    virtual ~CenterPointJumpEventHandler();
 
-   //Set the cfdModel
-   //param model The ModelHandler to execute the Command on
-   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
+    //Set the cfdModel
+    //param model The ModelHandler to execute the Command on
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-   //Exectute the event
-   //param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command ); 
+    //Exectute the event
+    //param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   //Equal operator
-   CenterPointJumpEventHandler& operator=( const CenterPointJumpEventHandler& rhs );
+    //Equal operator
+    CenterPointJumpEventHandler& operator=( const CenterPointJumpEventHandler& rhs );
 
 protected:
 

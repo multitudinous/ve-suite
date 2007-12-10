@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef GET_NUMBER_OF_POINTS_CALLBACK 
+#ifndef GET_NUMBER_OF_POINTS_CALLBACK
 #define  GET_NUMBER_OF_POINTS_CALLBACK
 /*!\file GetNumberOfPointsCallback.h
 GetNumberOfPointsCallback API.
@@ -52,20 +52,21 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS GetNumberOfPointsCallback:
-    public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     GetNumberOfPointsCallback();
     ///Destructor
-    virtual ~GetNumberOfPointsCallback(){};
+    virtual ~GetNumberOfPointsCallback()
+    {};
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Get the total number of points for the vtkDataObject
-	///\note This does a dumb sum in that interior boundary points\n
-	///are counted twice...
+    ///\note This does a dumb sum in that interior boundary points\n
+    ///are counted twice...
     unsigned int GetNumberOfPoints();
 protected:
     unsigned int m_numberOfPoints;///<The mean cell bbox length;

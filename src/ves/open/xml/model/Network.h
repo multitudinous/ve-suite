@@ -85,7 +85,7 @@ public:
 
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
-    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
@@ -130,7 +130,7 @@ private:
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::model::Network* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Network* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

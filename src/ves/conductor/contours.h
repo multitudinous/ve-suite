@@ -36,7 +36,7 @@
 *contours API
 */
 /*!\class contours
-* 
+*
 */
 
 #include <ves/VEConfig.h>
@@ -56,8 +56,8 @@ namespace open
 {
 namespace xml
 {
-   class Command;
-   class DataValuePair;
+class Command;
+class DataValuePair;
 }
 }
 }
@@ -90,130 +90,130 @@ namespace ves
 namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS Contours: public wxDialog
-{    
+{
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
-   Contours( );
-   Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, 
-            const wxString& caption = SYMBOL_CONTOURS_TITLE, 
-            const wxPoint& pos = SYMBOL_CONTOURS_POSITION, 
-            const wxSize& size = SYMBOL_CONTOURS_SIZE, 
-            long style = SYMBOL_CONTOURS_STYLE, std::string type="SCALAR" );
+    Contours( );
+    Contours( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME,
+              const wxString& caption = SYMBOL_CONTOURS_TITLE,
+              const wxPoint& pos = SYMBOL_CONTOURS_POSITION,
+              const wxSize& size = SYMBOL_CONTOURS_SIZE,
+              long style = SYMBOL_CONTOURS_STYLE, std::string type = "SCALAR" );
 
-   virtual ~Contours();   
-   
-   enum CONTOUR_IDS
-   {
-      CONTOUR_DIR_RBOX,
-      MULTIPLE_PRECONTOUR_RBUTTON,
-      MULTIPLE_PRECONTOUR_CHK,
-      SINGLE_PRECONTOUR_RBUTTON,
-      SINGLE_PRECONTOUR_CHK,
-      CONTOUR_PLANE_SLIDER,
-      ADD_CONTOUR_PLANE_BUTTON,
-      ADVANCED_CONTOUR_BUTTON
-   };
+    virtual ~Contours();
 
-   /// Creation
-   bool Create( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
+    enum CONTOUR_IDS
+    {
+        CONTOUR_DIR_RBOX,
+        MULTIPLE_PRECONTOUR_RBUTTON,
+        MULTIPLE_PRECONTOUR_CHK,
+        SINGLE_PRECONTOUR_RBUTTON,
+        SINGLE_PRECONTOUR_CHK,
+        CONTOUR_PLANE_SLIDER,
+        ADD_CONTOUR_PLANE_BUTTON,
+        ADVANCED_CONTOUR_BUTTON
+    };
 
-   /// Creates the controls and sizers
-   void CreateControls();
+    /// Creation
+    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_CONTOURS_IDNAME, const wxString& caption = SYMBOL_CONTOURS_TITLE, const wxPoint& pos = SYMBOL_CONTOURS_POSITION, const wxSize& size = SYMBOL_CONTOURS_SIZE, long style = SYMBOL_CONTOURS_STYLE );
 
-   ///Set the data type\n
-   ///\param type The type of data\n
-   ///Valid types are:\n
-   ///SCALAR\n
-   ///VECTOR
-   void SetDataType(std::string type = "SCALAR");
-   
-   ///Get the data type being displayed
-   std::string GetDataType();
+    /// Creates the controls and sizers
+    void CreateControls();
 
-   /// Retrieves bitmap resources
-   wxBitmap GetBitmapResource( const wxString& name );
+    ///Set the data type\n
+    ///\param type The type of data\n
+    ///Valid types are:\n
+    ///SCALAR\n
+    ///VECTOR
+    void SetDataType( std::string type = "SCALAR" );
 
-   /// Retrieves icon resources
-   wxIcon GetIconResource( const wxString& name );
+    ///Get the data type being displayed
+    std::string GetDataType();
 
-   /// Retrieves active scalar
-   void SetActiveScalar(std::string activeScalarName);
+    /// Retrieves bitmap resources
+    wxBitmap GetBitmapResource( const wxString& name );
+
+    /// Retrieves icon resources
+    wxIcon GetIconResource( const wxString& name );
+
+    /// Retrieves active scalar
+    void SetActiveScalar( std::string activeScalarName );
 
 
-   /// Should we show tooltips?
-   static bool ShowToolTips();
+    /// Should we show tooltips?
+    static bool ShowToolTips();
 protected:
-   ///Update the contour with the current settings.
-   void _updateContourInformation();
-   ///Update the advanced settings
-   void _updateAdvancedSettings();
-   
-   /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
-   void _onDirection( wxCommandEvent& event );
+    ///Update the contour with the current settings.
+    void _updateContourInformation();
+    ///Update the advanced settings
+    void _updateAdvancedSettings();
 
-   /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX1
-   void _onContourType( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX
+    void _onDirection( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
-   void _onMultiplePlanes( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBOX_SELECTED event handler for ID_RADIOBOX1
+    void _onContourType( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-   void _onCyclePlanes( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON
+    void _onMultiplePlanes( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1
-   void _onSinglePlane( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+    void _onCyclePlanes( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1
-   void _onPrecomputedPlane( wxCommandEvent& event );
+    /// wxEVT_COMMAND_RADIOBUTTON_SELECTED event handler for ID_RADIOBUTTON1
+    void _onSinglePlane( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-   void _onPlane( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX1
+    void _onPrecomputedPlane( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAddPlane( wxCommandEvent& event );
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onPlane( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
-   void _onAdvanced( wxCommandEvent& event );
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAddPlane( wxCommandEvent& event );
 
-   std::string _dataType;///<Scalar or vector data
-   std::string _activeScalar;///Active scalar name
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON
+    void _onAdvanced( wxCommandEvent& event );
 
-   wxRadioBox*    _directionRBox;
-   //wxRadioBox*    _contourTypeRBox;
-   wxRadioButton* _allPrecomputedRButton;
-   wxCheckBox*    _cyclePrecomputedCBox;
-   wxRadioButton* _singlePlaneRButton;
-   wxCheckBox*    _nearestPrecomputedCBox;
-   wxSlider*      _planePositonSlider;
-   wxButton*      itemButton16;
-   wxButton*      itemButton17;
+    std::string _dataType;///<Scalar or vector data
+    std::string _activeScalar;///Active scalar name
 
-   std::vector<ves::open::xml::DataValuePair*> _advancedSettings;///<The advanced settings.
-   std::vector<ves::open::xml::DataValuePair*> _contourInformation;///<The countour setting data
+    wxRadioBox*    _directionRBox;
+    //wxRadioBox*    _contourTypeRBox;
+    wxRadioButton* _allPrecomputedRButton;
+    wxCheckBox*    _cyclePrecomputedCBox;
+    wxRadioButton* _singlePlaneRButton;
+    wxCheckBox*    _nearestPrecomputedCBox;
+    wxSlider*      _planePositonSlider;
+    wxButton*      itemButton16;
+    wxButton*      itemButton17;
 
-   std::string _planeDirection;///<Store the value of the direction.
-   std::string _planeType;///<The contour type.
-   std::string _numberOfPlanesOption;///<Single or Multiple planes.
-   std::string _planeOption;///<Once single or multiple is selected, the plane option corresponds to the checkbox.
-   double _planePosition;///<The position of the plane.
-   double _lastLOD;///<The last LOD setting from the advanced panel.
-   double _lastWarpedScale;///<The last warped scale setting from the advanced panel.
-   double _lastOpacity;///<The last opacity setting from the advanced panel.
-   std::vector<double> _lastVectorThreshold;///<The min and max values for the vector threshold.
-   double _lastVectorScale;///<The vector scale.
-   double _lastVectorRatio;///<The vector ratio.
-   bool _lastScaleByMagnitude;///<Flag for scaling.
-   bool _warpOption;///<Flag for warp contour option
+    std::vector<ves::open::xml::DataValuePair*> _advancedSettings;///<The advanced settings.
+    std::vector<ves::open::xml::DataValuePair*> _contourInformation;///<The countour setting data
 
-   std::string ConvertUnicode( const wxChar* data )
-   {
-         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-         return tempStr;
-   }
+    std::string _planeDirection;///<Store the value of the direction.
+    std::string _planeType;///<The contour type.
+    std::string _numberOfPlanesOption;///<Single or Multiple planes.
+    std::string _planeOption;///<Once single or multiple is selected, the plane option corresponds to the checkbox.
+    double _planePosition;///<The position of the plane.
+    double _lastLOD;///<The last LOD setting from the advanced panel.
+    double _lastWarpedScale;///<The last warped scale setting from the advanced panel.
+    double _lastOpacity;///<The last opacity setting from the advanced panel.
+    std::vector<double> _lastVectorThreshold;///<The min and max values for the vector threshold.
+    double _lastVectorScale;///<The vector scale.
+    double _lastVectorRatio;///<The vector ratio.
+    bool _lastScaleByMagnitude;///<Flag for scaling.
+    bool _warpOption;///<Flag for warp contour option
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }
 #endif
-    // _CONTOURS_H_
+// _CONTOURS_H_

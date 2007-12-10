@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedIsosurfaceUpdateEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedIsosurfaceUpdateEventHandler();
+    ///Constructor
+    TextureBasedIsosurfaceUpdateEventHandler();
 
-   ///Copy Constructor
-   TextureBasedIsosurfaceUpdateEventHandler(const TextureBasedIsosurfaceUpdateEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedIsosurfaceUpdateEventHandler();
+    ///Copy Constructor
+    TextureBasedIsosurfaceUpdateEventHandler( const TextureBasedIsosurfaceUpdateEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedIsosurfaceUpdateEventHandler();
 
-   ///Equal operator
-   TextureBasedIsosurfaceUpdateEventHandler& operator=(const TextureBasedIsosurfaceUpdateEventHandler& rhs);
+    ///Equal operator
+    TextureBasedIsosurfaceUpdateEventHandler& operator=( const TextureBasedIsosurfaceUpdateEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

@@ -38,18 +38,17 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////////////////////
 ComputeMeanCellBBoxLengthCallback::ComputeMeanCellBBoxLengthCallback()
-:m_meanCellBBLength(0.0)
-{
-}
+        : m_meanCellBBLength( 0.0 )
+{}
 //////////////////////////////////////////////////////////////
 double ComputeMeanCellBBoxLengthCallback::GetMeanCellBBLength()
 {
     return m_meanCellBBLength;
 }
 /////////////////////////////////////////////////////////////////////////////
-void ComputeMeanCellBBoxLengthCallback::OperateOnDataset(vtkDataSet* dataset)
+void ComputeMeanCellBBoxLengthCallback::OperateOnDataset( vtkDataSet* dataset )
 {
-    m_meanCellBBLength += 
-	    cfdAccessoryFunctions::ComputeMeanCellBBLength(dataset);    
+    m_meanCellBBLength +=
+        cfdAccessoryFunctions::ComputeMeanCellBBLength( dataset );
 }
 

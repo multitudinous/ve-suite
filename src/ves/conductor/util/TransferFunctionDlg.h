@@ -52,38 +52,38 @@ namespace conductor
 {
 namespace util
 {
-	class VE_CONDUCTOR_UTILS_EXPORTS TransferFunctionDialog : public ves::conductor::util::BaseDialog 
+class VE_CONDUCTOR_UTILS_EXPORTS TransferFunctionDialog : public ves::conductor::util::BaseDialog
 {
 public:
-   ///Constructor
-   TransferFunctionDialog(wxWindow* parent, int id,std::string title);
-   ///Destructor
-   virtual ~TransferFunctionDialog();
-   
-   enum TRANSFER_FUNCTION_IDS
-   {
-      AVAILABLE_SHADER_MANAGERS,
-      PHONG_ENABLE_CHECK
-   };
+    ///Constructor
+    TransferFunctionDialog( wxWindow* parent, int id, std::string title );
+    ///Destructor
+    virtual ~TransferFunctionDialog();
+
+    enum TRANSFER_FUNCTION_IDS
+    {
+        AVAILABLE_SHADER_MANAGERS,
+        PHONG_ENABLE_CHECK
+    };
 
 
 protected:
-   ///Add the controls to the dialog
-   virtual void _buildGUI();
+    ///Add the controls to the dialog
+    virtual void _buildGUI();
 
-   ///Update the active scalar shader manager
-   ///\param command The wxCommandEvent
-   void _updateActiveScalarShaderManager(wxCommandEvent& command);
+    ///Update the active scalar shader manager
+    ///\param command The wxCommandEvent
+    void _updateActiveScalarShaderManager( wxCommandEvent& command );
 
-   ///Enable/Disable phong lighting 
-   ///\param command The wxCommandEvent
-   void _onEnablePhongLighting(wxCommandEvent& command);
+    ///Enable/Disable phong lighting
+    ///\param command The wxCommandEvent
+    void _onEnablePhongLighting( wxCommandEvent& command );
 
-   wxCheckBox* _phongShadingCheck;///<The phong shading check box.
-   wxComboBox* _shaderManagerSelection;///<The available shader manager.
-   
+    wxCheckBox* _phongShadingCheck;///<The phong shading check box.
+    wxComboBox* _shaderManagerSelection;///<The available shader manager.
 
-   DECLARE_EVENT_TABLE()
+
+    DECLARE_EVENT_TABLE()
 };
 }
 }

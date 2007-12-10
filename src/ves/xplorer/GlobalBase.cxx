@@ -41,24 +41,24 @@ namespace ves
 {
 namespace xplorer
 {
-GlobalBase::GlobalBase() : veCommand(0)
+GlobalBase::GlobalBase() : veCommand( 0 )
 {
-   ; // Do nothing.
+    ; // Do nothing.
 }
 
 GlobalBase::~GlobalBase()
 {
-   ; // Do nothing.
+    ; // Do nothing.
 }
 
 void GlobalBase::SetVECommand( open::xml::Command* command )
 {
-   veCommand = command;
+    veCommand = command;
 }
 
 open::xml::Command* GlobalBase::GetVECommand()
 {
-   return veCommand;
+    return veCommand;
 }
 
 } // end xplorer

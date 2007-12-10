@@ -62,7 +62,7 @@ class VE_MODEL_EXPORTS Tag : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
-    Tag(  );
+    Tag( );
     ///Destructor
     virtual ~Tag();
     ///Copy Constructor
@@ -75,8 +75,8 @@ public:
     void SetText( std::string text );
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
-    virtual void SetObjectFromXMLData( 
-        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    virtual void SetObjectFromXMLData(
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
     ///Get the i'th point for a Tag.
     ///\param i The i'th point you are after.
     PointPtr GetPoint( size_t i );
@@ -87,23 +87,23 @@ public:
     void AddPoint( PointPtr newPoint );
 
 protected:
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName );
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
 
 private:
-   ///raw datatypes of Tag that are specified in the verg_model.xsd file
-   std::vector< PointPtr > tagPoints;///<Vector of Points.
-   std::string tagText;///<string that contains text for the tag
+    ///raw datatypes of Tag that are specified in the verg_model.xsd file
+    std::vector< PointPtr > tagPoints;///<Vector of Points.
+    std::string tagText;///<string that contains text for the tag
 };
 }
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-                                                                           const std::string subElementTagName, ves::open::xml::model::Tag* val)
+    const std::string subElementTagName, ves::open::xml::model::Tag* val )
 {
     val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( 
-                                                                               subElementTagName );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData(
+                                                                  subElementTagName );
     _veElement->appendChild( childElement );
     return childElement;
 }

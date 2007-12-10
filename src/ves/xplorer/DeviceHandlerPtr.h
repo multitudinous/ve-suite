@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class DeviceHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<DeviceHandler>::type  DeviceHandlerPtr;
-   typedef ves::util::SharedPtrDef<DeviceHandler>::type DeviceHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<DeviceHandler>::type   DeviceHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<DeviceHandler>::type DeviceHandlerScopedPtr;
+class DeviceHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<DeviceHandler>::type  DeviceHandlerPtr;
+typedef ves::util::SharedPtrDef<DeviceHandler>::type DeviceHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<DeviceHandler>::type   DeviceHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<DeviceHandler>::type DeviceHandlerScopedPtr;
 }
 }
 #endif

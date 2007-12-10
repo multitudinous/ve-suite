@@ -51,102 +51,111 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS ROIDialog : public BaseDialog 
+class VE_CONDUCTOR_UTILS_EXPORTS ROIDialog : public BaseDialog
 {
 public:
-   ///Constructor
-   ROIDialog(wxWindow* parent, int id,std::string title);
-   ///Destructor
-   virtual ~ROIDialog();
+    ///Constructor
+    ROIDialog( wxWindow* parent, int id, std::string title );
+    ///Destructor
+    virtual ~ROIDialog();
 
-   ///Set the name of the command
-   ///\param name The name of the command.
-   void SetCommandName(std::string name);
-  
-   ///Send the commands to Xplorer;
-   void SendCommands();
+    ///Set the name of the command
+    ///\param name The name of the command.
+    void SetCommandName( std::string name );
 
-   ///Add an instruction to send. This is for access in the callbacks.
-   ///\param newInstruct The instruction to add to the Command.
-   void AddInstruction(ves::open::xml::DataValuePair* newInstruct);
+    ///Send the commands to Xplorer;
+    void SendCommands();
+
+    ///Add an instruction to send. This is for access in the callbacks.
+    ///\param newInstruct The instruction to add to the Command.
+    void AddInstruction( ves::open::xml::DataValuePair* newInstruct );
 protected:
-   /*!\class ROIMinSliderCallback
-    *Class that allows the user to do operations based on the min slider events
-    */
-   class ROIMinSliderCallback:
-	   public ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
+    /*!\class ROIMinSliderCallback
+     *Class that allows the user to do operations based on the min slider events
+     */
+class ROIMinSliderCallback:
+                public ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
         ///Constructors
-        ROIMinSliderCallback(ROIDialog* parent,std::string direction = "X")
+        ROIMinSliderCallback( ROIDialog* parent, std::string direction = "X" )
         {
             _direction = direction;
             _roidlg = parent;
         }
         ///Destructor
-        virtual ~ROIMinSliderCallback(){_direction.clear();}
-        
-        ///The operation to do for the slider
-        virtual void SliderOperation();      
-      protected:
-         std::string _direction;
-         ROIDialog* _roidlg;
-         
-   };
-   /*!\class ROIBothMoveCallback
-    *Class that allows the user to do operations based on both sliders moving, i.e.
-    *This is caused by the slider buffer being reached.
-    */
-   class ROIBothMoveCallback:
-          public ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
-        ///Constructors
-        ROIBothMoveCallback(ROIDialog* parent,std::string direction = "X")
+        virtual ~ROIMinSliderCallback()
         {
-           _direction = direction;
-           _roidlg = parent;
+            _direction.clear();
         }
-        ///Destructor
-        virtual ~ROIBothMoveCallback(){_direction.clear();}
-        
-        ///The operation to do for the slider
-        virtual void SliderOperation();      
-      protected:
-         std::string _direction;
-         ROIDialog* _roidlg;
-   };
-   /*!\class ROIMaxSliderCallback
-    *Class that allows the user to do operations based on the max slider events
-    */
-   class ROIMaxSliderCallback:
-          public ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
-        ///Constructors
-        ROIMaxSliderCallback(ROIDialog* parent,std::string direction = "X")
-        { 
-           _direction = direction;
-           _roidlg = parent;
-        }
-        ///Destructor
-        virtual ~ROIMaxSliderCallback(){_direction.clear();}
-        
-        ///The operation to do for the slider
-        virtual void SliderOperation();      
-      protected:
-         std::string _direction;
-         ROIDialog* _roidlg;
-   };
-   ///Build the DualSlider s for this dialog
-   void _createDualSliders();
-   ///Add the controls to the dialog
-   virtual void _buildGUI();
-   virtual wxSizer* _buildSpecificWidgets();
 
-   ves::conductor::util::DualSlider* _xBounds;///<DualSlider for x bounds
-   ves::conductor::util::DualSlider* _yBounds;///<DualSlider for y bounds
-   ves::conductor::util::DualSlider* _zBounds;///<DualSlider for z bounds
+        ///The operation to do for the slider
+        virtual void SliderOperation();
+    protected:
+        std::string _direction;
+        ROIDialog* _roidlg;
+
+    };
+    /*!\class ROIBothMoveCallback
+     *Class that allows the user to do operations based on both sliders moving, i.e.
+     *This is caused by the slider buffer being reached.
+     */
+class ROIBothMoveCallback:
+                public ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
+        ///Constructors
+        ROIBothMoveCallback( ROIDialog* parent, std::string direction = "X" )
+        {
+            _direction = direction;
+            _roidlg = parent;
+        }
+        ///Destructor
+        virtual ~ROIBothMoveCallback()
+        {
+            _direction.clear();
+        }
+
+        ///The operation to do for the slider
+        virtual void SliderOperation();
+    protected:
+        std::string _direction;
+        ROIDialog* _roidlg;
+    };
+    /*!\class ROIMaxSliderCallback
+     *Class that allows the user to do operations based on the max slider events
+     */
+class ROIMaxSliderCallback:
+                public ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
+        ///Constructors
+        ROIMaxSliderCallback( ROIDialog* parent, std::string direction = "X" )
+        {
+            _direction = direction;
+            _roidlg = parent;
+        }
+        ///Destructor
+        virtual ~ROIMaxSliderCallback()
+        {
+            _direction.clear();
+        }
+
+        ///The operation to do for the slider
+        virtual void SliderOperation();
+    protected:
+        std::string _direction;
+        ROIDialog* _roidlg;
+    };
+    ///Build the DualSlider s for this dialog
+    void _createDualSliders();
+    ///Add the controls to the dialog
+    virtual void _buildGUI();
+    virtual wxSizer* _buildSpecificWidgets();
+
+    ves::conductor::util::DualSlider* _xBounds;///<DualSlider for x bounds
+    ves::conductor::util::DualSlider* _yBounds;///<DualSlider for y bounds
+    ves::conductor::util::DualSlider* _zBounds;///<DualSlider for z bounds
 };
 }
 }

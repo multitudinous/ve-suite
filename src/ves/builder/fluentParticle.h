@@ -43,18 +43,18 @@
 #include <string>
 class fluentParticle
 {
-   public:
-      
-      int mID;
-      float mTime;
-      int mTimeSteps;
-      float mPosX,mPosY,mPosZ;
-      float mVelocityU,mVelocityV,mVelocityW;
-      float mDiameter;
-      float mDensity;
-      float mTemp;
-      float mMass;
-      
+public:
+
+    int mID;
+    float mTime;
+    int mTimeSteps;
+    float mPosX, mPosY, mPosZ;
+    float mVelocityU, mVelocityV, mVelocityW;
+    float mDiameter;
+    float mDensity;
+    float mTemp;
+    float mMass;
+
 
 };
 #endif

@@ -52,28 +52,34 @@ GlobalBase API
 class VE_XPLORER_EXPORTS GlobalBase
 {
 public:
-   GlobalBase();
-   virtual ~GlobalBase ();
-   ///copy constructor
-   GlobalBase( const GlobalBase& ){;}
+    GlobalBase();
+    virtual ~GlobalBase();
+    ///copy constructor
+    GlobalBase( const GlobalBase& )
+    {
+        ;
+    }
 
-   ///this abstract base class declares some pure virtual int functions to be
-   ///specified in concrete implementations
-   ///Process the ves::open::xml::Command that has been passed in
-    virtual void ProcessCommand(){;}
-   
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand() = 0;
+    ///this abstract base class declares some pure virtual int functions to be
+    ///specified in concrete implementations
+    ///Process the ves::open::xml::Command that has been passed in
+    virtual void ProcessCommand()
+    {
+        ;
+    }
 
-   ///Accessor to set the VECommand to be used in any class within Xplorer
-   ///\param command holds the current command to be executed
-   void SetVECommand( ves::open::xml::Command* command );
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand() = 0;
 
-   ///Get the current command
-   ves::open::xml::Command* GetVECommand();
+    ///Accessor to set the VECommand to be used in any class within Xplorer
+    ///\param command holds the current command to be executed
+    void SetVECommand( ves::open::xml::Command* command );
+
+    ///Get the current command
+    ves::open::xml::Command* GetVECommand();
 protected:
 
-   ves::open::xml::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
+    ves::open::xml::Command* veCommand;///<cfdApp side variables declared in VjObs_i.h
 
 private:
 };

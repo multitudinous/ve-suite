@@ -62,15 +62,15 @@ using namespace ves::xplorer::event;
 
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler::StreamLineEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 StreamLineEventHandler::StreamLineEventHandler( const StreamLineEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -92,9 +92,9 @@ void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
     ves::open::xml::DataValuePairWeakPtr glowDVP = command->GetDataValuePair( "Glow" );
 
     double size, glow;
-    std::vector< ves::xplorer::cfdGraphicsObject* > cfdGraphicsObject = 
+    std::vector< ves::xplorer::cfdGraphicsObject* > cfdGraphicsObject =
         ves::xplorer::SteadyStateVizHandler::instance()->
-            GetGraphicsObjectsOfType( STREAMLINES );
+        GetGraphicsObjectsOfType( STREAMLINES );
 
     if( sizeDVP && !cfdGraphicsObject.empty() )
     {
@@ -106,7 +106,7 @@ void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
                 cfdGraphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
-                osg::ref_ptr< osg::Uniform > parSize = 
+                osg::ref_ptr< osg::Uniform > parSize =
                     geodes.at( j )->getDrawable( 0 )->getStateSet()->getUniform( "particleSize" );
                 if( parSize.valid() )
                 {
@@ -115,7 +115,7 @@ void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
             }
         }
     }
-    
+
     if( glowDVP && !cfdGraphicsObject.empty() )
     {
         glowDVP->GetData( glow );
@@ -126,7 +126,7 @@ void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
                 cfdGraphicsObject.at( i )->GetGeodes();
             for( size_t j = 0; j < geodes.size(); ++j )
             {
-                osg::ref_ptr< osg::Uniform > parExp = 
+                osg::ref_ptr< osg::Uniform > parExp =
                     geodes.at( j )->getDrawable( 0 )->getStateSet()->getUniform( "particleExp" );
                 if( parExp.valid() )
                 {

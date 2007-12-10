@@ -52,42 +52,42 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ReloadPluginsEventHandler::ReloadPluginsEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ReloadPluginsEventHandler::ReloadPluginsEventHandler(const ReloadPluginsEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+ReloadPluginsEventHandler::ReloadPluginsEventHandler( const ReloadPluginsEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 ReloadPluginsEventHandler::~ReloadPluginsEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-ReloadPluginsEventHandler& ReloadPluginsEventHandler::operator=(const ReloadPluginsEventHandler& rhs)
+ReloadPluginsEventHandler& ReloadPluginsEventHandler::operator=( const ReloadPluginsEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ReloadPluginsEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ReloadPluginsEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ReloadPluginsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   ;
+    ;
 }
 //////////////////////////////////////////////////////////////////////////
 void ReloadPluginsEventHandler::Execute( XMLObject* xmlObject )
 {
-   cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
-   modules->ResetPluginLoader();
+    cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
+    modules->ResetPluginLoader();
 }

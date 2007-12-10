@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS CADToggleEventHandler : public CADEventHandler
 {
 public:
-   ///Constructor
-   CADToggleEventHandler();
+    ///Constructor
+    CADToggleEventHandler();
 
-   ///Copy Constructor
-   CADToggleEventHandler(const CADToggleEventHandler& rhs);
+    ///Copy Constructor
+    CADToggleEventHandler( const CADToggleEventHandler& rhs );
 
-   ///Destructor
-   virtual ~CADToggleEventHandler();
+    ///Destructor
+    virtual ~CADToggleEventHandler();
 
-   ///Equal operator
-   CADToggleEventHandler& operator=(const CADToggleEventHandler& rhs);
+    ///Equal operator
+    CADToggleEventHandler& operator=( const CADToggleEventHandler& rhs );
 protected:
-   ///Toggle a CADNode on/off.
-   ///\param command The Command containing the CADNode to toggle.
-   void _operateOnNode(ves::open::xml::XMLObject* command);
+    ///Toggle a CADNode on/off.
+    ///\param command The Command containing the CADNode to toggle.
+    void _operateOnNode( ves::open::xml::XMLObject* command );
 };
 
 }

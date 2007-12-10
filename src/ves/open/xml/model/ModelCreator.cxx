@@ -43,115 +43,115 @@
 
 using namespace ves::open::xml::model;
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* ModelCreator::CreateNewXMLObject(std::string objectType)
+ves::open::xml::XMLObject* ModelCreator::CreateNewXMLObject( std::string objectType )
 {
-    if ( objectType == "Link" )
+    if( objectType == "Link" )
     {
         return new Link();
     }
-    else if ( objectType == "veModel" )
+    else if( objectType == "veModel" )
     {
         return new Model();
-    } 
-    else if ( objectType == "veNetwork" )
+    }
+    else if( objectType == "veNetwork" )
     {
         return new Network();
     }
-    else if ( objectType == "Model" )
+    else if( objectType == "Model" )
     {
         return new Model();
-    } 
-    else if ( objectType == "Network" )
+    }
+    else if( objectType == "Network" )
     {
         return new Network();
     }
-    else if ( objectType == "Point" )
+    else if( objectType == "Point" )
     {
         return new Point();
     }
-    else if ( objectType == "Port" )
+    else if( objectType == "Port" )
     {
         return new Port();
     }
-    else if ( objectType == "Tag" )
+    else if( objectType == "Tag" )
     {
         return new Tag();
     }
-    else if ( objectType == "System" )
+    else if( objectType == "System" )
     {
         return new System();
     }
-    else if ( objectType == "veSystem" )
+    else if( objectType == "veSystem" )
     {
         return new System();
     }
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr 
+ves::open::xml::XMLObjectPtr
 ModelCreator::CreateNewXMLObjectSmart( std::string objectType )
 {
-    if ( objectType == "Tag" )
+    if( objectType == "Tag" )
     {
         return new Tag();
     }
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* 
+ves::open::xml::XMLObject*
 ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
-    ves::open::xml::XMLObject* objectToCopy )
+                                      ves::open::xml::XMLObject* objectToCopy )
 {
-   if ( objectType == "Link" )
-   {
-      return new Link(*dynamic_cast<Link*>(objectToCopy));
-   }
-   else if ( objectType == "Model" )
-   {
-      return new Model(*dynamic_cast<Model*>(objectToCopy));
-   }
-   else if ( objectType == "Network" )
-   {
-      return new Network(*dynamic_cast<Network*>(objectToCopy));
-   }
-   else if ( objectType == "veModel" )
-   {
-      return new Model(*dynamic_cast<Model*>(objectToCopy));
-   }
-   else if ( objectType == "veNetwork" )
-   {
-      return new Network(*dynamic_cast<Network*>(objectToCopy));
-   }
-   else if ( objectType == "Point" )
-   {
-      return new Point(*dynamic_cast<Point*>(objectToCopy));
-   }
-   else if ( objectType == "Port" )
-   {
-      return new Port(*dynamic_cast<Port*>(objectToCopy));
-   }
-   else if ( objectType == "Tag" )
-   {
-      return new Tag(*dynamic_cast<Tag*>(objectToCopy));
-   }
-    else if ( objectType == "System" )
+    if( objectType == "Link" )
     {
-        return new System(*dynamic_cast<System*>(objectToCopy));
+        return new Link( *dynamic_cast<Link*>( objectToCopy ) );
     }
-    else if ( objectType == "veSystem" )
+    else if( objectType == "Model" )
     {
-        return new System(*dynamic_cast<System*>(objectToCopy));
+        return new Model( *dynamic_cast<Model*>( objectToCopy ) );
+    }
+    else if( objectType == "Network" )
+    {
+        return new Network( *dynamic_cast<Network*>( objectToCopy ) );
+    }
+    else if( objectType == "veModel" )
+    {
+        return new Model( *dynamic_cast<Model*>( objectToCopy ) );
+    }
+    else if( objectType == "veNetwork" )
+    {
+        return new Network( *dynamic_cast<Network*>( objectToCopy ) );
+    }
+    else if( objectType == "Point" )
+    {
+        return new Point( *dynamic_cast<Point*>( objectToCopy ) );
+    }
+    else if( objectType == "Port" )
+    {
+        return new Port( *dynamic_cast<Port*>( objectToCopy ) );
+    }
+    else if( objectType == "Tag" )
+    {
+        return new Tag( *dynamic_cast<Tag*>( objectToCopy ) );
+    }
+    else if( objectType == "System" )
+    {
+        return new System( *dynamic_cast<System*>( objectToCopy ) );
+    }
+    else if( objectType == "veSystem" )
+    {
+        return new System( *dynamic_cast<System*>( objectToCopy ) );
     }
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr 
+ves::open::xml::XMLObjectPtr
 ModelCreator::CreateNewXMLObjectCopySmart( std::string objectType,
-    ves::open::xml::XMLObjectPtr objectToCopy )
+                                           ves::open::xml::XMLObjectPtr objectToCopy )
 {
-    if ( objectType == "Tag" )
+    if( objectType == "Tag" )
     {
-        ///This is a hack and will be corrected 
+        ///This is a hack and will be corrected
         //with the proper use of a factory
         return new Tag( *dynamic_cast< Tag* >( &*objectToCopy ) );
     }

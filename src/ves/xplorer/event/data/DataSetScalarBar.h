@@ -57,7 +57,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class DCS;
+class DCS;
 }
 }
 }
@@ -76,66 +76,69 @@ DataSetScalarBar API
 class VE_XPLORER_EXPORTS DataSetScalarBar : public GlobalBase
 {
 public:
-   ///Constructor
-   DataSetScalarBar( void );
-   ///Destructor
-   virtual ~DataSetScalarBar( void );
-   /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand(){ ; }
-   /// Create the scalar bar
-   void SetBoundingBox( double* inBBox );
-   /// cleanup and add the scalar bar to the dcs
-   void AddScalarBarToGroup( void );
-   /// Get the scalar bar that was created
-   ves::xplorer::scenegraph::DCS* GetScalarBar( void );
-   ///Create the osg scalar bar
-   osg::ref_ptr< ScalarBar > CreateScalarBar( void );
-   // Create a custom scalar printer
-   struct MyScalarPrinter: public ScalarBar::ScalarPrinter
-   {
-      double min, max, mid;
-      void SetMinMax( double minIn, double maxIn )
-      {
-         min = minIn;
-         max = maxIn;
-         
-         mid = min + ((max - min) * 0.5f);
-      }
-      
-      std::string printScalar(float scalar)
-      {
-         //std::cout<<"In MyScalarPrinter::printScalar "<< scalar <<std::endl;
-         std::ostringstream numStream;
-         if ( ( (scalar > (min - (min * 0.001f)) ) && 
-                (scalar < (min + (min * 0.001f)) ) ) ||
-              (scalar == min) )
-         {
-            numStream << min;
-            return numStream.str();
-         }
-         else if ( (scalar > (mid - (mid * 0.001f)) ) && 
-                   (scalar < (mid + (mid * 0.001f)) ) )
-         { 
-            numStream << mid;
-            return numStream.str();
-         }
-         else if ( (scalar > (max - (max * 0.001f)) ) && 
-                   (scalar < (max + (max * 0.001f)) ) )
-         { 
-            numStream << max;
-            return numStream.str();
-         }
-         else
-         { 
-            return " "; 
-         }
-         //std::cout << ScalarBar::ScalarPrinter::printScalar(scalar) << std::endl;
-      }
-   };
+    ///Constructor
+    DataSetScalarBar( void );
+    ///Destructor
+    virtual ~DataSetScalarBar( void );
+    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand()
+    {
+        ;
+    }
+    /// Create the scalar bar
+    void SetBoundingBox( double* inBBox );
+    /// cleanup and add the scalar bar to the dcs
+    void AddScalarBarToGroup( void );
+    /// Get the scalar bar that was created
+    ves::xplorer::scenegraph::DCS* GetScalarBar( void );
+    ///Create the osg scalar bar
+    osg::ref_ptr< ScalarBar > CreateScalarBar( void );
+    // Create a custom scalar printer
+struct MyScalarPrinter: public ScalarBar::ScalarPrinter
+    {
+        double min, max, mid;
+        void SetMinMax( double minIn, double maxIn )
+        {
+            min = minIn;
+            max = maxIn;
+
+            mid = min + (( max - min ) * 0.5f );
+        }
+
+        std::string printScalar( float scalar )
+        {
+            //std::cout<<"In MyScalarPrinter::printScalar "<< scalar <<std::endl;
+            std::ostringstream numStream;
+            if ((( scalar > ( min - ( min * 0.001f ) ) ) &&
+                    ( scalar < ( min + ( min * 0.001f ) ) ) ) ||
+                    ( scalar == min ) )
+            {
+                numStream << min;
+                return numStream.str();
+            }
+            else if (( scalar > ( mid - ( mid * 0.001f ) ) ) &&
+                     ( scalar < ( mid + ( mid * 0.001f ) ) ) )
+            {
+                numStream << mid;
+                return numStream.str();
+            }
+            else if (( scalar > ( max - ( max * 0.001f ) ) ) &&
+                     ( scalar < ( max + ( max * 0.001f ) ) ) )
+            {
+                numStream << max;
+                return numStream.str();
+            }
+            else
+            {
+                return " ";
+            }
+            //std::cout << ScalarBar::ScalarPrinter::printScalar(scalar) << std::endl;
+        }
+    };
 
 private:
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > scalarBarDCS; ///<Scalar bar coordinate system
-   double bbox[ 6 ]; ///<Bounding box
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > scalarBarDCS; ///<Scalar bar coordinate system
+    double bbox[ 6 ]; ///<Bounding box
 };
 }
 }

@@ -52,27 +52,27 @@ namespace event
 class VE_XPLORER_EXPORTS SoundAddNewEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   SoundAddNewEventHandler();
+    ///Constructor
+    SoundAddNewEventHandler();
 
-   ///Copy Constructor
-   SoundAddNewEventHandler(const SoundAddNewEventHandler& ceh);
-   ///Destructor
-   virtual ~SoundAddNewEventHandler();
+    ///Copy Constructor
+    SoundAddNewEventHandler( const SoundAddNewEventHandler& ceh );
+    ///Destructor
+    virtual ~SoundAddNewEventHandler();
 
-   ///Equal operator
-   SoundAddNewEventHandler& operator=(const SoundAddNewEventHandler& rhs);
+    ///Equal operator
+    SoundAddNewEventHandler& operator=( const SoundAddNewEventHandler& rhs );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   virtual void Execute(ves::open::xml::XMLObject* xmlObject);
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    virtual void Execute( ves::open::xml::XMLObject* xmlObject );
 
-   ///Set the active model
-   ///\param baseObject Active model
-   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
+    ///Set the active model
+    ///\param baseObject Active model
+    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
 protected:
-   ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

@@ -49,7 +49,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class Geode;
+class Geode;
 }
 }
 }
@@ -64,39 +64,39 @@ namespace xplorer
 cfd1DTextInput API
 */
 /*!\class ves::xplorer::cfd1DTextInput
-* 
+*
 */
 class cfd1DTextInput : public ves::xplorer::scenegraph::DCS
 {
 public:
-   ///Constructor
-   cfd1DTextInput( void );
-   ///Destructor
-   virtual ~cfd1DTextInput( void );
-   ///get the Performer DCS (may need to remove)
-   ves::xplorer::scenegraph::DCS* getpfDCS( void );
-   ///set transform values.
-   ///\param scale The scale value.
-   ///\param trans The translation value.
-   ///\param rot The rotation value.
-   void SetTransforms( double scale[ 3 ] , double trans[ 3 ] , double rot[ 3 ]  );
-   ///Set the Filename of the dataset
-   ///\param fileName
-   void SetFilename( std::string fileName);
-   ///update the text
-   void Update( void );
-   ///Update the colors
-   ///\param red The red value.
-   ///\param green The green value.
-   ///\param blue The blue value.
-   void UpdateTextColor( double red, double green, double blue );
+    ///Constructor
+    cfd1DTextInput( void );
+    ///Destructor
+    virtual ~cfd1DTextInput( void );
+    ///get the Performer DCS (may need to remove)
+    ves::xplorer::scenegraph::DCS* getpfDCS( void );
+    ///set transform values.
+    ///\param scale The scale value.
+    ///\param trans The translation value.
+    ///\param rot The rotation value.
+    void SetTransforms( double scale[ 3 ] , double trans[ 3 ] , double rot[ 3 ] );
+    ///Set the Filename of the dataset
+    ///\param fileName
+    void SetFilename( std::string fileName );
+    ///update the text
+    void Update( void );
+    ///Update the colors
+    ///\param red The red value.
+    ///\param green The green value.
+    ///\param blue The blue value.
+    void UpdateTextColor( double red, double green, double blue );
 
 private:
 
-   std::string text;///<The string to hold the text.
-   vtkActor*   actor;///<The VTKactor.
-   //DCS*      dcs;
-   osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.  
+    std::string text;///<The string to hold the text.
+    vtkActor*   actor;///<The VTKactor.
+    //DCS*      dcs;
+    osg::ref_ptr< ves::xplorer::scenegraph::Geode > geode;///<The geode.
 };
 }
 }

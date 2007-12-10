@@ -87,15 +87,15 @@ namespace scenegraph
 vprSingletonImpLifetime( SceneManager, 100 );
 
 SceneManager::SceneManager()
-:
+        :
 #ifdef VE_SOUND
-m_sound( 0 ),
+        m_sound( 0 ),
 #endif
-m_blueArrow( 0 ),
-m_greyArrow( 0 ),
-m_orangeArrow( 0 ),
-m_veText( 0 ),
-m_suiteText( 0 )
+        m_blueArrow( 0 ),
+        m_greyArrow( 0 ),
+        m_orangeArrow( 0 ),
+        m_veText( 0 ),
+        m_suiteText( 0 )
 {
     _param.erase();
 }
@@ -225,7 +225,7 @@ void SceneManager::InitScene()
     bool loadedLib = osgDB::Registry::instance()->loadLibrary( pluginName );
     if( !loadedLib )
     {
-        vprDEBUG( vesDBG,2 ) << "Can't load plugin \""
+        vprDEBUG( vesDBG, 2 ) << "Can't load plugin \""
         << pluginName << "\"." << std::endl << vprDEBUG_FLUSH;
     }
 }
@@ -282,7 +282,7 @@ void SceneManager::_createLogo()
         m_veText = new ves::xplorer::scenegraph::CADEntity( VE(), _logoNode.get(), true, false );
         m_suiteText = new ves::xplorer::scenegraph::CADEntity( Suite(), _logoNode.get(), true, false );
 
-        char phong_vertex[]=
+        char phong_vertex[] =
             "varying vec4 color; \n"
             "varying vec3 eyePos; \n"
             "varying vec3 lightPos; \n"
@@ -290,15 +290,15 @@ void SceneManager::_createLogo()
 
             "void main() \n"
             "{ \n"
-                "gl_Position=ftransform(); \n"
+            "gl_Position=ftransform(); \n"
 
-                "color=gl_Color; \n"
-                "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-                "lightPos=gl_LightSource[0].position.xyz; \n"
-                "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
+            "color=gl_Color; \n"
+            "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
+            "lightPos=gl_LightSource[0].position.xyz; \n"
+            "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
             "} \n";
 
-        char phong_fragment[]=
+        char phong_fragment[] =
             "varying vec4 color; \n"
             "varying vec3 eyePos; \n"
             "varying vec3 lightPos; \n"
@@ -306,21 +306,21 @@ void SceneManager::_createLogo()
 
             "void main() \n"
             "{ \n"
-                "vec3 N=normalize(normal); \n"
-                "vec3 L=normalize(lightPos); \n"
-                "float NDotL=max(dot(N,L),0.0); \n"
+            "vec3 N=normalize(normal); \n"
+            "vec3 L=normalize(lightPos); \n"
+            "float NDotL=max(dot(N,L),0.0); \n"
 
-                "vec3 V=normalize(eyePos); \n"
-                "vec3 R=reflect(V,N); \n"
-                "float RDotL=max(dot(R,L),0.0); \n"
+            "vec3 V=normalize(eyePos); \n"
+            "vec3 R=reflect(V,N); \n"
+            "float RDotL=max(dot(R,L),0.0); \n"
 
-                "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
-                "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
-                "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
+            "vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*color.rgb; \n"
+            "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
+            "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
 
-                "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
+            "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
 
-                "gl_FragColor=vec4(color,1.0); \n"
+            "gl_FragColor=vec4(color,1.0); \n"
             "} \n";
 
         osg::ref_ptr< osg::StateSet > stateset = _logoNode->getOrCreateStateSet();
@@ -352,15 +352,15 @@ void SceneManager::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* SceneManager::GetActiveSwitchNode()
 {
-   osg::Switch::ValueList boolList = _logoSwitch->getValueList();
+    osg::Switch::ValueList boolList = _logoSwitch->getValueList();
 
-   for( size_t i = 0; i < boolList.size(); ++i )
-   {
-      if( boolList.at( i ) )
-      {
-         return dynamic_cast< ves::xplorer::scenegraph::DCS* >( _logoSwitch->getChild( i ) );
-      }
-   }
+    for( size_t i = 0; i < boolList.size(); ++i )
+    {
+        if( boolList.at( i ) )
+        {
+            return dynamic_cast< ves::xplorer::scenegraph::DCS* >( _logoSwitch->getChild( i ) );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetBackgroundColor( std::vector< double > color )

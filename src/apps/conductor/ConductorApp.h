@@ -36,7 +36,7 @@
 ConductorApp API
 */
 /*!\class ConductorApp
-* 
+*
 */
 #include <wx/app.h>
 
@@ -45,13 +45,13 @@ class AppFrame;
 class ConductorApp : public wxApp
 {
 public:
-   virtual bool OnInit();
-   virtual int OnExit();
+    virtual bool OnInit();
+    virtual int OnExit();
 
-   AppFrame *mainFrame;
+    AppFrame *mainFrame;
 
-   long id;
+    long id;
 };
 
-DECLARE_APP(ConductorApp)
+DECLARE_APP( ConductorApp )
 #endif

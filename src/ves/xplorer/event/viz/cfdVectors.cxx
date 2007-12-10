@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdVectors.h>
@@ -59,7 +59,7 @@ using namespace ves::xplorer;
 
 cfdVectors::cfdVectors( const int xyz )
 {
-   this->xyz = xyz;
+    this->xyz = xyz;
 }
 
 cfdVectors::~cfdVectors()
@@ -70,147 +70,147 @@ cfdVectors::~cfdVectors()
 void cfdVectors::Update( void )
 {
 
-   cfdPlanes* precomputedPlanes = 
-       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+    cfdPlanes* precomputedPlanes =
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
 
-   if (!precomputedPlanes)
-   {
-      vprDEBUG(vesDBG, 0) 
-          << "Dataset contains no precomputed vector planes." 
-         << std::endl << vprDEBUG_FLUSH;
-      ves::xplorer::CommandHandler::instance()
-             ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
-      return;
-   }
+    if( !precomputedPlanes )
+    {
+        vprDEBUG( vesDBG, 0 )
+        << "Dataset contains no precomputed vector planes."
+        << std::endl << vprDEBUG_FLUSH;
+        ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
+        return;
+    }
 
-   if ( this->mapper && this->cursorType == CUBE )
-   { 
-      
-     // this->planes = new cfdPlanes();
-     // this->planes->SetAllPlanesSelected();
-     // this->planes->ConcatenateSelectedPlanes();
+    if( this->mapper && this->cursorType == CUBE )
+    {
 
-      double bd[6];
-      this->GetActiveDataSet()->GetBounds( bd );
-      vprDEBUG(vesDBG, 0) <<"d1:"<<bd[0]<<"d2:"<<bd[1]<<"d3:"<<bd[2]
-          <<"d4:"<<bd[3]<<"d5:"<<bd[4]<<"d6:"<<bd[5]
-          << std::endl << vprDEBUG_FLUSH;
+        // this->planes = new cfdPlanes();
+        // this->planes->SetAllPlanesSelected();
+        // this->planes->ConcatenateSelectedPlanes();
 
-      if ( this->origin[0] > (float)bd[0]-(this->box_size[1]-this->box_size[0])/2 
-        && this->origin[0] < (float)bd[1]+(this->box_size[1]-this->box_size[0])/2 
-        && this->origin[1] > (float)bd[2]-(this->box_size[3]-this->box_size[2])/2 
-        && this->origin[1] < (float)bd[3]+(this->box_size[3]-this->box_size[2])/2
-        && this->origin[2] > (float)bd[4]-(this->box_size[5]-this->box_size[4])/2
-        && this->origin[2] < (float)bd[5]+(this->box_size[5]-this->box_size[4])/2 )
-      {
-        /* if ( this->box_size[0] != this->box_size[1] 
-           && this->box_size[2] != this->box_size[3] 
-           && this->box_size[4] != this->box_size[5] )
-         {
-            vprDEBUG(vesDBG, 0)
-                <<"c1:"<<this->box_size[0]<<"c2:"<<this->box_size[1]
-                <<"c3:"<<this->box_size[2]<<"c4:"<<this->box_size[3]
-                <<"c5:"<<this->box_size[4]<<"c6:"<<this->box_size[5]
-                << std::endl << vprDEBUG_FLUSH;
+        double bd[6];
+        this->GetActiveDataSet()->GetBounds( bd );
+        vprDEBUG( vesDBG, 0 ) << "d1:" << bd[0] << "d2:" << bd[1] << "d3:" << bd[2]
+        << "d4:" << bd[3] << "d5:" << bd[4] << "d6:" << bd[5]
+        << std::endl << vprDEBUG_FLUSH;
 
-            //--biv do we need this call ??this->filter->SetExtent( this->box_size );
-            //--biv do we need this call ??this->filter->ExtentClippingOn();
-         }
-         else
-            //--biv do we need this call ??this->filter->ExtentClippingOff();
-*/
-         //this->filter->Update();
-      
-         this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                           ->GetUserRange() );
-         this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                           ->GetLookupTable() );
-         this->mapper->Update();
+        if( this->origin[0] > ( float )bd[0] - ( this->box_size[1] - this->box_size[0] ) / 2
+                && this->origin[0] < ( float )bd[1] + ( this->box_size[1] - this->box_size[0] ) / 2
+                && this->origin[1] > ( float )bd[2] - ( this->box_size[3] - this->box_size[2] ) / 2
+                && this->origin[1] < ( float )bd[3] + ( this->box_size[3] - this->box_size[2] ) / 2
+                && this->origin[2] > ( float )bd[4] - ( this->box_size[5] - this->box_size[4] ) / 2
+                && this->origin[2] < ( float )bd[5] + ( this->box_size[5] - this->box_size[4] ) / 2 )
+        {
+            /* if(this->box_size[0] != this->box_size[1]
+               && this->box_size[2] != this->box_size[3] 
+               && this->box_size[4] != this->box_size[5] )
+             {
+                vprDEBUG(vesDBG, 0)
+                    <<"c1:"<<this->box_size[0]<<"c2:"<<this->box_size[1]
+                    <<"c3:"<<this->box_size[2]<<"c4:"<<this->box_size[3]
+                    <<"c5:"<<this->box_size[4]<<"c6:"<<this->box_size[5]
+                    << std::endl << vprDEBUG_FLUSH;
 
-         this->updateFlag = true;
-      }
-      else
-      { 
-         vprDEBUG(vesDBG, 0) <<"cfdVectors Error: cursor not in cube\n"
+                //--biv do we need this call ??this->filter->SetExtent( this->box_size );
+                //--biv do we need this call ??this->filter->ExtentClippingOn();
+             }
+             else
+                //--biv do we need this call ??this->filter->ExtentClippingOff();
+            */
+            //this->filter->Update();
+
+            this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                          ->GetUserRange() );
+            this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                          ->GetLookupTable() );
+            this->mapper->Update();
+
+            this->updateFlag = true;
+        }
+        else
+        {
+            vprDEBUG( vesDBG, 0 ) << "cfdVectors Error: cursor not in cube\n"
             << vprDEBUG_FLUSH;
-         this->updateFlag = false;
-      }
-   }
-   //make sure that there are planesData and that the cursorType is correct...
-   else if ( this->mapper && this->cursorType == NONE )
-   {
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
+            this->updateFlag = false;
+        }
+    }
+    //make sure that there are planesData and that the cursorType is correct...
+    else if( this->mapper && this->cursorType == NONE )
+    {
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-      std::string vectorName = this->GetActiveDataSet()->
+        std::string vectorName = this->GetActiveDataSet()->
                                  GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-            ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
 
-      std::string scalarName = this->GetActiveDataSet()->
+        std::string scalarName = this->GetActiveDataSet()->
                                  GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-               ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
 
-      // get every nth point from the dataSet data
-      this->ptmask->SetInput( this->GetActiveDataSet()
-                       ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
-      this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-      this->ptmask->Update();
+        // get every nth point from the dataSet data
+        this->ptmask->SetInput( this->GetActiveDataSet()
+                                ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+        this->ptmask->Update();
 
-      // Not VTK Functions
-      this->SetGlyphWithThreshold();
-      this->SetGlyphAttributes();
-      //this->glyph->Update();  
-      //this->glyph->Print( cout );
+        // Not VTK Functions
+        this->SetGlyphWithThreshold();
+        this->SetGlyphAttributes();
+        //this->glyph->Update();
+        //this->glyph->Print( cout );
 
-      //--biv do we need this call ??this->filter->ExtentClippingOff();
-      //this->filter->Update();
-      
-      // Good Test code to see if you are actually getting streamlines
-/*      
-      vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
-      writer->SetInput( ( vtkPolyData * ) filter->GetOutput() );      
-      writer->SetFileName( "teststreamers.vtk" );
-      writer->Write();
-*/     
+        //--biv do we need this call ??this->filter->ExtentClippingOff();
+        //this->filter->Update();
+
+        // Good Test code to see if you are actually getting streamlines
+        /*
+              vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
+              writer->SetInput( ( vtkPolyData * ) filter->GetOutput() );
+              writer->SetFileName( "teststreamers.vtk" );
+              writer->Write();
+        */
         mapper->SetInputConnection( glyph->GetOutputPort() );
-        mapper->ImmediateModeRenderingOn();    
-        this->mapper->SetScalarRange( 
+        mapper->ImmediateModeRenderingOn();
+        this->mapper->SetScalarRange(
             this->GetActiveDataSet()->GetUserRange() );
-        this->mapper->SetLookupTable( 
+        this->mapper->SetLookupTable(
             this->GetActiveDataSet()->GetLookupTable() );
-     // this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+        // this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
 
-      //this->mapper->Update();  //sgent
-   }
-   else
-   {
-      this->updateFlag = false;
-   }
-   
-   vtkActor* temp = vtkActor::New();
-   temp->SetMapper( this->mapper );
-   temp->GetProperty()->SetSpecularPower( 20.0f );
-   //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-   //geodes.back()->TranslateToGeode( temp );
-   //temp->Delete();
-   //this->updateFlag = true;
-   try
-   {
-		osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-      tempGeode->TranslateToGeode( temp );
-      geodes.push_back( tempGeode ); 
-      this->updateFlag = true;
-   }
-   catch( std::bad_alloc )
-   {
-      mapper->Delete();
-      mapper = vtkMultiGroupPolyDataMapper::New();
-      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVectors " 
-                           << std::endl << vprDEBUG_FLUSH;
-   }
-   this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
-   temp->Delete();
+        //this->mapper->Update();  //sgent
+    }
+    else
+    {
+        this->updateFlag = false;
+    }
+
+    vtkActor* temp = vtkActor::New();
+    temp->SetMapper( this->mapper );
+    temp->GetProperty()->SetSpecularPower( 20.0f );
+    //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+    //geodes.back()->TranslateToGeode( temp );
+    //temp->Delete();
+    //this->updateFlag = true;
+    try
+    {
+        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+        tempGeode->TranslateToGeode( temp );
+        geodes.push_back( tempGeode );
+        this->updateFlag = true;
+    }
+    catch ( std::bad_alloc )
+    {
+        mapper->Delete();
+        mapper = vtkMultiGroupPolyDataMapper::New();
+        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdVectors "
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+    temp->Delete();
 }
 

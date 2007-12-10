@@ -38,21 +38,21 @@ namespace xplorer
 {
 Thread::Thread( void )
 {
-   //corba_run = NULL;
-   new_thread = NULL;
+    //corba_run = NULL;
+    new_thread = NULL;
 }
 
 Thread::~Thread( void )
 {
-   /*if ( corba_run != NULL )
-   {
-      delete corba_run;
-   }*/
-   
-   if ( new_thread != NULL )
-   {
-      delete new_thread;
-   }
+    /*if ( corba_run != NULL )
+    {
+       delete corba_run;
+    }*/
+
+    if( new_thread != NULL )
+    {
+        delete new_thread;
+    }
 }
 
 } // end xplorer

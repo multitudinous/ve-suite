@@ -42,7 +42,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdPlanes;
+class cfdPlanes;
 }
 }
 
@@ -63,21 +63,21 @@ cfdMomentums API
 class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
 {
 public:
-   ///Initialize the multiple momentum profiles, based on the input 
-   ///from the vtkPolyData generated from cfdPlanes.  
-   ///\param xyz
-   cfdMomentums( const int xyz );
-   ///Destructor
-   virtual ~cfdMomentums( void );
+    ///Initialize the multiple momentum profiles, based on the input
+    ///from the vtkPolyData generated from cfdPlanes.
+    ///\param xyz
+    cfdMomentums( const int xyz );
+    ///Destructor
+    virtual ~cfdMomentums( void );
 
-   ///Output an updated pfGeoSet.
-   virtual void Update( void );
+    ///Output an updated pfGeoSet.
+    virtual void Update( void );
 
 private:
-   int xyz;///<relative locatio
+    int xyz;///<relative locatio
 
-   vtkWarpVector * warper;///<warper used by vtk
-   cfdPlanes* planes;///<planes
+    vtkWarpVector * warper;///<warper used by vtk
+    cfdPlanes* planes;///<planes
 };
 }
 }

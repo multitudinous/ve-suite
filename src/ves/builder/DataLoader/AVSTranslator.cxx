@@ -47,62 +47,64 @@ using namespace ves::builder::cfdTranslatorToVTK;
 AVSTranslator::AVSTranslator()
 {
 
-   SetTranslateCallback(&_AVSToVTK);
-   SetPreTranslateCallback(&_cmdParser);
+    SetTranslateCallback( &_AVSToVTK );
+    SetPreTranslateCallback( &_cmdParser );
 }
 /////////////////////////////////////////
 AVSTranslator::~AVSTranslator()
-{
-
-}
+{}
 //////////////////////////////////////////////////////////////////////////
-void AVSTranslator::AVSPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               cfdTranslatorToVTK* toVTK)
+void AVSTranslator::AVSPreTranslateCbk::Preprocess( int argc, char** argv,
+                                                    cfdTranslatorToVTK* toVTK )
 {
-   PreTranslateCallback::Preprocess( argc, argv, toVTK );
+    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AVSTranslator::AVSTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                     cfdTranslatorToVTK* toVTK)
+void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
+                                                cfdTranslatorToVTK* toVTK )
 {
-   AVSTranslator* AVSToVTK =
-              dynamic_cast<AVSTranslator*>(toVTK);
-   if(AVSToVTK)
-   {
-      vtkAVSucdReader* avsReader = vtkAVSucdReader::New();
-      avsReader->SetFileName(AVSToVTK->GetFile(0).c_str());
-      avsReader->Update();
-      if(!outputDataset){
-         outputDataset = vtkUnstructuredGrid::New();
-      }
-      vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-      tmpDSet->DeepCopy(avsReader->GetOutput());
+    AVSTranslator* AVSToVTK =
+        dynamic_cast<AVSTranslator*>( toVTK );
+    if( AVSToVTK )
+    {
+        vtkAVSucdReader* avsReader = vtkAVSucdReader::New();
+        avsReader->SetFileName( AVSToVTK->GetFile( 0 ).c_str() );
+        avsReader->Update();
+        if( !outputDataset )
+        {
+            outputDataset = vtkUnstructuredGrid::New();
+        }
+        vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+        tmpDSet->DeepCopy( avsReader->GetOutput() );
 
-      //get the info about the data in the data set
-      unsigned int nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
-      if(!nPtDataArrays){
-         std::cout<<"Warning!!!"<<std::endl;
-         std::cout<<"No point data found!"<<std::endl;
-         std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+        //get the info about the data in the data set
+        unsigned int nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
+        if( !nPtDataArrays )
+        {
+            std::cout << "Warning!!!" << std::endl;
+            std::cout << "No point data found!" << std::endl;
+            std::cout << "Attempting to convert cell data to point data." << std::endl;
 
-         vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();
-      
-         dataConvertCellToPoint->SetInput(tmpDSet);
-         dataConvertCellToPoint->PassCellDataOff();
-         dataConvertCellToPoint->Update();
-         outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-         outputDataset->Update();
-         return;
-      }else{
-         outputDataset->DeepCopy(tmpDSet);
-         outputDataset->Update();
-      }
-   }
+            vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();
+
+            dataConvertCellToPoint->SetInput( tmpDSet );
+            dataConvertCellToPoint->PassCellDataOff();
+            dataConvertCellToPoint->Update();
+            outputDataset->DeepCopy( dataConvertCellToPoint->GetOutput() );
+            outputDataset->Update();
+            return;
+        }
+        else
+        {
+            outputDataset->DeepCopy( tmpDSet );
+            outputDataset->Update();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AVSTranslator::DisplayHelp( void )
 {
-   std::cout << "|\tAVS Translator Usage:" << std::endl
-               << "\t -singleFile <filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader avs -w file" << std::endl;
+    std::cout << "|\tAVS Translator Usage:" << std::endl
+    << "\t -singleFile <filename_to_load> -o <output_dir> "
+    << "-outFileName <output_filename> -loader avs -w file" << std::endl;
 }

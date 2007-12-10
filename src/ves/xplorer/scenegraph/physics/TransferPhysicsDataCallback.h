@@ -46,7 +46,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class PhysicsRigidBody; 
+class PhysicsRigidBody;
 
 #ifdef _OSG
 /*!\file TransferPhysicsDataCallback.h
@@ -67,7 +67,10 @@ public:
     TransferPhysicsDataCallback();
 
     ///Destructor
-    virtual ~TransferPhysicsDataCallback(){;}
+    virtual ~TransferPhysicsDataCallback()
+    {
+        ;
+    }
 
     ///Copy constructor
     TransferPhysicsDataCallback( const TransferPhysicsDataCallback& );

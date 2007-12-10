@@ -37,50 +37,48 @@ using namespace ves::conductor::util;
 ///Constructor                         //
 /////////////////////////////////////////
 CADMaterialEditMenu::CADMaterialEditMenu()
-:wxMenu()
+        : wxMenu()
 {
-   Append(DIFFUSE_ID,
-          _T("Diffuse..."),
-          _T("Set Diffuse color of material"),
-          wxITEM_NORMAL);
+    Append( DIFFUSE_ID,
+            _T( "Diffuse..." ),
+            _T( "Set Diffuse color of material" ),
+            wxITEM_NORMAL );
 
-   Append(AMBIENT_ID,
-          _T("Ambient..."),
-          _T("Set Ambient color of material"),
-          wxITEM_NORMAL);
+    Append( AMBIENT_ID,
+            _T( "Ambient..." ),
+            _T( "Set Ambient color of material" ),
+            wxITEM_NORMAL );
 
-   Append(SPECULAR_ID,
-          _T("Specular..."),
-          _T("Set Specular color of material"),
-          wxITEM_NORMAL);
+    Append( SPECULAR_ID,
+            _T( "Specular..." ),
+            _T( "Set Specular color of material" ),
+            wxITEM_NORMAL );
 
-   Append(EMISSIVE_ID,
-          _T("Emissive..."),
-          _T("Set Emissive color of material"),
-          wxITEM_NORMAL);
-   InsertSeparator(4);
+    Append( EMISSIVE_ID,
+            _T( "Emissive..." ),
+            _T( "Set Emissive color of material" ),
+            wxITEM_NORMAL );
+    InsertSeparator( 4 );
 
-   Append(SHININESS_ID,
-          _T("Shininess..."),
-          _T("Set shininess of material"),
-          wxITEM_NORMAL);
-   Append(OPACITY_ID,
-          _T("Opacity..."),
-          _T("Set Opacity color of material"),
-          wxITEM_NORMAL);
-   InsertSeparator(7);
+    Append( SHININESS_ID,
+            _T( "Shininess..." ),
+            _T( "Set shininess of material" ),
+            wxITEM_NORMAL );
+    Append( OPACITY_ID,
+            _T( "Opacity..." ),
+            _T( "Set Opacity color of material" ),
+            wxITEM_NORMAL );
+    InsertSeparator( 7 );
 
-   Append(COLOR_MODE_ID,
-          _T("Color Mode..."),
-          _T("Set the color mode of this material"),
-          wxITEM_NORMAL);
-   Append(FACE_ID,
-          _T("Face..."),
-          _T("Set the face to apply this material to"),
-          wxITEM_NORMAL);
+    Append( COLOR_MODE_ID,
+            _T( "Color Mode..." ),
+            _T( "Set the color mode of this material" ),
+            wxITEM_NORMAL );
+    Append( FACE_ID,
+            _T( "Face..." ),
+            _T( "Set the face to apply this material to" ),
+            wxITEM_NORMAL );
 }
 /////////////////////////////
 CADMaterialEditMenu::~CADMaterialEditMenu()
-{
-  
-}
+{}

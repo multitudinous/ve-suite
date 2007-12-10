@@ -56,57 +56,84 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage:
-      public osgUtil::RenderStage
-   {
-      public:
-         cfdCopyTo3DTextureStage();
-         virtual ~cfdCopyTo3DTextureStage();
-         virtual osg::Object* cloneType() const { return new cfdCopyTo3DTextureStage(); }
-         virtual osg::Object* clone(const osg::CopyOp&) const { return new cfdCopyTo3DTextureStage(); } // note only implements a clone of type.
-         virtual bool isSameKindAs(const osg::Object* obj) const { return dynamic_cast<const cfdCopyTo3DTextureStage*>(obj)!=0L; }
-         virtual const char* libraryName() const { return ""; }
-         virtual const char* className() const { return "cfdCopyTo3DTextureStage"; }
+class VE_TEXTURE_BASED_EXPORTS cfdCopyTo3DTextureStage:
+            public osgUtil::RenderStage
+{
+public:
+    cfdCopyTo3DTextureStage();
+    virtual ~cfdCopyTo3DTextureStage();
+    virtual osg::Object* cloneType() const
+    {
+        return new cfdCopyTo3DTextureStage();
+    }
+    virtual osg::Object* clone( const osg::CopyOp& ) const
+    {
+        return new cfdCopyTo3DTextureStage();
+    } // note only implements a clone of type.
+    virtual bool isSameKindAs( const osg::Object* obj ) const
+    {
+        return dynamic_cast<const cfdCopyTo3DTextureStage*>( obj ) != 0L;
+    }
+    virtual const char* libraryName() const
+    {
+        return "";
+    }
+    virtual const char* className() const
+    {
+        return "cfdCopyTo3DTextureStage";
+    }
 #ifdef _PBUFFER
-         inline void setPBuffer(cfdPBufferManager* pbuffer) { _pbuffer = pbuffer; }
-#endif  
-         void SetWhichSliceToUpdate(unsigned int whichSlice);
+    inline void setPBuffer( cfdPBufferManager* pbuffer )
+    {
+        _pbuffer = pbuffer;
+    }
+#endif
+    void SetWhichSliceToUpdate( unsigned int whichSlice );
 
-         //whichSlice corresponds to offset in the 3d texture
-         //whichDir corresponds to the direction (x =0,y=1,z=2)
-         inline void setSliceToUpdate(int whichSlice=0,int whichDir=2)
-         {
-            _whichSlice = whichSlice;
-            _whichDir = whichDir;
-         }
-         void SetViewDirection(int whichDir=2){_whichDir = whichDir;}
-         virtual void reset();
-        
-         void set3DTexture(osg::Texture3D* texture) { _texture = texture; }
-         void SetShaderStateSet(osg::StateSet* ss);
-         osg::Texture3D* getTexture() { return _texture.get(); }
+    //whichSlice corresponds to offset in the 3d texture
+    //whichDir corresponds to the direction (x =0,y=1,z=2)
+    inline void setSliceToUpdate( int whichSlice = 0, int whichDir = 2 )
+    {
+        _whichSlice = whichSlice;
+        _whichDir = whichDir;
+    }
+    void SetViewDirection( int whichDir = 2 )
+    {
+        _whichDir = whichDir;
+    }
+    virtual void reset();
+
+    void set3DTexture( osg::Texture3D* texture )
+    {
+        _texture = texture;
+    }
+    void SetShaderStateSet( osg::StateSet* ss );
+    osg::Texture3D* getTexture()
+    {
+        return _texture.get();
+    }
 
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-   void draw(osg::RenderInfo& renderInfo, osgUtil::RenderLeaf*& previous);
+    void draw( osg::RenderInfo& renderInfo, osgUtil::RenderLeaf*& previous );
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-   void draw(osg::State& state, osgUtil::RenderLeaf*& previous);
+    void draw( osg::State& state, osgUtil::RenderLeaf*& previous );
 #endif
 
-      protected:   
-  
-         osg::ref_ptr<osg::FrameStamp> _fs;
-         osg::ref_ptr<osg::Texture3D> _texture;
-         osg::ref_ptr<osg::State> _localState;
-         osg::ref_ptr<osg::StateSet> _shader;
+protected:
+
+    osg::ref_ptr<osg::FrameStamp> _fs;
+    osg::ref_ptr<osg::Texture3D> _texture;
+    osg::ref_ptr<osg::State> _localState;
+    osg::ref_ptr<osg::StateSet> _shader;
 #ifdef _PBUFFER
-         cfdPBufferManager* _pbuffer;
+    cfdPBufferManager* _pbuffer;
 #endif
-         unsigned int _whichSlice;
-         unsigned int _whichDir;
-         int _width;
-         int _height;
-        int _nSlices;
-   };
+    unsigned int _whichSlice;
+    unsigned int _whichDir;
+    int _width;
+    int _height;
+    int _nSlices;
+};
 }
 }
 }

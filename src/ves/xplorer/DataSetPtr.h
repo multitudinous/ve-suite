@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class DataSet;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<DataSet>::type  DataSetPtr;
-   typedef ves::util::SharedPtrDef<DataSet>::type DataSetSharedPtr;
-   typedef ves::util::WeakPtrDef<DataSet>::type   DataSetWeakPtr;
-   typedef ves::util::ScopedPtrDef<DataSet>::type DataSetScopedPtr;
+class DataSet;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<DataSet>::type  DataSetPtr;
+typedef ves::util::SharedPtrDef<DataSet>::type DataSetSharedPtr;
+typedef ves::util::WeakPtrDef<DataSet>::type   DataSetWeakPtr;
+typedef ves::util::ScopedPtrDef<DataSet>::type DataSetScopedPtr;
 }
 }
 #endif

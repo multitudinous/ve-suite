@@ -46,36 +46,36 @@ class OPort;
 
 ///This class is basically a link
 ///It has an id, input port, output port
-class VE_CE_UTILS_EXPORTS Connection 
+class VE_CE_UTILS_EXPORTS Connection
 {
 public:
-   ///??
-   Connection(int);
-   ///??
-   Connection(const Connection&);
-   ~Connection();
+    ///??
+    Connection( int );
+    ///??
+    Connection( const Connection& );
+    ~Connection();
 
-   ///??
-   void copy (const Connection&);
+    ///??
+    void copy( const Connection& );
 
-   ///??
-   IPort* get_iport ();
-   ///??
-   OPort* get_oport ();
+    ///??
+    IPort* get_iport();
+    ///??
+    OPort* get_oport();
 
-   ///??
-   void connect_iport (IPort*);
-   ///??
-   void connect_oport (OPort*);
+    ///??
+    void connect_iport( IPort* );
+    ///??
+    void connect_oport( OPort* );
 
-   ///??
-   int get_id();
+    ///??
+    int get_id();
 
 private:
-   IPort* _iport;
-   OPort* _oport;
+    IPort* _iport;
+    OPort* _oport;
 
-   int _id;
+    int _id;
 };
 }
 }

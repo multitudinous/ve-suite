@@ -46,123 +46,121 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////
 DataObjectHandler::DataObjectHandler()
-:m_numberOfPointDataArrays(0),
-m_numberOfCellDataArrays(0)
+        : m_numberOfPointDataArrays( 0 ),
+        m_numberOfCellDataArrays( 0 )
 
 {
     m_datasetOperator = 0;
 }
 ///////////////////////////////////////
 DataObjectHandler::~DataObjectHandler()
-{
-
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-void DataObjectHandler::OperateOnAllDatasetsInObject(vtkDataObject* dataObject)
+void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject )
 {
     /*if(m_datasetOperator)
     {
         std::cout<<"No operator defined for datasets!!!"<<std::endl;
         std::cout<<"DataObjectHandler::operateOnAllDatasetsInObject."<<std::endl;
-	    return;
+     return;
     }*/
     unsigned int numDatasets = 0;
     vtkDataSet* currentDataset = 0;
-    if(dataObject->IsA("vtkMultiGroupDataSet"))
+    if( dataObject->IsA( "vtkMultiGroupDataSet" ) )
     {
         try
-	    {
-            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
+        {
+            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>( dataObject );
             unsigned int nGroups = mgd->GetNumberOfGroups();
             unsigned int nDatasetsInGroup = 0;
             vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
-            mgdIterator->SetDataSet(mgd);
+            mgdIterator->SetDataSet( mgd );
             ///For traversal of nested multigroupdatasets
             mgdIterator->VisitOnlyLeavesOn();
             mgdIterator->GoToFirstItem();
 
-            while(!mgdIterator->IsDoneWithTraversal())
+            while( !mgdIterator->IsDoneWithTraversal() )
             {
-                currentDataset = dynamic_cast<vtkDataSet*>(mgdIterator->GetCurrentDataObject());
-                _convertCellDataToPointData(currentDataset);
-				if(m_datasetOperator)
-				{
-                    m_datasetOperator->OperateOnDataset(currentDataset);
-				}
-				mgdIterator->GoToNextItem();   
+                currentDataset = dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
+                _convertCellDataToPointData( currentDataset );
+                if( m_datasetOperator )
+                {
+                    m_datasetOperator->OperateOnDataset( currentDataset );
+                }
+                mgdIterator->GoToNextItem();
             }
-            if(mgdIterator)
+            if( mgdIterator )
             {
                 mgdIterator->Delete();
                 mgdIterator = 0;
             }
         }
-        catch(...)
+        catch ( ... )
         {
-            std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
+            std::cout << "Invalid Dataset: " << dataObject->GetClassName() << std::endl;
         }
     }
     else //Assume this is a regular vtkdataset
     {
-        currentDataset = dynamic_cast<vtkDataSet*>(dataObject);
-        _convertCellDataToPointData(currentDataset);
-		if(m_datasetOperator)
-		{
-            m_datasetOperator->OperateOnDataset(currentDataset);
-		}
+        currentDataset = dynamic_cast<vtkDataSet*>( dataObject );
+        _convertCellDataToPointData( currentDataset );
+        if( m_datasetOperator )
+        {
+            m_datasetOperator->OperateOnDataset( currentDataset );
+        }
     }
 
 }
 ////////////////////////////////////////////////////////////////////////
-void DataObjectHandler::_convertCellDataToPointData(vtkDataSet* dataSet)
+void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
 {
-    if(dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays)
+    if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
     {
-       m_numberOfPointDataArrays = dataSet->GetPointData()
-                                        ->GetNumberOfArrays();
+        m_numberOfPointDataArrays = dataSet->GetPointData()
+                                    ->GetNumberOfArrays();
     }
-    if(dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays)
+    if( dataSet->GetCellData()->GetNumberOfArrays() > m_numberOfCellDataArrays )
     {
-       m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
+        m_numberOfCellDataArrays = dataSet->GetCellData()->GetNumberOfArrays();
     }
-    if ( m_numberOfCellDataArrays > 0 && m_numberOfPointDataArrays  == 0 )
+    if( m_numberOfCellDataArrays > 0 && m_numberOfPointDataArrays  == 0 )
     {
-        std::cout <<"|\tThe dataset has no point data -- "
-                  << "will try to convert cell data to point data" << std::endl;
+        std::cout << "|\tThe dataset has no point data -- "
+        << "will try to convert cell data to point data" << std::endl;
 
         vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
         converter->SetInput( 0, dataSet );
         converter->PassCellDataOff();
         converter->Update();
 
-	    ///Why do we need to do this only for unstructured grids?
-        if ( dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
+        ///Why do we need to do this only for unstructured grids?
+        if( dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
         {
             dataSet->DeepCopy( converter->GetUnstructuredGridOutput() );
             converter->Delete();
-		}
+        }
         else
         {
             converter->Delete();
-            std::cout <<"\nAttempt failed: can not currently handle "
-                      << "this type of data\n" << std::endl;
-            exit(1);
+            std::cout << "\nAttempt failed: can not currently handle "
+            << "this type of data\n" << std::endl;
+            exit( 1 );
         }
-		if(dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays)
+        if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
         {
-           m_numberOfPointDataArrays = dataSet->GetPointData()
+            m_numberOfPointDataArrays = dataSet->GetPointData()
                                         ->GetNumberOfArrays();
         }
     }
     return;
 }
 ///////////////////////////////////////////////////////////////////////
-unsigned int DataObjectHandler::GetNumberOfDataArrays(bool isPointData)
+unsigned int DataObjectHandler::GetNumberOfDataArrays( bool isPointData )
 {
-    return (isPointData)?m_numberOfPointDataArrays:m_numberOfCellDataArrays;
+    return ( isPointData ) ? m_numberOfPointDataArrays : m_numberOfCellDataArrays;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void DataObjectHandler::SetDatasetOperatorCallback(DatasetOperatorCallback* dsoCbk)
+void DataObjectHandler::SetDatasetOperatorCallback( DatasetOperatorCallback* dsoCbk )
 {
     m_datasetOperator = dsoCbk;
 }

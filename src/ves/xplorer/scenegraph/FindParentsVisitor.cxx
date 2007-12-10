@@ -37,9 +37,9 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 FindParentsVisitor::FindParentsVisitor( osg::Node* node )
-:
-NodeVisitor( TRAVERSE_PARENTS ),
-parentNode( 0 )
+        :
+        NodeVisitor( TRAVERSE_PARENTS ),
+        parentNode( 0 )
 {
     node->accept( *this );
 }
@@ -60,10 +60,10 @@ std::string FindParentsVisitor::GetNodeGUID()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FindParentsVisitor::apply( osg::Node& node )
-{ 
+{
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = node.getDescriptions();
-    
+
     //Find the parent node and the id of this particular node
     for( size_t i = 0; i < descriptorsList.size(); i++ )
     {
@@ -75,7 +75,7 @@ void FindParentsVisitor::apply( osg::Node& node )
             break;
         }
     }
-    
+
     //If we did not find an id and therefore a parent then keep going up
     if( !parentNode )
     {

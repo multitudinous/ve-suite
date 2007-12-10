@@ -50,19 +50,22 @@ namespace volume
 {
 class cfdTextureManager;
 
-class GreyScaleShaderManager: public cfdScalarShaderManager{
+class GreyScaleShaderManager: public cfdScalarShaderManager
+{
 public:
-   ///Constructor
-   GreyScaleShaderManager(){};
-   ///Destructor
-   virtual ~GreyScaleShaderManager(){}
-         
+    ///Constructor
+    GreyScaleShaderManager()
+    {};
+    ///Destructor
+    virtual ~GreyScaleShaderManager()
+    {}
+
 protected:
-   ///Update the transfer function
-   ///\param fastUpdate Determines if we are updating the preintegrated table or just diagonal
-   //void _updateTransferFunction(bool preIntegrated=true);
-   ///Initialize the transfer functions
-   virtual void _initTransferFunctions();
+    ///Update the transfer function
+    ///\param fastUpdate Determines if we are updating the preintegrated table or just diagonal
+    //void _updateTransferFunction(bool preIntegrated=true);
+    ///Initialize the transfer functions
+    virtual void _initTransferFunctions();
 };
 }
 }

@@ -48,32 +48,32 @@
 #include <ves/VEConfig.h>
 using namespace ves::xplorer;
 
-int main(int argc, char* argv[])
+int main( int argc, char* argv[] )
 {
-    std::cout 
-        << "|-----------------------------------------------------------------|" 
-        << std::endl 
-        << "|\tVE-Xplorer Version "
-        << VES_MAJOR_VERSION << "." 
-        << VES_MINOR_VERSION << "." 
-        << VES_PATCH_VERSION << "." 
-		<< SVN_VES_REVISION << std::endl
-		<< "|-----------------------------------------------------------------|" 
-        << std::endl;
+    std::cout
+    << "|-----------------------------------------------------------------|"
+    << std::endl
+    << "|\tVE-Xplorer Version "
+    << VES_MAJOR_VERSION << "."
+    << VES_MINOR_VERSION << "."
+    << VES_PATCH_VERSION << "."
+    << SVN_VES_REVISION << std::endl
+    << "|-----------------------------------------------------------------|"
+    << std::endl;
     try
     {
-        CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"VE_Suite_ORB" );
+        CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "VE_Suite_ORB" );
 
         //Here is the part to contact the naming service and get the reference for the executive
         CORBA::Object_var naming_context_object =
-        orb->resolve_initial_references ("NameService"); 
-        CORBA::String_var sior1(orb->object_to_string( naming_context_object.in() ) );
+            orb->resolve_initial_references( "NameService" );
+        CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
         std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
-        CosNaming::NamingContext_var naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in());
+        CosNaming::NamingContext_var naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
 
         //Here is the code to set up the server
-        CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
-        PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
+        CORBA::Object_var poa_object = orb->resolve_initial_references( "RootPOA" ); // get the root poa
+        PortableServer::POA_var poa = PortableServer::POA::_narrow( poa_object.in() );
         PortableServer::POAManager_var poa_manager = poa->the_POAManager();
 
         // Create policy with BiDirPolicy::BOTH
@@ -82,18 +82,18 @@ int main(int argc, char* argv[])
 
         CORBA::Any pol;
         pol <<= BiDirPolicy::BOTH;
-        policies[ 0 ] = 
+        policies[ 0 ] =
             orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol );
 
-        // Create POA as child of RootPOA with the above policies.  This POA 
-        // will receive request in the same connection in which it sent 
-        // the request 
+        // Create POA as child of RootPOA with the above policies.  This POA
+        // will receive request in the same connection in which it sent
+        // the request
 
-        PortableServer::POA_var child_poa = poa->create_POA ("childPOA",
-            poa_manager.in(), policies);
+        PortableServer::POA_var child_poa = poa->create_POA( "childPOA",
+                                                             poa_manager.in(), policies );
 
-        // Creation of childPOA is over. Destroy the Policy objects. 
-        for( CORBA::ULong i = 0; i < policies.length (); ++i)
+        // Creation of childPOA is over. Destroy the Policy objects.
+        for( CORBA::ULong i = 0; i < policies.length(); ++i )
         {
             policies[i]->destroy();
         }
@@ -103,31 +103,31 @@ int main(int argc, char* argv[])
         //Initialize Xplorer CORBA interfaces
         VjObsWrapper* vjobsWrapper = new VjObsWrapper();
         vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
-        
+
         //Start the juggler kernel here so that we can run on darwin
         vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 #if __VJ_version >= 2003000
-        kernel->init(argc, argv);
+        kernel->init( argc, argv );
 #elif __VJ_version == 2000003
 #endif
-        for ( int i = 1; i < argc; ++i )          // Configure the kernel
+        for( int i = 1; i < argc; ++i )        // Configure the kernel
         {
-            if ( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
+            if( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
             {
                 //skip the resolutions
                 i = i + 2;
             }
-            else if ( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
+            else if( std::string( argv[ i ] ) == std::string( "-VESCluster" ) )
             {
                 //Skip the master computer name
                 i = i + 1;
             }
             else
             {
-                kernel->loadConfigFile( argv[i] );  
+                kernel->loadConfigFile( argv[i] );
             }
         }
-                
+
         AppWrapper* appWrapper = new AppWrapper( argc, argv, vjobsWrapper );
 
         kernel->waitForKernelStop();              // Block until kernel stops
@@ -146,20 +146,20 @@ int main(int argc, char* argv[])
         //appWrapper->m_thread->new_thread->join();
         delete appWrapper;
     }
-    catch( CORBA::SystemException& ) 
+    catch ( CORBA::SystemException& )
     {
         std::cerr << "Caught CORBA::SystemException." << std::endl
-                  << " The nameserver is probably not started yet or " << std::endl
-                  << " the computer name and port number passed into " << std::endl
-                  << " VE-Xplorer do not match the computer name and " << std::endl
-                  << " port number specified in the VES script.      " << std::endl
-                  << " Please start the nameserver with -> VES -nserv . " << std::endl;
+        << " The nameserver is probably not started yet or " << std::endl
+        << " the computer name and port number passed into " << std::endl
+        << " VE-Xplorer do not match the computer name and " << std::endl
+        << " port number specified in the VES script.      " << std::endl
+        << " Please start the nameserver with -> VES -nserv . " << std::endl;
     }
-    catch( CORBA::Exception& ) 
+    catch ( CORBA::Exception& )
     {
         std::cerr << "Caught CORBA::Exception." << std::endl;
     }
-    catch ( ... ) 
+    catch ( ... )
     {
         std::cerr << "Caught unknown exception." << std::endl;
     }

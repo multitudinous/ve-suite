@@ -49,66 +49,66 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////
 Model::Model()
-:XMLObject( )
+        : XMLObject( )
 {
-   //modelName = '\0';
-   uniqueModelID = 0;
-   //iconFileName = '\0';
-   iconLocation = new Point();
-   geometry = 0;
-   SetObjectType("Model");
-   SetObjectNamespace("Model");
-   //vendorUnit = '\0';
-   modelAttribute = 0;
-   iconScale = 1.0f;
-   iconRotation = 0.0f;
-   iconMirror = 0;
-   parentModel = NULL;
+    //modelName = '\0';
+    uniqueModelID = 0;
+    //iconFileName = '\0';
+    iconLocation = new Point();
+    geometry = 0;
+    SetObjectType( "Model" );
+    SetObjectNamespace( "Model" );
+    //vendorUnit = '\0';
+    modelAttribute = 0;
+    iconScale = 1.0f;
+    iconRotation = 0.0f;
+    iconMirror = 0;
+    parentModel = NULL;
 }
 ///////////////////////////////////
 Model::~Model()
 {
-   for ( size_t i = 0; i < ports.size(); ++i )
-   {
-      delete ports.at( i );
-   }
-   ports.clear();
+    for( size_t i = 0; i < ports.size(); ++i )
+    {
+        delete ports.at( i );
+    }
+    ports.clear();
 
-   delete iconLocation;
+    delete iconLocation;
 
-   for ( size_t i = 0; i < results.size(); ++i )
-   {
-      delete results.at( i );
-   }
-   results.clear();
+    for( size_t i = 0; i < results.size(); ++i )
+    {
+        delete results.at( i );
+    }
+    results.clear();
 
-   for ( size_t i = 0; i < inputs.size(); ++i )
-   {
-      delete inputs.at( i );
-   }
-   inputs.clear();
+    for( size_t i = 0; i < inputs.size(); ++i )
+    {
+        delete inputs.at( i );
+    }
+    inputs.clear();
 
-   for ( size_t i = 0; i < informationPackets.size(); ++i )
-   {
-      delete informationPackets.at( i );
-   }
-   informationPackets.clear();
+    for( size_t i = 0; i < informationPackets.size(); ++i )
+    {
+        delete informationPackets.at( i );
+    }
+    informationPackets.clear();
 
-   if ( geometry )
-   {   
-      delete geometry;
-      geometry = 0;
-   }
-   
-   if ( modelAttribute )
-   {
-      delete modelAttribute;
-      modelAttribute = 0;
-   }
+    if( geometry )
+    {
+        delete geometry;
+        geometry = 0;
+    }
+
+    if( modelAttribute )
+    {
+        delete modelAttribute;
+        modelAttribute = 0;
+    }
 }
 ///////////////////////////////////////////
 Model::Model( const Model& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
     modelName = input.modelName;
     uniqueModelID = input.uniqueModelID;
@@ -122,148 +122,148 @@ Model::Model( const Model& input )
         m_subSystem = new System( *input.m_subSystem );
     }
 
-    for ( size_t i = 0; i < input.ports.size(); ++i )
+    for( size_t i = 0; i < input.ports.size(); ++i )
     {
-        ports.push_back( new Port( *(input.ports.at( i )) ) );
+        ports.push_back( new Port( *( input.ports.at( i ) ) ) );
     }
 
-    iconLocation = new Point( *(input.iconLocation) );
+    iconLocation = new Point( *( input.iconLocation ) );
 
-    for ( size_t i = 0; i < input.results.size(); ++i )
+    for( size_t i = 0; i < input.results.size(); ++i )
     {
-        results.push_back( new Command( *(input.results.at( i )) ) );
+        results.push_back( new Command( *( input.results.at( i ) ) ) );
     }
 
-    for ( size_t i = 0; i < input.inputs.size(); ++i )
+    for( size_t i = 0; i < input.inputs.size(); ++i )
     {
-        inputs.push_back( new Command( *(input.inputs.at( i )) ) );
+        inputs.push_back( new Command( *( input.inputs.at( i ) ) ) );
     }
 
-    for ( size_t i = 0; i < input.informationPackets.size(); ++i )
+    for( size_t i = 0; i < input.informationPackets.size(); ++i )
     {
-        informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
+        informationPackets.push_back( new ParameterBlock( *( input.informationPackets.at( i ) ) ) );
     }
 
     geometry = 0;
     if( input.geometry )
     {
-        geometry = new CADAssembly( *(input.geometry) );
+        geometry = new CADAssembly( *( input.geometry ) );
     }
 
     modelAttribute = 0;
-    if ( input.modelAttribute )
+    if( input.modelAttribute )
     {
-        modelAttribute = new Command( *(input.modelAttribute) );
+        modelAttribute = new Command( *( input.modelAttribute ) );
     }
-	
-	//add ptr to parent - used for querying
+
+    //add ptr to parent - used for querying
     parentModel = input.parentModel;
 }
 /////////////////////////////////////////////////////
-Model& Model::operator=( const Model& input)
+Model& Model::operator=( const Model& input )
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-      modelName = input.modelName;
-      uniqueModelID = input.uniqueModelID;
-      iconFileName = input.iconFileName;
-      vendorUnit = input.vendorUnit;
-      iconScale = input.iconScale;
-      iconRotation = input.iconRotation;
-      iconMirror = input.iconMirror;
-      if( input.m_subSystem )
-      {
-          m_subSystem = new System( *input.m_subSystem );
-      }
-      
-      for ( size_t i = 0; i < ports.size(); ++i )
-      {
-         delete ports.at( i );
-      }
-      ports.clear();
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =( input );
+        modelName = input.modelName;
+        uniqueModelID = input.uniqueModelID;
+        iconFileName = input.iconFileName;
+        vendorUnit = input.vendorUnit;
+        iconScale = input.iconScale;
+        iconRotation = input.iconRotation;
+        iconMirror = input.iconMirror;
+        if( input.m_subSystem )
+        {
+            m_subSystem = new System( *input.m_subSystem );
+        }
 
-      for ( size_t i = 0; i < input.ports.size(); ++i )
-      {
-         ports.push_back( new Port( *(input.ports.at( i )) ) );
-      }
+        for( size_t i = 0; i < ports.size(); ++i )
+        {
+            delete ports.at( i );
+        }
+        ports.clear();
 
-      *iconLocation = *(input.iconLocation);
+        for( size_t i = 0; i < input.ports.size(); ++i )
+        {
+            ports.push_back( new Port( *( input.ports.at( i ) ) ) );
+        }
 
-      for ( size_t i = 0; i < results.size(); ++i )
-      {
-         delete results.at( i );
-      }
-      results.clear();
+        *iconLocation = *( input.iconLocation );
 
-      for ( size_t i = 0; i < input.results.size(); ++i )
-      {
-         results.push_back( new Command( *(input.results.at( i )) ) );
-      }
+        for( size_t i = 0; i < results.size(); ++i )
+        {
+            delete results.at( i );
+        }
+        results.clear();
 
-      for ( size_t i = 0; i < inputs.size(); ++i )
-      {
-         delete inputs.at( i );
-      }
-      inputs.clear();
+        for( size_t i = 0; i < input.results.size(); ++i )
+        {
+            results.push_back( new Command( *( input.results.at( i ) ) ) );
+        }
 
-      for ( size_t i = 0; i < input.inputs.size(); ++i )
-      {
-         inputs.push_back( new Command( *(input.inputs.at( i )) ) );
-      }
+        for( size_t i = 0; i < inputs.size(); ++i )
+        {
+            delete inputs.at( i );
+        }
+        inputs.clear();
 
-      for ( size_t i = 0; i < informationPackets.size(); ++i )
-      {
-         delete informationPackets.at( i );
-      }
-      informationPackets.clear();
+        for( size_t i = 0; i < input.inputs.size(); ++i )
+        {
+            inputs.push_back( new Command( *( input.inputs.at( i ) ) ) );
+        }
 
-      for ( size_t i = 0; i < input.informationPackets.size(); ++i )
-      {
-         informationPackets.push_back( new ParameterBlock( *(input.informationPackets.at( i )) ) );
-      }
+        for( size_t i = 0; i < informationPackets.size(); ++i )
+        {
+            delete informationPackets.at( i );
+        }
+        informationPackets.clear();
 
-      if ( input.geometry )
-      {
-         if ( !geometry )
-         {
-            geometry = new CADAssembly();
-         }
-         *geometry = *(input.geometry);
-      }
+        for( size_t i = 0; i < input.informationPackets.size(); ++i )
+        {
+            informationPackets.push_back( new ParameterBlock( *( input.informationPackets.at( i ) ) ) );
+        }
 
-      if ( input.modelAttribute )
-      {
-         if ( !modelAttribute )
-         {
-            modelAttribute = new Command();
-         }
-         *modelAttribute = *(input.modelAttribute);
-      }	
-      
-       //add ptr to parent - used for querying
-       parentModel = input.parentModel;
-   }
-   return *this;
+        if( input.geometry )
+        {
+            if( !geometry )
+            {
+                geometry = new CADAssembly();
+            }
+            *geometry = *( input.geometry );
+        }
+
+        if( input.modelAttribute )
+        {
+            if( !modelAttribute )
+            {
+                modelAttribute = new Command();
+            }
+            *modelAttribute = *( input.modelAttribute );
+        }
+
+        //add ptr to parent - used for querying
+        parentModel = input.parentModel;
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////
 void Model::SetModelName( std::string name )
 {
-   modelName = name;
+    modelName = name;
 }
 ////////////////////////////////////////////////////////////
 void Model::SetModelID( unsigned int id )
 {
-   uniqueModelID = id;
+    uniqueModelID = id;
 }
 ////////////////////////////////////////////////////////////
 void Model::SetIconFilename( std::string filename )
 {
-   iconFileName = filename;
+    iconFileName = filename;
 }
 ////////////////////////////////////////////////////////////
-void Model::SetObjectFromXMLData(DOMNode* element)
+void Model::SetObjectFromXMLData( DOMNode* element )
 {
     DOMElement* currentElement = 0;
     if( element->getNodeType() == DOMNode::ELEMENT_NODE )
@@ -274,12 +274,12 @@ void Model::SetObjectFromXMLData(DOMNode* element)
     if( !currentElement )
     {
         return;
-    }   
+    }
 
     //Setup uuid for model element
     {
         std::string tempUuid;
-		ves::open::xml::XMLObject::GetAttribute(currentElement, "id", tempUuid);
+        ves::open::xml::XMLObject::GetAttribute( currentElement, "id", tempUuid );
         if( !tempUuid.empty() )
         {
             uuid = tempUuid;
@@ -290,10 +290,10 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
     {
         dataValueStringName = GetSubElement( currentElement, "name", 0 );
-        if ( dataValueStringName )
+        if( dataValueStringName )
         {
             modelName = ExtractFromSimpleElement< std::string >( dataValueStringName );
-            dataValueStringName = 0;            
+            dataValueStringName = 0;
         }
         else
         {
@@ -305,14 +305,14 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
     {
         dataValueStringName = GetSubElement( currentElement, "ID", 0 );
-        if ( dataValueStringName )
+        if( dataValueStringName )
         {
             uniqueModelID = ExtractFromSimpleElement< unsigned int >( dataValueStringName );
         }
         else
         {
             std::string idString;
-            GetAttribute( currentElement, "ID", idString );  
+            GetAttribute( currentElement, "ID", idString );
             std::istringstream inputStream( idString );
             inputStream >> uniqueModelID;
         }
@@ -320,7 +320,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
     {
         dataValueStringName = GetSubElement( currentElement, "icon", 0 );
-        if ( dataValueStringName )
+        if( dataValueStringName )
         {
             iconFileName = ExtractFromSimpleElement< std::string >( dataValueStringName );
         }
@@ -328,14 +328,14 @@ void Model::SetObjectFromXMLData(DOMNode* element)
         {
             iconFileName = std::string( "no_icon" );
         }
-        GetAttribute( dataValueStringName, "iconScale", iconScale );  
-        GetAttribute( dataValueStringName, "iconRotation", iconRotation );    
-        GetAttribute( dataValueStringName, "iconMirror", iconMirror );          
+        GetAttribute( dataValueStringName, "iconScale", iconScale );
+        GetAttribute( dataValueStringName, "iconRotation", iconRotation );
+        GetAttribute( dataValueStringName, "iconMirror", iconMirror );
     }
 
     {
         dataValueStringName = GetSubElement( currentElement, "iconLocation", 0 );
-        if ( iconLocation )
+        if( iconLocation )
         {
             delete iconLocation;
             iconLocation = 0;
@@ -346,69 +346,69 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 
     //get the geometry nodes
     {
-        if ( currentElement->getElementsByTagName( xercesString("geometry") )->getLength() > 0 )
+        if( currentElement->getElementsByTagName( xercesString( "geometry" ) )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
-            if ( geometry )
+            if( geometry )
             {
                 delete geometry;
                 geometry = 0;
             }
-            geometry = new CADAssembly("oops" );
+            geometry = new CADAssembly( "oops" );
             geometry->SetObjectFromXMLData( dataValueStringName );
         }
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("ports") )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "ports" ) )->getLength();
 
-        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "ports", i );
-            ports.push_back( new Port(  ) );
+            ports.push_back( new Port( ) );
             ports.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("results") )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "results" ) )->getLength();
 
-        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "results", i );
-            results.push_back( new Command(  ) );
+            results.push_back( new Command( ) );
             results.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("inputs") )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "inputs" ) )->getLength();
 
-        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "inputs", i );
-            inputs.push_back( new Command(  ) );
+            inputs.push_back( new Command( ) );
             inputs.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString("informationPackets") )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "informationPackets" ) )->getLength();
 
-        for ( unsigned int i = 0; i < numberOfPortData; ++i )
+        for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
-            informationPackets.push_back( new ParameterBlock(  ) );
+            informationPackets.push_back( new ParameterBlock( ) );
             informationPackets.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
 
     //get the model attribute nodes
     {
-        if ( currentElement->getElementsByTagName( xercesString("modelAttributes") )->getLength() > 0 )
+        if( currentElement->getElementsByTagName( xercesString( "modelAttributes" ) )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
-            if ( modelAttribute )
+            if( modelAttribute )
             {
                 delete modelAttribute;
                 modelAttribute = 0;
@@ -424,7 +424,7 @@ void Model::SetObjectFromXMLData(DOMNode* element)
         {
             m_subSystem = new System();
             //set parent
-            m_subSystem->SetParentModel(this);
+            m_subSystem->SetParentModel( this );
             m_subSystem->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -432,131 +432,131 @@ void Model::SetObjectFromXMLData(DOMNode* element)
 ////////////////////////////////////////////////////////////
 std::string Model::GetModelName( void )
 {
-   return modelName;
+    return modelName;
 }
 ////////////////////////////////////////////////////////////
 unsigned int Model::GetModelID( void )
 {
-   return uniqueModelID;
+    return uniqueModelID;
 }
 ////////////////////////////////////////////////////////////
 std::string Model::GetIconFilename( void )
 {
-   return iconFileName;
+    return iconFileName;
 }
 ////////////////////////////////////////////////////////////
 Point* Model::GetIconLocation( void )
 {
-   return iconLocation;
+    return iconLocation;
 }
 ////////////////////////////////////////////////////////////
 Command* Model::GetResult( int i )
 {
-   try
-   {
-      return results.at( i );
-   }
-   catch (...)
-   {
-      if ( i >= 0 )
-      {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         return 0;
-      }
-      //else
-      {
-         results.push_back( new Command(  ) );
-         return results.back();
-      }
-   }
+    try
+    {
+        return results.at( i );
+    }
+    catch ( ... )
+    {
+        if( i >= 0 )
+        {
+            std::cerr << "The element request is out of sequence."
+            << " Please ask for a lower number point." << std::endl;
+            return 0;
+        }
+        //else
+        {
+            results.push_back( new Command( ) );
+            return results.back();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfResults( void )
 {
-   return results.size();
+    return results.size();
 }
 ////////////////////////////////////////////////
-Command* Model::GetInput(std::string inputName)
+Command* Model::GetInput( std::string inputName )
 {
-   for(size_t i = 0; i < inputs.size(); i++)
-   {
-      if(inputs.at(i)->GetCommandName() == inputName)
-      {
-         return inputs.at(i);
-      }
-   }
-   return 0;
+    for( size_t i = 0; i < inputs.size(); i++ )
+    {
+        if( inputs.at( i )->GetCommandName() == inputName )
+        {
+            return inputs.at( i );
+        }
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////
 Command* Model::GetInput( int i )
 {
-   try
-   {
-      return inputs.at( i );
-   }
-   catch (...)
-   {
-      if ( i >= 0 )
-      {
-         std::cerr << " Model::GetInput The element request is out of sequence."
+    try
+    {
+        return inputs.at( i );
+    }
+    catch ( ... )
+    {
+        if( i >= 0 )
+        {
+            std::cerr << " Model::GetInput The element request is out of sequence."
             << " Please ask for a lower number point or -1 to request new element." << std::endl;
-      }  
-      inputs.push_back( new Command() );
-      return inputs.back();
-   }
+        }
+        inputs.push_back( new Command() );
+        return inputs.back();
+    }
 }
 ////////////////////////////////////////////////////////////
 ves::open::xml::Command* Model::GetInput( void )
 {
-   inputs.push_back( new Command() );
-   return inputs.back();
+    inputs.push_back( new Command() );
+    return inputs.back();
 }
 ////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfInputs( void )
 {
-   return inputs.size();
+    return inputs.size();
 }
 ////////////////////////////////////////////////////////////
-Port* Model::GetPort(int i )
+Port* Model::GetPort( int i )
 {
-   try
-   {
-      return ports.at( i );
-   }
-   catch (...)
-   {
-      //if ( i > (ports.size() + 1) )
-	  if ( i >=0)
-      {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         return 0;
-      }
-      else
-      {
-         ports.push_back( new Port(  ) );
-         return ports.back();
-      }
-   }
+    try
+    {
+        return ports.at( i );
+    }
+    catch ( ... )
+    {
+        //if ( i > (ports.size() + 1) )
+        if( i >= 0 )
+        {
+            std::cerr << "The element request is out of sequence."
+            << " Please ask for a lower number point." << std::endl;
+            return 0;
+        }
+        else
+        {
+            ports.push_back( new Port( ) );
+            return ports.back();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 Port* Model::GetPort( void )
 {
-   ports.push_back( new Port() );
-   return ports.back();
+    ports.push_back( new Port() );
+    return ports.back();
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfPorts( void )
 {
-   return ports.size();
+    return ports.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::RemovePort( unsigned int i )
 {
     size_t count = 0;
-    for( std::vector< Port* >::iterator iter = ports.begin(); 
-        iter != ports.end(); ++iter )
+    for( std::vector< Port* >::iterator iter = ports.begin();
+            iter != ports.end(); ++iter )
     {
         if( count == i )
         {
@@ -569,8 +569,8 @@ void Model::RemovePort( unsigned int i )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::RemovePort( ves::open::xml::model::Port* removePort )
 {
-    for( std::vector< Port* >::iterator iter = ports.begin(); 
-        iter != ports.end(); ++iter )
+    for( std::vector< Port* >::iterator iter = ports.begin();
+            iter != ports.end(); ++iter )
     {
         if( *iter == removePort )
         {
@@ -589,7 +589,7 @@ Port* Model::GetOutputPort( unsigned int i )
    }
    catch (...)
    {
-      if ( i > ( outputPorts.size() + 1) )
+      if(i > ( outputPorts.size() + 1) )
       {
          std::cerr << "The element request is out of sequence."
                      << " Please ask for a lower number point." << std::endl;
@@ -609,97 +609,97 @@ size_t Model::GetNumberOfOutputPorts( void )
    return outputPorts.size();
 }*/
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::ParameterBlock* Model::GetInformationPacket( std::string name)
+ves::open::xml::ParameterBlock* Model::GetInformationPacket( std::string name )
 {
 
-   for(std::vector<ves::open::xml::ParameterBlock*>::iterator iter = informationPackets.begin();
-      iter != informationPackets.end(); ++iter)
-   {
-      if((*iter)->GetName() == name)
-      {
-         return (*iter);
-      }
-   }
-   //std::cout<<"Parameter Block: "<<name<<std::endl;
-   //std::cout<<"not found in Model: "<<uuid<<std::endl;
-   return 0;
+    for( std::vector<ves::open::xml::ParameterBlock*>::iterator iter = informationPackets.begin();
+            iter != informationPackets.end(); ++iter )
+    {
+        if (( *iter )->GetName() == name )
+        {
+            return ( *iter );
+        }
+    }
+    //std::cout<<"Parameter Block: "<<name<<std::endl;
+    //std::cout<<"not found in Model: "<<uuid<<std::endl;
+    return 0;
 }
 ////////////////////////////////////////////////////////////
 ParameterBlock* Model::GetInformationPacket( int i )
 {
-   try
-   {
-      return informationPackets.at( i );
-   }
-   catch (...)
-   {
-      if ( i >= 0 )
-      {
-         std::cerr << "The element request is out of sequence."
-                     << " Please ask for a lower number point." << std::endl;
-         return 0;
-      }
-      else
-      {
-         informationPackets.push_back( new ParameterBlock(  ) );
-         return informationPackets.back();
-      }
-   }
+    try
+    {
+        return informationPackets.at( i );
+    }
+    catch ( ... )
+    {
+        if( i >= 0 )
+        {
+            std::cerr << "The element request is out of sequence."
+            << " Please ask for a lower number point." << std::endl;
+            return 0;
+        }
+        else
+        {
+            informationPackets.push_back( new ParameterBlock( ) );
+            return informationPackets.back();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////
 size_t Model::GetNumberOfInformationPackets( void )
 {
-   return informationPackets.size();
+    return informationPackets.size();
 }
 ////////////////////////////////////////////////////////////
 CADNode* Model::GetGeometry( void )
 {
-   return geometry;
+    return geometry;
 }
 ////////////////////////////////////////////////////////////
 CADNode* Model::AddGeometry( void )
 {
-   if ( geometry == 0 )
-      geometry = new CADAssembly( "Model_Geometry" );
+    if( geometry == 0 )
+        geometry = new CADAssembly( "Model_Geometry" );
 
-   return geometry;
+    return geometry;
 }
 ////////////////////////////////////////////////////////////
 void Model::DeleteGeometry( void )
 {
-   if ( geometry )
-   {
-      delete geometry;
-      geometry = 0;
-   }
+    if( geometry )
+    {
+        delete geometry;
+        geometry = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::RemoveInformationPacket( unsigned int i )
 {
-   std::vector< ves::open::xml::ParameterBlock* >::iterator iter;
-   for( iter = informationPackets.begin(); iter != informationPackets.end(); ++iter )
-   {
-      if( informationPackets.at( i ) == (*iter) )
-      {
-         delete informationPackets.at( i );
-         informationPackets.erase( iter );
-         return;
-      }
-   }
+    std::vector< ves::open::xml::ParameterBlock* >::iterator iter;
+    for( iter = informationPackets.begin(); iter != informationPackets.end(); ++iter )
+    {
+        if( informationPackets.at( i ) == ( *iter ) )
+        {
+            delete informationPackets.at( i );
+            informationPackets.erase( iter );
+            return;
+        }
+    }
 }
 //////////////////////////////////////////////////////
-void Model::RemoveInformationPacket(std::string name )
+void Model::RemoveInformationPacket( std::string name )
 {
-   for(std::vector<ves::open::xml::ParameterBlock*>::iterator iter = informationPackets.begin();
-      iter != informationPackets.end(); ++iter)
-   {
-      if((*iter)->GetName() == name)
-      {
-         delete *iter;
-         informationPackets.erase( iter );
-         return;
-      }
-   }
+    for( std::vector<ves::open::xml::ParameterBlock*>::iterator iter = informationPackets.begin();
+            iter != informationPackets.end(); ++iter )
+    {
+        if (( *iter )->GetName() == name )
+        {
+            delete *iter;
+            informationPackets.erase( iter );
+            return;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::_updateVEElement( std::string input )
@@ -707,7 +707,7 @@ void Model::_updateVEElement( std::string input )
     // write all the elements according to verg_model.xsd
     for( size_t i = 0; i < ports.size(); ++i )
     {
-        SetSubElement( "ports", ports.at( i ) );   
+        SetSubElement( "ports", ports.at( i ) );
     }
 
     SetSubElement( "iconLocation", iconLocation );
@@ -718,7 +718,7 @@ void Model::_updateVEElement( std::string input )
     {
         vendorUnit = modelName;
     }
-    
+
     SetAttribute( "vendorUnit", vendorUnit );
     //SetSubElement( "name", modelName );
     std::ostringstream dirStringStream;
@@ -730,100 +730,100 @@ void Model::_updateVEElement( std::string input )
     {
         std::stringstream int2string;
         int2string << iconScale;
-        iconElement->setAttribute( xercesString( "iconScale" ), xercesString( int2string.str().c_str() )  );
+        iconElement->setAttribute( xercesString( "iconScale" ), xercesString( int2string.str().c_str() ) );
     }
     ///
     {
         std::stringstream int2string;
         int2string << iconRotation;
-        iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() )  );      
+        iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() ) );
     }
     ///
     {
         std::stringstream int2string;
         int2string << iconMirror;
-        iconElement->setAttribute( xercesString( "iconMirror" ), xercesString( int2string.str().c_str() )  );      
+        iconElement->setAttribute( xercesString( "iconMirror" ), xercesString( int2string.str().c_str() ) );
     }
 
-    for ( size_t i = 0; i < results.size(); ++i )
+    for( size_t i = 0; i < results.size(); ++i )
     {
-        SetSubElement( "results", results.at( i ) );   
+        SetSubElement( "results", results.at( i ) );
     }
 
-    for ( size_t i = 0; i < inputs.size(); ++i )
+    for( size_t i = 0; i < inputs.size(); ++i )
     {
-        SetSubElement( "inputs", inputs.at( i ) );   
+        SetSubElement( "inputs", inputs.at( i ) );
     }
 
     for( size_t i = 0; i < informationPackets.size(); ++i )
     {
-        SetSubElement( "informationPackets", informationPackets.at( i ) );   
+        SetSubElement( "informationPackets", informationPackets.at( i ) );
     }
 
     if( geometry )
-    {   
-        SetSubElement( "geometry", geometry );   
+    {
+        SetSubElement( "geometry", geometry );
     }
 
     if( modelAttribute )
     {
-        SetSubElement( "modelAttributes", modelAttribute );   
+        SetSubElement( "modelAttributes", modelAttribute );
     }
 
     if( m_subSystem )
     {
-        SetSubElement( "modelSubSystem", &(*m_subSystem) );   
-    }   
+        SetSubElement( "modelSubSystem", &( *m_subSystem ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetVendorName( std::string vendorName )
 {
-   vendorUnit = vendorName;
+    vendorUnit = vendorName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string Model::GetVendorName( void )
 {
-   return vendorUnit;
+    return vendorUnit;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetModelAttribute( ves::open::xml::Command* modelAttribute )
 {
-   this->modelAttribute = modelAttribute;
+    this->modelAttribute = modelAttribute;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::Command* Model::GetModelAttribute( void )
 {
-   return this->modelAttribute;
+    return this->modelAttribute;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetIconRotation( float rotation )
 {
-   iconRotation = rotation;
+    iconRotation = rotation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 float Model::GetIconRotation( void )
 {
-   return iconRotation;
+    return iconRotation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetIconScale( float scale )
 {
-   iconScale = scale;
+    iconScale = scale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 float Model::GetIconScale( void )
 {
-   return iconScale;
+    return iconScale;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetIconMirror( int mirror )
 {
-   iconMirror = mirror;
+    iconMirror = mirror;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Model::GetIconMirror( void )
 {
-   return iconMirror;
+    return iconMirror;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetSubSystem( ves::open::xml::model::SystemWeakPtr inputSystem )

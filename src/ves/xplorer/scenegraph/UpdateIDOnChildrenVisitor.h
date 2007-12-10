@@ -53,7 +53,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
+class DCS;
 }
 }
 }

@@ -57,11 +57,11 @@ namespace open
 {
 namespace xml
 {
-   class DataValuePair;
-   namespace model
-   {
-      class Point;
-   }
+class DataValuePair;
+namespace model
+{
+class Point;
+}
 }
 }
 }
@@ -74,7 +74,7 @@ namespace xml
 {
 namespace model
 {
-	class VE_MODEL_EXPORTS Link : public ves::open::xml::XMLObject
+class VE_MODEL_EXPORTS Link : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
@@ -88,8 +88,8 @@ public:
 
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
-    virtual void SetObjectFromXMLData( 
-        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    virtual void SetObjectFromXMLData(
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
     ///Get the portInfo for the fromPort.
     ///\return The element with the information about the module being linked to
@@ -130,9 +130,9 @@ protected:
     virtual void _updateVEElement( std::string tagName );
 
 private:
-       ///raw datatypes of Link that are specified in the verg_model.xsd file
+    ///raw datatypes of Link that are specified in the verg_model.xsd file
     std::vector< Point* > linkPoints;///<Vector of Points.
-    ///The data value pair will contain the model and port 
+    ///The data value pair will contain the model and port
     ///number of the appropriate port to be linked
     ///The classes hold the fromPort in first and the toPort in second.
     std::pair< ves::open::xml::DataValuePair*, ves::open::xml::DataValuePair* > moduleInfo;
@@ -147,10 +147,10 @@ private:
 }
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-	const std::string subElementTagName, ves::open::xml::model::Link* val)
+    const std::string subElementTagName, ves::open::xml::model::Link* val )
 {
     val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = 
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement =
         val->GetXMLData( subElementTagName );
     _veElement->appendChild( childElement );
     return childElement;

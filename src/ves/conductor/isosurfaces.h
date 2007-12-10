@@ -36,7 +36,7 @@
 *isosurfaces API
 */
 /*!\class isosurfaces
-* 
+*
 */
 #include <wx/dialog.h>
 
@@ -51,7 +51,7 @@ namespace open
 {
 namespace xml
 {
-   class Command;
+class Command;
 }
 }
 }
@@ -75,37 +75,37 @@ namespace conductor
 {
 namespace util
 {
-    class wxSpinCtrlDbl;
+class wxSpinCtrlDbl;
 }
-    class Vistab;
-    class Network;
-    class AdvancedIsosurface;
+class Vistab;
+class Network;
+class AdvancedIsosurface;
 class VE_GUIPLUGINS_EXPORTS Isosurfaces: public wxDialog
-{    
+{
 //    DECLARE_DYNAMIC_CLASS( Isosurfaces )
     DECLARE_EVENT_TABLE()
 
 public:
     /// Constructors
     Isosurfaces( );
-    Isosurfaces(  wxWindow* parent, 
-                  wxWindowID id = SYMBOL_ISOSURFACES_IDNAME, 
-                  const wxString& caption = SYMBOL_ISOSURFACES_TITLE,
-                  const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
-                  const wxSize& size = SYMBOL_ISOSURFACES_SIZE, 
-                  long style = SYMBOL_ISOSURFACES_STYLE);
-   virtual ~Isosurfaces();
+    Isosurfaces( wxWindow* parent,
+                 wxWindowID id = SYMBOL_ISOSURFACES_IDNAME,
+                 const wxString& caption = SYMBOL_ISOSURFACES_TITLE,
+                 const wxPoint& pos = SYMBOL_ISOSURFACES_POSITION,
+                 const wxSize& size = SYMBOL_ISOSURFACES_SIZE,
+                 long style = SYMBOL_ISOSURFACES_STYLE );
+    virtual ~Isosurfaces();
 
-   enum ISOSURFACE_IDS
-   {
-      ISOSURFACE_RBUTTON,
-      PRECOMPUTED_ISO_CHK,
-      ISOSURFACE_PLANE_SLIDER,
-      ADD_ISOSURFACE_BUTTON,
-      ADVANCED_ISOSURFACE_BUTTON,
-      ISOSURFACE_SPINCTRL,
-	  SCALAR_SPINCTRL
-   };
+    enum ISOSURFACE_IDS
+    {
+        ISOSURFACE_RBUTTON,
+        PRECOMPUTED_ISO_CHK,
+        ISOSURFACE_PLANE_SLIDER,
+        ADD_ISOSURFACE_BUTTON,
+        ADVANCED_ISOSURFACE_BUTTON,
+        ISOSURFACE_SPINCTRL,
+        SCALAR_SPINCTRL
+    };
 
     void SendCommandsToXplorer( void );
     /// Creation
@@ -121,11 +121,11 @@ public:
 
     ///The name of the available scalars.
     ///\param scalarNames all the scalars in this dataset
-    void SetAvailableScalars(wxArrayString scalarNames);
-    
+    void SetAvailableScalars( wxArrayString scalarNames );
+
     ///Set the active scalar
     ///\param activeScalarName The active scalar name
-    void SetActiveScalar(std::string activeScalarName);
+    void SetActiveScalar( std::string activeScalarName );
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -140,58 +140,58 @@ public:
     void SetScalarRange( std::string, std::vector<double> );
 
     /// Initialize scalar data
-    void InitializeScalarData(std::string activeScalarName);
+    void InitializeScalarData( std::string activeScalarName );
 
-	void SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges );
+    void SetScalarList( std::map<std::string, std::vector<double> > colorScalarRanges );
 
     AdvancedIsosurface* advancediso;
 
 protected:
-   std::string _colorByScalarName;///<The name of the scalar to color by.
-   std::string _activeScalar;///The scalar that is active on the vistab
-   std::vector<double> _scalarRange;///The scalar range that is active on vistab
-   wxArrayString _scalarNames;///<The available scalars.
-   wxCheckBox* _useNearestPreComputedCheckBox;
-   wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
-   wxButton* _advancedButton;///<Display the color by scalar dialog
-   wxButton* _computeButton;///<Compute the iso-surface
-   util::wxSpinCtrlDbl* _isoSpinner;///<Display real scalar value
-   
-   void _onIsosurface( wxCommandEvent& event );
+    std::string _colorByScalarName;///<The name of the scalar to color by.
+    std::string _activeScalar;///The scalar that is active on the vistab
+    std::vector<double> _scalarRange;///The scalar range that is active on vistab
+    wxArrayString _scalarNames;///<The available scalars.
+    wxCheckBox* _useNearestPreComputedCheckBox;
+    wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
+    wxButton* _advancedButton;///<Display the color by scalar dialog
+    wxButton* _computeButton;///<Compute the iso-surface
+    util::wxSpinCtrlDbl* _isoSpinner;///<Display real scalar value
 
-   /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
-   void _onPrecomputedIsosurface( wxCommandEvent& event );
+    void _onIsosurface( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
-   void _onIsosurfacePlane( wxCommandEvent& event );
+    /// wxEVT_COMMAND_CHECKBOX_CLICKED event handler for ID_CHECKBOX
+    void _onPrecomputedIsosurface( wxCommandEvent& event );
 
-   /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAddIsosurface( wxCommandEvent& event );
+    /// wxEVT_COMMAND_SLIDER_UPDATED event handler for ID_SLIDER
+    void _onIsosurfacePlane( wxCommandEvent& event );
 
-   ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAdvanced(wxCommandEvent& event);
+    /// wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAddIsosurface( wxCommandEvent& event );
 
-   ///wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINNER
-   void _onSpinner(wxScrollEvent& WXUNUSED(event));
+    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAdvanced( wxCommandEvent& event );
 
-   ///wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINNER
-   void UpdateSlider( wxCommandEvent& event );
+    ///wxEVT_COMMAND_SPINCTRL_UPDATED event handler for ID_SPINNER
+    void _onSpinner( wxScrollEvent& WXUNUSED( event ) );
 
-   double tempSliderScalar;///temporary value updated by slider
-   double tempSpinnerScalar;///temporary value updated by spinctrl
-   std::string tempScalarName;///contains current scalar name
-   double _minValue;
-   double _maxValue;
+    ///wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINNER
+    void UpdateSlider( wxCommandEvent& event );
 
-   std::map<std::string,std::vector<double> > scalarlist;
+    double tempSliderScalar;///temporary value updated by slider
+    double tempSpinnerScalar;///temporary value updated by spinctrl
+    std::string tempScalarName;///contains current scalar name
+    double _minValue;
+    double _maxValue;
 
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
+    std::map<std::string, std::vector<double> > scalarlist;
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }
 #endif
-    // _ISOSURFACES_H_
+// _ISOSURFACES_H_

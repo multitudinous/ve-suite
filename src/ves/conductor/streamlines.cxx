@@ -60,15 +60,15 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( Streamlines, wxDialog )
-EVT_RADIOBOX( CURSOR_RBOX, Streamlines::_onCursorSelect )
-EVT_RADIOBOX( DIRECTION_RBOX, Streamlines::_onDirection )
-EVT_RADIOBOX( INTEGRATION_DIR_RBOX, Streamlines::_onIntegrateDir )
-EVT_COMMAND_SCROLL( NUMBER_PTS_SLIDER, Streamlines::_onPointsSlider )
-EVT_COMMAND_SCROLL( PLANE_SIZE_SLIDER, Streamlines::_onSizeSlider )
-EVT_BUTTON( ADVANCED_STREAMLINE_BUTTON, Streamlines::_onAdvanced )
-EVT_BUTTON( COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
-EVT_BUTTON( SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
-EVT_BUTTON( wxID_OK, Streamlines::OnClose )
+    EVT_RADIOBOX( CURSOR_RBOX, Streamlines::_onCursorSelect )
+    EVT_RADIOBOX( DIRECTION_RBOX, Streamlines::_onDirection )
+    EVT_RADIOBOX( INTEGRATION_DIR_RBOX, Streamlines::_onIntegrateDir )
+    EVT_COMMAND_SCROLL( NUMBER_PTS_SLIDER, Streamlines::_onPointsSlider )
+    EVT_COMMAND_SCROLL( PLANE_SIZE_SLIDER, Streamlines::_onSizeSlider )
+    EVT_BUTTON( ADVANCED_STREAMLINE_BUTTON, Streamlines::_onAdvanced )
+    EVT_BUTTON( COMPUTE_STREAMLINE_BUTTON, Streamlines::_onCompute )
+    EVT_BUTTON( SET_SEED_POINTS_BUTTON, Streamlines::SetSeedPoints )
+    EVT_BUTTON( wxID_OK, Streamlines::OnClose )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -86,9 +86,9 @@ Streamlines::Streamlines( wxWindow* parent,
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Streamlines::Create( wxWindow* parent,
-                          wxWindowID id, 
-                          const wxString& caption, 
-                          const wxPoint& pos, 
+                          wxWindowID id,
+                          const wxString& caption,
+                          const wxPoint& pos,
                           const wxSize& size,
                           long style )
 {
@@ -131,15 +131,15 @@ Streamlines::~Streamlines()
         delete seedPointInformation.at( i );
     }
 
-    seedPointInformation.clear();   
+    seedPointInformation.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::CreateControls()
-{    
+{
     Streamlines* itemDialog1 = this;
 
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
-    itemDialog1->SetSizer(itemBoxSizer2);
+    itemDialog1->SetSizer( itemBoxSizer2 );
 
     wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Streamline Controls" ) );
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
@@ -196,19 +196,19 @@ void Streamlines::CreateControls()
     //itemStaticBoxSizer3->Add(_nPointsSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
 
     wxBoxSizer* itemBoxSizer12 = new wxBoxSizer( wxHORIZONTAL );
-    itemStaticBoxSizer3->Add(itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    itemStaticBoxSizer3->Add( itemBoxSizer12, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
     wxButton* itemButton13 = new wxButton( itemDialog1, COMPUTE_STREAMLINE_BUTTON, _T( "Compute Streamline" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer12->Add(itemButton13, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer12->Add( itemButton13, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* seedPointsbutton = new wxButton( itemDialog1, SET_SEED_POINTS_BUTTON, _T( "Seed Points" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer12->Add(seedPointsbutton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer12->Add( seedPointsbutton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* itemButton14 = new wxButton( itemDialog1, ADVANCED_STREAMLINE_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer12->Add(itemButton14, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer12->Add( itemButton14, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer12->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    itemBoxSizer12->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Streamlines::ShowToolTips()
@@ -218,13 +218,13 @@ bool Streamlines::ShowToolTips()
 ////////////////////////////////////////////////////////////////////////////////
 wxBitmap Streamlines::GetBitmapResource( const wxString& name )
 {
-    wxUnusedVar(name);
+    wxUnusedVar( name );
     return wxNullBitmap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxIcon Streamlines::GetIconResource( const wxString& name )
 {
-    wxUnusedVar(name);
+    wxUnusedVar( name );
     return wxNullIcon;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -238,88 +238,88 @@ void Streamlines::_updateAdvancedSettings()
 
     ves::open::xml::DataValuePair* integrationStep = new ves::open::xml::DataValuePair();
     integrationStep->SetData( "Integration Step Size", _lastIntegrationStepSize );
-    _advancedSettings.push_back(integrationStep);
+    _advancedSettings.push_back( integrationStep );
 
     ves::open::xml::DataValuePair* lineDiameter = new ves::open::xml::DataValuePair();
     lineDiameter->SetData( "Diameter", _lastLineDiameter );
     _advancedSettings.push_back( lineDiameter );
 
     ves::open::xml::DataValuePair* sphereArrowParticles = new ves::open::xml::DataValuePair();
-    sphereArrowParticles->SetData("Sphere/Arrow/Particle Size",_lastSphereArrowParticleSize);
-    _advancedSettings.push_back(sphereArrowParticles);
+    sphereArrowParticles->SetData( "Sphere/Arrow/Particle Size", _lastSphereArrowParticleSize );
+    _advancedSettings.push_back( sphereArrowParticles );
 
     ves::open::xml::DataValuePair* seedPtFlag = new ves::open::xml::DataValuePair();
-    seedPtFlag->SetDataName("Use Last Seed Pt");
-    seedPtFlag->SetDataType("UNSIGNED INT");
-    if(_lastSeedPtFlag)
+    seedPtFlag->SetDataName( "Use Last Seed Pt" );
+    seedPtFlag->SetDataType( "UNSIGNED INT" );
+    if( _lastSeedPtFlag )
     {
-        seedPtFlag->SetDataValue(static_cast<unsigned int>(1));
+        seedPtFlag->SetDataValue( static_cast<unsigned int>( 1 ) );
     }
     else
     {
-        seedPtFlag->SetDataValue(static_cast<unsigned int>(0));
+        seedPtFlag->SetDataValue( static_cast<unsigned int>( 0 ) );
     }
-    _advancedSettings.push_back(seedPtFlag);
+    _advancedSettings.push_back( seedPtFlag );
 
     ves::open::xml::DataValuePair* streamArrow = new ves::open::xml::DataValuePair();
-    streamArrow->SetDataName("Use Stream Arrows");
-    streamArrow->SetDataType("UNSIGNED INT");
+    streamArrow->SetDataName( "Use Stream Arrows" );
+    streamArrow->SetDataType( "UNSIGNED INT" );
     if( _lastStreamArrow )
     {
-        streamArrow->SetDataValue(static_cast<unsigned int>(1));
+        streamArrow->SetDataValue( static_cast<unsigned int>( 1 ) );
     }
     else
     {
-        streamArrow->SetDataValue(static_cast<unsigned int>(0));
+        streamArrow->SetDataValue( static_cast<unsigned int>( 0 ) );
     }
 
-    _advancedSettings.push_back(streamArrow);
+    _advancedSettings.push_back( streamArrow );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_updateStreamlineInformation()
 {
     _streamlineInformation.clear();
     ves::open::xml::DataValuePair* streamlineDirection = new ves::open::xml::DataValuePair();
-    streamlineDirection->SetDataType("STRING");
-    streamlineDirection->SetDataName(std::string("Cursor Direction"));
-    streamlineDirection->SetDataString(_streamlineDirection);
+    streamlineDirection->SetDataType( "STRING" );
+    streamlineDirection->SetDataName( std::string( "Cursor Direction" ) );
+    streamlineDirection->SetDataString( _streamlineDirection );
 
-    _streamlineInformation.push_back(streamlineDirection);
+    _streamlineInformation.push_back( streamlineDirection );
 
     ves::open::xml::DataValuePair* cursorSelection = new ves::open::xml::DataValuePair();
-    cursorSelection->SetDataType("STRING");
-    cursorSelection->SetDataName(std::string("Cursor Type"));
-    cursorSelection->SetDataString(_cursorType);
+    cursorSelection->SetDataType( "STRING" );
+    cursorSelection->SetDataName( std::string( "Cursor Type" ) );
+    cursorSelection->SetDataString( _cursorType );
 
-    _streamlineInformation.push_back(cursorSelection);
+    _streamlineInformation.push_back( cursorSelection );
 
     ves::open::xml::DataValuePair* integrationDirection = new ves::open::xml::DataValuePair();
-    integrationDirection->SetDataType("STRING");
-    integrationDirection->SetDataName(std::string("Integration Direction"));
-    integrationDirection->SetDataString(_integrationDirection);
+    integrationDirection->SetDataType( "STRING" );
+    integrationDirection->SetDataName( std::string( "Integration Direction" ) );
+    integrationDirection->SetDataString( _integrationDirection );
 
-    _streamlineInformation.push_back(integrationDirection);
+    _streamlineInformation.push_back( integrationDirection );
 
     ves::open::xml::DataValuePair* streamSize = new ves::open::xml::DataValuePair();
-    streamSize->SetData("Size",_streamSize);
+    streamSize->SetData( "Size", _streamSize );
 
-    _streamlineInformation.push_back(streamSize);
+    _streamlineInformation.push_back( streamSize );
 
     ves::open::xml::DataValuePair* nPointsPerPlane = new ves::open::xml::DataValuePair();
-    nPointsPerPlane->SetDataName("Number Of Points Per Plane");
-    nPointsPerPlane->SetDataType("UNSIGNED INT");
-    nPointsPerPlane->SetDataValue(_nPointsPerPlane);
+    nPointsPerPlane->SetDataName( "Number Of Points Per Plane" );
+    nPointsPerPlane->SetDataType( "UNSIGNED INT" );
+    nPointsPerPlane->SetDataValue( _nPointsPerPlane );
 
-    _streamlineInformation.push_back(nPointsPerPlane);
+    _streamlineInformation.push_back( nPointsPerPlane );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 {
-    AdvancedStreamlines adStreamline( this,                
-                                      SYMBOL_ADVANCEDSTREAMLINES_IDNAME, 
+    AdvancedStreamlines adStreamline( this,
+                                      SYMBOL_ADVANCEDSTREAMLINES_IDNAME,
                                       SYMBOL_ADVANCEDSTREAMLINES_TITLE,
                                       SYMBOL_ADVANCEDSTREAMLINES_POSITION,
-                                      SYMBOL_ADVANCEDSTREAMLINES_SIZE, 
+                                      SYMBOL_ADVANCEDSTREAMLINES_SIZE,
                                       SYMBOL_ADVANCEDSTREAMLINES_STYLE );
 
     /*int displayWidth, displayHeight = 0;
@@ -332,18 +332,18 @@ void Streamlines::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
     adStreamline.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
     width, height));*/
 
-    adStreamline.SetSize(GetRect());
-    adStreamline.SetIntegrationStepSize(_lastIntegrationStepSize);
-    adStreamline.SetPropagationSize(_lastPropagationSize);
+    adStreamline.SetSize( GetRect() );
+    adStreamline.SetIntegrationStepSize( _lastIntegrationStepSize );
+    adStreamline.SetPropagationSize( _lastPropagationSize );
     adStreamline.SetLineDiameter( _lastLineDiameter );
-    adStreamline.SetSphereArrowParticleSize(_lastSphereArrowParticleSize);
-    adStreamline.SetUseLastSeedPt(_lastSeedPtFlag);
-    adStreamline.SetStreamArrow(_lastStreamArrow);
+    adStreamline.SetSphereArrowParticleSize( _lastSphereArrowParticleSize );
+    adStreamline.SetUseLastSeedPt( _lastSeedPtFlag );
+    adStreamline.SetStreamArrow( _lastStreamArrow );
 
-    int error = adStreamline.ShowModal(); 
+    int error = adStreamline.ShowModal();
     if( error == wxID_OK ||
-        error == wxID_CLOSE ||
-        error == wxID_CANCEL )
+            error == wxID_CLOSE ||
+            error == wxID_CANCEL )
     {
         _lastIntegrationStepSize = adStreamline.GetIntegrationStepSize();
         _lastPropagationSize = adStreamline.GetPropagationSize();
@@ -361,44 +361,44 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
 
     //turn off streamlines-- probably need a function for this since it is used often
     ves::open::xml::Command* veCommand = new ves::open::xml::Command();
-    veCommand->SetCommandName( std::string("Display Seed Points") );
+    veCommand->SetCommandName( std::string( "Display Seed Points" ) );
     ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
-    seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
-    veCommand->AddDataValuePair(seedPointDVP);
+    seedPointDVP->SetData( "OnOff", static_cast<unsigned int>( 0 ) );
+    veCommand->AddDataValuePair( seedPointDVP );
     ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
-    activeDataset->SetData("Active Dataset",dynamic_cast<Vistab*>(GetParent())->GetActiveDatasetName());
-    veCommand->AddDataValuePair(activeDataset);
+    activeDataset->SetData( "Active Dataset", dynamic_cast<Vistab*>( GetParent() )->GetActiveDatasetName() );
+    veCommand->AddDataValuePair( activeDataset );
 
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;   
+    delete veCommand;
     ves::open::xml::Command* newCommand = new ves::open::xml::Command();
-    newCommand->SetCommandName("UPDATE_STREAMLINE_SETTINGS");
+    newCommand->SetCommandName( "UPDATE_STREAMLINE_SETTINGS" );
 
-    for(size_t i =0; i < _streamlineInformation.size(); i++)
+    for( size_t i = 0; i < _streamlineInformation.size(); i++ )
     {
-        newCommand->AddDataValuePair(_streamlineInformation.at(i));
+        newCommand->AddDataValuePair( _streamlineInformation.at( i ) );
     }
 
     //The advanced settings command
     ves::open::xml::Command* advancedSettings = new ves::open::xml::Command();
-    advancedSettings->SetCommandName("ADVANCED_STREAMLINE_SETTINGS");
-    for(size_t i =0; i < _advancedSettings.size(); i++)
+    advancedSettings->SetCommandName( "ADVANCED_STREAMLINE_SETTINGS" );
+    for( size_t i = 0; i < _advancedSettings.size(); i++ )
     {
-        advancedSettings->AddDataValuePair(_advancedSettings.at(i));
+        advancedSettings->AddDataValuePair( _advancedSettings.at( i ) );
     }
 
     //Add the dvp's for the seed point info
     //VE_XML::Command* seedPointSettings = new VE_XML::Command();
     //seedPointSettings->SetCommandName("Set_Seed_Point_Settings");
-    for(size_t i =0; i < seedPointInformation.size(); i++)
+    for( size_t i = 0; i < seedPointInformation.size(); i++ )
     {
-        advancedSettings->AddDataValuePair( seedPointInformation.at(i) );
+        advancedSettings->AddDataValuePair( seedPointInformation.at( i ) );
     }
 
     //dvp representing the advanced settings within the contours information
     ves::open::xml::DataValuePair* advancedStreamlineSettings = new ves::open::xml::DataValuePair();
-    advancedStreamlineSettings->SetData("Advanced Streamline Settings",advancedSettings);
-    newCommand->AddDataValuePair(advancedStreamlineSettings);
+    advancedStreamlineSettings->SetData( "Advanced Streamline Settings", advancedSettings );
+    newCommand->AddDataValuePair( advancedStreamlineSettings );
 
     //dvp representing the advanced settings within the contours information
     //VE_XML::DataValuePair* seedPoint = new VE_XML::DataValuePair();
@@ -407,49 +407,49 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
 
     try
     {
-        dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
+        dynamic_cast<Vistab*>( GetParent() )->SendUpdatedSettingsToXplorer( newCommand );
     }
-    catch(...)
+    catch ( ... )
     {
-        wxMessageBox( _("Invalid Parent"),_("Communication Failure"), 
-        wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
+                      wxOK | wxICON_INFORMATION );
     }
 
-    if(newCommand)
+    if( newCommand )
     {
         delete newCommand;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Streamlines::_onCursorSelect(wxCommandEvent& WXUNUSED(event))
+void Streamlines::_onCursorSelect( wxCommandEvent& WXUNUSED( event ) )
 {
     _cursorType = ConvertUnicode( _cursorRBox->GetStringSelection() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Streamlines::_onDirection(wxCommandEvent& WXUNUSED(event))
+void Streamlines::_onDirection( wxCommandEvent& WXUNUSED( event ) )
 {
     _streamlineDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Streamlines::_onIntegrateDir(wxCommandEvent& WXUNUSED(event))
+void Streamlines::_onIntegrateDir( wxCommandEvent& WXUNUSED( event ) )
 {
     _integrationDirection = ConvertUnicode( _integrationRBox->GetStringSelection() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Streamlines::_onSizeSlider(wxScrollEvent& WXUNUSED(event))
+void Streamlines::_onSizeSlider( wxScrollEvent& WXUNUSED( event ) )
 {
-    _streamSize = static_cast<double>(_sizeSlider->GetValue());
+    _streamSize = static_cast<double>( _sizeSlider->GetValue() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Streamlines::_onPointsSlider(wxScrollEvent& WXUNUSED(event))
+void Streamlines::_onPointsSlider( wxScrollEvent& WXUNUSED( event ) )
 {
     _nPointsPerPlane = _nPointsSlider->GetValue();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
+void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
 {
     //Clear the old dvps if there were any
-    for ( size_t i = 0; i < seedPointInformation.size(); ++i )
+    for( size_t i = 0; i < seedPointInformation.size(); ++i )
     {
         delete seedPointInformation.at( i );
     }
@@ -466,66 +466,66 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
         newCommand->SetCommandName( "Display Seed Points" );
         ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
         seedPointDVP->SetData( "OnOff", static_cast< unsigned int >( 1 ) );
-        newCommand->AddDataValuePair(seedPointDVP);
+        newCommand->AddDataValuePair( seedPointDVP );
 
         ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
-        activeDataset->SetData( "Active Dataset", dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName());
-        newCommand->AddDataValuePair(activeDataset);
+        activeDataset->SetData( "Active Dataset", dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName() );
+        newCommand->AddDataValuePair( activeDataset );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
 
         delete newCommand;
     }
-    catch(...)
+    catch ( ... )
     {
-        wxMessageBox( _("Invalid command!"),wxString(newCommand->GetCommandName().c_str(),wxConvUTF8), 
-        wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid command!" ), wxString( newCommand->GetCommandName().c_str(), wxConvUTF8 ),
+                      wxOK | wxICON_INFORMATION );
 
         delete newCommand;
     }
     ves::open::xml::Command* boundsCommand = new ves::open::xml::Command();
     try
     {
-        boundsCommand->SetCommandName("Seed Points Bounds");
+        boundsCommand->SetCommandName( "Seed Points Bounds" );
         std::vector<double> seedPointBounds;
-        seedPointDialog->GetBounds(seedPointBounds);
+        seedPointDialog->GetBounds( seedPointBounds );
 
         ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
-        coordinate->SetData("Coordinate","All Bounds");
-        boundsCommand->AddDataValuePair(coordinate);
+        coordinate->SetData( "Coordinate", "All Bounds" );
+        boundsCommand->AddDataValuePair( coordinate );
 
         ves::open::xml::DataValuePair* seedPointBoundsDVP = new ves::open::xml::DataValuePair();
-        seedPointBoundsDVP->SetData("Bounds",seedPointBounds);
-        boundsCommand->AddDataValuePair(seedPointBoundsDVP);
+        seedPointBoundsDVP->SetData( "Bounds", seedPointBounds );
+        boundsCommand->AddDataValuePair( seedPointBoundsDVP );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( boundsCommand );
 
         delete boundsCommand;
     }
-    catch(...)
+    catch ( ... )
     {
-        wxMessageBox( _("Invalid command!"), wxString(boundsCommand->GetCommandName().c_str(),wxConvUTF8), 
-        wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid command!" ), wxString( boundsCommand->GetCommandName().c_str(), wxConvUTF8 ),
+                      wxOK | wxICON_INFORMATION );
 
         delete newCommand;
     }
     ves::open::xml::Command* dimensionsCommand = new ves::open::xml::Command();
     try
     {
-        dimensionsCommand->SetCommandName("Seed Points Dimensions");
+        dimensionsCommand->SetCommandName( "Seed Points Dimensions" );
         std::vector<long> seedPointDims;
-        seedPointDialog->GetDimensions(seedPointDims);
+        seedPointDialog->GetDimensions( seedPointDims );
 
         ves::open::xml::DataValuePair* dimensions = new ves::open::xml::DataValuePair();
-        dimensions->SetData("Dimensions",seedPointDims);
-        dimensionsCommand->AddDataValuePair(dimensions);
+        dimensions->SetData( "Dimensions", seedPointDims );
+        dimensionsCommand->AddDataValuePair( dimensions );
 
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( dimensionsCommand );
 
         delete dimensionsCommand;
     }
-    catch(...)
+    catch ( ... )
     {
-        wxMessageBox( _("Invalid command!"), wxString(dimensionsCommand->GetCommandName().c_str(),wxConvUTF8), 
-        wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Invalid command!" ), wxString( dimensionsCommand->GetCommandName().c_str(), wxConvUTF8 ),
+                      wxOK | wxICON_INFORMATION );
 
         delete dimensionsCommand;
     }
@@ -538,15 +538,15 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED(event) )
 void Streamlines::OnClose( wxCommandEvent& event )
 {
     ves::open::xml::Command* veCommand = new ves::open::xml::Command();
-    veCommand->SetCommandName( std::string("Display Seed Points") );
+    veCommand->SetCommandName( std::string( "Display Seed Points" ) );
     ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
-    seedPointDVP->SetData("OnOff",static_cast<unsigned int>(0));
-    veCommand->AddDataValuePair(seedPointDVP);
-    
+    seedPointDVP->SetData( "OnOff", static_cast<unsigned int>( 0 ) );
+    veCommand->AddDataValuePair( seedPointDVP );
+
     ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
-    activeDataset->SetData("Active Dataset",dataSetName);
-    veCommand->AddDataValuePair(activeDataset);
-    
+    activeDataset->SetData( "Active Dataset", dataSetName );
+    veCommand->AddDataValuePair( activeDataset );
+
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
     delete veCommand;
     event.Skip();

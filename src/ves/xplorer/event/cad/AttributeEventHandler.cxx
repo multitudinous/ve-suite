@@ -45,59 +45,58 @@ using namespace ves::xplorer::scenegraph;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 AttributeEventHandler::AttributeEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////
-AttributeEventHandler::AttributeEventHandler(const AttributeEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
+AttributeEventHandler::AttributeEventHandler( const AttributeEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = rhs._activeModel;
+    _activeModel = rhs._activeModel;
 }
 ////////////////////////////////////
 ///Destructor                     //
 ////////////////////////////////////
 AttributeEventHandler::~AttributeEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////
-void AttributeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void AttributeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if(model)
-      {
-         _activeModel = dynamic_cast<ves::xplorer::Model*>(model);
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to CADEventHandler!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast<ves::xplorer::Model*>( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to CADEventHandler!" << std::endl;
+    }
 }
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void AttributeEventHandler::Execute(ves::open::xml::XMLObject* veXMLObject)
+void AttributeEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
 {
-   if(_activeModel)
-   {
-      //this is overridden in derived classes
-      _operateOnNode(veXMLObject);
-   }
+    if( _activeModel )
+    {
+        //this is overridden in derived classes
+        _operateOnNode( veXMLObject );
+    }
 }
 ///////////////////////////////////////////////////////////////////////
-AttributeEventHandler& AttributeEventHandler::operator=(const AttributeEventHandler& rhs)
+AttributeEventHandler& AttributeEventHandler::operator=( const AttributeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        _activeModel = rhs._activeModel;
+    }
+    return *this;
 }

@@ -47,11 +47,11 @@
 using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
-    m_argc( argc ),
-    m_argv( argv ),
-    m_vjObsWrapper( input ),
-    m_thread( 0 ),
-    m_jugglerIsRunning( false )
+        m_argc( argc ),
+        m_argv( argv ),
+        m_vjObsWrapper( input ),
+        m_thread( 0 ),
+        m_jugglerIsRunning( false )
 {
     //Setup the juggler kernel now
     // block it on another thread
@@ -65,26 +65,26 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
     kernel->setApplication( m_cfdApp );    // Give application to kernel
 
     /*m_thread = new Thread();
-#if __VJ_version > 2000003
+    #if __VJ_version > 2000003
     m_thread->new_thread = 
         new vpr::Thread( boost::bind(&AppWrapper::init, this) );
-#elif __VJ_version == 2000003
+    #elif __VJ_version == 2000003
     m_thread->new_thread = 
         new vpr::Thread( new vpr::ThreadMemberFunctor< AppWrapper >( this, &AppWrapper::init ) );
-#endif
+    #endif
     m_jugglerIsRunning = true;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppWrapper::~AppWrapper( void )
 {
-   if ( m_thread )
-   {
-      delete m_thread;
-   }
+    if( m_thread )
+    {
+        delete m_thread;
+    }
 
     delete m_cfdApp;
     m_cfdApp = NULL;
-    
+
     delete m_vjObsWrapper;
     m_vjObsWrapper = NULL;
     m_jugglerIsRunning = false;
@@ -92,7 +92,7 @@ AppWrapper::~AppWrapper( void )
 ////////////////////////////////////////////////////////////////////////////////
 bool AppWrapper::JugglerIsRunning( void )
 {
-   return m_jugglerIsRunning;
+    return m_jugglerIsRunning;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003

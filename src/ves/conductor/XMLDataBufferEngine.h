@@ -36,7 +36,7 @@
 XMLDataBufferEngine API
 */
 /*!\class VE_Conductor::XMLDataBufferEngine
-* 
+*
 */
 
 //do this to remove compile warnings from linux platforms
@@ -62,11 +62,14 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS XMLDataBufferEngine
 {
 private:
-   /// Required so that vpr::Singleton can instantiate this class.
-   /// friend class vpr::Singleton< UserPreferenceDataBuffer >;
-   XMLDataBufferEngine( void );
-   ~XMLDataBufferEngine(){ CleanUp(); } //Never called, don't implement until vrj2.2
-   vprSingletonHeader( XMLDataBufferEngine );
+    /// Required so that vpr::Singleton can instantiate this class.
+    /// friend class vpr::Singleton< UserPreferenceDataBuffer >;
+    XMLDataBufferEngine( void );
+    ~XMLDataBufferEngine()
+    {
+        CleanUp();
+    } //Never called, don't implement until vrj2.2
+    vprSingletonHeader( XMLDataBufferEngine );
 public:
     ///Desctructor call until vrj 2.2 is released
     void CleanUp( void );
@@ -84,34 +87,37 @@ public:
     ///\param tempMap the the map of commands when initialized by the user
     void SetCommandMap( std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap );
     ///Set data from CORBA receiver thread
-    void SetXplorerData(){ ; }
-    ///Load data 
+    void SetXplorerData()
+    {
+        ;
+    }
+    ///Load data
     void LoadVESData( std::string vesNetwork );
-    ///Save data 
+    ///Save data
     std::string SaveVESData( std::string fileName );
-    ///New 
+    ///New
     void NewVESData( bool promptClearXplorer );
     ///Get data
     ves::open::xml::model::NetworkWeakPtr
-      GetXMLNetworkDataObject( std::string dataNumber );
-   ///Get the network
-   std::map< std::string, ves::open::xml::model::ModelWeakPtr > GetXMLModels();
+    GetXMLNetworkDataObject( std::string dataNumber );
+    ///Get the network
+    std::map< std::string, ves::open::xml::model::ModelWeakPtr > GetXMLModels();
     ///Get data
     ves::open::xml::model::ModelWeakPtr GetXMLModelDataObject( std::string dataNumber );
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
-   ///Get the map of all systems
-   std::map< std::string, ves::open::xml::model::SystemPtr >
-      GetXMLSystemDataMap();
-   ///Get a system
-   std::string GetTopSystemId( );
-   ///Get a system
-   ves::open::xml::model::SystemPtr GetXMLSystemDataObject( std::string id );
+    ///Get the map of all systems
+    std::map< std::string, ves::open::xml::model::SystemPtr >
+    GetXMLSystemDataMap();
+    ///Get a system
+    std::string GetTopSystemId( );
+    ///Get a system
+    ves::open::xml::model::SystemPtr GetXMLSystemDataObject( std::string id );
     ///Get data
     ves::open::xml::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
-   ///Parse system for subsystems
-   void ParseSystem( ves::open::xml::model::SystemWeakPtr system );
-        
+    ///Parse system for subsystems
+    void ParseSystem( ves::open::xml::model::SystemWeakPtr system );
+
 private:
     ///Map to store the command name and command for easy lookup by the user
     std::map< std::string, ves::open::xml::CommandPtr > m_commandMap;
@@ -129,8 +135,8 @@ private:
     std::map< std::string, ves::open::xml::model::TagPtr > m_tagMap;
     ///Map
     std::map< std::string, ves::open::xml::UserPtr > m_userMap;
-   //Top most id
-   std::string topId;
+    //Top most id
+    std::string topId;
 };
 }
 }

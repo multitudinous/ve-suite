@@ -47,8 +47,8 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneNode::SceneNode()
-:
-m_activeTechnique( "Default" )
+        :
+        m_activeTechnique( "Default" )
 {
     AddTechnique( "Default", new ves::xplorer::scenegraph::DefaultTechnique() );
 }
@@ -56,8 +56,8 @@ m_activeTechnique( "Default" )
 SceneNode::~SceneNode()
 {
     //Delete techniques in map
-    for( std::map< std::string, ves::xplorer::scenegraph::Technique* >::iterator 
-         iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
+    for( std::map< std::string, ves::xplorer::scenegraph::Technique* >::iterator
+            iter = m_techniques.begin(); iter != m_techniques.end(); ++iter )
     {
         ves::xplorer::scenegraph::Technique* tempTech = iter->second;
         delete tempTech;
@@ -75,9 +75,9 @@ void SceneNode::DirtyTechniques()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneNode::AddTechnique(  std::string name, ves::xplorer::scenegraph::Technique* technique  )
+void SceneNode::AddTechnique( std::string name, ves::xplorer::scenegraph::Technique* technique )
 {
-    m_techniques[ std::string( name ) ] = technique;
+    m_techniques[ std::string( name )] = technique;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::SetTechnique( std::string name )

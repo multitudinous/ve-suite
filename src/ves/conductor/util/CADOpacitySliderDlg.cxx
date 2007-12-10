@@ -43,117 +43,116 @@
 
 using namespace ves::open::xml::cad;
 using namespace ves::conductor::util;
-BEGIN_EVENT_TABLE(CADOpacitySliderDlg,wxDialog)
-   EVT_COMMAND_SCROLL(OPACITY_SLIDER,CADOpacitySliderDlg::_onSlider)
+BEGIN_EVENT_TABLE( CADOpacitySliderDlg, wxDialog )
+    EVT_COMMAND_SCROLL( OPACITY_SLIDER, CADOpacitySliderDlg::_onSlider )
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
-CADOpacitySliderDlg::CADOpacitySliderDlg(wxWindow* parent, int id,
-                                         std::string cadNodeID,
-                                         CADMaterial* material)
-:wxDialog(parent,id,_("CADMaterial Opacity"),wxDefaultPosition,wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX),_("CADMaterial Opacity"))
+CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
+                                          std::string cadNodeID,
+                                          CADMaterial* material )
+        : wxDialog( parent, id, _( "CADMaterial Opacity" ), wxDefaultPosition, wxDefaultSize,
+                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ), _( "CADMaterial Opacity" ) )
 {
-   _cadID = cadNodeID;
-   _material = material;
-   _buildDialog();
+    _cadID = cadNodeID;
+    _material = material;
+    _buildDialog();
 }
 ///////////////////////////////////////////
 CADOpacitySliderDlg::~CADOpacitySliderDlg()
-{
-}
+{}
 ////////////////////////////////////////
 void CADOpacitySliderDlg::_buildDialog()
 {
-   wxStaticBox* opacityGroup = new wxStaticBox(this, -1, wxT("Opacity"));
-   wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(opacityGroup,wxHORIZONTAL);
+    wxStaticBox* opacityGroup = new wxStaticBox( this, -1, wxT( "Opacity" ) );
+    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( opacityGroup, wxHORIZONTAL );
 
-   wxBoxSizer* sliderSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* sliderSizer = new wxBoxSizer( wxHORIZONTAL );
 
-   _opacitySlider = new wxSlider(this, OPACITY_SLIDER,0 , 0, 100, wxDefaultPosition,wxDefaultSize,
-                                 wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS); 
-   SetSliderValue(_material->GetOpacity());
-   sliderSizer->Add(_opacitySlider,1,wxALIGN_CENTER|wxEXPAND);
+    _opacitySlider = new wxSlider( this, OPACITY_SLIDER, 0 , 0, 100, wxDefaultPosition, wxDefaultSize,
+                                   wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS );
+    SetSliderValue( _material->GetOpacity() );
+    sliderSizer->Add( _opacitySlider, 1, wxALIGN_CENTER | wxEXPAND );
 
-   mainSizer->Add(sliderSizer,1,wxALIGN_CENTER|wxEXPAND);
-   SetAutoLayout(true);
-   SetSizer(mainSizer);
+    mainSizer->Add( sliderSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    SetAutoLayout( true );
+    SetSizer( mainSizer );
 }
 //////////////////////////////////////////////////////
-void CADOpacitySliderDlg::SetSliderValue(double value)
+void CADOpacitySliderDlg::SetSliderValue( double value )
 {
-   //This should be a pecentage that comes in so we convert it
-   //to an int 0-100
-   _opacitySlider->SetValue(static_cast<int>(100 - 100*(1.0-value)));
+    //This should be a pecentage that comes in so we convert it
+    //to an int 0-100
+    _opacitySlider->SetValue( static_cast<int>( 100 - 100*( 1.0 - value ) ) );
 }
 ////////////////////////////////////////
 double CADOpacitySliderDlg::GetOpacity()
 {
-   return (double)(_opacitySlider->GetValue())/100.0;
+    return ( double )( _opacitySlider->GetValue() ) / 100.0;
 }
 //////////////////////////////////////////////////////////
-void CADOpacitySliderDlg::_onSlider(wxScrollEvent& WXUNUSED(event))
+void CADOpacitySliderDlg::_onSlider( wxScrollEvent& WXUNUSED( event ) )
 {
-   //update the material
-   //convert int to double
-   float opacityValue = (float)(_opacitySlider->GetValue())/100.0;
-   
-   _material->SetOpacity(opacityValue);
+    //update the material
+    //convert int to double
+    float opacityValue = ( float )( _opacitySlider->GetValue() ) / 100.0;
 
-   //build the command
-   //_commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
-    _commandName = std::string("CAD_ATTRIBUTE_MATERIAL_UPDATE");
+    _material->SetOpacity( opacityValue );
+
+    //build the command
+    //_commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
+    _commandName = std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" );
 
     ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
-    nodeID->SetDataType("STRING");
-    nodeID->SetData(std::string("Node ID"),_cadID);
-    _instructions.push_back(nodeID);
+    nodeID->SetDataType( "STRING" );
+    nodeID->SetData( std::string( "Node ID" ), _cadID );
+    _instructions.push_back( nodeID );
 
     ves::open::xml::DataValuePair* componentToUpdate = new ves::open::xml::DataValuePair();
-    componentToUpdate->SetDataType("STRING");
-    componentToUpdate->SetData("Material Component","Opacity");
-    _instructions.push_back(componentToUpdate);
+    componentToUpdate->SetDataType( "STRING" );
+    componentToUpdate->SetData( "Material Component", "Opacity" );
+    _instructions.push_back( componentToUpdate );
 
     ves::open::xml::DataValuePair* materialToUpdate = new ves::open::xml::DataValuePair();
-    materialToUpdate->SetDataType("XMLOBJECT");
-    materialToUpdate->SetData("Material",_material);
-    _instructions.push_back(materialToUpdate);
+    materialToUpdate->SetDataType( "XMLOBJECT" );
+    materialToUpdate->SetData( "Material", _material );
+    _instructions.push_back( materialToUpdate );
 
     _sendCommandsToXplorer();
-  
-   _clearInstructions();
+
+    _clearInstructions();
 }
 //////////////////////////////////////////////
 void CADOpacitySliderDlg::_clearInstructions()
 {
-   _instructions.clear();
-   _commandName.clear() ;
+    _instructions.clear();
+    _commandName.clear() ;
 }
 //////////////////////////////////////////////////
 void CADOpacitySliderDlg::_sendCommandsToXplorer()
 {
-   ves::open::xml::Command* opacityCommand = new ves::open::xml::Command();
+    ves::open::xml::Command* opacityCommand = new ves::open::xml::Command();
 
-   for(size_t i =0; i < _instructions.size(); i++)
-   {
-      opacityCommand->AddDataValuePair(_instructions.at(i));
-   }
-   opacityCommand->SetCommandName(_commandName);
-   
-   {
-      try
-      {
-		  ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer(opacityCommand);
-      }
-      catch ( ... )
-      {
-         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."),
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-      }
-   }
-   //Clean up memory
-   delete opacityCommand;
-   _clearInstructions();
+    for( size_t i = 0; i < _instructions.size(); i++ )
+    {
+        opacityCommand->AddDataValuePair( _instructions.at( i ) );
+    }
+    opacityCommand->SetCommandName( _commandName );
+
+    {
+        try
+        {
+            ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( opacityCommand );
+        }
+        catch ( ... )
+        {
+            wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
+                          _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
+        }
+    }
+    //Clean up memory
+    delete opacityCommand;
+    _clearInstructions();
 }
 

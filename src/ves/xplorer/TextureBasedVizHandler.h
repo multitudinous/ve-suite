@@ -53,8 +53,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class Group;
+class DCS;
+class Group;
 }
 }
 }
@@ -63,7 +63,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdGraphicsObject;
+class cfdGraphicsObject;
 }
 }
 
@@ -71,7 +71,7 @@ namespace xplorer
 #include <map>
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG 
+#elif _OSG
 #include <osg/ref_ptr>
 
 namespace ves
@@ -80,13 +80,13 @@ namespace xplorer
 {
 namespace volume
 {
-   class cfdTextureManager;
-   class cfdPBufferManager;
-   class cfdVolumeVisualization;
-   class cfdTextureDataSet;
-   class cfdVolumeVisNodeHandler;
-   class cfdScalarVolumeVisHandler;
-   class cfdVectorVolumeVisHandler;
+class cfdTextureManager;
+class cfdPBufferManager;
+class cfdVolumeVisualization;
+class cfdTextureDataSet;
+class cfdVolumeVisNodeHandler;
+class cfdScalarVolumeVisHandler;
+class cfdVectorVolumeVisHandler;
 }
 }
 }
@@ -101,143 +101,143 @@ namespace xplorer
 TextureBasedVizHandler API
 */
 /*!\class ves::xplorer::TextureBasedVizHandler
-* 
+*
 */
 class VE_XPLORER_EXPORTS TextureBasedVizHandler
 {
 public:
-   void PreFrameUpdate( void );
-   ///Update the frame number of the transient animation
-   void UpdateTransientFrame();
-   //void CleanUp( void );
-   void SetParameterFile(std::string paramFile);
-   void SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs);
-   void SetParentNode( ves::xplorer::scenegraph::Group* parent);
-   void SetActiveTextureDataSet(ves::xplorer::volume::cfdTextureDataSet* tdset);
+    void PreFrameUpdate( void );
+    ///Update the frame number of the transient animation
+    void UpdateTransientFrame();
+    //void CleanUp( void );
+    void SetParameterFile( std::string paramFile );
+    void SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs );
+    void SetParentNode( ves::xplorer::scenegraph::Group* parent );
+    void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tdset );
 
-   ///Update the active cfdTextureManager by pinging the cfdTextureDataSet
-   void UpdateActiveTextureManager();
+    ///Update the active cfdTextureManager by pinging the cfdTextureDataSet
+    void UpdateActiveTextureManager();
 
-   ///Update the bounding box
-   void UpdateBoundingBox(bool value);
+    ///Update the bounding box
+    void UpdateBoundingBox( bool value );
 
-   ///Update the clip plane position
-   ///\param planeCoordinate The "X","Y","Z" specification for a plane.
-   ///\param planeDirection The direction "Negative" or "Positive"
-   ///\param alpha The plane position.
-   void UpdateClipPlane(std::string planeCoordinate,
-                 std::string planeDirection,
-                 double alpha);
+    ///Update the clip plane position
+    ///\param planeCoordinate The "X","Y","Z" specification for a plane.
+    ///\param planeDirection The direction "Negative" or "Positive"
+    ///\param alpha The plane position.
+    void UpdateClipPlane( std::string planeCoordinate,
+                          std::string planeDirection,
+                          double alpha );
 
-   
-   ///Update the scalar range
-   ///\param range The new scalar range
-   void UpdateScalarRange(float* range);
 
-   ///Activate/deactivate isosurface visualization.
-   ///\param onOff Turn it off or on.
-   void EnsureIsosurface(bool onOff);
+    ///Update the scalar range
+    ///\param range The new scalar range
+    void UpdateScalarRange( float* range );
 
-   ///Activate/deactivate phong shading.
-   ///\param onOff Turn it off or on.
-   void EnsurePhongShading(bool onOff);
+    ///Activate/deactivate isosurface visualization.
+    ///\param onOff Turn it off or on.
+    void EnsureIsosurface( bool onOff );
 
-   ///Activate the isosurface
-   ///\param value The new isosurface value.
-   void UpdateIsosurface(double value);
+    ///Activate/deactivate phong shading.
+    ///\param onOff Turn it off or on.
+    void EnsurePhongShading( bool onOff );
 
- ///Set the number of Slice planes per brick
- ///\param nSlices The number of slices per brick
- void UpdateNumberOfSlicePlanes(unsigned int nSlices);
+    ///Activate the isosurface
+    ///\param value The new isosurface value.
+    void UpdateIsosurface( double value );
 
- ///Flag how the PreIntegration Table is update.\n true == full update\nfalse==fast update\n
- void UpdatePreIntegrationTable(bool trueFalse);
-   
- ///Clear the texture-based visualization
-   void ClearAll();
+    ///Set the number of Slice planes per brick
+    ///\param nSlices The number of slices per brick
+    void UpdateNumberOfSlicePlanes( unsigned int nSlices );
 
- ///Set the active shader mananger
- ///\param The name of the shader mananger to set active
- void SetActiveShaderManager(std::string name);
+    ///Flag how the PreIntegration Table is update.\n true == full update\nfalse==fast update\n
+    void UpdatePreIntegrationTable( bool trueFalse );
 
-   ///Set the current frame
-   ///\param frame The current step in the transient visualization.
-   void SetCurrentFrame(unsigned int frame);
+    ///Clear the texture-based visualization
+    void ClearAll();
 
-   ///Step the current visualization
-   ///\param direction The direction to step
-   void StepTransientVisualization(std::string direction);
+    ///Set the active shader mananger
+    ///\param The name of the shader mananger to set active
+    void SetActiveShaderManager( std::string name );
 
-   ///Update the duration of the current visualization
-   ///\param duration The duration
-   void UpdateTransientDuration(double duration);
+    ///Set the current frame
+    ///\param frame The current step in the transient visualization.
+    void SetCurrentFrame( unsigned int frame );
 
-   ///Play the transient visualization
-   void PlayTransientVisualization();
+    ///Step the current visualization
+    ///\param direction The direction to step
+    void StepTransientVisualization( std::string direction );
 
-   ///Stop the transient visualization
-   void StopTransientVisualization();
+    ///Update the duration of the current visualization
+    ///\param duration The duration
+    void UpdateTransientDuration( double duration );
 
-   ///Set the direction of the visualization
-   void SetTransientDirection(std::string direction);
+    ///Play the transient visualization
+    void PlayTransientVisualization();
 
-   void SetCurrentTime(double time);
-  
-   //Set the master node
-   ///\param isMaster Flag depicting the master node
-   void SetMasterNode( bool isMaster );
-  
-   void ViewTextureBasedVis(bool trueFalse);
-   //once we get pf side this may need to be ifdef'd
-   //void SetSceneView(osgUtil::SceneView* sv); 
-   void SetPBuffer(ves::xplorer::volume::cfdPBufferManager* pbm);
-   void PingPongTextures();
-   ves::xplorer::volume::cfdPBufferManager* GetPBuffer();
-   //bool InitVolumeVizNodes( void );
-   ves::xplorer::volume::cfdVolumeVisualization* GetVolumeVizNode(int index);
-   ves::xplorer::volume::cfdVolumeVisualization* GetActiveVolumeVizNode( void );
-   
-   ///The active texture manager
-   ves::xplorer::volume::cfdTextureManager* GetActiveTextureManager();
+    ///Stop the transient visualization
+    void StopTransientVisualization();
+
+    ///Set the direction of the visualization
+    void SetTransientDirection( std::string direction );
+
+    void SetCurrentTime( double time );
+
+    //Set the master node
+    ///\param isMaster Flag depicting the master node
+    void SetMasterNode( bool isMaster );
+
+    void ViewTextureBasedVis( bool trueFalse );
+    //once we get pf side this may need to be ifdef'd
+    //void SetSceneView(osgUtil::SceneView* sv);
+    void SetPBuffer( ves::xplorer::volume::cfdPBufferManager* pbm );
+    void PingPongTextures();
+    ves::xplorer::volume::cfdPBufferManager* GetPBuffer();
+    //bool InitVolumeVizNodes( void );
+    ves::xplorer::volume::cfdVolumeVisualization* GetVolumeVizNode( int index );
+    ves::xplorer::volume::cfdVolumeVisualization* GetActiveVolumeVizNode( void );
+
+    ///The active texture manager
+    ves::xplorer::volume::cfdTextureManager* GetActiveTextureManager();
 
 protected:
-   void _updateShaderState();
-   void _updateGraph();
-   void _updateVisualization();
-   void _updateShaders();
-   void _updateScalarVisHandler();
-   void _updateVectorVisHandler();
+    void _updateShaderState();
+    void _updateGraph();
+    void _updateVisualization();
+    void _updateShaders();
+    void _updateScalarVisHandler();
+    void _updateVectorVisHandler();
 
-   double _appTime;
-   double _animationDelay;
-   std::string _paramFile;
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-   ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
-   ves::xplorer::volume::cfdTextureManager* _activeTM;
+    double _appTime;
+    double _animationDelay;
+    std::string _paramFile;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
+    ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
+    ves::xplorer::volume::cfdTextureManager* _activeTM;
 
-   //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
-   ves::xplorer::volume::cfdVolumeVisualization* _activeVolumeVizNode;
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > _parent;
-   ves::xplorer::volume::cfdPBufferManager* _pbm;
-   //osgUtil::SceneView* _sceneView;
-   ves::xplorer::volume::cfdVolumeVisNodeHandler* _activeVisNodeHdlr;
-   ves::xplorer::volume::cfdScalarVolumeVisHandler* _svvh;
-   ves::xplorer::volume::cfdVectorVolumeVisHandler* _vvvh;
-   bool m_isMaster;///<Flag defining the master node
-//osg::ref_ptr< ves::xplorer::scenegraph::Switch > _visOptionSwitch;
-   float* _currentBBox;
-   bool _cleared;
-   bool _textureBaseSelected;
+    //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
+    ves::xplorer::volume::cfdVolumeVisualization* _activeVolumeVizNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > _parent;
+    ves::xplorer::volume::cfdPBufferManager* _pbm;
+    //osgUtil::SceneView* _sceneView;
+    ves::xplorer::volume::cfdVolumeVisNodeHandler* _activeVisNodeHdlr;
+    ves::xplorer::volume::cfdScalarVolumeVisHandler* _svvh;
+    ves::xplorer::volume::cfdVectorVolumeVisHandler* _vvvh;
+    bool m_isMaster;///<Flag defining the master node
+    //osg::ref_ptr< ves::xplorer::scenegraph::Switch > _visOptionSwitch;
+    float* _currentBBox;
+    bool _cleared;
+    bool _textureBaseSelected;
 
-   std::map<std::string,ves::xplorer::event::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
+    std::map<std::string, ves::xplorer::event::TextureBasedEventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
 
 private:
-   // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< TextureBasedVizHandler >;
-   TextureBasedVizHandler( void );
+    // Required so that vpr::Singleton can instantiate this class.
+    //friend class vpr::Singleton< TextureBasedVizHandler >;
+    TextureBasedVizHandler( void );
 
-   ~TextureBasedVizHandler( void );
-   vprSingletonHeader( TextureBasedVizHandler );   
+    ~TextureBasedVizHandler( void );
+    vprSingletonHeader( TextureBasedVizHandler );
 };
 }
 }

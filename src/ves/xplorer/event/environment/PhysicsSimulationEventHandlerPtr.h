@@ -50,12 +50,12 @@ namespace xplorer
 {
 namespace event
 {
-   class PhysicsSimulationEventHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<PhysicsSimulationEventHandler>::type  PhysicsSimulationEventHandlerPtr;
-   typedef ves::util::SharedPtrDef<PhysicsSimulationEventHandler>::type PhysicsSimulationEventHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<PhysicsSimulationEventHandler>::type   PhysicsSimulationEventHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<PhysicsSimulationEventHandler>::type PhysicsSimulationEventHandlerScopedPtr;
+class PhysicsSimulationEventHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<PhysicsSimulationEventHandler>::type  PhysicsSimulationEventHandlerPtr;
+typedef ves::util::SharedPtrDef<PhysicsSimulationEventHandler>::type PhysicsSimulationEventHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<PhysicsSimulationEventHandler>::type   PhysicsSimulationEventHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<PhysicsSimulationEventHandler>::type PhysicsSimulationEventHandlerScopedPtr;
 }
 }
 }

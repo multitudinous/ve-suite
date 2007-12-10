@@ -40,51 +40,52 @@
 using namespace ves::builder::DataLoader;
 
 void ves::builder::DataLoader::letUsersAddParamsToField( const int numParams, vtkFloatArray** data,
-                               vtkPointData* pointData, int verbose )
-{  
-   int debug  = 0;
+                                                         vtkPointData* pointData, int verbose )
+{
+    int debug  = 0;
 
-   if ( debug )
-      std::cout << "in letUsersAddParamsToField with numParams = " 
-                << numParams << std::endl;
+    if( debug )
+        std::cout << "in letUsersAddParamsToField with numParams = "
+        << numParams << std::endl;
 
-   char response;
-   for ( int i=0; i<numParams; i++ )
-   {
-      if ( debug > 1 ) 
-         std::cout << "data[" << i << "]->GetNumberOfTuples() = " 
-                   << data[i]->GetNumberOfTuples() << std::endl;
+    char response;
+    for( int i = 0; i < numParams; i++ )
+    {
+        if( debug > 1 )
+            std::cout << "data[" << i << "]->GetNumberOfTuples() = "
+            << data[i]->GetNumberOfTuples() << std::endl;
 
-      // if there is just one scalar/vector then write it to field without
-      // checking with user.  Otherwise, check with user if the scalar/vector
-      // should be written to the flowdata.vtk file...
-      // verbose sets wether or not just to skip the questions from being asked
-      if ( numParams > 1 && verbose == 1 )
-      {
-         do
-         {
-            if (data[i]->GetNumberOfComponents()==1) 
-               std::cout << "Do you want to store scalar value \"";
-            else                                     
-               std::cout << "Do you want to store vector value \"";
+        // if there is just one scalar/vector then write it to field without
+        // checking with user.  Otherwise, check with user if the scalar/vector
+        // should be written to the flowdata.vtk file...
+        // verbose sets wether or not just to skip the questions from being asked
+        if( numParams > 1 && verbose == 1 )
+        {
+            do
+            {
+                if( data[i]->GetNumberOfComponents() == 1 )
+                    std::cout << "Do you want to store scalar value \"";
+                else
+                    std::cout << "Do you want to store vector value \"";
 
-            std::cout << data[i]->GetName() << "\" in flowdata.vtk? (y/n): ";
-            std::cout.flush();
-            std::cin >> response;
-            std::cin.ignore();
-            //cout << "response = " << response << endl;
-         } while (response != 'y' && response != 'Y' && 
-                  response != 'n' && response != 'N');
+                std::cout << data[i]->GetName() << "\" in flowdata.vtk? (y/n): ";
+                std::cout.flush();
+                std::cin >> response;
+                std::cin.ignore();
+                //cout << "response = " << response << endl;
+            }
+            while( response != 'y' && response != 'Y' &&
+                    response != 'n' && response != 'N' );
 
-         // if other than y/Y was input then don't write parameter to field...
-         if (response != 'y' && response != 'Y') 
-            continue;
-      }
-      pointData->AddArray( data[i] );
-   }
+            // if other than y/Y was input then don't write parameter to field...
+            if( response != 'y' && response != 'Y' )
+                continue;
+        }
+        pointData->AddArray( data[i] );
+    }
 
-   // Breaks Deere's Build
-   //if ( debug > 1 ) 
-   //   pointData->Print( std::cout );
+    // Breaks Deere's Build
+    //if ( debug > 1 )
+    //   pointData->Print( std::cout );
 }
 

@@ -40,25 +40,25 @@ using namespace ves::xplorer::util;
 //////////////////////////////////////////////////////////////////////
 ComputeVectorMagnitudeRangeCallback::ComputeVectorMagnitudeRangeCallback()
 {
-	m_magnitudeRange[0] = 0.0;
-	m_magnitudeRange[1] = 1.0;
+    m_magnitudeRange[0] = 0.0;
+    m_magnitudeRange[1] = 1.0;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void ComputeVectorMagnitudeRangeCallback::GetVectorMagnitudeRange(double*& vMagRange)
+void ComputeVectorMagnitudeRangeCallback::GetVectorMagnitudeRange( double*& vMagRange )
 {
     vMagRange[0] = m_magnitudeRange[0];
     vMagRange[1] = m_magnitudeRange[1];
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-void ComputeVectorMagnitudeRangeCallback::OperateOnDataset(vtkDataSet* dataset)
+void ComputeVectorMagnitudeRangeCallback::OperateOnDataset( vtkDataSet* dataset )
 {
-    if(!dataset->GetPointData()->GetVectors())
+    if( !dataset->GetPointData()->GetVectors() )
     {
         return;
     }
-	double* range = 
-	    cfdAccessoryFunctions::ComputeVectorMagnitudeRange(dataset->GetPointData()->GetVectors());    
-	m_magnitudeRange[0] = (range[0] < m_magnitudeRange[0])?range[0]:m_magnitudeRange[0];
-	m_magnitudeRange[1] = (range[1] > m_magnitudeRange[1])?range[1]:m_magnitudeRange[1];
+    double* range =
+        cfdAccessoryFunctions::ComputeVectorMagnitudeRange( dataset->GetPointData()->GetVectors() );
+    m_magnitudeRange[0] = ( range[0] < m_magnitudeRange[0] ) ? range[0] : m_magnitudeRange[0];
+    m_magnitudeRange[1] = ( range[1] > m_magnitudeRange[1] ) ? range[1] : m_magnitudeRange[1];
 }
 

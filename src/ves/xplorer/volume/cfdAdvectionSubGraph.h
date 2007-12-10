@@ -42,7 +42,7 @@
 #ifdef _OSG
 namespace osg
 {
-   class Texture3D;
+class Texture3D;
 }
 
 #include <osg/Group>
@@ -57,9 +57,9 @@ namespace volume
 class cfdOSGAdvectionShaderManager;
 class cfdTextureManager;
 class cfdPBufferManager;
-   VE_TEXTURE_BASED_EXPORTS osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
-                                           cfdPBufferManager* pbm,
-                                           float deltaZ);
+VE_TEXTURE_BASED_EXPORTS osg::ref_ptr<osg::Group> CreateAdvectionSubGraph( cfdTextureManager* tm,
+        cfdPBufferManager* pbm,
+        float deltaZ );
 
 }
 }

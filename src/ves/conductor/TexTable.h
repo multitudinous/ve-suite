@@ -36,7 +36,7 @@
 TexTable API
 */
 /*!\class TexTable
-* 
+*
 */
 #include <vector>
 #include <wx/grid.h>
@@ -53,24 +53,31 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS TexTable : public wxGrid
 {
 public:
-   TexTable(wxWindow* parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
-   virtual ~TexTable(){;}
-   void Clear( void ){ ClearGrid(); SetNumofCols(2); }
-   void SetColWidth( int Col_id, int width );
-   void SetNumofCols( int num );
-   void SetColTitles( const std::vector<wxString>& titles );
-   void SetColAlignments( const std::vector<int>& alignments );
+    TexTable( wxWindow* parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize );
+    virtual ~TexTable()
+    {
+        ;
+    }
+    void Clear( void )
+    {
+        ClearGrid();
+        SetNumofCols( 2 );
+    }
+    void SetColWidth( int Col_id, int width );
+    void SetNumofCols( int num );
+    void SetColTitles( const std::vector<wxString>& titles );
+    void SetColAlignments( const std::vector<int>& alignments );
 
-   void AddRow( const std::vector<wxString>& vals );
-   void AddSeperator( char pad='=' );
-   void DoChangeFont( const wxFont &font );
-   bool ChooseFixedFont( int size );
-   wxString padding( wxString str, int col_id );
+    void AddRow( const std::vector<wxString>& vals );
+    void AddSeperator( char pad = '=' );
+    void DoChangeFont( const wxFont &font );
+    bool ChooseFixedFont( int size );
+    wxString padding( wxString str, int col_id );
 
 private:
-   int num_cols;
-   std::vector< int > m_align;
-   std::vector< int > cols_width;
+    int num_cols;
+    std::vector< int > m_align;
+    std::vector< int > cols_width;
 };
 }
 }

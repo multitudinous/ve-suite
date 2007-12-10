@@ -36,7 +36,7 @@
 DataSetLoaderUI API
 */
 /*!\class DataSetLoaderUI
-* 
+*
 */
 #include <ves/VEConfig.h>
 
@@ -68,7 +68,7 @@ namespace open
 {
 namespace xml
 {
-   class ParameterBlock;
+class ParameterBlock;
 }
 }
 }
@@ -108,51 +108,51 @@ namespace conductor
 namespace util
 {
 class VE_CONDUCTOR_UTILS_EXPORTS DataSetLoaderUI: public wxDialog
-{    
+{
     //DECLARE_DYNAMIC_CLASS( DataSetLoaderUI )
 
 public:
     /// Constructors
     DataSetLoaderUI( );
-    DataSetLoaderUI( wxWindow* parent, 
-                     wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME, 
-                     const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE, 
-                     const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
-                     const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
-                     long style = SYMBOL_DATASETLOADERUI_STYLE, 
+    DataSetLoaderUI( wxWindow* parent,
+                     wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME,
+                     const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE,
+                     const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION,
+                     const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE,
+                     long style = SYMBOL_DATASETLOADERUI_STYLE,
                      ves::open::xml::model::ModelWeakPtr veModel = 0 );
 
-   enum
-   {
-      ID_SCROLLEDWINDOW = 10001,
-      ID_COMBOBOX,
-      ID_TEXTCTRL,
-      ID_BUTTON,
-      ID_TEXTCTRL2,
-      ID_BUTTON3,
-      ID_TEXTCTRL3,
-      ID_BUTTON4,
-      ID_BUTTON6,
-      ID_BUTTON5,
-      ID_TEXTCTRL1,
-      ID_BUTTON2,
-      ID_SCROLLEDWINDOW1,
-      ID_LISTBOX,
-      ID_INFORMATION_PACKET_LIST,
-      ID_INFORMATION_PACKET_CHANGE_NAME,
-      ID_INFORMATION_PACKET_ADD_NAME,
-      ID_ADD_DATASET,
-      ID_DELETE_DATASET
-   };
+    enum
+    {
+        ID_SCROLLEDWINDOW = 10001,
+        ID_COMBOBOX,
+        ID_TEXTCTRL,
+        ID_BUTTON,
+        ID_TEXTCTRL2,
+        ID_BUTTON3,
+        ID_TEXTCTRL3,
+        ID_BUTTON4,
+        ID_BUTTON6,
+        ID_BUTTON5,
+        ID_TEXTCTRL1,
+        ID_BUTTON2,
+        ID_SCROLLEDWINDOW1,
+        ID_LISTBOX,
+        ID_INFORMATION_PACKET_LIST,
+        ID_INFORMATION_PACKET_CHANGE_NAME,
+        ID_INFORMATION_PACKET_ADD_NAME,
+        ID_ADD_DATASET,
+        ID_DELETE_DATASET
+    };
 
     /// Creation
-    bool Create( wxWindow* parent, 
-                  wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME, 
-                  const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE, 
-                  const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION, 
-                  const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE, 
-                  long style = SYMBOL_DATASETLOADERUI_STYLE, 
-                  ves::open::xml::model::ModelWeakPtr veModel = 0);
+    bool Create( wxWindow* parent,
+                 wxWindowID id = SYMBOL_DATASETLOADERUI_IDNAME,
+                 const wxString& caption = SYMBOL_DATASETLOADERUI_TITLE,
+                 const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION,
+                 const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE,
+                 long style = SYMBOL_DATASETLOADERUI_STYLE,
+                 ves::open::xml::model::ModelWeakPtr veModel = 0 );
 
     /// Creates the controls and sizers
     void CreateControls();
@@ -191,16 +191,16 @@ public:
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_INFORMATION_PACKET_ADD_NAME
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
-   std::string GetActiveDataSetName();
-   ves::open::xml::ParameterBlock* GetParamBlock();
-   
-   ///Disable/enable the buttons
-   ///\param flag Bool to control the ui.
-   void EnableUI( bool flag );
-   ///Initialize widgets
-   void InitializeWidgets( void );
-   ///Set the text controls when the text is modified
-   void SetTextCtrls( void );
+    std::string GetActiveDataSetName();
+    ves::open::xml::ParameterBlock* GetParamBlock();
+
+    ///Disable/enable the buttons
+    ///\param flag Bool to control the ui.
+    void EnableUI( bool flag );
+    ///Initialize widgets
+    void InitializeWidgets( void );
+    ///Set the text controls when the text is modified
+    void SetTextCtrls( void );
 
 ////@end DataSetLoaderUI event handler declarations
 
@@ -217,34 +217,34 @@ public:
     static bool ShowToolTips();
 
 private:
-   wxComboBox* dataSetList;
-   wxTextCtrl* dataSetTextEntry;
-   wxButton* dataSetOpenButton;
-   wxTextCtrl* preComputDirTextEntry;
-   wxButton* preComputeOpenButton;
-   wxTextCtrl* surfaceDataText;
-   wxButton* surfaceDataOpenButton;
-   wxButton* transformButton;
-   wxButton* scalarButton;
-   wxButton* itemButton22;
-   //wxButton* createDataSet;
-   wxListBox* itemListBox24;
-   wxTextCtrl* itemTextCtrl21;  
-   wxStaticBox* itemStaticBoxSizer6Static;
-   wxStaticBox* itemStaticBoxSizer9Static;
-   wxStaticBox* itemStaticBoxSizer12Static;
-   wxStaticBox* itemStaticBoxSizer15Static;
-   wxStaticBox* itemStaticBoxSizer19Static;
-   std::set< wxString > textureDirs;
+    wxComboBox* dataSetList;
+    wxTextCtrl* dataSetTextEntry;
+    wxButton* dataSetOpenButton;
+    wxTextCtrl* preComputDirTextEntry;
+    wxButton* preComputeOpenButton;
+    wxTextCtrl* surfaceDataText;
+    wxButton* surfaceDataOpenButton;
+    wxButton* transformButton;
+    wxButton* scalarButton;
+    wxButton* itemButton22;
+    //wxButton* createDataSet;
+    wxListBox* itemListBox24;
+    wxTextCtrl* itemTextCtrl21;
+    wxStaticBox* itemStaticBoxSizer6Static;
+    wxStaticBox* itemStaticBoxSizer9Static;
+    wxStaticBox* itemStaticBoxSizer12Static;
+    wxStaticBox* itemStaticBoxSizer15Static;
+    wxStaticBox* itemStaticBoxSizer19Static;
+    std::set< wxString > textureDirs;
 
-   ves::open::xml::model::ModelPtr m_veModel;
-   ves::open::xml::ParameterBlock* paramBlock;
+    ves::open::xml::model::ModelPtr m_veModel;
+    ves::open::xml::ParameterBlock* paramBlock;
 
-   int lastAddition;
-   DECLARE_EVENT_TABLE()
+    int lastAddition;
+    DECLARE_EVENT_TABLE()
 };
 }
 }
 }
 #endif
-    // _DATASETLOADERUI_H_
+// _DATASETLOADERUI_H_

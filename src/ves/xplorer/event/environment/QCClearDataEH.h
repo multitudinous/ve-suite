@@ -49,25 +49,25 @@ namespace event
  * Activate the texture based visualization.
  */
 class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler :
-    public EventHandler
+            public EventHandler
 {
 public:
-   ///Constructor
-   QuatCamClearDataEventHandler();
+    ///Constructor
+    QuatCamClearDataEventHandler();
 
-   ///Copy Constructor
-   QuatCamClearDataEventHandler(const QuatCamClearDataEventHandler& ceh);
-   ///Destructor
-   virtual ~QuatCamClearDataEventHandler();
+    ///Copy Constructor
+    QuatCamClearDataEventHandler( const QuatCamClearDataEventHandler& ceh );
+    ///Destructor
+    virtual ~QuatCamClearDataEventHandler();
 
-   ///Equal operator
-   QuatCamClearDataEventHandler& operator=(const QuatCamClearDataEventHandler& rhs);
-   ///\param baseObject The GlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject=0); 
-   
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
+    ///Equal operator
+    QuatCamClearDataEventHandler& operator=( const QuatCamClearDataEventHandler& rhs );
+    ///\param baseObject The GlobalBase object to apply the command to.
+    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject = 0 );
+
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void Execute( ves::open::xml::XMLObject* veXMLObject );
 protected:
 
 };

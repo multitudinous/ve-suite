@@ -50,21 +50,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedPhongShadingEnableEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedPhongShadingEnableEventHandler();
+    ///Constructor
+    TextureBasedPhongShadingEnableEventHandler();
 
-   ///Copy Constructor
-   TextureBasedPhongShadingEnableEventHandler(const TextureBasedPhongShadingEnableEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedPhongShadingEnableEventHandler();
+    ///Copy Constructor
+    TextureBasedPhongShadingEnableEventHandler( const TextureBasedPhongShadingEnableEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedPhongShadingEnableEventHandler();
 
-   ///Equal operator
-   TextureBasedPhongShadingEnableEventHandler& operator=(const TextureBasedPhongShadingEnableEventHandler& rhs);
+    ///Equal operator
+    TextureBasedPhongShadingEnableEventHandler& operator=( const TextureBasedPhongShadingEnableEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

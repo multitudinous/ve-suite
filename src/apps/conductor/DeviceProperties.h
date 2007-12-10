@@ -36,7 +36,7 @@
 DeviceProperties API
 */
 /*!\class DeviceProperties
-* 
+*
 */
 #include <vector>
 #include <string>
@@ -52,7 +52,7 @@ namespace open
 {
 namespace xml
 {
-   class DataValuePair;
+class DataValuePair;
 }
 }
 }
@@ -63,45 +63,45 @@ namespace conductor
 {
 namespace util
 {
-    class CORBAServiceList;
+class CORBAServiceList;
 }
 }
 }
 
-class DeviceProperties:public wxDialog 
+class DeviceProperties: public wxDialog
 {
-   public:
-      DeviceProperties( wxWindow* parent );
+public:
+    DeviceProperties( wxWindow* parent );
 
-      virtual ~DeviceProperties();
+    virtual ~DeviceProperties();
 
-   enum DEVICE_IDS 
-   {
-      DEVICE_SPLITTERWINDOW,
-      DEVICE_LISTBOX,
-      DEVICE_TRACKBALL_PANEL,
-      DEVICE_WAND_PANEL,
+    enum DEVICE_IDS
+    {
+        DEVICE_SPLITTERWINDOW,
+        DEVICE_LISTBOX,
+        DEVICE_TRACKBALL_PANEL,
+        DEVICE_WAND_PANEL,
 
-      ANIMATE_CHECKBOX,
-   };
+        ANIMATE_CHECKBOX,
+    };
 
-   protected:
-      void BuildGUI();
+protected:
+    void BuildGUI();
 
-      wxSplitterWindow* device_splitter;
-      wxCheckBox* animate_check_box;
+    wxSplitterWindow* device_splitter;
+    wxCheckBox* animate_check_box;
 
-      void OnAnimate(wxCommandEvent& event);
+    void OnAnimate( wxCommandEvent& event );
 
-      bool animate;
+    bool animate;
 
-      std::vector<ves::open::xml::DataValuePair*> instructions;        //The DataValuePairs for the current command
+    std::vector<ves::open::xml::DataValuePair*> instructions;        //The DataValuePairs for the current command
 
-      void SendCommandsToXplorer();
-      void ClearInstructions();
+    void SendCommandsToXplorer();
+    void ClearInstructions();
 
-      ves::conductor::util::CORBAServiceList* serviceList;
+    ves::conductor::util::CORBAServiceList* serviceList;
 
-      DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 #endif

@@ -40,59 +40,59 @@ using namespace ves::xplorer::util;
 //////////////////////////////////////////////////////////////////
 ComputeDataObjectBoundsCallback::ComputeDataObjectBoundsCallback()
 {
-   m_bounds[0] = 100000;
-   m_bounds[1] = -100000;
-   m_bounds[2] = 100000;
-   m_bounds[3] = -100000;
-   m_bounds[4] = 100000;
-   m_bounds[5] = -100000;
+    m_bounds[0] = 100000;
+    m_bounds[1] = -100000;
+    m_bounds[2] = 100000;
+    m_bounds[3] = -100000;
+    m_bounds[4] = 100000;
+    m_bounds[5] = -100000;
 }
 ///////////////////////////////////////////////////////////////////////////
-void ComputeDataObjectBoundsCallback::OperateOnDataset(vtkDataSet* dataset)
+void ComputeDataObjectBoundsCallback::OperateOnDataset( vtkDataSet* dataset )
 {
-   double bounds[6];
-   dataset->GetBounds(bounds);
-   if(bounds[0] < m_bounds[0])
-   {
-      m_bounds[0] = bounds[0];
-   }
-   if(bounds[1] > m_bounds[1])
-   {
-      m_bounds[1] = bounds[1];
-   }
-   if(bounds[2] < m_bounds[2])
-   {
-      m_bounds[2] = bounds[2];
-   }
-   if(bounds[3] > m_bounds[3])
-   {
-      m_bounds[3] = bounds[3];
-   }
-   if(bounds[4] < m_bounds[4])
-   {
-      m_bounds[4] = bounds[4];
-   }
-   if(bounds[5] > m_bounds[5])
-   {
-      m_bounds[5] = bounds[5];
-   }
-   
+    double bounds[6];
+    dataset->GetBounds( bounds );
+    if( bounds[0] < m_bounds[0] )
+    {
+        m_bounds[0] = bounds[0];
+    }
+    if( bounds[1] > m_bounds[1] )
+    {
+        m_bounds[1] = bounds[1];
+    }
+    if( bounds[2] < m_bounds[2] )
+    {
+        m_bounds[2] = bounds[2];
+    }
+    if( bounds[3] > m_bounds[3] )
+    {
+        m_bounds[3] = bounds[3];
+    }
+    if( bounds[4] < m_bounds[4] )
+    {
+        m_bounds[4] = bounds[4];
+    }
+    if( bounds[5] > m_bounds[5] )
+    {
+        m_bounds[5] = bounds[5];
+    }
+
 }
-//////////////////////////////////////////////////////////////////////////    
-void ComputeDataObjectBoundsCallback::GetDataObjectBounds(double bounds[6])
+//////////////////////////////////////////////////////////////////////////
+void ComputeDataObjectBoundsCallback::GetDataObjectBounds( double bounds[6] )
 {
-    
-   bounds[0] = m_bounds[0];
-   bounds[1] = m_bounds[1];
-   bounds[2] = m_bounds[2];
-   bounds[3] = m_bounds[3];
-   bounds[4] = m_bounds[4];
-   bounds[5] = m_bounds[5];
+
+    bounds[0] = m_bounds[0];
+    bounds[1] = m_bounds[1];
+    bounds[2] = m_bounds[2];
+    bounds[3] = m_bounds[3];
+    bounds[4] = m_bounds[4];
+    bounds[5] = m_bounds[5];
 }
 ///////////////////////////////////////////////////////////////////
 double ComputeDataObjectBoundsCallback::GetDataObjectBoundsDiagonal()
 {
-   return sqrt((m_bounds[1]-m_bounds[0])*(m_bounds[1]-m_bounds[0]) +
-               (m_bounds[3]-m_bounds[2])*(m_bounds[3]-m_bounds[2]) +
-               (m_bounds[5]-m_bounds[4])*(m_bounds[5]-m_bounds[4]) );
+    return sqrt(( m_bounds[1] - m_bounds[0] )*( m_bounds[1] - m_bounds[0] ) +
+                ( m_bounds[3] - m_bounds[2] )*( m_bounds[3] - m_bounds[2] ) +
+                ( m_bounds[5] - m_bounds[4] )*( m_bounds[5] - m_bounds[4] ) );
 }

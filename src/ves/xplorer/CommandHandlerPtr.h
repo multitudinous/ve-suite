@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class CommandHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<CommandHandler>::type  CommandHandlerPtr;
-   typedef ves::util::SharedPtrDef<CommandHandler>::type CommandHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<CommandHandler>::type   CommandHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<CommandHandler>::type CommandHandlerScopedPtr;
+class CommandHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<CommandHandler>::type  CommandHandlerPtr;
+typedef ves::util::SharedPtrDef<CommandHandler>::type CommandHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<CommandHandler>::type   CommandHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<CommandHandler>::type CommandHandlerScopedPtr;
 }
 }
 #endif

@@ -52,39 +52,42 @@ public:
     ///Construtor
     Scheduler();
     ///??
-    Scheduler(Network*);
+    Scheduler( Network* );
     ///Destructor
     ~Scheduler();
 
     ///clear the schedule
-    void clear();  
+    void clear();
     ///Reset the visit variables so that the schedule can be run again
     void reset();
     ///??
     void set_net( Network* );
 
     ///??
-    void sweep    (Module*);
+    void sweep( Module* );
     ///??
-    int  schedule (Module*);
+    int  schedule( Module* );
     ///??
-    int  execute  (Module*);
+    int  execute( Module* );
 
     ///??
-    unsigned int snodes_size () { return _schedule_nodes._nodes.size(); }
+    unsigned int snodes_size()
+    {
+        return _schedule_nodes._nodes.size();
+    }
 
     ///Printthe schedule to verify the correct network has been recreated
-    void print_schedule ();
+    void print_schedule();
     ///Raw Network
     Network* _net;
-  
+
 private:
-    int visit( int k, std::set<int> connid_ignore, 
-        std::vector<std::vector<int> >& sccs);
-    void visit( std::vector<std::vector<int> > adj, 
-        size_t k,  std::vector<int>& order);
-    int  breakdown( std::vector<int> S, std::set<int> connid_ignore, 
-        node_loop &node_loop);
+    int visit( int k, std::set<int> connid_ignore,
+                   std::vector<std::vector<int> > & sccs );
+    void visit( std::vector<std::vector<int> > adj,
+                size_t k,  std::vector<int>& order );
+    int  breakdown( std::vector<int> S, std::set<int> connid_ignore,
+                        node_loop &node_loop );
 
     std::vector<int> visit_val;
     std::stack<int>  visit_stack;

@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML:VE_Model::LinkPtr.  To get the full 
+ * VE_XML:VE_Model::LinkPtr.  To get the full
  * declaration of VE_XML::VE_Model::LinkPtr
  * VE_Open/XML/Model/Link.h must be included, too.
  */
@@ -52,12 +52,12 @@ namespace xml
 {
 namespace model
 {
-    class Link;
-    /// Typedef for a SmartPtr type for the Link.
-    typedef ves::util::ClassPtrDef<Link>::type  LinkPtr;
-    typedef ves::util::SharedPtrDef<Link>::type LinkSharedPtr;
-    typedef ves::util::WeakPtrDef<Link>::type   LinkWeakPtr;
-    typedef ves::util::ScopedPtrDef<Link>::type LinkScopedPtr;
+class Link;
+/// Typedef for a SmartPtr type for the Link.
+typedef ves::util::ClassPtrDef<Link>::type  LinkPtr;
+typedef ves::util::SharedPtrDef<Link>::type LinkSharedPtr;
+typedef ves::util::WeakPtrDef<Link>::type   LinkWeakPtr;
+typedef ves::util::ScopedPtrDef<Link>::type LinkScopedPtr;
 }
 }
 }

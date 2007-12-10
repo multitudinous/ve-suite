@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::TagPtr.  To get the full 
+ * VE_XML::VE_Model::TagPtr.  To get the full
  * declaration of VE_XML::VE_Model::Tag
  * VE_Open/XML/Model/Tag.h must be included, too.
  */
@@ -52,12 +52,12 @@ namespace xml
 {
 namespace model
 {
-   class Tag;
-   /// Typedef for a SmartPtr type for the Tag.
-   typedef ves::util::ClassPtrDef<Tag>::type  TagPtr;
-   typedef ves::util::SharedPtrDef<Tag>::type TagSharedPtr;
-   typedef ves::util::WeakPtrDef<Tag>::type   TagWeakPtr;
-   typedef ves::util::ScopedPtrDef<Tag>::type TagScopedPtr;
+class Tag;
+/// Typedef for a SmartPtr type for the Tag.
+typedef ves::util::ClassPtrDef<Tag>::type  TagPtr;
+typedef ves::util::SharedPtrDef<Tag>::type TagSharedPtr;
+typedef ves::util::WeakPtrDef<Tag>::type   TagWeakPtr;
+typedef ves::util::ScopedPtrDef<Tag>::type TagScopedPtr;
 }
 }
 }

@@ -53,294 +53,300 @@ using namespace ves::xplorer::volume;
 ////////////////////////////////////////////////
 cfdScalarShaderManager::cfdScalarShaderManager()
 {
-   _useTM = true;
-   _isoSurface = false;
-   _preIntegrate = true;
-   _percentScalarRange = 0;
-   _stepSize[0] = .0001;
-   _stepSize[1] = .0001;
-   _stepSize[2] = .0001;
-   _tUnit = 0;
+    _useTM = true;
+    _isoSurface = false;
+    _preIntegrate = true;
+    _percentScalarRange = 0;
+    _stepSize[0] = .0001;
+    _stepSize[1] = .0001;
+    _stepSize[2] = .0001;
+    _tUnit = 0;
 }
 ///////////////////////////////////////////
 void cfdScalarShaderManager::Init()
 {
-   _initTransferFunctions();
-   _initPropertyTexture();
-   if(_tm)
-   {
-      SetScalarRange(_tm->dataRange(_tm->GetCurrentFrame()).range);
-      
-   }
-   if(!_ss.valid() && _reinit &&_property.valid()){
-      _ss = new osg::StateSet();
-      _ss->setDataVariance(osg::Object::DYNAMIC);
-      _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
+    _initTransferFunctions();
+    _initPropertyTexture();
+    if( _tm )
+    {
+        SetScalarRange( _tm->dataRange( _tm->GetCurrentFrame() ).range );
 
-      osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-      bf->setFunction(osg::BlendFunc::SRC_ALPHA, 
-                      osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+    }
+    if( !_ss.valid() && _reinit && _property.valid() )
+    {
+        _ss = new osg::StateSet();
+        _ss->setDataVariance( osg::Object::DYNAMIC );
+        _ss->setMode( GL_BLEND, osg::StateAttribute::ON );
 
-      _ss->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
-      _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-      _ss->setTextureAttributeAndModes(0,_property.get(),
-                                osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_S,
-                     osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_T,
-                     osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_R,
-                     osg::StateAttribute::ON);
-      _ss->setTextureAttributeAndModes(0,
-                                new osg::TexEnv(osg::TexEnv::REPLACE),
-                             osg::StateAttribute::ON);
-      int nTransferFunctions = _transferFunctions.size();
-      //for(int i =0; i < nTransferFunctions; i++){
-         _ss->setTextureAttributeAndModes(1,_transferFunctions.at(0).get(),
-                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE); 
-         /*_ss->setTextureMode(i+1,GL_TEXTURE_2D,
-                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);*/
-         _ss->setTextureMode(1,GL_TEXTURE_GEN_S,
-                        osg::StateAttribute::OFF);
-         _ss->setTextureMode(1,GL_TEXTURE_GEN_T,
-                        osg::StateAttribute::OFF);
-         _ss->setTextureMode(1,GL_TEXTURE_GEN_R,
-                        osg::StateAttribute::OFF);
-      //}
-      _ss->setTextureAttributeAndModes(3,_jitterTexture->GetNoiseTexture(),
-                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE); 
-      _tUnit = 0;
-      _setupStateSetForGLSL();
-   }
-   _reinit = false;
+        osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+        bf->setFunction( osg::BlendFunc::SRC_ALPHA,
+                         osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+
+        _ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
+        _ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+        _ss->setTextureAttributeAndModes( 0, _property.get(),
+                                          osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        _ss->setTextureMode( 0, GL_TEXTURE_GEN_S,
+                             osg::StateAttribute::ON );
+        _ss->setTextureMode( 0, GL_TEXTURE_GEN_T,
+                             osg::StateAttribute::ON );
+        _ss->setTextureMode( 0, GL_TEXTURE_GEN_R,
+                             osg::StateAttribute::ON );
+        _ss->setTextureAttributeAndModes( 0,
+                                          new osg::TexEnv( osg::TexEnv::REPLACE ),
+                                          osg::StateAttribute::ON );
+        int nTransferFunctions = _transferFunctions.size();
+        //for(int i =0; i < nTransferFunctions; i++){
+        _ss->setTextureAttributeAndModes( 1, _transferFunctions.at( 0 ).get(),
+                                          osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        /*_ss->setTextureMode(i+1,GL_TEXTURE_2D,
+                         osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);*/
+        _ss->setTextureMode( 1, GL_TEXTURE_GEN_S,
+                             osg::StateAttribute::OFF );
+        _ss->setTextureMode( 1, GL_TEXTURE_GEN_T,
+                             osg::StateAttribute::OFF );
+        _ss->setTextureMode( 1, GL_TEXTURE_GEN_R,
+                             osg::StateAttribute::OFF );
+        //}
+        _ss->setTextureAttributeAndModes( 3, _jitterTexture->GetNoiseTexture(),
+                                          osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        _tUnit = 0;
+        _setupStateSetForGLSL();
+    }
+    _reinit = false;
 }
 ////////////////////////////////////////////////////
 void cfdScalarShaderManager::_setupStateSetForGLSL()
 {
-   std::cout<<"Using glsl..."<<std::endl;
-   _ss->addUniform(new osg::Uniform("volumeData",0));
-   _ss->addUniform(new osg::Uniform("fastUpdate",_preIntegrate));
-   _ss->addUniform(new osg::Uniform("transferFunction",1)); 
-   _ss->addUniform(new osg::Uniform("jitter2D",3));
-   _ss->addUniform(new osg::Uniform("viewRay",osg::Vec3(0,1,0)));
-   _ss->addUniform(new osg::Uniform("alphaRatio",1.f));
-   _ss->addUniform(new osg::Uniform("jitterSize",osg::Vec2(_jitterTexture->GetResolutionX(),_jitterTexture->GetResolutionY())));
-   //_ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
-   _ss->addUniform(new osg::Uniform("stepSize",osg::Vec3f(_stepSize[0],_stepSize[1],_stepSize[2])));
-   _ss->addUniform(new osg::Uniform("datacenter",osg::Vec3f(0,0,0)));
-   _tUnit = 0;
-   osg::ref_ptr<osg::Shader> basicVertShader = _createGLSLShaderFromInline(vrBasicVertSource,false);                          
-   osg::ref_ptr<osg::Shader> basicFragShader = _createGLSLShaderFromInline(vrBasicFragSource,true);
-   osg::ref_ptr<osg::Program> vrBasic = new osg::Program();
-   vrBasic->addShader(basicFragShader.get());
-   vrBasic->addShader(basicVertShader.get());
-   AddShaderProgram("Basic Volume Render",vrBasic);
+    std::cout << "Using glsl..." << std::endl;
+    _ss->addUniform( new osg::Uniform( "volumeData", 0 ) );
+    _ss->addUniform( new osg::Uniform( "fastUpdate", _preIntegrate ) );
+    _ss->addUniform( new osg::Uniform( "transferFunction", 1 ) );
+    _ss->addUniform( new osg::Uniform( "jitter2D", 3 ) );
+    _ss->addUniform( new osg::Uniform( "viewRay", osg::Vec3( 0, 1, 0 ) ) );
+    _ss->addUniform( new osg::Uniform( "alphaRatio", 1.f ) );
+    _ss->addUniform( new osg::Uniform( "jitterSize", osg::Vec2( _jitterTexture->GetResolutionX(), _jitterTexture->GetResolutionY() ) ) );
+    //_ss->addUniform(new osg::Uniform("deltaSlice",osg::Vec3(1.f,1.f,1.f)));
+    _ss->addUniform( new osg::Uniform( "stepSize", osg::Vec3f( _stepSize[0], _stepSize[1], _stepSize[2] ) ) );
+    _ss->addUniform( new osg::Uniform( "datacenter", osg::Vec3f( 0, 0, 0 ) ) );
+    _tUnit = 0;
+    osg::ref_ptr<osg::Shader> basicVertShader = _createGLSLShaderFromInline( vrBasicVertSource, false );
+    osg::ref_ptr<osg::Shader> basicFragShader = _createGLSLShaderFromInline( vrBasicFragSource, true );
+    osg::ref_ptr<osg::Program> vrBasic = new osg::Program();
+    vrBasic->addShader( basicFragShader.get() );
+    vrBasic->addShader( basicVertShader.get() );
+    AddShaderProgram( "Basic Volume Render", vrBasic );
 
-   osg::ref_ptr<osg::Shader> vrPhongVertShader = _createGLSLShaderFromInline(vrPhongVertSource,false);
-   osg::ref_ptr<osg::Shader> vrPhongFragShader = _createGLSLShaderFromInline(vrPhongFragSource,true);
-   osg::ref_ptr<osg::Program> vrPhong = new osg::Program();
-   
-   vrPhong->addShader(vrPhongVertShader.get());
-   vrPhong->addShader(vrPhongFragShader.get());
-   AddShaderProgram("Phong Lit Volume Render",vrPhong);
+    osg::ref_ptr<osg::Shader> vrPhongVertShader = _createGLSLShaderFromInline( vrPhongVertSource, false );
+    osg::ref_ptr<osg::Shader> vrPhongFragShader = _createGLSLShaderFromInline( vrPhongFragSource, true );
+    osg::ref_ptr<osg::Program> vrPhong = new osg::Program();
 
-   SetActiveShaderProgram("Basic Volume Render");
+    vrPhong->addShader( vrPhongVertShader.get() );
+    vrPhong->addShader( vrPhongFragShader.get() );
+    AddShaderProgram( "Phong Lit Volume Render", vrPhong );
+
+    SetActiveShaderProgram( "Basic Volume Render" );
 }
 //////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::FullTransferFunctionUpdate()
 {
-   _preIntegrate = true;
+    _preIntegrate = true;
 }
 //////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::FastTransferFunctionUpdate()
 {
-   _preIntegrate = false;
+    _preIntegrate = false;
 }
 //////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
 {
-   _tf->SetIsoSurface(true);
-   //_preIntegrate = true;
+    _tf->SetIsoSurface( true );
+    //_preIntegrate = true;
 }
 ///////////////////////////////////////////////////
 void cfdScalarShaderManager::DeactivateIsoSurface()
 {
-   _tf->SetIsoSurface(false);
-   //_preIntegrate = true;
+    _tf->SetIsoSurface( false );
+    //_preIntegrate = true;
 }
 /////////////////////////////////////////////////////////////////////////
-void cfdScalarShaderManager::SetIsoSurfaceValue(float percentScalarRange)
+void cfdScalarShaderManager::SetIsoSurfaceValue( float percentScalarRange )
 {
-   _percentScalarRange = percentScalarRange;
-   
-   _tf->SetIsoSurfaceValue(percentScalarRange);
-   _updateTransferFunction();
+    _percentScalarRange = percentScalarRange;
+
+    _tf->SetIsoSurfaceValue( percentScalarRange );
+    _updateTransferFunction();
 }
 /////////////////////////////////////////////////////
 void cfdScalarShaderManager::_initTransferFunctions()
 {
-   if(_transferFunctions.empty())
-   {
-      //create transfer functions
-      //_createTransferFunction(); 
-      if(_tf)
-	  {
-		  delete _tf;
-		  _tf = 0;
-	  }
-	  if(_preIntTexture)
-	  {
-		  delete _preIntTexture;
-		  _preIntTexture = 0;
-	  }
-	  _tf = new ves::xplorer::volume::RYGCBLinearTF();
-	  _tf->InitializeData();
-	  _preIntTexture = new ves::xplorer::volume::PreIntegrationTexture2D();
-	  _preIntTexture->SetTransferFunction(_tf);
-	  _preIntTexture->FullUpdate();
-      _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());
-   }
+    if( _transferFunctions.empty() )
+    {
+        //create transfer functions
+        //_createTransferFunction();
+        if( _tf )
+        {
+            delete _tf;
+            _tf = 0;
+        }
+        if( _preIntTexture )
+        {
+            delete _preIntTexture;
+            _preIntTexture = 0;
+        }
+        _tf = new ves::xplorer::volume::RYGCBLinearTF();
+        _tf->InitializeData();
+        _preIntTexture = new ves::xplorer::volume::PreIntegrationTexture2D();
+        _preIntTexture->SetTransferFunction( _tf );
+        _preIntTexture->FullUpdate();
+        _transferFunctions.push_back( _preIntTexture->GetPreIntegratedTexture() );
+    }
 }
 /////////////////////////////////////////////////////////////////////
-void cfdScalarShaderManager::_updateTransferFunction(bool fastUpdate)
+void cfdScalarShaderManager::_updateTransferFunction( bool fastUpdate )
 {
-   if(!_tf)
-   {
-	  std::cout<<"Transfer function not set!"<<std::endl;
-	  std::cout<<"cfdScalarShaderManager::_updateTransferFunction"<<std::endl;
-      return;
-   }
-   if(_ss.valid())
-   {
-      _ss->getUniform("fastUpdate")->set(!_preIntegrate);
-   }
-   if(_preIntegrate)
-   {
-	   _preIntTexture->FullUpdate();
-	   _preIntegrate = false;
-   }
-   else
-   { 
-	   _preIntTexture->FastUpdate();
-   }
+    if( !_tf )
+    {
+        std::cout << "Transfer function not set!" << std::endl;
+        std::cout << "cfdScalarShaderManager::_updateTransferFunction" << std::endl;
+        return;
+    }
+    if( _ss.valid() )
+    {
+        _ss->getUniform( "fastUpdate" )->set( !_preIntegrate );
+    }
+    if( _preIntegrate )
+    {
+        _preIntTexture->FullUpdate();
+        _preIntegrate = false;
+    }
+    else
+    {
+        _preIntTexture->FastUpdate();
+    }
 }
 //////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::EnsureScalarRange()
 {
-   _updateTransferFunction();
+    _updateTransferFunction();
 }
 /////////////////////////////////////////////////////////
-void cfdScalarShaderManager::SetScalarRange(float* range)
-{ 
-   if(!_tm)
-   {
-      return;
-   }
-   
-   ScalarRange originalRange = _tm->dataRange(_tm->GetCurrentFrame());
-   _tf->SetFullScalarRange(originalRange.range[0],originalRange.range[1]);
-   float adjustedRange[2] = {0.,0.};
-   adjustedRange[0] = originalRange.range[0] + range[0]*(originalRange.range[1] - originalRange.range[0]);
-   adjustedRange[1] = originalRange.range[0] + range[1]*(originalRange.range[1] - originalRange.range[0]);
-   _tf->AdjustScalarMaximum(adjustedRange[1]);
-   _tf->AdjustScalarMinimum(adjustedRange[0]);
-   _updateTransferFunction();
+void cfdScalarShaderManager::SetScalarRange( float* range )
+{
+    if( !_tm )
+    {
+        return;
+    }
+
+    ScalarRange originalRange = _tm->dataRange( _tm->GetCurrentFrame() );
+    _tf->SetFullScalarRange( originalRange.range[0], originalRange.range[1] );
+    float adjustedRange[2] = {0., 0.};
+    adjustedRange[0] = originalRange.range[0] + range[0] * ( originalRange.range[1] - originalRange.range[0] );
+    adjustedRange[1] = originalRange.range[0] + range[1] * ( originalRange.range[1] - originalRange.range[0] );
+    _tf->AdjustScalarMaximum( adjustedRange[1] );
+    _tf->AdjustScalarMinimum( adjustedRange[0] );
+    _updateTransferFunction();
 }
 /////////////////////////////////////////////////////////////
-void cfdScalarShaderManager::UpdateScalarMin(float minScalar)
+void cfdScalarShaderManager::UpdateScalarMin( float minScalar )
 {
-   if(!_tm)
-   {
-      return;
-   }
-   ScalarRange originalRange = _tm->dataRange(_tm->GetCurrentFrame());
-   _scalarRange[0] = originalRange.range[0]*minScalar;
-   _tf->AdjustScalarMinimum(_scalarRange[0]);
-   _updateTransferFunction();
+    if( !_tm )
+    {
+        return;
+    }
+    ScalarRange originalRange = _tm->dataRange( _tm->GetCurrentFrame() );
+    _scalarRange[0] = originalRange.range[0] * minScalar;
+    _tf->AdjustScalarMinimum( _scalarRange[0] );
+    _updateTransferFunction();
 }
 /////////////////////////////////////////////////////////////
-void cfdScalarShaderManager::UpdateScalarMax(float maxScalar)
+void cfdScalarShaderManager::UpdateScalarMax( float maxScalar )
 {
-   if(!_tm)
-   {
-      return;
-   }
-   ScalarRange originalRange = _tm->dataRange(_tm->GetCurrentFrame());
-   _scalarRange[1] = originalRange.range[1]*maxScalar;
-   _tf->AdjustScalarMinimum(_scalarRange[1]);
-   _updateTransferFunction();
+    if( !_tm )
+    {
+        return;
+    }
+    ScalarRange originalRange = _tm->dataRange( _tm->GetCurrentFrame() );
+    _scalarRange[1] = originalRange.range[1] * maxScalar;
+    _tf->AdjustScalarMinimum( _scalarRange[1] );
+    _updateTransferFunction();
 }
 ///////////////////////////////////////////////////////
-void cfdScalarShaderManager::SetDelayTime(double delay)
+void cfdScalarShaderManager::SetDelayTime( double delay )
 {
-   if(_utCbk.valid()){
-     _utCbk->SetDelayTime(delay);
-   }
+    if( _utCbk.valid() )
+    {
+        _utCbk->SetDelayTime( delay );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void cfdScalarShaderManager::SetCurrentTransientTexture(unsigned int whichTimeStep,
-                                                  bool makeSlave )
+void cfdScalarShaderManager::SetCurrentTransientTexture( unsigned int whichTimeStep,
+                                                         bool makeSlave )
 {
-   if(_utCbk.valid())
-   {
-     _utCbk->SetCurrentFrame(whichTimeStep,makeSlave);
-   }
+    if( _utCbk.valid() )
+    {
+        _utCbk->SetCurrentFrame( whichTimeStep, makeSlave );
+    }
 }
 //////////////////////////////////////////////////////////////////////////
-void cfdScalarShaderManager::UpdateTextureManager(cfdTextureManager* tm)
+void cfdScalarShaderManager::UpdateTextureManager( cfdTextureManager* tm )
 {
-   if(_tm != tm){
-      _tm = tm;
-      if(_utCbk.valid()){
-         _utCbk->SetIsLuminance(true);
-         _utCbk->SetTextureManager(_tm);
-         SetScalarRange(_tm->dataRange(_tm->GetCurrentFrame()).range);
-      }
-   }
-   _reinit = false;
+    if( _tm != tm )
+    {
+        _tm = tm;
+        if( _utCbk.valid() )
+        {
+            _utCbk->SetIsLuminance( true );
+            _utCbk->SetTextureManager( _tm );
+            SetScalarRange( _tm->dataRange( _tm->GetCurrentFrame() ).range );
+        }
+    }
+    _reinit = false;
 }
 ///////////////////////////////////////////////////////
 void cfdScalarShaderManager::_initPropertyTexture()
 {
-   if(!_utCbk){
-      _utCbk =  new cfdUpdateTextureCallback();
-      _utCbk->SetIsLuminance(true);
-   }
-   int* res = _tm->fieldResolution();
-   _stepSize[0] = 1.0/float(res[0]);
-   _stepSize[1] = 1.0/float(res[1]);
-   _stepSize[2] = 1.0/float(res[2]);
-   _utCbk->SetTextureManager(_tm);
-   _utCbk->SetDelayTime(.1);
-   _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
-   
-      
-   if(!_property.valid()){
-      osg::ref_ptr<osg::Image> propertyField = new osg::Image();
-      propertyField->allocateImage(_fieldSize[0],
-                                _fieldSize[1],
-                                _fieldSize[2],
-                                GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE);
-      propertyField->setImage(_fieldSize[0], _fieldSize[1], _fieldSize[2],
-                           GL_LUMINANCE_ALPHA,
-	                        GL_LUMINANCE_ALPHA,
-	                        GL_UNSIGNED_BYTE,
-                           _tm->dataField(0),
-                           osg::Image::NO_DELETE,1);
+    if( !_utCbk )
+    {
+        _utCbk =  new cfdUpdateTextureCallback();
+        _utCbk->SetIsLuminance( true );
+    }
+    int* res = _tm->fieldResolution();
+    _stepSize[0] = 1.0 / float( res[0] );
+    _stepSize[1] = 1.0 / float( res[1] );
+    _stepSize[2] = 1.0 / float( res[2] );
+    _utCbk->SetTextureManager( _tm );
+    _utCbk->SetDelayTime( .1 );
+    _utCbk->setSubloadTextureSize( res[0], res[1], res[2] );
 
-      propertyField->setDataVariance(osg::Object::DYNAMIC);
-      _property = new osg::Texture3D();
-      _property->setDataVariance(osg::Object::DYNAMIC);
-      _property->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
-      _property->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
-      _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP_TO_EDGE);
-      _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP_TO_EDGE);
-      _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP_TO_EDGE);
-      _property->setInternalFormat(GL_LUMINANCE_ALPHA);
-      _property->setImage(propertyField.get());
-      _property->setSubloadCallback(_utCbk.get());
-   } 
 
-   _jitterTexture = new ves::xplorer::volume::NoiseTexture2D();
+    if( !_property.valid() )
+    {
+        osg::ref_ptr<osg::Image> propertyField = new osg::Image();
+        propertyField->allocateImage( _fieldSize[0],
+                                      _fieldSize[1],
+                                      _fieldSize[2],
+                                      GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE );
+        propertyField->setImage( _fieldSize[0], _fieldSize[1], _fieldSize[2],
+                                 GL_LUMINANCE_ALPHA,
+                                 GL_LUMINANCE_ALPHA,
+                                 GL_UNSIGNED_BYTE,
+                                 _tm->dataField( 0 ),
+                                 osg::Image::NO_DELETE, 1 );
+
+        propertyField->setDataVariance( osg::Object::DYNAMIC );
+        _property = new osg::Texture3D();
+        _property->setDataVariance( osg::Object::DYNAMIC );
+        _property->setFilter( osg::Texture3D::MIN_FILTER, osg::Texture3D::LINEAR );
+        _property->setFilter( osg::Texture3D::MAG_FILTER, osg::Texture3D::LINEAR );
+        _property->setWrap( osg::Texture3D::WRAP_R, osg::Texture3D::CLAMP_TO_EDGE );
+        _property->setWrap( osg::Texture3D::WRAP_S, osg::Texture3D::CLAMP_TO_EDGE );
+        _property->setWrap( osg::Texture3D::WRAP_T, osg::Texture3D::CLAMP_TO_EDGE );
+        _property->setInternalFormat( GL_LUMINANCE_ALPHA );
+        _property->setImage( propertyField.get() );
+        _property->setSubloadCallback( _utCbk.get() );
+    }
+
+    _jitterTexture = new ves::xplorer::volume::NoiseTexture2D();
 }
 #endif//_OSG

@@ -33,7 +33,7 @@
 #ifndef DEFAULT_PLUGIN_UI_DIALOG_H
 #define DEFAULT_PLUGIN_UI_DIALOG_H
 #include <ves/conductor/UIDialog.h>
-#include "ves/VEConfig.h" 
+#include "ves/VEConfig.h"
 #include <vector>
 #include <string>
 
@@ -45,61 +45,64 @@ class wxButton;
 class VE_GUIPLUGINS_EXPORTS DefaultPlugin_UI_Dialog : public ves::conductor::UIDialog
 {
 public:
-  DefaultPlugin_UI_Dialog(wxWindow* parent, int id, long int* height );
-  DefaultPlugin_UI_Dialog(){;}
-  
-  virtual ~DefaultPlugin_UI_Dialog();
-  
-   enum Hummer_TAB_IDS
-   {
-      DIRECTION_RBOX,
-      ERROR_RBOX,
-      HEIGHT_SLIDER,
-      WIDTH_SLIDER,
-      X_LOCATION_SLIDER,
-      Y_LOCATION_SLIDER,
-      Z_LOCATION_SLIDER,
-      UPDATE_BUTTON,
-      CLEAR_BUTTON,
-      EXIT_BUTTON
-   };
+    DefaultPlugin_UI_Dialog( wxWindow* parent, int id, long int* height );
+    DefaultPlugin_UI_Dialog()
+    {
+        ;
+    }
 
-  virtual bool TransferDataFromWindow();
-  virtual bool TransferDataToWindow();
-  virtual void Lock(bool l); 
- protected:
+    virtual ~DefaultPlugin_UI_Dialog();
 
-  //UI widgets variables
+    enum Hummer_TAB_IDS
+    {
+        DIRECTION_RBOX,
+        ERROR_RBOX,
+        HEIGHT_SLIDER,
+        WIDTH_SLIDER,
+        X_LOCATION_SLIDER,
+        Y_LOCATION_SLIDER,
+        Z_LOCATION_SLIDER,
+        UPDATE_BUTTON,
+        CLEAR_BUTTON,
+        EXIT_BUTTON
+    };
 
-   wxRadioBox* _directionRBox;
-   wxRadioBox* _errorRBox;
-   //the controls
-   wxSlider* _heightSlider;
-   wxSlider* _widthSlider;
-   wxSlider* _xLocSlider;
-   wxSlider* _yLocSlider;
-   wxSlider* _zLocSlider; 
+    virtual bool TransferDataFromWindow();
+    virtual bool TransferDataToWindow();
+    virtual void Lock( bool l );
+protected:
 
-   wxTextCtrl* _xLoc;
-   wxTextCtrl* _yLoc;
-   wxTextCtrl* _zLoc;
+    //UI widgets variables
 
-   wxButton* _sliderUpdate;
-   wxButton* _clearButton;
-   wxButton* _exitButton;
+    wxRadioBox* _directionRBox;
+    wxRadioBox* _errorRBox;
+    //the controls
+    wxSlider* _heightSlider;
+    wxSlider* _widthSlider;
+    wxSlider* _xLocSlider;
+    wxSlider* _yLocSlider;
+    wxSlider* _zLocSlider;
 
-   long int* height;
- public:
-  //GUI Variables
-  void _buildPage();
-  void _onDirection(wxCommandEvent& event);
-  void _onError(wxCommandEvent& event);
-  void _onSliderUpdate(wxCommandEvent& event);   
-  void _onClear(wxCommandEvent& event);
-  void _onExit(wxCommandEvent& event);
-  void SliderUpdate(wxScrollEvent& event);
+    wxTextCtrl* _xLoc;
+    wxTextCtrl* _yLoc;
+    wxTextCtrl* _zLoc;
 
-  DECLARE_EVENT_TABLE()
+    wxButton* _sliderUpdate;
+    wxButton* _clearButton;
+    wxButton* _exitButton;
+
+    long int* height;
+public:
+    //GUI Variables
+    void _buildPage();
+    void _onDirection( wxCommandEvent& event );
+    void _onError( wxCommandEvent& event );
+    void _onSliderUpdate( wxCommandEvent& event );
+    void _onClear( wxCommandEvent& event );
+    void _onExit( wxCommandEvent& event );
+    void SliderUpdate( wxScrollEvent& event );
+
+    DECLARE_EVENT_TABLE()
 };
 
 #endif//DEFAULT_PLUGIN_UI_DIALOG_H

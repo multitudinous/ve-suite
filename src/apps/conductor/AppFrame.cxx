@@ -130,8 +130,8 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( CLEAR_RECENT_FILES, AppFrame::OnClearRecentFiles )
     EVT_MENU( wxID_OPEN, AppFrame::Open )
     EVT_MENU( CHANGE_WORKING_DIRECTORY, AppFrame::OnChangeWorkingDirectory )
-    
-    EVT_MENU_RANGE(wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
+
+    EVT_MENU_RANGE( wxID_FILE1, wxID_FILE9  , AppFrame::OpenRecentFile )
 
     EVT_MENU( v21ID_LOAD, AppFrame::LoadFromServer )
     EVT_MENU( QUERY_FROM_SERVER, AppFrame::QueryFromServer )
@@ -169,13 +169,13 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( XPLORER_VIEWPOINTS, AppFrame::LaunchViewpointsPane )
     EVT_MENU( XPLORER_SCENES, AppFrame::LaunchRecordScenes )
     EVT_MENU( XPLORER_COLOR, AppFrame::SetBackgroundColor )
-    EVT_MENU( XPLORER_EPHEMERIS, AppFrame::SetEphemerisData)
+    EVT_MENU( XPLORER_EPHEMERIS, AppFrame::SetEphemerisData )
     EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
     EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
-	EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
-	EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
+    EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
+    EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
     EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
     EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
     EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
@@ -187,27 +187,27 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
-	EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
+    EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
-:
-wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize ), 
-m_frameNr( 0 ), 
-f_financial( true ), 
-f_geometry( true ), 
-f_visualization( true ),
-xplorerMenu( 0 ),
-recordScenes( 0 ),
-canvas( 0 ),
-hierarchyTree(),
-m_frame( 0 ),
-_treeView( 0 ),
-deviceProperties( 0 ),
-navPane( 0 ),
-viewlocPane( 0 ),
-m_ephemeris( 0 )
+        :
+        wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize ),
+        m_frameNr( 0 ),
+        f_financial( true ),
+        f_geometry( true ),
+        f_visualization( true ),
+        xplorerMenu( 0 ),
+        recordScenes( 0 ),
+        canvas( 0 ),
+        hierarchyTree(),
+        m_frame( 0 ),
+        _treeView( 0 ),
+        deviceProperties( 0 ),
+        navPane( 0 ),
+        viewlocPane( 0 ),
+        m_ephemeris( 0 )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -224,8 +224,8 @@ m_ephemeris( 0 )
     //This must go before preferences so that wxConfig is already loaded
     GetConfig();
     //This must go before CreateMenu so that we can configure the menu properly
-    preferences = new UserPreferences( this, ::wxNewId(), 
-                                       SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION, 
+    preferences = new UserPreferences( this, ::wxNewId(),
+                                       SYMBOL_USERPREFERENCES_TITLE, SYMBOL_USERPREFERENCES_POSITION,
                                        SYMBOL_USERPREFERENCES_SIZE, SYMBOL_USERPREFERENCES_STYLE );
     //This must be configured before the menu is created so that the menus for
     //shutdown are configured correctly
@@ -242,9 +242,9 @@ m_ephemeris( 0 )
     directory = _( "" );
     fname = _( "" );
 
-    m_recentVESFiles->UseMenu(file_menu);
-    m_recentVESFiles->AddFilesToMenu(file_menu);
-    
+    m_recentVESFiles->UseMenu( file_menu );
+    m_recentVESFiles->AddFilesToMenu( file_menu );
+
     ///Initialize VE-Open
     XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new XMLCreator() );
     XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new shader::ShaderCreator() );
@@ -256,7 +256,7 @@ m_ephemeris( 0 )
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 1.0f );
     xplorerWxColor = new wxColourData();
-    xplorerWxColor->SetChooseFull(true);
+    xplorerWxColor->SetChooseFull( true );
 
     if( preferences->GetMode( "Auto Launch Nav Pane" ) )
     {
@@ -270,46 +270,46 @@ m_ephemeris( 0 )
     }
 
     DataValuePairWeakPtr dataValuePair = new DataValuePair();
-    dataValuePair->SetData(std::string("Background Color"),xplorerColor);
+    dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
     CommandWeakPtr veCommand = new Command();
-    veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-    veCommand->AddDataValuePair(dataValuePair);
-    ///Set the command on the buffer first so that a strong ptr is 
+    veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    ///Set the command on the buffer first so that a strong ptr is
     ///referencing the memory
-    UserPreferencesDataBuffer::instance()->SetCommand( 
+    UserPreferencesDataBuffer::instance()->SetCommand(
         "CHANGE_BACKGROUND_COLOR", veCommand );
-    
+
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    
+
     //Try and load network from server if one is already present
     std::string nw_str = CORBAServiceList::instance()->GetNetwork();
-	if(!nw_str.empty())
-	{
-		canvas->PopulateNetworks( nw_str );
-	}
+    if( !nw_str.empty() )
+    {
+        canvas->PopulateNetworks( nw_str );
+    }
     //create hierarchy page
-	hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-                                GetXMLModels(), XMLDataBufferEngine::instance()->
-                                GetTopSystemId());
+    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                 GetXMLModels(), XMLDataBufferEngine::instance()->
+                                 GetTopSystemId() );
     //Process command line args to see if ves file needs to be loaded
-    ProcessCommandLineArgs();    
+    ProcessCommandLineArgs();
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
 {
     //Shutdown xplorer
-    if ( (GetDisplayMode() == "Desktop") ||
-        ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
+    if (( GetDisplayMode() == "Desktop" ) ||
+            ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
     {
         ExitXplorer();
     }
-    
+
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
     StoreConfig();
     StoreRecentFile();
-    
-    //We have to mannually destroy these to make sure that things shutdown 
+
+    //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
     //network->Destroy();
@@ -335,7 +335,7 @@ void AppFrame::_detectDisplay()
     {
         if( ConvertUnicode( wxTheApp->argv[i] ) == std::string( "-VESDesktop" ) )
         {
-            _displayMode = std::string("Desktop");
+            _displayMode = std::string( "Desktop" );
 
             break;
         }
@@ -350,51 +350,51 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     {
         wx_log_splitter = new Splitter( parent, -1 );
         wx_log_splitter->SetMinimumPaneSize( 40 );
-        serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, _( "" ), 
-            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+        serviceList->GetMessageLog()->Create( wx_log_splitter, MYLOG, _( "" ),
+                                              wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
         wx_nw_splitter = new Splitter( wx_log_splitter, -1 );
     }
     else
     {
-        serviceList->GetMessageLog()->Create( this, MYLOG, _( "" ), 
-            wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY );
+        serviceList->GetMessageLog()->Create( this, MYLOG, _( "" ),
+                                              wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE | wxTE_READONLY );
         wx_nw_splitter = new Splitter( parent, -1 );
     }
 
     wx_nw_splitter->SetMinimumPaneSize( 1 );
 
-	//create side pane - notebook
-    side_pane = new wxNotebook(wx_nw_splitter, -1 ,wxDefaultPosition, wxDefaultSize, wxNB_BOTTOM);
-	
-	//create module page
-	wxPanel* modPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
-    av_modules = new Avail_Modules( modPage, Avail_Modules::TREE_CTRL, 
-        wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );	
-    
-	//make module panel fill the notebook page
-	wxBoxSizer *sizerPanel = new wxBoxSizer(wxVERTICAL);
-    sizerPanel->Add(av_modules, 1, wxEXPAND);
-	modPage->SetSizer(sizerPanel);
+    //create side pane - notebook
+    side_pane = new wxNotebook( wx_nw_splitter, -1 , wxDefaultPosition, wxDefaultSize, wxNB_BOTTOM );
 
-	//add the module panel to page
-    side_pane->AddPage(modPage, wxT("Modules"));
-	
-	//create hierarchy page
-	wxPanel * hierPage = new wxPanel(side_pane, -1, wxDefaultPosition, wxDefaultSize);
-	hierarchyTree = new HierarchyTree( hierPage, HierarchyTree::TREE_CTRL, 
-			wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
+    //create module page
+    wxPanel* modPage = new wxPanel( side_pane, -1, wxDefaultPosition, wxDefaultSize );
+    av_modules = new Avail_Modules( modPage, Avail_Modules::TREE_CTRL,
+                                    wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
-	//make hierarchy panel fill the notebook page
-	sizerPanel = new wxBoxSizer(wxVERTICAL);
-	sizerPanel->Add(hierarchyTree, 1, wxEXPAND);
-	hierPage->SetSizer(sizerPanel);
+    //make module panel fill the notebook page
+    wxBoxSizer *sizerPanel = new wxBoxSizer( wxVERTICAL );
+    sizerPanel->Add( av_modules, 1, wxEXPAND );
+    modPage->SetSizer( sizerPanel );
 
-	//add the hierarchy panel to page
-	side_pane->AddPage(hierPage, wxT("Hierarchy"));
+    //add the module panel to page
+    side_pane->AddPage( modPage, wxT( "Modules" ) );
 
-	//add network to splitter
-	//network = new Network( wx_nw_splitter, -1 );
-	canvas = new Canvas( wx_nw_splitter, -1 );
+    //create hierarchy page
+    wxPanel * hierPage = new wxPanel( side_pane, -1, wxDefaultPosition, wxDefaultSize );
+    hierarchyTree = new HierarchyTree( hierPage, HierarchyTree::TREE_CTRL,
+                                       wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
+
+    //make hierarchy panel fill the notebook page
+    sizerPanel = new wxBoxSizer( wxVERTICAL );
+    sizerPanel->Add( hierarchyTree, 1, wxEXPAND );
+    hierPage->SetSizer( sizerPanel );
+
+    //add the hierarchy panel to page
+    side_pane->AddPage( hierPage, wxT( "Hierarchy" ) );
+
+    //add network to splitter
+    //network = new Network( wx_nw_splitter, -1 );
+    canvas = new Canvas( wx_nw_splitter, -1 );
     if( GetDisplayMode() == "Tablet" )
     {
         canvas->SetTreeViewWindow( this );
@@ -403,9 +403,9 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     {
         canvas->SetTreeViewWindow( _treeView );
     }
-    
-	//tells module panel where to send the selected module
-	Network * network = canvas->GetActiveNetwork();
+
+    //tells module panel where to send the selected module
+    Network * network = canvas->GetActiveNetwork();
     av_modules->SetFrame( this );
     av_modules->SetCanvas( canvas );
     hierarchyTree->SetCanvas( canvas );
@@ -421,29 +421,29 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureDesktop()
 {
-    SetTitle( _("VE-Suite: www.vesuite.org") );
-    _treeView = new wxDialog(this, -1, _("Available Objects"), 
-         wxDefaultPosition, wxDefaultSize,
-         wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER);
-    //wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~ 
+    SetTitle( _( "VE-Suite: www.vesuite.org" ) );
+    _treeView = new wxDialog( this, -1, _( "Available Objects" ),
+                              wxDefaultPosition, wxDefaultSize,
+                              wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
+    //wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~
     //(wxCLOSE_BOX | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX)));
     //|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX));
-    wxBoxSizer* treeViewSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* treeViewSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    _treeView->SetAutoLayout(true);
-    _treeView->SetSizer(treeViewSizer);
+    _treeView->SetAutoLayout( true );
+    _treeView->SetSizer( treeViewSizer );
 
-    _createTreeAndLogWindow(_treeView);
-    treeViewSizer->Add(wx_nw_splitter,1, wxALIGN_CENTER|wxEXPAND);
+    _createTreeAndLogWindow( _treeView );
+    treeViewSizer->Add( wx_nw_splitter, 1, wxALIGN_CENTER | wxEXPAND );
 
     int displayWidth, displayHeight = 0;
-    ::wxDisplaySize(&displayWidth,&displayHeight);
+    ::wxDisplaySize( &displayWidth, &displayHeight );
 #ifdef WIN32
-    SetSize(wxSize(displayWidth,195/*displayHeight*0.0732421875*/));
+    SetSize( wxSize( displayWidth, 195/*displayHeight*0.0732421875*/ ) );
 #else
-    SetSize(wxSize(displayWidth,120/*displayHeight*0.0732421875*/));
+    SetSize( wxSize( displayWidth, 120/*displayHeight*0.0732421875*/ ) );
 #endif
-    SetPosition(wxPoint(0,0));
+    SetPosition( wxPoint( 0, 0 ) );
     //--need to look into if we can use wxRegion to define our "cut-out" for the sim display
     //wxRegion desktopSize(0,0,displayWidth,displayHeight);
     //wxRegion xplorerWindownSize(%displayWidth,%displayHeight,xplorerWidth,xplorerHeight);
@@ -453,43 +453,43 @@ void AppFrame::_configureDesktop()
     //   SetShape(frameShape);
     //}
     //else
-    //{ 
+    //{
     //   SetSize(DetermineFrameSize(NULL));
     //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_configureTablet()
 {
-   _createTreeAndLogWindow(this);
-   SetSize( DetermineTabletFrameSize() );
+    _createTreeAndLogWindow( this );
+    SetSize( DetermineTabletFrameSize() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_detectDisplayAndCreate()
-{ 
-   _detectDisplay();
-   if ( GetDisplayMode() == "Desktop")
-   {
-      _configureDesktop();
-      SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-      //Set min size so all buttons still show and message window displays at least one line
-      SetMinSize( wxSize( 600, 100) );
-   }
-   else if ( GetDisplayMode() == "Tablet")
-   {
-      _configureTablet();
-      SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
-      //set min size so all buttons still show and message window displays three lines and canvas
-      SetMinSize( wxSize( 600, 260) );
-   }
-   else
-   {
-      wxMessageBox( _("Unable to create GUI."), _("Unknown display request!"), 
-            wxOK | wxICON_INFORMATION );
-      _exit(1);
-   }
+{
+    _detectDisplay();
+    if( GetDisplayMode() == "Desktop" )
+    {
+        _configureDesktop();
+        SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+        //Set min size so all buttons still show and message window displays at least one line
+        SetMinSize( wxSize( 600, 100 ) );
+    }
+    else if( GetDisplayMode() == "Tablet" )
+    {
+        _configureTablet();
+        SetWindowStyle( wxDEFAULT_FRAME_STYLE | wxRESIZE_BORDER | wxRESIZE_BOX | wxMAXIMIZE_BOX );
+        //set min size so all buttons still show and message window displays three lines and canvas
+        SetMinSize( wxSize( 600, 260 ) );
+    }
+    else
+    {
+        wxMessageBox( _( "Unable to create GUI." ), _( "Unknown display request!" ),
+                      wxOK | wxICON_INFORMATION );
+        _exit( 1 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool AppFrame::Show(bool value)
+bool AppFrame::Show( bool value )
 {
     bool status = false;
     status = wxFrame::Show( value );
@@ -497,15 +497,15 @@ bool AppFrame::Show(bool value)
     if( GetDisplayMode() == "Desktop" )
     {
         int displayWidth, displayHeight = 0;
-        ::wxDisplaySize(&displayWidth,&displayHeight);
+        ::wxDisplaySize( &displayWidth, &displayHeight );
         //std::cout<<"Width: "<<displayWidth<<" Height: "<<displayHeight<<std::endl;
         wxRect bbox = wxTheApp->GetTopWindow()->GetRect();
 
-        wxRect dialogPosition( 2*displayWidth/3, 
-                             bbox.GetBottomRight().y, 
-                             displayWidth/3, 
-                             (displayHeight-bbox.GetBottomRight().y)/2 
-                           );
+        wxRect dialogPosition( 2*displayWidth / 3,
+                               bbox.GetBottomRight().y,
+                               displayWidth / 3,
+                               ( displayHeight - bbox.GetBottomRight().y ) / 2
+                             );
         _treeView->SetSize( dialogPosition );
 
         status = _treeView->Show();
@@ -515,19 +515,19 @@ bool AppFrame::Show(bool value)
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::GetConfig()
 {
-    wxConfig* cfg = new wxConfig(wxTheApp->GetAppName());
+    wxConfig* cfg = new wxConfig( wxTheApp->GetAppName() );
     //Do not let wx create a new wxConfig with Get calls
     cfg->DontCreateOnDemand();
-    wxConfig::Set(cfg);
+    wxConfig::Set( cfg );
 
     bool exist = false;
 
     wxString key = FEATURE;
-    if( cfg->Exists(key) ) 
+    if( cfg->Exists( key ) )
     {
-        cfg->Read( key + _T("/") + F_FINANCIAL, &f_financial);
-        cfg->Read( key + _T("/") + F_GEOMETRY, &f_geometry);
-        cfg->Read( key + _T("/") + F_VISUALIZATION, &f_visualization);
+        cfg->Read( key + _T( "/" ) + F_FINANCIAL, &f_financial );
+        cfg->Read( key + _T( "/" ) + F_GEOMETRY, &f_geometry );
+        cfg->Read( key + _T( "/" ) + F_VISUALIZATION, &f_visualization );
     }
     else
     {
@@ -536,7 +536,7 @@ void AppFrame::GetConfig()
         f_visualization = true;
     }
 
-    m_recentVESFiles->Load(*cfg);
+    m_recentVESFiles->Load( *cfg );
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect AppFrame::DetermineTabletFrameSize()
@@ -547,14 +547,14 @@ wxRect AppFrame::DetermineTabletFrameSize()
     wxRect rect;
     //wxSize scr = wxGetDisplaySize();
 
-    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
-    wxString key = LOCATION + wxString::Format(_("%d"), 0);
-    if( cfg->Exists(key) ) 
+    wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
+    wxString key = LOCATION + wxString::Format( _( "%d" ), 0 );
+    if( cfg->Exists( key ) )
     {
-        cfg->Read( key + _T("/") + LOCATION_X, &rect.x);
-        cfg->Read( key + _T("/") + LOCATION_Y, &rect.y);
-        cfg->Read( key + _T("/") + LOCATION_W, &rect.width);
-        cfg->Read( key + _T("/") + LOCATION_H, &rect.height);
+        cfg->Read( key + _T( "/" ) + LOCATION_X, &rect.x );
+        cfg->Read( key + _T( "/" ) + LOCATION_Y, &rect.y );
+        cfg->Read( key + _T( "/" ) + LOCATION_W, &rect.width );
+        cfg->Read( key + _T( "/" ) + LOCATION_H, &rect.height );
     }
 
     ///check for reasonable values (within screen)
@@ -572,47 +572,47 @@ wxRect AppFrame::DetermineTabletFrameSize()
         rect.width = 500;
         rect.height = 500;
     }
-  
+
     return rect;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreFrameSize( wxRect rect )
 {
     // store size
-    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
+    wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
 
-    wxString key = LOCATION + wxString::Format( _("%d"), 0);
-    cfg->Write(key + _T("/") + LOCATION_X, rect.x);
-    cfg->Write(key + _T("/") + LOCATION_Y, rect.y);
-    cfg->Write(key + _T("/") + LOCATION_W, rect.width);
-    cfg->Write(key + _T("/") + LOCATION_H, rect.height);
+    wxString key = LOCATION + wxString::Format( _( "%d" ), 0 );
+    cfg->Write( key + _T( "/" ) + LOCATION_X, rect.x );
+    cfg->Write( key + _T( "/" ) + LOCATION_Y, rect.y );
+    cfg->Write( key + _T( "/" ) + LOCATION_W, rect.width );
+    cfg->Write( key + _T( "/" ) + LOCATION_H, rect.height );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreConfig()
 {
     //store config
-    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
+    wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
 
     wxString key = FEATURE;
-    cfg->Write(key+_T("/") + F_FINANCIAL, f_financial);
-    cfg->Write(key+_T("/") + F_GEOMETRY, f_geometry);
-    cfg->Write(key+_T("/") + F_VISUALIZATION, f_visualization);
+    cfg->Write( key + _T( "/" ) + F_FINANCIAL, f_financial );
+    cfg->Write( key + _T( "/" ) + F_GEOMETRY, f_geometry );
+    cfg->Write( key + _T( "/" ) + F_VISUALIZATION, f_visualization );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::StoreRecentFile()
 {
     //store recent menus in config
-    wxConfig* cfg = static_cast<wxConfig*>(wxConfig::Get());
+    wxConfig* cfg = static_cast<wxConfig*>( wxConfig::Get() );
 
-    m_recentVESFiles->Save(*cfg);
+    m_recentVESFiles->Save( *cfg );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
+void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
-   Close(true);
+    Close( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CreateMenu() 
+void AppFrame::CreateMenu()
 {
     menubar = new wxMenuBar;
     file_menu = new wxMenu;
@@ -629,8 +629,8 @@ void AppFrame::CreateMenu()
     file_menu->Append( wxID_SAVE, _( "&Save\tCtrl+S" ) );
     file_menu->Append( wxID_SAVEAS, _( "Save &as ..\tCtrl+Shift+S" ) );
     file_menu->AppendSeparator();
-    file_menu->Append( EXPORT_MENU_OPT, _( "Export" ), 
-        new ExportMenu(), _("Options") );
+    file_menu->Append( EXPORT_MENU_OPT, _( "Export" ),
+                       new ExportMenu(), _( "Options" ) );
     file_menu->AppendSeparator();
     file_menu->Append( CHANGE_WORKING_DIRECTORY, _( "Change Working Directory" ) );
     file_menu->AppendSeparator();
@@ -638,7 +638,7 @@ void AppFrame::CreateMenu()
     file_menu->Append( wxID_PREVIEW, _( "Print Pre&view\tCtrl+Shift+P" ) );
     file_menu->Append( wxID_PRINT, _( "&Print ..\tCtrl+P" ) );
     file_menu->Enable( wxID_PRINT_SETUP, false );
-    file_menu->Enable( wxID_PREVIEW, false );	
+    file_menu->Enable( wxID_PREVIEW, false ); 
     file_menu->Enable( wxID_PRINT, false );
     file_menu->AppendSeparator();*/
     file_menu->Append( ID_PREFERENCES, _( "Preferences" ) );
@@ -663,9 +663,9 @@ void AppFrame::CreateMenu()
     aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
     aspenMenu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
     aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
-    aspenMenu->Append( SAVE_SIMULATION, _("Save Simulation") );
-    aspenMenu->Append( SAVEAS_SIMULATION, _("SaveAs Simulation") );
-    con_menu->Append( ASPEN_CONNECTION_MENU,   _( "Aspen" ), aspenMenu, _("Aspen connection") );
+    aspenMenu->Append( SAVE_SIMULATION, _( "Save Simulation" ) );
+    aspenMenu->Append( SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
+    con_menu->Append( ASPEN_CONNECTION_MENU,   _( "Aspen" ), aspenMenu, _( "Aspen connection" ) );
 
     //file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), aspenMenu, _("NOTHING") );
 
@@ -688,32 +688,32 @@ void AppFrame::CreateMenu()
     // run_menu->Append( v21ID_GLOBAL_PARAM, _("Global Parameters"));
     // run_menu->Append( v21ID_VIEW_FINANCIAL, _("View Financial Params"));
 
-    run_menu->Enable(v21ID_START_CALC, false);
-    run_menu->Enable(v21ID_STOP_CALC, false);
-    run_menu->Enable(v21ID_PAUSE_CALC, false);
-    run_menu->Enable(v21ID_RESUME_CALC, false);
+    run_menu->Enable( v21ID_START_CALC, false );
+    run_menu->Enable( v21ID_STOP_CALC, false );
+    run_menu->Enable( v21ID_PAUSE_CALC, false );
+    run_menu->Enable( v21ID_RESUME_CALC, false );
     // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
 
     //edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
     //edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
     //edit_menu->AppendSeparator();
-    edit_menu->Append(v21ID_ZOOMIN, _("Zoom &In\tCtrl+UP"));
-    edit_menu->Append(v21ID_ZOOMOUT, _("Zoom &Out\tCtrl+DOWN"));
+    edit_menu->Append( v21ID_ZOOMIN, _( "Zoom &In\tCtrl+UP" ) );
+    edit_menu->Append( v21ID_ZOOMOUT, _( "Zoom &Out\tCtrl+DOWN" ) );
     //This is needed because on windows the scale must be 1 for the
     //wxAutoBufferedPaintDC to work properly
 #ifdef WIN32
-    edit_menu->Enable(v21ID_ZOOMIN, false);
-    edit_menu->Enable(v21ID_ZOOMOUT, false);
+    edit_menu->Enable( v21ID_ZOOMIN, false );
+    edit_menu->Enable( v21ID_ZOOMOUT, false );
 #endif
     //edit_menu->Enable(v21ID_UNDO, false);
     //edit_menu->Enable(v21ID_REDO, false);
 
     //help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-    help_menu->Append (v21ID_HELP, _("&VE-Suite Help"));
-    help_menu->Append(v21ID_ABOUT, _("&About"));
-    help_menu->Append(v21ID_REVISION, _("&Revision"));
-    help_menu->Append(v21ID_CONTACTS, _("&Contacts"));
-    help_menu->Append(v21ID_PLATFORM, _("&Platform Info"));
+    help_menu->Append( v21ID_HELP, _( "&VE-Suite Help" ) );
+    help_menu->Append( v21ID_ABOUT, _( "&About" ) );
+    help_menu->Append( v21ID_REVISION, _( "&Revision" ) );
+    help_menu->Append( v21ID_CONTACTS, _( "&Contacts" ) );
+    help_menu->Append( v21ID_PLATFORM, _( "&Platform Info" ) );
     //help_menu->AppendSeparator();
     //help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
 
@@ -741,72 +741,72 @@ void AppFrame::CreateMenu()
     xplorerViewMenu->Append( FRAME_SELECTION, _( "Frame Selection" ) );
     xplorerViewMenu->Append( RESET,           _( "Reset                  [r]" ) );
 
-    xplorerView->Append( CHANGE_XPLORER_VIEW_NETWORK, _("Network") );
-    xplorerView->Append( CHANGE_XPLORER_VIEW_CAD, _("CAD") );
-    xplorerView->Append( CHANGE_XPLORER_VIEW_LOGO, _("Logo") );
+    xplorerView->Append( CHANGE_XPLORER_VIEW_NETWORK, _( "Network" ) );
+    xplorerView->Append( CHANGE_XPLORER_VIEW_CAD, _( "CAD" ) );
+    xplorerView->Append( CHANGE_XPLORER_VIEW_LOGO, _( "Logo" ) );
 
-    xplorerJugglerMenu->Append( JUGGLER_STEREO, _("Stereo") );
-    xplorerJugglerMenu->Append( JUGGLER_MONO, _("Mono") );
-    xplorerJugglerMenu->Enable( JUGGLER_STEREO, true);
-    xplorerJugglerMenu->Enable( JUGGLER_MONO, true);
+    xplorerJugglerMenu->Append( JUGGLER_STEREO, _( "Stereo" ) );
+    xplorerJugglerMenu->Append( JUGGLER_MONO, _( "Mono" ) );
+    xplorerJugglerMenu->Enable( JUGGLER_STEREO, true );
+    xplorerJugglerMenu->Enable( JUGGLER_MONO, true );
 
-    xplorerMenu->Append( XPLORER_NAVIGATION, _("Navigation Pane") );
-    xplorerMenu->Append( XPLORER_VIEWPOINTS, _("Viewpoints Pane") );
-    xplorerMenu->Append( XPLORER_SCENES,     _("Record Scenes") );
-    xplorerMenu->Append( XPLORER_COLOR,      _("Background Color") );
-    xplorerMenu->Append( XPLORER_EPHEMERIS, _("Ephemeris Data") );
+    xplorerMenu->Append( XPLORER_NAVIGATION, _( "Navigation Pane" ) );
+    xplorerMenu->Append( XPLORER_VIEWPOINTS, _( "Viewpoints Pane" ) );
+    xplorerMenu->Append( XPLORER_SCENES,     _( "Record Scenes" ) );
+    xplorerMenu->Append( XPLORER_COLOR,      _( "Background Color" ) );
+    xplorerMenu->Append( XPLORER_EPHEMERIS, _( "Ephemeris Data" ) );
     //xplorerMenu->Append( XPLORER_SOUNDS,     _("Sounds Pane") );
     //xplorerMenu->Append( XPLORER_STREAMLINE, _("Streamline Pane") );
-    xplorerMenu->Append( XPLORER_DEVICE,     _("Devices"),            
-        xplorerDeviceMenu,  _("Used to change device properties") );
-    xplorerMenu->Append( JUGGLER_SETTINGS,   _("Juggler Settings"),   
-        xplorerJugglerMenu, _("Used to adjust juggler runtime settings") );
-    xplorerMenu->Append( XPLORER_DISPLAY,    _("Display"),           
-        xplorerDisplayMenu, _("Used to change display preferences") );
-    xplorerMenu->Append( XPLORER_VIEW,       _("View"),               
-        xplorerViewMenu,    _("Used to change the view") );
+    xplorerMenu->Append( XPLORER_DEVICE,     _( "Devices" ),
+                         xplorerDeviceMenu,  _( "Used to change device properties" ) );
+    xplorerMenu->Append( JUGGLER_SETTINGS,   _( "Juggler Settings" ),
+                         xplorerJugglerMenu, _( "Used to adjust juggler runtime settings" ) );
+    xplorerMenu->Append( XPLORER_DISPLAY,    _( "Display" ),
+                         xplorerDisplayMenu, _( "Used to change display preferences" ) );
+    xplorerMenu->Append( XPLORER_VIEW,       _( "View" ),
+                         xplorerViewMenu,    _( "Used to change the view" ) );
     //add the view settings
-    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _("Graphical View"),    
-        xplorerView,        _("Used to change the view in xplorer") );
+    xplorerMenu->Append( CHANGE_XPLORER_VIEW, _( "Graphical View" ),
+                         xplorerView,        _( "Used to change the view in xplorer" ) );
     //If the display mode is desktop then we will disconnect when exit is selected
     //and in other modes we will give the user the ability to exit
-    if( ( GetDisplayMode() != "Desktop" ) &&
-        ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
+    if (( GetDisplayMode() != "Desktop" ) &&
+            ( preferences->GetMode( "Shut Down Xplorer Option" ) ) )
     {
-        xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
-        xplorerMenu->Enable( XPLORER_EXIT, true);
+        xplorerMenu->Append( XPLORER_EXIT, _( "Shutdown Xplorer" ) );
+        xplorerMenu->Enable( XPLORER_EXIT, true );
     }
 
-    xplorerMenu->Enable( XPLORER_NAVIGATION, true);
-    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true);
+    xplorerMenu->Enable( XPLORER_NAVIGATION, true );
+    xplorerMenu->Enable( XPLORER_VIEWPOINTS, true );
     //xplorerMenu->Enable( XPLORER_SOUNDS, true);
-    xplorerMenu->Enable( XPLORER_SCENES, true);
-    xplorerMenu->Enable( JUGGLER_SETTINGS, true);
+    xplorerMenu->Enable( XPLORER_SCENES, true );
+    xplorerMenu->Enable( JUGGLER_SETTINGS, true );
 
-    menubar->Append(file_menu, _("&File"));
-    menubar->Append(edit_menu, _("&Edit"));
-    menubar->Append(con_menu, _("&Connection"));
-    menubar->Append(run_menu, _("&Execution"));
-    menubar->Append( xplorerMenu, _("&VE-Xplorer") );
-    menubar->Append(help_menu, _("&Help"));
+    menubar->Append( file_menu, _( "&File" ) );
+    menubar->Append( edit_menu, _( "&Edit" ) );
+    menubar->Append( con_menu, _( "&Connection" ) );
+    menubar->Append( run_menu, _( "&Execution" ) );
+    menubar->Append( xplorerMenu, _( "&VE-Xplorer" ) );
+    menubar->Append( help_menu, _( "&Help" ) );
 
     SetMenuBar( menubar );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
 {
-	Network * network = canvas->GetActiveNetwork();
+    Network * network = canvas->GetActiveNetwork();
 
     if( network->GetUserScale()->first > 4 )
-    {    
+    {
         return; // maximum zoom in x3
     }
 
     network->GetUserScale()->first += 0.1;
-    network->GetUserScale()->second += 0.1; 
+    network->GetUserScale()->second += 0.1;
     network->GetNumPix()->first += 1;
     network->GetNumPix()->second += 1;
-    
+
     int xpos, ypos;
     /*network->GetViewStart( &xpos, &ypos );
     network->SetScrollbars( 
@@ -815,19 +815,19 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED(event) )
         xpos, ypos );
     network->Refresh(true);*/
     canvas->GetViewStart( &xpos, &ypos );
-    canvas->SetScrollbars( 
-        network->GetNumPix()->first, network->GetNumPix()->second, 
+    canvas->SetScrollbars(
+        network->GetNumPix()->first, network->GetNumPix()->second,
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
-    canvas->Refresh(true);
+    canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
 {
-	Network * network = canvas->GetActiveNetwork();
+    Network * network = canvas->GetActiveNetwork();
 
     if( network->GetUserScale()->first < 0.2 )
-    {   
+    {
         return; //minimum x-5
     }
 
@@ -843,12 +843,12 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED(event) )
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
     network->Refresh(true);*/
-    canvas->GetViewStart(&xpos, &ypos);
-    canvas->SetScrollbars( 
-        network->GetNumPix()->first, network->GetNumPix()->second, 
+    canvas->GetViewStart( &xpos, &ypos );
+    canvas->SetScrollbars(
+        network->GetNumPix()->first, network->GetNumPix()->second,
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
-    canvas->Refresh(true);
+    canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::Save( wxCommandEvent& event )
@@ -856,7 +856,7 @@ void AppFrame::Save( wxCommandEvent& event )
     canvas->Update();
 
     //First time call save will be the same as SaveAs
-    if ( fname == wxString( "", wxConvUTF8) ) 
+    if( fname == wxString( "", wxConvUTF8 ) )
     {
         SaveAs( event );
     }
@@ -866,82 +866,82 @@ void AppFrame::Save( wxCommandEvent& event )
         //wrtie to path
         //std::string data = network->Save( );
         std::string nw_str = XMLDataBufferEngine::instance()->
-            SaveVESData( ConvertUnicode( fname.c_str() ) );
+                             SaveVESData( ConvertUnicode( fname.c_str() ) );
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SaveAs( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
 {
-   wxFileName vesFileName;
-   int answer = 0;
-   do
-   {
-      wxTextEntryDialog newDataSetName(this, 
-                                       _("Enter the prefix for *.ves filename:"),
-                                       _("Save VES file as..."),
-                                       _("network"),wxOK|wxCANCEL);
-      
-      if ( newDataSetName.ShowModal() == wxID_OK )
-      {
-         vesFileName.ClearExt();
-         vesFileName.SetName( newDataSetName.GetValue() ); 
-         vesFileName.SetExt( _("ves") );
-      }
-      else
-      {
-         break;
-      }
-      
-      if ( vesFileName.FileExists() )
-      {
-         wxString tempMessage = _("Do you want to replace ") + vesFileName.GetFullName() + _("?");
-         wxMessageDialog promptDlg( this, 
-                                    tempMessage, 
-                                    _("Overwrite File Warning"), 
-                                    wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
-                                    wxDefaultPosition);
-         answer = promptDlg.ShowModal();
-      }
-   }
-   while ( answer == wxID_NO );
+    wxFileName vesFileName;
+    int answer = 0;
+    do
+    {
+        wxTextEntryDialog newDataSetName( this,
+                                          _( "Enter the prefix for *.ves filename:" ),
+                                          _( "Save VES file as..." ),
+                                          _( "network" ), wxOK | wxCANCEL );
 
-   if( vesFileName.FileExists() && !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
-   {
-       wxString tempMessage = _("Cannot write file ") + vesFileName.GetFullName() + _("?");
-       wxMessageDialog promptDlg( this, 
-                                  tempMessage, 
-                                  _("Overwrite File Warning"), 
-                                  wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
-                                  wxDefaultPosition);
-       promptDlg.ShowModal();
-       return;
-   }
-   
-   if( vesFileName.HasName() ) 
-   {
-      directory	= vesFileName.GetPath();
-      fname = vesFileName.GetFullName();
-      ///now write the file out from domdocument manager
-      //wrtie to path
-      //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
-      std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
-      SetTitle( vesFileName.GetFullName() );
-   }
+        if( newDataSetName.ShowModal() == wxID_OK )
+        {
+            vesFileName.ClearExt();
+            vesFileName.SetName( newDataSetName.GetValue() );
+            vesFileName.SetExt( _( "ves" ) );
+        }
+        else
+        {
+            break;
+        }
+
+        if( vesFileName.FileExists() )
+        {
+            wxString tempMessage = _( "Do you want to replace " ) + vesFileName.GetFullName() + _( "?" );
+            wxMessageDialog promptDlg( this,
+                                       tempMessage,
+                                       _( "Overwrite File Warning" ),
+                                       wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                       wxDefaultPosition );
+            answer = promptDlg.ShowModal();
+        }
+    }
+    while( answer == wxID_NO );
+
+    if( vesFileName.FileExists() && !wxFileName::IsFileWritable( vesFileName.GetFullPath() ) )
+    {
+        wxString tempMessage = _( "Cannot write file " ) + vesFileName.GetFullName() + _( "?" );
+        wxMessageDialog promptDlg( this,
+                                   tempMessage,
+                                   _( "Overwrite File Warning" ),
+                                   wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                   wxDefaultPosition );
+        promptDlg.ShowModal();
+        return;
+    }
+
+    if( vesFileName.HasName() )
+    {
+        directory = vesFileName.GetPath();
+        fname = vesFileName.GetFullName();
+        ///now write the file out from domdocument manager
+        //wrtie to path
+        //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
+        std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
+        SetTitle( vesFileName.GetFullName() );
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
+void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 {
     wxFileDialog dialog
-              (
-                 this,
-                 _T("Open File dialog"),
-                 ::wxGetCwd(),
-                 fname,
-                 _T("Network files (*.ves)|*.ves"),
-                 wxOPEN|wxFILE_MUST_EXIST
-              );
+    (
+        this,
+        _T( "Open File dialog" ),
+        ::wxGetCwd(),
+        fname,
+        _T( "Network files (*.ves)|*.ves" ),
+        wxOPEN | wxFILE_MUST_EXIST
+    );
 
     if( dialog.ShowModal() != wxID_OK )
     {
@@ -949,23 +949,23 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
 
     wxFileName vesFileName( dialog.GetPath() );
-    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
     if( !success )
     {
-        wxMessageBox( _("Can't open a VES file on another drive."), 
-                      _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Can't open a VES file on another drive." ),
+                      _( "VES File Read Error" ), wxOK | wxICON_INFORMATION );
         return;
     }
 
     SetTitle( vesFileName.GetFullName() );
 
-    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
     //change conductor working dir
     ::wxSetWorkingDirectory( directory );
-    directory.Replace( _("\\"), _("/"), true );
+    directory.Replace( _( "\\" ), _( "/" ), true );
     std::string tempDir = ConvertUnicode( directory.c_str() );
 
-    SetRecentFile( wxFileName(dialog.GetPath()) );
+    SetRecentFile( wxFileName( dialog.GetPath() ) );
 
     if( tempDir.empty() )
     {
@@ -973,26 +973,26 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    DataValuePairWeakPtr dataValuePair = 
-    new DataValuePair(  std::string("STRING") );
+    DataValuePairWeakPtr dataValuePair =
+        new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
     CommandWeakPtr veCommand = new Command();
-    veCommand->SetCommandName( std::string("Change Working Directory") );
+    veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
 
     //Clear the viewpoints data
-    //Since the data is "managed" by Xplorer we need to notify 
+    //Since the data is "managed" by Xplorer we need to notify
     //Xplorer when we load a new ves file to clear viewpoints since
     //They don't go with the new data.
 
     //Dummy data that isn't used but I don't know if a command will work
-    //w/o a DVP 
-    DataValuePairWeakPtr dvp = 
-        new DataValuePair(  std::string("STRING") );
+    //w/o a DVP
+    DataValuePairWeakPtr dvp =
+        new DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "Clear Quat Data", tempDir );
     CommandWeakPtr vec = new Command();
-    vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+    vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
 
@@ -1000,14 +1000,14 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
-    fname=dialog.GetFilename();
+    fname = dialog.GetFilename();
     //network->Load( ConvertUnicode( fname.c_str() ), true );
-	canvas->PopulateNetworks(ConvertUnicode( fname.c_str() ));
+    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
 
     //create hierarchy page
-    hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-		GetXMLModels(), XMLDataBufferEngine::instance()->
-		GetTopSystemId());
+    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                 GetXMLModels(), XMLDataBufferEngine::instance()->
+                                 GetTopSystemId() );
     wxCommandEvent event;
     SubmitToServer( event );
     if( recordScenes )
@@ -1016,62 +1016,62 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
-    CommandWeakPtr aspenBKPFile = 
+    CommandWeakPtr aspenBKPFile =
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-		DataValuePairPtr bkpPtr = 
+        DataValuePairPtr bkpPtr =
             aspenBKPFile->GetDataValuePair( "BKPFileName" );
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
-        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8) );
+        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SetRecentFile(wxFileName vesFileName)
+void AppFrame::SetRecentFile( wxFileName vesFileName )
 {
     size_t numFilesInHistory = m_recentVESFiles->GetCount();
     for( size_t i = 0; i < numFilesInHistory; ++i )
-    { 
-        if ( !m_recentVESFiles->GetHistoryFile(i).Cmp(vesFileName.GetFullPath()))
+    {
+        if( !m_recentVESFiles->GetHistoryFile( i ).Cmp( vesFileName.GetFullPath() ) )
         {
             return;
         }
     }
-    m_recentVESFiles->AddFileToHistory(vesFileName.GetFullPath());
+    m_recentVESFiles->AddFileToHistory( vesFileName.GetFullPath() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OpenRecentFile( wxCommandEvent& event ) 
+void AppFrame::OpenRecentFile( wxCommandEvent& event )
 {
-    wxString fileToOpen(m_recentVESFiles->GetHistoryFile(event.GetId() - wxID_FILE1));
-    if( fileToOpen.empty() || (!wxFileName::FileExists( fileToOpen ) ) )
+    wxString fileToOpen( m_recentVESFiles->GetHistoryFile( event.GetId() - wxID_FILE1 ) );
+    if( fileToOpen.empty() || ( !wxFileName::FileExists( fileToOpen ) ) )
     {
-        wxString message( _("VES file "));
+        wxString message( _( "VES file " ) );
         message += fileToOpen;
-        message += wxString( _(" does not exist!") );
-        wxMessageBox( message, 
-                      _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+        message += wxString( _( " does not exist!" ) );
+        wxMessageBox( message,
+                      _( "VES File Read Error" ), wxOK | wxICON_INFORMATION );
         m_recentVESFiles->RemoveFileFromHistory( event.GetId() - wxID_FILE1 );
         return;
     }
-    
+
     int placeChosen = event.GetId();
-    wxFileName vesFileName(fileToOpen);
-    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    wxFileName vesFileName( fileToOpen );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
     if( !success )
     {
-        wxMessageBox( _("Can't open a VES file on another drive."), 
-                _("VES File Read Error"), wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Can't open a VES file on another drive." ),
+                      _( "VES File Read Error" ), wxOK | wxICON_INFORMATION );
         return;
     }
-    
-    SetTitle(vesFileName.GetFullName());
-        
-    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
+
+    SetTitle( vesFileName.GetFullName() );
+
+    directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
     //change conductor working dir
     ::wxSetWorkingDirectory( directory );
-    directory.Replace( _("\\"), _("/"), true );
+    directory.Replace( _( "\\" ), _( "/" ), true );
 
     // TODO also, make call if file they are trying to call does not exist, call DeleteRecentFile
     fname = vesFileName.GetFullName();
@@ -1084,21 +1084,21 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    DataValuePairWeakPtr dataValuePair = 
-                  new DataValuePair(  std::string("STRING") );
+    DataValuePairWeakPtr dataValuePair =
+        new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
     CommandWeakPtr veCommand = new Command();
-    veCommand->SetCommandName( std::string("Change Working Directory") );
+    veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
 
     //Dummy data that isn't used but I don't know if a command will work
-    //w/o a DVP 
-    DataValuePairWeakPtr dvp = 
-                  new DataValuePair(  std::string("STRING") );
+    //w/o a DVP
+    DataValuePairWeakPtr dvp =
+        new DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "Clear Quat Data", tempDir );
     CommandWeakPtr vec = new Command();
-    vec->SetCommandName( std::string("QC_CLEAR_QUAT_DATA") );
+    vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
 
@@ -1109,128 +1109,128 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     //network->Load( ConvertUnicode( fname.c_str() ), true );
 //CORBAServiceList* serviceList = CORBAServiceList::instance();
 //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( fname.c_str() ).c_str() );
-	canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
-    
-	//create hierarchy page
-    hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-		GetXMLModels(), XMLDataBufferEngine::instance()->
-		GetTopSystemId());
+    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+
+    //create hierarchy page
+    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                 GetXMLModels(), XMLDataBufferEngine::instance()->
+                                 GetTopSystemId() );
     SubmitToServer( event );
     //Rebuild the teacher tab so that the new stored files are loaded
     if( recordScenes )
     {
         recordScenes->_buildPage();
     }
-	
-	///This code will be moved in the future. It is Aspen specific code.
-    CommandWeakPtr aspenBKPFile = 
+
+    ///This code will be moved in the future. It is Aspen specific code.
+    CommandWeakPtr aspenBKPFile =
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
     {
-		DataValuePairPtr bkpPtr = 
+        DataValuePairPtr bkpPtr =
             aspenBKPFile->GetDataValuePair( "BKPFileName" );
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
-        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8) );
+        OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnClearRecentFiles( wxCommandEvent& event ) 
+void AppFrame::OnClearRecentFiles( wxCommandEvent& event )
 {
-    wxMessageDialog confirm(this,
-                            _("Are you sure you want to clear the recent files list?"),
-                           _("Confirm"),wxOK|wxCANCEL); 
-    if(confirm.ShowModal() == wxID_OK)
+    wxMessageDialog confirm( this,
+                             _( "Are you sure you want to clear the recent files list?" ),
+                             _( "Confirm" ), wxOK | wxCANCEL );
+    if( confirm.ShowModal() == wxID_OK )
     {
         size_t numFilesInHistory = m_recentVESFiles->GetCount();
         for( size_t i = 0; i < numFilesInHistory; ++i )
         {
-            m_recentVESFiles->RemoveFileFromHistory( ( numFilesInHistory - 1) - i);
+            m_recentVESFiles->RemoveFileFromHistory(( numFilesInHistory - 1 ) - i );
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED( event ) )
 {
-   std::string nw_str = serviceList->GetNetwork();
-   EnableCEGUIMenuItems();
-   //network->Load( nw_str, false );
-   canvas->PopulateNetworks( nw_str, false );
+    std::string nw_str = serviceList->GetNetwork();
+    EnableCEGUIMenuItems();
+    //network->Load( nw_str, false );
+    canvas->PopulateNetworks( nw_str, false );
 
-   //create hierarchy page
-   hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-	   GetXMLModels(), XMLDataBufferEngine::instance()->
-	   GetTopSystemId());
+    //create hierarchy page
+    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                 GetXMLModels(), XMLDataBufferEngine::instance()->
+                                 GetTopSystemId() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
 {
-   EnableCEGUIMenuItems();
+    EnableCEGUIMenuItems();
 
-   std::string nw_str;
+    std::string nw_str;
 
-   try
-   {
-	   nw_str.assign( serviceList->Query( 0 ));
-   }
-   catch ( CORBA::Exception& )
-   {
-      Log("No ves network available\n");
-   }
+    try
+    {
+        nw_str.assign( serviceList->Query( 0 ) );
+    }
+    catch ( CORBA::Exception& )
+    {
+        Log( "No ves network available\n" );
+    }
 
-   // If there is nothing on the CE
-   if ( !nw_str.empty() )
-   {
-       //network->Load( nw_str, true );
-	   canvas->PopulateNetworks( nw_str );
-       
-       //create hierarchy page
-	   hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-		   GetXMLModels(), XMLDataBufferEngine::instance()->
-		   GetTopSystemId());
-       ///Submit job to xplorer
-	   wxCommandEvent event;
-	   SubmitToServer( event );
-   }
-   else
-   {
-      Log("No ves network available\n");
-   }
+    // If there is nothing on the CE
+    if( !nw_str.empty() )
+    {
+        //network->Load( nw_str, true );
+        canvas->PopulateNetworks( nw_str );
+
+        //create hierarchy page
+        hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                     GetXMLModels(), XMLDataBufferEngine::instance()->
+                                     GetTopSystemId() );
+        ///Submit job to xplorer
+        wxCommandEvent event;
+        SubmitToServer( event );
+    }
+    else
+    {
+        Log( "No ves network available\n" );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Opening Simulation...\n");
+    Log( "Opening Simulation...\n" );
     wxFileName bkpFileName;
-    wxTextEntryDialog newDataSetName(this, 
-        wxString("Enter the prefix for *.bkp filename:", wxConvUTF8),
-        wxString("Open BKP Filename", wxConvUTF8),
-        wxString("", wxConvUTF8),wxOK|wxCANCEL);
-        
+    wxTextEntryDialog newDataSetName( this,
+                                      wxString( "Enter the prefix for *.bkp filename:", wxConvUTF8 ),
+                                      wxString( "Open BKP Filename", wxConvUTF8 ),
+                                      wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
+
     if( newDataSetName.ShowModal() != wxID_OK )
     {
         return;
     }
 
     bkpFileName.ClearExt();
-    bkpFileName.SetName( newDataSetName.GetValue() ); 
+    bkpFileName.SetName( newDataSetName.GetValue() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
     Command returnState;
-    returnState.SetCommandName("getNetwork");
+    returnState.SetCommandName( "getNetwork" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "getNetwork" );
+    data->SetData( "NetworkQuery", "getNetwork" );
     returnState.AddDataValuePair( data );
-    
+
     data = new DataValuePair();
-    data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+    data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     //Get results
@@ -1239,291 +1239,291 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED(event) )
     // If there is nothing on the CE
     if( nw_str.empty() )
     {
-        Log("No ves network available\n");
+        Log( "No ves network available\n" );
         return;
     }
 
-	Network * network = canvas->GetActiveNetwork();
+    Network * network = canvas->GetActiveNetwork();
 
     if( network->modules.empty() )
-    { 
+    {
         //network->Load( nw_str, true );
-		canvas->PopulateNetworks( nw_str );
+        canvas->PopulateNetworks( nw_str );
 
-		//create hierarchy page
-		hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-			GetXMLModels(), XMLDataBufferEngine::instance()->
-			GetTopSystemId());
+        //create hierarchy page
+        hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                     GetXMLModels(), XMLDataBufferEngine::instance()->
+                                     GetTopSystemId() );
 
-        Log("Simulation Opened.\n");
+        Log( "Simulation Opened.\n" );
         ///
         CommandWeakPtr aspenBKPFile = new Command();
         aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
         data = new DataValuePair();
-        data->SetData( "BKPFileName",  
-            ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+        data->SetData( "BKPFileName",
+                       ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
         aspenBKPFile->AddDataValuePair( data );
         UserPreferencesDataBuffer::instance()->
-            SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
+        SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
         ///Submit job to xplorer
-		wxCommandEvent event;
-		SubmitToServer( event );
+        wxCommandEvent event;
+        SubmitToServer( event );
     }
     else
-    {    
-        Log("Simulation is already open.\n");
+    {
+        Log( "Simulation is already open.\n" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenSimulation( wxString simName )
 {
     wxFileName bkpFileName;
-    bkpFileName.SetName( simName); 
+    bkpFileName.SetName( simName );
 
     Command returnState;
-    returnState.SetCommandName("openSimulation");
+    returnState.SetCommandName( "openSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("AspenPlus", "openSimulation" );
+    data->SetData( "AspenPlus", "openSimulation" );
     returnState.AddDataValuePair( data );
-    
+
     data = new DataValuePair();
-    data->SetData("BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
+    data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     //Get results
     std::string nw_str = serviceList->Query( status );
-    Log(nw_str.c_str());
+    Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Show Simulation.\n");
+    Log( "Show Simulation.\n" );
     Command returnState;
-    returnState.SetCommandName("showSimulation");
+    returnState.SetCommandName( "showSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "showSimulation" );
+    data->SetData( "NetworkQuery", "showSimulation" );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = serviceList->Query( status ) + "\n";
-    Log(nw_str.c_str());
+    Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Hide Simulation.\n");
+    Log( "Hide Simulation.\n" );
     Command returnState;
-    returnState.SetCommandName("hideSimulation");
+    returnState.SetCommandName( "hideSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "hideSimulation" );
+    data->SetData( "NetworkQuery", "hideSimulation" );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = serviceList->Query( status ) + "\n";
-    Log(nw_str.c_str());
+    Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Close Simulation.\n");
+    Log( "Close Simulation.\n" );
     Command returnState;
-    returnState.SetCommandName("closeSimulation");
+    returnState.SetCommandName( "closeSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "closeSimulation" );
+    data->SetData( "NetworkQuery", "closeSimulation" );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     std::string nw_str = serviceList->Query( status ) + "\n";
-    Log(nw_str.c_str());
+    Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Run Simulation.\n");
+    Log( "Run Simulation.\n" );
     Command returnState;
-    returnState.SetCommandName("runNetwork");
+    returnState.SetCommandName( "runNetwork" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "runNetwork" );
+    data->SetData( "NetworkQuery", "runNetwork" );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Run Simulation.\n");
+    Log( "Run Simulation.\n" );
     Command returnState;
-    returnState.SetCommandName("stepNetwork");
+    returnState.SetCommandName( "stepNetwork" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "runNetwork" );
+    data->SetData( "NetworkQuery", "runNetwork" );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 {
-	Network* network = canvas->GetActiveNetwork();
+    Network* network = canvas->GetActiveNetwork();
 
-    Log("Find Block.\n");
-    FindDialog* fd = new FindDialog(this);
+    Log( "Find Block.\n" );
+    FindDialog* fd = new FindDialog( this );
     std::vector< std::string > moduleNames;
     std::vector< unsigned int > moduleIDs;
-    
-    for( std::map<int, Module>::iterator iter=network->modules.begin(); 
-        iter!=network->modules.end(); iter++)
+
+    for( std::map<int, Module>::iterator iter = network->modules.begin();
+            iter != network->modules.end(); iter++ )
     {
-        moduleNames.push_back( ConvertUnicode( 
-            network->modules[ iter->first ].GetPlugin()->GetName().c_str() ) );
+        moduleNames.push_back( ConvertUnicode(
+                                   network->modules[ iter->first ].GetPlugin()->GetName().c_str() ) );
         moduleIDs.push_back( network->modules[ iter->first ].GetPlugin()->
-            GetVEModel()->GetModelID());
+                             GetVEModel()->GetModelID() );
     }
 
-    fd->SetModuleList(moduleNames);
+    fd->SetModuleList( moduleNames );
     fd->ShowModal();
 
     int selectedModulePos = fd->GetSelectedModulePos();
-	
-	//highlight and center block
-	network->HighlightCenter( moduleIDs[selectedModulePos] );
+
+    //highlight and center block
+    network->HighlightCenter( moduleIDs[selectedModulePos] );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SaveSimulation(wxCommandEvent& WXUNUSED(event))
+void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
-    Log("Saving Simulation...\n");
+    Log( "Saving Simulation...\n" );
     Command returnState;
-    returnState.SetCommandName("saveSimulation");
+    returnState.SetCommandName( "saveSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "saveSimulation" );
+    data->SetData( "NetworkQuery", "saveSimulation" );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     serviceList->Query( status );
     //std::string nw_str = serviceList->Query( status ) + "\n";
     //Log(nw_str.c_str());
-    Log("Simulation Saved.\n");
+    Log( "Simulation Saved.\n" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
-   wxFileName saveFileName;
-   wxTextEntryDialog newDataSetName(this, 
-	   wxString("Enter filename (.apw):", wxConvUTF8),
-	   wxString("Save Flowsheet", wxConvUTF8),
-	   wxString("", wxConvUTF8),wxOK|wxCANCEL);
+    wxFileName saveFileName;
+    wxTextEntryDialog newDataSetName( this,
+                                      wxString( "Enter filename (.apw):", wxConvUTF8 ),
+                                      wxString( "Save Flowsheet", wxConvUTF8 ),
+                                      wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
 
     if( newDataSetName.ShowModal() != wxID_OK )
     {
         return;
     }
 
-    Log("Saving Simulation...\n");
+    Log( "Saving Simulation...\n" );
     saveFileName.ClearExt();
-    saveFileName.SetName( newDataSetName.GetValue() ); 
+    saveFileName.SetName( newDataSetName.GetValue() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
     Command returnState;
-    returnState.SetCommandName("saveAsSimulation");
+    returnState.SetCommandName( "saveAsSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
-    data->SetData("NetworkQuery", "saveAsSimulation" );
+    data->SetData( "NetworkQuery", "saveAsSimulation" );
     returnState.AddDataValuePair( data );
-    
+
     data = new DataValuePair();
-    data->SetData("SaveFileName",  
-        ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+    data->SetData( "SaveFileName",
+                   ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
     std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back(std::pair< XMLObject*, 
-        std::string >( &returnState, "vecommand" ));
+    nodes.push_back( std::pair < XMLObject*,
+                     std::string > ( &returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
-    std::string status="returnString";
+    std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     //Get results
     std::string nw_str = serviceList->Query( status );
-    Log("Simulation Saved.\n");
+    Log( "Simulation Saved.\n" );
 
     CommandWeakPtr aspenAPWFile = new Command();
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
     data = new DataValuePair();
-    data->SetData( "BKPFileName",  
-        ConvertUnicode( saveFileName.GetFullName().c_str() ) );
+    data->SetData( "BKPFileName",
+                   ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     aspenAPWFile->AddDataValuePair( data );
     UserPreferencesDataBuffer::instance()->
-        SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
+    SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
 }
 ///////////////////////////////////////////////////////////////////////////
-void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
-   //clear any current tree
-   hierarchyTree->Clear();
-   SetTitle( _("VE-Suite: www.vesuite.org") );
-   //network->New( true );
-   canvas->New( true );
-   canvas->CreateDefaultNetwork();
+    //clear any current tree
+    hierarchyTree->Clear();
+    SetTitle( _( "VE-Suite: www.vesuite.org" ) );
+    //network->New( true );
+    canvas->New( true );
+    canvas->CreateDefaultNetwork();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
 {
     EnableCEGUIMenuItems();
-   
+
     canvas->Update();
-    
+
     std::string nw_str = XMLDataBufferEngine::instance()->
-        SaveVESData( std::string( "returnString" ) );
+                         SaveVESData( std::string( "returnString" ) );
     // write the domdoc to the string above
-    try 
+    try
     {
         //first make sure all the units have been initialized with the current
         //ids to get an active xml model
@@ -1533,718 +1533,717 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
         // set the network
         serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
         // Tell xplorer to ask ce for the new data
-        DataValuePairWeakPtr dataValuePair = 
+        DataValuePairWeakPtr dataValuePair =
             new DataValuePair();
-        dataValuePair->SetData(std::string("Load Data"),xplorerColor);
+        dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
         CommandWeakPtr veCommand = new Command();
-        veCommand->SetCommandName(std::string("veNetwork Update"));
-        veCommand->AddDataValuePair(dataValuePair);
+        veCommand->SetCommandName( std::string( "veNetwork Update" ) );
+        veCommand->AddDataValuePair( dataValuePair );
         serviceList->SendCommandStringToXplorer( veCommand );
         //enable the menus now
         run_menu->Enable( v21ID_START_CALC, true );
     }
-    catch ( CORBA::Exception& ) 
+    catch ( CORBA::Exception& )
     {
-        Log("no exec found!\n");
+        Log( "no exec found!\n" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::StartCalc( wxCommandEvent& WXUNUSED( event ) )
 {
-   try	
-   { 
-      serviceList->StartCalc();
-   }
-   catch ( CORBA::Exception& ) 
-   {
-      Log("no exec found!\n");
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::StopCalc(wxCommandEvent& WXUNUSED(event) )
-{
-   try
-   {
-      serviceList->StopCalc();
-   }
-   catch ( CORBA::Exception& )
-   {
-      Log("no exec found!\n");
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::PauseCalc(wxCommandEvent& WXUNUSED(event) )
-{
-   try
-   {
-      serviceList->PauseCalc();
-   }
-   catch ( CORBA::Exception& )
-   {
-      Log("no exec found!\n");
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
-{
-   try
-   { 
-      serviceList->Resume();
-   }
-   catch ( CORBA::Exception& )
-   {
-      Log("no exec found!\n");
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
-{
-   Network * network = canvas->GetActiveNetwork();
-
-   serviceList->IsConnectedToCE();
-   EnableCEGUIMenuItems();
-
-   char* result = 0;
-   //char buf[80];
-   std::map<int, Module>::iterator iter;
-   std::vector<wxString> titles;
-   //TextResultDialog * result_dlg;
-   SummaryResultDialog * result_dlg = 0;
-   std::vector<wxString> v_desc, v_value;
-   std::vector<std::string> descs;
-   std::vector<int> alignments;
-
-   titles.push_back( _("Description") );
-   alignments.push_back (wxALIGN_LEFT);
-   titles.push_back( _("Value") );
-   alignments.push_back (wxALIGN_RIGHT);
-
-   /*
-   result_dlg = new TextResultDialog(NULL);
-   result_dlg->syngas->Clear();
-   result_dlg->syngas->AddRow(titles);
-   */
-   if( result_dlg )
-   {
-      result_dlg->Destroy();
-      result_dlg = 0;
-   }
-   result_dlg = new SummaryResultDialog(NULL, wxT("Result Summary - All Modules"), wxSize(560, 400));
-   result_dlg->syngas->Clear();
-   result_dlg->syngas->SetNumofCols( 2 );
-   result_dlg->syngas->SetColTitles( titles );
-   result_dlg->syngas->SetColAlignments( alignments );
-
-    try 
+    try
     {
-        for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
+        serviceList->StartCalc();
+    }
+    catch ( CORBA::Exception& )
+    {
+        Log( "no exec found!\n" );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::StopCalc( wxCommandEvent& WXUNUSED( event ) )
+{
+    try
+    {
+        serviceList->StopCalc();
+    }
+    catch ( CORBA::Exception& )
+    {
+        Log( "no exec found!\n" );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::PauseCalc( wxCommandEvent& WXUNUSED( event ) )
+{
+    try
+    {
+        serviceList->PauseCalc();
+    }
+    catch ( CORBA::Exception& )
+    {
+        Log( "no exec found!\n" );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ResumeCalc( wxCommandEvent& WXUNUSED( event ) )
+{
+    try
+    {
+        serviceList->Resume();
+    }
+    catch ( CORBA::Exception& )
+    {
+        Log( "no exec found!\n" );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
+{
+    Network * network = canvas->GetActiveNetwork();
+
+    serviceList->IsConnectedToCE();
+    EnableCEGUIMenuItems();
+
+    char* result = 0;
+    //char buf[80];
+    std::map<int, Module>::iterator iter;
+    std::vector<wxString> titles;
+    //TextResultDialog * result_dlg;
+    SummaryResultDialog * result_dlg = 0;
+    std::vector<wxString> v_desc, v_value;
+    std::vector<std::string> descs;
+    std::vector<int> alignments;
+
+    titles.push_back( _( "Description" ) );
+    alignments.push_back( wxALIGN_LEFT );
+    titles.push_back( _( "Value" ) );
+    alignments.push_back( wxALIGN_RIGHT );
+
+    /*
+    result_dlg = new TextResultDialog(NULL);
+    result_dlg->syngas->Clear();
+    result_dlg->syngas->AddRow(titles);
+    */
+    if( result_dlg )
+    {
+        result_dlg->Destroy();
+        result_dlg = 0;
+    }
+    result_dlg = new SummaryResultDialog( NULL, wxT( "Result Summary - All Modules" ), wxSize( 560, 400 ) );
+    result_dlg->syngas->Clear();
+    result_dlg->syngas->SetNumofCols( 2 );
+    result_dlg->syngas->SetColTitles( titles );
+    result_dlg->syngas->SetColAlignments( alignments );
+
+    try
+    {
+        for( iter = network->modules.begin(); iter != network->modules.end(); iter++ )
         {
             //result = network->exec->GetModuleResult(iter->first);
 
-            if ( std::string(result) != "" ) 
+            if( std::string( result ) != "" )
             {
-            /* Package p;
-            p.SetSysId("linkresult.xml");
-            p.Load(result, strlen(result));
+                /* Package p;
+                p.SetSysId("linkresult.xml");
+                p.Load(result, strlen(result));
 
-            descs = p.GetInterfaceVector()[0].getStrings();
+                descs = p.GetInterfaceVector()[0].getStrings();
 
-            // This may not be needed.
-            // this should be taken care of with previous statement
-            if ( descs.size() < 1 ) 
-            continue;
+                // This may not be needed.
+                // this should be taken care of with previous statement
+                if(descs.size() < 1 ) 
+                continue;
 
-            v_desc.clear();
-            v_value.clear();
-            wxString str;
-            str = iter->second.GetPlugin()->GetName();
-            str << _(" (") << iter->first << _(")");
-            result_dlg->NewTab( str );
+                v_desc.clear();
+                v_value.clear();
+                wxString str;
+                str = iter->second.GetPlugin()->GetName();
+                str << _(" (") << iter->first << _(")");
+                result_dlg->NewTab( str );
 
-            for (i=0; i<descs.size(); i++) 
-            {
-            std::string desc = descs[i];
-            std::string value = p.GetInterfaceVector()[0].getString(descs[i]);
+                for (i=0; i<descs.size(); i++) 
+                {
+                std::string desc = descs[i];
+                std::string value = p.GetInterfaceVector()[0].getString(descs[i]);
 
-            if (desc.substr(0,3) == "***") 
-            {
-            desc = desc.substr(9,desc.size()-9);
-            }
+                if (desc.substr(0,3) == "***") 
+                {
+                desc = desc.substr(9,desc.size()-9);
+                }
 
-            v_desc.push_back( wxString( desc.c_str(), wxConvUTF8 ) );
-            v_value.push_back( wxString( value.c_str(), wxConvUTF8 ) );
-            }
+                v_desc.push_back( wxString( desc.c_str(), wxConvUTF8 ) );
+                v_value.push_back( wxString( value.c_str(), wxConvUTF8 ) );
+                }
 
-            result_dlg->syngas->AddSeperator(' ');
-            result_dlg->syngas->AddSeperator('+');
-            result_dlg->syngas->AddSeperator(' ');
-            result_dlg->Set2Cols(v_desc, v_value);*/
+                result_dlg->syngas->AddSeperator(' ');
+                result_dlg->syngas->AddSeperator('+');
+                result_dlg->syngas->AddSeperator(' ');
+                result_dlg->Set2Cols(v_desc, v_value);*/
             }
         }
 
         //result = network->exec->GetModuleResult(-1); //Global result
 
-        if (std::string(result)!="") 
+        if( std::string( result ) != "" )
         {
-        /* Package p;
-        p.SetSysId("linkresult.xml");
-        p.Load(result, strlen(result));
+            /* Package p;
+            p.SetSysId("linkresult.xml");
+            p.Load(result, strlen(result));
 
-        descs = p.GetInterfaceVector()[0].getStrings();
-        v_desc.clear();
-        v_value.clear();
-        //v_desc.push_back("Plant Results");
-        //v_value.push_back("   ");
-        result_dlg->NewTab( wxT("Plant Results") );
+            descs = p.GetInterfaceVector()[0].getStrings();
+            v_desc.clear();
+            v_value.clear();
+            //v_desc.push_back("Plant Results");
+            //v_value.push_back("   ");
+            result_dlg->NewTab( wxT("Plant Results") );
 
-        for (i=0; i<descs.size(); i++) 
-        {
-        v_desc.push_back( wxString( descs[i].c_str(), wxConvUTF8 ) );
-        v_value.push_back( wxString( (p.GetInterfaceVector()[0].getString(descs[i])).c_str(), wxConvUTF8 ) );
-        }
-        result_dlg->syngas->AddSeperator(' ');
-        result_dlg->syngas->AddSeperator('+');
-        result_dlg->syngas->AddSeperator(' ');
-        result_dlg->Set2Cols(v_desc, v_value);*/
+            for (i=0; i<descs.size(); i++) 
+            {
+            v_desc.push_back( wxString( descs[i].c_str(), wxConvUTF8 ) );
+            v_value.push_back( wxString( (p.GetInterfaceVector()[0].getString(descs[i])).c_str(), wxConvUTF8 ) );
+            }
+            result_dlg->syngas->AddSeperator(' ');
+            result_dlg->syngas->AddSeperator('+');
+            result_dlg->syngas->AddSeperator(' ');
+            result_dlg->Set2Cols(v_desc, v_value);*/
         }
     }
-    catch (CORBA::Exception &) 
+    catch ( CORBA::Exception & )
     {
         std::cerr << "Maybe Computational Engine is down " << std::endl;
         return;
     }
-   /*else 
-   {
-      titles.clear();
-      titles.push_back("No Plant Results");
-      titles.push_back(" ");
-  
-      result_dlg->syngas->AddSeperator('+');
-      result_dlg->syngas->AddRow(titles);
-   }*/
-       
-   // EPRI TAG
-   std::vector<wxString> v_desc2, v_value2;
-   double total_cccost = 0;
-   double total_omcost = 0;
-   v_desc.clear();
-   v_value.clear();
-   for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
-   {
-      if(iter->second.GetPlugin()->financial_dlg != NULL) 
-      {
-         if(iter->second.GetPlugin()->financial_dlg->_use_data) 
-         {
-	         double TPC = iter->second.GetPlugin()->financial_dlg->_cc00_d *
-	                        (1 +
-	                     iter->second.GetPlugin()->financial_dlg->_cc01_d / 100 +
-	                     iter->second.GetPlugin()->financial_dlg->_cc02_d / 100 +
-	                     iter->second.GetPlugin()->financial_dlg->_cc03_d / 100 +
-	                     iter->second.GetPlugin()->financial_dlg->_cc04_d / 100 +
-	                     iter->second.GetPlugin()->financial_dlg->_cc05_d / 100);
+    /*else
+    {
+       titles.clear();
+       titles.push_back("No Plant Results");
+       titles.push_back(" ");
 
-	         double TPI = TPC + iter->second.GetPlugin()->financial_dlg->_cc06_d;
+       result_dlg->syngas->AddSeperator('+');
+       result_dlg->syngas->AddRow(titles);
+    }*/
 
-	         double cccost = TPI + iter->second.GetPlugin()->financial_dlg->_cc07_d +
-	                           iter->second.GetPlugin()->financial_dlg->_cc08_d;
+    // EPRI TAG
+    std::vector<wxString> v_desc2, v_value2;
+    double total_cccost = 0;
+    double total_omcost = 0;
+    v_desc.clear();
+    v_value.clear();
+    for( iter = network->modules.begin(); iter != network->modules.end(); iter++ )
+    {
+        if( iter->second.GetPlugin()->financial_dlg != NULL )
+        {
+            if( iter->second.GetPlugin()->financial_dlg->_use_data )
+            {
+                double TPC = iter->second.GetPlugin()->financial_dlg->_cc00_d *
+                             ( 1 +
+                               iter->second.GetPlugin()->financial_dlg->_cc01_d / 100 +
+                               iter->second.GetPlugin()->financial_dlg->_cc02_d / 100 +
+                               iter->second.GetPlugin()->financial_dlg->_cc03_d / 100 +
+                               iter->second.GetPlugin()->financial_dlg->_cc04_d / 100 +
+                               iter->second.GetPlugin()->financial_dlg->_cc05_d / 100 );
 
-	         total_cccost += cccost;
+                double TPI = TPC + iter->second.GetPlugin()->financial_dlg->_cc06_d;
 
-	         v_desc.push_back(wxString(iter->second.GetPlugin()->GetName()));
-            std::ostringstream dirStringStream;
-            dirStringStream << std::setprecision(2) << cccost;
-            std::string dirString = dirStringStream.str();
+                double cccost = TPI + iter->second.GetPlugin()->financial_dlg->_cc07_d +
+                                iter->second.GetPlugin()->financial_dlg->_cc08_d;
 
-	         v_value.push_back( wxString( dirString.c_str(), wxConvUTF8) );
+                total_cccost += cccost;
 
-	         double TMC = TPC * iter->second.GetPlugin()->financial_dlg->_om00_d / 100;
-	
-	         double omcost = TMC + 
-	                        iter->second.GetPlugin()->financial_dlg->_om01_d +
-	                        iter->second.GetPlugin()->financial_dlg->_om02_d +
-	                        iter->second.GetPlugin()->financial_dlg->_om02_d * iter->second.GetPlugin()->financial_dlg->_om03_d / 100;
+                v_desc.push_back( wxString( iter->second.GetPlugin()->GetName() ) );
+                std::ostringstream dirStringStream;
+                dirStringStream << std::setprecision( 2 ) << cccost;
+                std::string dirString = dirStringStream.str();
 
-	         total_omcost += omcost;
-	
-	         v_desc2.push_back(wxString(iter->second.GetPlugin()->GetName()));
-            dirStringStream << std::setprecision(2) << omcost;
-	         v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
-         }
-      }
-   }
+                v_value.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
 
-   if ( v_desc.size() > 0 ) 
-   {
-      result_dlg->syngas->AddSeperator(' ');
-      result_dlg->syngas->AddSeperator(' ');
+                double TMC = TPC * iter->second.GetPlugin()->financial_dlg->_om00_d / 100;
 
-      titles.clear();
-      titles.push_back( _("Plant Component") );
-      titles.push_back( _("Capital Required (M$)") );
+                double omcost = TMC +
+                                iter->second.GetPlugin()->financial_dlg->_om01_d +
+                                iter->second.GetPlugin()->financial_dlg->_om02_d +
+                                iter->second.GetPlugin()->financial_dlg->_om02_d * iter->second.GetPlugin()->financial_dlg->_om03_d / 100;
 
-      result_dlg->syngas->AddRow(titles);
-      result_dlg->syngas->AddSeperator('+');
+                total_omcost += omcost;
 
-      v_desc.push_back( _("Total") );
-      std::ostringstream dirStringStream;
-      dirStringStream << std::setprecision(2) << total_cccost;
-      std::string dirString = dirStringStream.str();
-      v_value.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
+                v_desc2.push_back( wxString( iter->second.GetPlugin()->GetName() ) );
+                dirStringStream << std::setprecision( 2 ) << omcost;
+                v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
+            }
+        }
+    }
 
-      result_dlg->Set2Cols(v_desc, v_value);
+    if( v_desc.size() > 0 )
+    {
+        result_dlg->syngas->AddSeperator( ' ' );
+        result_dlg->syngas->AddSeperator( ' ' );
 
-      //
+        titles.clear();
+        titles.push_back( _( "Plant Component" ) );
+        titles.push_back( _( "Capital Required (M$)" ) );
 
-      result_dlg->syngas->AddSeperator(' ');
+        result_dlg->syngas->AddRow( titles );
+        result_dlg->syngas->AddSeperator( '+' );
 
-      titles.clear();
-      titles.push_back( _("Plant Component") );
-      titles.push_back( _("Revenue Required (M$)") );
+        v_desc.push_back( _( "Total" ) );
+        std::ostringstream dirStringStream;
+        dirStringStream << std::setprecision( 2 ) << total_cccost;
+        std::string dirString = dirStringStream.str();
+        v_value.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
 
-      result_dlg->syngas->AddRow(titles);
-      result_dlg->syngas->AddSeperator('+');
+        result_dlg->Set2Cols( v_desc, v_value );
 
-      v_desc2.push_back( _("Total") );
-      dirStringStream << std::setprecision(2) << total_omcost;
-      v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
+        //
 
-      result_dlg->Set2Cols(v_desc2, v_value2);
-   }
+        result_dlg->syngas->AddSeperator( ' ' );
 
-   result_dlg->Show();
+        titles.clear();
+        titles.push_back( _( "Plant Component" ) );
+        titles.push_back( _( "Revenue Required (M$)" ) );
+
+        result_dlg->syngas->AddRow( titles );
+        result_dlg->syngas->AddSeperator( '+' );
+
+        v_desc2.push_back( _( "Total" ) );
+        dirStringStream << std::setprecision( 2 ) << total_omcost;
+        v_value2.push_back( wxString( dirString.c_str(), wxConvUTF8 ) );
+
+        result_dlg->Set2Cols( v_desc2, v_value2 );
+    }
+
+    result_dlg->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::Log(const char* msg)
+void AppFrame::Log( const char* msg )
 {
-   serviceList->GetMessageLog()->SetMessage( msg );
+    serviceList->GetMessageLog()->SetMessage( msg );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
+void AppFrame::DisConExeServer( wxCommandEvent &WXUNUSED( event ) )
 {
-   serviceList->DisconnectFromCE();
-   //con_menu->Enable(v21ID_SUBMIT,false);
-   //con_menu->Enable(v21ID_LOAD, false);
-   //con_menu->Enable(v21ID_CONNECT, true);
-   run_menu->Enable(v21ID_START_CALC, false);
-   // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-   con_menu->Enable(v21ID_DISCONNECT, false);
+    serviceList->DisconnectFromCE();
+    //con_menu->Enable(v21ID_SUBMIT,false);
+    //con_menu->Enable(v21ID_LOAD, false);
+    //con_menu->Enable(v21ID_CONNECT, true);
+    run_menu->Enable( v21ID_START_CALC, false );
+    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+    con_menu->Enable( v21ID_DISCONNECT, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
+void AppFrame::DisConVEServer( wxCommandEvent &WXUNUSED( event ) )
 {
-   serviceList->DisconnectFromXplorer();
-   con_menu->Enable(v21ID_DISCONNECT_VE, false);
+    serviceList->DisconnectFromXplorer();
+    con_menu->Enable( v21ID_DISCONNECT_VE, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
+void AppFrame::ViewHelp( wxCommandEvent& WXUNUSED( event ) )
 {
-    ::wxLaunchDefaultBrowser( 
+    ::wxLaunchDefaultBrowser(
         wxString( "http://vesuite.org/content.php?id=421", wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewAbout(wxCommandEvent& WXUNUSED(event))
+void AppFrame::ViewAbout( wxCommandEvent& WXUNUSED( event ) )
 {
-   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org", wxConvUTF8 ) );
+    ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org", wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewRevision(wxCommandEvent& WXUNUSED(event))
+void AppFrame::ViewRevision( wxCommandEvent& WXUNUSED( event ) )
 {
     std::ostringstream revNum;
-    revNum << VES_MAJOR_VERSION << "." 
-        << VES_MINOR_VERSION << "." 
-        << VES_PATCH_VERSION << "." 
-        << SVN_VES_REVISION;
+    revNum << VES_MAJOR_VERSION << "."
+    << VES_MINOR_VERSION << "."
+    << VES_PATCH_VERSION << "."
+    << SVN_VES_REVISION;
 
 
-    wxString tempNum = wxString("Current Revision: ", wxConvUTF8 ) + 
-        wxString(revNum.str().c_str(), wxConvUTF8 );
-    
-    wxMessageBox( tempNum, _("Revision"), wxOK | wxICON_INFORMATION );
+    wxString tempNum = wxString( "Current Revision: ", wxConvUTF8 ) +
+                       wxString( revNum.str().c_str(), wxConvUTF8 );
+
+    wxMessageBox( tempNum, _( "Revision" ), wxOK | wxICON_INFORMATION );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewContacts(wxCommandEvent& WXUNUSED(event))
+void AppFrame::ViewContacts( wxCommandEvent& WXUNUSED( event ) )
 {
-   ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
+    ::wxLaunchDefaultBrowser( wxString( "http://www.vesuite.org/forum/index.php", wxConvUTF8 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::ViewPlatformInfo(wxCommandEvent& WXUNUSED(event))
+void AppFrame::ViewPlatformInfo( wxCommandEvent& WXUNUSED( event ) )
 {
-   wxMessageBox( ::wxGetOsDescription(),_("Platform Info"), 
-                 wxOK | wxICON_INFORMATION );
+    wxMessageBox( ::wxGetOsDescription(), _( "Platform Info" ),
+                  wxOK | wxICON_INFORMATION );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LaunchDeviceProperties( wxCommandEvent& WXUNUSED( event ) )
 {
-   if ( deviceProperties == 0 )
-   {
-      // create pane and set appropriate vars
-      deviceProperties = new DeviceProperties( this );
-   }
-   // now show it
-   deviceProperties->Show();
+    if( deviceProperties == 0 )
+    {
+        // create pane and set appropriate vars
+        deviceProperties = new DeviceProperties( this );
+    }
+    // now show it
+    deviceProperties->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED( event ) )
 {
-   if ( navPane == 0 )
-   {
-      // create pane and set appropriate vars
-      navPane = new NavigationPane( this );
-   }
-   // now show it
-   navPane->Show();
+    if( navPane == 0 )
+    {
+        // create pane and set appropriate vars
+        navPane = new NavigationPane( this );
+    }
+    // now show it
+    navPane->Show();
 }
 //////////////////////////////////////////////////////////////////
-void AppFrame::SetEphemerisData( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::SetEphemerisData( wxCommandEvent& WXUNUSED( event ) )
 {
-    if(!m_ephemeris)
+    if( !m_ephemeris )
     {
-        m_ephemeris = new EphemerisDialog(this,wxID_ANY);
+        m_ephemeris = new EphemerisDialog( this, wxID_ANY );
     }
 
-    if(m_ephemeris->Show() == wxID_OK)
-    {
-    }
+    if( m_ephemeris->Show() == wxID_OK )
+    {}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED( event ) )
 {
     //this is kinda confusing...thanks wx!!!
     //wxColourData data;
     //data.SetChooseFull(true);
     CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->
-        GetCommand( "CHANGE_BACKGROUND_COLOR" );
-    
+                             GetCommand( "CHANGE_BACKGROUND_COLOR" );
+
     if( bkColor->GetCommandName() != "NULL" )
     {
         bkColor->GetDataValuePair( "Background Color" )->GetData( xplorerColor );
     }
 
-    xplorerWxColor->GetColour().Set( 
-        static_cast<unsigned char>(xplorerColor.at( 0 )), 
-        static_cast<unsigned char>(xplorerColor.at( 1 )), 
-        static_cast<unsigned char>(xplorerColor.at( 2 )), 
-        static_cast<unsigned char>(xplorerColor.at( 3 )) 
-        );
-    
-    wxColourDialog colorDlg(this,xplorerWxColor);
-    colorDlg.SetTitle(wxString("Xplorer Background Color", wxConvUTF8));
+    xplorerWxColor->GetColour().Set(
+        static_cast<unsigned char>( xplorerColor.at( 0 ) ),
+        static_cast<unsigned char>( xplorerColor.at( 1 ) ),
+        static_cast<unsigned char>( xplorerColor.at( 2 ) ),
+        static_cast<unsigned char>( xplorerColor.at( 3 ) )
+    );
 
-   if (colorDlg.ShowModal() == wxID_OK)
-   {
-      *xplorerWxColor = colorDlg.GetColourData();
-      wxColour col = xplorerWxColor->GetColour();
+    wxColourDialog colorDlg( this, xplorerWxColor );
+    colorDlg.SetTitle( wxString( "Xplorer Background Color", wxConvUTF8 ) );
 
-      xplorerColor.clear();
-      xplorerColor.push_back(static_cast<double>(col.Red())/255.0);
-      xplorerColor.push_back(static_cast<double>(col.Green())/255.0);
-      xplorerColor.push_back(static_cast<double>(col.Blue())/255.0);
-      xplorerColor.push_back(1.0);
+    if( colorDlg.ShowModal() == wxID_OK )
+    {
+        *xplorerWxColor = colorDlg.GetColourData();
+        wxColour col = xplorerWxColor->GetColour();
 
-      // Create the command and data value pairs
-      DataValuePairWeakPtr dataValuePair = new DataValuePair();
-      dataValuePair->SetData(std::string("Background Color"),xplorerColor);
-      CommandPtr veCommand = new Command();
-      veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-      veCommand->AddDataValuePair(dataValuePair);
+        xplorerColor.clear();
+        xplorerColor.push_back( static_cast<double>( col.Red() ) / 255.0 );
+        xplorerColor.push_back( static_cast<double>( col.Green() ) / 255.0 );
+        xplorerColor.push_back( static_cast<double>( col.Blue() ) / 255.0 );
+        xplorerColor.push_back( 1.0 );
 
-      serviceList->SendCommandStringToXplorer( veCommand );
-         
-      UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );
-   }
+        // Create the command and data value pairs
+        DataValuePairWeakPtr dataValuePair = new DataValuePair();
+        dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
+        CommandPtr veCommand = new Command();
+        veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+
+        serviceList->SendCommandStringToXplorer( veCommand );
+
+        UserPreferencesDataBuffer::instance()->SetCommand( "CHANGE_BACKGROUND_COLOR", veCommand );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
-   //Create the command and data value pairs
-   DataValuePairWeakPtr dvp = new DataValuePair();
-   CommandWeakPtr command = new Command();
-   
-   std::string device;
+    //Create the command and data value pairs
+    DataValuePairWeakPtr dvp = new DataValuePair();
+    CommandWeakPtr command = new Command();
 
-   if( event.GetId() == WAND )
-   {
-      device = "Wand";
-   }
+    std::string device;
 
-   else if( event.GetId() == KEYBOARD_MOUSE )
-   {
-      device = "KeyboardMouse";
-   }
+    if( event.GetId() == WAND )
+    {
+        device = "Wand";
+    }
 
-   dvp->SetData( std::string( "Device" ), device );
-   
-   command->SetCommandName( std::string( "CHANGE_DEVICE" ) );
-   command->AddDataValuePair( dvp );
+    else if( event.GetId() == KEYBOARD_MOUSE )
+    {
+        device = "KeyboardMouse";
+    }
 
-   serviceList->SendCommandStringToXplorer( command );
+    dvp->SetData( std::string( "Device" ), device );
+
+    command->SetCommandName( std::string( "CHANGE_DEVICE" ) );
+    command->AddDataValuePair( dvp );
+
+    serviceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::DisplaySelection( wxCommandEvent& event )
 {
-   //Create the command and data value pairs
-   DataValuePairWeakPtr DVP = new DataValuePair();
-   CommandWeakPtr command = new Command();
+    //Create the command and data value pairs
+    DataValuePairWeakPtr DVP = new DataValuePair();
+    CommandWeakPtr command = new Command();
 
-   unsigned int value;
+    unsigned int value;
 
-   if(event.GetId() == FRAME_RATE)
-	{
-      value=xplorerDisplayMenu->IsChecked(FRAME_RATE);
-      DVP->SetData(std::string("FrameRateID"),value);
-   }
+    if( event.GetId() == FRAME_RATE )
+    {
+        value = xplorerDisplayMenu->IsChecked( FRAME_RATE );
+        DVP->SetData( std::string( "FrameRateID" ), value );
+    }
 
-   else if(event.GetId() == COORDINATE_SYSTEM)
-	{
-      value=xplorerDisplayMenu->IsChecked(COORDINATE_SYSTEM);
-      DVP->SetData(std::string("CoordSysID"),value);
-   }
-   
-   command->SetCommandName(std::string("DISPLAY_SELECTION"));
-   command->AddDataValuePair(DVP);
+    else if( event.GetId() == COORDINATE_SYSTEM )
+    {
+        value = xplorerDisplayMenu->IsChecked( COORDINATE_SYSTEM );
+        DVP->SetData( std::string( "CoordSysID" ), value );
+    }
 
-   serviceList->SendCommandStringToXplorer(command);
+    command->SetCommandName( std::string( "DISPLAY_SELECTION" ) );
+    command->AddDataValuePair( DVP );
+
+    serviceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewSelection( wxCommandEvent& event )
 {
-   //Create the command and data value pairs
-   DataValuePairWeakPtr dvp = new DataValuePair();
-   CommandWeakPtr command = new Command();
-   
-   std::string view;
+    //Create the command and data value pairs
+    DataValuePairWeakPtr dvp = new DataValuePair();
+    CommandWeakPtr command = new Command();
 
-   if( event.GetId() == FRAME_ALL )
-   {
-      view = "Frame All";
-   }
-   else if( event.GetId() == FRAME_SELECTION )
-   {
-      view = "Frame Selection";
-   }
-   else if( event.GetId() == RESET )
-   {
-      view = "Reset";
-   }
+    std::string view;
 
-   dvp->SetData( std::string( "View" ), view );
-   
-   command->SetCommandName( std::string( "VIEW_SELECTION" ) );
-   command->AddDataValuePair( dvp );
+    if( event.GetId() == FRAME_ALL )
+    {
+        view = "Frame All";
+    }
+    else if( event.GetId() == FRAME_SELECTION )
+    {
+        view = "Frame Selection";
+    }
+    else if( event.GetId() == RESET )
+    {
+        view = "Reset";
+    }
 
-   serviceList->SendCommandStringToXplorer( command );
+    dvp->SetData( std::string( "View" ), view );
+
+    command->SetCommandName( std::string( "VIEW_SELECTION" ) );
+    command->AddDataValuePair( dvp );
+
+    serviceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LaunchRecordScenes( wxCommandEvent& WXUNUSED( event ) )
 {
-   if ( recordScenes == 0 )
-   {
-      // create pane and set appropriate vars
-      recordScenes = new UI_TeacherTab( this );
-   }
+    if( recordScenes == 0 )
+    {
+        // create pane and set appropriate vars
+        recordScenes = new UI_TeacherTab( this );
+    }
 
-   // now show it
-   recordScenes->Show();
+    // now show it
+    recordScenes->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED( event ) )
 {
-   if ( viewlocPane == 0 )
-   {
-      // create pane and set appropriate vars
-      viewlocPane = new ViewLocPane( this );
-   }
-   // now show it
-   viewlocPane->Show();
+    if( viewlocPane == 0 )
+    {
+        // create pane and set appropriate vars
+        viewlocPane = new ViewLocPane( this );
+    }
+    // now show it
+    viewlocPane->Show();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::JugglerSettings( wxCommandEvent& event )
 {
-   // Create the command and data value pairs
-   DataValuePairWeakPtr dataValuePair = 
-                           new DataValuePair(  std::string("FLOAT") );
-   dataValuePair->SetDataName( "Stereo" );
-   if ( event.GetId() == JUGGLER_STEREO )
-   {
-      dataValuePair->SetDataValue( 1.0 );
-   }
-   else
-   {
-      dataValuePair->SetDataValue( 0.0 );
-   }
-   CommandWeakPtr veCommand = new Command();
-   veCommand->SetCommandName( std::string("Juggler_Display_Data") );
-   veCommand->AddDataValuePair( dataValuePair );
+    // Create the command and data value pairs
+    DataValuePairWeakPtr dataValuePair =
+        new DataValuePair( std::string( "FLOAT" ) );
+    dataValuePair->SetDataName( "Stereo" );
+    if( event.GetId() == JUGGLER_STEREO )
+    {
+        dataValuePair->SetDataValue( 1.0 );
+    }
+    else
+    {
+        dataValuePair->SetDataValue( 0.0 );
+    }
+    CommandWeakPtr veCommand = new Command();
+    veCommand->SetCommandName( std::string( "Juggler_Display_Data" ) );
+    veCommand->AddDataValuePair( dataValuePair );
 
-   serviceList->SendCommandStringToXplorer( veCommand );
+    serviceList->SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
-   DataValuePairWeakPtr dataValuePair = 
-                           new DataValuePair( std::string("STRING") );
-   dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
-   CommandWeakPtr veCommand = new Command();
-   veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
-   veCommand->AddDataValuePair( dataValuePair );
-   
-   serviceList->SendCommandStringToXplorer( veCommand );
+    DataValuePairWeakPtr dataValuePair =
+        new DataValuePair( std::string( "STRING" ) );
+    dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
+    CommandWeakPtr veCommand = new Command();
+    veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+
+    serviceList->SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnExitXplorer( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::OnExitXplorer( wxCommandEvent& WXUNUSED( event ) )
 {
-   ExitXplorer();
+    ExitXplorer();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ProcessCommandLineArgs( void )
 {
-   int argc = ::wxGetApp().argc;
-   char** argv = new char*[ argc ];
-   std::string vesFile;
-   for ( int i = 0; i < argc; ++ i )
-   {
-      if ( ( ConvertUnicode( ::wxGetApp().argv[ i ] ) == std::string( "-VESFile" )) &&
-           ( (i + 1) < argc )
-         )
-      {
-         Log(std::string(std::string("Loading VES file: ") + ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) ).c_str() );
-         Log("\n");
-         vesFile.assign( ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) );
-         break;
-      }
-   }
-   
-   if ( vesFile.empty() )
-   {
-      return;
-   }
-   
-   wxFileName vesFileName( wxString( vesFile.c_str(), wxConvUTF8 ) );
-   bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
-   if ( !success )
-   {
-      wxMessageBox( _("Can't open a VES file on another drive."), 
-                    _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-      return;
-   }
+    int argc = ::wxGetApp().argc;
+    char** argv = new char*[ argc ];
+    std::string vesFile;
+    for( int i = 0; i < argc; ++ i )
+    {
+        if (( ConvertUnicode( ::wxGetApp().argv[ i ] ) == std::string( "-VESFile" ) ) &&
+                (( i + 1 ) < argc )
+           )
+        {
+            Log( std::string( std::string( "Loading VES file: " ) + ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) ).c_str() );
+            Log( "\n" );
+            vesFile.assign( ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) );
+            break;
+        }
+    }
 
-   directory = vesFileName.GetPath();
-   //change conductor working dir
-   ::wxSetWorkingDirectory( directory );
-   
-   //Send Command to change xplorer working dir
-   // Create the command and data value pairs
-   DataValuePairWeakPtr dataValuePair = 
-      new DataValuePair(  std::string("STRING") );
-   dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
-   CommandWeakPtr veCommand = new Command();
-   veCommand->SetCommandName( std::string("Change Working Directory") );
-   veCommand->AddDataValuePair( dataValuePair );
-   serviceList->SendCommandStringToXplorer( veCommand );
-   
-   //Now laod the xml data now that we are in the correct directory
-   fname=vesFileName.GetFullName();
-   // we submit after new to make sure that the ce and ge ar cleared
-   wxCommandEvent event;
-   //network->Load( ConvertUnicode( fname.c_str() ), true );
-   canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
-   //create hierarchy page
-   hierarchyTree->PopulateTree(XMLDataBufferEngine::instance()->
-	   GetXMLModels(), XMLDataBufferEngine::instance()->
-	   GetTopSystemId());
-   // we submit after load to give ce and ge the new network
-   SubmitToServer( event );
+    if( vesFile.empty() )
+    {
+        return;
+    }
+
+    wxFileName vesFileName( wxString( vesFile.c_str(), wxConvUTF8 ) );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
+    if( !success )
+    {
+        wxMessageBox( _( "Can't open a VES file on another drive." ),
+                      _( "VES File Read Error" ), wxOK | wxICON_INFORMATION );
+        return;
+    }
+
+    directory = vesFileName.GetPath();
+    //change conductor working dir
+    ::wxSetWorkingDirectory( directory );
+
+    //Send Command to change xplorer working dir
+    // Create the command and data value pairs
+    DataValuePairWeakPtr dataValuePair =
+        new DataValuePair( std::string( "STRING" ) );
+    dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
+    CommandWeakPtr veCommand = new Command();
+    veCommand->SetCommandName( std::string( "Change Working Directory" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    serviceList->SendCommandStringToXplorer( veCommand );
+
+    //Now laod the xml data now that we are in the correct directory
+    fname = vesFileName.GetFullName();
+    // we submit after new to make sure that the ce and ge ar cleared
+    wxCommandEvent event;
+    //network->Load( ConvertUnicode( fname.c_str() ), true );
+    canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+    //create hierarchy page
+    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+                                 GetXMLModels(), XMLDataBufferEngine::instance()->
+                                 GetTopSystemId() );
+    // we submit after load to give ce and ge the new network
+    SubmitToServer( event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::EnableCEGUIMenuItems( void )
 {
-   if ( !serviceList->IsConnectedToCE() )
-   {
-      return;
-   }
+    if( !serviceList->IsConnectedToCE() )
+    {
+        return;
+    }
 
-   con_menu->Enable(v21ID_SUBMIT,true);
-   con_menu->Enable(v21ID_LOAD, true);
-   //frame_->con_menu->Enable(v21ID_CONNECT, false);
-   run_menu->Enable(v21ID_VIEW_RESULT, true);
-   con_menu->Enable(v21ID_DISCONNECT, true);
+    con_menu->Enable( v21ID_SUBMIT, true );
+    con_menu->Enable( v21ID_LOAD, true );
+    //frame_->con_menu->Enable(v21ID_CONNECT, false);
+    run_menu->Enable( v21ID_VIEW_RESULT, true );
+    con_menu->Enable( v21ID_DISCONNECT, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences* AppFrame::GetUserPreferences( void )
 {
-   return preferences;
+    return preferences;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED(event) )
+void AppFrame::OnPreferences( wxCommandEvent& WXUNUSED( event ) )
 {
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( 100, 50, 500, 300 );
-   preferences->SetSize( dialogPosition );
-   preferences->ShowModal();
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( 100, 50, 500, 300 );
+    preferences->SetSize( dialogPosition );
+    preferences->ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
 {
-    wxDirDialog dialog( this, _T("Change Working Directory..."),
-                         ::wxGetCwd(),
-                         wxDD_DEFAULT_STYLE
-                         );
-    
+    wxDirDialog dialog( this, _T( "Change Working Directory..." ),
+                        ::wxGetCwd(),
+                        wxDD_DEFAULT_STYLE
+                      );
+
     if( dialog.ShowModal() == wxID_OK )
     {
-       wxFileName vesFileName( dialog.GetPath() );
-       if( !vesFileName.MakeRelativeTo( ::wxGetCwd() ) )
-       {
-           wxMessageBox( _("Can't change working directory to another drive."), 
-                      _("Change Directory Error"), wxOK | wxICON_INFORMATION );
-           return;
-       }
-    
-       ///Clear the canvas then change the directory
-       NewCanvas( event );
-    
-       directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX);
-       //change conductor working dir
-       ::wxSetWorkingDirectory( directory );
-       directory.Replace( _("\\"), _("/"), true );
-    
-       DataValuePairWeakPtr dvp = new DataValuePair();
-       CommandPtr command = new Command();
-       std::string mode = ConvertUnicode( directory.c_str() );
-       dvp->SetData( std::string( "Change Working Directory" ), mode );
-       command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
-       command->AddDataValuePair( dvp );
-    
-       CORBAServiceList::instance()->
-           SendCommandStringToXplorer( command );
+        wxFileName vesFileName( dialog.GetPath() );
+        if( !vesFileName.MakeRelativeTo( ::wxGetCwd() ) )
+        {
+            wxMessageBox( _( "Can't change working directory to another drive." ),
+                          _( "Change Directory Error" ), wxOK | wxICON_INFORMATION );
+            return;
+        }
+
+        ///Clear the canvas then change the directory
+        NewCanvas( event );
+
+        directory = vesFileName.GetPath( wxPATH_GET_VOLUME, wxPATH_UNIX );
+        //change conductor working dir
+        ::wxSetWorkingDirectory( directory );
+        directory.Replace( _( "\\" ), _( "/" ), true );
+
+        DataValuePairWeakPtr dvp = new DataValuePair();
+        CommandPtr command = new Command();
+        std::string mode = ConvertUnicode( directory.c_str() );
+        dvp->SetData( std::string( "Change Working Directory" ), mode );
+        command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
+        command->AddDataValuePair( dvp );
+
+        CORBAServiceList::instance()->
+        SendCommandStringToXplorer( command );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 {
-   DataValuePairWeakPtr dataValuePair = 
-      new DataValuePair(  std::string("STRING") );
-   if ( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
-   {
-      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
-   }
-   else if ( event.GetId() == CHANGE_XPLORER_VIEW_CAD )
-   {
-      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
-   }
-   else if ( event.GetId() == CHANGE_XPLORER_VIEW_LOGO )
-   {
-      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
-   }
-   else
-   {
-      dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
-   }
-   
-   CommandWeakPtr veCommand = new Command();
-   veCommand->SetCommandName( std::string("CHANGE_XPLORER_VIEW") );
-   veCommand->AddDataValuePair( dataValuePair );
-   serviceList->SendCommandStringToXplorer( veCommand );
+    DataValuePairWeakPtr dataValuePair =
+        new DataValuePair( std::string( "STRING" ) );
+    if( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
+    {
+        dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
+    }
+    else if( event.GetId() == CHANGE_XPLORER_VIEW_CAD )
+    {
+        dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_CAD" );
+    }
+    else if( event.GetId() == CHANGE_XPLORER_VIEW_LOGO )
+    {
+        dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_LOGO" );
+    }
+    else
+    {
+        dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
+    }
+
+    CommandWeakPtr veCommand = new Command();
+    veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    serviceList->SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnInternalIdle()
@@ -2254,15 +2253,15 @@ void AppFrame::OnInternalIdle()
     {
         network = canvas->GetActiveNetwork();
     }
-	
-	//only when not dragging
+
+    //only when not dragging
     if( !network )
     {
         return;
     }
-    
+
     if( !network->IsDragging() )
-    {	
+    {
         ///Servicelist is initialized before network...
         serviceList->CheckORBWorkLoad();
     }
@@ -2270,8 +2269,8 @@ void AppFrame::OnInternalIdle()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShutdownXplorerOptionOn()
 {
-    xplorerMenu->Append( XPLORER_EXIT, _("Shutdown Xplorer") );
-    xplorerMenu->Enable( XPLORER_EXIT, true);
+    xplorerMenu->Append( XPLORER_EXIT, _( "Shutdown Xplorer" ) );
+    xplorerMenu->Enable( XPLORER_EXIT, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShutdownXplorerOptionOff()
@@ -2281,11 +2280,11 @@ void AppFrame::ShutdownXplorerOptionOff()
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree * AppFrame::GetHierarchyTree()
 {
-	return hierarchyTree;
+    return hierarchyTree;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnDelMod(wxCommandEvent& event )
+void AppFrame::OnDelMod( wxCommandEvent& event )
 {
-	int* mod = static_cast< int* >( event.GetClientData() );  
-	hierarchyTree->RemoveFromTree( *mod );
+    int* mod = static_cast< int* >( event.GetClientData() );
+    hierarchyTree->RemoveFromTree( *mod );
 }

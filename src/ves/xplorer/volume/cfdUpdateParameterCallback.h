@@ -49,33 +49,34 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback
-      : public osg::Uniform::Callback{
+class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback
+            : public osg::Uniform::Callback
+{
 
-      public:
-	      cfdUpdateParameterCallback(); 
-  
-	/*cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
-                           const osg::CopyOp &copyop = osg::CopyOp::SHALLOW_COPY);
-*/
-         enum cfdParameterType{VECTOR,MATRIX,TIME};
-         enum cfdParameterSize{ONE=0,TWO,THREE,FOUR};
-         virtual void operator () (osg::Uniform* uniVar, osg::NodeVisitor* nv);
+public:
+    cfdUpdateParameterCallback();
 
-         void setTypeAndSize(cfdParameterType type,
-                           cfdParameterSize size)
-         {
-            _type = type;
-            _size = size;
-         }
+    /*cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
+                              const osg::CopyOp &copyop = osg::CopyOp::SHALLOW_COPY);
+    */
+    enum cfdParameterType{VECTOR, MATRIX, TIME};
+    enum cfdParameterSize{ONE = 0, TWO, THREE, FOUR};
+    virtual void operator()( osg::Uniform* uniVar, osg::NodeVisitor* nv );
 
-         void updateParameter(float* value);
-   
-      protected:
-         float _value[4];
-         cfdParameterType _type;
-         cfdParameterSize _size;
-   };
+    void setTypeAndSize( cfdParameterType type,
+                         cfdParameterSize size )
+    {
+        _type = type;
+        _size = size;
+    }
+
+    void updateParameter( float* value );
+
+protected:
+    float _value[4];
+    cfdParameterType _type;
+    cfdParameterSize _size;
+};
 }
 }
 }

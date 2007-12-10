@@ -48,17 +48,17 @@ namespace DefaultGraphicalPlugin
 ////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : cfdVEBaseClass()
 {
-   SetObjectName( std::string( "DefaultPlugin" ) );
+    SetObjectName( std::string( "DefaultPlugin" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
 {
-   std::cout << "DefaultGraphicalPlugin is deleted" << std::endl;
+    std::cout << "DefaultGraphicalPlugin is deleted" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DefaultGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-   cfdVEBaseClass::InitializeNode( veworldDCS );
+    cfdVEBaseClass::InitializeNode( veworldDCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

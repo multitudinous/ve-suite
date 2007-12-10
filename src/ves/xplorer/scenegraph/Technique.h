@@ -43,7 +43,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class SceneNode;
+class SceneNode;
 }
 }
 }
@@ -67,7 +67,10 @@ class VE_SCENEGRAPH_EXPORTS Technique
 {
 public:
     Technique();
-    virtual ~Technique(){;}
+    virtual ~Technique()
+    {
+        ;
+    }
 
     int GetNumPasses() const;
 

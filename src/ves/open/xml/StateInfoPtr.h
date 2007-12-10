@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML:StateInfoPtr.  To get the full 
+ * VE_XML:StateInfoPtr.  To get the full
  * declaration of VE_XML::StateInfoPtr
  * VE_Open/XML/StateInfo.h must be included, too.
  */
@@ -50,12 +50,12 @@ namespace open
 {
 namespace xml
 {
-   class StateInfo;
-   //Typedefs for various StateInfo SmartPtrs
-   typedef ves::util::ClassPtrDef<StateInfo>::type  StateInfoPtr;
-   typedef ves::util::SharedPtrDef<StateInfo>::type StateInfoSharedPtr;
-   typedef ves::util::WeakPtrDef<StateInfo>::type   StateInfoWeakPtr;
-   typedef ves::util::ScopedPtrDef<StateInfo>::type StateInfoScopedPtr;
+class StateInfo;
+//Typedefs for various StateInfo SmartPtrs
+typedef ves::util::ClassPtrDef<StateInfo>::type  StateInfoPtr;
+typedef ves::util::SharedPtrDef<StateInfo>::type StateInfoSharedPtr;
+typedef ves::util::WeakPtrDef<StateInfo>::type   StateInfoWeakPtr;
+typedef ves::util::ScopedPtrDef<StateInfo>::type StateInfoScopedPtr;
 }
 }
 }

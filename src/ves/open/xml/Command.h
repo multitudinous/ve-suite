@@ -60,72 +60,72 @@ namespace xml
 class VE_XML_EXPORTS Command : public XMLObject
 {
 public:
-   ///Constructor
-   Command();
-   ///Destructor
-   virtual ~Command();
-   ///Copy Constructor
-   Command( const Command& );
-   ///equal operator
-   Command& operator= ( const Command& );
-   
-   ///Set the name of the command.
-   ///\param name The name of the command to execute.
-   void SetCommandName( std::string name );
+    ///Constructor
+    Command();
+    ///Destructor
+    virtual ~Command();
+    ///Copy Constructor
+    Command( const Command& );
+    ///equal operator
+    Command& operator= ( const Command& );
 
-   ///Add a data value pair for the command.
-   ///\param commandValuePair The data value pair representing command information.
-   //void AddDataValuePair( DataValuePair* commandValuePair );
-   ///Add a data value pair for the command.
-   ///\param commandValuePair The data value pair representing command information.
-   void AddDataValuePair( DataValuePairWeakPtr commandValuePair );
-   
-   ///Utility function to extract a command name from an element.
-   ///\param commandElement The command element.
-   void ExtractCmdNameFromElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* commandElement);
+    ///Set the name of the command.
+    ///\param name The name of the command to execute.
+    void SetCommandName( std::string name );
 
-   ///Populate the Command data from an XML element.
-   ///\param xmlInput The element to populate the command data from.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
-   
-   ///Return the name of this command.
-   ///\return The command name of this element
-   std::string GetCommandName();
+    ///Add a data value pair for the command.
+    ///\param commandValuePair The data value pair representing command information.
+    //void AddDataValuePair( DataValuePair* commandValuePair );
+    ///Add a data value pair for the command.
+    ///\param commandValuePair The data value pair representing command information.
+    void AddDataValuePair( DataValuePairWeakPtr commandValuePair );
 
-   ///Get a specific DataValuePair by name.
-   ///\param dataValueName The name of the DataValuePair to search for.
-   ///\return The dvp with the requested name
-   DataValuePairWeakPtr GetDataValuePair(std::string dataValueName);
-   
-   ///Get a DataValuePair at the index.
-   ///\param index The index of the DataValuePair to return.
-   ///\return The dvp at the requested index
-   DataValuePairWeakPtr GetDataValuePair( size_t index );
+    ///Utility function to extract a command name from an element.
+    ///\param commandElement The command element.
+    void ExtractCmdNameFromElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* commandElement );
 
-   ///Return the number of DataValuePair s in this command.
-   ///\return The number of dvps stored in this command
-   size_t GetNumberOfDataValuePairs();
+    ///Populate the Command data from an XML element.
+    ///\param xmlInput The element to populate the command data from.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
+
+    ///Return the name of this command.
+    ///\return The command name of this element
+    std::string GetCommandName();
+
+    ///Get a specific DataValuePair by name.
+    ///\param dataValueName The name of the DataValuePair to search for.
+    ///\return The dvp with the requested name
+    DataValuePairWeakPtr GetDataValuePair( std::string dataValueName );
+
+    ///Get a DataValuePair at the index.
+    ///\param index The index of the DataValuePair to return.
+    ///\return The dvp at the requested index
+    DataValuePairWeakPtr GetDataValuePair( size_t index );
+
+    ///Return the number of DataValuePair s in this command.
+    ///\return The number of dvps stored in this command
+    size_t GetNumberOfDataValuePairs();
 
 protected:
-   ///Internally update the command element.
-   ///\param tagName The tagName of this element
-   void _updateVEElement( std::string tagName);
-   ///Internally update the command name from the input XML data.
-   void _updateCommandName( void );
-   ///Internally update the DataValuePair s from the input XML data.
-   void _updateDataValuePairs( void );
+    ///Internally update the command element.
+    ///\param tagName The tagName of this element
+    void _updateVEElement( std::string tagName );
+    ///Internally update the command name from the input XML data.
+    void _updateCommandName( void );
+    ///Internally update the DataValuePair s from the input XML data.
+    void _updateDataValuePairs( void );
 
-   std::string _cmdName;///<The name of this command.
-   std::vector< DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.  
-   std::map< std::string, DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.  
+    std::string _cmdName;///<The name of this command.
+    std::vector< DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.
+    std::map< std::string, DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Command* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, Command* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_CAD::CADAttribute.  To get the full 
+ * VE_XML::VE_CAD::CADAttribute.  To get the full
  * declaration of VE_XML::VE_CAD::CADAttribute
  * ves/open/xml/cad/CADAttribute.h must be included, too.
  */
@@ -52,9 +52,9 @@ namespace xml
 {
 namespace cad
 {
-   class CADAttribute;
-   /// Typedef for a SmartPtr type for the CADAttribute.
-   typedef Loki::SmartPtrDef<CADAttribute>::type CADAttributePtr;
+class CADAttribute;
+/// Typedef for a SmartPtr type for the CADAttribute.
+typedef Loki::SmartPtrDef<CADAttribute>::type CADAttributePtr;
 }
 }
 }

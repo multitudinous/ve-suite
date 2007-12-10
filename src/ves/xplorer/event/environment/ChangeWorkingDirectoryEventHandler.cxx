@@ -57,60 +57,55 @@ using namespace ves::open::xml;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler()
-:ves::xplorer::event::EventHandler()
-{
-}
+        : ves::xplorer::event::EventHandler()
+{}
 ////////////////////////////////////////////////////////////
-ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler(const ChangeWorkingDirectoryEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
-{
-}
+ChangeWorkingDirectoryEventHandler::ChangeWorkingDirectoryEventHandler( const ChangeWorkingDirectoryEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
+{}
 ////////////////////////////////////
 ///Destructor                     //
 ////////////////////////////////////
 ChangeWorkingDirectoryEventHandler::~ChangeWorkingDirectoryEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////
 void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
-{
-}
+{}
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void ChangeWorkingDirectoryEventHandler::Execute(XMLObject* veXMLObject)
+void ChangeWorkingDirectoryEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command = dynamic_cast< Command* >( veXMLObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
-   std::string newWorkingDir;
-   activeModelDVP->GetData( newWorkingDir );
-   std::cout << newWorkingDir << std::endl;
+    Command* command = dynamic_cast< Command* >( veXMLObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
+    std::string newWorkingDir;
+    activeModelDVP->GetData( newWorkingDir );
+    std::cout << newWorkingDir << std::endl;
 
-   if(newWorkingDir.empty())
-   {
-      newWorkingDir.assign("./");
-   }
-   boost::filesystem::path dir_path( newWorkingDir, boost::filesystem::native  );
-   if ( !boost::filesystem::is_directory( dir_path ) )
-   {
-      return;
-   }
+    if( newWorkingDir.empty() )
+    {
+        newWorkingDir.assign( "./" );
+    }
+    boost::filesystem::path dir_path( newWorkingDir, boost::filesystem::native );
+    if( !boost::filesystem::is_directory( dir_path ) )
+    {
+        return;
+    }
 #ifdef WIN32
-   _chdir( newWorkingDir.c_str() );
+    _chdir( newWorkingDir.c_str() );
 #else
-   chdir( newWorkingDir.c_str() );
+    chdir( newWorkingDir.c_str() );
 #endif
-   //A new working directory also means that 
-   //the STORED scenes are no longer valid
-   ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
-   //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
-   ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
+    //A new working directory also means that
+    //the STORED scenes are no longer valid
+    ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
+    //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
+    ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }
 ///////////////////////////////////////////////////////////////////////
-ChangeWorkingDirectoryEventHandler& ChangeWorkingDirectoryEventHandler::operator=(const ChangeWorkingDirectoryEventHandler& rhs)
+ChangeWorkingDirectoryEventHandler& ChangeWorkingDirectoryEventHandler::operator=( const ChangeWorkingDirectoryEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-   }
-   return *this;
+    if( this != &rhs )
+    {}
+    return *this;
 }

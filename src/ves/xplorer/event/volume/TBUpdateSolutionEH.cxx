@@ -49,86 +49,83 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler::TextureBasedUpdateSolutionEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler
-::TextureBasedUpdateSolutionEventHandler(const TextureBasedUpdateSolutionEventHandler& ceh)
-{
-}
+::TextureBasedUpdateSolutionEventHandler( const TextureBasedUpdateSolutionEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedUpdateSolutionEventHandler::~TextureBasedUpdateSolutionEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedUpdateSolutionEventHandler& 
-TextureBasedUpdateSolutionEventHandler::operator=(const TextureBasedUpdateSolutionEventHandler& rhs)
+TextureBasedUpdateSolutionEventHandler&
+TextureBasedUpdateSolutionEventHandler::operator=( const TextureBasedUpdateSolutionEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedUpdateSolutionEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedUpdateSolutionEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
-      std::string dataName;
-      activeDataset->GetData( dataName );
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
+        std::string dataName;
+        activeDataset->GetData( dataName );
 
-      DataValuePairWeakPtr type = command->GetDataValuePair( "Data Type" );
-      std::string dataType;
-      type->GetData( dataType );
+        DataValuePairWeakPtr type = command->GetDataValuePair( "Data Type" );
+        std::string dataType;
+        type->GetData( dataType );
 
-      if(_activeTDSet)
-      {
-         if(dataType == "Scalar")
-         {
-            _activeTDSet->SetActiveScalar( dataName );
-            
-            ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
-            
-            double scalarRange[2] = {0.f,100.f};
-
-            DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
-            minScalarRange->GetData( scalarRange[0] );
-            
-            DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
-            maxScalarRange->GetData( scalarRange[1] );
-            //this is overkill
-            float floatRange[2];
-            floatRange[0] = scalarRange[0];
-            floatRange[1] = scalarRange[1];
-            ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange(floatRange);
-            //need to pass the scalar range command to update it
-            
-            //if ( _activeModel )
+        if( _activeTDSet )
+        {
+            if( dataType == "Scalar" )
             {
-               DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-               //if ( dataSet )
-               {
-                  DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
-                  if ( scalarBar )
-                  {
-                     dataSet->SetActiveScalar( dataName );
-                     scalarBar->AddScalarBarToGroup();
-                  }
-               }
-            }            
-         }
-	       else if(dataType == "Vector")
-          {
-             _activeTDSet->SetActiveVector( dataName );
-          }
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedUpdateSolutionEventHandler::_operateOnNode()"<<std::endl;
-   }
+                _activeTDSet->SetActiveScalar( dataName );
+
+                ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
+
+                double scalarRange[2] = {0.f, 100.f};
+
+                DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
+                minScalarRange->GetData( scalarRange[0] );
+
+                DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
+                maxScalarRange->GetData( scalarRange[1] );
+                //this is overkill
+                float floatRange[2];
+                floatRange[0] = scalarRange[0];
+                floatRange[1] = scalarRange[1];
+                ves::xplorer::TextureBasedVizHandler::instance()->UpdateScalarRange( floatRange );
+                //need to pass the scalar range command to update it
+
+                //if ( _activeModel )
+                {
+                    DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+                    //if ( dataSet )
+                    {
+                        DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+                        if( scalarBar )
+                        {
+                            dataSet->SetActiveScalar( dataName );
+                            scalarBar->AddScalarBarToGroup();
+                        }
+                    }
+                }
+            }
+            else if( dataType == "Vector" )
+            {
+                _activeTDSet->SetActiveVector( dataName );
+            }
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedUpdateSolutionEventHandler::_operateOnNode()" << std::endl;
+    }
 }

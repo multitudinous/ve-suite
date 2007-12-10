@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef WIN32
-    #include <wx/msw/winundef.h>
+#include <wx/msw/winundef.h>
 #endif
 
 #include <wx/scrolwin.h>
@@ -50,7 +50,7 @@ using namespace ves::conductor::util;
 Tag::Tag( wxScrolledWindow* designCanvas )
 {
     canvas = designCanvas;
-	ves::open::xml::model::Tag temp;
+    ves::open::xml::model::Tag temp;
     uuid = temp.GetID();
 }
 ////////////////////////////////////////////////
@@ -87,22 +87,22 @@ Tag& Tag::operator= ( const Tag& input )
 ////////////////////////////////////////////////
 wxPoint* Tag::GetConnectorsPoint( size_t i )
 {
-    return &(cons[i]);
+    return &( cons[i] );
 }
 ////////////////////////////////////////////////
 wxString* Tag::GetTagText( void )
 {
-    return &(text);
+    return &( text );
 }
 ////////////////////////////////////////////////
 ves::conductor::util::Polygon* Tag::GetPolygon( void )
 {
-    return &(poly);
+    return &( poly );
 }
 ////////////////////////////////////////////////
 wxRect* Tag::GetBoundingBox( void )
 {
-    return &(box);
+    return &( box );
 }
 
 ////////////////////////////////////////////////////
@@ -111,61 +111,61 @@ void Tag::CalcTagPoly( void )
     // Create a poly based on a tag
     wxPoint endpos;
     endpos.x = box.x;
-    endpos.y = box.y+box.height/2;
+    endpos.y = box.y + box.height / 2;
 
     // first point of the extension line
-    poly.GetPolygon()->push_back(wxPoint(cons[0].x, cons[0].y-3));
+    poly.GetPolygon()->push_back( wxPoint( cons[0].x, cons[0].y - 3 ) );
     // second point of the extension line
-    poly.GetPolygon()->push_back(wxPoint(cons[1].x, cons[1].y-3));
+    poly.GetPolygon()->push_back( wxPoint( cons[1].x, cons[1].y - 3 ) );
     // first corner of the text box
-    poly.GetPolygon()->push_back(wxPoint(endpos.x, endpos.y-3));
-    poly.GetPolygon()->push_back(wxPoint(box.x, box.y));
-    poly.GetPolygon()->push_back(wxPoint(box.x+box.width, box.y));
-    poly.GetPolygon()->push_back(wxPoint(box.x+box.width, box.y+box.height));
-    poly.GetPolygon()->push_back(wxPoint(box.x, box.y+box.height));
+    poly.GetPolygon()->push_back( wxPoint( endpos.x, endpos.y - 3 ) );
+    poly.GetPolygon()->push_back( wxPoint( box.x, box.y ) );
+    poly.GetPolygon()->push_back( wxPoint( box.x + box.width, box.y ) );
+    poly.GetPolygon()->push_back( wxPoint( box.x + box.width, box.y + box.height ) );
+    poly.GetPolygon()->push_back( wxPoint( box.x, box.y + box.height ) );
     // and now back around again
-    poly.GetPolygon()->push_back(wxPoint(endpos.x, endpos.y+3));
-    poly.GetPolygon()->push_back(wxPoint(cons[1].x, cons[1].y+3));
-    poly.GetPolygon()->push_back(wxPoint(cons[0].x, cons[0].y+3));
+    poly.GetPolygon()->push_back( wxPoint( endpos.x, endpos.y + 3 ) );
+    poly.GetPolygon()->push_back( wxPoint( cons[1].x, cons[1].y + 3 ) );
+    poly.GetPolygon()->push_back( wxPoint( cons[0].x, cons[0].y + 3 ) );
 }
 
 ////////////////////////////////////////////////////////////
 void Tag::DrawTagCon( bool flag, std::pair< double, double > scale )
 {
-   wxClientDC dc( canvas );
-   canvas->PrepareDC(dc);
-   dc.SetUserScale( scale.first, scale.second );
+    wxClientDC dc( canvas );
+    canvas->PrepareDC( dc );
+    dc.SetUserScale( scale.first, scale.second );
 
-   wxBrush old_brush = dc.GetBrush();
-   wxPen old_pen = dc.GetPen();
+    wxBrush old_brush = dc.GetBrush();
+    wxPen old_pen = dc.GetPen();
 
-   if (flag)
-   {
-      dc.SetBrush( *wxGREEN_BRUSH );
-      dc.SetPen( *wxBLACK_PEN );
-   }
-   else
-   {
-      dc.SetBrush( *wxWHITE_BRUSH );
-      dc.SetPen( *wxWHITE_PEN );
-   }
-  
-   wxPoint bport[4];
-   bport[0]=wxPoint(0,0);
-   bport[1]=wxPoint(10,0);
-   bport[2]=wxPoint(10,10);
-   bport[3]=wxPoint(0,10);
-  
-   for ( size_t i=0; i < 2; ++i )
-   {
-      wxCoord xoff = cons[i].x-3;
-      wxCoord yoff = cons[i].y-3;
+    if( flag )
+    {
+        dc.SetBrush( *wxGREEN_BRUSH );
+        dc.SetPen( *wxBLACK_PEN );
+    }
+    else
+    {
+        dc.SetBrush( *wxWHITE_BRUSH );
+        dc.SetPen( *wxWHITE_PEN );
+    }
 
-      dc.DrawPolygon(4, bport, xoff, yoff);      
-   }
+    wxPoint bport[4];
+    bport[0] = wxPoint( 0, 0 );
+    bport[1] = wxPoint( 10, 0 );
+    bport[2] = wxPoint( 10, 10 );
+    bport[3] = wxPoint( 0, 10 );
 
-   dc.SetBrush(old_brush);
-   dc.SetPen(old_pen);
+    for( size_t i = 0; i < 2; ++i )
+    {
+        wxCoord xoff = cons[i].x - 3;
+        wxCoord yoff = cons[i].y - 3;
+
+        dc.DrawPolygon( 4, bport, xoff, yoff );
+    }
+
+    dc.SetBrush( old_brush );
+    dc.SetPen( old_pen );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
@@ -176,13 +176,13 @@ void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
 
     wxBrush old_brush = dc.GetBrush();
     wxPen old_pen = dc.GetPen();
-    wxPen mypen(old_pen);
-    mypen.SetColour( _("BLUE") );
+    wxPen mypen( old_pen );
+    mypen.SetColour( _( "BLUE" ) );
     //  mypen.SetStyle(wxDOT);
     // mypen.SetStyle(wxLONG_DASH);
 
     int w, h;
-    dc.GetTextExtent( text, &w, &h);
+    dc.GetTextExtent( text, &w, &h );
     box.width = w;
     box.height = h;
 
@@ -190,28 +190,28 @@ void Tag::DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale )
     wxPoint points[3];
     points[0] = cons[0];
     points[1] = cons[1];
-    points[2] = wxPoint( box.x,  box.y + box.height/2);
+    points[2] = wxPoint( box.x,  box.y + box.height / 2 );
 
 
-    if(!flag)
+    if( !flag )
     {
-        dc.SetPen(*wxWHITE_PEN);
-        dc.SetBrush(*wxWHITE_BRUSH);
+        dc.SetPen( *wxWHITE_PEN );
+        dc.SetBrush( *wxWHITE_BRUSH );
     }
     else
     {
-        dc.SetPen(mypen);
-        dc.SetBrush(*wxWHITE_BRUSH);
+        dc.SetPen( mypen );
+        dc.SetBrush( *wxWHITE_BRUSH );
     }
 
-    dc.DrawLines(3, points);
-    dc.DrawRectangle( box.x-3,  box.y-3,  box.width+6,  box.height+6);
+    dc.DrawLines( 3, points );
+    dc.DrawRectangle( box.x - 3,  box.y - 3,  box.width + 6,  box.height + 6 );
 
-    if(flag) 
+    if( flag )
         dc.DrawText( text, box.x, box.y );
 
-    dc.SetPen(old_pen);
-    dc.SetBrush(old_brush);
+    dc.SetPen( old_pen );
+    dc.SetBrush( old_brush );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::SetVETagPtr( ves::open::xml::model::TagPtr inputTag )
@@ -228,23 +228,23 @@ void Tag::SetVETagPtr( ves::open::xml::model::TagPtr inputTag )
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::model::TagPtr Tag::GetVETagPtr()
 {
-	ves::open::xml::model::TagPtr tagPtr = new ves::open::xml::model::Tag();
+    ves::open::xml::model::TagPtr tagPtr = new ves::open::xml::model::Tag();
     tagPtr->SetText( ConvertUnicode( text.c_str() ) );
     tagPtr->SetID( uuid );
     //Order is important below
-	ves::open::xml::model::PointPtr con0Ptr = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr con0Ptr = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > point0;
     point0.first = cons[0].x;
     point0.second = cons[0].y;
     con0Ptr->SetPoint( point0 );
     tagPtr->AddPoint( con0Ptr );
-	ves::open::xml::model::PointPtr con1Ptr = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr con1Ptr = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > point1;
     point1.first = cons[1].x;
     point1.second = cons[1].y;
     con1Ptr->SetPoint( point1 );
     tagPtr->AddPoint( con1Ptr );
-	ves::open::xml::model::PointPtr con2Ptr = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr con2Ptr = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > point2;
     point2.first = box.x;
     point2.second = box.y;

@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS CADSetActiveAttributeEventHandler : public CADEventHandler
 {
 public:
-   ///Constructor
-   CADSetActiveAttributeEventHandler();
+    ///Constructor
+    CADSetActiveAttributeEventHandler();
 
-   ///Copy Constructor
-   CADSetActiveAttributeEventHandler(const CADSetActiveAttributeEventHandler& rhs);
+    ///Copy Constructor
+    CADSetActiveAttributeEventHandler( const CADSetActiveAttributeEventHandler& rhs );
 
-   ///Destructor
-   virtual ~CADSetActiveAttributeEventHandler();
+    ///Destructor
+    virtual ~CADSetActiveAttributeEventHandler();
 
-   ///Equal operator
-   CADSetActiveAttributeEventHandler& operator=(const CADSetActiveAttributeEventHandler& rhs);
+    ///Equal operator
+    CADSetActiveAttributeEventHandler& operator=( const CADSetActiveAttributeEventHandler& rhs );
 protected:
-   ///Set the active CADAttribute on the CADNode.
-   ///\param command The Command containing the active CADAttribute.
-   void _operateOnNode(ves::open::xml::XMLObject* command);
+    ///Set the active CADAttribute on the CADNode.
+    ///\param command The Command containing the active CADAttribute.
+    void _operateOnNode( ves::open::xml::XMLObject* command );
 };
 
 }

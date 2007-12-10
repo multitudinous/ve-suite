@@ -48,35 +48,35 @@ namespace event
   ScalarBarEventHandler API
   */
 /*!\class ScalarBarEventHandler
- * 
+ *
  */
 class VE_XPLORER_EXPORTS ScalarBarEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   ScalarBarEventHandler();
+    ///Constructor
+    ScalarBarEventHandler();
 
-   ///Copy Constructor
-   ScalarBarEventHandler(const ScalarBarEventHandler& rhs);
+    ///Copy Constructor
+    ScalarBarEventHandler( const ScalarBarEventHandler& rhs );
 
-   ///Destructor
-   virtual ~ScalarBarEventHandler();
+    ///Destructor
+    virtual ~ScalarBarEventHandler();
 
-   ///Equal operator
-   ScalarBarEventHandler& operator=(const ScalarBarEventHandler& rhs);
+    ///Equal operator
+    ScalarBarEventHandler& operator=( const ScalarBarEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
-   ves::xplorer::Model* _activeModel;
+    ves::xplorer::Model* _activeModel;
 };
 
 }

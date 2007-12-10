@@ -36,7 +36,7 @@
 PluginLoader API
 */
 /*!\class PluginLoader
-* 
+*
 */
 #include <vector>
 #include <utility>
@@ -50,11 +50,11 @@ namespace ves
 {
 namespace conductor
 {
-    class UIPluginBase;
+class UIPluginBase;
 }
 }
 
-class PluginLoader 
+class PluginLoader
 {
 public:
     ///Constructor
@@ -62,11 +62,11 @@ public:
     ///Destructor
     ~PluginLoader();
     ///Load all the dlls in the given dir
-    bool LoadPlugins(wxString dir);
+    bool LoadPlugins( wxString dir );
     ///Get the number of plugins
     size_t GetNumberOfPlugins( void );
     ///Get classinfo and plugin pointer for a specific plugin
-    ///\param i Plugin pair to retrieve 
+    ///\param i Plugin pair to retrieve
     std::pair< ves::conductor::UIPluginBase*, wxClassInfo* > GetPluginDataPair( size_t i );
 
 private:
@@ -74,11 +74,11 @@ private:
     void RegisterPlugins();
     ///Instantiate a instance of the plug_in
     ///This instance is not used for any network composition but for information
-    void RegisterPlugin(wxClassInfo* info);
+    void RegisterPlugin( wxClassInfo* info );
 
     std::vector< ves::conductor::UIPluginBase*> plugins;
     //Keep the list of the first intance of each plugin
-    std::vector<wxClassInfo*> plugin_cls; 
+    std::vector<wxClassInfo*> plugin_cls;
     //The classinfo obj of the each plugin, will be use to generate more instances
 };
 

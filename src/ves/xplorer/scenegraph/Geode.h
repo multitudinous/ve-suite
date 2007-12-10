@@ -80,12 +80,15 @@ public:
     ///\param geode
     ///\param copyop
     Geode( const Geode& geode, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-   
+
     META_Node( ves::xplorer::scenegraph, Geode );
 
     ///Turn vtkActorToXX on and off
     ///\param onOff The VTK debug level
-    void TurnOnDebugOutput( int onOff = 0 ){ _vtkDebugLevel = onOff; }
+    void TurnOnDebugOutput( int onOff = 0 )
+    {
+        _vtkDebugLevel = onOff;
+    }
 
     ///This function implements the respective translate vtkActorToGeode
     ///\param actor The VTK actor to be translated to a geode

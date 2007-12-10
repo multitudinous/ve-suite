@@ -76,8 +76,8 @@ namespace open
 {
 namespace xml
 {
-    class Command;
-    class DataValuePair;
+class Command;
+class DataValuePair;
 }
 }
 }
@@ -88,7 +88,7 @@ namespace conductor
 {
 namespace util
 {
-    class wxSpinCtrlDbl;
+class wxSpinCtrlDbl;
 }
 }
 }
@@ -96,114 +96,114 @@ namespace util
 class ViewLocPane : public wxDialog
 {
 public:
-   ViewLocPane( wxWindow* parent );
-   virtual ~ViewLocPane( void );
+    ViewLocPane( wxWindow* parent );
+    virtual ~ViewLocPane( void );
 
-   enum VIEWLOC_TAB_IDS{
-      VIEWLOC_LOAD_BUTTON,
-      VIEWLOC_ACCEPTNEWVPNAME_BUTTON,
-      VIEWLOC_CANCELNEWVPNAME_BUTTON,
-      VIEWLOC_REMOVEVP_COMBOBOX,
-      VIEWLOC_MOVETOVP_COMBOBOX,
-      VIEWLOC_NEWFLY_BUTTON,
-      VIEWLOC_ACCEPTNEWFLYNAME_BUTTON,
-      VIEWLOC_CANCELNEWFLYNAME_BUTTON,
-      VIEWLOC_ACTIVEFLYSEL_COMBOBOX,
-      VIEWLOC_ADDVPTOFLYSEL_COMBOBOX,
-      VIEWLOC_INSERTVPINFLYSEL_COMBOBOX,
-      VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX,
-      VIEWLOC_RUNFLY_BUTTON,
-      VIEWLOC_STOPFLY_BUTTON,
-      VIEWLOC_FLYBUILDER_LISTBOX,
-      VIEWLOC_DELETEFLYSEL_COMBOBOX,
-      VIEWLOC_SPEED_CONTROL_SLIDER,
-      VIEWLOC_LOAD_FILE,
-      VIEWLOC_SAVE_FILE,
-      REMOVE_VIEW_PT_BUTTON,
-      VIEWLOC_SPEED_CONTROL_SPIN
-   };
+    enum VIEWLOC_TAB_IDS{
+        VIEWLOC_LOAD_BUTTON,
+        VIEWLOC_ACCEPTNEWVPNAME_BUTTON,
+        VIEWLOC_CANCELNEWVPNAME_BUTTON,
+        VIEWLOC_REMOVEVP_COMBOBOX,
+        VIEWLOC_MOVETOVP_COMBOBOX,
+        VIEWLOC_NEWFLY_BUTTON,
+        VIEWLOC_ACCEPTNEWFLYNAME_BUTTON,
+        VIEWLOC_CANCELNEWFLYNAME_BUTTON,
+        VIEWLOC_ACTIVEFLYSEL_COMBOBOX,
+        VIEWLOC_ADDVPTOFLYSEL_COMBOBOX,
+        VIEWLOC_INSERTVPINFLYSEL_COMBOBOX,
+        VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX,
+        VIEWLOC_RUNFLY_BUTTON,
+        VIEWLOC_STOPFLY_BUTTON,
+        VIEWLOC_FLYBUILDER_LISTBOX,
+        VIEWLOC_DELETEFLYSEL_COMBOBOX,
+        VIEWLOC_SPEED_CONTROL_SLIDER,
+        VIEWLOC_LOAD_FILE,
+        VIEWLOC_SAVE_FILE,
+        REMOVE_VIEW_PT_BUTTON,
+        VIEWLOC_SPEED_CONTROL_SPIN
+    };
 
-   unsigned int _numStoredLocations;
-   unsigned int _numStoredFlythroughs;
-   unsigned int _vwptsInActiveFly;
-   unsigned int _numViewLocLocal;
-   unsigned int _vwptsInActiveFlyLocal;
-   unsigned int _numStoredFlythroughsLocal;
-   std::vector< std::vector <int> > flyThroughList;
-   wxArrayString _locationName;
-   wxArrayString _flythroughName;
-   wxArrayString _activeFlyNames;
-	wxArrayString _locNamesLocal;
-	wxArrayString _activeFlyNamesLocal;
-	wxArrayString _flythroughNamesLocal;
-   void SendCommandsToXplorer( void );
+    unsigned int _numStoredLocations;
+    unsigned int _numStoredFlythroughs;
+    unsigned int _vwptsInActiveFly;
+    unsigned int _numViewLocLocal;
+    unsigned int _vwptsInActiveFlyLocal;
+    unsigned int _numStoredFlythroughsLocal;
+    std::vector< std::vector <int> > flyThroughList;
+    wxArrayString _locationName;
+    wxArrayString _flythroughName;
+    wxArrayString _activeFlyNames;
+    wxArrayString _locNamesLocal;
+    wxArrayString _activeFlyNamesLocal;
+    wxArrayString _flythroughNamesLocal;
+    void SendCommandsToXplorer( void );
 
-   short    num_viewlocs;
+    short    num_viewlocs;
 
 protected:
-   void _buildPage( void );
+    void _buildPage( void );
 
-   void _rebuildNameArrays( void );
-   void _setUpActiveFlyThroughNames( int );
-   void _rebuildPage( void );
-   void _resetSelections( void );
+    void _rebuildNameArrays( void );
+    void _setUpActiveFlyThroughNames( int );
+    void _rebuildPage( void );
+    void _resetSelections( void );
 
-   std::string _commandName;///<The name of the command.
-   std::vector<ves::open::xml::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
-   int _numView_LocsGlobal;
-   std::vector< ves::open::xml::Command* > commands;
-   int cId, cIso_value, cSc, cMin;
-   std::string dataValueName;
+    std::string _commandName;///<The name of the command.
+    std::vector<ves::open::xml::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
+    int _numView_LocsGlobal;
+    std::vector< ves::open::xml::Command* > commands;
+    int cId, cIso_value, cSc, cMin;
+    std::string dataValueName;
 
-   std::vector< long > commandInputs;
-   wxScrolledWindow* scrollWindow;
+    std::vector< long > commandInputs;
+    wxScrolledWindow* scrollWindow;
 
-   wxComboBox* _activeflySel;
-   wxComboBox* _movetovwptSel;
-   wxComboBox* _removevwptSel;
-   wxComboBox* _addvptoflySel;
-   wxListBox* _flybuilderListBox;
-   wxComboBox* _insertvpinflySel;
-   wxComboBox* _removevpfromflySel;
-   wxComboBox* _deleteflySel;
-   wxSlider* _speedCtrlSlider;
-   ves::conductor::util::wxSpinCtrlDbl* _spinSpeedControls;
-   
-   //the controls
-   void _onLoad(wxCommandEvent& event);
-   void _onAcceptNewVPName(wxCommandEvent& event);
-   void _onCancelNewVPName(wxCommandEvent& event);
-   void _onRemoveVP(wxCommandEvent& event);
-   void _onMoveToVP(wxCommandEvent& event);
-   void _onBuildNewFlyButton(wxCommandEvent& event);
-   void _onAcceptNewFlyName(wxCommandEvent& event);
-   void _onCancelNewFlyName(wxCommandEvent& event);
-   void _onActiveFlySel(wxCommandEvent& event);
-   void _onAddVPtoFlySel(wxCommandEvent& event);
-   void _onInsertVPinFlySel(wxCommandEvent& event);
-   void _onRemoveVPfromFlySel(wxCommandEvent& event);
-   void _onStartActiveFly(wxCommandEvent& event);
-   void _onStopFly(wxCommandEvent& event);
-   void _onFlyBuilderListBox(wxCommandEvent& event);
-   void _onDeleteFlySel(wxCommandEvent& event);
-   void _onSpeedChange(wxSpinEvent& event);
+    wxComboBox* _activeflySel;
+    wxComboBox* _movetovwptSel;
+    wxComboBox* _removevwptSel;
+    wxComboBox* _addvptoflySel;
+    wxListBox* _flybuilderListBox;
+    wxComboBox* _insertvpinflySel;
+    wxComboBox* _removevpfromflySel;
+    wxComboBox* _deleteflySel;
+    wxSlider* _speedCtrlSlider;
+    ves::conductor::util::wxSpinCtrlDbl* _spinSpeedControls;
 
-   ///Refresh the GUI
-   ///\param event The idle event
-   void _refreshGUIFromXplorerData( wxIdleEvent& event );
-   
-   ///Load a stored view points file
-   void _onLoadStoredPointsFile(wxCommandEvent& event);
+    //the controls
+    void _onLoad( wxCommandEvent& event );
+    void _onAcceptNewVPName( wxCommandEvent& event );
+    void _onCancelNewVPName( wxCommandEvent& event );
+    void _onRemoveVP( wxCommandEvent& event );
+    void _onMoveToVP( wxCommandEvent& event );
+    void _onBuildNewFlyButton( wxCommandEvent& event );
+    void _onAcceptNewFlyName( wxCommandEvent& event );
+    void _onCancelNewFlyName( wxCommandEvent& event );
+    void _onActiveFlySel( wxCommandEvent& event );
+    void _onAddVPtoFlySel( wxCommandEvent& event );
+    void _onInsertVPinFlySel( wxCommandEvent& event );
+    void _onRemoveVPfromFlySel( wxCommandEvent& event );
+    void _onStartActiveFly( wxCommandEvent& event );
+    void _onStopFly( wxCommandEvent& event );
+    void _onFlyBuilderListBox( wxCommandEvent& event );
+    void _onDeleteFlySel( wxCommandEvent& event );
+    void _onSpeedChange( wxSpinEvent& event );
 
-   ///Save current view points to a file.
-   void _onSaveStoredPointsFile(wxCommandEvent& event);
+    ///Refresh the GUI
+    ///\param event The idle event
+    void _refreshGUIFromXplorerData( wxIdleEvent& event );
 
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
-   
-   DECLARE_EVENT_TABLE()
+    ///Load a stored view points file
+    void _onLoadStoredPointsFile( wxCommandEvent& event );
+
+    ///Save current view points to a file.
+    void _onSaveStoredPointsFile( wxCommandEvent& event );
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+    DECLARE_EVENT_TABLE()
 };
 #endif// _VE_UI_VIEWLOC_H

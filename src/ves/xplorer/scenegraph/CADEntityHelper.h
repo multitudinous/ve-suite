@@ -55,14 +55,14 @@ class progress_streambuf: public std::basic_filebuf< Elem, Tr >
 {
 public:
     typedef std::basic_filebuf< Elem, Tr > base_type;
-    
+
     explicit progress_streambuf( const std::string &filename )
-    :	
-    base_type(),
-    count_( 0 ),
-    prev_perc_( 0 )
+            :
+            base_type(),
+            count_( 0 ),
+            prev_perc_( 0 )
     {
-        if( base_type::open(filename.c_str(), std::ios_base::in | std::ios_base::binary) )
+        if( base_type::open( filename.c_str(), std::ios_base::in | std::ios_base::binary ) )
         {
             size_ = static_cast< int >( std::streambuf::pubseekoff( 0, std::ios_base::end, std::ios_base::in ) );
             std::streambuf::pubseekoff( 0, std::ios_base::beg, std::ios_base::in );
@@ -83,7 +83,7 @@ protected:
 
         return v;
     }
-    
+
 private:
     int count_;
     int size_;
@@ -101,10 +101,10 @@ typedef progress_streambuf< char > progbuf;
 #include <osg/PositionAttitudeTransform>
 #include <osg/ref_ptr>
 
-namespace osg 
-{ 
-    class Fog; 
-    class LightModel;
+namespace osg
+{
+class Fog;
+class LightModel;
 }
 #elif _OPENSG
 #endif
@@ -144,11 +144,11 @@ public:
     ///Toggle the display of this CADEntityHelper on/off
     ///\param onOff Turn on/off rendering of this CADEntityHelper
     void ToggleDisplay( bool onOff );
-    
+
     ///Add occluder nodes
     ///Must call after this node has a parent
     void AddOccluderNodes();
-    
+
 #ifdef _OSG
     ///Set the node of CADEntityHelper
     ///\param node An osg::Node pointer
@@ -163,10 +163,10 @@ public:
     ///\param filename The name of the file to be loaded
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the geom with osgOQ if desired
-    void LoadFile( std::string filename, bool isStream = false, 
-        bool occlude = false );
+    void LoadFile( std::string filename, bool isStream = false,
+                   bool occlude = false );
     ///Used for working with PolyTrans
-    std::string ComputeIntermediateFileNameAndPath( 
+    std::string ComputeIntermediateFileNameAndPath(
         const std::string& srcFile ) const;
 
     ///Process a ven file

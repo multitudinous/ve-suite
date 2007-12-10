@@ -47,94 +47,93 @@ EphemerisDataEventHandler::EphemerisDataEventHandler()
     m_activeModel = 0;
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-EphemerisDataEventHandler::EphemerisDataEventHandler(const EphemerisDataEventHandler& ceh)
+EphemerisDataEventHandler::EphemerisDataEventHandler( const EphemerisDataEventHandler& ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }
 ///////////////////////////////////////////////////////
 EphemerisDataEventHandler::~EphemerisDataEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////
 EphemerisDataEventHandler&
-EphemerisDataEventHandler::operator=(const EphemerisDataEventHandler& rhs)
+EphemerisDataEventHandler::operator=( const EphemerisDataEventHandler& rhs )
 {
-    if(this != &rhs)
+    if( this != &rhs )
     {
-        m_activeModel = rhs.m_activeModel;    
+        m_activeModel = rhs.m_activeModel;
     }
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
+void EphemerisDataEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisInfo = dynamic_cast<ves::open::xml::Command*>(xmlObject);
+        ves::open::xml::Command* ephemerisInfo = dynamic_cast<ves::open::xml::Command*>( xmlObject );
         if( ephemerisInfo )
         {
             //std::cout<<"Got ephemeris data"<<std::endl;
             ves::open::xml::DataValuePairWeakPtr latitude =
-                                 ephemerisInfo->GetDataValuePair( "Latitude" );
+                ephemerisInfo->GetDataValuePair( "Latitude" );
             double latitudeData = 0;
-            latitude->GetData(latitudeData);
-            ves::open::xml::DataValuePairWeakPtr latitudeDir=
-                                 ephemerisInfo->GetDataValuePair( "Latitude Direction" );
+            latitude->GetData( latitudeData );
+            ves::open::xml::DataValuePairWeakPtr latitudeDir =
+                ephemerisInfo->GetDataValuePair( "Latitude Direction" );
             std::string northSouth;
-            latitudeDir->GetData(northSouth);
+            latitudeDir->GetData( northSouth );
             ves::open::xml::DataValuePairWeakPtr longitude =
-                                 ephemerisInfo->GetDataValuePair( "Longitude" );
-            double longitudeData = 0; 
+                ephemerisInfo->GetDataValuePair( "Longitude" );
+            double longitudeData = 0;
             ves::open::xml::DataValuePairWeakPtr longitudeDir =
-                                 ephemerisInfo->GetDataValuePair( "Longitude Direction" );
-            longitude->GetData(longitudeData);
+                ephemerisInfo->GetDataValuePair( "Longitude Direction" );
+            longitude->GetData( longitudeData );
             std::string eastWest;
-            longitudeDir->GetData(eastWest);
+            longitudeDir->GetData( eastWest );
             //std::cout<<"Latitude: "<<latitudeData<<std::endl;
             //std::cout<<"Longitude: "<<longitudeData<<std::endl;
-            osgEphemeris::EphemerisModel* ephemerisModel = 
-                  ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel(true);
-            ephemerisModel->setLatitudeLongitude((northSouth == "South")?-1*latitudeData:latitudeData,
-                                                 (eastWest == "West")?-1*longitudeData:longitudeData);
+            osgEphemeris::EphemerisModel* ephemerisModel =
+                ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( true );
+            ephemerisModel->setLatitudeLongitude(( northSouth == "South" ) ? -1*latitudeData : latitudeData,
+                                                 ( eastWest == "West" ) ? -1*longitudeData : longitudeData );
             std::vector<long> dateTimeInfo;
             ves::open::xml::DataValuePairWeakPtr dateTimeData =
-                                 ephemerisInfo->GetDataValuePair("Date and Time Info");
-            dateTimeData->GetData(dateTimeInfo);
+                ephemerisInfo->GetDataValuePair( "Date and Time Info" );
+            dateTimeData->GetData( dateTimeInfo );
             //std::cout<<"Date: "<<dateTimeInfo[0]<<" "<<dateTimeInfo[1]<<" "
             //                   <<dateTimeInfo[2]<<std::endl;
             //std::cout<<"Time: "<<dateTimeInfo[3]<<":"<<dateTimeInfo[4]<<std::endl;
-                               
-            ephemerisModel->setDateTime(osgEphemeris::DateTime(dateTimeInfo[0],
-                                                               dateTimeInfo[1],
-                                                               dateTimeInfo[2],
-                                                               dateTimeInfo[3],
-                                                               dateTimeInfo[4]));
-	}
+
+            ephemerisModel->setDateTime( osgEphemeris::DateTime( dateTimeInfo[0],
+                                                                 dateTimeInfo[1],
+                                                                 dateTimeInfo[2],
+                                                                 dateTimeInfo[3],
+                                                                 dateTimeInfo[4] ) );
+        }
     }
-    catch(...)
+    catch ( ... )
     {
         m_activeModel = 0;
-	std::cout<<"Invalid command passed to EphemerisDataEventHandler!!"<<std::endl;
+        std::cout << "Invalid command passed to EphemerisDataEventHandler!!" << std::endl;
     }
-   
+
 }
 //////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase*
-                                                     baseObject)
+void EphemerisDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
+                                                     baseObject )
 {
     try
     {
-        if(baseObject)
-	{
-            m_activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
-	}
-	else
-	{
+        if( baseObject )
+        {
+            m_activeModel = dynamic_cast<ves::xplorer::Model*>( baseObject );
+        }
+        else
+        {
             m_activeModel =
-		    ves::xplorer::ModelHandler::instance()->GetActiveModel();
-	}
+                ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
     }
-    catch(...)
+    catch ( ... )
     {
         m_activeModel = 0;
     }

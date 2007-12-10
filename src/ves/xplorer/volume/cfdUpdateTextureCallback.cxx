@@ -46,77 +46,79 @@ using namespace ves::xplorer::volume;
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback():
- _subloadMode(AUTO),
-_textureWidth(0),
-_textureHeight(0),
-_textureDepth(0),
-_subloadTextureOffsetX(0),
-_subloadTextureOffsetY(0),
-_subloadTextureOffsetZ(0),
-_subloadImageOffsetX(0),
-_subloadImageOffsetY(0),
-_subloadImageOffsetZ(0),
-_subloadImageWidth(0),
-_subloadImageHeight(0),
-_subloadImageDepth(0)
+        _subloadMode( AUTO ),
+        _textureWidth( 0 ),
+        _textureHeight( 0 ),
+        _textureDepth( 0 ),
+        _subloadTextureOffsetX( 0 ),
+        _subloadTextureOffsetY( 0 ),
+        _subloadTextureOffsetZ( 0 ),
+        _subloadImageOffsetX( 0 ),
+        _subloadImageOffsetY( 0 ),
+        _subloadImageOffsetZ( 0 ),
+        _subloadImageWidth( 0 ),
+        _subloadImageHeight( 0 ),
+        _subloadImageDepth( 0 )
 {
-   _tm = 0;
-   _delay = 0.0001f;
-   _isSlave = false;
-   _currentFrame = 0;
-   _isLuminance = false;
-   _update = false;
+    _tm = 0;
+    _delay = 0.0001f;
+    _isSlave = false;
+    _currentFrame = 0;
+    _isLuminance = false;
+    _update = false;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-cfdUpdateTextureCallback::cfdUpdateTextureCallback(const cfdUpdateTextureCallback& cb)
-:osg::Texture3D::SubloadCallback(cb)
+cfdUpdateTextureCallback::cfdUpdateTextureCallback( const cfdUpdateTextureCallback& cb )
+        : osg::Texture3D::SubloadCallback( cb )
 {
-   _tm = cb._tm;
-   _delay = cb._delay;
-   _isSlave = cb._isSlave;
-   _currentFrame = cb._currentFrame;
-   _isLuminance = cb._isLuminance;
+    _tm = cb._tm;
+    _delay = cb._delay;
+    _isSlave = cb._isSlave;
+    _currentFrame = cb._currentFrame;
+    _isLuminance = cb._isLuminance;
 }
 ///////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::~cfdUpdateTextureCallback()
 {
-   /*if(_tm){
-      delete _tm;
-      _tm = 0;
-   }*/
+    /*if(_tm){
+    delete _tm;
+    _tm = 0;
+    }*/
 }
 ///////////////////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::SetTextureManager(cfdTextureManager* tm)
+void cfdUpdateTextureCallback::SetTextureManager( cfdTextureManager* tm )
 {
-   if(_tm != tm)
-   {
-      _tm = tm;
-      _update = true;
-   }else{
-      _update = false;
-   }
-   return;
+    if( _tm != tm )
+    {
+        _tm = tm;
+        _update = true;
+    }
+    else
+    {
+        _update = false;
+    }
+    return;
 }
 /////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::SetDelayTime(double delayTime)
+void cfdUpdateTextureCallback::SetDelayTime( double delayTime )
 {
-   _delay = delayTime;
-   _update = false;
+    _delay = delayTime;
+    _update = false;
 }
 ////////////////////////////////////////////////////////
 unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
 {
-   if(_tm)
-   {
-      return _tm->GetCurrentFrame();
-   }
-   return 0;
+    if( _tm )
+    {
+        return _tm->GetCurrentFrame();
+    }
+    return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame, 
-                                                             bool forceUpdate)
+void cfdUpdateTextureCallback::SetCurrentFrame( unsigned int cFrame,
+                                                bool forceUpdate )
 {
-    if(_tm)
+    if( _tm )
     {
         _currentFrame = cFrame;
         if( forceUpdate )
@@ -126,32 +128,34 @@ void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& state )const 
+void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& state )const
 {
-   if(_isLuminance)
-   {
-      texture.getExtensions(state.getContextID(),false)->glTexImage3D(GL_TEXTURE_3D, 0, 
-                                          GL_LUMINANCE_ALPHA, 
-                                          _textureWidth,
-                                          _textureHeight,
-                                          _textureDepth,
-                                          0, GL_LUMINANCE_ALPHA, 
-                                          GL_UNSIGNED_BYTE, 
-                                          (unsigned char*)_tm->dataField(0));
-   
-   }else{
-      texture.getExtensions(state.getContextID(),false)->glTexImage3D(GL_TEXTURE_3D, 0, 
-                                          GL_RGBA, 
-                                          _textureWidth,
-                                          _textureHeight,
-                                          _textureDepth,
-                                          0, GL_RGBA, 
-                                          GL_UNSIGNED_BYTE, 
-                                          (unsigned char*)_tm->dataField(0));
-   }
+    if( _isLuminance )
+    {
+        texture.getExtensions( state.getContextID(), false )->glTexImage3D( GL_TEXTURE_3D, 0,
+                GL_LUMINANCE_ALPHA,
+                _textureWidth,
+                _textureHeight,
+                _textureDepth,
+                0, GL_LUMINANCE_ALPHA,
+                GL_UNSIGNED_BYTE,
+                ( unsigned char* )_tm->dataField( 0 ) );
+
+    }
+    else
+    {
+        texture.getExtensions( state.getContextID(), false )->glTexImage3D( GL_TEXTURE_3D, 0,
+                GL_RGBA,
+                _textureWidth,
+                _textureHeight,
+                _textureDepth,
+                0, GL_RGBA,
+                GL_UNSIGNED_BYTE,
+                ( unsigned char* )_tm->dataField( 0 ) );
+    }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State& state) const
+void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::State& state ) const
 {
     if( !state.getFrameStamp() )
     {
@@ -159,44 +163,46 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
     }
 
     double currTime = state.getFrameStamp()->getReferenceTime();
-    
+
     if( !_tm )
     {
         return;
-    }            
+    }
 
     /*if( _tm->getPlayMode() != cfdTextureManager::PLAY)
     {
-        return;
+    return;
     }*/
 
     //master node in the cluster
-    if(_tm->TimeToUpdate()||_update)
+    if( _tm->TimeToUpdate() || _update )
     {
         //std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
 
-        if(_isLuminance)
+        if( _isLuminance )
         {
-          texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                     0,
-                     0,0,0, 
-                     _textureWidth,
-                     _textureHeight,
-                     _textureDepth, 
-                     GL_LUMINANCE_ALPHA, 
-                     GL_UNSIGNED_BYTE,
-                     (unsigned char*)_tm->getCurrentField());
+            texture.getExtensions( state.getContextID(), false )->glTexSubImage3D( GL_TEXTURE_3D,
+                    0,
+                    0, 0, 0,
+                    _textureWidth,
+                    _textureHeight,
+                    _textureDepth,
+                    GL_LUMINANCE_ALPHA,
+                    GL_UNSIGNED_BYTE,
+                    ( unsigned char* )_tm->getCurrentField() );
 
-        }else{
-          texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                     0,
-                     0,0,0, 
-                     _textureWidth,
-                     _textureHeight,
-                     _textureDepth, 
-                     GL_RGBA, 
-                     GL_UNSIGNED_BYTE,
-                     (unsigned char*)_tm->getCurrentField());
+        }
+        else
+        {
+            texture.getExtensions( state.getContextID(), false )->glTexSubImage3D( GL_TEXTURE_3D,
+                    0,
+                    0, 0, 0,
+                    _textureWidth,
+                    _textureHeight,
+                    _textureDepth,
+                    GL_RGBA,
+                    GL_UNSIGNED_BYTE,
+                    ( unsigned char* )_tm->getCurrentField() );
         }
         ///reset the update flag so we don't subload every frame!!
         _update = false;

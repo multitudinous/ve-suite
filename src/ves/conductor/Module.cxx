@@ -40,48 +40,48 @@ using namespace ves::conductor;
 
 ////////////////////////////////////////////////
 Module::Module( void ):
-    pl_mod( 0 ),
-    canvas( 0 )
+        pl_mod( 0 ),
+        canvas( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////
 Module::~Module( void )
 {
-   if( pl_mod )
-   {
-      delete pl_mod;
-      pl_mod = 0;
-   }
+    if( pl_mod )
+    {
+        delete pl_mod;
+        pl_mod = 0;
+    }
 }
 ////////////////////////////////////////////////
 Module::Module( const Module& input )
 {
-   pl_mod = 0;
-   poly = input.poly; 
-   //cls_name = input.cls_name;
-   canvas = input.canvas;
-   //links = input.links;
+    pl_mod = 0;
+    poly = input.poly;
+    //cls_name = input.cls_name;
+    canvas = input.canvas;
+    //links = input.links;
 }
 ////////////////////////////////////////////////
 Module& Module::operator= ( const Module& input )
 {
-   if ( this != &input )
-   {
-      pl_mod = 0;
-      poly = input.poly; 
-      //cls_name = input.cls_name;
-      canvas = input.canvas;
-      // we can do this because it is a vector of actual instances
-      //links.clear();
-      //links = input.links;
-   }
-   return *this;
+    if( this != &input )
+    {
+        pl_mod = 0;
+        poly = input.poly;
+        //cls_name = input.cls_name;
+        canvas = input.canvas;
+        // we can do this because it is a vector of actual instances
+        //links.clear();
+        //links = input.links;
+    }
+    return *this;
 }
 ////////////////////////////////////////////////
 void Module::SetWxWindow( wxWindow* window )
 {
-   canvas = window;
+    canvas = window;
 }
 /*////////////////////////////////////////////////
 Link* Module::GetLink( size_t i )
@@ -103,9 +103,9 @@ void Module::RemoveLink( size_t i )
 {
    std::vector< Link >::iterator iter;
    size_t j;
-   for ( iter = links.begin(), j = 0; iter != links.end(); iter++, j++)
+   for(iter = links.begin(), j = 0; iter != links.end(); iter++, j++)
    {
-      if ( j == i )
+      if(j == i )
       {
          links.erase( iter );
          break;
@@ -120,7 +120,7 @@ void Module::RemoveLink( size_t i )
 ////////////////////////////////////////////////
 util::Polygon* Module::GetPolygon( void )
 {
-   return &(poly);
+    return &( poly );
 }
 /*////////////////////////////////////////////////
 void Module::SetClassName( std::string newClassname )
@@ -130,10 +130,10 @@ void Module::SetClassName( std::string newClassname )
 ////////////////////////////////////////////////
 void Module::SetPlugin( UIPluginBase* newPlugin )
 {
-   pl_mod = newPlugin;
+    pl_mod = newPlugin;
 }
 ////////////////////////////////////////////////
 UIPluginBase* Module::GetPlugin( void )
 {
-   return pl_mod;
+    return pl_mod;
 }

@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedBoundingBoxEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedBoundingBoxEventHandler();
+    ///Constructor
+    TextureBasedBoundingBoxEventHandler();
 
-   ///Copy Constructor
-   TextureBasedBoundingBoxEventHandler(const TextureBasedBoundingBoxEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedBoundingBoxEventHandler();
+    ///Copy Constructor
+    TextureBasedBoundingBoxEventHandler( const TextureBasedBoundingBoxEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedBoundingBoxEventHandler();
 
-   ///Equal operator
-   TextureBasedBoundingBoxEventHandler& operator=(const TextureBasedBoundingBoxEventHandler& rhs);
+    ///Equal operator
+    TextureBasedBoundingBoxEventHandler& operator=( const TextureBasedBoundingBoxEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

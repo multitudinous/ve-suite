@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef COMPUTE_VECTOR_MAGNITUDE_RANGE_CALLBACK 
+#ifndef COMPUTE_VECTOR_MAGNITUDE_RANGE_CALLBACK
 #define  COMPUTE_VECTOR_MAGNITUDE_RANGE_CALLBACK
 /*!\file ComputeMeanCellBBoxLengthCallback.h
 ComputeMeanCellBBoxLengthCallback API.
@@ -52,20 +52,21 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ComputeVectorMagnitudeRangeCallback:
-    public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     ComputeVectorMagnitudeRangeCallback();
     ///Destructor
-    virtual ~ComputeVectorMagnitudeRangeCallback(){};
+    virtual ~ComputeVectorMagnitudeRangeCallback()
+    {};
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Get the Mean Cell BBox length
-	///\param vMagRange The min and max magnitude of the active vector
-    void GetVectorMagnitudeRange(double*& vMagRange);
+    ///\param vMagRange The min and max magnitude of the active vector
+    void GetVectorMagnitudeRange( double*& vMagRange );
 protected:
     double m_magnitudeRange[2];///<The mean cell bbox length;
 };

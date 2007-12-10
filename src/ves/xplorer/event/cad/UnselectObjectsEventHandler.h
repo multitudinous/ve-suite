@@ -66,7 +66,7 @@ public:
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command ); 
+    void Execute( ves::open::xml::XMLObject* command );
 
     //Equal operator
     UnselectObjectsEventHandler& operator=( const UnselectObjectsEventHandler& rhs );

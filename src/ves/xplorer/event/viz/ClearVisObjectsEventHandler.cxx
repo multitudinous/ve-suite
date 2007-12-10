@@ -59,57 +59,57 @@ using namespace ves::xplorer::volume;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 ClearVisObjectsEventHandler::ClearVisObjectsEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ClearVisObjectsEventHandler::ClearVisObjectsEventHandler(const ClearVisObjectsEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+ClearVisObjectsEventHandler::ClearVisObjectsEventHandler( const ClearVisObjectsEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                                                 //
 ////////////////////////////////////////////////////////////////////////////////
 ClearVisObjectsEventHandler::~ClearVisObjectsEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-ClearVisObjectsEventHandler& ClearVisObjectsEventHandler::operator=(const ClearVisObjectsEventHandler& rhs)
+ClearVisObjectsEventHandler& ClearVisObjectsEventHandler::operator=( const ClearVisObjectsEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::ClearVisObjectsEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::ClearVisObjectsEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ClearVisObjectsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void ClearVisObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   ;
+    ;
 }
 //////////////////////////////////////////////////////////////////////////
 void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
 {
-   //call back over to ssvishandler to clear the vis objects
-   SteadyStateVizHandler::instance()->ClearVisObjects();
-   TextureBasedVizHandler::instance()->ClearAll();
-   if ( ModelHandler::instance()->GetActiveModel() )
-   {
-      ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
+    //call back over to ssvishandler to clear the vis objects
+    SteadyStateVizHandler::instance()->ClearVisObjects();
+    TextureBasedVizHandler::instance()->ClearAll();
+    if( ModelHandler::instance()->GetActiveModel() )
+    {
+        ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
 
-      unsigned int state = 0;
-      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-      if ( dataSet )
-      {
-         dataSet->SetBoundingBoxState( state );
-         dataSet->SetDataSetScalarState( state );
-         dataSet->SetWireframeState( state );
-         dataSet->SetAxesState( state );
-      }
-   }
+        unsigned int state = 0;
+        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( dataSet )
+        {
+            dataSet->SetBoundingBoxState( state );
+            dataSet->SetDataSetScalarState( state );
+            dataSet->SetWireframeState( state );
+            dataSet->SetAxesState( state );
+        }
+    }
 }

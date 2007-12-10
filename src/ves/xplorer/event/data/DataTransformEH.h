@@ -46,30 +46,30 @@ namespace event
 class VE_XPLORER_EXPORTS DataTransformEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   DataTransformEventHandler();
+    ///Constructor
+    DataTransformEventHandler();
 
-   ///Copy Constructor
-   DataTransformEventHandler(const DataTransformEventHandler& rhs);
+    ///Copy Constructor
+    DataTransformEventHandler( const DataTransformEventHandler& rhs );
 
-   ///Destructor
-   virtual ~DataTransformEventHandler();
+    ///Destructor
+    virtual ~DataTransformEventHandler();
 
-   ///Equal operator
-   DataTransformEventHandler& operator=(const DataTransformEventHandler& rhs);
+    ///Equal operator
+    DataTransformEventHandler& operator=( const DataTransformEventHandler& rhs );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* veXMLObject);
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* veXMLObject );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
 protected:
-   ves::xplorer::Model* _activeModel;///<The active cfdModel;
+    ves::xplorer::Model* _activeModel;///<The active cfdModel;
 
 };
 

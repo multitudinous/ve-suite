@@ -36,7 +36,7 @@
 ListTable API
 */
 /*!\class ListTable
-* 
+*
 */
 
 #include <wx/listctrl.h>
@@ -50,22 +50,22 @@ namespace ves
 {
 namespace conductor
 {
-class VE_GUIPLUGINS_EXPORTS ListTable : public wxListCtrl  
+class VE_GUIPLUGINS_EXPORTS ListTable : public wxListCtrl
 {
 public:
-	ListTable(wxWindow *parent=NULL,
-               const wxWindowID id=-1,
-               const wxPoint& pos=wxDefaultPosition,
-               const wxSize& size=wxDefaultSize);
-	virtual ~ListTable();
+    ListTable( wxWindow *parent = NULL,
+               const wxWindowID id = -1,
+               const wxPoint& pos = wxDefaultPosition,
+               const wxSize& size = wxDefaultSize );
+    virtual ~ListTable();
 
-	void SetTitle(std::vector<wxString> titles);
-	void AddRow(std::vector<wxString> vals);
-	void DelRow(int i);
+    void SetTitle( std::vector<wxString> titles );
+    void AddRow( std::vector<wxString> vals );
+    void DelRow( int i );
 
 protected:
-	wxListItemAttr m_attr;
-	int num_of_row;
+    wxListItemAttr m_attr;
+    int num_of_row;
 
 };
 }

@@ -44,50 +44,48 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::ExportDOTFileEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler
-::ExportDOTFileEventHandler(const ExportDOTFileEventHandler& ceh)
-{
-}
+::ExportDOTFileEventHandler( const ExportDOTFileEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 ExportDOTFileEventHandler::~ExportDOTFileEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-ExportDOTFileEventHandler& 
-ExportDOTFileEventHandler::operator=(const ExportDOTFileEventHandler& rhs)
+ExportDOTFileEventHandler&
+ExportDOTFileEventHandler::operator=( const ExportDOTFileEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void ExportDOTFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
     ;
 }
-//////////////////////////////////////////////////////////////////////////   
-void ExportDOTFileEventHandler::Execute(XMLObject* veXMLObject)
+//////////////////////////////////////////////////////////////////////////
+void ExportDOTFileEventHandler::Execute( XMLObject* veXMLObject )
 {
     try
     {
-        Command* command = 
+        Command* command =
             dynamic_cast< Command* >( veXMLObject );
         std::string filename;
-        command->GetDataValuePair("Filename")->GetData( filename );
+        command->GetDataValuePair( "Filename" )->GetData( filename );
         // store the active geometry and viz objects as a pfb
         // (but not the sun, menu, laser, or text)
-        ves::xplorer::scenegraph::CreateGraphDOTVisitor dotCreator( 
+        ves::xplorer::scenegraph::CreateGraphDOTVisitor dotCreator(
             ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), filename );
     }
-    catch( ... )
+    catch ( ... )
     {
-        std::cout<<"Error!!"<<std::endl;
-        std::cout<<"StoredSceneEventHandler::_operateOnNode()"<<std::endl;
+        std::cout << "Error!!" << std::endl;
+        std::cout << "StoredSceneEventHandler::_operateOnNode()" << std::endl;
     }
 }

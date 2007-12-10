@@ -40,9 +40,12 @@
 *
 */
 #ifdef _OSG
-namespace osg { class Group; }
+namespace osg
+{
+class Group;
+}
 
-#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h> 
+#include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
 namespace ves
 {
 namespace xplorer
@@ -51,35 +54,35 @@ namespace volume
 {
 class cfdScalarShaderManager;
 class cfdTextureManager;
-class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler 
-      : public cfdVolumeVisNodeHandler
-   {
-      public:
-         ///Constructor
-         cfdScalarVolumeVisHandler();
-         ///Copy Constructor
-         ///\param vvnh cfdScalarVolumeVisHandler to copy
-         cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHandler& vvnh);
-         ///Destructor
-         virtual ~cfdScalarVolumeVisHandler();
-         ///Initialize parameters
-         virtual void Init();
-         ///Set the current cfdTextureManager
-         ///\param tm cfdTextureManager pointer
-         virtual void SetTextureManager(cfdTextureManager* tm);
-         ///Equal operator
-         ///\param vvnh cfdScalarVolumeVisHandler to set this equal to.
-         cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
+class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler
+            : public cfdVolumeVisNodeHandler
+{
+public:
+    ///Constructor
+    cfdScalarVolumeVisHandler();
+    ///Copy Constructor
+    ///\param vvnh cfdScalarVolumeVisHandler to copy
+    cfdScalarVolumeVisHandler( const cfdScalarVolumeVisHandler& vvnh );
+    ///Destructor
+    virtual ~cfdScalarVolumeVisHandler();
+    ///Initialize parameters
+    virtual void Init();
+    ///Set the current cfdTextureManager
+    ///\param tm cfdTextureManager pointer
+    virtual void SetTextureManager( cfdTextureManager* tm );
+    ///Equal operator
+    ///\param vvnh cfdScalarVolumeVisHandler to set this equal to.
+    cfdScalarVolumeVisHandler& operator=( const cfdScalarVolumeVisHandler& vvnh );
 
-      protected:
-         ///Set up the decorator node 
-         virtual void _setUpDecorator();
-         ///Apply the texture matrix
-         virtual void _applyTextureMatrix();
-         ///Create the default set of shaders
-         void _createDefaultShaders();
-         cfdScalarShaderManager* _transferSM;///<cfdScalarShaderManager
-   };
+protected:
+    ///Set up the decorator node
+    virtual void _setUpDecorator();
+    ///Apply the texture matrix
+    virtual void _applyTextureMatrix();
+    ///Create the default set of shaders
+    void _createDefaultShaders();
+    cfdScalarShaderManager* _transferSM;///<cfdScalarShaderManager
+};
 }
 }
 }

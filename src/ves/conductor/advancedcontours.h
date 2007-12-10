@@ -37,7 +37,7 @@
 *advancedcontours API
 */
 /*!\class AdvancedContours
-* 
+*
 */
 #include <vector>
 #include <string>
@@ -59,7 +59,7 @@ namespace open
 {
 namespace xml
 {
-   class Command;
+class Command;
 }
 }
 }
@@ -89,55 +89,55 @@ namespace ves
 namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS AdvancedContours: public wxDialog
-{    
+{
 
 public:
     /// Constructors
     AdvancedContours( );
-    AdvancedContours( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME, 
-                      const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE, 
-                      const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, 
-                      const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
+    AdvancedContours( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME,
+                      const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE,
+                      const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION,
+                      const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE,
                       long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
 
-   enum ADVANCED_CONTOUR_IDS
-   {
-      OPACITY_SLIDER,
-      WARPED_SCALE_SLIDER,
-      LOD_SLIDER,
-      CONTOUR_TYPE_RBOX,
-      WARP_OPTION_CHK
-   };
+    enum ADVANCED_CONTOUR_IDS
+    {
+        OPACITY_SLIDER,
+        WARPED_SCALE_SLIDER,
+        LOD_SLIDER,
+        CONTOUR_TYPE_RBOX,
+        WARP_OPTION_CHK
+    };
 
     void SendCommandsToXplorer( void );
     /// Creation
-    bool Create( wxWindow* parent, 
-       wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME,
-       const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE,
-       const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION, 
-       const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE, 
-       long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
+    bool Create( wxWindow* parent,
+                 wxWindowID id = SYMBOL_ADVANCEDCONTOURS_IDNAME,
+                 const wxString& caption = SYMBOL_ADVANCEDCONTOURS_TITLE,
+                 const wxPoint& pos = SYMBOL_ADVANCEDCONTOURS_POSITION,
+                 const wxSize& size = SYMBOL_ADVANCEDCONTOURS_SIZE,
+                 long style = SYMBOL_ADVANCEDCONTOURS_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
 
     ///The opacity setting.
     ///\param opacity The opacity setting
-    void SetOpacity(double opacity);
+    void SetOpacity( double opacity );
     ///The warped scale.
     ///\param warpScale The scale for warping on the contours
-    void SetWarpedScale(double warpScale);
+    void SetWarpedScale( double warpScale );
     ///The Level of Detail
     ///\param LOD The LOD setting
-    void SetLOD(double LOD);
+    void SetLOD( double LOD );
 
     ///Set the contour type
     ///\param contourType The contour type.
-    void SetContourType(std::string contourType);
+    void SetContourType( std::string contourType );
 
     ///Set the warp option
     ///\param warpOption true/false for warped contour
-    void SetWarpOption(bool warpOption);
+    void SetWarpOption( bool warpOption );
 
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
@@ -162,20 +162,20 @@ public:
     bool GetWarpOption();
 
 protected:
-   
-   wxSlider* _opacitySlider;///<Opacity slider.
-   wxSlider* _warpedScaleSlider;///<Warped scale slider.
-   wxSlider* _LODSlider;///<Level Of Detail slider.
-   wxRadioBox* _contourTypeRBox;///<Contour radio box dialog.
-   wxCheckBox* _warpOptionCBox;///<Warp contour option.
-   
-   std::string ConvertUnicode( const wxChar* data )
-   {
-         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-         return tempStr;
-   }
+
+    wxSlider* _opacitySlider;///<Opacity slider.
+    wxSlider* _warpedScaleSlider;///<Warped scale slider.
+    wxSlider* _LODSlider;///<Level Of Detail slider.
+    wxRadioBox* _contourTypeRBox;///<Contour radio box dialog.
+    wxCheckBox* _warpOptionCBox;///<Warp contour option.
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }
 #endif
-    // _ADVANCEDCONTOURS_H_
+// _ADVANCEDCONTOURS_H_

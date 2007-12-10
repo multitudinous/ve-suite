@@ -55,30 +55,30 @@ namespace event
 class VE_XPLORER_EXPORTS ChangeCursorEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   ChangeCursorEventHandler();
+    ///Constructor
+    ChangeCursorEventHandler();
 
-   ///Copy Constructor
-   ChangeCursorEventHandler(const ChangeCursorEventHandler& rhs);
+    ///Copy Constructor
+    ChangeCursorEventHandler( const ChangeCursorEventHandler& rhs );
 
-   ///Destructor
-   virtual ~ChangeCursorEventHandler();
+    ///Destructor
+    virtual ~ChangeCursorEventHandler();
 
-   ///Equal operator
-   ChangeCursorEventHandler& operator=(const ChangeCursorEventHandler& rhs);
+    ///Equal operator
+    ChangeCursorEventHandler& operator=( const ChangeCursorEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
-   ves::xplorer::Model* _activeModel; ///<The active model
+    ves::xplorer::Model* _activeModel; ///<The active model
 };
 
 }

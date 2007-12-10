@@ -36,7 +36,7 @@
 cfdExecutive API
 */
 /*!\class ves::xplorer::cfdExecutive
-* 
+*
 */
 
 #include <ves/xplorer/GlobalBase.h>
@@ -58,7 +58,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class Group;
+class Group;
 }
 }
 }
@@ -67,7 +67,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdVjObsWrapper;
+class cfdVjObsWrapper;
 }
 }
 
@@ -77,25 +77,34 @@ namespace xplorer
 {
 namespace plugin
 {
-    class cfdVEBaseClass;
+class cfdVEBaseClass;
 }
 }
 }
-        
+
 namespace ves
 {
 namespace xplorer
 {
 namespace event
 {
-   class EventHandler;
+class EventHandler;
 }
 }
 }
 
-namespace Body { class Executive; }
-namespace CosNaming { class NamingContext; }
-namespace PortableServer { class POA; }
+namespace Body
+{
+class Executive;
+}
+namespace CosNaming
+{
+class NamingContext;
+}
+namespace PortableServer
+{
+class POA;
+}
 
 namespace ves
 {
@@ -103,88 +112,94 @@ namespace xplorer
 {
 namespace network
 {
-    class cfdVEAvailModules;
-    class Body_UI_i;
+class cfdVEAvailModules;
+class Body_UI_i;
 class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase
 {
 private:
-   // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< cfdExecutive >;
-   //cfdExecutive(const cfdExecutive& o) { ; }
-   //cfdExecutive& operator=(const cfdExecutive& o) { ; }
-   // this class should be a singleton
-   // constructor
-   cfdExecutive( void ){;}
-   
-   // destructor
-   virtual ~cfdExecutive( void );
-   vprSingletonHeader( cfdExecutive );   
+    // Required so that vpr::Singleton can instantiate this class.
+    //friend class vpr::Singleton< cfdExecutive >;
+    //cfdExecutive(const cfdExecutive& o) { ; }
+    //cfdExecutive& operator=(const cfdExecutive& o) { ; }
+    // this class should be a singleton
+    // constructor
+    cfdExecutive( void )
+    {
+        ;
+    }
+
+    // destructor
+    virtual ~cfdExecutive( void );
+    vprSingletonHeader( cfdExecutive );
 public:
-   void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
-   //void CleanUp( void );
-   
-   ///the Computational Engine
-   Body::Executive* _exec;
-   CosNaming::NamingContext* naming_context;
+    void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
+    //void CleanUp( void );
 
-   ///Functions that operate on the Executive
-   void GetNetwork( void );
-   void GetOutput( std::string name);
-   void GetEverything( void );
-   void HowToUse( std::string name);
-   ///Get intial module information from the executive
-   void InitModules( void );
-   ///Update function called from within latePreFrame
-   void UpdateModules( void );
-   ///Update function called from within latePreFrame
-   void PreFrameUpdate( void );
-   ///Update function called from within latePreFrame
-   void PostFrameUpdate( void );
-   ///Function called within preFrame to allow cfdExecutive
-   ///to have access to scalar information
-   void UnbindORB( void );
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand(){ ; }
-   ///This function returns the map of the current plugins 
-   ///so that evehenthandlers can manipulate the plugins while
-   ///with commands from the gui
-   std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* GetTheCurrentPlugins( void );
-   ///Get available plugins object
-   cfdVEAvailModules* GetAvailablePlugins( void );
-   ///Accessor for ehs to use
-   Body_UI_i* GetCORBAInterface();
-   ///Laod data from CE
-   void LoadDataFromCE( void );
-   ///Get the current network string being used by cfdExecutive
-   std::string GetCurrentNetwork();
-   
+    ///the Computational Engine
+    Body::Executive* _exec;
+    CosNaming::NamingContext* naming_context;
+
+    ///Functions that operate on the Executive
+    void GetNetwork( void );
+    void GetOutput( std::string name );
+    void GetEverything( void );
+    void HowToUse( std::string name );
+    ///Get intial module information from the executive
+    void InitModules( void );
+    ///Update function called from within latePreFrame
+    void UpdateModules( void );
+    ///Update function called from within latePreFrame
+    void PreFrameUpdate( void );
+    ///Update function called from within latePreFrame
+    void PostFrameUpdate( void );
+    ///Function called within preFrame to allow cfdExecutive
+    ///to have access to scalar information
+    void UnbindORB( void );
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand()
+    {
+        ;
+    }
+    ///This function returns the map of the current plugins
+    ///so that evehenthandlers can manipulate the plugins while
+    ///with commands from the gui
+    std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* GetTheCurrentPlugins( void );
+    ///Get available plugins object
+    cfdVEAvailModules* GetAvailablePlugins( void );
+    ///Accessor for ehs to use
+    Body_UI_i* GetCORBAInterface();
+    ///Laod data from CE
+    void LoadDataFromCE( void );
+    ///Get the current network string being used by cfdExecutive
+    std::string GetCurrentNetwork();
+
 private:
-   ///Loading the Available Modules
-   cfdVEAvailModules* m_avModules;
-   std::string veNetwork;
+    ///Loading the Available Modules
+    cfdVEAvailModules* m_avModules;
+    std::string veNetwork;
 
-   std::string _activeScalarName;
-   //cfdGauges* _gauges;
-   //cfdDashboard* _dashBoard;
-   //cfdInteractiveGeometry* _geometry;
-   Body_UI_i* ui_i;
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > _masterNode;
+    std::string _activeScalarName;
+    //cfdGauges* _gauges;
+    //cfdDashboard* _dashBoard;
+    //cfdInteractiveGeometry* _geometry;
+    Body_UI_i* ui_i;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > _masterNode;
 
-   bool _doneWithCalculations;
-   bool updateNetworkString;
-   bool runGetEverythingThread;
+    bool _doneWithCalculations;
+    bool updateNetworkString;
+    bool runGetEverythingThread;
 
-   // _name_map : maps a module id to it's module name.
-   std::map< int, std::string> _id_map;
-   std::map< int, ves::open::xml::model::ModelPtr > idToModel;
+    // _name_map : maps a module id to it's module name.
+    std::map< int, std::string> _id_map;
+    std::map< int, ves::open::xml::model::ModelPtr > idToModel;
 
-   // _name_map : maps a module name to it's module id.
-   std::map<int, ves::xplorer::plugin::cfdVEBaseClass* > _plugins;
+    // _name_map : maps a module name to it's module id.
+    std::map<int, ves::xplorer::plugin::cfdVEBaseClass* > _plugins;
 
-   // map to hold unique plugin command names and associated plugin pointers
-   std::map< int, std::map< std::string, ves::xplorer::plugin::cfdVEBaseClass* > > pluginEHMap;
-   
-   std::map< std::string,ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
+    // map to hold unique plugin command names and associated plugin pointers
+    std::map< int, std::map< std::string, ves::xplorer::plugin::cfdVEBaseClass* > > pluginEHMap;
+
+    std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
 
 };
 }

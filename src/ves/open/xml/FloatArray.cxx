@@ -40,152 +40,153 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-FloatArray::FloatArray(unsigned int nElements)
-:XMLObject()
+FloatArray::FloatArray( unsigned int nElements )
+        : XMLObject()
 {
-   _nElements  = nElements;
-   // These should match the schema for min and max occurances 
-   // of the float array
-   minIndex = 2;
-   maxIndex = 4;
-   SetObjectType("FloatArray");
+    _nElements  = nElements;
+    // These should match the schema for min and max occurances
+    // of the float array
+    minIndex = 2;
+    maxIndex = 4;
+    SetObjectType( "FloatArray" );
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
 FloatArray::~FloatArray()
 {
-   if(_array.size())
-      _array.clear();
+    if( _array.size() )
+        _array.clear();
 }
 ///////////////////////////////////////////
 FloatArray::FloatArray( const FloatArray& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
-   _nElements = input._nElements;
-   _array = input._array;
-   minIndex = input.minIndex;
-   maxIndex = input.maxIndex;
+    _nElements = input._nElements;
+    _array = input._array;
+    minIndex = input.minIndex;
+    maxIndex = input.maxIndex;
 }
 /////////////////////////////////////////////////////
-FloatArray& FloatArray::operator=( const FloatArray& input)
+FloatArray& FloatArray::operator=( const FloatArray& input )
 {
-   if ( this != &input )
-   {
-      XMLObject::operator =(input);
-      _nElements = input._nElements;
-      _array = input._array;
-      minIndex = input.minIndex;
-      maxIndex = input.maxIndex;
-   }
-   return *this;
+    if( this != &input )
+    {
+        XMLObject::operator =( input );
+        _nElements = input._nElements;
+        _array = input._array;
+        minIndex = input.minIndex;
+        maxIndex = input.maxIndex;
+    }
+    return *this;
 }
 ////////////////////////
 void FloatArray::Clear()
 {
-   if(_array.size())
-      _array.clear();
+    if( _array.size() )
+        _array.clear();
 }
 /////////////////////////////////////////////////
-void FloatArray::AddElementToArray(double value)
+void FloatArray::AddElementToArray( double value )
 {
-   _array.push_back(value);
-   _nElements = static_cast< unsigned int >( _array.size() );
+    _array.push_back( value );
+    _nElements = static_cast< unsigned int >( _array.size() );
 }
 /////////////////////////////////////////////////////////////////
 void FloatArray::SetArray( std::vector< double > input )
 {
-   if ( input.size() )
-   {
-      _array.clear();
-      _array = input;
-      _nElements = static_cast< unsigned int >( _array.size() );;
-   }
+    if( input.size() )
+    {
+        _array.clear();
+        _array = input;
+        _nElements = static_cast< unsigned int >( _array.size() );
+        ;
+    }
 }
 //////////////////////////////////////////////////
-double FloatArray::GetElement(unsigned int index)
+double FloatArray::GetElement( unsigned int index )
 {
-   try
-   {
-      return _array.at( index );
-   }
-   catch (...)
-   {
-      std::cout<<"ERROR!!!"<<std::endl;
-      std::cout<<"Invalid index: "<<index<<" in FloatArray::GetElement!!!"<<std::endl;
-      return 0;
-   }
+    try
+    {
+        return _array.at( index );
+    }
+    catch ( ... )
+    {
+        std::cout << "ERROR!!!" << std::endl;
+        std::cout << "Invalid index: " << index << " in FloatArray::GetElement!!!" << std::endl;
+        return 0;
+    }
 }
 ///////////////////////////////////////////////////
 std::vector< double > FloatArray::GetArray( void )
 {
-   return _array;
+    return _array;
 }
 ////////////////////////////////////
 void FloatArray::_updateVEElement( std::string input )
 {
-   //Be sure to set the number of children (_nChildren) 
-   //either here or in the updating subElements code
-   //this will be based on the size of the double array
-   //_nChildren = static_cast< unsigned int >( _array.size() );
+    //Be sure to set the number of children (_nChildren)
+    //either here or in the updating subElements code
+    //this will be based on the size of the double array
+    //_nChildren = static_cast< unsigned int >( _array.size() );
 
-   //Add code here to update the specific sub elements
-   for ( unsigned int i = 0; i < _array.size(); ++i )
-   {
-      // name comes from verg.xsd
-      DOMElement* valueTag  = _rootDocument->createElement( xercesString("value") );
-      _veElement->appendChild( valueTag );      
-      DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
-      valueTag->appendChild( valueNum );
-   }
+    //Add code here to update the specific sub elements
+    for( unsigned int i = 0; i < _array.size(); ++i )
+    {
+        // name comes from verg.xsd
+        DOMElement* valueTag  = _rootDocument->createElement( xercesString( "value" ) );
+        _veElement->appendChild( valueTag );
+        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
+        valueTag->appendChild( valueNum );
+    }
 }
 ////////////////////////////////////////////////////////////
-void FloatArray::SetObjectFromXMLData(DOMNode* xmlInput)
+void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
 {
-   //TODO:fill in the values for the double array
-   //this is currently maxed out at 4 in the schema but
-   //we can adjust this to be larger if needed. Also it
-   //has to be at least 2 elements according to the schema
-   //_nElements = xerces->();
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast<DOMElement*>(xmlInput);
-   }
-   
-   if(currentElement)
-   {   
-      _array.clear();
-      
-      // do we need to delete the old one or does xerces handle this???
-      //_nElements = xmlInput->getChildNodes()->getLength();
-      DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("value"));
-      XMLSize_t numNodes = nodeList->getLength();
-      _nElements = numNodes;
-      if ( ( minIndex > numNodes ) && ( maxIndex < numNodes ) )
-      {
-         std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" << 
-                     " This node has too few or too many children." << std::endl;
-      }
-   
-      // This for loop may be wrong since the the text node and 
-      // element may be seprate entities.
-      // if that is the case then inside the for loop
-      // we just need to get each text node child
-      for ( XMLSize_t i = 0; i < numNodes; ++i )
-      {
-         //We know this about the node so we can cast it...
-         DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
-         char* tempCharData = XMLString::transcode( temp->getData() );
-         std::string stringVal( tempCharData );
-         _array.push_back( std::atof( stringVal.c_str() ) );
-         XMLString::release(&tempCharData);
-      }
-   }
-   else
-   {
-      std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" << 
-                  " This node has no children which means there is probably a problem." << std::endl;
-   }
+    //TODO:fill in the values for the double array
+    //this is currently maxed out at 4 in the schema but
+    //we can adjust this to be larger if needed. Also it
+    //has to be at least 2 elements according to the schema
+    //_nElements = xerces->();
+    DOMElement* currentElement = 0;
+    if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast<DOMElement*>( xmlInput );
+    }
+
+    if( currentElement )
+    {
+        _array.clear();
+
+        // do we need to delete the old one or does xerces handle this???
+        //_nElements = xmlInput->getChildNodes()->getLength();
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "value" ) );
+        XMLSize_t numNodes = nodeList->getLength();
+        _nElements = numNodes;
+        if (( minIndex > numNodes ) && ( maxIndex < numNodes ) )
+        {
+            std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" <<
+            " This node has too few or too many children." << std::endl;
+        }
+
+        // This for loop may be wrong since the the text node and
+        // element may be seprate entities.
+        // if that is the case then inside the for loop
+        // we just need to get each text node child
+        for( XMLSize_t i = 0; i < numNodes; ++i )
+        {
+            //We know this about the node so we can cast it...
+            DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
+            char* tempCharData = XMLString::transcode( temp->getData() );
+            std::string stringVal( tempCharData );
+            _array.push_back( std::atof( stringVal.c_str() ) );
+            XMLString::release( &tempCharData );
+        }
+    }
+    else
+    {
+        std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" <<
+        " This node has no children which means there is probably a problem." << std::endl;
+    }
 }
 

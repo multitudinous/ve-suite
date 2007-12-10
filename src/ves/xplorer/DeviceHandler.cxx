@@ -62,21 +62,21 @@ namespace xplorer
 {
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
-:
-m_activeDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
-selectedDCS( 0 ),
-device_mode( "World Navigation" ),
-center_point( 0, 2, 0 ),
-m_threshold( 0.5f ),
-m_jump( 10.0f )
+        :
+        m_activeDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
+        selectedDCS( 0 ),
+        device_mode( "World Navigation" ),
+        center_point( 0, 2, 0 ),
+        m_threshold( 0.5f ),
+        m_jump( 10.0f )
 {
     //Move the world DCS forward a little bit
     //activeDCS->setPosition( osg::Vec3d( 0.0, 2.0, 0.0 ) );
 
     //Initialize Devices
-    devices[ std::string( "Tablet" ) ] = new ves::xplorer::Tablet();
-    devices[ std::string( "Wand" ) ] = new ves::xplorer::Wand();
-    devices[ std::string( "KeyboardMouse" ) ] = new ves::xplorer::KeyboardMouse();
+    devices[ std::string( "Tablet" )] = new ves::xplorer::Tablet();
+    devices[ std::string( "Wand" )] = new ves::xplorer::Wand();
+    devices[ std::string( "KeyboardMouse" )] = new ves::xplorer::KeyboardMouse();
 
     //Set properties in Devices
     std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
@@ -91,19 +91,19 @@ m_jump( 10.0f )
 
     active_device = devices[ "KeyboardMouse" ];
 
-    _eventHandlers[ std::string( "CHANGE_DEVICE" ) ] = new ves::xplorer::event::DeviceEventHandler();
-    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] = new ves::xplorer::event::DeviceModeEventHandler();
-    _eventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] = new ves::xplorer::event::UnselectObjectsEventHandler();
-    _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" ) ] = new ves::xplorer::event::CenterPointJumpEventHandler();
-    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] = new ves::xplorer::event::KeyboardMouseEventHandler();
-    _eventHandlers[ std::string( "Navigation_Data" ) ] = new ves::xplorer::event::NavigationDataEventHandler();
+    _eventHandlers[ std::string( "CHANGE_DEVICE" )] = new ves::xplorer::event::DeviceEventHandler();
+    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" )] = new ves::xplorer::event::DeviceModeEventHandler();
+    _eventHandlers[ std::string( "UNSELECT_OBJECTS" )] = new ves::xplorer::event::UnselectObjectsEventHandler();
+    _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" )] = new ves::xplorer::event::CenterPointJumpEventHandler();
+    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" )] = new ves::xplorer::event::KeyboardMouseEventHandler();
+    _eventHandlers[ std::string( "Navigation_Data" )] = new ves::xplorer::event::NavigationDataEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
 {
     //Delete devices in map
-    for( std::map< std::string, ves::xplorer::Device* >::iterator 
-        itr = devices.begin(); itr != devices.end(); ++itr )
+    for( std::map< std::string, ves::xplorer::Device* >::iterator
+            itr = devices.begin(); itr != devices.end(); ++itr )
     {
         delete itr->second;
     }
@@ -145,7 +145,7 @@ void DeviceHandler::ExecuteCommands()
 void DeviceHandler::SetActiveDevice( std::string device )
 {
     std::map< std::string, ves::xplorer::Device* >::iterator itr = devices.find( device );
-    if ( itr != devices.end() )
+    if( itr != devices.end() )
     {
         active_device = devices[ device ];
     }
@@ -158,7 +158,7 @@ void DeviceHandler::SetDeviceMode( std::string mode )
     if( device_mode == "World Navigation" )
     {
         m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+                      GetActiveSwitchNode();
         active_device->SetActiveDCS( m_activeDCS.get() );
     }
     else if( device_mode == "Object Navigation" )
@@ -210,17 +210,17 @@ void DeviceHandler::ProcessDeviceEvents()
     //Update Device properties
     ExecuteCommands();
 
-    if ( device_mode == "World Navigation" || device_mode == "Object Navigation" )
+    if( device_mode == "World Navigation" || device_mode == "Object Navigation" )
     {
         devices[ "Wand" ]->UpdateNavigation();
         devices[ "KeyboardMouse" ]->UpdateNavigation();
 
-        if( ( active_device != devices[ "Wand" ] ) && ( active_device != devices[ "KeyboardMouse" ] ) )
+        if (( active_device != devices[ "Wand" ] ) && ( active_device != devices[ "KeyboardMouse" ] ) )
         {
             active_device->UpdateNavigation();
         }
     }
-    else if ( device_mode == "Selection" )
+    else if( device_mode == "Selection" )
     {
         active_device->UpdateSelection();
     }

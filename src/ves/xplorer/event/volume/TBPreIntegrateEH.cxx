@@ -47,41 +47,38 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler::TextureBasedPreIntegrateEnableEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler
-::TextureBasedPreIntegrateEnableEventHandler(const TextureBasedPreIntegrateEnableEventHandler& ceh)
-{
-}
+::TextureBasedPreIntegrateEnableEventHandler( const TextureBasedPreIntegrateEnableEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedPreIntegrateEnableEventHandler::~TextureBasedPreIntegrateEnableEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedPreIntegrateEnableEventHandler& 
-TextureBasedPreIntegrateEnableEventHandler::operator=(const TextureBasedPreIntegrateEnableEventHandler& rhs)
+TextureBasedPreIntegrateEnableEventHandler&
+TextureBasedPreIntegrateEnableEventHandler::operator=( const TextureBasedPreIntegrateEnableEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr enable = command->GetDataValuePair("Recalculate Pre-Integration");      
-      unsigned int onOff;
-      enable->GetData(onOff);
-      ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable((onOff==1)?true:false);
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedPreIntegrateEnableEventHandler::_operateOnNode()"<<std::endl;
-   }
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr enable = command->GetDataValuePair( "Recalculate Pre-Integration" );
+        unsigned int onOff;
+        enable->GetData( onOff );
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable(( onOff == 1 ) ? true : false );
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedPreIntegrateEnableEventHandler::_operateOnNode()" << std::endl;
+    }
 }

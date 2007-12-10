@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Shader::UniformPtr.  To get the full 
+ * VE_XML::VE_Shader::UniformPtr.  To get the full
  * declaration of VE_XML::VE_Shader::Uniform
  * ves/open/xml/shader/Uniform.h must be included, too.
  */
@@ -52,13 +52,13 @@ namespace xml
 {
 namespace shader
 {
-   class Uniform;
-   /// Typedef for a SmartPtr type for the Uniform.
-   typedef Loki::SmartPtrDef<Uniform>::type UniformPtr;
-   typedef ves::util::ClassPtrDef<Uniform>::type  UniformPtr;
-   typedef ves::util::SharedPtrDef<Uniform>::type UniformSharedPtr;
-   typedef ves::util::WeakPtrDef<Uniform>::type   UniformWeakPtr;
-   typedef ves::util::ScopedPtrDef<Uniform>::type UniformScopedPtr;
+class Uniform;
+/// Typedef for a SmartPtr type for the Uniform.
+typedef Loki::SmartPtrDef<Uniform>::type UniformPtr;
+typedef ves::util::ClassPtrDef<Uniform>::type  UniformPtr;
+typedef ves::util::SharedPtrDef<Uniform>::type UniformSharedPtr;
+typedef ves::util::WeakPtrDef<Uniform>::type   UniformWeakPtr;
+typedef ves::util::ScopedPtrDef<Uniform>::type UniformScopedPtr;
 }
 }
 }

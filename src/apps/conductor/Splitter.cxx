@@ -34,28 +34,27 @@
 #include "Splitter.h"
 #include <iostream>
 
-BEGIN_EVENT_TABLE(Splitter, wxSplitterWindow)
-   EVT_SPLITTER_DCLICK( -1, Splitter::OnDClick )   
+BEGIN_EVENT_TABLE( Splitter, wxSplitterWindow )
+    EVT_SPLITTER_DCLICK( -1, Splitter::OnDClick )
 END_EVENT_TABLE()
 
-Splitter::Splitter(wxWindow* parent, wxWindowID id)
-   :wxSplitterWindow(parent, id)
-{  
-}
+Splitter::Splitter( wxWindow* parent, wxWindowID id )
+        : wxSplitterWindow( parent, id )
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void Splitter::OnDClick( wxSplitterEvent& event )
 {
-   event.Veto();
-   if( GetSashPosition() > 140 )
-   {
-      SetSashPosition( 140, true );
-   }
-   else if( GetSashPosition() < 10 )
-   {
-      SetSashPosition( 140, true );
-   }
-   else if( GetSashPosition() <= 140 || GetSashPosition() > 9 )
-   {
-      SetSashPosition( 1, true );
-   }
+    event.Veto();
+    if( GetSashPosition() > 140 )
+    {
+        SetSashPosition( 140, true );
+    }
+    else if( GetSashPosition() < 10 )
+    {
+        SetSashPosition( 140, true );
+    }
+    else if( GetSashPosition() <= 140 || GetSashPosition() > 9 )
+    {
+        SetSashPosition( 1, true );
+    }
 }

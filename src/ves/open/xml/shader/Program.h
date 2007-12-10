@@ -41,7 +41,7 @@
 #include <vector>
 
 /*!\file Program.h
-  Program API 
+  Program API
   */
 /*!\class VE_Shader::Program
  * Class that stores an data and information neccessary to create a glsl Program program.
@@ -55,62 +55,62 @@ namespace xml
 {
 namespace shader
 {
-class VE_SHADER_EXPORTS Program:public ves::open::xml::XMLObject
+class VE_SHADER_EXPORTS Program: public ves::open::xml::XMLObject
 {
 public:
-   ///Constructor
-   Program();
+    ///Constructor
+    Program();
 
-   ///Destructor
-   virtual ~Program();
-  
-   ///Copy constructor
-   Program(const Program& rhs);
+    ///Destructor
+    virtual ~Program();
 
-   ///Set the vertex shader for this program
-   ///\param vertShader The vertex shader.
-   void SetVertexShader(ves::open::xml::shader::ShaderPtr vertShader);
+    ///Copy constructor
+    Program( const Program& rhs );
 
-   
-   ///Set the fragment shader for this program
-   ///\param fragShader The fragment shader.
-   void SetFragmentShader(ves::open::xml::shader::ShaderPtr fragShader);
+    ///Set the vertex shader for this program
+    ///\param vertShader The vertex shader.
+    void SetVertexShader( ves::open::xml::shader::ShaderPtr vertShader );
 
-   ///Set the name of the glsl program
-   ///\param name The name of the program.
-   void SetProgramName(std::string name);
 
-   ///Set the object from input XML data
-   ///\param xmlInput The input xml data.
-   void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    ///Set the fragment shader for this program
+    ///\param fragShader The fragment shader.
+    void SetFragmentShader( ves::open::xml::shader::ShaderPtr fragShader );
 
-   ///Get the fragment shader.
-   ves::open::xml::shader::ShaderPtr GetFragmentShader();
+    ///Set the name of the glsl program
+    ///\param name The name of the program.
+    void SetProgramName( std::string name );
 
-   ///Get the vertex shader.
-   ves::open::xml::shader::ShaderPtr GetVertexShader();
+    ///Set the object from input XML data
+    ///\param xmlInput The input xml data.
+    void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
-   ///Get the name of the program.
-   std::string GetProgramName();
+    ///Get the fragment shader.
+    ves::open::xml::shader::ShaderPtr GetFragmentShader();
 
-   
-   ///equal operator
-   Program& operator=(const Program& rhs);
+    ///Get the vertex shader.
+    ves::open::xml::shader::ShaderPtr GetVertexShader();
+
+    ///Get the name of the program.
+    std::string GetProgramName();
+
+
+    ///equal operator
+    Program& operator=( const Program& rhs );
 protected:
-   ///Internally update the XML data for this element.
-   ///\param input The XML element information
-   virtual void _updateVEElement(std::string input);
+    ///Internally update the XML data for this element.
+    ///\param input The XML element information
+    virtual void _updateVEElement( std::string input );
 
-   ///Internally update the name from the XML data.
-   void _updateProgramName();
+    ///Internally update the name from the XML data.
+    void _updateProgramName();
 
-   std::string _name;///< The program name.
-   ves::open::xml::shader::ShaderPtr _vertexShader;///< The vertex shader.
-   ves::open::xml::shader::ShaderPtr _fragmentShader;///< The fragment shader.
+    std::string _name;///< The program name.
+    ves::open::xml::shader::ShaderPtr _vertexShader;///< The vertex shader.
+    ves::open::xml::shader::ShaderPtr _fragmentShader;///< The fragment shader.
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Program* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::shader::Program* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

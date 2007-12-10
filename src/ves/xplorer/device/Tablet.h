@@ -66,7 +66,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
+class DCS;
 }
 }
 }
@@ -77,7 +77,7 @@ namespace open
 {
 namespace xml
 {
-    class Command;
+class Command;
 }
 }
 }
@@ -104,7 +104,7 @@ public:
     ///\param input Indicates which rotation method is needed
     void SetHeadRotationFlag( int input );
 
-    ///Does not let the user go below the ground plane at 0,0,0 
+    ///Does not let the user go below the ground plane at 0,0,0
     ///\param input Flag to insure translation does not go below zero plane
     void SetSubZeroFlag( int zero );
 

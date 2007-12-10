@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedPreIntegrateEnableEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedPreIntegrateEnableEventHandler();
+    ///Constructor
+    TextureBasedPreIntegrateEnableEventHandler();
 
-   ///Copy Constructor
-   TextureBasedPreIntegrateEnableEventHandler(const TextureBasedPreIntegrateEnableEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedPreIntegrateEnableEventHandler();
+    ///Copy Constructor
+    TextureBasedPreIntegrateEnableEventHandler( const TextureBasedPreIntegrateEnableEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedPreIntegrateEnableEventHandler();
 
-   ///Equal operator
-   TextureBasedPreIntegrateEnableEventHandler& operator=(const TextureBasedPreIntegrateEnableEventHandler& rhs);
+    ///Equal operator
+    TextureBasedPreIntegrateEnableEventHandler& operator=( const TextureBasedPreIntegrateEnableEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

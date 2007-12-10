@@ -59,9 +59,9 @@ class cfdObjects;
 
 namespace scenegraph
 {
-    class Group;
-    class Geode;
-    ///class DCS;
+class Group;
+class Geode;
+///class DCS;
 }
 
 /*!\file cfdGraphicsObject.h
@@ -69,7 +69,7 @@ namespace scenegraph
  */
 
 /*!\class ves::xplorer::cfdGraphicsObject
- * 
+ *
  */
 class VE_XPLORER_EXPORTS cfdGraphicsObject
 {
@@ -88,7 +88,11 @@ public:
     ///\param &input
     cfdGraphicsObject& operator=( const cfdGraphicsObject& input );
 
-    enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};///<types of viz objects possible to add to scene
+    enum VizType
+    {
+        TRANSIENT, TEXTURE, CLASSIC, OTHER
+    }
+    ;///<types of viz objects possible to add to scene
 
     ///Set parent node to add "graphics node" to
     ///\param input
@@ -130,7 +134,7 @@ protected:
     ves::xplorer::scenegraph::DCS* worldNode;///<SceneGraph world node.
     VizType type;///<Type of viz: trans, classic, texture.
 
-    // used for animated particles and other ss 
+    // used for animated particles and other ss
     // animated features
     //ves::xplorer::scenegraph::cfdTempAnimation* animation;
     ves::xplorer::Model* model;///<Xplorer cfd model.

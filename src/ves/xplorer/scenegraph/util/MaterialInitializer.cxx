@@ -44,33 +44,33 @@ using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
 MaterialInitializer::MaterialInitializer( osg::Node* osg_node )
-:
-NodeVisitor( TRAVERSE_ALL_CHILDREN )
+        :
+        NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
-	osg_node->accept( *this );
+    osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 MaterialInitializer::~MaterialInitializer()
 {
-   ;
+    ;
 }
-////////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////
 void MaterialInitializer::apply( osg::Group& node )
 {
-   osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
-   osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+    osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
-   if( material.valid() )
-   {
-      return;
-   }
+    if( material.valid() )
+    {
+        return;
+    }
 
-   else
-   {
-      material = new osg::Material();
-      material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
+    else
+    {
+        material = new osg::Material();
+        material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
 
-      stateset->setAttribute( material.get(), osg::StateAttribute::ON );
-   }
+        stateset->setAttribute( material.get(), osg::StateAttribute::ON );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

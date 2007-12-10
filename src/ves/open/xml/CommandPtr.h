@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::CommandPtr.  To get the full 
+ * VE_XML::CommandPtr.  To get the full
  * declaration of VE_XML::CommandPtr
  * VE_Open/XML/Command.h must be included, too.
  */
@@ -50,12 +50,12 @@ namespace open
 {
 namespace xml
 {
-   class Command;
-   /// Typedef for a SmartPtr type for the Command.
-   typedef ves::util::ClassPtrDef<Command>::type  CommandPtr;
-   typedef ves::util::SharedPtrDef<Command>::type CommandSharedPtr;
-   typedef ves::util::WeakPtrDef<Command>::type   CommandWeakPtr;
-   typedef ves::util::ScopedPtrDef<Command>::type CommandScopedPtr;
+class Command;
+/// Typedef for a SmartPtr type for the Command.
+typedef ves::util::ClassPtrDef<Command>::type  CommandPtr;
+typedef ves::util::SharedPtrDef<Command>::type CommandSharedPtr;
+typedef ves::util::WeakPtrDef<Command>::type   CommandWeakPtr;
+typedef ves::util::ScopedPtrDef<Command>::type CommandScopedPtr;
 }
 }
 }

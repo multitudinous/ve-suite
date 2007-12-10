@@ -42,7 +42,7 @@
 
 #include <ves/VEConfig.h>
 /*!\file XMLObjectFactory.h
-  Factory class for creating XMLObject 
+  Factory class for creating XMLObject
   */
 /*!\class VE_XML::XMLObjectFactory
   *Factory class for creating XMLObject s
@@ -53,8 +53,8 @@ namespace open
 {
 namespace xml
 {
-   class XMLObject;
-   class CreationEventHandler;
+class XMLObject;
+class CreationEventHandler;
 }
 }
 }
@@ -69,44 +69,44 @@ class VE_XML_EXPORTS XMLObjectFactory
 {
 public:
 
-   ///Get an instance of the ObjectFactory
-   static XMLObjectFactory* Instance();
-   
-   ///Cleanup the instance of the ObjectFactory
-   static void DeleteInstance();
+    ///Get an instance of the ObjectFactory
+    static XMLObjectFactory* Instance();
 
-   ///\param objectType The unique string specifying what object to create
-   ///\param objectNamespace The namespace that the object belongs to. 
-   XMLObject* CreateXMLObject(std::string objectType,
-                                             std::string objectNamespace);
+    ///Cleanup the instance of the ObjectFactory
+    static void DeleteInstance();
 
-   ///\param objectToCopy The object to pass to the copy constructor
-   XMLObject* CreateXMLObjectCopy( XMLObject* objectToCopy );
+    ///\param objectType The unique string specifying what object to create
+    ///\param objectNamespace The namespace that the object belongs to.
+    XMLObject* CreateXMLObject( std::string objectType,
+                                std::string objectNamespace );
 
-   ///Register a CreationEventHandler for a namespace
-   ///Valid types so far are:
-   ///XML == Objects from the VE_XML namespace
-   ///CAD == Objects from the CAD namespace
-   ///Shader == Objects from the Shader
-   ///\param objectNamespace The unique string specifying what namespace to register
-   ///\param objectCreator The objectCreator to register 
-   bool RegisterObjectCreator(std::string objectNamespace,CreationEventHandler* objectCreator);
+    ///\param objectToCopy The object to pass to the copy constructor
+    XMLObject* CreateXMLObjectCopy( XMLObject* objectToCopy );
 
-   ///Check if a CreationEventHandler is registered 
-   ///Valid types so far are:
-   ///XML == Objects from the VE_XML namespace
-   ///CAD == Objects from the CAD namespace
-   ///Shader == Objects from the Shader
-   ///\param objectNamespace The unique string specifying what namespace to register
-   bool ObjectCreatorIsRegistered(std::string objectNamespace);
+    ///Register a CreationEventHandler for a namespace
+    ///Valid types so far are:
+    ///XML == Objects from the VE_XML namespace
+    ///CAD == Objects from the CAD namespace
+    ///Shader == Objects from the Shader
+    ///\param objectNamespace The unique string specifying what namespace to register
+    ///\param objectCreator The objectCreator to register
+    bool RegisterObjectCreator( std::string objectNamespace, CreationEventHandler* objectCreator );
+
+    ///Check if a CreationEventHandler is registered
+    ///Valid types so far are:
+    ///XML == Objects from the VE_XML namespace
+    ///CAD == Objects from the CAD namespace
+    ///Shader == Objects from the Shader
+    ///\param objectNamespace The unique string specifying what namespace to register
+    bool ObjectCreatorIsRegistered( std::string objectNamespace );
 protected:
-   ///Base constructor
-   XMLObjectFactory( );
-   ///Destructor
-   virtual ~XMLObjectFactory();
+    ///Base constructor
+    XMLObjectFactory( );
+    ///Destructor
+    virtual ~XMLObjectFactory();
 
-   static XMLObjectFactory* _instanceOfFactory;///<The instance of the XMLObjectFactory
-   std::map< std::string,CreationEventHandler*> _objectCreators;///<Creators of XMLObjects in different namespaces.
+    static XMLObjectFactory* _instanceOfFactory;///<The instance of the XMLObjectFactory
+    std::map< std::string, CreationEventHandler*> _objectCreators;///<Creators of XMLObjects in different namespaces.
 };
 }
 }

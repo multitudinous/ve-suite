@@ -71,29 +71,29 @@ void ExportMenu::CreateExportMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::OnScreenShot( wxCommandEvent& event )
 {
-    wxFileDialog dialog( NULL, _T("Save Screen Shot..."),
-        ::wxGetCwd(),
-        _T("xploreScreenCap.jpg"),
-        _T("JPG Image (*.jpg)|*.jpg"),
-        wxFD_SAVE|wxFD_OVERWRITE_PROMPT
-        );
-    
+    wxFileDialog dialog( NULL, _T( "Save Screen Shot..." ),
+                         ::wxGetCwd(),
+                         _T( "xploreScreenCap.jpg" ),
+                         _T( "JPG Image (*.jpg)|*.jpg" ),
+                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                       );
+
     if( dialog.ShowModal() != wxID_OK )
     {
         return;
     }
-    
+
     wxFileName vesFileName( dialog.GetPath() );
     vesFileName.ClearExt();
-    vesFileName.SetExt( _("jpg") );
-    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    vesFileName.SetExt( _( "jpg" ) );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
     if( !success )
     {
-        wxMessageBox( _("Can't save the screen capture on another drive."), 
-                      _("JPG Write Error"), wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Can't save the screen capture on another drive." ),
+                      _( "JPG Write Error" ), wxOK | wxICON_INFORMATION );
         return;
     }
-    
+
     DataValuePairWeakPtr dvp = new DataValuePair();
     CommandPtr command = new Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
@@ -102,41 +102,41 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->
-        SendCommandStringToXplorer( command );
+    SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::OnDOTFile( wxCommandEvent& event )
 {
-    wxFileDialog dialog( NULL, _T("Save OSG Graph File..."),
-        ::wxGetCwd(),
-        _T("osgGraph.dot"),
-        _T("DOT Graph (*.dot)|*.dot"),
-        wxFD_SAVE|wxFD_OVERWRITE_PROMPT
-        );
+    wxFileDialog dialog( NULL, _T( "Save OSG Graph File..." ),
+                         ::wxGetCwd(),
+                         _T( "osgGraph.dot" ),
+                         _T( "DOT Graph (*.dot)|*.dot" ),
+                         wxFD_SAVE | wxFD_OVERWRITE_PROMPT
+                       );
 
     if( dialog.ShowModal() != wxID_OK )
     {
         return;
     }
-    
+
     wxFileName vesFileName( dialog.GetPath() );
     vesFileName.ClearExt();
-    vesFileName.SetExt( _("dot") );
-    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );   
+    vesFileName.SetExt( _( "dot" ) );
+    bool success = vesFileName.MakeRelativeTo( ::wxGetCwd() );
     if( !success )
     {
-        wxMessageBox( _("Can't save the graph file on another drive."), 
-                      _("DOT Write Error"), wxOK | wxICON_INFORMATION );
+        wxMessageBox( _( "Can't save the graph file on another drive." ),
+                      _( "DOT Write Error" ), wxOK | wxICON_INFORMATION );
         return;
     }
-    
+
     DataValuePairWeakPtr dvp = new DataValuePair();
     CommandPtr command = new Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "DOT_FILE" ) );
     command->AddDataValuePair( dvp );
-    
+
     CORBAServiceList::instance()->
-        SendCommandStringToXplorer( command );
+    SendCommandStringToXplorer( command );
 }

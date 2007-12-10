@@ -43,8 +43,8 @@
 
 namespace osg
 {
-    class Node;
-    class Geode;
+class Node;
+class Geode;
 }
 
 // --- Bullet Includes --- //
@@ -70,7 +70,7 @@ class osgToBullet;
  *
  */
 /*!\class ves::xplorer::scenegraph::PhysicsRigidBody
- * 
+ *
  */
 /*!\namespace ves::xplorer::scenegraph
  *

@@ -36,7 +36,7 @@
 cfdVEAvailModules API
 */
 /*!\class ves::xplorer::cfdVEAvailModules
-* 
+*
 */
 
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
@@ -56,10 +56,10 @@ public:
     ///Destructor
     ~cfdVEAvailModules( void );
     //Load all the modules from the dlls
-    bool LoadModules(); 
+    bool LoadModules();
     ///Get the plugin loader to load available plugins
     cfdVEPluginLoader* GetLoader( void );
-    ///Reset the plugin loader so that plugins can be 
+    ///Reset the plugin loader so that plugins can be
     ///loaded as required by the user
     void ResetPluginLoader( void );
 

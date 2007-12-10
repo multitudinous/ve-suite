@@ -43,87 +43,87 @@
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
-cfd1DTextInput::cfd1DTextInput( void ):DCS()
+cfd1DTextInput::cfd1DTextInput( void ): DCS()
 {
-   this->geode = new ves::xplorer::scenegraph::Geode();
-	(( ves::xplorer::scenegraph::DCS* )this)->AddChild( this->geode.get() );
+    this->geode = new ves::xplorer::scenegraph::Geode();
+    (( ves::xplorer::scenegraph::DCS* )this )->AddChild( this->geode.get() );
 
-   // Do we need to initialize this->text here?
-   // If this->text is required, it should probably be a constructor argument
+    // Do we need to initialize this->text here?
+    // If this->text is required, it should probably be a constructor argument
 }
 
 cfd1DTextInput::~cfd1DTextInput( void )
 {
-   //vprDEBUG(vesDBG,2) << "cfd1DTextInput Destructor: doing nothing" 
-   //                       << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vesDBG,2) << "cfd1DTextInput Destructor: doing nothing"
+    //                       << std::endl << vprDEBUG_FLUSH;
 }
 
 ves::xplorer::scenegraph::DCS* cfd1DTextInput::getpfDCS( void )
 {
-   return (ves::xplorer::scenegraph::DCS*)this;
+    return ( ves::xplorer::scenegraph::DCS* )this;
 }
 
 void cfd1DTextInput::SetFilename( std::string text )
 {
-   this->text = text;
-   vprDEBUG(vesDBG,1) << "\tcfd1DTextInput : " << this->text
-                          << std::endl << vprDEBUG_FLUSH;
+    this->text = text;
+    vprDEBUG( vesDBG, 1 ) << "\tcfd1DTextInput : " << this->text
+    << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfd1DTextInput::SetTransforms( double scale[ 3 ],
                                     double trans[ 3 ],
                                     double rot[ 3 ] )
 {
-   this->SetScaleArray( scale );
-   this->SetTranslationArray( trans );
-   this->SetRotationArray( rot );
+    this->SetScaleArray( scale );
+    this->SetTranslationArray( trans );
+    this->SetRotationArray( rot );
 }
 
-void cfd1DTextInput::UpdateTextColor( double redColor, double greenColor, double blueColor)
+void cfd1DTextInput::UpdateTextColor( double redColor, double greenColor, double blueColor )
 {
-  vtkVectorText* labelScalar       = vtkVectorText::New();
-  vtkPolyDataMapper *labelMapper   = vtkPolyDataMapper::New();
-  actor                            = vtkActor::New();
+    vtkVectorText* labelScalar       = vtkVectorText::New();
+    vtkPolyDataMapper *labelMapper   = vtkPolyDataMapper::New();
+    actor                            = vtkActor::New();
 
-  labelScalar->SetText( text.c_str() );
-  labelMapper->SetInput( labelScalar->GetOutput() );
-  actor->SetMapper( labelMapper );
-  this->actor->GetProperty()->SetSpecularPower( 20.0f );
-  double color[ 3 ];
-  color[ 0 ] = redColor;
-  color[ 1 ] = greenColor;
-  color[ 2 ] = blueColor;
-  this->actor->GetProperty()->SetColor( color );
+    labelScalar->SetText( text.c_str() );
+    labelMapper->SetInput( labelScalar->GetOutput() );
+    actor->SetMapper( labelMapper );
+    this->actor->GetProperty()->SetSpecularPower( 20.0f );
+    double color[ 3 ];
+    color[ 0 ] = redColor;
+    color[ 1 ] = greenColor;
+    color[ 2 ] = blueColor;
+    this->actor->GetProperty()->SetColor( color );
 
-  this->geode->TranslateToGeode( actor );
+    this->geode->TranslateToGeode( actor );
 
-  actor->Delete();
-  labelMapper->Delete();
-  labelScalar->Delete();
+    actor->Delete();
+    labelMapper->Delete();
+    labelScalar->Delete();
 }
 
 void cfd1DTextInput::Update( void )
 {
-   vtkVectorText* labelScalar = vtkVectorText::New();   
-   labelScalar->SetText( this->text.c_str() );
+    vtkVectorText* labelScalar = vtkVectorText::New();
+    labelScalar->SetText( this->text.c_str() );
 
-   vtkPolyDataMapper *labelMapper = vtkPolyDataMapper::New();
-   labelMapper->SetInput( labelScalar->GetOutput() );
+    vtkPolyDataMapper *labelMapper = vtkPolyDataMapper::New();
+    labelMapper->SetInput( labelScalar->GetOutput() );
 
-   vtkActor * actor = vtkActor::New();
-   actor->SetMapper( labelMapper );
-   actor->GetProperty()->SetSpecularPower( 20.0f );
+    vtkActor * actor = vtkActor::New();
+    actor->SetMapper( labelMapper );
+    actor->GetProperty()->SetSpecularPower( 20.0f );
 
-   // set text color to green
-   double color[ 3 ];
-   color[ 0 ] = color[ 2 ] = 0;
-   color[ 1 ] = 1;
-   actor->GetProperty()->SetColor( color );
+    // set text color to green
+    double color[ 3 ];
+    color[ 0 ] = color[ 2 ] = 0;
+    color[ 1 ] = 1;
+    actor->GetProperty()->SetColor( color );
 
-   this->geode->TranslateToGeode( actor );
+    this->geode->TranslateToGeode( actor );
 
-   actor->Delete();
-   labelMapper->Delete();
-   labelScalar->Delete();
+    actor->Delete();
+    labelMapper->Delete();
+    labelScalar->Delete();
 }
 

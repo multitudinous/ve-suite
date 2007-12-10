@@ -54,192 +54,190 @@
 #include <string>
 
 using namespace ves::conductor::util;
-BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
-   EVT_BUTTON(PLAY_BUTTON, UI_TransientDialog::_onPlay)
-   EVT_BUTTON(STOP_BUTTON, UI_TransientDialog::_onStop)
-   EVT_BUTTON(FORWARD_STEP_BUTTON, UI_TransientDialog::_onForwardStep)
-   EVT_BUTTON(BACKWARD_STEP_BUTTON, UI_TransientDialog::_onBackwardStep)
-   EVT_SPINCTRL(CURRENT_FRAME, UI_TransientDialog::_onSelectFrame)
-   EVT_SPINCTRL(DURATION_CNTL_BOX, UI_TransientDialog::_onSetDuration)
+BEGIN_EVENT_TABLE( UI_TransientDialog, wxDialog )
+    EVT_BUTTON( PLAY_BUTTON, UI_TransientDialog::_onPlay )
+    EVT_BUTTON( STOP_BUTTON, UI_TransientDialog::_onStop )
+    EVT_BUTTON( FORWARD_STEP_BUTTON, UI_TransientDialog::_onForwardStep )
+    EVT_BUTTON( BACKWARD_STEP_BUTTON, UI_TransientDialog::_onBackwardStep )
+    EVT_SPINCTRL( CURRENT_FRAME, UI_TransientDialog::_onSelectFrame )
+    EVT_SPINCTRL( DURATION_CNTL_BOX, UI_TransientDialog::_onSetDuration )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////
 //Constructor                                        //
 ///////////////////////////////////////////////////////
-UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
-                                       wxWindow* parent, 
-                                       wxWindowID id, 
-                                       std::string title)
-:BaseDialog(parent,id,title)
+UI_TransientDialog::UI_TransientDialog( int numTimeSteps,
+                                        wxWindow* parent,
+                                        wxWindowID id,
+                                        std::string title )
+        : BaseDialog( parent, id, title )
 {
-   //_tab = 0;
-   //_nTimeSteps = numTimeSteps;
-   _nTimeSteps = 100;
-   _commandPrefix = "TB_";
+    //_tab = 0;
+    //_nTimeSteps = numTimeSteps;
+    _nTimeSteps = 100;
+    _commandPrefix = "TB_";
 
-   _playImage = new wxImage(play_xpm);
-   _forwardImage = new wxImage(next_xpm);
-   _backwardImage = new wxImage(prev_xpm);
-   _stopImage = new wxImage(stop_xpm);
-   
-   _playButton = new wxBitmapButton(this, PLAY_BUTTON,
-		                           wxBitmap(*_playImage),
-				                      wxDefaultPosition, 
-				                      wxSize(35,40)
-#ifdef WIN32
-                                 ,wxBU_AUTODRAW
-#endif
-                                  );
+    _playImage = new wxImage( play_xpm );
+    _forwardImage = new wxImage( next_xpm );
+    _backwardImage = new wxImage( prev_xpm );
+    _stopImage = new wxImage( stop_xpm );
 
-   _stopButton = new wxBitmapButton(this, STOP_BUTTON,
-		                           wxBitmap(*_stopImage),
-				                      wxDefaultPosition, 
-				                      wxSize(35,40)
+    _playButton = new wxBitmapButton( this, PLAY_BUTTON,
+                                      wxBitmap( *_playImage ),
+                                      wxDefaultPosition,
+                                      wxSize( 35, 40 )
 #ifdef WIN32
-                                 ,wxBU_AUTODRAW
+                                      , wxBU_AUTODRAW
 #endif
-                                 );
-   _nextButton = new wxBitmapButton(this, FORWARD_STEP_BUTTON,
-		                           wxBitmap(*_forwardImage),
-				                      wxDefaultPosition, 
-				                      wxSize(35,40)
+                                    );
+
+    _stopButton = new wxBitmapButton( this, STOP_BUTTON,
+                                      wxBitmap( *_stopImage ),
+                                      wxDefaultPosition,
+                                      wxSize( 35, 40 )
 #ifdef WIN32
-                                 ,wxBU_AUTODRAW
+                                      , wxBU_AUTODRAW
 #endif
-                                 );
-   _prevButton = new wxBitmapButton(this, BACKWARD_STEP_BUTTON,
-		                           wxBitmap(*_backwardImage),
-				                      wxDefaultPosition, 
-				                      wxSize(35,40)
+                                    );
+    _nextButton = new wxBitmapButton( this, FORWARD_STEP_BUTTON,
+                                      wxBitmap( *_forwardImage ),
+                                      wxDefaultPosition,
+                                      wxSize( 35, 40 )
 #ifdef WIN32
-                                 ,wxBU_AUTODRAW
+                                      , wxBU_AUTODRAW
 #endif
-                                 );
-   _currentFrame = new wxSpinCtrl(this, CURRENT_FRAME,
-		                  wxEmptyString, wxDefaultPosition,
-				             wxDefaultSize, 0, 0, _nTimeSteps, 0);
-   _currentFrame->Enable(false);
-   _duration = new wxSpinCtrlDbl( *this, DURATION_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
-                                   0, 100, 0, 1.0, -1, wxEmptyString);
-   _buildGUI();
+                                    );
+    _prevButton = new wxBitmapButton( this, BACKWARD_STEP_BUTTON,
+                                      wxBitmap( *_backwardImage ),
+                                      wxDefaultPosition,
+                                      wxSize( 35, 40 )
+#ifdef WIN32
+                                      , wxBU_AUTODRAW
+#endif
+                                    );
+    _currentFrame = new wxSpinCtrl( this, CURRENT_FRAME,
+                                    wxEmptyString, wxDefaultPosition,
+                                    wxDefaultSize, 0, 0, _nTimeSteps, 0 );
+    _currentFrame->Enable( false );
+    _duration = new wxSpinCtrlDbl( *this, DURATION_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0,
+                                   0, 100, 0, 1.0, -1, wxEmptyString );
+    _buildGUI();
 }
 ///////////////////////////////////////
 void UI_TransientDialog::_buildGUI()
 {
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer* spinSizer = new wxBoxSizer(wxHORIZONTAL);
-   wxBoxSizer* controlSizer = new wxBoxSizer(wxHORIZONTAL);
-   
-   wxStaticBox* timeStep = new wxStaticBox(this,-1,
-                                _("Current Timestep"));
-   wxStaticBoxSizer* tStepSizer = new wxStaticBoxSizer(timeStep,wxHORIZONTAL);
+    wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* spinSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* controlSizer = new wxBoxSizer( wxHORIZONTAL );
 
-   wxStaticBox* duration = new wxStaticBox(this,-1,
-                                _("Duration (s)"));
-   wxStaticBoxSizer* dSizer = new wxStaticBoxSizer(duration,wxHORIZONTAL);
-   //wxBoxSizer* dSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxStaticBox* timeStep = new wxStaticBox( this, -1,
+                                             _( "Current Timestep" ) );
+    wxStaticBoxSizer* tStepSizer = new wxStaticBoxSizer( timeStep, wxHORIZONTAL );
 
-   tStepSizer->Add(_currentFrame,1,wxALIGN_CENTER);
-   dSizer->Add(_duration,1,wxALIGN_CENTER);
-   spinSizer->Add(tStepSizer,1,wxALIGN_CENTER);
-   spinSizer->Add(dSizer,1,wxALIGN_CENTER);
+    wxStaticBox* duration = new wxStaticBox( this, -1,
+                                             _( "Duration (s)" ) );
+    wxStaticBoxSizer* dSizer = new wxStaticBoxSizer( duration, wxHORIZONTAL );
+    //wxBoxSizer* dSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   controlSizer->Add(_prevButton,1,wxALIGN_CENTER|wxEXPAND);
-   controlSizer->Add(_stopButton,1,wxALIGN_CENTER|wxEXPAND);
-   controlSizer->Add(_playButton,1,wxALIGN_CENTER|wxEXPAND);
-   controlSizer->Add(_nextButton,1,wxALIGN_CENTER|wxEXPAND);
+    tStepSizer->Add( _currentFrame, 1, wxALIGN_CENTER );
+    dSizer->Add( _duration, 1, wxALIGN_CENTER );
+    spinSizer->Add( tStepSizer, 1, wxALIGN_CENTER );
+    spinSizer->Add( dSizer, 1, wxALIGN_CENTER );
 
-   mainSizer->Add(controlSizer,0,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(spinSizer,1,wxALIGN_CENTER|wxEXPAND);
-   _duration->Raise();
-   _currentFrame->Raise();
-   //_addOKButton(mainSizer);
+    controlSizer->Add( _prevButton, 1, wxALIGN_CENTER | wxEXPAND );
+    controlSizer->Add( _stopButton, 1, wxALIGN_CENTER | wxEXPAND );
+    controlSizer->Add( _playButton, 1, wxALIGN_CENTER | wxEXPAND );
+    controlSizer->Add( _nextButton, 1, wxALIGN_CENTER | wxEXPAND );
 
-   SetSize(200,120);
-   SetAutoLayout(true);
-   SetSizer(mainSizer);
+    mainSizer->Add( controlSizer, 0, wxALIGN_CENTER | wxEXPAND );
+    mainSizer->Add( spinSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    _duration->Raise();
+    _currentFrame->Raise();
+    //_addOKButton(mainSizer);
+
+    SetSize( 200, 120 );
+    SetAutoLayout( true );
+    SetSizer( mainSizer );
 }
 ////////////////////////////////////////////////////////////////
-void UI_TransientDialog::SetCommandPrefix(std::string newPrefix)
+void UI_TransientDialog::SetCommandPrefix( std::string newPrefix )
 {
-   _commandPrefix = newPrefix;
+    _commandPrefix = newPrefix;
 }
 ///////////////////////////////////////////////////////
-void UI_TransientDialog::_onPlay(wxCommandEvent& event )
+void UI_TransientDialog::_onPlay( wxCommandEvent& event )
 {
-   ClearInstructions();
-   _commandName = std::string(_commandPrefix + "TRANSIENT_MODE_UPDATE");
-   
-   ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
-   updateMode->SetData("Mode","Play");
-   _instructions.push_back(updateMode);
-   _sendCommandsToXplorer();
-   ClearInstructions();
+    ClearInstructions();
+    _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
+
+    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    updateMode->SetData( "Mode", "Play" );
+    _instructions.push_back( updateMode );
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
 ///////////////////////////////////////////////////////////////
-void UI_TransientDialog::_onForwardStep(wxCommandEvent& event )
+void UI_TransientDialog::_onForwardStep( wxCommandEvent& event )
 {
-   ClearInstructions();
-   _commandName = std::string(_commandPrefix+"TRANSIENT_MODE_UPDATE");
-   
-   ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
-   updateMode->SetData("Mode","Step");
-   _instructions.push_back(updateMode);
+    ClearInstructions();
+    _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-   
-   ves::open::xml::DataValuePair* updateDirection = new ves::open::xml::DataValuePair();
-   updateDirection->SetData("Direction","Forward");
-   _instructions.push_back(updateDirection);
+    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    updateMode->SetData( "Mode", "Step" );
+    _instructions.push_back( updateMode );
 
-   _sendCommandsToXplorer();
-   ClearInstructions();
+
+    ves::open::xml::DataValuePair* updateDirection = new ves::open::xml::DataValuePair();
+    updateDirection->SetData( "Direction", "Forward" );
+    _instructions.push_back( updateDirection );
+
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
 ///////////////////////////////////////////////////////////////
-void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event )
+void UI_TransientDialog::_onBackwardStep( wxCommandEvent& event )
 {
-   ClearInstructions();
-   _commandName = std::string(_commandPrefix + "TRANSIENT_MODE_UPDATE");
-   
-   ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
-   updateMode->SetData("Mode","Step");
-   _instructions.push_back(updateMode);
+    ClearInstructions();
+    _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-   
-   ves::open::xml::DataValuePair* updateDirection = new ves::open::xml::DataValuePair();
-   updateDirection->SetData("Direction","Backward");
-   _instructions.push_back(updateDirection);
+    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    updateMode->SetData( "Mode", "Step" );
+    _instructions.push_back( updateMode );
 
-   _sendCommandsToXplorer();
-   ClearInstructions();
+
+    ves::open::xml::DataValuePair* updateDirection = new ves::open::xml::DataValuePair();
+    updateDirection->SetData( "Direction", "Backward" );
+    _instructions.push_back( updateDirection );
+
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////
-void UI_TransientDialog::_onStop(wxCommandEvent& event )
+void UI_TransientDialog::_onStop( wxCommandEvent& event )
 {
-   ClearInstructions();
-   _commandName = std::string(_commandPrefix + "TRANSIENT_MODE_UPDATE");
-   
-   ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
-   updateMode->SetData("Mode","Stop");
-   _instructions.push_back(updateMode);
-   _sendCommandsToXplorer();
-   ClearInstructions();
-}
-/////////////////////////////////////////////////////////////////////
-void UI_TransientDialog::_onSetDuration(wxSpinEvent& WXUNUSED(event))
-{
-   ClearInstructions();
-   _commandName = std::string(_commandPrefix + "TRANSIENT_DURATION_UPDATE");
-  
-   ves::open::xml::DataValuePair* duration = new ves::open::xml::DataValuePair();
-   duration->SetData("Duration", _duration->GetValue());
-   _instructions.push_back(duration);
+    ClearInstructions();
+    _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-   _sendCommandsToXplorer();
-   ClearInstructions();
+    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    updateMode->SetData( "Mode", "Stop" );
+    _instructions.push_back( updateMode );
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
 /////////////////////////////////////////////////////////////////////
-void UI_TransientDialog::_onSelectFrame(wxSpinEvent& WXUNUSED(event))
+void UI_TransientDialog::_onSetDuration( wxSpinEvent& WXUNUSED( event ) )
 {
-   
+    ClearInstructions();
+    _commandName = std::string( _commandPrefix + "TRANSIENT_DURATION_UPDATE" );
+
+    ves::open::xml::DataValuePair* duration = new ves::open::xml::DataValuePair();
+    duration->SetData( "Duration", _duration->GetValue() );
+    _instructions.push_back( duration );
+
+    _sendCommandsToXplorer();
+    ClearInstructions();
 }
+/////////////////////////////////////////////////////////////////////
+void UI_TransientDialog::_onSelectFrame( wxSpinEvent& WXUNUSED( event ) )
+{}
 

@@ -47,68 +47,67 @@ EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler()
     m_activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler(const EphemerisAutoDateTimeEventHandler& ceh)
+EphemerisAutoDateTimeEventHandler::EphemerisAutoDateTimeEventHandler( const EphemerisAutoDateTimeEventHandler& ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }
 ///////////////////////////////////////////////////////////////////////
 EphemerisAutoDateTimeEventHandler::~EphemerisAutoDateTimeEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////////
 EphemerisAutoDateTimeEventHandler&
-EphemerisAutoDateTimeEventHandler::operator=(const EphemerisAutoDateTimeEventHandler& rhs)
+EphemerisAutoDateTimeEventHandler::operator=( const EphemerisAutoDateTimeEventHandler& rhs )
 {
-    if(this != &rhs)
+    if( this != &rhs )
     {
         m_activeModel = rhs.m_activeModel;
     }
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void EphemerisAutoDateTimeEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
+void EphemerisAutoDateTimeEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisAutoDateTime = dynamic_cast<ves::open::xml::Command*>(xmlObject);
+        ves::open::xml::Command* ephemerisAutoDateTime = dynamic_cast<ves::open::xml::Command*>( xmlObject );
         if( ephemerisAutoDateTime )
         {
             ves::open::xml::DataValuePairWeakPtr autoDateTime =
-                                 ephemerisAutoDateTime->GetDataValuePair( "Auto Date Time" );
+                ephemerisAutoDateTime->GetDataValuePair( "Auto Date Time" );
             long int onOff = 0;
-            autoDateTime->GetData(onOff);
-         
-            osgEphemeris::EphemerisModel* ephemerisModel =
-                  ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel(true);
+            autoDateTime->GetData( onOff );
 
-            ephemerisModel->setAutoDateTime((onOff==0)?false:true);
+            osgEphemeris::EphemerisModel* ephemerisModel =
+                ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( true );
+
+            ephemerisModel->setAutoDateTime(( onOff == 0 ) ? false : true );
         }
     }
-    catch(...)
+    catch ( ... )
     {
         m_activeModel = 0;
-        std::cout<<"Invalid command passed to EphemerisAutoDateTimeEventHandler!!"<<std::endl;
+        std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
 
 
     }
-    
+
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-void EphemerisAutoDateTimeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void EphemerisAutoDateTimeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
     try
     {
-        if(baseObject)
+        if( baseObject )
         {
-            m_activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
+            m_activeModel = dynamic_cast<ves::xplorer::Model*>( baseObject );
         }
         else
         {
             m_activeModel =
-                    ves::xplorer::ModelHandler::instance()->GetActiveModel();
+                ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch(...)
+    catch ( ... )
     {
         m_activeModel = 0;
     }

@@ -32,19 +32,19 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <ves/conductor/StringParse.h>
 
-int get_tokens(char* s, std::vector<wxString> &toks, const char* delim)
+int get_tokens( char* s, std::vector<wxString> &toks, const char* delim )
 {
-  char* token;
-  int i=0;
-  token = strtok(s, delim);
-  
-  toks.clear();
-  while( token )
+    char* token;
+    int i = 0;
+    token = strtok( s, delim );
+
+    toks.clear();
+    while( token )
     {
-      i++;
-      toks.push_back(wxString(token,wxConvUTF8));
-      token = strtok(NULL, delim);
+        i++;
+        toks.push_back( wxString( token, wxConvUTF8 ) );
+        token = strtok( NULL, delim );
     }
-  
-  return i; 
+
+    return i;
 }

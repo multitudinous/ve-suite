@@ -45,15 +45,15 @@ using namespace ves::open::xml::shader;
 
 pfType* ves::xplorer::scenegraph::util::Attribute::_classType = NULL;
 //initialize our class w/ performer at run time
-void ves::xplorer::scenegraph::util::Attribute::init(void)
+void ves::xplorer::scenegraph::util::Attribute::init( void )
 {
-   if(_classType == 0)
-   {
-      //initialize the parent
-      pfGeoState::init();
-      //create the new class type
-      _classType = new pfType(pfGeoState::getClassType(),"Attribute");
-   }
+    if( _classType == 0 )
+    {
+        //initialize the parent
+        pfGeoState::init();
+        //create the new class type
+        _classType = new pfType( pfGeoState::getClassType(), "Attribute" );
+    }
 }
 #endif
 #include <ves/open/xml/cad/CADAttribute.h>
@@ -80,199 +80,198 @@ void ves::xplorer::scenegraph::util::Attribute::init(void)
 //////////////////////
 Attribute::Attribute()
 #ifdef _OSG
-:osg::StateSet()
+        :
+        osg::StateSet()
 #elif _PERFORMER
-:pfGeoState()
+        :
+        pfGeoState()
 #endif
 {
 #ifdef _PERFORMER
-   init();
-   setType(_classType);
+    init();
+    setType( _classType );
 #endif
 
 }
 #ifdef _OSG
 //////////////////////////////////////////////////////////
-Attribute::Attribute(const Attribute& veAttribute,
-                   const osg::CopyOp& copyop)
-:osg::StateSet(veAttribute,copyop)
-{
-}
+Attribute::Attribute( const Attribute& veAttribute,
+                      const osg::CopyOp& copyop )
+        : osg::StateSet( veAttribute, copyop )
+{}
 #endif
 ///////////////////////
 Attribute::~Attribute()
-{
-}
+{}
 //////////////////////////////////////////////////////////////////////
-void Attribute::UpdateMaterialMode(std::string type, std::string mode)
+void Attribute::UpdateMaterialMode( std::string type, std::string mode )
 {
 #ifdef _OSG
-   osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>(this->getAttribute(osg::StateAttribute::MATERIAL));   
-   if(material.valid())
-   {
-      if(type == "Color")
-      {
-         osg::Material::ColorMode colorMode = osg::Material::OFF;
-         if(mode == "Ambient")
-         {
-            colorMode = osg::Material::AMBIENT;
-         }
-         else if(mode == "Diffuse")
-         {
-            colorMode = osg::Material::DIFFUSE;
-         }
-         else if(mode == "Emissive")
-         {
-            colorMode = osg::Material::EMISSION;
-         }
-         else if(mode == "Specular")
-         {
-            colorMode = osg::Material::SPECULAR;
-         }
-         else if(mode == "Ambient_and_Diffuse")
-         {
-           colorMode = osg::Material::AMBIENT_AND_DIFFUSE; 
-         }
-         else if(mode == "Off")
-         {
-           colorMode = osg::Material::OFF;
-         }
-         material->setColorMode(colorMode);
-      }
-      else if(type == "Face")
-      {
-      }
-   }
+    osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>( this->getAttribute( osg::StateAttribute::MATERIAL ) );
+    if( material.valid() )
+    {
+        if( type == "Color" )
+        {
+            osg::Material::ColorMode colorMode = osg::Material::OFF;
+            if( mode == "Ambient" )
+            {
+                colorMode = osg::Material::AMBIENT;
+            }
+            else if( mode == "Diffuse" )
+            {
+                colorMode = osg::Material::DIFFUSE;
+            }
+            else if( mode == "Emissive" )
+            {
+                colorMode = osg::Material::EMISSION;
+            }
+            else if( mode == "Specular" )
+            {
+                colorMode = osg::Material::SPECULAR;
+            }
+            else if( mode == "Ambient_and_Diffuse" )
+            {
+                colorMode = osg::Material::AMBIENT_AND_DIFFUSE;
+            }
+            else if( mode == "Off" )
+            {
+                colorMode = osg::Material::OFF;
+            }
+            material->setColorMode( colorMode );
+        }
+        else if( type == "Face" )
+        {}
+    }
 #endif
 }
 ////////////////////////////////////////////////////////////////////////
-void Attribute::UpdateShaderUniform(Uniform* uniformToUpdate)
+void Attribute::UpdateShaderUniform( Uniform* uniformToUpdate )
 {
 #ifdef _OSG
-   ShaderHelper shaderHelper;
-   shaderHelper.SetStateSet(this);
-   shaderHelper.UpdateUniform(uniformToUpdate);
+    ShaderHelper shaderHelper;
+    shaderHelper.SetStateSet( this );
+    shaderHelper.UpdateUniform( uniformToUpdate );
 #endif
 }
 ////////////////////////////////////////////////////////////////
-void Attribute::UpdateMaterial(std::string componentName,std::string face,
-                               std::vector<double> values)
+void Attribute::UpdateMaterial( std::string componentName, std::string face,
+                                std::vector<double> values )
 {
 #ifdef _OSG
-   osg::Material::Face faceMode = osg::Material::FRONT_AND_BACK;
-   if(face == "Back")
-   {
-      faceMode = osg::Material::BACK;
-   }
-   else if(face == "Front")
-   {
-      faceMode = osg::Material::FRONT;
-   }
-   osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>(this->getAttribute(osg::StateAttribute::MATERIAL));   
-   if(material.valid())
-   {
-      /*std::cout<<"Updating: "<<componentName<<" :(";
-      std::cout<<values[0]<<",";
-      std::cout<<values[1]<<",";
-      std::cout<<values[2]<<",";
-      std::cout<<values[3]<<")"<<std::endl;
-     */ 
-      if(componentName == "Diffuse")
-      {
-         material->setDiffuse(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
-      }
-      else if(componentName == "Ambient")
-      {
-         material->setAmbient(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
-      }
-      else if(componentName == "Specular")
-      {
-         material->setSpecular(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
-      }
-      else if(componentName == "Emissive")
-      {
-         material->setEmission(faceMode,osg::Vec4(values[0],values[1],values[2],values[3]));
-      }
-      else if(componentName == "Opacity")
-      {
-         material->setAlpha(faceMode,values[0]);
-      }
-   }
-   else 
-   {
-      std::cout<<"Node doesn't contian a material!!"<<std::endl;
-   }
+    osg::Material::Face faceMode = osg::Material::FRONT_AND_BACK;
+    if( face == "Back" )
+    {
+        faceMode = osg::Material::BACK;
+    }
+    else if( face == "Front" )
+    {
+        faceMode = osg::Material::FRONT;
+    }
+    osg::ref_ptr<osg::Material> material = dynamic_cast<osg::Material*>( this->getAttribute( osg::StateAttribute::MATERIAL ) );
+    if( material.valid() )
+    {
+        /*std::cout<<"Updating: "<<componentName<<" :(";
+        std::cout<<values[0]<<",";
+        std::cout<<values[1]<<",";
+        std::cout<<values[2]<<",";
+        std::cout<<values[3]<<")"<<std::endl;
+        */
+        if( componentName == "Diffuse" )
+        {
+            material->setDiffuse( faceMode, osg::Vec4( values[0], values[1], values[2], values[3] ) );
+        }
+        else if( componentName == "Ambient" )
+        {
+            material->setAmbient( faceMode, osg::Vec4( values[0], values[1], values[2], values[3] ) );
+        }
+        else if( componentName == "Specular" )
+        {
+            material->setSpecular( faceMode, osg::Vec4( values[0], values[1], values[2], values[3] ) );
+        }
+        else if( componentName == "Emissive" )
+        {
+            material->setEmission( faceMode, osg::Vec4( values[0], values[1], values[2], values[3] ) );
+        }
+        else if( componentName == "Opacity" )
+        {
+            material->setAlpha( faceMode, values[0] );
+        }
+    }
+    else
+    {
+        std::cout << "Node doesn't contian a material!!" << std::endl;
+    }
 #endif
 }
 ////////////////////////////////////////////
 void Attribute::CreateTransparencyStateSet()
 {
-#ifdef _OSG  
-   ShaderHelper shaderHelper;
-   shaderHelper.SetStateSet(this);
-   shaderHelper.LoadTransparencyProgram();
+#ifdef _OSG
+    ShaderHelper shaderHelper;
+    shaderHelper.SetStateSet( this );
+    shaderHelper.LoadTransparencyProgram();
 
-   osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-   bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-   setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-   setRenderBinDetails(99,std::string("DepthSortedBin"));
-   setMode(GL_BLEND,osg::StateAttribute::ON);
-   setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+    osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+    setMode( GL_BLEND, osg::StateAttribute::ON );
+    setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
 
 #elif _PERFORMER
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////
-void Attribute::CreateStateSetFromAttribute( CADAttribute* attribute)
+void Attribute::CreateStateSetFromAttribute( CADAttribute* attribute )
 {
-   std::string attributeType = attribute->GetAttributeType();
-   bool blending = attribute->NeedsBlending();
+    std::string attributeType = attribute->GetAttributeType();
+    bool blending = attribute->NeedsBlending();
 
-   if( attributeType == std::string("Material"))
-   {
+    if( attributeType == std::string( "Material" ) )
+    {
 #ifdef _OSG
-      MaterialHelper materialHelper;
-      materialHelper.SetStateSet(this);
-      materialHelper.LoadMaterial(attribute->GetMaterial());
+        MaterialHelper materialHelper;
+        materialHelper.SetStateSet( this );
+        materialHelper.LoadMaterial( attribute->GetMaterial() );
 #elif _PERFORMER
 #endif
-   }
-   else if( attributeType == std::string("Program"))
-   {
-#ifdef _OSG      
-      
-      ShaderHelper shaderHelper;
-      shaderHelper.SetStateSet(this);
-      shaderHelper.LoadGLSLProgram(attribute->GetGLSLProgram());
-            osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-      bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-   
-      //probabaly need more params for the user to set but initially, we don't need that
-      //so either enable "typical" blending (1-alpha) and bin appropriately.
-      if (!blending) 
-      {
-         setRenderingHint(osg::StateSet::OPAQUE_BIN);
-         setMode(GL_BLEND,osg::StateAttribute::ON);
-      }
-      else
-      {
-        setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-        setRenderBinDetails(99,std::string("DepthSortedBin"));
-        setMode(GL_BLEND,osg::StateAttribute::ON);
-      }
-      setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+    }
+    else if( attributeType == std::string( "Program" ) )
+    {
+#ifdef _OSG
+
+        ShaderHelper shaderHelper;
+        shaderHelper.SetStateSet( this );
+        shaderHelper.LoadGLSLProgram( attribute->GetGLSLProgram() );
+        osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+        bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+
+        //probabaly need more params for the user to set but initially, we don't need that
+        //so either enable "typical" blending (1-alpha) and bin appropriately.
+        if( !blending )
+        {
+            setRenderingHint( osg::StateSet::OPAQUE_BIN );
+            setMode( GL_BLEND, osg::StateAttribute::ON );
+        }
+        else
+        {
+            setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+            setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+            setMode( GL_BLEND, osg::StateAttribute::ON );
+        }
+        setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
 #elif _PERFORMER
 #endif
-   }
+    }
 }
 #ifdef _OSG
 /////////////////////////////////////////////////////
-Attribute& Attribute::operator=(const osg::StateSet& rhs)
+Attribute& Attribute::operator=( const osg::StateSet& rhs )
 {
-   if(this != &rhs)
-   {
-      osg::StateSet::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        osg::StateSet::operator=( rhs );
+    }
+    return *this;
 }
 #endif

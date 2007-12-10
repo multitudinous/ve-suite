@@ -45,57 +45,53 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 StoredSceneEventHandler::StoredSceneEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 StoredSceneEventHandler
-::StoredSceneEventHandler(const StoredSceneEventHandler& ceh)
-{
-}
+::StoredSceneEventHandler( const StoredSceneEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 StoredSceneEventHandler::~StoredSceneEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-StoredSceneEventHandler& 
-StoredSceneEventHandler::operator=(const StoredSceneEventHandler& rhs)
+StoredSceneEventHandler&
+StoredSceneEventHandler::operator=( const StoredSceneEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void StoredSceneEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void StoredSceneEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
+{}
+//////////////////////////////////////////////////////////////////////////
+void StoredSceneEventHandler::Execute( XMLObject* veXMLObject )
 {
-}
-//////////////////////////////////////////////////////////////////////////   
-void StoredSceneEventHandler::Execute(XMLObject* veXMLObject)
-{
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      unsigned int whichChild =0;
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        unsigned int whichChild = 0;
 
-      if(command->GetDataValuePair("LOAD_PFB_FILE"))
-      {
-         command->GetDataValuePair("LOAD_PFB_FILE")->GetData(whichChild);
-	      ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->LoadScene(whichChild);
-         
-      }
-      else if(command->GetDataValuePair("CLEAR_PFB_FILE"))
-      {
-	      ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
-      }
-      else if(command->GetDataValuePair("RECORD_SCENE"))
-      {
-	      ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->RecordScene();
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!"<<std::endl;
-      std::cout<<"StoredSceneEventHandler::_operateOnNode()"<<std::endl;
-   }
+        if( command->GetDataValuePair( "LOAD_PFB_FILE" ) )
+        {
+            command->GetDataValuePair( "LOAD_PFB_FILE" )->GetData( whichChild );
+            ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->LoadScene( whichChild );
+
+        }
+        else if( command->GetDataValuePair( "CLEAR_PFB_FILE" ) )
+        {
+            ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->ClearStoredScenes();
+        }
+        else if( command->GetDataValuePair( "RECORD_SCENE" ) )
+        {
+            ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->RecordScene();
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "StoredSceneEventHandler::_operateOnNode()" << std::endl;
+    }
 }

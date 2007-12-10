@@ -45,34 +45,39 @@ namespace DataLoader
 class VE_USER_BUILDER_EXPORTS AnsysTranslator : public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   AnsysTranslator();
-   virtual ~AnsysTranslator();
-   ///Display help for the StarCD translator
-   virtual void DisplayHelp( void );
-   
-   class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
-   {
-   public:
-      AnsysTranslateCbk(){};
-      virtual ~AnsysTranslateCbk(){};
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-   protected:
-   };
-   class VE_USER_BUILDER_EXPORTS AnsysPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
-   public:
-      AnsysPreTranslateCbk(){};
-      virtual ~AnsysPreTranslateCbk(){};
-      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-   protected:
-   };
+    AnsysTranslator();
+    virtual ~AnsysTranslator();
+    ///Display help for the StarCD translator
+    virtual void DisplayHelp( void );
+
+class VE_USER_BUILDER_EXPORTS AnsysTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        AnsysTranslateCbk()
+        {};
+        virtual ~AnsysTranslateCbk()
+        {};
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+    protected:
+    };
+class VE_USER_BUILDER_EXPORTS AnsysPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        AnsysPreTranslateCbk()
+        {};
+        virtual ~AnsysPreTranslateCbk()
+        {};
+        void Preprocess( int argc, char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+    protected:
+    };
 protected:
-   AnsysPreTranslateCbk _cmdParser;
-   AnsysTranslateCbk ansysToVTK;
+    AnsysPreTranslateCbk _cmdParser;
+    AnsysTranslateCbk ansysToVTK;
 };
 }
 }

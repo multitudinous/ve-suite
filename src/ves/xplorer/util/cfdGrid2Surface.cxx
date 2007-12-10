@@ -47,66 +47,66 @@ using namespace ves::xplorer::util;
 
 vtkPolyData * ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float deciVal )
 {
-   //convert vtkDataSet to polydata
-   vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
-      cFilter->SetInput( dataSet );
-      // Turn off merging of coincident points. 
-      // Note that if merging is on, points with different point attributes
-      // (e.g., normals) are merged, which may cause rendering artifacts. 
-      cFilter->MergingOff();
+    //convert vtkDataSet to polydata
+    vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
+    cFilter->SetInput( dataSet );
+    // Turn off merging of coincident points.
+    // Note that if merging is on, points with different point attributes
+    // (e.g., normals) are merged, which may cause rendering artifacts.
+    cFilter->MergingOff();
 
-   // generate triangles from input polygons
-   vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
-      tFilter->SetInput( cFilter->GetOutput() );
+    // generate triangles from input polygons
+    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
+    tFilter->SetInput( cFilter->GetOutput() );
 
-   // reduce the number of triangles...
-   vtkDecimatePro *deci = vtkDecimatePro::New();
-      deci->SetInput( tFilter->GetOutput() );
-      deci->SetTargetReduction( deciVal );
-      deci->PreserveTopologyOn();
+    // reduce the number of triangles...
+    vtkDecimatePro *deci = vtkDecimatePro::New();
+    deci->SetInput( tFilter->GetOutput() );
+    deci->SetTargetReduction( deciVal );
+    deci->PreserveTopologyOn();
 
-   // smooth the vertex coordinates
-   vtkSmoothPolyDataFilter *smoother = vtkSmoothPolyDataFilter::New();
-      smoother->SetInput( deci->GetOutput() );
-      smoother->SetNumberOfIterations( 0 );   //was set to one
+    // smooth the vertex coordinates
+    vtkSmoothPolyDataFilter *smoother = vtkSmoothPolyDataFilter::New();
+    smoother->SetInput( deci->GetOutput() );
+    smoother->SetNumberOfIterations( 0 );   //was set to one
 
-   // vtkPolyDataNormals will add normals and vertices (and corresponding
-   // scalar/vector data) However it will not add corresponding field data,
-   // causing vertices and field length to be out of sequence
-   // So delete the field at this point...
-   smoother->GetOutput()->Update();
-   int numberOfArrays = smoother->GetOutput()->GetFieldData()->GetNumberOfArrays();
-   //std::cout << "GetNumberOfArrays = " << numberOfArrays << std::endl;
+    // vtkPolyDataNormals will add normals and vertices (and corresponding
+    // scalar/vector data) However it will not add corresponding field data,
+    // causing vertices and field length to be out of sequence
+    // So delete the field at this point...
+    smoother->GetOutput()->Update();
+    int numberOfArrays = smoother->GetOutput()->GetFieldData()->GetNumberOfArrays();
+    //std::cout << "GetNumberOfArrays = " << numberOfArrays << std::endl;
 
-   // remove the first array numberOfArrays times...
-   for(int i= 0; i < numberOfArrays; i++)
-   {
-      //std::cout << i << "  " << smoother->GetOutput()->GetFieldData()->GetArrayName(0) << std::endl;
-      smoother->GetOutput()->GetFieldData()->RemoveArray( 
-                    smoother->GetOutput()->GetFieldData()->GetArrayName(0) );
-   }
-   smoother->GetOutput()->Update();
+    // remove the first array numberOfArrays times...
+    for( int i = 0; i < numberOfArrays; i++ )
+    {
+        //std::cout << i << "  " << smoother->GetOutput()->GetFieldData()->GetArrayName(0) << std::endl;
+        smoother->GetOutput()->GetFieldData()->RemoveArray(
+            smoother->GetOutput()->GetFieldData()->GetArrayName( 0 ) );
+    }
+    smoother->GetOutput()->Update();
 
-   // add normals and vertices (and corresponding scalar/vector data)
-   vtkPolyDataNormals *cNormal = vtkPolyDataNormals::New();
-      cNormal->SetInput( smoother->GetOutput() );
-      cNormal->ConsistencyOn();  //Enforce consistent polygon ordering
+    // add normals and vertices (and corresponding scalar/vector data)
+    vtkPolyDataNormals *cNormal = vtkPolyDataNormals::New();
+    cNormal->SetInput( smoother->GetOutput() );
+    cNormal->ConsistencyOn();  //Enforce consistent polygon ordering
 
-   vtkPolyData * uGrid = vtkPolyData::New();
-      cNormal->GetOutput()->Update();
-      uGrid->ShallowCopy( cNormal->GetOutput() );
-/*
-   int numCells = uGrid->GetNumberOfCells();
-   std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
-   std::cout << "\tactive scalar name is " << uGrid->GetPointData()->GetScalars()->GetName(); 
-*/
+    vtkPolyData * uGrid = vtkPolyData::New();
+    cNormal->GetOutput()->Update();
+    uGrid->ShallowCopy( cNormal->GetOutput() );
+    /*
+       int numCells = uGrid->GetNumberOfCells();
+       std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
+       std::cout << "\tactive scalar name is " << uGrid->GetPointData()->GetScalars()->GetName();
+    */
 
-   cFilter->Delete();
-   tFilter->Delete();
-   deci->Delete();
-   smoother->Delete();
-   cNormal->Delete();
+    cFilter->Delete();
+    tFilter->Delete();
+    deci->Delete();
+    smoother->Delete();
+    cNormal->Delete();
 
-   return uGrid;
+    return uGrid;
 }
 

@@ -57,18 +57,18 @@ class cfdTextureManager;
 class VE_TEXTURE_BASED_EXPORTS TextureDataInfo
 {
 public:
-   TextureDataInfo();
-   TextureDataInfo(const TextureDataInfo& tdi);
-   ~TextureDataInfo();
-   void SetName(std::string name);
-   void SetTextureManager(cfdTextureManager* tm);
+    TextureDataInfo();
+    TextureDataInfo( const TextureDataInfo& tdi );
+    ~TextureDataInfo();
+    void SetName( std::string name );
+    void SetTextureManager( cfdTextureManager* tm );
 
-   std::string GetName();
-   cfdTextureManager* GetTextureManager();
-   TextureDataInfo& operator=(const TextureDataInfo& tdi);
+    std::string GetName();
+    cfdTextureManager* GetTextureManager();
+    TextureDataInfo& operator=( const TextureDataInfo& tdi );
 protected:
-   std::string _name;
-   cfdTextureManager* _tm;
+    std::string _name;
+    cfdTextureManager* _tm;
 };
 
 
@@ -78,83 +78,83 @@ protected:
 class VE_TEXTURE_BASED_EXPORTS cfdTextureDataSet
 {
 public:
-   ///Constructor
-   cfdTextureDataSet();
-   ///Destructor
-   virtual ~cfdTextureDataSet();
+    ///Constructor
+    cfdTextureDataSet();
+    ///Destructor
+    virtual ~cfdTextureDataSet();
 
-   enum DataType {SCALAR,VECTOR};
+    enum DataType {SCALAR, VECTOR};
 
-   ///Set the active scalar by name
-   ///\param name The name of the desired active scalar
-   void SetActiveScalar(std::string name);
-   
-   ///Set the active vector by name
-   ///\param name The name of the desired active vector
-   void SetActiveVector(std::string name);
-   
-   ///DERPICATED.\nSet the name of the text file describing the texture data
-   ///\param name Full path to the text file describing the texture data
-   void SetFileName(std::string name);
+    ///Set the active scalar by name
+    ///\param name The name of the desired active scalar
+    void SetActiveScalar( std::string name );
 
-   ///Create a cfdTextureManager from data in the given directory
-   ///\param textureDataDirectory The directory containing the texture data
-   void CreateTextureManager(std::string textureDataDirectory);
-   
-   ///Add cfdTextureManager data to the scalar list
-   ///\param scalarrData cfdTextureManager containing scalar data
-   void AddScalarTextureManager( cfdTextureManager* scalarData);
-   
-   ///Add cfdTextureManager data to the vector list
-   ///\param vectorData cfdTextureManager containing vector data
-   void AddVectorTextureManager( cfdTextureManager* vectorData);
+    ///Set the active vector by name
+    ///\param name The name of the desired active vector
+    void SetActiveVector( std::string name );
 
-   ///Find a vector by name. Return -1 if not found.
-   ///\param name The name of the vector to search for.r
-   int FindVector(std::string name);
-   
-   ///Find a scalar by name. Return -1 if not found.
-   ///\param name The name of the scalar to search for.
-   int FindScalar(std::string name);
+    ///DERPICATED.\nSet the name of the text file describing the texture data
+    ///\param name Full path to the text file describing the texture data
+    void SetFileName( std::string name );
 
-   ///Get the number of scalars in this texture dataset
-   unsigned int NumberOfScalars();
-   
-   ///Get the number of vectors
-   unsigned int NumberOfVectors();
+    ///Create a cfdTextureManager from data in the given directory
+    ///\param textureDataDirectory The directory containing the texture data
+    void CreateTextureManager( std::string textureDataDirectory );
 
-   ///Return the name of the scalar data referenced at index
-   ///\param index The position within  the scalar data
-   std::string ScalarName(unsigned int index);
-   
-   ///Return the name of the vector data referenced at index
-   ///\param index The position within  the vector data
-   std::string VectorName(unsigned int index);
+    ///Add cfdTextureManager data to the scalar list
+    ///\param scalarrData cfdTextureManager containing scalar data
+    void AddScalarTextureManager( cfdTextureManager* scalarData );
 
-   ///Get the active data type
-   DataType ActiveDataType();
+    ///Add cfdTextureManager data to the vector list
+    ///\param vectorData cfdTextureManager containing vector data
+    void AddVectorTextureManager( cfdTextureManager* vectorData );
 
-   ///Get the active cfdTextureManager
-   cfdTextureManager* GetActiveTextureManager();
-   
-   ///Get the cfdVolumeVisualizationNode
-   cfdVolumeVisualization* GetVolumeVisNode();
+    ///Find a vector by name. Return -1 if not found.
+    ///\param name The name of the vector to search for.r
+    int FindVector( std::string name );
+
+    ///Find a scalar by name. Return -1 if not found.
+    ///\param name The name of the scalar to search for.
+    int FindScalar( std::string name );
+
+    ///Get the number of scalars in this texture dataset
+    unsigned int NumberOfScalars();
+
+    ///Get the number of vectors
+    unsigned int NumberOfVectors();
+
+    ///Return the name of the scalar data referenced at index
+    ///\param index The position within  the scalar data
+    std::string ScalarName( unsigned int index );
+
+    ///Return the name of the vector data referenced at index
+    ///\param index The position within  the vector data
+    std::string VectorName( unsigned int index );
+
+    ///Get the active data type
+    DataType ActiveDataType();
+
+    ///Get the active cfdTextureManager
+    cfdTextureManager* GetActiveTextureManager();
+
+    ///Get the cfdVolumeVisualizationNode
+    cfdVolumeVisualization* GetVolumeVisNode();
 protected:
 
-   DataType _activeDataType;///<The active data type
-   unsigned int _nScalars;///<The number of scalars
-   unsigned int _nVectors;///<The number of vectors
-   std::string _fileName;///<DEPRICATED: The name of the file describing the texture data.
-   cfdVolumeVisualization* _volVisNode;///<The volume visualization rendering node
-   cfdTextureManager* _activeTM;///<The active cfdTextureManager
+    DataType _activeDataType;///<The active data type
+    unsigned int _nScalars;///<The number of scalars
+    unsigned int _nVectors;///<The number of vectors
+    std::string _fileName;///<DEPRICATED: The name of the file describing the texture data.
+    cfdVolumeVisualization* _volVisNode;///<The volume visualization rendering node
+    cfdTextureManager* _activeTM;///<The active cfdTextureManager
 
-   typedef std::vector<TextureDataInfo*> TextureDataList;
+    typedef std::vector<TextureDataInfo*> TextureDataList;
 
-   std::vector<std::string> _scalarNames;///<Names of the available scalars
-   std::vector<std::string> _vectorNames;///<Names of the available vectors
+    std::vector<std::string> _scalarNames;///<Names of the available scalars
+    std::vector<std::string> _vectorNames;///<Names of the available vectors
 
-   TextureDataList _scalars;///<The list of TextureDataInfo for each available scalar
-   TextureDataList _vectors;///<The list of TextureDataInfo for each available vector
+    TextureDataList _scalars;///<The list of TextureDataInfo for each available scalar
+    TextureDataList _vectors;///<The list of TextureDataInfo for each available vector
 };
 }
 }

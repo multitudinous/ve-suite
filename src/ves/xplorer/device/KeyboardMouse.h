@@ -37,7 +37,7 @@
 */
 
 /*!\class VE_XPlorer::KeyboardMouse
-* 
+*
 */
 
 // --- VE-Suite Stuff --- //
@@ -61,13 +61,13 @@
 // --- C/C++ Libraries --- //
 #include <utility>
 
-namespace osg 
+namespace osg
 {
-    class Geode;
-    class Group;
-    class Vec4d;
-    class Vec3d;
-    class LineSegment;
+class Geode;
+class Group;
+class Vec4d;
+class Vec3d;
+class LineSegment;
 }
 
 namespace ves
@@ -171,7 +171,7 @@ private:
 
     ///Do not know how to describe this
     ///\param dx The change in the x direction
-    ///\param dy The change in the y direction	
+    ///\param dy The change in the y direction
     void Twist( double dx, double dy );
 
     ///Handles movement in and out of the scene
@@ -194,7 +194,7 @@ private:
 
     unsigned int m_width;///<Width of the window
     unsigned int m_height;///<Height of the window
-      
+
     int m_key;///<Holds the value of the key being used
     int m_button;///<Holds the value of the mouse button being used
     int m_state;///<Determines if mouse button is pressed or released

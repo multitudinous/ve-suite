@@ -52,73 +52,79 @@ namespace xplorer
 {
 namespace util
 {
-    class VE_UTIL_EXPORTS cfdVTKFileHandler
+class VE_UTIL_EXPORTS cfdVTKFileHandler
 {
 public:
-	///Constructor
-   cfdVTKFileHandler();
-   ///Copy Constructor
-   ///\param fh Right hand side
-   cfdVTKFileHandler(const cfdVTKFileHandler& fh);
-   ///Destructor
-   virtual ~cfdVTKFileHandler();
+    ///Constructor
+    cfdVTKFileHandler();
+    ///Copy Constructor
+    ///\param fh Right hand side
+    cfdVTKFileHandler( const cfdVTKFileHandler& fh );
+    ///Destructor
+    virtual ~cfdVTKFileHandler();
 
-   enum OutFileType{CFD_XML,VTK_CLASSIC};
-   enum OutFileMode{CFD_ASCII=0,CFD_BINARY};
+    enum OutFileType
+    {
+        CFD_XML, VTK_CLASSIC
+    };
+    enum OutFileMode
+    {
+        CFD_ASCII = 0, CFD_BINARY
+    };
 
-   ///Set the input filename
-   ///\param inFile The input filename
-   void SetInputFileName(std::string inFile);
-   ///Set the output filename
-   ///\param oFile The output filename
-   void SetOutputFileName(std::string oFile);
-   ///Set the output file type. Default is CFD_XML
-   void SetVTKOutFileType(OutFileType type);
-   ///Set the output file mode. Default is CFD_BINARY
-   void SetOutFileWriteMode(OutFileMode mode);
+    ///Set the input filename
+    ///\param inFile The input filename
+    void SetInputFileName( std::string inFile );
+    ///Set the output filename
+    ///\param oFile The output filename
+    void SetOutputFileName( std::string oFile );
+    ///Set the output file type. Default is CFD_XML
+    void SetVTKOutFileType( OutFileType type );
+    ///Set the output file mode. Default is CFD_BINARY
+    void SetOutFileWriteMode( OutFileMode mode );
 
-   ///\param vtkFileName The fileName of the vtkDataSet to read in.
-   ///vtkDataSet* GetDataSetFromFile(std::string vtkFileName);
+    ///\param vtkFileName The fileName of the vtkDataSet to read in.
+    ///vtkDataSet* GetDataSetFromFile(std::string vtkFileName);
 
-   ///Get the dataobject from the file
-   ///\param vtkFileName The name of the file to read in.
-   vtkDataObject* GetDataSetFromFile(std::string vtkFileName);
-   
-   ///Write the DataObject to file
-   ///\param dataObject The vtkDataObject to write
-   ///\param outFileName The output filename.
-   bool WriteDataSet(vtkDataObject* dataObject,std::string outFileName);
+    ///Get the dataobject from the file
+    ///\param vtkFileName The name of the file to read in.
+    vtkDataObject* GetDataSetFromFile( std::string vtkFileName );
 
-   ///Equal operator
-   ///\param fh The right hand side
-   cfdVTKFileHandler& operator=(const cfdVTKFileHandler& fh);
+    ///Write the DataObject to file
+    ///\param dataObject The vtkDataObject to write
+    ///\param outFileName The output filename.
+    bool WriteDataSet( vtkDataObject* dataObject, std::string outFileName );
+
+    ///Equal operator
+    ///\param fh The right hand side
+    cfdVTKFileHandler& operator=( const cfdVTKFileHandler& fh );
 protected:
-	///Read XML UnstructredGrid data
-   void _getXMLUGrid();
-   ///Read XML StructuredGrid data
-   void _getXMLSGrid();
-   ///Read xML RectilinearGrid data
-   void _getXMLRGrid();
-   ///Read XML Polydata
-   void  _getXMLPolyData();
-   ///Read MultiGroup data
-   ///\param isMultiBlock Determines if the data is MultiBlock or Hierachical
-   void _getXMLMultiGroupDataSet(bool isMultiBlock=true);
-   ///Reader function to open an vtkImageData file
-   void GetXMLImageData( void );
-   ///Read old style(non-XML) vtk file
-   void _readClassicVTKFile();
-   ///Write old style(non-XML) vtk file
-   void _writeClassicVTKFile( vtkDataObject * vtkThing, 
-                      std::string vtkFilename, int binaryFlag = 0 );
+    ///Read XML UnstructredGrid data
+    void _getXMLUGrid();
+    ///Read XML StructuredGrid data
+    void _getXMLSGrid();
+    ///Read xML RectilinearGrid data
+    void _getXMLRGrid();
+    ///Read XML Polydata
+    void  _getXMLPolyData();
+    ///Read MultiGroup data
+    ///\param isMultiBlock Determines if the data is MultiBlock or Hierachical
+    void _getXMLMultiGroupDataSet( bool isMultiBlock = true );
+    ///Reader function to open an vtkImageData file
+    void GetXMLImageData( void );
+    ///Read old style(non-XML) vtk file
+    void _readClassicVTKFile();
+    ///Write old style(non-XML) vtk file
+    void _writeClassicVTKFile( vtkDataObject * vtkThing,
+                               std::string vtkFilename, int binaryFlag = 0 );
 
-   OutFileType _outFileType;///<output XML or classic
-   OutFileMode _outFileMode;///<output binary/ascii
+    OutFileType _outFileType;///<output XML or classic
+    OutFileMode _outFileMode;///<output binary/ascii
 
-   std::string _inFileName;///<input vtk file name
-   std::string _outFileName;///<output vtk file name
-   vtkXMLFileReadTester* _xmlTester;///<Test if file is XML format   
-   vtkDataObject* _dataSet;///<The vtk data.
+    std::string _inFileName;///<input vtk file name
+    std::string _outFileName;///<output vtk file name
+    vtkXMLFileReadTester* _xmlTester;///<Test if file is XML format
+    vtkDataObject* _dataSet;///<The vtk data.
 };
 }// end of util namesapce
 }// end of xplorer namesapce

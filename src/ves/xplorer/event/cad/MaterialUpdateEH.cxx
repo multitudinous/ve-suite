@@ -48,77 +48,74 @@ using namespace ves::open::xml::cad;
 //Constructor                                         //
 ////////////////////////////////////////////////////////
 MaterialUpdateEventHandler::MaterialUpdateEventHandler()
-:ves::xplorer::event::AttributeEventHandler()
-{
-}
+        : ves::xplorer::event::AttributeEventHandler()
+{}
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Copy Constructor                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
-MaterialUpdateEventHandler::MaterialUpdateEventHandler(const MaterialUpdateEventHandler& ceh)
-:ves::xplorer::event::AttributeEventHandler(ceh)
-{
-}
+MaterialUpdateEventHandler::MaterialUpdateEventHandler( const MaterialUpdateEventHandler& ceh )
+        : ves::xplorer::event::AttributeEventHandler( ceh )
+{}
 /////////////////////////////////////////////////////////
 MaterialUpdateEventHandler::~MaterialUpdateEventHandler()
-{
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-MaterialUpdateEventHandler& MaterialUpdateEventHandler::operator=(const MaterialUpdateEventHandler& rhs)
+MaterialUpdateEventHandler& MaterialUpdateEventHandler::operator=( const MaterialUpdateEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::AttributeEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::AttributeEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-///////////////////////////////////////////////////////////////////////////////   
-void MaterialUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject) 
+///////////////////////////////////////////////////////////////////////////////
+void MaterialUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   std::cout<<"Material update event handler"<<std::endl;
-   try
-   {
-      Command* componentUpdate = dynamic_cast<Command*>(veXMLObject);
-      DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr material = componentUpdate->GetDataValuePair("Material");
-      DataValuePairWeakPtr component = componentUpdate->GetDataValuePair("Material Component");
-      
-      CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>(material->GetDataXMLObject());
-      std::string rawComponent = component->GetDataString();
-      std::vector<double> values;
-      if(rawComponent == "Diffuse")
-      {
-         values = rawMaterial->GetDiffuse()->GetArray();
-      }
-      else if(rawComponent == "Ambient")
-      {
-         values = rawMaterial->GetAmbient()->GetArray();
-      }
-      else if(rawComponent == "Emissive")
-      {
-         values = rawMaterial->GetEmissive()->GetArray();
-      }
-      else if(rawComponent == "Specular")
-      {
-         values = rawMaterial->GetSpecular()->GetArray();
-      }
-      else if(rawComponent == "Opacity")
-      {
-         //std::cout<<"Update opacity"<<std::endl;
-         values.push_back(rawMaterial->GetOpacity());
-      }
+    std::cout << "Material update event handler" << std::endl;
+    try
+    {
+        Command* componentUpdate = dynamic_cast<Command*>( veXMLObject );
+        DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr material = componentUpdate->GetDataValuePair( "Material" );
+        DataValuePairWeakPtr component = componentUpdate->GetDataValuePair( "Material Component" );
 
-       values.push_back(rawMaterial->GetOpacity());
-      _activeModel->GetModelCADHandler()->
-		  UpdateMaterialComponent(nodeId->GetDataString(),
-		                          rawMaterial->GetMaterialName(),
-								  rawComponent,
-								  rawMaterial->GetFace(),
-								  values);
-      
-   }
-   catch(...)
-   {
-      std::cout<<"Unable to update material!!"<<std::endl;
-      std::cout<<"===MaterialUpdateEventHandler==="<<std::endl;
-   }
+        CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>( material->GetDataXMLObject() );
+        std::string rawComponent = component->GetDataString();
+        std::vector<double> values;
+        if( rawComponent == "Diffuse" )
+        {
+            values = rawMaterial->GetDiffuse()->GetArray();
+        }
+        else if( rawComponent == "Ambient" )
+        {
+            values = rawMaterial->GetAmbient()->GetArray();
+        }
+        else if( rawComponent == "Emissive" )
+        {
+            values = rawMaterial->GetEmissive()->GetArray();
+        }
+        else if( rawComponent == "Specular" )
+        {
+            values = rawMaterial->GetSpecular()->GetArray();
+        }
+        else if( rawComponent == "Opacity" )
+        {
+            //std::cout<<"Update opacity"<<std::endl;
+            values.push_back( rawMaterial->GetOpacity() );
+        }
+
+        values.push_back( rawMaterial->GetOpacity() );
+        _activeModel->GetModelCADHandler()->
+        UpdateMaterialComponent( nodeId->GetDataString(),
+                                 rawMaterial->GetMaterialName(),
+                                 rawComponent,
+                                 rawMaterial->GetFace(),
+                                 values );
+
+    }
+    catch ( ... )
+    {
+        std::cout << "Unable to update material!!" << std::endl;
+        std::cout << "===MaterialUpdateEventHandler===" << std::endl;
+    }
 }

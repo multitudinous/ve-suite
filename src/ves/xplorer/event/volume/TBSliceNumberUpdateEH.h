@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedSliceNumberUpdateEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedSliceNumberUpdateEventHandler();
+    ///Constructor
+    TextureBasedSliceNumberUpdateEventHandler();
 
-   ///Copy Constructor
-   TextureBasedSliceNumberUpdateEventHandler(const TextureBasedSliceNumberUpdateEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedSliceNumberUpdateEventHandler();
+    ///Copy Constructor
+    TextureBasedSliceNumberUpdateEventHandler( const TextureBasedSliceNumberUpdateEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedSliceNumberUpdateEventHandler();
 
-   ///Equal operator
-   TextureBasedSliceNumberUpdateEventHandler& operator=(const TextureBasedSliceNumberUpdateEventHandler& rhs);
+    ///Equal operator
+    TextureBasedSliceNumberUpdateEventHandler& operator=( const TextureBasedSliceNumberUpdateEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

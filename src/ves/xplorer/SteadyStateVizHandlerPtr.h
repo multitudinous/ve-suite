@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class SteadyStateVizHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<SteadyStateVizHandler>::type  SteadyStateVizHandlerPtr;
-   typedef ves::util::SharedPtrDef<SteadyStateVizHandler>::type SteadyStateVizHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<SteadyStateVizHandler>::type   SteadyStateVizHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<SteadyStateVizHandler>::type SteadyStateVizHandlerScopedPtr;
+class SteadyStateVizHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<SteadyStateVizHandler>::type  SteadyStateVizHandlerPtr;
+typedef ves::util::SharedPtrDef<SteadyStateVizHandler>::type SteadyStateVizHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<SteadyStateVizHandler>::type   SteadyStateVizHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<SteadyStateVizHandler>::type SteadyStateVizHandlerScopedPtr;
 }
 }
 #endif

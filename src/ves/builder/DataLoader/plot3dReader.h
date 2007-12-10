@@ -51,84 +51,96 @@ namespace DataLoader
 class  VE_USER_BUILDER_EXPORTS plot3dReader: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   plot3dReader( void );
-   ~plot3dReader( void );
-   plot3dReader( plot3dReader * );
-   ///Display help for the Plot3D translator
-   virtual void DisplayHelp( void );
-   //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS Plot3DTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
-   {
-   public:
-      Plot3DTranslateCbk(){;}
-      virtual ~Plot3DTranslateCbk(){;}
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-                             ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-      ///This creates additional scalars from vector components
-      ///\param outputDataset Dataset to be used and modified
-   private:
-      vtkStructuredGridWriter    *writer;      
-      vtkPLOT3DReader            *reader;
-      vtkStructuredGrid          **grids;
-      vtkUnstructuredGrid        *unsgrid;
-      vtkUnstructuredGridWriter  *unswriter;
-      vtkAppendFilter            *filter;      
-      int   answer;   
-      int   numGrids;
-      char  plot3dGeomFileName[100];
-      char  plot3dDataFileName[100];
-      int   numOfSurfaceGrids;
-   };
-   //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS Plot3DPreTranslateCbk: 
-      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
-   {
-   public:
-      Plot3DPreTranslateCbk(){;}
-      virtual ~Plot3DPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-      std::string GetIBlankFlag( void );
-      std::string GetNumberOfDimensions( void );
-      std::string GetMultigridFlag( void );
-      std::string GetXYZFilename( void );
-      std::string GetQFilename( void );
-      std::string GetByteFlag( void );
-      std::string GetBinaryFlag( void );
-      std::string GetByteCountFlag( void );
-      std::string GetForceReadFlag( void );
-   private:
-      std::string numberOfDimensions;
-      std::string iblankFlag;
-      std::string multiGridFlag;
-      std::string xyzFilename;
-      std::string qFilename;
-      std::string byteFlag;
-      std::string binaryFlag;
-      std::string byteCountFlag;
-      std::string forceReadFlag;
-   };
-   
-   //void writeParticlePolyData( void );
-   //void readPPLOT1( void );
-   void GetFileNames( void );
-   //void readParticleParamFile( void );
-   vtkUnstructuredGrid  *GetUnsGrid( void );
-   vtkUnstructuredGrid *MakeVTKSurfaceFromGeomFiles( void );
+    plot3dReader( void );
+    ~plot3dReader( void );
+    plot3dReader( plot3dReader * );
+    ///Display help for the Plot3D translator
+    virtual void DisplayHelp( void );
+    //////////////////////////////////////////////////////
+class VE_USER_BUILDER_EXPORTS Plot3DTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        Plot3DTranslateCbk()
+        {
+            ;
+        }
+        virtual ~Plot3DTranslateCbk()
+        {
+            ;
+        }
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+        ///This creates additional scalars from vector components
+        ///\param outputDataset Dataset to be used and modified
+    private:
+        vtkStructuredGridWriter    *writer;
+        vtkPLOT3DReader            *reader;
+        vtkStructuredGrid          **grids;
+        vtkUnstructuredGrid        *unsgrid;
+        vtkUnstructuredGridWriter  *unswriter;
+        vtkAppendFilter            *filter;
+        int   answer;
+        int   numGrids;
+        char  plot3dGeomFileName[100];
+        char  plot3dDataFileName[100];
+        int   numOfSurfaceGrids;
+    };
+    //////////////////////////////////////////////////////
+class VE_USER_BUILDER_EXPORTS Plot3DPreTranslateCbk:
+                public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        Plot3DPreTranslateCbk()
+        {
+            ;
+        }
+        virtual ~Plot3DPreTranslateCbk()
+        {
+            ;
+        }
+        void Preprocess( int argc, char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+        std::string GetIBlankFlag( void );
+        std::string GetNumberOfDimensions( void );
+        std::string GetMultigridFlag( void );
+        std::string GetXYZFilename( void );
+        std::string GetQFilename( void );
+        std::string GetByteFlag( void );
+        std::string GetBinaryFlag( void );
+        std::string GetByteCountFlag( void );
+        std::string GetForceReadFlag( void );
+    private:
+        std::string numberOfDimensions;
+        std::string iblankFlag;
+        std::string multiGridFlag;
+        std::string xyzFilename;
+        std::string qFilename;
+        std::string byteFlag;
+        std::string binaryFlag;
+        std::string byteCountFlag;
+        std::string forceReadFlag;
+    };
 
-   //typedef std::vector< Particle * > Particles;
-   //Particles particles;
-   //int nsl;
-   //int nps;
+    //void writeParticlePolyData( void );
+    //void readPPLOT1( void );
+    void GetFileNames( void );
+    //void readParticleParamFile( void );
+    vtkUnstructuredGrid  *GetUnsGrid( void );
+    vtkUnstructuredGrid *MakeVTKSurfaceFromGeomFiles( void );
 
-   char  *plot3dSurfaceFileName[100];
+    //typedef std::vector< Particle * > Particles;
+    //Particles particles;
+    //int nsl;
+    //int nps;
+
+    char  *plot3dSurfaceFileName[100];
 
 protected:
-   Plot3DPreTranslateCbk cmdParser;
-   Plot3DTranslateCbk plot3dToVTK;
+    Plot3DPreTranslateCbk cmdParser;
+    Plot3DTranslateCbk plot3dToVTK;
 };
 }
 }

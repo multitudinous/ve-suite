@@ -61,8 +61,8 @@ OCCNURBSFileReader::~OCCNURBSFileReader()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::nurbs::NURBSSurface* OCCNURBSFileReader::ReadPatchFile( std::string star2occFile )
 {
-    std::fstream occNURBSFile( star2occFile.c_str(),std::ios::in );
-    if(occNURBSFile.is_open())
+    std::fstream occNURBSFile( star2occFile.c_str(), std::ios::in );
+    if( occNURBSFile.is_open() )
     {
         int fileLength = 0;
         occNURBSFile.seekg( 0, std::ios_base::end );
@@ -70,8 +70,8 @@ ves::xplorer::scenegraph::nurbs::NURBSSurface* OCCNURBSFileReader::ReadPatchFile
         occNURBSFile.seekg( 0, std::ios_base::beg );
 
         char* descriptorLine = new char[ fileLength ];
-        std::cout<<"Opened file: "<<star2occFile<<std::endl;
-        
+        std::cout << "Opened file: " << star2occFile << std::endl;
+
         //U knots descriptor
         occNURBSFile.getline( descriptorLine, fileLength, '\n' );
 
@@ -80,8 +80,8 @@ ves::xplorer::scenegraph::nurbs::NURBSSurface* OCCNURBSFileReader::ReadPatchFile
 
         std::istringstream strm( descriptorLine );
         double knot = 0;
-        ves::xplorer::scenegraph::nurbs::KnotVector uKnots;        
-    
+        ves::xplorer::scenegraph::nurbs::KnotVector uKnots;
+
         while( strm >> knot )
         {
             uKnots.AddKnot( knot );
@@ -99,7 +99,7 @@ ves::xplorer::scenegraph::nurbs::NURBSSurface* OCCNURBSFileReader::ReadPatchFile
         {
             vKnots.AddKnot( knot );
         }
-          
+
         std::vector< ves::xplorer::scenegraph::nurbs::ControlPoint > surfaceCtrlPts;
         double x = 0;
         double y = 0;
@@ -112,25 +112,25 @@ ves::xplorer::scenegraph::nurbs::NURBSSurface* OCCNURBSFileReader::ReadPatchFile
         char delimChar[256];
         unsigned int nU = 0;
         unsigned int nV = 0;
-        while( occNURBSFile.getline( descriptorLine, fileLength,'\n' ) )
+        while( occNURBSFile.getline( descriptorLine, fileLength, '\n' ) )
         {
             nU = 0;
             strm.clear();
             strm.str( descriptorLine );
             while( strm >> delimChar )
             {
-                strm>>x>>y>>z>>w;
+                strm >> x >> y >> z >> w;
                 surfaceCtrlPts.push_back( ves::xplorer::scenegraph::nurbs::ControlPoint( x, y, z, w ) );
                 nU++;
                 //")"
-                strm>>delimChar;
+                strm >> delimChar;
             }
             nV++;
         }
 
         occNURBSFile.close();
         delete [] descriptorLine;
-        descriptorLine =0;
+        descriptorLine = 0;
         //User responsible for deleting memory!!!
         ves::xplorer::scenegraph::nurbs::NURBSSurface* surfacePatch = new ves::xplorer::scenegraph::nurbs::NURBSSurface();
         surfacePatch->SetControlPoints( surfaceCtrlPts, nU, nV );
@@ -141,7 +141,7 @@ ves::xplorer::scenegraph::nurbs::NURBSSurface* OCCNURBSFileReader::ReadPatchFile
     }
     else
     {
-        std::cout<<"Could not open file: "<<star2occFile<<std::endl;
+        std::cout << "Could not open file: " << star2occFile << std::endl;
         return 0;
     }
 }

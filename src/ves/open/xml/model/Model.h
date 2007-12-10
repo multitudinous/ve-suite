@@ -59,17 +59,17 @@ namespace open
 {
 namespace xml
 {
-   class ParameterBlock;
-   namespace model
-   {
-      class Port;
-      class Point;
-   }
-   namespace cad
-   {
-     class CADNode;
-     class CADAssembly;
-   }
+class ParameterBlock;
+namespace model
+{
+class Port;
+class Point;
+}
+namespace cad
+{
+class CADNode;
+class CADAssembly;
+}
 
 }
 }
@@ -101,13 +101,13 @@ public:
     ///Set the unique model id
     ///\param id id of the model
     void SetModelID( unsigned int id );
-    ///Set the icon filename 
+    ///Set the icon filename
     ///\param filename filename for the icon to be loaded
     void SetIconFilename( std::string filename );
 
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
-    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
     ///Get the model name
     ///\return The model name
@@ -138,7 +138,7 @@ public:
     Point* GetIconLocation( void );
     ///Get results data
     ///\return The ith result stored as a command
-    ves::open::xml::Command* GetResult(int i );
+    ves::open::xml::Command* GetResult( int i );
     ///Get results data
     ///\return The number of results in this model
     size_t GetNumberOfResults( void );
@@ -150,7 +150,7 @@ public:
     ///Get the input variable by name
     ///\param inputName Then name of the input to retrieve
     ///\return The input with the given name
-    ves::open::xml::Command* GetInput(std::string inputName);
+    ves::open::xml::Command* GetInput( std::string inputName );
 
     ///Allocate another input block for use
     ///\return The new input
@@ -161,7 +161,7 @@ public:
     ///Get the i'th port for the model.
     ///\param i The i'th port you are after.
     ///\return The ith port selected by the user
-    Port* GetPort(int i );
+    Port* GetPort( int i );
     ///Allocates a new port for the model.
     ///\return The new port
     Port* GetPort( void );
@@ -179,7 +179,7 @@ public:
 
     ///Get the named information packet for a model.
     ///\param name The name of the packet you are after.
-    ves::open::xml::ParameterBlock* GetInformationPacket( std::string name);
+    ves::open::xml::ParameterBlock* GetInformationPacket( std::string name );
 
     ///Get info packets data
     size_t GetNumberOfInformationPackets( void );
@@ -191,7 +191,7 @@ public:
 
     ///Remove the named information packet from a model.
     ///\param name The name of the packet to remove.
-    void RemoveInformationPacket(std::string name );
+    void RemoveInformationPacket( std::string name );
 
     ///Add a geometry node and return it
     /// if there is already geometry then the function will return that pointer
@@ -216,43 +216,43 @@ public:
     ///\return The subnetwork for this model
     ves::open::xml::model::SystemWeakPtr GetSubSystem();
 
-	void SetParentModel( ModelSharedPtr parent );
-	ModelSharedPtr GetParentModel( );
+    void SetParentModel( ModelSharedPtr parent );
+    ModelSharedPtr GetParentModel( );
 
 protected:
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName );
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
 
 private:
-   ///raw datatypes of Model that are specified in the verg_model.xsd file
-   std::string modelName;///<The name of the model.
-   unsigned int uniqueModelID;///<The unique model id. 
-   std::string iconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
-   std::vector< Port* > ports;///<The vector port data if any for a model.
-   Point* iconLocation;///<The icon location point container.
-   ///The data value pair will contain all the results for a paticular model
-   std::vector< ves::open::xml::Command* > results;///<The classes hold the results for the model.
-   ///The data value pair will contain the model inputs for the model
-   std::vector< ves::open::xml::Command* > inputs;///<The classes hold the inputs for the model.
-   ///The parameter block holds all the data the was formerly stored in the param file
-   std::vector< ves::open::xml::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
-   ///The CADNode contains the tree structure for the geometry
-   ves::open::xml::cad::CADAssembly* geometry;///<The classes hold the geometry for the model.
-   ///The vendor name for the model
-   std::string vendorUnit;///<The string that stores the unit name that this model maps to
-   ves::open::xml::Command* modelAttribute;///<The structure that stores all of the model attributes
-   float iconScale;///<The icon scale to set the right size for conductor and xplorer
-   float iconRotation;///<The icon rotation for conductor and xplorer
-   ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
-   unsigned int iconMirror;
-   ///The sub network for this model
-   ves::open::xml::model::SystemPtr m_subSystem;
-   ModelSharedPtr parentModel;
+    ///raw datatypes of Model that are specified in the verg_model.xsd file
+    std::string modelName;///<The name of the model.
+    unsigned int uniqueModelID;///<The unique model id.
+    std::string iconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
+    std::vector< Port* > ports;///<The vector port data if any for a model.
+    Point* iconLocation;///<The icon location point container.
+    ///The data value pair will contain all the results for a paticular model
+    std::vector< ves::open::xml::Command* > results;///<The classes hold the results for the model.
+    ///The data value pair will contain the model inputs for the model
+    std::vector< ves::open::xml::Command* > inputs;///<The classes hold the inputs for the model.
+    ///The parameter block holds all the data the was formerly stored in the param file
+    std::vector< ves::open::xml::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
+    ///The CADNode contains the tree structure for the geometry
+    ves::open::xml::cad::CADAssembly* geometry;///<The classes hold the geometry for the model.
+    ///The vendor name for the model
+    std::string vendorUnit;///<The string that stores the unit name that this model maps to
+    ves::open::xml::Command* modelAttribute;///<The structure that stores all of the model attributes
+    float iconScale;///<The icon scale to set the right size for conductor and xplorer
+    float iconRotation;///<The icon rotation for conductor and xplorer
+    ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
+    unsigned int iconMirror;
+    ///The sub network for this model
+    ves::open::xml::model::SystemPtr m_subSystem;
+    ModelSharedPtr parentModel;
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::model::Model* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Model* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

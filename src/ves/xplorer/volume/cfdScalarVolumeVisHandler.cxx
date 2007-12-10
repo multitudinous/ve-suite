@@ -48,99 +48,100 @@ using namespace ves::xplorer::volume;
 //Constructors                                      //
 //////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler()
-:cfdVolumeVisNodeHandler()
+        : cfdVolumeVisNodeHandler()
 {
-   //_transferSM = 0;
+    //_transferSM = 0;
 }
 //////////////////////////////////////////////////////////
-cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHandler& vvnh)
-:cfdVolumeVisNodeHandler(vvnh)
+cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler( const cfdScalarVolumeVisHandler& vvnh )
+        : cfdVolumeVisNodeHandler( vvnh )
 {
-   //_transferSM = new cfdScalarShaderManager(*vvnh._transferSM);
+    //_transferSM = new cfdScalarShaderManager(*vvnh._transferSM);
 }
 ///////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler::~cfdScalarVolumeVisHandler()
 {
 
-   /*if(_transferSM)
-   {
-      delete _transferSM;
-      _transferSM = 0;
-   }*/
+    /*if(_transferSM)
+    {
+       delete _transferSM;
+       _transferSM = 0;
+    }*/
 
 }
 //////////////////////////////////////
 void cfdScalarVolumeVisHandler::Init()
 {
-   cfdVolumeVisNodeHandler::Init();
-   //set our names for debugging purposes
-   SetBoundingBoxName("Scalar VVNH BBox");
-   SetDecoratorName("Scalar VV Fragment PG");
+    cfdVolumeVisNodeHandler::Init();
+    //set our names for debugging purposes
+    SetBoundingBoxName( "Scalar VVNH BBox" );
+    SetDecoratorName( "Scalar VV Fragment PG" );
 }
 /////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::_setUpDecorator()
 {
-   if(!_tm)
-   {
-      return;
-   }
-   _createDefaultShaders();
+    if( !_tm )
+    {
+        return;
+    }
+    _createDefaultShaders();
 
 }
 ///////////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::_createDefaultShaders()
 {
-   if(!GetShaderManager("BLUE_RED_LINEAR_SHADER") && _tm)
-   {
-      int* fieldSize = _tm->fieldResolution();
-      AddShaderManager("BLUE_RED_LINEAR_SHADER",new cfdScalarShaderManager());
-	  AddShaderManager("GREY_SCALE_SHADER", new GreyScaleShaderManager());
-      SetActiveShader("BLUE_RED_LINEAR_SHADER");
-   }
+    if( !GetShaderManager( "BLUE_RED_LINEAR_SHADER" ) && _tm )
+    {
+        int* fieldSize = _tm->fieldResolution();
+        AddShaderManager( "BLUE_RED_LINEAR_SHADER", new cfdScalarShaderManager() );
+        AddShaderManager( "GREY_SCALE_SHADER", new GreyScaleShaderManager() );
+        SetActiveShader( "BLUE_RED_LINEAR_SHADER" );
+    }
 }
 ////////////////////////////////////////////////////////////////////////
-void cfdScalarVolumeVisHandler::SetTextureManager(cfdTextureManager* tm)
+void cfdScalarVolumeVisHandler::SetTextureManager( cfdTextureManager* tm )
 {
-   cfdVolumeVisNodeHandler::SetTextureManager(tm);
-   size_t nShaderManagers = _shaderManagers.size();
-   if(nShaderManagers)
-   { 
-      size_t nShaderManagers = _shaderManagers.size();
-      for ( std::map<std::string ,
-         ves::xplorer::volume::cfdOSGShaderManager*>::iterator itr = _shaderManagers.begin();
-         itr != _shaderManagers.end(); itr++ )
-      {
-         dynamic_cast<ves::xplorer::volume::cfdScalarShaderManager*>(itr->second)->UpdateTextureManager(_tm);
-      }
-   }
+    cfdVolumeVisNodeHandler::SetTextureManager( tm );
+    size_t nShaderManagers = _shaderManagers.size();
+    if( nShaderManagers )
+    {
+        size_t nShaderManagers = _shaderManagers.size();
+        for( std::map < std::string ,
+                ves::xplorer::volume::cfdOSGShaderManager* >::iterator itr = _shaderManagers.begin();
+                itr != _shaderManagers.end(); itr++ )
+        {
+            dynamic_cast<ves::xplorer::volume::cfdScalarShaderManager*>( itr->second )->UpdateTextureManager( _tm );
+        }
+    }
 }
 /////////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::_applyTextureMatrix()
 {
-   unsigned int tUnit = 0;
-   tUnit = GetShaderManager(_activeShader)->GetAutoGenTextureUnit();
+    unsigned int tUnit = 0;
+    tUnit = GetShaderManager( _activeShader )->GetAutoGenTextureUnit();
 
-   osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
-   tMat->setMatrix(osg::Matrix::identity());
-   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,
-                                                        tMat.get(),
-                                                        osg::StateAttribute::ON);
-   float trans[3] = {0,0,0};
-   //_center = osg::Vec3(0,0,0);
-   _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
-                                                                  _center,
-                                                                  _scale,
-                                                                  trans));
-   _updateTexGenUnit(tUnit);
+    osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
+    tMat->setMatrix( osg::Matrix::identity() );
+    _decoratorGroup->getStateSet()->setTextureAttributeAndModes( tUnit,
+            tMat.get(),
+            osg::StateAttribute::ON );
+    float trans[3] = {0, 0, 0};
+    //_center = osg::Vec3(0,0,0);
+    _decoratorGroup->setUpdateCallback( new cfdTextureMatrixCallback( tMat.get(),
+                                        _center,
+                                        _scale,
+                                        trans ) );
+    _updateTexGenUnit( tUnit );
 }
 //////////////////////////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler&
-cfdScalarVolumeVisHandler::operator=(const cfdScalarVolumeVisHandler& vvnh)
+cfdScalarVolumeVisHandler::operator=( const cfdScalarVolumeVisHandler& vvnh )
 {
-   if(this != &vvnh){
-      cfdVolumeVisNodeHandler::operator=(vvnh);
-      //_transferSM = vvnh._transferSM;
-   }
-   return *this;
+    if( this != &vvnh )
+    {
+        cfdVolumeVisNodeHandler::operator=( vvnh );
+        //_transferSM = vvnh._transferSM;
+    }
+    return *this;
 }
 #endif //_OSG

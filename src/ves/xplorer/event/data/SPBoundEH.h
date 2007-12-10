@@ -52,26 +52,26 @@ namespace event
 class VE_XPLORER_EXPORTS SeedPointBoundsEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   SeedPointBoundsEventHandler();
+    ///Constructor
+    SeedPointBoundsEventHandler();
 
-   ///Copy Constructor
-   SeedPointBoundsEventHandler(const SeedPointBoundsEventHandler& ceh);
-   ///Destructor
-   virtual ~SeedPointBoundsEventHandler();
+    ///Copy Constructor
+    SeedPointBoundsEventHandler( const SeedPointBoundsEventHandler& ceh );
+    ///Destructor
+    virtual ~SeedPointBoundsEventHandler();
 
-   ///Equal operator
-   SeedPointBoundsEventHandler& operator=(const SeedPointBoundsEventHandler& rhs);
-   
-   ///Update the bounds.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
+    ///Equal operator
+    SeedPointBoundsEventHandler& operator=( const SeedPointBoundsEventHandler& rhs );
 
-   ///Set the active cfdModel
-   ///\param model The active cfdModel
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model);
+    ///Update the bounds.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void Execute( ves::open::xml::XMLObject* veXMLObject );
+
+    ///Set the active cfdModel
+    ///\param model The active cfdModel
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model );
 protected:
-   ves::xplorer::Model* _activeModel;///<The active model;
+    ves::xplorer::Model* _activeModel;///<The active model;
 };
 
 }

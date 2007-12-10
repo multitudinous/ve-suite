@@ -59,70 +59,70 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 AxesLabelsEventHandler::AxesLabelsEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-AxesLabelsEventHandler::AxesLabelsEventHandler(const AxesLabelsEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+AxesLabelsEventHandler::AxesLabelsEventHandler( const AxesLabelsEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 AxesLabelsEventHandler::~AxesLabelsEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-AxesLabelsEventHandler& AxesLabelsEventHandler::operator=(const AxesLabelsEventHandler& rhs)
+AxesLabelsEventHandler& AxesLabelsEventHandler::operator=( const AxesLabelsEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AxesLabelsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void AxesLabelsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if ( model )
-      {
-         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 void AxesLabelsEventHandler::Execute( XMLObject* xmlObject )
 {
-   Command* command = dynamic_cast< Command* >( xmlObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Axes Labels" );
-   std::vector< std::string > labels;
-   activeModelDVP->GetData( labels );
-   
-   if ( _activeModel && !labels.empty() )
-   {
-      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-      if ( dataSet )
-      {
-         dataSet->GetDataSetAxes()->SetAxisLabels( labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
-         dataSet->GetDataSetAxes()->CreateAxis();
-      }
-   }
-   
+    Command* command = dynamic_cast< Command* >( xmlObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Axes Labels" );
+    std::vector< std::string > labels;
+    activeModelDVP->GetData( labels );
+
+    if( _activeModel && !labels.empty() )
+    {
+        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( dataSet )
+        {
+            dataSet->GetDataSetAxes()->SetAxisLabels( labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
+            dataSet->GetDataSetAxes()->CreateAxis();
+        }
+    }
+
 }

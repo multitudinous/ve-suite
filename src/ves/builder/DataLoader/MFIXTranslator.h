@@ -41,39 +41,51 @@ namespace builder
 {
 namespace DataLoader
 {
-class VE_USER_BUILDER_EXPORTS MFIXTranslator: 
-   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+class VE_USER_BUILDER_EXPORTS MFIXTranslator:
+            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   MFIXTranslator();
-   virtual ~MFIXTranslator();
-   ///Display help for the MFIX translator
-   virtual void DisplayHelp( void );
-   //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
-   {
-   public:
-      MFIXTranslateCbk(){;}
-      virtual ~MFIXTranslateCbk(){;}
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-   };
-   //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS MFIXPreTranslateCbk: 
-      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
-   {
-   public:
-      MFIXPreTranslateCbk(){;}
-      virtual ~MFIXPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-   };
+    MFIXTranslator();
+    virtual ~MFIXTranslator();
+    ///Display help for the MFIX translator
+    virtual void DisplayHelp( void );
+    //////////////////////////////////////////////////////
+class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        MFIXTranslateCbk()
+        {
+            ;
+        }
+        virtual ~MFIXTranslateCbk()
+        {
+            ;
+        }
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+    };
+    //////////////////////////////////////////////////////
+class VE_USER_BUILDER_EXPORTS MFIXPreTranslateCbk:
+                public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        MFIXPreTranslateCbk()
+        {
+            ;
+        }
+        virtual ~MFIXPreTranslateCbk()
+        {
+            ;
+        }
+        void Preprocess( int argc, char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+    };
 protected:
-   MFIXPreTranslateCbk cmdParser;
-   MFIXTranslateCbk mfixToVTK;
+    MFIXPreTranslateCbk cmdParser;
+    MFIXTranslateCbk mfixToVTK;
 };
 }
 }

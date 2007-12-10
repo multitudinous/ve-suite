@@ -44,60 +44,57 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler::TextureBasedActivateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler
-::TextureBasedActivateEventHandler(const TextureBasedActivateEventHandler& ceh)
-{
-}
+::TextureBasedActivateEventHandler( const TextureBasedActivateEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedActivateEventHandler::~TextureBasedActivateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedActivateEventHandler& 
-TextureBasedActivateEventHandler::operator=(const TextureBasedActivateEventHandler& rhs)
+TextureBasedActivateEventHandler&
+TextureBasedActivateEventHandler::operator=( const TextureBasedActivateEventHandler& rhs )
 {
-    if(&rhs != this)
+    if( &rhs != this )
     {
-        TextureBasedEventHandler::operator=(rhs);
+        TextureBasedEventHandler::operator=( rhs );
     }
     return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedActivateEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedActivateEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
     try
     {
-    if(_activeModel)
-    {
-        //make the CAD transparent
-        _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
-        if( !_activeModel->GetDCS()->SearchChild(_activeModel->GetActiveDataSet()->GetDCS()) )
+        if( _activeModel )
         {
-            vprDEBUG(vesDBG,2) << "|\t\tadding active switch node to worldDCS"
-                     << std::endl << vprDEBUG_FLUSH;
-            _activeModel->GetDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
-        }
-        ves::xplorer::scenegraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
-        if ( !_activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
-        {
-            vprDEBUG(vesDBG,2) << "|\t\tadding active dcs node to worldDCS for classic ss "
-                     << std::endl << vprDEBUG_FLUSH;
-            _activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
-        }
-        ///what happens if texture is somehow added first? Is that possible?
-        _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
-        _activeTDSet = _activeModel->GetTextureDataSet( 0 );
-        ves::xplorer::TextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
+            //make the CAD transparent
+            _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
+            if( !_activeModel->GetDCS()->SearchChild( _activeModel->GetActiveDataSet()->GetDCS() ) )
+            {
+                vprDEBUG( vesDBG, 2 ) << "|\t\tadding active switch node to worldDCS"
+                << std::endl << vprDEBUG_FLUSH;
+                _activeModel->GetDCS()->AddChild( _activeModel->GetActiveDataSet()->GetDCS() );
+            }
+            ves::xplorer::scenegraph::Switch* temp = _activeModel->GetActiveDataSet()->GetSwitchNode();
+            if( !_activeModel->GetActiveDataSet()->GetDCS()->SearchChild( temp ) )
+            {
+                vprDEBUG( vesDBG, 2 ) << "|\t\tadding active dcs node to worldDCS for classic ss "
+                << std::endl << vprDEBUG_FLUSH;
+                _activeModel->GetActiveDataSet()->GetDCS()->AddChild( temp );
+            }
+            ///what happens if texture is somehow added first? Is that possible?
+            _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal( 1 );
+            _activeTDSet = _activeModel->GetTextureDataSet( 0 );
+            ves::xplorer::TextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
 
-        } 
+        }
     }
-    catch(...)
+    catch ( ... )
     {
-    std::cout<<"Invalid Model!!"<<std::endl;
-    std::cout<<"TextureBasedActivateEventHandler::_operateOnNode()"<<std::endl;
+        std::cout << "Invalid Model!!" << std::endl;
+        std::cout << "TextureBasedActivateEventHandler::_operateOnNode()" << std::endl;
     }
 
 }

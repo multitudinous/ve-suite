@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class TextureBasedVizHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<TextureBasedVizHandler>::type  TextureBasedVizHandlerPtr;
-   typedef ves::util::SharedPtrDef<TextureBasedVizHandler>::type TextureBasedVizHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<TextureBasedVizHandler>::type   TextureBasedVizHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<TextureBasedVizHandler>::type TextureBasedVizHandlerScopedPtr;
+class TextureBasedVizHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<TextureBasedVizHandler>::type  TextureBasedVizHandlerPtr;
+typedef ves::util::SharedPtrDef<TextureBasedVizHandler>::type TextureBasedVizHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<TextureBasedVizHandler>::type   TextureBasedVizHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<TextureBasedVizHandler>::type TextureBasedVizHandlerScopedPtr;
 }
 }
 #endif

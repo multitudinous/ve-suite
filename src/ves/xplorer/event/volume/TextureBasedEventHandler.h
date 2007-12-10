@@ -42,7 +42,7 @@ namespace xplorer
 {
 namespace volume
 {
-   class cfdTextureDataSet;
+class cfdTextureDataSet;
 }
 }
 }
@@ -63,37 +63,37 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   TextureBasedEventHandler();
+    ///Constructor
+    TextureBasedEventHandler();
 
-   ///Copy Constructor
-   TextureBasedEventHandler(const TextureBasedEventHandler& ceh);
+    ///Copy Constructor
+    TextureBasedEventHandler( const TextureBasedEventHandler& ceh );
 
-   ///Destructor
-   virtual ~TextureBasedEventHandler();
+    ///Destructor
+    virtual ~TextureBasedEventHandler();
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   ///Equal operator
-   TextureBasedEventHandler& operator=(const TextureBasedEventHandler& rhs);
+    ///Equal operator
+    TextureBasedEventHandler& operator=( const TextureBasedEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject ) = 0;
 
-   ///Set the active cfdTextureDataset
-   void _setActiveTextureDataset(/*std::string tdsName*/);
-   ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
-   ves::xplorer::Model* _activeModel;///<The active cfdModel;
+    ///Set the active cfdTextureDataset
+    void _setActiveTextureDataset( /*std::string tdsName*/ );
+    ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;///<The active cfdTextureDataset.
+    ves::xplorer::Model* _activeModel;///<The active cfdModel;
 };
 
 }

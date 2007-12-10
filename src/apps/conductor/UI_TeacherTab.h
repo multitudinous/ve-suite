@@ -36,7 +36,7 @@
 UI_TeacherTab API
 */
 /*!\class UI_TeacherTab
-* 
+*
 */
 #include <wx/dialog.h>
 
@@ -50,27 +50,30 @@ class wxBoxSizer;
 class UI_TeacherTab : public wxDialog
 {
 public:
-   UI_TeacherTab(wxWindow* tControl);
-   virtual ~UI_TeacherTab( void ){ ; }
+    UI_TeacherTab( wxWindow* tControl );
+    virtual ~UI_TeacherTab( void )
+    {
+        ;
+    }
 
-   enum TEACHER_TAB_IDS
-   {
-      TEACHER_RBOX,
-      TEACHER_CLEAR_BUTTON,
-      RECORD_SCENE
-   };
-   void _buildPage();
+    enum TEACHER_TAB_IDS
+    {
+        TEACHER_RBOX,
+        TEACHER_CLEAR_BUTTON,
+        RECORD_SCENE
+    };
+    void _buildPage();
 protected:
-   
-   wxWindow* _parent;
-   //the controls
-   wxRadioBox* _teacherRBox;
-   wxButton* _clearButton;
-   wxBoxSizer* teacherPanelGroup;
-   //event handlers
-   void _onTeacher(wxCommandEvent& event);
-   void _onClear(wxCommandEvent& event);
 
-   DECLARE_EVENT_TABLE()
+    wxWindow* _parent;
+    //the controls
+    wxRadioBox* _teacherRBox;
+    wxButton* _clearButton;
+    wxBoxSizer* teacherPanelGroup;
+    //event handlers
+    void _onTeacher( wxCommandEvent& event );
+    void _onClear( wxCommandEvent& event );
+
+    DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_TEACHER_TAB_H_

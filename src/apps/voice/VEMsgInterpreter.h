@@ -48,37 +48,37 @@
 class /* VE_VOICE_EXPORTS */ VEMsgInterpreter
 {
 public:
-   VEMsgInterpreter(int argc, char** argv);
-   VEMsgInterpreter(int argc, char** argv, VjObs_ptr server);
-   virtual ~VEMsgInterpreter();
+    VEMsgInterpreter( int argc, char** argv );
+    VEMsgInterpreter( int argc, char** argv, VjObs_ptr server );
+    virtual ~VEMsgInterpreter();
 
-   bool IsRunning();
-   void SetServer(VjObs_ptr _server);
+    bool IsRunning();
+    void SetServer( VjObs_ptr _server );
 
 protected:
-   void _initCORBA(int argc, char** argv);
-   void _shutdownCORBA();
-   void _sendVoiceCommandToVE();
-   
-   short _numScalars;
-   short _numVectors;
-   short _numGeoArrays;
-   int   _clients;
-   int   _iso_value;
-   int   _sc;
-   int   _min;
-   int   _max;
-   long  _id;
-   long  _geo_state;
-   short _postdata_state;
-   bool  _pre_state;
-   short _timesteps;
-   short _numTeacherArrays;
-   short _teacher_state;
-   int _numOfClientInfo;
-   bool _quit;
+    void _initCORBA( int argc, char** argv );
+    void _shutdownCORBA();
+    void _sendVoiceCommandToVE();
 
-   VjObs::obj_pd_var _clientInfoArray;
-   VjObs_ptr _server;
+    short _numScalars;
+    short _numVectors;
+    short _numGeoArrays;
+    int   _clients;
+    int   _iso_value;
+    int   _sc;
+    int   _min;
+    int   _max;
+    long  _id;
+    long  _geo_state;
+    short _postdata_state;
+    bool  _pre_state;
+    short _timesteps;
+    short _numTeacherArrays;
+    short _teacher_state;
+    int _numOfClientInfo;
+    bool _quit;
+
+    VjObs::obj_pd_var _clientInfoArray;
+    VjObs_ptr _server;
 };
 #endif // VE_MSG_INTERPRETER_H

@@ -44,46 +44,42 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler::QuatCamClearDataEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler
-::QuatCamClearDataEventHandler(const QuatCamClearDataEventHandler& ceh)
-{
-}
+::QuatCamClearDataEventHandler( const QuatCamClearDataEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 QuatCamClearDataEventHandler::~QuatCamClearDataEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-QuatCamClearDataEventHandler& 
-QuatCamClearDataEventHandler::operator=(const QuatCamClearDataEventHandler& rhs)
+QuatCamClearDataEventHandler&
+QuatCamClearDataEventHandler::operator=( const QuatCamClearDataEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void QuatCamClearDataEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void QuatCamClearDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
+{}
+/////////////////////////////////////////////////////////////////////////////////////
+void QuatCamClearDataEventHandler::Execute( XMLObject* veXMLObject )
 {
-}
-/////////////////////////////////////////////////////////////////////////////////////   
-void QuatCamClearDataEventHandler::Execute(XMLObject* veXMLObject)
-{
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      //This isn't used but I think we need to pass in something to the command
-      DataValuePairWeakPtr velFile = command->GetDataValuePair("Clear Quat Data");      
-      std::string clearCmdDummy;
-      velFile->GetData(clearCmdDummy);
-      ves::xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!"<<std::endl;
-      std::cout<<"QuatCamClearDataEventHandler::_operateOnNode()"<<std::endl;
-   }
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        //This isn't used but I think we need to pass in something to the command
+        DataValuePairWeakPtr velFile = command->GetDataValuePair( "Clear Quat Data" );
+        std::string clearCmdDummy;
+        velFile->GetData( clearCmdDummy );
+        ves::xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "QuatCamClearDataEventHandler::_operateOnNode()" << std::endl;
+    }
 }

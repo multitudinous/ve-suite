@@ -49,21 +49,23 @@ namespace xml
 class VE_XML_EXPORTS CreationEventHandler
 {
 public:
-   ///Constructor
-   CreationEventHandler(){}
+    ///Constructor
+    CreationEventHandler()
+    {}
 
-   ///Destructor
-   virtual ~CreationEventHandler(){}
+    ///Destructor
+    virtual ~CreationEventHandler()
+    {}
 
-   ///Create a new XMLObject.
-   ///\param objectType The type of object to create.
-   virtual XMLObject* CreateNewXMLObject(std::string objectType)=0;
+    ///Create a new XMLObject.
+    ///\param objectType The type of object to create.
+    virtual XMLObject* CreateNewXMLObject( std::string objectType ) = 0;
 
-   ///Create a copy of a XMLObject
-   ///\param objectType The type of object to create.
-   ///\param objectToCopy The object to copy
-   virtual XMLObject* CreateNewXMLObjectCopy(std::string objectType,
-                                                  XMLObject* objectToCopy)=0;
+    ///Create a copy of a XMLObject
+    ///\param objectType The type of object to create.
+    ///\param objectToCopy The object to copy
+    virtual XMLObject* CreateNewXMLObjectCopy( std::string objectType,
+                                               XMLObject* objectToCopy ) = 0;
 protected:
 };
 }

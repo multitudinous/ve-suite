@@ -60,172 +60,172 @@ using namespace ves::xplorer::scenegraph;
 cfdVector::cfdVector()
 {
 #ifdef USE_OMP
-   float b[6];
-   float c[3];
-   int maxPointsInPlanes = 0;
-   this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs();
-   this->append = vtkAppendFilter::New();
+    float b[6];
+    float c[3];
+    int maxPointsInPlanes = 0;
+    this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs();
+    this->append = vtkAppendFilter::New();
 
-   for ( int i=0; i<this->nData; i++ )
-   {
-      // get the center of data set.
-      this->GetActiveDataSet()->GetData(i)->GetBounds( b );
-      c[0] = b[1] - b[0];
-      c[1] = b[3] - b[2];
-      c[2] = b[5] - b[4];
+    for( int i = 0; i < this->nData; i++ )
+    {
+        // get the center of data set.
+        this->GetActiveDataSet()->GetData( i )->GetBounds( b );
+        c[0] = b[1] - b[0];
+        c[1] = b[3] - b[2];
+        c[2] = b[5] - b[4];
 
-      // set the plane
-      this->plane[i] = vtkPlane::New();
-      this->plane[i]->SetOrigin( c[0], c[1], c[2] );
-      this->plane[i]->SetNormal( 1.0f, 0.0f, 0.0f );
+        // set the plane
+        this->plane[i] = vtkPlane::New();
+        this->plane[i]->SetOrigin( c[0], c[1], c[2] );
+        this->plane[i]->SetNormal( 1.0f, 0.0f, 0.0f );
 
-      // set the cut function
-      this->cutter[i] = vtkCutter::New();
-      this->cutter[i]->SetInput( this->GetActiveDataSet()->GetData(i) );
-      this->cutter[i]->SetCutFunction( this->plane[i] );
+        // set the cut function
+        this->cutter[i] = vtkCutter::New();
+        this->cutter[i]->SetInput( this->GetActiveDataSet()->GetData( i ) );
+        this->cutter[i]->SetCutFunction( this->plane[i] );
 
-      if( this->cutter[i]->GetOutput()->GetPointData()->GetNumberOfTuples()
-          > maxPointsInPlanes )
-      {
-         maxPointsInPlanes = this->cutter[i]->GetOutput()
-                                         ->GetPointData()->GetNumberOfTuples();
-      }
-   }
+        if( this->cutter[i]->GetOutput()->GetPointData()->GetNumberOfTuples()
+                > maxPointsInPlanes )
+        {
+            maxPointsInPlanes = this->cutter[i]->GetOutput()
+                                ->GetPointData()->GetNumberOfTuples();
+        }
+    }
 
-   for ( int i=0; i<this->nData; i++ )
-   {
-      this->ptmask[i] = vtkMaskPoints::New();
-      this->ptmask[i]->SetInput( this->cutter[i]->GetOutput() );
-      this->ptmask[i]->SetOnRatio( this->GetVectorRatioFactor() );
-      this->ptmask[i]->RandomModeOn();
-      // Using glyph3D to insert arrow to the data sets
-      this->glyph[i] = vtkGlyph3D::New(); 
-      this->glyph[i]->SetInput( this->cutter[i]->GetOutput() );
-      this->glyph[i]->SetSource( this->GetActiveDataSet()->GetArrow() );
-      this->glyph[i]->SetScaleFactor( GetVectorScaleFactor() );
-      this->glyph[i]->SetVectorModeToUseVector();
-      this->glyph[i]->SetScaleModeToDataScalingOff();
+    for( int i = 0; i < this->nData; i++ )
+    {
+        this->ptmask[i] = vtkMaskPoints::New();
+        this->ptmask[i]->SetInput( this->cutter[i]->GetOutput() );
+        this->ptmask[i]->SetOnRatio( this->GetVectorRatioFactor() );
+        this->ptmask[i]->RandomModeOn();
+        // Using glyph3D to insert arrow to the data sets
+        this->glyph[i] = vtkGlyph3D::New();
+        this->glyph[i]->SetInput( this->cutter[i]->GetOutput() );
+        this->glyph[i]->SetSource( this->GetActiveDataSet()->GetArrow() );
+        this->glyph[i]->SetScaleFactor( GetVectorScaleFactor() );
+        this->glyph[i]->SetVectorModeToUseVector();
+        this->glyph[i]->SetScaleModeToDataScalingOff();
 
-      // append data
-      this->append->AddInput( this->glyph[i]->GetOutput() );
-   }
+        // append data
+        this->append->AddInput( this->glyph[i]->GetOutput() );
+    }
 #else
-   // set the plane
-   this->plane = vtkPlane::New();
-   this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
-   this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
+    // set the plane
+    this->plane = vtkPlane::New();
+    this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
+    this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
 
-   // set the cut function
-   this->cutter = vtkCutter::New();
-   this->cutter->SetCutFunction( this->plane );
+    // set the cut function
+    this->cutter = vtkCutter::New();
+    this->cutter->SetCutFunction( this->plane );
 
     this->filter = vtkMultiGroupDataGeometryFilter::New();
 
 #endif
 
 #ifdef USE_OMP
-   this->filter->SetInput( (vtkDataSet *)this->append->GetOutput() );
+    this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
 #endif
 
-  //biv--do we need this? this->filter->ExtentClippingOn();
+    //biv--do we need this? this->filter->ExtentClippingOn();
 }
 
 cfdVector::~cfdVector()
 {
 #ifdef USE_OMP
-   for ( int i=0; i<this->nData; i++ )
-   {
-      this->plane[i]->Delete();
-      this->cutter[i]->Delete();
-      this->glyph[i]->Delete();
-      this->ptmask[i]->Delete();
-   }
-   this->append->Delete();
-   this->append = NULL;
+    for( int i = 0; i < this->nData; i++ )
+    {
+        this->plane[i]->Delete();
+        this->cutter[i]->Delete();
+        this->glyph[i]->Delete();
+        this->ptmask[i]->Delete();
+    }
+    this->append->Delete();
+    this->append = NULL;
 #else
-   this->plane->Delete();
-   this->plane = NULL;
+    this->plane->Delete();
+    this->plane = NULL;
 
-   this->cutter->Delete();
-   this->cutter = NULL;
+    this->cutter->Delete();
+    this->cutter = NULL;
 #endif
 }
 
 void cfdVector::Update( void )
 {
-   if ( this->cursorType == ARROW )
-   {
+    if( this->cursorType == ARROW )
+    {
 #ifdef USE_OMP
-      int i;
-      int imax = this->nData;
+        int i;
+        int imax = this->nData;
 # pragma omp parallel for private(i)
-      for ( i=0; i<imax; i++ )
-      {
-         this->plane[i]->SetOrigin( this->origin );
-         this->plane[i]->SetNormal( this->normal );
-         this->cutter[i]->Update();
-         this->ptmask[i]->Update();
-         this->glyph[i]->Update();
-      }
+        for( i = 0; i < imax; i++ )
+        {
+            this->plane[i]->SetOrigin( this->origin );
+            this->plane[i]->SetNormal( this->normal );
+            this->cutter[i]->Update();
+            this->ptmask[i]->Update();
+            this->glyph[i]->Update();
+        }
 #else
-      vprDEBUG(vesDBG, 1) << "Vector Cutting Plane Update"
-                              << std::endl << vprDEBUG_FLUSH;
-      this->plane->SetOrigin( this->origin );
-      vprDEBUG(vesDBG, 1) << "origin: " << this->origin[0] << " : " 
-                              << this->origin[1] << " : " << this->origin[2] 
-                              << std::endl << vprDEBUG_FLUSH;
-      this->plane->SetNormal( this->normal );
-      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-      int numPointsInPlanes = 0;
-      numPointsInPlanes = this->cutter->GetOutput()->GetPointData()->GetNumberOfTuples();
-      vprDEBUG(vesDBG, 3) << "|   Number of points in cutting plane : " << numPointsInPlanes
-                              << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "Vector Cutting Plane Update"
+        << std::endl << vprDEBUG_FLUSH;
+        this->plane->SetOrigin( this->origin );
+        vprDEBUG( vesDBG, 1 ) << "origin: " << this->origin[0] << " : "
+        << this->origin[1] << " : " << this->origin[2]
+        << std::endl << vprDEBUG_FLUSH;
+        this->plane->SetNormal( this->normal );
+        this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+        int numPointsInPlanes = 0;
+        numPointsInPlanes = this->cutter->GetOutput()->GetPointData()->GetNumberOfTuples();
+        vprDEBUG( vesDBG, 3 ) << "|   Number of points in cutting plane : " << numPointsInPlanes
+        << std::endl << vprDEBUG_FLUSH;
 
-      // get every nth point from the dataSet data
-      this->ptmask->SetInput( (vtkDataSet *)this->cutter->GetOutput() );
-      this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+        // get every nth point from the dataSet data
+        this->ptmask->SetInput(( vtkDataSet * )this->cutter->GetOutput() );
+        this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
 
-      // Using glyph3D to insert arrow to the data sets
-      this->glyph->SetInput( (vtkDataSet *)this->ptmask->GetOutput() );
-      this->glyph->SetScaleFactor( GetVectorScaleFactor() );
-      this->glyph->SetScaleModeToDataScalingOff();
-      this->cutter->Update();
-      this->ptmask->Update();
-      this->glyph->Update();
+        // Using glyph3D to insert arrow to the data sets
+        this->glyph->SetInput(( vtkDataSet * )this->ptmask->GetOutput() );
+        this->glyph->SetScaleFactor( GetVectorScaleFactor() );
+        this->glyph->SetScaleModeToDataScalingOff();
+        this->cutter->Update();
+        this->ptmask->Update();
+        this->glyph->Update();
 #endif
-       this->filter->SetInput( this->glyph->GetOutput() );
-       this->filter->Update();
+        this->filter->SetInput( this->glyph->GetOutput() );
+        this->filter->Update();
 
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                        ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                        ->GetLookupTable() );
-      this->mapper->Update();
+        this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                      ->GetUserRange() );
+        this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                      ->GetLookupTable() );
+        this->mapper->Update();
 
-   }
-   else if ( this->cursorType == CUBE )
-   {
-      vprDEBUG(vesDBG, 0) << "cfdVector not implemented for cube cursor"
-                              << std::endl << vprDEBUG_FLUSH;
-   }
-   
-   vtkActor* temp = vtkActor::New();
-   temp->SetMapper( this->mapper );
-   temp->GetProperty()->SetSpecularPower( 20.0f );
-   
+    }
+    else if( this->cursorType == CUBE )
+    {
+        vprDEBUG( vesDBG, 0 ) << "cfdVector not implemented for cube cursor"
+        << std::endl << vprDEBUG_FLUSH;
+    }
+
+    vtkActor* temp = vtkActor::New();
+    temp->SetMapper( this->mapper );
+    temp->GetProperty()->SetSpecularPower( 20.0f );
+
     try
     {
         osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
         tempGeode->TranslateToGeode( temp );
-        geodes.push_back( tempGeode.get() ); 
+        geodes.push_back( tempGeode.get() );
         this->updateFlag = true;
     }
-    catch( std::bad_alloc )
+    catch ( std::bad_alloc )
     {
         mapper->Delete();
         mapper = vtkMultiGroupPolyDataMapper::New();
-        vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdVector " 
-            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdVector "
+        << std::endl << vprDEBUG_FLUSH;
     }
     temp->Delete();
 }

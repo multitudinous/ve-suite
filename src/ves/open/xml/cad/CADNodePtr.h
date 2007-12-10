@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_CAD::CADNode.  To get the full 
+ * VE_XML::VE_CAD::CADNode.  To get the full
  * declaration of VE_XML::VE_CAD::CADNode
  * ves/open/xml/cad/CADNode.h must be included, too.
  */
@@ -52,9 +52,9 @@ namespace xml
 {
 namespace cad
 {
-   class CADNode;
-   /// Typedef for a SmartPtr type for the CADNode.
-   typedef Loki::SmartPtrDef<CADNode>::type CADNodePtr;
+class CADNode;
+/// Typedef for a SmartPtr type for the CADNode.
+typedef Loki::SmartPtrDef<CADNode>::type CADNodePtr;
 }
 }
 }

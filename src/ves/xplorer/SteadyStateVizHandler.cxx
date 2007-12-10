@@ -105,13 +105,13 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     vjTh[ 0 ] = 0;
     _param.erase();
 
-    _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] = 
+    _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
         new ves::xplorer::event::CreateVisObjectEventHandler();
-    _eventHandlers[ std::string( "CLEAR_VIS_OBJECTS" ) ] = 
+    _eventHandlers[ std::string( "CLEAR_VIS_OBJECTS" )] =
         new ves::xplorer::event::ClearVisObjectsEventHandler();
-    _eventHandlers[ std::string( "DELETE_OBJECT_FROM_NETWORK" ) ] = 
+    _eventHandlers[ std::string( "DELETE_OBJECT_FROM_NETWORK" )] =
         new ves::xplorer::event::ClearVisObjectsEventHandler();
-    _eventHandlers[ std::string( "LIVE_STREAMLINE_UPDATE" ) ] = 
+    _eventHandlers[ std::string( "LIVE_STREAMLINE_UPDATE" )] =
         new ves::xplorer::event::StreamLineEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
     {
         vjTh[ 0 ]->join();
     }
-    catch(...)
+    catch ( ... )
     {
         ;//do nothing
     }
@@ -154,8 +154,8 @@ std::vector< cfdGraphicsObject* > SteadyStateVizHandler::GetGraphicsObjectsOfTyp
 
     //Search map for other object types with the same type as this one
     std::multimap< int, cfdGraphicsObject* >::iterator itr;
-    for( itr = graphicsObjects.lower_bound( type ); 
-         itr != graphicsObjects.upper_bound( type ); ++itr )
+    for( itr = graphicsObjects.lower_bound( type );
+            itr != graphicsObjects.upper_bound( type ); ++itr )
     {
         if( itr->second )
         {
@@ -190,8 +190,8 @@ void SteadyStateVizHandler::SetActorsAreReady( bool actorsReady )
 ////////////////////////////////////////////////////////////////////////////////
 void SteadyStateVizHandler::ClearVisObjects()
 {
-    vprDEBUG( vesDBG,2 ) << "|\tClear All Graphics Objects From Scene Graph"
-                         << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 2 ) << "|\tClear All Graphics Objects From Scene Graph"
+    << std::endl << vprDEBUG_FLUSH;
 
     std::multimap< int, cfdGraphicsObject* >::iterator pos;
     for( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
@@ -211,8 +211,8 @@ void SteadyStateVizHandler::InitScene()
 #if __VJ_version > 2000003
     vjTh[ 0 ] = new vpr::Thread( boost::bind( &SteadyStateVizHandler::CreateActorThread, this ) );
 #elif __VJ_version == 2000003
-    vjTh[ 0 ] = new vpr::Thread( new vpr::ThreadMemberFunctor< SteadyStateVizHandler >( 
-        this, &SteadyStateVizHandler::CreateActorThread ) );
+    vjTh[ 0 ] = new vpr::Thread( new vpr::ThreadMemberFunctor< SteadyStateVizHandler >(
+                                     this, &SteadyStateVizHandler::CreateActorThread ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -228,8 +228,8 @@ void SteadyStateVizHandler::PreFrameUpdate()
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
-            vprDEBUG( vesDBG, 0 ) << "|\tExecuting: "<< tempCommand->GetCommandName() 
-                                  << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 0 ) << "|\tExecuting: " << tempCommand->GetCommandName()
+            << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( tempCommand );
         }
@@ -247,18 +247,18 @@ void SteadyStateVizHandler::PreFrameUpdate()
     if( actorsAreReady && transientActors )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tUpdating Objects"
-                              << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
         bool alreadyRemoved = false;
         //for ( unsigned int i = 0; i < dataList.size(); i++ )
         //{
-        if( _activeObject->GetUpdateFlag() )// || 
+        if( _activeObject->GetUpdateFlag() )// ||
             //dataList.at( i )->GetTransientGeodeFlag() )
-        {  
+        {
             //Set the update flag in steadystate viz handler
             //now update the vis object
-            ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
+            ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->SetVal( 0 );
             vprDEBUG( vesDBG, 2 ) << "|\tCreating Objects"
-                                  << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
@@ -270,8 +270,8 @@ void SteadyStateVizHandler::PreFrameUpdate()
 
             //Search map for other object types with the same type as this one
             std::multimap< int, cfdGraphicsObject* >::iterator pos;
-            for( pos = graphicsObjects.lower_bound( _activeObject->GetObjectType() ); 
-                 pos != graphicsObjects.upper_bound( _activeObject->GetObjectType() ); )
+            for( pos = graphicsObjects.lower_bound( _activeObject->GetObjectType() );
+                    pos != graphicsObjects.upper_bound( _activeObject->GetObjectType() ); )
             {
                 //and see if they have the same parent node
                 //the parent node is unique becaue each dataset has a dcs
@@ -294,7 +294,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             actorsAreReady = false;
             _activeObject->ClearGeodes();
             vprDEBUG( vesDBG, 2 ) << "|\tDone Creating Objects"
-                                  << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
 
             /*if( ModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
             {
@@ -350,47 +350,47 @@ void SteadyStateVizHandler::CreateActorThread( void* )
         vpr::System::msleep( 500 );  // half-second delay
 
         // Basically waiting for work here
-        // This is a guard 
+        // This is a guard
         // Sample every half second
         if( computeActorsAndGeodes )
-        {      
+        {
             if( _activeObject != NULL )
             {
-                cfdContour* contourTest = 
+                cfdContour* contourTest =
                     dynamic_cast< cfdContour* >( _activeObject );
-                cfdVector* vectorTest = 
+                cfdVector* vectorTest =
                     dynamic_cast< cfdVector* >( _activeObject );
-                cfdMomentum* momentumTest = 
+                cfdMomentum* momentumTest =
                     dynamic_cast< cfdMomentum* >( _activeObject );
-                cfdStreamers* streamersTest = 
+                cfdStreamers* streamersTest =
                     dynamic_cast< cfdStreamers* >( _activeObject );
-                cfdAnimatedStreamlineCone* animStreamerTest = 
+                cfdAnimatedStreamlineCone* animStreamerTest =
                     dynamic_cast< cfdAnimatedStreamlineCone* >( _activeObject );
-                cfdAnimatedImage* animImgTest = 
+                cfdAnimatedImage* animImgTest =
                     dynamic_cast< cfdAnimatedImage* >( _activeObject );
 
-                vprDEBUG( vesDBG, 0 ) << " Updating cfdObject..." 
-                                      << std::endl << vprDEBUG_FLUSH;
+                vprDEBUG( vesDBG, 0 ) << " Updating cfdObject..."
+                << std::endl << vprDEBUG_FLUSH;
 
                 // May replace later , fix a later date
                 //vprDEBUG(vesDBG,2) << " Memory used before update ( bytes ) : "
                 //                   << pfMemory::getArenaBytesUsed() << std::endl << vprDEBUG_FLUSH;
 
                 //tt = GetTimeClock();
-                if( contourTest == NULL && 
-                    vectorTest == NULL &&
-                    momentumTest == NULL &&   
-                    //streamersTest == NULL &&
-                    animStreamerTest == NULL &&
-                    animImgTest == NULL )
+                if( contourTest == NULL &&
+                        vectorTest == NULL &&
+                        momentumTest == NULL &&
+                        //streamersTest == NULL &&
+                        animStreamerTest == NULL &&
+                        animImgTest == NULL )
                 {
                     // For everything except for the interactive and transient stuff
-                    vprDEBUG( vesDBG, 1 ) << "non-interactive object." << std::endl << vprDEBUG_FLUSH; 
+                    vprDEBUG( vesDBG, 1 ) << "non-interactive object." << std::endl << vprDEBUG_FLUSH;
 
-                    _activeObject->Update();      
+                    _activeObject->Update();
                     //_activeObject->SetSequence( 0 );
                 }
-                /*else if ( streamersTest != NULL )
+                /*else if(streamersTest != NULL )
                 {
                 vprDEBUG(vesDBG,1) << "interactive object." 
                    << std::endl << vprDEBUG_FLUSH;
@@ -413,13 +413,13 @@ void SteadyStateVizHandler::CreateActorThread( void* )
                 //vprDEBUG(vesDBG,1) << " Time: " << GetTimeClock()-tt
                 //                       << std::endl << vprDEBUG_FLUSH;
                 //vprDEBUG(vesDBG,2) <<" Memory used after update ( bytes ) : "
-                //                       << pfMemory::getArenaBytesUsed() 
+                //                       << pfMemory::getArenaBytesUsed()
                 //                       << std::endl << vprDEBUG_FLUSH;
 
                 //_activeObject = NULL;
-                computeActorsAndGeodes = false;   
-                vprDEBUG( vesDBG, 0 ) << "|\tDone updating cfdObject" 
-                                      << std::endl << std::endl << vprDEBUG_FLUSH; 
+                computeActorsAndGeodes = false;
+                vprDEBUG( vesDBG, 0 ) << "|\tDone updating cfdObject"
+                << std::endl << std::endl << vprDEBUG_FLUSH;
 
             }
         }
@@ -443,7 +443,7 @@ void SteadyStateVizHandler::streamers()
     if( !useLastSource )
     {
         vprDEBUG( vesDBG, 1 ) << "creating fresh streamlines"
-                              << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
         if( lastSource != NULL )
         {
             lastSource->Delete();
@@ -454,10 +454,10 @@ void SteadyStateVizHandler::streamers()
 
         _activeObject->SetSourcePoints( lastSource );
     }
-    else 
+    else
     {
         vprDEBUG( vesDBG, 1 ) << "using transformed last source"
-                              << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
         _activeObject->SetSourcePoints( lastSource );
     }

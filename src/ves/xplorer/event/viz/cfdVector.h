@@ -55,36 +55,36 @@ namespace xplorer
 cfdVector API
 */
 /*!\class ves::xplorer::cfdVector
-* A class to takes input data set(s) and generates a 
-* cutting planes of vector profile based on the position 
+* A class to takes input data set(s) and generates a
+* cutting planes of vector profile based on the position
 * and direction selected. Update member function will update
 * the position and direction as each "Update" being called.
 */
 class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase
 {
 public:
-   // Initialize the VTK objects and pipeline.
-  ///Constructor
-   cfdVector( );
- ///Destructor
-   virtual ~cfdVector( );
+    // Initialize the VTK objects and pipeline.
+    ///Constructor
+    cfdVector( );
+///Destructor
+    virtual ~cfdVector( );
 
-   /* Update the position, x, and normal direction to cut.
-   Output a updated pfGeoSet.  */
-   virtual void Update( void );
+    /* Update the position, x, and normal direction to cut.
+    Output a updated pfGeoSet.  */
+    virtual void Update( void );
 
 private:
 
 #ifdef USE_OMP
-   vtkPlane *plane[MAX_VECTOR];
-   vtkCutter *cutter[MAX_VECTOR];
-   vtkGlyph3D *glyph[MAX_VECTOR];
-   vtkMaskPoints   *ptmask[MAX_VECTOR];
-   vtkAppendFilter *append;
-   float nData;
+    vtkPlane *plane[MAX_VECTOR];
+    vtkCutter *cutter[MAX_VECTOR];
+    vtkGlyph3D *glyph[MAX_VECTOR];
+    vtkMaskPoints   *ptmask[MAX_VECTOR];
+    vtkAppendFilter *append;
+    float nData;
 #else
-   vtkPlane           *plane;
-   vtkCutter          *cutter;
+    vtkPlane           *plane;
+    vtkCutter          *cutter;
     vtkMultiGroupDataGeometryFilter*   filter;
 #endif
 };

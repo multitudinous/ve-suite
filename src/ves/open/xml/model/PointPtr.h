@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::PointPtr.  To get the full 
+ * VE_XML::VE_Model::PointPtr.  To get the full
  * declaration of VE_XML::VE_Model::Point
  * VE_Open/XML/Model/Point.h must be included, too.
  */
@@ -52,9 +52,9 @@ namespace xml
 {
 namespace model
 {
-   class Point;
-   /// Typedef for a SmartPtr type for the Tag.
-   typedef Loki::SmartPtrDef<Point>::type PointPtr;
+class Point;
+/// Typedef for a SmartPtr type for the Tag.
+typedef Loki::SmartPtrDef<Point>::type PointPtr;
 }
 }
 }

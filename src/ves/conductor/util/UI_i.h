@@ -36,7 +36,7 @@
 Body_UI_i API
 */
 /*!\class Body_UI_i
-* 
+*
 */
 #include <ves/open/moduleS.h>
 #include <iostream>
@@ -54,12 +54,12 @@ namespace open
 {
 namespace xml
 {
-	class XMLObject;
-    class Command;
-	namespace model
-	{
-		class Model;
-	}
+class XMLObject;
+class Command;
+namespace model
+{
+class Model;
+}
 }
 }
 }
@@ -76,80 +76,80 @@ namespace util
 class PEThread;
 class VE_CONDUCTOR_UTILS_EXPORTS Body_UI_i : public virtual POA_Body::UI
 {
- public:
-  //Constructor 
-  Body_UI_i (Body::Executive_ptr exec, std::string name);
-  
-  //Destructor 
-  virtual ~Body_UI_i (void);
-  
-  std::string UIName_;
+public:
+    //Constructor
+    Body_UI_i( Body::Executive_ptr exec, std::string name );
 
- protected:
-  Body::Executive_var executive_;
-  PEThread* logWindow;
- public:
+    //Destructor
+    virtual ~Body_UI_i( void );
 
-     void SetLogWindow( PEThread* logWindow );
+    std::string UIName_;
 
-	 ///Returns vector containing XMLObjects
-	 ves::open::xml::Command GetXplorerData( std::string commandName );
-     
-virtual void UpdateNetwork (
-    const char * network
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+protected:
+    Body::Executive_var executive_;
+    PEThread* logWindow;
+public:
 
-virtual void UpdateModuleUI (
-    CORBA::Long module_id,
-    const char * msg
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+    void SetLogWindow( PEThread* logWindow );
 
-virtual void UpdateModuleResult (
-    CORBA::Long module_id,
-    const char * msg
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+    ///Returns vector containing XMLObjects
+    ves::open::xml::Command GetXplorerData( std::string commandName );
 
-virtual void UpdateLinkContent (
-    CORBA::Long id,
-    const char * msg
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
-
-virtual void Raise (
-    const char * notification
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
-
-  virtual
-  void SetXplorerData (
-      const char * xplorerData
+    virtual void UpdateNetwork(
+        const char * network
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
 
-  std::map<int,std::string> m_idToModelName;
-  std::map<std::string, ves::open::xml::XMLObject*> m_objectToModel;
-  std::map< std::string, ves::open::xml::Command > m_commandNameMap;
+    virtual void UpdateModuleUI(
+        CORBA::Long module_id,
+        const char * msg
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void UpdateModuleResult(
+        CORBA::Long module_id,
+        const char * msg
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void UpdateLinkContent(
+        CORBA::Long id,
+        const char * msg
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void Raise(
+        const char * notification
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual
+    void SetXplorerData(
+        const char * xplorerData
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    std::map<int, std::string> m_idToModelName;
+    std::map<std::string, ves::open::xml::XMLObject*> m_objectToModel;
+    std::map< std::string, ves::open::xml::Command > m_commandNameMap;
 };
 }
 }

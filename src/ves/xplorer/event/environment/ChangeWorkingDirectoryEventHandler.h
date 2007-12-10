@@ -51,25 +51,25 @@ namespace event
 class ChangeWorkingDirectoryEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   ChangeWorkingDirectoryEventHandler();
+    ///Constructor
+    ChangeWorkingDirectoryEventHandler();
 
-   ///Copy Constructor
-   ChangeWorkingDirectoryEventHandler(const ChangeWorkingDirectoryEventHandler& ceh);
+    ///Copy Constructor
+    ChangeWorkingDirectoryEventHandler( const ChangeWorkingDirectoryEventHandler& ceh );
 
-   ///Destructor
-   virtual ~ChangeWorkingDirectoryEventHandler();
+    ///Destructor
+    virtual ~ChangeWorkingDirectoryEventHandler();
 
-   ///Set the cfdModel.
-   ///\param model The ModelHandler to execute the Command on.
-   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
+    ///Set the cfdModel.
+    ///\param model The ModelHandler to execute the Command on.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   ///Equal operator
-   ChangeWorkingDirectoryEventHandler& operator=(const ChangeWorkingDirectoryEventHandler& rhs);
+    ///Equal operator
+    ChangeWorkingDirectoryEventHandler& operator=( const ChangeWorkingDirectoryEventHandler& rhs );
 
 protected:
 };

@@ -34,7 +34,7 @@
 *UI_TransientDialog API
 */
 /*!\class UI_TransientDialog
-* 
+*
 */
 #include <ves/VEConfig.h>
 
@@ -53,55 +53,56 @@ namespace conductor
 namespace util
 {
 class wxSpinCtrlDbl;
-class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public BaseDialog 
+class VE_CONDUCTOR_UTILS_EXPORTS UI_TransientDialog : public BaseDialog
 {
 public:
-   UI_TransientDialog(int numTimeSteps,
-                    wxWindow* parent, 
-		               wxWindowID id = -1, 
-                     std::string title = "Transient Controls");
-   virtual ~UI_TransientDialog(){}
+    UI_TransientDialog( int numTimeSteps,
+                        wxWindow* parent,
+                        wxWindowID id = -1,
+                        std::string title = "Transient Controls" );
+    virtual ~UI_TransientDialog()
+    {}
 
-   enum TRANS_DIALOG_IDS
-   {
-      PLAY_BUTTON,
-      STOP_BUTTON,
-      FORWARD_STEP_BUTTON,
-      BACKWARD_STEP_BUTTON,
-      DURATION_CNTL_BOX,
-      CURRENT_FRAME
-   };
+    enum TRANS_DIALOG_IDS
+    {
+        PLAY_BUTTON,
+        STOP_BUTTON,
+        FORWARD_STEP_BUTTON,
+        BACKWARD_STEP_BUTTON,
+        DURATION_CNTL_BOX,
+        CURRENT_FRAME
+    };
 
-   ///Set the command prefix so that we can use this control to
-   ///send different commands.
-   ///\param newPrefix The command prefix
-   void SetCommandPrefix(std::string newPrefix);
+    ///Set the command prefix so that we can use this control to
+    ///send different commands.
+    ///\param newPrefix The command prefix
+    void SetCommandPrefix( std::string newPrefix );
 protected:
-   virtual void _buildGUI();
+    virtual void _buildGUI();
 
-   unsigned int _nTimeSteps;
-   std::string _commandPrefix;///<The command prefix.
+    unsigned int _nTimeSteps;
+    std::string _commandPrefix;///<The command prefix.
 
-   wxImage* _playImage;
-   wxImage* _stopImage;
-   wxImage* _forwardImage;
-   wxImage* _backwardImage;
+    wxImage* _playImage;
+    wxImage* _stopImage;
+    wxImage* _forwardImage;
+    wxImage* _backwardImage;
 
-   wxBitmapButton* _playButton;
-   wxBitmapButton* _stopButton;
+    wxBitmapButton* _playButton;
+    wxBitmapButton* _stopButton;
 
-   wxBitmapButton* _nextButton;
-   wxBitmapButton* _prevButton;
+    wxBitmapButton* _nextButton;
+    wxBitmapButton* _prevButton;
 
-   wxSpinCtrl* _currentFrame;
-   wxSpinCtrlDbl* _duration;
-   void _onBackwardStep(wxCommandEvent& event);
-   void _onForwardStep(wxCommandEvent& event);
-   void _onPlay(wxCommandEvent& event);
-   void _onStop(wxCommandEvent& event);
-   void _onSelectFrame(wxSpinEvent& event);
-   void _onSetDuration(wxSpinEvent& event);
-  DECLARE_EVENT_TABLE()
+    wxSpinCtrl* _currentFrame;
+    wxSpinCtrlDbl* _duration;
+    void _onBackwardStep( wxCommandEvent& event );
+    void _onForwardStep( wxCommandEvent& event );
+    void _onPlay( wxCommandEvent& event );
+    void _onStop( wxCommandEvent& event );
+    void _onSelectFrame( wxSpinEvent& event );
+    void _onSetDuration( wxSpinEvent& event );
+    DECLARE_EVENT_TABLE()
 };
 }
 }

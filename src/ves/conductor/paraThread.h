@@ -36,7 +36,7 @@
 *paraThread API
 */
 /*!\class paraThread
-* 
+*
 */
 #include <wx/thread.h>
 
@@ -46,17 +46,20 @@ namespace ves
 {
 namespace conductor
 {
-    class Network;
-class VE_GUIPLUGINS_EXPORTS paraThread : public wxThread  
+class Network;
+class VE_GUIPLUGINS_EXPORTS paraThread : public wxThread
 {
 public:
-	paraThread(Network* nt);
-	virtual ~paraThread();
-	bool Do();
-	virtual ExitCode Entry() { return (ExitCode) this->Do(); };
+    paraThread( Network* nt );
+    virtual ~paraThread();
+    bool Do();
+    virtual ExitCode Entry()
+    {
+        return ( ExitCode ) this->Do();
+    };
 
- protected:
-	//Network* nw;
+protected:
+    //Network* nw;
 };
 }
 }

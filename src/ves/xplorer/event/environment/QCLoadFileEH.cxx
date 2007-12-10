@@ -44,46 +44,42 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler::QuatCamLoadFileEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler
-::QuatCamLoadFileEventHandler(const QuatCamLoadFileEventHandler& ceh)
-{
-}
+::QuatCamLoadFileEventHandler( const QuatCamLoadFileEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 QuatCamLoadFileEventHandler::~QuatCamLoadFileEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-QuatCamLoadFileEventHandler& 
-QuatCamLoadFileEventHandler::operator=(const QuatCamLoadFileEventHandler& rhs)
+QuatCamLoadFileEventHandler&
+QuatCamLoadFileEventHandler::operator=( const QuatCamLoadFileEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////
-void QuatCamLoadFileEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void QuatCamLoadFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
+{}
+/////////////////////////////////////////////////////////////////////////////////////
+void QuatCamLoadFileEventHandler::Execute( XMLObject* veXMLObject )
 {
-}
-/////////////////////////////////////////////////////////////////////////////////////   
-void QuatCamLoadFileEventHandler::Execute(XMLObject* veXMLObject)
-{
-   std::string fileName;
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr velFile = command->GetDataValuePair("View Locations file");      
-      velFile->GetData(fileName);
-      ves::xplorer::cfdQuatCamHandler::instance()->LoadFromFile(fileName);
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!"<<std::endl;
-	  std::cout<<"QuatCamLoadFileEventHandler"<<std::endl;
-	  std::cout<<"Couldn't load viewpoints file: "<<fileName<<std::endl;
-   }
+    std::string fileName;
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr velFile = command->GetDataValuePair( "View Locations file" );
+        velFile->GetData( fileName );
+        ves::xplorer::cfdQuatCamHandler::instance()->LoadFromFile( fileName );
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "QuatCamLoadFileEventHandler" << std::endl;
+        std::cout << "Couldn't load viewpoints file: " << fileName << std::endl;
+    }
 }

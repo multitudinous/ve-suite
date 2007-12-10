@@ -51,94 +51,94 @@ using namespace ves::xplorer::scenegraph;
 
 cfdMomentums::cfdMomentums( const int xyz )
 {
-   this->xyz = xyz;
-   this->warper = vtkWarpVector::New();
+    this->xyz = xyz;
+    this->warper = vtkWarpVector::New();
 }
 
 
 cfdMomentums::~cfdMomentums()
-{ 
-   if ( this->warper != NULL )
-   {
-      this->warper->Delete();
-      this->warper = NULL;
-   }
+{
+    if( this->warper != NULL )
+    {
+        this->warper->Delete();
+        this->warper = NULL;
+    }
 }
 
 
 void cfdMomentums::Update( void )
 {
-   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
-   {
-      vprDEBUG(vesDBG, 0) 
-         << "cfdMomentums: planesData == NULL so returning"
-         << std::endl << vprDEBUG_FLUSH;
+    if( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetNumberOfPlanes() == 0 )
+    {
+        vprDEBUG( vesDBG, 0 )
+        << "cfdMomentums: planesData == NULL so returning"
+        << std::endl << vprDEBUG_FLUSH;
 
-      return;
-   }
+        return;
+    }
 
-   //make sure that there are planesData and that the cursorType is correct...
-   if ( this->mapper && this->cursorType == NONE )
-   {
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
+    //make sure that there are planesData and that the cursorType is correct...
+    if( this->mapper && this->cursorType == NONE )
+    {
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-      std::string vectorName = this->GetActiveDataSet()->
+        std::string vectorName = this->GetActiveDataSet()->
                                  GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-            ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
 
-      std::string scalarName = this->GetActiveDataSet()->
+        std::string scalarName = this->GetActiveDataSet()->
                                  GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-               ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
-      
-      this->warper->SetInput( this->GetActiveDataSet()
-                       ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
-      this->warper->SetScaleFactor( this->warpedContourScale );
-      this->warper->Update();//can this go???
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
 
-      this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
+        this->warper->SetInput( this->GetActiveDataSet()
+                                ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        this->warper->SetScaleFactor( this->warpedContourScale );
+        this->warper->Update();//can this go???
 
-      this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
-      //this->mapper->Update();//can this go???
+        this->SetMapperInput(( vtkPolyData* )this->warper->GetOutput() );
 
-      vtkActor* temp = vtkActor::New();
-      temp->SetMapper( this->mapper );
-      //temp->GetProperty()->SetSpecularPower( 100.0f );
-      //temp->GetProperty()->SetSpecular( 100.0f );
-      //temp->GetProperty()->SetDiffuse( 100.0f );
-      //temp->GetProperty()->SetAmbient( 100.0f );
-      //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-      //geodes.back()->TranslateToGeode( temp );
-      //temp->Delete();
-      //this->updateFlag = true;
+        this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
+        this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
+        //this->mapper->Update();//can this go???
 
-      try
-      {   
-			osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-         tempGeode->TranslateToGeode( temp );
-         geodes.push_back( tempGeode.get() ); 
-         this->updateFlag = true;
-      }
-      catch( std::bad_alloc )
-      {
-         mapper->Delete();
-         mapper = vtkMultiGroupPolyDataMapper::New();
+        vtkActor* temp = vtkActor::New();
+        temp->SetMapper( this->mapper );
+        //temp->GetProperty()->SetSpecularPower( 100.0f );
+        //temp->GetProperty()->SetSpecular( 100.0f );
+        //temp->GetProperty()->SetDiffuse( 100.0f );
+        //temp->GetProperty()->SetAmbient( 100.0f );
+        //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+        //geodes.back()->TranslateToGeode( temp );
+        //temp->Delete();
+        //this->updateFlag = true;
 
-         vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdMomentums " 
-                              << std::endl << vprDEBUG_FLUSH;
-      }
-      this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
-      temp->Delete();
-   }
-   else
-   {
-      vprDEBUG(vesDBG, 0) 
-         << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
-         << std::endl << vprDEBUG_FLUSH;
+        try
+        {
+            osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+            tempGeode->TranslateToGeode( temp );
+            geodes.push_back( tempGeode.get() );
+            this->updateFlag = true;
+        }
+        catch ( std::bad_alloc )
+        {
+            mapper->Delete();
+            mapper = vtkMultiGroupPolyDataMapper::New();
 
-      this->updateFlag = false;
-   }
+            vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentums "
+            << std::endl << vprDEBUG_FLUSH;
+        }
+        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+        temp->Delete();
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 0 )
+        << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
+        << std::endl << vprDEBUG_FLUSH;
+
+        this->updateFlag = false;
+    }
 }

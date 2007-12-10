@@ -67,17 +67,17 @@ struct vesMotionState : public btMotionState
 
     vesMotionState( const btTransform& startTrans = btTransform::getIdentity(),
                     const btTransform& centerOfMassOffset = btTransform::getIdentity() )
-    :
-    m_graphicsWorldTrans( startTrans ),
-    m_centerOfMassOffset( centerOfMassOffset ),
-    m_startWorldTrans( startTrans ),
-    m_userPointer( 0 )
+            :
+            m_graphicsWorldTrans( startTrans ),
+            m_centerOfMassOffset( centerOfMassOffset ),
+            m_startWorldTrans( startTrans ),
+            m_userPointer( 0 )
     {
         ;
     }
 
     //Synchronizes world transform from user to physics
-    virtual void getWorldTransform( btTransform& worldTrans ) const 
+    virtual void getWorldTransform( btTransform& worldTrans ) const
     {
         worldTrans = m_centerOfMassOffset.inverse() * m_graphicsWorldTrans;
     }

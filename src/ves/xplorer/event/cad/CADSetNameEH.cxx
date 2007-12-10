@@ -50,89 +50,88 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetNameEventHandler::CADSetNameEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADSetNameEventHandler::CADSetNameEventHandler(const CADSetNameEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADSetNameEventHandler::CADSetNameEventHandler( const CADSetNameEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADSetNameEventHandler::~CADSetNameEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADSetNameEventHandler& CADSetNameEventHandler::operator=(const CADSetNameEventHandler& rhs)
+CADSetNameEventHandler& CADSetNameEventHandler::operator=( const CADSetNameEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetNameEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADSetNameEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr newName = command->GetDataValuePair("Node Name");
-      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
+    try
+    {
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr newName = command->GetDataValuePair( "Node Name" );
+        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
 
-      std::string errorString;
-          
-      //This assumes the part/assembly is there already
-      if(nodeType->GetDataString() == std::string("Assembly"))
-      {
-         if(m_cadHandler->AssemblyExists(nodeID->GetDataString()))
-         {
-            std::cout<<"Setting name: "<<newName->GetDataString()<<std::endl;
-            m_cadHandler->GetAssembly(nodeID->GetDataString())->SetName(newName->GetDataString());
-         }
-         else
-         {
-            errorString = std::string("Assembly: ") + newName->GetDataString()+ std::string(" not added to the graph yet!");;
-            throw(errorString);
-         }
-      }
-      else if(nodeType->GetDataString() == std::string("Part"))
-      {
-         if(m_cadHandler->PartExists(nodeID->GetDataString()))
-         {
-            m_cadHandler->GetPart(nodeID->GetDataString())->GetNode()->SetName(newName->GetDataString());
-         }
-         else
-         {
-            errorString = std::string("Part: ") + newName->GetDataString()+ std::string(" not added to the graph yet!");;
-            throw(errorString);
-         }
-      }
-      else if(nodeType->GetDataString() == std::string("Clone"))
-      {
-         if(m_cadHandler->CloneExists(nodeID->GetDataString()))
-         {
-            m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph()->SetName(newName->GetDataString());
-         }
-         else
-         {
-            errorString = std::string("Clone: ") + newName->GetDataString()+ std::string(" not added to the graph yet!");;
-            throw(errorString);
-         }
-      }
-   }
-   catch(std::string str)
-   {
-      std::cout<<str<<std::endl;
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!"<<std::endl;
-      std::cout<<"---Invalid node specified to rename!---"<<std::endl;
-   }
+        std::string errorString;
+
+        //This assumes the part/assembly is there already
+        if( nodeType->GetDataString() == std::string( "Assembly" ) )
+        {
+            if( m_cadHandler->AssemblyExists( nodeID->GetDataString() ) )
+            {
+                std::cout << "Setting name: " << newName->GetDataString() << std::endl;
+                m_cadHandler->GetAssembly( nodeID->GetDataString() )->SetName( newName->GetDataString() );
+            }
+            else
+            {
+                errorString = std::string( "Assembly: " ) + newName->GetDataString() + std::string( " not added to the graph yet!" );
+                ;
+                throw( errorString );
+            }
+        }
+        else if( nodeType->GetDataString() == std::string( "Part" ) )
+        {
+            if( m_cadHandler->PartExists( nodeID->GetDataString() ) )
+            {
+                m_cadHandler->GetPart( nodeID->GetDataString() )->GetNode()->SetName( newName->GetDataString() );
+            }
+            else
+            {
+                errorString = std::string( "Part: " ) + newName->GetDataString() + std::string( " not added to the graph yet!" );
+                ;
+                throw( errorString );
+            }
+        }
+        else if( nodeType->GetDataString() == std::string( "Clone" ) )
+        {
+            if( m_cadHandler->CloneExists( nodeID->GetDataString() ) )
+            {
+                m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph()->SetName( newName->GetDataString() );
+            }
+            else
+            {
+                errorString = std::string( "Clone: " ) + newName->GetDataString() + std::string( " not added to the graph yet!" );
+                ;
+                throw( errorString );
+            }
+        }
+    }
+    catch ( std::string str )
+    {
+        std::cout << str << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "---Invalid node specified to rename!---" << std::endl;
+    }
 }

@@ -42,8 +42,8 @@ namespace open
 {
 namespace xml
 {
-    class Command;
-    class DataValuePair;
+class Command;
+class DataValuePair;
 }
 }
 }
@@ -73,7 +73,7 @@ namespace conductor
 
 namespace util
 {
-    class WPDialog;
+class WPDialog;
 }
 
 /*!\file streamlines.h
@@ -81,10 +81,10 @@ namespace util
  */
 
 /*!\class Streamlines
- * 
+ *
  */
 class VE_GUIPLUGINS_EXPORTS Streamlines : public wxDialog
-{    
+{
 public:
     Streamlines();
     Streamlines( wxWindow* parent,
@@ -134,14 +134,14 @@ public:
 
     wxButton* itemButton14;
 
-protected: 
+protected:
     void _onCursorSelect( wxCommandEvent& event );
     void _onDirection( wxCommandEvent& event );
     void _onIntegrateDir( wxCommandEvent& event );
     void _onPointsSlider( wxScrollEvent& event );
     void _onAdvanced( wxCommandEvent& event );
-    void _onSizeSlider( wxScrollEvent& event);
-    void _onCompute( wxCommandEvent& event);
+    void _onSizeSlider( wxScrollEvent& event );
+    void _onCompute( wxCommandEvent& event );
     void SetSeedPoints( wxCommandEvent& event );
     void OnClose( wxCommandEvent& event );
 

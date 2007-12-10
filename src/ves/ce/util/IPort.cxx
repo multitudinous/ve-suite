@@ -33,23 +33,21 @@
 #include <ves/ce/util/IPort.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
-IPort::IPort (int id, Module* m)
-   :Port( id, m )
-{
-}
+IPort::IPort( int id, Module* m )
+        : Port( id, m )
+{}
 ////////////////////////////////////////////////////////////////////////////////
-IPort::IPort (const IPort& p)
-   :Port(p)
+IPort::IPort( const IPort& p )
+        : Port( p )
 {
-  copy(p);
+    copy( p );
 }
 ////////////////////////////////////////////////////////////////////////////////
 IPort::~IPort()
-{
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void IPort::copy( const IPort& p )
 {
-   if ( this==&p ) 
-      return;
+    if( this == &p )
+        return;
 }

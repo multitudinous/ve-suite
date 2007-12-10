@@ -38,7 +38,7 @@
   */
 /*!\class VE_XML::VE_Model::Point
  *This class basically manages two unsigned ints for constructing points
- *on the design canvas. 
+ *on the design canvas.
  */
 #include <utility>
 
@@ -58,38 +58,38 @@ namespace model
 class VE_MODEL_EXPORTS Point : public ves::open::xml::XMLObject
 {
 public:
-   ///Constructor
-   Point(  );
-   ///Destructor
-   virtual ~Point();
-   ///Copy Constructor
-   Point( const Point& );
-   ///equal operator
-   Point& operator= ( const Point& );
+    ///Constructor
+    Point( );
+    ///Destructor
+    virtual ~Point();
+    ///Copy Constructor
+    Point( const Point& );
+    ///equal operator
+    Point& operator= ( const Point& );
 
-   ///Set this array from an input vector
-   ///\param newPoint The new values to set to this point.
-   void SetPoint( std::pair< unsigned int, unsigned int > newPoint);
+    ///Set this array from an input vector
+    ///\param newPoint The new values to set to this point.
+    void SetPoint( std::pair< unsigned int, unsigned int > newPoint );
 
-   ///Get the internal data.
-   std::pair< unsigned int, unsigned int > GetPoint( void );
-   
-   ///Populate the VEXMLObject data from an XML element.
-   ///\param inputXML The input data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML ); 
-   
-protected:   
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName);
-   ///point holds two unsigned ints used by wx to construct
-   ///the network diagram in Conductor
-   ///The first component is x, the second component is y
-   std::pair< unsigned int, unsigned int > point;///<Raw data.
+    ///Get the internal data.
+    std::pair< unsigned int, unsigned int > GetPoint( void );
+
+    ///Populate the VEXMLObject data from an XML element.
+    ///\param inputXML The input data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML );
+
+protected:
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
+    ///point holds two unsigned ints used by wx to construct
+    ///the network diagram in Conductor
+    ///The first component is x, the second component is y
+    std::pair< unsigned int, unsigned int > point;///<Raw data.
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::model::Point* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Point* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

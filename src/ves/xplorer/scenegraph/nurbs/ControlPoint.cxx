@@ -37,118 +37,117 @@ using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////////
 Point::Point()
 {
-   _x = 0.0;
-   _y = 0.0;
-   _z = 0.0;
-   _row = 0;
-   _column = 0;
-   _isSelected = false;
+    _x = 0.0;
+    _y = 0.0;
+    _z = 0.0;
+    _row = 0;
+    _column = 0;
+    _isSelected = false;
 }
 ///////////////////////////////////////
 //Constructor                        //
 ///////////////////////////////////////
-Point::Point(double x,double y, double z)
+Point::Point( double x, double y, double z )
 {
-   _x = x;
-   _y = y;
-   _z = z;
-   _row = 0;
-   _column = 0;
-   _isSelected = false;
+    _x = x;
+    _y = y;
+    _z = z;
+    _row = 0;
+    _column = 0;
+    _isSelected = false;
 }
 ///////////////////////////////////////////////////
 //Copy constructor                               //
 ///////////////////////////////////////////////////
-Point::Point(const Point& rhs)
-{ 
-   _x = rhs._x;
-   _y = rhs._y;
-   _z = rhs._z;
-   _row = rhs._row;
-   _column = rhs._column;
-   _isSelected = rhs._isSelected;
+Point::Point( const Point& rhs )
+{
+    _x = rhs._x;
+    _y = rhs._y;
+    _z = rhs._z;
+    _row = rhs._row;
+    _column = rhs._column;
+    _isSelected = rhs._isSelected;
 }
 ///////////////
 //Destructor //
 ///////////////
 Point::~Point()
-{
-}
+{}
 //////////////////////////////////////////////////////////////
 //Equal operator                                            //
 //////////////////////////////////////////////////////////////
-Point& Point::operator=(const Point& rhs)
+Point& Point::operator=( const Point& rhs )
 {
-   if(this !=&rhs)
-   {
-      _x = rhs._x;
-      _y = rhs._y;
-      _z = rhs._z;
-      _row = rhs._row;
-      _column = rhs._column;
-      _isSelected = rhs._isSelected;
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        _x = rhs._x;
+        _y = rhs._y;
+        _z = rhs._z;
+        _row = rhs._row;
+        _column = rhs._column;
+        _isSelected = rhs._isSelected;
+    }
+    return *this;
 }
 ///////////////////////////////////////
-void Point::SetSelected(bool trueFalse)
+void Point::SetSelected( bool trueFalse )
 {
-   _isSelected = trueFalse;
+    _isSelected = trueFalse;
 }
 //////////////////////////////////////
-void Point::SetCoordinates(double* pt)
+void Point::SetCoordinates( double* pt )
 {
-   _x = pt[0];
-   _y = pt[1];
-   _z = pt[2];
+    _x = pt[0];
+    _y = pt[1];
+    _z = pt[2];
 }
 /////////////////////////////////
 //Set the x coord of           //
 // this control point.         //
 /////////////////////////////////
-void Point::SetX(double x)
+void Point::SetX( double x )
 {
-   _x = x;
+    _x = x;
 }
 /////////////////////////////////
 //Set the y coord of           //
 // this control point.         //
 /////////////////////////////////
-void Point::SetY(double y)
+void Point::SetY( double y )
 {
-   _y = y;
+    _y = y;
 }
 /////////////////////////////////
 //Set the z coord of           //
 // this control point.         //
 /////////////////////////////////
-void Point::SetZ(double z)
+void Point::SetZ( double z )
 {
-   _z = z;
+    _z = z;
 }
 //////////////////////////////////////////////////
-void Point::Translate(double dx,double dy, double dz)
+void Point::Translate( double dx, double dy, double dz )
 {
-   _x += dx;
-   _y += dy;
-   _z += dz;
+    _x += dx;
+    _y += dy;
+    _z += dz;
 }
 //////////////////////////////////////////////
-void Point::SetRowColumnIndex(unsigned int row,
-                              unsigned int column)
+void Point::SetRowColumnIndex( unsigned int row,
+                               unsigned int column )
 {
-   _row = row;
-   _column = column;
+    _row = row;
+    _column = column;
 }
 ////////////////////////////////////
 unsigned int Point::GetRowIndex()
 {
-   return _row;
+    return _row;
 }
 ////////////////////////////////////
 unsigned int Point::GetColumnIndex()
 {
-   return _column;
+    return _column;
 }
 ///////////////////////
 //Get the weight of  //
@@ -156,7 +155,7 @@ unsigned int Point::GetColumnIndex()
 ///////////////////////
 double Point::X()
 {
-   return _x;
+    return _x;
 }
 //////////////////////////////////////
 //Get the value of                  //
@@ -164,7 +163,7 @@ double Point::X()
 //////////////////////////////////////
 double Point::Y()
 {
-   return _y;
+    return _y;
 }
 //////////////////////////////////
 //Get the value of the         //
@@ -172,132 +171,131 @@ double Point::Y()
 //////////////////////////////////
 double Point::Z()
 {
-   return _z;
+    return _z;
 }
 ////////////////////////
 bool Point::IsSelected()
 {
-   return _isSelected;
+    return _isSelected;
 }
 ////////////////////////////
 //ControlPoint class      //
 ////////////////////////////
 ControlPoint::ControlPoint()
-:ves::xplorer::scenegraph::nurbs::Point()
+        : ves::xplorer::scenegraph::nurbs::Point()
 {
-   _xW = _x;
-   _yW = _y;
-   _zW = _z;
-   _weight = 1.0;
-   _eyeSpaceTranslation[0] = 0;
-   _eyeSpaceTranslation[1] = 0;
-   _eyeSpaceTranslation[2] = 0;
+    _xW = _x;
+    _yW = _y;
+    _zW = _z;
+    _weight = 1.0;
+    _eyeSpaceTranslation[0] = 0;
+    _eyeSpaceTranslation[1] = 0;
+    _eyeSpaceTranslation[2] = 0;
 }
 ///////////////////////////////////////////////////////////////
-ControlPoint::ControlPoint(double x, double y, double z, double w)
-:ves::xplorer::scenegraph::nurbs::Point(x,y,z)
+ControlPoint::ControlPoint( double x, double y, double z, double w )
+        : ves::xplorer::scenegraph::nurbs::Point( x, y, z )
 {
-   SetWeight(w);
+    SetWeight( w );
 }
 ///////////////////////////////////////////////////
-ControlPoint::ControlPoint(const ControlPoint& rhs)
-:ves::xplorer::scenegraph::nurbs::Point(rhs)
+ControlPoint::ControlPoint( const ControlPoint& rhs )
+        : ves::xplorer::scenegraph::nurbs::Point( rhs )
 {
-   SetWeight(rhs._weight);
-   _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
-   _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];
-   _eyeSpaceTranslation[2] = rhs._eyeSpaceTranslation[2];
+    SetWeight( rhs._weight );
+    _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
+    _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];
+    _eyeSpaceTranslation[2] = rhs._eyeSpaceTranslation[2];
 }
 /////////////////////////////
 ControlPoint::~ControlPoint()
-{
-}
+{}
 //////////////////////////////////////////
-void ControlPoint::SetWeight(double weight)
+void ControlPoint::SetWeight( double weight )
 {
-   _weight = weight;
-   _xW = _x*_weight;
-   _yW = _y*_weight;
-   _zW = _z*_weight;
+    _weight = weight;
+    _xW = _x * _weight;
+    _yW = _y * _weight;
+    _zW = _z * _weight;
 }
 //////////////////////////////////////////////////////////
-void ControlPoint::SetEyeSpaceTranslation(double* deltaPt)
+void ControlPoint::SetEyeSpaceTranslation( double* deltaPt )
 {
-   _eyeSpaceTranslation[0] = deltaPt[0];
-   _eyeSpaceTranslation[1] = deltaPt[1];
-   _eyeSpaceTranslation[2] = deltaPt[2];
+    _eyeSpaceTranslation[0] = deltaPt[0];
+    _eyeSpaceTranslation[1] = deltaPt[1];
+    _eyeSpaceTranslation[2] = deltaPt[2];
 }
 //////////////////////////////////////////////
 double* ControlPoint::GetEyeSpaceTranslation()
 {
-   return _eyeSpaceTranslation;
+    return _eyeSpaceTranslation;
 }
 ////////////////////////////
 double ControlPoint::Weight()
 {
-   return _weight;
+    return _weight;
 }
 //////////////////////////////////////////////
 ControlPoint ControlPoint::GetWeightedPoint()
 {
-   return ves::xplorer::scenegraph::nurbs::ControlPoint(_xW,_yW,_zW,_weight);
+    return ves::xplorer::scenegraph::nurbs::ControlPoint( _xW, _yW, _zW, _weight );
 }
 ////////////////////////////////
 //Weighted component X        //
 ////////////////////////////////
 double ControlPoint::WeightedX()
 {
-   return _x*_weight;
+    return _x*_weight;
 }
 ////////////////////////////////
 //Weighted component Y        //
 ////////////////////////////////
 double ControlPoint::WeightedY()
 {
-   return _y*_weight;
+    return _y*_weight;
 }
 ////////////////////////////////
 //Weighted component Z        //
 ////////////////////////////////
 double ControlPoint::WeightedZ()
 {
-   return _z*_weight;
+    return _z*_weight;
 }
 ///////////////////////////////////////////////////////
-ControlPoint ControlPoint::operator*(const double& lhs)
+ControlPoint ControlPoint::operator*( const double& lhs )
 {
     //not sure how to handle the weights here!!!
-    ControlPoint newPoint(lhs*_x,
-                          lhs*_y,
-                          lhs*_z,
-                          _weight);
-      
-      return newPoint;
+    ControlPoint newPoint( lhs*_x,
+                           lhs*_y,
+                           lhs*_z,
+                           _weight );
+
+    return newPoint;
 }
 ////////////////////////////////////////////////////////////
 //override "+" operator                                   //
 ////////////////////////////////////////////////////////////
-ControlPoint ControlPoint::operator+(const ControlPoint& lhs)
+ControlPoint ControlPoint::operator+( const ControlPoint& lhs )
 {
-   //not sure how to handle the weights here!!!
-   ControlPoint newPoint(lhs._x + _x,
-                         lhs._y + _y,
-                         lhs._z + _z,
-                         _weight);
-      
-   return newPoint;
+    //not sure how to handle the weights here!!!
+    ControlPoint newPoint( lhs._x + _x,
+                           lhs._y + _y,
+                           lhs._z + _z,
+                           _weight );
+
+    return newPoint;
 }
 //////////////////////////////////////////////////////////////
-ControlPoint& ControlPoint::operator=(const ControlPoint& rhs)
+ControlPoint& ControlPoint::operator=( const ControlPoint& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::scenegraph::nurbs::Point::operator=(rhs);
-      SetWeight(rhs._weight);
-      _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
-      _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];
-      _eyeSpaceTranslation[2] = rhs._eyeSpaceTranslation[2];
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::scenegraph::nurbs::Point::operator=( rhs );
+        SetWeight( rhs._weight );
+        _eyeSpaceTranslation[0] = rhs._eyeSpaceTranslation[0];
+        _eyeSpaceTranslation[1] = rhs._eyeSpaceTranslation[1];
+        _eyeSpaceTranslation[2] = rhs._eyeSpaceTranslation[2];
+    }
+    return *this;
 }
 

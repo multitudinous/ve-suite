@@ -49,145 +49,144 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////
 SeedPointBoundsEventHandler::SeedPointBoundsEventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointBoundsEventHandler
-::SeedPointBoundsEventHandler(const SeedPointBoundsEventHandler& ceh)
+::SeedPointBoundsEventHandler( const SeedPointBoundsEventHandler& ceh )
 {
-   _activeModel = ceh._activeModel;
+    _activeModel = ceh._activeModel;
 }
 /////////////////////////////////////////////////////////////////////
 SeedPointBoundsEventHandler::~SeedPointBoundsEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-SeedPointBoundsEventHandler& 
-SeedPointBoundsEventHandler::operator=(const SeedPointBoundsEventHandler& rhs)
+SeedPointBoundsEventHandler&
+SeedPointBoundsEventHandler::operator=( const SeedPointBoundsEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        _activeModel = rhs._activeModel;
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
-void SeedPointBoundsEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void SeedPointBoundsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if(model)
-      {
-         _activeModel = dynamic_cast<ves::xplorer::Model*>(model);
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to SeedPointBoundsEventHandler!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast<ves::xplorer::Model*>( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to SeedPointBoundsEventHandler!" << std::endl;
+    }
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void SeedPointBoundsEventHandler::Execute(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void SeedPointBoundsEventHandler::Execute( XMLObject* veXMLObject )
 {
-   if(!_activeModel)
-      throw;
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-     
-      DataValuePairWeakPtr coordinate = command->GetDataValuePair("Coordinate");      
-      std::string boundCoordinate;
-      coordinate->GetData( boundCoordinate );
+    if( !_activeModel )
+        throw;
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
 
-      if(boundCoordinate == "All Bounds")
-      {
-         std::vector<double> allBoundaryData;
-         DataValuePairWeakPtr bounds = command->GetDataValuePair("Bounds");
-         bounds->GetData(allBoundaryData);
-         double databounds[6] = {0,0,0,0,0,0};
-         //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
-         _activeModel->GetActiveDataSet()->GetBounds(databounds);
-         double newValue[6] = {0,0,0,0,0,0};
-         newValue[0] = databounds[0] + allBoundaryData.at(0)*(databounds[1] - databounds[0]);
-         newValue[1] = databounds[0] + allBoundaryData.at(1)*(databounds[1] - databounds[0]);
-         newValue[2] = databounds[2] + allBoundaryData.at(2)*(databounds[3] - databounds[2]);
-         newValue[3] = databounds[2] + allBoundaryData.at(3)*(databounds[3] - databounds[2]);
-         newValue[4] = databounds[4] + allBoundaryData.at(4)*(databounds[5] - databounds[4]);
-         newValue[5] = databounds[4] + allBoundaryData.at(5)*(databounds[5] - databounds[4]);
+        DataValuePairWeakPtr coordinate = command->GetDataValuePair( "Coordinate" );
+        std::string boundCoordinate;
+        coordinate->GetData( boundCoordinate );
 
-         ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetBounds(newValue[0],
-                                                                                   newValue[1],
-                                                                                   newValue[2],
-                                                                                   newValue[3],
-                                                                                   newValue[4],
-                                                                                   newValue[5]);
-      }
-      else
-      {
-         DataValuePairWeakPtr minMaxDVP = command->GetDataValuePair("MinMax");      
-         std::string minMaxUpdate;
-         minMaxDVP->GetData(minMaxUpdate);
-
-         if(minMaxUpdate != "Both")
-         {
-            DataValuePairWeakPtr value = command->GetDataValuePair("Value");      
-            ///Get the percentage
-            double alpha;
-            value->GetData( alpha );
-            ///Get the dataset bounds
-            double databounds[6] = {0,0,0,0,0,0};
+        if( boundCoordinate == "All Bounds" )
+        {
+            std::vector<double> allBoundaryData;
+            DataValuePairWeakPtr bounds = command->GetDataValuePair( "Bounds" );
+            bounds->GetData( allBoundaryData );
+            double databounds[6] = {0, 0, 0, 0, 0, 0};
             //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
-		    _activeModel->GetActiveDataSet()->GetBounds(databounds);
-         
-            //udpate the correct bound
-            unsigned int index = (boundCoordinate=="X")?0:(boundCoordinate=="Y")?2:4;
-            double newValue = 0;
-            newValue = databounds[index] + alpha*(databounds[index+1] - databounds[index]);
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue,
-                                                                                         boundCoordinate,
-                                                                                         minMaxUpdate);
-         }
-         else if(minMaxUpdate == "Both")
-         {
-            DataValuePairWeakPtr minValue = command->GetDataValuePair("Min Value");      
-            double minAlpha;
-            minValue->GetData( minAlpha );
-            
-            ///Get the dataset bounds
-            double databounds[6] = {0,0,0,0,0,0};
-            //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
-		    _activeModel->GetActiveDataSet()->GetBounds(databounds);
-         
-            //udpate the correct bound
-            unsigned int index = (boundCoordinate=="X")?0:(boundCoordinate=="Y")?2:4;
+            _activeModel->GetActiveDataSet()->GetBounds( databounds );
+            double newValue[6] = {0, 0, 0, 0, 0, 0};
+            newValue[0] = databounds[0] + allBoundaryData.at( 0 ) * ( databounds[1] - databounds[0] );
+            newValue[1] = databounds[0] + allBoundaryData.at( 1 ) * ( databounds[1] - databounds[0] );
+            newValue[2] = databounds[2] + allBoundaryData.at( 2 ) * ( databounds[3] - databounds[2] );
+            newValue[3] = databounds[2] + allBoundaryData.at( 3 ) * ( databounds[3] - databounds[2] );
+            newValue[4] = databounds[4] + allBoundaryData.at( 4 ) * ( databounds[5] - databounds[4] );
+            newValue[5] = databounds[4] + allBoundaryData.at( 5 ) * ( databounds[5] - databounds[4] );
 
-            double newValue = 0;
-            newValue = databounds[index] + minAlpha*(databounds[index+1] - databounds[index]);
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue, 
-                                                                                         boundCoordinate,
-                                                                                         "Min");
-            DataValuePairWeakPtr maxValue = command->GetDataValuePair("Max Value");      
-            double maxAlpha;
-            maxValue->GetData( maxAlpha );
-            
-            newValue = databounds[index] + maxAlpha*(databounds[index+1] - databounds[index]);
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds(newValue,
-                                                                                          boundCoordinate,
-                                                                                         "Max");
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetBounds( newValue[0],
+                    newValue[1],
+                    newValue[2],
+                    newValue[3],
+                    newValue[4],
+                    newValue[5] );
+        }
+        else
+        {
+            DataValuePairWeakPtr minMaxDVP = command->GetDataValuePair( "MinMax" );
+            std::string minMaxUpdate;
+            minMaxDVP->GetData( minMaxUpdate );
 
-                 
-         
-         }
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid Bounds!!"<<std::endl;
-      std::cout<<"SeedPointBoundsEventHandler::Execute()"<<std::endl;
-   }
+            if( minMaxUpdate != "Both" )
+            {
+                DataValuePairWeakPtr value = command->GetDataValuePair( "Value" );
+                ///Get the percentage
+                double alpha;
+                value->GetData( alpha );
+                ///Get the dataset bounds
+                double databounds[6] = {0, 0, 0, 0, 0, 0};
+                //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+                _activeModel->GetActiveDataSet()->GetBounds( databounds );
+
+                //udpate the correct bound
+                unsigned int index = ( boundCoordinate == "X" ) ? 0 : ( boundCoordinate == "Y" ) ? 2 : 4;
+                double newValue = 0;
+                newValue = databounds[index] + alpha * ( databounds[index+1] - databounds[index] );
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
+                        boundCoordinate,
+                        minMaxUpdate );
+            }
+            else if( minMaxUpdate == "Both" )
+            {
+                DataValuePairWeakPtr minValue = command->GetDataValuePair( "Min Value" );
+                double minAlpha;
+                minValue->GetData( minAlpha );
+
+                ///Get the dataset bounds
+                double databounds[6] = {0, 0, 0, 0, 0, 0};
+                //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
+                _activeModel->GetActiveDataSet()->GetBounds( databounds );
+
+                //udpate the correct bound
+                unsigned int index = ( boundCoordinate == "X" ) ? 0 : ( boundCoordinate == "Y" ) ? 2 : 4;
+
+                double newValue = 0;
+                newValue = databounds[index] + minAlpha * ( databounds[index+1] - databounds[index] );
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
+                        boundCoordinate,
+                        "Min" );
+                DataValuePairWeakPtr maxValue = command->GetDataValuePair( "Max Value" );
+                double maxAlpha;
+                maxValue->GetData( maxAlpha );
+
+                newValue = databounds[index] + maxAlpha * ( databounds[index+1] - databounds[index] );
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
+                        boundCoordinate,
+                        "Max" );
+
+
+
+            }
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid Bounds!!" << std::endl;
+        std::cout << "SeedPointBoundsEventHandler::Execute()" << std::endl;
+    }
 }

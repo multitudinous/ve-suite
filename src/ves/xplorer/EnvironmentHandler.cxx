@@ -92,127 +92,127 @@ namespace xplorer
 {
 EnvironmentHandler::EnvironmentHandler( void )
 {
-   _teacher = 0;
-   //_soundHandler = 0;
-   //_camHandler = 0;
-   cursor = 0;
-   _param.erase();// = 0;
-   //_readParam = 0;
-   arrow = 0;
-   displaySettings = 0;
+    _teacher = 0;
+    //_soundHandler = 0;
+    //_camHandler = 0;
+    cursor = 0;
+    _param.erase();// = 0;
+    //_readParam = 0;
+    arrow = 0;
+    displaySettings = 0;
 
-   _frustumLeft = 0;
-   _frustumRight = 0;
-   _frustumTop = 0;
-   _frustumBottom = 0;
-   _frustumNear = 0;
-   _frustumFar = 0;
+    _frustumLeft = 0;
+    _frustumRight = 0;
+    _frustumTop = 0;
+    _frustumBottom = 0;
+    _frustumNear = 0;
+    _frustumFar = 0;
 
 
-   for( unsigned int i = 0; i < 3; i++ )
-   {
-      worldScale[ i ] = 1.0f;
-      worldTrans[ i ] = 0.0f;
-      worldRot[ i ] = 0.0f;
-   }
+    for( unsigned int i = 0; i < 3; i++ )
+    {
+        worldScale[ i ] = 1.0f;
+        worldTrans[ i ] = 0.0f;
+        worldRot[ i ] = 0.0f;
+    }
 
     display_information = 0;
     _activeGeomPicking = false;
 
-   //_readParam = 0;
-   _param.erase();// = 0;
-   desktopWidth = 0;
-   desktopHeight = 0;
+    //_readParam = 0;
+    _param.erase();// = 0;
+    desktopWidth = 0;
+    desktopHeight = 0;
 
-   ///create seed points drawable
-   _seedPoints = new ves::xplorer::SeedPoints(4,4,1);
-   _seedPoints->Toggle(false);
-   
-   ///add a transform for manipulation of the seed points 
-   ///to sync with the active dataset
-   _seedPointsDCS = new ves::xplorer::scenegraph::DCS();
-   _seedPointsDCS->SetName("Seed Points DCS");
-   _seedPointsDCS->addChild(_seedPoints.get());
+    ///create seed points drawable
+    _seedPoints = new ves::xplorer::SeedPoints( 4, 4, 1 );
+    _seedPoints->Toggle( false );
 
-   _eventHandlers[ std::string( "PHYSICS_SIMULATION" ) ] = 
-       new ves::xplorer::event::PhysicsSimulationEventHandler();
-   _eventHandlers[ std::string( "VIEW_SELECTION" ) ] = 
-       new ves::xplorer::event::ViewEventHandler();
-   _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" ) ] = 
-       new ves::xplorer::event::ChangeCursorEventHandler();
-   _eventHandlers[ std::string( "Stored Scenes" ) ] = 
-       new ves::xplorer::event::StoredSceneEventHandler();
-   _eventHandlers[ std::string( "Change Working Directory" ) ] = 
-       new ves::xplorer::event::ChangeWorkingDirectoryEventHandler();
-   _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" ) ] = 
-       new ves::xplorer::event::ChangeBackgroundColorEventHandler();
-   _eventHandlers[ std::string( "DISPLAY_SELECTION" ) ] = 
-       new ves::xplorer::event::DisplayEventHandler();
-   _eventHandlers[ std::string( "Display Seed Points" ) ] = 
-       new ves::xplorer::event::SeedPointActivateEventHandler();
-   _eventHandlers[ std::string( "Seed Points Bounds" ) ] = 
-       new ves::xplorer::event::SeedPointBoundsEventHandler();
-   _eventHandlers[ std::string( "Seed Points Dimensions" ) ] = 
-       new ves::xplorer::event::SeedPointDimensionsEventHandler();
-   _eventHandlers[ std::string( "DOT_FILE" ) ] = 
-       new ves::xplorer::event::ExportDOTFileEventHandler();
-   _eventHandlers[ std::string( "Ephemeris Data" ) ] = 
-       new ves::xplorer::event::EphemerisDataEventHandler();
-   _eventHandlers[ std::string( "Ephemeris Auto Date and Time" ) ] = 
-       new ves::xplorer::event::EphemerisAutoDateTimeEventHandler();
+    ///add a transform for manipulation of the seed points
+    ///to sync with the active dataset
+    _seedPointsDCS = new ves::xplorer::scenegraph::DCS();
+    _seedPointsDCS->SetName( "Seed Points DCS" );
+    _seedPointsDCS->addChild( _seedPoints.get() );
+
+    _eventHandlers[ std::string( "PHYSICS_SIMULATION" )] =
+        new ves::xplorer::event::PhysicsSimulationEventHandler();
+    _eventHandlers[ std::string( "VIEW_SELECTION" )] =
+        new ves::xplorer::event::ViewEventHandler();
+    _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
+        new ves::xplorer::event::ChangeCursorEventHandler();
+    _eventHandlers[ std::string( "Stored Scenes" )] =
+        new ves::xplorer::event::StoredSceneEventHandler();
+    _eventHandlers[ std::string( "Change Working Directory" )] =
+        new ves::xplorer::event::ChangeWorkingDirectoryEventHandler();
+    _eventHandlers[ std::string( "CHANGE_BACKGROUND_COLOR" )] =
+        new ves::xplorer::event::ChangeBackgroundColorEventHandler();
+    _eventHandlers[ std::string( "DISPLAY_SELECTION" )] =
+        new ves::xplorer::event::DisplayEventHandler();
+    _eventHandlers[ std::string( "Display Seed Points" )] =
+        new ves::xplorer::event::SeedPointActivateEventHandler();
+    _eventHandlers[ std::string( "Seed Points Bounds" )] =
+        new ves::xplorer::event::SeedPointBoundsEventHandler();
+    _eventHandlers[ std::string( "Seed Points Dimensions" )] =
+        new ves::xplorer::event::SeedPointDimensionsEventHandler();
+    _eventHandlers[ std::string( "DOT_FILE" )] =
+        new ves::xplorer::event::ExportDOTFileEventHandler();
+    _eventHandlers[ std::string( "Ephemeris Data" )] =
+        new ves::xplorer::event::EphemerisDataEventHandler();
+    _eventHandlers[ std::string( "Ephemeris Auto Date and Time" )] =
+        new ves::xplorer::event::EphemerisAutoDateTimeEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize( void )
 {
-   displaySettings = new cfdDisplaySettings();
+    displaySettings = new cfdDisplaySettings();
 
-   this->arrow = ModelHandler::instance()->GetArrow();
+    this->arrow = ModelHandler::instance()->GetArrow();
 }
 ////////////////////////////////////////////////////////////////////////////////
 EnvironmentHandler::~EnvironmentHandler( void )
 {
-   if ( this->cursor )
-   {  
-      //vprDEBUG(vesDBG,2)  
-      //  << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
-      delete this->cursor;
-   }
+    if( this->cursor )
+    {
+        //vprDEBUG(vesDBG,2)
+        //  << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
+        delete this->cursor;
+    }
 
-   //if(ves::xplorer::cfdQuatCamHandler::instance())
-   {
-      //ves::xplorer::cfdQuatCamHandler::instance()->CleanUp();
-   }
+    //if(ves::xplorer::cfdQuatCamHandler::instance())
+    {
+        //ves::xplorer::cfdQuatCamHandler::instance()->CleanUp();
+    }
 
-   /*if ( this->_soundHandler )
-   {  
-      vprDEBUG(vesDBG,2)  
-        << "|       deleting this->_soundHandler" << std::endl << vprDEBUG_FLUSH;
-      delete this->_soundHandler;
-   }*/
+    /*if ( this->_soundHandler )
+    {  
+       vprDEBUG(vesDBG,2)  
+         << "|       deleting this->_soundHandler" << std::endl << vprDEBUG_FLUSH;
+       delete this->_soundHandler;
+    }*/
 
-   if ( this->_teacher )
-   {  
-      //vprDEBUG(vesDBG,2)  
-      //  << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
-      delete this->_teacher;
-   }
+    if( this->_teacher )
+    {
+        //vprDEBUG(vesDBG,2)
+        //  << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
+        delete this->_teacher;
+    }
 
-   if ( this->displaySettings )
-   {
-      //vprDEBUG(vesDBG,2)  
-      //  << "|       deleting this->displaySettings" << std::endl << vprDEBUG_FLUSH;
-      delete this->displaySettings;
-   }
+    if( this->displaySettings )
+    {
+        //vprDEBUG(vesDBG,2)
+        //  << "|       deleting this->displaySettings" << std::endl << vprDEBUG_FLUSH;
+        delete this->displaySettings;
+    }
 
-   if ( this->display_information )
-   {
-      //vprDEBUG(vesDBG,2)  
-      //  << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
-      delete this->display_information;
-   }
+    if( this->display_information )
+    {
+        //vprDEBUG(vesDBG,2)
+        //  << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
+        delete this->display_information;
+    }
 
-   //Delete all the devices in DeviceHandler
-   //ves::xplorer::DeviceHandler::instance()->CleanUp();
+    //Delete all the devices in DeviceHandler
+    //ves::xplorer::DeviceHandler::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*cfdSoundHandler* EnvironmentHandler::GetSoundHandler( void )
@@ -222,7 +222,7 @@ EnvironmentHandler::~EnvironmentHandler( void )
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher* EnvironmentHandler::GetTeacher( void )
 {
-   return _teacher;
+    return _teacher;
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*cfdQuatCamHandler* EnvironmentHandler::GetQuatCamHandler( void )
@@ -232,25 +232,25 @@ cfdTeacher* EnvironmentHandler::GetTeacher( void )
 ////////////////////////////////////////////////////////////////////////////////
 cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings( void )
 {
-   return displaySettings;
+    return displaySettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdCursor* EnvironmentHandler::GetCursor( void )
 {
-   return this->cursor;
+    return this->cursor;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
 DisplayInformation* EnvironmentHandler::GetDisplayInformation( void )
 {
-   return this->display_information;
+    return this->display_information;
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::SetDesktopSize( int width, int height )
 {
-   desktopWidth = width;
-   desktopHeight = height;
+    desktopWidth = width;
+    desktopHeight = height;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::GetDesktopSize( int &width, int &height )
@@ -261,172 +261,172 @@ void EnvironmentHandler::GetDesktopSize( int &width, int &height )
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::InitScene( void )
 {
-   std::cout << "| ***************************************************************** |" << std::endl;
-   //
-   // Initiate cursors.
-   //
-   std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
-   this->cursor = new cfdCursor( this->arrow, 
-                             ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(), 
-                             ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
-            
-   //
-   // Initiate quatcam
-   //
-   std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
-   ves::xplorer::cfdQuatCamHandler::instance()->SetDCS(ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS());
+    std::cout << "| ***************************************************************** |" << std::endl;
+    //
+    // Initiate cursors.
+    //
+    std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
+    this->cursor = new cfdCursor( this->arrow,
+                                  ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
+                                  ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
 
-   //
-   // Initiate the Performer Stored Binary objects.
-   //
-   std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
-   this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
-                                 ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+    //
+    // Initiate quatcam
+    //
+    std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
+    ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 
-   if( ( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
-   {
-      std::cout << "| 12. Initializing................................  Desktop Display |" << std::endl;
-      // Create the command and data value pairs
-      // to adjust the desktop settings.
-      ves::open::xml::DataValuePair* dvpDesktopWidth = new ves::open::xml::DataValuePair( std::string("FLOAT") );
-      dvpDesktopWidth->SetDataName( "desktop_width" );
-      dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
-      ves::open::xml::DataValuePair* dvpDesktopHeight = new ves::open::xml::DataValuePair( std::string("FLOAT") );
-      dvpDesktopHeight->SetDataName( "desktop_height" );
-      dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
-      ves::open::xml::Command* displayCommand = new ves::open::xml::Command();
-      displayCommand->SetCommandName( std::string("Juggler_Desktop_Data") );
-      displayCommand->AddDataValuePair( dvpDesktopWidth );
-      displayCommand->AddDataValuePair( dvpDesktopHeight );
-      displaySettings->SetVECommand( displayCommand );
-      displaySettings->ProcessCommand();
-      delete displayCommand;
-   }
+    //
+    // Initiate the Performer Stored Binary objects.
+    //
+    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
+    this->_teacher = new cfdTeacher( std::string( "STORED_FILES" ),
+                                     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 
-   //
-   // Initialize DisplayInformation
-   //
-   std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
-   this->display_information = new ves::xplorer::DisplayInformation;
-   std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
-   this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
+    if (( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
+    {
+        std::cout << "| 12. Initializing................................  Desktop Display |" << std::endl;
+        // Create the command and data value pairs
+        // to adjust the desktop settings.
+        ves::open::xml::DataValuePair* dvpDesktopWidth = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
+        dvpDesktopWidth->SetDataName( "desktop_width" );
+        dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
+        ves::open::xml::DataValuePair* dvpDesktopHeight = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
+        dvpDesktopHeight->SetDataName( "desktop_height" );
+        dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
+        ves::open::xml::Command* displayCommand = new ves::open::xml::Command();
+        displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
+        displayCommand->AddDataValuePair( dvpDesktopWidth );
+        displayCommand->AddDataValuePair( dvpDesktopHeight );
+        displaySettings->SetVECommand( displayCommand );
+        displaySettings->ProcessCommand();
+        delete displayCommand;
+    }
 
-   static_cast< ves::xplorer::KeyboardMouse* >( 
-         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
-         SetWindowValues( screenDims.first, screenDims.second );
-   static_cast< ves::xplorer::KeyboardMouse* >( 
-         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
-         SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
+    //
+    // Initialize DisplayInformation
+    //
+    std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
+    this->display_information = new ves::xplorer::DisplayInformation;
+    std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
+    this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
+
+    static_cast< ves::xplorer::KeyboardMouse* >(
+        ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+    SetWindowValues( screenDims.first, screenDims.second );
+    static_cast< ves::xplorer::KeyboardMouse* >(
+        ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
+    SetScreenCornerValues( displaySettings->GetScreenCornerValues() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
 //(i.e) trackball, wand, gui nav,...
 void EnvironmentHandler::PreFrameUpdate( void )
 {
-   //Process all events for active device
-   ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
+    //Process all events for active device
+    ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
 
-   ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+    ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::LatePreFrameUpdate()
 {
-   // Update Navigation variables   
-   vprDEBUG(vesDBG,3) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
+    // Update Navigation variables
+    vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 
-   std::map<std::string,ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
-   if( ModelHandler::instance()->GetXMLCommand() )
-   {
-      vprDEBUG(vesDBG,3) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
-                           << ModelHandler::instance()->GetXMLCommand()->GetCommandName() 
-                           << std::endl<< vprDEBUG_FLUSH;
-      currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
-      if(currentEventHandler != _eventHandlers.end())
-      {
-         vprDEBUG(vesDBG,1) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
-                              << ModelHandler::instance()->GetXMLCommand()->GetCommandName() 
-                              << std::endl<< vprDEBUG_FLUSH;
-         currentEventHandler->second->SetGlobalBaseObject();
-         currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
-      }
-   }
+    std::map<std::string, ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
+    if( ModelHandler::instance()->GetXMLCommand() )
+    {
+        vprDEBUG( vesDBG, 3 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Command Name : "
+        << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
+        << std::endl << vprDEBUG_FLUSH;
+        currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+        if( currentEventHandler != _eventHandlers.end() )
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\tEnvironmentHandler::LatePreFrameUpdate Executing: "
+            << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
+            << std::endl << vprDEBUG_FLUSH;
+            currentEventHandler->second->SetGlobalBaseObject();
+            currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
+        }
+    }
 
-   display_information->LatePreFrame();
-   vprDEBUG(vesDBG,3) << "|\tEnd EnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
+    display_information->LatePreFrame();
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd EnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::SetWindowDimensions(unsigned int w, unsigned int h)
+void EnvironmentHandler::SetWindowDimensions( unsigned int w, unsigned int h )
 {
-   _windowWidth = w;
-   _windowHeight = h;
+    _windowWidth = w;
+    _windowHeight = h;
 }
 
 void EnvironmentHandler::SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far )
 {
-   _frustumLeft = _left;
-   _frustumRight = _right;
-   _frustumTop = _top;
-   _frustumBottom = _bottom;
-   _frustumNear = _near;
-   _frustumFar = _far;
+    _frustumLeft = _left;
+    _frustumRight = _right;
+    _frustumTop = _top;
+    _frustumBottom = _bottom;
+    _frustumNear = _near;
+    _frustumFar = _far;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int EnvironmentHandler::GetWindowWidth()
 {
-   return _windowWidth;
+    return _windowWidth;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int EnvironmentHandler::GetWindowHeight()
 {
-   return _windowHeight;
+    return _windowHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::SetFrameRate( float value )
 {
-   framerate = value;
+    framerate = value;
 }
 ////////////////////////////////////////////////////////////////////////////////
 float EnvironmentHandler::GetFrameRate()
 {
-   return framerate;
+    return framerate;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::PostFrameUpdate()
 {
-   //Update the values in trackball
-   static_cast< ves::xplorer::KeyboardMouse* >( 
+    //Update the values in trackball
+    static_cast< ves::xplorer::KeyboardMouse* >(
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
-        SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop, 
-            _frustumBottom, _frustumNear, _frustumFar );
+    SetFrustumValues( _frustumLeft, _frustumRight, _frustumTop,
+                      _frustumBottom, _frustumNear, _frustumFar );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::SeedPoints* EnvironmentHandler::GetSeedPoints()
 {
-   if(_seedPoints.valid())
-   {
-      return _seedPoints.get();
-   }
+    if( _seedPoints.valid() )
+    {
+        return _seedPoints.get();
+    }
 
-   return 0;
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* EnvironmentHandler::GetSeedPointsDCS()
 {
-    if(_seedPointsDCS.valid())
+    if( _seedPointsDCS.valid() )
     {
         return _seedPointsDCS.get();
     }
     return 0;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel(bool createIfDoesNotExist)
+osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool createIfDoesNotExist )
 {
-    if(!m_ephemerisModel.valid() && createIfDoesNotExist)
+    if( !m_ephemerisModel.valid() && createIfDoesNotExist )
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
-        osg::ref_ptr<osg::Group> worldDCS = 
-         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        osg::ref_ptr<osg::Group> worldDCS =
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
         /*if(worldDCS->getBound().valid())
         {
@@ -437,24 +437,24 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel(bool createI
         else*/
         {
             m_ephemerisModel->setSkyDomeRadius( 5000. );
-            m_ephemerisModel->setAutoDateTime(false);
-            m_ephemerisModel->setSkyDomeCenter( osg::Vec3f(0.,0.,0.) );
-            m_ephemerisModel->setSunLightNum(2);
-            m_ephemerisModel->setMoveWithEyePoint(false);
-            m_ephemerisModel->setMembers(osgEphemeris::EphemerisModel::ALL_MEMBERS);
+            m_ephemerisModel->setAutoDateTime( false );
+            m_ephemerisModel->setSkyDomeCenter( osg::Vec3f( 0., 0., 0. ) );
+            m_ephemerisModel->setSunLightNum( 2 );
+            m_ephemerisModel->setMoveWithEyePoint( false );
+            m_ephemerisModel->setMembers( osgEphemeris::EphemerisModel::ALL_MEMBERS );
         }
-        worldDCS->addChild(m_ephemerisModel.get()); 
+        worldDCS->addChild( m_ephemerisModel.get() );
     }
     return m_ephemerisModel.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void EnvironmentHandler::CreateObjects( void )
-{  
+{
    int numObjects;
    char text[ 256 ];
    std::ifstream input;
    input.open( this->_param.c_str() );
-   input >> numObjects; 
+   input >> numObjects;
    input.getline( text, 256 );   //skip past remainder of line
 
    vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
@@ -464,11 +464,11 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel(bool createI
       input >> id;
       vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
-      if ( id == 0 )
+      if(id == 0 )
       {
          vprDEBUG(vesDBG,0) << "|\tWorld DCS parameters : "
                           << std::endl << vprDEBUG_FLUSH;
-         _readParam->read_pf_DCS_parameters( input, 
+         _readParam->read_pf_DCS_parameters( input,
                         this->worldScale, this->worldTrans, this->worldRot );
       }
       else

@@ -37,7 +37,7 @@
   Double Array API
   */
 /*!\class VE_XML::ThreeDIntArray
- *This class basically manages a vector of floats. 
+ *This class basically manages a vector of floats.
  */
 #include <vector>
 
@@ -51,7 +51,7 @@ namespace open
 {
 namespace xml
 {
-   class TwoDIntArray;
+class TwoDIntArray;
 }
 }
 }
@@ -65,58 +65,58 @@ namespace xml
 class VE_XML_EXPORTS ThreeDIntArray : public XMLObject
 {
 public:
-   ///Constructor
-   ///\param nElements The length of the float array.
-   ThreeDIntArray(unsigned int nElements=3);
-   ///Destructor
-   virtual ~ThreeDIntArray();
-   ///Copy Constructor
-   ThreeDIntArray( const ThreeDIntArray& );
-   ///equal operator
-   ThreeDIntArray& operator= ( const ThreeDIntArray& );
+    ///Constructor
+    ///\param nElements The length of the float array.
+    ThreeDIntArray( unsigned int nElements = 3 );
+    ///Destructor
+    virtual ~ThreeDIntArray();
+    ///Copy Constructor
+    ThreeDIntArray( const ThreeDIntArray& );
+    ///equal operator
+    ThreeDIntArray& operator= ( const ThreeDIntArray& );
 
-   ///Add a new element to the end of this array
-   ///\param newValue The new value to add.
-   void AddElementToArray( std::vector< std::vector< long > > newValue);
+    ///Add a new element to the end of this array
+    ///\param newValue The new value to add.
+    void AddElementToArray( std::vector< std::vector< long > > newValue );
 
-   ///Add a new element to the end of this array
-   ///\param newValue The new value to add.
-   void AddElementToArray( TwoDIntArray* newValue );
+    ///Add a new element to the end of this array
+    ///\param newValue The new value to add.
+    void AddElementToArray( TwoDIntArray* newValue );
 
-   ///Set this array from an input vector
-   ///\param newArrayValues The new values to set to this array.
-   void SetArray( std::vector< std::vector< std::vector< long > > > newArrayValues );
+    ///Set this array from an input vector
+    ///\param newArrayValues The new values to set to this array.
+    void SetArray( std::vector< std::vector< std::vector< long > > > newArrayValues );
 
-   ///Get a specific element
-   ///\param i The i'th index of the element to return
-   ///\param j The j'th index of the element to return
-   ///\param k The k'th index of the element to return
-   long GetElement( unsigned int i, unsigned int j, unsigned int k );
+    ///Get a specific element
+    ///\param i The i'th index of the element to return
+    ///\param j The j'th index of the element to return
+    ///\param k The k'th index of the element to return
+    long GetElement( unsigned int i, unsigned int j, unsigned int k );
 
-   ///Get the internal array.
-   std::vector< std::vector< std::vector< long > > > GetArray( void );
-   
-   ///Populate the XMLObject data from an XML element.
-   ///\param inputXML The input data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML ); 
-   
+    ///Get the internal array.
+    std::vector< std::vector< std::vector< long > > > GetArray( void );
+
+    ///Populate the XMLObject data from an XML element.
+    ///\param inputXML The input data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML );
+
 protected:
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName);
-   unsigned int _nElements;///<Length of this float array
-   std::vector< TwoDIntArray* > twoDArray;///<Raw data.
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
+    unsigned int _nElements;///<Length of this float array
+    std::vector< TwoDIntArray* > twoDArray;///<Raw data.
 
 private:
-   XMLSize_t minIndex;///<Mininum size of the array.
+    XMLSize_t minIndex;///<Mininum size of the array.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ThreeDIntArray* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ThreeDIntArray* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

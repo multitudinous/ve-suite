@@ -44,7 +44,7 @@
 #include <osg/Node>
 namespace osg
 {
-   class Texture3D;
+class Texture3D;
 }
 #include <ves/VEConfig.h>
 namespace ves
@@ -53,24 +53,25 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdOSGPingPongTexture3D{
-      public:
-         cfdOSGPingPongTexture3D();
-         cfdOSGPingPongTexture3D(const cfdOSGPingPongTexture3D& pp);
-         virtual ~cfdOSGPingPongTexture3D();
+class VE_TEXTURE_BASED_EXPORTS cfdOSGPingPongTexture3D
+{
+public:
+    cfdOSGPingPongTexture3D();
+    cfdOSGPingPongTexture3D( const cfdOSGPingPongTexture3D& pp );
+    virtual ~cfdOSGPingPongTexture3D();
 
-         void SetPingTexture(unsigned int tunit,osg::Node* ping);
-         void SetPongTexture(unsigned int tunit,osg::Node* pong);
-         void PingPongTextures();
-         osg::Texture3D* GetCurrentTexture();
-   
-         cfdOSGPingPongTexture3D& operator=(const cfdOSGPingPongTexture3D& pp);
-      protected:
-         osg::ref_ptr<osg::Node> _previous;
-         osg::ref_ptr<osg::Node> _current;
-         unsigned int _pingUnit;
-         unsigned int _pongUnit;
-   };
+    void SetPingTexture( unsigned int tunit, osg::Node* ping );
+    void SetPongTexture( unsigned int tunit, osg::Node* pong );
+    void PingPongTextures();
+    osg::Texture3D* GetCurrentTexture();
+
+    cfdOSGPingPongTexture3D& operator=( const cfdOSGPingPongTexture3D& pp );
+protected:
+    osg::ref_ptr<osg::Node> _previous;
+    osg::ref_ptr<osg::Node> _current;
+    unsigned int _pingUnit;
+    unsigned int _pongUnit;
+};
 }
 }
 }

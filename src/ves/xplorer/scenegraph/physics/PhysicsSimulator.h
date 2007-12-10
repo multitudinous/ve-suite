@@ -37,7 +37,7 @@
 */
 
 /*!\class ves::xplorer::scenegraph::PhysicsSimulator
-* 
+*
 */
 
 /*!\namespace ves::xplorer::scenegraph
@@ -53,7 +53,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class CADEntity;
+class CADEntity;
 }
 }
 }
@@ -103,9 +103,9 @@ public:
     void ResetScene();
 
     ///Shoot a box from the head position
-    ///\param destination 
+    ///\param destination
     void ShootBox( const btVector3& destination );
-	
+
     void SetDebugMode( int mode );
 
     ///Set whether physics is idle or not
@@ -137,7 +137,10 @@ private:
     PhysicsSimulator();
 
     ///Destructor - never gets called, don't implement
-    ~PhysicsSimulator(){;}
+    ~PhysicsSimulator()
+    {
+        ;
+    }
 
     ///VPR singleton header
     vprSingletonHeader( PhysicsSimulator );

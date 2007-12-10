@@ -58,17 +58,17 @@ namespace open
 {
 namespace xml
 {
-   class Transform;
-   class FloatArray;
-   class OneDDoubleArray;
-   class TwoDDoubleArray;
-   class ThreeDDoubleArray;
-   class OneDIntArray;
-   class TwoDIntArray;
-   class ThreeDIntArray;
-   class OneDStringArray;
-   //class TwoDStringArray;
-   //class ThreeDStringArray;
+class Transform;
+class FloatArray;
+class OneDDoubleArray;
+class TwoDDoubleArray;
+class ThreeDDoubleArray;
+class OneDIntArray;
+class TwoDIntArray;
+class ThreeDIntArray;
+class OneDStringArray;
+//class TwoDStringArray;
+//class ThreeDStringArray;
 }
 }
 }
@@ -78,204 +78,204 @@ namespace ves
 namespace open
 {
 namespace xml
-{        
+{
 class VE_XML_EXPORTS DataValuePair : public XMLObject
 {
 public:
-   
-   //valid values are 
-   //STRING == a string value
-   //FLOAT == a single float value
-   //FARRAY == a float array
-   //TRANSFORM == a Transform
-   //1DSTRING
-   //1DDOUBLE
-   //2DDOUBLE
-   //3DDOUBLE
-   //LONG
-   //1DLONG
-   //2DLONG
-   //3DLONG
-   //UNSIGNED INT
-   ///Constructor
-   ///\param type The type of value in this pair.
-   DataValuePair( std::string type=std::string("STRING"));
-   ///Destructor
-   virtual ~DataValuePair();
-   ///Copy Constructor
-   DataValuePair( const DataValuePair& );
-   ///equal operator
-   DataValuePair& operator= ( const DataValuePair& );
-   
-   /// Set the name 
-   ///\param name The name of this data value pair
-   void SetDataName(std::string name);
 
-   ///Set the data value type
-   ///\param type Set the type of the data held.
-   void SetDataType(std::string type);
+    //valid values are
+    //STRING == a string value
+    //FLOAT == a single float value
+    //FARRAY == a float array
+    //TRANSFORM == a Transform
+    //1DSTRING
+    //1DDOUBLE
+    //2DDOUBLE
+    //3DDOUBLE
+    //LONG
+    //1DLONG
+    //2DLONG
+    //3DLONG
+    //UNSIGNED INT
+    ///Constructor
+    ///\param type The type of value in this pair.
+    DataValuePair( std::string type = std::string( "STRING" ) );
+    ///Destructor
+    virtual ~DataValuePair();
+    ///Copy Constructor
+    DataValuePair( const DataValuePair& );
+    ///equal operator
+    DataValuePair& operator= ( const DataValuePair& );
 
-   ///Set the string data
-   ///\param data The string data.
-   void SetDataString(std::string data);
-   
-   ///Set the float data
-   ///\param data The float data.
-   void SetDataValue( double data );
-  
-   ///set the Unsigned int data
-   ///\param data The unsigned data.
-   void SetDataValue(unsigned int data);
+    /// Set the name
+    ///\param name The name of this data value pair
+    void SetDataName( std::string name );
 
-   ///set the data from an string representing the xml
-   ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
-   
-   ///Get the unsigned data
-   unsigned int GetUIntData();
+    ///Set the data value type
+    ///\param type Set the type of the data held.
+    void SetDataType( std::string type );
 
-   ///Get the data type.
-   std::string GetDataType();
-   ///Get the data name.
-   std::string GetDataName();
+    ///Set the string data
+    ///\param data The string data.
+    void SetDataString( std::string data );
 
-   ///Get the string data.
-   std::string GetDataString();
-   
-   ///Get the value of the double data.
-   double GetDataValue();
+    ///Set the float data
+    ///\param data The float data.
+    void SetDataValue( double data );
 
-   ///Get the xmlObject from the DataValuePair  
-   XMLObject* GetDataXMLObject();
+    ///set the Unsigned int data
+    ///\param data The unsigned data.
+    void SetDataValue( unsigned int data );
 
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data XMLObject being passed in. Can be a broad range of data types
-   void SetData(std::string dataName, XMLObject* data);
+    ///set the data from an string representing the xml
+    ///\param xmlInput The input XML data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data unsgined int being passed in.
-   void SetData(std::string dataName, unsigned int data);
+    ///Get the unsigned data
+    unsigned int GetUIntData();
 
-   ///String data
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::string data );
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::string > data );
+    ///Get the data type.
+    std::string GetDataType();
+    ///Get the data name.
+    std::string GetDataName();
 
-   ///Double arrays
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, double data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< double > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< double > > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data );
+    ///Get the string data.
+    std::string GetDataString();
 
-   ///Int arrays
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, long data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< long > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< long > > data );
-   ///Helper functions to set data easily
-   ///\param dataName Name of the data being passed in
-   ///\param data Data value being passed in. Can be a broad range of data types
-   void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
+    ///Get the value of the double data.
+    double GetDataValue();
 
-   ///String data
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::string& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::string >& data );
-   
-   ///Double arrays
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( double& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< double >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< double > >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< std::vector< double > > >& data );
+    ///Get the xmlObject from the DataValuePair
+    XMLObject* GetDataXMLObject();
 
-   ///Int arrays
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( long& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< long >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< long > >& data );
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( std::vector< std::vector< std::vector< long > > >& data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data XMLObject being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, XMLObject* data );
 
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   void GetData( unsigned int& data );
-   ///XMLObject 
-   ///Helper functions to get data easily
-   ///\param data Name of the data being passed in
-   //void GetData( VE_XML::XMLObject& data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data unsgined int being passed in.
+    void SetData( std::string dataName, unsigned int data );
+
+    ///String data
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::string data );
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< std::string > data );
+
+    ///Double arrays
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, double data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< double > data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< std::vector< double > > data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data );
+
+    ///Int arrays
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, long data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< long > data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< std::vector< long > > data );
+    ///Helper functions to set data easily
+    ///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+    void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
+
+    ///String data
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::string& data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< std::string >& data );
+
+    ///Double arrays
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( double& data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< double >& data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< std::vector< double > > & data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< std::vector< std::vector< double > > > & data );
+
+    ///Int arrays
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( long& data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< long >& data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< std::vector< long > > & data );
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( std::vector< std::vector< std::vector< long > > > & data );
+
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    void GetData( unsigned int& data );
+    ///XMLObject
+    ///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+    //void GetData( VE_XML::XMLObject& data );
 
 protected:
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName );
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
 
-   ///Internally extract data of type "XMLOBJECT" from the DataValuePair
-   ///In derived classes, this should be overridden
-   ///\param baseElement The element to extract the XMLObject from.
-   ///\param objectType The XMLObject::_objectType to extract
-   virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,std::string objectType);
+    ///Internally extract data of type "XMLOBJECT" from the DataValuePair
+    ///In derived classes, this should be overridden
+    ///\param baseElement The element to extract the XMLObject from.
+    ///\param objectType The XMLObject::_objectType to extract
+    virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string objectType );
 
-   std::string _dataType;///<The data type.
-   std::string _dataName;///<The data name.
+    std::string _dataType;///<The data type.
+    std::string _dataName;///<The data name.
 
-   ///raw datatypes of DataValuePair that are specified in the verg.xsd file
-   double _dataValue;///<Raw double value.
-   long intDataValue;///<Raw long value.
-   unsigned int _dataUInt;///<Raw unsigned int value
-   std::string _dataString;///<Raw string value.
-  
-   XMLObject* _veXMLObject;///<Raw XMLObject.
+    ///raw datatypes of DataValuePair that are specified in the verg.xsd file
+    double _dataValue;///<Raw double value.
+    long intDataValue;///<Raw long value.
+    unsigned int _dataUInt;///<Raw unsigned int value
+    std::string _dataString;///<Raw string value.
+
+    XMLObject* _veXMLObject;///<Raw XMLObject.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, DataValuePair* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, DataValuePair* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

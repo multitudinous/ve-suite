@@ -43,19 +43,19 @@
 
 namespace osg
 {
-    class Geode;
+class Geode;
 }
 
 namespace osgAL
 {
-    class SoundManager;
-    class SoundNode;
-    class SoundState;
+class SoundManager;
+class SoundNode;
+class SoundState;
 }
 
 namespace openalpp
 {
-    class Sample;
+class Sample;
 }
 
 // --- C/C++ Libraries --- //
@@ -73,7 +73,7 @@ class DCS;
  */
 
 /*!\class ves::xplorer::scenegraph::Sound
- * 
+ *
  */
 
 /*!\namespace ves::xplorer::scenegraph
@@ -106,7 +106,7 @@ public:
     void Stop();
 
     osgAL::SoundNode* GetSoundNode();
-    
+
 private:
     osgAL::SoundManager* m_soundManager;
 

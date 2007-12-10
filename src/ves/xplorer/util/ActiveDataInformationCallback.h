@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef ACTIVE_DATA_INFORMATION_CALLBACK 
+#ifndef ACTIVE_DATA_INFORMATION_CALLBACK
 #define  ACTIVE_DATA_INFORMATION_CALLBACK
 /*!\file ActiveDataInformationCallback.h
 ActiveDataInformationCallback API.
@@ -54,33 +54,33 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ActiveDataInformationCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     ActiveDataInformationCallback();
     ///Destructor
     virtual ~ActiveDataInformationCallback();
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Set the active vector or scalar
     ///\param name The name of the scalar or vector to make active
-    ///\param isVector Flag determining vector or scalar data 
-    void SetActiveDataName(std::string name,bool isVector=false);
+    ///\param isVector Flag determining vector or scalar data
+    void SetActiveDataName( std::string name, bool isVector = false );
 
     ///Get the name of the active scalar or vector
-    ///\param isVector Flag determining vector or scalar data 
-    std::string GetActiveDataName(bool isVector=false);
+    ///\param isVector Flag determining vector or scalar data
+    std::string GetActiveDataName( bool isVector = false );
 
-    ///Get active scalar or vector 
-    ///\param  isVector Flag determining vector or scalar data to retrieve 
-    std::string GetActiveData(bool isVector=false);
+    ///Get active scalar or vector
+    ///\param  isVector Flag determining vector or scalar data to retrieve
+    std::string GetActiveData( bool isVector = false );
 
 protected:
-    std::string m_activeScalar;///<The active scalar 	
-    std::string m_activeVector;///<The active vector	
+    std::string m_activeScalar;///<The active scalar
+    std::string m_activeVector;///<The active vector
 };
 }// end of util namesapce
 }// end of xplorer namesapce

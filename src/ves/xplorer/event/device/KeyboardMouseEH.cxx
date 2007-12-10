@@ -56,56 +56,57 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouseEventHandler::KeyboardMouseEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-KeyboardMouseEventHandler::KeyboardMouseEventHandler(const KeyboardMouseEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
+KeyboardMouseEventHandler::KeyboardMouseEventHandler( const KeyboardMouseEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouseEventHandler::~KeyboardMouseEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouseEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler)
+void KeyboardMouseEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouseEventHandler::Execute(XMLObject* veXMLObject)
+void KeyboardMouseEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command=dynamic_cast<Command*>(veXMLObject);
-   DataValuePairWeakPtr animateDVP=command->GetDataValuePair("AnimateID");
+    Command* command = dynamic_cast<Command*>( veXMLObject );
+    DataValuePairWeakPtr animateDVP = command->GetDataValuePair( "AnimateID" );
 
-   unsigned int animate;
-   animateDVP->GetData(animate);
+    unsigned int animate;
+    animateDVP->GetData( animate );
 
-   if( animateDVP )
-   {
-      if( animate == 0 )
-		{
-         static_cast< ves::xplorer::KeyboardMouse* >( ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( false );
-      }
+    if( animateDVP )
+    {
+        if( animate == 0 )
+        {
+            static_cast< ves::xplorer::KeyboardMouse* >( ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( false );
+        }
 
-      else if( animate == 1 )
-		{
-         static_cast< ves::xplorer::KeyboardMouse* >( ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( true );
-      }
-   }
+        else if( animate == 1 )
+        {
+            static_cast< ves::xplorer::KeyboardMouse* >( ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->Animate( true );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-KeyboardMouseEventHandler& KeyboardMouseEventHandler::operator=(const KeyboardMouseEventHandler& rhs)
+KeyboardMouseEventHandler& KeyboardMouseEventHandler::operator=( const KeyboardMouseEventHandler& rhs )
 {
-   if(this!=&rhs){
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
 
-   return *this;
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

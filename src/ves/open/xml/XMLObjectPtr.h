@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML:XMLObjectPtr.  To get the full 
+ * VE_XML:XMLObjectPtr.  To get the full
  * declaration of VE_XML::XMLObjectPtr
  * VE_Open/XML/XMLObject.h must be included, too.
  */
@@ -50,12 +50,12 @@ namespace open
 {
 namespace xml
 {
-   class XMLObject;
-   /// Typedef for a SmartPtr type for the Uniform.
-   typedef ves::util::ClassPtrDef<XMLObject>::type  XMLObjectPtr;
-   typedef ves::util::SharedPtrDef<XMLObject>::type XMLObjectSharedPtr;
-   typedef ves::util::WeakPtrDef<XMLObject>::type   XMLObjectWeakPtr;
-   typedef ves::util::ScopedPtrDef<XMLObject>::type XMLObjectScopedPtr;
+class XMLObject;
+/// Typedef for a SmartPtr type for the Uniform.
+typedef ves::util::ClassPtrDef<XMLObject>::type  XMLObjectPtr;
+typedef ves::util::SharedPtrDef<XMLObject>::type XMLObjectSharedPtr;
+typedef ves::util::WeakPtrDef<XMLObject>::type   XMLObjectWeakPtr;
+typedef ves::util::ScopedPtrDef<XMLObject>::type XMLObjectScopedPtr;
 }
 }
 }

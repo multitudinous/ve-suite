@@ -51,22 +51,22 @@ namespace event
 class VE_XPLORER_EXPORTS StoredSceneEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   StoredSceneEventHandler();
+    ///Constructor
+    StoredSceneEventHandler();
 
-   ///Copy Constructor
-   StoredSceneEventHandler(const StoredSceneEventHandler& ceh);
-   ///Destructor
-   virtual ~StoredSceneEventHandler();
+    ///Copy Constructor
+    StoredSceneEventHandler( const StoredSceneEventHandler& ceh );
+    ///Destructor
+    virtual ~StoredSceneEventHandler();
 
-   ///Equal operator
-   StoredSceneEventHandler& operator=(const StoredSceneEventHandler& rhs);
-   ///\param baseObject The GlobalBase object to apply the command to.
-   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject=0); 
+    ///Equal operator
+    StoredSceneEventHandler& operator=( const StoredSceneEventHandler& rhs );
+    ///\param baseObject The GlobalBase object to apply the command to.
+    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject = 0 );
 
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void Execute(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void Execute( ves::open::xml::XMLObject* veXMLObject );
 protected:
 
 };

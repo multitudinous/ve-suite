@@ -52,27 +52,27 @@ namespace event
 class VE_XPLORER_EXPORTS EphemerisAutoDateTimeEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   EphemerisAutoDateTimeEventHandler();
+    ///Constructor
+    EphemerisAutoDateTimeEventHandler();
 
-   ///Copy Constructor
-   EphemerisAutoDateTimeEventHandler(const EphemerisAutoDateTimeEventHandler& ceh);
-   ///Destructor
-   virtual ~EphemerisAutoDateTimeEventHandler();
+    ///Copy Constructor
+    EphemerisAutoDateTimeEventHandler( const EphemerisAutoDateTimeEventHandler& ceh );
+    ///Destructor
+    virtual ~EphemerisAutoDateTimeEventHandler();
 
-   ///Equal operator
-   EphemerisAutoDateTimeEventHandler& operator=(const EphemerisAutoDateTimeEventHandler& rhs);
+    ///Equal operator
+    EphemerisAutoDateTimeEventHandler& operator=( const EphemerisAutoDateTimeEventHandler& rhs );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   virtual void Execute(ves::open::xml::XMLObject* xmlObject);
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    virtual void Execute( ves::open::xml::XMLObject* xmlObject );
 
-   ///Set the active model
-   ///\param baseObject Active model
-   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
+    ///Set the active model
+    ///\param baseObject Active model
+    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
 protected:
-   ves::xplorer::Model* m_activeModel;///<The active cfdModel
+    ves::xplorer::Model* m_activeModel;///<The active cfdModel
 };
 
 }

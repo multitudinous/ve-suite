@@ -60,81 +60,81 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 VjObsWrapper::VjObsWrapper( void )
 {
-   _vjObs = new VjObs_i();
-   m_xplorer = new Body_VEXplorer_i();
-   isMaster = false;
+    _vjObs = new VjObs_i();
+    m_xplorer = new Body_VEXplorer_i();
+    isMaster = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::InitCluster( void )
 {
-   _vjObs->InitCluster();
+    _vjObs->InitCluster();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::GetUpdateClusterStateVariables( void )
 {
-   _vjObs->GetUpdateClusterStateVariables();
+    _vjObs->GetUpdateClusterStateVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VjObsWrapper::~VjObsWrapper( void )
 {
-   CosNaming::Name name(1);
+    CosNaming::Name name( 1 );
 
-   name.length(1);
-   name[0].id   = CORBA::string_dup("Master");
-   name[0].kind = CORBA::string_dup("VE_Xplorer");
-   
-   try
-   {
-      //vprDEBUG(vesDBG,0) 
-         //<< "naming_context->unbind for CORBA Object  " 
-         //<< std::endl << vprDEBUG_FLUSH;
-      if ( !CORBA::is_nil( naming_context ) )
-         naming_context->unbind( name );
-   }
-   catch( CosNaming::NamingContext::InvalidName& )
-   {
-      std::cerr << "Invalid name for CORBA Object  " << std::endl;
-   }
-   catch(CosNaming::NamingContext::NotFound& ex)
-   {
-      std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
-   }
-   catch( ... )
-   {
-      std::cerr << "Unknown exception." << std::endl;
-   }
+    name.length( 1 );
+    name[0].id   = CORBA::string_dup( "Master" );
+    name[0].kind = CORBA::string_dup( "VE_Xplorer" );
+
+    try
+    {
+        //vprDEBUG(vesDBG,0)
+        //<< "naming_context->unbind for CORBA Object  "
+        //<< std::endl << vprDEBUG_FLUSH;
+        if( !CORBA::is_nil( naming_context ) )
+            naming_context->unbind( name );
+    }
+    catch ( CosNaming::NamingContext::InvalidName& )
+    {
+        std::cerr << "Invalid name for CORBA Object  " << std::endl;
+    }
+    catch ( CosNaming::NamingContext::NotFound& ex )
+    {
+        std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cerr << "Unknown exception." << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VjObsWrapper::init( CosNaming::NamingContext* input, 
-    CORBA::ORB* orbPtr, PortableServer::POA* child_poa, 
-    PortableServer::POA* poa,int argc, char* argv[]  )
+void VjObsWrapper::init( CosNaming::NamingContext* input,
+                         CORBA::ORB* orbPtr, PortableServer::POA* child_poa,
+                         PortableServer::POA* poa, int argc, char* argv[] )
 {
     //boost::ignore_unused_variable_warning( argc );
     //boost::ignore_unused_variable_warning( argv );
     m_orbPtr = orbPtr;
     bool isCluster = false;
     std::string masterhost;
-   for(int i=1;i<argc;++i)
-   {
-      if ( std::string( argv[i] ) == std::string("-VESCluster") )
-      {
-         isCluster = true;
-         masterhost = std::string( argv[i+1] );
-         std::cout << "The cluster master is " << masterhost << std::endl;
-         break;
-      }
-   }
-   this->child_poa = child_poa;
-   this->poa = poa;
-   naming_context = input;
+    for( int i = 1;i < argc;++i )
+    {
+        if( std::string( argv[i] ) == std::string( "-VESCluster" ) )
+        {
+            isCluster = true;
+            masterhost = std::string( argv[i+1] );
+            std::cout << "The cluster master is " << masterhost << std::endl;
+            break;
+        }
+    }
+    this->child_poa = child_poa;
+    this->poa = poa;
+    naming_context = input;
 
     if( isCluster )
     {
-        std::cout << "----------------CLUSTER INFO-------------------" 
-            << std::endl
-            << "NOTE : Be sure to specify this GUID = " << std::endl
-            << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-            << "       in the application data config file." << std::endl;
+        std::cout << "----------------CLUSTER INFO-------------------"
+        << std::endl
+        << "NOTE : Be sure to specify this GUID = " << std::endl
+        << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+        << "       in the application data config file." << std::endl;
 
         _vjObs->SetClusterMode( true );
         std::string name;
@@ -153,15 +153,15 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
 #if __VJ_version > 2000003
             tempHostname = tempAddrVec.at( i ).getHostname();
 #elif __VJ_version == 2000003
-             tempAddrVec.at( i ).getHostname( tempHostname );
+            tempAddrVec.at( i ).getHostname( tempHostname );
 #endif
-            std::cout << "Host name is " << tempHostname <<std::endl;
-            getStringTokens( tempHostname.c_str(),".", toks);
+            std::cout << "Host name is " << tempHostname << std::endl;
+            getStringTokens( tempHostname.c_str(), ".", toks );
             //now toks[0] will be the short host name
             //the one without the domain name
-            if( (tempHostname == masterhost) || (toks[0]==masterhost) )
+            if (( tempHostname == masterhost ) || ( toks[0] == masterhost ) )
             {
-                std::cout<<"This is the master!"<<std::endl;
+                std::cout << "This is the master!" << std::endl;
                 isMaster = true;
                 break;
             }
@@ -173,65 +173,65 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
         _vjObs->SetClusterMode( false );
     }
 
-   if( isMaster || !isCluster )
-   {
-      //This is the old way of communication
-      VjObs_var vjobs = this->_vjObs->_this();
-      
-      CosNaming::Name name;
-      name.length(1);
-      
-      name[0].id   = (const char*) "Master";
-      name[0].kind = (const char*) "VE_Xplorer";
-      //Bind the object
-      try
-      {
-         naming_context->bind(name, vjobs.in());
-      }
-      catch(CosNaming::NamingContext::AlreadyBound&)
-      {
-         naming_context->rebind(name, vjobs.in());
-      }
+    if( isMaster || !isCluster )
+    {
+        //This is the old way of communication
+        VjObs_var vjobs = this->_vjObs->_this();
 
-      ///This is the new way of communication
-      Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
-      
-      CosNaming::Name xplorerName;
-      xplorerName.length(1);
-      
-      xplorerName[0].id   = (const char*) "Test";
-      xplorerName[0].kind = (const char*) "VE_Xplorer";
-      //Bind the object
-      try
-      {
-         naming_context->bind(xplorerName, xplorerCom.in());
-      }
-      catch(CosNaming::NamingContext::AlreadyBound&)
-      {
-         naming_context->rebind(xplorerName, xplorerCom.in());
-      }
-      ves::xplorer::CommandHandler::instance()->SetXplorer(m_xplorer);
-   }
+        CosNaming::Name name;
+        name.length( 1 );
+
+        name[0].id   = ( const char* ) "Master";
+        name[0].kind = ( const char* ) "VE_Xplorer";
+        //Bind the object
+        try
+        {
+            naming_context->bind( name, vjobs.in() );
+        }
+        catch ( CosNaming::NamingContext::AlreadyBound& )
+        {
+            naming_context->rebind( name, vjobs.in() );
+        }
+
+        ///This is the new way of communication
+        Body::VEXplorer_var xplorerCom = this->m_xplorer->_this();
+
+        CosNaming::Name xplorerName;
+        xplorerName.length( 1 );
+
+        xplorerName[0].id   = ( const char* ) "Test";
+        xplorerName[0].kind = ( const char* ) "VE_Xplorer";
+        //Bind the object
+        try
+        {
+            naming_context->bind( xplorerName, xplorerCom.in() );
+        }
+        catch ( CosNaming::NamingContext::AlreadyBound& )
+        {
+            naming_context->rebind( xplorerName, xplorerCom.in() );
+        }
+        ves::xplorer::CommandHandler::instance()->SetXplorer( m_xplorer );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 Command* VjObsWrapper::GetXMLCommand( void )
 {
-   return _vjObs->bufferCommand;
+    return _vjObs->bufferCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double VjObsWrapper::GetShortArray( int i )
 {
-   return _vjObs->cfdShort_data_array[ i ];
+    return _vjObs->cfdShort_data_array[ i ];
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::GetCfdStateVariables( void )
 {
-   _vjObs->GetCfdStateVariables();
+    _vjObs->GetCfdStateVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::PreFrameUpdate( void )
 {
-   _vjObs->PreFrameUpdate();
+    _vjObs->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::CheckORBWorkLoad( void )
@@ -253,35 +253,35 @@ void VjObsWrapper::CheckORBWorkLoad( void )
 // Frame sync variables used by osg only at this point
 float VjObsWrapper::GetSetAppTime( float x )
 {
-   return _vjObs->GetSetAppTime( x );
+    return _vjObs->GetSetAppTime( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
 long VjObsWrapper::GetSetFrameNumber( long x )
 {
-   return _vjObs->GetSetFrameNumber( x );
+    return _vjObs->GetSetFrameNumber( x );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int VjObsWrapper::getStringTokens(const char* buffer, char* delim, 
-    std::vector<std::string> &toks)
+int VjObsWrapper::getStringTokens( const char* buffer, char* delim,
+                                   std::vector<std::string> &toks )
 {
-   char* token;
-   int i=0;
-   std::string tempBuffer( buffer );
-   char* temp = const_cast< char* >( tempBuffer.c_str() );
-   token = strtok(temp, delim);
+    char* token;
+    int i = 0;
+    std::string tempBuffer( buffer );
+    char* temp = const_cast< char* >( tempBuffer.c_str() );
+    token = strtok( temp, delim );
 
-   toks.clear();
-   while( token )
-   {
-      i++;
-      toks.push_back(std::string(token));
-      token = strtok(NULL, delim);
-   }
+    toks.clear();
+    while( token )
+    {
+        i++;
+        toks.push_back( std::string( token ) );
+        token = strtok( NULL, delim );
+    }
 
-   return i;
+    return i;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool VjObsWrapper::IsMaster( void )
 {
-   return isMaster;
+    return isMaster;
 }

@@ -52,27 +52,27 @@ namespace event
 class VE_XPLORER_EXPORTS EphemerisDataEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   EphemerisDataEventHandler();
+    ///Constructor
+    EphemerisDataEventHandler();
 
-   ///Copy Constructor
-   EphemerisDataEventHandler(const EphemerisDataEventHandler& ceh);
-   ///Destructor
-   virtual ~EphemerisDataEventHandler();
+    ///Copy Constructor
+    EphemerisDataEventHandler( const EphemerisDataEventHandler& ceh );
+    ///Destructor
+    virtual ~EphemerisDataEventHandler();
 
-   ///Equal operator
-   EphemerisDataEventHandler& operator=(const EphemerisDataEventHandler& rhs);
+    ///Equal operator
+    EphemerisDataEventHandler& operator=( const EphemerisDataEventHandler& rhs );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   virtual void Execute(ves::open::xml::XMLObject* xmlObject);
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    virtual void Execute( ves::open::xml::XMLObject* xmlObject );
 
-   ///Set the active model
-   ///\param baseObject Active model
-   virtual void SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject);
+    ///Set the active model
+    ///\param baseObject Active model
+    virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject );
 
 protected:
-   ves::xplorer::Model* m_activeModel;///<The active cfdModel
+    ves::xplorer::Model* m_activeModel;///<The active cfdModel
 };
 
 }

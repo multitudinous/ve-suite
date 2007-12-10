@@ -36,7 +36,7 @@
 CORBAServiceList API
 */
 /*!\class ves::conductor::util::CORBAServiceList
-* 
+*
 */
 #include <orbsvcs/CosNamingC.h>
 #include <ves/open/moduleC.h>
@@ -73,10 +73,16 @@ private:
     //friend class vpr::Singleton< SceneManager >;
     //SceneManager(const SceneManager& o) { ; }
     //SceneManager& operator=(const SceneManager& o) { ; }
-    CORBAServiceList( void ){ ; }
-    ~CORBAServiceList(){ ; } // Never gets called, don't implement
+    CORBAServiceList( void )
+    {
+        ;
+    }
+    ~CORBAServiceList()
+    {
+        ;
+    } // Never gets called, don't implement
     vprSingletonHeader( CORBAServiceList );
-    
+
 public:
     ///Constructor
     void SetArgcArgv( int argc, char** argv );
@@ -101,12 +107,12 @@ public:
     bool DisconnectFromXplorer( void );
     ///Disconnect to ce
     bool DisconnectFromCE( void );
-    ///Set xplorer command string 
+    ///Set xplorer command string
     ///\param command string containing command
-    bool SendCommandStringToXplorer(  ves::open::xml::Command* veCommand  );
-    ///Set xplorer command string 
+    bool SendCommandStringToXplorer( ves::open::xml::Command* veCommand );
+    ///Set xplorer command string
     ///\param command string containing command
-    bool SendCommandStringToXplorer(  ves::open::xml::CommandWeakPtr veCommand  );
+    bool SendCommandStringToXplorer( ves::open::xml::CommandWeakPtr veCommand );
     /*
     ///Set xplorer command string 
     ///\param command VE_XML::Command containing command
@@ -143,11 +149,11 @@ public:
         catch( ... )
         {
             return false;
-        }      
+        }    
         return true;
     }
     */
-    ///Set ce network string 
+    ///Set ce network string
     ///\param network string containing network
     bool SendNetworkStringToCE( std::string network );
     ///Keep the orb running and check for corba commands to be processed

@@ -36,7 +36,7 @@
 MaterialInitializer API
 */
 /*!\class MaterialInitializer
-* 
+*
 */
 #include <ves/VEConfig.h>
 
@@ -54,10 +54,10 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS MaterialInitializer : public osg::NodeVisitor
 {
 public:
-	MaterialInitializer( osg::Node* osg_node );
-	virtual ~MaterialInitializer();
+    MaterialInitializer( osg::Node* osg_node );
+    virtual ~MaterialInitializer();
 
-   virtual void apply( osg::Group& node );
+    virtual void apply( osg::Group& node );
 
 private:
 

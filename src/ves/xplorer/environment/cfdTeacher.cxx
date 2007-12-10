@@ -58,20 +58,20 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 #ifdef _OSG
-    #include <osgDB/WriteFile>
-    #include <osg/Node>
-    #include <osgUtil/Optimizer>
+#include <osgDB/WriteFile>
+#include <osg/Node>
+#include <osgUtil/Optimizer>
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::cfdTeacher( std::string specifiedDir, ves::xplorer::scenegraph::DCS* worldDCS )
-:
-m_currentScene( 0 )
+        :
+        m_currentScene( 0 )
 {
     this->directory = specifiedDir;
 
-    vprDEBUG(vesDBG,1) << "|\tStored Scenes directory : \"" << this->directory 
-        << "\"" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
+    << "\"" << std::endl << vprDEBUG_FLUSH;
 
     // initialize in case the directory is not there...
     this->dcs = new ves::xplorer::scenegraph::DCS();
@@ -82,16 +82,16 @@ m_currentScene( 0 )
     pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
     tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
-    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
-        tempFilenames.end() );
+    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
+                         tempFilenames.end() );
     tempFilenames.clear();
     tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
-    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
-        tempFilenames.end() );
+    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
+                         tempFilenames.end() );
 
     // how many performer binaries found ?
-    vprDEBUG(vesDBG,1) << "|\t\tNumber of stored scenes found: " 
-        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of stored scenes found: "
+    << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::~cfdTeacher( )
@@ -102,7 +102,7 @@ cfdTeacher::~cfdTeacher( )
         delete m_currentScene;
         m_currentScene = 0;
     }
-    
+
     //vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
     //    << std::endl << vprDEBUG_FLUSH;
 }
@@ -134,18 +134,18 @@ int cfdTeacher::getNumberOfFiles()
 ////////////////////////////////////////////////////////////////////////////////
 std::string cfdTeacher::getFileName( int i )
 {
-   if ( i >= 0 && i < static_cast<int>(this->pfbFileNames.size()) )
-   {
-	   return this->pfbFileNames[i];
-   }
-   else
-   {
-      return NULL;
-   }
+    if( i >= 0 && i < static_cast<int>( this->pfbFileNames.size() ) )
+    {
+        return this->pfbFileNames[i];
+    }
+    else
+    {
+        return NULL;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::RecordScene()
-{ 
+{
     //check if the path to STORED_FILES exists
     boost::filesystem::path dir_path( this->directory );
     try
@@ -155,72 +155,72 @@ void cfdTeacher::RecordScene()
     catch ( const std::exception& ex )
     {
         std::cout << "|\t" << ex.what() << std::endl;
-        boost::filesystem::create_directory(dir_path);
+        boost::filesystem::create_directory( dir_path );
         std::cout << "...so we made it for you..." << std::endl;
     }
 
-   // Generate a .pfb filename...
-   std::string pfb_filename;
-   std::ostringstream dirStringStream;
-   dirStringStream << this->directory << "/stored_scene_" 
+    // Generate a .pfb filename...
+    std::string pfb_filename;
+    std::ostringstream dirStringStream;
+    dirStringStream << this->directory << "/stored_scene_"
 #ifdef _PERFORMER
-       << pfbFileNames.size() << ".pfb";
+    << pfbFileNames.size() << ".pfb";
 #elif _OSG
-        << pfbFileNames.size() << ".ive";
+    << pfbFileNames.size() << ".ive";
 #endif
-   std::string dirString = dirStringStream.str();
-   pfb_filename = dirString.c_str();
-   pfbFileNames.push_back( pfb_filename );
+    std::string dirString = dirStringStream.str();
+    pfb_filename = dirString.c_str();
+    pfbFileNames.push_back( pfb_filename );
 
-   vprDEBUG(vesDBG,0) << "|\tScene stored as " << pfb_filename
-       << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tScene stored as " << pfb_filename
+    << std::endl << vprDEBUG_FLUSH;
 
-   // store the world DCS matrix..
-   if ( _worldDCS.valid() )
-   {
-      gmtl::Matrix44d m = this->_worldDCS->GetMat();
+    // store the world DCS matrix..
+    if( _worldDCS.valid() )
+    {
+        gmtl::Matrix44d m = this->_worldDCS->GetMat();
 
-      //temporarily reset the world DCS matrix to the identity
-      gmtl::Matrix44d I;
+        //temporarily reset the world DCS matrix to the identity
+        gmtl::Matrix44d I;
 
-      // Make an identity matrix
-      gmtl::identity( I );
-      this->_worldDCS->SetMat( I );
-		//ves::xplorer::scenegraph::Clone* graphToWrite = new ves::xplorer::scenegraph::Clone(_worldDCS.get());
+        // Make an identity matrix
+        gmtl::identity( I );
+        this->_worldDCS->SetMat( I );
+        //ves::xplorer::scenegraph::Clone* graphToWrite = new ves::xplorer::scenegraph::Clone(_worldDCS.get());
 
-      writePFBFile( this->_worldDCS.get(), pfb_filename );
+        writePFBFile( this->_worldDCS.get(), pfb_filename );
 
-		//delete graphToWrite;
-      //graphToWrite = 0;
-      this->_worldDCS->SetMat( m );
-   }
-   else
-   {
-      writePFBFile(ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), pfb_filename);
-   }
-   
-   vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << pfbFileNames.size()
-                             << std::endl << vprDEBUG_FLUSH;
+        //delete graphToWrite;
+        //graphToWrite = 0;
+        this->_worldDCS->SetMat( m );
+    }
+    else
+    {
+        writePFBFile( ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), pfb_filename );
+    }
+
+    vprDEBUG( vesDBG, 1 ) << "|   Stored Scene Output " << pfbFileNames.size()
+    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdTeacher::LoadScene(unsigned int whichChild)
+void cfdTeacher::LoadScene( unsigned int whichChild )
 {
     if( whichChild > pfbFileNames.size() )
     {
         return;
     }
-    
-    vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: addChild" << std::endl 
-        << vprDEBUG_FLUSH;
+
+    vprDEBUG( vesDBG, 2 ) << "LOAD_PFB_FILE: addChild" << std::endl
+    << vprDEBUG_FLUSH;
 
     this->GetDCS()->addChild( this->getpfNode( whichChild )->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::ClearStoredScenes()
 {
-    vprDEBUG(vesDBG,2) 
-        << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
-        << std::endl  << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 2 )
+    << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
+    << std::endl  << vprDEBUG_FLUSH;
 
     if( !this->dcs.valid() )
     {
@@ -230,7 +230,7 @@ void cfdTeacher::ClearStoredScenes()
     if( this->GetDCS()->getNumChildren() > 0 )
     {
         this->GetDCS()->removeChild( this->GetDCS()->GetChild( 0 ) );
-    }   
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::UpdateCommand()
@@ -238,19 +238,19 @@ void cfdTeacher::UpdateCommand()
     std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdTeacher::writePFBFile( ves::xplorer::scenegraph::SceneNode* graph,std::string fileName)
+void cfdTeacher::writePFBFile( ves::xplorer::scenegraph::SceneNode* graph, std::string fileName )
 {
 #ifdef _OSG
     osgUtil::Optimizer optimizer;
-    optimizer.optimize(dynamic_cast< osg::Node* >(graph));
-    osgDB::writeNodeFile(*dynamic_cast< osg::Node* >(graph),fileName);
+    optimizer.optimize( dynamic_cast< osg::Node* >( graph ) );
+    osgDB::writeNodeFile( *dynamic_cast< osg::Node* >( graph ), fileName );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::Reset()
 {
-    vprDEBUG(vesDBG,1) << "|\tStored Scenes directory : \"" << this->directory 
-        << "\"" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
+    << "\"" << std::endl << vprDEBUG_FLUSH;
     //Remove the other application's stored scenes
     ClearStoredScenes();
     //Delete the old active scene if we have one
@@ -259,20 +259,20 @@ void cfdTeacher::Reset()
         this->dcs->removeChild( m_currentScene->GetNode() );
         delete m_currentScene;
         m_currentScene = 0;
-    }    
+    }
     //Get ive, osg, and pfb filenames for the new application
     pfbFileNames.clear();
     pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
     tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".ive" );
-    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
+    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
     tempFilenames.clear();
     tempFilenames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".osg" );
-    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(), 
+    pfbFileNames.insert( pfbFileNames.end(), tempFilenames.begin(),
                          tempFilenames.end() );
-    
+
     // how many performer binaries found ?
-    vprDEBUG(vesDBG,1) << "|\t\tNumber of stored scenes found: " 
-        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;    
+    vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of stored scenes found: "
+    << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }

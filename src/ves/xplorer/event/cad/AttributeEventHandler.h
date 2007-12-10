@@ -55,35 +55,35 @@ namespace event
 class VE_XPLORER_EXPORTS AttributeEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   AttributeEventHandler();
+    ///Constructor
+    AttributeEventHandler();
 
-   ///Copy Constructor
-   AttributeEventHandler(const AttributeEventHandler& ceh);
+    ///Copy Constructor
+    AttributeEventHandler( const AttributeEventHandler& ceh );
 
-   ///Destructor
-   virtual ~AttributeEventHandler();
+    ///Destructor
+    virtual ~AttributeEventHandler();
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   ///Equal operator
-   AttributeEventHandler& operator=(const AttributeEventHandler& rhs);
+    ///Equal operator
+    AttributeEventHandler& operator=( const AttributeEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject ) = 0;
 
-   ves::xplorer::Model* _activeModel;///<The active cfdModel
-   ves::open::xml::cad::CADAttribute* _activeAttribute;///<The CADNode.
+    ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ves::open::xml::cad::CADAttribute* _activeAttribute;///<The CADNode.
 };
 
 }

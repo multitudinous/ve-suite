@@ -38,87 +38,83 @@
 
 #include <iostream>
 
-Execute_Thread::Execute_Thread (Body::Unit_var m, Body_Executive_i* ex) :
-  _mod       ( m ),
-  _is_exec   ( false),
-  _executive ( ex )
-{
-
-}
+Execute_Thread::Execute_Thread( Body::Unit_var m, Body_Executive_i* ex ) :
+        _mod( m ),
+        _is_exec( false ),
+        _executive( ex )
+{}
 ////////////////////////////////////////////////////////////////////////////////
-Execute_Thread::~Execute_Thread ()
-{
-
-}
+Execute_Thread::~Execute_Thread()
+{}
 ////////////////////////////////////////////////////////////////////////////////
-int Execute_Thread::svc (void)
+int Execute_Thread::svc( void )
 {
-   while ( true ) 
-   {
-      while ( true ) 
-      {
-         _mutex.acquire();
-         if ( _is_exec ) 
-            break;
-      
-         _mutex.release();
-      
-         ACE_OS::sleep(2); 	    
-      }
-    
-      _mutex.release();
-      try 
-      {
-         _mod->StartCalc();
-      } 
-      catch (CORBA::Exception &) 
-      {
-         std::cout <<"Module Execution Messed up." << std::endl;
-      }
-    
-      _mutex.acquire();
-      _is_exec = false;
-      _mutex.release();
-    
-      try 
-      {
-         // This function returns the id of the currently executed module
-         long id = static_cast< long >( _mod->GetCurID() );
-         _executive->execute_next_mod( id );
-      }
-      catch (CORBA::Exception &) 
-      {
-         std::cout <<"Module GetID Messed up." << std::endl;
-      }
-   }
+    while( true )
+    {
+        while( true )
+        {
+            _mutex.acquire();
+            if( _is_exec )
+                break;
+
+            _mutex.release();
+
+            ACE_OS::sleep( 2 );
+        }
+
+        _mutex.release();
+        try
+        {
+            _mod->StartCalc();
+        }
+        catch ( CORBA::Exception & )
+        {
+            std::cout << "Module Execution Messed up." << std::endl;
+        }
+
+        _mutex.acquire();
+        _is_exec = false;
+        _mutex.release();
+
+        try
+        {
+            // This function returns the id of the currently executed module
+            long id = static_cast< long >( _mod->GetCurID() );
+            _executive->execute_next_mod( id );
+        }
+        catch ( CORBA::Exception & )
+        {
+            std::cout << "Module GetID Messed up." << std::endl;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Execute_Thread::lock ()
 {
-  _mutex.acquire();
-  return 0;
+    _mutex.acquire();
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Execute_Thread::unlock ()
+int Execute_Thread::unlock()
 {
-  _mutex.release();
-  return 0;
+    _mutex.release();
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Execute_Thread::needexecute ()
+int Execute_Thread::needexecute()
 {
-   int ret = 1;
-   _mutex.acquire();
-   if ( _is_exec == true )
-   {
-      ret = 0;
-   }
-   else
-   {
-      _is_exec = true;
-   }
-   _mutex.release();
+    int ret = 1;
+    _mutex.acquire();
+    if( _is_exec == true )
+    {
+        ret = 0;
+    }
+    else
+    {
+        _is_exec = true;
+    }
+    _mutex.release();
 
-   return ret;
+    return ret;
 }
 

@@ -53,23 +53,23 @@ namespace ClusterVariables
 {
 struct StateVariables
 {
-   double      clusterIso_value;
-   double      clusterSc;
-   double      clusterMin;
-   double      clusterMax;
-   double      clusterId;
-   double      clusterGeo_state;
-   double      clusterPostdata_state;
-   bool        clusterPre_state;
-   double      clusterTimesteps;
-   double      clusterTeacher_state; 
-   short       clusterClientInfoFlag; 
-   int         currentFrame; // the index of the current frame
-   float       clusterTime_since_start;
-   long        clusterFrameNumber;
-   float       clusterQuatCamIncrement;
-   float       clusterMatrix[16];
-   std::string clusterXMLCommands;
+    double      clusterIso_value;
+    double      clusterSc;
+    double      clusterMin;
+    double      clusterMax;
+    double      clusterId;
+    double      clusterGeo_state;
+    double      clusterPostdata_state;
+    bool        clusterPre_state;
+    double      clusterTimesteps;
+    double      clusterTeacher_state;
+    short       clusterClientInfoFlag;
+    int         currentFrame; // the index of the current frame
+    float       clusterTime_since_start;
+    long        clusterFrameNumber;
+    float       clusterQuatCamIncrement;
+    float       clusterMatrix[16];
+    std::string clusterXMLCommands;
 };
 }
 
@@ -77,88 +77,90 @@ namespace vpr
 {
 template<>
 #if __VJ_version <= 2000003
-   inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
+inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject( vpr::ObjectWriter* writer )
 #elif __VJ_version > 2000003
-   inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
+inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject( vpr::ObjectWriter* writer )
 #endif
-{ 
-    VPR_PROFILE_GUARD_HISTORY("writeObject", 20 );
-   writer->writeDouble( clusterIso_value );  
-   writer->writeDouble( clusterSc );  
-   writer->writeDouble( clusterMin );  
-   writer->writeDouble( clusterMax );  
-   writer->writeDouble( clusterId ); 
-   writer->writeDouble( clusterGeo_state );
-   writer->writeDouble( clusterPostdata_state );
-   writer->writeBool( clusterPre_state );
-   writer->writeDouble( clusterTimesteps );
-   writer->writeDouble( clusterTeacher_state ); 
-   writer->writeUint16( currentFrame );
-   writer->writeFloat( clusterTime_since_start );
-   writer->writeUint32( clusterFrameNumber );
-   writer->writeFloat( clusterQuatCamIncrement );
+{
+    VPR_PROFILE_GUARD_HISTORY( "writeObject", 20 );
+    writer->writeDouble( clusterIso_value );
+    writer->writeDouble( clusterSc );
+    writer->writeDouble( clusterMin );
+    writer->writeDouble( clusterMax );
+    writer->writeDouble( clusterId );
+    writer->writeDouble( clusterGeo_state );
+    writer->writeDouble( clusterPostdata_state );
+    writer->writeBool( clusterPre_state );
+    writer->writeDouble( clusterTimesteps );
+    writer->writeDouble( clusterTeacher_state );
+    writer->writeUint16( currentFrame );
+    writer->writeFloat( clusterTime_since_start );
+    writer->writeUint32( clusterFrameNumber );
+    writer->writeFloat( clusterQuatCamIncrement );
 
-   for(int i=0;i<16;i++){
-      writer->writeFloat(clusterMatrix[i]);
-   }
+    for( int i = 0;i < 16;i++ )
+    {
+        writer->writeFloat( clusterMatrix[i] );
+    }
 
-   //writer->writeString( clusterXMLCommands );
- 
-   writer->writeUint64(clusterXMLCommands.length());
- 
-   vpr::BufferObjectWriter* bufwriter =
-      static_cast< vpr::BufferObjectWriter* >( writer );
-   for(unsigned i = 0; i < clusterXMLCommands.length(); ++i)
-   {
-     bufwriter->writeRaw((vpr::Uint8*) &(clusterXMLCommands[i]),1);
-   }
+    //writer->writeString( clusterXMLCommands );
+
+    writer->writeUint64( clusterXMLCommands.length() );
+
+    vpr::BufferObjectWriter* bufwriter =
+        static_cast< vpr::BufferObjectWriter* >( writer );
+    for( unsigned i = 0; i < clusterXMLCommands.length(); ++i )
+    {
+        bufwriter->writeRaw(( vpr::Uint8* ) &( clusterXMLCommands[i] ), 1 );
+    }
 #if __VJ_version <= 2000003
-   return vpr::ReturnStatus::Succeed;
+    return vpr::ReturnStatus::Succeed;
 #elif __VJ_version > 2000003
 #endif
 }
 
 template<>
 #if __VJ_version <= 2000003
-inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject(vpr::ObjectReader* reader)
+inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject( vpr::ObjectReader* reader )
 #elif __VJ_version > 2000003
-inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject(vpr::ObjectReader* reader)
+inline void vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject( vpr::ObjectReader* reader )
 #endif
 {
-    VPR_PROFILE_GUARD_HISTORY("readObject", 20 );
-   clusterIso_value        = reader->readDouble();  
-   clusterSc               = reader->readDouble();  
-   clusterMin              = reader->readDouble();  
-   clusterMax              = reader->readDouble();  
-   clusterId               = reader->readDouble();
-   clusterGeo_state        = reader->readDouble();
-   clusterPostdata_state   = reader->readDouble();
-   clusterPre_state        = reader->readBool();
-   clusterTimesteps        = reader->readDouble();
-   clusterTeacher_state    = reader->readDouble(); 
-   currentFrame            = reader->readUint16(); 
-   clusterTime_since_start = reader->readFloat();
-   clusterFrameNumber      = reader->readUint32();
-   clusterQuatCamIncrement = reader->readFloat();
+    VPR_PROFILE_GUARD_HISTORY( "readObject", 20 );
+    clusterIso_value        = reader->readDouble();
+    clusterSc               = reader->readDouble();
+    clusterMin              = reader->readDouble();
+    clusterMax              = reader->readDouble();
+    clusterId               = reader->readDouble();
+    clusterGeo_state        = reader->readDouble();
+    clusterPostdata_state   = reader->readDouble();
+    clusterPre_state        = reader->readBool();
+    clusterTimesteps        = reader->readDouble();
+    clusterTeacher_state    = reader->readDouble();
+    currentFrame            = reader->readUint16();
+    clusterTime_since_start = reader->readFloat();
+    clusterFrameNumber      = reader->readUint32();
+    clusterQuatCamIncrement = reader->readFloat();
 
-   for(int i=0;i<16;i++){
-      clusterMatrix[i]=reader->readFloat();
-   }
+    for( int i = 0;i < 16;i++ )
+    {
+        clusterMatrix[i] = reader->readFloat();
+    }
 
-   //clusterXMLCommands      = reader->readString(); 
-   vpr::Uint64 str_len = reader->readUint64();
- 
-   vpr::BufferObjectReader* bufreader =
-      static_cast< vpr::BufferObjectReader* >( reader );
-   clusterXMLCommands.clear();
-   char tempChar;
-   for(unsigned i = 0; i < str_len; ++i)
-   {
-     tempChar = (char)(*bufreader->readRaw(1));
-     clusterXMLCommands += tempChar;
-   }
+    //clusterXMLCommands      = reader->readString();
+    vpr::Uint64 str_len = reader->readUint64();
+
+    vpr::BufferObjectReader* bufreader =
+        static_cast< vpr::BufferObjectReader* >( reader );
+    clusterXMLCommands.clear();
+    char tempChar;
+    for( unsigned i = 0; i < str_len; ++i )
+    {
+        tempChar = ( char )( *bufreader->readRaw( 1 ) );
+        clusterXMLCommands += tempChar;
+    }
 #if __VJ_version <= 2000003
-   return vpr::ReturnStatus::Succeed;
+    return vpr::ReturnStatus::Succeed;
 #elif __VJ_version > 2000003
 #endif
 }

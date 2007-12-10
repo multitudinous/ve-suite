@@ -46,8 +46,8 @@
 #include <osg/StateSet>
 namespace osg
 {
-   class StateSet;
-   class Material;
+class StateSet;
+class Material;
 }
 #elif _PERFORMER
 #endif
@@ -59,7 +59,7 @@ namespace xml
 {
 namespace cad
 {
-    class CADMaterial;
+class CADMaterial;
 }
 }
 }
@@ -76,28 +76,29 @@ namespace scenegraph
 {
 namespace util
 {
-class VE_SCENEGRAPH_UTILS_EXPORTS MaterialHelper{
+class VE_SCENEGRAPH_UTILS_EXPORTS MaterialHelper
+{
 public:
-   ///Constructor
-   MaterialHelper();
-   ///Destructor
-   virtual ~MaterialHelper();
+    ///Constructor
+    MaterialHelper();
+    ///Destructor
+    virtual ~MaterialHelper();
 
-   ///Load and create the stateset from the input XML data
-   void LoadMaterial(ves::open::xml::cad::CADMaterial* material);
+    ///Load and create the stateset from the input XML data
+    void LoadMaterial( ves::open::xml::cad::CADMaterial* material );
 #ifdef _OSG
-   ///The state set that we want to load the material into
-   ///\param materialThe state set representing the material.
-   void SetStateSet(osg::StateSet* material);
+    ///The state set that we want to load the material into
+    ///\param materialThe state set representing the material.
+    void SetStateSet( osg::StateSet* material );
 
-   ///Get the created state set representing the shader
-   osg::ref_ptr<osg::StateSet> GetMaterialStateSet();
+    ///Get the created state set representing the shader
+    osg::ref_ptr<osg::StateSet> GetMaterialStateSet();
 #elif _PERFORMER
 #endif
 protected:
 #ifdef _OSG
-   osg::ref_ptr<osg::Material> _material;///<The GLSL program.
-   osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
+    osg::ref_ptr<osg::Material> _material;///<The GLSL program.
+    osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
 #elif _PERFORMER
 #endif
 };

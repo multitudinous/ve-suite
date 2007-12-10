@@ -36,7 +36,7 @@
  * CADPart API
  */
 
-/*!\class VE_XML::VE_CAD::CADPart 
+/*!\class VE_XML::VE_CAD::CADPart
  * Class to represent a part file (the actual CAD geometry)
  */
 #include <xercesc/dom/DOM.hpp>
@@ -54,48 +54,49 @@ namespace xml
 {
 namespace cad
 {
-	class VE_CAD_EXPORTS CADPart: public ves::open::xml::cad::CADNode{
+class VE_CAD_EXPORTS CADPart: public ves::open::xml::cad::CADNode
+{
 public:
-   ///Constructor
-   ///\param name The name of the part
-   CADPart(std::string name=std::string("Part"));
+    ///Constructor
+    ///\param name The name of the part
+    CADPart( std::string name = std::string( "Part" ) );
 
-   ///Destructor
-   virtual ~CADPart();
+    ///Destructor
+    virtual ~CADPart();
 
-   ///\param cadFileName The name of the part
-   ///Set the name of the CAD file this node represents
-   void SetCADFileName(std::string cadFileName);
+    ///\param cadFileName The name of the part
+    ///Set the name of the CAD file this node represents
+    void SetCADFileName( std::string cadFileName );
 
-   ///Set the object from XML data
-   ///\param xmlNode Node to set this object from
-   virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+    ///Set the object from XML data
+    ///\param xmlNode Node to set this object from
+    virtual void SetObjectFromXMLData( DOMNode* xmlNode );
 
-   ///Get the name of the CAD file this node represents
-   std::string GetCADFileName();
+    ///Get the name of the CAD file this node represents
+    std::string GetCADFileName();
 
-   ///Copy constructor
-   //\param rhs The CADPart to copy
-   ///\param clone Create a clone of this node
-   CADPart(const CADPart& rhs, bool clone = false);
+    ///Copy constructor
+    //\param rhs The CADPart to copy
+    ///\param clone Create a clone of this node
+    CADPart( const CADPart& rhs, bool clone = false );
 
-   ///Equal operator
-   CADPart& operator=(const CADPart& rhs);
+    ///Equal operator
+    CADPart& operator=( const CADPart& rhs );
 protected:
-   
 
-   ///Internally update the XML data for this node.
-   ///\param input The XML data for this element.
-   virtual void _updateVEElement(std::string input);
 
-   ///Internally update the XML data for the CAD filename that this part represents.
-   void _updateCADFileName();
-   
-   std::string m_cadFileName; ///<The name of the CAD file on disk
+    ///Internally update the XML data for this node.
+    ///\param input The XML data for this element.
+    virtual void _updateVEElement( std::string input );
+
+    ///Internally update the XML data for the CAD filename that this part represents.
+    void _updateCADFileName();
+
+    std::string m_cadFileName; ///<The name of the CAD file on disk
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADPart* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADPart* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

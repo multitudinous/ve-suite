@@ -36,7 +36,7 @@
 OpacityVisitor API
 */
 /*!\class OpacityVisitor
-* 
+*
 */
 #include <ves/VEConfig.h>
 
@@ -54,14 +54,14 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS OpacityVisitor : public osg::NodeVisitor
 {
 public:
-	OpacityVisitor( osg::Node* osg_node, bool state );
-	virtual ~OpacityVisitor();
+    OpacityVisitor( osg::Node* osg_node, bool state );
+    virtual ~OpacityVisitor();
 
-   virtual void apply( osg::Geode& node );
-   virtual void apply( osg::Group& node );
+    virtual void apply( osg::Geode& node );
+    virtual void apply( osg::Group& node );
 
 private:
-	bool transparent;
+    bool transparent;
 
 };
 }

@@ -35,70 +35,69 @@
 #include <ves/ce/util/Module.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
-Port::Port (int id, Module* m)
-  : _module (m),
-    _id     (id)
+Port::Port( int id, Module* m )
+        : _module( m ),
+        _id( id )
+{}
+////////////////////////////////////////////////////////////////////////////////
+Port::Port( const Port& p )
 {
+    copy( p );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Port::Port (const Port& p)
+Port::~Port()
 {
-  copy(p);
+    /*for ( size_t i = 0; i < _connections.size(); ++i )
+    {
+       delete _connections.at( i );
+    }
+    _connections.clear();*/
+    /*
+       if(_module )
+       {
+          delete _module;
+          _module = 0;
+       }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-Port::~Port ()
+void Port::copy( const Port& p )
 {
-   /*for ( size_t i = 0; i < _connections.size(); ++i )
-   {
-      delete _connections.at( i );
-   }
-   _connections.clear();*/
-/*
-   if ( _module )
-   {
-      delete _module;
-      _module = 0;
-   }*/
-}
-////////////////////////////////////////////////////////////////////////////////
-void Port::copy (const Port& p)
-{
-  if(this==&p) return;
+    if( this == &p ) return;
 
-  _connections = p._connections;
-  _module      = p._module;
-  _id          = p._id;
+    _connections = p._connections;
+    _module      = p._module;
+    _id          = p._id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Port::nconnections ()
+int Port::nconnections()
 {
-  return _connections.size();
+    return _connections.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Connection* Port::connection(int idx)
+Connection* Port::connection( int idx )
 {
-   try
-   {
-      return _connections.at( idx );
-   }
-   catch ( ... )
-   {
-      return NULL;
-   }
+    try
+    {
+        return _connections.at( idx );
+    }
+    catch ( ... )
+    {
+        return NULL;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Port::add_connection( Connection* c )
 {
-   _connections.push_back( c );
+    _connections.push_back( c );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module* Port::get_module()
 {
-  return _module;
+    return _module;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Port::get_id()
 {
-  return _id;
+    return _id;
 }
 

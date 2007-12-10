@@ -49,49 +49,49 @@ namespace xplorer
 cfdAnimatedStreamlineCone API
 */
 /*!\class ves::xplorer::cfdAnimatedStreamlineCone
-* 
+*
 */
 class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
 {
 public:
-   ///Base constructor
-   cfdAnimatedStreamlineCone( void );
-   ///Destructor
-   virtual ~cfdAnimatedStreamlineCone();
+    ///Base constructor
+    cfdAnimatedStreamlineCone( void );
+    ///Destructor
+    virtual ~cfdAnimatedStreamlineCone();
 
-   //void Initialize();
-   //void SetDirection( float [3]);
-   //void SetCenter( float [3]);
-   //void CleanUpSequence( void );
+    //void Initialize();
+    //void SetDirection( float [3]);
+    //void SetCenter( float [3]);
+    //void CleanUpSequence( void );
 
-   ///Set the Polydata Source
-   ///\param polySource
-   void SetPolyDataSource( vtkPolyData * polySource);
+    ///Set the Polydata Source
+    ///\param polySource
+    void SetPolyDataSource( vtkPolyData * polySource );
 
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand();
 
-   ///Update
-   virtual void Update( void );
+    ///Update
+    virtual void Update( void );
 
 private:
-   vtkPolyDataMapper *mapper;///<Mapper for vtk polydata
-   vtkPolyData *polyData;///<polyData
-   vtkPolyData *polydata;///<polydata
-   vtkGlyph3D *glyph;///<glyph
-   vtkSphereSource *sphere;///<sphere source
+    vtkPolyDataMapper *mapper;///<Mapper for vtk polydata
+    vtkPolyData *polyData;///<polyData
+    vtkPolyData *polydata;///<polydata
+    vtkGlyph3D *glyph;///<glyph
+    vtkSphereSource *sphere;///<sphere source
 
-   float particleDiameter;///<Diameter of particle
-   enum STREAM_DIRECTION
-   {
-      FORWARD,
-      BACKWARD,
-      BOTH
-   };
+    float particleDiameter;///<Diameter of particle
+    enum STREAM_DIRECTION
+    {
+        FORWARD,
+        BACKWARD,
+        BOTH
+    };
 
-   STREAM_DIRECTION streamDir;///<Stream direction
-   //int nPts, nStr, iPts;
-   //float ptData[3], direction[3], center[3];   
+    STREAM_DIRECTION streamDir;///<Stream direction
+    //int nPts, nStr, iPts;
+    //float ptData[3], direction[3], center[3];
 };
 }
 }

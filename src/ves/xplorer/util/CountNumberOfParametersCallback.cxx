@@ -41,68 +41,68 @@ using namespace ves::xplorer::util;
 //////////////////////////////////////////////////////////////////
 CountNumberOfParametersCallback::CountNumberOfParametersCallback()
 {
-   m_numberOfParameters[0] = 0;
-   m_numberOfParameters[1] = 0;
+    m_numberOfParameters[0] = 0;
+    m_numberOfParameters[1] = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 CountNumberOfParametersCallback::~CountNumberOfParametersCallback()
 {
-   m_scalarNames.clear();
-   m_vectorNames.clear();
+    m_scalarNames.clear();
+    m_vectorNames.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CountNumberOfParametersCallback::OperateOnDataset(vtkDataSet* dataset)
+void CountNumberOfParametersCallback::OperateOnDataset( vtkDataSet* dataset )
 {
-   unsigned int numPtDataArrays = dataset->GetPointData()
-                                              ->GetNumberOfArrays();
-   std::vector<std::string>::iterator name;
-   // count the number of paraneters containing numComponents components...
-   for ( unsigned int i=0; i < numPtDataArrays; i++ )
-   {
-      vtkDataArray* array = dataset->GetPointData()->GetArray(i);
-      name = std::find(m_scalarNames.begin(),
-                       m_scalarNames.end(),
-                       array->GetName());
-      if(name != m_scalarNames.end())
-      {
-          ///This scalar already exists
-          continue;
-      }
-      name = std::find(m_vectorNames.begin(),
-                           m_vectorNames.end(),
-                           array->GetName());
-      if(name != m_vectorNames.end())
-      {
-          ///This vector already exists
-          continue;
-      }
+    unsigned int numPtDataArrays = dataset->GetPointData()
+                                   ->GetNumberOfArrays();
+    std::vector<std::string>::iterator name;
+    // count the number of paraneters containing numComponents components...
+    for( unsigned int i = 0; i < numPtDataArrays; i++ )
+    {
+        vtkDataArray* array = dataset->GetPointData()->GetArray( i );
+        name = std::find( m_scalarNames.begin(),
+                          m_scalarNames.end(),
+                          array->GetName() );
+        if( name != m_scalarNames.end() )
+        {
+            ///This scalar already exists
+            continue;
+        }
+        name = std::find( m_vectorNames.begin(),
+                          m_vectorNames.end(),
+                          array->GetName() );
+        if( name != m_vectorNames.end() )
+        {
+            ///This vector already exists
+            continue;
+        }
 
-	  // also, ignore arrays of normals...
-      if ( array->GetNumberOfComponents() == 3 && ( ! strcmp( array->GetName(), "normals" ) ) )
-      {
-         continue; 
-      } 
-      else if ( array->GetNumberOfComponents() == 3 )
-	  {
-         m_numberOfParameters[1]++;
-		 m_vectorNames.push_back( std::string( array->GetName() ));
-      }
-      else if ( array->GetNumberOfComponents() == 1 )
-      {
-         m_numberOfParameters[0]++;
-         m_scalarNames.push_back( std::string( array->GetName() ));
-      }
-   }
-   
+        // also, ignore arrays of normals...
+        if( array->GetNumberOfComponents() == 3 && ( ! strcmp( array->GetName(), "normals" ) ) )
+        {
+            continue;
+        }
+        else if( array->GetNumberOfComponents() == 3 )
+        {
+            m_numberOfParameters[1]++;
+            m_vectorNames.push_back( std::string( array->GetName() ) );
+        }
+        else if( array->GetNumberOfComponents() == 1 )
+        {
+            m_numberOfParameters[0]++;
+            m_scalarNames.push_back( std::string( array->GetName() ) );
+        }
+    }
+
 }
-//////////////////////////////////////////////////////////////////////////////////    
-unsigned int CountNumberOfParametersCallback::GetNumberOfParameters(bool isVector)
+//////////////////////////////////////////////////////////////////////////////////
+unsigned int CountNumberOfParametersCallback::GetNumberOfParameters( bool isVector )
 {
-   return (isVector)?m_numberOfParameters[1]:m_numberOfParameters[0];
+    return ( isVector ) ? m_numberOfParameters[1] : m_numberOfParameters[0];
 }
-//////////////////////////////////////////////////////////////////////////////////////////    
-std::vector<std::string> CountNumberOfParametersCallback::GetParameterNames(bool isVector)
+//////////////////////////////////////////////////////////////////////////////////////////
+std::vector<std::string> CountNumberOfParametersCallback::GetParameterNames( bool isVector )
 {
-   return (isVector)?m_vectorNames:m_scalarNames;
+    return ( isVector ) ? m_vectorNames : m_scalarNames;
 }
 

@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class Thread;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<Thread>::type  ThreadPtr;
-   typedef ves::util::SharedPtrDef<Thread>::type ThreadSharedPtr;
-   typedef ves::util::WeakPtrDef<Thread>::type   ThreadWeakPtr;
-   typedef ves::util::ScopedPtrDef<Thread>::type ThreadScopedPtr;
+class Thread;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<Thread>::type  ThreadPtr;
+typedef ves::util::SharedPtrDef<Thread>::type ThreadSharedPtr;
+typedef ves::util::WeakPtrDef<Thread>::type   ThreadWeakPtr;
+typedef ves::util::ScopedPtrDef<Thread>::type ThreadScopedPtr;
 }
 }
 #endif

@@ -43,17 +43,17 @@
 //#ifdef CFD_USE_SHADERS
 namespace osg
 {
-   class Node;
-   class Texture3D;
-   class NodeVisitor;
-   class Viewport;
-   class FrameStamp;
-   //class BoundingBox;
+class Node;
+class Texture3D;
+class NodeVisitor;
+class Viewport;
+class FrameStamp;
+//class BoundingBox;
 }
 namespace osgUtil
 {
-   class CullVisitor;
-   class UpdateVisitor;
+class CullVisitor;
+class UpdateVisitor;
 }
 
 #include <osg/Node>
@@ -65,47 +65,53 @@ namespace xplorer
 {
 namespace volume
 {
-   class cfdPBufferManager;
-   class cfdOSGPingPongTexture3D;
+class cfdPBufferManager;
+class cfdOSGPingPongTexture3D;
 }
 #include <ves/VEConfig.h>
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfd3DTextureCullCallback 
-      : public osg::NodeCallback
-   {
-      public:    
-         cfd3DTextureCullCallback(osg::Node* subgraph,
-                         //osg::Texture3D* texture,
-                         unsigned int width,
-                         unsigned int height);
+class VE_TEXTURE_BASED_EXPORTS cfd3DTextureCullCallback
+            : public osg::NodeCallback
+{
+public:
+    cfd3DTextureCullCallback( osg::Node* subgraph,
+                              //osg::Texture3D* texture,
+                              unsigned int width,
+                              unsigned int height );
 
-         virtual ~cfd3DTextureCullCallback();
-         void SetPBuffer(cfdPBufferManager* pbuffer){_pbuffer = pbuffer;}
-         void SetPingPongTextures(unsigned int tPingUint,
-                               osg::Node* ping,
-                               unsigned int tPongUint, 
-                               osg::Node* pong);
-         virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+    virtual ~cfd3DTextureCullCallback();
+    void SetPBuffer( cfdPBufferManager* pbuffer )
+    {
+        _pbuffer = pbuffer;
+    }
+    void SetPingPongTextures( unsigned int tPingUint,
+                              osg::Node* ping,
+                              unsigned int tPongUint,
+                              osg::Node* pong );
+    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
-         void preRender(osg::Node& node,osgUtil::CullVisitor& cv);
-         cfdOSGPingPongTexture3D* GetPingPonger();
-         osg::Node* subgraph(){return _subgraph.get();}
-        
-      protected:
-         osg::ref_ptr<osg::Node> _subgraph;
-         unsigned int _w;
-         unsigned int _h;
-         unsigned int _count;
-         cfdPBufferManager* _pbuffer;
-         cfdOSGPingPongTexture3D* _pingPonger;  
-         osg::ref_ptr<osg::Texture3D> _textureToUpdate;
-         osg::ref_ptr<osg::Node> _current;
-         osg::ref_ptr<osg::Node> _previous;
-         osg::ref_ptr<osg::StateSet> _localState;
-         osgUtil::UpdateVisitor* _uniformUpdater;
-         osg::ref_ptr<osg::FrameStamp> _fs;
-   };
+    void preRender( osg::Node& node, osgUtil::CullVisitor& cv );
+    cfdOSGPingPongTexture3D* GetPingPonger();
+    osg::Node* subgraph()
+    {
+        return _subgraph.get();
+    }
+
+protected:
+    osg::ref_ptr<osg::Node> _subgraph;
+    unsigned int _w;
+    unsigned int _h;
+    unsigned int _count;
+    cfdPBufferManager* _pbuffer;
+    cfdOSGPingPongTexture3D* _pingPonger;
+    osg::ref_ptr<osg::Texture3D> _textureToUpdate;
+    osg::ref_ptr<osg::Node> _current;
+    osg::ref_ptr<osg::Node> _previous;
+    osg::ref_ptr<osg::StateSet> _localState;
+    osgUtil::UpdateVisitor* _uniformUpdater;
+    osg::ref_ptr<osg::FrameStamp> _fs;
+};
 }
 }
 }

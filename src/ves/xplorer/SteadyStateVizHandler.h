@@ -71,20 +71,20 @@ namespace ves
 namespace xplorer
 {
 
-class cfdPolyData;      
-class cfdIsosurface;    
-class cfdPresetContour; 
-class cfdContours;      
-class cfdMomentum;      
+class cfdPolyData;
+class cfdIsosurface;
+class cfdPresetContour;
+class cfdContours;
+class cfdMomentum;
 class cfdPresetMomentum;
-class cfdMomentums;     
-class cfdVector;        
-class cfdPresetVector;  
-class cfdVectors;       
+class cfdMomentums;
+class cfdVector;
+class cfdPresetVector;
+class cfdVectors;
 class cfdStreamers;
-class cfdPolyData;      
-class cfdImage;         
-class cfdAnimatedImage; 
+class cfdPolyData;
+class cfdImage;
+class cfdAnimatedImage;
 class cfdAnimatedStreamlineCone;
 class cfdContour;
 class cfdObjects;
@@ -94,7 +94,7 @@ class cfdTextOutput;
 
 namespace scenegraph
 {
-   class DCS;
+class DCS;
 }
 
 /*!\file SteadyStateVizHandler.h
@@ -102,7 +102,7 @@ namespace scenegraph
  */
 
 /*!\class ves::xplorer::SteadyStateVizHandler
- * 
+ *
  */
 class VE_XPLORER_EXPORTS SteadyStateVizHandler
 {
@@ -118,7 +118,7 @@ private:
     ~SteadyStateVizHandler();
 
     ///????
-    vprSingletonHeader( SteadyStateVizHandler );   
+    vprSingletonHeader( SteadyStateVizHandler );
 
 public:
     ///Initialize the sshandler claass
@@ -132,7 +132,7 @@ public:
     ///The standard preframe function
     void PreFrameUpdate();
 
-   ///The thread function used to create geodes and actors
+    ///The thread function used to create geodes and actors
 #if __VJ_version > 2000003
     void CreateActorThread();
 #elif __VJ_version == 2000003
@@ -158,7 +158,7 @@ public:
 
     ///Clear all the vis objects from the graphics objects list
     ///right now this must be done in ssvishandler
-    ///because the map is a private member of ssvishandler and this is the 
+    ///because the map is a private member of ssvishandler and this is the
     ///easiest way to handle for the time being
     void ClearVisObjects();
 
@@ -227,7 +227,7 @@ private:
     //for data interagation
     double cur_box[ 6 ];
 
-    //Need to get rid of this bool fix 
+    //Need to get rid of this bool fix
     //bool inter_activeObject;
     //bool chgMod;
     //bool runStreamersThread;

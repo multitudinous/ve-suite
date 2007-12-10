@@ -53,12 +53,12 @@ namespace ves
 {
 namespace xplorer
 {
-    class cfdCursor;
-    class cfdTeacher;
-    class cfdQuatCamHandler;
-    class cfdDisplaySettings;
+class cfdCursor;
+class cfdTeacher;
+class cfdQuatCamHandler;
+class cfdDisplaySettings;
 
-    class DisplayInformation;
+class DisplayInformation;
 }
 }
 
@@ -73,150 +73,150 @@ namespace xplorer
 EnvironmentHandler API
 */
 /*!\class ves::xplorer::EnvironmentHandler
-* 
+*
 */
 class VE_XPLORER_EXPORTS EnvironmentHandler
 {
 private:
-   // Required so that vpr::Singleton can instantiate this class.
-   //friend class vpr::Singleton< EnvironmentHandler >;
-   //EnvironmentHandler(const EnvironmentHandler& o) { ; }
-   //EnvironmentHandler& operator=(const EnvironmentHandler& o) { ; }
+    // Required so that vpr::Singleton can instantiate this class.
+    //friend class vpr::Singleton< EnvironmentHandler >;
+    //EnvironmentHandler(const EnvironmentHandler& o) { ; }
+    //EnvironmentHandler& operator=(const EnvironmentHandler& o) { ; }
 
-   ///Constructor
-   EnvironmentHandler( void );
+    ///Constructor
+    EnvironmentHandler( void );
 
-   ///Destructor
-   ~EnvironmentHandler( void );
-   vprSingletonHeader( EnvironmentHandler );
+    ///Destructor
+    ~EnvironmentHandler( void );
+    vprSingletonHeader( EnvironmentHandler );
 
 public:
-   ///Initialize environment.
-   void Initialize();
+    ///Initialize environment.
+    void Initialize();
 
-   ///Clean up environment.
-   //void CleanUp( void );
+    ///Clean up environment.
+    //void CleanUp( void );
 
-   ///Initialize scene.
-   void InitScene( void );
+    ///Initialize scene.
+    void InitScene( void );
 
-   ///Pre frame update.
-   void PreFrameUpdate( void );
+    ///Pre frame update.
+    void PreFrameUpdate( void );
 
-   ///Late pre-frame update ???
-   void LatePreFrameUpdate( void );
+    ///Late pre-frame update ???
+    void LatePreFrameUpdate( void );
 
-   ///Accessor for cfdCursor
-   cfdCursor* GetCursor( void );
-   ///Accessor for cfdTeacher
-   cfdTeacher* GetTeacher( void );
+    ///Accessor for cfdCursor
+    cfdCursor* GetCursor( void );
+    ///Accessor for cfdTeacher
+    cfdTeacher* GetTeacher( void );
 
-   ///Accessor for cfdQuatCamHandler
-   //cfdQuatCamHandler* GetQuatCamHandler( void );
+    ///Accessor for cfdQuatCamHandler
+    //cfdQuatCamHandler* GetQuatCamHandler( void );
 
-   ///Accessor for cfdDisplaySettings
-   cfdDisplaySettings* GetDisplaySettings( void );
-   ///Accessor to set desktop size information for
-   /// runtime reconfiguration of desktop windows
-   ///\param width The desktop width
-   ///\param height The desktop height
-   void SetDesktopSize( int width, int height );
-   ///Accessor to get desktop size information 
-   ///\param width The desktop width
-   ///\param height The desktop height
-   void GetDesktopSize( int &width, int &height );
-   
-   ///Set the window dimension
-   ///\param width The window width
-   ///\param height The window height
-   void SetWindowDimensions( unsigned int width, unsigned int height );
- 
-   ///Set up the frustum values
-   ///\param _left
-   ///\param _right
-   ///\param _top
-   ///\param _bottom
-   ///\param _near
-   ///\param _far
-   void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
-  
-   ///Get the window width 
-   unsigned int GetWindowWidth( void );
+    ///Accessor for cfdDisplaySettings
+    cfdDisplaySettings* GetDisplaySettings( void );
+    ///Accessor to set desktop size information for
+    /// runtime reconfiguration of desktop windows
+    ///\param width The desktop width
+    ///\param height The desktop height
+    void SetDesktopSize( int width, int height );
+    ///Accessor to get desktop size information
+    ///\param width The desktop width
+    ///\param height The desktop height
+    void GetDesktopSize( int &width, int &height );
 
-   ///Get the window height
-   unsigned int GetWindowHeight( void );
+    ///Set the window dimension
+    ///\param width The window width
+    ///\param height The window height
+    void SetWindowDimensions( unsigned int width, unsigned int height );
 
-   ///Set the frame rate 	
-   void SetFrameRate( float value );
+    ///Set up the frustum values
+    ///\param _left
+    ///\param _right
+    ///\param _top
+    ///\param _bottom
+    ///\param _near
+    ///\param _far
+    void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
 
-   ///Get the frame rate 
-   float GetFrameRate();
+    ///Get the window width
+    unsigned int GetWindowWidth( void );
 
-   ///Post frame update (look this up)
-   void PostFrameUpdate();
-   ///Accessor for DisplayInformation
-   DisplayInformation* GetDisplayInformation( void );
+    ///Get the window height
+    unsigned int GetWindowHeight( void );
 
-   ///Activate geometry picking functionality.
-   void ActivateGeometryPicking( void );
+    ///Set the frame rate
+    void SetFrameRate( float value );
 
-   ///Deactivate geoometry picking functionality.
-   void DeactivateGeometryPicking( void );
+    ///Get the frame rate
+    float GetFrameRate();
 
-   ///Get the seed points drawable
-   ///\return Get the seed points
-   SeedPoints* GetSeedPoints();
+    ///Post frame update (look this up)
+    void PostFrameUpdate();
+    ///Accessor for DisplayInformation
+    DisplayInformation* GetDisplayInformation( void );
 
-   ///Get the seed points drawable
-   ///\return Return the DCS for the seed points
-   ves::xplorer::scenegraph::DCS* GetSeedPointsDCS();
+    ///Activate geometry picking functionality.
+    void ActivateGeometryPicking( void );
 
-   ///Get the ephemeris data
-   ///\param createIfDoesNotExist Force creation of EphemerisModel if it doesn't exist
-   osgEphemeris::EphemerisModel* GetEphemerisModel(bool createIfDoesNotExist=false);
+    ///Deactivate geoometry picking functionality.
+    void DeactivateGeometryPicking( void );
+
+    ///Get the seed points drawable
+    ///\return Get the seed points
+    SeedPoints* GetSeedPoints();
+
+    ///Get the seed points drawable
+    ///\return Return the DCS for the seed points
+    ves::xplorer::scenegraph::DCS* GetSeedPointsDCS();
+
+    ///Get the ephemeris data
+    ///\param createIfDoesNotExist Force creation of EphemerisModel if it doesn't exist
+    osgEphemeris::EphemerisModel* GetEphemerisModel( bool createIfDoesNotExist = false );
 
 private:
-   osg::ref_ptr<ves::xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
-   osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
-   cfdTeacher* _teacher;///<Handle teacher functionality.
-   //cfdSoundHandler* _soundHandler;///<Handle the sound.
-   cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
+    osg::ref_ptr<ves::xplorer::SeedPoints> _seedPoints;///<The seed points for this dataset
+    osg::ref_ptr<ves::xplorer::scenegraph::DCS> _seedPointsDCS;///<The DCS for the seed points
+    cfdTeacher* _teacher;///<Handle teacher functionality.
+    //cfdSoundHandler* _soundHandler;///<Handle the sound.
+    cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
 #ifdef _OSG
-   DisplayInformation* display_information;///<???
+    DisplayInformation* display_information;///<???
 
-   ///Flag for active geometry picking.
-   bool _activeGeomPicking;
+    ///Flag for active geometry picking.
+    bool _activeGeomPicking;
 #endif //_OSG
 
-   cfdCursor* cursor;///<The cursor.
-   std::string _param;///<Store parameters.
+    cfdCursor* cursor;///<The cursor.
+    std::string _param;///<Store parameters.
 
-   // cur_box will eventually be used to define bounding box
-   // for data interagation
-   double cur_box[6];///<???
-   vtkPolyData * arrow;///<???
-   float worldScale[ 3 ];///<World scale.
-   float worldTrans[ 3 ];///<World translation
-   float worldRot[ 3 ];///<World rotation.
+    // cur_box will eventually be used to define bounding box
+    // for data interagation
+    double cur_box[6];///<???
+    vtkPolyData * arrow;///<???
+    float worldScale[ 3 ];///<World scale.
+    float worldTrans[ 3 ];///<World translation
+    float worldRot[ 3 ];///<World rotation.
 
-   ///<The class used to change juggler configuration settings during runtime
-   cfdDisplaySettings* displaySettings;
+    ///<The class used to change juggler configuration settings during runtime
+    cfdDisplaySettings* displaySettings;
 
-   int desktopWidth;///<Desktop width.
-   int desktopHeight;///<Desktop height.
+    int desktopWidth;///<Desktop width.
+    int desktopHeight;///<Desktop height.
 
-   int _windowWidth;///<Window width.
-   int _windowHeight;///<Window height.
+    int _windowWidth;///<Window width.
+    int _windowHeight;///<Window height.
 
-   float _frustumLeft;///<Left frustum.
-   float _frustumRight;///<Right frustum.
-   float _frustumTop;///<Top frustum.
-   float _frustumBottom;///<Bottom frustum.
-   float _frustumNear;///<Near frustum.
-   float _frustumFar;///<Far frustum.
+    float _frustumLeft;///<Left frustum.
+    float _frustumRight;///<Right frustum.
+    float _frustumTop;///<Top frustum.
+    float _frustumBottom;///<Bottom frustum.
+    float _frustumNear;///<Near frustum.
+    float _frustumFar;///<Far frustum.
 
-   float framerate;///<Frame rate.
+    float framerate;///<Frame rate.
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<The event handler for commands.
 
     osg::ref_ptr<osgEphemeris::EphemerisModel> m_ephemerisModel;///<The model containing ephemeris data

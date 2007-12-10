@@ -44,41 +44,38 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler::TextureBasedSetActiveShaderManagerEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler
-::TextureBasedSetActiveShaderManagerEventHandler(const TextureBasedSetActiveShaderManagerEventHandler& ceh)
-{
-}
+::TextureBasedSetActiveShaderManagerEventHandler( const TextureBasedSetActiveShaderManagerEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedSetActiveShaderManagerEventHandler::~TextureBasedSetActiveShaderManagerEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedSetActiveShaderManagerEventHandler& 
-TextureBasedSetActiveShaderManagerEventHandler::operator=(const TextureBasedSetActiveShaderManagerEventHandler& rhs)
+TextureBasedSetActiveShaderManagerEventHandler&
+TextureBasedSetActiveShaderManagerEventHandler::operator=( const TextureBasedSetActiveShaderManagerEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-	  Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr activeSM = command->GetDataValuePair("Active Shader Manager");      
-	  std::string value;
-      activeSM->GetData(value);
-	  ves::xplorer::TextureBasedVizHandler::instance()->SetActiveShaderManager( value );
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid Model!!"<<std::endl;
-      std::cout<<"TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode()"<<std::endl;
-   }
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr activeSM = command->GetDataValuePair( "Active Shader Manager" );
+        std::string value;
+        activeSM->GetData( value );
+        ves::xplorer::TextureBasedVizHandler::instance()->SetActiveShaderManager( value );
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid Model!!" << std::endl;
+        std::cout << "TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode()" << std::endl;
+    }
 }

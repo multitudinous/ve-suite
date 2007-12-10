@@ -56,79 +56,76 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 DataTransformEventHandler::DataTransformEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
-DataTransformEventHandler::DataTransformEventHandler(const DataTransformEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
-{
-   
-}
+DataTransformEventHandler::DataTransformEventHandler( const DataTransformEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 DataTransformEventHandler::~DataTransformEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-DataTransformEventHandler& DataTransformEventHandler::operator=(const DataTransformEventHandler& rhs)
+DataTransformEventHandler& DataTransformEventHandler::operator=( const DataTransformEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::Execute(XMLObject* xmlObject)
+void DataTransformEventHandler::Execute( XMLObject* xmlObject )
 {
     try
     {
         if( _activeModel )
         {
-            Command* command = dynamic_cast<Command*>(xmlObject);
-            DataValuePairWeakPtr datasetName = command->GetDataValuePair("Parameter Block ID");     
-            DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");     
-		    ves::xplorer::scenegraph::DCS* transform = 0;
+            Command* command = dynamic_cast<Command*>( xmlObject );
+            DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Parameter Block ID" );
+            DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
+            ves::xplorer::scenegraph::DCS* transform = 0;
             transform = _activeModel->GetActiveDataSet()->GetDCS();
-      
+
             if( transform )
             {
-                Transform* dataTransform = dynamic_cast<Transform*>(newTransform->GetDataXMLObject());
+                Transform* dataTransform = dynamic_cast<Transform*>( newTransform->GetDataXMLObject() );
                 transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
                 transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
                 transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-		        ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
             }
         }
     }
-    catch(...)
+    catch ( ... )
     {
-        std::cout<<"Error!!!Invalid command passed to DataTransformEH!!"<<std::endl;
+        std::cout << "Error!!!Invalid command passed to DataTransformEH!!" << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void DataTransformEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if ( model )
-      {
-         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to DataTransformEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to DataTransformEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }

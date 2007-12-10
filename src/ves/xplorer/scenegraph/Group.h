@@ -68,14 +68,14 @@ public:
     Group();
 
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    Group( const Group&, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
-   
+    Group( const Group&, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+
     META_Node( ves::xplorer::scenegraph, Group );
 
 protected:
     ///Destructor
     virtual ~Group();
-   
+
 public:
     ///Generic set name function
     ///\param name The name of the node

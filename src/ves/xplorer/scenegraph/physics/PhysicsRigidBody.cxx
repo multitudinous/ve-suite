@@ -52,21 +52,21 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-PhysicsRigidBody::PhysicsRigidBody( osg::Node* node, 
+PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
                                     PhysicsSimulator* physicsSimulator )
-:
-m_storeCollisions( false ),
-m_mass( 1.0 ),
-m_physicsSimulator( physicsSimulator ),
-m_osgToBullet( new osgToBullet( node ) ),
-btRigidBody( btScalar( m_mass ),                         //mass
-             m_vesMotionState = new vesMotionState(),    //motionState
-             0,                                          //collisionShape
-             btVector3( 0.0f, 0.0f, 0.0f ),              //localInertia
-             btScalar( 0.0f ),                           //linearDamping
-             btScalar( 0.0f ),                           //angularDamping
-             btScalar( 0.5f ),                           //friction
-             btScalar( 0.0f ) )                          //restitution
+        :
+        m_storeCollisions( false ),
+        m_mass( 1.0 ),
+        m_physicsSimulator( physicsSimulator ),
+        m_osgToBullet( new osgToBullet( node ) ),
+        btRigidBody( btScalar( m_mass ),                         //mass
+                     m_vesMotionState = new vesMotionState(),    //motionState
+                     0,                                          //collisionShape
+                     btVector3( 0.0f, 0.0f, 0.0f ),              //localInertia
+                     btScalar( 0.0f ),                           //linearDamping
+                     btScalar( 0.0f ),                           //angularDamping
+                     btScalar( 0.5f ),                           //friction
+                     btScalar( 0.0f ) )                          //restitution
 {
     BoundingBoxShape();
 }
@@ -152,12 +152,12 @@ void PhysicsRigidBody::BoundingBoxShape()
     }
 
     m_collisionShape = new btBoxShape(
-        btVector3( ( m_osgToBullet->GetBoundingBox().xMax() -
-                     m_osgToBullet->GetBoundingBox().xMin() ) * 0.5f,
-                   ( m_osgToBullet->GetBoundingBox().yMax() -
-                     m_osgToBullet->GetBoundingBox().yMin() ) * 0.5f,
-                   ( m_osgToBullet->GetBoundingBox().zMax() -
-                     m_osgToBullet->GetBoundingBox().zMin() ) * 0.5f ) );
+                           btVector3(( m_osgToBullet->GetBoundingBox().xMax() -
+                                       m_osgToBullet->GetBoundingBox().xMin() ) * 0.5f,
+                                     ( m_osgToBullet->GetBoundingBox().yMax() -
+                                       m_osgToBullet->GetBoundingBox().yMin() ) * 0.5f,
+                                     ( m_osgToBullet->GetBoundingBox().zMax() -
+                                       m_osgToBullet->GetBoundingBox().zMin() ) * 0.5f ) );
 
     SetMassProps();
 

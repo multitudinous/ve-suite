@@ -37,7 +37,7 @@
 */
 
 /*!\class ves::xplorer::scenegraph::PhysicsConstraint
-* 
+*
 */
 
 /*!\namespace ves::xplorer::scenegraph

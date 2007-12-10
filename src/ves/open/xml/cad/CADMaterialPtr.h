@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_CAD::CADMaterial.  To get the full 
+ * VE_XML::VE_CAD::CADMaterial.  To get the full
  * declaration of VE_XML::VE_CAD::CADMaterial
  * ves/open/xml/cad/CADMaterial.h must be included, too.
  */
@@ -52,9 +52,9 @@ namespace xml
 {
 namespace cad
 {
-   class CADMaterial;
-   /// Typedef for a SmartPtr type for the CADMaterial.
-   typedef Loki::SmartPtrDef<CADMaterial>::type CADMaterialPtr;
+class CADMaterial;
+/// Typedef for a SmartPtr type for the CADMaterial.
+typedef Loki::SmartPtrDef<CADMaterial>::type CADMaterialPtr;
 }
 }
 }

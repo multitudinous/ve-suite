@@ -37,7 +37,7 @@
   Double Array API
   */
 /*!\class VE_XML::TwoDDoubleArray
- *This class basically manages a vector of floats. 
+ *This class basically manages a vector of floats.
  */
 #include <vector>
 
@@ -51,7 +51,7 @@ namespace open
 {
 namespace xml
 {
-   class OneDDoubleArray;
+class OneDDoubleArray;
 }
 }
 }
@@ -65,57 +65,57 @@ namespace xml
 class VE_XML_EXPORTS TwoDDoubleArray : public XMLObject
 {
 public:
-   ///Constructor
-   ///\param nElements The length of the float array.
-   TwoDDoubleArray(unsigned int nElements=3);
-   ///Destructor
-   virtual ~TwoDDoubleArray();
-   ///Copy Constructor
-   TwoDDoubleArray( const TwoDDoubleArray& );
-   ///equal operator
-   TwoDDoubleArray& operator= ( const TwoDDoubleArray& );
+    ///Constructor
+    ///\param nElements The length of the float array.
+    TwoDDoubleArray( unsigned int nElements = 3 );
+    ///Destructor
+    virtual ~TwoDDoubleArray();
+    ///Copy Constructor
+    TwoDDoubleArray( const TwoDDoubleArray& );
+    ///equal operator
+    TwoDDoubleArray& operator= ( const TwoDDoubleArray& );
 
-   ///Add a new element to the end of this array
-   ///\param newValue The new value to add.
-   void AddElementToArray( std::vector< double > newValue);
+    ///Add a new element to the end of this array
+    ///\param newValue The new value to add.
+    void AddElementToArray( std::vector< double > newValue );
 
-   ///Add a new element to the end of this array
-   ///\param newValue The new value to add.
-   void AddElementToArray( OneDDoubleArray* newValue);
+    ///Add a new element to the end of this array
+    ///\param newValue The new value to add.
+    void AddElementToArray( OneDDoubleArray* newValue );
 
-   ///Set this array from an input vector
-   ///\param newArrayValues The new values to set to this array.
-   void SetArray( std::vector< std::vector< double > > newArrayValues);
+    ///Set this array from an input vector
+    ///\param newArrayValues The new values to set to this array.
+    void SetArray( std::vector< std::vector< double > > newArrayValues );
 
-   ///Get a specific element
-   ///\param i The i'th index of the element to return
-   ///\param j The j'th index of the element to return
-   double GetElement(unsigned int i, unsigned int j);
+    ///Get a specific element
+    ///\param i The i'th index of the element to return
+    ///\param j The j'th index of the element to return
+    double GetElement( unsigned int i, unsigned int j );
 
-   ///Get the internal array.
-   std::vector< std::vector< double > > GetArray( void );
-   
-   ///Populate the XMLObject data from an XML element.
-   ///\param inputXML The input data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML ); 
-   
+    ///Get the internal array.
+    std::vector< std::vector< double > > GetArray( void );
+
+    ///Populate the XMLObject data from an XML element.
+    ///\param inputXML The input data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML );
+
 protected:
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName);
-   unsigned int _nElements;///<Length of this float array.
-   std::vector< OneDDoubleArray* > oneDArray;///<Raw data.
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
+    unsigned int _nElements;///<Length of this float array.
+    std::vector< OneDDoubleArray* > oneDArray;///<Raw data.
 
 private:
-   XMLSize_t minIndex;///<Mininum size of the array.
+    XMLSize_t minIndex;///<Mininum size of the array.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, TwoDDoubleArray* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, TwoDDoubleArray* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

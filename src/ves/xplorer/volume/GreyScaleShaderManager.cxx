@@ -51,8 +51,8 @@ using namespace ves::xplorer::volume;
 {
    if(!_tf)
    {
-	  std::cout<<"Transfer function not set!"<<std::endl;
-	  std::cout<<"cfdScalarShaderManager::_updateTransferFunction"<<std::endl;
+   std::cout<<"Transfer function not set!"<<std::endl;
+   std::cout<<"cfdScalarShaderManager::_updateTransferFunction"<<std::endl;
       return;
    }
    if(fastUpdate)
@@ -61,7 +61,7 @@ using namespace ves::xplorer::volume;
    }
    else
    {
-	   _preIntTexture->FullUpdate();
+    _preIntTexture->FullUpdate();
    }
    //This in no different than the regular shader except that
    //the range is between 20->346.48;
@@ -73,16 +73,16 @@ using namespace ves::xplorer::volume;
    GLfloat alpha = 0;
    GLfloat isoVal = 0;
    float invSRange = 0;
-   
+
    //gamma table
    GLubyte gTable[256];
    double gamma = 2.4;
    //double y = 0;
    for (int i=0; i<256; i++)
-   {       
-      double y = (double)(i)/255.0;   
-      y = pow(y, 1.0/gamma);     
-      gTable[i] = (int) floor(255.0 * y + 0.5);  
+   {
+      double y = (double)(i)/255.0;
+      y = pow(y, 1.0/gamma);
+      gTable[i] = (int) floor(255.0 * y + 0.5);
    }
    osg::ref_ptr<osg::Texture2D> tFunc = _transferFunctions.at(0);
    if(tFunc.valid())
@@ -96,7 +96,7 @@ using namespace ves::xplorer::volume;
          return;
       }
    }
-   
+
    origRange = _tm->dataRange(_tm->GetCurrentFrame());
    if((origRange.range[1]-origRange.range[0]) == 0.0)
    {
@@ -127,15 +127,15 @@ using namespace ves::xplorer::volume;
                lutex[i*(256*4) + i*4 + 2] = 0;
                lutex[i*(256*4) + i*4 + 3] = 0;
             }
-	         else if( i > newRange[1])
-	         {
+          else if( i > newRange[1])
+          {
                lutex[i*(256*4) + i*4 ] = 0;//255;
                lutex[i*(256*4) + i*4 + 1] = 0;
                lutex[i*(256*4) + i*4 + 2] = 0;
                lutex[i*(256*4) + i*4 + 3] = 0;
             }
-	        else
-	        {
+         else
+         {
                if(_isoSurface)
                {
                   GLfloat isoRange [2];
@@ -144,14 +144,14 @@ using namespace ves::xplorer::volume;
                   isoRange[1] = isoVal + 4.0;
 
                   if(i >= isoRange[0] && i <= isoRange[1])
-			         {
-                     alpha = (i - newRange[0])*invSRange; 
-			            R = 
-                     G =       
-                     B = 
+            {
+                     alpha = (i - newRange[0])*invSRange;
+               R =
+                     G =
+                     B =
                      A = alpha*255.0f;
                   }
-			         else
+            else
                   {
                      R = 0;
                      G = 0;
@@ -159,49 +159,49 @@ using namespace ves::xplorer::volume;
                      A = 0;
                   }
                }
-		         else
+           else
                {
-                  alpha = (i - newRange[0])*invSRange; 
-			         R = 
-                  G =       
-                  B = 
+                  alpha = (i - newRange[0])*invSRange;
+            R =
+                  G =
+                  B =
                   A = alpha*alpha*255.0f;
                }
                lutex[i*(256*4) + i*4 ]  = (unsigned char)R;
                lutex[i*(256*4) + i*4 + 1] = (unsigned char)G;
                lutex[i*(256*4) + i*4 + 2] = (unsigned char)B;
-               lutex[i*(256*4) + i*4 + 3] = (unsigned char)A; 
+               lutex[i*(256*4) + i*4 + 3] = (unsigned char)A;
             }
          }
       }
    }
    tFunc->dirtyTextureParameters();
    tFunc->dirtyTextureObject();
-   
+
 }*/
 ///////////////////////////////////////////////////////////////////
 void GreyScaleShaderManager::_initTransferFunctions()
 {
-   if(_transferFunctions.empty())
-   {
-      //create transfer functions
-      //_createTransferFunction(); 
-      if(_tf)
-	  {
-		  delete _tf;
-		  _tf = 0;
-	  }
-	  if(_preIntTexture)
-	  {
-		  delete _preIntTexture;
-		  _preIntTexture = 0;
-	  }
-	  _tf = new ves::xplorer::volume::LuminanceTF();
-	  _tf->InitializeData();
-	  _preIntTexture = new ves::xplorer::volume::PreIntegrationTexture2D();
-	  _preIntTexture->SetTransferFunction(_tf);
-	  _preIntTexture->FullUpdate();
-      _transferFunctions.push_back(_preIntTexture->GetPreIntegratedTexture());
-   }
+    if( _transferFunctions.empty() )
+    {
+        //create transfer functions
+        //_createTransferFunction();
+        if( _tf )
+        {
+            delete _tf;
+            _tf = 0;
+        }
+        if( _preIntTexture )
+        {
+            delete _preIntTexture;
+            _preIntTexture = 0;
+        }
+        _tf = new ves::xplorer::volume::LuminanceTF();
+        _tf->InitializeData();
+        _preIntTexture = new ves::xplorer::volume::PreIntegrationTexture2D();
+        _preIntTexture->SetTransferFunction( _tf );
+        _preIntTexture->FullUpdate();
+        _transferFunctions.push_back( _preIntTexture->GetPreIntegratedTexture() );
+    }
 }
 #endif//_OSG

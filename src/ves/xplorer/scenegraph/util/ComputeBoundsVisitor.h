@@ -54,25 +54,34 @@ public:
     ComputeBoundsVisitor( TraversalMode traversalMode = TRAVERSE_ALL_CHILDREN );
 
     virtual void reset();
-    
-    osg::BoundingBox& getBoundingBox() { return _bb; }
+
+    osg::BoundingBox& getBoundingBox()
+    {
+        return _bb;
+    }
 
     void getPolytope( osg::Polytope& polytope, float margin = 0.1 ) const;
-        
+
     void getBase( osg::Polytope& polytope, float margin = 0.1 ) const;
-    
+
     void apply( osg::Node& node );
-    
+
     void apply( osg::Transform& transform );
-    
+
     void apply( osg::Geode& geode );
-    
-    inline void pushMatrix( osg::Matrix& matrix ) { _matrixStack.push_back( matrix ); }
-    
-    inline void popMatrix() { _matrixStack.pop_back(); }
+
+    inline void pushMatrix( osg::Matrix& matrix )
+    {
+        _matrixStack.push_back( matrix );
+    }
+
+    inline void popMatrix()
+    {
+        _matrixStack.pop_back();
+    }
 
     void applyDrawable( osg::Drawable* drawable );
-    
+
 protected:
     typedef std::vector< osg::Matrix > MatrixStack;
 

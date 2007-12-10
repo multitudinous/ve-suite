@@ -47,65 +47,63 @@ using namespace ves::builder::cfdTranslatorToVTK;
 MFIXTranslator::MFIXTranslator()
 {
 
-   SetTranslateCallback( &mfixToVTK );
-   SetPreTranslateCallback( &cmdParser );
+    SetTranslateCallback( &mfixToVTK );
+    SetPreTranslateCallback( &cmdParser );
 }
 /////////////////////////////////////////
 MFIXTranslator::~MFIXTranslator()
-{
-
-}
+{}
 //////////////////////////////////////////////////////////////////////////
-void MFIXTranslator::MFIXPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               cfdTranslatorToVTK* toVTK)
+void MFIXTranslator::MFIXPreTranslateCbk::Preprocess( int argc, char** argv,
+                                                      cfdTranslatorToVTK* toVTK )
 {
-   PreTranslateCallback::Preprocess( argc, argv, toVTK );
+    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
-		                                     cfdTranslatorToVTK* toVTK )
+                                                  cfdTranslatorToVTK* toVTK )
 {
-   MFIXTranslator* MFIXToVTK =
-              dynamic_cast< MFIXTranslator* >( toVTK );
-   if ( MFIXToVTK )
-   {
-	   vtkMFIXReader *reader = vtkMFIXReader::New();
-	   reader->SetFileName( MFIXToVTK->GetFile(0).c_str() );
-	   reader->Update();
-	   int TimeStepRange[2]; 
-	   reader->GetTimeStepRange( TimeStepRange );
-	   reader->SetTimeStep( TimeStepRange[0] );
+    MFIXTranslator* MFIXToVTK =
+        dynamic_cast< MFIXTranslator* >( toVTK );
+    if( MFIXToVTK )
+    {
+        vtkMFIXReader *reader = vtkMFIXReader::New();
+        reader->SetFileName( MFIXToVTK->GetFile( 0 ).c_str() );
+        reader->Update();
+        int TimeStepRange[2];
+        reader->GetTimeStepRange( TimeStepRange );
+        reader->SetTimeStep( TimeStepRange[0] );
 
-      if ( !outputDataset )
-      {
-         outputDataset = vtkUnstructuredGrid::New();
-      }
-      vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-      tmpDSet->DeepCopy( reader->GetOutput() );
+        if( !outputDataset )
+        {
+            outputDataset = vtkUnstructuredGrid::New();
+        }
+        vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+        tmpDSet->DeepCopy( reader->GetOutput() );
 
-      //get the info about the data in the data set
-      if ( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
-      {
-         vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-         dataConvertCellToPoint->SetInput(tmpDSet);
-         dataConvertCellToPoint->PassCellDataOff();
-         dataConvertCellToPoint->Update();
-         outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-         dataConvertCellToPoint->Delete();
-      }
-      else
-      {
-         outputDataset->DeepCopy(tmpDSet);
-      }
-      outputDataset->Update();
-      reader->Delete();
-      tmpDSet->Delete();
-   }
+        //get the info about the data in the data set
+        if( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+        {
+            vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();
+            dataConvertCellToPoint->SetInput( tmpDSet );
+            dataConvertCellToPoint->PassCellDataOff();
+            dataConvertCellToPoint->Update();
+            outputDataset->DeepCopy( dataConvertCellToPoint->GetOutput() );
+            dataConvertCellToPoint->Delete();
+        }
+        else
+        {
+            outputDataset->DeepCopy( tmpDSet );
+        }
+        outputDataset->Update();
+        reader->Delete();
+        tmpDSet->Delete();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::DisplayHelp( void )
 {
-   std::cout << "|MFIX Translator Usage:" << std::endl
-               << "\t -singleFile <filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader mfix -w file" << std::endl;
+    std::cout << "|MFIX Translator Usage:" << std::endl
+    << "\t -singleFile <filename_to_load> -o <output_dir> "
+    << "-outFileName <output_filename> -loader mfix -w file" << std::endl;
 }

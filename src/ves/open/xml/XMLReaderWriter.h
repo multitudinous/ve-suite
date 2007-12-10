@@ -50,8 +50,8 @@ namespace open
 {
 namespace xml
 {
-    class XMLObject;
-    class DOMDocumentManager;
+class XMLObject;
+class DOMDocumentManager;
 }
 }
 }
@@ -74,80 +74,80 @@ namespace xml
 class VE_XML_EXPORTS XMLReaderWriter
 {
 public:
-   ///Default Constructor
-   XMLReaderWriter();
-   
-   ///Destructor
-   virtual ~XMLReaderWriter();
+    ///Default Constructor
+    XMLReaderWriter();
 
-   ///Read an input XML string or file.
-   ///\param xmlData The input XML string or file.
-   ///\param objectNamespace The namespace of the object to extract.
-   ///\param tagName The tagname of the element to extract.
-   virtual void ReadXMLData( std::string xmlData,
-                             std::string objectNamespace,
-                             std::string tagName );
+    ///Destructor
+    virtual ~XMLReaderWriter();
 
-   ///Get all the element types in the document passed in
-   ///based on user input
-   ///\param xmlData The input XML string or file.
-   ///\param elementTypes Vector of pairs of data types requested.
-   virtual void ReadXMLData( std::string xmlData,
-            std::vector< std::pair< std::string, std::string > > elementTypes );
-                                     
-   ///Write the current XML document
-   ///\param xmlFile The XML document to write to.
-   ///\param nodes The XML node to write. If writing to string set this to "returnString" and it
-   ///will be populated w/ the return string.
-   ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
-   virtual void WriteXMLDocument( std::vector< std::pair< XMLObject*, std::string > > nodes,
-                                  std::string& xmlFile,
-                                  std::string documentType );
+    ///Read an input XML string or file.
+    ///\param xmlData The input XML string or file.
+    ///\param objectNamespace The namespace of the object to extract.
+    ///\param tagName The tagname of the element to extract.
+    virtual void ReadXMLData( std::string xmlData,
+                              std::string objectNamespace,
+                              std::string tagName );
 
-   ///Write the current XML document out to multiple documents
-   ///This will allow future extension to parallel reading of domcouments
-   ///as well as provide support for web based extensions
-   ///Note that this method only works for writing to disk no to memory
-   ///\param xmlFile The base XML document to write to.
-   ///\param nodes The XML node to write. 
-   void WriteMultipleXMLDocuments( std::vector< std::pair< XMLObject*, std::string > > nodes,
-                                                    std::string& xmlData );
-   ///Set the Active DOMDocumentManager
-   void SetDOMDocumentManager( DOMDocumentManager* ddManager);
+    ///Get all the element types in the document passed in
+    ///based on user input
+    ///\param xmlData The input XML string or file.
+    ///\param elementTypes Vector of pairs of data types requested.
+    virtual void ReadXMLData( std::string xmlData,
+                              std::vector< std::pair< std::string, std::string > > elementTypes );
 
-   ///Turn on a stand alone DOMDocumentManager.
-   void UseStandaloneDOMDocumentManager();
+    ///Write the current XML document
+    ///\param xmlFile The XML document to write to.
+    ///\param nodes The XML node to write. If writing to string set this to "returnString" and it
+    ///will be populated w/ the return string.
+    ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
+    virtual void WriteXMLDocument( std::vector< std::pair< XMLObject*, std::string > > nodes,
+                                   std::string& xmlFile,
+                                   std::string documentType );
 
-   ///Work around for the conflict when exposing the DOMDocumentManager
-   void ReadFromFile();
+    ///Write the current XML document out to multiple documents
+    ///This will allow future extension to parallel reading of domcouments
+    ///as well as provide support for web based extensions
+    ///Note that this method only works for writing to disk no to memory
+    ///\param xmlFile The base XML document to write to.
+    ///\param nodes The XML node to write.
+    void WriteMultipleXMLDocuments( std::vector< std::pair< XMLObject*, std::string > > nodes,
+                                    std::string& xmlData );
+    ///Set the Active DOMDocumentManager
+    void SetDOMDocumentManager( DOMDocumentManager* ddManager );
 
-   ///Work around for the conflict when exposing the DOMDocumentManager
-   void ReadFromString();
+    ///Turn on a stand alone DOMDocumentManager.
+    void UseStandaloneDOMDocumentManager();
 
-   ///Work around for the conflict when exposing the DOMDocumentManager
-   //void WriteToFile();
+    ///Work around for the conflict when exposing the DOMDocumentManager
+    void ReadFromFile();
 
-   ///Work around for the conflict when exposing the DOMDocumentManager
-   //void WriteToString();
-   
-   ///Get the active DOMDocumentManager.  
-   DOMDocumentManager* GetDOMDocumentManager();
+    ///Work around for the conflict when exposing the DOMDocumentManager
+    void ReadFromString();
 
-   ///Return the loaded XMLObject s.
-   std::vector<XMLObject*> GetLoadedXMLObjects();
+    ///Work around for the conflict when exposing the DOMDocumentManager
+    //void WriteToFile();
+
+    ///Work around for the conflict when exposing the DOMDocumentManager
+    //void WriteToString();
+
+    ///Get the active DOMDocumentManager.
+    DOMDocumentManager* GetDOMDocumentManager();
+
+    ///Return the loaded XMLObject s.
+    std::vector<XMLObject*> GetLoadedXMLObjects();
 
 protected:
 
-   bool _standAloneDDM;///<Tells Reader whether it is using it's on DDM or one was passed in.
+    bool _standAloneDDM;///<Tells Reader whether it is using it's on DDM or one was passed in.
 
-   ///Internal function to populate the appropriate structures from the file
-   ///read in.
-   ///\param rootDocument The document representing the input XML structure.
-   ///\param objectNamespace The namespace the object to populate belongs to.
-   ///\param tagName The tag name of the object to populate.
-   virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
-                                                std::string objectNamespace,
-                                                std::string tagName );
+    ///Internal function to populate the appropriate structures from the file
+    ///read in.
+    ///\param rootDocument The document representing the input XML structure.
+    ///\param objectNamespace The namespace the object to populate belongs to.
+    ///\param tagName The tag name of the object to populate.
+    virtual void _populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
+                                                 std::string objectNamespace,
+                                                 std::string tagName );
 
     ///The XMLObjects read in from a document file.
     std::vector<XMLObject*> m_internalXmlObjects;

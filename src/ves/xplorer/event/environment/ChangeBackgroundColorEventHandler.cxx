@@ -57,46 +57,42 @@ using namespace ves::open::xml;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler()
-:ves::xplorer::event::EventHandler()
-{
-}
+        : ves::xplorer::event::EventHandler()
+{}
 ////////////////////////////////////////////////////////////
-ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler(const ChangeBackgroundColorEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
-{
-}
+ChangeBackgroundColorEventHandler::ChangeBackgroundColorEventHandler( const ChangeBackgroundColorEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
+{}
 ////////////////////////////////////
 ///Destructor                     //
 ////////////////////////////////////
 ChangeBackgroundColorEventHandler::~ChangeBackgroundColorEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////
 void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////
 ///Exectute the event                                                        //
 ///////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::Execute(XMLObject* veXMLObject)
+void ChangeBackgroundColorEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command = dynamic_cast< Command* >( veXMLObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
-   std::vector<double> color;
-   activeModelDVP->GetData( color );
-   if(!color.empty())
-   {
-      ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor(color);
-      ves::xplorer::EnvironmentHandler::instance()->
-       GetDisplayInformation()->SetTextColor( color );
-   }
+    Command* command = dynamic_cast< Command* >( veXMLObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
+    std::vector<double> color;
+    activeModelDVP->GetData( color );
+    if( !color.empty() )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
+        ves::xplorer::EnvironmentHandler::instance()->
+        GetDisplayInformation()->SetTextColor( color );
+    }
 }
 ///////////////////////////////////////////////////////////////////////
-ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=(const ChangeBackgroundColorEventHandler& rhs)
+ChangeBackgroundColorEventHandler& ChangeBackgroundColorEventHandler::operator=( const ChangeBackgroundColorEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }

@@ -43,178 +43,181 @@
 
 namespace VE_CE
 {
-   class EventHandler;
+class EventHandler;
 }
 
 ///??
 class  VE_CE_UNIT_WRAPPER_EXPORTS UnitWrapper : public virtual POA_Body::Unit
 {
 public:
-   ///Constructor 
-   UnitWrapper( Body::Executive_ptr exec, std::string name );
-   ///Default constructor
-   UnitWrapper(){;}
-   ///Destructor 
-   virtual ~UnitWrapper( void );
+    ///Constructor
+    UnitWrapper( Body::Executive_ptr exec, std::string name );
+    ///Default constructor
+    UnitWrapper()
+    {
+        ;
+    }
+    ///Destructor
+    virtual ~UnitWrapper( void );
 
 protected:
-   Body::Executive_var executive_;
-   unsigned int return_state;
-   ///??
-   std::string UnitName_;
-   //::Types::ArrayLong_var id_;
-   ///??
-   CORBA::Long activeId;
-   ///??
-   std::string status_;
-   ///??
-   std::string data_;
-   ///??
-   std::map< std::string, ves::open::xml::model::Model* > xmlModelMap;
-   ///??
-   std::map< std::string, std::vector< ves::open::xml::XMLObject* > > inputsMap;
-   ///??
-   std::map< std::string, std::vector< ves::open::xml::XMLObject* > > resultsMap;
-   ///??
-   std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;
-   
+    Body::Executive_var executive_;
+    unsigned int return_state;
+    ///??
+    std::string UnitName_;
+    //::Types::ArrayLong_var id_;
+    ///??
+    CORBA::Long activeId;
+    ///??
+    std::string status_;
+    ///??
+    std::string data_;
+    ///??
+    std::map< std::string, ves::open::xml::model::Model* > xmlModelMap;
+    ///??
+    std::map< std::string, std::vector< ves::open::xml::XMLObject* > > inputsMap;
+    ///??
+    std::map< std::string, std::vector< ves::open::xml::XMLObject* > > resultsMap;
+    ///??
+    std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;
+
 public:
 
-   virtual
-   void StartCalc (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    virtual
+    void StartCalc(
 
-   virtual
-   void StopCalc (
-      
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-   void PauseCalc (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-   void Resume (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-   char * GetStatusMessage (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-   char * GetUserData (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-   void SetParams (
-                   ::CORBA::Long module_id,
-      const char * param
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-   void SetID (
-      ::CORBA::Long id
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-      void SetCurID (
-                     ::CORBA::Long id
-                     )
-      ACE_THROW_SPEC ((
+    ACE_THROW_SPEC((
                        ::CORBA::SystemException,
                        ::Error::EUnknown
-                       ));
-  
-   virtual
-      ::Types::ArrayLong * GetID (
-                                  
-                                  )
-      ACE_THROW_SPEC ((
+                   ) );
+
+    virtual
+    void StopCalc(
+
+    )
+    ACE_THROW_SPEC((
                        ::CORBA::SystemException,
                        ::Error::EUnknown
-                       ));
+                   ) );
 
-   virtual
-      ::CORBA::Long GetCurID (
-                              
-                              )
-      ACE_THROW_SPEC ((
+    virtual
+    void PauseCalc(
+
+    )
+    ACE_THROW_SPEC((
                        ::CORBA::SystemException,
                        ::Error::EUnknown
- 
-                  ));
-   virtual
-   void SetName (
-      const char * name
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+                   ) );
 
-   virtual
-   char * GetName (
-      
-    )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    virtual
+    void Resume(
 
-   virtual
-   char * Query ( const char * command
-      
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
-
-   virtual
-      void DeleteModuleInstance (
-                                 ::CORBA::Long module_id
-                                 )
-      ACE_THROW_SPEC ((
+    ACE_THROW_SPEC((
                        ::CORBA::SystemException,
                        ::Error::EUnknown
-                       ));
+                   ) );
+
+    virtual
+    char * GetStatusMessage(
+
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    char * GetUserData(
+
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    void SetParams(
+        ::CORBA::Long module_id,
+        const char * param
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    void SetID(
+        ::CORBA::Long id
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    void SetCurID(
+        ::CORBA::Long id
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    ::Types::ArrayLong * GetID(
+
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    ::CORBA::Long GetCurID(
+
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+
+                   ) );
+    virtual
+    void SetName(
+        const char * name
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    char * GetName(
+
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    char * Query( const char * command
+
+                )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
+
+    virtual
+    void DeleteModuleInstance(
+        ::CORBA::Long module_id
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
 };
 
 

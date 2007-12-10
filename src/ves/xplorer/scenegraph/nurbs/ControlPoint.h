@@ -64,232 +64,232 @@ namespace nurbs
 class VE_NURBS_EXPORTS Point
 {
 public:
-   ///Constructor
-   Point();
-   ///Constructor
-   ///\param x First directional coordinate
-   ///\param y Second directional coordinate
-   ///\param z Third directional coordinate
-   Point(double x,double y, double z);
+    ///Constructor
+    Point();
+    ///Constructor
+    ///\param x First directional coordinate
+    ///\param y Second directional coordinate
+    ///\param z Third directional coordinate
+    Point( double x, double y, double z );
 
-   ///Copy constructor
-   ///\param rhs The point to copy this one from. 
-   Point(const Point& rhs);
+    ///Copy constructor
+    ///\param rhs The point to copy this one from.
+    Point( const Point& rhs );
 
-   ///Destructor
-   virtual ~Point();
+    ///Destructor
+    virtual ~Point();
 
-   ///Equal operator.
-   ///\param rhs The point to set this one to. 
-   virtual Point& operator=(const Point& rhs);
+    ///Equal operator.
+    ///\param rhs The point to set this one to.
+    virtual Point& operator=( const Point& rhs );
 
-   ///Translate the point by a delta
-   ///\param dx Change to point's x-position.
-   ///\param dy Change to point's y-position.
-   ///\param dz Change to point's z-position.
-   void Translate(double dx, double dy, double dz);
+    ///Translate the point by a delta
+    ///\param dx Change to point's x-position.
+    ///\param dy Change to point's y-position.
+    ///\param dz Change to point's z-position.
+    void Translate( double dx, double dy, double dz );
 
-   ///Set the point coordinates
-   ///\param pt The new point values
-   void SetCoordinates(double* pt);
+    ///Set the point coordinates
+    ///\param pt The new point values
+    void SetCoordinates( double* pt );
 
-   ///Set the x value.
-   ///\param x The new value.
-   void SetX(double x);
+    ///Set the x value.
+    ///\param x The new value.
+    void SetX( double x );
 
-   ///Set the y value.
-   ///\param y The new value.
-   void SetY(double y);
+    ///Set the y value.
+    ///\param y The new value.
+    void SetY( double y );
 
-   ///Set the z value.
-   ///\param z The new value.
-   void SetZ(double z);
+    ///Set the z value.
+    ///\param z The new value.
+    void SetZ( double z );
 
-   ///Set the (Row,Column) position of this control point in the mesh
-   ///\param row Control point's new row.
-   ///\param col Control point's new column.
-   void SetRowColumnIndex(unsigned int row, unsigned int col);
+    ///Set the (Row,Column) position of this control point in the mesh
+    ///\param row Control point's new row.
+    ///\param col Control point's new column.
+    void SetRowColumnIndex( unsigned int row, unsigned int col );
 
-   ///Set the selection status of this point
-   ///\param trueFalse true == selected\n false == not selected 
-   void SetSelected(bool trueFalse=true);
+    ///Set the selection status of this point
+    ///\param trueFalse true == selected\n false == not selected
+    void SetSelected( bool trueFalse = true );
 
-   ///Get the value of the first directional coordinate.
-   double X();
+    ///Get the value of the first directional coordinate.
+    double X();
 
-   ///Get the value of the second directional coordinate.
-   double Y();
+    ///Get the value of the second directional coordinate.
+    double Y();
 
-   ///Get the value of the third directional coordinate.
-   double Z();
+    ///Get the value of the third directional coordinate.
+    double Z();
 
-   ///Get the u Index of this control point in the overall mesh
-   unsigned int GetRowIndex();
-   
-   ///Get the v Index of this control point in the overall mesh
-   unsigned int GetColumnIndex();
-   
-   ///Query selection status
-   bool IsSelected();
+    ///Get the u Index of this control point in the overall mesh
+    unsigned int GetRowIndex();
 
-   ///Dot product.
-   ///\param rhs ???
-   inline double operator*(const Point& rhs) const
-   {
-      return _x*rhs._x + _y*rhs._x + _z*rhs._z;
-   }
+    ///Get the v Index of this control point in the overall mesh
+    unsigned int GetColumnIndex();
 
-   ///Cross product. 
-   ///\param rhs ???
-   inline const Point operator ^ (const Point& rhs) const
-   {
-      return Point(_y*rhs._z - _z*rhs._y,
-                   _z*rhs._x - _x*rhs._z,
-                   _x*rhs._y - _y*rhs._x);
-   }
-   ///Override ostream operator.
-   ///\param os ???
-   ///\param fpd ???
-   inline friend std::ostream& operator<<(std::ostream& os,
-                                          const Point& fpd)
-   {
-      os<<fpd._x<<" "<<fpd._y<<" "<<fpd._z<<" ";
-      return os;
-   }
+    ///Query selection status
+    bool IsSelected();
 
-   ///Override ">" operator.
-   ///\param lhs ???
-   ///\param rhs ???
-   friend bool operator>(const Point& lhs,const Point& rhs)
-   {
-      if(lhs._x > rhs._x ||
-         lhs._y > rhs._y ||
-         lhs._z > rhs._z  )
-      {
-         return true;
-      }
-      return false;
-   };
-   ///Addition operator
-   ///\param lhs ???
-   Point operator+(const Point& lhs)
-   {
-      Point newPoint(lhs._x + _x,
-                   lhs._y + _y,
-                   lhs._z + _z);
-      
-      return newPoint;
+    ///Dot product.
+    ///\param rhs ???
+    inline double operator*( const Point& rhs ) const
+    {
+        return _x*rhs._x + _y*rhs._x + _z*rhs._z;
+    }
 
-   };
+    ///Cross product.
+    ///\param rhs ???
+    inline const Point operator ^( const Point& rhs ) const
+    {
+        return Point( _y*rhs._z - _z*rhs._y,
+                      _z*rhs._x - _x*rhs._z,
+                      _x*rhs._y - _y*rhs._x );
+    }
+    ///Override ostream operator.
+    ///\param os ???
+    ///\param fpd ???
+    inline friend std::ostream& operator<<( std::ostream& os,
+                                            const Point& fpd )
+    {
+        os << fpd._x << " " << fpd._y << " " << fpd._z << " ";
+        return os;
+    }
 
-   ///Multiplication with a scalar operator.
-   Point operator*(const double& lhs)
-   {
-      Point newPoint(lhs*_x,
-                   lhs*_y,
-                   lhs*_z);
-      
-      return newPoint;
+    ///Override ">" operator.
+    ///\param lhs ???
+    ///\param rhs ???
+    friend bool operator>( const Point& lhs, const Point& rhs )
+    {
+        if( lhs._x > rhs._x ||
+                lhs._y > rhs._y ||
+                lhs._z > rhs._z )
+        {
+            return true;
+        }
+        return false;
+    };
+    ///Addition operator
+    ///\param lhs ???
+    Point operator+( const Point& lhs )
+    {
+        Point newPoint( lhs._x + _x,
+                        lhs._y + _y,
+                        lhs._z + _z );
 
-   };
+        return newPoint;
+
+    };
+
+    ///Multiplication with a scalar operator.
+    Point operator*( const double& lhs )
+    {
+        Point newPoint( lhs*_x,
+                        lhs*_y,
+                        lhs*_z );
+
+        return newPoint;
+
+    };
 
 protected:
-   bool _isSelected;///<Selection status
-   double _x;///<The raw coordianate data
-   double _y;///<The raw coordianate data
-   double _z;///<The raw coordianate data
+    bool _isSelected;///<Selection status
+    double _x;///<The raw coordianate data
+    double _y;///<The raw coordianate data
+    double _z;///<The raw coordianate data
 
-   unsigned int _row;///<The row of this control point in the overall mesh
-   unsigned int _column;///<The column of this control point in the overall mesh
+    unsigned int _row;///<The row of this control point in the overall mesh
+    unsigned int _column;///<The column of this control point in the overall mesh
 };
 
 ///???
 class VE_NURBS_EXPORTS ControlPoint : public ves::xplorer::scenegraph::nurbs::Point
 {
 public:
-   ///Constructor
-   ControlPoint();
-   ///Constructor
-   ///\param x First directional coordinate
-   ///\param y Second directional coordinate
-   ///\param z Third directional coordinate
-   ///\param w Weight of the control point.
-   ControlPoint(double x, double y, double z, double w = 1.0);
+    ///Constructor
+    ControlPoint();
+    ///Constructor
+    ///\param x First directional coordinate
+    ///\param y Second directional coordinate
+    ///\param z Third directional coordinate
+    ///\param w Weight of the control point.
+    ControlPoint( double x, double y, double z, double w = 1.0 );
 
-   ///Copy constructor
-   ControlPoint(const ControlPoint& rhs);
+    ///Copy constructor
+    ControlPoint( const ControlPoint& rhs );
 
-   ///Destructor
-   virtual ~ControlPoint();
+    ///Destructor
+    virtual ~ControlPoint();
 
-   ///Equal operator
-   ///\param rhs The point to set this one to. 
-   virtual ControlPoint& operator=(const ControlPoint& rhs);
+    ///Equal operator
+    ///\param rhs The point to set this one to.
+    virtual ControlPoint& operator=( const ControlPoint& rhs );
 
-   ///Set the weight of this control point.
-   ///\param weight The weight of this control point
-   void SetWeight(double weight);
+    ///Set the weight of this control point.
+    ///\param weight The weight of this control point
+    void SetWeight( double weight );
 
-   ///Set the translation values to be performed in eye space.
-   ///\param deltaPt The translation in eye space
-   void SetEyeSpaceTranslation(double* deltaPt);
+    ///Set the translation values to be performed in eye space.
+    ///\param deltaPt The translation in eye space
+    void SetEyeSpaceTranslation( double* deltaPt );
 
-   ///Get the eye space translation.
-   double* GetEyeSpaceTranslation();
+    ///Get the eye space translation.
+    double* GetEyeSpaceTranslation();
 
-   ///Get the weight of this point.
-   double Weight();
+    ///Get the weight of this point.
+    double Weight();
 
-   ///Weighted component X
-   double WeightedX();
-   ///Weighted component Y
-   double WeightedY();
-   ///Weighted component Z
-   double WeightedZ();
-   ///Returns P*weight
-   ves::xplorer::scenegraph::nurbs::ControlPoint GetWeightedPoint();
+    ///Weighted component X
+    double WeightedX();
+    ///Weighted component Y
+    double WeightedY();
+    ///Weighted component Z
+    double WeightedZ();
+    ///Returns P*weight
+    ves::xplorer::scenegraph::nurbs::ControlPoint GetWeightedPoint();
 
-   ///Dot product
-   inline double operator*(const ControlPoint& rhs) const
-   {
-      return _x*rhs._x + _y*rhs._x + _z*rhs._z;
-   }
+    ///Dot product
+    inline double operator*( const ControlPoint& rhs ) const
+    {
+        return _x*rhs._x + _y*rhs._x + _z*rhs._z;
+    }
 
-   ///Cross product. 
-   inline const ControlPoint operator ^ (const ControlPoint& rhs) const
-   {
-      return ControlPoint(_y*rhs._z - _z*rhs._y,
-                   _z*rhs._x - _x*rhs._z,
-                   _x*rhs._y - _y*rhs._x);
-   }
-   ///override "<<"operator
-   inline friend std::ostream& operator<<(std::ostream& os,
-                                          const ControlPoint& fpd)
-   {
-      os<<fpd._x<<" "<<fpd._y<<" "<<fpd._z<<" "<<fpd._weight<<" ";
-      return os;
-   }
-   ///override "<<"operator
-   inline friend std::ostream& operator<<(std::ostream& os,
-                                          const ControlPoint* fpd)
-   {
-      os<<fpd->_x<<" "<<fpd->_y<<" "<<fpd->_z<<" "<<fpd->_weight<<" ";
-      return os;
-   }
+    ///Cross product.
+    inline const ControlPoint operator ^( const ControlPoint& rhs ) const
+    {
+        return ControlPoint( _y*rhs._z - _z*rhs._y,
+                             _z*rhs._x - _x*rhs._z,
+                             _x*rhs._y - _y*rhs._x );
+    }
+    ///override "<<"operator
+    inline friend std::ostream& operator<<( std::ostream& os,
+                                            const ControlPoint& fpd )
+    {
+        os << fpd._x << " " << fpd._y << " " << fpd._z << " " << fpd._weight << " ";
+        return os;
+    }
+    ///override "<<"operator
+    inline friend std::ostream& operator<<( std::ostream& os,
+                                            const ControlPoint* fpd )
+    {
+        os << fpd->_x << " " << fpd->_y << " " << fpd->_z << " " << fpd->_weight << " ";
+        return os;
+    }
 
-   ///Addition with a ControlPoint.
-   ControlPoint operator+(const ControlPoint& lhs);
+    ///Addition with a ControlPoint.
+    ControlPoint operator+( const ControlPoint& lhs );
 
-   ///Multiplication with a scalar.
-   ControlPoint operator*(const double& lhs);
-   
+    ///Multiplication with a scalar.
+    ControlPoint operator*( const double& lhs );
+
 protected:
-   double _eyeSpaceTranslation[3];///<Eye space translation
-   double _xW;///<Weighted x-coord
-   double _yW;///<Weighted y-coord
-   double _zW;///<Weighted z-coord
+    double _eyeSpaceTranslation[3];///<Eye space translation
+    double _xW;///<Weighted x-coord
+    double _yW;///<Weighted y-coord
+    double _zW;///<Weighted z-coord
 
-   double _weight;///<The weight for this coordinate.
+    double _weight;///<The weight for this coordinate.
 
 };
 }

@@ -39,16 +39,19 @@ namespace VE_CE
 namespace Utilities
 {
 ///Input port class
-class VE_CE_UTILS_EXPORTS IPort : public Port 
+class VE_CE_UTILS_EXPORTS IPort : public Port
 {
 public:
-   IPort( int, Module* );
-   IPort( const IPort& );
-   virtual ~IPort();
+    IPort( int, Module* );
+    IPort( const IPort& );
+    virtual ~IPort();
 
-   void copy( const IPort& );
+    void copy( const IPort& );
 
-   int clear_data(){ return 1; };
+    int clear_data()
+    {
+        return 1;
+    };
 };
 }
 }

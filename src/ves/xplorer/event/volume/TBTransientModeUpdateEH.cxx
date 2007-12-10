@@ -47,56 +47,53 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler::TextureBasedTransientModeUpdateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler
-::TextureBasedTransientModeUpdateEventHandler(const TextureBasedTransientModeUpdateEventHandler& ceh)
-{
-}
+::TextureBasedTransientModeUpdateEventHandler( const TextureBasedTransientModeUpdateEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedTransientModeUpdateEventHandler::~TextureBasedTransientModeUpdateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedTransientModeUpdateEventHandler& 
-TextureBasedTransientModeUpdateEventHandler::operator=(const TextureBasedTransientModeUpdateEventHandler& rhs)
+TextureBasedTransientModeUpdateEventHandler&
+TextureBasedTransientModeUpdateEventHandler::operator=( const TextureBasedTransientModeUpdateEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedTransientModeUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedTransientModeUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr playMode = command->GetDataValuePair("Mode");      
-      std::string mode;
-      playMode->GetData(mode);
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr playMode = command->GetDataValuePair( "Mode" );
+        std::string mode;
+        playMode->GetData( mode );
 
-      if(mode == "Step")
-      {
-         DataValuePairWeakPtr playDirection = command->GetDataValuePair("Direction");      
-         std::string direction;
-         playDirection->GetData(direction);
-         ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization(direction);
-      }
-      else if(mode == "Play")
-      {
-         ves::xplorer::TextureBasedVizHandler::instance()->PlayTransientVisualization();
-      }
-      else if(mode == "Stop")
-      {
-         ves::xplorer::TextureBasedVizHandler::instance()->StopTransientVisualization();
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedTransientModeUpdateEventHandler::_operateOnNode()"<<std::endl;
-   }
+        if( mode == "Step" )
+        {
+            DataValuePairWeakPtr playDirection = command->GetDataValuePair( "Direction" );
+            std::string direction;
+            playDirection->GetData( direction );
+            ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization( direction );
+        }
+        else if( mode == "Play" )
+        {
+            ves::xplorer::TextureBasedVizHandler::instance()->PlayTransientVisualization();
+        }
+        else if( mode == "Stop" )
+        {
+            ves::xplorer::TextureBasedVizHandler::instance()->StopTransientVisualization();
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedTransientModeUpdateEventHandler::_operateOnNode()" << std::endl;
+    }
 }

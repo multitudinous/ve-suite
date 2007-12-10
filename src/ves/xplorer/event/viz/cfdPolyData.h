@@ -46,51 +46,51 @@ namespace xplorer
 cfdPolyData API
 */
 /*!\class ves::xplorer::cfdPolyData
-* 
+*
 */
 class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
 {
 public:
-   ///Constructor.
-   ///\param op_val Set to 1.0.
-   cfdPolyData( float op_val = 1.0 );
+    ///Constructor.
+    ///\param op_val Set to 1.0.
+    cfdPolyData( float op_val = 1.0 );
 
-   ///Destructor.
-   virtual ~cfdPolyData();
+    ///Destructor.
+    virtual ~cfdPolyData();
 
-   ///Update.
-   virtual void Update( void );
+    ///Update.
+    virtual void Update( void );
 
-   ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
-   virtual void UpdateCommand();
+    ///In future, multi-threaded apps will make a copy of VjObs_i commandArray.
+    virtual void UpdateCommand();
 
-   ///Assigns particle option.
-   ///\param option
-   void SetParticleOption( unsigned int option);
+    ///Assigns particle option.
+    ///\param option
+    void SetParticleOption( unsigned int option );
 
-   ///Gets particle option.
-   unsigned int GetParticleOption();
+    ///Gets particle option.
+    unsigned int GetParticleOption();
 
-   ///Sets particle scale.
-   ///\param x
-   void SetParticleScale( float x);
+    ///Sets particle scale.
+    ///\param x
+    void SetParticleScale( float x );
 
-   ///Gets particle scale.
-   float GetParticleScale();
+    ///Gets particle scale.
+    float GetParticleScale();
 
 private:
-   float GetSphereScaleFactor();///Sphere scaling.
+    float GetSphereScaleFactor();///Sphere scaling.
 
-   std::string colorByScalar;///<String to hold color by scalar.
+    std::string colorByScalar;///<String to hold color by scalar.
 
-   vtkPolyDataMapper *map;///<Map for vtk.
-   vtkWarpVector* warper;///<Warper for vtk.
-   //cfdCommandArray* commandArray;
-   bool warpSurface;///Test for warped surface.
-   double warpedContourScale;///<warped contour scale value
+    vtkPolyDataMapper *map;///<Map for vtk.
+    vtkWarpVector* warper;///<Warper for vtk.
+    //cfdCommandArray* commandArray;
+    bool warpSurface;///Test for warped surface.
+    double warpedContourScale;///<warped contour scale value
 
-   unsigned int  _particleOption;///<point cloud or variably sized spheres.
-   float _particleScale;///<particle scale.
+    unsigned int  _particleOption;///<point cloud or variably sized spheres.
+    float _particleScale;///<particle scale.
 };
 }
 }

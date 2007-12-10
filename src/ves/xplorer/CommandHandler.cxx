@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/xplorer/CommandHandler.h>
 
@@ -45,31 +45,23 @@ using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 CommandHandler::CommandHandler():
-m_xplorer( 0 ),
-m_input( 0 )
+        m_xplorer( 0 ),
+        m_input( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::Initialize()
-{
-
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::CleanUp()
-{
-
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::InitScene()
-{
-
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::PreFrameUpdate()
-{
-
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////
 bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
 {
@@ -79,7 +71,7 @@ bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
     {
         return false;
     }
-    
+
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -94,9 +86,9 @@ bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
     {
         try
         {
-          //new way
-          //std::cout << xmlDocument << std::endl;
-          m_xplorer->SetXplorerData( xmlDocument );
+            //new way
+            //std::cout << xmlDocument << std::endl;
+            m_xplorer->SetXplorerData( xmlDocument );
         }
         catch ( ... )
         {
@@ -108,22 +100,22 @@ bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::Command* CommandHandler::GetXMLCommand()
 {
-	return m_input;
+    return m_input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::SetXplorer( Body_VEXplorer_i* xplorer )
 {
-	m_xplorer = xplorer;
+    m_xplorer = xplorer;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::SendConductorMessage( std::string message )
 {
     //Now tell conductor to display text
-    ves::open::xml::DataValuePair* dvp = 
-        new ves::open::xml::DataValuePair(  std::string("STRING") );
+    ves::open::xml::DataValuePair* dvp =
+        new ves::open::xml::DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "TEXT_OUTPUT", message );
     ves::open::xml::Command vec;
-    vec.SetCommandName( std::string("TEXT_FEEDBACK") );
+    vec.SetCommandName( std::string( "TEXT_FEEDBACK" ) );
     vec.AddDataValuePair( dvp );
     SetXMLCommand( &vec );
 }

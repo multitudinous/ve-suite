@@ -39,17 +39,16 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////
 GetNumberOfPointsCallback::GetNumberOfPointsCallback()
-:m_numberOfPoints(0)
-{
-}
+        : m_numberOfPoints( 0 )
+{}
 //////////////////////////////////////////////////////////////////////////////
 unsigned int GetNumberOfPointsCallback::GetNumberOfPoints()
 {
     return m_numberOfPoints;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////
-void GetNumberOfPointsCallback::OperateOnDataset(vtkDataSet* dataset)
+void GetNumberOfPointsCallback::OperateOnDataset( vtkDataSet* dataset )
 {
-	m_numberOfPoints += dataset->GetNumberOfPoints();
+    m_numberOfPoints += dataset->GetNumberOfPoints();
 }
 

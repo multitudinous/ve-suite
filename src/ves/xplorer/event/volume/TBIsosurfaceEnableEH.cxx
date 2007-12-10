@@ -47,41 +47,38 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceEnableEventHandler::TextureBasedIsosurfaceEnableEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceEnableEventHandler
-::TextureBasedIsosurfaceEnableEventHandler(const TextureBasedIsosurfaceEnableEventHandler& ceh)
-{
-}
+::TextureBasedIsosurfaceEnableEventHandler( const TextureBasedIsosurfaceEnableEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedIsosurfaceEnableEventHandler::~TextureBasedIsosurfaceEnableEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedIsosurfaceEnableEventHandler& 
-TextureBasedIsosurfaceEnableEventHandler::operator=(const TextureBasedIsosurfaceEnableEventHandler& rhs)
+TextureBasedIsosurfaceEnableEventHandler&
+TextureBasedIsosurfaceEnableEventHandler::operator=( const TextureBasedIsosurfaceEnableEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr enable = command->GetDataValuePair("Iso-Surface State");      
-      std::string onOff;
-      enable->GetData(onOff);
-      ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface((onOff=="On")?true:false);
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedIsosurfaceEnableEventHandler::_operateOnNode()"<<std::endl;
-   }
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr enable = command->GetDataValuePair( "Iso-Surface State" );
+        std::string onOff;
+        enable->GetData( onOff );
+        ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface(( onOff == "On" ) ? true : false );
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedIsosurfaceEnableEventHandler::_operateOnNode()" << std::endl;
+    }
 }

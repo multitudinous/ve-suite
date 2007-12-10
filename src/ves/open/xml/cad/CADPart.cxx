@@ -38,86 +38,85 @@ using namespace ves::open::xml::cad;
 ////////////////////////////////////////////////////////////
 //Constructor                                             //
 ////////////////////////////////////////////////////////////
-CADPart::CADPart(std::string name)
-:ves::open::xml::cad::CADNode(name)
+CADPart::CADPart( std::string name )
+        : ves::open::xml::cad::CADNode( name )
 {
-   m_cadFileName = std::string("CADFile");
-   m_type = std::string("Part");
-  SetObjectType("CADPart");
+    m_cadFileName = std::string( "CADFile" );
+    m_type = std::string( "Part" );
+    SetObjectType( "CADPart" );
 }
 ///////////////////
 //Destructor     //
 ///////////////////
 CADPart::~CADPart()
-{
-}
+{}
 /////////////////////////////////////////////////////
-void CADPart::SetCADFileName(std::string cadFileName)
+void CADPart::SetCADFileName( std::string cadFileName )
 {
-   m_cadFileName = cadFileName;
+    m_cadFileName = cadFileName;
 }
 /////////////////////////////////////
 std::string CADPart::GetCADFileName()
 {
-   return m_cadFileName;
+    return m_cadFileName;
 }
 //////////////////////////////////
 void CADPart::_updateCADFileName()
 {
-   DOMElement* nameElement  = _rootDocument->createElement( xercesString("fileName") );
-   _veElement->appendChild( nameElement );      
-   
-   DOMText* fileName = _rootDocument->createTextNode( xercesString( m_cadFileName ) );
-   nameElement->appendChild( fileName  );
+    DOMElement* nameElement  = _rootDocument->createElement( xercesString( "fileName" ) );
+    _veElement->appendChild( nameElement );
+
+    DOMText* fileName = _rootDocument->createTextNode( xercesString( m_cadFileName ) );
+    nameElement->appendChild( fileName );
 }
 /////////////////////////////////////////////////
-void CADPart::_updateVEElement(std::string input)
+void CADPart::_updateVEElement( std::string input )
 {
-   //How is this going to work???
-   //Get the base elements from CADNode
-   ves::open::xml::cad::CADNode::_updateVEElement(input);
+    //How is this going to work???
+    //Get the base elements from CADNode
+    ves::open::xml::cad::CADNode::_updateVEElement( input );
 
-   _updateCADFileName();
+    _updateCADFileName();
 }
 /////////////////////////////////////////////////////
-void CADPart::SetObjectFromXMLData( DOMNode* xmlNode)
+void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
 {
-   DOMElement* currentElement = 0;
+    DOMElement* currentElement = 0;
 
-   if(xmlNode->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast<DOMElement*>(xmlNode);
-   }
-   
-   if(currentElement)
-   {
-      //populate the base elements in node
-      ves::open::xml::cad::CADNode::SetObjectFromXMLData(currentElement);
+    if( xmlNode->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast<DOMElement*>( xmlNode );
+    }
 
-      //break down the element
-      {
-         if(currentElement->hasChildNodes())
-         {
-            DOMElement* fileNameElement = GetSubElement(currentElement,std::string("fileName"),0);
-            m_cadFileName = ExtractFromSimpleElement< std::string >(fileNameElement);
-         }
-      }
-   }
+    if( currentElement )
+    {
+        //populate the base elements in node
+        ves::open::xml::cad::CADNode::SetObjectFromXMLData( currentElement );
+
+        //break down the element
+        {
+            if( currentElement->hasChildNodes() )
+            {
+                DOMElement* fileNameElement = GetSubElement( currentElement, std::string( "fileName" ), 0 );
+                m_cadFileName = ExtractFromSimpleElement< std::string >( fileNameElement );
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////
-CADPart::CADPart(const CADPart& rhs, bool clone)
-:ves::open::xml::cad::CADNode(rhs,clone)
+CADPart::CADPart( const CADPart& rhs, bool clone )
+        : ves::open::xml::cad::CADNode( rhs, clone )
 {
-   m_cadFileName = rhs.m_cadFileName;
+    m_cadFileName = rhs.m_cadFileName;
 }
 ////////////////////////////////////////////////
-CADPart& CADPart::operator=(const CADPart& rhs)
+CADPart& CADPart::operator=( const CADPart& rhs )
 {
-   if ( this != &rhs )
-   {
-      ves::open::xml::cad::CADNode::operator =(rhs);
-      m_cadFileName = rhs.m_cadFileName;
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::open::xml::cad::CADNode::operator =( rhs );
+        m_cadFileName = rhs.m_cadFileName;
+    }
+    return *this;
 }
 

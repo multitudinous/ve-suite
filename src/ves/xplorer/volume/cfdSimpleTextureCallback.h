@@ -50,28 +50,33 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdSimpleTextureCallback 
-      : public  osg::Texture3D::SubloadCallback{
-      public:
-         cfdSimpleTextureCallback();
-         virtual ~cfdSimpleTextureCallback(){}
-        
-         void setTextureSize(const int width,
-                           const int height, 
-                           const int depth)
-         {
-            _textureWidth = width;
-            _textureHeight = height;
-            _textureDepth= depth;
-         }
-         void SetIsLuminance(bool isLum){_isLuminance = isLum;} 
-         void subload(const osg::Texture3D& texture,osg::State& state) const;
-         void load(const osg::Texture3D& texture,osg::State&) const;
-   
-      protected:
-         bool _isLuminance;
-         mutable GLsizei _textureWidth, _textureHeight,_textureDepth;
-   };
+class VE_TEXTURE_BASED_EXPORTS cfdSimpleTextureCallback
+            : public  osg::Texture3D::SubloadCallback
+{
+public:
+    cfdSimpleTextureCallback();
+    virtual ~cfdSimpleTextureCallback()
+    {}
+
+    void setTextureSize( const int width,
+                         const int height,
+                         const int depth )
+    {
+        _textureWidth = width;
+        _textureHeight = height;
+        _textureDepth = depth;
+    }
+    void SetIsLuminance( bool isLum )
+    {
+        _isLuminance = isLum;
+    }
+    void subload( const osg::Texture3D& texture, osg::State& state ) const;
+    void load( const osg::Texture3D& texture, osg::State& ) const;
+
+protected:
+    bool _isLuminance;
+    mutable GLsizei _textureWidth, _textureHeight, _textureDepth;
+};
 }
 }
 }

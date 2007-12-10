@@ -59,69 +59,69 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 BBoxEventHandler::BBoxEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-BBoxEventHandler::BBoxEventHandler(const BBoxEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+BBoxEventHandler::BBoxEventHandler( const BBoxEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 BBoxEventHandler::~BBoxEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-BBoxEventHandler& BBoxEventHandler::operator=(const BBoxEventHandler& rhs)
+BBoxEventHandler& BBoxEventHandler::operator=( const BBoxEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BBoxEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if ( model )
-      {
-         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to BBoxEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 void BBoxEventHandler::Execute( XMLObject* xmlObject )
 {
-   Command* command = dynamic_cast< Command* >( xmlObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Bounding Box State" );
-   
-   unsigned int state = 0;
-   activeModelDVP->GetData( state );
-   if ( _activeModel )
-   {
-      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-      if ( dataSet )
-      {
-         dataSet->SetBoundingBoxState( state );
-      }
-   }
-   
+    Command* command = dynamic_cast< Command* >( xmlObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Bounding Box State" );
+
+    unsigned int state = 0;
+    activeModelDVP->GetData( state );
+    if( _activeModel )
+    {
+        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( dataSet )
+        {
+            dataSet->SetBoundingBoxState( state );
+        }
+    }
+
 }

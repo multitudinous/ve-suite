@@ -57,16 +57,16 @@
 
 namespace osg
 {
-   class Texture2D;
+class Texture2D;
 #if (OSG_VERSION_MAJOR>=2)
-   class Camera;
+class Camera;
 #endif
 }
 
 namespace osgText
 {
-   class Font;
-   class Text;
+class Font;
+class Text;
 }
 
 namespace ves
@@ -78,61 +78,61 @@ namespace scenegraph
 class VE_SCENEGRAPH_EXPORTS TextTexture : public ves::xplorer::scenegraph::Geode
 {
 public:
-   ///Constructor
-   ///\param textureResolutionX The X resolution of the output texture in pixels
-   ///\param textureResolutionY The Y resolution of the output texture in pixels
-   ///\param fontFile The file to load fonts from. See osgText/Font for usage.
-   TextTexture(unsigned int textureResolutionX = 1024,
-               unsigned int textureResolutionY = 1024,
-               std::string fontFile = "fonts/arial.ttf" );
+    ///Constructor
+    ///\param textureResolutionX The X resolution of the output texture in pixels
+    ///\param textureResolutionY The Y resolution of the output texture in pixels
+    ///\param fontFile The file to load fonts from. See osgText/Font for usage.
+    TextTexture( unsigned int textureResolutionX = 1024,
+                 unsigned int textureResolutionY = 1024,
+                 std::string fontFile = "fonts/arial.ttf" );
 
-   ///Copy constructors for osg
-   TextTexture( const TextTexture& ttexture, 
-                const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-   
-   META_Node( ves::xplorer::scenegraph, TextTexture );
+    ///Copy constructors for osg
+    TextTexture( const TextTexture& ttexture,
+                 const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-   ///Set the color of the text
-   ///\param color Text color
-   void SetTextColor( float color[4] );
+    META_Node( ves::xplorer::scenegraph, TextTexture );
 
-   ///Set the font
-   ///\param fontFile The file containing the font to use 
-   void SetFont( std::string fontFile );
+    ///Set the color of the text
+    ///\param color Text color
+    void SetTextColor( float color[4] );
 
-   ///Update the text
-   ///\param newText The new text
-   void UpdateText( std::string newText );
+    ///Set the font
+    ///\param fontFile The file containing the font to use
+    void SetFont( std::string fontFile );
 
-   ///Get the texture with the text
-   osg::Texture2D* GetTexture();
+    ///Update the text
+    ///\param newText The new text
+    void UpdateText( std::string newText );
 
-   ///Get the fbo
+    ///Get the texture with the text
+    osg::Texture2D* GetTexture();
+
+    ///Get the fbo
 #if (OSG_VERSION_MAJOR>=2)
-   osg::Camera* GetCameraNode();
+    osg::Camera* GetCameraNode();
 #else
-   osg::CameraNode* GetCameraNode();
+    osg::CameraNode* GetCameraNode();
 #endif
-   
+
 protected:
-   ///Destructor
-   virtual ~TextTexture();
+    ///Destructor
+    virtual ~TextTexture();
 
-   ///Initialize the Frame Buffer Object in the camera node
-   void _initializeFBO();
+    ///Initialize the Frame Buffer Object in the camera node
+    void _initializeFBO();
 
-   bool _fboInitialized;///<Flag for camera node state
-   float _textColor[4];///<The color of the text, default is black
-   unsigned int _textureResolution[2];///<The texture resolution
-   std::string _font;///<The font file
-   osg::ref_ptr<osgText::Text> _text;///<The text
-   osg::ref_ptr<osg::Texture2D> _texture;///<The texture we create
+    bool _fboInitialized;///<Flag for camera node state
+    float _textColor[4];///<The color of the text, default is black
+    unsigned int _textureResolution[2];///<The texture resolution
+    std::string _font;///<The font file
+    osg::ref_ptr<osgText::Text> _text;///<The text
+    osg::ref_ptr<osg::Texture2D> _texture;///<The texture we create
 #if (OSG_VERSION_MAJOR>=2)
-   osg::ref_ptr<osg::Camera> _fbo;///<The off screen rendering node
+    osg::ref_ptr<osg::Camera> _fbo;///<The off screen rendering node
 #else
-   osg::ref_ptr<osg::CameraNode> _fbo;///<The off screen rendering node
+    osg::ref_ptr<osg::CameraNode> _fbo;///<The off screen rendering node
 #endif
-   //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
+    //osg::ref_ptr<TextUpdateCallback> _ttUpdateCallback;///<The update callback
 
 };
 }

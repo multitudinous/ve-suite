@@ -44,9 +44,9 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 UpdateIDOnChildrenVisitor::UpdateIDOnChildrenVisitor( ves::xplorer::scenegraph::DCS* node, std::string id )
-:
-NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-modelGUID( id )
+        :
+        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+        modelGUID( id )
 {
     node->accept( *this );
 }
@@ -61,9 +61,9 @@ void UpdateIDOnChildrenVisitor::apply( osg::PositionAttitudeTransform& node )
     osg::Node::DescriptionList descriptorsList;
     //descriptorsList.push_back( "VE_XML_ID" );
     //descriptorsList.push_back( modelGUID );
-   
+
     node.setDescriptions( descriptorsList );
-   
+
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////

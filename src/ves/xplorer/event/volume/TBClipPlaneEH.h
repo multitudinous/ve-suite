@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedClipPlaneEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedClipPlaneEventHandler();
+    ///Constructor
+    TextureBasedClipPlaneEventHandler();
 
-   ///Copy Constructor
-   TextureBasedClipPlaneEventHandler(const TextureBasedClipPlaneEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedClipPlaneEventHandler();
+    ///Copy Constructor
+    TextureBasedClipPlaneEventHandler( const TextureBasedClipPlaneEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedClipPlaneEventHandler();
 
-   ///Equal operator
-   TextureBasedClipPlaneEventHandler& operator=(const TextureBasedClipPlaneEventHandler& rhs);
-   
+    ///Equal operator
+    TextureBasedClipPlaneEventHandler& operator=( const TextureBasedClipPlaneEventHandler& rhs );
+
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

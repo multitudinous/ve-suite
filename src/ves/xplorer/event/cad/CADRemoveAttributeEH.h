@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS CADRemoveAttributeEventHandler: public CADEventHandler
 {
 public:
-   ///Constructor
-   CADRemoveAttributeEventHandler();
+    ///Constructor
+    CADRemoveAttributeEventHandler();
 
-   ///Copy Constructor
-   CADRemoveAttributeEventHandler(const CADRemoveAttributeEventHandler& rhs);
+    ///Copy Constructor
+    CADRemoveAttributeEventHandler( const CADRemoveAttributeEventHandler& rhs );
 
-   ///Destructor
-   virtual ~CADRemoveAttributeEventHandler();
+    ///Destructor
+    virtual ~CADRemoveAttributeEventHandler();
 
-   ///Equal operator
-   CADRemoveAttributeEventHandler& operator=(const CADRemoveAttributeEventHandler& rhs);
+    ///Equal operator
+    CADRemoveAttributeEventHandler& operator=( const CADRemoveAttributeEventHandler& rhs );
 protected:
-   ///Update a transform on the CADNode.
-   ///\param command The Command containing the udpated transform.
-   void _operateOnNode(ves::open::xml::XMLObject* command);
+    ///Update a transform on the CADNode.
+    ///\param command The Command containing the udpated transform.
+    void _operateOnNode( ves::open::xml::XMLObject* command );
 };
 
 }

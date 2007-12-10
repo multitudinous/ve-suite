@@ -48,101 +48,100 @@ using namespace ves::open::xml;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 TextureBasedEventHandler::TextureBasedEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
-   _activeTDSet = 0;
+    _activeModel = 0;
+    _activeTDSet = 0;
 }
 ////////////////////////////////////////////////////////////
-TextureBasedEventHandler::TextureBasedEventHandler(const TextureBasedEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
+TextureBasedEventHandler::TextureBasedEventHandler( const TextureBasedEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = rhs._activeModel;
-   _activeTDSet = rhs._activeTDSet;
+    _activeModel = rhs._activeModel;
+    _activeTDSet = rhs._activeTDSet;
 }
 ////////////////////////////////////
 ///Destructor                     //
 ////////////////////////////////////
 TextureBasedEventHandler::~TextureBasedEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////
-void TextureBasedEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void TextureBasedEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if(model)
-      {
-         _activeModel = dynamic_cast<ves::xplorer::Model*>(model);
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      _activeTDSet = 0;
-      std::cout<<"Invalid object passed to TextureBasedEventHandler!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast<ves::xplorer::Model*>( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        _activeTDSet = 0;
+        std::cout << "Invalid object passed to TextureBasedEventHandler!" << std::endl;
+    }
 }
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 //////////////////////////////////////////////////////////////////////
-void TextureBasedEventHandler::Execute(XMLObject* veXMLObject)
+void TextureBasedEventHandler::Execute( XMLObject* veXMLObject )
 {
-   //this is ridiculously simple now...Just testing to see how things will work.
-   //Command* command = dynamic_cast< Command* >( xmlObject );
-   if(_activeModel)
-   {
-      try
-      {
-         _setActiveTextureDataset(/*name of the active texture dataset*/);
-      }
-      catch(...)
-      {
-          std::cout<<"Invalid texture dataset!!"<<std::endl;	       
-          std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;	       
-      }
-      /*try
-      {
-         _setActiveSolutionName(veXMLObject);
-      }
-      catch(...)
-      {
-          std::cout<<"Invalid texture dataset!!"<<std::endl;	       
-          std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;	       
-      }
-      try
-      {
-         DataValuePair* bboxState = command->GetDataValuePair( "Bounding Box" );
-	      if(bboxState)
-         {
-            bool showBBox = false;
-            unsigned int state = 0;
-            bboxState->GetData( state );
-            _ensureBBoxState(((state==0)?false:true));
-	      }
-      }
-      catch(...)
-      {
-          std::cout<<"Invalid texture dataset!!"<<std::endl;	       
-          std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;	       
-      }*/
-      
-      //this is overridden in derived classes
-      _operateOnNode(veXMLObject);
-   }
+    //this is ridiculously simple now...Just testing to see how things will work.
+    //Command* command = dynamic_cast< Command* >( xmlObject );
+    if( _activeModel )
+    {
+        try
+        {
+            _setActiveTextureDataset( /*name of the active texture dataset*/ );
+        }
+        catch ( ... )
+        {
+            std::cout << "Invalid texture dataset!!" << std::endl;
+            std::cout << "TextureBasedEventHandler::Execute()" << std::endl;
+        }
+        /*try
+        {
+           _setActiveSolutionName(veXMLObject);
+        }
+        catch(...)
+        {
+            std::cout<<"Invalid texture dataset!!"<<std::endl;      
+            std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;      
+        }
+        try
+        {
+           DataValuePair* bboxState = command->GetDataValuePair( "Bounding Box" );
+         if(bboxState)
+           {
+              bool showBBox = false;
+              unsigned int state = 0;
+              bboxState->GetData( state );
+              _ensureBBoxState(((state==0)?false:true));
+         }
+        }
+        catch(...)
+        {
+            std::cout<<"Invalid texture dataset!!"<<std::endl;      
+            std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;      
+        }*/
+
+        //this is overridden in derived classes
+        _operateOnNode( veXMLObject );
+    }
 }
 ///////////////////////////////////////////////////////////////////////
-TextureBasedEventHandler& TextureBasedEventHandler::operator=(const TextureBasedEventHandler& rhs)
+TextureBasedEventHandler& TextureBasedEventHandler::operator=( const TextureBasedEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        _activeModel = rhs._activeModel;
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////
 /*void TextureBasedEventHandler::_ensureBBoxState(bool showBBox)
@@ -151,12 +150,12 @@ TextureBasedEventHandler& TextureBasedEventHandler::operator=(const TextureBased
 /////////////////////////////////////////////////////////
 void TextureBasedEventHandler::_setActiveTextureDataset()
 {
-   if(_activeModel)
-   {
-      //This assumes there is only one texture dataset per model which isn't quite right---biv
-      _activeTDSet = _activeModel->GetTextureDataSet(0);
-      _activeModel->SetActiveTextureDataSet(_activeTDSet);
-      ves::xplorer::TextureBasedVizHandler::instance()->SetActiveTextureDataSet(_activeTDSet);
+    if( _activeModel )
+    {
+        //This assumes there is only one texture dataset per model which isn't quite right---biv
+        _activeTDSet = _activeModel->GetTextureDataSet( 0 );
+        _activeModel->SetActiveTextureDataSet( _activeTDSet );
+        ves::xplorer::TextureBasedVizHandler::instance()->SetActiveTextureDataSet( _activeTDSet );
 
-   }
+    }
 }

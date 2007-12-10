@@ -44,12 +44,12 @@ namespace ves
 namespace open
 {
 namespace xml
-{   
-    class XMLObject;
-   namespace model
-   {
-      class Model;
-   }
+{
+class XMLObject;
+namespace model
+{
+class Model;
+}
 }
 }
 }
@@ -61,21 +61,21 @@ namespace VE_CE
 class VE_CE_UNIT_WRAPPER_EXPORTS GetInputsEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   GetInputsEventHandler();
+    ///Constructor
+    GetInputsEventHandler();
 
-   ///Destructor
-   virtual ~GetInputsEventHandler();
+    ///Destructor
+    virtual ~GetInputsEventHandler();
 
-   ///The call to handle the event
-   ///\param objectToProcess The xml Object to process
-   virtual std::string Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess );
+    ///The call to handle the event
+    ///\param objectToProcess The xml Object to process
+    virtual std::string Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess );
 
-   ///Function to set the xml object to work on
-   ///\param baseObject The base object to apply the command to.
-   virtual void SetBaseObject(ves::open::xml::XMLObject* baseObject );
+    ///Function to set the xml object to work on
+    ///\param baseObject The base object to apply the command to.
+    virtual void SetBaseObject( ves::open::xml::XMLObject* baseObject );
 private:
-   ves::open::xml::model::Model* baseModel;
+    ves::open::xml::model::Model* baseModel;
 };
 }
 #endif// GET_INPUTS_EVENT_HANDLER_H

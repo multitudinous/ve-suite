@@ -40,7 +40,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 // --- VR Juggler Includes --- //
-#include <boost/filesystem/operations.hpp>   
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
 // --- C/C++ Libraries --- //
@@ -59,15 +59,15 @@ namespace xplorer
 namespace event
 {
 PhysicsSimulationEventHandler::PhysicsSimulationEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulationEventHandler::PhysicsSimulationEventHandler( const PhysicsSimulationEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -95,7 +95,7 @@ void PhysicsSimulationEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
 void PhysicsSimulationEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
 {
     ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( veXMLObject );
-  
+
     if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
     {
         ves::xplorer::scenegraph::PhysicsSimulator::instance()->SetIdle( true );

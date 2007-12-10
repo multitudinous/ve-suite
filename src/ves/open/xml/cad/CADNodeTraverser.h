@@ -55,78 +55,93 @@ namespace xml
 {
 namespace cad
 {
-   class CADNode;
-   class VE_CAD_EXPORTS CADNodeTraverser
-   {
-      public:
-         ///Constructor
-         CADNodeTraverser();
-         ///Copy Constructor
-         CADNodeTraverser(const CADNodeTraverser& cfdNT);
-         ///Destructor
-         virtual ~CADNodeTraverser();
+class CADNode;
+class VE_CAD_EXPORTS CADNodeTraverser
+{
+public:
+    ///Constructor
+    CADNodeTraverser();
+    ///Copy Constructor
+    CADNodeTraverser( const CADNodeTraverser& cfdNT );
+    ///Destructor
+    virtual ~CADNodeTraverser();
 
-	    
-   
-      
-         class VE_CAD_EXPORTS CADNodeTraverseCallback{
-         public:
-            ///Constructor
-            CADNodeTraverseCallback(){;}
-	         
-            ///Destructor
-            virtual ~CADNodeTraverseCallback(){;}
 
-            ///This is the function to override to do something to a node
-            ///before (pre) or after (post) encountering a CADNode in the graph.
-            ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
-            ///\param node The CADNode that is currently being encountered.
-            ///\param currentParent The CADNode that is the parent of the node being encountered.
-            virtual void Apply(CADNodeTraverser* cadNodeTraverser,CADNode* node,void* currentParent=0)=0;
-         protected:
-      };
-      ///TraversalStatus The status of the traverser.
-      enum TraversalStatus{CONT,///<Continue traversing.
-                         SKIP,///<Skip traversing this CADNode.
-                         STOP///<Stop traversal of the graph.
-                         };
 
-      ///Set the pre node traverse callback
-      ///\param func The pre-traverse callback function.
-      virtual void SetPreNodeTraverseCallback(CADNodeTraverseCallback* func);
 
-      ///Set the post node traverse callback
-      ///\param func The post-traverse callback function.
-      virtual void SetPostNodeTraverseCallback(CADNodeTraverseCallback* func);
+    class VE_CAD_EXPORTS CADNodeTraverseCallback
+    {
+    public:
+        ///Constructor
+        CADNodeTraverseCallback()
+        {
+            ;
+        }
 
-      ///Set the node to traverse
-      ///\param root The root node to traverse.
-      void SetRootNode(CADNode* root);
+        ///Destructor
+        virtual ~CADNodeTraverseCallback()
+        {
+            ;
+        }
 
-      ///Set the traversal status.
-      ///\param ts The new traversal status.
-      void SetTraversalStatus(TraversalStatus ts){_ts = ts;}
-      
-      ///Get the traversal status.
-      TraversalStatus GetTraversalStatus(){return _ts;}
+        ///This is the function to override to do something to a node
+        ///before (pre) or after (post) encountering a CADNode in the graph.
+        ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
+        ///\param node The CADNode that is currently being encountered.
+        ///\param currentParent The CADNode that is the parent of the node being encountered.
+        virtual void Apply( CADNodeTraverser* cadNodeTraverser, CADNode* node, void* currentParent = 0 ) = 0;
+    protected:
+    };
+    ///TraversalStatus The status of the traverser.
+    enum TraversalStatus
+    {
+        CONT,///<Continue traversing.
+        SKIP,///<Skip traversing this CADNode.
+        STOP///<Stop traversal of the graph.
+    };
 
-      ///Begin traversing the node.
-      void Traverse();
+    ///Set the pre node traverse callback
+    ///\param func The pre-traverse callback function.
+    virtual void SetPreNodeTraverseCallback( CADNodeTraverseCallback* func );
 
-      ///equal operator
-      CADNodeTraverser& operator=(const CADNodeTraverser& cfdNT);
-   protected:
+    ///Set the post node traverse callback
+    ///\param func The post-traverse callback function.
+    virtual void SetPostNodeTraverseCallback( CADNodeTraverseCallback* func );
 
-      ///Recurse the nodes internally.
-      ///\param currentNode The node currently being traversed.
-      ///\param currentParent The CADNode that is the parent of the node being encountered.
-      virtual void _traverseNode(CADNode* currentNode,void* currentParent=0);
+    ///Set the node to traverse
+    ///\param root The root node to traverse.
+    void SetRootNode( CADNode* root );
 
-      TraversalStatus _ts;///<The status of the traverser.
-      CADNode* _root;///<The root node to traverse.
-      CADNodeTraverser::CADNodeTraverseCallback* _preFunc;///<The pre traverse callback.
-      CADNodeTraverser::CADNodeTraverseCallback* _postFunc;///<The post node traverse callback.
-   };
+    ///Set the traversal status.
+    ///\param ts The new traversal status.
+    void SetTraversalStatus( TraversalStatus ts )
+    {
+        _ts = ts;
+    }
+
+    ///Get the traversal status.
+    TraversalStatus GetTraversalStatus()
+    {
+        return _ts;
+    }
+
+    ///Begin traversing the node.
+    void Traverse();
+
+    ///equal operator
+    CADNodeTraverser& operator=( const CADNodeTraverser& cfdNT );
+protected:
+
+    ///Recurse the nodes internally.
+    ///\param currentNode The node currently being traversed.
+    ///\param currentParent The CADNode that is the parent of the node being encountered.
+    virtual void _traverseNode( CADNode* currentNode, void* currentParent = 0 );
+
+    TraversalStatus _ts;///<The status of the traverser.
+    CADNode* _root;///<The root node to traverse.
+    CADNodeTraverser::CADNodeTraverseCallback* _preFunc;///<The pre traverse callback.
+    CADNodeTraverser::CADNodeTraverseCallback* _postFunc;///<The post node traverse callback.
+};
 }
 }
 }

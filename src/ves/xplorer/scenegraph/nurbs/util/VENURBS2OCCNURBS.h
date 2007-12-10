@@ -66,73 +66,79 @@ namespace util
 class VE_NURBS_UTILS_EXPORTS VENURBS2OCCNURBS
 {
 public:
-   ///Constructor
-   VENURBS2OCCNURBS(){ ; }
-   ///Destructor
-   ~VENURBS2OCCNURBS(){ ; }
+    ///Constructor
+    VENURBS2OCCNURBS()
+    {
+        ;
+    }
+    ///Destructor
+    ~VENURBS2OCCNURBS()
+    {
+        ;
+    }
 
-   ///Get a VE NURBS patch and return an OCC BSpline Surface
-   ///\param veNURBSSurface NURBS surface to be converted
-   Geom_BSplineSurface* GetOCCNURBSSurface( ves::xplorer::scenegraph::nurbs::NURBSSurface* veNURBSSurface )
-   {
-      ves::xplorer::scenegraph::nurbs::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
-      ves::xplorer::scenegraph::nurbs::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
-      std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
-      std::vector< double > uKnots = uKnotVector.GetDistinctKnotVector();
-      std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
-      std::vector< double > vKnots = vKnotVector.GetDistinctKnotVector();
-      
-      TColStd_Array1OfInteger UMults( 1, uKnots.size() );
-      TColStd_Array1OfReal UKnots( 1, uKnots.size() );
-      // get u info
-      //std::map< double , unsigned int >::iterator iter;
-      size_t count = 1;
-      for ( size_t i = 0; i < uKnots.size(); ++i )
-      {
-         UMults( count ) = uMultiplicity.at( i );
-         UKnots( count ) = uKnots.at( i );
-         count++;
-      }
-      
-      // get v info
-      TColStd_Array1OfReal VKnots( 1, vKnots.size() );
-      TColStd_Array1OfInteger VMults( 1, vKnots.size() );
-      count = 1;
-      for ( size_t i = 0; i < vKnots.size(); ++i )
-      {
-         VMults( count ) = vMultiplicity.at( i );
-         VKnots( count ) = vKnots.at( i );
-         count++;
-      }
-      
-      //Get control points
-      std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > points = veNURBSSurface->GetControlPoints();
-      TColgp_Array2OfPnt Poles( 1, points.at( 0 ).size(), 1, points.size() );
-      TColStd_Array2OfReal Weights( 1, points.at( 0 ).size(), 1, points.size() );
-      double X = 0;
-      double Y = 0;
-      double Z = 0;   
-      for ( size_t j = 0; j < points.size(); ++j )
-      {
-         for ( size_t i = 0; i < points.at( j ).size(); ++i )
-         {
-            X = points.at( j ).at( i ).X();
-            Y = points.at( j ).at( i ).Y();
-            Z = points.at( j ).at( i ).Z();
-            Weights( i, j ) = points.at( j ).at( i ).Weight();
-            Poles( i, j ).SetCoord( X, Y, Z );
-         }
-      }
-      
-      int UDegree = veNURBSSurface->GetDegree( "U" );
-      int VDegree = veNURBSSurface->GetDegree( "V" );
-      //Now create occ nurb surface
-      Geom_BSplineSurface* surface = new Geom_BSplineSurface ( Poles,  Weights, 
-                                                               UKnots, VKnots, 
-                                                               UMults, VMults, 
-                                                               UDegree, VDegree );
-      return surface;
-   }
+    ///Get a VE NURBS patch and return an OCC BSpline Surface
+    ///\param veNURBSSurface NURBS surface to be converted
+    Geom_BSplineSurface* GetOCCNURBSSurface( ves::xplorer::scenegraph::nurbs::NURBSSurface* veNURBSSurface )
+    {
+        ves::xplorer::scenegraph::nurbs::KnotVector uKnotVector = veNURBSSurface->KnotVector( "U" );
+        ves::xplorer::scenegraph::nurbs::KnotVector vKnotVector = veNURBSSurface->KnotVector( "V" );
+        std::vector< unsigned int > uMultiplicity = uKnotVector.GetMultiplicityVector();
+        std::vector< double > uKnots = uKnotVector.GetDistinctKnotVector();
+        std::vector< unsigned int > vMultiplicity = vKnotVector.GetMultiplicityVector();
+        std::vector< double > vKnots = vKnotVector.GetDistinctKnotVector();
+
+        TColStd_Array1OfInteger UMults( 1, uKnots.size() );
+        TColStd_Array1OfReal UKnots( 1, uKnots.size() );
+        // get u info
+        //std::map< double , unsigned int >::iterator iter;
+        size_t count = 1;
+        for( size_t i = 0; i < uKnots.size(); ++i )
+        {
+            UMults( count ) = uMultiplicity.at( i );
+            UKnots( count ) = uKnots.at( i );
+            count++;
+        }
+
+        // get v info
+        TColStd_Array1OfReal VKnots( 1, vKnots.size() );
+        TColStd_Array1OfInteger VMults( 1, vKnots.size() );
+        count = 1;
+        for( size_t i = 0; i < vKnots.size(); ++i )
+        {
+            VMults( count ) = vMultiplicity.at( i );
+            VKnots( count ) = vKnots.at( i );
+            count++;
+        }
+
+        //Get control points
+        std::vector< std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > points = veNURBSSurface->GetControlPoints();
+        TColgp_Array2OfPnt Poles( 1, points.at( 0 ).size(), 1, points.size() );
+        TColStd_Array2OfReal Weights( 1, points.at( 0 ).size(), 1, points.size() );
+        double X = 0;
+        double Y = 0;
+        double Z = 0;
+        for( size_t j = 0; j < points.size(); ++j )
+        {
+            for( size_t i = 0; i < points.at( j ).size(); ++i )
+            {
+                X = points.at( j ).at( i ).X();
+                Y = points.at( j ).at( i ).Y();
+                Z = points.at( j ).at( i ).Z();
+                Weights( i, j ) = points.at( j ).at( i ).Weight();
+                Poles( i, j ).SetCoord( X, Y, Z );
+            }
+        }
+
+        int UDegree = veNURBSSurface->GetDegree( "U" );
+        int VDegree = veNURBSSurface->GetDegree( "V" );
+        //Now create occ nurb surface
+        Geom_BSplineSurface* surface = new Geom_BSplineSurface( Poles,  Weights,
+                                                                UKnots, VKnots,
+                                                                UMults, VMults,
+                                                                UDegree, VDegree );
+        return surface;
+    }
 };
 }
 }

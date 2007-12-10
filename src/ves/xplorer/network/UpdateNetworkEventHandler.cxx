@@ -51,38 +51,38 @@ using namespace ves::xplorer::network;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::UpdateNetworkEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-UpdateNetworkEventHandler::UpdateNetworkEventHandler(const UpdateNetworkEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+UpdateNetworkEventHandler::UpdateNetworkEventHandler( const UpdateNetworkEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 UpdateNetworkEventHandler::~UpdateNetworkEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=(const UpdateNetworkEventHandler& rhs)
+UpdateNetworkEventHandler& UpdateNetworkEventHandler::operator=( const UpdateNetworkEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      UpdateNetworkEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        UpdateNetworkEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UpdateNetworkEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void UpdateNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   ;
+    ;
 }
 //////////////////////////////////////////////////////////////////////////
 void UpdateNetworkEventHandler::Execute( XMLObject* xmlObject )

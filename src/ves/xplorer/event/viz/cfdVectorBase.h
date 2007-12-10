@@ -59,63 +59,63 @@ cfdVectorBase API
 class VE_XPLORER_EXPORTS cfdVectorBase : public cfdObjects
 {
 public:
-   ///Constructor
-   cfdVectorBase();
+    ///Constructor
+    cfdVectorBase();
 
-   ///Destructor
-   virtual ~cfdVectorBase();
+    ///Destructor
+    virtual ~cfdVectorBase();
 
-   // pure virtual int functions to be specified in concrete implementations
+    // pure virtual int functions to be specified in concrete implementations
 
-   /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+    /// in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand();
 
-   ///Update the actor
-   virtual void Update() = 0;
+    ///Update the actor
+    virtual void Update() = 0;
 
-   ///Set threshold
-   ///\params minThresh and maxThresh, min and max percentage values for threshold
-   void SetThreshHoldPercentages( int minThresh, int maxThresh );
+    ///Set threshold
+    ///\params minThresh and maxThresh, min and max percentage values for threshold
+    void SetThreshHoldPercentages( int minThresh, int maxThresh );
 
-   ///Set/Get threshold values
-   ///\param ????
-   void SetThreshHoldValues( double * );
-   double* GetThreshHoldValues( void );
+    ///Set/Get threshold values
+    ///\param ????
+    void SetThreshHoldValues( double * );
+    double* GetThreshHoldValues( void );
 
-   ///Update function
-   void UpdateThreshHoldValues();
+    ///Update function
+    void UpdateThreshHoldValues();
 
-   
-   ///Set/Get vector ratio factor
-   void SetVectorRatioFactor( int );
-   int GetVectorRatioFactor();
 
-   ///Set/Get scale by factor
-   void SetScaleByVectorFlag( int );
-   int GetScaleByVectorFlag( void );
+    ///Set/Get vector ratio factor
+    void SetVectorRatioFactor( int );
+    int GetVectorRatioFactor();
 
-   ///Set/Get vector scales
-   void SetVectorScale( float );
-   float GetVectorScale();
+    ///Set/Get scale by factor
+    void SetScaleByVectorFlag( int );
+    int GetScaleByVectorFlag( void );
+
+    ///Set/Get vector scales
+    void SetVectorScale( float );
+    float GetVectorScale();
 
 protected:
-   vtkGlyph3D*          glyph;
-   //vtkMultiGroupDataGeometryFilter*   filter;
-   vtkMultiGroupPolyDataMapper*   mapper;
-   vtkMaskPoints*       ptmask;
-   vtkTriangleFilter*   tris;
-   vtkStripper*         strip;
-   vtkThresholdPoints*  tfilter;
-   void SetGlyphWithThreshold();
-   void SetGlyphAttributes();
-   float GetVectorScaleFactor();
+    vtkGlyph3D*          glyph;
+    //vtkMultiGroupDataGeometryFilter*   filter;
+    vtkMultiGroupPolyDataMapper*   mapper;
+    vtkMaskPoints*       ptmask;
+    vtkTriangleFilter*   tris;
+    vtkStripper*         strip;
+    vtkThresholdPoints*  tfilter;
+    void SetGlyphWithThreshold();
+    void SetGlyphAttributes();
+    float GetVectorScaleFactor();
 
-   int _vectorThreshHoldMinPercentage;
-   int _vectorThreshHoldMaxPercentage;
-   double _vectorThreshHoldValues[ 2 ];
-   int _vectorRatioFactor;
-   int _scaleByVector;
-   float _vectorScale;
+    int _vectorThreshHoldMinPercentage;
+    int _vectorThreshHoldMaxPercentage;
+    double _vectorThreshHoldValues[ 2 ];
+    int _vectorRatioFactor;
+    int _scaleByVector;
+    float _vectorScale;
 };
 }
 }

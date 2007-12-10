@@ -59,87 +59,87 @@ namespace scenegraph
 {
 namespace nurbs
 {
-   class NURBSControlMesh;
-   class NURBSTessellatedSurface;
+class NURBSControlMesh;
+class NURBSTessellatedSurface;
 
 ///???
 class VE_NURBS_EXPORTS NURBSNode : public osg::Group
 {
 public:
     ///Constructor
-    NURBSNode(ves::xplorer::scenegraph::nurbs::NURBSObject* object = 0);
+    NURBSNode( ves::xplorer::scenegraph::nurbs::NURBSObject* object = 0 );
     ///Copy constructor using CopyOp to manage deep vs shallow copy
-    NURBSNode( const NURBSNode&, 
-        const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
+    NURBSNode( const NURBSNode&,
+               const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     META_Node( ves::xplorer::scenegraph::nurbs, NURBSNode );
 
 protected:
-   ///Destructor
-   virtual ~NURBSNode();
+    ///Destructor
+    virtual ~NURBSNode();
 public:
-   ///Set the ves::xplorer::scenegraph::nurbs::NURBSObject
-   ///\param object The ves::xplorer::scenegraph::nurbs::NURBSObject
-   void SetNURBSObject(ves::xplorer::scenegraph::nurbs::NURBSObject* object);
+    ///Set the ves::xplorer::scenegraph::nurbs::NURBSObject
+    ///\param object The ves::xplorer::scenegraph::nurbs::NURBSObject
+    void SetNURBSObject( ves::xplorer::scenegraph::nurbs::NURBSObject* object );
 
-   ///Show the triangulated wireframe surface
-   ///\param trueFalse turn off/on wireframe
-   void ViewWireframe(bool trueFalse);
+    ///Show the triangulated wireframe surface
+    ///\param trueFalse turn off/on wireframe
+    void ViewWireframe( bool trueFalse );
 
-   ///Update the control mesh and the surface
-   void UpdateControlMesh();
+    ///Update the control mesh and the surface
+    void UpdateControlMesh();
 
-   ///Turn on/off selection mode
-   ///\param trueFalse Flag for on/off of selection
-   void SetSelectionStatus(bool trueFalse);
+    ///Turn on/off selection mode
+    ///\param trueFalse Flag for on/off of selection
+    void SetSelectionStatus( bool trueFalse );
 
-   ///Set the mouse position
-   ///\param xPosition The x mouse position
-   ///\param yPosition The y mouse position
-   void SetMousePosition(float xPosition,float yPosition);
+    ///Set the mouse position
+    ///\param xPosition The x mouse position
+    ///\param yPosition The y mouse position
+    void SetMousePosition( float xPosition, float yPosition );
 
-   ///Move a control point
-   ///\param dx Change in x position of the control point
-   ///\param dy Change in y position of the control point
-   ///\param dz Change in z position of the control point
-   void MoveSelectedControlPoint(float dx,
-                                 float dy,
-                                 float dz);
-   ///Get the original surface
-   ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBS();
+    ///Move a control point
+    ///\param dx Change in x position of the control point
+    ///\param dy Change in y position of the control point
+    ///\param dz Change in z position of the control point
+    void MoveSelectedControlPoint( float dx,
+                                   float dy,
+                                   float dz );
+    ///Get the original surface
+    ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBS();
 
-   ///Get the osg::Geometry for the surface
-   osg::Geode* GetTriangulatedSurface();
+    ///Get the osg::Geometry for the surface
+    osg::Geode* GetTriangulatedSurface();
 
-   ///Get the osg::Geometry for the control mesh
-   osg::Geode* GetControlMesh();
+    ///Get the osg::Geometry for the control mesh
+    osg::Geode* GetControlMesh();
 
-   ///Get selection status
-   bool IsSelecting();
+    ///Get selection status
+    bool IsSelecting();
 
-   ///Determine if a control point is currently selected
-   bool IsControlPointSelected();
+    ///Determine if a control point is currently selected
+    bool IsControlPointSelected();
 
-   ///compute the bounding box
-   virtual osg::BoundingSphere computeBound()const;
+    ///compute the bounding box
+    virtual osg::BoundingSphere computeBound()const;
 protected:
 
-   bool _isSelecting;///<Selection flag
+    bool _isSelecting;///<Selection flag
 
-   bool _retessellate;///<Update the mesh
+    bool _retessellate;///<Update the mesh
 
-   bool _wireframeView;///<View the wireframe (tessellation)
+    bool _wireframeView;///<View the wireframe (tessellation)
 
-   ///Calculate the surface normal at a point
-   ///\param index The index of the point to calculate the normal
-   osg::Vec3 _calculateSurfaceNormalAtPoint(unsigned int index);
+    ///Calculate the surface normal at a point
+    ///\param index The index of the point to calculate the normal
+    osg::Vec3 _calculateSurfaceNormalAtPoint( unsigned int index );
 
-   ves::xplorer::scenegraph::nurbs::NURBSObject* _nurbsObject;///<The NURBSurface
-   osg::ref_ptr<osg::Geode> _triangulatedSurfaceGeode;///<The triangulated surface
-   osg::ref_ptr<osg::Geode> _controlMeshGeode;///<The control mesh geode
+    ves::xplorer::scenegraph::nurbs::NURBSObject* _nurbsObject;///<The NURBSurface
+    osg::ref_ptr<osg::Geode> _triangulatedSurfaceGeode;///<The triangulated surface
+    osg::ref_ptr<osg::Geode> _controlMeshGeode;///<The control mesh geode
 
-   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSControlMesh> _controlMeshDrawable;///<The control mesh drawable
-   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSTessellatedSurface> _triangulatedSurfaceDrawable;///<The control mesh drawable
+    osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSControlMesh> _controlMeshDrawable;///<The control mesh drawable
+    osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSTessellatedSurface> _triangulatedSurfaceDrawable;///<The control mesh drawable
 
 };
 }

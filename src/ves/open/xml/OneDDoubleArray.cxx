@@ -40,132 +40,132 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-OneDDoubleArray::OneDDoubleArray(unsigned int nElements)
-:XMLObject()
+OneDDoubleArray::OneDDoubleArray( unsigned int nElements )
+        : XMLObject()
 {
-   // These should match the schema for min and max occurances 
-   // of the float array
-   minIndex = 1;
-   SetObjectType("OneDDoubleArray");
+    // These should match the schema for min and max occurances
+    // of the float array
+    minIndex = 1;
+    SetObjectType( "OneDDoubleArray" );
 }
 /////////////////////////////
 //Destructor               //
 /////////////////////////////
 OneDDoubleArray::~OneDDoubleArray()
 {
-   ;
+    ;
 }
 ///////////////////////////////////////////
 OneDDoubleArray::OneDDoubleArray( const OneDDoubleArray& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
-   _array = input._array;
-   minIndex = input.minIndex;
+    _array = input._array;
+    minIndex = input.minIndex;
 }
 /////////////////////////////////////////////////////
-OneDDoubleArray& OneDDoubleArray::operator=( const OneDDoubleArray& input)
+OneDDoubleArray& OneDDoubleArray::operator=( const OneDDoubleArray& input )
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-      _array = input._array;
-      minIndex = input.minIndex;
-   }
-   return *this;
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =( input );
+        _array = input._array;
+        minIndex = input.minIndex;
+    }
+    return *this;
 }
 /////////////////////////////////////////////////
-void OneDDoubleArray::AddElementToArray(double value)
+void OneDDoubleArray::AddElementToArray( double value )
 {
-   _array.push_back(value);
+    _array.push_back( value );
 }
 /////////////////////////////////////////////////////////////////
 void OneDDoubleArray::SetArray( std::vector< double > input )
 {
-   _array.clear();
-   _array = input;
+    _array.clear();
+    _array = input;
 }
 //////////////////////////////////////////////////
-double OneDDoubleArray::GetElement(unsigned int index)
+double OneDDoubleArray::GetElement( unsigned int index )
 {
-   try
-   {
-      return _array.at(index);
-   }
-   catch (...)
-   {
-      std::cout<<"ERROR!!!"<<std::endl;
-      std::cout<<"Invalid index: "<<index<<" in OneDDoubleArray::GetElement!!!"<<std::endl;
-      return 0;
-   }
+    try
+    {
+        return _array.at( index );
+    }
+    catch ( ... )
+    {
+        std::cout << "ERROR!!!" << std::endl;
+        std::cout << "Invalid index: " << index << " in OneDDoubleArray::GetElement!!!" << std::endl;
+        return 0;
+    }
 }
 ///////////////////////////////////////////////////
 std::vector< double > OneDDoubleArray::GetArray( void )
 {
-   return _array;
+    return _array;
 }
 ////////////////////////////////////
 void OneDDoubleArray::_updateVEElement( std::string input )
 {
-   //Be sure to set the number of children (_nChildren) 
-   //either here or in the updating subElements code
-   //this will be based on the size of the double array
-   //_nChildren = static_cast< unsigned int >( _array.size() );
+    //Be sure to set the number of children (_nChildren)
+    //either here or in the updating subElements code
+    //this will be based on the size of the double array
+    //_nChildren = static_cast< unsigned int >( _array.size() );
 
-   //Add code here to update the specific sub elements
-   for ( unsigned int i = 0; i < _array.size(); ++i )
-   {
-      // name comes from verg.xsd
-      DOMElement* valueTag  = _rootDocument->createElement( xercesString("data") );
-      _veElement->appendChild( valueTag );      
-      DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
-      valueTag->appendChild( valueNum );
-   }
+    //Add code here to update the specific sub elements
+    for( unsigned int i = 0; i < _array.size(); ++i )
+    {
+        // name comes from verg.xsd
+        DOMElement* valueTag  = _rootDocument->createElement( xercesString( "data" ) );
+        _veElement->appendChild( valueTag );
+        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
+        valueTag->appendChild( valueNum );
+    }
 }
 ////////////////////////////////////////////////////////////
-void OneDDoubleArray::SetObjectFromXMLData(DOMNode* xmlInput)
+void OneDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
 {
-   //TODO:fill in the values for the double array
-   //this is currently maxed out at 4 in the schema but
-   //we can adjust this to be larger if needed. Also it
-   //has to be at least 2 elements according to the schema
-   DOMElement* currentElement = 0;
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast< DOMElement* >(xmlInput);
-   }
-   
-   if(currentElement)
-   {   
-      _array.clear();
-      
-      // do we need to delete the old one or does xerces handle this???
-      DOMNodeList* nodeList = currentElement->getElementsByTagName(xercesString("data"));
-      XMLSize_t numNodes = nodeList->getLength();
-      if ( ( minIndex > numNodes ) )
-      {
-         std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" << 
-                     " This node has too few or too many children." << std::endl;
-      }
-   
-      // This for loop may be wrong since the the text node and 
-      // element may be seprate entities.
-      // if that is the case then inside the for loop
-      // we just need to get each text node child
-      for ( XMLSize_t i = 0; i < numNodes; ++i )
-      {
-         //We know this about the node so we can cast it...
-         DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
-         char* tempString = XMLString::transcode( temp->getData() );
-         std::string stringVal( tempString );
-         _array.push_back( std::atof( stringVal.c_str() ) );
-         XMLString::release( &tempString );
-      }
-   }
-   else
-   {
-      std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" << 
-                  " This node has no children which means there is probably a problem." << std::endl;
-   }
+    //TODO:fill in the values for the double array
+    //this is currently maxed out at 4 in the schema but
+    //we can adjust this to be larger if needed. Also it
+    //has to be at least 2 elements according to the schema
+    DOMElement* currentElement = 0;
+    if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast< DOMElement* >( xmlInput );
+    }
+
+    if( currentElement )
+    {
+        _array.clear();
+
+        // do we need to delete the old one or does xerces handle this???
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "data" ) );
+        XMLSize_t numNodes = nodeList->getLength();
+        if (( minIndex > numNodes ) )
+        {
+            std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" <<
+            " This node has too few or too many children." << std::endl;
+        }
+
+        // This for loop may be wrong since the the text node and
+        // element may be seprate entities.
+        // if that is the case then inside the for loop
+        // we just need to get each text node child
+        for( XMLSize_t i = 0; i < numNodes; ++i )
+        {
+            //We know this about the node so we can cast it...
+            DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
+            char* tempString = XMLString::transcode( temp->getData() );
+            std::string stringVal( tempString );
+            _array.push_back( std::atof( stringVal.c_str() ) );
+            XMLString::release( &tempString );
+        }
+    }
+    else
+    {
+        std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" <<
+        " This node has no children which means there is probably a problem." << std::endl;
+    }
 }
 

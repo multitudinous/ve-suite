@@ -42,7 +42,7 @@ namespace open
 {
 namespace xml
 {
-    class Command;
+class Command;
 }
 }
 }
@@ -70,17 +70,17 @@ namespace conductor
 
 namespace util
 {
-    class UI_TransientDialog;
+class UI_TransientDialog;
 }
 /*!\file advancedstreamlines.h
  *advancedstreamlines API
  */
 
 /*!\class AdvancedStreamlines
- * 
+ *
  */
 class VE_GUIPLUGINS_EXPORTS AdvancedStreamlines: public wxDialog
-{    
+{
 public:
     /// Constructors
     AdvancedStreamlines();
@@ -145,13 +145,13 @@ public:
     void SetGlowStrength( double value );
 
     ///Live command for setting streamline size
-    void _OnLineDiameter( wxCommandEvent& WXUNUSED( event ) ); 
+    void _OnLineDiameter( wxCommandEvent& WXUNUSED( event ) );
 
     ///Live command for setting streamline glow strength
-    void _OnGlowStrength( wxCommandEvent& WXUNUSED( event ) ); 
+    void _OnGlowStrength( wxCommandEvent& WXUNUSED( event ) );
 
     ///Call particle tracking gui
-    void _OnParticleTracking( wxCommandEvent& WXUNUSED( event ) ); 
+    void _OnParticleTracking( wxCommandEvent& WXUNUSED( event ) );
 
     ///Get the propagation step size.
     double GetPropagationSize();
@@ -187,9 +187,9 @@ public:
 
 protected:
 
-    wxSlider* _propagationSlider;  
-    wxSlider* _integrationSlider; 
-    wxSlider* _sphereArrowParticleSlider; 
+    wxSlider* _propagationSlider;
+    wxSlider* _integrationSlider;
+    wxSlider* _sphereArrowParticleSlider;
     wxSlider* _diameterSlider;
     wxSlider* _glowSlider;
     wxCheckBox* _lastSeedPtCheck;

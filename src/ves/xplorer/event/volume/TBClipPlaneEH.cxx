@@ -47,70 +47,67 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedClipPlaneEventHandler::TextureBasedClipPlaneEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedClipPlaneEventHandler
-::TextureBasedClipPlaneEventHandler(const TextureBasedClipPlaneEventHandler& ceh)
-{
-}
+::TextureBasedClipPlaneEventHandler( const TextureBasedClipPlaneEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedClipPlaneEventHandler::~TextureBasedClipPlaneEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedClipPlaneEventHandler& 
-TextureBasedClipPlaneEventHandler::operator=(const TextureBasedClipPlaneEventHandler& rhs)
+TextureBasedClipPlaneEventHandler&
+TextureBasedClipPlaneEventHandler::operator=( const TextureBasedClipPlaneEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedClipPlaneEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedClipPlaneEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr direction = command->GetDataValuePair("Direction");      
-      std::string planeDirection;
-      direction->GetData(planeDirection);
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr direction = command->GetDataValuePair( "Direction" );
+        std::string planeDirection;
+        direction->GetData( planeDirection );
 
-      DataValuePairWeakPtr coordinate = command->GetDataValuePair("Coordinate");      
-      std::string planeCoordinate;
-      coordinate->GetData( planeCoordinate );
-            
-      if(planeDirection != "Both")
-      {
-         DataValuePairWeakPtr value = command->GetDataValuePair("ROI Value");      
-         double alpha;
-         value->GetData( alpha );
-         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
-                                                                      planeDirection,
-		                                                                 alpha);
-      }
-      else if(planeDirection == "Both")
-      {
-         DataValuePairWeakPtr minValue = command->GetDataValuePair("ROI Min Value");      
-         double minAlpha;
-         minValue->GetData( minAlpha );
-         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
-                                                                         "Positive",
-		                                                                    minAlpha);
-      
-         DataValuePairWeakPtr maxValue = command->GetDataValuePair("ROI Max Value");      
-         double maxAlpha;
-         maxValue->GetData( maxAlpha );
-         ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane(planeCoordinate,
-                                                                         "Negative",
-		                                                                    maxAlpha);
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedClipPlaneEventHandler::_operateOnNode()"<<std::endl;
-   }
+        DataValuePairWeakPtr coordinate = command->GetDataValuePair( "Coordinate" );
+        std::string planeCoordinate;
+        coordinate->GetData( planeCoordinate );
+
+        if( planeDirection != "Both" )
+        {
+            DataValuePairWeakPtr value = command->GetDataValuePair( "ROI Value" );
+            double alpha;
+            value->GetData( alpha );
+            ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
+                    planeDirection,
+                    alpha );
+        }
+        else if( planeDirection == "Both" )
+        {
+            DataValuePairWeakPtr minValue = command->GetDataValuePair( "ROI Min Value" );
+            double minAlpha;
+            minValue->GetData( minAlpha );
+            ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
+                    "Positive",
+                    minAlpha );
+
+            DataValuePairWeakPtr maxValue = command->GetDataValuePair( "ROI Max Value" );
+            double maxAlpha;
+            maxValue->GetData( maxAlpha );
+            ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
+                    "Negative",
+                    maxAlpha );
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedClipPlaneEventHandler::_operateOnNode()" << std::endl;
+    }
 }

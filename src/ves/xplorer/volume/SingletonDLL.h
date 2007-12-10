@@ -40,16 +40,16 @@ namespace xplorer
 {
 namespace volume
 {
-   /**
-    * This little Singleton is necessary to 
-    * make Singletons actually have a single instance in Windows DLLs.
-    */
-   template <class T>
-   class VE_TEXTURE_BASED_EXPORTS Singleton
-   {
-   public:
-      static T& Instance();
-   };
+/**
+ * This little Singleton is necessary to
+ * make Singletons actually have a single instance in Windows DLLs.
+ */
+template <class T>
+class VE_TEXTURE_BASED_EXPORTS Singleton
+{
+public:
+    static T& Instance();
+};
 }
 }
 }

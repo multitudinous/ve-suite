@@ -37,7 +37,7 @@
   Double Array API
   */
 /*!\class VE_XML::OneDStringArray
- *This class basically manages a vector of doubles. 
+ *This class basically manages a vector of doubles.
  */
 #include <vector>
 
@@ -54,52 +54,52 @@ namespace xml
 class VE_XML_EXPORTS OneDStringArray : public XMLObject
 {
 public:
-   ///Constructor
-   ///\param nElements The length of the float array.
-   OneDStringArray(unsigned int nElements=3);
-   ///Destructor
-   virtual ~OneDStringArray();
-   ///Copy Constructor
-   OneDStringArray( const OneDStringArray& );
-   ///equal operator
-   OneDStringArray& operator= ( const OneDStringArray& );
+    ///Constructor
+    ///\param nElements The length of the float array.
+    OneDStringArray( unsigned int nElements = 3 );
+    ///Destructor
+    virtual ~OneDStringArray();
+    ///Copy Constructor
+    OneDStringArray( const OneDStringArray& );
+    ///equal operator
+    OneDStringArray& operator= ( const OneDStringArray& );
 
-   ///Add a new element to the end of this array
-   ///\param newValue The new value to add.
-   void AddElementToArray( std::string newValue);
-   ///Set this array from an input vector
-   ///\param newArrayValues The new values to set to this array.
-   void SetArray( std::vector<std::string> newArrayValues);
+    ///Add a new element to the end of this array
+    ///\param newValue The new value to add.
+    void AddElementToArray( std::string newValue );
+    ///Set this array from an input vector
+    ///\param newArrayValues The new values to set to this array.
+    void SetArray( std::vector<std::string> newArrayValues );
 
-   ///Get a specific element
-   ///\param index The index of the element to return
-   std::string GetElement( unsigned int index);
+    ///Get a specific element
+    ///\param index The index of the element to return
+    std::string GetElement( unsigned int index );
 
-   ///Get the internal array.
-   std::vector<std::string> GetArray( void );
-   
-   ///Populate the XMLObject data from an XML element.
-   ///\param inputXML The input data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML ); 
-   
+    ///Get the internal array.
+    std::vector<std::string> GetArray( void );
+
+    ///Populate the XMLObject data from an XML element.
+    ///\param inputXML The input data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML );
+
 protected:
-   
-   ///Internally update the data.
-   ///\param tagName The tag name of this element.
-   virtual void _updateVEElement( std::string tagName);
-   unsigned int _nElements;///<Length of this float array.
-   std::vector<std::string> _array;///<Raw data.
+
+    ///Internally update the data.
+    ///\param tagName The tag name of this element.
+    virtual void _updateVEElement( std::string tagName );
+    unsigned int _nElements;///<Length of this float array.
+    std::vector<std::string> _array;///<Raw data.
 
 private:
-   XMLSize_t minIndex;///<Mininum size of the array.
+    XMLSize_t minIndex;///<Mininum size of the array.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, OneDStringArray* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, OneDStringArray* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

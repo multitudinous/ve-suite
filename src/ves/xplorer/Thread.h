@@ -46,20 +46,20 @@ namespace xplorer
 Thread API
 */
 /*!\class ves::xplorer::Thread
-* 
+*
 */
 class VE_XPLORER_EXPORTS Thread
 {
 public:
-  ///Constructor
-   Thread( void );
- ///Destructor
-   ~Thread( void );
+    ///Constructor
+    Thread( void );
+///Destructor
+    ~Thread( void );
 
-   //   private:
-   //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
-   //vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
-   vpr::Thread* new_thread;
+    //   private:
+    //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
+    //vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
+    vpr::Thread* new_thread;
 
 };
 }

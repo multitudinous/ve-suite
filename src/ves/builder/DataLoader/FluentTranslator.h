@@ -41,39 +41,51 @@ namespace builder
 {
 namespace DataLoader
 {
-class VE_USER_BUILDER_EXPORTS FluentTranslator: 
-    public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+class VE_USER_BUILDER_EXPORTS FluentTranslator:
+            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   FluentTranslator();
-   virtual ~FluentTranslator();
-   ///Display help for the Fluent translator
-   virtual void DisplayHelp( void );
-   //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
-   {
-   public:
-      FluentTranslateCbk(){;}
-      virtual ~FluentTranslateCbk(){;}
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-   };
-   //////////////////////////////////////////////////////
-   class VE_USER_BUILDER_EXPORTS FluentPreTranslateCbk: 
-      public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
-   {
-   public:
-      FluentPreTranslateCbk(){;}
-      virtual ~FluentPreTranslateCbk(){;}
-      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-   };
+    FluentTranslator();
+    virtual ~FluentTranslator();
+    ///Display help for the Fluent translator
+    virtual void DisplayHelp( void );
+    //////////////////////////////////////////////////////
+class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        FluentTranslateCbk()
+        {
+            ;
+        }
+        virtual ~FluentTranslateCbk()
+        {
+            ;
+        }
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+    };
+    //////////////////////////////////////////////////////
+class VE_USER_BUILDER_EXPORTS FluentPreTranslateCbk:
+                public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        FluentPreTranslateCbk()
+        {
+            ;
+        }
+        virtual ~FluentPreTranslateCbk()
+        {
+            ;
+        }
+        void Preprocess( int argc, char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+    };
 protected:
-   FluentPreTranslateCbk cmdParser;
-   FluentTranslateCbk fluentToVTK;
+    FluentPreTranslateCbk cmdParser;
+    FluentTranslateCbk fluentToVTK;
 };
 }
 }

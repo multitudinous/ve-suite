@@ -42,8 +42,8 @@
 #ifdef _OSG
 namespace osg
 {
-   class Group;
-   class Texture3D;
+class Group;
+class Texture3D;
 }
 #include <ves/xplorer/volume/cfdVolumeVisNodeHandler.h>
 
@@ -61,71 +61,76 @@ class cfdUpdateTextureCallback;
 class cfd3DTextureCullCallback;
 class cfdOSGPingPongTexture3D;
 
-class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler{
-      public:
-         ///Constructor
-         cfdVectorVolumeVisHandler();
-         ///Copy Constructor
-         ///\param vvnh cfdVectorVolumeVisHandler to copy
-         cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHandler& vvnh);
-         ///Destructor
-         virtual ~cfdVectorVolumeVisHandler();
-         ///Initialize parameters
-         virtual void Init();
-         ///Set the cfdTextureManager
-         ///\param tm cfdTextureManager pointer
-         virtual void SetTextureManager(cfdTextureManager* tm);
+class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler
+{
+public:
+    ///Constructor
+    cfdVectorVolumeVisHandler();
+    ///Copy Constructor
+    ///\param vvnh cfdVectorVolumeVisHandler to copy
+    cfdVectorVolumeVisHandler( const cfdVectorVolumeVisHandler& vvnh );
+    ///Destructor
+    virtual ~cfdVectorVolumeVisHandler();
+    ///Initialize parameters
+    virtual void Init();
+    ///Set the cfdTextureManager
+    ///\param tm cfdTextureManager pointer
+    virtual void SetTextureManager( cfdTextureManager* tm );
 
-         ///Set the cfdPBufferManager pointer
-         ///\param pbm cfdPBufferManager pointer
-         void SetPBufferManager(cfdPBufferManager* pbm);
-         ///Ping-pong the advection textures
-         void PingPongTextures();
-         ///Set the current transient timestep
-         ///\param whichTimeStep The index of the timestep in the cfdTextureManager
-         ///\param makeSlave The Cluster information
-         void SetCurrentTransientTexture(unsigned int whichTimeStep,
-                                      bool makeSlave = false);
+    ///Set the cfdPBufferManager pointer
+    ///\param pbm cfdPBufferManager pointer
+    void SetPBufferManager( cfdPBufferManager* pbm );
+    ///Ping-pong the advection textures
+    void PingPongTextures();
+    ///Set the current transient timestep
+    ///\param whichTimeStep The index of the timestep in the cfdTextureManager
+    ///\param makeSlave The Cluster information
+    void SetCurrentTransientTexture( unsigned int whichTimeStep,
+                                     bool makeSlave = false );
 
-         ///Get the cfdOSGAdvectionShaderManager pointer
-         cfdOSGAdvectionShaderManager* GetAdvectionShaderManager(){return _aSM;}
-         ///Equal Operator
-         ///\param vvnh cfdVectorVolumeVisHandler to set this equal to.
-         cfdVectorVolumeVisHandler& operator=(const cfdVectorVolumeVisHandler& vvnh);
-      protected:
-         ///Set up the decorator node
-         virtual void _setUpDecorator();
-         ///Apply the texture matrix
-         virtual void _applyTextureMatrix();
-         ///Create the texture "ping-ponger"
-         void _createTexturePingPong();
-         ///Iniit the property texturee
-         void _initPropertyTexture();
-         ///Create velocity field from current cfdTextureManager if it exists
-         void _createVelocityFromTextureManager();
-         ///Setup transfer shader
-         void _createTransferShader();
-         ///Setup transfer functions state sets
-         void _setupTransferPropertyStateSet();
-         ///Set up advection property texture
-         void _setupAdvectionPropertyStateSet();
+    ///Get the cfdOSGAdvectionShaderManager pointer
+    cfdOSGAdvectionShaderManager* GetAdvectionShaderManager()
+    {
+        return _aSM;
+    }
+    ///Equal Operator
+    ///\param vvnh cfdVectorVolumeVisHandler to set this equal to.
+    cfdVectorVolumeVisHandler& operator=( const cfdVectorVolumeVisHandler& vvnh );
+protected:
+    ///Set up the decorator node
+    virtual void _setUpDecorator();
+    ///Apply the texture matrix
+    virtual void _applyTextureMatrix();
+    ///Create the texture "ping-ponger"
+    void _createTexturePingPong();
+    ///Iniit the property texturee
+    void _initPropertyTexture();
+    ///Create velocity field from current cfdTextureManager if it exists
+    void _createVelocityFromTextureManager();
+    ///Setup transfer shader
+    void _createTransferShader();
+    ///Setup transfer functions state sets
+    void _setupTransferPropertyStateSet();
+    ///Set up advection property texture
+    void _setupAdvectionPropertyStateSet();
 
-         bool _ssIsSet;///<StateSet is initializer
+    bool _ssIsSet;///<StateSet is initializer
 
-         cfdOSGAdvectionShaderManager* _aSM;///<Advection shader algorithm
-         cfdOSGTransferShaderManager* _transferSM;///<Transfer funciton shader manager for advection algorithm
-   
-         osg::ref_ptr<cfd3DTextureCullCallback> _cullCallback;;///<Cullcallback for advection algorithm
-         osg::ref_ptr<cfdUpdateTextureCallback> _velocityCbk;///<Update callback for velocity texture
-         cfdPBufferManager* _pbuffer;///<PBuffer
-         cfdOSGPingPongTexture3D* _texturePingPong;///<Texture "Ping-pong"er
+    cfdOSGAdvectionShaderManager* _aSM;///<Advection shader algorithm
+    cfdOSGTransferShaderManager* _transferSM;///<Transfer funciton shader manager for advection algorithm
 
-         osg::ref_ptr<osg::Group> _advectionSlice;///<Group for advection slice
-         osg::ref_ptr<osg::Group> _propertyTextureGroup;///<Group of property texure
-         osg::ref_ptr<osg::Texture3D> _property;///<Property texture
-         osg::ref_ptr<osg::Texture3D> _velocity;///<Velocity texture
+    osg::ref_ptr<cfd3DTextureCullCallback> _cullCallback;
+    ;///<Cullcallback for advection algorithm
+    osg::ref_ptr<cfdUpdateTextureCallback> _velocityCbk;///<Update callback for velocity texture
+    cfdPBufferManager* _pbuffer;///<PBuffer
+    cfdOSGPingPongTexture3D* _texturePingPong;///<Texture "Ping-pong"er
 
-   };
+    osg::ref_ptr<osg::Group> _advectionSlice;///<Group for advection slice
+    osg::ref_ptr<osg::Group> _propertyTextureGroup;///<Group of property texure
+    osg::ref_ptr<osg::Texture3D> _property;///<Property texture
+    osg::ref_ptr<osg::Texture3D> _velocity;///<Velocity texture
+
+};
 }
 }
 }

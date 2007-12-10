@@ -50,51 +50,47 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADAddAttributeEventHandler::CADAddAttributeEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADAddAttributeEventHandler::CADAddAttributeEventHandler(const CADAddAttributeEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADAddAttributeEventHandler::CADAddAttributeEventHandler( const CADAddAttributeEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADAddAttributeEventHandler::~CADAddAttributeEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADAddAttributeEventHandler& CADAddAttributeEventHandler::operator=(const CADAddAttributeEventHandler& rhs)
+CADAddAttributeEventHandler& CADAddAttributeEventHandler::operator=( const CADAddAttributeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddAttributeEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADAddAttributeEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      std::cout<<"---Adding attribute to node---"<<std::endl;
-      std::cout<<"CADAddAttributeEventHandler."<<std::endl;
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr newAttribute = command->GetDataValuePair("Attribute");
-      CADAttribute* rawAttribute = dynamic_cast<CADAttribute*>(newAttribute->GetDataXMLObject());
+    try
+    {
+        std::cout << "---Adding attribute to node---" << std::endl;
+        std::cout << "CADAddAttributeEventHandler." << std::endl;
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr newAttribute = command->GetDataValuePair( "Attribute" );
+        CADAttribute* rawAttribute = dynamic_cast<CADAttribute*>( newAttribute->GetDataXMLObject() );
 
-      //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
-      std::cout<<"Node:"<<nodeID->GetDataString()<<std::endl;
-      std::cout<<"Attribute:"<<rawAttribute->GetAttributeName()<<std::endl;
-      m_cadHandler->AddAttributeToNode(nodeID->GetDataString(),rawAttribute);
-   }
-   catch(...)
-   {
-      std::cout<<"Couldn't add attribute to node!!!"<<std::endl;
-      std::cout<<"CADAddAttributeEventHandler."<<std::endl;
-   }
+        //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
+        std::cout << "Node:" << nodeID->GetDataString() << std::endl;
+        std::cout << "Attribute:" << rawAttribute->GetAttributeName() << std::endl;
+        m_cadHandler->AddAttributeToNode( nodeID->GetDataString(), rawAttribute );
+    }
+    catch ( ... )
+    {
+        std::cout << "Couldn't add attribute to node!!!" << std::endl;
+        std::cout << "CADAddAttributeEventHandler." << std::endl;
+    }
 }

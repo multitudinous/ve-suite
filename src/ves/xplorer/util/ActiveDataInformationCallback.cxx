@@ -39,34 +39,31 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////////////
 ActiveDataInformationCallback::ActiveDataInformationCallback()
-{
-
-}
+{}
 ///////////////////////////////////////////////////////////////
 ActiveDataInformationCallback::~ActiveDataInformationCallback()
-{
-}
+{}
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ActiveDataInformationCallback::OperateOnDataset(vtkDataSet* dataset)
+void ActiveDataInformationCallback::OperateOnDataset( vtkDataSet* dataset )
 {
-    if(!m_activeScalar.empty())
+    if( !m_activeScalar.empty() )
     {
-        dataset->GetPointData()->SetActiveScalars(m_activeScalar.c_str());   
+        dataset->GetPointData()->SetActiveScalars( m_activeScalar.c_str() );
     }
-    if(!m_activeVector.empty())
+    if( !m_activeVector.empty() )
     {
-        dataset->GetPointData()->SetActiveVectors(m_activeVector.c_str());   
+        dataset->GetPointData()->SetActiveVectors( m_activeVector.c_str() );
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void ActiveDataInformationCallback::SetActiveDataName(std::string name,
-		                                                               bool isVector)
+void ActiveDataInformationCallback::SetActiveDataName( std::string name,
+                                                       bool isVector )
 {
-    (isVector)?m_activeVector = name:m_activeScalar = name;   
+    ( isVector ) ? m_activeVector = name : m_activeScalar = name;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
-std::string ActiveDataInformationCallback::GetActiveDataName(bool isVector)
+std::string ActiveDataInformationCallback::GetActiveDataName( bool isVector )
 {
-    return (isVector)?m_activeVector:m_activeScalar;   
+    return ( isVector ) ? m_activeVector : m_activeScalar;
 }
 

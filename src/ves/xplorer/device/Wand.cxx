@@ -65,15 +65,15 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
-:
-subzeroFlag( 0 ),
-rotationFlag( 1 ),
-distance( 1000 ),
-cursorLen( 1.0f ),
-command( 0 ),
-translationStepSize( 0.25f ),
-rotationStepSize( 1.0f ),
-m_buttonPushed( false )
+        :
+        subzeroFlag( 0 ),
+        rotationFlag( 1 ),
+        distance( 1000 ),
+        cursorLen( 1.0f ),
+        command( 0 ),
+        translationStepSize( 0.25f ),
+        rotationStepSize( 1.0f ),
+        m_buttonPushed( false )
 {
     wand.init( "VJWand" );
     head.init( "VJHead" );
@@ -81,14 +81,14 @@ m_buttonPushed( false )
     digital[ 0 ].init( "VJButton0" );
     // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
     digital[ 1 ].init( "VJButton1" );
-    // 12 o'clock -- forward navigation       
-    digital[ 2 ].init( "VJButton2" );  
-    // 3 o'clock -- not used at present     
+    // 12 o'clock -- forward navigation
+    digital[ 2 ].init( "VJButton2" );
+    // 3 o'clock -- not used at present
     digital[ 3 ].init( "VJButton3" );
-    // 6 o'clock -- reset      
+    // 6 o'clock -- reset
     digital[ 4 ].init( "VJButton4" );
-    // 9 o'clock -- exit streamer while loop     
-    digital[ 5 ].init( "VJButton5" );       
+    // 9 o'clock -- exit streamer while loop
+    digital[ 5 ].init( "VJButton5" );
 
     beamLineSegment = new osg::LineSegment();
     Initialize();
@@ -126,7 +126,7 @@ void Wand::UpdateNavigation()
     }
 
     m_buttonPushed = false;
-    
+
     //Update the wand direction every frame
     UpdateWandLocalDirection();
 
@@ -166,15 +166,15 @@ void Wand::UpdateNavigation()
         newCommand = commandData->GetDataName();
     }
 
-    if( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )         
+    if( !newCommand.compare( "ROTATE_ABOUT_HEAD" ) )
     {
         SetHeadRotationFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )         
+    else if( !newCommand.compare( "Z_ZERO_PLANE" ) )
     {
         SetSubZeroFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )         
+    else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
         for( unsigned int i = 0; i < 3; ++i )
         {
@@ -185,36 +185,36 @@ void Wand::UpdateNavigation()
 
         world_quat[ 3 ] = 1.0f;
     }
-    else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )         
+    else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
     {
         //This equation returns a range of ~ 0.01' -> 220'
         //the equation is 1/100 * e ^ ( x / 10 ) where 1 < x < 100
-        translationStepSize = 0.01f * exp( cfdIso_value * 0.10f );   
+        translationStepSize = 0.01f * exp( cfdIso_value * 0.10f );
     }
-    else if( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )         
+    else if( !newCommand.compare( "CHANGE_ROTATION_STEP_SIZE" ) )
     {
-        //This equation returns a range of ~ 0.00029' -> 1.586' 
+        //This equation returns a range of ~ 0.00029' -> 1.586'
         //NOTE: These are in degrees
-        //This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50 
-        rotationStepSize = 0.001333f * powf( ( cfdIso_value * 0.5f ), 2.2f );
+        //This equation is 1 / 750 * ( x / 2 ) ^ 2.2 where 1 < x < 50
+        rotationStepSize = 0.001333f * powf(( cfdIso_value * 0.5f ), 2.2f );
     }
 
     //Navigate with buttons now
-    if( ( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) || 
-        ( buttonData[ 1 ] == gadget::Digital::ON ) )
+    if (( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
+            ( buttonData[ 1 ] == gadget::Digital::ON ) )
     {
         m_buttonPushed = true;
         RotateAboutWand();
     }
     //Navigation based on current wand direction
     else if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
-             buttonData[ 2 ] == gadget::Digital::ON )
-    { 
+              buttonData[ 2 ] == gadget::Digital::ON )
+    {
         double* tempWandDir = GetDirection();
-        vprDEBUG( vesDBG, 1 ) << "|\tWand direction :" 
-            << tempWandDir[ 0 ] << " : "
-            << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
-            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tWand direction :"
+        << tempWandDir[ 0 ] << " : "
+        << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
+        << std::endl << vprDEBUG_FLUSH;
 
         m_buttonPushed = true;
         for( int i = 0; i < 3; ++i )
@@ -226,8 +226,8 @@ void Wand::UpdateNavigation()
     }
     //Reset back to 0, 0, 0
     else if( buttonData[ 4 ] == gadget::Digital::TOGGLE_ON ||
-             buttonData[ 4 ] == gadget::Digital::ON )
-    {         
+              buttonData[ 4 ] == gadget::Digital::ON )
+    {
         m_buttonPushed = true;
         for( unsigned int i = 0; i < 3; ++i )
         {
@@ -235,17 +235,17 @@ void Wand::UpdateNavigation()
             world_quat[ i ] = 0.0f;
             center_point->mData[ i ] = 0.0f;
         }
-        
+
         world_quat[ 3 ] = 1.0f;
     }
-    
+
     ///If we actually pushed a button then move things
     if( m_buttonPushed )
     {
-        //Set the DCS postion based off of previous 
+        //Set the DCS postion based off of previous
         //manipulation of the worldTrans array
         for( unsigned int i = 0; i < 3; ++i )
-        {   
+        {
             m_worldTrans[ i ] = -m_worldTrans[ i ];
         }
 
@@ -308,14 +308,14 @@ void Wand::SelectObject()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
-{ 
+{
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
 
-    if ( listOfHits.empty() )
+    if( listOfHits.empty() )
     {
-        vprDEBUG(vesDBG,1) << "|\tWand::ProcessHit No object selected" 
-                           << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
+        << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
@@ -327,8 +327,8 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     {
         objectHit = listOfHits[ i ];
         //std::cout << i << " " <<  objectHit._geode->getName() << std::endl;
-        if( ( objectHit._geode->getName() != laserName ) && 
-            ( objectHit._geode->getName() != "Root Node" ) ) 
+        if (( objectHit._geode->getName() != laserName ) &&
+                ( objectHit._geode->getName() != "Root Node" ) )
         {
             break;
         }
@@ -346,12 +346,12 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
     if( parentNode.valid() )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tObjects has name " 
-            << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
+        << parentNode->getName() << std::endl << vprDEBUG_FLUSH;
 
-        vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors " 
-            << parentNode->getDescriptions().at( 1 ) 
-            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
+        << parentNode->getDescriptions().at( 1 )
+        << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
     }
@@ -359,9 +359,9 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     {
         selectedGeometry = objectHit._geode;
 
-        vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name " 
-          << objectHit._geode->getParents().front()->getName() 
-          << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
+        << objectHit._geode->getParents().front()->getName()
+        << std::endl << vprDEBUG_FLUSH;
 
         activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
     }
@@ -369,9 +369,9 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 ////////////////////////////////////////////////////////////////////////////////
 //This function currently deletes the existing beam each time it is called and
 //add a new beam.  This should be replaced such that it is only called once
-//and then a transform is modified for the location.  
+//and then a transform is modified for the location.
 void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
-{   
+{
     if( beamGeode.valid() )
     {
         rootNode->asGroup()->removeChild( beamGeode.get() );
@@ -385,21 +385,21 @@ void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
     rootNode->asGroup()->addChild( beamGeode.get() );
 
     osg::ref_ptr< osg::Vec3Array > beamVertices = new osg::Vec3Array;
-    beamVertices->push_back( 
-        osg::Vec3( start[ 0 ] - 0.1, start[ 1 ], start[ 2 ] ) ); 
-    beamVertices->push_back( 
-        osg::Vec3( start[ 0 ] + 0.1, start[ 1 ], start[ 2 ] ) ); 
-    beamVertices->push_back( 
-        osg::Vec3( end[ 0 ] + 0.1, end[ 1 ], end[ 2 ] ) ); 
-    beamVertices->push_back( 
-        osg::Vec3( end[ 0 ] - 0.1, end[ 1 ], end[ 2] ) ); 
-    beamVertices->push_back( 
-        osg::Vec3( start[ 0 ] - 0.1, start[ 1 ], start[ 2 ] + 0.1 ) ); 
-    beamVertices->push_back( 
-        osg::Vec3( start[ 0 ] + 0.1, start[ 1 ], start[ 2 ] + 0.1 ) ); 
-    beamVertices->push_back( 
-        osg::Vec3( end[ 0 ] + 0.1, end[ 1 ], end[ 2 ] + 0.1 ) ); 
-    beamVertices->push_back( 
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] - 0.1, start[ 1 ], start[ 2 ] ) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] + 0.1, start[ 1 ], start[ 2 ] ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] + 0.1, end[ 1 ], end[ 2 ] ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] - 0.1, end[ 1 ], end[ 2] ) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] - 0.1, start[ 1 ], start[ 2 ] + 0.1 ) );
+    beamVertices->push_back(
+        osg::Vec3( start[ 0 ] + 0.1, start[ 1 ], start[ 2 ] + 0.1 ) );
+    beamVertices->push_back(
+        osg::Vec3( end[ 0 ] + 0.1, end[ 1 ], end[ 2 ] + 0.1 ) );
+    beamVertices->push_back(
         osg::Vec3( end[ 0 ] - 0.1, end[ 1 ], end[ 2 ] + 0.1 ) );
 
     beamGeometry->setVertexArray( beamVertices.get() );
@@ -445,7 +445,7 @@ void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
     beamGeometry->addPrimitiveSet( beamBack.get() );
 
     osg::ref_ptr< osg::DrawElementsUInt > beamFront =
-        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0);
+        new osg::DrawElementsUInt( osg::PrimitiveSet::QUADS, 0 );
     beamFront->push_back( 3 );
     beamFront->push_back( 2 );
     beamFront->push_back( 6 );
@@ -461,16 +461,16 @@ void Wand::DrawLine( osg::Vec3d start, osg::Vec3d end )
     beamGeometry->setColorArray( colors.get() );
     beamGeometry->setColorIndices( cfdColorIndexArray.get() );
     beamGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
-}   
+}
 ////////////////////////////////////////////////////////////////////////////////
 //The current implemention uses VJButton0 to select an object then if VJButton3
-//is pressed the object is translated with the users motion.  Later the 
+//is pressed the object is translated with the users motion.  Later the
 //selection method will occur from voice commands and translation will be done
 //using gestures from a glove.
 void Wand::UpdateObjectHandler()
 {
-    vprDEBUG( vesDBG, 3 ) << "|\tStart Wand::UpdateObjectHandler" 
-                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tStart Wand::UpdateObjectHandler"
+    << std::endl << vprDEBUG_FLUSH;
 
     //Update the juggler location of the wand
     UpdateWandLocalDirection();
@@ -486,7 +486,7 @@ void Wand::UpdateObjectHandler()
     if( digital[ 0 ]->getData() == gadget::Digital::TOGGLE_ON )
     {
         SelectObject();
-        //Set delta back to 0 so that it is not moved 
+        //Set delta back to 0 so that it is not moved
         //by the old delta from the previous frame
         //UpdateDeltaWandPosition();
     }
@@ -500,8 +500,8 @@ void Wand::UpdateObjectHandler()
     }
     */
 
-    vprDEBUG( vesDBG, 3 ) << "|\tEnd Wand::UpdateObjectHandler" 
-                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|\tEnd Wand::UpdateObjectHandler"
+    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::SetupStartEndPoint( osg::Vec3d * startPoint, osg::Vec3d * endPoint )
@@ -512,7 +512,7 @@ void Wand::SetupStartEndPoint( osg::Vec3d * startPoint, osg::Vec3d * endPoint )
 
     for( int i = 0; i < 3; ++i )
     {
-        wandEndPoint[ i ] = ( wandDirection [ i ] * distance ); 
+        wandEndPoint[ i ] = ( wandDirection [ i ] * distance );
     }
 
     startPoint->set( wandPosition[ 0 ], wandPosition[ 1 ], wandPosition[ 2 ] );
@@ -569,8 +569,8 @@ void Wand::UpdateWandGlobalLocation()
     osgPointLoc[ 0 ] =  loc_temp[ 0 ];
     osgPointLoc[ 1 ] = -loc_temp[ 2 ];
     osgPointLoc[ 2 ] =  loc_temp[ 1 ];
-   
-    for ( size_t i = 0; i < 3; ++i )
+
+    for( size_t i = 0; i < 3; ++i )
     {
         LastWandPosition[ i ] = objLoc[ i ];
         //cursorLoc[ i ] = this->loc[ i ];// + this->dir[ i ] * this->cursorLen;
@@ -590,7 +590,7 @@ double* Wand::GetDirection()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateDeltaWandPosition()
 {
-    for ( size_t i = 0; i < 3; ++i )
+    for( size_t i = 0; i < 3; ++i )
     {
         deltaTrans[ i ] = objLoc[ i ] - LastWandPosition[ i ];
     }
@@ -605,70 +605,70 @@ void Wand::RotateAboutWand()
 {
     gmtl::Matrix44d vrjWandMat = convertTo< double >( wand->getData() );
     gmtl::Quatd wandQuat = gmtl::make< gmtl::Quatd >( vrjWandMat );
-    
+
     osg::Vec3d tempVec( 0, 0, wandQuat[ 1 ] );
-    m_rotIncrement = 
+    m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
-    
+
     ///If we are rotating about the users position
     if( !rotationFlag )
     {
         return;
     }
-    
+
     vjHeadMat = convertTo< double >( head->getData() );
-    
+
     //Get juggler Matrix of worldDCS
     //Note:: for pf we are in juggler land
     //       for osg we are in z up land
     Matrix44d worldMat;
     worldMat = activeDCS->GetMat();
-    
+
     gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
     jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
     jugglerHeadPointTemp[ 0 ] = jugglerHeadPoint[ 0 ];
     jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
     jugglerHeadPointTemp[ 2 ] = 0;//jugglerHeadPoint[ 1 ];
-        
+
     //Translate world dcs by distance that the head
     // is away from the origin
-    gmtl::Matrix44d transMat = 
+    gmtl::Matrix44d transMat =
         gmtl::makeTrans< gmtl::Matrix44d >( -jugglerHeadPointTemp );
     gmtl::Matrix44d worldMatTrans = transMat * worldMat;
     gmtl::Point3d newJugglerHeadPoint;
-    
+
     //Get the position of the head in the new world space
     //as if the head is on the origin
-    gmtl::Point3d newGlobalHeadPointTemp = 
+    gmtl::Point3d newGlobalHeadPointTemp =
         worldMatTrans * newJugglerHeadPoint;
-    
+
     //Create rotation matrix and juggler head vector
     tempVec.set( wandQuat[ 0 ], -wandQuat[ 2 ], wandQuat[ 1 ] );
-    m_rotIncrement = 
+    m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
-    
+
     gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >
-        ( gmtl::Quat< double >( m_rotIncrement[ 0 ], 
-                                m_rotIncrement[ 1 ], m_rotIncrement[ 2 ], 
-                                m_rotIncrement[ 3 ] ) );
-    
+                                 ( gmtl::Quat< double >( m_rotIncrement[ 0 ],
+                                                         m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],
+                                                         m_rotIncrement[ 3 ] ) );
+
     gmtl::Vec4d newGlobalHeadPointVec;
     newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
     newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
     newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
-    
+
     //Rotate the head vector by the rotation increment
-    gmtl::Vec4d rotateJugglerHeadVec = 
+    gmtl::Vec4d rotateJugglerHeadVec =
         rotMatTemp * newGlobalHeadPointVec;
-    
+
     //Create translation from new rotated point
     //and add original head off set to the newly found location
     //Set world translation accordingly
-    m_worldTrans[ 0 ] = 
+    m_worldTrans[ 0 ] =
         -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
-    m_worldTrans[ 1 ] = 
+    m_worldTrans[ 1 ] =
         -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
-    m_worldTrans[ 2 ] = 
+    m_worldTrans[ 2 ] =
         -( rotateJugglerHeadVec[ 2 ] + jugglerHeadPointTemp[ 2 ] );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -677,7 +677,7 @@ double* Wand::GetPlaneEquationConstantsNormalToWand()
     ///Get wand pointing vector
     Matrix44d vjMat = convertTo< double >( wand->getData() );
     ///Transform from juggler space to world space
-    Matrix44d worldWandMat = 
+    Matrix44d worldWandMat =
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() * vjMat;
     ///Normalize vector
     gmtl::Vec3d vjVec;

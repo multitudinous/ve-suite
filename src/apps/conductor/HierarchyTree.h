@@ -36,7 +36,7 @@
 HierarchyTree API
 */
 /*!\class HierarchyTree
-* 
+*
 */
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/ModelPtr.h>
@@ -49,7 +49,7 @@ namespace ves
 {
 namespace conductor
 {
-    class UIPluginBase;
+class UIPluginBase;
 }
 }
 
@@ -61,32 +61,38 @@ class HierarchyTree : public wxTreeCtrl
 {
 public:
     ///Default constructor
-    HierarchyTree() {;}
+    HierarchyTree()
+    {
+        ;
+    }
     ///Normal constructor
-    HierarchyTree(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
+    HierarchyTree( wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style );
     ///Destructor
     virtual ~HierarchyTree();
 
     enum
     {
-		TREE_CTRL=1000
+        TREE_CTRL = 1000
     };
 
     ///Populate the tree
     ///\param tree The tree to populate
-	void PopulateTree(std::map< std::string, 
-        ves::open::xml::model::ModelWeakPtr > tree, std::string id);
+    void PopulateTree( std::map < std::string,
+                       ves::open::xml::model::ModelWeakPtr > tree, std::string id );
     ///Create image list of size
     ///\param size Size of images
-    void CreateImageList(int size=16);
-	void AddtoImageList(wxBitmap);
+    void CreateImageList( int size = 16 );
+    void AddtoImageList( wxBitmap );
     ///Set the network to work with
     ///\param nw Network to work with
-    void SetCanvas(Canvas *can) { m_canvas = can; }
-	//add a module to the tree
-	void AddtoTree( ves::conductor::UIPluginBase *cur_module );
-	void RemoveFromTree( unsigned int id );
-	wxTreeItemId SearchTree( wxTreeItemId root, int id );
+    void SetCanvas( Canvas *can )
+    {
+        m_canvas = can;
+    }
+    //add a module to the tree
+    void AddtoTree( ves::conductor::UIPluginBase *cur_module );
+    void RemoveFromTree( unsigned int id );
+    wxTreeItemId SearchTree( wxTreeItemId root, int id );
     ///Clear the hierarchy tree
     ///This is called by default by PopulateTree
     void Clear();
@@ -94,16 +100,16 @@ public:
 protected:
     ///The size of the images
     int m_imageSize;
-	void PopulateLevel(wxTreeItemId parentLeaf, 
-        std::vector< ves::open::xml::model::ModelWeakPtr > models, std::string id);
-	void OnSelChanged(wxTreeEvent& event);
-	void OnExpanded(wxTreeEvent& WXUNUSED(event));
-    
+    void PopulateLevel( wxTreeItemId parentLeaf,
+                        std::vector< ves::open::xml::model::ModelWeakPtr > models, std::string id );
+    void OnSelChanged( wxTreeEvent& event );
+    void OnExpanded( wxTreeEvent& WXUNUSED( event ) );
+
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
     wxTreeItemId currentId;
     Canvas* m_canvas;
-	wxImageList *images;
+    wxImageList *images;
 
     std::string ConvertUnicode( const wxChar* data )
     {

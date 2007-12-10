@@ -42,37 +42,43 @@ namespace builder
 {
 namespace DataLoader
 {
-class VE_USER_BUILDER_EXPORTS AVSTranslator: 
-   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+class VE_USER_BUILDER_EXPORTS AVSTranslator:
+            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   AVSTranslator();
-   virtual ~AVSTranslator();
-   ///Display help for the AVS translator
-   virtual void DisplayHelp( void );
-   
-   class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback{
-   public:
-      AVSTranslateCbk(){};
-      virtual ~AVSTranslateCbk(){};
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-   protected:
-   };
-   class VE_USER_BUILDER_EXPORTS AVSPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
-   public:
-      AVSPreTranslateCbk(){};
-      virtual ~AVSPreTranslateCbk(){};
-      void Preprocess(int argc,char** argv,ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-   protected:
-   };
+    AVSTranslator();
+    virtual ~AVSTranslator();
+    ///Display help for the AVS translator
+    virtual void DisplayHelp( void );
+
+class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        AVSTranslateCbk()
+        {};
+        virtual ~AVSTranslateCbk()
+        {};
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+    protected:
+    };
+class VE_USER_BUILDER_EXPORTS AVSPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        AVSPreTranslateCbk()
+        {};
+        virtual ~AVSPreTranslateCbk()
+        {};
+        void Preprocess( int argc, char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+    protected:
+    };
 protected:
-   AVSPreTranslateCbk _cmdParser;
-   AVSTranslateCbk _AVSToVTK;
+    AVSPreTranslateCbk _cmdParser;
+    AVSTranslateCbk _AVSToVTK;
 };
 }
 }

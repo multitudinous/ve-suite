@@ -40,7 +40,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCuttingPlane;
+class cfdCuttingPlane;
 }
 }
 
@@ -52,28 +52,28 @@ namespace xplorer
 cfdPresetVector API
 */
 /*!\class ves::xplorer::cfdPresetVector
-* A class that takes input data set(s) and generates a 
-* cutting plane of vector profile based on the position 
+* A class that takes input data set(s) and generates a
+* cutting plane of vector profile based on the position
 * and direction selected. Update member function will update
 * the plane position and direction.
 */
 class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
 {
 public:
-   ///Initialize the VTK objects and pipeline, (and set the number of isosurface increments for blue menu)
-   ///\param xyz
-   ///\param numSteps
-   cfdPresetVector( const int xyz, const int numSteps = 10 );
-   ///Destructor
-   virtual ~cfdPresetVector();
-   ///Update the preset vectors
-   virtual void Update( void );
+    ///Initialize the VTK objects and pipeline, (and set the number of isosurface increments for blue menu)
+    ///\param xyz
+    ///\param numSteps
+    cfdPresetVector( const int xyz, const int numSteps = 10 );
+    ///Destructor
+    virtual ~cfdPresetVector();
+    ///Update the preset vectors
+    virtual void Update( void );
 
 private:
-   int xyz;///<value of location
-   int numSteps;///<number of steps
+    int xyz;///<value of location
+    int numSteps;///<number of steps
 
-   cfdCuttingPlane * cuttingPlane;///<cutting plane
+    cfdCuttingPlane * cuttingPlane;///<cutting plane
 };
 }
 }

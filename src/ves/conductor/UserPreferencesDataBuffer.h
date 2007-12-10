@@ -36,7 +36,7 @@
 UserPreferencesDataBuffer API
 */
 /*!\class VE_Conductor::UserPreferencesDataBuffer
-* 
+*
 */
 #include <ves/open/xml/CommandPtr.h>
 
@@ -60,7 +60,10 @@ private:
     // Required so that vpr::Singleton can instantiate this class.
     // friend class vpr::Singleton< UserPreferenceDataBuffer >;
     UserPreferencesDataBuffer( void );
-    ~UserPreferencesDataBuffer(){ ; } // Never gets called, don't implement
+    ~UserPreferencesDataBuffer()
+    {
+        ;
+    } // Never gets called, don't implement
     vprSingletonHeader( UserPreferencesDataBuffer );
 public:
     ///Destructor
@@ -80,7 +83,7 @@ private:
     std::map< std::string, ves::open::xml::CommandPtr > commandMap;
     //std::map< std::string, ves::open::xml::CommandPtr > commandMap;
     ///A mutex to protect variables accesses
-    vpr::Mutex m_valueLock;  
+    vpr::Mutex m_valueLock;
 };
 }
 }

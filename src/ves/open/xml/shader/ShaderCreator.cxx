@@ -38,45 +38,45 @@
 
 using namespace ves::open::xml::shader;
 ////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObject(std::string objectType)
+ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObject( std::string objectType )
 {
-   if(objectType == "Program")
-   {
-      return new Program();
-   }
-   else if(objectType == "Shader")
-   {
-      return new Shader();
-   } 
-   else if(objectType == "Uniform")
-   {
-      return new Uniform();
-   }
-   else if(objectType == "TextureImage")
-   {
-      return new TextureImage();
-   }
-   return 0;
+    if( objectType == "Program" )
+    {
+        return new Program();
+    }
+    else if( objectType == "Shader" )
+    {
+        return new Shader();
+    }
+    else if( objectType == "Uniform" )
+    {
+        return new Uniform();
+    }
+    else if( objectType == "TextureImage" )
+    {
+        return new TextureImage();
+    }
+    return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                  ves::open::xml::XMLObject* objectToCopy)
+ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObjectCopy( std::string objectType,
+        ves::open::xml::XMLObject* objectToCopy )
 {
-   if(objectType == "Program")
-   {
-      return new Program(*dynamic_cast<Program*>(objectToCopy));
-   }
-   else if(objectType == "Shader")
-   {
-      return new Shader(*dynamic_cast<Shader*>(objectToCopy));
-   }
-   else if(objectType == "Uniform")
-   {
-      return new Uniform(*dynamic_cast<Uniform*>(objectToCopy));
-   }
-   else if(objectType == "TextureImage")
-   {
-      return new TextureImage(*dynamic_cast<TextureImage*>(objectToCopy));
-   }
-   return 0;
+    if( objectType == "Program" )
+    {
+        return new Program( *dynamic_cast<Program*>( objectToCopy ) );
+    }
+    else if( objectType == "Shader" )
+    {
+        return new Shader( *dynamic_cast<Shader*>( objectToCopy ) );
+    }
+    else if( objectType == "Uniform" )
+    {
+        return new Uniform( *dynamic_cast<Uniform*>( objectToCopy ) );
+    }
+    else if( objectType == "TextureImage" )
+    {
+        return new TextureImage( *dynamic_cast<TextureImage*>( objectToCopy ) );
+    }
+    return 0;
 }

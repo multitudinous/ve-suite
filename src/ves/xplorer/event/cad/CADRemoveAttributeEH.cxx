@@ -50,50 +50,46 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADRemoveAttributeEventHandler::CADRemoveAttributeEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADRemoveAttributeEventHandler::CADRemoveAttributeEventHandler(const CADRemoveAttributeEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADRemoveAttributeEventHandler::CADRemoveAttributeEventHandler( const CADRemoveAttributeEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADRemoveAttributeEventHandler::~CADRemoveAttributeEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADRemoveAttributeEventHandler& CADRemoveAttributeEventHandler::operator=(const CADRemoveAttributeEventHandler& rhs)
+CADRemoveAttributeEventHandler& CADRemoveAttributeEventHandler::operator=( const CADRemoveAttributeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADRemoveAttributeEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADRemoveAttributeEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      std::cout<<"---Adding attribute to node---"<<std::endl;
-      std::cout<<"CADRemoveAttributeEventHandler."<<std::endl;
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
-      DataValuePairWeakPtr activeAttribute = command->GetDataValuePair("Attribute Name");
+    try
+    {
+        std::cout << "---Adding attribute to node---" << std::endl;
+        std::cout << "CADRemoveAttributeEventHandler." << std::endl;
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
+        DataValuePairWeakPtr activeAttribute = command->GetDataValuePair( "Attribute Name" );
 
-      m_cadHandler->RemoveAttributeFromNode(nodeID->GetDataString(),
-                                            nodeType->GetDataString(),
-                                            activeAttribute->GetDataString());
-   }
-   catch(...)
-   {
-      std::cout<<"Couldn't add attribute to node!!!"<<std::endl;
-      std::cout<<"CADRemoveAttributeEventHandler."<<std::endl;
-   }
+        m_cadHandler->RemoveAttributeFromNode( nodeID->GetDataString(),
+                                               nodeType->GetDataString(),
+                                               activeAttribute->GetDataString() );
+    }
+    catch ( ... )
+    {
+        std::cout << "Couldn't add attribute to node!!!" << std::endl;
+        std::cout << "CADRemoveAttributeEventHandler." << std::endl;
+    }
 }

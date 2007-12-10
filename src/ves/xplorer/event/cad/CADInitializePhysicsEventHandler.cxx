@@ -49,15 +49,15 @@ using namespace ves::open::xml;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADInitializePhysicsEventHandler::CADInitializePhysicsEventHandler()
-:
-ves::xplorer::event::CADEventHandler()
+        :
+        ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADInitializePhysicsEventHandler::CADInitializePhysicsEventHandler( const CADInitializePhysicsEventHandler& rhs )
-:
-ves::xplorer::event::CADEventHandler( rhs )
+        :
+        ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }
@@ -81,7 +81,7 @@ void CADInitializePhysicsEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >(xmlObject);
+        Command* command = dynamic_cast< Command* >( xmlObject );
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
 
@@ -91,7 +91,7 @@ void CADInitializePhysicsEventHandler::_operateOnNode( XMLObject* xmlObject )
             m_cadHandler->GetPart( nodeID->GetDataString() )->InitPhysics();
         }
     }
-    catch(...)
+    catch ( ... )
     {
         std::cout << "Error!!" << std::endl;
     }

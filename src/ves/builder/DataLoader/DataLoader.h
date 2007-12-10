@@ -37,7 +37,7 @@
   *Data Loader API
   */
 /*!\class VE_Builder::DataLoader
- * This is an interface that allows you to load data into tool 
+ * This is an interface that allows you to load data into tool
  * in VE-Suite.
  */
 #include <ves/VEConfig.h>
@@ -52,7 +52,7 @@ namespace builder
 {
 namespace cfdTranslatorToVTK
 {
-    class cfdTranslatorToVTK;
+class cfdTranslatorToVTK;
 }
 }
 }
@@ -66,32 +66,32 @@ namespace DataLoader
 class VE_USER_BUILDER_EXPORTS DataLoader
 {
 public:
-   ///Constructor
-   DataLoader();
-   ///Destructor
-   ~DataLoader();
+    ///Constructor
+    DataLoader();
+    ///Destructor
+    ~DataLoader();
 private:
-   ///Copy Constructor
-   DataLoader( const DataLoader& );
-   ///equal operator
-   DataLoader& operator= ( const DataLoader& );
-public:   
-   ///Get the active translator for the data that is loaded.
-   ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* GetActiveTranslator( void );
+    ///Copy Constructor
+    DataLoader( const DataLoader& );
+    ///equal operator
+    DataLoader& operator= ( const DataLoader& );
+public:
+    ///Get the active translator for the data that is loaded.
+    ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* GetActiveTranslator( void );
 
-   ///Set the data file name to be translated.
-   ///\param inputData The file name of the data to be loaded.
-   void SetInputData( std::string inputData, std::string inputDir );
+    ///Set the data file name to be translated.
+    ///\param inputData The file name of the data to be loaded.
+    void SetInputData( std::string inputData, std::string inputDir );
 
-   ///Get the vtkDataSet for the data that was passed in
-   ///\param inputData The file name of the data to be loaded.
-   vtkDataObject* GetVTKDataSet( int argc, char** argv );
+    ///Get the vtkDataSet for the data that was passed in
+    ///\param inputData The file name of the data to be loaded.
+    vtkDataObject* GetVTKDataSet( int argc, char** argv );
 
 private:
-   std::string inputDataName;///<The name of the data file.
-   std::string inputDataDir;///<The name of the input data dir.
-   ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* activeLoader;///<The pointer to the active loader
-   std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* > translatorMap;///<Map the translators to a filename or extension, must be unique
+    std::string inputDataName;///<The name of the data file.
+    std::string inputDataDir;///<The name of the input data dir.
+    ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* activeLoader;///<The pointer to the active loader
+    std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* > translatorMap;///<Map the translators to a filename or extension, must be unique
 };
 }
 }

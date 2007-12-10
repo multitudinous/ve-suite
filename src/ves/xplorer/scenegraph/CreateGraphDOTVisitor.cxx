@@ -46,10 +46,10 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-CreateGraphDOTVisitor::CreateGraphDOTVisitor( osg::Node* node, 
+CreateGraphDOTVisitor::CreateGraphDOTVisitor( osg::Node* node,
                                               std::string& inputStream )
-:
-NodeVisitor( TRAVERSE_ALL_CHILDREN )
+        :
+        NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     m_dotFile.open( inputStream.c_str(), std::ios::out );
     m_dotFile << "digraph VE_Suite_Tree" << std::endl << "{" << std::endl;
@@ -63,7 +63,7 @@ CreateGraphDOTVisitor::~CreateGraphDOTVisitor()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CreateGraphDOTVisitor::apply( osg::Node& node )
-{ 
+{
     //If it is not a group then it is a low level node which is already recorded
     //in the dot file
     osg::ref_ptr< osg::Group > tempGroup = node.asGroup();
@@ -77,7 +77,7 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
     {
         nodeName = std::string( "Class" ) + node.className();
     }
-    
+
     //Get the properties
     ///Material
     std::string childName;
@@ -92,56 +92,56 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
         }
 
         //Write the link
-        m_dotFile << "\"" << tempGroup.get() << "\" -> \"" 
-            << childNode.get() << "\";" << std::endl; 
-        if ( !childNode->asGroup() )
+        m_dotFile << "\"" << tempGroup.get() << "\" -> \""
+        << childNode.get() << "\";" << std::endl;
+        if( !childNode->asGroup() )
         {
             //Write the child node label
-            m_dotFile << "\"" << childNode.get() << "\" " << "[label=\"" 
-                << childName << "\\n"
-                << GetMaterialDataString( childNode.get() ) << "\\n" 
-                << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
+            m_dotFile << "\"" << childNode.get() << "\" " << "[label=\""
+            << childName << "\\n"
+            << GetMaterialDataString( childNode.get() ) << "\\n"
+            << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
         }
     }
 
     //Write the label info for the parent
-    m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\"" 
-        << nodeName << "\\n" 
-        << GetMaterialDataString( tempGroup.get() ) << "\\n" 
-        << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
-    
+    m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\""
+    << nodeName << "\\n"
+    << GetMaterialDataString( tempGroup.get() ) << "\\n"
+    << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
+
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
 {
     std::ostringstream materialData;
-    
+
     osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
     osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >
-        ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+                                             ( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
     if( material.valid() )
     {
-        osg::Vec4 ambient =  material->getAmbient(osg::Material::FRONT);
-        osg::Vec4 diffuse = material->getDiffuse(osg::Material::FRONT);
-        osg::Vec4 specular = material->getSpecular(osg::Material::FRONT);
-        osg::Vec4 emission =  material->getEmission(osg::Material::FRONT);
-        float shininess =  material->getShininess(osg::Material::FRONT);
+        osg::Vec4 ambient =  material->getAmbient( osg::Material::FRONT );
+        osg::Vec4 diffuse = material->getDiffuse( osg::Material::FRONT );
+        osg::Vec4 specular = material->getSpecular( osg::Material::FRONT );
+        osg::Vec4 emission =  material->getEmission( osg::Material::FRONT );
+        float shininess =  material->getShininess( osg::Material::FRONT );
         materialData << "Material Properties" << "\\n"
-            << "Ambient = " << ambient[ 0 ] << ", " 
-            << ambient[ 1 ] << ", " 
-            << ambient[ 2 ] << ", " 
-            << ambient[ 3 ] << "\\n"
-            << "Diffuse = " << diffuse[ 0 ] << ", " 
-            << diffuse[ 1 ] << ", " 
-            << diffuse[ 2 ] << ", " 
-            << diffuse[ 3 ] << "\\n"
-            << "Specular = " << specular[ 0 ] << ", " 
-            << specular[ 1 ] << ", " 
-            << specular[ 2 ] << ", " 
-            << specular[ 3 ] << "\\n"
-            << "Shininess = " << shininess;
+        << "Ambient = " << ambient[ 0 ] << ", "
+        << ambient[ 1 ] << ", "
+        << ambient[ 2 ] << ", "
+        << ambient[ 3 ] << "\\n"
+        << "Diffuse = " << diffuse[ 0 ] << ", "
+        << diffuse[ 1 ] << ", "
+        << diffuse[ 2 ] << ", "
+        << diffuse[ 3 ] << "\\n"
+        << "Specular = " << specular[ 0 ] << ", "
+        << specular[ 1 ] << ", "
+        << specular[ 2 ] << ", "
+        << specular[ 3 ] << "\\n"
+        << "Shininess = " << shininess;
     }
     else
     {
@@ -153,11 +153,11 @@ std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
 std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
 {
     std::ostringstream textureData;
-    
+
     osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
     osg::ref_ptr< osg::Texture > texture = static_cast< osg::Texture* >
-        ( stateset->getAttribute( osg::StateAttribute::TEXTURE ) );
-    
+                                           ( stateset->getAttribute( osg::StateAttribute::TEXTURE ) );
+
     if( texture.valid() )
     {
         //Just do the dimensions for now
@@ -166,9 +166,9 @@ std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
         int h = texture->getTextureHeight();
         int d = texture->getTextureDepth();
         textureData << "Texture Properties" << "\\n"
-            << "Width = " << w << "\\n" 
-            << "Height = " << h << "\\n"
-            << "Depth = " << d;
+        << "Width = " << w << "\\n"
+        << "Height = " << h << "\\n"
+        << "Depth = " << d;
     }
     else
     {

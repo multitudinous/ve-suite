@@ -46,36 +46,40 @@ namespace DataLoader
 class VE_USER_BUILDER_EXPORTS cfdREITranslator: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   cfdREITranslator();
-   virtual ~cfdREITranslator();
-   ///Display help for the REI translator
-   virtual void DisplayHelp( void );
+    cfdREITranslator();
+    virtual ~cfdREITranslator();
+    ///Display help for the REI translator
+    virtual void DisplayHelp( void );
 
-   class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
-   {
-   public:
-      REITranslatorCbk(){};
-      virtual ~REITranslatorCbk(){};
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-      int debug;
-   protected:
-   };
-   class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
-   {
-   public:
-      REIPreTranslatorCbk(){};
-      virtual ~REIPreTranslatorCbk(){};
-      //void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
-   protected:
-   };
+class VE_USER_BUILDER_EXPORTS REITranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        REITranslatorCbk()
+        {};
+        virtual ~REITranslatorCbk()
+        {};
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+        int debug;
+    protected:
+    };
+class VE_USER_BUILDER_EXPORTS REIPreTranslatorCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        REIPreTranslatorCbk()
+        {};
+        virtual ~REIPreTranslatorCbk()
+        {};
+        //void Preprocess(int argc,char** argv,VE_Builder::cfdTranslatorToVTK* toVTK);
+    protected:
+    };
 protected:
-   REIPreTranslatorCbk _cmdParser;
-   REITranslatorCbk _reiTranslator;
+    REIPreTranslatorCbk _cmdParser;
+    REITranslatorCbk _reiTranslator;
 };
 }
 }

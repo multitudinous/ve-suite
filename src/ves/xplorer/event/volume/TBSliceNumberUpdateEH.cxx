@@ -47,41 +47,38 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedSliceNumberUpdateEventHandler::TextureBasedSliceNumberUpdateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedSliceNumberUpdateEventHandler
-::TextureBasedSliceNumberUpdateEventHandler(const TextureBasedSliceNumberUpdateEventHandler& ceh)
-{
-}
+::TextureBasedSliceNumberUpdateEventHandler( const TextureBasedSliceNumberUpdateEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedSliceNumberUpdateEventHandler::~TextureBasedSliceNumberUpdateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedSliceNumberUpdateEventHandler& 
-TextureBasedSliceNumberUpdateEventHandler::operator=(const TextureBasedSliceNumberUpdateEventHandler& rhs)
+TextureBasedSliceNumberUpdateEventHandler&
+TextureBasedSliceNumberUpdateEventHandler::operator=( const TextureBasedSliceNumberUpdateEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr isovalue = command->GetDataValuePair("Number of Slice Planes");      
-      unsigned int value;
-      isovalue->GetData(value);
-      ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes(value);
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedSliceNumberUpdateEventHandler::_operateOnNode()"<<std::endl;
-   }
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr isovalue = command->GetDataValuePair( "Number of Slice Planes" );
+        unsigned int value;
+        isovalue->GetData( value );
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes( value );
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedSliceNumberUpdateEventHandler::_operateOnNode()" << std::endl;
+    }
 }

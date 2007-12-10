@@ -36,35 +36,35 @@
 
 #include <iostream>
 
-QueryThread::QueryThread (Body::Unit_var m ) :
-  _mod       ( m ),
-  isComplete( true )
+QueryThread::QueryThread( Body::Unit_var m ) :
+        _mod( m ),
+        isComplete( true )
 {
-   shutdown = false;
+    shutdown = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-QueryThread::~QueryThread ()
+QueryThread::~QueryThread()
 {
-   shutdown = true;
+    shutdown = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int QueryThread::svc( void )
-{		  
-    while( !shutdown ) 
+{
+    while( !shutdown )
     {
-        while( isComplete ) 
+        while( isComplete )
         {
-            ACE_OS::sleep(1); 	    
+            ACE_OS::sleep( 1 );
         }
 
         _mutex.acquire();
-        try 
+        try
         {
             _mod->_non_existent();
             _mod->SetCurID( moduleId );
             queryData.assign( _mod->Query( CORBA::string_dup( queryCommand.c_str() ) ) );
-        } 
-        catch( CORBA::Exception &ex ) 
+        }
+        catch ( CORBA::Exception &ex )
         {
             std::cout << "Module Query Messed up." << std::endl;
             std::cerr << "CORBA exception raised! : " << ex._name() << std::endl;
@@ -79,24 +79,24 @@ int QueryThread::svc( void )
 ////////////////////////////////////////////////////////////////////////////////
 void QueryThread::QueryData( std::string command, CORBA::Long modId )
 {
-   _mutex.acquire();
-   queryCommand = command;
-   queryData.erase();
-   moduleId = modId;
-   isComplete = false;
-   _mutex.release();
+    _mutex.acquire();
+    queryCommand = command;
+    queryData.erase();
+    moduleId = modId;
+    isComplete = false;
+    _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool QueryThread::GettingData( void )
 {
-   return isComplete;
+    return isComplete;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string QueryThread::GetQueryData( void )
 {
-	_mutex.acquire();
-	std::string tempData = queryData;
-	_mutex.release();
-	return tempData;
+    _mutex.acquire();
+    std::string tempData = queryData;
+    _mutex.release();
+    return tempData;
 }
 

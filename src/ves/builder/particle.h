@@ -38,48 +38,48 @@
 
 class Data
 {
-   public:
-      Data( void );
-      ~Data( void );
-      Data( Data * );
-      
-      float time;
-      float IDLIM;
-      float particleCoalFraction;
-      float particleCharFraction;
-      float CPTREF;
-      float particleTemperature;
-      float gasTemperature;
-      float particleSize;
-      float particleCloudDispersion;
-      float massOfChar;
-      float moistureFraction;
+public:
+    Data( void );
+    ~Data( void );
+    Data( Data * );
+
+    float time;
+    float IDLIM;
+    float particleCoalFraction;
+    float particleCharFraction;
+    float CPTREF;
+    float particleTemperature;
+    float gasTemperature;
+    float particleSize;
+    float particleCloudDispersion;
+    float massOfChar;
+    float moistureFraction;
 };
 
 class Location : public Data
 {
-   public:
-      Location( void );
-      ~Location( void );
-      Location( Location * );
-      
-      float x;
-      float y;
-      float z;
+public:
+    Location( void );
+    ~Location( void );
+    Location( Location * );
+
+    float x;
+    float y;
+    float z;
 };
 
 class Particle
 {
-   public:
-      Particle( void );
-      ~Particle( void );
-      Particle( Particle * );
-      
-      int pathIndex;
-      int timeSteps;
-      int particleNumber;
-      int particleSize;
-      typedef std::vector< Location * > Locations;
-      Locations locations;
+public:
+    Particle( void );
+    ~Particle( void );
+    Particle( Particle * );
+
+    int pathIndex;
+    int timeSteps;
+    int particleNumber;
+    int particleSize;
+    typedef std::vector< Location * > Locations;
+    Locations locations;
 };
-#endif 
+#endif

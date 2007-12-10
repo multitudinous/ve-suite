@@ -44,102 +44,99 @@ using namespace ves::xplorer::scenegraph::util;
 //Constructors                      //
 //////////////////////////////////////
 PhongLoader::PhongLoader()
-:ShaderHelper()
-{
-}
+        : ShaderHelper()
+{}
 ///////////////////////////////////////////////////
-PhongLoader::PhongLoader(const PhongLoader& rhs)
-:ShaderHelper(rhs)
-{
-}
+PhongLoader::PhongLoader( const PhongLoader& rhs )
+        : ShaderHelper( rhs )
+{}
 //////////////////////////////////////////////////////////////
-PhongLoader& PhongLoader::operator=(const PhongLoader& rhs)
+PhongLoader& PhongLoader::operator=( const PhongLoader& rhs )
 {
-   if(this != &rhs)
-   {
-      ShaderHelper::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ShaderHelper::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////
 //Destructor                             //
 ///////////////////////////////////////////
 PhongLoader::~PhongLoader()
-{
-}
+{}
 /////////////////////////////////////////////////////////////////////////////////
-void PhongLoader::_loadShader(std::string vertexSource,std::string fragmentSource)
+void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSource )
 {
 #ifdef _OSG
-   //std::cout<<"Loading shader!!"<<std::endl;
-   //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
-   //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
-   ShaderPtr vertShader = new Shader();
-   vertShader->SetShaderType("Vertex");
-   vertShader->SetShaderSource(vertexSource);
-   
-   ShaderPtr fragShader = new Shader();
-   fragShader->SetShaderType("Fragment");
-   fragShader->SetShaderSource(fragmentSource);
+    //std::cout<<"Loading shader!!"<<std::endl;
+    //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
+    //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
+    ShaderPtr vertShader = new Shader();
+    vertShader->SetShaderType( "Vertex" );
+    vertShader->SetShaderSource( vertexSource );
 
-   Uniform amaterial;
-   amaterial.SetType("Float");
-   amaterial.SetName("ambientMaterial");
-   amaterial.SetSize(3);
-   std::vector<float> ambient;
-   ambient.push_back(0.368627);
-   ambient.push_back(0.368421);
-   ambient.push_back(0.368421);
-   amaterial.SetValues(ambient);
+    ShaderPtr fragShader = new Shader();
+    fragShader->SetShaderType( "Fragment" );
+    fragShader->SetShaderSource( fragmentSource );
 
-   Uniform dmaterial;
-   dmaterial.SetType("Float");
-   dmaterial.SetName("diffuseMaterial");
-   dmaterial.SetSize(3);
-   std::vector<float> diffuse;
-   diffuse.push_back(0.886275);
-   diffuse.push_back(0.885003);
-   diffuse.push_back(0.885003);
-   dmaterial.SetValues(diffuse);
+    Uniform amaterial;
+    amaterial.SetType( "Float" );
+    amaterial.SetName( "ambientMaterial" );
+    amaterial.SetSize( 3 );
+    std::vector<float> ambient;
+    ambient.push_back( 0.368627 );
+    ambient.push_back( 0.368421 );
+    ambient.push_back( 0.368421 );
+    amaterial.SetValues( ambient );
 
-   Uniform smaterial;
-   smaterial.SetType("Float");
-   smaterial.SetName("specularMaterial");
-   smaterial.SetSize(3);
-   std::vector<float> specular;
-   specular.push_back(0.490196);
-   specular.push_back(0.488722);
-   specular.push_back(0.488722);
-   smaterial.SetValues(specular);
+    Uniform dmaterial;
+    dmaterial.SetType( "Float" );
+    dmaterial.SetName( "diffuseMaterial" );
+    dmaterial.SetSize( 3 );
+    std::vector<float> diffuse;
+    diffuse.push_back( 0.886275 );
+    diffuse.push_back( 0.885003 );
+    diffuse.push_back( 0.885003 );
+    dmaterial.SetValues( diffuse );
 
-   Uniform specularValues;
-   specularValues.SetType("Float");
-   specularValues.SetName("specularPower");
-   specularValues.SetSize(1);
-   std::vector<float> specularPower;
-   specularPower.push_back(20.0);
-   specularValues.SetValues(specularPower);
-   
-   fragShader->AddUniform(amaterial); 
-   fragShader->AddUniform(dmaterial); 
-   fragShader->AddUniform(smaterial); 
-   fragShader->AddUniform(specularValues); 
-   Program glslProgram;// = new Program();
-   glslProgram.SetProgramName("Phong Shader");
-   glslProgram.SetVertexShader(vertShader);
-   glslProgram.SetFragmentShader(fragShader);
+    Uniform smaterial;
+    smaterial.SetType( "Float" );
+    smaterial.SetName( "specularMaterial" );
+    smaterial.SetSize( 3 );
+    std::vector<float> specular;
+    specular.push_back( 0.490196 );
+    specular.push_back( 0.488722 );
+    specular.push_back( 0.488722 );
+    smaterial.SetValues( specular );
 
-   LoadGLSLProgram(&glslProgram);
+    Uniform specularValues;
+    specularValues.SetType( "Float" );
+    specularValues.SetName( "specularPower" );
+    specularValues.SetSize( 1 );
+    std::vector<float> specularPower;
+    specularPower.push_back( 20.0 );
+    specularValues.SetValues( specularPower );
 
-   //enable 2 sided lighting fix
-   _ss->setMode(GL_VERTEX_PROGRAM_TWO_SIDE,osg::StateAttribute::ON);
+    fragShader->AddUniform( amaterial );
+    fragShader->AddUniform( dmaterial );
+    fragShader->AddUniform( smaterial );
+    fragShader->AddUniform( specularValues );
+    Program glslProgram;// = new Program();
+    glslProgram.SetProgramName( "Phong Shader" );
+    glslProgram.SetVertexShader( vertShader );
+    glslProgram.SetFragmentShader( fragShader );
+
+    LoadGLSLProgram( &glslProgram );
+
+    //enable 2 sided lighting fix
+    _ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
 #elif _PERFORMER
 #endif
 }
 /////////////////////////////////////////
 void PhongLoader::SyncShaderAndStateSet()
 {
-   std::string vSource(
+    std::string vSource(
         "varying vec3 color;\n"
         "varying vec3 lightPos;\n"
         "varying vec3 objPos;\n"
@@ -158,39 +155,39 @@ void PhongLoader::SyncShaderAndStateSet()
         "        gl_BackSecondaryColor=vec4(0.0);\n"
         "}\n"
     );
-   std::string fSource(
-      "uniform vec3 ambientMaterial;\n"
-      "uniform vec3 diffuseMaterial;\n"
-      "uniform vec3 specularMaterial;\n"
-      "uniform float specularPower;\n"
+    std::string fSource(
+        "uniform vec3 ambientMaterial;\n"
+        "uniform vec3 diffuseMaterial;\n"
+        "uniform vec3 specularMaterial;\n"
+        "uniform float specularPower;\n"
 
-      "varying vec3 color;\n"
-      "varying vec3 lightPos;\n"
-      "varying vec3 objPos;\n"
-      "varying vec3 eyePos;\n"
-      "varying vec3 normal;\n"
+        "varying vec3 color;\n"
+        "varying vec3 lightPos;\n"
+        "varying vec3 objPos;\n"
+        "varying vec3 eyePos;\n"
+        "varying vec3 normal;\n"
 
-      "void main()\n"
-      "{\n"
-      "    vec3 N=normalize(normal);\n"
-      "    if(gl_SecondaryColor.r < .5)\n"
-      "    {\n"
-      "       N=-N; \n"
-      "    }\n"
-      "    vec3 L=normalize(lightPos);\n"
-      "    float NDotL=max(dot(N,L),0.0);\n"
+        "void main()\n"
+        "{\n"
+        "    vec3 N=normalize(normal);\n"
+        "    if(gl_SecondaryColor.r < .5)\n"
+        "    {\n"
+        "       N=-N; \n"
+        "    }\n"
+        "    vec3 L=normalize(lightPos);\n"
+        "    float NDotL=max(dot(N,L),0.0);\n"
 
-      "    vec3 V=normalize(eyePos);\n"
-      "    vec3 R=reflect(V,N);\n"
-      "    float RDotL=max(dot(R,L),0.0);\n"
+        "    vec3 V=normalize(eyePos);\n"
+        "    vec3 R=reflect(V,N);\n"
+        "    float RDotL=max(dot(R,L),0.0);\n"
 
-      "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
-      "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
-      "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
+        "    vec3 TotalAmbient=gl_LightSource[0].ambient.rgb*ambientMaterial*color;\n"
+        "    vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*diffuseMaterial*color*NDotL;\n"
+        "    vec3 TotalSpecular=gl_LightSource[0].specular.rgb*specularMaterial*pow(RDotL,specularPower);\n"
 
-      "    gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
-      " }\n"
+        "    gl_FragColor=vec4(TotalAmbient+TotalDiffuse+TotalSpecular,1.0);\n"
+        " }\n"
 
-   );
-   _loadShader(vSource,fSource);
+    );
+    _loadShader( vSource, fSource );
 }

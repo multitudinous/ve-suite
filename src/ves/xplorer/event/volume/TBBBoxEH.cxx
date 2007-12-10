@@ -47,40 +47,37 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler::TextureBasedBoundingBoxEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler
-::TextureBasedBoundingBoxEventHandler(const TextureBasedBoundingBoxEventHandler& ceh)
-{
-}
+::TextureBasedBoundingBoxEventHandler( const TextureBasedBoundingBoxEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedBoundingBoxEventHandler::~TextureBasedBoundingBoxEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedBoundingBoxEventHandler& 
-TextureBasedBoundingBoxEventHandler::operator=(const TextureBasedBoundingBoxEventHandler& rhs)
+TextureBasedBoundingBoxEventHandler&
+TextureBasedBoundingBoxEventHandler::operator=( const TextureBasedBoundingBoxEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedBoundingBoxEventHandler::_operateOnNode(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedBoundingBoxEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
-      ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox((bboxFlag->GetUIntData()==1)?true:false);
-      
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedBoundingBoxEventHandler::_operateOnNode()"<<std::endl;
-   }
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox(( bboxFlag->GetUIntData() == 1 ) ? true : false );
+
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedBoundingBoxEventHandler::_operateOnNode()" << std::endl;
+    }
 }

@@ -58,18 +58,18 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS PEThread : public ACE_Task_Base, public wxTextCtrl
 {
 public:
-	PEThread( void );
-	virtual ~PEThread();
-	void SetMessage(const char* msg);
-   virtual int svc( void );
-   void ShutDownThread( void );
+    PEThread( void );
+    virtual ~PEThread();
+    void SetMessage( const char* msg );
+    virtual int svc( void );
+    void ShutDownThread( void );
 
 protected:
-	//wxTextCtrl* logWindow;
-	ACE_Thread_Mutex _mutex;
-	std::string message;
-   bool shutdown;
-DECLARE_EVENT_TABLE()
+    //wxTextCtrl* logWindow;
+    ACE_Thread_Mutex _mutex;
+    std::string message;
+    bool shutdown;
+    DECLARE_EVENT_TABLE()
 };
 }
 }

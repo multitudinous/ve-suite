@@ -58,13 +58,13 @@ namespace scenegraph
 ////////////////////////////////////////////////////////////////////////////////
 Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS )
-:
-m_soundManager( osgAL::SoundManager::instance() ),
-m_dcs( new ves::xplorer::scenegraph::DCS() ),
-m_soundGeode( new osg::Geode() ),
-m_sample( 0 ),
-m_soundState( new osgAL::SoundState( name ) ),
-m_soundNode( new osgAL::SoundNode( m_soundState.get() ) )
+        :
+        m_soundManager( osgAL::SoundManager::instance() ),
+        m_dcs( new ves::xplorer::scenegraph::DCS() ),
+        m_soundGeode( new osg::Geode() ),
+        m_sample( 0 ),
+        m_soundState( new osgAL::SoundState( name ) ),
+        m_soundNode( new osgAL::SoundNode( m_soundState.get() ) )
 {
     parentDCS->AddChild( m_dcs.get() );
     m_dcs->addChild( m_soundNode.get() );
@@ -74,13 +74,13 @@ m_soundNode( new osgAL::SoundNode( m_soundState.get() ) )
 Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS,
               osgAL::SoundManager* soundManager )
-:
-m_soundManager( soundManager ),
-m_dcs( new ves::xplorer::scenegraph::DCS() ),
-m_soundGeode( new osg::Geode() ),
-m_sample( 0 ),
-m_soundState( new osgAL::SoundState( name, m_soundManager ) ),
-m_soundNode( new osgAL::SoundNode( m_soundState.get(), m_soundManager ) )
+        :
+        m_soundManager( soundManager ),
+        m_dcs( new ves::xplorer::scenegraph::DCS() ),
+        m_soundGeode( new osg::Geode() ),
+        m_sample( 0 ),
+        m_soundState( new osgAL::SoundState( name, m_soundManager ) ),
+        m_soundNode( new osgAL::SoundNode( m_soundState.get(), m_soundManager ) )
 {
     parentDCS->AddChild( m_dcs.get() );
     m_dcs->addChild( m_soundNode.get() );
@@ -93,7 +93,7 @@ Sound::~Sound()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sound &Sound::operator=( const Sound &sound )
-{ 
+{
     if( &sound != this )
     {
         m_soundManager = sound.m_soundManager;

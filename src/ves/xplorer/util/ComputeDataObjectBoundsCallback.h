@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef COMPUTE_DATAOBJECT_BOUNDS_CALLBACK 
+#ifndef COMPUTE_DATAOBJECT_BOUNDS_CALLBACK
 #define  COMPUTE_DATAOBJECT_BOUNDS_CALLBACK
 /*!\file ComputeDataObjectBoundsCallback.h
 ComputeDataObjectBoundsCallback API.
@@ -52,21 +52,22 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS ComputeDataObjectBoundsCallback:
-        public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     ComputeDataObjectBoundsCallback();
     ///Destructor
-    virtual ~ComputeDataObjectBoundsCallback(){};
+    virtual ~ComputeDataObjectBoundsCallback()
+    {};
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
-    ///Get the bounds 
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
+    ///Get the bounds
     ///\param  boundsv The bounding box as:\n
-    /// min-x, max-x, min-y, max-y, min-z, max-z 
-    void GetDataObjectBounds(double bounds[6]);
+    /// min-x, max-x, min-y, max-y, min-z, max-z
+    void GetDataObjectBounds( double bounds[6] );
 
     ///Get the diagonal of the calculated bbox
     double GetDataObjectBoundsDiagonal();

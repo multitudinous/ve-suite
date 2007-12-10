@@ -51,27 +51,27 @@ namespace event
 class VE_XPLORER_EXPORTS ClearVisObjectsEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   ClearVisObjectsEventHandler();
+    ///Constructor
+    ClearVisObjectsEventHandler();
 
-   ///Copy Constructor
-   ClearVisObjectsEventHandler(const ClearVisObjectsEventHandler& rhs);
+    ///Copy Constructor
+    ClearVisObjectsEventHandler( const ClearVisObjectsEventHandler& rhs );
 
-   ///Destructor
-   virtual ~ClearVisObjectsEventHandler();
+    ///Destructor
+    virtual ~ClearVisObjectsEventHandler();
 
-   ///Equal operator
-   ClearVisObjectsEventHandler& operator=(const ClearVisObjectsEventHandler& rhs);
+    ///Equal operator
+    ClearVisObjectsEventHandler& operator=( const ClearVisObjectsEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command);
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
 };

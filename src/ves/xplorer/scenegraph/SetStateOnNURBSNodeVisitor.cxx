@@ -43,17 +43,17 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node, 
-    bool selectedState, bool dragState, std::pair< double, double > mousePoint, 
-    std::pair< double, double > mouseDelta)
-:
-NodeVisitor( TRAVERSE_ALL_CHILDREN ),
-m_mousePoint( mousePoint ),
-m_selectedState( selectedState ),
-m_mouseDelta( mouseDelta ),
-m_dragState( dragState )
+SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node,
+                                                        bool selectedState, bool dragState, std::pair< double, double > mousePoint,
+                                                        std::pair< double, double > mouseDelta )
+        :
+        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+        m_mousePoint( mousePoint ),
+        m_selectedState( selectedState ),
+        m_mouseDelta( mouseDelta ),
+        m_dragState( dragState )
 {
-    node->accept( *this );    
+    node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 SetStateOnNURBSNodeVisitor::~SetStateOnNURBSNodeVisitor( void )
@@ -69,7 +69,7 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         return;
     }
 
-    ves::xplorer::scenegraph::nurbs::NURBSNode* tempNode = 
+    ves::xplorer::scenegraph::nurbs::NURBSNode* tempNode =
         dynamic_cast< ves::xplorer::scenegraph::nurbs::NURBSNode* >( tempGroup.get() );
     if( tempNode )
     {
@@ -83,8 +83,8 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
 
         if( m_dragState && tempNode->IsControlPointSelected() )
         {
-            tempNode->MoveSelectedControlPoint( 
-                m_mouseDelta.first * 10, 0, -m_mouseDelta.second * 10);
+            tempNode->MoveSelectedControlPoint(
+                m_mouseDelta.first * 10, 0, -m_mouseDelta.second * 10 );
         }
         else
         {

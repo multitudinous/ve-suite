@@ -48,132 +48,141 @@ namespace cfdTranslatorToVTK
 class VE_BUILDER_EXPORTS cfdTranslatorToVTK
 {
 public:
-   cfdTranslatorToVTK();
-   virtual ~cfdTranslatorToVTK();
-   
-   void SetFileExtension(std::string fileExtension);
-   void SetNumberOfFoundFiles(unsigned int nFilesFound);
-   void SetInputDirectory(std::string inDir);
-   void SetOutputDirectory(std::string inDir);
-   void SetFileName( std::string fileName );
-   void SetBaseFileName( std::string baseFileName );
-   ///Function to list all the features of a respective translator
-   ///when the -h option is specified
-   virtual void DisplayHelp( void ) = 0;
+    cfdTranslatorToVTK();
+    virtual ~cfdTranslatorToVTK();
 
-   ///Utility function to process command line args
-   ///\param argc The number of command line args
-   ///\param argv The arg values as chars
-   ///\param optionFlag The option you are looking for
-   ///\param optionArg The returned argument
-   bool _extractOptionFromCmdLine(int argc,char** argv,
-                                  std::string optionFlag,
-                                  std::string& optionArg);
-   /////////////////////////////////////////////////////
-   //The idea for these callback classes is similar to//
-   //the setup in OSG (www.openscenegraph.org)        //
-   /////////////////////////////////////////////////////
-   
-   ////////////////////////////////////////////////////////
-   //Any preprocessing can be easily setup to happen here//
-   ////////////////////////////////////////////////////////
-   class VE_BUILDER_EXPORTS PreTranslateCallback{
-   public:
-      PreTranslateCallback(){};
-      virtual ~PreTranslateCallback(){};
-      virtual void Preprocess(int argc, char** argv,
-                            cfdTranslatorToVTK* toVTK);
-   };
+    void SetFileExtension( std::string fileExtension );
+    void SetNumberOfFoundFiles( unsigned int nFilesFound );
+    void SetInputDirectory( std::string inDir );
+    void SetOutputDirectory( std::string inDir );
+    void SetFileName( std::string fileName );
+    void SetBaseFileName( std::string baseFileName );
+    ///Function to list all the features of a respective translator
+    ///when the -h option is specified
+    virtual void DisplayHelp( void ) = 0;
 
-   /////////////////////////////////////////////////////////
-   //translate callback must be defined or nothing happens//
-   /////////////////////////////////////////////////////////
-   class VE_BUILDER_EXPORTS TranslateCallback{
-   public:
-      TranslateCallback(){};
-      virtual ~TranslateCallback(){};
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		             cfdTranslatorToVTK* toVTK) = 0;
-   protected:
-   };
-   ///////////////////////////////////////////////////////////
-   //Any post-processing can be easily setup to happen here //
-   ///////////////////////////////////////////////////////////
-   class VE_BUILDER_EXPORTS PostTranslateCallback{
-   public:
-      PostTranslateCallback(){};
-      virtual ~PostTranslateCallback(){};
-      virtual void PostProcess(cfdTranslatorToVTK* toVTK) = 0;
-   protected:
-   };
+    ///Utility function to process command line args
+    ///\param argc The number of command line args
+    ///\param argv The arg values as chars
+    ///\param optionFlag The option you are looking for
+    ///\param optionArg The returned argument
+    bool _extractOptionFromCmdLine( int argc, char** argv,
+                                    std::string optionFlag,
+                                    std::string& optionArg );
+    /////////////////////////////////////////////////////
+    //The idea for these callback classes is similar to//
+    //the setup in OSG (www.openscenegraph.org)        //
+    /////////////////////////////////////////////////////
 
-   ///Set all the callbacks for the required translator
-   ///\param preTCbk Callback class
-   void SetPreTranslateCallback(PreTranslateCallback* preTCbk);
-   ///\param postTCbk Callback class
-   void SetPostTranslateCallback(PostTranslateCallback* postTCbk);
-   ///\param tCbk Callback class
-   void SetTranslateCallback(TranslateCallback* tCbk);
-   ///Get all the callbacks for the required translator
-   PreTranslateCallback* GetPreTranslateCallback( void );
-   PostTranslateCallback* GetPostTranslateCallback( void );
-   TranslateCallback* GetTranslateCallback( void );
+    ////////////////////////////////////////////////////////
+    //Any preprocessing can be easily setup to happen here//
+    ////////////////////////////////////////////////////////
+    class VE_BUILDER_EXPORTS PreTranslateCallback
+    {
+    public:
+        PreTranslateCallback()
+        {};
+        virtual ~PreTranslateCallback()
+        {};
+        virtual void Preprocess( int argc, char** argv,
+                                 cfdTranslatorToVTK* toVTK );
+    };
 
-   void AddFoundFile(std::string singleFile);
-   void AddBaseName(std::string baseName);
-   ///Get the basename of the file used for setting the output filename
-   std::string GetBaseName( unsigned int whichFile = 0 );
-   ///Extract the basename for a file path
-   void ExtractBaseName(std::string fileName);
-   /////////////////////////////////////////
-   //main translation calling method      //
-   //Basically makes the following calls: //
-   //PreTranslateCallback::Preprocess();  //
-   //TranslateCallback::Translate();      // 
-   //PostTranslateCallback::PostProcess();//
-   //_writeVTKFile();                      //
-   /////////////////////////////////////////
-   bool TranslateToVTK(int argc, char** argv);
-   
-   std::string GetFileExtension();
-   std::string GetInputDirectory();
-   std::string GetOutputDirectory();
-   std::string GetBaseFileName();
-   std::string GetOutputFileName();
+    /////////////////////////////////////////////////////////
+    //translate callback must be defined or nothing happens//
+    /////////////////////////////////////////////////////////
+    class VE_BUILDER_EXPORTS TranslateCallback
+    {
+    public:
+        TranslateCallback()
+        {};
+        virtual ~TranslateCallback()
+        {};
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK ) = 0;
+    protected:
+    };
+    ///////////////////////////////////////////////////////////
+    //Any post-processing can be easily setup to happen here //
+    ///////////////////////////////////////////////////////////
+    class VE_BUILDER_EXPORTS PostTranslateCallback
+    {
+    public:
+        PostTranslateCallback()
+        {};
+        virtual ~PostTranslateCallback()
+        {};
+        virtual void PostProcess( cfdTranslatorToVTK* toVTK ) = 0;
+    protected:
+    };
 
-   unsigned int GetNumberOfFoundFiles();
-   std::string GetFile( unsigned int fileNumber );
+    ///Set all the callbacks for the required translator
+    ///\param preTCbk Callback class
+    void SetPreTranslateCallback( PreTranslateCallback* preTCbk );
+    ///\param postTCbk Callback class
+    void SetPostTranslateCallback( PostTranslateCallback* postTCbk );
+    ///\param tCbk Callback class
+    void SetTranslateCallback( TranslateCallback* tCbk );
+    ///Get all the callbacks for the required translator
+    PreTranslateCallback* GetPreTranslateCallback( void );
+    PostTranslateCallback* GetPostTranslateCallback( void );
+    TranslateCallback* GetTranslateCallback( void );
 
-   vtkDataObject* GetVTKFile( unsigned int whichFile );
+    void AddFoundFile( std::string singleFile );
+    void AddBaseName( std::string baseName );
+    ///Get the basename of the file used for setting the output filename
+    std::string GetBaseName( unsigned int whichFile = 0 );
+    ///Extract the basename for a file path
+    void ExtractBaseName( std::string fileName );
+    /////////////////////////////////////////
+    //main translation calling method      //
+    //Basically makes the following calls: //
+    //PreTranslateCallback::Preprocess();  //
+    //TranslateCallback::Translate();      //
+    //PostTranslateCallback::PostProcess();//
+    //_writeVTKFile();                      //
+    /////////////////////////////////////////
+    bool TranslateToVTK( int argc, char** argv );
 
-   void SetIsTransient();
+    std::string GetFileExtension();
+    std::string GetInputDirectory();
+    std::string GetOutputDirectory();
+    std::string GetBaseFileName();
+    std::string GetOutputFileName();
+
+    unsigned int GetNumberOfFoundFiles();
+    std::string GetFile( unsigned int fileNumber );
+
+    vtkDataObject* GetVTKFile( unsigned int whichFile );
+
+    void SetIsTransient();
 protected:
-   bool _writeToVTK( unsigned int whichFile );
-   ///Write the file to memory so that it is accessible 
-   ///through other interfaces
-   unsigned int _nFoundFiles;
+    bool _writeToVTK( unsigned int whichFile );
+    ///Write the file to memory so that it is accessible
+    ///through other interfaces
+    unsigned int _nFoundFiles;
 
-   std::vector<std::string> baseFileNames;
-   std::string _fileExtension;
-   std::string _inputDir;
-   std::string _outputDir;
-   std::string _baseFileName;
-   std::vector<std::string> _infileNames;
+    std::vector<std::string> baseFileNames;
+    std::string _fileExtension;
+    std::string _inputDir;
+    std::string _outputDir;
+    std::string _baseFileName;
+    std::vector<std::string> _infileNames;
 
-   std::vector<std::string> _outfileNames;
-   std::string _outputFile;
+    std::vector<std::string> _outfileNames;
+    std::string _outputFile;
 
-   PreTranslateCallback* _preTCbk;
-   PostTranslateCallback* _postTCbk;
-   TranslateCallback* _translateCbk;
+    PreTranslateCallback* _preTCbk;
+    PostTranslateCallback* _postTCbk;
+    TranslateCallback* _translateCbk;
 
-   vtkDataObject* _outputDataset;
+    vtkDataObject* _outputDataset;
 
-   bool isTransient;
+    bool isTransient;
 };
 }
 }

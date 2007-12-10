@@ -37,7 +37,7 @@
 Body_UI_i API
 */
 /*!\class ves::xplorer::Body_UI_i
-* 
+*
 */
 #include <ves/open/moduleS.h>
 #include <ves/VEConfig.h>
@@ -57,81 +57,84 @@ namespace network
 class  Body_UI_i : public virtual POA_Body::UI
 {
 public:
-   //Constructor 
-   Body_UI_i (Body::Executive_ptr exec, std::string name);
+    //Constructor
+    Body_UI_i( Body::Executive_ptr exec, std::string name );
 
-   //Destructor 
-   virtual ~Body_UI_i (void);
+    //Destructor
+    virtual ~Body_UI_i( void );
 
-   std::string UIName_;
-   std::string GetNetworkString( void );
-   std::string GetStatusString( void );
-   bool GetNetworkFlag( void );
-   void GetNetworkFromCE( void );
+    std::string UIName_;
+    std::string GetNetworkString( void );
+    std::string GetStatusString( void );
+    bool GetNetworkFlag( void );
+    void GetNetworkFromCE( void );
 
 protected:
-   Body::Executive_var executive_;
-   std::vector< std::string > networkStringBuffer;
-   std::vector< std::string > statusStringBuffer;
-   vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
-   vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
-   void SetNetworkString( std::string tempString );
+    Body::Executive_var executive_;
+    std::vector< std::string > networkStringBuffer;
+    std::vector< std::string > statusStringBuffer;
+    vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
+    vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
+    void SetNetworkString( std::string tempString );
 
-   virtual void UpdateNetwork (
-      const char * network
-      ACE_ENV_ARG_DECL
-   )
-   ACE_THROW_SPEC ((
-      CORBA::SystemException
-      , Error::EUnknown
-   ));
-
-   virtual void UpdateModuleUI (
-    CORBA::Long module_id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-   )
-   ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-   ));
-
-   virtual void UpdateModuleResult (
-      CORBA::Long module_id,
-      const char * msg
-      ACE_ENV_ARG_DECL
-   )
-   ACE_THROW_SPEC ((
-      CORBA::SystemException
-      , Error::EUnknown
-   ));
-
-   virtual void UpdateLinkContent (
-    CORBA::Long id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-   )
-   ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-   ));
-
-   virtual void Raise (
-    const char * notification
-    ACE_ENV_ARG_DECL
-   )
-   ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-   ));
-  virtual
-  void SetXplorerData (
-      const char * xplorerData
+    virtual void UpdateNetwork(
+        const char * network
+        ACE_ENV_ARG_DECL
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    )) { ; } 
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void UpdateModuleUI(
+        CORBA::Long module_id,
+        const char * msg
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void UpdateModuleResult(
+        CORBA::Long module_id,
+        const char * msg
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void UpdateLinkContent(
+        CORBA::Long id,
+        const char * msg
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void Raise(
+        const char * notification
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+    virtual
+    void SetXplorerData(
+        const char * xplorerData
+    )
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) )
+    {
+        ;
+    }
 };
 }
 }

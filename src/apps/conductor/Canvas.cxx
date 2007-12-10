@@ -89,17 +89,17 @@ lrintf( float flt )
 #endif
 //using namespace VE_Conductor;
 
-BEGIN_EVENT_TABLE(Canvas, wxScrolledWindow)
+BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
-	EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
+    EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
-Canvas::Canvas(wxWindow* parent, int id)
-  :wxScrolledWindow(parent, id, wxDefaultPosition, wxDefaultSize,
-		    wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE),
-previousId("-1"),
-m_treeView( 0 )
+Canvas::Canvas( wxWindow* parent, int id )
+        : wxScrolledWindow( parent, id, wxDefaultPosition, wxDefaultSize,
+                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE ),
+        previousId( "-1" ),
+        m_treeView( 0 )
 {
     userScale.first = 1;
     userScale.second = 1;
@@ -112,16 +112,16 @@ m_treeView( 0 )
     SetScrollRate( numUnit.first, numUnit.second );
     SetVirtualSize( numPix.first, numPix.second );
 
-    SetBackgroundColour(*wxWHITE);
+    SetBackgroundColour( *wxWHITE );
     //This is for the paint buffer
-    SetBackgroundStyle(wxBG_STYLE_CUSTOM);
+    SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 
     ///Create default network for the user to work with
     CreateDefaultNetwork();
-    
-	this->parent = parent;
 
-    Refresh(true);
+    this->parent = parent;
+
+    Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
@@ -133,37 +133,37 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 {
     if( xmlNetwork.empty() )
     {
-        std::cout << 
-            " Canvas::PopulateNetworks network string is empty" << std::endl;
+        std::cout <<
+        " Canvas::PopulateNetworks network string is empty" << std::endl;
         return;
     }
-    
+
     //Clean up the old
     New( true );
 
-	//load
-	XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
-	
-	//get the map count
-	std::map< std::string, model::SystemPtr> systems =
-		XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+    //load
+    XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 
-	// iterate through the systems
-	for( std::map< std::string, model::SystemPtr>::iterator 
-        iter = systems.begin(); iter != systems.end(); iter++ )
-	{
-		Network* tempNetwork = new Network( this );
-		tempNetwork->LoadSystem(iter->second, this);
-		networks[iter->first] = tempNetwork;
-	}
-	this->SetActiveNetwork( XMLDataBufferEngine::instance()->
-		GetTopSystemId() );
-    Refresh(true);
+    //get the map count
+    std::map< std::string, model::SystemPtr> systems =
+        XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+
+    // iterate through the systems
+    for( std::map< std::string, model::SystemPtr>::iterator
+            iter = systems.begin(); iter != systems.end(); iter++ )
+    {
+        Network* tempNetwork = new Network( this );
+        tempNetwork->LoadSystem( iter->second, this );
+        networks[iter->first] = tempNetwork;
+    }
+    this->SetActiveNetwork( XMLDataBufferEngine::instance()->
+                            GetTopSystemId() );
+    Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Canvas::OnPaint(wxPaintEvent& paintEvent)
+void Canvas::OnPaint( wxPaintEvent& paintEvent )
 {
-    wxAutoBufferedPaintDC dc(this);
+    wxAutoBufferedPaintDC dc( this );
     dc.Clear();
 
     dc.SetUserScale( userScale.first, userScale.second );
@@ -174,11 +174,11 @@ void Canvas::OnPaint(wxPaintEvent& paintEvent)
     // account for the horz and vert scrollbar offset
     dc.SetDeviceOrigin( -x * xpix, -y * ypix );
     dc.SetFont( GetFont() );
-	
-	if( !networks.empty() )
-	{
-		DrawNetwork(dc, this->activeId);
-	}
+
+    if( !networks.empty() )
+    {
+        DrawNetwork( dc, this->activeId );
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 Network* Canvas::GetActiveNetwork()
@@ -187,14 +187,14 @@ Network* Canvas::GetActiveNetwork()
     iter = networks.find( activeId );
 
     if( iter != networks.end() )
-	{
-        Refresh(true);
-		return networks[this->activeId];
-	}
+    {
+        Refresh( true );
+        return networks[this->activeId];
+    }
     return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void Canvas::SetActiveNetwork(std::string id)
+void Canvas::SetActiveNetwork( std::string id )
 {
     //std::cout << activeId << " " << previousId << " " << id << std::endl;
 
@@ -202,30 +202,30 @@ void Canvas::SetActiveNetwork(std::string id)
     {
         return;
     }
-    
-	this->activeId = id;
+
+    this->activeId = id;
 
     if( this->previousId != "-1" )
     {
         RemoveEventHandler( networks[this->previousId] );
         networks[this->previousId]->RemoveAllEvents();
     }
-    
+
     PushEventHandler( networks[this->activeId] );
     networks[this->activeId]->PushAllEvents();
     this->previousId = this->activeId;
     SetVirtualSize( networks[this->activeId]->GetMaxX(), networks[this->activeId]->GetMaxY() );
-    Refresh(true);
+    Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::string Canvas::GetActiveNetworkID( )
 {
-   return this->activeId;
+    return this->activeId;
 }
 //////////////////////////////////////////////////////////////////////////////
-void Canvas::DrawNetwork(wxDC &dc, std::string id)
+void Canvas::DrawNetwork( wxDC &dc, std::string id )
 {
-	networks[id]->DrawNetwork(dc);
+    networks[id]->DrawNetwork( dc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::New( bool promptClearXplorer )
@@ -234,48 +234,48 @@ void Canvas::New( bool promptClearXplorer )
     {
         return;
     }
-    
+
     int answer = wxID_NO;
     if( !promptClearXplorer )
     {
-        wxMessageDialog promptDlg( this, 
-            _("Do you want to reset Xplorer?"), 
-            _("Reset Xplorer Warning"), 
-            wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
-            wxDefaultPosition);
+        wxMessageDialog promptDlg( this,
+                                   _( "Do you want to reset Xplorer?" ),
+                                   _( "Reset Xplorer Warning" ),
+                                   wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                                   wxDefaultPosition );
         answer = promptDlg.ShowModal();
     }
 
-    if( ( answer == wxID_OK ) || ( promptClearXplorer ) )
+    if (( answer == wxID_OK ) || ( promptClearXplorer ) )
     {
-        for( std::map < std::string, Network* >::iterator iter = 
-            networks.begin(); iter != networks.end(); ++iter )
+        for( std::map < std::string, Network* >::iterator iter =
+                    networks.begin(); iter != networks.end(); ++iter )
         {
             networks[this->activeId]->ClearXplorer();
         }
     }
-   
-	RemoveEventHandler( networks[this->activeId] );
+
+    RemoveEventHandler( networks[this->activeId] );
     networks[this->activeId]->RemoveAllEvents();
     CleanUpNetworks();
 
-	Refresh( true );
+    Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect Canvas::GetAppropriateSubDialogSize()
 {
-    int displayWidth= 0;
+    int displayWidth = 0;
     int displayHeight = 0;
-    
-    ::wxDisplaySize(&displayWidth,&displayHeight);
+
+    ::wxDisplaySize( &displayWidth, &displayHeight );
     wxRect tempRect = m_treeView->GetScreenRect();
 
     //if( GetDisplayMode() == std::string( "Desktop" ) )
     {
         wxRect bbox = GetRect();
-        int xStart = lrint( 2.0f*displayWidth/3.0f );
-        int width = lrint( displayWidth/3.0f );
-        int height = lrint( 3.0f * (displayHeight-tempRect.GetTopLeft().y )/4.0f );
+        int xStart = lrint( 2.0f * displayWidth / 3.0f );
+        int width = lrint( displayWidth / 3.0f );
+        int height = lrint( 3.0f * ( displayHeight - tempRect.GetTopLeft().y ) / 4.0f );
         return wxRect( xStart, tempRect.GetTopLeft().y , width, height );
     }
     /*else
@@ -296,7 +296,7 @@ void Canvas::SetTreeViewWindow( wxWindow* treeView )
 void Canvas::CleanUpNetworks()
 {
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
-        iter != networks.end(); ++iter )
+            iter != networks.end(); ++iter )
     {
         //RemoveEventHandler( iter->second );
         //iter->second->RemoveAllEvents();
@@ -311,19 +311,19 @@ void Canvas::CreateDefaultNetwork()
 {
     XMLDataBufferEngine::instance()->NewVESData( true );
     ///Initialize tope level network
-    model::NetworkWeakPtr tempNetwork = 
+    model::NetworkWeakPtr tempNetwork =
         new model::Network();
-    XMLDataBufferEngine::instance()->GetXMLSystemDataObject( 
+    XMLDataBufferEngine::instance()->GetXMLSystemDataObject(
         XMLDataBufferEngine::instance()->GetTopSystemId() )->
-        AddNetwork( tempNetwork );
-    
+    AddNetwork( tempNetwork );
+
     ///Set the default network
     activeId = "NULL";
-    networks[ XMLDataBufferEngine::instance()->GetTopSystemId() ] = 
+    networks[ XMLDataBufferEngine::instance()->GetTopSystemId()] =
         new Network( this );
     ///Now set it active
     this->SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
-    
+
     ///Set canvas parameters
     std::pair< long int, long int > numPix;
     numPix.first = 7000;
@@ -332,29 +332,29 @@ void Canvas::CreateDefaultNetwork()
     numUnit.first = 10;
     numUnit.second = 10;
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_xUserScale", userScale.first );
+    SetData( "m_xUserScale", userScale.first );
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_yUserScale", userScale.second );
+    SetData( "m_yUserScale", userScale.second );
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixX", static_cast< long int >( numPix.first ) );
+    SetData( "nPixX", static_cast< long int >( numPix.first ) );
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nPixY", static_cast< long int >( numPix.second ) );
+    SetData( "nPixY", static_cast< long int >( numPix.second ) );
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+    SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+    SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::Update()
 {
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
-         iter != networks.end(); ++iter )
+            iter != networks.end(); ++iter )
     {
         iter->second->Update();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Canvas::OnDelMod(wxCommandEvent& event )
-{  
+void Canvas::OnDelMod( wxCommandEvent& event )
+{
     ::wxPostEvent( parent, event );
 }

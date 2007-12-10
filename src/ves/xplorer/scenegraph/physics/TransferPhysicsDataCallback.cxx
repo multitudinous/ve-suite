@@ -54,17 +54,17 @@ namespace scenegraph
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 TransferPhysicsDataCallback::TransferPhysicsDataCallback()
-:
-m_physicsRigidBody( 0 )
+        :
+        m_physicsRigidBody( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 TransferPhysicsDataCallback::TransferPhysicsDataCallback( const TransferPhysicsDataCallback& input )
-:
-osg::Object( input ),
-osg::NodeCallback( input ),
-m_physicsRigidBody( 0 )
+        :
+        osg::Object( input ),
+        osg::NodeCallback( input ),
+        m_physicsRigidBody( 0 )
 {
     ;
 }

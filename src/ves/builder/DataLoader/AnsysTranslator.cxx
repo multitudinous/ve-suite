@@ -45,44 +45,42 @@ using namespace ves::builder::cfdTranslatorToVTK;
 AnsysTranslator::AnsysTranslator()
 {
 
-   SetTranslateCallback(&ansysToVTK);
-   SetPreTranslateCallback(&_cmdParser);
+    SetTranslateCallback( &ansysToVTK );
+    SetPreTranslateCallback( &_cmdParser );
 }
 /////////////////////////////////////////
 AnsysTranslator::~AnsysTranslator()
-{
-
-}
+{}
 //////////////////////////////////////////////////////////////////////////
-void AnsysTranslator::AnsysPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               cfdTranslatorToVTK* toVTK)
+void AnsysTranslator::AnsysPreTranslateCbk::Preprocess( int argc, char** argv,
+                                                        cfdTranslatorToVTK* toVTK )
 {
-   PreTranslateCallback::Preprocess( argc, argv, toVTK );
+    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AnsysTranslator::AnsysTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                     cfdTranslatorToVTK* toVTK)
+void AnsysTranslator::AnsysTranslateCbk::Translate( vtkDataObject*& outputDataset,
+                                                    cfdTranslatorToVTK* toVTK )
 {
-   AnsysTranslator* ansysTransVTK =
-              dynamic_cast<AnsysTranslator*>(toVTK);
-   if ( ansysTransVTK )
-   {
-      ansysReader* ansys = new ansysReader( ansysTransVTK->GetFile(0).c_str() );
-      
-      if ( !outputDataset )
-      {
-         outputDataset = vtkUnstructuredGrid::New();
-      }
-      outputDataset->ShallowCopy( ansys->GetUGrid() );
-      delete ansys;
-      outputDataset->Update();
-   }
+    AnsysTranslator* ansysTransVTK =
+        dynamic_cast<AnsysTranslator*>( toVTK );
+    if( ansysTransVTK )
+    {
+        ansysReader* ansys = new ansysReader( ansysTransVTK->GetFile( 0 ).c_str() );
+
+        if( !outputDataset )
+        {
+            outputDataset = vtkUnstructuredGrid::New();
+        }
+        outputDataset->ShallowCopy( ansys->GetUGrid() );
+        delete ansys;
+        outputDataset->Update();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AnsysTranslator::DisplayHelp( void )
 {
-   std::cout << "|\tAnsys Translator Usage:" << std::endl
-               << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader rst -w file" << std::endl;
+    std::cout << "|\tAnsys Translator Usage:" << std::endl
+    << "\t -singleFile <rst_filename_to_load> -o <output_dir> "
+    << "-outFileName <output_filename> -loader rst -w file" << std::endl;
 }
 

@@ -58,70 +58,70 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 WireframeEventHandler::WireframeEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-WireframeEventHandler::WireframeEventHandler(const WireframeEventHandler& rhs)
-:ves::xplorer::event::EventHandler(rhs)
+WireframeEventHandler::WireframeEventHandler( const WireframeEventHandler& rhs )
+        : ves::xplorer::event::EventHandler( rhs )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Destructor                                      //
 ////////////////////////////////////////////////////////////////////////////////
 WireframeEventHandler::~WireframeEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Equal operator
 ////////////////////////////////////////////////////////////////////////////////
-WireframeEventHandler& WireframeEventHandler::operator=(const WireframeEventHandler& rhs)
+WireframeEventHandler& WireframeEventHandler::operator=( const WireframeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WireframeEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* model)
+void WireframeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-   try
-   {
-      if ( model )
-      {
-         _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to WireframeEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to WireframeEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 //////////////////////////////////////////////////////////////////////////
 void WireframeEventHandler::Execute( XMLObject* xmlObject )
 {
-   Command* command = dynamic_cast< Command* >( xmlObject );
-   DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
-   
-   unsigned int state = 0;
-   activeModelDVP->GetData( state );
-   
-   if ( ModelHandler::instance()->GetActiveModel() )
-   {
-      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-      if ( dataSet )
-      {
-         dataSet->SetWireframeState( state );
-      }
-   }
-   
+    Command* command = dynamic_cast< Command* >( xmlObject );
+    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
+
+    unsigned int state = 0;
+    activeModelDVP->GetData( state );
+
+    if( ModelHandler::instance()->GetActiveModel() )
+    {
+        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( dataSet )
+        {
+            dataSet->SetWireframeState( state );
+        }
+    }
+
 }

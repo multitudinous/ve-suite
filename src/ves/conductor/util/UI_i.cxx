@@ -37,54 +37,53 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
-  
+
 using namespace ves::conductor::util;
 // Implementation skeleton constructor
-Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
-  : UIName_(name), executive_(Body::Executive::_duplicate(exec))
+Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
+        : UIName_( name ), executive_( Body::Executive::_duplicate( exec ) )
 {
-    UIName_=name;
+    UIName_ = name;
     m_commandNameMap[ "NULL" ] = ves::open::xml::Command();
     m_commandNameMap[ "NULL" ].SetCommandName( "NULL" );
 }
-  
+
 // Implementation skeleton destructor
-Body_UI_i::~Body_UI_i (void)
-  {
-  }
-  
-void Body_UI_i::UpdateNetwork (
+Body_UI_i::~Body_UI_i( void )
+{}
+
+void Body_UI_i::UpdateNetwork(
     const char * network
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (network!=NULL)
-      std::cout<<network<<std::endl;
-    std::cout<<UIName_<<" :UpdateNetwork called"<<std::endl;
-    
+    if( network != NULL )
+        std::cout << network << std::endl;
+    std::cout << UIName_ << " :UpdateNetwork called" << std::endl;
+
     //ui_network_->Load(network);
-     
-  }
-  
-void Body_UI_i::UpdateModuleUI (
+
+}
+
+void Body_UI_i::UpdateModuleUI(
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (msg!=NULL)
-      std::cout<<module_id<<" : "<<msg<<std::endl;
-    std::cout<<UIName_<<" :UpdateModuleUI called"<<std::endl;
+    if( msg != NULL )
+        std::cout << module_id << " : " << msg << std::endl;
+    std::cout << UIName_ << " :UpdateModuleUI called" << std::endl;
 
     //Real code the update UI
     //Package p;
@@ -95,99 +94,99 @@ void Body_UI_i::UpdateModuleUI (
     //ui_network_->modules[module_id].GetPlugin()->UnPack(&(p.GetInterfaceVector())[0]);
     //ui_network_->s_mutexProtect.Unlock();
     //ui_network_->Refresh();
-  }
-  
-void Body_UI_i::UpdateModuleResult (
+}
+
+void Body_UI_i::UpdateModuleResult(
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (msg!=NULL)
-      std::cout<<module_id<<" : "<<msg<<std::endl;
-    std::cout<<UIName_<<" :UpdateModuleResult called"<<std::endl;
-  }
-  
-void Body_UI_i::UpdateLinkContent (
+    if( msg != NULL )
+        std::cout << module_id << " : " << msg << std::endl;
+    std::cout << UIName_ << " :UpdateModuleResult called" << std::endl;
+}
+
+void Body_UI_i::UpdateLinkContent(
     CORBA::Long id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-    if (msg!=NULL)
-      std::cout<<id<<" : "<<msg<<std::endl;
-    std::cout<<UIName_<<" :UpdateLinkContent called"<<std::endl;
-  }
-  
-void Body_UI_i::Raise (
+    if( msg != NULL )
+        std::cout << id << " : " << msg << std::endl;
+    std::cout << UIName_ << " :UpdateLinkContent called" << std::endl;
+}
+
+void Body_UI_i::Raise(
     const char * notification
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
+)
+ACE_THROW_SPEC((
+                   CORBA::SystemException
+                   , Error::EUnknown
+               ) )
+{
     // Add your implementation here
-   
-    if (std::string(notification)!="")
+
+    if( std::string( notification ) != "" )
     {
-       logWindow->SetMessage( notification );
+        logWindow->SetMessage( notification );
     }
-  }
-  
-void Body_UI_i::SetXplorerData (
+}
+
+void Body_UI_i::SetXplorerData(
     const char * xplorerData
-  )
-  ACE_THROW_SPEC ((
-    ::CORBA::SystemException,
-    ::Error::EUnknown
-  ))
+)
+ACE_THROW_SPEC((
+                   ::CORBA::SystemException,
+                   ::Error::EUnknown
+               ) )
 {
     //std::cout << xplorerData << std::endl;
-   //Receive the data from Xplorer
-   std::string tempString( const_cast<char*>(xplorerData) );
-   ves::open::xml::XMLReaderWriter networkReader;
+    //Receive the data from Xplorer
+    std::string tempString( const_cast<char*>( xplorerData ) );
+    ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
-   networkReader.ReadXMLData( tempString, "Command", "vecommand" );
+    networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
     std::vector<ves::open::xml::XMLObject*> xmlObjects;
-   xmlObjects = networkReader.GetLoadedXMLObjects();
-    
+    xmlObjects = networkReader.GetLoadedXMLObjects();
+
     //std::cout << xmlObjects.size() << std::endl;
     std::vector< ves::open::xml::XMLObject* >::iterator iter;
     //Not sure why this is not working...
     //for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
     {
         //iter
-       //  VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
+        //  VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
         ves::open::xml::Command* temp = dynamic_cast< ves::open::xml::Command* >( xmlObjects.at( 0 ) );
         if( !temp )
         {
             std::cout << " bad stuff " << std::endl;
         }
-        m_commandNameMap[ temp->GetCommandName() ] = *temp;
+        m_commandNameMap[ temp->GetCommandName()] = *temp;
         delete temp;
         //iter = xmlObjects.erase( iter );
         xmlObjects.clear();
     }
-   //logWindow->SetMessage( xplorerData );
+    //logWindow->SetMessage( xplorerData );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_UI_i::SetLogWindow( PEThread* logWindow )
-{ 
-     this->logWindow = logWindow;
+{
+    this->logWindow = logWindow;
 }
 ///////////////////////////////////////////////////////////////////////////////
 ves::open::xml::Command Body_UI_i::GetXplorerData( std::string commandName )
@@ -200,5 +199,5 @@ ves::open::xml::Command Body_UI_i::GetXplorerData( std::string commandName )
     }
     ves::open::xml::Command temp = iter->second;
     m_commandNameMap.erase( iter );
-   return temp;
+    return temp;
 }

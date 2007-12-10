@@ -51,7 +51,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdCuttingPlane;
+class cfdCuttingPlane;
 }
 }
 
@@ -63,52 +63,52 @@ namespace xplorer
 cfdContourBase API
 */
 /*!\class ves::xplorer::cfdContourBase
-* 
+*
 */
 class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
 {
 public:
-   ///Constructor
-   cfdContourBase();
-   ///Destructor
-   virtual ~cfdContourBase();
+    ///Constructor
+    cfdContourBase();
+    ///Destructor
+    virtual ~cfdContourBase();
 
-   ///update the actor
-   virtual void Update( void ) = 0;
+    ///update the actor
+    virtual void Update( void ) = 0;
 
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand();
 
-   ///Sets the Mapper Input
-   ///\param polydata
-   void SetMapperInput( vtkPolyData* polydata );
+    ///Sets the Mapper Input
+    ///\param polydata
+    void SetMapperInput( vtkPolyData* polydata );
 
-   ///Sets the Fill Type
-   ///\param fillType
-   void SetFillType( const int fillType);
+    ///Sets the Fill Type
+    ///\param fillType
+    void SetFillType( const int fillType );
 
-   ///Create the Plane
-   void CreatePlane();
+    ///Create the Plane
+    void CreatePlane();
 
 protected:
-   //vtkPolyDataMapper*   mapper;
-   vtkMultiGroupPolyDataMapper* mapper;///<mapper.
-   //vtkMultiGroupDataGeometryFilter*   filter;
-   vtkContourFilter*    cfilter;///<Contour filter.
-   vtkBandedPolyDataContourFilter* bfilter;///<banded contour filter.
-   vtkDecimatePro*      deci;///<decimator.
-   vtkTriangleFilter*   tris;///<trangle filter for vtk.
-   vtkStripper*         strip;///<strip.
-   vtkPolyDataNormals*  normals;///<polydata normals.
+    //vtkPolyDataMapper*   mapper;
+    vtkMultiGroupPolyDataMapper* mapper;///<mapper.
+    //vtkMultiGroupDataGeometryFilter*   filter;
+    vtkContourFilter*    cfilter;///<Contour filter.
+    vtkBandedPolyDataContourFilter* bfilter;///<banded contour filter.
+    vtkDecimatePro*      deci;///<decimator.
+    vtkTriangleFilter*   tris;///<trangle filter for vtk.
+    vtkStripper*         strip;///<strip.
+    vtkPolyDataNormals*  normals;///<polydata normals.
 
-   cfdCuttingPlane* cuttingPlane;///<cutting plane
+    cfdCuttingPlane* cuttingPlane;///<cutting plane
 
-   int fillType;///<Representation of contour line.
-   double warpedContourScale;///<Scale of warped contour
-   double contourOpacity;///<Level of Opacity.
-   int contourLOD;///<Level of Detail.
-   int xyz;///<Value of surface.
-   int numSteps;///<Number of timesteps.
+    int fillType;///<Representation of contour line.
+    double warpedContourScale;///<Scale of warped contour
+    double contourOpacity;///<Level of Opacity.
+    int contourLOD;///<Level of Detail.
+    int xyz;///<Value of surface.
+    int numSteps;///<Number of timesteps.
 };
 }
 }

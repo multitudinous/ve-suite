@@ -50,20 +50,20 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
 
 cfdObjects::cfdObjects( void ):
-    pointSource( 0 ),
-    vtkToPFDebug( 0 ),
-    usePreCalcData( false ),
-    activeDataSet( 0 )
+        pointSource( 0 ),
+        vtkToPFDebug( 0 ),
+        usePreCalcData( false ),
+        activeDataSet( 0 )
 {
-   m_multiGroupGeomFilter = vtkMultiGroupDataGeometryFilter::New();
-   m_geometryFilter = vtkGeometryFilter::New();
+    m_multiGroupGeomFilter = vtkMultiGroupDataGeometryFilter::New();
+    m_geometryFilter = vtkGeometryFilter::New();
 }
 
-cfdObjects::cfdObjects( const cfdObjects& src)
-:GlobalBase(src)
+cfdObjects::cfdObjects( const cfdObjects& src )
+        : GlobalBase( src )
 {
-   this->objectType = src.objectType;
-   this->pointSource = src.pointSource;
+    this->objectType = src.objectType;
+    this->pointSource = src.pointSource;
 }
 
 cfdObjects::~cfdObjects( void )
@@ -74,121 +74,119 @@ cfdObjects::~cfdObjects( void )
 
 void cfdObjects::SetObjectType( int type )
 {
-   this->objectType = type;
+    this->objectType = type;
 }
 
 std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > cfdObjects::GetGeodes( void )
 {
-   return geodes;
+    return geodes;
 }
 
 void cfdObjects::ClearGeodes( void )
 {
-   /*
-   for ( unsigned int i = 0; i < geodes.size(); ++i )
-   {
-      delete geodes.at( i );
-   }
-   */
+    /*
+    for(unsigned int i = 0; i < geodes.size(); ++i )
+    {
+       delete geodes.at( i );
+    }
+    */
 
-   geodes.clear();
+    geodes.clear();
 }
 
 void cfdObjects::SetOrigin( float o[ 3 ] )
 {
-   for ( int i = 0; i < 3; i++ )
-   {
-      this->origin[ i ] = o[ i ];
-   }
+    for( int i = 0; i < 3; i++ )
+    {
+        this->origin[ i ] = o[ i ];
+    }
 }
 
 double * cfdObjects::GetOrigin()
 {
-   return this->origin;
+    return this->origin;
 }
 
 void cfdObjects::GetOrigin( double o[ 3 ] )
 {
-   for ( int i = 0; i < 3; i++ )
-   {
-      o[ i ] = this->origin[ i ];
-   }
+    for( int i = 0; i < 3; i++ )
+    {
+        o[ i ] = this->origin[ i ];
+    }
 }
 
-void cfdObjects::SetNormal( double n[ 3 ]  )
+void cfdObjects::SetNormal( double n[ 3 ] )
 {
-   for ( int i = 0; i < 3; i++ )
-   {
-      this->normal[ i ] = n[ i ];
-   }
+    for( int i = 0; i < 3; i++ )
+    {
+        this->normal[ i ] = n[ i ];
+    }
 }
 
-void cfdObjects::SetBoxSize( double b[ 6 ]  )
+void cfdObjects::SetBoxSize( double b[ 6 ] )
 {
-   for ( int i = 0; i < 6; i++ )
-   {
-      this->box_size[ i ] = b[ i ];
-   }
-   
-   this->center[0] = (this->box_size[0] + this->box_size[1])/2;
-   this->center[1] = (this->box_size[2] + this->box_size[3])/2;
-   this->center[2] = (this->box_size[4] + this->box_size[5])/2;
+    for( int i = 0; i < 6; i++ )
+    {
+        this->box_size[ i ] = b[ i ];
+    }
+
+    this->center[0] = ( this->box_size[0] + this->box_size[1] ) / 2;
+    this->center[1] = ( this->box_size[2] + this->box_size[3] ) / 2;
+    this->center[2] = ( this->box_size[4] + this->box_size[5] ) / 2;
 }
 
 void cfdObjects::SetSourcePoints( vtkPolyData* pointSource )
 {
-   this->pointSource = pointSource;
+    this->pointSource = pointSource;
 }
 
 void cfdObjects::UpdateCommand()
 {
-   ;
+    ;
 }
 ///////////////////////////////////////
 void cfdObjects::SetActiveVtkPipeline()
 {
-   if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
+    if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
     {
         // we have to use a compsite pipeline
         vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
-        vtkAlgorithm::SetDefaultExecutivePrototype(prototype);
+        vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
         prototype->Delete();
-   }
-   else
-   {   
-        vtkAlgorithm::SetDefaultExecutivePrototype(0);
-   }
+    }
+    else
+    {
+        vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
+    }
 }
 ///////////////////////////////
 void cfdObjects::UpdateActors()
-{
-
-}
+{}
 /////////////////////////////////////////////////////////////////////////
-vtkPolyData* cfdObjects::ApplyGeometryFilter(vtkAlgorithmOutput* input)
+vtkPolyData* cfdObjects::ApplyGeometryFilter( vtkAlgorithmOutput* input )
 {
-   if(this->activeDataSet->GetDataSet()->IsA("vtkMultiGroupDataSet"))
+    if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
     {
-        m_multiGroupGeomFilter->SetInputConnection(input);
-      return m_multiGroupGeomFilter->GetOutput();
-   }
-   else
-   {
-        m_geometryFilter->SetInputConnection(input);
-      return m_geometryFilter->GetOutput();
-   }
+        m_multiGroupGeomFilter->SetInputConnection( input );
+        return m_multiGroupGeomFilter->GetOutput();
+    }
+    else
+    {
+        m_geometryFilter->SetInputConnection( input );
+        return m_geometryFilter->GetOutput();
+    }
 }
 /////////////////////////////////////////////
 DataSet* cfdObjects::GetActiveDataSet()
 {
-   return activeDataSet;
+    return activeDataSet;
 }
 
 void cfdObjects::SetActiveDataSet( DataSet* dataset )
 {
-   /*vprDEBUG(vesDBG, 4) 
-      << "cfdObjects::SetActiveDataSet: " << dataset
-      << std::endl << vprDEBUG_FLUSH;*/
+    /*vprDEBUG(vesDBG, 4)
+       << "cfdObjects::SetActiveDataSet: " << dataset
+       << std::endl << vprDEBUG_FLUSH;*/
 
-   activeDataSet = dataset;
+    activeDataSet = dataset;
 }

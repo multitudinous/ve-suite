@@ -55,162 +55,162 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( Contours, wxDialog )
-////@begin Contours event table entries
-   EVT_RADIOBOX      (CONTOUR_DIR_RBOX,            Contours::_onDirection)
-   //EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,           Contours::_onContourType)
-   EVT_RADIOBUTTON   (MULTIPLE_PRECONTOUR_RBUTTON, Contours::_onMultiplePlanes)
-   EVT_CHECKBOX      (MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes)
-   EVT_RADIOBUTTON   (SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane)
-   EVT_CHECKBOX      (SINGLE_PRECONTOUR_CHK,       Contours::_onPrecomputedPlane)
-   EVT_SLIDER        (CONTOUR_PLANE_SLIDER,        Contours::_onPlane)
-   EVT_BUTTON        (ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane)
-   EVT_BUTTON        (ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced)
-////@end Contours event table entries
+    ////@begin Contours event table entries
+    EVT_RADIOBOX( CONTOUR_DIR_RBOX,            Contours::_onDirection )
+    //EVT_RADIOBOX      (CONTOUR_TYPE_RBOX,           Contours::_onContourType)
+    EVT_RADIOBUTTON( MULTIPLE_PRECONTOUR_RBUTTON, Contours::_onMultiplePlanes )
+    EVT_CHECKBOX( MULTIPLE_PRECONTOUR_CHK,     Contours::_onCyclePlanes )
+    EVT_RADIOBUTTON( SINGLE_PRECONTOUR_RBUTTON,   Contours::_onSinglePlane )
+    EVT_CHECKBOX( SINGLE_PRECONTOUR_CHK,       Contours::_onPrecomputedPlane )
+    EVT_SLIDER( CONTOUR_PLANE_SLIDER,        Contours::_onPlane )
+    EVT_BUTTON( ADD_CONTOUR_PLANE_BUTTON,    Contours::_onAddPlane )
+    EVT_BUTTON( ADVANCED_CONTOUR_BUTTON,     Contours::_onAdvanced )
+    ////@end Contours event table entries
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////////
-Contours::Contours( wxWindow* parent, wxWindowID id, 
-                  const wxString& caption, const wxPoint& pos, 
-                  const wxSize& size, long style,std::string type )
+Contours::Contours( wxWindow* parent, wxWindowID id,
+                    const wxString& caption, const wxPoint& pos,
+                    const wxSize& size, long style, std::string type )
 {
-   Create(parent, id, caption, pos, size, style);
-   SetDataType(type);
+    Create( parent, id, caption, pos, size, style );
+    SetDataType( type );
 }
 /////////////////////////////////////////////////////////////////////////////////
-bool Contours::Create(wxWindow* parent, wxWindowID id, const wxString& caption,
-                    const wxPoint& pos, const wxSize& size, 
-                    long style )
+bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
+                       const wxPoint& pos, const wxSize& size,
+                       long style )
 {
-   _directionRBox = 0;
-   //_contourTypeRBox = 0;
-   _allPrecomputedRButton = 0;
-   _cyclePrecomputedCBox = 0;
-   _singlePlaneRButton = 0;
-   _nearestPrecomputedCBox = 0;
-   _planePositonSlider = 0;
-   itemButton16 = 0;
-   itemButton17 = 0;
-   _planeDirection = "x";
-   _planeType = "Graduated";
-   _numberOfPlanesOption = "Single";
-   _planeOption = "";
-   _planePosition = 0.0f;
-   _lastLOD = 1.0f;
-   _lastWarpedScale = 1.0f;
-   _lastOpacity = 100.0f;
-   _lastVectorScale = 1.0f;
-   _lastVectorRatio = 1.0f;
-   _lastScaleByMagnitude = false;
-   _lastVectorThreshold.push_back(1.0f);
-   _lastVectorThreshold.push_back(100.0f);
-   _warpOption = false;
+    _directionRBox = 0;
+    //_contourTypeRBox = 0;
+    _allPrecomputedRButton = 0;
+    _cyclePrecomputedCBox = 0;
+    _singlePlaneRButton = 0;
+    _nearestPrecomputedCBox = 0;
+    _planePositonSlider = 0;
+    itemButton16 = 0;
+    itemButton17 = 0;
+    _planeDirection = "x";
+    _planeType = "Graduated";
+    _numberOfPlanesOption = "Single";
+    _planeOption = "";
+    _planePosition = 0.0f;
+    _lastLOD = 1.0f;
+    _lastWarpedScale = 1.0f;
+    _lastOpacity = 100.0f;
+    _lastVectorScale = 1.0f;
+    _lastVectorRatio = 1.0f;
+    _lastScaleByMagnitude = false;
+    _lastVectorThreshold.push_back( 1.0f );
+    _lastVectorThreshold.push_back( 100.0f );
+    _warpOption = false;
 
-   SetExtraStyle(GetExtraStyle()|wxWS_EX_BLOCK_EVENTS);
-   wxDialog::Create( parent, id, caption, pos, size, style );
+    SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
+    wxDialog::Create( parent, id, caption, pos, size, style );
 
-   CreateControls();
-   GetSizer()->Fit(this);
-   GetSizer()->SetSizeHints(this);
-   Centre();
-   return true;
+    CreateControls();
+    GetSizer()->Fit( this );
+    GetSizer()->SetSizeHints( this );
+    Centre();
+    return true;
 }
 ///////////////////////////////
 void Contours::CreateControls()
-{    
+{
     Contours* itemDialog1 = this;
 
-    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer(wxVERTICAL);
-    itemDialog1->SetSizer(itemBoxSizer2);
+    wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
+    itemDialog1->SetSizer( itemBoxSizer2 );
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Contour Controls"));
-    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer(itemStaticBoxSizer3Static, wxVERTICAL);
-    itemBoxSizer2->Add(itemStaticBoxSizer3, 0, wxGROW|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Contour Controls" ) );
+    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
+    itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
-    wxBoxSizer* itemBoxSizer4 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer4, 0, wxGROW|wxALL, 5);
+    wxBoxSizer* itemBoxSizer4 = new wxBoxSizer( wxHORIZONTAL );
+    itemStaticBoxSizer3->Add( itemBoxSizer4, 0, wxGROW | wxALL, 5 );
 
     wxString itemRadioBox5Strings[] = {
-        _T("x"),
-        _T("y"),
-        _T("z"),
-        _T("By Wand")
-    };
-    
-    _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, _T("Direction"), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
-    itemBoxSizer4->Add(_directionRBox, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+                                          _T( "x" ),
+                                          _T( "y" ),
+                                          _T( "z" ),
+                                          _T( "By Wand" )
+                                      };
+
+    _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     /*wxString itemRadioBox6Strings[] = {
         _T("Graduated"),
         _T("Banded"),
         _T("Lined")
     };
-   
+
     _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
     itemBoxSizer4->Add(_contourTypeRBox, 0, wxALIGN_TOP|wxALL, 5);
-*/
-    wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Multiple Planes"));
-    wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer(itemStaticBoxSizer7Static, wxVERTICAL);
-    itemStaticBoxSizer3->Add(itemStaticBoxSizer7, 0, wxGROW|wxALL, 5);
+    */
+    wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Multiple Planes" ) );
+    wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer( itemStaticBoxSizer7Static, wxVERTICAL );
+    itemStaticBoxSizer3->Add( itemStaticBoxSizer7, 0, wxGROW | wxALL, 5 );
 
-    _allPrecomputedRButton = new wxRadioButton( itemDialog1, MULTIPLE_PRECONTOUR_RBUTTON, _T("All Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
-    _allPrecomputedRButton->SetValue(false);
-    itemStaticBoxSizer7->Add(_allPrecomputedRButton, 0, wxALIGN_LEFT|wxALL, 5);
+    _allPrecomputedRButton = new wxRadioButton( itemDialog1, MULTIPLE_PRECONTOUR_RBUTTON, _T( "All Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _allPrecomputedRButton->SetValue( false );
+    itemStaticBoxSizer7->Add( _allPrecomputedRButton, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, MULTIPLE_PRECONTOUR_CHK, _T("Cycle Precomputed Surfaces"), wxDefaultPosition, wxDefaultSize, 0 );
-    _cyclePrecomputedCBox->SetValue(false);
-    _cyclePrecomputedCBox->Enable(false);
-    itemStaticBoxSizer7->Add(_cyclePrecomputedCBox, 0, wxALIGN_LEFT|wxALL, 5);
+    _cyclePrecomputedCBox = new wxCheckBox( itemDialog1, MULTIPLE_PRECONTOUR_CHK, _T( "Cycle Precomputed Surfaces" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _cyclePrecomputedCBox->SetValue( false );
+    _cyclePrecomputedCBox->Enable( false );
+    itemStaticBoxSizer7->Add( _cyclePrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    wxStaticBox* itemStaticBoxSizer10Static = new wxStaticBox(itemDialog1, wxID_ANY, _T("Single Plane"));
-    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer(itemStaticBoxSizer10Static, wxVERTICAL);
-    itemStaticBoxSizer3->Add(itemStaticBoxSizer10, 0, wxGROW|wxALL, 5);
+    wxStaticBox* itemStaticBoxSizer10Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Single Plane" ) );
+    wxStaticBoxSizer* itemStaticBoxSizer10 = new wxStaticBoxSizer( itemStaticBoxSizer10Static, wxVERTICAL );
+    itemStaticBoxSizer3->Add( itemStaticBoxSizer10, 0, wxGROW | wxALL, 5 );
 
-    _singlePlaneRButton = new wxRadioButton( itemDialog1, SINGLE_PRECONTOUR_RBUTTON, _T("Specify a Single Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    _singlePlaneRButton->SetValue(true);
-    itemStaticBoxSizer10->Add(_singlePlaneRButton, 0, wxALIGN_LEFT|wxALL, 5);
+    _singlePlaneRButton = new wxRadioButton( itemDialog1, SINGLE_PRECONTOUR_RBUTTON, _T( "Specify a Single Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _singlePlaneRButton->SetValue( true );
+    itemStaticBoxSizer10->Add( _singlePlaneRButton, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, SINGLE_PRECONTOUR_CHK, _T("Use Nearest Precomputed Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    _nearestPrecomputedCBox->SetValue(false);
-    itemStaticBoxSizer10->Add(_nearestPrecomputedCBox, 0, wxALIGN_LEFT|wxALL, 5);
+    _nearestPrecomputedCBox = new wxCheckBox( itemDialog1, SINGLE_PRECONTOUR_CHK, _T( "Use Nearest Precomputed Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    _nearestPrecomputedCBox->SetValue( false );
+    itemStaticBoxSizer10->Add( _nearestPrecomputedCBox, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T("Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemStaticBoxSizer3->Add(itemStaticText13, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE, 5);
+    wxStaticText* itemStaticText13 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemStaticBoxSizer3->Add( itemStaticText13, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
-    _planePositonSlider = new wxSlider( itemDialog1, CONTOUR_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize(300, -1), wxSL_HORIZONTAL|wxSL_LABELS );
-    itemStaticBoxSizer3->Add(_planePositonSlider, 0, wxGROW|wxLEFT|wxRIGHT|wxBOTTOM, 5);
+    _planePositonSlider = new wxSlider( itemDialog1, CONTOUR_PLANE_SLIDER, 0, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
+    itemStaticBoxSizer3->Add( _planePositonSlider, 0, wxGROW | wxLEFT | wxRIGHT | wxBOTTOM, 5 );
 
-    wxBoxSizer* itemBoxSizer15 = new wxBoxSizer(wxHORIZONTAL);
-    itemStaticBoxSizer3->Add(itemBoxSizer15, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+    wxBoxSizer* itemBoxSizer15 = new wxBoxSizer( wxHORIZONTAL );
+    itemStaticBoxSizer3->Add( itemBoxSizer15, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, 5 );
 
-    wxButton* itemButton16 = new wxButton( itemDialog1, ADD_CONTOUR_PLANE_BUTTON, _T("Add Plane"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer15->Add(itemButton16, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxButton* itemButton16 = new wxButton( itemDialog1, ADD_CONTOUR_PLANE_BUTTON, _T( "Add Plane" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer15->Add( itemButton16, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxButton* itemButton17 = new wxButton( itemDialog1, ADVANCED_CONTOUR_BUTTON, _T("Advanced..."), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer15->Add(itemButton17, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxButton* itemButton17 = new wxButton( itemDialog1, ADVANCED_CONTOUR_BUTTON, _T( "Advanced..." ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer15->Add( itemButton17, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T("Close"), wxDefaultPosition, wxDefaultSize, 0 );
-    itemBoxSizer15->Add(_closeButton, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
+    itemBoxSizer15->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
 ////@end Contours content construction
 }
 ////////////////////
 Contours::~Contours()
 {
-   _advancedSettings.clear();
-   _contourInformation.clear();
+    _advancedSettings.clear();
+    _contourInformation.clear();
 }
 ////////////////////////////////////////////
-void Contours::SetDataType(std::string type)
+void Contours::SetDataType( std::string type )
 {
-   _dataType = type;
-   
-   if(_dataType == "SCALAR")
-   {
-      SetTitle( _("Scalar Contour") );
-   }
-   else if(_dataType == "VECTOR")
-   {
-      SetTitle( _("Vector Contour") );
-   }
+    _dataType = type;
+
+    if( _dataType == "SCALAR" )
+    {
+        SetTitle( _( "Scalar Contour" ) );
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        SetTitle( _( "Vector Contour" ) );
+    }
 }
 /////////////////////////////
 bool Contours::ShowToolTips()
@@ -220,96 +220,96 @@ bool Contours::ShowToolTips()
 /////////////////////////////////////////////////////////////
 wxBitmap Contours::GetBitmapResource( const wxString& name )
 {
-   wxUnusedVar(name);
-   return wxNullBitmap;
+    wxUnusedVar( name );
+    return wxNullBitmap;
 }
 /////////////////////////////////////////////////////////
 wxIcon Contours::GetIconResource( const wxString& name )
 {
-   wxUnusedVar(name);
-   return wxNullIcon;
+    wxUnusedVar( name );
+    return wxNullIcon;
 }
 /////////////////////////////////////////////////////////////////
-void Contours::_onAdvanced( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
 {
-   if(_dataType == "SCALAR")
-   {
-      AdvancedContours adContour(this,                
-                  SYMBOL_ADVANCEDCONTOURS_IDNAME, 
-                  SYMBOL_ADVANCEDCONTOURS_TITLE,
-                  SYMBOL_ADVANCEDCONTOURS_POSITION,
-                  SYMBOL_ADVANCEDCONTOURS_SIZE, 
-                  SYMBOL_ADVANCEDCONTOURS_STYLE );
-      
-      int displayWidth, displayHeight = 0;
-      ::wxDisplaySize(&displayWidth,&displayHeight);
-      wxRect bbox = this->GetRect();
-      int width,height = 0;
-      GetSize(&width,&height);
-      /*adContour.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y, 
-                        width, height));*/
-      adContour.SetSize(GetRect());
+    if( _dataType == "SCALAR" )
+    {
+        AdvancedContours adContour( this,
+                                    SYMBOL_ADVANCEDCONTOURS_IDNAME,
+                                    SYMBOL_ADVANCEDCONTOURS_TITLE,
+                                    SYMBOL_ADVANCEDCONTOURS_POSITION,
+                                    SYMBOL_ADVANCEDCONTOURS_SIZE,
+                                    SYMBOL_ADVANCEDCONTOURS_STYLE );
 
-      adContour.SetLOD(_lastLOD);
-      adContour.SetOpacity(_lastOpacity);
-      adContour.SetWarpedScale(_lastWarpedScale);
-      adContour.SetContourType(_planeType);
-      adContour.SetWarpOption(_warpOption);
-      int status = adContour.ShowModal(); 
- 
-      if( status == wxID_OK||
-          status == wxID_CLOSE||
-          status == wxID_CANCEL)
-       {
-          _lastLOD = adContour.GetLOD();
-          _lastOpacity = adContour.GetOpacity();
-          _lastWarpedScale = adContour.GetWarpedScale();
-          _planeType = adContour.GetContourType();
-          _warpOption = adContour.GetWarpOption();
-       }
-   }
-   else if(_dataType == "VECTOR")
-   {
-      AdvancedVectors adVector(this,                
-                  SYMBOL_ADVANCEDVECTORS_IDNAME, 
-                  SYMBOL_ADVANCEDVECTORS_TITLE,
-                  SYMBOL_ADVANCEDVECTORS_POSITION,
-                  SYMBOL_ADVANCEDVECTORS_SIZE, 
-                  SYMBOL_ADVANCEDVECTORS_STYLE );
+        int displayWidth, displayHeight = 0;
+        ::wxDisplaySize( &displayWidth, &displayHeight );
+        wxRect bbox = this->GetRect();
+        int width, height = 0;
+        GetSize( &width, &height );
+        /*adContour.SetSize(wxRect( 2*displayWidth/3, bbox.GetBottomRight().y,
+                          width, height));*/
+        adContour.SetSize( GetRect() );
 
-      int displayWidth, displayHeight = 0;
-      ::wxDisplaySize(&displayWidth,&displayHeight);
-      wxRect bbox = GetRect();
-      int width,height = 0;
-      GetSize(&width,&height);
+        adContour.SetLOD( _lastLOD );
+        adContour.SetOpacity( _lastOpacity );
+        adContour.SetWarpedScale( _lastWarpedScale );
+        adContour.SetContourType( _planeType );
+        adContour.SetWarpOption( _warpOption );
+        int status = adContour.ShowModal();
 
-      adVector.SetSize(GetRect());
-      adVector.SetScaleByMagFlag(_lastScaleByMagnitude);
-      adVector.SetVectorRatio(_lastVectorRatio);
-      adVector.SetVectorScale(_lastVectorScale);
-      adVector.SetVectorThreshold(_lastVectorThreshold);
-      
-      int status = adVector.ShowModal();
-      if( status == wxID_OK||
-          status == wxID_CLOSE||
-          status == wxID_CANCEL)
-       {
-          _lastScaleByMagnitude = adVector.GetScaleByMagFlag();
-          _lastVectorRatio = adVector.GetVectorRatio();
-          _lastVectorScale = adVector.GetVectorScale();
-          adVector.GetVectorThreshold(_lastVectorThreshold);
-       }
-   }
-   else
-   {
-      wxMessageBox( wxString( _dataType.c_str(), wxConvUTF8 ), _("Unknown Data Type!"), 
-            wxOK | wxICON_INFORMATION );
-   }
+        if( status == wxID_OK ||
+                status == wxID_CLOSE ||
+                status == wxID_CANCEL )
+        {
+            _lastLOD = adContour.GetLOD();
+            _lastOpacity = adContour.GetOpacity();
+            _lastWarpedScale = adContour.GetWarpedScale();
+            _planeType = adContour.GetContourType();
+            _warpOption = adContour.GetWarpOption();
+        }
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        AdvancedVectors adVector( this,
+                                  SYMBOL_ADVANCEDVECTORS_IDNAME,
+                                  SYMBOL_ADVANCEDVECTORS_TITLE,
+                                  SYMBOL_ADVANCEDVECTORS_POSITION,
+                                  SYMBOL_ADVANCEDVECTORS_SIZE,
+                                  SYMBOL_ADVANCEDVECTORS_STYLE );
+
+        int displayWidth, displayHeight = 0;
+        ::wxDisplaySize( &displayWidth, &displayHeight );
+        wxRect bbox = GetRect();
+        int width, height = 0;
+        GetSize( &width, &height );
+
+        adVector.SetSize( GetRect() );
+        adVector.SetScaleByMagFlag( _lastScaleByMagnitude );
+        adVector.SetVectorRatio( _lastVectorRatio );
+        adVector.SetVectorScale( _lastVectorScale );
+        adVector.SetVectorThreshold( _lastVectorThreshold );
+
+        int status = adVector.ShowModal();
+        if( status == wxID_OK ||
+                status == wxID_CLOSE ||
+                status == wxID_CANCEL )
+        {
+            _lastScaleByMagnitude = adVector.GetScaleByMagFlag();
+            _lastVectorRatio = adVector.GetVectorRatio();
+            _lastVectorScale = adVector.GetVectorScale();
+            adVector.GetVectorThreshold( _lastVectorThreshold );
+        }
+    }
+    else
+    {
+        wxMessageBox( wxString( _dataType.c_str(), wxConvUTF8 ), _( "Unknown Data Type!" ),
+                      wxOK | wxICON_INFORMATION );
+    }
 }
 /////////////////////////////////////////////////////
-void Contours::_onDirection( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onDirection( wxCommandEvent& WXUNUSED( event ) )
 {
-   _planeDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
+    _planeDirection = ConvertUnicode( _directionRBox->GetStringSelection() );
 }
 ///////////////////////////////////////////////////////
 /*void Contours::_onContourType( wxCommandEvent& WXUNUSED(event) )
@@ -317,22 +317,22 @@ void Contours::_onDirection( wxCommandEvent& WXUNUSED(event) )
    _planeType = _contourTypeRBox->GetStringSelection();
 }*/
 //////////////////////////////////////////////////////////
-void Contours::_onMultiplePlanes( wxCommandEvent& WXUNUSED(event) )
-{   
-   _cyclePrecomputedCBox->SetValue(false);
-   _cyclePrecomputedCBox->Enable(true);
-   _nearestPrecomputedCBox->SetValue(false);
-   _nearestPrecomputedCBox->Enable(false);
-   _planeOption.clear();
-   _numberOfPlanesOption = "Multiple";
+void Contours::_onMultiplePlanes( wxCommandEvent& WXUNUSED( event ) )
+{
+    _cyclePrecomputedCBox->SetValue( false );
+    _cyclePrecomputedCBox->Enable( true );
+    _nearestPrecomputedCBox->SetValue( false );
+    _nearestPrecomputedCBox->Enable( false );
+    _planeOption.clear();
+    _numberOfPlanesOption = "Multiple";
 
 }
 //////////////////////////////////////////////////////
-void Contours::_onCyclePlanes( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onCyclePlanes( wxCommandEvent& WXUNUSED( event ) )
 {
-    if(_cyclePrecomputedCBox->GetValue())
+    if( _cyclePrecomputedCBox->GetValue() )
     {
-       _planeOption = ConvertUnicode( _cyclePrecomputedCBox->GetLabel() );
+        _planeOption = ConvertUnicode( _cyclePrecomputedCBox->GetLabel() );
     }
     else
     {
@@ -340,22 +340,22 @@ void Contours::_onCyclePlanes( wxCommandEvent& WXUNUSED(event) )
     }
 }
 ///////////////////////////////////////////////////////
-void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onSinglePlane( wxCommandEvent& WXUNUSED( event ) )
 {
-   _cyclePrecomputedCBox->SetValue(false);
-   _cyclePrecomputedCBox->Enable(false);
+    _cyclePrecomputedCBox->SetValue( false );
+    _cyclePrecomputedCBox->Enable( false );
 
-   _nearestPrecomputedCBox->Enable(true);
-   _nearestPrecomputedCBox->SetValue(false);
-   _planeOption.clear();
-   _numberOfPlanesOption = "Single";
+    _nearestPrecomputedCBox->Enable( true );
+    _nearestPrecomputedCBox->SetValue( false );
+    _planeOption.clear();
+    _numberOfPlanesOption = "Single";
 }
 ////////////////////////////////////////////////////////////
-void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED( event ) )
 {
-    if(_nearestPrecomputedCBox->GetValue())
+    if( _nearestPrecomputedCBox->GetValue() )
     {
-       _planeOption = ConvertUnicode( _nearestPrecomputedCBox->GetLabel() );
+        _planeOption = ConvertUnicode( _nearestPrecomputedCBox->GetLabel() );
     }
     else
     {
@@ -363,176 +363,176 @@ void Contours::_onPrecomputedPlane( wxCommandEvent& WXUNUSED(event) )
     }
 }
 /////////////////////////////////////////////////
-void Contours::_onPlane( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onPlane( wxCommandEvent& WXUNUSED( event ) )
 {
-   _planePosition = static_cast<double>(_planePositonSlider->GetValue());  
+    _planePosition = static_cast<double>( _planePositonSlider->GetValue() );
 }
 ////////////////////////////////////////
 void Contours::_updateAdvancedSettings()
 {
-   _advancedSettings.clear();
+    _advancedSettings.clear();
 
-   if(_dataType == "SCALAR")
-   {
-      ves::open::xml::DataValuePair* contourOpacity = new ves::open::xml::DataValuePair();
-      contourOpacity->SetData("Contour Opacity",_lastOpacity);
-      _advancedSettings.push_back(contourOpacity);
+    if( _dataType == "SCALAR" )
+    {
+        ves::open::xml::DataValuePair* contourOpacity = new ves::open::xml::DataValuePair();
+        contourOpacity->SetData( "Contour Opacity", _lastOpacity );
+        _advancedSettings.push_back( contourOpacity );
 
-      ves::open::xml::DataValuePair* warpedScale = new ves::open::xml::DataValuePair();
-      warpedScale->SetData("Warped Contour Scale",_lastWarpedScale);
-      _advancedSettings.push_back(warpedScale);
+        ves::open::xml::DataValuePair* warpedScale = new ves::open::xml::DataValuePair();
+        warpedScale->SetData( "Warped Contour Scale", _lastWarpedScale );
+        _advancedSettings.push_back( warpedScale );
 
-      ves::open::xml::DataValuePair* LODSetting = new ves::open::xml::DataValuePair();
-      LODSetting->SetData("Contour LOD",_lastLOD);
-      _advancedSettings.push_back(LODSetting);
+        ves::open::xml::DataValuePair* LODSetting = new ves::open::xml::DataValuePair();
+        LODSetting->SetData( "Contour LOD", _lastLOD );
+        _advancedSettings.push_back( LODSetting );
 
-      ves::open::xml::DataValuePair* contourType = new ves::open::xml::DataValuePair();
-      contourType->SetDataType("STRING");
-      contourType->SetDataName(std::string("Type"));
-      contourType->SetDataString(_planeType);
-      _advancedSettings.push_back(contourType);
-      
-      ves::open::xml::DataValuePair* warpOptionFlag = new ves::open::xml::DataValuePair();
-      warpOptionFlag->SetDataName("Warp Option");
-      warpOptionFlag->SetDataType("UNSIGNED INT");
-      if(_warpOption)
-      {
-         warpOptionFlag->SetDataValue(static_cast<unsigned int>(1));
-      }
-      else
-      {
-         warpOptionFlag->SetDataValue(static_cast<unsigned int>(0));
-      }
-      _advancedSettings.push_back(warpOptionFlag);
-   }
-   else if(_dataType == "VECTOR")
-   {
-      ves::open::xml::DataValuePair* vectorThreshold = new ves::open::xml::DataValuePair();
-      vectorThreshold->SetData("Vector Threshold",_lastVectorThreshold);
-      _advancedSettings.push_back(vectorThreshold);
-   
-      ves::open::xml::DataValuePair* vectorScale = new ves::open::xml::DataValuePair();
-      vectorScale->SetData("Vector Scale",_lastVectorScale);
-      _advancedSettings.push_back(vectorScale);
+        ves::open::xml::DataValuePair* contourType = new ves::open::xml::DataValuePair();
+        contourType->SetDataType( "STRING" );
+        contourType->SetDataName( std::string( "Type" ) );
+        contourType->SetDataString( _planeType );
+        _advancedSettings.push_back( contourType );
 
-      ves::open::xml::DataValuePair* vectorRatio = new ves::open::xml::DataValuePair();
-      vectorRatio->SetData("Vector Ratio",_lastVectorRatio);
-      _advancedSettings.push_back(vectorRatio);
+        ves::open::xml::DataValuePair* warpOptionFlag = new ves::open::xml::DataValuePair();
+        warpOptionFlag->SetDataName( "Warp Option" );
+        warpOptionFlag->SetDataType( "UNSIGNED INT" );
+        if( _warpOption )
+        {
+            warpOptionFlag->SetDataValue( static_cast<unsigned int>( 1 ) );
+        }
+        else
+        {
+            warpOptionFlag->SetDataValue( static_cast<unsigned int>( 0 ) );
+        }
+        _advancedSettings.push_back( warpOptionFlag );
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        ves::open::xml::DataValuePair* vectorThreshold = new ves::open::xml::DataValuePair();
+        vectorThreshold->SetData( "Vector Threshold", _lastVectorThreshold );
+        _advancedSettings.push_back( vectorThreshold );
 
-      ves::open::xml::DataValuePair* scaleByMagFlag = new ves::open::xml::DataValuePair();
-      scaleByMagFlag->SetDataName("Scale By Magnitude");
-      scaleByMagFlag->SetDataType("UNSIGNED INT");
-      if(_lastScaleByMagnitude)
-      {
-         scaleByMagFlag->SetDataValue(static_cast<unsigned int>(1));
-      }
-      else
-      {
-         scaleByMagFlag->SetDataValue(static_cast<unsigned int>(0));
-      }
-      _advancedSettings.push_back(scaleByMagFlag);
-   }
-   else
-   {
-      wxMessageBox( wxString( _dataType.c_str(), wxConvUTF8), 
-                    _("Unknown Data Type"), 
-            wxOK | wxICON_INFORMATION );
-   }
+        ves::open::xml::DataValuePair* vectorScale = new ves::open::xml::DataValuePair();
+        vectorScale->SetData( "Vector Scale", _lastVectorScale );
+        _advancedSettings.push_back( vectorScale );
+
+        ves::open::xml::DataValuePair* vectorRatio = new ves::open::xml::DataValuePair();
+        vectorRatio->SetData( "Vector Ratio", _lastVectorRatio );
+        _advancedSettings.push_back( vectorRatio );
+
+        ves::open::xml::DataValuePair* scaleByMagFlag = new ves::open::xml::DataValuePair();
+        scaleByMagFlag->SetDataName( "Scale By Magnitude" );
+        scaleByMagFlag->SetDataType( "UNSIGNED INT" );
+        if( _lastScaleByMagnitude )
+        {
+            scaleByMagFlag->SetDataValue( static_cast<unsigned int>( 1 ) );
+        }
+        else
+        {
+            scaleByMagFlag->SetDataValue( static_cast<unsigned int>( 0 ) );
+        }
+        _advancedSettings.push_back( scaleByMagFlag );
+    }
+    else
+    {
+        wxMessageBox( wxString( _dataType.c_str(), wxConvUTF8 ),
+                      _( "Unknown Data Type" ),
+                      wxOK | wxICON_INFORMATION );
+    }
 }
 //////////////////////////////////////////
 void Contours::_updateContourInformation()
 {
-   _contourInformation.clear();
-   ves::open::xml::DataValuePair* contourDirection = new ves::open::xml::DataValuePair();
-   contourDirection->SetDataType("STRING");
-   contourDirection->SetDataName(std::string("Direction"));
-   contourDirection->SetDataString(_planeDirection);
+    _contourInformation.clear();
+    ves::open::xml::DataValuePair* contourDirection = new ves::open::xml::DataValuePair();
+    contourDirection->SetDataType( "STRING" );
+    contourDirection->SetDataName( std::string( "Direction" ) );
+    contourDirection->SetDataString( _planeDirection );
 
-   _contourInformation.push_back(contourDirection);
-   
-   /*VE_XML::DataValuePair* contourType = new VE_XML::DataValuePair();
-   contourType->SetDataType("STRING");
-   contourType->SetDataName(std::string("Type"));
-   contourType->SetDataString(_planeType);
+    _contourInformation.push_back( contourDirection );
 
-   _contourInformation.push_back(contourType);*/
+    /*VE_XML::DataValuePair* contourType = new VE_XML::DataValuePair();
+    contourType->SetDataType("STRING");
+    contourType->SetDataName(std::string("Type"));
+    contourType->SetDataString(_planeType);
 
-   ves::open::xml::DataValuePair* numberOfPlanes = new ves::open::xml::DataValuePair();
-   numberOfPlanes->SetDataType("STRING");
-   numberOfPlanes->SetDataName(std::string("Number of Planes"));
-   numberOfPlanes->SetDataString(_numberOfPlanesOption);
+    _contourInformation.push_back(contourType);*/
 
-   _contourInformation.push_back(numberOfPlanes);
+    ves::open::xml::DataValuePair* numberOfPlanes = new ves::open::xml::DataValuePair();
+    numberOfPlanes->SetDataType( "STRING" );
+    numberOfPlanes->SetDataName( std::string( "Number of Planes" ) );
+    numberOfPlanes->SetDataString( _numberOfPlanesOption );
 
-   ves::open::xml::DataValuePair* planePosition = new ves::open::xml::DataValuePair();
-   planePosition->SetData("Position",_planePosition);
+    _contourInformation.push_back( numberOfPlanes );
 
-   _contourInformation.push_back(planePosition);
+    ves::open::xml::DataValuePair* planePosition = new ves::open::xml::DataValuePair();
+    planePosition->SetData( "Position", _planePosition );
 
-   if( !_planeOption.empty() )
-   {
-      ves::open::xml::DataValuePair* planeOption = new ves::open::xml::DataValuePair();
-      planeOption->SetDataType("STRING");
-      planeOption->SetDataName(std::string("Plane Option"));
-      planeOption->SetDataString(_planeOption);
+    _contourInformation.push_back( planePosition );
 
-      _contourInformation.push_back(planeOption);
-   }
+    if( !_planeOption.empty() )
+    {
+        ves::open::xml::DataValuePair* planeOption = new ves::open::xml::DataValuePair();
+        planeOption->SetDataType( "STRING" );
+        planeOption->SetDataName( std::string( "Plane Option" ) );
+        planeOption->SetDataString( _planeOption );
+
+        _contourInformation.push_back( planeOption );
+    }
 
 }
 ////////////////////////////////////////////////////
-void Contours::_onAddPlane( wxCommandEvent& WXUNUSED(event) )
+void Contours::_onAddPlane( wxCommandEvent& WXUNUSED( event ) )
 {
-   _updateContourInformation();
-   _updateAdvancedSettings();
+    _updateContourInformation();
+    _updateAdvancedSettings();
 
-   ves::open::xml::Command* newCommand = new ves::open::xml::Command();
-   if(_dataType == "SCALAR")
-   {
-      newCommand->SetCommandName("UPDATE_SCALAR_SETTINGS");
-   }
-   else if(_dataType == "VECTOR")
-   {
-       newCommand->SetCommandName("UPDATE_VECTOR_SETTINGS");
-   }
-   for(size_t i =0; i < _contourInformation.size(); i++)
-   {
-      newCommand->AddDataValuePair(_contourInformation.at(i));
-   }
+    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
+    if( _dataType == "SCALAR" )
+    {
+        newCommand->SetCommandName( "UPDATE_SCALAR_SETTINGS" );
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        newCommand->SetCommandName( "UPDATE_VECTOR_SETTINGS" );
+    }
+    for( size_t i = 0; i < _contourInformation.size(); i++ )
+    {
+        newCommand->AddDataValuePair( _contourInformation.at( i ) );
+    }
 
-   //The advanced settings command
-   ves::open::xml::Command* advancedSettings = new ves::open::xml::Command();
-   advancedSettings->SetCommandName("ADVANCED_CONTOUR_SETTINGS");
-   for(size_t i =0; i < _advancedSettings.size(); i++)
-   {
-      advancedSettings->AddDataValuePair(_advancedSettings.at(i));
-   }
-   std::string typeName = (_dataType == "SCALAR")?"Advanced Scalar Settings":"Advanced Vector Settings";
+    //The advanced settings command
+    ves::open::xml::Command* advancedSettings = new ves::open::xml::Command();
+    advancedSettings->SetCommandName( "ADVANCED_CONTOUR_SETTINGS" );
+    for( size_t i = 0; i < _advancedSettings.size(); i++ )
+    {
+        advancedSettings->AddDataValuePair( _advancedSettings.at( i ) );
+    }
+    std::string typeName = ( _dataType == "SCALAR" ) ? "Advanced Scalar Settings" : "Advanced Vector Settings";
 
-   //dvp representing the advanced settings within the contours information
-   ves::open::xml::DataValuePair* advancedContourSettings = new ves::open::xml::DataValuePair();
-   advancedContourSettings->SetData(typeName,advancedSettings);
-   newCommand->AddDataValuePair(advancedContourSettings);
-   
-   try
-   {
-      dynamic_cast<Vistab*>(GetParent())->SendUpdatedSettingsToXplorer(newCommand);
+    //dvp representing the advanced settings within the contours information
+    ves::open::xml::DataValuePair* advancedContourSettings = new ves::open::xml::DataValuePair();
+    advancedContourSettings->SetData( typeName, advancedSettings );
+    newCommand->AddDataValuePair( advancedContourSettings );
 
-   }
-   catch(...)
-   {
-      wxMessageBox( _("Invalid Parent"), _("Communication Failure"), 
-         wxOK | wxICON_INFORMATION );
-   }
+    try
+    {
+        dynamic_cast<Vistab*>( GetParent() )->SendUpdatedSettingsToXplorer( newCommand );
 
-   if(newCommand)
-   {
-      delete newCommand;
-      newCommand = 0;
-   }
+    }
+    catch ( ... )
+    {
+        wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
+                      wxOK | wxICON_INFORMATION );
+    }
+
+    if( newCommand )
+    {
+        delete newCommand;
+        newCommand = 0;
+    }
 }
 ///////////////////////////////////////////////////////////
-void Contours::SetActiveScalar(std::string activeScalar)
+void Contours::SetActiveScalar( std::string activeScalar )
 {
-   _activeScalar = activeScalar;
+    _activeScalar = activeScalar;
 }

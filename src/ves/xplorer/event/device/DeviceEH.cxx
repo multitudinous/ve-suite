@@ -50,46 +50,46 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::DeviceEventHandler( const DeviceEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler::~DeviceEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command = dynamic_cast< Command* >( veXMLObject );
-   
-   std::string device;
-   command->GetDataValuePair( "Device" )->GetData( device );
+    Command* command = dynamic_cast< Command* >( veXMLObject );
 
-   ves::xplorer::DeviceHandler::instance()->SetActiveDevice( device );
+    std::string device;
+    command->GetDataValuePair( "Device" )->GetData( device );
+
+    ves::xplorer::DeviceHandler::instance()->SetActiveDevice( device );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceEventHandler& DeviceEventHandler::operator=( const DeviceEventHandler& rhs )
 {
-   if( this != &rhs )
-   {
-      ves::xplorer::event::EventHandler::operator=( rhs );
-   }
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
 
-   return *this;
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

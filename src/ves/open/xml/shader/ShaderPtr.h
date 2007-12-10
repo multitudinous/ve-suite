@@ -40,7 +40,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Shader::ShaderPtr.  To get the full 
+ * VE_XML::VE_Shader::ShaderPtr.  To get the full
  * declaration of VE_XML::VE_Shader::Shader
  * ves/open/xml/shader/Shader.h must be included, too.
  */
@@ -53,12 +53,12 @@ namespace xml
 {
 namespace shader
 {
-   class Shader;
-   /// Typedef for a SmartPtr type for the Shader.
-   typedef ves::util::ClassPtrDef<Shader>::type  ShaderPtr;
-   typedef ves::util::SharedPtrDef<Shader>::type ShaderSharedPtr;
-   typedef ves::util::WeakPtrDef<Shader>::type   ShaderWeakPtr;
-   typedef ves::util::ScopedPtrDef<Shader>::type ShaderScopedPtr;
+class Shader;
+/// Typedef for a SmartPtr type for the Shader.
+typedef ves::util::ClassPtrDef<Shader>::type  ShaderPtr;
+typedef ves::util::SharedPtrDef<Shader>::type ShaderSharedPtr;
+typedef ves::util::WeakPtrDef<Shader>::type   ShaderWeakPtr;
+typedef ves::util::ScopedPtrDef<Shader>::type ShaderScopedPtr;
 }
 }
 }

@@ -44,8 +44,8 @@ double GetTimeClock()
 {
     double v;
     struct timeval tv;
-    gettimeofday(&tv, 0);
-    v = (double) tv.tv_sec + (double) tv.tv_usec / 1000000.0;
+    gettimeofday( &tv, 0 );
+    v = ( double ) tv.tv_sec + ( double ) tv.tv_usec / 1000000.0;
     return v;
 }
 #endif

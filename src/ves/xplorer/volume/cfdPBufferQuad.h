@@ -47,9 +47,9 @@
 
 namespace osg
 {
-   class BoundingBox;
-   class State;
-   class Texture3D;
+class BoundingBox;
+class State;
+class Texture3D;
 }
 #include <ves/VEConfig.h>
 namespace ves
@@ -58,53 +58,58 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdPBufferQuad : public osg::Drawable{
-      public:
-         cfdPBufferQuad();
-         cfdPBufferQuad(const cfdPBufferQuad& pbQuad,
-                        const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
-         META_Object(PBufferQuad,cfdPBufferQuad);
+class VE_TEXTURE_BASED_EXPORTS cfdPBufferQuad : public osg::Drawable
+{
+public:
+    cfdPBufferQuad();
+    cfdPBufferQuad( const cfdPBufferQuad& pbQuad,
+                    const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    META_Object( PBufferQuad, cfdPBufferQuad );
 
-         void SetBBox(float* bbox);
-         void SetNumberOfSlices(unsigned int ns);
-         void SetUseAutoTexCoords(bool useAutoTCoords = false);
-         void SetTextureDimensions(unsigned int w,unsigned int h,unsigned int d);
-         void CalculateSlices();
+    void SetBBox( float* bbox );
+    void SetNumberOfSlices( unsigned int ns );
+    void SetUseAutoTexCoords( bool useAutoTCoords = false );
+    void SetTextureDimensions( unsigned int w, unsigned int h, unsigned int d );
+    void CalculateSlices();
 
-         void SetTextureToUpdate(osg::Texture3D* texture);
-         //if advection doesn't work check this code!!!!!!!!
-         class BBoxCallback:public osg::Drawable::ComputeBoundingBoxCallback{
-            public:
-               BBoxCallback(cfdPBufferQuad* pbq){_pbq = pbq;}
-               virtual osg::BoundingBox computeBound(const osg::Drawable&) const;
-            protected:
-               osg::ref_ptr<cfdPBufferQuad> _pbq;
-         };
+    void SetTextureToUpdate( osg::Texture3D* texture );
+    //if advection doesn't work check this code!!!!!!!!
+class BBoxCallback: public osg::Drawable::ComputeBoundingBoxCallback
+    {
+    public:
+        BBoxCallback( cfdPBufferQuad* pbq )
+        {
+            _pbq = pbq;
+        }
+        virtual osg::BoundingBox computeBound( const osg::Drawable& ) const;
+    protected:
+        osg::ref_ptr<cfdPBufferQuad> _pbq;
+    };
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-         virtual void drawImplementation(osg::RenderInfo& temp) const ;
+    virtual void drawImplementation( osg::RenderInfo& temp ) const ;
 #elif ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR<=2))
-         virtual void drawImplementation(osg::State& state)const;
+    virtual void drawImplementation( osg::State& state )const;
 #endif
 protected:
-   void _drawAutoTexCoords()const;
-   void _drawHardCodedTCoords(osg::State& state)const;
-   virtual ~cfdPBufferQuad();
-   bool _useAutoTexCoords;
-   bool _bbSet;
-   bool _sliceCountSet;
+    void _drawAutoTexCoords()const;
+    void _drawHardCodedTCoords( osg::State& state )const;
+    virtual ~cfdPBufferQuad();
+    bool _useAutoTexCoords;
+    bool _bbSet;
+    bool _sliceCountSet;
 
-   unsigned int _nSlices;
-   unsigned int _curSlice;
-   unsigned int _w;
-   unsigned int _h;
-   unsigned int _d;
-   float* _nearFarSlices;
-   float* _slices;
-   float _bounds[6];
-   float _eye[3];
-   float _lookAt[3];
-   float _deltaZ;
-   osg::ref_ptr<osg::Texture3D> _texture;
+    unsigned int _nSlices;
+    unsigned int _curSlice;
+    unsigned int _w;
+    unsigned int _h;
+    unsigned int _d;
+    float* _nearFarSlices;
+    float* _slices;
+    float _bounds[6];
+    float _eye[3];
+    float _lookAt[3];
+    float _deltaZ;
+    osg::ref_ptr<osg::Texture3D> _texture;
 };
 }
 }

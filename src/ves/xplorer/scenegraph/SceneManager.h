@@ -145,9 +145,9 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;///<Node to control navigation
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
 
-    #ifdef VE_SOUND
+#ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* m_sound;
-    #endif
+#endif
 
     //The logo
     ves::xplorer::scenegraph::CADEntity* m_blueArrow;

@@ -50,12 +50,12 @@ namespace xplorer
 {
 namespace event
 {
-   class EventHandler;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<EventHandler>::type  EventHandlerPtr;
-   typedef ves::util::SharedPtrDef<EventHandler>::type EventHandlerSharedPtr;
-   typedef ves::util::WeakPtrDef<EventHandler>::type   EventHandlerWeakPtr;
-   typedef ves::util::ScopedPtrDef<EventHandler>::type EventHandlerScopedPtr;
+class EventHandler;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<EventHandler>::type  EventHandlerPtr;
+typedef ves::util::SharedPtrDef<EventHandler>::type EventHandlerSharedPtr;
+typedef ves::util::WeakPtrDef<EventHandler>::type   EventHandlerWeakPtr;
+typedef ves::util::ScopedPtrDef<EventHandler>::type EventHandlerScopedPtr;
 }
 }
 }

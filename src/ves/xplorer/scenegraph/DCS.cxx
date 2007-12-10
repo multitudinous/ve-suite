@@ -70,8 +70,8 @@ namespace scenegraph
 
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS()
-:
-m_physicsRigidBody( 0 )
+        :
+        m_physicsRigidBody( 0 )
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; ++i )
@@ -103,12 +103,12 @@ m_physicsRigidBody( 0 )
     setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
-        ( new osg::StateSet( *getOrCreateStateSet() ) ) );
+                  ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
-:
-m_physicsRigidBody( 0 )
+        :
+        m_physicsRigidBody( 0 )
 {
     SetTranslationArray( trans );
     SetRotationArray( rot );
@@ -119,20 +119,20 @@ m_physicsRigidBody( 0 )
     setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
-        ( new osg::StateSet( *getOrCreateStateSet() ) ) );
+                  ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
-:
-osg::PositionAttitudeTransform( dcs, copyop ),
-m_physicsRigidBody( 0 )
+        :
+        osg::PositionAttitudeTransform( dcs, copyop ),
+        m_physicsRigidBody( 0 )
 {
     m_udcb = new TransferPhysicsDataCallback();
     m_udcb->SetPhysicsRigidBody( m_physicsRigidBody );
     setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
-        ( new osg::StateSet( *getOrCreateStateSet() ) ) );
+                  ( new osg::StateSet( *getOrCreateStateSet() ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DCS::~DCS()
@@ -169,7 +169,7 @@ double* DCS::GetRotationArray()
 double* DCS::GetScaleArray()
 {
     osg::Vec3d tempScale = getScale();
-    for ( size_t i = 0; i < 3; ++i )
+    for( size_t i = 0; i < 3; ++i )
     {
         m_Scale[i] = tempScale[i];
     }
@@ -179,7 +179,7 @@ double* DCS::GetScaleArray()
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetTranslationArray( std::vector< double > transArray )
 {
-#ifdef _OSG           
+#ifdef _OSG
     setPosition( osg::Vec3d( transArray[0], transArray[1], transArray[2] ) );
 #elif _OPENSG
 #endif
@@ -213,7 +213,7 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     osg::Quat quat;
     rotateMat.get( quat );
     setAttitude( quat );
-    setPivotPoint( osg::Vec3d( 0, 0, 0) );
+    setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
 #elif _OPENSG
 #endif
 
@@ -227,7 +227,7 @@ void DCS::SetScaleArray( std::vector< double > scaleArray )
 
     ///Do this so that the normals will not be affected by the scaling applied by the user
     ///See osg post one April 19, 2007
-    if ( scaleArray[0] != 1 )
+    if( scaleArray[0] != 1 )
     {
         getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
     }
@@ -278,11 +278,11 @@ gmtl::Matrix44d DCS::GetMat()
     osg::Matrixd scaleMat = osg::Matrixd::scale( getScale() );
     osg::Matrixd translationMat = osg::Matrixd::translate( getPosition() );
     osg::Matrixd inverseTranslationMat = osg::Matrixd::translate( -getPosition()[0],
-                                                                  -getPosition()[1],
-                                                                  -getPosition()[2] );
+                                         -getPosition()[1],
+                                         -getPosition()[2] );
     scaleMat = inverseTranslationMat * scaleMat * translationMat;
 
-    osg::Matrixd rotateMat;   
+    osg::Matrixd rotateMat;
     rotateMat.makeRotate( getAttitude() );
     rotateMat = inverseTranslationMat * rotateMat * translationMat;
 
@@ -319,9 +319,9 @@ void DCS::SetMat( gmtl::Matrix44d& input )
     gmtl::Matrix44d unScaleInput = tempScaleMat * input;
 
     //Set scale values
-    setScale( osg::Vec3d( gmtl::length( scaleXVec ), 
-                                gmtl::length( scaleYVec ), 
-                                gmtl::length( scaleZVec ) ) );
+    setScale( osg::Vec3d( gmtl::length( scaleXVec ),
+                          gmtl::length( scaleYVec ),
+                          gmtl::length( scaleZVec ) ) );
 
     //Set rotation values
     gmtl::Quatd tempQuat = gmtl::make< gmtl::Quatd >( unScaleInput );
@@ -479,7 +479,7 @@ void DCS::ToggleDisplay( bool onOff )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::ToggleDisplay( std::string onOff )
-{      
+{
     if( onOff == "ON" )
     {
 #ifdef _OSG
@@ -523,9 +523,9 @@ void DCS::UpdatePhysicsTransform()
 
     //Removed cached contact points
     ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->
-        getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs
-        ( m_physicsRigidBody->getBroadphaseHandle(),
-          ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->getDispatcher() );
+    getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs
+    ( m_physicsRigidBody->getBroadphaseHandle(),
+      ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->getDispatcher() );
 
     if( m_physicsRigidBody && !m_physicsRigidBody->isStaticObject() )
     {

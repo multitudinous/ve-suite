@@ -37,7 +37,7 @@
 */
 
 /*!\class LocalToWorldTransform
-* 
+*
 */
 
 // --- VE-Suite Includes --- //

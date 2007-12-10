@@ -48,23 +48,24 @@ namespace event
 /*!\class TextureBasedActivateEventHandler
  * Activate the texture based visualization.
  */
-class VE_XPLORER_EXPORTS TextureBasedActivateEventHandler : public TextureBasedEventHandler{
+class VE_XPLORER_EXPORTS TextureBasedActivateEventHandler : public TextureBasedEventHandler
+{
 public:
-   ///Constructor
-   TextureBasedActivateEventHandler();
+    ///Constructor
+    TextureBasedActivateEventHandler();
 
-   ///Copy Constructor
-   TextureBasedActivateEventHandler(const TextureBasedActivateEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedActivateEventHandler();
+    ///Copy Constructor
+    TextureBasedActivateEventHandler( const TextureBasedActivateEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedActivateEventHandler();
 
-   ///Equal operator
-   TextureBasedActivateEventHandler& operator=(const TextureBasedActivateEventHandler& rhs);
+    ///Equal operator
+    TextureBasedActivateEventHandler& operator=( const TextureBasedActivateEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

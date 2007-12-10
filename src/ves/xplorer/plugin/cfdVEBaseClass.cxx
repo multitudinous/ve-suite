@@ -81,16 +81,16 @@ namespace plugin
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEBaseClass::cfdVEBaseClass():
-m_xmlModel( 0 ),
-m_onSceneGraph( false ),
-m_device( 0 ),
-m_physicsSimulator( 0 ),
-m_modID( -1 ),
-m_pos_x( 0 ),
-m_pos_y( 0 )
+        m_xmlModel( 0 ),
+        m_onSceneGraph( false ),
+        m_device( 0 ),
+        m_physicsSimulator( 0 ),
+        m_modID( -1 ),
+        m_pos_x( 0 ),
+        m_pos_y( 0 )
 #ifdef VE_SOUND
-,
-m_soundManager( 0 )
+        ,
+        m_soundManager( 0 )
 #endif
 {
     m_network.empty();
@@ -104,7 +104,7 @@ cfdVEBaseClass::~cfdVEBaseClass()
 void cfdVEBaseClass::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     //groupNode = new ves::xplorer::scenegraph::Group();
-    m_dcs = new ves::xplorer::scenegraph::DCS(); 
+    m_dcs = new ves::xplorer::scenegraph::DCS();
     m_dcs->SetName( "cfdVEBaseClass" );
     //m_dataRepresentation = new cfdObjects();
     m_worldDCS = veworldDCS;
@@ -197,7 +197,7 @@ void cfdVEBaseClass::SetCursor( cfdCursor* input )
     else
     {
         std::cerr << " ERROR : cfdVEBaseClass::SetCursor input is NULL "
-                  << std::endl;
+        << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,7 +210,7 @@ void cfdVEBaseClass::SetInteractionDevice( ves::xplorer::Device* device )
     else
     {
         std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL "
-                  << std::endl;
+        << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +223,7 @@ void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
     else
     {
         std::cerr << " ERROR : cfdVEBaseClass::SetSoundHandler input is NULL "
-                  << std::endl;
+        << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -236,7 +236,7 @@ void cfdVEBaseClass::SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimul
     else
     {
         std::cerr << " ERROR : cfdVEBaseClass::SetPhysicsSimulator physicsSimulator is NULL "
-                  << std::endl;
+        << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -250,7 +250,7 @@ void cfdVEBaseClass::SetSoundManager( osgAL::SoundManager* soundManager )
     else
     {
         std::cerr << " ERROR : cfdVEBaseClass::SetSoundManager soundManager is NULL "
-                  << std::endl;
+        << std::endl;
     }
 }
 #endif
@@ -301,15 +301,15 @@ Model* cfdVEBaseClass::GetCFDModel()
 {
     return m_model;
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel )
 {
     m_xmlModel = tempModel;
 
     //Decompose model to be utilized by the event handlers
-    ves::open::xml::cad::CADAssembly* cadNodeData = 
-        dynamic_cast< ves::open::xml::cad::CADAssembly* >( 
-        m_xmlModel->GetGeometry() );
+    ves::open::xml::cad::CADAssembly* cadNodeData =
+        dynamic_cast< ves::open::xml::cad::CADAssembly* >(
+            m_xmlModel->GetGeometry() );
     if( cadNodeData )
     {
         ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
@@ -333,20 +333,20 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
     {
         ves::open::xml::DataValuePairPtr modelNode = new ves::open::xml::DataValuePair();
         modelNode->SetDataType( std::string( "XMLOBJECT" ) );
-        modelNode->SetData( "CREATE_NEW_DATASETS", 
-            new ves::open::xml::model::Model( *m_xmlModel ) );
+        modelNode->SetData( "CREATE_NEW_DATASETS",
+                            new ves::open::xml::model::Model( *m_xmlModel ) );
 
         ves::open::xml::Command* dataCommand = new ves::open::xml::Command();
         dataCommand->AddDataValuePair( modelNode );
         dataCommand->SetCommandName( "UPDATE_MODEL_DATASETS" );
 
         //Add the active dataset name to the command
-        ves::open::xml::ParameterBlock* parameterBlock = 
+        ves::open::xml::ParameterBlock* parameterBlock =
             m_xmlModel->GetInformationPacket( 0 );
-        ves::open::xml::DataValuePairPtr dataSetName = 
-        new ves::open::xml::DataValuePair();
-        dataSetName->SetData( "VTK_DATASET_NAME", 
-            parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+        ves::open::xml::DataValuePairPtr dataSetName =
+            new ves::open::xml::DataValuePair();
+        dataSetName->SetData( "VTK_DATASET_NAME",
+                              parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
         dataCommand->AddDataValuePair( dataSetName );
 
         //Process the vtk data

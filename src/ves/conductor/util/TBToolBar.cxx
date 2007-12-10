@@ -60,167 +60,166 @@
 
 #include <iostream>
 using namespace ves::conductor::util;
-BEGIN_EVENT_TABLE(TextureBasedToolBar,wxDialog)
-   EVT_TOOL_RANGE(SCALAR_ID,TRANSFER_FUNCS_ID,TextureBasedToolBar::_handleToolButtons)
-   //EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
-   EVT_BUTTON(TRANSIENT_BUTTON,TextureBasedToolBar::_onTransient)
+BEGIN_EVENT_TABLE( TextureBasedToolBar, wxDialog )
+    EVT_TOOL_RANGE( SCALAR_ID, TRANSFER_FUNCS_ID, TextureBasedToolBar::_handleToolButtons )
+    //EVT_CHECKBOX(BBOX_CHECK_BOX,TextureBasedToolBar::_onBBoxCheck)
+    EVT_BUTTON( TRANSIENT_BUTTON, TextureBasedToolBar::_onTransient )
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////
-TextureBasedToolBar::TextureBasedToolBar(wxWindow* parent, int id)
-:ves::conductor::util::BaseDialog(parent,id,"Texture-Based Tools")
+TextureBasedToolBar::TextureBasedToolBar( wxWindow* parent, int id )
+        : ves::conductor::util::BaseDialog( parent, id, "Texture-Based Tools" )
 {
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
 
-   _buildGUI();
-   _transientControls = 0;
+    _buildGUI();
+    _transientControls = 0;
 
-   mainSizer->Add(_tbToolButtons,2,wxALIGN_CENTER);
-   wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
-   //_bboxCheckBox = new wxCheckBox(this,BBOX_CHECK_BOX,"Display Bounds");
-   //_bboxCheckBox->SetValue(true);
+    mainSizer->Add( _tbToolButtons, 2, wxALIGN_CENTER );
+    wxBoxSizer* buttonRowSizer = new wxBoxSizer( wxHORIZONTAL );
+    //_bboxCheckBox = new wxCheckBox(this,BBOX_CHECK_BOX,"Display Bounds");
+    //_bboxCheckBox->SetValue(true);
 
-   //buttonRowSizer->Add(_bboxCheckBox,0,wxALIGN_CENTER);
-   buttonRowSizer->Add(new wxButton(this,TRANSIENT_BUTTON,_T("Transient")),0,wxALIGN_CENTER);
-   _addOKButton(buttonRowSizer);
-   
-   mainSizer->Add(buttonRowSizer,1,wxALIGN_CENTER);
+    //buttonRowSizer->Add(_bboxCheckBox,0,wxALIGN_CENTER);
+    buttonRowSizer->Add( new wxButton( this, TRANSIENT_BUTTON, _T( "Transient" ) ), 0, wxALIGN_CENTER );
+    _addOKButton( buttonRowSizer );
 
-   //set this flag and let wx handle alignment
-   SetAutoLayout(true);
+    mainSizer->Add( buttonRowSizer, 1, wxALIGN_CENTER );
 
-   //assign the group to the panel
-   SetSizer(mainSizer);
-   mainSizer->Fit(this);
+    //set this flag and let wx handle alignment
+    SetAutoLayout( true );
+
+    //assign the group to the panel
+    SetSizer( mainSizer );
+    mainSizer->Fit( this );
 }
 ///////////////////////////////////////////
 TextureBasedToolBar::~TextureBasedToolBar()
 {
-   _availableScalars.clear();
-   _availableVectors.clear();
+    _availableScalars.clear();
+    _availableVectors.clear();
 }
 //////////////////////////////////////////////////////////
-void TextureBasedToolBar::SetSubDialogSize(wxRect subSize)
+void TextureBasedToolBar::SetSubDialogSize( wxRect subSize )
 {
-   _subDialogSize = subSize;
+    _subDialogSize = subSize;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedToolBar::_updateAvailableSolutions(wxArrayString scalarNames,
-                                              wxArrayString vectorNames)
-{
-}
+void TextureBasedToolBar::_updateAvailableSolutions( wxArrayString scalarNames,
+                                                     wxArrayString vectorNames )
+{}
 ////////////////////////////////////////////////////////////////
-void TextureBasedToolBar::SetScalars(wxArrayString scalarNames)
+void TextureBasedToolBar::SetScalars( wxArrayString scalarNames )
 {
-   size_t nScalars = scalarNames.Count();
-   _availableScalars.Clear();
+    size_t nScalars = scalarNames.Count();
+    _availableScalars.Clear();
 
-   
-   for(size_t i = 0; i < nScalars; i++)
-   {
-      if(scalarNames[i] != wxString("",wxConvUTF8))
-      {
-         wxFileName fName(scalarNames[i]);
-         _availableScalars.Add( wxString(fName.GetName(),wxConvUTF8));
-      }
-      else
-      {
-        std::cout<<"Scalar..."<<std::endl;
-        std::cout<<scalarNames[i]<<std::endl;
-      }
-   }
+
+    for( size_t i = 0; i < nScalars; i++ )
+    {
+        if( scalarNames[i] != wxString( "", wxConvUTF8 ) )
+        {
+            wxFileName fName( scalarNames[i] );
+            _availableScalars.Add( wxString( fName.GetName(), wxConvUTF8 ) );
+        }
+        else
+        {
+            std::cout << "Scalar..." << std::endl;
+            std::cout << scalarNames[i] << std::endl;
+        }
+    }
 }
 ///////////////////////////////////////////////////////////////
-void TextureBasedToolBar::SetVectors(wxArrayString vectorNames)
+void TextureBasedToolBar::SetVectors( wxArrayString vectorNames )
 {
-   size_t nVectors = vectorNames.Count();
-   _availableVectors.Clear();
-   
- 
-   for(size_t i = 0; i < nVectors; i++)
-   {
-      if(vectorNames[i] != wxString("",wxConvUTF8))
-      {
-         wxFileName fName(vectorNames[i]);
-         _availableVectors.Add( wxString(fName.GetName(), wxConvUTF8));
-      }
-      else
-      {
-        std::cout<<"Vector..."<<std::endl;
-        std::cout<<vectorNames[i]<<std::endl;
-      }
-   }
+    size_t nVectors = vectorNames.Count();
+    _availableVectors.Clear();
+
+
+    for( size_t i = 0; i < nVectors; i++ )
+    {
+        if( vectorNames[i] != wxString( "", wxConvUTF8 ) )
+        {
+            wxFileName fName( vectorNames[i] );
+            _availableVectors.Add( wxString( fName.GetName(), wxConvUTF8 ) );
+        }
+        else
+        {
+            std::cout << "Vector..." << std::endl;
+            std::cout << vectorNames[i] << std::endl;
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////
-void TextureBasedToolBar::_updateSolutionList(wxArrayString activeSolutions)
+void TextureBasedToolBar::_updateSolutionList( wxArrayString activeSolutions )
 {
-   _solutionSelection->Clear();
-   for(size_t i = 0; i < activeSolutions.GetCount(); i++)
-   {
-      _solutionSelection->Append(activeSolutions[i]);
-   }
-   if(activeSolutions.GetCount())
-   {
-      _solutionSelection->SetValue(activeSolutions[0]);
-   }
+    _solutionSelection->Clear();
+    for( size_t i = 0; i < activeSolutions.GetCount(); i++ )
+    {
+        _solutionSelection->Append( activeSolutions[i] );
+    }
+    if( activeSolutions.GetCount() )
+    {
+        _solutionSelection->SetValue( activeSolutions[0] );
+    }
 }
 /////////////////////////////////////////
 void TextureBasedToolBar::_buildGUI()
 {
-   _tbToolButtons  = new wxToolBar(this,TB_TOOLBAR,wxDefaultPosition, wxDefaultSize,
-                                wxTB_HORIZONTAL | wxNO_BORDER |wxTB_TEXT);
-   _tbToolButtons->SetToolBitmapSize(wxSize(50,50));
+    _tbToolButtons  = new wxToolBar( this, TB_TOOLBAR, wxDefaultPosition, wxDefaultSize,
+                                     wxTB_HORIZONTAL | wxNO_BORDER | wxTB_TEXT );
+    _tbToolButtons->SetToolBitmapSize( wxSize( 50, 50 ) );
 
-   wxImage scalarOnImage(scalartb_xpm);
-   wxBitmap scalarOnBitmap(scalarOnImage);
+    wxImage scalarOnImage( scalartb_xpm );
+    wxBitmap scalarOnBitmap( scalarOnImage );
 
-   wxImage scalarOffImage(scalartb_bw_xpm);
-   wxBitmap scalarOffBitmap(scalarOffImage);
-   
-   wxImage vectorOnImage(vectortb_xpm);
-   wxBitmap vectorOnBitmap(vectorOnImage);
+    wxImage scalarOffImage( scalartb_bw_xpm );
+    wxBitmap scalarOffBitmap( scalarOffImage );
 
-   wxImage ROIOnImage(ROItb_xpm);
-   wxBitmap ROIOnBitmap(ROIOnImage);
+    wxImage vectorOnImage( vectortb_xpm );
+    wxBitmap vectorOnBitmap( vectorOnImage );
 
-   
-   wxImage tfuncOnImage(cspline_xpm);
-   wxBitmap tfuncOnBitmap(tfuncOnImage);
-  
-   _tbToolButtons->AddSeparator();
-   _tbToolButtons->AddTool(SCALAR_ID,_T("Scalars"),
-                             scalarOnBitmap,wxNullBitmap,
+    wxImage ROIOnImage( ROItb_xpm );
+    wxBitmap ROIOnBitmap( ROIOnImage );
+
+
+    wxImage tfuncOnImage( cspline_xpm );
+    wxBitmap tfuncOnBitmap( tfuncOnImage );
+
+    _tbToolButtons->AddSeparator();
+    _tbToolButtons->AddTool( SCALAR_ID, _T( "Scalars" ),
+                             scalarOnBitmap, wxNullBitmap,
                              wxITEM_NORMAL,
-                             _T("Scalar Data Tools") );
-   
-   _tbToolButtons->AddTool(VECTOR_ID,_T("Vectors"),
-                             vectorOnBitmap,wxNullBitmap,
+                             _T( "Scalar Data Tools" ) );
+
+    _tbToolButtons->AddTool( VECTOR_ID, _T( "Vectors" ),
+                             vectorOnBitmap, wxNullBitmap,
                              wxITEM_NORMAL,
-                             _T("Vector Data Tools") );
-   _tbToolButtons->AddSeparator();
-   _tbToolButtons->AddTool(ROI_ID,_T("ROI"),
-                        ROIOnBitmap,wxNullBitmap,
-                        wxITEM_NORMAL,_T("Edit Region Of Interest") );
-   _tbToolButtons->AddTool(TRANSFER_FUNCS_ID,_T("Transfer Functions"), 
-                        tfuncOnBitmap,wxNullBitmap,
-                        wxITEM_NORMAL,_T("Edit Transfer Functions") );
+                             _T( "Vector Data Tools" ) );
+    _tbToolButtons->AddSeparator();
+    _tbToolButtons->AddTool( ROI_ID, _T( "ROI" ),
+                             ROIOnBitmap, wxNullBitmap,
+                             wxITEM_NORMAL, _T( "Edit Region Of Interest" ) );
+    _tbToolButtons->AddTool( TRANSFER_FUNCS_ID, _T( "Transfer Functions" ),
+                             tfuncOnBitmap, wxNullBitmap,
+                             wxITEM_NORMAL, _T( "Edit Transfer Functions" ) );
 
-   _tbToolButtons->Realize();
+    _tbToolButtons->Realize();
 
-   ///the sub dialogs
-   ///ROI Dialog
-   _roiDlg = new ves::conductor::util::ROIDialog(this,-1, "Volume Clipping Bounds" );
-   //_roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
-   _scalarToolsDlg = new ScalarToolsDialog(this,-1, "Scalar Tools" );
-   _transferFunctionDlg = new TransferFunctionDialog(this,-1,"Transfer Functions");
-   
+    ///the sub dialogs
+    ///ROI Dialog
+    _roiDlg = new ves::conductor::util::ROIDialog( this, -1, "Volume Clipping Bounds" );
+    //_roiDlg->SetSize(GetRect().x, GetRect().y, -1, -1, wxSIZE_USE_EXISTING);
+    _scalarToolsDlg = new ScalarToolsDialog( this, -1, "Scalar Tools" );
+    _transferFunctionDlg = new TransferFunctionDialog( this, -1, "Transfer Functions" );
+
 }
 /////////////////////////////////////////////////////////////
 /*void TextureBasedToolBar::_onBBoxCheck(wxCommandEvent& event)
 {
    ClearInstructions();
    _commandName = "TB_BBOX_DISPLAY";
-   
+
    VE_XML::DataValuePair* showBBox = new VE_XML::DataValuePair();
    showBBox->SetDataType("UNSIGNED INT");
    showBBox->SetDataName(std::string("BBox Flag"));
@@ -232,113 +231,113 @@ void TextureBasedToolBar::_buildGUI()
    else
    {
       value = 0;
-   }   
+   }
    showBBox->SetDataValue(value);
-   
+
    _instructions.push_back(showBBox);
    _sendCommandsToXplorer();
    ClearInstructions();
 }*/
 //////////////////////////////////////////////////////////////
-void TextureBasedToolBar::_onTransient(wxCommandEvent& event)
+void TextureBasedToolBar::_onTransient( wxCommandEvent& event )
 {
-   if(!_transientControls)
-   {
-      _transientControls = new UI_TransientDialog(0,this,-1);
-   }
-   _transientControls->SetVjObsPtr(_vjObsPtr);
-   _transientControls->SetSize(GetRect());
-   _transientControls->ShowModal();
+    if( !_transientControls )
+    {
+        _transientControls = new UI_TransientDialog( 0, this, -1 );
+    }
+    _transientControls->SetVjObsPtr( _vjObsPtr );
+    _transientControls->SetSize( GetRect() );
+    _transientControls->ShowModal();
 }
 ///////////////////////////////////////////////////////////////////
-void TextureBasedToolBar::_handleToolButtons(wxCommandEvent& event)
+void TextureBasedToolBar::_handleToolButtons( wxCommandEvent& event )
 {
-   switch(event.GetId())
-   {
-      case SCALAR_ID:
-         {
-            if(_availableScalars.GetCount())
+    switch ( event.GetId() )
+    {
+        case SCALAR_ID:
+        {
+            if( _availableScalars.GetCount() )
             {
-               //_scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
-               _scalarToolsDlg->UpdateScalarList(_availableScalars);
-               _scalarToolsDlg->SetSize(_subDialogSize);
-               _scalarToolsDlg->CentreOnParent();
-               if(_scalarToolsDlg->ShowModal() == wxID_OK)
-               {
-                  ;
-               }
+                //_scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
+                _scalarToolsDlg->UpdateScalarList( _availableScalars );
+                _scalarToolsDlg->SetSize( _subDialogSize );
+                _scalarToolsDlg->CentreOnParent();
+                if( _scalarToolsDlg->ShowModal() == wxID_OK )
+                {
+                    ;
+                }
             }
             else
             {
-               wxMessageBox( _("ERROR!"), 
-                            _("No scalar data available!!"), wxOK | wxICON_ERROR);
-            
-            }
-         }
-         
-         break;
-      case VECTOR_ID:
-         wxMessageBox( _("Unavailable!!"),_("Vector tools"), 
-                       wxOK | wxICON_INFORMATION );
-         break;
-      case TRANSFER_FUNCS_ID:
-         /*wxMessageBox( _("Transfer functions tools."), 
-                        _("Unavailable!!"), wxOK | wxICON_INFORMATION );*/
-		  //_transferFunctionDlg->SetVjObsPtr(_vjObsPtr);
-		  _transferFunctionDlg->SetSize(_subDialogSize);
-        _transferFunctionDlg->CentreOnParent();
-		  if(_transferFunctionDlg->ShowModal()== wxID_OK)
-		  {
-			  ;
-		  }
-         break;
-      case ROI_ID:
-         {
-            //_roiDlg->SetVjObsPtr(_vjObsPtr);
-            _roiDlg->SetSize(_subDialogSize);
-            _roiDlg->CentreOnParent();
-            if(_roiDlg->ShowModal() == wxID_OK)
-            {
-               ;
-            }
-         }
-         break;
+                wxMessageBox( _( "ERROR!" ),
+                              _( "No scalar data available!!" ), wxOK | wxICON_ERROR );
 
-   };
+            }
+        }
+
+        break;
+        case VECTOR_ID:
+            wxMessageBox( _( "Unavailable!!" ), _( "Vector tools" ),
+                          wxOK | wxICON_INFORMATION );
+            break;
+        case TRANSFER_FUNCS_ID:
+            /*wxMessageBox( _("Transfer functions tools."),
+                           _("Unavailable!!"), wxOK | wxICON_INFORMATION );*/
+            //_transferFunctionDlg->SetVjObsPtr(_vjObsPtr);
+            _transferFunctionDlg->SetSize( _subDialogSize );
+            _transferFunctionDlg->CentreOnParent();
+            if( _transferFunctionDlg->ShowModal() == wxID_OK )
+            {
+                ;
+            }
+            break;
+        case ROI_ID:
+        {
+            //_roiDlg->SetVjObsPtr(_vjObsPtr);
+            _roiDlg->SetSize( _subDialogSize );
+            _roiDlg->CentreOnParent();
+            if( _roiDlg->ShowModal() == wxID_OK )
+            {
+                ;
+            }
+        }
+        break;
+
+    };
 }
 /////////////////////////////////////////////////////////
 bool TextureBasedToolBar::ActivateTextureVisualization()
 {
-   ClearInstructions();
-   _commandName = "TB_ACTIVATE";
-   
-   if(_availableScalars.GetCount())
-   {
-      ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
-      activateCommand->SetDataType("STRING");
-      activateCommand->SetDataName(std::string("Active Scalar"));
-      activateCommand->SetDataString( ConvertUnicode( _availableScalars[0].GetData() ) );
-      _instructions.push_back(activateCommand);
-      _sendCommandsToXplorer();
-   }
-   else if(_availableVectors.GetCount())
-   {
-      ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
-      activateCommand->SetDataType("STRING");
-      activateCommand->SetDataName(std::string("Active Vector"));
-      activateCommand->SetDataString( ConvertUnicode(_availableVectors[0].GetData()));
-      _instructions.push_back(activateCommand);
-      _sendCommandsToXplorer();
-   }
-   else
-   {
-      wxMessageBox( _("No texture-based datasets available!!"),_("ERROR"), 
-                    wxOK | wxICON_ERROR );
-      _tbToolButtons->Enable(false);
-      return false;
+    ClearInstructions();
+    _commandName = "TB_ACTIVATE";
 
-   }
-   _tbToolButtons->Enable(true);
-   ClearInstructions();
-   return true;
+    if( _availableScalars.GetCount() )
+    {
+        ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
+        activateCommand->SetDataType( "STRING" );
+        activateCommand->SetDataName( std::string( "Active Scalar" ) );
+        activateCommand->SetDataString( ConvertUnicode( _availableScalars[0].GetData() ) );
+        _instructions.push_back( activateCommand );
+        _sendCommandsToXplorer();
+    }
+    else if( _availableVectors.GetCount() )
+    {
+        ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
+        activateCommand->SetDataType( "STRING" );
+        activateCommand->SetDataName( std::string( "Active Vector" ) );
+        activateCommand->SetDataString( ConvertUnicode( _availableVectors[0].GetData() ) );
+        _instructions.push_back( activateCommand );
+        _sendCommandsToXplorer();
+    }
+    else
+    {
+        wxMessageBox( _( "No texture-based datasets available!!" ), _( "ERROR" ),
+                      wxOK | wxICON_ERROR );
+        _tbToolButtons->Enable( false );
+        return false;
+
+    }
+    _tbToolButtons->Enable( true );
+    ClearInstructions();
+    return true;
 }

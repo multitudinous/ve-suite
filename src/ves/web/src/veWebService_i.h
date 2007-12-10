@@ -48,73 +48,73 @@ class cfdWebServices;
 //Class Body_UI_i
 class  veWebService_i : public virtual POA_Body::UI
 {
-   public:
-      //Constructor 
-      veWebService_i (Body::Executive_ptr exec, std::string name);
-		void setWebServices(cfdWebServices* webServe);
-      //Destructor 
-      virtual ~veWebService_i (void);
-  
-      std::string UIName_;
-      std::string GetNetworkString( void );
+public:
+    //Constructor
+    veWebService_i( Body::Executive_ptr exec, std::string name );
+    void setWebServices( cfdWebServices* webServe );
+    //Destructor
+    virtual ~veWebService_i( void );
 
-   protected:
-      Body::Executive_var executive_;
-      std::vector< std::string > networkStringBuffer;
-      vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
-      void SetNetworkString( char* );
-		cfdWebServices* webServices;
-  
-   public:
-      bool GetCalcFlag( void );
+    std::string UIName_;
+    std::string GetNetworkString( void );
 
-virtual void UpdateNetwork (
-    const char * network
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+protected:
+    Body::Executive_var executive_;
+    std::vector< std::string > networkStringBuffer;
+    vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
+    void SetNetworkString( char* );
+    cfdWebServices* webServices;
 
-virtual void UpdateModuleUI (
-    CORBA::Long module_id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+public:
+    bool GetCalcFlag( void );
 
-virtual void UpdateModuleResult (
-    CORBA::Long module_id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+    virtual void UpdateNetwork(
+        const char * network
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
 
-virtual void UpdateLinkContent (
-    CORBA::Long id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+    virtual void UpdateModuleUI(
+        CORBA::Long module_id,
+        const char * msg
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
 
-virtual void Raise (
-    const char * notification
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+    virtual void UpdateModuleResult(
+        CORBA::Long module_id,
+        const char * msg
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void UpdateLinkContent(
+        CORBA::Long id,
+        const char * msg
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
+
+    virtual void Raise(
+        const char * notification
+        ACE_ENV_ARG_DECL
+    )
+    ACE_THROW_SPEC((
+                       CORBA::SystemException
+                       , Error::EUnknown
+                   ) );
 };
 
 

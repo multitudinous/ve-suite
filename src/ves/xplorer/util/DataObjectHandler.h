@@ -65,31 +65,33 @@ public:
     */
     class VE_UTIL_EXPORTS DatasetOperatorCallback
     {
-    public:    
+    public:
         ///Constructor
-        DatasetOperatorCallback(){};
-	    ///Destructor
-        virtual ~DatasetOperatorCallback(){};
-	    ///The operation to do on each vtkDataSet in the vtkDataObject
-	    ///\param dataset The vtkDataSet to operate on
-	    virtual void OperateOnDataset(vtkDataSet* dataset) = 0;
+        DatasetOperatorCallback()
+        {};
+        ///Destructor
+        virtual ~DatasetOperatorCallback()
+        {};
+        ///The operation to do on each vtkDataSet in the vtkDataObject
+        ///\param dataset The vtkDataSet to operate on
+        virtual void OperateOnDataset( vtkDataSet* dataset ) = 0;
     protected:
     };
     ///Do the operation specified in the DataObjectHandlerCallback\n
     ///on a vtkDataObject
-    void OperateOnAllDatasetsInObject(vtkDataObject* dataObject);
+    void OperateOnAllDatasetsInObject( vtkDataObject* dataObject );
     ///Set the operation to perform on each dataset in the vtkDataObject
-	///Caller is responsible for cleaning up DatasetOperatorCallback memory
+    ///Caller is responsible for cleaning up DatasetOperatorCallback memory
     ///\param dsoCbk The DataSetOperatorCallback
-    void SetDatasetOperatorCallback(DatasetOperatorCallback* dsoCbk);
+    void SetDatasetOperatorCallback( DatasetOperatorCallback* dsoCbk );
 
     ///Get the number of cell or point data arrays
     ///\param isPointData Return point or cell data array count
-    unsigned int GetNumberOfDataArrays(bool isPointData=true);
+    unsigned int GetNumberOfDataArrays( bool isPointData = true );
 protected:
     ///Convert the cell data to point data if it exists
     ///\param dataset The vtkDataSet
-    void _convertCellDataToPointData(vtkDataSet* dataset);
+    void _convertCellDataToPointData( vtkDataSet* dataset );
 
     ///<Number of point data arrays
     unsigned int m_numberOfPointDataArrays;

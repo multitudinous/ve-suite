@@ -64,9 +64,9 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdPlanes;
-   class DataSetAxis;
-   class DataSetScalarBar;
+class cfdPlanes;
+class DataSetAxis;
+class DataSetScalarBar;
 }
 }
 
@@ -76,10 +76,10 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class Group;
-    class Switch;
-    class Geode;
+class DCS;
+class Group;
+class Switch;
+class Geode;
 }
 }
 }
@@ -90,7 +90,7 @@ namespace xplorer
 {
 namespace util
 {
-   class cfdVTKFileHandler;
+class cfdVTKFileHandler;
 }
 }
 }
@@ -101,7 +101,7 @@ namespace builder
 {
 namespace DataLoader
 {
-    class DataLoader;
+class DataLoader;
 }
 }
 }
@@ -114,8 +114,8 @@ namespace xplorer
 DataSet API
 */
 /*!\class ves::xplorer::DataSet
-* A class to load data set and pre-compute flow parameters 
-* or properties for virtual environment interactive 
+* A class to load data set and pre-compute flow parameters
+* or properties for virtual environment interactive
 * computation.
 */
 class VE_XPLORER_EXPORTS DataSet
@@ -128,7 +128,7 @@ public:
     // Initialize the number of data to load and parallel process.
     // By default, use the octree table.
     void LoadData( const std::string fileName );
-    void LoadData(vtkUnstructuredGrid*,int);
+    void LoadData( vtkUnstructuredGrid*, int );
     void LoadData();
     ///Load the precomputed data directory
     void LoadPrecomputedDataSlices();
@@ -198,12 +198,12 @@ public:
     void UpdatePropertiesForNewMesh();
 
     static void AutoComputeUserRange( const double rawRange[2],
-                double prettyRange[2] );
+                                      double prettyRange[2] );
 
     void ResetScalarBarRange( double min, double max );
 
     void SetFileName( const std::string filename );
-    void SetFileName_OnFly(int);
+    void SetFileName_OnFly( int );
     std::string GetFileName();
 
     void SetPrecomputedDataSliceDir( const std::string newDir );
@@ -220,7 +220,7 @@ public:
     void StoreScalarInfo();
 
 #ifdef USE_OMP
-    vtkUnstructuredGrid * GetData(int i);
+    vtkUnstructuredGrid * GetData( int i );
     int GetNoOfDataForProcs();       // Set/get number of data for parallel process.
 #endif
 
@@ -243,7 +243,7 @@ public:
     void SetActualScalarRange( int, double * );
     void GetActualScalarRange( int, double * );
     double* GetActualScalarRange( int );
-    double* GetActualScalarRange(std::string name);
+    double* GetActualScalarRange( std::string name );
 
     // returns displayed range of active scalar
     double * GetDisplayedScalarRange();
@@ -277,25 +277,25 @@ public:
     ///Create the wireframe geode for the dataset
     void CreateWireframeGeode( void );
     ///Set the bounding box for this dataset
-    ///\param state The state of the bounding box 0 or 1 
+    ///\param state The state of the bounding box 0 or 1
     void SetBoundingBoxState( unsigned int state );
     ///Set the wireframe state for this dataset
-    ///\param state The state of the wireframe 0 or 1 
+    ///\param state The state of the wireframe 0 or 1
     void SetWireframeState( unsigned int state );
     ///Set the axes state for this dataset
-    ///\param state The state of the axes state 0 or 1 
+    ///\param state The state of the axes state 0 or 1
     void SetAxesState( unsigned int state );
     ///Set the bounding box for this dataset
     ves::xplorer::DataSetAxis* GetDataSetAxes( void );
     ///Set the scalar for this dataset
-    ///\param state The state of the scalar bar 0 or 1 
+    ///\param state The state of the scalar bar 0 or 1
     void SetDataSetScalarState( unsigned int state );
     ///Get the scalar bar
     ves::xplorer::DataSetScalarBar* GetDataSetScalarBar( void );
 
     ///Get the bounds of the vtkDataObject contained in the DataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
-    void GetBounds(double bounds[6]);
+    void GetBounds( double bounds[6] );
 
     ///Get the bounds of the vtkDataObject contained in the DataSet
     ///\param bounds xmin,xmax,ymin,ymax,zmin,zmax
@@ -303,7 +303,7 @@ public:
 
     ///Get the scalar range by name
     ///\param scalarName The name of the scalar to get the range
-    double* GetScalarRange(std::string scalarName);
+    double* GetScalarRange( std::string scalarName );
 
     ///Get the number of points
     unsigned int GetNumberOfPoints();
@@ -330,7 +330,7 @@ private:
 
     float bbDiagonal;        // length of the diagonal of the bounding box.
 
-    double meanCellBBLength; // length of diagonal of average cell bounding box. 
+    double meanCellBBLength; // length of diagonal of average cell bounding box.
 
     float stepLength;        // Step length for streamline integration.
 
@@ -370,7 +370,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased; 
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
 
     ves::xplorer::DataSetAxis* dataSetAxes;
     ves::xplorer::DataSetScalarBar* dataSetScalarBar;
@@ -380,7 +380,7 @@ private:
     //int intRange[2];
     ves::builder::DataLoader::DataLoader* m_externalFileLoader;///<Translator interface
 
-#ifdef USE_OMP 
+#ifdef USE_OMP
     unsigned int noOfData;   // Total no. of octants.
     vtkUnstructuredGridReader *dataReader[MAX_DATA];
     vtkUnstructuredGrid *data[MAX_DATA];

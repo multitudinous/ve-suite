@@ -53,148 +53,148 @@ using namespace ves::xplorer::scenegraph;
 
 cfdMomentum::cfdMomentum( )
 {
-#ifdef USE_OMP  
-   float b[6];
-   float c[3];
-   this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs( );
+#ifdef USE_OMP
+    float b[6];
+    float c[3];
+    this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs( );
 
-   this->append = vtkAppendPolyData::New( );
+    this->append = vtkAppendPolyData::New( );
 
-   for ( int i=0; i<this->nData; i++ )
-   {
-      // get the center of data set.
-      this->GetActiveDataSet()->GetDataSet(i)->GetBounds( b );
-      c[0] = b[1] - b[0];
-      c[1] = b[3] - b[2];
-      c[2] = b[5] - b[4];
+    for( int i = 0; i < this->nData; i++ )
+    {
+        // get the center of data set.
+        this->GetActiveDataSet()->GetDataSet( i )->GetBounds( b );
+        c[0] = b[1] - b[0];
+        c[1] = b[3] - b[2];
+        c[2] = b[5] - b[4];
 
-      // set the plane
-      this->plane[i] = vtkPlane::New( );
-      this->plane[i]->SetOrigin( c[0], c[1], c[2] );
-      this->plane[i]->SetNormal( 1.0f, 0.0f, 0.0f );
+        // set the plane
+        this->plane[i] = vtkPlane::New( );
+        this->plane[i]->SetOrigin( c[0], c[1], c[2] );
+        this->plane[i]->SetNormal( 1.0f, 0.0f, 0.0f );
 
-      // set the cut function
-      this->cutter[i] = vtkCutter::New( );
-      this->cutter[i]->SetInput( this->GetActiveDataSet()->GetDataSet(i) );
-      this->cutter[i]->SetCutFunction( this->plane[i] );
+        // set the cut function
+        this->cutter[i] = vtkCutter::New( );
+        this->cutter[i]->SetInput( this->GetActiveDataSet()->GetDataSet( i ) );
+        this->cutter[i]->SetCutFunction( this->plane[i] );
 
-      // append data
-      this->append->AddInput( this->cutter[i]->GetOutput( ) );
-   }
+        // append data
+        this->append->AddInput( this->cutter[i]->GetOutput( ) );
+    }
 #else
 
-   // set the plane
-   this->plane = vtkPlane::New();
-   this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
-   this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
+    // set the plane
+    this->plane = vtkPlane::New();
+    this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
+    this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
 
-   // set the cut function
-   this->cutter = vtkCutter::New();
-   this->cutter->SetCutFunction( this->plane );
+    // set the cut function
+    this->cutter = vtkCutter::New();
+    this->cutter->SetCutFunction( this->plane );
 #endif
 
-   this->warper = vtkWarpVector::New();
+    this->warper = vtkWarpVector::New();
 #ifdef USE_OMP
-   this->warper->SetInput( (vtkPointSet *)this->append->GetOutput() );
+    this->warper->SetInput(( vtkPointSet * )this->append->GetOutput() );
 #else
-   this->warper->SetInput( (vtkPointSet *)this->cutter->GetOutput() );
+    this->warper->SetInput(( vtkPointSet * )this->cutter->GetOutput() );
 #endif
 
 }
 
 cfdMomentum::~cfdMomentum()
 {
-   //vprDEBUG(vesDBG,2) << "cfdMomentum destructor"
-   //                       << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vesDBG,2) << "cfdMomentum destructor"
+    //                       << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
-   for( int i = 0; i < this->nData; i++ )
-   {
-      this->plane[i]->Delete();
-      this->cutter[i]->Delete();
-   }
-   this->append->Delete();
+    for( int i = 0; i < this->nData; i++ )
+    {
+        this->plane[i]->Delete();
+        this->cutter[i]->Delete();
+    }
+    this->append->Delete();
 #else
-   this->plane->Delete();
-   this->cutter->Delete();
+    this->plane->Delete();
+    this->cutter->Delete();
 #endif
 
-   this->warper->Delete();
+    this->warper->Delete();
 }
 
 void cfdMomentum::Update( void )
-{    
-   if ( this->cursorType == ARROW )
-   {
-/*
-      // get the boundary of data set
-      float bd[6];
-      this->GetActiveMeshedVolume()->GetDataSet()->GetWholeBoundingBox( bd );
+{
+    if( this->cursorType == ARROW )
+    {
+        /*
+              // get the boundary of data set
+              float bd[6];
+              this->GetActiveMeshedVolume()->GetDataSet()->GetWholeBoundingBox( bd );
 
-      if ( this->origin[0] > bd[0] && this->origin[0] < bd[1] &&
-           this->origin[1] > bd[2] && this->origin[1] < bd[3] &&
-           this->origin[2] > bd[4] && this->origin[2] < bd[5] )
-*/
-      {  
-      this->warper->SetScaleFactor( this->warpedContourScale );
+              if(this->origin[0] > bd[0] && this->origin[0] < bd[1] &&
+                   this->origin[1] > bd[2] && this->origin[1] < bd[3] &&
+                   this->origin[2] > bd[4] && this->origin[2] < bd[5] )
+        */
+        {
+            this->warper->SetScaleFactor( this->warpedContourScale );
 
 #ifdef USE_OMP
-         int i;
-         int imax = this->nData;
+            int i;
+            int imax = this->nData;
 
 # pragma omp parallel for private(i)
-         for ( i=0; i<imax; i++ )
-         {
-            this->plane[i]->SetOrigin( this->origin );
-            this->plane[i]->SetNormal( this->normal );
-            this->cutter[i]->Update();
-         }
-         this->append->Update( );
+            for( i = 0; i < imax; i++ )
+            {
+                this->plane[i]->SetOrigin( this->origin );
+                this->plane[i]->SetNormal( this->normal );
+                this->cutter[i]->Update();
+            }
+            this->append->Update( );
 #else
-         this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-         this->plane->SetOrigin( this->origin );
-         this->plane->SetNormal( this->normal );
-         this->cutter->Update();
+            this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+            this->plane->SetOrigin( this->origin );
+            this->plane->SetNormal( this->normal );
+            this->cutter->Update();
 #endif
-         this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
-         this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                           ->GetUserRange() );
-         this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                           ->GetLookupTable() );
-         this->mapper->Update();
-         vtkActor* temp = vtkActor::New();
-         temp->SetMapper( this->mapper );
-         temp->GetProperty()->SetSpecularPower( 20.0f );
-         //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-         //geodes.back()->TranslateToGeode( temp );
-         //temp->Delete();
-         //this->updateFlag = true;
+            this->SetMapperInput(( vtkPolyData* )this->warper->GetOutput() );
+            this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                          ->GetUserRange() );
+            this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                          ->GetLookupTable() );
+            this->mapper->Update();
+            vtkActor* temp = vtkActor::New();
+            temp->SetMapper( this->mapper );
+            temp->GetProperty()->SetSpecularPower( 20.0f );
+            //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+            //geodes.back()->TranslateToGeode( temp );
+            //temp->Delete();
+            //this->updateFlag = true;
 
-         try
-         {   
-				osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-            tempGeode->TranslateToGeode( temp );
-            geodes.push_back( tempGeode.get() ); 
-            this->updateFlag = true;
-         }
-         catch( std::bad_alloc )
-         {
-            mapper->Delete();
-            mapper = vtkMultiGroupPolyDataMapper::New();
+            try
+            {
+                osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+                tempGeode->TranslateToGeode( temp );
+                geodes.push_back( tempGeode.get() );
+                this->updateFlag = true;
+            }
+            catch ( std::bad_alloc )
+            {
+                mapper->Delete();
+                mapper = vtkMultiGroupPolyDataMapper::New();
 
-            vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdMomentum " 
-                                 << std::endl << vprDEBUG_FLUSH;
-         }
-         //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
-         temp->Delete();
-      }
-         
-   }
-   else
-   {
-      vprDEBUG(vesDBG,0) << "cfdMomentum requires cursorType == ARROW"
-                             << std::endl << vprDEBUG_FLUSH;
-      this->updateFlag = false;
-   }
+                vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentum "
+                << std::endl << vprDEBUG_FLUSH;
+            }
+            //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+            temp->Delete();
+        }
+
+    }
+    else
+    {
+        vprDEBUG( vesDBG, 0 ) << "cfdMomentum requires cursorType == ARROW"
+        << std::endl << vprDEBUG_FLUSH;
+        this->updateFlag = false;
+    }
 }
 

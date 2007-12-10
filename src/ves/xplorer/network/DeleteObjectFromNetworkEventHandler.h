@@ -50,7 +50,7 @@ namespace open
 {
 namespace xml
 {
-    class XMLObject;
+class XMLObject;
 }
 }
 }
@@ -59,7 +59,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class GlobalBase;
+class GlobalBase;
 }
 }
 
@@ -69,7 +69,7 @@ namespace xplorer
 {
 namespace plugin
 {
-    class cfdVEBaseClass;
+class cfdVEBaseClass;
 }
 }
 }
@@ -83,30 +83,30 @@ namespace network
 class VE_XPLORER_NETWORK_EXPORTS DeleteObjectFromNetworkEventHandler: public ves::xplorer::event::EventHandler
 {
 public:
-   ///Constructor
-   DeleteObjectFromNetworkEventHandler();
+    ///Constructor
+    DeleteObjectFromNetworkEventHandler();
 
-   ///Copy Constructor
-   DeleteObjectFromNetworkEventHandler(const DeleteObjectFromNetworkEventHandler& rhs);
+    ///Copy Constructor
+    DeleteObjectFromNetworkEventHandler( const DeleteObjectFromNetworkEventHandler& rhs );
 
-   ///Destructor
-   virtual ~DeleteObjectFromNetworkEventHandler();
+    ///Destructor
+    virtual ~DeleteObjectFromNetworkEventHandler();
 
-   ///Equal operator
-   DeleteObjectFromNetworkEventHandler& operator=(const DeleteObjectFromNetworkEventHandler& rhs);
+    ///Equal operator
+    DeleteObjectFromNetworkEventHandler& operator=( const DeleteObjectFromNetworkEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
-   
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
+
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
-   std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* _plugins;
+    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* _plugins;
 };
 }
 }

@@ -53,75 +53,72 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADTransformEventHandler::CADTransformEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADTransformEventHandler::CADTransformEventHandler(const CADTransformEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADTransformEventHandler::CADTransformEventHandler( const CADTransformEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADTransformEventHandler::~CADTransformEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADTransformEventHandler& CADTransformEventHandler::operator=(const CADTransformEventHandler& rhs)
+CADTransformEventHandler& CADTransformEventHandler::operator=( const CADTransformEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void CADTransformEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADTransformEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try{
+    try
+    {
 
-      Command* command = dynamic_cast<Command*>(xmlObject);
+        Command* command = dynamic_cast<Command*>( xmlObject );
 
-      DataValuePairWeakPtr nodeID = command->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr nodeType = command->GetDataValuePair("Node Type");
-      DataValuePairWeakPtr newTransform = command->GetDataValuePair("Transform");
-      
-		ves::xplorer::scenegraph::DCS* transform = 0;
-        
-      if(nodeType->GetDataString() == std::string("Part"))
-      {
-         if(m_cadHandler->PartExists(nodeID->GetDataString()))
-         {
-            transform = m_cadHandler->GetPart(nodeID->GetDataString())->GetDCS();
-         }
-      }
-      else if(nodeType->GetDataString() == std::string("Assembly"))
-      {
-         if(m_cadHandler->AssemblyExists(nodeID->GetDataString()))
-         {
-            transform = m_cadHandler->GetAssembly(nodeID->GetDataString());
-         }
-      }
-      else if(nodeType->GetDataString() == std::string("Clone"))
-      {
-         if(m_cadHandler->CloneExists(nodeID->GetDataString()))
-         {
-            transform = m_cadHandler->GetClone(nodeID->GetDataString())->GetClonedGraph();
-         }
-      }
-      if( transform )
-      {
-         Transform* rawTransform = dynamic_cast<Transform*>(newTransform->GetDataXMLObject());
-         transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
-         transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
-         transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!!Invalid command passed to CADTransformEH!!"<<std::endl;
-   }
+        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
+        DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
+
+        ves::xplorer::scenegraph::DCS* transform = 0;
+
+        if( nodeType->GetDataString() == std::string( "Part" ) )
+        {
+            if( m_cadHandler->PartExists( nodeID->GetDataString() ) )
+            {
+                transform = m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS();
+            }
+        }
+        else if( nodeType->GetDataString() == std::string( "Assembly" ) )
+        {
+            if( m_cadHandler->AssemblyExists( nodeID->GetDataString() ) )
+            {
+                transform = m_cadHandler->GetAssembly( nodeID->GetDataString() );
+            }
+        }
+        else if( nodeType->GetDataString() == std::string( "Clone" ) )
+        {
+            if( m_cadHandler->CloneExists( nodeID->GetDataString() ) )
+            {
+                transform = m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph();
+            }
+        }
+        if( transform )
+        {
+            Transform* rawTransform = dynamic_cast<Transform*>( newTransform->GetDataXMLObject() );
+            transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
+            transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
+            transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!!Invalid command passed to CADTransformEH!!" << std::endl;
+    }
 }

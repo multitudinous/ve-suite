@@ -38,7 +38,7 @@ Wand API
 */
 
 /*!\class VE_XPlorer::Wand
-* 
+*
 */
 
 // --- VE-Suite Includes
@@ -65,7 +65,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
+class DCS;
 }
 }
 }
@@ -76,19 +76,19 @@ namespace open
 {
 namespace xml
 {
-    class Command;
+class Command;
 }
 }
 }
 
 namespace osg
 {
-    class Geode;
-    class Group;
-    class Vec4d;
-    class Vec3d;
-    class MatrixTransform;
-    class LineSegment;
+class Geode;
+class Group;
+class Vec4d;
+class Vec3d;
+class MatrixTransform;
+class LineSegment;
 }
 
 namespace ves
@@ -120,7 +120,7 @@ public:
     ///\param veCommand Sets the Command used for navigation
     void SetVECommand( ves::open::xml::Command* veCommand );
 
-    ///Does not let the user go below the ground plane at 0,0,0 
+    ///Does not let the user go below the ground plane at 0,0,0
     ///\param input Flag to insure translation does not go below zero plane
     void SetSubZeroFlag( int input );
 
@@ -134,13 +134,13 @@ public:
     ///Update the events done by wand
     void UpdateObjectHandler();
 
-    ///Set the start and end position 
+    ///Set the start and end position
     ///\param startPoint The start position
     ///\param endPoint The end position
     void SetupStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
     ///Performs translation through scene
-    void TranslateObject(); 
+    void TranslateObject();
 
     //osg::MatrixTransform* getMatrixTransform( void );
 
@@ -152,15 +152,15 @@ public:
 
     ///Transform direction from VRJuggler to OSG
     void UpdateWandLocalDirection();
-    
+
     ///Transform wand point into global space
     void UpdateWandGlobalLocation();
-    
+
     ///Find translation difference from last position to current
     void UpdateDeltaWandPosition();
     ///Get the plane equation constants normal to the wand in world space
     double* GetPlaneEquationConstantsNormalToWand();
-    
+
 protected:
     ///Set the start and end point
     ///\param startPoint The start point
@@ -171,10 +171,10 @@ protected:
     ///\param startPoint The start position
     ///\param endPoint The end position
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
-      
-    ///Roate about arbitrary axis 
+
+    ///Roate about arbitrary axis
     void RotateAboutWand();
-    
+
 private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
     int buttonData[ 6 ]; ///<do not know what this does

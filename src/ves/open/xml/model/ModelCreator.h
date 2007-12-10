@@ -45,7 +45,7 @@ namespace open
 {
 namespace xml
 {
-   class XMLObject;
+class XMLObject;
 }
 }
 }
@@ -64,27 +64,33 @@ namespace model
 class VE_MODEL_EXPORTS ModelCreator : public ves::open::xml::CreationEventHandler
 {
 public:
-   ///Constructor
-   ModelCreator(){ ; }
+    ///Constructor
+    ModelCreator()
+    {
+        ;
+    }
 
-   ///Destructor
-   virtual ~ModelCreator(){;}
+    ///Destructor
+    virtual ~ModelCreator()
+    {
+        ;
+    }
 
-   ///Create a new XMLObject.
-   ///\param objectType The type of object to create.
-   virtual ves::open::xml::XMLObject* CreateNewXMLObject( std::string objectType );
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-   virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
-    
-   ///Create a copy of a new CAD object
-   ///\param objectType The type of object to create.
-   ///\param objectToCopy The object to copy.
-   virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy(std::string objectType,ves::open::xml::XMLObject* objectToCopy);
-   ///Create a copy of a new CAD object
-   ///\param objectType The type of object to create.
-   ///\param objectToCopy The object to copy.
-   virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy);
+    virtual ves::open::xml::XMLObject* CreateNewXMLObject( std::string objectType );
+    ///Create a new XMLObject.
+    ///\param objectType The type of object to create.
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
+
+    ///Create a copy of a new CAD object
+    ///\param objectType The type of object to create.
+    ///\param objectToCopy The object to copy.
+    virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObject* objectToCopy );
+    ///Create a copy of a new CAD object
+    ///\param objectType The type of object to create.
+    ///\param objectToCopy The object to copy.
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy );
 protected:
 };
 }

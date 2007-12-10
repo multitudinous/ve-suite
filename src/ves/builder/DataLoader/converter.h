@@ -42,7 +42,7 @@ namespace builder
 {
 namespace DataLoader
 {
-    extern void letUsersAddParamsToField( const int numParams, vtkFloatArray** data, vtkPointData * pointData, int verbose = 1 );
+extern void letUsersAddParamsToField( const int numParams, vtkFloatArray** data, vtkPointData * pointData, int verbose = 1 );
 }
 }
 }

@@ -59,55 +59,55 @@ using namespace ves::xplorer::util;
 ///////////////////////////////////////////////////////////////
 void ves::xplorer::util::printWhatItIs( vtkDataObject * dataSet )
 {
-   if ( dataSet == NULL )
-   {
-      std::cout << "\tdataSet == NULL" << std::endl;
-      return;
-   }
-   std::cout<<dataSet->GetClassName()<<std::endl;
+    if( dataSet == NULL )
+    {
+        std::cout << "\tdataSet == NULL" << std::endl;
+        return;
+    }
+    std::cout << dataSet->GetClassName() << std::endl;
 }
 ///////////////////////////////////////////////////////
-void ves::xplorer::util::printBounds( vtkDataObject* dataObject)//double bounds[6] )
+void ves::xplorer::util::printBounds( vtkDataObject* dataObject )//double bounds[6] )
 {
-   double bounds[6];
-   DataObjectHandler dataObjectHandler;
-   ComputeDataObjectBoundsCallback* boundsCallback = 
-	   new ComputeDataObjectBoundsCallback();
-   dataObjectHandler.SetDatasetOperatorCallback(boundsCallback);
-   dataObjectHandler.OperateOnAllDatasetsInObject(dataObject);
-   std::cout << "Geometry bounding box information..." << std::endl;
-   boundsCallback->GetDataObjectBounds(bounds);
-   std::cout << "\tx-min = \t" << bounds[0]
-             << "\tx-max = \t" << bounds[1] << std::endl;
-   std::cout << "\ty-min = \t" << bounds[2] 
-             << "\ty-max = \t" << bounds[3] << std::endl;
-   std::cout << "\tz-min = \t" << bounds[4] 
-             << "\tz-max = \t" << bounds[5] << std::endl;
-			 
-   if(boundsCallback)
-   {
-	   delete boundsCallback;
-	   boundsCallback = 0;
-   }
+    double bounds[6];
+    DataObjectHandler dataObjectHandler;
+    ComputeDataObjectBoundsCallback* boundsCallback =
+        new ComputeDataObjectBoundsCallback();
+    dataObjectHandler.SetDatasetOperatorCallback( boundsCallback );
+    dataObjectHandler.OperateOnAllDatasetsInObject( dataObject );
+    std::cout << "Geometry bounding box information..." << std::endl;
+    boundsCallback->GetDataObjectBounds( bounds );
+    std::cout << "\tx-min = \t" << bounds[0]
+    << "\tx-max = \t" << bounds[1] << std::endl;
+    std::cout << "\ty-min = \t" << bounds[2]
+    << "\ty-max = \t" << bounds[3] << std::endl;
+    std::cout << "\tz-min = \t" << bounds[4]
+    << "\tz-max = \t" << bounds[5] << std::endl;
+
+    if( boundsCallback )
+    {
+        delete boundsCallback;
+        boundsCallback = 0;
+    }
 }
 /////////////////////////////////////////////////////////////////////////////
 vtkDataObject* ves::xplorer::util::readVtkThing( std::string vtkFilename, int printFlag )
 {
-   cfdVTKFileHandler fileReader;
-   vtkDataObject* temp = fileReader.GetDataSetFromFile(vtkFilename);
-   if ( printFlag )
-   {
-	  ves::xplorer::util::printBounds( temp );
-      ves::xplorer::util::printWhatItIs( temp );
-   }
-   return temp;
+    cfdVTKFileHandler fileReader;
+    vtkDataObject* temp = fileReader.GetDataSetFromFile( vtkFilename );
+    if( printFlag )
+    {
+        ves::xplorer::util::printBounds( temp );
+        ves::xplorer::util::printWhatItIs( temp );
+    }
+    return temp;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 bool ves::xplorer::util::writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
 {
-   cfdVTKFileHandler fileWriter;
-   if(!binaryFlag) 
-      fileWriter.SetOutFileWriteMode(cfdVTKFileHandler::CFD_ASCII);
-   return fileWriter.WriteDataSet(vtkThing,vtkFilename);
+    cfdVTKFileHandler fileWriter;
+    if( !binaryFlag )
+        fileWriter.SetOutFileWriteMode( cfdVTKFileHandler::CFD_ASCII );
+    return fileWriter.WriteDataSet( vtkThing, vtkFilename );
 }
 

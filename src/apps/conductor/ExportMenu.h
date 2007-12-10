@@ -37,7 +37,7 @@
  */
 
 /*!\class ExportMenu
- * 
+ *
  */
 
 // --- wxWidgets Includes --- //
@@ -57,9 +57,9 @@ public:
     virtual ~ExportMenu();
 
     ///\enum The enums for MainToolBar
-    enum 
+    enum
     {
-        EXPORT_SCREEN_SHOT=1950,
+        EXPORT_SCREEN_SHOT = 1950,
         EXPORT_DOT_FILE
     };
 

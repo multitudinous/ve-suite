@@ -54,103 +54,103 @@ using namespace ves::builder::cfdTranslatorToVTK;
 //////////////////////
 DataLoader::DataLoader()
 {
-   inputDataName =  '\0';
-   activeLoader = 0;
-   // load up the translator map
-   // AVS
-   translatorMap[ "avs" ] = new AVSTranslator();
-   // REI
-   translatorMap[ "BANFDB" ] = new cfdREITranslator();
-   // DICOM
-   translatorMap[ "dcm" ] = new cfdDICOMTranslator();
-   // Fluent
-   translatorMap[ "cas" ] = new FluentTranslator();
-   // MFIX
-   translatorMap[ "mfix" ] = new MFIXTranslator();
-   // EnSight
-   translatorMap[ "ens" ] = new EnSightTranslator();
-   // Plot3D
-   translatorMap[ "xyz" ] = new plot3dReader();
-   // StarCD
-   translatorMap[ "star" ] = new StarCDTranslator();
-   // ANSYS
-   translatorMap[ "rst" ] = new AnsysTranslator();
+    inputDataName =  '\0';
+    activeLoader = 0;
+    // load up the translator map
+    // AVS
+    translatorMap[ "avs" ] = new AVSTranslator();
+    // REI
+    translatorMap[ "BANFDB" ] = new cfdREITranslator();
+    // DICOM
+    translatorMap[ "dcm" ] = new cfdDICOMTranslator();
+    // Fluent
+    translatorMap[ "cas" ] = new FluentTranslator();
+    // MFIX
+    translatorMap[ "mfix" ] = new MFIXTranslator();
+    // EnSight
+    translatorMap[ "ens" ] = new EnSightTranslator();
+    // Plot3D
+    translatorMap[ "xyz" ] = new plot3dReader();
+    // StarCD
+    translatorMap[ "star" ] = new StarCDTranslator();
+    // ANSYS
+    translatorMap[ "rst" ] = new AnsysTranslator();
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::~DataLoader()
 {
-   // Clear the translator map
-   //translatorMap
+    // Clear the translator map
+    //translatorMap
 }
 ///////////////////////////////////////////////////////////////////////////
 DataLoader::DataLoader( const DataLoader& input )
 {
-   ;
+    ;
 }
 ///////////////////////////////////////////////////////////////////////////
-DataLoader& DataLoader::operator=( const DataLoader& input)
+DataLoader& DataLoader::operator=( const DataLoader& input )
 {
-   if ( this != &input )
-   {
-      ;
-   }
-   return *this;
+    if( this != &input )
+    {
+        ;
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////////////////
 vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
 {
-   //Data processing loop
-   std::string fileExtension = ves::xplorer::util::fileIO::getExtension( inputDataName );
-   if ( fileExtension.empty() )
-   {
-      // an example of this would be rei data
-      fileExtension = inputDataName;
-   }
+    //Data processing loop
+    std::string fileExtension = ves::xplorer::util::fileIO::getExtension( inputDataName );
+    if( fileExtension.empty() )
+    {
+        // an example of this would be rei data
+        fileExtension = inputDataName;
+    }
 
-   // could extract command line args to get loader to use
-   // in addition to the above method
-   std::string tempExtension;
-   if ( translatorMap[ "dcm" ]->_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
-   {
-      fileExtension = tempExtension;
-   }
-   else
-   {
-      std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* >::iterator iter;
-      for ( iter = translatorMap.begin(); iter != translatorMap.end(); ++iter )
-      {
-         iter->second->DisplayHelp();
-      }
-      return 0;
-   }
-   //Check and see if we have a loader
-   std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* >::iterator iter;
-   iter = translatorMap.find( fileExtension );
-   if ( iter == translatorMap.end() )
-   {
-      std::cout << " Loader " << fileExtension << " not supported." << std::endl;
-      return 0;
-   }
-   // process data with appropriate loader
-   activeLoader = translatorMap[ fileExtension ];
-   if ( argc < 1 )
-   {
-      activeLoader->SetInputDirectory( inputDataDir );
-      activeLoader->AddFoundFile( inputDataName );
-   }
-   activeLoader->TranslateToVTK( argc, argv );
-   vtkDataObject* tempDataset = activeLoader->GetVTKFile( 0 );
-   return tempDataset;
+    // could extract command line args to get loader to use
+    // in addition to the above method
+    std::string tempExtension;
+    if( translatorMap[ "dcm" ]->_extractOptionFromCmdLine( argc, argv, "-loader", tempExtension ) )
+    {
+        fileExtension = tempExtension;
+    }
+    else
+    {
+        std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* >::iterator iter;
+        for( iter = translatorMap.begin(); iter != translatorMap.end(); ++iter )
+        {
+            iter->second->DisplayHelp();
+        }
+        return 0;
+    }
+    //Check and see if we have a loader
+    std::map< std::string, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* >::iterator iter;
+    iter = translatorMap.find( fileExtension );
+    if( iter == translatorMap.end() )
+    {
+        std::cout << " Loader " << fileExtension << " not supported." << std::endl;
+        return 0;
+    }
+    // process data with appropriate loader
+    activeLoader = translatorMap[ fileExtension ];
+    if( argc < 1 )
+    {
+        activeLoader->SetInputDirectory( inputDataDir );
+        activeLoader->AddFoundFile( inputDataName );
+    }
+    activeLoader->TranslateToVTK( argc, argv );
+    vtkDataObject* tempDataset = activeLoader->GetVTKFile( 0 );
+    return tempDataset;
 }
 ///////////////////////////////////////////////////////////////////////////
 void DataLoader::SetInputData( std::string inputData, std::string inputDir )
 {
-   inputDataName = inputData;
-   inputDataDir = inputDir;
+    inputDataName = inputData;
+    inputDataDir = inputDir;
 }
 ///////////////////////////////////////////////////////////////////////////
 cfdTranslatorToVTK* DataLoader::GetActiveTranslator( void )
 {
-   return activeLoader;
+    return activeLoader;
 }
-   
+

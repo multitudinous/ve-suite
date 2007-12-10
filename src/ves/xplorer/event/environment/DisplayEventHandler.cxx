@@ -46,9 +46,9 @@
 #include <boost/filesystem/path.hpp>
 
 #ifdef WIN32
-   #include <direct.h>
+#include <direct.h>
 #else
-   #include <unistd.h>
+#include <unistd.h>
 #endif
 
 using namespace ves::xplorer::event;
@@ -56,57 +56,57 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler::DisplayEventHandler()
-:ves::xplorer::event::EventHandler()
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DisplayEventHandler::DisplayEventHandler(const DisplayEventHandler& rhs)
-:ves::xplorer::event::EventHandler()
+DisplayEventHandler::DisplayEventHandler( const DisplayEventHandler& rhs )
+        : ves::xplorer::event::EventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DisplayEventHandler::~DisplayEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler)
+void DisplayEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::Execute(XMLObject* veXMLObject)
+void DisplayEventHandler::Execute( XMLObject* veXMLObject )
 {
-   Command* command=dynamic_cast<Command*>(veXMLObject);
-   DataValuePairWeakPtr DVP;
-   unsigned int value;
+    Command* command = dynamic_cast<Command*>( veXMLObject );
+    DataValuePairWeakPtr DVP;
+    unsigned int value;
 
-   if(command->GetDataValuePair("FrameRateID"))
-	{
-      DVP=command->GetDataValuePair("FrameRateID");
-      DVP->GetData(value);
-   
-      ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
-   }
+    if( command->GetDataValuePair( "FrameRateID" ) )
+    {
+        DVP = command->GetDataValuePair( "FrameRateID" );
+        DVP->GetData( value );
 
-   else if(command->GetDataValuePair("CoordSysID"))
-	{
-      DVP=command->GetDataValuePair("CoordSysID");
-      DVP->GetData(value);
-   
-      ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
-   }
+        ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
+    }
+
+    else if( command->GetDataValuePair( "CoordSysID" ) )
+    {
+        DVP = command->GetDataValuePair( "CoordSysID" );
+        DVP->GetData( value );
+
+        ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-DisplayEventHandler& DisplayEventHandler::operator=(const DisplayEventHandler& rhs)
+DisplayEventHandler& DisplayEventHandler::operator=( const DisplayEventHandler& rhs )
 {
-   if(this!=&rhs)
-	{
-      ves::xplorer::event::EventHandler::operator=(rhs);
-   }
+    if( this != &rhs )
+    {
+        ves::xplorer::event::EventHandler::operator=( rhs );
+    }
 
-   return *this;
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////

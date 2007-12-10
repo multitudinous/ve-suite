@@ -40,57 +40,57 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////
 Tag::Tag()
-:XMLObject()
+        : XMLObject()
 {
-   SetObjectType("Tag");
-   SetObjectNamespace("Model");   
+    SetObjectType( "Tag" );
+    SetObjectNamespace( "Model" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Tag::~Tag()
 {
-   /*for ( size_t i = 0; i < tagPoints.size(); ++i )
-   {
-      delete tagPoints.at( i );
-   }*/
-   tagPoints.clear();
+    /*for ( size_t i = 0; i < tagPoints.size(); ++i )
+    {
+       delete tagPoints.at( i );
+    }*/
+    tagPoints.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Tag::Tag( const Tag& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
-   tagText = input.tagText;
+    tagText = input.tagText;
 
-   for ( size_t i = 0; i < input.tagPoints.size(); ++i )
-   {
-      tagPoints.push_back( new Point( *(input.tagPoints.at( i )) ) );
-   }
+    for( size_t i = 0; i < input.tagPoints.size(); ++i )
+    {
+        tagPoints.push_back( new Point( *( input.tagPoints.at( i ) ) ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Tag& Tag::operator=( const Tag& input)
+Tag& Tag::operator=( const Tag& input )
 {
-   if ( this != &input )
-   {
-      //biv-- make sure to call the parent =
-      XMLObject::operator =(input);
-      tagText = input.tagText;
+    if( this != &input )
+    {
+        //biv-- make sure to call the parent =
+        XMLObject::operator =( input );
+        tagText = input.tagText;
 
-      /*for ( size_t i = 0; i < tagPoints.size(); ++i )
-      {
-         delete tagPoints.at( i );
-      }*/
-      tagPoints.clear();
+        /*for ( size_t i = 0; i < tagPoints.size(); ++i )
+        {
+           delete tagPoints.at( i );
+        }*/
+        tagPoints.clear();
 
-      for( size_t i = 0; i < input.tagPoints.size(); ++i )
-      {
-         tagPoints.push_back( new Point( *(input.tagPoints.at( i )) ) );
-      }
-   }
-   return *this;
+        for( size_t i = 0; i < input.tagPoints.size(); ++i )
+        {
+            tagPoints.push_back( new Point( *( input.tagPoints.at( i ) ) ) );
+        }
+    }
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::SetText( std::string text )
 {
-   tagText = text;
+    tagText = text;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::_updateVEElement( std::string input )
@@ -100,13 +100,13 @@ void Tag::_updateVEElement( std::string input )
     SetSubElement( "tagText", tagText );
     for( size_t i = 0; i < tagPoints.size(); ++i )
     {
-        SetSubElement( "linkPoints", &(*tagPoints.at( i )) );   
+        SetSubElement( "linkPoints", &( *tagPoints.at( i ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string Tag::GetText( void )
 {
-   return tagText;
+    return tagText;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PointPtr Tag::GetPoint( size_t i )
@@ -115,10 +115,10 @@ PointPtr Tag::GetPoint( size_t i )
     {
         return tagPoints.at( i );
     }
-    catch (...)
+    catch ( ... )
     {
         std::cerr << "The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+        << " Please ask for a lower number point." << std::endl;
         return PointPtr();
     }
 }
@@ -128,7 +128,7 @@ void Tag::AddPoint( PointPtr newPoint )
     tagPoints.push_back( newPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::SetObjectFromXMLData(DOMNode* element)
+void Tag::SetObjectFromXMLData( DOMNode* element )
 {
     DOMElement* currentElement = 0;
     if( element->getNodeType() == DOMNode::ELEMENT_NODE )
@@ -139,16 +139,16 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
     if( !currentElement )
     {
         return;
-    }   
-    
+    }
+
     //get variables by tags
     DOMElement* dataValueStringName = 0;
     dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
     tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
     // for Tag points
-    unsigned int numberOfPoints = 
-        currentElement->getElementsByTagName( 
-        xercesString("linkPoints") )->getLength();
+    unsigned int numberOfPoints =
+        currentElement->getElementsByTagName(
+            xercesString( "linkPoints" ) )->getLength();
 
     for( unsigned int i = 0; i < numberOfPoints; ++i )
     {
@@ -156,10 +156,10 @@ void Tag::SetObjectFromXMLData(DOMNode* element)
         tagPoints.push_back( new Point() );
         tagPoints.back()->SetObjectFromXMLData( dataValueStringName );
     }
-    
+
     //Setup uuid for model element
     {
-        ves::open::xml::XMLObject::GetAttribute(currentElement, "id", uuid);
+        ves::open::xml::XMLObject::GetAttribute( currentElement, "id", uuid );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -34,7 +34,7 @@
 #define CFD_ACCESSORY_FUNCTIONS_H
 
 /*!file cfdAccessoryFunctions.h
-cfdAccessoryFunctions API 
+cfdAccessoryFunctions API
 */
 /*!class ves::xplorer::util::cfdAccessoryFunctions
 *This class returns information on an input vector.
@@ -50,28 +50,28 @@ namespace xplorer
 {
 namespace util
 {
-    class VE_UTIL_EXPORTS cfdAccessoryFunctions
-   { 
-      public:
-         ///Constructor
-         cfdAccessoryFunctions();
-         ///Destructor
-         ~cfdAccessoryFunctions();
-         ///Find the range of the magnitude of the vector for vector-based 
-               ///visualization when "scale by vector magnitude" is selected.
-         ///\param dataArray The vector to be measured
-         static double * ComputeVectorMagnitudeRange( vtkDataArray * dataArray );
-         ///Find the Mean Cell Bounding Box (????) Length
-         ///\param dataSet The values for the grid that is being analyzed.
-         static double ComputeMeanCellBBLength( vtkDataSet * dataSet );
+class VE_UTIL_EXPORTS cfdAccessoryFunctions
+{
+public:
+    ///Constructor
+    cfdAccessoryFunctions();
+    ///Destructor
+    ~cfdAccessoryFunctions();
+    ///Find the range of the magnitude of the vector for vector-based
+    ///visualization when "scale by vector magnitude" is selected.
+    ///\param dataArray The vector to be measured
+    static double * ComputeVectorMagnitudeRange( vtkDataArray * dataArray );
+    ///Find the Mean Cell Bounding Box (????) Length
+    ///\param dataSet The values for the grid that is being analyzed.
+    static double ComputeMeanCellBBLength( vtkDataSet * dataSet );
 
 
-      private:
-         ///Find the magnitude of the input vector
-         ///\param vectorComponents The three dimensional array holding the 
-               ///components of the vector being evaluated
-         static double ComputeVectorMagnitude( double vectorComponents [ 3 ] );
-   };
+private:
+    ///Find the magnitude of the input vector
+    ///\param vectorComponents The three dimensional array holding the
+    ///components of the vector being evaluated
+    static double ComputeVectorMagnitude( double vectorComponents [ 3 ] );
+};
 }// end of util namesapce
 }// end of xplorer namesapce
 }// end of ves namesapce

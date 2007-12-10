@@ -46,12 +46,12 @@ namespace xplorer
 {
 namespace util
 {
-    // function declarations
-   ///Takes in a vtkPointSet and removes vertices not used by a cell.
-   VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet * );
-   ///Takes in a vtkPointSet and removes vertices not used by a cell and writes it back out.
-   ///param vtkFileName The name of the file to be written out.
-   VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet *, std::string vtkFileName );
+// function declarations
+///Takes in a vtkPointSet and removes vertices not used by a cell.
+VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet * );
+///Takes in a vtkPointSet and removes vertices not used by a cell and writes it back out.
+///param vtkFileName The name of the file to be written out.
+VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet *, std::string vtkFileName );
 }// end of util namesapce
 }// end of xplorer namesapce
 }// end of ves namesapce

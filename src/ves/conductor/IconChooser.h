@@ -62,22 +62,22 @@ class VE_GUIPLUGINS_EXPORTS IconChooser : public wxFrame
 {
 private:
     DECLARE_EVENT_TABLE();
-    
+
 public:
-    IconChooser(wxWindow *parent, /*std::string path,*/ wxWindowID id = 1, 
-        const wxString &title = wxT("IconChooser"), 
-        const wxPoint& pos = wxDefaultPosition, 
-        const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE);
+    IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id = 1,
+                 const wxString &title = wxT( "IconChooser" ),
+                 const wxPoint& pos = wxDefaultPosition,
+                 const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE );
     virtual ~IconChooser();
-    void WxButtonClick(wxCommandEvent& event);
-    void okButtonClick(wxCommandEvent& event);
-    void cancelButtonClick(wxCommandEvent& event);
-    void IconDirectoryClick(wxCommandEvent& event);
+    void WxButtonClick( wxCommandEvent& event );
+    void okButtonClick( wxCommandEvent& event );
+    void cancelButtonClick( wxCommandEvent& event );
+    void IconDirectoryClick( wxCommandEvent& event );
     //void AppendList(const char * input);
-    void SetPlugin( UIPluginBase * plugin);
-    void AddIconsDir(wxString directory);
-    
-private:		
+    void SetPlugin( UIPluginBase * plugin );
+    void AddIconsDir( wxString directory );
+
+private:
     std::map< int, std::string > iconPaths;
     wxTextCtrl* WxEdit;
     UIPluginBase* thePlugin;
@@ -96,14 +96,14 @@ private:
     void InitializeAspenIcons();
 
 private:
-    void OnClose(wxCloseEvent& event);
+    void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 
-  std::string ConvertUnicode( const wxChar* data )
-  {
-     std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-     return tempStr;
-  }
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }

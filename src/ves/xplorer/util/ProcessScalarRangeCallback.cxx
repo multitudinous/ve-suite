@@ -40,32 +40,31 @@ using namespace ves::xplorer::util;
 
 //////////////////////////////////////////////////////////////////
 ProcessScalarRangeCallback::ProcessScalarRangeCallback()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 ProcessScalarRangeCallback::~ProcessScalarRangeCallback()
 {
     std::map<std::string, double* >::iterator iter;
-    for(iter == m_scalarRanges.begin();
-        iter != m_scalarRanges.end(); 
-        ++iter)
+    for( iter == m_scalarRanges.begin();
+            iter != m_scalarRanges.end();
+            ++iter )
     {
-        delete (*iter).second;
+        delete( *iter ).second;
     }
     m_scalarRanges.clear();
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void ProcessScalarRangeCallback::OperateOnDataset(vtkDataSet* dataset)
+void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
 {
     // store actual range...
     int ii = 0;
-    double scalarRange[2] = {100000.,-10000.};
-                
+    double scalarRange[2] = {100000., -10000.};
+
     std::map<std::string, double* >::iterator scalarRangeInfo;
-    for ( int i=0; i < dataset->GetPointData()->GetNumberOfArrays(); ++i )
+    for( int i = 0; i < dataset->GetPointData()->GetNumberOfArrays(); ++i )
     {
-        vtkDataArray* array = dataset->GetPointData()->GetArray(i);
-        if (array->GetNumberOfComponents() != 1 )
+        vtkDataArray* array = dataset->GetPointData()->GetArray( i );
+        if( array->GetNumberOfComponents() != 1 )
         {
             continue;
         }
@@ -75,7 +74,7 @@ void ProcessScalarRangeCallback::OperateOnDataset(vtkDataSet* dataset)
         //unique scalars---This may be incorrect because
         //each dataset in the multiblock may have it's own scalar range but
         //it's not clear if that is the case...
-        scalarRangeInfo = m_scalarRanges.find(array->GetName());
+        scalarRangeInfo = m_scalarRanges.find( array->GetName() );
         if( scalarRangeInfo == m_scalarRanges.end() )
         {
             m_scalarRanges[array->GetName()] = new double[2];
@@ -84,17 +83,17 @@ void ProcessScalarRangeCallback::OperateOnDataset(vtkDataSet* dataset)
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void ProcessScalarRangeCallback::GetScalarRange(std::string scalarName,double range[])
+void ProcessScalarRangeCallback::GetScalarRange( std::string scalarName, double range[] )
 {
     try
     {
         range[0] = m_scalarRanges[scalarName][0];
         range[1] = m_scalarRanges[scalarName][1];
     }
-    catch(...)
+    catch ( ... )
     {
-        std::cout<<"Invalid scalar specified: "<<scalarName<<std::endl;
-        std::cout<<"ProcessScalarRangeCallback::GetScalarRange"<<std::endl;
+        std::cout << "Invalid scalar specified: " << scalarName << std::endl;
+        std::cout << "ProcessScalarRangeCallback::GetScalarRange" << std::endl;
     }
 }
 

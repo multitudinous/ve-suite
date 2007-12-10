@@ -42,51 +42,51 @@ using namespace VE_CE;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 GetResultsEventHandler::GetResultsEventHandler()
-:VE_CE::EventHandler()
+        : VE_CE::EventHandler()
 {
-   baseModel = 0;
+    baseModel = 0;
 }
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 GetResultsEventHandler::~GetResultsEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model)
+void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model )
 {
-   try
-   {
-      if ( model )
-      {
-         baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
-      }
-   }
-   catch(...)
-   {
-      baseModel = 0;
-      std::cout<<"Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
+        }
+    }
+    catch ( ... )
+    {
+        baseModel = 0;
+        std::cout << "Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess )
 {
-   if ( !baseModel )
-   {
-      std::cerr << "Must call GetResultsEventHandler::SetBaseObject first" << std::endl;
-      return std::string("NULL");
-   }
-   
-   ves::open::xml::Command resultsCommand;
-   resultsCommand.SetCommandName("Model Results");
-   
-   size_t numInputs = baseModel->GetNumberOfResults();
-   if ( numInputs == 0 )
-   {
-      return std::string("NULL");
-   }
-   
+    if( !baseModel )
+    {
+        std::cerr << "Must call GetResultsEventHandler::SetBaseObject first" << std::endl;
+        return std::string( "NULL" );
+    }
+
+    ves::open::xml::Command resultsCommand;
+    resultsCommand.SetCommandName( "Model Results" );
+
+    size_t numInputs = baseModel->GetNumberOfResults();
+    if( numInputs == 0 )
+    {
+        return std::string( "NULL" );
+    }
+
     for( size_t i = 0; i < numInputs; ++i )
     {
         ves::open::xml::Command* tempResult = baseModel->GetResult( i );
@@ -94,15 +94,15 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
         tempPair->SetData( tempResult->GetCommandName(), tempResult );
         tempResult->AddDataValuePair( tempPair );
     }
-   
-   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-   nodes.push_back( std::pair< ves::open::xml::XMLObject*, 
-        std::string >( &resultsCommand, "vecommand" ) );
 
-   ves::open::xml::XMLReaderWriter commandWriter;
-   std::string status="returnString";
-   commandWriter.UseStandaloneDOMDocumentManager();
-   commandWriter.WriteXMLDocument( nodes, status, "Command" );
-   
-   return status;
+    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    nodes.push_back( std::pair < ves::open::xml::XMLObject*,
+                     std::string > ( &resultsCommand, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    return status;
 }

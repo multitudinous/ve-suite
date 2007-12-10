@@ -64,126 +64,126 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::volume;
 
 ////////////////////////////////////////////////////////////////////////////////
-Body_VEXplorer_i::Body_VEXplorer_i (void)
-:
-m_xplorerAMIHandler()
-{ 
-   bufferCommand = new Command();
-   bufferCommand->AddDataValuePair( new DataValuePair() );
-   bufferCommand->SetCommandName( "wait" );
-   isCluster = false;
+Body_VEXplorer_i::Body_VEXplorer_i( void )
+        :
+        m_xplorerAMIHandler()
+{
+    bufferCommand = new Command();
+    bufferCommand->AddDataValuePair( new DataValuePair() );
+    bufferCommand->SetCommandName( "wait" );
+    isCluster = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Body_VEXplorer_i::~Body_VEXplorer_i (void)
+Body_VEXplorer_i::~Body_VEXplorer_i( void )
 {
-   if(bufferCommand)
-   {
-      delete bufferCommand;
-      bufferCommand = 0;
-   }
+    if( bufferCommand )
+    {
+        delete bufferCommand;
+        bufferCommand = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_VEXplorer_i::GetStatusMessage( )
-  ACE_THROW_SPEC (( ::CORBA::SystemException,::Error::EUnknown ))
+ACE_THROW_SPEC(( ::CORBA::SystemException,::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetParams ( const char* param )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+void Body_VEXplorer_i::SetParams( const char* param )
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetID ( ::CORBA::Long id )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+void Body_VEXplorer_i::SetID( ::CORBA::Long id )
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-::CORBA::Long Body_VEXplorer_i::GetID ( )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+::CORBA::Long Body_VEXplorer_i::GetID( )
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::SetName ( const char* name )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+void Body_VEXplorer_i::SetName( const char* name )
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_VEXplorer_i::GetName()
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetNetwork( const char* network )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetCommand( const char* command )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  //When starting xplorer it is possible to connect and send a command before 
-   // xplorer is ready to receive it
-   while ( !jccl::ConfigManager::instance()->isPendingStale() )
-   {
-      vpr::System::msleep( 50 );  // 50 milli-second delay
-   }
-   
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+    //When starting xplorer it is possible to connect and send a command before
+    // xplorer is ready to receive it
+    while( !jccl::ConfigManager::instance()->isPendingStale() )
+    {
+        vpr::System::msleep( 50 );  // 50 milli-second delay
+    }
 
-   std::string commandString( command );
-   if ( isCluster )
-   {
-      if ( mStates.isLocal()   )
-      {
-         commandStringQueue.push_back( commandString );
-      }
-   }
+    vpr::Guard<vpr::Mutex> val_guard( mValueLock );
 
-   vprDEBUG(vprDBG_ALL,2) <<"VjObs::SetCommandString(): "<< std::endl << commandString << std::endl << vprDEBUG_FLUSH;
-   ves::open::xml::XMLReaderWriter networkWriter;
-   networkWriter.UseStandaloneDOMDocumentManager();
-   networkWriter.ReadFromString();
-   networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-   std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::string commandString( command );
+    if( isCluster )
+    {
+        if( mStates.isLocal() )
+        {
+            commandStringQueue.push_back( commandString );
+        }
+    }
 
-   for ( size_t i = 0; i < objectVector.size(); ++i )
-   {
-      commandVectorQueue.push_back( static_cast< ves::open::xml::Command* >( objectVector.at( i ) ) );
-   }
+    vprDEBUG( vprDBG_ALL, 2 ) << "VjObs::SetCommandString(): " << std::endl << commandString << std::endl << vprDEBUG_FLUSH;
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+
+    for( size_t i = 0; i < objectVector.size(); ++i )
+    {
+        commandVectorQueue.push_back( static_cast< ves::open::xml::Command* >( objectVector.at( i ) ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::RegisterUI ( const char* UIName, ::Body::UI_ptr ui )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+void Body_VEXplorer_i::RegisterUI( const char* UIName, ::Body::UI_ptr ui )
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-	std::cout << "Body_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
-	uiCom[std::string(UIName)] = Body::UI::_duplicate( ui );
+    std::cout << "Body_VEXplorer_i::RegisterUI Registering " << UIName << std::endl;
+    uiCom[std::string( UIName )] = Body::UI::_duplicate( ui );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Body_VEXplorer_i::UnRegisterUI ( const char* UIName )
-  ACE_THROW_SPEC (( ::CORBA::SystemException, ::Error::EUnknown ))
+void Body_VEXplorer_i::UnRegisterUI( const char* UIName )
+ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 {
-  // Add your implementation here
-	throw CORBA::NO_IMPLEMENT();
+    // Add your implementation here
+    throw CORBA::NO_IMPLEMENT();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::PreFrameUpdate( void )
 {
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
- }
+    vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+}
 ////////////////////////////////////////////////////////////////////////////////
 /*
 void Body_VEXplorer_i::CreateCommandQueue( void )
@@ -191,7 +191,7 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
    double newId = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
    double newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
    double newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-   
+
    //if we are doing transient vis then we already have an active model and dataset
    int activeVector = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveVector();
    int activeScalar = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetActiveScalar();
@@ -200,7 +200,7 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
    ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetRange( activeMinMax );
 
    std::map< int, DataSet >::iterator iter;
-   
+
    commandQueue.push_back( new cfdCommandArray() );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 0 );
@@ -213,152 +213,154 @@ void Body_VEXplorer_i::CreateCommandQueue( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::InitCluster( void )
 {
-   if ( !isCluster )
-   {
-      return;
-   }
+    if( !isCluster )
+    {
+        return;
+    }
 
-   // Cluster Stuff
-   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
-   this->mStates.init(new_guid);
+    // Cluster Stuff
+    vpr::GUID new_guid( "15c09c99-ed6d-4994-bbac-83587d4400d1" );
+    this->mStates.init( new_guid );
 
-   //Initialize cluster variables
-   this->mStates->clusterIso_value = 0.0f;
-   this->mStates->clusterSc = 0.0f;
-   this->mStates->clusterMin = 0.0f;
-   this->mStates->clusterMax = 0.0f;
-   this->mStates->clusterId = 0.0f;
-   this->mStates->clusterGeo_state = 0.0f;
-   this->mStates->clusterPostdata_state = 0.0f;
-   this->mStates->clusterPre_state = false;
-   this->mStates->clusterTimesteps = 0.0f;
-   this->mStates->clusterTeacher_state = 0.0f; 
-   this->mStates->clusterClientInfoFlag = 0; 
-   this->mStates->currentFrame = 0;; // the index of the current frame
-   this->mStates->clusterTime_since_start = 0;
-   this->mStates->clusterFrameNumber = 0.0f;
-   this->mStates->clusterQuatCamIncrement = 0.0f;
-   
-   for(int i=0;i<16;i++)
-   {
-      this->mStates->clusterMatrix[i] = 0.0f;
-   }
-   this->mStates->clusterMatrix[0] = 1.0f;
-   this->mStates->clusterMatrix[5] = 1.0f;
-   this->mStates->clusterMatrix[10] = 1.0f;
-   this->mStates->clusterMatrix[15] = 1.0f;
-   
-   this->mStates->clusterXMLCommands.clear();
+    //Initialize cluster variables
+    this->mStates->clusterIso_value = 0.0f;
+    this->mStates->clusterSc = 0.0f;
+    this->mStates->clusterMin = 0.0f;
+    this->mStates->clusterMax = 0.0f;
+    this->mStates->clusterId = 0.0f;
+    this->mStates->clusterGeo_state = 0.0f;
+    this->mStates->clusterPostdata_state = 0.0f;
+    this->mStates->clusterPre_state = false;
+    this->mStates->clusterTimesteps = 0.0f;
+    this->mStates->clusterTeacher_state = 0.0f;
+    this->mStates->clusterClientInfoFlag = 0;
+    this->mStates->currentFrame = 0;
+    ; // the index of the current frame
+    this->mStates->clusterTime_since_start = 0;
+    this->mStates->clusterFrameNumber = 0.0f;
+    this->mStates->clusterQuatCamIncrement = 0.0f;
+
+    for( int i = 0;i < 16;i++ )
+    {
+        this->mStates->clusterMatrix[i] = 0.0f;
+    }
+    this->mStates->clusterMatrix[0] = 1.0f;
+    this->mStates->clusterMatrix[5] = 1.0f;
+    this->mStates->clusterMatrix[10] = 1.0f;
+    this->mStates->clusterMatrix[15] = 1.0f;
+
+    this->mStates->clusterXMLCommands.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::GetUpdateClusterStateVariables( void )
 {
-   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode " 
-                           << isCluster << std::endl << vprDEBUG_FLUSH;
-   if ( !isCluster )
-   {
-      return;
-   }
-/*
-   {
-      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
-      _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
-   }
-*/
+    vprDEBUG( vprDBG_ALL, 3 ) << "|\tVjObs_i::GetUpdateClusterStateVariables Cluster Mode "
+    << isCluster << std::endl << vprDEBUG_FLUSH;
+    if( !isCluster )
+    {
+        return;
+    }
+    /*
+       {
+          vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
+          _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
+       }
+    */
 
-   vprDEBUG(vprDBG_ALL,3) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local " 
-                           << mStates.isLocal() << " " 
-                           << vpr::System::getHostname() 
-                           << std::endl << vprDEBUG_FLUSH;
-   
-   if ( mStates.isLocal() )
-   {
-      return;
-   }
+    vprDEBUG( vprDBG_ALL, 3 ) << "|\tVjObs_i::GetUpdateClusterStateVariables Node Local "
+    << mStates.isLocal() << " "
+    << vpr::System::getHostname()
+    << std::endl << vprDEBUG_FLUSH;
 
-   //Do for all the slaves
-   if ( this->mStates->clusterXMLCommands.size() > 0 )
-   {  
-      SetCommand( this->mStates->clusterXMLCommands.c_str() );  
-   }
+    if( mStates.isLocal() )
+    {
+        return;
+    }
 
-   //sync up the frames on all nodes in the
-   //cluster
-   {
-      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-      gmtl::Matrix44d matrix;
+    //Do for all the slaves
+    if( this->mStates->clusterXMLCommands.size() > 0 )
+    {
+        SetCommand( this->mStates->clusterXMLCommands.c_str() );
+    }
 
-      for(int i=0;i<16;i++){
-         matrix.mData[i]=this->mStates->clusterMatrix[i];
-      }
-      //std::cout << "slave: " << std::endl << matrix << std::endl;
-      ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
+    //sync up the frames on all nodes in the
+    //cluster
+    {
+        vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+        gmtl::Matrix44d matrix;
 
-      time_since_start = this->mStates->clusterTime_since_start;
+        for( int i = 0;i < 16;i++ )
+        {
+            matrix.mData[i] = this->mStates->clusterMatrix[i];
+        }
+        //std::cout << "slave: " << std::endl << matrix << std::endl;
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
+
+        time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
-      if ( TextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
-      {
-         TextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
-      }
+        if( TextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
+        {
+            TextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber );
+        }
 #endif
-   }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 float Body_VEXplorer_i::GetSetAppTime( float x )
 {
-   if ( x == -1 )
-   {
-      return time_since_start;
-   }
-   else
-   {
-      time_since_start = x;
-      return -1;
-   }
+    if( x == -1 )
+    {
+        return time_since_start;
+    }
+    else
+    {
+        time_since_start = x;
+        return -1;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 long Body_VEXplorer_i::GetSetFrameNumber( long x )
 {
-   if ( x == -1 )
-   {
-      return frameNumber;
-   }
-   else
-   {
-      frameNumber = x;
-      return -1;
-   }
+    if( x == -1 )
+    {
+        return frameNumber;
+    }
+    else
+    {
+        frameNumber = x;
+        return -1;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetClusterMode( bool clusterFlag )
 {
-   isCluster = clusterFlag;
+    isCluster = clusterFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Body_VEXplorer_i::GetClusterMode( void )
 {
-   return isCluster;
+    return isCluster;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_VEXplorer_i::SetXplorerData( std::string input )
 {
     ///AMI call
     Body::AMI_UIHandler_var xplorerComAMIHandler = m_xplorerAMIHandler._this();
-    std::map<std::string,Body::UI_var>::iterator currentConductor;
-    for(currentConductor = uiCom.begin();
-        currentConductor != uiCom.end();
-        ++currentConductor)
+    std::map<std::string, Body::UI_var>::iterator currentConductor;
+    for( currentConductor = uiCom.begin();
+            currentConductor != uiCom.end();
+            ++currentConductor )
     {
-        
-       currentConductor->second->sendc_SetXplorerData(xplorerComAMIHandler.in(), input.c_str());
+
+        currentConductor->second->sendc_SetXplorerData( xplorerComAMIHandler.in(), input.c_str() );
     }
 }

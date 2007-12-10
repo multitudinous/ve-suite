@@ -35,61 +35,61 @@
 
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
-OPort::OPort (int id, Module* m)
-  : Port (id, m)
+OPort::OPort( int id, Module* m )
+        : Port( id, m )
 {
-  _profile = NULL;
-   data = 0;
+    _profile = NULL;
+    data = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-OPort::OPort (const OPort& p)
-  : Port(p)
+OPort::OPort( const OPort& p )
+        : Port( p )
 {
-  copy(p);
+    copy( p );
 }
 ////////////////////////////////////////////////////////////////////////////////
-OPort::~OPort ()
+OPort::~OPort()
 {
-   if ( data )
-      delete data;
+    if( data )
+        delete data;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void OPort::copy (const OPort& p)
+void OPort::copy( const OPort& p )
 {
-  if(this==&p) return;
-  
-  //_data    = p._data;
-  if(_profile) delete _profile;
-  _profile = new Types::Profile(*(p._profile));
+    if( this == &p ) return;
 
-   if ( data )
-      delete data;
-   
-   *data = *(p.data);
+    //_data    = p._data;
+    if( _profile ) delete _profile;
+    _profile = new Types::Profile( *( p._profile ) );
+
+    if( data )
+        delete data;
+
+    *data = *( p.data );
 }
 ////////////////////////////////////////////////////////////////////////////////
 int OPort::have_data( void )
 {
-/*  return((_data.getInts()).size()      !=0 ||
-	 (_data.getDoubles()).size()   !=0 ||
-	 (_data.getStrings()).size()   !=0 ||
-	 (_data.getInts1D()).size()    !=0 ||
-	 (_data.getDoubles1D()).size() !=0 ||
-	 (_data.getStrings1D()).size() !=0 );*/
-   return ( data != NULL );
+    /*  return((_data.getInts()).size()      !=0 ||
+      (_data.getDoubles()).size()   !=0 ||
+      (_data.getStrings()).size()   !=0 ||
+      (_data.getInts1D()).size()    !=0 ||
+      (_data.getDoubles1D()).size() !=0 ||
+      (_data.getStrings1D()).size() !=0 );*/
+    return ( data != NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 int OPort::have_profile( void )
 {
-  return ( _profile != NULL );
+    return ( _profile != NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::Command* OPort::GetPortData( void )
 {
-   return data;
+    return data;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OPort::SetPortData( ves::open::xml::Command* inputData )
 {
-   data = inputData;
+    data = inputData;
 }

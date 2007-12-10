@@ -36,7 +36,7 @@
 UIDialog API
 */
 /*!\class UIDialog
-* 
+*
 */
 #include <wx/dialog.h>
 #include <wx/string.h>
@@ -52,13 +52,19 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
 public:
-   UIDialog() {;}
-   UIDialog(wxWindow* parent, int id, wxString title=wxT("UI"));
-   virtual ~UIDialog() { ; }
-   virtual void Lock(bool l); 
-   //This function locks/unlocks every input entry
+    UIDialog()
+    {
+        ;
+    }
+    UIDialog( wxWindow* parent, int id, wxString title = wxT( "UI" ) );
+    virtual ~UIDialog()
+    {
+        ;
+    }
+    virtual void Lock( bool l );
+    //This function locks/unlocks every input entry
 protected:
-   bool lock;
+    bool lock ;
 };
 }
 }

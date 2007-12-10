@@ -45,10 +45,10 @@
 #include <fluentParticle.h>
 
 #include <vtkPolyDataWriter.h>
-#include <vtkPolyData.h>      
-#include <vtkDataSet.h>     
-#include <vtkPointData.h>     
-#include <vtkPoints.h>       
+#include <vtkPolyData.h>
+#include <vtkDataSet.h>
+#include <vtkPointData.h>
+#include <vtkPoints.h>
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
 #include <vtkDataSetAttributes.h>
@@ -70,32 +70,32 @@
 
 //! VTK streamers plane renderer.
 /*!
-  A class to takes input data set(s) and generates streamlines 
+  A class to takes input data set(s) and generates streamlines
   based on the glyph given. Update member function will be update
   the position and direction as each "Update" being called.
 */
 class fluentParticles
 {
-   public:
-      fluentParticles( void );
-      ~fluentParticles( void );
-      
-      void translateFluentPartToVTK( void );
-      void allocatePolydata( void );
-      void addToPolydata( int );   
-      void writePolydata( int );
-      void deallocatePolydata( void );
-      
-  
-      std::multimap<int, fluentParticle> mfluentParticles;
-      
-      vtkPolyDataWriter          *writer;      
-      vtkPolyData                *polydata;          
-      vtkPoints                  *points;              
-      vtkFloatArray              **parameterData;          
-      vtkTransform               *transform;        
-      vtkTransformPolyDataFilter *transFilter;
-      int particleID[500];
- 
+public:
+    fluentParticles( void );
+    ~fluentParticles( void );
+
+    void translateFluentPartToVTK( void );
+    void allocatePolydata( void );
+    void addToPolydata( int );
+    void writePolydata( int );
+    void deallocatePolydata( void );
+
+
+    std::multimap<int, fluentParticle> mfluentParticles;
+
+    vtkPolyDataWriter          *writer;
+    vtkPolyData                *polydata;
+    vtkPoints                  *points;
+    vtkFloatArray              **parameterData;
+    vtkTransform               *transform;
+    vtkTransformPolyDataFilter *transFilter;
+    int particleID[500];
+
 };
 #endif

@@ -56,58 +56,58 @@ namespace event
 class VE_XPLORER_EXPORTS CADEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   CADEventHandler();
+    ///Constructor
+    CADEventHandler();
 
-   ///Copy Constructor
-   CADEventHandler(const CADEventHandler& ceh);
+    ///Copy Constructor
+    CADEventHandler( const CADEventHandler& ceh );
 
-   ///Destructor
-   virtual ~CADEventHandler();
+    ///Destructor
+    virtual ~CADEventHandler();
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Set the node descriptors from the xml to the SceneNode
-   ///\param nodeID The CADNode to update
-   ///\param nodeType The type of CADNode
-   ///\param descriptorName The name of the descriptor
-   ///\param descriptorValue The value of the descriptor
-   void SetNodeDescriptors(std::string nodeID,
-                           std::string nodeType,
-                           std::string descriptorName,
-                           std::string descriptorValue);
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Set the node descriptors from the xml to the SceneNode
+    ///\param nodeID The CADNode to update
+    ///\param nodeType The type of CADNode
+    ///\param descriptorName The name of the descriptor
+    ///\param descriptorValue The value of the descriptor
+    void SetNodeDescriptors( std::string nodeID,
+                             std::string nodeType,
+                             std::string descriptorName,
+                             std::string descriptorValue );
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   ///Equal operator
-   CADEventHandler& operator=(const CADEventHandler& rhs);
+    ///Equal operator
+    CADEventHandler& operator=( const CADEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject) = 0;
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject ) = 0;
 
-   ///Internal method to add nodes.
-   ///\param parentID The ID of the node to add the new node to.
-   ///\param node The new CADNode to add to the model
-   void _addNodeToNode(std::string parentID, ves::open::xml::cad::CADNode* node);
+    ///Internal method to add nodes.
+    ///\param parentID The ID of the node to add the new node to.
+    ///\param node The new CADNode to add to the model
+    void _addNodeToNode( std::string parentID, ves::open::xml::cad::CADNode* node );
 
-   ///Internal method to extract attribtutes from CADNodes.
-   ///\param node CADNode to extra attributes from.
-   void _setAttributesOnNode(ves::open::xml::cad::CADNode* node);
+    ///Internal method to extract attribtutes from CADNodes.
+    ///\param node CADNode to extra attributes from.
+    void _setAttributesOnNode( ves::open::xml::cad::CADNode* node );
 
-   ///Internal method to extract transform from CADNodes.
-   ///\param node CADNode to extract transform from.
-   void _setTransformOnNode(ves::open::xml::cad::CADNode* node);
+    ///Internal method to extract transform from CADNodes.
+    ///\param node CADNode to extract transform from.
+    void _setTransformOnNode( ves::open::xml::cad::CADNode* node );
 
-   ves::xplorer::Model* m_activeModel;///<The active cfdModel;
-   ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
-   ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
+    ves::xplorer::Model* m_activeModel;///<The active cfdModel;
+    ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
+    ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
 };
 
 }

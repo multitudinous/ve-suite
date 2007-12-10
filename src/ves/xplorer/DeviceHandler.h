@@ -52,9 +52,9 @@ namespace ves
 {
 namespace xplorer
 {
-    class Device;
-    class Wand;
-    class KeyboardMouse;
+class Device;
+class Wand;
+class KeyboardMouse;
 }
 }
 
@@ -64,7 +64,7 @@ namespace xplorer
 {
 namespace event
 {
-    class EventHandler;
+class EventHandler;
 }
 }
 }
@@ -78,7 +78,7 @@ namespace xplorer
 DeviceHandler API
 */
 /*!\class ves::xplorer::DeviceHandler
-* 
+*
 */
 class VE_XPLORER_EXPORTS DeviceHandler
 {
@@ -90,7 +90,7 @@ private:
     ~DeviceHandler();
 
     ///Do not know what this is
-    ///\param DeviceHandler 
+    ///\param DeviceHandler
     vprSingletonHeader( DeviceHandler );
 public:
     ///Delete existing devices
@@ -121,7 +121,7 @@ public:
     ///\param device The device
     ///\return Get the device being requested
     ves::xplorer::Device* GetDevice( std::string device );
-    
+
     ///Get active device
     ///\return Get the active device
     ves::xplorer::Device* GetActiveDevice();

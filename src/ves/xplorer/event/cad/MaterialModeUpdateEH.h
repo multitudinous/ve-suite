@@ -51,22 +51,22 @@ namespace event
 class VE_XPLORER_EXPORTS MaterialModeUpdateEventHandler : public AttributeEventHandler
 {
 public:
-   ///Constructor
-   MaterialModeUpdateEventHandler();
+    ///Constructor
+    MaterialModeUpdateEventHandler();
 
-   ///Copy Constructor
-   MaterialModeUpdateEventHandler(const MaterialModeUpdateEventHandler& ceh);
+    ///Copy Constructor
+    MaterialModeUpdateEventHandler( const MaterialModeUpdateEventHandler& ceh );
 
-   ///Destructor
-   virtual ~MaterialModeUpdateEventHandler();
+    ///Destructor
+    virtual ~MaterialModeUpdateEventHandler();
 
-   ///Equal operator
-   MaterialModeUpdateEventHandler& operator=(const MaterialModeUpdateEventHandler& rhs);
+    ///Equal operator
+    MaterialModeUpdateEventHandler& operator=( const MaterialModeUpdateEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

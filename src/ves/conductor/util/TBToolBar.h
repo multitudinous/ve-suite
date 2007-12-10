@@ -37,7 +37,7 @@
 TextureBasedToolBar API
 */
 /*!\class TextureBasedToolBar
-* 
+*
 */
 namespace ves
 {
@@ -45,7 +45,7 @@ namespace open
 {
 namespace xml
 {
-	class DataValuePair;
+class DataValuePair;
 }
 }
 }
@@ -77,82 +77,82 @@ class ROIDialog;
 class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public BaseDialog
 {
 public:
-   ///Constructor
-   TextureBasedToolBar(wxWindow* parent, int id/*,
-                     wxArrayString scalarNames,
-                     wxArrayString vectorNames*/);
+    ///Constructor
+    TextureBasedToolBar( wxWindow* parent, int id/*,
+                                                                       wxArrayString scalarNames,
+                                                                       wxArrayString vectorNames*/ );
 
-   ///Destructor
-   virtual ~TextureBasedToolBar();
+    ///Destructor
+    virtual ~TextureBasedToolBar();
 
-   enum TBTOOLBAR_IDS
-   {
-      ACTIVE_SOLUTION ,///<Active scalar/vector ID
-      SCALAR_ID,///<Scalar ID
-      VECTOR_ID,///<Vector ID
-      ROI_ID,///<Region of interest ID
-      TRANSFER_FUNCS_ID,///<Transfer function ID
-      TB_TOOLBAR,///<Toolbar ID
-      BBOX_CHECK_BOX,///<Bounding box check
-      TRANSIENT_BUTTON///<Transient controls
-   };
+    enum TBTOOLBAR_IDS
+    {
+        ACTIVE_SOLUTION ,///<Active scalar/vector ID
+        SCALAR_ID,///<Scalar ID
+        VECTOR_ID,///<Vector ID
+        ROI_ID,///<Region of interest ID
+        TRANSFER_FUNCS_ID,///<Transfer function ID
+        TB_TOOLBAR,///<Toolbar ID
+        BBOX_CHECK_BOX,///<Bounding box check
+        TRANSIENT_BUTTON///<Transient controls
+    };
 
-   ///Set the scalars
-   void SetScalars(wxArrayString scalarNames);
-   
-   ///Set the vectors
-   void SetVectors(wxArrayString vectorNames);
+    ///Set the scalars
+    void SetScalars( wxArrayString scalarNames );
 
-   ///Set the size for the subdialogs
-   ///\param subSize wxRect size for sub dialogs.\n
-   ///Should be the same as vistab
-   void SetSubDialogSize(wxRect subSize);
+    ///Set the vectors
+    void SetVectors( wxArrayString vectorNames );
 
-   ///Activate the texture based visualization
-   bool ActivateTextureVisualization();
-   
+    ///Set the size for the subdialogs
+    ///\param subSize wxRect size for sub dialogs.\n
+    ///Should be the same as vistab
+    void SetSubDialogSize( wxRect subSize );
+
+    ///Activate the texture based visualization
+    bool ActivateTextureVisualization();
+
 protected:
-   wxToolBar* _tbToolButtons;///<The toolbar buttons;
-   wxComboBox* _solutionSelection;///<The list of active solutions.
-   //wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
-   UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
-   ves::conductor::util::ROIDialog* _roiDlg;///<The ROI dialog;
-   ScalarToolsDialog* _scalarToolsDlg;///<The scalar tools dialog;
-   TransferFunctionDialog* _transferFunctionDlg;///<The scalar tools dialog;
-  
-  
-   wxArrayString _availableScalars;///<Scalar names
-   wxArrayString _availableVectors;///<Vector names
+    wxToolBar* _tbToolButtons;///<The toolbar buttons;
+    wxComboBox* _solutionSelection;///<The list of active solutions.
+    //wxCheckBox* _bboxCheckBox;///<The check box to activate the Bounding Box
+    UI_TransientDialog* _transientControls;///<The "radio-like" controls for transient visualiation.
+    ves::conductor::util::ROIDialog* _roiDlg;///<The ROI dialog;
+    ScalarToolsDialog* _scalarToolsDlg;///<The scalar tools dialog;
+    TransferFunctionDialog* _transferFunctionDlg;///<The scalar tools dialog;
 
-   wxRect _subDialogSize;//<The size for the subdialogs.
-   ///Build the toolbar.  
-   void _buildGUI();
 
-   ///update the displayed available solutions
-   ///\param activeSolutions The active solutions names
-   void _updateSolutionList(wxArrayString activeSolutions);
+    wxArrayString _availableScalars;///<Scalar names
+    wxArrayString _availableVectors;///<Vector names
 
-   ///update the list of scalars and vectors
-   ///\param scalarNames Scalar names
-   ///\param vectorNames Vector names
-   void _updateAvailableSolutions(wxArrayString scalarNames,
-                               wxArrayString vectorNames);
-   
-   ///Handle tool button presses
-   ///\param event wxCommand event
-   void _handleToolButtons(wxCommandEvent& event);
-   
-   ///Handle bounding box check box event
-   ///\param event wxCommand event
-   //void _onBBoxCheck(wxCommandEvent& event);
-   
-   ///Launch transient controls
-   ///\param event wxCommand event
-   void _onTransient(wxCommandEvent& event);
-   
-   
-   
-   DECLARE_EVENT_TABLE()
+    wxRect _subDialogSize;//<The size for the subdialogs.
+    ///Build the toolbar.
+    void _buildGUI();
+
+    ///update the displayed available solutions
+    ///\param activeSolutions The active solutions names
+    void _updateSolutionList( wxArrayString activeSolutions );
+
+    ///update the list of scalars and vectors
+    ///\param scalarNames Scalar names
+    ///\param vectorNames Vector names
+    void _updateAvailableSolutions( wxArrayString scalarNames,
+                                    wxArrayString vectorNames );
+
+    ///Handle tool button presses
+    ///\param event wxCommand event
+    void _handleToolButtons( wxCommandEvent& event );
+
+    ///Handle bounding box check box event
+    ///\param event wxCommand event
+    //void _onBBoxCheck(wxCommandEvent& event);
+
+    ///Launch transient controls
+    ///\param event wxCommand event
+    void _onTransient( wxCommandEvent& event );
+
+
+
+    DECLARE_EVENT_TABLE()
 };
 }
 }

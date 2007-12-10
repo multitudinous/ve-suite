@@ -50,87 +50,86 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler::SeedPointActivateEventHandler()
 {
-	_activeModel = 0;
+    _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler
-::SeedPointActivateEventHandler(const SeedPointActivateEventHandler& ceh)
+::SeedPointActivateEventHandler( const SeedPointActivateEventHandler& ceh )
 {
-	_activeModel = ceh._activeModel;
+    _activeModel = ceh._activeModel;
 }
 /////////////////////////////////////////////////////////////////////
 SeedPointActivateEventHandler::~SeedPointActivateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-SeedPointActivateEventHandler& 
-SeedPointActivateEventHandler::operator=(const SeedPointActivateEventHandler& rhs)
+SeedPointActivateEventHandler&
+SeedPointActivateEventHandler::operator=( const SeedPointActivateEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-	  _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        _activeModel = rhs._activeModel;
+    }
+    return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void SeedPointActivateEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void SeedPointActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
-   ///is this overkill????
-   try
-   {
-      if(baseObject)
-      {
-         _activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to TextureBasedEventHandler!"<<std::endl;
-   }
+    ///is this overkill????
+    try
+    {
+        if( baseObject )
+        {
+            _activeModel = dynamic_cast<ves::xplorer::Model*>( baseObject );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to TextureBasedEventHandler!" << std::endl;
+    }
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void SeedPointActivateEventHandler::Execute(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void SeedPointActivateEventHandler::Execute( XMLObject* veXMLObject )
 {
-   try
-   {
-      if(_activeModel)
-      {
-         //make the CAD transparent
-         _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
-         ///what happens if texture is somehow added first? Is that possible?
-         Command* command = dynamic_cast< Command* >( veXMLObject );
-         DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
-		   DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
-		   std::string datasetname;
-		   activeDataset->GetData(datasetname);
-		   //check to see if the seed points exist
-		   if(!ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SearchChild(ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()))
-		   {
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->addChild(ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS());   
-		   }
-		 
+    try
+    {
+        if( _activeModel )
+        {
+            //make the CAD transparent
+            _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
+            ///what happens if texture is somehow added first? Is that possible?
+            Command* command = dynamic_cast< Command* >( veXMLObject );
+            DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
+            DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
+            std::string datasetname;
+            activeDataset->GetData( datasetname );
+            //check to see if the seed points exist
+            if( !ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SearchChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
+            {
+                ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
+            }
+
             //this seems to be a bad sequence of calls but we need to set the
             //active dataset otherwise this set of calls goes in every seed pointEH
             //as well as all the commands have to lug this extra info.
-            _activeModel->SetActiveDataSet(_activeModel->GetCfdDataSet(_activeModel->GetIndexOfDataSet(datasetname)));
+            _activeModel->SetActiveDataSet( _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( datasetname ) ) );
             ves::xplorer::scenegraph::DCS* tempDCS = _activeModel->GetActiveDataSet()->GetDCS();
             ves::xplorer::scenegraph::DCS* seedPointDCS = ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS();
 
             seedPointDCS->SetTranslationArray( tempDCS->GetVETranslationArray() );
             seedPointDCS->SetRotationArray( tempDCS->GetRotationArray() );
             seedPointDCS->SetScaleArray( tempDCS->GetScaleArray() );
-            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle((seedPointsFlag->GetUIntData()==1)?true:false);
-        } 
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid Model!!"<<std::endl;
-      std::cout<<"SeedPointActivateEventHandler::_operateOnNode()"<<std::endl;
-   }
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->Toggle(( seedPointsFlag->GetUIntData() == 1 ) ? true : false );
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid Model!!" << std::endl;
+        std::cout << "SeedPointActivateEventHandler::_operateOnNode()" << std::endl;
+    }
 
 }

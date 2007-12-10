@@ -47,59 +47,56 @@ using namespace ves::open::xml::cad;
 //Constructor                                         //
 ////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler()
-:ves::xplorer::event::AttributeEventHandler()
-{
-}
+        : ves::xplorer::event::AttributeEventHandler()
+{}
 /////////////////////////////////////////////////////////////////////////////////////////////
 //Copy Constructor                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
-MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler(const MaterialModeUpdateEventHandler& ceh)
-:ves::xplorer::event::AttributeEventHandler(ceh)
-{
-}
+MaterialModeUpdateEventHandler::MaterialModeUpdateEventHandler( const MaterialModeUpdateEventHandler& ceh )
+        : ves::xplorer::event::AttributeEventHandler( ceh )
+{}
 /////////////////////////////////////////////////////////
 MaterialModeUpdateEventHandler::~MaterialModeUpdateEventHandler()
-{
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-MaterialModeUpdateEventHandler& MaterialModeUpdateEventHandler::operator=(const MaterialModeUpdateEventHandler& rhs)
+MaterialModeUpdateEventHandler& MaterialModeUpdateEventHandler::operator=( const MaterialModeUpdateEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::AttributeEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::AttributeEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-///////////////////////////////////////////////////////////////////////////////   
-void MaterialModeUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject) 
+///////////////////////////////////////////////////////////////////////////////
+void MaterialModeUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* componentUpdate = dynamic_cast<Command*>(veXMLObject);
-      DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair("Node ID");
-      DataValuePairWeakPtr material = componentUpdate->GetDataValuePair("Material");
-      DataValuePairWeakPtr updateMode = componentUpdate->GetDataValuePair("Mode");
-      
-      CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>(material->GetDataXMLObject());
-      std::string newMode = updateMode->GetDataString();
-      std::string value = "";
-    
-      if(newMode == "Face")
-      {
-         value = rawMaterial->GetFace();
-      }
-      else if(newMode == "Color")
-      {
-         value = rawMaterial->GetColorMode();
-      }
-      _activeModel->GetModelCADHandler()->UpdateMaterialMode(nodeId->GetDataString(),
-                                       rawMaterial->GetMaterialName(),
-                                       newMode,value);
-      
-   }
-   catch(...)
-   {
-      std::cout<<"Unable to update material!!"<<std::endl;
-      std::cout<<"===MaterialUpdateEventHandler==="<<std::endl;
-   }
+    try
+    {
+        Command* componentUpdate = dynamic_cast<Command*>( veXMLObject );
+        DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
+        DataValuePairWeakPtr material = componentUpdate->GetDataValuePair( "Material" );
+        DataValuePairWeakPtr updateMode = componentUpdate->GetDataValuePair( "Mode" );
+
+        CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>( material->GetDataXMLObject() );
+        std::string newMode = updateMode->GetDataString();
+        std::string value = "";
+
+        if( newMode == "Face" )
+        {
+            value = rawMaterial->GetFace();
+        }
+        else if( newMode == "Color" )
+        {
+            value = rawMaterial->GetColorMode();
+        }
+        _activeModel->GetModelCADHandler()->UpdateMaterialMode( nodeId->GetDataString(),
+                                                                rawMaterial->GetMaterialName(),
+                                                                newMode, value );
+
+    }
+    catch ( ... )
+    {
+        std::cout << "Unable to update material!!" << std::endl;
+        std::cout << "===MaterialUpdateEventHandler===" << std::endl;
+    }
 }

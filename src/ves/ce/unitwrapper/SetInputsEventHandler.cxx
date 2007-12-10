@@ -41,64 +41,64 @@ using namespace VE_CE;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 SetInputsEventHandler::SetInputsEventHandler()
-:VE_CE::EventHandler()
+        : VE_CE::EventHandler()
 {
-   baseModel = 0;
+    baseModel = 0;
 }
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 SetInputsEventHandler::~SetInputsEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model)
+void SetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model )
 {
-   try
-   {
-      if ( model )
-      {
-         baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
-      }
-   }
-   catch(...)
-   {
-      baseModel = 0;
-      std::cout<<"Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
+        }
+    }
+    catch ( ... )
+    {
+        baseModel = 0;
+        std::cout << "Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string SetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess )
 {
-   if ( !baseModel )
-   {
-      std::cerr << "Must call SetInputsEventHandler::SetBaseObject first" << std::endl;
-      return std::string();
-   }
+    if( !baseModel )
+    {
+        std::cerr << "Must call SetInputsEventHandler::SetBaseObject first" << std::endl;
+        return std::string();
+    }
 
-   try
-   {
-      
-      size_t numInputs = objectToProcess.size();
-      for ( size_t i = 0; i < numInputs; ++i )
-      {
-         ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( objectToProcess.at( i ) );
-         std::string dataName = command->GetCommandName();
-         ves::open::xml::Command* tempInput = baseModel->GetInput( dataName );
-         if ( tempInput )
-         {
-            (*tempInput) = (*command);
-         }
-         else
-         {
-            *(baseModel->GetInput()) = (*command);
-         }
-      }
-   }
-   catch (...)
-   {
-      std::cerr << " ERROR : SetInputsEventHandler::Execute " << std::endl;
-   }
-   return std::string();
+    try
+    {
+
+        size_t numInputs = objectToProcess.size();
+        for( size_t i = 0; i < numInputs; ++i )
+        {
+            ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( objectToProcess.at( i ) );
+            std::string dataName = command->GetCommandName();
+            ves::open::xml::Command* tempInput = baseModel->GetInput( dataName );
+            if( tempInput )
+            {
+                ( *tempInput ) = ( *command );
+            }
+            else
+            {
+                *( baseModel->GetInput() ) = ( *command );
+            }
+        }
+    }
+    catch ( ... )
+    {
+        std::cerr << " ERROR : SetInputsEventHandler::Execute " << std::endl;
+    }
+    return std::string();
 }

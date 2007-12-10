@@ -53,21 +53,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedUpdateScalarRangeEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedUpdateScalarRangeEventHandler();
+    ///Constructor
+    TextureBasedUpdateScalarRangeEventHandler();
 
-   ///Copy Constructor
-   TextureBasedUpdateScalarRangeEventHandler(const TextureBasedUpdateScalarRangeEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedUpdateScalarRangeEventHandler();
+    ///Copy Constructor
+    TextureBasedUpdateScalarRangeEventHandler( const TextureBasedUpdateScalarRangeEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedUpdateScalarRangeEventHandler();
 
-   ///Equal operator
-   TextureBasedUpdateScalarRangeEventHandler& operator=(const TextureBasedUpdateScalarRangeEventHandler& rhs);
+    ///Equal operator
+    TextureBasedUpdateScalarRangeEventHandler& operator=( const TextureBasedUpdateScalarRangeEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

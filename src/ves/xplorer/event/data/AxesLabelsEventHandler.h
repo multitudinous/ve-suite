@@ -49,35 +49,35 @@ namespace event
   AxesLabelsEventHandler API
   */
 /*!\class AxesLabelsEventHandler
- * 
+ *
  */
 class VE_XPLORER_EXPORTS AxesLabelsEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   AxesLabelsEventHandler();
+    ///Constructor
+    AxesLabelsEventHandler();
 
-   ///Copy Constructor
-   AxesLabelsEventHandler(const AxesLabelsEventHandler& rhs);
+    ///Copy Constructor
+    AxesLabelsEventHandler( const AxesLabelsEventHandler& rhs );
 
-   ///Destructor
-   virtual ~AxesLabelsEventHandler();
+    ///Destructor
+    virtual ~AxesLabelsEventHandler();
 
-   ///Equal operator
-   AxesLabelsEventHandler& operator=(const AxesLabelsEventHandler& rhs);
+    ///Equal operator
+    AxesLabelsEventHandler& operator=( const AxesLabelsEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
-   ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

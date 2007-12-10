@@ -42,7 +42,7 @@ namespace open
 {
 namespace xml
 {
-   class Command;
+class Command;
 }
 }
 }
@@ -52,27 +52,27 @@ namespace VE_CE
 namespace Utilities
 {
 ///Output port class
-class VE_CE_UTILS_EXPORTS OPort : public Port 
+class VE_CE_UTILS_EXPORTS OPort : public Port
 {
 public:
-   OPort( int, Module* );
-   OPort( const OPort& );
-   virtual ~OPort();
-  
-   void copy (const OPort&);
+    OPort( int, Module* );
+    OPort( const OPort& );
+    virtual ~OPort();
 
-   int have_data();
-   int have_profile();
+    void copy( const OPort& );
 
-   ///Get ouput port data
-   ves::open::xml::Command* GetPortData( void );
-   ///Set port data for respective port
-   void SetPortData( ves::open::xml::Command* inputData );
+    int have_data();
+    int have_profile();
 
-   //Interface      _data;
-   Types::Profile *_profile;
+    ///Get ouput port data
+    ves::open::xml::Command* GetPortData( void );
+    ///Set port data for respective port
+    void SetPortData( ves::open::xml::Command* inputData );
+
+    //Interface      _data;
+    Types::Profile *_profile;
 protected:
-   ves::open::xml::Command* data;
+    ves::open::xml::Command* data;
 };
 }
 }

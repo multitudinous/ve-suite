@@ -42,23 +42,26 @@ namespace Utilities
 {
 class Network;
 
-class VE_CE_UTILS_EXPORTS node_module : public node_base 
+class VE_CE_UTILS_EXPORTS node_module : public node_base
 {
 public:
-   node_module  (Network *, int);
-   node_module  (const node_module&);
-   ~node_module ();
+    node_module( Network *, int );
+    node_module( const node_module& );
+    ~node_module();
 
-   virtual int  mod_count () { return 1; };
-   virtual void get_mods (std::set<int> &);
-   virtual void get_ins (std::set<int> &, std::set<int> connid_ignore);
-   virtual void get_outs (std::set<int> &, std::set<int> connid_ignore);
-   virtual void print_mods ();
-   virtual int  execute_mods (int, bool);
-   virtual void need_execute ();
-   virtual void clear_out_to (std::set<int>);
+    virtual int  mod_count()
+    {
+        return 1;
+    };
+    virtual void get_mods( std::set<int> & );
+    virtual void get_ins( std::set<int> &, std::set<int> connid_ignore );
+    virtual void get_outs( std::set<int> &, std::set<int> connid_ignore );
+    virtual void print_mods();
+    virtual int  execute_mods( int, bool );
+    virtual void need_execute();
+    virtual void clear_out_to( std::set<int> );
 
-   int _module;
+    int _module;
 };
 }
 }

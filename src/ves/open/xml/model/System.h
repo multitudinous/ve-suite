@@ -91,8 +91,8 @@ public:
     void AddNetwork( NetworkWeakPtr inputNetwork );
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
-    virtual void SetObjectFromXMLData( 
-        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    virtual void SetObjectFromXMLData(
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
     void SetParentModel( ModelSharedPtr parent );
     ModelSharedPtr GetParentModel( );
 
@@ -111,10 +111,10 @@ private:
 }
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(
-                                                                           const std::string subElementTagName, ves::open::xml::model::System* val)
+    const std::string subElementTagName, ves::open::xml::model::System* val )
 {
     val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = 
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement =
         val->GetXMLData( subElementTagName );
     _veElement->appendChild( childElement );
     return childElement;

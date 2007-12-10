@@ -51,7 +51,7 @@ namespace open
 {
 namespace xml
 {
-   class Command;
+class Command;
 }
 }
 }
@@ -76,41 +76,41 @@ namespace conductor
 {
 namespace util
 {
-	class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public ves::conductor::util::BaseDialog
-{    
+class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedIsosurfaceDlg: public ves::conductor::util::BaseDialog
+{
 public:
     /// Constructors
-    TextureBasedIsosurfaceDlg(  wxWindow* parent, 
-                  wxWindowID id =-1, 
-                  std::string title = "wxDialog" );
+    TextureBasedIsosurfaceDlg( wxWindow* parent,
+                               wxWindowID id = -1,
+                               std::string title = "wxDialog" );
 
-   enum TBISOSURFACE_IDS
-   {
-      TBISOSURFACE_RBUTTON,
-      TBPRECOMPUTED_ISO_CHK,
-      TBISOSURFACE_PLANE_SLIDER,
-      TBADD_ISOSURFACE_BUTTON,
-      TBADVANCED_ISOSURFACE_BUTTON
-   };
+    enum TBISOSURFACE_IDS
+    {
+        TBISOSURFACE_RBUTTON,
+        TBPRECOMPUTED_ISO_CHK,
+        TBISOSURFACE_PLANE_SLIDER,
+        TBADD_ISOSURFACE_BUTTON,
+        TBADVANCED_ISOSURFACE_BUTTON
+    };
     ///The name of the available scalars.
     ///\param scalarNames all the scalars in this dataset
-    void SetAvailableScalars(wxArrayString scalarNames);
-    void SetActiveScalar(std::string activeScalar);
-       
-protected:
-   wxArrayString _scalarNames;///<The available scalars.
-   wxComboBox* _availableScalars;///The widget for the available scalars;
-   wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
-   wxButton* _advancedButton;
-   std::string _colorByScalarName;
-   std::string _activeScalar;
-   
-   void _onUpdateIsoSurface( wxCommandEvent& event );
-   void _buildGUI( void );
-   ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
-   void _onAdvanced(wxCommandEvent& event);
+    void SetAvailableScalars( wxArrayString scalarNames );
+    void SetActiveScalar( std::string activeScalar );
 
-   DECLARE_EVENT_TABLE()
+protected:
+    wxArrayString _scalarNames;///<The available scalars.
+    wxComboBox* _availableScalars;///The widget for the available scalars;
+    wxSlider* _isoSurfaceSlider;///<Set the value of the iso-surface
+    wxButton* _advancedButton;
+    std::string _colorByScalarName;
+    std::string _activeScalar;
+
+    void _onUpdateIsoSurface( wxCommandEvent& event );
+    void _buildGUI( void );
+    ///wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON1
+    void _onAdvanced( wxCommandEvent& event );
+
+    DECLARE_EVENT_TABLE()
 
 };
 }

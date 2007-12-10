@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef WX_PRECOMP
-    #include <wx/valtext.h>     // for wxTextValidator
-    #include <wx/textctrl.h>
+#include <wx/valtext.h>     // for wxTextValidator
+#include <wx/textctrl.h>
 #endif // WX_PRECOMP
 
 #include <ves/conductor/util/spinctld.h>
@@ -40,17 +40,17 @@ using namespace ves::conductor::util;
 #include <math.h>
 
 #if wxMINOR_VERSION > 4
-    #include <wx/math.h>
+#include <wx/math.h>
 #else
 #if defined(__VISUALC__) || defined(__BORLANDC__) || defined(__WATCOMC__)
-    #include <float.h>
-    #define wxFinite(x) _finite(x)
+#include <float.h>
+#define wxFinite(x) _finite(x)
 #elif defined(__GNUG__)||defined(__GNUWIN32__)||defined(__DJGPP__)|| \
       defined(__SGI_CC__)||defined(__SUNCC__)||defined(__XLC__)|| \
           defined(__HPUX__)||defined(__MWERKS__)
-    #define wxFinite(x) finite(x)
+#define wxFinite(x) finite(x)
 #else
-    #define wxFinite(x) ((x) == (x))
+#define wxFinite(x) ((x) == (x))
 #endif
 #endif
 
@@ -76,12 +76,12 @@ public:
                            const wxString &value = wxEmptyString,
                            const wxPoint &pos = wxDefaultPosition,
                            const wxSize &size = wxDefaultSize,
-                           const wxString &name = wxTextCtrlNameStr);
+                           const wxString &name = wxTextCtrlNameStr );
 
     // MSW sends extra kill focus event
     virtual ~wxSpinCtrlDblTextCtrl()
     {
-        if (m_parent) m_parent->m_textCtrl = NULL;
+        if( m_parent ) m_parent->m_textCtrl = NULL;
         m_parent = NULL;
     }
 
@@ -97,9 +97,9 @@ private:
 }
 }
 
-BEGIN_EVENT_TABLE(wxSpinCtrlDblTextCtrl,wxTextCtrl)
-//  EVT_TEXT_ENTER( wxID_ANY, wxSpinCtrlDblTextCtrl::OnTextEnter ) // get them from spinctrldbl
-//  EVT_TEXT( wxID_ANY, wxSpinCtrlDblTextCtrl::OnTextUpdate )      // get them from spinctrldbl
+BEGIN_EVENT_TABLE( wxSpinCtrlDblTextCtrl, wxTextCtrl )
+    //  EVT_TEXT_ENTER( wxID_ANY, wxSpinCtrlDblTextCtrl::OnTextEnter ) // get them from spinctrldbl
+    //  EVT_TEXT( wxID_ANY, wxSpinCtrlDblTextCtrl::OnTextUpdate )      // get them from spinctrldbl
     EVT_CHAR( wxSpinCtrlDblTextCtrl::OnChar )
     EVT_KILL_FOCUS( wxSpinCtrlDblTextCtrl::OnKillFocus )
 END_EVENT_TABLE()
@@ -107,33 +107,33 @@ END_EVENT_TABLE()
 wxSpinCtrlDblTextCtrl::wxSpinCtrlDblTextCtrl( wxWindow *parent, wxWindowID id,
                                               const wxString &value,
                                               const wxPoint &pos, const wxSize &size,
-                                              const wxString &name)
-                       :wxTextCtrl( parent, id, value, pos, size,
-                                    wxTE_NOHIDESEL|wxTE_PROCESS_ENTER,
-                                    wxDefaultValidator, name)
+                                              const wxString &name )
+        : wxTextCtrl( parent, id, value, pos, size,
+                      wxTE_NOHIDESEL | wxTE_PROCESS_ENTER,
+                      wxDefaultValidator, name )
 {
-    m_parent = (wxSpinCtrlDbl*)parent;
+    m_parent = ( wxSpinCtrlDbl* )parent;
 
-    wxTextValidator valid(wxFILTER_INCLUDE_CHAR_LIST);
+    wxTextValidator valid( wxFILTER_INCLUDE_CHAR_LIST );
     wxArrayString list;
 
-    wxString valid_chars(wxT(" 0123456789+-.eE"));
+    wxString valid_chars( wxT( " 0123456789+-.eE" ) );
     size_t len = valid_chars.Length();
-    for (size_t i=0; i<len; i++)
-        list.Add(wxString(valid_chars.GetChar(i)));
+    for( size_t i = 0; i < len; i++ )
+        list.Add( wxString( valid_chars.GetChar( i ) ) );
 
-    valid.SetIncludes(list);
-    SetValidator(valid);
+    valid.SetIncludes( list );
+    SetValidator( valid );
 }
 
 void wxSpinCtrlDblTextCtrl::OnChar( wxKeyEvent &event )
 {
-    if (m_parent) m_parent->OnChar( event );
+    if( m_parent ) m_parent->OnChar( event );
 }
 
 void wxSpinCtrlDblTextCtrl::OnKillFocus( wxFocusEvent &event )
 {
-    if (m_parent) m_parent->SyncSpinToText(TRUE);
+    if( m_parent ) m_parent->SyncSpinToText( TRUE );
     event.Skip();
 }
 
@@ -143,11 +143,11 @@ void wxSpinCtrlDblTextCtrl::OnKillFocus( wxFocusEvent &event )
 
 //IMPLEMENT_DYNAMIC_CLASS( wxSpinCtrlDbl, wxControl )
 
-BEGIN_EVENT_TABLE(wxSpinCtrlDbl,wxControl)
-    EVT_SPIN_UP   ( wxID_ANY, wxSpinCtrlDbl::OnSpinUp    )
-    EVT_SPIN_DOWN ( wxID_ANY, wxSpinCtrlDbl::OnSpinDown  )
+BEGIN_EVENT_TABLE( wxSpinCtrlDbl, wxControl )
+    EVT_SPIN_UP( wxID_ANY, wxSpinCtrlDbl::OnSpinUp )
+    EVT_SPIN_DOWN( wxID_ANY, wxSpinCtrlDbl::OnSpinDown )
     EVT_TEXT_ENTER( wxID_ANY, wxSpinCtrlDbl::OnTextEnter )
-    EVT_SET_FOCUS ( wxSpinCtrlDbl::OnFocus     )
+    EVT_SET_FOCUS( wxSpinCtrlDbl::OnFocus )
     EVT_KILL_FOCUS( wxSpinCtrlDbl::OnKillFocus )
 END_EVENT_TABLE()
 
@@ -170,29 +170,29 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
                             double min, double max,
                             double initial,
                             double increment, int digits,
-                            const wxString& name)
+                            const wxString& name )
 {
-    if (!wxControl::Create(parent,id,pos,size,style|wxNO_BORDER,wxDefaultValidator,name))
+    if( !wxControl::Create( parent, id, pos, size, style | wxNO_BORDER, wxDefaultValidator, name ) )
         return FALSE;
-    
-    wxControl::SetLabel(name);
-    wxControl::SetBackgroundColour(parent->GetBackgroundColour());
-    wxControl::SetForegroundColour(parent->GetForegroundColour());
+
+    wxControl::SetLabel( name );
+    wxControl::SetBackgroundColour( parent->GetBackgroundColour() );
+    wxControl::SetForegroundColour( parent->GetForegroundColour() );
 
     int width = size.GetWidth(), height = size.GetHeight();
 
     wxSize best_size( DoGetBestSize() );
-    if (width  == -1) width  = best_size.GetWidth();
-    if (height == -1) height = best_size.GetHeight();
+    if( width  == -1 ) width  = best_size.GetWidth();
+    if( height == -1 ) height = best_size.GetHeight();
 
-    m_spinButton = new wxSpinButton( this, id, wxPoint(0,0), wxSize(-1, height),
-                                    wxSP_ARROW_KEYS|wxSP_VERTICAL|wxSP_WRAP);
-    m_textCtrl = new wxSpinCtrlDblTextCtrl( this, id, value, wxPoint(0,0),
-                      wxSize(width-m_spinButton->GetSize().GetWidth(), height));
+    m_spinButton = new wxSpinButton( this, id, wxPoint( 0, 0 ), wxSize( -1, height ),
+                                     wxSP_ARROW_KEYS | wxSP_VERTICAL | wxSP_WRAP );
+    m_textCtrl = new wxSpinCtrlDblTextCtrl( this, id, value, wxPoint( 0, 0 ),
+                                            wxSize( width - m_spinButton->GetSize().GetWidth(), height ) );
 
     DoSetSize( pos.x, pos.y, width, height );
-    SetInitialSize(wxSize(width, height));
-    
+    SetInitialSize( wxSize( width, height ) );
+
     m_min = min;
     m_max = max;
     m_value = initial;
@@ -202,17 +202,17 @@ bool wxSpinCtrlDbl::Create( wxWindow *parent, wxWindowID id,
 
     // set the value here without generating an event (also don't use virutal
     //  SetValue functions)
-    if (!value.IsEmpty()) 
-        m_textCtrl->SetValue(value);
-    else 
-        m_textCtrl->SetValue(wxString::Format(m_textFormat.c_str(), initial));
+    if( !value.IsEmpty() )
+        m_textCtrl->SetValue( value );
+    else
+        m_textCtrl->SetValue( wxString::Format( m_textFormat.c_str(), initial ) );
 
     return TRUE;
 }
 
 wxSpinCtrlDbl::~wxSpinCtrlDbl()
 {
-    if (m_textCtrl) // null this since MSW sends KILL_FOCUS on deletion 
+    if( m_textCtrl ) // null this since MSW sends KILL_FOCUS on deletion
     {
         m_textCtrl->m_parent = NULL;
         m_textCtrl = NULL;
@@ -222,48 +222,51 @@ wxSpinCtrlDbl::~wxSpinCtrlDbl()
 #define wxSPINCTRLDBL_SPIN_WIDTH  15
 #define wxSPINCTRLDBL_SPIN_HEIGHT 22
 
-void wxSpinCtrlDbl::DoSetSize(int x, int y, int width, int height, int sizeFlags)
+void wxSpinCtrlDbl::DoSetSize( int x, int y, int width, int height, int sizeFlags )
 {
     //wxPrintf(wxT("DoSetSize %d, %d %d %d %d %d\n"), GetId(), x, y, width, height, sizeFlags);
-    
-    wxSize bestSize( DoGetBestSize() );
-    if (width < 0)  width  = bestSize.GetWidth();
-    if (height < 0) height = bestSize.GetHeight();
 
-    wxWindow::DoSetSize(x, y, width, height, sizeFlags);
+    wxSize bestSize( DoGetBestSize() );
+    if( width < 0 )  width  = bestSize.GetWidth();
+    if( height < 0 ) height = bestSize.GetHeight();
+
+    wxWindow::DoSetSize( x, y, width, height, sizeFlags );
 
     int spinwidth  = wxSPINCTRLDBL_SPIN_WIDTH;
     int spinheight = wxSPINCTRLDBL_SPIN_HEIGHT;
-    if (m_spinButton) 
+    if( m_spinButton )
         m_spinButton->GetSize( &spinwidth, &spinheight );
 
 #ifdef __WIN95__   // humm... these used to be different
-    if (m_textCtrl)   m_textCtrl->SetSize( 0, 0, width - spinwidth, height );
-    if (m_spinButton) m_spinButton->SetSize( width-spinwidth-2, 0, -1, height );
+    if( m_textCtrl )   m_textCtrl->SetSize( 0, 0, width - spinwidth, height );
+    if( m_spinButton ) m_spinButton->SetSize( width - spinwidth - 2, 0, -1, height );
     //m_textCtrl->SetSize( -3, -3, width - spinwidth, height );   // old wxWin < 2.3.2
     //m_spinButton->SetSize( width-spinwidth-4, -3, -1, height-1 );
 #else
-    if (m_textCtrl)   m_textCtrl->SetSize( 0, 0, width - spinwidth, height );
-    if (m_spinButton) m_spinButton->SetSize( width-spinwidth, 0, -1, height );
+    if( m_textCtrl )   m_textCtrl->SetSize( 0, 0, width - spinwidth, height );
+    if( m_spinButton ) m_spinButton->SetSize( width - spinwidth, 0, -1, height );
 #endif
 }
 
-static wxSize s_spinctrl_bestSize(-999,-999);
+static wxSize s_spinctrl_bestSize( -999, -999 );
 
-double   wxSpinCtrlDbl::GetValue() const { return m_value; }
+double   wxSpinCtrlDbl::GetValue() const
+{
+    return m_value;
+}
 
 wxSize wxSpinCtrlDbl::DoGetBestSize() const
-{   
+{
     //wxPrintf(wxT("GetBestSize %d\n"), GetId());
-    if (s_spinctrl_bestSize.x == -999)
+    if( s_spinctrl_bestSize.x == -999 )
     {
-        wxSpinCtrl spin((wxWindow*)this, wxID_ANY);
+        wxSpinCtrl spin(( wxWindow* )this, wxID_ANY );
         s_spinctrl_bestSize = spin.GetBestSize();
         // oops something went wrong, set to reasonable value
-        if (s_spinctrl_bestSize.GetWidth()  < 20) 
-            s_spinctrl_bestSize.SetWidth(95);
-        if (s_spinctrl_bestSize.GetHeight() < 10) 
-            s_spinctrl_bestSize.SetHeight(wxSPINCTRLDBL_SPIN_HEIGHT);
+        if( s_spinctrl_bestSize.GetWidth()  < 20 )
+            s_spinctrl_bestSize.SetWidth( 95 );
+        if( s_spinctrl_bestSize.GetHeight() < 10 )
+            s_spinctrl_bestSize.SetHeight( wxSPINCTRLDBL_SPIN_HEIGHT );
     }
 
     return s_spinctrl_bestSize;
@@ -273,17 +276,17 @@ void wxSpinCtrlDbl::DoSendEvent()
 {
     wxCommandEvent event( wxEVT_COMMAND_SPINCTRL_UPDATED, GetId() );
     event.SetEventObject( this );
-    event.SetInt( (int)(m_value+0.5) );
-    if (m_textCtrl) event.SetString( m_textCtrl->GetValue() );
+    event.SetInt(( int )( m_value + 0.5 ) );
+    if( m_textCtrl ) event.SetString( m_textCtrl->GetValue() );
     GetEventHandler()->ProcessEvent( event );
 }
 
-void wxSpinCtrlDbl::OnSpinUp( wxSpinEvent &WXUNUSED(event) )
+void wxSpinCtrlDbl::OnSpinUp( wxSpinEvent &WXUNUSED( event ) )
 {
-    if (m_textCtrl && m_textCtrl->IsModified() ) 
-        SyncSpinToText(FALSE);
-    
-    if ( InRange(m_value + m_increment) )
+    if( m_textCtrl && m_textCtrl->IsModified() )
+        SyncSpinToText( FALSE );
+
+    if( InRange( m_value + m_increment ) )
     {
         m_value += m_increment;
         SetValue( m_value );
@@ -291,12 +294,12 @@ void wxSpinCtrlDbl::OnSpinUp( wxSpinEvent &WXUNUSED(event) )
     }
 }
 
-void wxSpinCtrlDbl::OnSpinDown( wxSpinEvent &WXUNUSED(event) )
+void wxSpinCtrlDbl::OnSpinDown( wxSpinEvent &WXUNUSED( event ) )
 {
-    if (m_textCtrl && m_textCtrl->IsModified() ) 
-        SyncSpinToText(FALSE);
-    
-    if ( InRange(m_value - m_increment) )
+    if( m_textCtrl && m_textCtrl->IsModified() )
+        SyncSpinToText( FALSE );
+
+    if( InRange( m_value - m_increment ) )
     {
         m_value -= m_increment;
         SetValue( m_value );
@@ -306,51 +309,51 @@ void wxSpinCtrlDbl::OnSpinDown( wxSpinEvent &WXUNUSED(event) )
 
 void wxSpinCtrlDbl::OnTextEnter( wxCommandEvent &event )
 {
-    SyncSpinToText(TRUE);
+    SyncSpinToText( TRUE );
     event.Skip();
 }
 
 void wxSpinCtrlDbl::OnChar( wxKeyEvent &event )
 {
     double modifier = 1.0;
-    if ( event.m_shiftDown   ) modifier  = 2.0;
-    if ( event.m_controlDown ) modifier *= 10.0;
-    if ( event.m_altDown     ) modifier *= 100.0;
+    if( event.m_shiftDown ) modifier  = 2.0;
+    if( event.m_controlDown ) modifier *= 10.0;
+    if( event.m_altDown ) modifier *= 100.0;
 
     switch ( event.GetKeyCode() )
     {
         case WXK_UP :
         {
-            if (m_textCtrl && m_textCtrl->IsModified()) SyncSpinToText(FALSE);
+            if( m_textCtrl && m_textCtrl->IsModified() ) SyncSpinToText( FALSE );
             SetValue( m_value + m_increment * modifier );
             DoSendEvent();
             break;
         }
         case WXK_DOWN :
         {
-            if (m_textCtrl && m_textCtrl->IsModified()) SyncSpinToText(FALSE);
+            if( m_textCtrl && m_textCtrl->IsModified() ) SyncSpinToText( FALSE );
             SetValue( m_value - m_increment * modifier );
             DoSendEvent();
             break;
         }
         case WXK_PRIOR :  // pg-up
         {
-            if (m_textCtrl && m_textCtrl->IsModified()) SyncSpinToText(FALSE);
+            if( m_textCtrl && m_textCtrl->IsModified() ) SyncSpinToText( FALSE );
             SetValue( m_value + m_increment * 10.0 * modifier );
             DoSendEvent();
             break;
         }
         case WXK_NEXT :  // pg-down
         {
-            if (m_textCtrl && m_textCtrl->IsModified()) SyncSpinToText(FALSE);
+            if( m_textCtrl && m_textCtrl->IsModified() ) SyncSpinToText( FALSE );
             SetValue( m_value - m_increment * 10.0 * modifier );
             DoSendEvent();
             break;
         }
         case WXK_SPACE :
         {
-            SetValue(m_value);
-            event.Skip(FALSE);
+            SetValue( m_value );
+            event.Skip( FALSE );
             break;
         }
         case WXK_ESCAPE :
@@ -370,32 +373,34 @@ void wxSpinCtrlDbl::OnChar( wxKeyEvent &event )
             GetParent()->GetEventHandler()->ProcessEvent( new_event );
             break;
         }
-        default : event.Skip(); break;
+        default :
+            event.Skip();
+            break;
     }
 }
 
 void wxSpinCtrlDbl::SetValue( double value )
 {
     // this check is probably too much to ask
-    if (!m_textCtrl || !InRange(value)) 
+    if( !m_textCtrl || !InRange( value ) )
         return;
 
-    if ( m_snap_ticks && (m_increment != 0) )
+    if( m_snap_ticks && ( m_increment != 0 ) )
     {
-        double snap_value = (value - m_default_value) / m_increment;
+        double snap_value = ( value - m_default_value ) / m_increment;
 
-        if (wxFinite(snap_value)) // FIXME what to do about a failure?
+        if( wxFinite( snap_value ) ) // FIXME what to do about a failure?
         {
-            if (snap_value - floor(snap_value) < ceil(snap_value) - snap_value)
-                value = m_default_value + floor(snap_value) * m_increment;
+            if( snap_value - floor( snap_value ) < ceil( snap_value ) - snap_value )
+                value = m_default_value + floor( snap_value ) * m_increment;
             else
-                value = m_default_value + ceil(snap_value) * m_increment;
+                value = m_default_value + ceil( snap_value ) * m_increment;
         }
     }
-    
-    wxString str(wxString::Format(m_textFormat.c_str(), value));
-    
-    if ((value != m_value) || (str != m_textCtrl->GetValue()))
+
+    wxString str( wxString::Format( m_textFormat.c_str(), value ) );
+
+    if (( value != m_value ) || ( str != m_textCtrl->GetValue() ) )
     {
         m_textCtrl->SetValue( str );
         m_textCtrl->DiscardEdits();
@@ -406,12 +411,12 @@ void wxSpinCtrlDbl::SetValue( double value )
 
 void wxSpinCtrlDbl::SetValue( const wxString& text, bool force )
 {
-    if (!m_textCtrl) return;
+    if( !m_textCtrl ) return;
 
     double value;
-    if ( text.ToDouble(&value) ) 
+    if( text.ToDouble( &value ) )
         SetValue( value );
-    else if (force)
+    else if( force )
     {
         m_textCtrl->SetValue( text );
         m_textCtrl->DiscardEdits();
@@ -424,61 +429,65 @@ void wxSpinCtrlDbl::SetRange( double min_val, double max_val )
     m_min = min_val;
     m_max = max_val;
 
-    if (HasRange())
+    if( HasRange() )
     {
-        if (m_value > m_max) 
-            SetValue(m_max);
-        else if (m_value < m_min) 
-            SetValue(m_min);
+        if( m_value > m_max )
+            SetValue( m_max );
+        else if( m_value < m_min )
+            SetValue( m_min );
     }
 }
 
 void wxSpinCtrlDbl::SetIncrement( double increment )
 {
     m_increment = increment;
-    SetValue(m_value);
+    SetValue( m_value );
 }
 
 void wxSpinCtrlDbl::SetDigits( int digits, formatType fmt )
 {
-    wxCHECK_RET(digits >= -1, wxT("invalid spinctrl format"));
+    wxCHECK_RET( digits >= -1, wxT( "invalid spinctrl format" ) );
 
-    if ((digits == wxSPINCTRLDBL_AUTODIGITS) && (fmt != lg_fmt))
+    if (( digits == wxSPINCTRLDBL_AUTODIGITS ) && ( fmt != lg_fmt ) )
     {
         wxString wxstr;
         int lastplace = -1, extra_digits = 0;
-        if (fmt == le_fmt)
+        if( fmt == le_fmt )
         {
-            wxstr.Printf(wxT("%le"), m_increment );
+            wxstr.Printf( wxT( "%le" ), m_increment );
             wxstr.LowerCase();
-            lastplace = wxstr.Find(wxT('e')) - 2;
+            lastplace = wxstr.Find( wxT( 'e' ) ) - 2;
             long places;
-            if (wxstr.AfterFirst(wxT('e')).ToLong(&places))
-                extra_digits = int(labs(places));
+            if( wxstr.AfterFirst( wxT( 'e' ) ).ToLong( &places ) )
+                extra_digits = int( labs( places ) );
         }
-        else if (fmt == lf_fmt)
+        else if( fmt == lf_fmt )
         {
-            wxstr.Printf(wxT("%lf"), m_increment );
-            lastplace = wxstr.Len()-1;
+            wxstr.Printf( wxT( "%lf" ), m_increment );
+            lastplace = wxstr.Len() - 1;
         }
 
-        int decimalplace = wxstr.Find(wxT('.'));
+        int decimalplace = wxstr.Find( wxT( '.' ) );
 
         int i = 0;
 
-        for ( i=lastplace; i>decimalplace; i-- )
+        for( i = lastplace; i > decimalplace; i-- )
         {
-            if ( wxstr.GetChar(i) != wxT('0') )
+            if( wxstr.GetChar( i ) != wxT( '0' ) )
             {
-                m_digits = extra_digits + i-decimalplace;
-                switch (fmt)
+                m_digits = extra_digits + i - decimalplace;
+                switch ( fmt )
                 {
-                    case le_fmt : m_textFormat.Printf(wxT("%%.%dle"), m_digits ); break;
+                    case le_fmt :
+                        m_textFormat.Printf( wxT( "%%.%dle" ), m_digits );
+                        break;
                     case lf_fmt :
-                    default     : m_textFormat.Printf(wxT("%%.%dlg"), m_digits ); break;
+                    default     :
+                        m_textFormat.Printf( wxT( "%%.%dlg" ), m_digits );
+                        break;
                 }
 
-                SetValue(m_value);
+                SetValue( m_value );
                 return;
             }
         }
@@ -488,45 +497,49 @@ void wxSpinCtrlDbl::SetDigits( int digits, formatType fmt )
     else
         m_digits = digits;
 
-    switch (fmt)
+    switch ( fmt )
     {
-        case le_fmt : m_textFormat.Printf(wxT("%%.%dle"), m_digits ); break;
-        case lg_fmt : 
+        case le_fmt :
+            m_textFormat.Printf( wxT( "%%.%dle" ), m_digits );
+            break;
+        case lg_fmt :
         {
-            if (m_digits == -1)
-                m_textFormat.Printf(wxT("%%lg") ); 
-            else 
-                m_textFormat.Printf(wxT("%%.%dlg"), m_digits ); 
+            if( m_digits == -1 )
+                m_textFormat.Printf( wxT( "%%lg" ) );
+            else
+                m_textFormat.Printf( wxT( "%%.%dlg" ), m_digits );
             break;
         }
         case lf_fmt :
-        default     : m_textFormat.Printf(wxT("%%.%dlf"), m_digits ); break;
+        default     :
+            m_textFormat.Printf( wxT( "%%.%dlf" ), m_digits );
+            break;
     }
 
-    SetValue(m_value);
+    SetValue( m_value );
 }
 
 void wxSpinCtrlDbl::SetFormat( const wxString& format )
 {
     wxString wxstr;
-    if ( wxstr.Printf(format.c_str(), 123456.123456) > 0 ) 
+    if( wxstr.Printf( format.c_str(), 123456.123456 ) > 0 )
         m_textFormat = format;
-    
-    SetValue(m_value);
+
+    SetValue( m_value );
 }
 
 void wxSpinCtrlDbl::SetDefaultValue( double default_value )
 {
-    if ( InRange(default_value) )
+    if( InRange( default_value ) )
     {
         m_default_value = default_value;
         SetDefaultValue();
     }
 }
 
-void wxSpinCtrlDbl::SetSnapToTicks(bool forceTicks)
+void wxSpinCtrlDbl::SetSnapToTicks( bool forceTicks )
 {
-    if (m_snap_ticks != forceTicks)
+    if( m_snap_ticks != forceTicks )
     {
         m_snap_ticks = forceTicks;
         SetValue( m_value );
@@ -535,7 +548,7 @@ void wxSpinCtrlDbl::SetSnapToTicks(bool forceTicks)
 
 void wxSpinCtrlDbl::OnFocus( wxFocusEvent &event )
 {
-    if (m_textCtrl) 
+    if( m_textCtrl )
         m_textCtrl->SetFocus(); // this is to pass TAB navigation
 
     event.Skip();
@@ -543,63 +556,66 @@ void wxSpinCtrlDbl::OnFocus( wxFocusEvent &event )
 
 void wxSpinCtrlDbl::OnKillFocus( wxFocusEvent &event )
 {
-    SyncSpinToText(TRUE);
+    SyncSpinToText( TRUE );
     event.Skip();
 }
 
-void wxSpinCtrlDbl::SyncSpinToText(bool send_event)
+void wxSpinCtrlDbl::SyncSpinToText( bool send_event )
 {
     double txt_value;
-    if (m_textCtrl && m_textCtrl->GetValue().ToDouble( &txt_value ) )
-    {  
-        if ( InRange(txt_value) && (m_value != txt_value) )
+    if( m_textCtrl && m_textCtrl->GetValue().ToDouble( &txt_value ) )
+    {
+        if( InRange( txt_value ) && ( m_value != txt_value ) )
         {
             SetValue( txt_value );
-            if (send_event) DoSendEvent();
+            if( send_event ) DoSendEvent();
         }
     }
 }
 
 bool wxSpinCtrlDbl::SetFont( const wxFont &font )
 {
-    if (!m_textCtrl) return FALSE;
+    if( !m_textCtrl ) return FALSE;
     return m_textCtrl->SetFont( font );
 }
 wxFont wxSpinCtrlDbl::GetFont() const
 {
-    if (!m_textCtrl) return GetFont();
+    if( !m_textCtrl ) return GetFont();
     return m_textCtrl->GetFont();
 }
 
-wxSpinCtrlDbl::wxSpinCtrlDbl() : wxControl() { Init(); }
+wxSpinCtrlDbl::wxSpinCtrlDbl() : wxControl()
+{
+    Init();
+}
 
 // Native constructor - note &parent, this is to avoid ambiguity
 wxSpinCtrlDbl::wxSpinCtrlDbl( wxWindow &parent, wxWindowID id,
-               const wxString &value,
-               const wxPoint& pos,
-               const wxSize& size,
-               long style,
-               double min, double max,
-               double initial,
-               double increment, int digits,
-               const wxString& name)
+                              const wxString &value,
+                              const wxPoint& pos,
+                              const wxSize& size,
+                              long style,
+                              double min, double max,
+                              double initial,
+                              double increment, int digits,
+                              const wxString& name )
 {
-   Init();
-   Create(&parent, id, value, pos, size, style,
-          min, max, initial, increment, digits, name);
+    Init();
+    Create( &parent, id, value, pos, size, style,
+            min, max, initial, increment, digits, name );
 }
 
 // wxSpinCtrl compatibility, call SetIncrement(increment,digits) after
 wxSpinCtrlDbl::wxSpinCtrlDbl( wxWindow *parent, wxWindowID id ,
-               const wxString &value,
-               const wxPoint& pos ,
-               const wxSize& size,
-               long style,
-               int min, int max,
-               int initial,
-               const wxString& name )
+                              const wxString &value,
+                              const wxPoint& pos ,
+                              const wxSize& size,
+                              long style,
+                              int min, int max,
+                              int initial,
+                              const wxString& name )
 {
-   Init();
-   Create(parent, id, value, pos, size, style,
-          (double)min, (double)max, (double)initial, 1.0, -1, name);
+    Init();
+    Create( parent, id, value, pos, size, style,
+            ( double )min, ( double )max, ( double )initial, 1.0, -1, name );
 }

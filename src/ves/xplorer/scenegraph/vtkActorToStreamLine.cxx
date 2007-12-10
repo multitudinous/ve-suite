@@ -113,7 +113,7 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkAc
 ////////////////////////////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
 {
-    if( verbose ) 
+    if( verbose )
     {
         int numPts = primArray->GetNumberOfCells();
         std::cerr << " " << numPts << " prim type " << primType;
@@ -125,9 +125,9 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     vtkPolyData *polyData = ( vtkPolyData* )actor->GetMapper()->GetInput();
 
     int numPrimitives = primArray->GetNumberOfCells();
-    if( numPrimitives == 0 ) 
+    if( numPrimitives == 0 )
     {
-        if( verbose ) 
+        if( verbose )
         {
             std::cout << " no cells" << std::endl;
         }
@@ -173,9 +173,9 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
             if( isFirstPoint )
             {
                 //A unit equilateral triangle
-                vertices->push_back( osg::Vec3(      0.0,  2.0, 0 ) );
+                vertices->push_back( osg::Vec3( 0.0,  2.0, 0 ) );
                 vertices->push_back( osg::Vec3( -1.73205, -1.0, 0 ) );
-                vertices->push_back( osg::Vec3(  1.73205, -1.0, 0 ) );
+                vertices->push_back( osg::Vec3( 1.73205, -1.0, 0 ) );
 
                 unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
                 colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
@@ -195,12 +195,12 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
 
             double lineSegmentLength = BminusA.length();
             double totalDistance = lineSegmentLength + leftOver;
-            
+
             if( totalDistance >= delta )
             {
                 int numSteps = static_cast< int >( totalDistance / delta );
                 double ds = delta / lineSegmentLength;
-                double firstPos = ds * ( ( delta - leftOver ) / delta );
+                double firstPos = ds * (( delta - leftOver ) / delta );
 
                 leftOver = totalDistance - ( numSteps * delta );
 
@@ -208,9 +208,9 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
                 while( j <= 1 )
                 {
                     //A unit equilateral triangle
-                    vertices->push_back( osg::Vec3(      0.0,  2.0, j ) );
+                    vertices->push_back( osg::Vec3( 0.0,  2.0, j ) );
                     vertices->push_back( osg::Vec3( -1.73205, -1.0, j ) );
-                    vertices->push_back( osg::Vec3(  1.73205, -1.0, j ) );
+                    vertices->push_back( osg::Vec3( 1.73205, -1.0, j ) );
 
                     unsigned char *aColor = colorArray->GetPointer( 4 * pts[ i ] );
                     colors->push_back( osg::Vec4( aColor[ 0 ] / 255.0f,
@@ -289,25 +289,25 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            //Billboard the quads
-            "vec3 pos = particleSize * \n"
-                      "( gl_Vertex.x * vec3( gl_ModelViewMatrix[ 0 ][ 0 ], \n"
-                                            "gl_ModelViewMatrix[ 1 ][ 0 ], \n"
-                                            "gl_ModelViewMatrix[ 2 ][ 0 ] ) +  \n"
-                        "gl_Vertex.y * vec3( gl_ModelViewMatrix[ 0 ][ 1 ],  \n"
-                                            "gl_ModelViewMatrix[ 1 ][ 1 ],  \n"
-                                            "gl_ModelViewMatrix[ 2 ][ 1 ] ) ); \n"
+        //Billboard the quads
+        "vec3 pos = particleSize * \n"
+        "( gl_Vertex.x * vec3( gl_ModelViewMatrix[ 0 ][ 0 ], \n"
+        "gl_ModelViewMatrix[ 1 ][ 0 ], \n"
+        "gl_ModelViewMatrix[ 2 ][ 0 ] ) +  \n"
+        "gl_Vertex.y * vec3( gl_ModelViewMatrix[ 0 ][ 1 ],  \n"
+        "gl_ModelViewMatrix[ 1 ][ 1 ],  \n"
+        "gl_ModelViewMatrix[ 2 ][ 1 ] ) ); \n"
 
-            //Move the quads along the line segment
-            "float t = gl_Vertex.z; \n"
-            "pos.x += gl_MultiTexCoord0.x + t * gl_MultiTexCoord1.x; \n"
-            "pos.y += gl_MultiTexCoord0.y + t * gl_MultiTexCoord1.y; \n"
-            "pos.z += gl_MultiTexCoord0.z + t * gl_MultiTexCoord1.z; \n"
+        //Move the quads along the line segment
+        "float t = gl_Vertex.z; \n"
+        "pos.x += gl_MultiTexCoord0.x + t * gl_MultiTexCoord1.x; \n"
+        "pos.y += gl_MultiTexCoord0.y + t * gl_MultiTexCoord1.y; \n"
+        "pos.z += gl_MultiTexCoord0.z + t * gl_MultiTexCoord1.z; \n"
 
-            //Set the variables
-            "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
-            "gl_TexCoord[0].xy = gl_Vertex.xy; \n"
-            "gl_FrontColor = gl_Color; \n"
+        //Set the variables
+        "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
+        "gl_TexCoord[0].xy = gl_Vertex.xy; \n"
+        "gl_FrontColor = gl_Color; \n"
         "} \n";
 
     char fragmentPass[] =
@@ -315,9 +315,9 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
 
         "void main() \n"
         "{ \n"
-            "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
+        "vec4 totalColor = ( 1.0 - pow( dot( gl_TexCoord[0].xy, gl_TexCoord[0].xy ), particleExp ) ) * gl_Color; \n"
 
-            "gl_FragColor = totalColor; \n"
+        "gl_FragColor = totalColor; \n"
         "} \n";
 
     osg::ref_ptr< osg::Program > program = new osg::Program();

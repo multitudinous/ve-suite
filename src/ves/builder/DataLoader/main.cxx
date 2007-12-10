@@ -38,10 +38,10 @@ using namespace ves::builder::cfdTranslatorToVTK;
 //Example of how to read dicom files and create vtk files for the//
 //dicom data                                                     //
 ///////////////////////////////////////////////////////////////////
-int main(int argc, char** argv)
+int main( int argc, char** argv )
 {
-   DataLoader loader;
-   loader.SetInputData( "something", "somedir" );
-   vtkDataObject* tempData = loader.GetVTKDataSet( argc, argv );
-   return 0;
+    DataLoader loader;
+    loader.SetInputData( "something", "somedir" );
+    vtkDataObject* tempData = loader.GetVTKDataSet( argc, argv );
+    return 0;
 }

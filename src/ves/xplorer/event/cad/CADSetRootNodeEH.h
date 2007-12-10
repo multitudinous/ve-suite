@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS CADSetRootNodeEventHandler: public CADEventHandler
 {
 public:
-   ///Constructor
-   CADSetRootNodeEventHandler();
+    ///Constructor
+    CADSetRootNodeEventHandler();
 
-   ///Copy Constructor
-   CADSetRootNodeEventHandler(const CADSetRootNodeEventHandler& rhs);
+    ///Copy Constructor
+    CADSetRootNodeEventHandler( const CADSetRootNodeEventHandler& rhs );
 
-   ///Destructor
-   virtual ~CADSetRootNodeEventHandler();
+    ///Destructor
+    virtual ~CADSetRootNodeEventHandler();
 
-   ///Equal operator
-   CADSetRootNodeEventHandler& operator=(const CADSetRootNodeEventHandler& rhs);
+    ///Equal operator
+    CADSetRootNodeEventHandler& operator=( const CADSetRootNodeEventHandler& rhs );
 protected:
-   ///Remove a CADNode.
-   ///\param command The Command containing the CADNode to set as the root node.
-   void _operateOnNode(ves::open::xml::XMLObject* command);
+    ///Remove a CADNode.
+    ///\param command The Command containing the CADNode to set as the root node.
+    void _operateOnNode( ves::open::xml::XMLObject* command );
 };
 
 }

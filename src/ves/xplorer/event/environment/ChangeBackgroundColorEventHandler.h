@@ -51,25 +51,25 @@ namespace event
 class ChangeBackgroundColorEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   ChangeBackgroundColorEventHandler();
+    ///Constructor
+    ChangeBackgroundColorEventHandler();
 
-   ///Copy Constructor
-   ChangeBackgroundColorEventHandler(const ChangeBackgroundColorEventHandler& ceh);
+    ///Copy Constructor
+    ChangeBackgroundColorEventHandler( const ChangeBackgroundColorEventHandler& ceh );
 
-   ///Destructor
-   virtual ~ChangeBackgroundColorEventHandler();
+    ///Destructor
+    virtual ~ChangeBackgroundColorEventHandler();
 
-   ///Set the cfdModel.
-   ///\param model The ModelHandler to execute the Command on.
-   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
+    ///Set the cfdModel.
+    ///\param model The ModelHandler to execute the Command on.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   ///Equal operator
-   ChangeBackgroundColorEventHandler& operator=(const ChangeBackgroundColorEventHandler& rhs);
+    ///Equal operator
+    ChangeBackgroundColorEventHandler& operator=( const ChangeBackgroundColorEventHandler& rhs );
 
 protected:
 };

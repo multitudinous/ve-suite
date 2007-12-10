@@ -45,34 +45,39 @@ namespace DataLoader
 class VE_USER_BUILDER_EXPORTS StarCDTranslator : public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
 {
 public:
-   StarCDTranslator();
-   virtual ~StarCDTranslator();
-   ///Display help for the StarCD translator
-   virtual void DisplayHelp( void );
-   
-   class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
-   {
-   public:
-      StarCDTranslateCbk(){};
-      virtual ~StarCDTranslateCbk(){};
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-   protected:
-   };
-   class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
-   public:
-      StarCDPreTranslateCbk(){};
-      virtual ~StarCDPreTranslateCbk(){};
-      void Preprocess(int argc,char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK);
-   protected:
-   };
+    StarCDTranslator();
+    virtual ~StarCDTranslator();
+    ///Display help for the StarCD translator
+    virtual void DisplayHelp( void );
+
+class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        StarCDTranslateCbk()
+        {};
+        virtual ~StarCDTranslateCbk()
+        {};
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+    protected:
+    };
+class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        StarCDPreTranslateCbk()
+        {};
+        virtual ~StarCDPreTranslateCbk()
+        {};
+        void Preprocess( int argc, char** argv, ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+    protected:
+    };
 protected:
-   StarCDPreTranslateCbk _cmdParser;
-   StarCDTranslateCbk starToVTK;
+    StarCDPreTranslateCbk _cmdParser;
+    StarCDTranslateCbk starToVTK;
 };
 }
 }

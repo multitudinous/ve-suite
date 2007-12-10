@@ -59,121 +59,121 @@ using namespace ves::xplorer::scenegraph;
 
 cfdIsosurface::cfdIsosurface( int numsteps )
 {
-   this->totalId = numsteps;
-   this->value = 0.0f;
+    this->totalId = numsteps;
+    this->value = 0.0f;
 
 #ifdef USE_OMP
-   this->append = vtkAppendPolyData::New( );
-   this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs( );
+    this->append = vtkAppendPolyData::New( );
+    this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs( );
 
-   for ( int i=0; i<this->nData; i++ )
-   {
-      this->contour[i] = vtkContourFilter::New( );
-      //this->contour[i]->UseScalarTreeOff( );
-      this->contour[i]->UseScalarTreeOn();
+    for( int i = 0; i < this->nData; i++ )
+    {
+        this->contour[i] = vtkContourFilter::New( );
+        //this->contour[i]->UseScalarTreeOff( );
+        this->contour[i]->UseScalarTreeOn();
 
-      this->normals[i] = vtkPolyDataNormals::New( );
-      this->normals[i]->SetInput( this->contour[i]->GetOutput( ) );
+        this->normals[i] = vtkPolyDataNormals::New( );
+        this->normals[i]->SetInput( this->contour[i]->GetOutput( ) );
 
-      this->append->AddInput( this->normals[i]->GetOutput( ) );
-   }
+        this->append->AddInput( this->normals[i]->GetOutput( ) );
+    }
 #else
-   this->normals = vtkPolyDataNormals::New();
+    this->normals = vtkPolyDataNormals::New();
 #endif
 
-   
+
 #ifdef USE_OMP
-   this->filter->SetInput( (vtkDataSet *)this->append->GetOutput() );
+    this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
 #endif
 
-   this->mapper = vtkMultiGroupPolyDataMapper::New();
-   this->mapper->SetColorModeToMapScalars();
+    this->mapper = vtkMultiGroupPolyDataMapper::New();
+    this->mapper->SetColorModeToMapScalars();
 }
 
 cfdIsosurface::~cfdIsosurface()
 {
 #ifdef USE_OMP
-   for(int i = 0; this->nData; i++ )
-   {
-      this->contour[i]->Delete();
-      this->normals[i]->Delete();
-   }
-   this->append->Delete();
+    for( int i = 0; this->nData; i++ )
+    {
+        this->contour[i]->Delete();
+        this->normals[i]->Delete();
+    }
+    this->append->Delete();
 #else
-   this->normals->Delete();
+    this->normals->Delete();
 #endif
-   this->mapper->Delete();
+    this->mapper->Delete();
 }
 
 void cfdIsosurface::Update()
 {
-   SetActiveVtkPipeline();
-   vprDEBUG(vesDBG, 1) <<"|\tcfdIsosurface::Update: FileName: "
-      << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
+    SetActiveVtkPipeline();
+    vprDEBUG( vesDBG, 1 ) << "|\tcfdIsosurface::Update: FileName: "
+    << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vesDBG, 1) << "|\trequestedValue: "<< this->requestedValue
-                           << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\trequestedValue: " << this->requestedValue
+    << std::endl << vprDEBUG_FLUSH;
 
-   // convert the requested value percentage (0-100) to a scalar value
-   this->value = convertPercentage( this->requestedValue );
+    // convert the requested value percentage (0-100) to a scalar value
+    this->value = convertPercentage( this->requestedValue );
 
-   vprDEBUG(vesDBG, 1) << "|\tthis->value: "<< this->value
-                           << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tthis->value: " << this->value
+    << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
-   int imax = this->nData;
-   int i;
+    int imax = this->nData;
+    int i;
 # pragma omp parallel for private(i)
-   for ( i=0; i<imax; i++ )
-   {
-      this->contour[i]->SetInput( this->GetActiveDataSet()->GetData(i) );
-      this->contour[i]->SetValue( 0, this->value );
-      this->normals[i]->Update();
-   }
-   this->append->Update( );
+    for( i = 0; i < imax; i++ )
+    {
+        this->contour[i]->SetInput( this->GetActiveDataSet()->GetData( i ) );
+        this->contour[i]->SetValue( 0, this->value );
+        this->normals[i]->Update();
+    }
+    this->append->Update( );
 #else
-   vprDEBUG(vesDBG, 1) 
-      << "cfdIsosurface: this->GetActiveMeshedVolume() = " 
-      << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+    << "cfdIsosurface: this->GetActiveMeshedVolume() = "
+    << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vesDBG, 1) 
-      << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()=" 
-      << this->GetActiveDataSet()->GetDataSet()
-      << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+    << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()="
+    << this->GetActiveDataSet()->GetDataSet()
+    << std::endl << vprDEBUG_FLUSH;
 
-   vtkContourFilter* contourFilter = vtkContourFilter::New();
-   contourFilter->UseScalarTreeOn();
-   contourFilter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-   contourFilter->SetValue( 0, this->value );
-  
-   vtkPolyData* polydata = ApplyGeometryFilter(contourFilter->GetOutputPort());
-   
-   polydata->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
-   polydata->Update();
-   this->normals->SetInput(polydata);
-   this->mapper->SetInputConnection(normals->GetOutputPort());
+    vtkContourFilter* contourFilter = vtkContourFilter::New();
+    contourFilter->UseScalarTreeOn();
+    contourFilter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+    contourFilter->SetValue( 0, this->value );
+
+    vtkPolyData* polydata = ApplyGeometryFilter( contourFilter->GetOutputPort() );
+
+    polydata->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
+    polydata->Update();
+    this->normals->SetInput( polydata );
+    this->mapper->SetInputConnection( normals->GetOutputPort() );
 #endif
 
-   //double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
-   this->mapper->SetScalarRange( minValue, maxValue );
+    //double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
+    this->mapper->SetScalarRange( minValue, maxValue );
 
-   vtkLookupTable* lut = vtkLookupTable::New();
-   lut->SetNumberOfColors( 256 );            //default is 256
-   lut->SetHueRange( 2.0f/3.0f, 0.0f );      //a blue-to-red scale
-   lut->SetTableRange( minValue, maxValue );
-   lut->Build();
-   
-   this->mapper->SetLookupTable( lut );
+    vtkLookupTable* lut = vtkLookupTable::New();
+    lut->SetNumberOfColors( 256 );            //default is 256
+    lut->SetHueRange( 2.0f / 3.0f, 0.0f );    //a blue-to-red scale
+    lut->SetTableRange( minValue, maxValue );
+    lut->Build();
 
-   vtkActor* temp = vtkActor::New();
-   temp->SetMapper( this->mapper );
-   temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-   geodes.back()->TranslateToGeode( temp );
-   temp->Delete();
-   lut->Delete();
-   contourFilter->Delete();
-   this->updateFlag = true;
+    this->mapper->SetLookupTable( lut );
+
+    vtkActor* temp = vtkActor::New();
+    temp->SetMapper( this->mapper );
+    temp->GetProperty()->SetSpecularPower( 20.0f );
+    geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+    geodes.back()->TranslateToGeode( temp );
+    temp->Delete();
+    lut->Delete();
+    contourFilter->Delete();
+    this->updateFlag = true;
 }
 
 double cfdIsosurface::GetValue()
@@ -183,95 +183,95 @@ double cfdIsosurface::GetValue()
 
 double cfdIsosurface::convertPercentage( const int percentage )
 {
-   // set the step-size for isosurface based on the "pretty" range
-   double minmax[2];
-   this->GetActiveDataSet()->GetUserRange( minmax );
+    // set the step-size for isosurface based on the "pretty" range
+    double minmax[2];
+    this->GetActiveDataSet()->GetUserRange( minmax );
 
-   vprDEBUG(vesDBG, 1) << "minmax = " << minmax[0] << "\t" << minmax[1]
-                           << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "minmax = " << minmax[0] << "\t" << minmax[1]
+    << std::endl << vprDEBUG_FLUSH;
 
-   double minmaxDiff = minmax[1] - minmax[0];
-   double dx = ( minmaxDiff ) / (double)this->totalId;
+    double minmaxDiff = minmax[1] - minmax[0];
+    double dx = ( minmaxDiff ) / ( double )this->totalId;
 
-   if( percentage == 999 )   // happens only with the blue menu
-   {
-      this->value += dx;
+    if( percentage == 999 )  // happens only with the blue menu
+    {
+        this->value += dx;
 
-      // if way over the limit, reset close to bottom of range
-      // (but true bottom will cause error)
-      if ( this->value > minmax[1] + 0.5 * dx )
-      {
-         this->value = minmax[0] + minmaxDiff / 100.0;
-      }
+        // if way over the limit, reset close to bottom of range
+        // (but true bottom will cause error)
+        if( this->value > minmax[1] + 0.5 * dx )
+        {
+            this->value = minmax[0] + minmaxDiff / 100.0;
+        }
 
-      // if just over the limit, reset close to end of range
-      else if ( this->value > (minmax[1] - minmaxDiff / 100.0) )
-      {
-         this->value = minmax[1] - minmaxDiff / 100.0;
-      }
-   } 
-   else
-   {
-      // The java app slider bar returns integers 0-100 representing percentile.  
-      this->value = minmax[0] + minmaxDiff * percentage / 100.0;
+        // if just over the limit, reset close to end of range
+        else if( this->value > ( minmax[1] - minmaxDiff / 100.0 ) )
+        {
+            this->value = minmax[1] - minmaxDiff / 100.0;
+        }
+    }
+    else
+    {
+        // The java app slider bar returns integers 0-100 representing percentile.
+        this->value = minmax[0] + minmaxDiff * percentage / 100.0;
 
-      // if too low error will occur, so reset close to bottom of range
-      if ( this->value < (minmax[0] + minmaxDiff / 100.0) )
-      {
-         this->value = minmax[0] + minmaxDiff / 100.0;
-      }
+        // if too low error will occur, so reset close to bottom of range
+        if( this->value < ( minmax[0] + minmaxDiff / 100.0 ) )
+        {
+            this->value = minmax[0] + minmaxDiff / 100.0;
+        }
 
-      // if over the limit, reset close to end of range
-      if ( this->value > (minmax[1] - minmaxDiff / 100.0) )
-      {
-         this->value = minmax[1] - minmaxDiff / 100.0;
-      }
-   }
-   return this->value;
+        // if over the limit, reset close to end of range
+        if( this->value > ( minmax[1] - minmaxDiff / 100.0 ) )
+        {
+            this->value = minmax[1] - minmaxDiff / 100.0;
+        }
+    }
+    return this->value;
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdIsosurface::UpdateCommand()
 {
-   //Call base method - currently does nothing
-   cfdObjects::UpdateCommand();
+    //Call base method - currently does nothing
+    cfdObjects::UpdateCommand();
 
-   //Extract the specific commands from the overall command
-   ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-   ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    //Extract the specific commands from the overall command
+    ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
+    ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
 
-   //Extract the isosurface value
-   activeModelDVP = objectCommand->GetDataValuePair( "Iso-Surface Value" );
-   double planePosition;
-   activeModelDVP->GetData( planePosition );
-   SetRequestedValue( static_cast< int >( planePosition ) );
+    //Extract the isosurface value
+    activeModelDVP = objectCommand->GetDataValuePair( "Iso-Surface Value" );
+    double planePosition;
+    activeModelDVP->GetData( planePosition );
+    SetRequestedValue( static_cast< int >( planePosition ) );
 
-   activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
-   activeModelDVP->GetData( colorByScalar );
+    activeModelDVP = objectCommand->GetDataValuePair( "Color By Scalar" );
+    activeModelDVP->GetData( colorByScalar );
 
-   activeModelDVP = objectCommand->GetDataValuePair( "Minimum Scalar Value" );
-   activeModelDVP->GetData( minValue );
+    activeModelDVP = objectCommand->GetDataValuePair( "Minimum Scalar Value" );
+    activeModelDVP->GetData( minValue );
 
-   activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
-   activeModelDVP->GetData( maxValue );
+    activeModelDVP = objectCommand->GetDataValuePair( "Maximum Scalar Value" );
+    activeModelDVP->GetData( maxValue );
 
-   //if ( _activeModel )
-   {
-      DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-      if ( !colorByScalar.empty() )
-      {
-         unsigned int activeTempScalar = dataSet->GetActiveScalar();
-         dataSet->SetActiveScalar( colorByScalar );
-         DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
-         if ( scalarBar )
-         {
-            scalarBar->AddScalarBarToGroup();
-         }
-         dataSet->SetActiveScalar( activeTempScalar );
-      }
-   }            
+    //if ( _activeModel )
+    {
+        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+        if( !colorByScalar.empty() )
+        {
+            unsigned int activeTempScalar = dataSet->GetActiveScalar();
+            dataSet->SetActiveScalar( colorByScalar );
+            DataSetScalarBar* scalarBar = dataSet->GetDataSetScalarBar();
+            if( scalarBar )
+            {
+                scalarBar->AddScalarBarToGroup();
+            }
+            dataSet->SetActiveScalar( activeTempScalar );
+        }
+    }
 
-      vprDEBUG(vesDBG, 1) 
-      << "IN THE UPDATE COMMAND FUNCTION" 
-      << this->GetActiveDataSet()->GetDataSet()
-      << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 )
+    << "IN THE UPDATE COMMAND FUNCTION"
+    << this->GetActiveDataSet()->GetDataSet()
+    << std::endl << vprDEBUG_FLUSH;
 }

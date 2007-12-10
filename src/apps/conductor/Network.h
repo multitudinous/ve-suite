@@ -36,7 +36,7 @@
 Network API
 */
 /*!\class Network
-* 
+*
 */
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/util/Link.h>
@@ -64,7 +64,7 @@ namespace xml
 {
 namespace model
 {
-  class User;
+class User;
 }
 }
 }
@@ -76,15 +76,15 @@ class Canvas;
 class Network : public wxEvtHandler
 {
 public:
-   Network(wxWindow* parent);
-   virtual ~Network();
+    Network( wxWindow* parent );
+    virtual ~Network();
 
-   enum 
-   {
-      ADD_TAG = 3250,
-      EDIT_TAG,
-      DEL_TAG
-   };
+    enum
+    {
+        ADD_TAG = 3250,
+        EDIT_TAG,
+        DEL_TAG
+    };
 
     ///Fucntion called during submit job to send the id of all active
     ///modules to the CE
@@ -105,158 +105,164 @@ public:
     void OnEditTag( wxCommandEvent &event );
     void OnDelTag( wxCommandEvent &event );
     void OnDelMod( wxCommandEvent &event );
-    void OnDelPort(wxCommandEvent& event );
-    void OnDelLink(wxCommandEvent& event );
+    void OnDelPort( wxCommandEvent& event );
+    void OnDelLink( wxCommandEvent& event );
 
     //Add to network fuctions
-    void AddtoNetwork(ves::conductor::UIPluginBase *new_mod, std::string cls_name);
-    void AddTag(int x, int y, wxString text);
-       
-   //Save and Load the network
-   //std::string Save( std::string fileName );
-   ///Load calls new when loading the network
-   ///this also calls delete objects on xplorer but the user may not 
-   ///always want this action
-   void Load( std::string xmlNetwork, bool promptClearXplorer );
-   void CreateNetwork( std::string xmlNetwork );
-   void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas * parent );
-   ///Clear the deisgn canvas and xplorer objects if desired
-   void New( bool clearXplorer = false );
-   ///Acessors
-   std::pair< double, double >* GetUserScale( void );
-   std::pair< unsigned int, unsigned int >* GetNumPix( void );
-   std::pair< unsigned int, unsigned int >* GetNumUnit( void );
-   
-   //void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
-   //void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
-   bool IsDragging();
-   void SetSelectedModule( int mod );
-   void HighlightCenter( int modId );
-   std::map< int, ves::conductor::Module > modules; //The list of modules;
-   //void ReDraw(wxDC &dc);
-   void DrawNetwork(wxDC &dc);
-   ///Push all the event handlers from the tags, plugins, and links onto canvas
-   void PushAllEvents();
-   ///Remove all of the event handlers from the tags, 
-   ///plugins, and links from the canvas
-   void RemoveAllEvents();
-   ///Clear the plugins from the xplorer environment
-   void ClearXplorer();
-   ///Update all the ve models
-   void Update();
+    void AddtoNetwork( ves::conductor::UIPluginBase *new_mod, std::string cls_name );
+    void AddTag( int x, int y, wxString text );
 
-   size_t GetMaxX() { return maxX; }
-   size_t GetMaxY() { return maxY; }
+    //Save and Load the network
+    //std::string Save( std::string fileName );
+    ///Load calls new when loading the network
+    ///this also calls delete objects on xplorer but the user may not
+    ///always want this action
+    void Load( std::string xmlNetwork, bool promptClearXplorer );
+    void CreateNetwork( std::string xmlNetwork );
+    void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas * parent );
+    ///Clear the deisgn canvas and xplorer objects if desired
+    void New( bool clearXplorer = false );
+    ///Acessors
+    std::pair< double, double >* GetUserScale( void );
+    std::pair< unsigned int, unsigned int >* GetNumPix( void );
+    std::pair< unsigned int, unsigned int >* GetNumUnit( void );
+
+    //void HighlightSelectedIcon( UIPluginBase* cur_module, wxDC &dc);
+    //void DrawPorts( UIPluginBase* cur_module, bool flag, wxDC &dc);
+    bool IsDragging();
+    void SetSelectedModule( int mod );
+    void HighlightCenter( int modId );
+    std::map< int, ves::conductor::Module > modules; //The list of modules;
+    //void ReDraw(wxDC &dc);
+    void DrawNetwork( wxDC &dc );
+    ///Push all the event handlers from the tags, plugins, and links onto canvas
+    void PushAllEvents();
+    ///Remove all of the event handlers from the tags,
+    ///plugins, and links from the canvas
+    void RemoveAllEvents();
+    ///Clear the plugins from the xplorer environment
+    void ClearXplorer();
+    ///Update all the ve models
+    void Update();
+
+    size_t GetMaxX()
+    {
+        return maxX;
+    }
+    size_t GetMaxY()
+    {
+        return maxY;
+    }
 
 protected:
-   //Draw functions
-   //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
-   //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
-   //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
-   //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
-   //void DrawTag( VE_Conductor::GUI_Utilities::Tag *t, bool flag);
+    //Draw functions
+    //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
+    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
+    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
+    //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
+    //void DrawTag( VE_Conductor::GUI_Utilities::Tag *t, bool flag);
 
-   //Selection functions
-   int SelectMod(int x, int y, wxDC& dc);
-   void UnSelectMod();
-   int  SelectLink(int x, int y);
-   void UnSelectLink(wxDC& dc);
-   int SelectTag(int x, int y);
-   void UnSelectTag(wxDC& dc);
+    //Selection functions
+    int SelectMod( int x, int y, wxDC& dc );
+    void UnSelectMod();
+    int  SelectLink( int x, int y );
+    void UnSelectLink( wxDC& dc );
+    int SelectTag( int x, int y );
+    void UnSelectTag( wxDC& dc );
 
-   //Move and drop functions
-   void MoveModule(int x, int y, int mod);//, wxDC &dc);
-   void DropModule(int x, int y, int mod );
-   void MoveLinkCon(int x, int y, int ln, int ln_con, wxDC& dc);
-   void DropLinkCon(int x, int y, int ln, int ln_con, wxDC& dc);
-   void MoveTagCon(int x, int y, int t, int t_con, wxDC &dc);
-   void DropTagCon(int x, int y, int t, int t_con, wxDC &dc);
-   void MoveTag(int x, int y, int t, wxDC &dc);
-   void DropTag(int x, int y, int t, wxDC &dc);
-   void TryLink(int x, int y, int mod, int pt, wxDC &dc, bool flag);
-   void DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag);
+    //Move and drop functions
+    void MoveModule( int x, int y, int mod );//, wxDC &dc);
+    void DropModule( int x, int y, int mod );
+    void MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc );
+    void DropLinkCon( int x, int y, int ln, int ln_con, wxDC& dc );
+    void MoveTagCon( int x, int y, int t, int t_con, wxDC &dc );
+    void DropTagCon( int x, int y, int t, int t_con, wxDC &dc );
+    void MoveTag( int x, int y, int t, wxDC &dc );
+    void DropTag( int x, int y, int t, wxDC &dc );
+    void TryLink( int x, int y, int mod, int pt, wxDC &dc, bool flag );
+    void DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag );
 
-   //Math functions for the relationship of points and polygons
-   //int ccw( wxPoint pt1, wxPoint pt2, wxPoint pt3 );
-   //int intersect( VE_Conductor::GUI_Utilities::Polygon l1, VE_Conductor::GUI_Utilities::Polygon l2);
-   //int inside( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly);
-   double computenorm (wxPoint pt1, wxPoint pt2);
-   //double nearpnt( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly, 
-   //                                 VE_Conductor::GUI_Utilities::Polygon &near);
-   //void TransPoly( VE_Conductor::GUI_Utilities::Polygon oldpoly, 
-   //                int x, int y, VE_Conductor::GUI_Utilities::Polygon &newpoly);
+    //Math functions for the relationship of points and polygons
+    //int ccw( wxPoint pt1, wxPoint pt2, wxPoint pt3 );
+    //int intersect( VE_Conductor::GUI_Utilities::Polygon l1, VE_Conductor::GUI_Utilities::Polygon l2);
+    //int inside( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly);
+    double computenorm( wxPoint pt1, wxPoint pt2 );
+    //double nearpnt( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly,
+    //                                 VE_Conductor::GUI_Utilities::Polygon &near);
+    //void TransPoly( VE_Conductor::GUI_Utilities::Polygon oldpoly,
+    //                int x, int y, VE_Conductor::GUI_Utilities::Polygon &newpoly);
 
-   //Misc functions
-   void CleanRect( wxRect box, wxDC& dc); // for wipeout a rectangular area
-   wxPoint GetFreePos( wxRect bbox); // for finding a free start location for a new module
-   //VE_Conductor::GUI_Utilities::Polygon CalcLinkPoly( VE_Conductor::GUI_Utilities::Tag l); // calculate the bounding polygon of a link
-   //VE_Conductor::GUI_Utilities::Polygon CalcTagPoly( VE_Conductor::GUI_Utilities::Tag t); // calculate the bounding polygon of a tag
+    //Misc functions
+    void CleanRect( wxRect box, wxDC& dc ); // for wipeout a rectangular area
+    wxPoint GetFreePos( wxRect bbox ); // for finding a free start location for a new module
+    //VE_Conductor::GUI_Utilities::Polygon CalcLinkPoly( VE_Conductor::GUI_Utilities::Tag l); // calculate the bounding polygon of a link
+    //VE_Conductor::GUI_Utilities::Polygon CalcTagPoly( VE_Conductor::GUI_Utilities::Tag t); // calculate the bounding polygon of a tag
 
-   ///Get the point for a port or connector for a selected plugin
-   ///portType is either input or output
-   wxPoint GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType );
+    ///Get the point for a port or connector for a selected plugin
+    ///portType is either input or output
+    wxPoint GetPointForSelectedPlugin( unsigned long moduleID, unsigned int portNumber, std::string portType );
 
-   //Check if the two port is compatible
-   bool IsPortCompatible(int frmod, int frport, int tomod, int toport);
+    //Check if the two port is compatible
+    bool IsPortCompatible( int frmod, int frport, int tomod, int toport );
 
-   int m_selMod; // selected module
-   int m_selFrPort; // selected From port
-   int m_selToPort; // selected To port;
-   int m_selLink; //selected Link
-   int m_selLinkCon; //selected Link Connector
-   int m_selTag; //selected Tag
-   int m_selTagCon; //selected Tag Connector
+    int m_selMod; // selected module
+    int m_selFrPort; // selected From port
+    int m_selToPort; // selected To port;
+    int m_selLink; //selected Link
+    int m_selLinkCon; //selected Link Connector
+    int m_selTag; //selected Tag
+    int m_selTagCon; //selected Tag Connector
     //Three main list of network objs
-   std::vector< ves::conductor::util::Link > links; //The list of links between the nodes of moduls.
-   std::vector< ves::conductor::util::Tag > tags; //The list of text tags  
-   
-   wxPoint relative_pt; // the relative point of the polygon, used by the move module function
+    std::vector< ves::conductor::util::Link > links; //The list of links between the nodes of moduls.
+    std::vector< ves::conductor::util::Tag > tags; //The list of text tags
+
+    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
 
 private:
-   int intfssize;
-   wxProgressDialog* _fileProgress;
-   bool isLoading;
-   bool isDataSet;
-   bool tryingLink;
-   bool dragging;
-   wxBitmap * bitmapBuffer;
-   wxPoint point1;
-   wxPoint point2;
-   size_t maxX;
-   size_t maxY;
+    int intfssize;
+    wxProgressDialog* _fileProgress;
+    bool isLoading;
+    bool isDataSet;
+    bool tryingLink;
+    bool dragging;
+    wxBitmap * bitmapBuffer;
+    wxPoint point1;
+    wxPoint point2;
+    size_t maxX;
+    size_t maxY;
 
-   unsigned int pluginID;
-   
-   std::string tempXMLNetworkData;
-   std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
-   int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
-   wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
-   ///System for this network
-   ves::open::xml::model::SystemPtr systemPtr;
-   ///Parent window pointer to the splitter in AppFrame
-   Canvas* parent;
-   ///wxframe pointer for frame.cxx
-   //AppFrame* frame;
-   ///User scale
-   /// first = x scale
-   /// second = y scale
-   std::pair< double, double > userScale;
-   ///Num Pixels
-   /// first = x pix
-   /// second = y pix
-   std::pair< unsigned int, unsigned int > numPix;
-   ///Num unit
-   /// first = x unit
-   /// second = y unit
-   std::pair< unsigned int, unsigned int > numUnit;
-   
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
-   
-   DECLARE_EVENT_TABLE() // no semicolon needed
+    unsigned int pluginID;
+
+    std::string tempXMLNetworkData;
+    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
+    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
+    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
+    ///System for this network
+    ves::open::xml::model::SystemPtr systemPtr;
+    ///Parent window pointer to the splitter in AppFrame
+    Canvas* parent;
+    ///wxframe pointer for frame.cxx
+    //AppFrame* frame;
+    ///User scale
+    /// first = x scale
+    /// second = y scale
+    std::pair< double, double > userScale;
+    ///Num Pixels
+    /// first = x pix
+    /// second = y pix
+    std::pair< unsigned int, unsigned int > numPix;
+    ///Num unit
+    /// first = x unit
+    /// second = y unit
+    std::pair< unsigned int, unsigned int > numUnit;
+
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+    DECLARE_EVENT_TABLE() // no semicolon needed
 };
 
 #endif

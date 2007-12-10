@@ -40,7 +40,7 @@
   NURBS Curve Code
   */
 /*!\class ves::xplorer::scenegraph::nurbs::NURBSCurve
- * Class defining a NURBSCurve. 
+ * Class defining a NURBSCurve.
  */
 #include <ves/VEConfig.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSObject.h>
@@ -64,38 +64,38 @@ class ControlPoint;
 class VE_NURBS_EXPORTS NURBSCurve : public NURBSObject
 {
 public:
-   ///Constructor
-   NURBSCurve(unsigned int degree=3);
+    ///Constructor
+    NURBSCurve( unsigned int degree = 3 );
 
-   ///Copy constructor
-   NURBSCurve(const NURBSCurve& rhs);
+    ///Copy constructor
+    NURBSCurve( const NURBSCurve& rhs );
 
-   ///Destructor
-   virtual ~NURBSCurve();
+    ///Destructor
+    virtual ~NURBSCurve();
 
-   ///Equal operator
-   ///\param rhs The point to set this one to. 
-   NURBSCurve& operator=(const NURBSCurve& rhs);
+    ///Equal operator
+    ///\param rhs The point to set this one to.
+    NURBSCurve& operator=( const NURBSCurve& rhs );
 
-   ///Interpolate the curve.
-   virtual void Interpolate();
+    ///Interpolate the curve.
+    virtual void Interpolate();
 
 protected:
-  
 
-   ///Interpolate with a range of values...\n
-   ///Used internally for re-tessellation when moving control points
-   ///\param umin The min u param to interpolate between
-   ///\param umax The max u param to interpolate between
-   ///\param vmin The min v param to interpolate between
-   ///\param vmax The max v param to interpolate between
-   virtual void _interpolateWithinRange(double umin,double umax,
-                                        double vmin,double vmax);
 
-   ///Calculate a point and it's derivatives on a curve
-   ///\param parameter The interpolating parameter
-   ///\param span The knot span to interpolate the parameter on
-   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> _calculatePointOnCurve(double parameter, unsigned int span);
+    ///Interpolate with a range of values...\n
+    ///Used internally for re-tessellation when moving control points
+    ///\param umin The min u param to interpolate between
+    ///\param umax The max u param to interpolate between
+    ///\param vmin The min v param to interpolate between
+    ///\param vmax The max v param to interpolate between
+    virtual void _interpolateWithinRange( double umin, double umax,
+                                          double vmin, double vmax );
+
+    ///Calculate a point and it's derivatives on a curve
+    ///\param parameter The interpolating parameter
+    ///\param span The knot span to interpolate the parameter on
+    std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> _calculatePointOnCurve( double parameter, unsigned int span );
 };
 }
 }

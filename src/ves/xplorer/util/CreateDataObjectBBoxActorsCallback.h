@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK 
+#ifndef CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK
 #define  CREATE_DATAOBJECT_BBOX_GEODE_CALLBACK
 /*!\file CreateDataObjectBBoxActorsCallback.h
 CreateDataObjectBBoxActorsCallback API.
@@ -54,17 +54,17 @@ namespace xplorer
 namespace util
 {
 class VE_UTIL_EXPORTS CreateDataObjectBBoxActorsCallback:
-    public DataObjectHandler::DatasetOperatorCallback
+            public DataObjectHandler::DatasetOperatorCallback
 {
-public:    
+public:
     ///Constructor
     CreateDataObjectBBoxActorsCallback();
     ///Destructor
     virtual ~CreateDataObjectBBoxActorsCallback();
     ///The operation to do on each vtkDataSet in the vtkDataObject
     ///\param dataset The vtkDataSet to operate on
-    virtual void OperateOnDataset(vtkDataSet* dataset);
-    
+    virtual void OperateOnDataset( vtkDataSet* dataset );
+
     ///Get the actors representing the bounding boxes of the datasets
     std::vector< vtkActor* > GetBBoxActors();
 protected:

@@ -47,42 +47,39 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////
 TextureBasedTransientDurationUpdateEventHandler::TextureBasedTransientDurationUpdateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////
 TextureBasedTransientDurationUpdateEventHandler
-::TextureBasedTransientDurationUpdateEventHandler(const TextureBasedTransientDurationUpdateEventHandler& ceh)
-{
-}
+::TextureBasedTransientDurationUpdateEventHandler( const TextureBasedTransientDurationUpdateEventHandler& ceh )
+{}
 /////////////////////////////////////////////////////////////////////
 TextureBasedTransientDurationUpdateEventHandler::~TextureBasedTransientDurationUpdateEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-TextureBasedTransientDurationUpdateEventHandler& 
-TextureBasedTransientDurationUpdateEventHandler::operator=(const TextureBasedTransientDurationUpdateEventHandler& rhs)
+TextureBasedTransientDurationUpdateEventHandler&
+TextureBasedTransientDurationUpdateEventHandler::operator=( const TextureBasedTransientDurationUpdateEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      TextureBasedEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        TextureBasedEventHandler::operator=( rhs );
+    }
+    return *this;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////   
-void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode(XMLObject* veXMLObject)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
 {
-   try
-   {
-      Command* command = dynamic_cast< Command* >( veXMLObject );
-      DataValuePairWeakPtr playDuration = command->GetDataValuePair("Duration");      
-      double value;
-      playDuration->GetData(value);
+    try
+    {
+        Command* command = dynamic_cast< Command* >( veXMLObject );
+        DataValuePairWeakPtr playDuration = command->GetDataValuePair( "Duration" );
+        double value;
+        playDuration->GetData( value );
 
-      ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration(value);
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid TextureDataSet!!"<<std::endl;
-      std::cout<<"TextureBasedTransientDurationUpdateEventHandler::_operateOnNode()"<<std::endl;
-   }
+        ves::xplorer::TextureBasedVizHandler::instance()->UpdateTransientDuration( value );
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid TextureDataSet!!" << std::endl;
+        std::cout << "TextureBasedTransientDurationUpdateEventHandler::_operateOnNode()" << std::endl;
+    }
 }

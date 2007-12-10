@@ -58,157 +58,175 @@ namespace xplorer
 cfdObjects API
 */
 /*!\class ves::xplorer::cfdObjects
-* 
+*
 */
 class VE_XPLORER_EXPORTS cfdObjects : public GlobalBase
 {
 public:
 
-   ///copy constructor.
-   ///\param &src
-   cfdObjects( const cfdObjects& src );
+    ///copy constructor.
+    ///\param &src
+    cfdObjects( const cfdObjects& src );
 
-   ///Constructor.
-   cfdObjects( void );
+    ///Constructor.
+    cfdObjects( void );
 
-   ///Destructor.
-   virtual ~cfdObjects( void );
+    ///Destructor.
+    virtual ~cfdObjects( void );
 
-   // pure virtual functions to be specified in concrete implementations
+    // pure virtual functions to be specified in concrete implementations
 
-   ///Process the VECommand from Conductor
-   virtual void UpdateCommand( void );
+    ///Process the VECommand from Conductor
+    virtual void UpdateCommand( void );
 
-   ///update the actor
-   virtual void Update() = 0;
+    ///update the actor
+    virtual void Update() = 0;
 
- ///Update the actors in the object
- void UpdateActors();
+///Update the actors in the object
+    void UpdateActors();
 
- ///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
- ///and the current dataset type
- ///\param input The input vtkPolyDataAlgorithm to process
- vtkPolyData* ApplyGeometryFilter(vtkAlgorithmOutput* input);
+///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
+///and the current dataset type
+///\param input The input vtkPolyDataAlgorithm to process
+    vtkPolyData* ApplyGeometryFilter( vtkAlgorithmOutput* input );
 
-   ///Returnd geodes.
-   std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes( void );
+    ///Returnd geodes.
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes( void );
 
-   ///Clear the geodes.
-   void ClearGeodes( void );
+    ///Clear the geodes.
+    void ClearGeodes( void );
 
-   ///Sets the object type.
-   ///\param type
-   void SetObjectType( int type );
+    ///Sets the object type.
+    ///\param type
+    void SetObjectType( int type );
 
-   ///Returns object type.
-   int GetObjectType( void ) { return this->objectType; }
+    ///Returns object type.
+    int GetObjectType( void )
+    {
+        return this->objectType;
+    }
 
-   ///Set the origin.
-   ///\param o
-   void SetOrigin( float o[3] );
+    ///Set the origin.
+    ///\param o
+    void SetOrigin( float o[3] );
 
-   ///returns the origin.
-   double * GetOrigin();
+    ///returns the origin.
+    double * GetOrigin();
 
-   ///Gets the origin values.
-   ///\param o
-   void GetOrigin( double o[3] );
+    ///Gets the origin values.
+    ///\param o
+    void GetOrigin( double o[3] );
 
-   ///Sets the normals.
-   ///\param n
-   void SetNormal( double n[3] );
+    ///Sets the normals.
+    ///\param n
+    void SetNormal( double n[3] );
 
-   ///Sets the size of the box.
-   ///\param b
-   void SetBoxSize( double b[6] );
-
-
-   ///Sets and stores the requested value.
-   ///\param x
-   void SetRequestedValue( int x ) { this->requestedValue = x; }
-
-   ///Sets and stores the cursor type.
-   ///\param x
-   void SetCursorType( int x ) { this->cursorType = x; }
-
-   ///Sets the use for the precalculated data.
-   ///\param x
-   void SetPreCalcFlag( int x ) { this->usePreCalcData = x; }
-
-   ///Sets the update flag.
-   ///\param x
-   void SetUpdateFlag( bool x ) { this->updateFlag = x; }
-
-   ///Gets the update flag.
-   ///\param x
-   bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
-
-   ///Deletes the geode.
-   void DeleteGeode( void );
-
-   //void SetSequence( cfdTempAnimation* );
-   //cfdTempAnimation* GetSequence( void );
-
-   ///Sets the source points.
-   ///\param pointSource
-   void SetSourcePoints( vtkPolyData * pointSource );
+    ///Sets the size of the box.
+    ///\param b
+    void SetBoxSize( double b[6] );
 
 
-   ///Adds another geode to the sequence.
-   void AddGeodesToSequence(void);
+    ///Sets and stores the requested value.
+    ///\param x
+    void SetRequestedValue( int x )
+    {
+        this->requestedValue = x;
+    }
 
-   ///Sets a flag for the geode.
-   ///\param x
-   void SetGeodeFlag( bool x );
+    ///Sets and stores the cursor type.
+    ///\param x
+    void SetCursorType( int x )
+    {
+        this->cursorType = x;
+    }
 
- ///Set active vtk pipelines 
- void SetActiveVtkPipeline();
+    ///Sets the use for the precalculated data.
+    ///\param x
+    void SetPreCalcFlag( int x )
+    {
+        this->usePreCalcData = x;
+    }
 
-   ///Flag for the geode flag.
-   bool GetGeodeFlag( void );
+    ///Sets the update flag.
+    ///\param x
+    void SetUpdateFlag( bool x )
+    {
+        this->updateFlag = x;
+    }
 
-   ///Flag for transient geode.
-   bool GetTransientGeodeFlag(void);
+    ///Gets the update flag.
+    ///\param x
+    bool GetUpdateFlag( void )
+    {
+        return ( this->updateFlag );
+    }
 
-   ///Sets flag for transient geode
-   void SetTransientGeodeFlag(bool x);
+    ///Deletes the geode.
+    void DeleteGeode( void );
 
-   ///Selects the active dataset.
-   ///\param dataset
-   void SetActiveDataSet( DataSet* dataset );
+    //void SetSequence( cfdTempAnimation* );
+    //cfdTempAnimation* GetSequence( void );
 
-   ///Gets the active dataset.
-   DataSet* GetActiveDataSet( void );
+    ///Sets the source points.
+    ///\param pointSource
+    void SetSourcePoints( vtkPolyData * pointSource );
 
-   //void ClearTransientVector( void );
-   //static void SetVectorScale( float );
-   //static float GetVectorScale();
+
+    ///Adds another geode to the sequence.
+    void AddGeodesToSequence( void );
+
+    ///Sets a flag for the geode.
+    ///\param x
+    void SetGeodeFlag( bool x );
+
+///Set active vtk pipelines
+    void SetActiveVtkPipeline();
+
+    ///Flag for the geode flag.
+    bool GetGeodeFlag( void );
+
+    ///Flag for transient geode.
+    bool GetTransientGeodeFlag( void );
+
+    ///Sets flag for transient geode
+    void SetTransientGeodeFlag( bool x );
+
+    ///Selects the active dataset.
+    ///\param dataset
+    void SetActiveDataSet( DataSet* dataset );
+
+    ///Gets the active dataset.
+    DataSet* GetActiveDataSet( void );
+
+    //void ClearTransientVector( void );
+    //static void SetVectorScale( float );
+    //static float GetVectorScale();
 
 protected:
-   DataSet* activeDataSet;///<active dataset.
+    DataSet* activeDataSet;///<active dataset.
 
-   // used by vectors and intended for warped contours
-   //static float vectorScale;
+    // used by vectors and intended for warped contours
+    //static float vectorScale;
 
-   std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<geode vector.
-   vtkPolyData* pointSource;///<point source for vtk polydata.
+    std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<geode vector.
+    vtkPolyData* pointSource;///<point source for vtk polydata.
 
- ///vtkMultiGroupGeometryFilter
- vtkMultiGroupDataGeometryFilter* m_multiGroupGeomFilter;
- ///vtkGeometryFilter
- vtkGeometryFilter* m_geometryFilter;
+///vtkMultiGroupGeometryFilter
+    vtkMultiGroupDataGeometryFilter* m_multiGroupGeomFilter;
+///vtkGeometryFilter
+    vtkGeometryFilter* m_geometryFilter;
 
-   bool updateFlag;///<flag for updating.
-   int vtkToPFDebug;///<debugging for performer (may not be needed).
-   int objectType;///<sets object type.
-   int requestedValue;///flag for requested value.
-   int cursorType;///<flag for cursor type.
-   int usePreCalcData;///<flag for using the precalculated data.
-   double origin[ 3 ];///<stores origin values.
-   double center[ 3 ];///<stores center values.
-   double normal[ 3 ];///<stores normal values.
-   double box_size[ 6 ];///<stores size of box.
-   float scale;///<store scale factor.
+    bool updateFlag;///<flag for updating.
+    int vtkToPFDebug;///<debugging for performer (may not be needed).
+    int objectType;///<sets object type.
+    int requestedValue;///flag for requested value.
+    int cursorType;///<flag for cursor type.
+    int usePreCalcData;///<flag for using the precalculated data.
+    double origin[ 3 ];///<stores origin values.
+    double center[ 3 ];///<stores center values.
+    double normal[ 3 ];///<stores normal values.
+    double box_size[ 6 ];///<stores size of box.
+    float scale;///<store scale factor.
 private:
 };
 }

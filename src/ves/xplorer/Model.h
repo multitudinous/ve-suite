@@ -63,7 +63,7 @@ namespace xplorer
 {
 namespace volume
 {
-   class cfdTextureDataSet;
+class cfdTextureDataSet;
 }
 }
 }
@@ -80,13 +80,13 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class DCS;
-   class Group;
-   class Switch;
-   class CADEntity;
-   class CADEntityHelper;
-   class Clone;
-   class fileInfo;
+class DCS;
+class Group;
+class Switch;
+class CADEntity;
+class CADEntityHelper;
+class Clone;
+class fileInfo;
 }
 }
 }
@@ -96,20 +96,20 @@ class vtkUnstructuredGrid;
 
 enum ModelTypeIndex
 {
-   SimulationModel=1,
-   ExperimentalModel,
-   DesignModel,
-   GeometricalModel
+    SimulationModel = 1,
+    ExperimentalModel,
+    DesignModel,
+    GeometricalModel
 };
 
 enum Operation2Model
 {
-   AddVTKdataset=1,
-   DelVTKdataset,
-   DeleteVTKdataset,
-   AddGeodataset,
-   DelGeodataset,
-   DeleteGeomdataset
+    AddVTKdataset = 1,
+    DelVTKdataset,
+    DeleteVTKdataset,
+    AddGeodataset,
+    DelGeodataset,
+    DeleteGeomdataset
 };
 
 namespace ves
@@ -120,169 +120,170 @@ namespace xplorer
 Model API
 */
 /*!\class ves::xplorer::Model
-* 
+*
 */
 
 /*
-1.The difference between the concept of multiple models and multiple datasets 
+1.The difference between the concept of multiple models and multiple datasets
 is that:
 
-A model can contain several vtkDataSets, geometricalDataSets (surface dataset). 
+A model can contain several vtkDataSets, geometricalDataSets (surface dataset).
 These datasets have the same operations. For example, for the same shape design,
-if we want to see the effects of different boundary condition, we can put two 
-different cases into the same model, so the comparision can be made very 
-easily.But if we want to see the two different shape design or need to see 
-the difference between the experiment results and the simulation results, 
+if we want to see the effects of different boundary condition, we can put two
+different cases into the same model, so the comparision can be made very
+easily.But if we want to see the two different shape design or need to see
+the difference between the experiment results and the simulation results,
 it is better to treat these two dataset as two different models.
 */
 class VE_XPLORER_EXPORTS Model : public GlobalBase
 {
 public:
-   Model( ves::xplorer::scenegraph::DCS* );
-   virtual ~Model();
+    Model( ves::xplorer::scenegraph::DCS* );
+    virtual ~Model();
 
-   ///PreFrame callback to update the model based on commands from
-   ///VE-Conductor
-   void PreFrameUpdate(); 
+    ///PreFrame callback to update the model based on commands from
+    ///VE-Conductor
+    void PreFrameUpdate();
 
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand() {}
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand()
+    {}
 
-   void setModelNode( ves::xplorer::scenegraph::CADEntityHelper * );
-   void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
-   bool GetMirrorDataFlag( void );
-   void SetMirrorDataFlag( bool );
-   void SetMirrorNode( ves::xplorer::scenegraph::Group* );
+    void setModelNode( ves::xplorer::scenegraph::CADEntityHelper * );
+    void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
+    bool GetMirrorDataFlag( void );
+    void SetMirrorDataFlag( bool );
+    void SetMirrorNode( ves::xplorer::scenegraph::Group* );
 
-   ves::xplorer::DataSet* GetCfdDataSet( int );
-   unsigned int GetIndexOfDataSet( std::string dataSetName );
-   unsigned int GetNumberOfCfdDataSets( void );
-   std::string GetCfdDataSetFileName( int );
-   void CreateCfdDataSet( void );
-   int GetKeyForCfdDataSet( DataSet* );
-   ves::xplorer::DataSet* GetActiveDataSet( void );
-   void SetActiveDataSet( ves::xplorer::DataSet* );
+    ves::xplorer::DataSet* GetCfdDataSet( int );
+    unsigned int GetIndexOfDataSet( std::string dataSetName );
+    unsigned int GetNumberOfCfdDataSets( void );
+    std::string GetCfdDataSetFileName( int );
+    void CreateCfdDataSet( void );
+    int GetKeyForCfdDataSet( DataSet* );
+    ves::xplorer::DataSet* GetActiveDataSet( void );
+    void SetActiveDataSet( ves::xplorer::DataSet* );
     ///Delete the named dataset
     void DeleteDataSet( std::string dataSetName );
 
 
-   ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
-   unsigned int GetNumberOfGeomDataSets( void );
-   std::string GetGeomFileName( int );
-   void CreateGeomDataSet( std::string );
+    ves::xplorer::scenegraph::CADEntity* GetGeomDataSet( int );
+    unsigned int GetNumberOfGeomDataSets( void );
+    std::string GetGeomFileName( int );
+    void CreateGeomDataSet( std::string );
 
-   ///Get the CADModelHandler for manipulation/management\n
-   ///of CADNode s
-   ///\return ModelCADHandler 
-   ves::xplorer::ModelCADHandler* GetModelCADHandler();
+    ///Get the CADModelHandler for manipulation/management\n
+    ///of CADNode s
+    ///\return ModelCADHandler
+    ves::xplorer::ModelCADHandler* GetModelCADHandler();
 
-   ///Get the node for the cfd data set
-   ves::xplorer::scenegraph::CADEntityHelper* GetCfdNode( void );
+    ///Get the node for the cfd data set
+    ves::xplorer::scenegraph::CADEntityHelper* GetCfdNode( void );
 
-   ///Get the dcs for the cfd data set
-   ves::xplorer::scenegraph::DCS* GetDCS( void );
+    ///Get the dcs for the cfd data set
+    ves::xplorer::scenegraph::DCS* GetDCS( void );
 
-   ///Set the id for this model
-   ///\param id the id of the model to be set
-   void SetID( unsigned int id );
+    ///Set the id for this model
+    ///\param id the id of the model to be set
+    void SetID( unsigned int id );
 
-   ///Get the id for this model
-   unsigned int GetID( void );
+    ///Get the id for this model
+    unsigned int GetID( void );
 
-   ///Add a new sound to the model
-   ///\param soundName The name of the sound
-   ///\param filename The actual filename of the sound to load
-   void AddNewSound(std::string soundName,std::string filename);
+    ///Add a new sound to the model
+    ///\param soundName The name of the sound
+    ///\param filename The actual filename of the sound to load
+    void AddNewSound( std::string soundName, std::string filename );
 
-   ///Activate (play) the sound
-   ///\param soundName The name of the sound to play
-   void ActivateSound(std::string soundName);
+    ///Activate (play) the sound
+    ///\param soundName The name of the sound to play
+    void ActivateSound( std::string soundName );
 
-   ///Deactivate (stop) the sound
-   ///\param soundName The name of the sound to stop
-   void DeactivateSound(std::string soundName);
- 
-   //////////////////////////
-   //texture based interface
-   void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS);
-  void CreateTextureDataSet();
-   void AddDataSetToTextureDataSet(unsigned int index,
-                         std::string textureDescriptionFile);
-   unsigned int GetNumberOfTextureDataSets();
-   ves::xplorer::volume::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
-   ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
-   ///////////////////////////////////////////////////
+    ///Deactivate (stop) the sound
+    ///\param soundName The name of the sound to stop
+    void DeactivateSound( std::string soundName );
+
+    //////////////////////////
+    //texture based interface
+    void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS );
+    void CreateTextureDataSet();
+    void AddDataSetToTextureDataSet( unsigned int index,
+                                     std::string textureDescriptionFile );
+    unsigned int GetNumberOfTextureDataSets();
+    ves::xplorer::volume::cfdTextureDataSet* GetTextureDataSet( unsigned int index );
+    ves::xplorer::volume::cfdTextureDataSet* GetActiveTextureDataSet();
+    ///////////////////////////////////////////////////
 
 //Dynamically load data from unit
-public:   
-   void ActiveLoadingThread();
+public:
+    void ActiveLoadingThread();
 #if __VJ_version > 2000003
-   void GetDataFromUnit(void);
+    void GetDataFromUnit( void );
 #elif __VJ_version == 2000003
-   void GetDataFromUnit(void* unused);
+    void GetDataFromUnit( void* unused );
 #endif
-   const std::string MakeSurfaceFile(vtkDataSet*,int);
-   void DynamicLoadingData(vtkUnstructuredGrid*, int, double*, double*, double*);
-   void DynamicLoadingGeom(std::string, double*, double*, double*, double*, int, int);
-   void AddVTKDataSet(vtkDataSet* );
-   std::vector<vtkDataSet* >GetWaitingDataList();
+    const std::string MakeSurfaceFile( vtkDataSet*, int );
+    void DynamicLoadingData( vtkUnstructuredGrid*, int, double*, double*, double* );
+    void DynamicLoadingGeom( std::string, double*, double*, double*, double*, int, int );
+    void AddVTKDataSet( vtkDataSet* );
+    std::vector<vtkDataSet* >GetWaitingDataList();
 
-  ///The current graph
-   /*std::string GetRootCADNodeID();*/
+    ///The current graph
+    /*std::string GetRootCADNodeID();*/
 
 private:
-   vpr::Thread *loadDataTh;
-   vpr::Mutex mValueLock;
-   std::vector<vtkDataSet* > waitingdatalist; 
-   std::string currentsurfacefilename;
-   bool mirrorDataFlag;
+    vpr::Thread *loadDataTh;
+    vpr::Mutex mValueLock;
+    std::vector<vtkDataSet* > waitingdatalist;
+    std::string currentsurfacefilename;
+    bool mirrorDataFlag;
 
 private:
-   //ves::xplorer::scenegraph::cfdTempAnimation* animation;
-   osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
-   typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;
-   GeometoryDataSetList mGeomDataSets;
-   typedef std::vector< ves::xplorer::DataSet* > VTKDataSetList;
-   VTKDataSetList mVTKDataSets;
+    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > classic;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > textureBased;
+    typedef std::vector< ves::xplorer::scenegraph::CADEntity* > GeometoryDataSetList;
+    GeometoryDataSetList mGeomDataSets;
+    typedef std::vector< ves::xplorer::DataSet* > VTKDataSetList;
+    VTKDataSetList mVTKDataSets;
 
-   /*std::map< std::string, ves::xplorer::scenegraph::CADEntity* > _partList;///<A list of the current parts.
-   std::map< std::string, ves::xplorer::scenegraph::DCS* > _assemblyList;///A list of the current assemblies.
-   std::map< std::string, ves::xplorer::scenegraph::Clone* > _cloneList;///A list of clones.
-*/
+    /*std::map< std::string, ves::xplorer::scenegraph::CADEntity* > _partList;///<A list of the current parts.
+    std::map< std::string, ves::xplorer::scenegraph::DCS* > _assemblyList;///A list of the current assemblies.
+    std::map< std::string, ves::xplorer::scenegraph::Clone* > _cloneList;///A list of clones.
+    */
 #ifdef _OSG
-   typedef std::vector<ves::xplorer::volume::cfdTextureDataSet*> TextureDataSetList;
-   TextureDataSetList mTextureDataSets;
-   ves::xplorer::volume::cfdTextureDataSet* _activeTextureDataSet;
+    typedef std::vector<ves::xplorer::volume::cfdTextureDataSet*> TextureDataSetList;
+    TextureDataSetList mTextureDataSets;
+    ves::xplorer::volume::cfdTextureDataSet* _activeTextureDataSet;
 #endif
 
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-   ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
-   DataSet* activeDataSet;
-   ves::xplorer::scenegraph::Clone* mirrorNode;
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
+    ves::xplorer::scenegraph::CADEntityHelper* mModelNode;
+    DataSet* activeDataSet;
+    ves::xplorer::scenegraph::Clone* mirrorNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > mirrorGroupNode;
 
-   //the information for following three variables should be transfered from cfdApp
-   ModelTypeIndex mModelType;
-   Operation2Model mActiveOperation2Model;
+    //the information for following three variables should be transfered from cfdApp
+    ModelTypeIndex mModelType;
+    Operation2Model mActiveOperation2Model;
 
-   bool mUpdateModelFlag;
-   bool mMoveOldGeomDataSets;
-   bool mMoveOldVTKDataSets;   
+    bool mUpdateModelFlag;
+    bool mMoveOldGeomDataSets;
+    bool mMoveOldVTKDataSets;
 
-   /*std::string rootCADNodeID;///<ID for root CAD node id*/
-   unsigned int modelID;
+    /*std::string rootCADNodeID;///<ID for root CAD node id*/
+    unsigned int modelID;
 
-   
-   std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
+
+    std::map<std::string, cfdSound> _availableSounds;///<The available sounds for this model.
 #ifdef _OSG
-         std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
+    std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > > _nodeAttributes;///<The map of node attributes.
 #endif
 
-         ves::xplorer::ModelCADHandler* m_cadHandler;///<The CADHandler for this model.
-   };
+    ves::xplorer::ModelCADHandler* m_cadHandler;///<The CADHandler for this model.
+};
 }
 }
 #endif

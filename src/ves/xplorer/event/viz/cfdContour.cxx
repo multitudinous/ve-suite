@@ -53,152 +53,152 @@ using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 cfdContour::cfdContour()
-:cfdContourBase()
+        : cfdContourBase()
 {
-#ifdef USE_OMP 
-   float b[6];
-   float c[3];
+#ifdef USE_OMP
+    float b[6];
+    float c[3];
 
-   this->append = vtkAppendPolyData::New();
-   this->nData = this->GetActiveMeshedVolume()->GetNoOfDataForProcs();
+    this->append = vtkAppendPolyData::New();
+    this->nData = this->GetActiveMeshedVolume()->GetNoOfDataForProcs();
 
-   for ( int i = 0; i < this->nData; i++ )
-   {
-      this->GetActiveMeshedVolume()->GetData(i)->GetBounds( b );
-      c[0] = b[1] - b[0];
-      c[1] = b[3] - b[2];
-      c[2] = b[5] - b[4];
+    for( int i = 0; i < this->nData; i++ )
+    {
+        this->GetActiveMeshedVolume()->GetData( i )->GetBounds( b );
+        c[0] = b[1] - b[0];
+        c[1] = b[3] - b[2];
+        c[2] = b[5] - b[4];
 
-      // set the plane
-      this->plane[i] = vtkPlane::New();
-      this->plane[i]->SetOrigin( c[0], c[1], c[2] );
-      this->plane[i]->SetNormal( 1.0f, 0.0f, 0.0f );
+        // set the plane
+        this->plane[i] = vtkPlane::New();
+        this->plane[i]->SetOrigin( c[0], c[1], c[2] );
+        this->plane[i]->SetNormal( 1.0f, 0.0f, 0.0f );
 
-      // set the cut function
-      this->cutter[i] = vtkCutter::New();
-      this->cutter[i]->SetInput( this->GetActiveMeshedVolume()->GetData(i) );
-      this->cutter[i]->SetCutFunction( this->plane[i] );
+        // set the cut function
+        this->cutter[i] = vtkCutter::New();
+        this->cutter[i]->SetInput( this->GetActiveMeshedVolume()->GetData( i ) );
+        this->cutter[i]->SetCutFunction( this->plane[i] );
 
-      // append data
-      this->append->AddInput( this->cutter[i]->GetOutput() );
-   }
+        // append data
+        this->append->AddInput( this->cutter[i]->GetOutput() );
+    }
 #else
 
-   // set the contour visualization pipeline
-   this->plane = vtkPlane::New();
-   this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
-   this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
+    // set the contour visualization pipeline
+    this->plane = vtkPlane::New();
+    this->plane->SetOrigin( 0.0f, 0.0f, 0.0f );
+    this->plane->SetNormal( 1.0f, 0.0f, 0.0f );
 
-   // set the cut function
-   this->cutter = vtkCutter::New();
-   this->cutter->SetCutFunction( this->plane );
+    // set the cut function
+    this->cutter = vtkCutter::New();
+    this->cutter->SetCutFunction( this->plane );
 
 #endif
 
-   //this->filter->ExtentClippingOn();
+    //this->filter->ExtentClippingOn();
 }
 
 cfdContour::~cfdContour()
 {
-   //vprDEBUG(vesDBG,2) << "cfdContour destructor"
+    //vprDEBUG(vesDBG,2) << "cfdContour destructor"
     //                      << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP
-   for ( int i=0; i<this->nData; i++ )
-   {
-      this->plane[i]->Delete();
-      this->cutter[i]->Delete();
-   }
-   this->append->Delete();
+    for( int i = 0; i < this->nData; i++ )
+    {
+        this->plane[i]->Delete();
+        this->cutter[i]->Delete();
+    }
+    this->append->Delete();
 #else
-   this->plane->Delete();
-   this->cutter->Delete();
+    this->plane->Delete();
+    this->cutter->Delete();
 #endif
 }
 
 void cfdContour::Update( void )
 {
-   if ( this->cursorType == CUBE )
-   {
-/*
-      float bd[6];      // Boundary of the whole data sets.
-      this->GetActiveMeshedVolume()->GetDataSet()->GetWholeBoundingBox( bd );
-      if (  this->center[0] > bd[0]-(this->box_size[1]-this->box_size[0])/2 
-         && this->center[0] < bd[1]+(this->box_size[1]-this->box_size[0])/2 
-         && this->center[1] > bd[2]-(this->box_size[3]-this->box_size[2])/2 
-         && this->center[1] < bd[3]+(this->box_size[3]-this->box_size[2])/2
-         && this->center[2] > bd[4]-(this->box_size[5]-this->box_size[4])/2
-         && this->center[2] < bd[5]+(this->box_size[5]-this->box_size[4])/2 )
-*/
-      {  
+    if( this->cursorType == CUBE )
+    {
+        /*
+              float bd[6];      // Boundary of the whole data sets.
+              this->GetActiveMeshedVolume()->GetDataSet()->GetWholeBoundingBox( bd );
+              if( this->center[0] > bd[0]-(this->box_size[1]-this->box_size[0])/2
+                 && this->center[0] < bd[1]+(this->box_size[1]-this->box_size[0])/2
+                 && this->center[1] > bd[2]-(this->box_size[3]-this->box_size[2])/2
+                 && this->center[1] < bd[3]+(this->box_size[3]-this->box_size[2])/2
+                 && this->center[2] > bd[4]-(this->box_size[5]-this->box_size[4])/2
+                 && this->center[2] < bd[5]+(this->box_size[5]-this->box_size[4])/2 )
+        */
+        {
 #ifndef USE_OMP
-         this->plane->SetOrigin( this->center );
-         this->plane->SetNormal( this->normal );
-         this->cutter->Update();
-         this->SetMapperInput( this->cutter->GetOutput() );
-         this->updateFlag = true;
+            this->plane->SetOrigin( this->center );
+            this->plane->SetNormal( this->normal );
+            this->cutter->Update();
+            this->SetMapperInput( this->cutter->GetOutput() );
+            this->updateFlag = true;
 #endif
-      }
-   }
-   else if ( this->cursorType == ARROW )
-   {
-      vprDEBUG(vesDBG, 0) << "contour cutting plane origin: "
-         << origin[0] << " : " << origin[1] << " : " << origin[2]
-         << std::endl << vprDEBUG_FLUSH;
+        }
+    }
+    else if( this->cursorType == ARROW )
+    {
+        vprDEBUG( vesDBG, 0 ) << "contour cutting plane origin: "
+        << origin[0] << " : " << origin[1] << " : " << origin[2]
+        << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP
-      int num_data = this->nData;
-      int i;
+        int num_data = this->nData;
+        int i;
 
 # pragma omp parallel for private(i)
-      for ( i=0; i<num_data; i++ )
-      {
-         this->plane[i]->SetOrigin( this->origin );
-         this->plane[i]->SetNormal( this->normal );
-         this->cutter[i]->Update();
-      }
-      this->SetMapperInput( this->append->GetOutput() );
+        for( i = 0; i < num_data; i++ )
+        {
+            this->plane[i]->SetOrigin( this->origin );
+            this->plane[i]->SetNormal( this->normal );
+            this->cutter[i]->Update();
+        }
+        this->SetMapperInput( this->append->GetOutput() );
 
 #else
 
-      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-      //this->cutter->SetInput( this->GetActiveMeshedVolume()->getProbe(cursor->getBox())->GetOutput() ); //temp change
-      this->plane->SetOrigin( this->origin );
-      this->plane->SetNormal( this->normal );
-      this->cutter->Update();
-      this->SetMapperInput( this->cutter->GetOutput() );
+        this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+        //this->cutter->SetInput( this->GetActiveMeshedVolume()->getProbe(cursor->getBox())->GetOutput() ); //temp change
+        this->plane->SetOrigin( this->origin );
+        this->plane->SetNormal( this->normal );
+        this->cutter->Update();
+        this->SetMapperInput( this->cutter->GetOutput() );
 
 #endif
 
-      this->mapper->SetScalarRange( 
-                               this->GetActiveDataSet()->GetUserRange() );
+        this->mapper->SetScalarRange(
+            this->GetActiveDataSet()->GetUserRange() );
 
-      this->mapper->SetLookupTable( 
-                             this->GetActiveDataSet()->GetLookupTable() );
+        this->mapper->SetLookupTable(
+            this->GetActiveDataSet()->GetLookupTable() );
 
-      this->updateFlag = true;
-   }
-   vtkActor* temp = vtkActor::New();
-   temp->SetMapper( this->mapper );
-   temp->GetProperty()->SetSpecularPower( 20.0f );
-   //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-   //geodes.back()->TranslateToGeode( temp );
-   //temp->Delete();
+        this->updateFlag = true;
+    }
+    vtkActor* temp = vtkActor::New();
+    temp->SetMapper( this->mapper );
+    temp->GetProperty()->SetSpecularPower( 20.0f );
+    //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
+    //geodes.back()->TranslateToGeode( temp );
+    //temp->Delete();
 
-   try
-   {
-		osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-      tempGeode->TranslateToGeode( temp );
-      geodes.push_back( tempGeode.get() );
-      this->updateFlag = true;
-   }
-   catch( std::bad_alloc )
-   {
-      mapper->Delete();
-      mapper = vtkMultiGroupPolyDataMapper::New();
+    try
+    {
+        osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+        tempGeode->TranslateToGeode( temp );
+        geodes.push_back( tempGeode.get() );
+        this->updateFlag = true;
+    }
+    catch ( std::bad_alloc )
+    {
+        mapper->Delete();
+        mapper = vtkMultiGroupPolyDataMapper::New();
 
-      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdContour" 
-                           << std::endl << vprDEBUG_FLUSH;
-   }
-   //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
-   temp->Delete();
+        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdContour"
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
+    temp->Delete();
 }
 

@@ -51,25 +51,25 @@ namespace event
 class NavigationDataEventHandler: public EventHandler
 {
 public:
-   //Constructor
-   NavigationDataEventHandler();
+    //Constructor
+    NavigationDataEventHandler();
 
-   //Copy Constructor
-   NavigationDataEventHandler(const NavigationDataEventHandler& ceh);
+    //Copy Constructor
+    NavigationDataEventHandler( const NavigationDataEventHandler& ceh );
 
-   //Destructor
-   virtual ~NavigationDataEventHandler();
+    //Destructor
+    virtual ~NavigationDataEventHandler();
 
-   //Set the Model
-   //param model The ModelHandler to execute the Command on
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* modelHandler);
+    //Set the Model
+    //param model The ModelHandler to execute the Command on
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-   //Exectute the event
-   //param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    //Exectute the event
+    //param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   //Equal operator
-   NavigationDataEventHandler& operator=(const NavigationDataEventHandler& rhs);
+    //Equal operator
+    NavigationDataEventHandler& operator=( const NavigationDataEventHandler& rhs );
 
 protected:
 };

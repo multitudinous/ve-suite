@@ -48,25 +48,26 @@ namespace conductor
 namespace util
 {
 
-class VE_CONDUCTOR_UTILS_EXPORTS CADMaterialEditMenu : public wxMenu{
+class VE_CONDUCTOR_UTILS_EXPORTS CADMaterialEditMenu : public wxMenu
+{
 public:
-   enum MATERIAL_EDIT_MENU_IDS
-   {
-      DIFFUSE_ID,   
-      AMBIENT_ID,   
-      SPECULAR_ID,   
-      EMISSIVE_ID,   
-      SHININESS_ID,   
-      OPACITY_ID,
-      FACE_ID,
-      COLOR_MODE_ID
-   };
+    enum MATERIAL_EDIT_MENU_IDS
+    {
+        DIFFUSE_ID,
+        AMBIENT_ID,
+        SPECULAR_ID,
+        EMISSIVE_ID,
+        SHININESS_ID,
+        OPACITY_ID,
+        FACE_ID,
+        COLOR_MODE_ID
+    };
 
-   ///Constructor
-   CADMaterialEditMenu();
+    ///Constructor
+    CADMaterialEditMenu();
 
-   ///Destructor
-   virtual ~CADMaterialEditMenu();
+    ///Destructor
+    virtual ~CADMaterialEditMenu();
 
 
 protected:

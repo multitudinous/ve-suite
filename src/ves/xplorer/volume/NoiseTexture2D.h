@@ -53,34 +53,40 @@ class TransferFunction;
 class VE_TEXTURE_BASED_EXPORTS NoiseTexture2D
 {
 public:
-   ///Constructor
-   ///\param x The x size
-   ///\param x The y size
-   NoiseTexture2D(unsigned int x=32,unsigned int y =32);
+    ///Constructor
+    ///\param x The x size
+    ///\param x The y size
+    NoiseTexture2D( unsigned int x = 32, unsigned int y = 32 );
 
-   ///Copy Constructor
-   NoiseTexture2D(const NoiseTexture2D& rhs);
+    ///Copy Constructor
+    NoiseTexture2D( const NoiseTexture2D& rhs );
 
-   ///Destructor
-   virtual ~NoiseTexture2D();
+    ///Destructor
+    virtual ~NoiseTexture2D();
 
-   ///\return The noise texture
-   osg::Texture2D* GetNoiseTexture();
+    ///\return The noise texture
+    osg::Texture2D* GetNoiseTexture();
 
-   ///Get the resolution
-   ///\return The x resolution
-   unsigned int GetResolutionX(){return _resolution[0];}
+    ///Get the resolution
+    ///\return The x resolution
+    unsigned int GetResolutionX()
+    {
+        return _resolution[0];
+    }
 
-   ///Get the resolution
-   ///\return The y resolution
-   unsigned int GetResolutionY(){return _resolution[1];}
-   ///equal operator
-   ///\param rhs The right hand side
-   NoiseTexture2D& operator=(const NoiseTexture2D& rhs);
+    ///Get the resolution
+    ///\return The y resolution
+    unsigned int GetResolutionY()
+    {
+        return _resolution[1];
+    }
+    ///equal operator
+    ///\param rhs The right hand side
+    NoiseTexture2D& operator=( const NoiseTexture2D& rhs );
 protected:
-   unsigned int _resolution[2];///<The resolution of the noise image
-   unsigned char* _noiseData;///<The data
-   osg::ref_ptr<osg::Texture2D> _noiseTexture;///<The noise texture
+    unsigned int _resolution[2];///<The resolution of the noise image
+    unsigned char* _noiseData;///<The data
+    osg::ref_ptr<osg::Texture2D> _noiseTexture;///<The noise texture
 };
 }
 }

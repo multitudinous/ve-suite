@@ -51,35 +51,35 @@ class Particle;
 
 //! VTK streamers plane renderer.
 /*!
-  A class to takes input data set(s) and generates streamlines 
+  A class to takes input data set(s) and generates streamlines
   based on the glyph given. Update member function will be update
   the position and direction as each "Update" being called.
 */
 class reiParticles
 {
-   public:
-      reiParticles( void );
-      ~reiParticles( void );
-      reiParticles( reiParticles * );
+public:
+    reiParticles( void );
+    ~reiParticles( void );
+    reiParticles( reiParticles * );
 
-      void writeParticlePolyData( void );
-      void readPPLOT1( void );
-      void readPPLOT3( void );
-      void readParticleParamFile( void );
+    void writeParticlePolyData( void );
+    void readPPLOT1( void );
+    void readPPLOT3( void );
+    void readParticleParamFile( void );
 
-      typedef std::vector< Particle * > Particles;
-      Particles particles;
-      int nsl;
-      int nps;
+    typedef std::vector< Particle * > Particles;
+    Particles particles;
+    int nsl;
+    int nps;
 
-      vtkPolyDataWriter          *writer;      
-      vtkPolyData                *polydata;          
-      vtkPoints                  *points;              
-      vtkCellArray               *lines;            
-      vtkFloatArray              **parameterData;          
-      vtkTransform               *transform;        
-      vtkTransformPolyDataFilter *transFilter; 
-      //typedef std::vector< int > IntList;
-      //IntList whichParticles;
+    vtkPolyDataWriter          *writer;
+    vtkPolyData                *polydata;
+    vtkPoints                  *points;
+    vtkCellArray               *lines;
+    vtkFloatArray              **parameterData;
+    vtkTransform               *transform;
+    vtkTransformPolyDataFilter *transFilter;
+    //typedef std::vector< int > IntList;
+    //IntList whichParticles;
 };
 #endif

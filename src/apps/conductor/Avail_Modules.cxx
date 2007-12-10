@@ -59,126 +59,126 @@ using namespace ves::conductor;
 using namespace ves::conductor::util;
 using namespace ves::open::xml;
 
-BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
-  EVT_TREE_ITEM_RIGHT_CLICK(TREE_CTRL, Avail_Modules::OnItemRightClick)
-  EVT_TREE_SEL_CHANGED(TREE_CTRL, Avail_Modules::OnSelChanged)
-  EVT_MENU(Module_Desc, Avail_Modules::ShowDesc)
-  EVT_MENU(Module_Help, Avail_Modules::ShowHelp)
-  EVT_TREE_ITEM_ACTIVATED(TREE_CTRL, Avail_Modules::Instantiate)
+BEGIN_EVENT_TABLE( Avail_Modules, wxTreeCtrl )
+    EVT_TREE_ITEM_RIGHT_CLICK( TREE_CTRL, Avail_Modules::OnItemRightClick )
+    EVT_TREE_SEL_CHANGED( TREE_CTRL, Avail_Modules::OnSelChanged )
+    EVT_MENU( Module_Desc, Avail_Modules::ShowDesc )
+    EVT_MENU( Module_Help, Avail_Modules::ShowHelp )
+    EVT_TREE_ITEM_ACTIVATED( TREE_CTRL, Avail_Modules::Instantiate )
 END_EVENT_TABLE()
-   
-Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
-:
-wxTreeCtrl(parent, id, pos, size, style), 
-canvas(0)
+
+Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style )
+        :
+        wxTreeCtrl( parent, id, pos, size, style ),
+        canvas( 0 )
 {
-  int image1 = TreeCtrlIcon_Folder;
-  int image2 = TreeCtrlIcon_FolderSelected;
-  CreateImageList();
-  rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
-  SetItemImage(rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
-  SetItemFont(rootId, *wxITALIC_FONT);
-  pl_loader = new PluginLoader();
-  LoadModules();
+    int image1 = TreeCtrlIcon_Folder;
+    int image2 = TreeCtrlIcon_FolderSelected;
+    CreateImageList();
+    rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
+    SetItemImage( rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
+    SetItemFont( rootId, *wxITALIC_FONT );
+    pl_loader = new PluginLoader();
+    LoadModules();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Avail_Modules::~Avail_Modules()
 {
-   delete pl_loader;
+    delete pl_loader;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::AddModule(UIPluginBase* plugin, wxClassInfo* clsi)
+void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
 {
-	std::vector<wxString> lnames;
-	wxTreeItemIdValue cookie;
-	wxString plname = plugin->GetConductorName();
-	wxTreeItemId id, lastid;
-	int image1, image2, image3, image4;
-	int i, lsize;
+    std::vector<wxString> lnames;
+    wxTreeItemIdValue cookie;
+    wxString plname = plugin->GetConductorName();
+    wxTreeItemId id, lastid;
+    int image1, image2, image3, image4;
+    int i, lsize;
 
-	getLeveledName(plname, lnames);
-	image1 = TreeCtrlIcon_Folder;
-	image2 = TreeCtrlIcon_FolderSelected;
-	image3 = TreeCtrlIcon_File;
-	image4 = TreeCtrlIcon_FileSelected;
+    getLeveledName( plname, lnames );
+    image1 = TreeCtrlIcon_Folder;
+    image2 = TreeCtrlIcon_FolderSelected;
+    image3 = TreeCtrlIcon_File;
+    image4 = TreeCtrlIcon_FileSelected;
 
-	id = rootId;
-	lsize = lnames.size();
+    id = rootId;
+    lsize = lnames.size();
 
     //This parses the _ in the plugin name so that the proper folder hiearachy
     //can be created
-	for( i=0; i < (lsize-1); i++)
+    for( i = 0; i < ( lsize - 1 ); i++ )
     {
-		lastid=id;
-        id = GetFirstChild(id, cookie);
-      
-		while( 1 )
-		{
-			if( !id )
-			{
-				id=AppendItem( lastid,lnames[i], image1, image2, NULL );
-				SetItemImage(id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
-				SetItemFont(id, *wxITALIC_FONT);
-				break;
-			}
-			  	  
-			if(GetItemText(id)==lnames[i])
-				 break;
-			  
-            id= GetNextChild(lastid, cookie);
-		}
-	}
-   
-   id = AppendItem(id, lnames[i], image3, image4,  new ReiTreeItemData(plugin, clsi));
-   SetItemBold(id);
+        lastid = id;
+        id = GetFirstChild( id, cookie );
+
+        while( 1 )
+        {
+            if( !id )
+            {
+                id = AppendItem( lastid, lnames[i], image1, image2, NULL );
+                SetItemImage( id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
+                SetItemFont( id, *wxITALIC_FONT );
+                break;
+            }
+
+            if( GetItemText( id ) == lnames[i] )
+                break;
+
+            id = GetNextChild( lastid, cookie );
+        }
+    }
+
+    id = AppendItem( id, lnames[i], image3, image4,  new ReiTreeItemData( plugin, clsi ) );
+    SetItemBold( id );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
+void Avail_Modules::OnItemRightClick( wxTreeEvent& event )
 {
     ReiTreeItemData* item_data;
 
     selection = GetSelection();
     if( !selection )
-    {  
-        return;
-    }
-
-    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
-    if (item_data==NULL)
     {
         return;
     }
 
-    ShowMenu(selection, event.GetPoint());
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
+    if( item_data == NULL )
+    {
+        return;
+    }
+
+    ShowMenu( selection, event.GetPoint() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
+void Avail_Modules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
 {
     selection = GetSelection();
     if( !selection )
-    {   
+    {
         return;
     }
 
     ReiTreeItemData* item_data;
-    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
-    if ( item_data == NULL )
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
+    if( item_data == NULL )
     {
         return;
     }
 
     wxClassInfo* info;
     info = item_data->pl_clsi;
-    if ( info )
+    if( info )
     {
         UIPluginBase* object;
         object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
         //object->SetNetworkFrame( canvas );
         object->SetCanvas( canvas );
         object->SetNetwork( canvas->GetActiveNetwork() );
-		object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
+        object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
         canvas->GetActiveNetwork()->AddtoNetwork( object, std::string( wxString( info->GetClassName() ).mb_str() ) );
-		frame->GetHierarchyTree()->AddtoTree( object );
+        frame->GetHierarchyTree()->AddtoTree( object );
     }
     else
     {
@@ -186,131 +186,131 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
         //object->SetNetworkFrame( canvas );
         object->SetCanvas( canvas );
         object->SetNetwork( canvas->GetActiveNetwork() );
-		object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
+        object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
         canvas->GetActiveNetwork()->AddtoNetwork( object, std::string( "DefaultPlugin" ) );
-		frame->GetHierarchyTree()->AddtoTree( object );
+        frame->GetHierarchyTree()->AddtoTree( object );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ShowMenu(wxTreeItemId id, const wxPoint& pt)
+void Avail_Modules::ShowMenu( wxTreeItemId id, const wxPoint& pt )
 {
     wxString title;
-    if ( id.IsOk() )
+    if( id.IsOk() )
     {
-        title << wxT("Menu for ") << GetItemText(id);
+        title << wxT( "Menu for " ) << GetItemText( id );
     }
     else
     {
-        title = wxT("Menu for no particular item");
+        title = wxT( "Menu for no particular item" );
     }
 
-    wxMenu menu(title);
-    menu.Append(Module_Desc, wxT("&Description"));
-    menu.Append(Module_Help, wxT("&Help"));
+    wxMenu menu( title );
+    menu.Append( Module_Desc, wxT( "&Description" ) );
+    menu.Append( Module_Help, wxT( "&Help" ) );
 
-    PopupMenu(&menu, pt);
+    PopupMenu( &menu, pt );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::getLeveledName(wxString name, std::vector<wxString> & lnames)
+void Avail_Modules::getLeveledName( wxString name, std::vector<wxString> & lnames )
 {
-  char * s;
-  int len;
+    char * s;
+    int len;
 
-  len = name.Len();
-  s = new char[len+1];
+    len = name.Len();
+    s = new char[len+1];
 
-  lnames.clear();
-  strcpy(s, name.mb_str() );
-  get_tokens(s, lnames, "_");
-  delete [] s;
-  
+    lnames.clear();
+    strcpy( s, name.mb_str() );
+    get_tokens( s, lnames, "_" );
+    delete [] s;
+
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::CreateImageList(int size)
+void Avail_Modules::CreateImageList( int size )
 {
-    if ( size == -1 )
+    if( size == -1 )
     {
-        SetImageList(NULL);
+        SetImageList( NULL );
         return;
     }
-    if ( size == 0 )
+    if( size == 0 )
         size = m_imageSize;
     else
         m_imageSize = size;
 
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList(size, size, TRUE);
+    wxImageList *images = new wxImageList( size, size, TRUE );
 
     // should correspond to TreeCtrlIcon_xxx enum
     wxBusyCursor wait;
     wxIcon icons[5];
-    icons[0] = wxIcon(icon1_xpm);
-    icons[1] = wxIcon(icon2_xpm);
-    icons[2] = wxIcon(icon3_xpm);
-    icons[3] = wxIcon(icon4_xpm);
-    icons[4] = wxIcon(icon5_xpm);
+    icons[0] = wxIcon( icon1_xpm );
+    icons[1] = wxIcon( icon2_xpm );
+    icons[2] = wxIcon( icon3_xpm );
+    icons[3] = wxIcon( icon4_xpm );
+    icons[4] = wxIcon( icon5_xpm );
 
     int sizeOrig = icons[0].GetWidth();
-    for ( size_t i = 0; i < WXSIZEOF(icons); i++ )
+    for( size_t i = 0; i < WXSIZEOF( icons ); i++ )
     {
-        if ( size == sizeOrig )
+        if( size == sizeOrig )
         {
-            images->Add(icons[i]);
+            images->Add( icons[i] );
         }
         else
         {
-            images->Add(wxBitmap(wxBitmap(icons[i]).ConvertToImage().Rescale(size, size)));
+            images->Add( wxBitmap( wxBitmap( icons[i] ).ConvertToImage().Rescale( size, size ) ) );
         }
     }
 
-    AssignImageList(images);
+    AssignImageList( images );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::OnSelChanged(wxTreeEvent& WXUNUSED(event))
+void Avail_Modules::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Avail_Modules::LoadModules()
 {
-    pl_loader->LoadPlugins( _("Plugins/UI") );
-    for( size_t i=0; i < pl_loader->GetNumberOfPlugins(); i++)
-    {  
+    pl_loader->LoadPlugins( _( "Plugins/UI" ) );
+    for( size_t i = 0; i < pl_loader->GetNumberOfPlugins(); i++ )
+    {
         UIPluginBase* plugin = pl_loader->GetPluginDataPair( i ).first;
         wxClassInfo* clsi = pl_loader->GetPluginDataPair( i ).second;
-            
-        AddModule( plugin, clsi);
+
+        AddModule( plugin, clsi );
     }
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
+void Avail_Modules::ShowDesc( wxCommandEvent& WXUNUSED( event ) )
 {
     ReiTreeItemData* item_data;
     UIPluginBase* pl;
     wxString desc;
     wxString title;
 
-    title << wxT("Description for ") << GetItemText(selection);
+    title << wxT( "Description for " ) << GetItemText( selection );
 
     if( !selection )
     {
         return;
     }
 
-    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
-    if( item_data==NULL )
-    {  
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
+    if( item_data == NULL )
+    {
         return;
     }
 
     pl = item_data->plugin;
     desc = pl->GetDesc();
 
-    wxMessageDialog(this, desc, title).ShowModal();
+    wxMessageDialog( this, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
+void Avail_Modules::ShowHelp( wxCommandEvent& WXUNUSED( event ) )
 {
     UIPluginBase* pl;
     wxString help;
@@ -318,9 +318,9 @@ void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
     wxString docdir;
     wxString cmd;
     ReiTreeItemData* item_data;
-    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData(selection) );
+    item_data = dynamic_cast< ReiTreeItemData* >( GetItemData( selection ) );
     if( !item_data )
-    {    
+    {
         return;
     }
 
@@ -329,11 +329,11 @@ void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
     fgroot = getenv("FGROOT");
     char browser[1024];
 
-#ifdef WIN32
+    #ifdef WIN32
     docdir=fgroot+"\\Framework\\doc";
     help = fgroot+"\\"+pl->GetHelp();
     FindExecutable("index.html", docdir.c_str(), browser);
-#endif
+    #endif
     cmd="\"";
     cmd+=browser;
     cmd+="\" \"";
@@ -351,20 +351,20 @@ void Avail_Modules::ResetPluginTree()
     int image1 = TreeCtrlIcon_Folder;
     int image2 = TreeCtrlIcon_FolderSelected;
     rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
-    SetItemImage(rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
-    SetItemFont(rootId, *wxITALIC_FONT);
+    SetItemImage( rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
+    SetItemFont( rootId, *wxITALIC_FONT );
     //Remove all the old plugins and create the new one
     delete pl_loader;
     pl_loader = new PluginLoader();
     //Load the plugins now
     LoadModules();
-    
+
     //Now tell Xplorer to reload plugins
-    DataValuePair* dvp = 
-        new DataValuePair(  std::string("STRING") );
+    DataValuePair* dvp =
+        new DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "Reload_Plugin_Objects", "Reload" );
     ves::open::xml::Command vec;
-    vec.SetCommandName( std::string("Plugin_Control") );
+    vec.SetCommandName( std::string( "Plugin_Control" ) );
     vec.AddDataValuePair( dvp );
     CORBAServiceList::instance()->SendCommandStringToXplorer( &vec );
 }

@@ -58,54 +58,54 @@ namespace xml
 class VE_XML_EXPORTS StateInfo : public XMLObject
 {
 public:
-   ///Constructor 
-   StateInfo();
-   ///Copy Constructor
-   StateInfo( const StateInfo& );
-   ///equal operator
-   StateInfo& operator= ( const StateInfo& );
-   ///Destructor
-   virtual ~StateInfo();
-   
-   ///Add new state information.
-   ///\param state The new state to add which is held in a Command object.
-   //void AddState(CommandPtr state);
-   ///Add new state information.
-   ///\param state The new state to add which is held in a Command object.
-   void AddState( CommandWeakPtr state );
-   
-   ///Clear all current state information.
-   void ClearState();
-   
-   ///Set the data from an string representing the xml
-   ///\param xmlInput The input xml data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    ///Constructor
+    StateInfo();
+    ///Copy Constructor
+    StateInfo( const StateInfo& );
+    ///equal operator
+    StateInfo& operator= ( const StateInfo& );
+    ///Destructor
+    virtual ~StateInfo();
 
-   ///Get a state based on the name.
-   ///\param name The name of the state to search for
-   CommandWeakPtr GetState(std::string name);
-   ///Get the state based on an index
-   ///\param index The index to search for.
-   CommandWeakPtr GetState( size_t index);
-   ///Get the vector of states for this user
-   std::vector< CommandWeakPtr > GetStateVector( void );
+    ///Add new state information.
+    ///\param state The new state to add which is held in a Command object.
+    //void AddState(CommandPtr state);
+    ///Add new state information.
+    ///\param state The new state to add which is held in a Command object.
+    void AddState( CommandWeakPtr state );
+
+    ///Clear all current state information.
+    void ClearState();
+
+    ///Set the data from an string representing the xml
+    ///\param xmlInput The input xml data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
+
+    ///Get a state based on the name.
+    ///\param name The name of the state to search for
+    CommandWeakPtr GetState( std::string name );
+    ///Get the state based on an index
+    ///\param index The index to search for.
+    CommandWeakPtr GetState( size_t index );
+    ///Get the vector of states for this user
+    std::vector< CommandWeakPtr > GetStateVector( void );
 
 protected:
-   ///Internally update the XML data.
-   ///\param tagName The tag name to use for this element.
-	virtual void _updateVEElement( std::string tagName );
-   ///Internally update the Command list.
-   void _updateCommands();
+    ///Internally update the XML data.
+    ///\param tagName The tag name to use for this element.
+    virtual void _updateVEElement( std::string tagName );
+    ///Internally update the Command list.
+    void _updateCommands();
 
-   std::vector<CommandPtr> _stateInfo;///<The Command list holding state information.
+    std::vector<CommandPtr> _stateInfo;///<The Command list holding state information.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, StateInfo* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, StateInfo* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

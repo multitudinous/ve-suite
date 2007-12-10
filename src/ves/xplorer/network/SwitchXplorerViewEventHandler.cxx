@@ -69,16 +69,16 @@ using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 SwitchXplorerViewEventHandler::SwitchXplorerViewEventHandler( const SwitchXplorerViewEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler( rhs )
+        :
+        ves::xplorer::event::EventHandler( rhs )
 {
     ;
 }
@@ -106,7 +106,7 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
 void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
 {
     Command* command = dynamic_cast< Command* >( xmlObject );
-    DataValuePairWeakPtr activeModelDVP = 
+    DataValuePairWeakPtr activeModelDVP =
         command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
 
     std::string viewData;
@@ -139,8 +139,8 @@ void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
     {
         SceneManager::instance()->SetActiveSwitchNode( 0 );
     }
-   
-    ves::xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS( 
+
+    ves::xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS(
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////

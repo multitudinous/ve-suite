@@ -44,8 +44,8 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 LocalToWorldTransform::LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldNode,
                                               ves::xplorer::scenegraph::DCS* localNode )
-:
-NodeVisitor( TRAVERSE_PARENTS )
+        :
+        NodeVisitor( TRAVERSE_PARENTS )
 {
     gmtl::identity( m_localToWorldTransform );
 
@@ -59,7 +59,7 @@ LocalToWorldTransform::~LocalToWorldTransform()
 {
     ;
 }
-////////////////////////////////////////////////////////////////////////////////    
+////////////////////////////////////////////////////////////////////////////////
 void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
 {
     if( pat.getName() == m_worldNode->getName() )
@@ -67,7 +67,8 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
         for( size_t i = 0; i < _nodePath.size(); ++i )
         {
             m_localToWorldTransform *= static_cast< ves::xplorer::scenegraph::DCS* >
-                ( _nodePath.at( i ) )->GetMat();;
+                                       ( _nodePath.at( i ) )->GetMat();
+            ;
         }
         gmtl::Matrix44d tempLocalMat = m_localNode->GetMat();
         m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( tempLocalMat );

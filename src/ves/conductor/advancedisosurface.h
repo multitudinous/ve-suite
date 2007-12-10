@@ -52,7 +52,7 @@ namespace conductor
 {
 namespace util
 {
-    class wxSpinCtrlDbl;
+class wxSpinCtrlDbl;
 }
 }
 }
@@ -74,51 +74,54 @@ namespace ves
 namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS AdvancedIsosurface: public wxDialog
-{    
+{
     DECLARE_EVENT_TABLE()
 
 public:
     AdvancedIsosurface( );
     AdvancedIsosurface( wxWindow* parent,
-						wxWindowID id = SYMBOL_ADVANCEDISOSURFACES_IDNAME,
-						const wxString& caption = SYMBOL_ADVANCEDISOSURFACES_TITLE,
-						const wxPoint& pos = SYMBOL_ADVANCEDISOSURFACES_POSITION,
-						const wxSize& size = SYMBOL_ADVANCEDISOSURFACES_SIZE,
-						long style = SYMBOL_ADVANCEDISOSURFACES_STYLE );
-   virtual ~AdvancedIsosurface( void ){ ; }
+                        wxWindowID id = SYMBOL_ADVANCEDISOSURFACES_IDNAME,
+                        const wxString& caption = SYMBOL_ADVANCEDISOSURFACES_TITLE,
+                        const wxPoint& pos = SYMBOL_ADVANCEDISOSURFACES_POSITION,
+                        const wxSize& size = SYMBOL_ADVANCEDISOSURFACES_SIZE,
+                        long style = SYMBOL_ADVANCEDISOSURFACES_STYLE );
+    virtual ~AdvancedIsosurface( void )
+    {
+        ;
+    }
 
-   enum ADVANCEDISO_IDS
-   {
-      MIN_SPINCTRL,
-      MAX_SPINCTRL,
-      MIN_SLIDER,
-      MAX_SLIDER,
-	  SELECT_SCALAR
-   };
+    enum ADVANCEDISO_IDS
+    {
+        MIN_SPINCTRL,
+        MAX_SPINCTRL,
+        MIN_SLIDER,
+        MAX_SLIDER,
+        SELECT_SCALAR
+    };
 
     bool Create( wxWindow* parent,
-				 wxWindowID id = SYMBOL_ADVANCEDISOSURFACES_IDNAME,
-				 const wxString& caption = SYMBOL_ADVANCEDISOSURFACES_TITLE,
-				 const wxPoint& pos = SYMBOL_ADVANCEDISOSURFACES_POSITION,
-				 const wxSize& size = SYMBOL_ADVANCEDISOSURFACES_SIZE,
-				 long style = SYMBOL_ADVANCEDISOSURFACES_STYLE );
+                 wxWindowID id = SYMBOL_ADVANCEDISOSURFACES_IDNAME,
+                 const wxString& caption = SYMBOL_ADVANCEDISOSURFACES_TITLE,
+                 const wxPoint& pos = SYMBOL_ADVANCEDISOSURFACES_POSITION,
+                 const wxSize& size = SYMBOL_ADVANCEDISOSURFACES_SIZE,
+                 long style = SYMBOL_ADVANCEDISOSURFACES_STYLE );
 
     /// Creates the controls and sizers
     void CreateControls();
-	/// Callback for the scalar selection
-	void OnScalarSelection( wxCommandEvent& WXUNUSED(event) );
-	/// Callback for the minimum scalar spinner
-	void OnMinSpinCtrl( wxScrollEvent& WXUNUSED(event) );
-	/// Callback for the maximum scalar spinner
-	void OnMaxSpinCtrl( wxScrollEvent& WXUNUSED(event) );
-	/// Callback for the minimum scalar slider
-	void OnMinSlider( wxScrollEvent& WXUNUSED(event) );
-	/// Callback for the maximum scalar slider
-	void OnMaxSlider( wxScrollEvent& WXUNUSED(event) );
-	/// Callback for text on minimum spinner
-	void UpdateMinSlider( wxCommandEvent& event );
-	/// Callback for text on maximum spinner	
-	void UpdateMaxSlider( wxCommandEvent& event );
+    /// Callback for the scalar selection
+    void OnScalarSelection( wxCommandEvent& WXUNUSED( event ) );
+    /// Callback for the minimum scalar spinner
+    void OnMinSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    /// Callback for the maximum scalar spinner
+    void OnMaxSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    /// Callback for the minimum scalar slider
+    void OnMinSlider( wxScrollEvent& WXUNUSED( event ) );
+    /// Callback for the maximum scalar slider
+    void OnMaxSlider( wxScrollEvent& WXUNUSED( event ) );
+    /// Callback for text on minimum spinner
+    void UpdateMinSlider( wxCommandEvent& event );
+    /// Callback for text on maximum spinner
+    void UpdateMaxSlider( wxCommandEvent& event );
 
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -126,7 +129,7 @@ public:
 
     static bool ShowToolTips();
     void PopulateList( wxArrayString scalarlist );
-    void SetScalarList( std::map<std::string,std::vector<double> > colorScalarRanges );
+    void SetScalarList( std::map<std::string, std::vector<double> > colorScalarRanges );
     void SetActiveScalar( std::string activeScalar );
     void SetScalarRange( void );
     bool _ensureSliders( int activeSliderID );
@@ -135,25 +138,25 @@ public:
     std::string GetScalarName( void );
 protected:
 
-	wxListBox* scalarSelection;
-	util::wxSpinCtrlDbl* _minSpinner;
+    wxListBox* scalarSelection;
+    util::wxSpinCtrlDbl* _minSpinner;
     util::wxSpinCtrlDbl* _maxSpinner;
     wxSlider* _minSlider;
     wxSlider* _maxSlider;
 
-	std::map<std::string,wxArrayString> _availableSolutions;
-	std::map<std::string,std::vector<double> > _colorScalarRanges;///<The scalar range for the active scalar
+    std::map<std::string, wxArrayString> _availableSolutions;
+    std::map<std::string, std::vector<double> > _colorScalarRanges;///<The scalar range for the active scalar
     std::vector<double> _colorScalarRange;///<The active scalars range.
-	std::string _colorScalarName;///<The selected scalar
-	std::string _activeScalar;
+    std::string _colorScalarName;///<The selected scalar
+    std::string _activeScalar;
 
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
 };
 }
 }
 #endif
-    // _ADVANCEDISOSURFACES_H_
+// _ADVANCEDISOSURFACES_H_

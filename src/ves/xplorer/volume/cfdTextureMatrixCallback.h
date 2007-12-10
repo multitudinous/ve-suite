@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 //class to update the texture matrix appropriately
-#ifndef CFD_TEXTURE_MATRIX_CALLBACK_H 
-#define CFD_TEXTURE_MATRIX_CALLBACK_H 
+#ifndef CFD_TEXTURE_MATRIX_CALLBACK_H
+#define CFD_TEXTURE_MATRIX_CALLBACK_H
 /*!\file cfdTextureMatrixCallback.h
 * cfdTextureMatrixCallback API
 */
@@ -44,8 +44,8 @@
 
 namespace osg
 {
-   class TexMat;
-   class Node;
+class TexMat;
+class Node;
 }
 #include <osg/NodeCallback>
 #include <osg/Vec3f>
@@ -56,29 +56,29 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback : public osg::NodeCallback
-   {
-      public:
-         ///Callback that updates the texture matrix
-         ///\param texmat The osg::TexMat to update
-         ///\param center The center of the data
-         ///\param scale The scale of the data (compared to unit cube)
-         ///\param trans The translation for the texture matrix
-         cfdTextureMatrixCallback(osg::TexMat* texmat,osg::Vec3f center,
-                       float* scale,float* trans);
-         ///Update the texture matrix
-         ///\param node The osg::Node to update
-         ///\param nv The osg::NodeVisitor
-         virtual void operator()(osg::Node* node,osg::NodeVisitor* nv);
-    
-      protected:
-         float _trans[3];///<Translation vector
-         float _scale[3];///<The scale vector
-         osg::Vec3f _center;///<The center
-        mutable osg::ref_ptr<osg::TexMat> _texMat;///<The texture matrix
-   };
+class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback : public osg::NodeCallback
+{
+public:
+    ///Callback that updates the texture matrix
+    ///\param texmat The osg::TexMat to update
+    ///\param center The center of the data
+    ///\param scale The scale of the data (compared to unit cube)
+    ///\param trans The translation for the texture matrix
+    cfdTextureMatrixCallback( osg::TexMat* texmat, osg::Vec3f center,
+                              float* scale, float* trans );
+    ///Update the texture matrix
+    ///\param node The osg::Node to update
+    ///\param nv The osg::NodeVisitor
+    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+
+protected:
+    float _trans[3];///<Translation vector
+    float _scale[3];///<The scale vector
+    osg::Vec3f _center;///<The center
+    mutable osg::ref_ptr<osg::TexMat> _texMat;///<The texture matrix
+};
 }
 }
 }
 #endif //_OSG
-#endif// CFD_TEXTURE_MATRIX_CALLBACK_H 
+#endif// CFD_TEXTURE_MATRIX_CALLBACK_H

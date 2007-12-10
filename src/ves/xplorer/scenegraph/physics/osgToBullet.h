@@ -56,7 +56,7 @@ namespace scenegraph
  */
 
 /*!\class osgToBullet
- * 
+ *
  */
 class VE_SCENEGRAPH_EXPORTS osgToBullet : public osg::NodeVisitor
 {

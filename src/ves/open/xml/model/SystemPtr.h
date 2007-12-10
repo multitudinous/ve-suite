@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::SystemPtr.  To get the full 
+ * VE_XML::VE_Model::SystemPtr.  To get the full
  * declaration of VE_XML::VE_Model::SystemPtr
  * VE_Open/XML/Model/System.h must be included, too.
  */
@@ -52,12 +52,12 @@ namespace xml
 {
 namespace model
 {
-   class System;
-   /// Typedef for a SmartPtr type for the System.
-   typedef ves::util::ClassPtrDef<System>::type  SystemPtr;
-   typedef ves::util::SharedPtrDef<System>::type SystemSharedPtr;
-   typedef ves::util::WeakPtrDef<System>::type   SystemWeakPtr;
-   typedef ves::util::ScopedPtrDef<System>::type SystemScopedPtr;
+class System;
+/// Typedef for a SmartPtr type for the System.
+typedef ves::util::ClassPtrDef<System>::type  SystemPtr;
+typedef ves::util::SharedPtrDef<System>::type SystemSharedPtr;
+typedef ves::util::WeakPtrDef<System>::type   SystemWeakPtr;
+typedef ves::util::ScopedPtrDef<System>::type SystemScopedPtr;
 }
 }
 }

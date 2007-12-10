@@ -51,11 +51,11 @@ namespace open
 {
 namespace xml
 {
-   namespace cad
-   {
-      class CADMaterial;
-   }
-   class DataValuePair;
+namespace cad
+{
+class CADMaterial;
+}
+class DataValuePair;
 }
 }
 }
@@ -77,48 +77,48 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS CADOpacitySliderDlg:public wxDialog
+class VE_CONDUCTOR_UTILS_EXPORTS CADOpacitySliderDlg: public wxDialog
 {
 public:
-   enum OPACITY_DLG_IDS
-   {
-      OPACITY_SLIDER
-   };
-   ///Constructor
-   ///\param parent The parent wxWindow.
-   ///\param id The unique id for this window.
-   CADOpacitySliderDlg(wxWindow* parent, int id,std::string cadID,ves::open::xml::cad::CADMaterial* material);
+    enum OPACITY_DLG_IDS
+    {
+        OPACITY_SLIDER
+    };
+    ///Constructor
+    ///\param parent The parent wxWindow.
+    ///\param id The unique id for this window.
+    CADOpacitySliderDlg( wxWindow* parent, int id, std::string cadID, ves::open::xml::cad::CADMaterial* material );
 
-   ///Destructor 
-   virtual ~CADOpacitySliderDlg();
-   
-   ///Set the value of the slider
-   ///\param value The new opacity value.
-   void SetSliderValue(double value);
+    ///Destructor
+    virtual ~CADOpacitySliderDlg();
 
-   ///Get the current opacity value
-   double GetOpacity();
+    ///Set the value of the slider
+    ///\param value The new opacity value.
+    void SetSliderValue( double value );
+
+    ///Get the current opacity value
+    double GetOpacity();
 protected:
-   ///The wxSlider callback to update opacity.
-   ///\param event The wxScrollEvent.
-   void _onSlider(wxScrollEvent& event);
+    ///The wxSlider callback to update opacity.
+    ///\param event The wxScrollEvent.
+    void _onSlider( wxScrollEvent& event );
 
-   ///Clear out the current list of commands.
-   void _clearInstructions();
+    ///Clear out the current list of commands.
+    void _clearInstructions();
 
-   ///Build the dialog internally.
-   void _buildDialog();
-   std::string _cadID;///<The id of the CADNode the material belongs to.
-   std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
-   std::string _commandName;///<The command name.
-   ves::open::xml::cad::CADMaterial* _material;///<The CADMaterial we are updating.
+    ///Build the dialog internally.
+    void _buildDialog();
+    std::string _cadID;///<The id of the CADNode the material belongs to.
+    std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+    std::string _commandName;///<The command name.
+    ves::open::xml::cad::CADMaterial* _material;///<The CADMaterial we are updating.
 
-   ///Send CAD commands back to VE-Xplorer
-   void _sendCommandsToXplorer();
+    ///Send CAD commands back to VE-Xplorer
+    void _sendCommandsToXplorer();
 
-   wxSlider* _opacitySlider;///<The wxSlider.
+    wxSlider* _opacitySlider;///<The wxSlider.
 
-   DECLARE_EVENT_TABLE()
+    DECLARE_EVENT_TABLE()
 };
 }
 }

@@ -41,7 +41,7 @@
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( PEThread, wxTextCtrl )
-   //EVT_UPDATE_UI(7777, PEThread::OnUpdateUIPop)
+    //EVT_UPDATE_UI(7777, PEThread::OnUpdateUIPop)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////////////////
@@ -49,49 +49,49 @@ END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////////
 PEThread::PEThread()
 {
-   //frame_ = frame;
-   //Create();
-   shutdown = true;
-   //logWindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+    //frame_ = frame;
+    //Create();
+    shutdown = true;
+    //logWindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 }
 
 PEThread::~PEThread()
 {
-   ShutDownThread();
-   ACE_OS::sleep(1); 
+    ShutDownThread();
+    ACE_OS::sleep( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int PEThread::svc (void)
+int PEThread::svc( void )
 {
-   while( shutdown )
-   {
-      _mutex.acquire();
-      if ((message!="") )//&& (this->GetParent()))
-      {
-         //wxUpdateUIEvent u;
-         //u.SetId(7777);
-         //u.SetText(message.c_str());
-         this->AppendText( wxString( message.c_str(), wxConvUTF8 ) );
-         std::cout<<"LOG: "<<message;
-         //::wxPostEvent(this, u);
-         //message="";
-      }
-      _mutex.release();
-      ACE_OS::sleep(1); 
-   }
-   return 1;
+    while( shutdown )
+    {
+        _mutex.acquire();
+        if (( message != "" ) )//&& (this->GetParent()))
+        {
+            //wxUpdateUIEvent u;
+            //u.SetId(7777);
+            //u.SetText(message.c_str());
+            this->AppendText( wxString( message.c_str(), wxConvUTF8 ) );
+            std::cout << "LOG: " << message;
+            //::wxPostEvent(this, u);
+            //message="";
+        }
+        _mutex.release();
+        ACE_OS::sleep( 1 );
+    }
+    return 1;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::ShutDownThread( void )
 {
-   shutdown = false;
+    shutdown = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PEThread::SetMessage(const char* msg)
+void PEThread::SetMessage( const char* msg )
 {
-   _mutex.acquire();
-   //message+=msg;
-   this->AppendText( wxString( msg, wxConvUTF8 ) );
-   _mutex.release();
+    _mutex.acquire();
+    //message+=msg;
+    this->AppendText( wxString( msg, wxConvUTF8 ) );
+    _mutex.release();
 }
 

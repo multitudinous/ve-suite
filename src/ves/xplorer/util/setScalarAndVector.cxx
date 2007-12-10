@@ -41,108 +41,109 @@ using namespace ves::xplorer::util;
 
 void ves::xplorer::util::activateScalar( vtkDataSet * dataSet )
 {
-   // if there are data arrays, count the number of arrays
-   int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
-   //std::cout << "numPDArrays = " << numPDArrays << std::endl;
-   if ( numPDArrays )
-   {
-      //count number of scalars...
-      int numScalars = 0;
-      for (int i=0; i < numPDArrays; i++)
-      {
-         if (dataSet->GetPointData()->GetArray(i)->GetNumberOfComponents() == 1 )
-            numScalars++;
-      }
+    // if there are data arrays, count the number of arrays
+    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
+    //std::cout << "numPDArrays = " << numPDArrays << std::endl;
+    if( numPDArrays )
+    {
+        //count number of scalars...
+        int numScalars = 0;
+        for( int i = 0; i < numPDArrays; i++ )
+        {
+            if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 1 )
+                numScalars++;
+        }
 
-      if ( numScalars == 0 ) 
-         return;
-      else if ( numScalars == 1 )
-      {
-         for (int i=0; i < numPDArrays; i++)
-         {
-            if (dataSet->GetPointData()->GetArray(i)->GetNumberOfComponents() == 1 )
+        if( numScalars == 0 )
+            return;
+        else if( numScalars == 1 )
+        {
+            for( int i = 0; i < numPDArrays; i++ )
             {
-               dataSet->GetPointData()->SetActiveScalars( 
-                            dataSet->GetPointData()->GetArray(i)->GetName() );
+                if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 1 )
+                {
+                    dataSet->GetPointData()->SetActiveScalars(
+                        dataSet->GetPointData()->GetArray( i )->GetName() );
+                }
             }
-         }
-      }
-      else
-      {
-         std::cout << "\nThe available scalars are ..." << std::endl;
-         for (int i=0; i < numPDArrays; i++)
-         {
-            if (dataSet->GetPointData()->GetArray(i)->GetNumberOfComponents() == 1 )
-               std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray(i)->GetName() << std::endl;
-         }
-         std::cout << std::endl;
+        }
+        else
+        {
+            std::cout << "\nThe available scalars are ..." << std::endl;
+            for( int i = 0; i < numPDArrays; i++ )
+            {
+                if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 1 )
+                    std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray( i )->GetName() << std::endl;
+            }
+            std::cout << std::endl;
 
-         int choice;
-         do
-         {
-            std::cout << "Enter the integer corresponding to the scalar you want to activate: ";
-            std::cin >> choice;
+            int choice;
+            do
+            {
+                std::cout << "Enter the integer corresponding to the scalar you want to activate: ";
+                std::cin >> choice;
 
-            // verify that the choice corresponds to a valid scalar...
-            if (dataSet->GetPointData()->GetArray(choice)
-                                       ->GetNumberOfComponents() == 1 )
-               break;
-            else   
-               std::cout << "ERROR!: " << std::flush;
+                // verify that the choice corresponds to a valid scalar...
+                if( dataSet->GetPointData()->GetArray( choice )
+                        ->GetNumberOfComponents() == 1 )
+                    break;
+                else
+                    std::cout << "ERROR!: " << std::flush;
 
-         } while (1);
+            }
+            while( 1 );
 
-         dataSet->GetPointData()->SetActiveScalars( 
-                      dataSet->GetPointData()->GetArray(choice)->GetName() );
-      }
-   }
-   return;
+            dataSet->GetPointData()->SetActiveScalars(
+                dataSet->GetPointData()->GetArray( choice )->GetName() );
+        }
+    }
+    return;
 }
 
 void ves::xplorer::util::activateVector( vtkDataSet * dataSet )
 {
-   // if there are data arrays, count the number of arrays
-   int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
-   //std::cout << "numPDArrays = " << numPDArrays << std::endl;
-   if ( numPDArrays )
-   {
-      //count number of vectors...
-      int numVectors = 0;
-      for (int i=0; i < numPDArrays; i++)
-      {
-         if (dataSet->GetPointData()->GetArray(i)->GetNumberOfComponents() == 3 )
-            numVectors++;
-      }
+    // if there are data arrays, count the number of arrays
+    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
+    //std::cout << "numPDArrays = " << numPDArrays << std::endl;
+    if( numPDArrays )
+    {
+        //count number of vectors...
+        int numVectors = 0;
+        for( int i = 0; i < numPDArrays; i++ )
+        {
+            if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 3 )
+                numVectors++;
+        }
 
-      if ( numVectors == 0 ) 
-         return;
-      else if ( numVectors == 1 )
-      {
-         for (int i=0; i < numPDArrays; i++)
-         {
-            if (dataSet->GetPointData()->GetArray(i)->GetNumberOfComponents() == 3 )
+        if( numVectors == 0 )
+            return;
+        else if( numVectors == 1 )
+        {
+            for( int i = 0; i < numPDArrays; i++ )
             {
-               dataSet->GetPointData()->SetActiveVectors( 
-                            dataSet->GetPointData()->GetArray(i)->GetName() );
+                if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 3 )
+                {
+                    dataSet->GetPointData()->SetActiveVectors(
+                        dataSet->GetPointData()->GetArray( i )->GetName() );
+                }
             }
-         }
-      }
-      else
-      {
-         std::cout << "\nThe available vectors are ..." << std::endl;
-         for (int i=0; i < numPDArrays; i++)
-         {
-            if (dataSet->GetPointData()->GetArray(i)->GetNumberOfComponents() == 3 )
-               std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray(i)->GetName() << std::endl;
-         }
-         std::cout << "\nEnter the integer corresponding to the vector you want to activate: " << std::endl;
-         int choice;
-         std::cin >> choice;
-         dataSet->GetPointData()->SetActiveVectors( 
-                      dataSet->GetPointData()->GetArray(choice)->GetName() );
-      }
-   }
-   return;
+        }
+        else
+        {
+            std::cout << "\nThe available vectors are ..." << std::endl;
+            for( int i = 0; i < numPDArrays; i++ )
+            {
+                if( dataSet->GetPointData()->GetArray( i )->GetNumberOfComponents() == 3 )
+                    std::cout << "\t" << i << "\t" << dataSet->GetPointData()->GetArray( i )->GetName() << std::endl;
+            }
+            std::cout << "\nEnter the integer corresponding to the vector you want to activate: " << std::endl;
+            int choice;
+            std::cin >> choice;
+            dataSet->GetPointData()->SetActiveVectors(
+                dataSet->GetPointData()->GetArray( choice )->GetName() );
+        }
+    }
+    return;
 }
 
 

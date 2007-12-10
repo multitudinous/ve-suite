@@ -53,59 +53,59 @@ namespace xml
 class VE_XML_EXPORTS User : public XMLObject
 {
 public:
-   ///Constructor
-   User();
-   ///Destructor
-   virtual ~User();
-   ///Copy Constructor
-   User( const User& );
-   ///equal operator
-   User& operator= ( const User& );
-   ///The control status of this user
-   ///Valid status
-   ///MASTER == controlling changes of the main graphics state
-   ///SLAVE == observing changes of the main graphics state
-   /*\fn typedef VEControlStatus 
-    *The control status of the user.
-    */
-   typedef std::string VEControlStatus;
-   
-   ///Set the users ID
-   ///\param id String to uniquely identify the user
-   void SetUserId( std::string id );
-   ///Set the control status of the user
-   ///\param cs The control status.
-   void SetControlStatus( VEControlStatus cs );
-   ///Set the state information for this user
-   ///\param userState The StateInfo for this user.
-   void SetStateInfo( StateInfoWeakPtr userState );
+    ///Constructor
+    User();
+    ///Destructor
+    virtual ~User();
+    ///Copy Constructor
+    User( const User& );
+    ///equal operator
+    User& operator= ( const User& );
+    ///The control status of this user
+    ///Valid status
+    ///MASTER == controlling changes of the main graphics state
+    ///SLAVE == observing changes of the main graphics state
+    /*\fn typedef VEControlStatus
+     *The control status of the user.
+     */
+    typedef std::string VEControlStatus;
 
-   ///Return the user id
-   std::string GetUserId();
-   ///Return the VEControlStatus of this user
-   VEControlStatus GetControlStatus();
-   ///Return the StateInfo for this user.
-   StateInfoWeakPtr GetUserStateInfo();
+    ///Set the users ID
+    ///\param id String to uniquely identify the user
+    void SetUserId( std::string id );
+    ///Set the control status of the user
+    ///\param cs The control status.
+    void SetControlStatus( VEControlStatus cs );
+    ///Set the state information for this user
+    ///\param userState The StateInfo for this user.
+    void SetStateInfo( StateInfoWeakPtr userState );
 
-   ///Set the data for this object from an XML element
-   ///\param xmlInput The input XML element
-  virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);   
+    ///Return the user id
+    std::string GetUserId();
+    ///Return the VEControlStatus of this user
+    VEControlStatus GetControlStatus();
+    ///Return the StateInfo for this user.
+    StateInfoWeakPtr GetUserStateInfo();
+
+    ///Set the data for this object from an XML element
+    ///\param xmlInput The input XML element
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
 protected:
-   ///Internally update this element
-   ///\param tagName The tagName for this element.
-   virtual void _updateVEElement( std::string tagName );
-   std::string _userId;///<The users unique identification
-   StateInfoPtr m_stateInfo;///<The StateInfo for this user.
-   VEControlStatus _controlStatus;///<The VEControlStatus of this user.
+    ///Internally update this element
+    ///\param tagName The tagName for this element.
+    virtual void _updateVEElement( std::string tagName );
+    std::string _userId;///<The users unique identification
+    StateInfoPtr m_stateInfo;///<The StateInfo for this user.
+    VEControlStatus _controlStatus;///<The VEControlStatus of this user.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, User* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, User* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

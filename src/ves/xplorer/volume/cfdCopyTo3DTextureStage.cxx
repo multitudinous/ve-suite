@@ -41,110 +41,112 @@
 using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
-:osgUtil::RenderStage()
+        : osgUtil::RenderStage()
 {
-   _texture = 0;
-  
-   _localState = new osg::State;
+    _texture = 0;
+
+    _localState = new osg::State;
 
 #ifdef _PBUFFER
-   _pbuffer = 0;
+    _pbuffer = 0;
 #endif
-   _width = 0;
-   _height = 0;
-   _nSlices = 0;
-   _whichSlice = 0;
-   _whichDir = 2;
+    _width = 0;
+    _height = 0;
+    _nSlices = 0;
+    _whichSlice = 0;
+    _whichDir = 2;
 
 }
 ///////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::~cfdCopyTo3DTextureStage()
 {
-   /*if(_pbuffer){
-      _pbuffer->cleanUpPBuffer();
-      _pbuffer = 0;
-   }*/
+    /*if(_pbuffer){
+       _pbuffer->cleanUpPBuffer();
+       _pbuffer = 0;
+    }*/
 }
 //////////////////////////////////////////////////////////////////
-void cfdCopyTo3DTextureStage::SetShaderStateSet(osg::StateSet* ss)
+void cfdCopyTo3DTextureStage::SetShaderStateSet( osg::StateSet* ss )
 {
-   _shader = ss;
+    _shader = ss;
 }
 //////////////////////////////////////////////////////////////////////////
-void cfdCopyTo3DTextureStage::SetWhichSliceToUpdate(unsigned int nSlices)
+void cfdCopyTo3DTextureStage::SetWhichSliceToUpdate( unsigned int nSlices )
 {
-   _whichSlice = nSlices;
+    _whichSlice = nSlices;
 }
 /////////////////////////////////////
 void cfdCopyTo3DTextureStage::reset()
 {
     RenderStage::reset();
-    if(_whichSlice == _nSlices){
-       _whichSlice = 0;
+    if( _whichSlice == _nSlices )
+    {
+        _whichSlice = 0;
     }
 }
 //////////////////////////////////////////////////////////////////
-/*void cfdCopyTo3DTextureStage::draw(osg::State& state, 
+/*void cfdCopyTo3DTextureStage::draw(osg::State& state,
                                osgUtil::RenderLeaf*& previous)*/
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-void cfdCopyTo3DTextureStage::draw(osg::RenderInfo& renderInfo,
-                                   osgUtil::RenderLeaf*& previous)
+void cfdCopyTo3DTextureStage::draw( osg::RenderInfo& renderInfo,
+                                    osgUtil::RenderLeaf*& previous )
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-void cfdCopyTo3DTextureStage::draw(osg::State& state, 
-                               osgUtil::RenderLeaf*& previous)
+void cfdCopyTo3DTextureStage::draw( osg::State& state,
+                                    osgUtil::RenderLeaf*& previous )
 #endif
 {
-   if (_stageDrawnThisFrame) return;
+    if( _stageDrawnThisFrame ) return;
 
 #ifdef _PBUFFER
-   if(_pbuffer->isCreated()){
-      _texture->getTextureSize(_width,_height,_nSlices);
-      _pbuffer->activate();
-      //const unsigned int contextID = 0;
+    if( _pbuffer->isCreated() )
+    {
+        _texture->getTextureSize( _width, _height, _nSlices );
+        _pbuffer->activate();
+        //const unsigned int contextID = 0;
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-      const unsigned int  contextID = renderInfo.getContextID();
+        const unsigned int  contextID = renderInfo.getContextID();
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-	  const unsigned int  contextID = state.getContextID();
+        const unsigned int  contextID = state.getContextID();
 #endif
-      osg::Texture::TextureObject* textureObject = _texture->getTextureObject(contextID);
-      if (textureObject == 0)
-      {
+        osg::Texture::TextureObject* textureObject = _texture->getTextureObject( contextID );
+        if( textureObject == 0 )
+        {
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2))
-         _texture->apply(*renderInfo.getState()/*state*/);
+            _texture->apply( *renderInfo.getState()/*state*/ );
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-         _texture->apply(state);
+            _texture->apply( state );
 #endif
-      }
+        }
         ///check here for changes if vectors don't work
-      /*if(!_fs.valid()){
-         _fs = new osg::FrameStamp();
-      }
-      _fs->setReferenceTime(state.getFrameStamp()->getReferenceTime());
-      _fs->setFrameNumber(state.getFrameStamp()->getFrameNumber());
-      
-      _localState->setFrameStamp(_fs.get());*/
-      for(unsigned int i = 1; i < _nSlices-1; i++)
-      {
+        /*if(!_fs.valid()){
+           _fs = new osg::FrameStamp();
+        }
+        _fs->setReferenceTime(state.getFrameStamp()->getReferenceTime());
+        _fs->setFrameNumber(state.getFrameStamp()->getFrameNumber());
+
+        _localState->setFrameStamp(_fs.get());*/
+        for( unsigned int i = 1; i < _nSlices - 1; i++ )
+        {
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-          RenderStage::draw(renderInfo,previous);
-         _texture->copyTexSubImage3D(*renderInfo.getState()/*state*/,
-                                  1,1,i,
-                                  1,1,_width-1,_height-1);
+            RenderStage::draw( renderInfo, previous );
+            _texture->copyTexSubImage3D( *renderInfo.getState()/*state*/,
+                                         1, 1, i,
+                                         1, 1, _width - 1, _height - 1 );
 
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
-         RenderStage::draw(*_localState.get(),previous);
-         _texture->copyTexSubImage3D(state,
-                                  1,1,i,
-                                  1,1,_width-1,_height-1);
+            RenderStage::draw( *_localState.get(), previous );
+            _texture->copyTexSubImage3D( state,
+                                         1, 1, i,
+                                         1, 1, _width - 1, _height - 1 );
 #endif
 
 
-         //need this to draw multiple slices
-         _stageDrawnThisFrame = false;
-      }
-      _stageDrawnThisFrame =true;
-      _pbuffer->deactivate();
-   }
+            //need this to draw multiple slices
+            _stageDrawnThisFrame = false;
+        }
+        _stageDrawnThisFrame = true;
+        _pbuffer->deactivate();
+    }
 #endif
 }
 #endif

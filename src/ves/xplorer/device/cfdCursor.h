@@ -49,9 +49,9 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class Group;
-    class Geode;
+class DCS;
+class Group;
+class Geode;
 }
 }
 }
@@ -87,164 +87,164 @@ cfdCursor API
 class VE_XPLORER_EXPORTS cfdCursor : public GlobalBase
 {
 public:
-   cfdCursor( vtkPolyData* , ves::xplorer::scenegraph::DCS* , ves::xplorer::scenegraph::Group* );
-   virtual ~cfdCursor();
+    cfdCursor( vtkPolyData* , ves::xplorer::scenegraph::DCS* , ves::xplorer::scenegraph::Group* );
+    virtual ~cfdCursor();
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand();
 
-   void Initialize( double x[3], double v[3] );
+    void Initialize( double x[3], double v[3] );
 
-   /*!
-   Update the cursor's type(t), position(x), and
-   direction(v).
-   Type 0, multiple sphere cursor(x plane oriented).
-   Type 1, multiple sphere cursor(y plane oriented).
-   Type 2, multiple sphere cursor(z plane oriented).
-   Type 3, single sphere cursor.
-   Type 4, single arrow cursor.
-   */
-   /* 
-   Update the position and direction of the virtual cursor
-   based on the output from cfdNavigate::GetCursorLocation(location) 
-   and cfdNavigate::GetDirection(direction).  
-   */
-   void Update( double x[3], double v[3], double wx[3] );
+    /*!
+    Update the cursor's type(t), position(x), and
+    direction(v).
+    Type 0, multiple sphere cursor(x plane oriented).
+    Type 1, multiple sphere cursor(y plane oriented).
+    Type 2, multiple sphere cursor(z plane oriented).
+    Type 3, single sphere cursor.
+    Type 4, single arrow cursor.
+    */
+    /*
+    Update the position and direction of the virtual cursor
+    based on the output from cfdNavigate::GetCursorLocation(location) 
+    and cfdNavigate::GetDirection(direction).  
+    */
+    void Update( double x[3], double v[3], double wx[3] );
 
-   vtkPolyData* GetSourcePoints( void );
+    vtkPolyData* GetSourcePoints( void );
 
-   // Return the dynamic coordinate system with pfGeode objects.
-   ves::xplorer::scenegraph::DCS* GetDCS();
+    // Return the dynamic coordinate system with pfGeode objects.
+    ves::xplorer::scenegraph::DCS* GetDCS();
 
-   ///Set/Get plane size.
-   void SetPlaneSize( float size );
-   void GetPlaneSize( float &size );
-   float GetPlaneSize();
+    ///Set/Get plane size.
+    void SetPlaneSize( float size );
+    void GetPlaneSize( float &size );
+    float GetPlaneSize();
 
-   ///Set/Get plane resolution: the number of x-y subdivisions in the plane
-   void SetPlaneReso( int size );
-   void GetPlaneReso( int &size );
-   int GetPlaneReso();
+    ///Set/Get plane resolution: the number of x-y subdivisions in the plane
+    void SetPlaneReso( int size );
+    void GetPlaneReso( int &size );
+    int GetPlaneReso();
 
-   ///Set the sphere scale
-   ///\param scale The scale of the speheres
-   void SetSphereScale( float scale );
-   ///Set the cursor type
-   ///\param The type of cursor to use
-   void SetCursorType( int type );
-   virtual void ProcessCommand();
-   // for box cursor...
-   void getExtent(double boxExtent[6]);
-   vtkCubeSource *getBox();
-   float boxExtent;
+    ///Set the sphere scale
+    ///\param scale The scale of the speheres
+    void SetSphereScale( float scale );
+    ///Set the cursor type
+    ///\param The type of cursor to use
+    void SetCursorType( int type );
+    virtual void ProcessCommand();
+    // for box cursor...
+    void getExtent( double boxExtent[6] );
+    vtkCubeSource *getBox();
+    float boxExtent;
 
-   void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
-   void SetActiveDataSet( DataSet* input );
+    void SetActiveDataSetDCS( ves::xplorer::scenegraph::DCS* myDCS );
+    void SetActiveDataSet( DataSet* input );
 
-   int GetCursorID( void );
-   double* GetCursorLocation( void );
-   double* GetCursorLocalLocation( void );
-   double* ReturnLocalLocationVector( void );
-   void GetLocalLocationVector( void );
+    int GetCursorID( void );
+    double* GetCursorLocation( void );
+    double* GetCursorLocalLocation( void );
+    double* ReturnLocalLocationVector( void );
+    void GetLocalLocationVector( void );
 private:
 
-   // Move the cursor methods
-   void SetTranslation( void );
-   void SetRotation( double [3] );
+    // Move the cursor methods
+    void SetTranslation( void );
+    void SetRotation( double [3] );
 
-   void BuildSphere();           // Build sphere cursor.
-   void BuildPlaneSource();      // Build nxn plane cursor
-   // Update the current position of sphere cursor.
-   void UpdateSphere();
+    void BuildSphere();           // Build sphere cursor.
+    void BuildPlaneSource();      // Build nxn plane cursor
+    // Update the current position of sphere cursor.
+    void UpdateSphere();
 
-   vtkSphereSource *sphereSrc;
-   vtkPolyDataNormals *sphereNorm;
-   vtkPolyDataMapper *sphereMapper;
-   vtkActor *sphereActor;
+    vtkSphereSource *sphereSrc;
+    vtkPolyDataNormals *sphereNorm;
+    vtkPolyDataMapper *sphereMapper;
+    vtkActor *sphereActor;
 
-   //Arrow Source Stuff
-   // Build arrow cursor and use as source for glyph.
-   void BuildArrowSource( void );
-   void UpdateArrowSource( void );
+    //Arrow Source Stuff
+    // Build arrow cursor and use as source for glyph.
+    void BuildArrowSource( void );
+    void UpdateArrowSource( void );
 
-   vtkPolyData * arrow;
+    vtkPolyData * arrow;
 
-   vtkPlaneSource * arrowPlaneS;
-   vtkPolyDataMapper * arrowMapperS;
-   vtkActor * arrowActorS;
-   vtkGlyph3D * arrowGlyphS;
-   //DataSet * dataSet;
+    vtkPlaneSource * arrowPlaneS;
+    vtkPolyDataMapper * arrowMapperS;
+    vtkActor * arrowActorS;
+    vtkGlyph3D * arrowGlyphS;
+    //DataSet * dataSet;
 
-   // Line Source Stuff
-   void UpdateLineSource( int );
-   void BuildLineSource( void );
+    // Line Source Stuff
+    void UpdateLineSource( int );
+    void BuildLineSource( void );
 
-   vtkLineSource * lineSrc;
-   vtkActor * lineActor;
-   vtkPolyDataMapper *lineMapper;
-   vtkGlyph3D * lineGlyph;
-   vtkSphereSource * lineSphere;
+    vtkLineSource * lineSrc;
+    vtkActor * lineActor;
+    vtkPolyDataMapper *lineMapper;
+    vtkGlyph3D * lineGlyph;
+    vtkSphereSource * lineSphere;
 
-   //add for box cursor
-   void UpdateCube();
-   void BuildCube();
+    //add for box cursor
+    void UpdateCube();
+    void BuildCube();
 
-   vtkCubeSource *cubeSrc;
-   vtkPolyDataMapper *cubeMapper;
-   vtkActor *cubeActor;
+    vtkCubeSource *cubeSrc;
+    vtkPolyDataMapper *cubeMapper;
+    vtkActor *cubeActor;
 
-   // Plane Source Stuff
-   // Build the x,y,z plane orientations cursors.
-   void UpdatePlaneSource( int );
+    // Plane Source Stuff
+    // Build the x,y,z plane orientations cursors.
+    void UpdatePlaneSource( int );
 
-   vtkPlaneSource * planeSrc;
-   vtkActor * planeActorS;
-   vtkPolyDataMapper *planeMapperS;
-   vtkGlyph3D * sphereGlyph;
-   vtkSphereSource * planeSphereS;
+    vtkPlaneSource * planeSrc;
+    vtkActor * planeActorS;
+    vtkPolyDataMapper *planeMapperS;
+    vtkGlyph3D * sphereGlyph;
+    vtkSphereSource * planeSphereS;
 
-   // I use 'pos' to indicate the current coordinate of the cursor
-   double pos[3];
-   double pos_c[3];
+    // I use 'pos' to indicate the current coordinate of the cursor
+    double pos[3];
+    double pos_c[3];
 
-   // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > cursorDCS;
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > cursorScaleDCS;
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
+    // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > cursorDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > cursorScaleDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
 
-   // A Performer geometry node.
-   osg::ref_ptr< ves::xplorer::scenegraph::Geode > cursorGeode;
+    // A Performer geometry node.
+    osg::ref_ptr< ves::xplorer::scenegraph::Geode > cursorGeode;
 
-   // Plane size;
-   float pSize;
-   float last_pSize;
+    // Plane size;
+    float pSize;
+    float last_pSize;
 
-   // Plane resolution;
-   int pReso;
-   int last_pReso;
+    // Plane resolution;
+    int pReso;
+    int last_pReso;
 
-   // Current position of cursor in virtual environment.
-   double loc[3];
+    // Current position of cursor in virtual environment.
+    double loc[3];
 
-   // Current direction of cursor in virtual environment.
-   double dir[3];
+    // Current direction of cursor in virtual environment.
+    double dir[3];
 
-   // Current location of cursor relatice to worldDCS (Note: this is not to global 0,0,0).
-   double localLocation[3];
+    // Current location of cursor relatice to worldDCS (Note: this is not to global 0,0,0).
+    double localLocation[3];
 
-   // last plane direction
-   int last_direction;
+    // last plane direction
+    int last_direction;
 
-   // last plane direction
-   int last_cursor_type;
+    // last plane direction
+    int last_cursor_type;
 
-   osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDataSetDCS;
 
-   osg::ref_ptr< ves::xplorer::scenegraph::Group > _rootNode;
-   ves::xplorer::DataSet* _activeDataSet;
-   int cursorId;
-   float sphereRadius;
-   float last_sphereRadius;
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > _rootNode;
+    ves::xplorer::DataSet* _activeDataSet;
+    int cursorId;
+    float sphereRadius;
+    float last_sphereRadius;
 };
 }
 }

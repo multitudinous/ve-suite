@@ -51,77 +51,75 @@ using namespace ves::builder::cfdTranslatorToVTK;
 FluentTranslator::FluentTranslator()
 {
 
-   SetTranslateCallback( &fluentToVTK );
-   SetPreTranslateCallback( &cmdParser );
+    SetTranslateCallback( &fluentToVTK );
+    SetPreTranslateCallback( &cmdParser );
 }
 /////////////////////////////////////////
 FluentTranslator::~FluentTranslator()
-{
-
-}
+{}
 //////////////////////////////////////////////////////////////////////////
-void FluentTranslator::FluentPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               cfdTranslatorToVTK* toVTK)
+void FluentTranslator::FluentPreTranslateCbk::Preprocess( int argc, char** argv,
+                                                          cfdTranslatorToVTK* toVTK )
 {
-   PreTranslateCallback::Preprocess( argc, argv, toVTK );
+    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputDataset,
-		                                     cfdTranslatorToVTK* toVTK )
+                                                      cfdTranslatorToVTK* toVTK )
 {
-   FluentTranslator* FluentToVTK =
-              dynamic_cast< FluentTranslator* >( toVTK );
-   if ( FluentToVTK )
-   {
-	   vtkFLUENTReader* reader = vtkFLUENTReader::New();
-	   reader->SetFileName(FluentToVTK->GetFile(0).c_str() );
-	   reader->Update();
+    FluentTranslator* FluentToVTK =
+        dynamic_cast< FluentTranslator* >( toVTK );
+    if( FluentToVTK )
+    {
+        vtkFLUENTReader* reader = vtkFLUENTReader::New();
+        reader->SetFileName( FluentToVTK->GetFile( 0 ).c_str() );
+        reader->Update();
 
-      if ( !outputDataset )
-      {
-         outputDataset = vtkMultiBlockDataSet::New();
-      }
-      /*vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-      tmpDSet->DeepCopy( reader->GetOutput()*/ //);
+        if( !outputDataset )
+        {
+            outputDataset = vtkMultiBlockDataSet::New();
+        }
+        /*vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
+        tmpDSet->DeepCopy( reader->GetOutput()*/ //);
 
-      //get the info about the data in the data set
-      //reader->GetOutput()
-      //GetNumberOfGroups ()
-      //GetNumberOfDataSets( );
-      //GetDataSet( ) 
-      /*if ( dynamic_cast< vtkDataSet* >( reader->GetOutput()->GetDataSet( 0, 0 ) )->GetPointData()->GetNumberOfArrays() == 0 )
-      {
-         //std::cout<<"Warning!!!"<<std::endl;
-         //std::cout<<"No point data found!"<<std::endl;
-         //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+        //get the info about the data in the data set
+        //reader->GetOutput()
+        //GetNumberOfGroups ()
+        //GetNumberOfDataSets( );
+        //GetDataSet( )
+        /*if ( dynamic_cast< vtkDataSet* >( reader->GetOutput()->GetDataSet( 0, 0 ) )->GetPointData()->GetNumberOfArrays() == 0 )
+        {
+           //std::cout<<"Warning!!!"<<std::endl;
+           //std::cout<<"No point data found!"<<std::endl;
+           //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
 
-         vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-         dataConvertCellToPoint->SetInput(reader->GetOutput());
-         dataConvertCellToPoint->PassCellDataOff();
-         dataConvertCellToPoint->Update();
-         outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-         reader->Delete();
-         dataConvertCellToPoint->Delete();
-      }
-      else*/
-      {
-         outputDataset->DeepCopy(reader->GetOutput());
-         reader->Delete();
-      }
-      outputDataset->Update();
-      
-      /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
-      writer->SetInput( reader->GetOutput() );
-      writer->SetWriteMetaFile( 1 );
-      writer->SetFileName( "test_multigrou.vtu" );
-      writer->Write();*/
-      //tmpDSet->Delete();
-   }
+           vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
+           dataConvertCellToPoint->SetInput(reader->GetOutput());
+           dataConvertCellToPoint->PassCellDataOff();
+           dataConvertCellToPoint->Update();
+           outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
+           reader->Delete();
+           dataConvertCellToPoint->Delete();
+        }
+        else*/
+        {
+            outputDataset->DeepCopy( reader->GetOutput() );
+            reader->Delete();
+        }
+        outputDataset->Update();
+
+        /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
+        writer->SetInput( reader->GetOutput() );
+        writer->SetWriteMetaFile( 1 );
+        writer->SetFileName( "test_multigrou.vtu" );
+        writer->Write();*/
+        //tmpDSet->Delete();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::DisplayHelp( void )
 {
-   std::cout << "|\tFluent Translator Usage:" << std::endl
-               << "\t -singleFile <filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader cas -w file" << std::endl;
+    std::cout << "|\tFluent Translator Usage:" << std::endl
+    << "\t -singleFile <filename_to_load> -o <output_dir> "
+    << "-outFileName <output_filename> -loader cas -w file" << std::endl;
 }

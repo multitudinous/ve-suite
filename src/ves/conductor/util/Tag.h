@@ -44,7 +44,7 @@ Tag API
 #include <ves/open/xml/model/TagPtr.h>
 
 #ifdef WIN32
-    #include <wx/msw/winundef.h>
+#include <wx/msw/winundef.h>
 #endif
 
 #include <wx/gdicmn.h>
@@ -95,7 +95,7 @@ public:
 
 private:
     ///2 connectors for a tag, end and middle
-    wxPoint cons[2]; 
+    wxPoint cons[2];
     ///Text to be dispalyed in the tag
     wxString text;
     ///Box that the tag is contained in
@@ -109,7 +109,7 @@ private:
     ///Convert unicode strings
     std::string ConvertUnicode( const wxChar* data )
     {
-        std::string tempStr( 
+        std::string tempStr(
             static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }

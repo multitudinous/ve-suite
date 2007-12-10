@@ -48,10 +48,10 @@
 // --- osgAL Includes --- //
 namespace osgAL
 {
-    class SoundManager;
+class SoundManager;
 }
 #endif
- 
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
@@ -71,9 +71,9 @@ class cfdSoundHandler;
 
 namespace scenegraph
 {
-    class DCS;
-    class Group;
-    class PhysicsSimulator;
+class DCS;
+class Group;
+class PhysicsSimulator;
 }
 
 namespace plugin
@@ -100,16 +100,16 @@ public:
 
     virtual void RemoveSelfFromSG();
 
-    //transform object based 
+    //transform object based
     void SetTransforms( double*, double*, double* );
 
     //Implement Gengxun's work by using socket
     //stuff from vtk. This will be used in parallel
-    //with implementation of a unit connected to the 
+    //with implementation of a unit connected to the
     //computational engine.
     virtual void GetDataFromUnit();
 
-    //Basically uses vtkActorToPF to create a geode and 
+    //Basically uses vtkActorToPF to create a geode and
     //add it to the scene graph. Probably use cfdObject.
     virtual void MakeGeodeByUserRequest( int );
 
@@ -118,7 +118,7 @@ public:
 
     //This returns the description of the module, This should be a short description
     std::string GetDesc();
-    
+
     //Set the id for a particular module
     void SetID( int id );
 
@@ -177,9 +177,12 @@ public:
     ///\param command Current command from conductor
     virtual void SetCurrentCommand( ves::open::xml::Command* command );
 
-    ///Allow the users to process new inputs after a job has 
+    ///Allow the users to process new inputs after a job has
     ///been submitted for all plugins
-    virtual void ProcessOnSubmitJob(){;}
+    virtual void ProcessOnSubmitJob()
+    {
+        ;
+    }
 
     ///Return map that maps command names to this plugin
     std::map< std::string, cfdVEBaseClass* > GetCommandNameMap();

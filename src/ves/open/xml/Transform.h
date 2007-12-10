@@ -54,7 +54,7 @@ namespace open
 {
 namespace xml
 {
-   class FloatArray;
+class FloatArray;
 }
 }
 }
@@ -68,80 +68,80 @@ namespace xml
 class VE_XML_EXPORTS Transform : public XMLObject
 {
 public:
-   ///Constructor.
-   Transform( );
-   ///Destructor
-   virtual ~Transform();
-   ///Copy Constructor
-   Transform( const Transform& );
-   ///equal operator
-   Transform& operator= ( const Transform& );
+    ///Constructor.
+    Transform( );
+    ///Destructor
+    virtual ~Transform();
+    ///Copy Constructor
+    Transform( const Transform& );
+    ///equal operator
+    Transform& operator= ( const Transform& );
 
-   
-   ///Set the translation array for this transform
-   ///\param translation The translation 
-   void SetTranslation( float* translation );
 
-   ///Set the scale array for this transform
-   ///\param scale The scale 
-   void SetScale( float* scale );
+    ///Set the translation array for this transform
+    ///\param translation The translation
+    void SetTranslation( float* translation );
 
-   ///Set the rotation array for this transform
-   ///\param rotation The rotation angles in degrees\n
-   ///rotation is specified in H-P-R (Z-X-Y)
-   void SetRotation( float* rotation );
-  
-   
-   ///Create the transform from xml input
-   ///\param xmlInput The input XML data.
-   virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
-   
-   
-   /*
-   float* GetTranslation( void );
-   float* GetScale( void );
-   float* GetRotation( void );
-   */
+    ///Set the scale array for this transform
+    ///\param scale The scale
+    void SetScale( float* scale );
 
-   /// Get float for translations
-   FloatArray* GetTranslationArray( void );
-   /// Get float for scale
-   FloatArray* GetScaleArray( void );
-   /// Get float for rotation
-   FloatArray* GetRotationArray( void );
-    
-   /// Set float for translations
-   ///\param translation The FloatArray holding translation.
-   void SetTranslationArray( FloatArray* translation);
+    ///Set the rotation array for this transform
+    ///\param rotation The rotation angles in degrees\n
+    ///rotation is specified in H-P-R (Z-X-Y)
+    void SetRotation( float* rotation );
 
-   // Set float for scale
-   ///\param scale The FloatArray holding scale.
-   void SetScaleArray( FloatArray* scale );
-   
-   // Set float for rotation
-   ///\param rotation The FloatArray holding rotation.
-   void SetRotationArray( FloatArray* rotation);
-    
+
+    ///Create the transform from xml input
+    ///\param xmlInput The input XML data.
+    virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
+
+
+    /*
+    float* GetTranslation( void );
+    float* GetScale( void );
+    float* GetRotation( void );
+    */
+
+    /// Get float for translations
+    FloatArray* GetTranslationArray( void );
+    /// Get float for scale
+    FloatArray* GetScaleArray( void );
+    /// Get float for rotation
+    FloatArray* GetRotationArray( void );
+
+    /// Set float for translations
+    ///\param translation The FloatArray holding translation.
+    void SetTranslationArray( FloatArray* translation );
+
+    // Set float for scale
+    ///\param scale The FloatArray holding scale.
+    void SetScaleArray( FloatArray* scale );
+
+    // Set float for rotation
+    ///\param rotation The FloatArray holding rotation.
+    void SetRotationArray( FloatArray* rotation );
+
 protected:
-   ///Internally update the XML data.
-   ///\param tagName The tag name for this element.
-   virtual void _updateVEElement( std::string tagName );
-   /*
-   float* _translation;
-   float* _scale;
-   float* _rotation;
-   */
-   FloatArray* translationArray;///<The FloatArray holding translation information.
-   FloatArray* scaleArray;///<The FloatArray holding scale information.
-   FloatArray* rotationArray;///<The FloatArray holding rotation information.
+    ///Internally update the XML data.
+    ///\param tagName The tag name for this element.
+    virtual void _updateVEElement( std::string tagName );
+    /*
+    float* _translation;
+    float* _scale;
+    float* _rotation;
+    */
+    FloatArray* translationArray;///<The FloatArray holding translation information.
+    FloatArray* scaleArray;///<The FloatArray holding scale information.
+    FloatArray* rotationArray;///<The FloatArray holding rotation information.
 };
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, Transform* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, Transform* val )
 {
-   val->SetOwnerDocument( _rootDocument );
-   XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-   _veElement->appendChild( childElement );
-   return childElement;
+    val->SetOwnerDocument( _rootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    _veElement->appendChild( childElement );
+    return childElement;
 }
 }
 }

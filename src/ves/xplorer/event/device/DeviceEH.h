@@ -50,26 +50,26 @@ namespace event
 class DeviceEventHandler : public EventHandler
 {
 public:
-   //Constructor
-   DeviceEventHandler();
+    //Constructor
+    DeviceEventHandler();
 
-   //Copy Constructor
-   DeviceEventHandler( const DeviceEventHandler& ceh );
+    //Copy Constructor
+    DeviceEventHandler( const DeviceEventHandler& ceh );
 
-   //Destructor
-   virtual ~DeviceEventHandler();
+    //Destructor
+    virtual ~DeviceEventHandler();
 
-   //Set the cfdModel
-   //param model The ModelHandler to execute the Command on
-   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
-      
-   //Exectute the event
-   //param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command ); 
+    //Set the cfdModel
+    //param model The ModelHandler to execute the Command on
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-   //Equal operator
-   DeviceEventHandler& operator=( const DeviceEventHandler& rhs );
-   
+    //Exectute the event
+    //param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
+
+    //Equal operator
+    DeviceEventHandler& operator=( const DeviceEventHandler& rhs );
+
 protected:
 
 };

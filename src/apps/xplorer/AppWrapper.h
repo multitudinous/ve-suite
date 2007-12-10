@@ -47,8 +47,8 @@ namespace ves
 {
 namespace xplorer
 {
-   class App;
-   class VjObsWrapper;
+class App;
+class VjObsWrapper;
 }
 }
 
@@ -59,26 +59,26 @@ namespace xplorer
 class AppWrapper
 {
 public:
-   ///Contructor
-   AppWrapper( int argc,  char* argv[], VjObsWrapper* );
-   ///destructor
-   ~AppWrapper( void );
-   ///Is juggler running
-   bool JugglerIsRunning( void );
-   ///Initilize things in a seperate thread
+    ///Contructor
+    AppWrapper( int argc,  char* argv[], VjObsWrapper* );
+    ///destructor
+    ~AppWrapper( void );
+    ///Is juggler running
+    bool JugglerIsRunning( void );
+    ///Initilize things in a seperate thread
 #if __VJ_version > 2000003
-   void init( void );
+    void init( void );
 #elif __VJ_version == 2000003
-   void init( void * );
+    void init( void * );
 #endif
-   Thread* m_thread;///< the thread to run things in
+    Thread* m_thread;///< the thread to run things in
 private:
-   ves::xplorer::App* m_cfdApp;///< the app that is running
-   bool m_jugglerIsRunning;///< is juggler running
-   ves::xplorer::VjObsWrapper* m_vjObsWrapper;///< points to the wrapper to send to cfdapp
-   int m_argc;///<command line args
-   char** m_argv;///<command line args
-}; 
+    ves::xplorer::App* m_cfdApp;///< the app that is running
+    bool m_jugglerIsRunning;///< is juggler running
+    ves::xplorer::VjObsWrapper* m_vjObsWrapper;///< points to the wrapper to send to cfdapp
+    int m_argc;///<command line args
+    char** m_argv;///<command line args
+};
 }
 }
 #endif

@@ -96,106 +96,106 @@ namespace xplorer
 {
 Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
 {
-   vprDEBUG(vesDBG,1) << "|\tNew Model ! " 
-                          << std::endl << vprDEBUG_FLUSH;
-   this->mModelNode = 0;
-   //this->actor = NULL;
-   //ModelIndex = static_cast<ModelTypeIndex>(value);
-   // Will fix this later so that each model has a dcs
-   //mModelDCS = new ves::xplorer::scenegraph::DCS();
-   _worldDCS = worldDCS;
-   m_cadHandler = new ves::xplorer::ModelCADHandler( _worldDCS.get() );
-   //mirrorNode = 0;
-   //mirrorGroupNode = 0;
+    vprDEBUG( vesDBG, 1 ) << "|\tNew Model ! "
+    << std::endl << vprDEBUG_FLUSH;
+    this->mModelNode = 0;
+    //this->actor = NULL;
+    //ModelIndex = static_cast<ModelTypeIndex>(value);
+    // Will fix this later so that each model has a dcs
+    //mModelDCS = new ves::xplorer::scenegraph::DCS();
+    _worldDCS = worldDCS;
+    m_cadHandler = new ves::xplorer::ModelCADHandler( _worldDCS.get() );
+    //mirrorNode = 0;
+    //mirrorGroupNode = 0;
 
-   //this->animation = 0;
-   this->activeDataSet = 0;
-   mirrorDataFlag = false;
+    //this->animation = 0;
+    this->activeDataSet = 0;
+    mirrorDataFlag = false;
 #ifdef _OSG
-   _activeTextureDataSet = 0;
+    _activeTextureDataSet = 0;
 #endif
-   modelID = 10000000;
-   
+    modelID = 10000000;
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model::~Model()
 {
-   //vprDEBUG(vesDBG,2) << "Model destructor"
-   //                       << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vesDBG,2) << "Model destructor"
+    //                       << std::endl << vprDEBUG_FLUSH;
 
- 
-  /* for ( std::map<std::string ,ves::xplorer::event::EventHandler*>::iterator itr = _eventHandlers.begin();
-                                       itr != _eventHandlers.end(); itr++ )
-   {
-      delete itr->second;
-      itr->second = 0;
-   }
-   _eventHandlers.clear();*/
-   // the following block allows the program to get to pfExit
-   /*for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
-                                  itr != mVTKDataSets.end(); itr++ )
-   {
-      vprDEBUG(vesDBG,2) << "deleting a Model"
-                             << std::endl << vprDEBUG_FLUSH;
-      delete *itr;
-   }*/
-   size_t dataSetSize = mVTKDataSets.size();
-   for ( size_t i = 0; i < dataSetSize; i++)
-   {
-      delete mVTKDataSets.at(i);
-   }
-   mVTKDataSets.clear();
-   //vprDEBUG(vesDBG,2) << "deleting mVTKDataSets"
-   //   << std::endl << vprDEBUG_FLUSH;
 
-   //texture data cleanup
+    /* for(std::map<std::string ,ves::xplorer::event::EventHandler*>::iterator itr = _eventHandlers.begin();
+                                         itr != _eventHandlers.end(); itr++ )
+     {
+        delete itr->second;
+        itr->second = 0;
+     }
+     _eventHandlers.clear();*/
+    // the following block allows the program to get to pfExit
+    /*for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
+                                   itr != mVTKDataSets.end(); itr++ )
+    {
+       vprDEBUG(vesDBG,2) << "deleting a Model"
+                              << std::endl << vprDEBUG_FLUSH;
+       delete *itr;
+    }*/
+    size_t dataSetSize = mVTKDataSets.size();
+    for( size_t i = 0; i < dataSetSize; i++ )
+    {
+        delete mVTKDataSets.at( i );
+    }
+    mVTKDataSets.clear();
+    //vprDEBUG(vesDBG,2) << "deleting mVTKDataSets"
+    //   << std::endl << vprDEBUG_FLUSH;
+
+    //texture data cleanup
 #ifdef _OSG
-   /*TextureDataSetList::iterator tDataSet;
-   for ( tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
-   {
-         delete *tDataSet;
-   }*/
-   for(unsigned int i = 0; i < mTextureDataSets.size(); i++)
-   {
-      delete mTextureDataSets.at(i);
-   }
-   mTextureDataSets.clear();
-   //vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
-   //   << std::endl << vprDEBUG_FLUSH;
+    /*TextureDataSetList::iterator tDataSet;
+    for(tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
+    {
+          delete *tDataSet;
+    }*/
+    for( unsigned int i = 0; i < mTextureDataSets.size(); i++ )
+    {
+        delete mTextureDataSets.at( i );
+    }
+    mTextureDataSets.clear();
+    //vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
+    //   << std::endl << vprDEBUG_FLUSH;
 #endif
- 
-   //std::map<int,DataSet>::iterator foundPlugin;
-   // Remove any plugins that aren't present in the current network
-   /*for ( foundPlugin=transientDataSets.begin(); foundPlugin!=transientDataSets.end(); )
-   {
-         // When we clear the _plugin map will
-         // loop over all plugins
-         transientDataSets.erase( foundPlugin++ );
-   }
-   transientDataSets.clear();
-   */
-/*
-   // The following block is broken
-   // It loops more than it should (ie, twice for a single dataset)
-   // and seg faults trying to erase something that is not there
-   for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
-                                  itr != mVTKDataSets.end(); )
-   {
-      vprDEBUG(vesDBG,2) << "erasing a Model"
-                             << std::endl << vprDEBUG_FLUSH;
-      mVTKDataSets.erase( itr++ );
-   }
-*/
 
-   //vprDEBUG(vesDBG,2) << "Model destructor finished"
-   //                       << std::endl << vprDEBUG_FLUSH;
-   _availableSounds.clear();
+    //std::map<int,DataSet>::iterator foundPlugin;
+    // Remove any plugins that aren't present in the current network
+    /*for ( foundPlugin=transientDataSets.begin(); foundPlugin!=transientDataSets.end(); )
+    {
+          // When we clear the _plugin map will
+          // loop over all plugins
+          transientDataSets.erase( foundPlugin++ );
+    }
+    transientDataSets.clear();
+    */
+    /*
+       // The following block is broken
+       // It loops more than it should (ie, twice for a single dataset)
+       // and seg faults trying to erase something that is not there
+       for(VTKDataSetList::iterator itr = mVTKDataSets.begin();
+                                      itr != mVTKDataSets.end(); )
+       {
+          vprDEBUG(vesDBG,2) << "erasing a Model"
+                                 << std::endl << vprDEBUG_FLUSH;
+          mVTKDataSets.erase( itr++ );
+       }
+    */
 
-   if( m_cadHandler)
-   {
-       delete m_cadHandler;
-       m_cadHandler = 0;
-   }
+    //vprDEBUG(vesDBG,2) << "Model destructor finished"
+    //                       << std::endl << vprDEBUG_FLUSH;
+    _availableSounds.clear();
+
+    if( m_cadHandler )
+    {
+        delete m_cadHandler;
+        m_cadHandler = 0;
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::ModelCADHandler* Model::GetModelCADHandler()
@@ -205,57 +205,58 @@ ves::xplorer::ModelCADHandler* Model::GetModelCADHandler()
 ////////////////////////////////////////////////////////////////////////////////
 void Model::PreFrameUpdate()
 {
-   vprDEBUG(vesDBG,1) << "Model::PreFrameUpdate " <<std::endl<< vprDEBUG_FLUSH;;
+    vprDEBUG( vesDBG, 1 ) << "Model::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateCfdDataSet( void )
 {
-   mVTKDataSets.push_back( new DataSet() );
+    mVTKDataSets.push_back( new DataSet() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetMirrorNode( ves::xplorer::scenegraph::Group* dataNode )
 {
-   if ( !mirrorNode )
-   {
-      mirrorNode = new ves::xplorer::scenegraph::Clone();
-		mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
-      double rot[ 3 ];
-      rot[ 0 ] = 180.0f;
-      rot[ 1 ] = 0.0f;
-      rot[ 2 ] = 0.0f;
-      mirrorNode->SetRotationArray( rot );
-      this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
-   }
-   else
-   {
-      this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
-      delete mirrorNode;     
-      mirrorNode = new ves::xplorer::scenegraph::Clone( GetActiveDataSet()->GetDCS() );
-      double rot[ 3 ];
-      rot[ 0 ] = 180.0f;
-      rot[ 1 ] = 0.0f;
-      rot[ 2 ] = 0.0f;
-      mirrorNode->SetRotationArray( rot );
-      this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
-   }
+    if( !mirrorNode )
+    {
+        mirrorNode = new ves::xplorer::scenegraph::Clone();
+        mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() );
+        double rot[ 3 ];
+        rot[ 0 ] = 180.0f;
+        rot[ 1 ] = 0.0f;
+        rot[ 2 ] = 0.0f;
+        mirrorNode->SetRotationArray( rot );
+        this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
+    }
+    else
+    {
+        this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
+        delete mirrorNode;
+        mirrorNode = new ves::xplorer::scenegraph::Clone( GetActiveDataSet()->GetDCS() );
+        double rot[ 3 ];
+        rot[ 0 ] = 180.0f;
+        rot[ 1 ] = 0.0f;
+        rot[ 2 ] = 0.0f;
+        mirrorNode->SetRotationArray( rot );
+        this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSet* Model::GetActiveDataSet( void )
 {
-   return activeDataSet;
+    return activeDataSet;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetActiveDataSet( DataSet* input )
 {
-   activeDataSet = input;
+    activeDataSet = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateTextureDataSet()
 {
     // Currently we only have the capability to work with 1 texture dataset
-    // per Model. This can change once the Visualization GUI is capable of 
+    // per Model. This can change once the Visualization GUI is capable of
     // working with multiple texture datasets. Once that is possible
     // we will need a map of texture datasets organized by the overall
     // vtk dataset UUID.
@@ -264,460 +265,463 @@ void Model::CreateTextureDataSet()
         return;
     }
     // Add a new texture dataset
-    mTextureDataSets.push_back(new cfdTextureDataSet());
+    mTextureDataSets.push_back( new cfdTextureDataSet() );
     // Map texture dataset to UUID of overall vtk dataset
-}  
+}
 ////////////////////////////////////////////////////////////////////////////////
-void Model::AddDataSetToTextureDataSet(unsigned int index,
-                                     std::string textureDescriptionFile)
+void Model::AddDataSetToTextureDataSet( unsigned int index,
+                                        std::string textureDescriptionFile )
 {
-   mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
+    mTextureDataSets.at( index )->CreateTextureManager( textureDescriptionFile );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateGeomDataSet( std::string filename )
 {
-   mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get(), false, true ) );
+    mGeomDataSets.push_back( new CADEntity( filename, _worldDCS.get(), false, true ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::setModelType( ModelTypeIndex type )
 {
-   this->mModelType = type;
+    this->mModelType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::CADEntityHelper* Model::GetCfdNode( )
 {
-   return this->mModelNode;
+    return this->mModelNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* Model::GetDCS( )
 {
-   return this->_worldDCS.get();
+    return this->_worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool Model::GetMirrorDataFlag( void )
 {
-   return mirrorDataFlag;
+    return mirrorDataFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetMirrorDataFlag( bool input )
 {
-   mirrorDataFlag = input;
+    mirrorDataFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetID( void )
 {
-   return modelID;
+    return modelID;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetID( unsigned int id )
 {
-   modelID = id;
+    modelID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
 DataSet* Model::GetCfdDataSet( int dataset )
 {
-   // Check and see if we have any datasets
-   // if not return null
-   // to get the last added dataset pass in -1
-   if ( mVTKDataSets.empty() )
-      return NULL;
-   else if ( dataset == -1 )
-      return mVTKDataSets.back();
-   else
-      return mVTKDataSets.at( dataset );
+    // Check and see if we have any datasets
+    // if not return null
+    // to get the last added dataset pass in -1
+    if( mVTKDataSets.empty() )
+        return NULL;
+    else if( dataset == -1 )
+        return mVTKDataSets.back();
+    else
+        return mVTKDataSets.at( dataset );
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetIndexOfDataSet( std::string dataSetName )
 {
-   unsigned int dataSetIndex = 0;
-   for ( size_t i = 0; i < mVTKDataSets.size(); ++i )
-   {
-      if ( mVTKDataSets.at( i )->GetFileName() == dataSetName )
-      {
-         dataSetIndex = i;
-         break;
-      }
-   }
-   return dataSetIndex;
+    unsigned int dataSetIndex = 0;
+    for( size_t i = 0; i < mVTKDataSets.size(); ++i )
+    {
+        if( mVTKDataSets.at( i )->GetFileName() == dataSetName )
+        {
+            dataSetIndex = i;
+            break;
+        }
+    }
+    return dataSetIndex;
 }
 #ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::volume::cfdTextureDataSet* Model::GetTextureDataSet(unsigned int index)
+ves::xplorer::volume::cfdTextureDataSet* Model::GetTextureDataSet( unsigned int index )
 {
-   if(mTextureDataSets.empty())
-   {
-      return 0;
-   }else{
-      return mTextureDataSets.at(index);
-   }
+    if( mTextureDataSets.empty() )
+    {
+        return 0;
+    }
+    else
+    {
+        return mTextureDataSets.at( index );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetActiveTextureDataSet(ves::xplorer::volume::cfdTextureDataSet* tDS)
+void Model::SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tDS )
 {
-   _activeTextureDataSet = tDS;
+    _activeTextureDataSet = tDS;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::volume::cfdTextureDataSet* Model::GetActiveTextureDataSet()
 {
-   return _activeTextureDataSet;
+    return _activeTextureDataSet;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetNumberOfTextureDataSets()
 {
-   return mTextureDataSets.size();
+    return mTextureDataSets.size();
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 int Model::GetKeyForCfdDataSet( DataSet* input )
 {
-   int key = -1;
-   for ( unsigned int i = 0; i < mVTKDataSets.size(); ++i )
-   {
-      if ( mVTKDataSets.at( i ) == input )
-      {
-         key = i;
-         break;
-      }
-   }
-   
-   return key;
+    int key = -1;
+    for( unsigned int i = 0; i < mVTKDataSets.size(); ++i )
+    {
+        if( mVTKDataSets.at( i ) == input )
+        {
+            key = i;
+            break;
+        }
+    }
+
+    return key;
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetNumberOfCfdDataSets( void )
 {
-   return mVTKDataSets.size();
+    return mVTKDataSets.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity* Model::GetGeomDataSet( int dataset )
 {
-   // Check and see if we have any datasets
-   // if not return null
-   // to get the last added dataset pass in -1
-   if ( mGeomDataSets.empty() )
-      return NULL;
-   else if ( dataset == -1 )
-      return mGeomDataSets.back();
-   else
-      return mGeomDataSets.at( dataset );
+    // Check and see if we have any datasets
+    // if not return null
+    // to get the last added dataset pass in -1
+    if( mGeomDataSets.empty() )
+        return NULL;
+    else if( dataset == -1 )
+        return mGeomDataSets.back();
+    else
+        return mGeomDataSets.at( dataset );
 }
 ////////////////////////////////////////////////////////////////////////////////
 unsigned int Model::GetNumberOfGeomDataSets( void )
 {
-   return mGeomDataSets.size();
+    return mGeomDataSets.size();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Dynamic Loading Data Start From Here
-void Model::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, double* scale, double* trans, double* rotate)
+void Model::DynamicLoadingData( vtkUnstructuredGrid* dataset, int datasetindex, double* scale, double* trans, double* rotate )
 {
-   this->CreateCfdDataSet();
-   
+    this->CreateCfdDataSet();
 
-   vprDEBUG(vesDBG,0) << " ************************************* "
-                          << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
-                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << " ************************************* "
+    << std::endl << vprDEBUG_FLUSH;
 
-   //double scale[3], trans[3], rotate[3];   // pfDCS stuff
-   //this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
+    vprDEBUG( vesDBG, 0 ) << " vtk DCS parameters:"
+    << std::endl << vprDEBUG_FLUSH;
 
-   //hard code here and will change it later
-   //scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
-   //trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
-   //rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
-   // Pass in -1 to GetCfdDataSet to get the last dataset added
-   this->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-   this->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-   this->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-   this->GetCfdDataSet( -1 )->LoadData(dataset, datasetindex);
-  
-  // this->MakingSurface( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
-  //
-   std::cout<<"[DBG]...Before add data into waitinglist"<<std::endl;
-  this->waitingdatalist.push_back(dataset);
-  std::cout<<"[DBG]...After add data into waitinglist"<<std::endl;
-   
+    //double scale[3], trans[3], rotate[3];   // pfDCS stuff
+    //this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
+
+    //hard code here and will change it later
+    //scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
+    //trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
+    //rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
+    // Pass in -1 to GetCfdDataSet to get the last dataset added
+    this->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+    this->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+    this->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
+    this->GetCfdDataSet( -1 )->LoadData( dataset, datasetindex );
+
+    // this->MakingSurface( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
+    //
+    std::cout << "[DBG]...Before add data into waitinglist" << std::endl;
+    this->waitingdatalist.push_back( dataset );
+    std::cout << "[DBG]...After add data into waitinglist" << std::endl;
+
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::DynamicLoadingGeom(std::string surfacefilename, double* scale, 
-               double* trans, double* rotate, double* stlColor, int color, int transFlag)
-{  
-   std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
-   this->CreateGeomDataSet(surfacefilename);
-   std::cout<<"[DBG]...after cfdFile constructor"<<std::endl;
-   this->GetGeomDataSet(-1)->GetDCS()->SetScaleArray( scale );
-   this->GetGeomDataSet(-1)->GetDCS()->SetTranslationArray( trans );
-   this->GetGeomDataSet(-1)->GetDCS()->SetRotationArray(rotate);
+void Model::DynamicLoadingGeom( std::string surfacefilename, double* scale,
+                                double* trans, double* rotate, double* stlColor, int color, int transFlag )
+{
+    std::cout << "[DBG]...the geom file is " << surfacefilename << std::endl;
+    this->CreateGeomDataSet( surfacefilename );
+    std::cout << "[DBG]...after cfdFile constructor" << std::endl;
+    this->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+    this->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+    this->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector<vtkDataSet*> Model::GetWaitingDataList()
 {
-   return this->waitingdatalist;
+    return this->waitingdatalist;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if __VJ_version > 2000003
-void Model::GetDataFromUnit(void)
+void Model::GetDataFromUnit( void )
 #elif __VJ_version == 2000003
-void Model::GetDataFromUnit(void* unused)
+void Model::GetDataFromUnit( void* unused )
 #endif
 {
 
- //std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
-   //char answer;
-   
-   vpr::Uint32 data_length =0;
-   vpr::Uint32 compressed_data_length(0);
-   unsigned int bytes_read = 0;
-   int i=0;
-   
-   while(1){
-   std::cout<<"[DBG]...Before ACCEPT New Data, *****************************************"<<std::endl;
-   vpr::SocketStream connection;
-   vpr::InetAddr addr;
-   std::string localhostname;
-   localhostname = vpr::System::getHostname();
-   addr.setAddress(localhostname, 50031);
-   vpr::SocketAcceptor server(addr);
+//std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
+    //char answer;
 
-   server.accept(connection);
-   i++;
+    vpr::Uint32 data_length = 0;
+    vpr::Uint32 compressed_data_length( 0 );
+    unsigned int bytes_read = 0;
+    int i = 0;
 
-   // Get the length of the uncompressed data.
-   mValueLock.acquire();
-   {
-      try
-      {
-         //connection.recvn( (void*)(&data_length), sizeof(data_length), bytes_read);
-      }
-      catch (...)
-      {
-         std::cerr << "[ERR] Unable to receive data length "
-         << __FILE__ << ":" << __LINE__ << std::endl;
-      }
-   }
-   mValueLock.release();
-   // Get the length of the compressed data
-   mValueLock.acquire();
-   {
-      try
-      {
-         //connection.recvn( (void*)(&compressed_data_length), 
-         //                         sizeof(compressed_data_length), bytes_read);
-      }
-      catch (...)
-      {
-         std::cerr << "[ERR] Unable to receive compressed data length "
-         << __FILE__ << ":" << __LINE__ << std::endl;
-         //return 1;
-      }
-   }
-   mValueLock.release();
-   
-   ///Set the byte-order
-   data_length = vpr::System::Ntohl(data_length);
-   compressed_data_length = vpr::System::Ntohl(compressed_data_length);
-   vpr::Uint8* compressed_data = new vpr::Uint8[compressed_data_length];
-   mValueLock.acquire();
-   {
-      //connection.recvn( (void*)compressed_data, 
-      //                           compressed_data_length, 
-      //                           bytes_read );
-   }
-   mValueLock.release();
-   
-   /*if(status != vpr::ReturnStatus::Succeed)
-   {
-      std::cout << "[ERR] Error receiving data; read " << bytes_read << " of "
-                << data_length << " bytes." << std::endl;
-      if (status == vpr::ReturnStatus::Fail)
-      {
-         std::cout << "[ERR] Read failed." << std::endl;
-      }
-      else if (status == vpr::ReturnStatus::WouldBlock)
-      {
-         std::cout << "[ERR] This read would block the caller." << std::endl;
-      }
-      else if (status == vpr::ReturnStatus::Timeout)
-      {
-         std::cout << "[ERR] This read timed out." << std::endl;
-      }
-      else if (status == vpr::ReturnStatus::InProgress)
-      {
-         std::cout << "[ERR] This read is still in progress." << std::endl;
-      }
-      else if (status == vpr::ReturnStatus::NotConnected)
-      {
-         std::cout << "[ERR] The device is not connected." << std::endl;
-      }
-      else
-      {
-         std::cout << "[ERR] Unknown Result." << std::endl;
-      }
-      //return 1;
-    }*/
-    std::cout << "[DBG] Read " << data_length << " of " 
-              << compressed_data_length << " bytes."
-              << std::endl;
-    // Uncompress the data
-    vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
-    vtkUnsignedCharArray* vtk_data = vtkUnsignedCharArray::New();
-    vtk_data = compressor->Uncompress(compressed_data, compressed_data_length, data_length);
-    /*VTKSmartPtr<vtkUnsignedCharArray> vtk_data = 
-                compressor->Uncompress( compressed_data, 
-                                        compressed_data_length,
-                                        data_length );*/
-    //VTKSmartPtr<vtkUnstructuredGridReader> reader;
-    vpr::Uint8* data = new vpr::Uint8[vtk_data->GetSize()];
-    data = vtk_data->WritePointer(0,data_length);
-    vtkUnstructuredGridReader* reader = vtkUnstructuredGridReader::New();
-    reader->ReadFromInputStringOn();
-    reader->SetBinaryInputString( reinterpret_cast<char*>(data), 
-                                    data_length );
-
-
-    //VTKSmartPtr<vtkUnstructuredGrid> ugrid(reader->GetOutput());
-    
-    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
-    ugrid = reader->GetOutput();
-    mValueLock.acquire();
+    while( 1 )
     {
-      std::cout << "[DBG] Now drawing" << std::endl;
-    }
-    mValueLock.release();
-      
-    mValueLock.acquire();
-    {
-      std::cout<<"[DBG]...READY TO READ DATA FROM UNIT **********************************"<<std::endl;
-      double scale[3],trans[3],rotate[3];
-      scale[0] = scale[1] = scale[2] = 1.0f;
-      trans[0] = trans[1] = trans[2] = 0.0f;
-      rotate[0] = rotate[1] = rotate[2] = 0.0f;
-      //since the user doesn't have access to the scale a and translate edata in this thread
-      // this data for this cfddataset can be set after rloading that dataset 
-      // in the activate custom viz function when necessary 
-      this->DynamicLoadingData(ugrid,i,scale,trans,rotate);
-      std::cout<<"[DBG]...AFTER LOAD DATA ****************************************"<<std::endl;
-      this->currentsurfacefilename =(std::string)(this->MakeSurfaceFile(ugrid, i));
+        std::cout << "[DBG]...Before ACCEPT New Data, *****************************************" << std::endl;
+        vpr::SocketStream connection;
+        vpr::InetAddr addr;
+        std::string localhostname;
+        localhostname = vpr::System::getHostname();
+        addr.setAddress( localhostname, 50031 );
+        vpr::SocketAcceptor server( addr );
 
-      std::cout<<"[DBG]...current surface file is "<<currentsurfacefilename<<std::endl;
-      //currentsurfacefilename ="NewlyLoadedDataSet_1.stl";
-      //this->DynamicLoadingGeom(currentsurfacefilename);
-      std::cout<<"[DBG]...After load geom data************************************"<<std::endl;
+        server.accept( connection );
+        i++;
+
+        // Get the length of the uncompressed data.
+        mValueLock.acquire();
+        {
+            try
+            {
+                //connection.recvn( (void*)(&data_length), sizeof(data_length), bytes_read);
+            }
+            catch ( ... )
+            {
+                std::cerr << "[ERR] Unable to receive data length "
+                << __FILE__ << ":" << __LINE__ << std::endl;
+            }
+        }
+        mValueLock.release();
+        // Get the length of the compressed data
+        mValueLock.acquire();
+        {
+            try
+            {
+                //connection.recvn( (void*)(&compressed_data_length),
+                //                         sizeof(compressed_data_length), bytes_read);
+            }
+            catch ( ... )
+            {
+                std::cerr << "[ERR] Unable to receive compressed data length "
+                << __FILE__ << ":" << __LINE__ << std::endl;
+                //return 1;
+            }
+        }
+        mValueLock.release();
+
+        ///Set the byte-order
+        data_length = vpr::System::Ntohl( data_length );
+        compressed_data_length = vpr::System::Ntohl( compressed_data_length );
+        vpr::Uint8* compressed_data = new vpr::Uint8[compressed_data_length];
+        mValueLock.acquire();
+        {
+            //connection.recvn( (void*)compressed_data,
+            //                           compressed_data_length,
+            //                           bytes_read );
+        }
+        mValueLock.release();
+
+        /*if(status != vpr::ReturnStatus::Succeed)
+        {
+           std::cout << "[ERR] Error receiving data; read " << bytes_read << " of "
+                     << data_length << " bytes." << std::endl;
+           if (status == vpr::ReturnStatus::Fail)
+           {
+              std::cout << "[ERR] Read failed." << std::endl;
+           }
+           else if (status == vpr::ReturnStatus::WouldBlock)
+           {
+              std::cout << "[ERR] This read would block the caller." << std::endl;
+           }
+           else if (status == vpr::ReturnStatus::Timeout)
+           {
+              std::cout << "[ERR] This read timed out." << std::endl;
+           }
+           else if (status == vpr::ReturnStatus::InProgress)
+           {
+              std::cout << "[ERR] This read is still in progress." << std::endl;
+           }
+           else if (status == vpr::ReturnStatus::NotConnected)
+           {
+              std::cout << "[ERR] The device is not connected." << std::endl;
+           }
+           else
+           {
+              std::cout << "[ERR] Unknown Result." << std::endl;
+           }
+           //return 1;
+         }*/
+        std::cout << "[DBG] Read " << data_length << " of "
+        << compressed_data_length << " bytes."
+        << std::endl;
+        // Uncompress the data
+        vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
+        vtkUnsignedCharArray* vtk_data = vtkUnsignedCharArray::New();
+        vtk_data = compressor->Uncompress( compressed_data, compressed_data_length, data_length );
+        /*VTKSmartPtr<vtkUnsignedCharArray> vtk_data =
+                    compressor->Uncompress( compressed_data, 
+                                            compressed_data_length,
+                                            data_length );*/
+        //VTKSmartPtr<vtkUnstructuredGridReader> reader;
+        vpr::Uint8* data = new vpr::Uint8[vtk_data->GetSize()];
+        data = vtk_data->WritePointer( 0, data_length );
+        vtkUnstructuredGridReader* reader = vtkUnstructuredGridReader::New();
+        reader->ReadFromInputStringOn();
+        reader->SetBinaryInputString( reinterpret_cast<char*>( data ),
+                                      data_length );
+
+
+        //VTKSmartPtr<vtkUnstructuredGrid> ugrid(reader->GetOutput());
+
+        vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
+        ugrid = reader->GetOutput();
+        mValueLock.acquire();
+        {
+            std::cout << "[DBG] Now drawing" << std::endl;
+        }
+        mValueLock.release();
+
+        mValueLock.acquire();
+        {
+            std::cout << "[DBG]...READY TO READ DATA FROM UNIT **********************************" << std::endl;
+            double scale[3], trans[3], rotate[3];
+            scale[0] = scale[1] = scale[2] = 1.0f;
+            trans[0] = trans[1] = trans[2] = 0.0f;
+            rotate[0] = rotate[1] = rotate[2] = 0.0f;
+            //since the user doesn't have access to the scale a and translate edata in this thread
+            // this data for this cfddataset can be set after rloading that dataset
+            // in the activate custom viz function when necessary
+            this->DynamicLoadingData( ugrid, i, scale, trans, rotate );
+            std::cout << "[DBG]...AFTER LOAD DATA ****************************************" << std::endl;
+            this->currentsurfacefilename = ( std::string )( this->MakeSurfaceFile( ugrid, i ) );
+
+            std::cout << "[DBG]...current surface file is " << currentsurfacefilename << std::endl;
+            //currentsurfacefilename ="NewlyLoadedDataSet_1.stl";
+            //this->DynamicLoadingGeom(currentsurfacefilename);
+            std::cout << "[DBG]...After load geom data************************************" << std::endl;
             //reader->Delete();
-      //ugrid->Delete();
-      connection.close();
-   
-      std::cout<<"[DBG]...After Server Close"<<std::endl;
-   }
-   mValueLock.release();
+            //ugrid->Delete();
+            connection.close();
 
-  }
+            std::cout << "[DBG]...After Server Close" << std::endl;
+        }
+        mValueLock.release();
+
+    }
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::ActiveLoadingThread()
 {
 #if __VJ_version > 2000003
-   this->loadDataTh = new vpr::Thread( boost::bind( &Model::GetDataFromUnit, this ) );
+    this->loadDataTh = new vpr::Thread( boost::bind( &Model::GetDataFromUnit, this ) );
 #elif __VJ_version == 2000003
-   this->loadDataTh = new vpr::Thread( 
-                        new vpr::ThreadMemberFunctor< Model >( 
-                                 this, &Model::GetDataFromUnit) );
+    this->loadDataTh = new vpr::Thread(
+                           new vpr::ThreadMemberFunctor< Model >(
+                               this, &Model::GetDataFromUnit ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::string Model::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
+const std::string Model::MakeSurfaceFile( vtkDataSet* ugrid, int datasetindex )
 {
-   std::ostringstream file_name;
-   std::string currentStlFileName = "NewlyLoadedDataSet_000.stl";
-   file_name<<"NewlyLoadedDataSet_"<<datasetindex<<".stl";
-   currentStlFileName = file_name.str();
+    std::ostringstream file_name;
+    std::string currentStlFileName = "NewlyLoadedDataSet_000.stl";
+    file_name << "NewlyLoadedDataSet_" << datasetindex << ".stl";
+    currentStlFileName = file_name.str();
 
-   std::string newStlName;
+    std::string newStlName;
 
-   newStlName = currentStlFileName;
+    newStlName = currentStlFileName;
 
-   vtkPolyData * surface = NULL;
-   std::cout<<"[DBG]... after readVtkThing"<<std::endl;
+    vtkPolyData * surface = NULL;
+    std::cout << "[DBG]... after readVtkThing" << std::endl;
     // Create a polydata surface file that completely envelopes the solution space
-   float deciVal=0.7;
-   surface = cfdGrid2Surface( ugrid , deciVal );
-   
-   vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
-   vtkGeometryFilter *gFilter = NULL;
+    float deciVal = 0.7;
+    surface = cfdGrid2Surface( ugrid , deciVal );
 
-   // convert dataset to vtkPolyData
-   tFilter->SetInput( (vtkPolyData*)surface );
-  
-   std::cout << "Writing \"" << newStlName << "\"... ";
-   std::cout.flush();
-   vtkSTLWriter *writer = vtkSTLWriter::New();
-   writer->SetInput( tFilter->GetOutput() );
-   writer->SetFileName( newStlName.c_str() );
-   writer->SetFileTypeToBinary();
-   writer->Write();
-   writer->Delete();
-   std::cout << "... done" << std::endl;
+    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
+    vtkGeometryFilter *gFilter = NULL;
 
-   tFilter->Delete();
+    // convert dataset to vtkPolyData
+    tFilter->SetInput(( vtkPolyData* )surface );
 
-   if ( gFilter ) 
-      gFilter->Delete();
+    std::cout << "Writing \"" << newStlName << "\"... ";
+    std::cout.flush();
+    vtkSTLWriter *writer = vtkSTLWriter::New();
+    writer->SetInput( tFilter->GetOutput() );
+    writer->SetFileName( newStlName.c_str() );
+    writer->SetFileTypeToBinary();
+    writer->Write();
+    writer->Delete();
+    std::cout << "... done" << std::endl;
+
+    tFilter->Delete();
+
+    if( gFilter )
+        gFilter->Delete();
 
 //clean up
-   surface->Delete();
-   std::cout << "\ndone\n";
-   return newStlName;
+    surface->Delete();
+    std::cout << "\ndone\n";
+    return newStlName;
 }
 //Dynamic Loading Data End Here
 /////////////////////////////////////////////////
-void Model::AddNewSound(std::string soundName,
-                           std::string filename)
+void Model::AddNewSound( std::string soundName,
+                         std::string filename )
 {
-   cfdSound newSound;
-   newSound.fileName = filename;
-   newSound.soundName = soundName;
+    cfdSound newSound;
+    newSound.fileName = filename;
+    newSound.soundName = soundName;
 
-   if(newSound.initSound())
-   {
-      _availableSounds[soundName] = newSound;
-   }
+    if( newSound.initSound() )
+    {
+        _availableSounds[soundName] = newSound;
+    }
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::ActivateSound(std::string soundName)
+void Model::ActivateSound( std::string soundName )
 {
-   try
-   {
-      _availableSounds[soundName].playSound();
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid sound: "<<soundName<<std::endl;
-      std::cout<<"Model::ActivateSound"<<std::endl;
-   }
+    try
+    {
+        _availableSounds[soundName].playSound();
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid sound: " << soundName << std::endl;
+        std::cout << "Model::ActivateSound" << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::DeactivateSound(std::string soundName)
+void Model::DeactivateSound( std::string soundName )
 {
-   try
-   {
-      _availableSounds[soundName].stopSound();
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid sound: "<<soundName<<std::endl;
-      std::cout<<"Model::ActivateSound"<<std::endl;
-   }
+    try
+    {
+        _availableSounds[soundName].stopSound();
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid sound: " << soundName << std::endl;
+        std::cout << "Model::ActivateSound" << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::DeleteDataSet( std::string dataSetName )
 {
-    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin(); 
-        iter != mVTKDataSets.end(); ++iter )
+    for( std::vector< DataSet* >::iterator iter = mVTKDataSets.begin();
+            iter != mVTKDataSets.end(); ++iter )
     {
-        if( (*iter)->GetFileName() == dataSetName )
+        if (( *iter )->GetFileName() == dataSetName )
         {
             delete *iter;
             mVTKDataSets.erase( iter );

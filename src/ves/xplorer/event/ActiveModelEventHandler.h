@@ -53,25 +53,25 @@ namespace event
 class VE_XPLORER_EXPORTS ActiveModelEventHandler : public EventHandler
 {
 public:
-   ///Constructor
-   ActiveModelEventHandler();
+    ///Constructor
+    ActiveModelEventHandler();
 
-   ///Copy Constructor
-   ActiveModelEventHandler(const ActiveModelEventHandler& ceh);
+    ///Copy Constructor
+    ActiveModelEventHandler( const ActiveModelEventHandler& ceh );
 
-   ///Destructor
-   virtual ~ActiveModelEventHandler();
+    ///Destructor
+    virtual ~ActiveModelEventHandler();
 
-   ///Set the cfdModel.
-   ///\param model The ModelHandler to execute the Command on.
-   void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
+    ///Set the cfdModel.
+    ///\param model The ModelHandler to execute the Command on.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
-   ///Equal operator
-   ActiveModelEventHandler& operator=(const ActiveModelEventHandler& rhs);
+    ///Equal operator
+    ActiveModelEventHandler& operator=( const ActiveModelEventHandler& rhs );
 
 protected:
 };

@@ -35,53 +35,51 @@
 #include <ves/ce/util/OPort.h>
 using namespace VE_CE::Utilities;
 
-Connection::Connection (int id)
-  : _iport (NULL),
-    _oport (NULL),
-    _id    (id)
+Connection::Connection( int id )
+        : _iport( NULL ),
+        _oport( NULL ),
+        _id( id )
+{}
+////////////////////////////////////////////////////////////////////////////////
+Connection::Connection( const Connection& c )
 {
+    copy( c );
 }
 ////////////////////////////////////////////////////////////////////////////////
-Connection::Connection (const Connection& c)
-{
-  copy(c);
-}
+Connection::~Connection()
+{}
 ////////////////////////////////////////////////////////////////////////////////
-Connection::~Connection ()
+void Connection::copy( const Connection& c )
 {
-}
-////////////////////////////////////////////////////////////////////////////////
-void Connection::copy (const Connection& c)
-{
-   if(this==&c) return;
+    if( this == &c ) return;
 
-   _iport = c._iport;
-   _oport = c._oport;
-   _id    = c._id;  
+    _iport = c._iport;
+    _oport = c._oport;
+    _id    = c._id;
 }
 ////////////////////////////////////////////////////////////////////////////////
-IPort* Connection::get_iport ()
+IPort* Connection::get_iport()
 {
-   return _iport;
+    return _iport;
 }
 ////////////////////////////////////////////////////////////////////////////////
-OPort* Connection::get_oport ()
+OPort* Connection::get_oport()
 {
-   return _oport;
+    return _oport;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Connection::connect_iport( IPort* p )
 {
-   _iport = p;
+    _iport = p;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Connection::connect_oport( OPort* p )
 {
-   _oport = p;
+    _oport = p;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Connection::get_id()
 {
-   return _id;
+    return _id;
 }
 

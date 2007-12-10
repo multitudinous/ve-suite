@@ -41,53 +41,53 @@
 using namespace ves::open::xml::cad;
 
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* CADCreator::CreateNewXMLObject(std::string objectType)
+ves::open::xml::XMLObject* CADCreator::CreateNewXMLObject( std::string objectType )
 {
-   if(objectType == "CADAssembly")
-   {
-      return new CADAssembly();
-   }
-   else if(objectType == "CADPart")
-   {
-      return new CADPart();
-   } 
-   else if(objectType == "CADAttribute")
-   {
-      return new CADAttribute();
-   }
-   else if(objectType == "CADMaterial")
-   {
-      return new CADMaterial();
-   }
-   else if(objectType == "CADNodeAnimation")
-   {
-      return new CADNodeAnimation();
-   }
-   return 0;
+    if( objectType == "CADAssembly" )
+    {
+        return new CADAssembly();
+    }
+    else if( objectType == "CADPart" )
+    {
+        return new CADPart();
+    }
+    else if( objectType == "CADAttribute" )
+    {
+        return new CADAttribute();
+    }
+    else if( objectType == "CADMaterial" )
+    {
+        return new CADMaterial();
+    }
+    else if( objectType == "CADNodeAnimation" )
+    {
+        return new CADNodeAnimation();
+    }
+    return 0;
 }
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* CADCreator::CreateNewXMLObjectCopy(std::string objectType,
-                                                     ves::open::xml::XMLObject* objectToCopy)
+ves::open::xml::XMLObject* CADCreator::CreateNewXMLObjectCopy( std::string objectType,
+        ves::open::xml::XMLObject* objectToCopy )
 {
-   if(objectType == "CADAssembly")
-   {
-      return new CADAssembly(*dynamic_cast<CADAssembly*>(objectToCopy));
-   }
-   else if(objectType == "CADPart")
-   {
-      return new CADPart(*dynamic_cast<CADPart*>(objectToCopy));
-   }
-   else if(objectType == "CADAttribute")
-   {
-      return new CADAttribute(*dynamic_cast<CADAttribute*>(objectToCopy));
-   }
-   else if(objectType == "CADMaterial")
-   {
-      return new CADMaterial(*dynamic_cast<CADMaterial*>(objectToCopy));
-   }
-   else if(objectType == "CADNodeAnimation")
-   {
-      return new CADNodeAnimation(*dynamic_cast<CADNodeAnimation*>(objectToCopy));
-   }
-   return 0;
+    if( objectType == "CADAssembly" )
+    {
+        return new CADAssembly( *dynamic_cast<CADAssembly*>( objectToCopy ) );
+    }
+    else if( objectType == "CADPart" )
+    {
+        return new CADPart( *dynamic_cast<CADPart*>( objectToCopy ) );
+    }
+    else if( objectType == "CADAttribute" )
+    {
+        return new CADAttribute( *dynamic_cast<CADAttribute*>( objectToCopy ) );
+    }
+    else if( objectType == "CADMaterial" )
+    {
+        return new CADMaterial( *dynamic_cast<CADMaterial*>( objectToCopy ) );
+    }
+    else if( objectType == "CADNodeAnimation" )
+    {
+        return new CADNodeAnimation( *dynamic_cast<CADNodeAnimation*>( objectToCopy ) );
+    }
+    return 0;
 }

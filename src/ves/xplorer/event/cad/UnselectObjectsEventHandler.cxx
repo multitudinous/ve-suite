@@ -48,15 +48,15 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 UnselectObjectsEventHandler::UnselectObjectsEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UnselectObjectsEventHandler::UnselectObjectsEventHandler( const UnselectObjectsEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }

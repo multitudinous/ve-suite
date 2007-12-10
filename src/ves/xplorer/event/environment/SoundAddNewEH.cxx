@@ -45,71 +45,70 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////
 SoundAddNewEventHandler::SoundAddNewEventHandler()
 {
-   _activeModel = 0;
+    _activeModel = 0;
 }
 ///////////////////////////////////////////////////////////////////
 SoundAddNewEventHandler
-::SoundAddNewEventHandler(const SoundAddNewEventHandler& ceh)
+::SoundAddNewEventHandler( const SoundAddNewEventHandler& ceh )
 {
-   _activeModel = ceh._activeModel;
+    _activeModel = ceh._activeModel;
 }
 /////////////////////////////////////////////////////////////////////
 SoundAddNewEventHandler::~SoundAddNewEventHandler()
-{
-}
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-SoundAddNewEventHandler& 
-SoundAddNewEventHandler::operator=(const SoundAddNewEventHandler& rhs)
+SoundAddNewEventHandler&
+SoundAddNewEventHandler::operator=( const SoundAddNewEventHandler& rhs )
 {
-   if(&rhs != this)
-   {
-      _activeModel = rhs._activeModel;
-   }
-   return *this;
+    if( &rhs != this )
+    {
+        _activeModel = rhs._activeModel;
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void SoundAddNewEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void SoundAddNewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
-   ///is this overkill????
-   try
-   {
-      if(baseObject)
-      {
-         _activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
-      }
-      else
-      {
-         _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-      }
-   }
-   catch(...)
-   {
-      _activeModel = 0;
-      std::cout<<"Invalid object passed to TextureBasedEventHandler!"<<std::endl;
-   }
+    ///is this overkill????
+    try
+    {
+        if( baseObject )
+        {
+            _activeModel = dynamic_cast<ves::xplorer::Model*>( baseObject );
+        }
+        else
+        {
+            _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
+        }
+    }
+    catch ( ... )
+    {
+        _activeModel = 0;
+        std::cout << "Invalid object passed to TextureBasedEventHandler!" << std::endl;
+    }
 }
-/////////////////////////////////////////////////////////////////////////////////////   
-void SoundAddNewEventHandler::Execute(XMLObject* veXMLObject)
+/////////////////////////////////////////////////////////////////////////////////////
+void SoundAddNewEventHandler::Execute( XMLObject* veXMLObject )
 {
-   try
-   {
-      if(_activeModel)
-      { 
-         Command* command = dynamic_cast< Command* >( veXMLObject );
-         DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
-         std::string guiName;
-         soundName->GetData(guiName);
+    try
+    {
+        if( _activeModel )
+        {
+            Command* command = dynamic_cast< Command* >( veXMLObject );
+            DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
+            std::string guiName;
+            soundName->GetData( guiName );
 
-         std::string fileName;
-         DataValuePairWeakPtr soundFile = command->GetDataValuePair( "Sound Filename" );
-         soundFile->GetData(fileName);
-         _activeModel->AddNewSound(guiName,fileName);
-      } 
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid Model!!"<<std::endl;
-      std::cout<<"SoundAddNewEventHandler::_operateOnNode()"<<std::endl;
-   }
+            std::string fileName;
+            DataValuePairWeakPtr soundFile = command->GetDataValuePair( "Sound Filename" );
+            soundFile->GetData( fileName );
+            _activeModel->AddNewSound( guiName, fileName );
+        }
+    }
+    catch ( ... )
+    {
+        std::cout << "Invalid Model!!" << std::endl;
+        std::cout << "SoundAddNewEventHandler::_operateOnNode()" << std::endl;
+    }
 
 }

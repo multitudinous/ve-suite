@@ -41,7 +41,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class cfdSound;
+class cfdSound;
 }
 }
 
@@ -59,27 +59,27 @@ cfdSoundHandler API
 class VE_XPLORER_EXPORTS cfdSoundHandler : public GlobalBase
 {
 public:
-   ///Constructor
-   cfdSoundHandler( std::string );
-   ///Destructor
-   virtual ~cfdSoundHandler();
+    ///Constructor
+    cfdSoundHandler( std::string );
+    ///Destructor
+    virtual ~cfdSoundHandler();
 
-   ///Used to read parameter file and configure objects
-   void CreateObjects( void );
+    ///Used to read parameter file and configure objects
+    void CreateObjects( void );
 
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    virtual void UpdateCommand();
 
-   ///Get number of sounds
-   int GetNumberOfSounds( void );
-   ///Set the sound file name
-   std::string GetSoundFilename( int );
-   ///Get a vector of sounds
-   std::vector< cfdSound* > GetSounds( void );
+    ///Get number of sounds
+    int GetNumberOfSounds( void );
+    ///Set the sound file name
+    std::string GetSoundFilename( int );
+    ///Get a vector of sounds
+    std::vector< cfdSound* > GetSounds( void );
 private:
-   std::string _param;
-   std::vector< cfdSound* > sounds;///<The vector of sounds.
-   //cfdCommandArray* commandArray;
+    std::string _param;
+    std::vector< cfdSound* > sounds;///<The vector of sounds.
+    //cfdCommandArray* commandArray;
 };
 }
 }

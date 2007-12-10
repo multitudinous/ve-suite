@@ -38,25 +38,25 @@
 
 #include <ves/open/moduleS.h>
 
-class QueryThread : public ACE_Task_Base 
+class QueryThread : public ACE_Task_Base
 {
 public:
-  QueryThread( Body::Unit_var m );
-  ~QueryThread( void );
+    QueryThread( Body::Unit_var m );
+    ~QueryThread( void );
 
-  virtual int svc (void);
+    virtual int svc( void );
 
-  void QueryData( std::string command, CORBA::Long modId );
-  bool GettingData( void );
-  std::string GetQueryData( void );
-  
+    void QueryData( std::string command, CORBA::Long modId );
+    bool GettingData( void );
+    std::string GetQueryData( void );
+
 private:
-   Body::Unit_var _mod;
-   bool isComplete;
-   bool shutdown;
-   CORBA::Long moduleId;
-   ACE_Thread_Mutex _mutex;
-   std::string queryCommand;
-   std::string queryData;
+    Body::Unit_var _mod;
+    bool isComplete;
+    bool shutdown;
+    CORBA::Long moduleId;
+    ACE_Thread_Mutex _mutex;
+    std::string queryCommand;
+    std::string queryData;
 };
 #endif

@@ -59,15 +59,15 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler()
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ViewEventHandler::ViewEventHandler( const ViewEventHandler& rhs )
-:
-ves::xplorer::event::EventHandler()
+        :
+        ves::xplorer::event::EventHandler()
 {
     ;
 }
@@ -92,20 +92,20 @@ void ViewEventHandler::Execute( XMLObject* veXMLObject )
     if( view == "Frame All" )
     {
         static_cast< ves::xplorer::KeyboardMouse* >
-            ( ves::xplorer::DeviceHandler::instance()->
-              GetDevice( "KeyboardMouse" ) )->FrameAll();
+        ( ves::xplorer::DeviceHandler::instance()->
+          GetDevice( "KeyboardMouse" ) )->FrameAll();
     }
     else if( view == "Frame Selection" )
     {
         static_cast< ves::xplorer::KeyboardMouse* >
-            ( ves::xplorer::DeviceHandler::instance()->
-              GetDevice( "KeyboardMouse" ) )->FrameSelection();
+        ( ves::xplorer::DeviceHandler::instance()->
+          GetDevice( "KeyboardMouse" ) )->FrameSelection();
     }
     else if( view == "Reset" )
     {
         static_cast< ves::xplorer::KeyboardMouse* >
-            ( ves::xplorer::DeviceHandler::instance()->
-              GetDevice( "KeyboardMouse" ) )->ResetTransforms();
+        ( ves::xplorer::DeviceHandler::instance()->
+          GetDevice( "KeyboardMouse" ) )->ResetTransforms();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

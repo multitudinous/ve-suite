@@ -45,12 +45,12 @@ namespace open
 {
 namespace xml
 {
-    class Command;
-    class XMLObject;
+class Command;
+class XMLObject;
 namespace model
 {
-   class Model;
-   class Port;
+class Model;
+class Port;
 }
 }
 }
@@ -66,95 +66,95 @@ class IPort;
 class Connection;
 
 ///??
-class VE_CE_UTILS_EXPORTS Module 
+class VE_CE_UTILS_EXPORTS Module
 {
 public:
-   Module();
-   Module( const Module& );
-   ~Module();
+    Module();
+    Module( const Module& );
+    ~Module();
 
-   void copy( const Module& );
+    void copy( const Module& );
 
-   ///return number of output ports
-   size_t numOPorts( void );
-   ///return number of input ports
-   size_t numIPorts( void );
+    ///return number of output ports
+    size_t numOPorts( void );
+    ///return number of input ports
+    size_t numIPorts( void );
 
-   ///Get the vector index for the specific input port id 
-   int iportIdx( int idx );
-   ///Get the vector index for the specific output port id 
-   int oportIdx( int idx );
+    ///Get the vector index for the specific input port id
+    int iportIdx( int idx );
+    ///Get the vector index for the specific output port id
+    int oportIdx( int idx );
 
-   ///Add input port
-   void addIPort (int, Connection*);
-   ///Add output port
-   void addOPort (int, Connection*);
+    ///Add input port
+    void addIPort( int, Connection* );
+    ///Add output port
+    void addOPort( int, Connection* );
 
-   ///Get the ith output port
-   OPort* getOPort( int i );
-   ///Get the ith input port
-   IPort* getIPort( int i );
-  
-   ///Get Feedback Port
-   IPort* getFBPort ();
+    ///Get the ith output port
+    OPort* getOPort( int i );
+    ///Get the ith input port
+    IPort* getIPort( int i );
 
-   ///Get output port data for the specific port
-   int getPortData( int, ves::open::xml::Command& );
-   ///Set output port data for the specific port
-   int setPortData( int, ves::open::xml::Command* );
+    ///Get Feedback Port
+    IPort* getFBPort();
 
-   int getPortProfile( int, Types::Profile_out& );
-   int setPortProfile( int, const Types::Profile* );
+    ///Get output port data for the specific port
+    int getPortData( int, ves::open::xml::Command& );
+    ///Set output port data for the specific port
+    int setPortData( int, ves::open::xml::Command* );
 
-   ///Accessors for input data
-   std::vector< ves::open::xml::Command* > GetInputData( void );
-   void SetInputData( std::vector< ves::open::xml::XMLObject* > inputData );
+    int getPortProfile( int, Types::Profile_out& );
+    int setPortProfile( int, const Types::Profile* );
 
-   ///Accessors for input data
-   std::vector< ves::open::xml::Command* > GetResultsData( void );
-   void SetResultsData( std::vector< ves::open::xml::XMLObject* > resultsData );
+    ///Accessors for input data
+    std::vector< ves::open::xml::Command* > GetInputData( void );
+    void SetInputData( std::vector< ves::open::xml::XMLObject* > inputData );
 
-   ///Get the ID for the module
-   ///\return The module id
-   int get_id();
-   ///Get the modules name
-   ///\return The module name
-   std::string GetModuleName( void );
-   ///Get the VE_Model for this module
-   ///\return The model for this module
-   ves::open::xml::model::ModelWeakPtr GetVEModel( void );
-   ///Set the VE_Model for this module
-   ///\param mod The model to add
-   void SetVEModel( ves::open::xml::model::ModelWeakPtr mod );
+    ///Accessors for input data
+    std::vector< ves::open::xml::Command* > GetResultsData( void );
+    void SetResultsData( std::vector< ves::open::xml::XMLObject* > resultsData );
 
-   int _need_execute;
-   int _return_state;
-   int _is_feedback;
+    ///Get the ID for the module
+    ///\return The module id
+    int get_id();
+    ///Get the modules name
+    ///\return The module name
+    std::string GetModuleName( void );
+    ///Get the VE_Model for this module
+    ///\return The model for this module
+    ves::open::xml::model::ModelWeakPtr GetVEModel( void );
+    ///Set the VE_Model for this module
+    ///\param mod The model to add
+    void SetVEModel( ves::open::xml::model::ModelWeakPtr mod );
 
-   //int _type;
-   //int _category;
+    int _need_execute;
+    int _return_state;
+    int _is_feedback;
+
+    //int _type;
+    //int _category;
 
 private:
-   //Input ports for the module
-   std::vector<IPort*> _iports;
-   //Output ports for the module
-   std::vector<OPort*> _oports;
+    //Input ports for the module
+    std::vector<IPort*> _iports;
+    //Output ports for the module
+    std::vector<OPort*> _oports;
 
-   ///ID for the particular module
-   int _id;
-   ///Module name
-   std::string _name;
-   
-   // The holder of the raw data for this class
-   // This class is responsible for the memory management here
-   ves::open::xml::model::ModelPtr veModel;
-   //Container for input data
-   std::vector< ves::open::xml::Command* > inputs;
-   //Container for results data
-   std::vector< ves::open::xml::Command* > results;
-   //Container for port data
-   std::vector< ves::open::xml::model::Port* > ports;
-   ///Do we need to keep track of messages?
+    ///ID for the particular module
+    int _id;
+    ///Module name
+    std::string _name;
+
+    // The holder of the raw data for this class
+    // This class is responsible for the memory management here
+    ves::open::xml::model::ModelPtr veModel;
+    //Container for input data
+    std::vector< ves::open::xml::Command* > inputs;
+    //Container for results data
+    std::vector< ves::open::xml::Command* > results;
+    //Container for port data
+    std::vector< ves::open::xml::model::Port* > ports;
+    ///Do we need to keep track of messages?
 };
 }
 }

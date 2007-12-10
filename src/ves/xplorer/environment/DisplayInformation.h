@@ -36,7 +36,7 @@
 DisplayInformation API
 */
 /*!\class ves::xplorer::DisplayInformation
-* 
+*
 */
 #include <ves/VEConfig.h>
 
@@ -57,8 +57,8 @@ namespace xplorer
 {
 namespace scenegraph
 {
-   class Switch;
-   class CADEntity;
+class Switch;
+class CADEntity;
 }
 }
 }
@@ -70,50 +70,50 @@ namespace xplorer
 class VE_XPLORER_EXPORTS DisplayInformation
 {
 public:
-   ///Constructor
-   DisplayInformation();
+    ///Constructor
+    DisplayInformation();
 
-   ///Destructor
-   ~DisplayInformation();
+    ///Destructor
+    ~DisplayInformation();
 
-   ///Do not know what this is
-   void LatePreFrame();
+    ///Do not know what this is
+    void LatePreFrame();
 
-   ///Set flag to display frame rate
-   ///\param val Bool to determine is frame rate is displayed
-   void SetFrameRateFlag( bool val );
+    ///Set flag to display frame rate
+    ///\param val Bool to determine is frame rate is displayed
+    void SetFrameRateFlag( bool val );
 
-   ///Set flag to display world coordinate system
-   ///\param val Bool to determine is coordinate system is displayed
-   void SetCoordSysFlag( bool val );
+    ///Set flag to display world coordinate system
+    ///\param val Bool to determine is coordinate system is displayed
+    void SetCoordSysFlag( bool val );
 
-   ///Set the text color of the frame rate and world coordinate system
-   ///\param color A vector containing color properties
-   void SetTextColor( std::vector< double > color );
+    ///Set the text color of the frame rate and world coordinate system
+    ///\param color A vector containing color properties
+    void SetTextColor( std::vector< double > color );
 
-   ///Set position of the frame rate and world coordinate system
-   ///\param width Width of the screen
-   ///\param height Height of the screen
-   void SetDisplayPositions( unsigned int width, unsigned int height );
+    ///Set position of the frame rate and world coordinate system
+    ///\param width Width of the screen
+    ///\param height Height of the screen
+    void SetDisplayPositions( unsigned int width, unsigned int height );
 
 private:
-   ///Initialize the framerate display
-   void InitFrameRateDisplay();
+    ///Initialize the framerate display
+    void InitFrameRateDisplay();
 
-   ///Initialize the world coordinate system display
-   void InitCoordSysDisplay();
+    ///Initialize the world coordinate system display
+    void InitCoordSysDisplay();
 
-   osg::ref_ptr< ves::xplorer::scenegraph::Switch > display_switch; ///<Allows switching between different display options
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > display_switch; ///<Allows switching between different display options
 
-   osg::ref_ptr< osg::CameraNode > framerate;
-   osg::ref_ptr< osg::CameraNode > wcs;
+    osg::ref_ptr< osg::CameraNode > framerate;
+    osg::ref_ptr< osg::CameraNode > wcs;
 
-   osg::ref_ptr< osgText::Text > framerate_text; ///<Text for the frame rate
-   osg::ref_ptr< osgText::Text > wcs_x_text; ///<Text for the x world coordinate system
-   osg::ref_ptr< osgText::Text > wcs_y_text; ///<Text for the y world coordinate system
-   osg::ref_ptr< osgText::Text > wcs_z_text; ///<Text for the z world coordinate system
+    osg::ref_ptr< osgText::Text > framerate_text; ///<Text for the frame rate
+    osg::ref_ptr< osgText::Text > wcs_x_text; ///<Text for the x world coordinate system
+    osg::ref_ptr< osgText::Text > wcs_y_text; ///<Text for the y world coordinate system
+    osg::ref_ptr< osgText::Text > wcs_z_text; ///<Text for the z world coordinate system
 
-   ves::xplorer::scenegraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
+    ves::xplorer::scenegraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
 };
 }
 }

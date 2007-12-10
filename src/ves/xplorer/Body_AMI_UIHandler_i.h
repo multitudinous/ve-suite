@@ -33,7 +33,7 @@
 #ifndef BODY_AMI_UI_HANDLER_I_H
 #define BODY_AMI_UI_HANDLER_I_H
 /*!\file Body_AMI_UIHandler_i.h
-*Interface for sending information from Xplorer Asynchronously to Condutor 
+*Interface for sending information from Xplorer Asynchronously to Condutor
 */
 
 /*!\class Body_AMI_UIHandler_i
@@ -54,101 +54,101 @@ public:
     ///Update the Network from Xplorer
     virtual
     void UpdateNetwork()
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
 
     ///Update the Network from Xplorer
     virtual
     void UpdateNetwork_excep(
-      ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder * excep_holder
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException
+                   ) );
 
     ///???
     virtual
     void UpdateModuleUI( )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
 
     ///???
     virtual
     void UpdateModuleUI_excep(
-      ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder * excep_holder
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException
+                   ) );
 
     ///???
     virtual
     void UpdateModuleResult( )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
 
     ///???
     virtual
     void UpdateModuleResult_excep(
-      ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder * excep_holder
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException
+                   ) );
 
     ///???
     virtual
     void UpdateLinkContent( )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
 
     ///???
     virtual
     void UpdateLinkContent_excep(
-      ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder * excep_holder
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException
+                   ) );
 
     ///???
     virtual
     void Raise( )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
 
     ///???
     virtual
     void Raise_excep(
-      ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder * excep_holder
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException
+                   ) );
     ///Set the Xplorer data for Conductor to retrieve
     virtual
     void SetXplorerData( )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException,
-      ::Error::EUnknown
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException,
+                       ::Error::EUnknown
+                   ) );
     ///Set the Xplorer data for Conductor to retrieve
     virtual
     void SetXplorerData_excep(
-      ::Messaging::ExceptionHolder * excep_holder
+        ::Messaging::ExceptionHolder * excep_holder
     )
-    ACE_THROW_SPEC ((
-      ::CORBA::SystemException
-    ));
+    ACE_THROW_SPEC((
+                       ::CORBA::SystemException
+                   ) );
 };
 #endif// BODY_AMI_UI_HANDLER_I_H

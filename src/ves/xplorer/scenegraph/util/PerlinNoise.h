@@ -25,7 +25,7 @@
  *                                                                      *
  ***********************************************************************/
 ///This is modified code from 3DLabs
-#ifndef PERLIN_NOISE_FUNCTIONS 
+#ifndef PERLIN_NOISE_FUNCTIONS
 #define  PERLIN_NOISE_FUNCTIONS
 /*!\file PerlinNoise.h
 Functions for creating Perlin Noise
@@ -38,13 +38,13 @@ namespace scenegraph
 {
 namespace util
 {
-    void SetNoiseFrequency(int frequency);
+void SetNoiseFrequency( int frequency );
 
-    double noise1(double arg);
-    double noise2(double vec[2]);
-    double noise3(double vec[3]);
-    void normalize2(double vec[2]);
-    void normalize3(double vec[3]);
+double noise1( double arg );
+double noise2( double vec[2] );
+double noise3( double vec[3] );
+void normalize2( double vec[2] );
+void normalize3( double vec[3] );
 
 /*
    In what follows "alpha" is the weight when the sum is formed.
@@ -52,11 +52,11 @@ namespace util
    "beta" is the harmonic scaling/spacing, typically 2.
 */
 
-    double PerlinNoise1D(double x,double alpha, double beta, int n);
-    double PerlinNoise2D(double x,double y,double alpha, double beta, int n);
-    double PerlinNoise3D(double x,double y,double z,double alpha, double beta, int n);
+double PerlinNoise1D( double x, double alpha, double beta, int n );
+double PerlinNoise2D( double x, double y, double alpha, double beta, int n );
+double PerlinNoise3D( double x, double y, double z, double alpha, double beta, int n );
 }
 }
 }
 }
-#endif ///PERLIN_NOISE_FUNCTIONS 
+#endif ///PERLIN_NOISE_FUNCTIONS

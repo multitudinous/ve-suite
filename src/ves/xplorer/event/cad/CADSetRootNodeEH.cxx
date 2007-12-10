@@ -45,50 +45,46 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADSetRootNodeEventHandler::CADSetRootNodeEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADSetRootNodeEventHandler::CADSetRootNodeEventHandler(const CADSetRootNodeEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADSetRootNodeEventHandler::CADSetRootNodeEventHandler( const CADSetRootNodeEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADSetRootNodeEventHandler::~CADSetRootNodeEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADSetRootNodeEventHandler& CADSetRootNodeEventHandler::operator=(const CADSetRootNodeEventHandler& rhs)
+CADSetRootNodeEventHandler& CADSetRootNodeEventHandler::operator=( const CADSetRootNodeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetRootNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADSetRootNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr newRootNode = command->GetDataValuePair("Root Node ID");
+    try
+    {
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr newRootNode = command->GetDataValuePair( "Root Node ID" );
 
-      std::string rootNodeID;
-      newRootNode->GetData(rootNodeID);       
-      m_cadHandler->SetRootCADNodeID(rootNodeID);
-   }
-   catch(std::string str)
-   {
-      std::cout<<str<<std::endl;
-   }
-   catch(...)
-   {
-      std::cout<<"Error!!"<<std::endl;
-      std::cout<<"---Invalid node specified to rename!---"<<std::endl;
-   }
+        std::string rootNodeID;
+        newRootNode->GetData( rootNodeID );
+        m_cadHandler->SetRootCADNodeID( rootNodeID );
+    }
+    catch ( std::string str )
+    {
+        std::cout << str << std::endl;
+    }
+    catch ( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "---Invalid node specified to rename!---" << std::endl;
+    }
 }

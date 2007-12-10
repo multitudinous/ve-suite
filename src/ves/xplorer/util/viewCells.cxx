@@ -77,20 +77,20 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
     int numCells = output->GetNumberOfCells();
     //std::cout << "     The number of cells is " << numCells << std::endl;
     exteriorCells->Allocate( numCells, numCells );
-    
-    for(int cellId=0; cellId < numCells; cellId++)
-    {      
+
+    for( int cellId = 0; cellId < numCells; cellId++ )
+    {
         int thisIsExteriorCell = 0;
         output->GetCell( cellId, cell );
-        
+
         vtkCell *face = NULL;
-        for (int j=0; j < cell->GetNumberOfFaces(); j++)
+        for( int j = 0; j < cell->GetNumberOfFaces(); j++ )
         {
-            face = cell->GetFace(j);
-            output->GetCellNeighbors(cellId, face->PointIds, cellIds);
+            face = cell->GetFace( j );
+            output->GetCellNeighbors( cellId, face->PointIds, cellIds );
             //face->Delete();
 //              std::cout << "cellId=" << cellId << ", face " << j << ", cellIds->GetNumberOfIds()=" << cellIds->GetNumberOfIds() << std::endl;
-            if ( cellIds->GetNumberOfIds() <= 0 )    // exterior faces have a zero here
+            if( cellIds->GetNumberOfIds() <= 0 )  // exterior faces have a zero here
             {
                 thisIsExteriorCell = 1;
                 break;
@@ -102,7 +102,7 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
 //            std::cout << "ext cell found" << std::endl;
             npts = cell->GetNumberOfPoints();
             pts->Reset();
-            for ( int i=0; i < npts; i++)
+            for( int i = 0; i < npts; i++ )
             {
                 ptId = cell->GetPointId( i );
                 x = output->GetPoint( ptId );
@@ -114,7 +114,7 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
             exteriorCells->InsertNextCell( cell->GetCellType(), pts );
         }
     }//for all cells
- 
+
     exteriorCells->SetPoints( extCellPoints );
     //exteriorCells->Squeeze();    // Reclaim any extra memory used to store data. vtk says: THIS METHOD IS NOT THREAD SAFE
 //    exteriorCells->Print( std::cout );
@@ -132,16 +132,16 @@ void ves::xplorer::util::viewCells( vtkDataSet *dataset, const float shrinkFacto
     int numCells = dataset->GetNumberOfCells();
     std::cout << "     The number of cells is " << numCells << std::endl;
     int numPts = dataset->GetNumberOfPoints();
-    std::cout << "     The number of points is "<< numPts << std::endl;
-    
-    if ( numCells==0 ) return;
+    std::cout << "     The number of points is " << numPts << std::endl;
+
+    if( numCells == 0 ) return;
 
     //Create one-time graphics stuff
     vtkRenderer* ren1 = vtkRenderer::New();
     vtkRenderWindow* renWin = vtkRenderWindow::New();
-        renWin->AddRenderer( ren1 );
+    renWin->AddRenderer( ren1 );
     vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
-        iren->SetRenderWindow( renWin );
+    iren->SetRenderWindow( renWin );
 
     //Create actor from dataset and add to the renderer
     AddToRenderer( dataset, ren1, shrinkFactor );
@@ -153,24 +153,24 @@ void ves::xplorer::util::viewCells( vtkDataSet *dataset, const float shrinkFacto
     vtkActor * C6Actor = NULL;
 
     int hasCaveCorners = 1;
-    if ( hasCaveCorners )
+    if( hasCaveCorners )
     {
         // Create the cube corners and the associated mapper and actor.
         vtkCubeSource * C6 = vtkCubeSource::New();
-            C6->SetBounds( -5, 5, -5, 5, 0, 10 );
+        C6->SetBounds( -5, 5, -5, 5, 0, 10 );
         vtkOutlineCornerFilter * C6CornerFilter = vtkOutlineCornerFilter::New();
-            C6CornerFilter->SetInput( C6->GetOutput() );
+        C6CornerFilter->SetInput( C6->GetOutput() );
         vtkPolyDataMapper * C6Mapper = vtkPolyDataMapper::New();
-            C6Mapper->SetInput( C6CornerFilter->GetOutput() );
+        C6Mapper->SetInput( C6CornerFilter->GetOutput() );
 
         C6Actor = vtkActor::New();
-            C6Actor->SetMapper( C6Mapper );
+        C6Actor->SetMapper( C6Mapper );
 
         // intermediate cleanup
         C6->Delete();
         C6CornerFilter->Delete();
         C6Mapper->Delete();
-        
+
         // Create the axes symbol actor.
         axesActor = vtkActor::New();
         GetAxesSymbol( axesActor );
@@ -180,7 +180,7 @@ void ves::xplorer::util::viewCells( vtkDataSet *dataset, const float shrinkFacto
         yActor = vtkFollower::New();
         zActor = vtkFollower::New();
         GetAxesLabels( xActor, yActor, zActor );
-        
+
         // Add the actors to the renderer.
         ren1->AddActor( C6Actor );
         ren1->AddActor( axesActor );
@@ -208,13 +208,13 @@ void ves::xplorer::util::viewCells( vtkDataSet *dataset, const float shrinkFacto
     // Reset the clipping range of the camera; set the camera of the follower; render.
     ren1->ResetCameraClippingRange();
 
-/*
-    vtkCamera *cam1 = ren1->GetActiveCamera();
-        //cam1->Zoom( 1.5 );
-        cam1->Zoom( );
-        cam1->SetParallelProjection(1);    // no perspective
-        //cam1->ParallelProjectionOn();    // no perspective
-*/
+    /*
+        vtkCamera *cam1 = ren1->GetActiveCamera();
+            //cam1->Zoom( 1.5 );
+            cam1->Zoom( );
+            cam1->SetParallelProjection(1);    // no perspective
+            //cam1->ParallelProjectionOn();    // no perspective
+    */
     std::cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << std::endl;
 
     // interact with data
@@ -223,7 +223,7 @@ void ves::xplorer::util::viewCells( vtkDataSet *dataset, const float shrinkFacto
     iren->Start();
 
     // delete all the instances that have been created.
-    if ( hasCaveCorners )
+    if( hasCaveCorners )
     {
         C6Actor->Delete();
         axesActor->Delete();
@@ -250,54 +250,54 @@ void ves::xplorer::util::viewXSectionOfRectilinearGrid( vtkRectilinearGrid *outp
     int nz = dim[2];
     std::cout << "nx = " << nx << ", ny = " << ny << ", nz = " << nz << std::endl;
 
-    //view a cross-section parallel to y-z axes, at half-way point of model 
+    //view a cross-section parallel to y-z axes, at half-way point of model
     vtkRectilinearGridGeometryFilter *plane = vtkRectilinearGridGeometryFilter::New();
-        plane->SetInput(output);
-        plane->SetExtent(nx/2,nx/2, 0,ny, 0,nz);
-        plane->Update();
+    plane->SetInput( output );
+    plane->SetExtent( nx / 2, nx / 2, 0, ny, 0, nz );
+    plane->Update();
 
     vtkPolyDataMapper *rgridMapper = vtkPolyDataMapper::New();
-    rgridMapper->SetInput(plane->GetOutput());
+    rgridMapper->SetInput( plane->GetOutput() );
 
 //    vtkPolyDataMapper *rgridMapper = vtkPolyDataMapper::New();
 //    rgridMapper->SetInput(rgrid);
     vtkActor *wireActor = vtkActor::New();
-    wireActor->SetMapper(rgridMapper);
+    wireActor->SetMapper( rgridMapper );
 //    wireActor->GetProperty()->SetRepresentationToWireframe();
-    wireActor->GetProperty()->SetColor(0,0,0);
-    
-	//Create graphics stuff
-	vtkRenderer* ren1 = vtkRenderer::New();
-	vtkRenderWindow* renWin = vtkRenderWindow::New();
-    	renWin->AddRenderer( ren1 );
-	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
-    	iren->SetRenderWindow( renWin );
+    wireActor->GetProperty()->SetColor( 0, 0, 0 );
 
-	//Add the actors to the renderer, set the background and size
-	ren1->AddActor( wireActor );
-	ren1->SetBackground( 1, 1, 1 );
+    //Create graphics stuff
+    vtkRenderer* ren1 = vtkRenderer::New();
+    vtkRenderWindow* renWin = vtkRenderWindow::New();
+    renWin->AddRenderer( ren1 );
+    vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
+    iren->SetRenderWindow( renWin );
 
-	vtkCamera *cam1 = ren1->GetActiveCamera();
-		cam1->Zoom( 1.5 );
-        cam1->SetParallelProjection(1);    // no perspective
+    //Add the actors to the renderer, set the background and size
+    ren1->AddActor( wireActor );
+    ren1->SetBackground( 1, 1, 1 );
+
+    vtkCamera *cam1 = ren1->GetActiveCamera();
+    cam1->Zoom( 1.5 );
+    cam1->SetParallelProjection( 1 );  // no perspective
 
     std::cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << std::endl;
 
-	// interact with data
-	renWin->SetSize( 500, 500 );
-	renWin->Render();
-	iren->Start();
+    // interact with data
+    renWin->SetSize( 500, 500 );
+    renWin->Render();
+    iren->Start();
 
-   //clean up
-   plane->Delete();
-   rgridMapper->Delete();
-   wireActor->Delete();
-   ren1->Delete();
-   renWin->Delete();
-   iren->Delete();
-   cam1->Delete();
+    //clean up
+    plane->Delete();
+    rgridMapper->Delete();
+    wireActor->Delete();
+    ren1->Delete();
+    renWin->Delete();
+    iren->Delete();
+    cam1->Delete();
 
-   return;
+    return;
 }
 
 /*
@@ -314,7 +314,7 @@ void viewXSection( vtkDataObject *output )
     int nz = dim[2];
     std::cout << "nx = " << nx << ", ny = " << ny << ", nz = " << nz << std::endl;
 
-    //view a cross-section parallel to y-z axes, at half-way point of model 
+    //view a cross-section parallel to y-z axes, at half-way point of model
     vtkGeometryFilter *plane = vtkGeometryFilter::New();
         plane->SetInput(output);
         plane->SetExtent(nx/2,nx/2, 0,ny, 0,nz);
@@ -329,26 +329,26 @@ void viewXSection( vtkDataObject *output )
     wireActor->SetMapper(rgridMapper);
 //    wireActor->GetProperty()->SetRepresentationToWireframe();
     wireActor->GetProperty()->SetColor(0,0,0);
-    
-	//Create graphics stuff
-	vtkRenderer* ren1 = vtkRenderer::New();
-	vtkRenderWindow* renWin = vtkRenderWindow::New();
-    	renWin->AddRenderer( ren1 );
-	vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
-    	iren->SetRenderWindow( renWin );
 
-	//Add the actors to the renderer, set the background and size
-	ren1->AddActor( wireActor );
-	ren1->SetBackground( 1, 1, 1 );
+ //Create graphics stuff
+ vtkRenderer* ren1 = vtkRenderer::New();
+ vtkRenderWindow* renWin = vtkRenderWindow::New();
+     renWin->AddRenderer( ren1 );
+ vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
+     iren->SetRenderWindow( renWin );
 
-	vtkCamera *cam1 = ren1->GetActiveCamera();
-		cam1->Zoom( 1.5 );
+ //Add the actors to the renderer, set the background and size
+ ren1->AddActor( wireActor );
+ ren1->SetBackground( 1, 1, 1 );
+
+ vtkCamera *cam1 = ren1->GetActiveCamera();
+  cam1->Zoom( 1.5 );
         cam1->SetParallelProjection(1);    // no perspective
 
-	// interact with data
-	renWin->SetSize( 500, 500 );
-	renWin->Render();
-	iren->Start();
+ // interact with data
+ renWin->SetSize( 500, 500 );
+ renWin->Render();
+ iren->Start();
 
     //clean up
     plane->Delete();
@@ -364,112 +364,124 @@ void viewXSection( vtkDataObject *output )
 
 void ves::xplorer::util::GetAxesSymbol( vtkActor * axesActor )
 {
-   // Create the axes and the associated mapper and actor.
-   vtkPoints *newPts = vtkPoints::New();
-   newPts->Allocate(6);
+    // Create the axes and the associated mapper and actor.
+    vtkPoints *newPts = vtkPoints::New();
+    newPts->Allocate( 6 );
 
-   vtkCellArray *newLines = vtkCellArray::New();
-   newLines->Allocate(3);
+    vtkCellArray *newLines = vtkCellArray::New();
+    newLines->Allocate( 3 );
 
-   float x[3];
-   vtkIdType pts[2];
+    float x[3];
+    vtkIdType pts[2];
 
-   pts[0] = 0;
-   x[0] = 0; x[1] = 0; x[2] = 0;
-   newPts->InsertPoint(pts[0], x);
+    pts[0] = 0;
+    x[0] = 0;
+    x[1] = 0;
+    x[2] = 0;
+    newPts->InsertPoint( pts[0], x );
 
-   pts[1] = 1;
-   x[0] = 1; x[1] = 0; x[2] = 0;
-   newPts->InsertPoint(pts[1], x);
-   newLines->InsertNextCell(2,pts);
+    pts[1] = 1;
+    x[0] = 1;
+    x[1] = 0;
+    x[2] = 0;
+    newPts->InsertPoint( pts[1], x );
+    newLines->InsertNextCell( 2, pts );
 
-   pts[0] = 2;
-   x[0] = 0; x[1] = 0; x[2] = 0;
-   newPts->InsertPoint(pts[0], x);
+    pts[0] = 2;
+    x[0] = 0;
+    x[1] = 0;
+    x[2] = 0;
+    newPts->InsertPoint( pts[0], x );
 
-   pts[1] = 3;
-   x[0] = 0; x[1] = 1; x[2] = 0;
-   newPts->InsertPoint(pts[1], x);
-   newLines->InsertNextCell(2,pts);
+    pts[1] = 3;
+    x[0] = 0;
+    x[1] = 1;
+    x[2] = 0;
+    newPts->InsertPoint( pts[1], x );
+    newLines->InsertNextCell( 2, pts );
 
-   pts[0] = 4;
-   x[0] = 0; x[1] = 0; x[2] = 0;
-   newPts->InsertPoint(pts[0], x);
+    pts[0] = 4;
+    x[0] = 0;
+    x[1] = 0;
+    x[2] = 0;
+    newPts->InsertPoint( pts[0], x );
 
-   pts[1] = 5;
-   x[0] = 0; x[1] = 0; x[2] = 1;
-   newPts->InsertPoint(pts[1], x);
-   newLines->InsertNextCell(2,pts);
+    pts[1] = 5;
+    x[0] = 0;
+    x[1] = 0;
+    x[2] = 1;
+    newPts->InsertPoint( pts[1], x );
+    newLines->InsertNextCell( 2, pts );
 
-   vtkPolyData *output = vtkPolyData::New();
-   output->SetPoints(newPts);
-   newPts->Delete();
+    vtkPolyData *output = vtkPolyData::New();
+    output->SetPoints( newPts );
+    newPts->Delete();
 
-   output->SetLines(newLines);
-   newLines->Delete();
+    output->SetLines( newLines );
+    newLines->Delete();
 
-   vtkPolyDataMapper * axesMapper = vtkPolyDataMapper::New();
-   axesMapper->SetInput( output );
+    vtkPolyDataMapper * axesMapper = vtkPolyDataMapper::New();
+    axesMapper->SetInput( output );
 
-   axesActor->SetMapper( axesMapper );
+    axesActor->SetMapper( axesMapper );
 
-   output->Delete();
-   axesMapper->Delete();
+    output->Delete();
+    axesMapper->Delete();
 }
 
 void ves::xplorer::util::GetAxesLabels( vtkFollower * xActor,
-                    vtkFollower * yActor,
-                    vtkFollower * zActor )
+                                        vtkFollower * yActor,
+                                        vtkFollower * zActor )
 {
-   // Create the 3D text and the associated mapper and follower
-   vtkVectorText * xText = vtkVectorText::New();
-      xText->SetText( "X" );
-   vtkVectorText * yText = vtkVectorText::New();
-      yText->SetText( "Y" );
-   vtkVectorText * zText = vtkVectorText::New();
-      zText->SetText( "Z" );
+    // Create the 3D text and the associated mapper and follower
+    vtkVectorText * xText = vtkVectorText::New();
+    xText->SetText( "X" );
+    vtkVectorText * yText = vtkVectorText::New();
+    yText->SetText( "Y" );
+    vtkVectorText * zText = vtkVectorText::New();
+    zText->SetText( "Z" );
 
-   vtkPolyDataMapper * xMapper = vtkPolyDataMapper::New();
-      xMapper->SetInput( xText->GetOutput() );
+    vtkPolyDataMapper * xMapper = vtkPolyDataMapper::New();
+    xMapper->SetInput( xText->GetOutput() );
 
-   xActor->SetMapper( xMapper );
-   xActor->SetScale( 0.2, 0.2, 0.2 );
-   xActor->AddPosition( 1, -0.1, 0 );
+    xActor->SetMapper( xMapper );
+    xActor->SetScale( 0.2, 0.2, 0.2 );
+    xActor->AddPosition( 1, -0.1, 0 );
 
-   vtkPolyDataMapper * yMapper = vtkPolyDataMapper::New();
-      yMapper->SetInput( yText->GetOutput() );
+    vtkPolyDataMapper * yMapper = vtkPolyDataMapper::New();
+    yMapper->SetInput( yText->GetOutput() );
 
-   yActor->SetMapper( yMapper );
-   yActor->SetScale( 0.2, 0.2, 0.2 );
-   yActor->AddPosition( 0, 1-0.1, 0 );
+    yActor->SetMapper( yMapper );
+    yActor->SetScale( 0.2, 0.2, 0.2 );
+    yActor->AddPosition( 0, 1 - 0.1, 0 );
 
-   vtkPolyDataMapper * zMapper = vtkPolyDataMapper::New();
-      zMapper->SetInput( zText->GetOutput() );
+    vtkPolyDataMapper * zMapper = vtkPolyDataMapper::New();
+    zMapper->SetInput( zText->GetOutput() );
 
-   zActor->SetMapper( zMapper );
-   zActor->SetScale( 0.2, 0.2, 0.2 );
-   zActor->AddPosition( 0, -0.1, 1 );
+    zActor->SetMapper( zMapper );
+    zActor->SetScale( 0.2, 0.2, 0.2 );
+    zActor->AddPosition( 0, -0.1, 1 );
 
-   xText->Delete();
-   yText->Delete();
-   zText->Delete();
+    xText->Delete();
+    yText->Delete();
+    zText->Delete();
 
-   xMapper->Delete();
-   yMapper->Delete();
-   zMapper->Delete();
+    xMapper->Delete();
+    yMapper->Delete();
+    zMapper->Delete();
 }
 
 void ves::xplorer::util::AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor )
 {
     //std::cout << "\nPreparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();
-/*
-    std::cout << "     The number of cells is " << numCells << std::endl;
-    int numPts = dataset->GetNumberOfPoints();
-    std::cout << "     The number of points is "<< numPts << std::endl;
-*/
+    /*
+        std::cout << "     The number of cells is " << numCells << std::endl;
+        int numPts = dataset->GetNumberOfPoints();
+        std::cout << "     The number of points is "<< numPts << std::endl;
+    */
 
-    if ( numCells==0 )
+    if( numCells == 0 )
     {
         std::cout << "\tNothing to plot in AddToRenderer: The number of cells is " << numCells << std::endl;
         return;
@@ -485,95 +497,95 @@ void ves::xplorer::util::AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, 
     std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
 
     vtkShrinkFilter *shrink = NULL;
-    if ( shrinkFactor > 0.0 && shrinkFactor < 1.0 ) 
+    if( shrinkFactor > 0.0 && shrinkFactor < 1.0 )
     {
         //std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
         shrink = vtkShrinkFilter::New();
         shrink->SetInput( dataset );
         shrink->SetShrinkFactor( shrinkFactor );
-        shrink->GetOutput()->ReleaseDataFlagOn(); 
+        shrink->GetOutput()->ReleaseDataFlagOn();
 
         map->SetInput( shrink->GetOutput() );    //don't use this with stock version of vtk3.2: has code error!
     }
     else
-      map->SetInput( dataset );
+        map->SetInput( dataset );
 
-/*
-//    extract geometry from data (or convert data to polygonal type)...
-    vtkGeometryFilter *geom = vtkGeometryFilter::New();
-        geom->SetInput( shrink->GetOutput() );    //don't use this with stock version of vtk3.2: has code error!
-        geom->GetOutput()->ReleaseDataFlagOn(); 
+    /*
+    //    extract geometry from data (or convert data to polygonal type)...
+        vtkGeometryFilter *geom = vtkGeometryFilter::New();
+            geom->SetInput( shrink->GetOutput() );    //don't use this with stock version of vtk3.2: has code error!
+            geom->GetOutput()->ReleaseDataFlagOn();
 
-//    Most filters in VTK produce independent triangles or polygons which are not the most compact or
-//    efficient to render. To create triangle strips from polydata you can first use vtkTriangleFilter
-//    to convert any polygons to triangles (not required if you only have triangles to start with)
-//    then run it through a vtkStipper to convert the triangles into triangle strips.
-//    The only disadvantage to using triangle strips is that they require time to compute, so if your
-//    data is changing every time you render, it could actually be slower.
+    //    Most filters in VTK produce independent triangles or polygons which are not the most compact or
+    //    efficient to render. To create triangle strips from polydata you can first use vtkTriangleFilter
+    //    to convert any polygons to triangles (not required if you only have triangles to start with)
+    //    then run it through a vtkStipper to convert the triangles into triangle strips.
+    //    The only disadvantage to using triangle strips is that they require time to compute, so if your
+    //    data is changing every time you render, it could actually be slower.
 
-    vtkTriangleFilter *tris = vtkTriangleFilter::New();
-        tris->SetInput( geom->GetOutput() );
-        tris->GetOutput()->ReleaseDataFlagOn(); 
+        vtkTriangleFilter *tris = vtkTriangleFilter::New();
+            tris->SetInput( geom->GetOutput() );
+            tris->GetOutput()->ReleaseDataFlagOn();
 
-    vtkStripper *strip = vtkStripper::New();
-        strip->SetInput(tris->GetOutput());
-        strip->GetOutput()->ReleaseDataFlagOn(); 
+        vtkStripper *strip = vtkStripper::New();
+            strip->SetInput(tris->GetOutput());
+            strip->GetOutput()->ReleaseDataFlagOn();
 
-    vtkPolyDataMapper *map = vtkPolyDataMapper::New();
-//    By default, VTK uses OpenGL display lists which results in another copy of the data being stored
-//    in memory. For most large datasets you will be better off saving memory by not using display lists.
-//    You can turn off display lists by turning on ImmediateModeRendering.
-        map->ImmediateModeRenderingOn();
-        map->SetInput(tris->GetOutput()); 
-//        map->SetInput(strip->GetOutput()); 
-*/
-    
-   if ( shrink )
-      shrink->Delete();
+        vtkPolyDataMapper *map = vtkPolyDataMapper::New();
+    //    By default, VTK uses OpenGL display lists which results in another copy of the data being stored
+    //    in memory. For most large datasets you will be better off saving memory by not using display lists.
+    //    You can turn off display lists by turning on ImmediateModeRendering.
+            map->ImmediateModeRenderingOn();
+            map->SetInput(tris->GetOutput());
+    //        map->SetInput(strip->GetOutput());
+    */
 
-   vtkActor * actor = vtkActor::New();
+    if( shrink )
+        shrink->Delete();
 
-   if ( dataset->GetPointData()->GetScalars() )
-   {
-      vtkLookupTable *lut = vtkLookupTable::New();
-      lut->SetNumberOfColors( 256 ); //default is 256
+    vtkActor * actor = vtkActor::New();
 
-      std::cout << "dataset->GetPointData()->GetScalars()->GetName() = "
-           << dataset->GetPointData()->GetScalars()->GetName() << std::endl;
-      //std::cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = " << dataset->GetPointData()->GetScalars()->GetLookupTable() << std::endl;
+    if( dataset->GetPointData()->GetScalars() )
+    {
+        vtkLookupTable *lut = vtkLookupTable::New();
+        lut->SetNumberOfColors( 256 ); //default is 256
 
-      double minMax[ 2 ];
-      minMax[ 0 ] = 0.0;
-      minMax[ 1 ] = 1.0;
+        std::cout << "dataset->GetPointData()->GetScalars()->GetName() = "
+        << dataset->GetPointData()->GetScalars()->GetName() << std::endl;
+        //std::cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = " << dataset->GetPointData()->GetScalars()->GetLookupTable() << std::endl;
 
-      if ( dataset->GetPointData()->GetScalars()->GetLookupTable() )
-      {
-         std::cout << "lookup table is added in getActorFromDataSet" << std::endl;
-      }
-      else
-      {
-         lut->SetHueRange( 2.0f/3.0f, 0.0f ); //a blue-to-red scale
-         dataset->GetPointData()->GetScalars()->GetRange( minMax );
-         std::cout << "tableRange: " << minMax[ 0 ] << " " << minMax[ 1 ] << std::endl;
-         lut->SetTableRange( minMax );
-         lut->Build();
-      }
-      map->SetScalarRange( minMax );
-      map->SetLookupTable( lut );
-      lut->Delete();
-   }
-   else
-      actor->GetProperty()->SetColor( 1, 0, 0 );
+        double minMax[ 2 ];
+        minMax[ 0 ] = 0.0;
+        minMax[ 1 ] = 1.0;
 
-   actor->SetMapper( map );
-   actor->GetProperty()->SetRepresentationToWireframe();
-   actor->GetProperty()->EdgeVisibilityOn();
+        if( dataset->GetPointData()->GetScalars()->GetLookupTable() )
+        {
+            std::cout << "lookup table is added in getActorFromDataSet" << std::endl;
+        }
+        else
+        {
+            lut->SetHueRange( 2.0f / 3.0f, 0.0f ); //a blue-to-red scale
+            dataset->GetPointData()->GetScalars()->GetRange( minMax );
+            std::cout << "tableRange: " << minMax[ 0 ] << " " << minMax[ 1 ] << std::endl;
+            lut->SetTableRange( minMax );
+            lut->Build();
+        }
+        map->SetScalarRange( minMax );
+        map->SetLookupTable( lut );
+        lut->Delete();
+    }
+    else
+        actor->GetProperty()->SetColor( 1, 0, 0 );
 
-   //Add the actors to the renderer, set the viewport and background
-   ren1->AddActor( actor );
-   map->Delete();
-   actor->Delete();
+    actor->SetMapper( map );
+    actor->GetProperty()->SetRepresentationToWireframe();
+    actor->GetProperty()->EdgeVisibilityOn();
 
-   return;
+    //Add the actors to the renderer, set the viewport and background
+    ren1->AddActor( actor );
+    map->Delete();
+    actor->Delete();
+
+    return;
 }
 

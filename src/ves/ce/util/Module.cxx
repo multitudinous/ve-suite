@@ -47,296 +47,296 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module()
-  : _need_execute( true ),
-    _return_state( 0 ),
-    _is_feedback( 0 )
-{
-   veModel = new model::Model();
-}
-////////////////////////////////////////////////////////////////////////////////
-Module::Module( const Module &m )
-{
-   veModel = new model::Model();
-   copy(m);
-}
-////////////////////////////////////////////////////////////////////////////////
-Module::~Module ()
-{
-   for ( size_t i=0; i < _iports.size(); ++i ) 
-   {
-      delete _iports[i];
-   }
-   _iports.clear();
-   
-   for ( size_t i=0; i < _oports.size(); ++i ) 
-   {
-      delete _oports[i];
-   }
-   _oports.clear();
+        : _need_execute( true ),
+        _return_state( 0 ),
+               _is_feedback( 0 )
+       {
+           veModel = new model::Model();
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       Module::Module( const Module &m )
+       {
+           veModel = new model::Model();
+           copy( m );
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       Module::~Module()
+       {
+           for( size_t i = 0; i < _iports.size(); ++i )
+           {
+               delete _iports[i];
+           }
+           _iports.clear();
 
-   inputs.clear();
-   results.clear();
-   ports.clear();
-}
-////////////////////////////////////////////////////////////////////////////////
-void Module::copy( const Module &m )
-{
-   if(this==&m) return;
+           for( size_t i = 0; i < _oports.size(); ++i )
+           {
+               delete _oports[i];
+           }
+           _oports.clear();
 
-   _need_execute = m._need_execute;
-   _iports       = m._iports;
-   _oports       = m._oports;
-   _id           = m._id;
-   *veModel = *(m.veModel);
+           inputs.clear();
+           results.clear();
+           ports.clear();
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       void Module::copy( const Module &m )
+       {
+           if( this == &m ) return;
 
-   inputs.clear();
-   inputs = m.inputs;
+           _need_execute = m._need_execute;
+           _iports       = m._iports;
+           _oports       = m._oports;
+           _id           = m._id;
+           *veModel = *( m.veModel );
 
-   results.clear();
-   results = m.results;
+           inputs.clear();
+           inputs = m.inputs;
 
-   ports.clear();
-   for ( size_t i = 0; i < m.ports.size(); ++i )
-   {
-      ports.push_back( new model::Port( *(m.ports.at( i )) ) );
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-size_t Module::numOPorts()
-{
-  return _oports.size();
-}
-////////////////////////////////////////////////////////////////////////////////
-size_t Module::numIPorts()
-{
-  return _iports.size();
-}
-////////////////////////////////////////////////////////////////////////////////
-OPort* Module::getOPort( int idx )
-{
-   try
-   {
-      return _oports.at( idx );
-   }
-   catch ( ... )
-   {
-      return NULL;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-IPort* Module::getIPort( int idx )
-{
-   try
-   {
-      return _iports.at( idx );
-   }
-   catch ( ... )
-   {
-      return NULL;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-IPort* Module::getFBPort( void )
-{
-   for( size_t i=0; i < _iports.size(); ++i )
-   {
-     if ( _iports[i]->get_id() == 1 ) 
-         return _iports[ i ];
-   }
+           results.clear();
+           results = m.results;
 
-   return NULL;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::get_id ()
-{
-  return _id;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::iportIdx( int idx )
-{
-   ///Get the vector index for the specific port id 
-   for( size_t i = 0; i < _iports.size(); ++i )
-   {
-      if ( _iports[i]->get_id() == idx ) 
-      {
-         return i;
-      }
-   }
+           ports.clear();
+           for( size_t i = 0; i < m.ports.size(); ++i )
+           {
+               ports.push_back( new model::Port( *( m.ports.at( i ) ) ) );
+           }
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       size_t Module::numOPorts()
+       {
+           return _oports.size();
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       size_t Module::numIPorts()
+       {
+           return _iports.size();
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       OPort* Module::getOPort( int idx )
+       {
+           try
+           {
+               return _oports.at( idx );
+           }
+           catch ( ... )
+           {
+               return NULL;
+           }
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       IPort* Module::getIPort( int idx )
+       {
+           try
+           {
+               return _iports.at( idx );
+           }
+           catch ( ... )
+           {
+               return NULL;
+           }
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       IPort* Module::getFBPort( void )
+       {
+           for( size_t i = 0; i < _iports.size(); ++i )
+           {
+               if( _iports[i]->get_id() == 1 )
+                   return _iports[ i ];
+           }
 
-   return -1;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::oportIdx( int idx )
-{
-   ///Get the vector index for the specific port id 
-   for ( size_t i=0; i < _oports.size(); ++i )
-   {
-      if ( _oports[i]->get_id() == idx ) 
-      {
-         return i;
-      }
-   }
+           return NULL;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::get_id()
+       {
+           return _id;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::iportIdx( int idx )
+       {
+           ///Get the vector index for the specific port id
+           for( size_t i = 0; i < _iports.size(); ++i )
+           {
+               if( _iports[i]->get_id() == idx )
+               {
+                   return i;
+               }
+           }
 
-   return -1;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Module::addIPort( int p, Connection* c )
-{
-   size_t sz = _iports.size();
-   int fi = iportIdx( p );
-  
-   if ( fi < 0 ) 
-   {
-      fi = sz;
-      _iports.push_back( new IPort(p, this) );
-   }
+           return -1;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::oportIdx( int idx )
+       {
+           ///Get the vector index for the specific port id
+           for( size_t i = 0; i < _oports.size(); ++i )
+           {
+               if( _oports[i]->get_id() == idx )
+               {
+                   return i;
+               }
+           }
 
-   _iports[ fi ]->add_connection( c );
-   c->connect_iport( _iports[fi] );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Module::addOPort( int p, Connection* c )
-{
-   size_t sz = _oports.size();
-   int fi = oportIdx( p );
+           return -1;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       void Module::addIPort( int p, Connection* c )
+       {
+           size_t sz = _iports.size();
+           int fi = iportIdx( p );
 
-   if ( fi < 0 ) 
-   {
-      fi = sz;
-      _oports.push_back( new OPort(p, this) );
-   }
+           if( fi < 0 )
+           {
+               fi = sz;
+               _iports.push_back( new IPort( p, this ) );
+           }
 
-   _oports[fi]->add_connection(c);
-   c->connect_oport(_oports[fi]);
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::getPortData( int p, Command& intf )
-{
-   try
-   {
-      intf = *(_oports.at( oportIdx(p) )->GetPortData());
-      return 1;
-   }
-   catch ( ... )
-   {
-      return 0;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::setPortData( int p, Command* intf )
-{   
-   try
-   {
-      _oports.at( oportIdx(p) )->SetPortData( intf );
-      return 1;
-   }
-   catch ( ... )
-   {
-      return 0;
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::getPortProfile( int p, Types::Profile_out& prof )
-{
-   int fi = oportIdx( p );  
-   if ( fi < 0 )
-      return 0; 
-   
-   prof = new Types::Profile( *(_oports[fi]->_profile) );
-   return 1;
-}
-////////////////////////////////////////////////////////////////////////////////
-int Module::setPortProfile (int p, const Types::Profile* prof)
-{
-   int fi = oportIdx(p);
-   if ( fi < 0 ) 
-      return 0;
+           _iports[ fi ]->add_connection( c );
+           c->connect_iport( _iports[fi] );
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       void Module::addOPort( int p, Connection* c )
+       {
+           size_t sz = _oports.size();
+           int fi = oportIdx( p );
 
-   if ( _oports[fi]->_profile ) 
-   {
-      delete _oports[fi]->_profile;
-   }
+           if( fi < 0 )
+           {
+               fi = sz;
+               _oports.push_back( new OPort( p, this ) );
+           }
 
-   _oports[fi]->_profile = new Types::Profile(*prof); 
-   return 1;
-}
-////////////////////////////////////////////////////////////////////////////////
-std::string Module::GetModuleName( void )
-{
-   return _name;
-}
-////////////////////////////////////////////////////////////////////////////////
-model::ModelWeakPtr Module::GetVEModel( void )
-{
-   //Set the input, results, port data data structures
-   return veModel;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Module::SetVEModel( model::ModelWeakPtr mod )
-{
-   veModel = mod;
-   //Set the name of this module
-   _name = veModel->GetModelName();
-   // _id is set in the constructor
-   _id = veModel->GetModelID();
-   _need_execute = 1;
-   _return_state = 0;
+           _oports[fi]->add_connection( c );
+           c->connect_oport( _oports[fi] );
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::getPortData( int p, Command& intf )
+       {
+           try
+           {
+               intf = *( _oports.at( oportIdx( p ) )->GetPortData() );
+               return 1;
+           }
+           catch ( ... )
+           {
+               return 0;
+           }
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::setPortData( int p, Command* intf )
+       {
+           try
+           {
+               _oports.at( oportIdx( p ) )->SetPortData( intf );
+               return 1;
+           }
+           catch ( ... )
+           {
+               return 0;
+           }
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::getPortProfile( int p, Types::Profile_out& prof )
+       {
+           int fi = oportIdx( p );
+           if( fi < 0 )
+               return 0;
 
-   ///Get feedback info
-   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
-   {
-      DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
-      if( dvp )
-      {
-         unsigned int feedback;
-         dvp->GetData( feedback );
-         _is_feedback = static_cast< int >( feedback );
-         break;
-      }   
-   }
+           prof = new Types::Profile( *( _oports[fi]->_profile ) );
+           return 1;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       int Module::setPortProfile( int p, const Types::Profile* prof )
+       {
+           int fi = oportIdx( p );
+           if( fi < 0 )
+               return 0;
 
-   //Now get port data
-   ports.clear();
-   for ( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
-   {
-      ports.push_back( veModel->GetPort( i ) );
-   }
+           if( _oports[fi]->_profile )
+           {
+               delete _oports[fi]->_profile;
+           }
 
-   //Probably now need to set port data pointers on the port vectors
-}
-////////////////////////////////////////////////////////////////////////////////
-std::vector< Command* > Module::GetInputData( void )
-{
-   inputs.clear();
-   for ( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
-   {
-      inputs.push_back( veModel->GetInput( i ) );
-   }
-   return inputs;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Module::SetInputData( std::vector< XMLObject* > inputData )
-{
-   for ( size_t i = 0; i < inputData.size(); ++i )
-   {
-      *(veModel->GetInput( i )) = *(dynamic_cast< Command* >( inputData.at( i ) ) );
-   }
-}
-////////////////////////////////////////////////////////////////////////////////
-std::vector< Command* > Module::GetResultsData( void )
-{
-   results.clear();
-   for ( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
-   {
-      results.push_back( veModel->GetResult( i ) );
-   }
-   return results;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Module::SetResultsData( std::vector< XMLObject* > resultsData )
-{
-   for ( size_t i = 0; i < resultsData.size(); ++i )
-   {
-      *(veModel->GetResult( i )) = *(dynamic_cast< Command* >( resultsData.at( i ) ) );
-   }
-}
+           _oports[fi]->_profile = new Types::Profile( *prof );
+           return 1;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       std::string Module::GetModuleName( void )
+       {
+           return _name;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       model::ModelWeakPtr Module::GetVEModel( void )
+       {
+           //Set the input, results, port data data structures
+           return veModel;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       void Module::SetVEModel( model::ModelWeakPtr mod )
+       {
+           veModel = mod;
+           //Set the name of this module
+           _name = veModel->GetModelName();
+           // _id is set in the constructor
+           _id = veModel->GetModelID();
+           _need_execute = 1;
+           _return_state = 0;
+
+           ///Get feedback info
+           for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+           {
+               DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
+               if( dvp )
+               {
+                   unsigned int feedback;
+                   dvp->GetData( feedback );
+                   _is_feedback = static_cast< int >( feedback );
+                   break;
+               }
+           }
+
+           //Now get port data
+           ports.clear();
+           for( size_t i = 0; i < veModel->GetNumberOfPorts(); ++i )
+           {
+               ports.push_back( veModel->GetPort( i ) );
+           }
+
+           //Probably now need to set port data pointers on the port vectors
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       std::vector< Command* > Module::GetInputData( void )
+       {
+           inputs.clear();
+           for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+           {
+               inputs.push_back( veModel->GetInput( i ) );
+           }
+           return inputs;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       void Module::SetInputData( std::vector< XMLObject* > inputData )
+       {
+           for( size_t i = 0; i < inputData.size(); ++i )
+           {
+               *( veModel->GetInput( i ) ) = *( dynamic_cast< Command* >( inputData.at( i ) ) );
+           }
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       std::vector< Command* > Module::GetResultsData( void )
+       {
+           results.clear();
+           for( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
+           {
+               results.push_back( veModel->GetResult( i ) );
+           }
+           return results;
+       }
+       ////////////////////////////////////////////////////////////////////////////////
+       void Module::SetResultsData( std::vector< XMLObject* > resultsData )
+       {
+           for( size_t i = 0; i < resultsData.size(); ++i )
+           {
+               *( veModel->GetResult( i ) ) = *( dynamic_cast< Command* >( resultsData.at( i ) ) );
+           }
+       }

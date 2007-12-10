@@ -39,42 +39,42 @@
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 //Constructor                             //
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 System::System()
-:XMLObject()
+        : XMLObject()
 {
-    SetObjectType("System");
-    SetObjectNamespace("Model");
+    SetObjectType( "System" );
+    SetObjectNamespace( "Model" );
     parentModel = NULL;
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 System::~System()
 {
     m_models.clear();
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 System::System( const System& input )
-:XMLObject(input)
+        : XMLObject( input )
 {
-    m_network = new Network( *(input.m_network) );
-   
+    m_network = new Network( *( input.m_network ) );
+
     for( size_t i = 0; i < input.m_models.size(); ++i )
     {
         m_models.push_back( new Model( *input.m_models.at( i ) ) );
     }
     parentModel = input.parentModel;
 }
-////////////////////////////////////////////////////////////////////////////////   
-System& System::operator=( const System& input)
+////////////////////////////////////////////////////////////////////////////////
+System& System::operator=( const System& input )
 {
     if( this != &input )
     {
         //biv-- make sure to call the parent =
-        XMLObject::operator =(input);
+        XMLObject::operator =( input );
         m_network = new Network( *input.m_network );
-        
+
         m_models.clear();
         for( size_t i = 0; i < input.m_models.size(); ++i )
         {
@@ -84,30 +84,30 @@ System& System::operator=( const System& input)
     }
     return *this;
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 void System::_updateVEElement( std::string input )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", uuid );
-    SetSubElement( "network", &(*m_network) );   
+    SetSubElement( "network", &( *m_network ) );
 
     for( size_t i = 0; i < m_models.size(); ++i )
     {
-        SetSubElement( "model", &(*m_models.at( i )) );   
+        SetSubElement( "model", &( *m_models.at( i ) ) );
     }
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 void System::AddNetwork( NetworkWeakPtr inputNetwork )
 {
     m_network = inputNetwork;
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 NetworkWeakPtr System::GetNetwork()
 {
     return m_network;
 }
-////////////////////////////////////////////////////////////////////////////////   
-void System::SetObjectFromXMLData(DOMNode* element)
+////////////////////////////////////////////////////////////////////////////////
+void System::SetObjectFromXMLData( DOMNode* element )
 {
     DOMElement* currentElement = 0;
     if( element->getNodeType() == DOMNode::ELEMENT_NODE )
@@ -118,11 +118,11 @@ void System::SetObjectFromXMLData(DOMNode* element)
     if( !currentElement )
     {
         return;
-    }   
-    
+    }
+
     //Setup uuid for model element
     {
-        ves::open::xml::XMLObject::GetAttribute(currentElement, "id", uuid);
+        ves::open::xml::XMLObject::GetAttribute( currentElement, "id", uuid );
     }
 
     //get variables by tags
@@ -131,60 +131,60 @@ void System::SetObjectFromXMLData(DOMNode* element)
     {
         dataValueStringName = GetSubElement( currentElement, "network", 0 );
         m_network = new Network();
-		m_network->SetParentModel(parentModel);
+        m_network->SetParentModel( parentModel );
         m_network->SetObjectFromXMLData( dataValueStringName );
-        dataValueStringName = 0;            
+        dataValueStringName = 0;
     }
     // for models
     {
         DOMNodeList* subElements = currentElement->
-            getElementsByTagName( xercesString("model") );
+                                   getElementsByTagName( xercesString( "model" ) );
         unsigned int numberOfModels = subElements->getLength();
-        
+
         for( unsigned int i = 0; i < numberOfModels; ++i )
         {
             if( subElements->item( i )->getParentNode() == currentElement )
             {
-                dataValueStringName = 
+                dataValueStringName =
                     static_cast< DOMElement* >( subElements->item( i ) );
                 ves::open::xml::model::ModelSharedPtr newModel = new Model();
-                newModel->SetParentModel(parentModel);
-                m_models.push_back( newModel );				
+                newModel->SetParentModel( parentModel );
+                m_models.push_back( newModel );
                 m_models.back()->SetObjectFromXMLData( dataValueStringName );
             }
         }
-    }      
+    }
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 ModelWeakPtr System::GetModel( size_t i )
 {
     try
     {
         return m_models.at( i );
     }
-    catch(...)
+    catch ( ... )
     {
         std::cerr << "System::GetModel value greater than number of tags present"
-            << std::endl;
+        << std::endl;
         return 0;
     }
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 size_t System::GetNumberOfModels( void )
 {
     return m_models.size();
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 void System::AddModel( ModelWeakPtr inputModel )
 {
     m_models.push_back( inputModel );
 }
-////////////////////////////////////////////////////////////////////////////////   
+////////////////////////////////////////////////////////////////////////////////
 std::vector< ModelWeakPtr > System::GetModels()
 {
     std::vector< ModelWeakPtr > tempModels;
-    std::copy( m_models.begin(), 
-               m_models.end(), 
+    std::copy( m_models.begin(),
+               m_models.end(),
                std::back_inserter( tempModels ) );
     return tempModels;
 }

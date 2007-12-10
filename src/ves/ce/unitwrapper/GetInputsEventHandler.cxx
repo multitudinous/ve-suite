@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/ce/unitwrapper/GetInputsEventHandler.h>
 
@@ -45,32 +45,32 @@ using namespace VE_CE;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 GetInputsEventHandler::GetInputsEventHandler()
-:VE_CE::EventHandler()
+        : VE_CE::EventHandler()
 {
-   baseModel = 0;
+    baseModel = 0;
 }
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 GetInputsEventHandler::~GetInputsEventHandler()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model)
+void GetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model )
 {
-   try
-   {
-      if ( model )
-      {
-         baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
-      }
-   }
-   catch(...)
-   {
-      baseModel = 0;
-      std::cout<<"Invalid object passed to GetInputsEventHandler::SetGlobalBaseObject!"<<std::endl;
-   }
+    try
+    {
+        if( model )
+        {
+            baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
+        }
+    }
+    catch ( ... )
+    {
+        baseModel = 0;
+        std::cout << "Invalid object passed to GetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess )
@@ -81,11 +81,11 @@ std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
         return std::string();
     }
 
-    std::string status="returnString";
+    std::string status = "returnString";
     try
     {
         size_t numInputs = objectToProcess.size();
-        for ( size_t i = 0; i < numInputs; ++i )
+        for( size_t i = 0; i < numInputs; ++i )
         {
             ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( objectToProcess.at( i ) );
             std::string dataName = command->GetCommandName();
@@ -93,7 +93,7 @@ std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
             for( size_t j = 0; j < baseModel->GetNumberOfInputs(); ++j )
             {
                 ves::open::xml::Command* tempInput = baseModel->GetInput( j );
-                nodes.push_back(std::pair< ves::open::xml::XMLObject*, std::string >( tempInput, "vecommand" ));
+                nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( tempInput, "vecommand" ) );
             }
 
             ves::open::xml::XMLReaderWriter commandWriter;
@@ -101,7 +101,7 @@ std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
         }
     }
-    catch( ... )
+    catch ( ... )
     {
         std::cerr << " ERROR : GetInputsEventHandler::Execute " << std::endl;
     }

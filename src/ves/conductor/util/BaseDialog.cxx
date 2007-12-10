@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU Library General Public
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA. 
+ * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
  * Date modified: $Date$
@@ -49,92 +49,91 @@ using namespace ves::conductor::util;
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////
-BaseDialog::BaseDialog (wxWindow* parent, int id,std::string title)
-:wxDialog((wxWindow*) parent, id, wxString(title.c_str(), wxConvUTF8), wxDefaultPosition, wxDefaultSize,
-(wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX|wxCLOSE_BOX))
+BaseDialog::BaseDialog( wxWindow* parent, int id, std::string title )
+        : wxDialog(( wxWindow* ) parent, id, wxString( title.c_str(), wxConvUTF8 ), wxDefaultPosition, wxDefaultSize,
+                   ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ) )
 {
-   //_vjObsPtr = 0;
-   _commandName = "";
-   //SetIcon( ve_icon32x32_xpm );
+    //_vjObsPtr = 0;
+    _commandName = "";
+    //SetIcon( ve_icon32x32_xpm );
 }
 /////////////////////////////////////////////////////
 BaseDialog::~BaseDialog()
-{
-}
+{}
 //////////////////////////////////////////////////////////
-void BaseDialog::SetVjObsPtr(VjObs_ptr xplorerCom)
+void BaseDialog::SetVjObsPtr( VjObs_ptr xplorerCom )
 {
-   //_vjObsPtr = xplorerCom;
+    //_vjObsPtr = xplorerCom;
 }
 //////////////////////////////////////////////
 void BaseDialog::ClearInstructions()
 {
-   ///deleting the command deletes the memory but
-   ///we need to insure that the vector is clear
-   _instructions.clear();
-   _commandName.clear();
+    ///deleting the command deletes the memory but
+    ///we need to insure that the vector is clear
+    _instructions.clear();
+    _commandName.clear();
 }
 //////////////////////////////////////////////////////
-void BaseDialog::_addOKButton(wxSizer* buttonRowSizer)
+void BaseDialog::_addOKButton( wxSizer* buttonRowSizer )
 {
-   buttonRowSizer->Add(new wxButton(this,wxID_OK,_("OK")),0,wxALIGN_CENTER);
+    buttonRowSizer->Add( new wxButton( this, wxID_OK, _( "OK" ) ), 0, wxALIGN_CENTER );
 }
 /////////////////////////////////////////////////////////
-void BaseDialog::_addCancelButton(wxSizer* buttonRowSizer)
+void BaseDialog::_addCancelButton( wxSizer* buttonRowSizer )
 {
-   buttonRowSizer->Add(new wxButton(this,wxID_CANCEL,_("Cancel")),0,wxALIGN_CENTER);
+    buttonRowSizer->Add( new wxButton( this, wxID_CANCEL, _( "Cancel" ) ), 0, wxALIGN_CENTER );
 }
 /////////////////////////////////////////
 void BaseDialog::_sendCommandsToXplorer()
 {
-   //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
-	ves::open::xml::Command* newCommand = new ves::open::xml::Command();
+    //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
+    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
 
-   for(size_t i =0; i < _instructions.size(); i++)
-   {
-      newCommand->AddDataValuePair(_instructions.at(i));
-   }
+    for( size_t i = 0; i < _instructions.size(); i++ )
+    {
+        newCommand->AddDataValuePair( _instructions.at( i ) );
+    }
 
-   newCommand->SetCommandName(_commandName);
+    newCommand->SetCommandName( _commandName );
 
-   std::string commandString("returnString");
+    std::string commandString( "returnString" );
 
-   ves::open::xml::XMLReaderWriter commandWriter;
-   commandWriter.UseStandaloneDOMDocumentManager();
-   
-   std::pair<ves::open::xml::Command*,std::string> nodeTagPair;
-   nodeTagPair.first = newCommand;
-   nodeTagPair.second = std::string("vecommand");
-   std::vector< std::pair<ves::open::xml::XMLObject*,std::string> > nodeToWrite;
-   nodeToWrite.push_back(nodeTagPair);
+    ves::open::xml::XMLReaderWriter commandWriter;
+    commandWriter.UseStandaloneDOMDocumentManager();
 
-   commandWriter.WriteXMLDocument(nodeToWrite,commandString,"Command");
+    std::pair<ves::open::xml::Command*, std::string> nodeTagPair;
+    nodeTagPair.first = newCommand;
+    nodeTagPair.second = std::string( "vecommand" );
+    std::vector< std::pair<ves::open::xml::XMLObject*, std::string> > nodeToWrite;
+    nodeToWrite.push_back( nodeTagPair );
 
-   //char* tempDoc = new char[ commandString.size() + 1 ];
-   //tempDoc = CORBA::string_dup( commandString.c_str() );
+    commandWriter.WriteXMLDocument( nodeToWrite, commandString, "Command" );
 
-   if ( !commandString.empty() )
-   {
-      try
-      {
-         //std::cout<<"---The command to send---"<<std::endl;
-         //std::cout<<tempDoc<<std::endl;
-         // CORBA releases the allocated memory so we do not have to
-         //_vjObsPtr->SetCommandString( tempDoc );
-         CORBAServiceList::instance()->SendCommandStringToXplorer(newCommand);
-         delete newCommand;
-      }
-      catch ( ... )
-      {
-         wxMessageBox( _("Send data to VE-Xplorer failed. Probably need to disconnect and reconnect."), 
-                        _("Communication Failure"), wxOK | wxICON_INFORMATION );
-         delete newCommand;
-      }
-   }
-   else
-   {
-      delete newCommand;
-   }
+    //char* tempDoc = new char[ commandString.size() + 1 ];
+    //tempDoc = CORBA::string_dup( commandString.c_str() );
 
-   ClearInstructions();
+    if( !commandString.empty() )
+    {
+        try
+        {
+            //std::cout<<"---The command to send---"<<std::endl;
+            //std::cout<<tempDoc<<std::endl;
+            // CORBA releases the allocated memory so we do not have to
+            //_vjObsPtr->SetCommandString( tempDoc );
+            CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
+            delete newCommand;
+        }
+        catch ( ... )
+        {
+            wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
+                          _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
+            delete newCommand;
+        }
+    }
+    else
+    {
+        delete newCommand;
+    }
+
+    ClearInstructions();
 }

@@ -38,48 +38,48 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main( int argc, char* argv[] )
 {
-    if( (argc < 2) || (std::string( argv[ 1 ] ) == "--help") )
+    if (( argc < 2 ) || ( std::string( argv[ 1 ] ) == "--help" ) )
     {
-       std::cout << "Usage : " << argv[ 0 ] << " <filename> " << std::endl;
-       return 0;
+        std::cout << "Usage : " << argv[ 0 ] << " <filename> " << std::endl;
+        return 0;
     }
-    std::string filename = std::string( argv[ 1 ] );    
+    std::string filename = std::string( argv[ 1 ] );
     std::ifstream osgFile( filename.c_str() );
     if( !filename.compare( 0, 2, std::string( "./" ) ) )
     {
         filename = filename.erase( 0, 2 );
     }
-    
+
     size_t indexOfFirstDot = filename.find_last_of( '.' );
     std::string shortName( filename.begin(), filename.begin() + indexOfFirstDot );
     //replace . / - with _
-    for ( size_t index = 0; index < shortName.length(); )
+    for( size_t index = 0; index < shortName.length(); )
     {
         index = shortName.find( '.', index );
-        if ( index != std::string::npos )
-            shortName[ index ] = '_';
-    }
-    
-    for ( size_t index = 0; index < shortName.length(); )
-    {
-        index = shortName.find( '/', index );
-        if ( index != std::string::npos )
+        if( index != std::string::npos )
             shortName[ index ] = '_';
     }
 
-    for ( size_t index = 0; index < shortName.length(); )
+    for( size_t index = 0; index < shortName.length(); )
+    {
+        index = shortName.find( '/', index );
+        if( index != std::string::npos )
+            shortName[ index ] = '_';
+    }
+
+    for( size_t index = 0; index < shortName.length(); )
     {
         index = shortName.find( '-', index );
-        if ( index != std::string::npos )
+        if( index != std::string::npos )
             shortName[ index ] = '_';
     }
 
     std::string commandString = std::string( "convert " ) + std::string( argv[ 1 ] ) + std::string( " " ) + shortName + std::string( ".xpm" );
     std::system( commandString.c_str() );
- 
+
     /*
     // Sample for C++ File I/O binary file read
-    
+
     void read_from_binary_file()
     {
         WebSites p_Data;
@@ -96,7 +96,7 @@ int main( int argc, char* argv[] )
     binary_file.write(reinterpret_cast<char *>(&p_Data),sizeof(WebSites));
     binary_file.close();
     */
-    
+
     /*if( !osgFile.good() )
     {
         std::cerr << filename << " could not be opened." << std::endl;
@@ -109,7 +109,7 @@ int main( int argc, char* argv[] )
     outputFilename = shortName + std::string( ".h" );
 
     std::ofstream hFile( outputFilename.c_str(), std::ios::binary );
-   
+
     hFile << "#ifndef GETVESUITE_" << shortName << "_H" << std::endl
         << "#define GETVESUITE_" << shortName << "_H" << std::endl
         << "//Usage of this file" << std::endl
@@ -124,18 +124,18 @@ int main( int argc, char* argv[] )
         << "std::string GetVESuite_" << shortName << "( void )" << std::endl
         << "{" << std::endl
         << "    unsigned char osgData";
- 
+
 
     //get size of binary file
     osgFile.seekg (0, std::ios::end);
     size_t binaryFileSize = osgFile.tellg();
     //rewind
     osgFile.seekg (0, std::ios::beg);
-    
+
     char* dataBuffer = new char[ binaryFileSize ];
     osgFile.read( dataBuffer, binaryFileSize );
     osgFile.close();
-                    
+        
     hFile << "[ " << binaryFileSize << " ] = ";
     hFile << "{ " << std::endl;
     unsigned char temp = dataBuffer[ 0 ];
@@ -158,7 +158,7 @@ int main( int argc, char* argv[] )
     hFile << "    {" << std::endl;
     hFile << "        strOsgData.push_back( static_cast< char >( osgData[ i ] ) );" << std::endl;
     hFile << "    }" << std::endl;
-    
+
     hFile << "    return strOsgData;" << std::endl
          << "}" << std::endl
          << "#endif" << std::endl

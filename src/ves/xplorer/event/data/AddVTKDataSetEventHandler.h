@@ -57,37 +57,37 @@ namespace event
 class VE_XPLORER_EXPORTS AddVTKDataSetEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   AddVTKDataSetEventHandler();
+    ///Constructor
+    AddVTKDataSetEventHandler();
 
-   ///Copy Constructor
-   AddVTKDataSetEventHandler(const AddVTKDataSetEventHandler& rhs);
+    ///Copy Constructor
+    AddVTKDataSetEventHandler( const AddVTKDataSetEventHandler& rhs );
 
-   ///Destructor
-   virtual ~AddVTKDataSetEventHandler();
+    ///Destructor
+    virtual ~AddVTKDataSetEventHandler();
 
-   ///Equal operator
-   AddVTKDataSetEventHandler& operator=(const AddVTKDataSetEventHandler& rhs);
+    ///Equal operator
+    AddVTKDataSetEventHandler& operator=( const AddVTKDataSetEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
-   
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute(ves::open::xml::XMLObject* command); 
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
+
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 protected:
-   ///Load surface files from a predefined directory
-   ///\param directory to load files from
-   void LoadSurfaceFiles( std::string precomputedSurfaceDir );
-   ///Directory that contians 3d textures
-   ///\param directory to load files from
-   void Load3DTextureDirectories( std::string dirToLoad );
+    ///Load surface files from a predefined directory
+    ///\param directory to load files from
+    void LoadSurfaceFiles( std::string precomputedSurfaceDir );
+    ///Directory that contians 3d textures
+    ///\param directory to load files from
+    void Load3DTextureDirectories( std::string dirToLoad );
 
-   ves::xplorer::Model* _activeModel;///<The active cfdModel;
+    ves::xplorer::Model* _activeModel;///<The active cfdModel;
 };
 
 }

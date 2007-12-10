@@ -48,189 +48,188 @@
 
 namespace VE_TextureBased
 {
-   /**
-    * Implementation of the Database Singleton.  This class handles a single
-    * connection to a database; it delegates most functionality out to a
-    * DatabaseDriver.
-    */
-   class VE_TEXTURE_BASED_EXPORTS Database_t
-   {
-   public:
+/**
+ * Implementation of the Database Singleton.  This class handles a single
+ * connection to a database; it delegates most functionality out to a
+ * DatabaseDriver.
+ */
+class VE_TEXTURE_BASED_EXPORTS Database_t
+{
+public:
 
-      /**
-       * Default Ctor
-       * Initializes the driver to NULL.
-       */
-      Database_t()
-         : mCurrentDriver(NULL)
-      {
-      }
+    /**
+     * Default Ctor
+     * Initializes the driver to NULL.
+     */
+    Database_t()
+            : mCurrentDriver( NULL )
+    {}
 
-      /**
-       * Dtor
-       * Closes and deletes the current driver if necessary.
-       */
-      ~Database_t()
-      {
-         if (mCurrentDriver)
-         {
+    /**
+     * Dtor
+     * Closes and deletes the current driver if necessary.
+     */
+    ~Database_t()
+    {
+        if( mCurrentDriver )
+        {
             mCurrentDriver->close();
-         }
-      }
-      
-      /**
-       * Opens a connection to the given database.
-       *
-       * @param   name     the name of the database to open a connection to.
-       *
-       * @return     true if succesful, false if not.
-       */
-      bool open(const std::string& name)
-      {
-         if (!mCurrentDriver)
-         {
+        }
+    }
+
+    /**
+     * Opens a connection to the given database.
+     *
+     * @param   name     the name of the database to open a connection to.
+     *
+     * @return     true if succesful, false if not.
+     */
+    bool open( const std::string& name )
+    {
+        if( !mCurrentDriver )
+        {
             return false;
-         }
-         return mCurrentDriver->open(name);
-      }
+        }
+        return mCurrentDriver->open( name );
+    }
 
-      /**
-       * Closes the connection to the database.
-       */
-      void close()
-      {
-         if (mCurrentDriver && mCurrentDriver->isOpen())
-         {
+    /**
+     * Closes the connection to the database.
+     */
+    void close()
+    {
+        if( mCurrentDriver && mCurrentDriver->isOpen() )
+        {
             mCurrentDriver->close();
-         }
-      }
+        }
+    }
 
-      /**
-       * Executes a SQL statement
-       *
-       * @param   statement      the SQL statement to execute.
-       *
-       * @return     true if successful, false otherwise
-       */
-      bool execute(const std::string& statement)
-      {
-         if (mCurrentDriver && mCurrentDriver->isOpen())
-         {
-            return mCurrentDriver->execute(statement);
-         }
-         return false;
-      }
+    /**
+     * Executes a SQL statement
+     *
+     * @param   statement      the SQL statement to execute.
+     *
+     * @return     true if successful, false otherwise
+     */
+    bool execute( const std::string& statement )
+    {
+        if( mCurrentDriver && mCurrentDriver->isOpen() )
+        {
+            return mCurrentDriver->execute( statement );
+        }
+        return false;
+    }
 
-      /**
-       * Retrieves the results from the last query.
-       *
-       * @return     the results from the last query
-       */
-      std::vector< std::vector<DBValue> > getResults() const
-      {
-         if (mCurrentDriver)
-         {
+    /**
+     * Retrieves the results from the last query.
+     *
+     * @return     the results from the last query
+     */
+    std::vector< std::vector<DBValue> > getResults() const
+    {
+        if( mCurrentDriver )
+        {
             return mCurrentDriver->getResults();
-         }
-      }
+        }
+    }
 
-      /**
-       * Queries the open status of the database.
-       *
-       * @return     true if the database is open, false otherwise.
-       */
-      bool isOpen()
-      {
-         if (mCurrentDriver)
-         {
+    /**
+     * Queries the open status of the database.
+     *
+     * @return     true if the database is open, false otherwise.
+     */
+    bool isOpen()
+    {
+        if( mCurrentDriver )
+        {
             return mCurrentDriver->isOpen();
-         }
-         return false;
-      }
+        }
+        return false;
+    }
 
-      /**
-       * Sets the current driver.
-       *
-       * @param   name     the name of the driver to use.
-       *
-       * @return     true if successful, false otherwise.
-       */
-      bool setDriver(const std::string& name)
-      {
-         if (mDriverMap.find(name) != mDriverMap.end())
-         {
-            if (mCurrentDriver)
+    /**
+     * Sets the current driver.
+     *
+     * @param   name     the name of the driver to use.
+     *
+     * @return     true if successful, false otherwise.
+     */
+    bool setDriver( const std::string& name )
+    {
+        if( mDriverMap.find( name ) != mDriverMap.end() )
+        {
+            if( mCurrentDriver )
             {
-               mCurrentDriver->close();
-               delete mCurrentDriver;
+                mCurrentDriver->close();
+                delete mCurrentDriver;
             }
             mCurrentDriver = mDriverMap[name]();
             return mCurrentDriver == NULL;
-         }
-         return false;
-      }
+        }
+        return false;
+    }
 
-      /**
-       * Returns the name of the current driver.
-       *
-       * @return     the name of the current driver.
-       */
-      std::string getDriverName() const
-      {
-         if (mCurrentDriver)
-         {
+    /**
+     * Returns the name of the current driver.
+     *
+     * @return     the name of the current driver.
+     */
+    std::string getDriverName() const
+    {
+        if( mCurrentDriver )
+        {
             return mCurrentDriver->getDriverName();
-         }
-         return "None";
-      }
+        }
+        return "None";
+    }
 
-      /**
-       * Returns the version of the current driver.
-       *
-       * @return     the version of the current driver.
-       */
-      std::string getDriverVersion() const
-      {
-         if (mCurrentDriver)
-         {
+    /**
+     * Returns the version of the current driver.
+     *
+     * @return     the version of the current driver.
+     */
+    std::string getDriverVersion() const
+    {
+        if( mCurrentDriver )
+        {
             return mCurrentDriver->getDriverVersion();
-         }
-         return "N/A";
-      }
+        }
+        return "N/A";
+    }
 
-      /// driver creation functors.
-      typedef Loki::Function<DatabaseDriver*()> DriverCreator;
+    /// driver creation functors.
+    typedef Loki::Function < DatabaseDriver*() > DriverCreator;
 
-      /**
-       * Registers a driver with the database.
-       *
-       * @param   name     the name of the driver.
-       * @param   creator  the function used to create a new instance of the
-       *                   driver.
-       */
-      void registerDriver(const std::string& name, 
-                          const DriverCreator& creator)
-      {
-         mDriverMap[name] = creator;
-      }
+    /**
+     * Registers a driver with the database.
+     *
+     * @param   name     the name of the driver.
+     * @param   creator  the function used to create a new instance of the
+     *                   driver.
+     */
+    void registerDriver( const std::string& name,
+                         const DriverCreator& creator )
+    {
+        mDriverMap[name] = creator;
+    }
 
-   private:
+private:
 
-      /// the current driver in use.
-      DatabaseDriver*                                 mCurrentDriver;
+    /// the current driver in use.
+    DatabaseDriver*                                 mCurrentDriver;
 
-      /// the map of driver names to their creation functions.
-      std::map<std::string, DriverCreator>            mDriverMap;
-   };
+    /// the map of driver names to their creation functions.
+    std::map<std::string, DriverCreator>            mDriverMap;
+};
 
-   /// Typedef for the singleton declaration.  This is necessary to make the
-   /// singleton have one instance in a Windows DLL; the macro calls are 
-   /// based upon recommendations from the MSDN documentation.
+/// Typedef for the singleton declaration.  This is necessary to make the
+/// singleton have one instance in a Windows DLL; the macro calls are
+/// based upon recommendations from the MSDN documentation.
 #ifdef WIN32
-   VE_TEXTURE_BASED_TEMPLATE_EXPORTS template class VE_TEXTURE_BASED_EXPORTS Singleton<Database_t>;
+VE_TEXTURE_BASED_TEMPLATE_EXPORTS template class VE_TEXTURE_BASED_EXPORTS Singleton<Database_t>;
 #endif
-   /// Typedef for the singleton Database.
-   typedef Singleton<Database_t> Database;
+/// Typedef for the singleton Database.
+typedef Singleton<Database_t> Database;
 }
 
 #endif

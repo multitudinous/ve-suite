@@ -43,156 +43,157 @@ using namespace ves::open::xml;
 //Constructor                                                           //
 //////////////////////////////////////////////////////////////////////////
 Program::Program()
-:XMLObject()
+        : XMLObject()
 {
-   _name = std::string("VEProgram");
-   _vertexShader = 0;
-   _fragmentShader = 0;
-   SetObjectType("Program");
-   SetObjectNamespace("Shader");
-   
-   if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("Shader"))
-   {
-      XMLObjectFactory::Instance()->RegisterObjectCreator("Shader",new ShaderCreator());
-   }
+    _name = std::string( "VEProgram" );
+    _vertexShader = 0;
+    _fragmentShader = 0;
+    SetObjectType( "Program" );
+    SetObjectNamespace( "Shader" );
+
+    if( !XMLObjectFactory::Instance()->ObjectCreatorIsRegistered( "Shader" ) )
+    {
+        XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new ShaderCreator() );
+    }
 }
 ///////////////////
 //Destructor     //
 ///////////////////
 Program::~Program()
 {
-   _name.clear();
+    _name.clear();
 }
-/////////////////////////////////////  
+/////////////////////////////////////
 //Copy constructor                 //
 /////////////////////////////////////
-Program::Program(const Program& rhs)
-:XMLObject(rhs)
+Program::Program( const Program& rhs )
+        : XMLObject( rhs )
 {
-   _name = std::string("VEProgram");
+    _name = std::string( "VEProgram" );
 
-   if(rhs._vertexShader)
-   {
-      _vertexShader = new Shader(*rhs._vertexShader);
-   }
-   if(rhs._fragmentShader)
-   {
-      _fragmentShader = new Shader(*rhs._fragmentShader);
-   }
-   _name = rhs._name;
+    if( rhs._vertexShader )
+    {
+        _vertexShader = new Shader( *rhs._vertexShader );
+    }
+    if( rhs._fragmentShader )
+    {
+        _fragmentShader = new Shader( *rhs._fragmentShader );
+    }
+    _name = rhs._name;
 }
 /////////////////////////////////////////////////
-void Program::SetVertexShader(ShaderPtr vertShader)
+void Program::SetVertexShader( ShaderPtr vertShader )
 {
-   _vertexShader = vertShader;
+    _vertexShader = vertShader;
 }
 ///////////////////////////////////////////////////
-void Program::SetFragmentShader(ShaderPtr fragShader)
+void Program::SetFragmentShader( ShaderPtr fragShader )
 {
-   _fragmentShader = fragShader;
+    _fragmentShader = fragShader;
 }
 //////////////////////////////////////////////
-void Program::SetProgramName(std::string name)
+void Program::SetProgramName( std::string name )
 {
-   _name = name;
+    _name = name;
 }
 /////////////////////////////////////////////////////
-void Program::SetObjectFromXMLData(DOMNode* xmlInput)
+void Program::SetObjectFromXMLData( DOMNode* xmlInput )
 {
     DOMElement* currentElement = 0;
 
-   if(xmlInput->getNodeType() == DOMNode::ELEMENT_NODE)
-   {
-      currentElement = dynamic_cast<DOMElement*>(xmlInput);
-   }
-   
-   if(currentElement)
-   {
-      //break down the element
-      {
-         if(currentElement->hasChildNodes())
-         {
-            //Get the source
-            DOMElement* vertexShader = GetSubElement(currentElement,std::string("vertexShader"),0);
-            if(vertexShader)
+    if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
+    {
+        currentElement = dynamic_cast<DOMElement*>( xmlInput );
+    }
+
+    if( currentElement )
+    {
+        //break down the element
+        {
+            if( currentElement->hasChildNodes() )
             {
-               if(!_vertexShader)
-               {
-                  _vertexShader = new Shader();
-               }
-               _vertexShader->SetObjectFromXMLData(vertexShader);
+                //Get the source
+                DOMElement* vertexShader = GetSubElement( currentElement, std::string( "vertexShader" ), 0 );
+                if( vertexShader )
+                {
+                    if( !_vertexShader )
+                    {
+                        _vertexShader = new Shader();
+                    }
+                    _vertexShader->SetObjectFromXMLData( vertexShader );
+                }
+                DOMElement* fragShader = GetSubElement( currentElement, std::string( "fragmentShader" ), 0 );
+                if( fragShader )
+                {
+                    if( !_fragmentShader )
+                    {
+                        _fragmentShader = new Shader();
+                    }
+                    _fragmentShader->SetObjectFromXMLData( fragShader );
+                }
+                DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
+                if( nameNode )
+                {
+                    _name = ExtractFromSimpleElement< std::string >( nameNode );
+                }
             }
-            DOMElement* fragShader = GetSubElement(currentElement,std::string("fragmentShader"),0);
-            if(fragShader)
-            {
-               if(!_fragmentShader)
-               {
-                  _fragmentShader = new Shader();
-               }
-               _fragmentShader->SetObjectFromXMLData(fragShader);
-            }
-            DOMElement* nameNode = GetSubElement(currentElement,std::string("name"),0);
-            if(nameNode)
-            {
-                _name = ExtractFromSimpleElement< std::string >( nameNode );
-            }
-         }
-      }
-   }
+        }
+    }
 }
 ////////////////////////////////////
 ShaderPtr Program::GetFragmentShader()
 {
-   return _fragmentShader;
+    return _fragmentShader;
 }
 //////////////////////////////////
 ShaderPtr Program::GetVertexShader()
 {
-   return _vertexShader;
+    return _vertexShader;
 }
 /////////////////////////////////////
 std::string Program::GetProgramName()
 {
-   return _name;
+    return _name;
 }
 /////////////////////////////////////////////////
-void Program::_updateVEElement(std::string input)
+void Program::_updateVEElement( std::string input )
 {
-   _updateProgramName();
-   if(_vertexShader)
-   {
-      _vertexShader->SetOwnerDocument(_rootDocument);
-      _veElement->appendChild(_vertexShader->GetXMLData("vertexShader"));
-   }
-   if(_fragmentShader)
-   {
-      _fragmentShader->SetOwnerDocument(_rootDocument);
-      _veElement->appendChild(_fragmentShader->GetXMLData("fragmentShader"));
-   }
+    _updateProgramName();
+    if( _vertexShader )
+    {
+        _vertexShader->SetOwnerDocument( _rootDocument );
+        _veElement->appendChild( _vertexShader->GetXMLData( "vertexShader" ) );
+    }
+    if( _fragmentShader )
+    {
+        _fragmentShader->SetOwnerDocument( _rootDocument );
+        _veElement->appendChild( _fragmentShader->GetXMLData( "fragmentShader" ) );
+    }
 }
 /////////////////////////////////
 void Program::_updateProgramName()
 {
-   DOMElement* nameElement = _rootDocument->createElement(xercesString("name"));
-   DOMText* name = _rootDocument->createTextNode(xercesString(_name));
-   nameElement->appendChild(name);
-   _veElement->appendChild(nameElement);
+    DOMElement* nameElement = _rootDocument->createElement( xercesString( "name" ) );
+    DOMText* name = _rootDocument->createTextNode( xercesString( _name ) );
+    nameElement->appendChild( name );
+    _veElement->appendChild( nameElement );
 }
 ///////////////////////////////////////////////
-Program& Program::operator=(const Program& rhs)
+Program& Program::operator=( const Program& rhs )
 {
 
-   if(this != &rhs){
-      XMLObject::operator=(rhs);
-      if(rhs._vertexShader)
-      {
-         _vertexShader = new Shader(*rhs._vertexShader);
-      }
-      if(rhs._fragmentShader)
-      {
-         _fragmentShader = new Shader(*rhs._fragmentShader);
-      }
-      _name = rhs._name;
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        XMLObject::operator=( rhs );
+        if( rhs._vertexShader )
+        {
+            _vertexShader = new Shader( *rhs._vertexShader );
+        }
+        if( rhs._fragmentShader )
+        {
+            _fragmentShader = new Shader( *rhs._fragmentShader );
+        }
+        _name = rhs._name;
+    }
+    return *this;
 }

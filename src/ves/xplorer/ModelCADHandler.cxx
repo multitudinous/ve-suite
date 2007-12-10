@@ -59,7 +59,7 @@ namespace ves
 {
 namespace xplorer
 {
-ModelCADHandler::ModelCADHandler(ves::xplorer::scenegraph::DCS* rootNode)
+ModelCADHandler::ModelCADHandler( ves::xplorer::scenegraph::DCS* rootNode )
 {
     m_assemblyList["rootNode"] = rootNode;
     //m_clipPlane = new osg::ClipPlane();
@@ -67,24 +67,24 @@ ModelCADHandler::ModelCADHandler(ves::xplorer::scenegraph::DCS* rootNode)
     /*m_assemblyList["rootNode"]
     ->getOrCreateStateSet()->setAttributeAndModes(m_clipPlane.get(),
                                                                   osg::StateAttribute::OFF);
-*/
+    */
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ModelCADHandler::ModelCADHandler(const ModelCADHandler& rhs)
+ModelCADHandler::ModelCADHandler( const ModelCADHandler& rhs )
 {
     m_cloneList = rhs.m_cloneList;
     m_partList = rhs.m_partList;
     m_assemblyList = rhs.m_assemblyList;
     m_rootCADNodeID = rhs.m_rootCADNodeID;
     m_nodeAttributes = rhs.m_nodeAttributes;
-	m_globalAttributeList = rhs.m_globalAttributeList;
-    m_clipPlane = new osg::ClipPlane(*rhs.m_clipPlane.get());
+    m_globalAttributeList = rhs.m_globalAttributeList;
+    m_clipPlane = new osg::ClipPlane( *rhs.m_clipPlane.get() );
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 ModelCADHandler::~ModelCADHandler()
 {
     std::map<std::string, ves::xplorer::scenegraph::CADEntity*>::iterator iter;
-    for ( iter = m_partList.begin(); iter != m_partList.end(); iter++ )
+    for( iter = m_partList.begin(); iter != m_partList.end(); iter++ )
     {
         ModelHandler::instance()->UnregisterCADFile( iter->second );
         delete iter->second;
@@ -94,18 +94,18 @@ ModelCADHandler::~ModelCADHandler()
     ///Assembly list is map of dcs's which are osg smart pointers
     m_assemblyList.clear();
 
-    for (std::map< std::string, 
-         ves::xplorer::scenegraph::Clone* >::iterator itr = m_cloneList.begin();
-         itr != m_cloneList.end(); itr++)
+    for( std::map < std::string,
+            ves::xplorer::scenegraph::Clone* >::iterator itr = m_cloneList.begin();
+            itr != m_cloneList.end(); itr++ )
     {
         delete itr->second;
     }
     m_cloneList.clear();
     m_nodeAttributes.clear();
-	m_globalAttributeList.clear();
+    m_globalAttributeList.clear();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ModelCADHandler& 
+ModelCADHandler&
 ModelCADHandler::operator=( const ModelCADHandler& rhs )
 {
     if( this != &rhs )
@@ -115,61 +115,61 @@ ModelCADHandler::operator=( const ModelCADHandler& rhs )
         m_assemblyList = rhs.m_assemblyList;
         m_rootCADNodeID = rhs.m_rootCADNodeID;
         m_nodeAttributes = rhs.m_nodeAttributes;
-		m_globalAttributeList = rhs.m_globalAttributeList;
+        m_globalAttributeList = rhs.m_globalAttributeList;
     }
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::SetClipPlane(double a, double b, double c, double d)
+void ModelCADHandler::SetClipPlane( double a, double b, double c, double d )
 {
-	if(m_clipPlane.valid())
-	{
-        m_clipPlane->setClipPlane(a,b,c,d);
-	}
+    if( m_clipPlane.valid() )
+    {
+        m_clipPlane->setClipPlane( a, b, c, d );
+    }
 }
 //////////////////////////////////////////////////////////////////
-void ModelCADHandler::ToggleClipPlane(bool onOff)
+void ModelCADHandler::ToggleClipPlane( bool onOff )
 {
-	if(!m_clipPlane.valid())
-	{
-		return;
-	}
-    if(onOff)
+    if( !m_clipPlane.valid() )
+    {
+        return;
+    }
+    if( onOff )
     {
         m_assemblyList["rootNode"]->getOrCreateStateSet()
-        ->setAssociatedModes(m_clipPlane.get(),osg::StateAttribute::ON);
+        ->setAssociatedModes( m_clipPlane.get(), osg::StateAttribute::ON );
     }
     else
     {
         m_assemblyList["rootNode"]->getOrCreateStateSet()
-           ->setAssociatedModes(m_clipPlane.get(),osg::StateAttribute::OFF);
+        ->setAssociatedModes( m_clipPlane.get(), osg::StateAttribute::OFF );
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::SetRootCADNodeID(std::string rootNodeId )
+void ModelCADHandler::SetRootCADNodeID( std::string rootNodeId )
 {
     m_rootCADNodeID = rootNodeId;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::CreateClone(std::string cloneID, 
-                                               std::string originalID, 
-                                               std::string originalType )
+void ModelCADHandler::CreateClone( std::string cloneID,
+                                   std::string originalID,
+                                   std::string originalType )
 {
-    if(originalType == std::string( "Assembly" ) )
+    if( originalType == std::string( "Assembly" ) )
     {
-      
-        if ( GetAssembly( originalID ) )
+
+        if( GetAssembly( originalID ) )
         {
-            m_cloneList[ cloneID ] = 
+            m_cloneList[ cloneID ] =
                 new ves::xplorer::scenegraph::Clone( GetAssembly( originalID ) );
         }
     }
     else if( originalType == std::string( "Part" ) )
     {
-        if ( GetPart( originalID ) )
+        if( GetPart( originalID ) )
         {
-            m_cloneList[ cloneID ] = 
-                new ves::xplorer::scenegraph::Clone( GetPart(originalID )->GetNode()->GetNode() );
+            m_cloneList[ cloneID ] =
+                new ves::xplorer::scenegraph::Clone( GetPart( originalID )->GetNode()->GetNode() );
         }
     }
 }
@@ -179,36 +179,36 @@ void ModelCADHandler::CreateAssembly( std::string assemblyID )
     m_assemblyList[ assemblyID ] = new ves::xplorer::scenegraph::DCS();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::CreatePart( std::string fileName, std::string partID, 
-    std::string parentID )
+void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
+                                  std::string parentID )
 {
-    ves::xplorer::scenegraph::CADEntity* tempCAD = 
+    ves::xplorer::scenegraph::CADEntity* tempCAD =
         ModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
     {
         ///If we have already loaded the parts
         ves::xplorer::scenegraph::CADEntityHelper* tempNode = tempCAD->GetNode();
-        m_partList[ partID ] = 
-            new ves::xplorer::scenegraph::CADEntity( 
+        m_partList[ partID ] =
+            new ves::xplorer::scenegraph::CADEntity(
                 tempNode,
                 m_assemblyList[ parentID ].get(),
                 ves::xplorer::scenegraph::PhysicsSimulator::instance() );
-        vprDEBUG(vesDBG,1) << "|\t--Cloned new part--"
-                            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t--Cloned new part--"
+        << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
         ///If we have not loaded this part
         ///turn on occlusion culling by default
-        m_partList[ partID ] = 
-            new ves::xplorer::scenegraph::CADEntity( 
+        m_partList[ partID ] =
+            new ves::xplorer::scenegraph::CADEntity(
                 fileName,
                 m_assemblyList[ parentID ].get(),
-                false, 
+                false,
                 true,
                 ves::xplorer::scenegraph::PhysicsSimulator::instance() );
-        vprDEBUG(vesDBG,1) << "|\t--Loaded new part--" 
-                            << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t--Loaded new part--"
+        << std::endl << vprDEBUG_FLUSH;
     }
     ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
@@ -219,9 +219,9 @@ void ModelCADHandler::RemoveNode( std::string nodeID,
                                   std::string nodeType )
 {
     //first remove all the attributes for this node
-   std::map<std::string, 
-                 std::vector< std::pair< std::string, 
-                                             osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+    std::map < std::string,
+    std::vector < std::pair < std::string,
+    osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
     attributeList = m_nodeAttributes.find( nodeID );
     if( attributeList != m_nodeAttributes.end() )
     {
@@ -239,163 +239,163 @@ void ModelCADHandler::RemoveNode( std::string nodeID,
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::SetActiveAttributeOnNode(std::string nodeID, 
-                                               std::string nodeType, 
-                                               std::string attributeName )
+void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
+                                                std::string nodeType,
+                                                std::string attributeName )
 {
 #ifdef _OSG
-    std::map<std::string, 
-                 std::vector< std::pair< std::string, 
-                                             osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-    attributeList = m_nodeAttributes.find(nodeID);
-   
-    if(attributeList != m_nodeAttributes.end())
+    std::map < std::string,
+    std::vector < std::pair < std::string,
+    osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+    attributeList = m_nodeAttributes.find( nodeID );
+
+    if( attributeList != m_nodeAttributes.end() )
     {
 
-        std::vector< std::pair<std::string,
-                                   osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-        std::vector< std::pair<std::string,
-                                   osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+        std::vector < std::pair < std::string,
+        osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+        std::vector < std::pair < std::string,
+        osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
         namesAndAttributes = attributeList->second;
-        for(foundAttribute = namesAndAttributes.begin();
-             foundAttribute != namesAndAttributes.end();
-             foundAttribute++)
+        for( foundAttribute = namesAndAttributes.begin();
+                foundAttribute != namesAndAttributes.end();
+                foundAttribute++ )
         {
-            vprDEBUG(vesDBG,1) <<"|\tFound attribute: "
-                                      <<foundAttribute->first
-                                      <<std::endl<< vprDEBUG_FLUSH;
-            if(foundAttribute->first == attributeName)
-           {
-               if(nodeType == "Assembly")
-               {
-                   vprDEBUG(vesDBG,1) <<"|\tSetting Assembly attribute: "
-                                             <<foundAttribute->first
-                                             <<std::endl<< vprDEBUG_FLUSH;
-                   GetAssembly(nodeID)->setStateSet(foundAttribute->second.get());
-                   return;
-                }
-                else if(nodeType == "Part")
+            vprDEBUG( vesDBG, 1 ) << "|\tFound attribute: "
+            << foundAttribute->first
+            << std::endl << vprDEBUG_FLUSH;
+            if( foundAttribute->first == attributeName )
+            {
+                if( nodeType == "Assembly" )
                 {
-                   vprDEBUG(vesDBG,1) <<"|\tSetting Part attribute: "
-                                             <<foundAttribute->first
-                                             <<std::endl<< vprDEBUG_FLUSH;
-                   GetPart(nodeID)->GetDCS()->setStateSet(foundAttribute->second.get());
-                   vprDEBUG(vesDBG,1) <<"|\tvalid: "
-                                             <<foundAttribute->first<<std::endl
-                                             << vprDEBUG_FLUSH;
-                   return;
+                    vprDEBUG( vesDBG, 1 ) << "|\tSetting Assembly attribute: "
+                    << foundAttribute->first
+                    << std::endl << vprDEBUG_FLUSH;
+                    GetAssembly( nodeID )->setStateSet( foundAttribute->second.get() );
+                    return;
                 }
-                else if(nodeType == "Clone")
+                else if( nodeType == "Part" )
                 {
-                   vprDEBUG(vesDBG,1) <<"|\tSetting Clone attribute: "
-                                             <<foundAttribute->first
-                                             <<std::endl
-                                             << vprDEBUG_FLUSH;
-                   GetClone(nodeID)->
-                       GetClonedGraph()->setStateSet(foundAttribute->second.get());
-                   return;
+                    vprDEBUG( vesDBG, 1 ) << "|\tSetting Part attribute: "
+                    << foundAttribute->first
+                    << std::endl << vprDEBUG_FLUSH;
+                    GetPart( nodeID )->GetDCS()->setStateSet( foundAttribute->second.get() );
+                    vprDEBUG( vesDBG, 1 ) << "|\tvalid: "
+                    << foundAttribute->first << std::endl
+                    << vprDEBUG_FLUSH;
+                    return;
+                }
+                else if( nodeType == "Clone" )
+                {
+                    vprDEBUG( vesDBG, 1 ) << "|\tSetting Clone attribute: "
+                    << foundAttribute->first
+                    << std::endl
+                    << vprDEBUG_FLUSH;
+                    GetClone( nodeID )->
+                    GetClonedGraph()->setStateSet( foundAttribute->second.get() );
+                    return;
                 }
             }
         }
     }
     else
     {
-        vprDEBUG(vesDBG,1) <<"|\tAttribute not found on node: "
-                                   <<attributeName<<std::endl
-                                   << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tAttribute not found on node: "
+        << attributeName << std::endl
+        << vprDEBUG_FLUSH;
     }
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootTransparent()
 {
-   if(!AssemblyExists(m_rootCADNodeID))
-   {
-	   return;
-   }
+    if( !AssemblyExists( m_rootCADNodeID ) )
+    {
+        return;
+    }
 #ifdef _OSG
 
-   osg::ref_ptr< osg::StateSet > attribute = new osg::StateSet;
-   osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
+    osg::ref_ptr< osg::StateSet > attribute = new osg::StateSet;
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
 
-   bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-   attribute->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-   attribute->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
-   attribute->setMode( GL_BLEND, osg::StateAttribute::ON );
-   attribute->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    attribute->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    attribute->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+    attribute->setMode( GL_BLEND, osg::StateAttribute::ON );
+    attribute->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
 
-   try
-   {
-      m_assemblyList[m_rootCADNodeID]->setStateSet( attribute.get() );
-      ves::xplorer::scenegraph::util::OpacityVisitor 
-          opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true );
-   }
+    try
+    {
+        m_assemblyList[m_rootCADNodeID]->setStateSet( attribute.get() );
+        ves::xplorer::scenegraph::util::OpacityVisitor
+        opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true );
+    }
 
-   catch(...)
-   {
-      vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"
-                                 <<std::endl
-                                 << vprDEBUG_FLUSH;
-      vprDEBUG(vesDBG,1) <<"|\tModelCADHandler::MakeCADRootTransparent()---"
-                                 <<std::endl<< vprDEBUG_FLUSH;
-   }
+    catch ( ... )
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\tRoot CADNode not found!!!"
+        << std::endl
+        << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::MakeCADRootTransparent()---"
+        << std::endl << vprDEBUG_FLUSH;
+    }
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootOpaque()
 {
-   if( !AssemblyExists( m_rootCADNodeID ) )
-   {
-	   return;
-   }
+    if( !AssemblyExists( m_rootCADNodeID ) )
+    {
+        return;
+    }
 #ifdef _OSG
-   try
-   {
-      if( m_assemblyList[m_rootCADNodeID]->getStateSet() )
-      {   
-         m_assemblyList[ m_rootCADNodeID ]->getStateSet()->clear();
-         ves::xplorer::scenegraph::util::OpacityVisitor 
-             opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false );
-      }
-   }
-   catch(...)
-   {
-      vprDEBUG(vesDBG,1) <<"|\tRoot CADNode not found!!!"
-                                <<std::endl
-                                << vprDEBUG_FLUSH;
-      vprDEBUG(vesDBG,1) <<"|\tModelCADHandler::MakeCADRootOpaque()---"
-                                <<std::endl<< vprDEBUG_FLUSH;
-   }
+    try
+    {
+        if( m_assemblyList[m_rootCADNodeID]->getStateSet() )
+        {
+            m_assemblyList[ m_rootCADNodeID ]->getStateSet()->clear();
+            ves::xplorer::scenegraph::util::OpacityVisitor
+            opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false );
+        }
+    }
+    catch ( ... )
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\tRoot CADNode not found!!!"
+        << std::endl
+        << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::MakeCADRootOpaque()---"
+        << std::endl << vprDEBUG_FLUSH;
+    }
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::RemoveAttributeFromNode(std::string nodeID,
-                                              std::string nodeType,
-                                              std::string attributeName)
+void ModelCADHandler::RemoveAttributeFromNode( std::string nodeID,
+                                               std::string nodeType,
+                                               std::string attributeName )
 {
 #ifdef _OSG
-	std::map< std::string, 
-                 std::vector< std::pair< std::string, 
-                                             osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+    std::map < std::string,
+    std::vector < std::pair < std::string,
+    osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
     attributeList = m_nodeAttributes.find( nodeID );
-   
-   
-    if(attributeList != m_nodeAttributes.end())
+
+
+    if( attributeList != m_nodeAttributes.end() )
     {
-        std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-        std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+        std::vector< std::pair<std::string, osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+        std::vector< std::pair<std::string, osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
         namesAndAttributes = attributeList->second;
-        for(foundAttribute = namesAndAttributes.begin();
-            foundAttribute != namesAndAttributes.end();)
+        for( foundAttribute = namesAndAttributes.begin();
+                foundAttribute != namesAndAttributes.end(); )
         {
-            vprDEBUG(vesDBG,1) <<"|\tFound attribute: "
-                                      <<foundAttribute->first
-                                      <<std::endl<< vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tFound attribute: "
+            << foundAttribute->first
+            << std::endl << vprDEBUG_FLUSH;
             if( foundAttribute->first == attributeName )
             {
                 namesAndAttributes.erase( foundAttribute );
-        		   
-                if( nodeType == "Assembly")
+
+                if( nodeType == "Assembly" )
                 {
                     GetAssembly( nodeID )->getStateSet()->clear();
                 }
@@ -403,9 +403,9 @@ void ModelCADHandler::RemoveAttributeFromNode(std::string nodeID,
                 {
                     GetPart( nodeID )->GetDCS()->getStateSet()->clear();
                 }
-                else if( nodeType == "Clone")
+                else if( nodeType == "Clone" )
                 {
-                   GetClone( nodeID )->GetClonedGraph()->getStateSet()->clear();
+                    GetClone( nodeID )->GetClonedGraph()->getStateSet()->clear();
                 }
                 break;
             }
@@ -414,93 +414,93 @@ void ModelCADHandler::RemoveAttributeFromNode(std::string nodeID,
     }
     else
     {
-        vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "
-                                  <<attributeName<<std::endl
-                                  << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tAttribute not found: "
+        << attributeName << std::endl
+        << vprDEBUG_FLUSH;
     }
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::AddAttributeToNode(std::string nodeID,
-                                                          ves::open::xml::cad::CADAttribute* 
-                                                          newAttribute)
+void ModelCADHandler::AddAttributeToNode( std::string nodeID,
+                                          ves::open::xml::cad::CADAttribute*
+                                          newAttribute )
 {
 #ifdef _OSG
-    vprDEBUG(vesDBG,1) <<"|\tModelCADHandler::AddAttributeToNode()---"<<std::endl<< vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::AddAttributeToNode()---" << std::endl << vprDEBUG_FLUSH;
     osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute;
-	std::map<std::string, osg::ref_ptr<osg::StateSet> >::iterator 
-		itr = m_globalAttributeList.find( newAttribute->GetAttributeName() ) ;
-	if( itr != m_globalAttributeList.end() )
-	{
-		attribute = dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>((*itr).second.get());
-	}
-	else
-	{
-	   attribute = new ves::xplorer::scenegraph::util::Attribute();
-       attribute->CreateStateSetFromAttribute(newAttribute);
-	   m_globalAttributeList[newAttribute->GetAttributeName()] = attribute.get();
-	}
-    std::pair<std::string,osg::ref_ptr< osg::StateSet > >attributeInfo;
+    std::map<std::string, osg::ref_ptr<osg::StateSet> >::iterator
+    itr = m_globalAttributeList.find( newAttribute->GetAttributeName() ) ;
+    if( itr != m_globalAttributeList.end() )
+    {
+        attribute = dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>(( *itr ).second.get() );
+    }
+    else
+    {
+        attribute = new ves::xplorer::scenegraph::util::Attribute();
+        attribute->CreateStateSetFromAttribute( newAttribute );
+        m_globalAttributeList[newAttribute->GetAttributeName()] = attribute.get();
+    }
+    std::pair<std::string, osg::ref_ptr< osg::StateSet > > attributeInfo;
     attributeInfo.first = newAttribute->GetAttributeName();
     attributeInfo.second = attribute.get();
 
     std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-    attributeList = m_nodeAttributes.find(nodeID);
+    attributeList = m_nodeAttributes.find( nodeID );
 
-    if(attributeList != m_nodeAttributes.end())
+    if( attributeList != m_nodeAttributes.end() )
     {
-        vprDEBUG(vesDBG,1) <<"|\tAdding attribute: "<<attributeList->first<<std::endl<< vprDEBUG_FLUSH;
-        attributeList->second.push_back(attributeInfo);
+        vprDEBUG( vesDBG, 1 ) << "|\tAdding attribute: " << attributeList->first << std::endl << vprDEBUG_FLUSH;
+        attributeList->second.push_back( attributeInfo );
     }
     else
-    { 
-        std::vector< std::pair<std::string,
-                                    osg::ref_ptr< osg::StateSet > > > temp;
+    {
+        std::vector < std::pair < std::string,
+        osg::ref_ptr< osg::StateSet > > > temp;
         temp.push_back( attributeInfo );
         m_nodeAttributes[ nodeID ] = temp;
 
         //create the empty state set to restore defaults
-        std::pair<std::string,osg::ref_ptr< osg::StateSet > >defaultAttributeInfo;
+        std::pair<std::string, osg::ref_ptr< osg::StateSet > > defaultAttributeInfo;
         defaultAttributeInfo.first = "Default Attribute";
         defaultAttributeInfo.second = new osg::StateSet();
         m_nodeAttributes[ nodeID ].push_back( defaultAttributeInfo );
     }
-    vprDEBUG( vesDBG,1 ) <<"|\tend ModelCADHandler::AddAttributeToNode()---"
-                                <<std::endl<< vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tend ModelCADHandler::AddAttributeToNode()---"
+    << std::endl << vprDEBUG_FLUSH;
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateMaterialMode(std::string nodeID,
-                                                          std::string attributeName,
-                                                          std::string type,
-                                                          std::string mode)
+void ModelCADHandler::UpdateMaterialMode( std::string nodeID,
+                                          std::string attributeName,
+                                          std::string type,
+                                          std::string mode )
 {
 #ifdef _OSG
     std::map< std::string, std::vector< std::pair< std::string, osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-    attributeList = m_nodeAttributes.find(nodeID);
-   
-    if(attributeList != m_nodeAttributes.end())
+    attributeList = m_nodeAttributes.find( nodeID );
+
+    if( attributeList != m_nodeAttributes.end() )
     {
-        std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-        std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+        std::vector< std::pair<std::string, osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+        std::vector< std::pair<std::string, osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
         namesAndAttributes = attributeList->second;
-        for(foundAttribute = namesAndAttributes.begin();
-            foundAttribute != namesAndAttributes.end();
-            foundAttribute++)
+        for( foundAttribute = namesAndAttributes.begin();
+                foundAttribute != namesAndAttributes.end();
+                foundAttribute++ )
         {
-            vprDEBUG(vesDBG,1) <<"|\tFound attribute: "<<foundAttribute->first<<std::endl<< vprDEBUG_FLUSH;
-            if(foundAttribute->first == attributeName)
+            vprDEBUG( vesDBG, 1 ) << "|\tFound attribute: " << foundAttribute->first << std::endl << vprDEBUG_FLUSH;
+            if( foundAttribute->first == attributeName )
             {
                 ///update the material component
-                osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute = 
-                              dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>(foundAttribute->second.get());
-                if(attribute.valid())
+                osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute =
+                    dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>( foundAttribute->second.get() );
+                if( attribute.valid() )
                 {
-                    attribute->UpdateMaterialMode(type,mode);
+                    attribute->UpdateMaterialMode( type, mode );
                 }
                 else
                 {
-                    vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
+                    vprDEBUG( vesDBG, 1 ) << "|\tAttribute not found: " << attributeName << std::endl << vprDEBUG_FLUSH;
                 }
             }
         }
@@ -508,65 +508,65 @@ void ModelCADHandler::UpdateMaterialMode(std::string nodeID,
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateMaterialComponent(std::string nodeID, 
-                                                                 std::string attributeName,
-                                                                 std::string component,
-                                                                 std::string face,
-                                                                 std::vector<double> values)
+void ModelCADHandler::UpdateMaterialComponent( std::string nodeID,
+                                               std::string attributeName,
+                                               std::string component,
+                                               std::string face,
+                                               std::vector<double> values )
 {
 #ifdef _OSG
-   std::map< std::string, 
-                std::vector< std::pair< std::string, 
-                                osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
-   attributeList = m_nodeAttributes.find(nodeID);
-   
-    if(attributeList != m_nodeAttributes.end())
+    std::map < std::string,
+    std::vector < std::pair < std::string,
+    osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
+    attributeList = m_nodeAttributes.find( nodeID );
+
+    if( attributeList != m_nodeAttributes.end() )
     {
-        std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
-        std::vector< std::pair<std::string,osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
+        std::vector< std::pair<std::string, osg::ref_ptr< osg::StateSet > > > namesAndAttributes;
+        std::vector< std::pair<std::string, osg::ref_ptr< osg::StateSet > > >::iterator foundAttribute;
         namesAndAttributes = attributeList->second;
-        for(foundAttribute = namesAndAttributes.begin();
-            foundAttribute != namesAndAttributes.end();
-            foundAttribute++)
+        for( foundAttribute = namesAndAttributes.begin();
+                foundAttribute != namesAndAttributes.end();
+                foundAttribute++ )
         {
-             vprDEBUG(vesDBG,1) <<"|\tFound attribute: "
-                                       <<foundAttribute->first
-                                       <<std::endl<< vprDEBUG_FLUSH;
-             if(foundAttribute->first == attributeName)
-             {
+            vprDEBUG( vesDBG, 1 ) << "|\tFound attribute: "
+            << foundAttribute->first
+            << std::endl << vprDEBUG_FLUSH;
+            if( foundAttribute->first == attributeName )
+            {
                 ///update the material component
-                osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute = 
-                              dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>
-                                ( foundAttribute->second.get() );
+                osg::ref_ptr<ves::xplorer::scenegraph::util::Attribute> attribute =
+                    dynamic_cast<ves::xplorer::scenegraph::util::Attribute*>
+                    ( foundAttribute->second.get() );
                 if( attribute.valid() )
                 {
-                    attribute->UpdateMaterial(component, face, values);
+                    attribute->UpdateMaterial( component, face, values );
                 }
                 else
                 {
-                    vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
+                    vprDEBUG( vesDBG, 1 ) << "|\tAttribute not found: " << attributeName << std::endl << vprDEBUG_FLUSH;
                 }
             }
         }
     }
     else
     {
-        vprDEBUG(vesDBG,1) <<"|\tAttribute not found: "<<attributeName<<std::endl<< vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tAttribute not found: " << attributeName << std::endl << vprDEBUG_FLUSH;
     }
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart(std::string partID)
+ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart( std::string partID )
 {
     std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator iter;
     iter = m_partList.find( partID );
 
-    if ( iter == m_partList.end() )
+    if( iter == m_partList.end() )
     {
-        for ( iter = m_partList.begin(); iter != m_partList.end(); ++iter )
+        for( iter = m_partList.begin(); iter != m_partList.end(); ++iter )
         {
-            std::cout << "Parts that are available: " << iter->first 
-                        << " " << iter->second->GetFilename() << std::endl;
+            std::cout << "Parts that are available: " << iter->first
+            << " " << iter->second->GetFilename() << std::endl;
         }
         return 0;
     }
@@ -574,17 +574,17 @@ ves::xplorer::scenegraph::CADEntity* ModelCADHandler::GetPart(std::string partID
     return m_partList[ partID ];
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* ModelCADHandler::GetAssembly(std::string assemblyID)
+ves::xplorer::scenegraph::DCS* ModelCADHandler::GetAssembly( std::string assemblyID )
 {
     return m_assemblyList[ assemblyID ].get();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Clone* ModelCADHandler::GetClone(std::string cloneID)
+ves::xplorer::scenegraph::Clone* ModelCADHandler::GetClone( std::string cloneID )
 {
     std::map< std::string, ves::xplorer::scenegraph::Clone* >::iterator iter;
     iter = m_cloneList.find( cloneID );
 
-    if ( iter == m_cloneList.end() )
+    if( iter == m_cloneList.end() )
     {
         std::cout << "Clone not available: " << cloneID << std::endl;
         return 0;
@@ -592,9 +592,9 @@ ves::xplorer::scenegraph::Clone* ModelCADHandler::GetClone(std::string cloneID)
     return m_cloneList[ cloneID ];
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-bool ModelCADHandler::PartExists(std::string partID)
+bool ModelCADHandler::PartExists( std::string partID )
 {
-    std::map<std::string,ves::xplorer::scenegraph::CADEntity*>::iterator foundPart;
+    std::map<std::string, ves::xplorer::scenegraph::CADEntity*>::iterator foundPart;
     foundPart = m_partList.find( partID );
 
     if( foundPart != m_partList.end() )
@@ -604,11 +604,11 @@ bool ModelCADHandler::PartExists(std::string partID)
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-bool ModelCADHandler::AssemblyExists(std::string assemblyID)
+bool ModelCADHandler::AssemblyExists( std::string assemblyID )
 {
-    std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >::iterator 
-        foundAssembly;
-    foundAssembly = m_assemblyList.find (assemblyID) ;
+    std::map< std::string, osg::ref_ptr< ves::xplorer::scenegraph::DCS > >::iterator
+    foundAssembly;
+    foundAssembly = m_assemblyList.find( assemblyID ) ;
 
     if( foundAssembly != m_assemblyList.end() )
     {
@@ -617,7 +617,7 @@ bool ModelCADHandler::AssemblyExists(std::string assemblyID)
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
-bool ModelCADHandler::CloneExists(std::string cloneID)
+bool ModelCADHandler::CloneExists( std::string cloneID )
 {
     std::map< std::string, ves::xplorer::scenegraph::Clone* >::iterator foundClone;
     foundClone = m_cloneList.find( cloneID );

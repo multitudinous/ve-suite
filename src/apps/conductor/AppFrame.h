@@ -48,8 +48,8 @@ namespace conductor
 {
 namespace util
 {
-    class CADNodeManagerDlg;
-    class CORBAServiceList;
+class CADNodeManagerDlg;
+class CORBAServiceList;
 }
 }
 }
@@ -77,7 +77,7 @@ class EphemerisDialog;
 #include <wx/notebook.h>
 
 class wxTextCtrl;
-class wxImage; 
+class wxImage;
 class wxSplitterWindow;
 class wxDialog;
 class wxImageList;
@@ -107,45 +107,48 @@ const wxString RECENT_FILE = _T( "Recent_File" );
 class AppFrame : public wxFrame
 {
 public:
-    AppFrame(){;}
+    AppFrame()
+    {
+        ;
+    }
     AppFrame( wxWindow* parent, wxWindowID id, const wxString& title );
     virtual ~AppFrame();
-   enum 
-   {
-      v21ID_CONNECT,
-      v21ID_CONNECT_VE,
-      v21ID_SUBMIT,
-      v21ID_LOAD, 
-      QUERY_FROM_SERVER, 
-      QUERY_NETWORK,  
-      RUN_ASPEN_NETWORK,
-      STEP_ASPEN_NETWORK,
-      ASPEN_CONNECTION_MENU,
-      SHOW_ASPEN_SIMULATION,
-      HIDE_ASPEN_SIMULATION,
-      CLOSE_ASPEN_SIMULATION,
-      CONDUCTOR_FIND,
-      SAVE_SIMULATION,  
-      SAVEAS_SIMULATION,  
-      v21ID_DISCONNECT,
-      v21ID_DISCONNECT_VE, 
-      v21ID_UNDO, 
-      v21ID_REDO, 
-      v21ID_ZOOMIN, 
-      v21ID_ZOOMOUT,
-      v21ID_START_CALC, 
-      v21ID_STOP_CALC,
-      v21ID_PAUSE_CALC,
-      v21ID_RESUME_CALC, 
-      v21ID_VIEW_RESULT,
-      v21ID_GLOBAL_PARAM,
-      v21ID_BASE,
-      v21ID_SOUR,
-      v21ID_REI_BASE,
-      v21ID_REI_SOUR,
-      v21ID_SWEET,
-      v21ID_CO_DISPOSAL,
-      MYLOG,
+    enum
+    {
+        v21ID_CONNECT,
+        v21ID_CONNECT_VE,
+        v21ID_SUBMIT,
+        v21ID_LOAD,
+        QUERY_FROM_SERVER,
+        QUERY_NETWORK,
+        RUN_ASPEN_NETWORK,
+        STEP_ASPEN_NETWORK,
+        ASPEN_CONNECTION_MENU,
+        SHOW_ASPEN_SIMULATION,
+        HIDE_ASPEN_SIMULATION,
+        CLOSE_ASPEN_SIMULATION,
+        CONDUCTOR_FIND,
+        SAVE_SIMULATION,
+        SAVEAS_SIMULATION,
+        v21ID_DISCONNECT,
+        v21ID_DISCONNECT_VE,
+        v21ID_UNDO,
+        v21ID_REDO,
+        v21ID_ZOOMIN,
+        v21ID_ZOOMOUT,
+        v21ID_START_CALC,
+        v21ID_STOP_CALC,
+        v21ID_PAUSE_CALC,
+        v21ID_RESUME_CALC,
+        v21ID_VIEW_RESULT,
+        v21ID_GLOBAL_PARAM,
+        v21ID_BASE,
+        v21ID_SOUR,
+        v21ID_REI_BASE,
+        v21ID_REI_SOUR,
+        v21ID_SWEET,
+        v21ID_CO_DISPOSAL,
+        MYLOG,
 
         v21ID_HELP,
         v21ID_ABOUT,
@@ -172,13 +175,13 @@ public:
         XPLORER_STREAMLINE,
 
         JUGGLER_STEREO,
-        JUGGLER_MONO, 
+        JUGGLER_MONO,
         JUGGLER_SETTINGS,
 
         XPLORER_SCENES,
         XPLORER_EXIT,
         XPLORER_COLOR,
-		XPLORER_EPHEMERIS,
+        XPLORER_EPHEMERIS,
         ID_PREFERENCES,
         CHANGE_XPLORER_VIEW,
         CHANGE_XPLORER_VIEW_NETWORK,
@@ -190,7 +193,7 @@ public:
         //For debugging purposes
         v21ID_DUMMY,
 
-        //Always enum these last 
+        //Always enum these last
         OPEN_RECENT_CONNECTION_MENU,
         v21ID_BASE_RECENT,
         //Export menu
@@ -201,7 +204,7 @@ public:
 
     void FrameClose( wxCommandEvent& event );
 
-    ///Override so we can show the tree after things are initialized. 
+    ///Override so we can show the tree after things are initialized.
     virtual bool Show( bool value );
 
     ///Get the active display mode of conductor
@@ -263,8 +266,8 @@ public:
     void ShutdownXplorerOptionOn( void );
     ///Removes Xplorer shutdown option using user preferences
     void ShutdownXplorerOptionOff( void );
-	HierarchyTree * GetHierarchyTree();
-    
+    HierarchyTree * GetHierarchyTree();
+
 protected:
     int m_frameNr;
     wxString fname;
@@ -278,7 +281,7 @@ protected:
     void _configureTablet();
     void _detectDisplayAndCreate();
     void _detectDisplay();
-   
+
     ///Get information about the size of conductor in tablet mode
     wxRect DetermineTabletFrameSize();
     ///Write the frame information about the size of conductor in tablet mode
@@ -290,13 +293,13 @@ protected:
     ///Get the config to start off with
     ///This must be called early
     void GetConfig();
-    
+
     void CreateMenu();
     void ZoomIn( wxCommandEvent &event );
     void ZoomOut( wxCommandEvent &event );
     void SaveAs( wxCommandEvent &event );
     void OnPreferences( wxCommandEvent &event );
-	
+
     void SetRecentFile( wxFileName vesFileName );
     void OpenRecentFile( wxCommandEvent& event );
     ///Clear the recent file history menu
@@ -304,24 +307,24 @@ protected:
 
 protected:
     void LoadFromServer( wxCommandEvent &event );
-	
-	void OpenSimulation( wxString simName );
 
-   void QueryFromServer( wxCommandEvent& event );
-   void QueryNetwork( wxCommandEvent& event );
-   void RunAspenNetwork( wxCommandEvent& event );
-   void StepAspenNetwork( wxCommandEvent& event );
-   void ShowAspenSimulation( wxCommandEvent& WXUNUSED(event) );
-   void HideAspenSimulation( wxCommandEvent& WXUNUSED(event) );
-   void CloseAspenSimulation( wxCommandEvent& WXUNUSED(event) );
-   void FindBlocks( wxCommandEvent& WXUNUSED(event) );
-   void SaveSimulation( wxCommandEvent& WXUNUSED(event) );
-   void SaveAsSimulation( wxCommandEvent& WXUNUSED(event) );
-   void StartCalc(wxCommandEvent &event);	
-   void StopCalc(wxCommandEvent &event);	
-   void PauseCalc(wxCommandEvent &event);	
-   void ResumeCalc(wxCommandEvent &event);	
-   
+    void OpenSimulation( wxString simName );
+
+    void QueryFromServer( wxCommandEvent& event );
+    void QueryNetwork( wxCommandEvent& event );
+    void RunAspenNetwork( wxCommandEvent& event );
+    void StepAspenNetwork( wxCommandEvent& event );
+    void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    void CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
+    void SaveSimulation( wxCommandEvent& WXUNUSED( event ) );
+    void SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) );
+    void StartCalc( wxCommandEvent &event );
+    void StopCalc( wxCommandEvent &event );
+    void PauseCalc( wxCommandEvent &event );
+    void ResumeCalc( wxCommandEvent &event );
+
     void ViewResult( wxCommandEvent &event );
 
     void ViewHelp( wxCommandEvent &event );
@@ -339,7 +342,7 @@ protected:
 
     //Controls for VE-Xplorer
     //These are the callbacks for the pull down menu
-    void LaunchDeviceProperties(wxCommandEvent& event);
+    void LaunchDeviceProperties( wxCommandEvent& event );
     void LaunchNavigationPane( wxCommandEvent& event );
     void LaunchViewpointsPane( wxCommandEvent& event );
     void LaunchStreamlinePane( wxCommandEvent& event );
@@ -351,18 +354,18 @@ protected:
 
     ///Set the background color in xplorer
     ///\param The command event
-    void SetBackgroundColor( wxCommandEvent& event ); 
+    void SetBackgroundColor( wxCommandEvent& event );
 
-	///Set the ephemeris data
-	///\param event The command event
-	void SetEphemerisData(wxCommandEvent& event);
+    ///Set the ephemeris data
+    ///\param event The command event
+    void SetEphemerisData( wxCommandEvent& event );
 
     void OnExitXplorer( wxCommandEvent& event );
 
     ///Process Juggler settings
     void JugglerSettings( wxCommandEvent& event );
 
-    ///Change the visual view in xplorer 
+    ///Change the visual view in xplorer
     void ChangeXplorerViewSettings( wxCommandEvent& event );
 
     ///Get the user preferences class
@@ -388,7 +391,7 @@ protected:
     ///\param event The wxCommand event
     void OnChangeWorkingDirectory( wxCommandEvent& event );
 
-	void OnDelMod(wxCommandEvent& event );
+    void OnDelMod( wxCommandEvent& event );
 
 private:
     void ExitXplorer();
@@ -407,7 +410,7 @@ private:
     ///<Desktop or Tablet
     std::string _displayMode;
 
-	EphemerisDialog* m_ephemeris;///<Ephemeris data dialog
+    EphemerisDialog* m_ephemeris;///<Ephemeris data dialog
     StreamlinePane* streamlinePane;
     ves::conductor::util::CORBAServiceList* serviceList;
     UserPreferences* preferences;

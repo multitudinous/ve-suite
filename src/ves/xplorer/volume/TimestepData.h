@@ -47,26 +47,26 @@ namespace xplorer
 {
 namespace volume
 {
-   struct VE_TEXTURE_BASED_EXPORTS TimestepData
-   {
-      /**
-       * Ctor
-       * Takes the vector data and scalar data.
-       *
-       * @param   vd       the vector data map.
-       * @param   sdm      the scalar data map.
-       */
-      TimestepData(const VectorMap& vdm, const ScalarDataMap& sdm)
-         : mVectorMap(vdm), mScalarData(sdm)
-      {}
+struct VE_TEXTURE_BASED_EXPORTS TimestepData
+{
+    /**
+     * Ctor
+     * Takes the vector data and scalar data.
+     *
+     * @param   vd       the vector data map.
+     * @param   sdm      the scalar data map.
+     */
+    TimestepData( const VectorMap& vdm, const ScalarDataMap& sdm )
+            : mVectorMap( vdm ), mScalarData( sdm )
+    {}
 
-      /// The vector data.
-      VectorMap                                       mVectorMap;
+    /// The vector data.
+    VectorMap                                       mVectorMap;
 
-      /// The scalar data.
-      ScalarDataMap                                   mScalarData;
+    /// The scalar data.
+    ScalarDataMap                                   mScalarData;
 
-   };
+};
 }
 }
 }

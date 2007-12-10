@@ -57,7 +57,7 @@ namespace open
 {
 namespace xml
 {
-    class XMLObject;
+class XMLObject;
 }
 }
 }
@@ -66,7 +66,7 @@ namespace ves
 {
 namespace xplorer
 {
-    class GlobalBase;
+class GlobalBase;
 }
 }
 
@@ -103,7 +103,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command ); 
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
 

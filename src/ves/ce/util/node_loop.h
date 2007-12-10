@@ -43,29 +43,32 @@ namespace Utilities
 {
 class node_module;
 
-class VE_CE_UTILS_EXPORTS node_loop : public node_base 
+class VE_CE_UTILS_EXPORTS node_loop : public node_base
 {
 public:
 
-	node_loop  (VE_CE::Utilities::Network *);
-   node_loop  (const node_loop&);
-   ~node_loop ();
+    node_loop( VE_CE::Utilities::Network * );
+    node_loop( const node_loop& );
+    ~node_loop();
 
-   virtual int  mod_count () { return (int)_nodes.size(); };
-   virtual void get_mods (std::set<int> &);
-   virtual void get_ins (std::set<int> &, std::set<int> connid_ignore);
-   virtual void get_outs (std::set<int> &, std::set<int> connid_ignore);
-   virtual void print_mods ();
-   virtual int  execute_mods (int, bool);
-   virtual void need_execute ();
-   virtual void clear_out_to (std::set<int>);
+    virtual int  mod_count()
+    {
+        return ( int )_nodes.size();
+    };
+    virtual void get_mods( std::set<int> & );
+    virtual void get_ins( std::set<int> &, std::set<int> connid_ignore );
+    virtual void get_outs( std::set<int> &, std::set<int> connid_ignore );
+    virtual void print_mods();
+    virtual int  execute_mods( int, bool );
+    virtual void need_execute();
+    virtual void clear_out_to( std::set<int> );
 
-   void clear ();
+    void clear();
 
-   void add_node (const node_module*);
-   void add_node (const node_loop*);
+    void add_node( const node_module* );
+    void add_node( const node_loop* );
 
-   std::vector<node_base*> _nodes;
+    std::vector<node_base*> _nodes;
 };
 }
 }

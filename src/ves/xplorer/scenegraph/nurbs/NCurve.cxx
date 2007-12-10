@@ -39,136 +39,132 @@ using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////
 //Constructor         //
 ////////////////////////
-NURBSCurve::NURBSCurve(unsigned int degree)
-:NURBSObject(ves::xplorer::scenegraph::nurbs::NURBSObject::Curve,degree)
+NURBSCurve::NURBSCurve( unsigned int degree )
+        : NURBSObject( ves::xplorer::scenegraph::nurbs::NURBSObject::Curve, degree )
 {
-   _needsRetessellation = true;
+    _needsRetessellation = true;
 }
 /////////////////////////////////////////////
 //Copy constructor                         //
 /////////////////////////////////////////////
-NURBSCurve::NURBSCurve(const NURBSCurve& rhs)
-{
-  
-}
+NURBSCurve::NURBSCurve( const NURBSCurve& rhs )
+{}
 /////////////////////////
 NURBSCurve::~NURBSCurve()
-{
-   
-}
+{}
 ////////////////////////////////////////////////////////
-NURBSCurve& NURBSCurve::operator=(const NURBSCurve& rhs)
+NURBSCurve& NURBSCurve::operator=( const NURBSCurve& rhs )
 {
-   if(this != &rhs)
-   {
-      NURBSObject::operator =(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        NURBSObject::operator =( rhs );
+    }
+    return *this;
 }
 ///////////////////////////////////////////////////////////////////
-void NURBSCurve::_interpolateWithinRange(double umin,double umax,
-                                         double vmin,double vmax)
+void NURBSCurve::_interpolateWithinRange( double umin, double umax,
+                                          double vmin, double vmax )
 {
 
-   //This function assumes all the proper checks have been made
-   //before entering!!!!!
-   double uparam = umin;
-   double vparam = vmin;
-   unsigned int uIndexMin = _findNearestParameterIndex("U",umin);
-   unsigned int uIndexMax = _findNearestParameterIndex("U",umax);
+    //This function assumes all the proper checks have been made
+    //before entering!!!!!
+    double uparam = umin;
+    double vparam = vmin;
+    unsigned int uIndexMin = _findNearestParameterIndex( "U", umin );
+    unsigned int uIndexMax = _findNearestParameterIndex( "U", umax );
 
-   //std::cout<<"umin: "<<uIndexMin<<std::endl;
-   //std::cout<<"umax: "<<uIndexMax<<std::endl;
-   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
+    //std::cout<<"umin: "<<uIndexMin<<std::endl;
+    //std::cout<<"umax: "<<uIndexMax<<std::endl;
+    std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
 
-   for(unsigned int u = uIndexMin; u <= uIndexMax; u++)
-   {
-      _calculateBasisFunctionsAndDerivatives(std::min(uparam,umax),"U");
-      curveInfo = _calculatePointOnCurve(uparam,_currentSpan["U"]);
-      for(size_t k = 0; k < curveInfo.size(); k++)
-      {
-         _interpolatedPoints[k][u] = curveInfo.at(k);
-      }
-      uparam += _interpolationStepSize["U"];
-   }
+    for( unsigned int u = uIndexMin; u <= uIndexMax; u++ )
+    {
+        _calculateBasisFunctionsAndDerivatives( std::min( uparam, umax ), "U" );
+        curveInfo = _calculatePointOnCurve( uparam, _currentSpan["U"] );
+        for( size_t k = 0; k < curveInfo.size(); k++ )
+        {
+            _interpolatedPoints[k][u] = curveInfo.at( k );
+        }
+        uparam += _interpolationStepSize["U"];
+    }
 
 }
 //////////////////////////////
 void NURBSCurve::Interpolate()
 {
 
-   if(!_needsRetessellation)
-      return;
-   if(!_controlPoints[0].size())
-   {
-      std::cout<<"No control points specified!!"<<std::endl;
-      std::cout<<"NURBSCurve::Interpolate()"<<std::endl;
-      return;
-   }
+    if( !_needsRetessellation )
+        return;
+    if( !_controlPoints[0].size() )
+    {
+        std::cout << "No control points specified!!" << std::endl;
+        std::cout << "NURBSCurve::Interpolate()" << std::endl;
+        return;
+    }
 
-   if(!_knotVectors["U"].NumberOfKnots())
-   {
-      std::cout<<"No knots specified!!"<<std::endl;
-      std::cout<<"NURBSCurve::Interpolate()"<<std::endl;
-      return;
-   }
-   //Check our curve condition
-   //m + 1 = (n + 1) + (p + 1)
-   SetDegree(static_cast<unsigned int>(_knotVectors["U"].NumberOfKnots() - _controlPoints[0].size()) - 1);
+    if( !_knotVectors["U"].NumberOfKnots() )
+    {
+        std::cout << "No knots specified!!" << std::endl;
+        std::cout << "NURBSCurve::Interpolate()" << std::endl;
+        return;
+    }
+    //Check our curve condition
+    //m + 1 = (n + 1) + (p + 1)
+    SetDegree( static_cast<unsigned int>( _knotVectors["U"].NumberOfKnots() - _controlPoints[0].size() ) - 1 );
 
-   _interpolatedPoints.clear();
-   
-   _interpolationStepSize["U"] = 1.0/(_meshDimensions["U"]-1); 
-   double param = 0.0;
-   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
+    _interpolatedPoints.clear();
 
-   for(unsigned int i = 0; i < _meshDimensions["U"]; i++)
-   {
-      _calculateBasisFunctionsAndDerivatives(param,"U");
-      curveInfo = _calculatePointOnCurve(param,_currentSpan["U"]);
-      for(size_t k = 0; k < curveInfo.size(); k++)
-      {
-         _interpolatedPoints[k].push_back(curveInfo.at(k));
-      }
-      param += _interpolationStepSize["U"];
-      _parameterValues["U"][param]=i;
-   }
+    _interpolationStepSize["U"] = 1.0 / ( _meshDimensions["U"] - 1 );
+    double param = 0.0;
+    std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
+
+    for( unsigned int i = 0; i < _meshDimensions["U"]; i++ )
+    {
+        _calculateBasisFunctionsAndDerivatives( param, "U" );
+        curveInfo = _calculatePointOnCurve( param, _currentSpan["U"] );
+        for( size_t k = 0; k < curveInfo.size(); k++ )
+        {
+            _interpolatedPoints[k].push_back( curveInfo.at( k ) );
+        }
+        param += _interpolationStepSize["U"];
+        _parameterValues["U"][param] = i;
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> NURBSCurve::_calculatePointOnCurve(double parameter, 
-                                                                    unsigned int span)
+std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> NURBSCurve::_calculatePointOnCurve( double parameter,
+        unsigned int span )
 {
-   std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> resutlingWeightedPoint;
-   double invWeight = 1.0f;
-   double ctrlPtWeight = 1.0;
-   double resultPtWeight = 1.0;
-   double cw[3] = {0,0,0};
-   unsigned int udegree = _degree["U"];
-   for(unsigned int k = 0; k < udegree; k++)
-   {
-      cw[0] = 0.0;
-      cw[1] = 0.0;
-      cw[2] = 0.0;
-      resultPtWeight=0.0;
-      for(unsigned int j = 0; j <= udegree; j++)
-      {                 
-         cw[0] += (_controlPoints[0][span - udegree +j].WeightedX()
-                   *_derivativeBasisFunctions["U"][k].at(j));
-      
-         cw[1] += (_controlPoints[0][span - udegree +j].WeightedY()
-                   *_derivativeBasisFunctions["U"][k].at(j));
-      
-         cw[2] +=(_controlPoints[0][span - udegree +j].WeightedZ()
-                  *_derivativeBasisFunctions["U"][k].at(j));
+    std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> resutlingWeightedPoint;
+    double invWeight = 1.0f;
+    double ctrlPtWeight = 1.0;
+    double resultPtWeight = 1.0;
+    double cw[3] = {0, 0, 0};
+    unsigned int udegree = _degree["U"];
+    for( unsigned int k = 0; k < udegree; k++ )
+    {
+        cw[0] = 0.0;
+        cw[1] = 0.0;
+        cw[2] = 0.0;
+        resultPtWeight = 0.0;
+        for( unsigned int j = 0; j <= udegree; j++ )
+        {
+            cw[0] += ( _controlPoints[0][span - udegree +j].WeightedX()
+                       * _derivativeBasisFunctions["U"][k].at( j ) );
 
-         resultPtWeight += _controlPoints[0][span - udegree +j].Weight()
-                           *_derivativeBasisFunctions["U"][k].at(j);
-      }
-      invWeight = 1.0/resultPtWeight;
-      resutlingWeightedPoint.push_back(ControlPoint(cw[0]*invWeight,
-                                                    cw[1]*invWeight,
-                                                    cw[2]*invWeight,
-                                                    resultPtWeight));
-   }
-   return resutlingWeightedPoint;
+            cw[1] += ( _controlPoints[0][span - udegree +j].WeightedY()
+                       * _derivativeBasisFunctions["U"][k].at( j ) );
+
+            cw[2] += ( _controlPoints[0][span - udegree +j].WeightedZ()
+                       * _derivativeBasisFunctions["U"][k].at( j ) );
+
+            resultPtWeight += _controlPoints[0][span - udegree +j].Weight()
+                              * _derivativeBasisFunctions["U"][k].at( j );
+        }
+        invWeight = 1.0 / resultPtWeight;
+        resutlingWeightedPoint.push_back( ControlPoint( cw[0]*invWeight,
+                                                        cw[1]*invWeight,
+                                                        cw[2]*invWeight,
+                                                        resultPtWeight ) );
+    }
+    return resutlingWeightedPoint;
 }

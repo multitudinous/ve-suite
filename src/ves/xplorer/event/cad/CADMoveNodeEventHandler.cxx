@@ -53,95 +53,90 @@ using namespace ves::open::xml;
 //Constructor                                                             //
 ////////////////////////////////////////////////////////////////////////////
 CADMoveNodeEventHandler::CADMoveNodeEventHandler()
-:ves::xplorer::event::CADEventHandler()
-{
-}
+        : ves::xplorer::event::CADEventHandler()
+{}
 ///////////////////////////////////////////////////////////////////////////////////////
-CADMoveNodeEventHandler::CADMoveNodeEventHandler(const CADMoveNodeEventHandler& rhs)
-:ves::xplorer::event::CADEventHandler(rhs)
-{
-   
-}
+CADMoveNodeEventHandler::CADMoveNodeEventHandler( const CADMoveNodeEventHandler& rhs )
+        : ves::xplorer::event::CADEventHandler( rhs )
+{}
 /////////////////////////////////////////////////////
 ///Destructor                                      //
 /////////////////////////////////////////////////////
 CADMoveNodeEventHandler::~CADMoveNodeEventHandler()
-{
-}
+{}
 ///Equal operator
 //////////////////////////////////////////////////////////////////////////////////////////////////
-CADMoveNodeEventHandler& CADMoveNodeEventHandler::operator=(const CADMoveNodeEventHandler& rhs)
+CADMoveNodeEventHandler& CADMoveNodeEventHandler::operator=( const CADMoveNodeEventHandler& rhs )
 {
-   if(this != &rhs)
-   {
-      ves::xplorer::event::CADEventHandler::operator=(rhs);
-   }
-   return *this;
+    if( this != &rhs )
+    {
+        ves::xplorer::event::CADEventHandler::operator=( rhs );
+    }
+    return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADMoveNodeEventHandler::_operateOnNode(XMLObject* xmlObject)
+void CADMoveNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
-   try
-   {
-      Command* command = dynamic_cast<Command*>(xmlObject);
-      DataValuePairWeakPtr movingNodeType = 
-          command->GetDataValuePair("Move Node Type");
-   
-      std::string nodeType;
-      movingNodeType->GetData( nodeType );
+    try
+    {
+        Command* command = dynamic_cast<Command*>( xmlObject );
+        DataValuePairWeakPtr movingNodeType =
+            command->GetDataValuePair( "Move Node Type" );
 
-      DataValuePairWeakPtr movingNode = 
-          command->GetDataValuePair("Move Node ID");
-      std::string movingNodeID;
-      movingNode->GetData( movingNodeID );
+        std::string nodeType;
+        movingNodeType->GetData( nodeType );
 
-      DataValuePairWeakPtr oldParent = 
-          command->GetDataValuePair("Old Parent ID");
-      std::string oldParentID;
-      oldParent->GetData( oldParentID );
+        DataValuePairWeakPtr movingNode =
+            command->GetDataValuePair( "Move Node ID" );
+        std::string movingNodeID;
+        movingNode->GetData( movingNodeID );
 
-      DataValuePairWeakPtr newParent = 
-          command->GetDataValuePair("New Parent ID");
-      std::string newParentID;
-      newParent->GetData( newParentID );
-      
-      osg::ref_ptr<ves::xplorer::scenegraph::DCS> oldParentCAD; 
-      osg::ref_ptr<ves::xplorer::scenegraph::DCS> newParentCAD; 
-      
-      if(m_cadHandler->GetAssembly(oldParentID))
-      {
-         oldParentCAD = m_cadHandler->GetAssembly(oldParentID);
-      }
+        DataValuePairWeakPtr oldParent =
+            command->GetDataValuePair( "Old Parent ID" );
+        std::string oldParentID;
+        oldParent->GetData( oldParentID );
 
-      if(m_cadHandler->GetAssembly(newParentID))
-      {
-         newParentCAD = m_cadHandler->GetAssembly(newParentID);
-      }
-      if( oldParentCAD.valid() && newParentCAD.valid())
-      {
-          if( nodeType == "Assembly" )
-          {
-              if( oldParentCAD->removeChild(m_cadHandler->GetAssembly(movingNodeID) ) )
-              {
-                 newParentCAD->AddChild(m_cadHandler->GetAssembly(movingNodeID) );
-              }
-          }
-          else if( nodeType == "Part" )
-          {
-              if( oldParentCAD->removeChild(m_cadHandler->GetPart(movingNodeID)->GetDCS() ) )
-              {
-                  newParentCAD->AddChild(m_cadHandler->GetPart(movingNodeID)->GetDCS() );
-              }
-          }
-      }
+        DataValuePairWeakPtr newParent =
+            command->GetDataValuePair( "New Parent ID" );
+        std::string newParentID;
+        newParent->GetData( newParentID );
 
-   }
-   catch(char* str)
-   {
-      std::cout<<str<<std::endl;
-   }
-   catch(...)
-   {
-   }
-   
+        osg::ref_ptr<ves::xplorer::scenegraph::DCS> oldParentCAD;
+        osg::ref_ptr<ves::xplorer::scenegraph::DCS> newParentCAD;
+
+        if( m_cadHandler->GetAssembly( oldParentID ) )
+        {
+            oldParentCAD = m_cadHandler->GetAssembly( oldParentID );
+        }
+
+        if( m_cadHandler->GetAssembly( newParentID ) )
+        {
+            newParentCAD = m_cadHandler->GetAssembly( newParentID );
+        }
+        if( oldParentCAD.valid() && newParentCAD.valid() )
+        {
+            if( nodeType == "Assembly" )
+            {
+                if( oldParentCAD->removeChild( m_cadHandler->GetAssembly( movingNodeID ) ) )
+                {
+                    newParentCAD->AddChild( m_cadHandler->GetAssembly( movingNodeID ) );
+                }
+            }
+            else if( nodeType == "Part" )
+            {
+                if( oldParentCAD->removeChild( m_cadHandler->GetPart( movingNodeID )->GetDCS() ) )
+                {
+                    newParentCAD->AddChild( m_cadHandler->GetPart( movingNodeID )->GetDCS() );
+                }
+            }
+        }
+
+    }
+    catch ( char* str )
+    {
+        std::cout << str << std::endl;
+    }
+    catch ( ... )
+    {}
+
 }

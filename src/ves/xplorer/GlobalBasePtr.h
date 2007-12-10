@@ -48,12 +48,12 @@ namespace ves
 {
 namespace xplorer
 {
-   class GlobalBase;
-   /// Typedef for the SmartPtr types.
-   typedef ves::util::ClassPtrDef<GlobalBase>::type  GlobalBasePtr;
-   typedef ves::util::SharedPtrDef<GlobalBase>::type GlobalBaseSharedPtr;
-   typedef ves::util::WeakPtrDef<GlobalBase>::type   GlobalBaseWeakPtr;
-   typedef ves::util::ScopedPtrDef<GlobalBase>::type GlobalBaseScopedPtr;
+class GlobalBase;
+/// Typedef for the SmartPtr types.
+typedef ves::util::ClassPtrDef<GlobalBase>::type  GlobalBasePtr;
+typedef ves::util::SharedPtrDef<GlobalBase>::type GlobalBaseSharedPtr;
+typedef ves::util::WeakPtrDef<GlobalBase>::type   GlobalBaseWeakPtr;
+typedef ves::util::ScopedPtrDef<GlobalBase>::type GlobalBaseScopedPtr;
 }
 }
 #endif

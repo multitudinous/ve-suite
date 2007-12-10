@@ -45,8 +45,8 @@
 #include <osg/GL>
 
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
-    #include <windows.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 #endif
 ///////////////////////
 #ifdef WIN32
@@ -65,79 +65,96 @@ namespace xplorer
 {
 namespace volume
 {
-   class VE_TEXTURE_BASED_EXPORTS cfdPBufferManager
-   {
-      public:
-         cfdPBufferManager();
-         ~cfdPBufferManager();
-   
-         //initialize the entry functions
-         void initializePBufferEntryFunctions();
-   
-         //clean up the pbuffer
-         void cleanUpPBuffer();
-   
-         void setViewport(double w, double h);
+class VE_TEXTURE_BASED_EXPORTS cfdPBufferManager
+{
+public:
+    cfdPBufferManager();
+    ~cfdPBufferManager();
+
+    //initialize the entry functions
+    void initializePBufferEntryFunctions();
+
+    //clean up the pbuffer
+    void cleanUpPBuffer();
+
+    void setViewport( double w, double h );
 
 #ifdef WIN32
-         BOOL activate(){
-            return wglMakeCurrent(_pBufferDeviceContext, _pBufferGLContext);
-         }
-    
-         BOOL deactivate(){
-            return wglMakeCurrent(_frameBufferDeviceContext, _frameBDGLContext);
-         }
+    BOOL activate()
+    {
+        return wglMakeCurrent( _pBufferDeviceContext, _pBufferGLContext );
+    }
 
-         //get the device context
-         HDC pBufferDeviceContex(){return _pBufferDeviceContext;}
+    BOOL deactivate()
+    {
+        return wglMakeCurrent( _frameBufferDeviceContext, _frameBDGLContext );
+    }
 
-         //get the gl rendering pbuffer contex
-         HGLRC pBufferGLDC(){return _pBufferGLContext;}
+    //get the device context
+    HDC pBufferDeviceContex()
+    {
+        return _pBufferDeviceContext;
+    }
+
+    //get the gl rendering pbuffer contex
+    HGLRC pBufferGLDC()
+    {
+        return _pBufferGLContext;
+    }
 #else
-       void activate();
-       void deactivate();
+    void activate();
+    void deactivate();
 #endif
-      //initialize a pixel buffer
-      //this functionality will be
-      //expanded so that you can specialize
-      //the buffer to you needs but for now
-      //it is set up w/ default params
-      bool initializePBuffer(int width, int height);
+    //initialize a pixel buffer
+    //this functionality will be
+    //expanded so that you can specialize
+    //the buffer to you needs but for now
+    //it is set up w/ default params
+    bool initializePBuffer( int width, int height );
 
-      int height(){return _h;}
-      int width(){return _w;}
+    int height()
+    {
+        return _h;
+    }
+    int width()
+    {
+        return _w;
+    }
 
-      //check if pbuffer extensions
-      //are supported
-      bool isSupported();
+    //check if pbuffer extensions
+    //are supported
+    bool isSupported();
 
-      bool isCreated(){return _isCreated;}
+    bool isCreated()
+    {
+        return _isCreated;
+    }
 
-   
-   protected:
+
+protected:
 #ifdef WIN32
-      HDC _frameBufferDeviceContext;
-      HGLRC _frameBDGLContext;
-      HPBUFFERARB _hBuffer;
+    HDC _frameBufferDeviceContext;
+    HGLRC _frameBDGLContext;
+    HPBUFFERARB _hBuffer;
 
-      HDC _pBufferDeviceContext;
-      HGLRC _pBufferGLContext;
+    HDC _pBufferDeviceContext;
+    HGLRC _pBufferGLContext;
 #else
-      GLXContext  _pBufferGLContext;
-      GLXPbuffer  _hBuffer;
+    GLXContext  _pBufferGLContext;
+    GLXPbuffer  _hBuffer;
 
-      Display*    _oldDisplay;
-      GLXPbuffer  _oldDrawable;
-      GLXContext  _oldContext;
+    Display*    _oldDisplay;
+    GLXPbuffer  _oldDrawable;
+    GLXContext  _oldContext;
 
-      std::vector<int> _pfAttribList;
+    std::vector<int> _pfAttribList;
 #endif
-      bool _isSupported;
-      bool _isCreated;
-  
-      int _h;
-      int _w;
-   };
+    bool _isSupported;
+    bool _isCreated;
+
+    int _h;
+    int _w;
+};
 }
 }
 }

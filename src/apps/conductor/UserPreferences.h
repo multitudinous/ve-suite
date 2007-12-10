@@ -36,7 +36,7 @@
 UserPreferences API
 */
 /*!\class UserPreferences
-* 
+*
 */
 #include <vector>
 
@@ -56,7 +56,7 @@ namespace conductor
 {
 namespace util
 {
-    class CORBAServiceList;
+class CORBAServiceList;
 }
 }
 }
@@ -91,37 +91,37 @@ namespace util
  */
 
 class UserPreferences: public wxPropertySheetDialog
-{    
+{
 public:
-   /// Constructors
-   UserPreferences( );
-   UserPreferences( wxWindow* parent, 
-                  wxWindowID id = SYMBOL_USERPREFERENCES_IDNAME, 
-                  const wxString& caption = SYMBOL_USERPREFERENCES_TITLE, 
-                  const wxPoint& pos = SYMBOL_USERPREFERENCES_POSITION, 
-                  const wxSize& size = SYMBOL_USERPREFERENCES_SIZE, 
-                  long style = SYMBOL_USERPREFERENCES_STYLE);
+    /// Constructors
+    UserPreferences( );
+    UserPreferences( wxWindow* parent,
+                     wxWindowID id = SYMBOL_USERPREFERENCES_IDNAME,
+                     const wxString& caption = SYMBOL_USERPREFERENCES_TITLE,
+                     const wxPoint& pos = SYMBOL_USERPREFERENCES_POSITION,
+                     const wxSize& size = SYMBOL_USERPREFERENCES_SIZE,
+                     long style = SYMBOL_USERPREFERENCES_STYLE );
 
-   enum
-   {
+    enum
+    {
         ID_NAVIGATION_CHKBX,
-	    ID_BACKGROUND_COLOR_BUTTON,
+        ID_BACKGROUND_COLOR_BUTTON,
         ID_SHUTDOWN_XPLORER,
         ID_CONDUCTOR_CHKBX
-   };
+    };
 
-   virtual ~UserPreferences();
-   
-   /// Creation
-   bool Create( wxWindow* parent, 
-               wxWindowID id = SYMBOL_USERPREFERENCES_IDNAME, 
-               const wxString& caption = SYMBOL_USERPREFERENCES_TITLE, 
-               const wxPoint& pos = SYMBOL_USERPREFERENCES_POSITION, 
-               const wxSize& size = SYMBOL_USERPREFERENCES_SIZE, 
-               long style = SYMBOL_USERPREFERENCES_STYLE);
+    virtual ~UserPreferences();
 
-   /// Creates the controls and sizers
-   void CreateControls();
+    /// Creation
+    bool Create( wxWindow* parent,
+                 wxWindowID id = SYMBOL_USERPREFERENCES_IDNAME,
+                 const wxString& caption = SYMBOL_USERPREFERENCES_TITLE,
+                 const wxPoint& pos = SYMBOL_USERPREFERENCES_POSITION,
+                 const wxSize& size = SYMBOL_USERPREFERENCES_SIZE,
+                 long style = SYMBOL_USERPREFERENCES_STYLE );
+
+    /// Creates the controls and sizers
+    void CreateControls();
 
     ///Check to set map for navigation pane
     void OnNavigationCheck( wxCommandEvent& event );
@@ -130,40 +130,40 @@ public:
     ///Check to set map for Xplorer shutdown option
     void OnShutdownXplorer( wxCommandEvent& event );
     void OnConductorCheck( wxCommandEvent& event );
-   bool GetMode( std::string mode );
-   void ReadConfiguration( void );
-   void WriteConfiguration( void );
-      
-   /// Should we show tooltips?
-   static bool ShowToolTips();
+    bool GetMode( std::string mode );
+    void ReadConfiguration( void );
+    void WriteConfiguration( void );
 
-   ///Returns the chosen background color
-   std::vector< double > GetBackgroundColor( void );
+    /// Should we show tooltips?
+    static bool ShowToolTips();
+
+    ///Returns the chosen background color
+    std::vector< double > GetBackgroundColor( void );
 
     wxCheckBox* shutdownModeChkBx;///<Check box for Xplorer shutdown option
-   
+
 private:
-   wxCheckListBox* prefChkBx;///<The check box list of preferences
+    wxCheckListBox* prefChkBx;///<The check box list of preferences
 
-   wxButton* backgroundColorButton;///<To choose background color
+    wxButton* backgroundColorButton;///<To choose background color
 
-   wxColourData* xplorerWxColor;
-   std::vector<double> xplorerColor;
-   //wxColour* colour;
+    wxColourData* xplorerWxColor;
+    std::vector<double> xplorerColor;
+    //wxColour* colour;
 
-   ves::conductor::util::CORBAServiceList* serviceList;
+    ves::conductor::util::CORBAServiceList* serviceList;
 
-   std::map< std::string, double > backgroundColor; ///Map the colors to their values
+    std::map< std::string, double > backgroundColor; ///Map the colors to their values
 
-   std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
-   
-   std::string ConvertUnicode( const wxChar* data )
-   {
-      std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
-      return tempStr;
-   }
+    std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
 
-   DECLARE_EVENT_TABLE()
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+
+    DECLARE_EVENT_TABLE()
 
 };
 #endif

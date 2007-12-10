@@ -40,6 +40,6 @@
 #include <ves/VEConfig.h>
 
 //This is the string parsing utilities
-VE_GUIPLUGINS_EXPORTS int get_tokens(char* s, std::vector< wxString > &toks, const char* delim);
+VE_GUIPLUGINS_EXPORTS int get_tokens( char* s, std::vector< wxString > &toks, const char* delim );
 
 #endif

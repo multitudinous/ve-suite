@@ -46,15 +46,24 @@ namespace ves
 {
 namespace xplorer
 {
-   class VjObs_i;
+class VjObs_i;
 }
 }
 
 class Body_VEXplorer_i;
 
-namespace CosNaming{ class NamingContext; }
-namespace CORBA{ class ORB; }
-namespace PortableServer{ class POA; }
+namespace CosNaming
+{
+class NamingContext;
+}
+namespace CORBA
+{
+class ORB;
+}
+namespace PortableServer
+{
+class POA;
+}
 #include <vector>
 #include <string>
 
@@ -66,45 +75,45 @@ namespace xplorer
 class VjObsWrapper
 {
 public:
-   ///Constructor
-   VjObsWrapper( void );
-   ///Destructor
-   ~VjObsWrapper( void );
-   ///init function to pass corba pointers arounf for registration purposes
-   void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
-   ///get xml command data
-   ves::open::xml::Command* GetXMLCommand( void );
-   ///Get short array
-   ///shoudl be removed
-   double GetShortArray( int );
-   ///get cfd state variables to be called by cfd app
-   void GetCfdStateVariables( void );
-   ///Called every frame
-   void PreFrameUpdate( void );
-   ///parse some command line input not sure what for
-   int getStringTokens( const char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
-   ///Initialize the cluster data
-   void InitCluster( void );
-   ///Get the clsuter data in preframe
-   void GetUpdateClusterStateVariables( void );
-   ///Get/set the app time
-   float GetSetAppTime( float );
-   ///Set the frame number for the app
-   long GetSetFrameNumber( long );
-   ///This should be removed as soon as the quat cam code is fixed
-   bool IsMaster( void );
-   ///Check to see if the orb needs to work. This ties the orb performance
-   /// to the framerate
-   void CheckORBWorkLoad();
+    ///Constructor
+    VjObsWrapper( void );
+    ///Destructor
+    ~VjObsWrapper( void );
+    ///init function to pass corba pointers arounf for registration purposes
+    void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
+    ///get xml command data
+    ves::open::xml::Command* GetXMLCommand( void );
+    ///Get short array
+    ///shoudl be removed
+    double GetShortArray( int );
+    ///get cfd state variables to be called by cfd app
+    void GetCfdStateVariables( void );
+    ///Called every frame
+    void PreFrameUpdate( void );
+    ///parse some command line input not sure what for
+    int getStringTokens( const char* buffer, char* delim, std::vector<std::string> &toks ); // YANG, a string parsing utility, it is a not thread safe call.
+    ///Initialize the cluster data
+    void InitCluster( void );
+    ///Get the clsuter data in preframe
+    void GetUpdateClusterStateVariables( void );
+    ///Get/set the app time
+    float GetSetAppTime( float );
+    ///Set the frame number for the app
+    long GetSetFrameNumber( long );
+    ///This should be removed as soon as the quat cam code is fixed
+    bool IsMaster( void );
+    ///Check to see if the orb needs to work. This ties the orb performance
+    /// to the framerate
+    void CheckORBWorkLoad();
 
-   CosNaming::NamingContext* naming_context;///< holds the naming context for tao
-   PortableServer::POA* child_poa;///< holds the poa server for tao
-   PortableServer::POA* poa;///< holds the poa server for tao
-   VjObs_i* _vjObs;///< holds the vjobs pointer for tao
-   Body_VEXplorer_i* m_xplorer;///< holds the xplorer pointer for tao
+    CosNaming::NamingContext* naming_context;///< holds the naming context for tao
+    PortableServer::POA* child_poa;///< holds the poa server for tao
+    PortableServer::POA* poa;///< holds the poa server for tao
+    VjObs_i* _vjObs;///< holds the vjobs pointer for tao
+    Body_VEXplorer_i* m_xplorer;///< holds the xplorer pointer for tao
 private:
-   CORBA::ORB* m_orbPtr;///<holds the orb pointer for tao
-   bool isMaster;///is the master should be removed
+    CORBA::ORB* m_orbPtr;///<holds the orb pointer for tao
+    bool isMaster;///is the master should be removed
 };
 }
 }

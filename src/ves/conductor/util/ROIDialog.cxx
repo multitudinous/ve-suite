@@ -39,218 +39,218 @@
 #include <wx/statbox.h>
 using namespace ves::conductor::util;
 ////////////////////////////////////////////////////////////////
-ROIDialog::ROIDialog(wxWindow* parent, int id,std::string title)
-:BaseDialog(parent,id,title)
+ROIDialog::ROIDialog( wxWindow* parent, int id, std::string title )
+        : BaseDialog( parent, id, title )
 {
-   _xBounds = 0;
-   _yBounds = 0; 
-   _zBounds = 0;
-   _buildGUI();
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-350 );
-   this->SetSize( dialogPosition );
+    _xBounds = 0;
+    _yBounds = 0;
+    _zBounds = 0;
+    _buildGUI();
+    wxSize displaySize = ::wxGetDisplaySize();
+    wxRect dialogPosition( displaySize.GetWidth() - 427, 440, 427, displaySize.GetHeight() - 350 );
+    this->SetSize( dialogPosition );
 }
 ///////////////////////
 ///Destructor        //
 ///////////////////////
 ROIDialog::~ROIDialog()
 {
-   /*if(_xBounds)
-   {
-      _xBounds->Destroy();
-      _xBounds = 0;
-   }
-   if(_yBounds)
-   {
-      _yBounds->Destroy();
-      _yBounds = 0;
-   }
-   if(_zBounds)
-   {
-      _zBounds->Destroy();
-      _zBounds = 0;
-   }*/
+    /*if(_xBounds)
+    {
+       _xBounds->Destroy();
+       _xBounds = 0;
+    }
+    if(_yBounds)
+    {
+       _yBounds->Destroy();
+       _yBounds = 0;
+    }
+    if(_zBounds)
+    {
+       _zBounds->Destroy();
+       _zBounds = 0;
+    }*/
 }
 ///////////////////////////
 void ROIDialog::_buildGUI()
 {
-   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, wxT("Volume Clipping Planes"));
-   wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(dualSliderGroup,wxVERTICAL);
+    wxStaticBox* dualSliderGroup = new wxStaticBox( this, -1, wxT( "Volume Clipping Planes" ) );
+    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( dualSliderGroup, wxVERTICAL );
 
-   _createDualSliders();
-   wxBoxSizer* xdualSizer = new wxBoxSizer(wxHORIZONTAL);
-   xdualSizer->Add(_xBounds,1,wxALIGN_CENTER|wxEXPAND);
+    _createDualSliders();
+    wxBoxSizer* xdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    xdualSizer->Add( _xBounds, 1, wxALIGN_CENTER | wxEXPAND );
 
-   wxBoxSizer* ydualSizer = new wxBoxSizer(wxHORIZONTAL);
-   ydualSizer->Add(_yBounds,1,wxALIGN_CENTER|wxEXPAND);
+    wxBoxSizer* ydualSizer = new wxBoxSizer( wxHORIZONTAL );
+    ydualSizer->Add( _yBounds, 1, wxALIGN_CENTER | wxEXPAND );
 
-   wxBoxSizer* zdualSizer = new wxBoxSizer(wxHORIZONTAL);
-   zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND);
+    wxBoxSizer* zdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    zdualSizer->Add( _zBounds, 1, wxALIGN_CENTER | wxEXPAND );
 
-   mainSizer->Add(xdualSizer,3,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(ydualSizer,3,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(zdualSizer,3,wxALIGN_CENTER|wxEXPAND);
+    mainSizer->Add( xdualSizer, 3, wxALIGN_CENTER | wxEXPAND );
+    mainSizer->Add( ydualSizer, 3, wxALIGN_CENTER | wxEXPAND );
+    mainSizer->Add( zdualSizer, 3, wxALIGN_CENTER | wxEXPAND );
 
-   wxBoxSizer* buttonRowSizer = new wxBoxSizer(wxHORIZONTAL);
-   _addOKButton(buttonRowSizer);
-   
-   mainSizer->Add(buttonRowSizer,0,wxALIGN_CENTER);
-   _xBounds->Raise();
-   _yBounds->Raise();
-   _zBounds->Raise();
-   //set this flag and let wx handle alignment
-   SetAutoLayout(true);
+    wxBoxSizer* buttonRowSizer = new wxBoxSizer( wxHORIZONTAL );
+    _addOKButton( buttonRowSizer );
 
-   //assign the group to the panel
-   SetSizer(mainSizer);
-   mainSizer->Fit(this);
+    mainSizer->Add( buttonRowSizer, 0, wxALIGN_CENTER );
+    _xBounds->Raise();
+    _yBounds->Raise();
+    _zBounds->Raise();
+    //set this flag and let wx handle alignment
+    SetAutoLayout( true );
+
+    //assign the group to the panel
+    SetSizer( mainSizer );
+    mainSizer->Fit( this );
 }
 ////////////////////////////////////
 void ROIDialog::_createDualSliders()
 {
-   _xBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("X Bounds"));
-   ROIMinSliderCallback* minX = new ROIMinSliderCallback(this,"X");
-   ROIMaxSliderCallback* maxX = new ROIMaxSliderCallback(this,"X");
-   ROIBothMoveCallback* bothX = new ROIBothMoveCallback(this,"X");
+    _xBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition, wxDefaultSize,
+                               wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, _( "X Bounds" ) );
+    ROIMinSliderCallback* minX = new ROIMinSliderCallback( this, "X" );
+    ROIMaxSliderCallback* maxX = new ROIMaxSliderCallback( this, "X" );
+    ROIBothMoveCallback* bothX = new ROIBothMoveCallback( this, "X" );
 
-   _xBounds->SetMinSliderCallback(minX);
-   _xBounds->SetMaxSliderCallback(maxX);
-   _xBounds->SetBothSliderUpdateCallback(bothX);
+    _xBounds->SetMinSliderCallback( minX );
+    _xBounds->SetMaxSliderCallback( maxX );
+    _xBounds->SetBothSliderUpdateCallback( bothX );
 
-   _yBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("Y Bounds"));
+    _yBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition, wxDefaultSize,
+                               wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, _( "Y Bounds" ) );
 
-   ROIMinSliderCallback* minY = new ROIMinSliderCallback(this,"Y");
-   ROIMaxSliderCallback* maxY = new ROIMaxSliderCallback(this,"Y");
-   ROIBothMoveCallback* bothY = new ROIBothMoveCallback(this,"Y");
+    ROIMinSliderCallback* minY = new ROIMinSliderCallback( this, "Y" );
+    ROIMaxSliderCallback* maxY = new ROIMaxSliderCallback( this, "Y" );
+    ROIBothMoveCallback* bothY = new ROIBothMoveCallback( this, "Y" );
 
-   _yBounds->SetMinSliderCallback(minY);
-   _yBounds->SetMaxSliderCallback(maxY);
-   _yBounds->SetBothSliderUpdateCallback(bothY);
+    _yBounds->SetMinSliderCallback( minY );
+    _yBounds->SetMaxSliderCallback( maxY );
+    _yBounds->SetBothSliderUpdateCallback( bothY );
 
-   _zBounds = new DualSlider(this,-1,1,0,100,0,100,wxDefaultPosition,wxDefaultSize,
-                             wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS,_("Z Bounds"));
+    _zBounds = new DualSlider( this, -1, 1, 0, 100, 0, 100, wxDefaultPosition, wxDefaultSize,
+                               wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS, _( "Z Bounds" ) );
 
-   ROIMinSliderCallback* minZ = new ROIMinSliderCallback(this,"Z");
-   ROIMaxSliderCallback* maxZ = new ROIMaxSliderCallback(this,"Z");
-   ROIBothMoveCallback* bothZ = new ROIBothMoveCallback(this,"Z");
+    ROIMinSliderCallback* minZ = new ROIMinSliderCallback( this, "Z" );
+    ROIMaxSliderCallback* maxZ = new ROIMaxSliderCallback( this, "Z" );
+    ROIBothMoveCallback* bothZ = new ROIBothMoveCallback( this, "Z" );
 
-   _zBounds->SetMinSliderCallback(minZ);
-   _zBounds->SetMaxSliderCallback(maxZ);
-   _zBounds->SetBothSliderUpdateCallback(bothZ);
+    _zBounds->SetMinSliderCallback( minZ );
+    _zBounds->SetMaxSliderCallback( maxZ );
+    _zBounds->SetBothSliderUpdateCallback( bothZ );
 }
 ///////////////////////////////////////////////////////
-void ROIDialog::ROIMinSliderCallback::SliderOperation()     
+void ROIDialog::ROIMinSliderCallback::SliderOperation()
 {
-   _roidlg->SetCommandName("TB_ROI_UPDATE");
+    _roidlg->SetCommandName( "TB_ROI_UPDATE" );
 
-   ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
-   coordinate->SetDataType("STRING");
-   coordinate->SetDataName(std::string("Coordinate"));
-   coordinate->SetDataString(_direction);
-   _roidlg->AddInstruction(coordinate);
+    ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+    coordinate->SetDataType( "STRING" );
+    coordinate->SetDataName( std::string( "Coordinate" ) );
+    coordinate->SetDataString( _direction );
+    _roidlg->AddInstruction( coordinate );
 
-   ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
-   direction->SetDataType("STRING");
-   direction->SetDataName(std::string("Direction"));
-   direction->SetDataString("Positive");
-   _roidlg->AddInstruction(direction);
+    ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
+    direction->SetDataType( "STRING" );
+    direction->SetDataName( std::string( "Direction" ) );
+    direction->SetDataString( "Positive" );
+    _roidlg->AddInstruction( direction );
 
-   ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair();
-   value->SetData("ROI Value",static_cast<double>(_dualSlider->GetMinSliderValue())/100.0);
-   _roidlg->AddInstruction(value);
+    ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair();
+    value->SetData( "ROI Value", static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
+    _roidlg->AddInstruction( value );
 
-   _roidlg->SendCommands();
-   _roidlg->ClearInstructions();
+    _roidlg->SendCommands();
+    _roidlg->ClearInstructions();
 }
 ///////////////////////////////////////////////////////
-void ROIDialog::ROIMaxSliderCallback::SliderOperation()     
+void ROIDialog::ROIMaxSliderCallback::SliderOperation()
 {
-   _roidlg->SetCommandName("TB_ROI_UPDATE");
-   ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
-   coordinate->SetDataType("STRING");
-   coordinate->SetDataName(std::string("Coordinate"));
-   coordinate->SetDataString(_direction);
-   _roidlg->AddInstruction(coordinate);
+    _roidlg->SetCommandName( "TB_ROI_UPDATE" );
+    ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+    coordinate->SetDataType( "STRING" );
+    coordinate->SetDataName( std::string( "Coordinate" ) );
+    coordinate->SetDataString( _direction );
+    _roidlg->AddInstruction( coordinate );
 
-   ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
-   direction->SetDataType("STRING");
-   direction->SetDataName(std::string("Direction"));
-   direction->SetDataString("Negative");
-   _roidlg->AddInstruction(direction);
+    ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
+    direction->SetDataType( "STRING" );
+    direction->SetDataName( std::string( "Direction" ) );
+    direction->SetDataString( "Negative" );
+    _roidlg->AddInstruction( direction );
 
-   ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair();
-   value->SetData("ROI Value",static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
-   _roidlg->AddInstruction(value);
+    ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair();
+    value->SetData( "ROI Value", static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
+    _roidlg->AddInstruction( value );
 
-   _roidlg->SendCommands();
-   _roidlg->ClearInstructions();
+    _roidlg->SendCommands();
+    _roidlg->ClearInstructions();
 }
 //////////////////////////////////////////////////////
-void ROIDialog::ROIBothMoveCallback::SliderOperation()     
+void ROIDialog::ROIBothMoveCallback::SliderOperation()
 {
-   _roidlg->SetCommandName("TB_ROI_UPDATE");
+    _roidlg->SetCommandName( "TB_ROI_UPDATE" );
 
-   ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
-   coordinate->SetDataType("STRING");
-   coordinate->SetDataName(std::string("Coordinate"));
-   coordinate->SetDataString(_direction);
-   _roidlg->AddInstruction(coordinate);
+    ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+    coordinate->SetDataType( "STRING" );
+    coordinate->SetDataName( std::string( "Coordinate" ) );
+    coordinate->SetDataString( _direction );
+    _roidlg->AddInstruction( coordinate );
 
-   ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
-   direction->SetDataType("STRING");
-   direction->SetDataName(std::string("Direction"));
-   direction->SetDataString("Both");
-   _roidlg->AddInstruction(direction);
+    ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
+    direction->SetDataType( "STRING" );
+    direction->SetDataName( std::string( "Direction" ) );
+    direction->SetDataString( "Both" );
+    _roidlg->AddInstruction( direction );
 
 
-   ves::open::xml::DataValuePair* minvalue = new ves::open::xml::DataValuePair();
-   minvalue->SetData("ROI Min Value",static_cast<double>(_dualSlider->GetMinSliderValue())/100.0);
-   _roidlg->AddInstruction(minvalue);
+    ves::open::xml::DataValuePair* minvalue = new ves::open::xml::DataValuePair();
+    minvalue->SetData( "ROI Min Value", static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
+    _roidlg->AddInstruction( minvalue );
 
-   ves::open::xml::DataValuePair* maxvalue = new ves::open::xml::DataValuePair();
-   maxvalue->SetData("ROI Max Value",static_cast<double>(_dualSlider->GetMaxSliderValue())/100.0);
-   _roidlg->AddInstruction(maxvalue);
+    ves::open::xml::DataValuePair* maxvalue = new ves::open::xml::DataValuePair();
+    maxvalue->SetData( "ROI Max Value", static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
+    _roidlg->AddInstruction( maxvalue );
 
-   _roidlg->SendCommands();
-   _roidlg->ClearInstructions();
+    _roidlg->SendCommands();
+    _roidlg->ClearInstructions();
 }
 ////////////////////////////////////////////////////
-void ROIDialog::SetCommandName(std::string newName)
+void ROIDialog::SetCommandName( std::string newName )
 {
-   _commandName = newName;
+    _commandName = newName;
 }
 ///////////////////////////////////////////////////////////////////
-void ROIDialog::AddInstruction(ves::open::xml::DataValuePair* newInstruct)
+void ROIDialog::AddInstruction( ves::open::xml::DataValuePair* newInstruct )
 {
-   _instructions.push_back(newInstruct);
+    _instructions.push_back( newInstruct );
 }
 //////////////////////////////
 void ROIDialog::SendCommands()
 {
-   _sendCommandsToXplorer();
+    _sendCommandsToXplorer();
 }
 ////////////////////////////////////////////
 wxSizer* ROIDialog::_buildSpecificWidgets()
 {
-   wxStaticBox* dualSliderGroup = new wxStaticBox(this, -1, wxT("Volume Clipping Planes"));
-   wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer(dualSliderGroup,wxVERTICAL);
+    wxStaticBox* dualSliderGroup = new wxStaticBox( this, -1, wxT( "Volume Clipping Planes" ) );
+    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( dualSliderGroup, wxVERTICAL );
 
-   _createDualSliders();
-   wxBoxSizer* xdualSizer = new wxBoxSizer(wxHORIZONTAL);
-   xdualSizer->Add(_xBounds,1,wxALIGN_CENTER|wxEXPAND);
+    _createDualSliders();
+    wxBoxSizer* xdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    xdualSizer->Add( _xBounds, 1, wxALIGN_CENTER | wxEXPAND );
 
-   wxBoxSizer* ydualSizer = new wxBoxSizer(wxHORIZONTAL);
-   ydualSizer->Add(_yBounds,1,wxALIGN_CENTER|wxEXPAND);
+    wxBoxSizer* ydualSizer = new wxBoxSizer( wxHORIZONTAL );
+    ydualSizer->Add( _yBounds, 1, wxALIGN_CENTER | wxEXPAND );
 
-   wxBoxSizer* zdualSizer = new wxBoxSizer(wxHORIZONTAL);
-   zdualSizer->Add(_zBounds,1,wxALIGN_CENTER|wxEXPAND);
+    wxBoxSizer* zdualSizer = new wxBoxSizer( wxHORIZONTAL );
+    zdualSizer->Add( _zBounds, 1, wxALIGN_CENTER | wxEXPAND );
 
-   mainSizer->Add(xdualSizer,1,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(ydualSizer,1,wxALIGN_CENTER|wxEXPAND);
-   mainSizer->Add(zdualSizer,1,wxALIGN_CENTER|wxEXPAND);
+    mainSizer->Add( xdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    mainSizer->Add( ydualSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    mainSizer->Add( zdualSizer, 1, wxALIGN_CENTER | wxEXPAND );
 
-   return mainSizer;
+    return mainSizer;
 }
 

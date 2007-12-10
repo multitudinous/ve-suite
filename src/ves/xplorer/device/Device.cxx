@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Stuff --- //
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/xplorer/CommandHandler.h>
 
@@ -57,24 +57,24 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
-:
-activeDCS( 0 ),
-selectedDCS( 0 ),
-center_point( 0 ),
-m_threshold( 0 ),
-m_jump( 0 )
+        :
+        activeDCS( 0 ),
+        selectedDCS( 0 ),
+        center_point( 0 ),
+        m_threshold( 0 ),
+        m_jump( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateNavigation()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateSelection()
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetVECommand( Command* command )
@@ -136,7 +136,7 @@ void Device::SetSelectedDCS( ves::xplorer::scenegraph::DCS* dcs )
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPoint( gmtl::Point3d* cp )
 {
-   center_point = cp;
+    center_point = cp;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPointThreshold( double* threshold )
@@ -151,71 +151,71 @@ void Device::SetCenterPointJump( double* jump )
 ////////////////////////////////////////////////////////////////////////////////
 void Device::ProcessSelection()
 {
-   osg::Vec3d start_point;
-   osg::Vec3d end_point;
-   this->SetStartEndPoint( &start_point, &end_point );
+    osg::Vec3d start_point;
+    osg::Vec3d end_point;
+    this->SetStartEndPoint( &start_point, &end_point );
 
-   /*
-   std::cout << start_point.x() << std::endl;
-   std::cout << start_point.y() << std::endl;
-   std::cout << start_point.z() << std::endl;
-   std::cout << std::endl;
-   */
-   
-   osg::ref_ptr< osg::LineSegment > line_segment = new osg::LineSegment();
-   line_segment->set( start_point, end_point );
+    /*
+    std::cout << start_point.x() << std::endl;
+    std::cout << start_point.y() << std::endl;
+    std::cout << start_point.z() << std::endl;
+    std::cout << std::endl;
+    */
 
-   osgUtil::IntersectVisitor intersect_visitor;
-   intersect_visitor.addLineSegment( line_segment.get() );
+    osg::ref_ptr< osg::LineSegment > line_segment = new osg::LineSegment();
+    line_segment->set( start_point, end_point );
 
-   //Add IntersectVisitor to RootNode so that all geometry is checked and no transforms are applied to LineSegment
-   ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
+    osgUtil::IntersectVisitor intersect_visitor;
+    intersect_visitor.addLineSegment( line_segment.get() );
 
-   osgUtil::IntersectVisitor::HitList hit_list;
-   hit_list = intersect_visitor.getHitList( line_segment.get() );
+    //Add IntersectVisitor to RootNode so that all geometry is checked and no transforms are applied to LineSegment
+    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( intersect_visitor );
 
-   //Traversal part
-   osgUtil::Hit objectHit;
+    osgUtil::IntersectVisitor::HitList hit_list;
+    hit_list = intersect_visitor.getHitList( line_segment.get() );
 
-   osg::ref_ptr< osg::Geode > selected_geometry;
+    //Traversal part
+    osgUtil::Hit objectHit;
 
-   if( hit_list.empty())
-   {
-      //return;
-   }
-   else
-   {
-      for( unsigned int i = 0; i < hit_list.size(); i++ )
-      {
-         objectHit = hit_list[i];
-         /*
-         if( objectHit._geode->getName() != this->laserName )
-         {
-            break;
-         }
-         */
-      }
-   
-      if (objectHit._geode.valid())
-      {
-         if (!objectHit._geode->getName().empty())
-         {
-            if ( /*objectHit._geode->getName() != this->laserName
-                  && */objectHit._geode->getName() != "Root Node") 
+    osg::ref_ptr< osg::Geode > selected_geometry;
+
+    if( hit_list.empty() )
+    {
+        //return;
+    }
+    else
+    {
+        for( unsigned int i = 0; i < hit_list.size(); i++ )
+        {
+            objectHit = hit_list[i];
+            /*
+            if( objectHit._geode->getName() != this->laserName )
             {
-               selected_geometry = objectHit._geode;
-               std::cout << objectHit._geode->getName() << std::endl;
+               break;
             }
-         }
-         else
-         {
-            selected_geometry = objectHit._geode;
-            std::cout << objectHit._geode->getParents().front()->getName() << std::endl;
-         }
-      } 
-   }
+            */
+        }
 
-   this->DrawLine( start_point, end_point );
+        if( objectHit._geode.valid() )
+        {
+            if( !objectHit._geode->getName().empty() )
+            {
+                if( /*objectHit._geode->getName() != this->laserName
+                                                          && */objectHit._geode->getName() != "Root Node" )
+                {
+                    selected_geometry = objectHit._geode;
+                    std::cout << objectHit._geode->getName() << std::endl;
+                }
+            }
+            else
+            {
+                selected_geometry = objectHit._geode;
+                std::cout << objectHit._geode->getParents().front()->getName() << std::endl;
+            }
+        }
+    }
+
+    this->DrawLine( start_point, end_point );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )

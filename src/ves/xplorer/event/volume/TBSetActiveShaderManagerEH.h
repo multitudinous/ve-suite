@@ -51,21 +51,21 @@ namespace event
 class VE_XPLORER_EXPORTS TextureBasedSetActiveShaderManagerEventHandler : public TextureBasedEventHandler
 {
 public:
-   ///Constructor
-   TextureBasedSetActiveShaderManagerEventHandler();
+    ///Constructor
+    TextureBasedSetActiveShaderManagerEventHandler();
 
-   ///Copy Constructor
-   TextureBasedSetActiveShaderManagerEventHandler(const TextureBasedSetActiveShaderManagerEventHandler& ceh);
-   ///Destructor
-   virtual ~TextureBasedSetActiveShaderManagerEventHandler();
+    ///Copy Constructor
+    TextureBasedSetActiveShaderManagerEventHandler( const TextureBasedSetActiveShaderManagerEventHandler& ceh );
+    ///Destructor
+    virtual ~TextureBasedSetActiveShaderManagerEventHandler();
 
-   ///Equal operator
-   TextureBasedSetActiveShaderManagerEventHandler& operator=(const TextureBasedSetActiveShaderManagerEventHandler& rhs);
+    ///Equal operator
+    TextureBasedSetActiveShaderManagerEventHandler& operator=( const TextureBasedSetActiveShaderManagerEventHandler& rhs );
 
 protected:
-   ///The internal operation on the CADNode.
-   ///\param veXMLObject The veXMLObject to execute.
-   virtual void _operateOnNode(ves::open::xml::XMLObject* veXMLObject);
+    ///The internal operation on the CADNode.
+    ///\param veXMLObject The veXMLObject to execute.
+    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
 };
 
 }

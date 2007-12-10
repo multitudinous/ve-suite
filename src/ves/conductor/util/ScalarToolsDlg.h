@@ -56,123 +56,125 @@ namespace conductor
 {
 namespace util
 {
-	class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public ves::conductor::util::BaseDialog 
+class VE_CONDUCTOR_UTILS_EXPORTS ScalarToolsDialog : public ves::conductor::util::BaseDialog
 {
 public:
-   ///Constructor
-   ScalarToolsDialog(wxWindow* parent, int id,std::string title);
-   ///Destructor
-   virtual ~ScalarToolsDialog();
-   
-   enum SCALAR_TOOLS_IDS
-   {
-      AVAILABLE_SCALARS,
-	  AVAILABLE_SHADER_MANAGERS,
-      ISO_ENABLE_CHECK,
-      TB_ISOSURFACE_SLIDER,
-      TB_SLICE_SLIDER,
-      ADVANCED_TB_ISOSURFACE
-   };
+    ///Constructor
+    ScalarToolsDialog( wxWindow* parent, int id, std::string title );
+    ///Destructor
+    virtual ~ScalarToolsDialog();
 
-   ///Set the name of the command
-   ///\param name The name of the command.
-   void SetCommandName(std::string name);
-  
-   ///Send the commands to Xplorer;
-   void SendCommands();
+    enum SCALAR_TOOLS_IDS
+    {
+        AVAILABLE_SCALARS,
+        AVAILABLE_SHADER_MANAGERS,
+        ISO_ENABLE_CHECK,
+        TB_ISOSURFACE_SLIDER,
+        TB_SLICE_SLIDER,
+        ADVANCED_TB_ISOSURFACE
+    };
 
-   ///Add an instruction to send. This is for access in the callbacks.
-   ///\param newInstruct The instruction to add to the Command.
-   void AddInstruction(ves::open::xml::DataValuePair* newInstruct);
+    ///Set the name of the command
+    ///\param name The name of the command.
+    void SetCommandName( std::string name );
 
-   ///Set the active scalars
-   ///\param The name of the scalars
-   void UpdateScalarList(wxArrayString scalarNames);
+    ///Send the commands to Xplorer;
+    void SendCommands();
+
+    ///Add an instruction to send. This is for access in the callbacks.
+    ///\param newInstruct The instruction to add to the Command.
+    void AddInstruction( ves::open::xml::DataValuePair* newInstruct );
+
+    ///Set the active scalars
+    ///\param The name of the scalars
+    void UpdateScalarList( wxArrayString scalarNames );
 protected:
-   /*!\class ScalarToolsMinSliderCallback
-    *Class that allows the user to do operations based on the min slider events
-    */
-   class ScalarToolsSliderCallback:
-          public ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
+    /*!\class ScalarToolsMinSliderCallback
+     *Class that allows the user to do operations based on the min slider events
+     */
+class ScalarToolsSliderCallback:
+                public ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
         ///Constructors
-        ScalarToolsSliderCallback(ScalarToolsDialog* parent)
+        ScalarToolsSliderCallback( ScalarToolsDialog* parent )
         {
             _scalarDlg = parent;
         }
         ///Destructor
-        virtual ~ScalarToolsSliderCallback(){}
-        
-        ///The operation to do for the slider
-        virtual void SliderOperation();      
-      protected:
-         ScalarToolsDialog* _scalarDlg;
-   };
+        virtual ~ScalarToolsSliderCallback()
+        {}
 
-   /*!\class ScalarToolsStopSliderCallback
-    *Class that allows the user to do operations based on the min slider events
-    */
-   class ScalarToolsStopSliderCallback:
-          public ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
+        ///The operation to do for the slider
+        virtual void SliderOperation();
+    protected:
+        ScalarToolsDialog* _scalarDlg;
+    };
+
+    /*!\class ScalarToolsStopSliderCallback
+     *Class that allows the user to do operations based on the min slider events
+     */
+class ScalarToolsStopSliderCallback:
+                public ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
         ///Constructors
-        ScalarToolsStopSliderCallback(ScalarToolsDialog* parent)
+        ScalarToolsStopSliderCallback( ScalarToolsDialog* parent )
         {
             _scalarDlg = parent;
         }
         ///Destructor
-        virtual ~ScalarToolsStopSliderCallback(){}
-        
+        virtual ~ScalarToolsStopSliderCallback()
+        {}
+
         ///The operation to do for the slider
-        virtual void SliderOperation();      
-      protected:
-         ScalarToolsDialog* _scalarDlg;
-   };
-   ///Build the DualSlider s for this dialog
-   void _createDualSliders();
-   ///Add the controls to the dialog
-   virtual void _buildGUI();
+        virtual void SliderOperation();
+    protected:
+        ScalarToolsDialog* _scalarDlg;
+    };
+    ///Build the DualSlider s for this dialog
+    void _createDualSliders();
+    ///Add the controls to the dialog
+    virtual void _buildGUI();
 
-   ///Update the active scalar
-   ///\param command The wxCommandEvent
-   void _updateActiveScalar(wxCommandEvent& command);
-   
-   ///Update the active scalar shader manager
-   ///\param command The wxCommandEvent
-   void _updateActiveScalarShaderManager(wxCommandEvent& command);
+    ///Update the active scalar
+    ///\param command The wxCommandEvent
+    void _updateActiveScalar( wxCommandEvent& command );
 
-   ///Update the scalar to color the iso-surface by
-   ///\param command The wxCommandEvent
-   void _setColorByFace(wxCommandEvent& command);
+    ///Update the active scalar shader manager
+    ///\param command The wxCommandEvent
+    void _updateActiveScalarShaderManager( wxCommandEvent& command );
 
-   ///Update the isosurface
-   ///\param command The wxScrollEvent
-   void _onUpdateIsosurface(wxScrollEvent& command);
+    ///Update the scalar to color the iso-surface by
+    ///\param command The wxCommandEvent
+    void _setColorByFace( wxCommandEvent& command );
 
-   ///Set the number of slice planes per brick
-   ///\param command The wxScrollEvent
-   void _onUpdateNumberOfSlicePlanes(wxScrollEvent& command);
-   ///Enable/Disable isosurface visualization
-   ///\param command The wxCommandEvent
-   void _onEnableIsoSurface(wxCommandEvent& command);
+    ///Update the isosurface
+    ///\param command The wxScrollEvent
+    void _onUpdateIsosurface( wxScrollEvent& command );
 
-   ///Fully update the pre-integration table
-   void _onPreIntegrate(wxScrollEvent& command);
+    ///Set the number of slice planes per brick
+    ///\param command The wxScrollEvent
+    void _onUpdateNumberOfSlicePlanes( wxScrollEvent& command );
+    ///Enable/Disable isosurface visualization
+    ///\param command The wxCommandEvent
+    void _onEnableIsoSurface( wxCommandEvent& command );
 
-   wxString _activeScalar;///<The name of the scalar we are working on.
-   wxString _colorByScalarName;///<The name of the scalar to color by.
+    ///Fully update the pre-integration table
+    void _onPreIntegrate( wxScrollEvent& command );
 
-   wxButton* _advancedButton;///<The advanced iso surface button.
-   wxCheckBox* _isosurfaceCheck;///<The iso surface check box.
-   wxSlider* _isoSlider;///<The isosurface slider.
-   wxSlider* _numSlicesSlider;///<The number of slices slider.
-   wxComboBox* _scalarSelection;///<The available scalars.
-   wxComboBox* _shaderManagerSelection;///<The available shader manager.
-   ves::conductor::util::DualSlider* _scalarRange;///<DualSlider for x bounds
+    wxString _activeScalar;///<The name of the scalar we are working on.
+    wxString _colorByScalarName;///<The name of the scalar to color by.
 
-   DECLARE_EVENT_TABLE()
+    wxButton* _advancedButton;///<The advanced iso surface button.
+    wxCheckBox* _isosurfaceCheck;///<The iso surface check box.
+    wxSlider* _isoSlider;///<The isosurface slider.
+    wxSlider* _numSlicesSlider;///<The number of slices slider.
+    wxComboBox* _scalarSelection;///<The available scalars.
+    wxComboBox* _shaderManagerSelection;///<The available shader manager.
+    ves::conductor::util::DualSlider* _scalarRange;///<DualSlider for x bounds
+
+    DECLARE_EVENT_TABLE()
 };
 }
 }

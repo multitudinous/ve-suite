@@ -49,7 +49,7 @@
 #include <string>
 #include <vector>
 ///////////////////////////////////////////////////////////////////////
-//this class is used to create a stateset representing a phong shader// 
+//this class is used to create a stateset representing a phong shader//
 ///////////////////////////////////////////////////////////////////////
 namespace ves
 {
@@ -62,26 +62,26 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS PhongLoader : public ves::xplorer::scenegraph::util::ShaderHelper
 {
 public:
-   ///Constructor
-   PhongLoader();
+    ///Constructor
+    PhongLoader();
 
-   ///Copy Constructor
-   PhongLoader(const PhongLoader& rhs);
-  
-   ///Destructor
-   virtual ~PhongLoader();
-  
-   ///Sync up the active stateset with the current shader
-   virtual void SyncShaderAndStateSet(); 
+    ///Copy Constructor
+    PhongLoader( const PhongLoader& rhs );
 
-   ///Equal operator
-   ///\param rhs Right hand side.
-   PhongLoader& operator=(const PhongLoader& rhs);
+    ///Destructor
+    virtual ~PhongLoader();
+
+    ///Sync up the active stateset with the current shader
+    virtual void SyncShaderAndStateSet();
+
+    ///Equal operator
+    ///\param rhs Right hand side.
+    PhongLoader& operator=( const PhongLoader& rhs );
 protected:
-   ///Load and create the stateset for phong shader
-   ///\param vertexSource The vertex shader source code
-   ///\param fragSource The fragment shader source code
-   virtual void _loadShader(std::string vertexSource, std::string fragSource);
+    ///Load and create the stateset for phong shader
+    ///\param vertexSource The vertex shader source code
+    ///\param fragSource The fragment shader source code
+    virtual void _loadShader( std::string vertexSource, std::string fragSource );
 };
 }
 }

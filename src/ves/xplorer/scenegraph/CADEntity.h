@@ -37,7 +37,7 @@
 */
 
 /*!\class ves::xplorer::scenegraph::CADEntity
-* 
+*
 */
 
 /*!\namespace ves::xplorer::scenegraph
@@ -56,9 +56,9 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
-    class CADEntityHelper;
-    class PhysicsRigidBody;
+class DCS;
+class CADEntityHelper;
+class PhysicsRigidBody;
 }
 }
 }
@@ -70,7 +70,7 @@ namespace scenegraph
 
 namespace osg
 {
-    class Fog;
+class Fog;
 }
 #endif
 
@@ -95,9 +95,9 @@ public:
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the node with osgOQ
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    CADEntity( std::string geomFile, 
-               ves::xplorer::scenegraph::DCS* parentDCS, 
-               bool isStream = false, 
+    CADEntity( std::string geomFile,
+               ves::xplorer::scenegraph::DCS* parentDCS,
+               bool isStream = false,
                bool occlude = false,
                PhysicsSimulator* physicsSimulator = NULL );
 
@@ -105,16 +105,16 @@ public:
     ///\param node
     ///\param parentDCS
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    CADEntity( osg::Node* node, 
+    CADEntity( osg::Node* node,
                ves::xplorer::scenegraph::DCS* parentDCS,
                PhysicsSimulator* physicsSimulator = NULL );
 
-    ///Constructor that takes a CADEntityHelper and deep copies 
+    ///Constructor that takes a CADEntityHelper and deep copies
     ///the osg node contained in the CADEntityHelper
     ///\param nodeToCopy The node to copy
     ///\param parentDCS The parent DCS that CADEntity is added to
     ///\param physicsSimulator Sets a pointer to the PhysicsSimulator singleton
-    CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy, 
+    CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
                ves::xplorer::scenegraph::DCS* parentDCS,
                PhysicsSimulator* physicsSimulator = NULL );
 
@@ -139,11 +139,11 @@ public:
 
     ///Returns the transparency state of the node
     bool GetTransparentFlag();
-    
+
     ///Set the transparency state of the node
     ///\param flag The transparency state
     void SetTransparencyFlag( bool flag );
-    
+
 private:
     ///A helper class to give added functionality to CADEntity
     ves::xplorer::scenegraph::CADEntityHelper* m_cadEntityHelper;

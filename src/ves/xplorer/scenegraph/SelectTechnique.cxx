@@ -46,8 +46,8 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
-:
-m_stateSet( stateSet )
+        :
+        m_stateSet( stateSet )
 {
     DefinePasses();
 }
@@ -71,13 +71,13 @@ void SelectTechnique::DefinePasses()
 
             "void main() \n"
             "{ \n"
-                "gl_Position = ftransform(); \n"
+            "gl_Position = ftransform(); \n"
             "} \n";
 
         char fragmentPass[] =
             "void main() \n"
             "{ \n"
-                "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
+            "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
             "} \n";
 
         osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
@@ -92,7 +92,7 @@ void SelectTechnique::DefinePasses()
 
         linewidth->setWidth( 2.0f );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
-        
+
         stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::ON );
         stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::ON );
         stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::ON );

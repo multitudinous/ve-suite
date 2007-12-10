@@ -54,7 +54,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class Technique;
+class Technique;
 }
 }
 }
@@ -63,7 +63,7 @@ namespace scenegraph
 #ifdef _OSG
 namespace osg
 {
-    class NodeVisitor;
+class NodeVisitor;
 }
 #elif _OPENSG
 #endif

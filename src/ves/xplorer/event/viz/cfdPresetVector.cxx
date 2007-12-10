@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #if defined(WIN32)
-    #define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
 #endif
 #include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetVector.h>
@@ -59,8 +59,8 @@ using namespace ves::xplorer::scenegraph;
 // this class requires that the dataset has a vector field.
 cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
 {
-   this->xyz = xyz;
-   this->numSteps = numSteps;
+    this->xyz = xyz;
+    this->numSteps = numSteps;
 }
 
 cfdPresetVector::~cfdPresetVector()
@@ -70,116 +70,116 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-	SetActiveVtkPipeline();
-   vprDEBUG(vesDBG,1) << "cfdPresetVector::ActiveDataSet = " 
-                          << this->GetActiveDataSet() 
-                          << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vesDBG,1) << this->cursorType 
-                          << " : " << usePreCalcData 
-                          << std::endl << vprDEBUG_FLUSH;
+    SetActiveVtkPipeline();
+    vprDEBUG( vesDBG, 1 ) << "cfdPresetVector::ActiveDataSet = "
+    << this->GetActiveDataSet()
+    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << this->cursorType
+    << " : " << usePreCalcData
+    << std::endl << vprDEBUG_FLUSH;
 
-   if ( this->usePreCalcData )
-   {
+    if( this->usePreCalcData )
+    {
 
-       cfdPlanes* precomputedPlanes = 
-       this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
-       if (!precomputedPlanes)
-       {
-           vprDEBUG(vesDBG, 0) 
-              << "Dataset contains no precomputed vector planes." 
-              << std::endl << vprDEBUG_FLUSH;
-           ves::xplorer::CommandHandler::instance()
-               ->SendConductorMessage("Dataset contains no precomputed vector planes.\n");
-           return;
-       }
+        cfdPlanes* precomputedPlanes =
+            this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz );
+        if( !precomputedPlanes )
+        {
+            vprDEBUG( vesDBG, 0 )
+            << "Dataset contains no precomputed vector planes."
+            << std::endl << vprDEBUG_FLUSH;
+            ves::xplorer::CommandHandler::instance()
+            ->SendConductorMessage( "Dataset contains no precomputed vector planes.\n" );
+            return;
+        }
 
-       vtkPolyData * preCalcData = precomputedPlanes
-                              ->GetClosestPlane( this->requestedValue );
+        vtkPolyData * preCalcData = precomputedPlanes
+                                    ->GetClosestPlane( this->requestedValue );
 
-       if ( preCalcData == NULL )
-       {
-          vprDEBUG(vesDBG, 0) 
+        if( preCalcData == NULL )
+        {
+            vprDEBUG( vesDBG, 0 )
             << "cfdPresetVector: no precalculated data available"
             << std::endl << vprDEBUG_FLUSH;
-          this->updateFlag = false;
-          return;
-       }
+            this->updateFlag = false;
+            return;
+        }
 
-       // get every nth point from the dataSet data
-       this->ptmask->SetInput( preCalcData );
-       this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-       this->ptmask->Update();
+        // get every nth point from the dataSet data
+        this->ptmask->SetInput( preCalcData );
+        this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+        this->ptmask->Update();
 
-       this->SetGlyphWithThreshold();
-       this->SetGlyphAttributes();
-       this->glyph->Update();
-      //this->glyph->DebugOn();
+        this->SetGlyphWithThreshold();
+        this->SetGlyphAttributes();
+        this->glyph->Update();
+        //this->glyph->DebugOn();
 
-       this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                          ->GetUserRange() );
-       this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                          ->GetLookupTable() );
-       this->mapper->Update();
-       vprDEBUG(vesDBG, 1) << "|\tcfdPresetVector::Update Yes Precalc : " 
-            << this->cursorType << " : " << usePreCalcData 
-            << std::endl << vprDEBUG_FLUSH;
-   }
-   else
-   {
-      this->cuttingPlane = new cfdCuttingPlane( 
-                  this->GetActiveDataSet()->GetBounds(),
-                  xyz, numSteps );
+        this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                      ->GetUserRange() );
+        this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                      ->GetLookupTable() );
+        this->mapper->Update();
+        vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::Update Yes Precalc : "
+        << this->cursorType << " : " << usePreCalcData
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    else
+    {
+        this->cuttingPlane = new cfdCuttingPlane(
+                                 this->GetActiveDataSet()->GetBounds(),
+                                 xyz, numSteps );
 
-      // insure that we are using correct bounds for the given data set...
-      this->cuttingPlane->SetBounds( 
+        // insure that we are using correct bounds for the given data set...
+        this->cuttingPlane->SetBounds(
             this->GetActiveDataSet()->GetBounds() );
-      this->cuttingPlane->Advance( this->requestedValue );
-	  vtkCutter* cutter = vtkCutter::New();
-      cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-      cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-      cutter->Update();
-      delete this->cuttingPlane;
-      this->cuttingPlane = NULL;
+        this->cuttingPlane->Advance( this->requestedValue );
+        vtkCutter* cutter = vtkCutter::New();
+        cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+        cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+        cutter->Update();
+        delete this->cuttingPlane;
+        this->cuttingPlane = NULL;
 
-      // get every nth point from the dataSet data
-	  this->ptmask->SetInput( ApplyGeometryFilter(cutter->GetOutputPort()) );
-      this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-      this->ptmask->Update();      
+        // get every nth point from the dataSet data
+        this->ptmask->SetInput( ApplyGeometryFilter( cutter->GetOutputPort() ) );
+        this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+        this->ptmask->Update();
 
-      this->SetGlyphWithThreshold();
-      this->SetGlyphAttributes();
-      this->glyph->Update();
+        this->SetGlyphWithThreshold();
+        this->SetGlyphAttributes();
+        this->glyph->Update();
 
-	  this->mapper->SetInputConnection(glyph->GetOutputPort());
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                        ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                        ->GetLookupTable() );
-      this->mapper->Update();
-      
-       cutter->Delete();
-      vprDEBUG(vesDBG, 1) 
-         << "No Precalc : " << this->cursorType << " : " << usePreCalcData
-         << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
-   }
-   vtkActor* temp = vtkActor::New();
-   temp->SetMapper( this->mapper );
-   temp->GetProperty()->SetSpecularPower( 20.0f );
+        this->mapper->SetInputConnection( glyph->GetOutputPort() );
+        this->mapper->SetScalarRange( this->GetActiveDataSet()
+                                      ->GetUserRange() );
+        this->mapper->SetLookupTable( this->GetActiveDataSet()
+                                      ->GetLookupTable() );
+        this->mapper->Update();
 
-   try
-   {
-		osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-      tempGeode->TranslateToGeode( temp );
-      geodes.push_back( tempGeode ); 
-      this->updateFlag = true;
-   }
-   catch( std::bad_alloc )
-   {
-      mapper->Delete();
-      mapper = vtkMultiGroupPolyDataMapper::New();
-      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdPresetVectors " 
-                           << std::endl << vprDEBUG_FLUSH;
-   }
-   temp->Delete();
+        cutter->Delete();
+        vprDEBUG( vesDBG, 1 )
+        << "No Precalc : " << this->cursorType << " : " << usePreCalcData
+        << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
+    }
+    vtkActor* temp = vtkActor::New();
+    temp->SetMapper( this->mapper );
+    temp->GetProperty()->SetSpecularPower( 20.0f );
+
+    try
+    {
+        osg::ref_ptr<ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
+        tempGeode->TranslateToGeode( temp );
+        geodes.push_back( tempGeode );
+        this->updateFlag = true;
+    }
+    catch ( std::bad_alloc )
+    {
+        mapper->Delete();
+        mapper = vtkMultiGroupPolyDataMapper::New();
+        vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
+        << std::endl << vprDEBUG_FLUSH;
+    }
+    temp->Delete();
 }
 

@@ -38,8 +38,8 @@
 #include <osg/ref_ptr>
 namespace osg
 {
-   class Group;
-   class AutoTransform;
+class Group;
+class AutoTransform;
 }
 
 namespace ves
@@ -51,17 +51,20 @@ namespace network
 class VE_XPLORER_NETWORK_EXPORTS NetworkSystemView : public ves::xplorer::GlobalBase
 {
 public:
-   NetworkSystemView();
-   NetworkSystemView(std::string);
-   NetworkSystemView( const NetworkSystemView& );
-   
-   virtual ~NetworkSystemView( void );
-   NetworkSystemView& operator=( const NetworkSystemView& );
-   
-   void UpdateCommand( void ){;}
-   osg::ref_ptr< osg::Group > DrawNetwork( void );
+    NetworkSystemView();
+    NetworkSystemView( std::string );
+    NetworkSystemView( const NetworkSystemView& );
+
+    virtual ~NetworkSystemView( void );
+    NetworkSystemView& operator=( const NetworkSystemView& );
+
+    void UpdateCommand( void )
+    {
+        ;
+    }
+    osg::ref_ptr< osg::Group > DrawNetwork( void );
 private:
-	std::string network;
+    std::string network;
     osg::ref_ptr<osg::AutoTransform> worldTranslate;
 
 };

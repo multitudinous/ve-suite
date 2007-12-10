@@ -46,8 +46,14 @@
 class TriIndexFunc
 {
 public:
-    TriIndexFunc(){;}
-    ~TriIndexFunc(){;}
+    TriIndexFunc()
+    {
+        ;
+    }
+    ~TriIndexFunc()
+    {
+        ;
+    }
 
     void inline operator()( unsigned int pos1, unsigned int pos2, unsigned int pos3 )
     {
@@ -68,9 +74,9 @@ namespace scenegraph
 
 ////////////////////////////////////////////////////////////////////////////////
 osgToBullet::osgToBullet( osg::Node* node )
-:
-m_triangleMesh( new btTriangleMesh() ),
-NodeVisitor( TRAVERSE_ALL_CHILDREN )
+        :
+        m_triangleMesh( new btTriangleMesh() ),
+        NodeVisitor( TRAVERSE_ALL_CHILDREN )
 {
     node->accept( *this );
 }
@@ -97,7 +103,7 @@ void osgToBullet::apply( osg::Geode& geode )
         for( size_t j = 0; j < tif.m_triangleIndex.size() / 3; ++j )
         {
             unsigned int index1, index2, index3;
-            index1 = tif.m_triangleIndex.at( j * 3     );
+            index1 = tif.m_triangleIndex.at( j * 3 );
             index2 = tif.m_triangleIndex.at( j * 3 + 1 );
             index3 = tif.m_triangleIndex.at( j * 3 + 2 );
 

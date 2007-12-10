@@ -37,7 +37,7 @@
 *advancedvectors API
 */
 /*!\class AdvancedVectors
-* 
+*
 */
 #include <ves/conductor/util/DualSlider.h>
 
@@ -52,7 +52,7 @@ namespace open
 {
 namespace xml
 {
-   class Command;
+class Command;
 }
 }
 }
@@ -73,83 +73,83 @@ namespace ves
 namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS AdvancedVectors: public wxDialog
-{    
+{
 
 public:
-   /// Constructors
-   AdvancedVectors( );
-   AdvancedVectors( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME, 
-                  const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE,
-                  const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION, 
-                  const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE,
-                  long style = SYMBOL_ADVANCEDVECTORS_STYLE );
+    /// Constructors
+    AdvancedVectors( );
+    AdvancedVectors( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME,
+                     const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE,
+                     const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION,
+                     const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE,
+                     long style = SYMBOL_ADVANCEDVECTORS_STYLE );
 
-   enum ADVANCED_VECTOR_IDS
-   {
-      VECTOR_MAX_SLIDER,
-      VECTOR_MIN_SLIDER,
-      VECTOR_SCALE_SLIDER,
-      VECTOR_RATIO_SLIDER,
-      SCALAR_BY_VECTOR_CHK
-   };
+    enum ADVANCED_VECTOR_IDS
+    {
+        VECTOR_MAX_SLIDER,
+        VECTOR_MIN_SLIDER,
+        VECTOR_SCALE_SLIDER,
+        VECTOR_RATIO_SLIDER,
+        SCALAR_BY_VECTOR_CHK
+    };
 
-   bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME, 
-              const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE, 
-              const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION, 
-              const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE, 
-              long style = SYMBOL_ADVANCEDVECTORS_STYLE );
+    bool Create( wxWindow* parent, wxWindowID id = SYMBOL_ADVANCEDVECTORS_IDNAME,
+                 const wxString& caption = SYMBOL_ADVANCEDVECTORS_TITLE,
+                 const wxPoint& pos = SYMBOL_ADVANCEDVECTORS_POSITION,
+                 const wxSize& size = SYMBOL_ADVANCEDVECTORS_SIZE,
+                 long style = SYMBOL_ADVANCEDVECTORS_STYLE );
 
-   /// Creates the controls and sizers
-   void CreateControls();
+    /// Creates the controls and sizers
+    void CreateControls();
 
     ///Set the vector threshold
-   ///\param range The vector threshold to set.
-   void SetVectorThreshold(std::vector<double> range);
+    ///\param range The vector threshold to set.
+    void SetVectorThreshold( std::vector<double> range );
 
-   ///Get the vector threshold
-   ///\param range The vector threshold to fill in.
-   void GetVectorThreshold(std::vector<double>& range);
+    ///Get the vector threshold
+    ///\param range The vector threshold to fill in.
+    void GetVectorThreshold( std::vector<double>& range );
 
-   ///Set the vector scale.
-   ///\param value The vector scale.
-   void SetVectorScale(double value);
+    ///Set the vector scale.
+    ///\param value The vector scale.
+    void SetVectorScale( double value );
 
-   ///Set the vector ratio.
-   ///\param value The vector ratio.
-   void SetVectorRatio(double value);
+    ///Set the vector ratio.
+    ///\param value The vector ratio.
+    void SetVectorRatio( double value );
 
-   ///Set the scale by magnitude flag.
-   ///\param value Flag determining how to scale vectors.
-   void SetScaleByMagFlag(bool value);
+    ///Set the scale by magnitude flag.
+    ///\param value Flag determining how to scale vectors.
+    void SetScaleByMagFlag( bool value );
 
-   ///Get the vector scale
-   double GetVectorScale();
+    ///Get the vector scale
+    double GetVectorScale();
 
-   ///Get the vector ratio.
-   double GetVectorRatio();
+    ///Get the vector ratio.
+    double GetVectorRatio();
 
-   ///Get the scale by magnitude flag.
-   bool GetScaleByMagFlag();
+    ///Get the scale by magnitude flag.
+    bool GetScaleByMagFlag();
 
 
-   /// Retrieves bitmap resources
-   wxBitmap GetBitmapResource( const wxString& name );
+    /// Retrieves bitmap resources
+    wxBitmap GetBitmapResource( const wxString& name );
 
-   /// Retrieves icon resources
-   wxIcon GetIconResource( const wxString& name );
+    /// Retrieves icon resources
+    wxIcon GetIconResource( const wxString& name );
 
-   /// Should we show tooltips?
-   static bool ShowToolTips();
+    /// Should we show tooltips?
+    static bool ShowToolTips();
 
 protected:
 
-	ves::conductor::util::DualSlider* vectorRange;
-   wxSlider* _vectorScaleSlider;///<Slider widget for vector scale.
-   wxSlider*   _vectorRatioSlider;///<Slider widget for vector ratio.
-   wxCheckBox* _scaleByMagCheck;///<Check box widget for scale option.
-   
+    ves::conductor::util::DualSlider* vectorRange;
+    wxSlider* _vectorScaleSlider;///<Slider widget for vector scale.
+    wxSlider*   _vectorRatioSlider;///<Slider widget for vector ratio.
+    wxCheckBox* _scaleByMagCheck;///<Check box widget for scale option.
+
 };
 }
 }
 #endif
-    // _VECTORS_H_
+// _VECTORS_H_

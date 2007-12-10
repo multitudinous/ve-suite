@@ -42,36 +42,43 @@ namespace builder
 {
 namespace DataLoader
 {
-class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator: 
-   public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK{
+class VE_USER_BUILDER_EXPORTS cfdDICOMTranslator:
+            public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK
+{
 
 public:
-   cfdDICOMTranslator();
-   virtual ~cfdDICOMTranslator();
-   ///Display help for the DICOM translator
-   virtual void DisplayHelp( void );
- 
-   class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback{
-   public:
-      DICOMTranslateCbk(){};
-      virtual ~DICOMTranslateCbk(){};
-      //////////////////////////////////////////////////
-      //ouputDataset should be populated              //
-      //appropriately by the translate callback.      //
-      //////////////////////////////////////////////////
-      virtual void Translate(vtkDataObject*& outputDataset,
-		                     cfdTranslatorToVTK* toVTK);
-   protected:
-   };
-   class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback{
-   public:
-      DICOMPreTranslateCbk(){};
-      virtual ~DICOMPreTranslateCbk(){};
-   protected:
-   };
+    cfdDICOMTranslator();
+    virtual ~cfdDICOMTranslator();
+    ///Display help for the DICOM translator
+    virtual void DisplayHelp( void );
+
+class VE_USER_BUILDER_EXPORTS DICOMTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::TranslateCallback
+    {
+    public:
+        DICOMTranslateCbk()
+        {};
+        virtual ~DICOMTranslateCbk()
+        {};
+        //////////////////////////////////////////////////
+        //ouputDataset should be populated              //
+        //appropriately by the translate callback.      //
+        //////////////////////////////////////////////////
+        virtual void Translate( vtkDataObject*& outputDataset,
+                                cfdTranslatorToVTK* toVTK );
+    protected:
+    };
+class VE_USER_BUILDER_EXPORTS DICOMPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback
+    {
+    public:
+        DICOMPreTranslateCbk()
+        {};
+        virtual ~DICOMPreTranslateCbk()
+        {};
+    protected:
+    };
 protected:
-   DICOMPreTranslateCbk _cmdParser;
-   DICOMTranslateCbk _dicomToVTK;
+    DICOMPreTranslateCbk _cmdParser;
+    DICOMTranslateCbk _dicomToVTK;
 };
 }
 }

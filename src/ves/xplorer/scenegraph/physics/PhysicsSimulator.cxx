@@ -85,16 +85,16 @@ vprSingletonImp( PhysicsSimulator );
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
-:
-m_dynamicsWorld( 0 ),
-m_collisionConfiguration( 0 ),
-m_dispatcher( 0 ),
-m_broadphase( 0 ),
-m_solver( 0 ),
-m_debugMode( 0 ),
-m_idle( true ),
-m_collisionInformation( false ),
-shoot_speed( 50.0f )
+        :
+        m_dynamicsWorld( 0 ),
+        m_collisionConfiguration( 0 ),
+        m_dispatcher( 0 ),
+        m_broadphase( 0 ),
+        m_solver( 0 ),
+        m_debugMode( 0 ),
+        m_idle( true ),
+        m_collisionInformation( false ),
+        shoot_speed( 50.0f )
 {
     head.init( "VJHead" );
 
@@ -132,7 +132,7 @@ void PhysicsSimulator::ExitPhysics()
     {
         delete m_dispatcher;
     }
-   
+
     //Delete m_broadphase
     if( m_broadphase )
     {
@@ -241,9 +241,9 @@ void PhysicsSimulator::UpdatePhysics( float dt )
                 //contactManifold->refreshContactPoints( bodyA->getWorldTransform(), bodyB->getWorldTransform() );
 
                 int numContacts = contactManifold->getNumContacts();
-		        for( int j = 0; j < numContacts; ++j )
-		        {
-		            btManifoldPoint& pt = contactManifold->getContactPoint( j );
+                for( int j = 0; j < numContacts; ++j )
+                {
+                    btManifoldPoint& pt = contactManifold->getContactPoint( j );
 
                     PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >( contactManifold->getBody0() );
                     PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >( contactManifold->getBody1() );
@@ -271,7 +271,7 @@ void PhysicsSimulator::UpdatePhysics( float dt )
                         btVector3 ptB = pt.getPositionWorldOnB();
                         bodyB->PushBackCollision( bodyA, ptB );
                     }
-		        }
+                }
             }
         }
 
@@ -315,17 +315,17 @@ void PhysicsSimulator::StepSimulation()
 {
     if( m_idle )
     {
-        m_dynamicsWorld->stepSimulation(  1.0f / 60.0f, 0  );
+        m_dynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ResetScene()
 {
     /*
-#ifdef SHOW_NUM_DEEP_PENETRATIONS
+    #ifdef SHOW_NUM_DEEP_PENETRATIONS
     gNumDeepPenetrationChecks = 0;
     gNumGjkChecks = 0;
-#endif
+    #endif
     */
 
     if( m_dynamicsWorld )
@@ -342,7 +342,7 @@ void PhysicsSimulator::ResetScene()
 
         if( body && body->getMotionState() )
         {
-            ves::xplorer::scenegraph::vesMotionState* motionState = 
+            ves::xplorer::scenegraph::vesMotionState* motionState =
                 static_cast< ves::xplorer::scenegraph::vesMotionState* >( body->getMotionState() );
             motionState->m_graphicsWorldTrans = motionState->m_startWorldTrans;
 
@@ -351,7 +351,7 @@ void PhysicsSimulator::ResetScene()
             colObj->activate();
 
             //Removed cached contact points
-			m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), m_dynamicsWorld->getDispatcher() );
+            m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), m_dynamicsWorld->getDispatcher() );
 
             btRigidBody* body = btRigidBody::upcast( colObj );
 
@@ -428,12 +428,12 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
         box->setColorBinding( osg::Geometry::BIND_OVERALL );
 
         osg::ref_ptr< osg::Vec3Array > normals = new osg::Vec3Array;
-        normals->push_back( osg::Vec3( -1.0f, 0.0f, 0.0f ) );					//Left
-        normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );					//Near
-        normals->push_back( osg::Vec3( 1.0f, 0.0f, 0.0f ) );					//Right
-        normals->push_back( osg::Vec3( 0.0f, 1.0f, 0.0f ) );					//Far
-        normals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );					//Top
-        normals->push_back( osg::Vec3( 0.0f, 0.0f, -1.0f ) );					//Bottom
+        normals->push_back( osg::Vec3( -1.0f, 0.0f, 0.0f ) );     //Left
+        normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );     //Near
+        normals->push_back( osg::Vec3( 1.0f, 0.0f, 0.0f ) );     //Right
+        normals->push_back( osg::Vec3( 0.0f, 1.0f, 0.0f ) );     //Far
+        normals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );     //Top
+        normals->push_back( osg::Vec3( 0.0f, 0.0f, -1.0f ) );     //Bottom
         box->setNormalArray( normals.get() );
         box->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -445,12 +445,12 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
 
         osgDB::writeNodeFile( *geode, "C:/Users/JK/Desktop/Models/box.osg" );
 
-        osgDB::Registry::instance()->getReaderWriterForExtension("osg")->writeNode( *geode, box_ss );
+        osgDB::Registry::instance()->getReaderWriterForExtension( "osg" )->writeNode( *geode, box_ss );
 
-        box_vector.push_back( new ves::xplorer::scenegraph::CADEntity( 
-            "C:/Users/JK/Desktop/Models/box.osg",
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
-            false, false ) );
+        box_vector.push_back( new ves::xplorer::scenegraph::CADEntity(
+                                  "C:/Users/JK/Desktop/Models/box.osg",
+                                  ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
+                                  false, false ) );
 
         float mass = 1.0f;
         btTransform transform;
@@ -510,7 +510,7 @@ btRigidBody* PhysicsSimulator::CreateRigidBody( float mass, const btTransform& s
     //RigidBody is dynamic if and only if mass is non zero, otherwise static
     bool dynamic = ( mass != 0.0f );
 
-    btVector3 localInertia( 0 ,0, 0 );
+    btVector3 localInertia( 0 , 0, 0 );
     if( dynamic )
     {
         shape->calculateLocalInertia( mass, localInertia );

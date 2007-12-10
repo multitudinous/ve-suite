@@ -41,7 +41,7 @@
 #include <map>
 
 /*!\file Shader.h
-  Shader API 
+  Shader API
   */
 /*!\class VE_Shader::Shader
  * Class that stores an data and information neccessary to create a glsl shader.
@@ -55,8 +55,8 @@ namespace xml
 {
 namespace shader
 {
-   class TextureImage;
-   class Uniform;
+class TextureImage;
+class Uniform;
 }
 }
 }
@@ -70,94 +70,94 @@ namespace xml
 {
 namespace shader
 {
-class VE_SHADER_EXPORTS Shader:public ves::open::xml::XMLObject
+class VE_SHADER_EXPORTS Shader: public ves::open::xml::XMLObject
 {
 public:
-   ///Constructor
-   Shader();
+    ///Constructor
+    Shader();
 
-   ///Destructor
-   virtual ~Shader();
-  
-   ///Copy constructor
-   Shader(const Shader& rhs);
+    ///Destructor
+    virtual ~Shader();
 
-   ///Set the object from input XML data
-   ///\param xmlInput The input xml data.
-   void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput);
+    ///Copy constructor
+    Shader( const Shader& rhs );
 
-   ///Add a uniform variable to the shader
-   ///\param newUniform The new uniform variable to add to the shader.
-   void AddUniform(Uniform newUniform);
-  
-   ///Add a texture image to the shader. 
-   ///\todo This may not be necessary!!!!
-   ///\param newTextureImage The texture image to add.
-   void AddTextureImage(TextureImage newTextureImage);
+    ///Set the object from input XML data
+    ///\param xmlInput The input xml data.
+    void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
-   ///The type of shader program. Valid types are "Vertex"
-   ///and "Fragment".
-   ///\param fragOrVert The type of shader this represents.
-   void SetShaderType(std::string fragOrVert);
+    ///Add a uniform variable to the shader
+    ///\param newUniform The new uniform variable to add to the shader.
+    void AddUniform( Uniform newUniform );
 
-   ///This is the string containing the full source code
-   ///of the shader. This includes the variables as well as the
-   ///functions.
-   ///\param shaderSourceCode The raw shader code.
-   void SetShaderSource(std::string shaderSourceCode);
+    ///Add a texture image to the shader.
+    ///\todo This may not be necessary!!!!
+    ///\param newTextureImage The texture image to add.
+    void AddTextureImage( TextureImage newTextureImage );
 
-   ///Get the raw source for the shader.
-   std::string GetShaderSource();
+    ///The type of shader program. Valid types are "Vertex"
+    ///and "Fragment".
+    ///\param fragOrVert The type of shader this represents.
+    void SetShaderType( std::string fragOrVert );
 
-   ///Get the shader type.
-   std::string GetShaderType();
-  
-   ///Get a texture representing an image file.
-   ///\param textureUnit The texture unit to search for.
-   TextureImage& GetTextureImage(unsigned int textureUnit);
+    ///This is the string containing the full source code
+    ///of the shader. This includes the variables as well as the
+    ///functions.
+    ///\param shaderSourceCode The raw shader code.
+    void SetShaderSource( std::string shaderSourceCode );
 
-   ///Get the number of uniforms.
-   size_t GetNumberOfUniforms();
+    ///Get the raw source for the shader.
+    std::string GetShaderSource();
 
-   ///Get the number of texture images.
-   size_t GetNumberOfTextureImages();
+    ///Get the shader type.
+    std::string GetShaderType();
 
-   ///Get a specific uniform by name.
-   ///\param uniformName The uniform name to search for.
-   Uniform& GetUniform(std::string uniformName);
+    ///Get a texture representing an image file.
+    ///\param textureUnit The texture unit to search for.
+    TextureImage& GetTextureImage( unsigned int textureUnit );
+
+    ///Get the number of uniforms.
+    size_t GetNumberOfUniforms();
+
+    ///Get the number of texture images.
+    size_t GetNumberOfTextureImages();
+
+    ///Get a specific uniform by name.
+    ///\param uniformName The uniform name to search for.
+    Uniform& GetUniform( std::string uniformName );
 
     ///Get a specific uniform by index.
-   ///\param index The uniform to search for.
-   Uniform& GetUniform(unsigned int index);
+    ///\param index The uniform to search for.
+    Uniform& GetUniform( unsigned int index );
 
-   ///equal operator
-   Shader& operator=(const Shader& rhs);
+    ///equal operator
+    Shader& operator=( const Shader& rhs );
 protected:
-   ///Internally update the XML data for this element.
-   ///\param input The XML element information
-   virtual void _updateVEElement(std::string input);
-   
-   ///Internally update the texture images.
-   void _updateTextureImages();
-   
-   ///Internally update the uniforms.
-   void _updateUniforms();
-   
-   ///Internally update the shader type.
-   void _updateShaderType();
+    ///Internally update the XML data for this element.
+    ///\param input The XML element information
+    virtual void _updateVEElement( std::string input );
 
-   ///Internally update the shader source.
-   void _updateShaderSource();
+    ///Internally update the texture images.
+    void _updateTextureImages();
 
-   std::string _shaderType;///<The type of shader represented.
-   std::string _shaderSource;///<The raw shader source.
-   std::map<unsigned int, TextureImage> _textureImages;///<The list of texture images.
-   std::vector<Uniform> _uniformList;///<The list of uniforms.
+    ///Internally update the uniforms.
+    void _updateUniforms();
+
+    ///Internally update the shader type.
+    void _updateShaderType();
+
+    ///Internally update the shader source.
+    void _updateShaderSource();
+
+    std::string _shaderType;///<The type of shader represented.
+    std::string _shaderSource;///<The raw shader source.
+    std::map<unsigned int, TextureImage> _textureImages;///<The list of texture images.
+    std::vector<Uniform> _uniformList;///<The list of uniforms.
 
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::shader::Shader* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::shader::Shader* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

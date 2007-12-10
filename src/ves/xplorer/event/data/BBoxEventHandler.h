@@ -54,30 +54,30 @@ namespace event
 class VE_XPLORER_EXPORTS BBoxEventHandler: public EventHandler
 {
 public:
-   ///Constructor
-   BBoxEventHandler();
+    ///Constructor
+    BBoxEventHandler();
 
-   ///Copy Constructor
-   BBoxEventHandler(const BBoxEventHandler& rhs);
+    ///Copy Constructor
+    BBoxEventHandler( const BBoxEventHandler& rhs );
 
-   ///Destructor
-   virtual ~BBoxEventHandler();
+    ///Destructor
+    virtual ~BBoxEventHandler();
 
-   ///Equal operator
-   BBoxEventHandler& operator=(const BBoxEventHandler& rhs);
+    ///Equal operator
+    BBoxEventHandler& operator=( const BBoxEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
 
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
-   ves::xplorer::Model* _activeModel;///<The active cfdModel
+    ves::xplorer::Model* _activeModel;///<The active cfdModel
 };
 
 }

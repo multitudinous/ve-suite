@@ -40,7 +40,7 @@
   NURBS Surface code
   */
 /*!\class ves::xplorer::scenegraph::nurbs::NURBSSurface
- * Class defining a NURBSSurface. 
+ * Class defining a NURBSSurface.
  */
 #include <ves/VEConfig.h>
 #include <vector>
@@ -63,56 +63,56 @@ class ControlPoint;
 class VE_NURBS_EXPORTS NURBSSurface : public NURBSObject
 {
 public:
-   ///Constructor
-   NURBSSurface(unsigned int uDegree=3,unsigned int vDegree=3);
+    ///Constructor
+    NURBSSurface( unsigned int uDegree = 3, unsigned int vDegree = 3 );
 
-   ///Copy constructor
-   NURBSSurface(const NURBSSurface& rhs);
+    ///Copy constructor
+    NURBSSurface( const NURBSSurface& rhs );
 
-   ///Destructor
-   virtual ~NURBSSurface();
+    ///Destructor
+    virtual ~NURBSSurface();
 
-   ///Equal operator
-   ///\param rhs The point to set this one to. 
-   NURBSSurface& operator=(const NURBSSurface& rhs);
+    ///Equal operator
+    ///\param rhs The point to set this one to.
+    NURBSSurface& operator=( const NURBSSurface& rhs );
 
-   ///Interpolate the surface.
-   virtual void Interpolate();
+    ///Interpolate the surface.
+    virtual void Interpolate();
 
-   ///???
-   std::map<unsigned int, std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::Point> > > GetSurfaceDerivatives();
+    ///???
+    std::map<unsigned int, std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::Point> > > GetSurfaceDerivatives();
 
-   ///Write the surface out in the VE-NURBS format
-   ///\param stream ostrem to write to
-   void Write( std::ostream& stream );
+    ///Write the surface out in the VE-NURBS format
+    ///\param stream ostrem to write to
+    void Write( std::ostream& stream );
 protected:
-   ///Interpolate with a range of values...\n
-   ///Used internally for re-tessellation when moving control points
-   ///\param uBounds The min[0] and max[1] u params to interpolate between
-   ///\param vBounds The min[0] and max v[1] params to interpolate between
-   virtual void _interpolateWithinBounds(double* uBounds,double* vBounds);
+    ///Interpolate with a range of values...\n
+    ///Used internally for re-tessellation when moving control points
+    ///\param uBounds The min[0] and max[1] u params to interpolate between
+    ///\param vBounds The min[0] and max v[1] params to interpolate between
+    virtual void _interpolateWithinBounds( double* uBounds, double* vBounds );
 
-   ///Interpolate with a range of values...\n
-   ///Used internally for re-tessellation when moving control points
-   ///\param umin The min u param to interpolate between
-   ///\param umax The max u param to interpolate between
-   ///\param vmin The min v param to interpolate between
-   ///\param vmax The max v param to interpolate between
-   virtual void _interpolateWithinRange(double umin,double umax,
-                                        double vmin,double vmax);
+    ///Interpolate with a range of values...\n
+    ///Used internally for re-tessellation when moving control points
+    ///\param umin The min u param to interpolate between
+    ///\param umax The max u param to interpolate between
+    ///\param vmin The min v param to interpolate between
+    ///\param vmax The max v param to interpolate between
+    virtual void _interpolateWithinRange( double umin, double umax,
+                                          double vmin, double vmax );
 
-   ///Calculate a point on a surface and the derivatives
-   ///\param uparameter The interpolating u parameter
-   ///\param vparameter The interpolating v parameter
-   ///\param uspan The knot u span to interpolate the parameter on
-   ///\param vspan The knot v span to interpolate the parameter on
-   std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > _calculatePointOnSurface(double uparameter,
-                                         double vparameter,
-                                         unsigned int uspan,
-                                         unsigned int vspan);
+    ///Calculate a point on a surface and the derivatives
+    ///\param uparameter The interpolating u parameter
+    ///\param vparameter The interpolating v parameter
+    ///\param uspan The knot u span to interpolate the parameter on
+    ///\param vspan The knot v span to interpolate the parameter on
+    std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > _calculatePointOnSurface( double uparameter,
+            double vparameter,
+            unsigned int uspan,
+            unsigned int vspan );
 
-   
-   std::map<unsigned int, std::map<unsigned int,std::vector<ves::xplorer::scenegraph::nurbs::Point> > > _surfDerivatives;///<The surfaceDerivatives.
+
+    std::map<unsigned int, std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::Point> > > _surfDerivatives;///<The surfaceDerivatives.
 
 };
 }

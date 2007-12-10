@@ -49,14 +49,14 @@ namespace xml
 class ObjectFactoryMaker
 {
 public:
-  ObjectFactoryMaker()
-  {
-     XMLObjectFactory::Instance(); 
-  };
-  ~ObjectFactoryMaker()
-  { 
-     XMLObjectFactory::DeleteInstance(); 
-  };
+    ObjectFactoryMaker()
+    {
+        XMLObjectFactory::Instance();
+    };
+    ~ObjectFactoryMaker()
+    {
+        XMLObjectFactory::DeleteInstance();
+    };
 };
 }
 }
@@ -68,103 +68,103 @@ XMLObjectFactory* XMLObjectFactory::_instanceOfFactory = 0;
 //std::map<std::string,CreationEventHandler*> XMLObjectFactory::_objectCreators;
 /////////////////////////////////////
 XMLObjectFactory::XMLObjectFactory( )
-{
-}
+{}
 /////////////////////////////////////
 XMLObjectFactory::~XMLObjectFactory()
 {
-   if(_objectCreators.size()){
-      for(std::map<std::string, CreationEventHandler* >::iterator itr = _objectCreators.begin();
-                                       itr != _objectCreators.end(); itr++ )
-      {
-         delete itr->second;
-         itr->second = 0;
-      }
-      _objectCreators.clear();
-   }
+    if( _objectCreators.size() )
+    {
+        for( std::map<std::string, CreationEventHandler* >::iterator itr = _objectCreators.begin();
+                itr != _objectCreators.end(); itr++ )
+        {
+            delete itr->second;
+            itr->second = 0;
+        }
+        _objectCreators.clear();
+    }
 }
 ///////////////////////////////////////
 void XMLObjectFactory::DeleteInstance()
 {
-   if(_instanceOfFactory)
-   {
-      delete _instanceOfFactory;
-      _instanceOfFactory = 0;
-   }
+    if( _instanceOfFactory )
+    {
+        delete _instanceOfFactory;
+        _instanceOfFactory = 0;
+    }
 }
 //////////////////////////////////////////////
 XMLObjectFactory* XMLObjectFactory::Instance()
 {
-   if(!_instanceOfFactory)
-   {
-      _instanceOfFactory = new XMLObjectFactory();
-   }
-   return _instanceOfFactory;
+    if( !_instanceOfFactory )
+    {
+        _instanceOfFactory = new XMLObjectFactory();
+    }
+    return _instanceOfFactory;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-XMLObject* XMLObjectFactory::CreateXMLObject(std::string objectType,
-                                               std::string objectNameSpace)
+XMLObject* XMLObjectFactory::CreateXMLObject( std::string objectType,
+                                              std::string objectNameSpace )
 {
-   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
-   //xmlCreator = _objectCreators.find(objectNameSpace);
-   for ( xmlCreator = _objectCreators.begin(); xmlCreator != _objectCreators.end(); ++xmlCreator )
-   {
-      XMLObject* temp = xmlCreator->second->CreateNewXMLObject(objectType);
-      if ( temp )
-      {
-         return temp;       
-      }
-   }
-   return 0;
+    std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
+    //xmlCreator = _objectCreators.find(objectNameSpace);
+    for( xmlCreator = _objectCreators.begin(); xmlCreator != _objectCreators.end(); ++xmlCreator )
+    {
+        XMLObject* temp = xmlCreator->second->CreateNewXMLObject( objectType );
+        if( temp )
+        {
+            return temp;
+        }
+    }
+    return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 XMLObject* XMLObjectFactory::CreateXMLObjectCopy( XMLObject* objectToCopy )
 {
-   std::string objectType = objectToCopy->GetObjectType();
-   std::string objectNamespace = objectToCopy->GetObjectNamespace();
+    std::string objectType = objectToCopy->GetObjectType();
+    std::string objectNamespace = objectToCopy->GetObjectNamespace();
 
-   ///I don't think we need this as we already have an object of the type we are creating
-   ///therefore no need to check this. 
-   ///registration of the creator is taken care of in the constructor of the xmlobject -- mccdo
-   //std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
-   //xmlCreator = _objectCreators.find(objectNamespace);
-   //if(xmlCreator != _objectCreators.end())
-   {
-      return _objectCreators[ objectNamespace ]->CreateNewXMLObjectCopy(objectType,objectToCopy);
-   }
-   //return 0;
+    ///I don't think we need this as we already have an object of the type we are creating
+    ///therefore no need to check this.
+    ///registration of the creator is taken care of in the constructor of the xmlobject -- mccdo
+    //std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
+    //xmlCreator = _objectCreators.find(objectNamespace);
+    //if(xmlCreator != _objectCreators.end())
+    {
+        return _objectCreators[ objectNamespace ]->CreateNewXMLObjectCopy( objectType, objectToCopy );
+    }
+    //return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-bool XMLObjectFactory::ObjectCreatorIsRegistered(std::string objectNamespace)
+bool XMLObjectFactory::ObjectCreatorIsRegistered( std::string objectNamespace )
 {
-   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
-   if(_objectCreators.find(objectNamespace) != _objectCreators.end())
-   {
-      return true;
-   }
-   return false;
+    std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
+    if( _objectCreators.find( objectNamespace ) != _objectCreators.end() )
+    {
+        return true;
+    }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool XMLObjectFactory::RegisterObjectCreator(std::string objectNamespace,CreationEventHandler* newCreator)
+bool XMLObjectFactory::RegisterObjectCreator( std::string objectNamespace, CreationEventHandler* newCreator )
 {
-   std::map<std::string,CreationEventHandler* >::iterator xmlCreator;
-   if(_objectCreators.find(objectNamespace) != _objectCreators.end())
-   {
-      return false;
-   }
-   if(objectNamespace != std::string("XML") && 
-      objectNamespace != std::string("CAD") &&
-      objectNamespace != std::string("Model") &&
-      objectNamespace != std::string("Shader"))
-   {
-      std::cout<<"Invalid namespace specified: "<<objectNamespace<<std::endl;
-      std::cout<<"Valid namespaces are: "<<std::endl;
-      std::cout<<"XML"<<std::endl;
-      std::cout<<"CAD"<<std::endl;
-      std::cout<<"Shader"<<std::endl;
-      return false;
-   }
-   _objectCreators[objectNamespace] = newCreator;
-   return true;
+    std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
+    if( _objectCreators.find( objectNamespace ) != _objectCreators.end() )
+    {
+        return false;
+    }
+    if( objectNamespace != std::string( "XML" ) &&
+            objectNamespace != std::string( "CAD" ) &&
+            objectNamespace != std::string( "Model" ) &&
+            objectNamespace != std::string( "Shader" ) )
+    {
+        std::cout << "Invalid namespace specified: " << objectNamespace << std::endl;
+        std::cout << "Valid namespaces are: " << std::endl;
+        std::cout << "XML" << std::endl;
+        std::cout << "CAD" << std::endl;
+        std::cout << "Shader" << std::endl;
+        return false;
+    }
+    _objectCreators[objectNamespace] = newCreator;
+    return true;
 }

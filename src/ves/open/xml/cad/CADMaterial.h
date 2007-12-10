@@ -52,7 +52,7 @@ namespace open
 {
 namespace xml
 {
-   class FloatArray;
+class FloatArray;
 }
 }
 }
@@ -70,136 +70,136 @@ namespace cad
 class VE_CAD_EXPORTS CADMaterial: public ves::open::xml::XMLObject
 {
 public:
-   ///Constructor
-   ///\param name The name of this material.
-   CADMaterial(std::string name=std::string("Material"));
-   ///Destructor
-   virtual ~CADMaterial();
+    ///Constructor
+    ///\param name The name of this material.
+    CADMaterial( std::string name = std::string( "Material" ) );
+    ///Destructor
+    virtual ~CADMaterial();
 
-   ///Set the diffuse component
-   ///\param diffuse RGBA diffuse property
-   void SetDiffuseComponent(ves::open::xml::FloatArray* diffuse);
+    ///Set the diffuse component
+    ///\param diffuse RGBA diffuse property
+    void SetDiffuseComponent( ves::open::xml::FloatArray* diffuse );
 
-   ///Set the emissive component
-   ///\param emissive RGBA emissive property
-   void SetEmissiveComponent(ves::open::xml::FloatArray* emissive);
+    ///Set the emissive component
+    ///\param emissive RGBA emissive property
+    void SetEmissiveComponent( ves::open::xml::FloatArray* emissive );
 
-   ///Set the ambient component
-   ///\param ambient RGBA ambient property
-   void SetAmbientComponent(ves::open::xml::FloatArray* ambient);
+    ///Set the ambient component
+    ///\param ambient RGBA ambient property
+    void SetAmbientComponent( ves::open::xml::FloatArray* ambient );
 
-   ///Set the specular reflection component
-   ///\param specular RGBA specular property
-   void SetSpecularComponent(ves::open::xml::FloatArray* specular);
+    ///Set the specular reflection component
+    ///\param specular RGBA specular property
+    void SetSpecularComponent( ves::open::xml::FloatArray* specular );
 
-   ///Set the "shininess" of this material
-   ///\param shine value
-   void SetShininess(float shine);
+    ///Set the "shininess" of this material
+    ///\param shine value
+    void SetShininess( float shine );
 
-   ///Set the name of this material.
-   ///\param name The name of the material.
-   void SetMaterialName(std::string name);
+    ///Set the name of this material.
+    ///\param name The name of the material.
+    void SetMaterialName( std::string name );
 
-   ///Set the object from XML data
-   ///\param xmlNode Node to set this object from
-   virtual void SetObjectFromXMLData( DOMNode* xmlNode);
+    ///Set the object from XML data
+    ///\param xmlNode Node to set this object from
+    virtual void SetObjectFromXMLData( DOMNode* xmlNode );
 
-   ///Set the face that this material applies to.
-   ///\param faceToApplyTo The face that this material applies to.
-   void SetFace(std::string faceToApplyTo);
- 
-   ///Set a component of the material
-   ///\param componentName The name of the component to set the values to.
-   ///\param values The new values to use
-   void SetComponent(std::string componentName,double* values);
+    ///Set the face that this material applies to.
+    ///\param faceToApplyTo The face that this material applies to.
+    void SetFace( std::string faceToApplyTo );
 
-   ///Set a component of the material
-   ///\param componentName The name of the component to set the values to.
-   ///\param values The new values to use
-   void SetComponent(std::string componentName,std::vector<double> values);
+    ///Set a component of the material
+    ///\param componentName The name of the component to set the values to.
+    ///\param values The new values to use
+    void SetComponent( std::string componentName, double* values );
 
-   ///Set the color mode.
-   ///Valid options are:
-   ///Ambient
-   ///Diffuse
-   ///Specular
-   ///Emission
-   ///Ambient_and_Diffuse
-   ///Off            
-   ///\param colorMode The color mode of this material.
-   void SetColorMode(std::string colorMode);
-   
-   ///Set the overall opacity for this material
-   ///\param  opacity The opacity value;
-   void SetOpacity(double opacity); 
-   
-   ///Get the opacity value
-   double GetOpacity();
+    ///Set a component of the material
+    ///\param componentName The name of the component to set the values to.
+    ///\param values The new values to use
+    void SetComponent( std::string componentName, std::vector<double> values );
 
-   ///Get the diffuse property
-   ves::open::xml::FloatArray* GetDiffuse();
+    ///Set the color mode.
+    ///Valid options are:
+    ///Ambient
+    ///Diffuse
+    ///Specular
+    ///Emission
+    ///Ambient_and_Diffuse
+    ///Off
+    ///\param colorMode The color mode of this material.
+    void SetColorMode( std::string colorMode );
 
-   ///Get the emissive property
-   ves::open::xml::FloatArray* GetEmissive();
+    ///Set the overall opacity for this material
+    ///\param  opacity The opacity value;
+    void SetOpacity( double opacity );
 
-   ///Get the ambient property
-   ves::open::xml::FloatArray* GetAmbient();
+    ///Get the opacity value
+    double GetOpacity();
 
-   ///Get the specular property
-   ves::open::xml::FloatArray* GetSpecular();
-  
-   ///Get the shininess property
-   double GetShininess();
+    ///Get the diffuse property
+    ves::open::xml::FloatArray* GetDiffuse();
 
-   ///Get the material name.
-   std::string GetMaterialName();
+    ///Get the emissive property
+    ves::open::xml::FloatArray* GetEmissive();
 
-   ///Get the face that this material applies to.
-   std::string GetFace();
+    ///Get the ambient property
+    ves::open::xml::FloatArray* GetAmbient();
 
-   ///Get the color mode.
-   std::string GetColorMode();
-   
-   ///Copy constructor
-   CADMaterial(const CADMaterial& rhs);
+    ///Get the specular property
+    ves::open::xml::FloatArray* GetSpecular();
 
-   ///Equal operator
-   CADMaterial& operator=(const CADMaterial& rhs);
-protected:	
-   
+    ///Get the shininess property
+    double GetShininess();
 
-   ///Internally update the XML data for the material.
-   ///\param input The new XML data for the material.
-   virtual void _updateVEElement(std::string input);
+    ///Get the material name.
+    std::string GetMaterialName();
 
-   ///Internally update the XML data for the material shininess.
-   void _updateShininess();
+    ///Get the face that this material applies to.
+    std::string GetFace();
 
-   ///Internally update the XML data for the material color properties.
-   void _updateColorProperties();
+    ///Get the color mode.
+    std::string GetColorMode();
 
-   ///Internally update the XML data for the material name.
-   void _updateMaterialName();
+    ///Copy constructor
+    CADMaterial( const CADMaterial& rhs );
 
-   ///Internally update the XML data for the material face.
-   void _updateMaterialFace();
+    ///Equal operator
+    CADMaterial& operator=( const CADMaterial& rhs );
+protected:
 
-   ///Internally update the XML data for the material color mode.
-   void _updateColorMode();
 
-   ves::open::xml::FloatArray* _kDiffuse;///< Diffuse component.
-   ves::open::xml::FloatArray* _kEmissive;///< Emmisive component.
-   ves::open::xml::FloatArray* _ambient;///< Ambient component.
-   ves::open::xml::FloatArray* _specular;///< Specular component.
-   std::string _materialName;///< Name of this Material node.
-   double _shininess;///< Shininess of the material
-   std::string _colorMode;///< Color mode of this material
-   std::string _face;///< Face that this material is applied to.
-   double _opacity;///<Opacity value
+    ///Internally update the XML data for the material.
+    ///\param input The new XML data for the material.
+    virtual void _updateVEElement( std::string input );
+
+    ///Internally update the XML data for the material shininess.
+    void _updateShininess();
+
+    ///Internally update the XML data for the material color properties.
+    void _updateColorProperties();
+
+    ///Internally update the XML data for the material name.
+    void _updateMaterialName();
+
+    ///Internally update the XML data for the material face.
+    void _updateMaterialFace();
+
+    ///Internally update the XML data for the material color mode.
+    void _updateColorMode();
+
+    ves::open::xml::FloatArray* _kDiffuse;///< Diffuse component.
+    ves::open::xml::FloatArray* _kEmissive;///< Emmisive component.
+    ves::open::xml::FloatArray* _ambient;///< Ambient component.
+    ves::open::xml::FloatArray* _specular;///< Specular component.
+    std::string _materialName;///< Name of this Material node.
+    double _shininess;///< Shininess of the material
+    std::string _colorMode;///< Color mode of this material
+    std::string _face;///< Face that this material is applied to.
+    double _opacity;///<Opacity value
 };
 }
 template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement(const std::string subElementTagName, ves::open::xml::cad::CADMaterial* val)
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADMaterial* val )
 {
     val->SetOwnerDocument( _rootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );

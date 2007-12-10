@@ -47,7 +47,7 @@ namespace open
 {
 namespace xml
 {
-    class XMLObject;
+class XMLObject;
 }
 }
 }
@@ -56,7 +56,7 @@ namespace ves
 {
 namespace xplorer
 {
-   class GlobalBase;
+class GlobalBase;
 }
 }
 
@@ -71,27 +71,27 @@ namespace network
 class VE_XPLORER_NETWORK_EXPORTS UpdateNetworkEventHandler: public ves::xplorer::event::EventHandler
 {
 public:
-   ///Constructor
-   UpdateNetworkEventHandler();
+    ///Constructor
+    UpdateNetworkEventHandler();
 
-   ///Copy Constructor
-   UpdateNetworkEventHandler(const UpdateNetworkEventHandler& rhs);
+    ///Copy Constructor
+    UpdateNetworkEventHandler( const UpdateNetworkEventHandler& rhs );
 
-   ///Destructor
-   virtual ~UpdateNetworkEventHandler();
+    ///Destructor
+    virtual ~UpdateNetworkEventHandler();
 
-   ///Equal operator
-   UpdateNetworkEventHandler& operator=(const UpdateNetworkEventHandler& rhs);
+    ///Equal operator
+    UpdateNetworkEventHandler& operator=( const UpdateNetworkEventHandler& rhs );
 
-   ///Set the cfdModel.
-   ///\param model The cfdModel to execute the Command on\n.
-   ///Default uses the active cfdModel from ModelHandler\n
-   ///Otherwise, the cfdModel passed in is used.
-   void SetGlobalBaseObject(ves::xplorer::GlobalBase* model=0);
-   
-   ///Exectute the event
-   ///\param xmlObject The current xmlObject event.
-   void Execute( ves::open::xml::XMLObject* command); 
+    ///Set the cfdModel.
+    ///\param model The cfdModel to execute the Command on\n.
+    ///Default uses the active cfdModel from ModelHandler\n
+    ///Otherwise, the cfdModel passed in is used.
+    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
+
+    ///Exectute the event
+    ///\param xmlObject The current xmlObject event.
+    void Execute( ves::open::xml::XMLObject* command );
 
 private:
 };

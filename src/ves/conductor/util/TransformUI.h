@@ -36,7 +36,7 @@
 TransformUI API
 */
 /*!\class ves::conductor::util::TransformUI
-* 
+*
 */
 #include <wx/panel.h>
 #include <wx/spinctrl.h>
@@ -55,13 +55,13 @@ namespace open
 {
 namespace xml
 {
-   class Transform;
-   class DataValuePair;
-   class ParameterBlock;
-   namespace model
-   {
-      class Model;
-   }
+class Transform;
+class DataValuePair;
+class ParameterBlock;
+namespace model
+{
+class Model;
+}
 }
 }
 }
@@ -73,7 +73,7 @@ namespace conductor
 namespace util
 {
 class DataSetLoaderUI;
-    class wxSpinCtrlDbl;
+class wxSpinCtrlDbl;
 class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
 {
 public:
@@ -85,8 +85,8 @@ public:
     ///Enums used by wxwidgets
     enum TRANSFORM_UI
     {
-    TRANSFORM_PANEL_ID,///<The transform panel ID.
-    UNIFORM_SCALE///<The scale uniformly ID
+        TRANSFORM_PANEL_ID,///<The transform panel ID.
+        UNIFORM_SCALE///<The scale uniformly ID
     };
 
     ///Callback for the transform ui

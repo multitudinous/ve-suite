@@ -39,7 +39,7 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Shader::TextureImagePtr.  To get the full 
+ * VE_XML::VE_Shader::TextureImagePtr.  To get the full
  * declaration of VE_XML::VE_Shader::TextureImage
  * ves/open/xml/shader/TextureImage.h must be included, too.
  */
@@ -52,12 +52,12 @@ namespace xml
 {
 namespace shader
 {
-   class TextureImage;
-   /// Typedef for a SmartPtr type for the TextureImage.
-   typedef ves::util::ClassPtrDef<TextureImage>::type  TextureImagePtr;
-   typedef ves::util::SharedPtrDef<TextureImage>::type TextureImageSharedPtr;
-   typedef ves::util::WeakPtrDef<TextureImage>::type   TextureImageWeakPtr;
-   typedef ves::util::ScopedPtrDef<TextureImage>::type TextureImageScopedPtr;
+class TextureImage;
+/// Typedef for a SmartPtr type for the TextureImage.
+typedef ves::util::ClassPtrDef<TextureImage>::type  TextureImagePtr;
+typedef ves::util::SharedPtrDef<TextureImage>::type TextureImageSharedPtr;
+typedef ves::util::WeakPtrDef<TextureImage>::type   TextureImageWeakPtr;
+typedef ves::util::ScopedPtrDef<TextureImage>::type TextureImageScopedPtr;
 }
 }
 }

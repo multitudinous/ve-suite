@@ -36,7 +36,7 @@
 SummaryResultDialog API
 */
 /*!\class SummaryResultDialog
-* 
+*
 */
 #include <ves/conductor/UIDialog.h>
 #include <ves/conductor/TexTable.h>
@@ -56,21 +56,21 @@ namespace conductor
 class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
-   SummaryResultDialog(wxWindow*parent, const wxString& title=wxT("Result Dialog"), wxSize tabsize= wxSize(477, 300));
-   virtual ~SummaryResultDialog();
+    SummaryResultDialog( wxWindow*parent, const wxString& title = wxT( "Result Dialog" ), wxSize tabsize = wxSize( 477, 300 ) );
+    virtual ~SummaryResultDialog();
 
-   void TabTitle( const wxString& title );
-   void NewTab( const wxString& title = wxT("Results") );
-   void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2);
-   TexTable* syngas;
+    void TabTitle( const wxString& title );
+    void NewTab( const wxString& title = wxT( "Results" ) );
+    void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2 );
+    TexTable* syngas;
 
 private:
-   wxNotebook* tabs;
-   wxButton* ok;
-   wxSize tsize;
-   int first_tab;
+    wxNotebook* tabs;
+    wxButton* ok;
+    wxSize tsize;
+    int first_tab;
 
-   //DECLARE_EVENT_TABLE()
+    //DECLARE_EVENT_TABLE()
 };
 }
 }

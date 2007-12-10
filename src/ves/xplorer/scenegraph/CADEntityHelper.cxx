@@ -86,7 +86,7 @@
 #include <string>
 #include <cctype>
 
-#include <boost/filesystem/operations.hpp> 
+#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 
 using namespace ves::xplorer::scenegraph;
@@ -102,28 +102,28 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 #ifdef _OSG
     if( !input.m_cadNode.valid() )
     {
-        std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node" 
-            << std::endl;
+        std::cerr << "ERROR : CADEntityHelper::CADEntityHelper not a valid node"
+        << std::endl;
         return;
     }
-    
-    ///We deep copy nodes so that picking is accurate 
+
+    ///We deep copy nodes so that picking is accurate
     ///and so that physics will work properly in the future
     if( dynamic_cast< osgOQ::OcclusionQueryRoot* >( input.m_cadNode.get() ) )
     {
-        m_cadNode = new osgOQ::OcclusionQueryRoot( 
-            *static_cast< osgOQ::OcclusionQueryRoot* >( 
-            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+        m_cadNode = new osgOQ::OcclusionQueryRoot(
+                        *static_cast< osgOQ::OcclusionQueryRoot* >(
+                            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
     }
     else if( input.m_cadNode->asGroup() )
     {
-        m_cadNode = new osg::Group( *input.m_cadNode->asGroup(), 
-            osg::CopyOp::DEEP_COPY_NODES );
+        m_cadNode = new osg::Group( *input.m_cadNode->asGroup(),
+                                    osg::CopyOp::DEEP_COPY_NODES );
     }
     else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
     {
-        m_cadNode = new osg::Geode( *static_cast< osg::Geode* >( 
-            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+        m_cadNode = new osg::Geode( *static_cast< osg::Geode* >(
+                                        input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
     }
     else
     {
@@ -198,11 +198,11 @@ void CADEntityHelper::ToggleDisplay( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::ToggleDisplay( std::string onOff )
 {
-    if ( !GetNode() )
+    if( !GetNode() )
     {
         return;
     }
-        
+
     if( onOff == "ON" )
     {
 #ifdef _OSG
@@ -219,11 +219,11 @@ void CADEntityHelper::ToggleDisplay( std::string onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::LoadFile( std::string filename, 
-    bool isStream, bool occlude )
+void CADEntityHelper::LoadFile( std::string filename,
+                                bool isStream, bool occlude )
 {
-    if( strstr( filename.c_str(), ".stl" ) || 
-        strstr( filename.c_str(), ".stla" ) )
+    if( strstr( filename.c_str(), ".stl" ) ||
+            strstr( filename.c_str(), ".stla" ) )
     {
         m_twoSidedLighting = true;
     }
@@ -232,15 +232,15 @@ void CADEntityHelper::LoadFile( std::string filename,
     osg::ref_ptr< osg::Node > tempCADNode;
     if( !isStream )
     {
-        if( osgDB::getLowerCaseFileExtension(filename) == "osg" )
+        if( osgDB::getLowerCaseFileExtension( filename ) == "osg" )
         {
             osgDB::ReaderWriter *rw = osgDB::Registry::instance()->
-                getReaderWriterForExtension( 
-                osgDB::getLowerCaseFileExtension( filename ) );
+                                      getReaderWriterForExtension(
+                                          osgDB::getLowerCaseFileExtension( filename ) );
             if( !rw )
             {
-                std::cerr << "Error: could not find a suitable " << 
-                    "reader/writer to load the specified file" << std::endl;
+                std::cerr << "Error: could not find a suitable " <<
+                "reader/writer to load the specified file" << std::endl;
                 return;
             }
 
@@ -248,88 +248,88 @@ void CADEntityHelper::LoadFile( std::string filename,
             std::auto_ptr< progbuf > pb( new progbuf( filename ) );
             if( !pb->is_open() )
             {
-                std::cerr << "Error: could not open file `" 
-                    << filename << "'" << std::endl;
+                std::cerr << "Error: could not open file `"
+                << filename << "'" << std::endl;
                 return;
             }
-            
+
             std::cout << "Progress: ";
-            
+
             std::istream mis( pb.get() );
             osgDB::ReaderWriter::ReadResult rr = rw->readNode( mis );
-            
+
             std::cout << std::endl;
-            
+
             tempCADNode = rr.getNode();
             if( !tempCADNode.valid() )
             {
-                std::cerr << "Error: could not load file `" 
-                    << filename << "'" << std::endl;
+                std::cerr << "Error: could not load file `"
+                << filename << "'" << std::endl;
             }
         }
-        else if( osgDB::getLowerCaseFileExtension(filename) == "ven" )
+        else if( osgDB::getLowerCaseFileExtension( filename ) == "ven" )
         {
             ///Get directory to look for txt files
             std::string venDirectory;
             std::ifstream inputDirectory( filename.c_str() );
             inputDirectory >> venDirectory;
             ///Load in txt files
- 			/*boost::filesystem::path fullPathFilename =
+            /*boost::filesystem::path fullPathFilename =
+                        boost::filesystem::system_complete(
+                        boost::filesystem::path( filename.c_str(),
+                        boost::filesystem::native) );
+                    fullPathFilename.*/
+            boost::filesystem::path fullPathFilename =
                 boost::filesystem::system_complete(
-                boost::filesystem::path( filename.c_str(),
-                boost::filesystem::native) );
-            fullPathFilename.*/
- 			boost::filesystem::path fullPathFilename =
-            boost::filesystem::system_complete(
                     boost::filesystem::path( venDirectory.c_str(),
-                    boost::filesystem::native) );
-            //std::cout << venDirectory << " " 
+                                             boost::filesystem::native ) );
+            //std::cout << venDirectory << " "
             //<< fullPathFilename.native_file_string() << std::endl;
-            tempCADNode = 
+            tempCADNode =
                 parseOCCNURBSFile( fullPathFilename.native_file_string() );
             ///get osg node
         }
         else
         {
- 			boost::filesystem::path fullPathFilename =
-			boost::filesystem::system_complete(
-                boost::filesystem::path(filename.c_str(),
-                boost::filesystem::native));
-			std::string fullPath;
-			if( boost::filesystem::exists( fullPathFilename ) )
-			{
-				fullPath = fullPathFilename.native_file_string();
-			}
+            boost::filesystem::path fullPathFilename =
+                boost::filesystem::system_complete(
+                    boost::filesystem::path( filename.c_str(),
+                                             boost::filesystem::native ) );
+            std::string fullPath;
+            if( boost::filesystem::exists( fullPathFilename ) )
+            {
+                fullPath = fullPathFilename.native_file_string();
+            }
             tempCADNode = osgDB::readNodeFile( fullPath );
-			///Check for cached file when reloading file with ves file
-			//osgDB::fileExists( destFile );
-			//osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
-			//osgDB::getLowerCaseFileExtension(filename)
-			//std::string shortName = osgDB::getNameLessExtension( fName );
-			//ext = osgDB::getFileExtension( shortName );
-			if( !tempCADNode.valid() )
-			{
-				std::string ptFileTest = ComputeIntermediateFileNameAndPath( filename );
-				if( !ptFileTest.empty() )
-				{
-					fullPath = ptFileTest;
-				}
-				tempCADNode = osgDB::readNodeFile( fullPath );
-			}
-		}
+            ///Check for cached file when reloading file with ves file
+            //osgDB::fileExists( destFile );
+            //osgDB::Registry::instance()->getReaderWriterForExtension( "osg" );
+            //osgDB::getLowerCaseFileExtension(filename)
+            //std::string shortName = osgDB::getNameLessExtension( fName );
+            //ext = osgDB::getFileExtension( shortName );
+            if( !tempCADNode.valid() )
+            {
+                std::string ptFileTest = ComputeIntermediateFileNameAndPath( filename );
+                if( !ptFileTest.empty() )
+                {
+                    fullPath = ptFileTest;
+                }
+                tempCADNode = osgDB::readNodeFile( fullPath );
+            }
+        }
     }
     else
     {
         std::istringstream textNodeStream( filename );
         tempCADNode = osgDB::Registry::instance()->
-            getReaderWriterForExtension( "osg" )->
-            readNode( textNodeStream ).getNode();
+                      getReaderWriterForExtension( "osg" )->
+                      readNode( textNodeStream ).getNode();
     }
 
     if( !tempCADNode.valid() )
     {
-        std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: " 
-            << filename << std::endl;
+        std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: "
+        << filename << std::endl;
         return;
     }
 
@@ -338,10 +338,10 @@ void CADEntityHelper::LoadFile( std::string filename,
         osg::ref_ptr< osg::LightModel > lightModel;
         lightModel = new osg::LightModel;
         lightModel->setTwoSided( true );
-        tempCADNode->getOrCreateStateSet()->setAttributeAndModes( 
+        tempCADNode->getOrCreateStateSet()->setAttributeAndModes(
             lightModel.get(), osg::StateAttribute::ON );
-    }  
-        
+    }
+
 #elif _OPENSG
     std::cout << " Error:LoadFile !!! " << std::endl;
     exit( 1 );
@@ -351,23 +351,23 @@ void CADEntityHelper::LoadFile( std::string filename,
     root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( tempCADNode.get() );
     if( !root.valid() && occlude ) //(m_cadNode->getNumParents() > 0) )
     {
-        /*osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+        /*osgOQ::OcclusionQueryNonFlatVisitor oqv(
                                              ves::xplorer::scenegraph::SceneManager::instance()->
                                              GetOcclusionQueryContext() );
         m_cadNode->accept( oqv );*/
 
 
-        root = new osgOQ::OcclusionQueryRoot( 
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetOcclusionQueryContext() );
+        root = new osgOQ::OcclusionQueryRoot(
+                   ves::xplorer::scenegraph::SceneManager::instance()->
+                   GetOcclusionQueryContext() );
         root->addChild( tempCADNode.get() );
         m_cadNode = static_cast< osg::Node* >( root.get() );
     }
     else
     {
-        m_cadNode = tempCADNode;   
+        m_cadNode = tempCADNode;
     }
-    
+
     if( !isStream )
     {
         m_cadNode->setName( filename.c_str() );
@@ -375,7 +375,7 @@ void CADEntityHelper::LoadFile( std::string filename,
     else
     {
         std::string nodeName = m_cadNode->getName();
-        if ( nodeName.empty() )
+        if( nodeName.empty() )
         {
             m_cadNode->setName( "NULL_FILENAME" );
         }
@@ -386,13 +386,13 @@ void CADEntityHelper::AddOccluderNodes()
 {
     osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
     root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( m_cadNode.get() );
-    if( !root.valid() && (m_cadNode->getNumParents() > 0) )
+    if( !root.valid() && ( m_cadNode->getNumParents() > 0 ) )
     {
-        osgOQ::OcclusionQueryNonFlatVisitor oqv( 
+        osgOQ::OcclusionQueryNonFlatVisitor oqv(
             ves::xplorer::scenegraph::SceneManager::instance()->
             GetOcclusionQueryContext() );
         m_cadNode->accept( oqv );
-        
+
         /*
         root = new osgOQ::OcclusionQueryRoot( 
             ves::xplorer::scenegraph::SceneManager::instance()->
@@ -404,16 +404,16 @@ void CADEntityHelper::AddOccluderNodes()
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
-    ComputeIntermediateFileNameAndPath( const std::string& srcFile ) const
+ComputeIntermediateFileNameAndPath( const std::string& srcFile ) const
 {
-	std::string intermediateFileNameAndPath = "";
+    std::string intermediateFileNameAndPath = "";
     std::string inFile;
     inFile = srcFile;
-    
-    //then no filename was given by the user, so we'll 
+
+    //then no filename was given by the user, so we'll
     //use the same filename as the file that was imported
-    int indexOfFirstDot = (int)( inFile.find_last_of( '.' ) );
-    std::string tempExt( inFile.begin()+indexOfFirstDot+1, inFile.end() );
+    int indexOfFirstDot = ( int )( inFile.find_last_of( '.' ) );
+    std::string tempExt( inFile.begin() + indexOfFirstDot + 1, inFile.end() );
     //See if the extension is only 1 char which would mean a ProE file
     if( tempExt.size() == 1 )
     {
@@ -421,68 +421,68 @@ std::string CADEntityHelper::
         if( std::isdigit( tempExt.at( 0 ) ) )
         {
             //if so then grab the real index before the 3 space extension
-            indexOfFirstDot = 
-                (int)( inFile.find_last_of( '.', indexOfFirstDot - 1 ) );
+            indexOfFirstDot =
+                ( int )( inFile.find_last_of( '.', indexOfFirstDot - 1 ) );
         }
     }
-    
-    if ( indexOfFirstDot > 0 )
+
+    if( indexOfFirstDot > 0 )
     {
         intermediateFileNameAndPath = inFile.substr( 0, indexOfFirstDot );
     }
-    
+
     std::string objTest;
     objTest = intermediateFileNameAndPath + ".obj";
     if( osgDB::fileExists( objTest ) )
     {
         return objTest;
     }
-    
+
     objTest = intermediateFileNameAndPath + ".flt";
     if( osgDB::fileExists( objTest ) )
     {
         return objTest;
     }
 
-	objTest.clear();
-	return objTest;
+    objTest.clear();
+    return objTest;
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
 {
-    std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >nurbsPatches;
+    std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> > nurbsPatches;
     //std::string nurbsfile(argv[1]);
-    std::vector< std::string > patchFiles = 
-        ves::xplorer::util::fileIO::GetFilesInDirectory( directory,".txt");
+    std::vector< std::string > patchFiles =
+        ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".txt" );
     size_t nPatches = patchFiles.size();
     ves::xplorer::scenegraph::nurbs::util::OCCNURBSFileReader patchReader;
-    
-    for( size_t i = 0; i < nPatches;i++)
+
+    for( size_t i = 0; i < nPatches;i++ )
     {
-        ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = patchReader.ReadPatchFile(patchFiles.at(i));
-        if(surface)
+        ves::xplorer::scenegraph::nurbs::NURBSSurface* surface = patchReader.ReadPatchFile( patchFiles.at( i ) );
+        if( surface )
         {
-            surface->SetInterpolationGridSize(10,"U");
-            surface->SetInterpolationGridSize(20,"V");
+            surface->SetInterpolationGridSize( 10, "U" );
+            surface->SetInterpolationGridSize( 20, "V" );
             surface->Interpolate();
-            
-            osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch = 
-                new ves::xplorer::scenegraph::nurbs::NURBSNode(surface);
-            nurbsPatches.push_back(renderablePatch.get());
+
+            osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch =
+                new ves::xplorer::scenegraph::nurbs::NURBSNode( surface );
+            nurbsPatches.push_back( renderablePatch.get() );
         }
         else
         {
-            std::cout<<"Could not open file: "<<patchFiles.at(i)<<std::endl;
+            std::cout << "Could not open file: " << patchFiles.at( i ) << std::endl;
         }
     }
-    
-    if(nurbsPatches.size())
+
+    if( nurbsPatches.size() )
     {
-        m_venNode = 
+        m_venNode =
             new osg::PositionAttitudeTransform();
-        for(size_t i = 0; i < nurbsPatches.size(); i++)
+        for( size_t i = 0; i < nurbsPatches.size(); i++ )
         {
-            m_venNode->addChild(nurbsPatches.at(i).get());
+            m_venNode->addChild( nurbsPatches.at( i ).get() );
         }
         return m_venNode.get();
     }

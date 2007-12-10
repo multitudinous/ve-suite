@@ -34,7 +34,7 @@
 #define CFD_DISPLAY_SETTINGS
 namespace jccl
 {
-   class Configuration;
+class Configuration;
 }
 #include <jccl/Config/ConfigElement.h>
 
@@ -57,38 +57,44 @@ namespace xplorer
 class VE_XPLORER_EXPORTS cfdDisplaySettings : public GlobalBase
 {
 public:
-   ///Base constructor.
-   cfdDisplaySettings( void );
-   ///Copy Construstor
-   //cfdDisplaySettings( const cfdDisplaySettings& input ) { ; }
-   ///Destructor.
-   virtual ~cfdDisplaySettings( void ) { ; }
-   ///equal operator
-   //cfdDisplaySettings& operator= ( const cfdDisplaySettings& ) { ; }
+    ///Base constructor.
+    cfdDisplaySettings( void );
+    ///Copy Construstor
+    //cfdDisplaySettings( const cfdDisplaySettings& input ) { ; }
+    ///Destructor.
+    virtual ~cfdDisplaySettings( void )
+    {
+        ;
+    }
+    ///equal operator
+    //cfdDisplaySettings& operator= ( const cfdDisplaySettings& ) { ; }
 
     ///Process the display command
     virtual void ProcessCommand();
-    
-   ///in future, multi-threaded apps will make a copy of VjObs_i commandArray.
-   virtual void UpdateCommand() { ; }
 
-   ///Obtains the screen resolution.
-   std::pair< int, int > GetScreenResolution( void );
-   ///Sets screen corner values.
-   std::map< std::string, double > GetScreenCornerValues( void );
-   
+    ///in future, multi-threaded apps will make a copy of VjObs_i commandArray.
+    virtual void UpdateCommand()
+    {
+        ;
+    }
+
+    ///Obtains the screen resolution.
+    std::pair< int, int > GetScreenResolution( void );
+    ///Sets screen corner values.
+    std::map< std::string, double > GetScreenCornerValues( void );
+
 private:
     ///This function removes/adds elements to the current display system in
     /// vrjuggler. This can be extended to much more with juggler's rtrc code.
     ///\param remove flag to add/remove elements from an active configuration
     ///\param elements vector of elements to add/remove from an active configuration
     void ChangeDisplayElements( bool remove, jccl::ConfigElementPtr elements );
-   
+
 
     jccl::Configuration* configuration;///<A vector that contains current configurations.
 
-   int xSize;///<Screen size in pixels for x direction.
-   int ySize;///<Screen size in pixels for y direction.
+    int xSize;///<Screen size in pixels for x direction.
+    int ySize;///<Screen size in pixels for y direction.
 
     double newXmin;///<Sets new x min value for screen corner.
     double newXmax;///<Sets new x max value for screen corner.

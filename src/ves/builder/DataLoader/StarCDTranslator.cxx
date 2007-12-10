@@ -47,45 +47,43 @@ using namespace ves::builder::cfdTranslatorToVTK;
 StarCDTranslator::StarCDTranslator()
 {
 
-   SetTranslateCallback(&starToVTK);
-   SetPreTranslateCallback(&_cmdParser);
+    SetTranslateCallback( &starToVTK );
+    SetPreTranslateCallback( &_cmdParser );
 }
 /////////////////////////////////////////
 StarCDTranslator::~StarCDTranslator()
-{
-
-}
+{}
 //////////////////////////////////////////////////////////////////////////
-void StarCDTranslator::StarCDPreTranslateCbk::Preprocess(int argc,char** argv,
-                                               cfdTranslatorToVTK* toVTK)
+void StarCDTranslator::StarCDPreTranslateCbk::Preprocess( int argc, char** argv,
+                                                          cfdTranslatorToVTK* toVTK )
 {
-   PreTranslateCallback::Preprocess( argc, argv, toVTK );
+    PreTranslateCallback::Preprocess( argc, argv, toVTK );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StarCDTranslator::StarCDTranslateCbk::Translate(vtkDataObject*& outputDataset,
-		                                     cfdTranslatorToVTK* toVTK)
+void StarCDTranslator::StarCDTranslateCbk::Translate( vtkDataObject*& outputDataset,
+                                                      cfdTranslatorToVTK* toVTK )
 {
-   StarCDTranslator* starCDToVTK =
-              dynamic_cast<StarCDTranslator*>(toVTK);
-   if ( starCDToVTK )
-   {
-      starReader* star = new starReader( starCDToVTK->GetFile(0).c_str() );
-      star->ReadParameterFile();
-      
-      if ( !outputDataset )
-      {
-         outputDataset = vtkUnstructuredGrid::New();
-      }
-      outputDataset->ShallowCopy( star->GetUnsGrid() );
-      delete star;
-      outputDataset->Update();
-   }
+    StarCDTranslator* starCDToVTK =
+        dynamic_cast<StarCDTranslator*>( toVTK );
+    if( starCDToVTK )
+    {
+        starReader* star = new starReader( starCDToVTK->GetFile( 0 ).c_str() );
+        star->ReadParameterFile();
+
+        if( !outputDataset )
+        {
+            outputDataset = vtkUnstructuredGrid::New();
+        }
+        outputDataset->ShallowCopy( star->GetUnsGrid() );
+        delete star;
+        outputDataset->Update();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::DisplayHelp( void )
 {
-   std::cout << "|\tStarCD Translator Usage:" << std::endl
-               << "\t -singleFile <filename_to_load> -o <output_dir> "
-               << "-outFileName <output_filename> -loader star -w file" << std::endl;
+    std::cout << "|\tStarCD Translator Usage:" << std::endl
+    << "\t -singleFile <filename_to_load> -o <output_dir> "
+    << "-outFileName <output_filename> -loader star -w file" << std::endl;
 }
 

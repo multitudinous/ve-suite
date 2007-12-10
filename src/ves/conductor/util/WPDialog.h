@@ -34,7 +34,7 @@
 #define WP_DIALOG_H
 
 
-#include <string> 
+#include <string>
 #include <ves/VEConfig.h>
 #include <ves/conductor/util/BaseDialog.h>
 #include <ves/conductor/util/DualSlider.h>
@@ -53,138 +53,141 @@ class VE_CONDUCTOR_UTILS_EXPORTS WPDialog : public BaseDialog
 
 {
 public:
-   enum SEEDPOINT_IDS
-   {
-      DIMENSION_SPINNER_ID
-   };
-   //Constructor
-      WPDialog(wxWindow* parent, int id, std::string title);
-   
-   //Destructor
-   virtual ~WPDialog();
-   
-   ///Set the name of the command
-   void SetCommandName(std::string name);
-  
-   ///Send the commands to Xplorer;
-   void SendCommands();
+    enum SEEDPOINT_IDS
+    {
+        DIMENSION_SPINNER_ID
+    };
+    //Constructor
+    WPDialog( wxWindow* parent, int id, std::string title );
 
-   ///Add an instruction to send. This is for access in the callbacks.
-   void AddInstruction(ves::open::xml::DataValuePair* newInstruct);
-   
-   void SetCommand(std::string name){_commandName = name;}
-   
-   ///Get the seed point vector
-   std::vector< ves::open::xml::DataValuePair* > GetSeedPointDVPVector( void );
-   ///Callback used to set the dvp vector
-   void SetVectorDVP( void );
-   ///Transfer the seed points info from the window
-   virtual bool TransferDataFromWindow( void );
+    //Destructor
+    virtual ~WPDialog();
 
-   ///Get the slider values for the bounds
-   ///\param bounds The current slider values
-   void GetBounds(std::vector<double>& bounds);
+    ///Set the name of the command
+    void SetCommandName( std::string name );
 
-   ///Get the spinner values for the dimensions
-   ///\param dimensions The x y z dimensions
-   void GetDimensions(std::vector<long>& dimensions);
+    ///Send the commands to Xplorer;
+    void SendCommands();
+
+    ///Add an instruction to send. This is for access in the callbacks.
+    void AddInstruction( ves::open::xml::DataValuePair* newInstruct );
+
+    void SetCommand( std::string name )
+    {
+        _commandName = name;
+    }
+
+    ///Get the seed point vector
+    std::vector< ves::open::xml::DataValuePair* > GetSeedPointDVPVector( void );
+    ///Callback used to set the dvp vector
+    void SetVectorDVP( void );
+    ///Transfer the seed points info from the window
+    virtual bool TransferDataFromWindow( void );
+
+    ///Get the slider values for the bounds
+    ///\param bounds The current slider values
+    void GetBounds( std::vector<double>& bounds );
+
+    ///Get the spinner values for the dimensions
+    ///\param dimensions The x y z dimensions
+    void GetDimensions( std::vector<long>& dimensions );
 protected:
-   
-   ///Update the dimensions of the seed points bbox
-   ///\param event The wxCommand event.
-   void _updateDimensions(wxSpinEvent& event);
 
-   class WPMinSliderCallback: public
-	   ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
-      
-      WPMinSliderCallback(WPDialog* parent, std::string direction = "X")
-      
-      {
-         _direction = direction;
-	      _wpdlg = parent;
-      }
-      
-      virtual ~WPMinSliderCallback()
-      {
-         _direction.clear();
-      }
-      
-      virtual void SliderOperation();
-      
-      protected:
-      std::string _direction;
-      WPDialog* _wpdlg;
+    ///Update the dimensions of the seed points bbox
+    ///\param event The wxCommand event.
+    void _updateDimensions( wxSpinEvent& event );
+
+class WPMinSliderCallback: public
+                ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
+
+        WPMinSliderCallback( WPDialog* parent, std::string direction = "X" )
+
+        {
+            _direction = direction;
+            _wpdlg = parent;
+        }
+
+        virtual ~WPMinSliderCallback()
+        {
+            _direction.clear();
+        }
+
+        virtual void SliderOperation();
+
+    protected:
+        std::string _direction;
+        WPDialog* _wpdlg;
     };
 
 
-   class WPBothMoveCallback: public
-	   ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
-      
-      WPBothMoveCallback(WPDialog* parent, std::string direction = "X")
-      
-      {
-         _direction = direction;
-	      _wpdlg = parent;
-      }
-      
-      virtual ~WPBothMoveCallback()
-      {
-         _direction.clear();
-      }
-      
-      virtual void SliderOperation();
-      
-      protected:
-      std::string _direction;
-      WPDialog* _wpdlg;
+class WPBothMoveCallback: public
+                ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
+
+        WPBothMoveCallback( WPDialog* parent, std::string direction = "X" )
+
+        {
+            _direction = direction;
+            _wpdlg = parent;
+        }
+
+        virtual ~WPBothMoveCallback()
+        {
+            _direction.clear();
+        }
+
+        virtual void SliderOperation();
+
+    protected:
+        std::string _direction;
+        WPDialog* _wpdlg;
     };
 
 
 
-   class WPMaxSliderCallback: public
-	   ves::conductor::util::DualSlider::SliderCallback
-   {
-      public:
-      
-      WPMaxSliderCallback(WPDialog* parent, std::string direction = "X")
-      
-      {
-         _direction = direction;
-	 _wpdlg = parent;
-      }
-      
-      virtual ~WPMaxSliderCallback()
-      {
-         _direction.clear();
-      }
-      
-      virtual void SliderOperation();
-      
-      protected:
-      std::string _direction;
-      WPDialog* _wpdlg;
+class WPMaxSliderCallback: public
+                ves::conductor::util::DualSlider::SliderCallback
+    {
+    public:
+
+        WPMaxSliderCallback( WPDialog* parent, std::string direction = "X" )
+
+        {
+            _direction = direction;
+            _wpdlg = parent;
+        }
+
+        virtual ~WPMaxSliderCallback()
+        {
+            _direction.clear();
+        }
+
+        virtual void SliderOperation();
+
+    protected:
+        std::string _direction;
+        WPDialog* _wpdlg;
     };
 
-   //Build the DualSliders for the dialog
-   void _createDualSliders();
+    //Build the DualSliders for the dialog
+    void _createDualSliders();
 
-   //Add controls for dialog
-   virtual void _buildGUI();
-   virtual wxSizer* _buildSpecificWidgets();
-   
-   //
-   ves::conductor::util::DualSlider* _xBounds;
-   ves::conductor::util::DualSlider* _yBounds;
-   ves::conductor::util::DualSlider* _zBounds;
-   std::vector< ves::open::xml::DataValuePair* > seedPointDVP;
-   wxSpinCtrl* numXPointsSpinner;
-   wxSpinCtrl* numYPointsSpinner;
-   wxSpinCtrl* numZPointsSpinner;
-   DECLARE_EVENT_TABLE()
+    //Add controls for dialog
+    virtual void _buildGUI();
+    virtual wxSizer* _buildSpecificWidgets();
+
+    //
+    ves::conductor::util::DualSlider* _xBounds;
+    ves::conductor::util::DualSlider* _yBounds;
+    ves::conductor::util::DualSlider* _zBounds;
+    std::vector< ves::open::xml::DataValuePair* > seedPointDVP;
+    wxSpinCtrl* numXPointsSpinner;
+    wxSpinCtrl* numYPointsSpinner;
+    wxSpinCtrl* numZPointsSpinner;
+    DECLARE_EVENT_TABLE()
 
 };
 }

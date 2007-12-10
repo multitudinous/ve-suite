@@ -68,10 +68,10 @@ public:
     ///\param selectedState The state of the selection process
     ///\param dragState The state of the mouse true for dragging
     ///\param mousePoint The mouse position is between 0,1
-    SetStateOnNURBSNodeVisitor( osg::Node* node, bool selectedState, 
-        bool dragState,
-        std::pair< double, double > mousePoint, 
-        std::pair< double, double > mouseDelta );
+    SetStateOnNURBSNodeVisitor( osg::Node* node, bool selectedState,
+                                bool dragState,
+                                std::pair< double, double > mousePoint,
+                                std::pair< double, double > mouseDelta );
 
     ///Destructor
     virtual ~SetStateOnNURBSNodeVisitor( void );

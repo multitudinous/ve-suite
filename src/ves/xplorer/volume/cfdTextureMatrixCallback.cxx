@@ -40,37 +40,37 @@ using namespace ves::xplorer::volume;
 ////////////////////////////////////////////////////////////////////////
 //Constructor                                                         //
 ////////////////////////////////////////////////////////////////////////
-cfdTextureMatrixCallback::cfdTextureMatrixCallback(osg::TexMat* texmat,
-                                             osg::Vec3f center,
-                                        float* scale,float* trans)
-:_texMat(texmat),_center(center)
+cfdTextureMatrixCallback::cfdTextureMatrixCallback( osg::TexMat* texmat,
+                                                    osg::Vec3f center,
+                                                    float* scale, float* trans )
+        : _texMat( texmat ), _center( center )
 {
-   _scale[0] = scale[0];
-   _scale[1] = scale[1];
-   _scale[2] = scale[2];
+    _scale[0] = scale[0];
+    _scale[1] = scale[1];
+    _scale[2] = scale[2];
 
-   _trans[0] = trans[0];
-   _trans[1] = trans[1];
-   _trans[2] = trans[2];
+    _trans[0] = trans[0];
+    _trans[1] = trans[1];
+    _trans[2] = trans[2];
 }
 ////////////////////////////////////////////////////////////////////////////
-void cfdTextureMatrixCallback::operator()(osg::Node* node,osg::NodeVisitor* nv)
+void cfdTextureMatrixCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
-   //osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
-   if (_texMat.valid())
-   {
-      osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
-      osg::Matrixd translation = osg::Matrixd::translate(_center[0], _center[1], _center[2]);
-      osg::Matrixd inverseTranslation = osg::Matrixd::translate(-_center[0], 
-                                                                -_center[1],
-                                                                -_center[2]);
-      scale = inverseTranslation*scale*translation;
-      
-      osg::Matrix translate = osg::Matrix::translate(_center[0],_center[1],_center[2]);
-     
-      
-      _texMat->setMatrix(translate*scale);
-   }
-   traverse(node,nv);
+    //osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
+    if( _texMat.valid() )
+    {
+        osg::Matrixd scale = osg::Matrixd::scale( _scale[0], _scale[1], _scale[2] );
+        osg::Matrixd translation = osg::Matrixd::translate( _center[0], _center[1], _center[2] );
+        osg::Matrixd inverseTranslation = osg::Matrixd::translate( -_center[0],
+                                                                   -_center[1],
+                                                                   -_center[2] );
+        scale = inverseTranslation * scale * translation;
+
+        osg::Matrix translate = osg::Matrix::translate( _center[0], _center[1], _center[2] );
+
+
+        _texMat->setMatrix( translate*scale );
+    }
+    traverse( node, nv );
 }
 #endif //_OSG

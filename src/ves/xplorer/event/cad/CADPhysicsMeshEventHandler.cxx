@@ -51,15 +51,15 @@ using namespace ves::open::xml;
 
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsMeshEventHandler::CADPhysicsMeshEventHandler()
-:
-ves::xplorer::event::CADEventHandler()
+        :
+        ves::xplorer::event::CADEventHandler()
 {
     ;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
 CADPhysicsMeshEventHandler::CADPhysicsMeshEventHandler( const CADPhysicsMeshEventHandler& rhs )
-:
-ves::xplorer::event::CADEventHandler( rhs )
+        :
+        ves::xplorer::event::CADEventHandler( rhs )
 {
     ;
 }
@@ -83,7 +83,7 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObject* xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >(xmlObject);
+        Command* command = dynamic_cast< Command* >( xmlObject );
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
         DataValuePairWeakPtr meshType = command->GetDataValuePair( "Mesh Type" );
@@ -106,7 +106,7 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObject* xmlObject )
             std::cout << "Changed Physics Mesh: " << m_cadHandler->GetPart( nodeID->GetDataString() )->GetFilename() << std::endl;
         }
     }
-    catch(...)
+    catch ( ... )
     {
         std::cout << "Error!!" << std::endl;
     }

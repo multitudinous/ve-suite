@@ -36,7 +36,7 @@
 Device API
 */
 /*!\class VE_XPlorer::Device
-* 
+*
 */
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
@@ -51,9 +51,9 @@ Device API
 // --- OSG Stuff --- //
 #include <osg/ref_ptr>
 
-namespace osg 
+namespace osg
 {
-    class Vec3d;
+class Vec3d;
 }
 
 namespace ves
@@ -62,7 +62,7 @@ namespace open
 {
 namespace xml
 {
-    class Command;
+class Command;
 }
 }
 }
@@ -78,7 +78,10 @@ public:
     Device();
 
     ///Destructor
-    virtual ~Device(){;}
+    virtual ~Device()
+    {
+        ;
+    }
 
     ///Definition to update the position in scene
     virtual void UpdateNavigation();
@@ -118,7 +121,7 @@ public:
     void SetCenterPointJump( double* jump );
 
 protected:
-    ///Process the selection of a piece of geometry 
+    ///Process the selection of a piece of geometry
     virtual void ProcessSelection();
 
     ///Definition to set the start and end point

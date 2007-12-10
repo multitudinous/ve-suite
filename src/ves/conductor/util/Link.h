@@ -62,83 +62,89 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS Link : public wxEvtHandler
 {
 public:
-   ///Constructor
-   Link( wxScrolledWindow* designCanvas );
-   ///Destructor
-   ~Link( void );
-   ///Copy Constructor
-   Link( const Link& );
-   ///equal operator
-   Link& operator= ( const Link& );
-   ///Test for equality operator
-   friend inline bool operator== ( const Link& l1, const Link& l2 )
-   {
-      if ( 
-            (l1.Fr_mod == l2.Fr_mod) &&
-            (l1.To_mod == l2.To_mod) &&
-            (l1.Fr_port == l2.Fr_port) &&
-            (l1.To_port == l2.To_port)
-         )
-      {
-         return true;
-      }
-      return false;
-   }
-   
-   enum
-   {
-       DEL_LINK = 3000,
-       DEL_LINK_CON,
-       SHOW_LINK_CONT,
-       ADD_LINK_CON,
-       SET_ACTIVE_LINK,
-       //Aspen
-       LINK_MENU,
-       SHOW_LINK_NAME,
-       LINK_INPUTS,
-       LINK_OUTPUTS
-   };
-   
-   wxPoint* GetPoint( size_t i );
-   size_t GetNumberOfPoints( void );
-   std::vector< wxPoint >* GetPoints( void );
-   void SetPoint( wxPoint* pnt );
-   unsigned int GetFromPort( void );
-   unsigned int GetToPort( void );
-   unsigned long GetFromModule( void );
-   unsigned long GetToModule( void );
+    ///Constructor
+    Link( wxScrolledWindow* designCanvas );
+    ///Destructor
+    ~Link( void );
+    ///Copy Constructor
+    Link( const Link& );
+    ///equal operator
+    Link& operator= ( const Link& );
+    ///Test for equality operator
+    friend inline bool operator== ( const Link& l1, const Link& l2 )
+    {
+        if (
+            ( l1.Fr_mod == l2.Fr_mod ) &&
+            ( l1.To_mod == l2.To_mod ) &&
+            ( l1.Fr_port == l2.Fr_port ) &&
+            ( l1.To_port == l2.To_port )
+        )
+        {
+            return true;
+        }
+        return false;
+    }
 
-   void SetFromPort( unsigned int );
-   void SetToPort( unsigned int );
-   void SetFromModule( unsigned long );
-   void SetToModule( unsigned long );
-   Polygon* GetPolygon( void );
+    enum
+    {
+        DEL_LINK = 3000,
+        DEL_LINK_CON,
+        SHOW_LINK_CONT,
+        ADD_LINK_CON,
+        SET_ACTIVE_LINK,
+        //Aspen
+        LINK_MENU,
+        SHOW_LINK_NAME,
+        LINK_INPUTS,
+        LINK_OUTPUTS
+    };
 
-   void SetName(wxString name);
-   wxString GetName();
+    wxPoint* GetPoint( size_t i );
+    size_t GetNumberOfPoints( void );
+    std::vector< wxPoint >* GetPoints( void );
+    void SetPoint( wxPoint* pnt );
+    unsigned int GetFromPort( void );
+    unsigned int GetToPort( void );
+    unsigned long GetFromModule( void );
+    unsigned long GetToModule( void );
 
-   ///Helper functions
-   void DrawLinkCon( wxDC* dc );
-   void CalcLinkPoly( void );
-   void DrawLinkLine( wxDC* dc );
-   double computenorm( wxPoint pt1, wxPoint pt2 );
-   ///Set the user scale to enable working with the dc
-   void SetDCScale( std::pair< double, double >* scale );
-   ///Set UUID for this link
-   void SetUUID( std::string uuid );
-   ///Get UUID for this link
-   std::string GetUUID();
-   ///Set highlight flag for link
-   void SetHighlightFlag( bool flag );
-   ///Draw link
-   void DrawLink( wxDC* dc );
-   ///Set ves::open::xml::model::Link
-   void SetLink( ves::open::xml::model::LinkWeakPtr inputLink );
-   ///Get ves::open::xml::model::Link
-   ves::open::xml::model::LinkWeakPtr GetLink();
-   size_t GetMaxPointX() { return maxPointX; }
-   size_t GetMaxPointY() { return maxPointY; }
-   
+    void SetFromPort( unsigned int );
+    void SetToPort( unsigned int );
+    void SetFromModule( unsigned long );
+    void SetToModule( unsigned long );
+    Polygon* GetPolygon( void );
+
+    void SetName( wxString name );
+    wxString GetName();
+
+    ///Helper functions
+    void DrawLinkCon( wxDC* dc );
+    void CalcLinkPoly( void );
+    void DrawLinkLine( wxDC* dc );
+    double computenorm( wxPoint pt1, wxPoint pt2 );
+    ///Set the user scale to enable working with the dc
+    void SetDCScale( std::pair< double, double >* scale );
+    ///Set UUID for this link
+    void SetUUID( std::string uuid );
+    ///Get UUID for this link
+    std::string GetUUID();
+    ///Set highlight flag for link
+    void SetHighlightFlag( bool flag );
+    ///Draw link
+    void DrawLink( wxDC* dc );
+    ///Set ves::open::xml::model::Link
+    void SetLink( ves::open::xml::model::LinkWeakPtr inputLink );
+    ///Get ves::open::xml::model::Link
+    ves::open::xml::model::LinkWeakPtr GetLink();
+    size_t GetMaxPointX()
+    {
+        return maxPointX;
+    }
+    size_t GetMaxPointY()
+    {
+        return maxPointY;
+    }
+
 protected:
     void OnShowLinkContent( wxCommandEvent& event );
     void OnShowAspenName( wxCommandEvent& event );
@@ -149,7 +155,7 @@ protected:
     void OnDelLinkCon( wxCommandEvent &event );
     void OnMRightDown( wxMouseEvent &event );
     void OnSetActiveLinkID( wxUpdateUIEvent& event );
-    bool SelectLink(int x, int y);
+    bool SelectLink( int x, int y );
     ///Check the active id against the plugin id
     bool CheckID();
 
@@ -167,11 +173,11 @@ private:
     ///to port for the link
     unsigned int To_port;
     ///Used for the construction of arrow heads
-    double sinb; 
+    double sinb;
     ///Used for the construction of arrow heads
     double cosb;
     ///Used for the construction of arrow heads
-    double sina; 
+    double sina;
     ///Used for the construction of arrow heads
     double cosa;
     ///UUID for this link
@@ -183,13 +189,13 @@ private:
     int m_selToPort; // selected To port;
     int m_selLinkCon; //selected Link Connector
 
-	size_t maxPointX;
-	size_t maxPointY;
-    
+    size_t maxPointX;
+    size_t maxPointY;
+
     std::vector< wxPoint > cons; //connectors
     Polygon poly; //Poly is the current poly on the canvas
     wxScrolledWindow* networkFrame;
-    //The mouse position when the right button 
+    //The mouse position when the right button
     //clicked, used by menu event handlers
     wxPoint action_point;
     ///User scale
@@ -199,13 +205,13 @@ private:
     ///The XML Link rep
     ves::open::xml::model::LinkSharedPtr m_veLink;
     ves::open::xml::model::ModelSharedPtr parentModel;
-    
+
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
-    
+
     DECLARE_EVENT_TABLE()
 };
 }
@@ -217,6 +223,6 @@ private:
     { \
         event.Skip(); \
         return; \
-    } 
+    }
 
 #endif

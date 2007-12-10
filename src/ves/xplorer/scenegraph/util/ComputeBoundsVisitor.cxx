@@ -39,8 +39,8 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ComputeBoundsVisitor::ComputeBoundsVisitor( TraversalMode traversalMode )
-:
-osg::NodeVisitor( traversalMode )
+        :
+        osg::NodeVisitor( traversalMode )
 {
     ;
 }
@@ -53,7 +53,7 @@ void ComputeBoundsVisitor::reset()
 
 void ComputeBoundsVisitor::getPolytope( osg::Polytope& polytope, float margin ) const
 {
-    float delta = _bb.radius()*margin;
+    float delta = _bb.radius() * margin;
     polytope.add( osg::Plane( 0.0, 0.0, 1.0, -( _bb.zMin() - delta ) ) );
     polytope.add( osg::Plane( 0.0, 0.0, -1.0, ( _bb.zMax() + delta ) ) );
 
@@ -67,7 +67,7 @@ void ComputeBoundsVisitor::getPolytope( osg::Polytope& polytope, float margin ) 
 void ComputeBoundsVisitor::getBase( osg::Polytope& polytope, float margin ) const
 {
     float delta = _bb.radius() * margin;
-    polytope.add( osg::Plane( 0.0, 0.0, 1.0, -( _bb.zMin()-delta ) ) );
+    polytope.add( osg::Plane( 0.0, 0.0, 1.0, -( _bb.zMin() - delta ) ) );
 }
 
 void ComputeBoundsVisitor::apply( osg::Node& node )
