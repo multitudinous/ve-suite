@@ -30,6 +30,7 @@ AllowRootDirectory=true
 WizardImageBackColor=clWhite
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 EnableDirDoesntExistWarning=true
+PrivilegesRequired=none
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl

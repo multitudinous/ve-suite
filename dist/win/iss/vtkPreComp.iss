@@ -29,6 +29,7 @@ WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#DEPENDSINSTALLHOME}
+PrivilegesRequired=none
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl

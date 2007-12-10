@@ -29,24 +29,24 @@ BackColor2=$1b84f7
 WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
-OutputDir={#DEPENDSINSTALLHOME}
 EnableDirDoesntExistWarning=true
 ShowLanguageDialog=yes
+PrivilegesRequired=none
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly createallsubdirs
+Source: {#ACETAOHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly createallsubdirs ignoreversion
 Source: {#ACETAOHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Release\Naming_Service.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
-Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly
-Source: {#ACETAOHOME}\tao\*.h; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
-Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
-Source: {#ACETAOHOME}\TAO\*.inl; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
-Source: {#ACETAOHOME}\TAO\*.i; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
-Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
-Source: {#ACETAOHOME}\TAO\*.cpp; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly
+Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
+Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\ace; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOHOME}\tao\*.h; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly  ignoreversion
+Source: {#ACETAOHOME}\ace\*.inl; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOHOME}\TAO\*.inl; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOHOME}\TAO\*.i; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOHOME}\ace\*.cpp; DestDir: {app}\ace; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
+Source: {#ACETAOHOME}\TAO\*.cpp; DestDir: {app}\TAO; Attribs: readonly; Flags: recursesubdirs createallsubdirs uninsremovereadonly ignoreversion
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Debug\Naming_Service_d.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
+Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\

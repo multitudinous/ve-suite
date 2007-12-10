@@ -31,6 +31,7 @@ WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 OutputDir={#DEPENDSINSTALLHOME}
 AppVersion={#WXVERSION}_{#VEVERSION}
+PrivilegesRequired=none
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
