@@ -160,11 +160,14 @@ void World::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void World::PreFrameUpdate()
 {
+#ifdef VE_SOUND
     if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
         m_slideEntity->GetPhysicsRigidBody() ) )
     {
+
         m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
     }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* World::GetPluginDCS()

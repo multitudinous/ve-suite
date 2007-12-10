@@ -41,10 +41,11 @@ class MarbleEntity : public ves::xplorer::scenegraph::CADEntity
 public:
     MarbleEntity( std::string geomFile,
                   ves::xplorer::scenegraph::DCS* pluginDCS,
+		  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+                  ,osgAL::SoundManager* soundManager
 #endif
-                  osgAL::SoundManager* soundManager );
+		   );
 
     virtual ~MarbleEntity();
 
