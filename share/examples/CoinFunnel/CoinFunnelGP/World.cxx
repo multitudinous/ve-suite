@@ -105,7 +105,7 @@ void World::Initialize()
 #endif
                                              );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
-    double marblePosition[ 3 ] = { 5.4, 1.9, 5.4 };
+    double marblePosition[ 3 ] = { 4.85, 2.5, 5.75 };
     m_marbleEntity->GetDCS()->SetTranslationArray( marblePosition );
     m_marbleEntity->InitPhysics();
     m_marbleEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
@@ -120,7 +120,8 @@ void World::Initialize()
                                                m_pluginDCS.get(),
                                                m_physicsSimulator );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );
-    double quarterPosition[ 3 ] = { 5.0, 2.0, 5.0 };
+    double quarterPosition[ 3 ] = { -3.5, 0.7, 4.0 };
+    m_quarterEntity->GetDCS()->setAttitude( osg::Quat( 90.0, osg::Vec3f( 0, 1, 0 ) ) );
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
     m_quarterEntity->InitPhysics();
     m_quarterEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
@@ -128,6 +129,7 @@ void World::Initialize()
     m_quarterEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_quarterEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
+    m_quarterEntity->GetPhysicsRigidBody()->setActivationState( WANTS_DEACTIVATION );
 
     m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
                                                m_pluginDCS.get(),
@@ -138,7 +140,7 @@ void World::Initialize()
     m_railingEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_railingEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_railingEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    //m_railingEntity->SetShaders();
+    m_railingEntity->SetShaders( m_tcm.get() );
 
     m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive",
                                            m_pluginDCS.get(),
@@ -161,7 +163,7 @@ void World::PreFrameUpdate()
     if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
         m_slideEntity->GetPhysicsRigidBody() ) )
     {
-        //m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 0 );
+        m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

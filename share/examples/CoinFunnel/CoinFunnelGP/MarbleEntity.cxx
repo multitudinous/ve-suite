@@ -43,7 +43,7 @@ m_nonPhysicsGeometry( 0 )
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
 #ifdef VE_SOUND
-    m_marbleOnWood->LoadFile( "Sounds/31292_Corsica_S_coin_spiral.wav" );
+    m_marbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "float reflectionScale = 0.2; \n"
             "float refractionScale = 0.3; \n"
             "float indexOfRefractionRatio = 1.14; \n"
-            "vec4 baseColor = vec4( 0.7, 0.7, 0.7, 1.0 ); \n"
+            "vec4 baseColor = vec4( 0.2, 0.6, 0.2, 1.0 ); \n"
 
             "vec3 N = normalize( normal ); \n"
             "vec3 V = normalize( eyePos ); \n"
@@ -137,8 +137,8 @@ void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "float v =  dot( normalize( V ), N ); \n"
             "vec4 rainbow = texture2D( Rainbow, vec2( v, 0.0 ) ); \n"
 
-            //"vec4 rain = rainbowScale * rainbow * baseColor; \n"
-            "vec4 rain = rainbowScale * rainbow; \n"
+            "vec4 rain = rainbowScale * rainbow * baseColor; \n"
+            //"vec4 rain = rainbowScale * rainbow; \n"
             "vec4 refl = reflectionScale * reflection; \n"
             "vec4 refr = refractionScale * refraction * baseColor; \n"
 
@@ -212,7 +212,7 @@ void MarbleEntity::SetShaderTwo()
             "vec3 R = reflect( V, N ); \n"
             "float RDotL = max( dot( R, L ), 0.0 ); \n"
 
-            "vec3 color = vec3( 1.0, 1.0, 0.0 ); \n"
+            "vec3 color = vec3( 1.0, 0.0, 0.0 ); \n"
 
             "vec3 TotalAmbient  = gl_LightSource[ 0 ].ambient.rgb  * color; \n"
             "vec3 TotalDiffuse  = gl_LightSource[ 0 ].diffuse.rgb  * color * NDotL; \n"
@@ -222,21 +222,6 @@ void MarbleEntity::SetShaderTwo()
         "} \n";
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
-    //stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-    //stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-    //osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
-    //bf->setFunction( GL_ONE, GL_ONE_MINUS_SRC_ALPHA );
-    //bf->setFunction( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
-    //stateset->setAttribute( bf.get(), osg::StateAttribute::ON );
-
-    //osg::ref_ptr< osg::Depth > depth = new osg::Depth();
-    //depth->setWriteMask( false );
-    //stateset->setAttribute( depth.get(), osg::StateAttribute::ON );
-
-    //stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
-    //stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader( osg::Shader::VERTEX, vertexPass );

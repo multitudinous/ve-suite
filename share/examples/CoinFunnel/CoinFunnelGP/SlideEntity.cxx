@@ -63,7 +63,7 @@ void SlideEntity::SetShaderOne()
         "{ \n"
             "gl_Position = ftransform(); \n"
             
-            "float scale = 0.2; \n"
+            "float scale = 0.47; \n"
             "scaledPosition = scale * gl_Vertex.xyz; \n"
             "normal = gl_NormalMatrix * gl_Normal; \n"
             "eyePos = vec3( gl_ModelViewMatrix * gl_Vertex); \n"
@@ -81,8 +81,8 @@ void SlideEntity::SetShaderOne()
         "void main() \n"
         "{ \n"
             "float snoise = 2.0 * texture3D( Noise, scaledPosition ).x - 1.0; \n"
-            "float frequency = 0.0; \n"
-            "float noiseScale = 5.88; \n"
+            "float frequency = 113.0; \n"
+            "float noiseScale = 10.90; \n"
             
             "float r = fract( frequency * scaledPosition.z + noiseScale * snoise ); \n"
 
@@ -90,8 +90,8 @@ void SlideEntity::SetShaderOne()
             "float invMax = pow( ringSharpness, ringSharpness / ( ringSharpness - 1.0 ) ) / ( ringSharpness - 1.0 ); \n"
             "float ring = invMax * ( r - pow( r, ringSharpness ) ); \n"
 
-            "vec4 darkWood = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
-            "vec4 lightWood = vec4( 0.4, 0.4, 0.3, 1.0 ); \n"
+            "vec4 darkWood = vec4( 0.439216, 0.210526, 0.0, 1.0 ); \n"
+            "vec4 lightWood = vec4( 0.517647, 0.403759, 0.227820, 1.0 ); \n"
             "float lrp = ring + snoise; \n"
             "vec4  base = mix( darkWood, lightWood, lrp ); \n"
 
@@ -101,7 +101,7 @@ void SlideEntity::SetShaderOne()
             "vec3 R = reflect( V, N ); \n"
             
             "float diffuse = 0.5 + 0.5 * dot( N, L ); \n"
-            "float specular = pow( max( dot( R, L ), 0.0 ), 20.0 ); \n"
+            "float specular = pow( max( dot( R, L ), 0.0 ), 10.0 ); \n"
 
             "float Kd = 0.89; \n"
             "float Ks = 0.66; \n"
