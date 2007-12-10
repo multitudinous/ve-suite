@@ -86,7 +86,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS PhysicsSimulator    //: public vpr::Singleton< PhysicsSimulator >
+class VE_SCENEGRAPH_EXPORTS PhysicsSimulator
 {
 public:
     ///Acts as the destructor
@@ -111,6 +111,8 @@ public:
     ///Set whether physics is idle or not
     ///\param state State on or idle
     void SetIdle( bool state );
+
+    void SetCollisionInformation( bool collisionInformation );
 
     ///Set the shoot speed
     ///\param speed
@@ -146,6 +148,7 @@ private:
     int m_debugMode;///<The debug level for bullet physics
 
     bool m_idle;///<Determines whether the physics simulation is idle or not
+    bool m_collisionInformation;
 
     float shoot_speed;///<
 

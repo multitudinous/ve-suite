@@ -98,6 +98,19 @@ bool PhysicsRigidBody::IsStoringCollisions()
     return m_storeCollisions;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool PhysicsRigidBody::CollisionInquiry( PhysicsRigidBody* physicsRigidBody )
+{
+    int count = m_collisions.count( physicsRigidBody );
+    if( count > 0 )
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps()
 {
     if( m_collisionShape )

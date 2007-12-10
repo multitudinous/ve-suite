@@ -383,6 +383,7 @@ void App::latePreFrame( void )
 #endif
    //This is a frame rate calculation
    float deltaTime = current_time - lastTime;
+   ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( deltaTime );
    if( deltaTime >= 1.0f )
    {
       float framerate;
@@ -427,16 +428,6 @@ void App::latePreFrame( void )
     ///////////////////////
     cfdExecutive::instance()->PreFrameUpdate();
 
-	//Update physics objects with time passed from last frame
-	//**********************************************************************
-	//Used for physics_simulator to grab real dt per frame as floats
-	static float previous_time = 0.0f;
-
-	float dt = current_time - previous_time;
-	//std::cout<<dt<<std::endl;
-	ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( dt );
-	previous_time = current_time;
-	//**********************************************************************
 #ifdef _OSG
    //profile the update call
    {

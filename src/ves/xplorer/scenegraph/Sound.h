@@ -83,28 +83,41 @@ class VE_SCENEGRAPH_EXPORTS Sound
 {
 public:
     Sound( const std::string& name,
-           ves::xplorer::scenegraph::DCS* parent );
+           ves::xplorer::scenegraph::DCS* parentDCS );
 
     ///Constructor for use only with multiple applications on windows.
     ///This will prevent multiple instances of the osgAL::SoundManager singleton.
     Sound( const std::string& name,
-           ves::xplorer::scenegraph::DCS* parent,
+           ves::xplorer::scenegraph::DCS* parentDCS,
            osgAL::SoundManager* soundManager );
 
     ~Sound();
 
+    Sound &operator=( const Sound &sound );
+
     void Draw();
-    void LoadFile( std::string fileName );
+
+    void LoadFile( const std::string fileName );
+
+    void PushSoundEvent( int priority );
+
+    void Pause();
+    void Play();
+    void Stop();
+
     osgAL::SoundNode* GetSoundNode();
     
 private:
     osgAL::SoundManager* m_soundManager;
 
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
+    osg::ref_ptr< osg::Geode > m_soundGeode;
+
     osg::ref_ptr< openalpp::Sample > m_sample;
     osg::ref_ptr< osgAL::SoundState > m_soundState;
     osg::ref_ptr< osgAL::SoundNode > m_soundNode;
 
-    osg::ref_ptr< osg::Geode > m_soundGeode;
+    std::string m_fileName;
 
 };
 }

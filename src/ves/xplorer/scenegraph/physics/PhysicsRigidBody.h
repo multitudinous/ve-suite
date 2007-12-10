@@ -95,6 +95,8 @@ public:
 
     bool IsStoringCollisions();
 
+    bool CollisionInquiry( PhysicsRigidBody* physicsRigidBody );
+
     ///Creates a box shape from the osg::BoundingBox of the mesh shape
     void BoundingBoxShape();
 

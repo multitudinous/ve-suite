@@ -93,6 +93,7 @@ m_broadphase( 0 ),
 m_solver( 0 ),
 m_debugMode( 0 ),
 m_idle( true ),
+m_collisionInformation( false ),
 shoot_speed( 50.0f )
 {
     head.init( "VJHead" );
@@ -229,46 +230,49 @@ void PhysicsSimulator::UpdatePhysics( float dt )
     {
         m_dynamicsWorld->stepSimulation( dt );
 
-        bool clearCollisions = true;
-
-        int numManifolds = m_dispatcher->getNumManifolds();
-        for( int i = 0; i < numManifolds; ++i )
+        if( m_collisionInformation )
         {
-            btPersistentManifold* contactManifold = m_dispatcher->getManifoldByIndexInternal( i );
-            //contactManifold->refreshContactPoints( bodyA->getWorldTransform(), bodyB->getWorldTransform() );
+            bool clearCollisions = true;
 
-            int numContacts = contactManifold->getNumContacts();
-		    for( int j = 0; j < numContacts; ++j )
-		    {
-		        btManifoldPoint& pt = contactManifold->getContactPoint( j );
+            int numManifolds = m_dispatcher->getNumManifolds();
+            for( int i = 0; i < numManifolds; ++i )
+            {
+                btPersistentManifold* contactManifold = m_dispatcher->getManifoldByIndexInternal( i );
+                //contactManifold->refreshContactPoints( bodyA->getWorldTransform(), bodyB->getWorldTransform() );
 
-                PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >( contactManifold->getBody0() );
-                PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >( contactManifold->getBody1() );
+                int numContacts = contactManifold->getNumContacts();
+		        for( int j = 0; j < numContacts; ++j )
+		        {
+		            btManifoldPoint& pt = contactManifold->getContactPoint( j );
 
-                if( bodyA->IsStoringCollisions() )
-                {
-                    if( clearCollisions )
+                    PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >( contactManifold->getBody0() );
+                    PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >( contactManifold->getBody1() );
+
+                    if( bodyA->IsStoringCollisions() )
                     {
-                        bodyA->ClearCollisions();
-                        clearCollisions = false;
+                        if( clearCollisions )
+                        {
+                            bodyA->ClearCollisions();
+                            clearCollisions = false;
+                        }
+
+                        btVector3 ptA = pt.getPositionWorldOnA();
+                        bodyA->PushBackCollision( bodyB, ptA );
                     }
 
-                    btVector3 ptA = pt.getPositionWorldOnA();
-                    bodyA->PushBackCollision( bodyB, ptA );
-                }
-
-                if( bodyB->IsStoringCollisions() )
-                {
-                    if( clearCollisions )
+                    if( bodyB->IsStoringCollisions() )
                     {
-                        bodyB->ClearCollisions();
-                        clearCollisions = false;
-                    }
+                        if( clearCollisions )
+                        {
+                            bodyB->ClearCollisions();
+                            clearCollisions = false;
+                        }
 
-                    btVector3 ptB = pt.getPositionWorldOnB();
-                    bodyB->PushBackCollision( bodyA, ptB );
-                }
-		    }
+                        btVector3 ptB = pt.getPositionWorldOnB();
+                        bodyB->PushBackCollision( bodyA, ptB );
+                    }
+		        }
+            }
         }
 
         /*
@@ -479,6 +483,11 @@ void PhysicsSimulator::SetDebugMode( int mode )
 void PhysicsSimulator::SetIdle( bool state )
 {
     m_idle = state;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PhysicsSimulator::SetCollisionInformation( bool collisionInformation )
+{
+    m_collisionInformation = collisionInformation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetShootSpeed( float speed )
