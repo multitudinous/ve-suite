@@ -4,17 +4,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-    class Sound;
-}
-}
-}
-
 // --- My Includes --- //
 namespace demo
 {
@@ -27,7 +16,6 @@ public:
     CoinFunnelGP();
     virtual ~CoinFunnelGP();
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
-    virtual void AddSelfToSG();
     virtual void PreFrameUpdate();
     virtual void SetCurrentCommand( ves::open::xml::Command* command );
 
@@ -36,7 +24,6 @@ protected:
 
 private:
     demo::World* world;
-    ves::xplorer::scenegraph::Sound* m_sound;
 
 };
 

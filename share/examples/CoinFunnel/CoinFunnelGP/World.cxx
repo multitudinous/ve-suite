@@ -32,12 +32,17 @@ namespace demo
 
 ////////////////////////////////////////////////////////////////////////////////
 World::World( ves::xplorer::scenegraph::DCS* pluginDCS,
-              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
-              osgAL::SoundManager* soundManager  )
+              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+#ifdef VE_SOUND
+              , osgAL::SoundManager* soundManager
+#endif
+              )
 :
 m_pluginDCS( pluginDCS ),
 m_physicsSimulator( physicsSimulator ),
+#ifdef VE_SOUND
 m_soundManager( soundManager ),
+#endif
 m_tcm( new osg::TextureCubeMap() ),
 m_funnelEntity( 0 ),
 m_marbleEntity( 0 ),
@@ -79,6 +84,7 @@ void World::Initialize()
     m_tcm->setImage( osg::TextureCubeMap::NEGATIVE_Z,
                      osgDB::readImageFile( "Textures/CloudyHills/front.tga" ) );
 
+    m_physicsSimulator->SetCollisionInformation( true );
 
     m_funnelEntity = new demo::FunnelEntity( "Models/IVEs/funnel_physics.ive",
                                              m_pluginDCS.get(),
@@ -93,12 +99,16 @@ void World::Initialize()
 
     m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive",
                                              m_pluginDCS.get(),
-                                             m_physicsSimulator,
-                                             m_soundManager );
+                                             m_physicsSimulator
+#ifdef VE_SOUND
+                                             , m_soundManager
+#endif
+                                             );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
-    double marblePosition[ 3 ] = { 5.5, 2.0, 5.0 };
+    double marblePosition[ 3 ] = { 5.4, 1.9, 5.4 };
     m_marbleEntity->GetDCS()->SetTranslationArray( marblePosition );
     m_marbleEntity->InitPhysics();
+    m_marbleEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
     m_marbleEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
     m_marbleEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_marbleEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
@@ -113,6 +123,7 @@ void World::Initialize()
     double quarterPosition[ 3 ] = { 5.0, 2.0, 5.0 };
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
     m_quarterEntity->InitPhysics();
+    m_quarterEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
     m_quarterEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
     m_quarterEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_quarterEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
@@ -147,13 +158,10 @@ void World::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void World::PreFrameUpdate()
 {
-    if( m_physicsSimulator->GetIdle() )
+    if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
+        m_slideEntity->GetPhysicsRigidBody() ) )
     {
-        m_marbleEntity->GetSound()->Play();
-    }
-    else
-    {
-        m_marbleEntity->GetSound()->Pause();
+        //m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

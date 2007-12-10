@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="ec399511-9c93-a24f-8194-d9160fae966f">
+    <network>
+      <conductorState dataName="m_xUserScale" id="8b853220-9e54-5e48-8aae-6c1d44a621db">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="78e81480-c313-2b43-9758-88e8bd51d7ac">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="27fb63c8-6cf3-994c-980c-717d0df1014b">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="ed7a9b65-1a35-9140-b71c-fa1ce7ab6c7a">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="253137e5-70ac-0a4c-bbb5-99df45c53a4b">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="92f9f5c9-191b-734a-9900-d29834a457d2">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="101" id="a59051ec-a7a2-d34e-8a7f-8e6b8876bab3" name="CoinFunnelUI" vendorUnit="CoinFunnelUI">
+      <iconLocation xLocation="10" yLocation="10"/>
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <inputs commandName="portNumber">
+        <parameter dataName="portNumber" id="41307653-d8b8-a044-93cf-91ff5fc1a23d">
+          <dataValue type="xs:string"></dataValue>
+        </parameter>
+      </inputs>
+    </model>
+  </veSystem>
+
+  <User id="2df4cc9b-1a00-cc4f-8202-dc5bf172a908" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="7fce16c0-51d6-304d-860f-7df0209c1a14">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>

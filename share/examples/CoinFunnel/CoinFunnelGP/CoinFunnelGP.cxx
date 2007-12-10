@@ -3,15 +3,17 @@
 #include "World.h"
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/Sound.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/open/xml/model/Model.h>
 
+// --- osgAL Includes --- //
+#ifdef VE_SOUND
 #include <osgAL/SoundRoot>
 #include <osgAL/SoundManager>
 #include <osgAL/SoundNode>
 #include <osgAL/SoundState>
+#endif
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
@@ -40,17 +42,17 @@ void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-    world = new demo::World( m_dcs.get(), m_physicsSimulator, m_soundManager );
-}
-////////////////////////////////////////////////////////////////////////////////
-void CoinFunnelGP::AddSelfToSG()
-{
-    cfdVEBaseClass::AddSelfToSG();
+    world = new demo::World( m_dcs.get(),
+                             m_physicsSimulator
+#ifdef VE_SOUND
+                             , m_soundManager
+#endif
+                             );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::PreFrameUpdate()
 {
-    if( m_physicsSimulator->GetIdle() )
+    if( !m_physicsSimulator->GetIdle() )
     {
         world->PreFrameUpdate();
     }

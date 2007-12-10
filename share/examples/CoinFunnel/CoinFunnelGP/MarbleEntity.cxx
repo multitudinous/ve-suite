@@ -26,21 +26,34 @@ namespace demo
 ////////////////////////////////////////////////////////////////////////////////
 MarbleEntity::MarbleEntity( std::string geomFile,
                             ves::xplorer::scenegraph::DCS* pluginDCS,
-                            ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
-                            osgAL::SoundManager* soundManager )
+                            ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+#ifdef VE_SOUND
+                            , osgAL::SoundManager* soundManager
+#endif
+                            )
 :
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
-m_sound( new ves::xplorer::scenegraph::Sound( geomFile, GetDCS(), soundManager ) ),
+#ifdef VE_SOUND
+m_marbleOnWood( new ves::xplorer::scenegraph::Sound( "MarbleOnWood", GetDCS(), soundManager ) ),
+m_marbleOnMetal( new ves::xplorer::scenegraph::Sound( "MarbleOnMetal", GetDCS(), soundManager ) ),
+m_marbleOnMarble( new ves::xplorer::scenegraph::Sound( "MarbleOnMarble", GetDCS(), soundManager ) ),
+#endif
 m_nonPhysicsGeometry( 0 )
 {
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
-    m_sound->LoadFile( "Sounds/bee.wav" );
+#ifdef VE_SOUND
+    m_marbleOnWood->LoadFile( "Sounds/31292_Corsica_S_coin_spiral.wav" );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 MarbleEntity::~MarbleEntity()
 {
-    delete m_sound;
+#ifdef VE_SOUND
+    delete m_marbleOnWood;
+    delete m_marbleOnMetal;
+    delete m_marbleOnMarble;
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetNameAndDescriptions( std::string geomFile )
@@ -58,10 +71,17 @@ void MarbleEntity::SetShaders( osg::TextureCubeMap* tcm )
     SetShaderTwo();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Sound* MarbleEntity::GetSound()
+#ifdef VE_SOUND
+ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnWoodSound()
 {
-    return m_sound;
+    return m_marbleOnWood;
 }
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnMetalSound()
+{
+    return m_marbleOnMetal;
+}
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
 {

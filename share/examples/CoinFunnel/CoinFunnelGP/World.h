@@ -16,10 +16,12 @@ namespace scenegraph
 }
 
 // --- osgAL Includes --- //
+#ifdef VE_SOUND
 namespace osgAL
 {
     class SoundManager;
 }
+#endif
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -42,8 +44,11 @@ class World
 {
 public:
     World( ves::xplorer::scenegraph::DCS* pluginDCS,
-           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
-           osgAL::SoundManager* soundManager );
+           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+#ifdef VE_SOUND
+           , osgAL::SoundManager* soundManager
+#endif
+           );
 
     ~World();
 
@@ -57,7 +62,9 @@ private:
 
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
+#ifdef VE_SOUND
     osgAL::SoundManager* m_soundManager;
+#endif
 
     osg::ref_ptr< osg::TextureCubeMap > m_tcm;
 
