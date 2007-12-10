@@ -1,0 +1,29 @@
+##
+import os, sys, string
+import SConsAddons.Util as sca_util
+pj = os.path.join
+
+Import( 'RootDir ves_pkg' )
+
+fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'CoinFunnel' ) )
+coinDemoDir = pj( RootDir, 'share', 'examples', 'CoinFunnel' )
+xpmFile = sca_util.getFilesRecursiveByExt(coinDemoDir, [ '.xpm' ] )
+iveFile = sca_util.getFilesRecursiveByExt(coinDemoDir, [ '.ive' ] )
+wavFile = sca_util.getFilesRecursiveByExt(coinDemoDir, [ '.wav' ] )
+tgaFile = sca_util.getFilesRecursiveByExt(coinDemoDir, [ '.tga' ] )
+ddsFile = sca_util.getFilesRecursiveByExt(coinDemoDir, [ '.dds' ] )
+
+fileBundle.addFiles( xpmFile )
+fileBundle.addFiles( iveFile )
+fileBundle.addFiles( wavFile )
+fileBundle.addFiles( tgaFile )
+fileBundle.addFiles( ddsFile )
+fileBundle.addFiles( [ 'coinfunnel.ves' ] )
+coinFunnelSubdirs = Split("""
+    CoinFunnelGP
+    CoinFunnelUI
+""")
+
+##Run SConscript files in all of these folders.
+for d in coinFunnelSubdirs:
+   SConscript( dirs = d )

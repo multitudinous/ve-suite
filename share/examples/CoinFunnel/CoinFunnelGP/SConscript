@@ -1,35 +1,33 @@
-##Builds WinClient program
+##Builds CoinFunnel Graphical Plugin
 import os, sys, string
 import SConsAddons.Util as sca_util
+import distutils.util
 pj = os.path.join
 
-Import('baseEnv ves_pkg execOsgPatTag buildDir vtk_options osg_options xerces_options')
-openDir = os.path.abspath(pj('/', 'home', 'users', 'jbkoch', 'TSVEG', 'netl', 'ConstructionBots', 'ConstructionBotsGP'))
+host_type = distutils.util.get_platform()
 
+Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vpr_options osg_options osgal_options bullet_options xerces_options' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['GraphicalPlugin%s' %(execOsgPatTag)])
-lib_env.Append(LIBPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir, 'VE_Xplorer','GraphicalPlugin')])
-lib_env.Append(CPPPATH = [pj(os.getenv('VE_SUITE_HOME'), 'external', 'osgOQ', 'include')])
+lib_env.Append( LIBS = [ 'ves_xplorer',
+                         'ves_xplorer_scenegraph' ] )
+lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
+		            pj('#', buildDir, 'src','ves','xplorer','scenegraph') ] )
+#lib_env.Append( CPPPATH = [] )
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
-lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
-lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll bullet --libs --cflags')
-
-vtk_options.apply( lib_env )
+gmtl_options.apply( lib_env )
+vpr_options.apply( lib_env )
 osg_options.apply( lib_env )
+osgal_options.apply( lib_env )
+bullet_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
-if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('ConstructionBotsGP%s' %(execOsgPatTag), lib_env,
-   	pj( '/', 'home', 'users', 'jbkoch', 'TSVEG', 'netl', 'ConstructionBots', 'Plugins', 'GE', 'linux-i686' ) )
-else:
-   lib = ves_pkg.createStaticLibrary('ConstructionBotsGP%s' %(execOsgPatTag), lib_env, 
-		pj( '/', 'home', 'users', 'jbkoch', 'TSVEG', 'netl', 'ConstructionBots', 'Plugins', 'GE', 'linux-i686' ) )
-   
+lib = ves_pkg.createSharedLibrary( 'CoinFunnelGP', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'CoinFunnel', 'Plugins', 'GE', host_type ) )  
 
-lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'Plugins', 'GE'))
+lib.addSources( sources )
 lib.build()
