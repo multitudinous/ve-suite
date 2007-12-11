@@ -50,6 +50,9 @@ void QuarterEntity::SetShaders()
 {
     osg::ref_ptr< osg::Texture2D > quarterEdge =
         new osg::Texture2D( osgDB::readImageFile( "Textures/QuarterEdge.jpg" ) );
+    quarterEdge->setWrap( osg::Texture::WRAP_S, osg::Texture::REPEAT );
+    quarterEdge->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_BORDER );
+
     osg::ref_ptr< osg::Texture2D > quarterFront =
         new osg::Texture2D( osgDB::readImageFile( "Textures/QuarterFront.jpg" ) );
     osg::ref_ptr< osg::Texture2D > quarterBack =
