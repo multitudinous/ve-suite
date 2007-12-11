@@ -586,10 +586,10 @@ void DataSet::LoadData()
         strcpy( parameters[5], "-o" );
         parameters[6] = new char[strlen( "." ) + 1];
         strcpy( parameters[6], "." );/*
-                                              parameters[7] = new char[strlen( "-w" ) + 1];
-                                              strcpy(parameters[7], "-w" );
-                                              parameters[8] = new char[strlen( "stream" ) + 1];
-                                              strcpy(parameters[8], "stream" );*/
+                                                      parameters[7] = new char[strlen( "-w" ) + 1];
+                                                      strcpy(parameters[7], "-w" );
+                                                      parameters[8] = new char[strlen( "stream" ) + 1];
+                                                      strcpy(parameters[8], "stream" );*/
 
         dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
         dataSet->Print( std::cout );

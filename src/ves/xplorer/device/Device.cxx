@@ -201,7 +201,7 @@ void Device::ProcessSelection()
             if( !objectHit._geode->getName().empty() )
             {
                 if( /*objectHit._geode->getName() != this->laserName
-                                                                                                                      && */objectHit._geode->getName() != "Root Node" )
+                                                                                                                                          && */objectHit._geode->getName() != "Root Node" )
                 {
                     selected_geometry = objectHit._geode;
                     std::cout << objectHit._geode->getName() << std::endl;
