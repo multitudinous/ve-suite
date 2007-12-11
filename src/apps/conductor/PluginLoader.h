@@ -76,10 +76,16 @@ private:
     ///This instance is not used for any network composition but for information
     void RegisterPlugin( wxClassInfo* info );
 
+    ///Keep the list of the first intance of each plugin
     std::vector< ves::conductor::UIPluginBase*> plugins;
-    //Keep the list of the first intance of each plugin
+    ///The classinfo obj of the each plugin, will be use to generate more instances
     std::vector<wxClassInfo*> plugin_cls;
-    //The classinfo obj of the each plugin, will be use to generate more instances
+    ///Function used to work with unicode strings
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }    
 };
 
 #endif
