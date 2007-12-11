@@ -555,9 +555,7 @@ void ViewLocPane::_onSpeedChange( wxSpinEvent& WXUNUSED( event ) )
     commandInputs.push_back( _spinSpeedControls->GetValue() );
     commandInputs.push_back( 0 );
     SendCommandsToXplorer();
-
 }
-
 ///////////////////////////////////////
 void ViewLocPane::_rebuildPage( void )
 {
@@ -577,7 +575,9 @@ void ViewLocPane::_rebuildPage( void )
 void ViewLocPane::_resetSelections( void )
 {
     if( _removevwptSel )
+    {    
         _removevwptSel->SetSelection( 0 );
+    }
 }
 ////////////////////////////////////////////////
 void ViewLocPane::SendCommandsToXplorer( void )

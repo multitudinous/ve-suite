@@ -585,6 +585,10 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
         }
+        else
+        {
+            ProcessCommand();
+        }
     }
     frameTimer->stopTiming();
     if( _runFlyThrough )
