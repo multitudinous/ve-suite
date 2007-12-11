@@ -41,21 +41,23 @@ Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
 ; includes
-Source: {#LIBOGGHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#LIBVORBISHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OPENALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#LIBOGGHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#LIBVORBISHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#OPENALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#OSGALHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 ; libs
-Source: {#LIBOGGHOME}\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#LIBVORBISHOME}\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OPENALHOME}\libs\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OPENALHOME}\libs\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls
-Source: {#LIBOGGHOME}\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#LIBVORBISHOME}\win32\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:ProgramOnTheWeb,My Program}; Filename: http://www.example.com/
