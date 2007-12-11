@@ -25,7 +25,7 @@ CoinFunnelUIDialog::CoinFunnelUIDialog( wxWindow* parent,
                                         ves::conductor::util::CORBAServiceList* service,
                                         std::string* portNumber )
 :
-UIDialog( (wxWindow *)parent, id, "CoinFunnel" ), p_portNumber( portNumber )
+UIDialog( (wxWindow *)parent, id, _("CoinFunnel") ), p_portNumber( portNumber )
 {
     serviceList = service;
 

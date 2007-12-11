@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vpr_options osg_options osgal_options bullet_options xerces_options' )
+Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options bullet_options xerces_options' )
 openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CoinFunnel', 'CoinFunnelGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -20,7 +20,7 @@ lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
 gmtl_options.apply( lib_env )
-vpr_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
 osgal_options.apply( lib_env )
 bullet_options.apply( lib_env )
