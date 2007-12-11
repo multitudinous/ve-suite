@@ -63,6 +63,7 @@
 #include <ves/xplorer/event/environment/ExportDOTFileEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisAutoDateTimeEventHandler.h>
+#include <ves/xplorer/event/environment/EphemerisHeightMapEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -160,6 +161,8 @@ EnvironmentHandler::EnvironmentHandler( void )
         new ves::xplorer::event::EphemerisDataEventHandler();
     _eventHandlers[ std::string( "Ephemeris Auto Date and Time" )] =
         new ves::xplorer::event::EphemerisAutoDateTimeEventHandler();
+   _eventHandlers[ std::string( "Ephemeris Height Map" ) ] = 
+       new ves::xplorer::event::EphemerisHeightMapEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize( void )
