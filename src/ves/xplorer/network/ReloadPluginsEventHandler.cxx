@@ -90,4 +90,7 @@ void ReloadPluginsEventHandler::Execute( XMLObject* xmlObject )
 {
     cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
     modules->ResetPluginLoader();
+    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* plugins;
+    plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
+    plugins->clear();
 }
