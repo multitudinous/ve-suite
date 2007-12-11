@@ -47,16 +47,25 @@ Source: {#OPENALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion 
 Source: {#OSGALHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 ; libs
 Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBOGGHOME}\win32\Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OPENALHOME}\libs\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls
 Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBOGGHOME}\win32\Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 
