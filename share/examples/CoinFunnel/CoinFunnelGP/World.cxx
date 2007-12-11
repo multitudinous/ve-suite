@@ -72,17 +72,17 @@ void World::Initialize()
     m_tcm->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR );
 
     m_tcm->setImage( osg::TextureCubeMap::POSITIVE_X,
-                     osgDB::readImageFile( "Textures/CloudyHills/right.tga" ) );
+                     osgDB::readImageFile( "Textures/CubeMaps/CloudyHills/right.tga" ) );
     m_tcm->setImage( osg::TextureCubeMap::NEGATIVE_X,
-                     osgDB::readImageFile( "Textures/CloudyHills/left.tga" ) );
+                     osgDB::readImageFile( "Textures/CubeMaps/CloudyHills/left.tga" ) );
     m_tcm->setImage( osg::TextureCubeMap::POSITIVE_Y,
-                     osgDB::readImageFile( "Textures/CloudyHills/top.tga" ) );
+                     osgDB::readImageFile( "Textures/CubeMaps/CloudyHills/top.tga" ) );
     m_tcm->setImage( osg::TextureCubeMap::NEGATIVE_Y,
-                     osgDB::readImageFile( "Textures/CloudyHills/bottom.tga" ) );
+                     osgDB::readImageFile( "Textures/CubeMaps/CloudyHills/bottom.tga" ) );
     m_tcm->setImage( osg::TextureCubeMap::POSITIVE_Z,
-                     osgDB::readImageFile( "Textures/CloudyHills/back.tga" ) );
+                     osgDB::readImageFile( "Textures/CubeMaps/CloudyHills/back.tga" ) );
     m_tcm->setImage( osg::TextureCubeMap::NEGATIVE_Z,
-                     osgDB::readImageFile( "Textures/CloudyHills/front.tga" ) );
+                     osgDB::readImageFile( "Textures/CubeMaps/CloudyHills/front.tga" ) );
 
     m_physicsSimulator->SetCollisionInformation( true );
 
@@ -130,6 +130,7 @@ void World::Initialize()
     m_quarterEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
     m_quarterEntity->GetPhysicsRigidBody()->setActivationState( WANTS_DEACTIVATION );
+    m_quarterEntity->SetShaders();
 
     m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
                                                m_pluginDCS.get(),

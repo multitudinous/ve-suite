@@ -85,10 +85,10 @@ void RailingEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "vec3 R = reflect( V, N ); \n"
             "float RDotL = max( dot( R, L ), 0.0 ); \n"
 
-            "vec3 color = vec3( 0.6, 0.6, 0.6 ); \n"
+            "vec3 color = vec3( 0.3, 0.3, 0.1 ); \n"
             "vec3 reflectedColor = textureCube( Environment, R ).rgb; \n"
 
-            "vec3 mixColor = mix( color, reflectedColor, 0.4 ); \n"
+            "vec3 mixColor = mix( color, reflectedColor, 0.2 ); \n"
 
             "vec3 TotalAmbient  = gl_LightSource[ 0 ].ambient.rgb  * mixColor; \n"
             "vec3 TotalDiffuse  = gl_LightSource[ 0 ].diffuse.rgb  * mixColor * NDotL; \n"

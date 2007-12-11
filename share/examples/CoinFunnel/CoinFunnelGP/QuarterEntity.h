@@ -4,6 +4,12 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+// --- OSG Includes --- //
+namespace osg
+{
+    class Texture2D;
+}
+
 // --- C/C++ Libraries --- //
 #include <string>
 
@@ -20,7 +26,13 @@ public:
 
     void SetNameAndDescriptions( std::string geomFile );
 
+    void SetShaders();
+
 private:
+    void SetShaderOne( osg::Node* node, osg::Texture2D* texture );
+
+    osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
+    osg::ref_ptr< osg::Node > m_nonPhysicsGeometryII;
 
 };
 }

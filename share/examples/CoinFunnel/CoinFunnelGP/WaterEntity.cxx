@@ -54,7 +54,6 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
     char vertexPass[]=
         "uniform vec3 viewPosition; \n"
 
-        "varying vec3 vTexCoord; \n"
         "varying vec3 vNormal; \n"
         "varying vec3 vViewVec; \n"
 
@@ -62,8 +61,8 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         "{ \n"
             "gl_Position = ftransform(); \n"
 
-            "vTexCoord = gl_Vertex.xyz * 0.8; \n"
-            "vViewVec = vTexCoord - viewPosition; \n"
+            "gl_TexCoord[ 0 ].xyz = gl_Vertex.xyz * 0.8; \n"
+            "vViewVec = gl_TexCoord[ 0 ].xyz - viewPosition; \n"
             "vNormal = gl_Normal; \n"
         "} \n";
 
@@ -73,20 +72,17 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         "uniform sampler3D noise; \n"
         "uniform samplerCube skyBox; \n"
 
-        "varying vec3 vTexCoord; \n"
         "varying vec3 vNormal; \n"
         "varying vec3 vViewVec; \n"
 
         "void main() \n"
         "{ \n"
-            "vec3 tcoord = vTexCoord; \n"
-
             "float noiseSpeed = 0.18; \n"
             "float waveSpeed = 0.34; \n"
-            "tcoord.x += waveSpeed * time; \n"
-            "tcoord.z += noiseSpeed * time; \n"
+            "gl_TexCoord[ 0 ].x += waveSpeed * time; \n"
+            "gl_TexCoord[ 0 ].z += noiseSpeed * time; \n"
 
-            "vec4 noisy = texture3D( noise, tcoord ); \n"
+            "vec4 noisy = texture3D( noise, gl_TexCoord[ 0 ].xyz ); \n"
 
             //Signed noise 
             "vec3 bump = 2.0 * noisy.xyz - 1.0; \n"
@@ -104,7 +100,7 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
 
             "float lrp = 1.0 - dot( -normalize( vViewVec ), bump ); \n"
 
-            "vec4 waterColor = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
+            "vec4 waterColor = vec4( 0.0, 0.0, 0.5, 1.0 ); \n"
             "float fadeExp = 30.0; \n"
             "float fadeBias = 0.30; \n"
             "vec4 color = mix( waterColor, refl, clamp( fadeBias + pow( lrp, fadeExp ), 0.0, 1.0 ) ); \n"
