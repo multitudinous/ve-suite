@@ -101,13 +101,6 @@ public:
 };
 osg::ref_ptr<osg::Geometry> CreateTerrain(double radius)
 {
-    osg::ref_ptr<TestSupportOperation> testSupportOperation = new TestSupportOperation;
-    if (!testSupportOperation->_supported)
-    {
-        osg::notify(osg::WARN)<<testSupportOperation->_errorMessage<<std::endl;
-        return 0;
-    }
-    //osg::Group* scene = new osg::Group;
     osg::ref_ptr<osg::Geometry> geometry = new osg::Geometry;
     
     unsigned int numColumns = 38;
