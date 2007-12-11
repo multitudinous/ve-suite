@@ -79,8 +79,8 @@ class VE_CONDUCTOR_UTILS_EXPORTS TextureBasedToolBar : public BaseDialog
 public:
     ///Constructor
     TextureBasedToolBar( wxWindow* parent, int id/*,
-                                                                                                wxArrayString scalarNames,
-                                                                                                wxArrayString vectorNames*/ );
+                                                                                                                                                  wxArrayString scalarNames,
+                                                                                                                                                  wxArrayString vectorNames*/ );
 
     ///Destructor
     virtual ~TextureBasedToolBar();

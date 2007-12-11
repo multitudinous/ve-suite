@@ -110,7 +110,7 @@ int main( int argc, char* argv[] )
         kernel->init( argc, argv );
 #elif __VJ_version == 2000003
 #endif
-        for( int i = 1; i < argc; ++i )       // Configure the kernel
+        for( int i = 1; i < argc; ++i )     // Configure the kernel
         {
             if( std::string( argv[ i ] ) == std::string( "-VESDesktop" ) )
             {

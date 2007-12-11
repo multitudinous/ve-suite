@@ -276,7 +276,7 @@ char* cfdWebServices::GetNetwork( void )
     std::string line;
     int lineNum = 0;
 
-    while( infile.peek() != EOF )   //go through every line of the file
+    while( infile.peek() != EOF ) //go through every line of the file
     {
         lineNum++;
         std::getline( infile, line );

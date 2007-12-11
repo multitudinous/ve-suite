@@ -1878,7 +1878,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
 
     int32 elementRoutineNumber = this->elemDescriptions[ type - 1 ][ 2-1 ];
 
-    if( elementRoutineNumber == 186 )  //numNodesInElement == 20 && numCornerNodes == 8 )
+    if( elementRoutineNumber == 186 ) //numNodesInElement == 20 && numCornerNodes == 8 )
     {
         this->ugrid->InsertNextCell( VTK_HEXAHEDRON, numCornerNodes, nodes );
     }
