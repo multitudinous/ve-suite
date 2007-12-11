@@ -193,7 +193,7 @@ double cfdIsosurface::convertPercentage( const int percentage )
     double minmaxDiff = minmax[1] - minmax[0];
     double dx = ( minmaxDiff ) / ( double )this->totalId;
 
-    if( percentage == 999 )  // happens only with the blue menu
+    if( percentage == 999 ) // happens only with the blue menu
     {
         this->value += dx;
 

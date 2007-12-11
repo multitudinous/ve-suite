@@ -575,7 +575,7 @@ void ViewLocPane::_rebuildPage( void )
 void ViewLocPane::_resetSelections( void )
 {
     if( _removevwptSel )
-    {    
+    {
         _removevwptSel->SetSelection( 0 );
     }
 }

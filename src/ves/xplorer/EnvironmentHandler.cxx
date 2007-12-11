@@ -161,8 +161,8 @@ EnvironmentHandler::EnvironmentHandler( void )
         new ves::xplorer::event::EphemerisDataEventHandler();
     _eventHandlers[ std::string( "Ephemeris Auto Date and Time" )] =
         new ves::xplorer::event::EphemerisAutoDateTimeEventHandler();
-   _eventHandlers[ std::string( "Ephemeris Height Map" ) ] = 
-       new ves::xplorer::event::EphemerisHeightMapEventHandler();
+    _eventHandlers[ std::string( "Ephemeris Height Map" )] =
+        new ves::xplorer::event::EphemerisHeightMapEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize( void )

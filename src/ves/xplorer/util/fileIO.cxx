@@ -281,7 +281,7 @@ void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
             argc = 1;
     }
 
-    if( argc == 1 )  // then get filenames from user...
+    if( argc == 1 ) // then get filenames from user...
     {
         char phrase [] = {"input"};
         std::string tempText;
@@ -463,7 +463,7 @@ int fileIO::getIntegerBetween( const int min, const int max )
             }
         } // end while
 
-        if( !strcmp( string, "" ) )  // if only ENTER was pressed
+        if( !strcmp( string, "" ) ) // if only ENTER was pressed
         {
             //std::cout << "ENTER key pressed" << std::endl;
             //return defaultVal;         // return defaultVal
@@ -473,9 +473,9 @@ int fileIO::getIntegerBetween( const int min, const int max )
             StripTrailingSpaces( string );
             std::string shortString = StripLeadingSpaces( string );
             shortString.assign( string );
-            if( !strcmp( string, "" ) )  // if all spaces
+            if( !strcmp( string, "" ) ) // if all spaces
                 index = 0;                 // force a new loop
-            else if( !strcmp( string, "-" ) )  // if only neg sign
+            else if( !strcmp( string, "-" ) ) // if only neg sign
                 index = 0;                       // force a new loop
             else
             {

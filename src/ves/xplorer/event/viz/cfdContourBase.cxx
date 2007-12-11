@@ -171,7 +171,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
         normals->FlipNormalsOn();
         normals->Update();
     }
-    else if( this->fillType == 1 )  // banded contours
+    else if( this->fillType == 1 ) // banded contours
     {
         // putting the decimation routines as inputs to the bfilter
         // cause the bfilter to crash while being updated
@@ -189,7 +189,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
         //normals->ComputeCellNormalsOn();
         normals->FlipNormalsOn();
     }
-    else if( this->fillType == 2 )  // contourlines
+    else if( this->fillType == 2 ) // contourlines
     {
         this->cfilter->SetInput( this->strip->GetOutput() );
         double range[2];

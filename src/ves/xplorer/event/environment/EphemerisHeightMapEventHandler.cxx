@@ -48,68 +48,67 @@ EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler()
     m_activeModel = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler(const EphemerisHeightMapEventHandler& ceh)
+EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler( const EphemerisHeightMapEventHandler& ceh )
 {
     m_activeModel = ceh.m_activeModel;
 }
 /////////////////////////////////////////////////////////////////
 EphemerisHeightMapEventHandler::~EphemerisHeightMapEventHandler()
-{
-}
+{}
 ////////////////////////////////////////////////////////////////////////////////////
 EphemerisHeightMapEventHandler&
-EphemerisHeightMapEventHandler::operator=(const EphemerisHeightMapEventHandler& rhs)
+EphemerisHeightMapEventHandler::operator=( const EphemerisHeightMapEventHandler& rhs )
 {
-    if(this != &rhs)
+    if( this != &rhs )
     {
         m_activeModel = rhs.m_activeModel;
     }
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////////////
-void EphemerisHeightMapEventHandler::Execute(ves::open::xml::XMLObject* xmlObject)
+void EphemerisHeightMapEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisHeightMapData = dynamic_cast<ves::open::xml::Command*>(xmlObject);
+        ves::open::xml::Command* ephemerisHeightMapData = dynamic_cast<ves::open::xml::Command*>( xmlObject );
         if( ephemerisHeightMapData )
         {
-           std::cout<<"Getting height map info:"<<std::endl; 
+            std::cout << "Getting height map info:" << std::endl;
             ves::open::xml::DataValuePairWeakPtr heightMapInfo =
-                                 ephemerisHeightMapData->GetDataValuePair( "Height Map" );
+                ephemerisHeightMapData->GetDataValuePair( "Height Map" );
             std::string heightMap;
-            heightMapInfo->GetData(heightMap);
-            std::cout<<heightMap<<std::endl; 
-         
-            osgEphemeris::EphemerisModel* ephemerisModel =
-                  ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel(true);
+            heightMapInfo->GetData( heightMap );
+            std::cout << heightMap << std::endl;
 
-            ephemerisModel->getGroundPlane()->UpdateBaseTerrainFromImage(heightMap);
+            osgEphemeris::EphemerisModel* ephemerisModel =
+                ves::xplorer::EnvironmentHandler::instance()->GetEphemerisModel( true );
+
+            ephemerisModel->getGroundPlane()->UpdateBaseTerrainFromImage( heightMap );
         }
     }
-    catch(...)
+    catch ( ... )
     {
         m_activeModel = 0;
-        std::cout<<"Invalid command passed to EphemerisAutoDateTimeEventHandler!!"<<std::endl;
+        std::cout << "Invalid command passed to EphemerisAutoDateTimeEventHandler!!" << std::endl;
 
     }
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
-void EphemerisHeightMapEventHandler::SetGlobalBaseObject(ves::xplorer::GlobalBase* baseObject)
+void EphemerisHeightMapEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {
     try
     {
-        if(baseObject)
+        if( baseObject )
         {
-            m_activeModel = dynamic_cast<ves::xplorer::Model*>(baseObject);
+            m_activeModel = dynamic_cast<ves::xplorer::Model*>( baseObject );
         }
         else
         {
             m_activeModel =
-                    ves::xplorer::ModelHandler::instance()->GetActiveModel();
+                ves::xplorer::ModelHandler::instance()->GetActiveModel();
         }
     }
-    catch(...)
+    catch ( ... )
     {
         m_activeModel = 0;
     }

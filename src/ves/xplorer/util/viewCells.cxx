@@ -90,7 +90,7 @@ vtkUnstructuredGrid* ves::xplorer::util::extractExteriorCellsOnly( vtkUnstructur
             output->GetCellNeighbors( cellId, face->PointIds, cellIds );
             //face->Delete();
 //              std::cout << "cellId=" << cellId << ", face " << j << ", cellIds->GetNumberOfIds()=" << cellIds->GetNumberOfIds() << std::endl;
-            if( cellIds->GetNumberOfIds() <= 0 )  // exterior faces have a zero here
+            if( cellIds->GetNumberOfIds() <= 0 ) // exterior faces have a zero here
             {
                 thisIsExteriorCell = 1;
                 break;

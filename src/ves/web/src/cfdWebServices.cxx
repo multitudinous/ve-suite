@@ -276,7 +276,7 @@ char* cfdWebServices::GetNetwork( void )
     std::string line;
     int lineNum = 0;
 
-    while( infile.peek() != EOF )    //go through every line of the file
+    while( infile.peek() != EOF )   //go through every line of the file
     {
         lineNum++;
         std::getline( infile, line );
@@ -308,7 +308,7 @@ char* cfdWebServices::GetNetwork( void )
     // Find network layout chunk in network structure
     for( thisInterface = p.intfs.begin(); thisInterface != p.intfs.end(); thisInterface++ )
     {
-        if( thisInterface->_id == -1 )  //find the interface with ID = -1
+        if( thisInterface->_id == -1 ) //find the interface with ID = -1
         {
             vprDEBUG( vprDBG_ALL, 2 )  << "found layout chunk..." << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( vprDBG_ALL, 2 )  << "Gonna parse now" << std::endl << vprDEBUG_FLUSH;

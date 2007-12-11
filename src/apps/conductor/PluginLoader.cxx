@@ -82,7 +82,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
     lib_dir.Append( _( "/" ) );
     lib_dir.Append( hostType );
     wxLogDebug( _( "Loading plugins from [%s]\n" ), lib_dir.c_str() );
-    //std::cout << "Loading plugins from " 
+    //std::cout << "Loading plugins from "
     //    << ConvertUnicode( lib_dir.c_str() ) << std::endl;
     /* Create a directory object we can scan for plugins */
     if( !wxDir::Exists( lib_dir ) )
@@ -110,7 +110,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
     bool cont = dir.GetFirst( &filename, ext, wxDIR_FILES );
     while( cont )
     {
-        //std::cout << "try Loaded " << ConvertUnicode( ext.c_str() ) << " " 
+        //std::cout << "try Loaded " << ConvertUnicode( ext.c_str() ) << " "
         //    << ConvertUnicode( filename.c_str() ) << std::endl;
 
         wxFileName  libname( lib_dir, filename );
@@ -118,9 +118,9 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
 
         wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
         if( lib )
-        {    
+        {
             wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
-            //std::cout << "Loaded " << ConvertUnicode( filename.c_str() ) 
+            //std::cout << "Loaded " << ConvertUnicode( filename.c_str() )
             //    << std::endl;
         }
 
@@ -158,9 +158,9 @@ void PluginLoader::RegisterPlugins()
                 wxString( "UIPluginBase", wxConvUTF8 ) )
         {
             RegisterPlugin( classInfo );
-            wxLogDebug( _( "|\tRegister plugins : %s" ), 
-                classInfo->GetClassName() );
-            //std::cout << "|\tRegister plugins : " 
+            wxLogDebug( _( "|\tRegister plugins : %s" ),
+                        classInfo->GetClassName() );
+            //std::cout << "|\tRegister plugins : "
             //    << ConvertUnicode( classInfo->GetClassName() ) << std::endl;
         }
         node = ( wxNode* )wxClassInfo::sm_classTable->Next();

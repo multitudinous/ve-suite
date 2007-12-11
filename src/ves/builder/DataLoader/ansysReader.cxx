@@ -347,7 +347,7 @@ int64 ansysReader::ReadIntegerAsInt64( int32 & intPosition )
     int64 returnValue = 0;
     if( !strcmp( this->ansysVersion, " 8.1" ) )
         returnValue = ( int64 )this->ReadNthInt32( intPosition );
-    else if( !strcmp( this->ansysVersion, " 9.0" ) )  // uses double longs
+    else if( !strcmp( this->ansysVersion, " 9.0" ) ) // uses double longs
         returnValue = this->ReadNthInt64( intPosition );
     return returnValue;
 }
@@ -1878,7 +1878,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
 
     int32 elementRoutineNumber = this->elemDescriptions[ type - 1 ][ 2-1 ];
 
-    if( elementRoutineNumber == 186 )   //numNodesInElement == 20 && numCornerNodes == 8 )
+    if( elementRoutineNumber == 186 )  //numNodesInElement == 20 && numCornerNodes == 8 )
     {
         this->ugrid->InsertNextCell( VTK_HEXAHEDRON, numCornerNodes, nodes );
     }
@@ -2121,7 +2121,7 @@ void ansysReader::ReadSolutionDataHeader( int32 ptrDataSetSolution )
             exit( 1 );
         }
     }
-    else if( !strcmp( this->ansysVersion, " 9.0" ) )  // has 100 extra int32s
+    else if( !strcmp( this->ansysVersion, " 9.0" ) ) // has 100 extra int32s
     {
         if( numValues != 100 * 2 )
         {
@@ -2765,7 +2765,7 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex,
         vtkCell * face = cell->GetFace( j );
         this->ugrid->GetCellNeighbors( elemIndex, face->PointIds, cellIds );
 
-        if( cellIds->GetNumberOfIds() == 0 )  // exterior faces have a zero here
+        if( cellIds->GetNumberOfIds() == 0 ) // exterior faces have a zero here
         {
             thisIsExteriorCell = 1;
             break;

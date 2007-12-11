@@ -199,7 +199,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( std::string inFileName, int de
             nY = atoi( stringData );
             if( debug ) std::cout << " nY :" << nY << std::endl;
         }
-        if( I_Upper == std::string::npos )  //if J= was not found after finding I=
+        if( I_Upper == std::string::npos ) //if J= was not found after finding I=
         {
 
             nY = ( int ) sqrt(( double ) nX );

@@ -520,7 +520,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                 continue;    // to next cell record
             }
 
-            if( cType == -1 )              // star-cd samm cells
+            if( cType == -1 )             // star-cd samm cells
             {
                 // read second line of this record...
                 /*
@@ -565,9 +565,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                 REG = tPt[6];
                 //PERM = tPt[7];                 // not used at this point
 
-                if( resolutionType == 1 )     // hex with one corner cut away
+                if( resolutionType == 1 )    // hex with one corner cut away
                 {
-                    if( REG == 0 )             // the corner (a tetrahedron)
+                    if( REG == 0 )            // the corner (a tetrahedron)
                     {
                         temp[0] = cPt[0];
                         temp[1] = sPt[3];
@@ -579,7 +579,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                             << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                             << "\t" << temp[3] << std::endl;
                     }
-                    else if( REG == 1 )  // write the [hex with corner cut away] as a hexahedron and two tetrahedrons
+                    else if( REG == 1 ) // write the [hex with corner cut away] as a hexahedron and two tetrahedrons
                     {
                         temp[0] = sPt[1];
                         temp[1] = cPt[1];
@@ -619,9 +619,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                         << resolutionType << ", invalid REG=" << REG << std::endl;
                 }
 
-                else if( resolutionType == 2 )  // hex with wedge cut away
+                else if( resolutionType == 2 ) // hex with wedge cut away
                 {
-                    if( REG == 0 )             // the wedge
+                    if( REG == 0 )            // the wedge
                     {
                         temp[0] = cPt[0];
                         temp[1] = sPt[3];
@@ -636,7 +636,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                             << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
                             << std::endl;
                     }
-                    else if( REG == 1 )  // write the [hex with wedge cut away] as a hexahedron and a wedge
+                    else if( REG == 1 ) // write the [hex with wedge cut away] as a hexahedron and a wedge
                     {
                         temp[0] = cPt[3];
                         temp[1] = cPt[7];
@@ -671,7 +671,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
                 else if( resolutionType == 3 ) // samm hexahedron
                 {
-                    if( REG == 0 )          // convert samm hexahedron into vtk hexahedron
+                    if( REG == 0 )         // convert samm hexahedron into vtk hexahedron
                     {
                         temp[0] = cPt[0];
                         temp[1] = cPt[1];
@@ -697,7 +697,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
                 else if( resolutionType == 7 ) // hex with plane cutting three corners
                 {
-                    if( REG == 0 )       // divide the piece with the five original corners into two wedges, a pyr, and a tet
+                    if( REG == 0 )      // divide the piece with the five original corners into two wedges, a pyr, and a tet
                     {
                         temp[0] = cPt[0];
                         temp[1] = cPt[1];
@@ -743,7 +743,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                             << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                             << "\t" << temp[3] << std::endl;
                     }
-                    else if( REG == 1 )  // divide the piece with the three original corners into two pyramids and a tet
+                    else if( REG == 1 ) // divide the piece with the three original corners into two pyramids and a tet
                     {
                         temp[0] = sPt[1];
                         temp[1] = sPt[2];
@@ -779,7 +779,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
                 else if( resolutionType == 8 )// hex with plane cutting four corners
                 {
-                    if( REG == 0 )       // divide the piece containing the original 0th vertex into 2 pyrs, and 3 tets
+                    if( REG == 0 )      // divide the piece containing the original 0th vertex into 2 pyrs, and 3 tets
                     {
                         temp[0] = sPt[0];
                         temp[1] = sPt[1];
@@ -838,7 +838,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
                 else if( resolutionType == 85 ) // hex with two opposing edges removed can be a six-sided cylinder or 2 wedges
                 {
-                    if( REG == 0 )           // specify two wedges
+                    if( REG == 0 )          // specify two wedges
                     {
                         temp[0] = cPt[0];
                         temp[1] = sPt[3];
@@ -865,7 +865,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                             << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
                             << std::endl;
                     }
-                    else if( REG == 1 )      // write the six-sided cylinder as two hexahedrons
+                    else if( REG == 1 )     // write the six-sided cylinder as two hexahedrons
                     {
                         temp[0] = sPt[0];
                         temp[1] = sPt[3];
@@ -900,9 +900,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                         std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
                         << resolutionType << ", invalid REG=" << REG << std::endl;
                 }
-                else if( resolutionType == 275 )  // samm pyramid
+                else if( resolutionType == 275 ) // samm pyramid
                 {
-                    if( REG == 0 )       // convert samm pyramid into vtk pyramid
+                    if( REG == 0 )      // convert samm pyramid into vtk pyramid
                     {
                         temp[0] = cPt[0];
                         temp[1] = cPt[1];
