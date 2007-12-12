@@ -192,15 +192,15 @@ void SceneManager::InitScene()
     ///Network DCS
     m_matrixStore[ 2 ] = gmtl::Matrix44d();
 
-    m_oqc = new osgOQ::OcclusionQueryContext();
+    //m_oqc = new osgOQ::OcclusionQueryContext();
     ///number of pixels
-    m_oqc->setVisibilityThreshold( 1000 );
+    //m_oqc->setVisibilityThreshold( 1000 );
     ///Number of verts
-    m_oqc->setOccluderThreshold( 1000 );
+    //m_oqc->setOccluderThreshold( 1000 );
     ///Specifies how many frames to wait before issuing another query
-    m_oqc->setQueryFrameCount( 3 );
+    //m_oqc->setQueryFrameCount( 3 );
     ///Specify whether to use hierarchical ("NonFlat") placement for
-    m_oqc->setNonFlatPlacement( true );
+    //m_oqc->setNonFlatPlacement( true );
     ///Place bounding volumes in for osgOQ nodes
     //m_oqc->setDebugDisplay( true );
     // Sets the debug verbosity. Currently supported 'level' values:
@@ -210,7 +210,7 @@ void SceneManager::InitScene()
     // Call through OcclusionQueryRoot to set value only for a
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
-    m_oqc->setStatistics( true );
+    //m_oqc->setStatistics( true );
 
     rootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
@@ -368,7 +368,7 @@ void SceneManager::SetBackgroundColor( std::vector< double > color )
     m_clrNode->setClearColor( osg::Vec4( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
+/*osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
 {
     return m_oqc.get();
 }
@@ -394,7 +394,7 @@ void SceneManager::ResetOcclusionQueryContext()
     //   specific number of frames.
     //void setDebugVerbosity( 0 );
     m_oqc->setStatistics( true );
-}
+}*/
 
 } // end scenegraph
 } // end xplorer

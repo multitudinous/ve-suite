@@ -76,8 +76,8 @@
 #endif
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <osgOQ/OcclusionQueryNode.h>
 #include <osgOQ/OcclusionQueryVisitor.h>
-#include <osgOQ/OcclusionQueryRoot.h>
 
 // --- C/C++ Libraries --- //
 #include <cctype>
@@ -109,11 +109,11 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 
     ///We deep copy nodes so that picking is accurate
     ///and so that physics will work properly in the future
-    if( dynamic_cast< osgOQ::OcclusionQueryRoot* >( input.m_cadNode.get() ) )
+    if( dynamic_cast< osgOQ::OcclusionQueryNode* >( input.m_cadNode.get() ) )
     {
-        m_cadNode = new osgOQ::OcclusionQueryRoot(
-                        *static_cast< osgOQ::OcclusionQueryRoot* >(
-                            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+        m_cadNode = new osgOQ::OcclusionQueryNode( 
+            *static_cast< osgOQ::OcclusionQueryNode* >( 
+            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
     }
     else if( input.m_cadNode->asGroup() )
     {
@@ -141,7 +141,6 @@ CADEntityHelper& CADEntityHelper::operator=( const CADEntityHelper& input )
     {
 #ifdef _OSG
         //Recreate the node
-        //m_cadNode->unref();
         m_cadNode = input.m_cadNode;
 #elif _OPENSG
 #endif
@@ -154,7 +153,6 @@ CADEntityHelper::~CADEntityHelper()
 {
     //If neccesary
 #ifdef _OSG
-    //m_cadNode->unref();
 #elif _OPENSG
 #endif
 }
@@ -347,21 +345,15 @@ void CADEntityHelper::LoadFile( std::string filename,
     exit( 1 );
 #endif
 
-    osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
-    root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( tempCADNode.get() );
-    if( !root.valid() && occlude ) //(m_cadNode->getNumParents() > 0) )
+    osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
+    root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
+    if( !root.valid() && occlude )
     {
-        /*osgOQ::OcclusionQueryNonFlatVisitor oqv(
-                                             ves::xplorer::scenegraph::SceneManager::instance()->
-                                             GetOcclusionQueryContext() );
-        m_cadNode->accept( oqv );*/
-
-
-        root = new osgOQ::OcclusionQueryRoot(
-                   ves::xplorer::scenegraph::SceneManager::instance()->
-                   GetOcclusionQueryContext() );
-        root->addChild( tempCADNode.get() );
-        m_cadNode = static_cast< osg::Node* >( root.get() );
+        osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
+        tempGroup->addChild( tempCADNode.get() );
+        osgOQ::OcclusionQueryNonFlatVisitor oqv;
+        tempGroup->accept( oqv );
+        m_cadNode = tempGroup.get();
     }
     else
     {
@@ -384,22 +376,12 @@ void CADEntityHelper::LoadFile( std::string filename,
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::AddOccluderNodes()
 {
-    osg::ref_ptr< osgOQ::OcclusionQueryRoot > root;
-    root = dynamic_cast< osgOQ::OcclusionQueryRoot* >( m_cadNode.get() );
+    osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
+    root = dynamic_cast< osgOQ::OcclusionQueryNode* >( m_cadNode.get() );
     if( !root.valid() && ( m_cadNode->getNumParents() > 0 ) )
     {
-        osgOQ::OcclusionQueryNonFlatVisitor oqv(
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetOcclusionQueryContext() );
+        osgOQ::OcclusionQueryNonFlatVisitor oqv;
         m_cadNode->accept( oqv );
-
-        /*
-        root = new osgOQ::OcclusionQueryRoot( 
-            ves::xplorer::scenegraph::SceneManager::instance()->
-            GetOcclusionQueryContext() );
-        root->addChild( tempCADNode.get() );
-        m_cadNode = static_cast< osg::Node* >( root.get() );
-        */
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
