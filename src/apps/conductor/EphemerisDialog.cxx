@@ -204,6 +204,26 @@ void EphemerisDialog::CreateGUIControls()
     m_lonMinutesSymbol->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_longitudeSizer->Add( m_lonMinutesSymbol, 0, wxALIGN_CENTER | wxALL, 5 );
 
+    wxStaticBox* locationOptions = new wxStaticBox(m_latitudeLongitude, wxID_ANY, wxT("Locations"));
+    wxStaticBoxSizer* locationButtonSizer = new wxStaticBoxSizer(locationOptions, wxHORIZONTAL);
+    m_latLongSizer->Add(locationButtonSizer, 1, wxALIGN_CENTER | wxALL, 5);
+    m_saveLocationButton = new wxButton(m_latitudeLongitude, 
+                                            ID_M_SAVE_LOCATION_BUTTON,
+                                            wxT("Save..."));
+    locationButtonSizer->Add(m_saveLocationButton, 1, wxALIGN_CENTER | wxALL, 5);
+    m_loadLocationButton = new wxButton(m_latitudeLongitude, 
+                                            ID_M_LOAD_LOCATION_BUTTON,
+                                            wxT("Load..."));
+    locationButtonSizer->Add(m_loadLocationButton, 1, wxALIGN_CENTER | wxALL, 5);
+    wxStaticBox* heightFieldFile = new wxStaticBox(m_latitudeLongitude, wxID_ANY, wxT("Terrain Map"));
+    wxStaticBoxSizer* heightFieldSizer = new wxStaticBoxSizer(heightFieldFile, wxHORIZONTAL);
+    m_latLongSizer->Add(heightFieldSizer, 1, wxALIGN_CENTER | wxALL, 5);
+    m_heightMapSelector = new wxFilePickerCtrl( m_latitudeLongitude, 
+                                                      ID_M_LOAD_HEIGHT_MAP,
+                                                      ::wxGetCwd(),
+                                                      wxT("Height Field"),
+                                                      wxT("Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG"));
+        heightFieldSizer->Add(m_heightMapSelector, 1, wxALIGN_CENTER | wxALL, 5);
     wxArrayString arrayStringFor_m_lonHemisphere;
     arrayStringFor_m_lonHemisphere.Add( wxT( "East" ) );
     arrayStringFor_m_lonHemisphere.Add( wxT( "West" ) );
@@ -213,27 +233,6 @@ void EphemerisDialog::CreateGUIControls()
     m_lonHemisphere->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
     m_lonHemisphere->SetSelection( 0 );
     m_longitudeSizer->Add( m_lonHemisphere, 1, wxALIGN_CENTER | wxALL, 5 );
-
-    wxStaticBox* locationOptions = new wxStaticBox( m_latitudeLongitude, wxID_ANY, wxT( "Locations" ) );
-    wxStaticBoxSizer* locationButtonSizer = new wxStaticBoxSizer( locationOptions, wxHORIZONTAL );
-    m_latLongSizer->Add( locationButtonSizer, 1, wxALIGN_CENTER | wxALL, 5 );
-    m_saveLocationButton = new wxButton( m_latitudeLongitude,
-                                         ID_M_SAVE_LOCATION_BUTTON,
-                                         wxT( "Save..." ) );
-    locationButtonSizer->Add( m_saveLocationButton, 1, wxALIGN_CENTER | wxALL, 5 );
-    m_loadLocationButton = new wxButton( m_latitudeLongitude,
-                                         ID_M_LOAD_LOCATION_BUTTON,
-                                         wxT( "Load..." ) );
-    locationButtonSizer->Add( m_loadLocationButton, 1, wxALIGN_CENTER | wxALL, 5 );
-    wxStaticBox* heightFieldFile = new wxStaticBox( m_latitudeLongitude, wxID_ANY, wxT( "Height Field" ) );
-    wxStaticBoxSizer* heightFieldSizer = new wxStaticBoxSizer( heightFieldFile, wxHORIZONTAL );
-    m_latLongSizer->Add( heightFieldSizer, 1, wxALIGN_CENTER | wxALL, 5 );
-    m_heightMapSelector = new wxFilePickerCtrl( m_latitudeLongitude,
-                                                ID_M_LOAD_HEIGHT_MAP,
-                                                ::wxGetCwd(),
-                                                wxT( "Height Field" ),
-                                                wxT( "Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG" ) );
-    heightFieldSizer->Add( m_heightMapSelector, 1, wxALIGN_CENTER | wxALL, 5 );
 
     m_buttonsSizer = new wxBoxSizer( wxHORIZONTAL );
     m_mainSizer->Add( m_buttonsSizer, 0, wxALIGN_CENTER | wxALL, 5 );
@@ -582,6 +581,8 @@ void EphemerisDialog::OnLoadLocationInformation( wxCommandEvent& event )
                 SetLatitudeAndLongitudeOnGUI( latitude, longitude );
                 foundLocation->second->GetDataValuePair( "Height Map" )->GetData( heightMap );
                 m_heightMapSelector->SetPath( wxString( heightMap.c_str(), wxConvUTF8 ) );
+                wxFileDirPickerEvent emptyEvent;
+                OnLoadHeightMap(emptyEvent);
             }
         }
     }
