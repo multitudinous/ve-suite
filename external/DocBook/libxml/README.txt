@@ -1,1 +1,0 @@
-These binaries were downloaded from fear.sourceforge.net
