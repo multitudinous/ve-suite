@@ -183,14 +183,14 @@ opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
 
-vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.0", True, True,
+vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.1", True, True,
                         ['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
                          'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
                          'vtkParallel','vtkpng','vtktiff','vtksys','vtkjpeg', 
                          'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
                          'vtkzlib','vtkNetCDF','verdict'])
 opts.AddOption( vtk_options )
-opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.0')
+opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.1')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
 opts.AddOption(hdf5_options)
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
@@ -199,7 +199,7 @@ opts.AddOption(hdf4_options)
 osg_options = None
 if GetPlatform() == 'win32':
    osg_options = fp_option.FlagPollBasedOption("OSG",
-                                               "OpenSceneGraph", "1.2", True, True)
+                                               "OpenSceneGraph", "1.2", True, True, compileTest=True)
 else:
    osg_options = SConsAddons.Options.OSG.OSG("osg","1.2", True, True, 
                         ['osgText', 'osgText',
