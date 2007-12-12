@@ -51,6 +51,7 @@ Name: xercesc; Description: Xerces-C++; Types: vecns vexosg  full
 Name: osg; Description: OpenSceneGraph; Types: vexosg full
 Name: juggler; Description: vrJuggler; Types: vexosg  full
 Name: apr; Description: Apache APR; Types: vexosg vecns full
+Name: osgal; Description: osgAL; Types: vexosg full
 ;Name: opal; Description: Open Physics Abstraction Library OPAL; Types: vexosg full
 ;Name: ode; Description: Open Dynamics Engine; Types: vexosg full
 [Files]
@@ -75,18 +76,18 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\xerces-depdom_2_7D.dll; DestDir: {
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
 Source: {#VEDEVHOME}\dist\win\iss\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
 Source: {#OSGHOME}\bin\*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
+;Source: {#COINHOME}\bin\coin*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#XERCESHOME}\include\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
-Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
+;Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv; Attribs: readonly
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Debug\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
+;Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\ace\*.h; DestDir: {app}\include\ace; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\tao\utils\*.h; DestDir: {app}\include\tao\utils; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion createallsubdirs; Components: depsbuildenv
 Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\include\wx; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
@@ -125,7 +126,7 @@ Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-depdom_2_7.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
-Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
+;Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_gl_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
@@ -133,6 +134,12 @@ Source: {#WXHOME}\lib\vc_dll\wxmsw28_core_vc_custom.dll; DestDir: {app}\lib; Com
 Source: {#WXHOME}\lib\vc_dll\wxbase28_vc_custom.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: wxwidgets
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
+; osgAL includes
+Source: {#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+; osgAL libs
+Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+; osgAL dlls
+Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
