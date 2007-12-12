@@ -130,6 +130,8 @@ void GroundPlane::_updateTerrainGrid(unsigned int imageWidth, unsigned int image
        m_terrainGrid->removePrimitiveSet(0,m_terrainGrid->getNumPrimitiveSets());
        m_terrainGrid->getVertexArray()->dirty();
     }
+    m_terrainPrograms["BASIC_TERRAIN_SHADER"]->getUniform("textureSize")->set(osg::Vec2(imageWidth,imageHeight));
+    m_terrainPrograms["BASIC_TERRAIN_SHADER"]->getUniform("texelSize")->set(osg::Vec2(1.0/(float)imageWidth,1.0/(float)imageHeight));
     m_terrainGrid->setStateSet( m_terrainPrograms["BASIC_TERRAIN_SHADER"].get());
 
     osg::ref_ptr<osg::Vec3Array> verts = new osg::Vec3Array();
@@ -181,6 +183,8 @@ void GroundPlane::_initializeSimpleTerrainGeneratorShader()
         stateset->addUniform(scaleDownUniform.get());
 
         stateset->addUniform(new osg::Uniform("altitudeRange",m_altitudeRange));
+        stateset->addUniform(new osg::Uniform("textureSize",osg::Vec2(256,256)));
+        stateset->addUniform(new osg::Uniform("texelSize",osg::Vec2(1.0/256.0,1.0/256.0)));
 
         m_terrainVertTexture["Images/lz.rgb"] = new osg::Texture2D();
         osg::ref_ptr<osg::Uniform> baseVertTextureSampler =
@@ -192,14 +196,28 @@ void GroundPlane::_initializeSimpleTerrainGeneratorShader()
 
         // vertex shader using just Vec4 coefficients
         char vertexShaderSource[] =
-               
                "uniform sampler2D baseVertTexture; \n"
                "uniform vec3 terrainOrigin;\n"
                "uniform vec3 terrainScaleDown;\n"
                "uniform vec2 altitudeRange;\n"
+               "uniform vec2 textureSize;\n"
+               "uniform vec2 texelSize;\n"
                "\n"
                "varying vec4 texColor;\n"
                "\n"
+               "vec4 texture2D_bilinear( sampler2D tex, vec2 uv )\n"
+               "{\n"
+	       "    vec2 f;// = fract( uv.xy * textureSize );\n"
+	       "    f.x = fract( uv.x * textureSize.x );\n"
+	       "    f.y = fract( uv.y * textureSize.y );\n"
+	       "    vec4 t00 = texture2D( tex, uv );\n"
+	       "    vec4 t10 = texture2D( tex, uv + vec2( texelSize.x, 0.0 ));\n"
+	       "    vec4 tA = mix( t00, t10, f.x );\n"
+	       "    vec4 t01 = texture2D( tex, uv + vec2( 0.0, texelSize.y ) );\n"
+	       "    vec4 t11 = texture2D( tex, uv +  texelSize );\n"
+	       "    vec4 tB = mix( t01, t11, f.x );\n"
+	       "    return mix( tA, tB, f.y );\n"
+               "}\n"
                "float greyscale(vec3 rgbColor)\n"
                "{\n"
                "    return dot(vec3(0.2125,0.7154,0.0721),rgbColor);\n"
@@ -213,7 +231,8 @@ void GroundPlane::_initializeSimpleTerrainGeneratorShader()
                "    vec4 position;\n"
                "    position.x = gl_Vertex.x;\n"
                "    position.y = gl_Vertex.y;\n"
-               "    texColor = texture2D(baseVertTexture, texcoord);\n"
+               "    //texColor = texture2D(baseVertTexture, texcoord);\n"
+               "    texColor = texture2D_bilinear(baseVertTexture, texcoord);\n"
                "    position.z = mix(altitudeRange.x,altitudeRange.y,greyscale(texColor.rgb));\n"
                "    position.w = 1.0;\n"
                " \n"
