@@ -69,56 +69,43 @@ m_altitudeRange(0.0,m_size.z())
                                                              0, coords->size() ));
 
     }
-    //m_terrainGrid->setUseVertexBufferObjects(true);
-    //m_terrainGrid->setUseDisplayLists(false);
     addDrawable( m_terrainGrid.get() );
 }
 //////////////////////////////////////////////////////////////////////
 bool GroundPlane::UpdateBaseTerrainFromImage(std::string terrainImage)
 {
-    //std::cout<<"Creating terrain from file!!"<<std::endl;
     m_baseTerrainImage = osgDB::readImageFile(terrainImage);    
     if(!m_baseTerrainImage.valid())
     {
         std::cout<<"Failed to load terrain file: "<<terrainImage<<std::endl;
         return false;    
     }
-    //std::cout<<"Setting image to texture1!"<<std::endl;
+    //need to force this as the internal format so that vertex texture lookups don't fallback
+    //to software on shader model 3.0 cards
+    m_baseTerrainImage->setInternalTextureFormat(GL_RGBA_FLOAT32_ATI);
+
     std::map< std::string, osg::ref_ptr< osg::Texture2D > >::iterator foundVertTexture;
     foundVertTexture = m_terrainVertTexture.find(terrainImage);
 
-    //std::map< std::string, osg::ref_ptr< osg::Texture2D > >::iterator foundFragTexture;
-    //foundFragTexture = m_terrainFragTexture.find(terrainImage);
-    //std::cout<<"Setting image to texture2!"<<std::endl;
-    if( ( foundVertTexture != m_terrainVertTexture.end() ) // &&
-      //  ( foundFragTexture != m_terrainFragTexture.end() )
-       )
+    if( ( foundVertTexture != m_terrainVertTexture.end() ) )
     {
         if(!foundVertTexture->second->getImage())
         {
             m_terrainVertTexture[terrainImage]->setImage(m_baseTerrainImage.get());
         }
-       /* if(!foundFragTexture->second->getImage())
-        {
-            m_terrainFragTexture[terrainImage]->setImage(m_baseTerrainImage.get());
-        }*/
-        //std::cout<<"Found texture!!!"<<std::endl;
         UpdateTextureUnitsInStateSet( m_terrainPrograms["BASIC_TERRAIN_SHADER"].get(),
-                                      foundVertTexture->second.get());//,
-                                     // foundFragTexture->second.get());
+                                      foundVertTexture->second.get());
     }
     else
     {
-        //std::cout<<"Create texture!!!"<<std::endl;
-        //m_terrainFragTexture[terrainImage] = new osg::Texture2D();
         m_terrainVertTexture[terrainImage] = new osg::Texture2D();
-
-        //m_terrainFragTexture[terrainImage]->setImage(m_baseTerrainImage.get());
         m_terrainVertTexture[terrainImage]->setImage(m_baseTerrainImage.get());
+        m_terrainVertTexture[terrainImage]->setFilter(osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST);
+        m_terrainVertTexture[terrainImage]->setFilter(osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST);
+        m_terrainVertTexture[terrainImage]->setResizeNonPowerOfTwoHint(false);
 
         UpdateTextureUnitsInStateSet( m_terrainPrograms["BASIC_TERRAIN_SHADER"].get(),
-                                      m_terrainVertTexture[terrainImage].get());//,
-                                      //m_terrainFragTexture[terrainImage].get());
+                                      m_terrainVertTexture[terrainImage].get());
     }
     
 
@@ -140,7 +127,6 @@ void GroundPlane::_updateTerrainGrid(unsigned int imageWidth, unsigned int image
     }
     else
     {
-       std::cout<<"Removing Primitives"<<std::endl;
        m_terrainGrid->removePrimitiveSet(0,m_terrainGrid->getNumPrimitiveSets());
        m_terrainGrid->getVertexArray()->dirty();
     }
@@ -173,26 +159,6 @@ void GroundPlane::_updateTerrainGrid(unsigned int imageWidth, unsigned int image
     m_terrainGrid->setColorBinding(osg::Geometry::BIND_OVERALL);
     m_terrainGrid->setNormalArray( normals.get() );
     m_terrainGrid->setNormalBinding( osg::Geometry::BIND_OVERALL );
-
-
-   //m_terrainGrid->getOrCreateStateSet()->setAttribute(new osg::PolygonMode(osg::PolygonMode::FRONT_AND_BACK,osg::PolygonMode::LINE));
-
-    //specify the draw element indecies
-    /*for(unsigned int rows = 0; rows < height-1; ++rows)
-    {
-        std::cout<<"Creating draw elements..."<<std::endl;
-        //osg::ref_ptr<osg::DrawElementsUShort> drawElements =
-        osg::DrawElementsUShort& drawElements =
-                 *(new osg::DrawElementsUShort(GL_QUAD_STRIP,2*width));
-        m_terrainGrid->addPrimitiveSet(&drawElements);
-        int index = 0;
-        for(unsigned int cols = 0; cols < width; ++cols)
-        {
-            std::cout<<"Iterating draw elements..."<<std::endl;
-            drawElements[index++] = (rows+1)*width + cols;
-            drawElements[index++] = (rows)*width + cols;
-        }
-    }*/
     m_terrainGrid->setInitialBound(osg::BoundingBox(m_origin, m_origin + m_size));
 }
 ///////////////////////////////////////////////////////////
@@ -215,12 +181,6 @@ void GroundPlane::_initializeSimpleTerrainGeneratorShader()
         stateset->addUniform(scaleDownUniform.get());
 
         stateset->addUniform(new osg::Uniform("altitudeRange",m_altitudeRange));
-
-        /*m_terrainFragTexture["Images/lz.rgb"] = new osg::Texture2D();
-        osg::ref_ptr<osg::Uniform> baseFragTextureSampler =
-                                    new osg::Uniform("baseFragTexture",0);
-
-        stateset->addUniform(baseFragTextureSampler.get());*/
 
         m_terrainVertTexture["Images/lz.rgb"] = new osg::Texture2D();
         osg::ref_ptr<osg::Uniform> baseVertTextureSampler =
@@ -276,26 +236,18 @@ void GroundPlane::_initializeSimpleTerrainGeneratorShader()
         stateset->setAttribute(program.get());
         m_terrainPrograms["BASIC_TERRAIN_SHADER"] = stateset;
         UpdateTextureUnitsInStateSet( m_terrainPrograms["BASIC_TERRAIN_SHADER"].get(),
-                                      m_terrainVertTexture["Images/lz.rgb"].get());//,
-                                      //m_terrainFragTexture["Images/lz.rgb"].get());
+                                      m_terrainVertTexture["Images/lz.rgb"].get());
     }    
 }
 ///////////////////////////////////////////////////////////////////////////
 void GroundPlane::UpdateTextureUnitsInStateSet( osg::StateSet* ss,
-                                                osg::Texture2D* vertTexture)//,
-                                                //osg::Texture2D* fragTexture )
+                                                osg::Texture2D* vertTexture)
 {
     ss->removeTextureAttribute( 0, osg::StateAttribute::TEXTURE );
-    //ss->removeTextureAttribute( 1, osg::StateAttribute::TEXTURE );
-    /*ss->setTextureAttributeAndModes( 0,
-                                     fragTexture,
-                                     osg::StateAttribute::ON);
-   */
-     ss->setTextureAttributeAndModes( 0,
+    ss->setTextureAttributeAndModes( 0,
                                      vertTexture,
                                      osg::StateAttribute::ON);
 }
-
 ////////////////////////////////////////////////////////////////////////
 void GroundPlane::SetAltitudeRange(float minAltitude, float maxAltitude)
 {
@@ -312,5 +264,4 @@ void GroundPlane::SetAltitudeRange(float minAltitude, float maxAltitude)
                             ->set(osg::Vec2(minAltitude,maxAltitude));
         }
     }
-        
 }
