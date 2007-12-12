@@ -28,8 +28,13 @@ namespace osgAL
 
 namespace osg
 {
+    class Image;
     class TextureCubeMap;
 }
+
+// --- C/C++ Libraries --- //
+#include <string>
+#include <map>
 
 namespace demo
 {
@@ -58,6 +63,10 @@ public:
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
 
 private:
+    void CreateRoom( float width );
+
+    std::map< std::string, osg::Image* > m_imageMap;
+
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
 
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
