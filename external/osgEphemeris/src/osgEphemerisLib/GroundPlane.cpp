@@ -99,7 +99,6 @@ bool GroundPlane::UpdateBaseTerrainFromImage(std::string terrainImage)
     else
     {
         m_terrainVertTexture[terrainImage] = new osg::Texture2D();
-        m_terrainVertTexture[terrainImage]->setInternalFormatMode(osg::Texture::USE_IMAGE_DATA_FORMAT);
         m_terrainVertTexture[terrainImage]->setImage(m_baseTerrainImage.get());
         m_terrainVertTexture[terrainImage]->setFilter(osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST);
         m_terrainVertTexture[terrainImage]->setFilter(osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST);
