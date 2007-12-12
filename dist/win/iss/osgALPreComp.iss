@@ -31,7 +31,7 @@ WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
 AllowRootDirectory=true
 WizardImageBackColor=clWhite
-SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+SetupIconFile={#VEDEVHOME}\dist\installerImages\ve_icon.ico
 EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
 RestartIfNeededByRun=false
@@ -70,5 +70,4 @@ Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 
 [Icons]
-Name: {group}\{cm:ProgramOnTheWeb,My Program}; Filename: http://www.example.com/
-Name: {group}\{cm:UninstallProgram,My Program}; Filename: {uninstallexe}
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
