@@ -103,6 +103,8 @@ public:
     ///Creates a sphere shape from the osg::BoundingSphere of the mesh shape
     void SphereShape( double radius = 0 );
 
+    void UserDefinedShape( btCollisionShape* collisionShape );
+
     ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
     void StaticConcaveShape();
 

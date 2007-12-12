@@ -201,6 +201,31 @@ void PhysicsRigidBody::SphereShape( double radius )
     m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
+{
+    if( this )
+    {
+        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
+    }
+
+    if( m_collisionShape )
+    {
+        delete m_collisionShape;
+        m_collisionShape = 0;
+    }
+
+    m_collisionShape = collisionShape;
+
+    SetMassProps();
+
+    if( m_mass != 0 )
+    {
+        setActivationState( DISABLE_DEACTIVATION );
+    }
+
+    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
+}
+////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
     if( this )
