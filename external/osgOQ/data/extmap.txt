@@ -1,0 +1,16 @@
+## This is an extension file mapping that tells OSG to use
+##   our PolyTrans loader for .asm, .prt, etc.
+##
+## In the future, this file could be loaded with an env var,
+##   but for now the file must be loaded programmatically.
+##
+## To use this file, the application must explicitly tell OSG
+##   to load it by making the following function call:
+##       osgDB::Registry::instance()->readPluginAliasConfigurationFile( fileName );
+##   where 'fileName' is the name of this file. The path to this
+##   file must also be stored in OSG_FILE_PATH.
+
+## Extension mapping:
+prt PolyTrans
+asm PolyTrans
+igs PolyTrans

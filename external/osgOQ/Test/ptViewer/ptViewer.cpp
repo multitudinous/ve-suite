@@ -19,7 +19,8 @@
 #include <osg/Switch>
 
 #include <osgViewer/Viewer>
-#include <osgViewer/ViewerEventHandlers>
+#include <osgViewer/StatsHandler>
+#include <osgViewer/HelpHandler>
 
 #include <osgGA/TrackballManipulator>
 #include <osgGA/FlightManipulator>
@@ -29,12 +30,108 @@
 #include <osgGA/AnimationPathManipulator>
 #include <osgGA/TerrainManipulator>
 
-#include "osgOQ/OcclusionQueryVisitor.h"
+#include "osgOQ/OcclusionQueryRoot.h"
+#include "osgOQ/OcclusionQueryContext.h"
 
 #include <list>
 #include <iostream>
 #include <sstream>
 
+class ThreadingHandler : public osgGA::GUIEventHandler 
+{
+public: 
+
+    ThreadingHandler() {}
+        
+    bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa)
+    {
+        osgViewer::Viewer* viewer = dynamic_cast<osgViewer::Viewer*>(&aa);
+        if (!viewer) return false;
+    
+        switch(ea.getEventType())
+        {
+            case(osgGA::GUIEventAdapter::KEYUP):
+            {
+                if (ea.getKey()=='m')
+                {
+#if 0
+                    switch(viewer->getThreadingModel())
+                    {
+                        case(osgViewer::Viewer::SingleThreaded):
+                            viewer->setThreadingModel(osgViewer::Viewer::CullDrawThreadPerContext);
+                            osg::notify(osg::NOTICE)<<"Threading model 'CullDrawThreadPerContext' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::CullDrawThreadPerContext):
+                            viewer->setThreadingModel(osgViewer::Viewer::DrawThreadPerContext);
+                            osg::notify(osg::NOTICE)<<"Threading model 'DrawThreadPerContext' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::DrawThreadPerContext):
+                            viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+                            osg::notify(osg::NOTICE)<<"Threading model 'SingleThreaded' selected."<<std::endl;
+                            break;
+                        default:
+                            break;
+                    }
+#else                
+                    switch(viewer->getThreadingModel())
+                    {
+                        case(osgViewer::Viewer::SingleThreaded):
+                            viewer->setThreadingModel(osgViewer::Viewer::CullDrawThreadPerContext);
+                            osg::notify(osg::NOTICE)<<"Threading model 'CullDrawThreadPerContext' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::CullDrawThreadPerContext):
+                            viewer->setThreadingModel(osgViewer::Viewer::DrawThreadPerContext);
+                            osg::notify(osg::NOTICE)<<"Threading model 'DrawThreadPerContext' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::DrawThreadPerContext):
+                            viewer->setThreadingModel(osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext);
+                            osg::notify(osg::NOTICE)<<"Threading model 'CullThreadPerCameraDrawThreadPerContext' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext):
+                            viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+                            osg::notify(osg::NOTICE)<<"Threading model 'SingleThreaded' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::AutomaticSelection):
+                            viewer->setThreadingModel(viewer->suggestBestThreadingModel());
+                            osg::notify(osg::NOTICE)<<"Threading model 'AutomaticSelection' selected."<<std::endl;
+                            break;
+                    }
+#endif
+                    return true;
+                }
+                if (ea.getKey()=='e')
+                {
+                    switch(viewer->getEndBarrierPosition())
+                    {
+                        case(osgViewer::Viewer::BeforeSwapBuffers):
+                            viewer->setEndBarrierPosition(osgViewer::Viewer::AfterSwapBuffers);
+                            osg::notify(osg::NOTICE)<<"Threading model 'AfterSwapBuffers' selected."<<std::endl;
+                            break;
+                        case(osgViewer::Viewer::AfterSwapBuffers):
+                            viewer->setEndBarrierPosition(osgViewer::Viewer::BeforeSwapBuffers);
+                            osg::notify(osg::NOTICE)<<"Threading model 'BeforeSwapBuffers' selected."<<std::endl;
+                            break;
+                    }
+                    return true;
+                }
+            }
+            default: break;
+        }
+        
+        return false;
+    }
+    
+    /** Get the keyboard and mouse usage of this manipulator.*/
+    virtual void getUsage(osg::ApplicationUsage& usage) const
+    {
+        usage.addKeyboardMouseBinding("m","Toggle threading model.");
+        usage.addKeyboardMouseBinding("e","Toggle the placement of the end of frame barrier.");
+    }
+
+
+
+    bool _done;
+};
 
 // Store a list of MatrixTransforms that the F5 key will translate.
 typedef std::list< osg::ref_ptr< osg::MatrixTransform > > MatrixTransformList;
@@ -44,11 +141,11 @@ int mtShift( 0 );
 class KeyHandler : public osgGA::GUIEventHandler 
 {
 public: 
-    KeyHandler( osg::Node& node )
-      : _node( node ),
-        _enable( true ),
-        _debug( false )
-    {}
+	KeyHandler( osgOQ::OcclusionQueryRoot* oqr )
+	  : _oqr( oqr ),
+		_enable( true ),
+		_debug( false )
+	{}
 
     bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& )
     {
@@ -56,63 +153,54 @@ public:
         {
             case(osgGA::GUIEventAdapter::KEYUP):
             {
-                if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F4)
+                if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F5)
                 {
-                    // F4 -- Change transforms in the stock scene.
-                    MatrixTransformList::const_iterator mtIt = mtList.begin();
-                    while (mtIt != mtList.end())
-                    {
-                        osg::MatrixTransform* mt = (*mtIt).get();
-                        osg::Matrix m;
-                        m.makeTranslate( (float)mtShift++, 0.f, 0.f );
-                        mtShift = mtShift % 4;
-                        mt->setMatrix( m );
+					// F5 -- Change transforms in the stock scene.
+					MatrixTransformList::const_iterator mtIt = mtList.begin();
+					while (mtIt != mtList.end())
+					{
+						osg::MatrixTransform* mt = (*mtIt).get();
+				        osg::Matrix m;
+						m.makeTranslate( (float)mtShift++, 0.f, 0.f );
+						mtShift = mtShift % 4;
+						mt->setMatrix( m );
 
-                        mtIt++;
-                    }
-                    return true;
+						mtIt++;
+					}
                 }
                 else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F6)
                 {
-                    // F6 -- Toggle osgOQ testing.
-                    _enable = !_enable;
-                    osgOQ::EnableQueryVisitor eqv( _enable );
-                    _node.accept( eqv );
-                    return true;
+					// F6 -- Toggle osgOQ testing.
+					_enable = !_enable;
+					_oqr->setQueriesEnabled( _enable );
                 }
                 else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F7)
                 {
-                    // F7 -- Toggle display of OQ test bounding volumes
-                    _debug = !_debug;
-                    osgOQ::DebugDisplayVisitor ddv( _debug );
-                    _node.accept( ddv );
-                    return true;
+					// F7 -- Toggle display of OQ test bounding volumes
+					_debug = !_debug;
+					_oqr->setDebugDisplay( _debug );
                 }
                 else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_F8)
                 {
-                    // F8 -- Gether stats and display
-                    osgOQ::StatisticsVisitor sv;
-                    _node.accept( sv );
-                    std::cout << "osgOQ: Stats: numOQNs " << sv.getNumOQNs() << ", numPased " << sv.getNumPassed() << std::endl;
-                    return true;
+					// F8 -- Temporarily increase debug verbosity, 3 frames
+					_oqr->setDebugVerbosity( 1, 3 );
                 }
                 else if (ea.getKey()=='o')
                 {
-                    if (osgDB::writeNodeFile( _node, "saved_model.osg" ))
-                        osg::notify( osg::ALWAYS ) << "osgOQ: Wrote scene graph to \"saved_model.osg\"" << std::endl;
-                    else
-                        osg::notify( osg::ALWAYS ) << "osgOQ: Wrote failed for \"saved_model.osg\"" << std::endl;
-                    return true;
+					if (osgDB::writeNodeFile( *_oqr, "saved_model.osg" ))
+						osg::notify( osg::ALWAYS ) << "Wrote scene graph to \"saved_model.osg\"" << std::endl;
+					else
+						osg::notify( osg::ALWAYS ) << "Wrote failed for \"saved_model.osg\"" << std::endl;
                 }
                 return false;
             }
             default:
-                break;
+				break;
         }
         return false;
     }
 
-    osg::Node& _node;
+	osgOQ::OcclusionQueryRoot* _oqr;
 
     bool _enable, _debug;
 };
@@ -125,18 +213,18 @@ createScene()
 
     osg::ref_ptr<osg::Group> root = new osg::Group;
 
-    // Add complex geometry
+	// Add complex geometry
     osg::ref_ptr<osg::Group> g = new osg::Group;
     {
         osg::ref_ptr<osg::Node> node = osgDB::readNodeFile( "bigsphere.osg" );
         if (!node.valid())
-        {
-            osg::notify( osg::FATAL ) << "osgOQ: Can't load \"bigsphere.osg\"." << std::endl;
-            return NULL;
-        }
+		{
+            osg::notify( osg::FATAL ) << "Can't load \"bigsphere.osg\"." << std::endl;
+			return NULL;
+		}
 
-        osg::StateSet* ss = node->getOrCreateStateSet();
-        osg::PolygonMode* pm = new osg::PolygonMode(
+		osg::StateSet* ss = node->getOrCreateStateSet();
+		osg::PolygonMode* pm = new osg::PolygonMode(
             osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
         ss->setAttributeAndModes( pm, osg::StateAttribute::ON |
             osg::StateAttribute::PROTECTED);
@@ -145,18 +233,18 @@ createScene()
         node->accept( sv );
 
         osg::MatrixTransform* mt = new osg::MatrixTransform;
-        mt->setDataVariance( osg::Object::DYNAMIC );
+		mt->setDataVariance( osg::Object::DYNAMIC );
         osg::Matrix m;
         m.makeTranslate( 0.f, 0.f, 0.f );
         mt->setMatrix( m );
         g->addChild( mt );
         mt->addChild( node.get() );
 
-        mtList.push_back( mt );
+		mtList.push_back( mt );
     }
     root->addChild( g.get() );
 
-    // Add box
+	// Add box
     osg::ref_ptr<osg::Geode> box = new osg::Geode;
     osg::StateSet* state = box->getOrCreateStateSet();
     osg::PolygonMode* pm = new osg::PolygonMode( 
@@ -222,10 +310,10 @@ createScene()
     return root.get();
 }
 
-osg::ref_ptr<osg::Group>
-createStockScene()
+osg::ref_ptr<osg::Node>
+createStockScene( osgOQ::OcclusionQueryContext* oqc )
 {
-    osg::ref_ptr<osg::Group> root = new osg::Group();
+	osg::ref_ptr<osgOQ::OcclusionQueryRoot> root = new osgOQ::OcclusionQueryRoot( oqc );
 
     for (int i=0; i<3; i++)
     {
@@ -242,28 +330,28 @@ createStockScene()
         root->addChild( mt );
     }
 
-    return root.get();
+	return root.get();
 }
 
 
 int main(int argc, char** argv)
 {
-    // Force load of osgPolyTrans plugin
+	// Force load of osgPolyTrans plugin
 #ifdef _DEBUG
-    const std::string pluginName( "osgdb_PolyTransd.dll" );
+	const std::string pluginName( "osgdb_PolyTransd.dll" );
 #else
-    const std::string pluginName( "osgdb_PolyTrans.dll" );
+	const std::string pluginName( "osgdb_PolyTrans.dll" );
 #endif
     bool loadedLib = osgDB::Registry::instance()->loadLibrary( pluginName );
-    if (!loadedLib)
-    {
-        osg::notify( osg::FATAL ) << "osgOQ: Can't load plugin \"" << pluginName << "\"." << std::endl;
-    }
-    // Now that we force load, probably don't need the extension map any longer.
+	if (!loadedLib)
+	{
+        osg::notify( osg::FATAL ) << "Can't load plugin \"" << pluginName << "\"." << std::endl;
+	}
+	// Now that we force load, probably don't need the extension map any longer.
     //osgDB::Registry::instance()->readPluginAliasConfigurationFile( "extmap.txt" );
 
-    
-    // use an ArgumentParser object to manage the program arguments.
+	
+	// use an ArgumentParser object to manage the program arguments.
     osg::ArgumentParser arguments(&argc,argv);
 
     arguments.getApplicationUsage()->setApplicationName(arguments.getApplicationName());
@@ -280,10 +368,11 @@ int main(int argc, char** argv)
     arguments.getApplicationUsage()->addCommandLineOption("--DrawThreadPerContext","Select DrawThreadPerContext threading model for viewer.");
     arguments.getApplicationUsage()->addCommandLineOption("--CullThreadPerCameraDrawThreadPerContext","Select CullThreadPerCameraDrawThreadPerContext threading model for viewer.");
 
+    arguments.getApplicationUsage()->addCommandLineOption("--BufferSize <n>","Specify number of Occlusion Query buffers.");
     arguments.getApplicationUsage()->addCommandLineOption("--stock","Display the stock scene.");
     arguments.getApplicationUsage()->addCommandLineOption("--opt","Run the osgUtil Optimizer.");
 
-    // if user request help write it out to cout.
+	// if user request help write it out to cout.
     bool helpAll = arguments.read("--help-all");
     unsigned int helpType = ((helpAll || arguments.read("-h") || arguments.read("--help"))? osg::ApplicationUsage::COMMAND_LINE_OPTION : 0 ) |
                             ((helpAll ||  arguments.read("--help-env"))? osg::ApplicationUsage::ENVIRONMENTAL_VARIABLE : 0 ) |
@@ -301,7 +390,7 @@ int main(int argc, char** argv)
         return 1;
     }
     
-    osgViewer::Viewer viewer( arguments );
+    osgViewer::Viewer viewer;
     
     // set up the camera manipulators.
     {
@@ -333,10 +422,7 @@ int main(int argc, char** argv)
     viewer.addEventHandler( new osgGA::StateSetManipulator(viewer.getCamera()->getOrCreateStateSet()) );
     
     // add the thread model handler
-    viewer.addEventHandler(new osgViewer::ThreadingHandler);
-
-    // add the window size toggle handler
-    viewer.addEventHandler(new osgViewer::WindowSizeHandler);
+    viewer.addEventHandler(new ThreadingHandler);
 
     // add the stats handler
     viewer.addEventHandler(new osgViewer::StatsHandler);
@@ -344,54 +430,58 @@ int main(int argc, char** argv)
     // add the help handler
     viewer.addEventHandler(new osgViewer::HelpHandler(arguments.getApplicationUsage()));
 
-    // add the record camera path handler
-    viewer.addEventHandler(new osgViewer::RecordCameraPathHandler);
-
-#if 0
     while (arguments.read("--SingleThreaded")) viewer.setThreadingModel(osgViewer::Viewer::SingleThreaded);
     while (arguments.read("--CullDrawThreadPerContext")) viewer.setThreadingModel(osgViewer::Viewer::CullDrawThreadPerContext);
     while (arguments.read("--DrawThreadPerContext")) viewer.setThreadingModel(osgViewer::Viewer::DrawThreadPerContext);
     while (arguments.read("--CullThreadPerCameraDrawThreadPerContext")) viewer.setThreadingModel(osgViewer::Viewer::CullThreadPerCameraDrawThreadPerContext);
-#endif
 
-    std::string optStr;
-#if 0
-    // TBD
-    // Pass command line arguments to osgdb_PolyTrans here.
-    osg::ref_ptr<osgOQ::OcclusionQueryContext> oqc = new osgOQ::OcclusionQueryContext;
-    int buffers = oqc->getBufferSize();
+    unsigned int screenNum;
+    while (arguments.read("--screen",screenNum))
+    {
+        viewer.setUpViewOnSingleScreen(screenNum);
+    }
+
+	osg::ref_ptr<osgOQ::OcclusionQueryContext> oqc = new osgOQ::OcclusionQueryContext;
+	int buffers = oqc->getBufferSize();
+	std::string optStr;
     if (arguments.read( "--BufferSize", buffers ))
-    {
-        oqc->setBufferSize( buffers );
+	{
+		oqc->setBufferSize( buffers );
 
-        std::ostringstream oStr;
-        oStr << "BufferSize " << buffers;
-        optStr += oStr.str();
-    }
-#endif
+		std::ostringstream oStr;
+		oStr << "BufferSize " << buffers;
+		optStr += oStr.str();
+	}
 
-    osg::ref_ptr<osg::Group> root;
+	osg::ref_ptr<osgOQ::OcclusionQueryRoot> root;
     if (arguments.read( "--stock" ))
-        // User requested the stock scene
-        root = createStockScene().get();
-    else
-    {
-        osg::ref_ptr<osgDB::ReaderWriter::Options> opts =
-            new osgDB::ReaderWriter::Options( optStr );
-        // load the specified model
-        root = static_cast<osg::Group*>( osgDB::readNodeFiles( arguments, opts.get() ) );
-        if (!root) 
-        {
-            std::cout << arguments.getApplicationName() <<": No data loaded" << std::endl;
-            return 1;
-        }
-    }
-    osgOQ::OcclusionQueryFlatVisitor oqfv;
-    root->accept( oqfv );
+		// User requested the stock scene
+		root = dynamic_cast<osgOQ::OcclusionQueryRoot*>( createStockScene( oqc.get() ).get() );
+	else
+	{
+		osg::ref_ptr<osgDB::ReaderWriter::Options> opts =
+			new osgDB::ReaderWriter::Options( optStr );
+		// load the specified model
+		osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFiles( arguments, opts.get() );
+		if (!loadedModel) 
+		{
+			std::cout << arguments.getApplicationName() <<": No data loaded" << std::endl;
+			return 1;
+		}
+		// If this cast succeeds, the osgPolyTrans plugin loaded the model
+		//   and returned it headed by an OQR node.
+		root = dynamic_cast<osgOQ::OcclusionQueryRoot*>( loadedModel.get() );
+		if (!root.valid())
+		{
+			// Some other plugin was used. Add it to an OQR.
+			root = new osgOQ::OcclusionQueryRoot( oqc.get() );
+			root->addChild( loadedModel.get() );
+		}
+	}
 
-    bool optimize = arguments.read( "--opt" );
+	bool optimize = arguments.read( "--opt" );
 
-    // any option left unread are converted into errors to write out later.
+	// any option left unread are converted into errors to write out later.
     arguments.reportRemainingOptionsAsUnrecognized();
 
     // report any errors if they have occurred when parsing the program arguments.
@@ -404,15 +494,19 @@ int main(int argc, char** argv)
 
     // optimize the scene graph, remove redundant nodes and state etc.
     if (optimize)
-    {
-        osgUtil::Optimizer optimizer;
-        optimizer.optimize( root.get() );
-    }
+	{
+		osgUtil::Optimizer optimizer;
+		optimizer.optimize( root.get() );
+	}
 
     viewer.setSceneData( root.get() );
 
-    KeyHandler* kh = new KeyHandler( *root );
+	KeyHandler* kh = new KeyHandler( root.get() );
     viewer.addEventHandler( kh );
 
-    return viewer.run();
+	while (!viewer.done())
+	{
+		viewer.frame();
+	}
+    return 0;
 }

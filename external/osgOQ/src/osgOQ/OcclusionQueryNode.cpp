@@ -13,10 +13,8 @@
 //
 
 #include "osgOQ/OcclusionQueryNode.h"
+#include "osgOQ/OcclusionQueryContext.h"
 #include "osgOQ/QueryGeometry.h"
-#include "osgOQ/QueryState.h"
-#include "osgOQ/OptionLoader.h"
-#include <OpenThreads/ScopedLock>
 #include <osg/Notify>
 #include <osg/CopyOp>
 #include <osg/Vec3>
@@ -27,33 +25,103 @@
 #include <osg/BoundingBox>
 #include <osg/BoundingSphere>
 #include <osg/Referenced>
-#include <osg/ComputeBoundsVisitor>
 #include <osgUtil/CullVisitor>
 #include <osg/Version>
 #include <map>
 #include <vector>
 #include <cassert>
 
+// After the 1.2 release and leading up to the 2.0 release, OSG came out in a
+//   series of "engineering releases" starting with 1.9.0, which changed the
+//   OSG interface in an incompatible way from OSG v1.2.
+#define POST_OSG_1_2 \
+    ( (OSG_VERSION_MAJOR>1) || \
+      ( (OSG_VERSION_MAJOR==1) && (OSG_VERSION_MINOR>2) ) )
+#define PRE_OSG_1_9 \
+    ( (OSG_VERSION_MAJOR<1) || \
+      ( (OSG_VERSION_MAJOR==1) && (OSG_VERSION_MINOR<9) ) )
+
+#if POST_OSG_1_2
+// Version >1.2, use OSG's ComputeBoundsVisitor
+#include <osg/ComputeBoundsVisitor>
+#endif
 
 namespace osgOQ
 {
 
+#if PRE_OSG_1_9
+// Version <=1.2, use our own bounding box visitor.
 
-OcclusionQueryNode::OcclusionQueryNode()
-  : _enabled( true ),
-    _visThreshold( 500 ),
-    _queryFrameCount( 5 ),
-    _debugBB( false )
+// Runs during the update traversal.
+class BoundingBoxVisitor : public osg::NodeVisitor
 {
-    setDataVariance( osg::Object::DYNAMIC );
+public:
+    BoundingBoxVisitor()
+        : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+    {
+        osg::Matrix m;
+        _m.push_back( m );
+    }
+    ~BoundingBoxVisitor() {}
 
-    // Override defaults if specified in the config file using the OptionLoader singleton.
-    int clampMe;
-    if ( OptionLoader::instance()->getOption( "VisibilityThreshold", clampMe ) )
-        _visThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
-    if ( OptionLoader::instance()->getOption( "QueryFrameCount", clampMe ) )
-        _queryFrameCount = (clampMe < 1) ? 1 : static_cast<unsigned int>( clampMe );
-    OptionLoader::instance()->getOption( "DebugBoundingVolume", _debugBB );
+    osg::BoundingBox getBound() { return _bb; }
+
+    virtual void apply( osg::Node& node )
+    {
+        traverse( node );
+    }
+    virtual void apply( osg::MatrixTransform& mt )
+    {
+        osg::Matrix m = mt.getMatrix();
+        pushTraversePop( m, (osg::Node&)mt );
+    }
+
+    virtual void apply( osg::Geode& geode )
+    {
+        unsigned int i;
+        for( i = 0; i < geode.getNumDrawables(); i++ )
+        {
+            osg::Geometry* geom = dynamic_cast<osg::Geometry *>(geode.getDrawable(i));
+            if( !geom )
+                continue;
+
+            osg::BoundingBox bb = geom->getBound();
+            osg::Matrix c = _m.back();
+            osg::Vec3 v0 = bb._min * c;
+            osg::Vec3 v1 = bb._max * c;
+            _bb.expandBy( v0 );
+            _bb.expandBy( v1 );
+        } 
+    }
+
+protected:
+    void pushTraversePop( const osg::Matrix& m, osg::Node& node )
+    {
+        osg::Matrix c = _m.back();
+        _m.push_back( m*c );
+        traverse( node );
+        _m.pop_back();
+    }
+
+    osg::BoundingBox _bb;
+    std::vector<osg::Matrix> _m;
+};
+#endif
+
+
+OcclusionQueryNode::OcclusionQueryNode( OcclusionQueryContext* oqc )
+  : _enabled( true ),
+	_debug( false ),
+    _lastQueryFrame( 0 ),
+	_oqc( oqc )
+{
+	setDataVariance( osg::Object::DYNAMIC );
+
+    if (oqc == NULL)
+        _oqc = new OcclusionQueryContext;
+	_debug = _oqc->getDebugDisplay();
+
+	setName( _oqc->getNextOQNName() );
 
     // OQN has two Geode member variables, one for doing the
     //   query and one for rendering the debug geometry.
@@ -69,7 +137,11 @@ OcclusionQueryNode::OcclusionQueryNode( const OcclusionQueryNode& oqn, const osg
   : Group( oqn, copyop )
 {
     _enabled = oqn._enabled;
-    _debugBB = oqn._debugBB;
+    _debug = oqn._debug;
+    _lastQueryFrame = oqn._lastQueryFrame;
+
+    // Assume a shallow copy and share the OQC.
+    _oqc = oqn._oqc;
 
     // Regardless of shallow or deep, create unique support nodes.
     createSupportNodes();
@@ -81,14 +153,14 @@ OcclusionQueryNode::OcclusionQueryNode( const OcclusionQueryNode& oqn, const osg
 void
 OcclusionQueryNode::traverse( osg::NodeVisitor& nv )
 {
-    if ( !_enabled || (nv.getVisitorType() != osg::NodeVisitor::CULL_VISITOR) )
+	if ( !_enabled || (nv.getVisitorType() != osg::NodeVisitor::CULL_VISITOR) )
     {
         osg::Group::traverse( nv );
         return;
     }
 
-    osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>( &nv );
-    osg::Camera* camera = cv->getRenderStage()->getCamera();
+	osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>( &nv );
+    unsigned int contextID = cv->getState()->getContextID();
 
 
     // In the future, we could hold a reference directly to the QueryDrawable
@@ -97,134 +169,73 @@ OcclusionQueryNode::traverse( osg::NodeVisitor& nv )
     if (qg == NULL)
     {
         osg::notify( osg::FATAL ) <<
-            "osgOQ: OcclusionQueryNode: No QueryGeometry." << std::endl;
-        return;
+            "OcclusionQueryNode: No QueryGeometry." << std::endl;
+		return;
     }
 
     // If the distance to the bounding sphere shell is positive, retrieve
     //   the results. Others (we're inside the BS shell) we are considered
     //   to have passed and don't need to retrieve the query.
-    const osg::BoundingSphere& bs = getBound();
-    float distance = cv->getDistanceToEyePoint( bs._center, false )  - bs._radius;
-    _passed = ( distance <= 0.f );
-    if (!_passed)
+	const osg::BoundingSphere& bs = getBound();
+	float distance = cv->getDistanceToEyePoint( bs._center, false )  - bs._radius;
+	bool passed( distance <= 0.f );
+    if (!passed)
     {
-        int result = qg->getNumPixels( camera );
-        _passed = ( (unsigned int)(result) > _visThreshold );
-    }
+        int result = qg->retrieveQuery( contextID );
+		passed = ( (unsigned int)(result) > _oqc->getVisibilityThreshold() );
+	}
 
-    if (_passed)
+    if (passed)
         // We're visible. Traverse our children
         osg::Group::traverse( nv );
 
     // Submit a new query only if sufficient frames have elapsed.
-    bool issueQuery;
+    const int curFrame = nv.getTraversalNumber();
+    if (curFrame - _lastQueryFrame >= _oqc->getQueryFrameCount())
     {
-        const int curFrame = nv.getTraversalNumber();
-
-        OpenThreads::ScopedLock<OpenThreads::Mutex> lock( _frameCountMutex );
-        int& lastQueryFrame = _frameCountMap[ camera ];
-        if ( issueQuery = (curFrame - lastQueryFrame >= _queryFrameCount) )
-            lastQueryFrame = curFrame;
-    }
-    if (issueQuery)
         _queryGeode->accept( nv );
+        _lastQueryFrame = curFrame;
+    }
 
-    if (_debugBB)
+    if (_debug)
         // If requested, display the debug geometry
         _debugGeode->accept( nv );
 
-    osg::notify( osg::DEBUG_INFO ) <<
-        "oagOQ: OQN::traverse: OQN: " << getName() <<
-        ", Cam: " << camera <<
-        ", Passed: " << _passed << std::endl;
+    if (_oqc->getStatistics())
+	{
+		if (passed)
+			_oqc->incNumPassed();
+		else
+			_oqc->incNumFailed();
+	}
+
+	if (_oqc->getDebugVerbosity() > 0)
+		osg::notify( osg::ALWAYS ) <<
+			"OQN::traverse: OQN: " << getName() <<
+			", Ctx: " << contextID <<
+			", Passed: " << passed << std::endl;
 }
-
-osg::BoundingSphere
-OcclusionQueryNode::computeBound() const
-{
-    {
-        // Need to make this routine thread-safe. Typically called by the update
-        //   Visitor, or just after the update traversal, but could be called by
-        //   an application thread or by a non-osgViewer application.
-        OpenThreads::ScopedLock<OpenThreads::Mutex> lock( _computeBoundMutex )  ;
-
-        // This is the logical place to put this code, but the method is const. Cast
-        //   away constness to compute the bounding box and modify the query geometry.
-        osgOQ::OcclusionQueryNode* nonConstThis = const_cast<osgOQ::OcclusionQueryNode*>( this );
-
-
-        osg::ComputeBoundsVisitor cbv;
-        nonConstThis->accept( cbv );
-        osg::BoundingBox bb = cbv.getBoundingBox();
-
-        osg::ref_ptr<osg::Vec3Array> v = new osg::Vec3Array;
-        v->resize( 8 );
-        (*v)[0] = osg::Vec3( bb._min.x(), bb._min.y(), bb._min.z() );
-        (*v)[1] = osg::Vec3( bb._max.x(), bb._min.y(), bb._min.z() );
-        (*v)[2] = osg::Vec3( bb._max.x(), bb._min.y(), bb._max.z() );
-        (*v)[3] = osg::Vec3( bb._min.x(), bb._min.y(), bb._max.z() );
-        (*v)[4] = osg::Vec3( bb._max.x(), bb._max.y(), bb._min.z() );
-        (*v)[5] = osg::Vec3( bb._min.x(), bb._max.y(), bb._min.z() );
-        (*v)[6] = osg::Vec3( bb._min.x(), bb._max.y(), bb._max.z() );
-        (*v)[7] = osg::Vec3( bb._max.x(), bb._max.y(), bb._max.z() );
-
-        osg::Geometry* geom = dynamic_cast< osg::Geometry* >( nonConstThis->_queryGeode->getDrawable( 0 ) );
-        geom->setVertexArray( v.get() );
-
-        geom = dynamic_cast< osg::Geometry* >( nonConstThis->_debugGeode->getDrawable( 0 ) );
-        geom->setVertexArray( v.get() );
-    }
-
-    return Group::computeBound();
-}
-
 
 // Should only be called outside of cull/draw. No thread issues.
 void
 OcclusionQueryNode::setQueriesEnabled( bool enable )
 {
-    _enabled = enable;
+	_enabled = enable;
 }
 
 // Should only be called outside of cull/draw. No thread issues.
 void
 OcclusionQueryNode::setDebugDisplay( bool debug )
 {
-    _debugBB = debug;
-}
-bool
-OcclusionQueryNode::getDebugDisplay() const
-{
-    return _debugBB;
+	_debug = debug;
 }
 
-
-
-void
-OcclusionQueryNode::setQueryStateSets( osg::StateSet* ss, osg::StateSet* ssDebug )
-{
-    if (!_queryGeode.valid() || !_debugGeode.valid())
-    {
-        osg::notify( osg::WARN ) << "osgOQ: OcclusionQueryNode:: Invalid support node(s)." << std::endl;
-        return;
-    }
-
-    _queryGeode->setStateSet( ss );
-    _debugGeode->setStateSet( ssDebug );
-}
-
-bool
-OcclusionQueryNode::getPassed() const
-{
-    return _passed;
-}
 
 
 void
 OcclusionQueryNode::createSupportNodes()
 {
-    GLushort indices[] = { 0, 1, 2, 3,  4, 5, 6, 7,
+	GLushort indices[] = { 0, 1, 2, 3,  4, 5, 6, 7,
         0, 3, 6, 5,  2, 1, 4, 7,
         5, 4, 1, 0,  2, 7, 6, 3 };
 
@@ -232,10 +243,11 @@ OcclusionQueryNode::createSupportNodes()
         // Add the test geometry Geode
         _queryGeode = new osg::Geode;
         _queryGeode->setName( "OQTest" );
-        _queryGeode->setDataVariance( osg::Object::DYNAMIC );
+		_queryGeode->setDataVariance( osg::Object::DYNAMIC );
+        _queryGeode->setStateSet( _oqc->getTestStateSet() );
 
-        osg::ref_ptr< QueryGeometry > geom = new QueryGeometry( getName() );
-        geom->setDataVariance( osg::Object::DYNAMIC );
+        osg::ref_ptr< QueryGeometry > geom = new QueryGeometry( _oqc.get(), getName() );
+		geom->setDataVariance( osg::Object::DYNAMIC );
         geom->addPrimitiveSet( new osg::DrawElementsUShort(
                     osg::PrimitiveSet::QUADS, 24, indices ) );
 
@@ -247,10 +259,11 @@ OcclusionQueryNode::createSupportNodes()
         //   test geometry for debugging purposes
         _debugGeode = new osg::Geode;
         _debugGeode->setName( "Debug" );
-        _debugGeode->setDataVariance( osg::Object::DYNAMIC );
+		_debugGeode->setDataVariance( osg::Object::DYNAMIC );
+        _debugGeode->setStateSet( _oqc->getDebugStateSet() );
 
-        osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
-        geom->setDataVariance( osg::Object::DYNAMIC );
+		osg::ref_ptr<osg::Geometry> geom = new osg::Geometry;
+		geom->setDataVariance( osg::Object::DYNAMIC );
 
         osg::ref_ptr<osg::Vec4Array> ca = new osg::Vec4Array;
         ca->push_back( osg::Vec4( 1.f, 1.f, 1.f, 1.f ) );
@@ -262,11 +275,51 @@ OcclusionQueryNode::createSupportNodes()
 
         _debugGeode->addDrawable( geom.get() );
     }
+}
 
-    // Creste state sets. Note that the osgOQ visitors (which place OQNs throughout
-    //   the scene graph) create a single instance of these StateSets shared
-    //   between all OQNs for efficiency.
-    setQueryStateSets( initOQState(), initOQDebugState() );
+// Executes during the update traversal, called UpdateQueryGeometryVisitor.
+void
+OcclusionQueryNode::updateQueryGeometry()
+{
+    // DO NOT get bounding sphere of children, instead use a visitor
+    //   to get the bounding box. Children's bounding sphere is a
+    //   sphere around the bounding box, which is less efficient.
+
+	osg::Geometry* geom = dynamic_cast< osg::Geometry* >( _queryGeode->getDrawable( 0 ) );
+    if ( ( geom->getVertexArray() != NULL) &&
+        _boundingSphereComputed )
+        // This node already has some query array data and the
+        //   bounding sphere appears to be current. We don't
+        //   need to change our query geometry. Just return.
+        return;
+
+#if POST_OSG_1_2
+	// Version >1.2, use OSG's ComputeBoundsVisitor.
+	osg::ComputeBoundsVisitor cbv;
+    accept( cbv );
+	osg::BoundingBox bb = cbv.getBoundingBox();
+#else
+	// Version <=1.2, use our own bounding box visitor.
+	BoundingBoxVisitor bbv;
+	accept( bbv );
+	osg::BoundingBox bb = bbv.getBound();
+#endif
+
+	osg::ref_ptr<osg::Vec3Array> v = new osg::Vec3Array;
+	v->resize( 8 );
+	(*v)[0] = osg::Vec3( bb._min.x(), bb._min.y(), bb._min.z() );
+	(*v)[1] = osg::Vec3( bb._max.x(), bb._min.y(), bb._min.z() );
+	(*v)[2] = osg::Vec3( bb._max.x(), bb._min.y(), bb._max.z() );
+	(*v)[3] = osg::Vec3( bb._min.x(), bb._min.y(), bb._max.z() );
+	(*v)[4] = osg::Vec3( bb._max.x(), bb._max.y(), bb._min.z() );
+	(*v)[5] = osg::Vec3( bb._min.x(), bb._max.y(), bb._min.z() );
+	(*v)[6] = osg::Vec3( bb._min.x(), bb._max.y(), bb._max.z() );
+	(*v)[7] = osg::Vec3( bb._max.x(), bb._max.y(), bb._max.z() );
+
+	geom->setVertexArray( v.get() );
+
+	geom = dynamic_cast< osg::Geometry* >( _debugGeode->getDrawable( 0 ) );
+	geom->setVertexArray( v.get() );
 }
 
 

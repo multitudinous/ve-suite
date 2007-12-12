@@ -65,6 +65,7 @@
 #include <ves/xplorer/network/cfdExecutive.h>
 
 // Scene graph dependant headers
+#ifdef _OSG
 #include <osg/Group>
 #include <osg/FrameStamp>
 #include <osg/MatrixTransform>
@@ -82,9 +83,12 @@
 
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
+#endif
 
+#ifdef _OSG
 #include <ves/xplorer/volume/cfdPBufferManager.h>
 using namespace ves::xplorer::volume;
+#endif
 
 /// C/C++ libraries
 #include <iostream>
@@ -100,12 +104,14 @@ using namespace ves::xplorer::network;
 
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[] )
+#ifdef _OSG
 #if __VJ_version >= 2003000
         :
         vrj::osg::App( vrj::Kernel::instance() ),
 #else
         :
         vrj::OsgApp( vrj::Kernel::instance() ),
+#endif
 #endif
         readyToWriteWebImage( false ),
         writingWebImageNow( false ),
@@ -662,6 +668,7 @@ void App::writeImageFileForWeb()
     osgDB::writeImageFile( *( shot.get() ), m_filename );
 }
 ////////////////////////////////////////////////////////////////////////////////
+#ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
@@ -816,3 +823,4 @@ void App::update( void )
     // multi-threaded.
     getScene()->getBound();
 }
+#endif //_OSG

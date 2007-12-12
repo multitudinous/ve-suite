@@ -13,35 +13,18 @@
 //
 
 #include "osgOQ/OcclusionQueryVisitor.h"
+#include "osgOQ/OcclusionQueryContext.h"
+#include "osgOQ/OcclusionQueryRoot.h"
 #include "osgOQ/OcclusionQueryNode.h"
-#include "osgOQ/QueryState.h"
-#include "osgOQ/OptionLoader.h"
 #include <osgUtil/RenderBin>
-#include <osg/StateAttribute>
-#include <osg/PolygonMode>
-#include <osg/ColorMask>
-#include <osg/PolygonOffset>
-#include <osg/Depth>
+#include <osg/BlendFunc>
 #include <osgDB/FileUtils>
 #include <osg/Notify>
-#include <sstream>
 #include <string>
 
 
 using namespace osgOQ;
 
-
-unsigned int countGeometryVertices( osg::Geometry* geom )
-{
-    if (!geom->getVertexArray())
-        return 0;
-
-    // TBD This will eventually iterate over the PrimitiveSets and total the
-    //   number of vertices actually used. But for now, it just returns the
-    //   size of the vertex array.
-
-    return geom->getVertexArray()->getNumElements();
-}
 
 class VertexCounter : public osg::NodeVisitor
 {
@@ -78,8 +61,11 @@ public:
             if( !geom )
                 continue;
 
-            _total += countGeometryVertices( geom );
+            osg::Vec3Array* varray = dynamic_cast<osg::Vec3Array *>(geom->getVertexArray());
+            if( varray == NULL )
+                continue;
 
+            _total += varray->size();
             if (_total > _limit)
                 break;
         } 
@@ -92,37 +78,19 @@ protected:
 
 
 
-OcclusionQueryNonFlatVisitor::OcclusionQueryNonFlatVisitor()
+OcclusionQueryNonFlatVisitor::OcclusionQueryNonFlatVisitor( OcclusionQueryContext* oqc )
   : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-    _nameIdx( 0 ),
-    _occluderThreshold( 5000 )
+    _oqc( oqc )
 {
-    int clampMe;
-    if ( OptionLoader::instance()->getOption( "OccluderThreshold", clampMe ) )
-        _occluderThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
-
-    // Init StateSet for occlusion query geometry.
-    _state = initOQState();
-    // Initialize StateSet for debug geometry
-    _debugState = initOQDebugState();
+    if (oqc == NULL)
+        _oqc = new OcclusionQueryContext;
 }
 
 OcclusionQueryNonFlatVisitor::~OcclusionQueryNonFlatVisitor()
 {
-    osg::notify( osg::INFO ) <<
-        "osgOQ: OcclusionQueryNonFlatVisitor: Added " << getNameIdx() <<
-        " OQNodes." << std::endl;
-}
-
-void
-OcclusionQueryNonFlatVisitor::setOccluderThreshold( int vertices )
-{
-    _occluderThreshold = vertices;
-}
-int
-OcclusionQueryNonFlatVisitor::getOccluderThreshold() const
-{
-    return _occluderThreshold;
+	osg::notify( osg::NOTICE ) <<
+		"OcclusionQueryNonFlatVisitor: Added " << _oqc->getNameIdx() <<
+		" OQNodes." << std::endl;
 }
 
 void
@@ -136,46 +104,42 @@ OcclusionQueryNonFlatVisitor::apply( osg::Node& node )
     }
 
     osg::Group* grp = dynamic_cast<osg::Group*>( &node );
-    if (grp != NULL)
-    {
-        osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-        if (thisOQN != NULL)
-            // A subgraph is already under osgOQ contr9ol.
-            // Don't traverse further.
-            return;
+	if (grp != NULL)
+	{
+		osgOQ::OcclusionQueryRoot* thisOQR = dynamic_cast<osgOQ::OcclusionQueryRoot*>( &node );
+		osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
+		if ( (thisOQR != NULL) || (thisOQN != NULL) )
+			// A subgraph is already under osgOQ contr9ol.
+			// Don't traverse further.
+			return;
 
-        if (grp->getNumChildren() <= 1)
-        {
-            // No point in adding an OQN above a Group node
-            //   with only one child. Traverse, and add an
-            //   OQN closer to the leaves. This avoids redundant
-            //   OQNs that check the same bounding geometry.
-            traverse( node );
-            return;
-        }
-    }
+		if (grp->getNumChildren() <= 1)
+		{
+			// No point in adding an OQN above a Group node
+			//   with only one child. Traverse, and add an
+			//   OQN closer to the leaves. This avoids redundant
+			//   OQNs that check the same bounding geometry.
+	        traverse( node );
+			return;
+		}
+	}
 
-    VertexCounter vc( _occluderThreshold );
+    VertexCounter vc( _oqc->getOccluderThreshold() );
     node.accept( vc );
     if (vc.exceeded())
     {
         // Insert OQN(s) above this node.
-        unsigned int np = node.getNumParents();
-        while (np--)
-        {
-            osg::Group* parent = dynamic_cast<osg::Group*>( node.getParent( np ) );
-            if (parent != NULL)
-            {
-                osg::ref_ptr<OcclusionQueryNode> oqn = new OcclusionQueryNode();
-                oqn->addChild( &node );
-                parent->replaceChild( &node, oqn.get() );
-
-                oqn->setName( getNextOQNName() );
-                // Set all OQNs to use the same query StateSets (instead of multiple copies
-                //   of the same StateSet) for efficiency.
-                oqn->setQueryStateSets( _state.get(), _debugState.get() );
-            }
-        }
+		unsigned int np = node.getNumParents();
+		while (np--)
+		{
+			osg::Group* parent = dynamic_cast<osg::Group*>( node.getParent( np ) );
+			if (parent != NULL)
+			{
+				osg::ref_ptr<OcclusionQueryNode> oqn = new OcclusionQueryNode( getOQContext() );
+				oqn->addChild( &node );
+				parent->replaceChild( &node, oqn.get() );
+			}
+		}
 
         traverse( node );
     }
@@ -184,57 +148,33 @@ OcclusionQueryNonFlatVisitor::apply( osg::Node& node )
     //   occluder threshold.
 }
 
-std::string
-OcclusionQueryNonFlatVisitor::getNextOQNName()
-{
-    std::ostringstream ostr;
-    ostr << "OQNode_" << _nameIdx++;
-    return ostr.str();
-}
 
 
 
-OcclusionQueryFlatVisitor::OcclusionQueryFlatVisitor()
+OcclusionQueryFlatVisitor::OcclusionQueryFlatVisitor( OcclusionQueryContext* oqc )
   : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-    _nameIdx( 0 ),
-    _occluderThreshold( 5000 )
+    _oqc( oqc )
 {
-    int clampMe;
-    if ( OptionLoader::instance()->getOption( "OccluderThreshold", clampMe ) )
-        _occluderThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
-
-    // Init StateSet for occlusion query geometry.
-    _state = initOQState();
-    // Initialize StateSet for debug geometry
-    _debugState = initOQDebugState();
+    if (oqc == NULL)
+        _oqc = new OcclusionQueryContext;
 }
 
 OcclusionQueryFlatVisitor::~OcclusionQueryFlatVisitor()
 {
-    osg::notify( osg::INFO ) <<
-        "osgOQ: OcclusionQueryFlatVisitor: Added " << getNameIdx() <<
-        " OQNodes." << std::endl;
-}
-
-void
-OcclusionQueryFlatVisitor::setOccluderThreshold( int vertices )
-{
-    _occluderThreshold = vertices;
-}
-int
-OcclusionQueryFlatVisitor::getOccluderThreshold() const
-{
-    return _occluderThreshold;
+	osg::notify( osg::NOTICE ) <<
+		"OcclusionQueryFlatVisitor: Added " << _oqc->getNameIdx() <<
+		" OQNodes." << std::endl;
 }
 
 void
 OcclusionQueryFlatVisitor::apply( osg::Group& group )
 {
-    osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &group );
-    if (thisOQN != NULL)
-        // A subgraph is already under osgOQ control.
-        // Don't traverse further.
-        return;
+	osgOQ::OcclusionQueryRoot* thisOQR = dynamic_cast<osgOQ::OcclusionQueryRoot*>( &group );
+	osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &group );
+	if ( (thisOQR != NULL) || (thisOQN != NULL) )
+		// A subgraph is already under osgOQ control.
+		// Don't traverse further.
+		return;
 
     if (group.getNumParents() == 0)
     {
@@ -243,17 +183,17 @@ OcclusionQueryFlatVisitor::apply( osg::Group& group )
         return;
     }
 
-    int preTraverseOQNCount = getNameIdx();
-    traverse( group );
+	int preTraverseOQNCount = _oqc->getNameIdx();
+	traverse( group );
 
-    if (getNameIdx() > preTraverseOQNCount)
-        // A least one OQN was added below the current node.
-        //   Don't add one here to avoid hierarchical nesting.
-        return;
-    
-    // There are no OQNs below this group. If the vertex
-    //   count exceeds the threshold, add an OQN here.
-    addOQN( group );
+	if (_oqc->getNameIdx() > preTraverseOQNCount)
+		// A least one OQN was added below the current node.
+		//   Don't add one here to avoid hierarchical nesting.
+		return;
+	
+	// There are no OQNs below this group. If the vertex
+	//   count exceeds the threshold, add an OQN here.
+	addOQN( group );
 }
 
 void
@@ -266,264 +206,57 @@ OcclusionQueryFlatVisitor::apply( osg::Geode& geode )
         return;
     }
 
-    addOQN( geode );
+	addOQN( geode );
 }
 
 void
 OcclusionQueryFlatVisitor::addOQN( osg::Node& node )
 {
-    VertexCounter vc( _occluderThreshold );
+    VertexCounter vc( _oqc->getOccluderThreshold() );
     node.accept( vc );
     if (vc.exceeded())
     {
         // Insert OQN(s) above this node.
-        unsigned int np = node.getNumParents();
-        while (np--)
-        {
-            osg::Group* parent = dynamic_cast<osg::Group*>( node.getParent( np ) );
-            if (parent != NULL)
-            {
-                osg::ref_ptr<OcclusionQueryNode> oqn = new OcclusionQueryNode();
-                oqn->addChild( &node );
-                parent->replaceChild( &node, oqn.get() );
-
-                oqn->setName( getNextOQNName() );
-                // Set all OQNs to use the same query StateSets (instead of multiple copies
-                //   of the same StateSet) for efficiency.
-                oqn->setQueryStateSets( _state.get(), _debugState.get() );
-            }
-        }
+		unsigned int np = node.getNumParents();
+		while (np--)
+		{
+			osg::Group* parent = dynamic_cast<osg::Group*>( node.getParent( np ) );
+			if (parent != NULL)
+			{
+				osg::ref_ptr<OcclusionQueryNode> oqn = new OcclusionQueryNode( getOQContext() );
+				oqn->addChild( &node );
+				parent->replaceChild( &node, oqn.get() );
+			}
+		}
     }
 }
 
-std::string
-OcclusionQueryFlatVisitor::getNextOQNName()
-{
-    std::ostringstream ostr;
-    ostr << "OQNode_" << _nameIdx++;
-    return ostr.str();
-}
 
 
-
-
-//
-PerDrawableQueryVisitor::PerDrawableQueryVisitor()
-  : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-    _occluderThreshold( 5000 ),
-    _count( 0 )
-{
-    int clampMe;
-    if ( OptionLoader::instance()->getOption( "OccluderThreshold", clampMe ) )
-        _occluderThreshold = (clampMe < 0 ) ? 0 : static_cast<unsigned int>( clampMe );
-}
-
-PerDrawableQueryVisitor::~PerDrawableQueryVisitor()
-{
-    osg::notify( osg::INFO ) << "osgOQ: PerDrawableQueryVisitor: Moved " << _count << " Drawables." << std::endl;
-}
-
-void
-PerDrawableQueryVisitor::setOccluderThreshold( int vertices )
-{
-    _occluderThreshold = vertices;
-}
-int
-PerDrawableQueryVisitor::getOccluderThreshold() const
-{
-    return _occluderThreshold;
-}
-
-void
-PerDrawableQueryVisitor::apply( osg::Group& group )
-{
-    traverse( (osg::Node&)group );
-
-    GeodeList::const_iterator it = _newChildren.begin();
-    while (it != _newChildren.end())
-    {
-        group.addChild( (*it).get() );
-        it++;
-    }
-
-    _newChildren.clear();
-}
-
-void
-PerDrawableQueryVisitor::apply( osg::Geode& geode )
-{
-    typedef std::vector< osg::ref_ptr<osg::Geode> > GeodeList;
-    GeodeList gl;
-
-    // Identify target Drawable(s), create Geodes for each,
-    //   remove drawables from original Geode, and add new
-    //   Geodes to a list for later processing.
-    unsigned int nd = geode.getNumDrawables();
-    while (nd-- > 0)
-    {
-        osg::Geometry* geom = dynamic_cast<osg::Geometry*>( geode.getDrawable( nd ) );
-        if (!geom)
-            continue;
-        if (countGeometryVertices( geom ) >= _occluderThreshold)
-        {
-            osg::ref_ptr<osg::Geode> newGeode = copyGeodeNoChildren( &geode );
-            newGeode->addDrawable( geom );
-            _newChildren.push_back( newGeode );
-            geode.removeDrawable( geom );
-
-            _count++;
-        }
-    }
-}
-
-osg::Geode*
-PerDrawableQueryVisitor::copyGeodeNoChildren( osg::Geode* src )
-{
-    osg::Geode* g = new osg::Geode();
-
-    // Object
-    g->setName( src->getName() );
-    g->setDataVariance( src->getDataVariance() );
-    g->setUserData( src->getUserData() );
-
-    // Node
-    g->setInitialBound( src->getInitialBound() );
-    g->setUpdateCallback( src->getUpdateCallback() );
-    g->setCullCallback( src->getCullCallback() );
-    g->setCullingActive( src->getCullingActive() );
-    g->setNodeMask( src->getNodeMask() );
-    g->setDescriptions( src->getDescriptions() );
-    g->setStateSet( src->getStateSet() );
-
-    return g;
-}
-
-
-
-void
-VisibilityThresholdVisitor::apply( osg::Node& node )
-{
-    osgOQ::OcclusionQueryNode* oqn = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-    if (oqn != NULL)
-        oqn->setVisibilityThreshold( _visThreshold );
-    traverse( node );
-}
-
-void
-QueryFrameCountVisitor::apply( osg::Node& node )
-{
-    osgOQ::OcclusionQueryNode* oqn = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-    if (oqn != NULL)
-        oqn->setQueryFrameCount( _count );
-    traverse( node );
-}
-
-void
-EnableQueryVisitor::apply( osg::Node& node )
-{
-    osgOQ::OcclusionQueryNode* oqn = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-    if (oqn != NULL)
-        oqn->setQueriesEnabled( _enabled );
-    traverse( node );
-}
-
-
-void 
-DebugDisplayVisitor::apply( osg::Node& node )
-{
-    osgOQ::OcclusionQueryNode* oqn = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-    if (oqn != NULL)
-        oqn->setDebugDisplay( _debug );
-    traverse( node );
-}
-
-
-RemoveOcclusionQueryVisitor::RemoveOcclusionQueryVisitor()
+// In general, apps should use an OcclusionQueryRoot (OQR) as the top
+//   node of any osgOQ-managed scene graphs. However, if you don't want
+//   to use OQR, then you can still use osgOQ as long as you do everything
+//   that OQR does.
+// If the bounding box changes, OQR launches this visitor during the update
+//   traversal. The visitor calls updateQueryGeometry on every OQN, which
+//   ensures that the query geometry matches the latest bounding box.
+UpdateQueryGeometryVisitor::UpdateQueryGeometryVisitor()
   : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
 {
 }
 
-RemoveOcclusionQueryVisitor::~RemoveOcclusionQueryVisitor()
+UpdateQueryGeometryVisitor::~UpdateQueryGeometryVisitor()
 {
 }
 
 void
-RemoveOcclusionQueryVisitor::apply( osg::Node& node )
+UpdateQueryGeometryVisitor::apply( osg::Node& node )
 {
-    if (node.getNumParents() == 0)
-    {
-        // Even if this is an OQN, can't delete it because it's the root.
-        traverse( node );
-        return;
-    }
-
-    osgOQ::OcclusionQueryNode* oqnRaw = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-    if (!oqnRaw)
-    {
-        traverse( node );
-        return;
-    }
-    osg::ref_ptr<OcclusionQueryNode> oqn = oqnRaw;
-
-
-    unsigned int np = oqn->getNumParents();
-    while (np--)
-    {
-        osg::Group* parent = dynamic_cast<osg::Group*>( oqn->getParent( np ) );
-        if (parent != NULL)
-        {
-            // Remove OQN from parent.
-            parent->removeChild( oqn.get() );
-
-            // Add OQN's children to parent.
-            unsigned int nc = oqn->getNumChildren();
-            while (nc--)
-                parent->addChild( oqn->getChild( nc ) );
-        }
-    }
-}
-
-
-
-StatisticsVisitor::StatisticsVisitor( osg::NodeVisitor::TraversalMode mode )
-  : osg::NodeVisitor( mode ),
-    _numOQNs( 0 ),
-    _numPassed( 0 )
-{
-}
-
-StatisticsVisitor::~StatisticsVisitor()
-{
-}
-
-void
-StatisticsVisitor::apply( osg::Node& node )
-{
-    osgOQ::OcclusionQueryNode* oqn = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
-    if (oqn != NULL)
-    {
-        _numOQNs++;
-        if (oqn->getPassed())
-            _numPassed++;
-    }
-
     traverse( node );
-}
 
-void
-StatisticsVisitor::reset()
-{
-    _numOQNs = _numPassed = 0;
-}
-
-unsigned int
-StatisticsVisitor::getNumOQNs() const
-{
-    return _numOQNs;
-}
-unsigned int
-StatisticsVisitor::getNumPassed() const
-{
-    return _numPassed;
+	osgOQ::OcclusionQueryNode* thisOQN = dynamic_cast<osgOQ::OcclusionQueryNode*>( &node );
+	if ( thisOQN == NULL )
+        return;
+    thisOQN->updateQueryGeometry();
 }
 

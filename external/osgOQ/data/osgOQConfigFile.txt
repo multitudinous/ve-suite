@@ -18,14 +18,24 @@ VisibilityThreshold 500
 // Default if unspecified: 5000 vertices
 OccluderThreshold 5000
 
-// Wait the specified number of frames between queries. To
-//   disable this optimization, set to 1. Non-positive values
-//   are clamped to 1.
-// Default if unspecified: 5 frames
-QueryFrameCount 5
+// Specifies the number of occlusion query identifiers to allocate
+//   per rendering context. By implication, this also specifies an
+//   upper limit on the number of query nodes that osgOQ will insert
+//   into a scene graph.
+// A negative value tells osgOQ to insert as many query nodes (and
+//   allocate as many buffer IDs) as necessary.
+// Default if unspecified: -1
+BufferSize -1
 
 // If "true" or "Y", bounding volumes will be rendered. This can be
 //   useful in development and debugging.
 // Default if unspecified: false
 DebugBoundingVolume false
 
+// Specify whether to use hierarchical ("NonFlat") placement for
+//   Occlusion query nodes (OQNs) or a flat arrangement. The
+//   hierarchical algorithm produces the best general-case
+//   performance, but could cause some rendering artifacts when
+//   the viewpoint is inside an outer volume.
+// Default if unspecified: true
+UseNonFlatQueryNodePlacement true

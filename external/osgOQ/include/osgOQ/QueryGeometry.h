@@ -19,12 +19,24 @@
 #include <osg/Geometry>
 #include <osg/Version>
 #include <string>
-#include <map>
 
+
+// After the 1.2 release and leading up to the 2.0 release, OSG came out in a
+//   series of "engineering releases" starting with 1.9.0, which changed the
+//   OSG interface in an incompatible way from OSG v1.2.
+#define POST_OSG_1_2 \
+    ( (OSG_VERSION_MAJOR>1) || \
+      ( (OSG_VERSION_MAJOR==1) && (OSG_VERSION_MINOR>2) ) )
+#define PRE_OSG_1_9 \
+    ( (OSG_VERSION_MAJOR<1) || \
+      ( (OSG_VERSION_MAJOR==1) && (OSG_VERSION_MINOR<9) ) )
 
 
 namespace osgOQ
 {
+
+
+class OcclusionQueryContext;
 
 
 // TestResult -- stores (per context) results of an occlusion query
@@ -44,7 +56,7 @@ public:
     // Query ID for this context.
     GLuint _id;
 
-    // Set to true when a query gets issued and set to
+	// Set to true when a query gets issued and set to
     //   false when the result is retrieved.
     mutable bool _active;
 
@@ -55,22 +67,30 @@ public:
 class QueryGeometry : public osg::Geometry
 {
 public:
-    QueryGeometry( const std::string& oqnName=std::string("") );
+    QueryGeometry( OcclusionQueryContext* oqc, const std::string& oqnName=std::string("") );
     ~QueryGeometry() {}
 
     // TBD implement copy constructor
 
+#if POST_OSG_1_2
+	// After 1.2, param 1 changed from State to RenderInfo.
+	// Warning: Version was still 1.2 on dev branch long after the 1.2 release,
+	//   and finally got bumped to 1.9 in April 2007.
     virtual void drawImplementation( osg::RenderInfo& renderInfo ) const;
+#else
+    virtual void drawImplementation( osg::State& state ) const;
+#endif
 
-    unsigned int getNumPixels( osg::Camera* cam );
+    unsigned int retrieveQuery( unsigned int contextID );
 
 protected:
-    typedef std::map< osg::Camera*, TestResult > ResultMap;
-    mutable ResultMap _results;
-    mutable OpenThreads::Mutex _mapMutex;
+    typedef osg::buffered_object< TestResult > ResultList;
+    mutable ResultList _results;
 
     // Needed for debug only
     std::string _oqnName;
+
+    osg::ref_ptr<OcclusionQueryContext> _oqc;
 };
 
 

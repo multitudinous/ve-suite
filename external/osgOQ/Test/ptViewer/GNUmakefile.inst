@@ -1,0 +1,11 @@
+TOPDIR = ../..
+include $(TOPDIR)/Make/makedefs
+
+CXXFILES =\
+	ptViewer.cpp\
+
+LIBS     += -losgOQ -losgViewer -losgGA -losgUtil -losgDB -losg $(GL_LIBS) $(X_LIBS) $(OTHER_LIBS) 
+
+EXEC = ptViewer
+
+include $(TOPDIR)/Make/makerules

@@ -96,11 +96,11 @@ void ChangeWorkingDirectoryEventHandler::Execute( XMLObject* veXMLObject )
 #else
     chdir( newWorkingDir.c_str() );
 #endif
-    //A new working directory also means that 
+    //A new working directory also means that
     //the STORED scenes are no longer valid
     ves::xplorer::EnvironmentHandler::instance()->GetTeacher()->Reset();
     //Since Xplorer does not really have a "new" eh clear the osgOQ stuff here
-    //ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
+    ves::xplorer::scenegraph::SceneManager::instance()->ResetOcclusionQueryContext();
 }
 ///////////////////////////////////////////////////////////////////////
 ChangeWorkingDirectoryEventHandler& ChangeWorkingDirectoryEventHandler::operator=( const ChangeWorkingDirectoryEventHandler& rhs )
