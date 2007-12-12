@@ -54,16 +54,16 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
     char vertexPass[]=
         "uniform vec3 viewPosition; \n"
 
-        "varying vec3 vNormal; \n"
-        "varying vec3 vViewVec; \n"
+        "varying vec3 eyePos; \n"
+        "varying vec3 normal; \n"
 
         "void main() \n"
         "{ \n"
             "gl_Position = ftransform(); \n"
 
-            "gl_TexCoord[ 0 ].xyz = gl_Vertex.xyz * 0.8; \n"
-            "vViewVec = gl_TexCoord[ 0 ].xyz - viewPosition; \n"
-            "vNormal = gl_Normal; \n"
+            "gl_TexCoord[ 0 ].xyz =vec3( gl_ModelViewMatrix * gl_Vertex ) * 0.8; \n"
+            "eyePos = gl_TexCoord[ 0 ].xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
         "} \n";
 
     char fragmentPass[]=
@@ -72,17 +72,19 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         "uniform sampler3D noise; \n"
         "uniform samplerCube skyBox; \n"
 
-        "varying vec3 vNormal; \n"
-        "varying vec3 vViewVec; \n"
+        "varying vec3 eyePos; \n"
+        "varying vec3 normal; \n"
 
         "void main() \n"
         "{ \n"
             "float noiseSpeed = 0.18; \n"
-            "float waveSpeed = 0.34; \n"
-            "gl_TexCoord[ 0 ].x += waveSpeed * time; \n"
-            "gl_TexCoord[ 0 ].z += noiseSpeed * time; \n"
+            "float waveSpeed = 0.14; \n"
 
-            "vec4 noisy = texture3D( noise, gl_TexCoord[ 0 ].xyz ); \n"
+            "vec3 texCoord = gl_TexCoord[ 0 ].xyz; \n"
+            "texCoord.x += waveSpeed * time; \n"
+            "texCoord.z += noiseSpeed * time; \n"
+
+            "vec4 noisy = texture3D( noise, texCoord ); \n"
 
             //Signed noise 
             "vec3 bump = 2.0 * noisy.xyz - 1.0; \n"
@@ -92,15 +94,16 @@ void WaterEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "bump.z = 0.8 * abs( bump.z ) + 0.2; \n"
 
             //Offset the surface normal with the bump
-            "bump = normalize( vNormal + bump ); \n"
+            "bump = normalize( normal + bump ); \n"
 
             //Find the reflection vector
-            "vec3 reflVec = reflect( vViewVec, bump ); \n"
-            "vec4 refl = textureCube( skyBox, reflVec.yzx ); \n"
+            "vec3 V = normalize( eyePos ); \n"
+            "vec3 R = reflect( V, bump ); \n"
+            "vec4 refl = textureCube( skyBox, R ); \n"
 
-            "float lrp = 1.0 - dot( -normalize( vViewVec ), bump ); \n"
+            "float lrp = 1.0 - dot( V, bump ); \n"
 
-            "vec4 waterColor = vec4( 0.0, 0.0, 0.5, 1.0 ); \n"
+            "vec4 waterColor = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
             "float fadeExp = 30.0; \n"
             "float fadeBias = 0.30; \n"
             "vec4 color = mix( waterColor, refl, clamp( fadeBias + pow( lrp, fadeExp ), 0.0, 1.0 ) ); \n"

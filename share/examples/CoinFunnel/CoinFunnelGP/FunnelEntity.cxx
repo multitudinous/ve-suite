@@ -28,7 +28,7 @@ m_nonPhysicsGeometry( 0 ),
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/base.ive" );
-    pluginDCS->addChild( m_nonPhysicsGeometry.get() );
+    GetDCS()->addChild( m_nonPhysicsGeometry.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 FunnelEntity::~FunnelEntity()

@@ -27,10 +27,8 @@ CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
 m_nonPhysicsGeometry( 0 )
 {
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/railing.ive" );
-    m_nonPhysicsGeometryII = osgDB::readNodeFile( "Models/IVEs/railing_inlay.ive" );
 
     pluginDCS->addChild( m_nonPhysicsGeometry.get() );
-    pluginDCS->addChild( m_nonPhysicsGeometryII.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 RailingEntity::~RailingEntity()
@@ -85,10 +83,10 @@ void RailingEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "vec3 R = reflect( V, N ); \n"
             "float RDotL = max( dot( R, L ), 0.0 ); \n"
 
-            "vec3 color = vec3( 0.3, 0.3, 0.1 ); \n"
+            "vec3 color = vec3( 0.7, 0.7, 0.7 ); \n"
             "vec3 reflectedColor = textureCube( Environment, R ).rgb; \n"
 
-            "vec3 mixColor = mix( color, reflectedColor, 0.2 ); \n"
+            "vec3 mixColor = mix( color, reflectedColor, 0.15 ); \n"
 
             "vec3 TotalAmbient  = gl_LightSource[ 0 ].ambient.rgb  * mixColor; \n"
             "vec3 TotalDiffuse  = gl_LightSource[ 0 ].diffuse.rgb  * mixColor * NDotL; \n"
@@ -115,7 +113,6 @@ void RailingEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         
     GetNode()->GetNode()->setStateSet( stateset.get() );
     m_nonPhysicsGeometry->setStateSet( stateset.get() );
-    m_nonPhysicsGeometryII->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

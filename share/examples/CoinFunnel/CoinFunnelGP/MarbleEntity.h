@@ -55,10 +55,8 @@ public:
 
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* GetMarbleOnWoodSound();
-
     ves::xplorer::scenegraph::Sound* GetMarbleOnMetalSound();
-
-    ves::xplorer::scenegraph::Sound* GetSound();
+    ves::xplorer::scenegraph::Sound* GetMarbleOnMarbleSound();
 #endif
 
 private:

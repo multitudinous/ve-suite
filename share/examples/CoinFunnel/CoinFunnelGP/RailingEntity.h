@@ -32,7 +32,6 @@ private:
     void SetShaderOne( osg::TextureCubeMap* tcm );
 
     osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
-    osg::ref_ptr< osg::Node > m_nonPhysicsGeometryII;
 };
 }
 

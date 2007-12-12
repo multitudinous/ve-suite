@@ -44,6 +44,8 @@ m_nonPhysicsGeometry( 0 )
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
 #ifdef VE_SOUND
     m_marbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
+    m_marbleOnMetal->LoadFile( "Sounds/MarbleOnWood.wav" );
+    m_marbleOnMarble->LoadFile( "Sounds/MarbleOnWood.wav" );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -81,6 +83,11 @@ ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnMetalSound()
 {
     return m_marbleOnMetal;
 }
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnMarbleSound()
+{
+    return m_marbleOnMarble;
+}
 #endif
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
@@ -111,8 +118,8 @@ void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
         "{ \n"
             "float ambient = 0.2; \n"
             "float rainbowScale = 0.6; \n"
-            "float reflectionScale = 0.2; \n"
-            "float refractionScale = 0.3; \n"
+            "float reflectionScale = 0.4; \n"
+            "float refractionScale = 0.4; \n"
             "float indexOfRefractionRatio = 1.14; \n"
             "vec4 baseColor = vec4( 0.2, 0.6, 0.2, 1.0 ); \n"
 
@@ -132,14 +139,13 @@ void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "vec3 y = normalize( cross( cross( V, N ), N ) ); \n"
 
             "vec3 refrVec = x * cosine2 + y * sine2; \n"
-            "vec4 refraction = textureCube( Environment, -refrVec.xyz ); \n"
+            "vec4 refraction = textureCube( Environment, refrVec.xzy ); \n"
 
             "float v =  dot( normalize( V ), N ); \n"
             "vec4 rainbow = texture2D( Rainbow, vec2( v, 0.0 ) ); \n"
 
             "vec4 rain = rainbowScale * rainbow * baseColor; \n"
-            //"vec4 rain = rainbowScale * rainbow; \n"
-            "vec4 refl = reflectionScale * reflection; \n"
+            "vec4 refl = reflectionScale * reflection * baseColor; \n"
             "vec4 refr = refractionScale * refraction * baseColor; \n"
 
             "gl_FragColor = sine * refl + ( 1.0 - sine2 ) * refr + sine2 * rain + ambient; \n"

@@ -23,6 +23,7 @@
 
 // --- Bullet Includes --- //
 #include "btBulletDynamicsCommon.h"
+#include <BulletCollision/CollisionShapes/btCylinderShape.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -131,15 +132,17 @@ void World::Initialize()
                                                m_physicsSimulator );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );
     double quarterPosition[ 3 ] = { -3.5, 0.7, 4.0 };
-    m_quarterEntity->GetDCS()->setAttitude( osg::Quat( 90.0, osg::Vec3f( 0, 1, 0 ) ) );
+    //m_quarterEntity->GetDCS()->setAttitude( osg::Quat( 90.0, osg::Vec3f( 0, 1, 0 ) ) );
     m_quarterEntity->GetDCS()->SetTranslationArray( quarterPosition );
     m_quarterEntity->InitPhysics();
     m_quarterEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
     m_quarterEntity->GetPhysicsRigidBody()->SetMass( 1.0 );
     m_quarterEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_quarterEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
-    m_quarterEntity->GetPhysicsRigidBody()->ConvexShape();
-    m_quarterEntity->GetPhysicsRigidBody()->setActivationState( WANTS_DEACTIVATION );
+
+    btCylinderShape* cylinderShape = new btCylinderShape( btVector3( 0.01, 0.07, 0.07 ) );
+    m_quarterEntity->GetPhysicsRigidBody()->UserDefinedShape( cylinderShape );
+    //m_quarterEntity->GetPhysicsRigidBody()->setActivationState( WANTS_DEACTIVATION );
     m_quarterEntity->SetShaders();
 
     m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
@@ -175,7 +178,16 @@ void World::PreFrameUpdate()
     if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
         m_slideEntity->GetPhysicsRigidBody() ) )
     {
-
+        m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
+    }
+    else if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
+             m_railingEntity->GetPhysicsRigidBody() ) )
+    {
+        m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
+    }
+    else if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
+             m_funnelEntity->GetPhysicsRigidBody() ) )
+    {
         m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
     }
 #endif
