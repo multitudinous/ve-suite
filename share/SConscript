@@ -3,7 +3,7 @@ import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
 
-Import('ves_pkg buildDir RootDir')
+Import('ves_pkg buildDir RootDir GetPlatform')
 
 fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
 fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
@@ -18,10 +18,12 @@ shareSubdirs = Split("""
     vrj_configs
     examples
     tools
-    fpc
     scripts
     osg-textures
 """)
+
+if GetPlatform() != 'win32':
+  shareSubdirs.append(pj('fpc'))
 
 ##Set the Sconscript files to build.
 if 'docs' in COMMAND_LINE_TARGETS:
