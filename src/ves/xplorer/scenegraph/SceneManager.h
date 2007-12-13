@@ -46,8 +46,8 @@
 #include <osg/ClearNode>
 #endif
 
-#include <osgOQ/OcclusionQueryRoot.h>
-#include <osgOQ/OcclusionQueryContext.h>
+//#include <osgOQ/OcclusionQueryRoot.h>
+//#include <osgOQ/OcclusionQueryContext.h>
 
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -102,7 +102,7 @@ public:
     ves::xplorer::scenegraph::DCS* GetActiveSwitchNode();
 
     ///Return the active switch node of the scenegraph
-    osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
+    //osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
 
     ///Set the node on the switch node that is active
     ///\param activeNode The node to activate
@@ -121,7 +121,7 @@ public:
 
     ///Reset the osgOQC node accessor
     ///Should be used when new ves files are loaded
-    void ResetOcclusionQueryContext();
+    //void ResetOcclusionQueryContext();
 
 private:
     //Required so that vpr::Singleton can instantiate this class
@@ -158,7 +158,7 @@ private:
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
-    osg::ref_ptr< osgOQ::OcclusionQueryContext > m_oqc;
+    //osg::ref_ptr< osgOQ::OcclusionQueryContext > m_oqc;
 
     ///Map to store state information about each dcs
     std::map< int, gmtl::Matrix44d > m_matrixStore;
