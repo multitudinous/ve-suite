@@ -8,7 +8,9 @@
 #include <ves/xplorer/scenegraph/Sound.h>
 
 // --- osgAL Includes --- //
+#ifdef VE_SOUND
 #include <osgAL/SoundState>
+#endif
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
