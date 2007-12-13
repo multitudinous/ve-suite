@@ -232,7 +232,12 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
         if( m_collisionInformation )
         {
-            bool clearCollisions = true;
+            for( int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); ++i )
+            {
+                PhysicsRigidBody* obj = static_cast< PhysicsRigidBody* >(
+                    m_dynamicsWorld->getCollisionObjectArray()[ i ] );
+                obj->ClearCollisions();
+            }
 
             int numManifolds = m_dispatcher->getNumManifolds();
             for( int i = 0; i < numManifolds; ++i )
@@ -250,24 +255,12 @@ void PhysicsSimulator::UpdatePhysics( float dt )
 
                     if( bodyA->IsStoringCollisions() )
                     {
-                        if( clearCollisions )
-                        {
-                            bodyA->ClearCollisions();
-                            clearCollisions = false;
-                        }
-
                         btVector3 ptA = pt.getPositionWorldOnA();
                         bodyA->PushBackCollision( bodyB, ptA );
                     }
 
                     if( bodyB->IsStoringCollisions() )
                     {
-                        if( clearCollisions )
-                        {
-                            bodyB->ClearCollisions();
-                            clearCollisions = false;
-                        }
-
                         btVector3 ptB = pt.getPositionWorldOnB();
                         bodyB->PushBackCollision( bodyA, ptB );
                     }

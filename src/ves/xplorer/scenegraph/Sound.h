@@ -105,7 +105,7 @@ public:
     void Play();
     void Stop();
 
-    osgAL::SoundNode* GetSoundNode();
+    osgAL::SoundState* GetSoundState();
 
 private:
     osgAL::SoundManager* m_soundManager;

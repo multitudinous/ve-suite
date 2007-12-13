@@ -17,12 +17,6 @@ namespace scenegraph
 }
 #endif
 
-// --- OSG Includes --- //
-namespace osg
-{
-    class TextureCubeMap;
-}
-
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
 namespace osgAL
@@ -30,6 +24,12 @@ namespace osgAL
     class SoundManager;
 }
 #endif
+
+// --- OSG Includes --- //
+namespace osg
+{
+    class TextureCubeMap;
+}
 
 // --- C/C++ Libraries --- //
 #include <string>

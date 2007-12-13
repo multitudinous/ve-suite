@@ -5,6 +5,10 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntityHelper.h>
+#include <ves/xplorer/scenegraph/Sound.h>
+
+// --- osgAL Includes --- //
+#include <osgAL/SoundState>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -23,16 +27,29 @@ namespace demo
 {
 
 ////////////////////////////////////////////////////////////////////////////////
-WaterEntity::WaterEntity( std::string geomFile, ves::xplorer::scenegraph::DCS* pluginDCS )
+WaterEntity::WaterEntity( std::string geomFile,
+                          ves::xplorer::scenegraph::DCS* pluginDCS
+#ifdef VE_SOUND
+                          , osgAL::SoundManager* soundManager
+#endif
+                         )
 :
 CADEntity( geomFile, pluginDCS )
+#ifdef VE_SOUND
+, m_water( new ves::xplorer::scenegraph::Sound( "Water", GetDCS(), soundManager ) )
+#endif
 {
-    ;
+#ifdef VE_SOUND
+    m_water->LoadFile( "Sounds/Water.wav" );
+    m_water->GetSoundState()->setLooping( true );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 WaterEntity::~WaterEntity()
 {
-    ;
+#ifdef VE_SOUND
+    delete m_water;
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WaterEntity::SetNameAndDescriptions( std::string geomFile )

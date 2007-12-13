@@ -114,7 +114,7 @@ void World::Initialize()
 #ifdef VE_SOUND
                                              , m_soundManager
 #endif
-                                             );
+                                            );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
     double marblePosition[ 3 ] = { 4.85, 2.5, 5.75 };
     m_marbleEntity->GetDCS()->SetTranslationArray( marblePosition );
@@ -127,6 +127,7 @@ void World::Initialize()
     m_marbleEntity->GetPhysicsRigidBody()->SphereShape( 0.06 );
     m_marbleEntity->SetShaders( m_tcm.get() );
 
+    /*
     m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive",
                                                m_pluginDCS.get(),
                                                m_physicsSimulator );
@@ -140,10 +141,11 @@ void World::Initialize()
     m_quarterEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_quarterEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
 
-    btCylinderShape* cylinderShape = new btCylinderShape( btVector3( 0.01, 0.07, 0.07 ) );
+    btCylinderShape* cylinderShape = new btCylinderShape( btVector3( 0.07, 0.07, 0.002 ) );
     m_quarterEntity->GetPhysicsRigidBody()->UserDefinedShape( cylinderShape );
     //m_quarterEntity->GetPhysicsRigidBody()->setActivationState( WANTS_DEACTIVATION );
     m_quarterEntity->SetShaders();
+    */
 
     m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
                                                m_pluginDCS.get(),
@@ -167,7 +169,12 @@ void World::Initialize()
     m_slideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
     m_slideEntity->SetShaders();
 
-    m_waterEntity = new demo::WaterEntity( "Models/IVEs/water.ive", m_pluginDCS.get() );
+    m_waterEntity = new demo::WaterEntity( "Models/IVEs/water.ive",
+                                           m_pluginDCS.get()
+#ifdef VE_SOUND
+                                           , m_soundManager
+#endif 
+                                          );
     m_waterEntity->SetNameAndDescriptions( "water" );
     m_waterEntity->SetShaders( m_tcm.get() );
 }
@@ -183,12 +190,12 @@ void World::PreFrameUpdate()
     else if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
              m_railingEntity->GetPhysicsRigidBody() ) )
     {
-        m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
+        m_marbleEntity->GetMarbleOnMetalSound()->PushSoundEvent( 10 );
     }
     else if( m_marbleEntity->GetPhysicsRigidBody()->CollisionInquiry(
              m_funnelEntity->GetPhysicsRigidBody() ) )
     {
-        m_marbleEntity->GetMarbleOnWoodSound()->PushSoundEvent( 10 );
+        m_marbleEntity->GetMarbleOnMarbleSound()->PushSoundEvent( 10 );
     }
 #endif
 }

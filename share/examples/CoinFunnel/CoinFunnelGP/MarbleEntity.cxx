@@ -44,8 +44,8 @@ m_nonPhysicsGeometry( 0 )
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
 #ifdef VE_SOUND
     m_marbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
-    m_marbleOnMetal->LoadFile( "Sounds/MarbleOnWood.wav" );
-    m_marbleOnMarble->LoadFile( "Sounds/MarbleOnWood.wav" );
+    m_marbleOnMetal->LoadFile( "Sounds/MarbleOnMetal.wav" );
+    m_marbleOnMarble->LoadFile( "Sounds/MarbleOnMarble.wav" );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,11 +124,13 @@ void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "vec4 baseColor = vec4( 0.2, 0.6, 0.2, 1.0 ); \n"
 
             "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
             "vec3 V = normalize( eyePos ); \n"
 
             "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
             "vec4 reflection = textureCube( Environment, R ); \n"
-
+            
             "float cosine = dot( V, N ); \n"
             "float sine = sqrt( 1.0 - cosine * cosine ); \n"
 
@@ -147,8 +149,9 @@ void MarbleEntity::SetShaderOne( osg::TextureCubeMap* tcm )
             "vec4 rain = rainbowScale * rainbow * baseColor; \n"
             "vec4 refl = reflectionScale * reflection * baseColor; \n"
             "vec4 refr = refractionScale * refraction * baseColor; \n"
+            "vec4 TotalSpecular = gl_LightSource[ 0 ].specular * vec4( 0.8, 0.8, 0.8, 1.0 ) * pow( RDotL, 20.0 ); \n"
 
-            "gl_FragColor = sine * refl + ( 1.0 - sine2 ) * refr + sine2 * rain + ambient; \n"
+            "gl_FragColor = sine * refl + ( 1.0 - sine2 ) * refr + sine2 * rain + ambient + TotalSpecular; \n"
         "} \n";
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
