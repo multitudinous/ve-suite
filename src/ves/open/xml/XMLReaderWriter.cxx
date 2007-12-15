@@ -171,9 +171,9 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
     if( nXMLObjects == 0 )
     {
         std::cerr << "XMLReaderWriter::_populateStructureFromDocument "
-        << "number of xml objects = " << nXMLObjects << std::endl;
+            << "number of xml objects = " << nXMLObjects << std::endl;
         std::cerr << "XMLReaderWriter::_populateStructureFromDocument "
-        << "for " << objectNamespace << " " << tagName << std::endl;
+            << "for " << objectNamespace << " " << tagName << std::endl;
         return;
     }
 
@@ -196,7 +196,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
         else
         {
             std::cerr << "VE-Open XMLReaderWriter Error : No creator "
-            << "method for tagname = " << tagName << std::endl;
+                << "method for tagname = " << tagName << std::endl;
         }
     }
 }
@@ -259,7 +259,6 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObject*, std:
     ///Loop over all the objects that are passed in
     for( size_t i = 0; i < nodes.size(); ++i )
     {
-
         nodes.at( i ).first->SetOwnerDocument( doc );
         doc->getDocumentElement()->appendChild( nodes.at( i ).first->GetXMLData( nodes.at( i ).second ) );
     }

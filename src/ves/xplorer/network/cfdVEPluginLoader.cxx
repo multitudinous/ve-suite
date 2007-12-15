@@ -64,7 +64,6 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
     std::map< int, cfdVEBaseClass* >::iterator iter;
     for( iter = plugins.begin(); iter != plugins.end(); ++iter )
     {
-        std::cout << "Plugin id deleted " << iter->first << std::endl;
         delete iter->second;
     }
     plugins.clear();
@@ -161,10 +160,10 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         vpr::LibraryFinder finder( libDir, DSO_SUFFIX );
 
         libs = finder.getLibraries();
-        vprDEBUG( vesDBG, 1 )  << " Number of libs : "
-        << libs.size()
-        << " " << DSO_SUFFIX << std::endl
-        << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 )  << "|\tNumber of libs : "
+            << libs.size()
+            << " " << DSO_SUFFIX << std::endl
+            << vprDEBUG_FLUSH;
     }
 
     // Load the default plugin
@@ -186,14 +185,14 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         try
         {
             libs.at( i )->load();
-            vprDEBUG( vesDBG, 1 )  << " Loaded lib successfully : "
+            vprDEBUG( vesDBG, 1 )  << "|\tLoaded lib successfully : "
             //<< status.success()
             << std::endl
             << vprDEBUG_FLUSH;
         }
         catch ( ... )
         {
-            vprDEBUG( vesDBG, 1 )  << " Loaded lib failed : "
+            vprDEBUG( vesDBG, 1 )  << "|\tLoaded lib failed : "
             //<< status.success()
             << std::endl
             << vprDEBUG_FLUSH;
@@ -218,12 +217,12 @@ void cfdVEPluginLoader::LoadPlugins( void )
         {
             plugins[ i ] = test_obj;
             std::cout << "|\tLoaded and created plugin "
-            << test_obj->GetName() << std::endl;
+                << test_obj->GetName() << std::endl;
         }
         else
         {
             std::cout << "|\tCould not load plugin "
-            << i << std::endl;
+                << i << std::endl;
         }
     }
 }
@@ -238,7 +237,7 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
     creator = ( void * ( * )() ) libs[ input ]->findSymbol( std::string( "CreateVEPlugin" ) );
     if( NULL != creator )
     {
-        vprDEBUG( vesDBG, 1 )  << " created plugin " << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 )  << "|\tCreated plugin " << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
@@ -247,7 +246,7 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
 
     void* object = ( *creator )();
     if( NULL != object )
-        vprDEBUG( vesDBG, 1 )  <<  " created Object creation " << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 )  <<  "|\tCreated object instance " << std::endl << vprDEBUG_FLUSH;
 
     // Is there a way to test that this cast was successful?
     test_obj = static_cast<cfdVEBaseClass*>( object );

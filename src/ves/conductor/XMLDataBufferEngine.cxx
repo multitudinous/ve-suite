@@ -291,9 +291,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap;
         for( size_t i = 0; i < tempStates.size(); ++i )
         {
-            //CommandWeakPtr tempCommand = tempStates.at( i );
             tempMap[ tempStates.at( i )->GetCommandName()] = tempStates.at( i );
-            //std::cout << " here " << tempCommand->GetCommandName() << std::endl;
         }
         UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
     }
@@ -333,7 +331,6 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
     ///Load the current preferences from the data buffer
     std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap =
         UserPreferencesDataBuffer::instance()->GetCommandMap();
-    std::cout << tempMap.size() << std::endl;
     for( std::map< std::string, ves::open::xml::CommandWeakPtr >::iterator prefIter =
                 tempMap.begin(); prefIter != tempMap.end(); ++prefIter )
     {
@@ -405,8 +402,6 @@ ves::open::xml::UserWeakPtr XMLDataBufferEngine::GetXMLUserDataObject( std::stri
 std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector(
     std::string dataNumber )
 {
-    //std::vector< std::string > temp = m_networkModelMap[ dataNumber ];
-    //std::cout << " size " << temp.size() << std::endl;
     return m_networkModelMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////

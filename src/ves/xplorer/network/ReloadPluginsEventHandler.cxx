@@ -33,6 +33,8 @@
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
 #include <ves/xplorer/network/cfdExecutive.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
+#include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -88,9 +90,17 @@ void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
 //////////////////////////////////////////////////////////////////////////
 void ReloadPluginsEventHandler::Execute( XMLObject* xmlObject )
 {
-    cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
-    modules->ResetPluginLoader();
     std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* plugins;
     plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
+
+    for( std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >::iterator iter = 
+        plugins->begin(); iter != plugins->end(); ++iter )
+    {
+        iter->second->RemoveSelfFromSG();
+        ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
+    }
     plugins->clear();
+
+    cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
+    modules->ResetPluginLoader();
 }
