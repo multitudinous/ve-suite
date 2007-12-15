@@ -52,7 +52,11 @@ private:
     DECLARE_EVENT_TABLE();
 
 public:
-    EphemerisDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "Ephemeris Data" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = EphemerisDialog_STYLE );
+    EphemerisDialog( wxWindow *parent, wxWindowID id = 1, 
+        const wxString &title = wxT( "Ephemeris Data" ), 
+        const wxPoint& pos = wxDefaultPosition, 
+        const wxSize& size = wxDefaultSize, 
+        long style = EphemerisDialog_STYLE );
     virtual ~EphemerisDialog();
     void OnChangeLongitudeMinutes( wxSpinEvent& event );
     void OnChangeLongitudeDegrees( wxSpinEvent& event );

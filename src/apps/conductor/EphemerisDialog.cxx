@@ -542,49 +542,60 @@ void EphemerisDialog::ToggleCalendarAndTimerState( bool onOff )
 //////////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnLoadLocationInformation( wxCommandEvent& event )
 {
+    if( m_storedLocations.size() == 0 )
+    {
+        return;
+    }
+    
     wxArrayString locations;
-    size_t numLocations = m_storedLocations.size();
-    std::map<std::string, ves::open::xml::CommandPtr>::iterator iter;
-    for( iter = m_storedLocations.begin();
-            iter != m_storedLocations.end();
-            ++iter )
+    for( std::map<std::string, ves::open::xml::CommandPtr>::iterator iter = 
+        m_storedLocations.begin(); iter != m_storedLocations.end(); ++iter )
     {
         locations.Add( wxString( iter->first.c_str(), wxConvUTF8 ) );
     }
 
-    if( numLocations > 0 )
+    wxSingleChoiceDialog selectedLocation( this, wxT( "Select location to load." ),
+                                           wxT( "Load Location" ),
+                                           locations );
+    selectedLocation.CentreOnParent();
+    if( selectedLocation.ShowModal() == wxID_OK )
     {
-        wxSingleChoiceDialog selectedLocation( this, wxT( "Select location to load." ),
-                                               wxT( "Load Location" ),
-                                               locations );
-        selectedLocation.CentreOnParent();
-        if( selectedLocation.ShowModal() == wxID_OK )
-        {
-            std::string location = ConvertUnicode( selectedLocation.GetStringSelection().GetData() );
-            std::map<std::string, ves::open::xml::CommandPtr>::iterator foundLocation;
+        std::string location =
+            ConvertUnicode( selectedLocation.GetStringSelection().GetData() );
+            
+        std::map<std::string, ves::open::xml::CommandPtr>::iterator 
             foundLocation = m_storedLocations.find( location );
-            if( foundLocation != m_storedLocations.end() )
-            {
-                //std::cout<<foundLocation->first<<std::endl;
-                double latitude = 90.89;
-                double longitude = 89.;
-                std::string eastWest = "East";
-                std::string northSouth = "North";
-                std::string heightMap = "Default";
-                unsigned int index = 0;
-                foundLocation->second->GetDataValuePair( "Latitude" )->GetData( latitude );
-                foundLocation->second->GetDataValuePair( "Latitude Direction" )->GetData( northSouth );
-                latitude = ( northSouth == "South" ) ? ( -1 * latitude ) : latitude;
-                foundLocation->second->GetDataValuePair( "Longitude" )->GetData( longitude );
-                foundLocation->second->GetDataValuePair( "Longitude Direction" )->GetData( eastWest );
-                longitude = ( eastWest == "West" ) ? ( -1 * longitude ) : longitude;
-                SetLatitudeAndLongitudeOnGUI( latitude, longitude );
-                foundLocation->second->GetDataValuePair( "Height Map" )->GetData( heightMap );
-                m_heightMapSelector->SetPath( wxString( heightMap.c_str(), wxConvUTF8 ) );
-                wxFileDirPickerEvent emptyEvent;
-                OnLoadHeightMap(emptyEvent);
-            }
+            
+        if( foundLocation == m_storedLocations.end() )
+        {
+            return;
         }
+
+        double latitude = 90.89;
+        double longitude = 89.;
+        std::string eastWest = "East";
+        std::string northSouth = "North";
+        std::string heightMap = "Default";
+        unsigned int index = 0;
+        foundLocation->second->GetDataValuePair( "Latitude" )->GetData( latitude );
+        foundLocation->second->GetDataValuePair( "Latitude Direction" )->GetData( northSouth );
+        if( northSouth == "South" )
+        {
+            latitude = -1 * latitude;
+        }
+        
+        foundLocation->second->GetDataValuePair( "Longitude" )->GetData( longitude );
+        foundLocation->second->GetDataValuePair( "Longitude Direction" )->GetData( eastWest );
+        if( eastWest == "West" )
+        {
+            longitude = -1 * longitude;
+        }
+        
+        SetLatitudeAndLongitudeOnGUI( latitude, longitude );
+        foundLocation->second->GetDataValuePair( "Height Map" )->GetData( heightMap );
+        m_heightMapSelector->SetPath( wxString( heightMap.c_str(), wxConvUTF8 ) );
+        wxFileDirPickerEvent emptyEvent;
+        OnLoadHeightMap(emptyEvent);
     }
 }
 //////////////////////////////////////////////////////////////////////
@@ -623,7 +634,6 @@ void EphemerisDialog::ReadLocationInformation()
                    wxString::Format( wxT( "%d" ), numLocations );
     while( config->HasGroup( key ) )
     {
-        //std::cout<<key<<std::endl;
         wxString name( key + _T( "None" ) + wxString::Format( wxT( "%d" ) ), numLocations );
         wxString heightField( _T( "Default" ) );
         wxString latitudeDirection( m_latHemisphere->GetStringSelection() );
@@ -633,17 +643,11 @@ void EphemerisDialog::ReadLocationInformation()
         double longitude = 0.0;
 
         config->Read( key + _T( "/" ) + _T( "Name" ) , &name );
-        //  std::cout<<"name: "<<name.c_str()<<std::endl;
         config->Read( key + _T( "/" ) + _T( "Latitude" ), &latitude );
-        // std::cout<<"Latitude: "<<latitude<<std::endl;
         config->Read( key + _T( "/" ) + _T( "Longitude" ), &longitude ) ;
-        // std::cout<<"Longitude: "<<longitude<<std::endl;
         config->Read( key + _T( "/" ) + _T( "Longitude Direction" ), &longitudeDirection ) ;
-        //std::cout<<"Longitude dir: "<<longitudeDirection.c_str()<<std::endl;
         config->Read( key + _T( "/" ) + _T( "Latitude Direction" ), &latitudeDirection ) ;
-        // std::cout<<"Latitude dir: "<<latitudeDirection.c_str()<<std::endl;
         config->Read( key + _T( "/" ) + _T( "Height Map" ), &heightMap ) ;
-
 
         CommandPtr locationData = new Command();
         locationData->SetCommandName( ConvertUnicode( name.c_str() ) );
@@ -686,22 +690,17 @@ void EphemerisDialog::ReadLocationInformation()
 void EphemerisDialog::WriteLocationInformation()
 {
     wxConfig* config  = dynamic_cast<wxConfig*>( wxConfig::Get() );
-    std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
-    int numLocations = 0;//m_storedLocations.size();
-    for( iter = m_storedLocations.begin();
-            iter != m_storedLocations.end();
-            ++iter )
+    int numLocations = 0;
+    for( std::map< std::string, ves::open::xml::CommandPtr >::iterator iter = 
+        m_storedLocations.begin(); iter != m_storedLocations.end(); ++iter )
     {
         wxString key = _T( "EphemerisLocation_" ) +
-                       wxString::Format( wxT( "%d" ), numLocations );
-        config->Write( key +
-                       _T( "/" ) +
-                       _T( "Name" ) ,
-                       wxString( iter->second->GetCommandName().c_str(), wxConvUTF8 ) );
+            wxString::Format( wxT( "%d" ), numLocations );
+        config->Write( key + _T( "/" ) + _T( "Name" ),
+            wxString( iter->second->GetCommandName().c_str(), wxConvUTF8 ) );
         _writeLocation( iter->second, key );
         numLocations++;
     }
-
 }
 ////////////////////////////////////////////////////////////////////////////
 void EphemerisDialog::_writeLocation( ves::open::xml::CommandWeakPtr location,
@@ -711,8 +710,8 @@ void EphemerisDialog::_writeLocation( ves::open::xml::CommandWeakPtr location,
     size_t nDvps = location->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < nDvps; ++i )
     {
-        ves::open::xml::DataValuePairWeakPtr locationInfo = location->GetDataValuePair( i );
-        //std::cout<<"Writing: "<<locationInfo->GetDataName()<<std::endl;
+        ves::open::xml::DataValuePairWeakPtr locationInfo = 
+            location->GetDataValuePair( i );
         if (( locationInfo->GetDataName() == std::string( "Latitude" ) ) ||
                 ( locationInfo->GetDataName() == std::string( "Longitude" ) ) )
         {
@@ -721,11 +720,9 @@ void EphemerisDialog::_writeLocation( ves::open::xml::CommandWeakPtr location,
                            wxString( locationInfo->GetDataName().c_str(),
                                      wxConvUTF8 ),
                            locationInfo->GetDataValue() );
-            //std::cout<<"1: "<<locationInfo->GetDataValue()<<std::endl;
         }
         else
         {
-            //std::cout<<"2: "<<locationInfo->GetDataString()<<std::endl;
             config->Write( keySection +
                            _T( "/" ) +
                            wxString( locationInfo->GetDataName().c_str(),
@@ -733,31 +730,23 @@ void EphemerisDialog::_writeLocation( ves::open::xml::CommandWeakPtr location,
                            wxString( locationInfo->GetDataString().c_str(),
                                      wxConvUTF8 ) );
         }
-
     }
 }
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::OnLoadHeightMap( wxFileDirPickerEvent& event )
 {
-    m_heightMapInfo->SetData( "Height Map", ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
-    //std::cout<<"Loading height map!!"<<std::endl;
+    m_heightMapInfo->SetData( "Height Map", 
+        ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
     CommandWeakPtr ephemerisHeightMapInfo = new Command();
     ephemerisHeightMapInfo->SetCommandName( "Ephemeris Height Map" );
 
     DataValuePair* heightMapInfo = new ves::open::xml::DataValuePair();
-    //std::cout<< ConvertUnicode( m_heightMapSelector->GetPath().GetData())<<std::endl;;
-    heightMapInfo->SetData( "Height Map", ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
+    heightMapInfo->SetData( "Height Map", 
+        ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
     ephemerisHeightMapInfo->AddDataValuePair( heightMapInfo );
 
-    ves::conductor::UserPreferencesDataBuffer::instance()
-    ->SetCommand( ephemerisHeightMapInfo->GetCommandName(),
-                  ephemerisHeightMapInfo );
-    ves::conductor::util::CORBAServiceList::instance()
-    ->SendCommandStringToXplorer( ephemerisHeightMapInfo );
-
-
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand( 
+        ephemerisHeightMapInfo->GetCommandName(), ephemerisHeightMapInfo );
+    ves::conductor::util::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( ephemerisHeightMapInfo );
 }
-
-
-
-
