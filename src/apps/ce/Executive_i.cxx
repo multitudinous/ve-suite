@@ -89,7 +89,7 @@ ACE_THROW_SPEC((
 {
     _mutex.acquire();
 
-    std::cout << "GetImportData " << module_id << " " << port_id << std::endl;
+    std::cout << "VE-CE : GetImportData " << module_id << " " << port_id << std::endl;
 
     Module *mod = _network->GetModule( _network->moduleIdx( module_id ) );
     if( !mod )
@@ -216,7 +216,7 @@ ACE_THROW_SPEC((
                ) )
 {
     _mutex.acquire();
-    //std::cout << "GetExportData "<< module_id << " " << port_id << std::endl;
+    //std::cout << "VE-CE : GetExportData "<< module_id << " " << port_id << std::endl;
 
     //Interface intf;
     Command portData;
@@ -266,7 +266,7 @@ ACE_THROW_SPEC((
 {
     _mutex.acquire();
 
-    std::cout << " SetProfileData " << module_id << " " << port_id << std::endl;
+    std::cout << "VE-CE : SetProfileData " << module_id << " " << port_id << std::endl;
 
 
     if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortProfile( port_id, &data ) )
@@ -298,12 +298,12 @@ ACE_THROW_SPEC((
 {
     _mutex.acquire();
 
-    std::cout << "GetProfileData " << module_id << " " << port_id << std::endl;
+    std::cout << "VE-CE : GetProfileData " << module_id << " " << port_id << std::endl;
 
     Module *mod = _network->GetModule( _network->moduleIdx( module_id ) );
     if( !mod )
     {
-        std::cerr << "Cannot find module, id# " << module_id << std::endl;
+        std::cerr << "VE-CE : Cannot find module, id# " << module_id << std::endl;
         return;
     }
     IPort *iport = mod->getIPort( mod->iportIdx( port_id ) );
@@ -493,7 +493,7 @@ ACE_THROW_SPEC((
                    , Error::EUnknown
                ) )
 {
-    std::cout << "Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
+    std::cout << "VE-CE : Body_Executive_i::GetModuleResult has been replaced with the query function." << std::endl;
     return CORBA::string_dup( "" );
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -910,7 +910,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
 
     if( iter == _mod_units.end() )
     {
-        std::cout << "no units to query" << std::endl;
+        std::cout << "VE-CE : No units to query" << std::endl;
         _mutex.release();
         return 0;
     }
@@ -1055,7 +1055,7 @@ ACE_THROW_SPEC((
     if( iter != uis_.end() )
     {
         uis_.erase( iter );
-        std::cout << strUI << " Unregistered!\n";
+        std::cout << "VE-CE : " << strUI << " Unregistered!\n";
     }
     _mutex.release();
 }
@@ -1141,14 +1141,14 @@ ACE_THROW_SPEC((
     }
     catch ( CORBA::Exception & )
     {
-        std::cout << iter->first << " is obsolete." << std::endl;
+        std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
         _mod_units.erase( iter );
         _mutex.release();
         UnRegisterUnit( moduleName );
     }
     catch ( ... )
     {
-        std::cout << "another kind of exception " << std::endl;
+        std::cout << "VE-CE : another kind of exception " << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1179,11 +1179,11 @@ ACE_THROW_SPEC((
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::ClientMessage( const char *msg )
 {
-    std::cout << "CE Output = " << msg;
+    std::cout << "VE-CE : Output = " << msg;
     for( std::map<std::string, Body::UI_var>::iterator
             iter = uis_.begin(); iter != uis_.end(); )
     {
-        std::cout << msg << " to -> " << iter->first << std::endl;
+        std::cout << "VE-CE : " << msg << " to -> " << iter->first << std::endl;
         try
         {
             iter->second->_non_existent();
@@ -1192,14 +1192,14 @@ void Body_Executive_i::ClientMessage( const char *msg )
         }
         catch ( CORBA::Exception & )
         {
-            std::cout << iter->first << " is obsolete." << std::endl;
+            std::cout << "VE-CE : " << iter->first << " is obsolete." << std::endl;
             // it seems this call should be blocked as we are messing with
             // a map that is used everywhere
             uis_.erase( iter++ );
         }
         catch ( ... )
         {
-            std::cout << "another kind of exception " << std::endl;
+            std::cout << "VE-CE : another kind of exception " << std::endl;
         }
     }
 }
