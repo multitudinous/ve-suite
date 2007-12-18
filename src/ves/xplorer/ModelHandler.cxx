@@ -244,6 +244,8 @@ cfdTextureDataSet* ModelHandler::GetActiveTextureDataSet()
 /////////////////////////////////////////////////////
 void ModelHandler::SetActiveModel( int modelNumber )
 {
+    _activeModel = 0;
+    
     for( size_t i = 0; i < _modelList.size(); i++ )
     {
         if( modelNumber == _modelList.at( i )->GetID() )
@@ -255,9 +257,6 @@ void ModelHandler::SetActiveModel( int modelNumber )
             break;
         }
     }
-
-    if( _modelList.size() == 0 )
-        _activeModel = 0;
 }
 /////////////////////////////////////////////
 Model* ModelHandler::GetModel( int i )
@@ -275,10 +274,10 @@ void ModelHandler::AddModel( Model* input )
 ///////////////////////////////////////////////////////////////
 void ModelHandler::RemoveModel( Model* modelToBeRemoved )
 {
-    std::vector< Model* >::iterator iter;
-    for( iter = _modelList.begin(); iter != _modelList.end(); )
+    for( std::vector< Model* >::iterator iter = _modelList.begin(); 
+        iter != _modelList.end(); )
     {
-        if (( *iter ) == modelToBeRemoved )
+        if( *iter == modelToBeRemoved )
         {
             //delete (*iter);
             //Model* tempModel = (*iter);
@@ -519,19 +518,19 @@ void ModelHandler::InitScene( void )
 /////////////////////////////////
 void ModelHandler::PreFrameUpdate( void )
 {
-    bool updateScalarRange = false;
-    std::map<std::string, ves::xplorer::event::EventHandler*>::iterator currentEventHandler;
     if( activeCommand )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tModelHandler::PreFrameUpdate Command Name : "
-        << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
-        ;
-        currentEventHandler = _eventHandlers.find( activeCommand->GetCommandName() );
+            << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
+    
+        std::map<std::string, ves::xplorer::event::EventHandler*>::iterator 
+            currentEventHandler = 
+                _eventHandlers.find( activeCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::PreFrameUpdate Executing: "
-            << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
-            ;
+                << activeCommand->GetCommandName() << std::endl << vprDEBUG_FLUSH;
+
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( activeCommand );
         }
@@ -539,6 +538,7 @@ void ModelHandler::PreFrameUpdate( void )
 
     // Check and see if we need to refresh the scalar bar
     // May use in the future
+    //bool updateScalarRange = false;
     //_scalarBar->UpdateCommand();
 }
 

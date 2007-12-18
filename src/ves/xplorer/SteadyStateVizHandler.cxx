@@ -219,8 +219,6 @@ void SteadyStateVizHandler::InitScene()
 void SteadyStateVizHandler::PreFrameUpdate()
 {
     //Process the current command form the gui
-    //if( ModelHandler::instance()->GetActiveModel() )
-    //{
     if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
@@ -234,14 +232,6 @@ void SteadyStateVizHandler::PreFrameUpdate()
             currentEventHandler->second->Execute( tempCommand );
         }
     }
-    //}
-
-    /*
-    if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE )
-    {
-        transientActors = (commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )== 1)?true:false;
-    }
-    */
 
     //Check any virtual objects need to be updated
     if( actorsAreReady && transientActors )

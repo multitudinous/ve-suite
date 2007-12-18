@@ -407,16 +407,18 @@ void App::latePreFrame( void )
     ///////////////////////
     EnvironmentHandler::instance()->LatePreFrameUpdate();
     ///////////////////////
-    //svUpdate = cfdEnvironmentHandler::instance()->BackgroundColorChanged();
-    ///////////////////////
     SteadyStateVizHandler::instance()->PreFrameUpdate();
 
     if( ModelHandler::instance()->GetActiveModel() )
     {
         if( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
         {
-            _tbvHandler->SetParentNode(( ves::xplorer::scenegraph::Group* )ModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) );
-            _tbvHandler->SetActiveTextureDataSet( ModelHandler::instance()->GetActiveTextureDataSet() );
+            _tbvHandler->SetParentNode( 
+                static_cast< ves::xplorer::scenegraph::Group* >( 
+                    ModelHandler::instance()->GetActiveModel()->
+                    GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
+            _tbvHandler->SetActiveTextureDataSet( 
+                    ModelHandler::instance()->GetActiveTextureDataSet() );
             _tbvHandler->ViewTextureBasedVis( ModelHandler::instance()->GetVisOption() );
             _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
             _tbvHandler->PreFrameUpdate();

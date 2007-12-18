@@ -105,7 +105,6 @@ TextureBasedVizHandler::TextureBasedVizHandler()
     _vvvh = 0;
     m_isMaster = false;
 
-
     _eventHandlers[std::string( "TB_SET_ACTIVE_SHADER_MANAGER" )] = new ves::xplorer::event::TextureBasedSetActiveShaderManagerEventHandler();
     _eventHandlers[std::string( "TB_ACTIVATE" )] = new ves::xplorer::event::TextureBasedActivateEventHandler();
     _eventHandlers[std::string( "TB_ACTIVE_SOLUTION" )] = new ves::xplorer::event::TextureBasedUpdateSolutionEventHandler();
@@ -119,7 +118,6 @@ TextureBasedVizHandler::TextureBasedVizHandler()
     _eventHandlers[std::string( "TB_UPDATE_NUMBER_SLICE_PLANES" )] = new ves::xplorer::event::TextureBasedSliceNumberUpdateEventHandler();
     _eventHandlers[std::string( "TB_PHONG_SHADING_ENABLE" )] = new ves::xplorer::event::TextureBasedPhongShadingEnableEventHandler();
     _eventHandlers[std::string( "TB_FULL_PREINTEGRATE_UPDATE" )] = new ves::xplorer::event::TextureBasedPreIntegrateEnableEventHandler();
-
 }
 ///////////////////////////////////////////////
 TextureBasedVizHandler::~TextureBasedVizHandler( void )
@@ -487,43 +485,45 @@ void TextureBasedVizHandler::_updateVisualization()
 void TextureBasedVizHandler::_updateGraph()
 {
     //place vv node on the graph
-    if( _activeVolumeVizNode )
+    if( !_activeVolumeVizNode )
     {
-#ifdef _OSG
-        osg::ref_ptr<osg::Group> tParent = _parent.get();
-        osg::ref_ptr<osg::Switch> tVV = _activeVolumeVizNode->GetVolumeVisNode();
-        if( !tParent->containsNode( tVV.get() ) )
-        {
-            tParent->addChild( tVV.get() );
-#endif
-        }
+        return;
     }
+    
+    osg::ref_ptr<osg::Group> tParent = _parent.get();
+    osg::ref_ptr<osg::Switch> tVV = _activeVolumeVizNode->GetVolumeVisNode();
+    if( !tParent->containsNode( tVV.get() ) )
+    {
+        tParent->addChild( tVV.get() );
+    }    
 }
 /////////////////////////////////////////
 void TextureBasedVizHandler::ClearAll()
 {
-    if( _parent.valid() )
+    if( !_parent.valid() )
     {
-        //need to remove the clip planes
-        if( _activeVolumeVizNode )
-        {
-            _activeVolumeVizNode->ResetClipPlanes();
-            _parent->removeChild( _activeVolumeVizNode->GetVolumeVisNode().get() );
-            _activeVolumeVizNode = 0;
-        }
-        _activeTM = 0;
-        _activeVolumeVizNode = 0;
-        _parent = 0;
-        _currentBBox = 0;
-        _cleared = true;
-        _pbm = 0;
-
-        _activeVisNodeHdlr = 0;
-        _textureBaseSelected = false;
-        _activeTDSet = 0;
-        _svvh = 0;
-        _vvvh = 0;
+        return;
     }
+    
+    //need to remove the clip planes
+    if( _activeVolumeVizNode )
+    {
+        _activeVolumeVizNode->ResetClipPlanes();
+        _parent->removeChild( _activeVolumeVizNode->GetVolumeVisNode().get() );
+        _activeVolumeVizNode = 0;
+    }
+    _activeTM = 0;
+    _activeVolumeVizNode = 0;
+    _parent = 0;
+    _currentBBox = 0;
+    _cleared = true;
+    _pbm = 0;
+
+    _activeVisNodeHdlr = 0;
+    _textureBaseSelected = false;
+    _activeTDSet = 0;
+    _svvh = 0;
+    _vvvh = 0;
 }
 ///////////////////////////////////////////////////////////
 void TextureBasedVizHandler::SetCurrentTime( double time )

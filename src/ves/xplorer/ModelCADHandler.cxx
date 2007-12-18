@@ -243,7 +243,6 @@ void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
                                                 std::string nodeType,
                                                 std::string attributeName )
 {
-#ifdef _OSG
     std::map < std::string,
     std::vector < std::pair < std::string,
     osg::ref_ptr< osg::StateSet > > > >::iterator attributeList;
@@ -304,7 +303,6 @@ void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
         << attributeName << std::endl
         << vprDEBUG_FLUSH;
     }
-#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootTransparent()
@@ -313,7 +311,6 @@ void ModelCADHandler::MakeCADRootTransparent()
     {
         return;
     }
-#ifdef _OSG
 
     osg::ref_ptr< osg::StateSet > attribute = new osg::StateSet;
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
@@ -334,12 +331,11 @@ void ModelCADHandler::MakeCADRootTransparent()
     catch ( ... )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tRoot CADNode not found!!!"
-        << std::endl
-        << vprDEBUG_FLUSH;
+            << std::endl
+            << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::MakeCADRootTransparent()---"
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
     }
-#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootOpaque()
@@ -348,7 +344,7 @@ void ModelCADHandler::MakeCADRootOpaque()
     {
         return;
     }
-#ifdef _OSG
+
     try
     {
         if( m_assemblyList[m_rootCADNodeID]->getStateSet() )
@@ -358,15 +354,14 @@ void ModelCADHandler::MakeCADRootOpaque()
             opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false );
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tRoot CADNode not found!!!"
-        << std::endl
-        << vprDEBUG_FLUSH;
+            << std::endl
+            << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::MakeCADRootOpaque()---"
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
     }
-#endif
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::RemoveAttributeFromNode( std::string nodeID,

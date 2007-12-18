@@ -98,18 +98,35 @@ void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
     //call back over to ssvishandler to clear the vis objects
     SteadyStateVizHandler::instance()->ClearVisObjects();
     TextureBasedVizHandler::instance()->ClearAll();
-    if( ModelHandler::instance()->GetActiveModel() )
+    
+    // I believe this guard is a hack and should be removed in the future
+    // I was unable to figure out what was going wrong with loading 
+    // and reloading ves files and default plugins. Something appears to 
+    // be incorrect in how we are setting activemodel in deleting plugins.
+    std::string tempCommandName = 
+        static_cast< ves::open::xml::Command* >( xmlObject )->GetCommandName();
+    if( "DELETE_OBJECT_FROM_NETWORK" == tempCommandName )
     {
-        ModelHandler::instance()->GetActiveModel()->GetModelCADHandler()->MakeCADRootOpaque();
+        return;
+    }
+    
+    // Only process dataset related events on the clear vis command
+    if( !ModelHandler::instance()->GetActiveModel() )
+    {
+        return;
+    }
 
-        unsigned int state = 0;
-        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-        if( dataSet )
-        {
-            dataSet->SetBoundingBoxState( state );
-            dataSet->SetDataSetScalarState( state );
-            dataSet->SetWireframeState( state );
-            dataSet->SetAxesState( state );
-        }
+    ModelHandler::instance()->GetActiveModel()->
+        GetModelCADHandler()->MakeCADRootOpaque();
+
+    unsigned int state = 0;
+    DataSet* dataSet = 
+        ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
+    if( dataSet )
+    {
+        dataSet->SetBoundingBoxState( state );
+        dataSet->SetDataSetScalarState( state );
+        dataSet->SetWireframeState( state );
+        dataSet->SetAxesState( state );
     }
 }

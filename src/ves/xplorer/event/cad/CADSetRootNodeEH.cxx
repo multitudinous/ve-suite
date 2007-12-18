@@ -72,19 +72,21 @@ void CADSetRootNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
     try
     {
         Command* command = dynamic_cast<Command*>( xmlObject );
-        DataValuePairWeakPtr newRootNode = command->GetDataValuePair( "Root Node ID" );
+        DataValuePairWeakPtr newRootNode = 
+            command->GetDataValuePair( "Root Node ID" );
 
         std::string rootNodeID;
         newRootNode->GetData( rootNodeID );
         m_cadHandler->SetRootCADNodeID( rootNodeID );
     }
-    catch ( std::string str )
+    catch( std::string str )
     {
         std::cout << str << std::endl;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Error!!" << std::endl;
-        std::cout << "---Invalid node specified to rename!---" << std::endl;
+        std::cout << "---CADSetRootNodeEventHandler::_operateOnNode---" 
+            << std::endl;
     }
 }

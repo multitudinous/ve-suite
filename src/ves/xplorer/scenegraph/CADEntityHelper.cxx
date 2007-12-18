@@ -351,8 +351,19 @@ void CADEntityHelper::LoadFile( std::string filename,
     {
         osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
         tempGroup->addChild( tempCADNode.get() );
+
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
+        //Specify the vertex count threshold for performing 
+        // occlusion query tests.
+        oqv.setOccluderThreshold( 2500 );
         tempGroup->accept( oqv );
+        //Setup the number frames to skip
+        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
+        tempGroup->accept( queryFrameVisitor );
+        //Setup the number frames to skip
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
+        tempGroup->accept( visibilityThresholdVisitor );
+
         m_cadNode = tempGroup.get();
     }
     else
@@ -381,7 +392,16 @@ void CADEntityHelper::AddOccluderNodes()
     if( !root.valid() && ( m_cadNode->getNumParents() > 0 ) )
     {
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
+        //Specify the vertex count threshold for performing 
+        // occlusion query tests.
+        oqv.setOccluderThreshold( 2500 );
         m_cadNode->accept( oqv );
+        //Setup the number frames to skip
+        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
+        m_cadNode->accept( queryFrameVisitor );
+        //Setup the number frames to skip
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
+        m_cadNode->accept( visibilityThresholdVisitor );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

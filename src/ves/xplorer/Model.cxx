@@ -111,11 +111,8 @@ Model::Model( ves::xplorer::scenegraph::DCS* worldDCS )
     //this->animation = 0;
     this->activeDataSet = 0;
     mirrorDataFlag = false;
-#ifdef _OSG
     _activeTextureDataSet = 0;
-#endif
     modelID = 10000000;
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model::~Model()
@@ -149,7 +146,6 @@ Model::~Model()
     //   << std::endl << vprDEBUG_FLUSH;
 
     //texture data cleanup
-#ifdef _OSG
     /*TextureDataSetList::iterator tDataSet;
     for(tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
     {
@@ -162,7 +158,6 @@ Model::~Model()
     mTextureDataSets.clear();
     //vprDEBUG(vesDBG,2) << "deleting mTextureDataSets"
     //   << std::endl << vprDEBUG_FLUSH;
-#endif
 
     //std::map<int,DataSet>::iterator foundPlugin;
     // Remove any plugins that aren't present in the current network
