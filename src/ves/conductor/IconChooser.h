@@ -81,21 +81,19 @@ private:
     std::map< int, std::string > iconPaths;
     wxTextCtrl* WxEdit;
     UIPluginBase* thePlugin;
-    //wxString directory;
-    wxButton * okButton;
-    wxButton * cancelButton;
-    wxDirDialog *WxDirDialog;
-    wxMenuBar *WxMenuBar1;
-    wxNotebook * WxNotebook;
-    wxPanel * WxPanel;
-    wxChoice *WxChoice;
+    wxButton* okButton;
+    wxButton* cancelButton;
+    wxDirDialog* WxDirDialog;
+    wxMenuBar* WxMenuBar1;
+    wxNotebook* WxNotebook;
+    wxPanel* WxPanel;
+    wxChoice* WxChoice;
     wxArrayString choices;
-    wxWindow * networkFrame;
-    //wxArrayString componentList;
-    int maxRows;
-    void InitializeAspenIcons();
+    wxWindow* networkFrame;
 
-private:
+    int maxRows;
+
+    void InitializeAspenIcons();
     void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 
