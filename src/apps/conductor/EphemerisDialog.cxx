@@ -51,6 +51,7 @@ BEGIN_EVENT_TABLE( EphemerisDialog, wxDialog )
     EVT_BUTTON( ID_M_LOAD_LOCATION_BUTTON, EphemerisDialog::OnLoadLocationInformation )
     EVT_BUTTON( ID_M_SAVE_LOCATION_BUTTON, EphemerisDialog::OnSaveLocationInformation )
     EVT_FILEPICKER_CHANGED( ID_M_LOAD_HEIGHT_MAP, EphemerisDialog::OnLoadHeightMap )
+    EVT_CHECKBOX( ID_M_TOGGLE_EPHEMERIS, EphemerisDialog::OnToggleDisplay)
 END_EVENT_TABLE()
 ////Event Table End
 /////////////////////////////////////////////////////////////////
@@ -237,9 +238,20 @@ void EphemerisDialog::CreateGUIControls()
     m_buttonsSizer = new wxBoxSizer( wxHORIZONTAL );
     m_mainSizer->Add( m_buttonsSizer, 0, wxALIGN_CENTER | wxALL, 5 );
 
+    m_ephemerisToggleCheck = new wxCheckBox( this, ID_M_TOGGLE_EPHEMERIS,
+                                             wxT( "Display Ephemeris Data" ) );
+
+    m_ephemerisToggleCheck->SetFont( wxFont( 9, wxSWISS, wxNORMAL, 
+                                             wxNORMAL, false,
+                                             wxT( "Segoe UI" ) ) );
+    m_ephemerisToggleCheck->SetValue(true);
+    m_buttonsSizer->Add( m_ephemerisToggleCheck, 0, wxALIGN_CENTER | wxALL, 5 );
+
     m_cancel = new wxButton( this, wxID_CANCEL, wxT( "Cancel" ),
                              wxDefaultPosition, wxDefaultSize );
+
     m_cancel->SetFont( wxFont( 9, wxSWISS, wxNORMAL, wxNORMAL, false, wxT( "Segoe UI" ) ) );
+
     m_buttonsSizer->Add( m_cancel, 0, wxALIGN_CENTER | wxALL, 5 );
 
     m_close = new wxButton( this, wxID_OK, wxT( "OK" ),
@@ -302,6 +314,28 @@ void EphemerisDialog::CreateGUIControls()
 void EphemerisDialog::OnClose( wxCloseEvent& /*event*/ )
 {
     Destroy();
+}
+//////////////////////////////////////////////////////////////
+void EphemerisDialog::OnToggleDisplay( wxCommandEvent& event )
+{
+    //Create the command and data value pairs
+    ves::open::xml::DataValuePairWeakPtr DVP = new DataValuePair();
+    ves::open::xml::CommandWeakPtr command = new Command();
+    bool value = false;
+    value = m_ephemerisToggleCheck->IsChecked();
+    unsigned int displayValue = 0;
+    if( value )
+    {
+        displayValue = 1;
+    }
+
+    DVP->SetData( std::string( "Display Ephemeris Data" ), displayValue );
+    command->SetCommandName( std::string( "Ephemeris Toggle" ) );
+    command->AddDataValuePair( DVP );
+    ves::conductor::UserPreferencesDataBuffer::instance()->SetCommand(
+        command->GetCommandName(), command );
+    ves::conductor::util::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( command );
 }
 //////////////////////////////////////////////////////////////////
 void EphemerisDialog::SetLatitudeAndLongitudeOnGUI( double latitude,

@@ -74,6 +74,7 @@ public:
     void OnSaveLocationInformation( wxCommandEvent& event );
     void OnLoadLocationInformation( wxCommandEvent& event );
     void OnLoadHeightMap( wxFileDirPickerEvent& event );
+    void OnToggleDisplay( wxCommandEvent& event );
 
     ///Convert the input sexagesimal value to decimal values
     ///\param degree Degree of Latitude or Longitude
@@ -167,6 +168,7 @@ private:
     wxButton* m_saveLocationButton;
     wxButton* m_loadLocationButton;
     wxFilePickerCtrl* m_heightMapSelector;
+    wxCheckBox* m_ephemerisToggleCheck;
 
     ves::open::xml::CommandPtr m_date;
     ves::open::xml::CommandPtr m_time;
@@ -211,6 +213,7 @@ private:
         ID_M_SAVE_LOCATION_BUTTON = 1235,
         ID_M_LOAD_LOCATION_BUTTON = 1236,
         ID_M_LOAD_HEIGHT_MAP = 1237,
+        ID_M_TOGGLE_EPHEMERIS = 1237,
         ////GUI Enum Control ID End
         ID_DUMMY_VALUE_ //don't remove this value unless you have other enum values
     };
