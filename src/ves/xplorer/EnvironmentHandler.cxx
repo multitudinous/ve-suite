@@ -64,6 +64,7 @@
 #include <ves/xplorer/event/environment/EphemerisDataEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisAutoDateTimeEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisHeightMapEventHandler.h>
+#include <ves/xplorer/event/environment/EphemerisDisplayToggleEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -163,6 +164,8 @@ EnvironmentHandler::EnvironmentHandler( void )
         new ves::xplorer::event::EphemerisAutoDateTimeEventHandler();
     _eventHandlers[ std::string( "Ephemeris Height Map" )] =
         new ves::xplorer::event::EphemerisHeightMapEventHandler();
+    _eventHandlers[ std::string( "Ephemeris Toggle" )] =
+        new ves::xplorer::event::EphemerisDisplayToggleEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize( void )
@@ -442,7 +445,7 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool create
             m_ephemerisModel->setSkyDomeRadius( 5000. );
             m_ephemerisModel->setAutoDateTime( false );
             m_ephemerisModel->setSkyDomeCenter( osg::Vec3f( 0., 0., 0. ) );
-            m_ephemerisModel->setSunLightNum( 2 );
+            m_ephemerisModel->setSunLightNum( 0 );
             m_ephemerisModel->setMoveWithEyePoint( false );
             m_ephemerisModel->setMembers( osgEphemeris::EphemerisModel::ALL_MEMBERS );
         }
