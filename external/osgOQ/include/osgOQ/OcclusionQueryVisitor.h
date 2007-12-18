@@ -108,6 +108,11 @@ public:
     PerDrawableQueryVisitor();
     virtual ~PerDrawableQueryVisitor();
 
+    // After applying this visitor, new children are stored in a map but
+    //   haven't yet been added back into the tree. Call rearrange() to
+    //   effect this modification. (Called automatically in destructor.)
+    int rearrange();
+
     // Specify the vertex count threshold for performing occlusion
     //   query tests. Nodes in the scene graph whose total child geometry
     //   contains fewer vertices than the specified threshold will
@@ -116,7 +121,6 @@ public:
     void setOccluderThreshold( int vertices );
     int getOccluderThreshold() const;
 
-    virtual void apply( osg::Group& group );
     virtual void apply( osg::Geode& geode );
 
 protected:
@@ -125,8 +129,12 @@ protected:
     unsigned int _occluderThreshold;
     unsigned int _count;
 
-    typedef std::vector< osg::ref_ptr<osg::Geode> > GeodeList;
-    GeodeList _newChildren;
+    typedef std::list< osg::ref_ptr<osg::Geode> > GeodeList;
+    typedef std::list< osg::ref_ptr<osg::LOD> > LODList;
+    typedef std::map< osg::ref_ptr<osg::Group>, GeodeList > GroupMap;
+    typedef std::map< osg::ref_ptr<osg::LOD>, LODList > LODMap;
+    GroupMap _newGroupChildren;
+    LODMap _newLODChildren;
 };
 
 

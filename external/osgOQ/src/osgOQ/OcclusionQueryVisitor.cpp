@@ -320,7 +320,56 @@ PerDrawableQueryVisitor::PerDrawableQueryVisitor()
 
 PerDrawableQueryVisitor::~PerDrawableQueryVisitor()
 {
-    osg::notify( osg::INFO ) << "osgOQ: PerDrawableQueryVisitor: Moved " << _count << " Drawables." << std::endl;
+    if( !_newGroupChildren.empty() || !_newLODChildren.empty() )
+        rearrange();
+}
+
+int
+PerDrawableQueryVisitor::rearrange()
+{
+    unsigned int count = 0;
+
+    GroupMap::const_iterator it = _newGroupChildren.begin();
+    while (it != _newGroupChildren.end())
+    {
+        osg::Group* grp = (*it).first.get();
+
+        const GeodeList& gList = (*it).second;
+        GeodeList::const_iterator git = gList.begin();
+        while( git != gList.end())
+        {
+            grp->addChild( (*git).get() );
+            count++;
+            git++;
+        }
+
+        it++;
+    }
+    _newGroupChildren.clear();
+
+    LODMap::const_iterator lodIt = _newLODChildren.begin();
+    while (lodIt != _newLODChildren.end())
+    {
+        osg::LOD* lod = (*lodIt).first.get();
+
+        const LODList& lodList = (*lodIt).second;
+        LODList::const_iterator lit = lodList.begin();
+        while( lit != lodList.end())
+        {
+            osg::Geode* geode = dynamic_cast< osg::Geode* >( (*lit)->getChild( 0 ) );
+            float min = (*lit)->getMinRange( 0 );
+            float max = (*lit)->getMaxRange( 0 );
+            lod->addChild( geode, min, max );
+            count++;
+            lit++;
+        }
+
+        lodIt++;
+    }
+    _newLODChildren.clear();
+
+    osg::notify( osg::NOTICE ) << "osgOQ: PerDrawableQueryVisitor: Moved " << count << " Drawables." << std::endl;
+    return count;
 }
 
 void
@@ -335,26 +384,8 @@ PerDrawableQueryVisitor::getOccluderThreshold() const
 }
 
 void
-PerDrawableQueryVisitor::apply( osg::Group& group )
-{
-    traverse( (osg::Node&)group );
-
-    GeodeList::const_iterator it = _newChildren.begin();
-    while (it != _newChildren.end())
-    {
-        group.addChild( (*it).get() );
-        it++;
-    }
-
-    _newChildren.clear();
-}
-
-void
 PerDrawableQueryVisitor::apply( osg::Geode& geode )
 {
-    typedef std::vector< osg::ref_ptr<osg::Geode> > GeodeList;
-    GeodeList gl;
-
     // Identify target Drawable(s), create Geodes for each,
     //   remove drawables from original Geode, and add new
     //   Geodes to a list for later processing.
@@ -368,8 +399,24 @@ PerDrawableQueryVisitor::apply( osg::Geode& geode )
         {
             osg::ref_ptr<osg::Geode> newGeode = copyGeodeNoChildren( &geode );
             newGeode->addDrawable( geom );
-            _newChildren.push_back( newGeode );
             geode.removeDrawable( geom );
+
+            unsigned int pIdx;
+            for( pIdx=0; pIdx<geode.getNumParents(); pIdx++)
+            {
+                osg::Group* grp = geode.getParent( pIdx );
+                osg::LOD* lod = dynamic_cast< osg::LOD* >( grp );
+                if (lod != NULL)
+                {
+                    unsigned int childIdx = lod->getChildIndex( &geode );
+
+                    osg::LOD* newLOD = new osg::LOD;
+                    newLOD->addChild( newGeode.get(), lod->getMinRange( childIdx ), lod->getMaxRange( childIdx ) );
+                    _newLODChildren[ lod ].push_back( newLOD );
+                }
+                else
+                    _newGroupChildren[ grp ].push_back( newGeode.get() );
+            }
 
             _count++;
         }
