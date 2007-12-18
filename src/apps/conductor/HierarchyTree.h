@@ -107,7 +107,7 @@ protected:
 
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
-    wxTreeItemId currentId;
+    wxTreeItemId m_currentNodeId;
     Canvas* m_canvas;
     wxImageList *images;
 
