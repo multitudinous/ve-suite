@@ -51,7 +51,6 @@
 #undef IconChooser_STYLE
 #define IconChooser_STYLE wxCAPTION | wxSYSTEM_MENU | wxMINIMIZE_BOX | wxCLOSE_BOX
 
-
 namespace ves
 {
 namespace conductor
@@ -64,7 +63,13 @@ private:
     DECLARE_EVENT_TABLE();
 
 public:
-    IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id = 1,
+    enum
+	{
+       OK = 8888,
+       CANCEL,
+       CLICK
+	};
+    IconChooser( wxScrolledWindow *parent, /*std::string path,*/ wxWindowID id = 1,
                  const wxString &title = wxT( "IconChooser" ),
                  const wxPoint& pos = wxDefaultPosition,
                  const wxSize& size = wxDefaultSize, long style = IconChooser_STYLE );
@@ -89,11 +94,12 @@ private:
     wxPanel* WxPanel;
     wxChoice* WxChoice;
     wxArrayString choices;
-    wxWindow* networkFrame;
-
+	wxScrolledWindow* canvas;
+    //wxArrayString componentList;
     int maxRows;
-
+    std::pair< unsigned int, std::string > iconInfo;
     void InitializeAspenIcons();
+
     void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 

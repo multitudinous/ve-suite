@@ -74,6 +74,7 @@
 #include "EphemerisDialog.h"
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
+#include <ves/conductor/IconChooser.h>
 #include <ves/conductor/Module.h>
 #include <ves/conductor/util/Tag.h>
 
@@ -188,6 +189,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
     EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
+	EVT_MENU( IconChooser::OK, AppFrame::OnChangeIcon )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -2287,4 +2289,11 @@ void AppFrame::OnDelMod( wxCommandEvent& event )
 {
     int* mod = static_cast< int* >( event.GetClientData() );
     hierarchyTree->RemoveFromTree( *mod );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnChangeIcon(wxCommandEvent& event )
+{
+	std::pair <unsigned int, std::string>* data = static_cast< 
+		std::pair <unsigned int, std::string>*>( event.GetClientData() );
+	hierarchyTree->ChangeLeafIcon( data->first, data->second );
 }

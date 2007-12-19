@@ -1205,12 +1205,13 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     serviceList->GetMessageLog()->SetMessage( "Icon Chooser\n" );
     UIPluginBase* tempPlugin = this;
-    if( !m_iconChooser )
+    //if( m_iconChooser == NULL )
     {
         m_iconChooser = new IconChooser( m_canvas );
     }
     m_iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
-    m_iconChooser->SetPlugin( tempPlugin );
+    //m_iconChooser->SetPlugin( tempPlugin );
+    m_iconChooser->SetPlugin( this );
     //chooser->SetSize( dialogSize );
     m_iconChooser->Show();
 }

@@ -44,17 +44,17 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( IconChooser, wxFrame )
     EVT_CLOSE( IconChooser::OnClose )
-    EVT_BUTTON( 1003, IconChooser::okButtonClick )
-    EVT_BUTTON( 1004, IconChooser::cancelButtonClick )
-    EVT_MENU( 1005, IconChooser::IconDirectoryClick )
+	EVT_BUTTON( OK, IconChooser::okButtonClick )
+    EVT_BUTTON( CANCEL, IconChooser::cancelButtonClick )
+    EVT_MENU( CLICK, IconChooser::IconDirectoryClick )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
-IconChooser::IconChooser( wxWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
+IconChooser::IconChooser( wxScrolledWindow *parent, /*std::string path,*/ wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
         : wxFrame( parent, id, title, position, size, style )
 {
     //directory = wxString(path.c_str(), wxConvUTF8);
     CreateGUIControls();
-    networkFrame = parent;
+    canvas = parent;
 }
 ////////////////////////////////////////////////////////////////////////////////
 IconChooser::~IconChooser()
@@ -77,15 +77,15 @@ void IconChooser::CreateGUIControls()
     WxChoice->Select( 0 );
 
     WxEdit->SetEditable( false );
-    okButton = new wxButton( WxPanel, 1003, wxT( "OK" ), wxPoint( 450, 463 ) );
-    cancelButton = new wxButton( WxPanel, 1004, wxT( "Cancel" ), wxPoint( 535, 463 ) );
+    okButton = new wxButton( WxPanel, OK, wxT( "OK" ), wxPoint( 450, 463 ) );
+    cancelButton = new wxButton( WxPanel, CANCEL, wxT( "Cancel" ), wxPoint( 535, 463 ) );
     //WxChoice = new wxChoice(WxPanel, 1003, wxPoint(220,3), wxSize(200,21), componentList, 0, wxDefaultValidator, wxT("Components"));
     //WxChoice->SetSelection(-1);
 
     {
         WxMenuBar1 = new wxMenuBar();
         wxMenu * AddMenu = new wxMenu( 0 );
-        AddMenu->Append( 1005, wxT( "Icon Directory" ), wxT( "" ), wxITEM_NORMAL );
+        AddMenu->Append( CLICK, wxT( "Icon Directory" ), wxT( "" ), wxITEM_NORMAL );
         WxMenuBar1->Append( AddMenu, wxT( "Add" ) );
         SetMenuBar( WxMenuBar1 );
 
@@ -186,7 +186,11 @@ void IconChooser::okButtonClick( wxCommandEvent& event )
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 1 );
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Flip Up/Down" ) )
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 2 );
-    networkFrame->Refresh();
+    iconInfo.first = thePlugin->GetID();
+    iconInfo.second  = ConvertUnicode( WxEdit->GetValue().c_str() );
+    event.SetClientData( &iconInfo );
+    ::wxPostEvent( canvas, event);
+    this->canvas->Refresh();
     Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////

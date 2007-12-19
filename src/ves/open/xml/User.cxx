@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <ves/open/xml/User.h>
 #include <ves/open/xml/StateInfo.h>
 XERCES_CPP_NAMESPACE_USE

@@ -392,6 +392,7 @@ protected:
     void OnChangeWorkingDirectory( wxCommandEvent& event );
 
     void OnDelMod( wxCommandEvent& event );
+    void OnChangeIcon(wxCommandEvent& event );
 
 private:
     void ExitXplorer();

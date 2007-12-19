@@ -246,6 +246,24 @@ void HierarchyTree::RemoveFromTree( unsigned int id )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
+{
+   wxTreeItemId root = GetRootItem();
+   wxTreeItemId selected = SearchTree(root, id);
+   if( selected.IsOk() )
+   {
+      std::string fullPath = "2DIcons/" + path + ".jpg";
+      std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
+      std::map< std::string, char** >::iterator aspenIconIter;
+      if( aspenIconIter != aspenPlusIconMap.end() )
+      {
+			AddtoImageList( wxBitmap( wxBitmap( 
+                aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+      }
+      SetItemImage(selected, images->GetImageCount()-1);
+   }
+}
+///////////////////////////////////////////////////////////////////////////////
 wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, int id )
 {
     wxTreeItemIdValue cookie;
@@ -275,3 +293,4 @@ wxTreeItemId HierarchyTree::SearchTree( wxTreeItemId root, int id )
     wxTreeItemId dummy;
     return dummy;
 }
+
