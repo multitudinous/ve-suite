@@ -59,6 +59,13 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
         m_mass( 1.0 ),
         m_physicsSimulator( physicsSimulator ),
         m_osgToBullet( new osgToBullet( node ) ),
+#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 65 )
+        btRigidBody( btRigidBody::btRigidBodyConstructionInfo(
+                     btScalar( m_mass ),                         //mass
+                     m_vesMotionState = new vesMotionState(),    //motionState
+                     0,                                          //collisionShape
+                     btVector3( 0.0f, 0.0f, 0.0f ) ) )           //localInertia
+#else
         btRigidBody( btScalar( m_mass ),                         //mass
                      m_vesMotionState = new vesMotionState(),    //motionState
                      0,                                          //collisionShape
@@ -67,6 +74,7 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
                      btScalar( 0.0f ),                           //angularDamping
                      btScalar( 0.5f ),                           //friction
                      btScalar( 0.0f ) )                          //restitution
+#endif
 {
     BoundingBoxShape();
 }
