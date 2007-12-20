@@ -46,7 +46,7 @@ else:
 
 os.system("%s log --xml --verbose -r'{'%s'}':'HEAD' %s > ChangeLog.xml" % (svn_cmd, env['SVN_Previous_Date'], RootDir))
 
-xsltAction = '%s -o ${TARGET.abspath} %s/Tools/svn2cl/svn2cl.xsl ${SOURCE.abspath}' % (xsltproc_cmd, RootDir)
+xsltAction = '%s -o ${TARGET.abspath} %s/external/svn2cl/svn2cl.xsl ${SOURCE.abspath}' % (xsltproc_cmd, RootDir)
 xsltBuilder = Builder(action = xsltAction, single_source = True, suffix = "", chdir = relativeDir)
 
 env.Append(BUILDERS = {'xslt': xsltBuilder})
