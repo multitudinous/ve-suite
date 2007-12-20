@@ -125,7 +125,7 @@ Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversi
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-c_2_7.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\xerces-depdom_2_7.dll; DestDir: {app}\lib; Components: xercesc; Flags: ignoreversion
 Source: {#XERCESHOME}\Build\Win32\VC7.1\Release\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
+;Source: {#ACETAOHOME}\lib\ace.dll; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 ;Source: {#SIMAGEHOME}\bin\simage*.dll; DestDir: {app}\lib; Components: osg; Flags: ignoreversion
 
 Source: {#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
