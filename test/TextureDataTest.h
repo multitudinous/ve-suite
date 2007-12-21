@@ -1,8 +1,6 @@
 #ifndef JPG_TEXTURE_DATA_TEST_H_
 #define JPG_TEXTURE_DATA_TEST_H_
 
-#ifdef VE_PATENTED
-
 #include "VE_Xplorer/TextureBased/TextureData.h"
 
 #include <cxxtest/TestSuite.h>
@@ -16,6 +14,4 @@ public:
       TS_FAIL("Test not yet implemented"); 
    }
 };
-
-#endif
 #endif

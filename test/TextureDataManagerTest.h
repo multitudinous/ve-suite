@@ -1,8 +1,6 @@
 #ifndef JPG_TEXTURE_DATA_MANAGER_TEST_H_
 #define JPG_TEXTURE_DATA_MANAGER_TEST_H_
 
-#ifdef VE_PATENTED
-
 #include "VE_Xplorer/TextureBased/TextureDataManager.h"
 #include "VE_Xplorer/TextureBased/TimestepData.h"
 
@@ -27,6 +25,4 @@ public:
       VE_TextureBased::TextureDataPtr td = VE_TextureBased::TextureDataManager::Instance().getTextureData(sim);
    }
 };
-
-#endif
 #endif
