@@ -125,7 +125,7 @@ int main( int argc, char *argv[] )
          postDataDir.assign( tmp );//strcpy( postDataDir, tmp );
       }
 
-      if ( argc > arg )
+      /*if ( argc > arg )
       {
 		  B_octree = (atoi( argv[ arg ] ))?true:false;
          arg++;
@@ -226,7 +226,10 @@ int main( int argc, char *argv[] )
             isoMin = -0.1f;
             isoMax = -0.1f;
          }
-      }
+      }*/
+        B_octree = false;
+        B_iso = false;
+        B_surface = false;
 
       if ( argc > arg )
       {
