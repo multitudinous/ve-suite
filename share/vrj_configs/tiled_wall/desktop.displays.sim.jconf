@@ -30,8 +30,8 @@
                <accum_green_size>1</accum_green_size>
                <accum_blue_size>1</accum_blue_size>
                <accum_alpha_size>1</accum_alpha_size>
-               <num_sample_buffers>3</num_sample_buffers>
-               <num_samples>8</num_samples>
+               <num_sample_buffers>1</num_sample_buffers>
+               <num_samples>16</num_samples>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
@@ -47,17 +47,17 @@
                <size>1.0</size>
                <size>1.0</size>
                <view>Left Eye</view>
-               <lower_left_corner>-1.2192</lower_left_corner>
-               <lower_left_corner>0.1524</lower_left_corner>
+               <lower_left_corner>-1.33736</lower_left_corner>
+               <lower_left_corner>0.20715</lower_left_corner>
                <lower_left_corner>-1.8288</lower_left_corner>
-               <lower_right_corner>1.2192</lower_right_corner>
-               <lower_right_corner>0.1524</lower_right_corner>
+               <lower_right_corner>-0.0445</lower_right_corner>
+               <lower_right_corner>0.20715</lower_right_corner>
                <lower_right_corner>-1.8288</lower_right_corner>
-               <upper_right_corner>1.2192</upper_right_corner>
-               <upper_right_corner>1.9812</upper_right_corner>
+               <upper_right_corner>-0.0445</upper_right_corner>
+               <upper_right_corner>1.00725</upper_right_corner>
                <upper_right_corner>-1.8288</upper_right_corner>
-               <upper_left_corner>-1.2192</upper_left_corner>
-               <upper_left_corner>1.9812</upper_left_corner>
+               <upper_left_corner>-1.33736</upper_left_corner>
+               <upper_left_corner>1.00725</upper_left_corner>
                <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
@@ -90,8 +90,8 @@
                <accum_green_size>1</accum_green_size>
                <accum_blue_size>1</accum_blue_size>
                <accum_alpha_size>1</accum_alpha_size>
-               <num_sample_buffers>3</num_sample_buffers>
-               <num_samples>8</num_samples>
+               <num_sample_buffers>1</num_sample_buffers>
+               <num_samples>16</num_samples>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
@@ -107,17 +107,17 @@
                <size>1.0</size>
                <size>1.0</size>
                <view>Left Eye</view>
-               <lower_left_corner>-1.2192</lower_left_corner>
-               <lower_left_corner>0.1524</lower_left_corner>
+               <lower_left_corner>0.0445</lower_left_corner>
+               <lower_left_corner>0.20715</lower_left_corner>
                <lower_left_corner>-1.8288</lower_left_corner>
-               <lower_right_corner>1.2192</lower_right_corner>
-               <lower_right_corner>0.1524</lower_right_corner>
+               <lower_right_corner>1.33736</lower_right_corner>
+               <lower_right_corner>0.20715</lower_right_corner>
                <lower_right_corner>-1.8288</lower_right_corner>
-               <upper_right_corner>1.2192</upper_right_corner>
-               <upper_right_corner>1.9812</upper_right_corner>
+               <upper_right_corner>1.33736</upper_right_corner>
+               <upper_right_corner>1.00725</upper_right_corner>
                <upper_right_corner>-1.8288</upper_right_corner>
-               <upper_left_corner>-1.2192</upper_left_corner>
-               <upper_left_corner>1.9812</upper_left_corner>
+               <upper_left_corner>0.0445</upper_left_corner>
+               <upper_left_corner>1.00725</upper_left_corner>
                <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
@@ -150,8 +150,8 @@
                <accum_green_size>1</accum_green_size>
                <accum_blue_size>1</accum_blue_size>
                <accum_alpha_size>1</accum_alpha_size>
-               <num_sample_buffers>3</num_sample_buffers>
-               <num_samples>8</num_samples>
+               <num_sample_buffers>1</num_sample_buffers>
+               <num_samples>16</num_samples>
             </opengl_frame_buffer_config>
          </frame_buffer_config>
          <stereo>false</stereo>
