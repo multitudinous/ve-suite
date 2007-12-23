@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="b515def8-6750-4fbd-a970-7f78b5b6d1bb">
+    <network>
+      <conductorState dataName="m_xUserScale" id="3ee76408-079a-4e78-99ee-bdce28f72f19">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="e2565a11-3403-49d3-8c50-4a744a652690">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="cf230338-188d-4124-9e60-d50f70112b5c">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="25d3be18-be19-48b1-956f-b5933ef3bd61">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="849f50e6-5540-42e9-aa97-978dfb3700f5">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="17589a44-a2a4-43c1-9d99-e729308201d5">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="101" id="102eb10c-ef3e-4810-88b4-07c20a700c06" name="IntStoves" vendorUnit="IntStoves">
+      <iconLocation xLocation="10" yLocation="10"/>
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <inputs commandName="numbaffles">
+        <parameter dataName="numbaffles" id="c3c2a31a-6e8f-45d2-8a85-042b321884f8">
+          <dataValue type="xs:integer">0</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle1">
+        <parameter dataName="baffle1" id="8e5a7264-7bae-41d0-85ed-4f8716b34e92">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle2">
+        <parameter dataName="baffle2" id="50221b34-1bd2-4559-95a2-8daba553d7d1">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle3">
+        <parameter dataName="baffle3" id="8db784e9-e229-40d3-8a33-eabd830645d3">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle4">
+        <parameter dataName="baffle4" id="2c7c7ce6-4470-4921-be2f-87d270ca3c2f">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle5">
+        <parameter dataName="baffle5" id="40041a4a-dec7-4773-bfc8-7deca7d001c2">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle6">
+        <parameter dataName="baffle6" id="f8c8214a-2fa0-4b6f-9233-b335040966e0">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <inputs commandName="baffle7">
+        <parameter dataName="baffle7" id="f24dad6e-c8cb-4616-87e6-4d8b733f698b">
+          <genericObject objectType="OneDDoubleArray"/>
+        </parameter>
+      </inputs>
+      <geometry associatedDataset="NONE" friction="1" id="4623f478-6dde-4e64-9a11-51c15e93b152" mass="1" physics="false" restitution="0" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>0.393</value>
+            <value>0.393</value>
+            <value>0.393</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <numChildren>2</numChildren>
+        <children>
+          <child friction="1" id="8f44d637-7c17-473a-97fc-a99f0ca31ce4" mass="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>StoveBase2</name>
+            <parent type="xs:string">4623f478-6dde-4e64-9a11-51c15e93b152</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Geometry/StoveBase2.obj</fileName>
+          </child>
+          <child friction="1" id="805291e9-b84e-4a54-861c-5bb8eaadac3a" mass="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>stoveTop</name>
+            <parent type="xs:string">4623f478-6dde-4e64-9a11-51c15e93b152</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Geometry/stoveTop.obj</fileName>
+          </child>
+        </children>
+      </geometry>
+    </model>
+  </veSystem>
+
+  <User id="60b516bd-61ea-4852-8087-7de7441d31a3" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="8725167c-214c-4054-9e9d-f92e5f579075">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>

@@ -1,0 +1,47 @@
+##Builds WinClient program
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import('baseEnv ves_pkg LIBDIR buildDir wxwidgets_options osg_options xerces_options')
+
+srcs = Split("""
+   IntStoves_UI_Dialog.cpp
+   IntStoves.cpp
+   GL_Engine.cpp
+""")
+
+headers = Split("""
+   IntStoves_UI_Dialog.h
+   IntStoves.h
+   GL_Engine.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['ves_conductor_plugin'])
+lib_env.Append(LIBS = ['glut'])
+lib_env.Append(LIBPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'conductor'),
+                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'external', 'loki-0.1.6')])
+
+lib_env.Append(CPPPATH = [pj(os.getenv('VE_SUITE_HOME'), 'src'),
+                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src'),
+                          pj(os.getenv('VE_SUITE_HOME'), 'external', 'loki-0.1.6', 'include')])
+
+lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+lib_env.ParseConfig('flagpoll TAO --libs --cflags')
+lib_env.ParseConfig('wx-config --libs gl')
+
+osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+wxwidgets_options.apply( lib_env )
+
+lib = ves_pkg.createSharedLibrary( 'InteractiveStoveUI', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'InteractiveStove', 'Plugins', 'UI', host_type ) ) 
+   
+lib.addSources(srcs)
+lib.addHeaders(headers,  pj( 'Plugins', 'UI'))
+lib.build()

@@ -6,6 +6,7 @@
 exampleSubdirs = Split("""
     simple
     CoinFunnel
+    InteractiveStove
 """)
 #    HyperLab
 
