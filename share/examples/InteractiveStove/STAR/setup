@@ -1,0 +1,55 @@
+#! /bin/csh -f
+cd ./STAR/
+source /usr/local/starcd3.26/etc/setstar
+
+proam << EOF
+x
+star
+n
+y
+
+cset none
+cset news baff
+cdel cset
+cread baff.cel 0 all add coded 0
+close baff.cel
+check,all,0,dblc,newset,nolist
+cdel cset
+pmat,1,fluid
+moni,1
+pres,1.e+05,1
+tdatum,273
+ccom
+yes
+vcom
+
+yes
+geom,star.geom,0.0254,binary,check,serial
+prob,star.prob,binary
+quit,save
+EOF
+
+$STARDIR/bin/star
+
+proam << EOF
+x
+star
+n
+y
+
+load,star.pst
+psys,1
+oper,getv,su,1
+oper,getv,sv,2
+oper,getv,sw,3
+oper,getv,ptot,4,relative
+oper,getv,t,5,absolute
+savu,star.usr,all,coded,all
+cdsa,star.cel,star.vrt,star.inp,-1
+cset newset baff
+vset newset cset
+savu,baffpoly.usr,scalar,coded,vset
+cwrite,baffpoly.cel,coded,cset
+vwrite,baffpoly.vrt,coded,vset
+quit,save
+EOF

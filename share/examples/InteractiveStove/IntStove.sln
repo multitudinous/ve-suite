@@ -1,0 +1,119 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntStovePlugin", "IntStovePlugin\IntStovePlugin.vcproj", "{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntStove_GPModel", "IntStoveModel\IntStove_GPModel.vcproj", "{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Int_stove_econGraphicalPlugin", "Int_Stove_EconGraphicalPlugin\Int_stove_econGraphicalPlugin.vcproj", "{131D8F29-F034-45CC-804A-888B28542151}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Int_stove_econ_GUI", "Int_Stove_EconUIPlugin\Int_stove_econ.vcproj", "{0D29C965-1C45-4EB3-8421-302A1D2F4548}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Int_Stove_EconUnit", "Int_Stove_EconUnit\Int_Stove_EconUnit.vcproj", "{31F65F0F-4662-48C8-84C2-C0AC8A935119}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IntStoveUnit", "IntStoveUnit\IntStoveUnit.vcproj", "{233805F4-3C7A-4518-8CEA-0414EC4D834E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		dbg_installer|Win32 = dbg_installer|Win32
+		Debug|Win32 = Debug|Win32
+		install_osg_dbg|Win32 = install_osg_dbg|Win32
+		osg_tao_dbg|Win32 = osg_tao_dbg|Win32
+		osg_tao_debug_installer|Win32 = osg_tao_debug_installer|Win32
+		osg_tao_debug|Win32 = osg_tao_debug|Win32
+		pf_tao_dbg|Win32 = pf_tao_dbg|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.dbg_installer|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.dbg_installer|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.Debug|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.Debug|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.install_osg_dbg|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.install_osg_dbg|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.osg_tao_dbg|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.osg_tao_dbg|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.osg_tao_debug_installer|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.osg_tao_debug_installer|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.osg_tao_debug|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.osg_tao_debug|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.pf_tao_dbg|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.pf_tao_dbg|Win32.Build.0 = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.Release|Win32.ActiveCfg = dbg_installer|Win32
+		{CC54640C-8F89-40A4-9BE8-AED7C2D61EDB}.Release|Win32.Build.0 = dbg_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.dbg_installer|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.dbg_installer|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.install_osg_dbg|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.install_osg_dbg|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_dbg|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_dbg|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_debug_installer|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_debug_installer|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_debug|Win32.ActiveCfg = osg_tao_debug|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.osg_tao_debug|Win32.Build.0 = osg_tao_debug|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_tao_dbg|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.pf_tao_dbg|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.ActiveCfg = osg_tao_debug_installer|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.Build.0 = osg_tao_debug_installer|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.dbg_installer|Win32.ActiveCfg = osg_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.Debug|Win32.ActiveCfg = osg_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.install_osg_dbg|Win32.ActiveCfg = osg_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.osg_tao_dbg|Win32.ActiveCfg = osg_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.osg_tao_debug_installer|Win32.ActiveCfg = osg_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.osg_tao_debug|Win32.ActiveCfg = osg_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.pf_tao_dbg|Win32.ActiveCfg = pf_tao_dbg|Win32
+		{131D8F29-F034-45CC-804A-888B28542151}.Release|Win32.ActiveCfg = Release|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.dbg_installer|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.dbg_installer|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.install_osg_dbg|Win32.ActiveCfg = install_osg_dbg|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.install_osg_dbg|Win32.Build.0 = install_osg_dbg|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.osg_tao_dbg|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.osg_tao_dbg|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.osg_tao_debug_installer|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.osg_tao_debug_installer|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.osg_tao_debug|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.osg_tao_debug|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.pf_tao_dbg|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.pf_tao_dbg|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release|Win32.ActiveCfg = Release|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release|Win32.Build.0 = Release|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.dbg_installer|Win32.ActiveCfg = Debug|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.dbg_installer|Win32.Build.0 = Debug|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.Debug|Win32.ActiveCfg = Debug|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.Debug|Win32.Build.0 = Debug|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.install_osg_dbg|Win32.ActiveCfg = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.install_osg_dbg|Win32.Build.0 = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.osg_tao_dbg|Win32.ActiveCfg = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.osg_tao_dbg|Win32.Build.0 = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.osg_tao_debug_installer|Win32.ActiveCfg = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.osg_tao_debug_installer|Win32.Build.0 = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.osg_tao_debug|Win32.ActiveCfg = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.osg_tao_debug|Win32.Build.0 = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.pf_tao_dbg|Win32.ActiveCfg = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.pf_tao_dbg|Win32.Build.0 = install_osg_dbg|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.Release|Win32.ActiveCfg = Release|Win32
+		{31F65F0F-4662-48C8-84C2-C0AC8A935119}.Release|Win32.Build.0 = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.dbg_installer|Win32.ActiveCfg = Debug|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.dbg_installer|Win32.Build.0 = Debug|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.Debug|Win32.Build.0 = Debug|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.install_osg_dbg|Win32.ActiveCfg = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.install_osg_dbg|Win32.Build.0 = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.osg_tao_dbg|Win32.ActiveCfg = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.osg_tao_dbg|Win32.Build.0 = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.osg_tao_debug_installer|Win32.ActiveCfg = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.osg_tao_debug_installer|Win32.Build.0 = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.osg_tao_debug|Win32.ActiveCfg = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.osg_tao_debug|Win32.Build.0 = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.pf_tao_dbg|Win32.ActiveCfg = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.pf_tao_dbg|Win32.Build.0 = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.Release|Win32.ActiveCfg = Release|Win32
+		{233805F4-3C7A-4518-8CEA-0414EC4D834E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

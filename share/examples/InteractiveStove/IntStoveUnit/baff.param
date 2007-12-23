@@ -1,0 +1,16 @@
+STARCEL=./STAR/baffpoly.cel   // a *.cel file is required
+STARVRT=./STAR/baffpoly.vrt   // a *.vrt file is required
+STARUSR=./STAR/baffpoly.usr   // a *.usr file is required
+VECTORNAME=Velocity        // the columns of the *.usr file must be labeled
+SCALARNAME=Pressure         // the columns of the *.usr file must be labeled
+SCALARNAME=Temperature         // the columns of the *.usr file must be labeled
+ROTATEX=0      // optional: the x-rotation component (default = 0 degrees) 
+ROTATEY=0      // optional: the y-rotation component (default = 0 degrees)
+ROTATEZ=0      // optional: the z-rotation component (default = 0 degrees)
+TRANSLATEX=0   // optional: the x-translation component (default = 0 feet)
+TRANSLATEY=0   // optional: the y-translation component (default = 0 feet)
+TRANSLATEZ=0   // optional: the z-translation component (default = 0 feet)
+SCALEINDEX=1    // optional: uses integer indices defined in translateToVtk.cpp to set scale factor
+SCALEFACTOR=1.0  // optional: the scale factor (default = 1, unless SCALEINDEX > 1)
+WRITEOPTION=1 // optional: 0=let vtk write the file(default), 1=directly write ascii to disk
+OUTPUTFILENAME=flowdatapoly.vtk   // optional: specify the output file name

@@ -1,0 +1,5 @@
+#!/bin/csh -f
+translateToVtk 2 star.param /
+
+mergeVertices flowdata.vtk outFile1.vtk /
+

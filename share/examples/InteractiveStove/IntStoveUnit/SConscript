@@ -1,0 +1,57 @@
+##Builds BaffleUnit program
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir vtk_options osg_options xerces_options')
+
+srcs = Split("""
+   IntStoveUnit_client.cpp
+   IntStoveUnit_i.cpp
+   baffle.cpp
+   create_stove.cpp
+   inlet.cpp
+   stove.cpp
+""")
+
+headers = Split("""
+   IntStoveUnit_i.h
+   baffle.h
+   create_stove.h
+   inlet.h
+   stove.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
+lib_env.Append(LIBPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'open'),
+			  pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'open', 'xml'),
+			  pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'ce', 'unitwrapper'),
+                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'external', 'loki-0.1.6')])
+
+lib_env.Append(CPPPATH = [pj(os.getenv('VE_SUITE_HOME'), 'VE_XML', 'Framework'),
+			  pj(os.getenv('VE_SUITE_HOME'), buildDir),
+                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src'),
+	                  pj(os.getenv('VE_SUITE_HOME'), 'src'),
+	                  pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'open'),
+                          pj(os.getenv('VE_SUITE_HOME'), 'external', 'loki-0.1.6', 'include')])
+
+lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+lib_env.ParseConfig('flagpoll TAO --libs --cflags')
+
+osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+vtk_options.apply( lib_env )
+
+prog = ves_pkg.createProgram('IntStove', lib_env, installPrefix = LIBDIR)
+prog.addSources(srcs)
+prog.addHeaders(headers)
+prog.build()
+
+
+#if baseEnv['StaticOnly'] == "no":
+#   lib = ves_pkg.createStaticAndSharedLibrary('IntStove', lib_env, installPrefix = LIBDIR)
+#else:
+#   lib = ves_pkg.createStaticLibrary('IntStove', lib_env, installPrefix = LIBDIR)
+   
+

@@ -1,0 +1,8 @@
+1
+8
+   1 1 1 
+   0 0 0 
+   0 0 0
+   flowdata.vtk
+   ./POST_DATA       // precomputed data slice directory
+   ./JUNK

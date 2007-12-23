@@ -1,0 +1,39 @@
+##Builds WinClient program
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir PREFIX vtk_options osg_options xerces_options')
+
+srcs = Split("""
+   VEIntStovemod.cxx
+""")
+
+headers = Split("""
+   VEIntStovemod.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['ves_xplorer'])
+lib_env.Append(LIBPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'xplorer'),
+                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'external', 'loki-0.1.6')])
+
+lib_env.Append(CPPPATH = [pj(os.getenv('VE_SUITE_HOME'), 'src'),
+			  pj(os.getenv('VE_SUITE_HOME'), 'external', 'loki-0.1.6', 'include'),
+                          pj(os.getenv('VE_SUITE_HOME'), 'external', 'osgOQ', 'include')])
+
+lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
+lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
+lib_env.ParseConfig('flagpoll bullet --libs --cflags')
+
+vtk_options.apply( lib_env )
+osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+
+if baseEnv['StaticOnly'] == "no":
+   lib = ves_pkg.createStaticAndSharedLibrary('IntStovesGP', lib_env, installPrefix = LIBDIR)
+else:
+   lib = ves_pkg.createStaticLibrary('IntStovesGP', lib_env, installPrefix = LIBDIR)
+   
+lib.addSources(srcs)
+lib.addHeaders(headers,  pj( 'Plugins', 'GE'))
+lib.build()

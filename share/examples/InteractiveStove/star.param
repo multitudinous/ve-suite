@@ -1,0 +1,14 @@
+STARCEL=./STAR/star.cel   // a *.cel file is required
+STARVRT=./STAR/star.vrt   // a *.vrt file is required
+STARUSR=./STAR/star.usr   // a *.usr file is required
+VECTORNAME=Velocity        // the columns of the *.usr file must be labeled
+SCALARNAME=Pressure         // the columns of the *.usr file must be labeled
+SCALARNAME=Temperature         // the columns of the *.usr file must be labeled
+ROTATEX=0      // optional: the x-rotation component (default = 0 degrees) 
+ROTATEY=0      // optional: the y-rotation component (default = 0 degrees)
+ROTATEZ=0      // optional: the z-rotation component (default = 0 degrees)
+TRANSLATEX=0   // optional: the x-translation component (default = 0 feet)
+TRANSLATEY=0   // optional: the y-translation component (default = 0 feet)
+TRANSLATEZ=0   // optional: the z-translation component (default = 0 feet)
+WRITEOPTION=1 // optional: 0=let vtk write the file(default), 1=directly write ascii to disk
+OUTPUTFILENAME=flowdata.vtk   // optional: specify the output file name
