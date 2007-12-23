@@ -1,8 +1,12 @@
 ##Builds WinClient program
 import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR execOsgPatTag buildDir wxwidgets_options osg_options xerces_options')
+host_type = distutils.util.get_platform()
+
+Import('baseEnv ves_pkg LIBDIR buildDir wxwidgets_options osg_options xerces_options')
 
 srcs = Split("""
    IntStoves_UI_Dialog.cpp
@@ -35,11 +39,8 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )
 
-
-if baseEnv['StaticOnly'] == "no":
-   lib = ves_pkg.createStaticAndSharedLibrary('IntStovesUI', lib_env, installPrefix = LIBDIR)
-else:
-   lib = ves_pkg.createStaticLibrary('IntStovesUI', lib_env, installPrefix = LIBDIR)
+lib = ves_pkg.createSharedLibrary( 'InteractiveStoveUI', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'InteractiveStove', 'Plugins', 'UI', host_type ) ) 
    
 lib.addSources(srcs)
 lib.addHeaders(headers,  pj( 'Plugins', 'UI'))
