@@ -210,7 +210,9 @@ if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
          "xerces-c", "2.7", True, True)
 else:
-   xerces_options = SConsAddons.Options.Xerces.Xerces("xerces","1.0", True, True)
+   xerces_options = SConsAddons.Options.StandardPackageOption("xercesc",
+      "Xerces-C library options, default : xercesc_incdir=<xercesc>/include xercesc_libdir=<xercesc>/lib(64)", 
+      pj('xercesc','util','XercesVersion.hpp'), 'xerces-c', symbol="main", required=True)
    
 opts.AddOption( xerces_options )
 wxwidgets_options = None
