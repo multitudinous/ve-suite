@@ -273,28 +273,37 @@ else:
     boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
         "Boost.Filesystem", "1.33.1", True, True)
 
-vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
-
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
-                                               "gmtl", "0.5", True, True)
+                                             "gmtl", "0.5", True, True,
+                                             None,
+                                             compileTest=True, headerToCheck="gmtl/gmtl.h")
 
 vpr_options = fp_option.FlagPollBasedOption("Vapor",
-                                               "vpr", "2.0", True, True)
+                                            "vpr", "2.0", True, True,
+                                            None,
+                                            compileTest=True, headerToCheck="vpr/vpr.h")
 
 gadgeteer_options = fp_option.FlagPollBasedOption("Gadgeteer",
-                                               "gadgeteer", "1.0", True, True)
+                                                  "gadgeteer", "1.0", True, True,
+                                                  None,
+                                                  compileTest=True, headerToCheck="gadget/gadgetConfig.h")
 
-osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, None, True, headerToCheck=None)
+vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
+
+osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, 
+                                              None, 
+                                              True, headerToCheck=None)
 
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
 opts.AddOption( bullet_options )
 opts.AddOption( tao_options )
-opts.AddOption( vrjuggler_options )
 opts.AddOption( boost_options )
 opts.AddOption( gmtl_options )
 opts.AddOption( vpr_options )
 opts.AddOption( gadgeteer_options )
+# Test VR Juggler after all the rest of its dependencies
+opts.AddOption( vrjuggler_options )
 opts.AddOption( osgal_options )
 
 Export('opts', 'vtk_options', 'osg_options', 
