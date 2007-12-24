@@ -140,7 +140,6 @@ SceneManager::~SceneManager()
 
 #ifdef VE_SOUND
     delete m_sound;
-    osgAL::SoundManager::instance()->shutdown();
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -366,6 +365,13 @@ ves::xplorer::scenegraph::DCS* SceneManager::GetActiveSwitchNode()
 void SceneManager::SetBackgroundColor( std::vector< double > color )
 {
     m_clrNode->setClearColor( osg::Vec4( color.at( 0 ), color.at( 1 ), color.at( 2 ), 1.0f ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneManager::Shutdown()
+{
+#ifdef VE_SOUND
+    osgAL::SoundManager::instance()->shutdown();
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()

@@ -119,6 +119,9 @@ public:
     ///\param color the color to set the background color
     void SetBackgroundColor( std::vector< double > color );
 
+    ///Shutdown the sound manager and other extra engines used in the world
+    void Shutdown();
+    
     ///Reset the osgOQC node accessor
     ///Should be used when new ves files are loaded
     //void ResetOcclusionQueryContext();

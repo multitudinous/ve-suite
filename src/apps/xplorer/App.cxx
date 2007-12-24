@@ -361,6 +361,7 @@ void App::latePreFrame( void )
     //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
     if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
     {
+        ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
         VPR_PROFILE_RESULTS();
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel
