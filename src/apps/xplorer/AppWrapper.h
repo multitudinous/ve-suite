@@ -41,8 +41,6 @@ AppWrapper API
 */
 #include <vrj/vrjParam.h>
 
-#include <ves/xplorer/ThreadPtr.h>
-
 namespace ves
 {
 namespace xplorer
@@ -71,7 +69,6 @@ public:
 #elif __VJ_version == 2000003
     void init( void * );
 #endif
-    Thread* m_thread;///< the thread to run things in
 private:
     ves::xplorer::App* m_cfdApp;///< the app that is running
     bool m_jugglerIsRunning;///< is juggler running

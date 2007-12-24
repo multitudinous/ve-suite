@@ -37,7 +37,6 @@
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/Thread.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 

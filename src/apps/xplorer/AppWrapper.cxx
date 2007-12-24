@@ -33,7 +33,6 @@
 #include "AppWrapper.h"
 
 #include "App.h"
-#include <ves/xplorer/Thread.h>
 #include "VjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
@@ -50,7 +49,6 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
         m_argc( argc ),
         m_argv( argv ),
         m_vjObsWrapper( input ),
-        m_thread( 0 ),
         m_jugglerIsRunning( false )
 {
     //Setup the juggler kernel now
@@ -77,11 +75,6 @@ AppWrapper::AppWrapper( int argc,  char* argv[], VjObsWrapper* input ):
 ////////////////////////////////////////////////////////////////////////////////
 AppWrapper::~AppWrapper( void )
 {
-    if( m_thread )
-    {
-        delete m_thread;
-    }
-
     delete m_cfdApp;
     m_cfdApp = NULL;
 

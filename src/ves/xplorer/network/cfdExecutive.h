@@ -40,7 +40,6 @@ cfdExecutive API
 */
 
 #include <ves/xplorer/GlobalBase.h>
-#include <ves/xplorer/ThreadPtr.h>
 
 #include <vpr/Util/Singleton.h>
 

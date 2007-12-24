@@ -35,7 +35,6 @@
 //End TAO headers
 
 #include <ves/open/moduleS.h>
-//#include <tao/ORB.h>
 #include "AppWrapper.h"
 #include "VjObsWrapper.h"
 
@@ -44,7 +43,6 @@
 #include <vpr/System.h>
 #include <vrj/Kernel/Kernel.h>
 
-#include <ves/xplorer/Thread.h>
 #include <ves/VEConfig.h>
 using namespace ves::xplorer;
 

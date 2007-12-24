@@ -33,9 +33,7 @@
 #include "App.h"
 #include "VjObsWrapper.h"
 
-#ifdef _OSG
 #include <ves/xplorer/TextureBasedVizHandler.h>
-#endif
 
 #include <ves/xplorer/util/fileIO.h>
 
