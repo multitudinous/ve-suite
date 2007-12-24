@@ -38,8 +38,9 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <osgEphemeris/EphemerisModel>
-#include <osgEphemeris/GroundPlane>>
+
+#include <osgEphemeris/EphemerisModel.h>
+#include <osgEphemeris/GroundPlane.h>
 
 using namespace ves::xplorer::event;
 ////////////////////////////////////////////////////////////////

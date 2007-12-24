@@ -19,33 +19,36 @@
  -------------------------------------------------------------------------------
  */
 
-#include <time.h>
-#include <osgEphemeris/EphemerisUpdateCallback.h>
+#ifndef OSG_EPHEMERIS_PLANETS_DEF
+#define OSG_EPHEMERIS_PLANETS_DEF
+
+#include <osg/Group>
+#include <osgEphemeris/Export.h>
 #include <osgEphemeris/EphemerisData.h>
 
-class TimePassesCallback : public osgEphemeris::EphemerisUpdateCallback
+namespace osgEphemeris {
+
+/** \class Planets
+    \brief A container class which updates Planet position in the sky - used internally.
+    */
+
+class OSGEPHEMERIS_EXPORT Planets : public osg::Group
 {
     public:
-        TimePassesCallback(): EphemerisUpdateCallback( "TimePassesCallback" ),
-             _seconds(0)
-        {}
+        Planets();
 
-        void operator()( osgEphemeris::EphemerisData *data )
-        {
-             _seconds += 60;
-             struct tm *_tm = localtime(&_seconds);
-
-             data->dateTime.setYear( _tm->tm_year + 1900 );
-             data->dateTime.setMonth( _tm->tm_mon + 1 );
-             data->dateTime.setDayOfMonth( _tm->tm_mday + 1 );
-             data->dateTime.setHour( _tm->tm_hour );
-             data->dateTime.setMinute( _tm->tm_min );
-             data->dateTime.setSecond( _tm->tm_sec );
-        }
+        void update( osgEphemeris::EphemerisData * );
 
     private:
-        time_t _seconds;
+        osg::ref_ptr<osg::MatrixTransform> _mercuryTx;
+        osg::ref_ptr<osg::MatrixTransform> _venusTx;
+        osg::ref_ptr<osg::MatrixTransform> _marsTx;
+        osg::ref_ptr<osg::MatrixTransform> _jupiterTx;
+        osg::ref_ptr<osg::MatrixTransform> _saturnTx;
+        osg::ref_ptr<osg::MatrixTransform> _uranusTx;
+        osg::ref_ptr<osg::MatrixTransform> _neptuneTx;
 };
 
-osgEphemeris::EphemerisUpdateCallbackProxy<TimePassesCallback> _timePassesCallbackProxy;
+}
 
+#endif

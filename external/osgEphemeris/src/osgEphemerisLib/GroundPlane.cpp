@@ -1,16 +1,25 @@
-/* -*-c++-*- OpenSceneGraph - Ephemeris Model Copyright (C) 2005 Don Burns
- *
- * This library is open source and may be redistributed and/or modified under
- * the terms of the OpenSceneGraph Public License (OSGPL) version 0.0 or
- * (at your option) any later version.  The full license is in LICENSE file
- * included with this distribution, and on the openscenegraph.org website.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * OpenSceneGraph Public License for more details.
-*/
-#include <osgEphemeris/GroundPlane>
+/*
+ -------------------------------------------------------------------------------
+ | osgEphemeris - Copyright (C) 2007  Don Burns                                |
+ |                                                                             |
+ | This library is free software; you can redistribute it and/or modify        |
+ | it under the terms of the GNU Lesser General Public License as published    |
+ | by the Free Software Foundation; either version 3 of the License, or        |
+ | (at your option) any later version.                                         |
+ |                                                                             |
+ | This library is distributed in the hope that it will be useful, but         |
+ | WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  |
+ | or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public     |
+ | License for more details.                                                   |
+ |                                                                             |
+ | You should have received a copy of the GNU Lesser General Public License    |
+ | along with this software; if not, write to the Free Software Foundation,    |
+ | Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.               |
+ |                                                                             |
+ -------------------------------------------------------------------------------
+ */
+
+#include <osgEphemeris/GroundPlane.h>
 #include <osgDB/ReadFile>
 #include <osg/Texture2D>
 #include <osg/Image>
@@ -24,12 +33,12 @@
 
 using namespace osgEphemeris;
 
-GroundPlane::GroundPlane( double radius )
-:m_radius(radius),
-m_origin(-m_radius,-m_radius,0.0f),
-m_size(2.0*m_radius,2.0*m_radius,.1*m_radius),
-m_scaleDown(1.0f/m_size.x(),1.0f/m_size.y(),1.0f/m_size.z()),
-m_altitudeRange(0.0,m_size.z())
+GroundPlane::GroundPlane( double radius ):
+    m_radius(radius),
+    m_origin(-m_radius,-m_radius,0.0f),
+    m_size(2.0*m_radius,2.0*m_radius,.1*m_radius),
+    m_scaleDown(1.0f/m_size.x(),1.0f/m_size.y(),1.0f/m_size.z()),
+    m_altitudeRange(0.0,m_size.z())
 {
     _initializeSimpleTerrainGeneratorShader();
     UpdateBaseTerrainFromImage("Images/lz.rgb");
@@ -116,8 +125,8 @@ bool GroundPlane::UpdateBaseTerrainFromImage(std::string terrainImage)
 ///////////////////////////////////////////////////////////////////////////////////////
 void GroundPlane::_updateTerrainGrid(unsigned int imageWidth, unsigned int imageHeight)
 {
-    int width = 2*imageWidth;
-    int height = 2*imageHeight;
+    int width = imageWidth;/*testing multiply by factor of 2*/
+    int height = imageHeight;/*testing multiply by factor of 2*/
     float delta[2] = {0.0,0.0};
     delta[0] = m_size.x()/(float)(width-1);
     delta[1] = m_size.y()/(float)(height-1);
@@ -142,9 +151,9 @@ void GroundPlane::_updateTerrainGrid(unsigned int imageWidth, unsigned int image
 
     //specify vertecies
      
-    for(unsigned int rows = 0; rows < height-1; ++rows)
+    for(int rows = 0; rows < height-1; ++rows)
     {
-        for(unsigned int cols = 0; cols < width; ++cols)
+        for(int cols = 0; cols < width; ++cols)
         {
             verts->push_back(osg::Vec3(m_origin.x() + (cols)*delta[0], 
                                        m_origin.y() + (rows+1)*delta[1], 
@@ -207,16 +216,16 @@ void GroundPlane::_initializeSimpleTerrainGeneratorShader()
                "\n"
                "vec4 texture2D_bilinear( sampler2D tex, vec2 uv )\n"
                "{\n"
-	       "    vec2 f;// = fract( uv.xy * textureSize );\n"
-	       "    f.x = fract( uv.x * textureSize.x );\n"
-	       "    f.y = fract( uv.y * textureSize.y );\n"
-	       "    vec4 t00 = texture2D( tex, uv );\n"
-	       "    vec4 t10 = texture2D( tex, uv + vec2( texelSize.x, 0.0 ));\n"
-	       "    vec4 tA = mix( t00, t10, f.x );\n"
-	       "    vec4 t01 = texture2D( tex, uv + vec2( 0.0, texelSize.y ) );\n"
-	       "    vec4 t11 = texture2D( tex, uv +  texelSize );\n"
-	       "    vec4 tB = mix( t01, t11, f.x );\n"
-	       "    return mix( tA, tB, f.y );\n"
+           "    vec2 f;// = fract( uv.xy * textureSize );\n"
+           "    f.x = fract( uv.x * textureSize.x );\n"
+           "    f.y = fract( uv.y * textureSize.y );\n"
+           "    vec4 t00 = texture2D( tex, uv );\n"
+           "    vec4 t10 = texture2D( tex, uv + vec2( texelSize.x, 0.0 ));\n"
+           "    vec4 tA = mix( t00, t10, f.x );\n"
+           "    vec4 t01 = texture2D( tex, uv + vec2( 0.0, texelSize.y ) );\n"
+           "    vec4 t11 = texture2D( tex, uv +  texelSize );\n"
+           "    vec4 tB = mix( t01, t11, f.x );\n"
+           "    return mix( tA, tB, f.y );\n"
                "}\n"
                "float greyscale(vec3 rgbColor)\n"
                "{\n"

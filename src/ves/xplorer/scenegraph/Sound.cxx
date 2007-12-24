@@ -118,7 +118,8 @@ void Sound::Draw()
 
     osg::ref_ptr< osg::TessellationHints > hints = new osg::TessellationHints();
     hints->setDetailRatio( 0.5f );
-    m_soundGeode->addDrawable( new osg::ShapeDrawable( new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
+    m_soundGeode->addDrawable( new osg::ShapeDrawable( 
+        new osg::Sphere( osg::Vec3( 0.0f, 0.0f, 0.0f ), 10 ), hints.get() ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::LoadFile( const std::string fileName )
@@ -151,7 +152,8 @@ void Sound::LoadFile( const std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::PushSoundEvent( int priority )
 {
-    osg::ref_ptr< osgAL::SoundState > temp = new osgAL::SoundState( "temp", m_soundManager );
+    osg::ref_ptr< osgAL::SoundState > temp = 
+        new osgAL::SoundState( "temp", m_soundManager );
     temp->setSample( m_sample.get() );
     temp->setPosition( m_soundState->getPosition() );
     temp->setSoundCone( 0.0, 360.0, 1.0 );

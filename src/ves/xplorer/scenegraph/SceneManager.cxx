@@ -145,20 +145,32 @@ SceneManager::~SceneManager()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::InitScene()
 {
-    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
+    std::cout << 
+        "|  1. Initializing.................................... SceneManager |" 
+        << std::endl;
 
     rootNode = new ves::xplorer::scenegraph::Group();
     rootNode->SetName( "Root Node" );
     rootNode->setThreadSafeRefUnref( true );
 
 #ifdef VE_SOUND
-    osgAL::SoundManager::instance()->init( 32 );
-    osgAL::SoundManager::instance()->getEnvironment()->setDistanceModel( openalpp::InverseDistance );
-    osgAL::SoundManager::instance()->getEnvironment()->setDopplerFactor( 1 );
-
-    osg::ref_ptr< osgAL::SoundRoot > soundRoot = new osgAL::SoundRoot();
-    soundRoot->setName( "Sound Root" );
-    rootNode->addChild( soundRoot.get() );
+    try
+    {
+        osgAL::SoundManager::instance()->init( 32 );
+        osgAL::SoundManager::instance()->getEnvironment()->
+            setDistanceModel( openalpp::InverseDistance );
+        osgAL::SoundManager::instance()->getEnvironment()->
+            setDopplerFactor( 1 );
+        
+        osg::ref_ptr< osgAL::SoundRoot > soundRoot = new osgAL::SoundRoot();
+        soundRoot->setName( "Sound Root" );
+        rootNode->addChild( soundRoot.get() );
+    }
+    catch( ... )
+    {
+        std::cerr << "|\tosgAL::SoundManager is unable to initialize." 
+            << std::endl;
+    }
 #endif
 
     worldDCS = new ves::xplorer::scenegraph::DCS();
@@ -258,7 +270,6 @@ void SceneManager::ViewLogo( bool trueFalse )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::_createLogo()
 {
-#ifdef _OSG
     if( !_logoSwitch )
     {
         _logoSwitch = new ves::xplorer::scenegraph::Switch();
@@ -275,11 +286,16 @@ void SceneManager::_createLogo()
         _logoNode->SetQuat( quat );
         _logoNode->SetScaleArray( scale );
 
-        //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( BlueArrow(), _logoNode.get(), true, false );
-        //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( GreyArrow(), _logoNode.get(), true, false );
-        //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( OrangeArrow(), _logoNode.get(), true, false );
-        m_veText = new ves::xplorer::scenegraph::CADEntity( VE(), _logoNode.get(), true, false );
-        m_suiteText = new ves::xplorer::scenegraph::CADEntity( Suite(), _logoNode.get(), true, false );
+        //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
+        //    BlueArrow(), _logoNode.get(), true, false );
+        //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( 
+        //    GreyArrow(), _logoNode.get(), true, false );
+        //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( 
+        //    OrangeArrow(), _logoNode.get(), true, false );
+        m_veText = new ves::xplorer::scenegraph::CADEntity( 
+            VE(), _logoNode.get(), true, false );
+        m_suiteText = new ves::xplorer::scenegraph::CADEntity( 
+            Suite(), _logoNode.get(), true, false );
 
         char phong_vertex[] =
             "varying vec4 color; \n"
@@ -333,7 +349,6 @@ void SceneManager::_createLogo()
 
         stateset->setAttribute( program.get() );
     }
-#endif //_OSG
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::SetActiveSwitchNode( int activeNode )

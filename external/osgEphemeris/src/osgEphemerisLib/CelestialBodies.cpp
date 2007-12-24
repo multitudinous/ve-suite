@@ -24,7 +24,7 @@
  * Boston, MA  02111-1307, USA.
  *
  **************************************************************************/
-#include <osgEphemeris/CelestialBodies>
+#include <osgEphemeris/CelestialBodies.h>
 #include <osg/Math>
 
 

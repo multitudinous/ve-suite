@@ -8,7 +8,8 @@ DIRS = \
     osgEphemerisPlugin\
     Gui\
     CallbackExample\
-    Viewer\
+
+#    Viewer\
 
 
 include $(DWMAKE)/makedirrules
