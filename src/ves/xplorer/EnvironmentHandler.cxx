@@ -74,6 +74,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <osgEphemeris/EphemerisModel.h>
+
 #include <osg/Vec3f>
 #include <osg/BoundingSphere>
 #include <osg/Group>
