@@ -2,15 +2,6 @@
 #define GL_ENGINE_H
 
 #include <wx/glcanvas.h>
-#include <GL/glut.h>
-
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <ostream>
-#include <stdlib.h>
-#include <stdio.h>
-#include <vector>
 
 class IntStoves_UI_Dialog;
 

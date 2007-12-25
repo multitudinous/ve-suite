@@ -1,10 +1,24 @@
 #include "GL_Engine.h"
 #include "IntStoves_UI_Dialog.h"
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#include <OpenGL/gl.h>
+#include <GLUT/glut.h>
+#else
 #include <GL/glu.h>
 #include <GL/gl.h>
-#include "wx/wx.h"
-#include "wx/sizer.h"
+#include <GL/glut.h>
+#endif
+#include <wx/wx.h>
+#include <wx/sizer.h>
 #include <iostream>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <ostream>
+#include <cstdlib>
+#include <cstdio>
+#include <vector>
 
 #include <ves/open/xml/DataValuePair.h>
 
@@ -12,18 +26,17 @@ BEGIN_EVENT_TABLE(GL_Engine, wxGLCanvas)
   EVT_MOUSE_EVENTS  (GL_Engine::_onMouse)
   EVT_PAINT         (GL_Engine::OnPaint)
 END_EVENT_TABLE()
-/*
-#ifdef (__linux__)
-#define _itoa _itoa
-char* _itoa(int value, char* str, int radix);
-#endif
-*/
 
 ///////////////
 //Constructor//
 ///////////////
 GL_Engine::GL_Engine(wxWindow* parent, wxWindowID id, int* attrlist, const wxPoint& pos, const wxSize& size, long style, const wxString& name)
-	:wxGLCanvas(parent, id, attrlist, pos, size, style, name)
+:
+#ifndef __WXMAC__
+    wxGLCanvas(parent, id, attrlist, pos, size, style, name)
+#else
+    wxGLCanvas( parent, id, pos, size, style, name, attrlist )
+#endif
 {
     for (int i=0; i<2; i++)
     {
@@ -36,8 +49,11 @@ GL_Engine::GL_Engine(wxWindow* parent, wxWindowID id, int* attrlist, const wxPoi
 
     gluOrtho2D(0.0, 53.0, 0.0, 39.0);
 
+#ifndef __WXMAC__
     m_glContext = new wxGLContext(this);
-
+#else
+    m_glContext = GetContext();
+#endif
     m_dialog = dynamic_cast< IntStoves_UI_Dialog* >( parent );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -366,7 +382,11 @@ void GL_Engine::_onMouse(wxMouseEvent& event)
 	    ypos2 = 600 - ypos2;
         xPoint = xpos2;
         yPoint = ypos2;
+#ifndef __WXMAC__
 	    SetCurrent( *GetContext() );
+#else
+        SetCurrent();
+#endif
         _checkForMouseHitsOne( xpos2, ypos2 );
 
         SwapBuffers();
@@ -382,7 +402,11 @@ void GL_Engine::_onMouse(wxMouseEvent& event)
             xLine = (x/400) - 1;
             yLine = (y/300) - 1;
 
+#ifndef __WXMAC__
             SetCurrent( *GetContext() );
+#else
+            SetCurrent();
+#endif
             glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
             _draw();
             for ( int i=0; i<m_dialog->GetNumBaffles(); i++ )
@@ -405,7 +429,11 @@ void GL_Engine::_onMouse(wxMouseEvent& event)
 	    ypos2 = 600 - ypos2;
         xPoint = xpos2;
         yPoint = ypos2;
+#ifndef __WXMAC__
 	    SetCurrent( *GetContext() );
+#else
+        SetCurrent();
+#endif
         _checkForMouseHitsTwo( xpos2, ypos2 );
 
         if(	actpt2[0] == actpt1[0] && actpt2[1] == actpt1[1] )
@@ -428,7 +456,11 @@ void GL_Engine::_onMouse(wxMouseEvent& event)
 void GL_Engine::OnPaint(wxPaintEvent& WXUNUSED(event) )
 {
     wxPaintDC dc(this);
+#ifndef __WXMAC__
     SetCurrent( *GetContext() );
+#else
+    SetCurrent();
+#endif
     _draw();
     for( size_t i=0; i<7; ++i )
     {   

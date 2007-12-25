@@ -23,9 +23,9 @@ fileBundle.addFiles( rgbFile )
 fileBundle.addFiles( 'interactivestove.ves' )
 
 InteractiveStoveSubdirs = Split("""
-    InteractiveStoveGP
-    InteractiveStoveUI
-    InteractiveStoveUnit
+    IntStoveModel
+    IntStovePlugin
+    IntStoveUnit
 """)
 
 ##Run SConscript files in all of these folders.

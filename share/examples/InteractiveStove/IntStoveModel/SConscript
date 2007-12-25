@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('baseEnv ves_pkg LIBDIR buildDir vtk_options osg_options xerces_options')
+Import('RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options bullet_options osg_options xerces_options')
 
 srcs = Split("""
    VEIntStovemod.cxx
@@ -17,25 +17,26 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['ves_xplorer'])
-lib_env.Append(LIBPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'xplorer'),
-                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'external', 'loki-0.1.6')])
+lib_env. AppendUnique( LIBS = [ 'ves_xplorer',
+                         'ves_xplorer_scenegraph' ] )
+lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
+		            pj('#', buildDir, 'src','ves','xplorer','scenegraph') ] )
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
-lib_env.Append(CPPPATH = [pj(os.getenv('VE_SUITE_HOME'), 'src'),
-			                 pj(os.getenv('VE_SUITE_HOME'), 'external', 'loki-0.1.6', 'include'),
-                          pj(os.getenv('VE_SUITE_HOME'), 'external', 'osgOQ', 'include')])
-
-lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
-lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll bullet --libs --cflags')
 
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
+boost_options.apply( lib_env )
+bullet_options.apply( lib_env )
+
+if GetPlatform() == 'darwin':
+   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace'
+   lib_env['SHLIBSUFFIX'] = '.dylib'
 
 lib = ves_pkg.createSharedLibrary( 'InteractiveStoveGP', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'InteractiveStove', 'Plugins', 'GE', host_type ) ) 
 
 lib.addSources(srcs)
-lib.addHeaders(headers,  pj( 'Plugins', 'GE'))
 lib.build()

@@ -10,8 +10,7 @@
 #include <iomanip>
 #include <fstream>
 #include <ostream>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
 #include <vector>
 
 #include <wx/dc.h>
@@ -22,6 +21,9 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
+namespace tb = TimeBase;
+
+#include "GL_Engine.h"
 
 using namespace std;
 
@@ -52,7 +54,7 @@ IntStoves_UI_Dialog
   vector<double>* baffle5,
   vector<double>* baffle6,
   vector<double>* baffle7)
-: UIDialog((wxWindow *) parent, id, "IntStoves"),
+: UIDialog( (wxWindow *) parent, id, _("IntStoves") ),
   p_numbaffles(numbaffles),
   p_baffle1(baffle1),
   p_baffle2(baffle2),
@@ -127,9 +129,9 @@ void IntStoves_UI_Dialog::_buildPage()
 
   for ( int i=0; i<7; i++ )
   {
-    wxString temp = "Baffle Number ";
+    wxString temp( _("Baffle Number " ) );
 	temp << (i+1);
-    _baff[i] = new wxStaticBox(this,-1, wxT(temp));
+    _baff[i] = new wxStaticBox(this,-1, temp );
     _baffGroup[i] = new wxStaticBoxSizer(_baff[i],wxHORIZONTAL);
 	_startposx[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
 	_startposy[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
@@ -157,7 +159,7 @@ void IntStoves_UI_Dialog::_buildPage()
   attribList[ 3 ] = 8;
   attribList[ 4 ] = int( WX_GL_DOUBLEBUFFER );
   attribList[ 5 ] = WX_GL_RGBA;
-  _designCanvas = new GL_Engine(this, -1, attribList, wxPoint(0,0), wxSize(800,600), wxSUNKEN_BORDER, "Stove Design Canvas");
+  _designCanvas = new GL_Engine(this, -1, attribList, wxPoint(0,0), wxSize(800,600), wxSUNKEN_BORDER, _("Stove Design Canvas") );
 
   delete [] attribList;
 
@@ -353,7 +355,11 @@ void IntStoves_UI_Dialog::_onAddBaff()
 				txt << _designCanvas->actpt1[1] - _designCanvas->actpt2[1];
 				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
 			}
-			_designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
+#ifndef __WXMAC__
+            _designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
+#else
+            _designCanvas->SetCurrent();
+#endif
 			_designCanvas->_drawNewBaffle();
 			_designCanvas->SwapBuffers();
 			actbaffdrawn[(m_numbaffles)-1] = true;
@@ -368,11 +374,15 @@ void IntStoves_UI_Dialog::_reDrawBaff(int index)
 {
     if( m_numbaffles > 0 )
     {
-	_designCanvas->_reDrawBaffle(atoi(_startposx[index]->GetValue()),
-									atoi(_startposy[index]->GetValue()),
-										atoi(_direction[index]->GetValue()),
-											atoi(_length[index]->GetValue()),
-                                                index);	
+        long int temp1;
+        _startposx[index]->GetValue().ToLong( &temp1 );
+        long int temp2;
+        _startposy[index]->GetValue().ToLong( &temp2 );
+        long int temp3;
+        _direction[index]->GetValue().ToLong( &temp3 );
+        long int temp4;
+        _length[index]->GetValue().ToLong( &temp4 );
+        _designCanvas->_reDrawBaffle( temp1, temp2, temp3, temp4, index);	
     }
 }
 
@@ -395,11 +405,21 @@ void IntStoves_UI_Dialog::SetDepth( wxSpinEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_removeBaff(int index)
 {
+#ifndef __WXMAC__
 	_designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
-	_designCanvas->_removeBaffle(atoi(_startposx[index]->GetValue()),
-									atoi(_startposy[index]->GetValue()),
-										atoi(_direction[index]->GetValue()),
-											atoi(_length[index]->GetValue()));
+#else
+	_designCanvas->SetCurrent();
+#endif
+    long int temp1;
+    _startposx[index]->GetValue().ToLong( &temp1 );
+    long int temp2;
+    _startposy[index]->GetValue().ToLong( &temp2 );
+    long int temp3;
+    _direction[index]->GetValue().ToLong( &temp3 );
+    long int temp4;
+    _length[index]->GetValue().ToLong( &temp4 );
+    _designCanvas->_removeBaffle( temp1, temp2, temp3, temp4 );	
+
 	_designCanvas->SwapBuffers();
 
 	_startposx[index]->Clear();
@@ -427,7 +447,7 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
         number << tempNum;
         _removebafCombo->Append(number);
     }
-    _removebafCombo->SetValue("Select the Baffle to Remove");
+    _removebafCombo->SetValue( _("Select the Baffle to Remove") );
 
 	static bool test = false;
 	int flag = 0;
@@ -446,7 +466,11 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
 	temp.SetHeight( temp.GetHeight()+flag );
 	temp.SetWidth( temp.GetWidth()+flag );
 	SetSize( temp );
+#ifndef __WXMAC__
 	_designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
+#else
+	_designCanvas->SetCurrent();
+#endif
 	_designCanvas->_draw();  
   
 	for ( int i=0; i<m_numbaffles; i++ )
@@ -491,11 +515,11 @@ void IntStoves_UI_Dialog::_reOrganizeBaffs()
 	{
 		if ( i >= (m_numbaffles) )
 		{
-			_startposx[i]->SetValue( "0" );
-			_startposy[i]->SetValue( "0" );
-			_direction[i]->SetValue( "0" );
-			_length[i]->SetValue( "0" );
-			_depth[i]->SetValue( "1" );
+			_startposx[i]->SetValue( _("0") );
+			_startposy[i]->SetValue( _("0") );
+			_direction[i]->SetValue( _("0") );
+			_length[i]->SetValue( _("0") );
+			_depth[i]->SetValue( _("1") );
 
 			_baff[i]->Enable( false );
 			_startposx[i]->Enable( false );
@@ -511,22 +535,30 @@ void IntStoves_UI_Dialog::_reOrganizeBaffs()
 ///////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetStartX(int index)
 {
-    return atoi(_startposx[index]->GetValue());
+    long int temp1;
+    _startposx[index]->GetValue().ToLong( &temp1 );
+    return temp1;
 }
 ///////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetStartY( int index )
 {
-    return atoi(_startposy[index]->GetValue());
+    long int temp1;
+    _startposy[index]->GetValue().ToLong( &temp1 );
+    return temp1;
 }
 ///////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetDirection( int index )
 {
-    return atoi(_direction[index]->GetValue());
+    long int temp1;
+    _direction[index]->GetValue().ToLong( &temp1 );
+    return temp1;
 }
 ///////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetLength( int index )
 {
-    return atoi(_length[index]->GetValue());
+    long int temp1;
+    _length[index]->GetValue().ToLong( &temp1 );
+    return temp1;
 }
 ///////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetDepth( int index )
@@ -565,14 +597,19 @@ void IntStoves_UI_Dialog::UpdateParams(wxCommandEvent& event)
 
 	vector<double> temp[7];
 
+    long int temp1;
 	for ( int i=0; i<7; i++ )
 	{
 		temp[i].clear();
-		temp[i].push_back(atoi(_startposx[i]->GetValue()));
-		temp[i].push_back(atoi(_startposy[i]->GetValue()));
-		temp[i].push_back(atoi(_direction[i]->GetValue()));
-		temp[i].push_back(atoi(_length[i]->GetValue()));
-		temp[i].push_back(_depth[i]->GetValue());
+        _startposx[i]->GetValue().ToLong( &temp1 );
+		temp[i].push_back(temp1);
+        _startposy[i]->GetValue().ToLong( &temp1 );
+		temp[i].push_back( temp1 );
+        _direction[i]->GetValue().ToLong( &temp1 );
+		temp[i].push_back( temp1 );
+        _length[i]->GetValue().ToLong( &temp1 );
+		temp[i].push_back( temp1 );
+		temp[i].push_back( _depth[i]->GetValue() );
 	}
 
 	(*p_baffle1).clear();

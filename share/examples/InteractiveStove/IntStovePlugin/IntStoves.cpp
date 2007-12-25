@@ -1,11 +1,3 @@
-
-#ifdef WIN32
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4101)
-#pragma warning(disable : 4503)
-#pragma warning(disable : 4251)
-#endif
-
 #include "IntStoves.h"
 #include "IntStoves_UI_Dialog.h"
 #include "plancha.xpm"
@@ -13,8 +5,6 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <wx/dc.h>
-
-
 
 IMPLEMENT_DYNAMIC_CLASS(IntStoves, UIPluginBase)
 
@@ -45,7 +35,7 @@ IntStoves
   poly[2]=wxPoint(icon_w,icon_h);
   poly[3]=wxPoint(0,icon_h);
 
-  name = "IntStoves";
+  name = _("IntStoves");
 }
 
 
@@ -141,20 +131,20 @@ ves::conductor::UIDialog* IntStoves::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetName()
 {
-  wxString result="IntStoves"; //your name
+  wxString result( _("IntStoves") ); //your name
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetDesc()
 {
-  wxString result="IntStoves"; //your description
+  wxString result( _("IntStoves") ); //your description
 
   return result;
 }
 ///////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetConductorName()
 {         
-   wxString result="IntStoves";
+   wxString result( _("IntStoves") );
    return result;
 }

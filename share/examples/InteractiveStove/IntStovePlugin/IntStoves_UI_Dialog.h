@@ -1,5 +1,6 @@
 #ifndef IntStoves_UI_DIALOG_H
 #define IntStoves_UI_DIALOG_H
+#include <wx/spinctrl.h>
 
 #include <ves/conductor/UIDialog.h>
 
@@ -8,10 +9,6 @@
 
 #include <vector>
 #include <string>
-//#include <wx/wx.h>
-#include <wx/glcanvas.h>
-#include <wx/spinctrl.h>
-#include "GL_Engine.h"
 
 class wxComboBox;
 class wxButton;
@@ -31,6 +28,8 @@ namespace util
 }
 }
 }
+
+class GL_Engine;
 
 using namespace std;
 
