@@ -282,6 +282,11 @@ void GL_Engine::_checkForMouseHitsTwo(int xpos, int ypos)
 ///////////////////////////////////////////////////////////////////////////////
 void GL_Engine::_drawNewBaffle()
 {
+#ifndef __WXMAC__
+    SetCurrent( *(_designCanvas->GetContext()) );
+#else
+    SetCurrent();
+#endif
     glLineWidth(2.0);
     glColor3f(0.0, 0.0, 1.0);
     glBegin(GL_LINES);
@@ -289,6 +294,8 @@ void GL_Engine::_drawNewBaffle()
 	    glVertex2f(gridptsx[actpt2[0]], gridptsy[actpt2[1]]);
     glEnd();
     glFlush();
+    
+    SwapBuffers();
 
     actpt1[0] = -1;
     actpt1[1] = -1;
@@ -320,6 +327,11 @@ void GL_Engine::_removeBaffle(int x, int y, int direction, int length)
 		y2 = y - length;
 	}
 
+#ifndef __WXMAC__
+	SetCurrent( *(_designCanvas->GetContext()) );
+#else
+	SetCurrent();
+#endif
 	glPointSize(4.0);
 	glLineWidth(2.0);
 	glColor3f(0.0, 1.0, 0.0);
@@ -331,6 +343,8 @@ void GL_Engine::_removeBaffle(int x, int y, int direction, int length)
 		glVertex2f(gridptsx[x], gridptsy[y]);
 		glVertex2f(gridptsx[x2], gridptsy[y2]);
 	glEnd();
+	
+    SwapBuffers();
 }
 
 void GL_Engine::_reDrawBaffle(int x, int y, int direction, int length, int index)

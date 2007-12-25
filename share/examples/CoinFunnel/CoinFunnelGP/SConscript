@@ -28,7 +28,7 @@ xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 
 if GetPlatform() == 'darwin':
-   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
+   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace'
    lib_env['SHLIBSUFFIX'] = '.dylib'
 
 lib = ves_pkg.createSharedLibrary( 'CoinFunnelGP', lib_env,

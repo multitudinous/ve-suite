@@ -1,5 +1,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
+#include "GL_Engine.h"
+
 #include "IntStoves_UI_Dialog.h"
 
 #include <ves/open/xml/DataValuePair.h>
@@ -10,7 +12,6 @@
 #include <iomanip>
 #include <fstream>
 #include <ostream>
-#include <cstdlib>
 #include <vector>
 
 #include <wx/dc.h>
@@ -21,9 +22,6 @@
 #include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
-namespace tb = TimeBase;
-
-#include "GL_Engine.h"
 
 using namespace std;
 
@@ -355,15 +353,8 @@ void IntStoves_UI_Dialog::_onAddBaff()
 				txt << _designCanvas->actpt1[1] - _designCanvas->actpt2[1];
 				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
 			}
-#ifndef __WXMAC__
-            _designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
-#else
-            _designCanvas->SetCurrent();
-#endif
 			_designCanvas->_drawNewBaffle();
-			_designCanvas->SwapBuffers();
 			actbaffdrawn[(m_numbaffles)-1] = true;
-
 		}
 		_rebuildActBaffSel();
 
@@ -405,11 +396,6 @@ void IntStoves_UI_Dialog::SetDepth( wxSpinEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_removeBaff(int index)
 {
-#ifndef __WXMAC__
-	_designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
-#else
-	_designCanvas->SetCurrent();
-#endif
     long int temp1;
     _startposx[index]->GetValue().ToLong( &temp1 );
     long int temp2;
@@ -419,8 +405,6 @@ void IntStoves_UI_Dialog::_removeBaff(int index)
     long int temp4;
     _length[index]->GetValue().ToLong( &temp4 );
     _designCanvas->_removeBaffle( temp1, temp2, temp3, temp4 );	
-
-	_designCanvas->SwapBuffers();
 
 	_startposx[index]->Clear();
 	_startposy[index]->Clear();

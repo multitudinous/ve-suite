@@ -1,4 +1,4 @@
-#include "src/ves/open/moduleC.h"
+#include <ves/open/moduleC.h>
 #include <orbsvcs/CosNamingC.h>
 
 #include <orbsvcs/CosNamingC.h>

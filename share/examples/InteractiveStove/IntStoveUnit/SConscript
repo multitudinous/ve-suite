@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('baseEnv ves_pkg LIBDIR buildDir vtk_options osg_options xerces_options')
+Import('ves_pkg buildDir RootDir vtk_options osg_options xerces_options tao_options')
 
 srcs = Split("""
    IntStoveUnit_client.cpp
@@ -27,21 +27,14 @@ headers = Split("""
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
-lib_env.Append(LIBPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'open'),
-			                 pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'open', 'xml'),
-			                 pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'ce', 'unitwrapper'),
-                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'external', 'loki-0.1.6')])
+lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
+			                 pj(RootDir, buildDir, 'src', 'ves', 'open', 'xml'),
+			                 pj(RootDir, buildDir, 'src', 'ves', 'ce', 'unitwrapper'),
+                          pj(RootDir, buildDir, 'external', 'loki-0.1.6')])
 
-lib_env.Append(CPPPATH = [pj(os.getenv('VE_SUITE_HOME'), buildDir),
-                          pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src'),
-	                       pj(os.getenv('VE_SUITE_HOME'), 'src'),
-	                       pj(os.getenv('VE_SUITE_HOME'), buildDir, 'src', 'ves', 'open'),
-                          pj(os.getenv('VE_SUITE_HOME'), 'external', 'loki-0.1.6', 'include')])
+lib_env.Append(CPPPATH = [pj(RootDir, 'external', 'loki-0.1.6', 'include')])
 
-lib_env.ParseConfig('flagpoll vrjuggler --libs --cflags')
-lib_env.ParseConfig('flagpoll Boost.Filesystem --libs --cflags')
-lib_env.ParseConfig('flagpoll TAO --libs --cflags')
-
+tao_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
@@ -50,5 +43,4 @@ prog = ves_pkg.createProgram('IntStoveUnit', lib_env,
           installPrefix = pj( 'share', 'vesuite', 'examples', 'InteractiveStove', 'Plugins', 'Unit', host_type ))
 
 prog.addSources(srcs)
-prog.addHeaders(headers)
 prog.build()
