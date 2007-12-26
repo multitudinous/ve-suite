@@ -77,6 +77,14 @@ HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
     m_currentNodeId = m_rootId;
     SetItemImage( m_rootId, 2, wxTreeItemIcon_Expanded );
     SetItemFont( m_rootId, *wxITALIC_FONT );
+
+    //Default Icons
+    defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
+    defaultIconMap[ "isosurface.xpm" ] = wxImage( isosurface_xpm );
+    defaultIconMap[ "ROItb.xpm" ] = wxImage( ROItb_xpm );
+    defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
+    defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
+    defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
 HierarchyTree::~HierarchyTree()
@@ -252,15 +260,42 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
    wxTreeItemId selected = SearchTree(root, id);
    if( selected.IsOk() )
    {
+      //Try and find default icons if needed
+      std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
+      if( iter != defaultIconMap.end() )
+      {
+          AddtoImageList( wxBitmap( wxBitmap( 
+              iter->second ).ConvertToImage().Rescale(32, 32)));
+          SetItemImage(selected, images->GetImageCount()-1);
+          return;
+      }
+
       std::string fullPath = "2DIcons/" + path + ".jpg";
       std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
       std::map< std::string, char** >::iterator aspenIconIter;
+      aspenIconIter = aspenPlusIconMap.find( fullPath );
       if( aspenIconIter != aspenPlusIconMap.end() )
       {
-			AddtoImageList( wxBitmap( wxBitmap( 
-                aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+         AddtoImageList( wxBitmap( wxBitmap( 
+            aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+          SetItemImage(selected, images->GetImageCount()-1);
       }
-      SetItemImage(selected, images->GetImageCount()-1);
+      else
+      {
+          //Now see if the user has any jpgs in
+          //the 2DIcons directory for the application
+          std::ifstream exists( fullPath.c_str() );
+          if( exists.fail() )
+          {
+              return;
+          }
+		  wxImage image;
+          image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ),
+             wxBITMAP_TYPE_JPEG );
+          AddtoImageList( wxBitmap( wxBitmap( image ).ConvertToImage().Rescale(32, 32)));
+          SetItemImage(selected, images->GetImageCount()-1);
+      }
+      return;
    }
 }
 ///////////////////////////////////////////////////////////////////////////////

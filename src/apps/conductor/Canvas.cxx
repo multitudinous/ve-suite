@@ -93,7 +93,6 @@ lrintf( float flt )
 BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
     EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
-    EVT_MENU( IconChooser::OK, Canvas::OnChangeIcon )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -357,11 +356,6 @@ void Canvas::Update()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::OnDelMod( wxCommandEvent& event )
-{
-    ::wxPostEvent( parent, event );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Canvas::OnChangeIcon( wxCommandEvent& event )
 {
     ::wxPostEvent( parent, event );
 }

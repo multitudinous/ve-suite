@@ -111,6 +111,7 @@ protected:
     wxTreeItemId m_currentNodeId;
     Canvas* m_canvas;
     wxImageList *images;
+    std::map< std::string, wxImage > defaultIconMap;
 
     std::string ConvertUnicode( const wxChar* data )
     {

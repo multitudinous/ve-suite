@@ -160,7 +160,8 @@ void IconChooser::WxButtonClick( wxCommandEvent& event )
     //wxString id;
     //id.Printf("%d", event.GetId());
     //WxEdit->SetValue(id);
-    WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
+    //WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
+    WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str() ) );
     //thePlugin->SetImageIcon(iconPaths[event.GetId()]);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -189,8 +190,9 @@ void IconChooser::okButtonClick( wxCommandEvent& event )
     iconInfo.first = thePlugin->GetID();
     iconInfo.second  = ConvertUnicode( WxEdit->GetValue().c_str() );
     event.SetClientData( &iconInfo );
-    ::wxPostEvent( canvas, event);
+    ::wxPostEvent( canvas->GetParent(), event);
     this->canvas->Refresh();
+	//Show(false);
     Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -299,7 +301,7 @@ void IconChooser::InitializeAspenIcons()
     int vCount = 0;
     int xLoc = 0;
     int yLoc = 0;
-    maxRows = 6;
+    maxRows = 5;
     wxPanel* WxNoteBookPage = 0;
     //button size and # of columns is fixed
     SetSize( 640, maxRows*80 + 125 );
@@ -367,14 +369,22 @@ void IconChooser::InitializeAspenIcons()
         {
             maxRows = vCount + 1;
             //button size and # of columns is fixed
-            SetSize( 640, maxRows*80 + 125 );
+            /*SetSize( 640, maxRows*80 + 125 );
             //WxPanel->SetSize(640, maxRows*80+50);
             WxNotebook->SetSize( 635, maxRows*80 + 25 );
             WxEdit->SetPosition( wxPoint( 10, maxRows*80 + 30 ) );
             WxChoice->SetPosition( wxPoint( 325, maxRows*80 + 30 ) );
             okButton->SetPosition( wxPoint( 450, maxRows*80 + 30 ) );
-            cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );
+            cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );*/
         }
     }
+        //button size and # of columns is fixed
+        SetSize( 640, maxRows*80 + 125 );
+        //WxPanel->SetSize(640, maxRows*80+50);
+        WxNotebook->SetSize( 635, maxRows*80 + 25 );
+        WxEdit->SetPosition( wxPoint( 10, maxRows*80 + 30 ) );
+        WxChoice->SetPosition( wxPoint( 325, maxRows*80 + 30 ) );
+        okButton->SetPosition( wxPoint( 450, maxRows*80 + 30 ) );
+        cancelButton->SetPosition( wxPoint( 535, maxRows*80 + 30 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

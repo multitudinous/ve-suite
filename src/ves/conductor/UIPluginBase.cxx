@@ -157,6 +157,8 @@ UIPluginBase::UIPluginBase() :
     defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
     defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
     defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
+
+	m_iconChooser = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
@@ -1205,7 +1207,7 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     serviceList->GetMessageLog()->SetMessage( "Icon Chooser\n" );
     UIPluginBase* tempPlugin = this;
-    //if( m_iconChooser == NULL )
+//    if( m_iconChooser == NULL )
     {
         m_iconChooser = new IconChooser( m_canvas );
     }

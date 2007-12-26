@@ -90,7 +90,6 @@ public:
     ///of the child windows
     void SetTreeViewWindow( wxWindow* treeView );
     void OnDelMod( wxCommandEvent& event );
-    void OnChangeIcon( wxCommandEvent& event );
 
 protected:
 

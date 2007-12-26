@@ -189,7 +189,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
     EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
-	EVT_MENU( IconChooser::OK, AppFrame::OnChangeIcon )
+	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
