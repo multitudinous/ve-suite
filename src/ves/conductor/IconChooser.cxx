@@ -161,7 +161,7 @@ void IconChooser::WxButtonClick( wxCommandEvent& event )
     //id.Printf("%d", event.GetId());
     //WxEdit->SetValue(id);
     //WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
-    WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str() ) );
+    WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
     //thePlugin->SetImageIcon(iconPaths[event.GetId()]);
 }
 ////////////////////////////////////////////////////////////////////////////////
