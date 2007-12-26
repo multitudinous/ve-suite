@@ -85,6 +85,7 @@ void NURBSCurve::_interpolateWithinRange( double umin, double umax,
         {
             _interpolatedPoints[k][u] = curveInfo.at( k );
         }
+        m_uvParameters[u] = ( ves::xplorer::scenegraph::nurbs::Point(uparam, 0, 0 ) );
         uparam += _interpolationStepSize["U"];
     }
 
@@ -113,6 +114,7 @@ void NURBSCurve::Interpolate()
     SetDegree( static_cast<unsigned int>( _knotVectors["U"].NumberOfKnots() - _controlPoints[0].size() ) - 1 );
 
     _interpolatedPoints.clear();
+    m_uvParameters.clear();
 
     _interpolationStepSize["U"] = 1.0 / ( _meshDimensions["U"] - 1 );
     double param = 0.0;
@@ -126,6 +128,7 @@ void NURBSCurve::Interpolate()
         {
             _interpolatedPoints[k].push_back( curveInfo.at( k ) );
         }
+        m_uvParameters.push_back ( ves::xplorer::scenegraph::nurbs::Point( param, 0, 0 ) );
         param += _interpolationStepSize["U"];
         _parameterValues["U"][param] = i;
     }

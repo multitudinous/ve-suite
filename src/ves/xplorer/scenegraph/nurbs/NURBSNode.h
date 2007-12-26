@@ -121,7 +121,7 @@ public:
     bool IsControlPointSelected();
 
     ///compute the bounding box
-    virtual osg::BoundingSphere computeBound()const;
+    //virtual osg::BoundingSphere computeBound()const;
 protected:
 
     bool _isSelecting;///<Selection flag

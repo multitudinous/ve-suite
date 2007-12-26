@@ -86,6 +86,7 @@ NURBSObject::NURBSObject( const NURBSObject& rhs )
     _vBasisFunctionsDerivatives = rhs._vBasisFunctionsDerivatives;
     _controlPoints = rhs._controlPoints;
     _interpolatedPoints = rhs._interpolatedPoints;
+    m_uvParameters = rhs.m_uvParameters;
 }
 /////////////////////////
 NURBSObject::~NURBSObject()
@@ -102,6 +103,7 @@ NURBSObject::~NURBSObject()
     _interpolatedPoints.clear();
 
     _needsRetessellation = true;
+    m_uvParameters.clear();
 }
 ////////////////////////////////////////////////////////
 NURBSObject& NURBSObject::operator=( const NURBSObject& rhs )
@@ -128,6 +130,7 @@ NURBSObject& NURBSObject::operator=( const NURBSObject& rhs )
 
         _controlPoints = rhs._controlPoints;
         _interpolatedPoints = rhs._interpolatedPoints;
+        m_uvParameters = rhs.m_uvParameters;
     }
     return *this;
 }
@@ -193,12 +196,6 @@ void NURBSObject::UpdateMesh( /*std::vector<*/ves::xplorer::scenegraph::nurbs::C
     double ubounds[2] = {0.0, 1.0};
     double vbounds[2] = {0.0, 1.0};
 
-    /*size_t nMovedControlPoints = controlPointIndecies.size();
-    for(size_t i = 0; i < nMovedControlPoints; i++)
-    {
-     
-    }*/
-
     unsigned int vIndex = modifiedControlPoint.GetRowIndex();
     unsigned int uIndex = modifiedControlPoint.GetColumnIndex();
 
@@ -248,6 +245,11 @@ std::vector<ves::xplorer::scenegraph::nurbs::Point>& NURBSObject::InterpolatedPo
 {
     return _interpolatedPoints[0];
 }
+/////////////////////////////////////////////////////////////////////////////////////
+std::vector< ves::xplorer::scenegraph::nurbs::Point > NURBSObject::GetUVParameters()
+{
+    return m_uvParameters;
+}
 //////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::nurbs::ControlPoint* NURBSObject::GetControlPoint( size_t index )
 {
@@ -277,38 +279,6 @@ void NURBSObject::_calculateBasisFunctions( double parameter,
 {
     std::cout << "Not implemented!!" << std::endl;
     std::cout << "Use NURBSObject::_calculateBasisFunctionsAndDerivatives" << std::endl;
-    /*_currentSpan[direction] = _knotVectors[direction].FindKnotSpan(parameter,
-                                                    _nControlPoints[direction]-1,
-                                                    _degree[direction]);
-    _knotDifferences[direction].clear();
-    _knotDifferences[direction][0].push_back(1.0);
-
-    std::vector<double> left;
-    std::vector<double> right;
-    double saved = 0.0;
-    double temp = 0.0;
-
-
-    left.push_back(0.0);
-    right.push_back(0.0);
-
-    ///Compute the basis functions -- Algo A2.2 Pigel
-    for(size_t j = 1; j <= _degree[direction]; j++)
-    {
-       left.push_back(parameter - _knotVectors[direction].Knot(_currentSpan[direction] + 1 - j));
-       right.push_back(_knotVectors[direction].Knot(_currentSpan[direction] + j) - parameter);
-       
-       saved = 0.0;
-       temp = 0.0;
-       
-       for(size_t r = 0; r < j; r++)
-       {
-          temp = _knotDifferences[direction][r]/(right[r+1] + left[j-r]);
-          _knotDifferences[direction][r] = saved + right[r+1]*temp;
-          saved = left[j-r]*temp;
-       }
-       _knotDifferences[direction].push_back(saved);
-    }*/
 }
 /////////////////////////////////////
 unsigned int NURBSObject::GetMinimumDegree()

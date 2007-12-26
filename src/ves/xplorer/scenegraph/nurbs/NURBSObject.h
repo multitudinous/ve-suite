@@ -150,6 +150,9 @@ public:
     ///Get the tessellated points.
     std::vector<ves::xplorer::scenegraph::nurbs::Point>& InterpolatedPoints();
 
+    ///Get the u and v parameters for each interpolated point
+    std::vector<ves::xplorer::scenegraph::nurbs::Point> GetUVParameters();
+
     ///write out the NURBSObject
     inline friend std::ostream& operator<<( std::ostream& os, ves::xplorer::scenegraph::nurbs::NURBSObject& nurbsObject )
     {
@@ -246,6 +249,8 @@ protected:
 
     std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > _controlPoints;///<The raw ControlPoint data
     std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::Point> > _interpolatedPoints;///<The tesselated points.
+    std::vector< ves::xplorer::scenegraph::nurbs::Point > m_uvParameters;///< The u v parameter values for each point.
+   
 };
 }
 }

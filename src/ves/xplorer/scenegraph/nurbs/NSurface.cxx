@@ -106,6 +106,7 @@ void NURBSSurface::_interpolateWithinRange( double umin, double umax,
 
             //_interpolatedPoints[0].push_back(surfaceInfo[0].at(0));
             _interpolatedPoints[0][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 0 );
+            m_uvParameters[v*_meshDimensions["U"] + u ] = ves::xplorer::scenegraph::nurbs::Point( uparam, vparam, 0 ) ;
 
             //S(u,v)
             _surfDerivatives[0][0][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 0 );
@@ -175,6 +176,7 @@ void NURBSSurface::Interpolate()
     _interpolatedPoints.clear();
 
     _parameterValues.clear();
+    m_uvParameters.clear();
 
     double uparam = 0.0;
     double vparam = 0.0;
@@ -197,6 +199,7 @@ void NURBSSurface::Interpolate()
 
             surfaceInfo = _calculatePointOnSurface( uparam, vparam, _currentSpan["U"], _currentSpan["V"] );
             _interpolatedPoints[0].push_back( surfaceInfo[0].at( 0 ) );
+            m_uvParameters.push_back( ves::xplorer::scenegraph::nurbs::Point( uparam, vparam, 0 ) );
 
             //S(u,v)
             _surfDerivatives[0][0].push_back( surfaceInfo[0].at( 0 ) );
