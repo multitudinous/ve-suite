@@ -47,6 +47,7 @@
 
 #include <map>
 #include <vector>
+#include <osgEphemeris/EphemerisModel.h>
 
 namespace ves
 {
@@ -59,11 +60,6 @@ class cfdDisplaySettings;
 
 class DisplayInformation;
 }
-}
-
-namespace osgEphemeris
-{
-class EphemerisModel;
 }
 
 class vtkPolyData;
