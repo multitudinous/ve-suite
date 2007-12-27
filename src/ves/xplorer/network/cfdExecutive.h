@@ -135,7 +135,6 @@ public:
     //void CleanUp( void );
 
     ///the Computational Engine
-    Body::Executive* _exec;
     CosNaming::NamingContext* naming_context;
 
     ///Functions that operate on the Executive
@@ -171,7 +170,10 @@ public:
     void LoadDataFromCE( void );
     ///Get the current network string being used by cfdExecutive
     std::string GetCurrentNetwork();
-
+    ///Unregister in the executive from the ce. This should be called before the
+    /// destrucutor is called.
+    void UnRegisterExecutive();
+    
 private:
     ///Loading the Available Modules
     cfdVEAvailModules* m_avModules;
@@ -200,6 +202,7 @@ private:
 
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
 
+    Body::Executive* _exec;
 };
 }
 }

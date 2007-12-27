@@ -160,7 +160,6 @@ void IconChooser::WxButtonClick( wxCommandEvent& event )
     //wxString id;
     //id.Printf("%d", event.GetId());
     //WxEdit->SetValue(id);
-    //WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
     WxEdit->SetValue( wxString( iconPaths[event.GetId()].c_str(), wxConvUTF8 ) );
     //thePlugin->SetImageIcon(iconPaths[event.GetId()]);
 }
@@ -178,15 +177,26 @@ void IconChooser::SetPlugin( UIPluginBase * plugin )
 void IconChooser::okButtonClick( wxCommandEvent& event )
 {
     if( choices[WxChoice->GetCurrentSelection()] == _( "None" ) )
+    {    
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ) );
+    }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Rotate Left" ) )
+    {
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 90.0 );
+    }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Rotate Right" ) )
+    {
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 270.0 );
+    }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Flip Left/Right" ) )
+    {    
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 1 );
+    }
     else if( choices[WxChoice->GetCurrentSelection()] == _( "Flip Up/Down" ) )
+    {    
         thePlugin->SetImageIcon( ConvertUnicode( WxEdit->GetValue().c_str() ), 0.0, 2 );
+    }
+    
     iconInfo.first = thePlugin->GetID();
     iconInfo.second  = ConvertUnicode( WxEdit->GetValue().c_str() );
     event.SetClientData( &iconInfo );

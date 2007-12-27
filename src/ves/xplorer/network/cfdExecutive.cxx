@@ -174,8 +174,6 @@ std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* cfdExecutive::GetTheCurre
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::~cfdExecutive( void )
 {
-    // vprDEBUG(vesDBG,2) << "|\tExecutive Destructor "
-    //                     << std::endl << vprDEBUG_FLUSH;
     this->runGetEverythingThread = false;
     delete m_avModules;
 
@@ -185,24 +183,26 @@ cfdExecutive::~cfdExecutive( void )
     pluginEHMap.clear();
     _eventHandlers.clear();
 
+    delete ui_i;
+    ui_i = 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::UnRegisterExecutive()
+{
     try
     {
         if( ui_i )
         {
             _exec->UnRegisterUI( ui_i->UIName_.c_str() );
+            std::cout << "|\tDisconnect from VE-CE succeeded!" << std::endl;
         }
     }
     catch ( CORBA::Exception& )
     {
         std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
     }
-
-    delete ui_i;
-    ui_i = 0;
-    //vprDEBUG(vesDBG,2) << "|\tEnd Executive Destructor "
-    //    << std::endl << vprDEBUG_FLUSH;
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::UnbindORB()
 {
     if( !ui_i )
@@ -213,8 +213,6 @@ void cfdExecutive::UnbindORB()
     CosNaming::Name UIname( 1 );
     UIname.length( 1 );
     UIname[0].id = CORBA::string_dup(( ui_i->UIName_ ).c_str() );
-    vprDEBUG( vesDBG, 2 ) << "|\tExecutive Destructor "
-    << UIname[0].id << std::endl << vprDEBUG_FLUSH;
 
     try
     {
