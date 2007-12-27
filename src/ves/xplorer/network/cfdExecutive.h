@@ -132,10 +132,6 @@ private:
     vprSingletonHeader( cfdExecutive );
 public:
     void Initialize( CosNaming::NamingContext*, PortableServer::POA* );
-    //void CleanUp( void );
-
-    ///the Computational Engine
-    CosNaming::NamingContext* naming_context;
 
     ///Functions that operate on the Executive
     void GetNetwork( void );
@@ -188,7 +184,6 @@ private:
 
     bool _doneWithCalculations;
     bool updateNetworkString;
-    bool runGetEverythingThread;
 
     // _name_map : maps a module id to it's module name.
     std::map< int, std::string> _id_map;
@@ -202,6 +197,8 @@ private:
 
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
 
+    ///the Computational Engine
+    CosNaming::NamingContext* naming_context;
     Body::Executive* _exec;
 };
 }

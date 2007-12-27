@@ -152,6 +152,9 @@ void App::exit()
 {
     //Profiling guard used by vrjuggler
     VPR_PROFILE_RESULTS();
+    std::cout << "|\tApp is now exiting." << std::endl;
+    ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
+    ves::xplorer::network::cfdExecutive::instance()->UnRegisterExecutive();
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
@@ -361,8 +364,7 @@ void App::latePreFrame( void )
     //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
     if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
     {
-        ves::xplorer::scenegraph::SceneManager::instance()->Shutdown();
-        ves::xplorer::network::cfdExecutive::instance()->UnRegisterExecutive();
+        std::cout << "|\tShutting down xplorer." << std::endl;
         VPR_PROFILE_RESULTS();
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel

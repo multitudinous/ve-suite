@@ -100,9 +100,6 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     }
 
     this->_doneWithCalculations = true;
-    this->runGetEverythingThread = true;
-    //this->updateNetworkString = false;
-    //this->thread = 0;
 
     //this->naming_context = CosNaming::NamingContext::_duplicate(
     //   corbaManager->_vjObs->GetCosNaming()->naming_context );
@@ -174,8 +171,8 @@ std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* cfdExecutive::GetTheCurre
 ////////////////////////////////////////////////////////////////////////////////
 cfdExecutive::~cfdExecutive( void )
 {
-    this->runGetEverythingThread = false;
     delete m_avModules;
+    m_avModules = 0;
 
     _plugins.clear();
     _id_map.clear();
