@@ -94,28 +94,24 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     catch ( const XMLException &toCatch )
     {
         std::cerr << "Error during Xerces-c Initialization.\n"
-        << "  Exception message:"
-        << XMLString::transcode( toCatch.getMessage() ) << std::endl;
+            << "  Exception message:"
+            << XMLString::transcode( toCatch.getMessage() ) << std::endl;
         return;
     }
 
-    this->_doneWithCalculations = true;
-
     //this->naming_context = CosNaming::NamingContext::_duplicate(
     //   corbaManager->_vjObs->GetCosNaming()->naming_context );
-    this->_masterNode = new ves::xplorer::scenegraph::Group();
-    this->_masterNode->SetName( "cfdExecutive_Node" );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->AddChild( this->_masterNode.get() );
+    _masterNode = new ves::xplorer::scenegraph::Group();
+    _masterNode->SetName( "cfdExecutive_Node" );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+        AddChild( this->_masterNode.get() );
 
     m_avModules = new cfdVEAvailModules();
 
     std::ostringstream dirStringStream;
     dirStringStream << "VEClient-" << vpr::System::getHostname()
-    << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
+        << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
     std::string UINAME = dirStringStream.str();
-
-    _exec = NULL;
-    ui_i = 0;
 
     try
     {
@@ -155,13 +151,17 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     catch ( CORBA::Exception& )
     {
         std::cerr << "|\tExecutive not present or VEClient registration error"
-        << std::endl;
+            << std::endl;
     }
 
-    _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] = new DeleteObjectFromNetworkEventHandler();
-    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] = new SwitchXplorerViewEventHandler();
-    _eventHandlers[std::string( "Plugin_Control" )] = new ReloadPluginsEventHandler();
-    _eventHandlers[std::string( "veNetwork Update" )] = new UpdateNetworkEventHandler();
+    _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] = 
+        new DeleteObjectFromNetworkEventHandler();
+    _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] = 
+        new SwitchXplorerViewEventHandler();
+    _eventHandlers[std::string( "Plugin_Control" )] = 
+        new ReloadPluginsEventHandler();
+    _eventHandlers[std::string( "veNetwork Update" )] = 
+        new UpdateNetworkEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
@@ -218,20 +218,17 @@ void cfdExecutive::UnbindORB()
     catch ( CosNaming::NamingContext::InvalidName& ex )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tcfdExecutive : Invalid Name! "
-        << ex._info().c_str()
-        << std::endl << vprDEBUG_FLUSH;
+            << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
     catch ( CosNaming::NamingContext::NotFound& ex )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tcfdExecutive : Not Found! "
-        << ex._info().c_str()
-        << std::endl << vprDEBUG_FLUSH;
+            << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
     catch ( CosNaming::NamingContext::CannotProceed& ex )
     {
         vprDEBUG( vesDBG, 1 ) << "|\t\tcfdExecutive : Cannot Proceed! "
-        << ex._info().c_str()
-        << std::endl << vprDEBUG_FLUSH;
+            << ex._info().c_str() << std::endl << vprDEBUG_FLUSH;
     }
 }
 ///////////////////////////////////////////////////////////////////

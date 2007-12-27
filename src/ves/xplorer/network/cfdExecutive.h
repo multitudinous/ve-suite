@@ -122,7 +122,11 @@ private:
     //cfdExecutive& operator=(const cfdExecutive& o) { ; }
     // this class should be a singleton
     // constructor
-    cfdExecutive( void )
+    cfdExecutive():
+        m_avModules( 0 ),
+        ui_i( 0 ),
+        naming_context( 0 ),
+        _exec( 0 )
     {
         ;
     }
@@ -175,15 +179,8 @@ private:
     cfdVEAvailModules* m_avModules;
     std::string veNetwork;
 
-    std::string _activeScalarName;
-    //cfdGauges* _gauges;
-    //cfdDashboard* _dashBoard;
-    //cfdInteractiveGeometry* _geometry;
     Body_UI_i* ui_i;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > _masterNode;
-
-    bool _doneWithCalculations;
-    bool updateNetworkString;
 
     // _name_map : maps a module id to it's module name.
     std::map< int, std::string> _id_map;
