@@ -204,6 +204,6 @@ ves_pc = lib_env.ConfigBuilder(occFileName,
                         pj('#','share','fpc','occ.fpc.in'), submap = submap)
 
 # prepare the installer
-fpcBundle = ves_pkg.createFileBundle( pj('lib','flagpoll' )  )
+fpcBundle = ves_pkg.createFileBundle( pj(lib_env['libdir'],'flagpoll' )  )
 ##fpcFile = sca_util.getFilesRecursiveByExt( '.', ['.fpc'] )
 fpcBundle.addFiles( [osgFileName, vesFileName, vtkFileName, xercesFileName, occFileName] )

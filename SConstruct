@@ -462,7 +462,7 @@ if not SConsAddons.Util.hasHelpFlag():
    if baseEnv.has_key('libdir'):
       LIBDIR = baseEnv['libdir']
    else:
-      if GetArch() == 'x86_64':
+      if GetArch() == 'x64':
          LIBDIR = 'lib64'
       else:
          LIBDIR = 'lib'
