@@ -1,8 +1,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
-#include "GL_Engine.h"
-
 #include "IntStoves_UI_Dialog.h"
+#include "GLCanvasWrapper.h"
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -26,7 +25,7 @@
 using namespace std;
 
 BEGIN_EVENT_TABLE(IntStoves_UI_Dialog, UIDialog)
-  EVT_COMBOBOX      (NUMBAFFSEL_COMBOBOX,            IntStoves_UI_Dialog::_onNumBafSel)
+  //EVT_COMBOBOX      (NUMBAFFSEL_COMBOBOX,            IntStoves_UI_Dialog::_onNumBafSel)
   EVT_COMBOBOX      (ACTBAFFSEL_COMBOBOX,            IntStoves_UI_Dialog::_onActBafSel)
   EVT_COMBOBOX      (REMOVEBAFF_COMBOBOX,            IntStoves_UI_Dialog::_onRemoveBaff)
   //EVT_BUTTON		(DESIGN_BUTTON,					 IntStoves_UI_Dialog::_onDesignStove)
@@ -85,33 +84,33 @@ IntStoves_UI_Dialog
 /////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_buildPage()
 {
-  for (int i=0; i<7; i++)
-  {
-	  baffnums[i] << (i + 1);
-	  activebaff[i] << (i + 1);
-	  actbaffdrawn[i] = false;
-  }
+    for (int i=0; i<7; i++)
+    {
+        baffnums[i] << (i + 1);
+        activebaff[i] << (i + 1);
+        actbaffdrawn[i] = false;
+    }
 
-  //_numbaffsel = new wxComboBox(this, NUMBAFFSEL_COMBOBOX , wxT("Select Number of Baffles"),
-	//							wxDefaultPosition, wxDefaultSize, 7, baffnums, wxCB_DROPDOWN);
+    //_numbaffsel = new wxComboBox(this, NUMBAFFSEL_COMBOBOX , wxT("Select Number of Baffles"),
+    //							wxDefaultPosition, wxDefaultSize, 7, baffnums, wxCB_DROPDOWN);
 
-  //_designButton = new wxButton(this, DESIGN_BUTTON, wxT("Design Stove"));
+    //_designButton = new wxButton(this, DESIGN_BUTTON, wxT("Design Stove"));
 
-  //wxStaticBox* _baffnumSBox = new wxStaticBox(this,-1, wxT("Baffle Selection"));
-  //wxStaticBoxSizer* _baffnumGroup = new wxStaticBoxSizer(_baffnumSBox,wxVERTICAL);
-  
+    //wxStaticBox* _baffnumSBox = new wxStaticBox(this,-1, wxT("Baffle Selection"));
+    //wxStaticBoxSizer* _baffnumGroup = new wxStaticBoxSizer(_baffnumSBox,wxVERTICAL);
 
-  //_baffnumGroup->Add(_numbaffsel, 1, wxALIGN_LEFT|wxEXPAND);
-  //_baffnumGroup->Add(_designButton, 1, wxALIGN_LEFT);
 
-   wxStaticBox* _baffdef = new wxStaticBox(this,-1, wxT("Baffle Definition"));
-  wxStaticBoxSizer* _baffdefGroup = new wxStaticBoxSizer(_baffdef,wxHORIZONTAL);
+    //_baffnumGroup->Add(_numbaffsel, 1, wxALIGN_LEFT|wxEXPAND);
+    //_baffnumGroup->Add(_designButton, 1, wxALIGN_LEFT);
 
-  wxStaticText* _startposxLabel       = new wxStaticText(this, -1, wxT("Start X"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-  wxStaticText* _startposyLabel       = new wxStaticText(this, -1, wxT("Start Y"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-  wxStaticText* _directionLabel       = new wxStaticText(this, -1, wxT("Direction"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-  wxStaticText* _lengthLabel          = new wxStaticText(this, -1, wxT("Length"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
-  wxStaticText* _depthLabel           = new wxStaticText(this, -1, wxT("Depth"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxStaticBox* _baffdef = new wxStaticBox(this,-1, wxT("Baffle Definition"));
+    wxStaticBoxSizer* _baffdefGroup = new wxStaticBoxSizer(_baffdef,wxHORIZONTAL);
+
+    wxStaticText* _startposxLabel       = new wxStaticText(this, -1, wxT("Start X"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxStaticText* _startposyLabel       = new wxStaticText(this, -1, wxT("Start Y"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxStaticText* _directionLabel       = new wxStaticText(this, -1, wxT("Direction"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxStaticText* _lengthLabel          = new wxStaticText(this, -1, wxT("Length"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
+    wxStaticText* _depthLabel           = new wxStaticText(this, -1, wxT("Depth"), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE );
 
     _baffdefGroup->Add(_startposxLabel, 2, wxALIGN_CENTER_HORIZONTAL);
     _baffdefGroup->Add(5, 5, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
@@ -122,45 +121,33 @@ void IntStoves_UI_Dialog::_buildPage()
     _baffdefGroup->Add(_lengthLabel, 2, wxALIGN_CENTER_HORIZONTAL);
     _baffdefGroup->Add(_depthLabel, 3, wxALIGN_CENTER_HORIZONTAL);
 
-  wxBoxSizer* _baffall = new wxBoxSizer(wxVERTICAL);
-  _baffall->Add(_baffdefGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+    wxBoxSizer* _baffall = new wxBoxSizer(wxVERTICAL);
+    _baffall->Add(_baffdefGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
-  for ( int i=0; i<7; i++ )
-  {
-    wxString temp( _("Baffle Number " ) );
-	temp << (i+1);
-    _baff[i] = new wxStaticBox(this,-1, temp );
-    _baffGroup[i] = new wxStaticBoxSizer(_baff[i],wxHORIZONTAL);
-	_startposx[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
-	_startposy[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
-	_direction[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
-	_length[i]    = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
-	_depth[i]	  = new wxSpinCtrl(this, CHANGE_DEPTH ,wxT("1"),wxDefaultPosition,wxSize(70,25),wxSP_ARROW_KEYS|wxSP_WRAP,1,12,1);
-	_baffGroup[i]->Add(_startposx[i], 1, wxALIGN_CENTER_HORIZONTAL);
-    _baffGroup[i]->Add(_startposy[i], 1, wxALIGN_CENTER_HORIZONTAL);
-    _baffGroup[i]->Add(_direction[i], 1, wxALIGN_CENTER_HORIZONTAL);
-    _baffGroup[i]->Add(_length[i], 1, wxALIGN_CENTER_HORIZONTAL);
-    _baffGroup[i]->Add(_depth[i], 1, wxALIGN_CENTER_HORIZONTAL);
-	_baffall->Add(_baffGroup[i], 1, wxALIGN_CENTER_HORIZONTAL);
-		_baff[i]->Enable( false );
-		_startposx[i]->Enable( false );
-		_startposy[i]->Enable( false );
-		_direction[i]->Enable( false );
-		_length[i]->Enable( false );
-		_depth[i]->Enable( false );
-  }
-
-  int* attribList = new int[ 6 ];
-  attribList[ 0 ] = WX_GL_DEPTH_SIZE;
-  attribList[ 1 ] = 16;
-  attribList[ 2 ] = WX_GL_STENCIL_SIZE;
-  attribList[ 3 ] = 8;
-  attribList[ 4 ] = int( WX_GL_DOUBLEBUFFER );
-  attribList[ 5 ] = WX_GL_RGBA;
-  _designCanvas = new GL_Engine(this, -1, attribList, wxPoint(0,0), wxSize(800,600), wxSUNKEN_BORDER, _("Stove Design Canvas") );
-
-  delete [] attribList;
-
+    for ( int i=0; i<7; i++ )
+    {
+        wxString temp( _("Baffle Number " ) );
+        temp << (i+1);
+        _baff[i] = new wxStaticBox(this,-1, temp );
+        _baffGroup[i] = new wxStaticBoxSizer(_baff[i],wxHORIZONTAL);
+        _startposx[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
+        _startposy[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
+        _direction[i] = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
+        _length[i]    = new wxTextCtrl(this, -1,wxT("0"),wxDefaultPosition,wxSize(40,25),wxTE_READONLY,wxDefaultValidator);
+        _depth[i]	  = new wxSpinCtrl(this, CHANGE_DEPTH ,wxT("1"),wxDefaultPosition,wxSize(70,25),wxSP_ARROW_KEYS|wxSP_WRAP,1,12,1);
+        _baffGroup[i]->Add(_startposx[i], 1, wxALIGN_CENTER_HORIZONTAL);
+        _baffGroup[i]->Add(_startposy[i], 1, wxALIGN_CENTER_HORIZONTAL);
+        _baffGroup[i]->Add(_direction[i], 1, wxALIGN_CENTER_HORIZONTAL);
+        _baffGroup[i]->Add(_length[i], 1, wxALIGN_CENTER_HORIZONTAL);
+        _baffGroup[i]->Add(_depth[i], 1, wxALIGN_CENTER_HORIZONTAL);
+        _baffall->Add(_baffGroup[i], 1, wxALIGN_CENTER_HORIZONTAL);
+            _baff[i]->Enable( false );
+            _startposx[i]->Enable( false );
+            _startposy[i]->Enable( false );
+            _direction[i]->Enable( false );
+            _length[i]->Enable( false );
+            _depth[i]->Enable( false );
+    }
   //_activebaffsel = new wxComboBox(this, ACTBAFFSEL_COMBOBOX , wxT("Select the Active Baffle"),
 	//							wxDefaultPosition, wxDefaultSize, 7, activebaff, wxCB_DROPDOWN);
   //_addbafButton = new wxButton(this, ADDBAFF_BUTTON, wxT("Create New Baffle"));
@@ -196,21 +183,19 @@ void IntStoves_UI_Dialog::_buildPage()
 
     _rightset->Add(m_buttons, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
-  wxBoxSizer* _leftset = new wxBoxSizer(wxVERTICAL);
-  //_leftset->Add(_baffnumGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-  _leftset->Add(_designCanvas, 8, wxALIGN_CENTER_HORIZONTAL);
+    wxBoxSizer* _leftset = new wxBoxSizer(wxVERTICAL);
+    mCanvasWrapper = new GLCanvasWrapper( this, _leftset );
 
-  wxBoxSizer* _mainSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* _mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-  _mainSizer->Add(_leftset, 2, wxALIGN_LEFT);
-  _mainSizer->Add(_rightset, 1, wxALIGN_RIGHT);
+    _mainSizer->Add(_leftset, 2, wxALIGN_LEFT);
+    _mainSizer->Add(_rightset, 1, wxALIGN_RIGHT);
 
-   //set this flag and let wx handle alignment
-   SetAutoLayout(true);
-   //assign the group to the panel
-   SetSizer(_mainSizer);
-   _mainSizer->Fit(this);
-
+    //set this flag and let wx handle alignment
+    SetAutoLayout(true);
+    //assign the group to the panel
+    SetSizer(_mainSizer);
+    _mainSizer->Fit(this);
 }
 
 /////////////////////////////////////////////////////
@@ -229,10 +214,10 @@ bool IntStoves_UI_Dialog::TransferDataToWindow()
 void IntStoves_UI_Dialog::Lock(bool l)
 {
 }
-
+/*
 void IntStoves_UI_Dialog::_onNumBafSel(wxCommandEvent& event)
 {
-/*	for ( int i=0; i<7; i++)
+	for ( int i=0; i<7; i++)
 	{
 	  if ( i <= _numbaffsel->GetSelection() )
 	  {
@@ -260,12 +245,13 @@ void IntStoves_UI_Dialog::_onNumBafSel(wxCommandEvent& event)
 	  }
 	}
 
-	_rebuildActBaffSel();*/
+	_rebuildActBaffSel();
 }
-
+*/
+/*
 void IntStoves_UI_Dialog::_onDesignStove(wxCommandEvent& event)
 {
-    /*
+    
     _designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
     _designCanvas->_draw();  
   
@@ -277,18 +263,23 @@ void IntStoves_UI_Dialog::_onDesignStove(wxCommandEvent& event)
         }
     }
     _designCanvas->SwapBuffers();
-    */
+    
 }
-
+*/
 void IntStoves_UI_Dialog::_onActBafSel(wxCommandEvent& event)
 {
 }
 
 void IntStoves_UI_Dialog::_onAddBaff()
 {	
-	if ( _designCanvas->gridptsx[_designCanvas->actpt1[0]] != _designCanvas->gridptsx[_designCanvas->actpt2[0]]  
-				&& _designCanvas->gridptsy[_designCanvas->actpt1[1]] != _designCanvas->gridptsy[_designCanvas->actpt2[1]] )
-					return;
+    float* tempGrid = mCanvasWrapper->GetGridInfo();
+    int* actpt1 = mCanvasWrapper->GetGridPoints( 1 );
+    int* actpt2 = mCanvasWrapper->GetGridPoints( 2 );
+    
+	if( tempGrid[ 0 ] != tempGrid[ 1 ]  && tempGrid[ 2 ] != tempGrid[ 3 ] )
+	{
+        return;
+    }
 
 	(m_numbaffles) += 1;
 	for ( int i=0; i<(m_numbaffles); i++ )
@@ -302,65 +293,63 @@ void IntStoves_UI_Dialog::_onAddBaff()
 	}
 	wxString txt;
 	//if ( _designCanvas->actpt1[0] != -1 && _designCanvas->actpt2[0] != -1 && !actbaffdrawn[_activebaffsel->GetSelection()])
-	if ( _designCanvas->actpt1[0] != -1 && _designCanvas->actpt2[0] != -1 && !actbaffdrawn[(m_numbaffles)-1])
-		if ( _designCanvas->actpt1[0] == _designCanvas->actpt2[0] || _designCanvas->actpt1[1] == _designCanvas->actpt2[1] )
+	if ( actpt1[0] != -1 && actpt2[0] != -1 && !actbaffdrawn[(m_numbaffles)-1])
+	{	
+        if ( actpt1[0] == actpt2[0] || actpt1[1] == actpt2[1] )
 		{
-			//txt << _designCanvas->actpt1[0];
-			//_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-			//txt << _designCanvas->actpt1[1];
-			//_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-			if ( _designCanvas->actpt1[0] < _designCanvas->actpt2[0])
+			if ( actpt1[0] < actpt2[0])
 			{
-				txt << _designCanvas->actpt1[0];
+				txt << actpt1[0];
 				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt1[1];
+				txt << actpt1[1];
 				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
 				txt << 0;
 				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt <<  _designCanvas->actpt2[0] - _designCanvas->actpt1[0];
+				txt <<  actpt2[0] - actpt1[0];
 				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
 			}
-			else if ( _designCanvas->actpt1[0] > _designCanvas->actpt2[0])
+			else if ( actpt1[0] > actpt2[0])
 			{
-				txt << _designCanvas->actpt2[0];
+				txt << actpt2[0];
 				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt2[1];
+				txt << actpt2[1];
 				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
 				txt << 0;
 				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt1[0] - _designCanvas->actpt2[0];
+				txt << actpt1[0] - actpt2[0];
 				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
 			}
-			else if ( _designCanvas->actpt1[1] < _designCanvas->actpt2[1])
+			else if ( actpt1[1] < actpt2[1])
 			{
-				txt << _designCanvas->actpt2[0];
+				txt << actpt2[0];
 				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt2[1];
+				txt << actpt2[1];
 				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
 				txt << 3;
 				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt2[1] - _designCanvas->actpt1[1];
+				txt << actpt2[1] - actpt1[1];
 				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
 			}
-			else if ( _designCanvas->actpt1[1] > _designCanvas->actpt2[1])
+			else if ( actpt1[1] > actpt2[1])
 			{
-				txt << _designCanvas->actpt1[0];
+				txt << actpt1[0];
 				_startposx[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt1[1];
+				txt << actpt1[1];
 				_startposy[(m_numbaffles)-1]->SetValue(txt); txt.clear();
 				txt << 3;
 				_direction[(m_numbaffles)-1]->SetValue(txt); txt.clear();
-				txt << _designCanvas->actpt1[1] - _designCanvas->actpt2[1];
+				txt << actpt1[1] - actpt2[1];
 				_length[(m_numbaffles)-1]->SetValue( txt ); txt.clear();
 			}
-			_designCanvas->_drawNewBaffle();
+			mCanvasWrapper->DrawNewBaffle();
 			actbaffdrawn[(m_numbaffles)-1] = true;
 		}
-		_rebuildActBaffSel();
-
+    }
+    
+    _rebuildActBaffSel();
     SetBaffleData();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_reDrawBaff(int index)
 {
     if( m_numbaffles > 0 )
@@ -373,10 +362,10 @@ void IntStoves_UI_Dialog::_reDrawBaff(int index)
         _direction[index]->GetValue().ToLong( &temp3 );
         long int temp4;
         _length[index]->GetValue().ToLong( &temp4 );
-        _designCanvas->_reDrawBaffle( temp1, temp2, temp3, temp4, index);	
+        mCanvasWrapper->RedrawBaffle( temp1, temp2, temp3, temp4, index);	
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_onRemoveBaff(wxCommandEvent& event)
 {
 	//if ( _activebaffsel->GetSelection() != -1)
@@ -404,7 +393,7 @@ void IntStoves_UI_Dialog::_removeBaff(int index)
     _direction[index]->GetValue().ToLong( &temp3 );
     long int temp4;
     _length[index]->GetValue().ToLong( &temp4 );
-    _designCanvas->_removeBaffle( temp1, temp2, temp3, temp4 );	
+    mCanvasWrapper->RemoveBaffle( temp1, temp2, temp3, temp4 );	
 
 	_startposx[index]->Clear();
 	_startposy[index]->Clear();
@@ -450,7 +439,9 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
 	temp.SetHeight( temp.GetHeight()+flag );
 	temp.SetWidth( temp.GetWidth()+flag );
 	SetSize( temp );
-#ifndef __WXMAC__
+    
+    mCanvasWrapper->DrawCanvas();
+/*#ifndef __WXMAC__
 	_designCanvas->SetCurrent( *(_designCanvas->GetContext()) );
 #else
 	_designCanvas->SetCurrent();
@@ -461,7 +452,7 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
 	{
 		_reDrawBaff(i);	  
 	}
-	_designCanvas->SwapBuffers();
+	_designCanvas->SwapBuffers();*/
 }
 
 void IntStoves_UI_Dialog::_reOrganizeBaffs()

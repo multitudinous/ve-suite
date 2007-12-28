@@ -32,8 +32,6 @@ public:
 
     int x, y , direction, length;
 
-	//int* gridptsx;
-	//int* gridptsy;
 	float gridptsx[49];
 	float gridptsy[33];
 	int actindex[2];

@@ -12,23 +12,27 @@ srcs = Split("""
    IntStoves_UI_Dialog.cpp
    IntStoves.cpp
    GL_Engine.cpp
+   GLCanvasWrapper.cxx
 """)
 
 headers = Split("""
    IntStoves_UI_Dialog.h
    IntStoves.h
    GL_Engine.h
+   GLCanvasWrapper.h
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
 
-lib_env. AppendUnique( LIBS = ['ves_conductor_plugin',
+lib_env.AppendUnique( LIBS = ['ves_conductor_plugin',
                         'ves_open_xml' ] )
-lib_env. AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
+lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
                             pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
 
 if GetPlatform() == 'win32':
-   lib_env. AppendUnique( CPPDEFINES = [ 'LOKI_DLL' ] )
+   lib_env.AppendUnique( CPPDEFINES = [ 'LOKI_DLL' ] )
+else:
+   lib_env.ParseConfig( 'wx-config --libs gl' )
 
 vpr_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )

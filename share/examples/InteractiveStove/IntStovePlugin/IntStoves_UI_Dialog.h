@@ -29,7 +29,7 @@ namespace util
 }
 }
 
-class GL_Engine;
+class GLCanvasWrapper;
 
 using namespace std;
 
@@ -71,18 +71,18 @@ class IntStoves_UI_Dialog : public ves::conductor::UIDialog
   //UI widgets variables
   
  public:
-  void _buildPage();
-  void _onNumBafSel(wxCommandEvent& event);
-  void _onActBafSel(wxCommandEvent& event);
-  void _onDesignStove(wxCommandEvent& event);
-  void _onAddBaff();
-  void _onRemoveBaff(wxCommandEvent& event);
-  void SetDepth(wxSpinEvent& event);
-  void _reDrawBaff(int);
-  void _removeBaff(int);
-  void _rebuildActBaffSel();
-  void _reOrganizeBaffs();
-  void SetBaffleData();
+    void _buildPage();
+    //void _onNumBafSel(wxCommandEvent& event);
+    void _onActBafSel(wxCommandEvent& event);
+    //void _onDesignStove(wxCommandEvent& event);
+    void _onAddBaff();
+    void _onRemoveBaff(wxCommandEvent& event);
+    void SetDepth(wxSpinEvent& event);
+    void _reDrawBaff(int);
+    void _removeBaff(int);
+    void _rebuildActBaffSel();
+    void _reOrganizeBaffs();
+    void SetBaffleData();
     void UpdateParams(wxCommandEvent& event);
     void ShowVectors(wxCommandEvent& event);
     void ShowContour(wxCommandEvent& event);
@@ -128,7 +128,7 @@ class IntStoves_UI_Dialog : public ves::conductor::UIDialog
   wxButton* _updateButton;
   wxButton* m_closeButton;
   wxButton* _designButton;
-  GL_Engine* _designCanvas;
+  GLCanvasWrapper* mCanvasWrapper;
   wxStaticBox* _baff[7];
   wxStaticBoxSizer* _baffGroup[7];
   wxTextCtrl* _startposx[7];
