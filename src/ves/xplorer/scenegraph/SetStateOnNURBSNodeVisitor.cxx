@@ -32,7 +32,7 @@
 *************** <auto-copyright.pl END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
-#include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 
 // --- OSG Includes --- //
 #include <osg/Node>
@@ -69,8 +69,8 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
         return;
     }
 
-    ves::xplorer::scenegraph::nurbs::NURBSNode* tempNode =
-        dynamic_cast< ves::xplorer::scenegraph::nurbs::NURBSNode* >( tempGroup.get() );
+    /*ves::xplorer::scenegraph::nurbs::NURBS* tempNode =
+        dynamic_cast< ves::xplorer::scenegraph::nurbs::NURBS* >( tempGroup.get() );
     if( tempNode )
     {
         //process patches
@@ -92,7 +92,7 @@ void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
                                         1.0 - m_mousePoint.second*2.0 );
         }
     }
-    else
+    else*/
     {
         osg::NodeVisitor::traverse( node );
     }

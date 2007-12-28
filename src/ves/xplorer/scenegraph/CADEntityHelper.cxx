@@ -43,7 +43,7 @@
 #include <ves/xplorer/scenegraph/nurbs/KnotVector.h>
 #include <ves/xplorer/scenegraph/nurbs/NCurve.h>
 #include <ves/xplorer/scenegraph/nurbs/NSurface.h>
-#include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
 
 // --- OSG Includes --- //
@@ -452,7 +452,7 @@ ComputeIntermediateFileNameAndPath( const std::string& srcFile ) const
 ////////////////////////////////////////////////////////////////////////////////
 osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
 {
-    std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> > nurbsPatches;
+    std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> > nurbsPatches;
     //std::string nurbsfile(argv[1]);
     std::vector< std::string > patchFiles =
         ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".txt" );
@@ -468,8 +468,8 @@ osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
             surface->SetInterpolationGridSize( 20, "V" );
             surface->Interpolate();
 
-            osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch =
-                new ves::xplorer::scenegraph::nurbs::NURBSNode( surface );
+            osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> renderablePatch =
+                new ves::xplorer::scenegraph::nurbs::NURBS( surface );
             nurbsPatches.push_back( renderablePatch.get() );
         }
         else
