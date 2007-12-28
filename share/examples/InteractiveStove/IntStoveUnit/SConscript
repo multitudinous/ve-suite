@@ -39,7 +39,7 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 
-prog = ves_pkg.createProgram('IntStoveUnit', lib_env,
+prog = ves_pkg.createProgram('IntStoveUnit' + lib_env["PROGSUFFIX"], lib_env,
           installPrefix = pj( 'share', 'vesuite', 'examples', 'InteractiveStove', 'Plugins', 'Unit', host_type ))
 
 prog.addSources(srcs)
