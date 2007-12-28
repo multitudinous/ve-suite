@@ -9,6 +9,7 @@
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
+
 #elif ((OSG_VERSION_MAJOR<=1) && (OSG_VERSION_MINOR<=2))
 #include <osgProducer/Viewer>
 #endif
@@ -18,7 +19,7 @@
 #include <ves/xplorer/scenegraph/nurbs/NCurve.h>
 #include <ves/xplorer/scenegraph/nurbs/NSurface.h>
 
-#include <ves/xplorer/scenegraph/nurbs/NURBSNode.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #ifndef WIN32
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
 #ifdef HAS_OCC
@@ -39,7 +40,7 @@ class KeyboardEventHandler : public osgGA::GUIEventHandler
 {
 public:
     
-   KeyboardEventHandler(std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> > surfacePatches)
+   KeyboardEventHandler(std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> > surfacePatches)
       :_isSelecting(false)
    {
       _patches.clear();
@@ -67,8 +68,8 @@ public:
                   UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                   for(size_t i =0; i < _nPatches; i++)
                   {
-                     _patches.at(i)->SetMousePosition(ea.getXnormalized(),ea.getYnormalized());
-                     _patches.at(i)->SetSelectionStatus(true);
+                     //_patches.at(i)->SetMousePosition(ea.getXnormalized(),ea.getYnormalized());
+                     //_patches.at(i)->SetSelectionStatus(true);
                   }
                   //to process drag events...
                   return false;
@@ -82,7 +83,7 @@ public:
                   //std::cout<<"Left Mouse release"<<std::endl;
                   for(size_t i =0; i < _nPatches; i++)
                   {
-                     _patches.at(i)->SetSelectionStatus(false);
+                     //_patches.at(i)->SetSelectionStatus(false);
                   }
                }
                UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
@@ -103,7 +104,7 @@ public:
                   {
                      for(size_t i =0; i < _nPatches; i++)
                      {
-                        _patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
+                        //_patches.at(i)->MoveSelectedControlPoint(dx,0,dz);
                      }
                      UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                   }
@@ -116,7 +117,7 @@ public:
                   {
                      for(size_t i =0; i < _nPatches; i++)
                      {
-                        _patches.at(i)->MoveSelectedControlPoint(0,-dy,0);
+                        //_patches.at(i)->MoveSelectedControlPoint(0,-dy,0);
                      }
                      UpdateLastMousePosition(ea.getXnormalized(),ea.getYnormalized());
                   }
@@ -152,12 +153,12 @@ protected:
    bool _isSelecting;///< Indicates selection
    size_t _nPatches;///<The number of patches
    float _lastMousePosition[3];///<The change in mouse position.
-   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> > _patches;///<The surface patches
+   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> > _patches;///<The surface patches
         
 };
 /////////////render the NURBSurface in OSG
 void render(int argc, char** argv,
-            std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> > surfacePatches)
+            std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> > surfacePatches)
 {
    // use an ArgumentParser object to manage the program arguments.
     osg::ArgumentParser arguments(&argc,argv);
@@ -195,6 +196,7 @@ void render(int argc, char** argv,
     osgViewer::Viewer viewer(arguments);
     viewer.addEventHandler(keh);
     viewer.addEventHandler(new osgViewer::WindowSizeHandler);
+    viewer.addEventHandler(new osgViewer::StatsHandler);
     viewer.setSceneData( root.get());
     viewer.realize();
     viewer.run();
@@ -270,7 +272,7 @@ int parseIGESFile(int argc,char** argv)
 {
 
    std::string igesFile(argv[1]);
-   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >nurbsPatches;
+   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> >nurbsPatches;
    ves::xplorer::scenegraph::nurbs::util::IGES2VENURBS igesReader;
    std::vector<ves::xplorer::scenegraph::nurbs::NURBSSurface*> surfaces = igesReader.GetVectorOfVENURBSSurface(igesFile);
    size_t nPatches = surfaces.size();
@@ -289,7 +291,7 @@ int parseIGESFile(int argc,char** argv)
        surfaces.at(i)->Interpolate();
        //std::cout<<" Done:"<< i <<std::endl;
 
-       osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch = new ves::xplorer::scenegraph::nurbs::NURBSNode(surfaces.at(i));
+       osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> renderablePatch = new ves::xplorer::scenegraph::nurbs::NURBS(surfaces.at(i));
        nurbsPatches.push_back(renderablePatch.get());
    }
    if(nurbsPatches.size())
@@ -303,7 +305,7 @@ int parseIGESFile(int argc,char** argv)
 ////////////////////////////////////////////
 int parseOCCNURBSFile(int argc, char** argv)
 {
-   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >nurbsPatches;
+   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> >nurbsPatches;
    //std::string nurbsfile(argv[1]);
    std::vector< std::string > patchFiles = ves::xplorer::util::fileIO::GetFilesInDirectory(argv[1],".txt");
    size_t nPatches = patchFiles.size();
@@ -318,7 +320,7 @@ int parseOCCNURBSFile(int argc, char** argv)
          surface->SetInterpolationGridSize(20,"V");
          surface->Interpolate();
 
-         osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch = new ves::xplorer::scenegraph::nurbs::NURBSNode(surface);
+         osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> renderablePatch = new ves::xplorer::scenegraph::nurbs::NURBS(surface);
          nurbsPatches.push_back(renderablePatch.get());
       }
       else
@@ -336,8 +338,8 @@ int parseOCCNURBSFile(int argc, char** argv)
 ///////////////////////////////////////////
 void createTestNURBS(int argc, char** argv)
 {
-   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >testNURBSSurface;
-   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> >testNURBSCurve;
+   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> >testNURBSSurface;
+   std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> >testNURBSCurve;
    //Knot vector
    //U = {0,0,0,0,.5,1,1,1,1}
    ves::xplorer::scenegraph::nurbs::KnotVector knots;
@@ -367,9 +369,9 @@ void createTestNURBS(int argc, char** argv)
    ncurve.SetInterpolationGridSize(30);
    ncurve.Interpolate();
 
-   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderableCurve = new ves::xplorer::scenegraph::nurbs::NURBSNode(&ncurve);
+   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> renderableCurve = new ves::xplorer::scenegraph::nurbs::NURBS(&ncurve);
    testNURBSCurve.push_back(renderableCurve.get());
-   render(argc,argv,testNURBSCurve);
+   //render(argc,argv,testNURBSCurve);
 
    float x = 0.0;
    float y = 0.0;
@@ -422,7 +424,7 @@ void createTestNURBS(int argc, char** argv)
    surface.SetInterpolationGridSize(10,"V");
    surface.Interpolate();
 
-   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSNode> renderablePatch = new ves::xplorer::scenegraph::nurbs::NURBSNode(&surface);
+   osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> renderablePatch = new ves::xplorer::scenegraph::nurbs::NURBS(&surface);
    testNURBSSurface.push_back(renderablePatch.get());
 
    //std::fstream fout("./testOut.ven",std::ios::out);
