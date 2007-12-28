@@ -283,7 +283,7 @@ void GL_Engine::_checkForMouseHitsTwo(int xpos, int ypos)
 void GL_Engine::_drawNewBaffle()
 {
 #ifndef __WXMAC__
-    SetCurrent( *(_designCanvas->GetContext()) );
+    SetCurrent( *(GetContext()) );
 #else
     SetCurrent();
 #endif
@@ -328,7 +328,7 @@ void GL_Engine::_removeBaffle(int x, int y, int direction, int length)
 	}
 
 #ifndef __WXMAC__
-	SetCurrent( *(_designCanvas->GetContext()) );
+	SetCurrent( *(GetContext()) );
 #else
 	SetCurrent();
 #endif

@@ -92,38 +92,29 @@ namespace ves
 namespace xplorer
 {
 EnvironmentHandler::EnvironmentHandler( void )
+:
+_teacher( 0 ),
+cursor( 0 ),
+arrow( 0 ),
+displaySettings( 0 ),
+display_information( 0 ),
+_activeGeomPicking( false ),
+desktopWidth( 0 ),
+desktopHeight( 0 ),
+
+_frustumLeft( 0 ),
+_frustumRight( 0 ),
+_frustumTop( 0 ),
+_frustumBottom( 0 ),
+_frustumNear( 0 ),
+_frustumFar( 0 )
 {
-    _teacher = 0;
-    //_soundHandler = 0;
-    //_camHandler = 0;
-    cursor = 0;
-    _param.erase();// = 0;
-    //_readParam = 0;
-    arrow = 0;
-    displaySettings = 0;
-
-    _frustumLeft = 0;
-    _frustumRight = 0;
-    _frustumTop = 0;
-    _frustumBottom = 0;
-    _frustumNear = 0;
-    _frustumFar = 0;
-
-
     for( unsigned int i = 0; i < 3; i++ )
     {
         worldScale[ i ] = 1.0f;
         worldTrans[ i ] = 0.0f;
         worldRot[ i ] = 0.0f;
     }
-
-    display_information = 0;
-    _activeGeomPicking = false;
-
-    //_readParam = 0;
-    _param.erase();// = 0;
-    desktopWidth = 0;
-    desktopHeight = 0;
 
     ///create seed points drawable
     _seedPoints = new ves::xplorer::SeedPoints( 4, 4, 1 );
@@ -178,22 +169,8 @@ EnvironmentHandler::~EnvironmentHandler( void )
 {
     if( this->cursor )
     {
-        //vprDEBUG(vesDBG,2)
-        //  << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
         delete this->cursor;
     }
-
-    //if(ves::xplorer::cfdQuatCamHandler::instance())
-    {
-        //ves::xplorer::cfdQuatCamHandler::instance()->CleanUp();
-    }
-
-    /*if ( this->_soundHandler )
-    {  
-       vprDEBUG(vesDBG,2)  
-         << "|       deleting this->_soundHandler" << std::endl << vprDEBUG_FLUSH;
-       delete this->_soundHandler;
-    }*/
 
     if( this->_teacher )
     {
@@ -215,9 +192,6 @@ EnvironmentHandler::~EnvironmentHandler( void )
         //  << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
         delete this->display_information;
     }
-
-    //Delete all the devices in DeviceHandler
-    //ves::xplorer::DeviceHandler::instance()->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*cfdSoundHandler* EnvironmentHandler::GetSoundHandler( void )
