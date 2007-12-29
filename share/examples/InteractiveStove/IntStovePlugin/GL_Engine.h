@@ -11,7 +11,7 @@ class GL_Engine : public wxGLCanvas
 {
 public:
 	GL_Engine(wxWindow* parent, int id, int* attrlist, const wxPoint& pos, const wxSize& size, long style, const wxString& name );
-	~GL_Engine();
+	virtual ~GL_Engine();
 
 	void _draw();
 	void _checkForMouseHitsOne(int x, int y);

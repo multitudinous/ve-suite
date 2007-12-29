@@ -51,7 +51,7 @@ IntStoves_UI_Dialog
   vector<double>* baffle5,
   vector<double>* baffle6,
   vector<double>* baffle7)
-: UIDialog( (wxWindow *) parent, id, _("IntStoves") ),
+: UIDialog( parent, id, _("IntStoves") ),
   p_numbaffles(numbaffles),
   p_baffle1(baffle1),
   p_baffle2(baffle2),

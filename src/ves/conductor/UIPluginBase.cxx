@@ -1132,7 +1132,7 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
     delete veCommand;
 
     // now show the custom dialog with no parent for the wxDialog
-    UIDialog* hello = this->UI( NULL );
+    UIDialog* hello = this->UI( m_canvas );
     if( hello != NULL )
     {
         hello->Show();
