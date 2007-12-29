@@ -89,6 +89,9 @@ protected:
     ///Update the v iso-curves
     void _updateControlVCurvePrimitives();
 
+    ///Initialize the point properties
+    void _initializeStateSet();
+
     bool m_isSurface;///<Flag for determining NURBS type.
     unsigned int m_numUControlPoints;///<The number of control points in U direction.
     unsigned int m_numVControlPoints;///<The number of control points in V direction.

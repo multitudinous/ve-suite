@@ -88,6 +88,9 @@ protected:
 
      ///Update the curve vbo
      void _updateCurvePrimitive();
+     
+     ///Initialize the StateSet for the drawable
+     void _initializeStateSet();
 
      ves::xplorer::scenegraph::nurbs::NURBSObject* m_nurbsObject;///The NURBS representation
      osg::ref_ptr<osg::Vec3Array> m_tessellatedPoints;///<The points to tessellate

@@ -33,6 +33,9 @@
 
 #include <ves/xplorer/scenegraph/nurbs/NURBSControlMesh.h>
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
+#include <osg/Point>
+#include <osg/StateSet>
+#include <osg/Material>
 
 using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////////////////
@@ -42,6 +45,7 @@ NURBSControlMesh::NURBSControlMesh()
     m_numUControlPoints = 1;
     m_numVControlPoints = 0;
     m_isSurface = false;
+    _initializeStateSet();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 NURBSControlMesh::NURBSControlMesh( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
@@ -55,6 +59,7 @@ NURBSControlMesh::NURBSControlMesh( std::vector<ves::xplorer::scenegraph::nurbs:
     m_isSurface = isSurface;
     setUseVertexBufferObjects( true );
     _updateControlMeshPrimitives();
+    _initializeStateSet();
 }
 ///////////////////////////////////////////////////////////////////////
 NURBSControlMesh::NURBSControlMesh( const NURBSControlMesh& controlMesh,
@@ -66,6 +71,21 @@ NURBSControlMesh::NURBSControlMesh( const NURBSControlMesh& controlMesh,
     m_numVControlPoints = controlMesh.m_numVControlPoints;
     m_isSurface = controlMesh.m_isSurface;
     _updateControlMeshPrimitives();
+}
+////////////////////////////////////////////
+void NURBSControlMesh::_initializeStateSet()
+{
+    osg::ref_ptr<osg::StateSet> ss = getOrCreateStateSet();
+    ss->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+
+    osg::ref_ptr<osg::Material> yellow = new osg::Material();
+    yellow->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 1, 1, 0, 0 ) );
+    ss->setAttribute( yellow.get() );
+
+    osg::ref_ptr<osg::Point> pointProperties = new osg::Point();
+    pointProperties->setSize( 5.0 );
+    ss->setMode( GL_POINT_SMOOTH, osg::StateAttribute::ON );
+    ss->setAttribute( pointProperties.get() );
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,

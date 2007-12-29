@@ -48,6 +48,7 @@ NURBSDrawable::NURBSDrawable( ves::xplorer::scenegraph::nurbs::NURBSObject*
     m_nurbsObject = nurbsObject;
     setUseVertexBufferObjects( true );
     _updateTessellatedSurface();
+    _initializeStateSet();
 }
 ///////////////////////////////////////////////////////////
 NURBSDrawable::NURBSDrawable( const NURBSDrawable& tessSurf,
@@ -56,6 +57,15 @@ NURBSDrawable::NURBSDrawable( const NURBSDrawable& tessSurf,
 {
     m_nurbsObject = tessSurf.m_nurbsObject;
     _updateTessellatedSurface();
+}
+/////////////////////////////////////////
+void NURBSDrawable::_initializeStateSet()
+{
+    osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
+    shadeModel->setMode( osg::ShadeModel::SMOOTH );
+
+    osg::ref_ptr<osg::StateSet> surfaceState = getOrCreateStateSet();
+    surfaceState->setAttribute( shadeModel.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::nurbs::NURBSObject* NURBSDrawable::GetNURBSData()

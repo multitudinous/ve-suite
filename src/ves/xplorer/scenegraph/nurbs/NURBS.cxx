@@ -63,25 +63,11 @@ NURBS::NURBS( ves::xplorer::scenegraph::nurbs::NURBSObject* object )
                                                                     m_nurbsObject->NumControlPoints( "U" ),
                                                                     m_nurbsObject->NumControlPoints( "V" ),
                                                                     isSurface );
-
         addDrawable( m_controlMeshDrawable.get() );
-        osg::ref_ptr<osg::StateSet> ss = m_controlMeshDrawable->getOrCreateStateSet();
-        ss->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-
-        osg::ref_ptr<osg::Material> yellow = new osg::Material();
-        yellow->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 1, 1, 0, 0 ) );
-        ss->setAttribute( yellow.get() );
 
         m_nurbsDrawable =
            new ves::xplorer::scenegraph::nurbs::NURBSDrawable( m_nurbsObject );
         addDrawable( m_nurbsDrawable.get() );
-
-        osg::ref_ptr<osg::ShadeModel> shadeModel = new osg::ShadeModel();
-        shadeModel->setMode( osg::ShadeModel::SMOOTH );
-
-        osg::ref_ptr<osg::StateSet> surfaceState = 
-           m_nurbsDrawable->getOrCreateStateSet();
-        surfaceState->setAttributeAndModes( shadeModel.get(), osg::StateAttribute::ON );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
