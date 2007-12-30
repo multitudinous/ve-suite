@@ -45,6 +45,8 @@ HierarchyTree API
 #include <wx/imaglist.h>
 #include <wx/treectrl.h>
 
+#include <fstream>
+
 namespace ves
 {
 namespace conductor

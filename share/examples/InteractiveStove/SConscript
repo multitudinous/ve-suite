@@ -21,6 +21,8 @@ fileBundle.addFiles( mtlFile )
 fileBundle.addFiles( rgbFile )
 
 fileBundle.addFiles( 'interactivestove.ves' )
+fileBundle.addFiles( 'star.param' )
+#fileBundle.addFiles( 'RunUnit.csh' )
 
 InteractiveStoveSubdirs = Split("""
     IntStoveModel

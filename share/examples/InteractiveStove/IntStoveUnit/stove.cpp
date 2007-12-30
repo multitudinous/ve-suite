@@ -426,8 +426,8 @@ void Stove::CompileAndExecu( int runnum )
    cout << "|--- Running Setup and Executable -------------|"<<endl;
 	//system("chmod a+rwx ./STAR/setup && chmod a+rwx ./STAR/execu && chmod a+rwx compileRun && ./compileRun > /dev/null"); // update file permissions
    system("chmod a+rwx ./STAR/setup && chmod a+rwx compileRun && ./compileRun > /dev/null"); // update file permissions
-    system( "loaderToVtk -singleFile star.param -loader star -o . -w file" );
-
+   system( "loaderToVtk -singleFile star.param -loader star -o . -w file" );
+   std::cout<<"Translation Complete"<<std::endl;
  /*
    ofstream vtkFile;
    vtkFile.open( "createvtk", ios::out);
