@@ -1206,7 +1206,7 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     serviceList->GetMessageLog()->SetMessage( "Icon Chooser\n" );
-    UIPluginBase* tempPlugin = this;
+/*    UIPluginBase* tempPlugin = this;
 //    if( m_iconChooser == NULL )
     {
         m_iconChooser = new IconChooser( m_canvas );
@@ -1216,6 +1216,9 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     m_iconChooser->SetPlugin( this );
     //chooser->SetSize( dialogSize );
     m_iconChooser->Show();
+	*/
+    event.SetClientData( this );
+    ::wxPostEvent( m_canvas->GetParent(), event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )

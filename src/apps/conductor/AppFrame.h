@@ -46,6 +46,7 @@ namespace ves
 {
 namespace conductor
 {
+class IconChooser;
 namespace util
 {
 class CADNodeManagerDlg;
@@ -225,6 +226,7 @@ public:
     wxNotebook* side_pane;
     //Network* network;
     Canvas* canvas;
+	ves::conductor::IconChooser* iconChooser;
 
     UI_Frame* m_frame;
 
@@ -393,6 +395,7 @@ protected:
 
     void OnDelMod( wxCommandEvent& event );
     void OnChangeIcon(wxCommandEvent& event );
+    void OnShowIconChooser(wxCommandEvent& event );
 
 private:
     void ExitXplorer();

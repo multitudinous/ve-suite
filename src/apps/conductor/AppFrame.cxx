@@ -189,6 +189,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
     EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
+	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
 	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
 END_EVENT_TABLE()
 
@@ -293,6 +294,9 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
                                  GetXMLModels(), XMLDataBufferEngine::instance()->
                                  GetTopSystemId() );
+
+    iconChooser = new IconChooser( canvas );
+
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
 }
@@ -2296,4 +2300,12 @@ void AppFrame::OnChangeIcon(wxCommandEvent& event )
 	std::pair <unsigned int, std::string>* data = static_cast< 
 		std::pair <unsigned int, std::string>*>( event.GetClientData() );
 	hierarchyTree->ChangeLeafIcon( data->first, data->second );
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnShowIconChooser( wxCommandEvent& event )
+{
+	UIPluginBase* tempPlugin = static_cast< UIPluginBase* >(event.GetClientData());
+    iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
+    iconChooser->SetPlugin( tempPlugin );
+    iconChooser->Show();
 }

@@ -202,8 +202,8 @@ void IconChooser::okButtonClick( wxCommandEvent& event )
     event.SetClientData( &iconInfo );
     ::wxPostEvent( canvas->GetParent(), event);
     this->canvas->Refresh();
-	//Show(false);
-    Destroy();
+	Show(false);
+    //Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IconChooser::cancelButtonClick( wxCommandEvent& event )
