@@ -96,11 +96,18 @@ void ReloadPluginsEventHandler::Execute( XMLObject* xmlObject )
     for( std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >::iterator iter = 
         plugins->begin(); iter != plugins->end(); ++iter )
     {
+        // if a module is on the plugins map then remove it
         iter->second->RemoveSelfFromSG();
         ModelHandler::instance()->RemoveModel( iter->second->GetCFDModel() );
+        // Must delete current instance of vebaseclass object
+        delete iter->second;
+        plugins->erase( iter );
     }
     plugins->clear();
 
     cfdVEAvailModules* modules = cfdExecutive::instance()->GetAvailablePlugins();
     modules->ResetPluginLoader();
+    //Set active model to null so that if the previous active model is deleted
+    //that we don't get errors in our code other places.
+    ModelHandler::instance()->SetActiveModel( 0 );    
 }
