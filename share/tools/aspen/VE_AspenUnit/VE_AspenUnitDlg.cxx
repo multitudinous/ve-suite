@@ -30,6 +30,7 @@ BEGIN_MESSAGE_MAP(CVE_AspenUnitDlg, CDialog)
 	ON_WM_QUERYDRAGICON()
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDCANCEL, &CVE_AspenUnitDlg::OnBnClickedCancel)
+	ON_BN_CLICKED(IDC_OK, &CVE_AspenUnitDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -44,7 +45,7 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
-	commManager = new CorbaUnitManager(this);
+	/*commManager = new CorbaUnitManager(this);
 	commManager->SetComputerNameUnitNameAndPort( "dell29", "1239", "AspenUnit" );
 	commManager->RunORB();
 	unitObject = commManager->GetUnitObject();
@@ -56,9 +57,10 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 	if ( !unitObject )
 	{
 		AfxMessageBox( _T("Unable to connect to VE-CE" ));
-	}
+	}*/
 
 	// TODO: Add extra initialization here	
+	initialized = false;
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -102,7 +104,10 @@ HCURSOR CVE_AspenUnitDlg::OnQueryDragIcon()
 BOOL CVE_AspenUnitDlg::OnIdle( LONG test )
 {
 	Sleep( 100 );
-	commManager->CheckCORBAWork();
+	if(initialized)
+	{
+	    commManager->CheckCORBAWork();
+	}
 	return FALSE;
 }
 
@@ -134,4 +139,30 @@ void CVE_AspenUnitDlg::OnBnClickedCancel()
 	commManager->DestroyORB();
 	// TODO: Add your control notification handler code here
 	this->OnClose();
+}
+
+void CVE_AspenUnitDlg::OnBnClickedOk()
+{
+	if(!initialized)
+	{
+        // TODO: Add your control notification handler code here
+        CEdit *Display;
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
+        CString name;
+	    Display->GetWindowText(name);
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
+        CString port;
+	    Display->GetWindowText(port);   
+
+	    commManager = new CorbaUnitManager(this);
+        //commManager->SetComputerNameUnitNameAndPort( "dell29", "1239", "AspenUnit" );
+        commManager->SetComputerNameUnitNameAndPort( name , port, "AspenUnit" );
+        commManager->RunORB();
+        unitObject = commManager->GetUnitObject();
+        if ( !unitObject )
+        {
+            AfxMessageBox( _T("Unable to connect to VE-CE" ));
+        }
+		initialized = true;
+	}
 }

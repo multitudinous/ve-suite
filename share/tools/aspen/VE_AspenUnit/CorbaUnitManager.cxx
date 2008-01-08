@@ -21,7 +21,7 @@ CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
    parent = dialog;
    unit_i_instantiated = false;
 }
-void CorbaUnitManager::SetComputerNameUnitNameAndPort( std::string name, std::string port, std::string uname )
+void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString name, CString port, CString uname )
 {
    computerName = name;
    computerPort = port;
@@ -65,16 +65,17 @@ void CorbaUnitManager::RunORB()
 
    cmdargs.push_back( "VE_AspenUnit.exe" );
    cmdargs.push_back( "-ORBInitRef" );
-   std::string orbInfo = std::string("NameService=corbaloc:iiop:localhost:1239/NameService");
+   //std::string orbInfo = std::string("NameService=corbaloc:iiop:localhost:1239/NameService");
+   std::string orbInfo = std::string("NameService=corbaloc:iiop:"+computerName+":"+computerPort+"/NameService");
    cmdargs.push_back( (char*)orbInfo.c_str() );
    cmdargs.push_back( "-ORBDottedDecimalAddresses" );
    cmdargs.push_back( "1" );
    
-   CEdit *Display;
-   Display = reinterpret_cast<CEdit *>(parent->GetDlgItem(IDC_EDIT3));
-   Display->SetWindowText("localhost");
-   Display = reinterpret_cast<CEdit *>(parent->GetDlgItem(IDC_EDIT4));
-   Display->SetWindowText("1239");
+   //CEdit *Display;
+   //Display = reinterpret_cast<CEdit *>(parent->GetDlgItem(IDC_EDIT3));
+   //Display->SetWindowText("localhost");
+   //Display = reinterpret_cast<CEdit *>(parent->GetDlgItem(IDC_EDIT4));
+   //Display->SetWindowText("1239");
 
    argv = new char*[ argc ];
 

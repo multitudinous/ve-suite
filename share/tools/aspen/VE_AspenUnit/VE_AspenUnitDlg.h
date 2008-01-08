@@ -43,4 +43,7 @@ private:
 	CString unitName;
 	CString portNumber;
 	afx_msg void OnBnClickedCancel();
+	bool initialized;
+public:
+	afx_msg void OnBnClickedOk();
 };
