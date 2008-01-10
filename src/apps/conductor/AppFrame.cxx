@@ -1111,9 +1111,6 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
-    //network->Load( ConvertUnicode( fname.c_str() ), true );
-//CORBAServiceList* serviceList = CORBAServiceList::instance();
-//serviceList->GetMessageLog()->SetMessage( ConvertUnicode( fname.c_str() ).c_str() );
     canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
 
     //create hierarchy page

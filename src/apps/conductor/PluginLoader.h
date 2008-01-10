@@ -80,6 +80,8 @@ private:
     std::vector< ves::conductor::UIPluginBase*> plugins;
     ///The classinfo obj of the each plugin, will be use to generate more instances
     std::vector<wxClassInfo*> plugin_cls;
+    ///Vector of the plugins that will be loaded
+    std::vector< wxString > mPluginNames;
     ///Function used to work with unicode strings
     std::string ConvertUnicode( const wxChar* data )
     {

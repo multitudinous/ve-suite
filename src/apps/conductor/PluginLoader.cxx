@@ -58,12 +58,18 @@ PluginLoader::PluginLoader()
 ////////////////////////////////////////////////////////////////////////////////
 PluginLoader::~PluginLoader()
 {
-    for( unsigned int i = 0; i < plugins.size(); ++i )
+    for( size_t i = 0; i < plugins.size(); ++i )
     {
         delete plugins.at( i );
     }
-
     plugins.clear();
+    
+    for( size_t i = 0; i < mPluginNames.size(); ++i )
+    {
+        wxPluginManager::UnloadLibrary( mPluginNames.at( i ) );
+    }
+    mPluginNames.size();
+
     plugin_cls.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,6 +128,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
             wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
             //std::cout << "Loaded " << ConvertUnicode( filename.c_str() )
             //    << std::endl;
+            mPluginNames.push_back( libn );
         }
 
         cont = dir.GetNext( &filename );
@@ -134,8 +141,6 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
 ////////////////////////////////////////////////////////////////////////////////
 void PluginLoader::RegisterPlugins()
 {
-    wxNode *node;
-
     plugins.clear();
     plugin_cls.clear();
 
@@ -149,10 +154,11 @@ void PluginLoader::RegisterPlugins()
 
      This is a real rip off from the wxModule initialisation code
     */
-    node = ( wxNode* )wxClassInfo::sm_classTable->Next();
+    wxHashTable_Node* node = wxClassInfo::sm_classTable->Next();
     while( node )
     {
-        wxClassInfo *classInfo = ( wxClassInfo * )node->GetData();
+        //This has to be a c style cast for some reason...
+        wxClassInfo* classInfo = ( wxClassInfo* )( node->GetData() );
 
         if( wxString( classInfo->GetBaseClassName1() ) ==
                 wxString( "UIPluginBase", wxConvUTF8 ) )
@@ -163,7 +169,7 @@ void PluginLoader::RegisterPlugins()
             //std::cout << "|\tRegister plugins : "
             //    << ConvertUnicode( classInfo->GetClassName() ) << std::endl;
         }
-        node = ( wxNode* )wxClassInfo::sm_classTable->Next();
+        node = wxClassInfo::sm_classTable->Next();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -182,9 +188,10 @@ size_t PluginLoader::GetNumberOfPlugins( void )
     return plugin_cls.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::pair< UIPluginBase*, wxClassInfo* > PluginLoader::GetPluginDataPair( size_t i )
+std::pair< UIPluginBase*, wxClassInfo* > 
+    PluginLoader::GetPluginDataPair( size_t i )
 {
     std::pair< UIPluginBase*, wxClassInfo* >
-    dataPair( plugins.at( i ), plugin_cls.at( i ) );
+        dataPair( plugins.at( i ), plugin_cls.at( i ) );
     return dataPair;
 }
