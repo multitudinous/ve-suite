@@ -691,6 +691,7 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         paramBlock->SetName( tempStr );
         //paramBlock->SetBlockId( ::wxNewId() );
         EnableUI( true );
+        SetTextCtrls();
     }
 }
 //////////////////////////////////////////////////////////////////////////////
