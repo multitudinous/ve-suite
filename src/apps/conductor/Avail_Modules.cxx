@@ -274,7 +274,6 @@ void Avail_Modules::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
 bool Avail_Modules::LoadModules()
 {
     pl_loader->LoadPlugins( _( "Plugins/UI" ) );
-    std::cout << "number of gui plugins to laod " << pl_loader->GetNumberOfPlugins() << std::endl;
     for( size_t i = 0; i < pl_loader->GetNumberOfPlugins(); i++ )
     {
         UIPluginBase* plugin = pl_loader->GetPluginDataPair( i ).first;
