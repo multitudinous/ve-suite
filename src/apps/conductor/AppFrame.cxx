@@ -210,7 +210,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         deviceProperties( 0 ),
         navPane( 0 ),
         viewlocPane( 0 ),
-        m_ephemeris( 0 )
+        m_ephemeris( 0 ),
+        iconChooser( 0 )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -294,9 +295,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
                                  GetXMLModels(), XMLDataBufferEngine::instance()->
                                  GetTopSystemId() );
-
-    iconChooser = new IconChooser( canvas );
-
+                                 
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
 }
@@ -2305,6 +2304,11 @@ void AppFrame::OnChangeIcon(wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnShowIconChooser( wxCommandEvent& event )
 {
+    if( !iconChooser )
+    {
+        iconChooser = new IconChooser( canvas );
+    }
+
 	UIPluginBase* tempPlugin = static_cast< UIPluginBase* >(event.GetClientData());
     iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
     iconChooser->SetPlugin( tempPlugin );
