@@ -42,8 +42,15 @@ CADEntity( geomFile, pluginDCS )
 #endif
 {
 #ifdef VE_SOUND
-    m_water->LoadFile( "Sounds/Water.wav" );
-    m_water->GetSoundState()->setLooping( true );
+    try
+    {
+        m_water->LoadFile( "Sounds/Water.wav" );
+        m_water->GetSoundState()->setLooping( true );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load sounds" << std::endl;
+    }
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////

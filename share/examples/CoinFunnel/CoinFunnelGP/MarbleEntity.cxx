@@ -43,9 +43,16 @@ m_nonPhysicsGeometry( 0 )
     m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
 #ifdef VE_SOUND
-    m_marbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
-    m_marbleOnMetal->LoadFile( "Sounds/MarbleOnMetal.wav" );
-    m_marbleOnMarble->LoadFile( "Sounds/MarbleOnMarble.wav" );
+    try
+    {
+        m_marbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
+        m_marbleOnMetal->LoadFile( "Sounds/MarbleOnMetal.wav" );
+        m_marbleOnMarble->LoadFile( "Sounds/MarbleOnMarble.wav" );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load sounds" << std::endl;
+    }
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
