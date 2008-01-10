@@ -65,11 +65,6 @@ World::~World()
     delete m_slideEntity;
     delete m_waterEntity;
     
-    /*for( std::map< std::string, osg::Image* >::iterator iter = 
-        m_imageMap.begin(); iter != m_imageMap.end(); ++iter )
-    {
-        delete iter->second;
-    }*/
     m_imageMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
