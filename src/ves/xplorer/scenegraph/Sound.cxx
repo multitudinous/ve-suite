@@ -89,7 +89,8 @@ Sound::Sound( const std::string& name,
 ////////////////////////////////////////////////////////////////////////////////
 Sound::~Sound()
 {
-    m_soundState->releaseSource();
+    m_soundManager->removeSoundState( m_soundState.get() );
+    //m_soundState->releaseSource();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sound &Sound::operator=( const Sound &sound )

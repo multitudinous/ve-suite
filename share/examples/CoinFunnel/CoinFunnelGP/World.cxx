@@ -211,7 +211,7 @@ void World::CreateRoom( float width )
 {
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    osg::ref_ptr< osg::Box > room = new osg::Box( osg::Vec3( 0, 0, 0 ), width );
+    osg::ref_ptr< osg::Box > room = new osg::Box( osg::Vec3( 0, 0, width * 0.5 ), width );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable = new osg::ShapeDrawable( room.get() );
 
     geode->addDrawable( shapeDrawable.get() );

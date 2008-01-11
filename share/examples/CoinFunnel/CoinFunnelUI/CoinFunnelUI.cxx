@@ -15,9 +15,9 @@ CoinFunnelUI::CoinFunnelUI()
 {
     RegistVar( "portNumber", &portNumber );
 
-    name = wxString( _("CoinFunnel") );
+    name = wxString( _( "CoinFunnel" ) );
 
-    wxImage my_img( _("Icons/CoinFunnel.xpm") );
+    wxImage my_img( _( "Icons/CoinFunnel.xpm" ) );
     icon_w = static_cast< int >( my_img.GetWidth() );
     icon_h = static_cast< int >( my_img.GetHeight() );
     my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
