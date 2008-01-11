@@ -438,6 +438,9 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if GetPlatform() == 'darwin':
       baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
+      baseEnv['LDMODULESUFFIX'] = '.bundle'
+      #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
+
 
    #setup default libraries and defines
    baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
