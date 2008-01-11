@@ -71,6 +71,7 @@ public:
     ///Set active network id from hierarchy tree
     void SetActiveNetwork( std::string id );
     ///Populate canvas with network string
+    ///Note: Must call Canvas::New( bool ) before calling this function
     void PopulateNetworks( std::string xmlNetwork, bool clearXplorer = true );
     ///User scale
     /// first = x scale

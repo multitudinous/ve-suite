@@ -68,7 +68,7 @@ PluginLoader::~PluginLoader()
     {
         wxPluginManager::UnloadLibrary( mPluginNames.at( i ) );
     }
-    mPluginNames.size();
+    mPluginNames.clear();
 
     plugin_cls.clear();
 }

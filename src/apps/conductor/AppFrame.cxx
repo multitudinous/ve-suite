@@ -1001,6 +1001,10 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
     
+    //clear the old networks so that all the event handlers are removed
+    //before cleaning up the rest of the classes
+    canvas->New( true );
+
     //Reloading plugins
     av_modules->ResetPluginTree();
 
@@ -1105,6 +1109,10 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
+
+    //clear the old networks so that all the event handlers are removed
+    //before cleaning up the rest of the classes
+    canvas->New( true );
 
     //Reloading plugins
     av_modules->ResetPluginTree();
@@ -1507,12 +1515,14 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
+    //clear the old networks so that all the event handlers are removed
+    //before cleaning up the rest of the classes
+    canvas->New( true );
     //Reloading plugins
     av_modules->ResetPluginTree();
     //clear any current tree
     hierarchyTree->Clear();
     SetTitle( _( "VE-Suite: www.vesuite.org" ) );
-    canvas->New( true );
     canvas->CreateDefaultNetwork();
 }
 ////////////////////////////////////////////////////////////////////////////////

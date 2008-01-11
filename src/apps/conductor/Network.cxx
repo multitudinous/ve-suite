@@ -143,7 +143,6 @@ Network::~Network()
 {
     ///We do not need to remove event handlers anymore because the
     ///Canvas class calls the remove functions whenever this is neccessary
-
     //this->RemoveAllEvents();
     links.clear();
     tags.clear();

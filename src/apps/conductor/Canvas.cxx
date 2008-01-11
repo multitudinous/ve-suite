@@ -139,9 +139,6 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
         return;
     }
 
-    //Clean up the old
-    New( true );
-
     //load
     XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 
