@@ -90,7 +90,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
     wxLogDebug( _( "Loading plugins from [%s]\n" ), lib_dir.c_str() );
     //std::cout << "Loading plugins from "
     //    << ConvertUnicode( lib_dir.c_str() ) << std::endl;
-    /* Create a directory object we can scan for plugins */
+    // Create a directory object we can scan for plugins
     if( !wxDir::Exists( lib_dir ) )
     {
         // deal with the error here - wxDir would already log an error

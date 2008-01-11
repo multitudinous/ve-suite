@@ -285,99 +285,101 @@ void Network::OnMLeftDown( wxMouseEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnMouseMove( wxMouseEvent& event )
 {
-    if( event.Dragging() )
+    if( !event.Dragging() )
     {
-        dragging = true;
-        //drag link connector
-        if( m_selLinkCon >= 0 && m_selLink >= 0 )
-        {
-            //std::cout << " drag link connector " << std::endl;
-            links[m_selLink].SetHighlightFlag( true );
-            wxClientDC dc( parent );
-            parent->DoPrepareDC( dc );
-            dc.SetUserScale( userScale.first, userScale.second );
-            wxPoint evtpos = event.GetLogicalPosition( dc );
-            long x = evtpos.x;
-            long y = evtpos.y;
-            MoveLinkCon( x, y, m_selLink, m_selLinkCon, dc );
-        }
+        return;
+    }
 
-        //drag tag
-        else if( m_selTag >= 0 && m_selTagCon < 0 )
-        {
-            //std::cout << " drag tag  " << std::endl;
-            wxClientDC dc( parent );
-            parent->DoPrepareDC( dc );
-            dc.SetUserScale( userScale.first, userScale.second );
-            wxPoint evtpos = event.GetLogicalPosition( dc );
-            long x = evtpos.x;
-            long y = evtpos.y;
-            MoveTag( x, y, m_selTag, dc );
-        }
+    dragging = true;
+    //drag link connector
+    if( m_selLinkCon >= 0 && m_selLink >= 0 )
+    {
+        //std::cout << " drag link connector " << std::endl;
+        links[m_selLink].SetHighlightFlag( true );
+        wxClientDC dc( parent );
+        parent->DoPrepareDC( dc );
+        dc.SetUserScale( userScale.first, userScale.second );
+        wxPoint evtpos = event.GetLogicalPosition( dc );
+        long x = evtpos.x;
+        long y = evtpos.y;
+        MoveLinkCon( x, y, m_selLink, m_selLinkCon, dc );
+    }
 
-        //drag tag connector
-        else if( m_selTag >= 0 && m_selTagCon >= 0 )
-        {
-            //std::cout << " drag tag connector " << std::endl;
-            wxClientDC dc( parent );
-            parent->DoPrepareDC( dc );
-            dc.SetUserScale( userScale.first, userScale.second );
-            wxPoint evtpos = event.GetLogicalPosition( dc );
-            long x = evtpos.x;
-            long y = evtpos.y;
-            MoveTagCon( x, y, m_selTag, m_selTagCon, dc );
-        }
+    //drag tag
+    else if( m_selTag >= 0 && m_selTagCon < 0 )
+    {
+        //std::cout << " drag tag  " << std::endl;
+        wxClientDC dc( parent );
+        parent->DoPrepareDC( dc );
+        dc.SetUserScale( userScale.first, userScale.second );
+        wxPoint evtpos = event.GetLogicalPosition( dc );
+        long x = evtpos.x;
+        long y = evtpos.y;
+        MoveTag( x, y, m_selTag, dc );
+    }
 
-        //drag input port
-        else if( m_selMod >= 0 && m_selFrPort >= 0 )
-        {
-            modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
-            //std::cout << " drag link input " << std::endl;
-            wxClientDC dc( parent );
-            parent->DoPrepareDC( dc );
-            dc.SetUserScale( userScale.first, userScale.second );
-            wxPoint evtpos = event.GetLogicalPosition( dc );
-            long x = evtpos.x;
-            long y = evtpos.y;
-            tryingLink = true;
-            //std::cout << x << " " << y << " " <<  evtpos.x << " " <<  evtpos.y << std::endl;
-            TryLink( x, y, m_selMod, m_selFrPort, dc, true ); // draw input ports
-        }
+    //drag tag connector
+    else if( m_selTag >= 0 && m_selTagCon >= 0 )
+    {
+        //std::cout << " drag tag connector " << std::endl;
+        wxClientDC dc( parent );
+        parent->DoPrepareDC( dc );
+        dc.SetUserScale( userScale.first, userScale.second );
+        wxPoint evtpos = event.GetLogicalPosition( dc );
+        long x = evtpos.x;
+        long y = evtpos.y;
+        MoveTagCon( x, y, m_selTag, m_selTagCon, dc );
+    }
 
-        //drag output port
-        else if( m_selMod >= 0 && m_selToPort >= 0 )
-        {
-            modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
-            //std::cout << " drag link output " << std::endl;
-            wxClientDC dc( parent );
-            parent->DoPrepareDC( dc );
-            dc.SetUserScale( userScale.first, userScale.second );
-            wxPoint evtpos = event.GetLogicalPosition( dc );
-            long x = evtpos.x;
-            long y = evtpos.y;
-            tryingLink = true;
-            long xM = event.GetPosition().x;
-            long yM = event.GetPosition().y;
-            //std::cout << "dlo scale " << userScale.first << " " << userScale.second << std::endl;
-            //std::cout << "dlo pos " << xM << " " << yM << " " <<  evtpos.x << " " <<  evtpos.y << std::endl;
-            //std::cout << "dlo mod " <<m_selMod << " " <<  m_selToPort << std::endl;
-            TryLink( x, y, m_selMod, m_selToPort, dc, false ); // draw output ports
-            //std::cout << "end dlo " << std::endl;
-        }
+    //drag input port
+    else if( m_selMod >= 0 && m_selFrPort >= 0 )
+    {
+        modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
+        //std::cout << " drag link input " << std::endl;
+        wxClientDC dc( parent );
+        parent->DoPrepareDC( dc );
+        dc.SetUserScale( userScale.first, userScale.second );
+        wxPoint evtpos = event.GetLogicalPosition( dc );
+        long x = evtpos.x;
+        long y = evtpos.y;
+        tryingLink = true;
+        //std::cout << x << " " << y << " " <<  evtpos.x << " " <<  evtpos.y << std::endl;
+        TryLink( x, y, m_selMod, m_selFrPort, dc, true ); // draw input ports
+    }
 
-        //drag module
-        else if( m_selMod >= 0 && m_selFrPort < 0 && m_selToPort < 0 )
-        {
-            modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
-            //std::cout << " drag module " << std::endl;
-            wxClientDC dc( parent );
-            parent->DoPrepareDC( dc );
-            dc.SetUserScale( userScale.first, userScale.second );
-            wxPoint evtpos = event.GetLogicalPosition( dc );
-            long x = evtpos.x;
-            long y = evtpos.y;
-            MoveModule( x, y, m_selMod );
-        }
+    //drag output port
+    else if( m_selMod >= 0 && m_selToPort >= 0 )
+    {
+        modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
+        //std::cout << " drag link output " << std::endl;
+        wxClientDC dc( parent );
+        parent->DoPrepareDC( dc );
+        dc.SetUserScale( userScale.first, userScale.second );
+        wxPoint evtpos = event.GetLogicalPosition( dc );
+        long x = evtpos.x;
+        long y = evtpos.y;
+        tryingLink = true;
+        long xM = event.GetPosition().x;
+        long yM = event.GetPosition().y;
+        //std::cout << "dlo scale " << userScale.first << " " << userScale.second << std::endl;
+        //std::cout << "dlo pos " << xM << " " << yM << " " <<  evtpos.x << " " <<  evtpos.y << std::endl;
+        //std::cout << "dlo mod " <<m_selMod << " " <<  m_selToPort << std::endl;
+        TryLink( x, y, m_selMod, m_selToPort, dc, false ); // draw output ports
+        //std::cout << "end dlo " << std::endl;
+    }
+
+    //drag module
+    else if( m_selMod >= 0 && m_selFrPort < 0 && m_selToPort < 0 )
+    {
+        modules[m_selMod].GetPlugin()->SetHighlightFlag( true );
+        //std::cout << " drag module " << std::endl;
+        wxClientDC dc( parent );
+        parent->DoPrepareDC( dc );
+        dc.SetUserScale( userScale.first, userScale.second );
+        wxPoint evtpos = event.GetLogicalPosition( dc );
+        long x = evtpos.x;
+        long y = evtpos.y;
+        MoveModule( x, y, m_selMod );
     }
 }
 

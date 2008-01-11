@@ -1006,7 +1006,6 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 
     //Now laod the xml data now that we are in the correct directory
     fname = dialog.GetFilename();
-    //network->Load( ConvertUnicode( fname.c_str() ), true );
     canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
 
     //create hierarchy page

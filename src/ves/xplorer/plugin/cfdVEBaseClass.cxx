@@ -103,10 +103,8 @@ cfdVEBaseClass::~cfdVEBaseClass()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    //groupNode = new ves::xplorer::scenegraph::Group();
     m_dcs = new ves::xplorer::scenegraph::DCS();
     m_dcs->SetName( "cfdVEBaseClass" );
-    //m_dataRepresentation = new cfdObjects();
     m_worldDCS = veworldDCS;
     m_model = new Model( m_dcs.get() );
 }

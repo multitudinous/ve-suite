@@ -167,13 +167,11 @@ void Avail_Modules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
         return;
     }
 
-    wxClassInfo* info;
-    info = item_data->pl_clsi;
+    wxClassInfo* info = item_data->pl_clsi;
     if( info )
     {
         UIPluginBase* object;
         object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
-        //object->SetNetworkFrame( canvas );
         object->SetCanvas( canvas );
         object->SetNetwork( canvas->GetActiveNetwork() );
         object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );
@@ -183,7 +181,6 @@ void Avail_Modules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
     else
     {
         UIPluginBase* object = new DefaultPlugin();
-        //object->SetNetworkFrame( canvas );
         object->SetCanvas( canvas );
         object->SetNetwork( canvas->GetActiveNetwork() );
         object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );

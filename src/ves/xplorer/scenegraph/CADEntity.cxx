@@ -126,7 +126,11 @@ CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
 CADEntity::~CADEntity()
 {
     delete m_cadEntityHelper;
-    delete m_physicsRigidBody;
+    
+    if( m_physicsRigidBody )
+    {
+        delete m_physicsRigidBody;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()

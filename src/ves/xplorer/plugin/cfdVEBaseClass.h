@@ -188,10 +188,6 @@ public:
     std::map< std::string, cfdVEBaseClass* > GetCommandNameMap();
 
 private:
-    //This needs to be vector of geometry nodes
-    //cfdModuleGeometry*  geometryNode;
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > m_groupNode;
-
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_worldDCS;
 
     std::string m_objectDescription;

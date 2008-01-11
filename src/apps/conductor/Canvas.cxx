@@ -333,17 +333,17 @@ void Canvas::CreateDefaultNetwork()
     numUnit.first = 10;
     numUnit.second = 10;
     tempNetwork->GetDataValuePair( -1 )->
-    SetData( "m_xUserScale", userScale.first );
+        SetData( "m_xUserScale", userScale.first );
     tempNetwork->GetDataValuePair( -1 )->
-    SetData( "m_yUserScale", userScale.second );
+        SetData( "m_yUserScale", userScale.second );
     tempNetwork->GetDataValuePair( -1 )->
-    SetData( "nPixX", static_cast< long int >( numPix.first ) );
+        SetData( "nPixX", static_cast< long int >( numPix.first ) );
     tempNetwork->GetDataValuePair( -1 )->
-    SetData( "nPixY", static_cast< long int >( numPix.second ) );
+        SetData( "nPixY", static_cast< long int >( numPix.second ) );
     tempNetwork->GetDataValuePair( -1 )->
-    SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
+        SetData( "nUnitX", static_cast< long int >( numUnit.first ) );
     tempNetwork->GetDataValuePair( -1 )->
-    SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
+        SetData( "nUnitY", static_cast< long int >( numUnit.second ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::Update()

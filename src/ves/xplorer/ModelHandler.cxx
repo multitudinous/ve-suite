@@ -279,12 +279,11 @@ void ModelHandler::RemoveModel( Model* modelToBeRemoved )
     {
         if( *iter == modelToBeRemoved )
         {
-            //delete (*iter);
-            //Model* tempModel = (*iter);
             _modelList.erase( iter++ );
             delete modelToBeRemoved;
-            //tempModel = 0;
-            break;
+            vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::RemoveModel "
+                << " Model Removal Successful" << std::endl << vprDEBUG_FLUSH;
+            return;
         }
         else
         {
@@ -292,6 +291,8 @@ void ModelHandler::RemoveModel( Model* modelToBeRemoved )
         }
         // The above code is from : The C++ Standard Library by:Josuttis
     }
+    vprDEBUG( vesDBG, 1 ) << "|\tModelHandler::RemoveModel "
+        << " Model Removal Failed" << std::endl << vprDEBUG_FLUSH;
 }
 /////////////////////////////////////////////////
 Model* ModelHandler::GetActiveModel( void )
