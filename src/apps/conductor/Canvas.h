@@ -81,8 +81,6 @@ public:
     void New( bool promptClearXplorer );
     ///Get the correct size for sub dialogs
     wxRect GetAppropriateSubDialogSize();
-    ///Delete and remove the network event handlers
-    void CleanUpNetworks();
     ///Creates a default network for the user to work on a clean canvas
     void CreateDefaultNetwork();
     ///Update all the network
@@ -93,6 +91,8 @@ public:
     void OnDelMod( wxCommandEvent& event );
 
 protected:
+    ///Delete and remove the network event handlers
+    void CleanUpNetworks();
 
 private:
     std::map < std::string, Network* > networks;

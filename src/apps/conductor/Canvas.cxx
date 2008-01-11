@@ -127,7 +127,14 @@ Canvas::Canvas( wxWindow* parent, int id )
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
-    //CleanUpNetworks();
+    RemoveEventHandler( networks[this->activeId] );
+    networks[this->activeId]->RemoveAllEvents();
+    
+    for( std::map < std::string, Network* >::iterator iter = networks.begin();
+        iter != networks.end(); ++iter )
+    {
+        delete iter->second;
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )

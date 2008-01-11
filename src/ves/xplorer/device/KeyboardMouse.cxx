@@ -163,7 +163,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
     osgTransformedPosition[1] = -transformedPosition[2];
     osgTransformedPosition[2] =  transformedPosition[1];
 
-    /*
+    
     std::cout << " m_x location = " << m_x << std::endl 
               << " m_y location = " << m_y << std::endl 
               << " location = " << osgTransformedPosition[0] << " " << osgTransformedPosition[1] << " " << osgTransformedPosition[2] << std::endl
@@ -175,7 +175,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
               << " m_y " << m_yminScreen << " " << m_ymaxScreen 
               << " z " << m_zvalScreen 
               << " m_width " << m_width << " m_height "<< m_height << std::endl;
-    */
+    
 
     double wandEndPoint[3];
     double distance = m_farFrustum;
@@ -866,7 +866,7 @@ void KeyboardMouse::ProcessSelectionEvents()
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
 
-    //DrawLine( startPoint, endPoint );
+    DrawLine( startPoint, endPoint );
 
     m_beamLineSegment->set( startPoint, endPoint );
 
