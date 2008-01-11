@@ -135,6 +135,7 @@ Canvas::~Canvas()
     {
         delete iter->second;
     }
+    networks.clear();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
