@@ -419,6 +419,7 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
                          _T( "VTK DataSet Files (*.vtk;*.vtu;*.vts;*.vti)|*.vtk;*.vtu;*.vts;*.vti;|StarCD Parameter File (*.param)|*.param;|EnSight(*.ens;*.case)|*.ens;*.case;|MFIX (*.mfix)|*.mfix;|Fluent (*.cas)|*.cas;|AVS (*.avs)|*.avs;|Dicom (*.dcm)|*.dcm;|All Files (*.*)|*.*" ),
                          wxOPEN | wxFILE_MUST_EXIST,
                          wxDefaultPosition );
+    dialog.CentreOnParent();
 
     if( dialog.ShowModal() == wxID_OK )
     {
@@ -461,6 +462,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
                          _T( "VTK Surface Files (*.vtk;*.vtp)|*.vtk;*.vtp;" ),
                          wxOPEN | wxFILE_MUST_EXIST,
                          wxDefaultPosition );
+    dialog.CentreOnParent();
 
     if( dialog.ShowModal() == wxID_OK )
     {
@@ -576,9 +578,10 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
                              _T( "" ),
                              _T( "" ),
                              _T( "VTK Texture Files (*.vti)|*.vti;" ),
-                             wxOPEN | wxFILE_MUST_EXIST | wxCHANGE_DIR,
+                             wxOPEN | wxFILE_MUST_EXIST,
                              wxDefaultPosition );
-
+        dialog.CentreOnParent();
+        
         if( dialog.ShowModal() == wxID_OK )
         {
             wxFileName textureDir( dialog.GetPath() );
