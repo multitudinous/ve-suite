@@ -42,7 +42,7 @@
 #if defined(VPR_OS_Windows)
 static const std::string DSO_SUFFIX( ".dll" );
 #elif defined(VPR_OS_Darwin)
-static const std::string DSO_SUFFIX( ".dylib" );
+static const std::string DSO_SUFFIX( ".bundle" );
 #else
 static const std::string DSO_SUFFIX( ".so" );
 #endif
