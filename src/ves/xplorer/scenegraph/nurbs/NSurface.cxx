@@ -50,7 +50,7 @@ NURBSSurface::NURBSSurface( unsigned int udegree,
 //Copy constructor                         //
 /////////////////////////////////////////////
 NURBSSurface::NURBSSurface( const NURBSSurface& rhs )
-        : NURBSObject( rhs )
+: NURBSObject( rhs )
 {
     _surfDerivatives = rhs._surfDerivatives;
 }
@@ -72,42 +72,70 @@ NURBSSurface& NURBSSurface::operator=( const NURBSSurface& rhs )
 ////////////////////////////////////////////////////////////////////////////
 void NURBSSurface::_interpolateWithinBounds( double* uBounds, double* vBounds )
 {
-    _interpolateWithinRange( uBounds[0], uBounds[1], vBounds[0], vBounds[1] );
+    _interpolateWithinModifiedRange( );
 }
 ///////////////////////////////////////////////////////////////////
-void NURBSSurface::_interpolateWithinRange( double umin, double umax,
-                                            double vmin, double vmax )
+void NURBSSurface::_interpolateWithinModifiedRange( /*double umin, double umax,
+                                            double vmin, double vmax*/ )
 {
 
     //This function assumes all the proper checks have been made
     //before entering!!!!!
-    double uparam = umin;
-    double vparam = vmin;
+    double uparam = 0;//umin;
+    double vparam = 0;//vmin;
 
-    unsigned int uIndexMin = _findNearestParameterIndex( "U", umin );
-    unsigned int uIndexMax = _findNearestParameterIndex( "U", umax );
-    unsigned int vIndexMin = _findNearestParameterIndex( "V", vmin );
-    unsigned int vIndexMax = _findNearestParameterIndex( "V", vmax );
-
+    unsigned int uIndexMin = m_modifiedUBounds[0];
+    unsigned int uIndexMax = m_modifiedUBounds[1];
+    unsigned int vIndexMin = m_modifiedVBounds[0];
+    unsigned int vIndexMax = m_modifiedVBounds[1];
 
     std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > surfaceInfo;
 
     bool hasUderivative = ( _degree["U"] > 1 ) ? true : false;
     bool hasVderivative = ( _degree["V"] > 1 ) ? true : false;
     bool hasUVderivative = ( hasVderivative && hasUderivative ) ? true : false;
-
-    for( unsigned int v = vIndexMin; v <= vIndexMax; v++ )
+    //std::cout<<"index bounds: "<<uIndexMin<<" "<<uIndexMax<<std::endl;
+    //std::cout<<"index bounds: "<<vIndexMin<<" "<<vIndexMax<<std::endl;
+    unsigned int vIndexBound = (vIndexMax-vIndexMin+1);
+    unsigned int uIndexBound = (uIndexMax-uIndexMin+1);
+    unsigned int numberOfVertsToUpdate = ( vIndexBound )*( uIndexBound );
+    unsigned int u = 0;
+    unsigned int v = 0;
+    for( unsigned int nv = 0; nv < numberOfVertsToUpdate; ++nv )
     {
-        _calculateBasisFunctionsAndDerivatives( vparam, "V" );
+        u = uIndexMin + ( nv + uIndexMin )% uIndexBound;
+        v = vIndexMin +( (nv + uIndexMin) / uIndexBound) % vIndexBound;
+        uparam = m_uParameters.at(u);
+        vparam = m_vParameters.at(v);
+        surfaceInfo = _calculatePointOnSurface( uparam, vparam, _currentSpan["U"].at(u),
+                                                                    _currentSpan["V"].at(v) );
+
+        _interpolatedPoints[0][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 0 );
+        //S(u,v)
+        _surfDerivatives[0][0][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 0 );
+        if( hasUVderivative )
+        {
+            //dS/dv
+            _surfDerivatives[0][1][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 1 );
+
+            //dS/dU
+            _surfDerivatives[1][0][v*_meshDimensions["U"] + u] = surfaceInfo[1].at( 0 );
+        }
+     //   std::cout<<"u,v: ("<<u<<","<<v<<")"<<std::endl;
+    }
+    /*for( unsigned int v = vIndexMin; v <= vIndexMax; v++ )
+    {
+        //std::cout<<_parameterValues["V"][v];
+        vparam = m_vParameters.at(v);
+        std::cout<<m_vParameters.at(v);
         for( unsigned int u = uIndexMin; u <= uIndexMax; u++ )
         {
-            _calculateBasisFunctionsAndDerivatives( uparam, "U" );
-            surfaceInfo = _calculatePointOnSurface( uparam, vparam, _currentSpan["U"], _currentSpan["V"] );
+            //uparam = _parameterValues["U"][u];
+            uparam = m_uParameters.at(u);
+            surfaceInfo = _calculatePointOnSurface( uparam, vparam, _currentSpan["U"].at(u),
+                                                                    _currentSpan["V"].at(v) );
 
-            //_interpolatedPoints[0].push_back(surfaceInfo[0].at(0));
             _interpolatedPoints[0][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 0 );
-            m_uvParameters[v*_meshDimensions["U"] + u ] = ves::xplorer::scenegraph::nurbs::Point( uparam, vparam, 0 ) ;
-
             //S(u,v)
             _surfDerivatives[0][0][v*_meshDimensions["U"] + u] = surfaceInfo[0].at( 0 );
             if( hasUVderivative )
@@ -117,7 +145,7 @@ void NURBSSurface::_interpolateWithinRange( double umin, double umax,
 
                 //dS/dU
                 _surfDerivatives[1][0][v*_meshDimensions["U"] + u] = surfaceInfo[1].at( 0 );
-
+*/
                 /*try---these aren't used for anything now
                 {
                    //ds/dudv
@@ -127,16 +155,9 @@ void NURBSSurface::_interpolateWithinRange( double umin, double umax,
                 {
                     ///just means we have a lower degree surface (<3)
                 }*/
-            }
-            //uparam += _interpolationStepSize["U"];
-            uparam = std::min( uparam + _interpolationStepSize["U"], umax );
+            /*}
         }
-
-        uparam = umin;
-        //vparam += _interpolationStepSize["V"];
-        vparam = std::min( vparam + _interpolationStepSize["V"], vmax );
-    }
-
+    }*/
 }
 ////////////////////////////////
 void NURBSSurface::Interpolate()
@@ -176,28 +197,49 @@ void NURBSSurface::Interpolate()
     _interpolatedPoints.clear();
 
     _parameterValues.clear();
+    m_uParameters.clear();
+    m_vParameters.clear();
     m_uvParameters.clear();
 
     double uparam = 0.0;
     double vparam = 0.0;
 
+    //reduce the number of approximation points 
+    //if the KnotVector contains no interior points
+    if( !_knotVectors["U"].HasInteriorKnots() )
+    {
+        _meshDimensions["U"] = _nControlPoints["U"]; 
+    }
+    if( !_knotVectors["V"].HasInteriorKnots() )
+    {
+        _meshDimensions["V"] = _nControlPoints["V"];
+    }
+
     _interpolationStepSize["U"] = 1.0 / ( _meshDimensions["U"] - 1 );
     _interpolationStepSize["V"] = 1.0 / ( _meshDimensions["V"] - 1 );
+    bool addToSpan = false;
 
     std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > surfaceInfo;
+    //std::cout<<"Is this being called multiple time?!!!!"<<std::endl;
     for( unsigned int v = 0;v < _meshDimensions["V"]; v++ )
     {
+        addToSpan = false;
         _parameterValues["V"][vparam] = v;
-        _calculateBasisFunctionsAndDerivatives( vparam, "V" );
+        m_vParameters.push_back( vparam );
+        _calculateBasisFunctionsAndDerivatives( vparam,v,"V" );
         for( unsigned int u = 0;u < _meshDimensions["U"]; u++ )
         {
             if( !v )
             {
                 _parameterValues["U"][uparam] = u;
+                m_uParameters.push_back( uparam );
+                addToSpan = true;
             }
-            _calculateBasisFunctionsAndDerivatives( uparam, "U" );
+            _calculateBasisFunctionsAndDerivatives( uparam,u,"U",addToSpan );
 
-            surfaceInfo = _calculatePointOnSurface( uparam, vparam, _currentSpan["U"], _currentSpan["V"] );
+            surfaceInfo = _calculatePointOnSurface( uparam, vparam,
+                                                    _currentSpan["U"].at(u),
+                                                    _currentSpan["V"].at(v) );
             _interpolatedPoints[0].push_back( surfaceInfo[0].at( 0 ) );
             m_uvParameters.push_back( ves::xplorer::scenegraph::nurbs::Point( uparam, vparam, 0 ) );
 
@@ -227,9 +269,11 @@ void NURBSSurface::Interpolate()
         uparam = 0.0;
         vparam += _interpolationStepSize["V"];
     }
+    //std::cout<<"ParameterValues size Interpolate: "<<_parameterValues["U"].size()<<" "<<_parameterValues["V"].size()<<std::endl;
 }
 ////////////////////////////////////////////////////////////////
-std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > NURBSSurface::_calculatePointOnSurface( double u,
+std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> >
+ NURBSSurface::_calculatePointOnSurface( double u,
         double v,
         unsigned int uspan,
         unsigned int vspan )
@@ -250,23 +294,25 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
         tempUContribution.clear();
         for( unsigned int l = 0; l <= vdegree; l++ )
         {
-            vindex = _currentSpan["V"] - vdegree + l;
+            //vindex = _currentSpan["V"].at(v) - vdegree + l;
+            vindex = vspan - vdegree + l;
             ucontrib[0] = 0;
             ucontrib[1] = 0;
             ucontrib[2] = 0;
             ucontrib[3] = 0.0;
             for( unsigned int k = 0; k <= udegree; k++ )
             {
-                uindex = _currentSpan["U"] - udegree + k;
+                //uindex = _currentSpan["U"].at(u) - udegree + k;
+                uindex = uspan - udegree + k;
 
                 ucontrib[0] += ( _controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedX()
-                                 * _derivativeBasisFunctions["U"][n].at( k ) );
+                                 * _derivativeBasisFunctions["U"][n][u].at( k ) );
                 ucontrib[1] += ( _controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedY()
-                                 * _derivativeBasisFunctions["U"][n].at( k ) );
+                                 * _derivativeBasisFunctions["U"][n][u].at( k ) );
                 ucontrib[2] += ( _controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedZ()
-                                 * _derivativeBasisFunctions["U"][n].at( k ) );
+                                 * _derivativeBasisFunctions["U"][n][u].at( k ) );
                 ucontrib[3] += _controlPoints[0][vindex*_nControlPoints["U"] + uindex].Weight()
-                               * _derivativeBasisFunctions["U"][n].at( k );
+                               * _derivativeBasisFunctions["U"][n][u].at( k );
             }
             //invWeight = 1.0/ucontrib[3];
             tempUContribution.push_back( ves::xplorer::scenegraph::nurbs::ControlPoint( ucontrib[0]/*invWeight*/,
@@ -285,13 +331,13 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
             for( unsigned int l = 0; l <= vdegree; l++ )
             {
                 sw[0] += ( tempUContribution[l].X()
-                           * _derivativeBasisFunctions["V"][j].at( l ) );
+                           * _derivativeBasisFunctions["V"][j][v].at( l ) );
                 sw[1] += ( tempUContribution[l].Y()
-                           * _derivativeBasisFunctions["V"][j].at( l ) );
+                           * _derivativeBasisFunctions["V"][j][v].at( l ) );
                 sw[2] += ( tempUContribution[l].Z()
-                           * _derivativeBasisFunctions["V"][j].at( l ) );
+                           * _derivativeBasisFunctions["V"][j][v].at( l ) );
                 sw[3] += ( tempUContribution[l].Weight()
-                           * _derivativeBasisFunctions["V"][j].at( l ) );
+                           * _derivativeBasisFunctions["V"][j][v].at( l ) );
             }
             aDerivatives[n].push_back( ControlPoint( sw[0], sw[1], sw[2], sw[3] ) );
         }
@@ -359,6 +405,7 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
         }
     }
 
+    //std::cout<<resutlingWeightedPoint[0][0]<<std::endl;
     return resutlingWeightedPoint;
 }
 //////////////////////////////////////////////////////////////////////////

@@ -105,10 +105,20 @@ public:
     void SetInterpolationGridSize( unsigned int stepSize, std::string direction = "U" );
 
     ///Update the object as an effect of moving a control point
-    void UpdateMesh( /*std::vector<*/ves::xplorer::scenegraph::nurbs::ControlPoint modifiedControlPoint );
+    //void UpdateMesh( /*std::vector<*/ves::xplorer::scenegraph::nurbs::ControlPoint modifiedControlPoint );
+    void UpdateMesh( );
+
+    ///Update the data of a specific ControlPoint
+    ///\param index The index of the ControlPoint to update
+    ///\param newPosition The new values for the ControlPoint position
+    void UpdateControlPointPosition( unsigned int index, Point newPosition );
 
     ///Interpolate the NURBS object.
     virtual void Interpolate() = 0;
+    
+    ///Update the information associated with the selected/moving ControlPoint\n
+    ///\param index The index of the currently selected ControlPoint 
+    void SetMovingControlPoint( unsigned int index );
 
     ///Get the NURBSObject::Type
     Type GetType();
@@ -131,6 +141,11 @@ public:
 
     ///Get the minimum degree of the NURBSObject
     unsigned int GetMinimumDegree();
+    
+    //Get the indecies of the verticies that need updating after\n
+    //moving a ControlPoint
+    std::vector<unsigned int> GetChangedTessellatedVertexIndecies();
+
     ///Get a specified control point
     ///\param index The key to search for in the control point list
     ves::xplorer::scenegraph::nurbs::ControlPoint* GetControlPoint( size_t index );
@@ -199,8 +214,12 @@ protected:
     ///Modification of the _calculateBasisFunctions algorithm
     ///\param parameter The interpolating parameter
     ///\param direction "U" or "V" direction
+    ///\param spanIndex The current span index in the vector
+    ///\param addToSpan Flag to update the current span vector
     void _calculateBasisFunctionsAndDerivatives( double parameter,
-                                                 std::string direction );
+                                                 unsigned int spanIndex,
+                                                 std::string direction,
+                                                 bool addToSpan = true);
 
     ///Find the nearest parameter index in a given direction
     ///\param direction "U" or "V" direction
@@ -219,13 +238,20 @@ protected:
     ///\param umax The max u param to interpolate between
     ///\param vmin The min v param to interpolate between
     ///\param vmax The max v param to interpolate between
-    virtual void _interpolateWithinRange( double umin, double umax,
-                                          double vmin, double vmax ) = 0;
+    //virtual void _interpolateWithinRange( double umin, double umax,
+                                          //double vmin, double vmax ) = 0;
+    virtual void _interpolateWithinModifiedRange( ) = 0;
 
     Type _type; ///<The NURBSObject type.
 
     bool _needsRetessellation;///<Means the paramaters have changed.
+    unsigned int m_modifiedUBounds[2];///<The modified vertex index bounds
+    unsigned int m_modifiedVBounds[2];///<The modified vertex index bounds
+
+    std::vector<unsigned int> m_changedVertexIndecies;///<The index of verticies that have changed
     std::map<std::string, std::map<double, unsigned int > > _parameterValues;///<Map holding the actual parameter values in each direction and it's index
+    std::vector<double> m_uParameters;///<U parameter values
+    std::vector<double> m_vParameters;///<V parameter values
     std::map<std::string, double> _interpolationStepSize;///<The tessellation u/v step size
 
     std::map<std::string, unsigned int> _meshDimensions;///<The number of interpolated mesh points in the u/v direction
@@ -237,12 +263,12 @@ protected:
 
     unsigned int _nTotalControlPoints;///<The number of ControlPoint s.
 
-    std::map<std::string, unsigned int> _currentSpan;///<The current span in the knot vector.
+    std::map<std::string, std::vector<unsigned int> > _currentSpan;///<The current span in the knot vector.
 
     std::map<std::string, ves::xplorer::scenegraph::nurbs::KnotVector> _knotVectors;///<The raw u/v knot vectors
 
-    std::map<std::string, std::map< unsigned int, std::vector<double> > > _knotDifferences;///<Knot differences
-    std::map<std::string, std::map< unsigned int, std::vector<double> > > _derivativeBasisFunctions;///<The u/v derivatives of basis functions
+    std::map<std::string, std::map< unsigned int, std::map< double,std::vector<double> > > > _knotDifferences;///<Knot differences
+    std::map<std::string, std::map< unsigned int, std::map< double,std::vector<double> > > > _derivativeBasisFunctions;///<The u/v derivatives of basis functions
 
     std::map<unsigned int, std::vector<double> > _uBasisFunctionsDerivatives;///<The kth derivative u basis functions
     std::map<unsigned int, std::vector<double> > _vBasisFunctionsDerivatives;///<The kth derivative v basis functions

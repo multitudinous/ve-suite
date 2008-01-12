@@ -87,6 +87,15 @@ void NURBSControlMesh::_initializeStateSet()
     ss->setMode( GL_POINT_SMOOTH, osg::StateAttribute::ON );
     ss->setAttribute( pointProperties.get() );
 }
+////////////////////////////////////////////////////////////////////////////////
+void NURBSControlMesh::UpdateControlPointPosition( int index, osg::Vec3 position)
+{
+    m_controlPoints.at(index).SetX(position.x());    
+    m_controlPoints.at(index).SetY(position.y());    
+    m_controlPoints.at(index).SetZ(position.z());    
+    (*m_controlMeshVerts)[index].set(position);
+    m_controlMeshVerts->dirty();
+}
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
                                          unsigned int numU,
@@ -120,6 +129,7 @@ void NURBSControlMesh::_updateControlMeshPrimitives()
         m_controlMeshVerts->push_back( osg::Vec3d( m_controlPoints.at(i).X(),
                                                    m_controlPoints.at(i).Y(),
                                                    m_controlPoints.at(i).Z()));
+        //m_controlMeshVerts->push_back( static_cast<osg::Vec3d>(m_controlPoints.at(i) ));
     }
 
     if( m_isSurface )

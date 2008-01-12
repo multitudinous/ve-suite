@@ -49,6 +49,7 @@ KnotVector::KnotVector()
 /////////////////////////////////////////////
 KnotVector::KnotVector( const KnotVector& rhs )
 {
+    //std::cout<<"Knot vector copy constructor"<<std::endl;
     _spacing = rhs._spacing;
     _knotMultiplicityMap = rhs._knotMultiplicityMap;
     _nKnots = rhs._nKnots;
@@ -61,6 +62,7 @@ KnotVector::~KnotVector()
 ///////////////////////////////////////////////////////
 KnotVector& KnotVector::operator=( const KnotVector& rhs )
 {
+    //std::cout<<"Knot vector operator="<<std::endl;
     if( this != &rhs )
     {
         _spacing = rhs._spacing;
@@ -99,6 +101,15 @@ void KnotVector::AddKnot( double knot )
 
     _currentSpan = _knotMultiplicityMap.begin();
     _nKnots++;
+}
+///////////////////////////////////
+bool KnotVector::HasInteriorKnots()
+{
+    if( _knotMultiplicityMap.size() > 2 )
+    {
+       return true;
+    }
+    return false;
 }
 /////////////////////////////////////
 std::string KnotVector::KnotSpacing()
@@ -164,7 +175,7 @@ double KnotVector::Knot( unsigned int index )
     unsigned int currentIndex = 0;
     unsigned int multiplicity = 1;
     for( std::map<double , unsigned int>::iterator itr = _knotMultiplicityMap.begin();
-            itr != _knotMultiplicityMap.end(); itr++ )
+            itr != _knotMultiplicityMap.end(); ++itr )
     {
         multiplicity = 1;
         while( multiplicity <= itr->second )

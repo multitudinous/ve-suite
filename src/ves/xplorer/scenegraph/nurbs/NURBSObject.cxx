@@ -47,8 +47,8 @@ NURBSObject::NURBSObject( Type type, unsigned int udegree,
 
     _nTotalControlPoints = 0;
     _needsRetessellation = true;
-    _currentSpan["U"] = 0;
-    _currentSpan["V"] = 0;
+    _currentSpan["U"][0] = 0;
+    _currentSpan["V"][0] = 0;
 
     _nControlPoints["U"] = 1;
     _nControlPoints["V"] = 1;
@@ -65,6 +65,10 @@ NURBSObject::NURBSObject( Type type, unsigned int udegree,
 
     _order["U"] = _degree["U"] + 1;
     _order["V"] = _degree["V"] + 1;
+    m_modifiedUBounds[0] = 0;
+    m_modifiedUBounds[1] = 1;
+    m_modifiedVBounds[0] = 0;
+    m_modifiedVBounds[1] = 1;
 
 }
 /////////////////////////////////////////////
@@ -80,6 +84,7 @@ NURBSObject::NURBSObject( const NURBSObject& rhs )
     _needsRetessellation = rhs._needsRetessellation;
     _interpolationStepSize = rhs._interpolationStepSize;
     _currentSpan = rhs._currentSpan;
+    _derivativeBasisFunctions = rhs._derivativeBasisFunctions;
     _knotDifferences = rhs._knotDifferences;
     _knotVectors = rhs._knotVectors;
     _uBasisFunctionsDerivatives = rhs._uBasisFunctionsDerivatives;
@@ -87,6 +92,24 @@ NURBSObject::NURBSObject( const NURBSObject& rhs )
     _controlPoints = rhs._controlPoints;
     _interpolatedPoints = rhs._interpolatedPoints;
     m_uvParameters = rhs.m_uvParameters;
+    _parameterValues = rhs._parameterValues;
+    m_uParameters = rhs.m_uParameters;
+    m_vParameters = rhs.m_vParameters;
+
+    //std::cout<<"Parameter values size copy objex: "<<_parameterValues["U"].size()<<std::endl;
+
+    _degree = rhs._degree;
+
+    _order = rhs._order;
+    for( size_t i = 0; i <   m_changedVertexIndecies.size(); ++i )
+    {
+        m_changedVertexIndecies.push_back( rhs.m_changedVertexIndecies.at(i) );
+    }
+
+    m_modifiedUBounds[0] = rhs.m_modifiedUBounds[0];
+    m_modifiedUBounds[1] = rhs.m_modifiedUBounds[1];
+    m_modifiedVBounds[0] = rhs.m_modifiedVBounds[0];
+    m_modifiedVBounds[1] = rhs.m_modifiedVBounds[1];
 }
 /////////////////////////
 NURBSObject::~NURBSObject()
@@ -104,6 +127,7 @@ NURBSObject::~NURBSObject()
 
     _needsRetessellation = true;
     m_uvParameters.clear();
+    m_changedVertexIndecies.clear();
 }
 ////////////////////////////////////////////////////////
 NURBSObject& NURBSObject::operator=( const NURBSObject& rhs )
@@ -118,8 +142,13 @@ NURBSObject& NURBSObject::operator=( const NURBSObject& rhs )
 
         _needsRetessellation = rhs._needsRetessellation;
         _interpolationStepSize = rhs._interpolationStepSize;
+        _parameterValues = rhs._parameterValues;
+        m_uParameters = rhs.m_uParameters;
+        m_vParameters = rhs.m_vParameters;
 
+        //std::cout<<"Parameter values size equal objex: "<<_parameterValues["U"].size()<<std::endl;
         _currentSpan = rhs._currentSpan;
+        _derivativeBasisFunctions = rhs._derivativeBasisFunctions;
 
         _knotDifferences = rhs._knotDifferences;
 
@@ -130,7 +159,15 @@ NURBSObject& NURBSObject::operator=( const NURBSObject& rhs )
 
         _controlPoints = rhs._controlPoints;
         _interpolatedPoints = rhs._interpolatedPoints;
-        m_uvParameters = rhs.m_uvParameters;
+        m_changedVertexIndecies.clear();
+        for( size_t i = 0; i <   m_changedVertexIndecies.size(); ++i )
+        {
+            m_changedVertexIndecies.push_back( rhs.m_changedVertexIndecies.at(i) );
+        }
+        m_modifiedUBounds[0] = rhs.m_modifiedUBounds[0];
+        m_modifiedUBounds[1] = rhs.m_modifiedUBounds[1];
+        m_modifiedVBounds[0] = rhs.m_modifiedVBounds[0];
+        m_modifiedVBounds[1] = rhs.m_modifiedVBounds[1];
     }
     return *this;
 }
@@ -189,16 +226,31 @@ NURBSObject::Type NURBSObject::GetType()
 {
     return _type;
 }
-//////////////////////////////////////////////////////////////////////////////////////
-void NURBSObject::UpdateMesh( /*std::vector<*/ves::xplorer::scenegraph::nurbs::ControlPoint modifiedControlPoint )
+/////////////////////////////////////////////////////////////
+void NURBSObject::SetMovingControlPoint( unsigned int index )
 {
     ///This assumes the control point data has already been updated!!!
     double ubounds[2] = {0.0, 1.0};
     double vbounds[2] = {0.0, 1.0};
 
+    /*for(std::map<double, unsigned int>::iterator iter = _parameterValues["V"].begin();
+        iter != _parameterValues["V"].end();
+        ++iter)
+    {
+        std::cout<<(*iter).first<<std::endl;
+    }
+    for(std::map<double, unsigned int>::iterator iter = _parameterValues["U"].begin();
+        iter != _parameterValues["U"].end();
+        ++iter)
+    {
+        std::cout<<(*iter).first<<std::endl;
+    }*/
+    ControlPoint modifiedControlPoint = _controlPoints[0][index];
     unsigned int vIndex = modifiedControlPoint.GetRowIndex();
     unsigned int uIndex = modifiedControlPoint.GetColumnIndex();
 
+    //std::cout<<"Control Point index" <<std::endl;
+    //std::cout<<uIndex<<" "<<vIndex<<std::endl;
     ubounds[0] = _knotVectors["U"].Knot( uIndex );
     ubounds[1] = _knotVectors["U"].Knot( uIndex + _degree["U"] + 1 );
 
@@ -206,10 +258,51 @@ void NURBSObject::UpdateMesh( /*std::vector<*/ves::xplorer::scenegraph::nurbs::C
     {
         vbounds[0] = _knotVectors["V"].Knot( vIndex );
         vbounds[1] = _knotVectors["V"].Knot( vIndex + _degree["V"] + 1 );
+        //std::cout<< uIndex + _degree["U"] + 1 <<" "<< vIndex + _degree["V"] + 1 <<std::endl;
     }
-    _interpolateWithinBounds( ubounds, vbounds );
+    //std::cout<<"Bound values:" <<std::endl;
+    //std::cout<<ubounds[0]<<" "<<ubounds[1]<<std::endl;
+    //std::cout<<vbounds[0]<<" "<<vbounds[1]<<std::endl;
 
+    m_modifiedUBounds[0] = _findNearestParameterIndex( "U", ubounds[0] );
+    m_modifiedUBounds[1] = _findNearestParameterIndex( "U", ubounds[1] );
+    m_modifiedVBounds[0] = _findNearestParameterIndex( "V", vbounds[0] );
+    m_modifiedVBounds[1] = _findNearestParameterIndex( "V", vbounds[1] );
+    //std::cout<<"Modified bounds" <<std::endl;
+    //std::cout<<m_modifiedUBounds[0]<<" "<<m_modifiedUBounds[1]<<std::endl;
+    //std::cout<<m_modifiedVBounds[0]<<" "<<m_modifiedVBounds[1]<<std::endl;
+
+
+    std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> > surfaceInfo;
+
+    bool hasUderivative = ( _degree["U"] > 1 ) ? true : false;
+    bool hasVderivative = ( _degree["V"] > 1 ) ? true : false;
+    bool hasUVderivative = ( hasVderivative && hasUderivative ) ? true : false;
+
+    m_changedVertexIndecies.clear();
+    for( unsigned int v = m_modifiedVBounds[0]; v <= m_modifiedVBounds[1]; v++ )
+    {
+        for( unsigned int u = m_modifiedUBounds[0]; u <= m_modifiedUBounds[1]; u++ )
+        {
+            m_changedVertexIndecies.push_back( v*_meshDimensions["U"] + u );
+     //       std::cout<<m_changedVertexIndecies.back()<<std::endl;
+        }
+    }
 }
+///////////////////////////////
+void NURBSObject::UpdateMesh( )
+{
+    ///This assumes the control point data has already been updated!!!
+    _interpolateWithinModifiedRange( );
+}
+/////////////////////////////////////////////////////////////////
+void NURBSObject::UpdateControlPointPosition( unsigned int index,
+                                              Point newPosition )
+{
+    _controlPoints[0][index].SetX( newPosition.X() );
+    _controlPoints[0][index].SetY( newPosition.Y() );
+    _controlPoints[0][index].SetZ( newPosition.Z() );
+}          
 //////////////////////////////////////////////////////////////////////
 unsigned int NURBSObject::NumInterpolatedPoints( std::string direction )
 {
@@ -271,7 +364,8 @@ void NURBSObject::Interpolate()
 void NURBSObject::_interpolateWithinBounds( double* uBounds, double* vBounds )
 {
 
-    _interpolateWithinRange( uBounds[0], uBounds[1], vBounds[0], vBounds[1] );
+    //_interpolateWithinRange( uBounds[0], uBounds[1], vBounds[0], vBounds[1] );
+    _interpolateWithinModifiedRange( );
 }
 ////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctions( double parameter,
@@ -279,6 +373,20 @@ void NURBSObject::_calculateBasisFunctions( double parameter,
 {
     std::cout << "Not implemented!!" << std::endl;
     std::cout << "Use NURBSObject::_calculateBasisFunctionsAndDerivatives" << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////
+std::vector<unsigned int> NURBSObject::GetChangedTessellatedVertexIndecies()
+{
+    /*std::cout<<"NURBSObject::GetChangedTessellatedVertexIndecies"<<std::endl;
+    std::vector<unsigned int>::iterator itr;
+    for( itr = m_changedVertexIndecies.begin();
+         itr != m_changedVertexIndecies.end();
+         itr++ )
+    {
+        std::cout<<(*itr)<<std::endl;
+    }*/
+
+    return m_changedVertexIndecies;
 }
 /////////////////////////////////////
 unsigned int NURBSObject::GetMinimumDegree()
@@ -303,13 +411,20 @@ unsigned int NURBSObject::_calculateBinomialCoefficients( unsigned int row,
 }
 /////////////////////////////////////////////////////////////////////////
 void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
-                                                          std::string direction )
+                                                          unsigned int spanIndex,
+                                                          std::string direction,
+                                                          bool addToSpan )
 {
-    _currentSpan[direction] = _knotVectors[direction].FindKnotSpan( parameter,
-                              _degree[direction] );
+    if( addToSpan )
+    {
+        _currentSpan[direction].push_back(  _knotVectors[direction].FindKnotSpan( parameter,
+                              _degree[direction] ) );
+    }
+    //std::cout<<"Span["<<direction<<"]: "<<_currentSpan[direction].at(spanIndex)<<std::endl;
 
-    _knotDifferences[direction].clear();
-    _knotDifferences[direction][0].push_back( 1.0 );
+
+    _knotDifferences[direction][0][parameter].clear();
+    _knotDifferences[direction][0][parameter].push_back( 1.0 );
 
     std::vector<double> left;
     std::vector<double> right;
@@ -323,8 +438,8 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
     for( size_t j = 1; j <= _degree[direction]; j++ )
     {
 
-        left.push_back( parameter - _knotVectors[direction].Knot( _currentSpan[direction] + 1 - j ) );
-        right.push_back( _knotVectors[direction].Knot( _currentSpan[direction] + j ) - parameter );
+        left.push_back( parameter - _knotVectors[direction].Knot( _currentSpan[direction].at(spanIndex) + 1 - j ) );
+        right.push_back( _knotVectors[direction].Knot( _currentSpan[direction].at(spanIndex) + j ) - parameter );
 
         saved = 0.0;
         temp = 0.0;
@@ -332,22 +447,22 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
         for( size_t r = 0; r < j; r++ )
         {
             //Lower triangle for basis function table
-            _knotDifferences[direction][j].push_back( right[r+1] + left[j-r] );
-            temp = _knotDifferences[direction][r][j-1] / _knotDifferences[direction][j][r];
+            _knotDifferences[direction][j][parameter].push_back( right[r+1] + left[j-r] );
+            temp = _knotDifferences[direction][r][parameter][j-1] / _knotDifferences[direction][j][parameter][r];
 
 
             //Upper triangle for basis function table
-            _knotDifferences[direction][r].push_back( saved + ( right[r+1]*temp ) );
+            _knotDifferences[direction][r][parameter].push_back( saved + ( right[r+1]*temp ) );
             saved = left[j-r] * temp;
         }
-        _knotDifferences[direction][j].push_back( saved );
+        _knotDifferences[direction][j][parameter].push_back( saved );
     }
-    _derivativeBasisFunctions[direction].clear();
+    _derivativeBasisFunctions[direction][0][parameter].clear();
 
     //Initialize the "0th" derivative in our derivative map
     for( size_t j = 0; j <= _degree[direction]; j++ )
     {
-        _derivativeBasisFunctions[direction][0].push_back( _knotDifferences[direction][j].at( _degree[direction] ) );
+        _derivativeBasisFunctions[direction][0][parameter].push_back( _knotDifferences[direction][j][parameter].at( _degree[direction] ) );
     }
 
     int row1 = 0;
@@ -379,9 +494,9 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
             if( r >= k )
             {
                 //a[s2][0] = a[s1][0]/ndu[pk+1][rk]
-                a[row2*( _degree[direction] + 1 )] = a[row1*( _degree[direction] + 1 )] / _knotDifferences[direction][pk+1][rk];
+                a[row2*( _degree[direction] + 1 )] = a[row1*( _degree[direction] + 1 )] / _knotDifferences[direction][pk+1][parameter][rk];
 
-                d = a[row2*( _degree[direction] + 1 )] * _knotDifferences[direction][rk][pk];
+                d = a[row2*( _degree[direction] + 1 )] * _knotDifferences[direction][rk][parameter][pk];
             }
 
             if( rk >= -1 )
@@ -406,17 +521,17 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
             {
                 a[row2*( _degree[direction] + 1 ) + j] = ( a[row1*( _degree[direction] + 1 ) + ( j )]
                                                            - a[row1*( _degree[direction] + 1 ) + ( j - 1 )] )
-                                                         / _knotDifferences[direction][pk+1][rk+j];
+                                                         / _knotDifferences[direction][pk+1][parameter][rk+j];
 
-                d += a[row2*( _degree[direction] + 1 ) + j] * _knotDifferences[direction][rk+j][pk];
+                d += a[row2*( _degree[direction] + 1 ) + j] * _knotDifferences[direction][rk+j][parameter][pk];
             }
 
             if( r <= pk )
             {
-                a[row2*( _degree[direction] + 1 ) + k] = -a[row1*( _degree[direction] + 1 ) + ( k - 1 )] / _knotDifferences[direction][pk+1][r];
-                d += a[row2*( _degree[direction] + 1 ) + k] * _knotDifferences[direction][r][pk];
+                a[row2*( _degree[direction] + 1 ) + k] = -a[row1*( _degree[direction] + 1 ) + ( k - 1 )] / _knotDifferences[direction][pk+1][parameter][r];
+                d += a[row2*( _degree[direction] + 1 ) + k] * _knotDifferences[direction][r][parameter][pk];
             }
-            _derivativeBasisFunctions[direction][k].push_back( d );
+            _derivativeBasisFunctions[direction][k][parameter].push_back( d );
 
             //check this if things go bad!!!
             tempRow = row1;
@@ -430,7 +545,7 @@ void NURBSObject::_calculateBasisFunctionsAndDerivatives( double parameter,
     {
         for( int j = 0; j <= int( _degree[direction] ); j++ )
         {
-            _derivativeBasisFunctions[direction][k][j] *= r;
+            _derivativeBasisFunctions[direction][k][parameter][j] *= r;
         }
         r *= (( _degree[direction] ) - k );
     }
@@ -442,19 +557,47 @@ unsigned int NURBSObject::_findNearestParameterIndex( std::string direction,
 {
     std::map<double, unsigned int >::iterator lowerNearestValue;
     //endpoints
-    if( parameter == 0.f )
+    /*if( parameter == 0.f )
     {
+        std::cout<<"Parameter == 0: "<<parameter<<std::endl;
+        std::cout<<"returning: "<<_parameterValues[direction].begin()->second<<std::endl;
         return _parameterValues[direction].begin()->second;
     }
     if( parameter == 1.f )
     {
+        std::cout<<"Parameter == 1: "<<parameter<<std::endl;
+        std::cout<<"returning: "<<_parameterValues[direction].rbegin()->second<<std::endl;
         return _parameterValues[direction].rbegin()->second;
-    }
+    }*/
 
     lowerNearestValue = _parameterValues[direction].lower_bound( parameter );
+    //std::cout<<"lowest nearest value: "<<lowerNearestValue->first<<std::endl;
+    //std::cout<<"Parameter: "<<parameter<<std::endl;
 
-    while (( float )parameter < ( float )lowerNearestValue->first )
+    unsigned int counter = 0;
+    if(lowerNearestValue == _parameterValues[direction].end())
+    {
+    //    std::cout<<"Invalid search" <<std::endl;
+        if( parameter == 0.f )
+        {
+    //        std::cout<<"Parameter == 0: "<<parameter<<std::endl;
+     //       std::cout<<"returning: "<<_parameterValues[direction].begin()->second<<std::endl;
+            return _parameterValues[direction].begin()->second;
+        }
+        if( parameter == 1.f )
+        {
+      //      std::cout<<"Parameter == 1: "<<parameter<<std::endl;
+       //     std::cout<<"returning: "<<_parameterValues[direction].rbegin()->second<<std::endl;
+            return _parameterValues[direction].rbegin()->second;
+        }
+    }
+    counter = 0;
+    while (( float )parameter < ( float )lowerNearestValue->first /*&& counter < 20*/)
+    {
         lowerNearestValue--;
+        //std::cout<<"=== "<<lowerNearestValue->second<<std::endl;
+        //++counter;
+    }
     return lowerNearestValue->second;
 }
 ////////////////////////////////////////////////////////////////////////////////

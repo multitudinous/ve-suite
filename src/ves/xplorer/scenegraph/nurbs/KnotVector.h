@@ -86,6 +86,9 @@ public:
     ///\param knot The knot value to insert.
     void AddKnot( double knot );
 
+    ///Check if this vector simply contains 0,1 values\n
+    ///and no interior knots (similar to Bezier)
+    bool HasInteriorKnots();
 
     ///Get the KnotVector spacing.
     std::string KnotSpacing();

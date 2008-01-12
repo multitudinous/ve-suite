@@ -62,33 +62,31 @@ NURBSCurve& NURBSCurve::operator=( const NURBSCurve& rhs )
     return *this;
 }
 ///////////////////////////////////////////////////////////////////
-void NURBSCurve::_interpolateWithinRange( double umin, double umax,
-                                          double vmin, double vmax )
+//void NURBSCurve::_interpolateWithinRange( double umin, double umax,
+//                                          double vmin, double vmax )
+void NURBSCurve::_interpolateWithinModifiedRange( )
 {
 
     //This function assumes all the proper checks have been made
     //before entering!!!!!
-    double uparam = umin;
-    double vparam = vmin;
-    unsigned int uIndexMin = _findNearestParameterIndex( "U", umin );
-    unsigned int uIndexMax = _findNearestParameterIndex( "U", umax );
-
+    double uparam = 0;//umin;
+    //double vparam = vmin;
+    unsigned int uIndexMin = m_modifiedUBounds[0];//_findNearestParameterIndex( "U", umin );
+    unsigned int uIndexMax = m_modifiedUBounds[1];//_findNearestParameterIndex( "U", umax );
     //std::cout<<"umin: "<<uIndexMin<<std::endl;
     //std::cout<<"umax: "<<uIndexMax<<std::endl;
     std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> curveInfo;
 
     for( unsigned int u = uIndexMin; u <= uIndexMax; u++ )
     {
-        _calculateBasisFunctionsAndDerivatives( std::min( uparam, umax ), "U" );
-        curveInfo = _calculatePointOnCurve( uparam, _currentSpan["U"] );
+        uparam = _parameterValues["U"][u];
+        curveInfo = _calculatePointOnCurve( uparam, _currentSpan["U"].at(u) );
         for( size_t k = 0; k < curveInfo.size(); k++ )
         {
             _interpolatedPoints[k][u] = curveInfo.at( k );
         }
         m_uvParameters[u] = ( ves::xplorer::scenegraph::nurbs::Point(uparam, 0, 0 ) );
-        uparam += _interpolationStepSize["U"];
     }
-
 }
 //////////////////////////////
 void NURBSCurve::Interpolate()
@@ -122,8 +120,8 @@ void NURBSCurve::Interpolate()
 
     for( unsigned int i = 0; i < _meshDimensions["U"]; i++ )
     {
-        _calculateBasisFunctionsAndDerivatives( param, "U" );
-        curveInfo = _calculatePointOnCurve( param, _currentSpan["U"] );
+        _calculateBasisFunctionsAndDerivatives( param,i,"U" );
+        curveInfo = _calculatePointOnCurve( param, _currentSpan["U"].at(i) );
         for( size_t k = 0; k < curveInfo.size(); k++ )
         {
             _interpolatedPoints[k].push_back( curveInfo.at( k ) );
@@ -152,16 +150,16 @@ std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> NURBSCurve::_calculat
         for( unsigned int j = 0; j <= udegree; j++ )
         {
             cw[0] += ( _controlPoints[0][span - udegree +j].WeightedX()
-                       * _derivativeBasisFunctions["U"][k].at( j ) );
+                       * _derivativeBasisFunctions["U"][k][parameter].at( j ) );
 
             cw[1] += ( _controlPoints[0][span - udegree +j].WeightedY()
-                       * _derivativeBasisFunctions["U"][k].at( j ) );
+                       * _derivativeBasisFunctions["U"][k][parameter].at( j ) );
 
             cw[2] += ( _controlPoints[0][span - udegree +j].WeightedZ()
-                       * _derivativeBasisFunctions["U"][k].at( j ) );
+                       * _derivativeBasisFunctions["U"][k][parameter].at( j ) );
 
             resultPtWeight += _controlPoints[0][span - udegree +j].Weight()
-                              * _derivativeBasisFunctions["U"][k].at( j );
+                              * _derivativeBasisFunctions["U"][k][parameter].at( j );
         }
         invWeight = 1.0 / resultPtWeight;
         resutlingWeightedPoint.push_back( ControlPoint( cw[0]*invWeight,

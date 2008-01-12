@@ -75,6 +75,11 @@ public:
     void SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,
                            unsigned int numU,
                            unsigned int numV, bool isSurface = false );
+    
+    ///Update the position of a specific ControlPoint
+    ///\param controlPointIndex The index of the ControlPoint to move
+    ///\param position The new position of the ControlPoint
+    void UpdateControlPointPosition( int controlPointIndex, osg::Vec3 position );
 
 protected:
     ///Destructor

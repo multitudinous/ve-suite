@@ -34,12 +34,13 @@
 #define NURBS_NODE_H
 
 #include <osg/Geode>
-#include <osg/Node>
-#include <osg/Group>
-#include <osg/BoundingSphere>
-
+namespace osg
+{
+    class LineSegment;
+}
 #include <ves/VEConfig.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSObject.h>
+#include <ves/xplorer/scenegraph/nurbs/ControlMeshPointFunctor.h>
 
 /*!\file NURBS.h
   NURBS Object OSG Renderer API
@@ -73,10 +74,6 @@ public:
 
     META_Node( ves::xplorer::scenegraph::nurbs, NURBS );
 
-protected:
-    ///Destructor
-    virtual ~NURBS();
-public:
     ///Set the ves::xplorer::scenegraph::nurbs::NURBSObject
     ///\param object The ves::xplorer::scenegraph::nurbs::NURBSObject
     void SetNURBSObject( ves::xplorer::scenegraph::nurbs::NURBSObject* object );
@@ -85,15 +82,39 @@ public:
     ///\param trueFalse turn off/on wireframe
     void ViewWireframe( bool trueFalse );
 
+    ///Reset the selected control point information
+    void ReleaseControlPointSelection();
+
+    ///Move the point based on the motion of the mouse
+    ///\param currentView The transform down to this node based on the view
+    ///\param relativeMotion vector from the mouse
+    void MoveSelectedControlPoint( osg::Matrix currentView,
+                                   osg::Vec3 relativeMotion );
+
+    ///Check for selected control point
+    bool HasSelectedControlPoint();
+
+    ///Select a ControlPoint on the node
+    ///\param index The index of the selected ControlPoint
+    void SetSelectedControlPoint( unsigned int index);
+
     ///Get the original surface
     ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBS();
 
-protected:
+    ///Equal operator
+    ///\param rhs The right hand side of the operator
+    NURBS& operator=( const NURBS& rhs );
 
+protected:
+    ///Destructor
+    virtual ~NURBS();
 
     bool m_retessellate;///<Update the mesh
+    bool m_isSurface;///<Surface flag
 
     bool m_wireframeView;///<View the wireframe (tessellation)
+
+    int m_selectedControlPointIndex;///<The selected ControlPoint index
 
     ///Calculate the surface normal at a point
     ///\param index The index of the point to calculate the normal
@@ -103,6 +124,7 @@ protected:
 
     osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSControlMesh> m_controlMeshDrawable;///<The control mesh drawable
     osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSDrawable> m_nurbsDrawable;///<The NURBS drawable
+    ves::xplorer::scenegraph::nurbs::ControlMeshPointFunctor m_controlPointSelector;
 
 };
 }

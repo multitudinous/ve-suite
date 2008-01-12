@@ -48,6 +48,7 @@
 /*!\namespace ves::xplorer::scenegraph::nurbs
  * NURBS API namespace.
  */
+#include <osg/Vec3>
 #include <ves/VEConfig.h>
 
 #include <ostream>
@@ -61,7 +62,7 @@ namespace scenegraph
 namespace nurbs
 {
 ///???
-class VE_NURBS_EXPORTS Point
+class VE_NURBS_EXPORTS Point : public osg::Vec3
 {
 public:
     ///Constructor

@@ -89,8 +89,9 @@ protected:
     ///\param umax The max u param to interpolate between
     ///\param vmin The min v param to interpolate between
     ///\param vmax The max v param to interpolate between
-    virtual void _interpolateWithinRange( double umin, double umax,
-                                          double vmin, double vmax );
+    //virtual void _interpolateWithinRange( double umin, double umax,
+    //                                      double vmin, double vmax );
+    virtual void _interpolateWithinModifiedRange( );
 
     ///Calculate a point and it's derivatives on a curve
     ///\param parameter The interpolating parameter

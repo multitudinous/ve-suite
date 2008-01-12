@@ -44,8 +44,10 @@ using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SetStateOnNURBSNodeVisitor::SetStateOnNURBSNodeVisitor( osg::Node* node,
-                                                        bool selectedState, bool dragState, std::pair< double, double > mousePoint,
+                                                        bool selectedState, bool dragState,
+                                                        std::pair< double, double > mousePoint,
                                                         std::pair< double, double > mouseDelta )
+ 
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
         m_mousePoint( mousePoint ),
@@ -63,38 +65,27 @@ SetStateOnNURBSNodeVisitor::~SetStateOnNURBSNodeVisitor( void )
 ////////////////////////////////////////////////////////////////////////////////
 void SetStateOnNURBSNodeVisitor::apply( osg::Node& node )
 {
-    osg::ref_ptr< osg::Group > tempGroup = node.asGroup();
-    if( !tempGroup.valid() )
-    {
-        return;
-    }
-
-    /*ves::xplorer::scenegraph::nurbs::NURBS* tempNode =
-        dynamic_cast< ves::xplorer::scenegraph::nurbs::NURBS* >( tempGroup.get() );
+    ves::xplorer::scenegraph::nurbs::NURBS* tempNode =
+        dynamic_cast< ves::xplorer::scenegraph::nurbs::NURBS* >( &node );
     if( tempNode )
     {
-        //process patches
-        tempNode->SetSelectionStatus( m_selectedState );
         if( !m_selectedState )
         {
+    //        std::cout<<"Released"<<std::endl;
+            tempNode->ReleaseControlPointSelection();
             return;
         }
-        std::cout << " found a patch " << m_selectedState << " " << tempNode->IsControlPointSelected() << std::endl;
+        osg::Matrix localToWorld = osg::computeLocalToWorld( getNodePath() );
 
-        if( m_dragState && tempNode->IsControlPointSelected() )
+        //process patches
+        if( m_dragState && tempNode->HasSelectedControlPoint() )
         {
-            tempNode->MoveSelectedControlPoint(
-                m_mouseDelta.first * 10, 0, -m_mouseDelta.second * 10 );
-        }
-        else
-        {
-            tempNode->SetMousePosition( -1.0 + m_mousePoint.first*2.0,
-                                        1.0 - m_mousePoint.second*2.0 );
+     //       std::cout<<"Draggin"<<std::endl;
+            tempNode->MoveSelectedControlPoint( localToWorld, 
+                                                osg::Vec3( 10*m_mouseDelta.first,
+                                                           0,-m_mouseDelta.second*10 ) );
         }
     }
-    else*/
-    {
-        osg::NodeVisitor::traverse( node );
-    }
+    osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
