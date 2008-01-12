@@ -123,7 +123,6 @@ DataSet::DataSet( ) :
     // automatically have the same color mapping as the "parent"
     // By default, the dataset is assumed to have no parent, that is,
     // use its own range to determine color mapping.
-    //this->dcs = NULL;
     this->switchNode = new ves::xplorer::scenegraph::Switch();
     this->switchNode->SetName( "switch_for_data_viz" );
     this->classic = new ves::xplorer::scenegraph::Group();
@@ -495,8 +494,8 @@ int DataSet::GetNoOfDataForProcs()
 
 void DataSet::LoadData( const std::string filename )
 {
-    this->SetFileName( filename );
-    this->LoadData();
+    SetFileName( filename );
+    LoadData();
 }
 
 void DataSet::LoadData( vtkUnstructuredGrid* dataset, int datasetindex )
@@ -693,7 +692,6 @@ void DataSet::LoadData()
     }
 
     this->SetType();
-
 }
 ////////////////////////////////////////////
 unsigned int DataSet::GetNumberOfPoints()
@@ -1104,12 +1102,12 @@ void DataSet::SetActiveVector( std::string tempVectorName )
         }
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int DataSet::GetActiveVector()
 {
     return this->activeVector;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::AutoComputeUserRange( const double rawRange[2],
                                     double prettyRange[2] )
 {
@@ -1166,18 +1164,13 @@ void DataSet::ResetScalarBarRange( double min, double max )
     this->lut->SetTableRange( this->GetUserRange() );
     this->lut->Build();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetFileName( const std::string newName )
 {
-    if( this->fileName.c_str() )
-    {
-        fileName.erase();//delete [] this->fileName;
-    }
-
-    //this->fileName = new char [strlen(newName)+1];
-    fileName.assign( newName );//strcpy( this->fileName, newName );
+    fileName.assign( newName );
+    GetDCS()->SetName( fileName );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetFileName_OnFly( int datasetindex )
 {
     std :: ostringstream file_name;
