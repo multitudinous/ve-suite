@@ -362,10 +362,8 @@ private:
     std::vector< std::string > scalarName;
     std::vector< std::string > vectorName;
 
-    //osg::ref_ptr< ves::xplorer::scenegraph::Geode > bboxGeode;
     osg::ref_ptr< ves::xplorer::scenegraph::Geode > wireframeGeode;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > m_visualBBox;
-    //ves::xplorer::scenegraph::cfdTempAnimation* animation;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > switchNode;
@@ -377,7 +375,6 @@ private:
     ves::xplorer::util::cfdVTKFileHandler* _vtkFHndlr;
     ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
     int partOfTransientSeries;
-    //int intRange[2];
     ves::builder::DataLoader::DataLoader* m_externalFileLoader;///<Translator interface
 
 #ifdef USE_OMP
