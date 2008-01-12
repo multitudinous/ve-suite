@@ -125,9 +125,10 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
                          _T( "" ),
                          _T( "" ),
                          _T( "Wave files (*.wav)|*.wav;|MP3 files (*.mp3)|*.mp3;|All Files (*.*)|*.*" ),
-                         wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE,//|wxCHANGE_DIR,
+                         wxOPEN | wxFILE_MUST_EXIST | wxMULTIPLE,
                          wxDefaultPosition );
-
+    dialog.CentreOnParent();
+    
     if( dialog.ShowModal() == wxID_OK )
     {
         wxArrayString fileNamesVector;

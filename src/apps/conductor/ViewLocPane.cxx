@@ -119,7 +119,8 @@ void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
                          _T( "View Location files (*.vel;*.dat)|*.vel;*.dat;" ),
                          wxOPEN | wxFILE_MUST_EXIST,
                          wxDefaultPosition );
-
+    dialog.CentreOnParent();
+    
     if( dialog.ShowModal() == wxID_OK )
     {
         wxFileName viewPtsFilename( dialog.GetPath() );
