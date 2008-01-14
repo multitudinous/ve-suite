@@ -112,7 +112,7 @@ ControlMeshPointFunctor::operator=( const ControlMeshPointFunctor& rhs)
         m_lineSegment = rhs.m_lineSegment;
         m_intersections = rhs.m_intersections;
     }
-
+    return *this;
 }
  
 
