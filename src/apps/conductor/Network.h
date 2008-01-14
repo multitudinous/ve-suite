@@ -89,10 +89,7 @@ public:
     ///Fucntion called during submit job to send the id of all active
     ///modules to the CE
     void SetIDOnAllActiveModules( void );
-    wxMutex s_mutexProtect;
 
-    //Event Handlers
-    void OnPaint( wxPaintEvent &event );
     ///This is needed to reduce flicker
     ///Erase background callback
     void OnEraseBackground( wxEraseEvent& event );
@@ -118,10 +115,7 @@ public:
     ///this also calls delete objects on xplorer but the user may not
     ///always want this action
     void Load( std::string xmlNetwork, bool promptClearXplorer );
-    void CreateNetwork( std::string xmlNetwork );
     void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas * parent );
-    ///Clear the deisgn canvas and xplorer objects if desired
-    void New( bool clearXplorer = false );
     ///Acessors
     std::pair< double, double >* GetUserScale( void );
     std::pair< unsigned int, unsigned int >* GetNumPix( void );

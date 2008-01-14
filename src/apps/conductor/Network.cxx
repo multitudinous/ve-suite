@@ -160,40 +160,6 @@ void Network::OnEraseBackground( wxEraseEvent& WXUNUSED( event ) )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::OnPaint( wxPaintEvent& WXUNUSED( event ) )
-{
-    /*   while((s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) ) { ; }
-       wxAutoBufferedPaintDC dc(this);
-       //DoPrepareDC(dc);
-       dc.Clear();
-       //wxColour backgroundColour = GetBackgroundColour();
-       //dc.SetBrush(wxBrush(backgroundColour));
-       //dc.SetPen(wxPen(backgroundColour, 1));
-     
-       dc.SetUserScale( userScale.first, userScale.second );
-       int xpix, ypix;
-       GetScrollPixelsPerUnit( &xpix, &ypix );
-
-       int x, y;
-       GetViewStart( &x, &y );
-       // account for the horz and vert scrollbar offset
-       dc.SetDeviceOrigin( -x * xpix, -y * ypix );
-       //wxRect windowRect(wxPoint(x, y), GetClientSize()); 
-     
-       // We need to shift the client rectangle to take into account
-       // scrolling, converting device to logical coordinates 
-       //CalcUnscrolledPosition(windowRect.x, windowRect.y,
-       //                       & windowRect.x, & windowRect.y);
-       //dc.DrawRectangle(windowRect);
-
-       dc.SetFont( GetFont() );
-       ///Now lets draw everything in the current state
-       ReDraw(dc); 
-     
-       while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-    */
-}
-////////////////////////////////////////////////////////////////////////////////
 void Network::OnMLeftDown( wxMouseEvent& event )
 {
     if( event.Dragging() )
@@ -598,8 +564,6 @@ void Network::OnDelTag( wxCommandEvent& WXUNUSED( event ) )
         return;
     }
 
-    while( s_mutexProtect.Lock() != wxMUTEX_NO_ERROR );
-
     //Pop the tag event handlers to clear these event handlers
     //for( std::vector< GUI_Utilities::Tag >::iterator
     //     iter=tags.begin(); iter!=tags.end(); iter++ )
@@ -633,14 +597,11 @@ void Network::OnDelTag( wxCommandEvent& WXUNUSED( event ) )
     //}
     this->PushAllEvents();
 
-    while( s_mutexProtect.Unlock() != wxMUTEX_NO_ERROR );
-
     parent->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelLink( wxCommandEvent& event )
 {
-    while( s_mutexProtect.Lock() != wxMUTEX_NO_ERROR );
     //Pop the link event handlers to clear these event handlers
     //for( std::vector< GUI_Utilities::Link >::iterator
     //     iter=links.begin(); iter!=links.end(); iter++ )
@@ -673,16 +634,12 @@ void Network::OnDelLink( wxCommandEvent& event )
     //}
     this->PushAllEvents();
 
-    while( s_mutexProtect.Unlock() != wxMUTEX_NO_ERROR );
-
     parent->Refresh( true );
     //Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelMod( wxCommandEvent& event )
 {
-//    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){ ; }
-
     //Pop the link event handlers to clear these event handlers
     //for( std::vector< GUI_Utilities::Link >::iterator
     //     iter=links.begin(); iter!=links.end(); iter++ )
@@ -738,18 +695,11 @@ void Network::OnDelMod( wxCommandEvent& event )
     event.SetClientData( &pluginID );
     ::wxPostEvent( parent, event );
 
-//   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
-
     parent->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelPort( wxCommandEvent& event )
 {
-    while( s_mutexProtect.Lock() != wxMUTEX_NO_ERROR )
-    {
-        ;
-    }
-
     //Pop the link event handlers to clear these event handlers
     //for( std::vector< GUI_Utilities::Link >::iterator
     //    iter=links.begin(); iter!=links.end(); iter++ )
@@ -788,11 +738,6 @@ void Network::OnDelPort( wxCommandEvent& event )
     //    PushEventHandler( &(*iter) );
     //}
     this->PushAllEvents();
-
-    while( s_mutexProtect.Unlock() != wxMUTEX_NO_ERROR )
-    {
-        ;
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////
@@ -1679,7 +1624,6 @@ void Network::DropTag( int x, int y, int t, wxDC &dc )
 //////////////////////////////////////////////////////
 void Network::AddTag( int x, int y, wxString text )
 {
-    while( s_mutexProtect.Lock() != wxMUTEX_NO_ERROR );
     //Pop the tag event handlers to clear these event handlers
     //for( std::vector< GUI_Utilities::Tag >::iterator
     //     iter=tags.begin(); iter!=tags.end(); iter++ )
@@ -1723,15 +1667,12 @@ void Network::AddTag( int x, int y, wxString text )
     //}
     this->PushAllEvents();
 
-    while( s_mutexProtect.Unlock() != wxMUTEX_NO_ERROR );
-
     parent->Refresh( true );
 }
 
 //////////////////////////////////////////////////////////////
 void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
 {
-    while( s_mutexProtect.Lock() != wxMUTEX_NO_ERROR );
     POLY tmpPoly;
     int num;
 
@@ -1781,8 +1722,6 @@ void Network::AddtoNetwork( UIPluginBase *cur_module, std::string cls_name )
     //Setup the event handlers for the plugin
     parent->PushEventHandler( modules[id].GetPlugin() );
     parent->Refresh( true );
-
-    while( s_mutexProtect.Unlock() != wxMUTEX_NO_ERROR );
 }
 ////////////////////////////////////////
 /////// Draw Functions /////////////////
@@ -1939,73 +1878,6 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 return "removethisfunction";
 }*/
 ////////////////////////////////////////////////////////
-void Network::New( bool promptClearXplorer )
-{
-    /*
-      // Just clear the design canvas
-      while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
-     
-      int answer = wxID_NO;
-      if(!promptClearXplorer )
-      {
-         wxMessageDialog promptDlg( this, 
-                                    _("Do you want to reset Xplorer?"), 
-                                    _("Reset Xplorer Warning"), 
-                                    wxYES_NO|wxNO_DEFAULT|wxICON_QUESTION, 
-                                    wxDefaultPosition);
-         answer = promptDlg.ShowModal();
-      }
-     
-      if(( answer == wxID_OK ) || ( promptClearXplorer ) )
-      {
-         std::map<int, Module>::iterator iter;
-         for(iter=modules.begin(); iter!=modules.end(); ++iter )
-         {
-            DataValuePair* dataValuePair = new DataValuePair(  std::string("UNSIGNED INT") );
-            dataValuePair->SetDataName( "Object ID" );
-            dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-            Command* veCommand = new Command();
-            veCommand->SetCommandName( std::string("DELETE_OBJECT_FROM_NETWORK") );
-            veCommand->AddDataValuePair( dataValuePair );
-            bool connected = CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-            //Clean up memory
-            delete veCommand;
-         }
-      }
-     
-       //Pop the link event handlers to clear these event handlers
-       for( std::vector< GUI_Utilities::Link >::iterator 
-           iter=links.begin(); iter!=links.end(); iter++ )
-       {
-           RemoveEventHandler( &(*iter) );
-       }
-       links.clear();
-
-       //Pop the plugin event handlers to clear these event handlers
-       for( std::map< int, Module >::iterator iter = modules.begin(); 
-           iter!=modules.end(); iter++)
-       {
-           RemoveEventHandler( iter->second.GetPlugin() );
-       }
-       modules.clear();
-
-       //Pop the tag event handlers to clear these event handlers
-       for( std::vector< GUI_Utilities::Tag >::iterator 
-            iter =  tags.begin(); iter != tags.end(); iter++ )
-       {
-           RemoveEventHandler( &(*iter) );
-       }
-       tags.clear();
-     
-       ///Reset the canvas available spaces
-       sbboxes.clear();
-     
-       while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-
-       parent->Refresh( true );
-    */
-}
-////////////////////////////////////////////////////////
 void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
 {
     /*//Get a new canvas first to cleanup memory
@@ -2026,245 +1898,6 @@ void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
     ::wxEndBusyCursor();
     delete _fileProgress;
     */
-}
-////////////////////////////////////////////////////////
-void Network::CreateNetwork( std::string xmlNetwork )
-{
-    /*   if(xmlNetwork.empty() )
-       {
-          return;
-       }
-
-       // Just clear the design canvas
-       //while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR) { ; }
-       // Start the busy cursor
-       // Load from the nt file loaded through wx
-       // Get a list of all the command elements
-       _fileProgress->Update( 10, _("start loading") );
-        XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
-       _fileProgress->Update( 15, _("start loading") );
-       _fileProgress->Update( 25, _("start loading") );
-
-       // do this for network
-       NetworkWeakPtr veNetwork =
-           XMLDataBufferEngine::instance()->
-           GetXMLNetworkDataObject( "Network" );
-
-        // we are expecting that a network will be found
-        //if( !objectVector.empty() )
-        //{
-        //    veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
-        //    objectVector.erase( objectVector.begin() );
-        //}
-        //else
-        //{
-        //    wxMessageBox( _("Improperly formated ves file."),
-        //                    _("VES File Read Error"), wxOK | wxICON_INFORMATION );
-        //}
-
-    //This is needed because on windows the scale must be 1 for the
-    //wxAutoBufferedPaintDC to work properly
-    #ifndef WIN32
-       _fileProgress->Update( 30, _("start loading") );
-       long int tempScaleInfo;
-       veNetwork->GetDataValuePair( 0 )->GetData( (userScale.first)  );
-       veNetwork->GetDataValuePair( 1 )->GetData( (userScale.second) );
-       veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
-       numPix.first = tempScaleInfo;
-       veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
-       numPix.second = tempScaleInfo;
-       veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
-       numUnit.first = tempScaleInfo;
-       veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
-       numUnit.second = tempScaleInfo;
-    #endif
-       _fileProgress->Update( 35, _("start loading") );
-
-     size_t maxX = 7000;
-     size_t maxY = 7000;
-        //Setup the links
-        for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
-        {
-            links.push_back( GUI_Utilities::Link( this ) );
-            links.at( i ).SetDCScale( &userScale );
-
-            links.at( i ).SetFromPort( *(veNetwork->GetLink( i )->GetFromPort()) );
-            links.at( i ).SetToPort( *(veNetwork->GetLink( i )->GetToPort()) );
-
-            long moduleID;
-            veNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
-            links.at( i ).SetFromModule( moduleID );
-            veNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
-            links.at( i ).SetToModule( moduleID );
-
-            size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
-            for( size_t j = 0; j < numberOfPoints; ++j )
-            {
-                std::pair< unsigned int, unsigned int > rawPoint =
-                    veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
-                wxPoint point;
-                point.x = rawPoint.first;
-                point.y = rawPoint.second;
-                links.at( i ).SetPoint( &point );
-       if( point.x > maxX )
-       {
-                    maxX = point.x + 100;
-                }
-
-       if( point.y > maxY )
-                {
-                    maxY = point.y + 100;
-                }
-            }
-            // Create the polygon for links
-            links.at( i ).CalcLinkPoly();
-
-            links.at(i).SetName( wxString(
-                veNetwork->GetLink( i )->GetLinkName().c_str(), wxConvUTF8) );
-            links.at(i).SetUUID( veNetwork->GetLink( i )->GetID() );
-
-            //CORBAServiceList* serviceList = CORBAServiceList::instance();
-            //serviceList->GetMessageLog()->SetMessage( "velinks:_ " );
-            //serviceList->GetMessageLog()->SetMessage( veNetwork.GetLink( i )->GetLinkName().c_str() );
-            //serviceList->GetMessageLog()->SetMessage( "_\n" );
-            //serviceList->GetMessageLog()->SetMessage( "links:_ " );
-            //serviceList->GetMessageLog()->SetMessage( ConvertUnicode( links[i].GetName().c_str() ).c_str() );
-            //serviceList->GetMessageLog()->SetMessage( "_\n" );
-        }
-
-        for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
-        {
-            PushEventHandler( &links.at( i ) );
-        }
-
-        //Setup the tags
-        for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
-        {
-            tags.push_back( GUI_Utilities::Tag( this ) );
-            tags.at( i ).SetVETagPtr( veNetwork->GetTag( i ) );
-            // Create the polygon for tags
-            tags.at( i ).CalcTagPoly();
-        }
-
-        for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
-        {
-            PushEventHandler( &tags.at( i ) );
-        }
-
-
-        _fileProgress->Update( 50, _("create models") );
-        _fileProgress->Update( 75, _("done create models") );
-        // now lets create a list of them
-        std::vector< std::string > networkModelVector;
-        std::vector< std::string >::iterator stringIter;
-        networkModelVector = XMLDataBufferEngine::instance()->GetNetworkModelVector( "Network" );
-        int timeCalc = 0;
-        if(networkModelVector.size())
-        {
-            timeCalc = 25/networkModelVector.size();
-        }
-
-        size_t i = 0;
-        for( stringIter = networkModelVector.begin(); stringIter != networkModelVector.end(); ++stringIter )
-        {
-            _fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
-            ++i;
-            ModelWeakPtr model =
-                XMLDataBufferEngine::instance()->
-                GetXMLModelDataObject( *stringIter );
-
-            wxClassInfo* cls = wxClassInfo::FindClass( wxString(model->GetModelName().c_str(),wxConvUTF8) );
-            // If the class has not had a custom module been created
-            UIPluginBase* tempPlugin = 0;
-            if( cls == 0 )
-            {
-                tempPlugin = new DefaultPlugin();
-            }
-            else
-            {
-                tempPlugin = dynamic_cast< UIPluginBase* >( cls->CreateObject() );
-            }
-            tempPlugin->SetNetworkFrame( this );
-            tempPlugin->SetDCScale( &userScale );
-            ///Add event handler for the plugins
-            PushEventHandler( tempPlugin );
-            tempPlugin->SetName( wxString(model->GetModelName().c_str(),wxConvUTF8) );
-            tempPlugin->SetCORBAService( CORBAServiceList::instance() );
-            tempPlugin->SetDialogSize( frame->GetAppropriateSubDialogSize() );
-            if(model->GetIconFilename() != "DefaultPlugin" )
-            {
-                tempPlugin->SetImageIcon( model->GetIconFilename(),
-                                       model->GetIconRotation(),
-                                       model->GetIconMirror(),
-                                       model->GetIconScale() );
-            }
-
-            Module temp_mod;
-            unsigned int num = model->GetModelID();
-            modules[ num ] = temp_mod;
-            modules[ num ].SetPlugin( tempPlugin );
-            modules[ num ].GetPlugin()->SetID( num );
-            modules[ num ].SetClassName( model->GetModelName() );
-            modules[ num ].GetPlugin()->SetVEModel( new Model( *model ) );
-            //Second, calculate the polyes
-            wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
-            int polynum = modules[ num ].GetPlugin()->GetNumPoly();
-            POLY tmpPoly;
-            tmpPoly.resize( polynum );
-            modules[ num ].GetPlugin()->GetPoly(tmpPoly);
-            GUI_Utilities::Polygon tempPoly;
-            *(tempPoly.GetPolygon()) = tmpPoly;
-            tempPoly.TransPoly( bbox.x, bbox.y, *(modules[ num ].GetPolygon()) ); //Make the network recognize its polygon
-        }
-
-        UserWeakPtr userInfo = XMLDataBufferEngine::instance()->
-            GetXMLUserDataObject( "Network" );
-
-        if( !userInfo->GetUserStateInfo() )
-        {
-            ///Color vector
-            std::vector<double> backgroundColor;
-            backgroundColor.clear();
-            backgroundColor.push_back( 0.0f );
-            backgroundColor.push_back( 0.0f );
-            backgroundColor.push_back( 0.0f );
-            backgroundColor.push_back( 1.0f );
-
-            DataValuePair* dataValuePair = new DataValuePair( );
-            dataValuePair->SetData(std::string("Background Color"),backgroundColor);
-            CommandWeakPtr veCommand = new Command();
-            veCommand->SetCommandName(std::string("CHANGE_BACKGROUND_COLOR"));
-            veCommand->AddDataValuePair(dataValuePair);
-            UserPreferencesDataBuffer::instance()->
-                SetCommand( std::string("CHANGE_BACKGROUND_COLOR"), veCommand );
-        }
-        // Create the command and data value pairs
-        CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
-            GetCommand( "CHANGE_BACKGROUND_COLOR" );
-
-        CORBAServiceList::instance()->
-            SendCommandStringToXplorer( colorCommand );
-
-        // Create the command and data value pairs
-        CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
-            GetCommand( "Navigation_Data" );
-        //startCommand->SetCommandName( "MOVE_TO_START_POSITION" );
-        CORBAServiceList::instance()->
-            SendCommandStringToXplorer( startCommand );
-
-        //Reset values
-        m_selMod = -1;
-        m_selFrPort = -1;
-        m_selToPort = -1;
-        m_selLink = -1;
-        m_selLinkCon = -1;
-        m_selTag = -1;
-        m_selTagCon = -1;
-        xold = yold =0;
-     SetVirtualSize( maxX, maxY );
-        _fileProgress->Update( 100, _("Done") );
-        parent->Refresh( true );
-     */
 }
 ////////////////////////////////////////////////////////
 void Network::LoadSystem( model::SystemPtr system, Canvas * parent )

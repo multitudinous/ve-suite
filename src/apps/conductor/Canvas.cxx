@@ -127,8 +127,24 @@ Canvas::Canvas( wxWindow* parent, int id )
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
-    RemoveEventHandler( networks[this->activeId] );
-    networks[this->activeId]->RemoveAllEvents();
+    bool removeSuccess = RemoveEventHandler( networks[this->activeId] );
+    if( removeSuccess )
+    {
+        //Canvas controls when to remove the plugin event handlers
+        networks[this->activeId]->RemoveAllEvents();
+    }
+    else
+    {
+        ///Null out the UIPluginBase pointer becuase wx has probably 
+        ///already cleaned it up the plugin when deleting on the childrens
+        //windows. 
+        for( std::map< int, ves::conductor::Module >::iterator iter = 
+            networks[ activeId ]->modules.begin(); 
+            iter != networks[ activeId ]->modules.end(); ++iter )
+        {
+            iter->second.SetPlugin( 0 );
+        }
+    }
     
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
         iter != networks.end(); ++iter )
