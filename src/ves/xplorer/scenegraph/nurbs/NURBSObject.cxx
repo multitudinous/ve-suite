@@ -47,8 +47,8 @@ NURBSObject::NURBSObject( Type type, unsigned int udegree,
 
     _nTotalControlPoints = 0;
     _needsRetessellation = true;
-    _currentSpan["U"][0] = 0;
-    _currentSpan["V"][0] = 0;
+    //_currentSpan["U"].push_back( 0 );
+    //_currentSpan["V"].push_back( 0 );
 
     _nControlPoints["U"] = 1;
     _nControlPoints["V"] = 1;

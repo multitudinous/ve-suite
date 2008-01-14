@@ -1914,7 +1914,7 @@ void AppFrame::SetEphemerisData( wxCommandEvent& WXUNUSED( event ) )
         m_ephemeris = new EphemerisDialog( this, wxID_ANY );
     }
 
-    if( m_ephemeris->Show() == wxID_OK )
+    if( m_ephemeris->Show())
     {}
 }
 ////////////////////////////////////////////////////////////////////////////////
