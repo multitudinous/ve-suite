@@ -38,11 +38,14 @@
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
-
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/Group.h>
+#include <ves/xplorer/scenegraph/nurbs/PointLineSegmentIntersector.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBS.h>
+#include <ves/xplorer/scenegraph/nurbs/NURBSControlMesh.h>
+#include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -71,6 +74,7 @@
 #include <osg/Texture2D>
 #include <osg/CameraNode>
 //#include <osg/PolygonStipple>
+#include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -195,6 +199,7 @@ void KeyboardMouse::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoi
     jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[2];
     jugglerHeadPointTemp[ 2 ] = jugglerHeadPoint[1];
 
+    //std::cout << " start point " << jugglerHeadPointTemp[0] << " " << jugglerHeadPointTemp[1] << " " << jugglerHeadPointTemp[2] << std::endl;
     startPoint->set( jugglerHeadPointTemp[0], jugglerHeadPointTemp[1], jugglerHeadPointTemp[2] );
 
     gmtl::Point3d mousePosition( osgTransformedPosition[0], osgTransformedPosition[1], osgTransformedPosition[2] );
@@ -727,22 +732,17 @@ void KeyboardMouse::SelKeyboard()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SelMouse()
 {
-    if( m_state == 1 )
+    UpdateSelectionLine();
+    if( m_state == 1 && m_button == gadget::MBUTTON1 )
     {
-        ///Set selection of any patches back to true
-        ves::xplorer::scenegraph::SetStateOnNURBSNodeVisitor(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-            true, false, m_currPos,
-            std::pair< double, double >( 0, 0 ) );
+        ProcessNURBSSelectionEvents();
         return;
     }
     else if( m_state == 0 && m_button == gadget::MBUTTON1 )
     {
-        ///Set selection of any patches back to false
         ves::xplorer::scenegraph::SetStateOnNURBSNodeVisitor(
             ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-            false, false, m_currPos,
-            std::pair< double, double >( 0, 0 ) );
+            false, false, m_currPos, std::pair<double,double>(0.0,0.0) );
         ProcessSelectionEvents();
     }
 }
@@ -860,16 +860,59 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
     m_deltaTransform.mData[10] = ( z * z ) + ( cosAng * ( 1 - ( z * z ) ) );
     m_deltaTransform.mData[15] = 1.0f;
 }
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::ProcessSelectionEvents()
+/////////////////////////////////////////
+void KeyboardMouse::UpdateSelectionLine()
 {
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
-
-    //DrawLine( startPoint, endPoint );
-
     m_beamLineSegment->set( startPoint, endPoint );
+    DrawLine( startPoint, endPoint );
+}
+/////////////////////////////////////////////////
+void KeyboardMouse::ProcessNURBSSelectionEvents()
+{
+    UpdateSelectionLine();
+    osg::ref_ptr<osgUtil::IntersectorGroup> intersectorGroup = new osgUtil::IntersectorGroup();
+    osg::ref_ptr<ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector> intersector =
+                            new ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector(m_beamLineSegment->start(),
+                                                                                                    m_beamLineSegment->end() );
+    intersectorGroup->addIntersector( intersector.get() );
 
+    osgUtil::IntersectionVisitor controlMeshPointIntersectVisitor;
+
+    controlMeshPointIntersectVisitor.setIntersector( intersectorGroup.get() );
+
+    //Add the IntersectVisitor to the root Node so that all geometry will be
+    //checked and no transforms are done to the line segement
+    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( controlMeshPointIntersectVisitor );
+
+    if ( intersectorGroup->containsIntersections() )
+    {
+         //std::cout<<"Found intersections "<<std::endl;
+         ///only want the first one
+         ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector::Intersections& intersections  =
+                                                  intersector->getIntersections();
+         ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector::Intersection closestControlPoint = 
+                            (*intersections.begin());
+         osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBSControlMesh> ctMesh =
+            dynamic_cast<ves::xplorer::scenegraph::nurbs::NURBSControlMesh*>( closestControlPoint.drawable.get() );
+         if( ctMesh.valid() )
+         {
+             osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> nurbs = 
+                dynamic_cast<ves::xplorer::scenegraph::nurbs::NURBS*>( ctMesh->getParent( 0 ) );
+             if( nurbs.valid() )
+             {
+                 nurbs->SetSelectedControlPoint( closestControlPoint.primitiveIndex );
+             }
+         }
+         
+    }
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::ProcessSelectionEvents()
+{
+    UpdateSelectionLine();
     osgUtil::IntersectVisitor objectBeamIntersectVisitor;
     objectBeamIntersectVisitor.addLineSegment( m_beamLineSegment.get() );
 

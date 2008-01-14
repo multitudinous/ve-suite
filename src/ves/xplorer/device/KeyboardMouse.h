@@ -119,6 +119,9 @@ public:
 
     ///Resets the scene to original position
     void ResetTransforms();
+ 
+    ///Update the start and end points for the line
+    void UpdateSelectionLine();
 
 protected:
     ///Set the start and end point
@@ -141,6 +144,9 @@ private:
 
     ///Processes the selection events
     void ProcessSelectionEvents();
+
+    ///Process the NURBS selection events
+    void ProcessNURBSSelectionEvents();
 
     ///Process if selection is valid
     ///\param listOfHits A vector containing CAD hit in selection process
