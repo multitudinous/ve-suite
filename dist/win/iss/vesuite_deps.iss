@@ -135,11 +135,11 @@ Source: {#WXHOME}\lib\vc_dll\wxbase28_vc_custom.dll; DestDir: {app}\lib; Flags: 
 Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
 ; osgAL includes
-Source: {#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
 ; osgAL libs
-Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion skipifsourcedoesntexist
 ; osgAL dlls
-Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion skipifsourcedoesntexist
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}

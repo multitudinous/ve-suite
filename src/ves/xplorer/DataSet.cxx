@@ -1601,7 +1601,7 @@ std::string DataSet::GetUUID( std::string attribute )
     iter = dataSetUUIDMap.find( attribute );
     if( iter == dataSetUUIDMap.end() )
     {
-        return 0;
+        return std::string("");
     }
     else
     {
