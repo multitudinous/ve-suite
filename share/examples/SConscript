@@ -7,8 +7,8 @@ exampleSubdirs = Split("""
     simple
     CoinFunnel
     InteractiveStove
+    nurbs
 """)
-#    HyperLab
 
 ##Run SConscript files in all of those folders.
 for d in exampleSubdirs:
