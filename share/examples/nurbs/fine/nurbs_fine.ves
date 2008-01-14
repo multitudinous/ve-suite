@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="07747bb3-db4f-4087-9e37-18008e08bae5">
+    <network>
+      <conductorState dataName="m_xUserScale" id="56282af2-edde-4663-bcf9-b7dc0d23b695">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="3e8e0972-ae68-4d3f-bce0-5ef201b2f3bb">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="c065a42b-674a-4982-9a39-d6dd87dca2d6">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="a67f1dc2-03fa-4df2-9d44-b0315ad6eec1">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="50a21d12-14a1-4843-90df-aac85d24c7da">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="bb77e5a7-c660-496a-b248-6b64b2d5ced2">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="101" id="f1167322-7fb3-414e-9352-91de75226c72" name="DefaultPlugin" vendorUnit="DefaultPlugin">
+      <iconLocation xLocation="10" yLocation="10"/>
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <geometry associatedDataset="NONE" friction="1" id="5d24e7f7-65f6-479c-833a-2426c4982bd5" mass="1" physics="false" restitution="0" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <numChildren>1</numChildren>
+        <children>
+          <child friction="1" id="7d0d7e25-23b0-418a-a3dd-db4a3e54852e" mass="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>nozzle5</name>
+            <parent type="xs:string">5d24e7f7-65f6-479c-833a-2426c4982bd5</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>nozzle5.ven</fileName>
+          </child>
+        </children>
+      </geometry>
+    </model>
+  </veSystem>
+
+  <User id="60af5a70-9d21-453d-a2bd-f7dfd799c9f9" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="0f1fc868-2109-4959-bd82-60725caa37bf">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
