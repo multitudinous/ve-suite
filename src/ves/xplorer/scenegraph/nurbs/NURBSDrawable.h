@@ -71,7 +71,7 @@ public:
     ///Update the mesh based on a moved ControlPoint
     ///\param changedPoints The indecies of the changed points 
     ///\param nurbs The updated NURBSObject 
-    void NURBSDrawable::UpdateMesh( NURBSObject* nurbs );
+    void UpdateMesh( ves::xplorer::scenegraph::nurbs::NURBSObject* nurbs );
 
     ///Get the raw NURBS data
     ves::xplorer::scenegraph::nurbs::NURBSObject* GetNURBSData();
