@@ -508,7 +508,7 @@ void BKPParser::ParseFile(const char * bkpFile)
             //invert Y axis - flowsheets are inverted
             float scaledYCoords = -yCoords.back() * 100;
             
-            CString iconPath = ("2DIcons/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
+            CString iconPath = ("2DIconsTemp/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
             LPWSTR lpszW = new WCHAR[255];
             LPTSTR lpStr = iconPath.GetBuffer( iconPath.GetLength() );
             int nLen = MultiByteToWideChar(CP_ACP, 0,lpStr, -1, NULL, NULL);
@@ -518,6 +518,11 @@ void BKPParser::ParseFile(const char * bkpFile)
             ULONG_PTR gdiplusToken;
             GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
             Image * image = new Image(lpszW);
+			Status fileStat = image->GetLastStatus();
+			if( fileStat != 0 )
+            {
+                std::cout <<" Warning icon not found: "<< fileStat << std::endl;
+            }
             float width = image->GetWidth();
             float height = image->GetHeight();
             GdiplusShutdown(gdiplusToken);

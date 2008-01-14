@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options bullet_options osg_options xerces_options')
+Import('GetPlatform RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options bullet_options osg_options xerces_options')
 
 srcs = Split("""
    VEIntStovemod.cxx
@@ -24,6 +24,10 @@ lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
 		            pj('#', buildDir, 'src','ves','xplorer','util'),
                             pj('#', buildDir, 'src','ves','open','xml') ] )
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
+   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
 
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )

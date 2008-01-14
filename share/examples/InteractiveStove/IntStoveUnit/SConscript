@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('ves_pkg buildDir RootDir vtk_options osg_options xerces_options tao_options')
+Import('ves_pkg buildDir RootDir vtk_options osg_options xerces_options tao_options GetPlatform')
 
 srcs = Split("""
    IntStoveUnit_client.cpp
@@ -29,10 +29,11 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
 lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
 			                 pj(RootDir, buildDir, 'src', 'ves', 'open', 'xml'),
-			                 pj(RootDir, buildDir, 'src', 'ves', 'ce', 'unitwrapper'),
-                          pj(RootDir, buildDir, 'external', 'loki-0.1.6')])
+			                 pj(RootDir, buildDir, 'src', 'ves', 'ce', 'unitwrapper')])
 
-lib_env.Append(CPPPATH = [pj(RootDir, 'external', 'loki-0.1.6', 'include')])
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
+   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
 
 tao_options.apply( lib_env )
 osg_options.apply( lib_env )
