@@ -144,7 +144,7 @@ void VjObs_i::InitCluster( void )
     this->mStates->clusterTeacher_state = 0.0f;
     this->mStates->clusterClientInfoFlag = 0;
     this->mStates->currentFrame = 0;
-    ; // the index of the current frame
+    // the index of the current frame
     this->mStates->clusterTime_since_start = 0;
     this->mStates->clusterFrameNumber = 0;
     this->mStates->clusterQuatCamIncrement = 0.0f;

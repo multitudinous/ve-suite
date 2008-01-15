@@ -244,14 +244,14 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
                 {
                     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
                     AddChild( lastDataAdded->GetDCS() );
-                    _activeModel->SetActiveDataSet( lastDataAdded );
+                    _activeModel->SetActiveDataSet( 0 );//lastDataAdded );
                 }
             }
         }
     }
     else if( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" ) )
     {
-        DataValuePairSharedPtr tempDVP = static_cast< DataValuePair* >( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject() );
+        DataValuePair* tempDVP = static_cast< DataValuePair* >( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject() );
         std::string precomputedDataSliceDir = tempDVP->GetDataString();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempDVP->GetID() );
@@ -259,7 +259,7 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
     }
     else if( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" ) )
     {
-        DataValuePairSharedPtr tempDVP = static_cast< DataValuePair* >( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
+        DataValuePair* tempDVP = static_cast< DataValuePair* >( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
         std::string precomputedSurfaceDir = tempDVP->GetDataString();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_SURFACE_DIR_PATH", tempDVP->GetID() );
@@ -271,9 +271,9 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
     {
         //Load texture datasets
         vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
         _activeModel->CreateTextureDataSet();
-        DataValuePairSharedPtr tempDVP =
+        DataValuePair* tempDVP =
             static_cast< DataValuePair* >( command->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject() );
         _activeModel->AddDataSetToTextureDataSet( 0, tempDVP->GetDataString() );
 

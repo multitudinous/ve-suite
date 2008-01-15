@@ -1449,8 +1449,8 @@ void DataSet::SetActualScalarRange( int index, double* range )
 double * DataSet::GetDisplayedScalarRange()
 {
     vprDEBUG( vesDBG, 1 ) << "DataSet::GetDisplayedScalarRange"
-    << " activeScalar = " << this->activeScalar
-    << std::endl << vprDEBUG_FLUSH;
+        << " activeScalar = " << this->activeScalar
+        << std::endl << vprDEBUG_FLUSH;
     return this->displayedScalarRange[ this->activeScalar ];
 }
 ////////////////////////////////////////////////////////////////////////
@@ -1491,9 +1491,15 @@ ves::xplorer::scenegraph::DCS* DataSet::GetDCS()
 void DataSet::SetDCS( ves::xplorer::scenegraph::DCS* myDCS )
 {
     if( dcs == NULL )
+    {
         this->dcs = myDCS;
+    }
     else
-        std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
+    {
+        vprDEBUG( vesDBG, 1 ) 
+            << "|\tDataSet::SetDCS : DCS is already set for this dataset " 
+            << std::endl << vprDEBUG_FLUSH;
+    }
 }
 /////////////////////////////////////////////////
 int DataSet::IsPartOfTransientSeries()
