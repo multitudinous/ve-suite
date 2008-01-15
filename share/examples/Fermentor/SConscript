@@ -1,0 +1,31 @@
+##
+import os, sys, string
+import SConsAddons.Util as sca_util
+pj = os.path.join
+
+Import( 'RootDir ves_pkg' )
+
+fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'Fermentor' ) )
+fermentorDemoDir = pj( RootDir, 'share', 'examples', 'Fermentor' )
+#xpmFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.xpm' ] )
+iveFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.ive' ] )
+#wavFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.wav' ] )
+jpgFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.jpg' ] )
+gifFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.gif' ] )
+#ddsFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.dds' ] )
+
+#fileBundle.addFiles( xpmFile )
+fileBundle.addFiles( iveFile )
+#fileBundle.addFiles( wavFile )
+fileBundle.addFiles( jpgFile )
+fileBundle.addFiles( gifFile )
+#fileBundle.addFiles( ddsFile )
+fileBundle.addFiles( [ 'fermentor.ves' ] )
+fermentorSubdirs = Split("""
+    FermentorGP
+    FermentorUI
+""")
+
+##Run SConscript files in all of these folders.
+for d in fermentorSubdirs:
+   SConscript( dirs = d )
