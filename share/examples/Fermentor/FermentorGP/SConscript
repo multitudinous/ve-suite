@@ -12,12 +12,16 @@ sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append( LIBS = [ 'ves_xplorer',
+lib_env.Append( LIBS = [ 'ves_open_xml',
+                         'ves_xplorer',
                          'ves_xplorer_scenegraph' ] )
-lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
-		            pj('#', buildDir, 'src','ves','xplorer','scenegraph') ] )
+lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
+		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
 #lib_env.Append( CPPPATH = [] )
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = [ 'LOKI_DLL' ] )
 
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
@@ -27,7 +31,11 @@ bullet_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
 
-lib = ves_pkg.createLoadableModule( 'FermentorGP', lib_env,
+if GetPlatform() == 'darwin':
+   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
+   lib_env['SHLIBSUFFIX'] = '.dylib'
+
+lib = ves_pkg.createSharedLibrary( 'FermentorGP', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'Fermentor', 'Plugins', 'GE', host_type ) )  
 
 lib.addSources( sources )
