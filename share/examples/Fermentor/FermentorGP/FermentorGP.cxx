@@ -92,7 +92,7 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     fermentorGroup->addChild( transform_imp.get() );
     fermentorGroup->addChild( transform_tank.get() );
 
-    double trans[ 3 ] = { 1, 12, 2 };
+    double trans[ 3 ] = { 0.8, 14, 0.15 };
     m_dcs->SetTranslationArray( trans );
 
     _roomGeometry->setMatrix( osg::Matrix::scale( 3.28, 3.28, 3.28 ) *
