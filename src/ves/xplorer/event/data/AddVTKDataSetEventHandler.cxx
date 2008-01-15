@@ -244,7 +244,7 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
                 {
                     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
                     AddChild( lastDataAdded->GetDCS() );
-                    _activeModel->SetActiveDataSet( 0 );//lastDataAdded );
+                    _activeModel->SetActiveDataSet( 0 );
                 }
             }
         }
@@ -287,6 +287,7 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
         DataValuePairSharedPtr tempDVP =
             command->GetDataValuePair( "DELETE_DATASET" );
         _activeModel->DeleteDataSet( tempDVP->GetDataString() );
+        _activeModel->SetActiveDataSet( 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
