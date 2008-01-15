@@ -5,6 +5,6 @@ call C:/TSVEG/vesuite/VE_Installer/setup.bat
 
 REM only change this if your Visual Studio .NET is installed somewhere else
 
-"C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\devenv.exe" C:\TSVEG\IHCC\Fermentor\Fermentor.sln
+"C:\Program Files\Microsoft Visual Studio 8\Common7\IDE\devenv.exe" C:\TSVEG\vesuite\share\examples\Fermentor\Fermentor.sln
 
 cmd
