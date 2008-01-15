@@ -1,0 +1,6 @@
+1        //Number of X cuts
+0.0      //The x-coordinate where the cutting plane is located
+1        //Number of Y cuts
+0.0        //The y-coordinate where the cutting plane is located
+5        //Number of Z cuts
+0.1 0.68900 1.230375 1.853765 2.400  //z-coordinates specifying the 4 cutting planes

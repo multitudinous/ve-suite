@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FermentorGP", "FermentorGP\FermentorGP.vcproj", "{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FermentorUI", "FermentorUI\FermentorUI.vcproj", "{B9C740F0-5568-4D2B-BB6B-D11898F11BDE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FermentorUnit", "FermentorUnit\FermentorUnit.vcproj", "{12195E6B-B5BC-48E5-BAA3-4044F768F673}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug|Win32.Build.0 = Debug|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.ActiveCfg = Release|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.Build.0 = Release|Win32
+		{B9C740F0-5568-4D2B-BB6B-D11898F11BDE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B9C740F0-5568-4D2B-BB6B-D11898F11BDE}.Debug|Win32.Build.0 = Debug|Win32
+		{B9C740F0-5568-4D2B-BB6B-D11898F11BDE}.Release|Win32.ActiveCfg = Release|Win32
+		{B9C740F0-5568-4D2B-BB6B-D11898F11BDE}.Release|Win32.Build.0 = Release|Win32
+		{12195E6B-B5BC-48E5-BAA3-4044F768F673}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12195E6B-B5BC-48E5-BAA3-4044F768F673}.Debug|Win32.Build.0 = Debug|Win32
+		{12195E6B-B5BC-48E5-BAA3-4044F768F673}.Release|Win32.ActiveCfg = Release|Win32
+		{12195E6B-B5BC-48E5-BAA3-4044F768F673}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
