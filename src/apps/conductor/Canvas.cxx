@@ -127,11 +127,11 @@ Canvas::Canvas( wxWindow* parent, int id )
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
-    bool removeSuccess = RemoveEventHandler( networks[this->activeId] );
+    /*bool removeSuccess = RemoveEventHandler( networks[ activeId ] );
     if( removeSuccess )
     {
         //Canvas controls when to remove the plugin event handlers
-        networks[this->activeId]->RemoveAllEvents();
+        networks[ activeId ]->RemoveAllEvents();
     }
     else
     {
@@ -144,12 +144,15 @@ Canvas::~Canvas()
         {
             iter->second.SetPlugin( 0 );
         }
-    }
+    }*/
     
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
         iter != networks.end(); ++iter )
     {
-        delete iter->second;
+        if( activeId != iter->first )
+        {
+            delete iter->second;
+        }
     }
     networks.clear();
 }
