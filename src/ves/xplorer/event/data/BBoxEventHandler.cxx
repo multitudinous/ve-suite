@@ -111,17 +111,19 @@ void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 void BBoxEventHandler::Execute( XMLObject* xmlObject )
 {
     Command* command = dynamic_cast< Command* >( xmlObject );
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Bounding Box State" );
-
+    DataValuePairWeakPtr activeModelDVP = 
+        command->GetDataValuePair( "Bounding Box State" );
+    std::string datasetName = 
+        command->GetDataValuePair( "Active Dataset" )->GetDataString();
+    
     unsigned int state = 0;
     activeModelDVP->GetData( state );
     if( _activeModel )
     {
-        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-        if( dataSet )
-        {
-            dataSet->SetBoundingBoxState( state );
-        }
+        DataSet* dataSet = _activeModel->GetCfdDataSet( 
+            _activeModel->GetIndexOfDataSet( datasetName ) );
+        _activeModel->SetActiveDataSet( dataSet );
+        dataSet->SetBoundingBoxState( state );
     }
 
 }

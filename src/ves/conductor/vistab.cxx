@@ -1219,36 +1219,45 @@ void Vistab::UpdateBoundingBox( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Bounding Box State", static_cast< unsigned int >( bboxCB->GetValue() ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Bounding Box State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
+    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
+    veCommand->AddDataValuePair( activeDataset );
+    
     bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Wire Frame State", static_cast< unsigned int >( wireFrameCB->GetValue() ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Wire Frame State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
+    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
+    veCommand->AddDataValuePair( activeDataset );
+    
     bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED( event ) )
 {
     ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Axes State", static_cast< unsigned int >( axesCB->GetValue() ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Axes State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
+    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
+    veCommand->AddDataValuePair( activeDataset );
+    
     bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 
     if( axesCB->IsChecked() )
     {
@@ -1274,24 +1283,30 @@ void Vistab::UpdateAxesLabels( wxCommandEvent& event )
 
     ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( activeAxesLAbel, labels );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Axes Labels" ) );
     veCommand->AddDataValuePair( dataValuePair );
-
+    
+    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
+    veCommand->AddDataValuePair( activeDataset );
+    
     bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateScalarBar( wxCommandEvent& event )
 {
     ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Scalar Bar State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
+    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
+    veCommand->AddDataValuePair( activeDataset );
+    
     bool connected = CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateMinSlider( wxCommandEvent& event )

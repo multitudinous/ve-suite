@@ -111,18 +111,20 @@ void AxesLabelsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
 void AxesLabelsEventHandler::Execute( XMLObject* xmlObject )
 {
     Command* command = dynamic_cast< Command* >( xmlObject );
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Axes Labels" );
+    DataValuePairWeakPtr activeModelDVP = 
+        command->GetDataValuePair( "Axes Labels" );
     std::vector< std::string > labels;
     activeModelDVP->GetData( labels );
+    std::string datasetName = 
+        command->GetDataValuePair( "Active Dataset" )->GetDataString();
 
     if( _activeModel && !labels.empty() )
     {
-        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-        if( dataSet )
-        {
-            dataSet->GetDataSetAxes()->SetAxisLabels( labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
-            dataSet->GetDataSetAxes()->CreateAxis();
-        }
+        DataSet* dataSet = _activeModel->GetCfdDataSet( 
+            _activeModel->GetIndexOfDataSet( datasetName ) );
+        _activeModel->SetActiveDataSet( dataSet );
+        dataSet->GetDataSetAxes()->SetAxisLabels( 
+            labels.at( 0 ), labels.at( 1 ), labels.at( 2 ) );
+        dataSet->GetDataSetAxes()->CreateAxis();
     }
-
 }

@@ -111,17 +111,18 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
 void ScalarBarEventHandler::Execute( XMLObject* xmlObject )
 {
     Command* command = dynamic_cast< Command* >( xmlObject );
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Scalar Bar State" );
-
+    DataValuePairWeakPtr activeModelDVP = 
+        command->GetDataValuePair( "Scalar Bar State" );
+    std::string datasetName = 
+        command->GetDataValuePair( "Active Dataset" )->GetDataString();
+    
     unsigned int state = 0;
     activeModelDVP->GetData( state );
     if( _activeModel )
     {
-        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-        if( dataSet )
-        {
-            dataSet->SetDataSetScalarState( state );
-        }
+        DataSet* dataSet = _activeModel->GetCfdDataSet( 
+            _activeModel->GetIndexOfDataSet( datasetName ) );
+        _activeModel->SetActiveDataSet( dataSet );
+        dataSet->SetDataSetScalarState( state );
     }
-
 }

@@ -110,18 +110,19 @@ void WireframeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
 void WireframeEventHandler::Execute( XMLObject* xmlObject )
 {
     Command* command = dynamic_cast< Command* >( xmlObject );
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Wire Frame State" );
-
+    DataValuePairWeakPtr activeModelDVP = 
+        command->GetDataValuePair( "Wire Frame State" );
+    std::string datasetName = 
+        command->GetDataValuePair( "Active Dataset" )->GetDataString();
+    
     unsigned int state = 0;
     activeModelDVP->GetData( state );
-
-    if( ModelHandler::instance()->GetActiveModel() )
+    if( _activeModel )
     {
-        DataSet* dataSet = ModelHandler::instance()->GetActiveModel()->GetActiveDataSet();
-        if( dataSet )
-        {
-            dataSet->SetWireframeState( state );
-        }
+        DataSet* dataSet = _activeModel->GetCfdDataSet( 
+            _activeModel->GetIndexOfDataSet( datasetName ) );
+        _activeModel->SetActiveDataSet( dataSet );
+        dataSet->SetWireframeState( state );
     }
 
 }
