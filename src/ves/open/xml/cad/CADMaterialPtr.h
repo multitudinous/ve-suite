@@ -33,7 +33,8 @@
 #ifndef CADMATERIAL_PTR_H
 #define CADMATERIAL_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
+
 
 /**
  * \file
@@ -53,8 +54,12 @@ namespace xml
 namespace cad
 {
 class CADMaterial;
-/// Typedef for a SmartPtr type for the CADMaterial.
-typedef Loki::SmartPtrDef<CADMaterial>::type CADMaterialPtr;
+/// Typedef for a SmartPtr type for the Model.
+typedef ves::util::ClassPtrDef<CADMaterial>::type  CADMaterialPtr;
+typedef ves::util::SharedPtrDef<CADMaterial>::type CADMaterialSharedPtr;
+typedef ves::util::WeakPtrDef<CADMaterial>::type   CADMaterialWeakPtr;
+typedef ves::util::ScopedPtrDef<CADMaterial>::type CADMaterialScopedPtr;
+
 }
 }
 }

@@ -33,6 +33,7 @@
 #ifndef _CAD_ATTRIBUTE_H_
 #define _CAD_ATTRIBUTE_H_
 
+#include <ves/open/xml/cad/CADAttributePtr.h>
 #include <ves/open/xml/XMLObject.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>

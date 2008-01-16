@@ -33,7 +33,8 @@
 #ifndef CAD_ASSEMBLY_PTR_H
 #define CAD_ASSEMBLY_PTR_H
 
-#include <loki/SmartPtr.h>
+
+#include <ves/util/PointerTypes.h>
 
 /**
  * \file
@@ -53,8 +54,12 @@ namespace xml
 namespace cad
 {
 class CADAssembly;
-/// Typedef for a SmartPtr type for the CADAssembly.
-typedef Loki::SmartPtrDef<CADAssembly>::type CADAssemblyPtr;
+/// Typedef for a SmartPtr type for the Model.
+typedef ves::util::ClassPtrDef<CADAssembly>::type  CADAssemblyPtr;
+typedef ves::util::SharedPtrDef<CADAssembly>::type CADAssemblySharedPtr;
+typedef ves::util::WeakPtrDef<CADAssembly>::type   CADAssemblyWeakPtr;
+typedef ves::util::ScopedPtrDef<CADAssembly>::type CADAssemblyScopedPtr;
+
 }
 }
 }

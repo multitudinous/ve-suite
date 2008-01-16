@@ -33,7 +33,8 @@
 #ifndef CADNODE_ANIMATION_PTR_H
 #define CADNODE_ANIMATION_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
+
 
 /**
  * \file
@@ -54,7 +55,11 @@ namespace cad
 {
 class CADNodeAnimation;
 /// Typedef for a SmartPtr type for the CADNodeAnimation.
-typedef Loki::SmartPtrDef<CADNodeAnimation>::type CADNodeAnimationPtr;
+typedef ves::util::ClassPtrDef<CADNodeAnimation>::type  CADNodeAnimationPtr;
+typedef ves::util::SharedPtrDef<CADNodeAnimation>::type CADNodeAnimationSharedPtr;
+typedef ves::util::WeakPtrDef<CADNodeAnimation>::type   CADNodeAnimationWeakPtr;
+typedef ves::util::ScopedPtrDef<CADNodeAnimation>::type CADNodeAnimationScopedPtr;
+
 }
 }
 }

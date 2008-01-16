@@ -32,6 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CAD_PART_H_
 #define _CAD_PART_H_
+
+#include <ves/open/xml/cad/CADPartPtr.h>
+
 /*!\file CADPart.h
  * CADPart API
  */

@@ -33,7 +33,8 @@
 #ifndef CAD_ATTRIBUTE_PTR_H
 #define CAD_ATTRIBUTE_PTR_H
 
-#include <loki/SmartPtr.h>
+#include <ves/util/PointerTypes.h>
+
 
 /**
  * \file
@@ -53,8 +54,12 @@ namespace xml
 namespace cad
 {
 class CADAttribute;
-/// Typedef for a SmartPtr type for the CADAttribute.
-typedef Loki::SmartPtrDef<CADAttribute>::type CADAttributePtr;
+/// Typedef for a SmartPtr type for the Model.
+typedef ves::util::ClassPtrDef<CADAttribute>::type  CADAttributePtr;
+typedef ves::util::SharedPtrDef<CADAttribute>::type CADAttributeSharedPtr;
+typedef ves::util::WeakPtrDef<CADAttribute>::type   CADAttributeWeakPtr;
+typedef ves::util::ScopedPtrDef<CADAttribute>::type CADAttributeScopedPtr;
+
 }
 }
 }

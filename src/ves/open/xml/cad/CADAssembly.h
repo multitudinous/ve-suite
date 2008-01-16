@@ -32,6 +32,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _CAD_ASSEMBLY_H_
 #define _CAD_ASSEMBLY_H_
+
+#include <ves/open/xml/cad/CADAssemblyPtr.h>
+
 #include <xercesc/dom/DOM.hpp>
 #include <ves/open/xml/cad/CADNode.h>
 #include <string>

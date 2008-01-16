@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CAD_NODE_ANIMATION_H
 #define CAD_NODE_ANIMATION_H
-
+#include <ves/open/xml/cad/CADNodeAnimationPtr.h>
 #include <ves/open/xml/XMLObject.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
