@@ -871,7 +871,7 @@ void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* x
         // (and the active dataset as well)
         DataSet* activeDataset = activeModel->GetCfdDataSet( i );
 
-        std::string oldDatasetName = activeModel->GetActiveDataSet()->GetFileName();
+        std::string oldDatasetName = activeModel->GetCfdDataSet( i )->GetFileName();
         vprDEBUG( vesDBG, 1 ) << "|\tCreateVisObjectEventHandler::SetActiveDataSet last active dataset name = "
         << oldDatasetName
         << std::endl << vprDEBUG_FLUSH;
