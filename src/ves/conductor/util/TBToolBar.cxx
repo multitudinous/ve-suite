@@ -33,6 +33,7 @@
 #include <ves/conductor/util/UI_TransientDialog.h>
 
 #include <ves/conductor/util/TBToolBar.h>
+#include <ves/conductor/vistab.h>
 
 #include <wx/sizer.h>
 #include <wx/combobox.h>
@@ -108,11 +109,6 @@ void TextureBasedToolBar::SetSubDialogSize( wxRect subSize )
 void TextureBasedToolBar::_updateAvailableSolutions( wxArrayString scalarNames,
                                                      wxArrayString vectorNames )
 {}
-///////////////////////////////////////////////////////////////////
-void TextureBasedToolBar::SetActiveDatasetName( std::string name )
-{
-    m_activeDataset = name;
-}
 ////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetScalars( wxArrayString scalarNames )
 {
@@ -318,7 +314,7 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
 
     ves::open::xml::DataValuePair* activeDatasetName = new ves::open::xml::DataValuePair();
     activeDatasetName->SetData( std::string( "Active Dataset Name" ) ,
-                            m_activeDataset );
+                                dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName() );
     _instructions.push_back( activeDatasetName );
 
     if( _availableScalars.GetCount() )

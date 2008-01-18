@@ -567,7 +567,6 @@ void Vistab::_onTextureBased( wxCommandEvent& WXUNUSED( event ) )
     _tbTools->SetSubDialogSize( this->GetSize() );
     _tbTools->SetVectors( _availableSolutions["TEXTURE_VECTORS"] );
     _tbTools->SetScalars( _availableSolutions["TEXTURE_SCALARS"] );
-    _tbTools->SetActiveDatasetName( _activeDataSetName );
 
     if( _tbTools->ActivateTextureVisualization() )
     {
