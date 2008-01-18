@@ -411,11 +411,8 @@ void App::latePreFrame( void )
     ///////////////////////
     SteadyStateVizHandler::instance()->PreFrameUpdate();
 
-    if( ModelHandler::instance()->GetActiveModel() )
-    {
-         _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
-         _tbvHandler->PreFrameUpdate();
-    }
+    _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
+    _tbvHandler->PreFrameUpdate();
     ///////////////////////
     cfdExecutive::instance()->PreFrameUpdate();
 
