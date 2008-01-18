@@ -127,7 +127,7 @@ void NURBSSurface::_interpolateWithinModifiedRange( /*double umin, double umax,
     {
         //std::cout<<_parameterValues["V"][v];
         vparam = m_vParameters.at(v);
-        std::cout<<m_vParameters.at(v);
+        //std::cout<<m_vParameters.at(v);
         for( unsigned int u = uIndexMin; u <= uIndexMax; u++ )
         {
             //uparam = _parameterValues["U"][u];
@@ -296,6 +296,7 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
         {
             //vindex = _currentSpan["V"].at(v) - vdegree + l;
             vindex = vspan - vdegree + l;
+            //std::cout<<vindex<<" "<<vspan<<std::endl;
             ucontrib[0] = 0;
             ucontrib[1] = 0;
             ucontrib[2] = 0;
@@ -304,6 +305,7 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
             {
                 //uindex = _currentSpan["U"].at(u) - udegree + k;
                 uindex = uspan - udegree + k;
+                //std::cout<<uindex<<" "<<uspan<<std::endl;
 
                 ucontrib[0] += ( _controlPoints[0][vindex*_nControlPoints["U"] + uindex].WeightedX()
                                  * _derivativeBasisFunctions["U"][n][u].at( k ) );
