@@ -35,6 +35,7 @@
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/DataSet.h>
 
 #include <ves/xplorer/event/volume/TBTransientDurationUpdateEH.h>
 #include <ves/xplorer/event/volume/TBTransientModeUpdateEH.h>
@@ -481,9 +482,15 @@ void TextureBasedVizHandler::_updateVisualization()
     _cleared = false;
     }*/
 }
-//////////////////////////////////////////////
+///////////////////////////////////////////
 void TextureBasedVizHandler::_updateGraph()
 {
+    SetParentNode( static_cast< ves::xplorer::scenegraph::Group* >(
+                    ModelHandler::instance()->GetActiveModel()->
+                    GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
+    SetActiveTextureDataSet( ModelHandler::instance()->GetActiveTextureDataSet() );
+    ViewTextureBasedVis( ModelHandler::instance()->GetVisOption() );
+
     //place vv node on the graph
     if( !_activeVolumeVizNode )
     {
@@ -582,8 +589,6 @@ void TextureBasedVizHandler::PreFrameUpdate()
                 currentEventHandler->second->SetGlobalBaseObject();
                 currentEventHandler->second->Execute( tbvizCommand );
                 _updateGraph();
-
-
             }
         }
     }

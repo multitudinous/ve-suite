@@ -480,7 +480,7 @@ void Contours::_updateContourInformation()
     }
 
 }
-////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////
 void Contours::_onAddPlane( wxCommandEvent& WXUNUSED( event ) )
 {
     _updateContourInformation();

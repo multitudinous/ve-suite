@@ -413,18 +413,8 @@ void App::latePreFrame( void )
 
     if( ModelHandler::instance()->GetActiveModel() )
     {
-        if( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
-        {
-            _tbvHandler->SetParentNode( 
-                static_cast< ves::xplorer::scenegraph::Group* >( 
-                    ModelHandler::instance()->GetActiveModel()->
-                    GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
-            _tbvHandler->SetActiveTextureDataSet( 
-                    ModelHandler::instance()->GetActiveTextureDataSet() );
-            _tbvHandler->ViewTextureBasedVis( ModelHandler::instance()->GetVisOption() );
-            _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
-            _tbvHandler->PreFrameUpdate();
-        }
+         _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
+         _tbvHandler->PreFrameUpdate();
     }
     ///////////////////////
     cfdExecutive::instance()->PreFrameUpdate();

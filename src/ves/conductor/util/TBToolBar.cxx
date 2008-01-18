@@ -108,6 +108,11 @@ void TextureBasedToolBar::SetSubDialogSize( wxRect subSize )
 void TextureBasedToolBar::_updateAvailableSolutions( wxArrayString scalarNames,
                                                      wxArrayString vectorNames )
 {}
+///////////////////////////////////////////////////////////////////
+void TextureBasedToolBar::SetActiveDatasetName( std::string name )
+{
+    m_activeDataset = name;
+}
 ////////////////////////////////////////////////////////////////
 void TextureBasedToolBar::SetScalars( wxArrayString scalarNames )
 {
@@ -310,6 +315,11 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
 {
     ClearInstructions();
     _commandName = "TB_ACTIVATE";
+
+    ves::open::xml::DataValuePair* activeDatasetName = new ves::open::xml::DataValuePair();
+    activeDatasetName->SetData( std::string( "Active Dataset Name" ) ,
+                            m_activeDataset );
+    _instructions.push_back( activeDatasetName );
 
     if( _availableScalars.GetCount() )
     {

@@ -103,6 +103,9 @@ public:
     ///Set the vectors
     void SetVectors( wxArrayString vectorNames );
 
+    ///Set the active name of the active dataset
+    void SetActiveDatasetName( std::string activeDataset );
+
     ///Set the size for the subdialogs
     ///\param subSize wxRect size for sub dialogs.\n
     ///Should be the same as vistab
@@ -151,7 +154,7 @@ protected:
     void _onTransient( wxCommandEvent& event );
 
 
-
+    std::string m_activeDataset;///<The name of the active dataset on the vistab
     DECLARE_EVENT_TABLE()
 };
 }

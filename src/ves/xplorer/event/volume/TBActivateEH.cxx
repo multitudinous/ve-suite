@@ -38,6 +38,9 @@
 #include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/xplorer/Debug.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/DataValuePair.h>
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -69,6 +72,17 @@ void TextureBasedActivateEventHandler::_operateOnNode( XMLObject* veXMLObject )
     {
         if( _activeModel )
         {
+            Command* command = dynamic_cast< Command* >( veXMLObject );
+            DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Active Dataset Name" );
+
+            std::string activeDatasetName;
+            datasetName->GetData( activeDatasetName );
+
+            DataSet* dataSet = _activeModel->GetCfdDataSet(
+                      _activeModel->GetIndexOfDataSet( activeDatasetName ) );
+
+            _activeModel->SetActiveDataSet( dataSet );
+
             //make the CAD transparent
             _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
             if( !_activeModel->GetDCS()->SearchChild( _activeModel->GetActiveDataSet()->GetDCS() ) )
