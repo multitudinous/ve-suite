@@ -435,8 +435,8 @@ if not SConsAddons.Util.hasHelpFlag():
             'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
         baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
         baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
-        if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
-            baseEnv['PDB'] = 1
+        #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
+        #    baseEnv['PDB'] = 1
 
    if GetPlatform() == 'darwin':
       baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
