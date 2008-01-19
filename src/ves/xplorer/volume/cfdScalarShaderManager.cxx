@@ -39,6 +39,7 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
 #include <ves/xplorer/volume/cfdUpdateTextureCallback.h>
 #include <ves/xplorer/volume/cfdOSGTransferShaderManager.h>
@@ -326,13 +327,17 @@ void cfdScalarShaderManager::_initPropertyTexture()
         propertyField->allocateImage( _fieldSize[0],
                                       _fieldSize[1],
                                       _fieldSize[2],
-                                      GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE );
+                                      GL_LUMINANCE_ALPHA,
+                                      GL_UNSIGNED_BYTE );
         propertyField->setImage( _fieldSize[0], _fieldSize[1], _fieldSize[2],
                                  GL_LUMINANCE_ALPHA,
                                  GL_LUMINANCE_ALPHA,
                                  GL_UNSIGNED_BYTE,
                                  _tm->dataField( 0 ),
                                  osg::Image::NO_DELETE, 1 );
+
+        //propertyField->setPixelBufferObject(new ExternalPixelBufferObject(propertyField.get()) );
+        _utCbk->SetExternalPixelBufferObject( new ExternalPixelBufferObject( propertyField.get() ) );
 
         propertyField->setDataVariance( osg::Object::DYNAMIC );
         _property = new osg::Texture3D();

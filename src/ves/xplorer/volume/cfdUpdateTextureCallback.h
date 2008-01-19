@@ -60,6 +60,7 @@ class cfdTextureManager;
 }
 namespace volume
 {
+class ExternalPixelBufferObject;
 class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback
             : public  osg::Texture3D::SubloadCallback
 {
@@ -172,8 +173,10 @@ public:
 
     void subload( const osg::Texture3D& texture, osg::State& state ) const;
     void load( const osg::Texture3D& texture, osg::State& ) const;
+    void SetExternalPixelBufferObject( ExternalPixelBufferObject* ePBO );
 
 protected:
+    osg::ref_ptr<ExternalPixelBufferObject> m_pbo;
     cfdTextureManager* _tm;
     double _delay;
     bool _isSlave;

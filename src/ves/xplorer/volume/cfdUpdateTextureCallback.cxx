@@ -41,6 +41,8 @@
 #include <osg/NodeVisitor>
 #include <vpr/Util/Debug.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
+
 using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
@@ -76,14 +78,16 @@ cfdUpdateTextureCallback::cfdUpdateTextureCallback( const cfdUpdateTextureCallba
     _isSlave = cb._isSlave;
     _currentFrame = cb._currentFrame;
     _isLuminance = cb._isLuminance;
+    m_pbo = cb.m_pbo;
 }
 ///////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::~cfdUpdateTextureCallback()
 {
-    /*if(_tm){
-    delete _tm;
-    _tm = 0;
-    }*/
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+void cfdUpdateTextureCallback::SetExternalPixelBufferObject( ExternalPixelBufferObject* ePBO )
+{
+    m_pbo = ePBO;
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetTextureManager( cfdTextureManager* tm )
@@ -130,29 +134,50 @@ void cfdUpdateTextureCallback::SetCurrentFrame( unsigned int cFrame,
 ////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::load( const osg::Texture3D& texture, osg::State& state )const
 {
+    unsigned char* dataMinusOffset=0;
+    unsigned char* dataPlusOffset=0;
+    const unsigned int contextID = state.getContextID();
+    if (m_pbo.valid() && m_pbo->isPBOSupported(contextID) )
+    {
+        if ( m_pbo->isDirty( contextID ) )
+        {
+             m_pbo->compileBuffer( state );
+        }
+        else
+        {
+             m_pbo->bindBuffer( contextID );
+        }
+        dataMinusOffset = _tm->dataField( 0 ) ;
+        dataPlusOffset = reinterpret_cast<unsigned char*>(m_pbo->offset());
+    }
     if( _isLuminance )
     {
-        texture.getExtensions( state.getContextID(), false )->glTexImage3D( GL_TEXTURE_3D, 0,
+        texture.getExtensions( contextID, false )->glTexImage3D( GL_TEXTURE_3D, 0,
                 GL_LUMINANCE_ALPHA,
                 _textureWidth,
                 _textureHeight,
                 _textureDepth,
                 0, GL_LUMINANCE_ALPHA,
                 GL_UNSIGNED_BYTE,
-                ( unsigned char* )_tm->dataField( 0 ) );
+                ( unsigned char* )_tm->dataField( 0 )-dataMinusOffset+dataPlusOffset );
 
     }
     else
     {
-        texture.getExtensions( state.getContextID(), false )->glTexImage3D( GL_TEXTURE_3D, 0,
+        texture.getExtensions( contextID, false )->glTexImage3D( GL_TEXTURE_3D, 0,
                 GL_RGBA,
                 _textureWidth,
                 _textureHeight,
                 _textureDepth,
                 0, GL_RGBA,
                 GL_UNSIGNED_BYTE,
-                ( unsigned char* )_tm->dataField( 0 ) );
+                ( unsigned char* )_tm->dataField( 0 ) -dataMinusOffset+dataPlusOffset);
     }
+    if ( m_pbo.valid() )
+    {
+        m_pbo->unbindBuffer( contextID );
+    }
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::State& state ) const
@@ -177,11 +202,24 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
     //master node in the cluster
     if( _tm->TimeToUpdate() || _update )
     {
+        unsigned char* dataMinusOffset=0;
+        unsigned char* dataPlusOffset=0;
+        const unsigned int contextID = state.getContextID();
+
+        if ( m_pbo.valid() && m_pbo->isPBOSupported( contextID ) )
+        {
+            m_pbo->UpdateData( _tm->getCurrentField() );
+            {
+                 m_pbo->compileBuffer( state );
+            }
+            dataMinusOffset = _tm->getCurrentField();
+            dataPlusOffset = reinterpret_cast<unsigned char*>( m_pbo->offset() );
+        }
         //std::cout<<"current frame master: "<<_tm->GetCurrentFrame()<<std::endl;
 
         if( _isLuminance )
         {
-            texture.getExtensions( state.getContextID(), false )->glTexSubImage3D( GL_TEXTURE_3D,
+            texture.getExtensions( contextID, false )->glTexSubImage3D( GL_TEXTURE_3D,
                     0,
                     0, 0, 0,
                     _textureWidth,
@@ -189,12 +227,13 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
                     _textureDepth,
                     GL_LUMINANCE_ALPHA,
                     GL_UNSIGNED_BYTE,
-                    ( unsigned char* )_tm->getCurrentField() );
+                    ( unsigned char* )_tm->getCurrentField() -dataMinusOffset+dataPlusOffset);
+                   // ( unsigned char* )_tm->getCurrentField() );
 
         }
         else
         {
-            texture.getExtensions( state.getContextID(), false )->glTexSubImage3D( GL_TEXTURE_3D,
+            texture.getExtensions( contextID, false )->glTexSubImage3D( GL_TEXTURE_3D,
                     0,
                     0, 0, 0,
                     _textureWidth,
@@ -202,10 +241,15 @@ void cfdUpdateTextureCallback::subload( const osg::Texture3D& texture, osg::Stat
                     _textureDepth,
                     GL_RGBA,
                     GL_UNSIGNED_BYTE,
-                    ( unsigned char* )_tm->getCurrentField() );
+                    ( unsigned char* )_tm->getCurrentField() -dataMinusOffset+dataPlusOffset);
+                    //( unsigned char* )_tm->getCurrentField() );
         }
         ///reset the update flag so we don't subload every frame!!
         _update = false;
+        if ( m_pbo.valid() )
+        {
+            m_pbo->unbindBuffer( contextID );
+        }
     }
 }
 #endif
