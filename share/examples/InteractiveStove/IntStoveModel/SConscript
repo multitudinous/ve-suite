@@ -28,6 +28,8 @@ lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 if GetPlatform() == 'win32':
    lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
    lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
+   lib_env['no_import_lib'] = 1
+   #lib_env['SHLINKFLAGS'] = '$LINKFLAGS /dll /MANIFEST:NO'
 
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )

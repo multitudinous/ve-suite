@@ -39,6 +39,10 @@ wxwidgets_options.apply( lib_env )
 tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   #lib_env['SHLINKFLAGS'] = '$LINKFLAGS /dll /MANIFEST:NO'
+
 if GetPlatform() == 'darwin':
    lib_env.AppendUnique( LINKFLAGS = ['-framework','GLUT','-framework','OpenGL'])
 else:
