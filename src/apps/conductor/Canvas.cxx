@@ -127,17 +127,14 @@ Canvas::Canvas( wxWindow* parent, int id )
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()
 {
-    ///Null out the UIPluginBase pointer becuase wx has probably 
-    ///already cleaned it up the plugin when deleting on the children
-    //windows nd event handlers.
+    // Must first remove the plugin event handlers
+    // as these cause problems on shutdown on windows for some reason.
+    // Various shutdown processes were tried but the only way
+    // to get a clean shutdown on windows is to remove the eventhandlers
+    // first then manually clean up the memory.
     Network* tempNetwork = networks[ activeId ];
-    for( std::map< int, ves::conductor::Module >::iterator iter = 
-        tempNetwork->modules.begin(); 
-        iter != tempNetwork->modules.end(); ++iter )
-    {
-        iter->second.SetPlugin( 0 );
-    }
-    
+    tempNetwork->RemoveAllEvents();
+
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
         iter != networks.end(); ++iter )
     {
