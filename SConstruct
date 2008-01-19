@@ -435,33 +435,13 @@ if not SConsAddons.Util.hasHelpFlag():
             'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
         baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
         baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
+        if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
+            baseEnv['PDB'] = 1
 
    if GetPlatform() == 'darwin':
       baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
       baseEnv['LDMODULESUFFIX'] = '.bundle'
       #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
-
-   #if GetPlatform() == 'win32':
-      #env['LDMODULE'] = '$SHLINK'
-      #env['LDMODULEPREFIX'] = ''
-      #env['LDMODULESUFFIX'] = '$SHLIBSUFFIX'
-      #env['LDMODULEFLAGS'] = '$SHLINKFLAGS'
-       # We can't use '$SHLINKCOM' here because that will stringify the
-       # action list on expansion, and will then try to execute expanded
-       # strings, with the upshot that it would try to execute RegServerFunc
-       # as a command.
-       #env['LDMODULECOM'] = compositeLinkAction
-      #print env['LDMODULE']
-      #print env['LDMODULEFLAGS']
-
-    # override the default for loadable modules, which are different
-    # on OS X than dynamic shared libs.  echoing what XCode does for
-    # pre/suffixes:
-    #env['LDMODULEPREFIX'] = '' 
-    #env['LDMODULESUFFIX'] = '' 
-    #env['LDMODULEFLAGS'] = SCons.Util.CLVar('$LINKFLAGS -bundle')
-    #env['LDMODULECOM'] = '$LDMODULE -o ${TARGET} $LDMODULEFLAGS $SOURCES $_LIBDIRFLAGS $_LIBFLAGS $_FRAMEWORKPATH $_FRAMEWORKS $FRAMEWORKSFLAGS'
-
 
    #setup default libraries and defines
    baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
