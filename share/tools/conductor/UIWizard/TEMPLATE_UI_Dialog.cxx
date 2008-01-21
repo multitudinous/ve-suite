@@ -1,6 +1,6 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
- * VE-Suite is (C) Copyright 1998-2007 by Iowa State University
+ * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
  * Original Development Team:
  *   - ISU's Thermal Systems Virtual Engineering Group,
@@ -31,7 +31,7 @@
  *
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #include "TEMPLATE_UI_Dialog.h"
 
 //Here is the constructor with passed in pointers
