@@ -3,7 +3,7 @@
 
 #include <vesenv.iss>
 #define MyAppName "VE-Suite"
-#define MyAppVerName "VE-Suite 1.1.3"
+#define MyAppVerName "VE-Suite 1.1.4"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
 #define VELauncher "velauncher.exe"
@@ -36,6 +36,7 @@ ChangesAssociations=true
 BackColor=$a16502
 BackColor2=$1b84f7
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
+PrivilegesRequired=none
 
 [Types]
 Name: full; Description: Full installation
