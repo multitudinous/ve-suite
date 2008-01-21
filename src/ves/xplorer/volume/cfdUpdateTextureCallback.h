@@ -43,6 +43,7 @@
 #elif _OPENSG
 #elif _OSG
 #include <osg/Texture3D>
+#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
 namespace osg
 {
 class Node;
@@ -60,7 +61,6 @@ class cfdTextureManager;
 }
 namespace volume
 {
-class ExternalPixelBufferObject;
 class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback
             : public  osg::Texture3D::SubloadCallback
 {

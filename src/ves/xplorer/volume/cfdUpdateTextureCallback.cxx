@@ -41,7 +41,6 @@
 #include <osg/NodeVisitor>
 #include <vpr/Util/Debug.h>
 #include <ves/xplorer/volume/cfdTextureManager.h>
-#include <ves/xplorer/volume/ExternalPixelBufferObject.h>
 
 using namespace ves::xplorer::volume;
 //////////////////////////////////////////////////////////////////
