@@ -87,6 +87,7 @@ void NURBSDrawable::UpdateMesh( NURBSObject* nurbs )
     }
     m_tessellatedPoints->dirty();
     m_normals->dirty();
+    dirtyBound();
 }
 ////////////////////////////////////////////////////////
 void NURBSDrawable::_updateTessellatedSurface()

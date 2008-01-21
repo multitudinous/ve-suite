@@ -125,7 +125,6 @@ void NURBS::SetSelectedControlPoint( unsigned int index)
 //////////////////////////////////////////
 void NURBS::ReleaseControlPointSelection()
 {
-    //std::cout<<"Reseting selected control point "<<std::endl;
     m_selectedControlPointIndex = -1;
 }
 ///////////////////////////////////////////////////////////////
