@@ -363,6 +363,11 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             //Selection mode
             else if( mode == 1 )
             {
+                //We process selection on the release of the left button because
+                //in the future we would like to be able to select with a 
+                //rubber band rectangle which would mean the mouse down would be
+                //the first point of the rectangle and the mouse up would be the
+                //second point
                 SelMouse();
             }
 
