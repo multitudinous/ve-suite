@@ -67,28 +67,29 @@ void SelectTechnique::DefinePasses()
     //Implement pass #2
     {
         char vertexPass[] =
-            "varying vec3 Normal; \n"
-
             "void main() \n"
             "{ \n"
-            "gl_Position = ftransform(); \n"
-            "} \n";
+				"gl_FrontColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
 
+                "gl_Position = ftransform(); \n"
+            "} \n";
+		/*
         char fragmentPass[] =
             "void main() \n"
             "{ \n"
-            "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
+                "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
             "} \n";
+		*/
 
         osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
-        osg::ref_ptr< osg::Program > program = new osg::Program;
+        osg::ref_ptr< osg::Program > program = new osg::Program();
         osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
-        osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
+        //osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
         osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
 
         program->addShader( vertex_shader.get() );
-        program->addShader( fragment_shader.get() );
+        //program->addShader( fragment_shader.get() );
 
         linewidth->setWidth( 2.0f );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
