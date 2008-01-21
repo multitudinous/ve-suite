@@ -41,7 +41,7 @@ FermentorUIDialog::FermentorUIDialog( wxWindow* parent, int id, double* agitatio
                                                                 double* sim_speed )
 
 :
-UIDialog( ( wxWindow* )parent, id, "Fermentor" ), p_agitation( agitation ),
+UIDialog( ( wxWindow* )parent, id, _("Fermentor") ), p_agitation( agitation ),
                                                   p_air_conc( air_conc ),
                                                   p_ini_ph( ini_ph ),
                                                   p_nitrate_conc( nitrate_conc ),
@@ -86,19 +86,19 @@ void FermentorUIDialog::_buildPage()
 
     wxBoxSizer* FermentorModelGroup = new wxBoxSizer( wxVERTICAL );
 
-    _agitation = new wxTextCtrl( this,-1, "200", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
-    _air = new wxTextCtrl( this, -1, "1.25", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
-    _ph = new wxTextCtrl( this, -1, "6", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
-    _nitrate = new wxTextCtrl( this, -1, "0.1", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
-    _temperature = new wxTextCtrl( this, -1, "37", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
-    _hours = new wxTextCtrl( this, -1, "240", wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
+    _agitation = new wxTextCtrl( this,-1, _("200"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
+    _air = new wxTextCtrl( this, -1, _("1.25"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
+    _ph = new wxTextCtrl( this, -1, _("6"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
+    _nitrate = new wxTextCtrl( this, -1, _("0.1"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
+    _temperature = new wxTextCtrl( this, -1, _("37"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
+    _hours = new wxTextCtrl( this, -1, _("240"), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER, wxDefaultValidator );
 
-    AGI_Group = new wxStaticBox( this, -1, "Agitation(rpm)" );
-    AIR_Group = new wxStaticBox( this, -1, "Air Concentation(vvm)" );
-    PH_Group = new wxStaticBox( this, -1, "Initial pH" );
-    NIT_Group = new wxStaticBox( this, -1, "Nitrate Concentration(g/L)" );
-    TEMP_Group = new wxStaticBox( this, -1, "Temperature(C)" );
-    HRS_Group = new wxStaticBox( this, -1, "Simulation Time(Hours)" );
+    AGI_Group = new wxStaticBox( this, -1, _("Agitation(rpm)") );
+    AIR_Group = new wxStaticBox( this, -1, _("Air Concentation(vvm)") );
+    PH_Group = new wxStaticBox( this, -1, _("Initial pH") );
+    NIT_Group = new wxStaticBox( this, -1, _("Nitrate Concentration(g/L)") );
+    TEMP_Group = new wxStaticBox( this, -1, _("Temperature(C)") );
+    HRS_Group = new wxStaticBox( this, -1, _("Simulation Time(Hours)") );
 
     wxStaticBoxSizer* LOC_AGI_Group = new wxStaticBoxSizer( AGI_Group, wxVERTICAL );
     LOC_AGI_Group->Add( _agitation, 6, wxALIGN_CENTRE );
@@ -113,20 +113,20 @@ void FermentorUIDialog::_buildPage()
     wxStaticBoxSizer* LOC_HRS_Group = new wxStaticBoxSizer( HRS_Group, wxVERTICAL );
     LOC_HRS_Group->Add( _hours, 6, wxALIGN_CENTRE );
 
-    wxString cycles[] = { "Stop", "Start" };
-    wxString rotmode[] = { "Off", "On" };
-    wxString xraymode[] = { "Off", "On" };
-    wxString loopmode[] = { "Single", "Cycle" };
+    wxString cycles[] = { _("Stop"), _("Start") };
+    wxString rotmode[] = { _("Off"), _("On") };
+    wxString xraymode[] = { _("Off"), _("On") };
+    wxString loopmode[] = { _("Single"), _("Cycle") };
 
-    _CycleRadioBox = new wxRadioBox( this, CYCLE_ID_RADIOBOX, "Simulation Options", wxDefaultPosition, wxDefaultSize, 2, cycles, 1, wxRA_SPECIFY_COLS );
-    _RotationRadioBox = new wxRadioBox( this, ROTATION_ID_RADIOBOX, "Auto-Rotate", wxDefaultPosition, wxDefaultSize, 2, rotmode, 1, wxRA_SPECIFY_COLS );
-    _XRayRadioBox = new wxRadioBox( this, XRAY_ID_RADIOBOX, "X-Ray", wxDefaultPosition, wxDefaultSize, 2, xraymode, 1, wxRA_SPECIFY_COLS );
-    _LoopRadioBox = new wxRadioBox( this, LOOP_ID_RADIOBOX, "Mode", wxDefaultPosition, wxDefaultSize, 2, loopmode, 1, wxRA_SPECIFY_COLS );
+    _CycleRadioBox = new wxRadioBox( this, CYCLE_ID_RADIOBOX, _("Simulation Options"), wxDefaultPosition, wxDefaultSize, 2, cycles, 1, wxRA_SPECIFY_COLS );
+    _RotationRadioBox = new wxRadioBox( this, ROTATION_ID_RADIOBOX, _("Auto-Rotate"), wxDefaultPosition, wxDefaultSize, 2, rotmode, 1, wxRA_SPECIFY_COLS );
+    _XRayRadioBox = new wxRadioBox( this, XRAY_ID_RADIOBOX, _("X-Ray"), wxDefaultPosition, wxDefaultSize, 2, xraymode, 1, wxRA_SPECIFY_COLS );
+    _LoopRadioBox = new wxRadioBox( this, LOOP_ID_RADIOBOX, _("Mode"), wxDefaultPosition, wxDefaultSize, 2, loopmode, 1, wxRA_SPECIFY_COLS );
 
     _RotationSlider = new wxSlider( this, ROTATION_SLIDER, 0, 0, 5, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
     _SimulationSlider = new wxSlider( this, SIMULATION_SLIDER, 0, 0, 10, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 
-    _Update = new wxButton( this, wxID_OK, "UPDATE PARAMETERS AND RUN SIMULATION" );
+    _Update = new wxButton( this, wxID_OK, _("UPDATE PARAMETERS AND RUN SIMULATION") );
 
     wxBoxSizer* Row1 = new wxBoxSizer( wxHORIZONTAL );
     wxBoxSizer* Row2 = new wxBoxSizer( wxHORIZONTAL );
