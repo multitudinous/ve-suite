@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -29,7 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifdef _OSG
 #include <osg/FrameStamp>
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))

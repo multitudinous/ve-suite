@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> *************
+/*************** <auto-copyright.rb BEGIN do not edit this line> *************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -29,7 +29,7 @@
  * Id:            $Id: NURBS.cxx 10265 2007-12-26 20:42:01Z biv $
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> **************/
+ *************** <auto-copyright.rb END do not edit this line> **************/
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSControlMesh.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSDrawable.h>

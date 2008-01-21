@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2005 by Iowa State University
  *
@@ -31,7 +31,7 @@
  *
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef PHONG_LOADER_H
 #define PHONG_LOADER_H
 /*!\file PhongLoader.h

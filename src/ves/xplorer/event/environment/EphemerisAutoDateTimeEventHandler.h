@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -29,7 +29,7 @@
  * Id:            $Id: EphemerisAutoDateTimeEventHandler.h 9904 2007-11-14 21:54:23Z dshipton $
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef EPHEMERIS_AUTO_DATE_TIME_EVENT_HANDLER_H
 #define EPHEMERIS_AUTO_DATE_TIME_EVENT_HANDLER_H
 

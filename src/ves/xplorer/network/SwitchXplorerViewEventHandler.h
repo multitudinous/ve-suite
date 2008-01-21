@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -29,7 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef SWITCH_XPLORER_VIEW_EVENT_HANDLER_H
 #define SWITCH_XPLORER_VIEW_EVENT_HANDLER_H
 

@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> *************
+/*************** <auto-copyright.rb BEGIN do not edit this line> *************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -29,7 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> **************/
+ *************** <auto-copyright.rb END do not edit this line> **************/
 //C++ header - fIVE|Analyse - Copyright (C) 2002-2003 Michael Gronager, UNI-C
 //Distributed under the terms of the GNU Library General Public License (LGPL)
 //as published by the Free Software Foundation.

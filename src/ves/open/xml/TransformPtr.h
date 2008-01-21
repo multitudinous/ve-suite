@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
 *
 * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
 *
@@ -29,7 +29,7 @@
 * Id:            $Id: TransformPtr.h 10148 2007-12-10 23:37:51Z dshipton $
 * -----------------------------------------------------------------
 *
-*************** <auto-copyright.pl END do not edit this line> ***************/
+*************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef VE_TRANSFORM_PTR_H
 #define VE_TRANFORM_PTR_H
 

@@ -1,4 +1,4 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -29,7 +29,7 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 #if !defined(AFX_LISTTABLE_H__745B1AA2_D560_41C1_AC10_748693B1A8EF__INCLUDED_)
 #define AFX_LISTTABLE_H__745B1AA2_D560_41C1_AC10_748693B1A8EF__INCLUDED_
 /*!\file ListTable.h
