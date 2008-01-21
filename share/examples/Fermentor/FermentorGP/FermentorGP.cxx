@@ -4,9 +4,9 @@
 #include "Shaders.h"
 
 // --- VE-Suite Includes --- //
-#include <ves/open/xml/Model/Model.h>
+#include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/Command.h>
-#include <ves/open/xml/Shader/Shader.h>
+#include <ves/open/xml/shader/Shader.h>
 #include <ves/open/xml/DataValuePair.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
