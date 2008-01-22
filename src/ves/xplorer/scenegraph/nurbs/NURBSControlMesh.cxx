@@ -95,7 +95,6 @@ void NURBSControlMesh::UpdateControlPointPosition( int index, osg::Vec3 position
     m_controlPoints.at(index).SetZ(position.z());    
     (*m_controlMeshVerts)[index].set(position);
     m_controlMeshVerts->dirty();
-    dirtyBound();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::SetControlPoints( std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint> controlPoints,

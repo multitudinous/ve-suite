@@ -125,7 +125,12 @@ void NURBS::SetSelectedControlPoint( unsigned int index)
 //////////////////////////////////////////
 void NURBS::ReleaseControlPointSelection()
 {
-    m_selectedControlPointIndex = -1;
+    if( HasSelectedControlPoint() )
+    {
+        m_controlMeshDrawable->dirtyBound();
+        m_nurbsDrawable->dirtyBound();
+        m_selectedControlPointIndex = -1;
+    }
 }
 ///////////////////////////////////////////////////////////////
 void NURBS::MoveSelectedControlPoint( osg::Matrix currentView,
