@@ -41,6 +41,8 @@
 #include <osg/LineWidth>
 #include <osg/Material>
 #include <osg/PolygonMode>
+#include <osg/PolygonOffset>
+#include <osg/Material>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -61,6 +63,11 @@ void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
+        osg::ref_ptr<osg::PolygonOffset> polyoffset = new osg::PolygonOffset();
+        polyoffset->setFactor(1.0f);
+        polyoffset->setUnits(1.0f);
+        m_stateSet->setAttributeAndModes(polyoffset.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+        
         AddPass( m_stateSet.get() );
     }
 
@@ -73,14 +80,14 @@ void SelectTechnique::DefinePasses()
 
                 "gl_Position = ftransform(); \n"
             "} \n";
-		/*
-        char fragmentPass[] =
-            "void main() \n"
-            "{ \n"
-                "gl_FragColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
-            "} \n";
-		*/
 
+        osg::ref_ptr< osg::Material > material = new osg::Material();
+        material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
+        material->setDiffuse(osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
+        material->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f));
+        material->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+        material->setEmission(osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f,0.0f,0.0f,1.0f));
+        
         osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
         osg::ref_ptr< osg::Program > program = new osg::Program();
         osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
@@ -94,9 +101,12 @@ void SelectTechnique::DefinePasses()
         linewidth->setWidth( 2.0f );
         polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
 
-        stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::ON );
-        stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::ON );
-        stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::ON );
+        stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+        
+        stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
+        stateSet->setAttributeAndModes( material.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
+        //stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
 
         AddPass( stateSet.get() );
     }
