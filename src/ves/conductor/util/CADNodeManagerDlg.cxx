@@ -462,7 +462,7 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
         {
             return;
         }
-        newClone->SetNodeName( _activeCADNode->GetNodeName() + std::string( "_cloned" ) );
+        newClone->SetNodeName( _activeCADNode->GetNodeName() );
 
         wxTreeItemId parentID;
         if( _activeTreeNode->GetId() == _geometryTree->GetRootItem() )
