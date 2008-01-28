@@ -41,7 +41,7 @@
  * Class for creating wxTreeCtrl and wxTreeItem from ves::open::xml::cad::CADNode.
  */
 
-#include <ves/open/xml/cad/CADNode.h>
+#include <ves/open/xml/cad/CADNodePtr.h>
 #include <ves/open/xml/cad/CADNodeTraverser.h>
 
 #include <wx/treectrl.h>
@@ -83,6 +83,20 @@ public:
     //CADTreeBuilder(const CADTreeBuilder& cfdNT);
     ///Destructor
     virtual ~CADTreeBuilder();
+
+
+    ///Add a CADAssembly to the graph, returning the wxTreeItemId
+    ///\param assembly The assembly to add
+    ///\param parent The wxTreeItemId of the parent
+    wxTreeItemId AddAssemblyToGraph( ves::open::xml::cad::CADNodeWeakPtr assembly, wxTreeItemId parent );
+    ///Add a CADPart to the graph
+    ///\param part The part to add
+    ///\param parent The wxTreeItemId of the parent
+    void AddPartToGraph( ves::open::xml::cad::CADNodeWeakPtr part, wxTreeItemId parent );
+
+    ///Remove a node from the graph
+    ///\param nodeToRemove Remove a specified node from the tree
+    void RemoveNodeFromGraph( wxTreeItemId nodeToRemove );
 
 class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNodeTraverseCallback
     {
@@ -141,6 +155,7 @@ class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
         ///Constructor
         ///\param node The holder of the node data.
         TreeNodeData( ves::open::xml::cad::CADNode* node );
+        TreeNodeData( ves::open::xml::cad::CADNodeWeakPtr node );
 
         ///Destructor
         virtual ~TreeNodeData();

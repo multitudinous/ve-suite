@@ -141,6 +141,11 @@ CADTreeBuilder::TreeNodeData::TreeNodeData( CADNode* node )
 {
     _cadNode = node;
 }
+//////////////////////////////////////////////////////////////////////////////////////
+CADTreeBuilder::TreeNodeData::TreeNodeData( CADNodeWeakPtr node )
+{
+    //_cadNode = node;
+}
 /////////////////////////////////////////////
 CADTreeBuilder::TreeNodeData::~TreeNodeData()
 {
@@ -197,6 +202,31 @@ void CADTreeBuilder::PopCurrentParent()
     {
         _parentList.pop_back();
     }
+}
+/////////////////////////////////////////////////////////////////////
+void CADTreeBuilder::RemoveNodeFromGraph( wxTreeItemId nodeToRemove )
+{
+    _treeCtrl->Delete( nodeToRemove );
+}
+////////////////////////////////////////////////////////////////////////////////////////
+wxTreeItemId CADTreeBuilder::AddAssemblyToGraph(CADNodeWeakPtr assembly, wxTreeItemId parent )
+{
+    wxTreeItemId currentId;
+
+    currentId = _treeCtrl->AppendItem( parent,
+                               wxString( assembly->GetNodeName().c_str(), wxConvUTF8 ),
+                               0, 2, new TreeNodeData( assembly ) );
+    _treeCtrl->SetItemImage( currentId, 2, wxTreeItemIcon_Expanded );
+    _treeCtrl->SetItemImage( currentId, 2, wxTreeItemIcon_SelectedExpanded );
+
+    return currentId;
+}
+////////////////////////////////////////////////////////////////////////
+void CADTreeBuilder::AddPartToGraph(CADNodeWeakPtr part, wxTreeItemId parent )
+{
+    _treeCtrl->AppendItem( parent,
+                           wxString( part->GetNodeName().c_str(), wxConvUTF8 ),
+                           0, 1, new TreeNodeData( part ) );
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNode* node, void* currentParent )

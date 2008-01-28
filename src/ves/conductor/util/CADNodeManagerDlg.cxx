@@ -122,7 +122,7 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
         _loadedCAD.clear();
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void CADNodeManagerDlg::SetRootCADNode( CADNode* rootNode )
 {
     if( rootNode )
@@ -483,22 +483,21 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
 
         dynamic_cast<CADAssembly*>( parentCADNode->GetNode() )->AddChild( newClone );
 
-        if( newClone->GetNodeType() == std::string( "Assembly" ) )
+        /*if( newClone->GetNodeType() == std::string( "Assembly" ) )
         {
-            _geometryTree->AppendItem( parentID,
-                                       wxString( newClone->GetNodeName().c_str(), wxConvUTF8 )
-                                       , 0, 2, new CADTreeBuilder::TreeNodeData( newClone ) );
-
-            _geometryTree->SetItemImage( parentID, 2, wxTreeItemIcon_Expanded );
-            _geometryTree->SetItemImage( parentID, 2, wxTreeItemIcon_SelectedExpanded );
-            _ensureTree();
+            _cadTreeBuilder->SetCurrentParentNode( parentID );
+            _cadTreeBuilder->SetRootNode( newClone );
+            _cadTreeBuilder->Traverse();
         }
         else if( newClone->GetNodeType() == std::string( "Part" ) )
         {
             _geometryTree->AppendItem( parentID,
                                        wxString( newClone->GetNodeName().c_str(), wxConvUTF8 )
                                        , 0, 1, new CADTreeBuilder::TreeNodeData( newClone ) );
-        }
+        }*/
+        _cadTreeBuilder->SetCurrentParentNode( parentID );
+        _cadTreeBuilder->SetRootNode( newClone );
+        _cadTreeBuilder->Traverse();
         _commandName = std::string( "CAD_ADD_NODE" );
 
         ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
@@ -837,7 +836,8 @@ void CADNodeManagerDlg::_deleteNode( wxCommandEvent& WXUNUSED( event ) )
         _geometryTree->Delete( _activeTreeNode->GetId() );
         //_ensureTree();
     }
-}/////////////////////////////////////////////////////
+}
+/////////////////////////////////////////////////////
 void CADNodeManagerDlg::_onBeginNodeMove( wxTreeEvent& event )
 {
     if( event.GetItem() != _geometryTree->GetRootItem() )
