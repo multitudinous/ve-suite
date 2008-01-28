@@ -483,18 +483,6 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
 
         dynamic_cast<CADAssembly*>( parentCADNode->GetNode() )->AddChild( newClone );
 
-        /*if( newClone->GetNodeType() == std::string( "Assembly" ) )
-        {
-            _cadTreeBuilder->SetCurrentParentNode( parentID );
-            _cadTreeBuilder->SetRootNode( newClone );
-            _cadTreeBuilder->Traverse();
-        }
-        else if( newClone->GetNodeType() == std::string( "Part" ) )
-        {
-            _geometryTree->AppendItem( parentID,
-                                       wxString( newClone->GetNodeName().c_str(), wxConvUTF8 )
-                                       , 0, 1, new CADTreeBuilder::TreeNodeData( newClone ) );
-        }*/
         _cadTreeBuilder->SetCurrentParentNode( parentID );
         _cadTreeBuilder->SetRootNode( newClone );
         _cadTreeBuilder->Traverse();
