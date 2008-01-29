@@ -355,12 +355,19 @@ void CADEntityHelper::LoadFile( std::string filename,
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
         //Specify the vertex count threshold for performing 
         // occlusion query tests.
+        // If the child geometry has less than the specified number
+        //   of vertices, don't perform occlusion query testing (it's
+        //   an occluder). Otherwise, perform occlusion query testing
+        //   (it's an occludee).
         oqv.setOccluderThreshold( 2500 );
         tempGroup->accept( oqv );
         //Setup the number frames to skip
         osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
         tempGroup->accept( queryFrameVisitor );
-        //Setup the number frames to skip
+        // If the occlusion query test indicates that the number of
+        //   visible pixels is greater than this value, render the
+        //   child geometry. Otherwise, don't render and continue to
+        //   test for visibility in future frames.
         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
         tempGroup->accept( visibilityThresholdVisitor );
 
@@ -394,12 +401,19 @@ void CADEntityHelper::AddOccluderNodes()
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
         //Specify the vertex count threshold for performing 
         // occlusion query tests.
+        // If the child geometry has less than the specified number
+        //   of vertices, don't perform occlusion query testing (it's
+        //   an occluder). Otherwise, perform occlusion query testing
+        //   (it's an occludee).
         oqv.setOccluderThreshold( 2500 );
         m_cadNode->accept( oqv );
         //Setup the number frames to skip
         osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
         m_cadNode->accept( queryFrameVisitor );
-        //Setup the number frames to skip
+        // If the occlusion query test indicates that the number of
+        //   visible pixels is greater than this value, render the
+        //   child geometry. Otherwise, don't render and continue to
+        //   test for visibility in future frames.
         osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
         m_cadNode->accept( visibilityThresholdVisitor );
     }
