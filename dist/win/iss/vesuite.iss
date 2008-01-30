@@ -67,7 +67,7 @@ Source: {#VEINSTALLHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion rec
 Source: {#VEINSTALLHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion uninsremovereadonly
 
 Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: examples; Flags: recursesubdirs createallsubdirs
-Source: {#VEINSTALLHOME}\include\; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
+Source: {#VEINSTALLHOME}\include\*; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
 Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
