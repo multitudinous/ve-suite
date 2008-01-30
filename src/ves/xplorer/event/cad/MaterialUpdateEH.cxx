@@ -111,7 +111,6 @@ void MaterialUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
                                  rawComponent,
                                  rawMaterial->GetFace(),
                                  values );
-
     }
     catch ( ... )
     {

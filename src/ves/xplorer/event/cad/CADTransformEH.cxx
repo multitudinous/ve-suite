@@ -102,13 +102,14 @@ void CADTransformEventHandler::_operateOnNode( XMLObject* xmlObject )
                 transform = m_cadHandler->GetAssembly( nodeID->GetDataString() );
             }
         }
-        else if( nodeType->GetDataString() == std::string( "Clone" ) )
+        /*else if( nodeType->GetDataString() == std::string( "Clone" ) )
         {
             if( m_cadHandler->CloneExists( nodeID->GetDataString() ) )
             {
                 transform = m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph();
             }
-        }
+        }*/
+
         if( transform )
         {
             Transform* rawTransform = dynamic_cast<Transform*>( newTransform->GetDataXMLObject() );
