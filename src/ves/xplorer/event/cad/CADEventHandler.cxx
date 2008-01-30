@@ -70,7 +70,7 @@ using namespace ves::xplorer::scenegraph;
 ///Constructor                                          //
 //////////////////////////////////////////////////////////
 CADEventHandler::CADEventHandler()
-        : ves::xplorer::event::EventHandler()
+: ves::xplorer::event::EventHandler()
 {
     m_cadNode = 0;
     m_activeModel = 0;
@@ -88,7 +88,11 @@ CADEventHandler::CADEventHandler( const CADEventHandler& rhs )
 ///Destructor                     //
 ////////////////////////////////////
 CADEventHandler::~CADEventHandler()
-{}
+{
+    m_cadNode = 0;
+    m_activeModel = 0;
+    m_cadHandler = 0;
+}
 ///////////////////////////////////////////////////////////////////////////
 void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
@@ -119,7 +123,7 @@ void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 ///////////////////////////////////////////////////////
 void CADEventHandler::Execute( XMLObject* veXMLObject )
 {
-    if( m_cadHandler )
+    if( m_cadHandler && m_activeModel )
     {
         //this is overridden in derived classes
         _operateOnNode( veXMLObject );
