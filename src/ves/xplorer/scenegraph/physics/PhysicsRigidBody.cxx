@@ -249,11 +249,7 @@ void PhysicsRigidBody::StaticConcaveShape()
 
     m_collisionShape = new btBvhTriangleMeshShape( m_osgToBullet->GetTriangleMesh(), false );
 
-    btVector3 localInertia( 0, 0, 0 );
-    if( m_mass != 0 )
-    {
-        m_collisionShape->calculateLocalInertia( m_mass, localInertia );
-    }
+    SetMass( 0 );
 
     m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
@@ -273,11 +269,7 @@ void PhysicsRigidBody::ConvexShape()
 
     m_collisionShape = new btConvexTriangleMeshShape( m_osgToBullet->GetTriangleMesh() );
 
-    btVector3 localInertia( 0, 0, 0 );
-    if( m_mass != 0 )
-    {
-        m_collisionShape->calculateLocalInertia( m_mass, localInertia );
-    }
+    SetMassProps();
 
     if( m_mass != 0 )
     {
