@@ -108,41 +108,10 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
 
     ///We deep copy nodes so that picking is accurate
     ///and so that physics will work properly in the future
-    if( dynamic_cast< osgOQ::OcclusionQueryNode* >( input.m_cadNode.get() ) )
+    if( input.m_cadNode->asGroup() )
     {
-        std::cerr 
-            << " Error in CADEntityHelper::CADEntityHelper( input ) " 
-            << std::endl;
-        /*m_cadNode = new osgOQ::OcclusionQueryNode( 
-            *static_cast< osgOQ::OcclusionQueryNode* >( 
-            input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );*/
-    }
-    else if( input.m_cadNode->asGroup() )
-    {
-        osgOQ::RemoveOcclusionQueryVisitor roqv;
-        input.m_cadNode->accept( roqv );
-        
         m_cadNode = new osg::Group( *input.m_cadNode->asGroup(),
                                     osg::CopyOp::DEEP_COPY_NODES );
-
-        osgOQ::OcclusionQueryNonFlatVisitor oqv;
-        //Specify the vertex count threshold for performing 
-        // occlusion query tests.
-        // If the child geometry has less than the specified number
-        //   of vertices, don't perform occlusion query testing (it's
-        //   an occluder). Otherwise, perform occlusion query testing
-        //   (it's an occludee).
-        oqv.setOccluderThreshold( 2500 );
-        m_cadNode->accept( oqv );
-        //Setup the number frames to skip
-        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
-        m_cadNode->accept( queryFrameVisitor );
-        // If the occlusion query test indicates that the number of
-        //   visible pixels is greater than this value, render the
-        //   child geometry. Otherwise, don't render and continue to
-        //   test for visibility in future frames.
-        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
-        m_cadNode->accept( visibilityThresholdVisitor );
     }
     else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
     {
