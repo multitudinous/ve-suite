@@ -62,6 +62,18 @@
 #include <ves/open/xml/cad/CADAssembly.h>
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
+#include <ves/conductor/xpm/contour.xpm>
+#include <ves/conductor/xpm/cad_tree_selected.xpm>
+#include <ves/conductor/xpm/cad_tree_unselected.xpm>
+#include <ves/conductor/xpm/cspline.xpm>
+#include <ves/conductor/xpm/isosurface.xpm>
+#include <ves/conductor/xpm/ROItb.xpm>
+#include <ves/conductor/xpm/square.xpm>
+#include <ves/conductor/xpm/streamlines.xpm>
+#include <ves/conductor/xpm/vector.xpm>
+#include <ves/conductor/xpm/vectortb.xpm>
+
+
 
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
@@ -1402,8 +1414,8 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
     }
 
     // Here we launch a dialog for a specific plugins input values
-    ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
 
+    ves::open::xml::model::ModelWeakPtr veModel = GetVEModel();
     if( !cadDialog )
     {
         cadDialog = new ves::conductor::util::CADNodeManagerDlg( veModel->AddGeometry(),
