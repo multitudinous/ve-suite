@@ -178,12 +178,6 @@ UIPluginBase::~UIPluginBase()
     delete [] poly;
     poly = 0;
 
-    if( dlg != NULL )
-    {
-        delete dlg;
-        dlg = 0;
-    }
-
     if( result_dlg != NULL )
     {
         delete result_dlg;
