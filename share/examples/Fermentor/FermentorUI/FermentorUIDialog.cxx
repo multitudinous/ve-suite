@@ -174,6 +174,7 @@ void FermentorUIDialog::_buildPage()
 
     SetSizer( FermentorModelGroup );
     FermentorModelGroup->Fit( this );
+    CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool FermentorUIDialog::TransferDataFromWindow()
