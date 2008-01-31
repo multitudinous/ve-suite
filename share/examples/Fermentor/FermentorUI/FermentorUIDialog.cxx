@@ -41,18 +41,19 @@ FermentorUIDialog::FermentorUIDialog( wxWindow* parent, int id, double* agitatio
                                                                 double* sim_speed )
 
 :
-UIDialog( ( wxWindow* )parent, id, _("Fermentor") ), p_agitation( agitation ),
-                                                  p_air_conc( air_conc ),
-                                                  p_ini_ph( ini_ph ),
-                                                  p_nitrate_conc( nitrate_conc ),
-                                                  p_temperature( temperature ),
-                                                  p_hours( hours ),
-                                                  p_cycle_ID( cycle_ID ),
-                                                  p_rotation_ID( rotation_ID ),
-                                                  p_xray_ID( xray_ID ),
-                                                  p_loop_ID( loop_ID ),
-                                                  p_rot_speed( rot_speed ),
-                                                  p_sim_speed( sim_speed )
+    UIDialog( parent, id, _("Fermentor") ), 
+    p_agitation( agitation ),
+    p_air_conc( air_conc ),
+    p_ini_ph( ini_ph ),
+    p_nitrate_conc( nitrate_conc ),
+    p_temperature( temperature ),
+    p_hours( hours ),
+    p_cycle_ID( cycle_ID ),
+    p_rotation_ID( rotation_ID ),
+    p_xray_ID( xray_ID ),
+    p_loop_ID( loop_ID ),
+    p_rot_speed( rot_speed ),
+    p_sim_speed( sim_speed )
 {
     *p_agitation = 0;
     *p_air_conc = 0;
@@ -113,6 +114,13 @@ void FermentorUIDialog::_buildPage()
     wxStaticBoxSizer* LOC_HRS_Group = new wxStaticBoxSizer( HRS_Group, wxVERTICAL );
     LOC_HRS_Group->Add( _hours, 6, wxALIGN_CENTRE );
 
+    _agitation->Raise();
+    _air->Raise();
+    _ph->Raise();
+    _nitrate->Raise();
+    _temperature->Raise();
+    _hours->Raise();
+    
     wxString cycles[] = { _("Stop"), _("Start") };
     wxString rotmode[] = { _("Off"), _("On") };
     wxString xraymode[] = { _("Off"), _("On") };
@@ -192,22 +200,22 @@ bool FermentorUIDialog::TransferDataFromWindow()
 
     wxString txt;
     txt = _agitation->GetValue();
-    *p_agitation = atof( ( const char* )txt.c_str() );
+    txt.ToDouble( &(*p_agitation) );
 
     txt=_air->GetValue();
-    *p_air_conc = atof( ( const char* )txt.c_str() );
+    txt.ToDouble( &(*p_air_conc) );
 
     txt=_ph->GetValue();
-    *p_ini_ph = atof( ( const char* )txt.c_str() );
+    txt.ToDouble( &(*p_ini_ph) );
 
     txt=_nitrate->GetValue();
-    *p_nitrate_conc = atof( ( const char* )txt.c_str() );
+    txt.ToDouble( &(*p_nitrate_conc) );
 
     txt=_temperature->GetValue();
-    *p_temperature = atof( ( const char* )txt.c_str() );
+    txt.ToDouble( &(*p_temperature) );
 
     txt=_hours->GetValue();
-    *p_hours = atof( ( const char* )txt.c_str() );
+    txt.ToDouble( &(*p_hours) );
 
     return true;
 }
