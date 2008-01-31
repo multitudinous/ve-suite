@@ -103,9 +103,6 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     transform_ferm->setMatrix( osg::Matrix::scale( 3.28, 3.28, 3.28 ) *
                                osg::Matrix::translate( -0.67, 0.8, -1.36 ) );
 
-    transform_imp->setMatrix( osg::Matrix::scale( 1, 1, 1 ) *
-                              osg::Matrix::translate( 20000, 10000, -50000 ) );
-
     transform_tank->setMatrix( osg::Matrix::scale( 3.28, 3.28, 3.28 ) *
                                osg::Matrix::translate( 0.005, -0.02, -0.05 ) );
 

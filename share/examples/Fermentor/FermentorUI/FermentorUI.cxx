@@ -28,9 +28,9 @@ FermentorUI::FermentorUI()
 
     name = name = wxString( _( "Fermentor" ) );
 
-    wxImage my_img( _( "Icons/Fermentor.gif" ) );
-    icon_w = static_cast< int >( my_img.GetWidth() * 0.25 );
-    icon_h = static_cast< int >( my_img.GetHeight() * 0.25 );
+    wxImage my_img( _( "Icons/Fermentor.jpg" ) );
+    icon_w = static_cast< int >( my_img.GetWidth() * 0.03 );
+    icon_h = static_cast< int >( my_img.GetHeight() * 0.03 );
     my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
 
     n_pts = 4;
