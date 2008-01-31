@@ -20,7 +20,7 @@ fileBundle.addFiles( iveFile )
 fileBundle.addFiles( jpgFile )
 fileBundle.addFiles( gifFile )
 #fileBundle.addFiles( ddsFile )
-fileBundle.addFiles( [ 'Fermentor.ves' ] )
+fileBundle.addFiles( [ 'fermentor.ves' ] )
 fermentorSubdirs = Split("""
     FermentorGP
     FermentorUI

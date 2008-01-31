@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="60681b45-28d1-724f-a568-48b5bb85c425">
+    <network>
+      <conductorState dataName="m_xUserScale" id="ee6f70e3-f0a2-f944-9d12-221b4d6f50b4">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="48aaa4e0-ed70-254e-9287-a7f4a1147208">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="0c599862-106a-5d43-8c2b-5637e364b77d">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="e9dc4d07-9903-6842-8f4c-8641c250d6ff">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="2ea1f019-3601-3d49-ac13-0aa173e21bad">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="17116753-dcda-1d41-8dfc-7d50be036f49">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="101" id="936c0122-8b4a-5149-bcf1-0327252d8a67" name="FermentorUI" vendorUnit="FermentorUI">
+      <iconLocation xLocation="10" yLocation="10"/>
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <inputs commandName="cycle_ID">
+        <parameter dataName="cycle_ID" id="3d8b5579-0575-7246-9f3a-1967248187a6">
+          <dataValue type="xs:integer">1</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="loop_ID">
+        <parameter dataName="loop_ID" id="50dfc2ab-da72-6144-bb1f-212b87ece9df">
+          <dataValue type="xs:integer">0</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="rotation_ID">
+        <parameter dataName="rotation_ID" id="fc641d2c-068c-be4a-b8f2-4e9481207b00">
+          <dataValue type="xs:integer">0</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="xray_ID">
+        <parameter dataName="xray_ID" id="eafb6f6c-3a38-7148-a90f-bee287145bc3">
+          <dataValue type="xs:integer">1</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="agitation">
+        <parameter dataName="agitation" id="4dfc1090-885d-7340-8827-f0f0b813ead0">
+          <dataValue type="xs:double">200</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="air_conc">
+        <parameter dataName="air_conc" id="79eb1545-39d6-0c45-81d7-b5a1133698ca">
+          <dataValue type="xs:double">1.25</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="hours">
+        <parameter dataName="hours" id="00587044-3af5-9840-85f7-720431564320">
+          <dataValue type="xs:double">240</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="ini_ph">
+        <parameter dataName="ini_ph" id="be214d25-9444-dc48-b1a2-10720f9a5150">
+          <dataValue type="xs:double">6</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="nitrate_conc">
+        <parameter dataName="nitrate_conc" id="a22561a5-4cf2-4843-8295-16c98be7cd65">
+          <dataValue type="xs:double">0.1</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="rot_speed">
+        <parameter dataName="rot_speed" id="5c2512d6-72d3-9747-af75-1c00f4a5090b">
+          <dataValue type="xs:double">0</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="sim_speed">
+        <parameter dataName="sim_speed" id="3146b646-d2fc-3545-958d-6cb0d1da876b">
+          <dataValue type="xs:double">6</dataValue>
+        </parameter>
+      </inputs>
+      <inputs commandName="temperature">
+        <parameter dataName="temperature" id="47647919-992b-2d4d-a25f-c1234716d570">
+          <dataValue type="xs:double">37</dataValue>
+        </parameter>
+      </inputs>
+    </model>
+  </veSystem>
+
+  <User id="6581a4a7-1d84-9446-adb0-1ff6e5ea64a9" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="341da316-1620-e14b-bd33-aae41d2b5e3c">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
