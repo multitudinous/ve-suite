@@ -79,7 +79,7 @@
         "{ \n"
         "float opac=dot(normalize(-N),normalize(-I)); \n"
         "opac=abs(opac); \n"
-        "opac=1.0-pow(opac,3); \n"
+        "opac=1.0-pow(opac,3.0); \n"
         "vec4 Cs=currentColor; \n"
         "gl_FragColor=opac*Cs; \n"
         "} \n";              
