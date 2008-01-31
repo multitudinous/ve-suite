@@ -67,11 +67,12 @@ private:
     osg::ref_ptr< osg::Node > _impellerGeometry;
     osg::ref_ptr< osg::Node > _tankGeometry;
 
+    osg::ref_ptr< osg::MatrixTransform > _roomGeometry;
+    osg::ref_ptr< osg::MatrixTransform > fermentorGroup;
+
     osg::ref_ptr< osg::MatrixTransform > transform_ferm;
     osg::ref_ptr< osg::MatrixTransform > transform_imp;
     osg::ref_ptr< osg::MatrixTransform > transform_tank;
-
-    osg::ref_ptr< osg::MatrixTransform > fermentorGroup;
 
     Shaders* shader;
 };

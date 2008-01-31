@@ -49,12 +49,22 @@ frame_speed_control( 0 )
 
     capsule_sequence = new osg::Sequence();
     capsule_sequence->setValue( 0 );
-    fermentorGroup = new osg::MatrixTransform();
+
     shader = new Shaders();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
 {
+    osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+    rootNode->removeChild( _roomGeometry.get() );
+
+    for( std::map< int, osg::ref_ptr< display::DigitalGauge > >::iterator
+            itr = _gauges.begin(); itr != _gauges.end(); ++itr )
+    {
+        rootNode->removeChild( itr->second.get() );
+    }
+
     _gauges.clear();
 
     delete shader;
@@ -68,7 +78,8 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
-    osg::ref_ptr< osg::MatrixTransform > _roomGeometry = new osg::MatrixTransform();
+    _roomGeometry = new osg::MatrixTransform();
+    fermentorGroup = new osg::MatrixTransform();
     osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/fermentor_room.ive" );
     _roomGeometry->addChild( temp.get() );
     rootNode->addChild( _roomGeometry.get() );
@@ -92,13 +103,12 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     fermentorGroup->addChild( transform_imp.get() );
     fermentorGroup->addChild( transform_tank.get() );
 
-    double trans[ 3 ] = { 0.8, 14, 0.15 };
+    double trans[ 3 ] = { 0.8, 13.5, 0.15 };
     veworldDCS->SetTranslationArray( trans );
 
     _roomGeometry->setMatrix( osg::Matrix::scale( 3.28, 3.28, 3.28 ) *
                               osg::Matrix::translate( -4.5, 0.0, -3.4 ) *
                               osg::Matrix::rotate( 0.0, 0, 1, 0 ) );
-    
 
     transform_ferm->setMatrix( osg::Matrix::scale( 3.28, 3.28, 3.28 ) *
                                osg::Matrix::translate( -0.67, 0.8, -1.36 ) );
