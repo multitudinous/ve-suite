@@ -180,6 +180,9 @@ void App::contextInit()
     // --- Create new context specific scene viewer -- //
     osg::ref_ptr<osgUtil::SceneView> new_sv( new osgUtil::SceneView );
     this->configSceneView( new_sv.get() );          // Configure the new viewer
+    // hard code the LOD setting to be something high for the time being
+    new_sv->setLODScale( 10000 );
+    // set the unique id for this particular context
     new_sv->getState()->setContextID( unique_context_id );
     // Add the tree to the scene viewer and set properties
     {
