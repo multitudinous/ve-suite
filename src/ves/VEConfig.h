@@ -37,7 +37,7 @@
 
 #define VES_MAJOR_VERSION    1
 #define VES_MINOR_VERSION    1
-#define VES_PATCH_VERSION    5
+#define VES_PATCH_VERSION    7
 
 #if defined(_MSC_VER)
 //#pragma warning( disable : 4244 )
