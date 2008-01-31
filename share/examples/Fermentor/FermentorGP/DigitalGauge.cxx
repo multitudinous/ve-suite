@@ -104,7 +104,7 @@ void DigitalGauge::UpdateText( double value )
 {
     std::stringstream ss;
     ss << std::setw( 10 ) << std::setiosflags( std::ios_base::fixed );
-    ss << std::setprecision( 4 ) << value;
+    ss << std::setprecision( m_precision ) << value;
 
     m_digitalText->setText( ss.str() );
 }

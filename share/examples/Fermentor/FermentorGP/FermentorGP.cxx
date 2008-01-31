@@ -50,6 +50,12 @@ frame_speed_control( 0 )
     capsule_sequence = new osg::Sequence();
     capsule_sequence->setValue( 0 );
 
+    _roomGeometry = new osg::MatrixTransform();
+    fermentorGroup = new osg::MatrixTransform();
+    transform_ferm = new osg::MatrixTransform();
+    transform_imp = new osg::MatrixTransform();
+    transform_tank = new osg::MatrixTransform();
+
     shader = new Shaders();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -78,8 +84,6 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
-    _roomGeometry = new osg::MatrixTransform();
-    fermentorGroup = new osg::MatrixTransform();
     osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/fermentor_room.ive" );
     _roomGeometry->addChild( temp.get() );
     rootNode->addChild( _roomGeometry.get() );
@@ -91,14 +95,11 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     _tankGeometry = osgDB::readNodeFile( "Models/opaque_tank.ive" );
     _tankGeometry->setStateSet( shader->Phong().get() );
 
-    transform_ferm = new osg::MatrixTransform();
-    transform_imp = new osg::MatrixTransform();
-    transform_tank = new osg::MatrixTransform();
-
     transform_ferm->addChild( _fermentorGeometry.get() );
     transform_imp->addChild( _impellerGeometry.get() );
     transform_tank->addChild( _tankGeometry.get() );
 
+    fermentorGroup->addChild( capsule_sequence.get() );
     fermentorGroup->addChild( transform_ferm.get() );
     fermentorGroup->addChild( transform_imp.get() );
     fermentorGroup->addChild( transform_tank.get() );
@@ -134,6 +135,14 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
         itr->second->GetNameText()->setColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
         itr->second->GetDigitalText()->setColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
     }
+
+    _gauges[ 0 ]->SetPrecision( 0 );
+    _gauges[ 1 ]->SetPrecision( 2 );
+    _gauges[ 2 ]->SetPrecision( 0 );
+    _gauges[ 3 ]->SetPrecision( 2 );
+    _gauges[ 4 ]->SetPrecision( 1 );
+    _gauges[ 5 ]->SetPrecision( 2 );
+    _gauges[ 6 ]->SetPrecision( 1 );
 
     _gauges[ 0 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
                              osg::Matrix::translate(  2.5, 6, 3.5 ) );
@@ -225,7 +234,6 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
     {
         capsule_sequence->removeChildren( 0, static_cast< int >( 
             capsule_sequence->getNumChildren() ) );
-        capsule_sequence->setMode( osg::Sequence::START );
 
         results << "Agitation(rpm):\t" << _agitation << "\n";
         results << "Air Conc(vvm):\t" << _air_conc << "\n";
@@ -322,6 +330,8 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
         transform_imp->setUpdateCallback( new osg::AnimationPathCallback(
             osg::Vec3( 0, 0, 0 ), osg::Z_AXIS, _imp_speed ) );
+
+        capsule_sequence->setMode( osg::Sequence::START );
     }
 
     if( _sim_speed == 0 )
@@ -358,56 +368,31 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
         _tankGeometry->setStateSet( stateset_1.get() );
         _tankGeometry->setStateSet( shader->XRay().get() );
     }
-
-    fermentorGroup->addChild( capsule_sequence.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEFermentorGraphicalPlugin::PreFrameUpdate()
 {
-    int frame_rate = 1;
-    if( ( frame_speed_control >= frame_rate )
-        ||
-        ( frame_speed_control < 0 ) )
+    if( time_steps.empty() || result_steps.empty() )
     {
-        frame_speed_control = 0;
+        return;
     }
-    frame_speed_control++;
 
-    if( frame_speed_control == frame_rate )
+    int seqVal = capsule_sequence->getValue();
+    if( ( seqVal > -1 ) && ( seqVal < static_cast< int >( time_steps.size() ) ) )
     {
-        if( time_steps.empty() || result_steps.empty() )
-        {
-            return;
-        }
-        frame_count++;
+        UpdateGauges( time_steps[ seqVal ],
+                      result_steps[ seqVal ],
+                      _agitation,
+                      _air_conc,
+                      _ini_ph,
+                      _nitrate_conc,
+                      _temperature );
+    }
 
-        if( frame_count >= static_cast< int >( time_steps.size() ) || frame_count < 0 )
-        { 
-            frame_count=0;
-        }
-
-        if( frame_count < static_cast< int >( time_steps.size() ) )
-        {
-            if( capsule_sequence->getValue() != -1 )
-            {
-                UpdateGauges( time_steps[ capsule_sequence->getValue() ],
-                              result_steps[ capsule_sequence->getValue() ],
-                              _agitation,
-                              _air_conc,
-                              _ini_ph,
-                              _nitrate_conc,
-                              _temperature );
-            }
-        }
-
-        if( capsule_sequence->getValue() == _hours &&
-            _loop_ID == 0 || _cycle_ID == 0 )
-        {
-            transform_imp->setUpdateCallback(
-                new osg::AnimationPathCallback( osg::Vec3( 0, 0, 0 ), osg::Z_AXIS, 0.0f ) );
-        }
-
-        frame_speed_control = 0;
+    if( seqVal == _hours && _loop_ID == 0 )
+    {
+        transform_imp->setUpdateCallback(
+            new osg::AnimationPathCallback( osg::Vec3( 0, 0, 0 ), osg::Z_AXIS, 0.0f ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
