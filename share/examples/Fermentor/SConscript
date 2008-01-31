@@ -8,14 +8,9 @@ Import( 'RootDir ves_pkg' )
 fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'Fermentor' ) )
 fermentorDemoDir = pj( RootDir, 'share', 'examples', 'Fermentor' )
 iveFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.ive' ] )
-gifFile = sca_util.getFilesRecursiveByExt( fermentorDemoDir, [ '.gif' ] )
 
-#fileBundle.addFiles( xpmFile )
 fileBundle.addFiles( iveFile )
-#fileBundle.addFiles( wavFile )
-fileBundle.addFiles( jpgFile )
-fileBundle.addFiles( gifFile )
-#fileBundle.addFiles( ddsFile )
+fileBundle.addFiles( [ 'Icons/fermentor.jpg' ] )
 fileBundle.addFiles( [ 'fermentor.ves' ] )
 fermentorSubdirs = Split("""
     FermentorGP
