@@ -51,6 +51,9 @@
 #include <osg/Material>
 
 #include <osgUtil/IntersectVisitor>
+#include <osgUtil/IntersectionVisitor>
+#include <osg/Polytope>
+#include <osgUtil/PolytopeIntersector>
 
 using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -216,6 +219,34 @@ void Device::ProcessSelection()
     }
 
     this->DrawLine( start_point, end_point );
+}
+/////////////////////////////////////////////////////////////////////
+bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
+{
+    //Simple  box for the head/body 
+    //Can make this a better represenation later
+    //These objects can probably be moved to be members of this class
+    osg::BoundingBox headBBox;
+    headBBox.set( headPositionInWorld.x() - .75,
+                  headPositionInWorld.y() - .75,
+                  headPositionInWorld.z() - 5.0,
+                  headPositionInWorld.x() + .75,
+                  headPositionInWorld.y() + .75,
+                  headPositionInWorld.z() + 5.0 );
+
+    osg::Polytope polytope;
+    polytope.setToBoundingBox( headBBox );
+   
+    osg::ref_ptr<osgUtil::PolytopeIntersector> headCollider =
+                         new osgUtil::PolytopeIntersector( polytope );
+    osgUtil::IntersectionVisitor intersectionVisitor( headCollider.get() );
+
+    ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->accept( intersectionVisitor );
+    if ( headCollider->containsIntersections() )
+    {
+        return true;
+    }
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )

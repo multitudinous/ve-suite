@@ -73,7 +73,7 @@
 #include <osg/BoundingBox>
 #include <osg/Texture2D>
 #include <osg/CameraNode>
-//#include <osg/PolygonStipple>
+#include <osg/Math>
 #include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
@@ -443,6 +443,7 @@ void KeyboardMouse::ProcessNavigationEvents()
     //Rotate the m_head vector by the rotation increment
     gmtl::Vec4d rotateJugglerHeadVec = m_deltaTransform * newGlobalHeadPointVec;
 
+
     //Split apart the current matrix into rotation and translation parts
     gmtl::Matrix44d accuRotation;
     gmtl::Matrix44d matrix;
@@ -457,6 +458,30 @@ void KeyboardMouse::ProcessNavigationEvents()
         //Get the current translation matrix
         matrix[i][3] = rotateJugglerHeadVec[i] + center_point->mData[i];
     }
+
+    /*Convert head to world space to run intersection tests
+    gmtl::Matrix44d worldDCSInverse;
+    gmtl::invert( worldDCSInverse,
+                  ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->GetMat() );
+
+    gmtl::Matrix44d vjHeadMat;
+    vjHeadMat = worldDCSInverse*convertTo< double >( m_head->getData() );
+
+    osg::Vec3 headPositionInWorld = osg::Vec3( vjHeadMat[0][3] - ( 0.0345 * 3.2808399 ),
+                                               vjHeadMat[1][3], 
+                                               vjHeadMat[2][3] );
+
+    vprDEBUG( vesDBG, 3 ) << "|\tKeyboardMouse::ProcessNavigation Head Position in World Space: "
+                          <<headPositionInWorld.x()<<","
+                          <<headPositionInWorld.y()<<","
+                          <<headPositionInWorld.z()<< std::endl << vprDEBUG_FLUSH;
+
+    if( CheckCollisionsWithHead( headPositionInWorld ) )
+    {
+        m_deltaTransform.mData[12] = -m_deltaTransform.mData[12];
+        m_deltaTransform.mData[13] = -m_deltaTransform.mData[13];
+        m_deltaTransform.mData[14] = -m_deltaTransform.mData[14];
+    }*/
 
     //Multiply by the transform and then by the rotation
     matrix = matrix * m_deltaTransform * accuRotation;
@@ -983,6 +1008,24 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 
         return;
     }
+
+    double lineLength = (objectHit.getWorldIntersectPoint() - objectHit.getOriginalLineSegment()->end() ).length(); 
+    double locallineLength = (objectHit.getLocalLineSegment()->end() -  objectHit.getLocalLineSegment()->start() ).length(); 
+    double beamLength = (m_beamLineSegment->end() -  m_beamLineSegment->start() ).length(); 
+    if( true || osg::equivalent( lineLength, beamLength ) ) 
+    {
+        if(objectHit._geode->isCullingActive() )
+        {
+            std::cout<<"Geode has culling active"<<std::endl;
+        }
+        std::cout<<"Beam Length: "<<beamLength<<std::endl;
+        std::cout<<"Original Length: "<<lineLength<<std::endl;
+        std::cout<<"Local Length: "<<locallineLength<<std::endl;
+        std::cout<<"Far value: "<<m_farFrustum<<std::endl;
+        std::cout<<"no good!!!"<<std::endl;
+        return;
+    }
+    
 
     //Now find the id for the cad
     m_selectedGeometry = objectHit._geode;

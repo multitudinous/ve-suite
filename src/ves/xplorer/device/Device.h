@@ -120,6 +120,10 @@ public:
     ///Sets the center point delta jump
     void SetCenterPointJump( double* jump );
 
+    ///Check if the head collides with the rest of the objects in the scene
+    ///\param headPositionInWorld The head position in world coordinates
+    bool CheckCollisionsWithHead( osg::Vec3 headPositionInWorld );
+
 protected:
     ///Process the selection of a piece of geometry
     virtual void ProcessSelection();
