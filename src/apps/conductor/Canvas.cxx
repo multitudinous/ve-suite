@@ -134,15 +134,12 @@ Canvas::~Canvas()
     // first then manually clean up the memory.
     Network* tempNetwork = networks[ activeId ];
     tempNetwork->RemoveAllEvents();
+    RemoveEventHandler( tempNetwork );
 
-    for( std::map < std::string, Network* >::iterator iter = networks.begin();
+    for( std::map< std::string, Network* >::iterator iter = networks.begin();
         iter != networks.end(); ++iter )
     {
-        //Wx will cleanup the active network
-        if( activeId != iter->first )
-        {
-            delete iter->second;
-        }
+        delete iter->second;
     }
     networks.clear();
 }

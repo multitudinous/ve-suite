@@ -107,6 +107,7 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 Network::Network( wxWindow* parent ):
+        wxEvtHandler(),
         tryingLink( false ),
         isLoading( false )
 {

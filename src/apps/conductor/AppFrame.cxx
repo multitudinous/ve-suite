@@ -302,6 +302,12 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
 {
+    // Clean up the canvas and plugins first because
+    // if left to wx, on windows things get messy with unloading plugins
+    // and cleaning up memory at the same time
+    wx_nw_splitter->RemoveChild( canvas );
+    canvas->DestroyChildren();
+    canvas->Destroy();
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
             ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
@@ -317,8 +323,6 @@ AppFrame::~AppFrame()
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
-    //network->Destroy();
-    //network = 0;
     serviceList->CleanUp();
     serviceList = 0;
 
@@ -398,7 +402,6 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     side_pane->AddPage( hierPage, wxT( "Hierarchy" ) );
 
     //add network to splitter
-    //network = new Network( wx_nw_splitter, -1 );
     canvas = new Canvas( wx_nw_splitter, -1 );
     if( GetDisplayMode() == "Tablet" )
     {

@@ -121,6 +121,7 @@ IMPLEMENT_DYNAMIC_CLASS( UIPluginBase, wxEvtHandler )
 
 /////////////////////////////////////////////////////////////////////////////
 UIPluginBase::UIPluginBase() :
+        wxEvtHandler(),
         m_network( 0 ),
         m_canvas( 0 ),
         dlg( 0 ),
@@ -177,6 +178,12 @@ UIPluginBase::~UIPluginBase()
 {
     delete [] poly;
     poly = 0;
+
+    if( dlg )
+    {
+        //dlg->Destroy();
+        dlg = 0;
+    }
 
     if( result_dlg != NULL )
     {
@@ -1138,7 +1145,7 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
     delete veCommand;
 
     // now show the custom dialog with no parent for the wxDialog
-    UIDialog* hello = this->UI( m_canvas );
+    UIDialog* hello = UI( m_canvas );
     if( hello != NULL )
     {
         hello->Show();

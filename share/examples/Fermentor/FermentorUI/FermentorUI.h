@@ -16,7 +16,7 @@ class FermentorUI : public ves::conductor::UIPluginBase
 
 public:
     FermentorUI();
-    ~FermentorUI();
+    virtual ~FermentorUI();
 
     virtual double GetVersion();
     //Return the version number of the module
@@ -28,9 +28,6 @@ public:
     //Add the calls for the size. So the main program can preallocate memory for it
 
     virtual int GetNumPoly();
-
-    //virtual void GetPoly(POLY &polygon); 
-    //Return the outline polygon
 
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
     //This returns the UI dialog of the module
