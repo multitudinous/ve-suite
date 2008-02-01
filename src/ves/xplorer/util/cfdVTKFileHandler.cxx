@@ -43,6 +43,7 @@
 #include <vtkDataSetReader.h>
 #include <vtkDataReader.h>
 #include <vtkStructuredGrid.h>
+#include <vtkStructuredPoints.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLPolyDataReader.h>
@@ -223,6 +224,11 @@ void cfdVTKFileHandler::_readClassicVTKFile()
         {
             std::cout << "PolyData..." << std::endl;
             _dataSet = vtkPolyData::New();
+        }
+        else if( genericReader->IsFileStructuredPoints() )
+        {
+            std::cout << "Structured Points..." << std::endl;
+            _dataSet = vtkStructuredPoints::New();
         }
         else
         {
