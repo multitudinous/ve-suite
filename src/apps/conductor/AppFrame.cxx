@@ -291,10 +291,10 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     {
         canvas->PopulateNetworks( nw_str );
     }
+    
     //create hierarchy page
     hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                 GetXMLModels(), XMLDataBufferEngine::instance()->
-                                 GetTopSystemId() );
+        GetXMLModels(), XMLDataBufferEngine::instance()->GetTopSystemId() );
                                  
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();

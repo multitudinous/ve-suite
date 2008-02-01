@@ -179,12 +179,6 @@ UIPluginBase::~UIPluginBase()
     delete [] poly;
     poly = 0;
 
-    if( dlg )
-    {
-        //dlg->Destroy();
-        dlg = 0;
-    }
-
     if( result_dlg != NULL )
     {
         delete result_dlg;
@@ -1133,7 +1127,8 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
         return;
     }
 
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
+    ves::open::xml::DataValuePair* dataValuePair = 
+        new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
     ves::open::xml::Command* veCommand = new ves::open::xml::Command();
