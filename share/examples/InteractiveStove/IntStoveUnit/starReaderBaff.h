@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: starReader.h,v $
- * Date modified: $Date: 2005-04-03 15:10:15 -0500 (Sun, 03 Apr 2005) $
- * Version:       $Rev: 2122 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

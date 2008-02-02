@@ -23,10 +23,10 @@
 * Boston, MA 02111-1307, USA.
 *
 * -----------------------------------------------------------------
-* Date modified: $Date: 2007-12-10 17:37:51 -0600 (Mon, 10 Dec 2007) $
-* Version:       $Rev: 10148 $
-* Author:        $Author: dshipton $
-* Id:            $Id: TransformPtr.h 10148 2007-12-10 23:37:51Z dshipton $
+* Date modified: $Date$
+* Version:       $Rev$
+* Author:        $Author$
+* Id:            $Id$
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/

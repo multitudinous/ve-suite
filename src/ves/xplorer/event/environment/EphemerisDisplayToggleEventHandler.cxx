@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2007-11-14 15:54:23 -0600 (Wed, 14 Nov 2007) $
- * Version:       $Rev: 9904 $
- * Author:        $Author: dshipton $
- * Id:            $Id: EphemerisDisplayToggleEventHandler.h 9904 2007-11-14 21:54:23Z dshipton $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/

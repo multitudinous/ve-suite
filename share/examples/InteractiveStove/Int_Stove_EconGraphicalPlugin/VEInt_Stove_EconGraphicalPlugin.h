@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdVEBaseClass.h,v $
- * Date modified: $Date: 2005-09-23 12:19:05 -0500 (Fri, 23 Sep 2005) $
- * Version:       $Rev: 3081 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

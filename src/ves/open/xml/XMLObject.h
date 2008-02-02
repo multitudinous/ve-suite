@@ -519,6 +519,9 @@ inline std::string XMLObject::ExtractFromSimpleElement< std::string >( const XER
             iss.str( fUnicodeForm );
             delete fUnicodeForm;
         }
+        else
+        {
+            std::cout << "Failed to ExtractFromSimpleElement std::string" << std::endl;
         ret_val = iss.str();
     }
     catch ( ... )
