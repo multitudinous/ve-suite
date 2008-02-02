@@ -223,7 +223,7 @@ void EphemerisDialog::CreateGUIControls()
                                                       ID_M_LOAD_HEIGHT_MAP,
                                                       ::wxGetCwd(),
                                                       wxT("Height Field"),
-                                                      wxT("Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG"));
+                                                      wxT("Image Files (*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB)|*.bmp;*.BMP;.gif;*.GIF;*.jpg;*.JPG;*.jpeg;*.JPEG;*.png;*.PNG;*.rgb;*.RGB"));
         heightFieldSizer->Add(m_heightMapSelector, 1, wxALIGN_CENTER | wxALL, 5);
     wxArrayString arrayStringFor_m_lonHemisphere;
     arrayStringFor_m_lonHemisphere.Add( wxT( "East" ) );
