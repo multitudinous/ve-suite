@@ -138,6 +138,8 @@ public:
     void ClearXplorer();
     ///Update all the ve models
     void Update();
+    ///Remove plugin dialogs from the canvas 
+    void RemovePluginDialogs();
 
     size_t GetMaxX()
     {

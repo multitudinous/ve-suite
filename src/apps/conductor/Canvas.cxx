@@ -258,7 +258,7 @@ void Canvas::New( bool promptClearXplorer )
         answer = promptDlg.ShowModal();
     }
 
-    if (( answer == wxID_OK ) || ( promptClearXplorer ) )
+    if( ( answer == wxID_OK ) || ( promptClearXplorer ) )
     {
         for( std::map < std::string, Network* >::iterator iter =
                     networks.begin(); iter != networks.end(); ++iter )
@@ -310,8 +310,9 @@ void Canvas::CleanUpNetworks()
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
             iter != networks.end(); ++iter )
     {
-        //RemoveEventHandler( iter->second );
-        //iter->second->RemoveAllEvents();
+        //we have to do this because the canvas is not destroyed when
+        //new or open is selected
+        iter->second->RemovePluginDialogs();
         delete iter->second;
     }
     networks.clear();

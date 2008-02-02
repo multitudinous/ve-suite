@@ -2214,7 +2214,7 @@ void Network::PushAllEvents( )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::RemoveAllEvents( )
+void Network::RemoveAllEvents()
 {
     for( size_t i = 0; i < links.size(); ++i )
     {
@@ -2230,6 +2230,16 @@ void Network::RemoveAllEvents( )
             = modules.begin(); iter != modules.end(); iter++ )
     {
         parent->RemoveEventHandler( iter->second.GetPlugin() );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::RemovePluginDialogs()
+{
+    for( std::map< int, Module >::iterator iter
+        = modules.begin(); iter != modules.end(); iter++ )
+    {
+        parent->RemoveChild( iter->second.GetPlugin()->UI( 0 ) );
+        iter->second.GetPlugin()->UI( 0 )->Destroy();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
