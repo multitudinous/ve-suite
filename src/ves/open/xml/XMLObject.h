@@ -455,7 +455,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
             attribute = false;
         }
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid element!!" << std::endl;
         std::cout << "XMLObject::GetAttribute()" << std::endl;
@@ -479,7 +479,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
         attribute = float2string.str();
         delete fUnicodeForm;
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "Invalid element!!" << std::endl;
         std::cout << "XMLObject::GetAttribute()" << std::endl;
@@ -522,9 +522,10 @@ inline std::string XMLObject::ExtractFromSimpleElement< std::string >( const XER
         else
         {
             std::cout << "Failed to ExtractFromSimpleElement std::string" << std::endl;
+        }
         ret_val = iss.str();
     }
-    catch ( ... )
+    catch( ... )
     {
         std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
     }
