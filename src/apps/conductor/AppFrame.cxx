@@ -190,6 +190,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
     EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
 	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
+    EVT_WINDOW_CREATE(AppFrame::OnChildCreate) 
 	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
 END_EVENT_TABLE()
 
@@ -352,8 +353,6 @@ void AppFrame::_detectDisplay()
             break;
         }
     }
-
-    //return _displayMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
@@ -416,7 +415,7 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     }
 
     //tells module panel where to send the selected module
-    Network * network = canvas->GetActiveNetwork();
+    //Network * network = canvas->GetActiveNetwork();
     av_modules->SetFrame( this );
     av_modules->SetCanvas( canvas );
     hierarchyTree->SetCanvas( canvas );
@@ -433,7 +432,9 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
 void AppFrame::_configureDesktop()
 {
     SetTitle( _( "VE-Suite: www.vesuite.org" ) );
-    _treeView = new wxDialog( this, -1, _( "Available Objects" ),
+    _treeView = new wxDialog();
+    _treeView->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
+    _treeView->Create( this, ::wxNewId(), _( "Available Objects" ),
                               wxDefaultPosition, wxDefaultSize,
                               wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER );
     //wxCAPTION | wxRESIZE_BORDER);//(wxDEFAULT_DIALOG_STYLE&~
@@ -1908,6 +1909,8 @@ void AppFrame::LaunchNavigationPane( wxCommandEvent& WXUNUSED( event ) )
     {
         // create pane and set appropriate vars
         navPane = new NavigationPane( this );
+        navPane->Connect( wxEVT_DESTROY, 
+            wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), NULL, this );
     }
     // now show it
     navPane->Show();
@@ -2313,7 +2316,7 @@ void AppFrame::OnChangeIcon(wxCommandEvent& event )
 		std::pair <unsigned int, std::string>*>( event.GetClientData() );
 	hierarchyTree->ChangeLeafIcon( data->first, data->second );
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnShowIconChooser( wxCommandEvent& event )
 {
     if( !iconChooser )
@@ -2326,3 +2329,27 @@ void AppFrame::OnShowIconChooser( wxCommandEvent& event )
     iconChooser->SetPlugin( tempPlugin );
     iconChooser->Show();
 }
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnChildCreate( wxWindowCreateEvent& event ) 
+{ 
+    wxWindow* w = event.GetWindow();
+    /*std::cout << "Child created 1 " << std::endl; 
+    std::cout << event.GetId() << std::endl;
+    std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;*/
+    if(w) 
+    { 
+        //wxLogMessage( _("Child created") ); 
+        //std::cout << "Child created" << std::endl; 
+        w->Connect( wxEVT_DESTROY, wxWindowDestroyEventHandler(AppFrame::OnChildDestroy), 
+                   NULL, this); 
+    } 
+} 
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnChildDestroy(wxWindowDestroyEvent& event) 
+{ 
+    wxWindow* w = event.GetWindow(); 
+    /*std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
+    wxLogMessage( _("destroyed") );
+    std::cout << "destroyed " << std::endl;*/
+}
+////////////////////////////////////////////////////////////////////////////////

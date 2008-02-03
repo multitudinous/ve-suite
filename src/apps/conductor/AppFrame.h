@@ -201,7 +201,10 @@ public:
     };
 
     void FrameClose( wxCommandEvent& event );
-
+    ///Log the creation of windows that are children of AppFrame
+    void OnChildCreate( wxWindowCreateEvent& event );
+    ///Watch the children windows be destroyed
+    void OnChildDestroy( wxWindowDestroyEvent& event );
     ///Override so we can show the tree after things are initialized.
     virtual bool Show( bool value );
 

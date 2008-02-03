@@ -61,9 +61,9 @@ END_EVENT_TABLE()
 ///////////////
 //Constructor//
 ///////////////
-SoundsPane::SoundsPane( ves::open::xml::model::ModelWeakPtr activeModel )
+SoundsPane::SoundsPane( wxWindow* parent, ves::open::xml::model::ModelWeakPtr activeModel )
         :
-        wxDialog( NULL, -1, _( "Sounds Pane" ),
+        wxDialog( parent, -1, _( "Sounds Pane" ),
                   wxDefaultPosition, wxDefaultSize,
                   ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
 {

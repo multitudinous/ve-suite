@@ -47,6 +47,7 @@
 
 class wxCheckListBox;
 class wxButton;
+class wxWindow;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -71,7 +72,7 @@ namespace util
 class VE_CONDUCTOR_UTILS_EXPORTS SoundsPane : public wxDialog
 {
 public:
-    SoundsPane( ves::open::xml::model::ModelWeakPtr model );
+    SoundsPane( wxWindow* parent, ves::open::xml::model::ModelWeakPtr model );
     virtual ~SoundsPane()
     {
         ;

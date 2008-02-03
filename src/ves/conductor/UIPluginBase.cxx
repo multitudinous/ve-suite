@@ -1596,7 +1596,7 @@ void UIPluginBase::OnModelSounds( wxCommandEvent& event )
 
     if( !_soundsDlg )
     {
-        _soundsDlg = new SoundsPane( GetVEModel() );
+        _soundsDlg = new SoundsPane( m_canvas, GetVEModel() );
         _soundsDlg->SetSize( dialogSize );
     }
     _soundsDlg->SetActiveModel( GetVEModel() );
