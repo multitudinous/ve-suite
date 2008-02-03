@@ -138,10 +138,10 @@ ACE_THROW_SPEC((
                ) )
 {
     // Add your implementation here
-
-    if( std::string( notification ) != "" )
+    std::string tempString( notification );
+    if( !tempString.empty() )
     {
-        logWindow->SetMessage( notification );
+        logWindow->SetMessage( tempString.c_str() );
     }
 }
 

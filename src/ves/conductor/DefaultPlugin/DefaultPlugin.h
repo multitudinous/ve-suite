@@ -57,7 +57,7 @@ public:
     //Return the version number of the module
     //virtual void DrawIcon(wxDC* dc);
     //This call return a window to be displayed on the framework
-    virtual ves::conductor::UIDialog* UI( wxWindow* parent );
+    //virtual ves::conductor::UIDialog* UI( wxWindow* parent );
     //This returns the UI dialog of the module
     virtual wxString GetConductorName();
     ///This returns the name of the module

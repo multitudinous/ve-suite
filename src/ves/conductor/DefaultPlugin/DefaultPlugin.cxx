@@ -129,15 +129,15 @@ double DefaultPlugin::GetVersion()
 // dc->DrawBitmap(*my_icon,pos.x, pos.y);
 //}
 /////////////////////////////////////////////////////////////////////////////
-ves::conductor::UIDialog* DefaultPlugin::UI( wxWindow* parent )
-{
-    if( dlg != NULL )
-        return dlg;
+//ves::conductor::UIDialog* DefaultPlugin::UI( wxWindow* parent )
+//{
+//    if( dlg != NULL )
+//        return dlg;
 
     //dlg = new DefaultPlugin_UI_Dialog(parent, -1, &height );
 
-    return dlg;
-}
+//    return dlg;
+//}
 /////////////////////////////////////////////////////////////////////////////
 wxString DefaultPlugin::GetConductorName()
 {

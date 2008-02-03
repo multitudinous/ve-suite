@@ -34,7 +34,7 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( QueryInputsDlg, wxDialog )
-    EVT_CLOSE( QueryInputsDlg::OnClose )
+    //EVT_CLOSE( QueryInputsDlg::OnClose )
     EVT_BUTTON( ID_WXBUTTON2, QueryInputsDlg::WxButton2Click )
     EVT_BUTTON( ID_WXBUTTON1, QueryInputsDlg::WxButton1Click )
     EVT_BUTTON( ID_WXBUTTON3, QueryInputsDlg::WxButton3Click )
@@ -73,11 +73,11 @@ void QueryInputsDlg::CreateGUIControls()
     WxListBox1 = new wxListBox( this, ID_WXLISTBOX1, wxPoint( 8, 23 ), wxSize( 178, 450 ), arrayStringFor_WxListBox1, wxLB_SINGLE );
 }
 
-void QueryInputsDlg::OnClose( wxCloseEvent& /*event*/ )
+/*void QueryInputsDlg::OnClose( wxCloseEvent& event )
 {
     submit = false;
     Destroy();
-}
+}*/
 
 void QueryInputsDlg::WxButton1Click( wxCommandEvent& event )
 {

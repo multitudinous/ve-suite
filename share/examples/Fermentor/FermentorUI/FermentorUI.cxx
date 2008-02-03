@@ -26,7 +26,7 @@ FermentorUI::FermentorUI()
     RegistVar( "rot_speed", &rot_speed );
     RegistVar( "sim_speed", &sim_speed );
 
-    name = name = wxString( _( "Fermentor" ) );
+    name = wxString( _( "Fermentor" ) );
 
     wxImage my_img( _( "Icons/fermentor.jpg" ) );
     icon_w = static_cast< int >( my_img.GetWidth() * 0.1 );
@@ -44,7 +44,7 @@ FermentorUI::FermentorUI()
 ////////////////////////////////////////////////////////////////////////////////
 FermentorUI::~FermentorUI()
 {
-    ;
+    delete my_icon;
 }
 ////////////////////////////////////////////////////////////////////////////////
 double FermentorUI::GetVersion()
@@ -96,7 +96,7 @@ void FermentorUI::DrawIcon( wxDC* dc )
 ////////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* FermentorUI::UI( wxWindow* parent )
 {
-    if( dlg!=NULL )
+    if( dlg )
     {
         return dlg;
     }

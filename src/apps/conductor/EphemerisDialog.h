@@ -219,7 +219,7 @@ private:
     };
 
 private:
-    void OnClose( wxCloseEvent& event );
+    //void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 
     std::string ConvertUnicode( const wxChar* data )

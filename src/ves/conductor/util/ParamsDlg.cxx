@@ -34,7 +34,7 @@
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( ParamsDlg, wxDialog )
-    EVT_CLOSE( ParamsDlg::OnClose )
+    //EVT_CLOSE( ParamsDlg::OnClose )
     EVT_BUTTON( ID_SETBUTTON, ParamsDlg::SetButtonClick )
     EVT_CHOICE( ID_PARAMCHOICE, ParamsDlg::ParamChoiceSelected )
 END_EVENT_TABLE()
@@ -141,10 +141,10 @@ void ParamsDlg::CreateGUIControls()
     IsBlock = true;
 }
 
-void ParamsDlg::OnClose( wxCloseEvent& /*event*/ )
+/*void ParamsDlg::OnClose( wxCloseEvent& event )
 {
     Destroy();
-}
+}*/
 
 //ParamChoiceSelected
 void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )

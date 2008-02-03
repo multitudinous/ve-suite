@@ -34,7 +34,7 @@ BEGIN_EVENT_TABLE( EphemerisDialog, wxDialog )
     ////Manual Code Start
     ////Manual Code End
 
-    EVT_CLOSE( EphemerisDialog::OnClose )
+    //EVT_CLOSE( EphemerisDialog::OnClose )
     EVT_CHOICE( ID_M_AMPM, EphemerisDialog::OnAmPmSelected )
     EVT_CHOICE( ID_M_LATHEMISPHERE, EphemerisDialog::OnLatitudeDirection )
     EVT_SPINCTRL( ID_M_LATDEGREES, EphemerisDialog::OnChangeLatitudeDegrees )
@@ -311,10 +311,10 @@ void EphemerisDialog::CreateGUIControls()
     m_heightMapInfo->SetData( "Height Map", std::string( "Default" ) );
 }
 //////////////////////////////////////////////////////
-void EphemerisDialog::OnClose( wxCloseEvent& /*event*/ )
+/*void EphemerisDialog::OnClose( wxCloseEvent& event )
 {
     Destroy();
-}
+}*/
 //////////////////////////////////////////////////////////////
 void EphemerisDialog::OnToggleDisplay( wxCommandEvent& event )
 {

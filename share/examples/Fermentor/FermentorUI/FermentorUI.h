@@ -67,8 +67,6 @@ public:
     //HERE is the GUI variable passed to the Dialog and Packed
   
 protected:
-    wxBitmap *my_icon;
-    int icon_w, icon_h;
 };
 
 #endif //FERMENTOR_UI_H

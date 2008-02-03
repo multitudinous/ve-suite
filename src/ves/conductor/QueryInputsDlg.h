@@ -97,7 +97,7 @@ public:
     bool submit;
 
 private:
-    void OnClose( wxCloseEvent& event );
+    //void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 
     DECLARE_EVENT_TABLE();

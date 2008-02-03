@@ -39,7 +39,7 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( FindDialog, wxDialog )
-    EVT_CLOSE( FindDialog::OnClose )
+    //EVT_CLOSE( FindDialog::OnClose )
     EVT_BUTTON( ID_CANCELBUTTON, FindDialog::CancelButtonClick )
     EVT_BUTTON( ID_FINDBUTTON, FindDialog::FindButtonClick )
 END_EVENT_TABLE()
@@ -72,10 +72,10 @@ void FindDialog::CreateGUIControls()
     FindButton = new wxButton( this, ID_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 57 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
 }
 
-void FindDialog::OnClose( wxCloseEvent& /*event*/ )
+/*void FindDialog::OnClose( wxCloseEvent& event )
 {
     Destroy();
-}
+}*/
 
 void FindDialog::CancelButtonClick( wxCommandEvent& event )
 {

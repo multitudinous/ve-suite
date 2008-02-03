@@ -2238,8 +2238,14 @@ void Network::RemovePluginDialogs()
     for( std::map< int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); iter++ )
     {
-        parent->RemoveChild( iter->second.GetPlugin()->UI( 0 ) );
-        iter->second.GetPlugin()->UI( 0 )->Destroy();
+        ves::conductor::UIDialog* tempDiag = 
+            iter->second.GetPlugin()->GetUIDialog();
+        if( tempDiag )
+        {
+            tempDiag->Enable( false );
+            //parent->RemoveChild( tempDiag );
+            tempDiag->Destroy();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

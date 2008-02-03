@@ -100,7 +100,7 @@ private:
     std::pair< unsigned int, std::string > iconInfo;
     void InitializeAspenIcons();
 
-    void OnClose( wxCloseEvent& event );
+    //void OnClose( wxCloseEvent& event );
     void CreateGUIControls();
 
     std::string ConvertUnicode( const wxChar* data )

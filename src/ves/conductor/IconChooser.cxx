@@ -55,7 +55,7 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( IconChooser, wxFrame )
-    EVT_CLOSE( IconChooser::OnClose )
+    //EVT_CLOSE( IconChooser::OnClose )
 	EVT_BUTTON( OK, IconChooser::okButtonClick )
     EVT_BUTTON( CANCEL, IconChooser::cancelButtonClick )
     EVT_MENU( CLICK, IconChooser::IconDirectoryClick )
@@ -162,10 +162,10 @@ void IconChooser::CreateGUIControls()
     Center();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void IconChooser::OnClose( wxCloseEvent& event )
+/*void IconChooser::OnClose( wxCloseEvent& event )
 {
     Destroy();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void IconChooser::WxButtonClick( wxCommandEvent& event )
 {

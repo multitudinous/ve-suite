@@ -157,6 +157,8 @@ public:
     void GetPoly( POLY &polygon );
     ///This returns the UI dialog of the module
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
+    ///Just return whatever the dlg is pointing to
+    ves::conductor::UIDialog* GetUIDialog();
     ///This returns the Result dialog of the module
     virtual UIDialog* Result( wxWindow* parent );
     ///This returns the PortData dialog of the module

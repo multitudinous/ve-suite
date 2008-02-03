@@ -1993,3 +1993,9 @@ double UIPluginBase::computenorm( wxPoint pt1, wxPoint pt2 )
 {
     return sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
 }
+////////////////////////////////////////////////////////////////////////////////
+ves::conductor::UIDialog* UIPluginBase::GetUIDialog()
+{
+    return dlg;
+}
+////////////////////////////////////////////////////////////////////////////////
