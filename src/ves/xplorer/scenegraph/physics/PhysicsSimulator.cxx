@@ -448,8 +448,7 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
         float mass = 1.0f;
         btTransform transform;
         transform.setIdentity();
-        gadget::PositionData* head_pos;
-        head_pos = head->getPositionData();
+        const gadget::PositionData* head_pos = head->getPositionData();
         btVector3 position;
         position.setValue( head_pos->mPosData[ 0 ][ 3 ], head_pos->mPosData[ 1 ][ 3 ], head_pos->mPosData[ 2 ][ 3 ] );
         transform.setOrigin( position );
