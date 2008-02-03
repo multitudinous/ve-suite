@@ -88,6 +88,7 @@ using namespace ves::xplorer::volume;
 #include <iostream>
 
 #include <vrj/Kernel/Kernel.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
 
