@@ -63,7 +63,7 @@ bool ConductorApp::OnInit()
 
     SetAppName( _( "VE-Conductor" ) );
     // this->SetIcon( wxIcon( ve_xplorer_banner_xpm ) );
-    mainFrame = new AppFrame( NULL, 1023, _( "VE-Conductor" ) );
+    mainFrame = new AppFrame( NULL, ::wxNewId(), _( "VE-Conductor" ) );
 
     // Problem with generic wxNotebook implementation whereby it doesn't size
     // properly unless you set the size again

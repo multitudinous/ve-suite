@@ -48,9 +48,7 @@ public:
     virtual bool OnInit();
     virtual int OnExit();
 
-    AppFrame *mainFrame;
-
-    long id;
+    AppFrame* mainFrame;
 };
 
 DECLARE_APP( ConductorApp )

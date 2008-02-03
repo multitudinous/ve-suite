@@ -61,7 +61,7 @@ PEThread::~PEThread()
     ACE_OS::sleep( 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int PEThread::svc( void )
+/*int PEThread::svc( void )
 {
     while( shutdown )
     {
@@ -80,7 +80,7 @@ int PEThread::svc( void )
         ACE_OS::sleep( 1 );
     }
     return 1;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::ShutDownThread( void )
 {

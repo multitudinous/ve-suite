@@ -55,7 +55,6 @@ class CORBAServiceList;
 }
 }
 
-class UI_Frame;
 class Splitter;
 class Network;
 class Canvas;
@@ -65,7 +64,6 @@ class Avail_Modules;
 class HierarchyTree;
 class UI_TeacherTab;
 class NavigationPane;
-class StreamlinePane;
 class UserPreferences;
 class DeviceProperties;
 class EphemerisDialog;
@@ -81,7 +79,6 @@ class wxTextCtrl;
 class wxImage;
 class wxSplitterWindow;
 class wxDialog;
-class wxImageList;
 class wxSplitterWindow;
 class wxColourData;
 class wxMenu;
@@ -224,13 +221,8 @@ public:
     Avail_Modules* av_modules;
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
-    //Network* network;
     Canvas* canvas;
 	ves::conductor::IconChooser* iconChooser;
-
-    UI_Frame* m_frame;
-
-    wxImageList* m_imageList;
 
     wxMenu* file_menu;
     wxMenu* con_menu;
@@ -242,8 +234,6 @@ public:
     wxMenu* xplorerJugglerMenu;
     wxMenu* xplorerViewMenu;
     wxMenu* xplorerDisplayMenu;
-
-    wxMenu* openRecentMenu;
 
     //Configuration flags
     bool f_financial;
@@ -271,12 +261,8 @@ public:
     HierarchyTree * GetHierarchyTree();
 
 protected:
-    int m_frameNr;
     wxString fname;
     wxString directory;
-    //wxString path;
-
-    std::vector< wxFileName > recentFileArchive;
 
     void _createTreeAndLogWindow( wxWindow* parent );
     void _configureDesktop();
@@ -407,15 +393,12 @@ private:
     ViewLocPane* viewlocPane;
     UI_TeacherTab* recordScenes;
 
-    //wxDialog* visTabs;
-    //Vistab* vistab;
     wxDialog* _treeView;
 
     ///<Desktop or Tablet
     std::string _displayMode;
 
     EphemerisDialog* m_ephemeris;///<Ephemeris data dialog
-    StreamlinePane* streamlinePane;
     ves::conductor::util::CORBAServiceList* serviceList;
     UserPreferences* preferences;
     std::vector< double > xplorerColor;

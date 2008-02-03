@@ -1778,7 +1778,7 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     ves::open::xml::Command* veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
     veCommand->AddDataValuePair( dataValuePair );
-    bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    bool connected = serviceList->SendCommandStringToXplorer( veCommand );
 
     //Clean up memory
     delete veCommand;

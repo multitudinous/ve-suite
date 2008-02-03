@@ -134,7 +134,7 @@ double DefaultPlugin::GetVersion()
 //    if( dlg != NULL )
 //        return dlg;
 
-    //dlg = new DefaultPlugin_UI_Dialog(parent, -1, &height );
+    //dlg = new DefaultPlugin_UI_Dialog(parent, wxID_ANY, &height );
 
 //    return dlg;
 //}

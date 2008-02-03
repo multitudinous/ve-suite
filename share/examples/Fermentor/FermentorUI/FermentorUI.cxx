@@ -101,7 +101,7 @@ ves::conductor::UIDialog* FermentorUI::UI( wxWindow* parent )
         return dlg;
     }
   
-    dlg = new FermentorUIDialog( parent, -1, &agitation,
+    dlg = new FermentorUIDialog( parent, wxID_ANY, &agitation,
                                              &air_conc,
                                              &ini_ph,
                                              &nitrate_conc,

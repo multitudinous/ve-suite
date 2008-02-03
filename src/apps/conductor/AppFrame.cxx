@@ -197,7 +197,6 @@ END_EVENT_TABLE()
 AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         :
         wxFrame( parent, id, title, wxDefaultPosition, wxDefaultSize ),
-        m_frameNr( 0 ),
         f_financial( true ),
         f_geometry( true ),
         f_visualization( true ),
@@ -205,13 +204,18 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         recordScenes( 0 ),
         canvas( 0 ),
         hierarchyTree(),
-        m_frame( 0 ),
         _treeView( 0 ),
         deviceProperties( 0 ),
         navPane( 0 ),
         viewlocPane( 0 ),
         m_ephemeris( 0 ),
-        iconChooser( 0 )
+        iconChooser( 0 ),
+        wx_log_splitter( 0 ),
+        wx_ve_splitter( 0 ),
+        wx_nw_splitter( 0 ),
+        menubar( 0 ),
+        mainToolBar( 0 ),
+        serviceList( CORBAServiceList::instance() )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -219,8 +223,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         tempArray[ i ] = new char[ strlen( ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() ) + 1 ];
         strcpy( tempArray[ i ], ConvertUnicode( ::wxGetApp().argv[ i ] ).c_str() );
     }
-    serviceList = CORBAServiceList::instance();
-    CORBAServiceList::instance()->SetArgcArgv( ::wxGetApp().argc, tempArray );
+    serviceList->SetArgcArgv( ::wxGetApp().argc, tempArray );
 
     this->SetIcon( ve_icon32x32_xpm );
     //Initialize recent files menu

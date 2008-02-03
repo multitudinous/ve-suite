@@ -2243,7 +2243,8 @@ void Network::RemovePluginDialogs()
         if( tempDiag )
         {
             tempDiag->Enable( false );
-            //parent->RemoveChild( tempDiag );
+            parent->RemoveChild( tempDiag );
+            tempDiag->DestroyChildren();
             tempDiag->Destroy();
         }
     }
