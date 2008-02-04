@@ -860,7 +860,7 @@ void UIPluginBase::RegistVar( std::string vname, std::vector<std::string> *var )
 void UIPluginBase::FinancialData()
 {
     if( financial_dlg == NULL )
-        financial_dlg = new FinancialDialog( NULL, ( wxWindowID ) - 1 );
+        financial_dlg = new FinancialDialog( m_canvas, wxID_ANY );
 
     financial_dlg->Show();
 }
@@ -2010,11 +2010,18 @@ void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event)
     //wxLogMessage( _("destroyed") );
     //std::cout << "destroyed " << std::endl;
     ///erase the found window
-    std::map< wxWindow*, bool >::iterator iter;
-    iter = mDialogMemoryMap.find( w );
+    std::map< int, bool >::iterator iter;
+    iter = mDialogMemoryMap.find( w->GetId() );
     //std::cout << "****** " << mDialogMemoryMap.size() << std::endl;
     //std::cout << "deleting ui plugin base " << std::endl;
-    mDialogMemoryMap.erase( iter );
+    if( iter != mDialogMemoryMap.end() )
+    {
+        mDialogMemoryMap.erase( iter );
+    }
+    else
+    {
+        std::cerr << "Problem deleting UIPluginBase dialogs" << std::endl;
+    }
 
     if( mDialogMemoryMap.empty() )
     {
@@ -2062,7 +2069,7 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
 {
     if( window )
     {
-        mDialogMemoryMap[ window ] = true;
+        mDialogMemoryMap[ window->GetId() ] = true;
         window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
         window->Connect( wxEVT_DESTROY, 
             wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 

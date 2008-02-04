@@ -367,7 +367,7 @@ protected:
     ///CAD dialog for geometry
     ves::conductor::util::CADNodeManagerDlg* cadDialog;
     ///Map to keep track of which dialogs have been created
-    std::map< wxWindow*, bool > mDialogMemoryMap;
+    std::map< int, bool > mDialogMemoryMap;
     
     int m_selFrPort;
     int m_selToPort;
