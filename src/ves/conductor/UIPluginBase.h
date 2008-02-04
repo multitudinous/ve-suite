@@ -96,17 +96,15 @@ namespace conductor
 {
 class UIDialog;
 class TextResultDialog;
-class GeometryDialog;
 class FinancialDialog;
-class GeometryDataBuffer;
 class SummaryResultDialog;
 class Vistab;
 class IconChooser;
 
-class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler//, public wxObject
+class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler
 {
 public:
-    enum
+    enum PLUGIN_ENUMS
     {
         SHOW_RESULT = 3500,
         SHOW_DESC,
@@ -131,7 +129,8 @@ public:
         SET_ACTIVE_PLUGIN,
         ADD_INPUT_PORT,
         ADD_OUTPUT_PORT,
-        DELETE_PORT
+        DELETE_PORT,
+        DIALOG_PLUGIN_UPDATE
     };
     ///Defualt constructor
     UIPluginBase();
@@ -157,8 +156,11 @@ public:
     void GetPoly( POLY &polygon );
     ///This returns the UI dialog of the module
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
-    ///Just return whatever the dlg is pointing to
-    ves::conductor::UIDialog* GetUIDialog();
+    ///Remove all the dialogs that were opened for this plugin
+    void RemovePluginDialogsFromCanvas();
+    ///Remove a specific plugin from the canvas dialog
+    void RemoveWindowFromCanvas( wxWindow* window );
+    
     ///This returns the Result dialog of the module
     virtual UIDialog* Result( wxWindow* parent );
     ///This returns the PortData dialog of the module
@@ -195,7 +197,11 @@ public:
     void AddPort( wxCommandEvent& event );
     ///Delete selected port
     void DeletePort( wxCommandEvent& event );
-
+    ///Watch the children windows be destroyed
+    void OnChildDestroy( wxWindowDestroyEvent& event );
+    ///Configure the plugin dialogs with some default settings
+    void ConfigurePluginDialogs( wxWindow* window );
+    
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it
 
@@ -290,7 +296,6 @@ protected:
     UIDialog* dlg;
     TextResultDialog* result_dlg;
     TextResultDialog* port_dlg;
-    GeometryDialog* geom_dlg;
     ///Dataset dialog to load and control dataset
     util::DataSetLoaderUI* m_dataSetLoaderDlg;
     ///id
@@ -359,8 +364,11 @@ protected:
     IconChooser* m_iconChooser;
     ///The visualization tab
     Vistab* vistab;
-
+    ///CAD dialog for geometry
     ves::conductor::util::CADNodeManagerDlg* cadDialog;
+    ///Map to keep track of which dialogs have been created
+    std::map< wxWindow*, bool > mDialogMemoryMap;
+    
     int m_selFrPort;
     int m_selToPort;
     int m_selLink;
@@ -376,6 +384,12 @@ protected:
     /// first = x scale
     /// second = y scale
     std::pair< double, double >* userScale;
+    ///Pair to tell network what to delete
+    /// first = id
+    /// second = memory map size
+    std::pair< unsigned int, size_t > pluginDialogPair;
+    wxUpdateUIEvent pluginDeleteEvent;
+    
     DECLARE_DYNAMIC_CLASS( UIPluginBase )
     DECLARE_EVENT_TABLE()
 };

@@ -127,7 +127,6 @@ UIPluginBase::UIPluginBase() :
         dlg( 0 ),
         result_dlg( 0 ),
         port_dlg( 0 ),
-        geom_dlg( 0 ),
         financial_dlg( 0 ),
         inputsDialog( 0 ),
         resultsDialog( 0 ),
@@ -145,7 +144,8 @@ UIPluginBase::UIPluginBase() :
         highlightFlag( false ),
         serviceList( 0 ),
         m_veModel( new Model() ),
-        m_dataSetLoaderDlg( 0 )
+        m_dataSetLoaderDlg( 0 ),
+        m_iconChooser( 0 )
 {
     pos = wxPoint( 0, 0 ); //default position
 
@@ -170,8 +170,8 @@ UIPluginBase::UIPluginBase() :
     defaultIconMap[ "streamlines.xpm" ] = wxImage( streamlines_xpm );
     defaultIconMap[ "vector.xpm" ] = wxImage( vector_xpm );
     defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
-
-	m_iconChooser = NULL;
+    
+    pluginDeleteEvent.SetId( DIALOG_PLUGIN_UPDATE );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
@@ -215,6 +215,8 @@ UIPluginBase::~UIPluginBase()
         portsDialog->Destroy();
         portsDialog = 0;
     }
+    
+    //std::cout << " deleting plugins" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetCanvas( wxScrolledWindow* canvas )
@@ -421,7 +423,8 @@ UIDialog* UIPluginBase::UI( wxWindow* parent )
 
     long new_id = wxNewId();
     dlg = new UIDialog( parent, new_id, _( "UIDialog" ) );
-
+    ConfigurePluginDialogs( dlg );
+    
     return dlg;
 }
 
@@ -1431,6 +1434,7 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
         *( dynamic_cast< ves::open::xml::cad::CADAssembly* >( veModel->GetGeometry() ) ) =
             *( dynamic_cast< ves::open::xml::cad::CADAssembly* >( cadDialog->GetRootCADNode() ) );
     }
+    cadDialog = 0;
 }
 ///////////////////////////////////////////
 void UIPluginBase::OnDataSet( wxCommandEvent& event )
@@ -1451,6 +1455,7 @@ void UIPluginBase::OnDataSet( wxCommandEvent& event )
                                  SYMBOL_DATASETLOADERUI_POSITION, SYMBOL_DATASETLOADERUI_SIZE,
                                  SYMBOL_DATASETLOADERUI_STYLE, veModel );
         m_dataSetLoaderDlg->SetSize( dialogSize );
+        ConfigurePluginDialogs( m_dataSetLoaderDlg );
     }
 
     m_dataSetLoaderDlg->Show();
@@ -1500,6 +1505,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
         vistab->SetSize( dialogSize );
         vistab->SetSize( dialogSize.x, dialogSize.y, dialogSize.width,
                          wxDefaultCoord, wxSIZE_AUTO );
+        ConfigurePluginDialogs( vistab );
     }
     else
     {
@@ -1598,6 +1604,7 @@ void UIPluginBase::OnModelSounds( wxCommandEvent& event )
     {
         _soundsDlg = new SoundsPane( m_canvas, GetVEModel() );
         _soundsDlg->SetSize( dialogSize );
+        ConfigurePluginDialogs( _soundsDlg );
     }
     _soundsDlg->SetActiveModel( GetVEModel() );
     _soundsDlg->Show();
@@ -1779,9 +1786,11 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
     veCommand->AddDataValuePair( dataValuePair );
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
-
     //Clean up memory
     delete veCommand;
+    
+    RemovePluginDialogsFromCanvas();
+    
     event.SetClientData( &id );
     ::wxPostEvent( m_network, event );
 }
@@ -1994,8 +2003,70 @@ double UIPluginBase::computenorm( wxPoint pt1, wxPoint pt2 )
     return sqrt( double(( pt1.x - pt2.x )*( pt1.x - pt2.x ) + ( pt1.y - pt2.y )*( pt1.y - pt2.y ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::conductor::UIDialog* UIPluginBase::GetUIDialog()
+void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event) 
+{ 
+    wxWindow* w = event.GetWindow(); 
+    //std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
+    //wxLogMessage( _("destroyed") );
+    //std::cout << "destroyed " << std::endl;
+    ///erase the found window
+    std::map< wxWindow*, bool >::iterator iter;
+    iter = mDialogMemoryMap.find( w );
+    //std::cout << "****** " << mDialogMemoryMap.size() << std::endl;
+    //std::cout << "deleting ui plugin base " << std::endl;
+    mDialogMemoryMap.erase( iter );
+
+    if( mDialogMemoryMap.empty() )
+    {
+        pluginDialogPair = 
+            std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
+        pluginDeleteEvent.SetClientData( &pluginDialogPair );
+        m_network->AddPendingEvent( pluginDeleteEvent );    
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::RemovePluginDialogsFromCanvas() 
 {
-    return dlg;
+    RemoveWindowFromCanvas( dlg );
+    RemoveWindowFromCanvas( result_dlg );
+    RemoveWindowFromCanvas( port_dlg );
+    RemoveWindowFromCanvas( m_dataSetLoaderDlg );
+    RemoveWindowFromCanvas( resultsDialog );
+    RemoveWindowFromCanvas( portsDialog );
+    RemoveWindowFromCanvas( inputsDialog );
+    RemoveWindowFromCanvas( _soundsDlg );
+    RemoveWindowFromCanvas( m_iconChooser );
+    RemoveWindowFromCanvas( vistab );
+    //RemoveWindowFromCanvas( cadDialog );
+
+    if( mDialogMemoryMap.empty() )
+    {
+        pluginDialogPair = 
+            std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
+        pluginDeleteEvent.SetClientData( &pluginDialogPair );
+        m_network->AddPendingEvent( pluginDeleteEvent );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
+{
+    if( window )
+    {
+        m_canvas->RemoveChild( window );
+        window->DestroyChildren();
+        window->Destroy();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::ConfigurePluginDialogs( wxWindow* window ) 
+{
+    if( window )
+    {
+        mDialogMemoryMap[ window ] = true;
+        window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
+        window->Connect( wxEVT_DESTROY, 
+            wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 
+            NULL, this );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

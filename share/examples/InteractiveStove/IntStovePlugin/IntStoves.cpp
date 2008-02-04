@@ -110,22 +110,24 @@ void IntStoves::DrawIcon(wxDC* dc)
 /////////////////////////////////////////////////////////////////////////////
 ves::conductor::UIDialog* IntStoves::UI(wxWindow* parent)
 {
-  if (dlg!=NULL)
-    return dlg;
-  
-  dlg = new IntStoves_UI_Dialog(parent, -1, serviceList,
-	 &numbaffles,
-     &baffle1,
-     &baffle2,
-     &baffle3,
-     &baffle4,
-     &baffle5,
-     &baffle6,
-     &baffle7);
+    if (dlg!=NULL)
+        return dlg;
 
-	dlg->CenterOnScreen(wxBOTH);
-      
-  return dlg;
+    dlg = new IntStoves_UI_Dialog(parent, -1, serviceList,
+                                  &numbaffles,
+                                  &baffle1,
+                                  &baffle2,
+                                  &baffle3,
+                                  &baffle4,
+                                  &baffle5,
+                                  &baffle6,
+                                  &baffle7);
+
+    dlg->CenterOnScreen(wxBOTH);
+
+    ConfigurePluginDialogs( dlg );
+
+    return dlg;
 }
 
 /////////////////////////////////////////////////////////////////////////////

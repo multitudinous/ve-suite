@@ -113,7 +113,8 @@ ves::conductor::UIDialog* FermentorUI::UI( wxWindow* parent )
                                              &loop_ID,
                                              &rot_speed,
                                              &sim_speed );
-      
+    ConfigurePluginDialogs( dlg );
+
     return dlg;
 }
 

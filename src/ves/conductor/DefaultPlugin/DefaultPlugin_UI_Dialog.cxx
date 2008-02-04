@@ -61,8 +61,8 @@ DefaultPlugin_UI_Dialog
 
     this->height = height;
     _buildPage();
-//put anything else you want in constructor here
-
+    //put anything else you want in constructor here
+    CenterOnParent();
 }
 
 void DefaultPlugin_UI_Dialog::_buildPage()

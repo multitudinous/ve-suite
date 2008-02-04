@@ -91,6 +91,7 @@ ves::conductor::UIDialog* CoinFunnelUI::UI( wxWindow* parent )
     }
 
     dlg = new CoinFunnelUIDialog( parent, -1, serviceList, &portNumber );
+    ConfigurePluginDialogs( dlg );
 
     return dlg;
 }
