@@ -93,6 +93,7 @@ lrintf( float flt )
 BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
     EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
+    EVT_UPDATE_UI( Network::DELETE_NETWORK, Canvas::OnDelNetwork )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -121,7 +122,9 @@ Canvas::Canvas( wxWindow* parent, int id )
     CreateDefaultNetwork();
 
     this->parent = parent;
-
+    
+    cleanEvent.SetId( UPDATE_NETWORK_DATA );
+    
     Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,12 +135,16 @@ Canvas::~Canvas()
     // Various shutdown processes were tried but the only way
     // to get a clean shutdown on windows is to remove the eventhandlers
     // first then manually clean up the memory.
+    
+    // We do not need to remove any of the children dialogs on destruction 
+    // because all the children are destroyed in AppFrame. Please see
+    // the AppFrame destructor
     Network* tempNetwork = networks[ activeId ];
     tempNetwork->RemoveAllEvents();
     RemoveEventHandler( tempNetwork );
-
-    for( std::map< std::string, Network* >::iterator iter = networks.begin();
-        iter != networks.end(); ++iter )
+    
+    for( std::map< std::string, Network* >::iterator iter = 
+        networks.begin(); iter != networks.end(); ++iter )
     {
         delete iter->second;
     }
@@ -149,7 +156,7 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     if( xmlNetwork.empty() )
     {
         std::cout <<
-        " Canvas::PopulateNetworks network string is empty" << std::endl;
+            " Canvas::PopulateNetworks network string is empty" << std::endl;
         return;
     }
 
@@ -167,9 +174,10 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
         Network* tempNetwork = new Network( this );
         tempNetwork->LoadSystem( iter->second, this );
         networks[iter->first] = tempNetwork;
+        tempNetwork->SetNetworkID( iter->first );
     }
-    this->SetActiveNetwork( XMLDataBufferEngine::instance()->
-                            GetTopSystemId() );
+    
+    SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
     Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -187,7 +195,7 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
     dc.SetDeviceOrigin( -x * xpix, -y * ypix );
     dc.SetFont( GetFont() );
 
-    if( !networks.empty() )
+    if( activeId != "NULL" )
     {
         DrawNetwork( dc, this->activeId );
     }
@@ -208,8 +216,6 @@ Network* Canvas::GetActiveNetwork()
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::SetActiveNetwork( std::string id )
 {
-    //std::cout << activeId << " " << previousId << " " << id << std::endl;
-
     if( id == activeId )
     {
         return;
@@ -263,15 +269,11 @@ void Canvas::New( bool promptClearXplorer )
         for( std::map < std::string, Network* >::iterator iter =
                     networks.begin(); iter != networks.end(); ++iter )
         {
-            networks[this->activeId]->ClearXplorer();
+            iter->second->ClearXplorer();
         }
     }
 
-    RemoveEventHandler( networks[this->activeId] );
-    networks[this->activeId]->RemoveAllEvents();
     CleanUpNetworks();
-
-    Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxRect Canvas::GetAppropriateSubDialogSize()
@@ -307,17 +309,19 @@ void Canvas::SetTreeViewWindow( wxWindow* treeView )
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::CleanUpNetworks()
 {
+    //std::cout << networks.size() << std::endl;
+    RemoveEventHandler( networks[this->activeId] );
+    networks[this->activeId]->RemoveAllEvents();        
+
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
             iter != networks.end(); ++iter )
     {
+        //std::cout << " here 1 " << std::endl;
         //we have to do this because the canvas is not destroyed when
         //new or open is selected
         iter->second->RemovePluginDialogs();
-        delete iter->second;
+        //std::cout << " here 2 " << std::endl;
     }
-    networks.clear();
-    activeId = "NULL";
-    previousId = "-1";
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::CreateDefaultNetwork()
@@ -332,10 +336,11 @@ void Canvas::CreateDefaultNetwork()
 
     ///Set the default network
     activeId = "NULL";
-    networks[ XMLDataBufferEngine::instance()->GetTopSystemId()] =
-        new Network( this );
+    std::string tempUUID = XMLDataBufferEngine::instance()->GetTopSystemId();
+    networks[ tempUUID ] = new Network( this );
+    networks[ tempUUID ]->SetNetworkID( tempUUID );
     ///Now set it active
-    this->SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
+    this->SetActiveNetwork( tempUUID );
 
     ///Set canvas parameters
     std::pair< long int, long int > numPix;
@@ -360,7 +365,7 @@ void Canvas::CreateDefaultNetwork()
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::Update()
 {
-    for( std::map < std::string, Network* >::iterator iter = networks.begin();
+    for( std::map< std::string, Network* >::iterator iter = networks.begin();
             iter != networks.end(); ++iter )
     {
         iter->second->Update();
@@ -371,3 +376,26 @@ void Canvas::OnDelMod( wxCommandEvent& event )
 {
     ::wxPostEvent( parent, event );
 }
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
+{
+    std::string* networkID = 
+        static_cast< std::string* >( event.GetClientData() );
+
+    std::map< std::string, Network* >::iterator iter = 
+        networks.find( *networkID );
+
+    networks.erase( iter );
+    activeId = "NULL";
+    previousId = "-1";
+
+    //std::cout << " erasing the network" << std::endl;
+    
+    if( networks.empty() )
+    {
+        parent->AddPendingEvent( cleanEvent );    
+        
+        Refresh( true );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

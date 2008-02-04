@@ -54,6 +54,11 @@ class Network;
 class Canvas : public wxScrolledWindow
 {
 public:
+    enum CANVAS_ENUMS
+    {
+        UPDATE_NETWORK_DATA = 3700
+    };
+    
     ///Default canvas
     Canvas()
     {
@@ -88,19 +93,24 @@ public:
     ///Set the window that holds the object tree to determine the size
     ///of the child windows
     void SetTreeViewWindow( wxWindow* treeView );
+    ///Event handler to delete modules
     void OnDelMod( wxCommandEvent& event );
-
+    ///Event handler to delete networks
+    void OnDelNetwork( wxUpdateUIEvent& event );
 protected:
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
 
 private:
-    std::map < std::string, Network* > networks;
+    std::map< std::string, Network* > networks;
     std::string activeId;
     std::string previousId;
     void DrawNetwork( wxDC &dc, std::string id );
     wxWindow* m_treeView;
     wxWindow* parent;
+    ///canvas is cleaned up
+    wxUpdateUIEvent cleanEvent;
+
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
 

@@ -177,7 +177,7 @@ void PluginLoader::RegisterPlugin( wxClassInfo* info )
 {
     if( info )
     {
-        UIPluginBase* object = ( UIPluginBase* )( info->CreateObject() );
+        UIPluginBase* object = ( UIPluginBase* )( info->m_objectConstructor() );
         plugins.push_back( object );
         plugin_cls.push_back( info );
     }

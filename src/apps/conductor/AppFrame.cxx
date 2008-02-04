@@ -192,6 +192,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
 	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
     EVT_WINDOW_CREATE(AppFrame::OnChildCreate) 
 	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
+    EVT_UPDATE_UI( Canvas::UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,7 +217,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         wx_nw_splitter( 0 ),
         menubar( 0 ),
         mainToolBar( 0 ),
-        serviceList( CORBAServiceList::instance() )
+        serviceList( CORBAServiceList::instance() ),
+        newCanvas( false )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -976,13 +978,14 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     ::wxSetWorkingDirectory( directory );
     directory.Replace( _( "\\" ), _( "/" ), true );
     std::string tempDir = ConvertUnicode( directory.c_str() );
-
-    SetRecentFile( wxFileName( dialog.GetPath() ) );
-
     if( tempDir.empty() )
     {
         tempDir = "./";
     }
+    //Update recent file and fname variable
+    SetRecentFile( wxFileName( dialog.GetPath() ) );
+    fname = dialog.GetFilename();
+
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
     DataValuePairWeakPtr dataValuePair =
@@ -1011,12 +1014,11 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
     canvas->New( true );
-
+    /*
     //Reloading plugins
     av_modules->ResetPluginTree();
 
     //Now laod the xml data now that we are in the correct directory
-    fname = dialog.GetFilename();
     canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
 
     //create hierarchy page
@@ -1042,6 +1044,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         bkpPtr->GetData( bkpFilename );
         OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile( wxFileName vesFileName )
@@ -1120,7 +1123,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
     canvas->New( true );
-
+    /*
     //Reloading plugins
     av_modules->ResetPluginTree();
 
@@ -1150,6 +1153,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
         bkpPtr->GetData( bkpFilename );
         OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnClearRecentFiles( wxCommandEvent& event )
@@ -1522,15 +1526,12 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
+    newCanvas = true;
+    fname.Clear();
+
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
     canvas->New( true );
-    //Reloading plugins
-    av_modules->ResetPluginTree();
-    //clear any current tree
-    hierarchyTree->Clear();
-    SetTitle( _( "VE-Suite: www.vesuite.org" ) );
-    canvas->CreateDefaultNetwork();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
@@ -2236,7 +2237,7 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
         command->AddDataValuePair( dvp );
 
         CORBAServiceList::instance()->
-        SendCommandStringToXplorer( command );
+            SendCommandStringToXplorer( command );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2345,7 +2346,7 @@ void AppFrame::OnChildCreate( wxWindowCreateEvent& event )
     } 
 } 
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnChildDestroy(wxWindowDestroyEvent& event) 
+void AppFrame::OnChildDestroy( wxWindowDestroyEvent& event ) 
 { 
     wxWindow* w = event.GetWindow(); 
     /*std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
@@ -2353,3 +2354,48 @@ void AppFrame::OnChildDestroy(wxWindowDestroyEvent& event)
     std::cout << "destroyed " << std::endl;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
+void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
+{
+    //Reloading plugins
+    av_modules->ResetPluginTree();
+    
+    if( newCanvas )
+    {
+        //clear any current tree
+        hierarchyTree->Clear();
+        SetTitle( _( "VE-Suite: www.vesuite.org" ) );
+        canvas->CreateDefaultNetwork();
+    }
+    else
+    {
+        //Now laod the xml data now that we are in the correct directory
+        canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
+        
+        //create hierarchy page
+        hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
+            GetXMLModels(), XMLDataBufferEngine::instance()->
+            GetTopSystemId() );
+
+        wxCommandEvent submitEvent;
+        SubmitToServer( submitEvent );
+        
+        if( recordScenes )
+        {
+            recordScenes->_buildPage();
+        }
+        
+        ///This code will be moved in the future. It is Aspen specific code.
+        CommandWeakPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
+        GetCommand( "Aspen_Plus_Preferences" );
+        
+        if( aspenBKPFile->GetCommandName() != "NULL" )
+        {
+            DataValuePairPtr bkpPtr =
+            aspenBKPFile->GetDataValuePair( "BKPFileName" );
+            std::string bkpFilename;
+            bkpPtr->GetData( bkpFilename );
+            OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
+        }
+    }
+    newCanvas = false;
+}

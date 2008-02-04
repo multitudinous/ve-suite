@@ -79,11 +79,12 @@ public:
     Network( wxWindow* parent );
     virtual ~Network();
 
-    enum
+    enum NETWORK_ENUMS
     {
         ADD_TAG = 3250,
         EDIT_TAG,
-        DEL_TAG
+        DEL_TAG,
+        DELETE_NETWORK
     };
 
     ///Fucntion called during submit job to send the id of all active
@@ -140,7 +141,11 @@ public:
     void Update();
     ///Remove plugin dialogs from the canvas 
     void RemovePluginDialogs();
-
+    ///Delete plugins from plugins
+    void OnDeletePlugins( wxUpdateUIEvent& event );
+    ///Set the id for this network
+    void SetNetworkID( std::string id );
+    
     size_t GetMaxX()
     {
         return maxX;
@@ -226,7 +231,11 @@ private:
     wxPoint point2;
     size_t maxX;
     size_t maxY;
-
+    ///UUID for this network
+    std::string networkID;
+    ///Event to delete networks
+    wxUpdateUIEvent networkDeleteEvent;
+    
     unsigned int pluginID;
 
     std::string tempXMLNetworkData;

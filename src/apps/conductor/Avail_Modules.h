@@ -105,6 +105,11 @@ protected:
 
     void getLeveledName( wxString name, std::vector<wxString> & lnames );
 
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }    
 
     int m_imageSize;
     PluginLoader* pl_loader;

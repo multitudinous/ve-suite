@@ -207,6 +207,8 @@ public:
     void OnChildDestroy( wxWindowDestroyEvent& event );
     ///Override so we can show the tree after things are initialized.
     virtual bool Show( bool value );
+    ///Event handler to delete networks to load new data in
+    void LoadNewNetwork( wxUpdateUIEvent& event );
 
     ///Get the active display mode of conductor
     ///\return Returns either:\n "Desktop" or "Tablet"
@@ -398,10 +400,12 @@ private:
 
     wxDialog* _treeView;
 
-    ///<Desktop or Tablet
+    ///Desktop or Tablet
     std::string _displayMode;
-
-    EphemerisDialog* m_ephemeris;///<Ephemeris data dialog
+    /// Tell event handlers whether a new canvas is being created
+    bool newCanvas;
+    ///Ephemeris data dialog
+    EphemerisDialog* m_ephemeris;
     ves::conductor::util::CORBAServiceList* serviceList;
     UserPreferences* preferences;
     std::vector< double > xplorerColor;

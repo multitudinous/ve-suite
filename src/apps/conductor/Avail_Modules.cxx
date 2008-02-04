@@ -169,9 +169,15 @@ void Avail_Modules::Instantiate( wxTreeEvent& WXUNUSED( event ) ) //Double click
 
     wxClassInfo* info = item_data->pl_clsi;
     if( info )
-    {
-        UIPluginBase* object;
-        object = dynamic_cast< UIPluginBase* >( info->CreateObject() );
+    {   
+        /*UIPluginBase* tempObject = 
+            dynamic_cast< UIPluginBase* >( info->m_objectConstructor() );
+        std::cout << ConvertUnicode( tempObject->GetName().c_str() ) << std::endl;
+        std::cout << ConvertUnicode( tempObject->GetConductorName().c_str() ) << std::endl;
+        delete tempObject;*/
+
+        UIPluginBase* object = 
+            dynamic_cast< UIPluginBase* >( info->m_objectConstructor() );
         object->SetCanvas( canvas );
         object->SetNetwork( canvas->GetActiveNetwork() );
         object->SetDCScale( canvas->GetActiveNetwork()->GetUserScale() );

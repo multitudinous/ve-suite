@@ -104,6 +104,7 @@ BEGIN_EVENT_TABLE( Network, wxEvtHandler )
     EVT_MENU( UIPluginBase::DEL_MOD, Network::OnDelMod )
     EVT_MENU( UIPluginBase::DELETE_PORT, Network::OnDelPort )
     EVT_MENU( Link::DEL_LINK, Network::OnDelLink )
+    EVT_UPDATE_UI( UIPluginBase::DIALOG_PLUGIN_UPDATE, Network::OnDeletePlugins )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 Network::Network( wxWindow* parent ):
@@ -138,6 +139,7 @@ Network::Network( wxWindow* parent ):
     //SetBackgroundStyle(wxBG_STYLE_CUSTOM);
     systemPtr = XMLDataBufferEngine::instance()->GetXMLSystemDataObject(
                     XMLDataBufferEngine::instance()->GetTopSystemId() );
+    networkDeleteEvent.SetId( DELETE_NETWORK );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -2236,18 +2238,17 @@ void Network::RemoveAllEvents()
 void Network::RemovePluginDialogs()
 {
     for( std::map< int, Module >::iterator iter
-        = modules.begin(); iter != modules.end(); iter++ )
+        = modules.begin(); iter != modules.end(); ++iter )
     {
-        ves::conductor::UIDialog* tempDiag = 
-            iter->second.GetPlugin()->GetUIDialog();
-        if( tempDiag )
-        {
-            tempDiag->Enable( false );
-            parent->RemoveChild( tempDiag );
-            tempDiag->DestroyChildren();
-            tempDiag->Destroy();
-        }
+        iter->second.GetPlugin()->RemovePluginDialogsFromCanvas();
     }
+    
+    //Send event to canvas
+    if( modules.empty() )
+    {
+        networkDeleteEvent.SetClientData( &networkID );
+        parent->AddPendingEvent( networkDeleteEvent );    
+    }    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::ClearXplorer()
@@ -2278,3 +2279,34 @@ void Network::Update()
         iter->second.GetPlugin()->GetVEModel();
     }
 }
+////////////////////////////////////////////////////////////////////////////////
+void Network::OnDeletePlugins( wxUpdateUIEvent& event )
+{
+    std::pair< unsigned int, size_t >* pluginData = 
+        static_cast< std::pair< unsigned int, size_t >* >( event.GetClientData() );
+    size_t numDialogs = 1;
+    unsigned int idBeingDeleted = 1;
+    if( pluginData )
+    {
+        numDialogs = pluginData->second;
+        idBeingDeleted = pluginData->first;
+    }
+    
+    std::map< int, Module >::iterator iter;
+    iter = modules.find( idBeingDeleted );
+    modules.erase( iter );
+    //std::cout << " erasing the module" << std::endl;
+    
+    //Send event to canvas
+    if( modules.empty() )
+    {
+        networkDeleteEvent.SetClientData( &networkID );
+        parent->AddPendingEvent( networkDeleteEvent );    
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::SetNetworkID( std::string id )
+{
+    networkID = id;
+}
+////////////////////////////////////////////////////////////////////////////////
