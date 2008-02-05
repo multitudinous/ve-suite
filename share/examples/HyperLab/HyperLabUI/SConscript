@@ -25,11 +25,11 @@ wxwidgets_options.apply( lib_env )
 tao_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
-if GetPlatform() == 'darwin':
-   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
-   lib_env['SHLIBSUFFIX'] = '.bundle'
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
 
-lib = ves_pkg.createSharedLibrary( 'HyperLabUI', lib_env,
+lib = ves_pkg.createLoadableModule( 'HyperLabUI', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'HyperLab', 'Plugins', 'UI', host_type ) )
    
 lib.addSources( sources )
