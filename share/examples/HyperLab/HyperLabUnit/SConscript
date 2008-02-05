@@ -1,0 +1,40 @@
+##Builds HyperLab Unit
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir buildDir GetPlatform')
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'HyperLab', 'HyperLabUnit' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env[ 'MSVS_USE_MFC_DIRS' ] = 1
+lib_env.Clone( WINDOWS_INSERT_DEF = 1 )
+lib_env.Append( LINKFLAGS = [ '/SUBSYSTEM:WINDOWS' ] )
+ves_res = lib_env.RES( 'HyperLabUnit.rc' )
+for res in ves_res:
+  sources.append( res )
+
+lib_env.Append( LIBS = [ 'ves_open_module',
+                         'ves_open_xml' ] )
+lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ),
+                            pj( '#', buildDir, 'src', 'ves', 'open','xml' ) ] )
+#lib_env.Append( CPPPATH = [] )
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY',
+                               'WIN32',
+                               '_WINDOWS',
+                               'LOKI_DLL',
+                               '_AFXDLL' ] )
+  
+xerces_options.apply( lib_env )
+tao_options.apply( lib_env )
+
+lib = ves_pkg.createProgram( 'HyperLabUnit' + lib_env["PROGSUFFIX"], lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'HyperLab', 'Plugins', 'Unit', host_type ) )  
+
+lib.addSources( sources )
+lib.build()
