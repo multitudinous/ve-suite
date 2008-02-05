@@ -7,6 +7,7 @@ exampleSubdirs = Split("""
     simple
     CoinFunnel
     Fermentor
+    HyperLab
     InteractiveStove
     nurbs
 """)

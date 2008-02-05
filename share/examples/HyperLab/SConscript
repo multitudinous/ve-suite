@@ -6,21 +6,19 @@ pj = os.path.join
 Import( 'RootDir ves_pkg' )
 
 fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'HyperLab' ) )
-coinDemoDir = pj( RootDir, 'share', 'examples', 'HyperLab' )
-xpmFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.xpm' ] )
-iveFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.ive' ] )
-wavFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.wav' ] )
-jpgFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.jpg' ] )
-tgaFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.tga' ] )
-ddsFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.dds' ] )
+hyperlabDemoDir = pj( RootDir, 'share', 'examples', 'HyperLab' )
 
-fileBundle.addFiles( xpmFile )
+iveFile = sca_util.getFilesRecursiveByExt( hyperlabDemoDir, [ '.ive' ] )
+xpmFile = sca_util.getFilesRecursiveByExt( hyperlabDemoDir, [ '.xpm' ] )
+icoFile = sca_util.getFilesRecursiveByExt( hyperlabDemoDir, [ '.ico' ] )
+tgaFile = sca_util.getFilesRecursiveByExt( hyperlabDemoDir, [ '.tga' ] )
+
 fileBundle.addFiles( iveFile )
-fileBundle.addFiles( wavFile )
-fileBundle.addFiles( jpgFile )
+fileBundle.addFiles( xpmFile )
+fileBundle.addFiles( icoFile )
 fileBundle.addFiles( tgaFile )
-fileBundle.addFiles( ddsFile )
 fileBundle.addFiles( [ 'hyperlab.ves' ] )
+
 HyperLabSubdirs = Split("""
     HyperLabGP
     HyperLabUI
