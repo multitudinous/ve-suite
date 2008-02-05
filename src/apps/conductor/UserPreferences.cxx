@@ -43,6 +43,9 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/colordlg.h>
+#include <wx/slider.h>
+
+
 
 
 //#include <iostream>
@@ -66,9 +69,11 @@ BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
     EVT_CHECKBOX( ID_NAVIGATION_CHKBX,          UserPreferences::OnNavigationCheck )
     EVT_BUTTON( ID_BACKGROUND_COLOR_BUTTON,   UserPreferences::OnSetBackgroundColor )
     EVT_CHECKBOX( ID_SHUTDOWN_XPLORER,          UserPreferences::OnShutdownXplorer )
+    EVT_COMMAND_SCROLL( ID_GEOMETRY_LOD_SCALE_SLIDER, UserPreferences::OnLODScale )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
+:m_lodScale(.01)
 {
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
@@ -89,6 +94,7 @@ UserPreferences::UserPreferences( wxWindow* parent,
                                   const wxPoint& pos,
                                   const wxSize& size,
                                   long style )
+:m_lodScale(.01)
 {
     Create( parent, id, caption, pos, size, style );
 }
@@ -105,6 +111,7 @@ bool UserPreferences::Create( wxWindow* parent, wxWindowID id, const wxString& c
     preferenceMap[ "Use Preferred Background Color" ] = false;
     preferenceMap[ "Shut Down Xplorer Option" ] = false;
     preferenceMap[ "Navigation z=0 Lock" ] = false;
+    preferenceMap[ "Geometry LOD Scale" ] = true;
 
     ///Read from wxConfig
     ReadConfiguration();
@@ -177,11 +184,16 @@ void UserPreferences::CreateControls()
     zNavChkBx->IsChecked();
     shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
     shutdownModeChkBx->IsChecked();
+ 
+    m_lodScaleSlider = new wxSlider( panel, ID_GEOMETRY_LOD_SCALE_SLIDER, 100*m_lodScale, 0, 100,
+                                    wxDefaultPosition, wxDefaultSize,
+                                    wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
 
     itemBoxSizer3->Add( colorSizer, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( navigationChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( shutdownModeChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
     itemBoxSizer3->Add( zNavChkBx, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
+    itemBoxSizer3->Add( m_lodScaleSlider, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
     ///////////////////////////////////////
     panel = new wxPanel( GetBookCtrl(), -1, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
@@ -264,6 +276,22 @@ void UserPreferences::OnShutdownXplorer( wxCommandEvent& event )
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() )] = event.IsChecked();
 }
+/////////////////////////////////////////////////////////
+void UserPreferences::OnLODScale( wxScrollEvent& event )
+{
+    m_lodScale = double( m_lodScaleSlider->GetValue() )/100.0;
+    // Create the command and data value pairs
+    DataValuePairWeakPtr dataValuePair = new DataValuePair();
+    dataValuePair->SetData( std::string( "Geometry LOD Scale" ), m_lodScale );
+    CommandWeakPtr veCommand = new Command();
+    veCommand->SetCommandName( std::string( "Update LOD Scale" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+
+    serviceList = CORBAServiceList::instance();
+    serviceList->SendCommandStringToXplorer( veCommand );
+
+    UserPreferencesDataBuffer::instance()->SetCommand( "SET_GEOMETRY_LOD_SCALE", veCommand );
+}
 ////////////////////////////////////////////////////////////////////////////////
 bool UserPreferences::GetMode( std::string mode )
 {
@@ -289,45 +317,55 @@ void UserPreferences::ReadConfiguration( void )
     std::map< std::string, bool >::iterator iter;
     for( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-        bool exists = cfg->Read( key +
-                                 _T( "/" ) +
-                                 wxString( iter->first.c_str(), wxConvUTF8 ),
-                                 &iter->second, false );
-
-        if( iter->first == "Use Preferred Background Color" )
+        //std::cout<<"Reading: "<<iter->first<<std::endl;
+        if( iter->first == "Geometry LOD Scale" )
         {
+            cfg->Read( key +
+                       _T( "/" ) +
+                       _T( "GeometryLODScale" ) ,
+                       &m_lodScale );
+        }
+        else 
+        {
+            bool exists = cfg->Read( key +
+                                     _T( "/" ) +
+                                     wxString( iter->first.c_str(), wxConvUTF8 ),
+                                     &iter->second, false );
             xplorerColor.clear();
-            cfg->Read( key +
-                       _T( "/" ) +
-                       _T( "BackgroundColor" ) +
-                       _T( "/" ) +
-                       wxString( "Red", wxConvUTF8 ),
-                       &backgroundColor[ "Red" ] );
-            xplorerColor.push_back( backgroundColor[ "Red" ] );
+            if( iter->first == "Use Preferred Background Color" )
+            {
+                cfg->Read( key +
+                           _T( "/" ) +
+                           _T( "BackgroundColor" ) +
+                           _T( "/" ) +
+                           wxString( "Red", wxConvUTF8 ),
+                           &backgroundColor[ "Red" ] );
+                xplorerColor.push_back( backgroundColor[ "Red" ] );
 
-            cfg->Read( key +
-                       _T( "/" ) +
-                       _T( "BackgroundColor" ) +
-                       _T( "/" ) +
-                       wxString( "Green", wxConvUTF8 ),
-                       &backgroundColor[ "Green" ] );
-            xplorerColor.push_back( backgroundColor[ "Green" ] );
+                cfg->Read( key +
+                           _T( "/" ) +
+                           _T( "BackgroundColor" ) +
+                           _T( "/" ) +
+                           wxString( "Green", wxConvUTF8 ),
+                           &backgroundColor[ "Green" ] );
+                xplorerColor.push_back( backgroundColor[ "Green" ] );
 
-            cfg->Read( key +
-                       _T( "/" ) +
-                       _T( "BackgroundColor" ) +
-                       _T( "/" ) +
-                       wxString( "Blue", wxConvUTF8 ),
-                       &backgroundColor[ "Blue" ] );
-            xplorerColor.push_back( backgroundColor[ "Blue" ] );
+                cfg->Read( key +
+                           _T( "/" ) +
+                           _T( "BackgroundColor" ) +
+                           _T( "/" ) +
+                           wxString( "Blue", wxConvUTF8 ),
+                           &backgroundColor[ "Blue" ] );
+                xplorerColor.push_back( backgroundColor[ "Blue" ] );
 
-            cfg->Read( key +
-                       _T( "/" ) +
-                       _T( "BackgroundColor" ) +
-                       _T( "/" ) +
-                       wxString( "Alpha", wxConvUTF8 ),
-                       &backgroundColor[ "Alpha" ] );
-            xplorerColor.push_back( backgroundColor[ "Alpha" ] );
+                cfg->Read( key +
+                           _T( "/" ) +
+                           _T( "BackgroundColor" ) +
+                           _T( "/" ) +
+                           wxString( "Alpha", wxConvUTF8 ),
+                           &backgroundColor[ "Alpha" ] );
+                xplorerColor.push_back( backgroundColor[ "Alpha" ] );
+            }
         }
     }
 }
@@ -339,38 +377,49 @@ void UserPreferences::WriteConfiguration( void )
     std::map< std::string, bool >::iterator iter;
     for( iter = preferenceMap.begin(); iter != preferenceMap.end(); ++iter )
     {
-        cfg->Write( key +
+
+        //std::cout<<"Writing: "<<iter->first<<std::endl;
+        if( iter->first == "Geometry LOD Scale" )
+        {
+            cfg->Write( key +
+                       _T( "/" ) +
+                       _T( "GeometryLODScale" ) ,
+                       m_lodScale );
+        }
+        else
+        {
+            cfg->Write( key +
                     _T( "/" ) +
                     wxString( iter->first.c_str(), wxConvUTF8 ),
                     iter->second );
-
-        if( iter->first == "Use Preferred Background Color" )
-        {
-            cfg->Write( key +
-                        _T( "/" ) +
-                        _T( "BackgroundColor" ) +
-                        _T( "/" ) +
-                        wxString( "Red", wxConvUTF8 ),
-                        backgroundColor[ "Red" ] );
-            cfg->Write( key +
-                        _T( "/" ) +
-                        _T( "BackgroundColor" ) +
-                        _T( "/" ) +
-                        wxString( "Green", wxConvUTF8 ),
-                        backgroundColor[ "Green" ] );
-            cfg->Write( key +
-                        _T( "/" ) +
-                        _T( "BackgroundColor" ) +
-                        _T( "/" ) +
-                        wxString( "Blue", wxConvUTF8 ),
-                        backgroundColor[ "Blue" ] );
-            cfg->Write( key +
-                        _T( "/" ) +
-                        _T( "BackgroundColor" ) +
-                        _T( "/" ) +
-                        wxString( "Alpha", wxConvUTF8 ),
-                        backgroundColor[ "Alpha" ] );
-        }
+            if( iter->first == "Use Preferred Background Color" )
+            {
+                cfg->Write( key +
+                            _T( "/" ) +
+                            _T( "BackgroundColor" ) +
+                            _T( "/" ) +
+                            wxString( "Red", wxConvUTF8 ),
+                            backgroundColor[ "Red" ] );
+                cfg->Write( key +
+                            _T( "/" ) +
+                            _T( "BackgroundColor" ) +
+                            _T( "/" ) +
+                            wxString( "Green", wxConvUTF8 ),
+                            backgroundColor[ "Green" ] );
+                cfg->Write( key +
+                            _T( "/" ) +
+                            _T( "BackgroundColor" ) +
+                            _T( "/" ) +
+                            wxString( "Blue", wxConvUTF8 ),
+                            backgroundColor[ "Blue" ] );
+                cfg->Write( key +
+                            _T( "/" ) +
+                            _T( "BackgroundColor" ) +
+                            _T( "/" ) +
+                            wxString( "Alpha", wxConvUTF8 ),
+                            backgroundColor[ "Alpha" ] );
+            }
+       }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

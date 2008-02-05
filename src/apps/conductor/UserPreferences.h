@@ -49,6 +49,7 @@ class wxCheckListBox;
 class wxButton;
 class wxCheckBox;
 class wxColourData;
+class wxSlider;
 
 namespace ves
 {
@@ -107,6 +108,7 @@ public:
         ID_NAVIGATION_CHKBX,
         ID_BACKGROUND_COLOR_BUTTON,
         ID_SHUTDOWN_XPLORER,
+        ID_GEOMETRY_LOD_SCALE_SLIDER,
         ID_CONDUCTOR_CHKBX
     };
 
@@ -130,6 +132,8 @@ public:
     ///Check to set map for Xplorer shutdown option
     void OnShutdownXplorer( wxCommandEvent& event );
     void OnConductorCheck( wxCommandEvent& event );
+    ///Adjust the global LOD scale settings
+    void OnLODScale( wxScrollEvent& event );
     bool GetMode( std::string mode );
     void ReadConfiguration( void );
     void WriteConfiguration( void );
@@ -151,11 +155,13 @@ private:
     std::vector<double> xplorerColor;
     //wxColour* colour;
 
+    wxSlider* m_lodScaleSlider;///<Slider for the global Geometry LOD scale
     ves::conductor::util::CORBAServiceList* serviceList;
 
     std::map< std::string, double > backgroundColor; ///Map the colors to their values
 
     std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
+    double m_lodScale; ///< The global Geometry LOD scale
 
     std::string ConvertUnicode( const wxChar* data )
     {
