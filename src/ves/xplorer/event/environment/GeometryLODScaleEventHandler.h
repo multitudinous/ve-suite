@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2008-02-02 15:18:37 -0600 (Sat, 02 Feb 2008) $
- * Version:       $Rev: 10443 $
- * Author:        $Author: dshipton $
- * Id:            $Id: GeometryLODScaleEventHandler.h 10443 2008-02-02 21:18:37Z dshipton $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
