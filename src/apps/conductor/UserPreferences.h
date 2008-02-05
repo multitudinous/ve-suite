@@ -161,7 +161,7 @@ private:
     std::map< std::string, double > backgroundColor; ///Map the colors to their values
 
     std::map< std::string, bool > preferenceMap; ///<Map to hold preference bools and key names
-    double m_lodScale; ///< The global Geometry LOD scale
+    long m_lodScale; ///< The global Geometry LOD scale
 
     std::string ConvertUnicode( const wxChar* data )
     {

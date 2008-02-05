@@ -73,7 +73,7 @@ BEGIN_EVENT_TABLE( UserPreferences, wxDialog )
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferences::UserPreferences( )
-:m_lodScale(.01)
+:m_lodScale( 1 )
 {
     xplorerColor.push_back( 0.0f );
     xplorerColor.push_back( 0.0f );
@@ -94,7 +94,7 @@ UserPreferences::UserPreferences( wxWindow* parent,
                                   const wxPoint& pos,
                                   const wxSize& size,
                                   long style )
-:m_lodScale(.01)
+:m_lodScale( 1 )
 {
     Create( parent, id, caption, pos, size, style );
 }
@@ -185,7 +185,7 @@ void UserPreferences::CreateControls()
     shutdownModeChkBx->SetValue( preferenceMap[ "Shut Down Xplorer Option" ] );
     shutdownModeChkBx->IsChecked();
  
-    m_lodScaleSlider = new wxSlider( panel, ID_GEOMETRY_LOD_SCALE_SLIDER, 100*m_lodScale, 0, 100,
+    m_lodScaleSlider = new wxSlider( panel, ID_GEOMETRY_LOD_SCALE_SLIDER, m_lodScale, 0, 100,
                                     wxDefaultPosition, wxDefaultSize,
                                     wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
 
@@ -276,10 +276,11 @@ void UserPreferences::OnShutdownXplorer( wxCommandEvent& event )
     wxString mode = dynamic_cast< wxControl* >( event.GetEventObject() )->GetLabelText();
     preferenceMap[ ConvertUnicode( mode.c_str() )] = event.IsChecked();
 }
-/////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
 void UserPreferences::OnLODScale( wxScrollEvent& event )
 {
-    m_lodScale = double( m_lodScaleSlider->GetValue() )/100.0;
+    m_lodScale = m_lodScaleSlider->GetValue();
+    
     // Create the command and data value pairs
     DataValuePairWeakPtr dataValuePair = new DataValuePair();
     dataValuePair->SetData( std::string( "Geometry LOD Scale" ), m_lodScale );
