@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HyperLabUnit", "HyperLabUnit\HyperLabUnit.vcproj", "{4D0DE8A9-ED0D-4EFF-B22B-BAE8C7C8EA10}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HyperLabUI", "HyperLabUI\HyperLabUI.vcproj", "{0D29C965-1C45-4EB3-8421-302A1D2F4548}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HyperLabGP", "HyperLabGP\HyperLabGP.vcproj", "{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D0DE8A9-ED0D-4EFF-B22B-BAE8C7C8EA10}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4D0DE8A9-ED0D-4EFF-B22B-BAE8C7C8EA10}.Debug|Win32.Build.0 = Debug|Win32
+		{4D0DE8A9-ED0D-4EFF-B22B-BAE8C7C8EA10}.Release|Win32.ActiveCfg = Release|Win32
+		{4D0DE8A9-ED0D-4EFF-B22B-BAE8C7C8EA10}.Release|Win32.Build.0 = Release|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug|Win32.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release|Win32.ActiveCfg = Release|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release|Win32.Build.0 = Release|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Debug|Win32.Build.0 = Debug|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.ActiveCfg = Release|Win32
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
