@@ -65,6 +65,7 @@
 #include <ves/xplorer/event/environment/EphemerisAutoDateTimeEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisHeightMapEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisDisplayToggleEventHandler.h>
+#include <ves/xplorer/event/environment/GeometryLODScaleEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -107,7 +108,8 @@ _frustumRight( 0 ),
 _frustumTop( 0 ),
 _frustumBottom( 0 ),
 _frustumNear( 0 ),
-_frustumFar( 0 )
+_frustumFar( 0 ),
+m_lodScale(.01)
 {
     for( unsigned int i = 0; i < 3; i++ )
     {
@@ -156,6 +158,8 @@ _frustumFar( 0 )
         new ves::xplorer::event::EphemerisHeightMapEventHandler();
     _eventHandlers[ std::string( "Ephemeris Toggle" )] =
         new ves::xplorer::event::EphemerisDisplayToggleEventHandler();
+    _eventHandlers[ std::string( "Update LOD Scale" )] =
+        new ves::xplorer::event::GeometryLODScaleEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize( void )
@@ -193,6 +197,17 @@ EnvironmentHandler::~EnvironmentHandler( void )
         delete this->display_information;
     }
 }
+/////////////////////////////////////////////////////////////
+void EnvironmentHandler::SetGlobalLODScale( double lodScale )
+{
+    m_lodScale = lodScale;
+}
+//////////////////////////////////////////////
+double EnvironmentHandler::GetGlobalLODScale()
+{
+    return m_lodScale;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 /*cfdSoundHandler* EnvironmentHandler::GetSoundHandler( void )
 {

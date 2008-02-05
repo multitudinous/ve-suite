@@ -163,6 +163,13 @@ public:
     ///Deactivate geoometry picking functionality.
     void DeactivateGeometryPicking( void );
 
+    ///Set the globalLOD scale
+    ///\param lodScale The scale to set 
+    void SetGlobalLODScale( double lodScale );
+
+    ///Get the globalLOD scale
+    double GetGlobalLODScale();
+
     ///Get the seed points drawable
     ///\return Get the seed points
     SeedPoints* GetSeedPoints();
@@ -216,6 +223,7 @@ private:
     float _frustumNear;///<Near frustum.
     float _frustumFar;///<Far frustum.
 
+    double m_lodScale;///<Global geometry LOD scale
     float framerate;///<Frame rate.
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<The event handler for commands.
 
