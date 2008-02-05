@@ -12,9 +12,9 @@ HyperLabUI::HyperLabUI()
 {
     RegistVar( "portNumber", &portNumber );
 
-    name = "HyperLab";
+    name = _("HyperLab");
 
-    wxImage my_img( "Icons/hyper.xpm" );
+    wxImage my_img( _("Icons/hyper.xpm") );
     icon_w = static_cast< int >( my_img.GetWidth() );
     icon_h = static_cast< int >( my_img.GetHeight() );
     my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
@@ -90,7 +90,7 @@ ves::conductor::UIDialog* HyperLabUI::UI( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 wxString HyperLabUI::GetConductorName()
 {
-    wxString result = "NETL_HyperLab";
+    wxString result( _("NETL_HyperLab") );
 
     return result;
 }
@@ -99,7 +99,7 @@ wxString HyperLabUI::GetName()
 {
     if( name.IsEmpty() )
     {
-        name = "PleaseDefineClassName";
+        name = _("PleaseDefineClassName");
     }
 
     return name;
@@ -107,7 +107,7 @@ wxString HyperLabUI::GetName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString HyperLabUI::GetDesc()
 {
-    wxString result = "None";
+    wxString result = _("None");
 
     return result;
 }

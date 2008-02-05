@@ -40,7 +40,7 @@ HyperLabUIDialog::HyperLabUIDialog( wxWindow* parent,
                                     ves::conductor::util::CORBAServiceList* service,
                                     std::string* portNumber )
 :
-UIDialog( ( wxWindow* )parent, id, "HyperLab" ),
+UIDialog( parent, id, _("HyperLab") ),
 p_portNumber( portNumber )
 {
     serviceList = service;
@@ -95,11 +95,11 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* base_bs_4=new wxBoxSizer(wxHORIZONTAL);
     base_bs_3->Add(base_bs_4,0,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
-    wxIcon bitmap("./Icons/vesuite.ico", wxBITMAP_TYPE_ICO);
+    wxIcon bitmap( _("./Icons/vesuite.ico"), wxBITMAP_TYPE_ICO);
     wxStaticBitmap* base_sbm_1=new wxStaticBitmap(itemDialog,wxID_STATIC,bitmap,wxDefaultPosition,wxSize(32,32),0);
     base_bs_4->Add(base_sbm_1,0,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
-    wxStaticText* base_st_1=new wxStaticText(itemDialog,wxID_STATIC,"  Hyper Controls  ",wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER);
+    wxStaticText* base_st_1=new wxStaticText(itemDialog,wxID_STATIC,_("  Hyper Controls  "),wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER);
     base_st_1->SetForegroundColour(wxColour(255,255,255));
     base_st_1->SetBackgroundColour(wxColour(128,128,64));
     base_st_1->SetFont(wxFont(10,wxNORMAL,wxNORMAL,wxBOLD,false));
@@ -118,7 +118,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* unit_panel_bs_1=new wxBoxSizer(wxVERTICAL);
     unit_panel->SetSizer(unit_panel_bs_1);
 
-    notebook->AddPage(unit_panel,"Unit");
+    notebook->AddPage(unit_panel,_("Unit") );
 
     //Physics Panel
     wxPanel* physics_panel=new wxPanel(notebook,ID_PHYSICS_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
@@ -126,7 +126,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* physics_panel_bs_1=new wxBoxSizer(wxVERTICAL);
     physics_panel->SetSizer(physics_panel_bs_1);
 
-    notebook->AddPage(physics_panel,"Physics");
+    notebook->AddPage(physics_panel,_("Physics") );
 
     //Material Panel
     wxPanel* material_panel=new wxPanel(notebook,ID_MATERIAL_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
@@ -137,17 +137,17 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* material_panel_bs_2=new wxBoxSizer(wxVERTICAL);
     material_panel->SetSizer(material_panel_bs_2);
 
-    wxStaticText* material_panel_st_1=new wxStaticText(material_panel,wxID_STATIC,"Shader Effects:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* material_panel_st_1=new wxStaticText(material_panel,wxID_STATIC,_("Shader Effects:"),wxDefaultPosition,wxDefaultSize,0);
     material_panel_st_1->SetForegroundColour(wxColour(255,255,255));
     material_panel_st_1->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,true));
     material_panel_bs_2->Add(material_panel_st_1,0,wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE,5);
 
-    wxString material_panel_clb_strings[]={"Phong","Texture","Shadow","Reflection","X-Ray"};
+    wxString material_panel_clb_strings[]={_("Phong"),_("Texture"),_("Shadow"),_("Reflection"),_("X-Ray")};
     material_panel_clb_se=new wxCheckListBox(material_panel,ID_SHADER_EFFECTS,wxDefaultPosition,wxDefaultSize,5,material_panel_clb_strings,wxLB_SINGLE|wxSUNKEN_BORDER);
     material_panel_clb_se->Check(1,true);
     material_panel_bs_2->Add(material_panel_clb_se,0,wxALIGN_LEFT|wxALL,5);
 
-    notebook->AddPage(material_panel,"Material");
+    notebook->AddPage(material_panel,_("Material") );
 
     //Light Panel
     wxPanel* light_panel=new wxPanel(notebook,ID_LIGHT_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
@@ -155,7 +155,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_1=new wxBoxSizer(wxVERTICAL);
     light_panel->SetSizer(light_panel_bs_1);
 
-    wxStaticText* light_panel_st_1=new wxStaticText(light_panel,wxID_STATIC,"Ambient",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_1=new wxStaticText(light_panel,wxID_STATIC, _("Ambient"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_1->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_1->SetFont(wxFont(9,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_1->Add(light_panel_st_1,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE,5);
@@ -166,7 +166,7 @@ void HyperLabUIDialog::BuildGUI()
     //wxBoxSizer* light_panel_bs_17=new wxBoxSizer(wxHORIZONTAL);
     //light_panel_bs_2->Add(light_panel_bs_17,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT,5);
 
-    wxStaticText* light_panel_st_2=new wxStaticText(light_panel,wxID_STATIC,"R:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_2=new wxStaticText(light_panel,wxID_STATIC,_("R:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_2->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_2->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_2->Add(light_panel_st_2,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -174,7 +174,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_3=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_2->Add(light_panel_bs_3,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,32);
 
-    wxStaticText* light_panel_st_3=new wxStaticText(light_panel,wxID_STATIC,"G:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_3=new wxStaticText(light_panel,wxID_STATIC,_("G:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_3->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_3->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_2->Add(light_panel_st_3,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -182,7 +182,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_4=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_2->Add(light_panel_bs_4,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,32);
 
-    wxStaticText* light_panel_st_4=new wxStaticText(light_panel,wxID_STATIC,"B:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_4=new wxStaticText(light_panel,wxID_STATIC,_("B:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_4->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_4->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_2->Add(light_panel_st_4,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -211,7 +211,7 @@ void HyperLabUIDialog::BuildGUI()
     //wxBoxSizer* light_panel_bs_6=new wxBoxSizer(wxHORIZONTAL);
     //light_panel_bs_1->Add(light_panel_bs_6,0,wxALIGN_CENTER_HORIZONTAL|wxALL,5);
 
-    wxStaticText* light_panel_st_5=new wxStaticText(light_panel,wxID_STATIC,"Diffuse",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_5=new wxStaticText(light_panel,wxID_STATIC,_("Diffuse"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_5->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_5->SetFont(wxFont(9,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_1->Add(light_panel_st_5,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -222,7 +222,7 @@ void HyperLabUIDialog::BuildGUI()
     //wxBoxSizer* light_panel_bs_18=new wxBoxSizer(wxHORIZONTAL);
     //light_panel_bs_7->Add(light_panel_bs_18,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT,5);
 
-    wxStaticText* light_panel_st_6=new wxStaticText(light_panel,wxID_STATIC,"R:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_6=new wxStaticText(light_panel,wxID_STATIC,_("R:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_6->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_6->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_7->Add(light_panel_st_6,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -230,7 +230,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_8=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_7->Add(light_panel_bs_8,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,42);
 
-    wxStaticText* light_panel_st_7=new wxStaticText(light_panel,wxID_STATIC,"G:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_7=new wxStaticText(light_panel,wxID_STATIC,_("G:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_7->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_7->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_7->Add(light_panel_st_7,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -238,7 +238,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_9=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_7->Add(light_panel_bs_9,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,42);
 
-    wxStaticText* light_panel_st_8=new wxStaticText(light_panel,wxID_STATIC,"B:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_8=new wxStaticText(light_panel,wxID_STATIC,_("B:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_8->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_8->SetFont(wxFont(8,wxDECORATIVE, wxNORMAL, wxBOLD,false));
     light_panel_bs_7->Add(light_panel_st_8,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -267,7 +267,7 @@ void HyperLabUIDialog::BuildGUI()
     //wxBoxSizer* light_panel_bs_11=new wxBoxSizer(wxHORIZONTAL);
     //light_panel_bs_1->Add(light_panel_bs_11,0,wxALIGN_CENTER_HORIZONTAL|wxALL,5);
 
-    wxStaticText* light_panel_st_9=new wxStaticText(light_panel,wxID_STATIC,"Specular",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_9=new wxStaticText(light_panel,wxID_STATIC,_("Specular"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_9->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_9->SetFont(wxFont(9,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_1->Add(light_panel_st_9,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -278,7 +278,7 @@ void HyperLabUIDialog::BuildGUI()
     //wxBoxSizer* light_panel_bs_19=new wxBoxSizer(wxHORIZONTAL);
     //light_panel_bs_12->Add(light_panel_bs_19,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT,5);
 
-    wxStaticText* light_panel_st_10=new wxStaticText(light_panel,wxID_STATIC,"R:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_10=new wxStaticText(light_panel,wxID_STATIC,_("R:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_10->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_10->SetFont(wxFont(8,wxDECORATIVE, wxNORMAL, wxBOLD,false));
     light_panel_bs_12->Add(light_panel_st_10,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -286,7 +286,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_13=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_12->Add(light_panel_bs_13,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,52);
 
-    wxStaticText* light_panel_st_11=new wxStaticText(light_panel,wxID_STATIC,"G:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_11=new wxStaticText(light_panel,wxID_STATIC,_("G:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_11->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_11->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
     light_panel_bs_12->Add(light_panel_st_11,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -294,7 +294,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_14=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_12->Add(light_panel_bs_14,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,52);
 
-    wxStaticText* light_panel_st_12=new wxStaticText(light_panel,wxID_STATIC,"B:",wxDefaultPosition,wxDefaultSize,0);
+    wxStaticText* light_panel_st_12=new wxStaticText(light_panel,wxID_STATIC,_("B:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_12->SetForegroundColour(wxColour(255,255,255));
     light_panel_st_12->SetFont(wxFont(8,wxDECORATIVE, wxNORMAL, wxBOLD,false));
     light_panel_bs_12->Add(light_panel_st_12,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
@@ -323,7 +323,7 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_16=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_1->Add(light_panel_bs_16,0,wxALIGN_CENTER_HORIZONTAL|wxALL,5);
 
-    notebook->AddPage(light_panel,"Lights");
+    notebook->AddPage(light_panel,_("Lights"));
 
     //Base
     base_bs_2->Add(notebook,1,wxGROW|wxALL,5);
@@ -334,10 +334,10 @@ void HyperLabUIDialog::BuildGUI()
     wxStaticLine* base_sl_2=new wxStaticLine(itemDialog,wxID_STATIC,wxDefaultPosition,wxSize(200,2),wxLI_HORIZONTAL);
     base_bs_5->Add(base_sl_2,0,wxALIGN_BOTTOM|wxRIGHT|wxTOP,60);
 
-    wxButton* base_b_1=new wxButton(itemDialog,ID_OK_BUTTON,"OK",wxDefaultPosition,wxDefaultSize,0);
+    wxButton* base_b_1=new wxButton(itemDialog,ID_OK_BUTTON,_("OK"),wxDefaultPosition,wxDefaultSize,0);
     base_bs_5->Add(base_b_1,1,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
-    wxButton* base_b_2=new wxButton(itemDialog,ID_CANCEL_BUTTON,"Cancel",wxDefaultPosition,wxDefaultSize,0);
+    wxButton* base_b_2=new wxButton(itemDialog,ID_CANCEL_BUTTON,_("Cancel"),wxDefaultPosition,wxDefaultSize,0);
     base_bs_5->Add(base_b_2,1,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
     SetBestFittingSize();
