@@ -149,189 +149,189 @@ void Scene::CreateNodes()
     for( int i = 0; i < 39; ++i )
     {
         std::stringstream name;
-        name << "./IVEs/Room/Corona" << i << ".ive";
+        //name << "./Models/IVEs/Room/Corona" << i << ".ive";
 
-        coronas->addChild( osgDB::readNodeFile( name.str() ) );
+        //coronas->addChild( osgDB::readNodeFile( name.str() ) );
     }
 
     //Load in the shadowed group
-    aluminum_parts=osgDB::readNodeFile("./IVEs/Room/AluminumParts.ive");
+    aluminum_parts=osgDB::readNodeFile("./Models/IVEs/Room/AluminumParts.ive");
     stateset=aluminum_parts->getOrCreateStateSet();
     stateset->setAttributeAndModes(aluminum_parts_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(aluminum_parts.get());
 
-    aluminum_pipes=osgDB::readNodeFile("./IVEs/Room/AluminumPipes.ive");
+    aluminum_pipes=osgDB::readNodeFile("./Models/IVEs/Room/AluminumPipes.ive");
     stateset=aluminum_pipes->getOrCreateStateSet();
     stateset->setAttributeAndModes(aluminum_pipes_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(aluminum_pipes.get());
 
-    black=osgDB::readNodeFile("./IVEs/Room/Black.ive");
+    black=osgDB::readNodeFile("./Models/IVEs/Room/Black.ive");
     stateset=black->getOrCreateStateSet();
     stateset->setAttributeAndModes(black_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(black.get());
 
-    brown=osgDB::readNodeFile("./IVEs/Room/Brown.ive");
+    brown=osgDB::readNodeFile("./Models/IVEs/Room/Brown.ive");
     stateset=brown->getOrCreateStateSet();
     stateset->setAttributeAndModes(brown_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(brown.get());
 
-    details=osgDB::readNodeFile("./IVEs/Room/Details.ive");
+    details=osgDB::readNodeFile("./Models/IVEs/Room/Details.ive");
     stateset=details->getOrCreateStateSet();
     stateset->setAttributeAndModes(details_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(details.get());
 
-    floor=osgDB::readNodeFile("./IVEs/Room/Floor.ive");
+    floor=osgDB::readNodeFile("./Models/IVEs/Room/Floor.ive");
     stateset=floor->getOrCreateStateSet();
     stateset->setAttributeAndModes(floor_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(floor.get());
 
-    lt_green=osgDB::readNodeFile("./IVEs/Room/LtGreen.ive");
+    lt_green=osgDB::readNodeFile("./Models/IVEs/Room/LtGreen.ive");
     stateset=lt_green->getOrCreateStateSet();
     stateset->setAttributeAndModes(lt_green_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(lt_green.get());
 
-    lt_grey=osgDB::readNodeFile("./IVEs/Room/LtGrey.ive");
+    lt_grey=osgDB::readNodeFile("./Models/IVEs/Room/LtGrey.ive");
     stateset=lt_grey->getOrCreateStateSet();
     stateset->setAttributeAndModes(lt_grey_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(lt_grey.get());
 
-    orange=osgDB::readNodeFile("./IVEs/Room/Orange.ive");
+    orange=osgDB::readNodeFile("./Models/IVEs/Room/Orange.ive");
     stateset=orange->getOrCreateStateSet();
     stateset->setAttributeAndModes(orange_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(orange.get());
 
-    red=osgDB::readNodeFile("./IVEs/Room/Red.ive");
+    red=osgDB::readNodeFile("./Models/IVEs/Room/Red.ive");
     stateset=red->getOrCreateStateSet();
     stateset->setAttributeAndModes(red_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(red.get());
 
-    red_brown=osgDB::readNodeFile("./IVEs/Room/RedBrown.ive");
+    red_brown=osgDB::readNodeFile("./Models/IVEs/Room/RedBrown.ive");
     stateset=red_brown->getOrCreateStateSet();
     stateset->setAttributeAndModes(red_brown_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(red_brown.get());
 
-    walls=osgDB::readNodeFile("./IVEs/Room/Walls.ive");
+    walls=osgDB::readNodeFile("./Models/IVEs/Room/Walls.ive");
     stateset=walls->getOrCreateStateSet();
     stateset->setAttributeAndModes(walls_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(walls.get());
 
-    white_pipes=osgDB::readNodeFile("./IVEs/Room/WhitePipes.ive");
+    white_pipes=osgDB::readNodeFile("./Models/IVEs/Room/WhitePipes.ive");
     stateset=white_pipes->getOrCreateStateSet();
     stateset->setAttributeAndModes(white_pipes_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(white_pipes.get());
 
-    white_ducts=osgDB::readNodeFile("./IVEs/Room/WhiteDucts.ive");
+    white_ducts=osgDB::readNodeFile("./Models/IVEs/Room/WhiteDucts.ive");
     stateset=white_ducts->getOrCreateStateSet();
     stateset->setAttributeAndModes(white_ducts_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(white_ducts.get());
 
-    yellow=osgDB::readNodeFile("./IVEs/Room/Yellow.ive");
+    yellow=osgDB::readNodeFile("./Models/IVEs/Room/Yellow.ive");
     stateset=yellow->getOrCreateStateSet();
     stateset->setAttributeAndModes(yellow_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(yellow.get());
 
-    frame=osgDB::readNodeFile("./IVEs/Frame.ive");
+    frame=osgDB::readNodeFile("./Models/IVEs/Frame.ive");
     stateset=frame->getOrCreateStateSet();
     stateset->setAttributeAndModes(frame_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(frame.get());
 
-    railing=osgDB::readNodeFile("./IVEs/Railing.ive");
+    railing=osgDB::readNodeFile("./Models/IVEs/Railing.ive");
     stateset=railing->getOrCreateStateSet();
     stateset->setAttributeAndModes(railing_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(railing.get());
 
-    plenum_piping=osgDB::readNodeFile("./IVEs/PlenumPiping.ive");
+    plenum_piping=osgDB::readNodeFile("./Models/IVEs/PlenumPiping.ive");
     stateset=plenum_piping->getOrCreateStateSet();
     stateset->setAttributeAndModes(plenum_piping_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(plenum_piping.get());
 
-    blower_components=osgDB::readNodeFile("./IVEs/BlowerComponents.ive");
+    blower_components=osgDB::readNodeFile("./Models/IVEs/BlowerComponents.ive");
     stateset=blower_components->getOrCreateStateSet();
     stateset->setAttributeAndModes(blower_components_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(blower_components.get());
 
-    brackets=osgDB::readNodeFile("./IVEs/Brackets.ive");
+    brackets=osgDB::readNodeFile("./Models/IVEs/Brackets.ive");
     stateset=brackets->getOrCreateStateSet();
     stateset->setAttributeAndModes(plenum_piping_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(brackets.get());
 
-    cement_base=osgDB::readNodeFile("./IVEs/CementBase.ive");
+    cement_base=osgDB::readNodeFile("./Models/IVEs/CementBase.ive");
     stateset=cement_base->getOrCreateStateSet();
     stateset->setAttributeAndModes(brackets_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(cement_base.get());
 
-    combustor_piping=osgDB::readNodeFile("./IVEs/CombustorPiping.ive");
+    combustor_piping=osgDB::readNodeFile("./Models/IVEs/CombustorPiping.ive");
     stateset=combustor_piping->getOrCreateStateSet();
     stateset->setAttributeAndModes(combustor_piping_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(combustor_piping.get());
 
-    compressor_inlet=osgDB::readNodeFile("./IVEs/CompressorInlet.ive");
+    compressor_inlet=osgDB::readNodeFile("./Models/IVEs/CompressorInlet.ive");
     stateset=compressor_inlet->getOrCreateStateSet();
     stateset->setAttributeAndModes(compressor_inlet_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(compressor_inlet.get());
 
-    heat_exchanger=osgDB::readNodeFile("./IVEs/HeatExchanger.ive");
+    heat_exchanger=osgDB::readNodeFile("./Models/IVEs/HeatExchanger.ive");
     stateset=heat_exchanger->getOrCreateStateSet();
     stateset->setAttributeAndModes(heat_exchanger_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(heat_exchanger.get());
 
-    heat_exchanger_sweep=osgDB::readNodeFile("./IVEs/HeatExchangerSweep.ive");
+    heat_exchanger_sweep=osgDB::readNodeFile("./Models/IVEs/HeatExchangerSweep.ive");
     stateset=heat_exchanger_sweep->getOrCreateStateSet();
     stateset->setAttributeAndModes(heat_exchanger_sweep_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(heat_exchanger_sweep.get());
 
-    load=osgDB::readNodeFile("./IVEs/Load.ive");
+    load=osgDB::readNodeFile("./Models/IVEs/Load.ive");
     stateset=load->getOrCreateStateSet();
     stateset->setAttributeAndModes(load_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(load.get());
 
-    plenum_system=osgDB::readNodeFile("./IVEs/PlenumSystem.ive");
+    plenum_system=osgDB::readNodeFile("./Models/IVEs/PlenumSystem.ive");
     stateset=plenum_system->getOrCreateStateSet();
     stateset->setAttributeAndModes(plenum_system_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(plenum_system.get());
 
-    relief_piping=osgDB::readNodeFile("./IVEs/ReliefPiping.ive");
+    relief_piping=osgDB::readNodeFile("./Models/IVEs/ReliefPiping.ive");
     stateset=relief_piping->getOrCreateStateSet();
     stateset->setAttributeAndModes(relief_piping_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(relief_piping.get());
 
-    shell=osgDB::readNodeFile("./IVEs/Shell.ive");
+    shell=osgDB::readNodeFile("./Models/IVEs/Shell.ive");
     stateset=shell->getOrCreateStateSet();
     stateset->setAttributeAndModes(shell_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(shell.get());
 
-    stack=osgDB::readNodeFile("./IVEs/Stack.ive");
+    stack=osgDB::readNodeFile("./Models/IVEs/Stack.ive");
     stateset=stack->getOrCreateStateSet();
     stateset->setAttributeAndModes(stack_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(stack.get());
 
-    turbine_exhaust=osgDB::readNodeFile("./IVEs/TurbineExhaust.ive");
+    turbine_exhaust=osgDB::readNodeFile("./Models/IVEs/TurbineExhaust.ive");
     stateset=turbine_exhaust->getOrCreateStateSet();
     stateset->setAttributeAndModes(turbine_exhaust_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(turbine_exhaust.get());
 
-    turbine_postcombustor=osgDB::readNodeFile("./IVEs/TurbinePostCombustor.ive");
+    turbine_postcombustor=osgDB::readNodeFile("./Models/IVEs/TurbinePostCombustor.ive");
     stateset=turbine_postcombustor->getOrCreateStateSet();
     stateset->setAttributeAndModes(turbine_postcombustor_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(turbine_postcombustor.get());
 
-    miscellaneous=osgDB::readNodeFile("./IVEs/Instrumentation.ive");
+    miscellaneous=osgDB::readNodeFile("./Models/IVEs/Instrumentation.ive");
     stateset=miscellaneous->getOrCreateStateSet();
     stateset->setAttributeAndModes(miscellaneous_material.get(),osg::StateAttribute::ON);
     shadowed_scene->addChild(miscellaneous.get());
 
     //Load in the non-shadowed group
-    ceiling=osgDB::readNodeFile("./IVEs/Room/Ceiling.ive");
+    ceiling=osgDB::readNodeFile("./Models/IVEs/Room/Ceiling.ive");
     stateset=ceiling->getOrCreateStateSet();
     stateset->setAttributeAndModes(ceiling_material.get(),osg::StateAttribute::ON);
     non_shadowed_scene->addChild(ceiling.get());
 
-    glass=osgDB::readNodeFile("./IVEs/Room/Glass.ive");
+    glass=osgDB::readNodeFile("./Models/IVEs/Room/Glass.ive");
     stateset=glass->getOrCreateStateSet();
     stateset->setAttributeAndModes(glass_material.get(),osg::StateAttribute::ON);
     non_shadowed_scene->addChild(glass.get());
 
-    lights=osgDB::readNodeFile("./IVEs/Room/Lights.ive");
+    lights=osgDB::readNodeFile("./Models/IVEs/Room/Lights.ive");
     stateset=lights->getOrCreateStateSet();
     stateset->setAttributeAndModes(lights_material.get(),osg::StateAttribute::ON);
     non_shadowed_scene->addChild(lights.get());
