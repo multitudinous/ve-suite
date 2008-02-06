@@ -91,7 +91,7 @@ public:
     ///Sets up the file names by taking in command line arguments and using either those or default values.
     ///\param inFileName The name of the input file passed in.
     ///\param outFileName The name of the output file passed in.
-    static void processCommandLineArgs( int argc, char *argv[], char verb[],
+    static void processCommandLineArgs( int argc, char *argv[], const std::string verb,
                                         std::string & inFileName, std::string & outFileName );
     ///Returns the file extension of the file passed in.
     ///\param filename The file passed into the function.

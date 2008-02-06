@@ -228,7 +228,7 @@ int fileIO::readNByteBlockFromFile( void *ptr, const unsigned int nByte,
     return 0;  //success
 }
 ////////////////////////////////////////////////////////////////////////////////
-void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
+void fileIO::processCommandLineArgs( int argc, char *argv[], const std::string verb,
                                      std::string & inFileName, std::string & outFileName )
 {
     if( argc > 1 )
