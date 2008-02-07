@@ -18,6 +18,8 @@ namespace osg
 
 typedef std::vector< osg::ref_ptr< osg::Image > > ImageList;
 
+namespace hyperlab
+{
 class Shaders
 {
 public:
@@ -51,5 +53,6 @@ public:
     ImageList imageList;
     osg::ref_ptr< osg::TextureCubeMap > tcm;
 };
+} //end hyperlab
 
 #endif //SHADERS_H

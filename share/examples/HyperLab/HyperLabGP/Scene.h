@@ -1,8 +1,25 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+/// --- My Includes --- ///
+namespace hyperlab
+{
+    class Shaders;
+}
+
 /// --- VE-Suite Includes --- //
-class Shaders;
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+    class CADEntity;
+    class PhysicsSimulator;
+}
+}
+}
 
 // --- OSG Includes --- //
 namespace osg
@@ -16,88 +33,73 @@ namespace osg
     class TexGenNode;
     class Light;
     class LightSource;
-    class Material;
 }
 
+namespace hyperlab
+{
 class Scene
 {
 public:
-    Scene();
+    ///Constructor
+    Scene( ves::xplorer::scenegraph::DCS* pluginDCS,
+           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+
+    ///Destructor
     ~Scene();
 
-    osg::ref_ptr< osg::Group > InitScene();
+private:
+    void InitScene();
 
-    //Initial Effect
-    void Base();
-
-    //One effect
-    void Phong();
-    void Texture();
-    void PCF();
-    void Reflection();
-    void XRay();
-
-    //Two effect combos
-    void PhongTexture();
-    void PhongPCF();
-    void PhongReflection();
-    void TexturePCF();
-    void TextureReflection();
-    void PCFReflection();
-
-    //Three effect combos
-    void PhongTexturePCF();
-    void PhongTextureReflection();
-    void PhongPCFReflection();
-    void TexturePCFReflection();
-
-    //All effects
-    void PhongTexturePCFReflection();
-
-    void CreateLights();
     void CreateNodes();
-    void Defaults();
-    void WriteOutShadow();
-
+    void CreateLights();
     void CreateShadowTexture();
     void CreateJitterTexture();
 
-    osg::ref_ptr< osg::Group > root;
-    osg::ref_ptr< osg::Group > shadowed_scene;
-    osg::ref_ptr< osg::Group > non_shadowed_scene;
+    void WriteOutShadow();
 
-    osg::ref_ptr< osg::Light > light_1;
-    osg::ref_ptr< osg::LightSource > light_source_1;
-    osg::ref_ptr< osg::MatrixTransform > light_transform_1;
+    //Base Effects
+    void Defaults();
 
-    osg::ref_ptr< osg::Texture2D > shadow;
-    osg::ref_ptr< osg::Texture3D > jitter;
-    osg::ref_ptr< osg::Camera > camera;
-    osg::ref_ptr< osg::TexGenNode > texgenNode;
+    hyperlab::Shaders* shader;
 
-    Shaders* shader;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
 
-    osg::ref_ptr< osg::Group > coronas;
+    ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
-    osg::ref_ptr< osg::Node > aluminum_pipes;
-    osg::ref_ptr< osg::Node > aluminum_parts;
-    osg::ref_ptr< osg::Node > black;
-    osg::ref_ptr< osg::Node > brown;
-    osg::ref_ptr< osg::Node > details;
-    osg::ref_ptr< osg::Node > glass;
-    osg::ref_ptr< osg::Node > lights;
-    osg::ref_ptr< osg::Node > lt_green;
-    osg::ref_ptr< osg::Node > lt_grey;
-    osg::ref_ptr< osg::Node > orange;
-    osg::ref_ptr< osg::Node > red;
-    osg::ref_ptr< osg::Node > red_brown;
-    osg::ref_ptr< osg::Node > ceiling;
-    osg::ref_ptr< osg::Node > floor;
-    osg::ref_ptr< osg::Node > walls;
-    osg::ref_ptr< osg::Node > white_pipes;
-    osg::ref_ptr< osg::Node > white_ducts;
-    osg::ref_ptr< osg::Node > yellow;
+    osg::ref_ptr< osg::Group > m_shadowedScene;
 
+    osg::ref_ptr< osg::Texture2D > m_shadow;
+    osg::ref_ptr< osg::Texture3D > m_jitter;
+    osg::ref_ptr< osg::Camera > m_camera;
+    osg::ref_ptr< osg::TexGenNode > m_texgenNode;
+
+    //Variables to set up custom lighting for the scene
+    osg::ref_ptr< osg::Light > m_light;
+    osg::ref_ptr< osg::LightSource > m_lightSource;
+    osg::ref_ptr< osg::MatrixTransform > m_lightTransform;
+
+    //The room geometry nodes
+    ves::xplorer::scenegraph::CADEntity* m_room;
+
+    osg::ref_ptr< osg::Node > m_aluminumParts;
+    osg::ref_ptr< osg::Node > m_aluminumPipes;
+    osg::ref_ptr< osg::Node > m_black;
+    osg::ref_ptr< osg::Node > m_brown;
+    osg::ref_ptr< osg::Node > m_ceiling;
+    osg::ref_ptr< osg::Node > m_details;
+    osg::ref_ptr< osg::Node > m_floor;
+    osg::ref_ptr< osg::Node > m_glass;
+    osg::ref_ptr< osg::Node > m_ltGreen;
+    osg::ref_ptr< osg::Node > m_ltGrey;
+    osg::ref_ptr< osg::Node > m_orange;
+    osg::ref_ptr< osg::Node > m_red;
+    osg::ref_ptr< osg::Node > m_redBrown;
+    osg::ref_ptr< osg::Node > m_walls;
+    osg::ref_ptr< osg::Node > m_whitePipes;
+    osg::ref_ptr< osg::Node > m_whiteDucts;
+    osg::ref_ptr< osg::Node > m_yellow;
+
+/*
     osg::ref_ptr< osg::Node > frame;
     osg::ref_ptr< osg::Node > railing;
     osg::ref_ptr< osg::Node > plenum_piping;
@@ -116,44 +118,8 @@ public:
     osg::ref_ptr< osg::Node > turbine_exhaust;
     osg::ref_ptr< osg::Node > turbine_postcombustor;
     osg::ref_ptr< osg::Node > miscellaneous;
-
-    osg::ref_ptr< osg::Material > aluminum_pipes_material;
-    osg::ref_ptr< osg::Material > aluminum_parts_material;
-    osg::ref_ptr< osg::Material > black_material;
-    osg::ref_ptr< osg::Material > brown_material;
-    osg::ref_ptr< osg::Material > details_material;
-    osg::ref_ptr< osg::Material > glass_material;
-    osg::ref_ptr< osg::Material > lights_material;
-    osg::ref_ptr< osg::Material > lt_green_material;
-    osg::ref_ptr< osg::Material > lt_grey_material;
-    osg::ref_ptr< osg::Material > orange_material;
-    osg::ref_ptr< osg::Material > red_material;
-    osg::ref_ptr< osg::Material > red_brown_material;
-    osg::ref_ptr< osg::Material > ceiling_material;
-    osg::ref_ptr< osg::Material > floor_material;
-    osg::ref_ptr< osg::Material > walls_material;
-    osg::ref_ptr< osg::Material > white_pipes_material;
-    osg::ref_ptr< osg::Material > white_ducts_material;
-    osg::ref_ptr< osg::Material > yellow_material;
-
-    osg::ref_ptr< osg::Material > frame_material;
-    osg::ref_ptr< osg::Material > railing_material;
-    osg::ref_ptr< osg::Material > plenum_piping_material;
-    osg::ref_ptr< osg::Material > blower_components_material;
-    osg::ref_ptr< osg::Material > brackets_material;
-    osg::ref_ptr< osg::Material > cement_base_material;
-    osg::ref_ptr< osg::Material > combustor_piping_material;
-    osg::ref_ptr< osg::Material > compressor_inlet_material;
-    osg::ref_ptr< osg::Material > heat_exchanger_material;
-    osg::ref_ptr< osg::Material > heat_exchanger_sweep_material;
-    osg::ref_ptr< osg::Material > load_material;
-    osg::ref_ptr< osg::Material > plenum_system_material;
-    osg::ref_ptr< osg::Material > relief_piping_material;
-    osg::ref_ptr< osg::Material > shell_material;
-    osg::ref_ptr< osg::Material > stack_material;
-    osg::ref_ptr< osg::Material > turbine_exhaust_material;
-    osg::ref_ptr< osg::Material > turbine_postcombustor_material;
-    osg::ref_ptr< osg::Material > miscellaneous_material;
+    */
 };
+} //end hyperlab
 
 #endif //SCENE_H

@@ -18,11 +18,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::HyperLabGP()
 :
-cfdVEBaseClass()
+cfdVEBaseClass(),
+m_scene( 0 )
 {
     m_objectName = "HyperLabUI";
-
-    root=NULL;
 
     _phongID=0;
     _textureID=0;
@@ -34,16 +33,13 @@ cfdVEBaseClass()
     m_ehMap["AMBIENT_UPDATE"] = this;
     m_ehMap["DIFFUSE_UPDATE"] = this;
     m_ehMap["SPECULAR_UPDATE"] = this;
-
-    //_portNumber=0;
-    //_excelData=;
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::~HyperLabGP()
 {
-    if( root )
+    if( m_scene )
     {
-        delete root;
+        delete m_scene;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -51,12 +47,7 @@ void HyperLabGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-    root = new Scene;
-
-    //Set initial shader effect on all geometry
-    root->Texture();
-
-    veworldDCS->addChild( root->InitScene().get() );
+    m_scene = new hyperlab::Scene( m_dcs.get(), m_physicsSimulator );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::PreFrameUpdate()
@@ -74,6 +65,7 @@ void HyperLabGP::UpdateParams()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::SetCurrentCommand( ves::open::xml::Command* command)
 {
+    /*
     if( !command )
     {
         return;
@@ -216,5 +208,6 @@ void HyperLabGP::SetCurrentCommand( ves::open::xml::Command* command)
 
         root->light_1->setSpecular(osg::Vec4(_sr_color,_sg_color,_sb_color,1.0f));
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////

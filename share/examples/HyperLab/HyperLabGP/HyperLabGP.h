@@ -1,6 +1,12 @@
 #ifndef HYPER_LAB_GP_H
 #define HYPER_LAB_GP_H
 
+// --- My Includes --- //
+namespace hyperlab
+{
+    class Scene;
+}
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 
@@ -10,9 +16,6 @@
 #include <osg/Texture2D>
 #include <osg/CameraNode>
 #include <osg/TexGenNode>
-
-// --- My Includes --- //
-class Scene;
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -48,7 +51,7 @@ private:
     double _sg_color;
     double _sb_color;
 
-    Scene* root;
+    hyperlab::Scene* m_scene;
 
 };
 
