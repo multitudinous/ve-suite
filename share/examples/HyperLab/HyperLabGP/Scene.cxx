@@ -57,8 +57,8 @@ m_orange( 0 ),
 m_red( 0 ),
 m_redBrown( 0 ),
 m_walls( 0 ),
-m_whitePipes( 0 ),
 m_whiteDucts( 0 ),
+m_whitePipes( 0 ),
 m_yellow( 0 ),
 
 m_shadowedScene( new osg::Group() ),
@@ -97,7 +97,7 @@ void Scene::InitScene()
     //Setup the custom lighting for the scene
     CreateLights();
 
-    //CreateShadowTexture();
+    CreateShadowTexture();
 
     //CreateJitterTexture();
 }
@@ -112,6 +112,8 @@ void Scene::CreateLights()
 
     m_lightTransform->setMatrix( osg::Matrix::translate( osg::Vec3( 0.0f, 0.0f, 10000.0f ) ) );
     m_lightTransform->addChild( m_lightSource.get() );
+
+    m_pluginDCS->addChild( m_lightTransform.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateNodes()
@@ -151,10 +153,10 @@ void Scene::CreateNodes()
         m_redBrown = osgDB::readNodeFile( "./Models/IVEs/Room/RedBrown.ive" );
         m_room->GetDCS()->addChild( m_redBrown.get() );
         m_walls = osgDB::readNodeFile( "./Models/IVEs/Room/Walls.ive" );
-        roomPhysics->addChild( m_walls.get() );
-        m_whitePipes = osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
         m_room->GetDCS()->addChild( m_whitePipes.get() );
         m_whiteDucts = osgDB::readNodeFile( "./Models/IVEs/Room/WhiteDucts.ive" );
+        roomPhysics->addChild( m_walls.get() );
+        m_whitePipes = osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
         m_room->GetDCS()->addChild( m_whiteDucts.get() );
         m_yellow = osgDB::readNodeFile( "./Models/IVEs/Room/Yellow.ive" );
         m_room->GetDCS()->addChild( m_yellow.get() );
@@ -299,15 +301,6 @@ void Scene::CreateNodes()
         stateset = m_walls->getOrCreateStateSet();
         stateset->setAttributeAndModes( wallsMaterial.get(), osg::StateAttribute::ON );
 
-        osg::ref_ptr< osg::Material > whitePipesMaterial = new osg::Material();
-        whitePipesMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        whitePipesMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        whitePipesMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
-        whitePipesMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        whitePipesMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_whitePipes->getOrCreateStateSet();
-        stateset->setAttributeAndModes( whitePipesMaterial.get(), osg::StateAttribute::ON );
-
         osg::ref_ptr< osg::Material > whiteDuctsMaterial = new osg::Material();
         whiteDuctsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
         whiteDuctsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
@@ -316,6 +309,15 @@ void Scene::CreateNodes()
         whiteDuctsMaterial->setShininess( osg::Material::FRONT, 10.0f );
         stateset = m_whiteDucts->getOrCreateStateSet();
         stateset->setAttributeAndModes( whiteDuctsMaterial.get(), osg::StateAttribute::ON );
+
+        osg::ref_ptr< osg::Material > whitePipesMaterial = new osg::Material();
+        whitePipesMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        whitePipesMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        whitePipesMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
+        whitePipesMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        whitePipesMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        stateset = m_whitePipes->getOrCreateStateSet();
+        stateset->setAttributeAndModes( whitePipesMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > yellowMaterial = new osg::Material();
         yellowMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
@@ -438,8 +440,8 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_red.get() );
     m_shadowedScene->addChild( m_redBrown.get() );
     m_shadowedScene->addChild( m_walls.get() );
-    m_shadowedScene->addChild( m_whitePipes.get() );
     m_shadowedScene->addChild( m_whiteDucts.get() );
+    m_shadowedScene->addChild( m_whitePipes.get() );
     m_shadowedScene->addChild( m_yellow.get() );
 
     //m_nonShadowedScene->addChild( m_ceiling.get() );
@@ -453,6 +455,70 @@ void Scene::Defaults()
     m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
     m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
     m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+
+    /*
+    shader->Texture( 1, m_ceiling.get() );
+    shader->Texture( 0, m_details.get() );
+    shader->Texture( 1, m_floor.get() );
+    shader->Texture( 1, m_walls.get() );
+
+    shader->Phong( m_aluminumParts.get() );
+    shader->Phong( m_aluminumPipes.get() );
+    shader->Phong( m_black.get() );
+    shader->Phong( m_brown.get() );
+    shader->Base( m_glass.get() );
+    //shader->Phong( m_lights.get() );
+    shader->Phong( m_ltGreen.get() );
+    shader->Phong( m_ltGrey.get() );
+    shader->Phong( m_orange.get() );
+    shader->Phong( m_red.get() );
+    shader->Phong( m_redBrown.get() );
+    shader->Phong( m_whiteDucts.get() );
+    shader->Phong( m_whitePipes.get() );
+    shader->Phong( m_yellow.get() );
+    */
+
+    shader->Phong_Texture_PCF(1,m_shadow.get(),m_ceiling.get());
+    shader->Phong_Texture_PCF(1,m_shadow.get(),m_walls.get());
+
+    shader->Phong_Texture_PCF_Reflection(0,0.05f,m_shadow.get(),m_details.get());
+    shader->Phong_Texture_PCF_Reflection(1,0.05f,m_shadow.get(),m_floor.get());
+
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_aluminumParts.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_aluminumPipes.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_black.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_brown.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_glass.get());
+    //shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_lights.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_ltGreen.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_ltGrey.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_orange.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_red.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_redBrown.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_whiteDucts.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_whitePipes.get());
+    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_yellow.get());
+
+    /*
+    shader->Base(frame.get());
+    shader->Base(railing.get());
+    shader->Base(plenum_piping.get());
+    shader->Base(blower_components.get());
+    shader->Base(brackets.get());
+    shader->Base(cement_base.get());
+    shader->Base(combustor_piping.get());
+    shader->Base(compressor_inlet.get());
+    shader->Base(heat_exchanger.get());
+    shader->Base(heat_exchanger_sweep.get());
+    shader->Base(load.get());
+    shader->Base(plenum_system.get());
+    shader->Base(relief_piping.get());
+    shader->Base(shell.get());
+    shader->Base(stack.get());
+    shader->Base(turbine_exhaust.get());
+    shader->Base(turbine_postcombustor.get());
+    shader->Base(miscellaneous.get());
+    */
 
     //Set material defaults
 
@@ -655,7 +721,7 @@ void Scene::CreateShadowTexture()
         m_camera->setViewMatrixAsLookAt(position,bs.center(),osg::Vec3(0.0f,1.0f,0.0f));
 
         //Compute the matrix which takes a vertex from local coords into tex coords
-        osg::Matrix MVPT=m_camera->getViewMatrix()*
+        osg::Matrix MVPT = m_camera->getViewMatrix() *
         m_camera->getProjectionMatrix()*
         osg::Matrix::translate(1.0f,1.0f,1.0f)*
         osg::Matrix::scale(0.5f,0.5f,0.5f);
@@ -665,7 +731,8 @@ void Scene::CreateShadowTexture()
         m_texgenNode->getTexGen()->setPlanesFromMatrix(MVPT);
     }
 
-    //return m_shadow.get();
+    m_pluginDCS->addChild( m_camera.get() );
+    m_pluginDCS->addChild( m_texgenNode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation from Chapter 17, Efficient Soft-Edged Shadows Using Pixel Shader Branching, Yury Uralsky.

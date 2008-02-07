@@ -95,8 +95,8 @@ private:
     osg::ref_ptr< osg::Node > m_red;
     osg::ref_ptr< osg::Node > m_redBrown;
     osg::ref_ptr< osg::Node > m_walls;
-    osg::ref_ptr< osg::Node > m_whitePipes;
     osg::ref_ptr< osg::Node > m_whiteDucts;
+    osg::ref_ptr< osg::Node > m_whitePipes;
     osg::ref_ptr< osg::Node > m_yellow;
 
 /*
