@@ -458,28 +458,25 @@ void Scene::Defaults()
     m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
     m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
 
-    shader->SetOptions( m_ceiling.get(), false, false, NULL, NULL, &std::string( "WallMap" ) );
-    shader->SetOptions( m_details.get(), false, false, NULL, NULL, &std::string( "Decoration" ) );
-    shader->SetOptions( m_floor.get(), false, false, NULL, NULL, &std::string( "WallMap" ));
-    shader->SetOptions( m_walls.get(), false, false, NULL, NULL, &std::string( "WallMap" ) );
+    shader->SetOptions( m_ceiling.get(), false, false, &std::string( "WallMap" ), NULL, NULL );
+    shader->SetOptions( m_details.get(), false, false, &std::string( "Decoration" ), NULL, NULL );
+    shader->SetOptions( m_floor.get(), false, false, &std::string( "WallMap" ), NULL, NULL );
+    shader->SetOptions( m_walls.get(), false, false, &std::string( "WallMap" ), NULL, NULL );
 
-    /*
-    shader->SetOptions( m_aluminumParts.get() );
-    shader->SetOptions( m_aluminumPipes.get() );
-    shader->SetOptions( m_black.get() );
-    shader->SetOptions( m_brown.get() );
-    shader->SetOptions( m_glass.get() );
-    //shader->SetOptions( m_lights.get() );
-    shader->SetOptions( m_ltGreen.get() );
-    shader->SetOptions( m_ltGrey.get() );
-    shader->SetOptions( m_orange.get() );
-    shader->SetOptions( m_red.get() );
-    shader->SetOptions( m_redBrown.get() );
-    shader->SetOptions( m_whiteDucts.get() );
-    shader->SetOptions( m_whitePipes.get() );
-    shader->SetOptions( m_yellow.get() );
-    */
-
+    shader->SetOptions( m_aluminumParts.get(), true );
+    shader->SetOptions( m_aluminumPipes.get(), true );
+    shader->SetOptions( m_black.get(), true );
+    shader->SetOptions( m_brown.get(), true );
+    shader->SetOptions( m_glass.get(), true );
+    shader->SetOptions( m_lights.get(), true );
+    shader->SetOptions( m_ltGreen.get(), true );
+    shader->SetOptions( m_ltGrey.get(), true );
+    shader->SetOptions( m_orange.get(), true );
+    shader->SetOptions( m_red.get(), true );
+    shader->SetOptions( m_redBrown.get(), true );
+    shader->SetOptions( m_whiteDucts.get(), true );
+    shader->SetOptions( m_whitePipes.get(), true );
+    shader->SetOptions( m_yellow.get(), true );
 
     //Set material defaults
     /*

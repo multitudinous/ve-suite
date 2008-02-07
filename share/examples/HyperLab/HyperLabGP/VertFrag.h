@@ -3,8 +3,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 char base_vertex[] =
-    "varying vec3 color; \n"
-
     "void main() \n"
     "{ \n"
         "gl_Position = ftransform(); \n"
@@ -25,62 +23,48 @@ char base_vertex[] =
                              "gl_FrontMaterial.specular.rgb * \n"
                              "pow( NDotL, gl_FrontMaterial.shininess ); \n"
 
-        "color = TotalAmbient + TotalDiffuse + TotalSpecular; \n"
+        "vec3 color = TotalAmbient + TotalDiffuse + TotalSpecular; \n"
         "color *= gl_FrontMaterial.emission.rgb; \n"
+
+        "gl_FrontColor = vec4( color, 1.0 ); \n"
     "} \n";
 
 char base_fragment[] =
-    "varying vec3 color; \n"
-
     "void main() \n"
     "{ \n"
-        "gl_FragColor = vec4( color, 1.0 ); \n"
+        "gl_FragColor = gl_Color; \n"
     "} \n";
 
 ////////////////////////////////////////////////////////////////////////////////
 
 char xray_vertex[] =
-   "varying vec3 eyePos; \n"
-   "varying vec3 lightPos; \n"
-   "varying vec3 normal; \n"
+    "varying vec3 eyePos; \n"
+    "varying vec3 normal; \n"
 
-   "void main() \n"
-   "{ \n"
-         "gl_Position = ftransform(); \n"
+    "void main() \n"
+    "{ \n"
+        "gl_Position = ftransform(); \n"
 
-         "eyePos=vec3(gl_ModelViewMatrix*gl_Vertex); \n"
-         "lightPos=gl_LightSource[1].position.xyz; \n"
-         "normal=vec3(gl_NormalMatrix*gl_Normal); \n"
-   "} \n";
+        "eyePos = vec3( gl_ModelViewMatrix * gl_Vertex ); \n"
+        "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+    "} \n";
 
 char xray_fragment[] =
-   "varying vec3 eyePos; \n"
-   "varying vec3 lightPos; \n"
-   "varying vec3 normal; \n"
+    "varying vec3 eyePos; \n"
+    "varying vec3 lightPos; \n"
+    "varying vec3 normal; \n"
 
-   "void main() \n"
-   "{ \n"
-         "vec3 N=normalize(normal); \n"
-         "vec3 L=normalize(lightPos); \n"
-         "float NDotL=max(dot(N,L),0.0); \n" 
-   
-         "vec3 V=normalize(eyePos); \n"
-         "vec3 R=reflect(V,N); \n"
-         "float RDotL=max(dot(R,L),0.0); \n"
+    "void main() \n"
+    "{ \n"
+        "vec3 N = normalize( normal ); \n"
+        "vec3 V = normalize( eyePos ); \n"
 
-         "float opac=dot(N,V); \n"
-         "opac=abs(opac); \n"
-         "opac=1.0-pow(opac,3.0); \n"
+        "float opac = dot( N, V ); \n"
+        "opac = abs( opac ); \n"
+        "opac = 1.0 - pow( opac, 0.8 ); \n"
 
-         "vec3 TotalAmbient=gl_LightSource[1].ambient.rgb*gl_FrontMaterial.ambient.rgb; \n"
-         "vec3 TotalDiffuse=gl_LightSource[1].diffuse.rgb*gl_FrontMaterial.diffuse.rgb*NDotL; \n"
-         "vec3 TotalSpecular=gl_LightSource[1].specular.rgb*gl_FrontMaterial.specular.rgb*pow(RDotL,gl_FrontMaterial.shininess); \n"
-         
-         "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
-         "color *= gl_FrontMaterial.emission.rgb; \n"
-
-         "gl_FragColor = opac * vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
-   "} \n";
+        "gl_FragColor = opac * vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
+    "} \n";
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -99,7 +83,7 @@ char options_vertex[] =
         "lightPos = gl_LightSource[ 1 ].position.xyz; \n"
         "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
 
-        //"if( options.y ) \n"
+        //"if( options ) \n"
         //"{ \n"
             "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
             "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
@@ -107,7 +91,7 @@ char options_vertex[] =
             "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
         //"} \n"
 
-        //"if( options.w ) \n"
+        //"if( options ) \n"
         //"{ \n"
             "gl_TexCoord[ 1 ].st = gl_MultiTexCoord0.xy; \n"
         //"} \n"
@@ -142,7 +126,7 @@ char options_fragment[]=
                              "pow( RDotL, gl_FrontMaterial.shininess ); \n"
 
         "vec3 ambientDiffuse = TotalAmbient + TotalDiffuse; \n"
-        "if( options.w ) \n"
+        "if( options.y ) \n"
         "{ \n"
             "vec3 texture = vec3( texture2D( baseMap, gl_TexCoord[ 1 ].st ) ); \n"
             "ambientDiffuse *= texture; \n"
@@ -159,7 +143,7 @@ char options_fragment[]=
             "color *= gl_FrontMaterial.emission; \n"
         "} \n"
 
-        "if( options.y ) \n"
+        "if( options.w ) \n"
         "{ \n"
             "const float kTransparency = 0.5; \n"
 
@@ -200,7 +184,7 @@ char options_fragment[]=
         "} \n"
         "else \n"
         "{ \n"
-        "gl_FragColor = vec4( base, 1.0 ); \n"
+            "gl_FragColor = vec4( base, 1.0 ); \n"
         "} \n"
     "} \n";
 

@@ -47,9 +47,9 @@ void Shaders::ReadTextures()
 void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
                           bool xray,
                           bool phong,
-                          osg::ref_ptr< osg::Texture2D > shadow,
+                          std::string* baseMap,
                           float* reflectionPercent,
-                          std::string* baseMap )
+                          osg::ref_ptr< osg::Texture2D > shadow )
 {
     osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
     osg::ref_ptr< osg::Program > program = new osg::Program();
@@ -63,9 +63,9 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
 
     std::map< std::string, bool > optionsMap;
     optionsMap.insert( std::make_pair( "phong", false ) );
-    optionsMap.insert( std::make_pair( "shadowMap", false ) );
-    optionsMap.insert( std::make_pair( "envMap", false ) );
     optionsMap.insert( std::make_pair( "baseMap", false ) );
+    optionsMap.insert( std::make_pair( "envMap", false ) );
+    optionsMap.insert( std::make_pair( "shadowMap", false ) );
 
     if( xray )
     {
@@ -83,6 +83,28 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
         optionsMap[ "phong" ] = true;
     }
 
+    if( baseMap )
+    {
+        stateset->setTextureAttributeAndModes( 2, new osg::Texture2D( m_imageMap[ *baseMap ].get() ) );
+
+        osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 2 );
+        stateset->addUniform( baseMap.get() );
+
+        optionsMap[ "baseMap" ] = true;
+    }
+
+    if( reflectionPercent )
+    {
+        stateset->setTextureAttributeAndModes( 1, m_tcm.get(), osg::StateAttribute::ON );
+
+        //osg::ref_ptr< osg::Uniform > reflection_percentage = new osg::Uniform( "refl_perc", *reflectionPercent );
+        //stateset->addUniform( reflection_percentage.get() );
+        osg::ref_ptr< osg::Uniform > envMap = new osg::Uniform( "envMap", 1 );
+        stateset->addUniform( envMap.get() );
+
+        optionsMap[ "envMap" ] = true;
+    }
+
     if( shadow.valid() )
     {
         stateset->setTextureAttributeAndModes( 0, shadow.get(), osg::StateAttribute::ON );
@@ -97,32 +119,10 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
         optionsMap[ "shadowMap" ] = true;
     }
 
-    if( reflectionPercent )
-    {
-        stateset->setTextureAttributeAndModes( 1, m_tcm.get(), osg::StateAttribute::ON );
-
-        osg::ref_ptr< osg::Uniform > reflection_percentage = new osg::Uniform( "refl_perc", *reflectionPercent );
-        stateset->addUniform( reflection_percentage.get() );
-        osg::ref_ptr< osg::Uniform > envMap = new osg::Uniform( "envMap", 1 );
-        stateset->addUniform( envMap.get() );
-
-        optionsMap[ "envMap" ] = true;
-    }
-
-    if( baseMap )
-    {
-        stateset->setTextureAttributeAndModes( 2, new osg::Texture2D( m_imageMap[ *baseMap ].get() ) );
-
-        osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 2 );
-        stateset->addUniform( baseMap.get() );
-
-        optionsMap[ "baseMap" ] = true;
-    }
-
     osg::ref_ptr< osg::Uniform > options = new osg::Uniform( "options", optionsMap[ "phong" ],
-                                                                        optionsMap[ "shadowMap" ],
+                                                                        optionsMap[ "baseMap" ],
                                                                         optionsMap[ "envMap" ],
-                                                                        optionsMap[ "baseMap" ] );
+                                                                        optionsMap[ "shadowMap" ] );
     stateset->addUniform( options.get() );
 
     vertexShader->setShaderSource( options_vertex );

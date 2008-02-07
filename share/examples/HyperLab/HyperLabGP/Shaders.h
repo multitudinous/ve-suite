@@ -30,9 +30,9 @@ public:
     void SetOptions( osg::ref_ptr< osg::Node > node,
                      bool xray = false,
                      bool phong = false,
-                     osg::ref_ptr< osg::Texture2D > shadow = NULL,
+                     std::string* baseMap = NULL,
                      float* reflectionPercent = NULL,
-                     std::string* baseMap = NULL );
+                     osg::ref_ptr< osg::Texture2D > shadow = NULL );
 
     std::map< std::string, osg::ref_ptr< osg::Image > > m_imageMap;
     osg::ref_ptr< osg::TextureCubeMap > m_tcm;
