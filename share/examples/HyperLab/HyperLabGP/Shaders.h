@@ -14,9 +14,8 @@ namespace osg
 }
 
 // --- C/C++ Libraries
-#include <vector>
-
-typedef std::vector< osg::ref_ptr< osg::Image > > ImageList;
+#include <map>
+#include <string>
 
 namespace hyperlab
 {
@@ -28,30 +27,15 @@ public:
 
     void ReadTextures();
 
-    void Base( osg::ref_ptr< osg::Node > node );
+    void SetOptions( osg::ref_ptr< osg::Node > node,
+                     bool xray = false,
+                     bool phong = false,
+                     osg::ref_ptr< osg::Texture2D > shadow = NULL,
+                     float* reflectionPercent = NULL,
+                     std::string* baseMap = NULL );
 
-    void Phong( osg::ref_ptr< osg::Node > node );
-    void Texture( int tex_num, osg::ref_ptr< osg::Node > node );
-    void PCF( osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node );
-    void Reflection( float refl_perc, osg::ref_ptr< osg::Node > node );
-    void XRay( osg::ref_ptr< osg::Node > node );
-
-    void Phong_Texture( int tex_num, osg::ref_ptr< osg::Node > node );
-    void Phong_PCF( osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node );
-    void Phong_Reflection( float refl_perc, osg::ref_ptr< osg::Node > node );
-    void Texture_PCF( int tex_num, osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node);
-    void Texture_Reflection( int tex_num, float refl_perc, osg::ref_ptr< osg::Node > node);
-    void PCF_Reflection( float refl_perc, osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node );
-
-    void Phong_Texture_PCF( int tex_num, osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node );
-    void Phong_Texture_Reflection( int tex_num, float refl_perc, osg::ref_ptr< osg::Node > node );
-    void Phong_PCF_Reflection( float refl_perc, osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr<osg::Node> node );
-    void Texture_PCF_Reflection( int tex_num, float refl_perc, osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node );
-
-    void Phong_Texture_PCF_Reflection( int tex_num, float refl_perc, osg::ref_ptr< osg::Texture2D > shadow, osg::ref_ptr< osg::Node > node );
-
-    ImageList imageList;
-    osg::ref_ptr< osg::TextureCubeMap > tcm;
+    std::map< std::string, osg::ref_ptr< osg::Image > > m_imageMap;
+    osg::ref_ptr< osg::TextureCubeMap > m_tcm;
 };
 } //end hyperlab
 

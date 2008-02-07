@@ -51,6 +51,7 @@ m_ceiling( 0 ),
 m_details( 0 ),
 m_floor( 0 ),
 m_glass( 0 ),
+m_lights( 0 ),
 m_ltGreen( 0 ),
 m_ltGrey( 0 ),
 m_orange( 0 ),
@@ -61,16 +62,16 @@ m_whiteDucts( 0 ),
 m_whitePipes( 0 ),
 m_yellow( 0 ),
 
-m_shadowedScene( new osg::Group() ),
+m_shadowedScene( 0 ),
 
-m_shadow( new osg::Texture2D() ),
-m_jitter( new osg::Texture3D() ),
-m_camera( new osg::Camera() ),
-m_texgenNode( new osg::TexGenNode() ),
+m_shadow( 0 ),
+m_jitter( 0 ),
+m_camera( 0 ),
+m_texgenNode( 0 ),
 
-m_light( new osg::Light() ),
-m_lightSource( new osg::LightSource() ),
-m_lightTransform( new osg::MatrixTransform() )
+m_light( 0 ),
+m_lightSource( 0 ),
+m_lightTransform( 0 )
 {
     InitScene();
 
@@ -104,12 +105,15 @@ void Scene::InitScene()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateLights()
 {
+    m_light = new osg::Light();
     m_light->setLightNum( 1 );
     m_light->setPosition( osg::Vec4( 0.0f, 0.0f, 10000.0f, 0.0f ) );
 
+    m_lightSource = new osg::LightSource();
     m_lightSource->setLight( m_light.get() );
     m_lightSource->setLocalStateSetModes( osg::StateAttribute::ON );
 
+    m_lightTransform = new osg::MatrixTransform();
     m_lightTransform->setMatrix( osg::Matrix::translate( osg::Vec3( 0.0f, 0.0f, 10000.0f ) ) );
     m_lightTransform->addChild( m_lightSource.get() );
 
@@ -142,6 +146,8 @@ void Scene::CreateNodes()
         roomPhysics->addChild( m_floor.get() );
         m_glass = osgDB::readNodeFile( "./Models/IVEs/Room/Glass.ive" );
         m_room->GetDCS()->addChild( m_glass.get() );
+        m_lights = osgDB::readNodeFile( "./Models/IVEs/Room/Lights.ive" );
+        m_room->GetDCS()->addChild( m_lights.get() );
         m_ltGreen = osgDB::readNodeFile( "./Models/IVEs/Room/LtGreen.ive" );
         m_room->GetDCS()->addChild( m_ltGreen.get() );
         m_ltGrey = osgDB::readNodeFile( "./Models/IVEs/Room/LtGrey.ive" );
@@ -236,7 +242,6 @@ void Scene::CreateNodes()
         stateset = m_glass->getOrCreateStateSet();
         stateset->setAttributeAndModes( glassMaterial.get(), osg::StateAttribute::ON );
 
-        /*
         osg::ref_ptr< osg::Material > lightsMaterial = new osg::Material();
         lightsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
         lightsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
@@ -245,7 +250,6 @@ void Scene::CreateNodes()
         lightsMaterial->setShininess( osg::Material::FRONT, 15.0f );
         stateset = m_lights->getOrCreateStateSet();
         stateset->setAttributeAndModes( lightsMaterial.get(), osg::StateAttribute::ON );
-        */
 
         osg::ref_ptr< osg::Material > ltGreenMaterial = new osg::Material();
         ltGreenMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
@@ -428,6 +432,8 @@ void Scene::CreateNodes()
     m_room->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_room->GetPhysicsRigidBody()->StaticConcaveShape();
 
+    //Collect the showed nodes into a group for easy reference
+    m_shadowedScene = new osg::Group();
     m_shadowedScene->addChild( m_aluminumParts.get() );
     m_shadowedScene->addChild( m_aluminumPipes.get() );
     m_shadowedScene->addChild( m_black.get() );
@@ -443,10 +449,6 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_whiteDucts.get() );
     m_shadowedScene->addChild( m_whitePipes.get() );
     m_shadowedScene->addChild( m_yellow.get() );
-
-    //m_nonShadowedScene->addChild( m_ceiling.get() );
-    //m_nonShadowedScene->addChild( m_glass.get() );
-    //m_nonShadowedScene->addChild( m_lights.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::Defaults()
@@ -456,74 +458,31 @@ void Scene::Defaults()
     m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
     m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
 
-    /*
-    shader->Texture( 1, m_ceiling.get() );
-    shader->Texture( 0, m_details.get() );
-    shader->Texture( 1, m_floor.get() );
-    shader->Texture( 1, m_walls.get() );
-
-    shader->Phong( m_aluminumParts.get() );
-    shader->Phong( m_aluminumPipes.get() );
-    shader->Phong( m_black.get() );
-    shader->Phong( m_brown.get() );
-    shader->Base( m_glass.get() );
-    //shader->Phong( m_lights.get() );
-    shader->Phong( m_ltGreen.get() );
-    shader->Phong( m_ltGrey.get() );
-    shader->Phong( m_orange.get() );
-    shader->Phong( m_red.get() );
-    shader->Phong( m_redBrown.get() );
-    shader->Phong( m_whiteDucts.get() );
-    shader->Phong( m_whitePipes.get() );
-    shader->Phong( m_yellow.get() );
-    */
-
-    shader->Phong_Texture_PCF(1,m_shadow.get(),m_ceiling.get());
-    shader->Phong_Texture_PCF(1,m_shadow.get(),m_walls.get());
-
-    shader->Phong_Texture_PCF_Reflection(0,0.05f,m_shadow.get(),m_details.get());
-    shader->Phong_Texture_PCF_Reflection(1,0.05f,m_shadow.get(),m_floor.get());
-
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_aluminumParts.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_aluminumPipes.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_black.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_brown.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_glass.get());
-    //shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_lights.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_ltGreen.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_ltGrey.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_orange.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_red.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_redBrown.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_whiteDucts.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_whitePipes.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),m_yellow.get());
+    shader->SetOptions( m_ceiling.get(), false, false, NULL, NULL, &std::string( "WallMap" ) );
+    shader->SetOptions( m_details.get(), false, false, NULL, NULL, &std::string( "Decoration" ) );
+    shader->SetOptions( m_floor.get(), false, false, NULL, NULL, &std::string( "WallMap" ));
+    shader->SetOptions( m_walls.get(), false, false, NULL, NULL, &std::string( "WallMap" ) );
 
     /*
-    shader->Base(frame.get());
-    shader->Base(railing.get());
-    shader->Base(plenum_piping.get());
-    shader->Base(blower_components.get());
-    shader->Base(brackets.get());
-    shader->Base(cement_base.get());
-    shader->Base(combustor_piping.get());
-    shader->Base(compressor_inlet.get());
-    shader->Base(heat_exchanger.get());
-    shader->Base(heat_exchanger_sweep.get());
-    shader->Base(load.get());
-    shader->Base(plenum_system.get());
-    shader->Base(relief_piping.get());
-    shader->Base(shell.get());
-    shader->Base(stack.get());
-    shader->Base(turbine_exhaust.get());
-    shader->Base(turbine_postcombustor.get());
-    shader->Base(miscellaneous.get());
+    shader->SetOptions( m_aluminumParts.get() );
+    shader->SetOptions( m_aluminumPipes.get() );
+    shader->SetOptions( m_black.get() );
+    shader->SetOptions( m_brown.get() );
+    shader->SetOptions( m_glass.get() );
+    //shader->SetOptions( m_lights.get() );
+    shader->SetOptions( m_ltGreen.get() );
+    shader->SetOptions( m_ltGrey.get() );
+    shader->SetOptions( m_orange.get() );
+    shader->SetOptions( m_red.get() );
+    shader->SetOptions( m_redBrown.get() );
+    shader->SetOptions( m_whiteDucts.get() );
+    shader->SetOptions( m_whitePipes.get() );
+    shader->SetOptions( m_yellow.get() );
     */
+
 
     //Set material defaults
-
-
-/*
+    /*
     frame_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
     frame_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
     frame_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
@@ -636,11 +595,15 @@ void Scene::Defaults()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateShadowTexture()
 {
-    unsigned int tex_width = 4096;
-    unsigned int tex_height = 4096;
+    m_shadow = new osg::Texture2D();
+    m_camera = new osg::Camera();
+    m_texgenNode = new osg::TexGenNode();
+
+    unsigned int texWidth = 4096;
+    unsigned int texHeight = 4096;
 
     //Create the shadow texture
-    m_shadow->setTextureSize( tex_width, tex_height );
+    m_shadow->setTextureSize( texWidth, texHeight );
     m_shadow->setInternalFormat( GL_DEPTH_COMPONENT );
     m_shadow->setSourceType( GL_UNSIGNED_INT );
 
@@ -661,78 +624,80 @@ void Scene::CreateShadowTexture()
         m_camera->setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
 
         //Set viewport
-        m_camera->setViewport( 0, 0, tex_width, tex_height );
+        m_camera->setViewport( 0, 0, texWidth, texHeight );
 
-        osg::ref_ptr< osg::StateSet > local_stateset = m_camera->getOrCreateStateSet();
-        local_stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+        osg::ref_ptr< osg::StateSet > localStateset = m_camera->getOrCreateStateSet();
+        localStateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
         float factor = 0.0f;
         float units = 1.0f;
 
-        osg::ref_ptr<osg::PolygonOffset> polygon_offset = new osg::PolygonOffset();
-        polygon_offset->setFactor(factor);
-        polygon_offset->setUnits(units);
-        local_stateset->setAttribute(polygon_offset.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-        local_stateset->setMode(GL_POLYGON_OFFSET_FILL,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+        osg::ref_ptr< osg::PolygonOffset > polygonOffset = new osg::PolygonOffset();
+        polygonOffset->setFactor( factor );
+        polygonOffset->setUnits( units );
+        localStateset->setAttribute( polygonOffset.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        localStateset->setMode( GL_POLYGON_OFFSET_FILL, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
-        osg::ref_ptr<osg::CullFace> cull_face=new osg::CullFace;
-        cull_face->setMode(osg::CullFace::FRONT);
-        local_stateset->setAttribute(cull_face.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-        local_stateset->setMode(GL_CULL_FACE,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+        osg::ref_ptr< osg::CullFace > cullFace = new osg::CullFace();
+        cullFace->setMode( osg::CullFace::FRONT );
+        localStateset->setAttribute( cullFace.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        localStateset->setMode( GL_CULL_FACE, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
 
         //Set the camera to render before the main camera
-        m_camera->setRenderOrder(osg::Camera::PRE_RENDER);
+        m_camera->setRenderOrder( osg::Camera::PRE_RENDER );
 
         //Tell the camera to use OpenGL frame buffer object where supported
-        m_camera->setRenderTargetImplementation(osg::Camera::FRAME_BUFFER_OBJECT);
+        m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
 
         //Attach the texture and use it as the color buffer
-        m_camera->attach(osg::Camera::DEPTH_BUFFER,m_shadow.get());
+        m_camera->attach( osg::Camera::DEPTH_BUFFER, m_shadow.get() );
 
         //Add subgraph to render
-        m_camera->addChild(m_shadowedScene.get());
+        m_camera->addChild( m_shadowedScene.get() );
 
         //Create the texgen node to project the tex coords onto the subgraph  
-        m_texgenNode->setTextureUnit(0);
+        m_texgenNode->setTextureUnit( 0 );
 
         osg::BoundingSphere bs;
-        for(unsigned int i=0;i<m_camera->getNumChildren();++i)
+        for( unsigned int i = 0; i < m_camera->getNumChildren(); ++i )
         {
-            bs.expandBy(m_camera->getChild(i)->getBound());
+            bs.expandBy( m_camera->getChild( i )->getBound() );
         }
 
-        osg::Vec3 position=m_lightTransform->getMatrix().getTrans();
+        osg::Vec3 position = m_lightTransform->getMatrix().getTrans();
 
-        float centerDistance=(position-bs.center()).length();
+        float centerDistance = ( position - bs.center() ).length();
 
-        float znear=centerDistance-bs.radius();
-        float zfar=centerDistance+bs.radius();
-        float zNearRatio=0.001f;
-        if(znear<zfar*zNearRatio)
+        float znear = centerDistance - bs.radius();
+        float zfar = centerDistance + bs.radius();
+        float zNearRatio = 0.001f;
+        if( znear < zfar * zNearRatio )
         {
-            znear=zfar*zNearRatio;
+            znear = zfar * zNearRatio;
         }
 
         float top = ( bs.radius() / centerDistance ) * znear;
-        float right=top;
+        float right = top;
 
-        m_camera->setReferenceFrame(osg::Camera::ABSOLUTE_RF);
-        m_camera->setProjectionMatrixAsFrustum(-right,right,-top,top,znear,zfar);
-        m_camera->setViewMatrixAsLookAt(position,bs.center(),osg::Vec3(0.0f,1.0f,0.0f));
+        m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+        m_camera->setProjectionMatrixAsFrustum( -right, right, -top, top, znear, zfar );
+        m_camera->setViewMatrixAsLookAt( position, bs.center(), osg::Vec3( 0.0f, 1.0f, 0.0f ) );
 
         //Compute the matrix which takes a vertex from local coords into tex coords
         osg::Matrix MVPT = m_camera->getViewMatrix() *
-        m_camera->getProjectionMatrix()*
-        osg::Matrix::translate(1.0f,1.0f,1.0f)*
-        osg::Matrix::scale(0.5f,0.5f,0.5f);
+                           m_camera->getProjectionMatrix() *
+                           osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
+                           osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
 
         //Texture Generation
-        m_texgenNode->getTexGen()->setMode(osg::TexGen::EYE_LINEAR);
-        m_texgenNode->getTexGen()->setPlanesFromMatrix(MVPT);
+        m_texgenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
+        m_texgenNode->getTexGen()->setPlanesFromMatrix( MVPT );
     }
 
     m_pluginDCS->addChild( m_camera.get() );
     m_pluginDCS->addChild( m_texgenNode.get() );
+
+    WriteOutShadow();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation from Chapter 17, Efficient Soft-Edged Shadows Using Pixel Shader Branching, Yury Uralsky.
@@ -741,6 +706,8 @@ void Scene::CreateShadowTexture()
 // Creates a 3D texture containing jittering data used in the shader to take samples of the shadow map.
 void Scene::CreateJitterTexture()
 {
+    m_jitter = new osg::Texture3D();
+
     //Create a 3D texture with hw mipmapping
     m_jitter->setFilter( osg::Texture3D::MIN_FILTER, osg::Texture3D::NEAREST );
     m_jitter->setFilter( osg::Texture3D::MAG_FILTER, osg::Texture3D::NEAREST );
@@ -768,30 +735,30 @@ void Scene::CreateJitterTexture()
             for( unsigned int r = 0; r < R; ++r )
             {
                 const int x = r % ( gridW / 2 );
-                const int y = ( gridH - 1 ) - ( r / (gridW / 2) );
+                const int y = ( gridH - 1 ) - ( r / ( gridW / 2 ) );
 
                 //Generate points on a  regular gridW x gridH rectangular
                 //grid.   We  multiply  x   by  2  because,  we  treat  2
                 //consecutive x  each loop iteration.  Add 0.5f  to be in
                 //the center of the pixel. x, y belongs to [ 0.0, 1.0 ].
-                v[0] = static_cast< float >( x * 2     + 0.5f ) / gridW;
-                v[1] = static_cast< float >( y         + 0.5f ) / gridH;
-                v[2] = static_cast< float >( x * 2 + 1 + 0.5f ) / gridW;
-                v[3] = v[ 1 ];
+                v[ 0 ] = static_cast< float >( x * 2     + 0.5f ) / gridW;
+                v[ 1 ] = static_cast< float >( y         + 0.5f ) / gridH;
+                v[ 2 ] = static_cast< float >( x * 2 + 1 + 0.5f ) / gridW;
+                v[ 3 ] = v[ 1 ];
 
                 //Jitter positions. ( 0.5f / w ) == ( 1.0f / 2*w )
-                v[0] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridW );
-                v[1] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridH );
-                v[2] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridW );
-                v[3] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridH );
+                v[ 0 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridW );
+                v[ 1 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridH );
+                v[ 2 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridW );
+                v[ 3 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridH );
 
-                //Warp to disk; values in [-1,1]
-                d[0] = sqrtf( v[1] ) * cosf( 2.f * 3.1415926f * v[ 0 ] );
-                d[1] = sqrtf( v[1] ) * sinf( 2.f * 3.1415926f * v[ 0 ] );
-                d[2] = sqrtf( v[3] ) * cosf( 2.f * 3.1415926f * v[ 2 ] );
-                d[3] = sqrtf( v[3] ) * sinf( 2.f * 3.1415926f * v[ 2 ] );
+                //Warp to disk; values in [ -1, 1 ]
+                d[ 0 ] = sqrtf( v[ 1 ] ) * cosf( 2.f * 3.1415926f * v[ 0 ] );
+                d[ 1 ] = sqrtf( v[ 1 ] ) * sinf( 2.f * 3.1415926f * v[ 0 ] );
+                d[ 2 ] = sqrtf( v[ 3 ] ) * cosf( 2.f * 3.1415926f * v[ 2 ] );
+                d[ 3 ] = sqrtf( v[ 3 ] ) * sinf( 2.f * 3.1415926f * v[ 2 ] );
 
-                //store d into unsigned values [0,255]
+                //store d into unsigned values [ 0, 255 ]
                 const unsigned int tmp = ( ( r * size * size ) + ( t * size ) + s ) * 4;
                 data3D[ tmp + 0 ] = static_cast< unsigned char >( ( 1.f + d[ 0 ] ) * 127  );
                 data3D[ tmp + 1 ] = static_cast< unsigned char >( ( 1.f + d[ 1 ] ) * 127  );
@@ -816,8 +783,8 @@ void Scene::CreateJitterTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::WriteOutShadow()
 {
-    osg::ref_ptr<osg::Image> image=new osg::Image;
-    image->setInternalTextureFormat(GL_DEPTH_COMPONENT);
+    osg::ref_ptr< osg::Image > image = new osg::Image();
+    image->setInternalTextureFormat( GL_DEPTH_COMPONENT );
 
     class RGB
     {
@@ -834,357 +801,4 @@ void Scene::WriteOutShadow()
     image->readPixels(0,0,512,512,GL_LUMINANCE,GL_UNSIGNED_BYTE);
     osgDB::writeImageFile(*image.get(),"./Textures/m_shadow.bmp");*/
 }
-/*
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::Base()
-{
-    for(int i=0;i<(int)m_shadowedScene->getNumChildren();i++)
-    {
-        shader->Base(m_shadowedScene->getChild(i));
-    }
-
-    for(int i=0;i<(int)m_nonShadowedScene->getNumChildren();i++)
-    {
-        shader->Base(m_nonShadowedScene->getChild(i));
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::Phong()
-{
-    for(int i=0;i<(int)m_shadowedScene->getNumChildren();i++){
-        shader->Phong(m_shadowedScene->getChild(i));
-    }
-
-    for(int i=0;i<(int)m_nonShadowedScene->getNumChildren();i++){
-        shader->Phong(m_nonShadowedScene->getChild(i));
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::Texture()
-{
-    shader->Texture(1,ceiling.get());
-    shader->Texture(0,details.get());
-    shader->Texture(1,floor.get());
-    shader->Texture(1,walls.get());
-
-    shader->Base(aluminum_parts.get());
-    shader->Base(aluminum_pipes.get());
-    shader->Base(black.get());
-    shader->Base(brown.get());
-    shader->Base(glass.get());
-    shader->Base(lights.get());
-    shader->Base(lt_green.get());
-    shader->Base(lt_grey.get());
-    shader->Base(orange.get());
-    shader->Base(red.get());
-    shader->Base(red_brown.get());
-    shader->Base(white_ducts.get());
-    shader->Base(white_pipes.get());
-    shader->Base(yellow.get());
-
-    shader->Base(frame.get());
-    shader->Base(railing.get());
-    shader->Base(plenum_piping.get());
-    shader->Base(blower_components.get());
-    shader->Base(brackets.get());
-    shader->Base(cement_base.get());
-    shader->Base(combustor_piping.get());
-    shader->Base(compressor_inlet.get());
-    shader->Base(heat_exchanger.get());
-    shader->Base(heat_exchanger_sweep.get());
-    shader->Base(load.get());
-    shader->Base(plenum_system.get());
-    shader->Base(relief_piping.get());
-    shader->Base(shell.get());
-    shader->Base(stack.get());
-    shader->Base(turbine_exhaust.get());
-    shader->Base(turbine_postcombustor.get());
-    shader->Base(miscellaneous.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PCF()
-{
-    for(int i=0;i<(int)m_shadowedScene->getNumChildren();i++){
-      shader->PCF(m_shadow.get(),m_shadowedScene->getChild(i));
-    }
-
-    for(int i=0;i<(int)m_nonShadowedScene->getNumChildren();i++){
-      shader->PCF(m_shadow.get(),m_nonShadowedScene->getChild(i));
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::Reflection()
-{
-    shader->Reflection(0.05f,aluminum_parts.get());
-    shader->Reflection(0.05f,aluminum_pipes.get());
-    shader->Reflection(0.05f,black.get());
-    shader->Reflection(0.05f,brown.get());
-    shader->Reflection(0.05f,ceiling.get());
-    shader->Reflection(0.05f,details.get());
-    shader->Reflection(0.05f,floor.get());
-    shader->Reflection(0.05f,glass.get());
-    shader->Reflection(0.05f,lights.get());
-    shader->Reflection(0.05f,lt_green.get());
-    shader->Reflection(0.05f,lt_grey.get());
-    shader->Reflection(0.05f,orange.get());
-    shader->Reflection(0.05f,red.get());
-    shader->Reflection(0.05f,red_brown.get());
-    shader->Reflection(0.05f,walls.get());
-    shader->Reflection(0.05f,white_ducts.get());
-    shader->Reflection(0.05f,white_pipes.get());
-    shader->Reflection(0.05f,yellow.get());
-
-    shader->Reflection(0.05f,frame.get());
-    shader->Reflection(0.05f,railing.get());
-    shader->Reflection(0.05f,plenum_piping.get());
-    shader->Reflection(0.05f,blower_components.get());
-    shader->Reflection(0.05f,brackets.get());
-    shader->Reflection(0.05f,cement_base.get());
-    shader->Reflection(0.05f,combustor_piping.get());
-    shader->Reflection(0.05f,compressor_inlet.get());
-    shader->Reflection(0.05f,heat_exchanger.get());
-    shader->Reflection(0.05f,heat_exchanger_sweep.get());
-    shader->Reflection(0.05f,load.get());
-    shader->Reflection(0.05f,plenum_system.get());
-    shader->Reflection(0.05f,relief_piping.get());
-    shader->Reflection(0.05f,shell.get());
-    shader->Reflection(0.05f,stack.get());
-    shader->Reflection(0.05f,turbine_exhaust.get());
-    shader->Reflection(0.05f,turbine_postcombustor.get());
-    shader->Reflection(0.05f,miscellaneous.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::XRay()
-{
-    for(int i=0;i<(int)m_shadowedScene->getNumChildren();i++){
-      shader->XRay(m_shadowedScene->getChild(i));
-    }
-
-    for(int i=0;i<(int)m_nonShadowedScene->getNumChildren();i++){
-      shader->XRay(m_nonShadowedScene->getChild(i));
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongTexture()
-{
-    shader->Phong(aluminum_parts.get());
-    shader->Phong(aluminum_pipes.get());
-    shader->Phong(black.get());
-    shader->Phong(brown.get());
-    shader->Phong_Texture(1,ceiling.get());
-    shader->Phong_Texture(0,details.get());
-    shader->Phong_Texture(1,floor.get());
-    shader->Phong(glass.get());
-    shader->Phong(lights.get());
-    shader->Phong(lt_green.get());
-    shader->Phong(lt_grey.get());
-    shader->Phong(orange.get());
-    shader->Phong(red.get());
-    shader->Phong(red_brown.get());
-    shader->Phong_Texture(1,walls.get());
-    shader->Phong(white_ducts.get());
-    shader->Phong(white_pipes.get());
-    shader->Phong(yellow.get());
-
-    shader->Phong(frame.get());
-    shader->Phong(railing.get());
-    shader->Phong(plenum_piping.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongPCF()
-{
-    shader->Phong_PCF(m_shadow.get(),aluminum_parts.get());
-    shader->Phong_PCF(m_shadow.get(),aluminum_pipes.get());
-    shader->Phong_PCF(m_shadow.get(),black.get());
-    shader->Phong_PCF(m_shadow.get(),brown.get());
-    shader->Phong_PCF(m_shadow.get(),ceiling.get());
-    shader->Phong_PCF(m_shadow.get(),details.get());
-    shader->Phong_PCF(m_shadow.get(),floor.get());
-    shader->Phong_PCF(m_shadow.get(),glass.get());
-    shader->Phong_PCF(m_shadow.get(),lights.get());
-    shader->Phong_PCF(m_shadow.get(),lt_green.get());
-    shader->Phong_PCF(m_shadow.get(),lt_grey.get());
-    shader->Phong_PCF(m_shadow.get(),orange.get());
-    shader->Phong_PCF(m_shadow.get(),red.get());
-    shader->Phong_PCF(m_shadow.get(),red_brown.get());
-    shader->Phong_PCF(m_shadow.get(),walls.get());
-    shader->Phong_PCF(m_shadow.get(),white_ducts.get());
-    shader->Phong_PCF(m_shadow.get(),white_pipes.get());
-    shader->Phong_PCF(m_shadow.get(),yellow.get());
-
-    shader->Phong_PCF(m_shadow.get(),frame.get());
-    shader->Phong_PCF(m_shadow.get(),railing.get());
-    shader->Phong_PCF(m_shadow.get(),plenum_piping.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongReflection()
-{
-    shader->Phong(aluminum_parts.get());
-    shader->Phong(aluminum_pipes.get());
-    shader->Phong(black.get());
-    shader->Phong(brown.get());
-    shader->Phong(ceiling.get());
-    shader->Phong(details.get());
-    shader->Phong(floor.get());
-    shader->Phong(glass.get());
-    shader->Phong(lights.get());
-    shader->Phong(lt_green.get());
-    shader->Phong(lt_grey.get());
-    shader->Phong(orange.get());
-    shader->Phong(red.get());
-    shader->Phong(red_brown.get());
-    shader->Phong(walls.get());
-    shader->Phong(white_ducts.get());
-    shader->Phong(white_pipes.get());
-    shader->Phong(yellow.get());
-
-    shader->Phong_PCF(m_shadow.get(),frame.get());
-    shader->Phong_PCF(m_shadow.get(),railing.get());
-    shader->Phong_PCF(m_shadow.get(),plenum_piping.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::TexturePCF()
-{
-    shader->Texture_PCF(1,m_shadow.get(),ceiling.get());
-    shader->Texture_PCF(0,m_shadow.get(),details.get());
-    shader->Texture_PCF(1,m_shadow.get(),floor.get());
-    shader->Texture_PCF(1,m_shadow.get(),walls.get());
-
-    shader->PCF(m_shadow.get(),aluminum_parts.get());
-    shader->PCF(m_shadow.get(),aluminum_pipes.get());
-    shader->PCF(m_shadow.get(),black.get());
-    shader->PCF(m_shadow.get(),brown.get());
-    shader->PCF(m_shadow.get(),glass.get());
-    shader->PCF(m_shadow.get(),lights.get());
-    shader->PCF(m_shadow.get(),lt_green.get());
-    shader->PCF(m_shadow.get(),lt_grey.get());
-    shader->PCF(m_shadow.get(),orange.get());
-    shader->PCF(m_shadow.get(),red.get());
-    shader->PCF(m_shadow.get(),red_brown.get());
-    shader->PCF(m_shadow.get(),white_ducts.get());
-    shader->PCF(m_shadow.get(),white_pipes.get());
-    shader->PCF(m_shadow.get(),yellow.get());
-
-    shader->Phong_PCF(m_shadow.get(),frame.get());
-    shader->Phong_PCF(m_shadow.get(),railing.get());
-    shader->Phong_PCF(m_shadow.get(),plenum_piping.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::TextureReflection()
-{
-    shader->Texture(1,ceiling.get());
-    shader->Texture_Reflection(0,1.0f,details.get());
-    shader->Texture_Reflection(1,1.0f,floor.get());
-    shader->Texture(1,walls.get());
-
-    shader->Base(aluminum_parts.get());
-    shader->Base(aluminum_pipes.get());
-    shader->Base(black.get());
-    shader->Base(brown.get());
-    shader->Base(glass.get());
-    shader->Base(lights.get());
-    shader->Base(lt_green.get());
-    shader->Base(lt_grey.get());
-    shader->Base(orange.get());
-    shader->Base(red.get());
-    shader->Base(red_brown.get());
-    shader->Base(white_ducts.get());
-    shader->Base(white_pipes.get());
-    shader->Base(yellow.get());
-
-    shader->Base(frame.get());
-    shader->Base(railing.get());
-    shader->Base(plenum_piping.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PCFReflection()
-{
-    shader->PCF_Reflection(1.0f,m_shadow.get(),details.get());
-    shader->PCF_Reflection(1.0f,m_shadow.get(),floor.get());
-
-    shader->Base(aluminum_parts.get());
-    shader->Base(aluminum_pipes.get());
-    shader->Base(black.get());
-    shader->Base(brown.get());
-    shader->PCF(m_shadow.get(),ceiling.get());
-    shader->Base(glass.get());
-    shader->Base(lights.get());
-    shader->Base(lt_green.get());
-    shader->Base(lt_grey.get());
-    shader->Base(orange.get());
-    shader->Base(red.get());
-    shader->Base(red_brown.get());
-    shader->PCF(m_shadow.get(),walls.get());
-    shader->Base(white_ducts.get());
-    shader->Base(white_pipes.get());
-    shader->Base(yellow.get());
-
-    shader->Base(frame.get());
-    shader->Base(railing.get());
-    shader->Base(plenum_piping.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongTexturePCF()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongTextureReflection()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongPCFReflection()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::TexturePCFReflection()
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::PhongTexturePCFReflection()
-{
-    shader->Phong_Texture_PCF(1,m_shadow.get(),ceiling.get());
-    shader->Phong_Texture_PCF(1,m_shadow.get(),walls.get());
-
-    shader->Phong_Texture_PCF_Reflection(0,0.05f,m_shadow.get(),details.get());
-    shader->Phong_Texture_PCF_Reflection(1,0.05f,m_shadow.get(),floor.get());
-
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),aluminum_parts.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),aluminum_pipes.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),black.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),brown.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),glass.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),lights.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),lt_green.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),lt_grey.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),orange.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),red.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),red_brown.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),white_ducts.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),white_pipes.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),yellow.get());
-
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),frame.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),railing.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),plenum_piping.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),blower_components.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),brackets.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),cement_base.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),combustor_piping.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),compressor_inlet.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),heat_exchanger.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),heat_exchanger_sweep.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),load.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),plenum_system.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),relief_piping.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),shell.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),stack.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),turbine_exhaust.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),turbine_postcombustor.get());
-    shader->Phong_PCF_Reflection(0.05f,m_shadow.get(),miscellaneous.get());
-}
-////////////////////////////////////////////////////////////////////////////////
-*/

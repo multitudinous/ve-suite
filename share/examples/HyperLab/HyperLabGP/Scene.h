@@ -24,8 +24,8 @@ namespace scenegraph
 // --- OSG Includes --- //
 namespace osg
 {
-    class Group;
     class Node;
+    class Group;
     class MatrixTransform;
     class Texture2D;
     class Texture3D;
@@ -66,18 +66,6 @@ private:
 
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
-    osg::ref_ptr< osg::Group > m_shadowedScene;
-
-    osg::ref_ptr< osg::Texture2D > m_shadow;
-    osg::ref_ptr< osg::Texture3D > m_jitter;
-    osg::ref_ptr< osg::Camera > m_camera;
-    osg::ref_ptr< osg::TexGenNode > m_texgenNode;
-
-    //Variables to set up custom lighting for the scene
-    osg::ref_ptr< osg::Light > m_light;
-    osg::ref_ptr< osg::LightSource > m_lightSource;
-    osg::ref_ptr< osg::MatrixTransform > m_lightTransform;
-
     //The room geometry nodes
     ves::xplorer::scenegraph::CADEntity* m_room;
 
@@ -89,6 +77,7 @@ private:
     osg::ref_ptr< osg::Node > m_details;
     osg::ref_ptr< osg::Node > m_floor;
     osg::ref_ptr< osg::Node > m_glass;
+    osg::ref_ptr< osg::Node > m_lights;
     osg::ref_ptr< osg::Node > m_ltGreen;
     osg::ref_ptr< osg::Node > m_ltGrey;
     osg::ref_ptr< osg::Node > m_orange;
@@ -119,6 +108,19 @@ private:
     osg::ref_ptr< osg::Node > turbine_postcombustor;
     osg::ref_ptr< osg::Node > miscellaneous;
     */
+
+    //Variables to set up custom lighting for the scene
+    osg::ref_ptr< osg::Light > m_light;
+    osg::ref_ptr< osg::LightSource > m_lightSource;
+    osg::ref_ptr< osg::MatrixTransform > m_lightTransform;
+
+    //Variables to set up shadows for the scene
+    osg::ref_ptr< osg::Group > m_shadowedScene;
+
+    osg::ref_ptr< osg::Texture2D > m_shadow;
+    osg::ref_ptr< osg::Texture3D > m_jitter;
+    osg::ref_ptr< osg::Camera > m_camera;
+    osg::ref_ptr< osg::TexGenNode > m_texgenNode;
 };
 } //end hyperlab
 

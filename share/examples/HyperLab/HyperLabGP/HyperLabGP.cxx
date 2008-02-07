@@ -29,10 +29,10 @@ m_scene( 0 )
     _reflectionID=0;
     _xrayID=0;
 
-    m_ehMap["SHADER_EFFECTS_UPDATE"] = this;
-    m_ehMap["AMBIENT_UPDATE"] = this;
-    m_ehMap["DIFFUSE_UPDATE"] = this;
-    m_ehMap["SPECULAR_UPDATE"] = this;
+    m_ehMap[ "SHADER_EFFECTS_UPDATE" ] = this;
+    m_ehMap[ "AMBIENT_UPDATE" ] = this;
+    m_ehMap[ "DIFFUSE_UPDATE" ] = this;
+    m_ehMap[ "SPECULAR_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::~HyperLabGP()
