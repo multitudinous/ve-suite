@@ -10,6 +10,7 @@
 
 // --- wxWidgets Includes --- //
 #include <wx/sizer.h>
+#include <wx/radiobox.h>
 #include <wx/notebook.h>
 #include <wx/button.h>
 #include <wx/statbox.h>
@@ -26,7 +27,7 @@
 #include <wx/dialog.h>
 
 BEGIN_EVENT_TABLE( HyperLabUIDialog, wxDialog )
-EVT_CHECKLISTBOX( ID_SHADER_EFFECTS, HyperLabUIDialog::OnShaderEffects )
+EVT_RADIOBOX( ID_SHADER_EFFECTS, HyperLabUIDialog::OnShaderEffects )
 EVT_SLIDER( ID_AMBIENT_SLIDER, HyperLabUIDialog::OnAmbientRGB )
 EVT_SLIDER( ID_DIFFUSE_SLIDER, HyperLabUIDialog::OnDiffuseRGB )
 EVT_SLIDER( ID_SPECULAR_SLIDER, HyperLabUIDialog::OnSpecularRGB )
@@ -46,12 +47,6 @@ p_portNumber( portNumber )
     serviceList = service;
     portTextCtrl = 0;
 
-    phong_check = false;
-    texture_check = true;
-    shadow_check = false;
-    reflection_check = false;
-    xray_check = false;
-
     BuildGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -70,7 +65,7 @@ bool HyperLabUIDialog::TransferDataToWindow()
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HyperLabUIDialog::Lock(bool l)
+void HyperLabUIDialog::Lock( bool l )
 {
     ;
 }
@@ -89,19 +84,19 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* base_bs_2 = new wxBoxSizer( wxVERTICAL );
     base_bs_1->Add( base_bs_2, 1,wxGROW | wxALL, 5 );
 
-    wxBoxSizer* base_bs_3=new wxBoxSizer(wxHORIZONTAL);
-    base_bs_2->Add(base_bs_3,0,wxALIGN_LEFT|wxALL,5);
+    wxBoxSizer* base_bs_3 = new wxBoxSizer( wxHORIZONTAL );
+    base_bs_2->Add( base_bs_3, 0, wxALIGN_LEFT | wxALL, 5 );
 
-    wxBoxSizer* base_bs_4=new wxBoxSizer(wxHORIZONTAL);
-    base_bs_3->Add(base_bs_4,0,wxALIGN_CENTER_VERTICAL|wxALL,5);
+    wxBoxSizer* base_bs_4 = new wxBoxSizer( wxHORIZONTAL );
+    base_bs_3->Add( base_bs_4, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxIcon bitmap( _("./Icons/vesuite.ico"), wxBITMAP_TYPE_ICO);
+    wxIcon bitmap( _( "./Icons/vesuite.ico" ), wxBITMAP_TYPE_ICO );
     wxStaticBitmap* base_sbm_1=new wxStaticBitmap(itemDialog,wxID_STATIC,bitmap,wxDefaultPosition,wxSize(32,32),0);
     base_bs_4->Add(base_sbm_1,0,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
-    wxStaticText* base_st_1=new wxStaticText(itemDialog,wxID_STATIC,_("  Hyper Controls  "),wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER);
+    wxStaticText* base_st_1=new wxStaticText(itemDialog,wxID_STATIC,_("  Hyper Controls  "),wxDefaultPosition,wxDefaultSize,wxDEFAULT);
     base_st_1->SetForegroundColour(wxColour(255,255,255));
-    base_st_1->SetBackgroundColour(wxColour(128,128,64));
+    base_st_1->SetBackgroundColour(wxColour(0,0,0));
     base_st_1->SetFont(wxFont(10,wxNORMAL,wxNORMAL,wxBOLD,false));
     base_bs_4->Add(base_st_1,0,wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE,5);
 
@@ -114,7 +109,7 @@ void HyperLabUIDialog::BuildGUI()
 
     //Unit Panel
     wxPanel* unit_panel=new wxPanel(notebook,ID_UNIT_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
-    unit_panel->SetBackgroundColour(wxColour(85,0,0));
+    unit_panel->SetBackgroundColour(wxColour(255,144,30));
     wxBoxSizer* unit_panel_bs_1=new wxBoxSizer(wxVERTICAL);
     unit_panel->SetSizer(unit_panel_bs_1);
 
@@ -122,42 +117,34 @@ void HyperLabUIDialog::BuildGUI()
 
     //Physics Panel
     wxPanel* physics_panel=new wxPanel(notebook,ID_PHYSICS_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
-    physics_panel->SetBackgroundColour(wxColour(85,0,0));
+    physics_panel->SetBackgroundColour(wxColour(255,144,30));
     wxBoxSizer* physics_panel_bs_1=new wxBoxSizer(wxVERTICAL);
     physics_panel->SetSizer(physics_panel_bs_1);
 
-    notebook->AddPage(physics_panel,_("Physics") );
+    notebook->AddPage( physics_panel, _( "Physics" ) );
 
     //Material Panel
     wxPanel* material_panel=new wxPanel(notebook,ID_MATERIAL_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
-    material_panel->SetBackgroundColour(wxColour(85,0,0));
-    wxBoxSizer* material_panel_bs_1=new wxBoxSizer(wxVERTICAL);
+    material_panel->SetBackgroundColour(wxColour(255,144,30));
+    wxBoxSizer* material_panel_bs_1=new wxBoxSizer(wxHORIZONTAL);
     material_panel->SetSizer(material_panel_bs_1);
 
-    wxBoxSizer* material_panel_bs_2=new wxBoxSizer(wxVERTICAL);
-    material_panel->SetSizer(material_panel_bs_2);
-
-    wxStaticText* material_panel_st_1=new wxStaticText(material_panel,wxID_STATIC,_("Shader Effects:"),wxDefaultPosition,wxDefaultSize,0);
-    material_panel_st_1->SetForegroundColour(wxColour(255,255,255));
-    material_panel_st_1->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,true));
-    material_panel_bs_2->Add(material_panel_st_1,0,wxALIGN_LEFT|wxALL|wxADJUST_MINSIZE,5);
-
-    wxString material_panel_clb_strings[]={_("Phong"),_("Texture"),_("Shadow"),_("Reflection"),_("X-Ray")};
-    material_panel_clb_se=new wxCheckListBox(material_panel,ID_SHADER_EFFECTS,wxDefaultPosition,wxDefaultSize,5,material_panel_clb_strings,wxLB_SINGLE|wxSUNKEN_BORDER);
-    material_panel_clb_se->Check(1,true);
-    material_panel_bs_2->Add(material_panel_clb_se,0,wxALIGN_LEFT|wxALL,5);
+    wxString material_panel_clb_strings[] = { _( "Default Effects" ), _( "Advanced Effects" ), _( "X-Ray Effects" ) };
+    _CycleRadioBox = new wxRadioBox( material_panel, ID_SHADER_EFFECTS, _("Shader Effects"), wxDefaultPosition, wxDefaultSize, 3, material_panel_clb_strings, 1, wxRA_SPECIFY_COLS );
+  
+    material_panel_bs_1->Add( _CycleRadioBox, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxBOTTOM, 10 );
 
     notebook->AddPage(material_panel,_("Material") );
 
     //Light Panel
     wxPanel* light_panel=new wxPanel(notebook,ID_LIGHT_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);
-    light_panel->SetBackgroundColour(wxColour(85,0,0));
+    light_panel->SetBackgroundColour(wxColour(255,144,30));
     wxBoxSizer* light_panel_bs_1=new wxBoxSizer(wxVERTICAL);
     light_panel->SetSizer(light_panel_bs_1);
 
     wxStaticText* light_panel_st_1=new wxStaticText(light_panel,wxID_STATIC, _("Ambient"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_1->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_1->SetFont(wxFont(9,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_1->SetFont(wxFont(9,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_1->Add(light_panel_st_1,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxTOP|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_2=new wxBoxSizer(wxHORIZONTAL);
@@ -168,7 +155,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_2=new wxStaticText(light_panel,wxID_STATIC,_("R:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_2->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_2->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_2->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_2->Add(light_panel_st_2,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_3=new wxBoxSizer(wxHORIZONTAL);
@@ -176,7 +163,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_3=new wxStaticText(light_panel,wxID_STATIC,_("G:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_3->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_3->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_3->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_2->Add(light_panel_st_3,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_4=new wxBoxSizer(wxHORIZONTAL);
@@ -184,7 +171,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_4=new wxStaticText(light_panel,wxID_STATIC,_("B:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_4->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_4->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_4->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_2->Add(light_panel_st_4,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_5=new wxBoxSizer(wxHORIZONTAL);
@@ -192,17 +179,17 @@ void HyperLabUIDialog::BuildGUI()
 
     light_panel_sl_ar=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_ar->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_ar->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_ar->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_5->Add(light_panel_sl_ar,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     light_panel_sl_ag=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_ag->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_ag->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_ag->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_5->Add(light_panel_sl_ag,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     light_panel_sl_ab=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_ab->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_ab->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_ab->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_5->Add(light_panel_sl_ab,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     wxStaticLine* light_panel_line_1=new wxStaticLine(light_panel,wxID_STATIC,wxDefaultPosition,wxDefaultSize,wxLI_HORIZONTAL);
@@ -213,7 +200,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_5=new wxStaticText(light_panel,wxID_STATIC,_("Diffuse"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_5->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_5->SetFont(wxFont(9,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_5->SetFont(wxFont(9,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_1->Add(light_panel_st_5,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_7=new wxBoxSizer(wxHORIZONTAL);
@@ -224,7 +211,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_6=new wxStaticText(light_panel,wxID_STATIC,_("R:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_6->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_6->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_6->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_7->Add(light_panel_st_6,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_8=new wxBoxSizer(wxHORIZONTAL);
@@ -232,7 +219,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_7=new wxStaticText(light_panel,wxID_STATIC,_("G:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_7->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_7->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_7->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_7->Add(light_panel_st_7,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_9=new wxBoxSizer(wxHORIZONTAL);
@@ -240,7 +227,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_8=new wxStaticText(light_panel,wxID_STATIC,_("B:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_8->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_8->SetFont(wxFont(8,wxDECORATIVE, wxNORMAL, wxBOLD,false));
+    light_panel_st_8->SetFont(wxFont(8,wxNORMAL, wxNORMAL, wxBOLD,false));
     light_panel_bs_7->Add(light_panel_st_8,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_10=new wxBoxSizer(wxHORIZONTAL);
@@ -248,17 +235,17 @@ void HyperLabUIDialog::BuildGUI()
 
     light_panel_sl_dr=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,231,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_dr->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_dr->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_dr->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_10->Add(light_panel_sl_dr,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     light_panel_sl_dg=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,231,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_dg->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_dg->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_dg->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_10->Add(light_panel_sl_dg,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     light_panel_sl_db=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,115,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_db->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_db->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_db->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_10->Add(light_panel_sl_db,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     wxStaticLine* light_panel_line_2=new wxStaticLine(light_panel,wxID_STATIC,wxDefaultPosition,wxDefaultSize,wxLI_HORIZONTAL);
@@ -269,7 +256,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_9=new wxStaticText(light_panel,wxID_STATIC,_("Specular"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_9->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_9->SetFont(wxFont(9,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_9->SetFont(wxFont(9,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_1->Add(light_panel_st_9,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_12=new wxBoxSizer(wxHORIZONTAL);
@@ -280,7 +267,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_10=new wxStaticText(light_panel,wxID_STATIC,_("R:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_10->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_10->SetFont(wxFont(8,wxDECORATIVE, wxNORMAL, wxBOLD,false));
+    light_panel_st_10->SetFont(wxFont(8,wxNORMAL, wxNORMAL, wxBOLD,false));
     light_panel_bs_12->Add(light_panel_st_10,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_13=new wxBoxSizer(wxHORIZONTAL);
@@ -288,7 +275,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_11=new wxStaticText(light_panel,wxID_STATIC,_("G:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_11->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_11->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_st_11->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_12->Add(light_panel_st_11,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_14=new wxBoxSizer(wxHORIZONTAL);
@@ -296,7 +283,7 @@ void HyperLabUIDialog::BuildGUI()
 
     wxStaticText* light_panel_st_12=new wxStaticText(light_panel,wxID_STATIC,_("B:"),wxDefaultPosition,wxDefaultSize,0);
     light_panel_st_12->SetForegroundColour(wxColour(255,255,255));
-    light_panel_st_12->SetFont(wxFont(8,wxDECORATIVE, wxNORMAL, wxBOLD,false));
+    light_panel_st_12->SetFont(wxFont(8,wxNORMAL, wxNORMAL, wxBOLD,false));
     light_panel_bs_12->Add(light_panel_st_12,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT|wxADJUST_MINSIZE,5);
 
     wxBoxSizer* light_panel_bs_15=new wxBoxSizer(wxHORIZONTAL);
@@ -304,17 +291,17 @@ void HyperLabUIDialog::BuildGUI()
 
     light_panel_sl_sr=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_sr->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_sr->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_sr->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_15->Add(light_panel_sl_sr,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     light_panel_sl_sg=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_sg->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_sg->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_sg->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_15->Add(light_panel_sl_sg,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     light_panel_sl_sb=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
     light_panel_sl_sb->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_sb->SetFont(wxFont(8,wxDECORATIVE,wxNORMAL,wxBOLD,false));
+    light_panel_sl_sb->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
     light_panel_bs_15->Add(light_panel_sl_sb,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     wxStaticLine* light_panel_line_3=new wxStaticLine(light_panel,wxID_STATIC,wxDefaultPosition,wxDefaultSize,wxLI_HORIZONTAL);
@@ -350,6 +337,7 @@ void HyperLabUIDialog::UpdateGUI()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::OnShaderEffects( wxCommandEvent& event )
 {
+    /*
     static bool xray_hold = false;
 
     phong_check=material_panel_clb_se->IsChecked(0);
@@ -378,11 +366,9 @@ void HyperLabUIDialog::OnShaderEffects( wxCommandEvent& event )
     xray_hold=xray_check;
     }
 
-    phong_check=material_panel_clb_se->IsChecked(0);
-    texture_check=material_panel_clb_se->IsChecked(1);
-    shadow_check=material_panel_clb_se->IsChecked(2);
-    reflection_check=material_panel_clb_se->IsChecked(3);
-    xray_check=material_panel_clb_se->IsChecked(4);
+    bool default_check = material_panel_clb_se->IsChecked(0);
+    bool advanced_check = material_panel_clb_se->IsChecked(1);
+    bool xray_check = material_panel_clb_se->IsChecked(2);
 
     //Build the command
     command_name=std::string("SHADER_EFFECTS_UPDATE");
@@ -406,30 +392,31 @@ void HyperLabUIDialog::OnShaderEffects( wxCommandEvent& event )
     ves::open::xml::DataValuePairSharedPtr xrayID_DVP=new ves::open::xml::DataValuePair();
     xrayID_DVP->SetData("xrayID",(unsigned int)(xray_check));
     instructions.push_back(xrayID_DVP);
-
+*/
     SendCommandsToXplorer();
     ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::OnAmbientRGB( wxCommandEvent& event )
 {
-    ambient_red=light_panel_sl_ar->GetValue()/256.0f;
-    ambient_green=light_panel_sl_ag->GetValue()/256.0f;
-    ambient_blue=light_panel_sl_ab->GetValue()/256.0f;
+    double data[ 3 ];
+    data[ 1 ] = light_panel_sl_ar->GetValue() / 256.0f;
+    data[ 2 ] = light_panel_sl_ag->GetValue() / 256.0f;
+    data[ 3 ] = light_panel_sl_ab->GetValue() / 256.0f;
 
     //Build the command
     command_name=std::string("AMBIENT_UPDATE");
 
     ves::open::xml::DataValuePairSharedPtr ar_color_DVP=new ves::open::xml::DataValuePair();
-    ar_color_DVP->SetData(std::string("ar_color"),ambient_red);
+    ar_color_DVP->SetData(std::string("ar_color"),data[ 1 ]);
     instructions.push_back(ar_color_DVP);
 
     ves::open::xml::DataValuePairSharedPtr ag_color_DVP=new ves::open::xml::DataValuePair();
-    ag_color_DVP->SetData(std::string("ag_color"),ambient_green);
+    ag_color_DVP->SetData(std::string("ag_color"),data[ 2 ]);
     instructions.push_back(ag_color_DVP);
 
     ves::open::xml::DataValuePairSharedPtr ab_color_DVP=new ves::open::xml::DataValuePair();
-    ab_color_DVP->SetData("ab_color",ambient_blue);
+    ab_color_DVP->SetData("ab_color",data[ 3 ]);
     instructions.push_back(ab_color_DVP);
 
     SendCommandsToXplorer();
@@ -438,23 +425,25 @@ void HyperLabUIDialog::OnAmbientRGB( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::OnDiffuseRGB( wxCommandEvent& event )
 {
-    diffuse_red=light_panel_sl_dr->GetValue()/256.0f;
-    diffuse_green=light_panel_sl_dg->GetValue()/256.0f;
-    diffuse_blue=light_panel_sl_db->GetValue()/256.0f;
+    double data[ 3 ];
+
+    data[ 1 ]=light_panel_sl_dr->GetValue()/256.0f;
+    data[ 2 ]=light_panel_sl_dg->GetValue()/256.0f;
+    data[ 3 ]=light_panel_sl_db->GetValue()/256.0f;
 
     //Build the command
     command_name=std::string("DIFFUSE_UPDATE");
 
     ves::open::xml::DataValuePairSharedPtr dr_color_DVP=new ves::open::xml::DataValuePair();
-    dr_color_DVP->SetData(std::string("dr_color"),diffuse_red);
+    dr_color_DVP->SetData(std::string("dr_color"),data[ 1 ]);
     instructions.push_back(dr_color_DVP);
 
     ves::open::xml::DataValuePairSharedPtr dgID_DVP=new ves::open::xml::DataValuePair();
-    dgID_DVP->SetData(std::string("dg_color"),diffuse_green);
+    dgID_DVP->SetData(std::string("dg_color"),data[ 2 ]);
     instructions.push_back(dgID_DVP);
 
     ves::open::xml::DataValuePairSharedPtr db_color_DVP=new ves::open::xml::DataValuePair();
-    db_color_DVP->SetData("db_color",diffuse_blue);
+    db_color_DVP->SetData("db_color",data[ 3 ]);
     instructions.push_back(db_color_DVP);
 
     SendCommandsToXplorer();
@@ -463,23 +452,25 @@ void HyperLabUIDialog::OnDiffuseRGB( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::OnSpecularRGB( wxCommandEvent& event )
 {
-    specular_red=light_panel_sl_sr->GetValue()/256.0f;
-    specular_green=light_panel_sl_sg->GetValue()/256.0f;
-    specular_blue=light_panel_sl_sb->GetValue()/256.0f;
+    double data[ 3 ];
+
+    data[ 1 ]=light_panel_sl_sr->GetValue()/256.0f;
+    data[ 2 ]=light_panel_sl_sg->GetValue()/256.0f;
+    data[ 3 ]=light_panel_sl_sb->GetValue()/256.0f;
 
     //Build the command
     command_name=std::string("SPECULAR_UPDATE");
 
     ves::open::xml::DataValuePairSharedPtr sr_color_DVP=new ves::open::xml::DataValuePair();
-    sr_color_DVP->SetData(std::string("sr_color"),specular_red);
+    sr_color_DVP->SetData(std::string("sr_color"),data[ 1 ]);
     instructions.push_back(sr_color_DVP);
 
     ves::open::xml::DataValuePairSharedPtr sg_color_DVP=new ves::open::xml::DataValuePair();
-    sg_color_DVP->SetData(std::string("sg_color"),specular_green);
+    sg_color_DVP->SetData(std::string("sg_color"),data[ 2 ]);
     instructions.push_back(sg_color_DVP);
 
     ves::open::xml::DataValuePairSharedPtr sb_color_DVP=new ves::open::xml::DataValuePair();
-    sb_color_DVP->SetData("sb_color",specular_blue);
+    sb_color_DVP->SetData("sb_color",data[ 3 ]);
     instructions.push_back(sb_color_DVP);
 
     SendCommandsToXplorer();

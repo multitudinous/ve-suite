@@ -35,24 +35,7 @@ private:
     std::string _portNumber;
     std::string _excelData;
 
-    unsigned int _phongID;
-    unsigned int _textureID;
-    unsigned int _shadowID;
-    unsigned int _reflectionID;
-    unsigned int _xrayID;
-
-    double _ar_color;
-    double _ag_color;
-    double _ab_color;
-    double _dr_color;
-    double _dg_color;
-    double _db_color;
-    double _sr_color;
-    double _sg_color;
-    double _sb_color;
-
     hyperlab::Scene* m_scene;
-
 };
 
 extern "C"

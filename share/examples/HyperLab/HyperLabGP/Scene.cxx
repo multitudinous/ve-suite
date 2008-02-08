@@ -75,7 +75,7 @@ m_lightTransform( 0 )
 {
     InitScene();
 
-    Defaults();
+    DefaultVisuals();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Scene::~Scene()
@@ -451,17 +451,25 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_yellow.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::Defaults()
+void Scene::DefaultVisuals()
 {
     //Set light defaults
     m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
     m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
     m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
 
-    shader->SetOptions( m_ceiling.get(), false, false, &std::string( "WallMap" ), NULL, NULL );
-    shader->SetOptions( m_details.get(), false, false, &std::string( "Decoration" ), NULL, NULL );
-    shader->SetOptions( m_floor.get(), false, false, &std::string( "WallMap" ), NULL, NULL );
-    shader->SetOptions( m_walls.get(), false, false, &std::string( "WallMap" ), NULL, NULL );
+    shader->SetOptions( m_ceiling.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_details.get(),
+                        false, false,
+                        &static_cast< std::string >( "Decoration" ) );
+    shader->SetOptions( m_floor.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_walls.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
 
     shader->SetOptions( m_aluminumParts.get(), true );
     shader->SetOptions( m_aluminumPipes.get(), true );
@@ -590,6 +598,59 @@ void Scene::Defaults()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Scene::AdvancedVisuals()
+{
+    shader->SetOptions( m_ceiling.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_details.get(),
+                        false, false,
+                        &static_cast< std::string >( "Decoration" ) );
+    shader->SetOptions( m_floor.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_walls.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+
+    shader->SetOptions( m_aluminumParts.get(), true );
+    shader->SetOptions( m_aluminumPipes.get(), true );
+    shader->SetOptions( m_black.get(), true );
+    shader->SetOptions( m_brown.get(), true );
+    shader->SetOptions( m_glass.get(), true );
+    shader->SetOptions( m_lights.get(), true );
+    shader->SetOptions( m_ltGreen.get(), true );
+    shader->SetOptions( m_ltGrey.get(), true );
+    shader->SetOptions( m_orange.get(), true );
+    shader->SetOptions( m_red.get(), true );
+    shader->SetOptions( m_redBrown.get(), true );
+    shader->SetOptions( m_whiteDucts.get(), true );
+    shader->SetOptions( m_whitePipes.get(), true );
+    shader->SetOptions( m_yellow.get(), true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Scene::XRay()
+{
+    shader->SetOptions( m_aluminumParts.get(), true );
+    shader->SetOptions( m_aluminumPipes.get(), true );
+    shader->SetOptions( m_black.get(), true );
+    shader->SetOptions( m_brown.get(), true );
+    shader->SetOptions( m_ceiling.get(), true );
+    shader->SetOptions( m_details.get(), true );
+    shader->SetOptions( m_floor.get(), true );
+    shader->SetOptions( m_glass.get(), true );
+    shader->SetOptions( m_lights.get(), true );
+    shader->SetOptions( m_ltGreen.get(), true );
+    shader->SetOptions( m_ltGrey.get(), true );
+    shader->SetOptions( m_orange.get(), true );
+    shader->SetOptions( m_red.get(), true );
+    shader->SetOptions( m_redBrown.get(), true );
+    shader->SetOptions( m_walls.get(), true );
+    shader->SetOptions( m_whiteDucts.get(), true );
+    shader->SetOptions( m_whitePipes.get(), true );
+    shader->SetOptions( m_yellow.get(), true );
+}
+////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateShadowTexture()
 {
     m_shadow = new osg::Texture2D();
@@ -693,8 +754,6 @@ void Scene::CreateShadowTexture()
 
     m_pluginDCS->addChild( m_camera.get() );
     m_pluginDCS->addChild( m_texgenNode.get() );
-
-    WriteOutShadow();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation from Chapter 17, Efficient Soft-Edged Shadows Using Pixel Shader Branching, Yury Uralsky.
@@ -771,31 +830,16 @@ void Scene::CreateJitterTexture()
     m_jitter->setImage( image3D.get() );
 
     /*
-    ss->setTextureAttributeAndModes((int)_textureUnit + 1, m_jitter, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
-    ss->setTextureMode((int)_textureUnit + 1,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-    ss->setTextureMode((int)_textureUnit + 1,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-    ss->setTextureMode((int)_textureUnit + 1,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+    ss->setTextureAttributeAndModes( (int)_textureUnit + 1, m_jitter, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+    ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
+    ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
+    ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::WriteOutShadow()
 {
-    osg::ref_ptr< osg::Image > image = new osg::Image();
-    image->setInternalTextureFormat( GL_DEPTH_COMPONENT );
-
-    class RGB
-    {
-    public:
-        unsigned char r, g, b;
-    };
-
-    /*RGB* pixels;
-    pixels=new RGB[3*m_shadow->getTextureWidth()*m_shadow->getTextureHeight()*m_shadow->getTextureDepth()];
-    glGetTexImage(GL_TEXTURE_2D,0,GL_LUMINANCE,GL_UNSIGNED_BYTE,pixels);
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT,1);
-    glDrawPixels(m_shadow->getTextureHeight(),m_shadow->getTextureWidth(),GL_RGB,GL_UNSIGNED_BYTE,pixels);
-    image->readPixels(0,0,512,512,GL_LUMINANCE,GL_UNSIGNED_BYTE);
-    osgDB::writeImageFile(*image.get(),"./Textures/m_shadow.bmp");*/
+    osg::ref_ptr< osg::Image > image = m_shadow->getImage();
+    osgDB::writeImageFile( *image.get(), "./Textures/shadow.jpg" );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -51,7 +51,6 @@ char xray_vertex[] =
 
 char xray_fragment[] =
     "varying vec3 eyePos; \n"
-    "varying vec3 lightPos; \n"
     "varying vec3 normal; \n"
 
     "void main() \n"

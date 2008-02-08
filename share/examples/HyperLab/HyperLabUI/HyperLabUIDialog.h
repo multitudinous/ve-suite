@@ -22,6 +22,7 @@ namespace util
 }
 
 class wxTextCtrl;
+class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
 class wxCheckListBox;
@@ -59,22 +60,6 @@ public:
 
     std::string* p_portNumber;
 
-    bool phong_check;
-    bool texture_check;
-    bool shadow_check;
-    bool reflection_check;
-    bool xray_check;
-
-    double ambient_red;
-    double ambient_green;
-    double ambient_blue;
-    double diffuse_red;
-    double diffuse_green;
-    double diffuse_blue;
-    double specular_red;
-    double specular_green;
-    double specular_blue;
-
 private:
     void BuildGUI();
     void UpdateGUI();
@@ -86,8 +71,11 @@ private:
     void OnOK( wxCommandEvent& event );
     void OnCancel( wxCommandEvent& event );
 
+    void SendCommandsToXplorer();
+    void ClearInstructions();
+
     wxTextCtrl* portTextCtrl;
-    wxCheckListBox* material_panel_clb_se;
+    wxRadioBox* _CycleRadioBox;
     wxSlider* light_panel_sl_ar;
     wxSlider* light_panel_sl_ag;
     wxSlider* light_panel_sl_ab;
@@ -101,13 +89,9 @@ private:
     std::vector< ves::open::xml::DataValuePairSharedPtr > instructions;
     std::string command_name;
 
-    void SendCommandsToXplorer();
-    void ClearInstructions();
-
     ves::conductor::util::CORBAServiceList* serviceList;
 
     DECLARE_EVENT_TABLE()
-
 };
 
 #endif //HYPER_LAB_UI_DIALOG_H

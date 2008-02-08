@@ -58,7 +58,13 @@ private:
     void WriteOutShadow();
 
     //Base Effects
-    void Defaults();
+    void DefaultVisuals();
+
+    //Advanced Effects
+    void AdvancedVisuals();
+
+    //XRay Effect
+    void XRay();
 
     hyperlab::Shaders* shader;
 
