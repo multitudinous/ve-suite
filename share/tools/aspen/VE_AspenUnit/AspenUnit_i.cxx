@@ -443,7 +443,15 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::Command* cmd)
 	   
     //Display->SetWindowText(filename.c_str());
 
-	std::string network = bkp->CreateNetwork();
+	std::string network;
+	try
+    {
+        network = bkp->CreateNetwork();
+	}
+	catch(...)
+	{
+		std::cout << "GetNetwork Exception Aspen Unit" << std::endl;
+	}
 	std::ofstream output("returnString.txt");
 	output<<"Return String"<<std::endl;
 	output<<network<<std::endl;

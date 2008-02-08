@@ -153,23 +153,29 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         loadedModel->setName( model->GetModelName() );
 
         //calculate the original size of the icon
-        ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor;
-        loadedModel->accept( visitor );
-        osg::BoundingBox bounds = visitor.getBoundingBox();
-        float dx = bounds.xMax() - bounds.xMin();
-        float dy = bounds.yMax() - bounds.yMin();
-        float dz = bounds.zMax() - bounds.zMin();
+        //ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor;
+        //loadedModel->accept( visitor );
+        //osg::BoundingBox bounds = visitor.getBoundingBox();
+        //float dx = bounds.xMax() - bounds.xMin();
+        //float dy = bounds.yMax() - bounds.yMin();
+        //float dz = bounds.zMax() - bounds.zMin();
         //std::cout <<model->GetModelName()<<std::endl;
         //std::cout <<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
 
+		//for (int corn = 0; corn < 8; corn ++)
+		//{
+		//	osg::Vec3d corner = bounds.corner(corn);
+		//	std::cout<<"corner "<<corn<<": x="<<corner.x()<<" y="<<corner.y()<<" z="<<corner.z()<<std::endl;
+		//}
+
         //scale icon to 2d worksheet size
-        osg::ref_ptr<osg::Image> image = osgDB::readImageFile( "2DIcons/" + model->GetIconFilename() + ".jpg" );
-        //osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
-        if( image.valid() )
-        {
-            output << "width: " << image->s() << "height: " << image->t() << std::endl;
-            //output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
-        }
+        //osg::ref_ptr<osg::Image> image = osgDB::readImageFile( "2DIcons/" + model->GetIconFilename() + ".jpg" );
+        ////osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
+        //if( image.valid() )
+        //{
+          //  output << "width: " << image->s() << "height: " << image->t() << std::endl;
+           // //output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
+        //}
 
         //scales
         //osg::Vec3 vec;
@@ -253,8 +259,15 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         //Rotate the 3d comps 180 degrees around X axis
         //corrects issue with initial model location
         osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
-        rotatedComp->addChild( loadedModel.get() );
-        //rotatedComp->addChild(worksheetScaledModel.get());
+		rotatedComp->addChild( loadedModel.get() );
+		
+		//move pivot point to center
+		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
+        rotatedComp->accept( visitor2 );
+        osg::BoundingBox bounds2 = visitor2.getBoundingBox();
+		rotatedComp->setPivotPoint(bounds2.center());
+		
+		//rotate
         rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
 
         //rotate/scale/mirror component
@@ -264,8 +277,16 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
         //rotate according to iconMirror value
         osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
+		std::cout<<"PP: x="<<mirrorComp->getPivotPoint().x()<<" y="<<mirrorComp->getPivotPoint().y()<<" z="<<mirrorComp->getPivotPoint().z()<<std::endl;
         mirrorComp->addChild( rotatedComp.get() );
-        if( mirror > 0 && mirror < 3 )
+        
+		//move pivot point to center
+		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor3;
+        mirrorComp->accept( visitor3 );
+        osg::BoundingBox bounds3 = visitor3.getBoundingBox();
+		mirrorComp->setPivotPoint(bounds3.center());
+		
+		if( mirror > 0 && mirror < 3 )
         {
             //horizontally
             if( mirror == 1 )
@@ -278,7 +299,15 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         //rotate according to iconRotation value
         osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
         reRotatedComp->addChild( mirrorComp.get() );
-        reRotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( rotation ), osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
+        
+		//move pivot point to center
+		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor4;
+        reRotatedComp->accept( visitor4 );
+        osg::BoundingBox bounds4 = visitor4.getBoundingBox();
+		reRotatedComp->setPivotPoint(bounds4.center());
+		
+		//rotate
+		reRotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( rotation ), osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
 
         //move the text to the -y
         //osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
@@ -299,15 +328,24 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
         //std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
         osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
-        osg::Vec3 center = mModelTrans.get()->getBound().center();
+        //osg::Vec3 center = mModelTrans.get()->getBound().center();
         //20 and 28 should be replaced with conductor icon width and height respectively
         //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), (xyPair.second + 28) - center.y(), 0 - center.z());
         //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 0 - center.z(), (xyPair.second + 22) - center.y());
         //osg::Vec3 centerTrans = osg::Vec3(xyPair.first + 20, xyPair.second + 25, 0 );
         //std::cout << " center " << center.x() << " " << center.z() << " " << center.y() << std::endl;
-        osg::Vec3 centerTrans = osg::Vec3( xyPair.first - center.x(), 0 - center.z(), xyPair.second - center.y() );
-        //mModelTrans->addChild(scale.get());
+        //osg::Vec3 centerTrans = osg::Vec3( xyPair.first - center.x(), 0 - center.z(), xyPair.second - center.y() );
         mModelTrans->addChild( reRotatedComp.get() );
+		
+		//find offset from center to upper left corner
+		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
+        mModelTrans->accept( visitor5 );
+        osg::BoundingBox bounds5 = visitor5.getBoundingBox();
+		osg::Vec3 centerTrans = osg::Vec3( xyPair.first + ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + ((bounds5.zMax()-bounds5.zMin())/2));
+		//std::cout<< (bounds5.xMax()-bounds5.xMin())/2<<" "<< (bounds5.zMax()-bounds5.zMin())/2<<std::endl;
+		
+		//osg::Vec3 centerTrans = osg::Vec3( xyPair.first, 0, xyPair.second );
+        //mModelTrans->addChild(scale.get());
         mModelTrans->setPosition( centerTrans );
         mModelTrans->setName( model->GetModelName() );
         loadedModels->addChild( mModelTrans.get() );
