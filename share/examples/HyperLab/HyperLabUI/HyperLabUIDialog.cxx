@@ -38,7 +38,7 @@ HyperLabUIDialog::HyperLabUIDialog( wxWindow* parent,
 :
 UIDialog( parent, id, _( "HyperLab" ) ),
 p_portNumber( portNumber ),
-/*
+
 m_portTextCtrl( 0 ),
 
 m_shaderEffectsRadioBox( 0 ),
@@ -54,8 +54,7 @@ m_sgSlider( 0 ),
 m_sbSlider( 0 ),
 
 m_instructions( 0 ),
-m_commandName( 0 ),
-*/
+
 m_serviceList( service )
 {
     BuildGUI();
@@ -102,21 +101,21 @@ void HyperLabUIDialog::BuildGUI()
     base_bs_3->Add( base_bs_4, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
     wxIcon bitmap( _( "./Icons/vesuite.ico" ), wxBITMAP_TYPE_ICO );
-    wxStaticBitmap* base_sbm_1=new wxStaticBitmap(itemDialog,wxID_STATIC,bitmap,wxDefaultPosition,wxSize(32,32),0);
-    base_bs_4->Add(base_sbm_1,0,wxALIGN_CENTER_VERTICAL|wxALL,5);
+    wxStaticBitmap* base_sbm_1 = new wxStaticBitmap( itemDialog, wxID_STATIC, bitmap, wxDefaultPosition, wxSize( 32, 32 ), 0 );
+    base_bs_4->Add( base_sbm_1, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    wxStaticText* base_st_1=new wxStaticText(itemDialog,wxID_STATIC,_("  Hyper Controls  "),wxDefaultPosition,wxDefaultSize,wxDEFAULT);
-    base_st_1->SetForegroundColour(wxColour(255,255,255));
-    base_st_1->SetBackgroundColour(wxColour(0,0,0));
-    base_st_1->SetFont(wxFont(10,wxNORMAL,wxNORMAL,wxBOLD,false));
-    base_bs_4->Add(base_st_1,0,wxALIGN_CENTER_VERTICAL|wxALL|wxADJUST_MINSIZE,5);
+    wxStaticText* base_st_1 = new wxStaticText( itemDialog, wxID_STATIC, _( "  Hyper Controls  " ), wxDefaultPosition, wxDefaultSize, wxDEFAULT );
+    base_st_1->SetForegroundColour( wxColour( 255, 255, 255 ) );
+    base_st_1->SetBackgroundColour( wxColour( 0, 0, 0 ) );
+    base_st_1->SetFont( wxFont( 10, wxNORMAL, wxNORMAL, wxBOLD, false ) );
+    base_bs_4->Add( base_st_1, 0, wxALIGN_CENTER_VERTICAL | wxALL | wxADJUST_MINSIZE, 5 );
 
-    wxStaticLine* base_sl_1=new wxStaticLine(itemDialog,wxID_STATIC,wxDefaultPosition,wxSize(200,2),wxLI_HORIZONTAL);
-    base_bs_4->Add(base_sl_1,0,wxALIGN_TOP|wxLEFT,60);
+    wxStaticLine* base_sl_1 = new wxStaticLine( itemDialog, wxID_STATIC, wxDefaultPosition, wxSize( 200, 2 ), wxLI_HORIZONTAL );
+    base_bs_4->Add( base_sl_1, 0, wxALIGN_TOP | wxLEFT, 60 );
 
     //Notebook
-    wxNotebook* notebook=new wxNotebook(itemDialog,ID_NOTEBOOK,wxDefaultPosition,wxDefaultSize,wxNB_TOP);
-    notebook->SetBackgroundColour(wxColour(0,0,0));
+    wxNotebook* notebook = new wxNotebook( itemDialog, ID_NOTEBOOK, wxDefaultPosition, wxDefaultSize, wxNB_TOP );
+    notebook->SetBackgroundColour( wxColour( 0, 0, 0 ) );
 
     //Unit Panel
     wxPanel* unit_panel=new wxPanel(notebook,ID_UNIT_PANEL,wxDefaultPosition,wxDefaultSize,wxSUNKEN_BORDER|wxTAB_TRAVERSAL);

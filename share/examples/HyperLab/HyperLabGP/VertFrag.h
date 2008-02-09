@@ -96,7 +96,7 @@ char options_vertex[] =
         //"} \n"
     "} \n";
 
-char options_fragment[]=
+char options_fragment[] =
     "uniform bvec4 options; \n"
     "uniform sampler2DShadow shadowMap; \n"
     "uniform samplerCube envMap; \n"
@@ -132,14 +132,13 @@ char options_fragment[]=
         "} \n"
 
         "vec3 base = ambientDiffuse + TotalSpecular; \n"
+        "base *= gl_FrontMaterial.emission.rgb; \n"
 
-        "vec4 color; \n"
         "if( options.z ) \n"
         "{ \n"
             "vec3 reflection = textureCube( envMap, R ).rgb; \n"
 
-            "color = vec4( mix( base, reflection, 0.05 ), 1.0 ); \n"
-            "color *= gl_FrontMaterial.emission; \n"
+            "base = mix( base, reflection, 0.05 ); \n"
         "} \n"
 
         "if( options.w ) \n"
@@ -173,12 +172,12 @@ char options_fragment[]=
                 "shadowUV.x <= 1.0 && \n"
                 "shadowUV.y <= 1.0 ) \n"
             "{ \n"
-                "gl_FragColor = color * shadowColor; \n"
+                "gl_FragColor = vec4( base, 1.0 ) * shadowColor; \n"
             "} \n"
 
             "else \n"
             "{ \n"
-                "gl_FragColor = color; \n"
+                "gl_FragColor = vec4( base, 1.0 ); \n"
             "} \n"
         "} \n"
         "else \n"

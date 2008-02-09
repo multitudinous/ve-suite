@@ -93,11 +93,6 @@ Scene::~Scene()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::DefaultVisuals()
 {
-    //Set light defaults
-    m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-    m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
-    m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-
     shader->SetOptions( m_ceiling.get(),
                         false, false,
                         &static_cast< std::string >( "WallMap" ) );
@@ -111,20 +106,34 @@ void Scene::DefaultVisuals()
                         false, false,
                         &static_cast< std::string >( "WallMap" ) );
 
-    shader->SetOptions( m_aluminumParts.get(), true );
-    shader->SetOptions( m_aluminumPipes.get(), true );
-    shader->SetOptions( m_black.get(), true );
-    shader->SetOptions( m_brown.get(), true );
-    shader->SetOptions( m_glass.get(), true );
-    shader->SetOptions( m_lights.get(), true );
-    shader->SetOptions( m_ltGreen.get(), true );
-    shader->SetOptions( m_ltGrey.get(), true );
-    shader->SetOptions( m_orange.get(), true );
-    shader->SetOptions( m_red.get(), true );
-    shader->SetOptions( m_redBrown.get(), true );
-    shader->SetOptions( m_whiteDucts.get(), true );
-    shader->SetOptions( m_whitePipes.get(), true );
-    shader->SetOptions( m_yellow.get(), true );
+    shader->SetOptions( m_aluminumParts.get(),
+                        false, true );
+    shader->SetOptions( m_aluminumPipes.get(),
+                        false, true );
+    shader->SetOptions( m_black.get(),
+                        false, true );
+    shader->SetOptions( m_brown.get(),
+                        false, true );
+    shader->SetOptions( m_glass.get(),
+                        false, true );
+    shader->SetOptions( m_lights.get(),
+                        false, true );
+    shader->SetOptions( m_ltGreen.get(),
+                        false, true );
+    shader->SetOptions( m_ltGrey.get(),
+                        false, true );
+    shader->SetOptions( m_orange.get(),
+                        false, true );
+    shader->SetOptions( m_red.get(),
+                        false, true );
+    shader->SetOptions( m_redBrown.get(),
+                        false, true );
+    shader->SetOptions( m_whiteDucts.get(),
+                        false, true );
+    shader->SetOptions( m_whitePipes.get(),
+                        false, true );
+    shader->SetOptions( m_yellow.get(),
+                        false, true );
 
     //Set material defaults
     /*
@@ -240,33 +249,96 @@ void Scene::DefaultVisuals()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::AdvancedVisuals()
 {
+    float reflectionPercentage;
     shader->SetOptions( m_ceiling.get(),
                         false, false,
-                        &static_cast< std::string >( "WallMap" ) );
+                        &static_cast< std::string >( "WallMap" ),
+                        &( reflectionPercentage = 0.05 ) );
     shader->SetOptions( m_details.get(),
                         false, false,
-                        &static_cast< std::string >( "Decoration" ) );
+                        &static_cast< std::string >( "Decoration" ),
+                        &( reflectionPercentage = 0.05 ) );
     shader->SetOptions( m_floor.get(),
                         false, false,
-                        &static_cast< std::string >( "WallMap" ) );
+                        &static_cast< std::string >( "WallMap" ),
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
     shader->SetOptions( m_walls.get(),
                         false, false,
-                        &static_cast< std::string >( "WallMap" ) );
+                        &static_cast< std::string >( "WallMap" ),
+                        NULL,
+                        m_shadow.get() );
 
-    shader->SetOptions( m_aluminumParts.get(), true );
-    shader->SetOptions( m_aluminumPipes.get(), true );
-    shader->SetOptions( m_black.get(), true );
-    shader->SetOptions( m_brown.get(), true );
-    shader->SetOptions( m_glass.get(), true );
-    shader->SetOptions( m_lights.get(), true );
-    shader->SetOptions( m_ltGreen.get(), true );
-    shader->SetOptions( m_ltGrey.get(), true );
-    shader->SetOptions( m_orange.get(), true );
-    shader->SetOptions( m_red.get(), true );
-    shader->SetOptions( m_redBrown.get(), true );
-    shader->SetOptions( m_whiteDucts.get(), true );
-    shader->SetOptions( m_whitePipes.get(), true );
-    shader->SetOptions( m_yellow.get(), true );
+    shader->SetOptions( m_aluminumParts.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_aluminumPipes.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_black.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_brown.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_glass.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_lights.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        NULL );
+    shader->SetOptions( m_ltGreen.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_ltGrey.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_orange.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_red.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_redBrown.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_whiteDucts.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_whitePipes.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_yellow.get(),
+                        false, true,
+                        NULL,
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::XRay()
@@ -323,6 +395,11 @@ void Scene::CreateLights()
     m_lightTransform->addChild( m_lightSource.get() );
 
     m_pluginDCS->addChild( m_lightTransform.get() );
+
+    //Set light defaults
+    m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+    m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
+    m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateNodes()
