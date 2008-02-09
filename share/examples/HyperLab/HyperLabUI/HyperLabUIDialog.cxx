@@ -20,6 +20,7 @@
 #include <wx/listbox.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
+#include <wx/panel.h>
 
 BEGIN_EVENT_TABLE( HyperLabUIDialog, wxDialog )
 EVT_RADIOBOX( ID_SHADER_EFFECTS, HyperLabUIDialog::OnShaderEffects )
