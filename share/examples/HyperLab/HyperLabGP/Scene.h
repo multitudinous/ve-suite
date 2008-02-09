@@ -47,6 +47,17 @@ public:
     ///Destructor
     ~Scene();
 
+    //Base Effects
+    void DefaultVisuals();
+
+    //Advanced Effects
+    void AdvancedVisuals();
+
+    //XRay Effect
+    void XRay();
+
+    osg::Light* GetLight();
+
 private:
     void InitScene();
 
@@ -56,15 +67,6 @@ private:
     void CreateJitterTexture();
 
     void WriteOutShadow();
-
-    //Base Effects
-    void DefaultVisuals();
-
-    //Advanced Effects
-    void AdvancedVisuals();
-
-    //XRay Effect
-    void XRay();
 
     hyperlab::Shaders* shader;
 

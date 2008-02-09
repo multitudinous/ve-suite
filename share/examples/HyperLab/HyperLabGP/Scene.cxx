@@ -91,6 +91,211 @@ Scene::~Scene()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Scene::DefaultVisuals()
+{
+    //Set light defaults
+    m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+    m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
+    m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+
+    shader->SetOptions( m_ceiling.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_details.get(),
+                        false, false,
+                        &static_cast< std::string >( "Decoration" ) );
+    shader->SetOptions( m_floor.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_walls.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+
+    shader->SetOptions( m_aluminumParts.get(), true );
+    shader->SetOptions( m_aluminumPipes.get(), true );
+    shader->SetOptions( m_black.get(), true );
+    shader->SetOptions( m_brown.get(), true );
+    shader->SetOptions( m_glass.get(), true );
+    shader->SetOptions( m_lights.get(), true );
+    shader->SetOptions( m_ltGreen.get(), true );
+    shader->SetOptions( m_ltGrey.get(), true );
+    shader->SetOptions( m_orange.get(), true );
+    shader->SetOptions( m_red.get(), true );
+    shader->SetOptions( m_redBrown.get(), true );
+    shader->SetOptions( m_whiteDucts.get(), true );
+    shader->SetOptions( m_whitePipes.get(), true );
+    shader->SetOptions( m_yellow.get(), true );
+
+    //Set material defaults
+    /*
+    frame_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    frame_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
+    frame_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
+    frame_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    frame_material->setShininess(osg::Material::FRONT,12.0f);
+
+    railing_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    railing_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.3f,1.0f));
+    railing_material->setDiffuse(osg::Material::FRONT,osg::Vec4(1.0f,0.85f,0.3f,1.0f));
+    railing_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    railing_material->setShininess(osg::Material::FRONT,10.0f);
+
+    plenum_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    plenum_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    plenum_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    plenum_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    plenum_piping_material->setShininess(osg::Material::FRONT,10.0f);
+
+    blower_components_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    blower_components_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    blower_components_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    blower_components_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    blower_components_material->setShininess(osg::Material::FRONT,10.0f);
+
+    brackets_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    brackets_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    brackets_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    brackets_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    brackets_material->setShininess(osg::Material::FRONT,10.0f);
+
+    cement_base_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    cement_base_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    cement_base_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    cement_base_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    cement_base_material->setShininess(osg::Material::FRONT,10.0f);
+
+    combustor_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    combustor_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    combustor_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    combustor_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    combustor_piping_material->setShininess(osg::Material::FRONT,10.0f);
+
+    compressor_inlet_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    compressor_inlet_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    compressor_inlet_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    compressor_inlet_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    compressor_inlet_material->setShininess(osg::Material::FRONT,10.0f);
+
+    heat_exchanger_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    heat_exchanger_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    heat_exchanger_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    heat_exchanger_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    heat_exchanger_material->setShininess(osg::Material::FRONT,10.0f);
+
+    heat_exchanger_sweep_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    heat_exchanger_sweep_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    heat_exchanger_sweep_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    heat_exchanger_sweep_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    heat_exchanger_sweep_material->setShininess(osg::Material::FRONT,10.0f);
+
+    load_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    load_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    load_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    load_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    load_material->setShininess(osg::Material::FRONT,10.0f);
+
+    plenum_system_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    plenum_system_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    plenum_system_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    plenum_system_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    plenum_system_material->setShininess(osg::Material::FRONT,10.0f);
+
+    relief_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    relief_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    relief_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    relief_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    relief_piping_material->setShininess(osg::Material::FRONT,10.0f);
+
+    shell_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    shell_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    shell_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    shell_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    shell_material->setShininess(osg::Material::FRONT,10.0f);
+
+    stack_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    stack_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    stack_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    stack_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    stack_material->setShininess(osg::Material::FRONT,10.0f);
+
+    turbine_exhaust_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    turbine_exhaust_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    turbine_exhaust_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    turbine_exhaust_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    turbine_exhaust_material->setShininess(osg::Material::FRONT,10.0f);
+
+    turbine_postcombustor_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    turbine_postcombustor_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    turbine_postcombustor_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    turbine_postcombustor_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    turbine_postcombustor_material->setShininess(osg::Material::FRONT,10.0f);
+
+    miscellaneous_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+    miscellaneous_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
+    miscellaneous_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
+    miscellaneous_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
+    miscellaneous_material->setShininess(osg::Material::FRONT,10.0f);
+    */
+}
+////////////////////////////////////////////////////////////////////////////////
+void Scene::AdvancedVisuals()
+{
+    shader->SetOptions( m_ceiling.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_details.get(),
+                        false, false,
+                        &static_cast< std::string >( "Decoration" ) );
+    shader->SetOptions( m_floor.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+    shader->SetOptions( m_walls.get(),
+                        false, false,
+                        &static_cast< std::string >( "WallMap" ) );
+
+    shader->SetOptions( m_aluminumParts.get(), true );
+    shader->SetOptions( m_aluminumPipes.get(), true );
+    shader->SetOptions( m_black.get(), true );
+    shader->SetOptions( m_brown.get(), true );
+    shader->SetOptions( m_glass.get(), true );
+    shader->SetOptions( m_lights.get(), true );
+    shader->SetOptions( m_ltGreen.get(), true );
+    shader->SetOptions( m_ltGrey.get(), true );
+    shader->SetOptions( m_orange.get(), true );
+    shader->SetOptions( m_red.get(), true );
+    shader->SetOptions( m_redBrown.get(), true );
+    shader->SetOptions( m_whiteDucts.get(), true );
+    shader->SetOptions( m_whitePipes.get(), true );
+    shader->SetOptions( m_yellow.get(), true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Scene::XRay()
+{
+    shader->SetOptions( m_aluminumParts.get(), true );
+    shader->SetOptions( m_aluminumPipes.get(), true );
+    shader->SetOptions( m_black.get(), true );
+    shader->SetOptions( m_brown.get(), true );
+    shader->SetOptions( m_ceiling.get(), true );
+    shader->SetOptions( m_details.get(), true );
+    shader->SetOptions( m_floor.get(), true );
+    shader->SetOptions( m_glass.get(), true );
+    shader->SetOptions( m_lights.get(), true );
+    shader->SetOptions( m_ltGreen.get(), true );
+    shader->SetOptions( m_ltGrey.get(), true );
+    shader->SetOptions( m_orange.get(), true );
+    shader->SetOptions( m_red.get(), true );
+    shader->SetOptions( m_redBrown.get(), true );
+    shader->SetOptions( m_walls.get(), true );
+    shader->SetOptions( m_whiteDucts.get(), true );
+    shader->SetOptions( m_whitePipes.get(), true );
+    shader->SetOptions( m_yellow.get(), true );
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Light* Scene::GetLight()
+{
+    return m_light.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 void Scene::InitScene()
 {
     CreateNodes();
@@ -449,206 +654,6 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_whiteDucts.get() );
     m_shadowedScene->addChild( m_whitePipes.get() );
     m_shadowedScene->addChild( m_yellow.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::DefaultVisuals()
-{
-    //Set light defaults
-    m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-    m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
-    m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-
-    shader->SetOptions( m_ceiling.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
-    shader->SetOptions( m_details.get(),
-                        false, false,
-                        &static_cast< std::string >( "Decoration" ) );
-    shader->SetOptions( m_floor.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
-    shader->SetOptions( m_walls.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
-
-    shader->SetOptions( m_aluminumParts.get(), true );
-    shader->SetOptions( m_aluminumPipes.get(), true );
-    shader->SetOptions( m_black.get(), true );
-    shader->SetOptions( m_brown.get(), true );
-    shader->SetOptions( m_glass.get(), true );
-    shader->SetOptions( m_lights.get(), true );
-    shader->SetOptions( m_ltGreen.get(), true );
-    shader->SetOptions( m_ltGrey.get(), true );
-    shader->SetOptions( m_orange.get(), true );
-    shader->SetOptions( m_red.get(), true );
-    shader->SetOptions( m_redBrown.get(), true );
-    shader->SetOptions( m_whiteDucts.get(), true );
-    shader->SetOptions( m_whitePipes.get(), true );
-    shader->SetOptions( m_yellow.get(), true );
-
-    //Set material defaults
-    /*
-    frame_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    frame_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
-    frame_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
-    frame_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    frame_material->setShininess(osg::Material::FRONT,12.0f);
-
-    railing_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    railing_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.3f,1.0f));
-    railing_material->setDiffuse(osg::Material::FRONT,osg::Vec4(1.0f,0.85f,0.3f,1.0f));
-    railing_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    railing_material->setShininess(osg::Material::FRONT,10.0f);
-
-    plenum_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    plenum_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    plenum_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    plenum_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    plenum_piping_material->setShininess(osg::Material::FRONT,10.0f);
-
-    blower_components_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    blower_components_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    blower_components_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    blower_components_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    blower_components_material->setShininess(osg::Material::FRONT,10.0f);
-
-    brackets_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    brackets_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    brackets_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    brackets_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    brackets_material->setShininess(osg::Material::FRONT,10.0f);
-
-    cement_base_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    cement_base_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    cement_base_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    cement_base_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    cement_base_material->setShininess(osg::Material::FRONT,10.0f);
-
-    combustor_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    combustor_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    combustor_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    combustor_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    combustor_piping_material->setShininess(osg::Material::FRONT,10.0f);
-
-    compressor_inlet_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    compressor_inlet_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    compressor_inlet_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    compressor_inlet_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    compressor_inlet_material->setShininess(osg::Material::FRONT,10.0f);
-
-    heat_exchanger_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    heat_exchanger_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    heat_exchanger_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    heat_exchanger_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    heat_exchanger_material->setShininess(osg::Material::FRONT,10.0f);
-
-    heat_exchanger_sweep_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    heat_exchanger_sweep_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    heat_exchanger_sweep_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    heat_exchanger_sweep_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    heat_exchanger_sweep_material->setShininess(osg::Material::FRONT,10.0f);
-
-    load_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    load_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    load_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    load_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    load_material->setShininess(osg::Material::FRONT,10.0f);
-
-    plenum_system_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    plenum_system_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    plenum_system_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    plenum_system_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    plenum_system_material->setShininess(osg::Material::FRONT,10.0f);
-
-    relief_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    relief_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    relief_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    relief_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    relief_piping_material->setShininess(osg::Material::FRONT,10.0f);
-
-    shell_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    shell_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    shell_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    shell_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    shell_material->setShininess(osg::Material::FRONT,10.0f);
-
-    stack_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    stack_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    stack_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    stack_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    stack_material->setShininess(osg::Material::FRONT,10.0f);
-
-    turbine_exhaust_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    turbine_exhaust_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    turbine_exhaust_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    turbine_exhaust_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    turbine_exhaust_material->setShininess(osg::Material::FRONT,10.0f);
-
-    turbine_postcombustor_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    turbine_postcombustor_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    turbine_postcombustor_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    turbine_postcombustor_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    turbine_postcombustor_material->setShininess(osg::Material::FRONT,10.0f);
-
-    miscellaneous_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    miscellaneous_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    miscellaneous_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    miscellaneous_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    miscellaneous_material->setShininess(osg::Material::FRONT,10.0f);
-    */
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::AdvancedVisuals()
-{
-    shader->SetOptions( m_ceiling.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
-    shader->SetOptions( m_details.get(),
-                        false, false,
-                        &static_cast< std::string >( "Decoration" ) );
-    shader->SetOptions( m_floor.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
-    shader->SetOptions( m_walls.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
-
-    shader->SetOptions( m_aluminumParts.get(), true );
-    shader->SetOptions( m_aluminumPipes.get(), true );
-    shader->SetOptions( m_black.get(), true );
-    shader->SetOptions( m_brown.get(), true );
-    shader->SetOptions( m_glass.get(), true );
-    shader->SetOptions( m_lights.get(), true );
-    shader->SetOptions( m_ltGreen.get(), true );
-    shader->SetOptions( m_ltGrey.get(), true );
-    shader->SetOptions( m_orange.get(), true );
-    shader->SetOptions( m_red.get(), true );
-    shader->SetOptions( m_redBrown.get(), true );
-    shader->SetOptions( m_whiteDucts.get(), true );
-    shader->SetOptions( m_whitePipes.get(), true );
-    shader->SetOptions( m_yellow.get(), true );
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::XRay()
-{
-    shader->SetOptions( m_aluminumParts.get(), true );
-    shader->SetOptions( m_aluminumPipes.get(), true );
-    shader->SetOptions( m_black.get(), true );
-    shader->SetOptions( m_brown.get(), true );
-    shader->SetOptions( m_ceiling.get(), true );
-    shader->SetOptions( m_details.get(), true );
-    shader->SetOptions( m_floor.get(), true );
-    shader->SetOptions( m_glass.get(), true );
-    shader->SetOptions( m_lights.get(), true );
-    shader->SetOptions( m_ltGreen.get(), true );
-    shader->SetOptions( m_ltGrey.get(), true );
-    shader->SetOptions( m_orange.get(), true );
-    shader->SetOptions( m_red.get(), true );
-    shader->SetOptions( m_redBrown.get(), true );
-    shader->SetOptions( m_walls.get(), true );
-    shader->SetOptions( m_whiteDucts.get(), true );
-    shader->SetOptions( m_whitePipes.get(), true );
-    shader->SetOptions( m_yellow.get(), true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateShadowTexture()

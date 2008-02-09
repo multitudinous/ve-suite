@@ -1,30 +1,25 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/CORBAServiceList.h>
 
-// --- My Includes --- //
-#include "HyperLabUIDialog.h"
-
-// --- VE-Suite Includes --- //
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+// --- My Includes --- //
+#include "HyperLabUIDialog.h"
+
 // --- wxWidgets Includes --- //
-#include <wx/sizer.h>
-#include <wx/radiobox.h>
 #include <wx/notebook.h>
-#include <wx/button.h>
-#include <wx/statbox.h>
+#include <wx/sizer.h>
 #include <wx/textctrl.h>
+#include <wx/radiobox.h>
+#include <wx/button.h>
+#include <wx/statline.h>
+//#include <wx/statbox.h>
 #include <wx/stattext.h>
 #include <wx/statbmp.h>
-#include <wx/panel.h>
-#include <wx/statline.h>
 #include <wx/listbox.h>
-#include <wx/checklst.h>
 #include <wx/slider.h>
 #include <wx/spinctrl.h>
-#include <wx/notebook.h>
-#include <wx/dialog.h>
 
 BEGIN_EVENT_TABLE( HyperLabUIDialog, wxDialog )
 EVT_RADIOBOX( ID_SHADER_EFFECTS, HyperLabUIDialog::OnShaderEffects )
@@ -41,12 +36,28 @@ HyperLabUIDialog::HyperLabUIDialog( wxWindow* parent,
                                     ves::conductor::util::CORBAServiceList* service,
                                     std::string* portNumber )
 :
-UIDialog( parent, id, _("HyperLab") ),
-p_portNumber( portNumber )
-{
-    serviceList = service;
-    portTextCtrl = 0;
+UIDialog( parent, id, _( "HyperLab" ) ),
+p_portNumber( portNumber ),
+/*
+m_portTextCtrl( 0 ),
 
+m_shaderEffectsRadioBox( 0 ),
+
+m_arSlider( 0 ),
+m_agSlider( 0 ),
+m_abSlider( 0 ),
+m_drSlider( 0 ),
+m_dgSlider( 0 ),
+m_dbSlider( 0 ),
+m_srSlider( 0 ),
+m_sgSlider( 0 ),
+m_sbSlider( 0 ),
+
+m_instructions( 0 ),
+m_commandName( 0 ),
+*/
+m_serviceList( service )
+{
     BuildGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -130,9 +141,9 @@ void HyperLabUIDialog::BuildGUI()
     material_panel->SetSizer(material_panel_bs_1);
 
     wxString material_panel_clb_strings[] = { _( "Default Effects" ), _( "Advanced Effects" ), _( "X-Ray Effects" ) };
-    _CycleRadioBox = new wxRadioBox( material_panel, ID_SHADER_EFFECTS, _("Shader Effects"), wxDefaultPosition, wxDefaultSize, 3, material_panel_clb_strings, 1, wxRA_SPECIFY_COLS );
+    m_shaderEffectsRadioBox = new wxRadioBox( material_panel, ID_SHADER_EFFECTS, _("Shader Effects"), wxDefaultPosition, wxDefaultSize, 3, material_panel_clb_strings, 1, wxRA_SPECIFY_COLS );
   
-    material_panel_bs_1->Add( _CycleRadioBox, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxBOTTOM, 10 );
+    material_panel_bs_1->Add( m_shaderEffectsRadioBox, 0, wxALIGN_LEFT|wxLEFT|wxRIGHT|wxTOP|wxBOTTOM, 10 );
 
     notebook->AddPage(material_panel,_("Material") );
 
@@ -177,20 +188,20 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_5=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_1->Add(light_panel_bs_5,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_ar=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_ar->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_ar->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_5->Add(light_panel_sl_ar,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_arSlider=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_arSlider->SetForegroundColour(wxColour(255,255,255));
+    m_arSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_5->Add(m_arSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_ag=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_ag->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_ag->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_5->Add(light_panel_sl_ag,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_agSlider=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_agSlider->SetForegroundColour(wxColour(255,255,255));
+    m_agSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_5->Add(m_agSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_ab=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_ab->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_ab->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_5->Add(light_panel_sl_ab,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_abSlider=new wxSlider(light_panel,ID_AMBIENT_SLIDER,103,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_abSlider->SetForegroundColour(wxColour(255,255,255));
+    m_abSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_5->Add(m_abSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     wxStaticLine* light_panel_line_1=new wxStaticLine(light_panel,wxID_STATIC,wxDefaultPosition,wxDefaultSize,wxLI_HORIZONTAL);
     light_panel_bs_1->Add(light_panel_line_1,0,wxGROW|wxALL,5);
@@ -233,20 +244,20 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_10=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_1->Add(light_panel_bs_10,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_dr=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,231,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_dr->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_dr->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_10->Add(light_panel_sl_dr,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_drSlider=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,231,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_drSlider->SetForegroundColour(wxColour(255,255,255));
+    m_drSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_10->Add(m_drSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_dg=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,231,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_dg->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_dg->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_10->Add(light_panel_sl_dg,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_dgSlider=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,231,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_dgSlider->SetForegroundColour(wxColour(255,255,255));
+    m_dgSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_10->Add(m_dgSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_db=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,115,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_db->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_db->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_10->Add(light_panel_sl_db,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_dbSlider=new wxSlider(light_panel,ID_DIFFUSE_SLIDER,115,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_dbSlider->SetForegroundColour(wxColour(255,255,255));
+    m_dbSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_10->Add(m_dbSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     wxStaticLine* light_panel_line_2=new wxStaticLine(light_panel,wxID_STATIC,wxDefaultPosition,wxDefaultSize,wxLI_HORIZONTAL);
     light_panel_bs_1->Add(light_panel_line_2,0,wxGROW|wxALL,5);
@@ -289,20 +300,20 @@ void HyperLabUIDialog::BuildGUI()
     wxBoxSizer* light_panel_bs_15=new wxBoxSizer(wxHORIZONTAL);
     light_panel_bs_1->Add(light_panel_bs_15,0,wxALIGN_CENTER_HORIZONTAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_sr=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_sr->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_sr->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_15->Add(light_panel_sl_sr,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_srSlider=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_srSlider->SetForegroundColour(wxColour(255,255,255));
+    m_srSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_15->Add(m_srSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_sg=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_sg->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_sg->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_15->Add(light_panel_sl_sg,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_sgSlider=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_sgSlider->SetForegroundColour(wxColour(255,255,255));
+    m_sgSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_15->Add(m_sgSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
-    light_panel_sl_sb=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
-    light_panel_sl_sb->SetForegroundColour(wxColour(255,255,255));
-    light_panel_sl_sb->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
-    light_panel_bs_15->Add(light_panel_sl_sb,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
+    m_sbSlider=new wxSlider(light_panel,ID_SPECULAR_SLIDER,128,0,256,wxDefaultPosition,wxDefaultSize,wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP);
+    m_sbSlider->SetForegroundColour(wxColour(255,255,255));
+    m_sbSlider->SetFont(wxFont(8,wxNORMAL,wxNORMAL,wxBOLD,false));
+    light_panel_bs_15->Add(m_sbSlider,0,wxALIGN_CENTER_VERTICAL|wxLEFT|wxRIGHT,5);
 
     wxStaticLine* light_panel_line_3=new wxStaticLine(light_panel,wxID_STATIC,wxDefaultPosition,wxDefaultSize,wxLI_HORIZONTAL);
     light_panel_bs_1->Add(light_panel_line_3,0,wxGROW|wxALL,5);
@@ -328,71 +339,25 @@ void HyperLabUIDialog::BuildGUI()
     base_bs_5->Add(base_b_2,1,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
     SetBestFittingSize();
+    CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::UpdateGUI()
 {
-    //portTextCtrl->SetValue( (*p_portNumber).c_str() );
+    //m_portTextCtrl->SetValue( ( *p_portNumber ).c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::OnShaderEffects( wxCommandEvent& event )
 {
-    /*
-    static bool xray_hold = false;
-
-    phong_check=material_panel_clb_se->IsChecked(0);
-    texture_check=material_panel_clb_se->IsChecked(1);
-    shadow_check=material_panel_clb_se->IsChecked(2);
-    reflection_check=material_panel_clb_se->IsChecked(3);
-    xray_check=material_panel_clb_se->IsChecked(4);
-
-    if((xray_hold==xray_check)&&(xray_check!=false)&&(phong_check==true||texture_check==true||shadow_check==true||reflection_check==true)){
-    material_panel_clb_se->Check(4,false);
-
-    xray_hold=material_panel_clb_se->IsChecked(4);
-    }
-
-    else if((xray_hold!=xray_check)&&(xray_check!=false)&&(phong_check==true||texture_check==true||shadow_check==true||reflection_check==true)){
-    material_panel_clb_se->Check(0,false);
-    material_panel_clb_se->Check(1,false);
-    material_panel_clb_se->Check(2,false);
-    material_panel_clb_se->Check(3,false);
-
-    xray_hold=xray_check; 
-    }
-
-    else
-    {
-    xray_hold=xray_check;
-    }
-
-    bool default_check = material_panel_clb_se->IsChecked(0);
-    bool advanced_check = material_panel_clb_se->IsChecked(1);
-    bool xray_check = material_panel_clb_se->IsChecked(2);
+    unsigned int data = m_shaderEffectsRadioBox->GetSelection();
 
     //Build the command
-    command_name=std::string("SHADER_EFFECTS_UPDATE");
+    m_commandName = "SHADER_EFFECTS_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr phongID_DVP=new ves::open::xml::DataValuePair();
-    phongID_DVP->SetData(std::string("phongID"),(unsigned int)(phong_check));
-    instructions.push_back(phongID_DVP);
+    ves::open::xml::DataValuePairSharedPtr shaderEffectsDVP = new ves::open::xml::DataValuePair();
+    shaderEffectsDVP->SetData( "shaderEffects", data );
+    m_instructions.push_back( shaderEffectsDVP );
 
-    ves::open::xml::DataValuePairSharedPtr textureID_DVP=new ves::open::xml::DataValuePair();
-    textureID_DVP->SetData(std::string("textureID"),(unsigned int)(texture_check));
-    instructions.push_back(textureID_DVP);
-
-    ves::open::xml::DataValuePairSharedPtr shadowID_DVP=new ves::open::xml::DataValuePair();
-    shadowID_DVP->SetData("shadowID",(unsigned int)(shadow_check));
-    instructions.push_back(shadowID_DVP);
-
-    ves::open::xml::DataValuePairSharedPtr reflectionID_DVP=new ves::open::xml::DataValuePair();
-    reflectionID_DVP->SetData("reflectionID",(unsigned int)(reflection_check));
-    instructions.push_back(reflectionID_DVP);
-
-    ves::open::xml::DataValuePairSharedPtr xrayID_DVP=new ves::open::xml::DataValuePair();
-    xrayID_DVP->SetData("xrayID",(unsigned int)(xray_check));
-    instructions.push_back(xrayID_DVP);
-*/
     SendCommandsToXplorer();
     ClearInstructions();
 }
@@ -400,24 +365,24 @@ void HyperLabUIDialog::OnShaderEffects( wxCommandEvent& event )
 void HyperLabUIDialog::OnAmbientRGB( wxCommandEvent& event )
 {
     double data[ 3 ];
-    data[ 1 ] = light_panel_sl_ar->GetValue() / 256.0f;
-    data[ 2 ] = light_panel_sl_ag->GetValue() / 256.0f;
-    data[ 3 ] = light_panel_sl_ab->GetValue() / 256.0f;
+    data[ 0 ] = m_arSlider->GetValue() / 256.0f;
+    data[ 1 ] = m_agSlider->GetValue() / 256.0f;
+    data[ 2 ] = m_abSlider->GetValue() / 256.0f;
 
     //Build the command
-    command_name=std::string("AMBIENT_UPDATE");
+    m_commandName = "AMBIENT_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr ar_color_DVP=new ves::open::xml::DataValuePair();
-    ar_color_DVP->SetData(std::string("ar_color"),data[ 1 ]);
-    instructions.push_back(ar_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr arDVP = new ves::open::xml::DataValuePair();
+    arDVP->SetData( "arColor", data[ 0 ] );
+    m_instructions.push_back( arDVP );
 
-    ves::open::xml::DataValuePairSharedPtr ag_color_DVP=new ves::open::xml::DataValuePair();
-    ag_color_DVP->SetData(std::string("ag_color"),data[ 2 ]);
-    instructions.push_back(ag_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr agDVP = new ves::open::xml::DataValuePair();
+    agDVP->SetData( "agColor", data[ 1 ] );
+    m_instructions.push_back( agDVP );
 
-    ves::open::xml::DataValuePairSharedPtr ab_color_DVP=new ves::open::xml::DataValuePair();
-    ab_color_DVP->SetData("ab_color",data[ 3 ]);
-    instructions.push_back(ab_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr abDVP = new ves::open::xml::DataValuePair();
+    abDVP->SetData( "abColor", data[ 2 ] );
+    m_instructions.push_back( abDVP );
 
     SendCommandsToXplorer();
     ClearInstructions();
@@ -426,25 +391,24 @@ void HyperLabUIDialog::OnAmbientRGB( wxCommandEvent& event )
 void HyperLabUIDialog::OnDiffuseRGB( wxCommandEvent& event )
 {
     double data[ 3 ];
-
-    data[ 1 ]=light_panel_sl_dr->GetValue()/256.0f;
-    data[ 2 ]=light_panel_sl_dg->GetValue()/256.0f;
-    data[ 3 ]=light_panel_sl_db->GetValue()/256.0f;
+    data[ 0 ] = m_drSlider->GetValue() / 256.0f;
+    data[ 1 ] = m_dgSlider->GetValue() / 256.0f;
+    data[ 2 ] = m_dbSlider->GetValue() / 256.0f;
 
     //Build the command
-    command_name=std::string("DIFFUSE_UPDATE");
+    m_commandName = "DIFFUSE_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr dr_color_DVP=new ves::open::xml::DataValuePair();
-    dr_color_DVP->SetData(std::string("dr_color"),data[ 1 ]);
-    instructions.push_back(dr_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr drDVP = new ves::open::xml::DataValuePair();
+    drDVP->SetData( "drColor", data[ 0 ] );
+    m_instructions.push_back( drDVP );
 
-    ves::open::xml::DataValuePairSharedPtr dgID_DVP=new ves::open::xml::DataValuePair();
-    dgID_DVP->SetData(std::string("dg_color"),data[ 2 ]);
-    instructions.push_back(dgID_DVP);
+    ves::open::xml::DataValuePairSharedPtr dgDVP = new ves::open::xml::DataValuePair();
+    dgDVP->SetData( "dgColor",data[ 1 ] );
+    m_instructions.push_back( dgDVP );
 
-    ves::open::xml::DataValuePairSharedPtr db_color_DVP=new ves::open::xml::DataValuePair();
-    db_color_DVP->SetData("db_color",data[ 3 ]);
-    instructions.push_back(db_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr dbDVP = new ves::open::xml::DataValuePair();
+    dbDVP->SetData( "dbColor", data[ 2 ] );
+    m_instructions.push_back( dbDVP );
 
     SendCommandsToXplorer();
     ClearInstructions();
@@ -453,25 +417,24 @@ void HyperLabUIDialog::OnDiffuseRGB( wxCommandEvent& event )
 void HyperLabUIDialog::OnSpecularRGB( wxCommandEvent& event )
 {
     double data[ 3 ];
-
-    data[ 1 ]=light_panel_sl_sr->GetValue()/256.0f;
-    data[ 2 ]=light_panel_sl_sg->GetValue()/256.0f;
-    data[ 3 ]=light_panel_sl_sb->GetValue()/256.0f;
+    data[ 0 ] = m_srSlider->GetValue() / 256.0f;
+    data[ 1 ] = m_sgSlider->GetValue() / 256.0f;
+    data[ 2 ] = m_sbSlider->GetValue() / 256.0f;
 
     //Build the command
-    command_name=std::string("SPECULAR_UPDATE");
+    m_commandName = "SPECULAR_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr sr_color_DVP=new ves::open::xml::DataValuePair();
-    sr_color_DVP->SetData(std::string("sr_color"),data[ 1 ]);
-    instructions.push_back(sr_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr srDVP = new ves::open::xml::DataValuePair();
+    srDVP->SetData( "srColor", data[ 0 ] );
+    m_instructions.push_back( srDVP );
 
-    ves::open::xml::DataValuePairSharedPtr sg_color_DVP=new ves::open::xml::DataValuePair();
-    sg_color_DVP->SetData(std::string("sg_color"),data[ 2 ]);
-    instructions.push_back(sg_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr sgDVP = new ves::open::xml::DataValuePair();
+    sgDVP->SetData( "sgColor", data[ 1 ] );
+    m_instructions.push_back( sgDVP );
 
-    ves::open::xml::DataValuePairSharedPtr sb_color_DVP=new ves::open::xml::DataValuePair();
-    sb_color_DVP->SetData("sb_color",data[ 3 ]);
-    instructions.push_back(sb_color_DVP);
+    ves::open::xml::DataValuePairSharedPtr sbDVP = new ves::open::xml::DataValuePair();
+    sbDVP->SetData( "sbColor", data[ 2 ] );
+    m_instructions.push_back( sbDVP );
 
     SendCommandsToXplorer();
     ClearInstructions();
@@ -489,22 +452,22 @@ void HyperLabUIDialog::OnCancel( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::ClearInstructions()
 {
-    instructions.clear();
-    command_name.clear() ;
+    m_instructions.clear();
+    m_commandName.clear() ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::SendCommandsToXplorer()
 {
     ves::open::xml::Command* command = new ves::open::xml::Command();
 
-    for( size_t i = 0; i < instructions.size(); ++i )
+    for( size_t i = 0; i < m_instructions.size(); ++i )
     {
-        command->AddDataValuePair( instructions.at( i ) );
+        command->AddDataValuePair( m_instructions.at( i ) );
     }
 
-    command->SetCommandName( command_name );
+    command->SetCommandName( m_commandName );
 
-    serviceList->SendCommandStringToXplorer( command );
+    m_serviceList->SendCommandStringToXplorer( command );
 
     //Clean up memory
     delete command;

@@ -24,9 +24,6 @@ namespace util
 class wxTextCtrl;
 class wxRadioBox;
 class wxSlider;
-class wxSpinCtrl;
-class wxCheckListBox;
-class wxSpinEvent;
 
 enum HYPER_IDS
 {
@@ -74,22 +71,24 @@ private:
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    wxTextCtrl* portTextCtrl;
-    wxRadioBox* _CycleRadioBox;
-    wxSlider* light_panel_sl_ar;
-    wxSlider* light_panel_sl_ag;
-    wxSlider* light_panel_sl_ab;
-    wxSlider* light_panel_sl_dr;
-    wxSlider* light_panel_sl_dg;
-    wxSlider* light_panel_sl_db;
-    wxSlider* light_panel_sl_sr;
-    wxSlider* light_panel_sl_sg;
-    wxSlider* light_panel_sl_sb;
+    wxTextCtrl* m_portTextCtrl;
 
-    std::vector< ves::open::xml::DataValuePairSharedPtr > instructions;
-    std::string command_name;
+    wxRadioBox* m_shaderEffectsRadioBox;
 
-    ves::conductor::util::CORBAServiceList* serviceList;
+    wxSlider* m_arSlider;
+    wxSlider* m_agSlider;
+    wxSlider* m_abSlider;
+    wxSlider* m_drSlider;
+    wxSlider* m_dgSlider;
+    wxSlider* m_dbSlider;
+    wxSlider* m_srSlider;
+    wxSlider* m_sgSlider;
+    wxSlider* m_sbSlider;
+
+    std::vector< ves::open::xml::DataValuePairSharedPtr > m_instructions;
+    std::string m_commandName;
+
+    ves::conductor::util::CORBAServiceList* m_serviceList;
 
     DECLARE_EVENT_TABLE()
 };

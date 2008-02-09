@@ -63,38 +63,50 @@ void HyperLabGP::SetCurrentCommand( ves::open::xml::Command* command )
         return;
     }
 
-    double data[ 3 ];
+    double data[ 3 ] = { 0 };
 
-    /*
     //Set current shader effect
     if( command->GetCommandName() == "SHADER_EFFECTS_UPDATE" )
     {
+        unsigned int temp = 0;
+        command->GetDataValuePair( "shaderEffects" )->GetData( temp );
 
+        if( temp == 0 )
+        {
+            m_scene->DefaultVisuals();
+        }
+        else if( temp == 1 )
+        {
+            m_scene->AdvancedVisuals();
+        }
+        else if( temp == 2 )
+        {
+            m_scene->XRay();
+        }
     }
     else if( command->GetCommandName() == "AMBIENT_UPDATE" )
     {
-        command->GetDataValuePair( "ar_color" )->GetData( _ar_color );
-        command->GetDataValuePair( "ag_color" )->GetData( _ag_color );
-        command->GetDataValuePair( "ab_color" )->GetData( _ab_color );
+        command->GetDataValuePair( "arColor" )->GetData( data[ 0 ] );
+        command->GetDataValuePair( "agColor" )->GetData( data[ 1 ] );
+        command->GetDataValuePair( "abColor" )->GetData( data[ 2 ] );
 
-        root->light_1->setAmbient( osg::Vec4( _ar_color, _ag_color, _ab_color, 1.0f ) );
+        m_scene->GetLight()->setAmbient( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
     }
     else if( command->GetCommandName() == "DIFFUSE_UPDATE" )
     {
-        command->GetDataValuePair( "dr_color" )->GetData( _dr_color );
-        command->GetDataValuePair( "dg_color" )->GetData( _dg_color );
-        command->GetDataValuePair( "db_color" )->GetData( _db_color );
+        command->GetDataValuePair( "drColor" )->GetData( data[ 0 ] );
+        command->GetDataValuePair( "dgColor" )->GetData( data[ 1 ] );
+        command->GetDataValuePair( "dbColor" )->GetData( data[ 2 ] );
 
-        root->light_1->setDiffuse( osg::Vec4( _dr_color, _dg_color, _db_color, 1.0f ) );
+        m_scene->GetLight()->setDiffuse( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
     }
     else if( command->GetCommandName() == "SPECULAR_UPDATE" )
     {
-        command->GetDataValuePair( "sr_color" )->GetData( _sr_color );
-        command->GetDataValuePair( "sg_color" )->GetData( _sg_color );
-        command->GetDataValuePair( "sb_color" )->GetData( _sb_color );
+        command->GetDataValuePair( "srColor" )->GetData( data[ 0 ] );
+        command->GetDataValuePair( "sgColor" )->GetData( data[ 1 ] );
+        command->GetDataValuePair( "sbColor" )->GetData( data[ 2 ] );
 
-        root->light_1->setSpecular( osg::Vec4( _sr_color, _sg_color, _sb_color, 1.0f ) );
+        m_scene->GetLight()->setSpecular( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
     }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
