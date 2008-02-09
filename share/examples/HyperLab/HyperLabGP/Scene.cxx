@@ -94,17 +94,13 @@ Scene::~Scene()
 void Scene::DefaultVisuals()
 {
     shader->SetOptions( m_ceiling.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
+                        false, false, "WallMap" );
     shader->SetOptions( m_details.get(),
-                        false, false,
-                        &static_cast< std::string >( "Decoration" ) );
+                        false, false, "Decoration" );
     shader->SetOptions( m_floor.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
+                        false, false, "WallMap" );
     shader->SetOptions( m_walls.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ) );
+                        false, false, "WallMap" );
 
     shader->SetOptions( m_aluminumParts.get(),
                         false, true );
@@ -251,21 +247,17 @@ void Scene::AdvancedVisuals()
 {
     float reflectionPercentage;
     shader->SetOptions( m_ceiling.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ),
+                        false, false, "WallMap",
                         &( reflectionPercentage = 0.05 ) );
     shader->SetOptions( m_details.get(),
-                        false, false,
-                        &static_cast< std::string >( "Decoration" ),
+                        false, false, "Decoration",
                         &( reflectionPercentage = 0.05 ) );
     shader->SetOptions( m_floor.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ),
+                        false, false, "WallMap",
                         &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_walls.get(),
-                        false, false,
-                        &static_cast< std::string >( "WallMap" ),
+                        false, false, "WallMap",
                         NULL,
                         m_shadow.get() );
 

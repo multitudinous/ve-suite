@@ -30,7 +30,7 @@ public:
     void SetOptions( osg::ref_ptr< osg::Node > node,
                      bool xray = false,
                      bool phong = false,
-                     std::string* baseMap = NULL,
+                     const std::string baseMap = "",
                      float* reflectionPercent = NULL,
                      osg::ref_ptr< osg::Texture2D > shadow = NULL );
 

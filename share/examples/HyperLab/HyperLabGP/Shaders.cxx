@@ -47,7 +47,7 @@ void Shaders::ReadTextures()
 void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
                           bool xray,
                           bool phong,
-                          std::string* baseMap,
+                          const std::string baseMap,
                           float* reflectionPercent,
                           osg::ref_ptr< osg::Texture2D > shadow )
 {
@@ -83,12 +83,12 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
         optionsMap[ "phong" ] = true;
     }
 
-    if( baseMap )
+    if( !baseMap.empty() )
     {
-        stateset->setTextureAttributeAndModes( 2, new osg::Texture2D( m_imageMap[ *baseMap ].get() ) );
+        stateset->setTextureAttributeAndModes( 2, new osg::Texture2D( m_imageMap[ baseMap ].get() ) );
 
-        osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 2 );
-        stateset->addUniform( baseMap.get() );
+        osg::ref_ptr< osg::Uniform > baseMapUniform = new osg::Uniform( "baseMap", 2 );
+        stateset->addUniform( baseMapUniform.get() );
 
         optionsMap[ "baseMap" ] = true;
     }
