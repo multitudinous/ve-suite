@@ -144,7 +144,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     //get variables by tags
     DOMElement* dataValueStringName = 0;
     dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
-    tagText = ExtractFromSimpleElement< std::string >( dataValueStringName );
+    GetAttribute( dataValueStringName, "tagText", tagText );
     // for Tag points
     unsigned int numberOfPoints =
         currentElement->getElementsByTagName(
@@ -159,7 +159,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
 
     //Setup uuid for model element
     {
-        ves::open::xml::XMLObject::GetAttribute( currentElement, "id", uuid );
+        GetAttribute( currentElement, "id", uuid );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

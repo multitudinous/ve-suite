@@ -152,7 +152,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         {
             //should only be the name of the command
             DOMElement* name = dynamic_cast< DOMElement* >( subElements->item( 0 ) );
-            ExtractCmdNameFromElement( name );
+            GetAttribute( name, "commandName", _cmdName );
         }
         else
         {
@@ -181,11 +181,6 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
             nameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
         }
     }
-}
-/////////////////////////////////////////////////////////////////////
-void Command::ExtractCmdNameFromElement( DOMElement* commandElement )
-{
-    _cmdName = ExtractFromSimpleElement< std::string >( commandElement );
 }
 ///////////////////////////////////////
 std::string Command::GetCommandName()

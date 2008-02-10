@@ -140,13 +140,13 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode )
                 DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
                 if( typeNode )
                 {
-                    _attributeType = ExtractFromSimpleElement< std::string >( typeNode );
+                    GetAttribute( typeNode, "type", _attributeType );
                 }
 
                 DOMElement* blendNode = GetSubElement( currentElement, std::string( "blending" ), 0 );
                 if( blendNode )
                 {
-                    _blending = ExtractFromSimpleElement< bool >( blendNode );
+                    GetAttribute( blendNode, "blending", _blending );
                 }
 
                 if( _attributeType == std::string( "Material" ) )

@@ -292,7 +292,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "name", 0 );
         if( dataValueStringName )
         {
-            modelName = ExtractFromSimpleElement< std::string >( dataValueStringName );
+            GetAttribute( dataValueStringName, "name", modelName );
             dataValueStringName = 0;
         }
         else
@@ -307,7 +307,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "ID", 0 );
         if( dataValueStringName )
         {
-            uniqueModelID = ExtractFromSimpleElement< unsigned int >( dataValueStringName );
+            GetAttribute( dataValueStringName, "ID", uniqueModelID );
         }
         else
         {
@@ -322,7 +322,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "icon", 0 );
         if( dataValueStringName )
         {
-            iconFileName = ExtractFromSimpleElement< std::string >( dataValueStringName );
+            GetAttribute( dataValueStringName, "icon", iconFileName );
         }
         else
         {

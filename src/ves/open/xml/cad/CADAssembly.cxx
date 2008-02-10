@@ -220,7 +220,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
         //get the new number of children
         {
             DOMElement* nChildrenElement = GetSubElement( currentElement, std::string( "numChildren" ), 0 );
-            m_numChildren = ExtractFromSimpleElement< unsigned int >( nChildrenElement );
+            XMLObject::GetAttribute( nChildrenElement, "numChildren", m_numChildren );
         }
         if( currentElement->getAttributeNode(
             Convert( "associatedDataset" ).toXMLString() ) )
@@ -262,7 +262,9 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                 }
                 if( nodeType )
                 {
-                    if( ExtractFromSimpleElement< std::string >( nodeType ) == std::string( "Assembly" ) )
+                    std::string tmpNodeType;
+                    XMLObject::GetAttribute( nodeType, "type", tmpNodeType );
+                    if( tmpNodeType == std::string( "Assembly" ) )
                     {
                         //this is an Assembly
                         ves::open::xml::cad::CADAssembly* newAssembly = new ves::open::xml::cad::CADAssembly();
@@ -271,7 +273,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                         newAssembly->SetParent( uuid );
                         m_children.push_back( newAssembly );
                     }
-                    else if( ExtractFromSimpleElement< std::string >( nodeType ) == std::string( "Part" ) )
+                    else if( tmpNodeType == std::string( "Part" ) )
                     {
                         //this is a Part
                         ves::open::xml::cad::CADPart* newPart = new ves::open::xml::cad::CADPart();
@@ -284,7 +286,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                     {
                         std::cout << "ERROR!" << std::endl;
                         std::cout << "Unknown node type:"
-                        << ExtractFromSimpleElement< std::string >( nodeType ) << std::endl;
+                        << tmpNodeType << std::endl;
                     }
                 }
             }

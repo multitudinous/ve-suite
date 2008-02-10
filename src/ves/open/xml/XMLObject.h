@@ -109,33 +109,6 @@ public:
     ///Return the root document of this element.
     XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetRootDocument();
 
-    ///Usage is: unsigned int data = ExtractFromSimpleElement< unsigned int >( element );
-    ///Not sure how to document this
-    template<class T>
-    inline T ExtractFromSimpleElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
-    {
-        T ret_val = T();
-        try
-        {
-            std::istringstream iss;
-            // in case the element does not contain data
-            XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText =
-                dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
-            if( rawText )
-            {
-                char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
-                iss.str( fUnicodeForm );
-                delete fUnicodeForm;
-            }
-            iss >> ret_val;
-        }
-        catch ( ... )
-        {
-            std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
-        }
-        return ret_val;
-    }
-
     ///Get an attribute by name
     ///\param baseElement The element to extract it from
     ///\param attributeName The name of the attribute
@@ -364,57 +337,6 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
         std::cout << "XMLObject::GetAttribute()" << std::endl;
     }
 }
-///this is for the special case where bools are stored as strings in
-///the elements because 0 or 1 is not stored
-template<>
-inline bool XMLObject::ExtractFromSimpleElement< bool >( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
-{
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText = dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
-    std::string tmp;
-    char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
-    tmp.assign( fUnicodeForm );
-    delete fUnicodeForm;
-
-    std::cout << "Extracted bool: " << tmp.c_str() << std::endl;
-
-    if( tmp == "true" )
-        return true;
-    else
-        return false;
-}
-///This is to account for spaces in element values because just reading a string
-/// does not get the whole line from the istringstream
-template<>
-inline std::string XMLObject::ExtractFromSimpleElement< std::string >( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element )
-{
-    std::string ret_val = std::string();
-    try
-    {
-        std::istringstream iss;
-        // in case the element does not contain data
-        XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText =
-            dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
-        if( rawText )
-        {
-            char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
-            iss.str( fUnicodeForm );
-            delete fUnicodeForm;
-        }
-        else
-        {
-            std::cout << "Failed to ExtractFromSimpleElement std::string" << std::endl;
-        }
-        ret_val = iss.str();
-    }
-    catch( ... )
-    {
-        std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
-    }
-    std::cout << "Extracted string: " << ret_val.c_str() << std::endl;
-    return ret_val;
-}
-
-
 
 }
 }

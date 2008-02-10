@@ -117,7 +117,7 @@ void Point::SetObjectFromXMLData( DOMNode* xmlInput )
     if( xNode )
     {
         //We know this about the node so we can cast it...
-        point.first = ExtractFromSimpleElement< unsigned int >( xNode );
+        GetAttribute( xNode, "xLocation", point.first );
     }
     else
     {
@@ -129,7 +129,7 @@ void Point::SetObjectFromXMLData( DOMNode* xmlInput )
     if( yNode )
     {
         //We know this about the node so we can cast it...
-        point.second = ExtractFromSimpleElement< unsigned int >( yNode );
+        GetAttribute( yNode, "yLocation", point.second );
     }
     else
     {

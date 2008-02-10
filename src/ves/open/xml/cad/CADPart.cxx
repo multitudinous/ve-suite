@@ -34,6 +34,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 using namespace ves::open::xml::cad;
+using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////
 //Constructor                                             //
@@ -102,7 +103,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
             if( currentElement->hasChildNodes() )
             {
                 DOMElement* fileNameElement = GetSubElement( currentElement, std::string( "fileName" ), 0 );
-                m_cadFileName = ExtractFromSimpleElement< std::string >( fileNameElement );
+                XMLObject::GetAttribute( fileNameElement, "fileName", m_cadFileName );
             }
         }
     }

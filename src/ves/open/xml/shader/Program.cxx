@@ -134,7 +134,7 @@ void Program::SetObjectFromXMLData( DOMNode* xmlInput )
                 DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
                 if( nameNode )
                 {
-                    _name = ExtractFromSimpleElement< std::string >( nameNode );
+                    GetAttribute( nameNode, "name", _name );
                 }
             }
         }

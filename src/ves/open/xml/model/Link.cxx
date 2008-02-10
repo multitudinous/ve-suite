@@ -212,7 +212,7 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             dataValueStringName = GetSubElement( currentElement, "name", 0 );
             if( dataValueStringName )
             {
-                linkName = ExtractFromSimpleElement< std::string >( dataValueStringName );
+                GetAttribute( dataValueStringName, "name", linkName );
                 dataValueStringName = 0;
             }
             else
@@ -252,9 +252,10 @@ void Link::SetObjectFromXMLData( DOMNode* element )
         }
 
         dataValueStringName = GetSubElement( currentElement, "fromPort", 0 );
-        portInfo.first = ExtractFromSimpleElement< long int >( dataValueStringName );
+        GetAttribute( dataValueStringName, "fromPort", portInfo.first );
+
         dataValueStringName = GetSubElement( currentElement, "toPort", 0 );
-        portInfo.second = ExtractFromSimpleElement< long int >( dataValueStringName );
+        GetAttribute( dataValueStringName, "toPort", portInfo.second );
 
         // for link points
         {

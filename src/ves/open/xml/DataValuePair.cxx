@@ -336,7 +336,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
             {
                 //should only be the name of the command
                 DOMElement* dataName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
-                _dataName = ExtractFromSimpleElement< std::string >( dataName );
+                GetAttribute( dataName, "dataName", _dataName );
             }
             else
             {
@@ -370,7 +370,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 DOMElement* dataValueStringName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueStringName )
                 {
-                    this->_dataString = ExtractFromSimpleElement< std::string >( dataValueStringName );
+                    GetAttribute( dataValueStringName, "dataValueString", _dataString);
                     SetDataType( std::string( "STRING" ) );
                 }
             }
@@ -378,14 +378,15 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 //_dataType == "UNSIGNED INT")
             {
                 DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
-                _dataUInt = ExtractFromSimpleElement< unsigned int >( dataUnsignedValue );
+
+                GetAttribute( dataUnsignedValue, "dataValueUInt", _dataUInt);
                 _dataType = "UNSIGNED INT";
             }
             //else if(_dataType == "LONG")
             else if( currentElement->getElementsByTagName( ves::open::xml::Convert( "dataValueInt" ).toXMLString() )->getLength() )
             {
                 DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
-                intDataValue = ExtractFromSimpleElement< long int >( dataLongdValue );
+                GetAttribute( dataLongdValue, "dataValueInt", intDataValue);
                 _dataType = "LONG";
             }
             //else if(_dataType == "FLOAT" )
@@ -398,7 +399,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 DOMElement* dataValueNum = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueNum )
                 {
-                    _dataValue  = ExtractFromSimpleElement< double >( dataValueNum );
+                    GetAttribute( dataValueNum, "dataValueNum", _dataValue );
                     SetDataType( std::string( "FLOAT" ) );
                 }
             }
@@ -410,22 +411,22 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
 
                 if( type == "xs:string" )
                 {
-                    this->_dataString = ExtractFromSimpleElement< std::string >( dataValueTemp );
+                    GetAttribute( dataValueTemp, "xs:string", _dataString );
                     SetDataType( std::string( "STRING" ) );
                 }
                 else if( type == "xs:unsignedInt" )
                 {
-                    _dataUInt = ExtractFromSimpleElement< unsigned int >( dataValueTemp );
+                    GetAttribute( dataValueTemp, "xs:unsignedInt", _dataUInt );
                     _dataType = "UNSIGNED INT";
                 }
                 else if( type == "xs:integer" )
                 {
-                    intDataValue = ExtractFromSimpleElement< long int >( dataValueTemp );
+                    GetAttribute( dataValueTemp, "xs:integer", intDataValue );
                     _dataType = "LONG";
                 }
                 else if( type == "xs:double" )
                 {
-                    _dataValue  = ExtractFromSimpleElement< double >( dataValueTemp );
+                    GetAttribute( dataValueTemp, "xs:double", _dataValue );
                     SetDataType( std::string( "FLOAT" ) );
                 }
                 else

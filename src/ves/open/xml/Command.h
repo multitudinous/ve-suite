@@ -80,10 +80,6 @@ public:
     ///\param commandValuePair The data value pair representing command information.
     void AddDataValuePair( DataValuePairWeakPtr commandValuePair );
 
-    ///Utility function to extract a command name from an element.
-    ///\param commandElement The command element.
-    void ExtractCmdNameFromElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* commandElement );
-
     ///Populate the Command data from an XML element.
     ///\param xmlInput The element to populate the command data from.
     virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );

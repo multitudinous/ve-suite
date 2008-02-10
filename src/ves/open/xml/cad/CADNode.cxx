@@ -417,27 +417,29 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
                 if( nameNode )
                 {
-                    m_name = ExtractFromSimpleElement< std::string >( nameNode );
+                    XMLObject::GetAttribute( nameNode, "name", m_name );
                 }
 
                 DOMElement* idNode = GetSubElement( currentElement, std::string( "nodeID" ), 0 );
                 if( idNode )
                 {
-                    ves::open::xml::XMLObject::SetID( ExtractFromSimpleElement< unsigned int >( idNode ) );
+                    unsigned int tmp_id = 0;
+                    XMLObject::GetAttribute( idNode, "nodeID", tmp_id );
+                    ves::open::xml::XMLObject::SetID( tmp_id );
                 }
                 else
                 {
-                    ves::open::xml::XMLObject::GetAttribute( currentElement, "id", uuid );
+                    XMLObject::GetAttribute( currentElement, "id", uuid );
                 }
                 DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
                 if( typeNode )
                 {
-                    m_type = ExtractFromSimpleElement< std::string >( typeNode );
+                    XMLObject::GetAttribute( typeNode, "type", m_type );
                 }
                 DOMElement* parentNode = GetSubElement( currentElement, std::string( "parent" ), 0 );
                 if( parentNode )
                 {
-                    m_parent = ExtractFromSimpleElement< std::string >( parentNode );
+                    XMLObject::GetAttribute( typeNode, "parent", m_parent );
                 }
                 size_t nOldAttributes = m_attributeList.size();
                 if( nOldAttributes > 0 )
@@ -479,7 +481,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 DOMElement* activeAttribNode = GetSubElement( currentElement, std::string( "activeAttributeName" ), 0 );
                 if( activeAttribNode )
                 {
-                    m_activeAttributeName = ExtractFromSimpleElement< std::string >( activeAttribNode );
+                    XMLObject::GetAttribute( activeAttribNode, "activeAttributeName", m_activeAttributeName);
                     SetActiveAttribute( m_activeAttributeName );
                 }
 
