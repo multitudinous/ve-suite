@@ -167,8 +167,8 @@ int main( int argc, char* argv[] )
 
     program.SetFragmentShader( fragmentShader );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( 
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( 
         &program, "Program" ) );
     
     ///Initialize VE-Open
