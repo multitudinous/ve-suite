@@ -185,7 +185,7 @@ ACE_THROW_SPEC((
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( param, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
     std::ostringstream idString;
     idString << id;
     eventHandlerMap[ "Set XML Model Inputs" ]->SetBaseObject( xmlModelMap[ idString.str()] );
@@ -206,7 +206,7 @@ ACE_THROW_SPEC((
     std::ostringstream strm;
     strm << id;
 
-    std::map< std::string, ves::open::xml::model::Model* >::iterator iter;
+    std::map< std::string, ves::open::xml::model::ModelPtr >::iterator iter;
     iter = xmlModelMap.find( strm.str() );
     if( iter == xmlModelMap.end() )
     {
@@ -275,7 +275,7 @@ ACE_THROW_SPEC((
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( command, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     std::string network;
     //The query function assumes 1 command to be processed at a time
@@ -288,7 +288,7 @@ ACE_THROW_SPEC((
     std::ostringstream strm;
     strm << activeId;
 
-    ves::open::xml::Command* params = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    ves::open::xml::CommandPtr params = dynamic_cast< ves::open::xml::CommandPtr >( objectVector.at( 0 ) );
     std::string commandName = params->GetCommandName();
     std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
     currentEventHandler = eventHandlerMap.find( commandName );
@@ -312,7 +312,7 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
     std::ostringstream strm;
     strm << module_id;
 
-    std::map< std::string, ves::open::xml::model::Model* >::iterator iter;
+    std::map< std::string, ves::open::xml::model::ModelPtr >::iterator iter;
     iter = xmlModelMap.find( strm.str() );
     if( iter != xmlModelMap.end() )
     {

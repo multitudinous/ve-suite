@@ -54,13 +54,13 @@ GetResultsEventHandler::~GetResultsEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model )
+void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
 {
     try
     {
         if( model )
         {
-            baseModel = dynamic_cast< ves::open::xml::model::Model* >( model );
+            baseModel = dynamic_cast< ves::open::xml::model::ModelPtr >( model );
         }
     }
     catch ( ... )
@@ -70,7 +70,7 @@ void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObject* model )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess )
+std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObjectPtr > objectToProcess )
 {
     if( !baseModel )
     {
@@ -89,14 +89,14 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
 
     for( size_t i = 0; i < numInputs; ++i )
     {
-        ves::open::xml::Command* tempResult = baseModel->GetResult( i );
+        ves::open::xml::CommandPtr tempResult = baseModel->GetResult( i );
         ves::open::xml::DataValuePairWeakPtr tempPair = new ves::open::xml::DataValuePair();
         tempPair->SetData( tempResult->GetCommandName(), tempResult );
         tempResult->AddDataValuePair( tempPair );
     }
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair < ves::open::xml::XMLObject*,
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
                      std::string > ( &resultsCommand, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;

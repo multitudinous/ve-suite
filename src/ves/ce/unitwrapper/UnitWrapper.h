@@ -36,8 +36,8 @@
 
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/XMLObjectPtr.h>
+#include <ves/open/xml/model/ModelPtr.h>
 #include <ves/VEConfig.h>
 #include <vector>
 
@@ -73,11 +73,11 @@ protected:
     ///??
     std::string data_;
     ///??
-    std::map< std::string, ves::open::xml::model::Model* > xmlModelMap;
+    std::map< std::string, ves::open::xml::model::ModelPtr > xmlModelMap;
     ///??
-    std::map< std::string, std::vector< ves::open::xml::XMLObject* > > inputsMap;
+    std::map< std::string, std::vector< ves::open::xml::XMLObjectPtr > > inputsMap;
     ///??
-    std::map< std::string, std::vector< ves::open::xml::XMLObject* > > resultsMap;
+    std::map< std::string, std::vector< ves::open::xml::XMLObjectPtr > > resultsMap;
     ///??
     std::map< std::string, VE_CE::EventHandler* > eventHandlerMap;
 

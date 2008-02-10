@@ -305,7 +305,7 @@ Module::Module()
            //Probably now need to set port data pointers on the port vectors
        }
        ////////////////////////////////////////////////////////////////////////////////
-       std::vector< Command* > Module::GetInputData( void )
+       std::vector< CommandPtr > Module::GetInputData( void )
        {
            inputs.clear();
            for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
@@ -315,15 +315,15 @@ Module::Module()
            return inputs;
        }
        ////////////////////////////////////////////////////////////////////////////////
-       void Module::SetInputData( std::vector< XMLObject* > inputData )
+       void Module::SetInputData( std::vector< XMLObjectPtr > inputData )
        {
            for( size_t i = 0; i < inputData.size(); ++i )
            {
-               *( veModel->GetInput( i ) ) = *( dynamic_cast< Command* >( inputData.at( i ) ) );
+               *( veModel->GetInput( i ) ) = *( dynamic_cast< CommandPtr >( inputData.at( i ) ) );
            }
        }
        ////////////////////////////////////////////////////////////////////////////////
-       std::vector< Command* > Module::GetResultsData( void )
+       std::vector< CommandPtr > Module::GetResultsData( void )
        {
            results.clear();
            for( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
@@ -333,10 +333,10 @@ Module::Module()
            return results;
        }
        ////////////////////////////////////////////////////////////////////////////////
-       void Module::SetResultsData( std::vector< XMLObject* > resultsData )
+       void Module::SetResultsData( std::vector< XMLObjectPtr > resultsData )
        {
            for( size_t i = 0; i < resultsData.size(); ++i )
            {
-               *( veModel->GetResult( i ) ) = *( dynamic_cast< Command* >( resultsData.at( i ) ) );
+               *( veModel->GetResult( i ) ) = *( dynamic_cast< CommandPtr >( resultsData.at( i ) ) );
            }
        }

@@ -86,10 +86,10 @@ int Network::parse( std::string xmlNetwork )
 
     // do this for models
     networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
-    std::vector< XMLObject* > objectVector =
+    std::vector< XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
     model::SystemPtr tempSystem =
-        dynamic_cast< model::System* >( objectVector.at( 0 ) );
+        dynamic_cast< model::SystemPtr >( objectVector.at( 0 ) );
     if( !tempSystem )
     {
         std::cerr << "Improperly formated ves file."
@@ -203,10 +203,10 @@ std::string Network::GetNetworkString( void )
     tempSystem->AddNetwork( veNetwork );
 
     // Here we wshould loop over all of the following
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     // Just push on the old network as ce can't modify the network
     // it only uses the network. conductor modifies the network
-    nodes.push_back( std::pair< XMLObject*, std::string >(
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >(
                          &( *tempSystem ), "veSystem" ) );
 
     std::string fileName( "returnString" );

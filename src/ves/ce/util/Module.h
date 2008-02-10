@@ -35,26 +35,12 @@
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/model/PortPtr.h>
 
 #include <vector>
 #include <string>
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-class XMLObject;
-namespace model
-{
-class Model;
-class Port;
-}
-}
-}
-}
 
 namespace VE_CE
 {
@@ -101,18 +87,18 @@ public:
     ///Get output port data for the specific port
     int getPortData( int, ves::open::xml::Command& );
     ///Set output port data for the specific port
-    int setPortData( int, ves::open::xml::Command* );
+    int setPortData( int, ves::open::xml::CommandPtr );
 
     int getPortProfile( int, Types::Profile_out& );
     int setPortProfile( int, const Types::Profile* );
 
     ///Accessors for input data
-    std::vector< ves::open::xml::Command* > GetInputData( void );
-    void SetInputData( std::vector< ves::open::xml::XMLObject* > inputData );
+    std::vector< ves::open::xml::CommandPtr > GetInputData( void );
+    void SetInputData( std::vector< ves::open::xml::XMLObjectPtr > inputData );
 
     ///Accessors for input data
-    std::vector< ves::open::xml::Command* > GetResultsData( void );
-    void SetResultsData( std::vector< ves::open::xml::XMLObject* > resultsData );
+    std::vector< ves::open::xml::CommandPtr > GetResultsData( void );
+    void SetResultsData( std::vector< ves::open::xml::XMLObjectPtr > resultsData );
 
     ///Get the ID for the module
     ///\return The module id
@@ -131,9 +117,6 @@ public:
     int _return_state;
     int _is_feedback;
 
-    //int _type;
-    //int _category;
-
 private:
     //Input ports for the module
     std::vector<IPort*> _iports;
@@ -149,11 +132,11 @@ private:
     // This class is responsible for the memory management here
     ves::open::xml::model::ModelPtr veModel;
     //Container for input data
-    std::vector< ves::open::xml::Command* > inputs;
+    std::vector< ves::open::xml::CommandPtr > inputs;
     //Container for results data
-    std::vector< ves::open::xml::Command* > results;
+    std::vector< ves::open::xml::CommandPtr > results;
     //Container for port data
-    std::vector< ves::open::xml::model::Port* > ports;
+    std::vector< ves::open::xml::model::PortPtr > ports;
     ///Do we need to keep track of messages?
 };
 }
