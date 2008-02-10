@@ -186,7 +186,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
     {
         unsigned int numberOfPortData =
             currentElement->getElementsByTagName(
-                ves::open::xml::XMLObject::Convert( "link" ).toXMLString() )->getLength();
+                Convert( "link" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -201,7 +201,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
     {
         unsigned int numberOfStates =
             currentElement->getElementsByTagName(
-                ves::open::xml::XMLObject::Convert( "conductorState" ).toXMLString() )->getLength();
+                Convert( "conductorState" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfStates; ++i )
         {
@@ -215,7 +215,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
     {
         unsigned int numberOfPortData =
             currentElement->getElementsByTagName(
-                ves::open::xml::XMLObject::Convert( "tag" ).toXMLString() )->getLength();
+                Convert( "tag" ).toXMLString() )->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "tag", i );

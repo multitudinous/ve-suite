@@ -162,7 +162,8 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
         return;
     }
 
-    DOMNodeList* xmlObjects = rootDocument->getElementsByTagName( xercesString( tagName ) );
+    DOMNodeList* xmlObjects = rootDocument->getElementsByTagName(
+                              Convert( tagName ).toXMLString() );
 
     unsigned int nXMLObjects = xmlObjects->getLength();
     //In case we use the same readerwriter more than once for a read

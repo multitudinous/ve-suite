@@ -346,7 +346,8 @@ void Model::SetObjectFromXMLData( DOMNode* element )
 
     //get the geometry nodes
     {
-        if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "geometry" ).toXMLString() )->getLength() > 0 )
+        if( currentElement->getElementsByTagName(
+            Convert( "geometry" ).toXMLString() )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
             if( geometry )
@@ -360,7 +361,8 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "ports" ).toXMLString() )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName(
+                              Convert( "ports" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -371,7 +373,8 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "results" ).toXMLString() )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName(
+                           Convert( "results" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -382,7 +385,8 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "inputs" ).toXMLString() )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName(
+                           Convert( "inputs" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -393,7 +397,8 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "informationPackets" ).toXMLString() )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName(
+                  Convert( "informationPackets" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -405,7 +410,8 @@ void Model::SetObjectFromXMLData( DOMNode* element )
 
     //get the model attribute nodes
     {
-        if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "modelAttributes" ).toXMLString() )->getLength() > 0 )
+        if( currentElement->getElementsByTagName(
+            Convert( "modelAttributes" ).toXMLString() )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
             if( modelAttribute )
@@ -730,19 +736,22 @@ void Model::_updateVEElement( const std::string& input )
     {
         std::stringstream int2string;
         int2string << iconScale;
-        iconElement->setAttribute( ves::open::xml::XMLObject::Convert( "iconScale" ).toXMLString(), xercesString( int2string.str().c_str() ) );
+        iconElement->setAttribute( Convert( "iconScale" ).toXMLString(),
+                                   Convert( int2string.str() ).toXMLString() );
     }
     ///
     {
         std::stringstream int2string;
         int2string << iconRotation;
-        iconElement->setAttribute( ves::open::xml::XMLObject::Convert( "iconRotation" ).toXMLString(), xercesString( int2string.str().c_str() ) );
+        iconElement->setAttribute( Convert( "iconRotation" ).toXMLString(),
+                                   Convert( int2string.str() ).toXMLString() );
     }
     ///
     {
         std::stringstream int2string;
         int2string << iconMirror;
-        iconElement->setAttribute( ves::open::xml::XMLObject::Convert( "iconMirror" ).toXMLString(), xercesString( int2string.str().c_str() ) );
+        iconElement->setAttribute( Convert( "iconMirror" ).toXMLString(),
+                                   Convert( int2string.str() ).toXMLString() );
     }
 
     for( size_t i = 0; i < results.size(); ++i )

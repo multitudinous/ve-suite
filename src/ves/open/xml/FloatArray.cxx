@@ -134,9 +134,13 @@ void FloatArray::_updateVEElement( const std::string& input )
     for( unsigned int i = 0; i < _array.size(); ++i )
     {
         // name comes from verg.xsd
-        DOMElement* valueTag  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "value" ).toXMLString() );
+        DOMElement* valueTag  = _rootDocument->createElement(
+                                Convert( "value" ).toXMLString() );
+
         _veElement->appendChild( valueTag );
-        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ));
+        DOMText* valueNum = _rootDocument->createTextNode(
+                            Convert( _array.at( i ) ).toXMLString() );
+
         valueTag->appendChild( valueNum );
     }
 }
@@ -160,7 +164,9 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "value" ).toXMLString() );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName(
+                                Convert( "value" ).toXMLString() );
+
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if (( minIndex > numNodes ) && ( maxIndex < numNodes ) )

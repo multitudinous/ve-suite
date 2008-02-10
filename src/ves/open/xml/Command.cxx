@@ -108,8 +108,12 @@ void Command::_updateVEElement( const std::string& input )
 ////////////////////////////////////
 void Command::_updateCommandName()
 {
-    DOMElement* cmdNameElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "command" ).toXMLString() );
-    DOMText* cmdName = _rootDocument->createTextNode( xercesString( _cmdName.c_str() ) );
+    DOMElement* cmdNameElement = _rootDocument->createElement(
+                                 Convert( "command" ).toXMLString() );
+
+    DOMText* cmdName = _rootDocument->createTextNode(
+                       Convert( _cmdName ).toXMLString() );
+
     cmdNameElement->appendChild( cmdName );
     _veElement->appendChild( cmdNameElement );
 }
@@ -141,7 +145,9 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
     {
         //get variables by tags
         DOMNodeList* subElements = 0;
-        subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "command" ).toXMLString() );
+        subElements = currentElement->getElementsByTagName(
+                      Convert( "command" ).toXMLString() );
+
         if( subElements->getLength() > 0 )
         {
             //should only be the name of the command
@@ -156,7 +162,9 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
     //break down the element
     {
         //get variables by tags
-        DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "parameter" ).toXMLString() );
+        DOMNodeList* subElements = currentElement->getElementsByTagName(
+                                   Convert( "parameter" ).toXMLString() );
+
         //clear out old dvpairs
         _dataValuePairs.clear();
         nameToDataValuePairMap.clear();

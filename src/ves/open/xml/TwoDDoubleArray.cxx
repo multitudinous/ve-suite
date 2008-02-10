@@ -191,7 +191,7 @@ void TwoDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "index2" ).toXMLString() );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::Convert( "index2" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if( minIndex > numNodes )

@@ -63,10 +63,14 @@ std::string CADPart::GetCADFileName()
 //////////////////////////////////
 void CADPart::_updateCADFileName()
 {
-    DOMElement* nameElement  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "fileName" ).toXMLString() );
+    DOMElement* nameElement  = _rootDocument->createElement(
+                               Convert( "fileName" ).toXMLString() );
+
     _veElement->appendChild( nameElement );
 
-    DOMText* fileName = _rootDocument->createTextNode( xercesString( m_cadFileName ) );
+    DOMText* fileName = _rootDocument->createTextNode(
+                        Convert( m_cadFileName ).toXMLString() );
+
     nameElement->appendChild( fileName );
 }
 /////////////////////////////////////////////////

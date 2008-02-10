@@ -130,7 +130,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
 
     if( currentElement )
     {
-        if( currentElement->hasAttribute( ves::open::xml::XMLObject::Convert( "id" ).toXMLString() ) )
+        if( currentElement->hasAttribute( ves::open::xml::Convert( "id" ).toXMLString() ) )
         {
             std::string emptyCheck;
             XMLObject::GetAttribute( currentElement, "id", emptyCheck );
@@ -164,7 +164,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
         }
         _properties.clear();
 
-        unsigned int numberOfProperties = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "properties" ).toXMLString() )->getLength();
+        unsigned int numberOfProperties = currentElement->getElementsByTagName( ves::open::xml::Convert( "properties" ).toXMLString() )->getLength();
         for( unsigned int i = 0; i < numberOfProperties; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "properties", i );

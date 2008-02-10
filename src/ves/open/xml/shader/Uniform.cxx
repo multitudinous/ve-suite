@@ -170,24 +170,36 @@ void Uniform::_updateVEElement( const std::string& input )
 ///////////////////////////
 void Uniform::_updateSize()
 {
-    DOMElement* nodeSizeElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "size" ).toXMLString() );
-    DOMText* nodeSize = _rootDocument->createTextNode( xercesString( static_cast<int>( _variableSize ) ) );
+    DOMElement* nodeSizeElement = _rootDocument->createElement(
+                                  Convert( "size" ).toXMLString() );
+
+    DOMText* nodeSize = _rootDocument->createTextNode(
+                        Convert( static_cast<int>( _variableSize) ).toXMLString() );
+
     nodeSizeElement->appendChild( nodeSize );
     _veElement->appendChild( nodeSizeElement );
 }
 //////////////////////////////////
 void Uniform::_updateUniformName()
 {
-    DOMElement* nodeNameElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "name" ).toXMLString() );
-    DOMText* nodeName = _rootDocument->createTextNode( xercesString( _name.c_str() ) );
+    DOMElement* nodeNameElement = _rootDocument->createElement(
+                                  Convert( "name" ).toXMLString() );
+
+    DOMText* nodeName = _rootDocument->createTextNode(
+                        Convert( _name ).toXMLString() );
+
     nodeNameElement->appendChild( nodeName );
     _veElement->appendChild( nodeNameElement );
 }
 //////////////////////////////////
 void Uniform::_updateUniformType()
 {
-    DOMElement* nodeTypeElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "type" ).toXMLString() );
-    DOMText* nodeType = _rootDocument->createTextNode( xercesString( _type ) );
+    DOMElement* nodeTypeElement = _rootDocument->createElement(
+                                  Convert( "type" ).toXMLString() );
+
+    DOMText* nodeType = _rootDocument->createTextNode(
+                        Convert( _type ).toXMLString() );
+
     nodeTypeElement->appendChild( nodeType );
     _veElement->appendChild( nodeTypeElement );
 }
@@ -197,17 +209,25 @@ void Uniform::_updateValues()
     for( unsigned int i = 0; i < _values.size(); ++i )
     {
         // name comes from verg.xsd
-        DOMElement* valueTag  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "value" ).toXMLString() );
+        DOMElement* valueTag  = _rootDocument->createElement(
+                                Convert( "value" ).toXMLString() );
+
         _veElement->appendChild( valueTag );
-        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _values.at( i ) ) );
+        DOMText* valueNum = _rootDocument->createTextNode(
+                            Convert( _values.at( i ) ).toXMLString() );
+
         valueTag->appendChild( valueNum );
     }
 }
 //////////////////////////////////
 void Uniform::_updateTextureUnit()
 {
-    DOMElement* tUnitElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "textureUnit" ).toXMLString() );
-    DOMText* nodeTUnit = _rootDocument->createTextNode( xercesString( static_cast<int>( _textureUnit ) ) );
+    DOMElement* tUnitElement = _rootDocument->createElement(
+                               Convert( "textureUnit" ).toXMLString() );
+
+    DOMText* nodeTUnit = _rootDocument->createTextNode(
+                         Convert( static_cast<int>( _textureUnit ) ).toXMLString() );
+
     tUnitElement->appendChild( nodeTUnit );
     _veElement->appendChild( tUnitElement );
 }

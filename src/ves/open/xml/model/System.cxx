@@ -137,8 +137,9 @@ void System::SetObjectFromXMLData( DOMNode* element )
     }
     // for models
     {
-        DOMNodeList* subElements = currentElement->
-                                   getElementsByTagName( ves::open::xml::XMLObject::Convert( "model" ).toXMLString() );
+        DOMNodeList* subElements = currentElement->getElementsByTagName(
+                                   Convert( "model" ).toXMLString() );
+
         unsigned int numberOfModels = subElements->getLength();
 
         for( unsigned int i = 0; i < numberOfModels; ++i )

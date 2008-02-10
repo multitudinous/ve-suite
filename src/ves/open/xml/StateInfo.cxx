@@ -95,7 +95,7 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
     }
 
     //get variables by tags
-    DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "Command" ).toXMLString() );
+    DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::Convert( "Command" ).toXMLString() );
 
     _stateInfo.clear();
     //we can have as many dvpairs as we want so get them all and populate the list

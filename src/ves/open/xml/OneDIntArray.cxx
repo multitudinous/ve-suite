@@ -122,9 +122,13 @@ void OneDIntArray::_updateVEElement( const std::string& input )
     for( unsigned int i = 0; i < _array.size(); ++i )
     {
         // name comes from verg.xsd
-        DOMElement* valueTag  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "data" ).toXMLString() );
+        DOMElement* valueTag  = _rootDocument->createElement(
+                                Convert( "data" ).toXMLString() );
+
         _veElement->appendChild( valueTag );
-        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
+        DOMText* valueNum = _rootDocument->createTextNode(
+                            Convert( _array.at( i ) ).toXMLString() );
+
         valueTag->appendChild( valueNum );
     }
 }
@@ -148,7 +152,9 @@ void OneDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "data" ).toXMLString() );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName(
+                                Convert( "data" ).toXMLString() );
+
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if (( minIndex > numNodes ) )

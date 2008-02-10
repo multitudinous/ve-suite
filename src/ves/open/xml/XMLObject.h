@@ -37,10 +37,10 @@
 
 #include <ves/VEConfig.h>
 
+#include <ves/open/xml/util/Convert.h>
+
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
-
-#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 #include <string>
@@ -55,16 +55,15 @@ namespace open
 {
 namespace xml
 {
-#define xercesString(str)  ves::open::xml::XMLObject::Convert(str).toXMLString()
 
 /*!\file XMLObject.h
   Base XML API
   */
-/*!\class VE_XML::XMLObject
+/*!\class ves::open::xml::XMLObject
  * This class is the base class for representing
  * XML objects.
  */
-/*!\namespace VE_XML
+/*!\namespace ves::open::xml
  * Contains nodes for creating/managing a XML Objects.
  */
 class VE_XML_EXPORTS XMLObject
@@ -81,43 +80,6 @@ public:
     ///http://xml.apache.org/xerces-c/apiDocs/classDOMNode.html#z233_1
     ///http://xml.apache.org/xerces-c/apiDocs/classDOMNode.html#z233_0
     XMLObject& operator= ( const XMLObject& );
-
-///Utility class to convert strings to Xerces compatible strings
-class VE_XML_EXPORTS Convert
-{
-
-public:
-
-   ///Constructor
-   ///\param val The input to translate.
-   template<typename T>
-   Convert(const T& val)
-   {
-      mXmlUnicodeString = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
-                              boost::lexical_cast<std::string>( val ).c_str()
-                              );
-   }
-
-   // Destructor
-   ~Convert()
-   {
-      XERCES_CPP_NAMESPACE_QUALIFIER XMLString::release( &mXmlUnicodeString );
-   }
-
-   ///Get the XMLCh for the string.
-   const XMLCh* toXMLString()
-   {
-      return mXmlUnicodeString;
-   }
-private:
-   // -----------------------------------------------------------------------
-   //  Private data members
-   //
-   //  mXmlUnicodeString
-   //      This is the Unicode XMLCh format of the string.
-   // -----------------------------------------------------------------------
-   XMLCh*   mXmlUnicodeString;///< The raw unicode string.
-};
 
 protected:
     ///Set the XMLObject type

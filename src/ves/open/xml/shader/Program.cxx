@@ -173,8 +173,12 @@ void Program::_updateVEElement( const std::string& input )
 /////////////////////////////////
 void Program::_updateProgramName()
 {
-    DOMElement* nameElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "name" ).toXMLString() );
-    DOMText* name = _rootDocument->createTextNode( xercesString( _name ) );
+    DOMElement* nameElement = _rootDocument->createElement(
+                              Convert( "name" ).toXMLString() );
+
+    DOMText* name = _rootDocument->createTextNode(
+                    Convert( _name ).toXMLString() );
+
     nameElement->appendChild( name );
     _veElement->appendChild( nameElement );
 }

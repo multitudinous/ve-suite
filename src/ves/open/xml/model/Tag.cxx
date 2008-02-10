@@ -148,7 +148,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     // for Tag points
     unsigned int numberOfPoints =
         currentElement->getElementsByTagName(
-            ves::open::xml::XMLObject::Convert( "linkPoints" ).toXMLString() )->getLength();
+            Convert( "linkPoints" ).toXMLString() )->getLength();
 
     for( unsigned int i = 0; i < numberOfPoints; ++i )
     {

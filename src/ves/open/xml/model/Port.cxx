@@ -226,7 +226,7 @@ void Port::SetObjectFromXMLData( DOMNode* element )
         }
         // for port data
         {
-            unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "portData" ).toXMLString() )->getLength();
+            unsigned int numberOfPortData = currentElement->getElementsByTagName(               Convert( "portData" ).toXMLString() )->getLength();
 
             for( unsigned int i = 0; i < numberOfPortData; ++i )
             {

@@ -120,7 +120,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
 
                 //populate the uniforms
                 {
-                    DOMNodeList* uniformList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "uniform" ).toXMLString() );
+                    DOMNodeList* uniformList = currentElement->getElementsByTagName( Convert( "uniform" ).toXMLString() );
                     unsigned int nUniforms = uniformList->getLength();
                     for( unsigned int i = 0; i < nUniforms; i++ )
                     {
@@ -131,7 +131,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
                 }
                 //populate the texture images
                 {
-                    DOMNodeList* textureList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "textureImage" ).toXMLString() );
+                    DOMNodeList* textureList = currentElement->getElementsByTagName( Convert( "textureImage" ).toXMLString() );
                     unsigned int nTextures = textureList->getLength();
                     //std::cout<<"Texture Images in shader: "<<nTextures<<std::endl;
                     for( unsigned int i = 0; i < nTextures; i++ )
@@ -249,16 +249,24 @@ void Shader::_updateUniforms()
 ////////////////////////////////
 void Shader::_updateShaderType()
 {
-    DOMElement* typeElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "type" ).toXMLString() );
-    DOMText* type = _rootDocument->createTextNode( xercesString( _shaderType ) );
+    DOMElement* typeElement = _rootDocument->createElement(
+                              Convert( "type" ).toXMLString() );
+
+    DOMText* type = _rootDocument->createTextNode(
+                    Convert( _shaderType ).toXMLString() );
+
     typeElement->appendChild( type );
     _veElement->appendChild( typeElement );
 }
 //////////////////////////////////
 void Shader::_updateShaderSource()
 {
-    DOMElement* sourceElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "shaderCode" ).toXMLString() );
-    DOMText* source = _rootDocument->createTextNode( xercesString( _shaderSource ) );
+    DOMElement* sourceElement = _rootDocument->createElement(
+                                Convert( "shaderCode" ).toXMLString() );
+
+    DOMText* source = _rootDocument->createTextNode(
+                      Convert( _shaderSource ).toXMLString() );
+
     sourceElement->appendChild( source );
     _veElement->appendChild( sourceElement );
 }

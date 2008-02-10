@@ -201,11 +201,11 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
 
             // do we need to delete the old one or does xerces handle this???
             //_nChildren = 3;
-            translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "translation" ).toXMLString() )->item( 0 ) );
+            translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "translation" ).toXMLString() )->item( 0 ) );
 
-            scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "scale" ).toXMLString() )->item( 0 ) );
+            scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "scale" ).toXMLString() )->item( 0 ) );
 
-            rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "rotation" ).toXMLString() )->item( 0 ) );
+            rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "rotation" ).toXMLString() )->item( 0 ) );
         }
     }
     else

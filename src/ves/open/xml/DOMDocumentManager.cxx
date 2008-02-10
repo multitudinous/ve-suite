@@ -120,7 +120,6 @@ void DOMDocumentManager::_readInputFile( std::string xmlFile )
         return;
     }
 
-    //LocalFileInputSource inputXML(xercesString(xmlFile));
     //parser->parse(inputXML);
     parser->parse( xmlFile.c_str() );
 }
@@ -234,15 +233,24 @@ void DOMDocumentManager::UnLoadParser( void )
 /////////////////////////////////////////////////////
 void DOMDocumentManager::CreateCommandDocument( std::string type )
 {
-    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( ves::open::xml::XMLObject::Convert( "LS" ).toXMLString() );
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
+                              Convert( "LS" ).toXMLString() );
 
     char* message = 0;
     try
     {
-        std::map< std::string, std::pair< std::string, std::string > >::iterator iter =
-            documentType.find( type );
+        typedef std::map<
+                         std::string,
+                         std::pair< std::string, std::string > >
+                         ::iterator map_iter_type;
+
+        map_iter_type iter = documentType.find( type );
+
         std::string tempDoc = iter->second.second;
-        commandDocument = impl->createDocument( 0, xercesString( tempDoc ), 0 );
+        commandDocument = impl->createDocument( 0,
+                                                Convert( tempDoc ).toXMLString(),
+                                                0 );
+
     }
     catch ( const XMLException &toCatch )
     {
@@ -266,20 +274,37 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
         return;
     }
 
-    commandDocument->setVersion( ves::open::xml::XMLObject::Convert( "1.0" ).toXMLString() );
-    commandDocument->setEncoding( ves::open::xml::XMLObject::Convert( "ISO-8859-1" ).toXMLString() );
+    commandDocument->setVersion( Convert( "1.0" ).toXMLString() );
+    commandDocument->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
+
     DOMElement* root_elem = commandDocument->getDocumentElement(); //This is the root element
-    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "name" ).toXMLString(), xercesString( documentType[ type ].first ) );
-    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xmlns:xsi" ).toXMLString(), ves::open::xml::XMLObject::Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
-    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "verg.xsd" ).toXMLString() );
-    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "verg_model.xsd" ).toXMLString() );
-    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "vecad.xsd" ).toXMLString() );
-    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "veshader.xsd" ).toXMLString() );
+
+    root_elem->setAttribute( Convert( "name" ).toXMLString(),
+               Convert( documentType[ type ].first ).toXMLString() );
+
+    root_elem->setAttribute( Convert( "xmlns:xsi" ).toXMLString(),
+         Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
+    root_elem->setAttribute(
+               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+               Convert( "verg.xsd" ).toXMLString() );
+
+    root_elem->setAttribute(
+               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+               Convert( "verg_model.xsd" ).toXMLString() );
+
+    root_elem->setAttribute(
+               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+               Convert( "vecad.xsd" ).toXMLString() );
+
+    root_elem->setAttribute(
+               Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(),
+               Convert( "veshader.xsd" ).toXMLString() );
 }
 /////////////////////////////////////////////////////
 std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 {
-    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( ves::open::xml::XMLObject::Convert( "LS" ).toXMLString() );
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
+                              Convert( "LS" ).toXMLString() );
     DOMWriter* theSerializer = dynamic_cast< DOMImplementationLS* >( impl )->createDOMWriter();
     theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
     char* message = 0;
