@@ -86,7 +86,7 @@ public:
 
     ///Return the name of this command.
     ///\return The command name of this element
-    std::string GetCommandName();
+    const std::string GetCommandName();
 
     ///Get a specific DataValuePair by name.
     ///\param dataValueName The name of the DataValuePair to search for.

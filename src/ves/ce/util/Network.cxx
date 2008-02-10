@@ -88,8 +88,7 @@ int Network::parse( std::string xmlNetwork )
     networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
     std::vector< XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
-    model::SystemPtr tempSystem =
-        dynamic_cast< model::SystemPtr >( objectVector.at( 0 ) );
+    model::SystemPtr tempSystem = objectVector.at( 0 );
     if( !tempSystem )
     {
         std::cerr << "Improperly formated ves file."

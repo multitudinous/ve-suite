@@ -59,7 +59,7 @@ void SetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
     {
         if( model )
         {
-            baseModel = dynamic_cast< ves::open::xml::model::ModelPtr >( model );
+            baseModel = model;
         }
     }
     catch ( ... )
@@ -83,7 +83,7 @@ std::string SetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
         size_t numInputs = objectToProcess.size();
         for( size_t i = 0; i < numInputs; ++i )
         {
-            ves::open::xml::CommandPtr command = dynamic_cast< ves::open::xml::CommandPtr >( objectToProcess.at( i ) );
+            ves::open::xml::CommandPtr command = objectToProcess.at( i );
             std::string dataName = command->GetCommandName();
             ves::open::xml::CommandPtr tempInput = baseModel->GetInput( dataName );
             if( tempInput )

@@ -50,20 +50,22 @@ OPort::OPort( const OPort& p )
 ////////////////////////////////////////////////////////////////////////////////
 OPort::~OPort()
 {
-    if( data )
-        delete data;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OPort::copy( const OPort& p )
 {
-    if( this == &p ) return;
+    if( this == &p )
+    {
+        return;
+    } 
 
     //_data    = p._data;
-    if( _profile ) delete _profile;
+    if( _profile ) 
+    {
+        delete _profile;
+    }
     _profile = new Types::Profile( *( p._profile ) );
-
-    if( data )
-        delete data;
 
     *data = *( p.data );
 }

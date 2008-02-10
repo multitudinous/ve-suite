@@ -87,7 +87,7 @@ class VE_MODEL_EXPORTS Model : public ves::open::xml::XMLObject
 {
 public:
     ///Constructor
-    Model( );
+    Model();
     ///Destructor
     virtual ~Model();
     ///Copy Constructor
@@ -142,19 +142,21 @@ public:
     ///Get results data
     ///\return The number of results in this model
     size_t GetNumberOfResults( void );
+    ///Set the result for this models
+    void SetResult( ves::open::xml::CommandPtr input );
     ///Get input data
     ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
     ///\return The ith input in this model
     ves::open::xml::Command* GetInput( int i );
-
     ///Get the input variable by name
     ///\param inputName Then name of the input to retrieve
     ///\return The input with the given name
     ves::open::xml::Command* GetInput( std::string inputName );
-
     ///Allocate another input block for use
     ///\return The new input
     ves::open::xml::Command* GetInput( void );
+    ///Set the input for this models
+    void SetInput( ves::open::xml::CommandPtr input );
     ///Get number of input data
     ///\return The total number of inputs
     size_t GetNumberOfInputs( void );
@@ -215,9 +217,10 @@ public:
     ///Get the sub network for this model
     ///\return The subnetwork for this model
     ves::open::xml::model::SystemWeakPtr GetSubSystem();
-
+    ///Set the parent model pointer of this model
     void SetParentModel( ModelSharedPtr parent );
-    ModelSharedPtr GetParentModel( );
+    ///Get the parent model pointer of this class
+    ModelSharedPtr GetParentModel();
 
 protected:
     ///Internally update the data.

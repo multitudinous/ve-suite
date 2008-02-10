@@ -223,7 +223,7 @@ Module::Module()
            }
        }
        ////////////////////////////////////////////////////////////////////////////////
-       int Module::setPortData( int p, Command* intf )
+       int Module::setPortData( int p, CommandPtr intf )
        {
            try
            {
@@ -319,7 +319,7 @@ Module::Module()
        {
            for( size_t i = 0; i < inputData.size(); ++i )
            {
-               *( veModel->GetInput( i ) ) = *( dynamic_cast< CommandPtr >( inputData.at( i ) ) );
+               veModel->SetInput( inputData.at( i ) );
            }
        }
        ////////////////////////////////////////////////////////////////////////////////
@@ -337,6 +337,6 @@ Module::Module()
        {
            for( size_t i = 0; i < resultsData.size(); ++i )
            {
-               *( veModel->GetResult( i ) ) = *( dynamic_cast< CommandPtr >( resultsData.at( i ) ) );
+               veModel->SetResult( resultsData.at( i ) );
            }
        }

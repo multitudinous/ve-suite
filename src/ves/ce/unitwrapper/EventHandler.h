@@ -41,16 +41,7 @@
  * Base class for event handling.
  */
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class XMLObject;
-}
-}
-}
+#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/VEConfig.h>
 #include <string>
 #include <vector>
@@ -63,7 +54,7 @@ public:
     ///Constructor
     EventHandler()
     {
-        _baseObject = 0;
+        ;
     }
 
     ///Destructor
@@ -74,15 +65,15 @@ public:
 
     ///The call to handle the event
     ///\param objectToProcess The xml Object to process
-    virtual std::string Execute( std::vector< ves::open::xml::XMLObject* > objectToProcess ) = 0;
+    virtual std::string Execute( std::vector< ves::open::xml::XMLObjectPtr > objectToProcess ) = 0;
 
     ///Function to set the xml object to work on
     ///\param baseObject The base object to apply the command to.
-    virtual void SetBaseObject( ves::open::xml::XMLObject* baseObject = 0 ) = 0;
+    virtual void SetBaseObject( ves::open::xml::XMLObjectPtr baseObject = 0 ) = 0;
 
 protected:
     ///??
-    ves::open::xml::XMLObject* _baseObject;
+    ves::open::xml::XMLObjectPtr _baseObject;
 };
 }
 #endif// CE_EVENT_HANDLER_H

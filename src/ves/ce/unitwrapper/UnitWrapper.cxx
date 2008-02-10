@@ -288,7 +288,7 @@ ACE_THROW_SPEC((
     std::ostringstream strm;
     strm << activeId;
 
-    ves::open::xml::CommandPtr params = dynamic_cast< ves::open::xml::CommandPtr >( objectVector.at( 0 ) );
+    ves::open::xml::CommandPtr params = objectVector.at( 0 );
     std::string commandName = params->GetCommandName();
     std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
     currentEventHandler = eventHandlerMap.find( commandName );
@@ -316,7 +316,6 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
     iter = xmlModelMap.find( strm.str() );
     if( iter != xmlModelMap.end() )
     {
-        delete iter->second;
         xmlModelMap.erase( iter );
     }
 }

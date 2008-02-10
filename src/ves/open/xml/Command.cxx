@@ -183,7 +183,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
     }
 }
 ///////////////////////////////////////
-std::string Command::GetCommandName()
+const std::string Command::GetCommandName()
 {
     return _cmdName;
 }

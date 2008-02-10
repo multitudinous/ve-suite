@@ -60,7 +60,7 @@ void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
     {
         if( model )
         {
-            baseModel = dynamic_cast< ves::open::xml::model::ModelPtr >( model );
+            baseModel = model;
         }
     }
     catch ( ... )

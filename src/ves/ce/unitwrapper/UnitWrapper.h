@@ -40,6 +40,7 @@
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/VEConfig.h>
 #include <vector>
+#include <map>
 
 namespace VE_CE
 {

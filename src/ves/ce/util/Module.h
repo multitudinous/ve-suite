@@ -38,6 +38,7 @@
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/model/PortPtr.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 
 #include <vector>
 #include <string>
