@@ -78,8 +78,7 @@ Body_VEXplorer_i::~Body_VEXplorer_i( void )
 {
     if( bufferCommand )
     {
-        delete bufferCommand;
-        bufferCommand = 0;
+        bufferCommand = CommandPtr();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,11 +157,11 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        commandVectorQueue.push_back( static_cast< ves::open::xml::Command* >( objectVector.at( i ) ) );
+        commandVectorQueue.push_back(  objectVector.at( i ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

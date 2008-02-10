@@ -117,9 +117,9 @@ public:
     bool GetClusterMode( void );
 
     ///Get the command queue
-    std::vector <ves::open::xml::Command*> GetCommandQueue();
+    std::vector <ves::open::xml::CommandPtr> GetCommandQueue();
 
-    ves::open::xml::Command* bufferCommand;///< Data to hold command data
+    ves::open::xml::CommandPtr bufferCommand;///< Data to hold command data
 
     ///Set xplorer data
     ///\param input
@@ -130,7 +130,7 @@ protected:
     ///Should be removed once non texture pipelines are created
     //void CreateCommandQueue( void );
 
-    std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
+    std::vector< ves::open::xml::CommandPtr > commandVectorQueue;///< command vector may be a duplicate
     std::vector< std::string > commandStringQueue;///< command queue with raw string data
 
     vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
