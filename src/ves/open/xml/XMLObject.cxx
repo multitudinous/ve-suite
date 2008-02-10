@@ -34,6 +34,7 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/XMLCreator.h>
 #include <ves/open/xml/XMLObjectFactory.h>
+
 #include <sstream>
 #include <iomanip>
 
@@ -42,6 +43,7 @@
 XERCES_CPP_NAMESPACE_USE
 
 using namespace ves::open::xml;
+
 //////////////////////
 XMLObject::XMLObject()
 {
@@ -94,12 +96,12 @@ XMLObject& XMLObject::operator=( const XMLObject& input )
 XMLObject::~XMLObject()
 {}
 //////////////////////////////////////////////////
-void XMLObject::SetObjectNamespace( std::string tagname )
+void XMLObject::SetObjectNamespace( const std::string& tagname )
 {
     _objectNamespace = tagname;
 }
 //////////////////////////////////////////////////
-void XMLObject::SetObjectType( std::string tagName )
+void XMLObject::SetObjectType( const std::string& tagName )
 {
     _objectType = tagName;
 }
@@ -109,23 +111,23 @@ void XMLObject::SetOwnerDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* ow
     _rootDocument = owner;
 }
 ///////////////////////////////////////////
-std::string XMLObject::GetObjectNamespace()
+const std::string& XMLObject::GetObjectNamespace()
 {
     return _objectNamespace;
 }
 /////////////////////////////////////////
-std::string XMLObject::GetObjectType()
+const std::string& XMLObject::GetObjectType()
 {
     return _objectType;
 }
 ////////////////////////////////////////////////////////
-DOMElement* XMLObject::GetXMLData( std::string input )
+DOMElement* XMLObject::GetXMLData( const std::string& input )
 {
     if( _rootDocument )
     {
         //Make sure old data is cleared from the xerces side of the element
         //_clearAllChildrenFromElement();
-        _veElement = _rootDocument->createElement( xercesString( input ) );
+        _veElement = _rootDocument->createElement( Convert( input ).toXMLString() );
 
 
         //update the xerces element w/ the current data in the object
@@ -154,274 +156,20 @@ void XMLObject::_clearAllChildrenFromElement()
         }
     }
 }
-////////////////////////////////////////////////////////////////
-XMLObject::VEStr::VEStr( const char* const toTranscode )
-{
-    // Call the private transcoding method
-    fUnicodeForm = XMLString::transcode( toTranscode );
-}
-//////////////////////////////////////////////
-XMLObject::VEStr::VEStr( std::string input )
-{
-    // Call the private transcoding method
-    fUnicodeForm = XMLString::transcode( input.c_str() );
-}
-//////////////////////////////////////
-XMLObject::VEStr::VEStr( int input )
-{
-    std::ostringstream dirStringStream;
-    dirStringStream << std::setprecision( 10 ) << input;
-
-    // Call the private transcoding method
-    fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
-}
-//////////////////////////////////////
-XMLObject::VEStr::VEStr( unsigned int input )
-{
-    std::ostringstream dirStringStream;
-    dirStringStream << std::setprecision( 10 ) << input;
-
-    // Call the private transcoding method
-    fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
-}
-//////////////////////////////////////
-XMLObject::VEStr::VEStr( long int input )
-{
-    std::ostringstream dirStringStream;
-    dirStringStream << std::setprecision( 10 ) << input;
-
-    // Call the private transcoding method
-    fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
-}
-/////////////////////////////////////////
-XMLObject::VEStr::VEStr( double input )
-{
-    std::ostringstream dirStringStream;
-    dirStringStream << std::setprecision( 10 ) << input;
-
-    // Call the private transcoding method
-    fUnicodeForm = XMLString::transcode( dirStringStream.str().c_str() );
-}
-////////////////////////////
-XMLObject::VEStr::~VEStr()
-{
-    XMLString::release( &fUnicodeForm );
-}
-////////////////////////////////////////////////////
-const XMLCh* XMLObject::VEStr::unicodeForm() const
-{
-    return fUnicodeForm;
-}
 ////////////////////////////////////////////////////////////////////////////////
-/*DOMElement* XMLObject::SetSubElement( std::string subElementTagName, bool dataValue )
+DOMElement* XMLObject::GetSubElement( DOMElement* baseElement,
+                                      const std::string& subElementTagName,
+                                      unsigned int itemIndex )
 {
-   DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
-   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:boolean") );
-   std::string boolValue("true");
-   if(!dataValue)boolValue = "false";
-   DOMText* dataValueString = _rootDocument->createTextNode( xercesString( boolValue ) );
-   dataValueStringElement->appendChild( dataValueString );
-   _veElement->appendChild( dataValueStringElement );
-   return dataValueStringElement;
-}
-////////////////////////////////////////////////////////////////////////////////
-DOMElement* XMLObject::SetSubElement( std::string subElementTagName, std::string dataValue )
-{
-   DOMElement* dataValueStringElement = _rootDocument->createElement( xercesString( subElementTagName ) );
-   dataValueStringElement->setAttribute( xercesString("type"),xercesString("xs:string") );
-   DOMText* dataValueString = _rootDocument->createTextNode( xercesString( dataValue ) );
-   dataValueStringElement->appendChild( dataValueString );
-   _veElement->appendChild( dataValueStringElement );
-   return dataValueStringElement;
-}
-////////////////////////////////////////////////////////////////////////////////
-DOMElement* XMLObject::SetSubElement( std::string subElementTagName, unsigned int dataValue )
-{
-   DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
-   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:unsignedInt") );
-   std::stringstream float2string;
-   float2string << dataValue;
-   DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
-
-   dataValueNumElement->appendChild( dataValueText );
-   _veElement->appendChild( dataValueNumElement );
-   return dataValueNumElement;
-}
-////////////////////////////////////////////////////////////////////////////////
-DOMElement* XMLObject::SetSubElement( std::string subElementTagName, long int dataValue )
-{
-   DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
-   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:integer") );
-   std::stringstream float2string;
-   float2string << dataValue;
-   DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
-
-   dataValueNumElement->appendChild( dataValueText );
-   _veElement->appendChild( dataValueNumElement );
-   return dataValueNumElement;
-}
-////////////////////////////////////////////////////////////////////////////////
-DOMElement* XMLObject::SetSubElement( std::string subElementTagName, double dataValue )
-{
-   DOMElement* dataValueNumElement = _rootDocument->createElement( xercesString( subElementTagName ) );
-   dataValueNumElement->setAttribute( xercesString("type"),xercesString("xs:double") );
-   std::stringstream float2string;
-   float2string << dataValue;
-   DOMText* dataValueText = _rootDocument->createTextNode( xercesString( float2string.str().c_str() ) );
-
-   dataValueNumElement->appendChild( dataValueText );
-   _veElement->appendChild( dataValueNumElement );
-   return dataValueNumElement;
-}
-////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue )
-{
-   dataValue->SetOwnerDocument( _rootDocument );
-   _veElement->appendChild( dataValue->GetXMLData( subElementTagName ) );
-}*/
-/////////////////////////////////////////////////////////////////////////////
-/*void XMLObject::SetAttribute(std::string attirbuteName,std::string attribute, DOMElement* element)
-{
-   if(element == 0 )
-   {
-      element = _veElement;
-   }
-   element->setAttribute( xercesString( attirbuteName ), xercesString( attribute ) );
-}
-/////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetAttribute(std::string attirbuteName,unsigned int attribute, DOMElement* element)
-{
-   if(element == 0 )
-   {
-      element = _veElement;
-   }
-   std::stringstream int2string;
-   int2string << attribute;
-   element->setAttribute( xercesString( attirbuteName ), xercesString( int2string.str().c_str() )  );
-}
-/////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetAttribute(std::string attirbuteName,bool attribute,  DOMElement* element)
-{
-   if(element == 0 )
-   {
-      element = _veElement;
-   }
-   std::string bool2String("false");
-
-   if(attribute )
-   {
-      bool2String ="true";
-   }
-   element->setAttribute( xercesString( attirbuteName ), xercesString( bool2String.c_str() )  );
-}*/
-////////////////////////////////////////////////////////////////////////////////
-/*void XMLObject::SetSubElement( std::string subElementTagName, XMLObject* dataValue,
-                              std::string attribName, std::string attrib )
-{
-   dataValue->SetOwnerDocument( _rootDocument );
-   DOMElement* xmlObjectElement = dataValue->GetXMLData( subElementTagName );
-   xmlObjectElement->setAttribute( xercesString( attribName ), xercesString( attrib ) );
-   _veElement->appendChild( xmlObjectElement );
-}*/
-//////////////////////////////////////////////////////////////////////////////////////
-/*void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
-                             std::string attributeName, bool& attribute)
-{
-   try
-   {
-      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
-      if(!fUnicodeForm )
-      {
-         return;
-      }
-
-      std::string value( fUnicodeForm );
-      delete fUnicodeForm;
-      if(value == "true")
-      {
-         attribute = true;
-      }
-      else
-      {
-         attribute = false;
-      }
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid element!!"<<std::endl;
-      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
-   }
-}
-/////////////////////////////////////////////////////////////////////////////////////
-void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
-                             std::string attributeName, unsigned int& attribute)
-{
-   try
-   {
-      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
-      if(!fUnicodeForm )
-      {
-         return;
-      }
-
-      attribute = std::atoi( fUnicodeForm );
-      delete fUnicodeForm;
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid element!!"<<std::endl;
-      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
-   }
-}
-/////////////////////////////////////////////////////////////////////////////////////
-void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
-                              std::string attributeName, float& attribute)
-{
-   try
-   {
-      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName.c_str())) );
-      if(!fUnicodeForm )
-      {
-         return;
-      }
-
-      attribute = std::atof( fUnicodeForm );
-      delete fUnicodeForm;
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid element!!"<<std::endl;
-      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
-   }
-}
-//////////////////////////////////////////////////////////////////////////////
-void XMLObject::GetAttribute( DOMElement* baseElement, std::string attributeName,std::string& attribute)
-{
-   attribute.clear();
-   try
-   {
-      char* fUnicodeForm = XMLString::transcode( baseElement->getAttribute(xercesString(attributeName)) );
-      attribute.assign( fUnicodeForm );
-      delete fUnicodeForm;
-   }
-   catch(...)
-   {
-      std::cout<<"Invalid element!!"<<std::endl;
-      std::cout<<"XMLObject::GetAttribute()"<<std::endl;
-   }
-}*/
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-DOMElement* XMLObject::GetSubElement( DOMElement* baseElement, std::string subElementTagName, unsigned int itemIndex )
-{
-    DOMElement* foundElement = dynamic_cast<DOMElement*>( baseElement->getElementsByTagName( xercesString( subElementTagName ) )->item( itemIndex ) );
+    DOMElement* foundElement = dynamic_cast<DOMElement*>( baseElement->getElementsByTagName( Convert( subElementTagName ).toXMLString() )->item( itemIndex ) );
     if( foundElement )
     {
         if( foundElement->getParentNode() != baseElement )
         {
-            XMLSize_t nChildren = baseElement->getElementsByTagName( xercesString( subElementTagName ) )->getLength();
+            XMLSize_t nChildren = baseElement->getElementsByTagName( Convert( subElementTagName ).toXMLString() )->getLength();
             for( XMLSize_t i = 0; i < nChildren; i++ )
             {
-                foundElement = dynamic_cast<DOMElement*>( baseElement->getElementsByTagName( xercesString( subElementTagName ) )->item( i ) );
+                foundElement = dynamic_cast<DOMElement*>( baseElement->getElementsByTagName( Convert( subElementTagName ).toXMLString() )->item( i ) );
                 if( foundElement->getParentNode() == baseElement )
                     return foundElement;
             }
@@ -446,12 +194,12 @@ void XMLObject::SetID( unsigned int idVar )
     uuid = dirStringStream.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLObject::SetID( std::string idVar )
+void XMLObject::SetID( const std::string& idVar )
 {
     uuid = idVar;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string XMLObject::GetID( void )
+const std::string& XMLObject::GetID( void )
 {
     return uuid;
 }

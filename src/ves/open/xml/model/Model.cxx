@@ -346,7 +346,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
 
     //get the geometry nodes
     {
-        if( currentElement->getElementsByTagName( xercesString( "geometry" ) )->getLength() > 0 )
+        if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "geometry" ).toXMLString() )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
             if( geometry )
@@ -360,7 +360,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "ports" ) )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "ports" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -371,7 +371,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "results" ) )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "results" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -382,7 +382,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "inputs" ) )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "inputs" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -393,7 +393,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "informationPackets" ) )->getLength();
+        unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "informationPackets" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -405,7 +405,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
 
     //get the model attribute nodes
     {
-        if( currentElement->getElementsByTagName( xercesString( "modelAttributes" ) )->getLength() > 0 )
+        if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "modelAttributes" ).toXMLString() )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
             if( modelAttribute )
@@ -702,7 +702,7 @@ void Model::RemoveInformationPacket( std::string name )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Model::_updateVEElement( std::string input )
+void Model::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     for( size_t i = 0; i < ports.size(); ++i )
@@ -730,19 +730,19 @@ void Model::_updateVEElement( std::string input )
     {
         std::stringstream int2string;
         int2string << iconScale;
-        iconElement->setAttribute( xercesString( "iconScale" ), xercesString( int2string.str().c_str() ) );
+        iconElement->setAttribute( ves::open::xml::XMLObject::Convert( "iconScale" ).toXMLString(), xercesString( int2string.str().c_str() ) );
     }
     ///
     {
         std::stringstream int2string;
         int2string << iconRotation;
-        iconElement->setAttribute( xercesString( "iconRotation" ), xercesString( int2string.str().c_str() ) );
+        iconElement->setAttribute( ves::open::xml::XMLObject::Convert( "iconRotation" ).toXMLString(), xercesString( int2string.str().c_str() ) );
     }
     ///
     {
         std::stringstream int2string;
         int2string << iconMirror;
-        iconElement->setAttribute( xercesString( "iconMirror" ), xercesString( int2string.str().c_str() ) );
+        iconElement->setAttribute( ves::open::xml::XMLObject::Convert( "iconMirror" ).toXMLString(), xercesString( int2string.str().c_str() ) );
     }
 
     for( size_t i = 0; i < results.size(); ++i )

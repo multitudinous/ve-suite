@@ -133,7 +133,7 @@ void User::SetObjectFromXMLData( DOMNode* xmlInput )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void User::_updateVEElement( std::string input )
+void User::_updateVEElement( const std::string& input )
 {
     SetAttribute( "userID", _userId );
     SetAttribute( "id", uuid );

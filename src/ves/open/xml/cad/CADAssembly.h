@@ -119,7 +119,7 @@ protected:
 
     ///Internally update the XML data for this node.
     ///\param input The XML element data.
-    virtual void _updateVEElement( std::string input );
+    virtual void _updateVEElement( const std::string& input );
 
     ///Update the child nodes of this assembly
     void _updateChildren();
@@ -131,14 +131,7 @@ protected:
     ChildList m_children; ///<A list of the children
     std::string m_associatedDataset;///<The dataset associated with this CADNode
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADAssembly* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

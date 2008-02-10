@@ -142,7 +142,7 @@ void Port::SetPortType( std::string porttype )
     portType = porttype;
 }
 ///////////////////////////////////////
-void Port::_updateVEElement( std::string input )
+void Port::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetSubElement( "number", portNumber );
@@ -226,7 +226,7 @@ void Port::SetObjectFromXMLData( DOMNode* element )
         }
         // for port data
         {
-            unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "portData" ) )->getLength();
+            unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "portData" ).toXMLString() )->getLength();
 
             for( unsigned int i = 0; i < numberOfPortData; ++i )
             {

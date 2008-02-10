@@ -85,7 +85,7 @@ System& System::operator=( const System& input )
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void System::_updateVEElement( std::string input )
+void System::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", uuid );
@@ -138,7 +138,7 @@ void System::SetObjectFromXMLData( DOMNode* element )
     // for models
     {
         DOMNodeList* subElements = currentElement->
-                                   getElementsByTagName( xercesString( "model" ) );
+                                   getElementsByTagName( ves::open::xml::XMLObject::Convert( "model" ).toXMLString() );
         unsigned int numberOfModels = subElements->getLength();
 
         for( unsigned int i = 0; i < numberOfModels; ++i )

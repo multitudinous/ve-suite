@@ -81,20 +81,13 @@ public:
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
     ///point holds two unsigned ints used by wx to construct
     ///the network diagram in Conductor
     ///The first component is x, the second component is y
     std::pair< unsigned int, unsigned int > point;///<Raw data.
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Point* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

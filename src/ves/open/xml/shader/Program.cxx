@@ -156,7 +156,7 @@ std::string Program::GetProgramName()
     return _name;
 }
 /////////////////////////////////////////////////
-void Program::_updateVEElement( std::string input )
+void Program::_updateVEElement( const std::string& input )
 {
     _updateProgramName();
     if( _vertexShader )
@@ -173,7 +173,7 @@ void Program::_updateVEElement( std::string input )
 /////////////////////////////////
 void Program::_updateProgramName()
 {
-    DOMElement* nameElement = _rootDocument->createElement( xercesString( "name" ) );
+    DOMElement* nameElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "name" ).toXMLString() );
     DOMText* name = _rootDocument->createTextNode( xercesString( _name ) );
     nameElement->appendChild( name );
     _veElement->appendChild( nameElement );

@@ -109,7 +109,7 @@ public:
 protected:
     ///Internally update the command element.
     ///\param tagName The tagName of this element
-    void _updateVEElement( std::string tagName );
+    void _updateVEElement( const std::string& tagName );
     ///Internally update the command name from the input XML data.
     void _updateCommandName( void );
     ///Internally update the DataValuePair s from the input XML data.
@@ -119,14 +119,7 @@ protected:
     std::vector< DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.
     std::map< std::string, DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, Command* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

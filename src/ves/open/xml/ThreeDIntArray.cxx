@@ -152,7 +152,7 @@ std::vector< std::vector< std::vector< long > > > ThreeDIntArray::GetArray( void
     return tripleArray;
 }
 ////////////////////////////////////
-void ThreeDIntArray::_updateVEElement( std::string input )
+void ThreeDIntArray::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
@@ -192,7 +192,7 @@ void ThreeDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "index3" ) );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "index3" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if( minIndex > numNodes )

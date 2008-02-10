@@ -125,7 +125,7 @@ public:
 protected:
     ///Internally update the XML data.
     ///\param tagName The tag name for this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
     /*
     float* _translation;
     float* _scale;
@@ -135,14 +135,7 @@ protected:
     FloatArray* scaleArray;///<The FloatArray holding scale information.
     FloatArray* rotationArray;///<The FloatArray holding rotation information.
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, Transform* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

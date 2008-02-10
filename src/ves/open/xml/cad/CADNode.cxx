@@ -268,7 +268,7 @@ ves::open::xml::cad::CADAttribute& CADNode::GetActiveAttribute()
    return _uID;
 }*/
 /////////////////////////////////////////////////
-void CADNode::_updateVEElement( std::string input )
+void CADNode::_updateVEElement( const std::string& input )
 {
     _updateNodeType();
     _updateNodeName();
@@ -315,7 +315,7 @@ void CADNode::_updateVEElement( std::string input )
 ///////////////////////////////
 void CADNode::_updateNodeName()
 {
-    DOMElement* nodeNameElement = _rootDocument->createElement( xercesString( "name" ) );
+    DOMElement* nodeNameElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "name" ).toXMLString() );
     DOMText* nodeName = _rootDocument->createTextNode( xercesString( m_name.c_str() ) );
     nodeNameElement->appendChild( nodeName );
     _veElement->appendChild( nodeNameElement );
@@ -323,7 +323,7 @@ void CADNode::_updateNodeName()
 ////////////////////////////////////////////
 void CADNode::_updateNodeType()
 {
-    DOMElement* nodeTypeElement = _rootDocument->createElement( xercesString( "type" ) );
+    DOMElement* nodeTypeElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "type" ).toXMLString() );
     DOMText* nodeType = _rootDocument->createTextNode( xercesString( m_type ) );
     nodeTypeElement->appendChild( nodeType );
     _veElement->appendChild( nodeTypeElement );
@@ -345,7 +345,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             if( currentElement->hasChildNodes() )
             {
-                if( currentElement->getAttributeNode( xercesString( "visibility" ) ) )
+                if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "visibility" ).toXMLString() ) )
                 {
                     dynamic_cast<ves::open::xml::XMLObject*>( this )->GetAttribute( currentElement, "visibility", m_visibility );
                 }
@@ -354,7 +354,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                     m_visibility = true;
                 }
 
-                if( currentElement->getAttributeNode( xercesString( "physics" ) ) )
+                if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "physics" ).toXMLString() ) )
                 {
                     dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "physics", m_physics );
                 }
@@ -363,7 +363,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                     m_physics = false;
                 }
 
-                if( currentElement->getAttributeNode( xercesString( "mass" ) ) )
+                if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "mass" ).toXMLString() ) )
                 {
                     dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "mass", m_mass );
                 }
@@ -372,7 +372,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                     m_mass = 1.0f;
                 }
 
-                if( currentElement->getAttributeNode( xercesString( "friction" ) ) )
+                if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "friction" ).toXMLString() ) )
                 {
                     dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "friction", m_friction );
                 }
@@ -381,7 +381,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                     m_friction = 1.0f;
                 }
 
-                if( currentElement->getAttributeNode( xercesString( "restitution" ) ) )
+                if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "restitution" ).toXMLString() ) )
                 {
                     dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "restitution", m_restitution );
                 }
@@ -390,7 +390,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                     m_restitution = 0.0f;
                 }
 
-                if( currentElement->getAttributeNode( xercesString( "physics mesh" ) ) )
+                if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "physics mesh" ).toXMLString() ) )
                 {
                     dynamic_cast< ves::open::xml::XMLObject* >( this )->GetAttribute( currentElement, "physics mesh", m_physicsMesh );
                 }
@@ -430,7 +430,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 {
                     m_attributeList.clear();
                 }
-                DOMNodeList* attributeNodes = currentElement->getElementsByTagName( xercesString( "attribute" ) );
+                DOMNodeList* attributeNodes = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "attribute" ).toXMLString() );
                 XMLSize_t nNewAttributes = attributeNodes->getLength();
                 for( XMLSize_t  i = 0; i < nNewAttributes ; i++ )
                 {
@@ -447,7 +447,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 }
 
                 m_animations.clear();
-                DOMNodeList* animationNodes = currentElement->getElementsByTagName( xercesString( "animation" ) );
+                DOMNodeList* animationNodes = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "animation" ).toXMLString() );
                 XMLSize_t nNewAnimations = animationNodes->getLength();
                 for( XMLSize_t  i = 0; i < nNewAnimations ; i++ )
                 {

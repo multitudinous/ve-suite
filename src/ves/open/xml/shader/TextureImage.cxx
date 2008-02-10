@@ -302,7 +302,7 @@ void TextureImage::SetTextureImageType( std::string textureType )
     }
 }
 //////////////////////////////////////////////////////
-void TextureImage::_updateVEElement( std::string input )
+void TextureImage::_updateVEElement( const std::string& input )
 {
     SetSubElement( "textureDescriptionData", &( *_textureDescription ) );
 }

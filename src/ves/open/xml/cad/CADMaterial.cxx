@@ -219,7 +219,7 @@ std::string CADMaterial::GetMaterialName()
 ///////////////////////////////////////
 void CADMaterial::_updateMaterialName()
 {
-    DOMElement* nameElement  = _rootDocument->createElement( xercesString( "materialName" ) );
+    DOMElement* nameElement  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "materialName" ).toXMLString() );
     _veElement->appendChild( nameElement );
 
     DOMText* materialName = _rootDocument->createTextNode( xercesString( _materialName ) );
@@ -228,7 +228,7 @@ void CADMaterial::_updateMaterialName()
 ////////////////////////////////////
 void CADMaterial::_updateShininess()
 {
-    DOMElement* shineElement  = _rootDocument->createElement( xercesString( "shininess" ) );
+    DOMElement* shineElement  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "shininess" ).toXMLString() );
     _veElement->appendChild( shineElement );
 
     DOMText* shininess = _rootDocument->createTextNode( xercesString( _shininess ) );
@@ -249,14 +249,14 @@ void CADMaterial::_updateColorProperties()
     _specular->SetOwnerDocument( _rootDocument );
     _veElement->appendChild( _specular->GetXMLData( "specular" ) );
 
-    DOMElement* opacityElement  = _rootDocument->createElement( xercesString( "opacity" ) );
+    DOMElement* opacityElement  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "opacity" ).toXMLString() );
     _veElement->appendChild( opacityElement );
 
     DOMText* opacity = _rootDocument->createTextNode( xercesString( _opacity ) );
     opacityElement->appendChild( opacity );
 }
 /////////////////////////////////////////////////////
-void CADMaterial::_updateVEElement( std::string input )
+void CADMaterial::_updateVEElement( const std::string& input )
 {
     _updateColorProperties();
     _updateShininess();
@@ -267,7 +267,7 @@ void CADMaterial::_updateVEElement( std::string input )
 ////////////////////////////////////////
 void CADMaterial::_updateMaterialFace()
 {
-    DOMElement* faceElement = _rootDocument->createElement( xercesString( "face" ) );
+    DOMElement* faceElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "face" ).toXMLString() );
     DOMText* faceName = _rootDocument->createTextNode( xercesString( _face ) );
     faceElement->appendChild( faceName );
 
@@ -276,7 +276,7 @@ void CADMaterial::_updateMaterialFace()
 ////////////////////////////////////
 void CADMaterial::_updateColorMode()
 {
-    DOMElement* cModeElement = _rootDocument->createElement( xercesString( "colorMode" ) );
+    DOMElement* cModeElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "colorMode" ).toXMLString() );
     DOMText* cMode = _rootDocument->createTextNode( xercesString( _colorMode ) );
     cModeElement->appendChild( cMode );
 

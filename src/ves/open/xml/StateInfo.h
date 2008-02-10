@@ -93,20 +93,13 @@ public:
 protected:
     ///Internally update the XML data.
     ///\param tagName The tag name to use for this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
     ///Internally update the Command list.
     void _updateCommands();
 
     std::vector<CommandPtr> _stateInfo;///<The Command list holding state information.
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, StateInfo* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

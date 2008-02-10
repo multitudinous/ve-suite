@@ -120,7 +120,7 @@ std::string Link::GetLinkName( void )
     return linkName;
 }
 ///////////////////////////////////////
-void Link::_updateVEElement( std::string input )
+void Link::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "name", linkName );
@@ -258,7 +258,7 @@ void Link::SetObjectFromXMLData( DOMNode* element )
 
         // for link points
         {
-            unsigned int numberOfPortData = currentElement->getElementsByTagName( xercesString( "linkPoints" ) )->getLength();
+            unsigned int numberOfPortData = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "linkPoints" ).toXMLString() )->getLength();
 
             for( unsigned int i = 0; i < numberOfPortData; ++i )
             {

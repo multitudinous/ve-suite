@@ -151,7 +151,7 @@ std::vector< std::vector< long > > TwoDIntArray::GetArray( void )
     return tempData;
 }
 ////////////////////////////////////
-void TwoDIntArray::_updateVEElement( std::string input )
+void TwoDIntArray::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
@@ -191,7 +191,7 @@ void TwoDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "index2" ) );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "index2" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if( minIndex > numNodes )

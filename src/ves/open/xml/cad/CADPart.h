@@ -90,21 +90,14 @@ protected:
 
     ///Internally update the XML data for this node.
     ///\param input The XML data for this element.
-    virtual void _updateVEElement( std::string input );
+    virtual void _updateVEElement( const std::string& input );
 
     ///Internally update the XML data for the CAD filename that this part represents.
     void _updateCADFileName();
 
     std::string m_cadFileName; ///<The name of the CAD file on disk
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADPart* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

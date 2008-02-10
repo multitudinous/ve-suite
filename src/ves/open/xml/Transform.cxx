@@ -166,7 +166,7 @@ float* Transform::GetRotation()
 }
 */
 /////////////////////////////////////////////////////
-void Transform::_updateVEElement( std::string input )
+void Transform::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
     //we know this to be 3 float arrays
@@ -201,11 +201,11 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
 
             // do we need to delete the old one or does xerces handle this???
             //_nChildren = 3;
-            translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( xercesString( "translation" ) )->item( 0 ) );
+            translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "translation" ).toXMLString() )->item( 0 ) );
 
-            scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName( xercesString( "scale" ) )->item( 0 ) );
+            scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "scale" ).toXMLString() )->item( 0 ) );
 
-            rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( xercesString( "rotation" ) )->item( 0 ) );
+            rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "rotation" ).toXMLString() )->item( 0 ) );
         }
     }
     else

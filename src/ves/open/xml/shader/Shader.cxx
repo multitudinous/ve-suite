@@ -120,7 +120,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
 
                 //populate the uniforms
                 {
-                    DOMNodeList* uniformList = currentElement->getElementsByTagName( xercesString( "uniform" ) );
+                    DOMNodeList* uniformList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "uniform" ).toXMLString() );
                     unsigned int nUniforms = uniformList->getLength();
                     for( unsigned int i = 0; i < nUniforms; i++ )
                     {
@@ -131,7 +131,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
                 }
                 //populate the texture images
                 {
-                    DOMNodeList* textureList = currentElement->getElementsByTagName( xercesString( "textureImage" ) );
+                    DOMNodeList* textureList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "textureImage" ).toXMLString() );
                     unsigned int nTextures = textureList->getLength();
                     //std::cout<<"Texture Images in shader: "<<nTextures<<std::endl;
                     for( unsigned int i = 0; i < nTextures; i++ )
@@ -214,7 +214,7 @@ Uniform& Shader::GetUniform( unsigned int index )
     return _uniformList.at( index );
 }
 ////////////////////////////////////////////////
-void Shader::_updateVEElement( std::string input )
+void Shader::_updateVEElement( const std::string& input )
 {
     _updateShaderType();
     _updateTextureImages();
@@ -249,7 +249,7 @@ void Shader::_updateUniforms()
 ////////////////////////////////
 void Shader::_updateShaderType()
 {
-    DOMElement* typeElement = _rootDocument->createElement( xercesString( "type" ) );
+    DOMElement* typeElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "type" ).toXMLString() );
     DOMText* type = _rootDocument->createTextNode( xercesString( _shaderType ) );
     typeElement->appendChild( type );
     _veElement->appendChild( typeElement );
@@ -257,7 +257,7 @@ void Shader::_updateShaderType()
 //////////////////////////////////
 void Shader::_updateShaderSource()
 {
-    DOMElement* sourceElement = _rootDocument->createElement( xercesString( "shaderCode" ) );
+    DOMElement* sourceElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "shaderCode" ).toXMLString() );
     DOMText* source = _rootDocument->createTextNode( xercesString( _shaderSource ) );
     sourceElement->appendChild( source );
     _veElement->appendChild( sourceElement );

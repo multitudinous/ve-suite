@@ -234,7 +234,7 @@ void DOMDocumentManager::UnLoadParser( void )
 /////////////////////////////////////////////////////
 void DOMDocumentManager::CreateCommandDocument( std::string type )
 {
-    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( xercesString( "LS" ) );
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( ves::open::xml::XMLObject::Convert( "LS" ).toXMLString() );
 
     char* message = 0;
     try
@@ -266,20 +266,20 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
         return;
     }
 
-    commandDocument->setVersion( xercesString( "1.0" ) );
-    commandDocument->setEncoding( xercesString( "ISO-8859-1" ) );
+    commandDocument->setVersion( ves::open::xml::XMLObject::Convert( "1.0" ).toXMLString() );
+    commandDocument->setEncoding( ves::open::xml::XMLObject::Convert( "ISO-8859-1" ).toXMLString() );
     DOMElement* root_elem = commandDocument->getDocumentElement(); //This is the root element
-    root_elem->setAttribute( xercesString( "name" ), xercesString( documentType[ type ].first ) );
-    root_elem->setAttribute( xercesString( "xmlns:xsi" ), xercesString( "http://www.w3.org/2001/XMLSchema-instance" ) );
-    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg.xsd" ) );
-    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "verg_model.xsd" ) );
-    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "vecad.xsd" ) );
-    root_elem->setAttribute( xercesString( "xsi:noNamespaceSchemaLocation" ), xercesString( "veshader.xsd" ) );
+    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "name" ).toXMLString(), xercesString( documentType[ type ].first ) );
+    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xmlns:xsi" ).toXMLString(), ves::open::xml::XMLObject::Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
+    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "verg.xsd" ).toXMLString() );
+    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "verg_model.xsd" ).toXMLString() );
+    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "vecad.xsd" ).toXMLString() );
+    root_elem->setAttribute( ves::open::xml::XMLObject::Convert( "xsi:noNamespaceSchemaLocation" ).toXMLString(), ves::open::xml::XMLObject::Convert( "veshader.xsd" ).toXMLString() );
 }
 /////////////////////////////////////////////////////
 std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 {
-    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( xercesString( "LS" ) );
+    DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation( ves::open::xml::XMLObject::Convert( "LS" ).toXMLString() );
     DOMWriter* theSerializer = dynamic_cast< DOMImplementationLS* >( impl )->createDOMWriter();
     theSerializer->setFeature( XMLUni::fgDOMWRTFormatPrettyPrint, true );
     char* message = 0;

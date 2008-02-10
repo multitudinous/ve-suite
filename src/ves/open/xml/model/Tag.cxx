@@ -93,7 +93,7 @@ void Tag::SetText( std::string text )
     tagText = text;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::_updateVEElement( std::string input )
+void Tag::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", uuid );
@@ -148,7 +148,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     // for Tag points
     unsigned int numberOfPoints =
         currentElement->getElementsByTagName(
-            xercesString( "linkPoints" ) )->getLength();
+            ves::open::xml::XMLObject::Convert( "linkPoints" ).toXMLString() )->getLength();
 
     for( unsigned int i = 0; i < numberOfPoints; ++i )
     {

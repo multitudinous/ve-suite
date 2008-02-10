@@ -211,7 +211,7 @@ void DataValuePair::SetData( std::string dataName, XMLObject* vexmlObject )
     }
 }
 ///////////////////////////////////////
-void DataValuePair::_updateVEElement( std::string input )
+void DataValuePair::_updateVEElement( const std::string& input )
 {
     //fill in datavalue pairs, via xerces, according to schema
     //Add code here to update the specific sub elements
@@ -298,7 +298,7 @@ void DataValuePair::_extractXMLObject( DOMElement* baseElement, std::string obje
             _veXMLObject = 0;
         }
 
-        char* tempString = XMLString::transcode( genericObject->getAttribute( xercesString( "objectType" ) ) );
+        char* tempString = XMLString::transcode( genericObject->getAttribute( ves::open::xml::XMLObject::Convert( "objectType" ).toXMLString() ) );
         std::string attr( tempString );
         XMLString::release( &tempString );
         if( !attr.empty() )
@@ -328,7 +328,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
         GetAttribute( currentElement, "id", uuid );
 
         {
-            DOMNodeList* subElements = currentElement->getElementsByTagName( xercesString( "dataName" ) );
+            DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataName" ).toXMLString() );
             if( subElements->getLength() > 0 )
             {
                 //should only be the name of the command
@@ -347,7 +347,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
             DOMNodeList* subElements = 0;
             DOMElement* dataElement = 0;
 
-            if( currentElement->getElementsByTagName( xercesString( "genericObject" ) )->getLength() )
+            if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "genericObject" ).toXMLString() )->getLength() )
             {
                 try
                 {
@@ -360,9 +360,9 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 _dataType = "XMLOBJECT";
             }
             //else if(_dataType == "STRING")
-            else if( currentElement->getElementsByTagName( xercesString( "dataValueString" ) )->getLength() )
+            else if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValueString" ).toXMLString() )->getLength() )
             {
-                subElements = currentElement->getElementsByTagName( xercesString( "dataValueString" ) );
+                subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValueString" ).toXMLString() );
 
                 DOMElement* dataValueStringName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueStringName )
@@ -371,7 +371,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                     SetDataType( std::string( "STRING" ) );
                 }
             }
-            else if( currentElement->getElementsByTagName( xercesString( "dataValueUInt" ) )->getLength() )
+            else if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValueUInt" ).toXMLString() )->getLength() )
                 //_dataType == "UNSIGNED INT")
             {
                 DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
@@ -379,18 +379,18 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 _dataType = "UNSIGNED INT";
             }
             //else if(_dataType == "LONG")
-            else if( currentElement->getElementsByTagName( xercesString( "dataValueInt" ) )->getLength() )
+            else if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValueInt" ).toXMLString() )->getLength() )
             {
                 DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
                 intDataValue = ExtractFromSimpleElement< long int >( dataLongdValue );
                 _dataType = "LONG";
             }
             //else if(_dataType == "FLOAT" )
-            else if( currentElement->getElementsByTagName( xercesString( "dataValueNum" ) )->getLength() )
+            else if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValueNum" ).toXMLString() )->getLength() )
             {
                 //get variables by tags
                 //DOMNodeList* subElements = 0;
-                subElements = currentElement->getElementsByTagName( xercesString( "dataValueNum" ) );
+                subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValueNum" ).toXMLString() );
 
                 DOMElement* dataValueNum = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueNum )
@@ -399,7 +399,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                     SetDataType( std::string( "FLOAT" ) );
                 }
             }
-            else if( currentElement->getElementsByTagName( xercesString( "dataValue" ) )->getLength() )
+            else if( currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "dataValue" ).toXMLString() )->getLength() )
             {
                 DOMElement* dataValueTemp = GetSubElement( currentElement, "dataValue", 0 );
                 std::string type;

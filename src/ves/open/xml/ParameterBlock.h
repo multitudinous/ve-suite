@@ -120,20 +120,13 @@ public:
 protected:
     ///Internally update the XML data.
     ///\param tagName The tag name for this element
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
     unsigned int _id;///<The block ID.
     Transform* _dcs;///<The optional Transform.
     std::vector<DataValuePair*> _properties;///<The DataValuePair list containing the block properties.
     std::string paramName;
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ParameterBlock* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

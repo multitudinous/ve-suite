@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef NETWORK_H_
-#define NETWORK_H_
+#ifndef _VES_OPEN_XML_NETWORK_H_
+#define _VES_OPEN_XML_NETWORK_H_
 /*!\file Network.h
   *System Network API
   */
@@ -118,7 +118,7 @@ public:
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
 
 private:
     ///raw datatypes of Network that are specified in the verg_model.xsd file
@@ -128,14 +128,7 @@ private:
     std::vector< TagPtr > tags;
     ModelSharedPtr parentModel;
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Network* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

@@ -250,7 +250,7 @@ public:
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
 
     ///Internally extract data of type "XMLOBJECT" from the DataValuePair
     ///In derived classes, this should be overridden
@@ -269,14 +269,7 @@ protected:
 
     XMLObject* _veXMLObject;///<Raw XMLObject.
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, DataValuePair* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

@@ -135,7 +135,7 @@ public:
 protected:
     ///Internally update the XML data for this element.
     ///\param input The XML element information
-    virtual void _updateVEElement( std::string input );
+    virtual void _updateVEElement( const std::string& input );
 
     ///Internally update the texture images.
     void _updateTextureImages();
@@ -155,14 +155,7 @@ protected:
     std::vector<Uniform> _uniformList;///<The list of uniforms.
 
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::shader::Shader* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

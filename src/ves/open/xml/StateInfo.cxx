@@ -66,7 +66,7 @@ void StateInfo::ClearState()
     _stateInfo.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StateInfo::_updateVEElement( std::string input )
+void StateInfo::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
     //this will be based on the number of commands stored in the state
@@ -95,7 +95,7 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
     }
 
     //get variables by tags
-    DOMNodeList* subElements = currentElement->getElementsByTagName( xercesString( "Command" ) );
+    DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "Command" ).toXMLString() );
 
     _stateInfo.clear();
     //we can have as many dvpairs as we want so get them all and populate the list

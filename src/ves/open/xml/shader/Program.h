@@ -99,7 +99,7 @@ public:
 protected:
     ///Internally update the XML data for this element.
     ///\param input The XML element information
-    virtual void _updateVEElement( std::string input );
+    virtual void _updateVEElement( const std::string& input );
 
     ///Internally update the name from the XML data.
     void _updateProgramName();
@@ -108,14 +108,7 @@ protected:
     ves::open::xml::shader::ShaderPtr _vertexShader;///< The vertex shader.
     ves::open::xml::shader::ShaderPtr _fragmentShader;///< The fragment shader.
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::shader::Program* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

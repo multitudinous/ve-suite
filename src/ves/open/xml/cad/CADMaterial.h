@@ -172,7 +172,7 @@ protected:
 
     ///Internally update the XML data for the material.
     ///\param input The new XML data for the material.
-    virtual void _updateVEElement( std::string input );
+    virtual void _updateVEElement( const std::string& input );
 
     ///Internally update the XML data for the material shininess.
     void _updateShininess();
@@ -199,14 +199,7 @@ protected:
     std::string _face;///< Face that this material is applied to.
     double _opacity;///<Opacity value
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADMaterial* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

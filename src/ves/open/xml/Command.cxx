@@ -95,7 +95,7 @@ void Command::AddDataValuePair( DataValuePairWeakPtr commandValuePair )
     nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName()] = commandValuePair;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Command::_updateVEElement( std::string input )
+void Command::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
     //_nChildren will be the number of dvPairs + the name of the command but we have to call the
@@ -108,7 +108,7 @@ void Command::_updateVEElement( std::string input )
 ////////////////////////////////////
 void Command::_updateCommandName()
 {
-    DOMElement* cmdNameElement = _rootDocument->createElement( xercesString( "command" ) );
+    DOMElement* cmdNameElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "command" ).toXMLString() );
     DOMText* cmdName = _rootDocument->createTextNode( xercesString( _cmdName.c_str() ) );
     cmdNameElement->appendChild( cmdName );
     _veElement->appendChild( cmdNameElement );
@@ -141,7 +141,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
     {
         //get variables by tags
         DOMNodeList* subElements = 0;
-        subElements = currentElement->getElementsByTagName( xercesString( "command" ) );
+        subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "command" ).toXMLString() );
         if( subElements->getLength() > 0 )
         {
             //should only be the name of the command
@@ -156,7 +156,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
     //break down the element
     {
         //get variables by tags
-        DOMNodeList* subElements = currentElement->getElementsByTagName( xercesString( "parameter" ) );
+        DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "parameter" ).toXMLString() );
         //clear out old dvpairs
         _dataValuePairs.clear();
         nameToDataValuePairMap.clear();

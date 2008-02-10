@@ -130,7 +130,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
 
     if( currentElement )
     {
-        if( currentElement->hasAttribute( xercesString( "id" ) ) )
+        if( currentElement->hasAttribute( ves::open::xml::XMLObject::Convert( "id" ).toXMLString() ) )
         {
             std::string emptyCheck;
             XMLObject::GetAttribute( currentElement, "id", emptyCheck );
@@ -164,7 +164,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
         }
         _properties.clear();
 
-        unsigned int numberOfProperties = currentElement->getElementsByTagName( xercesString( "properties" ) )->getLength();
+        unsigned int numberOfProperties = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "properties" ).toXMLString() )->getLength();
         for( unsigned int i = 0; i < numberOfProperties; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "properties", i );
@@ -174,7 +174,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
     }
 }
 ////////////////////////////////////////
-void ParameterBlock::_updateVEElement( std::string input )
+void ParameterBlock::_updateVEElement( const std::string& input )
 {
     //Add code here to update the specific sub elements
     SetSubElement( "blockID", _id );

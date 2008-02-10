@@ -118,7 +118,7 @@ Network& Network::operator=( const Network& input )
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::_updateVEElement( std::string input )
+void Network::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     for( size_t i = 0; i < links.size(); ++i )
@@ -186,7 +186,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
     {
         unsigned int numberOfPortData =
             currentElement->getElementsByTagName(
-                xercesString( "link" ) )->getLength();
+                ves::open::xml::XMLObject::Convert( "link" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
@@ -201,7 +201,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
     {
         unsigned int numberOfStates =
             currentElement->getElementsByTagName(
-                xercesString( "conductorState" ) )->getLength();
+                ves::open::xml::XMLObject::Convert( "conductorState" ).toXMLString() )->getLength();
 
         for( unsigned int i = 0; i < numberOfStates; ++i )
         {
@@ -215,7 +215,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
     {
         unsigned int numberOfPortData =
             currentElement->getElementsByTagName(
-                xercesString( "tag" ) )->getLength();
+                ves::open::xml::XMLObject::Convert( "tag" ).toXMLString() )->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "tag", i );

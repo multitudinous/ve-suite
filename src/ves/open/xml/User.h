@@ -94,19 +94,12 @@ public:
 protected:
     ///Internally update this element
     ///\param tagName The tagName for this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
     std::string _userId;///<The users unique identification
     StateInfoPtr m_stateInfo;///<The StateInfo for this user.
     VEControlStatus _controlStatus;///<The VEControlStatus of this user.
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, User* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

@@ -87,21 +87,14 @@ protected:
 
     ///Internally update the data.
     ///\param tagName The tag name of this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
     unsigned int _nElements;///<Length of this float array.
     std::vector<long> _array;///<Raw data.
 
 private:
     XMLSize_t minIndex;///<Mininum size of the array.
 };
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, OneDIntArray* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
-}
+
 }
 }
 }

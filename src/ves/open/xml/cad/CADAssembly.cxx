@@ -165,10 +165,10 @@ ves::open::xml::cad::CADNode* CADAssembly::GetChild( unsigned int whichChild )
 ///////////////////////////////////
 void CADAssembly::_updateChildren()
 {
-    DOMElement* childList = _rootDocument->createElement( xercesString( "children" ) );
+    DOMElement* childList = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "children" ).toXMLString() );
 
     //the number of children
-    DOMElement* nchildrenElement = _rootDocument->createElement( xercesString( "numChildren" ) );
+    DOMElement* nchildrenElement = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "numChildren" ).toXMLString() );
     std::stringstream int2string;
     int2string << m_numChildren;
     DOMText* numberOfChildren = _rootDocument->createTextNode( xercesString( int2string.str().c_str() ) );
@@ -185,7 +185,7 @@ void CADAssembly::_updateChildren()
     _veElement->appendChild( childList );
 }
 /////////////////////////////////////////////////////
-void CADAssembly::_updateVEElement( std::string input )
+void CADAssembly::_updateVEElement( const std::string& input )
 {
     //Get the base elements from CADNode
     ves::open::xml::cad::CADNode::_updateVEElement( input );
@@ -217,7 +217,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
             DOMElement* nChildrenElement = GetSubElement( currentElement, std::string( "numChildren" ), 0 );
             m_numChildren = ExtractFromSimpleElement< unsigned int >( nChildrenElement );
         }
-        if( currentElement->getAttributeNode( xercesString( "associatedDataset" ) ) )
+        if( currentElement->getAttributeNode( ves::open::xml::XMLObject::Convert( "associatedDataset" ).toXMLString() ) )
         {
             dynamic_cast<ves::open::xml::XMLObject*>( this )->GetAttribute( currentElement,
                     "associatedDataset",
@@ -229,9 +229,9 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
         }
         //populate the childList
         {
-            DOMNodeList* childList = currentElement->getElementsByTagName( xercesString( "children" ) );
+            DOMNodeList* childList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "children" ).toXMLString() );
             DOMElement* childListElement = dynamic_cast<DOMElement*>( childList->item( 0 ) );
-            DOMNodeList* childrenNodes = childListElement->getElementsByTagName( xercesString( "child" ) );
+            DOMNodeList* childrenNodes = childListElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "child" ).toXMLString() );
             size_t nChilderenReally = childrenNodes->getLength();
             for( unsigned int i = 0; i < nChilderenReally; i++ )
             {

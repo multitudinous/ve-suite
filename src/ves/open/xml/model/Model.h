@@ -222,7 +222,7 @@ public:
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
 
 private:
     ///raw datatypes of Model that are specified in the verg_model.xsd file
@@ -250,14 +250,7 @@ private:
     ves::open::xml::model::SystemPtr m_subSystem;
     ModelSharedPtr parentModel;
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Model* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

@@ -185,7 +185,7 @@ CADNodeAnimation& CADNodeAnimation::operator=( const CADNodeAnimation& rhs )
     return *this;
 }
 //////////////////////////////////////////////////////////
-void CADNodeAnimation::_updateVEElement( std::string input )
+void CADNodeAnimation::_updateVEElement( const std::string& input )
 {
     SetSubElement( "fileName", _animationFileName );
     SetSubElement( "name", _name );

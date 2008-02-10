@@ -123,7 +123,7 @@ std::vector< double > FloatArray::GetArray( void )
     return _array;
 }
 ////////////////////////////////////
-void FloatArray::_updateVEElement( std::string input )
+void FloatArray::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
@@ -134,9 +134,9 @@ void FloatArray::_updateVEElement( std::string input )
     for( unsigned int i = 0; i < _array.size(); ++i )
     {
         // name comes from verg.xsd
-        DOMElement* valueTag  = _rootDocument->createElement( xercesString( "value" ) );
+        DOMElement* valueTag  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "value" ).toXMLString() );
         _veElement->appendChild( valueTag );
-        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
+        DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ));
         valueTag->appendChild( valueNum );
     }
 }
@@ -160,7 +160,7 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "value" ) );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "value" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if (( minIndex > numNodes ) && ( maxIndex < numNodes ) )

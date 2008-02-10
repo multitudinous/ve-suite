@@ -111,7 +111,7 @@ std::vector< long > OneDIntArray::GetArray( void )
     return _array;
 }
 ////////////////////////////////////
-void OneDIntArray::_updateVEElement( std::string input )
+void OneDIntArray::_updateVEElement( const std::string& input )
 {
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
@@ -122,7 +122,7 @@ void OneDIntArray::_updateVEElement( std::string input )
     for( unsigned int i = 0; i < _array.size(); ++i )
     {
         // name comes from verg.xsd
-        DOMElement* valueTag  = _rootDocument->createElement( xercesString( "data" ) );
+        DOMElement* valueTag  = _rootDocument->createElement( ves::open::xml::XMLObject::Convert( "data" ).toXMLString() );
         _veElement->appendChild( valueTag );
         DOMText* valueNum = _rootDocument->createTextNode( xercesString( _array.at( i ) ) );
         valueTag->appendChild( valueNum );
@@ -148,7 +148,7 @@ void OneDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
         // do we need to delete the old one or does xerces handle this???
         //_nElements = xmlInput->getChildNodes()->getLength();
-        DOMNodeList* nodeList = currentElement->getElementsByTagName( xercesString( "data" ) );
+        DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::XMLObject::Convert( "data" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
         _nElements = numNodes;
         if (( minIndex > numNodes ) )

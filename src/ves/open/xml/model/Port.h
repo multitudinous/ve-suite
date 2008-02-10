@@ -127,7 +127,7 @@ public:
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
-    virtual void _updateVEElement( std::string tagName );
+    virtual void _updateVEElement( const std::string& tagName );
 
     ///raw datatypes of Port that are specified in the verg_model.xsd file
     std::vector< ves::open::xml::DataValuePair* > portData;///<Vector of DataValuePairs.
@@ -137,14 +137,7 @@ protected:
     Point* portLocation;///<Physical location of the port on the wx design canvas.
     std::string portType;///<DataType of the port, in case the data is strong Typed
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::model::Port* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }

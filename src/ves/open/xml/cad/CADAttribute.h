@@ -124,7 +124,7 @@ protected:
 
     ///Internally update the XML data for this element.
     ///\param input The XML element information
-    virtual void _updateVEElement( std::string input );
+    virtual void _updateVEElement( const std::string& input );
 
     std::string _attributeType;///<The type of attribute
 
@@ -133,14 +133,7 @@ protected:
     ves::open::xml::cad::CADMaterial* _material; ///< Material for this node.
     ves::open::xml::shader::Program* _glslProgram;///<The glsl program.
 };
-}
-template<>
-inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string subElementTagName, ves::open::xml::cad::CADAttribute* val )
-{
-    val->SetOwnerDocument( _rootDocument );
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
-    _veElement->appendChild( childElement );
-    return childElement;
+
 }
 }
 }
