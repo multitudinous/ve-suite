@@ -100,7 +100,7 @@ public:
     ///\param nodes The XML node to write. If writing to string set this to "returnString" and it
     ///will be populated w/ the return string.
     ///\param documentType The type of dom doc to be created either: Network, Shader, Command.
-    virtual void WriteXMLDocument( std::vector< std::pair< XMLObject*, std::string > > nodes,
+    virtual void WriteXMLDocument( std::vector< std::pair< XMLObjectPtr, std::string > > nodes,
                                    std::string& xmlFile,
                                    std::string documentType );
 
@@ -110,7 +110,7 @@ public:
     ///Note that this method only works for writing to disk no to memory
     ///\param xmlFile The base XML document to write to.
     ///\param nodes The XML node to write.
-    void WriteMultipleXMLDocuments( std::vector< std::pair< XMLObject*, std::string > > nodes,
+    void WriteMultipleXMLDocuments( std::vector< std::pair< XMLObjectPtr, std::string > > nodes,
                                     std::string& xmlData );
     ///Set the Active DOMDocumentManager
     void SetDOMDocumentManager( DOMDocumentManager* ddManager );
@@ -134,7 +134,7 @@ public:
     DOMDocumentManager* GetDOMDocumentManager();
 
     ///Return the loaded XMLObject s.
-    std::vector<XMLObject*> GetLoadedXMLObjects();
+    std::vector<XMLObjectPtr> GetLoadedXMLObjects();
 
 protected:
 
@@ -150,9 +150,9 @@ protected:
                                                  std::string tagName );
 
     ///The XMLObjects read in from a document file.
-    std::vector<XMLObject*> m_internalXmlObjects;
+    std::vector<XMLObjectPtr> m_internalXmlObjects;
     ///The XMLObjects read in from a document file.
-    std::vector<XMLObject*> m_xmlObjects;
+    std::vector<XMLObjectPtr> m_xmlObjects;
 
     DOMDocumentManager* _domDocumentManager;///<The XML document manager.
 };

@@ -41,7 +41,7 @@
 using namespace ves::open::xml::cad;
 
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* CADCreator::CreateNewXMLObject( std::string objectType )
+ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObject( std::string objectType )
 {
     if( objectType == "CADAssembly" )
     {
@@ -66,8 +66,8 @@ ves::open::xml::XMLObject* CADCreator::CreateNewXMLObject( std::string objectTyp
     return 0;
 }
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* CADCreator::CreateNewXMLObjectCopy( std::string objectType,
-        ves::open::xml::XMLObject* objectToCopy )
+ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObjectCopy( std::string objectType,
+        ves::open::xml::XMLObjectPtr objectToCopy )
 {
     if( objectType == "CADAssembly" )
     {

@@ -78,7 +78,7 @@ public:
 
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual ves::open::xml::XMLObject* CreateNewXMLObject( std::string objectType );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( std::string objectType );
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
     virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
@@ -86,7 +86,7 @@ public:
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObject* CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObject* objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy );
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.

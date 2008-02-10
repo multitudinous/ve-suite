@@ -38,7 +38,7 @@
 
 using namespace ves::open::xml::shader;
 ////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObject( std::string objectType )
+ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( std::string objectType )
 {
     if( objectType == "Program" )
     {
@@ -59,8 +59,8 @@ ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObject( std::string object
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* ShaderCreator::CreateNewXMLObjectCopy( std::string objectType,
-        ves::open::xml::XMLObject* objectToCopy )
+ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy( std::string objectType,
+        ves::open::xml::XMLObjectPtr objectToCopy )
 {
     if( objectType == "Program" )
     {

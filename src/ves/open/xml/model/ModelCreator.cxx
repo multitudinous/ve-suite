@@ -43,7 +43,7 @@
 
 using namespace ves::open::xml::model;
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject* ModelCreator::CreateNewXMLObject( std::string objectType )
+ves::open::xml::XMLObjectPtr ModelCreator::CreateNewXMLObject( std::string objectType )
 {
     if( objectType == "Link" )
     {
@@ -98,9 +98,9 @@ ModelCreator::CreateNewXMLObjectSmart( std::string objectType )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObject*
+ves::open::xml::XMLObjectPtr
 ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
-                                      ves::open::xml::XMLObject* objectToCopy )
+                                      ves::open::xml::XMLObjectPtr objectToCopy )
 {
     if( objectType == "Link" )
     {

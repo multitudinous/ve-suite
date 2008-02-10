@@ -54,6 +54,6 @@
 */
 
 //////////////////////////////////////////////////////////
-/*VE_XML::XMLObject* CreationEventHandler::GetNewXMLObject()
+/*VE_XML::XMLObjectPtr CreationEventHandler::GetNewXMLObject()
 {
 }*/

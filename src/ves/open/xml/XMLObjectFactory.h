@@ -77,11 +77,11 @@ public:
 
     ///\param objectType The unique string specifying what object to create
     ///\param objectNamespace The namespace that the object belongs to.
-    XMLObject* CreateXMLObject( std::string objectType,
+    XMLObjectPtr CreateXMLObject( std::string objectType,
                                 std::string objectNamespace );
 
     ///\param objectToCopy The object to pass to the copy constructor
-    XMLObject* CreateXMLObjectCopy( XMLObject* objectToCopy );
+    XMLObjectPtr CreateXMLObjectCopy( XMLObjectPtr objectToCopy );
 
     ///Register a CreationEventHandler for a namespace
     ///Valid types so far are:

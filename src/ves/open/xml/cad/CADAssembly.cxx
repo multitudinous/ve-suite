@@ -225,7 +225,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
         if( currentElement->getAttributeNode(
             Convert( "associatedDataset" ).toXMLString() ) )
         {
-            dynamic_cast<ves::open::xml::XMLObject*>( this )->GetAttribute( currentElement,
+            dynamic_cast<ves::open::xml::XMLObjectPtr>( this )->GetAttribute( currentElement,
                     "associatedDataset",
                     m_associatedDataset );
         }

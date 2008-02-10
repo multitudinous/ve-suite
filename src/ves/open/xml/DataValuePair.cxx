@@ -190,7 +190,7 @@ void DataValuePair::SetDataValue( double data )
     _dataValue = data;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, XMLObject* vexmlObject )
+void DataValuePair::SetData( std::string dataName, XMLObjectPtr vexmlObject )
 {
     if( vexmlObject )
     {
@@ -207,7 +207,7 @@ void DataValuePair::SetData( std::string dataName, XMLObject* vexmlObject )
     }
     else
     {
-        std::cout << "Invalid type passed into DataValuePair::SetData(std::string dataName,XMLObject* vexmlObject)" << std::endl;
+        std::cout << "Invalid type passed into DataValuePair::SetData(std::string dataName,XMLObjectPtr vexmlObject)" << std::endl;
     }
 }
 ///////////////////////////////////////
@@ -278,7 +278,7 @@ double DataValuePair::GetDataValue()
     return 0;
 }
 ////////////////////////////////////////////////////
-XMLObject* DataValuePair::GetDataXMLObject()
+XMLObjectPtr DataValuePair::GetDataXMLObject()
 {
     if( _dataType == std::string( "XMLOBJECT" ) )
     {

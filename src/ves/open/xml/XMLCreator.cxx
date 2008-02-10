@@ -51,7 +51,7 @@
 
 using namespace ves::open::xml;
 /////////////////////////////////////////////////////////////////////////
-XMLObject* XMLCreator::CreateNewXMLObject( std::string objectType )
+XMLObjectPtr XMLCreator::CreateNewXMLObject( std::string objectType )
 {
     if( objectType == "FloatArray" )
     {
@@ -120,8 +120,8 @@ XMLObject* XMLCreator::CreateNewXMLObject( std::string objectType )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////
-XMLObject* XMLCreator::CreateNewXMLObjectCopy( std::string objectType,
-                                               XMLObject* objectToCopy )
+XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( std::string objectType,
+                                               XMLObjectPtr objectToCopy )
 {
     if( objectType == "FloatArray" )
     {

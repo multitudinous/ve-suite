@@ -146,7 +146,7 @@ void XMLReaderWriter::ReadXMLData( std::string xmlData,
     _domDocumentManager->UnLoadParser();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< XMLObject* > XMLReaderWriter::GetLoadedXMLObjects()
+std::vector< XMLObjectPtr > XMLReaderWriter::GetLoadedXMLObjects()
 {
     return m_xmlObjects;
 }
@@ -180,7 +180,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 
     for( unsigned int i = 0; i < nXMLObjects; ++i )
     {
-        XMLObject* newXMLobj = XMLObjectFactory::Instance()->
+        XMLObjectPtr newXMLobj = XMLObjectFactory::Instance()->
                                CreateXMLObject( tagName, objectNamespace );
         if( newXMLobj != NULL )
         {
@@ -203,7 +203,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::WriteMultipleXMLDocuments(
-    std::vector< std::pair< XMLObject*, std::string > > nodes,
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes,
     std::string& xmlData )
 {
     /*
@@ -237,7 +237,7 @@ void XMLReaderWriter::WriteMultipleXMLDocuments(
     */
 }
 ///////////////////////////////////////////////////////////
-void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObject*, std::string > > nodes,
+void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObjectPtr, std::string > > nodes,
                                         std::string& xmlData,
                                         std::string documentType )
 {

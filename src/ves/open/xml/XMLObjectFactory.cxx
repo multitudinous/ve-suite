@@ -102,14 +102,14 @@ XMLObjectFactory* XMLObjectFactory::Instance()
     return _instanceOfFactory;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-XMLObject* XMLObjectFactory::CreateXMLObject( std::string objectType,
+XMLObjectPtr XMLObjectFactory::CreateXMLObject( std::string objectType,
                                               std::string objectNameSpace )
 {
     std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
     //xmlCreator = _objectCreators.find(objectNameSpace);
     for( xmlCreator = _objectCreators.begin(); xmlCreator != _objectCreators.end(); ++xmlCreator )
     {
-        XMLObject* temp = xmlCreator->second->CreateNewXMLObject( objectType );
+        XMLObjectPtr temp = xmlCreator->second->CreateNewXMLObject( objectType );
         if( temp )
         {
             return temp;
@@ -119,7 +119,7 @@ XMLObject* XMLObjectFactory::CreateXMLObject( std::string objectType,
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-XMLObject* XMLObjectFactory::CreateXMLObjectCopy( XMLObject* objectToCopy )
+XMLObjectPtr XMLObjectFactory::CreateXMLObjectCopy( XMLObjectPtr objectToCopy )
 {
     std::string objectType = objectToCopy->GetObjectType();
     std::string objectNamespace = objectToCopy->GetObjectNamespace();

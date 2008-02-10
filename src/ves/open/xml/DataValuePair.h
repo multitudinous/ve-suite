@@ -146,12 +146,12 @@ public:
     double GetDataValue();
 
     ///Get the xmlObject from the DataValuePair
-    XMLObject* GetDataXMLObject();
+    XMLObjectPtr GetDataXMLObject();
 
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data XMLObject being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, XMLObject* data );
+    void SetData( std::string dataName, XMLObjectPtr data );
 
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
@@ -267,7 +267,7 @@ protected:
     unsigned int _dataUInt;///<Raw unsigned int value
     std::string _dataString;///<Raw string value.
 
-    XMLObject* _veXMLObject;///<Raw XMLObject.
+    XMLObjectPtr _veXMLObject;///<Raw XMLObject.
 };
 
 }
