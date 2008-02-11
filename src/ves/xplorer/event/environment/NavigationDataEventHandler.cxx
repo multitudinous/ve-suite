@@ -42,7 +42,6 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/OneDDoubleArray.h>
 
 #include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp
@@ -83,21 +82,21 @@ void NavigationDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* 
     _baseObject = modelHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationDataEventHandler::Execute( XMLObject* veXMLObject )
+void NavigationDataEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast<Command*>( veXMLObject );
+    CommandPtr command = veXMLObject;
     dynamic_cast< Device* >( _baseObject )->SetVECommand( command );
 
     DataValuePairWeakPtr quatPosition = command->GetDataValuePair( "QUAT_START_POSITION" );
     if( quatPosition )
     {
-        OneDDoubleArray* data = dynamic_cast< OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
+        OneDDoubleArrayPtr data = quatPosition->GetDataXMLObject();
         std::vector< double > tempQuat = data->GetArray();
         osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetQuat( quat );
 
         quatPosition = command->GetDataValuePair( "POSITION_START_POSITION" );
-        data = dynamic_cast< OneDDoubleArray* >( quatPosition->GetDataXMLObject() );
+        data = quatPosition->GetDataXMLObject();
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetTranslationArray( data->GetArray() );
     }
 }
