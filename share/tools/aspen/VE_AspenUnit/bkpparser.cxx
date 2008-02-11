@@ -474,8 +474,8 @@ void BKPParser::ParseFile(const char * bkpFile)
             }
             else if(modifier == 5)
             {
-                BlockInfoList[sheetIter->first][tempBlockId].rotation = 0.0f;
-                BlockInfoList[sheetIter->first][tempBlockId].mirror = 3;
+                BlockInfoList[sheetIter->first][tempBlockId].rotation = 180.0f;
+                BlockInfoList[sheetIter->first][tempBlockId].mirror = 0;
                 widthOffset = abs(right/iconWidth);
                 heightOffset = abs(bottom/iconHeight);
             }
