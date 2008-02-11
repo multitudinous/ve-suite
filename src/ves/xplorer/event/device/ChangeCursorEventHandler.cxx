@@ -86,13 +86,13 @@ ChangeCursorEventHandler& ChangeCursorEventHandler::operator=( const ChangeCurso
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
+void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBasePtr model )
 {
     try
     {
         if( model )
         {
-            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
+            _activeModel = model;
         }
         else
         {
@@ -106,12 +106,12 @@ void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void ChangeCursorEventHandler::Execute( XMLObject* xmlObject )
+void ChangeCursorEventHandler::Execute( XMLObjectPtr xmlObject )
 {
     //Grab the subdialog settings from streamlines to adjust cursor settings
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    Command* objectCommand = dynamic_cast< Command* >( activeModelDVP->GetDataXMLObject() );
+    CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
     if( objectCommand->GetCommandName() != "UPDATE_STREAMLINE_SETTINGS" )
     {
         return;

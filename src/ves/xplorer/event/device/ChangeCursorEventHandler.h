@@ -71,14 +71,14 @@ public:
     ///\param model The cfdModel to execute the Command on\n.
     ///Default uses the active cfdModel from ModelHandler\n
     ///Otherwise, the cfdModel passed in is used.
-    void SetGlobalBaseObject( ves::xplorer::GlobalBase* model = 0 );
+    void SetGlobalBaseObject( ves::xplorer::GlobalBasePtr model = 0 );
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
 private:
-    ves::xplorer::Model* _activeModel; ///<The active model
+    ves::xplorer::ModelPtr _activeModel; ///<The active model
 };
 
 }
