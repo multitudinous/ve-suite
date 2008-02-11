@@ -53,6 +53,7 @@
 #include <ves/open/xml/shader/Program.h>
 #include <ves/open/xml/shader/Uniform.h>
 #include <ves/open/xml/shader/TextureImage.h>
+
 using namespace ves::open::xml::shader;
 using namespace ves::xplorer::scenegraph::util;
 //////////////////////////////////////
@@ -64,23 +65,23 @@ ShaderHelper::ShaderHelper()
 ///////////////////////////////////////////////////
 ShaderHelper::ShaderHelper( const ShaderHelper& rhs )
 {
-    for( size_t i = 0; i < rhs._vertexUniformNames.size(); i++ )
+    for( size_t i = 0; i < rhs.m_vertexUniformNames.size(); i++ )
     {
-        _vertexUniformNames.push_back( rhs._vertexUniformNames.at( i ) );
+        m_vertexUniformNames.push_back( rhs.m_vertexUniformNames.at( i ) );
     }
-    for( size_t i = 0; i < rhs._fragmentUniformNames.size(); i++ )
+    for( size_t i = 0; i < rhs.m_fragmentUniformNames.size(); i++ )
     {
-        _fragmentUniformNames.push_back( rhs._fragmentUniformNames.at( i ) );
+        m_fragmentUniformNames.push_back( rhs.m_fragmentUniformNames.at( i ) );
     }
 #ifdef _OSG
-    if( rhs._vshader.valid() )
-        _vshader = new osg::Shader( *rhs._vshader.get() );
+    if( rhs.m_vshader.valid() )
+        m_vshader = new osg::Shader( *rhs.m_vshader.get() );
 
-    if( rhs._fshader.valid() )
-        _fshader = new osg::Shader( *rhs._fshader.get() );
+    if( rhs.m_fshader.valid() )
+        m_fshader = new osg::Shader( *rhs.m_fshader.get() );
 
-    _glslProgram = new osg::Program( *_glslProgram.get() );
-    _ss = new osg::StateSet( *rhs._ss );
+    m_glslProgram = new osg::Program( *m_glslProgram.get() );
+    m_ss = new osg::StateSet( *rhs.m_ss );
 #elif _PERFORMER
 #endif
 }
@@ -89,26 +90,26 @@ ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
 {
     if( this != &rhs )
     {
-        _vertexUniformNames.clear();
-        _fragmentUniformNames.clear();
-        for( size_t i = 0; i < rhs._vertexUniformNames.size(); i++ )
+        m_vertexUniformNames.clear();
+        m_fragmentUniformNames.clear();
+        for( size_t i = 0; i < rhs.m_vertexUniformNames.size(); i++ )
         {
-            _vertexUniformNames.push_back( rhs._vertexUniformNames.at( i ) );
+            m_vertexUniformNames.push_back( rhs.m_vertexUniformNames.at( i ) );
         }
-        for( size_t i = 0; i < rhs._fragmentUniformNames.size(); i++ )
+        for( size_t i = 0; i < rhs.m_fragmentUniformNames.size(); i++ )
         {
-            _fragmentUniformNames.push_back( rhs._fragmentUniformNames.at( i ) );
+            m_fragmentUniformNames.push_back( rhs.m_fragmentUniformNames.at( i ) );
         }
 #ifdef _OSG
 
-        if( rhs._vshader.valid() )
-            _vshader = rhs._vshader;
+        if( rhs.m_vshader.valid() )
+            m_vshader = rhs.m_vshader;
 
-        if( rhs._fshader.valid() )
-            _fshader = rhs._fshader;
+        if( rhs.m_fshader.valid() )
+            m_fshader = rhs.m_fshader;
 
-        _glslProgram = rhs._glslProgram;
-        _ss = rhs._ss;
+        m_glslProgram = rhs.m_glslProgram;
+        m_ss = rhs.m_ss;
 #elif _PERFORMER
 #endif
     }
@@ -119,14 +120,14 @@ ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
 ///////////////////////////////////////////
 ShaderHelper::~ShaderHelper()
 {
-    _vertexUniformNames.clear();
-    _fragmentUniformNames.clear();
+    m_vertexUniformNames.clear();
+    m_fragmentUniformNames.clear();
 }
 #ifdef _OSG
 /////////////////////////////////////////////////////
 void ShaderHelper::SetStateSet( osg::StateSet* shader )
 {
-    _ss = shader;
+    m_ss = shader;
 }
 #elif _PERFORMER
 #endif
@@ -134,7 +135,7 @@ void ShaderHelper::SetStateSet( osg::StateSet* shader )
 void ShaderHelper::LoadTransparencyProgram()
 {
 #ifdef _OSG
-    Shader* vertShader = new Shader();
+    ShaderPtr vertShader = new Shader();
     vertShader->SetShaderType( "Vertex" );
     std::string vertexSource( " varying vec3 N;\n"
                               "varying vec3 I;\n"
@@ -150,7 +151,7 @@ void ShaderHelper::LoadTransparencyProgram()
                               "}\n" );
     vertShader->SetShaderSource( vertexSource );
 
-    Shader* fragShader = new Shader();
+    ShaderPtr fragShader = new Shader();
     fragShader->SetShaderType( "Fragment" );
     std::string fragmentSource( "varying vec3 N;\n"
                                 " varying vec3 I;\n"
@@ -166,7 +167,7 @@ void ShaderHelper::LoadTransparencyProgram()
                               );
     fragShader->SetShaderSource( fragmentSource );
 
-    Program* glslProgram = new Program();
+    ProgramPtr glslProgram = new Program();
     glslProgram->SetProgramName( "Dataset Transparency" );
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );
@@ -175,24 +176,24 @@ void ShaderHelper::LoadTransparencyProgram()
 #endif
 }
 ///////////////////////////////////////////////////////////////////
-void ShaderHelper::LoadGLSLProgram( Program* glslProgram )
+void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
 {
 #ifdef _OSG
     //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
-    if( !_ss.valid() )
+    if( !m_ss.valid() )
     {
-        _ss = new osg::StateSet();
+        m_ss = new osg::StateSet();
     }
     else
     {
-        _ss->clear();
+        m_ss->clear();
     }
 
-    if( !_glslProgram.valid() )
+    if( !m_glslProgram.valid() )
     {
-        _glslProgram = new osg::Program();
+        m_glslProgram = new osg::Program();
     }
-    _glslProgram->setName( glslProgram->GetProgramName() );
+    m_glslProgram->setName( glslProgram->GetProgramName() );
 
     if( glslProgram->GetFragmentShader() )
     {
@@ -204,7 +205,7 @@ void ShaderHelper::LoadGLSLProgram( Program* glslProgram )
     }
     ///two-sided lighting hack until gl_FrontFacing works in glsl...
     ///only works if the shader implements it though...
-    _ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
+    m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
 #elif _PERFORMER
     std::cout << "Not implemented for Performer yet!!!" << std::endl;
 #endif
@@ -222,46 +223,46 @@ void ShaderHelper::_createGLSLShader( ShaderPtr shader )
 #ifdef _OSG
     if( shader->GetShaderType() == std::string( "Fragment" ) )
     {
-        if( !_fshader )
+        if( !m_fshader )
         {
-            _fshader = new osg::Shader( osg::Shader::FRAGMENT, shader->GetShaderSource() );
+            m_fshader = new osg::Shader( osg::Shader::FRAGMENT, shader->GetShaderSource() );
         }
         else
         {
-            _fshader->setShaderSource( shader->GetShaderSource() );
+            m_fshader->setShaderSource( shader->GetShaderSource() );
         }
-        _glslProgram->addShader( _fshader.get() );
+        m_glslProgram->addShader( m_fshader.get() );
     }
     else if( shader->GetShaderType() == std::string( "Vertex" ) )
     {
-        if( !_vshader )
+        if( !m_vshader )
         {
-            _vshader = new osg::Shader( osg::Shader::VERTEX, shader->GetShaderSource() );
+            m_vshader = new osg::Shader( osg::Shader::VERTEX, shader->GetShaderSource() );
         }
         else
         {
-            _vshader->setShaderSource( shader->GetShaderSource() );
+            m_vshader->setShaderSource( shader->GetShaderSource() );
         }
-        _glslProgram->addShader( _vshader.get() );
+        m_glslProgram->addShader( m_vshader.get() );
     }
 #elif _PERFORMER
     std::cout << "Not implemented for Performer yet!!!" << std::endl;
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void ShaderHelper::_extractTextureFromShader( TextureImage textureImage )
+void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
 {
 #ifdef _OSG
     //create the image
-    unsigned int tUnit = textureImage.GetTextureUnit();
-    unsigned int dimension = textureImage.GetDimension();
+    unsigned int tUnit = textureImage->GetTextureUnit();
+    unsigned int dimension = textureImage->GetDimension();
 
     //std::cout<<"Reading image file: "<<std::endl;
-    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile( textureImage.GetImageFile() );
+    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile( textureImage->GetImageFile() );
     //std::cout<<"Read image file: "<<std::endl;
     osg::ref_ptr<osg::Texture> genericTexture;
     std::string textureType( "" );
-    textureImage.GetType( textureType );
+    textureImage->GetType( textureType );
 
     //std::cout<<"Extracting: "<<textureType<<std::endl;
     if( textureType == "1D" )
@@ -291,17 +292,17 @@ void ShaderHelper::_extractTextureFromShader( TextureImage textureImage )
     {
         //std::cout<<"Cube map"<<std::endl;
         osg::ref_ptr<osg::TextureCubeMap> textureCubeMap = new osg::TextureCubeMap();
-        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile( textureImage.GetImageFile( "Positive X" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile( textureImage.GetImageFile( "Negative X" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Y, osgDB::readImageFile( textureImage.GetImageFile( "Positive Y" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Y, osgDB::readImageFile( textureImage.GetImageFile( "Negative Y" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Z, osgDB::readImageFile( textureImage.GetImageFile( "Positive Z" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Z, osgDB::readImageFile( textureImage.GetImageFile( "Negative Z" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile( textureImage->GetImageFile( "Positive X" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile( textureImage->GetImageFile( "Negative X" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Y, osgDB::readImageFile( textureImage->GetImageFile( "Positive Y" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Y, osgDB::readImageFile( textureImage->GetImageFile( "Negative Y" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Z, osgDB::readImageFile( textureImage->GetImageFile( "Positive Z" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Z, osgDB::readImageFile( textureImage->GetImageFile( "Negative Z" ) ) );
 
         //this should be adjustable parameter in the TextureImage interface
         osg::ref_ptr<osg::TexGen> textureCoordGeneration = new osg::TexGen;
         textureCoordGeneration->setMode( osg::TexGen::REFLECTION_MAP );
-        _ss->setTextureAttributeAndModes( tUnit, textureCoordGeneration.get(), osg::StateAttribute::ON );
+        m_ss->setTextureAttributeAndModes( tUnit, textureCoordGeneration.get(), osg::StateAttribute::ON );
 
         genericTexture = textureCubeMap.get();
     }
@@ -317,10 +318,10 @@ void ShaderHelper::_extractTextureFromShader( TextureImage textureImage )
     {
         //std::cout<<"Setting up texture parameters for shader!"<<std::endl;
         std::string minFilter;
-        textureImage.GetFilterMode( "Minification", minFilter );
+        textureImage->GetFilterMode( "Minification", minFilter );
 
         std::string magFilter;
-        textureImage.GetFilterMode( "Magnification", magFilter );
+        textureImage->GetFilterMode( "Magnification", magFilter );
 
         osg::Texture::FilterMode magMode = osg::Texture::LINEAR;
         osg::Texture::FilterMode minMode = osg::Texture::LINEAR;
@@ -345,37 +346,37 @@ void ShaderHelper::_extractTextureFromShader( TextureImage textureImage )
 
         osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
 
-        if( textureImage.GetWrapMode( "Wrap S", sWrap ) )
+        if( textureImage->GetWrapMode( "Wrap S", sWrap ) )
             _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_S, sWrap );
 
         if( dimension != 1 )
         {
-            if( textureImage.GetWrapMode( "Wrap T", tWrap ) )
+            if( textureImage->GetWrapMode( "Wrap T", tWrap ) )
                 _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_T, tWrap );
         }
 
         if( dimension == 3 )
         {
-            if( textureImage.GetWrapMode( "Wrap R", rWrap ) )
+            if( textureImage->GetWrapMode( "Wrap R", rWrap ) )
                 _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_R, rWrap );
         }
 
         //std::cout<<"Is this the problem??"<<std::endl;
         //set the texture to the state set
-        _ss->setTextureAttributeAndModes( tUnit, genericTexture.get(), osg::StateAttribute::ON );
+        m_ss->setTextureAttributeAndModes( tUnit, genericTexture.get(), osg::StateAttribute::ON );
 
         if( dimension == 1 )
-            _ss->setTextureMode( tUnit, GL_TEXTURE_1D, osg::StateAttribute::ON );
+            m_ss->setTextureMode( tUnit, GL_TEXTURE_1D, osg::StateAttribute::ON );
 
         if( dimension == 2 )
-            _ss->setTextureMode( tUnit, GL_TEXTURE_2D, osg::StateAttribute::ON );
+            m_ss->setTextureMode( tUnit, GL_TEXTURE_2D, osg::StateAttribute::ON );
 
         if( dimension == 3 )
         {
             if( textureType == "3D" )
             {
                 //std::cout<<"Probably"<<std::endl;
-                _ss->setTextureMode( tUnit, GL_TEXTURE_3D, osg::StateAttribute::ON );
+                m_ss->setTextureMode( tUnit, GL_TEXTURE_3D, osg::StateAttribute::ON );
             }
         }
     }
@@ -410,7 +411,7 @@ void ShaderHelper::_setWrapOnTexture( osg::Texture* texture,
 }
 #endif
 /////////////////////////////////////////////////////////////////
-void ShaderHelper::UpdateUniform( Uniform* uniformData )
+void ShaderHelper::UpdateUniform( UniformPtr uniformData )
 {
 #ifdef _OSG
     std::string uniformName( "" );
@@ -423,7 +424,7 @@ void ShaderHelper::UpdateUniform( Uniform* uniformData )
     uniformSize = uniformData->GetSize();
     uniformValues = uniformData->GetValues();
 
-    osg::ref_ptr<osg::Uniform> uniformToUpdate = _ss->getUniform( uniformName );
+    osg::ref_ptr<osg::Uniform> uniformToUpdate = m_ss->getUniform( uniformName );
     if( uniformToUpdate.valid() )
     {
         if( uniformType == "Float" )
@@ -542,21 +543,21 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
         {
             if( uniformSize == 1 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), uniformValues.at( 0 ) ) );
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), uniformValues.at( 0 ) ) );
             }
             else if( uniformSize == 2 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2f( uniformValues.at( 0 ), uniformValues.at( 0 ) ) ) );
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2f( uniformValues.at( 0 ), uniformValues.at( 0 ) ) ) );
             }
             else if( uniformSize == 3 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3f( uniformValues.at( 0 ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3f( uniformValues.at( 0 ),
                                                    uniformValues.at( 1 ),
                                                    uniformValues.at( 2 ) ) ) );
             }
             else if( uniformSize == 4 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4f( uniformValues.at( 0 ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4f( uniformValues.at( 0 ),
                                                    uniformValues.at( 1 ),
                                                    uniformValues.at( 2 ),
                                                    uniformValues.at( 3 ) ) ) );
@@ -566,22 +567,22 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
         {
             if( uniformSize == 1 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), static_cast<int>( uniformValues.at( 0 ) ) ) );
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), static_cast<int>( uniformValues.at( 0 ) ) ) );
             }
             else if( uniformSize == 2 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2( static_cast<int>( uniformValues.at( 0 ) ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2( static_cast<int>( uniformValues.at( 0 ) ),
                                                    static_cast<int>( uniformValues.at( 1 ) ) ) ) );
             }
             else if( uniformSize == 3 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3( static_cast<int>( uniformValues.at( 0 ) ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3( static_cast<int>( uniformValues.at( 0 ) ),
                                                    static_cast<int>( uniformValues.at( 1 ) ),
                                                    static_cast<int>( uniformValues.at( 2 ) ) ) ) );
             }
             else if( uniformSize == 4 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4( static_cast<int>( uniformValues.at( 0 ) ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4( static_cast<int>( uniformValues.at( 0 ) ),
                                                    static_cast<int>( uniformValues.at( 1 ) ),
                                                    static_cast<int>( uniformValues.at( 2 ) ),
                                                    static_cast<int>( uniformValues.at( 3 ) ) ) ) );
@@ -603,22 +604,22 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
             }
             if( uniformSize == 1 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), boolValues.at( 0 ) ) );
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), boolValues.at( 0 ) ) );
             }
             else if( uniformSize == 2 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2( boolValues.at( 0 ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec2( boolValues.at( 0 ),
                                                    boolValues.at( 1 ) ) ) );
             }
             else if( uniformSize == 3 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3( boolValues.at( 0 ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec3( boolValues.at( 0 ),
                                                    boolValues.at( 1 ),
                                                    boolValues.at( 2 ) ) ) );
             }
             else if( uniformSize == 4 )
             {
-                _ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4( boolValues.at( 0 ),
+                m_ss->addUniform( new osg::Uniform( uniformName.c_str(), osg::Vec4( boolValues.at( 0 ),
                                                    boolValues.at( 1 ),
                                                    boolValues.at( 2 ),
                                                    boolValues.at( 3 ) ) ) );
@@ -642,18 +643,18 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
 void ShaderHelper::_attachGLSLProgramToStateSet( bool override )
 {
 #ifdef _OSG
-    if( _ss.valid() )
+    if( m_ss.valid() )
     {
-        if( _glslProgram.valid() )
+        if( m_glslProgram.valid() )
         {
             //_glslProgram->setName(_name.c_str());
             if( override )
             {
-                _ss->setAttributeAndModes( _glslProgram.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+                m_ss->setAttributeAndModes( m_glslProgram.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
             }
             else
             {
-                _ss->setAttributeAndModes( _glslProgram.get(), osg::StateAttribute::ON );
+                m_ss->setAttributeAndModes( m_glslProgram.get(), osg::StateAttribute::ON );
             }
         }
     }
@@ -665,9 +666,9 @@ void ShaderHelper::_attachGLSLProgramToStateSet( bool override )
 //////////////////////////////////////////////////////////////
 osg::StateSet* ShaderHelper::GetProgramStateSet()
 {
-    if( _ss.valid() )
+    if( m_ss.valid() )
     {
-        return _ss.get();
+        return m_ss.get();
     }
     else
     {

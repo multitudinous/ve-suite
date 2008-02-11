@@ -30,11 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/open/xml/cad/CADAttribute.h>
-#include <ves/open/xml/shader/Uniform.h>
-#include <ves/xplorer/scenegraph/util/MaterialHelper.h>
-#include <ves/xplorer/scenegraph/util/ShaderHelper.h>
-#include <ves/xplorer/scenegraph/util/Attribute.h>
 
 //why is this needed
 #include <osg/Material>
@@ -50,13 +45,14 @@
 
 #include <set>
 
+#include <ves/xplorer/scenegraph/util/Attribute.h>
 using namespace osg;
 using namespace osgDB;
 using namespace std;
 
 using namespace ves::xplorer::scenegraph::util;
-using namespace ves::open::xml::cad;
-using namespace ves::open::xml::shader;
+//using namespace ves::open::xml::cad;
+//using namespace ves::open::xml::shader;
 
 bool VEAttribute_readLocalData( Object& obj, Input& fr );
 bool VEAttribute_writeLocalData( const Object& obj, Output& fw );

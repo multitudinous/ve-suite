@@ -50,25 +50,10 @@
 #include <osg/ref_ptr>
 #elif _OPENSG
 #endif
+#include <ves/open/xml/shader/UniformPtr.h>
+#include <ves/open/xml/cad/CADAttributePtr.h>
 #include <ves/VEConfig.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace shader
-{
-class Uniform;
-}
-namespace cad
-{
-class CADAttribute;
-}
-}
-}
-}
 
 namespace ves
 {
@@ -115,14 +100,14 @@ public:
 
     ///Create a StateSet from a CADAttribute.
     ///\param attribute The CADAttribute.
-    void CreateStateSetFromAttribute( ves::open::xml::cad::CADAttribute* attribute );
+    void CreateStateSetFromAttribute( ves::open::xml::cad::CADAttributePtr attribute );
 
     ///Sets this stateset to be the transparency shader.
     void CreateTransparencyStateSet();
 
     ///Update a Uniform value.
     ///\param uniformToUpdate The new uniform information.
-    void UpdateShaderUniform( ves::open::xml::shader::Uniform* uniformToUpdate );
+    void UpdateShaderUniform( ves::open::xml::shader::UniformPtr uniformToUpdate );
 
     ///Update a the components of a CADMaterial
     ///\param componentName The name of the component to update

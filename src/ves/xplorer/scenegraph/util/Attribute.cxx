@@ -58,6 +58,7 @@ void ves::xplorer::scenegraph::util::Attribute::init( void )
 #endif
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <ves/open/xml/shader/Uniform.h>
+#include <ves/open/xml/shader/Program.h>
 #include <ves/xplorer/scenegraph/util/MaterialHelper.h>
 #include <ves/xplorer/scenegraph/util/ShaderHelper.h>
 
@@ -145,7 +146,7 @@ void Attribute::UpdateMaterialMode( std::string type, std::string mode )
 #endif
 }
 ////////////////////////////////////////////////////////////////////////
-void Attribute::UpdateShaderUniform( Uniform* uniformToUpdate )
+void Attribute::UpdateShaderUniform( UniformPtr uniformToUpdate )
 {
 #ifdef _OSG
     ShaderHelper shaderHelper;
@@ -222,7 +223,7 @@ void Attribute::CreateTransparencyStateSet()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////
-void Attribute::CreateStateSetFromAttribute( CADAttribute* attribute )
+void Attribute::CreateStateSetFromAttribute( CADAttributePtr attribute )
 {
     std::string attributeType = attribute->GetAttributeType();
     bool blending = attribute->NeedsBlending();

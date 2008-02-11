@@ -53,21 +53,9 @@ class Program;
 #include <osg/Texture>
 #elif _PERFORMER
 #endif
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace shader
-{
-class Program;
-class Uniform;
-class TextureImage;
-}
-}
-}
-}
+#include <ves/open/xml/shader/TextureImagePtr.h>
+#include <ves/open/xml/shader/ProgramPtr.h>
+#include <ves/open/xml/shader/UniformPtr.h>
 #include <string>
 #include <vector>
 ///////////////////////////////////////////////////////////////////////
@@ -94,7 +82,7 @@ public:
     virtual ~ShaderHelper();
 
     ///Load and create the stateset from the input XML data
-    void LoadGLSLProgram( ves::open::xml::shader::Program* glslProgram );
+    void LoadGLSLProgram( ves::open::xml::shader::ProgramPtr glslProgram );
 
     ///Load and create the stateset for transparency shader
     void LoadTransparencyProgram();
@@ -110,7 +98,7 @@ public:
 #endif
     ///Update a uniform.
     ///\param The uniform to update.
-    void UpdateUniform( ves::open::xml::shader::Uniform* uniformToUpdate );
+    void UpdateUniform( ves::open::xml::shader::UniformPtr uniformToUpdate );
 
     ///Equal operator
     ///\param rhs Right hand side.
@@ -131,7 +119,7 @@ protected:
 
     ///Extract the texture images from the shader information.
     ///\param textureImage The texture image data.
-    void _extractTextureFromShader( ves::open::xml::shader::TextureImage textureImage );
+    void _extractTextureFromShader( ves::open::xml::shader::TextureImagePtr textureImage );
 
 #ifdef _OSG
     ///Extract the wrap modes for the texture images
@@ -142,13 +130,13 @@ protected:
                             osg::Texture::WrapParameter param,
                             std::string wrapMode );
 #endif
-    std::vector<std::string> _vertexUniformNames;///<Vertex program uniform names.
-    std::vector<std::string> _fragmentUniformNames;///<Fragment program uniform names.
+    std::vector<std::string> m_vertexUniformNames;///<Vertex program uniform names.
+    std::vector<std::string> m_fragmentUniformNames;///<Fragment program uniform names.
 #ifdef _OSG
-    osg::ref_ptr<osg::Shader> _vshader;///<The vertex shader.
-    osg::ref_ptr<osg::Shader> _fshader;///<The fragment shader.
-    osg::ref_ptr<osg::Program> _glslProgram;///<The GLSL program.
-    osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
+    osg::ref_ptr<osg::Shader> m_vshader;///<The vertex shader.
+    osg::ref_ptr<osg::Shader> m_fshader;///<The fragment shader.
+    osg::ref_ptr<osg::Program> m_glslProgram;///<The GLSL program.
+    osg::ref_ptr<osg::StateSet> m_ss;///<The stateset representing the GLSL program.
 #elif _PERFORMER
 #endif
 };

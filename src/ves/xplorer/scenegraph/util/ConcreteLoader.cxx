@@ -132,8 +132,8 @@ void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragment
     glslProgram.SetFragmentShader( fragShader );
 
     LoadGLSLProgram( &glslProgram );
-    _ss->addUniform( new osg::Uniform( "Noise", 0 ) );
-    _ss->setTextureAttributeAndModes( 0, m_noise->GetNoiseTexture() );
+    m_ss->addUniform( new osg::Uniform( "Noise", 0 ) );
+    m_ss->setTextureAttributeAndModes( 0, m_noise->GetNoiseTexture() );
 #endif
 }
 /////////////////////////////////////////

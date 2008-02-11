@@ -129,7 +129,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     LoadGLSLProgram( &glslProgram );
 
     //enable 2 sided lighting fix
-    _ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
+    m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
 #elif _PERFORMER
 #endif
 }

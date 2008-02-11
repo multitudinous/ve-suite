@@ -42,6 +42,7 @@
 
 #include <ves/open/xml/cad/CADMaterial.h>
 #include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/FloatArrayPtr.h>
 #include <string>
 using namespace ves::open::xml::cad;
 using namespace ves::xplorer::scenegraph::util;
@@ -56,20 +57,20 @@ MaterialHelper::MaterialHelper()
 MaterialHelper::~MaterialHelper()
 {}
 ////////////////////////////////////////////////////////////////
-void MaterialHelper::LoadMaterial( CADMaterial* material )
+void MaterialHelper::LoadMaterial( CADMaterialPtr material )
 {
 #ifdef _OSG
-    if( !_material.valid() )
+    if( !m_material.valid() )
     {
-        _material = new osg::Material();
+        m_material = new osg::Material();
     }
-    if( !_ss.valid() )
+    if( !m_ss.valid() )
     {
-        _ss = new osg::StateSet();
+        m_ss = new osg::StateSet();
     }
     else
     {
-        _ss->clear();
+        m_ss->clear();
     }
 
     std::string materialName = material->GetMaterialName();
@@ -116,7 +117,7 @@ void MaterialHelper::LoadMaterial( CADMaterial* material )
         std::cout << "Unrecognized color mode: " << colorMode << std::endl;
         std::cout << "SceneGraphBuilderSceneGraphCallback::Apply()" << std::endl;
     }
-    _material->setColorMode( cMode );
+    m_material->setColorMode( cMode );
 
     osg::Material::Face faceToApply = osg::Material::FRONT;
     if( face == std::string( "Front_and_Back" ) )
@@ -136,21 +137,21 @@ void MaterialHelper::LoadMaterial( CADMaterial* material )
         std::cout << "Unrecognized face: " << face << std::endl;
         std::cout << "SceneGraphBuilderSceneGraphCallback::Apply()" << std::endl;
     }
-    _material->setDiffuse( faceToApply,
+    m_material->setDiffuse( faceToApply,
                            osg::Vec4( diffuse.at( 0 ), diffuse.at( 1 ), diffuse.at( 2 ), opacity ) );
 
-    _material->setAmbient( faceToApply,
+    m_material->setAmbient( faceToApply,
                            osg::Vec4( ambient.at( 0 ), ambient.at( 1 ), ambient.at( 2 ), opacity ) );
 
-    _material->setEmission( faceToApply,
+    m_material->setEmission( faceToApply,
                             osg::Vec4( emmissive.at( 0 ), emmissive.at( 1 ), emmissive.at( 2 ), opacity ) );
 
-    _material->setSpecular( faceToApply,
+    m_material->setSpecular( faceToApply,
                             osg::Vec4( specular.at( 0 ), specular.at( 1 ), specular.at( 2 ), opacity ) );
 
     //_material->setName(materialName);
-    _material->setShininess( faceToApply, shininess );
-    _ss->setAttributeAndModes( _material.get(), osg::StateAttribute::ON );
+    m_material->setShininess( faceToApply, shininess );
+    m_ss->setAttributeAndModes( m_material.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
 
@@ -158,17 +159,17 @@ void MaterialHelper::LoadMaterial( CADMaterial* material )
 
     if( opacity == 1.0 )
     {
-        _ss->setRenderingHint( osg::StateSet::OPAQUE_BIN );
-        _ss->setMode( GL_BLEND, osg::StateAttribute::ON );
+        m_ss->setRenderingHint( osg::StateSet::OPAQUE_BIN );
+        m_ss->setMode( GL_BLEND, osg::StateAttribute::ON );
     }
     else
     {
-        _ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-        _ss->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
-        _ss->setMode( GL_BLEND, osg::StateAttribute::ON );
+        m_ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+        m_ss->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+        m_ss->setMode( GL_BLEND, osg::StateAttribute::ON );
     }
-    _ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    _ss->setAttributeAndModes( _material.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    m_ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    m_ss->setAttributeAndModes( m_material.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 #elif _PERFORMER
     std::cout << "Material Loader Not implemented for Performer version yet!!!!!!" << std::endl;
 #endif
@@ -177,16 +178,16 @@ void MaterialHelper::LoadMaterial( CADMaterial* material )
 /////////////////////////////////////////////////////////////////
 osg::ref_ptr<osg::StateSet> MaterialHelper::GetMaterialStateSet()
 {
-    if( _ss.valid() )
+    if( m_ss.valid() )
     {
-        return _ss;
+        return m_ss;
     }
     return 0;
 }
 /////////////////////////////////////////////////////////
 void MaterialHelper::SetStateSet( osg::StateSet* material )
 {
-    _ss = material;
+    m_ss = material;
 }
 #elif _PERFORMER
 #endif

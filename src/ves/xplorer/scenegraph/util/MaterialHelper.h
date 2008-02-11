@@ -51,19 +51,7 @@ class Material;
 }
 #elif _PERFORMER
 #endif
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace cad
-{
-class CADMaterial;
-}
-}
-}
-}
+#include <ves/open/xml/cad/CADMaterial.h>
 #include <string>
 ///////////////////////////////////////////////////////////////////////
 //this class is used to create a stateset representing a gl Material //
@@ -85,7 +73,7 @@ public:
     virtual ~MaterialHelper();
 
     ///Load and create the stateset from the input XML data
-    void LoadMaterial( ves::open::xml::cad::CADMaterial* material );
+    void LoadMaterial( ves::open::xml::cad::CADMaterialPtr material );
 #ifdef _OSG
     ///The state set that we want to load the material into
     ///\param materialThe state set representing the material.
@@ -97,8 +85,8 @@ public:
 #endif
 protected:
 #ifdef _OSG
-    osg::ref_ptr<osg::Material> _material;///<The GLSL program.
-    osg::ref_ptr<osg::StateSet> _ss;///<The stateset representing the GLSL program.
+    osg::ref_ptr<osg::Material> m_material;///<The GLSL program.
+    osg::ref_ptr<osg::StateSet> m_ss;///<The stateset representing the GLSL program.
 #elif _PERFORMER
 #endif
 };
