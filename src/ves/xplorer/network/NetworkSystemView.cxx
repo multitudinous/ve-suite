@@ -104,7 +104,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 {
     XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
-    std::vector< XMLObject* > objectVector;
+    std::vector< XMLObjectPtr > objectVector;
     // do this for models
     //networkWriter.ReadXMLData( network, "Model", "veModel" );
     networkWriter.ReadXMLData( network, "System", "veSystem" );
@@ -120,7 +120,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
     osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
     shared_normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );
     std::ofstream output( "scale.txt" );
-    System * mainSystem = dynamic_cast < System * >( objectVector.at( 0 ) );
+    SystemPtr mainSystem = objectVector.at( 0 );
     // now lets create a list of them
     //for ( size_t i = 0; i < objectVector.size(); ++i )
     for( size_t i = 0; i < mainSystem->GetModels().size(); ++i )

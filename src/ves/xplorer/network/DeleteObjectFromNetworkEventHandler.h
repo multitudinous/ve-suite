@@ -103,7 +103,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
 private:
     std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* _plugins;

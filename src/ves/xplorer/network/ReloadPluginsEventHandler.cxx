@@ -88,7 +88,7 @@ void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ReloadPluginsEventHandler::Execute( XMLObject* xmlObject )
+void ReloadPluginsEventHandler::Execute( XMLObjectPtr xmlObject )
 {
     std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* plugins;
     plugins = cfdExecutive::instance()->GetTheCurrentPlugins();

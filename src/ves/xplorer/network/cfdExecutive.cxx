@@ -255,13 +255,12 @@ void cfdExecutive::GetNetwork( void )
     // This logic also works for the case where a custom plugin doesn't exist because
     // there will be a default plugin that will be created just like there
     // is currently for conductor
-    std::vector< XMLObject* > currentModels;
+    std::vector< XMLObjectPtr > currentModels;
     currentModels.clear();
     // do this for models
     networkWriter.ReadXMLData( network, "System", "veSystem" );
     currentModels = networkWriter.GetLoadedXMLObjects();
-    model::SystemWeakPtr tempSystem =
-        dynamic_cast< model::System* >( currentModels.at( 0 ) );
+    model::SystemWeakPtr tempSystem = currentModels.at( 0 );
 
     veNetwork = network;
 
@@ -348,7 +347,7 @@ void cfdExecutive::GetEverything( void )
         data->SetData( "moduleId", static_cast< unsigned int >( iter->first ) );
         returnState.AddDataValuePair( data );
 
-        std::vector< std::pair< XMLObject*, std::string > > nodes;
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
         nodes.push_back(
             std::pair< XMLObject*, std::string >( &returnState, "vecommand" )
         );

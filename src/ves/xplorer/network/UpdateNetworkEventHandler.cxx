@@ -85,9 +85,9 @@ void UpdateNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void UpdateNetworkEventHandler::Execute( XMLObject* xmlObject )
+void UpdateNetworkEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* cmd = static_cast< Command* >( xmlObject );
+    CommandPtr cmd = xmlObject;
     if( cmd->GetDataValuePair( "Load Data" ) )
     {
         cfdExecutive::instance()->LoadDataFromCE();

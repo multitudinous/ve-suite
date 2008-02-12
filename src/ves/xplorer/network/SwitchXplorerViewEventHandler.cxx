@@ -103,9 +103,9 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::Execute( XMLObject* xmlObject )
+void SwitchXplorerViewEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP =
         command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
 
