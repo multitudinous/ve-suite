@@ -175,7 +175,7 @@ public:
 
     ///Set current command whatever it is
     ///\param command Current command from conductor
-    virtual void SetCurrentCommand( ves::open::xml::Command* command );
+    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
     ///Allow the users to process new inputs after a job has
     ///been submitted for all plugins

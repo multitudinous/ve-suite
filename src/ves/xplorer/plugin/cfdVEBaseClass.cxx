@@ -266,7 +266,7 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( network, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     if( objectVector.empty() )
     {
@@ -274,13 +274,13 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
         return;
     }
 
-    ves::open::xml::Command* tempCommand = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    ves::open::xml::CommandPtr tempCommand = objectVector.at( 0 );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
     {
-        ves::open::xml::Command* command = m_xmlModel->GetResult( i );
+        ves::open::xml::CommandPtr command = m_xmlModel->GetResult( i );
         ves::open::xml::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
-        ves::open::xml::Command* copyCommand = dynamic_cast< ves::open::xml::Command* >( tempPair->GetDataXMLObject() );
+        ves::open::xml::CommandPtr copyCommand = tempPair->GetDataXMLObject();
         *command = *copyCommand;
     }
 }
@@ -305,16 +305,14 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
     m_xmlModel = tempModel;
 
     //Decompose model to be utilized by the event handlers
-    ves::open::xml::cad::CADAssembly* cadNodeData =
-        dynamic_cast< ves::open::xml::cad::CADAssembly* >(
-            m_xmlModel->GetGeometry() );
+    ves::open::xml::cad::CADAssemblyPtr cadNodeData = m_xmlModel->GetGeometry();
     if( cadNodeData )
     {
-        ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
         cadNode->SetDataType( std::string( "XMLOBJECT" ) );
         cadNode->SetData( "New Node", cadNodeData );
 
-        ves::open::xml::Command* cadCommand = new ves::open::xml::Command();
+        ves::open::xml::CommandPtr cadCommand = new ves::open::xml::Command();
         cadCommand->AddDataValuePair( cadNode );
         std::string _commandName = "CAD_ADD_NODE";
         cadCommand->SetCommandName( _commandName );
@@ -323,7 +321,6 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
         ves::xplorer::event::CADAddNodeEventHandler newCADNode;
         newCADNode.SetGlobalBaseObject( m_model );
         newCADNode.Execute( cadCommand );
-        delete cadCommand;
     }
 
     //process the information blocks
@@ -334,12 +331,12 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
         modelNode->SetData( "CREATE_NEW_DATASETS",
                             new ves::open::xml::model::Model( *m_xmlModel ) );
 
-        ves::open::xml::Command* dataCommand = new ves::open::xml::Command();
+        ves::open::xml::CommandPtr dataCommand = new ves::open::xml::Command();
         dataCommand->AddDataValuePair( modelNode );
         dataCommand->SetCommandName( "UPDATE_MODEL_DATASETS" );
 
         //Add the active dataset name to the command
-        ves::open::xml::ParameterBlock* parameterBlock =
+        ves::open::xml::ParameterBlockPtr parameterBlock =
             m_xmlModel->GetInformationPacket( 0 );
         ves::open::xml::DataValuePairPtr dataSetName =
             new ves::open::xml::DataValuePair();
@@ -351,7 +348,6 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
         ves::xplorer::event::AddVTKDataSetEventHandler addVTKEH;
         addVTKEH.SetGlobalBaseObject( m_model );
         addVTKEH.Execute( dataCommand );
-        delete dataCommand;
     }
 
     //process inputs
@@ -367,7 +363,7 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelWeakPtr tempModel 
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetCurrentCommand( ves::open::xml::Command* command )
+void cfdVEBaseClass::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
     if( command )
     {
