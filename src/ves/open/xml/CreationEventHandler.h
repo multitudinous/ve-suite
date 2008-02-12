@@ -65,7 +65,7 @@ public:
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy
     virtual XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType,
-                                               XMLObjectPtr objectToCopy ) = 0;
+                                               const XMLObjectPtr& objectToCopy ) = 0;
 protected:
 };
 }

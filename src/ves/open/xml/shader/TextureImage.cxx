@@ -203,7 +203,7 @@ void TextureImage::SetImageFile( const std::string& face, const std::string& ima
         {
             faceImageData = new ves::open::xml::DataValuePair();
             faceImageData->SetData( face, imageFileName );
-            _textureDescription->AddDataValuePair( faceImageData );
+            mTextureDescription->AddDataValuePair( faceImageData );
         }
         else
         {
@@ -246,7 +246,7 @@ unsigned int TextureImage::GetDimension()
     return 0;
 }
 /////////////////////////////////////////////////////////
-const std::string& TextureImage::GetImageFile( const std::string& face )
+const std::string TextureImage::GetImageFile( const std::string& face )
 {
     try
     {

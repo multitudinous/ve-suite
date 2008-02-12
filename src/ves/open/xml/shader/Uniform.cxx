@@ -261,7 +261,7 @@ void Uniform::SetObjectFromXMLData( DOMNode* xmlNode )
                 {
                     GetAttribute( typeNode, "type", mType );
                     //if it is a texture get the texture unit
-                    if( _type == std::string( "Sampler" ) )
+                    if( mType == std::string( "Sampler" ) )
                     {
                         DOMElement* tUnitNode = GetSubElement( currentElement, std::string( "textureUnit" ), 0 );
                         if( tUnitNode )
@@ -277,7 +277,7 @@ void Uniform::SetObjectFromXMLData( DOMNode* xmlNode )
                      GetAttribute( lengthNode, "size", mVariableSize );
                 }
                 //get the values for this uniform
-                if( _type != std::string( "Sampler" ) )
+                if( mType != std::string( "Sampler" ) )
                 {
                     DOMElement* uniformValue = 0;
                     mValues.clear();

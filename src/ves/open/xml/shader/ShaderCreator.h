@@ -73,7 +73,7 @@ public:
     ///\param objectToCopy The object to copy.
     virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy(
                                                 const std::string& objectType,
-                                                ves::open::xml::XMLObjectPtr objectToCopy );
+                                                const ves::open::xml::XMLObjectPtr& objectToCopy );
 protected:
 };
 }

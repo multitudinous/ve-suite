@@ -54,7 +54,7 @@ Program::Program()
 
     if( !XMLObjectFactory::Instance()->ObjectCreatorIsRegistered( "Shader" ) )
     {
-        XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader", new ShaderCreator() );
+        XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",  new ShaderCreator() );
     }
 }
 ///////////////////

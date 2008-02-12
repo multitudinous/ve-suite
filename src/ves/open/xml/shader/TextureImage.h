@@ -91,7 +91,7 @@ public:
     ///Negative Y == negative y face\n
     ///Positive Z == positive z face\n
     ///Negative Z == negative z face\n
-    void SetImageFile( const std::string& imageFileName, std::string face = "FRONT" );
+    void SetImageFile( const std::string& imageFileName, const std::string& face = "FRONT" );
 
     ///Set the texture unit of this data.
     ///\todo May not be necessary.
@@ -150,7 +150,7 @@ public:
     ///Negative Y == negative y face\n
     ///Positive Z == positive z face\n
     ///Negative Z == negative z face\n
-    const std::string& GetImageFile( std::string face = "FRONT" );
+    const std::string GetImageFile( const std::string& face = "FRONT" );
 
     ///Set the object from input XML data
     ///\param xmlInput The input xml data.

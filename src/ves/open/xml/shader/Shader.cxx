@@ -49,7 +49,7 @@ Shader::Shader()
         : ves::open::xml::XMLObject()
 {
     mShaderType = std::string( "Vertex" );
-    _shaderSource = std::string( "" );
+    mShaderSource = std::string( "" );
     SetObjectType( "Shader" );
     SetObjectNamespace( "Shader" );
 }
@@ -58,9 +58,9 @@ Shader::Shader()
 /////////////////
 Shader::~Shader()
 {
-    _shaderSource.clear();
-    _uniformList.clear();
-    _textureImages.clear();
+    mShaderSource.clear();
+    mUniformList.clear();
+    mTextureImages.clear();
 }
 /////////////////////////////////
 ///Copy constructor            //
@@ -68,15 +68,15 @@ Shader::~Shader()
 Shader::Shader( const Shader& rhs )
         : XMLObject( rhs )
 {
-    _shaderSource = std::string( "" );
-    for( size_t i = 0; i < rhs._uniformList.size(); i++ )
+    mShaderSource = std::string( "" );
+    for( size_t i = 0; i < rhs.mUniformList.size(); i++ )
     {
-        _uniformList.push_back( rhs._uniformList.at( i ) );
+        mUniformList.push_back( rhs.mUniformList.at( i ) );
     }
 
-    _textureImages = rhs._textureImages;
+    mTextureImages = rhs.mTextureImages;
     mShaderType = rhs.mShaderType;
-    _shaderSource = rhs._shaderSource;
+    mShaderSource = rhs.mShaderSource;
 }
 ////////////////////////////////////////////////////
 void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
@@ -105,17 +105,17 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
                 DOMElement* sourceNode = GetSubElement( currentElement, std::string( "shaderCode" ), 0 );
                 if( sourceNode )
                 {
-                    GetAttribute( sourceNode, "type", _shaderSource );
+                    GetAttribute( sourceNode, "type", mShaderSource );
                 }
                 //clear out the current list of uniforms
-                if( _uniformList.size() )
+                if( mUniformList.size() )
                 {
-                    _uniformList.clear();
+                    mUniformList.clear();
                 }
                 //clear out the current list of texture images
-                if( _textureImages.size() )
+                if( mTextureImages.size() )
                 {
-                    _textureImages.clear();
+                    mTextureImages.clear();
                 }
 
                 //populate the uniforms
@@ -126,7 +126,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
                     {
                         Uniform newUniform;
                         newUniform.SetObjectFromXMLData( uniformList->item( i ) );
-                        _uniformList.push_back( newUniform );
+                        mUniformList.push_back( newUniform );
                     }
                 }
                 //populate the texture images
@@ -149,41 +149,41 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
 ////////////////////////////////////////////
 void Shader::AddUniform( Uniform newUniform )
 {
-    _uniformList.push_back( newUniform );
+    mUniformList.push_back( newUniform );
 }
 ///////////////////////////////////////////////////////////
 void Shader::AddTextureImage( TextureImage newTextureImage )
 {
-    _textureImages.insert( std::pair<unsigned int, TextureImage>( newTextureImage.GetTextureUnit(), newTextureImage ) );
+    mTextureImages.insert( std::pair<unsigned int, TextureImage>( newTextureImage.GetTextureUnit(), newTextureImage ) );
 }
 //////////////////////////////////////////////////
-void Shader::SetShaderType( std::string fragOrVert )
+void Shader::SetShaderType( const std::string& fragOrVert )
 {
     mShaderType = fragOrVert;
 }
 //////////////////////////////////////////////////////////
-void Shader::SetShaderSource( std::string shaderSourceCode )
+void Shader::SetShaderSource( const std::string& shaderSourceCode )
 {
-    _shaderSource = shaderSourceCode;
+    mShaderSource = shaderSourceCode;
 }
 /////////////////////////////////////
-std::string Shader::GetShaderSource()
+const std::string& Shader::GetShaderSource()
 {
-    return _shaderSource;
+    return mShaderSource;
 }
 ///////////////////////////////////
-std::string Shader::GetShaderType()
+const std::string& Shader::GetShaderType()
 {
     return mShaderType;
 }
 ////////////////////////////////////////////////////////////////
-TextureImage& Shader::GetTextureImage( unsigned int textureUnit )
+const TextureImage& Shader::GetTextureImage( unsigned int textureUnit )
 {
     try
     {
-        if( !_textureImages.size() )
+        if( !mTextureImages.size() )
             throw( "No textures present in shader!!" );
-        return _textureImages[textureUnit];
+        return mTextureImages[textureUnit];
     }
     catch ( const char* msg )
     {
@@ -196,22 +196,22 @@ TextureImage& Shader::GetTextureImage( unsigned int textureUnit )
     }
 }
 ////////////////////////////////////////////////////
-Uniform& Shader::GetUniform( std::string uniformName )
+const Uniform& Shader::GetUniform( const std::string& uniformName )
 {
-    size_t nUniforms = _uniformList.size();
+    size_t nUniforms = mUniformList.size();
     for( size_t i = 0; i < nUniforms; i++ )
     {
-        if( _uniformList.at( i ).GetName() == uniformName )
+        if( mUniformList.at( i ).GetName() == uniformName )
         {
-            return _uniformList.at( i );
+            return mUniformList.at( i );
         }
     }
     //return 0x0000000;
 }
 ////////////////////////////////////////////////
-Uniform& Shader::GetUniform( unsigned int index )
+const Uniform& Shader::GetUniform( unsigned int index )
 {
-    return _uniformList.at( index );
+    return mUniformList.at( index );
 }
 ////////////////////////////////////////////////
 void Shader::_updateVEElement( const std::string& input )
@@ -227,9 +227,9 @@ void Shader::_updateTextureImages()
 {
     //add the children nodes to the list
     std::map<unsigned int, TextureImage>::iterator textures;
-    //for(size_t i = 0; i < _textureImages.size(); i++)
-    for( textures = _textureImages.begin();
-            textures != _textureImages.end();
+    //for(size_t i = 0; i < mTextureImages.size(); i++)
+    for( textures = mTextureImages.begin();
+            textures != mTextureImages.end();
             textures++ )
     {
         textures->second.SetOwnerDocument( _rootDocument );
@@ -240,10 +240,10 @@ void Shader::_updateTextureImages()
 void Shader::_updateUniforms()
 {
     //add the children nodes to the list
-    for( size_t i = 0; i < _uniformList.size(); i++ )
+    for( size_t i = 0; i < mUniformList.size(); i++ )
     {
-        _uniformList.at( i ).SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( _uniformList.at( i ).GetXMLData( "uniform" ) );
+        mUniformList.at( i ).SetOwnerDocument( _rootDocument );
+        _veElement->appendChild( mUniformList.at( i ).GetXMLData( "uniform" ) );
     }
 }
 ////////////////////////////////
@@ -265,7 +265,7 @@ void Shader::_updateShaderSource()
                                 Convert( "shaderCode" ).toXMLString() );
 
     DOMText* source = _rootDocument->createTextNode(
-                      Convert( _shaderSource ).toXMLString() );
+                      Convert( mShaderSource ).toXMLString() );
 
     sourceElement->appendChild( source );
     _veElement->appendChild( sourceElement );
@@ -273,12 +273,12 @@ void Shader::_updateShaderSource()
 ////////////////////////////////////
 size_t Shader::GetNumberOfUniforms()
 {
-    return _uniformList.size();
+    return mUniformList.size();
 }
 /////////////////////////////////////////
 size_t Shader::GetNumberOfTextureImages()
 {
-    return _textureImages.size();
+    return mTextureImages.size();
 }
 ////////////////////////////////////////////
 Shader& Shader::operator=( const Shader& rhs )
@@ -286,31 +286,31 @@ Shader& Shader::operator=( const Shader& rhs )
     if( this != &rhs )
     {
         XMLObject::operator =( rhs );
-        /*size_t nUniforms = _uniformList.size();
+        /*size_t nUniforms = mUniformList.size();
         for(size_t i = nUniforms -1; i >=0; i--)
         {
-           delete _uniformList.at(i);
+           delete mUniformList.at(i);
         }*/
-        _uniformList.clear();
+        mUniformList.clear();
 
-        for( size_t i = 0; i < rhs._uniformList.size(); i++ )
+        for( size_t i = 0; i < rhs.mUniformList.size(); i++ )
         {
-            _uniformList.push_back( rhs._uniformList.at( i ) );
+            mUniformList.push_back( rhs.mUniformList.at( i ) );
         }
-        /*size_t nTextures = _textureImages.size();
+        /*size_t nTextures = mTextureImages.size();
         for(size_t i = nTextures-1; i >=0; i--)
         {
-           delete _textureImages.at(i);
+           delete mTextureImages.at(i);
         }*/
-        _textureImages.clear();
+        mTextureImages.clear();
 
-        //for(size_t i = 0; i < rhs._textureImages.size(); i++)
+        //for(size_t i = 0; i < rhs.mTextureImages.size(); i++)
         //{
         //is this correct for maps?
-        _textureImages = rhs._textureImages;
+        mTextureImages = rhs.mTextureImages;
         //}
         mShaderType = rhs.mShaderType;
-        _shaderSource = rhs._shaderSource;
+        mShaderSource = rhs.mShaderSource;
     }
     return *this;
 }

@@ -105,7 +105,7 @@ public:
 
     ///Get a texture representing an image file.
     ///\param textureUnit The texture unit to search for.
-    TextureImage& GetTextureImage( unsigned int textureUnit );
+    const TextureImage& GetTextureImage( unsigned int textureUnit );
 
     ///Get the number of uniforms.
     size_t GetNumberOfUniforms();
@@ -115,11 +115,11 @@ public:
 
     ///Get a specific uniform by name.
     ///\param uniformName The uniform name to search for.
-    Uniform& GetUniform( const std::string& uniformName );
+    const Uniform& GetUniform( const std::string& uniformName );
 
     ///Get a specific uniform by index.
     ///\param index The uniform to search for.
-    Uniform& GetUniform( unsigned int index );
+    const Uniform& GetUniform( unsigned int index );
 
     ///equal operator
     Shader& operator=( const Shader& rhs );

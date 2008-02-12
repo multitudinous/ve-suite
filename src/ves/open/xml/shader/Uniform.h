@@ -93,7 +93,7 @@ public:
     ///NOTE: All values should be passed in
     ///as floats and will be converted and interpretted appropriately.
     ///\param newValues The new values for the uniform.
-    void SetValues( std::vector<float>& newValues );
+    void SetValues( const std::vector<float>& newValues );
 
     ///Set the internal data values from a given XML element.
     ///\param inputXML The element to extract the data from.
@@ -114,7 +114,7 @@ public:
     ///Return the current values.
     ///Values are returned as floats but should be converted as
     ///needed.
-    std::vector<float> GetValues();
+    const std::vector<float>& GetValues();
 
     ///Equal operator
     Uniform& operator=( const Uniform& rhs );

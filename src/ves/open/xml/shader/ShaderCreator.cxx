@@ -55,29 +55,30 @@ ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( const std::strin
     }
     else if( objectType == "TextureImage" )
     {
-        return TexutrePtr( new TextureImage() );
+        return TextureImagePtr( new TextureImage() );
     }
     return ves::open::xml::XMLObjectPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy( const std::string& objectType,
-        ves::open::xml::XMLObjectPtr objectToCopy )
+ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy(
+                                    const std::string& objectType,
+                                    const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
     if( objectType == "Program" )
     {
-        return new Program( *dynamic_cast<Program*>( objectToCopy ) );
+        return ProgramPtr( objectToCopy );
     }
     else if( objectType == "Shader" )
     {
-        return new Shader( *dynamic_cast<Shader*>( objectToCopy ) );
+        return ShaderPtr( objectToCopy );
     }
     else if( objectType == "Uniform" )
     {
-        return new Uniform( *dynamic_cast<Uniform*>( objectToCopy ) );
+        return UniformPtr( objectToCopy );
     }
     else if( objectType == "TextureImage" )
     {
-        return new TextureImage( *dynamic_cast<TextureImage*>( objectToCopy ) );
+        return TextureImagePtr( objectToCopy );
     }
-    return 0;
+    return ves::open::xml::XMLObjectPtr();
 }
