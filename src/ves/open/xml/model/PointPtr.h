@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef POINT_PTR_H
-#define POINT_PTR_H
+#ifndef _VES_OPEN_XML_MODEL_POINT_PTR_H
+#define _VES_OPEN_XML_MODEL_POINT_PTR_H
 
 #include <loki/SmartPtr.h>
 
@@ -39,9 +39,9 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::PointPtr.  To get the full
- * declaration of VE_XML::VE_Model::Point
- * VE_Open/XML/Model/Point.h must be included, too.
+ * ves::open::xml::model::PointPtr.  To get the full
+ * declaration of ves::open::xml::model::Point
+ * ves/open/xml/model/Point.h must be included, too.
  */
 
 namespace ves

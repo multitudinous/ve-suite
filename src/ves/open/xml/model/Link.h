@@ -31,49 +31,40 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef LINK_H_
-#define LINK_H_
+#ifndef VES_OPEN_XML_MODEL_LINK_H_
+#define VES_OPEN_XML_MODEL_LINK_H_
+
+#include <ves/open/xml/model/LinkPtr.h>
+
+#include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/PointPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+
+#include <ves/open/xml/XMLObject.h>
+
+#include <xercesc/dom/DOM.hpp>
+
+#include <string>
+#include <vector>
+#include <utility>
+
+namespace ves
+{
+namespace open
+{
+namespace xml
+{
+namespace model
+{
 /*!\file Link.h
   *Data ports API
   */
 
-/*!\class VE_XML::VE_Model::Link
+/*!\class ves::open::xml::model::Link
  *Class that manages the port data for a specific model.
  *These class holds the raw data and the necessary info to draw the port
  *as well as the port direction (input or output) data
  */
-#include <string>
-#include <vector>
-#include <utility>
-#include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/model/Model.h>
-#include <ves/open/xml/model/ModelPtr.h>
-
-#include <xercesc/dom/DOM.hpp>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class DataValuePair;
-namespace model
-{
-class Point;
-}
-}
-}
-}
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace model
-{
 class VE_MODEL_EXPORTS Link : public ves::open::xml::XMLObject
 {
 public:
@@ -93,36 +84,47 @@ public:
 
     ///Get the portInfo for the fromPort.
     ///\return The element with the information about the module being linked to
-    ves::open::xml::DataValuePair* GetFromModule( void );
+    ves::open::xml::DataValuePairPtr GetFromModule( void );
+
     ///Get the portInfo for the toPort.
     ///\return The element with the information about the module being linked to
-    ves::open::xml::DataValuePair* GetToModule( void );
+    ves::open::xml::DataValuePairPtr GetToModule( void );
+
     ///Get the portInfo for the fromPort.
     ///\return The from port for the link
-    long int* GetFromPort( void );
+    long int GetFromPort( void );
+
     ///Get the portInfo for the toPort.
     ///\return The to port for the link
-    long int* GetToPort( void );
+    long int GetToPort( void );
+
     ///Get the i'th point for a link.
     ///\param i The i'th point you are after.
-    Point* GetLinkPoint( unsigned int i );
+    PointPtr GetLinkPoint( unsigned int i );
+
     ///Get the number of points used to define a link.
     ///\return The number of points making up the link
     size_t GetNumberOfLinkPoints( void );
+
     ///Set the link name
     ///\param name The name for the link
-    void SetLinkName( std::string name );
+    void SetLinkName( const std::string& name );
+
     ///Get the link name
     ///\return The link name in a string
-    std::string GetLinkName( void );
+    const std::string& GetLinkName( void );
+
     ///Set the link type
     ///\param type The type of linke
-    void SetLinkType( std::string type );
+    void SetLinkType( const std::string& type );
+
     ///Get the link type
     ///\return The link type in a string
-    std::string GetLinkType();
-    void SetParentModel( ModelSharedPtr parent );
-    ModelSharedPtr GetParentModel( );
+    const std::string& GetLinkType();
+
+    void SetParentModel( ModelPtr parent );
+
+    ModelPtr GetParentModel( );
 
 protected:
     ///Internally update the data.
@@ -131,18 +133,24 @@ protected:
 
 private:
     ///raw datatypes of Link that are specified in the verg_model.xsd file
-    std::vector< Point* > linkPoints;///<Vector of Points.
+    std::vector< PointPtr > mLinkPoints;///<Vector of Points.
+
     ///The data value pair will contain the model and port
     ///number of the appropriate port to be linked
     ///The classes hold the fromPort in first and the toPort in second.
-    std::pair< ves::open::xml::DataValuePair*, ves::open::xml::DataValuePair* > moduleInfo;
+    std::pair< ves::open::xml::DataValuePairPtr,
+               ves::open::xml::DataValuePairPtr > mModuleInfo;
+
     ///The classes hold the fromPort in first and the toPort in second.
-    std::pair< long int, long int > portInfo;
+    std::pair< long int, long int > mPortInfo;
+
     ///The name of the link.
-    std::string linkName;
+    std::string mLinkName;
+
     ///The link type
-    std::string m_type;
-    ModelSharedPtr parentModel;
+    std::string mType;
+
+    ModelPtr mParentModel;
 };
 
 }

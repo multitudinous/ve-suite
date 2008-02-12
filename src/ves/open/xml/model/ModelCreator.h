@@ -32,23 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef MODEL_CREATOR_H
 #define MODEL_CREATOR_H
-/*!\file ModelCreator.h
-  ModelCreator API
-  */
-/*!\class VE_XML::VE_Model::ModelCreator
- * Create Model Objects.
- */
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class XMLObject;
-}
-}
-}
 
 #include <ves/open/xml/CreationEventHandler.h>
 #include <ves/open/xml/XMLObjectPtr.h>
@@ -61,6 +44,12 @@ namespace xml
 {
 namespace model
 {
+/*!\file ModelCreator.h
+  ModelCreator API
+  */
+/*!\class ves::open::xml::model::ModelCreator
+ * Create Model Objects.
+ */
 class VE_MODEL_EXPORTS ModelCreator : public ves::open::xml::CreationEventHandler
 {
 public:
@@ -79,18 +68,23 @@ public:
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
     virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( const std::string& objectType );
+
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
     virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( const std::string& objectType );
 
-    ///Create a copy of a new CAD object
+    ///Create a copy of a new Model object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType, ves::open::xml::XMLObjectPtr objectToCopy );
-    ///Create a copy of a new CAD object
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType,
+                                            const ves::open::xml::XMLObjectPtr& objectToCopy );
+
+    ///Create a copy of a new Model object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( const std::string& objectType, ves::open::xml::XMLObjectPtr objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( const std::string& objectType,
+                                                const ves::open::xml::XMLObjectPtr& objectToCopy );
+
 protected:
 };
 }

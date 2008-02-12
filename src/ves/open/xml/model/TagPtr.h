@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef TAG_PTR_H
-#define TAG_PTR_H
+#ifndef _VES_OPEN_XML_MODEL_TAG_PTR_H
+#define _VES_OPEN_XML_MODEL_TAG_PTR_H
 
 #include <ves/util/PointerTypes.h>
 
@@ -39,9 +39,9 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::TagPtr.  To get the full
- * declaration of VE_XML::VE_Model::Tag
- * VE_Open/XML/Model/Tag.h must be included, too.
+ * ves::open::xml::model::TagPtr.  To get the full
+ * declaration of Tag
+ * ves/open/xml/model/Tag.h must be included, too.
  */
 
 namespace ves

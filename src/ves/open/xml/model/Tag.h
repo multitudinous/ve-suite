@@ -30,25 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#ifndef _VES_OPEN_XML_MODEL_TAG_H_
+#define _VES_OPEN_XML_MODEL_TAG_H_
 
-#ifndef Tag_H_
-#define Tag_H_
 #include <ves/open/xml/model/TagPtr.h>
-/*!\file Tag.h
-  *Data ports API
-  */
 
-/*!\class VE_XML::VE_Model::Tag
- *Class that manages the port data for a specific model.
- *These class holds the raw data and the necessary info to draw the port
- *as well as the port direction (input or output) data
- */
-#include <string>
-#include <vector>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/model/PointPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
+
+#include <string>
+#include <vector>
+
 
 namespace ves
 {
@@ -58,6 +52,15 @@ namespace xml
 {
 namespace model
 {
+/*!\file Tag.h
+  *Data ports API
+  */
+
+/*!\class ves::open::xml::model::Tag
+ *Class that manages the port data for a specific model.
+ *These class holds the raw data and the necessary info to draw the port
+ *as well as the port direction (input or output) data
+ */
 class VE_MODEL_EXPORTS Tag : public ves::open::xml::XMLObject
 {
 public:
@@ -72,16 +75,20 @@ public:
 
     ///Set the text for the tag
     ///\param text string containing text for the tag
-    void SetText( std::string text );
+    void SetText( const std::string& text );
+
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData(
         XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
+
     ///Get the i'th point for a Tag.
     ///\param i The i'th point you are after.
     PointPtr GetPoint( size_t i );
+
     ///Get the tag text
-    std::string GetText( void );
+    cosnt std::string& GetText( void );
+
     ///Add a new point to the tag
     ///\param newPoint The new point to be added
     void AddPoint( PointPtr newPoint );
@@ -93,8 +100,8 @@ protected:
 
 private:
     ///raw datatypes of Tag that are specified in the verg_model.xsd file
-    std::vector< PointPtr > tagPoints;///<Vector of Points.
-    std::string tagText;///<string that contains text for the tag
+    std::vector< PointPtr > mTagPoints;///<Vector of Points.
+    std::string mTagText;///<string that contains text for the tag
 };
 
 }

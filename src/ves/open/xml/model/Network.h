@@ -31,37 +31,22 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef _VES_OPEN_XML_NETWORK_H_
-#define _VES_OPEN_XML_NETWORK_H_
-/*!\file Network.h
-  *System Network API
-  */
+#ifndef _VES_OPEN_XML_MODEL_NETWORK_H_
+#define _VES_OPEN_XML_MODEL_NETWORK_H_
 
-/*!\class VE_XML::VE_Model::Network
- *Class that manages the system network for conductor.
- */
-#include <string>
-#include <vector>
+#include <ves/open/xml/model/NetworkPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 
 #include <ves/open/xml/model/TagPtr.h>
 #include <ves/open/xml/model/LinkPtr.h>
 #include <ves/open/xml/model/ModelPtr.h>
-#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class DataValuePair;
-}
-}
-}
+#include <string>
+#include <vector>
 
 namespace ves
 {
@@ -71,6 +56,13 @@ namespace xml
 {
 namespace model
 {
+/*!\file Network.h
+  *System Network API
+  */
+
+/*!\class VE_XML::VE_Model::Network
+ *Class that manages the system network for conductor.
+ */
 class VE_MODEL_EXPORTS Network : public ves::open::xml::XMLObject
 {
 public:
@@ -89,31 +81,41 @@ public:
 
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
-    LinkWeakPtr GetLink( int i );
+    LinkPtr GetLink( int i );
+
     ///Get the total number of links
     size_t GetNumberOfLinks( void );
+
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
-    ves::open::xml::DataValuePair* GetDataValuePair( int i );
+    ves::open::xml::DataValuePairPtr GetDataValuePair( int i );
+
     ///Get the i'th tag from the Network.
     ///\param i The i'th tag you are after.
     TagPtr GetTag( size_t i );
+
     ///Get the total number of links
     size_t GetNumberOfTags( void );
+
     ///Add a tag to the network
     ///\param newTag The new tag to be added
     void AddTag( TagPtr newTag );
+
     ///Add a Link to the network
     ///\param newLink The new Link to be added
-    void AddLink( LinkWeakPtr newLink );
+    void AddLink( LinkPtr newLink );
+
     ///Remove the tag from the network
     ///\param oldTag The tag to be removed
     void RemoveTag( TagPtr oldTag );
+
     ///Remove a link from the network
     ///\param oldLink The link to be removed
-    void RemoveLink( LinkWeakPtr oldLink );
-    void SetParentModel( ModelSharedPtr parent );
-    ModelSharedPtr GetParentModel( );
+    void RemoveLink( LinkPtr oldLink );
+
+    void SetParentModel( ModelPtr parent );
+
+    ModelPtr GetParentModel( );
 
 protected:
     ///Internally update the data.
@@ -122,11 +124,11 @@ protected:
 
 private:
     ///raw datatypes of Network that are specified in the verg_model.xsd file
-    std::vector< LinkSharedPtr > links;///<Vector of Links.
-    std::vector< ves::open::xml::DataValuePair* > conductorState;///<Vector of data value pairs that hold conductor info.
+    std::vector< LinkPtr > mLinks;///<Vector of Links.
+    std::vector< ves::open::xml::DataValuePairPtr > mConductorState;///<Vector of data value pairs that hold conductor info.
     ///The vector of tags for this network
-    std::vector< TagPtr > tags;
-    ModelSharedPtr parentModel;
+    std::vector< TagPtr > mTags;
+    ModelPtr mParentModel;
 };
 
 }

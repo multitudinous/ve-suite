@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef XML_MODEL_PTR_H
-#define XML_MODEL_PTR_H
+#ifndef _VES_OPEN_XML_MODEL_MODEL_PTR_H
+#define _VES_OPEN_XML_MODEL_MODEL_PTR_H
 
 #include <ves/util/PointerTypes.h>
 

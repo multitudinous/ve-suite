@@ -30,46 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef XML_MODEL_H_
-#define XML_MODEL_H_
+#ifndef _VES_OPEN_XML_MODEL_MODEL_H_
+#define _VES_OPEN_XML_MODEL_MODEL_H_
 
 #include <ves/open/xml/model/ModelPtr.h>
-/*!\file Model.h
-  *Model API
-  */
 
-/*!\class VE_XML::VE_Model::Model
- *Class that manages the model info for all of VE-Suite.
- */
-
-/*!\namespace VE_XML::VE_Model
- * Contains nodes for creating/managing a Model data.
- */
-#include <string>
-#include <vector>
 #include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/model/SystemPtr.h>
+
 #include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/ParameterBlockPtr.h>
+#include <ves/open/xml/model/SystemPtr.h>
+#include <ves/open/xml/model/PortPtr.h>
+#include <ves/open/xml/model/PointPtr.h>
 #include <ves/open/xml/cad/CADNodePtr.h>
 #include <ves/open/xml/cad/CADAssemblyPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class ParameterBlock;
-namespace model
-{
-class Port;
-class Point;
-}
-}
-}
-}
+#include <string>
+#include <vector>
+
 
 namespace ves
 {
@@ -79,8 +59,18 @@ namespace xml
 {
 namespace model
 {
+/*!\file Model.h
+  *Model API
+  */
+/*!\class ves::open::xml::model::Model
+ *Class that manages the model info for all of VE-Suite.
+ */
+/*!\namespace ves::open::xml::model
+ * Contains nodes for creating/managing a Model data.
+ */
 class VE_MODEL_EXPORTS Model : public ves::open::xml::XMLObject
 {
+
 public:
     ///Constructor
     Model();
@@ -93,13 +83,15 @@ public:
 
     ///Set the model name
     ///\param name name of the model
-    void SetModelName( std::string name );
+    void SetModelName( const std::string& name );
+
     ///Set the unique model id
     ///\param id id of the model
     void SetModelID( unsigned int id );
+
     ///Set the icon filename
     ///\param filename filename for the icon to be loaded
-    void SetIconFilename( std::string filename );
+    void SetIconFilename( const std::string& filename );
 
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
@@ -107,117 +99,150 @@ public:
 
     ///Get the model name
     ///\return The model name
-    std::string GetModelName( void );
+    const std::string& GetModelName( void );
+
     ///Get the model id
     ///\return The model ID used my third party solver
     unsigned int GetModelID( void );
+
     ///Get the icon file name
     ///\return The icon filename
-    std::string GetIconFilename( void );
+    const std::string& GetIconFilename( void );
+
     ///Set the roation of the icon
     void SetIconRotation( float rotation );
+
     ///Get the icon rotation
     ///\return The icon rotation
     float GetIconRotation( void );
+
     ///Set the scale of the icon
     void SetIconScale( float scale );
+
     ///Get icon scale
     ///\return The icon scale
     float GetIconScale( void );
+
     ///Set the mirroed attribute of the icon
     void SetIconMirror( int mirror );
+
     ///is the icon mirrored
     ///\return The mirror flag for the icon
     int GetIconMirror( void );
+
     ///Get point for the icon location referenced to the upper left hand corner
     ///\return The point for the icon location
-    Point* GetIconLocation( void );
+    PointPtr GetIconLocation( void );
+
     ///Get results data
     ///\return The ith result stored as a command
-    ves::open::xml::Command* GetResult( int i );
+    ves::open::xml::CommandPtr GetResult( int i );
+
     ///Get results data
     ///\return The number of results in this model
     size_t GetNumberOfResults( void );
+
     ///Set the result for this models
     void SetResult( ves::open::xml::CommandPtr input );
+
     ///Get input data
     ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
     ///\return The ith input in this model
-    ves::open::xml::Command* GetInput( int i );
+    ves::open::xml::CommandPtr GetInput( int i );
+
     ///Get the input variable by name
     ///\param inputName Then name of the input to retrieve
     ///\return The input with the given name
-    ves::open::xml::Command* GetInput( std::string inputName );
+    ves::open::xml::CommandPtr GetInput( const std::string& inputName );
+
     ///Allocate another input block for use
     ///\return The new input
-    ves::open::xml::Command* GetInput();
     #pragma deprecated( GetInput() )
+    ves::open::xml::CommandPtr GetInput();
+
     ///Set the input for this models
     void SetInput( ves::open::xml::CommandPtr input );
+
     ///Get number of input data
     ///\return The total number of inputs
     size_t GetNumberOfInputs( void );
+
     ///Get the i'th port for the model.
     ///\param i The i'th port you are after.
     ///\return The ith port selected by the user
-    Port* GetPort( int i );
+    PortPtr GetPort( int i );
+
     ///Allocates a new port for the model.
     ///\return The new port
-    Port* GetPort( void );
+    PortPtr GetPort( void );
+
     ///Get port data
     size_t GetNumberOfPorts( void );
+
     ///Remove the i'th port for the model.
     ///\param i The i'th port you are after.
     void RemovePort( unsigned int i );
+
     ///Remove the selected port for the model.
     ///\param removePort The port you are after.
-    void RemovePort( ves::open::xml::model::Port* removePort );
+    void RemovePort( PortPtr removePort );
+
     ///Get the i'th information packet for a model.
     ///\param i The i'th packet you are after.
-    ves::open::xml::ParameterBlock* GetInformationPacket( int i );
+    ves::open::xml::ParameterBlockPtr GetInformationPacket( int i );
 
     ///Get the named information packet for a model.
     ///\param name The name of the packet you are after.
-    ves::open::xml::ParameterBlock* GetInformationPacket( std::string name );
+    ves::open::xml::ParameterBlockPtr GetInformationPacket( const std::string& name );
 
     ///Get info packets data
     size_t GetNumberOfInformationPackets( void );
+
     ///Get the geometry for the model.
     ves::open::xml::cad::CADNodePtr GetGeometry( void );
+
     ///Remove the i'th information packet for a model.
     ///\param i The i'th packet you are after.
     void RemoveInformationPacket( unsigned int i );
 
     ///Remove the named information packet from a model.
     ///\param name The name of the packet to remove.
-    void RemoveInformationPacket( std::string name );
+    void RemoveInformationPacket( const std::string& name );
 
     ///Add a geometry node and return it
     /// if there is already geometry then the function will return that pointer
-    ves::open::xml::cad::CADNode* AddGeometry( void );
+    ves::open::xml::cad::CADNodePtr AddGeometry( void );
+
     ///Delete the geometry for this model
     void DeleteGeometry( void );
+
     ///Set the vendor name on the model
-    void SetVendorName( std::string vendorName );
+    void SetVendorName( const std::string& vendorName );
+
     ///Get the vendor name of the model
-    std::string GetVendorName( void );
+    const std::string& GetVendorName( void );
+
     ///Add a model attribute
-    void SetModelAttribute( ves::open::xml::Command* modelAttribute );
+    void SetModelAttribute( ves::open::xml::CommandPtr modelAttribute );
+
     ///Get model attributes
     ///\return The model attributes used by third party solvers
-    ves::open::xml::Command* GetModelAttribute( void );
+    ves::open::xml::CommandPtr GetModelAttribute( void );
 
     ///New interface for handling systems of systems
     ///Set the sub network for this model
     ///\param network The subnetwork for this model
-    void SetSubSystem( ves::open::xml::model::SystemWeakPtr inputSystem );
+    void SetSubSystem( ves::open::xml::model::SystemPtr inputSystem );
+
     ///Get the sub network for this model
     ///\return The subnetwork for this model
-    ves::open::xml::model::SystemWeakPtr GetSubSystem();
+    ves::open::xml::model::SystemPtr GetSubSystem();
+
     ///Set the parent model pointer of this model
-    void SetParentModel( ModelSharedPtr parent );
+    void SetParentModel( ModelPtr parent );
+
     ///Get the parent model pointer of this class
-    ModelSharedPtr GetParentModel();
+    ModelPtr GetParentModel();
 
 protected:
     ///Internally update the data.
@@ -226,29 +251,31 @@ protected:
 
 private:
     ///raw datatypes of Model that are specified in the verg_model.xsd file
-    std::string modelName;///<The name of the model.
-    unsigned int uniqueModelID;///<The unique model id.
-    std::string iconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
-    std::vector< Port* > ports;///<The vector port data if any for a model.
-    Point* iconLocation;///<The icon location point container.
+    std::string     mModelName;///<The name of the model.
+    unsigned int    mUniqueModelID;///<The unique model id.
+    std::string     mIconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
+
+    std::vector< PortPtr >  mPorts;///<The vector port data if any for a model.
+    PointPtr                mIconLocation;///<The icon location point container.
     ///The data value pair will contain all the results for a paticular model
-    std::vector< ves::open::xml::Command* > results;///<The classes hold the results for the model.
+    std::vector< ves::open::xml::CommandPtr > mResults;///<The classes hold the results for the model.
     ///The data value pair will contain the model inputs for the model
-    std::vector< ves::open::xml::Command* > inputs;///<The classes hold the inputs for the model.
+    std::vector< ves::open::xml::CommandPtr > mInputs;///<The classes hold the inputs for the model.
     ///The parameter block holds all the data the was formerly stored in the param file
-    std::vector< ves::open::xml::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
+    std::vector< ves::open::xml::ParameterBlockPtr > mInformationPackets;///<The classes hold relevant data to represent the model.
+
     ///The CADNode contains the tree structure for the geometry
-    ves::open::xml::cad::CADAssemblyPtr geometry;///<The classes hold the geometry for the model.
+    ves::open::xml::cad::CADAssemblyPtr mGeometry;///<The classes hold the geometry for the model.
     ///The vendor name for the model
-    std::string vendorUnit;///<The string that stores the unit name that this model maps to
-    ves::open::xml::Command* modelAttribute;///<The structure that stores all of the model attributes
-    float iconScale;///<The icon scale to set the right size for conductor and xplorer
-    float iconRotation;///<The icon rotation for conductor and xplorer
+    std::string mVendorUnit;///<The string that stores the unit name that this model maps to
+    ves::open::xml::CommandPtr mModelAttribute;///<The structure that stores all of the model attributes
+    float mIconScale;///<The icon scale to set the right size for conductor and xplorer
+    float mIconRotation;///<The icon rotation for conductor and xplorer
     ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
-    unsigned int iconMirror;
+    unsigned int mIconMirror;
     ///The sub network for this model
-    ves::open::xml::model::SystemPtr m_subSystem;
-    ModelSharedPtr parentModel;
+    ves::open::xml::model::SystemPtr mSubSystem;
+    ModelPtr mParentModel;
 };
 
 }

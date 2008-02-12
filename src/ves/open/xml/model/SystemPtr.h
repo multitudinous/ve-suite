@@ -39,9 +39,9 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Model::SystemPtr.  To get the full
- * declaration of VE_XML::VE_Model::SystemPtr
- * VE_Open/XML/Model/System.h must be included, too.
+ * ves::open::xml::model::SystemPtr.  To get the full
+ * declaration of SystemPtr
+ * ves/open/xml/model/System.h must be included, too.
  */
 
 namespace ves

@@ -30,18 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef VE_OPEN_XML_SYSTEM_H
-#define VE_OPEN_XML_SYSTEM_H
-#include <ves/open/xml/model/SystemPtr.h>
-/*!\file System.h
-  *System System API
-  */
+#ifndef VE_OPEN_XML_MODEL_SYSTEM_H
+#define VE_OPEN_XML_MODEL_SYSTEM_H
 
-/*!\class VE_XML::VE_Model::System
- *Class that manages the system network for conductor.
- */
-#include <string>
-#include <vector>
+#include <ves/open/xml/model/SystemPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 
@@ -49,6 +41,9 @@
 #include <ves/open/xml/model/NetworkPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
+
+#include <string>
+#include <vector>
 
 namespace ves
 {
@@ -58,6 +53,13 @@ namespace xml
 {
 namespace model
 {
+/*!\file System.h
+  *System System API
+  */
+
+/*!\class ves::open::xml::model::System
+ *Class that manages the system network for conductor.
+ */
 class VE_MODEL_EXPORTS System : public ves::open::xml::XMLObject
 {
 public:
@@ -73,28 +75,36 @@ public:
     ///Get the i'th model from the system
     ///\param i The i'th model you are after
     ///\return The model requested by the user
-    ModelWeakPtr GetModel( size_t i );
+    ModelPtr GetModel( size_t i );
+
     ///Get all the models for this system
     ///\return The vector of all the models
-    std::vector< ModelWeakPtr > GetModels();
+    const std::vector< ModelPtr >& GetModels();
+
     ///Get the total number of models
     ///\return The number of models
     size_t GetNumberOfModels( void );
+
     ///Add a model to the system
     ///\param inputModel The model to be added to the system
-    void AddModel( ModelWeakPtr inputModel );
+    void AddModel( ModelPtr inputModel );
+
     ///Get the network for the system
     ///\return The respective network for the system
-    NetworkWeakPtr GetNetwork();
+    NetworkPtr GetNetwork();
+
     ///Add a network to the system
     ///\param inputNetwork The new network to be added
-    void AddNetwork( NetworkWeakPtr inputNetwork );
+    void AddNetwork( NetworkPtr inputNetwork );
+
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData(
         XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
-    void SetParentModel( ModelSharedPtr parent );
-    ModelSharedPtr GetParentModel( );
+
+    void SetParentModel( ModelPtr parent );
+
+    ModelPtr GetParentModel( );
 
 protected:
     ///Internally update the data.
@@ -103,10 +113,10 @@ protected:
 
 private:
     ///The systems network
-    NetworkPtr m_network;
+    NetworkPtr mNetwork;
     ///The vector of models for this system
-    std::vector< ModelPtr > m_models;
-    ModelSharedPtr parentModel;
+    std::vector< ModelPtr > mModels;
+    ModelPtr mParentModel;
 };
 
 }
