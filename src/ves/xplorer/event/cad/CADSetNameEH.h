@@ -34,7 +34,7 @@
 #define VE_CAD_SET_NAME_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
-
+#include <ves/open/xml/XMLObjectPtr.h>
 
 namespace ves
 {
@@ -65,7 +65,7 @@ public:
 protected:
     ///Remove a CADNode.
     ///\param command The Command containing the CADNode to remove.
-    void _operateOnNode( ves::open::xml::XMLObject* command );
+    void _operateOnNode( ves::open::xml::XMLObjectPtr command );
 };
 
 }

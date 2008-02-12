@@ -72,11 +72,11 @@ CADSetNameEventHandler& CADSetNameEventHandler::operator=( const CADSetNameEvent
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetNameEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADSetNameEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr newName = command->GetDataValuePair( "Node Name" );
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
