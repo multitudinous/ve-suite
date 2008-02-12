@@ -115,8 +115,8 @@ ACE_THROW_SPEC((
             p.intfs.push_back(oport->_data);
 
             str = p.Save(rv);*/
-            std::vector< std::pair< XMLObject*, std::string > > nodes;
-            nodes.push_back( std::pair< Command*, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
+            std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+            nodes.push_back( std::pair< CommandPtr, std::string  >( oport->GetPortData(), std::string( "vecommand" ) ) );
             std::string fileName( "returnString" );
             XMLReaderWriter netowrkWriter;
             netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -189,11 +189,11 @@ ACE_THROW_SPEC((
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( std::string( data ), "Command", "vecommand" );
     //delete data;
-    std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     // Should only be one item. But, maybe later...
     if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData(
-                port_id, dynamic_cast< Command* >( objectVector.at( 0 ) ) )
+                port_id, objectVector.at( 0 ) )
        )
     {
         std::string msg = "Unable to set mod id# "
@@ -232,8 +232,8 @@ ACE_THROW_SPEC((
         return CORBA::string_dup( "" );
     }
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< Command*, std::string  >( &portData, std::string( "vecommand" ) ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< CommandPtr, std::string  >( &portData, std::string( "vecommand" ) ) );
     std::string fileName( "returnString" );
     XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -374,11 +374,11 @@ void Body_Executive_i::execute_next_mod( long module_id )
         networkWriter.UseStandaloneDOMDocumentManager();
         networkWriter.ReadFromString();
         networkWriter.ReadXMLData( msg, "Command", "vecommand" );
-        std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+        std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
         if( !objectVector.empty() )
         {
-            Command* returnState = dynamic_cast< Command* >( objectVector.at( 0 ) );
+            CommandPtr returnState = objectVector.at( 0 );
 
             long rs;
             // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
@@ -389,10 +389,6 @@ void Body_Executive_i::execute_next_mod( long module_id )
                 returnState->GetDataValuePair( "return_state" )->GetData( rs );
             }
             //delete the object vector
-            for( size_t i = 0; i < objectVector.size(); ++i )
-            {
-                delete objectVector.at( i );
-            }
             objectVector.clear();
 
             _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = rs;
@@ -410,11 +406,11 @@ void Body_Executive_i::execute_next_mod( long module_id )
                 }
                 else
                 {
-                    std::vector< std::pair< XMLObject*, std::string > > nodes;
-                    std::vector< Command* > inputList = _network->GetModule( rt )->GetInputData();
+                    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+                    std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
                     for( size_t k = 0; k < inputList.size(); ++k )
                     {
-                        nodes.push_back( std::pair< Command*, std::string  >(
+                        nodes.push_back( std::pair< CommandPtr, std::string  >(
                                              inputList.at( k ), std::string( "vecommand" ) )
                                        );
                     }
@@ -473,7 +469,7 @@ ACE_THROW_SPEC((
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( std::string( result ), "Command", "vecommand" );
     //delete result;
-    std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     _network->GetModule( _network->moduleIdx( module_id ) )->SetResultsData( objectVector );
 
@@ -577,31 +573,12 @@ ACE_THROW_SPEC((
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( std::string( ui ), "Command", "vecommand" );
-    std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     _network->GetModule( _network->moduleIdx( module_id ) )->SetInputData( objectVector );
     _network->GetModule( _network->moduleIdx( module_id ) )->_need_execute = 1;
     _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = 0;
 
-    /*Package p;
-    p.SetSysId("temp.xml");
-    p.Load(ui, strlen(ui));
-
-     // Should only be one item. But, maybe later...
-     std::vector<Interface>::iterator iter;
-     for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-     {
-        //if ( iter->_type == 1 ) // this block is for inputs not geom
-        {
-           if(_network->setInput( module_id, &(*iter) ) ) 
-           {
-              _network->GetModule( _network->moduleIdx(iter->_id) )->_need_execute = 1;
-              _network->GetModule( _network->moduleIdx(iter->_id) )->_return_state = 0;
-           }
-           else
-              std::cerr << "Unable to set mod id# " << module_id << "'s Input data" << std::endl;
-        }
-     }*/
     _mutex.release();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -680,11 +657,11 @@ ACE_THROW_SPEC((
     }
     else
     {
-        std::vector< std::pair< XMLObject*, std::string > > nodes;
-        std::vector< Command* > inputList = _network->GetModule( rt )->GetInputData();
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
         for( size_t k = 0; k < inputList.size(); ++k )
         {
-            nodes.push_back( std::pair< Command*, std::string  >(
+            nodes.push_back( std::pair< CommandPtr, std::string  >(
                                  inputList.at( k ), std::string( "vecommand" ) )
                            );
         }
@@ -840,14 +817,14 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( command, "Command", "vecommand" );
     //delete command;
-    std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
     //I think the above is a memory leak
     // we need to cleanup the vector of objects
 
     std::string moduleName;
     std::string vendorUnit;
     unsigned int moduleId = 0;
-    Command* tempCommand = dynamic_cast< Command* >( objectVector.at( 0 ) );
+    CommandPtr tempCommand = objectVector.at( 0 );
     Command passCommand;
     passCommand.SetCommandName( tempCommand->GetCommandName() );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
@@ -876,16 +853,12 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
         }
     }
     //delete the object vector
-    for( size_t i = 0; i < objectVector.size(); ++i )
-    {
-        delete objectVector.at( i );
-    }
     objectVector.clear();
 
     ///string used to hold query data
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     nodes.push_back(
-        std::pair< XMLObject*, std::string >( &passCommand, "vecommand" )
+        std::pair< XMLObjectPtr, std::string >( &passCommand, "vecommand" )
     );
 
     XMLReaderWriter commandWriter;
