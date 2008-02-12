@@ -141,16 +141,13 @@ class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
         ///Constructor
         ///\param node The holder of the node data.
         TreeNodeData( ves::open::xml::cad::CADNodePtr node );
-        TreeNodeData( ves::open::xml::cad::CADNodeWeakPtr node );
 
         ///Destructor
         virtual ~TreeNodeData();
 
         ///Get the CADNode.
-        ves::open::xml::cad::CADNodePtr GetNode()
-        {
-            return _cadNode;
-        }
+        ves::open::xml::cad::CADNodePtr GetNode();
+
     protected:
         ves::open::xml::cad::CADNodePtr _cadNode;///<The pointer to the CADNode this tree item represents.
     };

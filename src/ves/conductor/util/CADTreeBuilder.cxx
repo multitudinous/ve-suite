@@ -141,11 +141,6 @@ CADTreeBuilder::TreeNodeData::TreeNodeData( CADNodePtr node )
 {
     _cadNode = node;
 }
-//////////////////////////////////////////////////////////////////////////////////////
-CADTreeBuilder::TreeNodeData::TreeNodeData( CADNodeWeakPtr node )
-{
-    //_cadNode = node;
-}
 /////////////////////////////////////////////
 CADTreeBuilder::TreeNodeData::~TreeNodeData()
 {
@@ -154,6 +149,11 @@ CADTreeBuilder::TreeNodeData::~TreeNodeData()
        delete _cadNode;
        _cadNode = 0;
     }*/
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::open::xml::cad::CADNodePtr CADTreeBuilder::TreeNodeData::GetNode()
+{
+    return _cadNode;
 }
 //////////////////////////////////////////////////////////
 CADNodePtr CADTreeBuilder::GetCADNode( std::string name )
