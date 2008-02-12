@@ -87,7 +87,7 @@ void BaseDialog::_addCancelButton( wxSizer* buttonRowSizer )
 void BaseDialog::_sendCommandsToXplorer()
 {
     //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
-    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
 
     for( size_t i = 0; i < _instructions.size(); i++ )
     {
@@ -101,10 +101,10 @@ void BaseDialog::_sendCommandsToXplorer()
     ves::open::xml::XMLReaderWriter commandWriter;
     commandWriter.UseStandaloneDOMDocumentManager();
 
-    std::pair<ves::open::xml::Command*, std::string> nodeTagPair;
+    std::pair<ves::open::xml::CommandPtr, std::string> nodeTagPair;
     nodeTagPair.first = newCommand;
     nodeTagPair.second = std::string( "vecommand" );
-    std::vector< std::pair<ves::open::xml::XMLObject*, std::string> > nodeToWrite;
+    std::vector< std::pair<ves::open::xml::XMLObjectPtr, std::string> > nodeToWrite;
     nodeToWrite.push_back( nodeTagPair );
 
     commandWriter.WriteXMLDocument( nodeToWrite, commandString, "Command" );
@@ -121,18 +121,12 @@ void BaseDialog::_sendCommandsToXplorer()
             // CORBA releases the allocated memory so we do not have to
             //_vjObsPtr->SetCommandString( tempDoc );
             CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
-            delete newCommand;
         }
         catch ( ... )
         {
             wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                           _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
-            delete newCommand;
         }
-    }
-    else
-    {
-        delete newCommand;
     }
 
     ClearInstructions();

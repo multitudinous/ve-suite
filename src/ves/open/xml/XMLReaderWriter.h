@@ -50,11 +50,12 @@ namespace open
 {
 namespace xml
 {
-class XMLObject;
 class DOMDocumentManager;
 }
 }
 }
+
+#include <ves/open/xml/XMLObjectPtr.h>
 
 #include <ves/VEConfig.h>
 #include <xercesc/dom/DOM.hpp>

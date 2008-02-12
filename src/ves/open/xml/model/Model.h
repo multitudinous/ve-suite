@@ -154,7 +154,8 @@ public:
     ves::open::xml::Command* GetInput( std::string inputName );
     ///Allocate another input block for use
     ///\return The new input
-    ves::open::xml::Command* GetInput( void );
+    ves::open::xml::Command* GetInput();
+    #pragma deprecated( GetInput() )
     ///Set the input for this models
     void SetInput( ves::open::xml::CommandPtr input );
     ///Get number of input data

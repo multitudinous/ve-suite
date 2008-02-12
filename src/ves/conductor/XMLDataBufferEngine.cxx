@@ -152,16 +152,15 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     dataToObtain.push_back( std::make_pair( "XML", "User" ) );
     networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
-    std::vector< ves::open::xml::XMLObject* >::iterator objectIter;
-    std::vector< ves::open::xml::XMLObject* > objectVector =
+    std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
     ves::open::xml::model::SystemPtr tempSystem = 0;
 
     // we are expecting that a network will be found
     if( !objectVector.empty() )
     {
-        tempSystem =
-            dynamic_cast< ves::open::xml::model::System* >( objectVector.at( 0 ) );
+        tempSystem = objectVector.at( 0 );
         if( tempSystem )
         {
             m_systemMap[tempSystem->GetID()] = tempSystem;
@@ -175,8 +174,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             m_systemMap[tempSystem->GetID()] = tempSystem;
             topId = tempSystem->GetID();
 
-            m_networkMap[ "Network" ] =
-                dynamic_cast< ves::open::xml::model::Network* >( objectVector.at( 0 ) );
+            m_networkMap[ "Network" ] = objectVector.at( 0 );
             tempSystem->AddNetwork( m_networkMap[ "Network" ] );
             objectIter = objectVector.erase( objectVector.begin() );
             tempSystem = 0;
@@ -223,8 +221,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::ostringstream modelID;
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            ves::open::xml::model::ModelWeakPtr model =
-                dynamic_cast< Model* >( *objectIter );
+            ves::open::xml::model::ModelWeakPtr model = *objectIter;
             if( !model )
             {
                 //if this object is not a model continue
@@ -282,8 +279,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 
     if( !objectVector.empty() )
     {
-        ves::open::xml::UserWeakPtr userColor =
-            dynamic_cast< ves::open::xml::User* >( objectVector.at( 0 ) );
+        ves::open::xml::UserWeakPtr userColor = objectVector.at( 0 );
         m_userMap[ "Network" ] = userColor;
         //Set user preferences
         std::vector< ves::open::xml::CommandWeakPtr > tempStates =
@@ -321,9 +317,9 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 {
     // Here we wshould loop over all of the following
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     //Write out the veUser info for the local user
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >(
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >(
                          &( *m_systemMap[ topId] ), "veSystem" ) );
 
     //Write out the veUser info for the local user
@@ -348,7 +344,7 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 
 
     //Write out the veUser info for the local user
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >(
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >(
                          &( *m_userMap[ "Network" ] ), "User" ) );
 
     ves::open::xml::XMLReaderWriter netowrkWriter;
@@ -384,7 +380,7 @@ ves::open::xml::model::NetworkWeakPtr XMLDataBufferEngine::GetXMLNetworkDataObje
 std::map< std::string, ves::open::xml::model::ModelWeakPtr > XMLDataBufferEngine::GetXMLModels()
 {
     std::map< std::string, ves::open::xml::model::ModelWeakPtr >
-    tempMap( m_modelMap.begin(), m_modelMap.end() );
+        tempMap( m_modelMap.begin(), m_modelMap.end() );
     return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////

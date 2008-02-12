@@ -888,8 +888,8 @@ void UIPluginBase::ViewInputVariables( void )
         data->SetData( std::string( "ModuleName" ), compName );
         returnState.AddDataValuePair( data );
 
-        std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-        nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+        std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
         ves::open::xml::XMLReaderWriter commandWriter;
         std::string status = "returnString";
@@ -912,11 +912,11 @@ void UIPluginBase::ViewInputVariables( void )
         networkReader.ReadFromString();
         //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
         networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-        std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+        std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
         //std::ostringstream output;
         //output << objectVector.size()<<std::endl;
         //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-        ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+        ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
         ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
         /*std::vector< std::string > temp_vector;
         pair->GetData(temp_vector);
@@ -1253,8 +1253,8 @@ void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1273,11 +1273,11 @@ void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )
     networkReader.ReadFromString();
     //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     //std::ostringstream output;
     //output << objectVector.size()<<std::endl;
     //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
     ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );
@@ -1322,8 +1322,8 @@ void  UIPluginBase::OnQueryOutputs( wxCommandEvent& event )
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1340,8 +1340,8 @@ void  UIPluginBase::OnQueryOutputs( wxCommandEvent& event )
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
     ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );

@@ -809,7 +809,7 @@ void AppFrame::CreateMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
 {
-    Network * network = canvas->GetActiveNetwork();
+    Network* network = canvas->GetActiveNetwork();
 
     if( network->GetUserScale()->first > 4 )
     {
@@ -1247,8 +1247,8 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
@@ -1310,8 +1310,8 @@ void AppFrame::OpenSimulation( wxString simName )
     data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
@@ -1330,8 +1330,8 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "NetworkQuery", "showSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1351,8 +1351,8 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "NetworkQuery", "hideSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1372,8 +1372,8 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "NetworkQuery", "closeSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1393,8 +1393,8 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1413,8 +1413,8 @@ void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "NetworkQuery", "runNetwork" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1460,8 +1460,8 @@ void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
     data->SetData( "NetworkQuery", "saveSimulation" );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1503,8 +1503,8 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair < XMLObject*,
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair < XMLObjectPtr,
                      std::string > ( &returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1547,7 +1547,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
     {
         //first make sure all the units have been initialized with the current
         //ids to get an active xml model
-        Network * network = canvas->GetActiveNetwork();
+        Network* network = canvas->GetActiveNetwork();
         network->SetIDOnAllActiveModules();
         //Now that we have an active xml model in all units
         // set the network
@@ -1619,7 +1619,7 @@ void AppFrame::ResumeCalc( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
 {
-    Network * network = canvas->GetActiveNetwork();
+    Network* network = canvas->GetActiveNetwork();
 
     serviceList->IsConnectedToCE();
     EnableCEGUIMenuItems();

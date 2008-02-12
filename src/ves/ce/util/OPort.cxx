@@ -36,10 +36,9 @@
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort( int id, Module* m )
-        : Port( id, m )
+        : Port( id, m ), _profile( 0 )
 {
-    _profile = NULL;
-    data = 0;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 OPort::OPort( const OPort& p )
@@ -60,7 +59,6 @@ void OPort::copy( const OPort& p )
         return;
     } 
 
-    //_data    = p._data;
     if( _profile ) 
     {
         delete _profile;
@@ -72,12 +70,6 @@ void OPort::copy( const OPort& p )
 ////////////////////////////////////////////////////////////////////////////////
 int OPort::have_data( void )
 {
-    /*  return((_data.getInts()).size()      !=0 ||
-      (_data.getDoubles()).size()   !=0 ||
-      (_data.getStrings()).size()   !=0 ||
-      (_data.getInts1D()).size()    !=0 ||
-      (_data.getDoubles1D()).size() !=0 ||
-      (_data.getStrings1D()).size() !=0 );*/
     return ( data != NULL );
 }
 ////////////////////////////////////////////////////////////////////////////////
