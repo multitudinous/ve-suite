@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #ifndef _VE_XML_OBJECT_FACTORY_H_
@@ -40,6 +38,7 @@
 #include <string>
 #include <map>
 
+#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/VEConfig.h>
 /*!\file XMLObjectFactory.h
   Factory class for creating XMLObject
@@ -53,7 +52,6 @@ namespace open
 {
 namespace xml
 {
-class XMLObject;
 class CreationEventHandler;
 }
 }
