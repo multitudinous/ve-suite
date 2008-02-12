@@ -45,6 +45,7 @@
 #include <map>
 
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/CommandPtr.h>
 
 #include <ves/open/xml/DataValuePairPtr.h>
 
