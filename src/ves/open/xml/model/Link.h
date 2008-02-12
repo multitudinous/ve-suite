@@ -92,11 +92,11 @@ public:
 
     ///Get the portInfo for the fromPort.
     ///\return The from port for the link
-    long int GetFromPort( void );
+    long int* GetFromPort( void );
 
     ///Get the portInfo for the toPort.
     ///\return The to port for the link
-    long int GetToPort( void );
+    long int* GetToPort( void );
 
     ///Get the i'th point for a link.
     ///\param i The i'th point you are after.

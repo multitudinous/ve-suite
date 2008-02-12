@@ -31,8 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/open/xml/model/Link.h>
+
 #include <ves/open/xml/model/Point.h>
+#include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
+
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 using namespace ves::open::xml::model;
@@ -42,12 +45,12 @@ using namespace ves::open::xml::model;
 Link::Link()
         : XMLObject()
 {
-    linkName = "noName";
-    moduleInfo.first = new DataValuePair( "FLOAT" );
-    moduleInfo.second = new DataValuePair( "FLOAT" );
-    portInfo.first = 0;
-    portInfo.second = 0;
-    parentModel = NULL;
+    mLinkName = "noName";
+    mModuleInfo.first = new DataValuePair( "FLOAT" );
+    mModuleInfo.second = new DataValuePair( "FLOAT" );
+    mPortInfo.first = 0;
+    mPortInfo.second = 0;
+    mParentModel = NULL;
 
     SetObjectType( "Link" );
     SetObjectNamespace( "Model" );
@@ -55,31 +58,26 @@ Link::Link()
 ///////////////////////////////////
 Link::~Link()
 {
-    delete moduleInfo.first;
-    delete moduleInfo.second;
-
-    for( size_t i = 0; i < linkPoints.size(); ++i )
-    {
-        delete linkPoints.at( i );
-    }
-    linkPoints.clear();
+    mModuleInfo.first = DataValuePairPtr();
+    mModuleInfo.second = DataValuePairPtr();
+    mLinkPoints.clear();
 }
 ///////////////////////////////////////////
 Link::Link( const Link& input )
         : XMLObject( input )
 {
-    linkName = input.linkName;
-    m_type = input.m_type;
-    for( size_t i = 0; i < input.linkPoints.size(); ++i )
-    {
-        linkPoints.push_back( new Point( *( input.linkPoints.at( i ) ) ) );
-    }
+    mLinkName = input.mLinkName;
+    mType = input.mType;
 
-    moduleInfo.first = new DataValuePair( *( input.moduleInfo.first ) );
-    moduleInfo.second = new DataValuePair( *( input.moduleInfo.second ) );
+    std::copy( input.mLinkPoints.begin(),
+               input.mLinkPoints.end(),
+               mLinkPoints.begin() );
 
-    portInfo = input.portInfo;
-    parentModel = input.parentModel;
+    mModuleInfo.first =  input.mModuleInfo.first;
+    mModuleInfo.second =  input.mModuleInfo.second;
+
+    mPortInfo = input.mPortInfo;
+    mParentModel = input.mParentModel;
 }
 /////////////////////////////////////////////////////
 Link& Link::operator=( const Link& input )
@@ -88,86 +86,81 @@ Link& Link::operator=( const Link& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        linkName = input.linkName;
-        m_type = input.m_type;
-        for( size_t i = 0; i < linkPoints.size(); ++i )
-        {
-            delete linkPoints.at( i );
-        }
-        linkPoints.clear();
+        mLinkName = input.mLinkName;
+        mType = input.mType;
+        mLinkPoints.clear();
 
-        for( size_t i = 0; i < input.linkPoints.size(); ++i )
-        {
-            linkPoints.push_back( new Point( *( input.linkPoints.at( i ) ) ) );
-        }
+        std::copy( input.mLinkPoints.begin(),
+                   input.mLinkPoints.end(),
+                   mLinkPoints.begin() );
 
-        *( moduleInfo.first ) = *( input.moduleInfo.first );
-        *( moduleInfo.second ) = *( input.moduleInfo.second );
-        portInfo = input.portInfo;
-        linkName = input.linkName;
-        parentModel = input.parentModel;
+        mModuleInfo.first = input.mModuleInfo.first;
+        mModuleInfo.second = input.mModuleInfo.second ;
+        mPortInfo = input.mPortInfo;
+        mLinkName = input.mLinkName;
+        mParentModel = input.mParentModel;
     }
     return *this;
 }
 ////////////////////////////////////////////////////////////
-void Link::SetLinkName( std::string name )
+void Link::SetLinkName( const std::string& name )
 {
-    linkName = name;
+    mLinkName = name;
 }
 ////////////////////////////////////////////////////////////
-std::string Link::GetLinkName( void )
+const std::string& Link::GetLinkName( void )
 {
-    return linkName;
+    return mLinkName;
 }
 ///////////////////////////////////////
 void Link::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    SetAttribute( "name", linkName );
-    if( !m_type.empty() )
+    SetAttribute( "name", mLinkName );
+    if( !mType.empty() )
     {
-        SetAttribute( "type", m_type );
+        SetAttribute( "type", mType );
     }
     SetAttribute( "id", uuid );
-    SetSubElement( "fromModule", moduleInfo.first );
-    SetSubElement( "toModule", moduleInfo.second );
-    SetSubElement( "fromPort", portInfo.first );
-    SetSubElement( "toPort", portInfo.second );
-    for( size_t i = 0; i < linkPoints.size(); ++i )
+    SetSubElement( "fromModule", mModuleInfo.first );
+    SetSubElement( "toModule", mModuleInfo.second );
+    SetSubElement( "fromPort", mPortInfo.first );
+    SetSubElement( "toPort", mPortInfo.second );
+    for( size_t i = 0; i < mLinkPoints.size(); ++i )
     {
-        SetSubElement( "linkPoints", linkPoints.at( i ) );
+        SetSubElement( "linkPoints", mLinkPoints.at( i ) );
     }
 }
 ///////////////////////////////////////////////////
-DataValuePair* Link::GetFromModule( void )
+DataValuePairPtr Link::GetFromModule( void )
 {
-    return moduleInfo.first;
+    return mModuleInfo.first;
 }
 //////////////////////////////////////////
-DataValuePair* Link::GetToModule( void )
+DataValuePairPtr Link::GetToModule( void )
 {
-    return moduleInfo.second;
+    return mModuleInfo.second;
 }
 ///////////////////////////////////////////////////
 long int* Link::GetFromPort( void )
 {
-    return &( portInfo.first );
+    return &( mPortInfo.first );
 }
 //////////////////////////////////////////
 long int* Link::GetToPort( void )
 {
-    return &( portInfo.second );
+    return &( mPortInfo.second );
 }
 /////////////////////////////////////
-Point* Link::GetLinkPoint( unsigned int i )
+PointPtr Link::GetLinkPoint( unsigned int i )
 {
     try
     {
-        return linkPoints.at( i );
+        return mLinkPoints.at( i );
     }
     catch ( ... )
     {
-        if( i > ( linkPoints.size() + 1 ) )
+        if( i > ( mLinkPoints.size() + 1 ) )
         {
             std::cerr << "The element request is out of sequence."
             << " Please ask for a lower number point." << std::endl;
@@ -175,15 +168,15 @@ Point* Link::GetLinkPoint( unsigned int i )
         }
         else
         {
-            linkPoints.push_back( new Point() );
-            return linkPoints.back();
+            mLinkPoints.push_back( PointPtr( new Point() ) );
+            return mLinkPoints.back();
         }
     }
 }
 /////////////////////////////////////
 size_t Link::GetNumberOfLinkPoints( void )
 {
-    return linkPoints.size();
+    return mLinkPoints.size();
 }
 ////////////////////////////////////////////////////////////
 void Link::SetObjectFromXMLData( DOMNode* element )
@@ -212,50 +205,41 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             dataValueStringName = GetSubElement( currentElement, "name", 0 );
             if( dataValueStringName )
             {
-                GetAttribute( dataValueStringName, "name", linkName );
+                GetAttribute( dataValueStringName, "name", mLinkName );
                 dataValueStringName = 0;
             }
             else
             {
-                GetAttribute( currentElement, "name", linkName );
-                if( linkName.empty() )
+                GetAttribute( currentElement, "name", mLinkName );
+                if( mLinkName.empty() )
                 {
-                    linkName = "noName";
+                    mLinkName = "noName";
                 }
             }
         }
         //link type
         {
-            GetAttribute( currentElement, "type", m_type );
+            GetAttribute( currentElement, "type", mType );
         }
         // for module location
         {
             dataValueStringName = GetSubElement( currentElement, "fromModule", 0 );
-            if( moduleInfo.first )
-            {
-                delete moduleInfo.first;
-                moduleInfo.first = 0;
-            }
-            moduleInfo.first = new ves::open::xml::DataValuePair( "FLOAT" );
-            moduleInfo.first->SetObjectFromXMLData( dataValueStringName );
+            mModuleInfo.first = new ves::open::xml::DataValuePair( "FLOAT" );
+            mModuleInfo.first->SetObjectFromXMLData( dataValueStringName );
         }
         // for module location
         {
             dataValueStringName = GetSubElement( currentElement, "toModule", 0 );
-            if( moduleInfo.second )
-            {
-                delete moduleInfo.second;
-                moduleInfo.second = 0;
-            }
-            moduleInfo.second = new ves::open::xml::DataValuePair( "FLOAT" );
-            moduleInfo.second->SetObjectFromXMLData( dataValueStringName );
+
+            mModuleInfo.second = new ves::open::xml::DataValuePair( "FLOAT" );
+            mModuleInfo.second->SetObjectFromXMLData( dataValueStringName );
         }
 
         dataValueStringName = GetSubElement( currentElement, "fromPort", 0 );
-        GetAttribute( dataValueStringName, "fromPort", portInfo.first );
+        GetAttribute( dataValueStringName, "fromPort", mPortInfo.first );
 
         dataValueStringName = GetSubElement( currentElement, "toPort", 0 );
-        GetAttribute( dataValueStringName, "toPort", portInfo.second );
+        GetAttribute( dataValueStringName, "toPort", mPortInfo.second );
 
         // for link points
         {
@@ -264,29 +248,29 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             for( unsigned int i = 0; i < numberOfPortData; ++i )
             {
                 dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-                linkPoints.push_back( new Point() );
-                linkPoints.back()->SetObjectFromXMLData( dataValueStringName );
+                mLinkPoints.push_back( PointPtr( new Point() ) );
+                mLinkPoints.back()->SetObjectFromXMLData( dataValueStringName );
             }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetLinkType( std::string type )
+void Link::SetLinkType( const std::string& type )
 {
-    m_type = type;
+    mType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string Link::GetLinkType()
+const std::string& Link::GetLinkType()
 {
-    return m_type;
+    return mType;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetParentModel( ModelSharedPtr parent )
+void Link::SetParentModel( ModelPtr parent )
 {
-    parentModel = parent;
+    mParentModel = parent;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ModelSharedPtr Link::GetParentModel( )
+ModelPtr Link::GetParentModel( )
 {
-    return parentModel;
+    return mParentModel;
 }
