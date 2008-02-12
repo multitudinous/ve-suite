@@ -44,6 +44,7 @@
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/ParameterBlock.h>
+
 #include <ves/open/xml/model/Model.h>
 
 #include <ves/xplorer/Debug.h>
@@ -108,14 +109,14 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
+void AddVTKDataSetEventHandler::Execute( xml::XMLObjectPtr xmlObject )
 {
     if( !_activeModel )
     {
         return;
     }
 
-    Command* command = dynamic_cast<Command*>( xmlObject );
+    CommandPtr command = xmlObject;
     std::string dataSetName =
         command->GetDataValuePair( "VTK_DATASET_NAME" )->GetDataString();
 
@@ -123,12 +124,11 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
     {
         DataValuePairWeakPtr veModelDVP = 
             command->GetDataValuePair( "CREATE_NEW_DATASETS" );
-        xml::model::Model* veModel = 
-            dynamic_cast< xml::model::Model* >( veModelDVP->GetDataXMLObject() );
+        xml::model::ModelPtr veModel = veModelDVP->GetDataXMLObject();
         size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
         for( size_t i = 0; i < numInfoPackets; ++i )
         {
-            ParameterBlock* tempInfoPacket = veModel->GetInformationPacket( i );
+            ParameterBlockPtr tempInfoPacket = veModel->GetInformationPacket( i );
 
             if( !tempInfoPacket->GetProperty( "VTK_DATA_FILE" ) )
             {
@@ -251,7 +251,7 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
     }
     else if( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" ) )
     {
-        DataValuePair* tempDVP = static_cast< DataValuePair* >( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject() );
+        DataValuePairPtr tempDVP = command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject();
         std::string precomputedDataSliceDir = tempDVP->GetDataString();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempDVP->GetID() );
@@ -259,7 +259,7 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
     }
     else if( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" ) )
     {
-        DataValuePair* tempDVP = static_cast< DataValuePair* >( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
+        DataValuePairPtr tempDVP = command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject();
         std::string precomputedSurfaceDir = tempDVP->GetDataString();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_SURFACE_DIR_PATH", tempDVP->GetID() );
@@ -273,8 +273,7 @@ void AddVTKDataSetEventHandler::Execute( xml::XMLObject* xmlObject )
         vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
             << std::endl << vprDEBUG_FLUSH;
         _activeModel->CreateTextureDataSet();
-        DataValuePair* tempDVP =
-            static_cast< DataValuePair* >( command->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject() );
+        DataValuePairPtr tempDVP = command->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject();
         _activeModel->AddDataSetToTextureDataSet( 0, tempDVP->GetDataString() );
 
         std::ostringstream textId;

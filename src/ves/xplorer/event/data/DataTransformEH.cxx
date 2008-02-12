@@ -44,6 +44,7 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/TransformPtr.h>
 
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
@@ -80,13 +81,13 @@ DataTransformEventHandler& DataTransformEventHandler::operator=( const DataTrans
     return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::Execute( XMLObject* xmlObject )
+void DataTransformEventHandler::Execute( XMLObjectPtr xmlObject )
 {
     try
     {
         if( _activeModel )
         {
-            Command* command = dynamic_cast<Command*>( xmlObject );
+            CommandPtr command = xmlObject;
             DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Parameter Block ID" );
             DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
             ves::xplorer::scenegraph::DCS* transform = 0;
@@ -94,7 +95,7 @@ void DataTransformEventHandler::Execute( XMLObject* xmlObject )
 
             if( transform )
             {
-                Transform* dataTransform = dynamic_cast<Transform*>( newTransform->GetDataXMLObject() );
+                TransformPtr dataTransform = newTransform->GetDataXMLObject();
                 transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
                 transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
                 transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
