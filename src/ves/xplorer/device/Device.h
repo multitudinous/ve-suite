@@ -91,7 +91,7 @@ public:
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
-    virtual void SetVECommand( ves::open::xml::Command* command = 0 );
+    virtual void SetVECommand( ves::open::xml::CommandPtr command = 0 );
 
     ///Do not know what this is
     virtual void UpdateCommand();

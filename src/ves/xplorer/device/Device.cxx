@@ -40,10 +40,8 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
-#include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/DataValuePairPtr.h>
-
 #include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDDoubleArray.h>
 
 // --- OSG Stuff --- //
@@ -80,17 +78,17 @@ void Device::UpdateSelection()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetVECommand( Command* command )
+void Device::SetVECommand( CommandPtr command )
 {
     if( !command->GetDataValuePair( "SET_START_POSITION" ) )
     {
         return;
     }
-    Command* viewPointGUIData = new Command();
+    CommandPtr viewPointGUIData = new Command();
     viewPointGUIData->SetCommandName( "START_POSITION" );
 
     DataValuePairWeakPtr quatStartPosition = new DataValuePair();
-    OneDDoubleArray* quatData = new OneDDoubleArray( 0 );
+    OneDDoubleArrayPtr quatData = new OneDDoubleArray( 0 );
     osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
     quatData->AddElementToArray( quat[ 0 ] );
     quatData->AddElementToArray( quat[ 1 ] );
@@ -100,7 +98,7 @@ void Device::SetVECommand( Command* command )
     viewPointGUIData->AddDataValuePair( quatStartPosition );
 
     DataValuePairWeakPtr positionStartPosition = new DataValuePair();
-    OneDDoubleArray* positionsData = new OneDDoubleArray( 0 );
+    OneDDoubleArrayPtr positionsData = new OneDDoubleArray( 0 );
     osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getPosition();
     positionsData->AddElementToArray( trans[ 0 ] );
     positionsData->AddElementToArray( trans[ 1 ] );
@@ -109,7 +107,6 @@ void Device::SetVECommand( Command* command )
     viewPointGUIData->AddDataValuePair( positionStartPosition );
 
     ves::xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
-    delete viewPointGUIData;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateCommand()
