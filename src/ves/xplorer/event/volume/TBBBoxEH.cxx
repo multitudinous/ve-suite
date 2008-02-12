@@ -66,11 +66,11 @@ TextureBasedBoundingBoxEventHandler::operator=( const TextureBasedBoundingBoxEve
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedBoundingBoxEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedBoundingBoxEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox(( bboxFlag->GetUIntData() == 1 ) ? true : false );
 

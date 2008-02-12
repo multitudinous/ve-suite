@@ -66,11 +66,11 @@ TextureBasedClipPlaneEventHandler::operator=( const TextureBasedClipPlaneEventHa
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedClipPlaneEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedClipPlaneEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr direction = command->GetDataValuePair( "Direction" );
         std::string planeDirection;
         direction->GetData( planeDirection );

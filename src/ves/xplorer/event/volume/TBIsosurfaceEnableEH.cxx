@@ -66,11 +66,11 @@ TextureBasedIsosurfaceEnableEventHandler::operator=( const TextureBasedIsosurfac
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr enable = command->GetDataValuePair( "Iso-Surface State" );
         std::string onOff;
         enable->GetData( onOff );

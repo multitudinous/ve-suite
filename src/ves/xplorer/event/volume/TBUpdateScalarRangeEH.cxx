@@ -66,11 +66,11 @@ TextureBasedUpdateScalarRangeEventHandler::operator=( const TextureBasedUpdateSc
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
 
         double scalarRange[2] = {0.f, 100.f};

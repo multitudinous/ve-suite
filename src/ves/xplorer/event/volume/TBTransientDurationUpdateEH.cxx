@@ -66,11 +66,11 @@ TextureBasedTransientDurationUpdateEventHandler::operator=( const TextureBasedTr
     return *this;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr playDuration = command->GetDataValuePair( "Duration" );
         double value;
         playDuration->GetData( value );

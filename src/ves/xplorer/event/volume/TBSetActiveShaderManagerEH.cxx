@@ -34,10 +34,11 @@
 #include <ves/xplorer/event/volume/TBSetActiveShaderManagerEH.h>
 #include <ves/xplorer/TextureBasedVizHandler.h>
 
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePair.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/DataValuePair.h>
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -63,11 +64,11 @@ TextureBasedSetActiveShaderManagerEventHandler::operator=( const TextureBasedSet
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr activeSM = command->GetDataValuePair( "Active Shader Manager" );
         std::string value;
         activeSM->GetData( value );

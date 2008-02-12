@@ -66,11 +66,11 @@ TextureBasedIsosurfaceUpdateEventHandler::operator=( const TextureBasedIsosurfac
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr isovalue = command->GetDataValuePair( "Iso-Surface Value" );
         double value;
         isovalue->GetData( value );

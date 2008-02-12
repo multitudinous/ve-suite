@@ -66,11 +66,11 @@ TextureBasedPhongShadingEnableEventHandler::operator=( const TextureBasedPhongSh
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedPhongShadingEnableEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedPhongShadingEnableEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr enable = command->GetDataValuePair( "Phong Shading State" );
         std::string onOff;
         enable->GetData( onOff );

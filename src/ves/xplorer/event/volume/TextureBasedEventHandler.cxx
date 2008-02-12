@@ -89,7 +89,7 @@ void TextureBasedEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 //////////////////////////////////////////////////////////////////////
-void TextureBasedEventHandler::Execute( XMLObject* veXMLObject )
+void TextureBasedEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     //this is ridiculously simple now...Just testing to see how things will work.
     //Command* command = dynamic_cast< Command* >( xmlObject );
@@ -115,14 +115,14 @@ void TextureBasedEventHandler::Execute( XMLObject* veXMLObject )
         }
         try
         {
-           DataValuePair* bboxState = command->GetDataValuePair( "Bounding Box" );
-         if(bboxState)
+           DataValuePairPtr bboxState = command->GetDataValuePair( "Bounding Box" );
+           if(bboxState)
            {
               bool showBBox = false;
               unsigned int state = 0;
               bboxState->GetData( state );
               _ensureBBoxState(((state==0)?false:true));
-         }
+           }
         }
         catch(...)
         {

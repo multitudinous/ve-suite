@@ -68,11 +68,11 @@ TextureBasedUpdateSolutionEventHandler::operator=( const TextureBasedUpdateSolut
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedUpdateSolutionEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedUpdateSolutionEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
         std::string dataName;
         activeDataset->GetData( dataName );

@@ -66,13 +66,13 @@ TextureBasedActivateEventHandler::operator=( const TextureBasedActivateEventHand
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedActivateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedActivateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
         if( _activeModel )
         {
-            Command* command = dynamic_cast< Command* >( veXMLObject );
+            CommandPtr command = veXMLObject;
             DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Active Dataset Name" );
 
             std::string activeDatasetName;

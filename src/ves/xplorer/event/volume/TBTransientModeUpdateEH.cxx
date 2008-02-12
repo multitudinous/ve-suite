@@ -66,11 +66,11 @@ TextureBasedTransientModeUpdateEventHandler::operator=( const TextureBasedTransi
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedTransientModeUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedTransientModeUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr playMode = command->GetDataValuePair( "Mode" );
         std::string mode;
         playMode->GetData( mode );

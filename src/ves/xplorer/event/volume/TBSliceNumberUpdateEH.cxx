@@ -66,11 +66,11 @@ TextureBasedSliceNumberUpdateEventHandler::operator=( const TextureBasedSliceNum
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr isovalue = command->GetDataValuePair( "Number of Slice Planes" );
         unsigned int value;
         isovalue->GetData( value );

@@ -66,11 +66,11 @@ TextureBasedPreIntegrateEnableEventHandler::operator=( const TextureBasedPreInte
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr enable = command->GetDataValuePair( "Recalculate Pre-Integration" );
         unsigned int onOff;
         enable->GetData( onOff );

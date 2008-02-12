@@ -34,6 +34,7 @@
 #define TEXTURE_BASED_PREINTEGRATE_ENABLE_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/volume/TextureBasedEventHandler.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 
 
 namespace ves
@@ -65,7 +66,7 @@ public:
 protected:
     ///The internal operation on the CADNode.
     ///\param veXMLObject The veXMLObject to execute.
-    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject );
+    virtual void _operateOnNode( ves::open::xml::XMLObjectPtr veXMLObject );
 };
 
 }
