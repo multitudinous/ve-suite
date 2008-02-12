@@ -37,6 +37,8 @@
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkPolyData.h>

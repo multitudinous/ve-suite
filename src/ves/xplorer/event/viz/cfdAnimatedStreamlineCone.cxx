@@ -34,6 +34,8 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkSphereSource.h>

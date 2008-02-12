@@ -38,6 +38,8 @@
 #include <ves/xplorer/TextureBasedVizHandler.h>
 
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+
 #include <iostream>
 
 using namespace ves::xplorer::event;

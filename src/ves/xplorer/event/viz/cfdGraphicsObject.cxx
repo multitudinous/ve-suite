@@ -39,6 +39,8 @@
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/Debug.h>
 
+#include <ves/open/xml/Command.h>
+
 // --- OSG Includes --- //
 #ifdef _OSG
 #include <osg/BlendFunc>

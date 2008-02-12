@@ -41,6 +41,8 @@
 
 #include <ves/xplorer/Debug.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkPolyData.h>

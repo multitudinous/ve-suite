@@ -35,6 +35,8 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>    // needed for cursorType
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkPolyData.h>

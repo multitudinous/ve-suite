@@ -35,6 +35,8 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/util/fileIO.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkPlaneSource.h>
 #include <vtkBMPReader.h>
 #include <vtkActor.h>

@@ -92,7 +92,7 @@ void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
     {
         if( model )
         {
-            _activeModel = model;
+            _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
         }
         else
         {

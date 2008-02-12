@@ -36,6 +36,8 @@
 
 #include <ves/xplorer/Debug.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>

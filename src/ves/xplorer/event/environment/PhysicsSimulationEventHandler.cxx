@@ -36,8 +36,8 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
 
 // --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp>

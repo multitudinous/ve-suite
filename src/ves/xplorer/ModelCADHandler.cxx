@@ -47,6 +47,7 @@
 
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/Command.h>
 
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>

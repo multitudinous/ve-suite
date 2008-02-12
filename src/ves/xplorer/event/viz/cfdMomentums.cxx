@@ -35,6 +35,8 @@
 #include <ves/xplorer/environment/cfdEnum.h>    // needed for cursorType
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkWarpVector.h>

@@ -74,7 +74,7 @@ void ExportDOTFileEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     try
     {
-        CommandPtr command = veXMLObject;
+        ves::open::xml::CommandPtr command = veXMLObject;
         std::string filename;
         command->GetDataValuePair( "Filename" )->GetData( filename );
         // store the active geometry and viz objects as a pfb

@@ -88,13 +88,13 @@ void SoundAddNewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* bas
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SoundAddNewEventHandler::Execute( XMLObject* veXMLObject )
+void SoundAddNewEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     try
     {
         if( _activeModel )
         {
-            Command* command = dynamic_cast< Command* >( veXMLObject );
+            CommandPtr command = veXMLObject;
             DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
             std::string guiName;
             soundName->GetData( guiName );
