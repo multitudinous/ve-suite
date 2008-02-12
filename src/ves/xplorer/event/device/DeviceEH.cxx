@@ -37,7 +37,6 @@
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
 
-
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -73,9 +72,9 @@ void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHan
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::Execute( XMLObject* veXMLObject )
+void DeviceEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast< Command* >( veXMLObject );
+    CommandPtr command = veXMLObject;
 
     std::string device;
     command->GetDataValuePair( "Device" )->GetData( device );

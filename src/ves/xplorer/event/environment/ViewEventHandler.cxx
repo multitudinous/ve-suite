@@ -82,9 +82,9 @@ void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandl
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::Execute( XMLObject* veXMLObject )
+void ViewEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast< Command* >( veXMLObject );
+    CommandPtr command = veXMLObject;
 
     std::string view;
     command->GetDataValuePair( "View" )->GetData( view );

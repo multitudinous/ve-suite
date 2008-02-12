@@ -86,7 +86,7 @@ ChangeCursorEventHandler& ChangeCursorEventHandler::operator=( const ChangeCurso
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBasePtr model )
+void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
     try
     {

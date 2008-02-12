@@ -79,9 +79,9 @@ void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CenterPointJumpEventHandler::Execute( XMLObject* veXMLObject )
+void CenterPointJumpEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast< Command* >( veXMLObject );
+    CommandPtr command = veXMLObject;
 
     std::string mode;
     command->GetDataValuePair( "Mode" )->GetData( mode );

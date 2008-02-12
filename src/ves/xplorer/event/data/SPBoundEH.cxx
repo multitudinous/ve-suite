@@ -42,6 +42,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <vtkDataSet.h>
+
 using namespace ves::xplorer::event;
 using namespace ves::xplorer;
 using namespace ves::open::xml;
@@ -91,13 +92,13 @@ void SeedPointBoundsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SeedPointBoundsEventHandler::Execute( XMLObject* veXMLObject )
+void SeedPointBoundsEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     if( !_activeModel )
         throw;
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
 
         DataValuePairWeakPtr coordinate = command->GetDataValuePair( "Coordinate" );
         std::string boundCoordinate;
@@ -178,8 +179,6 @@ void SeedPointBoundsEventHandler::Execute( XMLObject* veXMLObject )
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
                         boundCoordinate,
                         "Max" );
-
-
 
             }
         }

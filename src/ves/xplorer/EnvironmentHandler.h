@@ -84,10 +84,10 @@ private:
     //EnvironmentHandler& operator=(const EnvironmentHandler& o) { ; }
 
     ///Constructor
-    EnvironmentHandler( void );
+    EnvironmentHandler();
 
     ///Destructor
-    ~EnvironmentHandler( void );
+    ~EnvironmentHandler();
     vprSingletonHeader( EnvironmentHandler );
 
 public:
@@ -95,27 +95,27 @@ public:
     void Initialize();
 
     ///Clean up environment.
-    //void CleanUp( void );
+    //void CleanUp();
 
     ///Initialize scene.
-    void InitScene( void );
+    void InitScene();
 
     ///Pre frame update.
-    void PreFrameUpdate( void );
+    void PreFrameUpdate();
 
     ///Late pre-frame update ???
-    void LatePreFrameUpdate( void );
+    void LatePreFrameUpdate();
 
     ///Accessor for cfdCursor
-    cfdCursor* GetCursor( void );
+    cfdCursor* GetCursor();
     ///Accessor for cfdTeacher
-    cfdTeacher* GetTeacher( void );
+    cfdTeacher* GetTeacher();
 
     ///Accessor for cfdQuatCamHandler
-    //cfdQuatCamHandler* GetQuatCamHandler( void );
+    //cfdQuatCamHandler* GetQuatCamHandler();
 
     ///Accessor for cfdDisplaySettings
-    cfdDisplaySettings* GetDisplaySettings( void );
+    cfdDisplaySettings* GetDisplaySettings();
     ///Accessor to set desktop size information for
     /// runtime reconfiguration of desktop windows
     ///\param width The desktop width
@@ -141,10 +141,10 @@ public:
     void SetFrustumValues( float _left, float _right, float _top, float _bottom, float _near, float _far );
 
     ///Get the window width
-    unsigned int GetWindowWidth( void );
+    unsigned int GetWindowWidth();
 
     ///Get the window height
-    unsigned int GetWindowHeight( void );
+    unsigned int GetWindowHeight();
 
     ///Set the frame rate
     void SetFrameRate( float value );
@@ -155,13 +155,13 @@ public:
     ///Post frame update (look this up)
     void PostFrameUpdate();
     ///Accessor for DisplayInformation
-    DisplayInformation* GetDisplayInformation( void );
+    DisplayInformation* GetDisplayInformation();
 
     ///Activate geometry picking functionality.
-    void ActivateGeometryPicking( void );
+    void ActivateGeometryPicking();
 
     ///Deactivate geoometry picking functionality.
-    void DeactivateGeometryPicking( void );
+    void DeactivateGeometryPicking();
 
     ///Set the globalLOD scale
     ///\param lodScale The scale to set 

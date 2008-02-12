@@ -65,7 +65,7 @@ public:
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
     //Equal operator
     KeyboardMouseEventHandler& operator=( const KeyboardMouseEventHandler& rhs );

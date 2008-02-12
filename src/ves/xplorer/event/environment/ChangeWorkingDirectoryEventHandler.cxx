@@ -74,9 +74,9 @@ void ChangeWorkingDirectoryEventHandler::SetGlobalBaseObject( ves::xplorer::Glob
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void ChangeWorkingDirectoryEventHandler::Execute( XMLObject* veXMLObject )
+void ChangeWorkingDirectoryEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast< Command* >( veXMLObject );
+    CommandPtr command = veXMLObject;
     DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "WORKING_DIRECTORY" );
     std::string newWorkingDir;
     activeModelDVP->GetData( newWorkingDir );

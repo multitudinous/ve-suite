@@ -75,10 +75,10 @@ public:
 
     ///Set command from Xplorer
     ///\param inputCommand
-    bool SetXMLCommand( ves::open::xml::Command* inputCommand );
+    bool SetXMLCommand( ves::open::xml::CommandPtr inputCommand );
 
     ///Get command from Xplorer
-    ves::open::xml::Command* GetXMLCommand( void );
+    ves::open::xml::CommandPtr GetXMLCommand( void );
 
     ///
     void SetXplorer( Body_VEXplorer_i* xplorer );
@@ -87,7 +87,7 @@ public:
     void SendConductorMessage( std::string message );
 
 private:
-    ves::open::xml::Command* m_input;///<XML command
+    ves::open::xml::CommandPtr m_input;///<XML command
 
     Body_VEXplorer_i* m_xplorer;
 };

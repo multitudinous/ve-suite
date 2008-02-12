@@ -65,7 +65,7 @@ public:
 
     ///Update the bounds.
     ///\param veXMLObject The veXMLObject to execute.
-    virtual void Execute( ves::open::xml::XMLObject* veXMLObject );
+    virtual void Execute( ves::open::xml::XMLObjectPtr veXMLObject );
 
     ///Set the active cfdModel
     ///\param model The active cfdModel

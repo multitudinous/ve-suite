@@ -77,9 +77,9 @@ void DisplayEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHa
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::Execute( XMLObject* veXMLObject )
+void DisplayEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast<Command*>( veXMLObject );
+    CommandPtr command = veXMLObject;
     DataValuePairWeakPtr DVP;
     unsigned int value;
 

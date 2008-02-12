@@ -34,6 +34,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -66,11 +67,11 @@ EphemerisDataEventHandler::operator=( const EphemerisDataEventHandler& rhs )
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void EphemerisDataEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisInfo = dynamic_cast<ves::open::xml::Command*>( xmlObject );
+        ves::open::xml::CommandPtr ephemerisInfo = xmlObject;
         if( ephemerisInfo )
         {
             //std::cout<<"Got ephemeris data"<<std::endl;

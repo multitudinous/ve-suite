@@ -66,7 +66,7 @@ public:
 
     ///The internal operation on the CADNode.
     ///\param veXMLObject The veXMLObject to execute.
-    virtual void Execute( ves::open::xml::XMLObject* veXMLObject );
+    virtual void Execute( ves::open::xml::XMLObjectPtr veXMLObject );
 protected:
 
 };

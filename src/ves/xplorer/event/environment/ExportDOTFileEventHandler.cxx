@@ -70,12 +70,11 @@ void ExportDOTFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* b
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::Execute( XMLObject* veXMLObject )
+void ExportDOTFileEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command =
-            dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         std::string filename;
         command->GetDataValuePair( "Filename" )->GetData( filename );
         // store the active geometry and viz objects as a pfb

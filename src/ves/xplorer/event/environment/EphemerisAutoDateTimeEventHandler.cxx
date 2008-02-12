@@ -35,6 +35,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -66,11 +67,11 @@ EphemerisAutoDateTimeEventHandler::operator=( const EphemerisAutoDateTimeEventHa
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void EphemerisAutoDateTimeEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void EphemerisAutoDateTimeEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisAutoDateTime = dynamic_cast<ves::open::xml::Command*>( xmlObject );
+        ves::open::xml::CommandPtr ephemerisAutoDateTime = xmlObject;
         if( ephemerisAutoDateTime )
         {
             ves::open::xml::DataValuePairWeakPtr autoDateTime =

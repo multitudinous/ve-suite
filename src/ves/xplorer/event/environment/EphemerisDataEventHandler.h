@@ -65,7 +65,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    virtual void Execute( ves::open::xml::XMLObject* xmlObject );
+    virtual void Execute( ves::open::xml::XMLObjectPtr xmlObject );
 
     ///Set the active model
     ///\param baseObject Active model

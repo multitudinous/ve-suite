@@ -40,6 +40,7 @@
 #include <ves/xplorer/event/data/SeedPoints.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
@@ -93,7 +94,7 @@ void SeedPointActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SeedPointActivateEventHandler::Execute( XMLObject* veXMLObject )
+void SeedPointActivateEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     try
     {
@@ -102,7 +103,7 @@ void SeedPointActivateEventHandler::Execute( XMLObject* veXMLObject )
             //make the CAD transparent
             _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
             ///what happens if texture is somehow added first? Is that possible?
-            Command* command = dynamic_cast< Command* >( veXMLObject );
+            CommandPtr command = veXMLObject;
             DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
             DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
             std::string datasetname;

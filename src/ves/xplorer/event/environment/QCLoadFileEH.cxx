@@ -66,12 +66,12 @@ QuatCamLoadFileEventHandler::operator=( const QuatCamLoadFileEventHandler& rhs )
 void QuatCamLoadFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {}
 /////////////////////////////////////////////////////////////////////////////////////
-void QuatCamLoadFileEventHandler::Execute( XMLObject* veXMLObject )
+void QuatCamLoadFileEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     std::string fileName;
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         DataValuePairWeakPtr velFile = command->GetDataValuePair( "View Locations file" );
         velFile->GetData( fileName );
         ves::xplorer::cfdQuatCamHandler::instance()->LoadFromFile( fileName );

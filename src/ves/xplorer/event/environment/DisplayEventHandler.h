@@ -35,7 +35,6 @@
 
 #include <ves/xplorer/event/EventHandler.h>
 
-
 namespace ves
 {
 namespace xplorer
@@ -66,7 +65,7 @@ public:
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
     //Equal operator
     DisplayEventHandler& operator=( const DisplayEventHandler& rhs );

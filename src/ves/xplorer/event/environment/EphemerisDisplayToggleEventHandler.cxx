@@ -35,6 +35,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -42,6 +43,7 @@
 #include <osgEphemeris/EphemerisModel.h>
 
 using namespace ves::xplorer::event;
+
 //////////////////////////////////////////////////////////////////////
 EphemerisDisplayToggleEventHandler::EphemerisDisplayToggleEventHandler()
 {
@@ -66,12 +68,11 @@ EphemerisDisplayToggleEventHandler::operator=( const EphemerisDisplayToggleEvent
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void EphemerisDisplayToggleEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void EphemerisDisplayToggleEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisToggleDisplay = 
-              dynamic_cast<ves::open::xml::Command*>( xmlObject );
+        ves::open::xml::CommandPtr ephemerisToggleDisplay = xmlObject;
         if( ephemerisToggleDisplay )
         {
             ves::open::xml::DataValuePairWeakPtr toggleDisplayInfo =

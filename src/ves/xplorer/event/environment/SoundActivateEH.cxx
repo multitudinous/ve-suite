@@ -88,13 +88,13 @@ void SoundActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* b
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SoundActivateEventHandler::Execute( XMLObject* veXMLObject )
+void SoundActivateEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     try
     {
         if( _activeModel )
         {
-            Command* command = dynamic_cast< Command* >( veXMLObject );
+            CommandPtr command = veXMLObject;
             DataValuePairWeakPtr soundStatus = command->GetDataValuePair( "Status" );
             unsigned int onOff = 0;
             soundStatus->GetData( onOff );

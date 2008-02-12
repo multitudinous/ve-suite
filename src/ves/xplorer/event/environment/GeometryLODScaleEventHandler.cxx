@@ -35,6 +35,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -42,6 +43,7 @@
 #include <osgEphemeris/EphemerisModel.h>
 
 using namespace ves::xplorer::event;
+
 //////////////////////////////////////////////////////////////////////
 GeometryLODScaleEventHandler::GeometryLODScaleEventHandler()
 {
@@ -66,12 +68,11 @@ GeometryLODScaleEventHandler::operator=( const GeometryLODScaleEventHandler& rhs
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void GeometryLODScaleEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void GeometryLODScaleEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     try
     {
-        ves::open::xml::Command*  geometryLODScaleCmd = 
-              dynamic_cast<ves::open::xml::Command*>( xmlObject );
+        ves::open::xml::CommandPtr  geometryLODScaleCmd = xmlObject;
         if(  geometryLODScaleCmd )
         {
             ves::open::xml::DataValuePairWeakPtr scaleValue =

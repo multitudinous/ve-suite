@@ -91,13 +91,13 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalB
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SeedPointDimensionsEventHandler::Execute( XMLObject* veXMLObject )
+void SeedPointDimensionsEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     if( !_activeModel )
         throw;
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
 
         std::vector<long> allDimensions;
         DataValuePairWeakPtr dimensions = command->GetDataValuePair( "Dimensions" );

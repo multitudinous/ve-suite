@@ -63,7 +63,7 @@ void CommandHandler::InitScene()
 void CommandHandler::PreFrameUpdate()
 {}
 ////////////////////////////////////////////////////////////////////////////////
-bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
+bool CommandHandler::SetXMLCommand( ves::open::xml::CommandPtr inputCommand )
 {
     //The calling function is reponsible for deleting the incoming command
     //If in cluster mode
@@ -77,8 +77,8 @@ bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // New need to destroy document and send it
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( inputCommand, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( inputCommand, "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 
@@ -98,7 +98,7 @@ bool CommandHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::Command* CommandHandler::GetXMLCommand()
+ves::open::xml::CommandPtr CommandHandler::GetXMLCommand()
 {
     return m_input;
 }
@@ -111,7 +111,7 @@ void CommandHandler::SetXplorer( Body_VEXplorer_i* xplorer )
 void CommandHandler::SendConductorMessage( std::string message )
 {
     //Now tell conductor to display text
-    ves::open::xml::DataValuePair* dvp =
+    ves::open::xml::DataValuePairPtr dvp =
         new ves::open::xml::DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "TEXT_OUTPUT", message );
     ves::open::xml::Command vec;

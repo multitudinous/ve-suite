@@ -35,6 +35,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -43,6 +44,7 @@
 #include <osgEphemeris/GroundPlane.h>
 
 using namespace ves::xplorer::event;
+
 ////////////////////////////////////////////////////////////////
 EphemerisHeightMapEventHandler::EphemerisHeightMapEventHandler()
 {
@@ -67,11 +69,11 @@ EphemerisHeightMapEventHandler::operator=( const EphemerisHeightMapEventHandler&
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////////////
-void EphemerisHeightMapEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void EphemerisHeightMapEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     try
     {
-        ves::open::xml::Command* ephemerisHeightMapData = dynamic_cast<ves::open::xml::Command*>( xmlObject );
+        ves::open::xml::CommandPtr ephemerisHeightMapData = xmlObject;
         if( ephemerisHeightMapData )
         {
             std::cout << "Getting height map info:" << std::endl;

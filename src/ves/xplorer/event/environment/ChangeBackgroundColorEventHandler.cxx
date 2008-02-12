@@ -35,6 +35,7 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/DisplayInformation.h>
+
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -74,9 +75,9 @@ void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::Globa
 ///////////////////////////////////////////////////////////////////////////////
 ///Exectute the event                                                        //
 ///////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::Execute( XMLObject* veXMLObject )
+void ChangeBackgroundColorEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
-    Command* command = dynamic_cast< Command* >( veXMLObject );
+    CommandPtr command = veXMLObject;
     DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
     std::vector<double> color;
     activeModelDVP->GetData( color );

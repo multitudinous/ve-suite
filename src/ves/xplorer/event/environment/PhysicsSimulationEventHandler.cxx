@@ -92,9 +92,9 @@ void PhysicsSimulationEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
+void PhysicsSimulationEventHandler::Execute( ves::open::xml::XMLObjectPtr veXMLObject )
 {
-    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( veXMLObject );
+    ves::open::xml::CommandPtr command = veXMLObject;
 
     if( command->GetDataValuePair( "ResetPhysicsSimulation" ) )
     {

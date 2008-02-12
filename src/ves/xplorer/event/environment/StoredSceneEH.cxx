@@ -65,13 +65,15 @@ StoredSceneEventHandler::operator=( const StoredSceneEventHandler& rhs )
 }
 ///////////////////////////////////////////////////////////////
 void StoredSceneEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
-{}
+{
+    ;
+}
 //////////////////////////////////////////////////////////////////////////
-void StoredSceneEventHandler::Execute( XMLObject* veXMLObject )
+void StoredSceneEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( veXMLObject );
+        CommandPtr command = veXMLObject;
         unsigned int whichChild = 0;
 
         if( command->GetDataValuePair( "LOAD_PFB_FILE" ) )

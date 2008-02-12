@@ -76,7 +76,7 @@ void Technique::AddPass( osg::StateSet* ss )
     if( ss )
     {
         m_passes.push_back( ss );
-        ss->setRenderBinDetails( static_cast< int >( m_passes.size() ), "RenderBin" );
+        //ss->setRenderBinDetails( static_cast< int >( m_passes.size() ), "RenderBin" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

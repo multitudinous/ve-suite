@@ -92,7 +92,7 @@ namespace ves
 {
 namespace xplorer
 {
-EnvironmentHandler::EnvironmentHandler( void )
+EnvironmentHandler::EnvironmentHandler()
 :
 _teacher( 0 ),
 cursor( 0 ),
@@ -162,14 +162,14 @@ m_lodScale(.01)
         new ves::xplorer::event::GeometryLODScaleEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::Initialize( void )
+void EnvironmentHandler::Initialize()
 {
     displaySettings = new cfdDisplaySettings();
 
     this->arrow = ModelHandler::instance()->GetArrow();
 }
 ////////////////////////////////////////////////////////////////////////////////
-EnvironmentHandler::~EnvironmentHandler( void )
+EnvironmentHandler::~EnvironmentHandler()
 {
     if( this->cursor )
     {
@@ -209,33 +209,33 @@ double EnvironmentHandler::GetGlobalLODScale()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-/*cfdSoundHandler* EnvironmentHandler::GetSoundHandler( void )
+/*cfdSoundHandler* EnvironmentHandler::GetSoundHandler()
 {
    return _soundHandler;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-cfdTeacher* EnvironmentHandler::GetTeacher( void )
+cfdTeacher* EnvironmentHandler::GetTeacher()
 {
     return _teacher;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*cfdQuatCamHandler* EnvironmentHandler::GetQuatCamHandler( void )
+/*cfdQuatCamHandler* EnvironmentHandler::GetQuatCamHandler()
 {
    return _camHandler;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings( void )
+cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings()
 {
     return displaySettings;
 }
 ////////////////////////////////////////////////////////////////////////////////
-cfdCursor* EnvironmentHandler::GetCursor( void )
+cfdCursor* EnvironmentHandler::GetCursor()
 {
     return this->cursor;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef _OSG
-DisplayInformation* EnvironmentHandler::GetDisplayInformation( void )
+DisplayInformation* EnvironmentHandler::GetDisplayInformation()
 {
     return this->display_information;
 }
@@ -253,7 +253,7 @@ void EnvironmentHandler::GetDesktopSize( int &width, int &height )
     height = desktopHeight;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void EnvironmentHandler::InitScene( void )
+void EnvironmentHandler::InitScene()
 {
     std::cout << "| ***************************************************************** |" << std::endl;
     //
@@ -282,13 +282,13 @@ void EnvironmentHandler::InitScene( void )
         std::cout << "| 12. Initializing................................  Desktop Display |" << std::endl;
         // Create the command and data value pairs
         // to adjust the desktop settings.
-        ves::open::xml::DataValuePair* dvpDesktopWidth = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
+        ves::open::xml::DataValuePairPtr dvpDesktopWidth = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
         dvpDesktopWidth->SetDataName( "desktop_width" );
         dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
-        ves::open::xml::DataValuePair* dvpDesktopHeight = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
+        ves::open::xml::DataValuePairPtr dvpDesktopHeight = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
         dvpDesktopHeight->SetDataName( "desktop_height" );
         dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
-        ves::open::xml::Command* displayCommand = new ves::open::xml::Command();
+        ves::open::xml::CommandPtr displayCommand = new ves::open::xml::Command();
         displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
         displayCommand->AddDataValuePair( dvpDesktopWidth );
         displayCommand->AddDataValuePair( dvpDesktopHeight );
@@ -301,7 +301,7 @@ void EnvironmentHandler::InitScene( void )
     // Initialize DisplayInformation
     //
     std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
-    this->display_information = new ves::xplorer::DisplayInformation;
+    this->display_information = new ves::xplorer::DisplayInformation();
     std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
     this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
 
@@ -315,7 +315,7 @@ void EnvironmentHandler::InitScene( void )
 ////////////////////////////////////////////////////////////////////////////////
 //This function sets the dcs based on any input device
 //(i.e) trackball, wand, gui nav,...
-void EnvironmentHandler::PreFrameUpdate( void )
+void EnvironmentHandler::PreFrameUpdate()
 {
     //Process all events for active device
     ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
@@ -442,7 +442,7 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool create
     return m_ephemerisModel.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void EnvironmentHandler::CreateObjects( void )
+/*void EnvironmentHandler::CreateObjects()
 {
    int numObjects;
    char text[ 256 ];
