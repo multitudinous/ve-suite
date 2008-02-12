@@ -30,23 +30,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef TEXTURE_IMAGE_H
-#define TEXTURE_IMAGE_H
+#ifndef _VES_OPEN_XML_SHADER_TEXTURE_IMAGE_H_
+#define _VES_OPEN_XML_SHADER_TEXTURE_IMAGE_H_
+
+#include <ves/open/xml/shader/TextureImagePtr.h>
 
 #include <ves/open/xml/XMLObject.h>
-#include <ves/VEConfig.h>
+#include <ves/open/xml/CommandPtr.h>
+
 #include <xercesc/dom/DOM.hpp>
+
 #include <string>
 #include <map>
 
-/*!\file TextureImage.h
-  Texture Image
-  */
-/*!\class VE_Shader::TextureImage
- * Class that stores an image in texture data.
- */
-
-#include <ves/open/xml/CommandPtr.h>
 
 namespace ves
 {
@@ -56,6 +52,12 @@ namespace xml
 {
 namespace shader
 {
+/*!\file TextureImage.h
+  Texture Image
+  */
+/*!\class ves::open::xml::shader::TextureImage
+ * Class that stores an image in texture data.
+ */
 class VE_SHADER_EXPORTS TextureImage: public ves::open::xml::XMLObject
 {
 public:
@@ -74,7 +76,7 @@ public:
     ///3D == three dimensional texture data
     ///Cube == Cube map texture data
     ///Environment == Environment map texture data
-    void SetTextureImageType( std::string type );
+    void SetTextureImageType( const std::string& type );
 
     ///Set the dimensions of the data stored in here.
     void SetDimension( unsigned int dimension );
@@ -89,7 +91,7 @@ public:
     ///Negative Y == negative y face\n
     ///Positive Z == positive z face\n
     ///Negative Z == negative z face\n
-    void SetImageFile( std::string imageFileName, std::string face = "FRONT" );
+    void SetImageFile( const std::string& imageFileName, std::string face = "FRONT" );
 
     ///Set the texture unit of this data.
     ///\todo May not be necessary.
@@ -106,7 +108,7 @@ public:
     ///Clamp to Border\n
     ///Repeat\n
     ///Mirror\n
-    void SetWrapMode( std::string direction, std::string wrapMode );
+    void SetWrapMode( const std::string& direction, const std::string& wrapMode );
 
     ///Set the minification or magnification filter mode
     ///\param minMagFilter The filter to set\n
@@ -115,18 +117,18 @@ public:
     ///Linear\n
     ///Nearest\n
     ///\todo Mipmapping not implemented yet!!
-    void SetFilterMode( std::string minMagFilter, std::string mode );
+    void SetFilterMode( const std::string& minMagFilter, const std::string& mode );
 
     ///Get the GL_WRAP_MODE\n
     ///\param direction S,T,R direction this wrap mode applies to.
     ///\param wrapMode The wrap mode
-    bool GetWrapMode( std::string direction, std::string& wrapMode );
+    bool GetWrapMode( const std::string& direction, std::string& wrapMode );
 
     ///Set the minification or magnification filter mode
     ///\param minMagFilter The filter to set\n
     ///\param mode The filter mode\n
     ///\todo Mipmapping not implemented yet!!
-    bool GetFilterMode( std::string minMagFilter, std::string& mode );
+    bool GetFilterMode( const std::string& minMagFilter, std::string& mode );
 
     ///Get the texture unit
     ///\todo May not be necessary.
@@ -148,7 +150,7 @@ public:
     ///Negative Y == negative y face\n
     ///Positive Z == positive z face\n
     ///Negative Z == negative z face\n
-    std::string GetImageFile( std::string face = "FRONT" );
+    const std::string& GetImageFile( std::string face = "FRONT" );
 
     ///Set the object from input XML data
     ///\param xmlInput The input xml data.
@@ -161,7 +163,7 @@ protected:
     ///\param input The XML element information
     virtual void _updateVEElement( const std::string& input );
 
-    ves::open::xml::CommandPtr _textureDescription;///<Data package containing the information about the texture map.
+    ves::open::xml::CommandPtr mTextureDescription;///<Data package containing the information about the texture map.
 
 };
 

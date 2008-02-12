@@ -30,28 +30,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef SHADER_CREATOR_H
-#define SHADER_CREATOR_H
-/*!\file ShaderCreator.h
-  ShaderCreator API
-  */
-/*!\class VE_Shader::ShaderCreator
- * Create Objects within the VE_Shader namespace.
- */
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class XMLObject;
-}
-}
-}
+#ifndef _VES_OPEN_XML_SHADER_SHADER_CREATOR_H_
+#define _VES_OPEN_XML_SHADER_SHADER_CREATOR_H_
 
 #include <ves/open/xml/CreationEventHandler.h>
 #include <ves/VEConfig.h>
+
+#include <ves/open/xml/XMLObjectPtr.h>
+
 
 namespace ves
 {
@@ -61,6 +47,12 @@ namespace xml
 {
 namespace shader
 {
+/*!\file ShaderCreator.h
+  ShaderCreator API
+  */
+/*!\class ves::open::xml::shader::ShaderCreator
+ * Create Objects within the ves::open::xml::Shader namespace.
+ */
 class VE_SHADER_EXPORTS ShaderCreator : public ves::open::xml::CreationEventHandler
 {
 public:
@@ -74,14 +66,14 @@ public:
 
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( std::string objectType );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( const std::string& objectType );
 
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    //virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject(std::string objectType);
-    //virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject(std::string objectType);
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy(
+                                                const std::string& objectType,
+                                                ves::open::xml::XMLObjectPtr objectToCopy );
 protected:
 };
 }

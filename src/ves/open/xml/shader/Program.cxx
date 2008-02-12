@@ -30,11 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/open/xml/shader/Program.h>
+
 #include <ves/open/xml/shader/Shader.h>
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/XMLObjectFactory.h>
+
 XERCES_CPP_NAMESPACE_USE
 
 using namespace ves::open::xml::shader;
@@ -45,9 +46,9 @@ using namespace ves::open::xml;
 Program::Program()
         : XMLObject()
 {
-    _name = std::string( "VEProgram" );
-    _vertexShader = 0;
-    _fragmentShader = 0;
+    mName = std::string( "VEProgram" );
+    mVertexShader = 0;
+    mFragmentShader = 0;
     SetObjectType( "Program" );
     SetObjectNamespace( "Shader" );
 
@@ -61,7 +62,7 @@ Program::Program()
 ///////////////////
 Program::~Program()
 {
-    _name.clear();
+    mName.clear();
 }
 /////////////////////////////////////
 //Copy constructor                 //
@@ -69,32 +70,32 @@ Program::~Program()
 Program::Program( const Program& rhs )
         : XMLObject( rhs )
 {
-    _name = std::string( "VEProgram" );
+    mName = std::string( "VEProgram" );
 
-    if( rhs._vertexShader )
+    if( rhs.mVertexShader )
     {
-        _vertexShader = new Shader( *rhs._vertexShader );
+        mVertexShader = new Shader( *rhs.mVertexShader );
     }
-    if( rhs._fragmentShader )
+    if( rhs.mFragmentShader )
     {
-        _fragmentShader = new Shader( *rhs._fragmentShader );
+        mFragmentShader = new Shader( *rhs.mFragmentShader );
     }
-    _name = rhs._name;
+    mName = rhs.mName;
 }
 /////////////////////////////////////////////////
 void Program::SetVertexShader( ShaderPtr vertShader )
 {
-    _vertexShader = vertShader;
+    mVertexShader = vertShader;
 }
 ///////////////////////////////////////////////////
 void Program::SetFragmentShader( ShaderPtr fragShader )
 {
-    _fragmentShader = fragShader;
+    mFragmentShader = fragShader;
 }
 //////////////////////////////////////////////
-void Program::SetProgramName( std::string name )
+void Program::SetProgramName( const std::string& name )
 {
-    _name = name;
+    mName = name;
 }
 /////////////////////////////////////////////////////
 void Program::SetObjectFromXMLData( DOMNode* xmlInput )
@@ -116,25 +117,25 @@ void Program::SetObjectFromXMLData( DOMNode* xmlInput )
                 DOMElement* vertexShader = GetSubElement( currentElement, std::string( "vertexShader" ), 0 );
                 if( vertexShader )
                 {
-                    if( !_vertexShader )
+                    if( !mVertexShader )
                     {
-                        _vertexShader = new Shader();
+                        mVertexShader = new Shader();
                     }
-                    _vertexShader->SetObjectFromXMLData( vertexShader );
+                    mVertexShader->SetObjectFromXMLData( vertexShader );
                 }
                 DOMElement* fragShader = GetSubElement( currentElement, std::string( "fragmentShader" ), 0 );
                 if( fragShader )
                 {
-                    if( !_fragmentShader )
+                    if( !mFragmentShader )
                     {
-                        _fragmentShader = new Shader();
+                        mFragmentShader = new Shader();
                     }
-                    _fragmentShader->SetObjectFromXMLData( fragShader );
+                    mFragmentShader->SetObjectFromXMLData( fragShader );
                 }
                 DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
                 if( nameNode )
                 {
-                    GetAttribute( nameNode, "name", _name );
+                    GetAttribute( nameNode, "name", mName );
                 }
             }
         }
@@ -143,31 +144,31 @@ void Program::SetObjectFromXMLData( DOMNode* xmlInput )
 ////////////////////////////////////
 ShaderPtr Program::GetFragmentShader()
 {
-    return _fragmentShader;
+    return mFragmentShader;
 }
 //////////////////////////////////
 ShaderPtr Program::GetVertexShader()
 {
-    return _vertexShader;
+    return mVertexShader;
 }
 /////////////////////////////////////
-std::string Program::GetProgramName()
+const std::string& Program::GetProgramName()
 {
-    return _name;
+    return mName;
 }
 /////////////////////////////////////////////////
 void Program::_updateVEElement( const std::string& input )
 {
     _updateProgramName();
-    if( _vertexShader )
+    if( mVertexShader )
     {
-        _vertexShader->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( _vertexShader->GetXMLData( "vertexShader" ) );
+        mVertexShader->SetOwnerDocument( _rootDocument );
+        _veElement->appendChild( mVertexShader->GetXMLData( "vertexShader" ) );
     }
-    if( _fragmentShader )
+    if( mFragmentShader )
     {
-        _fragmentShader->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( _fragmentShader->GetXMLData( "fragmentShader" ) );
+        mFragmentShader->SetOwnerDocument( _rootDocument );
+        _veElement->appendChild( mFragmentShader->GetXMLData( "fragmentShader" ) );
     }
 }
 /////////////////////////////////
@@ -177,7 +178,7 @@ void Program::_updateProgramName()
                               Convert( "name" ).toXMLString() );
 
     DOMText* name = _rootDocument->createTextNode(
-                    Convert( _name ).toXMLString() );
+                    Convert( mName ).toXMLString() );
 
     nameElement->appendChild( name );
     _veElement->appendChild( nameElement );
@@ -189,15 +190,15 @@ Program& Program::operator=( const Program& rhs )
     if( this != &rhs )
     {
         XMLObject::operator=( rhs );
-        if( rhs._vertexShader )
+        if( rhs.mVertexShader )
         {
-            _vertexShader = new Shader( *rhs._vertexShader );
+            mVertexShader = new Shader( *rhs.mVertexShader );
         }
-        if( rhs._fragmentShader )
+        if( rhs.mFragmentShader )
         {
-            _fragmentShader = new Shader( *rhs._fragmentShader );
+            mFragmentShader = new Shader( *rhs.mFragmentShader );
         }
-        _name = rhs._name;
+        mName = rhs.mName;
     }
     return *this;
 }

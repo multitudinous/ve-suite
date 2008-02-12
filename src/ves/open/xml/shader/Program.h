@@ -30,22 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#ifndef _VES_OPEN_XML_SHADER_PROGRAM_H_
+#define _VES_OPEN_XML_SHADER_PROGRAM_H_
+
+#include <ves/open/xml/ProgramPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/shader/ShaderPtr.h>
-#include <ves/VEConfig.h>
+
 #include <xercesc/dom/DOM.hpp>
+
 #include <string>
 #include <vector>
-
-/*!\file Program.h
-  Program API
-  */
-/*!\class VE_Shader::Program
- * Class that stores an data and information neccessary to create a glsl Program program.
- */
 
 namespace ves
 {
@@ -55,6 +51,13 @@ namespace xml
 {
 namespace shader
 {
+
+/*!\file Program.h
+  Program API
+  */
+/*!\class ves::open::xml::shader::Program
+ * Class that stores an data and information neccessary to create a glsl Program program.
+ */
 class VE_SHADER_EXPORTS Program: public ves::open::xml::XMLObject
 {
 public:
@@ -69,29 +72,29 @@ public:
 
     ///Set the vertex shader for this program
     ///\param vertShader The vertex shader.
-    void SetVertexShader( ves::open::xml::shader::ShaderPtr vertShader );
+    void SetVertexShader( ShaderPtr vertShader );
 
 
     ///Set the fragment shader for this program
     ///\param fragShader The fragment shader.
-    void SetFragmentShader( ves::open::xml::shader::ShaderPtr fragShader );
+    void SetFragmentShader( ShaderPtr fragShader );
 
     ///Set the name of the glsl program
     ///\param name The name of the program.
-    void SetProgramName( std::string name );
+    void SetProgramName( const std::string& name );
 
     ///Set the object from input XML data
     ///\param xmlInput The input xml data.
     void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
     ///Get the fragment shader.
-    ves::open::xml::shader::ShaderPtr GetFragmentShader();
+    ShaderPtr GetFragmentShader();
 
     ///Get the vertex shader.
-    ves::open::xml::shader::ShaderPtr GetVertexShader();
+    ShaderPtr GetVertexShader();
 
     ///Get the name of the program.
-    std::string GetProgramName();
+    const std::string& GetProgramName();
 
 
     ///equal operator
@@ -104,9 +107,9 @@ protected:
     ///Internally update the name from the XML data.
     void _updateProgramName();
 
-    std::string _name;///< The program name.
-    ves::open::xml::shader::ShaderPtr _vertexShader;///< The vertex shader.
-    ves::open::xml::shader::ShaderPtr _fragmentShader;///< The fragment shader.
+    std::string mName;///< The program name.
+    ShaderPtr mVertexShader;///< The vertex shader.
+    ShaderPtr mFragmentShader;///< The fragment shader.
 };
 
 }

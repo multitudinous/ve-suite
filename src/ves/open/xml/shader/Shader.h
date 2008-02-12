@@ -30,24 +30,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef SHADER_H
-#define SHADER_H
+#ifndef _VES_OPEN_XML_SHADER_SHADER_H_
+#define _VES_OPEN_XML_SHADER_SHADER_H_
+
+#include <ves/open/xml/shader/ShaderPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
-
 #include <ves/open/xml/shader/TextureImagePtr.h>
 #include <ves/open/xml/shader/UniformPtr.h>
+
 #include <xercesc/dom/DOM.hpp>
+
 #include <string>
 #include <vector>
 #include <map>
 
-/*!\file Shader.h
-  Shader API
-  */
-/*!\class VE_Shader::Shader
- * Class that stores an data and information neccessary to create a glsl shader.
- */
 
 namespace ves
 {
@@ -57,6 +54,13 @@ namespace xml
 {
 namespace shader
 {
+
+/*!\file Shader.h
+  Shader API
+  */
+/*!\class ves::open::xml::shader::Shader
+ * Class that stores an data and information neccessary to create a glsl shader.
+ */
 class VE_SHADER_EXPORTS Shader: public ves::open::xml::XMLObject
 {
 public:
@@ -85,19 +89,19 @@ public:
     ///The type of shader program. Valid types are "Vertex"
     ///and "Fragment".
     ///\param fragOrVert The type of shader this represents.
-    void SetShaderType( std::string fragOrVert );
+    void SetShaderType( const std::string& fragOrVert );
 
     ///This is the string containing the full source code
     ///of the shader. This includes the variables as well as the
     ///functions.
     ///\param shaderSourceCode The raw shader code.
-    void SetShaderSource( std::string shaderSourceCode );
+    void SetShaderSource( const std::string& shaderSourceCode );
 
     ///Get the raw source for the shader.
-    std::string GetShaderSource();
+    const std::string& GetShaderSource();
 
     ///Get the shader type.
-    std::string GetShaderType();
+    const std::string& GetShaderType();
 
     ///Get a texture representing an image file.
     ///\param textureUnit The texture unit to search for.
@@ -111,7 +115,7 @@ public:
 
     ///Get a specific uniform by name.
     ///\param uniformName The uniform name to search for.
-    Uniform& GetUniform( std::string uniformName );
+    Uniform& GetUniform( const std::string& uniformName );
 
     ///Get a specific uniform by index.
     ///\param index The uniform to search for.
@@ -136,11 +140,11 @@ protected:
     ///Internally update the shader source.
     void _updateShaderSource();
 
-    std::string _shaderType;///<The type of shader represented.
-    std::string _shaderSource;///<The raw shader source.
-    std::map<unsigned int, TextureImage> _textureImages;///<The list of texture images.
-    std::vector<Uniform> _uniformList;///<The list of uniforms.
+    std::string mShaderType;///<The type of shader represented.
+    std::string mShaderSource;///<The raw shader source.
 
+    std::map<unsigned int, TextureImage> mTextureImages;///<The list of texture images.
+    std::vector<Uniform> mUniformList;///<The list of uniforms.
 };
 
 }

@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef UNIFORM_PTR_H_
-#define UNIFORM_PTR_H_
+#ifndef _VES_OPEN_XML_SHADER_UNIFORM_PTR_H_
+#define _VES_OPEN_XML_SHADER_UNIFORM_PTR_H_
 
 #include <ves/util/PointerTypes.h>
 
@@ -54,7 +54,6 @@ namespace shader
 {
 class Uniform;
 /// Typedef for a SmartPtr type for the Uniform.
-typedef Loki::SmartPtrDef<Uniform>::type UniformPtr;
 typedef ves::util::ClassPtrDef<Uniform>::type  UniformPtr;
 typedef ves::util::SharedPtrDef<Uniform>::type UniformSharedPtr;
 typedef ves::util::WeakPtrDef<Uniform>::type   UniformWeakPtr;

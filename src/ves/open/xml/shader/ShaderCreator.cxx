@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/open/xml/shader/ShaderCreator.h>
+
 #include <ves/open/xml/shader/TextureImage.h>
 #include <ves/open/xml/shader/Shader.h>
 #include <ves/open/xml/shader/Uniform.h>
@@ -38,7 +39,7 @@
 
 using namespace ves::open::xml::shader;
 ////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( std::string objectType )
+ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( const std::string& objectType )
 {
     if( objectType == "Program" )
     {
@@ -59,7 +60,7 @@ ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( std::string obje
     return ves::open::xml::XMLObjectPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy( std::string objectType,
+ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy( const std::string& objectType,
         ves::open::xml::XMLObjectPtr objectToCopy )
 {
     if( objectType == "Program" )

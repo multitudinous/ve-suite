@@ -30,24 +30,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef UNIFORM_H_
-#define UNIFORM_H_
+#ifndef _VES_OPEN_XML_SHADER_UNIFORM_H_
+#define _VES_OPEN_XML_SHADER_UNIFORM_H_
+
+#include <ves/open/xml/shader/UniformPtr.h>
+
 #include <ves/open/xml/XMLObject.h>
-#include <ves/VEConfig.h>
+
 #include <xercesc/dom/DOM.hpp>
+
 #include <string>
 #include <vector>
 
-/*!\file Uniform.h
-  Shader Uniform API
-  */
-/*!\class VE_Shader::Uniform
- * Class representing uniform variables for use in Shaders
- */
-
-/*!\namespace VE_Shader
- * Contains classes that describe GLSL shaders and programs.
- */
 
 namespace ves
 {
@@ -57,6 +51,16 @@ namespace xml
 {
 namespace shader
 {
+/*!\file Uniform.h
+  Shader Uniform API
+  */
+/*!\class ves::open::xml::shader::Uniform
+ * Class representing uniform variables for use in Shaders
+ */
+
+/*!\namespace ves::open::xml::shader
+ * Contains classes that describe GLSL shaders and programs.
+ */
 class VE_SHADER_EXPORTS Uniform : public ves::open::xml::XMLObject
 {
 public:
@@ -70,7 +74,7 @@ public:
     ///Valid types:
     ///Float,Int,Bool
     ///\param type The type of data.
-    void SetType( std::string type );
+    void SetType( const std::string& type );
 
     ///Set the size of.
     ///Valid values range from 1-4
@@ -79,7 +83,7 @@ public:
 
     ///Set the name.
     ///\param name The name of the uniform
-    void SetName( std::string name );
+    void SetName( const std::string& name );
 
     ///The texuture unit of the sampler if type is a sampler.
     ///\param tUnit The texture unit.
@@ -89,17 +93,17 @@ public:
     ///NOTE: All values should be passed in
     ///as floats and will be converted and interpretted appropriately.
     ///\param newValues The new values for the uniform.
-    void SetValues( std::vector<float> newValues );
+    void SetValues( std::vector<float>& newValues );
 
     ///Set the internal data values from a given XML element.
     ///\param inputXML The element to extract the data from.
     void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* inputXML );
 
     ///Get the type.
-    std::string GetType();
+    const std::string& GetType();
 
     ///Get the name.
-    std::string GetName();
+    const std::string& GetName();
 
     ///Get the size of the uniform vector
     size_t GetSize();
@@ -130,11 +134,11 @@ protected:
     ///Internally update the data for the texture unit.
     void _updateTextureUnit();
 
-    std::string _type;///<The dataType.
-    size_t _variableSize;///<The size.
-    std::string _name;///<The name.
-    std::vector<float> _values;///<The value of the uniform
-    unsigned int _textureUnit;///<Optional texture unit if the data is a sampler.
+    std::string mType;///<The dataType.
+    size_t mVariableSize;///<The size.
+    std::string mName;///<The name.
+    std::vector<float> mValues;///<The value of the uniform
+    unsigned int mTextureUnit;///<Optional texture unit if the data is a sampler.
 };
 
 }

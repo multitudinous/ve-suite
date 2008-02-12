@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef TEXTUREIMAGE_PTR_H_
-#define TEXTUREIMAGE_PTR_H_
+#ifndef _VES_OPEN_XML_SHADER_TEXTUREIMAGE_PTR_H_
+#define _VES_OPEN_XML_SHADER_TEXTUREIMAGE_PTR_H_
 
 #include <ves/util/PointerTypes.h>
 

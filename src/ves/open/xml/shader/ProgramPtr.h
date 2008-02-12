@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef PROGRAM_PTR_H_
-#define PROGRAM_PTR_H_
+#ifndef _VES_OPEN_XML_SHADER_PROGRAM_PTR_H_
+#define _VES_OPEN_XML_SHADER_PROGRAM_PTR_H_
 
 #include <ves/util/PointerTypes.h>
 
@@ -39,8 +39,8 @@
  * \file
  *
  * Include this file to get a forward declaration of the pointer type
- * VE_XML::VE_Shader::ProgramPtr.  To get the full
- * declaration of VE_XML::VE_Shader::Program
+ * ves::open::xml::shader::ProgramPtr.  To get the full
+ * declaration of ves::open::xml::shader::Program
  * ves/open/xml/shader/Program.h must be included, too.
  */
 

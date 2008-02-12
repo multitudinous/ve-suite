@@ -48,7 +48,7 @@ XERCES_CPP_NAMESPACE_USE
 Shader::Shader()
         : ves::open::xml::XMLObject()
 {
-    _shaderType = std::string( "Vertex" );
+    mShaderType = std::string( "Vertex" );
     _shaderSource = std::string( "" );
     SetObjectType( "Shader" );
     SetObjectNamespace( "Shader" );
@@ -75,7 +75,7 @@ Shader::Shader( const Shader& rhs )
     }
 
     _textureImages = rhs._textureImages;
-    _shaderType = rhs._shaderType;
+    mShaderType = rhs.mShaderType;
     _shaderSource = rhs._shaderSource;
 }
 ////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
                 DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
                 if( typeNode )
                 {
-                    GetAttribute( typeNode, "type", _shaderType );
+                    GetAttribute( typeNode, "type", mShaderType );
                 }
 
                 //Get the source
@@ -159,7 +159,7 @@ void Shader::AddTextureImage( TextureImage newTextureImage )
 //////////////////////////////////////////////////
 void Shader::SetShaderType( std::string fragOrVert )
 {
-    _shaderType = fragOrVert;
+    mShaderType = fragOrVert;
 }
 //////////////////////////////////////////////////////////
 void Shader::SetShaderSource( std::string shaderSourceCode )
@@ -174,7 +174,7 @@ std::string Shader::GetShaderSource()
 ///////////////////////////////////
 std::string Shader::GetShaderType()
 {
-    return _shaderType;
+    return mShaderType;
 }
 ////////////////////////////////////////////////////////////////
 TextureImage& Shader::GetTextureImage( unsigned int textureUnit )
@@ -253,7 +253,7 @@ void Shader::_updateShaderType()
                               Convert( "type" ).toXMLString() );
 
     DOMText* type = _rootDocument->createTextNode(
-                    Convert( _shaderType ).toXMLString() );
+                    Convert( mShaderType ).toXMLString() );
 
     typeElement->appendChild( type );
     _veElement->appendChild( typeElement );
@@ -309,7 +309,7 @@ Shader& Shader::operator=( const Shader& rhs )
         //is this correct for maps?
         _textureImages = rhs._textureImages;
         //}
-        _shaderType = rhs._shaderType;
+        mShaderType = rhs.mShaderType;
         _shaderSource = rhs._shaderSource;
     }
     return *this;
