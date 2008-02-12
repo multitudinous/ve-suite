@@ -417,7 +417,7 @@ void ModelCADHandler::RemoveAttributeFromNode( std::string nodeID,
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::AddAttributeToNode( std::string nodeID,
-                                          ves::open::xml::cad::CADAttribute*
+                                          ves::open::xml::cad::CADAttributePtr
                                           newAttribute )
 {
 #ifdef _OSG

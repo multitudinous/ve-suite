@@ -102,7 +102,7 @@ public:
     ///\param nodeType The node type.
     ///\param The CADAttribute to add to the node.
     void AddAttributeToNode( std::string nodeID,
-                             ves::open::xml::cad::CADAttribute* newAttribute );
+                             ves::open::xml::cad::CADAttributePtr newAttribute );
     ///Add a new attribute to a node
     ///\param nodeID The ID of the node to add Attribute to.
     ///\param nodeType The node type.
