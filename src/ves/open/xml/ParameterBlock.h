@@ -44,6 +44,8 @@
 #include <vector>
 
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/ParameterBlockPtr.h>
+
 namespace ves
 {
 namespace open
