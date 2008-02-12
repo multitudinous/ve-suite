@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #ifndef _CAD_NODE_TRAVERSER_H_
@@ -45,6 +43,7 @@
 
 
 #include <ves/VEConfig.h>
+#include <ves/open/xml/cad/CADNodePtr.h>
 
 
 namespace ves
@@ -55,7 +54,6 @@ namespace xml
 {
 namespace cad
 {
-class CADNode;
 class VE_CAD_EXPORTS CADNodeTraverser
 {
 public:
@@ -89,7 +87,7 @@ public:
         ///\param cadNodeTraverser The CADNodeTraverser that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        virtual void Apply( CADNodeTraverser* cadNodeTraverser, CADNode* node, void* currentParent = 0 ) = 0;
+        virtual void Apply( CADNodeTraverser* cadNodeTraverser, CADNodePtr node, void* currentParent = 0 ) = 0;
     protected:
     };
     ///TraversalStatus The status of the traverser.
@@ -110,7 +108,7 @@ public:
 
     ///Set the node to traverse
     ///\param root The root node to traverse.
-    void SetRootNode( CADNode* root );
+    void SetRootNode( CADNodePtr root );
 
     ///Set the traversal status.
     ///\param ts The new traversal status.
@@ -135,10 +133,10 @@ protected:
     ///Recurse the nodes internally.
     ///\param currentNode The node currently being traversed.
     ///\param currentParent The CADNode that is the parent of the node being encountered.
-    virtual void _traverseNode( CADNode* currentNode, void* currentParent = 0 );
+    virtual void _traverseNode( CADNodePtr currentNode, void* currentParent = 0 );
 
     TraversalStatus _ts;///<The status of the traverser.
-    CADNode* _root;///<The root node to traverse.
+    CADNodePtr _root;///<The root node to traverse.
     CADNodeTraverser::CADNodeTraverseCallback* _preFunc;///<The pre traverse callback.
     CADNodeTraverser::CADNodeTraverseCallback* _postFunc;///<The post node traverse callback.
 };

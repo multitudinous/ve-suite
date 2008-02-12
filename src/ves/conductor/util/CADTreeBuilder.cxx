@@ -53,7 +53,7 @@ using namespace ves::conductor::util;
 //////////////////////////////////////////
 ///Constructor                          //
 //////////////////////////////////////////
-CADTreeBuilder::CADTreeBuilder( CADNode* root, int id , wxWindow* parent )
+CADTreeBuilder::CADTreeBuilder( CADNodePtr root, int id , wxWindow* parent )
 {
     SetRootNode( root );
     _parentWindow = parent;
@@ -137,7 +137,7 @@ void CADTreeBuilder::SetWXTreeCtrl( wxTreeCtrl* tree )
    return *this;
 }*/
 //////////////////////////////////////////////////////////////////////////////////////
-CADTreeBuilder::TreeNodeData::TreeNodeData( CADNode* node )
+CADTreeBuilder::TreeNodeData::TreeNodeData( CADNodePtr node )
 {
     _cadNode = node;
 }
@@ -156,7 +156,7 @@ CADTreeBuilder::TreeNodeData::~TreeNodeData()
     }*/
 }
 //////////////////////////////////////////////////////////
-CADNode* CADTreeBuilder::GetCADNode( std::string name )
+CADNodePtr CADTreeBuilder::GetCADNode( std::string name )
 {
     size_t nNodes = _nodeList.size();
     for( size_t i = 0; i < nNodes; i++ )
@@ -300,7 +300,7 @@ void CADTreeBuilder::_createImageList()
     _treeCtrl->AssignImageList( images );
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::TreeGraphPostCallback::Apply( CADNodeTraverser* treeBuilder, CADNode* node, void* currentParent )
+void CADTreeBuilder::TreeGraphPostCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, void* currentParent )
 {
     CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>( treeBuilder );
 
