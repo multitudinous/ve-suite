@@ -41,6 +41,8 @@
 #include <ves/xplorer/event/viz/cfdPlanes.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkDataSet.h>

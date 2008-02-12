@@ -39,6 +39,7 @@
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Network.h>

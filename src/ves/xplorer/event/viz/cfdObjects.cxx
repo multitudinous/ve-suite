@@ -34,6 +34,8 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
+#include <ves/open/xml/Command.h>
+
 // Juggler Includes
 #include <ves/xplorer/Debug.h>
 
