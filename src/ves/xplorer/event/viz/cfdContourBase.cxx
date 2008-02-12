@@ -215,7 +215,7 @@ void cfdContourBase::UpdateCommand()
 
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
 
     //Extract the plane position
     activeModelDVP = objectCommand->GetDataValuePair( "Position" );
@@ -241,7 +241,7 @@ void cfdContourBase::UpdateCommand()
 
     //Extract the advanced settings from the commands
     activeModelDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
-    objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    objectCommand = activeModelDVP->GetDataXMLObject();
 
     // set the opacity
     activeModelDVP = objectCommand->GetDataValuePair( "Contour Opacity" );

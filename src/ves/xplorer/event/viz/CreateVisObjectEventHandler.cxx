@@ -58,7 +58,6 @@
 #include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/device/cfdCursor.h>
 
-
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
@@ -687,19 +686,19 @@ void CreateVisObjectEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
        }*/
 }
 //////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     // Set the active dataset
-    this->SetActiveDataSet( xmlObject );
+    SetActiveDataSet( xmlObject );
     // set the active scalar and range
-    this->SetActiveScalarAndRange( xmlObject );
+    SetActiveScalarAndRange( xmlObject );
     // set the active vector
-    this->SetActiveVector( xmlObject );
+    SetActiveVector( xmlObject );
     // Get the active object
-    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( xmlObject );
+    ves::open::xml::CommandPtr command = xmlObject;
     ves::open::xml::DataValuePairWeakPtr scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
 
     std::string direction;
     ves::open::xml::DataValuePairWeakPtr directionDVP = objectCommand->GetDataValuePair( "Direction" );
@@ -719,7 +718,7 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
     ves::open::xml::DataValuePairWeakPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
     if( advancedDVP )
     {
-        ves::open::xml::Command* advancedCommand = dynamic_cast< ves::open::xml::Command* >( advancedDVP->GetDataXMLObject() );
+        ves::open::xml::CommandPtr advancedCommand = advancedDVP->GetDataXMLObject();
         unsigned int warpOption = 0;
         advancedCommand->GetDataValuePair( "Warp Option" )->GetData( warpOption );
         if( warpOption )
@@ -781,9 +780,9 @@ void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
     SteadyStateVizHandler::instance()->SetActorsAreReady( true );
 }
 //////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xmlObject )
+void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr xmlObject )
 {
-    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( xmlObject );
+    ves::open::xml::CommandPtr command = xmlObject;
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Vector" );
     std::string activeVector;
     activeModelDVP->GetData( activeVector );
@@ -805,9 +804,9 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObject* xm
 #endif
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLObject* xmlObject )
+void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLObjectPtr xmlObject )
 {
-    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( xmlObject );
+    ves::open::xml::CommandPtr command = xmlObject;
 
     std::string activeScalarName;
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Scalar" );
@@ -834,9 +833,9 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
     activeDataset->GetParent()->ResetScalarBarRange( scalarMin, scalarMax );
 }
 //////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObject* xmlObject )
+void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject )
 {
-    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( xmlObject );
+    ves::open::xml::CommandPtr command = xmlObject;
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Dataset" );
     std::string dataSetName;
     activeModelDVP->GetData( dataSetName );

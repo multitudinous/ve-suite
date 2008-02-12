@@ -298,7 +298,7 @@ void cfdStreamers::UpdateCommand()
 
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
 
     //Extract the integration direction
     activeModelDVP = objectCommand->GetDataValuePair( "Integration Direction" );
@@ -329,7 +329,7 @@ void cfdStreamers::UpdateCommand()
 
     //Extract the advanced settings from the commands
     activeModelDVP = objectCommand->GetDataValuePair( "Advanced Streamline Settings" );
-    objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    objectCommand = activeModelDVP->GetDataXMLObject();
 
     /////////////////////
     activeModelDVP = objectCommand->GetDataValuePair( "Use Stream Arrows" );

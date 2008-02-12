@@ -104,17 +104,17 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
 private:
     ///Set the active dataset for the cfdobject to work on
-    void SetActiveDataSet( ves::open::xml::XMLObject* xmlObject );
+    void SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject );
     ///Set the active scalar and appropriate range
-    void SetActiveScalarAndRange( ves::open::xml::XMLObject* xmlObject );
+    void SetActiveScalarAndRange( ves::open::xml::XMLObjectPtr xmlObject );
     ///Set access to the active sclalt range
-    void SetActiveVector( ves::open::xml::XMLObject* xmlObject );
+    void SetActiveVector( ves::open::xml::XMLObjectPtr xmlObject );
     ///Set the active cfd object based on the command
-    void SetActiveCfdObject( ves::open::xml::XMLObject* xmlObject );
+    void SetActiveCfdObject( ves::open::xml::XMLObjectPtr xmlObject );
 
     //ves::xplorer::Model* _activeModel;///<The active cfdModel
     ves::xplorer::cfdObjects* activeObject;   ///<The active cfdObject

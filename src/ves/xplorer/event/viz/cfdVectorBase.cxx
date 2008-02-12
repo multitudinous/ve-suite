@@ -122,7 +122,7 @@ void cfdVectorBase::UpdateCommand()
 
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairWeakPtr activeModelDVP = veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::Command* objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
 
     //Extract the plane position
     activeModelDVP = objectCommand->GetDataValuePair( "Position" );
@@ -148,7 +148,7 @@ void cfdVectorBase::UpdateCommand()
 
     //Extract the advanced settings from the commands
     activeModelDVP = objectCommand->GetDataValuePair( "Advanced Vector Settings" );
-    objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
+    objectCommand = activeModelDVP->GetDataXMLObject();
 
     activeModelDVP = objectCommand->GetDataValuePair( "Vector Threshold" );
     std::vector< double > threshHoldValues;
