@@ -438,42 +438,6 @@ void CORBAServiceList::CreateCORBAModule( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::Command* veCommand )
-{
-    //Calling function is responsible for the command memory
-    if( !IsConnectedToXplorer() )
-    {
-        return false;
-    }
-
-    //Now send the data to xplorer
-    ves::open::xml::XMLReaderWriter netowrkWriter;
-    netowrkWriter.UseStandaloneDOMDocumentManager();
-
-    // New need to destroy document and send it
-    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
-                     std::string > ( veCommand, "vecommand" ) );
-    std::string xmlDocument( "returnString" );
-    netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
-
-    if( CORBA::is_nil( vjobs.in() ) || xmlDocument.empty() )
-    {
-        return false;
-    }
-
-    try
-    {
-        // CORBA releases the allocated memory so we do not have to
-        vjobs->SetCommandString( xmlDocument.c_str() );
-    }
-    catch ( ... )
-    {
-        return false;
-    }
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::CommandWeakPtr veCommand )
 {
     //Calling function is responsible for the command memory

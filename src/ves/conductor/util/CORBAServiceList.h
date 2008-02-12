@@ -109,9 +109,6 @@ public:
     bool DisconnectFromCE( void );
     ///Set xplorer command string
     ///\param command string containing command
-    bool SendCommandStringToXplorer( ves::open::xml::Command* veCommand );
-    ///Set xplorer command string
-    ///\param command string containing command
     bool SendCommandStringToXplorer( ves::open::xml::CommandWeakPtr veCommand );
     /*
     ///Set xplorer command string 
