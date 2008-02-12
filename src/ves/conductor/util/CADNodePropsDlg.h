@@ -48,6 +48,10 @@ CADNodePropsDlg API
 #include <wx/window.h>
 #include <wx/dialog.h>
 #include <wx/spinctrl.h>
+
+#include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/cad/CADNodePtr.h>
+
 class wxBoxSizer;
 class wxNotebook;
 class wxButton;
@@ -60,21 +64,6 @@ class wxListCtrl;
 class wxArrayString;
 class wxCheckBox;
 class wxRadioBox;
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class DataValuePair;
-namespace cad
-{
-class CADNode;
-}
-}
-}
-}
 
 namespace ves
 {
@@ -303,9 +292,9 @@ protected:
     double tempY;///<The y scale value.
     double tempZ;///<The z scale value.
 
-    ves::open::xml::cad::CADNode* _cadNode;///<The current CADNode.
+    ves::open::xml::cad::CADNodePtr _cadNode;///<The current CADNode.
 
-    std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+    std::vector<ves::open::xml::DataValuePairPtr> _instructions;///<The DataValuePair s for the current command.
 
     std::string ConvertUnicode( const wxChar* data )
     {

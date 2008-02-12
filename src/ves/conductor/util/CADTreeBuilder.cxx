@@ -229,7 +229,7 @@ void CADTreeBuilder::AddPartToGraph(CADNodeWeakPtr part, wxTreeItemId parent )
                            0, 1, new TreeNodeData( part ) );
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNode* node, void* currentParent )
+void CADTreeBuilder::TreeGraphPreCallback::Apply( CADNodeTraverser* treeBuilder, CADNodePtr node, void* currentParent )
 {
     CADTreeBuilder* treeGraph = dynamic_cast<CADTreeBuilder*>( treeBuilder );
     if( !treeGraph )

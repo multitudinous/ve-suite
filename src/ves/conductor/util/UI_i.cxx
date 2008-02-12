@@ -161,23 +161,22 @@ ACE_THROW_SPEC((
     networkReader.ReadFromString();
     networkReader.ReadXMLData( tempString, "Command", "vecommand" );
 
-    std::vector<ves::open::xml::XMLObject*> xmlObjects;
+    std::vector<ves::open::xml::XMLObjectPtr> xmlObjects;
     xmlObjects = networkReader.GetLoadedXMLObjects();
 
     //std::cout << xmlObjects.size() << std::endl;
-    std::vector< ves::open::xml::XMLObject* >::iterator iter;
+    std::vector< ves::open::xml::XMLObjectPtr >::iterator iter;
     //Not sure why this is not working...
     //for( iter = xmlObjects.begin(); iter != xmlObjects.end(); ++iter )
     {
         //iter
         //  VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
-        ves::open::xml::Command* temp = dynamic_cast< ves::open::xml::Command* >( xmlObjects.at( 0 ) );
+        ves::open::xml::CommandPtr temp = xmlObjects.at( 0 );
         if( !temp )
         {
             std::cout << " bad stuff " << std::endl;
         }
         m_commandNameMap[ temp->GetCommandName()] = *temp;
-        delete temp;
         //iter = xmlObjects.erase( iter );
         xmlObjects.clear();
     }

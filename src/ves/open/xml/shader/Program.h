@@ -33,7 +33,7 @@
 #ifndef _VES_OPEN_XML_SHADER_PROGRAM_H_
 #define _VES_OPEN_XML_SHADER_PROGRAM_H_
 
-#include <ves/open/xml/ProgramPtr.h>
+#include <ves/open/xml/shader/ProgramPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/shader/ShaderPtr.h>

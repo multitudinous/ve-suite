@@ -865,12 +865,12 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                         shaderLoader.ReadFromFile();
                         shaderLoader.ReadXMLData( ConvertUnicode( veaFileNamePath ), "Shader", "Program" );
 
-                        ves::open::xml::shader::Program* loadedShader = 0;
+                        ves::open::xml::shader::ProgramPtr loadedShader = 0;
                         if( shaderLoader.GetLoadedXMLObjects().at( 0 ) )
                         {
                             try
                             {
-                                loadedShader = dynamic_cast<ves::open::xml::shader::Program*>( shaderLoader.GetLoadedXMLObjects().at( 0 ) );
+                                loadedShader = shaderLoader.GetLoadedXMLObjects().at( 0 );
                                 if( AttributeExists( loadedShader->GetProgramName().c_str() ) )
                                 {
                                     wxMessageBox( _( "Attribute with this name is already loaded." ),
@@ -885,12 +885,12 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
 
                                 _commandName = std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" );
 
-                                ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+                                ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
                                 nodeID->SetDataType( "STRING" );
                                 nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
                                 _instructions.push_back( nodeID );
 
-                                ves::open::xml::DataValuePair* addAttribute = new ves::open::xml::DataValuePair();
+                                ves::open::xml::DataValuePairPtr addAttribute = new ves::open::xml::DataValuePair();
                                 addAttribute->SetDataType( "XMLOBJECT" );
                                 addAttribute->SetData( "Attribute", &_cadNode->GetAttribute( newAttribute.GetAttributeName() ) );
                                 _instructions.push_back( addAttribute );
@@ -1011,17 +1011,17 @@ void CADNodePropertiesDlg::_updateTransform( wxSpinEvent& WXUNUSED( event ) )
 
         _commandName = std::string( "CAD_TRANSFORM_UPDATE" );
 
-        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
         _instructions.push_back( nodeID );
 
-        ves::open::xml::DataValuePair* updateTransform = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr updateTransform = new ves::open::xml::DataValuePair();
         updateTransform->SetDataType( "XMLOBJECT" );
         updateTransform->SetData( "Transform", _cadNode->GetTransform() );
         _instructions.push_back( updateTransform );
 
-        ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeType = new ves::open::xml::DataValuePair();
         nodeType->SetDataType( "STRING" );
         nodeType->SetDataName( std::string( "Node Type" ) );
         nodeType->SetDataString( _cadNode->GetNodeType() );
