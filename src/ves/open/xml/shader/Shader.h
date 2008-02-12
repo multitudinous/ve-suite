@@ -34,7 +34,9 @@
 #define SHADER_H
 
 #include <ves/open/xml/XMLObject.h>
-#include <ves/VEConfig.h>
+
+#include <ves/open/xml/shader/TextureImagePtr.h>
+#include <ves/open/xml/shader/UniformPtr.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>
@@ -46,21 +48,6 @@
 /*!\class VE_Shader::Shader
  * Class that stores an data and information neccessary to create a glsl shader.
  */
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace shader
-{
-class TextureImage;
-class Uniform;
-}
-}
-}
-}
 
 namespace ves
 {

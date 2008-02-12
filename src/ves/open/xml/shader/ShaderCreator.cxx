@@ -42,21 +42,21 @@ ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( std::string obje
 {
     if( objectType == "Program" )
     {
-        return new Program();
+        return ProgramPtr( new Program() );
     }
     else if( objectType == "Shader" )
     {
-        return new Shader();
+        return ShaderPtr( new Shader() );
     }
     else if( objectType == "Uniform" )
     {
-        return new Uniform();
+        return UniformPtr( new Uniform() );
     }
     else if( objectType == "TextureImage" )
     {
-        return new TextureImage();
+        return TexutrePtr( new TextureImage() );
     }
-    return 0;
+    return ves::open::xml::XMLObjectPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy( std::string objectType,
