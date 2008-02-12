@@ -93,7 +93,7 @@ void ClearVisObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject )
+void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
 {
     //call back over to ssvishandler to clear the vis objects
     SteadyStateVizHandler::instance()->ClearVisObjects();
@@ -103,8 +103,7 @@ void ClearVisObjectsEventHandler::Execute( ves::open::xml::XMLObject* xmlObject 
     // I was unable to figure out what was going wrong with loading 
     // and reloading ves files and default plugins. Something appears to 
     // be incorrect in how we are setting activemodel in deleting plugins.
-    std::string tempCommandName = 
-        static_cast< ves::open::xml::Command* >( xmlObject )->GetCommandName();
+    std::string tempCommandName = static_cast< ves::open::xml::CommandPtr >( xmlObject )->GetCommandName();
     if( "DELETE_OBJECT_FROM_NETWORK" == tempCommandName )
     {
         return;

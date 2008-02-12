@@ -85,9 +85,9 @@ void StreamLineEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::Execute( ves::open::xml::XMLObject* veXMLObject )
+void StreamLineEventHandler::Execute( ves::open::xml::XMLObjectPtr veXMLObject )
 {
-    ves::open::xml::Command* command = dynamic_cast< ves::open::xml::Command* >( veXMLObject );
+    ves::open::xml::CommandPtr command = veXMLObject;
     ves::open::xml::DataValuePairWeakPtr sizeDVP = command->GetDataValuePair( "Size" );
     ves::open::xml::DataValuePairWeakPtr glowDVP = command->GetDataValuePair( "Glow" );
 

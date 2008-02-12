@@ -772,11 +772,11 @@ void VjObs_i::CreatCommandVector( std::string commandString )
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( commandString, "Command", "vecommand" );
-    std::vector< XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        commandVectorQueue.push_back( static_cast< Command* >( objectVector.at( i ) ) );
+        commandVectorQueue.push_back( objectVector.at( i ) );
     }
 }
 // Frame sync variables used by osg only at this point

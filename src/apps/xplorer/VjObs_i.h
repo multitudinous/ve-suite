@@ -176,7 +176,7 @@ protected:
     double mShort_data_array[ 9 ];///< buffer data
 
     ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
-    std::vector< ves::open::xml::Command* > commandVectorQueue;///< command vector may be a duplicate
+    std::vector< ves::open::xml::CommandPtr > commandVectorQueue;///< command vector may be a duplicate
     std::vector< std::string > commandStringQueue;///< command queue with raw string data
     // Cluster Stuff for the above state variables
     cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
