@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef CAD_CREATOR_H
 #define CAD_CREATOR_H
@@ -76,12 +74,12 @@ public:
 
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( std::string objectType );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( const std::string& objectType );
 
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType, ves::open::xml::XMLObjectPtr objectToCopy );
 protected:
 };
 }

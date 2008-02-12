@@ -78,19 +78,19 @@ public:
 
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( std::string objectType );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObject( const std::string& objectType );
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( std::string objectType );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectSmart( const std::string& objectType );
 
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType, ves::open::xml::XMLObjectPtr objectToCopy );
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( std::string objectType, ves::open::xml::XMLObjectPtr objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopySmart( const std::string& objectType, ves::open::xml::XMLObjectPtr objectToCopy );
 protected:
 };
 }

@@ -62,12 +62,12 @@ public:
 
     ///Create a new XMLObject.
     ///\param objectType The type of object to create.
-    virtual XMLObjectPtr CreateNewXMLObject( std::string objectType );
+    virtual XMLObjectPtr CreateNewXMLObject( const std::string& objectType );
 
     ///Create a copy of a XMLObject
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy
-    virtual XMLObjectPtr CreateNewXMLObjectCopy( std::string objectType,
+    virtual XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType,
                                                XMLObjectPtr objectToCopy );
 protected:
 };
