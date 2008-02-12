@@ -51,12 +51,12 @@ GlobalBase::~GlobalBase()
     ; // Do nothing.
 }
 
-void GlobalBase::SetVECommand( open::xml::Command* command )
+void GlobalBase::SetVECommand( open::xml::CommandPtr command )
 {
     veCommand = command;
 }
 
-open::xml::Command* GlobalBase::GetVECommand()
+open::xml::CommandPtr GlobalBase::GetVECommand()
 {
     return veCommand;
 }

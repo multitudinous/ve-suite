@@ -52,6 +52,8 @@
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/builder/DataLoader/DataLoader.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
 #include <vtkDataSet.h>

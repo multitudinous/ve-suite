@@ -53,6 +53,7 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Transform.h>
 #include <ves/open/xml/FloatArray.h>
+#include <ves/open/xml/Command.h>
 
 #include <ves/xplorer/Debug.h>
 

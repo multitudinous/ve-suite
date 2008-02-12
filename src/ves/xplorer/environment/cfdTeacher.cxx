@@ -43,6 +43,8 @@
 
 #include <ves/xplorer/util/fileIO.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <iostream>
 #include <string>
 #include <sstream>

@@ -36,6 +36,8 @@
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/environment/cfdSound.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <iostream>
 #include <fstream>
 

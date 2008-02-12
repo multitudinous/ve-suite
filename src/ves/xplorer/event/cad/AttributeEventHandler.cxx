@@ -34,8 +34,9 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/open/xml/cad/CADAttribute.h>
 
+#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/Command.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <iostream>

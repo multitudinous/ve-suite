@@ -37,6 +37,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
+
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -48,6 +49,8 @@
 #include <ves/xplorer/scenegraph/nurbs/ControlPoint.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+
+#include <ves/open/xml/Command.h>
 
 // --- Bullet Stuff --- //
 #include <LinearMath/btVector3.h>

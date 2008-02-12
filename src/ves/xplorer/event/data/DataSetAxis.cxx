@@ -32,6 +32,8 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/event/data/DataSetAxis.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <ves/xplorer/Debug.h>
 
 #include <osg/Node>

@@ -37,6 +37,8 @@
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Model.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <osg/Node>
 #include <osg/Geode>
 #include <osg/Group>

@@ -78,7 +78,7 @@ public:
     void Execute( ves::open::xml::XMLObjectPtr command );
 
 private:
-    ves::xplorer::ModelPtr _activeModel; ///<The active model
+    ves::xplorer::Model* _activeModel; ///<The active model
 };
 
 }
