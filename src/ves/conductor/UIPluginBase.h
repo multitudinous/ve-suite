@@ -41,6 +41,7 @@ UIPluginBase API
 #include <ves/VEConfig.h>
 #include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/CommandPtr.h>
 #include <vector>
 #include <map>
 #include <utility>
@@ -72,17 +73,6 @@ class CORBAServiceList;
 class CADNodeManagerDlg;
 class SoundsPane;
 class DataSetLoaderUI;
-}
-}
-}
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
 }
 }
 }
@@ -279,7 +269,7 @@ public:
 
     void SetDialogSize( wxRect dialogSize );
 protected:
-    void GetDataTables( ves::open::xml::Command* inputCommand,
+    void GetDataTables( ves::open::xml::CommandPtr inputCommand,
                         std::vector< wxString >& tagNames,
                         std::vector< wxString >& values );
 

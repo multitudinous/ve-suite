@@ -51,20 +51,6 @@
 
 namespace ves
 {
-namespace open
-{
-namespace xml
-{
-namespace cad
-{
-class CADNode;
-}
-}
-}
-}
-
-namespace ves
-{
 namespace conductor
 {
 namespace util
@@ -77,7 +63,7 @@ public:
     ///\param cadNode The root CADNode.
     ///\param parent The parent wxWindow
     ///\param id The ID for the tree control.
-    CADTreeBuilder( ves::open::xml::cad::CADNode* cadNode, wxWindowID id, wxWindow* parent );
+    CADTreeBuilder( ves::open::xml::cad::CADNodePtr cadNode, wxWindowID id, wxWindow* parent );
 
     ///Copy Constructor
     //CADTreeBuilder(const CADTreeBuilder& cfdNT);
@@ -118,7 +104,7 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPreCallback: public CADNodeTraverser::CADNo
         ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNode* node, void* currentParent = 0 );
+        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, void* currentParent = 0 );
     protected:
     };
 
@@ -142,7 +128,7 @@ class VE_GUIPLUGINS_EXPORTS TreeGraphPostCallback: public CADNodeTraverser::CADN
         ///\param cadNodeTraverser The CADTreeBuilder that is doing the traversing.
         ///\param node The CADNode that is currently being encountered.
         ///\param currentParent The CADNode that is the parent of the node being encountered.
-        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNode* node, void* currentParent = 0 );
+        void Apply( CADNodeTraverser* sceneGraphBuilder, ves::open::xml::cad::CADNodePtr node, void* currentParent = 0 );
     protected:
     };
 
@@ -154,19 +140,19 @@ class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
     public:
         ///Constructor
         ///\param node The holder of the node data.
-        TreeNodeData( ves::open::xml::cad::CADNode* node );
+        TreeNodeData( ves::open::xml::cad::CADNodePtr node );
         TreeNodeData( ves::open::xml::cad::CADNodeWeakPtr node );
 
         ///Destructor
         virtual ~TreeNodeData();
 
         ///Get the CADNode.
-        ves::open::xml::cad::CADNode* GetNode()
+        ves::open::xml::cad::CADNodePtr GetNode()
         {
             return _cadNode;
         }
     protected:
-        ves::open::xml::cad::CADNode* _cadNode;///<The pointer to the CADNode this tree item represents.
+        ves::open::xml::cad::CADNodePtr _cadNode;///<The pointer to the CADNode this tree item represents.
     };
 
     ///\param Pop the current parent.
@@ -184,7 +170,7 @@ class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
 
     ///Search the tree for a CADNode.
     ///\param name The name to search for.
-    ves::open::xml::cad::CADNode* GetCADNode( std::string name );
+    ves::open::xml::cad::CADNodePtr GetCADNode( std::string name );
 
     ///Get the created root node.
     wxTreeCtrl* GetWXTreeCtrl();
@@ -197,7 +183,7 @@ class VE_GUIPLUGINS_EXPORTS TreeNodeData : public wxTreeItemData
 protected:
     ///Create the image list.
     void _createImageList();
-    std::vector<ves::open::xml::cad::CADNode*> _nodeList;///<List of all the nodes in our tree.
+    std::vector< ves::open::xml::cad::CADNodePtr > _nodeList;///<List of all the nodes in our tree.
     CADTreeBuilder::TreeGraphPreCallback* _treeCtrlCreator;///<The pre traverse callback that creates a wxTreeCtrl.
     CADTreeBuilder::TreeGraphPostCallback* _parentPopper;///<Pops the parent stack.
     wxWindow* _parentWindow;

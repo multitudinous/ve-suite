@@ -936,7 +936,7 @@ void UIPluginBase::ViewInputVariables( void )
     {
         std::vector< wxString > tagNames;
         std::vector< wxString > values;
-        ves::open::xml::Command* inputCommand = m_veModel->GetInput( i );
+        ves::open::xml::CommandPtr inputCommand = m_veModel->GetInput( i );
         GetDataTables( inputCommand, tagNames, values );
         std::string inputParamter = inputCommand->GetCommandName();
         inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
@@ -967,7 +967,7 @@ void UIPluginBase::ViewResultsVariables( void )
     {
         std::vector< wxString > tagNames;
         std::vector< wxString > values;
-        ves::open::xml::Command* inputCommand = m_veModel->GetResult( i );
+        ves::open::xml::CommandPtr inputCommand = m_veModel->GetResult( i );
         GetDataTables( inputCommand, tagNames, values );
         std::string inputParamter = inputCommand->GetCommandName();
         resultsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
@@ -976,7 +976,7 @@ void UIPluginBase::ViewResultsVariables( void )
     resultsDialog->Show();
 }
 ///////////////////////////////////////////////
-void UIPluginBase::GetDataTables( ves::open::xml::Command* inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
+void UIPluginBase::GetDataTables( ves::open::xml::CommandPtr inputCommand, std::vector< wxString >& tagNames, std::vector< wxString >& values )
 {
     for( size_t j = 0; j < inputCommand->GetNumberOfDataValuePairs(); ++j )
     {
@@ -1130,17 +1130,16 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
         return;
     }
 
-    ves::open::xml::DataValuePair* dataValuePair = 
+    ves::open::xml::DataValuePairPtr dataValuePair = 
         new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     //Clean up memory
-    delete veCommand;
 
     // now show the custom dialog with no parent for the wxDialog
     UIDialog* hello = UI( m_canvas );
@@ -1431,8 +1430,8 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
         {
             veModel->AddGeometry();
         }
-        *( dynamic_cast< ves::open::xml::cad::CADAssembly* >( veModel->GetGeometry() ) ) =
-            *( dynamic_cast< ves::open::xml::cad::CADAssembly* >( cadDialog->GetRootCADNode() ) );
+        *( veModel->GetGeometry() ) =
+            *( cadDialog->GetRootCADNode() );
     }
     cadDialog = 0;
 }

@@ -182,8 +182,8 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
     data->SetData( std::string( "ParamName" ), ConvertUnicode( ParamChoice->GetStringSelection().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -196,8 +196,8 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
 
     unsigned int num = cmd->GetNumberOfDataValuePairs();
     std::vector< std::string > dataName;
@@ -284,8 +284,8 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     data->SetData( "ParamValue", ConvertUnicode( ValueEdit->GetValue().c_str() ) );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";

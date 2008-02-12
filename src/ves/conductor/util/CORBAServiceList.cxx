@@ -451,8 +451,8 @@ bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::Command* veCo
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // New need to destroy document and send it
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair < ves::open::xml::XMLObject*,
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
                      std::string > ( veCommand, "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
@@ -487,8 +487,8 @@ bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::CommandWeakPt
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // New need to destroy document and send it
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &( *veCommand ), "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &( *veCommand ), "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 

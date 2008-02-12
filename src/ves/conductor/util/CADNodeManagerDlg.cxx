@@ -82,7 +82,7 @@ using namespace ves::conductor::util;
 /////////////////////////////////////////////////////////////////////
 //Constructor                                                      //
 /////////////////////////////////////////////////////////////////////
-CADNodeManagerDlg::CADNodeManagerDlg( CADNode* node, wxWindow* parent, wxWindowID id )
+CADNodeManagerDlg::CADNodeManagerDlg( CADNodePtr node, wxWindow* parent, wxWindowID id )
         : wxDialog( parent, id, _( "CADTree Manager" ), wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Manager" ) )
 {
@@ -123,7 +123,7 @@ CADNodeManagerDlg::~CADNodeManagerDlg()
     }
 }
 ///////////////////////////////////////////////////////////
-void CADNodeManagerDlg::SetRootCADNode( CADNode* rootNode )
+void CADNodeManagerDlg::SetRootCADNode( CADNodePtr rootNode )
 {
     if( rootNode )
     {
@@ -137,7 +137,7 @@ void CADNodeManagerDlg::SetRootCADNode( CADNode* rootNode )
     _commandName = std::string( "SET_ROOT_CAD_NODE" );
 
     ClearInstructions();
-    ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
     //cadNode->SetDataType(std::string("XMLOBJECT"));
     cadNode->SetData( "Root Node ID", _rootNode->GetID() );
     _dataValuePairList.push_back( cadNode );
@@ -343,11 +343,11 @@ void CADNodeManagerDlg::_createNewAssembly( wxCommandEvent& WXUNUSED( event ) )
             assemblyNameDlg.CentreOnParent();
             assemblyNameDlg.ShowModal();
 
-            CADAssembly* newAssembly = new CADAssembly( ConvertUnicode( assemblyNameDlg.GetValue().GetData() ) );
+            CADAssemblyPtr newAssembly = new CADAssembly( ConvertUnicode( assemblyNameDlg.GetValue().GetData() ) );
             newAssembly->SetParent( _activeCADNode->GetID() );
             //_toggleNodeOnOff[newAssembly->GetID()] = true;
             newAssembly->SetVisibility( true );
-            dynamic_cast<CADAssembly*>( _activeCADNode )->AddChild( newAssembly );
+            _activeCADNode->AddChild( newAssembly );
 
 
             _geometryTree->SetItemImage( _activeTreeNode->GetId(), 2, wxTreeItemIcon_Expanded );
@@ -362,12 +362,12 @@ void CADNodeManagerDlg::_createNewAssembly( wxCommandEvent& WXUNUSED( event ) )
 
             _commandName = std::string( "CAD_ADD_NODE" );
 
-            ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+            ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
             cadNode->SetDataType( std::string( "XMLOBJECT" ) );
             cadNode->SetData( "New Node", newAssembly );
             _dataValuePairList.push_back( cadNode );
 
-            ves::open::xml::DataValuePair* parentNode = new ves::open::xml::DataValuePair();
+            ves::open::xml::DataValuePairPtr parentNode = new ves::open::xml::DataValuePair();
             parentNode->SetDataType( std::string( "STRING" ) );
             parentNode->SetData( std::string( "Parent ID" ), _activeCADNode->GetID() );
             _dataValuePairList.push_back( parentNode );
@@ -389,17 +389,17 @@ void CADNodeManagerDlg::_toggleNode( wxCommandEvent& event )
     {
         _commandName = "CAD_TOGGLE_NODE";
 
-        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _activeCADNode->GetID() );
         _dataValuePairList.push_back( nodeID );
 
-        ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeType = new ves::open::xml::DataValuePair();
         nodeType->SetDataType( "STRING" );
         nodeType->SetData( std::string( "Node Type" ), _activeCADNode->GetNodeType() );
         _dataValuePairList.push_back( nodeType );
 
-        ves::open::xml::DataValuePair* toggleValue = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr toggleValue = new ves::open::xml::DataValuePair();
         toggleValue->SetDataType( "STRING" );
         if( event.GetId() == CADNodeMenu::GEOM_TOGGLE_ON )
         {
@@ -428,12 +428,12 @@ void CADNodeManagerDlg::_initializePhysics( wxCommandEvent& event )
     {
         _commandName = "INITIALIZE_PHYSICS";
 
-        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _activeCADNode->GetID() );
         _dataValuePairList.push_back( nodeID );
 
-        ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeType = new ves::open::xml::DataValuePair();
         nodeType->SetDataType( "STRING" );
         nodeType->SetData( std::string( "Node Type" ), _activeCADNode->GetNodeType() );
         _dataValuePairList.push_back( nodeType );
@@ -452,11 +452,11 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
         CADNode* newClone = 0;
         if( _activeCADNode->GetNodeType() == "Part" )
         {
-            newClone = new CADPart( *dynamic_cast<CADPart*>( _activeCADNode ), true );
+            newClone = new CADPart( *_activeCADNode, true );
         }
         else if( _activeCADNode->GetNodeType() == "Assembly" )
         {
-            newClone = new CADAssembly( *dynamic_cast<CADAssembly*>( _activeCADNode ), true );
+            newClone = new CADAssembly( *_activeCADNode, true );
         }
         else
         {
@@ -481,14 +481,14 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
         CADTreeBuilder::TreeNodeData* parentCADNode =
             dynamic_cast<CADTreeBuilder::TreeNodeData*>( _geometryTree->GetItemData( parentID ) );
 
-        dynamic_cast<CADAssembly*>( parentCADNode->GetNode() )->AddChild( newClone );
+        parentCADNode->GetNode()->AddChild( newClone );
 
         _cadTreeBuilder->SetCurrentParentNode( parentID );
         _cadTreeBuilder->SetRootNode( newClone );
         _cadTreeBuilder->Traverse();
         _commandName = std::string( "CAD_ADD_NODE" );
 
-        ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
         cadNode->SetDataType( std::string( "XMLOBJECT" ) );
         cadNode->SetData( "New Node", newClone );
         _dataValuePairList.push_back( cadNode );
@@ -531,14 +531,14 @@ void CADNodeManagerDlg::_addNodeFromVEGFile( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////
 bool CADNodeManagerDlg::_ensureClones( wxString filename )
 {
-    std::map<wxString, ves::open::xml::cad::CADNode*>::iterator loadedFile;
+    std::map<wxString, ves::open::xml::cad::CADNodePtr >::iterator loadedFile;
     loadedFile = _loadedCAD.find( filename );
     if( loadedFile != _loadedCAD.end() )
     {
         //Clone this node
         //Just need to set the node we are going to clone
         //and call the cloneNode event
-        ves::open::xml::cad::CADNode* originalActiveNode = _activeCADNode;
+        ves::open::xml::cad::CADNodePtr originalActiveNode = _activeCADNode;
         ///need to keep track of the parent node
         if( originalActiveNode->GetNodeType() == "Assembly" )
         {
@@ -563,15 +563,15 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
     cadReader.ReadXMLData( ConvertUnicode( fileName.c_str() ), "CAD", "CADAssembly" );
 
     //CADNode* loadedNode = 0;
-    CADAssembly* newAssembly = 0;
-    CADPart* newPart = 0;
-    std::vector<ves::open::xml::XMLObject*> loadedNodes;
+    CADAssemblyPtr newAssembly = 0;
+    CADPartPtr newPart = 0;
+    std::vector<ves::open::xml::XMLObjectPtr > loadedNodes;
     loadedNodes = cadReader.GetLoadedXMLObjects();
 
     if( loadedNodes.size() )
     {
         //std::cout<<"---Loaded Assembly---"<<std::endl;
-        newAssembly = new CADAssembly( *dynamic_cast<CADAssembly*>( loadedNodes.at( 0 ) ) );
+        newAssembly = new CADAssembly( *loadedNodes.at( 0 ) );
         //_toggleNodeOnOff[newAssembly->GetID()] = true;
         //newAssembly->SetVisibility(true);
     }
@@ -582,7 +582,7 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
         if( loadedNodes.size() )
         {
             //std::cout<<"---Loaded Part---"<<std::endl;
-            newPart = new CADPart( *dynamic_cast<CADPart*>( loadedNodes.at( 0 ) ) );
+            newPart = new CADPart( *loadedNodes.at( 0 ) );
             //_toggleNodeOnOff[newPart->GetID()] = true;
             //newPart->SetVisibility(true);
         }
@@ -593,25 +593,25 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
         if( newAssembly )
         {
             _loadedCAD[fileName] = newAssembly;
-            if( dynamic_cast<CADAssembly*>( _rootNode )->GetNumberOfChildren() == 0 )
+            try
             {
-                //std::cout<<"Reseting root CADNode"<<std::endl;
+                _rootNode->GetNumberOfChildren();
                 SetRootCADNode( newAssembly );
             }
-            else
+            catch( ... )
             {
-                dynamic_cast<CADAssembly*>( _activeCADNode )->AddChild( newAssembly );
+                _activeCADNode->AddChild( newAssembly );
                 SetRootCADNode( _rootNode );
             }
         }
         else if( newPart )
         {
             _loadedCAD[fileName] = newPart;
-            dynamic_cast<CADAssembly*>( _activeCADNode )->AddChild( newPart );
+            _activeCADNode->AddChild( newPart );
             SetRootCADNode( _rootNode );
         }
         _commandName = "CAD_ADD_NODE";
-        ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
         cadNode->SetDataType( std::string( "XMLOBJECT" ) );
 
         if( newAssembly )
@@ -669,12 +669,12 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
     partNameDlg.CentreOnParent();
     partNameDlg.ShowModal();
 
-    CADPart* newCADPart = new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) );
+    CADPartPtr newCADPart = new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) );
     newCADPart->SetCADFileName( ConvertUnicode( vegFileNamePath.c_str() ) );
     //_toggleNodeOnOff[newCADPart->GetID()] = true;
     newCADPart->SetVisibility( true );
 
-    dynamic_cast<CADAssembly*>( _activeCADNode )->AddChild( newCADPart );
+    _activeCADNode->AddChild( newCADPart );
 
     _geometryTree->AppendItem( _activeTreeNode->GetId(), wxString( newCADPart->GetNodeName().c_str(), wxConvUTF8 ),
                                0, 1, new CADTreeBuilder::TreeNodeData( newCADPart ) );
@@ -746,10 +746,10 @@ void CADNodeManagerDlg::_saveCADFile( wxCommandEvent& WXUNUSED( event ) )
 
         std::string outputFile = ConvertUnicode( vegFileName.GetFullPath( wxPATH_NATIVE ).c_str() );
 
-        std::pair<CADNode*, std::string> nodeTagPair;
+        std::pair<CADNodePtr, std::string> nodeTagPair;
         nodeTagPair.first = rootCADNode->GetNode();
         nodeTagPair.second = tagName;
-        std::vector< std::pair<ves::open::xml::XMLObject*, std::string> > nodeToWrite;
+        std::vector< std::pair<ves::open::xml::XMLObjectPtr, std::string> > nodeToWrite;
         nodeToWrite.push_back( nodeTagPair );
 
         cadReader.WriteXMLDocument( nodeToWrite, outputFile, "Command" );
@@ -783,24 +783,24 @@ void CADNodeManagerDlg::_deleteNode( wxCommandEvent& WXUNUSED( event ) )
     }
     if( _activeTreeNode )
     {
-        CADNode* parentCADNode =
+        CADNodePtr parentCADNode =
             dynamic_cast<CADTreeBuilder::TreeNodeData*>
             ( _geometryTree->GetItemData( _geometryTree->GetItemParent( _activeTreeNode->GetId() ) ) )->GetNode();
         _activeCADNode = _activeTreeNode->GetNode();
 
         _commandName = std::string( "CAD_DELETE_NODE" );
 
-        ves::open::xml::DataValuePair* deleteNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr deleteNode = new ves::open::xml::DataValuePair();
         deleteNode->SetDataType( "STRING" );
         deleteNode->SetData( std::string( "Node Type" ), _activeCADNode->GetNodeType() );
         _dataValuePairList.push_back( deleteNode );
 
-        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), _activeCADNode->GetID() );
         _dataValuePairList.push_back( nodeID );
 
-        ves::open::xml::DataValuePair* parentNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr parentNode = new ves::open::xml::DataValuePair();
         parentNode->SetDataType( std::string( "STRING" ) );
         parentNode->SetData( std::string( "Parent ID" ), _activeCADNode->GetParent() );
         _dataValuePairList.push_back( parentNode );
@@ -808,9 +808,9 @@ void CADNodeManagerDlg::_deleteNode( wxCommandEvent& WXUNUSED( event ) )
         _sendCommandsToXplorer();
         ClearInstructions();
 
-        dynamic_cast<CADAssembly*>( parentCADNode )->RemoveChild( _activeCADNode->GetID() );
+        parentCADNode->RemoveChild( _activeCADNode->GetID() );
 
-        for( std::map<wxString, ves::open::xml::cad::CADNode* >::iterator deletedNode = _loadedCAD.begin();
+        for( std::map<wxString, ves::open::xml::cad::CADNodePtr >::iterator deletedNode = _loadedCAD.begin();
                 deletedNode != _loadedCAD.end();
                 ++deletedNode )
         {
@@ -883,27 +883,26 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNode* movi
         dynamic_cast<CADTreeBuilder::TreeNodeData*>
         ( _geometryTree->GetItemData( newParentTreeID ) );
 
-    CADAssembly* newParent =
-        dynamic_cast<CADAssembly*>( newParentCADNode->GetNode( ) );
+    CADAssemblyPtr newParent = newParentCADNode->GetNode( );
 
     _commandName = std::string( "CAD_MOVE_NODE" );
 
-    ves::open::xml::DataValuePair* deleteNode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr deleteNode = new ves::open::xml::DataValuePair();
     deleteNode->SetDataType( "STRING" );
     deleteNode->SetData( std::string( "Move Node Type" ), movingChild->GetNodeType() );
     _dataValuePairList.push_back( deleteNode );
 
-    ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
     nodeID->SetDataType( "STRING" );
     nodeID->SetData( std::string( "Move Node ID" ), movingChild->GetID() );
     _dataValuePairList.push_back( nodeID );
 
-    ves::open::xml::DataValuePair* oldParentNode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr oldParentNode = new ves::open::xml::DataValuePair();
     oldParentNode->SetDataType( std::string( "STRING" ) );
     oldParentNode->SetData( std::string( "Old Parent ID" ), movingChild->GetParent() );
     _dataValuePairList.push_back( oldParentNode );
 
-    ves::open::xml::DataValuePair* newParentNode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr newParentNode = new ves::open::xml::DataValuePair();
     newParentNode ->SetDataType( std::string( "STRING" ) );
     newParentNode ->SetData( std::string( "New Parent ID" ), newParent->GetID() );
     _dataValuePairList.push_back( newParentNode );
@@ -916,8 +915,7 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNode* movi
         dynamic_cast<CADTreeBuilder::TreeNodeData*>
         ( _geometryTree->GetItemData( oldParentTreeID ) );
 
-    dynamic_cast<CADAssembly*>
-    ( oldParentTreeNode->GetNode() )->RemoveChild( movingChild->GetID() );
+    oldParentTreeNode->GetNode()->RemoveChild( movingChild->GetID() );
 
     newParent->AddChild( movingChild );
 
@@ -946,7 +944,7 @@ void CADNodeManagerDlg::_addNodeToParent( ves::open::xml::cad::CADAssembly* pare
 
     childToAdd->SetParent( parent->GetID( ) );
 
-    ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
     cadNode->SetDataType( std::string( "XMLOBJECT" ) );
     cadNode->SetData( "New Node", childToAdd );
     _dataValuePairList.push_back( cadNode );
@@ -957,7 +955,7 @@ void CADNodeManagerDlg::_addNodeToParent( ves::open::xml::cad::CADAssembly* pare
 ////////////////////////////////////////////////
 void CADNodeManagerDlg::_sendCommandsToXplorer()
 {
-    ves::open::xml::Command* cadCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr cadCommand = new ves::open::xml::Command();
 
     for( size_t i = 0; i < _dataValuePairList.size(); i++ )
     {
@@ -976,11 +974,10 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
     }
 
     //Clean up memory
-    delete cadCommand;
     ClearInstructions();
 }
 ////////////////////////////////////////
-CADNode* CADNodeManagerDlg::GetRootCADNode()
+CADNodePtr CADNodeManagerDlg::GetRootCADNode()
 {
     return _rootNode;
 }

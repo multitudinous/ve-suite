@@ -50,6 +50,8 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/model/SystemPtr.h>
 #include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/cad/CADNodePtr.h>
+#include <ves/open/xml/cad/CADAssemblyPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 
@@ -65,12 +67,6 @@ namespace model
 class Port;
 class Point;
 }
-namespace cad
-{
-class CADNode;
-class CADAssembly;
-}
-
 }
 }
 }
@@ -187,7 +183,7 @@ public:
     ///Get info packets data
     size_t GetNumberOfInformationPackets( void );
     ///Get the geometry for the model.
-    ves::open::xml::cad::CADNode* GetGeometry( void );
+    ves::open::xml::cad::CADNodePtr GetGeometry( void );
     ///Remove the i'th information packet for a model.
     ///\param i The i'th packet you are after.
     void RemoveInformationPacket( unsigned int i );
@@ -242,7 +238,7 @@ private:
     ///The parameter block holds all the data the was formerly stored in the param file
     std::vector< ves::open::xml::ParameterBlock* > informationPackets;///<The classes hold relevant data to represent the model.
     ///The CADNode contains the tree structure for the geometry
-    ves::open::xml::cad::CADAssembly* geometry;///<The classes hold the geometry for the model.
+    ves::open::xml::cad::CADAssemblyPtr geometry;///<The classes hold the geometry for the model.
     ///The vendor name for the model
     std::string vendorUnit;///<The string that stores the unit name that this model maps to
     ves::open::xml::Command* modelAttribute;///<The structure that stores all of the model attributes

@@ -442,8 +442,8 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -463,9 +463,9 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     networkReader.ReadFromString();
 
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
 
-    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
     ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );
@@ -506,8 +506,8 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "vecommand" ) );
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -518,15 +518,15 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     std::string nw_str = serviceList->Query( status );
     wxString title( compName.c_str(), wxConvUTF8 );
 
-    ParamsDlg * params = new ParamsDlg( networkFrame );
+    ParamsDlg* params = new ParamsDlg( networkFrame );
     params->SetIsBlock( false );
     //params->SetSize( dialogSize );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-    std::vector< ves::open::xml::XMLObject* > objectVector = networkReader.GetLoadedXMLObjects();
-    ves::open::xml::Command* cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
     ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );
