@@ -108,9 +108,9 @@ void AxesLabelsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void AxesLabelsEventHandler::Execute( XMLObject* xmlObject )
+void AxesLabelsEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 
         command->GetDataValuePair( "Axes Labels" );
     std::vector< std::string > labels;

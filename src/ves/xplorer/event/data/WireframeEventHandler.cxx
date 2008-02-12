@@ -107,9 +107,9 @@ void WireframeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void WireframeEventHandler::Execute( XMLObject* xmlObject )
+void WireframeEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 
         command->GetDataValuePair( "Wire Frame State" );
     std::string datasetName = 

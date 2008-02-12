@@ -108,9 +108,9 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void ScalarBarEventHandler::Execute( XMLObject* xmlObject )
+void ScalarBarEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 
         command->GetDataValuePair( "Scalar Bar State" );
     std::string datasetName = 

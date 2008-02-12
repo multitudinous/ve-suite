@@ -108,9 +108,9 @@ void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void BBoxEventHandler::Execute( XMLObject* xmlObject )
+void BBoxEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 
         command->GetDataValuePair( "Bounding Box State" );
     std::string datasetName = 

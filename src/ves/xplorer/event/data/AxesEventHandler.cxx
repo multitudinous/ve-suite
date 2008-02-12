@@ -107,9 +107,9 @@ void AxesEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void AxesEventHandler::Execute( XMLObject* xmlObject )
+void AxesEventHandler::Execute( XMLObjectPtr xmlObject )
 {
-    Command* command = dynamic_cast< Command* >( xmlObject );
+    CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 
         command->GetDataValuePair( "Axes State" );
     std::string datasetName = 

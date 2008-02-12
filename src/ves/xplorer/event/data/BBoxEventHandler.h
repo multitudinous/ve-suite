@@ -36,6 +36,8 @@
 #include <ves/xplorer/event/EventHandler.h>
 
 #include <ves/xplorer/ModelPtr.h>
+#include <ves/open/xml/XMLObjectPtr.h>
+
 
 #include <map>
 
@@ -74,7 +76,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
 private:
     ves::xplorer::Model* _activeModel;///<The active cfdModel
