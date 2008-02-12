@@ -73,11 +73,11 @@ CADToggleEventHandler& CADToggleEventHandler::operator=( const CADToggleEventHan
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADToggleEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );

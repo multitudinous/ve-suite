@@ -42,6 +42,7 @@
 #include <ves/open/xml/DataValuePair.h>
 
 #include <ves/open/xml/Transform.h>
+#include <ves/open/xml/TransformPtr.h>
 #include <ves/open/xml/FloatArray.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
@@ -75,12 +76,12 @@ CADTransformEventHandler& CADTransformEventHandler::operator=( const CADTransfor
     return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void CADTransformEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADTransformEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
 
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
 
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
@@ -112,7 +113,7 @@ void CADTransformEventHandler::_operateOnNode( XMLObject* xmlObject )
 
         if( transform )
         {
-            Transform* rawTransform = dynamic_cast<Transform*>( newTransform->GetDataXMLObject() );
+            TransformPtr rawTransform = newTransform->GetDataXMLObject();
             transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
             transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
             transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );

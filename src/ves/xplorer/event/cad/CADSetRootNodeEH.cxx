@@ -67,16 +67,24 @@ CADSetRootNodeEventHandler& CADSetRootNodeEventHandler::operator=( const CADSetR
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetRootNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADSetRootNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
+    if(!m_cadHandler)
+    {
+        std::cout<<"Invalide CADModelHandler!!"<<std::endl;
+        return;
+    }
+    //std::cout<<"Model Number: "<<m_activeModel->GetID()<<std::endl;
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        std::cout<<"Valid CADModelHandler!!"<<std::endl;
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr newRootNode = 
             command->GetDataValuePair( "Root Node ID" );
 
         std::string rootNodeID;
         newRootNode->GetData( rootNodeID );
+        std::cout<<"rootNodeID: "<<rootNodeID<<std::endl;
         m_cadHandler->SetRootCADNodeID( rootNodeID );
     }
     catch( std::string str )

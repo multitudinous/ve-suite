@@ -121,7 +121,7 @@ void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void CADEventHandler::Execute( XMLObject* veXMLObject )
+void CADEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     if( m_cadHandler && m_activeModel )
     {
@@ -141,7 +141,7 @@ CADEventHandler& CADEventHandler::operator=( const CADEventHandler& rhs )
     return *this;
 }
 ///////////////////////////////////////////////////////////////
-void CADEventHandler::_setAttributesOnNode( CADNode* activeNode )
+void CADEventHandler::_setAttributesOnNode( CADNodePtr activeNode )
 {
     //std::cout<<"Setting Attributes!!"<<std::endl;
     //set attributes
@@ -149,9 +149,10 @@ void CADEventHandler::_setAttributesOnNode( CADNode* activeNode )
     nAttributes = activeNode->GetAttributeList().size();
     for( size_t i = 0;  i < nAttributes; i++ )
     {
-        CADAttribute currentAttribute = activeNode->GetAttribute( i );
+        //This should change once the xml/cad stuff is committed
+        CADAttributePtr currentAttribute = &activeNode->GetAttribute( i );
         //  std::cout<<"Adding attribute: "<<currentAttribute.GetAttributeName()<<std::endl;
-        m_cadHandler->AddAttributeToNode( activeNode->GetID(), &currentAttribute );
+        m_cadHandler->AddAttributeToNode( activeNode->GetID(), currentAttribute );
     }
     if( nAttributes )
     {
@@ -162,8 +163,8 @@ void CADEventHandler::_setAttributesOnNode( CADNode* activeNode )
 
 
 }
-///////////////////////////////////////////////////////
-void CADEventHandler::_setTransformOnNode( CADNode* activeNode )
+//////////////////////////////////////////////////////////////////
+void CADEventHandler::_setTransformOnNode( CADNodePtr activeNode )
 {
     //set the transform
     ves::xplorer::scenegraph::DCS* transform = 0;
@@ -225,8 +226,9 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
         cloneNode->GetClonedGraph()->setDescriptions( descriptorsList );
     }
 }
-/////////////////////////////////////////////////////////////////////////
-void CADEventHandler::_addNodeToNode( std::string parentID, CADNode* activeNode )
+/////////////////////////////////////////////////////////////
+void CADEventHandler::_addNodeToNode( std::string parentID,
+                                      CADNodePtr activeNode )
 {
     ves::xplorer::scenegraph::DCS* parentAssembly = 0;
     parentAssembly = m_cadHandler->GetAssembly( parentID );
@@ -241,7 +243,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID, CADNode* activeNode 
 
     if( activeNode->GetNodeType() == "Assembly" )
     {
-        CADAssembly* newAssembly = dynamic_cast<CADAssembly*>( activeNode );
+        CADAssemblyPtr newAssembly = activeNode;
         //std::cout<<"---Assembly---"<<std::endl;
         //std::cout<<"   ---"<<newAssembly->GetID()<<"---"<<std::endl;
         //std::cout<<"   ---"<<newAssembly->GetNodeName()<<"---"<<std::endl;
@@ -272,7 +274,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID, CADNode* activeNode 
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
-        CADPart* newPart = dynamic_cast<CADPart*>( activeNode );
+        CADPartPtr newPart = activeNode;
         vprDEBUG( vesDBG, 1 ) << "|\t---Part---"
         << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t---" << newPart->GetID()
@@ -284,8 +286,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID, CADNode* activeNode 
         << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->CreatePart( correctedPath.native_file_string(),
                                   newPart->GetID(),
-                                  parentID
-                                );
+                                  parentID );
 
         ves::xplorer::scenegraph::CADEntity* partNode = m_cadHandler->GetPart( newPart->GetID() );
         if( partNode->GetNode()->GetNode() )

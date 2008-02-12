@@ -38,6 +38,8 @@
 #include <ves/xplorer/ModelPtr.h>
 
 #include <ves/open/xml/cad/CADAttributePtr.h>
+#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 
 
 namespace ves
@@ -72,7 +74,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
     ///Equal operator
     AttributeEventHandler& operator=( const AttributeEventHandler& rhs );
@@ -80,10 +82,10 @@ public:
 protected:
     ///The internal operation on the CADNode.
     ///\param veXMLObject The veXMLObject to execute.
-    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject ) = 0;
+    virtual void _operateOnNode( ves::open::xml::XMLObjectPtr veXMLObject ) = 0;
 
     ves::xplorer::Model* _activeModel;///<The active cfdModel
-    ves::open::xml::cad::CADAttribute* _activeAttribute;///<The CADNode.
+    ves::open::xml::cad::CADAttributePtr m_activeAttribute;///<The CADNode.
 };
 
 }

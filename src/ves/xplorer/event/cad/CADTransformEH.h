@@ -34,6 +34,7 @@
 #define VE_CAD_TRANSFORM_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/cad/CADEventHandler.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 
 
 namespace ves
@@ -65,7 +66,7 @@ public:
 protected:
     ///Update a transform on the CADNode.
     ///\param command The Command containing the udpated transform.
-    void _operateOnNode( ves::open::xml::XMLObject* command );
+    void _operateOnNode( ves::open::xml::XMLObjectPtr command );
 };
 
 }

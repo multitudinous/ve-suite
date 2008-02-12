@@ -39,8 +39,6 @@
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
-#include <ves/open/xml/FloatArray.h>
-#include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <iostream>
@@ -73,11 +71,11 @@ CADDeleteNodeEventHandler& CADDeleteNodeEventHandler::operator=( const CADDelete
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADDeleteNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADDeleteNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr parentID = command->GetDataValuePair( "Parent ID" );
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );

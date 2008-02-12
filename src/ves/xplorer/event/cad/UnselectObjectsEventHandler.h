@@ -34,7 +34,7 @@
 #define UNSELECT_OBJECTS_EVENT_HANDLER_H
 
 #include <ves/xplorer/event/EventHandler.h>
-
+#include <ves/open/xml/XMLObjectPtr.h>
 
 namespace ves
 {
@@ -66,7 +66,7 @@ public:
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
     //Equal operator
     UnselectObjectsEventHandler& operator=( const UnselectObjectsEventHandler& rhs );

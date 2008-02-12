@@ -79,11 +79,11 @@ CADPhysicsPropertiesEventHandler& CADPhysicsPropertiesEventHandler::operator=( c
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADPhysicsPropertiesEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADPhysicsPropertiesEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast< Command* >( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
 

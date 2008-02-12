@@ -36,10 +36,12 @@
 #include <ves/xplorer/scenegraph/util/Attribute.h>
 
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/cad/CADAttributePtr.h>
 #include <iostream>
 
 using namespace ves::xplorer::scenegraph::util;
@@ -72,16 +74,16 @@ CADAddAttributeEventHandler& CADAddAttributeEventHandler::operator=( const CADAd
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddAttributeEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADAddAttributeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
         std::cout << "---Adding attribute to node---" << std::endl;
         std::cout << "CADAddAttributeEventHandler." << std::endl;
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command =  xmlObject;
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr newAttribute = command->GetDataValuePair( "Attribute" );
-        CADAttribute* rawAttribute = dynamic_cast<CADAttribute*>( newAttribute->GetDataXMLObject() );
+        CADAttributePtr rawAttribute =  newAttribute->GetDataXMLObject();
 
         //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
         std::cout << "Node:" << nodeID->GetDataString() << std::endl;

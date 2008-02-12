@@ -82,7 +82,7 @@ public:
                              std::string descriptorValue );
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObject* command );
+    void Execute( ves::open::xml::XMLObjectPtr command );
 
     ///Equal operator
     CADEventHandler& operator=( const CADEventHandler& rhs );
@@ -90,24 +90,24 @@ public:
 protected:
     ///The internal operation on the CADNode.
     ///\param veXMLObject The veXMLObject to execute.
-    virtual void _operateOnNode( ves::open::xml::XMLObject* veXMLObject ) = 0;
+    virtual void _operateOnNode( ves::open::xml::XMLObjectPtr veXMLObject ) = 0;
 
     ///Internal method to add nodes.
     ///\param parentID The ID of the node to add the new node to.
     ///\param node The new CADNode to add to the model
-    void _addNodeToNode( std::string parentID, ves::open::xml::cad::CADNode* node );
+    void _addNodeToNode( std::string parentID, ves::open::xml::cad::CADNodePtr node );
 
     ///Internal method to extract attribtutes from CADNodes.
     ///\param node CADNode to extra attributes from.
-    void _setAttributesOnNode( ves::open::xml::cad::CADNode* node );
+    void _setAttributesOnNode( ves::open::xml::cad::CADNodePtr node );
 
     ///Internal method to extract transform from CADNodes.
     ///\param node CADNode to extract transform from.
-    void _setTransformOnNode( ves::open::xml::cad::CADNode* node );
+    void _setTransformOnNode( ves::open::xml::cad::CADNodePtr node );
 
     ves::xplorer::Model* m_activeModel;///<The active cfdModel;
     ves::xplorer::ModelCADHandler* m_cadHandler;///<The ModelCADHandler;
-    ves::open::xml::cad::CADNode* m_cadNode;///<The CADNode.
+    ves::open::xml::cad::CADNodePtr m_cadNode;///<The CADNode.
 };
 
 }

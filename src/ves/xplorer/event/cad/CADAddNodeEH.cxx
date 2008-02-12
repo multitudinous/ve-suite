@@ -36,8 +36,6 @@
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
-#include <ves/open/xml/FloatArray.h>
-#include <ves/open/xml/Transform.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADPart.h>
@@ -73,24 +71,25 @@ CADAddNodeEventHandler& CADAddNodeEventHandler::operator=( const CADAddNodeEvent
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADAddNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr cadNode = command->GetDataValuePair( "New Node" );
-        std::string nodeType = dynamic_cast<CADNode*>( cadNode->GetDataXMLObject() )->GetNodeType();
+        CADNodePtr tempNode = cadNode->GetDataXMLObject();
+        std::string nodeType =  tempNode->GetNodeType();
 
-        CADNode* node = 0;
-        CADAssembly* assembly = 0;
-        CADPart* part = 0;
+        CADNodePtr node = 0;
+        CADAssemblyPtr assembly = 0;
+        CADPartPtr part = 0;
         ves::xplorer::scenegraph::DCS* parentAssembly = 0;
 
         if( nodeType == "Assembly" )
         {
 
-            assembly = dynamic_cast<CADAssembly*>( cadNode->GetDataXMLObject() );
-            node = dynamic_cast<CADNode*>( assembly );
+            assembly = cadNode->GetDataXMLObject();
+            node = assembly;
             if( m_cadHandler->AssemblyExists( node->GetID() ) )
             {
                 throw( "Assembly already exists" );
@@ -98,8 +97,8 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
         }
         else if( nodeType == "Part" )
         {
-            part = dynamic_cast<CADPart*>( cadNode->GetDataXMLObject() );
-            node = dynamic_cast<CADNode*>( part );
+            part = cadNode->GetDataXMLObject();
+            node = part; 
             if( m_cadHandler->PartExists( node->GetID() ) )
             {
                 throw( "Part already exists" );

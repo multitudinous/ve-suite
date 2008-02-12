@@ -69,17 +69,17 @@ MaterialUpdateEventHandler& MaterialUpdateEventHandler::operator=( const Materia
     return *this;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MaterialUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void MaterialUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     std::cout << "Material update event handler" << std::endl;
     try
     {
-        Command* componentUpdate = dynamic_cast<Command*>( veXMLObject );
+        CommandPtr componentUpdate = ( veXMLObject );
         DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr material = componentUpdate->GetDataValuePair( "Material" );
         DataValuePairWeakPtr component = componentUpdate->GetDataValuePair( "Material Component" );
 
-        CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>( material->GetDataXMLObject() );
+        CADMaterialPtr rawMaterial = ( material->GetDataXMLObject() );
         std::string rawComponent = component->GetDataString();
         std::vector<double> values;
         if( rawComponent == "Diffuse" )

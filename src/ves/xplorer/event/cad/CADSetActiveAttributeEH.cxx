@@ -72,11 +72,11 @@ CADSetActiveAttributeEventHandler& CADSetActiveAttributeEventHandler::operator=(
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADSetActiveAttributeEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADSetActiveAttributeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
         DataValuePairWeakPtr activeAttribute = command->GetDataValuePair( "Active Attribute" );

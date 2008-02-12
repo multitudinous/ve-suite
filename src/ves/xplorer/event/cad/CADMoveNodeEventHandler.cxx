@@ -75,11 +75,11 @@ CADMoveNodeEventHandler& CADMoveNodeEventHandler::operator=( const CADMoveNodeEv
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////
-void CADMoveNodeEventHandler::_operateOnNode( XMLObject* xmlObject )
+void CADMoveNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        Command* command = dynamic_cast<Command*>( xmlObject );
+        CommandPtr command = xmlObject;
         DataValuePairWeakPtr movingNodeType =
             command->GetDataValuePair( "Move Node Type" );
 

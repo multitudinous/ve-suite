@@ -68,16 +68,16 @@ MaterialModeUpdateEventHandler& MaterialModeUpdateEventHandler::operator=( const
     return *this;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void MaterialModeUpdateEventHandler::_operateOnNode( XMLObject* veXMLObject )
+void MaterialModeUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        Command* componentUpdate = dynamic_cast<Command*>( veXMLObject );
+        CommandPtr componentUpdate = veXMLObject;
         DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
         DataValuePairWeakPtr material = componentUpdate->GetDataValuePair( "Material" );
         DataValuePairWeakPtr updateMode = componentUpdate->GetDataValuePair( "Mode" );
 
-        CADMaterial* rawMaterial = dynamic_cast<CADMaterial*>( material->GetDataXMLObject() );
+        CADMaterialPtr rawMaterial = ( material->GetDataXMLObject() );
         std::string newMode = updateMode->GetDataString();
         std::string value = "";
 
