@@ -93,22 +93,24 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
 
         //Write the link
         m_dotFile << "\"" << tempGroup.get() << "\" -> \""
-        << childNode.get() << "\";" << std::endl;
+            << childNode.get() << "\";" << std::endl;
         if( !childNode->asGroup() )
         {
             //Write the child node label
             m_dotFile << "\"" << childNode.get() << "\" " << "[label=\""
-            << childName << "\\n"
-            << GetMaterialDataString( childNode.get() ) << "\\n"
-            << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
+                << childName << "\\n"
+                << GetStateSetDataString( childNode.get() ) << "\\n"
+                << GetMaterialDataString( childNode.get() ) << "\\n"
+                << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
         }
     }
 
     //Write the label info for the parent
     m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\""
-    << nodeName << "\\n"
-    << GetMaterialDataString( tempGroup.get() ) << "\\n"
-    << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
+        << nodeName << "\\n"
+        << GetStateSetDataString( tempGroup.get() ) << "\\n"
+        << GetMaterialDataString( tempGroup.get() ) << "\\n"
+        << GetTextureDataString( tempGroup.get() ) << "\"];" << std::endl;
 
     osg::NodeVisitor::traverse( node );
 }
@@ -174,6 +176,29 @@ std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
     {
         textureData << "No Texture Data";
     }
+    return textureData.str();
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
+{
+    std::ostringstream textureData;
+    
+    //Grab stateset info
+    std::string binName = "None";
+    int binMode = -1;
+    int binNum = -1;
+    
+    osg::ref_ptr< osg::StateSet > tempState = node->getStateSet();
+    if( tempState.valid() )
+    {
+        binNum = tempState->getBinNumber();
+        binName = tempState->getBinName();
+        binMode = tempState->getRenderBinMode();
+    }
+
+    textureData << " StateSet => Bin Name = " << binName << ", Bin Mode = " 
+        << binMode << ", Bin Number = " << binNum;
+
     return textureData.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
