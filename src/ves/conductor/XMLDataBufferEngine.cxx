@@ -247,7 +247,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
             ves::open::xml::model::ModelWeakPtr model = *modelIter;
 
-            modelIter = modelVector.erase( modelIter );
+            //modelIter = modelVector.erase( modelIter );
             modelID << model->GetModelID();
             m_modelMap[ modelID.str()] = model;
             stringIter = std::find( networkModelVector.begin(),

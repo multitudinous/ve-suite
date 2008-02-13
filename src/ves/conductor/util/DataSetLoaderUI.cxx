@@ -96,7 +96,7 @@ END_EVENT_TABLE()
 
 DataSetLoaderUI::DataSetLoaderUI( )
 {
-    paramBlock = 0;
+    mParamBlock = 0;
 }
 
 DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
@@ -112,7 +112,7 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
 {
 ////@begin DataSetLoaderUI member initialisation
     m_veModel = veModel;
-    paramBlock = 0;
+    mParamBlock = 0;
     lastAddition = -1;
     dataSetList = NULL;
     dataSetTextEntry = NULL;
@@ -318,10 +318,10 @@ void DataSetLoaderUI::InitializeWidgets( void )
     {
         return;
     }
-    size_t numParamBlocks = m_veModel->GetNumberOfInformationPackets();
+    size_t nummParamBlocks = m_veModel->GetNumberOfInformationPackets();
     //Clear so that we can use this function in delete
     dataSetList->Clear();
-    for( size_t i = 0; i < numParamBlocks; ++i )
+    for( size_t i = 0; i < nummParamBlocks; ++i )
     {
         dataSetList->Append( wxString( m_veModel->GetInformationPacket( i )->GetName().c_str(), wxConvUTF8 ) );
     }
@@ -329,7 +329,7 @@ void DataSetLoaderUI::InitializeWidgets( void )
 ///////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::SetTextCtrls( void )
 {
-    if( paramBlock )
+    if( mParamBlock )
     {
         // clear the listbox before we enter the loop so that
         // we can add the appropriate entries if need be
@@ -339,10 +339,10 @@ void DataSetLoaderUI::SetTextCtrls( void )
         preComputDirTextEntry->SetValue( _( "Enter Dir Here-->" ) );
         itemTextCtrl21->SetValue( _( "Enter Dir Here-->" ) );
 
-        size_t numProperties = paramBlock->GetNumberOfProperties();
+        size_t numProperties = mParamBlock->GetNumberOfProperties();
         for( size_t i = 0; i < numProperties; ++i )
         {
-            ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( i );
+            ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( i );
             if( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
             {
                 //clear...then append
@@ -428,10 +428,10 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
         wxString relativeDataSetPath( datasetFilename.GetFullPath() );
         relativeDataSetPath.Replace( _( "\\" ), _( "/" ), true );
         dataSetTextEntry->SetValue( relativeDataSetPath );
-        ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_DATA_FILE" );
+        ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( "VTK_DATA_FILE" );
         if( !tempDVP )
         {
-            tempDVP = paramBlock->GetProperty( -1 );
+            tempDVP = mParamBlock->GetProperty( -1 );
         }
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) ) );
         tempDVP->SetData( "VTK_DATA_FILE", tempStr );
@@ -473,10 +473,10 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
             relativeSurfaceDirPath.Replace( _( "\\" ), _( "/" ), true );
             surfaceDataText->SetValue( relativeSurfaceDirPath );
-            ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
+            ves::open::xml::DataValuePair* tempDVP = mParamBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
             if( !tempDVP )
             {
-                tempDVP = paramBlock->GetProperty( -1 );
+                tempDVP = mParamBlock->GetProperty( -1 );
             }
             std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeSurfaceDirPath.c_str() ) ) );
             tempDVP->SetData( "VTK_SURFACE_DIR_PATH", tempStr );
@@ -491,10 +491,10 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             wxString relativePrecomputedDirPath( surfaceDir.GetPath() );
             relativePrecomputedDirPath.Replace( _( "\\" ), _( "/" ), true );
             preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
-            ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
+            ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" );
             if( !tempDVP )
             {
-                tempDVP = paramBlock->GetProperty( -1 );
+                tempDVP = mParamBlock->GetProperty( -1 );
             }
             std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativePrecomputedDirPath.c_str() ) ) );
             tempDVP->SetData( "VTK_PRECOMPUTED_DIR_PATH", tempStr );
@@ -528,9 +528,9 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
     wxBoxSizer* mainSizer = new wxBoxSizer( wxVERTICAL );
     //wxBoxSizer* notebookSizer = new wxBoxSizer(wxVERTICAL);
     //wxBoxSizer* bottomRow = new wxBoxSizer(wxHORIZONTAL);
-    ves::conductor::util::TransformUI* transformPanel = new ves::conductor::util::TransformUI( &transformDialog, _( "Transform Input" ), paramBlock->GetTransform() );
+    ves::conductor::util::TransformUI* transformPanel = new ves::conductor::util::TransformUI( &transformDialog, _( "Transform Input" ), mParamBlock->GetTransform() );
 
-    if( paramBlock )
+    if( mParamBlock )
     {
         mainSizer->Add( transformPanel, -1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
 
@@ -550,8 +550,8 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
     mainSizer->Fit( &transformDialog );
 
     //set parameterblock unique (GUID) id for transform GUI
-    transformPanel->SetParamBlockID( paramBlock->GetID() );
-    transformPanel->SetParamBlockTransform( paramBlock->GetTransform() );
+    transformPanel->SetParamBlockID( mParamBlock->GetID() );
+    transformPanel->SetParamBlockTransform( mParamBlock->GetTransform() );
 
     if( transformDialog.ShowModal() == wxID_OK )
     {
@@ -604,7 +604,7 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
     std::set< wxString >::iterator iter;
     for( iter = textureDirs.begin(); iter != textureDirs.end(); ++iter )
     {
-        ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( -1 );
+        ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( -1 );
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB(( *iter ).c_str() ) ) );
         tempDVP->SetData( "VTK_TEXTURE_DIR_PATH", tempStr );
         wxString* dirString = new wxString(( *iter ) );
@@ -625,16 +625,16 @@ void DataSetLoaderUI::OnListboxSelected( wxCommandEvent& WXUNUSED( event ) )
 {
     // When the list box is selected
 ////@begin wxEVT_COMMAND_LISTBOX_SELECTED event handler for ID_LISTBOX in DataSetLoaderUI.
-    size_t numProperties = paramBlock->GetNumberOfProperties();
+    size_t numProperties = mParamBlock->GetNumberOfProperties();
     for( size_t i = 0; i < numProperties; ++i )
     {
-        ves::open::xml::DataValuePair* tempDVP = paramBlock->GetProperty( i );
+        ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( i );
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( itemListBox24->GetStringSelection().c_str() ) ) );
         if (( tempDVP->GetDataName() == "VTK_TEXTURE_DIR_PATH" ) &&
                 ( tempDVP->GetDataString() == tempStr )
            )
         {
-            paramBlock->RemoveProperty( i );
+            mParamBlock->RemoveProperty( i );
             itemListBox24->Delete( itemListBox24->GetSelection() );
             return;
         }
@@ -657,7 +657,7 @@ void DataSetLoaderUI::OnInformationPacketChange( wxCommandEvent& WXUNUSED( event
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
         if( m_veModel->GetInformationPacket( i )->GetName() == tempStr )
         {
-            paramBlock = m_veModel->GetInformationPacket( i );
+            mParamBlock = m_veModel->GetInformationPacket( i );
             EnableUI( true );
             SetTextCtrls();
             break;
@@ -688,11 +688,11 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         dataSetList->Append( newDataSetName.GetValue() );
         dataSetList->SetStringSelection( newDataSetName.GetValue() );
 
-        paramBlock = m_veModel->GetInformationPacket( -1 );
+        mParamBlock = m_veModel->GetInformationPacket( -1 );
         std::string tempStr;
         tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
-        paramBlock->SetName( tempStr );
-        //paramBlock->SetBlockId( ::wxNewId() );
+        mParamBlock->SetName( tempStr );
+        //mParamBlock->SetBlockId( ::wxNewId() );
         EnableUI( true );
         SetTextCtrls();
     }
@@ -710,10 +710,10 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED( event ) )
     std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( selection.c_str() ) ) );
 
     std::string tempDataSetName =
-        paramBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString();
+        mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString();
 
     m_veModel->RemoveInformationPacket( tempStr );
-    paramBlock = 0;
+    mParamBlock = 0;
 
     ves::open::xml::DataValuePairSharedPtr dataValuePair =
         new ves::open::xml::DataValuePair();
@@ -733,13 +733,13 @@ void DataSetLoaderUI::OnInformationPacketChangeName( wxCommandEvent& WXUNUSED( e
     /// wxEVT_COMMAND_TEXT_UPDATED event handler for ID_LISTBOX
     // If any text is changed with the name of a information packet then
     // then the information packet should change as well in veModel.
-    if( paramBlock )
+    if( mParamBlock )
     {
         int selection = dataSetList->GetSelection();
         dataSetList->SetString( selection, dataSetList->GetValue() );
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( dataSetList->GetValue().c_str() ) ) );
-        paramBlock->SetName( tempStr );
-        //std::cout << "OnInformationPacketChangeName " << paramBlock->GetName() << std::endl;
+        mParamBlock->SetName( tempStr );
+        //std::cout << "OnInformationPacketChangeName " << mParamBlock->GetName() << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -762,12 +762,12 @@ void DataSetLoaderUI::EnableUI( bool flag )
 ////////////////////////////////////////////////////////////////////////////////
 std::string DataSetLoaderUI::GetActiveDataSetName()
 {
-    return paramBlock->GetName();
+    return mParamBlock->GetName();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::ParameterBlock* DataSetLoaderUI::GetParamBlock()
+ves::open::xml::ParameterBlockPtr DataSetLoaderUI::GetParamBlock()
 {
-    return paramBlock;
+    return mParamBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DataSetLoaderUI::SendCommandToXplorer(
@@ -778,16 +778,16 @@ void DataSetLoaderUI::SendCommandToXplorer(
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // Create the command and data value pairs
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
     veCommand->AddDataValuePair( tempObject );
     //Add the active dataset name to the command
     ves::open::xml::DataValuePairSharedPtr dataSetName =
         new ves::open::xml::DataValuePair();
-    if( paramBlock )
+    if( mParamBlock )
     {
         dataSetName->SetData( "VTK_DATASET_NAME",
-                              paramBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+                              mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
     }
     else
     {
@@ -796,8 +796,4 @@ void DataSetLoaderUI::SendCommandToXplorer(
     veCommand->AddDataValuePair( dataSetName );
     //Now send the command
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-
-    //Clean up memory
-    delete veCommand;
-    veCommand = 0;
 }

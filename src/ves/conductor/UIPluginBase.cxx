@@ -510,7 +510,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, long *>::iterator iteri;
         for( iteri = _int.begin(); iteri != _int.end(); iteri++ )
         {
-            Command* tempCommand = m_veModel->GetInput( iteri->first );
+            CommandPtr tempCommand = m_veModel->GetInput( iteri->first );
             if( !tempCommand )
             {
                 tempCommand = m_veModel->GetInput( -1 );
@@ -531,7 +531,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, double *>::iterator iterd;
         for( iterd = _double.begin(); iterd != _double.end(); iterd++ )
         {
-            Command* tempCommand = m_veModel->GetInput( iterd->first );
+            CommandPtr tempCommand = m_veModel->GetInput( iterd->first );
             if( !tempCommand )
             {
                 tempCommand = m_veModel->GetInput( -1 );
@@ -552,7 +552,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::string *>::iterator iters;
         for( iters = _string.begin(); iters != _string.end(); iters++ )
         {
-            Command* tempCommand = m_veModel->GetInput( iters->first );
+            CommandPtr tempCommand = m_veModel->GetInput( iters->first );
             if( !tempCommand )
             {
                 tempCommand = m_veModel->GetInput( -1 );
@@ -573,7 +573,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<long> * >::iterator itervi;
         for( itervi = _int1D.begin(); itervi != _int1D.end(); itervi++ )
         {
-            Command* tempCommand = m_veModel->GetInput( itervi->first );
+            CommandPtr tempCommand = m_veModel->GetInput( itervi->first );
             if( !tempCommand )
             {
                 tempCommand = m_veModel->GetInput( -1 );
@@ -594,7 +594,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<double> * >::iterator itervd;
         for( itervd = _double1D.begin(); itervd != _double1D.end(); itervd++ )
         {
-            Command* tempCommand = m_veModel->GetInput( itervd->first );
+            CommandPtr tempCommand = m_veModel->GetInput( itervd->first );
             if( !tempCommand )
             {
                 tempCommand = m_veModel->GetInput( -1 );
@@ -615,7 +615,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<std::string> * >::iterator itervs;
         for( itervs = _string1D.begin(); itervs != _string1D.end(); itervs++ )
         {
-            Command* tempCommand = m_veModel->GetInput( itervs->first );
+            CommandPtr tempCommand = m_veModel->GetInput( itervs->first );
             if( !tempCommand )
             {
                 tempCommand = m_veModel->GetInput( -1 );
@@ -634,7 +634,7 @@ ModelWeakPtr UIPluginBase::GetVEModel( void )
     // EPRI TAG
     if( financial_dlg != NULL )
     {
-        Command* tempCommand = m_veModel->GetInput( -1 );
+        CommandPtr tempCommand = m_veModel->GetInput( -1 );
         tempCommand->SetCommandName( "EPRI TAG" );
 
         ves::open::xml::DataValuePairWeakPtr dataDVP = new ves::open::xml::DataValuePair();
@@ -712,7 +712,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
     unsigned int numInputs = m_veModel->GetNumberOfInputs();
     for( unsigned int i = 0; i < numInputs; ++i )
     {
-        Command* commandData = m_veModel->GetInput( i );
+        CommandPtr commandData = m_veModel->GetInput( i );
         // Add if statement for input variables
         //if "EPRI TAG"
         //else
@@ -810,7 +810,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
     //Setup the ports so that the plugin can access them.
     for( size_t i = 0; i < m_veModel->GetNumberOfPorts(); ++i )
     {
-        ves::open::xml::model::Port* tempPort = m_veModel->GetPort( i );
+        ves::open::xml::model::PortPtr tempPort = m_veModel->GetPort( i );
         if( tempPort->GetDataFlowDirection() == std::string( "input" ) )
         {
             inputPort.push_back( tempPort );
@@ -1527,12 +1527,12 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
 
     for( size_t i = 0; i < nInformationPackets; i++ )
     {
-        ves::open::xml::ParameterBlock* paramBlock = activeXMLModel->GetInformationPacket( i );
+        ves::open::xml::ParameterBlockPtr paramBlock = activeXMLModel->GetInformationPacket( i );
         size_t numProperties = paramBlock->GetNumberOfProperties();
 
         for( size_t i = 0; i < numProperties; ++i )
         {
-            ves::open::xml::DataValuePair* dataValuePair = paramBlock->GetProperty( i );
+            ves::open::xml::DataValuePairPtr dataValuePair = paramBlock->GetProperty( i );
             if( dataValuePair->GetDataName() == "VTK_TEXTURE_DIR_PATH" )
             {
 
@@ -1744,17 +1744,16 @@ bool UIPluginBase::CheckID()
 bool UIPluginBase::SetActiveModel()
 {
     // Create the command and data value pairs
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "CHANGE_ACTIVE_MODEL" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
 
     //Clean up memory
-    delete veCommand;
     return connected;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1777,16 +1776,15 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
 //    networkFrame->RemoveEventHandler( this );
 
     ///Now send the erased module to xplorer to delete it as well
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
     dataValuePair->SetDataName( "Object ID" );
     //dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
     dataValuePair->SetDataValue( id );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
     veCommand->AddDataValuePair( dataValuePair );
     bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     //Clean up memory
-    delete veCommand;
     
     RemovePluginDialogsFromCanvas();
     
@@ -1917,7 +1915,7 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     //get location
-    ves::open::xml::model::Point* tempLoc = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr tempLoc = new ves::open::xml::model::Point();
     std::pair< unsigned int, unsigned int > newPoint;
     newPoint.first =
         static_cast< unsigned int >( actionPoint.x / userScale->first - pos.x );
@@ -1925,7 +1923,7 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
         static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
     tempLoc->SetPoint( newPoint );
     //Ask what type of port
-    ves::open::xml::model::Port* port = m_veModel->GetPort( -1 );
+    ves::open::xml::model::PortPtr port = m_veModel->GetPort( -1 );
     port->SetPortLocation( tempLoc );
     //either input or output
     port->SetModelName( ConvertUnicode( name.c_str() ) );
@@ -1956,10 +1954,10 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
         static_cast< unsigned int >( actionPoint.y / userScale->second - pos.y );
     //find port in model
     int acutallDestPortNumber = -1;
-    ves::open::xml::model::Port* tempPort = 0;
+    ves::open::xml::model::PortPtr tempPort = 0;
     for( size_t i = 0; i < m_veModel->GetNumberOfPorts(); ++i )
     {
-        ves::open::xml::model::Point* tempLoc =
+        ves::open::xml::model::PointPtr tempLoc =
             m_veModel->GetPort( i )->GetPortLocation();
         wxPoint tempPoint( tempLoc->GetPoint().first,
                            tempLoc->GetPoint().second );
@@ -1968,7 +1966,7 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
             acutallDestPortNumber = m_veModel->GetPort( i )->GetPortNumber();
             tempPort = m_veModel->GetPort( i );
             //delete the port from the model
-            std::vector< Port* >::iterator iter;
+            std::vector< PortPtr >::iterator iter;
             iter = std::find( inputPort.begin(),
                               inputPort.end(), m_veModel->GetPort( i ) );
             if( iter != inputPort.end() )
@@ -1991,7 +1989,7 @@ void UIPluginBase::DeletePort( wxCommandEvent& event )
     //delete associated links
     if( tempPort )
     {
-        event.SetClientData( tempPort );
+        event.SetClientData( &(*tempPort) );
         ::wxPostEvent( m_network, event );
     }
     m_canvas->Refresh( true );

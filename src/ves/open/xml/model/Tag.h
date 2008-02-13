@@ -87,7 +87,7 @@ public:
     PointPtr GetPoint( size_t i );
 
     ///Get the tag text
-    cosnt std::string& GetText( void );
+    const std::string& GetText( void );
 
     ///Add a new point to the tag
     ///\param newPoint The new point to be added

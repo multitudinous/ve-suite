@@ -33,7 +33,7 @@
 #ifndef _VES_OPEN_XML_MODEL_PORT_H_
 #define _VES_OPEN_XML_MODEL_PORT_H_
 
-#include <ves/open/xml/PortPtr.h>
+#include <ves/open/xml/model/PortPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 

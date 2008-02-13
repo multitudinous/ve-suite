@@ -309,8 +309,8 @@ protected:
     ///Port data info
     //int numberOfInputPorts;
     //int numberOfOutputPorts;
-    std::vector< ves::open::xml::model::Port* > inputPort;
-    std::vector< ves::open::xml::model::Port* > outputPort;
+    std::vector< ves::open::xml::model::PortPtr > inputPort;
+    std::vector< ves::open::xml::model::PortPtr > outputPort;
 
     //data storage types
     std::vector< wxString > v_desc;

@@ -42,6 +42,7 @@ DataSetLoaderUI API
 
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/ParameterBlockPtr.h>
 
 #include <wx/string.h>
 #include <wx/gdicmn.h>
@@ -61,17 +62,6 @@ class wxTextCtrl;
 class wxButton;
 class wxListBox;
 class wxStaticBox;
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class ParameterBlock;
-}
-}
-}
 
 ////@end forward declarations
 
@@ -192,7 +182,7 @@ public:
     void OnInformationPacketChangeName( wxCommandEvent& event );
 
     std::string GetActiveDataSetName();
-    ves::open::xml::ParameterBlock* GetParamBlock();
+    ves::open::xml::ParameterBlockPtr GetParamBlock();
 
     ///Disable/enable the buttons
     ///\param flag Bool to control the ui.
@@ -238,7 +228,7 @@ private:
     std::set< wxString > textureDirs;
 
     ves::open::xml::model::ModelPtr m_veModel;
-    ves::open::xml::ParameterBlock* paramBlock;
+    ves::open::xml::ParameterBlockPtr mParamBlock;
 
     int lastAddition;
     DECLARE_EVENT_TABLE()
