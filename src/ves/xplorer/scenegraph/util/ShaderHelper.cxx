@@ -250,19 +250,19 @@ void ShaderHelper::_createGLSLShader( ShaderPtr shader )
 #endif
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
+void ShaderHelper::_extractTextureFromShader( TextureImage textureImage )
 {
 #ifdef _OSG
     //create the image
-    unsigned int tUnit = textureImage->GetTextureUnit();
-    unsigned int dimension = textureImage->GetDimension();
+    unsigned int tUnit = textureImage.GetTextureUnit();
+    unsigned int dimension = textureImage.GetDimension();
 
     //std::cout<<"Reading image file: "<<std::endl;
-    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile( textureImage->GetImageFile() );
+    osg::ref_ptr<osg::Image> textureImageData = osgDB::readImageFile( textureImage.GetImageFile() );
     //std::cout<<"Read image file: "<<std::endl;
     osg::ref_ptr<osg::Texture> genericTexture;
     std::string textureType( "" );
-    textureImage->GetType( textureType );
+    textureImage.GetType( textureType );
 
     //std::cout<<"Extracting: "<<textureType<<std::endl;
     if( textureType == "1D" )
@@ -292,12 +292,12 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
     {
         //std::cout<<"Cube map"<<std::endl;
         osg::ref_ptr<osg::TextureCubeMap> textureCubeMap = new osg::TextureCubeMap();
-        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile( textureImage->GetImageFile( "Positive X" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile( textureImage->GetImageFile( "Negative X" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Y, osgDB::readImageFile( textureImage->GetImageFile( "Positive Y" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Y, osgDB::readImageFile( textureImage->GetImageFile( "Negative Y" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Z, osgDB::readImageFile( textureImage->GetImageFile( "Positive Z" ) ) );
-        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Z, osgDB::readImageFile( textureImage->GetImageFile( "Negative Z" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_X, osgDB::readImageFile( textureImage.GetImageFile( "Positive X" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_X, osgDB::readImageFile( textureImage.GetImageFile( "Negative X" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Y, osgDB::readImageFile( textureImage.GetImageFile( "Positive Y" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Y, osgDB::readImageFile( textureImage.GetImageFile( "Negative Y" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Z, osgDB::readImageFile( textureImage.GetImageFile( "Positive Z" ) ) );
+        textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Z, osgDB::readImageFile( textureImage.GetImageFile( "Negative Z" ) ) );
 
         //this should be adjustable parameter in the TextureImage interface
         osg::ref_ptr<osg::TexGen> textureCoordGeneration = new osg::TexGen;
@@ -318,10 +318,10 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
     {
         //std::cout<<"Setting up texture parameters for shader!"<<std::endl;
         std::string minFilter;
-        textureImage->GetFilterMode( "Minification", minFilter );
+        textureImage.GetFilterMode( "Minification", minFilter );
 
         std::string magFilter;
-        textureImage->GetFilterMode( "Magnification", magFilter );
+        textureImage.GetFilterMode( "Magnification", magFilter );
 
         osg::Texture::FilterMode magMode = osg::Texture::LINEAR;
         osg::Texture::FilterMode minMode = osg::Texture::LINEAR;
@@ -346,18 +346,18 @@ void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
 
         osg::Texture::WrapMode swrapMode = osg::Texture::CLAMP;
 
-        if( textureImage->GetWrapMode( "Wrap S", sWrap ) )
+        if( textureImage.GetWrapMode( "Wrap S", sWrap ) )
             _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_S, sWrap );
 
         if( dimension != 1 )
         {
-            if( textureImage->GetWrapMode( "Wrap T", tWrap ) )
+            if( textureImage.GetWrapMode( "Wrap T", tWrap ) )
                 _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_T, tWrap );
         }
 
         if( dimension == 3 )
         {
-            if( textureImage->GetWrapMode( "Wrap R", rWrap ) )
+            if( textureImage.GetWrapMode( "Wrap R", rWrap ) )
                 _setWrapOnTexture( genericTexture.get(), osg::Texture::WRAP_R, rWrap );
         }
 
@@ -526,18 +526,18 @@ void ShaderHelper::UpdateUniform( UniformPtr uniformData )
 void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
 {
     size_t nUniforms = shader->GetNumberOfUniforms();
-    Uniform* uniformData = 0;
+    Uniform uniformData;
     std::string uniformName( "" );
     std::string uniformType( "" );
     unsigned int uniformSize = 0;
     std::vector<float> uniformValues;
     for( size_t i = 0; i < nUniforms; i++ )
     {
-        uniformData = &shader->GetUniform( i );
-        uniformName = uniformData->GetName();
-        uniformType = uniformData->GetType();
-        uniformSize = uniformData->GetSize();
-        uniformValues = uniformData->GetValues();
+        uniformData = shader->GetUniform( i );
+        uniformName = uniformData.GetName();
+        uniformType = uniformData.GetType();
+        uniformSize = uniformData.GetSize();
+        uniformValues = uniformData.GetValues();
 #ifdef _OSG
         if( uniformType == "Float" )
         {
@@ -628,9 +628,9 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
         else if( uniformType == "Sampler" )
         {
             std::cout << "Extracting Sampler!!" << std::endl;
-            std::cout << "Unit: " << uniformData->GetTextureUnit() << std::endl;
+            std::cout << "Unit: " << uniformData.GetTextureUnit() << std::endl;
 
-            _extractTextureFromShader( shader->GetTextureImage( uniformData->GetTextureUnit() ) );
+            _extractTextureFromShader( shader->GetTextureImage( uniformData.GetTextureUnit() ) );
             std::cout << "---Done---" << std::endl;
         }
 

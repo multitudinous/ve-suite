@@ -119,7 +119,7 @@ protected:
 
     ///Extract the texture images from the shader information.
     ///\param textureImage The texture image data.
-    void _extractTextureFromShader( ves::open::xml::shader::TextureImagePtr textureImage );
+    void _extractTextureFromShader( ves::open::xml::shader::TextureImage textureImage );
 
 #ifdef _OSG
     ///Extract the wrap modes for the texture images
