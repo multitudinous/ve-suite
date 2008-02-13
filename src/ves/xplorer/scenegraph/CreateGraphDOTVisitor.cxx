@@ -187,6 +187,7 @@ std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
     std::string binName = "None";
     int binMode = -1;
     int binNum = -1;
+    int renderingHint = -1;
     
     osg::ref_ptr< osg::StateSet > tempState = node->getStateSet();
     if( tempState.valid() )
@@ -194,10 +195,12 @@ std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
         binNum = tempState->getBinNumber();
         binName = tempState->getBinName();
         binMode = tempState->getRenderBinMode();
+        renderingHint = tempState->getRenderingHint();
     }
 
-    textureData << " StateSet => Bin Name = " << binName << ", Bin Mode = " 
-        << binMode << ", Bin Number = " << binNum;
+    textureData << " StateSet => Bin Name = " << binName 
+        << ", Bin Mode = " << binMode << ", Bin Number = " << binNum 
+        << ", Rendering Hint = " << renderingHint;
 
     return textureData.str();
 }
