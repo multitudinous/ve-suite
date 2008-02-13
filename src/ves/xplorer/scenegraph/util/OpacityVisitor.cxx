@@ -47,12 +47,11 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool state )
-        :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN )
+OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool state, float alpha )
+        :NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+         transparent( state ),
+         m_alpha( alpha )
 {
-    transparent = state;
-
     osg_node->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -60,7 +59,6 @@ OpacityVisitor::~OpacityVisitor()
 {
     ;
 }
-
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Geode& node )
 {
@@ -69,7 +67,8 @@ void OpacityVisitor::apply( osg::Geode& node )
 
     if( geode_material.valid() )
     {
-        if( transparent == true )
+        geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
+        /*if( transparent == true )
         {
             geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
         }
@@ -78,6 +77,7 @@ void OpacityVisitor::apply( osg::Geode& node )
         {
             geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
         }
+        */
 
         geode_stateset->setAttribute( geode_material.get(), osg::StateAttribute::ON );
     }
@@ -93,32 +93,14 @@ void OpacityVisitor::apply( osg::Geode& node )
         {
             for( size_t j = 0; j < color_array->size(); j++ )
             {
-                if( transparent == true )
-                {
-                    color_array->at( j ).a() = 0.3f;
-                }
-
-                else
-                {
-                    color_array->at( j ).a() = 1.0f;
-                }
-
+                color_array->at( j ).a() = m_alpha;
                 node.getDrawable( i )->asGeometry()->setColorArray( color_array.get() );
             }
         }
 
         if( drawable_material.valid() )
         {
-            if( transparent == true )
-            {
-                drawable_material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
-            }
-
-            else
-            {
-                drawable_material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
-            }
-
+            drawable_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
             drawable_stateset->setAttribute( drawable_material.get(), osg::StateAttribute::ON );
         }
 
@@ -164,16 +146,7 @@ void OpacityVisitor::apply( osg::Group& node )
 
     if( material.valid() )
     {
-        if( transparent == true )
-        {
-            material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
-        }
-
-        else
-        {
-            material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
-        }
-
+        material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
         stateset->setAttribute( material.get(), osg::StateAttribute::ON );
     }
 

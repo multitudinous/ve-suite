@@ -326,7 +326,7 @@ void ModelCADHandler::MakeCADRootTransparent()
     {
         m_assemblyList[m_rootCADNodeID]->setStateSet( attribute.get() );
         ves::xplorer::scenegraph::util::OpacityVisitor
-        opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true );
+        opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true, 0.3f );
     }
 
     catch ( ... )
@@ -352,7 +352,7 @@ void ModelCADHandler::MakeCADRootOpaque()
         {
             m_assemblyList[ m_rootCADNodeID ]->getStateSet()->clear();
             ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false );
+            opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false, 1.0f );
         }
     }
     catch( ... )

@@ -54,7 +54,7 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS OpacityVisitor : public osg::NodeVisitor
 {
 public:
-    OpacityVisitor( osg::Node* osg_node, bool state );
+    OpacityVisitor( osg::Node* osg_node, bool state, float alpha=1.0 );
     virtual ~OpacityVisitor();
 
     virtual void apply( osg::Geode& node );
@@ -62,6 +62,7 @@ public:
 
 private:
     bool transparent;
+    float m_alpha;
 
 };
 }
