@@ -16,6 +16,7 @@
 #include <cmath>
 
 #include "AspenPlusLUT.h"
+#include "AspenIconData.h"
 
 using namespace Gdiplus;
 
@@ -155,6 +156,9 @@ void BKPParser::ParseFile(const char * bkpFile)
 	std::ofstream outFile("log.txt");
 	std::string discard;
 	
+	std::map< std::string, std::pair< unsigned int, unsigned int > > imageData;
+	imageData = GetAspenIconData();
+
 	//make sure it is a valid file
 	if(!inFile.is_open())
 	{
@@ -317,8 +321,8 @@ void BKPParser::ParseFile(const char * bkpFile)
 	// read data as a block:
 	inFile.read( buffer, (afterNetwork - beforeNetwork) );
 	std::ofstream tester4 ("tester4.txt");
-	tester4<<buffer<<std::endl;
-	tester4.close();
+	//tester4<<buffer<<std::endl;
+	//tester4.close();
 	std::string networkData( buffer );
 	delete [] buffer;
 
@@ -508,25 +512,28 @@ void BKPParser::ParseFile(const char * bkpFile)
             //invert Y axis - flowsheets are inverted
             float scaledYCoords = -yCoords.back() * 100;
             
-            CString iconPath = ("2DIconsTemp/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
-            LPWSTR lpszW = new WCHAR[255];
-            LPTSTR lpStr = iconPath.GetBuffer( iconPath.GetLength() );
-            int nLen = MultiByteToWideChar(CP_ACP, 0,lpStr, -1, NULL, NULL);
-            MultiByteToWideChar(CP_ACP, 0, lpStr, -1, lpszW, nLen);
+            //CString iconPath = ("2DIconsTemp/"+BlockInfoList[sheetIter->first][tempBlockId].type+"/"+BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg").c_str();
+            //LPWSTR lpszW = new WCHAR[255];
+            //LPTSTR lpStr = iconPath.GetBuffer( iconPath.GetLength() );
+            //int nLen = MultiByteToWideChar(CP_ACP, 0,lpStr, -1, NULL, NULL);
+            //MultiByteToWideChar(CP_ACP, 0, lpStr, -1, lpszW, nLen);
             
-            GdiplusStartupInput gdiplusStartupInput;
-            ULONG_PTR gdiplusToken;
-            GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
-            Image * image = new Image(lpszW);
-			Status fileStat = image->GetLastStatus();
-			if( fileStat != 0 )
-            {
-                std::cout <<" Warning icon not found: "<< fileStat << std::endl;
-            }
-            float width = image->GetWidth();
-            float height = image->GetHeight();
-            GdiplusShutdown(gdiplusToken);
-
+            //GdiplusStartupInput gdiplusStartupInput;
+            //ULONG_PTR gdiplusToken;
+            //GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, NULL);
+            //Image * image = new Image(lpszW);
+			//Status fileStat = image->GetLastStatus();
+			//if( fileStat != 0 )
+            //{
+            //    std::cout <<" Warning icon not found: "<< fileStat << std::endl;
+            //}
+            //float width = image->GetWidth();
+            //float height = image->GetHeight();
+            //GdiplusShutdown(gdiplusToken);
+			
+			float width = imageData[BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".JPG"].first;
+            float height = imageData[BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".JPG"].second;
+			tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"."+BlockInfoList[sheetIter->first][tempBlockId].icon+".JPG"<<": "<<width<<" "<<height<<std::endl;
             //iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords+200, scaledYCoords+200 );
             //iconLocations[ tempBlockId ] = std::pair< float, float >( scaledXCoords + 500 - (0.25*width), scaledYCoords + 500 - (0.25*height) );
             iconLocations[sheetIter->first][ tempBlockId ] = std::pair< float, float >( scaledXCoords - (width*widthOffset*BlockInfoList[sheetIter->first][tempBlockId].scale), scaledYCoords - (height*heightOffset*BlockInfoList[sheetIter->first][tempBlockId].scale) );
@@ -743,6 +750,7 @@ void BKPParser::ParseFile(const char * bkpFile)
             count = 0;
         }
     }
+	tester4.close();
 	//lutFile.close();
 	std::cout<<"Parsing Completed!"<<std::endl;
 	inFile.close();
