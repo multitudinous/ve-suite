@@ -41,7 +41,7 @@
  * Create XMLObject.
  */
 
-#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/open/xml/CreationEventHandler.h>
 namespace ves
 {
@@ -68,7 +68,7 @@ public:
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy
     virtual XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType,
-                                               XMLObjectPtr objectToCopy );
+                                               const XMLObjectPtr& objectToCopy );
 protected:
 };
 }

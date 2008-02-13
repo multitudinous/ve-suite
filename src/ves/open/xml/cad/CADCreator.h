@@ -39,18 +39,7 @@
  * Create CAD Objects.
  */
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-
-class XMLObject;
-}
-}
-}
-
+#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/open/xml/CreationEventHandler.h>
 
 namespace ves
@@ -79,7 +68,7 @@ public:
     ///Create a copy of a new CAD object
     ///\param objectType The type of object to create.
     ///\param objectToCopy The object to copy.
-    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType, ves::open::xml::XMLObjectPtr objectToCopy );
+    virtual ves::open::xml::XMLObjectPtr CreateNewXMLObjectCopy( const std::string& objectType, const ves::open::xml::XMLObjectPtr& objectToCopy );
 protected:
 };
 }
