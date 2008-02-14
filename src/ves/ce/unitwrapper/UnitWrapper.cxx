@@ -149,8 +149,8 @@ ACE_THROW_SPEC((
     data->SetDataValue( return_state );
     returnState.AddDataValuePair( data );
 
-    std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-    nodes.push_back( std::pair < ves::open::xml::XMLObject*,
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
                      std::string > ( &returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;

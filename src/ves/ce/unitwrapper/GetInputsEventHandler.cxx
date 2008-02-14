@@ -92,7 +92,7 @@ std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
             std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
             for( size_t j = 0; j < baseModel->GetNumberOfInputs(); ++j )
             {
-                ves::open::xml::Command* tempInput = baseModel->GetInput( j );
+                ves::open::xml::CommandPtr tempInput = baseModel->GetInput( j );
                 nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( tempInput, "vecommand" ) );
             }
 
