@@ -143,7 +143,7 @@ public:
     size_t GetNumberOfResults( void );
 
     ///Set the result for this models
-    void SetResult( ves::open::xml::CommandPtr input );
+    void SetResult( ves::open::xml::CommandPtr& input );
 
     ///Get input data
     ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
@@ -161,7 +161,7 @@ public:
     ves::open::xml::CommandPtr GetInput();
 
     ///Set the input for this models
-    void SetInput( ves::open::xml::CommandPtr input );
+    void SetInput( ves::open::xml::CommandPtr& input );
 
     ///Get number of input data
     ///\return The total number of inputs
