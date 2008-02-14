@@ -121,7 +121,7 @@ void Link::_updateVEElement( const std::string& input )
     {
         SetAttribute( "type", mType );
     }
-    SetAttribute( "id", uuid );
+    SetAttribute( "id", mUuid );
     SetSubElement( "fromModule", mModuleInfo.first );
     SetSubElement( "toModule", mModuleInfo.second );
     SetSubElement( "fromPort", mPortInfo.first );
@@ -196,7 +196,7 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             ves::open::xml::XMLObject::GetAttribute( currentElement, "id", tempUuid );
             if( !tempUuid.empty() )
             {
-                uuid = tempUuid;
+                mUuid = tempUuid;
             }
         }
         DOMElement* dataValueStringName = 0;

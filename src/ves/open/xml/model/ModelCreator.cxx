@@ -38,122 +38,121 @@
 #include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/model/Port.h>
-#include <ves/open/xml/model/TagPtr.h>
 #include <ves/open/xml/model/Tag.h>
 
 using namespace ves::open::xml::model;
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr ModelCreator::CreateNewXMLObject( std::string objectType )
+ves::open::xml::XMLObjectPtr ModelCreator::CreateNewXMLObject( const std::string& objectType )
 {
     if( objectType == "Link" )
     {
-        return new Link();
+        return LinkPtr( new Link() );
     }
     else if( objectType == "veModel" )
     {
-        return new Model();
+        return ModelPtr( new Model() );
     }
     else if( objectType == "veNetwork" )
     {
-        return new Network();
+        return NetworkPtr( new Network() );
     }
     else if( objectType == "Model" )
     {
-        return new Model();
+        return ModelPtr( new Model() );
     }
     else if( objectType == "Network" )
     {
-        return new Network();
+        return NetworkPtr( new Network() );
     }
     else if( objectType == "Point" )
     {
-        return new Point();
+        return PointPtr( new Point() );
     }
     else if( objectType == "Port" )
     {
-        return new Port();
+        return PortPtr( new Port() );
     }
     else if( objectType == "Tag" )
     {
-        return new Tag();
+        return TagPtr( new Tag() );
     }
     else if( objectType == "System" )
     {
-        return new System();
+        return SystemPtr( new System() );
     }
     else if( objectType == "veSystem" )
     {
-        return new System();
+        return SystemPtr( new System() );
     }
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr
-ModelCreator::CreateNewXMLObjectSmart( std::string objectType )
+ModelCreator::CreateNewXMLObjectSmart( const std::string& objectType )
 {
     if( objectType == "Tag" )
     {
-        return new Tag();
+        return TagPtr( new Tag() );
     }
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr
-ModelCreator::CreateNewXMLObjectCopy( std::string objectType,
-                                      ves::open::xml::XMLObjectPtr objectToCopy )
+ModelCreator::CreateNewXMLObjectCopy( const std::string& objectType,
+                                      const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
     if( objectType == "Link" )
     {
-        return new Link( *dynamic_cast<Link*>( objectToCopy ) );
+        return LinkPtr( objectToCopy );
     }
     else if( objectType == "Model" )
     {
-        return new Model( *dynamic_cast<Model*>( objectToCopy ) );
+        return ModelPtr( objectToCopy );
     }
     else if( objectType == "Network" )
     {
-        return new Network( *dynamic_cast<Network*>( objectToCopy ) );
+        return NetworkPtr( objectToCopy );
     }
     else if( objectType == "veModel" )
     {
-        return new Model( *dynamic_cast<Model*>( objectToCopy ) );
+        return ModelPtr( objectToCopy );
     }
     else if( objectType == "veNetwork" )
     {
-        return new Network( *dynamic_cast<Network*>( objectToCopy ) );
+        return NetworkPtr( objectToCopy );
     }
     else if( objectType == "Point" )
     {
-        return new Point( *dynamic_cast<Point*>( objectToCopy ) );
+        return PointPtr( objectToCopy );
     }
     else if( objectType == "Port" )
     {
-        return new Port( *dynamic_cast<Port*>( objectToCopy ) );
+        return PortPtr( objectToCopy );
     }
     else if( objectType == "Tag" )
     {
-        return new Tag( *dynamic_cast<Tag*>( objectToCopy ) );
+        return TagPtr( objectToCopy );
     }
     else if( objectType == "System" )
     {
-        return new System( *dynamic_cast<System*>( objectToCopy ) );
+        return SystemPtr( objectToCopy );
     }
     else if( objectType == "veSystem" )
     {
-        return new System( *dynamic_cast<System*>( objectToCopy ) );
+        return SystemPtr( objectToCopy );
     }
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr
-ModelCreator::CreateNewXMLObjectCopySmart( std::string objectType,
-                                           ves::open::xml::XMLObjectPtr objectToCopy )
+ModelCreator::CreateNewXMLObjectCopySmart( const std::string& objectType,
+                                           const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
     if( objectType == "Tag" )
     {
         ///This is a hack and will be corrected
         //with the proper use of a factory
-        return new Tag( *dynamic_cast< Tag* >( &*objectToCopy ) );
+        return TagPtr( objectToCopy );
     }
     return 0;
 }

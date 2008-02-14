@@ -47,6 +47,7 @@
 #include <typeinfo>
 #include <sstream>
 #include <iomanip>
+#include <algorithm>
 
 
 namespace ves
@@ -144,6 +145,30 @@ public:
     ///\param subElementTagName The subelement tagname to extract from baseElement.
     ///\param itemIndex The index of the subElement to extract from the complex element.
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* GetSubElement( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, const std::string& subElementTagName, unsigned int itemIndex );
+
+    class VE_XML_EXPORTS ElementSetter
+    {
+    public:
+       ElementSetter( const std::string& value, XMLObject* object ) : mValue(value), mObject(object)
+       {;}
+
+       template<typename U>
+       void operator() ( U& object )
+       {
+          mObject->SetSubElement( mValue, object );
+       }
+    private:
+       const std::string mValue;
+       XMLObject* mObject;
+    };
+
+    template<class T>
+    inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElements( const std::string& subElementTagName, std::vector<T>& vals )
+    {
+
+        std::for_each( vals.begin(), vals.end(),
+                       ElementSetter( subElementTagName, this ) );
+    }
 
     ///utility functions for creating subElements for mVeElement.
     ///\param subElementTagName The subelement tagname to extract from baseElement.
