@@ -230,14 +230,14 @@ protected:
 
     ///Clear all the children from the element.
     void _clearAllChildrenFromElement();
-    bool _needsUpdate;///<Determines whether the internal data has changed.
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* _veElement;///<The XML element.
-    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* _rootDocument;///<The owning document for this element.
-    std::string _objectType;///<The type of object;
-    std::string _objectNamespace;///<The namespace for this object;
-    std::string uuid;///<Data holder for id
+    bool mNeedsUpdate;///<Determines whether the internal data has changed.
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* mVeElement;///<The XML element.
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mRootDocument;///<The owning document for this element.
+    std::string mObjectType;///<The type of object;
+    std::string mObjectNamespace;///<The namespace for this object;
+    std::string mUuid;///<Data holder for id
 private:
-    unsigned int _nChildren;///<The number of childern for this element.
+    //unsigned int mNChildren;///<The number of childern for this element.
 };
 ///Special case for bools
 template<>

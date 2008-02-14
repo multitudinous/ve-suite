@@ -83,7 +83,7 @@ public:
     void SetStateInfo( StateInfoWeakPtr userState );
 
     ///Return the user id
-    std::string GetUserId();
+    const std::string& GetUserId();
     ///Return the VEControlStatus of this user
     VEControlStatus GetControlStatus();
     ///Return the StateInfo for this user.
@@ -97,9 +97,9 @@ protected:
     ///Internally update this element
     ///\param tagName The tagName for this element.
     virtual void _updateVEElement( const std::string& tagName );
-    std::string _userId;///<The users unique identification
-    StateInfoPtr m_stateInfo;///<The StateInfo for this user.
-    VEControlStatus _controlStatus;///<The VEControlStatus of this user.
+    std::string mUserId;///<The users unique identification
+    StateInfoPtr mStateInfo;///<The StateInfo for this user.
+    VEControlStatus mControlStatus;///<The VEControlStatus of this user.
 };
 
 }

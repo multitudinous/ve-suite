@@ -41,7 +41,7 @@ using namespace ves::open::xml;
 User::User()
         : XMLObject()
 {
-    _userId = std::string( "User_0" );
+    mUserId = std::string( "User_0" );
     _controlStatus = std::string( "MASTER" );
     SetObjectType( "User" );
 }
@@ -52,7 +52,7 @@ User::~User()
 User::User( const User& input )
         : XMLObject( input )
 {
-    _userId = input._userId;
+    mUserId = input.mUserId;
     _controlStatus = input._controlStatus;
 
     if( input.m_stateInfo )
@@ -66,7 +66,7 @@ User& User::operator=( const User& input )
     if( this != &input )
     {
         XMLObject::operator =( input );
-        _userId = input._userId;
+        mUserId = input.mUserId;
         _controlStatus = input._controlStatus;
 
         if( input.m_stateInfo )
@@ -79,7 +79,7 @@ User& User::operator=( const User& input )
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetUserId( std::string id )
 {
-    _userId = id;
+    mUserId = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetControlStatus( VEControlStatus cs )
@@ -92,9 +92,9 @@ void User::SetStateInfo( StateInfoWeakPtr userState )
     m_stateInfo = userState;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string User::GetUserId()
+const std::string& User::GetUserId()
 {
-    return _userId;
+    return mUserId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 User::VEControlStatus User::GetControlStatus()
@@ -121,7 +121,7 @@ void User::SetObjectFromXMLData( DOMNode* xmlInput )
     }
 
     GetAttribute( currentElement, "id", uuid );
-    GetAttribute( currentElement, "userID", _userId );
+    GetAttribute( currentElement, "userID", mUserId );
     GetAttribute( currentElement, "veControlStatus", _controlStatus );
 
     DOMElement* stateInfoElement = 0;
@@ -135,7 +135,7 @@ void User::SetObjectFromXMLData( DOMNode* xmlInput )
 ////////////////////////////////////////////////////////////////////////////////
 void User::_updateVEElement( const std::string& input )
 {
-    SetAttribute( "userID", _userId );
+    SetAttribute( "userID", mUserId );
     SetAttribute( "id", uuid );
     SetAttribute( "veControlStatus", _controlStatus );
     if( m_stateInfo )
