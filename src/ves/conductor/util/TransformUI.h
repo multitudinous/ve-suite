@@ -49,22 +49,9 @@ TransformUI API
 #include <ves/VEConfig.h>
 class wxCheckBox;
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Transform;
-class DataValuePair;
-class ParameterBlock;
-namespace model
-{
-class Model;
-}
-}
-}
-}
+#include <ves/open/xml/TransformPtr.h>
+#include <ves/open/xml/ParameterBlockPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 namespace ves
 {
@@ -78,7 +65,7 @@ class VE_CONDUCTOR_UTILS_EXPORTS TransformUI : public wxPanel
 {
 public:
     ///Constructor
-    TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::Transform* transform );
+    TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::TransformPtr transform );
     ///Destructor
     virtual ~TransformUI();
 
@@ -102,10 +89,10 @@ public:
     ///Get the current parameter block id
     void SetParamBlockID( std::string id );
     ///Get the current parameter block transform
-    void SetParamBlockTransform( ves::open::xml::Transform* transform );
+    void SetParamBlockTransform( ves::open::xml::TransformPtr transform );
 
 private:
-    ves::open::xml::Transform* transform;///<The Trasnform for the ui.
+    ves::open::xml::TransformPtr transform;///<The Trasnform for the ui.
 
     ///Transform panel controls
     wxSpinCtrlDbl* _xTransformCtrl;///<X translation control
@@ -123,10 +110,10 @@ private:
     wxCheckBox* m_uniformScale;///<Uniform scaling checkbox
 
     std::string _commandName;///<The command name.
-    std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+    std::vector<ves::open::xml::DataValuePairPtr> _instructions;///<The DataValuePair s for the current command.
 
     std::string _id;///<parameter block id
-    ves::open::xml::Transform* _transform;///<parameter block transform
+    ves::open::xml::TransformPtr _transform;///<parameter block transform
 
     ///Send the Command back to VE-Xplorer.
     void _sendCommandsToXplorer();
@@ -136,7 +123,7 @@ private:
     double tempZ;///<The z scale value.
 
     DataSetLoaderUI* dataset;
-    ves::open::xml::ParameterBlock* paramBlock;
+    ves::open::xml::ParameterBlockPtr paramBlock;
 
     DECLARE_EVENT_TABLE()
 };

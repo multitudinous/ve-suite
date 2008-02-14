@@ -55,6 +55,7 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/Transform.h>
 
 #include <iostream>
 
@@ -473,7 +474,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
             relativeSurfaceDirPath.Replace( _( "\\" ), _( "/" ), true );
             surfaceDataText->SetValue( relativeSurfaceDirPath );
-            ves::open::xml::DataValuePair* tempDVP = mParamBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
+            ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
             if( !tempDVP )
             {
                 tempDVP = mParamBlock->GetProperty( -1 );

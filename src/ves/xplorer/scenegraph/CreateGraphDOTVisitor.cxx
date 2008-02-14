@@ -131,19 +131,19 @@ std::string CreateGraphDOTVisitor::GetMaterialDataString( osg::Node* node )
         osg::Vec4 emission =  material->getEmission( osg::Material::FRONT );
         float shininess =  material->getShininess( osg::Material::FRONT );
         materialData << "Material Properties" << "\\n"
-        << "Ambient = " << ambient[ 0 ] << ", "
-        << ambient[ 1 ] << ", "
-        << ambient[ 2 ] << ", "
-        << ambient[ 3 ] << "\\n"
-        << "Diffuse = " << diffuse[ 0 ] << ", "
-        << diffuse[ 1 ] << ", "
-        << diffuse[ 2 ] << ", "
-        << diffuse[ 3 ] << "\\n"
-        << "Specular = " << specular[ 0 ] << ", "
-        << specular[ 1 ] << ", "
-        << specular[ 2 ] << ", "
-        << specular[ 3 ] << "\\n"
-        << "Shininess = " << shininess;
+            << "Ambient = " << ambient[ 0 ] << ", "
+            << ambient[ 1 ] << ", "
+            << ambient[ 2 ] << ", "
+            << ambient[ 3 ] << "\\n"
+            << "Diffuse = " << diffuse[ 0 ] << ", "
+            << diffuse[ 1 ] << ", "
+            << diffuse[ 2 ] << ", "
+            << diffuse[ 3 ] << "\\n"
+            << "Specular = " << specular[ 0 ] << ", "
+            << specular[ 1 ] << ", "
+            << specular[ 2 ] << ", "
+            << specular[ 3 ] << "\\n"
+            << "Shininess = " << shininess;
     }
     else
     {
@@ -168,9 +168,9 @@ std::string CreateGraphDOTVisitor::GetTextureDataString( osg::Node* node )
         int h = texture->getTextureHeight();
         int d = texture->getTextureDepth();
         textureData << "Texture Properties" << "\\n"
-        << "Width = " << w << "\\n"
-        << "Height = " << h << "\\n"
-        << "Depth = " << d;
+            << "Width = " << w << "\\n"
+            << "Height = " << h << "\\n"
+            << "Depth = " << d;
     }
     else
     {

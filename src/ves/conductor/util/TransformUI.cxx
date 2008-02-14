@@ -56,7 +56,7 @@ BEGIN_EVENT_TABLE( TransformUI, wxPanel )
     EVT_CHECKBOX( UNIFORM_SCALE,      TransformUI::UpdateUniformScale )
 END_EVENT_TABLE()
 
-TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::Transform* transform )
+TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml::TransformPtr transform )
         : wxPanel( parent, TRANSFORM_PANEL_ID, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL )
 {
     this->transform = transform;
@@ -240,12 +240,12 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
 
 
 
-        ves::open::xml::DataValuePair* paramBlockID = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr paramBlockID = new ves::open::xml::DataValuePair();
         paramBlockID->SetData( std::string( "Parameter Block ID" ), _id );
         _instructions.push_back( paramBlockID );
 //std::cout<<"NO"<<std::endl;}
         std::cout << "PARAMID :" << _id << std::endl;
-        ves::open::xml::DataValuePair* updateTransform = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr updateTransform = new ves::open::xml::DataValuePair();
         updateTransform->SetData( "Transform", _transform );
         _instructions.push_back( updateTransform );
         std::cout << "TRANSFORM :" << std::endl;
@@ -258,23 +258,20 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
 //      _sendCommandsToXplorer();
 
         ///send command to xplorer
-        ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+        ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
         veCommand->SetCommandName( "DATA_TRANSFORM_UPDATE" );
         veCommand->AddDataValuePair( paramBlockID );
         veCommand->AddDataValuePair( updateTransform );
         //   serviceList->SendCommandStringToXplorer( veCommand );
 
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-
-        //clean up memory
-        delete veCommand;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransformUI::UpdateUniformScale( wxCommandEvent &event )
 {}
 ////////////////////////////////////////////////////////////////////////////////
-void TransformUI::SetParamBlockTransform( ves::open::xml::Transform* transform )
+void TransformUI::SetParamBlockTransform( ves::open::xml::TransformPtr transform )
 {
     _transform = transform;
 }
