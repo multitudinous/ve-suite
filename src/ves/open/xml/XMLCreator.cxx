@@ -51,7 +51,7 @@
 
 using namespace ves::open::xml;
 /////////////////////////////////////////////////////////////////////////
-XMLObjectPtr XMLCreator::CreateNewXMLObject( std::string objectType )
+XMLObjectPtr XMLCreator::CreateNewXMLObject( const std::string& objectType )
 {
     if( objectType == "FloatArray" )
     {
@@ -120,70 +120,70 @@ XMLObjectPtr XMLCreator::CreateNewXMLObject( std::string objectType )
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////
-XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( std::string objectType,
-                                               XMLObjectPtr objectToCopy )
+XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( const std::string& objectType,
+                                               const XMLObjectPtr& objectToCopy )
 {
     if( objectType == "FloatArray" )
     {
-        return new FloatArray( *dynamic_cast<FloatArray*>( objectToCopy ) );
+        return FloatArrayPtr( objectToCopy );
     }
     else if( objectType == "Command" )
     {
-        return new Command( *dynamic_cast<Command*>( objectToCopy ) );
+        return CommandPtr( objectToCopy );
     }
     else if( objectType == "vecommand" )
     {
-        return new Command( *dynamic_cast<Command*>( objectToCopy ) );
+        return CommandPtr( objectToCopy );
     }
     else if( objectType == "DataValuePair" )
     {
-        return new DataValuePair( *dynamic_cast<DataValuePair*>( objectToCopy ) );
+        return DataValuePairPtr( objectToCopy );
     }
     else if( objectType == "OneDDoubleArray" )
     {
-        return new OneDDoubleArray( *dynamic_cast<OneDDoubleArray*>( objectToCopy ) );
+        return OneDDoubleArrayPtr( objectToCopy );
     }
     else if( objectType == "OneDIntArray" )
     {
-        return new OneDIntArray( *dynamic_cast<OneDIntArray*>( objectToCopy ) );
+        return OneDIntArrayPtr( objectToCopy );
     }
     else if( objectType == "OneDStringArray" )
     {
-        return new OneDStringArray( *dynamic_cast<OneDStringArray*>( objectToCopy ) );
+        return OneDStringArrayPtr( objectToCopy );
     }
     else if( objectType == "ParameterBlock" )
     {
-        return new ParameterBlock( *dynamic_cast<ParameterBlock*>( objectToCopy ) );
+        return ParameterBlockPtr( objectToCopy );
     }
     else if( objectType == "StateInfo" )
     {
-        return new StateInfo( *dynamic_cast<StateInfo*>( objectToCopy ) );
+        return StateInfoPtr( objectToCopy );
     }
     else if( objectType == "ThreeDDoubleArray" )
     {
-        return new ThreeDDoubleArray( *dynamic_cast<ThreeDDoubleArray*>( objectToCopy ) );
+        return ThreeDDoubleArrayPtr( objectToCopy );
     }
     else if( objectType == "ThreeDIntArray" )
     {
-        return new ThreeDIntArray( *dynamic_cast<ThreeDIntArray*>( objectToCopy ) );
+        return ThreeDIntArrayPtr( objectToCopy );
     }
     else if( objectType == "Transform" )
     {
-        return new Transform( *dynamic_cast<Transform*>( objectToCopy ) );
+        return TransformPtr( objectToCopy );
     }
     else if( objectType == "TwoDDoubleArray" )
     {
-        return new TwoDDoubleArray( *dynamic_cast<TwoDDoubleArray*>( objectToCopy ) );
+        return TwoDDoubleArrayPtr( objectToCopy );
     }
     else if( objectType == "TwoDIntArray" )
     {
-        return new TwoDIntArray( *dynamic_cast<TwoDIntArray*>( objectToCopy ) );
+        return TwoDIntArrayPtr( objectToCopy );
     }
     else if( objectType == "User" )
     {
-        return new User( *dynamic_cast<User*>( objectToCopy ) );
+        return UserPtr( objectToCopy );
     }
-    return 0;
+    return ves::open::xml::XMLObjectPtr();
 }
 
 

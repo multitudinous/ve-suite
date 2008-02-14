@@ -45,6 +45,7 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
+#include <ves/open/xml/OneDIntArrayPtr.h>
 
 namespace ves
 {

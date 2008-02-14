@@ -44,6 +44,7 @@
 #include <ves/open/xml/XMLObject.h>
 
 #include <xercesc/dom/DOM.hpp>
+#include <ves/open/xml/OneDStringArrayPtr.h>
 
 namespace ves
 {

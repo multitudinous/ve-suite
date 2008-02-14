@@ -48,6 +48,7 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
+#include <ves/open/xml/StateInfoPtr.h>
 
 namespace ves
 {

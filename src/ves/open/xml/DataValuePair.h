@@ -58,27 +58,6 @@ namespace open
 {
 namespace xml
 {
-class Transform;
-class FloatArray;
-class OneDDoubleArray;
-class TwoDDoubleArray;
-class ThreeDDoubleArray;
-class OneDIntArray;
-class TwoDIntArray;
-class ThreeDIntArray;
-class OneDStringArray;
-//class TwoDStringArray;
-//class ThreeDStringArray;
-}
-}
-}
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
 class VE_XML_EXPORTS DataValuePair : public XMLObject
 {
 public:

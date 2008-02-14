@@ -45,6 +45,8 @@
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
+#include <ves/open/xml/ThreeDDoubleArrayPtr.h>
+
 namespace ves
 {
 namespace open

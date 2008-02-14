@@ -44,6 +44,8 @@
 #include <iostream>
 
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/UserPtr.h>
+
 namespace ves
 {
 namespace open
