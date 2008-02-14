@@ -96,21 +96,27 @@ private:
     
     osg::ref_ptr< osg::Node > m_blowerComponents;
     osg::ref_ptr< osg::Node > m_brackets;
+    osg::ref_ptr< osg::Node > m_cableTray;
     osg::ref_ptr< osg::Node > m_cementBase;
+    osg::ref_ptr< osg::Node > m_combustorInternals;
     osg::ref_ptr< osg::Node > m_combustorPiping;
     osg::ref_ptr< osg::Node > m_compressorInlet;
     osg::ref_ptr< osg::Node > m_frame;
+    osg::ref_ptr< osg::Node > m_groundBolts;
     osg::ref_ptr< osg::Node > m_heatExchanger;
     osg::ref_ptr< osg::Node > m_heatExchangerSweep;
+    osg::ref_ptr< osg::Node > m_instrumentation;
     osg::ref_ptr< osg::Node > m_load;
     osg::ref_ptr< osg::Node > m_plenumPiping;
     osg::ref_ptr< osg::Node > m_plenumSystem;
     osg::ref_ptr< osg::Node > m_railing;
     osg::ref_ptr< osg::Node > m_reliefPiping;
+    osg::ref_ptr< osg::Node > m_reliefPipingAM;
     osg::ref_ptr< osg::Node > m_shell;
     osg::ref_ptr< osg::Node > m_stack;
     osg::ref_ptr< osg::Node > m_turbineExhaust;
     osg::ref_ptr< osg::Node > m_turbinePostCombustor;
+    osg::ref_ptr< osg::Node > m_turbineSupport;
 
     //Variables to set up custom lighting for the scene
     osg::ref_ptr< osg::Light > m_light;
