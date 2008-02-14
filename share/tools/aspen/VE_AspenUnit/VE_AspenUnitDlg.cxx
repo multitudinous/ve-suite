@@ -58,6 +58,12 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 	{
 		AfxMessageBox( _T("Unable to connect to VE-CE" ));
 	}*/
+    CEdit *Display;
+    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
+	Display->SetWindowTextA("localhost");
+	Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
+	Display->SetWindowTextA("1239");
+
 
 	// TODO: Add extra initialization here	
 	initialized = false;
