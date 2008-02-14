@@ -81,7 +81,7 @@ public:
 
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
-    LinkPtr GetLink( int i );
+    LinkWeakPtr GetLink( int i );
 
     ///Get the total number of links
     size_t GetNumberOfLinks( void );

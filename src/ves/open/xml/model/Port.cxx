@@ -45,43 +45,33 @@ using namespace ves::open::xml::model;
 Port::Port( )
         : XMLObject( )
 {
-    portNumber = 0;
-    //modelName = '\0';
-    //dataFlow = '\0';
-    portLocation = new Point();
+    mPortNumber = 0;
+    //mModelName = '\0';
+    //mDataFlow = '\0';
+    mPortLocation = new Point();
     SetObjectType( "Port" );
     SetObjectNamespace( "Model" );
 }
 ///////////////////////////////////
 Port::~Port()
 {
-    delete portLocation;
-
-    for( size_t i = 0; i < portData.size(); ++i )
-    {
-        delete portData.at( i );
-    }
-    portData.clear();
+    mPortData.clear();
 }
 ///////////////////////////////////////////
 Port::Port( const Port& input )
         : XMLObject( input )
 {
-    for( size_t i = 0; i < portData.size(); ++i )
-    {
-        delete portData.at( i );
-    }
-    portData.clear();
+    mPortData.clear();
 
-    for( size_t i = 0; i < input.portData.size(); ++i )
+    for( size_t i = 0; i < input.mPortData.size(); ++i )
     {
-        portData.push_back( new DataValuePair( *( input.portData.at( i ) ) ) );
+        mPortData.push_back( new DataValuePair( *( input.mPortData.at( i ) ) ) );
     }
 
-    portNumber = input.portNumber;
-    modelName = input.modelName;
-    dataFlow = input.dataFlow;
-    portLocation = new Point( *( input.portLocation ) );
+    mPortNumber = input.mPortNumber;
+    mModelName = input.mModelName;
+    mDataFlow = input.mDataFlow;
+    mPortLocation = new Point( *( input.mPortLocation ) );
 }
 /////////////////////////////////////////////////////
 Port& Port::operator=( const Port& input )
@@ -90,100 +80,95 @@ Port& Port::operator=( const Port& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        for( size_t i = 0; i < portData.size(); ++i )
-        {
-            delete portData.at( i );
-        }
-        portData.clear();
+        mPortData.clear();
 
-        for( size_t i = 0; i < input.portData.size(); ++i )
+        for( size_t i = 0; i < input.mPortData.size(); ++i )
         {
-            portData.push_back( new DataValuePair( *( input.portData.at( i ) ) ) );
+            mPortData.push_back( new DataValuePair( *( input.mPortData.at( i ) ) ) );
         }
 
-        portNumber = input.portNumber;
-        modelName = input.modelName;
-        dataFlow = input.dataFlow;
-        portType = input.portType;
-        *portLocation = *( input.portLocation );
+        mPortNumber = input.mPortNumber;
+        mModelName = input.mModelName;
+        mDataFlow = input.mDataFlow;
+        mPortType = input.mPortType;
+        *mPortLocation = *( input.mPortLocation );
     }
     return *this;
 }
 ////////////////////////////////////////////
 void Port::SetPortNumber( unsigned int number )
 {
-    portNumber = number;
+    mPortNumber = number;
 }
 /////////////////////////////////////////////////////
-void Port::SetModelName( std::string name )
+void Port::SetModelName( const std::string& name )
 {
-    modelName = name;
+    mModelName = name;
 }
 ///////////////////////////////////////////////
-void Port::SetDataFlowDirection( std::string direction )
+void Port::SetDataFlowDirection( const std::string& direction )
 {
-    dataFlow = direction;
+    mDataFlow = direction;
 }
 ////////////////////////////////////////////////////////////////////////
-void Port::SetPortLocation( Point* location )
+void Port::SetPortLocation( PointPtr location )
 {
     // we can do this because a point is always created be default
-    delete portLocation;
-    portLocation = location;
+    mPortLocation = location;
 }
 ///////////////////////////////////////////////////////////////////
-void Port::SetPortData( std::vector< DataValuePair* > data )
+void Port::SetPortData( const std::vector< DataValuePairPtr >& data )
 {
-    portData = data;
+    mPortData = data;
 }
 /////////////////////////////////////////////////////
-void Port::SetPortType( std::string porttype )
+void Port::SetPortType( const std::string& portType )
 {
-    portType = porttype;
+    mPortType = portType;
 }
 ///////////////////////////////////////
 void Port::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    SetSubElement( "number", portNumber );
-    SetSubElement( "name", modelName );
-    SetSubElement( "dataFlow", dataFlow );
-    SetSubElement( "portLocation", portLocation );
-    SetSubElement( "portType", portType );
-    for( size_t i = 0; i < portData.size(); ++i )
+    SetSubElement( "number", mPortNumber );
+    SetSubElement( "name", mModelName );
+    SetSubElement( "dataFlow", mDataFlow );
+    SetSubElement( "portLocation", mPortLocation );
+    SetSubElement( "portType", mPortType );
+    for( size_t i = 0; i < mPortData.size(); ++i )
     {
-        SetSubElement( "portData", portData.at( i ) );
+        SetSubElement( "portData", mPortData.at( i ) );
     }
 }
 ///////////////////////////////////////////////////
 unsigned int Port::GetPortNumber( void )
 {
-    return portNumber;
+    return mPortNumber;
 }
 //////////////////////////////////////////
-std::string Port::GetModelName( void )
+const std::string& Port::GetModelName( void )
 {
-    return modelName;
+    return mModelName;
 }
 //////////////////////////////////////////
-std::string Port::GetDataFlowDirection( void )
+const std::string& Port::GetDataFlowDirection( void )
 {
-    return dataFlow;
+    return mDataFlow;
 }
 ////////////////////////////////////////////
-Point* Port::GetPortLocation( void )
+PointPtr Port::GetPortLocation( void )
 {
-    return portLocation;
+    return mPortLocation;
 }
 //////////////////////////////////////////
-std::string Port::GetPortType( void )
+const std::string& Port::GetPortType( void )
 {
-    return portType;
+    return mPortType;
 }
 /////////////////////////////////////
-std::vector< ves::open::xml::DataValuePair* > Port::GetPortData( void )
+const std::vector< ves::open::xml::DataValuePairPtr >& Port::GetPortData( void )
 {
-    return portData;
+    return mPortData;
 }
 ////////////////////////////////////////////////////////////
 void Port::SetObjectFromXMLData( DOMNode* element )
@@ -201,38 +186,34 @@ void Port::SetObjectFromXMLData( DOMNode* element )
         // for port number
         {
             dataValueStringName = GetSubElement( currentElement, "number", 0 );
-            GetAttribute( dataValueStringName, "number", portNumber );
+            GetAttribute( dataValueStringName, "number", mPortNumber );
         }
         // for model name
         {
             dataValueStringName = GetSubElement( currentElement, "name", 0 );
-            GetAttribute( dataValueStringName, "name", modelName );
+            GetAttribute( dataValueStringName, "name", mModelName );
         }
         // for data flow
         {
             dataValueStringName = GetSubElement( currentElement, "dataFlow", 0 );
-            GetAttribute( dataValueStringName, "dataFlow", dataFlow );
+            GetAttribute( dataValueStringName, "dataFlow", mDataFlow );
         }
         // for port location
         {
             dataValueStringName = GetSubElement( currentElement, "portLocation", 0 );
-            if( portLocation )
-            {
-                delete portLocation;
-                portLocation = 0;
-            }
-            portLocation = new Point( );
-            portLocation->SetObjectFromXMLData( dataValueStringName );
+            mPortLocation = new Point();
+            mPortLocation->SetObjectFromXMLData( dataValueStringName );
         }
         // for port data
         {
-            unsigned int numberOfPortData = currentElement->getElementsByTagName(               Convert( "portData" ).toXMLString() )->getLength();
+            unsigned int numberOfmPortData = currentElement->getElementsByTagName(               
+                Convert( "portData" ).toXMLString() )->getLength();
 
-            for( unsigned int i = 0; i < numberOfPortData; ++i )
+            for( unsigned int i = 0; i < numberOfmPortData; ++i )
             {
                 dataValueStringName = GetSubElement( currentElement, "portData", i );
-                portData.push_back( new DataValuePair( ) );
-                portData.back()->SetObjectFromXMLData( dataValueStringName );
+                mPortData.push_back( new DataValuePair( ) );
+                mPortData.back()->SetObjectFromXMLData( dataValueStringName );
             }
         }
     }

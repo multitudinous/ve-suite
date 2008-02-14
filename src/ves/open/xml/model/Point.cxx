@@ -25,7 +25,7 @@
  * -----------------------------------------------------------------
  * Date modified: $Date$
  * Version:       $Rev$
- * Author:        $Author$
+ * Author:        $Author$mPoint
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
@@ -44,8 +44,8 @@ using namespace ves::open::xml::model;
 Point::Point()
         : XMLObject()
 {
-    point.first = 0;
-    point.second = 0;
+    mPoint.first = 0;
+    mPoint.second = 0;
     SetObjectType( "Point" );
     SetObjectNamespace( "Model" );
 }
@@ -60,7 +60,7 @@ Point::~Point()
 Point::Point( const Point& input )
         : XMLObject( input )
 {
-    point = input.point;
+    mPoint = input.mPoint;
 }
 /////////////////////////////////////////////////////
 Point& Point::operator=( const Point& input )
@@ -69,27 +69,27 @@ Point& Point::operator=( const Point& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        point = input.point;
+        mPoint = input.mPoint;
     }
     return *this;
 }
 /////////////////////////////////////////////////////////////////
-void Point::SetPoint( std::pair< unsigned int, unsigned int > input )
+void Point::SetPoint( const std::pair< unsigned int, unsigned int >& input )
 {
-    point = input;
+    mPoint = input;
 }
 ///////////////////////////////////////////////////
-std::pair< unsigned int, unsigned int > Point::GetPoint( void )
+const std::pair< unsigned int, unsigned int >& Point::GetPoint( void )
 {
-    return point;
+    return mPoint;
 }
 ////////////////////////////////////
 void Point::_updateVEElement( const std::string& input )
 {
     //Add code here to update the specific sub elements
     // name comes from verg.xsd
-    SetAttribute( "xLocation", point.first );
-    SetAttribute( "yLocation", point.second );
+    SetAttribute( "xLocation", mPoint.first );
+    SetAttribute( "yLocation", mPoint.second );
 }
 ////////////////////////////////////////////////////////////
 void Point::SetObjectFromXMLData( DOMNode* xmlInput )
@@ -117,11 +117,11 @@ void Point::SetObjectFromXMLData( DOMNode* xmlInput )
     if( xNode )
     {
         //We know this about the node so we can cast it...
-        GetAttribute( xNode, "xLocation", point.first );
+        GetAttribute( xNode, "xLocation", mPoint.first );
     }
     else
     {
-        GetAttribute( currentElement, "xLocation", point.first );
+        GetAttribute( currentElement, "xLocation", mPoint.first );
     }
 
     // Let's get the Y location
@@ -129,11 +129,11 @@ void Point::SetObjectFromXMLData( DOMNode* xmlInput )
     if( yNode )
     {
         //We know this about the node so we can cast it...
-        GetAttribute( yNode, "yLocation", point.second );
+        GetAttribute( yNode, "yLocation", mPoint.second );
     }
     else
     {
-        GetAttribute( currentElement, "yLocation", point.second );
+        GetAttribute( currentElement, "yLocation", mPoint.second );
     }
 }
 
