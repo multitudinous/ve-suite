@@ -36,8 +36,8 @@
 
 #include <ves/open/moduleS.h>
 
-#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 #include <ves/VEConfig.h>
 #include <vector>
 #include <map>
@@ -54,10 +54,7 @@ public:
     ///Constructor
     UnitWrapper( Body::Executive_ptr exec, std::string name );
     ///Default constructor
-    UnitWrapper()
-    {
-        ;
-    }
+    UnitWrapper();
     ///Destructor
     virtual ~UnitWrapper( void );
 

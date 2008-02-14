@@ -3,15 +3,10 @@
 
 #include <ves/open/moduleS.h>
 #include <ves/ce/unitwrapper/UnitWrapper.h>
-//#include "package.h" //so it can use the xerces stuff
 
 using namespace std;
 
 class Create_stove;
-
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
-#pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
 
 //Class Body_Unit_i
 class  Body_Unit_i : public UnitWrapper

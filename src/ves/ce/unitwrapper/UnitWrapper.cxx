@@ -72,6 +72,12 @@ UnitWrapper::UnitWrapper( Body::Executive_ptr exec, std::string name )
     //eventHandlerMap[ "Get XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
     //eventHandlerMap[ "Set XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
 }
+///
+///Default constructor
+UnitWrapper::UnitWrapper()
+{
+    ;
+}
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
 UnitWrapper::~UnitWrapper( void )
