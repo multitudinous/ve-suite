@@ -36,7 +36,7 @@
 
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/Parsers/XercesDOMParser.hpp>
+#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
