@@ -42,7 +42,7 @@ User::User()
         : XMLObject()
 {
     mUserId = std::string( "User_0" );
-    _controlStatus = std::string( "MASTER" );
+    mControlStatus = std::string( "MASTER" );
     SetObjectType( "User" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -53,11 +53,11 @@ User::User( const User& input )
         : XMLObject( input )
 {
     mUserId = input.mUserId;
-    _controlStatus = input._controlStatus;
+    mControlStatus = input.mControlStatus;
 
-    if( input.m_stateInfo )
+    if( input.mStateInfo )
     {
-        m_stateInfo = new StateInfo( *( input.m_stateInfo ) );
+        mStateInfo = new StateInfo( *( input.mStateInfo ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,11 +67,11 @@ User& User::operator=( const User& input )
     {
         XMLObject::operator =( input );
         mUserId = input.mUserId;
-        _controlStatus = input._controlStatus;
+        mControlStatus = input.mControlStatus;
 
-        if( input.m_stateInfo )
+        if( input.mStateInfo )
         {
-            m_stateInfo = new StateInfo( *( input.m_stateInfo ) );
+            mStateInfo = new StateInfo( *( input.mStateInfo ) );
         }
     }
     return *this;
@@ -84,12 +84,12 @@ void User::SetUserId( std::string id )
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetControlStatus( VEControlStatus cs )
 {
-    _controlStatus = cs;
+    mControlStatus = cs;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetStateInfo( StateInfoWeakPtr userState )
 {
-    m_stateInfo = userState;
+    mStateInfo = userState;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& User::GetUserId()
@@ -99,12 +99,12 @@ const std::string& User::GetUserId()
 ////////////////////////////////////////////////////////////////////////////////
 User::VEControlStatus User::GetControlStatus()
 {
-    return _controlStatus;
+    return mControlStatus;
 }
 ////////////////////////////////////////////////////////////////////////////////
 StateInfoWeakPtr User::GetUserStateInfo()
 {
-    return m_stateInfo;
+    return mStateInfo;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::SetObjectFromXMLData( DOMNode* xmlInput )
@@ -120,27 +120,27 @@ void User::SetObjectFromXMLData( DOMNode* xmlInput )
         return;
     }
 
-    GetAttribute( currentElement, "id", uuid );
+    GetAttribute( currentElement, "id", mUuid );
     GetAttribute( currentElement, "userID", mUserId );
-    GetAttribute( currentElement, "veControlStatus", _controlStatus );
+    GetAttribute( currentElement, "veControlStatus", mControlStatus );
 
     DOMElement* stateInfoElement = 0;
     stateInfoElement = GetSubElement( currentElement, "stateInfo", 0 );
     if( stateInfoElement )
     {
-        m_stateInfo = new StateInfo();
-        m_stateInfo->SetObjectFromXMLData( stateInfoElement );
+        mStateInfo = new StateInfo();
+        mStateInfo->SetObjectFromXMLData( stateInfoElement );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void User::_updateVEElement( const std::string& input )
 {
     SetAttribute( "userID", mUserId );
-    SetAttribute( "id", uuid );
-    SetAttribute( "veControlStatus", _controlStatus );
-    if( m_stateInfo )
+    SetAttribute( "id", mUuid );
+    SetAttribute( "veControlStatus", mControlStatus );
+    if( mStateInfo )
     {
-        SetSubElement( "stateInfo", &( *m_stateInfo ) );
+        SetSubElement( "stateInfo", mStateInfo );
     }
 }
 

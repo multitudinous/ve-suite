@@ -108,22 +108,22 @@ void Command::_updateVEElement( const std::string& input )
 ////////////////////////////////////
 void Command::_updateCommandName()
 {
-    DOMElement* cmdNameElement = _rootDocument->createElement(
+    DOMElement* cmdNameElement = mRootDocument->createElement(
                                  Convert( "command" ).toXMLString() );
 
-    DOMText* cmdName = _rootDocument->createTextNode(
+    DOMText* cmdName = mRootDocument->createTextNode(
                        Convert( _cmdName ).toXMLString() );
 
     cmdNameElement->appendChild( cmdName );
-    _veElement->appendChild( cmdNameElement );
+    mVeElement->appendChild( cmdNameElement );
 }
 ///////////////////////////////////////
 void Command::_updateDataValuePairs()
 {
     for( size_t i = 0; i < _dataValuePairs.size();  ++i )
     {
-        _dataValuePairs.at( i )->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( _dataValuePairs.at( i )->GetXMLData( "parameter" ) );
+        _dataValuePairs.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( _dataValuePairs.at( i )->GetXMLData( "parameter" ) );
     }
 }
 /////////////////////////////////////////////////////////

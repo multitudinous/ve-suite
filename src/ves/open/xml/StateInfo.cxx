@@ -79,8 +79,8 @@ void StateInfo::_updateCommands()
 {
     for( size_t i = 0; i < _stateInfo.size();  i++ )
     {
-        _stateInfo.at( i )->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( _stateInfo.at( i )->GetXMLData( "Command" ) );
+        _stateInfo.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( _stateInfo.at( i )->GetXMLData( "Command" ) );
     }
 }
 /////////////////////////////////////////////////////////////

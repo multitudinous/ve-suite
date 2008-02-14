@@ -172,17 +172,17 @@ void Transform::_updateVEElement( const std::string& input )
     //we know this to be 3 float arrays
     //_nChildren = 3;
     // name comes from verg.xsd
-    translationArray->SetOwnerDocument( _rootDocument );
+    translationArray->SetOwnerDocument( mRootDocument );
     DOMElement* translationTag  = translationArray->GetXMLData( "translation" );
-    _veElement->appendChild( translationTag );
+    mVeElement->appendChild( translationTag );
 
-    scaleArray->SetOwnerDocument( _rootDocument );
+    scaleArray->SetOwnerDocument( mRootDocument );
     DOMElement* scaleTag  = scaleArray->GetXMLData( "scale" );
-    _veElement->appendChild( scaleTag );
+    mVeElement->appendChild( scaleTag );
 
-    rotationArray->SetOwnerDocument( _rootDocument );
+    rotationArray->SetOwnerDocument( mRootDocument );
     DOMElement* rotationTag  = rotationArray->GetXMLData( "rotation" );
-    _veElement->appendChild( rotationTag );
+    mVeElement->appendChild( rotationTag );
 }
 //////////////////////////////////////////////////////////////
 void Transform::SetObjectFromXMLData( DOMNode* xmlInput )

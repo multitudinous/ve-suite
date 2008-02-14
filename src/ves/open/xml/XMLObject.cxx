@@ -47,18 +47,17 @@ using namespace ves::open::xml;
 //////////////////////
 XMLObject::XMLObject()
 {
-    _veElement = 0;
-    _needsUpdate = false;
-    _rootDocument = 0;
-    _nChildren = 0;
-    _objectType = std::string( "XMLObject" );
-    _objectNamespace = std::string( "XML" );
+    mVeElement = 0;
+    mNeedsUpdate = false;
+    mRootDocument = 0;
+    mObjectType = std::string( "XMLObject" );
+    mObjectNamespace = std::string( "XML" );
 
     apr_uuid_t tempUUID;
     apr_uuid_get( &tempUUID );
     char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
     apr_uuid_format( buffer, &tempUUID );
-    uuid.assign( buffer );
+    mUuid.assign( buffer );
     delete [] buffer;
     //This may need to be somewhere else
     /*if(!XMLObjectFactory::Instance()->ObjectCreatorIsRegistered("XML"))
@@ -69,26 +68,24 @@ XMLObject::XMLObject()
 ///////////////////////////////////////////////////
 XMLObject::XMLObject( const XMLObject& input )
 {
-    _veElement = input._veElement;
-    _needsUpdate = input._needsUpdate;
-    _rootDocument = input._rootDocument;
-    _nChildren = input._nChildren;
-    _objectType = input._objectType;
-    _objectNamespace = input._objectNamespace;
-    uuid = input.uuid;
+    mVeElement = input.mVeElement;
+    mNeedsUpdate = input.mNeedsUpdate;
+    mRootDocument = input.mRootDocument;
+    mObjectType = input.mObjectType;
+    mObjectNamespace = input.mObjectNamespace;
+    mUuid = input.mUuid;
 }
 //////////////////////////////////////////////////////////////
 XMLObject& XMLObject::operator=( const XMLObject& input )
 {
     if( this != &input )
     {
-        _veElement = input._veElement;
-        _needsUpdate = input._needsUpdate;
-        _rootDocument = input._rootDocument;
-        _nChildren = input._nChildren;
-        _objectType = input._objectType;
-        _objectNamespace = input._objectNamespace;
-        uuid = input.uuid;
+        mVeElement = input.mVeElement;
+        mNeedsUpdate = input.mNeedsUpdate;
+        mRootDocument = input.mRootDocument;
+        mObjectType = input.mObjectType;
+        mObjectNamespace = input.mObjectNamespace;
+        mUuid = input.mUuid;
     }
     return *this;
 }
@@ -98,45 +95,45 @@ XMLObject::~XMLObject()
 //////////////////////////////////////////////////
 void XMLObject::SetObjectNamespace( const std::string& tagname )
 {
-    _objectNamespace = tagname;
+    mObjectNamespace = tagname;
 }
 //////////////////////////////////////////////////
 void XMLObject::SetObjectType( const std::string& tagName )
 {
-    _objectType = tagName;
+    mObjectType = tagName;
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetOwnerDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* owner )
 {
-    _rootDocument = owner;
+    mRootDocument = owner;
 }
 ///////////////////////////////////////////
 const std::string& XMLObject::GetObjectNamespace()
 {
-    return _objectNamespace;
+    return mObjectNamespace;
 }
 /////////////////////////////////////////
 const std::string& XMLObject::GetObjectType()
 {
-    return _objectType;
+    return mObjectType;
 }
 ////////////////////////////////////////////////////////
 DOMElement* XMLObject::GetXMLData( const std::string& input )
 {
-    if( _rootDocument )
+    if( mRootDocument )
     {
         //Make sure old data is cleared from the xerces side of the element
         //_clearAllChildrenFromElement();
-        _veElement = _rootDocument->createElement( Convert( input ).toXMLString() );
+        mVeElement = mRootDocument->createElement( Convert( input ).toXMLString() );
 
 
         //update the xerces element w/ the current data in the object
         //This function should be overridden in ALL derived classes!!!!!
         _updateVEElement( input );
 
-        //SetSubElement("objectType",_objectType);
-        //SetSubElement("objectNamespace",_objectNamespace);
-        return _veElement;
+        //SetSubElement("objectType",mObjectType);
+        //SetSubElement("objectNamespace",mObjectNamespace);
+        return mVeElement;
     }
     else
     {
@@ -147,12 +144,12 @@ DOMElement* XMLObject::GetXMLData( const std::string& input )
 ////////////////////////////////////////////////
 void XMLObject::_clearAllChildrenFromElement()
 {
-    if( _veElement )
+    if( mVeElement )
     {
-        _nChildren = _veElement->getChildNodes()->getLength();
-        for( int i = _nChildren - 1; i > -1; i-- )
+        int nChildren = mVeElement->getChildNodes()->getLength();
+        for( int i = nChildren - 1; i > -1; i-- )
         {
-            _veElement->removeChild( _veElement->getChildNodes()->item( i ) );
+            mVeElement->removeChild( mVeElement->getChildNodes()->item( i ) );
         }
     }
 }
@@ -184,22 +181,22 @@ DOMElement* XMLObject::GetSubElement( DOMElement* baseElement,
 ////////////////////////////////////////////////////////////////////////////////
 DOMDocument* XMLObject::GetRootDocument()
 {
-    return _rootDocument;
+    return mRootDocument;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetID( unsigned int idVar )
 {
     std::ostringstream dirStringStream;
     dirStringStream << idVar;
-    uuid = dirStringStream.str();
+    mUuid = dirStringStream.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLObject::SetID( const std::string& idVar )
 {
-    uuid = idVar;
+    mUuid = idVar;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& XMLObject::GetID( void )
 {
-    return uuid;
+    return mUuid;
 }

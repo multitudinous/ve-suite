@@ -134,11 +134,11 @@ void FloatArray::_updateVEElement( const std::string& input )
     for( unsigned int i = 0; i < _array.size(); ++i )
     {
         // name comes from verg.xsd
-        DOMElement* valueTag  = _rootDocument->createElement(
+        DOMElement* valueTag  = mRootDocument->createElement(
                                 Convert( "value" ).toXMLString() );
 
-        _veElement->appendChild( valueTag );
-        DOMText* valueNum = _rootDocument->createTextNode(
+        mVeElement->appendChild( valueTag );
+        DOMText* valueNum = mRootDocument->createTextNode(
                             Convert( _array.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );

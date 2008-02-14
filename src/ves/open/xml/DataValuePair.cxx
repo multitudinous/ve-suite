@@ -201,7 +201,7 @@ void DataValuePair::_updateVEElement( const std::string& input )
     //fill in datavalue pairs, via xerces, according to schema
     //Add code here to update the specific sub elements
     SetAttribute( "dataName", _dataName );
-    SetAttribute( "id", uuid );
+    SetAttribute( "id", mUuid );
 
     //update the value held in the pair
     if( _dataType == std::string( "FLOAT" ) )
@@ -306,7 +306,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
 
     if( currentElement )
     {
-        GetAttribute( currentElement, "id", uuid );
+        GetAttribute( currentElement, "id", mUuid );
 
         {
             DOMNodeList* subElements = currentElement->getElementsByTagName(

@@ -164,8 +164,8 @@ void ThreeDIntArray::_updateVEElement( const std::string& input )
     for( size_t i = 0; i < twoDArray.size(); ++i )
     {
         // name comes from verg.xsd
-        twoDArray.at( i )->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( twoDArray.at( i )->GetXMLData( "index3" ) );
+        twoDArray.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( twoDArray.at( i )->GetXMLData( "index3" ) );
     }
 }
 ////////////////////////////////////////////////////////////

@@ -136,7 +136,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
             XMLObject::GetAttribute( currentElement, "id", emptyCheck );
             if( !emptyCheck.empty() )
             {
-                uuid = emptyCheck;
+                mUuid = emptyCheck;
             }
         }
         //get variables by tags
@@ -181,7 +181,7 @@ void ParameterBlock::_updateVEElement( const std::string& input )
     //Add code here to update the specific sub elements
     SetSubElement( "blockID", _id );
     SetSubElement( "blockName", paramName );
-    SetAttribute( "id", uuid );
+    SetAttribute( "id", mUuid );
     DOMElement* tempElement;
     tempElement = SetSubElement( "transform", _dcs );
     SetAttribute( "objectType", _dcs->GetObjectType(), tempElement );
