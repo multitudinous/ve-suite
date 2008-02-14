@@ -237,16 +237,16 @@ protected:
     ///\param objectType The XMLObject::_objectType to extract
     virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string objectType );
 
-    std::string _dataType;///<The data type.
-    std::string _dataName;///<The data name.
+    std::string mDataType;///<The data type.
+    std::string mDataName;///<The data name.
 
     ///raw datatypes of DataValuePair that are specified in the verg.xsd file
-    double _dataValue;///<Raw double value.
-    long intDataValue;///<Raw long value.
-    unsigned int _dataUInt;///<Raw unsigned int value
-    std::string _dataString;///<Raw string value.
+    double mDataValue;///<Raw double value.
+    long mIntDataValue;///<Raw long value.
+    unsigned int mDataUInt;///<Raw unsigned int value
+    std::string mDataString;///<Raw string value.
 
-    XMLObjectPtr _veXMLObject;///<Raw XMLObject.
+    XMLObjectPtr mVeXMLObject;///<Raw XMLObject.
 };
 
 }

@@ -41,25 +41,25 @@ using namespace ves::open::xml;
 Command::Command()
         : XMLObject()
 {
-    _cmdName.empty();
-    _dataValuePairs.clear();
+    mCmdName.empty();
+    mDataValuePairs.clear();
     SetObjectType( "Command" );
 }
 ///////////////////////
 Command::~Command()
 {
-    _dataValuePairs.clear();
-    nameToDataValuePairMap.clear();
+    mDataValuePairs.clear();
+    mNameToDataValuePairMap.clear();
 }
 ///////////////////////////////////////////
 Command::Command( const Command& input )
         : XMLObject( input )
 {
-    _cmdName =  input._cmdName;
-    for( size_t i = 0; i < input._dataValuePairs.size(); ++i )
+    mCmdName =  input.mCmdName;
+    for( size_t i = 0; i < input.mDataValuePairs.size(); ++i )
     {
-        _dataValuePairs.push_back( new DataValuePair(( *( input._dataValuePairs.at( i ) ) ) ) );
-        nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName()] = _dataValuePairs.back();
+        mDataValuePairs.push_back( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) );
+        mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = mDataValuePairs.back();
     }
 }
 /////////////////////////////////////////////////////
@@ -69,15 +69,15 @@ Command& Command::operator=( const Command& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        _cmdName =  input._cmdName;
+        mCmdName =  input.mCmdName;
 
-        _dataValuePairs.clear();
-        nameToDataValuePairMap.clear();
+        mDataValuePairs.clear();
+        mNameToDataValuePairMap.clear();
 
-        for( size_t i = 0; i < input._dataValuePairs.size(); ++i )
+        for( size_t i = 0; i < input.mDataValuePairs.size(); ++i )
         {
-            _dataValuePairs.push_back( new DataValuePair(( *( input._dataValuePairs.at( i ) ) ) ) );
-            nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName()] = _dataValuePairs.back();
+            mDataValuePairs.push_back( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) );
+            mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = mDataValuePairs.back();
         }
     }
     return *this;
@@ -85,14 +85,14 @@ Command& Command::operator=( const Command& input )
 ////////////////////////////////////////////////////////////////////////////////
 /*void Command::AddDataValuePair(DataValuePair* commandValuePair)
 {
-   _dataValuePairs.push_back(commandValuePair);
-   nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName() ] = commandValuePair;
+   mDataValuePairs.push_back(commandValuePair);
+   mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName() ] = commandValuePair;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
 void Command::AddDataValuePair( DataValuePairWeakPtr commandValuePair )
 {
-    _dataValuePairs.push_back( commandValuePair );
-    nameToDataValuePairMap[ _dataValuePairs.back()->GetDataName()] = commandValuePair;
+    mDataValuePairs.push_back( commandValuePair );
+    mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = commandValuePair;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( const std::string& input )
@@ -102,7 +102,7 @@ void Command::_updateVEElement( const std::string& input )
     //update functions below to get the ndvPairs before we can calculate _nChildren
 
     //Add code here to update the specific sub elements
-    SetAttribute( "commandName", _cmdName );
+    SetAttribute( "commandName", mCmdName );
     _updateDataValuePairs();
 }
 ////////////////////////////////////
@@ -112,7 +112,7 @@ void Command::_updateCommandName()
                                  Convert( "command" ).toXMLString() );
 
     DOMText* cmdName = mRootDocument->createTextNode(
-                       Convert( _cmdName ).toXMLString() );
+                       Convert( mCmdName ).toXMLString() );
 
     cmdNameElement->appendChild( cmdName );
     mVeElement->appendChild( cmdNameElement );
@@ -120,10 +120,10 @@ void Command::_updateCommandName()
 ///////////////////////////////////////
 void Command::_updateDataValuePairs()
 {
-    for( size_t i = 0; i < _dataValuePairs.size();  ++i )
+    for( size_t i = 0; i < mDataValuePairs.size();  ++i )
     {
-        _dataValuePairs.at( i )->SetOwnerDocument( mRootDocument );
-        mVeElement->appendChild( _dataValuePairs.at( i )->GetXMLData( "parameter" ) );
+        mDataValuePairs.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mDataValuePairs.at( i )->GetXMLData( "parameter" ) );
     }
 }
 /////////////////////////////////////////////////////////
@@ -152,11 +152,11 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         {
             //should only be the name of the command
             DOMElement* name = dynamic_cast< DOMElement* >( subElements->item( 0 ) );
-            GetAttribute( name, "commandName", _cmdName );
+            GetAttribute( name, "commandName", mCmdName );
         }
         else
         {
-            GetAttribute( currentElement, "commandName", _cmdName );
+            GetAttribute( currentElement, "commandName", mCmdName );
         }
     }
     //break down the element
@@ -166,8 +166,8 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
                                    Convert( "parameter" ).toXMLString() );
 
         //clear out old dvpairs
-        _dataValuePairs.clear();
-        nameToDataValuePairMap.clear();
+        mDataValuePairs.clear();
+        mNameToDataValuePairMap.clear();
         //we can have as many dvpairs as we want so get them all and populate the list
         DOMElement* dataValuePairIn = 0;
         unsigned int nDVPairsIn = subElements->getLength();
@@ -177,27 +177,27 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>( subElements->item( i ) );
             DataValuePairPtr veDvp = new DataValuePair();
             veDvp->SetObjectFromXMLData( dvPairIn );
-            _dataValuePairs.push_back( veDvp );
-            nameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
+            mDataValuePairs.push_back( veDvp );
+            mNameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
         }
     }
 }
 ///////////////////////////////////////
 const std::string Command::GetCommandName()
 {
-    return _cmdName;
+    return mCmdName;
 }
 ///////////////////////////////////////
 void Command::SetCommandName( std::string name )
 {
-    _cmdName = name;
+    mCmdName = name;
 }
 //////////////////////////////////////////////////////////////////////////////
 DataValuePairWeakPtr Command::GetDataValuePair( std::string dataValueName )
 {
     std::map< std::string, DataValuePairPtr >::iterator iter;
-    iter = nameToDataValuePairMap.find( dataValueName );
-    if( iter != nameToDataValuePairMap.end() )
+    iter = mNameToDataValuePairMap.find( dataValueName );
+    if( iter != mNameToDataValuePairMap.end() )
     {
         return iter->second;
     }
@@ -208,7 +208,7 @@ DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
 {
     try
     {
-        return _dataValuePairs.at( index );
+        return mDataValuePairs.at( index );
     }
     catch ( ... )
     {
@@ -222,6 +222,6 @@ DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
 ///////////////////////////////////////////////////
 size_t Command::GetNumberOfDataValuePairs()
 {
-    return _dataValuePairs.size();
+    return mDataValuePairs.size();
 }
 

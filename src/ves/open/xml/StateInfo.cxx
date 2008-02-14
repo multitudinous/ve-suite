@@ -48,22 +48,21 @@ StateInfo::StateInfo()
 StateInfo::~StateInfo()
 {
     ;
-    //ClearState();
 }
 ////////////////////////////////////////////////////
 /*void StateInfo::AddState(CommandPtr state)
 {
-   _stateInfo.push_back(state);
+   mStateInfo.push_back(state);
 }*/
 ////////////////////////////////////////////////////
 void StateInfo::AddState( CommandWeakPtr state )
 {
-    _stateInfo.push_back( state );
+    mStateInfo.push_back( state );
 }
 //////////////////////////////
 void StateInfo::ClearState()
 {
-    _stateInfo.clear();
+    mStateInfo.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StateInfo::_updateVEElement( const std::string& input )
@@ -77,10 +76,10 @@ void StateInfo::_updateVEElement( const std::string& input )
 ////////////////////////////////////////////////////////////////////////////////
 void StateInfo::_updateCommands()
 {
-    for( size_t i = 0; i < _stateInfo.size();  i++ )
+    for( size_t i = 0; i < mStateInfo.size();  i++ )
     {
-        _stateInfo.at( i )->SetOwnerDocument( mRootDocument );
-        mVeElement->appendChild( _stateInfo.at( i )->GetXMLData( "Command" ) );
+        mStateInfo.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mStateInfo.at( i )->GetXMLData( "Command" ) );
     }
 }
 /////////////////////////////////////////////////////////////
@@ -97,7 +96,7 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
     //get variables by tags
     DOMNodeList* subElements = currentElement->getElementsByTagName( ves::open::xml::Convert( "Command" ).toXMLString() );
 
-    _stateInfo.clear();
+    mStateInfo.clear();
     //we can have as many dvpairs as we want so get them all and populate the list
     DOMElement* cmdsIn = 0;
     unsigned int nCmdsIn = subElements->getLength();
@@ -110,18 +109,18 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
         {
             CommandWeakPtr command = new Command();
             command->SetObjectFromXMLData( vecmdIn );
-            _stateInfo.push_back( command );
+            mStateInfo.push_back( command );
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CommandWeakPtr StateInfo::GetState( std::string name )
 {
-    for( size_t i = 0; i < _stateInfo.size(); i++ )
+    for( size_t i = 0; i < mStateInfo.size(); i++ )
     {
-        if( _stateInfo.at( i )->GetCommandName() == name )
+        if( mStateInfo.at( i )->GetCommandName() == name )
         {
-            return _stateInfo.at( i );
+            return mStateInfo.at( i );
         }
     }
     return 0;
@@ -129,22 +128,22 @@ CommandWeakPtr StateInfo::GetState( std::string name )
 ////////////////////////////////////////////////////////////////////////////////
 CommandWeakPtr StateInfo::GetState( size_t index )
 {
-    return _stateInfo.at( index );
+    return mStateInfo.at( index );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< CommandWeakPtr > StateInfo::GetStateVector( void )
 {
-    std::vector< CommandWeakPtr > tempVec( _stateInfo.size() );
-    std::copy( _stateInfo.begin(), _stateInfo.end(), tempVec.begin() );
+    std::vector< CommandWeakPtr > tempVec( mStateInfo.size() );
+    std::copy( mStateInfo.begin(), mStateInfo.end(), tempVec.begin() );
     return tempVec;
 }
 /////////////////////////////////////////////////////
 StateInfo::StateInfo( const StateInfo& input )
         : XMLObject( input )
 {
-    for( size_t i = 0; i < input._stateInfo.size(); i++ )
+    for( size_t i = 0; i < input.mStateInfo.size(); i++ )
     {
-        _stateInfo.push_back( new Command( *( input._stateInfo.at( i ) ) ) );
+        mStateInfo.push_back( new Command( *( input.mStateInfo.at( i ) ) ) );
     }
 }
 /////////////////////////////////////////////////////////
@@ -153,9 +152,9 @@ StateInfo& StateInfo::operator= ( const StateInfo& input )
     if( this != &input )
     {
         ClearState();
-        for( size_t i = 0; i < input._stateInfo.size(); i++ )
+        for( size_t i = 0; i < input.mStateInfo.size(); i++ )
         {
-            _stateInfo.push_back( new Command( *( input._stateInfo.at( i ) ) ) );
+            mStateInfo.push_back( new Command( *( input.mStateInfo.at( i ) ) ) );
         }
     }
     return *this;

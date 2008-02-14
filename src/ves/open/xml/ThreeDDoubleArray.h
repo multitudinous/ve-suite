@@ -46,17 +46,7 @@
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
 #include <ves/open/xml/ThreeDDoubleArrayPtr.h>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class TwoDDoubleArray;
-}
-}
-}
+#include <ves/open/xml/TwoDDoubleArrayPtr.h>
 
 namespace ves
 {
@@ -83,7 +73,7 @@ public:
 
     ///Add a new element to the end of this array
     ///\param newValue The new value to add.
-    void AddElementToArray( TwoDDoubleArray* newValue );
+    void AddElementToArray( TwoDDoubleArrayPtr newValue );
 
     ///Set this array from an input vector
     ///\param newArrayValues The new values to set to this array.
@@ -106,11 +96,11 @@ protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
     virtual void _updateVEElement( const std::string& tagName );
-    unsigned int _nElements;///<Length of this float array
-    std::vector< TwoDDoubleArray* > twoDArray;///<Raw data.
+    unsigned int mNElements;///<Length of this float array
+    std::vector< TwoDDoubleArrayPtr > mTwoDArray;///<Raw data.
 
 private:
-    XMLSize_t minIndex;///<Mininum size of the array.
+    XMLSize_t mMinIndex;///<Mininum size of the array.
 };
 
 }

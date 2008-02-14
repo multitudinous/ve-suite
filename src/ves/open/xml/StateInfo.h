@@ -98,7 +98,7 @@ protected:
     ///Internally update the Command list.
     void _updateCommands();
 
-    std::vector<CommandPtr> _stateInfo;///<The Command list holding state information.
+    std::vector<CommandPtr> mStateInfo;///<The Command list holding state information.
 };
 
 }

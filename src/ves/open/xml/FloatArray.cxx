@@ -43,11 +43,11 @@ using namespace ves::open::xml;
 FloatArray::FloatArray( unsigned int nElements )
         : XMLObject()
 {
-    _nElements  = nElements;
+    mNElements  = nElements;
     // These should match the schema for min and max occurances
     // of the float array
-    minIndex = 2;
-    maxIndex = 4;
+    mMinIndex = 2;
+    mMaxIndex = 4;
     SetObjectType( "FloatArray" );
 }
 /////////////////////////////
@@ -55,17 +55,17 @@ FloatArray::FloatArray( unsigned int nElements )
 /////////////////////////////
 FloatArray::~FloatArray()
 {
-    if( _array.size() )
-        _array.clear();
+    if( mArray.size() )
+        mArray.clear();
 }
 ///////////////////////////////////////////
 FloatArray::FloatArray( const FloatArray& input )
         : XMLObject( input )
 {
-    _nElements = input._nElements;
-    _array = input._array;
-    minIndex = input.minIndex;
-    maxIndex = input.maxIndex;
+    mNElements = input.mNElements;
+    mArray = input.mArray;
+    mMinIndex = input.mMinIndex;
+    mMaxIndex = input.mMaxIndex;
 }
 /////////////////////////////////////////////////////
 FloatArray& FloatArray::operator=( const FloatArray& input )
@@ -73,33 +73,33 @@ FloatArray& FloatArray::operator=( const FloatArray& input )
     if( this != &input )
     {
         XMLObject::operator =( input );
-        _nElements = input._nElements;
-        _array = input._array;
-        minIndex = input.minIndex;
-        maxIndex = input.maxIndex;
+        mNElements = input.mNElements;
+        mArray = input.mArray;
+        mMinIndex = input.mMinIndex;
+        mMaxIndex = input.mMaxIndex;
     }
     return *this;
 }
 ////////////////////////
 void FloatArray::Clear()
 {
-    if( _array.size() )
-        _array.clear();
+    if( mArray.size() )
+        mArray.clear();
 }
 /////////////////////////////////////////////////
 void FloatArray::AddElementToArray( double value )
 {
-    _array.push_back( value );
-    _nElements = static_cast< unsigned int >( _array.size() );
+    mArray.push_back( value );
+    mNElements = static_cast< unsigned int >( mArray.size() );
 }
 /////////////////////////////////////////////////////////////////
 void FloatArray::SetArray( std::vector< double > input )
 {
     if( input.size() )
     {
-        _array.clear();
-        _array = input;
-        _nElements = static_cast< unsigned int >( _array.size() );
+        mArray.clear();
+        mArray = input;
+        mNElements = static_cast< unsigned int >( mArray.size() );
         ;
     }
 }
@@ -108,7 +108,7 @@ double FloatArray::GetElement( unsigned int index )
 {
     try
     {
-        return _array.at( index );
+        return mArray.at( index );
     }
     catch ( ... )
     {
@@ -120,7 +120,7 @@ double FloatArray::GetElement( unsigned int index )
 ///////////////////////////////////////////////////
 std::vector< double > FloatArray::GetArray( void )
 {
-    return _array;
+    return mArray;
 }
 ////////////////////////////////////
 void FloatArray::_updateVEElement( const std::string& input )
@@ -128,10 +128,10 @@ void FloatArray::_updateVEElement( const std::string& input )
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
     //this will be based on the size of the double array
-    //_nChildren = static_cast< unsigned int >( _array.size() );
+    //_nChildren = static_cast< unsigned int >( mArray.size() );
 
     //Add code here to update the specific sub elements
-    for( unsigned int i = 0; i < _array.size(); ++i )
+    for( unsigned int i = 0; i < mArray.size(); ++i )
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
@@ -139,7 +139,7 @@ void FloatArray::_updateVEElement( const std::string& input )
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( _array.at( i ) ).toXMLString() );
+                            Convert( mArray.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -151,7 +151,7 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
     //this is currently maxed out at 4 in the schema but
     //we can adjust this to be larger if needed. Also it
     //has to be at least 2 elements according to the schema
-    //_nElements = xerces->();
+    //mNElements = xerces->();
     DOMElement* currentElement = 0;
     if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
     {
@@ -160,16 +160,16 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
     if( currentElement )
     {
-        _array.clear();
+        mArray.clear();
 
         // do we need to delete the old one or does xerces handle this???
-        //_nElements = xmlInput->getChildNodes()->getLength();
+        //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName(
                                 Convert( "value" ).toXMLString() );
 
         XMLSize_t numNodes = nodeList->getLength();
-        _nElements = numNodes;
-        if (( minIndex > numNodes ) && ( maxIndex < numNodes ) )
+        mNElements = numNodes;
+        if (( mMinIndex > numNodes ) && ( mMaxIndex < numNodes ) )
         {
             std::cerr << " ERROR : FloatArray::SetObjectFromXMLData :" <<
             " This node has too few or too many children." << std::endl;
@@ -185,7 +185,7 @@ void FloatArray::SetObjectFromXMLData( DOMNode* xmlInput )
             DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
             char* tempCharData = XMLString::transcode( temp->getData() );
             std::string stringVal( tempCharData );
-            _array.push_back( std::atof( stringVal.c_str() ) );
+            mArray.push_back( std::atof( stringVal.c_str() ) );
             XMLString::release( &tempCharData );
         }
     }

@@ -89,10 +89,10 @@ protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.
     virtual void _updateVEElement( const std::string& tagName );
-    std::vector<double> _array;///<Raw data.
+    std::vector<double> mArray;///<Raw data.
 
 private:
-    XMLSize_t minIndex;///<Mininum size of the array.
+    XMLSize_t mMinIndex;///<Mininum size of the array.
 };
 
 }

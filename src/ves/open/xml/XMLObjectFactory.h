@@ -103,8 +103,8 @@ protected:
     ///Destructor
     virtual ~XMLObjectFactory();
 
-    static XMLObjectFactory* _instanceOfFactory;///<The instance of the XMLObjectFactory
-    std::map< std::string, CreationEventHandler*> _objectCreators;///<Creators of XMLObjects in different namespaces.
+    static XMLObjectFactory* mInstanceOfFactory;///<The instance of the XMLObjectFactory
+    std::map< std::string, CreationEventHandler*> mObjectCreators;///<Creators of XMLObjects in different namespaces.
 };
 }
 }

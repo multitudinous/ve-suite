@@ -36,7 +36,7 @@
 
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
+#include <xercesc/Parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
@@ -53,22 +53,22 @@ using namespace ves::open::xml;
 //////////////////////////////////////////////////////
 DOMDocumentManager::DOMDocumentManager( void )
 {
-    commandDocument = 0;
-    parameterDocument = 0;
-    modulesDocument = 0;
-    parseXMLFile = false;
-    writeXMLFile = false;
-    parser = 0;
-    errHandler = 0;
-    outputXMLFile = std::string( "./output.veg" );
-    documentType[ "Network" ] = std::pair< std::string, std::string >( "Network", "network" );
-    documentType[ "Shader" ] = std::pair< std::string, std::string >( "Shader", "shader" );
-    documentType[ "Command" ] = std::pair< std::string, std::string >( "Commands", "commands" );
+    mCommandDocument = 0;
+    mParameterDocument = 0;
+    mModulesDocument = 0;
+    mParseXMLFile = false;
+    mWriteXMLFile = false;
+    mParser = 0;
+    mErrHandler = 0;
+    mOutputXMLFile = std::string( "./output.veg" );
+    mDocumentType[ "Network" ] = std::pair< std::string, std::string >( "Network", "network" );
+    mDocumentType[ "Shader" ] = std::pair< std::string, std::string >( "Shader", "shader" );
+    mDocumentType[ "Command" ] = std::pair< std::string, std::string >( "Commands", "commands" );
 }
 //////////////////////////////////////////////////////
 DOMDocumentManager::~DOMDocumentManager( void )
 {
-    outputXMLFile.clear();
+    mOutputXMLFile.clear();
 }
 //////////////////////////////////////////////////////
 void DOMDocumentManager::InitializeXerces( void )
@@ -76,27 +76,27 @@ void DOMDocumentManager::InitializeXerces( void )
 ////////////////////////////////////////////
 void DOMDocumentManager::SetWriteXMLFileOn()
 {
-    writeXMLFile = true;
+    mWriteXMLFile = true;
 }
 //////////////////////////////////////////////
 void DOMDocumentManager::SetWriteXMLStringOn()
 {
-    writeXMLFile = false;
+    mWriteXMLFile = false;
 }
 ////////////////////////////////////////////
 void DOMDocumentManager::SetParseXMLFileOn()
 {
-    parseXMLFile = true;
+    mParseXMLFile = true;
 }
 //////////////////////////////////////////////
 void DOMDocumentManager::SetParseXMLStringOn()
 {
-    parseXMLFile = false;
+    mParseXMLFile = false;
 }
 ///////////////////////////////////////////////////////////////////
 void DOMDocumentManager::SetOuputXMLFile( std::string xmlOutputFile )
 {
-    outputXMLFile = xmlOutputFile;
+    mOutputXMLFile = xmlOutputFile;
 }
 ////////////////////////////////////////////////////////////////
 void DOMDocumentManager::_readInputString( std::string xmlString )
@@ -109,7 +109,7 @@ void DOMDocumentManager::_readInputString( std::string xmlString )
     std::string system_id( "input.xml" );
     MemBufInputSource inputXML(( const XMLByte* )xmlString.c_str(),
                                static_cast< const unsigned int >( xmlString.size() ), system_id.c_str() );
-    parser->parse( inputXML );
+    mParser->parse( inputXML );
 }
 ////////////////////////////////////////////////////////////
 void DOMDocumentManager::_readInputFile( std::string xmlFile )
@@ -120,8 +120,8 @@ void DOMDocumentManager::_readInputFile( std::string xmlFile )
         return;
     }
 
-    //parser->parse(inputXML);
-    parser->parse( xmlFile.c_str() );
+    //mParser->parse(inputXML);
+    mParser->parse( xmlFile.c_str() );
 }
 //////////////////////////////////////////////////////
 std::string DOMDocumentManager::WriteDocumentToString( DOMDocument* document )
@@ -133,17 +133,17 @@ std::string DOMDocumentManager::WriteDocumentToString( DOMDocument* document )
 //////////////////////////////////////////////////////
 DOMDocument* DOMDocumentManager::GetCommandDocument( void )
 {
-    return commandDocument;
+    return mCommandDocument;
 }
 //////////////////////////////////////////////////////
 DOMDocument* DOMDocumentManager::GetParameterDocument( void )
 {
-    return parameterDocument;
+    return mParameterDocument;
 }
 //////////////////////////////////////////////////////
 DOMDocument* DOMDocumentManager::GetModulesDocument( void )
 {
-    return modulesDocument;
+    return mModulesDocument;
 }
 
 ///////////////////////////////////////////////////////////////
@@ -153,19 +153,19 @@ void DOMDocumentManager::Load( const std::string inputCommand )
     //MemBufInputSource inpsrc( (const XMLByte*)inputCommand.c_str(), inputCommand.size(), system_id.c_str());
 
     char* message;
-    if( !parser )
+    if( !mParser )
     {
-        parser = new XercesDOMParser();
+        mParser = new XercesDOMParser();
 
-        parser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
-        parser->setDoNamespaces( true );  // optional
-        errHandler = ( ErrorHandler* ) new HandlerBase();
-        parser->setErrorHandler( errHandler );
+        mParser->setValidationScheme( XercesDOMParser::Val_Always );  // optional.
+        mParser->setDoNamespaces( true );  // optional
+        mErrHandler = ( ErrorHandler* ) new HandlerBase();
+        mParser->setErrorHandler( mErrHandler );
     }
 
     try
     {
-        if( parseXMLFile )
+        if( mParseXMLFile )
         {
             _readInputFile( inputCommand );
         }
@@ -181,10 +181,10 @@ void DOMDocumentManager::Load( const std::string inputCommand )
         std::cout << "Exception message is: \n"
         << message << "\n";
         XMLString::release( &message );
-        delete parser;
-        parser = 0;
-        delete errHandler;
-        errHandler = 0;
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
 
         return;
     }
@@ -194,10 +194,10 @@ void DOMDocumentManager::Load( const std::string inputCommand )
         std::cout << "Exception message is: \n"
         << message << "\n";
         XMLString::release( &message );
-        delete parser;
-        parser = 0;
-        delete errHandler;
-        errHandler = 0;
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
 
         return;
     }
@@ -206,28 +206,28 @@ void DOMDocumentManager::Load( const std::string inputCommand )
         std::cout << "DOMDocumentManager::Load Unexpected Exception"
         << std::endl;
         std::cout << inputCommand  << std::endl;
-        delete parser;
-        parser = 0;
-        delete errHandler;
-        errHandler = 0;
+        delete mParser;
+        mParser = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
         return;
     }
 
-    commandDocument = parser->getDocument(); //This is the rootNode;
+    mCommandDocument = mParser->getDocument(); //This is the rootNode;
 }
 //////////////////////////////////////////////////////
 void DOMDocumentManager::UnLoadParser( void )
 {
-    if( parser )
+    if( mParser )
     {
-        delete parser;
-        parser = 0;
+        delete mParser;
+        mParser = 0;
     }
 
-    if( errHandler )
+    if( mErrHandler )
     {
-        delete errHandler;
-        errHandler = 0;
+        delete mErrHandler;
+        mErrHandler = 0;
     }
 }
 /////////////////////////////////////////////////////
@@ -244,10 +244,10 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
                          std::pair< std::string, std::string > >
                          ::iterator map_iter_type;
 
-        map_iter_type iter = documentType.find( type );
+        map_iter_type iter = mDocumentType.find( type );
 
         std::string tempDoc = iter->second.second;
-        commandDocument = impl->createDocument( 0,
+        mCommandDocument = impl->createDocument( 0,
                                                 Convert( tempDoc ).toXMLString(),
                                                 0 );
 
@@ -274,13 +274,13 @@ void DOMDocumentManager::CreateCommandDocument( std::string type )
         return;
     }
 
-    commandDocument->setVersion( Convert( "1.0" ).toXMLString() );
-    commandDocument->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
+    mCommandDocument->setVersion( Convert( "1.0" ).toXMLString() );
+    mCommandDocument->setEncoding( Convert( "ISO-8859-1" ).toXMLString() );
 
-    DOMElement* root_elem = commandDocument->getDocumentElement(); //This is the root element
+    DOMElement* root_elem = mCommandDocument->getDocumentElement(); //This is the root element
 
     root_elem->setAttribute( Convert( "name" ).toXMLString(),
-               Convert( documentType[ type ].first ).toXMLString() );
+               Convert( mDocumentType[ type ].first ).toXMLString() );
 
     root_elem->setAttribute( Convert( "xmlns:xsi" ).toXMLString(),
          Convert( "http://www.w3.org/2001/XMLSchema-instance" ).toXMLString() );
@@ -313,16 +313,16 @@ std::string DOMDocumentManager::WriteAndReleaseCommandDocument( void )
 
     try
     {
-        if( writeXMLFile )
+        if( mWriteXMLFile )
         {
             //take a string passed in as the filename to write out
-            LocalFileFormatTarget outputXML( outputXMLFile.c_str() );
-            theSerializer->writeNode( &outputXML, *commandDocument );
+            LocalFileFormatTarget outputXML( mOutputXMLFile.c_str() );
+            theSerializer->writeNode( &outputXML, *mCommandDocument );
         }
         else
         {
             // do the serialization through DOMWriter::writeNode();
-            XMLCh* xXml = theSerializer->writeToString(( *commandDocument ) );
+            XMLCh* xXml = theSerializer->writeToString(( *mCommandDocument ) );
             tempResultString = XMLString::transcode( xXml );
             result = tempResultString;
             XMLString::release( &tempResultString );

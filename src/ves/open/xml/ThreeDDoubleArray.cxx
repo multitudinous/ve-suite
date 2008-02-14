@@ -44,10 +44,10 @@ using namespace ves::open::xml;
 ThreeDDoubleArray::ThreeDDoubleArray( unsigned int nElements )
         : XMLObject()
 {
-    _nElements  = nElements;
+    mNElements  = nElements;
     // These should match the schema for min and max occurances
     // of the float array
-    minIndex = 2;
+    mMinIndex = 2;
     SetObjectType( "ThreeDDoubleArray" );
 }
 /////////////////////////////
@@ -55,22 +55,18 @@ ThreeDDoubleArray::ThreeDDoubleArray( unsigned int nElements )
 /////////////////////////////
 ThreeDDoubleArray::~ThreeDDoubleArray()
 {
-    for( size_t i = 0; i < twoDArray.size(); ++i )
-    {
-        delete twoDArray.at( i );
-    }
-    twoDArray.clear();
+    mTwoDArray.clear();
 }
 ///////////////////////////////////////////
 ThreeDDoubleArray::ThreeDDoubleArray( const ThreeDDoubleArray& input )
         : XMLObject( input )
 {
-    _nElements  = input._nElements;
-    for( size_t i = 0; i < input.twoDArray.size(); ++i )
+    mNElements  = input.mNElements;
+    for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
     {
-        twoDArray.push_back( new TwoDDoubleArray( *( input.twoDArray.at( i ) ) ) );
+        mTwoDArray.push_back( new TwoDDoubleArray( *( input.mTwoDArray.at( i ) ) ) );
     }
-    minIndex = input.minIndex;
+    mMinIndex = input.mMinIndex;
 }
 /////////////////////////////////////////////////////
 ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input )
@@ -79,18 +75,14 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input 
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        _nElements = input._nElements;
-        minIndex = input.minIndex;
+        mNElements = input.mNElements;
+        mMinIndex = input.mMinIndex;
 
-        for( size_t i = 0; i < twoDArray.size(); ++i )
-        {
-            delete twoDArray.at( i );
-        }
-        twoDArray.clear();
+        mTwoDArray.clear();
 
-        for( size_t i = 0; i < input.twoDArray.size(); ++i )
+        for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
         {
-            twoDArray.push_back( new TwoDDoubleArray( *( input.twoDArray.at( i ) ) ) );
+            mTwoDArray.push_back( new TwoDDoubleArray( *( input.mTwoDArray.at( i ) ) ) );
         }
     }
     return *this;
@@ -98,31 +90,27 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input 
 /////////////////////////////////////////////////
 void ThreeDDoubleArray::AddElementToArray( std::vector< std::vector< double > > value )
 {
-    twoDArray.push_back( new TwoDDoubleArray( ) );
-    twoDArray.back()->SetArray( value );
-    _nElements = static_cast< unsigned int >( twoDArray.size() );
+    mTwoDArray.push_back( new TwoDDoubleArray( ) );
+    mTwoDArray.back()->SetArray( value );
+    mNElements = static_cast< unsigned int >( mTwoDArray.size() );
 }
 /////////////////////////////////////////////////
-void ThreeDDoubleArray::AddElementToArray( TwoDDoubleArray* value )
+void ThreeDDoubleArray::AddElementToArray( TwoDDoubleArrayPtr value )
 {
-    twoDArray.push_back( value );
-    _nElements = static_cast< unsigned int >( twoDArray.size() );
+    mTwoDArray.push_back( value );
+    mNElements = static_cast< unsigned int >( mTwoDArray.size() );
 }
 /////////////////////////////////////////////////////////////////
 void ThreeDDoubleArray::SetArray( std::vector< std::vector< std::vector< double > > > input )
 {
-    _nElements = static_cast< unsigned int >( input.size() );
+    mNElements = static_cast< unsigned int >( input.size() );
     // Clean old vector int
-    for( size_t i = 0; i < twoDArray.size(); ++i )
-    {
-        delete twoDArray.at( i );
-    }
-    twoDArray.clear();
+    mTwoDArray.clear();
 
     for( size_t i = 0; i < input.size(); ++i )
     {
-        twoDArray.push_back( new TwoDDoubleArray( ) );
-        twoDArray.back()->SetArray( input.at( i ) );
+        mTwoDArray.push_back( new TwoDDoubleArray( ) );
+        mTwoDArray.back()->SetArray( input.at( i ) );
     }
 }
 //////////////////////////////////////////////////
@@ -130,7 +118,7 @@ double ThreeDDoubleArray::GetElement( unsigned int i, unsigned int j, unsigned i
 {
     try
     {
-        return twoDArray.at( i )->GetElement( j, k );
+        return mTwoDArray.at( i )->GetElement( j, k );
     }
     catch ( ... )
     {
@@ -146,7 +134,7 @@ std::vector< std::vector< std::vector< double > > > ThreeDDoubleArray::GetArray(
     std::vector< std::vector< std::vector< double > > > tripleArray;///<Raw data.
     for( size_t i = 0; i < tripleArray.size(); ++i )
     {
-        tripleArray.push_back( twoDArray.at( i )->GetArray() );
+        tripleArray.push_back( mTwoDArray.at( i )->GetArray() );
     }
 
     return tripleArray;
@@ -157,15 +145,15 @@ void ThreeDDoubleArray::_updateVEElement( const std::string& input )
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
     //this will be based on the size of the double array
-    //_nChildren = static_cast< unsigned int >( twoDArray.size() );
+    //_nChildren = static_cast< unsigned int >( mTwoDArray.size() );
 
     //Add code here to update the specific sub elements
     // This acutally needs to be an array of 1d arrays
-    for( size_t i = 0; i < twoDArray.size(); ++i )
+    for( size_t i = 0; i < mTwoDArray.size(); ++i )
     {
         // name comes from verg.xsd
-        twoDArray.at( i )->SetOwnerDocument( mRootDocument );
-        mVeElement->appendChild( twoDArray.at( i )->GetXMLData( "index3" ) );
+        mTwoDArray.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mTwoDArray.at( i )->GetXMLData( "index3" ) );
     }
 }
 ////////////////////////////////////////////////////////////
@@ -175,7 +163,7 @@ void ThreeDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
     //this is currently maxed out at 4 in the schema but
     //we can adjust this to be larger if needed. Also it
     //has to be at least 2 elements according to the schema
-    //_nElements = xerces->();
+    //mNElements = xerces->();
     DOMElement* currentElement = 0;
     if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
     {
@@ -184,18 +172,14 @@ void ThreeDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
     if( currentElement )
     {
-        for( size_t i = 0; i < twoDArray.size(); ++i )
-        {
-            delete twoDArray.at( i );
-        }
-        twoDArray.clear();
+        mTwoDArray.clear();
 
         // do we need to delete the old one or does xerces handle this???
-        //_nElements = xmlInput->getChildNodes()->getLength();
+        //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::Convert( "index3" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
-        _nElements = numNodes;
-        if( minIndex > numNodes )
+        mNElements = numNodes;
+        if( mMinIndex > numNodes )
         {
             std::cerr << " ERROR : ThreeDDoubleArray::SetObjectFromXMLData :" <<
             " This node has too few or too many children." << std::endl;
@@ -210,8 +194,8 @@ void ThreeDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
         for( XMLSize_t i = 0; i < numNodes; ++i )
         {
             //We know this about the node so we can cast it...
-            twoDArray.push_back( new TwoDDoubleArray( ) );
-            twoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
+            mTwoDArray.push_back( new TwoDDoubleArray() );
+            mTwoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }
     else

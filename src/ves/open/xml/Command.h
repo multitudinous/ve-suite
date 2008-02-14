@@ -112,9 +112,9 @@ protected:
     ///Internally update the DataValuePair s from the input XML data.
     void _updateDataValuePairs( void );
 
-    std::string _cmdName;///<The name of this command.
-    std::vector< DataValuePairPtr > _dataValuePairs;///<The list of DataValuePair s in this command.
-    std::map< std::string, DataValuePairPtr > nameToDataValuePairMap;///<The list of DataValuePair s in this command.
+    std::string mCmdName;///<The name of this command.
+    std::vector< DataValuePairPtr > mDataValuePairs;///<The list of DataValuePair s in this command.
+    std::map< std::string, DataValuePairPtr > mNameToDataValuePairMap;///<The list of DataValuePair s in this command.
 };
 
 }

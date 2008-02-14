@@ -45,18 +45,8 @@
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/ParameterBlockPtr.h>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Transform;
-class DataValuePair;
-}
-}
-}
+#include <ves/open/xml/TransformPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -89,11 +79,11 @@ public:
 
     ///Optional. Set the Transform.
     ///\param transform The Transform information. Commonly used with CFD datasets and CAD information.
-    void SetTransform( Transform* transform );
+    void SetTransform( TransformPtr transform );
 
     ///Add a property, which is held in a DataValuePair.
     ///\param prop The DataValuePair holding the information such as a CFD filename.
-    void AddProperty( DataValuePair* prop );
+    void AddProperty( DataValuePairPtr prop );
 
     ///set the data from an string representing the xml
     ///\param xmlInput The input XML data.
@@ -105,13 +95,13 @@ public:
     ///Return the paramter block.
     std::string GetName( void );
     ///Return the Transform.
-    Transform* GetTransform();
+    TransformPtr GetTransform();
     ///Return a DataValuePair based on a name.
     ///\param name The name of the DataValuePair to search for.
-    DataValuePair* GetProperty( std::string name );
+    DataValuePairPtr GetProperty( std::string name );
     ///Return the DataValuePair at the index.
     ///\param index The index of the DataValuePair.
-    DataValuePair* GetProperty( int index );
+    DataValuePairPtr GetProperty( int index );
     ///Return the number DataValuePair's.
     size_t GetNumberOfProperties( void );
     ///Remove the DataValuePair at the index.
@@ -123,10 +113,10 @@ protected:
     ///Internally update the XML data.
     ///\param tagName The tag name for this element
     virtual void _updateVEElement( const std::string& tagName );
-    unsigned int _id;///<The block ID.
-    Transform* _dcs;///<The optional Transform.
-    std::vector<DataValuePair*> _properties;///<The DataValuePair list containing the block properties.
-    std::string paramName;
+    unsigned int mId;///<The block ID.
+    TransformPtr mDcs;///<The optional Transform.
+    std::vector<DataValuePairPtr> mProperties;///<The DataValuePair list containing the block properties.
+    std::string mParamName;
 };
 
 }

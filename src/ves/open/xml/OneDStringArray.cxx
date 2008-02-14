@@ -43,10 +43,10 @@ using namespace ves::open::xml;
 OneDStringArray::OneDStringArray( unsigned int nElements )
         : XMLObject()
 {
-    _nElements  = nElements;
+    mNElements  = nElements;
     // These should match the schema for min and max occurances
     // of the float array
-    minIndex = 1;
+    mMinIndex = 1;
     SetObjectType( "OneDStringArray" );
 }
 /////////////////////////////
@@ -60,9 +60,9 @@ OneDStringArray::~OneDStringArray()
 OneDStringArray::OneDStringArray( const OneDStringArray& input )
         : XMLObject( input )
 {
-    _nElements = input._nElements;
-    _array = input._array;
-    minIndex = input.minIndex;
+    mNElements = input.mNElements;
+    mArray = input.mArray;
+    mMinIndex = input.mMinIndex;
 }
 /////////////////////////////////////////////////////
 OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input )
@@ -71,24 +71,24 @@ OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        _nElements = input._nElements;
-        _array = input._array;
-        minIndex = input.minIndex;
+        mNElements = input.mNElements;
+        mArray = input.mArray;
+        mMinIndex = input.mMinIndex;
     }
     return *this;
 }
 /////////////////////////////////////////////////
 void OneDStringArray::AddElementToArray( std::string value )
 {
-    _array.push_back( value );
-    _nElements = static_cast< unsigned int >( _array.size() );
+    mArray.push_back( value );
+    mNElements = static_cast< unsigned int >( mArray.size() );
 }
 /////////////////////////////////////////////////////////////////
 void OneDStringArray::SetArray( std::vector< std::string > input )
 {
-    _array.clear();
-    _array = input;
-    _nElements = static_cast< unsigned int >( _array.size() );
+    mArray.clear();
+    mArray = input;
+    mNElements = static_cast< unsigned int >( mArray.size() );
     ;
 }
 //////////////////////////////////////////////////
@@ -96,7 +96,7 @@ std::string OneDStringArray::GetElement( unsigned int index )
 {
     try
     {
-        return _array.at( index );
+        return mArray.at( index );
     }
     catch ( ... )
     {
@@ -108,7 +108,7 @@ std::string OneDStringArray::GetElement( unsigned int index )
 ///////////////////////////////////////////////////
 std::vector< std::string > OneDStringArray::GetArray( void )
 {
-    return _array;
+    return mArray;
 }
 ////////////////////////////////////
 void OneDStringArray::_updateVEElement( const std::string& input )
@@ -116,10 +116,10 @@ void OneDStringArray::_updateVEElement( const std::string& input )
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
     //this will be based on the size of the string array
-    //_nChildren = static_cast< unsigned int >( _array.size() );
+    //_nChildren = static_cast< unsigned int >( mArray.size() );
 
     //Add code here to update the specific sub elements
-    for( unsigned int i = 0; i < _array.size(); ++i )
+    for( unsigned int i = 0; i < mArray.size(); ++i )
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
@@ -127,7 +127,7 @@ void OneDStringArray::_updateVEElement( const std::string& input )
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( _array.at( i ) ).toXMLString() );
+                            Convert( mArray.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -139,7 +139,7 @@ void OneDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
     //this is currently maxed out at 4 in the schema but
     //we can adjust this to be larger if needed. Also it
     //has to be at least 2 elements according to the schema
-    //_nElements = xerces->();
+    //mNElements = xerces->();
     DOMElement* currentElement = 0;
     if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
     {
@@ -148,16 +148,16 @@ void OneDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
     if( currentElement )
     {
-        _array.clear();
+        mArray.clear();
 
         // do we need to delete the old one or does xerces handle this???
-        //_nElements = xmlInput->getChildNodes()->getLength();
+        //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName(
                                 Convert( "data" ).toXMLString() );
 
         XMLSize_t numNodes = nodeList->getLength();
-        _nElements = numNodes;
-        if (( minIndex > numNodes ) )
+        mNElements = numNodes;
+        if (( mMinIndex > numNodes ) )
         {
             std::cerr << " ERROR : OneDStringArray::SetObjectFromXMLData :" <<
             " This node has too few or too many children." << std::endl;
@@ -173,7 +173,7 @@ void OneDStringArray::SetObjectFromXMLData( DOMNode* xmlInput )
             DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
             char* tempText = XMLString::transcode( temp->getData() );
             std::string stringVal( tempText );
-            _array.push_back( stringVal );
+            mArray.push_back( stringVal );
             XMLString::release( &tempText );
         }
     }

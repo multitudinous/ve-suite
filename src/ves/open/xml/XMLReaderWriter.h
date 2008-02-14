@@ -1,4 +1,4 @@
-/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ /*************** <auto-copyright.rb BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
@@ -139,7 +139,7 @@ public:
 
 protected:
 
-    bool _standAloneDDM;///<Tells Reader whether it is using it's on DDM or one was passed in.
+    bool mStandAloneDDM;///<Tells Reader whether it is using it's on DDM or one was passed in.
 
     ///Internal function to populate the appropriate structures from the file
     ///read in.
@@ -151,11 +151,11 @@ protected:
                                                  std::string tagName );
 
     ///The XMLObjects read in from a document file.
-    std::vector<XMLObjectPtr> m_internalXmlObjects;
+    std::vector<XMLObjectPtr> mInternalXmlObjects;
     ///The XMLObjects read in from a document file.
-    std::vector<XMLObjectPtr> m_xmlObjects;
+    std::vector<XMLObjectPtr> mXmlObjects;
 
-    DOMDocumentManager* _domDocumentManager;///<The XML document manager.
+    DOMDocumentManager* mDomDocumentManager;///<The XML document manager.
 };
 }
 }

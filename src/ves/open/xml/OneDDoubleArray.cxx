@@ -45,7 +45,7 @@ OneDDoubleArray::OneDDoubleArray( unsigned int nElements )
 {
     // These should match the schema for min and max occurances
     // of the float array
-    minIndex = 1;
+    mMinIndex = 1;
     SetObjectType( "OneDDoubleArray" );
 }
 /////////////////////////////
@@ -59,8 +59,8 @@ OneDDoubleArray::~OneDDoubleArray()
 OneDDoubleArray::OneDDoubleArray( const OneDDoubleArray& input )
         : XMLObject( input )
 {
-    _array = input._array;
-    minIndex = input.minIndex;
+    mArray = input.mArray;
+    mMinIndex = input.mMinIndex;
 }
 /////////////////////////////////////////////////////
 OneDDoubleArray& OneDDoubleArray::operator=( const OneDDoubleArray& input )
@@ -69,28 +69,28 @@ OneDDoubleArray& OneDDoubleArray::operator=( const OneDDoubleArray& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        _array = input._array;
-        minIndex = input.minIndex;
+        mArray = input.mArray;
+        mMinIndex = input.mMinIndex;
     }
     return *this;
 }
 /////////////////////////////////////////////////
 void OneDDoubleArray::AddElementToArray( double value )
 {
-    _array.push_back( value );
+    mArray.push_back( value );
 }
 /////////////////////////////////////////////////////////////////
 void OneDDoubleArray::SetArray( std::vector< double > input )
 {
-    _array.clear();
-    _array = input;
+    mArray.clear();
+    mArray = input;
 }
 //////////////////////////////////////////////////
 double OneDDoubleArray::GetElement( unsigned int index )
 {
     try
     {
-        return _array.at( index );
+        return mArray.at( index );
     }
     catch ( ... )
     {
@@ -102,7 +102,7 @@ double OneDDoubleArray::GetElement( unsigned int index )
 ///////////////////////////////////////////////////
 std::vector< double > OneDDoubleArray::GetArray( void )
 {
-    return _array;
+    return mArray;
 }
 ////////////////////////////////////
 void OneDDoubleArray::_updateVEElement( const std::string& input )
@@ -110,10 +110,10 @@ void OneDDoubleArray::_updateVEElement( const std::string& input )
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
     //this will be based on the size of the double array
-    //_nChildren = static_cast< unsigned int >( _array.size() );
+    //_nChildren = static_cast< unsigned int >( mArray.size() );
 
     //Add code here to update the specific sub elements
-    for( unsigned int i = 0; i < _array.size(); ++i )
+    for( unsigned int i = 0; i < mArray.size(); ++i )
     {
         // name comes from verg.xsd
         DOMElement* valueTag  = mRootDocument->createElement(
@@ -121,7 +121,7 @@ void OneDDoubleArray::_updateVEElement( const std::string& input )
 
         mVeElement->appendChild( valueTag );
         DOMText* valueNum = mRootDocument->createTextNode(
-                            Convert( _array.at( i ) ).toXMLString() );
+                            Convert( mArray.at( i ) ).toXMLString() );
 
         valueTag->appendChild( valueNum );
     }
@@ -141,14 +141,14 @@ void OneDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
     if( currentElement )
     {
-        _array.clear();
+        mArray.clear();
 
         // do we need to delete the old one or does xerces handle this???
         DOMNodeList* nodeList = currentElement->getElementsByTagName(
                                 Convert( "data" ).toXMLString() );
 
         XMLSize_t numNodes = nodeList->getLength();
-        if (( minIndex > numNodes ) )
+        if (( mMinIndex > numNodes ) )
         {
             std::cerr << " ERROR : OneDDoubleArray::SetObjectFromXMLData :" <<
             " This node has too few or too many children." << std::endl;
@@ -164,7 +164,7 @@ void OneDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
             DOMText* temp = dynamic_cast< DOMText* >( nodeList->item( i )->getFirstChild() );
             char* tempString = XMLString::transcode( temp->getData() );
             std::string stringVal( tempString );
-            _array.push_back( std::atof( stringVal.c_str() ) );
+            mArray.push_back( std::atof( stringVal.c_str() ) );
             XMLString::release( &tempString );
         }
     }

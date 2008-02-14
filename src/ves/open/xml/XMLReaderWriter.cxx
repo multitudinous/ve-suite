@@ -43,112 +43,112 @@ using namespace ves::open::xml;
 //////////////////////////////
 XMLReaderWriter::XMLReaderWriter()
 {
-    _domDocumentManager = 0;
-    _standAloneDDM = false;
+    mDomDocumentManager = 0;
+    mStandAloneDDM = false;
 }
 ///////////////////////
 XMLReaderWriter::~XMLReaderWriter()
 {
-    if( _domDocumentManager )
+    if( mDomDocumentManager )
     {
-        _domDocumentManager->UnLoadParser();
-        if( _standAloneDDM )
+        mDomDocumentManager->UnLoadParser();
+        if( mStandAloneDDM )
         {
-            delete _domDocumentManager;
-            _domDocumentManager = 0;
+            delete mDomDocumentManager;
+            mDomDocumentManager = 0;
         }
     }
-    m_xmlObjects.clear();
+    mXmlObjects.clear();
 }
 /////////////////////////////////////////////////
 void XMLReaderWriter::UseStandaloneDOMDocumentManager()
 {
-    if( !_domDocumentManager )
+    if( !mDomDocumentManager )
     {
-        _domDocumentManager = new DOMDocumentManager();
-        _standAloneDDM = true;
+        mDomDocumentManager = new DOMDocumentManager();
+        mStandAloneDDM = true;
     }
 }
 //////////////////////////////
 /*void XMLReaderWriter::WriteToFile()
 {
-   if(_domDocumentManager)
+   if(mDomDocumentManager)
    {
-      _domDocumentManager->SetWriteXMLFileOn();
+      mDomDocumentManager->SetWriteXMLFileOn();
    }
 }
 //////////////////////////////
 void XMLReaderWriter::WriteToString()
 {
-   if(_domDocumentManager)
+   if(mDomDocumentManager)
    {
-      _domDocumentManager->SetWriteXMLStringOn();
+      mDomDocumentManager->SetWriteXMLStringOn();
    }
 }*/
 ////////////////////////////////////
 void XMLReaderWriter::ReadFromFile()
 {
-    if( _domDocumentManager )
+    if( mDomDocumentManager )
     {
-        _domDocumentManager->SetParseXMLFileOn();
+        mDomDocumentManager->SetParseXMLFileOn();
     }
 }
 //////////////////////////////////////
 void XMLReaderWriter::ReadFromString()
 {
-    if( _domDocumentManager )
+    if( mDomDocumentManager )
     {
-        _domDocumentManager->SetParseXMLStringOn();
+        mDomDocumentManager->SetParseXMLStringOn();
     }
 }
 //////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::SetDOMDocumentManager( DOMDocumentManager* ddManager )
 {
-    _domDocumentManager = ddManager;
-    _standAloneDDM = false;
+    mDomDocumentManager = ddManager;
+    mStandAloneDDM = false;
 }
 ////////////////////////////////////////////////////////////////////
 DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
 {
-    return _domDocumentManager;
+    return mDomDocumentManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::ReadXMLData( std::string xmlData,
                                    std::string objectNamespace,
                                    std::string tagname )
 {
-    _domDocumentManager->Load( xmlData );
+    mDomDocumentManager->Load( xmlData );
     //override this in derived classes
-    _populateStructureFromDocument( _domDocumentManager->GetCommandDocument(),
+    _populateStructureFromDocument( mDomDocumentManager->GetCommandDocument(),
                                     objectNamespace,
                                     tagname );
-    _domDocumentManager->UnLoadParser();
-    m_xmlObjects = m_internalXmlObjects;
+    mDomDocumentManager->UnLoadParser();
+    mXmlObjects = mInternalXmlObjects;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::ReadXMLData( std::string xmlData,
                                    std::vector< std::pair< std::string, std::string > > elementTypes )
 {
-    _domDocumentManager->Load( xmlData );
+    mDomDocumentManager->Load( xmlData );
     //override this in derived classes
-    m_xmlObjects.clear();
+    mXmlObjects.clear();
     for( size_t i = 0; i < elementTypes.size(); ++i )
     {
-        _populateStructureFromDocument( _domDocumentManager->GetCommandDocument(),
+        _populateStructureFromDocument( mDomDocumentManager->GetCommandDocument(),
                                         elementTypes.at( i ).first,
                                         elementTypes.at( i ).second );
-        std::copy( m_internalXmlObjects.begin(),
-                   m_internalXmlObjects.end(),
-                   std::back_inserter( m_xmlObjects ) );
-        m_internalXmlObjects.clear();
+        std::copy( mInternalXmlObjects.begin(),
+                   mInternalXmlObjects.end(),
+                   std::back_inserter( mXmlObjects ) );
+        mInternalXmlObjects.clear();
     }
 
-    _domDocumentManager->UnLoadParser();
+    mDomDocumentManager->UnLoadParser();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< XMLObjectPtr > XMLReaderWriter::GetLoadedXMLObjects()
 {
-    return m_xmlObjects;
+    return mXmlObjects;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* rootDocument,
@@ -167,7 +167,7 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
 
     unsigned int nXMLObjects = xmlObjects->getLength();
     //In case we use the same readerwriter more than once for a read
-    m_internalXmlObjects.clear();
+    mInternalXmlObjects.clear();
 
     if( nXMLObjects == 0 )
     {
@@ -184,8 +184,8 @@ void XMLReaderWriter::_populateStructureFromDocument( XERCES_CPP_NAMESPACE_QUALI
                                CreateXMLObject( tagName, objectNamespace );
         if( newXMLobj != NULL )
         {
-            m_internalXmlObjects.push_back( newXMLobj );
-            m_internalXmlObjects[i]->SetObjectFromXMLData( xmlObjects->item( i ) );
+            mInternalXmlObjects.push_back( newXMLobj );
+            mInternalXmlObjects[i]->SetObjectFromXMLData( xmlObjects->item( i ) );
         }
         /*
         else if(newXMLobj == include )
@@ -207,17 +207,17 @@ void XMLReaderWriter::WriteMultipleXMLDocuments(
     std::string& xmlData )
 {
     /*
-    if(!_domDocumentManager )
+    if(!mDomDocumentManager )
     {
        return;
     }
 
 
     //loop over all nodes and figure out what types of documents to write   
-       _domDocumentManager->SetOuputXMLFile(xmlData);
-       _domDocumentManager->SetWriteXMLFileOn();
-       _domDocumentManager->CreateCommandDocument( documentType );
-       DOMDocument* doc = _domDocumentManager->GetCommandDocument();
+       mDomDocumentManager->SetOuputXMLFile(xmlData);
+       mDomDocumentManager->SetWriteXMLFileOn();
+       mDomDocumentManager->CreateCommandDocument( documentType );
+       DOMDocument* doc = mDomDocumentManager->GetCommandDocument();
        for(size_t i = 0; i < nodes.size(); ++i )
        {   
           nodes.at( i ).first->SetOwnerDocument( doc );
@@ -227,13 +227,13 @@ void XMLReaderWriter::WriteMultipleXMLDocuments(
        
        if( !xmlData.compare("returnString") )
        {
-          xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
+          xmlData = mDomDocumentManager->WriteAndReleaseCommandDocument();
        }
        else
        {
-          _domDocumentManager->WriteAndReleaseCommandDocument();
+          mDomDocumentManager->WriteAndReleaseCommandDocument();
        }
-       _domDocumentManager->UnLoadParser();
+       mDomDocumentManager->UnLoadParser();
     */
 }
 ///////////////////////////////////////////////////////////
@@ -241,7 +241,7 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObjectPtr, st
                                         std::string& xmlData,
                                         std::string documentType )
 {
-    if( !_domDocumentManager )
+    if( !mDomDocumentManager )
     {
         return;
     }
@@ -249,12 +249,12 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObjectPtr, st
     ///If you wanted to return a string you can pass in returnString for xmlData
     if( xmlData.compare( "returnString" ) )
     {
-        _domDocumentManager->SetOuputXMLFile( xmlData );
-        _domDocumentManager->SetWriteXMLFileOn();
+        mDomDocumentManager->SetOuputXMLFile( xmlData );
+        mDomDocumentManager->SetWriteXMLFileOn();
     }
 
-    _domDocumentManager->CreateCommandDocument( documentType );
-    DOMDocument* doc = _domDocumentManager->GetCommandDocument();
+    mDomDocumentManager->CreateCommandDocument( documentType );
+    DOMDocument* doc = mDomDocumentManager->GetCommandDocument();
 
     /// should put in an assert to verify tagnames == nodes
     ///Loop over all the objects that are passed in
@@ -266,11 +266,11 @@ void XMLReaderWriter::WriteXMLDocument( std::vector< std::pair< XMLObjectPtr, st
 
     if( !xmlData.compare( "returnString" ) )
     {
-        xmlData = _domDocumentManager->WriteAndReleaseCommandDocument();
+        xmlData = mDomDocumentManager->WriteAndReleaseCommandDocument();
     }
     else
     {
-        _domDocumentManager->WriteAndReleaseCommandDocument();
+        mDomDocumentManager->WriteAndReleaseCommandDocument();
     }
-    _domDocumentManager->UnLoadParser();
+    mDomDocumentManager->UnLoadParser();
 }

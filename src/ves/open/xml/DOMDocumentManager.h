@@ -110,7 +110,7 @@ public:
     void CreateCommandDocument( std::string type );
 
 private:
-    std::string outputXMLFile;///<The output XML file to write.
+    std::string mOutputXMLFile;///<The output XML file to write.
 
     ///Read an input file.
     ///\param xmlFile The XML filename.
@@ -120,20 +120,20 @@ private:
     ///\param xmlString The XML filename.
     void _readInputString( std::string xmlString );
 
-    bool parseXMLFile;///<Should we parse an XML file or string.
-    bool writeXMLFile;///<Should we write an XML file or string.
+    bool mParseXMLFile;///<Should we parse an XML file or string.
+    bool mWriteXMLFile;///<Should we write an XML file or string.
 
 
-    DOMDocument* commandDocument;///< This is the document used ot send commands to Xplorer
+    DOMDocument* mCommandDocument;///< This is the document used ot send commands to Xplorer
 
-    DOMDocument* parameterDocument;///< This is the document used to send parameter file info to Xplorer
+    DOMDocument* mParameterDocument;///< This is the document used to send parameter file info to Xplorer
 
-    DOMDocument* modulesDocument;///< This is the current Network file sent to the CE and is constructed by Conductor
+    DOMDocument* mModulesDocument;///< This is the current Network file sent to the CE and is constructed by Conductor
 
-    XercesDOMParser* parser;///<The DOMParser
-    ErrorHandler* errHandler;///<The error handler for the parser.
+    XercesDOMParser* mParser;///<The DOMParser
+    ErrorHandler* mErrHandler;///<The error handler for the parser.
 
-    std::map< std::string, std::pair< std::string, std::string > > documentType;
+    std::map< std::string, std::pair< std::string, std::string > > mDocumentType;
 };
 }
 }

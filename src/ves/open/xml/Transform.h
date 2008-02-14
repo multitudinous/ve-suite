@@ -50,17 +50,7 @@
 #include <iostream>
 
 #include <ves/open/xml/TransformPtr.h>
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class FloatArray;
-}
-}
-}
+#include <ves/open/xml/FloatArrayPtr.h>
 
 namespace ves
 {
@@ -99,44 +89,33 @@ public:
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
-
-    /*
-    float* GetTranslation( void );
-    float* GetScale( void );
-    float* GetRotation( void );
-    */
-
     /// Get float for translations
-    FloatArray* GetTranslationArray( void );
+    FloatArrayPtr GetTranslationArray( void );
     /// Get float for scale
-    FloatArray* GetScaleArray( void );
+    FloatArrayPtr GetScaleArray( void );
     /// Get float for rotation
-    FloatArray* GetRotationArray( void );
+    FloatArrayPtr GetRotationArray( void );
 
     /// Set float for translations
     ///\param translation The FloatArray holding translation.
-    void SetTranslationArray( FloatArray* translation );
+    void SetTranslationArray( FloatArrayPtr translation );
 
     // Set float for scale
     ///\param scale The FloatArray holding scale.
-    void SetScaleArray( FloatArray* scale );
+    void SetScaleArray( FloatArrayPtr scale );
 
     // Set float for rotation
     ///\param rotation The FloatArray holding rotation.
-    void SetRotationArray( FloatArray* rotation );
+    void SetRotationArray( FloatArrayPtr rotation );
 
 protected:
     ///Internally update the XML data.
     ///\param tagName The tag name for this element.
     virtual void _updateVEElement( const std::string& tagName );
-    /*
-    float* _translation;
-    float* _scale;
-    float* _rotation;
-    */
-    FloatArray* translationArray;///<The FloatArray holding translation information.
-    FloatArray* scaleArray;///<The FloatArray holding scale information.
-    FloatArray* rotationArray;///<The FloatArray holding rotation information.
+    
+    FloatArrayPtr mTranslationArray;///<The FloatArray holding translation information.
+    FloatArrayPtr mScaleArray;///<The FloatArray holding scale information.
+    FloatArrayPtr mRotationArray;///<The FloatArray holding rotation information.
 };
 
 }

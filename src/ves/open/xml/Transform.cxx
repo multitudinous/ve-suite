@@ -41,26 +41,20 @@ using namespace ves::open::xml;
 Transform::Transform()
         : XMLObject()
 {
-    /*
-    _translation = 0;
-    _scale = 0;
-    _rotation = 0;
-    */
-
     std::vector< double > temp;
     temp.assign( 3, 0.0f );
 
     std::vector< double > temp1;
     temp1.assign( 3, 1.0f );
 
-    rotationArray = new FloatArray( );
-    rotationArray->SetArray( temp );
+    mRotationArray = new FloatArray( );
+    mRotationArray->SetArray( temp );
 
-    scaleArray = new FloatArray( );
-    scaleArray->SetArray( temp1 );
+    mScaleArray = new FloatArray( );
+    mScaleArray->SetArray( temp1 );
 
-    translationArray = new FloatArray( );
-    translationArray->SetArray( temp );
+    mTranslationArray = new FloatArray( );
+    mTranslationArray->SetArray( temp );
     SetObjectType( "Transform" );
 }
 ///////////////////////////
@@ -68,40 +62,15 @@ Transform::Transform()
 ///////////////////////////
 Transform::~Transform()
 {
-    /*
-    if(_translation)
-    {
-       delete [] _translation;
-       _scale = 0;
-    }
-    if(_scale)
-    {
-       delete [] _scale;
-       _scale = 0;
-    }
-    if(_rotation)
-    {
-       delete [] _rotation;
-       _rotation = 0;
-    }
-    */
-
-    delete rotationArray;
-    rotationArray = 0;
-
-    delete scaleArray;
-    scaleArray = 0;
-
-    delete translationArray;
-    translationArray = 0;
+    ;
 }
 ///////////////////////////////////////////
 Transform::Transform( const Transform& input )
         : XMLObject( input )
 {
-    rotationArray = new FloatArray( *input.rotationArray );
-    scaleArray = new FloatArray( *input.scaleArray );
-    translationArray = new FloatArray( *input.translationArray );
+    mRotationArray = new FloatArray( *input.mRotationArray );
+    mScaleArray = new FloatArray( *input.mScaleArray );
+    mTranslationArray = new FloatArray( *input.mTranslationArray );
 }
 /////////////////////////////////////////////////////
 Transform& Transform::operator=( const Transform& input )
@@ -110,9 +79,9 @@ Transform& Transform::operator=( const Transform& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        *rotationArray = *input.rotationArray;
-        *scaleArray = *input.scaleArray;
-        *translationArray = *input.translationArray;
+        *mRotationArray = *input.mRotationArray;
+        *mScaleArray = *input.mScaleArray;
+        *mTranslationArray = *input.mTranslationArray;
     }
     return *this;
 }
@@ -121,10 +90,10 @@ void Transform::SetTranslation( float* trans )
 {
     if( trans )
     {
-        translationArray->Clear();
-        translationArray->AddElementToArray( trans[0] );
-        translationArray->AddElementToArray( trans[1] );
-        translationArray->AddElementToArray( trans[2] );
+        mTranslationArray->Clear();
+        mTranslationArray->AddElementToArray( trans[0] );
+        mTranslationArray->AddElementToArray( trans[1] );
+        mTranslationArray->AddElementToArray( trans[2] );
     }
 }
 ////////////////////////////////////////
@@ -132,10 +101,10 @@ void Transform::SetScale( float* scale )
 {
     if( scale )
     {
-        scaleArray->Clear();
-        scaleArray->AddElementToArray( scale[0] );
-        scaleArray->AddElementToArray( scale[1] );
-        scaleArray->AddElementToArray( scale[2] );
+        mScaleArray->Clear();
+        mScaleArray->AddElementToArray( scale[0] );
+        mScaleArray->AddElementToArray( scale[1] );
+        mScaleArray->AddElementToArray( scale[2] );
     }
 }
 //////////////////////////////////////////////
@@ -143,28 +112,12 @@ void Transform::SetRotation( float* rotation )
 {
     if( rotation )
     {
-        rotationArray->Clear();
-        rotationArray->AddElementToArray( rotation[0] );
-        rotationArray->AddElementToArray( rotation[1] );
-        rotationArray->AddElementToArray( rotation[2] );
+        mRotationArray->Clear();
+        mRotationArray->AddElementToArray( rotation[0] );
+        mRotationArray->AddElementToArray( rotation[1] );
+        mRotationArray->AddElementToArray( rotation[2] );
     }
 }
-////////////////////////////////////
-/*float* Transform::GetTranslation()
-{
-   return _translation;
-}
-//////////////////////////////
-float* Transform::GetScale()
-{
-   return _scale;
-}
-/////////////////////////////////
-float* Transform::GetRotation()
-{
-   return _rotation;
-}
-*/
 /////////////////////////////////////////////////////
 void Transform::_updateVEElement( const std::string& input )
 {
@@ -172,16 +125,16 @@ void Transform::_updateVEElement( const std::string& input )
     //we know this to be 3 float arrays
     //_nChildren = 3;
     // name comes from verg.xsd
-    translationArray->SetOwnerDocument( mRootDocument );
-    DOMElement* translationTag  = translationArray->GetXMLData( "translation" );
+    mTranslationArray->SetOwnerDocument( mRootDocument );
+    DOMElement* translationTag  = mTranslationArray->GetXMLData( "translation" );
     mVeElement->appendChild( translationTag );
 
-    scaleArray->SetOwnerDocument( mRootDocument );
-    DOMElement* scaleTag  = scaleArray->GetXMLData( "scale" );
+    mScaleArray->SetOwnerDocument( mRootDocument );
+    DOMElement* scaleTag  = mScaleArray->GetXMLData( "scale" );
     mVeElement->appendChild( scaleTag );
 
-    rotationArray->SetOwnerDocument( mRootDocument );
-    DOMElement* rotationTag  = rotationArray->GetXMLData( "rotation" );
+    mRotationArray->SetOwnerDocument( mRootDocument );
+    DOMElement* rotationTag  = mRotationArray->GetXMLData( "rotation" );
     mVeElement->appendChild( rotationTag );
 }
 //////////////////////////////////////////////////////////////
@@ -201,11 +154,11 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
 
             // do we need to delete the old one or does xerces handle this???
             //_nChildren = 3;
-            translationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "translation" ).toXMLString() )->item( 0 ) );
+            mTranslationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "translation" ).toXMLString() )->item( 0 ) );
 
-            scaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "scale" ).toXMLString() )->item( 0 ) );
+            mScaleArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "scale" ).toXMLString() )->item( 0 ) );
 
-            rotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "rotation" ).toXMLString() )->item( 0 ) );
+            mRotationArray->SetObjectFromXMLData( currentElement->getElementsByTagName( ves::open::xml::Convert( "rotation" ).toXMLString() )->item( 0 ) );
         }
     }
     else
@@ -215,35 +168,33 @@ void Transform::SetObjectFromXMLData( DOMNode* xmlInput )
     }
 }
 //////////////////////////////////////////////////////////////
-FloatArray* Transform::GetTranslationArray( void )
+FloatArrayPtr Transform::GetTranslationArray( void )
 {
-    return translationArray;
+    return mTranslationArray;
 }
 //////////////////////////////////////////////////////////////
-FloatArray* Transform::GetScaleArray( void )
+FloatArrayPtr Transform::GetScaleArray( void )
 {
-    return scaleArray;
+    return mScaleArray;
 }
 //////////////////////////////////////////////////////////////
-FloatArray* Transform::GetRotationArray( void )
+FloatArrayPtr Transform::GetRotationArray( void )
 {
-    return rotationArray;
+    return mRotationArray;
 }
 //////////////////////////////////////////////////////////////
-void Transform::SetTranslationArray( FloatArray* input )
+void Transform::SetTranslationArray( FloatArrayPtr input )
 {
-    translationArray = input;
+    mTranslationArray = input;
 }
 //////////////////////////////////////////////////////////////
-void Transform::SetScaleArray( FloatArray* input )
+void Transform::SetScaleArray( FloatArrayPtr input )
 {
-    scaleArray = input;
+    mScaleArray = input;
 }
 //////////////////////////////////////////////////////////////
-void Transform::SetRotationArray( FloatArray* input )
+void Transform::SetRotationArray( FloatArrayPtr input )
 {
-    rotationArray = input;
+    mRotationArray = input;
 }
-
-
-
+//////////////////////////////////////////////////////////////

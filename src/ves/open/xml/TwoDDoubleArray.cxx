@@ -44,10 +44,10 @@ using namespace ves::open::xml;
 TwoDDoubleArray::TwoDDoubleArray( unsigned int nElements )
         : XMLObject()
 {
-    _nElements  = nElements;
+    mNElements  = nElements;
     // These should match the schema for min and max occurances
     // of the float array
-    minIndex = 2;
+    mMinIndex = 2;
     SetObjectType( "TwoDDoubleArray" );
 }
 /////////////////////////////
@@ -55,22 +55,18 @@ TwoDDoubleArray::TwoDDoubleArray( unsigned int nElements )
 /////////////////////////////
 TwoDDoubleArray::~TwoDDoubleArray()
 {
-    for( size_t i = 0; i < oneDArray.size(); ++i )
-    {
-        delete oneDArray.at( i );
-    }
-    oneDArray.clear();
+    mOneDArray.clear();
 }
 ///////////////////////////////////////////
 TwoDDoubleArray::TwoDDoubleArray( const TwoDDoubleArray& input )
         : XMLObject( input )
 {
-    _nElements  = input._nElements;
-    for( size_t i = 0; i < input.oneDArray.size(); ++i )
+    mNElements  = input.mNElements;
+    for( size_t i = 0; i < input.mOneDArray.size(); ++i )
     {
-        oneDArray.push_back( new OneDDoubleArray( *( input.oneDArray.at( i ) ) ) );
+        mOneDArray.push_back( new OneDDoubleArray( *( input.mOneDArray.at( i ) ) ) );
     }
-    minIndex = input.minIndex;
+    mMinIndex = input.mMinIndex;
 }
 /////////////////////////////////////////////////////
 TwoDDoubleArray& TwoDDoubleArray::operator=( const TwoDDoubleArray& input )
@@ -79,18 +75,14 @@ TwoDDoubleArray& TwoDDoubleArray::operator=( const TwoDDoubleArray& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        _nElements = input._nElements;
-        minIndex = input.minIndex;
+        mNElements = input.mNElements;
+        mMinIndex = input.mMinIndex;
 
-        for( size_t i = 0; i < oneDArray.size(); ++i )
-        {
-            delete oneDArray.at( i );
-        }
-        oneDArray.clear();
+        mOneDArray.clear();
 
-        for( size_t i = 0; i < input.oneDArray.size(); ++i )
+        for( size_t i = 0; i < input.mOneDArray.size(); ++i )
         {
-            oneDArray.push_back( new OneDDoubleArray( *( input.oneDArray.at( i ) ) ) );
+            mOneDArray.push_back( new OneDDoubleArray( *( input.mOneDArray.at( i ) ) ) );
         }
     }
     return *this;
@@ -98,31 +90,27 @@ TwoDDoubleArray& TwoDDoubleArray::operator=( const TwoDDoubleArray& input )
 /////////////////////////////////////////////////
 void TwoDDoubleArray::AddElementToArray( std::vector< double > value )
 {
-    oneDArray.push_back( new OneDDoubleArray( ) );
-    oneDArray.back()->SetArray( value );
-    _nElements = static_cast< unsigned int >( oneDArray.size() );
+    mOneDArray.push_back( new OneDDoubleArray( ) );
+    mOneDArray.back()->SetArray( value );
+    mNElements = static_cast< unsigned int >( mOneDArray.size() );
 }
 /////////////////////////////////////////////////
-void TwoDDoubleArray::AddElementToArray( OneDDoubleArray* value )
+void TwoDDoubleArray::AddElementToArray( OneDDoubleArrayPtr value )
 {
-    oneDArray.push_back( value );
-    _nElements = static_cast< unsigned int >( oneDArray.size() );
+    mOneDArray.push_back( value );
+    mNElements = static_cast< unsigned int >( mOneDArray.size() );
 }
 /////////////////////////////////////////////////////////////////
 void TwoDDoubleArray::SetArray( std::vector< std::vector< double > > input )
 {
-    _nElements = static_cast< unsigned int >( input.size() );
+    mNElements = static_cast< unsigned int >( input.size() );
     // Clean old vector int
-    for( size_t i = 0; i < oneDArray.size(); ++i )
-    {
-        delete oneDArray.at( i );
-    }
-    oneDArray.clear();
+    mOneDArray.clear();
 
     for( size_t i = 0; i < input.size(); ++i )
     {
-        oneDArray.push_back( new OneDDoubleArray( ) );
-        oneDArray.back()->SetArray( input.at( i ) );
+        mOneDArray.push_back( new OneDDoubleArray( ) );
+        mOneDArray.back()->SetArray( input.at( i ) );
     }
 }
 //////////////////////////////////////////////////
@@ -130,7 +118,7 @@ double TwoDDoubleArray::GetElement( unsigned int i, unsigned int j )
 {
     try
     {
-        return oneDArray.at( i )->GetArray().at( j );
+        return mOneDArray.at( i )->GetArray().at( j );
     }
     catch ( ... )
     {
@@ -143,9 +131,9 @@ double TwoDDoubleArray::GetElement( unsigned int i, unsigned int j )
 std::vector< std::vector< double > > TwoDDoubleArray::GetArray( void )
 {
     std::vector< std::vector< double > > tempData;
-    for( size_t i = 0; i < oneDArray.size(); ++i )
+    for( size_t i = 0; i < mOneDArray.size(); ++i )
     {
-        tempData.push_back( oneDArray.at( i )->GetArray() );
+        tempData.push_back( mOneDArray.at( i )->GetArray() );
     }
 
     return tempData;
@@ -156,15 +144,15 @@ void TwoDDoubleArray::_updateVEElement( const std::string& input )
     //Be sure to set the number of children (_nChildren)
     //either here or in the updating subElements code
     //this will be based on the size of the double array
-    //_nChildren = static_cast< unsigned int >( oneDArray.size() );
+    //_nChildren = static_cast< unsigned int >( mOneDArray.size() );
 
     //Add code here to update the specific sub elements
     // This acutally needs to be an array of 1d arrays
-    for( size_t i = 0; i < oneDArray.size(); ++i )
+    for( size_t i = 0; i < mOneDArray.size(); ++i )
     {
         // name comes from verg.xsd
-        oneDArray.at( i )->SetOwnerDocument( mRootDocument );
-        mVeElement->appendChild( oneDArray.at( i )->GetXMLData( "index2" ) );
+        mOneDArray.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mOneDArray.at( i )->GetXMLData( "index2" ) );
     }
 }
 ////////////////////////////////////////////////////////////
@@ -174,7 +162,7 @@ void TwoDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
     //this is currently maxed out at 4 in the schema but
     //we can adjust this to be larger if needed. Also it
     //has to be at least 2 elements according to the schema
-    //_nElements = xerces->();
+    //mNElements = xerces->();
     DOMElement* currentElement = 0;
     if( xmlInput->getNodeType() == DOMNode::ELEMENT_NODE )
     {
@@ -183,18 +171,14 @@ void TwoDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
 
     if( currentElement )
     {
-        for( size_t i = 0; i < oneDArray.size(); ++i )
-        {
-            delete oneDArray.at( i );
-        }
-        oneDArray.clear();
+        mOneDArray.clear();
 
         // do we need to delete the old one or does xerces handle this???
-        //_nElements = xmlInput->getChildNodes()->getLength();
+        //mNElements = xmlInput->getChildNodes()->getLength();
         DOMNodeList* nodeList = currentElement->getElementsByTagName( ves::open::xml::Convert( "index2" ).toXMLString() );
         XMLSize_t numNodes = nodeList->getLength();
-        _nElements = numNodes;
-        if( minIndex > numNodes )
+        mNElements = numNodes;
+        if( mMinIndex > numNodes )
         {
             std::cerr << " ERROR : TwoDDoubleArray::SetObjectFromXMLData :" <<
             " This node has too few or too many children." << std::endl;
@@ -209,8 +193,8 @@ void TwoDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
         for( XMLSize_t i = 0; i < numNodes; ++i )
         {
             //We know this about the node so we can cast it...
-            oneDArray.push_back( new OneDDoubleArray( ) );
-            oneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
+            mOneDArray.push_back( new OneDDoubleArray( ) );
+            mOneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }
     else

@@ -237,7 +237,6 @@ protected:
     std::string mObjectNamespace;///<The namespace for this object;
     std::string mUuid;///<Data holder for id
 private:
-    //unsigned int mNChildren;///<The number of childern for this element.
 };
 ///Special case for bools
 template<>

@@ -43,38 +43,29 @@ using namespace ves::open::xml;
 ParameterBlock::ParameterBlock( unsigned int id )
         : XMLObject()
 {
-    _id = id;
-    _dcs = new Transform();
+    mId = id;
+    mDcs = new Transform();
     SetName( "NULL" );
     SetObjectType( "ParameterBlock" );
 }
 /////////////////////////////////////
 ParameterBlock::~ParameterBlock()
 {
-    delete _dcs;
-    _dcs = 0;
-
-    if( _properties.size() )
-    {
-        size_t nProps = _properties.size();
-        for( size_t i = nProps - 1; i > -1; i-- )
-        {
-            delete _properties.at( i );
-        }
-        _properties.clear();
-    }
+    mProperties.clear();
 }
 ///////////////////////////////////////////
 ParameterBlock::ParameterBlock( const ParameterBlock& input )
         : XMLObject( input )
 {
-    _dcs = new Transform( *input._dcs );
-    _id = input._id;
-    paramName = input.paramName;
+    mDcs = new Transform( *input.mDcs );
+    mId = input.mId;
+    mParamName = input.mParamName;
 
-    for( size_t i = 0; i < input._properties.size(); ++i )
+    mProperties.clear();
+
+    for( size_t i = 0; i < input.mProperties.size(); ++i )
     {
-        _properties.push_back( new DataValuePair( *( input._properties.at( i ) ) ) );
+        mProperties.push_back( new DataValuePair( *( input.mProperties.at( i ) ) ) );
     }
 }
 /////////////////////////////////////////////////////
@@ -84,19 +75,15 @@ ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        *_dcs = *input._dcs;
-        _id = input._id;
-        paramName = input.paramName;
+        *mDcs = *input.mDcs;
+        mId = input.mId;
+        mParamName = input.mParamName;
 
-        for( size_t i = 0; i < _properties.size(); ++i )
-        {
-            delete _properties.at( i );
-        }
-        _properties.clear();
+        mProperties.clear();
 
-        for( size_t i = 0; i < input._properties.size(); ++i )
+        for( size_t i = 0; i < input.mProperties.size(); ++i )
         {
-            _properties.push_back( new DataValuePair( *( input._properties.at( i ) ) ) );
+            mProperties.push_back( new DataValuePair( *( input.mProperties.at( i ) ) ) );
         }
     }
     return *this;
@@ -104,17 +91,17 @@ ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input )
 ////////////////////////////////////////////////
 void ParameterBlock::SetBlockId( unsigned int id )
 {
-    _id = id;
+    mId = id;
 }
 ///////////////////////////////////////////////////////////////////
-void ParameterBlock::SetTransform( Transform* transform )
+void ParameterBlock::SetTransform( TransformPtr transform )
 {
-    *_dcs = *transform;
+    *mDcs = *transform;
 }
 /////////////////////////////////////////////////////////////////
-void ParameterBlock::AddProperty( DataValuePair* prop )
+void ParameterBlock::AddProperty( DataValuePairPtr prop )
 {
-    _properties.push_back( prop );
+    mProperties.push_back( prop );
 }
 //////////////////////////////////////////////////////////////////
 //set the data from an string representing the xml              //
@@ -143,35 +130,26 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
         DOMElement* dataValueStringName = 0;
         //get the transform
         dataValueStringName = GetSubElement( currentElement, "transform", 0 );
-        if( _dcs )
-        {
-            delete _dcs;
-            _dcs = 0;
-        }
-        _dcs = new Transform();
-        _dcs->SetObjectFromXMLData( dataValueStringName );
+        mDcs = new Transform();
+        mDcs->SetObjectFromXMLData( dataValueStringName );
 
         //Get the block id
         dataValueStringName = GetSubElement( currentElement, "blockID", 0 );
-        GetAttribute( dataValueStringName, "blockID", _id );
+        GetAttribute( dataValueStringName, "blockID", mId );
 
         //Get the block name
         dataValueStringName = GetSubElement( currentElement, "blockName", 0 );
-        GetAttribute( dataValueStringName, "blockName", paramName );
+        GetAttribute( dataValueStringName, "blockName", mParamName );
 
         //Get the properties
-        for( size_t i = 0; i < _properties.size(); ++i )
-        {
-            delete _properties.at( i );
-        }
-        _properties.clear();
+        mProperties.clear();
 
         unsigned int numberOfProperties = currentElement->getElementsByTagName( ves::open::xml::Convert( "properties" ).toXMLString() )->getLength();
         for( unsigned int i = 0; i < numberOfProperties; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "properties", i );
-            _properties.push_back( new DataValuePair() );
-            _properties.back()->SetObjectFromXMLData( dataValueStringName );
+            mProperties.push_back( new DataValuePair() );
+            mProperties.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
 }
@@ -179,51 +157,51 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
 void ParameterBlock::_updateVEElement( const std::string& input )
 {
     //Add code here to update the specific sub elements
-    SetSubElement( "blockID", _id );
-    SetSubElement( "blockName", paramName );
+    SetSubElement( "blockID", mId );
+    SetSubElement( "blockName", mParamName );
     SetAttribute( "id", mUuid );
     DOMElement* tempElement;
-    tempElement = SetSubElement( "transform", _dcs );
-    SetAttribute( "objectType", _dcs->GetObjectType(), tempElement );
-    for( size_t i = 0; i < _properties.size(); ++i )
+    tempElement = SetSubElement( "transform", mDcs );
+    SetAttribute( "objectType", mDcs->GetObjectType(), tempElement );
+    for( size_t i = 0; i < mProperties.size(); ++i )
     {
-        tempElement = SetSubElement( "properties", _properties.at( i ) );
-        SetAttribute( "objectType", _properties.at( i )->GetObjectType(), tempElement );
+        tempElement = SetSubElement( "properties", mProperties.at( i ) );
+        SetAttribute( "objectType", mProperties.at( i )->GetObjectType(), tempElement );
     }
 }
 /////////////////////////////////////////
 unsigned int ParameterBlock::GetBlockId()
 {
-    return _id;
+    return mId;
 }
 /////////////////////////////////////////////////////
-Transform* ParameterBlock::GetTransform()
+TransformPtr ParameterBlock::GetTransform()
 {
-    return _dcs;
+    return mDcs;
 }
 ///////////////////////////////////////////////////////////////////////
-DataValuePair* ParameterBlock::GetProperty( std::string name )
+DataValuePairPtr ParameterBlock::GetProperty( std::string name )
 {
-    size_t nProps = _properties.size();
+    size_t nProps = mProperties.size();
     for( size_t i = 0; i < nProps; i++ )
     {
-        if( _properties.at( i )->GetDataName() == name )
+        if( mProperties.at( i )->GetDataName() == name )
         {
-            return _properties.at( i );
+            return mProperties.at( i );
         }
     }
     /*
-    _properties.push_back( new DataValuePair() );
-    _properties.back()->SetDataName( name );
+    mProperties.push_back( new DataValuePair() );
+    mProperties.back()->SetDataName( name );
     */
     return 0;
 }
 /////////////////////////////////////////////////////////////////////////
-DataValuePair* ParameterBlock::GetProperty( int index )
+DataValuePairPtr ParameterBlock::GetProperty( int index )
 {
     try
     {
-        return _properties.at( index );
+        return mProperties.at( index );
     }
     catch ( ... )
     {
@@ -235,31 +213,30 @@ DataValuePair* ParameterBlock::GetProperty( int index )
         }
         else
         {
-            _properties.push_back( new DataValuePair() );
-            return _properties.back();
+            mProperties.push_back( new DataValuePair() );
+            return mProperties.back();
         }
     }
 }
 /////////////////////////////////////////////////////////////////////////
 size_t ParameterBlock::GetNumberOfProperties( void )
 {
-    return _properties.size();
+    return mProperties.size();
 }
 /////////////////////////////////////////////////////////////////////////
 void ParameterBlock::RemoveProperty( unsigned int index )
 {
-    if( index >= _properties.size() )
+    if( index >= mProperties.size() )
     {
         return;
     }
 
-    std::vector< DataValuePair* >::iterator iter;
-    for( iter = _properties.begin(); iter != _properties.end(); ++iter )
+    std::vector< DataValuePairPtr >::iterator iter;
+    for( iter = mProperties.begin(); iter != mProperties.end(); ++iter )
     {
-        if( _properties.at( index ) == ( *iter ) )
+        if( mProperties.at( index ) == ( *iter ) )
         {
-            delete _properties.at( index );
-            _properties.erase( iter );
+            mProperties.erase( iter );
             break;
         }
     }
@@ -267,11 +244,11 @@ void ParameterBlock::RemoveProperty( unsigned int index )
 /////////////////////////////////////////////////////////////////////////
 void ParameterBlock::SetName( std::string name )
 {
-    paramName = name;
+    mParamName = name;
 }
 /////////////////////////////////////////////////////////////////////////
 std::string ParameterBlock::GetName( void )
 {
-    return paramName;
+    return mParamName;
 }
 
