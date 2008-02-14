@@ -107,19 +107,12 @@ END_EVENT_TABLE()
 //Here is the constructor with passed in pointers //
 ////////////////////////////////////////////////////
 CADNodePropertiesDlg::CADNodePropertiesDlg( wxWindow* parent,
-                                            int id, CADNode* activeNode )
+                                            int id, CADNodePtr activeNode )
 
         : wxDialog(( wxWindow * ) parent, id, _( "CAD Properties" ), wxDefaultPosition, wxDefaultSize,
                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Properties" ) )
 {
-    if( activeNode )
-    {
-        _cadNode = activeNode;
-    }
-    else
-    {
-        _cadNode = 0;
-    }
+    _cadNode = activeNode;
 
     _propertyTabs = 0;
     _transformPanel = 0;

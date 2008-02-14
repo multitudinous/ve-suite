@@ -109,7 +109,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
     }
 }
 ////////////////////////////////////////////////
-CADPart::CADPart( const CADPart& rhs, bool clone )
+CADPart::CADPart( CADPart& rhs, bool clone )
         : ves::open::xml::cad::CADNode( rhs, clone )
 {
     m_cadFileName = rhs.m_cadFileName;

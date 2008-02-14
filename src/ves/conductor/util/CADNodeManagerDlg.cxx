@@ -233,17 +233,17 @@ void CADNodeManagerDlg::_editLabel( wxTreeEvent& event )
 
         _commandName = std::string( "CAD_SET_NODE_NAME" );
 
-        ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
         nodeID->SetDataType( "STRING" );
         nodeID->SetData( std::string( "Node ID" ), cadNode->GetNode()->GetID() );
         _dataValuePairList.push_back( nodeID );
 
-        ves::open::xml::DataValuePair* nodeType = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeType = new ves::open::xml::DataValuePair();
         nodeType->SetDataType( "STRING" );
         nodeType->SetData( std::string( "Node Type" ), cadNode->GetNode()->GetNodeType() );
         _dataValuePairList.push_back( nodeType );
 
-        ves::open::xml::DataValuePair* nodeName = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr nodeName = new ves::open::xml::DataValuePair();
         nodeName->SetDataType( "STRING" );
         nodeName->SetData( std::string( "Node Name" ), cadNode->GetNode()->GetNodeName() );
         _dataValuePairList.push_back( nodeName );
@@ -343,11 +343,12 @@ void CADNodeManagerDlg::_createNewAssembly( wxCommandEvent& WXUNUSED( event ) )
             assemblyNameDlg.CentreOnParent();
             assemblyNameDlg.ShowModal();
 
+            CADAssemblyPtr tempAssembly = _activeCADNode;
             CADAssemblyPtr newAssembly = new CADAssembly( ConvertUnicode( assemblyNameDlg.GetValue().GetData() ) );
-            newAssembly->SetParent( _activeCADNode->GetID() );
+            newAssembly->SetParent( tempAssembly->GetID() );
             //_toggleNodeOnOff[newAssembly->GetID()] = true;
             newAssembly->SetVisibility( true );
-            _activeCADNode->AddChild( newAssembly );
+            tempAssembly->AddChild( newAssembly );
 
 
             _geometryTree->SetItemImage( _activeTreeNode->GetId(), 2, wxTreeItemIcon_Expanded );
@@ -450,14 +451,16 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
 {
     if( _activeCADNode )
     {
-        CADNode* newClone = 0;
+        CADNodePtr newClone = 0;
         if( _activeCADNode->GetNodeType() == "Part" )
         {
-            newClone = new CADPart( *_activeCADNode, true );
+            CADPartPtr tempPart = _activeCADNode;
+            newClone = new CADPart( *tempPart, true );
         }
         else if( _activeCADNode->GetNodeType() == "Assembly" )
         {
-            newClone = new CADAssembly( *_activeCADNode, true );
+            CADAssemblyPtr tempAssembly = _activeCADNode;
+            newClone = new CADAssembly( *tempAssembly, true );
         }
         else
         {
@@ -482,7 +485,8 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
         CADTreeBuilder::TreeNodeData* parentCADNode =
             dynamic_cast<CADTreeBuilder::TreeNodeData*>( _geometryTree->GetItemData( parentID ) );
 
-        parentCADNode->GetNode()->AddChild( newClone );
+        CADAssemblyPtr tempAssembly = parentCADNode->GetNode();
+        tempAssembly->AddChild( newClone );
 
         _cadTreeBuilder->SetCurrentParentNode( parentID );
         _cadTreeBuilder->SetRootNode( newClone );
@@ -572,7 +576,8 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
     if( loadedNodes.size() )
     {
         //std::cout<<"---Loaded Assembly---"<<std::endl;
-        newAssembly = new CADAssembly( *loadedNodes.at( 0 ) );
+        CADAssemblyPtr tempAssembly = loadedNodes.at( 0 );
+        newAssembly = new CADAssembly( *tempAssembly );
         //_toggleNodeOnOff[newAssembly->GetID()] = true;
         //newAssembly->SetVisibility(true);
     }
@@ -583,7 +588,8 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
         if( loadedNodes.size() )
         {
             //std::cout<<"---Loaded Part---"<<std::endl;
-            newPart = new CADPart( *loadedNodes.at( 0 ) );
+            CADPartPtr trempPart = loadedNodes.at( 0 );
+            newPart = new CADPart( *trempPart );
             //_toggleNodeOnOff[newPart->GetID()] = true;
             //newPart->SetVisibility(true);
         }
@@ -602,14 +608,16 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
             }
             catch( ... )
             {
-                _activeCADNode->AddChild( newAssembly );
+                CADAssemblyPtr tempAssembly = _activeCADNode;
+                tempAssembly->AddChild( newAssembly );
                 SetRootCADNode( _rootNode );
             }
         }
         else if( newPart )
         {
+            CADAssemblyPtr tempAssembly = _activeCADNode;
             _loadedCAD[fileName] = newPart;
-            _activeCADNode->AddChild( newPart );
+            tempAssembly->AddChild( newPart );
             SetRootCADNode( _rootNode );
         }
         _commandName = "CAD_ADD_NODE";
@@ -676,7 +684,8 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
     //_toggleNodeOnOff[newCADPart->GetID()] = true;
     newCADPart->SetVisibility( true );
 
-    _activeCADNode->AddChild( newCADPart );
+    CADAssemblyPtr tempAssembly = _activeCADNode;
+    tempAssembly->AddChild( newCADPart );
 
     _geometryTree->AppendItem( _activeTreeNode->GetId(), wxString( newCADPart->GetNodeName().c_str(), wxConvUTF8 ),
                                0, 1, new CADTreeBuilder::TreeNodeData( newCADPart ) );
@@ -810,7 +819,8 @@ void CADNodeManagerDlg::_deleteNode( wxCommandEvent& WXUNUSED( event ) )
         _sendCommandsToXplorer();
         ClearInstructions();
 
-        parentCADNode->RemoveChild( _activeCADNode->GetID() );
+        CADAssemblyPtr tempAssembly = parentCADNode;
+        tempAssembly->RemoveChild( _activeCADNode->GetID() );
 
         for( std::map<wxString, ves::open::xml::cad::CADNodePtr >::iterator deletedNode = _loadedCAD.begin();
                 deletedNode != _loadedCAD.end();
@@ -876,7 +886,7 @@ void CADNodeManagerDlg::_onEndNodeMove( wxTreeEvent& event )
     _geometryTree->SetItemImage( newParentNode, 2, wxTreeItemIcon_SelectedExpanded );
 }
 /////////////////////////////////////////////////////////////////////////// `
-void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNode* movingChild,
+void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNodePtr movingChild,
                                               wxTreeItemId oldParentTreeID,
                                               wxTreeItemId newParentTreeID )
 {
@@ -917,7 +927,8 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNode* movi
         dynamic_cast<CADTreeBuilder::TreeNodeData*>
         ( _geometryTree->GetItemData( oldParentTreeID ) );
 
-    oldParentTreeNode->GetNode()->RemoveChild( movingChild->GetID() );
+    CADAssemblyPtr tempAssembly = oldParentTreeNode->GetNode();
+    tempAssembly->RemoveChild( movingChild->GetID() );
 
     newParent->AddChild( movingChild );
 

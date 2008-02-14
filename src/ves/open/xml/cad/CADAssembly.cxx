@@ -260,7 +260,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
     }
 }
 ///////////////////////////////////////////////////////////
-CADAssembly::CADAssembly( const CADAssembly& rhs, bool clone )
+CADAssembly::CADAssembly( CADAssembly& rhs, bool clone )
         : ves::open::xml::cad::CADNode( rhs, clone )
 {
 

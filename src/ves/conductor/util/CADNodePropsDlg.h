@@ -102,7 +102,7 @@ public:
     ///\param parent The parent window.
     ///\param id The ID for the dialog.
     ///\param node The CADNode to display properties of.
-    CADNodePropertiesDlg( wxWindow* parent, int id, ves::open::xml::cad::CADNode* node );
+    CADNodePropertiesDlg( wxWindow* parent, int id, ves::open::xml::cad::CADNodePtr node );
 
     ///Destructor
     virtual ~CADNodePropertiesDlg();

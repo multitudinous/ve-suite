@@ -110,7 +110,7 @@ public:
     ///Copy constructor
     //\param rhs The CADPart to copy
     ///\param clone Create a clone of this node
-    CADAssembly( const CADAssembly& rhs, bool clone = false );
+    CADAssembly( CADAssembly& rhs, bool clone = false );
 
     ///Equal operator
     CADAssembly& operator=( const CADAssembly& rhs );
