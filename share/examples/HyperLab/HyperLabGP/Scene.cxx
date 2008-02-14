@@ -62,12 +62,23 @@ m_whiteDucts( 0 ),
 m_whitePipes( 0 ),
 m_yellow( 0 ),
 
-m_frame( 0 ),
-m_railing( 0 ),
-m_plenumPiping( 0 ),
 m_blowerComponents( 0 ),
 m_brackets( 0 ),
 m_cementBase( 0 ),
+m_combustorPiping( 0 ),
+m_compressorInlet( 0 ),
+m_frame( 0 ),
+m_heatExchanger( 0 ),
+m_heatExchangerSweep( 0 ),
+m_load( 0 ),
+m_plenumPiping( 0 ),
+m_plenumSystem( 0 ),
+m_railing( 0 ),
+m_reliefPiping( 0 ),
+m_shell( 0 ),
+m_stack( 0 ),
+m_turbineExhaust( 0 ),
+m_turbinePostCombustor( 0 ),
 
 m_shadowedScene( 0 ),
 
@@ -100,240 +111,115 @@ Scene::~Scene()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::DefaultVisuals()
 {
-    shader->SetOptions( m_ceiling.get(),
-                        false, false, "WallMap" );
-    shader->SetOptions( m_details.get(),
-                        false, false, "Decoration" );
-    shader->SetOptions( m_floor.get(),
-                        false, false, "WallMap" );
-    shader->SetOptions( m_walls.get(),
-                        false, false, "WallMap" );
+    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
+    shader->SetOptions( m_details.get(), false, false, "Decoration" );
+    shader->SetOptions( m_floor.get(), false, false, "WallMap" );
+    shader->SetOptions( m_walls.get(), false, false, "WallMap" );
 
-    shader->SetOptions( m_aluminumParts.get(),
-                        false, true );
-    shader->SetOptions( m_aluminumPipes.get(),
-                        false, true );
-    shader->SetOptions( m_black.get(),
-                        false, true );
-    shader->SetOptions( m_brown.get(),
-                        false, true );
-    shader->SetOptions( m_glass.get(),
-                        false, true );
-    shader->SetOptions( m_lights.get(),
-                        false, true );
-    shader->SetOptions( m_ltGreen.get(),
-                        false, true );
-    shader->SetOptions( m_ltGrey.get(),
-                        false, true );
-    shader->SetOptions( m_orange.get(),
-                        false, true );
-    shader->SetOptions( m_red.get(),
-                        false, true );
-    shader->SetOptions( m_redBrown.get(),
-                        false, true );
-    shader->SetOptions( m_whiteDucts.get(),
-                        false, true );
-    shader->SetOptions( m_whitePipes.get(),
-                        false, true );
-    shader->SetOptions( m_yellow.get(),
-                        false, true );
-
-    shader->SetOptions( m_frame.get(),
-                        false, true );
-    shader->SetOptions( m_railing.get(),
-                        false, true );
-    shader->SetOptions( m_plenumPiping.get(),
-                        false, true );
-    shader->SetOptions( m_blowerComponents.get(),
-                        false, true );
-    shader->SetOptions( m_brackets.get(),
-                        false, true );
-    shader->SetOptions( m_cementBase.get(),
-                        false, true );
-
-    //Set material defaults
-    /*
-    combustor_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    combustor_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    combustor_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    combustor_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    combustor_piping_material->setShininess(osg::Material::FRONT,10.0f);
-
-    compressor_inlet_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    compressor_inlet_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    compressor_inlet_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    compressor_inlet_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    compressor_inlet_material->setShininess(osg::Material::FRONT,10.0f);
-
-    heat_exchanger_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    heat_exchanger_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    heat_exchanger_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    heat_exchanger_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    heat_exchanger_material->setShininess(osg::Material::FRONT,10.0f);
-
-    heat_exchanger_sweep_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    heat_exchanger_sweep_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    heat_exchanger_sweep_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    heat_exchanger_sweep_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    heat_exchanger_sweep_material->setShininess(osg::Material::FRONT,10.0f);
-
-    load_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    load_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    load_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    load_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    load_material->setShininess(osg::Material::FRONT,10.0f);
-
-    plenum_system_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    plenum_system_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    plenum_system_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    plenum_system_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    plenum_system_material->setShininess(osg::Material::FRONT,10.0f);
-
-    relief_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    relief_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    relief_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    relief_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    relief_piping_material->setShininess(osg::Material::FRONT,10.0f);
-
-    shell_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    shell_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    shell_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    shell_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    shell_material->setShininess(osg::Material::FRONT,10.0f);
-
-    stack_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    stack_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    stack_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    stack_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    stack_material->setShininess(osg::Material::FRONT,10.0f);
-
-    turbine_exhaust_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    turbine_exhaust_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    turbine_exhaust_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    turbine_exhaust_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    turbine_exhaust_material->setShininess(osg::Material::FRONT,10.0f);
-
-    turbine_postcombustor_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    turbine_postcombustor_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    turbine_postcombustor_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    turbine_postcombustor_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    turbine_postcombustor_material->setShininess(osg::Material::FRONT,10.0f);
-
-    miscellaneous_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    miscellaneous_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    miscellaneous_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    miscellaneous_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    miscellaneous_material->setShininess(osg::Material::FRONT,10.0f);
-    */
+    shader->SetOptions( m_aluminumParts.get(), false, true );
+    shader->SetOptions( m_aluminumPipes.get(), false, true );
+    shader->SetOptions( m_black.get(), false, true );
+    shader->SetOptions( m_brown.get(), false, true );
+    shader->SetOptions( m_glass.get(), false, true );
+    shader->SetOptions( m_lights.get(), false, true );
+    shader->SetOptions( m_ltGreen.get(), false, true );
+    shader->SetOptions( m_ltGrey.get(), false, true );
+    shader->SetOptions( m_orange.get(), false, true );
+    shader->SetOptions( m_red.get(), false, true );
+    shader->SetOptions( m_redBrown.get(), false, true );
+    shader->SetOptions( m_whiteDucts.get(), false, true );
+    shader->SetOptions( m_whitePipes.get(), false, true );
+    shader->SetOptions( m_yellow.get(), false, true );
+    
+    shader->SetOptions( m_blowerComponents.get(), false, true );
+    shader->SetOptions( m_brackets.get(), false, true );
+    shader->SetOptions( m_cementBase.get(), false, true );
+    shader->SetOptions( m_combustorPiping.get(), false, true );
+    shader->SetOptions( m_compressorInlet.get(), false, true );
+    shader->SetOptions( m_frame.get(), false, true );
+    shader->SetOptions( m_heatExchanger.get(), false, true );
+    shader->SetOptions( m_heatExchangerSweep.get(), false, true );
+    shader->SetOptions( m_load.get(), false, true );
+    shader->SetOptions( m_plenumPiping.get(), false, true );
+    shader->SetOptions( m_plenumSystem.get(), false, true );
+    shader->SetOptions( m_railing.get(), false, true );
+    shader->SetOptions( m_reliefPiping.get(), false, true );
+    shader->SetOptions( m_shell.get(), false, true );
+    shader->SetOptions( m_stack.get(), false, true );
+    shader->SetOptions( m_turbineExhaust.get(), false, true );
+    shader->SetOptions( m_turbinePostCombustor.get(), false, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::AdvancedVisuals()
 {
     float reflectionPercentage;
-    shader->SetOptions( m_ceiling.get(),
-                        false, false, "WallMap" );
-    shader->SetOptions( m_details.get(),
-                        false, false, "Decoration" );
-    shader->SetOptions( m_floor.get(),
-                        false, false, "WallMap",
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
-    shader->SetOptions( m_walls.get(),
-                        false, false, "WallMap",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_aluminumParts.get(),
-                        false, true,
-                        "",
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
-    shader->SetOptions( m_aluminumPipes.get(),
-                        false, true,
-                        "",
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
-    shader->SetOptions( m_black.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_brown.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_glass.get(),
-                        false, true,
-                        "",
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
-    shader->SetOptions( m_lights.get(),
-                        false, true );
-    shader->SetOptions( m_ltGreen.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_ltGrey.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_orange.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_red.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_redBrown.get(),
-                        false, true );
-    shader->SetOptions( m_whiteDucts.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_whitePipes.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_yellow.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
+    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
+    shader->SetOptions( m_details.get(), false, false, "Decoration",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_floor.get(), false, false, "WallMap",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_walls.get(), false, false, "WallMap",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_aluminumParts.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_aluminumPipes.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_black.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_brown.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_glass.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_lights.get(), false, true );
+    shader->SetOptions( m_ltGreen.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_ltGrey.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_orange.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_red.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_redBrown.get(), false, true );
+    shader->SetOptions( m_whiteDucts.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_whitePipes.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_yellow.get(), false, true, "",
+                        NULL, m_shadow.get() );
 
-    shader->SetOptions( m_frame.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_railing.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
-    shader->SetOptions( m_plenumPiping.get(),
-                        false, true,
-                        "",
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
-    shader->SetOptions( m_blowerComponents.get(),
-                        false, true,
-                        "",
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
-    shader->SetOptions( m_brackets.get(),
-                        false, true );
-    shader->SetOptions( m_cementBase.get(),
-                        false, true,
-                        "",
-                        NULL,
-                        m_shadow.get() );
+    shader->SetOptions( m_blowerComponents.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_brackets.get(), false, true );
+    shader->SetOptions( m_cementBase.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_combustorPiping.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_compressorInlet.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_frame.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_heatExchanger.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_heatExchangerSweep.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_load.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_plenumPiping.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_plenumSystem.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_railing.get(), false, true, "",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_reliefPiping.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_shell.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_stack.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_turbineExhaust.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( m_turbinePostCombustor.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::XRay()
@@ -357,12 +243,23 @@ void Scene::XRay()
     shader->SetOptions( m_whitePipes.get(), true );
     shader->SetOptions( m_yellow.get(), true );
 
-    shader->SetOptions( m_frame.get(), true );
-    shader->SetOptions( m_railing.get(), true );
-    shader->SetOptions( m_plenumPiping.get(), true );
     shader->SetOptions( m_blowerComponents.get(), true );
     shader->SetOptions( m_brackets.get(), true );
     shader->SetOptions( m_cementBase.get(), true );
+    shader->SetOptions( m_combustorPiping.get(), true );
+    shader->SetOptions( m_compressorInlet.get(), true );
+    shader->SetOptions( m_frame.get(), true );
+    shader->SetOptions( m_heatExchanger.get(), true );
+    shader->SetOptions( m_heatExchangerSweep.get(), true );
+    shader->SetOptions( m_load.get(), true );
+    shader->SetOptions( m_plenumPiping.get(), true );
+    shader->SetOptions( m_plenumSystem.get(), true );
+    shader->SetOptions( m_railing.get(), true );
+    shader->SetOptions( m_reliefPiping.get(), true );
+    shader->SetOptions( m_shell.get(), true );
+    shader->SetOptions( m_stack.get(), true );
+    shader->SetOptions( m_turbineExhaust.get(), true );
+    shader->SetOptions( m_turbinePostCombustor.get(), true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Light* Scene::GetLight()
@@ -582,7 +479,7 @@ void Scene::CreateNodes()
         stateset->setAttributeAndModes( redBrownMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > wallsMaterial = new osg::Material();
-        wallsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 3.4f, 3.4f, 3.4f, 1.0f ) );
+        wallsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 3.0f, 3.0f, 3.0f, 1.0f ) );
         wallsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.85f, 0.7f, 0.3f, 1.0f ) );
         wallsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         wallsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
@@ -618,45 +515,40 @@ void Scene::CreateNodes()
         stateset->setAttributeAndModes( yellowMaterial.get(), osg::StateAttribute::ON );
     }
 
-    m_frame = osgDB::readNodeFile( "./Models/IVEs/Frame.ive" );
-    m_pluginDCS->addChild( m_frame.get() );
-    m_railing = osgDB::readNodeFile( "./Models/IVEs/Railing.ive" );
-    m_pluginDCS->addChild( m_railing.get() );
-    m_plenumPiping = osgDB::readNodeFile( "./Models/IVEs/PlenumPiping.ive" );
-    m_pluginDCS->addChild( m_plenumPiping.get() );
     m_blowerComponents = osgDB::readNodeFile( "./Models/IVEs/BlowerComponents.ive" );
     m_pluginDCS->addChild( m_blowerComponents.get() );
     m_brackets = osgDB::readNodeFile( "./Models/IVEs/Brackets.ive" );
     m_pluginDCS->addChild( m_brackets.get() );
     m_cementBase = osgDB::readNodeFile( "./Models/IVEs/CementBase.ive" );
     m_pluginDCS->addChild( m_cementBase.get() );
-
-    osg::ref_ptr< osg::Material > frameMaterial = new osg::Material();
-    frameMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    frameMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-    frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-    frameMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    frameMaterial->setShininess( osg::Material::FRONT, 12.0f );
-    stateset = m_frame->getOrCreateStateSet();
-    stateset->setAttributeAndModes( frameMaterial.get(), osg::StateAttribute::ON );
-    
-    osg::ref_ptr< osg::Material > railingMaterial = new osg::Material();
-    railingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    railingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
-    railingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.9f, 0.2f, 1.0f ) );
-    railingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    railingMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_railing->getOrCreateStateSet();
-    stateset->setAttributeAndModes( railingMaterial.get(), osg::StateAttribute::ON );
-
-    osg::ref_ptr< osg::Material > plenumPipingMaterial = new osg::Material();
-    plenumPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    plenumPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    plenumPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    plenumPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    plenumPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_plenumPiping->getOrCreateStateSet();
-    stateset->setAttributeAndModes( plenumPipingMaterial.get(), osg::StateAttribute::ON );
+    m_combustorPiping = osgDB::readNodeFile( "./Models/IVEs/CombustorPiping.ive" );
+    m_pluginDCS->addChild( m_combustorPiping.get() );
+    m_compressorInlet = osgDB::readNodeFile( "./Models/IVEs/CompressorInlet.ive" );
+    m_pluginDCS->addChild( m_compressorInlet.get() );
+    m_frame = osgDB::readNodeFile( "./Models/IVEs/Frame.ive" );
+    m_pluginDCS->addChild( m_frame.get() );
+    m_heatExchanger = osgDB::readNodeFile( "./Models/IVEs/HeatExchanger.ive" );
+    m_pluginDCS->addChild( m_heatExchanger.get() );
+    m_heatExchangerSweep = osgDB::readNodeFile( "./Models/IVEs/HeatExchangerSweep.ive" );
+    m_pluginDCS->addChild( m_heatExchangerSweep.get() );
+    m_load = osgDB::readNodeFile( "./Models/IVEs/Load.ive" );
+    m_pluginDCS->addChild( m_load.get() );
+    m_plenumPiping = osgDB::readNodeFile( "./Models/IVEs/PlenumPiping.ive" );
+    m_pluginDCS->addChild( m_plenumPiping.get() );
+    m_plenumSystem = osgDB::readNodeFile( "./Models/IVEs/PlenumSystem.ive" );
+    m_pluginDCS->addChild( m_plenumSystem.get() );
+    m_railing = osgDB::readNodeFile( "./Models/IVEs/Railing.ive" );
+    m_pluginDCS->addChild( m_railing.get() );
+    m_reliefPiping = osgDB::readNodeFile( "./Models/IVEs/ReliefPiping.ive" );
+    m_pluginDCS->addChild( m_reliefPiping.get() );
+    m_shell = osgDB::readNodeFile( "./Models/IVEs/Shell.ive" );
+    m_pluginDCS->addChild( m_shell.get() );
+    m_stack = osgDB::readNodeFile( "./Models/IVEs/Stack.ive" );
+    m_pluginDCS->addChild( m_stack.get() );
+    m_turbineExhaust = osgDB::readNodeFile( "./Models/IVEs/TurbineExhaust.ive" );
+    m_pluginDCS->addChild( m_turbineExhaust.get() );
+    m_turbinePostCombustor = osgDB::readNodeFile( "./Models/IVEs/TurbinePostCombustor.ive" );
+    m_pluginDCS->addChild( m_turbinePostCombustor.get() );
 
     osg::ref_ptr< osg::Material > blowerComponentsMaterial = new osg::Material();
     blowerComponentsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
@@ -685,68 +577,131 @@ void Scene::CreateNodes()
     stateset = m_cementBase->getOrCreateStateSet();
     stateset->setAttributeAndModes( cementBaseMaterial.get(), osg::StateAttribute::ON );
 
-        /*
-        combustor_piping=osgDB::readNodeFile("./Models/IVEs/CombustorPiping.ive");
-        stateset=combustor_piping->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(combustor_piping_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(combustor_piping.get());
+    osg::ref_ptr< osg::Material > combustorPipingMaterial = new osg::Material();
+    combustorPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    combustorPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    combustorPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    combustorPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    combustorPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_combustorPiping->getOrCreateStateSet();
+    stateset->setAttributeAndModes( combustorPipingMaterial.get(), osg::StateAttribute::ON );
 
-        compressor_inlet=osgDB::readNodeFile("./Models/IVEs/CompressorInlet.ive");
-        stateset=compressor_inlet->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(compressor_inlet_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(compressor_inlet.get());
+    osg::ref_ptr< osg::Material > compressorInletMaterial = new osg::Material();
+    compressorInletMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    compressorInletMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    compressorInletMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    compressorInletMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    compressorInletMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_compressorInlet->getOrCreateStateSet();
+    stateset->setAttributeAndModes( compressorInletMaterial.get(), osg::StateAttribute::ON );
 
-        heat_exchanger=osgDB::readNodeFile("./Models/IVEs/HeatExchanger.ive");
-        stateset=heat_exchanger->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(heat_exchanger_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(heat_exchanger.get());
+    osg::ref_ptr< osg::Material > frameMaterial = new osg::Material();
+    frameMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    frameMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    frameMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    frameMaterial->setShininess( osg::Material::FRONT, 12.0f );
+    stateset = m_frame->getOrCreateStateSet();
+    stateset->setAttributeAndModes( frameMaterial.get(), osg::StateAttribute::ON );
 
-        heat_exchanger_sweep=osgDB::readNodeFile("./Models/IVEs/HeatExchangerSweep.ive");
-        stateset=heat_exchanger_sweep->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(heat_exchanger_sweep_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(heat_exchanger_sweep.get());
+    osg::ref_ptr< osg::Material > heatExchangerMaterial = new osg::Material();
+    heatExchangerMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    heatExchangerMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    heatExchangerMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    heatExchangerMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    heatExchangerMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_heatExchanger->getOrCreateStateSet();
+    stateset->setAttributeAndModes( heatExchangerMaterial.get(), osg::StateAttribute::ON );
 
-        load=osgDB::readNodeFile("./Models/IVEs/Load.ive");
-        stateset=load->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(load_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(load.get());
+    osg::ref_ptr< osg::Material > heatExchangerSweepMaterial = new osg::Material();
+    heatExchangerSweepMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    heatExchangerSweepMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    heatExchangerSweepMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    heatExchangerSweepMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    heatExchangerSweepMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_heatExchangerSweep->getOrCreateStateSet();
+    stateset->setAttributeAndModes( heatExchangerSweepMaterial.get(), osg::StateAttribute::ON );
 
-        plenum_system=osgDB::readNodeFile("./Models/IVEs/PlenumSystem.ive");
-        stateset=plenum_system->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(plenum_system_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(plenum_system.get());
+    osg::ref_ptr< osg::Material > loadMaterial = new osg::Material();
+    loadMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    loadMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    loadMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    loadMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    loadMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_load->getOrCreateStateSet();
+    stateset->setAttributeAndModes( loadMaterial.get(), osg::StateAttribute::ON );
 
-        relief_piping=osgDB::readNodeFile("./Models/IVEs/ReliefPiping.ive");
-        stateset=relief_piping->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(relief_piping_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(relief_piping.get());
+    osg::ref_ptr< osg::Material > plenumPipingMaterial = new osg::Material();
+    plenumPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    plenumPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    plenumPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    plenumPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    plenumPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_plenumPiping->getOrCreateStateSet();
+    stateset->setAttributeAndModes( plenumPipingMaterial.get(), osg::StateAttribute::ON );
 
-        shell=osgDB::readNodeFile("./Models/IVEs/Shell.ive");
-        stateset=shell->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(shell_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(shell.get());
+    osg::ref_ptr< osg::Material > plenumSystemMaterial = new osg::Material();
+    plenumSystemMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    plenumSystemMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    plenumSystemMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    plenumSystemMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    plenumSystemMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_plenumSystem->getOrCreateStateSet();
+    stateset->setAttributeAndModes( plenumSystemMaterial.get(), osg::StateAttribute::ON );
 
-        stack=osgDB::readNodeFile("./Models/IVEs/Stack.ive");
-        stateset=stack->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(stack_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(stack.get());
+    osg::ref_ptr< osg::Material > railingMaterial = new osg::Material();
+    railingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    railingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
+    railingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.9f, 0.2f, 1.0f ) );
+    railingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    railingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_railing->getOrCreateStateSet();
+    stateset->setAttributeAndModes( railingMaterial.get(), osg::StateAttribute::ON );
 
-        turbine_exhaust=osgDB::readNodeFile("./Models/IVEs/TurbineExhaust.ive");
-        stateset=turbine_exhaust->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(turbine_exhaust_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(turbine_exhaust.get());
+    osg::ref_ptr< osg::Material > reliefPipingMaterial = new osg::Material();
+    reliefPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    reliefPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    reliefPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    reliefPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    reliefPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_reliefPiping->getOrCreateStateSet();
+    stateset->setAttributeAndModes( reliefPipingMaterial.get(), osg::StateAttribute::ON );
 
-        turbine_postcombustor=osgDB::readNodeFile("./Models/IVEs/TurbinePostCombustor.ive");
-        stateset=turbine_postcombustor->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(turbine_postcombustor_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(turbine_postcombustor.get());
+    osg::ref_ptr< osg::Material > shellMaterial = new osg::Material();
+    shellMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    shellMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    shellMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    shellMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    shellMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_shell->getOrCreateStateSet();
+    stateset->setAttributeAndModes( shellMaterial.get(), osg::StateAttribute::ON );
 
-        miscellaneous=osgDB::readNodeFile("./Models/IVEs/Instrumentation.ive");
-        stateset=miscellaneous->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(miscellaneous_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(miscellaneous.get());
+    osg::ref_ptr< osg::Material > stackMaterial = new osg::Material();
+    stackMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    stackMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    stackMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    stackMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    stackMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_stack->getOrCreateStateSet();
+    stateset->setAttributeAndModes( stackMaterial.get(), osg::StateAttribute::ON );
 
-        */
+    osg::ref_ptr< osg::Material > turbineExhaustMaterial = new osg::Material();
+    turbineExhaustMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    turbineExhaustMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    turbineExhaustMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    turbineExhaustMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    turbineExhaustMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_turbineExhaust->getOrCreateStateSet();
+    stateset->setAttributeAndModes( turbineExhaustMaterial.get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Material > turbinePostCombustorMaterial = new osg::Material();
+    turbinePostCombustorMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    turbinePostCombustorMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    turbinePostCombustorMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    turbinePostCombustorMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    turbinePostCombustorMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_turbinePostCombustor->getOrCreateStateSet();
+    stateset->setAttributeAndModes( turbinePostCombustorMaterial.get(), osg::StateAttribute::ON );
 
     //Create physics mesh for room
     m_room->InitPhysics();
@@ -773,12 +728,22 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_whitePipes.get() );
     m_shadowedScene->addChild( m_yellow.get() );
 
-    m_shadowedScene->addChild( m_frame.get() );
-    m_shadowedScene->addChild( m_railing.get() );
-    m_shadowedScene->addChild( m_plenumPiping.get() );
     m_shadowedScene->addChild( m_blowerComponents.get() );
     //m_shadowedScene->addChild( m_brackets.get() );
     m_shadowedScene->addChild( m_cementBase.get() );
+    m_shadowedScene->addChild( m_combustorPiping.get() );
+    m_shadowedScene->addChild( m_compressorInlet.get() );
+    m_shadowedScene->addChild( m_frame.get() );
+    m_shadowedScene->addChild( m_heatExchanger.get() );
+    m_shadowedScene->addChild( m_heatExchangerSweep.get() );
+    m_shadowedScene->addChild( m_load.get() );
+    m_shadowedScene->addChild( m_plenumPiping.get() );
+    m_shadowedScene->addChild( m_plenumSystem.get() );
+    m_shadowedScene->addChild( m_railing.get() );
+    m_shadowedScene->addChild( m_reliefPiping.get() );
+    m_shadowedScene->addChild( m_shell.get() );
+    m_shadowedScene->addChild( m_turbineExhaust.get() );
+    m_shadowedScene->addChild( m_turbinePostCombustor.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateShadowTexture()
@@ -823,13 +788,13 @@ void Scene::CreateShadowTexture()
         osg::ref_ptr< osg::PolygonOffset > polygonOffset = new osg::PolygonOffset();
         polygonOffset->setFactor( factor );
         polygonOffset->setUnits( units );
-        localStateset->setAttribute( polygonOffset.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-        localStateset->setMode( GL_POLYGON_OFFSET_FILL, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        localStateset->setAttribute( polygonOffset.get(), osg::StateAttribute::ON );
+        localStateset->setMode( GL_POLYGON_OFFSET_FILL, osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::CullFace > cullFace = new osg::CullFace();
         cullFace->setMode( osg::CullFace::FRONT );
-        localStateset->setAttribute( cullFace.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-        localStateset->setMode( GL_CULL_FACE, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+        localStateset->setAttribute( cullFace.get(), osg::StateAttribute::ON );
+        localStateset->setMode( GL_CULL_FACE, osg::StateAttribute::ON );
 
         //Set the camera to render before the main camera
         m_camera->setRenderOrder( osg::Camera::PRE_RENDER );
@@ -965,11 +930,5 @@ void Scene::CreateJitterTexture()
     ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
     ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
     */
-}
-////////////////////////////////////////////////////////////////////////////////
-void Scene::WriteOutShadow()
-{
-    osg::ref_ptr< osg::Image > image = m_shadow->getImage();
-    osgDB::writeImageFile( *image.get(), "./Textures/shadow.jpg" );
 }
 ////////////////////////////////////////////////////////////////////////////////

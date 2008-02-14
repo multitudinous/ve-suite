@@ -143,14 +143,14 @@ char options_fragment[] =
 
         "if( options.w ) \n"
         "{ \n"
-            "const float kTransparency = 0.3; \n"
+            "const float kTransparency = 0.4; \n"
 
             "vec3 shadowUV = gl_TexCoord[ 0 ].stp / gl_TexCoord[ 0 ].q; \n"
             "float mapScale = 1.0 / 4096.0; \n"
 
             "vec4 shadowColor = shadow2D( shadowMap, shadowUV ); \n"
 
-            "for( int i = 1; i < 4; ++i ) \n"
+            "for( int i = 1; i < 2; ++i ) \n"
             "{ \n"
                 "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  i * mapScale,  i * mapScale, 0 ) ); \n"
                 "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  i * mapScale, -i * mapScale, 0 ) ); \n"
@@ -162,7 +162,7 @@ char options_fragment[] =
                 "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0,            -i * mapScale, 0 ) ); \n"
             "} \n"
 
-            "shadowColor = shadowColor / 25.0; \n"
+            "shadowColor = shadowColor / 18.0; \n"
 
             "shadowColor += kTransparency; \n"
             "shadowColor = clamp( shadowColor, 0.0, 1.0 ); \n"
