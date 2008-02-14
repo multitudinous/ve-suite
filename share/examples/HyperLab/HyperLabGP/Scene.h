@@ -96,26 +96,23 @@ private:
     osg::ref_ptr< osg::Node > m_whitePipes;
     osg::ref_ptr< osg::Node > m_yellow;
 
-/*
-    osg::ref_ptr< osg::Node > frame;
-    osg::ref_ptr< osg::Node > railing;
-    osg::ref_ptr< osg::Node > plenum_piping;
-    osg::ref_ptr< osg::Node > blower_components;
-    osg::ref_ptr< osg::Node > brackets;
-    osg::ref_ptr< osg::Node > cement_base;
-    osg::ref_ptr< osg::Node > combustor_piping;
-    osg::ref_ptr< osg::Node > compressor_inlet;
-    osg::ref_ptr< osg::Node > heat_exchanger;
-    osg::ref_ptr< osg::Node > heat_exchanger_sweep;
-    osg::ref_ptr< osg::Node > load;
-    osg::ref_ptr< osg::Node > plenum_system;
-    osg::ref_ptr< osg::Node > relief_piping;
-    osg::ref_ptr< osg::Node > shell;
-    osg::ref_ptr< osg::Node > stack;
-    osg::ref_ptr< osg::Node > turbine_exhaust;
-    osg::ref_ptr< osg::Node > turbine_postcombustor;
-    osg::ref_ptr< osg::Node > miscellaneous;
-    */
+    osg::ref_ptr< osg::Node > m_frame;
+    osg::ref_ptr< osg::Node > m_railing;
+    osg::ref_ptr< osg::Node > m_plenumPiping;
+    osg::ref_ptr< osg::Node > m_blowerComponents;
+    osg::ref_ptr< osg::Node > m_brackets;
+    osg::ref_ptr< osg::Node > m_cementBase;
+    osg::ref_ptr< osg::Node > m_combustorPiping;
+    osg::ref_ptr< osg::Node > m_compressorInlet;
+    osg::ref_ptr< osg::Node > m_heatExchanger;
+    osg::ref_ptr< osg::Node > m_heatExchangerSweep;
+    osg::ref_ptr< osg::Node > m_load;
+    osg::ref_ptr< osg::Node > m_plenumSystem;
+    osg::ref_ptr< osg::Node > m_reliefPiping;
+    osg::ref_ptr< osg::Node > m_shell;
+    osg::ref_ptr< osg::Node > m_stack;
+    osg::ref_ptr< osg::Node > m_turbineExhaust;
+    osg::ref_ptr< osg::Node > m_turbinePostcombustor;
 
     //Variables to set up custom lighting for the scene
     osg::ref_ptr< osg::Light > m_light;

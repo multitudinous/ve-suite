@@ -62,6 +62,13 @@ m_whiteDucts( 0 ),
 m_whitePipes( 0 ),
 m_yellow( 0 ),
 
+m_frame( 0 ),
+m_railing( 0 ),
+m_plenumPiping( 0 ),
+m_blowerComponents( 0 ),
+m_brackets( 0 ),
+m_cementBase( 0 ),
+
 m_shadowedScene( 0 ),
 
 m_shadow( 0 ),
@@ -131,44 +138,21 @@ void Scene::DefaultVisuals()
     shader->SetOptions( m_yellow.get(),
                         false, true );
 
+    shader->SetOptions( m_frame.get(),
+                        false, true );
+    shader->SetOptions( m_railing.get(),
+                        false, true );
+    shader->SetOptions( m_plenumPiping.get(),
+                        false, true );
+    shader->SetOptions( m_blowerComponents.get(),
+                        false, true );
+    shader->SetOptions( m_brackets.get(),
+                        false, true );
+    shader->SetOptions( m_cementBase.get(),
+                        false, true );
+
     //Set material defaults
     /*
-    frame_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    frame_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
-    frame_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.1f,0.1f,0.1f,1.0f));
-    frame_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    frame_material->setShininess(osg::Material::FRONT,12.0f);
-
-    railing_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    railing_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.3f,1.0f));
-    railing_material->setDiffuse(osg::Material::FRONT,osg::Vec4(1.0f,0.85f,0.3f,1.0f));
-    railing_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    railing_material->setShininess(osg::Material::FRONT,10.0f);
-
-    plenum_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    plenum_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    plenum_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    plenum_piping_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    plenum_piping_material->setShininess(osg::Material::FRONT,10.0f);
-
-    blower_components_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    blower_components_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    blower_components_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    blower_components_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    blower_components_material->setShininess(osg::Material::FRONT,10.0f);
-
-    brackets_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    brackets_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    brackets_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    brackets_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    brackets_material->setShininess(osg::Material::FRONT,10.0f);
-
-    cement_base_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
-    cement_base_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
-    cement_base_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
-    cement_base_material->setSpecular(osg::Material::FRONT,osg::Vec4(0.5f,0.5f,0.5f,1.0f));
-    cement_base_material->setShininess(osg::Material::FRONT,10.0f);
-
     combustor_piping_material->setEmission(osg::Material::FRONT,osg::Vec4(1.0f,1.0f,1.0f,1.0f));
     combustor_piping_material->setAmbient(osg::Material::FRONT,osg::Vec4(0.45f,0.45f,0.45f,1.0f));
     combustor_piping_material->setDiffuse(osg::Material::FRONT,osg::Vec4(0.6f,0.6f,0.6f,1.0f));
@@ -247,11 +231,9 @@ void Scene::AdvancedVisuals()
 {
     float reflectionPercentage;
     shader->SetOptions( m_ceiling.get(),
-                        false, false, "WallMap",
-                        &( reflectionPercentage = 0.05 ) );
+                        false, false, "WallMap" );
     shader->SetOptions( m_details.get(),
-                        false, false, "Decoration",
-                        &( reflectionPercentage = 0.05 ) );
+                        false, false, "Decoration" );
     shader->SetOptions( m_floor.get(),
                         false, false, "WallMap",
                         &( reflectionPercentage = 0.05 ),
@@ -260,76 +242,97 @@ void Scene::AdvancedVisuals()
                         false, false, "WallMap",
                         NULL,
                         m_shadow.get() );
-
     shader->SetOptions( m_aluminumParts.get(),
                         false, true,
-                        NULL,
+                        "",
                         &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_aluminumPipes.get(),
                         false, true,
-                        NULL,
+                        "",
                         &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_black.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_brown.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_glass.get(),
                         false, true,
-                        NULL,
+                        "",
                         &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_lights.get(),
-                        false, true,
-                        NULL,
-                        &( reflectionPercentage = 0.05 ),
-                        NULL );
+                        false, true );
     shader->SetOptions( m_ltGreen.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_ltGrey.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_orange.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_red.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_redBrown.get(),
-                        false, true,
-                        NULL,
-                        &( reflectionPercentage = 0.05 ),
-                        m_shadow.get() );
+                        false, true );
     shader->SetOptions( m_whiteDucts.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_whitePipes.get(),
                         false, true,
+                        "",
                         NULL,
-                        &( reflectionPercentage = 0.05 ),
                         m_shadow.get() );
     shader->SetOptions( m_yellow.get(),
                         false, true,
+                        "",
                         NULL,
+                        m_shadow.get() );
+
+    shader->SetOptions( m_frame.get(),
+                        false, true,
+                        "",
+                        NULL,
+                        m_shadow.get() );
+    shader->SetOptions( m_railing.get(),
+                        false, true,
+                        "",
+                        NULL,
+                        m_shadow.get() );
+    shader->SetOptions( m_plenumPiping.get(),
+                        false, true,
+                        "",
                         &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_blowerComponents.get(),
+                        false, true,
+                        "",
+                        &( reflectionPercentage = 0.05 ),
+                        m_shadow.get() );
+    shader->SetOptions( m_brackets.get(),
+                        false, true );
+    shader->SetOptions( m_cementBase.get(),
+                        false, true,
+                        "",
+                        NULL,
                         m_shadow.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -353,6 +356,13 @@ void Scene::XRay()
     shader->SetOptions( m_whiteDucts.get(), true );
     shader->SetOptions( m_whitePipes.get(), true );
     shader->SetOptions( m_yellow.get(), true );
+
+    shader->SetOptions( m_frame.get(), true );
+    shader->SetOptions( m_railing.get(), true );
+    shader->SetOptions( m_plenumPiping.get(), true );
+    shader->SetOptions( m_blowerComponents.get(), true );
+    shader->SetOptions( m_brackets.get(), true );
+    shader->SetOptions( m_cementBase.get(), true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Light* Scene::GetLight()
@@ -396,6 +406,9 @@ void Scene::CreateLights()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateNodes()
 {
+    //Pointer to set StateSets for the nodes
+    osg::ref_ptr< osg::StateSet > stateset;
+
     //Set up the collision detection nodes for the room
     osg::ref_ptr< osg::Group > roomPhysics = new osg::Group();
     m_room = new ves::xplorer::scenegraph::CADEntity( roomPhysics.get(),
@@ -442,8 +455,6 @@ void Scene::CreateNodes()
         m_room->GetDCS()->addChild( m_yellow.get() );
 
         //Set up material properties for the room geometry
-        osg::ref_ptr< osg::StateSet > stateset;
-
         osg::ref_ptr< osg::Material > aluminumPartsMaterial = new osg::Material();
         aluminumPartsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
         aluminumPartsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
@@ -606,37 +617,75 @@ void Scene::CreateNodes()
         stateset = m_yellow->getOrCreateStateSet();
         stateset->setAttributeAndModes( yellowMaterial.get(), osg::StateAttribute::ON );
     }
+
+    m_frame = osgDB::readNodeFile( "./Models/IVEs/Frame.ive" );
+    m_pluginDCS->addChild( m_frame.get() );
+    m_railing = osgDB::readNodeFile( "./Models/IVEs/Railing.ive" );
+    m_pluginDCS->addChild( m_railing.get() );
+    m_plenumPiping = osgDB::readNodeFile( "./Models/IVEs/PlenumPiping.ive" );
+    m_pluginDCS->addChild( m_plenumPiping.get() );
+    m_blowerComponents = osgDB::readNodeFile( "./Models/IVEs/BlowerComponents.ive" );
+    m_pluginDCS->addChild( m_blowerComponents.get() );
+    m_brackets = osgDB::readNodeFile( "./Models/IVEs/Brackets.ive" );
+    m_pluginDCS->addChild( m_brackets.get() );
+    m_cementBase = osgDB::readNodeFile( "./Models/IVEs/CementBase.ive" );
+    m_pluginDCS->addChild( m_cementBase.get() );
+
+    osg::ref_ptr< osg::Material > frameMaterial = new osg::Material();
+    frameMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    frameMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    frameMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    frameMaterial->setShininess( osg::Material::FRONT, 12.0f );
+    stateset = m_frame->getOrCreateStateSet();
+    stateset->setAttributeAndModes( frameMaterial.get(), osg::StateAttribute::ON );
+    
+    osg::ref_ptr< osg::Material > railingMaterial = new osg::Material();
+    railingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    railingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
+    railingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.9f, 0.2f, 1.0f ) );
+    railingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    railingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_railing->getOrCreateStateSet();
+    stateset->setAttributeAndModes( railingMaterial.get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Material > plenumPipingMaterial = new osg::Material();
+    plenumPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    plenumPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    plenumPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    plenumPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    plenumPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_plenumPiping->getOrCreateStateSet();
+    stateset->setAttributeAndModes( plenumPipingMaterial.get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Material > blowerComponentsMaterial = new osg::Material();
+    blowerComponentsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    blowerComponentsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    blowerComponentsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    blowerComponentsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    blowerComponentsMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_blowerComponents->getOrCreateStateSet();
+    stateset->setAttributeAndModes( blowerComponentsMaterial.get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Material > bracketsMaterial = new osg::Material();
+    bracketsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    bracketsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    bracketsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    bracketsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    bracketsMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_brackets->getOrCreateStateSet();
+    stateset->setAttributeAndModes( bracketsMaterial.get(), osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Material > cementBaseMaterial = new osg::Material();
+    cementBaseMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    cementBaseMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    cementBaseMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    cementBaseMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    cementBaseMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stateset = m_cementBase->getOrCreateStateSet();
+    stateset->setAttributeAndModes( cementBaseMaterial.get(), osg::StateAttribute::ON );
+
         /*
-        frame=osgDB::readNodeFile("./Models/IVEs/Frame.ive");
-        stateset=frame->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(frame_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(frame.get());
-
-        railing=osgDB::readNodeFile("./Models/IVEs/Railing.ive");
-        stateset=railing->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(railing_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(railing.get());
-
-        plenum_piping=osgDB::readNodeFile("./Models/IVEs/PlenumPiping.ive");
-        stateset=plenum_piping->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(plenum_piping_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(plenum_piping.get());
-
-        blower_components=osgDB::readNodeFile("./Models/IVEs/BlowerComponents.ive");
-        stateset=blower_components->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(blower_components_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(blower_components.get());
-
-        brackets=osgDB::readNodeFile("./Models/IVEs/Brackets.ive");
-        stateset=brackets->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(plenum_piping_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(brackets.get());
-
-        cement_base=osgDB::readNodeFile("./Models/IVEs/CementBase.ive");
-        stateset=cement_base->getOrCreateStateSet();
-        //stateset->setAttributeAndModes(brackets_material.get(),osg::StateAttribute::ON);
-        m_shadowedScene->addChild(cement_base.get());
-
         combustor_piping=osgDB::readNodeFile("./Models/IVEs/CombustorPiping.ive");
         stateset=combustor_piping->getOrCreateStateSet();
         //stateset->setAttributeAndModes(combustor_piping_material.get(),osg::StateAttribute::ON);
@@ -718,11 +767,18 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_ltGrey.get() );
     m_shadowedScene->addChild( m_orange.get() );
     m_shadowedScene->addChild( m_red.get() );
-    m_shadowedScene->addChild( m_redBrown.get() );
+    //m_shadowedScene->addChild( m_redBrown.get() );
     m_shadowedScene->addChild( m_walls.get() );
     m_shadowedScene->addChild( m_whiteDucts.get() );
     m_shadowedScene->addChild( m_whitePipes.get() );
     m_shadowedScene->addChild( m_yellow.get() );
+
+    m_shadowedScene->addChild( m_frame.get() );
+    m_shadowedScene->addChild( m_railing.get() );
+    m_shadowedScene->addChild( m_plenumPiping.get() );
+    m_shadowedScene->addChild( m_blowerComponents.get() );
+    //m_shadowedScene->addChild( m_brackets.get() );
+    m_shadowedScene->addChild( m_cementBase.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateShadowTexture()

@@ -458,7 +458,7 @@ void HyperLabUIDialog::ClearInstructions()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::SendCommandsToXplorer()
 {
-    ves::open::xml::Command* command = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr command = new ves::open::xml::Command();
 
     for( size_t i = 0; i < m_instructions.size(); ++i )
     {
@@ -468,8 +468,5 @@ void HyperLabUIDialog::SendCommandsToXplorer()
     command->SetCommandName( m_commandName );
 
     m_serviceList->SendCommandStringToXplorer( command );
-
-    //Clean up memory
-    delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
