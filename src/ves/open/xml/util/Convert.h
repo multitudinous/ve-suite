@@ -36,11 +36,6 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
 
-#include <boost/lexical_cast.hpp>
-
-#include <iostream>
-#include <string>
-#include <typeinfo>
 #include <sstream>
 #include <iomanip>
 
@@ -68,8 +63,10 @@ public:
    template<typename T>
    Convert(const T& val)
    {
+      std::stringstream ss;
+      ss << std::setprecision( 10 ) << val;
       mXmlUnicodeString = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
-                              boost::lexical_cast<std::string>( val ).c_str()
+                              ss.str().c_str()
                               );
    }
 
