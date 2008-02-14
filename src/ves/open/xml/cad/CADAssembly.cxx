@@ -79,7 +79,7 @@ CADAssembly::~CADAssembly()
 void CADAssembly::AddChild( ves::open::xml::cad::CADNode* node )
 {
     m_children.push_back( node );
-    m_children.back()->SetParent( uuid );
+    m_children.back()->SetParent( mUuid );
     /*if(node->GetNodeType() == "Assembly")
     {
        CADAssembly temp(*dynamic_cast<CADAssembly*>(node));
@@ -102,16 +102,16 @@ void CADAssembly::AddChild( ves::open::xml::cad::CADNode* node )
    m_numChildren = static_cast< unsigned int >(m_children.size());
 }*/
 //////////////////////////////////////////////////////////////////////
-void CADAssembly::SetAssociatedDataset( std::string parameterBlockUUID )
+void CADAssembly::SetAssociatedDataset( std::string parameterBlockmUuid )
 {
-    m_associatedDataset = parameterBlockUUID;
+    m_associatedDataset = parameterBlockmUuid;
 }
 ///////////////////////////////////////////////////////////////////////
-bool CADAssembly::GetAssociatedDataset( std::string& parameterBlockUUID )
+bool CADAssembly::GetAssociatedDataset( std::string& parameterBlockmUuid )
 {
     if( m_associatedDataset != "NONE" )
     {
-        parameterBlockUUID = m_associatedDataset;
+        parameterBlockmUuid = m_associatedDataset;
         return true;
     }
     return false;
@@ -165,29 +165,29 @@ ves::open::xml::cad::CADNode* CADAssembly::GetChild( unsigned int whichChild )
 ///////////////////////////////////
 void CADAssembly::_updateChildren()
 {
-    DOMElement* childList = _rootDocument->createElement(
+    DOMElement* childList = mRootDocument->createElement(
                             Convert( "children" ).toXMLString() );
 
     //the number of children
-    DOMElement* nchildrenElement = _rootDocument->createElement(
+    DOMElement* nchildrenElement = mRootDocument->createElement(
                                    Convert( "numChildren" ).toXMLString() );
 
     std::stringstream int2string;
     int2string << m_numChildren;
-    DOMText* numberOfChildren = _rootDocument->createTextNode(
+    DOMText* numberOfChildren = mRootDocument->createTextNode(
                                 Convert( int2string.str() ).toXMLString() );
 
     nchildrenElement->appendChild( numberOfChildren );
-    _veElement->appendChild( nchildrenElement );
+    mVeElement->appendChild( nchildrenElement );
 
     //add the children nodes to the list
     for( unsigned int i = 0; i < m_numChildren;  i++ )
     {
-        m_children.at( i )->SetOwnerDocument( _rootDocument );
-        m_children.at( i )->SetParent( uuid );
+        m_children.at( i )->SetOwnerDocument( mRootDocument );
+        m_children.at( i )->SetParent( mUuid );
         childList->appendChild( m_children.at( i )->GetXMLData( "child" ) );
     }
-    _veElement->appendChild( childList );
+    mVeElement->appendChild( childList );
 }
 /////////////////////////////////////////////////////
 void CADAssembly::_updateVEElement( const std::string& input )
@@ -270,7 +270,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                         ves::open::xml::cad::CADAssembly* newAssembly = new ves::open::xml::cad::CADAssembly();
                         //VE_XML::VE_CAD::CADAssembly newAssembly;// = new VE_XML::VE_CAD::CADAssembly();
                         newAssembly->SetObjectFromXMLData( cadNode );
-                        newAssembly->SetParent( uuid );
+                        newAssembly->SetParent( mUuid );
                         m_children.push_back( newAssembly );
                     }
                     else if( tmpNodeType == std::string( "Part" ) )
@@ -279,7 +279,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                         ves::open::xml::cad::CADPart* newPart = new ves::open::xml::cad::CADPart();
                         //VE_XML::VE_CAD::CADPart newPart;// = new VE_XML::VE_CAD::CADPart();
                         newPart->SetObjectFromXMLData( cadNode );
-                        newPart->SetParent( uuid );
+                        newPart->SetParent( mUuid );
                         m_children.push_back( newPart );
                     }
                     else

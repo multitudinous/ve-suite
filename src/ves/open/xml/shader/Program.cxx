@@ -162,26 +162,26 @@ void Program::_updateVEElement( const std::string& input )
     _updateProgramName();
     if( mVertexShader )
     {
-        mVertexShader->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( mVertexShader->GetXMLData( "vertexShader" ) );
+        mVertexShader->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mVertexShader->GetXMLData( "vertexShader" ) );
     }
     if( mFragmentShader )
     {
-        mFragmentShader->SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( mFragmentShader->GetXMLData( "fragmentShader" ) );
+        mFragmentShader->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mFragmentShader->GetXMLData( "fragmentShader" ) );
     }
 }
 /////////////////////////////////
 void Program::_updateProgramName()
 {
-    DOMElement* nameElement = _rootDocument->createElement(
+    DOMElement* nameElement = mRootDocument->createElement(
                               Convert( "name" ).toXMLString() );
 
-    DOMText* name = _rootDocument->createTextNode(
+    DOMText* name = mRootDocument->createTextNode(
                     Convert( mName ).toXMLString() );
 
     nameElement->appendChild( name );
-    _veElement->appendChild( nameElement );
+    mVeElement->appendChild( nameElement );
 }
 ///////////////////////////////////////////////
 Program& Program::operator=( const Program& rhs )

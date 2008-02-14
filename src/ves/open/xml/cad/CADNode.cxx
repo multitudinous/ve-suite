@@ -71,7 +71,6 @@ CADNode::CADNode( std::string name )
     m_restitution = 0.0f;
     m_physicsMesh = "Bounding Box";
 
-    //_uID = std::atoi(uuid.c_str());//static_cast<unsigned int>(time(NULL));
     m_activeAttributeName = std::string( "" );
     SetObjectType( "CADNode" );
     SetObjectNamespace( "CAD" );
@@ -273,7 +272,7 @@ void CADNode::_updateVEElement( const std::string& input )
     _updateNodeType();
     _updateNodeName();
 
-    SetAttribute( "id", uuid );
+    SetAttribute( "id", mUuid );
     SetAttribute( "visibility", m_visibility );
 
     SetAttribute( "physics", m_physics );
@@ -288,16 +287,16 @@ void CADNode::_updateVEElement( const std::string& input )
     {
         m_transform = new Transform();
     }
-    m_transform->SetOwnerDocument( _rootDocument );
-    _veElement->appendChild( m_transform->GetXMLData( "transform" ) );
+    m_transform->SetOwnerDocument( mRootDocument );
+    mVeElement->appendChild( m_transform->GetXMLData( "transform" ) );
 
     if( m_attributeList.size() )
     {
         size_t nAttributes = m_attributeList.size();
         for( size_t i = 0; i < nAttributes; i++ )
         {
-            m_attributeList.at( i ).SetOwnerDocument( _rootDocument );
-            _veElement->appendChild( m_attributeList.at( i ).GetXMLData( "attribute" ) );
+            m_attributeList.at( i ).SetOwnerDocument( mRootDocument );
+            mVeElement->appendChild( m_attributeList.at( i ).GetXMLData( "attribute" ) );
         }
         SetSubElement( std::string( "activeAttributeName" ), m_activeAttributeName );
     }
@@ -307,34 +306,34 @@ void CADNode::_updateVEElement( const std::string& input )
         size_t nAnimations = m_animations.size();
         for( size_t i = 0; i < nAnimations; i++ )
         {
-            m_animations.at( i ).SetOwnerDocument( _rootDocument );
-            _veElement->appendChild( m_animations.at( i ).GetXMLData( "animation" ) );
+            m_animations.at( i ).SetOwnerDocument( mRootDocument );
+            mVeElement->appendChild( m_animations.at( i ).GetXMLData( "animation" ) );
         }
     }
 }
 ///////////////////////////////
 void CADNode::_updateNodeName()
 {
-    DOMElement* nodeNameElement = _rootDocument->createElement(
+    DOMElement* nodeNameElement = mRootDocument->createElement(
                                   Convert( "name" ).toXMLString() );
 
-    DOMText* nodeName = _rootDocument->createTextNode(
+    DOMText* nodeName = mRootDocument->createTextNode(
                         Convert( m_name ).toXMLString() );
 
     nodeNameElement->appendChild( nodeName );
-    _veElement->appendChild( nodeNameElement );
+    mVeElement->appendChild( nodeNameElement );
 }
 ////////////////////////////////////////////
 void CADNode::_updateNodeType()
 {
-    DOMElement* nodeTypeElement = _rootDocument->createElement(
+    DOMElement* nodeTypeElement = mRootDocument->createElement(
                                   Convert( "type" ).toXMLString() );
 
-    DOMText* nodeType = _rootDocument->createTextNode(
+    DOMText* nodeType = mRootDocument->createTextNode(
                         Convert( m_type ).toXMLString() );
 
     nodeTypeElement->appendChild( nodeType );
-    _veElement->appendChild( nodeTypeElement );
+    mVeElement->appendChild( nodeTypeElement );
 }
 /////////////////////////////////////////////////////
 void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
@@ -429,7 +428,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 }
                 else
                 {
-                    XMLObject::GetAttribute( currentElement, "id", uuid );
+                    XMLObject::GetAttribute( currentElement, "id", mUuid );
                 }
                 DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
                 if( typeNode )
@@ -589,10 +588,10 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     //maintain a unique ID
     if( clone )
     {
-        apr_uuid_t tempUUID;
-        apr_uuid_get( &tempUUID );
+        apr_uuid_t tempuuid;
+        apr_uuid_get( &tempuuid );
         char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
-        apr_uuid_format( buffer, &tempUUID );
+        apr_uuid_format( buffer, &tempuuid );
         uuid.assign( buffer );
         delete [] buffer;
     }

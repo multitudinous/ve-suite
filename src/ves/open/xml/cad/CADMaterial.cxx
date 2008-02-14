@@ -219,24 +219,24 @@ std::string CADMaterial::GetMaterialName()
 ///////////////////////////////////////
 void CADMaterial::_updateMaterialName()
 {
-    DOMElement* nameElement  = _rootDocument->createElement(
+    DOMElement* nameElement  = mRootDocument->createElement(
                                Convert( "materialName" ).toXMLString() );
 
-    _veElement->appendChild( nameElement );
+    mVeElement->appendChild( nameElement );
 
-    DOMText* materialName = _rootDocument->createTextNode(
+    DOMText* materialName = mRootDocument->createTextNode(
                             Convert( _materialName ).toXMLString() );
     nameElement->appendChild( materialName );
 }
 ////////////////////////////////////
 void CADMaterial::_updateShininess()
 {
-    DOMElement* shineElement  = _rootDocument->createElement(
+    DOMElement* shineElement  = mRootDocument->createElement(
                                 Convert( "shininess" ).toXMLString() );
 
-    _veElement->appendChild( shineElement );
+    mVeElement->appendChild( shineElement );
 
-    DOMText* shininess = _rootDocument->createTextNode(
+    DOMText* shininess = mRootDocument->createTextNode(
                          Convert( _shininess ).toXMLString() );
 
     shineElement->appendChild( shininess );
@@ -244,24 +244,24 @@ void CADMaterial::_updateShininess()
 //////////////////////////////////////////
 void CADMaterial::_updateColorProperties()
 {
-    _kDiffuse->SetOwnerDocument( _rootDocument );
-    _veElement->appendChild( _kDiffuse->GetXMLData( "kDiffuse" ) );
+    _kDiffuse->SetOwnerDocument( mRootDocument );
+    mVeElement->appendChild( _kDiffuse->GetXMLData( "kDiffuse" ) );
 
-    _kEmissive->SetOwnerDocument( _rootDocument );
-    _veElement->appendChild( _kEmissive->GetXMLData( "kEmissive" ) );
+    _kEmissive->SetOwnerDocument( mRootDocument );
+    mVeElement->appendChild( _kEmissive->GetXMLData( "kEmissive" ) );
 
-    _ambient->SetOwnerDocument( _rootDocument );
-    _veElement->appendChild( _ambient->GetXMLData( "kAmbient" ) );
+    _ambient->SetOwnerDocument( mRootDocument );
+    mVeElement->appendChild( _ambient->GetXMLData( "kAmbient" ) );
 
-    _specular->SetOwnerDocument( _rootDocument );
-    _veElement->appendChild( _specular->GetXMLData( "specular" ) );
+    _specular->SetOwnerDocument( mRootDocument );
+    mVeElement->appendChild( _specular->GetXMLData( "specular" ) );
 
-    DOMElement* opacityElement  = _rootDocument->createElement(
+    DOMElement* opacityElement  = mRootDocument->createElement(
                                   Convert( "opacity" ).toXMLString() );
 
-    _veElement->appendChild( opacityElement );
+    mVeElement->appendChild( opacityElement );
 
-    DOMText* opacity = _rootDocument->createTextNode(
+    DOMText* opacity = mRootDocument->createTextNode(
                        Convert( _opacity ).toXMLString() );
 
     opacityElement->appendChild( opacity );
@@ -278,28 +278,28 @@ void CADMaterial::_updateVEElement( const std::string& input )
 ////////////////////////////////////////
 void CADMaterial::_updateMaterialFace()
 {
-    DOMElement* faceElement = _rootDocument->createElement(
+    DOMElement* faceElement = mRootDocument->createElement(
                               Convert( "face" ).toXMLString() );
 
-    DOMText* faceName = _rootDocument->createTextNode(
+    DOMText* faceName = mRootDocument->createTextNode(
                         Convert( _face ).toXMLString() );
 
     faceElement->appendChild( faceName );
 
-    _veElement->appendChild( faceElement );
+    mVeElement->appendChild( faceElement );
 }
 ////////////////////////////////////
 void CADMaterial::_updateColorMode()
 {
-    DOMElement* cModeElement = _rootDocument->createElement(
+    DOMElement* cModeElement = mRootDocument->createElement(
                                Convert( "colorMode" ).toXMLString() );
 
-    DOMText* cMode = _rootDocument->createTextNode(
+    DOMText* cMode = mRootDocument->createTextNode(
                      Convert( _colorMode ).toXMLString() );
 
     cModeElement->appendChild( cMode );
 
-    _veElement->appendChild( cModeElement );
+    mVeElement->appendChild( cModeElement );
 }
 /////////////////////////////////////////////////////////
 void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode )

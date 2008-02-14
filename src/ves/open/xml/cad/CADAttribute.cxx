@@ -254,7 +254,7 @@ void CADAttribute::_updateVEElement( const std::string& input )
     {
         if( _material )
         {
-            _material->SetOwnerDocument( _rootDocument );
+            _material->SetOwnerDocument( mRootDocument );
             SetSubElement( "material", _material );
         }
     }
@@ -262,7 +262,7 @@ void CADAttribute::_updateVEElement( const std::string& input )
     {
         if( _glslProgram )
         {
-            _glslProgram->SetOwnerDocument( _rootDocument );
+            _glslProgram->SetOwnerDocument( mRootDocument );
             SetSubElement( "program", _glslProgram );
         }
     }

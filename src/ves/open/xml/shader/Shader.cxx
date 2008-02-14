@@ -232,8 +232,8 @@ void Shader::_updateTextureImages()
             textures != mTextureImages.end();
             textures++ )
     {
-        textures->second.SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( textures->second.GetXMLData( "textureImage" ) );
+        textures->second.SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( textures->second.GetXMLData( "textureImage" ) );
     }
 }
 //////////////////////////////
@@ -242,33 +242,33 @@ void Shader::_updateUniforms()
     //add the children nodes to the list
     for( size_t i = 0; i < mUniformList.size(); i++ )
     {
-        mUniformList.at( i ).SetOwnerDocument( _rootDocument );
-        _veElement->appendChild( mUniformList.at( i ).GetXMLData( "uniform" ) );
+        mUniformList.at( i ).SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mUniformList.at( i ).GetXMLData( "uniform" ) );
     }
 }
 ////////////////////////////////
 void Shader::_updateShaderType()
 {
-    DOMElement* typeElement = _rootDocument->createElement(
+    DOMElement* typeElement = mRootDocument->createElement(
                               Convert( "type" ).toXMLString() );
 
-    DOMText* type = _rootDocument->createTextNode(
+    DOMText* type = mRootDocument->createTextNode(
                     Convert( mShaderType ).toXMLString() );
 
     typeElement->appendChild( type );
-    _veElement->appendChild( typeElement );
+    mVeElement->appendChild( typeElement );
 }
 //////////////////////////////////
 void Shader::_updateShaderSource()
 {
-    DOMElement* sourceElement = _rootDocument->createElement(
+    DOMElement* sourceElement = mRootDocument->createElement(
                                 Convert( "shaderCode" ).toXMLString() );
 
-    DOMText* source = _rootDocument->createTextNode(
+    DOMText* source = mRootDocument->createTextNode(
                       Convert( mShaderSource ).toXMLString() );
 
     sourceElement->appendChild( source );
-    _veElement->appendChild( sourceElement );
+    mVeElement->appendChild( sourceElement );
 }
 ////////////////////////////////////
 size_t Shader::GetNumberOfUniforms()

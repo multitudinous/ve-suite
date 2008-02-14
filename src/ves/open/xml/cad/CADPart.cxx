@@ -64,12 +64,12 @@ std::string CADPart::GetCADFileName()
 //////////////////////////////////
 void CADPart::_updateCADFileName()
 {
-    DOMElement* nameElement  = _rootDocument->createElement(
+    DOMElement* nameElement  = mRootDocument->createElement(
                                Convert( "fileName" ).toXMLString() );
 
-    _veElement->appendChild( nameElement );
+    mVeElement->appendChild( nameElement );
 
-    DOMText* fileName = _rootDocument->createTextNode(
+    DOMText* fileName = mRootDocument->createTextNode(
                         Convert( m_cadFileName ).toXMLString() );
 
     nameElement->appendChild( fileName );
