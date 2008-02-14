@@ -41,7 +41,7 @@
 using namespace ves::open::xml::cad;
 
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObject( std::string objectType )
+ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObject( const std::string& objectType )
 {
     if( objectType == "CADAssembly" )
     {
@@ -63,31 +63,31 @@ ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObject( std::string objectT
     {
         return new CADNodeAnimation();
     }
-    return 0;
+    return XMLObjectPtr();
 }
 //////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObjectCopy( std::string objectType,
-        ves::open::xml::XMLObjectPtr objectToCopy )
+ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObjectCopy( const std::string& objectType,
+        const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
     if( objectType == "CADAssembly" )
     {
-        return new CADAssembly( *dynamic_cast<CADAssembly*>( objectToCopy ) );
+        return CADAssemblyPtr( objectToCopy );
     }
     else if( objectType == "CADPart" )
     {
-        return new CADPart( *dynamic_cast<CADPart*>( objectToCopy ) );
+        return CADPartPtr( objectToCopy );
     }
     else if( objectType == "CADAttribute" )
     {
-        return new CADAttribute( *dynamic_cast<CADAttribute*>( objectToCopy ) );
+        return CADAttributePtr( objectToCopy );
     }
     else if( objectType == "CADMaterial" )
     {
-        return new CADMaterial( *dynamic_cast<CADMaterial*>( objectToCopy ) );
+        return CADMaterialPtr( objectToCopy );
     }
     else if( objectType == "CADNodeAnimation" )
     {
-        return new CADNodeAnimation( *dynamic_cast<CADNodeAnimation*>( objectToCopy ) );
+        return CADNodeAnimationPtr( objectToCopy );
     }
-    return 0;
+    return XMLObjectPtr();
 }

@@ -325,7 +325,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         //scale->setScale(100);
 
         //translate to comp with name to correct location
-        Point * iconLocation = model->GetIconLocation();
+        PointPtr iconLocation = model->GetIconLocation();
         std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
         //std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
         osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();

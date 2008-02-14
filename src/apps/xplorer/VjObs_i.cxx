@@ -708,10 +708,9 @@ void VjObs_i::PreFrameUpdate( void )
     // New xml command queue
     if( !commandVectorQueue.empty() )
     {
-        std::vector< Command* >::iterator iter;
+        std::vector< CommandPtr >::iterator iter;
         iter = commandVectorQueue.begin();
         ( *bufferCommand ) = ( *( *iter ) );
-        delete commandVectorQueue.at( 0 );
         commandVectorQueue.erase( iter );
         cfdQuatCamHandler::instance()->SetVECommand( bufferCommand );
         EnvironmentHandler::instance()->GetDisplaySettings()->SetVECommand( bufferCommand );

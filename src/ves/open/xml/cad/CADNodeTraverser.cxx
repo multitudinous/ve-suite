@@ -68,7 +68,7 @@ CADNodeTraverser::~CADNodeTraverser()
 /////////////////////////////////////////////////////
 //set the node to traverse                         //
 /////////////////////////////////////////////////////
-void CADNodeTraverser::SetRootNode( CADNode* root )
+void CADNodeTraverser::SetRootNode( CADNodePtr root )
 {
     _root = root;
 }
@@ -92,7 +92,7 @@ void CADNodeTraverser::Traverse()
 ///////////////////////////////////////////////////////////////////////////////////////////
 //depth first recursion of a node/scene graph                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////
-void CADNodeTraverser::_traverseNode( CADNode* cNode, void* currentParent )
+void CADNodeTraverser::_traverseNode( CADNodePtr cNode, void* currentParent )
 {
     int nChildren = 0;
     //the pre-callback
@@ -113,15 +113,14 @@ void CADNodeTraverser::_traverseNode( CADNode* cNode, void* currentParent )
 
     if( cNode->GetNodeType() == std::string( "Assembly" ) )
     {
-        ves::open::xml::cad::CADAssembly* assembly = dynamic_cast<ves::open::xml::cad::CADAssembly*>( cNode );
-        if( assembly )
+        ves::open::xml::cad::CADAssemblyPtr assembly = cNode;
+        unsigned int nChildren = assembly->GetNumberOfChildren();
+        //recurse the children of this node
+        for( unsigned int i = 0; i < nChildren; i++ )
         {
-            unsigned int nChildren = assembly->GetNumberOfChildren();
-            //recurse the children of this node
-            for( unsigned int i = 0; i < nChildren; i++ )
-            {
-                _traverseNode( assembly->GetChild( i ), assembly );
-            }
+            //This needs to be cleaned up. not sure what the functionality
+            //is supposed to be
+            _traverseNode( assembly->GetChild( i ), &(*assembly) );
         }
     }
     //the post-callback

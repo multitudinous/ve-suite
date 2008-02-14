@@ -73,7 +73,7 @@ public:
 
     ///Add a child to this assembly
     ///\param node The node to add to the assembly
-    void AddChild( ves::open::xml::cad::CADNode* node );
+    void AddChild( ves::open::xml::cad::CADNodePtr node );
 
     ///Set the object from XML data
     ///\param xmlNode Node to set this object from
@@ -95,17 +95,17 @@ public:
 
     ///\param whichChildID The ID of the node to remove from this assembly
     ///Remove child from the assembly returns true for success false if fails
-    bool RemoveChild( std::string whichChildID );
+    bool RemoveChild( const std::string& whichChildID );
 
     ///Get the number of children of this assembly
     unsigned int GetNumberOfChildren();
 
     ///Get a specified child of this assembly
-    ves::open::xml::cad::CADNode* GetChild( unsigned int whichChild );
+    ves::open::xml::cad::CADNodePtr GetChild( unsigned int whichChild );
 
     ///Get a child by a name
     ///\param name The of the child name to search for.
-    ves::open::xml::cad::CADNode* GetChild( std::string name );
+    ves::open::xml::cad::CADNodePtr GetChild( std::string name );
 
     ///Copy constructor
     //\param rhs The CADPart to copy
@@ -124,12 +124,11 @@ protected:
     ///Update the child nodes of this assembly
     void _updateChildren();
 
-    unsigned int m_numChildren; ///<number of children in this assembly
     ///\typedef ChildList
     /// A vector of VE_XML::VE_CAD::CADNode s
-    typedef std::vector<ves::open::xml::cad::CADNode*> ChildList;
-    ChildList m_children; ///<A list of the children
-    std::string m_associatedDataset;///<The dataset associated with this CADNode
+    typedef std::vector<ves::open::xml::cad::CADNodePtr> ChildList;
+    ChildList mChildren; ///<A list of the children
+    std::string mAssociatedDataset;///<The dataset associated with this CADNode
 };
 
 }

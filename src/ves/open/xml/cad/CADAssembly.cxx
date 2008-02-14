@@ -44,8 +44,7 @@ CADAssembly::CADAssembly( std::string name )
         : ves::open::xml::cad::CADNode( name )
 {
 
-    m_associatedDataset = "NONE";
-    m_numChildren = 0;
+    mAssociatedDataset = "NONE";
     m_type = std::string( "Assembly" );
     SetObjectType( "CADAssembly" );
 }
@@ -54,64 +53,32 @@ CADAssembly::CADAssembly( std::string name )
 ///////////////////////////
 CADAssembly::~CADAssembly()
 {
-    for( unsigned int i = 0; i < m_numChildren; i++ )
-    {
-        try
-        {
-            //if(m_children.at(i))
-            {
-
-                delete m_children.at( i );
-            }
-
-            m_children.at( i ) = 0;
-        }
-        catch ( ... )
-        {
-            std::cout << "Child deleted!" << std::endl;
-        }
-    }
-
-    m_children.clear();
-    m_numChildren = 0;
+    mChildren.clear();
 }
 /////////////////////////////////////////////////
-void CADAssembly::AddChild( ves::open::xml::cad::CADNode* node )
+void CADAssembly::AddChild( ves::open::xml::cad::CADNodePtr node )
 {
-    m_children.push_back( node );
-    m_children.back()->SetParent( mUuid );
-    /*if(node->GetNodeType() == "Assembly")
-    {
-       CADAssembly temp(*dynamic_cast<CADAssembly*>(node));
-       temp.SetParent(_uID);
-       m_children.push_back(temp);
-    }
-    else if(node->GetNodeType() == "Part")
-    {
-       CADPart temp(*dynamic_cast<CADPart*>(node));
-       temp.SetParent(_uID);
-       m_children.push_back(temp);
-    }*/
-    m_numChildren = static_cast< unsigned int >( m_children.size() );
+    mChildren.push_back( node );
+    mChildren.back()->SetParent( mUuid );
 }
 /////////////////////////////////////////////////
 /*void CADAssembly::AddChild(VE_XML::VE_CAD::CADNode node)
 {
-   m_children.push_back(node);
-   m_children.back().SetParent(_uID);
-   m_numChildren = static_cast< unsigned int >(m_children.size());
+   mChildren.push_back(node);
+   mChildren.back().SetParent(_uID);
+   mChildren.size() = static_cast< unsigned int >(mChildren.size());
 }*/
 //////////////////////////////////////////////////////////////////////
 void CADAssembly::SetAssociatedDataset( std::string parameterBlockmUuid )
 {
-    m_associatedDataset = parameterBlockmUuid;
+    mAssociatedDataset = parameterBlockmUuid;
 }
 ///////////////////////////////////////////////////////////////////////
 bool CADAssembly::GetAssociatedDataset( std::string& parameterBlockmUuid )
 {
-    if( m_associatedDataset != "NONE" )
+    if( mAssociatedDataset != "NONE" )
     {
-        parameterBlockmUuid = m_associatedDataset;
+        parameterBlockmUuid = mAssociatedDataset;
         return true;
     }
     return false;
@@ -123,18 +90,17 @@ bool CADAssembly::RemoveChild( ves::open::xml::cad::CADNode node )
     return false;
 }
 //////////////////////////////////////////////////////
-bool CADAssembly::RemoveChild( std::string whichChildID )
+bool CADAssembly::RemoveChild( const std::string& whichChildID )
 {
-    std::vector<CADNode*>::iterator childToRemove;
-    for( childToRemove = m_children.begin();
-            childToRemove != m_children.end();
+    std::vector<CADNodePtr>::iterator childToRemove;
+    for( childToRemove = mChildren.begin();
+            childToRemove != mChildren.end();
             childToRemove++ )
     {
-        CADNode* childNode = ( *childToRemove );
+        CADNodePtr childNode = ( *childToRemove );
         if( whichChildID  == childNode->GetID() )
         {
-            m_children.erase( childToRemove );
-            m_numChildren = static_cast< unsigned int >( m_children.size() );
+            mChildren.erase( childToRemove );
             return true;
         }
     }
@@ -143,24 +109,24 @@ bool CADAssembly::RemoveChild( std::string whichChildID )
 ///////////////////////////////////////////////
 unsigned int CADAssembly::GetNumberOfChildren()
 {
-    return m_numChildren;
+    return mChildren.size();
 }
 /////////////////////////////////////////////////////////
-ves::open::xml::cad::CADNode* CADAssembly::GetChild( std::string name )
+ves::open::xml::cad::CADNodePtr CADAssembly::GetChild( std::string name )
 {
-    for( size_t i = 0; i < m_numChildren; i++ )
+    for( size_t i = 0; i < mChildren.size(); i++ )
     {
-        if( m_children.at( i )->GetNodeName() == name )
+        if( mChildren.at( i )->GetNodeName() == name )
         {
-            return m_children.at( i );
+            return mChildren.at( i );
         }
     }
     return 0;
 }
 ///////////////////////////////////////////////////////////////
-ves::open::xml::cad::CADNode* CADAssembly::GetChild( unsigned int whichChild )
+ves::open::xml::cad::CADNodePtr CADAssembly::GetChild( unsigned int whichChild )
 {
-    return m_children.at( whichChild );
+    return mChildren.at( whichChild );
 }
 ///////////////////////////////////
 void CADAssembly::_updateChildren()
@@ -169,23 +135,23 @@ void CADAssembly::_updateChildren()
                             Convert( "children" ).toXMLString() );
 
     //the number of children
-    DOMElement* nchildrenElement = mRootDocument->createElement(
+    /*DOMElement* nchildrenElement = mRootDocument->createElement(
                                    Convert( "numChildren" ).toXMLString() );
 
     std::stringstream int2string;
-    int2string << m_numChildren;
+    int2string << mChildren.size();
     DOMText* numberOfChildren = mRootDocument->createTextNode(
                                 Convert( int2string.str() ).toXMLString() );
 
     nchildrenElement->appendChild( numberOfChildren );
-    mVeElement->appendChild( nchildrenElement );
+    mVeElement->appendChild( nchildrenElement );*/
 
     //add the children nodes to the list
-    for( unsigned int i = 0; i < m_numChildren;  i++ )
+    for( unsigned int i = 0; i < mChildren.size();  i++ )
     {
-        m_children.at( i )->SetOwnerDocument( mRootDocument );
-        m_children.at( i )->SetParent( mUuid );
-        childList->appendChild( m_children.at( i )->GetXMLData( "child" ) );
+        mChildren.at( i )->SetOwnerDocument( mRootDocument );
+        mChildren.at( i )->SetParent( mUuid );
+        childList->appendChild( mChildren.at( i )->GetXMLData( "child" ) );
     }
     mVeElement->appendChild( childList );
 }
@@ -195,7 +161,7 @@ void CADAssembly::_updateVEElement( const std::string& input )
     //Get the base elements from CADNode
     ves::open::xml::cad::CADNode::_updateVEElement( input );
     _updateChildren();
-    SetAttribute( "associatedDataset", m_associatedDataset );
+    SetAttribute( "associatedDataset", mAssociatedDataset );
 }
 /////////////////////////////////////////////////////
 void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
@@ -207,87 +173,87 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //populate the base elements in node
-        ves::open::xml::cad::CADNode::SetObjectFromXMLData( xmlNode );
+        return;
+    }
+    //populate the base elements in node
+    ves::open::xml::cad::CADNode::SetObjectFromXMLData( xmlNode );
 
-        //clear out the current list of children
-        if( m_numChildren )
-        {
-            m_children.clear();
-        }
-        //get the new number of children
-        {
-            DOMElement* nChildrenElement = GetSubElement( currentElement, std::string( "numChildren" ), 0 );
-            XMLObject::GetAttribute( nChildrenElement, "numChildren", m_numChildren );
-        }
-        if( currentElement->getAttributeNode(
-            Convert( "associatedDataset" ).toXMLString() ) )
-        {
-            dynamic_cast<ves::open::xml::XMLObjectPtr>( this )->GetAttribute( currentElement,
-                    "associatedDataset",
-                    m_associatedDataset );
-        }
-        else
-        {
-            m_associatedDataset = "NONE";
-        }
-        //populate the childList
-        {
-            DOMNodeList* childList = currentElement->getElementsByTagName(
-                                     Convert( "children" ).toXMLString() );
+    //clear out the current list of children
+    mChildren.clear();
 
-            DOMElement* childListElement = dynamic_cast<DOMElement*>( childList->item( 0 ) );
-            DOMNodeList* childrenNodes = childListElement->getElementsByTagName(
-                                         Convert( "child" ).toXMLString() );
+    //get the new number of children
+    {
+        //DOMElement* nChildrenElement = GetSubElement( currentElement, std::string( "numChildren" ), 0 );
+        //XMLObject::GetAttribute( nChildrenElement, "numChildren", mChildren.size() );
+    }
+    if( currentElement->getAttributeNode(
+        Convert( "associatedDataset" ).toXMLString() ) )
+    {
+        XMLObject::GetAttribute( currentElement,
+                "associatedDataset",
+                mAssociatedDataset );
+    }
+    else
+    {
+        mAssociatedDataset = "NONE";
+    }
+    //populate the childList
+    {
+        DOMNodeList* childList = currentElement->getElementsByTagName(
+                                 Convert( "children" ).toXMLString() );
 
-            size_t nChilderenReally = childrenNodes->getLength();
-            for( unsigned int i = 0; i < nChilderenReally; i++ )
+        DOMElement* childListElement = dynamic_cast<DOMElement*>( childList->item( 0 ) );
+        DOMNodeList* childrenNodes = childListElement->getElementsByTagName(
+                                     Convert( "child" ).toXMLString() );
+
+        size_t nChilderenReally = childrenNodes->getLength();
+        for( size_t i = 0; i < nChilderenReally; i++ )
+        {
+            DOMElement* cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
+            unsigned int g = 0;
+            while( cadNode->getParentNode() != childListElement )
             {
-                DOMElement* cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
-                unsigned int g = 0;
-                while( cadNode->getParentNode() != childListElement )
+                i++;
+                cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
+                if( i == nChilderenReally )
+                    return;
+            }
+            DOMElement* nodeType = 0;
+            unsigned int k = 0;
+            while( !nodeType )
+            {
+                nodeType = GetSubElement( cadNode, std::string( "type" ), k );
+                k++;
+            }
+            if( nodeType )
+            {
+                std::string tmpNodeType;
+                XMLObject::GetAttribute( nodeType, "type", tmpNodeType );
+                if( tmpNodeType == std::string( "Assembly" ) )
                 {
-                    i++;
-                    cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
-                    if( i == nChilderenReally )return;
+                    //this is an Assembly
+                    ves::open::xml::cad::CADAssemblyPtr newAssembly = new ves::open::xml::cad::CADAssembly();
+                    //VE_XML::VE_CAD::CADAssembly newAssembly;// = new VE_XML::VE_CAD::CADAssembly();
+                    newAssembly->SetObjectFromXMLData( cadNode );
+                    newAssembly->SetParent( mUuid );
+                    mChildren.push_back( newAssembly );
                 }
-                DOMElement* nodeType = 0;
-                unsigned int k = 0;
-                while( !nodeType )
+                else if( tmpNodeType == std::string( "Part" ) )
                 {
-                    nodeType = GetSubElement( cadNode, std::string( "type" ), k );
-                    k++;
+                    //this is a Part
+                    ves::open::xml::cad::CADPartPtr newPart = new ves::open::xml::cad::CADPart();
+                    //VE_XML::VE_CAD::CADPart newPart;// = new VE_XML::VE_CAD::CADPart();
+                    newPart->SetObjectFromXMLData( cadNode );
+                    newPart->SetParent( mUuid );
+                    mChildren.push_back( newPart );
                 }
-                if( nodeType )
+                else
                 {
-                    std::string tmpNodeType;
-                    XMLObject::GetAttribute( nodeType, "type", tmpNodeType );
-                    if( tmpNodeType == std::string( "Assembly" ) )
-                    {
-                        //this is an Assembly
-                        ves::open::xml::cad::CADAssembly* newAssembly = new ves::open::xml::cad::CADAssembly();
-                        //VE_XML::VE_CAD::CADAssembly newAssembly;// = new VE_XML::VE_CAD::CADAssembly();
-                        newAssembly->SetObjectFromXMLData( cadNode );
-                        newAssembly->SetParent( mUuid );
-                        m_children.push_back( newAssembly );
-                    }
-                    else if( tmpNodeType == std::string( "Part" ) )
-                    {
-                        //this is a Part
-                        ves::open::xml::cad::CADPart* newPart = new ves::open::xml::cad::CADPart();
-                        //VE_XML::VE_CAD::CADPart newPart;// = new VE_XML::VE_CAD::CADPart();
-                        newPart->SetObjectFromXMLData( cadNode );
-                        newPart->SetParent( mUuid );
-                        m_children.push_back( newPart );
-                    }
-                    else
-                    {
-                        std::cout << "ERROR!" << std::endl;
-                        std::cout << "Unknown node type:"
-                        << tmpNodeType << std::endl;
-                    }
+                    std::cout << "ERROR!" << std::endl;
+                    std::cout << "Unknown node type:"
+                    << tmpNodeType << std::endl;
                 }
             }
         }
@@ -298,12 +264,10 @@ CADAssembly::CADAssembly( const CADAssembly& rhs, bool clone )
         : ves::open::xml::cad::CADNode( rhs, clone )
 {
 
-    m_numChildren = rhs.m_numChildren;
-    m_associatedDataset = rhs.m_associatedDataset;
-    for( unsigned int i = 0; i < m_numChildren; i++ )
+    mAssociatedDataset = rhs.mAssociatedDataset;
+    for( size_t i = 0; i < rhs.mChildren.size(); i++ )
     {
-
-        m_children.push_back( dynamic_cast<CADNode*>( XMLObjectFactory::Instance()->CreateXMLObjectCopy( rhs.m_children.at( i ) ) ) );
+        mChildren.push_back( XMLObjectFactory::Instance()->CreateXMLObjectCopy( rhs.mChildren.at( i ) ) );
     }
 }
 ///////////////////////////////////////////////////////////
@@ -312,18 +276,14 @@ CADAssembly& CADAssembly::operator=( const CADAssembly& rhs )
     if( this != &rhs )
     {
         ves::open::xml::cad::CADNode::operator =( rhs );
-        for( int i = m_numChildren - 1; i >= 0; i-- )
-        {
-            delete m_children.at( i );
-        }
-        m_children.clear();
-        m_numChildren = rhs.m_numChildren;
 
-        for( unsigned int i = 0; i < m_numChildren; i++ )
+        mChildren.clear();
+
+        for( size_t i = 0; i < rhs.mChildren.size(); i++ )
         {
-            m_children.push_back( rhs.m_children.at( i ) );
+            mChildren.push_back( rhs.mChildren.at( i ) );
         }
-        m_associatedDataset = rhs.m_associatedDataset;
+        mAssociatedDataset = rhs.mAssociatedDataset;
     }
     return *this;
 }

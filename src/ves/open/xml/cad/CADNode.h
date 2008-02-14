@@ -34,6 +34,7 @@
 #define _CAD_NODE_H_
 
 #include <ves/open/xml/cad/CADNodePtr.h>
+#include <ves/open/xml/TransformPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/cad/CADAttribute.h>
@@ -52,17 +53,6 @@
 /*!\namespace VE_CAD
  * Contains nodes for creating/managing a CAD hierarchy.
  */
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Transform;
-}
-}
-}
 
 namespace ves
 {
@@ -97,7 +87,7 @@ public:
 
     ///Set the transform for this node.
     ///\param transform The transform of this node.
-    void SetTransform( ves::open::xml::Transform* transform );
+    void SetTransform( ves::open::xml::TransformPtr transform );
 
     ///Add an attribute for this node.
     ///\param attribute A new attribute for this node.
@@ -178,7 +168,7 @@ public:
     std::string GetPhysicsMesh();
 
     ///Get the transform of this CAD node.
-    ves::open::xml::Transform* GetTransform();
+    ves::open::xml::TransformPtr GetTransform();
 
     ///Get an attribute of this CAD node by a name
     ///\param name The name of the attribute to find.
@@ -223,9 +213,8 @@ protected:
     void _updateNodeType();
 
     std::string m_activeAttributeName;///<The name of the active attribute.
-    //unsigned int _uID;///<A "unique" id for the node.
     std::string  m_parent;  ///< Parent node ID.
-    ves::open::xml::Transform* m_transform; ///< Transform for the node.
+    ves::open::xml::TransformPtr m_transform; ///< Transform for the node.
     std::vector<ves::open::xml::cad::CADAttribute> m_attributeList;///<A list of attributes for this node
     std::vector<ves::open::xml::cad::CADNodeAnimation> m_animations;//<A list of animation path files for this node.
     std::string m_name;///< The name of this node.

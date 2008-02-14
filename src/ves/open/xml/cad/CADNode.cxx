@@ -91,11 +91,6 @@ CADNode::CADNode( std::string name )
 ///////////////////
 CADNode::~CADNode()
 {
-    if( m_transform )
-    {
-        delete m_transform;
-        m_transform = 0;
-    }
     m_attributeList.clear();
     m_animations.clear();
 }
@@ -118,13 +113,8 @@ void CADNode::SetParent( std::string parent )
     m_parent = parent;
 }
 ///////////////////////////////////////////////////////
-void CADNode::SetTransform( ves::open::xml::Transform* transform )
+void CADNode::SetTransform( ves::open::xml::TransformPtr transform )
 {
-    if( m_transform )
-    {
-        delete m_transform;
-        m_transform = 0;
-    }
     m_transform = new ves::open::xml::Transform( *transform );
 }
 ///////////////////////////////////////////////////////////
@@ -222,7 +212,7 @@ std::string CADNode::GetParent()
     return m_parent;
 }
 //////////////////////////////////////////
-ves::open::xml::Transform* CADNode::GetTransform()
+ves::open::xml::TransformPtr CADNode::GetTransform()
 {
     return m_transform;
 }
@@ -355,7 +345,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( currentElement->getAttributeNode(
                     Convert( "visibility" ).toXMLString() ) )
                 {
-                    dynamic_cast<ves::open::xml::XMLObjectPtr>( this )->GetAttribute( currentElement, "visibility", m_visibility );
+                    XMLObject::GetAttribute( currentElement, "visibility", m_visibility );
                 }
                 else
                 {
@@ -365,7 +355,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( currentElement->getAttributeNode(
                     Convert( "physics" ).toXMLString() ) )
                 {
-                    dynamic_cast< ves::open::xml::XMLObjectPtr >( this )->GetAttribute( currentElement, "physics", m_physics );
+                    XMLObject::GetAttribute( currentElement, "physics", m_physics );
                 }
                 else
                 {
@@ -375,7 +365,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( currentElement->getAttributeNode(
                     Convert( "mass" ).toXMLString() ) )
                 {
-                    dynamic_cast< ves::open::xml::XMLObjectPtr >( this )->GetAttribute( currentElement, "mass", m_mass );
+                    XMLObject::GetAttribute( currentElement, "mass", m_mass );
                 }
                 else
                 {
@@ -385,7 +375,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( currentElement->getAttributeNode(
                     Convert( "friction" ).toXMLString() ) )
                 {
-                    dynamic_cast< ves::open::xml::XMLObjectPtr >( this )->GetAttribute( currentElement, "friction", m_friction );
+                    XMLObject::GetAttribute( currentElement, "friction", m_friction );
                 }
                 else
                 {
@@ -395,7 +385,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( currentElement->getAttributeNode(
                     Convert( "restitution" ).toXMLString() ) )
                 {
-                    dynamic_cast< ves::open::xml::XMLObjectPtr >( this )->GetAttribute( currentElement, "restitution", m_restitution );
+                    XMLObject::GetAttribute( currentElement, "restitution", m_restitution );
                 }
                 else
                 {
@@ -405,7 +395,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( currentElement->getAttributeNode(
                     Convert( "physics mesh" ).toXMLString() ) )
                 {
-                    dynamic_cast< ves::open::xml::XMLObjectPtr >( this )->GetAttribute( currentElement, "physics mesh", m_physicsMesh );
+                    XMLObject::GetAttribute( currentElement, "physics mesh", m_physicsMesh );
                 }
                 else
                 {
@@ -550,7 +540,6 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
 {
     m_parent = "";
     m_transform = 0;
-    ;
 
     if( rhs.m_transform )
     {
@@ -592,7 +581,7 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
         apr_uuid_get( &tempuuid );
         char* buffer = new char[ APR_UUID_FORMATTED_LENGTH + 1 ];
         apr_uuid_format( buffer, &tempuuid );
-        uuid.assign( buffer );
+        mUuid.assign( buffer );
         delete [] buffer;
     }
 }
@@ -623,11 +612,6 @@ CADNode& CADNode::operator=( const CADNode& rhs )
             m_animations.push_back( rhs.m_animations.at( i ) );
         }
 
-        if( m_transform )
-        {
-            delete m_transform;
-            m_transform = 0;
-        }
         m_transform = new Transform( *rhs.m_transform );
         m_activeAttributeName = rhs.m_activeAttributeName;
         m_visibility = rhs.m_visibility;
