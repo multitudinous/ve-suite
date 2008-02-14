@@ -16,6 +16,7 @@
         </xs:sequence>
         <xs:attribute name="visiblility" type="xs:boolean" />
         <xs:attribute name="physics" type="xs:boolean" />
+        <xs:attribute name="opacity" type="xs:double" use="optional" default="1.0" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
