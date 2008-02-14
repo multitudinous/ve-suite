@@ -47,24 +47,24 @@ System::System()
 {
     SetObjectType( "System" );
     SetObjectNamespace( "Model" );
-    parentModel = NULL;
+    mParentModel = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 System::~System()
 {
-    m_models.clear();
+    mModels.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 System::System( const System& input )
         : XMLObject( input )
 {
-    m_network = new Network( *( input.m_network ) );
+    mNetwork = new Network( *( input.mNetwork ) );
 
-    for( size_t i = 0; i < input.m_models.size(); ++i )
+    for( size_t i = 0; i < input.mModels.size(); ++i )
     {
-        m_models.push_back( new Model( *input.m_models.at( i ) ) );
+        mModels.push_back( new Model( *input.mModels.at( i ) ) );
     }
-    parentModel = input.parentModel;
+    mParentModel = input.mParentModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
 System& System::operator=( const System& input )
@@ -73,14 +73,14 @@ System& System::operator=( const System& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        m_network = new Network( *input.m_network );
+        mNetwork = new Network( *input.mNetwork );
 
-        m_models.clear();
-        for( size_t i = 0; i < input.m_models.size(); ++i )
+        mModels.clear();
+        for( size_t i = 0; i < input.mModels.size(); ++i )
         {
-            m_models.push_back( new Model( *input.m_models.at( i ) ) );
+            mModels.push_back( new Model( *input.mModels.at( i ) ) );
         }
-        parentModel = input.parentModel;
+        mParentModel = input.mParentModel;
     }
     return *this;
 }
@@ -88,23 +88,23 @@ System& System::operator=( const System& input )
 void System::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    SetAttribute( "id", uuid );
-    SetSubElement( "network", &( *m_network ) );
+    SetAttribute( "id", mUuid );
+    SetSubElement( "network", &( *mNetwork ) );
 
-    for( size_t i = 0; i < m_models.size(); ++i )
+    for( size_t i = 0; i < mModels.size(); ++i )
     {
-        SetSubElement( "model", &( *m_models.at( i ) ) );
+        SetSubElement( "model", &( *mModels.at( i ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void System::AddNetwork( NetworkWeakPtr inputNetwork )
+void System::AddNetwork( NetworkPtr inputNetwork )
 {
-    m_network = inputNetwork;
+    mNetwork = inputNetwork;
 }
 ////////////////////////////////////////////////////////////////////////////////
-NetworkWeakPtr System::GetNetwork()
+NetworkPtr System::GetNetwork()
 {
-    return m_network;
+    return mNetwork;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void System::SetObjectFromXMLData( DOMNode* element )
@@ -122,7 +122,7 @@ void System::SetObjectFromXMLData( DOMNode* element )
 
     //Setup uuid for model element
     {
-        ves::open::xml::XMLObject::GetAttribute( currentElement, "id", uuid );
+        ves::open::xml::XMLObject::GetAttribute( currentElement, "id", mUuid );
     }
 
     //get variables by tags
@@ -130,9 +130,9 @@ void System::SetObjectFromXMLData( DOMNode* element )
     // for network
     {
         dataValueStringName = GetSubElement( currentElement, "network", 0 );
-        m_network = new Network();
-        m_network->SetParentModel( parentModel );
-        m_network->SetObjectFromXMLData( dataValueStringName );
+        mNetwork = new Network();
+        mNetwork->SetParentModel( mParentModel );
+        mNetwork->SetObjectFromXMLData( dataValueStringName );
         dataValueStringName = 0;
     }
     // for models
@@ -149,53 +149,53 @@ void System::SetObjectFromXMLData( DOMNode* element )
                 dataValueStringName =
                     static_cast< DOMElement* >( subElements->item( i ) );
                 ves::open::xml::model::ModelSharedPtr newModel = new Model();
-                newModel->SetParentModel( parentModel );
-                m_models.push_back( newModel );
-                m_models.back()->SetObjectFromXMLData( dataValueStringName );
+                newModel->SetParentModel( mParentModel );
+                mModels.push_back( newModel );
+                mModels.back()->SetObjectFromXMLData( dataValueStringName );
             }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ModelWeakPtr System::GetModel( size_t i )
+ModelPtr System::GetModel( size_t i )
 {
     try
     {
-        return m_models.at( i );
+        return mModels.at( i );
     }
     catch ( ... )
     {
         std::cerr << "System::GetModel value greater than number of tags present"
         << std::endl;
-        return 0;
+        return ModelPtr();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 size_t System::GetNumberOfModels( void )
 {
-    return m_models.size();
+    return mModels.size();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void System::AddModel( ModelWeakPtr inputModel )
+void System::AddModel( ModelPtr inputModel )
 {
-    m_models.push_back( inputModel );
+    mModels.push_back( inputModel );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< ModelWeakPtr > System::GetModels()
 {
     std::vector< ModelWeakPtr > tempModels;
-    std::copy( m_models.begin(),
-               m_models.end(),
+    std::copy( mModels.begin(),
+               mModels.end(),
                std::back_inserter( tempModels ) );
     return tempModels;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void System::SetParentModel( ModelSharedPtr parent )
 {
-    parentModel = parent;
+    mParentModel = parent;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ModelSharedPtr System::GetParentModel( )
 {
-    return parentModel;
+    return mParentModel;
 }

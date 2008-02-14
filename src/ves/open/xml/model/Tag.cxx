@@ -48,21 +48,17 @@ Tag::Tag()
 ////////////////////////////////////////////////////////////////////////////////
 Tag::~Tag()
 {
-    /*for ( size_t i = 0; i < tagPoints.size(); ++i )
-    {
-       delete tagPoints.at( i );
-    }*/
-    tagPoints.clear();
+    mTagPoints.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Tag::Tag( const Tag& input )
         : XMLObject( input )
 {
-    tagText = input.tagText;
+    mTagText = input.mTagText;
 
-    for( size_t i = 0; i < input.tagPoints.size(); ++i )
+    for( size_t i = 0; i < input.mTagPoints.size(); ++i )
     {
-        tagPoints.push_back( new Point( *( input.tagPoints.at( i ) ) ) );
+        mTagPoints.push_back( new Point( *( input.mTagPoints.at( i ) ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -72,48 +68,44 @@ Tag& Tag::operator=( const Tag& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        tagText = input.tagText;
+        mTagText = input.mTagText;
 
-        /*for ( size_t i = 0; i < tagPoints.size(); ++i )
-        {
-           delete tagPoints.at( i );
-        }*/
-        tagPoints.clear();
+        mTagPoints.clear();
 
-        for( size_t i = 0; i < input.tagPoints.size(); ++i )
+        for( size_t i = 0; i < input.mTagPoints.size(); ++i )
         {
-            tagPoints.push_back( new Point( *( input.tagPoints.at( i ) ) ) );
+            mTagPoints.push_back( new Point( *( input.mTagPoints.at( i ) ) ) );
         }
     }
     return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tag::SetText( std::string text )
+void Tag::SetText( const std::string& text )
 {
-    tagText = text;
+    mTagText = text;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    SetAttribute( "id", uuid );
-    SetSubElement( "tagText", tagText );
-    for( size_t i = 0; i < tagPoints.size(); ++i )
+    SetAttribute( "id", mUuid );
+    SetSubElement( "tagText", mTagText );
+    for( size_t i = 0; i < mTagPoints.size(); ++i )
     {
-        SetSubElement( "linkPoints", &( *tagPoints.at( i ) ) );
+        SetSubElement( "linkPoints", &( *mTagPoints.at( i ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string Tag::GetText( void )
+const std::string& Tag::GetText( void )
 {
-    return tagText;
+    return mTagText;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PointPtr Tag::GetPoint( size_t i )
 {
     try
     {
-        return tagPoints.at( i );
+        return mTagPoints.at( i );
     }
     catch ( ... )
     {
@@ -125,7 +117,7 @@ PointPtr Tag::GetPoint( size_t i )
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::AddPoint( PointPtr newPoint )
 {
-    tagPoints.push_back( newPoint );
+    mTagPoints.push_back( newPoint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Tag::SetObjectFromXMLData( DOMNode* element )
@@ -144,7 +136,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     //get variables by tags
     DOMElement* dataValueStringName = 0;
     dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
-    GetAttribute( dataValueStringName, "tagText", tagText );
+    GetAttribute( dataValueStringName, "tagText", mTagText );
     // for Tag points
     unsigned int numberOfPoints =
         currentElement->getElementsByTagName(
@@ -153,13 +145,13 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     for( unsigned int i = 0; i < numberOfPoints; ++i )
     {
         dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-        tagPoints.push_back( new Point() );
-        tagPoints.back()->SetObjectFromXMLData( dataValueStringName );
+        mTagPoints.push_back( new Point() );
+        mTagPoints.back()->SetObjectFromXMLData( dataValueStringName );
     }
 
     //Setup uuid for model element
     {
-        GetAttribute( currentElement, "id", uuid );
+        GetAttribute( currentElement, "id", mUuid );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -79,7 +79,7 @@ public:
 
     ///Get all the models for this system
     ///\return The vector of all the models
-    std::vector< ModelWeakPtr >& GetModels();
+    std::vector< ModelWeakPtr > GetModels();
 
     ///Get the total number of models
     ///\return The number of models
