@@ -39,6 +39,8 @@
 #include <ves/conductor/util/BaseDialog.h>
 #include <ves/conductor/util/DualSlider.h>
 
+#include <ves/open/xml/DataValuePairPtr.h>
+
 #include <wx/spinctrl.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
@@ -70,7 +72,7 @@ public:
     void SendCommands();
 
     ///Add an instruction to send. This is for access in the callbacks.
-    void AddInstruction( ves::open::xml::DataValuePair* newInstruct );
+    void AddInstruction( ves::open::xml::DataValuePairPtr newInstruct );
 
     void SetCommand( std::string name )
     {
@@ -78,7 +80,7 @@ public:
     }
 
     ///Get the seed point vector
-    std::vector< ves::open::xml::DataValuePair* > GetSeedPointDVPVector( void );
+    std::vector< ves::open::xml::DataValuePairPtr > GetSeedPointDVPVector( void );
     ///Callback used to set the dvp vector
     void SetVectorDVP( void );
     ///Transfer the seed points info from the window
@@ -183,7 +185,7 @@ class WPMaxSliderCallback: public
     ves::conductor::util::DualSlider* _xBounds;
     ves::conductor::util::DualSlider* _yBounds;
     ves::conductor::util::DualSlider* _zBounds;
-    std::vector< ves::open::xml::DataValuePair* > seedPointDVP;
+    std::vector< ves::open::xml::DataValuePairPtr > seedPointDVP;
     wxSpinCtrl* numXPointsSpinner;
     wxSpinCtrl* numYPointsSpinner;
     wxSpinCtrl* numZPointsSpinner;

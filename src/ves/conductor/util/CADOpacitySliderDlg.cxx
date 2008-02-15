@@ -104,17 +104,17 @@ void CADOpacitySliderDlg::_onSlider( wxScrollEvent& WXUNUSED( event ) )
     //_commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
     _commandName = std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" );
 
-    ves::open::xml::DataValuePair* nodeID = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
     nodeID->SetDataType( "STRING" );
     nodeID->SetData( std::string( "Node ID" ), _cadID );
     _instructions.push_back( nodeID );
 
-    ves::open::xml::DataValuePair* componentToUpdate = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr componentToUpdate = new ves::open::xml::DataValuePair();
     componentToUpdate->SetDataType( "STRING" );
     componentToUpdate->SetData( "Material Component", "Opacity" );
     _instructions.push_back( componentToUpdate );
 
-    ves::open::xml::DataValuePair* materialToUpdate = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr materialToUpdate = new ves::open::xml::DataValuePair();
     materialToUpdate->SetDataType( "XMLOBJECT" );
     materialToUpdate->SetData( "Material", _material );
     _instructions.push_back( materialToUpdate );
@@ -132,7 +132,7 @@ void CADOpacitySliderDlg::_clearInstructions()
 //////////////////////////////////////////////////
 void CADOpacitySliderDlg::_sendCommandsToXplorer()
 {
-    ves::open::xml::Command* opacityCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr opacityCommand = new ves::open::xml::Command();
 
     for( size_t i = 0; i < _instructions.size(); i++ )
     {
@@ -152,7 +152,6 @@ void CADOpacitySliderDlg::_sendCommandsToXplorer()
         }
     }
     //Clean up memory
-    delete opacityCommand;
     _clearInstructions();
 }
 

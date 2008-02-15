@@ -49,18 +49,7 @@
  * Forward declarations
  */
 
-////@begin forward declarations
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-class DataValuePair;
-}
-}
-}
+#include <ves/open/xml/DataValuePairPtr.h>
 
 class wxRadioBox;
 class wxRadioButton;
@@ -190,8 +179,8 @@ protected:
     wxButton*      itemButton16;
     wxButton*      itemButton17;
 
-    std::vector<ves::open::xml::DataValuePair*> _advancedSettings;///<The advanced settings.
-    std::vector<ves::open::xml::DataValuePair*> _contourInformation;///<The countour setting data
+    std::vector<ves::open::xml::DataValuePairPtr> _advancedSettings;///<The advanced settings.
+    std::vector<ves::open::xml::DataValuePairPtr> _contourInformation;///<The countour setting data
 
     std::string _planeDirection;///<Store the value of the direction.
     std::string _planeType;///<The contour type.

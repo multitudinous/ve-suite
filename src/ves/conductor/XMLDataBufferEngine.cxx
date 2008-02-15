@@ -71,6 +71,11 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
     topId = tempSystem->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
+XMLDataBufferEngine::~XMLDataBufferEngine()
+{
+    CleanUp();
+}
+////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::CleanUp( void )
 {
     m_commandMap.clear();

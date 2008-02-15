@@ -126,11 +126,6 @@ bool Streamlines::Create( wxWindow* parent,
 ////////////////////////////////////////////////////////////////////////////////
 Streamlines::~Streamlines()
 {
-    for( size_t i = 0; i < seedPointInformation.size(); ++i )
-    {
-        delete seedPointInformation.at( i );
-    }
-
     seedPointInformation.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,18 +355,17 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     _updateAdvancedSettings();
 
     //turn off streamlines-- probably need a function for this since it is used often
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Display Seed Points" ) );
-    ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr seedPointDVP = new ves::open::xml::DataValuePair();
     seedPointDVP->SetData( "OnOff", static_cast<unsigned int>( 0 ) );
     veCommand->AddDataValuePair( seedPointDVP );
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair;
     activeDataset->SetData( "Active Dataset", dynamic_cast<Vistab*>( GetParent() )->GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
 
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
-    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
     newCommand->SetCommandName( "UPDATE_STREAMLINE_SETTINGS" );
 
     for( size_t i = 0; i < _streamlineInformation.size(); i++ )
@@ -380,7 +374,7 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     }
 
     //The advanced settings command
-    ves::open::xml::Command* advancedSettings = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr advancedSettings = new ves::open::xml::Command();
     advancedSettings->SetCommandName( "ADVANCED_STREAMLINE_SETTINGS" );
     for( size_t i = 0; i < _advancedSettings.size(); i++ )
     {
@@ -388,15 +382,13 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     }
 
     //Add the dvp's for the seed point info
-    //VE_XML::Command* seedPointSettings = new VE_XML::Command();
-    //seedPointSettings->SetCommandName("Set_Seed_Point_Settings");
     for( size_t i = 0; i < seedPointInformation.size(); i++ )
     {
         advancedSettings->AddDataValuePair( seedPointInformation.at( i ) );
     }
 
     //dvp representing the advanced settings within the contours information
-    ves::open::xml::DataValuePair* advancedStreamlineSettings = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr advancedStreamlineSettings = new ves::open::xml::DataValuePair();
     advancedStreamlineSettings->SetData( "Advanced Streamline Settings", advancedSettings );
     newCommand->AddDataValuePair( advancedStreamlineSettings );
 
@@ -413,11 +405,6 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     {
         wxMessageBox( _( "Invalid Parent" ), _( "Communication Failure" ),
                       wxOK | wxICON_INFORMATION );
-    }
-
-    if( newCommand )
-    {
-        delete newCommand;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -449,10 +436,6 @@ void Streamlines::_onPointsSlider( wxScrollEvent& WXUNUSED( event ) )
 void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
 {
     //Clear the old dvps if there were any
-    for( size_t i = 0; i < seedPointInformation.size(); ++i )
-    {
-        delete seedPointInformation.at( i );
-    }
     seedPointInformation.clear();
     if( !seedPointDialog )
     {
@@ -460,74 +443,64 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
     }
     //seedPointDialog->SetActiveDataset(dynamic_cast<Vistab*>(GetParent())->GetActiveDatasetName());
     //display the seed points
-    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
     try
     {
         newCommand->SetCommandName( "Display Seed Points" );
-        ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr seedPointDVP = new ves::open::xml::DataValuePair();
         seedPointDVP->SetData( "OnOff", static_cast< unsigned int >( 1 ) );
         newCommand->AddDataValuePair( seedPointDVP );
 
-        ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
+        ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair;
         activeDataset->SetData( "Active Dataset", dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName() );
         newCommand->AddDataValuePair( activeDataset );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
-
-        delete newCommand;
     }
     catch ( ... )
     {
         wxMessageBox( _( "Invalid command!" ), wxString( newCommand->GetCommandName().c_str(), wxConvUTF8 ),
                       wxOK | wxICON_INFORMATION );
 
-        delete newCommand;
     }
-    ves::open::xml::Command* boundsCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr boundsCommand = new ves::open::xml::Command();
     try
     {
         boundsCommand->SetCommandName( "Seed Points Bounds" );
         std::vector<double> seedPointBounds;
         seedPointDialog->GetBounds( seedPointBounds );
 
-        ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr coordinate = new ves::open::xml::DataValuePair();
         coordinate->SetData( "Coordinate", "All Bounds" );
         boundsCommand->AddDataValuePair( coordinate );
 
-        ves::open::xml::DataValuePair* seedPointBoundsDVP = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr seedPointBoundsDVP = new ves::open::xml::DataValuePair();
         seedPointBoundsDVP->SetData( "Bounds", seedPointBounds );
         boundsCommand->AddDataValuePair( seedPointBoundsDVP );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( boundsCommand );
-
-        delete boundsCommand;
     }
     catch ( ... )
     {
         wxMessageBox( _( "Invalid command!" ), wxString( boundsCommand->GetCommandName().c_str(), wxConvUTF8 ),
                       wxOK | wxICON_INFORMATION );
 
-        delete newCommand;
     }
-    ves::open::xml::Command* dimensionsCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr dimensionsCommand = new ves::open::xml::Command();
     try
     {
         dimensionsCommand->SetCommandName( "Seed Points Dimensions" );
         std::vector<long> seedPointDims;
         seedPointDialog->GetDimensions( seedPointDims );
 
-        ves::open::xml::DataValuePair* dimensions = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr dimensions = new ves::open::xml::DataValuePair();
         dimensions->SetData( "Dimensions", seedPointDims );
         dimensionsCommand->AddDataValuePair( dimensions );
 
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( dimensionsCommand );
-
-        delete dimensionsCommand;
     }
     catch ( ... )
     {
         wxMessageBox( _( "Invalid command!" ), wxString( dimensionsCommand->GetCommandName().c_str(), wxConvUTF8 ),
                       wxOK | wxICON_INFORMATION );
-
-        delete dimensionsCommand;
     }
     if( seedPointDialog->ShowModal() )
     {
@@ -537,18 +510,17 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::OnClose( wxCommandEvent& event )
 {
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Display Seed Points" ) );
-    ves::open::xml::DataValuePair* seedPointDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr seedPointDVP = new ves::open::xml::DataValuePair();
     seedPointDVP->SetData( "OnOff", static_cast<unsigned int>( 0 ) );
     veCommand->AddDataValuePair( seedPointDVP );
 
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair;
     activeDataset->SetData( "Active Dataset", dataSetName );
     veCommand->AddDataValuePair( activeDataset );
 
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
     event.Skip();
 }
 ////////////////////////////////////////////////////////////////////////////////

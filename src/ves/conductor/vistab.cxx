@@ -957,28 +957,28 @@ void Vistab::_updateBaseInformation()
     ///This is the default. Other dialogs actions will set the command name to the specific value if they are launched
     _commandName = "VISUALIZATION_SETTINGS";
 
-    ves::open::xml::DataValuePair* activeScalar = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeScalar = new ves::open::xml::DataValuePair();
     activeScalar->SetDataType( "STRING" );
     activeScalar->SetDataName( std::string( "Active Scalar" ) );
     activeScalar->SetDataString( _activeScalarName );
 
     _vistabBaseInformation.push_back( activeScalar );
 
-    ves::open::xml::DataValuePair* activeVector = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeVector = new ves::open::xml::DataValuePair();
     activeVector->SetDataType( "STRING" );
     activeVector->SetDataName( std::string( "Active Vector" ) );
     activeVector->SetDataString( _activeVectorName );
 
     _vistabBaseInformation.push_back( activeVector );
 
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair();
     activeDataset->SetDataType( "STRING" );
     activeDataset->SetDataName( std::string( "Active Dataset" ) );
     activeDataset->SetDataString( _activeDataSetName );
 
     _vistabBaseInformation.push_back( activeDataset );
 
-    ves::open::xml::DataValuePair* scalarMin = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr scalarMin = new ves::open::xml::DataValuePair();
 //   minimumValue = _activeScalarRange.at(0)
 //                    + (scalarRange->GetMinSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
     minimumValue = _activeScalarRange.at( 0 )
@@ -988,7 +988,7 @@ void Vistab::_updateBaseInformation()
 
     _vistabBaseInformation.push_back( scalarMin );
 
-    ves::open::xml::DataValuePair* scalarMax = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr scalarMax = new ves::open::xml::DataValuePair();
 //   maximumValue = _activeScalarRange.at(0)
 //                    + (scalarRange->GetMaxSliderValue()/100.0)*(_activeScalarRange.at(1) - _activeScalarRange.at(0));
     maximumValue = _activeScalarRange.at( 1 ) - (( _activeScalarRange.at( 1 ) - _activeScalarRange.at( 0 ) )
@@ -1003,38 +1003,37 @@ void Vistab::_updateBaseInformation()
     _vistabBaseInformation.push_back( axes );*/
 
     //Store the axes display value
-    ves::open::xml::DataValuePair* bbox = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr bbox = new ves::open::xml::DataValuePair();
     bbox->SetData( std::string( "Show Bounding Box" ), static_cast< unsigned int >( bboxCB->GetValue() ) );
     _vistabBaseInformation.push_back( bbox );
 
     //Store the axes display value
-    ves::open::xml::DataValuePair* wireMesh = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr wireMesh = new ves::open::xml::DataValuePair();
     wireMesh->SetData( std::string( "Show Wire Mesh" ), static_cast< unsigned int >( wireFrameCB->GetValue() ) );
     _vistabBaseInformation.push_back( wireMesh );
 
     //set scalar bar state
-    ves::open::xml::DataValuePair* scalarBarDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr scalarBarDVP = new ves::open::xml::DataValuePair();
     scalarBarDVP->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
     _vistabBaseInformation.push_back( scalarBarDVP );
 }
 ////////////////////////////////////////////////////////////////////////////
 void Vistab::OnClearAll( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) );
     dataValuePair->SetDataName( "CLEAR_ALL" );
     dataValuePair->SetDataValue( static_cast< unsigned int >( 1 ) );
-    ves::open::xml::Command* veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "CLEAR_VIS_OBJECTS" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
     bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    delete veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////
-void Vistab::SendUpdatedSettingsToXplorer( ves::open::xml::Command* subDialogCommand )
+void Vistab::SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand )
 {
     _updateBaseInformation();
-    ves::open::xml::Command* newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
 
     for( size_t i = 0; i < _vistabBaseInformation.size(); i++ )
     {
@@ -1042,7 +1041,7 @@ void Vistab::SendUpdatedSettingsToXplorer( ves::open::xml::Command* subDialogCom
     }
     if( subDialogCommand )
     {
-        ves::open::xml::DataValuePair* subDialogSettings = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr subDialogSettings = new ves::open::xml::DataValuePair();
         subDialogSettings->SetData( "Sub-Dialog Settings", subDialogCommand );
         newCommand->AddDataValuePair( subDialogSettings );
     }
@@ -1050,9 +1049,6 @@ void Vistab::SendUpdatedSettingsToXplorer( ves::open::xml::Command* subDialogCom
     newCommand->SetCommandName( _commandName );
 
     bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
-
-    delete newCommand;
-    newCommand = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 void Vistab::_onMinSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
@@ -1217,13 +1213,13 @@ void Vistab::_onClose( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateBoundingBox( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Bounding Box State", static_cast< unsigned int >( bboxCB->GetValue() ) );
     ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Bounding Box State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair();
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
     
@@ -1232,13 +1228,13 @@ void Vistab::UpdateBoundingBox( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Wire Frame State", static_cast< unsigned int >( wireFrameCB->GetValue() ) );
     ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Wire Frame State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair();
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
     
@@ -1247,13 +1243,13 @@ void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Axes State", static_cast< unsigned int >( axesCB->GetValue() ) );
     ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Axes State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair();
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
     
@@ -1281,13 +1277,13 @@ void Vistab::UpdateAxesLabels( wxCommandEvent& event )
     labels.push_back( ConvertUnicode( yAxisEntry->GetValue().c_str() ) );
     labels.push_back( ConvertUnicode( zAxisEntry->GetValue().c_str() ) );
 
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( activeAxesLAbel, labels );
     ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Axes Labels" ) );
     veCommand->AddDataValuePair( dataValuePair );
     
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair();
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
     
@@ -1296,13 +1292,13 @@ void Vistab::UpdateAxesLabels( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateScalarBar( wxCommandEvent& event )
 {
-    ves::open::xml::DataValuePair* dataValuePair = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dataValuePair = new ves::open::xml::DataValuePair();
     dataValuePair->SetData( "Scalar Bar State", static_cast< unsigned int >( scalarBarCB->GetValue() ) );
     ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
     veCommand->SetCommandName( std::string( "Change Scalar Bar State" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
-    ves::open::xml::DataValuePair* activeDataset = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair();
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
     

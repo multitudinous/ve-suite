@@ -42,6 +42,8 @@ CADOpacitySliderDlg API
 #include <ves/open/VjObsC.h>
 #include <ves/VEConfig.h>
 
+#include <ves/open/xml/DataValuePairPtr.h>
+
 #include <string>
 #include <vector>
 
@@ -55,7 +57,6 @@ namespace cad
 {
 class CADMaterial;
 }
-class DataValuePair;
 }
 }
 }
@@ -109,7 +110,7 @@ protected:
     ///Build the dialog internally.
     void _buildDialog();
     std::string _cadID;///<The id of the CADNode the material belongs to.
-    std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+    std::vector<ves::open::xml::DataValuePairPtr> _instructions;///<The DataValuePair s for the current command.
     std::string _commandName;///<The command name.
     ves::open::xml::cad::CADMaterial* _material;///<The CADMaterial we are updating.
 

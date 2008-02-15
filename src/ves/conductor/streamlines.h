@@ -36,17 +36,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-class DataValuePair;
-}
-}
-}
+#include <ves/open/xml/DataValuePairPtr.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/dialog.h>
@@ -157,9 +147,9 @@ protected:
     wxSlider* _nPointsSlider;
     wxButton* itemButton13;
 
-    std::vector< ves::open::xml::DataValuePair* > _advancedSettings;///<The advanced settings.
-    std::vector< ves::open::xml::DataValuePair* > _streamlineInformation;///<The streamline setting data
-    std::vector< ves::open::xml::DataValuePair* > seedPointInformation;///<The streamline setting data
+    std::vector< ves::open::xml::DataValuePairPtr > _advancedSettings;///<The advanced settings.
+    std::vector< ves::open::xml::DataValuePairPtr > _streamlineInformation;///<The streamline setting data
+    std::vector< ves::open::xml::DataValuePairPtr > seedPointInformation;///<The streamline setting data
 
     double _streamSize;///<The size of the streamlines.
     unsigned int _nPointsPerPlane;///<The number of seed points.

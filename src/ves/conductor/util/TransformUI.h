@@ -83,9 +83,6 @@ public:
     ///\param event The wxCommand event
     void UpdateUniformScale( wxCommandEvent& event );
 
-    ///Get the current transform
-    //ves::open::xml::Transform* GetTransform( void );
-
     ///Get the current parameter block id
     void SetParamBlockID( std::string id );
     ///Get the current parameter block transform
@@ -114,9 +111,6 @@ private:
 
     std::string _id;///<parameter block id
     ves::open::xml::TransformPtr _transform;///<parameter block transform
-
-    ///Send the Command back to VE-Xplorer.
-    void _sendCommandsToXplorer();
 
     double tempX;///<The x scale value.
     double tempY;///<The y scale value.

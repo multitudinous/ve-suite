@@ -197,7 +197,7 @@ void WPDialog::_updateDimensions( wxSpinEvent& event )
     dimensions.push_back( numYPointsSpinner->GetValue() );
     dimensions.push_back( numZPointsSpinner->GetValue() );
 
-    ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr value = new ves::open::xml::DataValuePair;
     value->SetData( "Dimensions", dimensions );
     AddInstruction( value );
     SendCommands();
@@ -250,17 +250,17 @@ void WPDialog::WPMinSliderCallback::SliderOperation()
     //what does TP stand for?
     _wpdlg->SetCommandName( "Seed Points Bounds" );
 
-    ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr coordinate = new ves::open::xml::DataValuePair();
     coordinate->SetDataType( "STRING" );
     coordinate->SetDataName( std::string( "Coordinate" ) );
     coordinate->SetDataString( _direction );
     _wpdlg->AddInstruction( coordinate );
 
-    ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr direction = new ves::open::xml::DataValuePair();
     direction->SetData( "MinMax", "Min" );
     _wpdlg->AddInstruction( direction );
 
-    ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr value = new ves::open::xml::DataValuePair;
     value->SetData( "Value",
                     static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
     _wpdlg->AddInstruction( value );
@@ -273,15 +273,15 @@ void WPDialog::WPMaxSliderCallback::SliderOperation()
 {
     _wpdlg->SetCommand( "Seed Points Bounds" );
 
-    ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr coordinate = new ves::open::xml::DataValuePair();
     coordinate->SetData( std::string( "Coordinate" ), _direction );
     _wpdlg->AddInstruction( coordinate );
 
-    ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr direction = new ves::open::xml::DataValuePair();
     direction->SetData( std::string( "MinMax" ), "Max" );
     _wpdlg->AddInstruction( direction );
 
-    ves::open::xml::DataValuePair* value = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr value = new ves::open::xml::DataValuePair();
     value->SetData( "Value",
                     static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
     _wpdlg->AddInstruction( value );
@@ -294,20 +294,20 @@ void WPDialog::WPBothMoveCallback::SliderOperation()
 {
     _wpdlg->SetCommand( "Seed Points Bounds" );
 
-    ves::open::xml::DataValuePair* coordinate = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr coordinate = new ves::open::xml::DataValuePair();
     coordinate->SetData( std::string( "Coordinate" ), _direction );
     _wpdlg->AddInstruction( coordinate );
 
-    ves::open::xml::DataValuePair* direction = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr direction = new ves::open::xml::DataValuePair();
     direction->SetData( std::string( "MinMax" ), "Both" );
     _wpdlg->AddInstruction( direction );
 
-    ves::open::xml::DataValuePair* minvalue = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr minvalue = new ves::open::xml::DataValuePair();
     minvalue->SetData( "Min Value",
                        static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
 
 
-    ves::open::xml::DataValuePair* maxvalue = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr maxvalue = new ves::open::xml::DataValuePair();
     maxvalue->SetData( "Max Value",
                        static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
 
@@ -323,7 +323,7 @@ void WPDialog::SetCommandName( std::string newName )
     _commandName = newName;
 }
 ////////////////////////////////////////////////////////////////////
-void WPDialog::AddInstruction( ves::open::xml::DataValuePair* newInstruction )
+void WPDialog::AddInstruction( ves::open::xml::DataValuePairPtr newInstruction )
 {
     _instructions.push_back( newInstruction );
 }
@@ -368,7 +368,7 @@ void WPDialog::SetVectorDVP( void )
        seedPointDVP*/
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< ves::open::xml::DataValuePair* > WPDialog::GetSeedPointDVPVector( void )
+std::vector< ves::open::xml::DataValuePairPtr > WPDialog::GetSeedPointDVPVector( void )
 {
     return seedPointDVP;
 }
@@ -377,7 +377,7 @@ bool WPDialog::TransferDataFromWindow( void )
 {
     seedPointDVP.clear();
 
-    ves::open::xml::DataValuePair* tempDVP;
+    ves::open::xml::DataValuePairPtr tempDVP;
     ////////////////
     tempDVP = new ves::open::xml::DataValuePair();
     tempDVP->SetData( "Min_Z_BB",

@@ -49,16 +49,7 @@ BaseDialog API
 #include <wx/sizer.h>
 #include <wx/dialog.h>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class DataValuePair;
-}
-}
-}
+#include <ves/open/xml/DataValuePairPtr.h>
 
 namespace ves
 {
@@ -114,7 +105,7 @@ protected:
     }
 #endif
     std::string _commandName;///<The name of the Command
-    std::vector<ves::open::xml::DataValuePair*> _instructions;///<The DataValuePair s for the current command.
+    std::vector<ves::open::xml::DataValuePairPtr> _instructions;///<The DataValuePair s for the current command.
 };
 }
 }

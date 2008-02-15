@@ -49,22 +49,8 @@
 #include <map>
 #include <string>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-class DataValuePair;
-namespace model
-{
-class Model;
-}
-}
-
-}
-}
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
 
 class wxComboBox;
 class wxListBox;
@@ -193,7 +179,7 @@ public:
 
     ///Send the current vistab data to xplorer.
     ///\param subDialogCommand The setting from any of the sub dialogs.
-    void SendUpdatedSettingsToXplorer( ves::open::xml::Command* subDialogCommand = 0 );
+    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand = 0 );
 
     ///Clear out the DataValuePair(s) of basic info about the vistab
     void ClearBaseInformation();
@@ -430,12 +416,12 @@ class ScalarRangeMaxSliderCallback:
     std::map<std::string, std::vector<double> > _originalScalarRanges;///<The scalar range for the active scalar
     std::vector<double> _activeScalarRange;///<The active scalars range.
 
-    std::vector<ves::open::xml::DataValuePair*> _vistabBaseInformation;///<The basic information from the vistab
-    std::vector<ves::open::xml::DataValuePair*> _vistabSpecificInformation;///<The specific information from specific vistab dialogs
+    std::vector<ves::open::xml::DataValuePairPtr> _vistabBaseInformation;///<The basic information from the vistab
+    std::vector<ves::open::xml::DataValuePairPtr> _vistabSpecificInformation;///<The specific information from specific vistab dialogs
 
     std::string _commandName;///<The name of the command to send back
 
-    std::vector< ves::open::xml::Command* > commands;
+    std::vector< ves::open::xml::CommandPtr > commands;
     //VjObs_ptr xplorerPtr;
     std::vector< long > commandInputs;
     //DOMDocument* doc;

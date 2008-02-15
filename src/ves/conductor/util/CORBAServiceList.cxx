@@ -33,7 +33,7 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/open/xml/DataValuePair.h>
-//#include "VE_Open/XML/Command.h"
+#include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #include <ves/conductor/util/OrbThread.h>
@@ -326,10 +326,10 @@ void CORBAServiceList::CheckORBWorkLoad( void )
                 orb->perform_work();
             }
 
-            ves::open::xml::Command textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
-            if( textOutput.GetCommandName() != "NULL" )
+            ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
+            if( textOutput->GetCommandName() != "NULL" )
             {
-                GetMessageLog()->SetMessage( textOutput.GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
+                GetMessageLog()->SetMessage( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
             }
         }
     }
@@ -507,12 +507,12 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
     return true;
 }
 ///////////////////////////////////////////////////////////////////////
-ves::open::xml::Command CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
+ves::open::xml::CommandPtr CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
 {
     if( p_ui_i == 0 )
     {
-        ves::open::xml::Command tempCommand;
-        tempCommand.SetCommandName( "NULL" );
+        ves::open::xml::CommandPtr tempCommand = new Command();
+        tempCommand->SetCommandName( "NULL" );
         return tempCommand;
     }
     return p_ui_i->GetXplorerData( commandName );

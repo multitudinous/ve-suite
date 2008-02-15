@@ -60,10 +60,7 @@ public:
     };
     
     ///Default canvas
-    Canvas()
-    {
-        ;
-    }
+    Canvas();
     ///Constructor
     Canvas( wxWindow* parent, int id );
     ///Destructor

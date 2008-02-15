@@ -60,10 +60,7 @@ private:
     // Required so that vpr::Singleton can instantiate this class.
     // friend class vpr::Singleton< UserPreferenceDataBuffer >;
     UserPreferencesDataBuffer( void );
-    ~UserPreferencesDataBuffer()
-    {
-        ;
-    } // Never gets called, don't implement
+    ~UserPreferencesDataBuffer();
     vprSingletonHeader( UserPreferencesDataBuffer );
 public:
     ///Destructor

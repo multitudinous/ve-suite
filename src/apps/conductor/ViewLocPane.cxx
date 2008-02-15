@@ -162,7 +162,7 @@ void ViewLocPane::_onSaveStoredPointsFile( wxCommandEvent& event )
     if( velFileName.HasName() )
     {
         _dataValuePairList.clear();
-        DataValuePair* velFile = new DataValuePair();
+        DataValuePairPtr velFile = new DataValuePair();
         velFile->SetData( "View Points file", ConvertUnicode( velFileName.GetFullPath( wxPATH_NATIVE ).c_str() ) );
         _dataValuePairList.push_back( velFile );
 
@@ -376,15 +376,15 @@ void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED( event ) )
         return;
     }
 
-    Command viewPointData = CORBAServiceList::instance()->
+    CommandPtr viewPointData = CORBAServiceList::instance()->
                             GetGUIUpdateCommands( "VIEWPOINT_GUI_DATA" );
     //Hasn't updated yet
-    if( viewPointData.GetCommandName() == "NULL" )
+    if( viewPointData->GetCommandName() == "NULL" )
     {
         return;
     }
 
-    _numStoredLocations = viewPointData.GetNumberOfDataValuePairs();
+    _numStoredLocations = viewPointData->GetNumberOfDataValuePairs();
     _numView_LocsGlobal = _numStoredLocations;
 
     _rebuildNameArrays();

@@ -50,6 +50,11 @@ UserPreferencesDataBuffer::UserPreferencesDataBuffer( void )
     commandMap[ "NULL" ] = nullCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
+UserPreferencesDataBuffer::~UserPreferencesDataBuffer()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void UserPreferencesDataBuffer::CleanUp( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );

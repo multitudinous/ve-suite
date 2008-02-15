@@ -637,16 +637,16 @@ void NavigationPane::UpdateNavigationData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateXplorerData( void )
 {
-    Command viewPointData = CORBAServiceList::instance()->
+    CommandPtr viewPointData = CORBAServiceList::instance()->
                             GetGUIUpdateCommands( "START_POSITION" );
     //Hasn't updated yet
-    if( viewPointData.GetCommandName() == "NULL" )
+    if( viewPointData->GetCommandName() == "NULL" )
     {
         return;
     }
 
-    quatStartPoint = viewPointData.GetDataValuePair( "QUAT_START_POSITION" );
-    positionStartPoint = viewPointData.GetDataValuePair( "POSITION_START_POSITION" );
+    quatStartPoint = viewPointData->GetDataValuePair( "QUAT_START_POSITION" );
+    positionStartPoint = viewPointData->GetDataValuePair( "POSITION_START_POSITION" );
     //Update preferences
     SetPreferenceNavigationData();
 }

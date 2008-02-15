@@ -275,20 +275,6 @@ void TransformUI::SetParamBlockTransform( ves::open::xml::TransformPtr transform
 {
     _transform = transform;
 }
-////////////////////////////////////////////////////////////////////////////////
-void TransformUI::_sendCommandsToXplorer()
-{/*
-                           VE_XML::Command* command=new VE_XML::Command();
-
-                           for(size_t i=0;i<_instructions.size();i++)
-                           {
-                              command->AddDataValuePair(_instructions.at(i));
-                           }
-                           command->SetCommandName(_commandName);
-                           serviceList->SendCommandStringToXplorer(command);
-                           //Clean up memory
-                           delete command;*/
-}
 ////////////////////////////////////////////////////
 void TransformUI::SetParamBlockID( std::string id )
 {

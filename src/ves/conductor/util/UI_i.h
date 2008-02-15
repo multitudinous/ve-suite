@@ -44,25 +44,10 @@ Body_UI_i API
 #include <vector>
 #include <map>
 
-#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/XMLObjectPtr.h>
 
-//class Network;
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class XMLObject;
-class Command;
-namespace model
-{
-class Model;
-}
-}
-}
-}
 
 //Class Body_UI_i
 #include <ves/VEConfig.h>
@@ -93,7 +78,7 @@ public:
     void SetLogWindow( PEThread* logWindow );
 
     ///Returns vector containing XMLObjects
-    ves::open::xml::Command GetXplorerData( std::string commandName );
+    ves::open::xml::CommandPtr GetXplorerData( std::string commandName );
 
     virtual void UpdateNetwork(
         const char * network
@@ -148,8 +133,8 @@ public:
                    ) );
 
     std::map<int, std::string> m_idToModelName;
-    std::map<std::string, ves::open::xml::XMLObject*> m_objectToModel;
-    std::map< std::string, ves::open::xml::Command > m_commandNameMap;
+    std::map<std::string, ves::open::xml::XMLObjectPtr > m_objectToModel;
+    std::map< std::string, ves::open::xml::CommandPtr > m_commandNameMap;
 };
 }
 }

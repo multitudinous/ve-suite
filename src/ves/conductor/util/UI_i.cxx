@@ -44,8 +44,8 @@ Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
         : UIName_( name ), executive_( Body::Executive::_duplicate( exec ) )
 {
     UIName_ = name;
-    m_commandNameMap[ "NULL" ] = ves::open::xml::Command();
-    m_commandNameMap[ "NULL" ].SetCommandName( "NULL" );
+    m_commandNameMap[ "NULL" ] = new ves::open::xml::Command();
+    m_commandNameMap[ "NULL" ]->SetCommandName( "NULL" );
 }
 
 // Implementation skeleton destructor
@@ -176,7 +176,7 @@ ACE_THROW_SPEC((
         {
             std::cout << " bad stuff " << std::endl;
         }
-        m_commandNameMap[ temp->GetCommandName()] = *temp;
+        m_commandNameMap[ temp->GetCommandName()] = temp;
         //iter = xmlObjects.erase( iter );
         xmlObjects.clear();
     }
@@ -188,15 +188,15 @@ void Body_UI_i::SetLogWindow( PEThread* logWindow )
     this->logWindow = logWindow;
 }
 ///////////////////////////////////////////////////////////////////////////////
-ves::open::xml::Command Body_UI_i::GetXplorerData( std::string commandName )
+ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( std::string commandName )
 {
-    std::map< std::string, ves::open::xml::Command >::iterator iter;
+    std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
     iter = m_commandNameMap.find( commandName );
     if( iter == m_commandNameMap.end() )
     {
         return m_commandNameMap[ "NULL" ];
     }
-    ves::open::xml::Command temp = iter->second;
+    ves::open::xml::CommandPtr temp = iter->second;
     m_commandNameMap.erase( iter );
     return temp;
 }

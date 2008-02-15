@@ -45,17 +45,6 @@ TBIsosurface API
 
 #include <vector>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-}
-}
-}
-
 class wxRadioButton;
 class wxCheckBox;
 class wxSlider;

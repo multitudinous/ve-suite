@@ -43,7 +43,6 @@ CORBAServiceList API
 #include <ves/open/VjObsC.h>
 #include <ves/conductor/util/UI_i.h>
 
-#include <ves/open/xml/Command.h>
 #include <ves/open/xml/CommandPtr.h>
 
 //do this to remove compile warning from linux platforms
@@ -165,7 +164,7 @@ public:
     PEThread* GetMessageLog( void );
 
     ///Get the current commands from xplorer
-    ves::open::xml::Command GetGUIUpdateCommands( std::string commandName );
+    ves::open::xml::CommandPtr GetGUIUpdateCommands( std::string commandName );
 
     ///Call set id on all modules in the current network
     bool SetID( int moduleId, std::string moduleName );

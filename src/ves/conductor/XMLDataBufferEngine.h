@@ -65,10 +65,7 @@ private:
     /// Required so that vpr::Singleton can instantiate this class.
     /// friend class vpr::Singleton< UserPreferenceDataBuffer >;
     XMLDataBufferEngine( void );
-    ~XMLDataBufferEngine()
-    {
-        CleanUp();
-    } //Never called, don't implement until vrj2.2
+    ~XMLDataBufferEngine();
     vprSingletonHeader( XMLDataBufferEngine );
 public:
     ///Desctructor call until vrj 2.2 is released

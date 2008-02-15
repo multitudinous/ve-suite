@@ -42,24 +42,6 @@
 
 #include <vector>
 
-////@end includes
-
-/*!
- * Forward declarations
- */
-
-////@begin forward declarations
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-}
-}
-}
-
 class wxRadioBox;
 class wxRadioButton;
 class wxCheckBox;
@@ -171,7 +153,6 @@ public:
     wxButton*      itemButton17;
 ////@end Vectors member variables
 protected:
-    std::vector< ves::open::xml::Command* > commands;
     int cId, cIso_value, cMin, cMax, cSc;
     std::vector< long > commandInputs;
 
