@@ -562,8 +562,8 @@ void cfdExecutive::LoadDataFromCE( void )
                       static_cast< unsigned int >( idMap->first ) );
                 returnState.AddDataValuePair( data );
                 
-                std::vector< std::pair< XMLObject*, std::string > > nodes;
-                nodes.push_back( std::pair< XMLObject*, 
+                std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+                nodes.push_back( std::pair< XMLObjectPtr, 
                       std::string >( &returnState, "vecommand" ) );
                 XMLReaderWriter commandWriter;
                 std::string status="returnString";
