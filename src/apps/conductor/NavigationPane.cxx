@@ -587,17 +587,15 @@ void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED( event ) )
 void NavigationPane::SendCommandsToXplorer( void )
 {
     // Create the command and data value pairs
-    DataValuePair* dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
+    DataValuePairPtr dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
-    Command* veCommand = new Command();
+    CommandPtr veCommand = new Command();
     veCommand->SetCommandName( std::string( "Navigation_Data" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 
-    //Clean up memory
-    delete veCommand;
     //Update preferences
     SetPreferenceNavigationData();
 }
@@ -655,11 +653,11 @@ void NavigationPane::UpdateXplorerData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
 {
-    CommandWeakPtr navPreferenceData = new Command();
+    CommandPtr navPreferenceData = new Command();
     navPreferenceData->SetCommandName( std::string( "Navigation_Data" ) );
 
     //////////////////////////////////////////////////////////////////
-    DataValuePair* dataValuePair;
+    DataValuePairPtr dataValuePair;
     dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
     dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
     dataValuePair->SetDataName( dataValueName );

@@ -43,19 +43,10 @@ DeviceProperties API
 
 #include <wx/dialog.h>
 
+#include <ves/open/xml/DataValuePairPtr.h>
+
 class wxSplitterWindow;
 class wxCheckBox;
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class DataValuePair;
-}
-}
-}
 
 namespace ves
 {
@@ -95,7 +86,7 @@ protected:
 
     bool animate;
 
-    std::vector<ves::open::xml::DataValuePair*> instructions;        //The DataValuePairs for the current command
+    std::vector<ves::open::xml::DataValuePairPtr> instructions;        //The DataValuePairs for the current command
 
     void SendCommandsToXplorer();
     void ClearInstructions();

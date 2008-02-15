@@ -153,11 +153,11 @@ void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
     }
     //This assumes that the command name was set by the callback
     //as well as the DataValuePairs
-    Command* veCommand = new Command();
+    CommandPtr veCommand = new Command();
 
     std::string _commandName = "Stored Scenes";
     // Create the command and data value pairs
-    DataValuePair* dataValuePair = new DataValuePair( std::string( "UNSIGNED INT" ) );
+    DataValuePairPtr dataValuePair = new DataValuePair( std::string( "UNSIGNED INT" ) );
     unsigned int sceneId = _teacherRBox->GetSelection() - 1;
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( sceneId );
@@ -175,18 +175,15 @@ void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
     }
-
-    //Clean up memory
-    delete veCommand;
 }
 
 void UI_TeacherTab::_onClear( wxCommandEvent& event )
 {
-    Command* veCommand = new Command();
+    CommandPtr veCommand = new Command();
 
     std::string _commandName = "Stored Scenes";
     // Create the command and data value pairs
-    DataValuePair* dataValuePair = new DataValuePair( std::string( "UNSIGNED INT" ) );
+    DataValuePairPtr dataValuePair = new DataValuePair( std::string( "UNSIGNED INT" ) );
     unsigned int sceneId = _teacherRBox->GetSelection() - 1;
     dataValuePair->SetDataName( "RECORD_SCENE" );
     dataValuePair->SetDataValue( sceneId );
@@ -205,6 +202,4 @@ void UI_TeacherTab::_onClear( wxCommandEvent& event )
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
     }
-    //Clean up memory
-    delete veCommand;
 }

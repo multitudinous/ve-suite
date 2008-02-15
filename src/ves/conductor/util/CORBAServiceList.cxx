@@ -438,7 +438,7 @@ void CORBAServiceList::CreateCORBAModule( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::CommandWeakPtr veCommand )
+bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::CommandWeakPtr& veCommand )
 {
     //Calling function is responsible for the command memory
     if( !IsConnectedToXplorer() )
@@ -452,7 +452,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( ves::open::xml::CommandWeakPt
 
     // New need to destroy document and send it
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &( *veCommand ), "vecommand" ) );
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veCommand, "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 

@@ -62,17 +62,6 @@ class wxWindow;
 class wxSizer;
 class wxScrolledWindow;
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-}
-}
-}
-
 //override the buttons
 class UI_NavButton: public wxBitmapButton
 {
@@ -162,9 +151,7 @@ public:
 protected:
     int _activeButton;
     wxScrolledWindow* scrollWindow;
-
-    std::vector< ves::open::xml::Command* > commands;
-
+    
     ves::open::xml::CommandPtr startPoint;
     ves::open::xml::DataValuePairPtr quatStartPoint;
     ves::open::xml::DataValuePairPtr positionStartPoint;

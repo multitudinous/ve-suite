@@ -2256,17 +2256,15 @@ void Network::ClearXplorer()
     for( std::map<int, Module>::iterator iter =
                 modules.begin(); iter != modules.end(); ++iter )
     {
-        DataValuePair* dataValuePair =
+        DataValuePairPtr dataValuePair =
             new DataValuePair( std::string( "UNSIGNED INT" ) );
         dataValuePair->SetDataName( "Object ID" );
         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-        Command* veCommand = new Command();
+        CommandPtr veCommand = new Command();
         veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = CORBAServiceList::instance()->
                          SendCommandStringToXplorer( veCommand );
-        //Clean up memory
-        delete veCommand;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

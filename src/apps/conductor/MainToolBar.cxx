@@ -260,7 +260,7 @@ void MainToolBar::OnSave( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 {
-    DataValuePair* dvp = new DataValuePair();
+    DataValuePairPtr dvp = new DataValuePair();
     CommandSharedPtr command = new ves::open::xml::Command();
 
     std::string mode;
@@ -302,7 +302,7 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
 {
-    DataValuePair* dvp = new DataValuePair();
+    DataValuePairPtr dvp = new DataValuePair();
     CommandSharedPtr command = new ves::open::xml::Command();
 
     std::string mode;
@@ -357,8 +357,8 @@ void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
 {
-    DataValuePair* dvp = new DataValuePair();
-    ves::open::xml::Command* command = new ves::open::xml::Command();
+    DataValuePairPtr dvp = new DataValuePair();
+    ves::open::xml::CommandPtr command = new ves::open::xml::Command();
 
     SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
     SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
@@ -370,8 +370,6 @@ void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnPhysicsState( wxCommandEvent& event )
@@ -409,8 +407,8 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         EnableTool( TOOLBAR_PLAY, false );
         EnableTool( TOOLBAR_STEP, false );
 
-        DataValuePair* dvp = new DataValuePair();
-        ves::open::xml::Command* command = new ves::open::xml::Command();
+        DataValuePairPtr dvp = new DataValuePair();
+        ves::open::xml::CommandPtr command = new ves::open::xml::Command();
 
         std::string value;
 
@@ -420,15 +418,13 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         command->AddDataValuePair( dvp );
 
         CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-        delete command;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 {
-    DataValuePair* dvp = new DataValuePair();
-    ves::open::xml::Command* command = new ves::open::xml::Command();
+    DataValuePairPtr dvp = new DataValuePair();
+    ves::open::xml::CommandPtr command = new ves::open::xml::Command();
 
     std::string value;
 
@@ -473,8 +469,6 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     command->AddDataValuePair( dvp );
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnSummitJob( wxCommandEvent& event )

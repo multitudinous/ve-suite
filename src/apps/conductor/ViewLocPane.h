@@ -70,17 +70,8 @@
 
 #include <vector>
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-class DataValuePair;
-}
-}
-}
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
 
 namespace ves
 {
@@ -149,9 +140,9 @@ protected:
     void _resetSelections( void );
 
     std::string _commandName;///<The name of the command.
-    std::vector<ves::open::xml::DataValuePair*> _dataValuePairList;///<The list of DataValuePairs
+    std::vector<ves::open::xml::DataValuePairPtr> _dataValuePairList;///<The list of DataValuePairs
     int _numView_LocsGlobal;
-    std::vector< ves::open::xml::Command* > commands;
+    std::vector< ves::open::xml::CommandPtr > commands;
     int cId, cIso_value, cSc, cMin;
     std::string dataValueName;
 

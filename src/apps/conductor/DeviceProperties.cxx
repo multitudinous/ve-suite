@@ -125,7 +125,7 @@ void DeviceProperties::OnAnimate( wxCommandEvent &event )
 {
     animate = animate_check_box->GetValue();
 
-    DataValuePair* animateDVP = new DataValuePair();
+    DataValuePairPtr animateDVP = new DataValuePair();
     animateDVP->SetData( std::string( "AnimateID" ), ( unsigned int )( animate ) );
     instructions.push_back( animateDVP );
 
@@ -136,7 +136,7 @@ void DeviceProperties::OnAnimate( wxCommandEvent &event )
 void DeviceProperties::SendCommandsToXplorer()
 {
     //Build the command
-    Command* command = new Command();
+    CommandPtr command = new Command();
     command->SetCommandName( "TRACKBALL_PROPERTIES" );
 
     for( size_t i = 0;i < instructions.size();i++ )
@@ -145,9 +145,6 @@ void DeviceProperties::SendCommandsToXplorer()
     }
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
-
-    //Clean up memory
-    delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceProperties::ClearInstructions()

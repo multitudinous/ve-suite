@@ -586,7 +586,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
     //This assumes that the command name was set by the callback
     //as well as the DataValuePairs
-    Command* veCommand = new Command();
+    CommandPtr veCommand = new Command();
 
     ///This is a hack to get around sending of only 1 command name and not using event handlers in the original
     ///code.
@@ -597,7 +597,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
         _commandName = "ViewLoc_Data";
         // Create the command and data value pairs
-        DataValuePair* dataValuePair = new DataValuePair( std::string( "LONG" ) );
+        DataValuePairPtr dataValuePair = new DataValuePair( std::string( "LONG" ) );
         dataValuePair->SetData( dataValueName, commandInputs );
         _dataValuePairList.push_back( dataValuePair );
     }
@@ -619,8 +619,6 @@ void ViewLocPane::SendCommandsToXplorer( void )
         wxMessageBox( _( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect." ),
                       _( "Communication Failure" ), wxOK | wxICON_INFORMATION );
     }
-    //Clean up memory
-    delete veCommand;
     commandInputs.clear();
     _dataValuePairList.clear();
     _commandName = " ";
