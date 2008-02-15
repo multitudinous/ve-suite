@@ -249,7 +249,7 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
         backgroundColor[ "Alpha" ] = xplorerColor.at( 3 );
 
         // Create the command and data value pairs
-        DataValuePair* dataValuePair = new DataValuePair();
+        DataValuePairPtr dataValuePair = new DataValuePair();
         dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
         CommandWeakPtr veCommand = new Command();
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );

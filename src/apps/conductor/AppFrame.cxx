@@ -281,7 +281,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 
     DataValuePairWeakPtr dataValuePair = new DataValuePair();
     dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
-    CommandWeakPtr veCommand = new Command();
+    CommandPtr veCommand = new Command();
     veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
     veCommand->AddDataValuePair( dataValuePair );
     ///Set the command on the buffer first so that a strong ptr is
@@ -1237,18 +1237,18 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
     bkpFileName.SetName( newDataSetName.GetValue() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-    Command returnState;
-    returnState.SetCommandName( "getNetwork" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "getNetwork" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "getNetwork" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     data = new DataValuePair();
     data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
@@ -1300,18 +1300,18 @@ void AppFrame::OpenSimulation( wxString simName )
     wxFileName bkpFileName;
     bkpFileName.SetName( simName );
 
-    Command returnState;
-    returnState.SetCommandName( "openSimulation" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "openSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "AspenPlus", "openSimulation" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     data = new DataValuePair();
     data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
@@ -1324,14 +1324,14 @@ void AppFrame::OpenSimulation( wxString simName )
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Show Simulation.\n" );
-    Command returnState;
-    returnState.SetCommandName( "showSimulation" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "showSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "showSimulation" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1345,14 +1345,14 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Hide Simulation.\n" );
-    Command returnState;
-    returnState.SetCommandName( "hideSimulation" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "hideSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "hideSimulation" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1366,14 +1366,14 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Close Simulation.\n" );
-    Command returnState;
-    returnState.SetCommandName( "closeSimulation" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "closeSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "closeSimulation" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1387,14 +1387,14 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Run Simulation.\n" );
-    Command returnState;
-    returnState.SetCommandName( "runNetwork" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "runNetwork" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "runNetwork" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1407,14 +1407,14 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Run Simulation.\n" );
-    Command returnState;
-    returnState.SetCommandName( "stepNetwork" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "stepNetwork" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "runNetwork" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1454,14 +1454,14 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Saving Simulation...\n" );
-    Command returnState;
-    returnState.SetCommandName( "saveSimulation" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "saveSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "saveSimulation" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -1492,20 +1492,20 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
     saveFileName.SetName( newDataSetName.GetValue() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-    Command returnState;
-    returnState.SetCommandName( "saveAsSimulation" );
+    CommandPtr returnState = new Command();
+    returnState->SetCommandName( "saveAsSimulation" );
     DataValuePairWeakPtr data = new DataValuePair();
     data->SetData( "NetworkQuery", "saveAsSimulation" );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     data = new DataValuePair();
     data->SetData( "SaveFileName",
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair < XMLObjectPtr,
-                     std::string > ( &returnState, "vecommand" ) );
+                     std::string > ( returnState, "vecommand" ) );
     XMLReaderWriter commandWriter;
     std::string status = "returnString";
     commandWriter.UseStandaloneDOMDocumentManager();
@@ -1553,8 +1553,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
         // set the network
         serviceList->SetNetwork( CORBA::string_dup( nw_str.c_str() ) );
         // Tell xplorer to ask ce for the new data
-        DataValuePairWeakPtr dataValuePair =
-            new DataValuePair();
+        DataValuePairPtr dataValuePair = new DataValuePair();
         dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
         CommandWeakPtr veCommand = new Command();
         veCommand->SetCommandName( std::string( "veNetwork Update" ) );
@@ -2093,7 +2092,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
     {
         dataValuePair->SetDataValue( 0.0 );
     }
-    CommandWeakPtr veCommand = new Command();
+    CommandPtr veCommand = new Command();
     veCommand->SetCommandName( std::string( "Juggler_Display_Data" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -2105,7 +2104,7 @@ void AppFrame::ExitXplorer( void )
     DataValuePairWeakPtr dataValuePair =
         new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
-    CommandWeakPtr veCommand = new Command();
+    CommandPtr veCommand = new Command();
     veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -2158,7 +2157,7 @@ void AppFrame::ProcessCommandLineArgs( void )
     DataValuePairWeakPtr dataValuePair =
         new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
-    CommandWeakPtr veCommand = new Command();
+    CommandPtr veCommand = new Command();
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
@@ -2262,7 +2261,7 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
     }
 
-    CommandWeakPtr veCommand = new Command();
+    CommandPtr veCommand = new Command();
     veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );

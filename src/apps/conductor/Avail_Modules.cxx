@@ -363,11 +363,11 @@ void Avail_Modules::ResetPluginTree()
     LoadModules();
 
     //Now tell Xplorer to reload plugins
-    DataValuePair* dvp =
+    DataValuePairPtr dvp =
         new DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "Reload_Plugin_Objects", "Reload" );
-    ves::open::xml::Command vec;
-    vec.SetCommandName( std::string( "Plugin_Control" ) );
-    vec.AddDataValuePair( dvp );
-    CORBAServiceList::instance()->SendCommandStringToXplorer( &vec );
+    ves::open::xml::CommandPtr vec = new ves::open::xml::Command();
+    vec->SetCommandName( "Plugin_Control" );
+    vec->AddDataValuePair( dvp );
+    CORBAServiceList::instance()->SendCommandStringToXplorer( vec );
 }

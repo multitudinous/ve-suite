@@ -551,7 +551,7 @@ void EphemerisDialog::UpdateAutoDateTime( bool useAutoDateTime )
 {
     CommandWeakPtr ephemerisAutoDateTime = new Command();
     ephemerisAutoDateTime->SetCommandName( "Ephemeris Auto Date and Time" );
-    DataValuePair* autoDateTime = new ves::open::xml::DataValuePair();
+    DataValuePairPtr autoDateTime = new ves::open::xml::DataValuePair();
     autoDateTime->SetData( "Auto Date Time", static_cast<long int>(( useAutoDateTime ) ? 1 : 0 ) );
     ephemerisAutoDateTime->AddDataValuePair( autoDateTime );
 
@@ -774,7 +774,7 @@ void EphemerisDialog::OnLoadHeightMap( wxFileDirPickerEvent& event )
     CommandWeakPtr ephemerisHeightMapInfo = new Command();
     ephemerisHeightMapInfo->SetCommandName( "Ephemeris Height Map" );
 
-    DataValuePair* heightMapInfo = new ves::open::xml::DataValuePair();
+    DataValuePairPtr heightMapInfo = new ves::open::xml::DataValuePair();
     heightMapInfo->SetData( "Height Map", 
         ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
     ephemerisHeightMapInfo->AddDataValuePair( heightMapInfo );
