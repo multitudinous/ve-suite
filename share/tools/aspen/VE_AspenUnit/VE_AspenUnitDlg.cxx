@@ -147,8 +147,8 @@ void CVE_AspenUnitDlg::OnBnClickedCancel()
 		commManager->DestroyORB();
 	}
 	// TODO: Add your control notification handler code here
-	//this->OnClose();
-	this->DestroyWindow();
+	this->OnClose();
+	//this->DestroyWindow();
 }
 
 void CVE_AspenUnitDlg::OnBnClickedOk()
