@@ -103,7 +103,7 @@ void TransferFunctionDialog::_updateActiveScalarShaderManager( wxCommandEvent& c
 
     _commandName = "TB_SET_ACTIVE_SHADER_MANAGER";
 
-    ves::open::xml::DataValuePair* name = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr name = new ves::open::xml::DataValuePair();
     name->SetData( "Active Shader Manager", ConvertUnicode( _shaderManagerSelection->GetValue().GetData() ) );
     _instructions.push_back( name );
 
@@ -117,7 +117,7 @@ void TransferFunctionDialog::_onEnablePhongLighting( wxCommandEvent& command )
     ClearInstructions();
     _commandName = "TB_PHONG_SHADING_ENABLE";
 
-    ves::open::xml::DataValuePair* phongValue = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr phongValue = new ves::open::xml::DataValuePair();
     phongValue->SetData( "Phong Shading State", ( _phongShadingCheck->GetValue() ) ? "On" : "Off" );
     _instructions.push_back( phongValue );
 

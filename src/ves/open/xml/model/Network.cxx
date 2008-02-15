@@ -121,7 +121,7 @@ void Network::_updateVEElement( const std::string& input )
 
     for( size_t i = 0; i < mConductorState.size(); ++i )
     {
-        SetSubElement( "conductorState", mConductorState.at( i ) );
+        SetSubElement( "conductorState", &( *mConductorState.at( i ) ) );
     }
 
     for( size_t i = 0; i < mTags.size(); ++i )

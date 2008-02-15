@@ -250,7 +250,7 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
         _instructions.push_back( updateTransform );
         std::cout << "TRANSFORM :" << std::endl;
 //     paramBlock->GetTransform()
-//      VE_XML::DataValuePair* updateTransform = new VE_XML::DataValuePair();
+//      VE_XML::DataValuePairPtr updateTransform = new VE_XML::DataValuePair();
 //      updateTransform->SetDataType("XMLOBJECT");
 //      updateTransform->SetData("Transform",paramBlock->GetTransform());
 //      _instructions.push_back(updateTransform);

@@ -693,7 +693,7 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
 
     newCADPart->SetParent( _activeCADNode->GetID() );
     _loadedCAD[fileName] = newCADPart;
-    ves::open::xml::DataValuePair* cadNode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
     cadNode->SetDataType( std::string( "XMLOBJECT" ) );
     cadNode->SetData( "New Node", newCADPart );
     _dataValuePairList.push_back( cadNode );

@@ -221,7 +221,7 @@ void TextureBasedToolBar::_buildGUI()
    ClearInstructions();
    _commandName = "TB_BBOX_DISPLAY";
 
-   VE_XML::DataValuePair* showBBox = new VE_XML::DataValuePair();
+   VE_XML::DataValuePairPtr showBBox = new VE_XML::DataValuePair();
    showBBox->SetDataType("UNSIGNED INT");
    showBBox->SetDataName(std::string("BBox Flag"));
    unsigned int value = 0;
@@ -312,14 +312,14 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
     ClearInstructions();
     _commandName = "TB_ACTIVATE";
 
-    ves::open::xml::DataValuePair* activeDatasetName = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr activeDatasetName = new ves::open::xml::DataValuePair();
     activeDatasetName->SetData( std::string( "Active Dataset Name" ) ,
                                 dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName() );
     _instructions.push_back( activeDatasetName );
 
     if( _availableScalars.GetCount() )
     {
-        ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr activateCommand = new ves::open::xml::DataValuePair();
         activateCommand->SetDataType( "STRING" );
         activateCommand->SetDataName( std::string( "Active Scalar" ) );
         activateCommand->SetDataString( ConvertUnicode( _availableScalars[0].GetData() ) );
@@ -328,7 +328,7 @@ bool TextureBasedToolBar::ActivateTextureVisualization()
     }
     else if( _availableVectors.GetCount() )
     {
-        ves::open::xml::DataValuePair* activateCommand = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr activateCommand = new ves::open::xml::DataValuePair();
         activateCommand->SetDataType( "STRING" );
         activateCommand->SetDataName( std::string( "Active Vector" ) );
         activateCommand->SetDataString( ConvertUnicode( _availableVectors[0].GetData() ) );

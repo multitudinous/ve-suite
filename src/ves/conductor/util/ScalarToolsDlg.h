@@ -83,7 +83,7 @@ public:
 
     ///Add an instruction to send. This is for access in the callbacks.
     ///\param newInstruct The instruction to add to the Command.
-    void AddInstruction( ves::open::xml::DataValuePair* newInstruct );
+    void AddInstruction( ves::open::xml::DataValuePairPtr newInstruct );
 
     ///Set the active scalars
     ///\param The name of the scalars

@@ -161,11 +161,11 @@ void ParameterBlock::_updateVEElement( const std::string& input )
     SetSubElement( "blockName", mParamName );
     SetAttribute( "id", mUuid );
     DOMElement* tempElement;
-    tempElement = SetSubElement( "transform", mDcs );
+    tempElement = SetSubElement( "transform", &( *mDcs ) );
     SetAttribute( "objectType", mDcs->GetObjectType(), tempElement );
     for( size_t i = 0; i < mProperties.size(); ++i )
     {
-        tempElement = SetSubElement( "properties", mProperties.at( i ) );
+        tempElement = SetSubElement( "properties", &( *mProperties.at( i ) ) );
         SetAttribute( "objectType", mProperties.at( i )->GetObjectType(), tempElement );
     }
 }

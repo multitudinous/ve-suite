@@ -47,7 +47,6 @@
 #include <iostream>
 
 using namespace VE_CE::Utilities;
-//using namespace VE_XML::VE_Model;
 using namespace ves::open::xml;
 
 Network::Network()
@@ -206,7 +205,7 @@ std::string Network::GetNetworkString( void )
     // Just push on the old network as ce can't modify the network
     // it only uses the network. conductor modifies the network
     nodes.push_back( std::pair< XMLObjectPtr, std::string >(
-                         &( *tempSystem ), "veSystem" ) );
+                         tempSystem, "veSystem" ) );
 
     std::string fileName( "returnString" );
     XMLReaderWriter netowrkWriter;

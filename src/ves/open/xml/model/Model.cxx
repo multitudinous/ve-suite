@@ -645,8 +645,11 @@ void Model::RemoveInformationPacket( const std::string& name )
 void Model::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    SetSubElements("ports", mPorts);
-
+    for( size_t i = 0; i < mPorts.size(); ++i )
+    {
+        SetSubElement("ports", mPorts.at( i ) );
+    }
+    
     SetSubElement( "iconLocation", mIconLocation );
     SetAttribute( "name", mModelName );
     SetAttribute( "id", mUuid );
@@ -685,18 +688,28 @@ void Model::_updateVEElement( const std::string& input )
                                    Convert( int2string.str() ).toXMLString() );
     }
 
-    SetSubElements("results", mResults);
-    SetSubElements("inputs", mInputs);
-    SetSubElements("informationPackets", mInformationPackets);
+    for( size_t i = 0; i < mResults.size(); ++i )
+    {
+        SetSubElement("results", mResults.at( i ) );
+    }
+    for( size_t i = 0; i < mInputs.size(); ++i )
+    {
+        SetSubElement("inputs", mInputs.at( i ) );
+    }
+    
+    for( size_t i = 0; i < mInformationPackets.size(); ++i )
+    {
+        SetSubElement("informationPackets", &( *mInformationPackets.at( i ) ) );
+    }
 
     if( mGeometry )
     {
-        SetSubElement( "geometry", mGeometry );
+        SetSubElement( "geometry", &(*mGeometry) );
     }
 
     if( mModelAttribute )
     {
-        SetSubElement( "modelAttributes", mModelAttribute );
+        SetSubElement( "modelAttributes", &( *mModelAttribute ) );
     }
 
     if( mSubSystem )

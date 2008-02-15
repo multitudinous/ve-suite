@@ -310,7 +310,7 @@ bool AdvancedStreamlines::GetStreamArrow()
 ////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::_OnLineDiameter( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePair* dvp = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dvp = new ves::open::xml::DataValuePair();
     ves::open::xml::CommandSharedPtr command = new ves::open::xml::Command();
 
     double value = static_cast< double >( _diameterSlider->GetValue() );
@@ -325,7 +325,7 @@ void AdvancedStreamlines::_OnLineDiameter( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AdvancedStreamlines::_OnGlowStrength( wxCommandEvent& WXUNUSED( event ) )
 {
-    ves::open::xml::DataValuePair* dvp = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr dvp = new ves::open::xml::DataValuePair();
     ves::open::xml::CommandSharedPtr command = new ves::open::xml::Command();
 
     double value = static_cast< double >( _glowSlider->GetValue() );

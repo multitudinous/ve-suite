@@ -227,23 +227,23 @@ void Streamlines::_updateAdvancedSettings()
 {
     _advancedSettings.clear();
 
-    ves::open::xml::DataValuePair* propagationTime = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr propagationTime = new ves::open::xml::DataValuePair();
     propagationTime->SetData( "Propagation Time", _lastPropagationSize );
     _advancedSettings.push_back( propagationTime );
 
-    ves::open::xml::DataValuePair* integrationStep = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr integrationStep = new ves::open::xml::DataValuePair();
     integrationStep->SetData( "Integration Step Size", _lastIntegrationStepSize );
     _advancedSettings.push_back( integrationStep );
 
-    ves::open::xml::DataValuePair* lineDiameter = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr lineDiameter = new ves::open::xml::DataValuePair();
     lineDiameter->SetData( "Diameter", _lastLineDiameter );
     _advancedSettings.push_back( lineDiameter );
 
-    ves::open::xml::DataValuePair* sphereArrowParticles = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr sphereArrowParticles = new ves::open::xml::DataValuePair();
     sphereArrowParticles->SetData( "Sphere/Arrow/Particle Size", _lastSphereArrowParticleSize );
     _advancedSettings.push_back( sphereArrowParticles );
 
-    ves::open::xml::DataValuePair* seedPtFlag = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr seedPtFlag = new ves::open::xml::DataValuePair();
     seedPtFlag->SetDataName( "Use Last Seed Pt" );
     seedPtFlag->SetDataType( "UNSIGNED INT" );
     if( _lastSeedPtFlag )
@@ -256,7 +256,7 @@ void Streamlines::_updateAdvancedSettings()
     }
     _advancedSettings.push_back( seedPtFlag );
 
-    ves::open::xml::DataValuePair* streamArrow = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr streamArrow = new ves::open::xml::DataValuePair();
     streamArrow->SetDataName( "Use Stream Arrows" );
     streamArrow->SetDataType( "UNSIGNED INT" );
     if( _lastStreamArrow )
@@ -274,33 +274,33 @@ void Streamlines::_updateAdvancedSettings()
 void Streamlines::_updateStreamlineInformation()
 {
     _streamlineInformation.clear();
-    ves::open::xml::DataValuePair* streamlineDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr streamlineDirection = new ves::open::xml::DataValuePair();
     streamlineDirection->SetDataType( "STRING" );
     streamlineDirection->SetDataName( std::string( "Cursor Direction" ) );
     streamlineDirection->SetDataString( _streamlineDirection );
 
     _streamlineInformation.push_back( streamlineDirection );
 
-    ves::open::xml::DataValuePair* cursorSelection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr cursorSelection = new ves::open::xml::DataValuePair();
     cursorSelection->SetDataType( "STRING" );
     cursorSelection->SetDataName( std::string( "Cursor Type" ) );
     cursorSelection->SetDataString( _cursorType );
 
     _streamlineInformation.push_back( cursorSelection );
 
-    ves::open::xml::DataValuePair* integrationDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr integrationDirection = new ves::open::xml::DataValuePair();
     integrationDirection->SetDataType( "STRING" );
     integrationDirection->SetDataName( std::string( "Integration Direction" ) );
     integrationDirection->SetDataString( _integrationDirection );
 
     _streamlineInformation.push_back( integrationDirection );
 
-    ves::open::xml::DataValuePair* streamSize = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr streamSize = new ves::open::xml::DataValuePair();
     streamSize->SetData( "Size", _streamSize );
 
     _streamlineInformation.push_back( streamSize );
 
-    ves::open::xml::DataValuePair* nPointsPerPlane = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr nPointsPerPlane = new ves::open::xml::DataValuePair();
     nPointsPerPlane->SetDataName( "Number Of Points Per Plane" );
     nPointsPerPlane->SetDataType( "UNSIGNED INT" );
     nPointsPerPlane->SetDataValue( _nPointsPerPlane );
@@ -393,7 +393,7 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     newCommand->AddDataValuePair( advancedStreamlineSettings );
 
     //dvp representing the advanced settings within the contours information
-    //VE_XML::DataValuePair* seedPoint = new VE_XML::DataValuePair();
+    //VE_XML::DataValuePairPtr seedPoint = new VE_XML::DataValuePair();
     //seedPoint->SetData( "Seed_Point_Settings", seedPointSettings );
     //newCommand->AddDataValuePair( seedPoint );
 

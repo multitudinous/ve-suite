@@ -632,6 +632,7 @@ void CORBAServiceList::SetNetwork( std::string command )
 
     try
     {
+        std::cout << "conductor set network " << command << std::endl;
         veCE->SetNetwork( command.c_str() );
     }
     catch ( ... )

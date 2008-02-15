@@ -121,9 +121,6 @@ void Transform::SetRotation( float* rotation )
 /////////////////////////////////////////////////////
 void Transform::_updateVEElement( const std::string& input )
 {
-    //Be sure to set the number of children (_nChildren) either here or in the updating subElements code
-    //we know this to be 3 float arrays
-    //_nChildren = 3;
     // name comes from verg.xsd
     mTranslationArray->SetOwnerDocument( mRootDocument );
     DOMElement* translationTag  = mTranslationArray->GetXMLData( "translation" );

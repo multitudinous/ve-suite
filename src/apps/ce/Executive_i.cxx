@@ -511,7 +511,7 @@ ACE_THROW_SPEC((
     //_module_powers.clear();
     //_thermal_input.clear();
     std::string strNetwork( network );
-    //std::cout << strNetwork << std::endl;
+    std::cout << strNetwork << std::endl;
     if( _network->parse( strNetwork ) )
     {
         _mutex.release();

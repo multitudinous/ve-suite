@@ -45,6 +45,8 @@
 #include <ves/conductor/util/BaseDialog.h>
 #include <ves/conductor/util/DualSlider.h>
 
+#include <ves/open/xml/DataValuePairPtr.h>
+
 namespace ves
 {
 namespace conductor
@@ -68,7 +70,7 @@ public:
 
     ///Add an instruction to send. This is for access in the callbacks.
     ///\param newInstruct The instruction to add to the Command.
-    void AddInstruction( ves::open::xml::DataValuePair* newInstruct );
+    void AddInstruction( ves::open::xml::DataValuePairPtr newInstruct );
 protected:
     /*!\class ROIMinSliderCallback
      *Class that allows the user to do operations based on the min slider events

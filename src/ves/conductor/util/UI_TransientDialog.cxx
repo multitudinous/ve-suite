@@ -170,7 +170,7 @@ void UI_TransientDialog::_onPlay( wxCommandEvent& event )
     ClearInstructions();
     _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr updateMode = new ves::open::xml::DataValuePair();
     updateMode->SetData( "Mode", "Play" );
     _instructions.push_back( updateMode );
     _sendCommandsToXplorer();
@@ -182,12 +182,12 @@ void UI_TransientDialog::_onForwardStep( wxCommandEvent& event )
     ClearInstructions();
     _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr updateMode = new ves::open::xml::DataValuePair();
     updateMode->SetData( "Mode", "Step" );
     _instructions.push_back( updateMode );
 
 
-    ves::open::xml::DataValuePair* updateDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr updateDirection = new ves::open::xml::DataValuePair();
     updateDirection->SetData( "Direction", "Forward" );
     _instructions.push_back( updateDirection );
 
@@ -200,12 +200,12 @@ void UI_TransientDialog::_onBackwardStep( wxCommandEvent& event )
     ClearInstructions();
     _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr updateMode = new ves::open::xml::DataValuePair();
     updateMode->SetData( "Mode", "Step" );
     _instructions.push_back( updateMode );
 
 
-    ves::open::xml::DataValuePair* updateDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr updateDirection = new ves::open::xml::DataValuePair();
     updateDirection->SetData( "Direction", "Backward" );
     _instructions.push_back( updateDirection );
 
@@ -218,7 +218,7 @@ void UI_TransientDialog::_onStop( wxCommandEvent& event )
     ClearInstructions();
     _commandName = std::string( _commandPrefix + "TRANSIENT_MODE_UPDATE" );
 
-    ves::open::xml::DataValuePair* updateMode = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr updateMode = new ves::open::xml::DataValuePair();
     updateMode->SetData( "Mode", "Stop" );
     _instructions.push_back( updateMode );
     _sendCommandsToXplorer();
@@ -230,7 +230,7 @@ void UI_TransientDialog::_onSetDuration( wxSpinEvent& WXUNUSED( event ) )
     ClearInstructions();
     _commandName = std::string( _commandPrefix + "TRANSIENT_DURATION_UPDATE" );
 
-    ves::open::xml::DataValuePair* duration = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr duration = new ves::open::xml::DataValuePair();
     duration->SetData( "Duration", _duration->GetValue() );
     _instructions.push_back( duration );
 

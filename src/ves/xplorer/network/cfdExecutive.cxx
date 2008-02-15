@@ -332,24 +332,24 @@ void cfdExecutive::GetEverything( void )
         modelIter = idToModel.find( iter->first );
         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
         //send command to get results
-        Command returnState;
-        returnState.SetCommandName( "Get XML Model Results" );
+        CommandPtr returnState = new Command();
+        returnState->SetCommandName( "Get XML Model Results" );
 
-        DataValuePairWeakPtr data = new DataValuePair();
+        DataValuePairPtr data = new DataValuePair();
         data->SetData( "vendorUnit", modelIter->second->GetVendorName() );
-        returnState.AddDataValuePair( data );
+        returnState->AddDataValuePair( data );
 
         data = new DataValuePair();
         data->SetData( "moduleName", iter->second );
-        returnState.AddDataValuePair( data );
+        returnState->AddDataValuePair( data );
 
         data = new DataValuePair();
         data->SetData( "moduleId", static_cast< unsigned int >( iter->first ) );
-        returnState.AddDataValuePair( data );
+        returnState->AddDataValuePair( data );
 
         std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
         nodes.push_back(
-            std::pair< XMLObject*, std::string >( &returnState, "vecommand" )
+            std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" )
         );
         XMLReaderWriter commandWriter;
         std::string status = "returnString";

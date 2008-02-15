@@ -73,7 +73,7 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::~XMLDataBufferEngine()
 {
-    CleanUp();
+    //CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::CleanUp( void )
@@ -191,7 +191,6 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         << "VES File Read Error" << std::endl;
     }
 
-
     std::vector< std::string > networkModelVector;
     std::vector< std::string >::iterator stringIter;
     long moduleID = 0;
@@ -226,7 +225,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::ostringstream modelID;
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            ves::open::xml::model::ModelWeakPtr model = *objectIter;
+            ves::open::xml::model::ModelPtr model = *objectIter;
             if( !model )
             {
                 //if this object is not a model continue
@@ -250,9 +249,9 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 
         for( modelIter = modelVector.begin(); modelIter != modelVector.end(); )
         {
-            ves::open::xml::model::ModelWeakPtr model = *modelIter;
+            ves::open::xml::model::ModelPtr model = *modelIter;
 
-            //modelIter = modelVector.erase( modelIter );
+            modelIter = modelVector.erase( modelIter );
             modelID << model->GetModelID();
             m_modelMap[ modelID.str()] = model;
             stringIter = std::find( networkModelVector.begin(),
@@ -265,7 +264,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         }
         objectIter = objectVector.erase( objectVector.begin() );
     }
-    //For the case where there are no links between models
+   //For the case where there are no links between models
     //Just grab all the models in the ves file
     //this is somewhat of a hack but the schema does not support anything else
     if( tempNetwork->GetNumberOfLinks() == 0 )
@@ -325,7 +324,7 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     //Write out the veUser info for the local user
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >(
-                         &( *m_systemMap[ topId] ), "veSystem" ) );
+                         m_systemMap[ topId], "veSystem" ) );
 
     //Write out the veUser info for the local user
     ves::open::xml::StateInfoWeakPtr colorState = new ves::open::xml::StateInfo();
@@ -350,7 +349,7 @@ std::string XMLDataBufferEngine::SaveVESData( std::string fileName )
 
     //Write out the veUser info for the local user
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >(
-                         &( *m_userMap[ "Network" ] ), "User" ) );
+                         m_userMap[ "Network" ], "User" ) );
 
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
