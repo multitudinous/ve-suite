@@ -171,8 +171,6 @@ ModelHandler::~ModelHandler( void )
 {
     //vprDEBUG(vesDBG,2) << "ModelHandler destructor"
     //                       << std::endl << vprDEBUG_FLUSH;
-    delete nullCommand;
-    nullCommand = 0;
 
     m_filenameToCADMap.clear();
 
@@ -212,19 +210,12 @@ ModelHandler::~ModelHandler( void )
 // Helper functions
 ///////////////////////
 /////////////////////////////////////////////////////////////
-void ModelHandler::SetXMLCommand( ves::open::xml::Command* inputCommand )
+void ModelHandler::SetXMLCommand( ves::open::xml::CommandPtr inputCommand )
 {
-    //if ( inputCommand )
-    {
-        activeCommand = inputCommand;
-    }
-    /*else
-    {
-       activeCommand = nullCommand;
-    }*/
+    activeCommand = inputCommand;
 }
 /////////////////////////////////////////////////////////////
-ves::open::xml::Command* ModelHandler::GetXMLCommand( void )
+ves::open::xml::CommandPtr ModelHandler::GetXMLCommand( void )
 {
     return activeCommand;
 }

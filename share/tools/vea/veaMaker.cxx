@@ -179,6 +179,11 @@ int main( int argc, char* argv[] )
     netowrkWriter.UseStandaloneDOMDocumentManager();
     std::string filename( "test.vea" );
     netowrkWriter.WriteXMLDocument( nodes, filename, "Command" );
+
+    {
+        std::cout << " deleting test object" << std::endl;
+        ves::open::xml::CommandWeakPtr testObject = new ves::open::xml::Command();
+    }
     
     return 0;
 }

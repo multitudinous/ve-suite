@@ -571,11 +571,6 @@ void VjObs_i::GetCfdStateVariables( void )
     vpr::Guard<vpr::Mutex> val_guard( mValueLock );
     VPR_PROFILE_GUARD_HISTORY( "Set application data", 20 );
 
-    for( int i = 0; i < 9; i++ )
-    {
-        cfdShort_data_array[ i ] = mShort_data_array[ i ];
-    }
-
     vprDEBUG( vesDBG, 3 ) << "|\tVjObs_i::GetCfdStateVariables Cluster Mode "
     << isCluster << std::endl << vprDEBUG_FLUSH;
     if( !isCluster )

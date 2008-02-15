@@ -188,15 +188,4 @@ void ChangeCursorEventHandler::Execute( XMLObjectPtr xmlObject )
             EnvironmentHandler::instance()->GetCursor()->SetCursorType( ZLINE );
         }
     }
-
-    /*std::string advanced;
-    DataValuePairWeakPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
-    if(advancedDVP )
-    {
-       Command* advancedCommand = dynamic_cast< Command* >( advancedDVP->GetDataXMLObject() );
-       unsigned int warpOption = 0;
-       advancedCommand->GetDataValuePair( "Warp Option" )->GetData( warpOption );
-       if(warpOption )
-          advanced = "-warp";
-    }*/
 }

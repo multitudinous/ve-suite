@@ -528,7 +528,7 @@ void Tablet::SetSubZeroFlag( int input )
     subzeroFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Tablet::SetVECommand( Command* veCommand )
+void Tablet::SetVECommand( CommandPtr veCommand )
 {
     Device::SetVECommand( veCommand );
     command = veCommand;

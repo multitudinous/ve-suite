@@ -106,9 +106,9 @@ public:
 
     ///Set the active xml command
     ///\param inputCommand input xml command
-    void SetXMLCommand( ves::open::xml::Command* inputCommand );
+    void SetXMLCommand( ves::open::xml::CommandPtr inputCommand );
     ///Returns the current xml command
-    ves::open::xml::Command* GetXMLCommand( void );
+    ves::open::xml::CommandPtr GetXMLCommand( void );
     //void CreateObjects( void );
     void LoadSurfaceFiles( std::string );
     vtkPolyData* GetArrow( void );
@@ -144,8 +144,8 @@ protected:
 private:
     std::string _param;
     DataSet* activeDataset;
-    ves::open::xml::Command* activeCommand;
-    ves::open::xml::Command* nullCommand;
+    ves::open::xml::CommandPtr activeCommand;
+    ves::open::xml::CommandPtr nullCommand;
     //cfdReadParam* _readParam;
     //cfdScalarBarActor* _scalarBar;
     Model* _activeModel;

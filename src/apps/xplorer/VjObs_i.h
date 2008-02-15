@@ -135,8 +135,8 @@ public:
     void GetCfdStateVariables( void );
     ///Create the vector with XML Commands to be used by Xplorer
     void CreatCommandVector( std::string commandString );
-    ves::open::xml::Command* bufferCommand;///< Data to hold command data
-    double cfdShort_data_array[ 9 ];///< hold command data shoudl be deleted in the future
+
+    ves::open::xml::CommandPtr bufferCommand;///< Data to hold command data
 
 protected:
     VjObs::scalar_p_var teacher_name; ///< hold the list of teacher file names
@@ -173,7 +173,6 @@ protected:
     short mNumGeoArrays;///< geo numerber
     short mNumTeacherArrays;///< teacher number
     short mGetClientInfo;///< client info number
-    double mShort_data_array[ 9 ];///< buffer data
 
     ves::open::xml::DOMDocumentManager* domManager; ///< dom manger should be removed
     std::vector< ves::open::xml::CommandPtr > commandVectorQueue;///< command vector may be a duplicate

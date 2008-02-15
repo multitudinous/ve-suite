@@ -72,22 +72,12 @@ class cfdQuatCam;
 }
 }
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
-}
-}
-}
-
 #include <vector>
 #include <map>
 
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/event/EventHandler.h>
+#include <ves/open/xml/CommandPtr.h>
 
 #ifdef _OSG
 #include <osg/ref_ptr>
@@ -151,7 +141,7 @@ public:
     bool IsActive( void );
 
     // New function for testing the new VECommand structure
-    void SetVECommand( ves::open::xml::Command* veCommand );
+    void SetVECommand( ves::open::xml::CommandPtr veCommand );
     ///Process the command that was set by conductor
     virtual void ProcessCommand();
 
@@ -199,7 +189,7 @@ private:
     std::vector < int > completionTest;
 
     // class used to store xml command
-    ves::open::xml::Command* command;
+    ves::open::xml::CommandPtr command;
 
     // Required so that vpr::Singleton can instantiate this class.
     //friend class vpr::Singleton< TextureBasedVizHandler >;

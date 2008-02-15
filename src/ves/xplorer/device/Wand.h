@@ -48,6 +48,8 @@ Wand API
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 // --- VR Juggler Includes --- //
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
@@ -66,17 +68,6 @@ namespace xplorer
 namespace scenegraph
 {
 class DCS;
-}
-}
-}
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class Command;
 }
 }
 }
@@ -118,7 +109,7 @@ public:
 
     ///New function for new VECommand structure
     ///\param veCommand Sets the Command used for navigation
-    void SetVECommand( ves::open::xml::Command* veCommand );
+    void SetVECommand( ves::open::xml::CommandPtr veCommand );
 
     ///Does not let the user go below the ground plane at 0,0,0
     ///\param input Flag to insure translation does not go below zero plane
@@ -199,7 +190,7 @@ private:
     int rotationFlag; ///<Rotation flag
     int subzeroFlag; ///<Zero plane flag
 
-    ves::open::xml::Command* command; ///<Stores xml command
+    ves::open::xml::CommandPtr command; ///<Stores xml command
 
     double deltaTrans[ 3 ]; ///<Stores difference in translation from last position to to current
 

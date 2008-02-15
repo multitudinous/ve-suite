@@ -94,7 +94,6 @@ void TextureBasedEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
 void TextureBasedEventHandler::Execute( XMLObjectPtr veXMLObject )
 {
     //this is ridiculously simple now...Just testing to see how things will work.
-    //Command* command = dynamic_cast< Command* >( xmlObject );
     if( _activeModel )
     {
         try
@@ -106,31 +105,6 @@ void TextureBasedEventHandler::Execute( XMLObjectPtr veXMLObject )
             std::cout << "Invalid texture dataset!!" << std::endl;
             std::cout << "TextureBasedEventHandler::Execute()" << std::endl;
         }
-        /*try
-        {
-           _setActiveSolutionName(veXMLObject);
-        }
-        catch(...)
-        {
-            std::cout<<"Invalid texture dataset!!"<<std::endl;      
-            std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;      
-        }
-        try
-        {
-           DataValuePairPtr bboxState = command->GetDataValuePair( "Bounding Box" );
-           if(bboxState)
-           {
-              bool showBBox = false;
-              unsigned int state = 0;
-              bboxState->GetData( state );
-              _ensureBBoxState(((state==0)?false:true));
-           }
-        }
-        catch(...)
-        {
-            std::cout<<"Invalid texture dataset!!"<<std::endl;      
-            std::cout<<"TextureBasedEventHandler::Execute()"<<std::endl;      
-        }*/
 
         //this is overridden in derived classes
         _operateOnNode( veXMLObject );

@@ -281,7 +281,7 @@ void Wand::SetHeadRotationFlag( int input )
     rotationFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::SetVECommand( Command* veCommand )
+void Wand::SetVECommand( CommandPtr veCommand )
 {
     Device::SetVECommand( veCommand );
     command = veCommand;

@@ -548,7 +548,7 @@ void cfdQuatCamHandler::ProcessCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::_updateViewGUIPointData()
 {
-    Command* viewPointGUIData = new Command();
+    CommandPtr viewPointGUIData = new Command();
     viewPointGUIData->SetCommandName( "VIEWPOINT_GUI_DATA" );
     size_t nViewPoints = this->QuatCams.size( );
 
@@ -557,13 +557,12 @@ void cfdQuatCamHandler::_updateViewGUIPointData()
     for( size_t i = 0; i < nViewPoints; ++i )
     {
         name << "View Location_" << i;
-        DataValuePair* viewPointNames = new DataValuePair( );
+        DataValuePairPtr viewPointNames = new DataValuePair( );
         viewPointNames->SetData( "View Location", name.str() );
         viewPointGUIData->AddDataValuePair( viewPointNames );
         name.clear( );
     }
     ves::xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
-    delete viewPointGUIData;
 }
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
@@ -703,7 +702,7 @@ bool cfdQuatCamHandler::IsActive( void )
     return activecam;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::SetVECommand( Command* veCommand )
+void cfdQuatCamHandler::SetVECommand( CommandPtr veCommand )
 {
     command = veCommand;
 }

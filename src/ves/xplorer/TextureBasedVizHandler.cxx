@@ -580,7 +580,7 @@ void TextureBasedVizHandler::PreFrameUpdate()
         if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
         {
             std::map<std::string, ves::xplorer::event::TextureBasedEventHandler*>::iterator currentEventHandler;
-            ves::open::xml::Command* tbvizCommand = ModelHandler::instance()->GetXMLCommand();
+            ves::open::xml::CommandPtr tbvizCommand = ModelHandler::instance()->GetXMLCommand();
             currentEventHandler = _eventHandlers.find( tbvizCommand->GetCommandName() );
             if( currentEventHandler != _eventHandlers.end() )
             {

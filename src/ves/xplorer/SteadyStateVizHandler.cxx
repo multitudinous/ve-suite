@@ -222,7 +222,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
     if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
-        ves::open::xml::Command* tempCommand = ModelHandler::instance()->GetXMLCommand();
+        ves::open::xml::CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {

@@ -392,8 +392,6 @@ void cfdStreamers::UpdateCommand()
     ////////////////////
     //Set the number of seed points in each direction and get the %BB info
     //Extract the advanced settings from the commands
-    //activeModelDVP = objectCommand->GetDataValuePair( "Seed_Point_Settings" );
-    //objectCommand = dynamic_cast< ves::open::xml::Command* >( activeModelDVP->GetDataXMLObject() );
     activeModelDVP = objectCommand->GetDataValuePair( "Max_X_BB" );
     //if 1 is there then they all are there
     if( activeModelDVP )

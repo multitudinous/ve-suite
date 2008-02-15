@@ -214,14 +214,9 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-Command* VjObsWrapper::GetXMLCommand( void )
+CommandPtr VjObsWrapper::GetXMLCommand( void )
 {
     return _vjObs->bufferCommand;
-}
-////////////////////////////////////////////////////////////////////////////////
-double VjObsWrapper::GetShortArray( int i )
-{
-    return _vjObs->cfdShort_data_array[ i ];
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::GetCfdStateVariables( void )

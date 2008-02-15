@@ -423,7 +423,7 @@ void cfdExecutive::PreFrameUpdate( void )
     {
         std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
         currentEventHandler;
-        Command* tempCommand = ModelHandler::instance()->GetXMLCommand();
+        CommandPtr tempCommand = ModelHandler::instance()->GetXMLCommand();
         currentEventHandler = _eventHandlers.find( tempCommand->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
@@ -453,7 +453,7 @@ void cfdExecutive::PreFrameUpdate( void )
         //1. Set the current command on all plugins
         /*if ( ModelHandler::instance()->GetActiveModel() )
         {
-           Command* tempCommand = 
+           CommandPtr tempCommand = 
                     ModelHandler::instance()->GetActiveModel()->GetVECommand();
            foundPlugin->second->SetCurrentCommand( tempCommand );
         }*/
@@ -464,7 +464,7 @@ void cfdExecutive::PreFrameUpdate( void )
            )
         {
             //Process a special plugin command
-            Command* tempCommand =
+            CommandPtr tempCommand =
                 ModelHandler::instance()->GetXMLCommand();
             //if( tempCommand )
             {
