@@ -267,8 +267,7 @@ void cfdExecutive::GetNetwork( void )
     // now lets create a list of them
     _id_map.clear();
     idToModel.clear();
-    std::vector< model::ModelWeakPtr > tempModels;
-    tempModels = tempSystem->GetModels();
+    std::vector< model::ModelWeakPtr > tempModels = tempSystem->GetModels();
     for( size_t i = 0; i < tempModels.size(); ++i )
     {
         model::ModelWeakPtr model = tempModels.at( i );

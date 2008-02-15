@@ -179,7 +179,7 @@ DOMElement* XMLObject::GetSubElement( DOMElement* baseElement,
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-DOMDocument* XMLObject::GetRootDocument()
+XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* XMLObject::GetRootDocument()
 {
     return mRootDocument;
 }

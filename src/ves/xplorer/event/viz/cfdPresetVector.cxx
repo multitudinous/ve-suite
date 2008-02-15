@@ -30,9 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#if defined(WIN32)
-#define WIN32_LEAN_AND_MEAN
-#endif
 #include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/event/viz/cfdPresetVector.h>
 #include <ves/xplorer/DataSet.h>

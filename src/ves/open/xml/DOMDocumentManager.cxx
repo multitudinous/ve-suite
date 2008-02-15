@@ -30,9 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
-#include <ves/open/xml/DOMDocumentManager.h>
+//This header must be first because the loki stuff includes headers that 
+// conflict with xerces DOMDocument
 #include <ves/open/xml/XMLObject.h>
+//All other headers can start here
+#include <ves/open/xml/DOMDocumentManager.h>
 
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -124,24 +126,24 @@ void DOMDocumentManager::_readInputFile( std::string xmlFile )
     mParser->parse( xmlFile.c_str() );
 }
 //////////////////////////////////////////////////////
-std::string DOMDocumentManager::WriteDocumentToString( DOMDocument* document )
+std::string DOMDocumentManager::WriteDocumentToString( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document )
 {
     std::string outputData;
     // do all the xerces studd to make a DOMWriter
     return outputData;
 }
 //////////////////////////////////////////////////////
-DOMDocument* DOMDocumentManager::GetCommandDocument( void )
+XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* DOMDocumentManager::GetCommandDocument( void )
 {
     return mCommandDocument;
 }
 //////////////////////////////////////////////////////
-DOMDocument* DOMDocumentManager::GetParameterDocument( void )
+XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* DOMDocumentManager::GetParameterDocument( void )
 {
     return mParameterDocument;
 }
 //////////////////////////////////////////////////////
-DOMDocument* DOMDocumentManager::GetModulesDocument( void )
+XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* DOMDocumentManager::GetModulesDocument( void )
 {
     return mModulesDocument;
 }

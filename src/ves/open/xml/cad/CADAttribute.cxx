@@ -30,9 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#if defined(WIN32)
-#define WIN32_LEAN_AND_MEAN
-#endif
 #include <ves/open/xml/cad/CADAttribute.h>
 #include <ves/open/xml/cad/CADMaterial.h>
 #include <ves/open/xml/shader/ShaderCreator.h>

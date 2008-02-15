@@ -34,6 +34,14 @@
 #include <ves/ce/util/node_module.h>
 #include <ves/ce/util/Module.h>
 #include <ves/ce/util/Network.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 #include <iostream>
 #include <algorithm>
 

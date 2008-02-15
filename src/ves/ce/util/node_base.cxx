@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/ce/util/node_base.h>
 #include <ves/ce/util/Network.h>
+#include <ves/open/xml/model/Network.h>
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////
 node_base::node_base( VE_CE::Utilities::Network* n, int t )

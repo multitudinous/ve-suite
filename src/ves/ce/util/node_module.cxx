@@ -36,6 +36,14 @@
 #include <ves/ce/util/IPort.h>
 #include <ves/ce/util/OPort.h>
 #include <ves/ce/util/Connection.h>
+#include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/Port.h>
+#include <ves/open/xml/model/Link.h>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 #include <iostream>
 
 using namespace VE_CE::Utilities;

@@ -432,8 +432,11 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
    if GetPlatform() == 'win32':
         baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK',
-            'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT','LOKI_OBJECT_LEVEL_THREADING'] )
-        baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
+            'WIN32_LEAN_AND_MEAN','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT',
+	    'LOKI_OBJECT_LEVEL_THREADING'] )
+	# for more information on WIN32_LEAN_AND_MEAN see:
+	# http://support.microsoft.com/kb/166474
+	baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
         baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
         #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
         #    baseEnv['PDB'] = 1

@@ -39,14 +39,14 @@
 /*!\class VE_XML::DOMDocumentManager
  *This class manages the main documents for VE-Open.
  */
+#include <string>
+#include <map>
+#include <utility>
+
 #include <ves/VEConfig.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
-
-#include <string>
-#include <map>
-#include <utility>
 
 XERCES_CPP_NAMESPACE_USE
 namespace ves
@@ -68,18 +68,18 @@ public:
     void InitializeXerces( void );
 
     /// Writes the document that is passed in and returns a string
-    std::string WriteDocumentToString( DOMDocument* document );
+    std::string WriteDocumentToString( XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* document );
 
     /// Get the command document
-    DOMDocument* GetCommandDocument( void );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetCommandDocument( void );
 
     /// Get the parameter document
     ///\todo This is not implemented yet
-    DOMDocument* GetParameterDocument( void );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetParameterDocument( void );
 
     /// Get the modules document
     ///\todo This is not implemented yet
-    DOMDocument* GetModulesDocument( void );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* GetModulesDocument( void );
 
     ///Load an XML tree from a string or a file.
     ///\param inputCommand Can be a string in memory of the tree or point to a file on disk.
@@ -124,14 +124,14 @@ private:
     bool mWriteXMLFile;///<Should we write an XML file or string.
 
 
-    DOMDocument* mCommandDocument;///< This is the document used ot send commands to Xplorer
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mCommandDocument;///< This is the document used ot send commands to Xplorer
 
-    DOMDocument* mParameterDocument;///< This is the document used to send parameter file info to Xplorer
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mParameterDocument;///< This is the document used to send parameter file info to Xplorer
 
-    DOMDocument* mModulesDocument;///< This is the current Network file sent to the CE and is constructed by Conductor
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMDocument* mModulesDocument;///< This is the current Network file sent to the CE and is constructed by Conductor
 
-    XercesDOMParser* mParser;///<The DOMParser
-    ErrorHandler* mErrHandler;///<The error handler for the parser.
+    XERCES_CPP_NAMESPACE_QUALIFIER XercesDOMParser* mParser;///<The DOMParser
+    XERCES_CPP_NAMESPACE_QUALIFIER ErrorHandler* mErrHandler;///<The error handler for the parser.
 
     std::map< std::string, std::pair< std::string, std::string > > mDocumentType;
 };

@@ -31,7 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/ce/util/Module.h>
-//#include <ves/ce/util/Network.h>
 #include <ves/ce/util/OPort.h>
 #include <ves/ce/util/IPort.h>
 #include <ves/ce/util/Connection.h>

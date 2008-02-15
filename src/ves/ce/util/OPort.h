@@ -32,10 +32,10 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef CE_UTILITIES_OPORT_H
 #define CE_UTILITIES_OPORT_H
+#include <ves/open/xml/CommandPtr.h>
 #include <ves/VEConfig.h>
 #include <ves/ce/util/Port.h>
 #include <ves/open/moduleS.h>
-#include <ves/open/xml/CommandPtr.h>
 
 namespace VE_CE
 {

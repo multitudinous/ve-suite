@@ -31,9 +31,6 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Stuff --- //
-#if defined(WIN32)
-#define WIN32_LEAN_AND_MEAN
-#endif
 #include <ves/xplorer/CommandHandler.h>
 
 #include <ves/xplorer/device/Device.h>

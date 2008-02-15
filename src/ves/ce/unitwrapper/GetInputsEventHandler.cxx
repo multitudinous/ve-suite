@@ -29,9 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#if defined(WIN32)
-#define WIN32_LEAN_AND_MEAN
-#endif
 #include <ves/ce/unitwrapper/GetInputsEventHandler.h>
 
 #include <ves/open/xml/XMLObject.h>

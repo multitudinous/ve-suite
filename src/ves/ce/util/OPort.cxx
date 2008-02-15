@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include <ves/ce/util/OPort.h>
 #include <ves/open/xml/Command.h>
+#include <ves/ce/util/OPort.h>
 
 using namespace VE_CE::Utilities;
 ////////////////////////////////////////////////////////////////////////////////

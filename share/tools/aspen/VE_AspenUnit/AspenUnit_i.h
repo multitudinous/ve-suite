@@ -32,7 +32,7 @@
 #define MODULEI_H_
 #include "bkpparser.h"
 #include <ves/open/moduleS.h>
-#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
 #include "VE_AspenUnit.h"
 #include "VE_AspenUnitDlg.h"
 #include "CorbaUnitManager.h"
@@ -207,18 +207,18 @@ public:
       ::Error::EUnknown
     ));
 
-  char* handleGetNetwork(ves::open::xml::Command* cmd);
-  char* handleOpenSimulation(ves::open::xml::Command* cmd);
-  char* handleSaveAs(ves::open::xml::Command* cmd);
-  char* handleGetInputModuleParamList(ves::open::xml::Command* cmd);
-  char* handleGetInputModuleProperties(ves::open::xml::Command* cmd);
-  char* handleGetOutputModuleParamList(ves::open::xml::Command* cmd);
-  char* handleGetOutputModuleProperties(ves::open::xml::Command* cmd);
-  char* handleGetStreamInputModuleParamList(ves::open::xml::Command* cmd);
-  char* handleGetStreamInputModuleProperties(ves::open::xml::Command* cmd);
-  char* handleGetStreamOutputModuleParamList(ves::open::xml::Command* cmd);
-  char* handleGetStreamOutputModuleProperties(ves::open::xml::Command* cmd);
-  void SetParam(ves::open::xml::Command* cmd);
+  char* handleGetNetwork(ves::open::xml::CommandPtr cmd);
+  char* handleOpenSimulation(ves::open::xml::CommandPtr cmd);
+  char* handleSaveAs(ves::open::xml::CommandPtr cmd);
+  char* handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd);
+  char* handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd);
+  char* handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd);
+  char* handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd);
+  char* handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd);
+  char* handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd);
+  char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
+  char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
+  void SetParam(ves::open::xml::CommandPtr cmd);
 };
 
 

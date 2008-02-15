@@ -159,13 +159,11 @@ void PhysicsRigidBody::BoundingBoxShape()
         m_collisionShape = 0;
     }
 
+    osg::BoundingBox bb = m_osgToBullet->GetBoundingBox();
     m_collisionShape = new btBoxShape(
-                           btVector3(( m_osgToBullet->GetBoundingBox().xMax() -
-                                       m_osgToBullet->GetBoundingBox().xMin() ) * 0.5f,
-                                     ( m_osgToBullet->GetBoundingBox().yMax() -
-                                       m_osgToBullet->GetBoundingBox().yMin() ) * 0.5f,
-                                     ( m_osgToBullet->GetBoundingBox().zMax() -
-                                       m_osgToBullet->GetBoundingBox().zMin() ) * 0.5f ) );
+                           btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
+                                      ( bb.yMax() - bb.yMin() ) * 0.5f,
+                                      ( bb.zMax() - bb.zMin() ) * 0.5f ) );
 
     SetMassProps();
 

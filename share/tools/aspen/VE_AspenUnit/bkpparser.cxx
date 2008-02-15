@@ -1030,11 +1030,11 @@ std::string BKPParser::CreateNetwork( void )
    // then create the appropriate models
    // then put them all together and for a network string
    // Here we wshould loop over all of the following
-   std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+   std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
    ves::open::xml::model::NetworkWeakPtr mainNetwork = new ves::open::xml::model::Network();
-   ves::open::xml::model::System* veSystem = new ves::open::xml::model::System();
+   ves::open::xml::model::SystemPtr veSystem = new ves::open::xml::model::System();
    
-   nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( veSystem, "veSystem" ) );
+   nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veSystem, "veSystem" ) );
    
    // create default state info section
    mainNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
@@ -1070,7 +1070,7 @@ std::string BKPParser::CreateNetwork( void )
       {
          if ( streamIter->second == blockIter->first )
          {
-			 ves::open::xml::model::Port* tempPort = tempModel->GetPort(-1);
+			 ves::open::xml::model::PortPtr tempPort = tempModel->GetPort(-1);
             // inputs are to ports
             tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].first );
             tempPort->SetModelName( streamIter->first );
@@ -1083,7 +1083,7 @@ std::string BKPParser::CreateNetwork( void )
       {
          if ( streamIter->second == blockIter->first )
          {
-            ves::open::xml::model::Port* tempPort = tempModel->GetPort(-1);
+            ves::open::xml::model::PortPtr tempPort = tempModel->GetPort(-1);
             // outputs are from ports
             tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].second );
             tempPort->SetModelName( streamIter->first );
@@ -1118,7 +1118,7 @@ std::string BKPParser::CreateNetwork( void )
 ////////////////////////////////////////////////////////////////////////////////
 void BKPParser::ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName)
 {
-	ves::open::xml::model::System* subSystem = new ves::open::xml::model::System();
+	ves::open::xml::model::SystemPtr subSystem = new ves::open::xml::model::System();
 	ves::open::xml::model::NetworkPtr subNetwork = new ves::open::xml::model::Network();
 	subSystem->AddNetwork(subNetwork);
 
@@ -1147,7 +1147,7 @@ void BKPParser::ParseSubSystem(ves::open::xml::model::ModelPtr model, std::strin
 		{
 		 if ( streamIter->second == blockIter->first )
 		 {
-            ves::open::xml::model::Port* tempPort = tempModel->GetPort(-1);
+            ves::open::xml::model::PortPtr tempPort = tempModel->GetPort(-1);
 			// inputs are to ports
 			tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].first );
 			tempPort->SetModelName( streamIter->first );
@@ -1160,7 +1160,7 @@ void BKPParser::ParseSubSystem(ves::open::xml::model::ModelPtr model, std::strin
 		{
 		 if ( streamIter->second == blockIter->first )
 		 {
-            ves::open::xml::model::Port* tempPort = tempModel->GetPort(-1);
+            ves::open::xml::model::PortPtr tempPort = tempModel->GetPort(-1);
 			// outputs are from ports
 			tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].second );
 			tempPort->SetModelName( streamIter->first );
@@ -1196,10 +1196,10 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 	CASI::CASIObj cur_block= aspendoc->getBlockByName(CString(modname.c_str()));
 	int i;
 	
-	ves::open::xml::Command params;
+    ves::open::xml::CommandPtr params = new ves::open::xml::Command();
 	std::vector<std::string> paramList;
 	//input variables;
-	params.SetCommandName((modname+"InputParams").c_str());
+	params->SetCommandName((modname+"InputParams").c_str());
 	
 	for (i = 0; i < (int)cur_block.getNumInputVar(); i++)
 	{	
@@ -1208,11 +1208,11 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 
 	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
-    params.AddDataValuePair( inpParams );
+    params->AddDataValuePair( inpParams );
     
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
-	nodes.push_back( std::pair< ves::open::xml::XMLObject*, 
-        std::string >( &params, "vecommand" ) );
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+	nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+        std::string >( params, "vecommand" ) );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -1228,9 +1228,9 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::s
 	std::cout<<paramName<<std::endl;
 	unsigned int j;
 	
-	ves::open::xml::Command properties;
+    ves::open::xml::CommandPtr properties = new ves::open::xml::Command();
 	const int propSize=23;
-	properties.SetCommandName((modname+paramName).c_str());
+	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
 	ves::open::xml::DataValuePairWeakPtr Props[propSize];
@@ -1238,7 +1238,7 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::s
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
 		Props[j]->SetDataType("STRING");
-		properties.AddDataValuePair( Props[j] );
+		properties->AddDataValuePair( Props[j] );
 	}
 	//CASI::Variable tempvar = cur_block.getOutputVarByName(paramName.c_str());
 	CASI::Variable tempvar = cur_block.getInputVarByName(CString(paramName.c_str()));
@@ -1313,9 +1313,9 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::s
 	Props[j]->SetDataName("lowerLimit");
 	Props[j++]->SetDataString((char*)LPCTSTR(tempvar.lowerLimit()));
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
-	nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &properties, "vecommand" ) );
+	nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( properties, "vecommand" ) );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -1329,21 +1329,21 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
 	CASI::CASIObj cur_block= aspendoc->getBlockByName(CString(modname.c_str()));
 	int i;
 	
-	ves::open::xml::Command params;
+    ves::open::xml::CommandPtr params = new ves::open::xml::Command();
 	std::vector<std::string> paramList;
 	//input variables;
-	params.SetCommandName((modname+"OutputParams").c_str());
+	params->SetCommandName((modname+"OutputParams").c_str());
 	
 	for (i = 0; i < (int)cur_block.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_block.getOutputVarName(i)));
 
 	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
-    params.AddDataValuePair( inpParams );
+    params->AddDataValuePair( inpParams );
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 	nodes.push_back( 
-                  std::pair< ves::open::xml::XMLObject*, std::string >( &params, "vecommand" ) 
+                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( params, "vecommand" ) 
                      );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
@@ -1360,9 +1360,9 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname, std::
 	std::cout<<paramName<<std::endl;
 	unsigned int j;
 	
-	ves::open::xml::Command properties;
+    ves::open::xml::CommandPtr properties = new ves::open::xml::Command();
 	const int propSize=23;
-	properties.SetCommandName((modname+paramName).c_str());
+	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
 	ves::open::xml::DataValuePairWeakPtr Props[propSize];
@@ -1370,7 +1370,7 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname, std::
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
 		Props[j]->SetDataType("STRING");
-		properties.AddDataValuePair( Props[j] );
+		properties->AddDataValuePair( Props[j] );
 	}
 	CASI::Variable tempvar = cur_block.getOutputVarByName(CString(paramName.c_str()));
 	j=0;
@@ -1445,9 +1445,9 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname, std::
 	Props[j]->SetDataName("lowerLimit");
 	Props[j++]->SetDataString((char*)LPCTSTR(tempvar.lowerLimit()));
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
-	nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &properties, "vecommand" ) );
+	nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( properties, "vecommand" ) );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -1476,9 +1476,9 @@ std::string BKPParser::GetStreamInputModuleParams(std::string modname)
 	inpParams->SetData("params",paramList);
     params.AddDataValuePair( inpParams );
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 	nodes.push_back( 
-                  std::pair< ves::open::xml::XMLObject*, std::string >( &params, "vecommand" ) 
+                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( &params, "vecommand" ) 
                      );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
@@ -1495,9 +1495,9 @@ std::string BKPParser::GetStreamInputModuleParamProperties(std::string modname, 
 	std::cout<<paramName<<std::endl;
 	unsigned int j;
 	
-	ves::open::xml::Command properties;
+    ves::open::xml::CommandPtr properties = new ves::open::xml::Command();
 	const int propSize=23;
-	properties.SetCommandName((modname+paramName).c_str());
+	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
 	ves::open::xml::DataValuePairWeakPtr Props[propSize];
@@ -1505,7 +1505,7 @@ std::string BKPParser::GetStreamInputModuleParamProperties(std::string modname, 
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
 		Props[j]->SetDataType("STRING");
-		properties.AddDataValuePair( Props[j] );
+		properties->AddDataValuePair( Props[j] );
 	}
 	CASI::Variable tempvar = cur_stream.getInputVarByName(paramName.c_str());
 	//CASI::Variable tempvar = cur_stream.GetStreamComponentVarByName(CString(paramName.c_str()));
@@ -1580,9 +1580,9 @@ std::string BKPParser::GetStreamInputModuleParamProperties(std::string modname, 
 	Props[j]->SetDataName("lowerLimit");
 	Props[j++]->SetDataString((char*)LPCTSTR(tempvar.lowerLimit()));
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
-	nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &properties, "vecommand" ) );
+	nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( properties, "vecommand" ) );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -1596,21 +1596,21 @@ std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
 	CASI::CASIObj cur_stream= aspendoc->getStreamByName(CString(modname.c_str()));
 	int i;
 	
-	ves::open::xml::Command params;
+    ves::open::xml::CommandPtr params = new ves::open::xml::Command();
 	std::vector<std::string> paramList;
 	//input variables;
-	params.SetCommandName((modname+"OutputParams").c_str());
+	params->SetCommandName((modname+"OutputParams").c_str());
 	
 	for (i = 0; i < (int)cur_stream.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_stream.getOutputVarName(i)));
 
 	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
-    params.AddDataValuePair( inpParams );
+    params->AddDataValuePair( inpParams );
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 	nodes.push_back( 
-                  std::pair< ves::open::xml::XMLObject*, std::string >( &params, "vecommand" ) 
+                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( params, "vecommand" ) 
                      );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
@@ -1627,9 +1627,9 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	std::cout<<paramName<<std::endl;
 	unsigned int j;
 	
-	ves::open::xml::Command properties;
+    ves::open::xml::CommandPtr properties = new ves::open::xml::Command();
 	const int propSize=23;
-	properties.SetCommandName((modname+paramName).c_str());
+	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
 	ves::open::xml::DataValuePairWeakPtr Props[propSize];
@@ -1637,7 +1637,7 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
 		Props[j]->SetDataType("STRING");
-		properties.AddDataValuePair( Props[j] );
+		properties->AddDataValuePair( Props[j] );
 	}
 	CASI::Variable tempvar = cur_stream.getOutputVarByName(CString(paramName.c_str()));
 	j=0;
@@ -1712,9 +1712,9 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	Props[j]->SetDataName("lowerLimit");
 	Props[j++]->SetDataString((char*)LPCTSTR(tempvar.lowerLimit()));
 
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
-	nodes.push_back( std::pair< ves::open::xml::XMLObject*, std::string >( &properties, "vecommand" ) );
+	nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( properties, "vecommand" ) );
 
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";

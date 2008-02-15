@@ -35,7 +35,6 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#define WIN32_LEAN_AND_MEAN
 #endif
 
 #include <ves/xplorer/volume/ScalarData.h>

@@ -33,6 +33,9 @@
 #include <ves/ce/util/Connection.h>
 #include <ves/ce/util/IPort.h>
 #include <ves/ce/util/OPort.h>
+
+#include <ves/open/xml/Command.h>
+
 using namespace VE_CE::Utilities;
 
 Connection::Connection( int id )

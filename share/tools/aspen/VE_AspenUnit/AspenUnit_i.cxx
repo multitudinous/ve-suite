@@ -171,10 +171,10 @@ char * Body_Unit_i::GetStatusMessage (
 	data->SetDataType("UNSIGNED INT");
 	data->SetDataValue(return_state);
 	
-	std::vector< std::pair< ves::open::xml::XMLObject*, std::string > > nodes;
+	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
 	nodes.push_back( 
-                  std::pair< ves::open::xml::XMLObject*, std::string >( &returnState, "Command" ) 
+                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "Command" ) 
                      );
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -287,23 +287,23 @@ char * Body_Unit_i::Query ( const char * query_str
 	networkWriter.UseStandaloneDOMDocumentManager();
 	networkWriter.ReadFromString();
 	networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
-	std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+	std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
-	ves::open::xml::Command* cmd;	
+	ves::open::xml::CommandPtr cmd;	
 	std::string cmdname;
 	
-	cmd = dynamic_cast< ves::open::xml::Command* >( objectVector.at( 0 ) );
+	cmd = objectVector.at( 0 );
 	cmdname = cmd->GetCommandName();
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel(("Command: "+cmdname+"\r\n").c_str());
-	char * returnValue = "empty";
+	char* returnValue = "empty";
 
 	if (cmdname=="getNetwork")
 	{
 		//bkp = theParent->CreateParser();
 		//theParent->CreateParser();
 		//bkp = new BKPParser();
-		returnValue = handleGetNetwork(cmd);
+		returnValue = handleGetNetwork( cmd );
 		return returnValue;
 	}
 	else if(cmdname=="openSimulation")
@@ -425,7 +425,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		return CORBA::string_dup("NULL");
 }
 
-char* Body_Unit_i::handleGetNetwork(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -465,7 +465,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::Command* cmd)
 	return CORBA::string_dup(network.c_str());
 }
 
-char* Body_Unit_i::handleOpenSimulation(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
@@ -477,7 +477,7 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::Command* cmd)
 	return CORBA::string_dup("Simulation Opened.");
 }
 
-char* Body_Unit_i::handleSaveAs(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel("saving...\r\n");
@@ -489,7 +489,7 @@ char* Body_Unit_i::handleSaveAs(ves::open::xml::Command* cmd)
 }
 
 //BLOCKS
-char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -511,7 +511,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::Command* cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -532,7 +532,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::Command* cmd)
 
 }
 
-char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -554,7 +554,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::Command* cmd)
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -576,7 +576,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::Command* cmd)
 }
 
 //Streams
-char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -598,7 +598,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::Command* 
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -619,7 +619,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::Command*
 
 }
 
-char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -641,7 +641,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::Command*
 	return CORBA::string_dup(netPak.c_str());
 }
 
-char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command* cmd)
+char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -675,12 +675,12 @@ void Body_Unit_i::SetParams (CORBA::Long id,
    networkWriter.UseStandaloneDOMDocumentManager();
    networkWriter.ReadFromString();
    networkWriter.ReadXMLData( param, "Command", "vecommand" );
-   std::vector< ves::open::xml::XMLObject* > objectVector = networkWriter.GetLoadedXMLObjects();
+   std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
   
    //this part would need rewrite later
    for( size_t i=0; i<objectVector.size(); i++)
    {
-		ves::open::xml::Command* param = dynamic_cast< ves::open::xml::Command* >( objectVector.at( i ) );
+		ves::open::xml::CommandPtr param = objectVector.at( i );
 		std::string paramName = param->GetCommandName();
 		
 		size_t num = param->GetNumberOfDataValuePairs();
@@ -697,7 +697,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
 		}
    }
 }
-void Body_Unit_i::SetParam (ves::open::xml::Command* cmd)
+void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName, paramValue;

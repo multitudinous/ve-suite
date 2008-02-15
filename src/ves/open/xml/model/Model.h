@@ -157,7 +157,7 @@ public:
 
     ///Allocate another input block for use
     ///\return The new input
-    #pragma deprecated( GetInput() )
+    #pragma deprecated( GetInput )
     ves::open::xml::CommandPtr GetInput();
 
     ///Set the input for this models

@@ -36,6 +36,7 @@
 
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/Port.h>
