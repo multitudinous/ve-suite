@@ -140,6 +140,30 @@ public:
         }
     }
 
+    template<class T>
+    inline void GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element, T& dataVal)
+    {
+        try
+        {
+            std::istringstream iss;
+            // in case the element does not contain data
+            XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText =
+                dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
+            if( rawText )
+            {
+                char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
+                iss.str( fUnicodeForm );
+                delete fUnicodeForm;
+            }
+            iss >> dataVal;
+        }
+        catch ( ... )
+        {
+            std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
+        }
+    }
+
+
     ///utility functions for extracting subElement itemIndex from a complex element.
     ///\param baseElement The XML complexElement to extract a subelement from of type subElementTagName.
     ///\param subElementTagName The subelement tagname to extract from baseElement.
@@ -376,6 +400,30 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
         std::cout << "Invalid element!!" << std::endl;
         std::cout << "XMLObject::GetAttribute()" << std::endl;
     }
+}
+
+template<>
+inline void XMLObject::GetDataFromElement( const XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* element, std::string& dataVal)
+{
+    try
+    {
+        std::istringstream iss;
+        // in case the element does not contain data
+        XERCES_CPP_NAMESPACE_QUALIFIER DOMText* rawText =
+            dynamic_cast< XERCES_CPP_NAMESPACE_QUALIFIER DOMText* >( element->getFirstChild() );
+        if( rawText )
+        {
+            char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( rawText->getData() );
+            iss.str( fUnicodeForm );
+            delete fUnicodeForm;
+        }
+        dataVal = iss.str();
+    }
+    catch ( ... )
+    {
+        std::cout << "ERROR : ExtractFromSimpleElement " << std::endl;
+    }
+
 }
 
 }

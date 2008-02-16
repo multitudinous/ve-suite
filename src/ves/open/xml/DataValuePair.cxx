@@ -316,7 +316,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
             {
                 //should only be the name of the command
                 DOMElement* dataName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
-                GetAttribute( dataName, "dataName", mDataName );
+                GetDataFromElement( dataName, mDataName );
             }
             else
             {
@@ -350,7 +350,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 DOMElement* dataValueStringName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueStringName )
                 {
-                    GetAttribute( dataValueStringName, "dataValueString", mDataString);
+                    GetDataFromElement( dataValueStringName, mDataString);
                     SetDataType( std::string( "STRING" ) );
                 }
             }
@@ -359,14 +359,14 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
             {
                 DOMElement* dataUnsignedValue = GetSubElement( currentElement, "dataValueUInt", 0 );
 
-                GetAttribute( dataUnsignedValue, "dataValueUInt", mDataUInt);
+                GetDataFromElement( dataUnsignedValue, mDataUInt );
                 mDataType = "UNSIGNED INT";
             }
             //else if(mDataType == "LONG")
             else if( currentElement->getElementsByTagName( ves::open::xml::Convert( "dataValueInt" ).toXMLString() )->getLength() )
             {
                 DOMElement* dataLongdValue = GetSubElement( currentElement, "dataValueInt", 0 );
-                GetAttribute( dataLongdValue, "dataValueInt", mIntDataValue);
+                GetDataFromElement( dataLongdValue, mIntDataValue);
                 mDataType = "LONG";
             }
             //else if(mDataType == "FLOAT" )
@@ -379,7 +379,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 DOMElement* dataValueNum = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueNum )
                 {
-                    GetAttribute( dataValueNum, "dataValueNum", mDataValue );
+                    GetDataFromElement( dataValueNum, mDataValue );
                     SetDataType( std::string( "FLOAT" ) );
                 }
             }
@@ -391,22 +391,22 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
 
                 if( type == "xs:string" )
                 {
-                    GetAttribute( dataValueTemp, "xs:string", mDataString );
+                    GetDataFromElement( dataValueTemp, mDataString );
                     SetDataType( std::string( "STRING" ) );
                 }
                 else if( type == "xs:unsignedInt" )
                 {
-                    GetAttribute( dataValueTemp, "xs:unsignedInt", mDataUInt );
+                    GetDataFromElement( dataValueTemp, mDataUInt );
                     mDataType = "UNSIGNED INT";
                 }
                 else if( type == "xs:integer" )
                 {
-                    GetAttribute( dataValueTemp, "xs:integer", mIntDataValue );
+                    GetDataFromElement( dataValueTemp, mIntDataValue );
                     mDataType = "LONG";
                 }
                 else if( type == "xs:double" )
                 {
-                    GetAttribute( dataValueTemp, "xs:double", mDataValue );
+                    GetDataFromElement( dataValueTemp, mDataValue );
                     SetDataType( std::string( "FLOAT" ) );
                 }
                 else
