@@ -33,6 +33,7 @@
 #ifndef CAD_MATERIAL_H
 #define CAD_MATERIAL_H
 #include <ves/open/xml/cad/CADMaterialPtr.h>
+#include <ves/open/xml/FloatArrayPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <xercesc/dom/DOM.hpp>
@@ -47,17 +48,6 @@
  * Class to represent a basic material.
  */
 XERCES_CPP_NAMESPACE_USE
-
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-class FloatArray;
-}
-}
-}
 
 #include <vector>
 
@@ -80,19 +70,19 @@ public:
 
     ///Set the diffuse component
     ///\param diffuse RGBA diffuse property
-    void SetDiffuseComponent( ves::open::xml::FloatArray* diffuse );
+    void SetDiffuseComponent( ves::open::xml::FloatArrayPtr diffuse );
 
     ///Set the emissive component
     ///\param emissive RGBA emissive property
-    void SetEmissiveComponent( ves::open::xml::FloatArray* emissive );
+    void SetEmissiveComponent( ves::open::xml::FloatArrayPtr emissive );
 
     ///Set the ambient component
     ///\param ambient RGBA ambient property
-    void SetAmbientComponent( ves::open::xml::FloatArray* ambient );
+    void SetAmbientComponent( ves::open::xml::FloatArrayPtr ambient );
 
     ///Set the specular reflection component
     ///\param specular RGBA specular property
-    void SetSpecularComponent( ves::open::xml::FloatArray* specular );
+    void SetSpecularComponent( ves::open::xml::FloatArrayPtr specular );
 
     ///Set the "shininess" of this material
     ///\param shine value
@@ -139,16 +129,16 @@ public:
     double GetOpacity();
 
     ///Get the diffuse property
-    ves::open::xml::FloatArray* GetDiffuse();
+    ves::open::xml::FloatArrayPtr GetDiffuse();
 
     ///Get the emissive property
-    ves::open::xml::FloatArray* GetEmissive();
+    ves::open::xml::FloatArrayPtr GetEmissive();
 
     ///Get the ambient property
-    ves::open::xml::FloatArray* GetAmbient();
+    ves::open::xml::FloatArrayPtr GetAmbient();
 
     ///Get the specular property
-    ves::open::xml::FloatArray* GetSpecular();
+    ves::open::xml::FloatArrayPtr GetSpecular();
 
     ///Get the shininess property
     double GetShininess();
@@ -189,10 +179,10 @@ protected:
     ///Internally update the XML data for the material color mode.
     void _updateColorMode();
 
-    ves::open::xml::FloatArray* _kDiffuse;///< Diffuse component.
-    ves::open::xml::FloatArray* _kEmissive;///< Emmisive component.
-    ves::open::xml::FloatArray* _ambient;///< Ambient component.
-    ves::open::xml::FloatArray* _specular;///< Specular component.
+    ves::open::xml::FloatArrayPtr _kDiffuse;///< Diffuse component.
+    ves::open::xml::FloatArrayPtr _kEmissive;///< Emmisive component.
+    ves::open::xml::FloatArrayPtr _ambient;///< Ambient component.
+    ves::open::xml::FloatArrayPtr _specular;///< Specular component.
     std::string _materialName;///< Name of this Material node.
     double _shininess;///< Shininess of the material
     std::string _colorMode;///< Color mode of this material

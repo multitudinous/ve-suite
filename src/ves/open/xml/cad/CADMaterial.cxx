@@ -81,26 +81,7 @@ CADMaterial::CADMaterial( std::string name )
 ///////////////////////////
 CADMaterial::~CADMaterial()
 {
-    if( _kDiffuse )
-    {
-        delete _kDiffuse;
-        _kDiffuse = 0;
-    }
-    if( _kEmissive )
-    {
-        delete _kEmissive;
-        _kEmissive = 0;
-    }
-    if( _ambient )
-    {
-        delete _ambient;
-        _ambient = 0;
-    }
-    if( _specular )
-    {
-        delete _specular;
-        _specular = 0;
-    }
+    ;
 }
 ////////////////////////////////////////////////////
 void CADMaterial::SetFace( std::string faceToApplyTo )
@@ -113,7 +94,7 @@ void CADMaterial::SetColorMode( std::string colorMode )
     _colorMode = colorMode;
 }
 //////////////////////////////////////////////////////////////////
-void CADMaterial::SetDiffuseComponent( ves::open::xml::FloatArray* diffuse )
+void CADMaterial::SetDiffuseComponent( ves::open::xml::FloatArrayPtr diffuse )
 {
     _kDiffuse = diffuse;
 }
@@ -152,17 +133,17 @@ void CADMaterial::SetComponent( std::string componentName, double* values )
     SetComponent( componentName, temp );
 }
 ///////////////////////////////////////////////////////
-void CADMaterial::SetEmissiveComponent( ves::open::xml::FloatArray* emissive )
+void CADMaterial::SetEmissiveComponent( ves::open::xml::FloatArrayPtr emissive )
 {
     _kEmissive = emissive;
 }
 /////////////////////////////////////////////////////
-void CADMaterial::SetAmbientComponent( ves::open::xml::FloatArray* ambient )
+void CADMaterial::SetAmbientComponent( ves::open::xml::FloatArrayPtr ambient )
 {
     _ambient = ambient;
 }
 //////////////////////////////////////////////////////
-void CADMaterial::SetSpecularComponent( ves::open::xml::FloatArray* specular )
+void CADMaterial::SetSpecularComponent( ves::open::xml::FloatArrayPtr specular )
 {
     _specular = specular;
 }
@@ -192,22 +173,22 @@ double CADMaterial::GetShininess()
     return _shininess;
 }
 ////////////////////////////////////////////
-ves::open::xml::FloatArray* CADMaterial::GetDiffuse()
+ves::open::xml::FloatArrayPtr CADMaterial::GetDiffuse()
 {
     return _kDiffuse;
 }
 /////////////////////////////////////////////
-ves::open::xml::FloatArray* CADMaterial::GetEmissive()
+ves::open::xml::FloatArrayPtr CADMaterial::GetEmissive()
 {
     return _kEmissive;
 }
 ////////////////////////////////////////////
-ves::open::xml::FloatArray* CADMaterial::GetAmbient()
+ves::open::xml::FloatArrayPtr CADMaterial::GetAmbient()
 {
     return _ambient;
 }
 /////////////////////////////////////////////
-ves::open::xml::FloatArray* CADMaterial::GetSpecular()
+ves::open::xml::FloatArrayPtr CADMaterial::GetSpecular()
 {
     return _specular;
 }
@@ -311,49 +292,48 @@ void CADMaterial::SetObjectFromXMLData( DOMNode* xmlNode )
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        if( currentElement->hasChildNodes() )
-        {
-            // do we need to delete the old one or does xerces handle this???
-            _kDiffuse->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "kDiffuse" ), 0 ) );
-
-            _kEmissive->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "kEmissive" ), 0 ) );
-
-            _ambient->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "kAmbient" ), 0 ) );
-
-            _specular->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "specular" ), 0 ) );
-
-            GetAttribute(
-               GetSubElement( currentElement, std::string( "shininess" ), 0 ),
-               "shininess",
-               _shininess );
-            //this is only needed to check with files that were created before we added opacity but won't be needed by the public
-            //for 1.0 release.
-            if( GetSubElement( currentElement, std::string( "opacity" ), 0 ) )
-            {
-               GetAttribute(
-                  GetSubElement( currentElement, std::string( "opacity" ), 0 ),
-                  "opacity",
-                  _opacity);
-            }
-
-            GetAttribute(
-               GetSubElement( currentElement, std::string( "materialName" ), 0 ),
-               "materialName",
-               _materialName);
-
-            GetAttribute(
-               GetSubElement( currentElement, std::string( "face" ), 0 ),
-               "face",
-               _face);
-
-            GetAttribute(
-               GetSubElement( currentElement, std::string( "colorMode" ), 0 ),
-               "colorMode",
-               _colorMode);
-        }
+        return;
     }
+    
+    if( !currentElement->hasChildNodes() )
+    {
+        return;
+    }
+
+    // do we need to delete the old one or does xerces handle this???
+    _kDiffuse->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "kDiffuse" ), 0 ) );
+
+    _kEmissive->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "kEmissive" ), 0 ) );
+
+    _ambient->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "kAmbient" ), 0 ) );
+
+    _specular->SetObjectFromXMLData( GetSubElement( currentElement, std::string( "specular" ), 0 ) );
+
+    GetDataFromElement(
+       GetSubElement( currentElement, std::string( "shininess" ), 0 ),
+                       _shininess );
+    //this is only needed to check with files that were created before we added opacity but won't be needed by the public
+    //for 1.0 release.
+    if( GetSubElement( currentElement, std::string( "opacity" ), 0 ) )
+    {
+       GetDataFromElement(
+          GetSubElement( currentElement, std::string( "opacity" ), 0 ),
+                          _opacity);
+    }
+
+    GetDataFromElement(
+       GetSubElement( currentElement, std::string( "materialName" ), 0 ),
+                       _materialName);
+
+    GetDataFromElement(
+       GetSubElement( currentElement, std::string( "face" ), 0 ),
+                       _face);
+
+    GetDataFromElement(
+       GetSubElement( currentElement, std::string( "colorMode" ), 0 ),
+                       _colorMode);
 }
 ////////////////////////////////////////////
 void CADMaterial::SetOpacity( double opacity )
@@ -385,26 +365,6 @@ CADMaterial& CADMaterial::operator=( const CADMaterial& rhs )
     if( this != &rhs )
     {
         XMLObject::operator =( rhs );
-        if( _kDiffuse )
-        {
-            delete _kDiffuse;
-            _kDiffuse = 0;
-        }
-        if( _kEmissive )
-        {
-            delete _kEmissive;
-            _kEmissive = 0;
-        }
-        if( _ambient )
-        {
-            delete _ambient;
-            _ambient = 0;
-        }
-        if( _specular )
-        {
-            delete _specular;
-            _specular = 0;
-        }
 
         _kDiffuse = new ves::open::xml::FloatArray( *rhs._kDiffuse );
         _kEmissive = new ves::open::xml::FloatArray( *rhs._kEmissive );

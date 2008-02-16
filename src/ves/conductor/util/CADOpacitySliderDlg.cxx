@@ -51,7 +51,7 @@ END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////
 CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
                                           std::string cadNodeID,
-                                          CADMaterial* material )
+                                          CADMaterialPtr material )
         : wxDialog( parent, id, _( "CADMaterial Opacity" ), wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ), _( "CADMaterial Opacity" ) )
 {

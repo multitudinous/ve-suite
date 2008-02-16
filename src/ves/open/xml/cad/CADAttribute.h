@@ -34,6 +34,8 @@
 #define _CAD_ATTRIBUTE_H_
 
 #include <ves/open/xml/cad/CADAttributePtr.h>
+#include <ves/open/xml/cad/CADMaterialPtr.h>
+#include <ves/open/xml/shader/ProgramPtr.h>
 #include <ves/open/xml/XMLObject.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
@@ -45,19 +47,6 @@
  * This class holds data for describing attributes for a CADNode.
  */
 
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace shader
-{
-class Program;
-}
-}
-}
-}
 
 namespace ves
 {
@@ -67,8 +56,6 @@ namespace xml
 {
 namespace cad
 {
-class CADMaterial;
-
 class VE_CAD_EXPORTS CADAttribute: public ves::open::xml::XMLObject
 {
 public:
@@ -106,10 +93,10 @@ public:
     std::string GetAttributeType();
 
     ///Get the material of this CAD node
-    ves::open::xml::cad::CADMaterial* GetMaterial();
+    ves::open::xml::cad::CADMaterialPtr GetMaterial();
 
     ///Get the GLSL program for this node.
-    ves::open::xml::shader::Program* GetGLSLProgram();
+    ves::open::xml::shader::ProgramPtr GetGLSLProgram();
 
     ///Get the name of a specific attribute.
     std::string GetAttributeName();
@@ -130,8 +117,8 @@ protected:
 
     bool _blending;///<Enable or disable blending;
 
-    ves::open::xml::cad::CADMaterial* _material; ///< Material for this node.
-    ves::open::xml::shader::Program* _glslProgram;///<The glsl program.
+    ves::open::xml::cad::CADMaterialPtr _material; ///< Material for this node.
+    ves::open::xml::shader::ProgramPtr _glslProgram;///<The glsl program.
 };
 
 }

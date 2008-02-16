@@ -68,16 +68,6 @@ CADAttribute::CADAttribute( )
 /////////////////////////////
 CADAttribute::~CADAttribute()
 {
-    if( _material )
-    {
-        delete _material;
-        _material = 0;
-    }
-    if( _glslProgram )
-    {
-        delete _glslProgram;
-        _glslProgram = 0;
-    }
     _attributeType.clear();
 }
 ///////////////////////////////////
@@ -98,22 +88,12 @@ void CADAttribute::SetAttributeType( std::string attributeType )
 /////////////////////////////////////////////////////////////
 void CADAttribute::SetMaterial( ves::open::xml::cad::CADMaterial material )
 {
-    if( _material )
-    {
-        delete _material;
-        _material = 0;
-    }
     _material = new CADMaterial( material );
     _attributeType = std::string( "Material" );
 }
 //////////////////////////////////////////////////////////////
 void CADAttribute::SetProgram( ves::open::xml::shader::Program glslProgram )
 {
-    if( _glslProgram )
-    {
-        delete _glslProgram;
-        _glslProgram = 0;
-    }
     _glslProgram = new Program( glslProgram );
     _attributeType = std::string( "Program" );
 }
@@ -186,12 +166,12 @@ std::string CADAttribute::GetAttributeType()
     return _attributeType;
 }
 ////////////////////////////////////////////////
-ves::open::xml::cad::CADMaterial* CADAttribute::GetMaterial()
+ves::open::xml::cad::CADMaterialPtr CADAttribute::GetMaterial()
 {
     return _material;
 }
 //////////////////////////////////////////////////
-ves::open::xml::shader::Program* CADAttribute::GetGLSLProgram()
+ves::open::xml::shader::ProgramPtr CADAttribute::GetGLSLProgram()
 {
     return _glslProgram;
 }
@@ -221,16 +201,7 @@ CADAttribute& CADAttribute::operator=( const CADAttribute& rhs )
         XMLObject::operator =( rhs );
         _attributeType = rhs._attributeType;
         _blending = rhs._blending;
-        if( _material )
-        {
-            delete _material;
-            _material = 0;
-        }
-        if( _glslProgram )
-        {
-            delete _glslProgram;
-            _glslProgram = 0;
-        }
+
         if( _attributeType == std::string( "Material" ) )
         {
             _material = new CADMaterial( *rhs._material );
@@ -252,16 +223,14 @@ void CADAttribute::_updateVEElement( const std::string& input )
     {
         if( _material )
         {
-            _material->SetOwnerDocument( mRootDocument );
-            SetSubElement( "material", _material );
+            SetSubElement<ves::open::xml::XMLObjectPtr>( "material", _material );
         }
     }
     else if( _attributeType == std::string( "Program" ) )
     {
         if( _glslProgram )
         {
-            _glslProgram->SetOwnerDocument( mRootDocument );
-            SetSubElement( "program", _glslProgram );
+            SetSubElement<ves::open::xml::XMLObjectPtr>( "program", _glslProgram );
         }
     }
 }

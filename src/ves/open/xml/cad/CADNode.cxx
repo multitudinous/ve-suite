@@ -406,7 +406,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
                 if( nameNode )
                 {
-                    XMLObject::GetAttribute( nameNode, "name", m_name );
+                    GetDataFromElement( nameNode, m_name );
                 }
 
                 DOMElement* idNode = GetSubElement( currentElement, std::string( "nodeID" ), 0 );

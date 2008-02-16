@@ -1120,7 +1120,7 @@ void CADNodePropertiesDlg::_showFaceSelectDialog( wxCommandEvent& WXUNUSED( even
         faceModes.Add( _( "Front_and_Back" ) );
         faceModes.Add( _( "Back" ) );
 
-        CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
+        CADMaterialPtr material = _cadNode->GetActiveAttribute().GetMaterial();
         wxSingleChoiceDialog faceSelector( this, _T( "Select Face to apply material" ), _T( "Material Face" ),
                                            faceModes );
 
@@ -1157,7 +1157,7 @@ void CADNodePropertiesDlg::_showOpacityDialog( wxCommandEvent& WXUNUSED( event )
     //We should only arrive in here if the attribute is a CADMaterial!!!!
     if( _cadNode )
     {
-        CADMaterial* material = _cadNode->GetActiveAttribute().GetMaterial();
+        CADMaterialPtr material = _cadNode->GetActiveAttribute().GetMaterial();
         CADOpacitySliderDlg opacityDlg( this, -1, _cadNode->GetID(), _cadNode->GetActiveAttribute().GetMaterial() );
         if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
         {
@@ -1180,7 +1180,7 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog( wxCommandEvent& WXUNUSED(
         colorModes.Add( _( "Off" ) );
 
         CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
-        CADMaterial* material = activeAttribute.GetMaterial();
+        CADMaterialPtr material = activeAttribute.GetMaterial();
 
         wxSingleChoiceDialog colorSelector( this, _T( "Select Color Mode" ), _T( "Material Color Mode" ),
                                             colorModes );
@@ -1221,8 +1221,8 @@ void CADNodePropertiesDlg::_showColorDialog( wxCommandEvent& event )
     if( _cadNode )
     {
         CADAttribute* activeAttribute = &_cadNode->GetActiveAttribute();
-        CADMaterial* material = activeAttribute->GetMaterial();
-        ves::open::xml::FloatArray* activeComponent = 0;
+        CADMaterialPtr material = activeAttribute->GetMaterial();
+        ves::open::xml::FloatArrayPtr activeComponent = 0;
         std::string updateComponent = "";
 
         std::vector<double> currentColor;

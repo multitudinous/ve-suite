@@ -146,6 +146,7 @@ void CADAssembly::_updateChildren()
     nchildrenElement->appendChild( numberOfChildren );
     mVeElement->appendChild( nchildrenElement );*/
 
+    //SetSubElement( "numChildren", mChildren.size() );
     //add the children nodes to the list
     for( unsigned int i = 0; i < mChildren.size();  i++ )
     {
@@ -230,7 +231,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
             if( nodeType )
             {
                 std::string tmpNodeType;
-                XMLObject::GetAttribute( nodeType, "type", tmpNodeType );
+                GetDataFromElement( nodeType, tmpNodeType );
                 if( tmpNodeType == std::string( "Assembly" ) )
                 {
                     //this is an Assembly
