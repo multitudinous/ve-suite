@@ -76,10 +76,6 @@ ConcreteLoader::~ConcreteLoader()
 /////////////////////////////////////////////////////////////////////////////////
 void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragmentSource )
 {
-#ifdef _OSG
-    //std::cout<<"Loading shader!!"<<std::endl;
-    //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
-    //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
     ShaderPtr vertShader = new Shader();
     vertShader->SetShaderType( "Vertex" );
     vertShader->SetShaderSource( vertexSource );
@@ -88,53 +84,52 @@ void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragment
     fragShader->SetShaderType( "Fragment" );
     fragShader->SetShaderSource( fragmentSource );
 
-    Uniform lightPosition;
-    lightPosition.SetType( "Float" );
-    lightPosition.SetName( "LightPos" );
-    lightPosition.SetSize( 3 );
+    UniformPtr lightPosition = new Uniform();
+    lightPosition->SetType( "Float" );
+    lightPosition->SetName( "LightPos" );
+    lightPosition->SetSize( 3 );
     std::vector<float> lightPos;
     lightPos.push_back( 10.0 );
     lightPos.push_back( 10.0 );
     lightPos.push_back( 10.0 );
-    lightPosition.SetValues( lightPos );
+    lightPosition->SetValues( lightPos );
 
-    Uniform scale;
-    scale.SetType( "Float" );
-    scale.SetName( "Scale" );
-    scale.SetSize( 1 );
+    UniformPtr scale = new Uniform();
+    scale->SetType( "Float" );
+    scale->SetName( "Scale" );
+    scale->SetSize( 1 );
     std::vector<float> value;
     value.push_back( 1.0 );
-    scale.SetValues( value );
+    scale->SetValues( value );
 
-    Uniform noiseScale;
-    noiseScale.SetType( "Float" );
-    noiseScale.SetName( "NoiseScale" );
-    noiseScale.SetSize( 1 );
+    UniformPtr noiseScale = new Uniform();
+    noiseScale->SetType( "Float" );
+    noiseScale->SetName( "NoiseScale" );
+    noiseScale->SetSize( 1 );
     std::vector<float> ns;
     ns.push_back( 1.0 );
-    noiseScale.SetValues( ns );
+    noiseScale->SetValues( ns );
 
-    Uniform specularValues;
-    specularValues.SetType( "Float" );
-    specularValues.SetName( "specularPower" );
-    specularValues.SetSize( 1 );
+    UniformPtr specularValues = new Uniform();
+    specularValues->SetType( "Float" );
+    specularValues->SetName( "specularPower" );
+    specularValues->SetSize( 1 );
     std::vector<float> specularPower;
     specularPower.push_back( 20.0 );
-    specularValues.SetValues( specularPower );
+    specularValues->SetValues( specularPower );
 
     fragShader->AddUniform( noiseScale );
     //fragShader->AddUniform(dmaterial);
     vertShader->AddUniform( scale );
     vertShader->AddUniform( lightPosition );
-    Program glslProgram;// = new Program();
-    glslProgram.SetProgramName( "Phong Shader" );
-    glslProgram.SetVertexShader( vertShader );
-    glslProgram.SetFragmentShader( fragShader );
+    ProgramPtr glslProgram = new Program();
+    glslProgram->SetProgramName( "Phong Shader" );
+    glslProgram->SetVertexShader( vertShader );
+    glslProgram->SetFragmentShader( fragShader );
 
-    LoadGLSLProgram( &glslProgram );
+    LoadGLSLProgram( glslProgram );
     m_ss->addUniform( new osg::Uniform( "Noise", 0 ) );
     m_ss->setTextureAttributeAndModes( 0, m_noise->GetNoiseTexture() );
-#endif
 }
 /////////////////////////////////////////
 void ConcreteLoader::SyncShaderAndStateSet()

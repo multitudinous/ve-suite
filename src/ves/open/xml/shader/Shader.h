@@ -79,12 +79,12 @@ public:
 
     ///Add a uniform variable to the shader
     ///\param newUniform The new uniform variable to add to the shader.
-    void AddUniform( Uniform newUniform );
+    void AddUniform( UniformPtr newUniform );
 
     ///Add a texture image to the shader.
     ///\todo This may not be necessary!!!!
     ///\param newTextureImage The texture image to add.
-    void AddTextureImage( TextureImage newTextureImage );
+    void AddTextureImage( TextureImagePtr newTextureImage );
 
     ///The type of shader program. Valid types are "Vertex"
     ///and "Fragment".
@@ -105,7 +105,7 @@ public:
 
     ///Get a texture representing an image file.
     ///\param textureUnit The texture unit to search for.
-    const TextureImage& GetTextureImage( unsigned int textureUnit );
+    const TextureImagePtr GetTextureImage( unsigned int textureUnit );
 
     ///Get the number of uniforms.
     size_t GetNumberOfUniforms();
@@ -115,11 +115,11 @@ public:
 
     ///Get a specific uniform by name.
     ///\param uniformName The uniform name to search for.
-    const Uniform& GetUniform( const std::string& uniformName );
+    const UniformPtr GetUniform( const std::string& uniformName );
 
     ///Get a specific uniform by index.
     ///\param index The uniform to search for.
-    const Uniform& GetUniform( unsigned int index );
+    const UniformPtr GetUniform( unsigned int index );
 
     ///equal operator
     Shader& operator=( const Shader& rhs );
@@ -143,8 +143,8 @@ protected:
     std::string mShaderType;///<The type of shader represented.
     std::string mShaderSource;///<The raw shader source.
 
-    std::map<unsigned int, TextureImage> mTextureImages;///<The list of texture images.
-    std::vector<Uniform> mUniformList;///<The list of uniforms.
+    std::map<unsigned int, TextureImagePtr> mTextureImages;///<The list of texture images.
+    std::vector<UniformPtr> mUniformList;///<The list of uniforms.
 };
 
 }

@@ -66,8 +66,8 @@ int main( int argc, char* argv[] )
         return false;
     }
 
-    ves::open::xml::shader::Program program;
-    program.SetProgramName( "testVEAFile" );
+    ves::open::xml::shader::ProgramPtr program = new ves::open::xml::shader::Program();
+    program->SetProgramName( "testVEAFile" );
     
     ves::open::xml::shader::ShaderPtr vertexShader = new ves::open::xml::shader::Shader();
     vertexShader->SetShaderType( "Vertex" );
@@ -92,7 +92,7 @@ int main( int argc, char* argv[] )
 
     vertexShader->SetShaderSource( vertexSource.str() );
     
-    program.SetVertexShader( vertexShader );
+    program->SetVertexShader( vertexShader );
     
     ves::open::xml::shader::ShaderPtr fragmentShader  = new ves::open::xml::shader::Shader();
     fragmentShader->SetShaderType( "Fragment" );
@@ -132,44 +132,44 @@ int main( int argc, char* argv[] )
     fragmentShader->SetShaderSource( fragmentSource.str() );
 
     {
-        ves::open::xml::shader::Uniform uniformFloat;
-        uniformFloat.SetType( "Float" );
-        uniformFloat.SetSize( 1 );
-        uniformFloat.SetName( "specularPower" );
+        ves::open::xml::shader::UniformPtr uniformFloat = new ves::open::xml::shader::Uniform();
+        uniformFloat->SetType( "Float" );
+        uniformFloat->SetSize( 1 );
+        uniformFloat->SetName( "specularPower" );
         std::vector< float > vals;
         vals.push_back( 10.0 );
-        uniformFloat.SetValues( vals );
+        uniformFloat->SetValues( vals );
         fragmentShader->AddUniform( uniformFloat );
     }
     
     {
-        ves::open::xml::shader::Uniform uniformSampler;
-        uniformSampler.SetType( "Sampler" );
-        uniformSampler.SetSize( 1 );
-        uniformSampler.SetName( "baseMap" );
-        uniformSampler.SetTextureUnit( 0 );
+        ves::open::xml::shader::UniformPtr uniformSampler = new ves::open::xml::shader::Uniform();
+        uniformSampler->SetType( "Sampler" );
+        uniformSampler->SetSize( 1 );
+        uniformSampler->SetName( "baseMap" );
+        uniformSampler->SetTextureUnit( 0 );
         fragmentShader->AddUniform( uniformSampler );
     }
     
     {
-        ves::open::xml::shader::TextureImage textureImage;
-        textureImage.SetTextureImageType( "2D" );
-        textureImage.SetDimension( 1 );
-        textureImage.SetImageFile( "temp.jpg", "FRONT" );
-        textureImage.SetTextureUnit( 0 );
-        textureImage.SetWrapMode( "S", "Repeat" );
-        textureImage.SetWrapMode( "T", "Repeat" );
-        textureImage.SetWrapMode( "R", "Repeat" );
-        textureImage.SetFilterMode( "MIN", "Linear" );
-        textureImage.SetFilterMode( "MAG", "Linear" );
+        ves::open::xml::shader::TextureImagePtr textureImage = new ves::open::xml::shader::TextureImage();
+        textureImage->SetTextureImageType( "2D" );
+        textureImage->SetDimension( 1 );
+        textureImage->SetImageFile( "temp.jpg", "FRONT" );
+        textureImage->SetTextureUnit( 0 );
+        textureImage->SetWrapMode( "S", "Repeat" );
+        textureImage->SetWrapMode( "T", "Repeat" );
+        textureImage->SetWrapMode( "R", "Repeat" );
+        textureImage->SetFilterMode( "MIN", "Linear" );
+        textureImage->SetFilterMode( "MAG", "Linear" );
         fragmentShader->AddTextureImage( textureImage );
     }
 
-    program.SetFragmentShader( fragmentShader );
+    program->SetFragmentShader( fragmentShader );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( 
-        &program, "Program" ) );
+        program, "Program" ) );
     
     ///Initialize VE-Open
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML", new ves::open::xml::XMLCreator() );

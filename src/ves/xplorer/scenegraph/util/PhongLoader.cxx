@@ -79,54 +79,54 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     fragShader->SetShaderType( "Fragment" );
     fragShader->SetShaderSource( fragmentSource );
 
-    Uniform amaterial;
-    amaterial.SetType( "Float" );
-    amaterial.SetName( "ambientMaterial" );
-    amaterial.SetSize( 3 );
+    UniformPtr amaterial = new Uniform();
+    amaterial->SetType( "Float" );
+    amaterial->SetName( "ambientMaterial" );
+    amaterial->SetSize( 3 );
     std::vector<float> ambient;
     ambient.push_back( 0.368627 );
     ambient.push_back( 0.368421 );
     ambient.push_back( 0.368421 );
-    amaterial.SetValues( ambient );
+    amaterial->SetValues( ambient );
 
-    Uniform dmaterial;
-    dmaterial.SetType( "Float" );
-    dmaterial.SetName( "diffuseMaterial" );
-    dmaterial.SetSize( 3 );
+    UniformPtr dmaterial = new Uniform();
+    dmaterial->SetType( "Float" );
+    dmaterial->SetName( "diffuseMaterial" );
+    dmaterial->SetSize( 3 );
     std::vector<float> diffuse;
     diffuse.push_back( 0.886275 );
     diffuse.push_back( 0.885003 );
     diffuse.push_back( 0.885003 );
-    dmaterial.SetValues( diffuse );
+    dmaterial->SetValues( diffuse );
 
-    Uniform smaterial;
-    smaterial.SetType( "Float" );
-    smaterial.SetName( "specularMaterial" );
-    smaterial.SetSize( 3 );
+    UniformPtr smaterial = new Uniform();
+    smaterial->SetType( "Float" );
+    smaterial->SetName( "specularMaterial" );
+    smaterial->SetSize( 3 );
     std::vector<float> specular;
     specular.push_back( 0.490196 );
     specular.push_back( 0.488722 );
     specular.push_back( 0.488722 );
-    smaterial.SetValues( specular );
+    smaterial->SetValues( specular );
 
-    Uniform specularValues;
-    specularValues.SetType( "Float" );
-    specularValues.SetName( "specularPower" );
-    specularValues.SetSize( 1 );
+    UniformPtr specularValues = new Uniform();
+    specularValues->SetType( "Float" );
+    specularValues->SetName( "specularPower" );
+    specularValues->SetSize( 1 );
     std::vector<float> specularPower;
     specularPower.push_back( 20.0 );
-    specularValues.SetValues( specularPower );
+    specularValues->SetValues( specularPower );
 
     fragShader->AddUniform( amaterial );
     fragShader->AddUniform( dmaterial );
     fragShader->AddUniform( smaterial );
     fragShader->AddUniform( specularValues );
-    Program glslProgram;// = new Program();
-    glslProgram.SetProgramName( "Phong Shader" );
-    glslProgram.SetVertexShader( vertShader );
-    glslProgram.SetFragmentShader( fragShader );
+    ProgramPtr glslProgram = new Program();
+    glslProgram->SetProgramName( "Phong Shader" );
+    glslProgram->SetVertexShader( vertShader );
+    glslProgram->SetFragmentShader( fragShader );
 
-    LoadGLSLProgram( &glslProgram );
+    LoadGLSLProgram( glslProgram );
 
     //enable 2 sided lighting fix
     m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );

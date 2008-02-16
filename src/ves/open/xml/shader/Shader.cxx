@@ -111,15 +111,9 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
         GetDataFromElement( sourceNode, mShaderSource );
     }
     //clear out the current list of uniforms
-    if( mUniformList.size() )
-    {
-        mUniformList.clear();
-    }
+    mUniformList.clear();
     //clear out the current list of texture images
-    if( mTextureImages.size() )
-    {
-        mTextureImages.clear();
-    }
+    mTextureImages.clear();
 
     //populate the uniforms
     {
@@ -127,8 +121,8 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
         unsigned int nUniforms = uniformList->getLength();
         for( unsigned int i = 0; i < nUniforms; i++ )
         {
-            Uniform newUniform;
-            newUniform.SetObjectFromXMLData( uniformList->item( i ) );
+            UniformPtr newUniform = new Uniform();
+            newUniform->SetObjectFromXMLData( uniformList->item( i ) );
             mUniformList.push_back( newUniform );
         }
     }
@@ -140,21 +134,21 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
         for( unsigned int i = 0; i < nTextures; i++ )
         {
             std::cout << "Adding texture image." << std::endl;
-            TextureImage newTexture;
-            newTexture.SetObjectFromXMLData( textureList->item( i ) );
+            TextureImagePtr newTexture = new TextureImage();
+            newTexture->SetObjectFromXMLData( textureList->item( i ) );
             AddTextureImage( newTexture );
         }
     }
 }
 ////////////////////////////////////////////
-void Shader::AddUniform( Uniform newUniform )
+void Shader::AddUniform( UniformPtr newUniform )
 {
     mUniformList.push_back( newUniform );
 }
 ///////////////////////////////////////////////////////////
-void Shader::AddTextureImage( TextureImage newTextureImage )
+void Shader::AddTextureImage( TextureImagePtr newTextureImage )
 {
-    mTextureImages.insert( std::pair<unsigned int, TextureImage>( newTextureImage.GetTextureUnit(), newTextureImage ) );
+    mTextureImages.insert( std::pair<unsigned int, TextureImagePtr>( newTextureImage->GetTextureUnit(), newTextureImage ) );
 }
 //////////////////////////////////////////////////
 void Shader::SetShaderType( const std::string& fragOrVert )
@@ -177,7 +171,7 @@ const std::string& Shader::GetShaderType()
     return mShaderType;
 }
 ////////////////////////////////////////////////////////////////
-const TextureImage& Shader::GetTextureImage( unsigned int textureUnit )
+const TextureImagePtr Shader::GetTextureImage( unsigned int textureUnit )
 {
     try
     {
@@ -196,12 +190,12 @@ const TextureImage& Shader::GetTextureImage( unsigned int textureUnit )
     }
 }
 ////////////////////////////////////////////////////
-const Uniform& Shader::GetUniform( const std::string& uniformName )
+const UniformPtr Shader::GetUniform( const std::string& uniformName )
 {
     size_t nUniforms = mUniformList.size();
     for( size_t i = 0; i < nUniforms; i++ )
     {
-        if( mUniformList.at( i ).GetName() == uniformName )
+        if( mUniformList.at( i )->GetName() == uniformName )
         {
             return mUniformList.at( i );
         }
@@ -209,7 +203,7 @@ const Uniform& Shader::GetUniform( const std::string& uniformName )
     //return 0x0000000;
 }
 ////////////////////////////////////////////////
-const Uniform& Shader::GetUniform( unsigned int index )
+const UniformPtr Shader::GetUniform( unsigned int index )
 {
     return mUniformList.at( index );
 }
@@ -226,14 +220,14 @@ void Shader::_updateVEElement( const std::string& input )
 void Shader::_updateTextureImages()
 {
     //add the children nodes to the list
-    std::map<unsigned int, TextureImage>::iterator textures;
+    std::map<unsigned int, TextureImagePtr>::iterator textures;
     //for(size_t i = 0; i < mTextureImages.size(); i++)
     for( textures = mTextureImages.begin();
             textures != mTextureImages.end();
             textures++ )
     {
-        textures->second.SetOwnerDocument( mRootDocument );
-        mVeElement->appendChild( textures->second.GetXMLData( "textureImage" ) );
+        textures->second->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( textures->second->GetXMLData( "textureImage" ) );
     }
 }
 //////////////////////////////
@@ -242,8 +236,8 @@ void Shader::_updateUniforms()
     //add the children nodes to the list
     for( size_t i = 0; i < mUniformList.size(); i++ )
     {
-        mUniformList.at( i ).SetOwnerDocument( mRootDocument );
-        mVeElement->appendChild( mUniformList.at( i ).GetXMLData( "uniform" ) );
+        mUniformList.at( i )->SetOwnerDocument( mRootDocument );
+        mVeElement->appendChild( mUniformList.at( i )->GetXMLData( "uniform" ) );
     }
 }
 ////////////////////////////////
@@ -286,22 +280,14 @@ Shader& Shader::operator=( const Shader& rhs )
     if( this != &rhs )
     {
         XMLObject::operator =( rhs );
-        /*size_t nUniforms = mUniformList.size();
-        for(size_t i = nUniforms -1; i >=0; i--)
-        {
-           delete mUniformList.at(i);
-        }*/
+
         mUniformList.clear();
 
         for( size_t i = 0; i < rhs.mUniformList.size(); i++ )
         {
             mUniformList.push_back( rhs.mUniformList.at( i ) );
         }
-        /*size_t nTextures = mTextureImages.size();
-        for(size_t i = nTextures-1; i >=0; i--)
-        {
-           delete mTextureImages.at(i);
-        }*/
+
         mTextureImages.clear();
 
         //for(size_t i = 0; i < rhs.mTextureImages.size(); i++)
