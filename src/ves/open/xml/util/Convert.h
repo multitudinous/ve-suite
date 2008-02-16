@@ -38,6 +38,7 @@
 
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 
 namespace ves
@@ -65,6 +66,7 @@ public:
    {
       std::stringstream ss;
       ss << std::setprecision( 10 ) << val;
+      std::cout << val << std::endl;
       mXmlUnicodeString = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
                               ss.str().c_str()
                               );

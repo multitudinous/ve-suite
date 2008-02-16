@@ -140,7 +140,7 @@ void User::_updateVEElement( const std::string& input )
     SetAttribute( "veControlStatus", mControlStatus );
     if( mStateInfo )
     {
-        SetSubElement( "stateInfo", mStateInfo );
+        SetSubElement<ves::open::xml::XMLObjectPtr>( "stateInfo", mStateInfo );
     }
 }
 

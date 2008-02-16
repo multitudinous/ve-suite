@@ -114,20 +114,11 @@ Network& Network::operator=( const Network& input )
 void Network::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    for( size_t i = 0; i < mLinks.size(); ++i )
-    {
-        SetSubElement( "link", &( *mLinks.at( i ) ) );
-    }
+    SetSubElements( "link", mLinks );
 
-    for( size_t i = 0; i < mConductorState.size(); ++i )
-    {
-        SetSubElement( "conductorState", &( *mConductorState.at( i ) ) );
-    }
+    SetSubElements( "conductorState", mConductorState );
 
-    for( size_t i = 0; i < mTags.size(); ++i )
-    {
-        SetSubElement( "tag", &( *mTags.at( i ) ) );
-    }
+    SetSubElements( "tag", mTags );
 }
 ////////////////////////////////////////////////////////////////////////////////
 LinkWeakPtr Network::GetLink( int i )

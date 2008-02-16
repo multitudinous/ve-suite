@@ -89,12 +89,8 @@ void System::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", mUuid );
-    SetSubElement( "network", &( *mNetwork ) );
-
-    for( size_t i = 0; i < mModels.size(); ++i )
-    {
-        SetSubElement( "model", &( *mModels.at( i ) ) );
-    }
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "network", mNetwork );
+    SetSubElements( "model", mModels );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void System::AddNetwork( NetworkPtr inputNetwork )

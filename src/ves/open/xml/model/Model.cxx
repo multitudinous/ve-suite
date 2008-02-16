@@ -645,10 +645,7 @@ void Model::RemoveInformationPacket( const std::string& name )
 void Model::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
-    for( size_t i = 0; i < mPorts.size(); ++i )
-    {
-        SetSubElement("ports", mPorts.at( i ) );
-    }
+    SetSubElements("ports", mPorts );
     
     SetSubElement( "iconLocation", mIconLocation );
     SetAttribute( "name", mModelName );
@@ -688,33 +685,23 @@ void Model::_updateVEElement( const std::string& input )
                                    Convert( int2string.str() ).toXMLString() );
     }
 
-    for( size_t i = 0; i < mResults.size(); ++i )
-    {
-        SetSubElement("results", mResults.at( i ) );
-    }
-    for( size_t i = 0; i < mInputs.size(); ++i )
-    {
-        SetSubElement("inputs", mInputs.at( i ) );
-    }
-    
-    for( size_t i = 0; i < mInformationPackets.size(); ++i )
-    {
-        SetSubElement("informationPackets", &( *mInformationPackets.at( i ) ) );
-    }
+    SetSubElements("results", mResults );
+    SetSubElements("inputs", mInputs );
+    SetSubElements("informationPackets", mInformationPackets );
 
     if( mGeometry )
     {
-        SetSubElement( "geometry", &(*mGeometry) );
+        SetSubElement<ves::open::xml::XMLObjectPtr>( "geometry", mGeometry );
     }
-
+    
     if( mModelAttribute )
     {
-        SetSubElement( "modelAttributes", &( *mModelAttribute ) );
+        SetSubElement<ves::open::xml::XMLObjectPtr>( "modelAttributes", mModelAttribute );
     }
-
+    
     if( mSubSystem )
     {
-        SetSubElement( "modelSubSystem", &( *mSubSystem ) );
+        SetSubElement<ves::open::xml::XMLObjectPtr>( "modelSubSystem", mSubSystem );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

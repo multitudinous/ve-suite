@@ -155,7 +155,7 @@ public:
        template<typename U>
        void operator() ( U& object )
        {
-          mObject->SetSubElement( mValue, object );
+          mObject->SetSubElement<ves::open::xml::XMLObjectPtr>( mValue, object );
        }
     private:
        const std::string mValue;
@@ -197,6 +197,7 @@ public:
         {
             xmlTag = "xs:integer";
         }
+
         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* dataValueNumElement =
             mRootDocument->createElement( Convert( subElementTagName ).toXMLString() );
 
@@ -212,7 +213,7 @@ public:
     }
 
     ///This is the special case for any xmlobject
-    template<class T>
+    /*template<class T>
     inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( const std::string& subElementTagName, T* val )
     {
         std::cout << "SetSubElement(T* ) for " << subElementTagName.c_str() <<std::endl;
@@ -220,8 +221,8 @@ public:
         XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
         mVeElement->appendChild( childElement );
         return childElement;
-    }
-
+    }*/
+    
     ///utility functions for creating attribute on mVeElement by default
     ///\param attirbuteName The name of the atrribute to be set
     ///\param attribute The attribute value
@@ -281,6 +282,21 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( cons
     dataValueStringElement->appendChild( dataValueString );
     mVeElement->appendChild( dataValueStringElement );
     return dataValueStringElement;
+}
+///This is the special case for any xmlobject
+template<>
+inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string& subElementTagName, XMLObjectPtr val )
+{
+    if( !val )
+    {
+        return 0;
+    }
+    
+    std::cout << "SetSubElement( XMLObjectPtr ) for " << subElementTagName.c_str() <<std::endl;
+    val->SetOwnerDocument( mRootDocument );
+    XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
+    mVeElement->appendChild( childElement );
+    return childElement;
 }
 ///Another special case for bools
 template<>

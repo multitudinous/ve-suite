@@ -90,10 +90,7 @@ void Tag::_updateVEElement( const std::string& input )
     // write all the elements according to verg_model.xsd
     SetAttribute( "id", mUuid );
     SetSubElement( "tagText", mTagText );
-    for( size_t i = 0; i < mTagPoints.size(); ++i )
-    {
-        SetSubElement( "linkPoints", &( *mTagPoints.at( i ) ) );
-    }
+    SetSubElements( "linkPoints", mTagPoints );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& Tag::GetText( void )

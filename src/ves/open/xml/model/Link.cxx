@@ -122,14 +122,11 @@ void Link::_updateVEElement( const std::string& input )
         SetAttribute( "type", mType );
     }
     SetAttribute( "id", mUuid );
-    SetSubElement( "fromModule", mModuleInfo.first );
-    SetSubElement( "toModule", mModuleInfo.second );
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "fromModule", mModuleInfo.first );
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "toModule", mModuleInfo.second );
     SetSubElement( "fromPort", mPortInfo.first );
     SetSubElement( "toPort", mPortInfo.second );
-    for( size_t i = 0; i < mLinkPoints.size(); ++i )
-    {
-        SetSubElement( "linkPoints", mLinkPoints.at( i ) );
-    }
+    SetSubElements( "linkPoints", mLinkPoints );
 }
 ///////////////////////////////////////////////////
 DataValuePairPtr Link::GetFromModule( void )

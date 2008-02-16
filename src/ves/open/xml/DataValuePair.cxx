@@ -222,7 +222,8 @@ void DataValuePair::_updateVEElement( const std::string& input )
     }
     else if( mDataType == std::string( "XMLOBJECT" ) )
     {
-        DOMElement* genericElement = SetSubElement( "genericObject" , mVeXMLObject );
+        DOMElement* genericElement = 
+            SetSubElement<ves::open::xml::XMLObjectPtr>( "genericObject", mVeXMLObject );
         SetAttribute( "objectType", mVeXMLObject->GetObjectType(), genericElement );
     }
 }

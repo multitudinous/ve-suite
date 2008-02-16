@@ -306,7 +306,7 @@ void TextureImage::SetTextureImageType( const std::string& textureType )
 //////////////////////////////////////////////////////
 void TextureImage::_updateVEElement( const std::string& input )
 {
-    SetSubElement( "textureDescriptionData", &( *mTextureDescription ) );
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "textureDescriptionData", mTextureDescription );
 }
 //////////////////////////////////////////////////////////
 void TextureImage::SetObjectFromXMLData( DOMNode* xmlInput )

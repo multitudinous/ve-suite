@@ -133,12 +133,9 @@ void Port::_updateVEElement( const std::string& input )
     SetSubElement( "number", mPortNumber );
     SetSubElement( "name", mModelName );
     SetSubElement( "dataFlow", mDataFlow );
-    SetSubElement( "portLocation", mPortLocation );
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "portLocation", mPortLocation );
     SetSubElement( "portType", mPortType );
-    for( size_t i = 0; i < mPortData.size(); ++i )
-    {
-        SetSubElement( "portData", mPortData.at( i ) );
-    }
+    SetSubElements( "portData", mPortData );
 }
 ///////////////////////////////////////////////////
 unsigned int Port::GetPortNumber( void )
