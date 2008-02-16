@@ -317,15 +317,17 @@ void TextureImage::SetObjectFromXMLData( DOMNode* xmlInput )
         currentElement = dynamic_cast<DOMElement*>( xmlInput );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //std::cout<<"Getting textureDescriptionData"<<std::endl;
-        DOMElement* descriptionData = GetSubElement( currentElement, std::string( "textureDescriptionData" ), 0 );
-        if( descriptionData )
-        {
-            //std::cout<<"Found textureDescriptionData"<<std::endl;
-            mTextureDescription->SetObjectFromXMLData( descriptionData );
-        }
+        return;
+    }
+
+    //std::cout<<"Getting textureDescriptionData"<<std::endl;
+    DOMElement* descriptionData = GetSubElement( currentElement, std::string( "textureDescriptionData" ), 0 );
+    if( descriptionData )
+    {
+        //std::cout<<"Found textureDescriptionData"<<std::endl;
+        mTextureDescription->SetObjectFromXMLData( descriptionData );
     }
 }
 //////////////////////////////////////////////////////////////

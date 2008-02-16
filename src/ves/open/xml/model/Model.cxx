@@ -240,7 +240,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "name", 0 );
         if( dataValueStringName )
         {
-            GetAttribute( dataValueStringName, "name", mModelName );
+            GetDataFromElement( dataValueStringName, mModelName );
             dataValueStringName = 0;
         }
         else
@@ -255,7 +255,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "ID", 0 );
         if( dataValueStringName )
         {
-            GetAttribute( dataValueStringName, "ID", mUniqueModelID );
+            GetDataFromElement( dataValueStringName,  mUniqueModelID );
         }
         else
         {
@@ -270,7 +270,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "icon", 0 );
         if( dataValueStringName )
         {
-            GetAttribute( dataValueStringName, "icon", mIconFileName );
+            GetDataFromElement( dataValueStringName, mIconFileName );
         }
         else
         {

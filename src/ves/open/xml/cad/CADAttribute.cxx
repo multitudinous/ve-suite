@@ -128,49 +128,50 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode )
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //break down the element
+        return;
+    }
+
+    if( !currentElement->hasChildNodes() )
+    {
+        return;
+    }
+    
+    DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
+    if( typeNode )
+    {
+        GetDataFromElement( typeNode, _attributeType );
+    }
+
+    DOMElement* blendNode = GetSubElement( currentElement, std::string( "blending" ), 0 );
+    if( blendNode )
+    {
+        GetDataFromElement( blendNode, _blending );
+    }
+
+    if( _attributeType == std::string( "Material" ) )
+    {
+        DOMElement* materialNode = GetSubElement( currentElement, std::string( "material" ), 0 );
+        if( materialNode )
         {
-            if( currentElement->hasChildNodes() )
+            if( !_material )
             {
-                DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
-                if( typeNode )
-                {
-                    GetAttribute( typeNode, "type", _attributeType );
-                }
-
-                DOMElement* blendNode = GetSubElement( currentElement, std::string( "blending" ), 0 );
-                if( blendNode )
-                {
-                    GetAttribute( blendNode, "blending", _blending );
-                }
-
-                if( _attributeType == std::string( "Material" ) )
-                {
-                    DOMElement* materialNode = GetSubElement( currentElement, std::string( "material" ), 0 );
-                    if( materialNode )
-                    {
-                        if( !_material )
-                        {
-                            _material = new CADMaterial();
-                        }
-                        _material->SetObjectFromXMLData( materialNode );
-                    }
-                }
-                else if( _attributeType == std::string( "Program" ) )
-                {
-                    DOMElement* programNode = GetSubElement( currentElement, std::string( "program" ), 0 );
-                    if( programNode )
-                    {
-                        if( !_glslProgram )
-                        {
-                            _glslProgram = new Program();
-                        }
-                        _glslProgram->SetObjectFromXMLData( programNode );
-                    }
-                }
+                _material = new CADMaterial();
             }
+            _material->SetObjectFromXMLData( materialNode );
+        }
+    }
+    else if( _attributeType == std::string( "Program" ) )
+    {
+        DOMElement* programNode = GetSubElement( currentElement, std::string( "program" ), 0 );
+        if( programNode )
+        {
+            if( !_glslProgram )
+            {
+                _glslProgram = new Program();
+            }
+            _glslProgram->SetObjectFromXMLData( programNode );
         }
     }
 }

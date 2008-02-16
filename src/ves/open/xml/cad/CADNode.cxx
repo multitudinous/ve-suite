@@ -413,28 +413,27 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( idNode )
                 {
                     unsigned int tmp_id = 0;
-                    XMLObject::GetAttribute( idNode, "nodeID", tmp_id );
+                    GetDataFromElement( idNode, tmp_id );
                     ves::open::xml::XMLObject::SetID( tmp_id );
                 }
                 else
                 {
                     XMLObject::GetAttribute( currentElement, "id", mUuid );
                 }
+                
                 DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
                 if( typeNode )
                 {
-                    XMLObject::GetAttribute( typeNode, "type", m_type );
+                    GetDataFromElement( typeNode, m_type );
                 }
+                
                 DOMElement* parentNode = GetSubElement( currentElement, std::string( "parent" ), 0 );
                 if( parentNode )
                 {
-                    XMLObject::GetAttribute( typeNode, "parent", m_parent );
+                    GetDataFromElement( typeNode, m_parent );
                 }
-                size_t nOldAttributes = m_attributeList.size();
-                if( nOldAttributes > 0 )
-                {
-                    m_attributeList.clear();
-                }
+                
+                m_attributeList.clear();
                 DOMNodeList* attributeNodes = currentElement->getElementsByTagName( Convert( "attribute" ).toXMLString() );
                 XMLSize_t nNewAttributes = attributeNodes->getLength();
                 for( XMLSize_t  i = 0; i < nNewAttributes ; i++ )
@@ -470,7 +469,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
                 DOMElement* activeAttribNode = GetSubElement( currentElement, std::string( "activeAttributeName" ), 0 );
                 if( activeAttribNode )
                 {
-                    XMLObject::GetAttribute( activeAttribNode, "activeAttributeName", m_activeAttributeName);
+                    GetDataFromElement( activeAttribNode, m_activeAttributeName);
                     SetActiveAttribute( m_activeAttributeName );
                 }
 

@@ -202,7 +202,7 @@ void Link::SetObjectFromXMLData( DOMNode* element )
             dataValueStringName = GetSubElement( currentElement, "name", 0 );
             if( dataValueStringName )
             {
-                GetAttribute( dataValueStringName, "name", mLinkName );
+                GetDataFromElement( dataValueStringName,  mLinkName );
                 dataValueStringName = 0;
             }
             else
@@ -233,10 +233,10 @@ void Link::SetObjectFromXMLData( DOMNode* element )
         }
 
         dataValueStringName = GetSubElement( currentElement, "fromPort", 0 );
-        GetAttribute( dataValueStringName, "fromPort", mPortInfo.first );
+        GetDataFromElement( dataValueStringName, mPortInfo.first );
 
         dataValueStringName = GetSubElement( currentElement, "toPort", 0 );
-        GetAttribute( dataValueStringName, "toPort", mPortInfo.second );
+        GetDataFromElement( dataValueStringName, mPortInfo.second );
 
         // for link points
         {

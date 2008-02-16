@@ -103,7 +103,7 @@ void CADPart::SetObjectFromXMLData( DOMNode* xmlNode )
             if( currentElement->hasChildNodes() )
             {
                 DOMElement* fileNameElement = GetSubElement( currentElement, std::string( "fileName" ), 0 );
-                XMLObject::GetAttribute( fileNameElement, "fileName", m_cadFileName );
+                GetDataFromElement( fileNameElement, m_cadFileName );
             }
         }
     }

@@ -133,7 +133,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     //get variables by tags
     DOMElement* dataValueStringName = 0;
     dataValueStringName = GetSubElement( currentElement, "tagText", 0 );
-    GetAttribute( dataValueStringName, "tagText", mTagText );
+    GetDataFromElement( dataValueStringName, mTagText );
     // for Tag points
     unsigned int numberOfPoints =
         currentElement->getElementsByTagName(

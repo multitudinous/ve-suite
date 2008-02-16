@@ -88,61 +88,61 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
         currentElement = dynamic_cast<DOMElement*>( xmlInput );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //break down the element
+        return;
+    }
+
+    if( !currentElement->hasChildNodes() )
+    {
+        return;
+    }
+    //Get the type of shader
+    DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
+    if( typeNode )
+    {
+        GetDataFromElement( typeNode, mShaderType );
+    }
+
+    //Get the source
+    DOMElement* sourceNode = GetSubElement( currentElement, std::string( "shaderCode" ), 0 );
+    if( sourceNode )
+    {
+        GetDataFromElement( sourceNode, mShaderSource );
+    }
+    //clear out the current list of uniforms
+    if( mUniformList.size() )
+    {
+        mUniformList.clear();
+    }
+    //clear out the current list of texture images
+    if( mTextureImages.size() )
+    {
+        mTextureImages.clear();
+    }
+
+    //populate the uniforms
+    {
+        DOMNodeList* uniformList = currentElement->getElementsByTagName( Convert( "uniform" ).toXMLString() );
+        unsigned int nUniforms = uniformList->getLength();
+        for( unsigned int i = 0; i < nUniforms; i++ )
         {
-            if( currentElement->hasChildNodes() )
-            {
-                //Get the type of shader
-                DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
-                if( typeNode )
-                {
-                    GetAttribute( typeNode, "type", mShaderType );
-                }
-
-                //Get the source
-                DOMElement* sourceNode = GetSubElement( currentElement, std::string( "shaderCode" ), 0 );
-                if( sourceNode )
-                {
-                    GetAttribute( sourceNode, "type", mShaderSource );
-                }
-                //clear out the current list of uniforms
-                if( mUniformList.size() )
-                {
-                    mUniformList.clear();
-                }
-                //clear out the current list of texture images
-                if( mTextureImages.size() )
-                {
-                    mTextureImages.clear();
-                }
-
-                //populate the uniforms
-                {
-                    DOMNodeList* uniformList = currentElement->getElementsByTagName( Convert( "uniform" ).toXMLString() );
-                    unsigned int nUniforms = uniformList->getLength();
-                    for( unsigned int i = 0; i < nUniforms; i++ )
-                    {
-                        Uniform newUniform;
-                        newUniform.SetObjectFromXMLData( uniformList->item( i ) );
-                        mUniformList.push_back( newUniform );
-                    }
-                }
-                //populate the texture images
-                {
-                    DOMNodeList* textureList = currentElement->getElementsByTagName( Convert( "textureImage" ).toXMLString() );
-                    unsigned int nTextures = textureList->getLength();
-                    //std::cout<<"Texture Images in shader: "<<nTextures<<std::endl;
-                    for( unsigned int i = 0; i < nTextures; i++ )
-                    {
-                        std::cout << "Adding texture image." << std::endl;
-                        TextureImage newTexture;
-                        newTexture.SetObjectFromXMLData( textureList->item( i ) );
-                        AddTextureImage( newTexture );
-                    }
-                }
-            }
+            Uniform newUniform;
+            newUniform.SetObjectFromXMLData( uniformList->item( i ) );
+            mUniformList.push_back( newUniform );
+        }
+    }
+    //populate the texture images
+    {
+        DOMNodeList* textureList = currentElement->getElementsByTagName( Convert( "textureImage" ).toXMLString() );
+        unsigned int nTextures = textureList->getLength();
+        //std::cout<<"Texture Images in shader: "<<nTextures<<std::endl;
+        for( unsigned int i = 0; i < nTextures; i++ )
+        {
+            std::cout << "Adding texture image." << std::endl;
+            TextureImage newTexture;
+            newTexture.SetObjectFromXMLData( textureList->item( i ) );
+            AddTextureImage( newTexture );
         }
     }
 }

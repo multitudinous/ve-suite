@@ -243,55 +243,55 @@ void Uniform::SetObjectFromXMLData( DOMNode* xmlNode )
         currentElement = dynamic_cast<DOMElement*>( xmlNode );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //break down the element
+        return;
+    }
+
+    if( !currentElement->hasChildNodes() )
+    {
+        return;
+    }
+    //Get the name of the uniform
+    DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
+    if( nameNode )
+    {
+        GetDataFromElement( nameNode, mName );
+    }
+    //get the type
+    DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
+    if( typeNode )
+    {
+        GetDataFromElement( typeNode, mType );
+        //if it is a texture get the texture unit
+        if( mType == std::string( "Sampler" ) )
         {
-            if( currentElement->hasChildNodes() )
+            DOMElement* tUnitNode = GetSubElement( currentElement, std::string( "textureUnit" ), 0 );
+            if( tUnitNode )
             {
-                //Get the name of the uniform
-                DOMElement* nameNode = GetSubElement( currentElement, std::string( "name" ), 0 );
-                if( nameNode )
-                {
-                    GetAttribute( nameNode, "name", mName );
-                }
-                //get the type
-                DOMElement* typeNode = GetSubElement( currentElement, std::string( "type" ), 0 );
-                if( typeNode )
-                {
-                    GetAttribute( typeNode, "type", mType );
-                    //if it is a texture get the texture unit
-                    if( mType == std::string( "Sampler" ) )
-                    {
-                        DOMElement* tUnitNode = GetSubElement( currentElement, std::string( "textureUnit" ), 0 );
-                        if( tUnitNode )
-                        {
-                            GetAttribute( tUnitNode, "textureUnit", mTextureUnit );
-                        }
-                    }
-                }
-                //Get the size of this uniform
-                DOMElement* lengthNode = GetSubElement( currentElement, std::string( "size" ), 0 );
-                if( lengthNode )
-                {
-                     GetAttribute( lengthNode, "size", mVariableSize );
-                }
-                //get the values for this uniform
-                if( mType != std::string( "Sampler" ) )
-                {
-                    DOMElement* uniformValue = 0;
-                    mValues.clear();
-                    for( unsigned int i = 0; i < mVariableSize; i++ )
-                    {
-                        uniformValue = GetSubElement( currentElement, std::string( "value" ), i );
-                        if( uniformValue )
-                        {
-                            double tmp_float;
-                            GetAttribute( uniformValue, "value", tmp_float);
-                            mValues.push_back( static_cast<float>( tmp_float ) );
-                        }
-                    }
-                }
+                GetDataFromElement( tUnitNode, mTextureUnit );
+            }
+        }
+    }
+    //Get the size of this uniform
+    DOMElement* lengthNode = GetSubElement( currentElement, std::string( "size" ), 0 );
+    if( lengthNode )
+    {
+         GetDataFromElement( lengthNode, mVariableSize );
+    }
+    //get the values for this uniform
+    if( mType != std::string( "Sampler" ) )
+    {
+        DOMElement* uniformValue = 0;
+        mValues.clear();
+        for( unsigned int i = 0; i < mVariableSize; i++ )
+        {
+            uniformValue = GetSubElement( currentElement, std::string( "value" ), i );
+            if( uniformValue )
+            {
+                double tmp_float;
+                GetDataFromElement( uniformValue, tmp_float);
+                mValues.push_back( static_cast<float>( tmp_float ) );
             }
         }
     }

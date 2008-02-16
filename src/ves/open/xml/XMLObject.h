@@ -156,6 +156,7 @@ public:
                 delete fUnicodeForm;
             }
             iss >> dataVal;
+            std::cout << dataVal << std::endl;
         }
         catch ( ... )
         {

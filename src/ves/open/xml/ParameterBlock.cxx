@@ -135,11 +135,11 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
 
         //Get the block id
         dataValueStringName = GetSubElement( currentElement, "blockID", 0 );
-        GetAttribute( dataValueStringName, "blockID", mId );
+        GetDataFromElement( dataValueStringName, mId );
 
         //Get the block name
         dataValueStringName = GetSubElement( currentElement, "blockName", 0 );
-        GetAttribute( dataValueStringName, "blockName", mParamName );
+        GetDataFromElement( dataValueStringName, mParamName );
 
         //Get the properties
         mProperties.clear();

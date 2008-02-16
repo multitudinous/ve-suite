@@ -176,42 +176,44 @@ void Port::SetObjectFromXMLData( DOMNode* element )
         currentElement = dynamic_cast< DOMElement* >( element );
     }
 
-    if( currentElement )
+    if( !currentElement )
     {
-        //get variables by tags
-        DOMElement* dataValueStringName = 0;
-        // for port number
-        {
-            dataValueStringName = GetSubElement( currentElement, "number", 0 );
-            GetAttribute( dataValueStringName, "number", mPortNumber );
-        }
-        // for model name
-        {
-            dataValueStringName = GetSubElement( currentElement, "name", 0 );
-            GetAttribute( dataValueStringName, "name", mModelName );
-        }
-        // for data flow
-        {
-            dataValueStringName = GetSubElement( currentElement, "dataFlow", 0 );
-            GetAttribute( dataValueStringName, "dataFlow", mDataFlow );
-        }
-        // for port location
-        {
-            dataValueStringName = GetSubElement( currentElement, "portLocation", 0 );
-            mPortLocation = new Point();
-            mPortLocation->SetObjectFromXMLData( dataValueStringName );
-        }
-        // for port data
-        {
-            unsigned int numberOfmPortData = currentElement->getElementsByTagName(               
-                Convert( "portData" ).toXMLString() )->getLength();
+        return;
+    }
+    
+    //get variables by tags
+    DOMElement* dataValueStringName = 0;
+    // for port number
+    {
+        dataValueStringName = GetSubElement( currentElement, "number", 0 );
+        GetDataFromElement( dataValueStringName, mPortNumber );
+    }
+    // for model name
+    {
+        dataValueStringName = GetSubElement( currentElement, "name", 0 );
+        GetDataFromElement( dataValueStringName, mModelName );
+    }
+    // for data flow
+    {
+        dataValueStringName = GetSubElement( currentElement, "dataFlow", 0 );
+        GetDataFromElement( dataValueStringName, mDataFlow );
+    }
+    // for port location
+    {
+        dataValueStringName = GetSubElement( currentElement, "portLocation", 0 );
+        mPortLocation = new Point();
+        mPortLocation->SetObjectFromXMLData( dataValueStringName );
+    }
+    // for port data
+    {
+        unsigned int numberOfmPortData = currentElement->getElementsByTagName(               
+            Convert( "portData" ).toXMLString() )->getLength();
 
-            for( unsigned int i = 0; i < numberOfmPortData; ++i )
-            {
-                dataValueStringName = GetSubElement( currentElement, "portData", i );
-                mPortData.push_back( new DataValuePair( ) );
-                mPortData.back()->SetObjectFromXMLData( dataValueStringName );
-            }
+        for( unsigned int i = 0; i < numberOfmPortData; ++i )
+        {
+            dataValueStringName = GetSubElement( currentElement, "portData", i );
+            mPortData.push_back( new DataValuePair( ) );
+            mPortData.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
 }
