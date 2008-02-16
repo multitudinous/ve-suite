@@ -171,7 +171,7 @@ public:
 
     ///Set the VE_Model to be used by this plugin
     ///\param tempModel Pointer to VE_Model
-    void SetXMLModel( ves::open::xml::model::ModelPtr tempModel );
+    void SetXMLModel( ves::open::xml::model::ModelPtr& tempModel );
 
     ///Set current command whatever it is
     ///\param command Current command from conductor

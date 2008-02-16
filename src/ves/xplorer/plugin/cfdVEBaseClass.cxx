@@ -300,7 +300,7 @@ Model* cfdVEBaseClass::GetCFDModel()
     return m_model;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelPtr tempModel )
+void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
 {
     m_xmlModel = tempModel;
 

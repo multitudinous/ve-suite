@@ -133,8 +133,9 @@ CommandWeakPtr StateInfo::GetState( size_t index )
 ////////////////////////////////////////////////////////////////////////////////
 std::vector< CommandWeakPtr > StateInfo::GetStateVector( void )
 {
-    std::vector< CommandWeakPtr > tempVec( mStateInfo.size() );
-    std::copy( mStateInfo.begin(), mStateInfo.end(), tempVec.begin() );
+    std::vector< CommandWeakPtr > tempVec;
+    std::copy( mStateInfo.begin(), mStateInfo.end(), 
+              std::back_inserter( tempVec ) );
     return tempVec;
 }
 /////////////////////////////////////////////////////

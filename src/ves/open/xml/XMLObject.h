@@ -118,7 +118,7 @@ public:
     inline void GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
                               const std::string& attributeName, T& attribute )
     {
-        std::cout << "GetAttribute(" << attributeName << ")" << std::endl;
+        //std::cout << "GetAttribute(" << attributeName << ")" << std::endl;
         try
         {
             char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode( baseElement->getAttribute( Convert(attributeName).toXMLString() ) );
@@ -130,7 +130,7 @@ public:
 
             std::stringstream float2string( fUnicodeForm );
             float2string >> attribute;
-            std::cout << "    attr: " << float2string.str().c_str() << std::endl;
+            //std::cout << "    attr: " << float2string.str().c_str() << std::endl;
             delete fUnicodeForm;
         }
         catch ( ... )
@@ -156,7 +156,7 @@ public:
                 delete fUnicodeForm;
             }
             iss >> dataVal;
-            std::cout << dataVal << std::endl;
+            //std::cout << dataVal << std::endl;
         }
         catch ( ... )
         {
@@ -204,7 +204,7 @@ public:
     template<class T>
     inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* SetSubElement( const std::string& subElementTagName, T val )
     {
-        std::cout << "SetSubElement(T val) for " << subElementTagName.c_str() <<std::endl;
+        //std::cout << "SetSubElement(T val) for " << subElementTagName.c_str() <<std::endl;
         std::string xmlTag( "xs:undefined" );
         if( typeid( double ) == typeid( val ) )
         {
@@ -293,7 +293,7 @@ private:
 template<>
 inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( const std::string& subElementTagName, bool val )
 {
-    std::cout << "SetSubElement(bool) for " << subElementTagName.c_str() <<std::endl;
+    //std::cout << "SetSubElement(bool) for " << subElementTagName.c_str() <<std::endl;
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* dataValueStringElement = mRootDocument->createElement( Convert( subElementTagName ).toXMLString() );
     dataValueStringElement->setAttribute( Convert( "type" ).toXMLString(),
                                           Convert( "xs:boolean" ).toXMLString() );
@@ -317,7 +317,7 @@ inline XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* XMLObject::SetSubElement( cons
         return 0;
     }
     
-    std::cout << "SetSubElement( XMLObjectPtr ) for " << subElementTagName.c_str() <<std::endl;
+    //std::cout << "SetSubElement( XMLObjectPtr ) for " << subElementTagName.c_str() <<std::endl;
     val->SetOwnerDocument( mRootDocument );
     XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* childElement = val->GetXMLData( subElementTagName );
     mVeElement->appendChild( childElement );
@@ -347,7 +347,7 @@ template<>
 inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
                                      const std::string& attributeName, bool& attribute )
 {
-    std::cout << "GetAttribute(" << attributeName << ") bool" << std::endl;
+    //std::cout << "GetAttribute(" << attributeName << ") bool" << std::endl;
     try
     {
         char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
@@ -367,7 +367,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
         {
             attribute = false;
         }
-        std::cout << "   attr: " << value.c_str() << std::endl;
+        //std::cout << "   attr: " << value.c_str() << std::endl;
     }
     catch( ... )
     {
@@ -380,7 +380,7 @@ template<>
 inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement,
                                      const std::string& attributeName, std::string& attribute )
 {
-    std::cout << "GetAttribute(" << attributeName << ") string" << std::endl;
+    //std::cout << "GetAttribute(" << attributeName << ") string" << std::endl;
     try
     {
         char* fUnicodeForm = XERCES_CPP_NAMESPACE_QUALIFIER XMLString::transcode(
@@ -393,7 +393,7 @@ inline void XMLObject::GetAttribute( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* 
         std::stringstream float2string( fUnicodeForm );
         float2string.str( fUnicodeForm );
         attribute = float2string.str();
-        std::cout << "   attr: " << attribute.c_str() << std::endl;
+        //std::cout << "   attr: " << attribute.c_str() << std::endl;
         delete fUnicodeForm;
     }
     catch( ... )

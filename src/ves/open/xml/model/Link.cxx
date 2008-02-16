@@ -71,7 +71,7 @@ Link::Link( const Link& input )
 
     std::copy( input.mLinkPoints.begin(),
                input.mLinkPoints.end(),
-               mLinkPoints.begin() );
+               std::back_inserter( mLinkPoints ) );
 
     mModuleInfo.first =  input.mModuleInfo.first;
     mModuleInfo.second =  input.mModuleInfo.second;
@@ -92,7 +92,7 @@ Link& Link::operator=( const Link& input )
 
         std::copy( input.mLinkPoints.begin(),
                    input.mLinkPoints.end(),
-                   mLinkPoints.begin() );
+                   std::back_inserter( mLinkPoints ) );
 
         mModuleInfo.first = input.mModuleInfo.first;
         mModuleInfo.second = input.mModuleInfo.second ;

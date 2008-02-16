@@ -151,7 +151,7 @@ void CADEventHandler::_setAttributesOnNode( CADNodePtr activeNode )
     for( size_t i = 0;  i < nAttributes; i++ )
     {
         //This should change once the xml/cad stuff is committed
-        CADAttributePtr currentAttribute = &activeNode->GetAttribute( i );
+        CADAttributePtr currentAttribute = activeNode->GetAttribute( i );
         //  std::cout<<"Adding attribute: "<<currentAttribute.GetAttributeName()<<std::endl;
         m_cadHandler->AddAttributeToNode( activeNode->GetID(), currentAttribute );
     }
@@ -159,7 +159,7 @@ void CADEventHandler::_setAttributesOnNode( CADNodePtr activeNode )
     {
         m_cadHandler->SetActiveAttributeOnNode( activeNode->GetID(),
                                                 activeNode->GetNodeType(),
-                                                activeNode->GetActiveAttribute().GetAttributeName() );
+                                                activeNode->GetActiveAttribute()->GetAttributeName() );
     }
 
 
@@ -245,27 +245,36 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     if( activeNode->GetNodeType() == "Assembly" )
     {
         CADAssemblyPtr newAssembly = activeNode;
-        //std::cout<<"---Assembly---"<<std::endl;
-        //std::cout<<"   ---"<<newAssembly->GetID()<<"---"<<std::endl;
-        //std::cout<<"   ---"<<newAssembly->GetNodeName()<<"---"<<std::endl;
-        //std::cout<<"   --- ("<<newAssembly->GetNumberOfChildren()<<") child nodes---"<<std::endl;
+        vprDEBUG( vesDBG, 2 ) <<"|---Assembly---"<<std::endl<< vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 )<<"|\t---"<<newAssembly->GetID()<<"---"
+            <<std::endl<< vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 )<<"|\t---"<<newAssembly->GetNodeName()
+            <<"---"<<std::endl<< vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 )<<"|\t--- ("<<newAssembly->GetNumberOfChildren()
+            <<") child nodes---"<<std::endl<< vprDEBUG_FLUSH;
 
         m_cadHandler->CreateAssembly( newAssembly->GetID() );
-        m_cadHandler->GetAssembly( newAssembly->GetID() )->SetName( newAssembly->GetNodeName() );
+        m_cadHandler->GetAssembly( newAssembly->GetID() )->
+            SetName( newAssembly->GetNodeName() );
 
-        //std::cout<<"   ---Setting node properties---"<<std::endl;
+        vprDEBUG( vesDBG, 2 )<<"|\t---Setting node properties---"
+            <<std::endl<< vprDEBUG_FLUSH;
 
         _setTransformOnNode( newAssembly );
-        //std::cout<<"      ---Set transform---"<<std::endl;
+        vprDEBUG( vesDBG, 2 )<<"|\t---Set transform---"
+            <<std::endl<< vprDEBUG_FLUSH;
 
         _setAttributesOnNode( newAssembly );
-        //std::cout<<"      ---Set Attributes---"<<std::endl;
+        vprDEBUG( vesDBG, 2 )<<"|\t---Set Attributes---"
+            <<std::endl<< vprDEBUG_FLUSH;
         parentAssembly->AddChild( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
 
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
         for( unsigned int i = 0; i < nChildren; i++ )
         {
-            //std::cout<<"      Adding child: "<<newAssembly->GetChild(i)->GetNodeName()<<std::endl;
+            vprDEBUG( vesDBG, 2 )<<"|\tAdding child: "
+                <<newAssembly->GetChild(i)->GetNodeName()
+                <<std::endl<< vprDEBUG_FLUSH;
             _addNodeToNode( newAssembly->GetID(), newAssembly->GetChild( i ) );
         }
         m_cadHandler->GetAssembly( newAssembly->GetID() )->ToggleDisplay( newAssembly->GetVisibility() );
@@ -277,14 +286,14 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     {
         CADPartPtr newPart = activeNode;
         vprDEBUG( vesDBG, 1 ) << "|\t---Part---"
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t---" << newPart->GetID()
-        << "---" << std::endl << vprDEBUG_FLUSH;
+            << "---" << std::endl << vprDEBUG_FLUSH;
         std::string tempFilename = newPart->GetCADFileName();
         boost::filesystem::path correctedPath( newPart->GetCADFileName(), boost::filesystem::no_check );
         vprDEBUG( vesDBG, 1 ) << "|\t---" << tempFilename << "---"
-        << correctedPath.native_file_string()
-        << std::endl << vprDEBUG_FLUSH;
+            << correctedPath.native_file_string()
+            << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->CreatePart( correctedPath.native_file_string(),
                                   newPart->GetID(),
                                   parentID );

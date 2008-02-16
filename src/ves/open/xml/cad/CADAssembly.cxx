@@ -61,13 +61,6 @@ void CADAssembly::AddChild( ves::open::xml::cad::CADNodePtr node )
     mChildren.push_back( node );
     mChildren.back()->SetParent( mUuid );
 }
-/////////////////////////////////////////////////
-/*void CADAssembly::AddChild(VE_XML::VE_CAD::CADNode node)
-{
-   mChildren.push_back(node);
-   mChildren.back().SetParent(_uID);
-   mChildren.size() = static_cast< unsigned int >(mChildren.size());
-}*/
 //////////////////////////////////////////////////////////////////////
 void CADAssembly::SetAssociatedDataset( std::string parameterBlockmUuid )
 {

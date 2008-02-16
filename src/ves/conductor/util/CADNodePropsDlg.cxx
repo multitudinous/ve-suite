@@ -561,7 +561,7 @@ void CADNodePropertiesDlg::_addAnimation( wxCommandEvent& event )
                     ves::open::xml::DataValuePairPtr addAnimation = new ves::open::xml::DataValuePair();
                     addAnimation->SetDataType( "XMLOBJECT" );
                     addAnimation->SetData( "Animation Info",
-                                           &_cadNode->GetAnimation( ConvertUnicode( animationNameDlg.GetValue().GetData() ) ) );
+                                           _cadNode->GetAnimation( ConvertUnicode( animationNameDlg.GetValue().GetData() ) ) );
                     _instructions.push_back( addAnimation );
 
                     _sendCommandsToXplorer();
@@ -605,7 +605,7 @@ void CADNodePropertiesDlg::_updateAvailableAnimations()
 
         for( size_t i = 0; i < nAnimations; i++ )
         {
-            _animationFiles.Add( wxString( _cadNode->GetAnimation( i ).GetAnimationName().c_str(), wxConvUTF8 ) );
+            _animationFiles.Add( wxString( _cadNode->GetAnimation( i )->GetAnimationName().c_str(), wxConvUTF8 ) );
         }
 
     }
@@ -635,21 +635,21 @@ void CADNodePropertiesDlg::_updateAvailableAttributes()
         _nShaders = 0;
         _nMaterials = 0;
 
-        std::vector<CADAttribute> attributes = _cadNode->GetAttributeList();
-        size_t nAttributes = _cadNode->GetAttributeList().size();
+        std::vector<CADAttributePtr> attributes = _cadNode->GetAttributeList();
+        size_t nAttributes = attributes.size();
         std::string attributeType;
         for( size_t i = 0; i < nAttributes; i++ )
         {
-            attributeType = attributes.at( i ).GetAttributeType();
+            attributeType = attributes.at( i )->GetAttributeType();
             if( attributeType == std::string( "Material" ) )
             {
                 _nMaterials++;
-                _availableMaterials.Add( wxString( attributes.at( i ).GetAttributeName().c_str(), wxConvUTF8 ) );
+                _availableMaterials.Add( wxString( attributes.at( i )->GetAttributeName().c_str(), wxConvUTF8 ) );
             }
             else if( attributeType == std::string( "Program" ) )
             {
                 _nShaders++;
-                _availableShaders.Add( wxString( attributes.at( i ).GetAttributeName().c_str(), wxConvUTF8 ) );
+                _availableShaders.Add( wxString( attributes.at( i )->GetAttributeName().c_str(), wxConvUTF8 ) );
             }
         }
 
@@ -712,7 +712,7 @@ void CADNodePropertiesDlg::_setActiveAttribute( wxListEvent& event )
 
         ves::open::xml::DataValuePairPtr activeAttribute = new ves::open::xml::DataValuePair();
         activeAttribute->SetDataType( "STRING" );
-        activeAttribute->SetData( "Active Attribute", _cadNode->GetActiveAttribute().GetAttributeName() );
+        activeAttribute->SetData( "Active Attribute", _cadNode->GetActiveAttribute()->GetAttributeName() );
         _instructions.push_back( activeAttribute );
 
         ves::open::xml::DataValuePairPtr nodeType = new ves::open::xml::DataValuePair();
@@ -761,7 +761,7 @@ void CADNodePropertiesDlg::_removeAttribute( wxCommandEvent& event )
     {
         ClearInstructions();
         _commandName = "CAD_REMOVE_ATTRIBUTE";
-        std::string attributeName = _cadNode->GetActiveAttribute().GetAttributeName();
+        std::string attributeName = _cadNode->GetActiveAttribute()->GetAttributeName();
         _cadNode->RemoveAttribute( attributeName );
         _updateAvailableAttributes();
 
@@ -795,8 +795,8 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
             std::stringstream nMaterials;
             nMaterials << _nMaterials;
 
-            ves::open::xml::cad::CADAttribute newAttribute;
-            newAttribute.SetAttributeType( "Material" );
+            ves::open::xml::cad::CADAttributePtr newAttribute = new CADAttribute();
+            newAttribute->SetAttributeType( "Material" );
 
             ves::open::xml::cad::CADMaterial newMaterial;
 
@@ -815,7 +815,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
             }
 
             newMaterial.SetMaterialName( ConvertUnicode( materialNameDlg.GetValue().GetData() ) );
-            newAttribute.SetMaterial( newMaterial );
+            newAttribute->SetMaterial( newMaterial );
             _cadNode->AddAttribute( newAttribute );
             _updateAvailableAttributes();
             //_attributeSelection->SetSelection(_nMaterials-1);
@@ -829,7 +829,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
 
             ves::open::xml::DataValuePairPtr addAttribute = new ves::open::xml::DataValuePair();
             addAttribute->SetDataType( "XMLOBJECT" );
-            addAttribute->SetData( "Attribute", &_cadNode->GetAttribute( newAttribute.GetAttributeName() ) );
+            addAttribute->SetData( "Attribute", _cadNode->GetAttribute( newAttribute->GetAttributeName() ) );
             _instructions.push_back( addAttribute );
 
             _sendCommandsToXplorer();
@@ -846,8 +846,8 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
             {
                 {
                     {
-                        ves::open::xml::cad::CADAttribute newAttribute;// = new CADAttribute();
-                        newAttribute.SetAttributeType( "Program" );
+                        ves::open::xml::cad::CADAttributePtr newAttribute = new CADAttribute();
+                        newAttribute->SetAttributeType( "Program" );
 
                         wxFileName veaFileName( dialog.GetPath() );
                         veaFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
@@ -871,7 +871,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                                     return;
                                 }
 
-                                newAttribute.SetProgram( *loadedShader );
+                                newAttribute->SetProgram( *loadedShader );
                                 _cadNode->AddAttribute( newAttribute );
                                 _updateAvailableAttributes();
                                 //_attributeSelection->SetSelection(_nShaders-1);
@@ -885,7 +885,7 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
 
                                 ves::open::xml::DataValuePairPtr addAttribute = new ves::open::xml::DataValuePair();
                                 addAttribute->SetDataType( "XMLOBJECT" );
-                                addAttribute->SetData( "Attribute", &_cadNode->GetAttribute( newAttribute.GetAttributeName() ) );
+                                addAttribute->SetData( "Attribute", _cadNode->GetAttribute( newAttribute->GetAttributeName() ) );
                                 _instructions.push_back( addAttribute );
 
                                 _sendCommandsToXplorer();
@@ -1120,7 +1120,7 @@ void CADNodePropertiesDlg::_showFaceSelectDialog( wxCommandEvent& WXUNUSED( even
         faceModes.Add( _( "Front_and_Back" ) );
         faceModes.Add( _( "Back" ) );
 
-        CADMaterialPtr material = _cadNode->GetActiveAttribute().GetMaterial();
+        CADMaterialPtr material = _cadNode->GetActiveAttribute()->GetMaterial();
         wxSingleChoiceDialog faceSelector( this, _T( "Select Face to apply material" ), _T( "Material Face" ),
                                            faceModes );
 
@@ -1157,8 +1157,8 @@ void CADNodePropertiesDlg::_showOpacityDialog( wxCommandEvent& WXUNUSED( event )
     //We should only arrive in here if the attribute is a CADMaterial!!!!
     if( _cadNode )
     {
-        CADMaterialPtr material = _cadNode->GetActiveAttribute().GetMaterial();
-        CADOpacitySliderDlg opacityDlg( this, -1, _cadNode->GetID(), _cadNode->GetActiveAttribute().GetMaterial() );
+        CADMaterialPtr material = _cadNode->GetActiveAttribute()->GetMaterial();
+        CADOpacitySliderDlg opacityDlg( this, -1, _cadNode->GetID(), _cadNode->GetActiveAttribute()->GetMaterial() );
         if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
         {
             material->SetOpacity( opacityDlg.GetOpacity() );
@@ -1179,8 +1179,8 @@ void CADNodePropertiesDlg::_showColorModeSelectDialog( wxCommandEvent& WXUNUSED(
         colorModes.Add( _( "Specular" ) );
         colorModes.Add( _( "Off" ) );
 
-        CADAttribute activeAttribute = _cadNode->GetActiveAttribute();
-        CADMaterialPtr material = activeAttribute.GetMaterial();
+        CADAttributePtr activeAttribute = _cadNode->GetActiveAttribute();
+        CADMaterialPtr material = activeAttribute->GetMaterial();
 
         wxSingleChoiceDialog colorSelector( this, _T( "Select Color Mode" ), _T( "Material Color Mode" ),
                                             colorModes );
@@ -1220,7 +1220,7 @@ void CADNodePropertiesDlg::_showColorDialog( wxCommandEvent& event )
     //We should only arrive in here if the attribute is a CADMaterial!!!!
     if( _cadNode )
     {
-        CADAttribute* activeAttribute = &_cadNode->GetActiveAttribute();
+        CADAttributePtr activeAttribute = _cadNode->GetActiveAttribute();
         CADMaterialPtr material = activeAttribute->GetMaterial();
         ves::open::xml::FloatArrayPtr activeComponent = 0;
         std::string updateComponent = "";

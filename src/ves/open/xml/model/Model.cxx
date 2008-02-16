@@ -98,14 +98,14 @@ Model::Model( const Model& input )
     mPorts.clear();
     std::copy( input.mPorts.begin(),
                input.mPorts.end(),
-               mPorts.begin() );
+               std::back_inserter( mPorts ) );
 
     mIconLocation =  input.mIconLocation;
 
     mResults.clear();
     std::copy( input.mResults.begin(),
                input.mResults.end(),
-               mResults.begin() );
+               std::back_inserter( mResults ) );
 
     mInputs.clear();
     std::copy( input.mInputs.begin(),
@@ -116,7 +116,7 @@ Model::Model( const Model& input )
     mInformationPackets.clear();
     std::copy( input.mInformationPackets.begin(),
                input.mInformationPackets.end(),
-               mInformationPackets.begin() );
+               std::back_inserter( mInformationPackets ) );
 
     mGeometry = ves::open::xml::cad::CADAssemblyPtr();
     if( input.mGeometry )
@@ -157,25 +157,25 @@ Model& Model::operator=( const Model& input )
         mPorts.clear();
         std::copy( input.mPorts.begin(),
                    input.mPorts.end(),
-                   mPorts.begin() );
+                   std::back_inserter( mPorts ) );
 
         mIconLocation =  input.mIconLocation;
 
         mResults.clear();
         std::copy( input.mResults.begin(),
                    input.mResults.end(),
-                   mResults.begin() );
+                   std::back_inserter( mResults ) );
 
         mInputs.clear();
         std::copy( input.mInputs.begin(),
                    input.mInputs.end(),
-                   mInputs.begin() );
+                   std::back_inserter( mInputs ) );
 
 
         mInformationPackets.clear();
         std::copy( input.mInformationPackets.begin(),
                    input.mInformationPackets.end(),
-                   mInformationPackets.begin() );
+                   std::back_inserter( mInformationPackets ) );
 
         mGeometry = ves::open::xml::cad::CADAssemblyPtr();
         if( input.mGeometry )

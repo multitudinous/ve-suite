@@ -37,7 +37,8 @@
 #include <ves/open/xml/TransformPtr.h>
 
 #include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/cad/CADAttribute.h>
+#include <ves/open/xml/cad/CADAttributePtr.h>
+#include <ves/open/xml/cad/CADNodeAnimationPtr.h>
 #include <xercesc/dom/DOM.hpp>
 #include <string>
 #include <vector>
@@ -62,9 +63,6 @@ namespace xml
 {
 namespace cad
 {
-class CADAssembly;
-class CADNodeAnimation;
-
 class VE_CAD_EXPORTS CADNode: public ves::open::xml::XMLObject
 {
 public:
@@ -79,10 +77,6 @@ public:
 
     ///Set the parent for this node.
     ///\param parentID The parent ID of this node.
-    //void SetParent(unsigned int parentID);
-
-    ///Set the parent for this node.
-    ///\param parentID The parent ID of this node.
     void SetParent( std::string parentID );
 
     ///Set the transform for this node.
@@ -91,7 +85,7 @@ public:
 
     ///Add an attribute for this node.
     ///\param attribute A new attribute for this node.
-    void AddAttribute( ves::open::xml::cad::CADAttribute attribute );
+    void AddAttribute( ves::open::xml::cad::CADAttributePtr attribute );
 
     ///Add an animation file for this CADNode.
     ///\param animationFileName The path to the animation file.
@@ -119,7 +113,7 @@ public:
     bool GetVisibility();
 
     ///Get the active attribute
-    ves::open::xml::cad::CADAttribute& GetActiveAttribute();
+    ves::open::xml::cad::CADAttributePtr GetActiveAttribute();
 
     ///Get the node type.
     ///Valid types currently are Node,Assembly,Part and Clone
@@ -127,9 +121,6 @@ public:
 
     ///Get the name of this CAD node.
     std::string GetNodeName();
-
-    ///Get the parent of this CAD node.
-    //unsigned int GetParent();
 
     ///Get the parent of this CAD node.
     std::string GetParent();
@@ -172,25 +163,25 @@ public:
 
     ///Get an attribute of this CAD node by a name
     ///\param name The name of the attribute to find.
-    ves::open::xml::cad::CADAttribute& GetAttribute( std::string name );
+    ves::open::xml::cad::CADAttributePtr GetAttribute( std::string name );
 
     ///Get an attribute of this CAD node by a name
     ///\param index The index of the attribute to find.
-    ves::open::xml::cad::CADAttribute& GetAttribute( unsigned int index );
+    ves::open::xml::cad::CADAttributePtr GetAttribute( unsigned int index );
 
     ///There is probably only one of these but internally we keep a vector of them
     ///\param name The reference name of the animation to find.
-    ves::open::xml::cad::CADNodeAnimation& GetAnimation( std::string name );
+    ves::open::xml::cad::CADNodeAnimationPtr GetAnimation( std::string name );
 
     ///There is probably only one of these but internally we keep a vector of them
     ///\param index The animation file index in the list.
-    ves::open::xml::cad::CADNodeAnimation& GetAnimation( unsigned int index );
+    ves::open::xml::cad::CADNodeAnimationPtr GetAnimation( unsigned int index );
 
     ///Get the CADNodeAnimation for this CADNode.
     size_t GetNumberOfAnimations();
 
     ///Get attributes for this node.
-    std::vector<CADAttribute> GetAttributeList();
+    std::vector<CADAttributePtr> GetAttributeList();
 
     ///Copy constructor
     ///\param rhs The CADNode to copy
@@ -215,8 +206,8 @@ protected:
     std::string m_activeAttributeName;///<The name of the active attribute.
     std::string  m_parent;  ///< Parent node ID.
     ves::open::xml::TransformPtr m_transform; ///< Transform for the node.
-    std::vector<ves::open::xml::cad::CADAttribute> m_attributeList;///<A list of attributes for this node
-    std::vector<ves::open::xml::cad::CADNodeAnimation> m_animations;//<A list of animation path files for this node.
+    std::vector<ves::open::xml::cad::CADAttributePtr> m_attributeList;///<A list of attributes for this node
+    std::vector<ves::open::xml::cad::CADNodeAnimationPtr> m_animations;//<A list of animation path files for this node.
     std::string m_name;///< The name of this node.
     std::string m_type;///< The type of node;
     bool m_visibility;///<Node visibilty.
