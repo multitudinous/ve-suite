@@ -45,8 +45,8 @@ if os.path.basename(JCONF_BASE_PATH) == "bin":
 ##Set default Jconf files.
 DEFAULT_JCONF = join(JCONF_BASE_PATH, "share", "vesuite","vrj_configs", 
     "stereo_desktop", "desktop.jconf")
-DEFAULT_DEV_JCONF = join(JCONF_BASE_PATH, "..", "share", "vrj_configs",
-    "stereo_desktop", "desktop.jconf")
+# these are the same with the scons build
+DEFAULT_DEV_JCONF = DEFAULT_JCONF
 MODE_LIST = ["Desktop", "Tablet", "Computation", "Visualization", "Shell", "Custom"]
 COMP_ADD_MODE_LIST = ["Manual", "From File"]
 #COMP_ADD_MODE_LIST = ["Manual", "Auto Fill", "From File"]
