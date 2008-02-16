@@ -210,11 +210,11 @@ void Module::addOPort( int p, Connection* c )
    c->connect_oport( _oports[fi] );
 }
 ////////////////////////////////////////////////////////////////////////////////
-int Module::getPortData( int p, Command& intf )
+int Module::getPortData( int p, CommandPtr intf )
 {
    try
    {
-       intf = *( _oports.at( oportIdx( p ) )->GetPortData() );
+       intf = ( _oports.at( oportIdx( p ) )->GetPortData() );
        return 1;
    }
    catch ( ... )

@@ -219,7 +219,7 @@ ACE_THROW_SPEC((
     //std::cout << "VE-CE : GetExportData "<< module_id << " " << port_id << std::endl;
 
     //Interface intf;
-    Command portData;
+    CommandPtr portData = new Command();
     if( !_network->GetModule( _network->moduleIdx( module_id ) )->getPortData( port_id, portData ) )
     {
         std::string msg = "Mod #"
@@ -233,7 +233,7 @@ ACE_THROW_SPEC((
     }
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< CommandPtr, std::string  >( &portData, std::string( "vecommand" ) ) );
+    nodes.push_back( std::pair< CommandPtr, std::string  >( portData, std::string( "vecommand" ) ) );
     std::string fileName( "returnString" );
     XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -511,7 +511,7 @@ ACE_THROW_SPEC((
     //_module_powers.clear();
     //_thermal_input.clear();
     std::string strNetwork( network );
-    std::cout << strNetwork << std::endl;
+
     if( _network->parse( strNetwork ) )
     {
         _mutex.release();
@@ -825,8 +825,8 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     std::string vendorUnit;
     unsigned int moduleId = 0;
     CommandPtr tempCommand = objectVector.at( 0 );
-    Command passCommand;
-    passCommand.SetCommandName( tempCommand->GetCommandName() );
+    CommandPtr passCommand = new Command();
+    passCommand->SetCommandName( tempCommand->GetCommandName() );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
     {
@@ -849,7 +849,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
             // the copy constructor is needed here because
             // the tempCommand owns the memory as well as the passcommand
             // each of these commands would then delete the same memory
-            passCommand.AddDataValuePair( tempPair );
+            passCommand->AddDataValuePair( tempPair );
         }
     }
     //delete the object vector
@@ -858,7 +858,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     ///string used to hold query data
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     nodes.push_back(
-        std::pair< XMLObjectPtr, std::string >( &passCommand, "vecommand" )
+        std::pair< XMLObjectPtr, std::string >( passCommand, "vecommand" )
     );
 
     XMLReaderWriter commandWriter;

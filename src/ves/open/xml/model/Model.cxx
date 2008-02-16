@@ -647,7 +647,7 @@ void Model::_updateVEElement( const std::string& input )
     // write all the elements according to verg_model.xsd
     SetSubElements("ports", mPorts );
     
-    SetSubElement( "iconLocation", mIconLocation );
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "iconLocation", mIconLocation );
     SetAttribute( "name", mModelName );
     SetAttribute( "id", mUuid );
 

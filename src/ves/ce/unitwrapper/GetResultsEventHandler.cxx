@@ -78,8 +78,8 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
         return std::string( "NULL" );
     }
 
-    ves::open::xml::Command resultsCommand;
-    resultsCommand.SetCommandName( "Model Results" );
+    ves::open::xml::CommandPtr resultsCommand;
+    resultsCommand->SetCommandName( "Model Results" );
 
     size_t numInputs = baseModel->GetNumberOfResults();
     if( numInputs == 0 )
@@ -92,12 +92,12 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
         ves::open::xml::CommandPtr tempResult = baseModel->GetResult( i );
         ves::open::xml::DataValuePairWeakPtr tempPair = new ves::open::xml::DataValuePair();
         tempPair->SetData( tempResult->GetCommandName(), tempResult );
-        tempResult->AddDataValuePair( tempPair );
+        resultsCommand->AddDataValuePair( tempPair );
     }
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
-                     std::string > ( &resultsCommand, "vecommand" ) );
+                     std::string > ( resultsCommand, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";

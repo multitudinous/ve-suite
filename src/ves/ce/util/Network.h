@@ -73,25 +73,6 @@ public:
     ///idx is the conductor assigned index. the vector index is returned
     int moduleIdx( int idx );
 
-    /*
-       int addIPort( int, int, Connection* );
-       int addOPort( int, int, Connection* );
-
-       int getInput(int, VE_XML::Command& );
-       int setInput(int, VE_XML::Command* );
-
-       int getOutput(int, VE_XML::Command& );
-       int setOutput(int, VE_XML::Command* );
-
-       int getMessage(int, VE_XML::Command& );
-       int setMessage(int, VE_XML::Command* );
-
-       int getPortData(int, int, VE_XML::Command& );
-       int setPortData(int, int, VE_XML::Command* );
-
-       int getPortProfile(int, int, Types::Profile_out& );
-       int setPortProfile(int, int, const Types::Profile* );
-    */
 protected:
     std::vector<Connection*> _connections;
     std::vector<Module*> _module_ptrs;

@@ -146,18 +146,18 @@ ACE_THROW_SPEC((
                ) )
 {
     // Add your implementation here
-    ves::open::xml::Command returnState;
+    ves::open::xml::CommandPtr returnState;
 
-    returnState.SetCommandName( "statusmessage" );
+    returnState->SetCommandName( "statusmessage" );
     ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
     data->SetDataName( "RETURN_STATE" );
     data->SetDataType( "UNSIGNED INT" );
     data->SetDataValue( return_state );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
     nodes.push_back( std::pair < ves::open::xml::XMLObjectPtr,
-                     std::string > ( &returnState, "vecommand" ) );
+                     std::string > ( returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";

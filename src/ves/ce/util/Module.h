@@ -86,7 +86,7 @@ public:
     IPort* getFBPort();
 
     ///Get output port data for the specific port
-    int getPortData( int, ves::open::xml::Command& );
+    int getPortData( int, ves::open::xml::CommandPtr );
     ///Set output port data for the specific port
     int setPortData( int, ves::open::xml::CommandPtr );
 
