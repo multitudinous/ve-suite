@@ -43,8 +43,6 @@
 #include <wx/toolbar.h>
 #include <wx/dialog.h>
 
-#include <ves/conductor/util/DualSlider.h>
-
 #include <vector>
 #include <map>
 #include <string>
@@ -57,6 +55,7 @@ class wxListBox;
 class wxCheckBox;
 class wxTextCtrl;
 class wxButton;
+class wxSlider;
 
 #define ID_DIALOG 10000
 #define SYMBOL_VISTAB_STYLE wxCAPTION|wxRESIZE_BORDER|wxSYSTEM_MENU|wxCLOSE_BOX
@@ -204,15 +203,6 @@ public:
     ///Get active dataset name
     std::string GetActiveDatasetName();
 
-    ///Get the scalar range sliders
-    ves::conductor::util::DualSlider* GetScalarRangeControls();
-
-    //Vectors* vector;
-    //Contours* contour;
-    //Streamlines* streamline;
-    //Isosurfaces* isosurface;
-    ves::conductor::util::DualSlider* scalarRange;
-
     ///Make sure all the dataset check boxes are unchecked.\n
     ///This occurs when loading a new network
     void ResetAllDatasetDependentCheckBoxes();
@@ -235,7 +225,7 @@ protected:
     /*!\class ScalarRangeMinSliderCallback
      *Class that allows the user to do operations based on the min slider events
      */
-class ScalarRangeMinSliderCallback:
+/*class ScalarRangeMinSliderCallback:
                 public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
@@ -252,12 +242,12 @@ class ScalarRangeMinSliderCallback:
         virtual void SliderOperation();
     protected:
         Vistab* _parent;
-    };
+    };*/
     /*!\class ScalarRangeBothMoveCallback
      *Class that allows the user to do operations based on both sliders moving, i.e.
      *This is caused by the slider buffer being reached.
      */
-class ScalarRangeBothMoveCallback:
+/*class ScalarRangeBothMoveCallback:
                 public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
@@ -275,11 +265,11 @@ class ScalarRangeBothMoveCallback:
         virtual void SliderOperation();
     protected:
         Vistab* _parent;
-    };
+    };*/
     /*!\class ScalarRangeMaxSliderCallback
      *Class that allows the user to do operations based on the max slider events
      */
-class ScalarRangeMaxSliderCallback:
+/*class ScalarRangeMaxSliderCallback:
                 public ves::conductor::util::DualSlider::SliderCallback
     {
     public:
@@ -296,7 +286,7 @@ class ScalarRangeMaxSliderCallback:
         virtual void SliderOperation();
     protected:
         Vistab* _parent;
-    };
+    };*/
     void _onContour( wxCommandEvent& );
     void _onVector( wxCommandEvent& );
     void _onStreamline( wxCommandEvent& );
@@ -327,7 +317,7 @@ class ScalarRangeMaxSliderCallback:
     ///Callback for max spinner
     void _onMaxSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     ///Callback for slider max and min values
-    void _onMinMaxSlider( wxScrollEvent& WXUNUSED( event ) );
+    //void _onMinMaxSlider( wxScrollEvent& WXUNUSED( event ) );
     ///Callback for slider max and min values
     void _onMinSlider( wxScrollEvent& WXUNUSED( event ) );
     ///Callback for slider max and min values
@@ -379,7 +369,6 @@ class ScalarRangeMaxSliderCallback:
     Isosurfaces* isosurface;///<Iso-Surface dialog
     util::TextureBasedToolBar* _tbTools;///<TextureBasedToolBar.
     Polydata* polydata;///<Polydata dialog
-    Vistab* vistab;
 
     unsigned int _nDatasetsInActiveModel;///<The number of datasets in the active model.
     unsigned int _nScalarsInActiveDataset;///<Number of scalars in the active dataset.
@@ -417,24 +406,11 @@ class ScalarRangeMaxSliderCallback:
     std::vector<double> _activeScalarRange;///<The active scalars range.
 
     std::vector<ves::open::xml::DataValuePairPtr> _vistabBaseInformation;///<The basic information from the vistab
-    std::vector<ves::open::xml::DataValuePairPtr> _vistabSpecificInformation;///<The specific information from specific vistab dialogs
 
     std::string _commandName;///<The name of the command to send back
 
-    std::vector< ves::open::xml::CommandPtr > commands;
-    //VjObs_ptr xplorerPtr;
-    std::vector< long > commandInputs;
-    //DOMDocument* doc;
-    //VE_XML::DOMDocumentManager* domManager;
-    std::string dataValueName;
-
     double minimumValue;
     double maximumValue;
-
-    //bool scalarSelect;
-    //bool vectorSelect;
-
-    //unsigned int scalarValue;
 
     std::string ConvertUnicode( const wxChar* data )
     {

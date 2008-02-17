@@ -2057,7 +2057,7 @@ void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window )
     if( window )
     {
         m_canvas->RemoveChild( window );
-        window->DestroyChildren();
+        //window->DestroyChildren();
         window->Destroy();
     }
 }

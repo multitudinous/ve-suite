@@ -94,7 +94,7 @@ BEGIN_EVENT_TABLE( Vistab, wxDialog )
     EVT_BUTTON( CLOSE_BUTTON,         Vistab::_onClose )
     EVT_COMMAND_SCROLL( MIN_SPINCTRL,    Vistab::_onMinSpinCtrl )
     EVT_COMMAND_SCROLL( MAX_SPINCTRL,    Vistab::_onMaxSpinCtrl )
-    EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
+    //EVT_COMMAND_SCROLL( MIN_MAX_SLIDERS, Vistab::_onMinMaxSlider )
     EVT_COMMAND_SCROLL( MIN_SLIDER,      Vistab::_onMinSlider )
     EVT_COMMAND_SCROLL( MAX_SLIDER,      Vistab::_onMaxSlider )
     EVT_TEXT_ENTER( MIN_SPINCTRL,        Vistab::UpdateMinSlider )
@@ -206,7 +206,6 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
     _minSpinner = 0;
     _maxSpinner = 0;
 
-    scalarRange = 0;
     SetExtraStyle( GetExtraStyle() | wxWS_EX_BLOCK_EVENTS );
     wxDialog::Create( parent, id, caption, pos, wxDefaultSize, style );
 
@@ -217,36 +216,6 @@ bool Vistab::Create( wxWindow* parent, wxWindowID id, const wxString& caption, c
 Vistab::~Vistab()
 {
     ClearBaseInformation();
-    if( isosurface )
-    {
-        isosurface->Destroy();
-        isosurface = 0;
-    }
-    if( _tbTools )
-    {
-        _tbTools->Destroy();
-        _tbTools = 0;
-    }
-    if( scalarContour )
-    {
-        scalarContour->Destroy();
-        scalarContour = 0;
-    }
-    if( vectorContour )
-    {
-        vectorContour->Destroy();
-        vectorContour = 0;
-    }
-    if( streamline )
-    {
-        streamline->Destroy();
-        streamline = 0;
-    }
-    if( polydata )
-    {
-        polydata->Destroy();
-        polydata = 0;
-    }
 }
 /////////////////////////////
 void Vistab::CreateControls()
@@ -817,11 +786,6 @@ void Vistab::_updateComboBoxNames( std::string dataType,
     //scalarSelect = false;
     //vectorSelect = false;
 }
-////////////////////////////////////////////
-DualSlider* Vistab::GetScalarRangeControls()
-{
-    return scalarRange;
-}
 ////////////////////////////////////////////////////
 void Vistab::_OnSelectDataset( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -947,7 +911,6 @@ void Vistab::ClearBaseInformation()
 ////////////////////////////////////////
 void Vistab::ClearSpecificInformation()
 {
-    _vistabSpecificInformation.clear();
     _commandName.clear();
 }
 ///////////////////////////////////////////
@@ -1120,13 +1083,13 @@ void Vistab::_onMaxSpinCtrl( wxScrollEvent& WXUNUSED( event ) )
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void Vistab::_onMinMaxSlider( wxScrollEvent& WXUNUSED( event ) )
+/*void Vistab::_onMinMaxSlider( wxScrollEvent& WXUNUSED( event ) )
 {
     double range = _activeScalarRange.at( 1 ) - _activeScalarRange.at( 0 );
 
     _minSpinner->SetValue(( range - ( double )scalarRange->GetMinSliderValue() ) / 100 + _activeScalarRange.at( 0 ) );
     _maxSpinner->SetValue(( _activeScalarRange.at( 1 ) - ( range - ( range - ( double )scalarRange->GetMaxSliderValue() ) ) ) / 100 );
-}
+}*/
 //////////////////////////////////////////////////////////////////////////
 void Vistab::_onMinSlider( wxScrollEvent& WXUNUSED( event ) )
 {
