@@ -187,17 +187,13 @@ void cfdVEPluginLoader::ScanAndLoad( void )
         try
         {
             libs.at( i )->load();
-            vprDEBUG( vesDBG, 1 )  << "|\tLoaded lib successfully : "
-            //<< status.success()
-            << std::endl
-            << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tLoaded lib successfully : "
+                << std::endl << vprDEBUG_FLUSH;
         }
-        catch ( ... )
+        catch( ... )
         {
-            vprDEBUG( vesDBG, 1 )  << "|\tLoaded lib failed : "
-            //<< status.success()
-            << std::endl
-            << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tLoaded lib failed : "
+                << std::endl << vprDEBUG_FLUSH;
         }
     }
 
