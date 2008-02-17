@@ -141,10 +141,12 @@ void cfdVEPluginLoader::ScanAndLoad( void )
     bool customPlugins = false;
     try
     {
-        boost::filesystem::path dir_path( libDir );
+        boost::filesystem::path dir_path( libDir, boost::filesystem::no_check );
         //boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
-        boost::filesystem::is_directory( dir_path );
-        customPlugins = true;
+        if( boost::filesystem::is_directory( dir_path ) )
+        {
+            customPlugins = true;
+        }
     }
     catch ( const std::exception& ex )
     {

@@ -132,13 +132,16 @@ void cfdQuatCamHandler::WriteToFile( std::string fileName )
     boost::filesystem::path dir_path( quatCamDirName, boost::filesystem::no_check );
     try
     {
-        boost::filesystem::is_directory( dir_path );
+        if( !boost::filesystem::is_directory( dir_path ) )
+        {
+            boost::filesystem::create_directory( dir_path );
+            std::cout << "|\tCreated " << quatCamDirName 
+                << " directory." << std::endl;
+        }
     }
     catch ( const std::exception& ex )
     {
         std::cout << ex.what() << std::endl;
-        boost::filesystem::create_directory( dir_path );
-        std::cout << "...so we made it for you..." << std::endl;
     }
 
     std::ofstream inFile( fileName.c_str(), std::ios::out );

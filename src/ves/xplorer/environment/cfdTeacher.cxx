@@ -149,18 +149,22 @@ std::string cfdTeacher::getFileName( int i )
 void cfdTeacher::RecordScene()
 {
     //check if the path to STORED_FILES exists
-    boost::filesystem::path dir_path( this->directory );
+    boost::filesystem::path dir_path( this->directory, boost::filesystem::no_check );
+    
     try
     {
-        boost::filesystem::is_directory( dir_path );
+        if( !boost::filesystem::is_directory( dir_path ) )
+        {
+            std::cout << "|\tCreated " << directory 
+                << " directory." << std::endl;
+            boost::filesystem::create_directory( dir_path );
+        }
     }
     catch ( const std::exception& ex )
     {
-        std::cout << "|\t" << ex.what() << std::endl;
-        boost::filesystem::create_directory( dir_path );
-        std::cout << "...so we made it for you..." << std::endl;
+        std::cout << ex.what() << std::endl;
     }
-
+    
     // Generate a .pfb filename...
     std::string pfb_filename;
     std::ostringstream dirStringStream;

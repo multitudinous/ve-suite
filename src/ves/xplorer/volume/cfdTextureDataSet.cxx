@@ -211,18 +211,16 @@ void cfdTextureDataSet::CreateTextureManager( std::string textureDescriptionFile
     tm->SetUseShaders( true );
 
     boost::filesystem::path scalarPath( textureDescriptionFile, boost::filesystem::no_check );
-    try
+    
+    if( !boost::filesystem::is_directory( scalarPath ) )
     {
-        boost::filesystem::is_directory( scalarPath );
-    }
-    catch ( const std::exception& ex )
-    {
-        std::cout << ex.what() << std::endl;
+        std::cout << "|\tNo directory " << textureDescriptionFile 
+            << " present." << std::endl;
         return;
     }
-
+    
     std::cout << "|\tReading texture description file: "
-    << textureDescriptionFile << std::endl;
+        << textureDescriptionFile << std::endl;
 
     std::vector< std::string > files = ves::xplorer::util::fileIO::GetFilesInDirectory( textureDescriptionFile, std::string( "vti" ) );
     for( size_t i = 0; i < files.size(); ++i )
