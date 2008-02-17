@@ -152,9 +152,9 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     }
     std::vector< std::pair< std::string, std::string > > dataToObtain;
     std::vector< std::pair< std::string, std::string > >::iterator dataIter;
+    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     dataToObtain.push_back( std::make_pair( "Model", "veNetwork" ) );
     dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
-    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
     dataToObtain.push_back( std::make_pair( "XML", "User" ) );
     networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
     std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
@@ -165,14 +165,16 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     // we are expecting that a network will be found
     if( !objectVector.empty() )
     {
-        tempSystem = objectVector.at( 0 );
-        if( tempSystem )
+        //If the file is a new xml file with a system element
+        if( objectVector.at( 0 )->GetObjectType() == "System" )
         {
+            tempSystem = objectVector.at( 0 );
             m_systemMap[tempSystem->GetID()] = tempSystem;
             //get the main systems id
             topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
         }
+        //Else if the file jsut has a netowrk and a series of models
         else
         {
             tempSystem = new ves::open::xml::model::System();
@@ -181,7 +183,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 
             m_networkMap[ "Network" ] = objectVector.at( 0 );
             tempSystem->AddNetwork( m_networkMap[ "Network" ] );
-            objectIter = objectVector.erase( objectVector.begin() );
+            objectIter = objectVector.begin();
+            objectIter = objectVector.erase( objectIter );
             tempSystem = 0;
         }
     }
@@ -225,13 +228,13 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         std::ostringstream modelID;
         for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
         {
-            ves::open::xml::model::ModelPtr model = *objectIter;
-            if( !model )
+            if( (*objectIter)->GetObjectType() != "Model" )
             {
                 //if this object is not a model continue
                 ++objectIter;
                 continue;
             }
+            ves::open::xml::model::ModelPtr model = *objectIter;
             objectIter = objectVector.erase( objectIter );
             modelID << model->GetModelID();
             m_modelMap[ modelID.str()] = model;
