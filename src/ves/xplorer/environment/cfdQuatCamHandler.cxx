@@ -244,7 +244,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName )
     }
 
     std::ifstream inFile( fileName.c_str(), std::ios::in );
-    std::cout << "QuatCam File Was Opened Successfully" << std::endl;
+    std::cout << "|\tQuatCam File Was Opened Successfully" << std::endl;
 
     if( inFile.peek() != '*' )
     {
@@ -255,7 +255,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName )
         inFile.getline( textLine, 256 );   //skip past remainder of line
         inFile >> numQuatCams;
         inFile.getline( textLine, 256 );   //skip past remainder of line
-        std::cout << "Number of QuatCams: " << numQuatCams << std::endl;
+        std::cout << "|\tNumber of QuatCams: " << numQuatCams << std::endl;
 
         for( unsigned int i = 0; i < numQuatCams; i++ )
         {
@@ -573,14 +573,14 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
     if( ModelHandler::instance()->GetXMLCommand() )
     {
         vprDEBUG( vesDBG, 3 ) << "|\tcfdQuatCamHandler::PreFrameUpdate Command Name : "
-        << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
-        << std::endl << vprDEBUG_FLUSH;
+            << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
+            << std::endl << vprDEBUG_FLUSH;
         currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
         if( currentEventHandler != _eventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 ) << "|\t cfdQuatCamHandler::PreFrameUpdate Executing: "
-            << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
-            << std::endl << vprDEBUG_FLUSH;
+                << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
+                << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
             currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
         }

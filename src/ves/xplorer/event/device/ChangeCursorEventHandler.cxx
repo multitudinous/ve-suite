@@ -136,7 +136,8 @@ void ChangeCursorEventHandler::Execute( XMLObjectPtr xmlObject )
     if( pointsDVP )
     {
         pointsDVP->GetData( numPointsPerPlane );
-        std::cout << " num points " << numPointsPerPlane << std::endl;
+        vprDEBUG( vesDBG, 2 ) << "Number of seed points " 
+            << numPointsPerPlane << std::endl << vprDEBUG_FLUSH;
         EnvironmentHandler::instance()->GetCursor()->SetPlaneReso( static_cast< int >( numPointsPerPlane ) );
     }
 
@@ -145,7 +146,8 @@ void ChangeCursorEventHandler::Execute( XMLObjectPtr xmlObject )
     if( sizeDVP )
     {
         sizeDVP->GetData( planeSize );
-        std::cout << " planesize " << planeSize << std::endl;
+        vprDEBUG( vesDBG, 2 ) << "|\tStreamline planesize " 
+            << planeSize << std::endl << vprDEBUG_FLUSH;
         EnvironmentHandler::instance()->GetCursor()->SetPlaneSize( static_cast< int >( planeSize ) );
     }
 
