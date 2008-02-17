@@ -128,6 +128,10 @@ protected:
     ///\param event The command event.
     void _showPropertiesDialog( wxCommandEvent& event );
 
+    ///Launch the opacity dialog
+    ///\param event The command event.
+    void _showOpacityDialog( wxCommandEvent& event );
+
     ///Delete the selected node.
     ///\param event The tree event.
     void _deleteNode( wxCommandEvent& event );

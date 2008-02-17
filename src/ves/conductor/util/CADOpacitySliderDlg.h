@@ -75,7 +75,17 @@ public:
     ///Constructor
     ///\param parent The parent wxWindow.
     ///\param id The unique id for this window.
-    CADOpacitySliderDlg( wxWindow* parent, int id, std::string cadID, ves::open::xml::cad::CADMaterialPtr material );
+    CADOpacitySliderDlg( wxWindow* parent,
+                         int id, std::string cadID,
+                         ves::open::xml::cad::CADMaterialPtr material );
+    ///Constructor
+    ///\param parent The parent wxWindow.
+    ///\param id The unique id for this window.
+    ///\param cadID The id for the CADNode.
+    ///\param opacity The current opacity.
+    CADOpacitySliderDlg( wxWindow* parent,
+                         int id, std::string cadID,
+                         float opacity );
 
     ///Destructor
     virtual ~CADOpacitySliderDlg();
@@ -95,7 +105,8 @@ protected:
     void _clearInstructions();
 
     ///Build the dialog internally.
-    void _buildDialog();
+    ///\param opacity The current opacity value
+    void _buildDialog( float opacity );
     std::string _cadID;///<The id of the CADNode the material belongs to.
     std::vector<ves::open::xml::DataValuePairPtr> _instructions;///<The DataValuePair s for the current command.
     std::string _commandName;///<The command name.

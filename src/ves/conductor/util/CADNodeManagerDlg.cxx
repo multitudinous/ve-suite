@@ -34,6 +34,7 @@
 #include <ves/conductor/util/CADNodeMenu.h>
 #include <ves/conductor/util/CADTreeBuilder.h>
 #include <ves/conductor/util/CADNodePropsDlg.h>
+#include <ves/conductor/util/CADOpacitySliderDlg.h>
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/open/xml/cad/CADNode.h>
@@ -67,6 +68,7 @@ BEGIN_EVENT_TABLE( CADNodeManagerDlg, wxDialog )
     EVT_TREE_END_DRAG( TREE_ID, CADNodeManagerDlg::_onEndNodeMove )
     EVT_TREE_BEGIN_DRAG( TREE_ID, CADNodeManagerDlg::_onBeginNodeMove )
     EVT_MENU( CADNodeMenu::GEOM_PROPERTIES, CADNodeManagerDlg::_showPropertiesDialog )
+    EVT_MENU( CADNodeMenu::GEOM_OPACITY, CADNodeManagerDlg::_showOpacityDialog )
     EVT_MENU( CADNodeMenu::GEOM_DELETE, CADNodeManagerDlg::_deleteNode )
     EVT_MENU( CADNodeMenu::GEOM_ASSEMBLY_CREATE, CADNodeManagerDlg::_createNewAssembly )
     EVT_MENU( CADNodeMenu::GEOM_VEG_FILE_ADD, CADNodeManagerDlg::_addNodeFromVEGFile )
@@ -775,6 +777,20 @@ void CADNodeManagerDlg::_showPropertiesDialog( wxCommandEvent& WXUNUSED( event )
         propsDlg.ShowModal();
     }
 }
+///////////////////////////////////////////////////////////////////////////////
+void CADNodeManagerDlg::_showOpacityDialog( wxCommandEvent& WXUNUSED( event ) )
+{
+    //We should only arrive in here if the attribute is a CADMaterial!!!!
+    if( _activeCADNode )
+    {
+        CADOpacitySliderDlg opacityDlg( this, -1, _activeCADNode->GetID(), _activeCADNode->GetOpacity() );
+        if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
+        {
+            _activeCADNode->SetOpacity( opacityDlg.GetOpacity() );
+        }
+    }
+}
+
 //////////////////////////////////////////////
 void CADNodeManagerDlg::ClearInstructions()
 {

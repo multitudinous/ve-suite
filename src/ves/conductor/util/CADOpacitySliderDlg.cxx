@@ -57,13 +57,27 @@ CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
 {
     _cadID = cadNodeID;
     _material = material;
-    _buildDialog();
+    _buildDialog( _material->GetOpacity() );
+}
+//////////////////////////////////////////////////////////////////
+//Constructor                                                   //
+//////////////////////////////////////////////////////////////////
+CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
+                                          std::string cadNodeID,
+                                          float opacity )
+        : wxDialog( parent, id, _( "CADMaterial Opacity" ), wxDefaultPosition, wxDefaultSize,
+                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ), _( "CADMaterial Opacity" ) )
+{
+    _material = new CADMaterial();
+    _cadID = cadNodeID;
+    _buildDialog( opacity );
+    CentreOnParent();
 }
 ///////////////////////////////////////////
 CADOpacitySliderDlg::~CADOpacitySliderDlg()
 {}
-////////////////////////////////////////
-void CADOpacitySliderDlg::_buildDialog()
+/////////////////////////////////////////////////////
+void CADOpacitySliderDlg::_buildDialog(float opacity)
 {
     wxStaticBox* opacityGroup = new wxStaticBox( this, -1, wxT( "Opacity" ) );
     wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( opacityGroup, wxHORIZONTAL );
@@ -72,7 +86,7 @@ void CADOpacitySliderDlg::_buildDialog()
 
     _opacitySlider = new wxSlider( this, OPACITY_SLIDER, 0 , 0, 100, wxDefaultPosition, wxDefaultSize,
                                    wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS );
-    SetSliderValue( _material->GetOpacity() );
+    SetSliderValue( opacity );
     sliderSizer->Add( _opacitySlider, 1, wxALIGN_CENTER | wxEXPAND );
 
     mainSizer->Add( sliderSizer, 1, wxALIGN_CENTER | wxEXPAND );
@@ -96,28 +110,18 @@ void CADOpacitySliderDlg::_onSlider( wxScrollEvent& WXUNUSED( event ) )
 {
     //update the material
     //convert int to double
-    float opacityValue = ( float )( _opacitySlider->GetValue() ) / 100.0;
-
-    _material->SetOpacity( opacityValue );
 
     //build the command
-    //_commandName = "CAD_ATTRIBUTE_MATERIAL_OPACITY_UPDATE";
-    _commandName = std::string( "CAD_ATTRIBUTE_MATERIAL_UPDATE" );
+    _commandName = std::string( "CAD_OPACITY_UPDATE" );
 
     ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
     nodeID->SetDataType( "STRING" );
     nodeID->SetData( std::string( "Node ID" ), _cadID );
     _instructions.push_back( nodeID );
 
-    ves::open::xml::DataValuePairPtr componentToUpdate = new ves::open::xml::DataValuePair();
-    componentToUpdate->SetDataType( "STRING" );
-    componentToUpdate->SetData( "Material Component", "Opacity" );
-    _instructions.push_back( componentToUpdate );
-
-    ves::open::xml::DataValuePairPtr materialToUpdate = new ves::open::xml::DataValuePair();
-    materialToUpdate->SetDataType( "XMLOBJECT" );
-    materialToUpdate->SetData( "Material", _material );
-    _instructions.push_back( materialToUpdate );
+    ves::open::xml::DataValuePairPtr opacityUpdate = new ves::open::xml::DataValuePair();
+    opacityUpdate->SetData( "Opacity Value", GetOpacity() );
+    _instructions.push_back( opacityUpdate );
 
     _sendCommandsToXplorer();
 

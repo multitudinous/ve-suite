@@ -108,6 +108,11 @@ CADNodeMenu::CADNodeMenu()
             _T( "" ),
             wxITEM_NORMAL );
     Enable( GEOM_PROPERTIES, false );
+    Append( GEOM_OPACITY,
+            _T( "Transparency..." ),
+            _T( "" ),
+            wxITEM_NORMAL );
+    Enable( GEOM_OPACITY, false );
 }
 /////////////////////////////
 CADNodeMenu::~CADNodeMenu()
@@ -131,6 +136,7 @@ void CADNodeMenu::EnableGlobalMenus( bool onOff )
     {
         Enable( GEOM_DELETE, true );
         Enable( GEOM_PROPERTIES, true );
+        Enable( GEOM_OPACITY, true );
         //Enable(GEOM_MENU_MOVE_NODE, true);
         Enable( GEOM_CLONE_ADD, true );
     }
@@ -138,6 +144,7 @@ void CADNodeMenu::EnableGlobalMenus( bool onOff )
     {
         Enable( GEOM_DELETE, false );
         Enable( GEOM_PROPERTIES, false );
+        Enable( GEOM_OPACITY, false );
         //Enable(GEOM_MENU_MOVE_NODE, false);
         Enable( GEOM_CLONE_ADD, false );
     }
