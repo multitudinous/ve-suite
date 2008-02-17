@@ -157,6 +157,11 @@ public:
                              std::string type,
                              std::string mode );
 
+    ///Update the opacity for a specified CADNode
+    ///\param nodeID The CADNode
+    ///\param opacity The value of the opacity.
+    void UpdateOpacity( std::string nodeID, float opacity );
+
     ///Get a specific part.
     ///\param partID The ID of the part to search form
     ves::xplorer::scenegraph::CADEntity* GetPart( std::string partID );

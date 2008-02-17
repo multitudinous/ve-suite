@@ -23,60 +23,54 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2008-02-11 22:15:28 -0600 (Mon, 11 Feb 2008) $
+ * Version:       $Rev: 10536 $
  * Author:        $Author$
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef OPACITY_VISITOR_H
-#define OPACITY_VISITOR_H
-/*!\file OpacityVisitor.h
-OpacityVisitor API
-*/
-/*!\class OpacityVisitor
-*
-*/
-#include <ves/VEConfig.h>
+#ifndef VE_CAD_SET_OPACITY_EVENT_HANDLER_H
+#define VE_CAD_SET_OPACITY_EVENT_HANDLER_H
 
-#include <osg/ref_ptr>
-#include <osg/NodeVisitor>
-namespace osg
-{
-    class StateSet;
-}
+#include <ves/xplorer/event/cad/CADEventHandler.h>
+#include <ves/open/xml/XMLObjectPtr.h>
+
+
 namespace ves
 {
 namespace xplorer
 {
-namespace scenegraph
+namespace event
 {
-namespace util
-{
-class VE_SCENEGRAPH_UTILS_EXPORTS OpacityVisitor : public osg::NodeVisitor
+/*!\file CADSetOpacityEventHandler.h
+  CADSetOpacityEventHandler API
+  */
+/*!\class CADSetOpacityEventHandler
+ * Class to set the opacity of the CADNode.
+ */
+class VE_XPLORER_EXPORTS CADSetOpacityEventHandler : public CADEventHandler
 {
 public:
-    OpacityVisitor( osg::Node* osg_node, bool state, float alpha=1.0 );
-    virtual ~OpacityVisitor();
+    ///Constructor
+    CADSetOpacityEventHandler();
 
-    virtual void apply( osg::Geode& node );
-    virtual void apply( osg::Group& node );
-    
-    //setup the blending and renderbin details for a stateset
-    //based on transparency
-    ///\param stateset The stateset to modify
-    void SetupBlendingForStateSet( osg::StateSet* stateset);
-    
+    ///Copy Constructor
+    CADSetOpacityEventHandler( const CADSetOpacityEventHandler& rhs );
 
-private:
-    bool transparent;
-    float m_alpha;
+    ///Destructor
+    virtual ~CADSetOpacityEventHandler();
 
+    ///Equal operator
+    CADSetOpacityEventHandler& operator=( const CADSetOpacityEventHandler& rhs );
+protected:
+    ///Toggle a CADNode on/off.
+    ///\param command The Command containing the CADNode to toggle.
+    void _operateOnNode( ves::open::xml::XMLObjectPtr command );
 };
-}
+
 }
 }
 }
 
-#endif //OPACITY_VISITOR_H
+#endif// VE_EVENT_HANDLER_H

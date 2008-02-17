@@ -40,6 +40,7 @@
 #include <osg/Texture>
 #include <osg/TexEnv>
 #include <osg/Array>
+#include <osg/BlendFunc>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -64,21 +65,11 @@ void OpacityVisitor::apply( osg::Geode& node )
 {
     osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
     osg::ref_ptr< osg::Material > geode_material = static_cast< osg::Material* >( geode_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+    SetupBlendingForStateSet( geode_stateset.get() );
 
     if( geode_material.valid() )
     {
         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
-        /*if( transparent == true )
-        {
-            geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 0.3f );
-        }
-
-        else
-        {
-            geode_material->setAlpha( osg::Material::FRONT_AND_BACK, 1.0f );
-        }
-        */
-
         geode_stateset->setAttribute( geode_material.get(), osg::StateAttribute::ON );
     }
 
@@ -88,6 +79,8 @@ void OpacityVisitor::apply( osg::Geode& node )
         osg::ref_ptr< osg::Material > drawable_material = static_cast< osg::Material* >( drawable_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
         osg::ref_ptr< osg::Vec4Array > color_array = static_cast< osg::Vec4Array* >( node.getDrawable( i )->asGeometry()->getColorArray() );
         osg::StateSet::TextureAttributeList drawable_tal = drawable_stateset->getTextureAttributeList();
+
+        SetupBlendingForStateSet( drawable_stateset.get() );
 
         if( color_array.valid() )
         {
@@ -149,7 +142,26 @@ void OpacityVisitor::apply( osg::Group& node )
         material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
         stateset->setAttribute( material.get(), osg::StateAttribute::ON );
     }
+    SetupBlendingForStateSet( stateset.get() );
 
     osg::NodeVisitor::apply( node );
 }
+////////////////////////////////////////////////////////////////////////
+void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset)
+{
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+    stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
+
+    if( transparent )
+    {
+        stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+    }   
+    else
+    {
+        stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////

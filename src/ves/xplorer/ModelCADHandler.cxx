@@ -305,6 +305,36 @@ void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
         << vprDEBUG_FLUSH;
     }
 }
+////////////////////////////////////////////////////////////////////////
+void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity )
+{
+    try
+    {
+        bool transparent = true;
+        if( opacity == 1.f )
+        {
+            transparent = false;
+        }
+        if( AssemblyExists(nodeID) )
+        {
+            ves::xplorer::scenegraph::util::OpacityVisitor
+            opacity_visitor( m_assemblyList[nodeID].get(), transparent, opacity );
+        }
+        else if( PartExists( nodeID ) )
+        {
+            ves::xplorer::scenegraph::util::OpacityVisitor
+            opacity_visitor( m_partList[nodeID]->GetDCS(), transparent, opacity );
+        }
+    }
+    catch ( ... )
+    {
+        vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found!!!"
+            << std::endl
+            << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
+            << std::endl << vprDEBUG_FLUSH;
+    }
+}
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootTransparent()
 {
