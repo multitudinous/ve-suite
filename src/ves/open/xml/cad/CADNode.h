@@ -105,6 +105,10 @@ public:
     ///\param onOff Flag for visibility\n true == "ON"\n false== "OFF"
     void SetVisibility( bool onOff );
 
+    ///Set the opacity of this node
+    ///\param alpha The alpha value
+    void SetOpacity( float alpha );
+
     ///Set the object from XML data
     ///\param xmlNode Node to set this object from
     virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlNode );
@@ -183,6 +187,9 @@ public:
     ///Get attributes for this node.
     std::vector<CADAttributePtr> GetAttributeList();
 
+    ///Get the opacity attribute of this node
+    float GetOpacity();
+
     ///Copy constructor
     ///\param rhs The CADNode to copy
     ///\param clone Create a clone of this node
@@ -217,6 +224,8 @@ protected:
     double m_friction;///<Node friction.
     double m_restitution;///<Node restitution.
     std::string m_physicsMesh;///<Node physics mesh.
+
+    float mOpacity;///<Opacity value for this node
 };
 
 }

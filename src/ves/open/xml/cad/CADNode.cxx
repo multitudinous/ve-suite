@@ -71,6 +71,7 @@ CADNode::CADNode( std::string name )
     m_friction = 1.0f;
     m_restitution = 0.0f;
     m_physicsMesh = "Bounding Box";
+    mOpacity = 1.f;
 
     m_activeAttributeName = std::string( "" );
     SetObjectType( "CADNode" );
@@ -122,6 +123,11 @@ void CADNode::SetTransform( ves::open::xml::TransformPtr transform )
 void CADNode::AddAttribute( ves::open::xml::cad::CADAttributePtr attribute )
 {
     m_attributeList.push_back( attribute );
+}
+///////////////////////////////////////
+void CADNode::SetOpacity( float alpha )
+{
+    mOpacity = alpha;
 }
 ////////////////////////////////////////////////////////
 void CADNode::RemoveAttribute( std::string attributeName )
@@ -217,6 +223,11 @@ ves::open::xml::TransformPtr CADNode::GetTransform()
 {
     return m_transform;
 }
+///////////////////////////
+float CADNode::GetOpacity()
+{
+    return mOpacity;
+}
 ///////////////////////////////////////////////////////////////////////
 ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( unsigned int index )
 {
@@ -263,6 +274,7 @@ void CADNode::_updateVEElement( const std::string& input )
     SetAttribute( "mass", m_mass );
     SetAttribute( "friction", m_friction );
     SetAttribute( "restitution", m_restitution );
+    SetAttribute( "opacity", mOpacity );
     //SetAttribute( "physics mesh", wxString( m_physicsMesh ) );
 
     SetSubElement( std::string( "parent" ), m_parent );
@@ -328,7 +340,15 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         return;
     }
-
+    if( currentElement->getAttributeNode(
+        Convert( "opacity" ).toXMLString() ) )
+    {
+        XMLObject::GetAttribute( currentElement, "opacity", mOpacity );
+    }
+    else
+    {
+        mOpacity = 1.f;
+    }
     if( currentElement->getAttributeNode(
         Convert( "visibility" ).toXMLString() ) )
     {
