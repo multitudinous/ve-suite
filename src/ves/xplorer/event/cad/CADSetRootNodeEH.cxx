@@ -71,20 +71,18 @@ void CADSetRootNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     if(!m_cadHandler)
     {
-        std::cout<<"Invalide CADModelHandler!!"<<std::endl;
+        std::cout << "|\tCADSetRootNodeEventHandler::_operateOnNode Invalide CADModelHandler!!" << std::endl;
         return;
     }
-    //std::cout<<"Model Number: "<<m_activeModel->GetID()<<std::endl;
+
     try
     {
-        std::cout<<"Valid CADModelHandler!!"<<std::endl;
         CommandPtr command = xmlObject;
         DataValuePairWeakPtr newRootNode = 
             command->GetDataValuePair( "Root Node ID" );
 
         std::string rootNodeID;
         newRootNode->GetData( rootNodeID );
-        std::cout<<"rootNodeID: "<<rootNodeID<<std::endl;
         m_cadHandler->SetRootCADNodeID( rootNodeID );
     }
     catch( std::string str )
