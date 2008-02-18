@@ -193,6 +193,7 @@ public:
 
         std::for_each( vals.begin(), vals.end(),
                        ElementSetter( subElementTagName, this ) );
+        return 0;
     }
 
     ///utility functions for creating subElements for mVeElement.

@@ -123,6 +123,8 @@ void XMLDataBufferEngine::SetCommandMap( std::map < std::string,
     m_commandMap = std::map< std::string, ves::open::xml::CommandPtr >(
                        tempMap.begin(), tempMap.end() );
 }
+#include <loki/TypeTraits.h>
+
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 {
@@ -165,6 +167,18 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
     // we are expecting that a network will be found
     if( !objectVector.empty() )
     {
+        //Conversion<T, U>::exists2Way
+        //SameType<T, U>::value
+        //Conversion<T, U>::exists
+        //const XMLObjectPtr tempPtr = objectVector.at( 0 );
+        
+        //bool tempBool = Loki::IsSameType<Loki::TypeTraits::PointerTraits( tempPtr ), Loki::TypeTraits<SystemPtr>::PointeeType>::value;
+        
+        /*if( ::Loki::TypeTraits<SystemPtr>::ReferredType == ::Loki::TypeTraits<tempPtr>::ReferredType )
+        {
+            
+        }*/
+        //tempSystem = SystemPtr( objectVector.at( 0 ) );
         //If the file is a new xml file with a system element
         if( objectVector.at( 0 )->GetObjectType() == "System" )
         {
