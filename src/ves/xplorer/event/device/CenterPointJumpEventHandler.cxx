@@ -79,7 +79,7 @@ void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CenterPointJumpEventHandler::Execute( XMLObjectPtr veXMLObject )
+void CenterPointJumpEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
 

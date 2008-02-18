@@ -106,7 +106,7 @@ void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void ChangeCursorEventHandler::Execute( XMLObjectPtr xmlObject )
+void ChangeCursorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     //Grab the subdialog settings from streamlines to adjust cursor settings
     CommandPtr command = xmlObject;

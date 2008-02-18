@@ -69,7 +69,7 @@ void StoredSceneEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* bas
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void StoredSceneEventHandler::Execute( XMLObjectPtr veXMLObject )
+void StoredSceneEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {

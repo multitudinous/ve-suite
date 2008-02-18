@@ -109,7 +109,7 @@ void AddVTKDataSetEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AddVTKDataSetEventHandler::Execute( xml::XMLObjectPtr xmlObject )
+void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     if( !_activeModel )
     {

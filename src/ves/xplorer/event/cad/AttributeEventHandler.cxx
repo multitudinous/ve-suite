@@ -86,7 +86,7 @@ void AttributeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void AttributeEventHandler::Execute( ves::open::xml::XMLObjectPtr veXMLObject )
+void AttributeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     if( _activeModel )
     {

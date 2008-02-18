@@ -92,7 +92,7 @@ void PhysicsSimulationEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsSimulationEventHandler::Execute( ves::open::xml::XMLObjectPtr veXMLObject )
+void PhysicsSimulationEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     ves::open::xml::CommandPtr command = veXMLObject;
 

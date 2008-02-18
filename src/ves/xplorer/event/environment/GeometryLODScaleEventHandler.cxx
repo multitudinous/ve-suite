@@ -68,7 +68,7 @@ GeometryLODScaleEventHandler::operator=( const GeometryLODScaleEventHandler& rhs
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void GeometryLODScaleEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
+void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
     {

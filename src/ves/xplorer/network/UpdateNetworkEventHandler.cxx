@@ -85,7 +85,7 @@ void UpdateNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void UpdateNetworkEventHandler::Execute( XMLObjectPtr xmlObject )
+void UpdateNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr cmd = xmlObject;
     if( cmd->GetDataValuePair( "Load Data" ) )

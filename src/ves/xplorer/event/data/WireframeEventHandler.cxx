@@ -107,7 +107,7 @@ void WireframeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void WireframeEventHandler::Execute( XMLObjectPtr xmlObject )
+void WireframeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 

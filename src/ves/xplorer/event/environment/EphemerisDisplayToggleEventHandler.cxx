@@ -68,7 +68,7 @@ EphemerisDisplayToggleEventHandler::operator=( const EphemerisDisplayToggleEvent
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void EphemerisDisplayToggleEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
+void EphemerisDisplayToggleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
     {

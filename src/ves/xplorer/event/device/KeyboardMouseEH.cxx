@@ -78,7 +78,7 @@ void KeyboardMouseEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouseEventHandler::Execute( XMLObjectPtr veXMLObject )
+void KeyboardMouseEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
     DataValuePairWeakPtr animateDVP = command->GetDataValuePair( "AnimateID" );

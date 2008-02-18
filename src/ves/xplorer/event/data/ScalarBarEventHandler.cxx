@@ -108,7 +108,7 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void ScalarBarEventHandler::Execute( XMLObjectPtr xmlObject )
+void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 

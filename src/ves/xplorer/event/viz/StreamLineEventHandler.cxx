@@ -85,7 +85,7 @@ void StreamLineEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void StreamLineEventHandler::Execute( ves::open::xml::XMLObjectPtr veXMLObject )
+void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     ves::open::xml::CommandPtr command = veXMLObject;
     ves::open::xml::DataValuePairWeakPtr sizeDVP = command->GetDataValuePair( "Size" );

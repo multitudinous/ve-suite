@@ -81,7 +81,7 @@ DataTransformEventHandler& DataTransformEventHandler::operator=( const DataTrans
     return *this;
 }
 ///////////////////////////////////////////////////////////////////////
-void DataTransformEventHandler::Execute( XMLObjectPtr xmlObject )
+void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
     {

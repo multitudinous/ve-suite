@@ -66,7 +66,7 @@ QuatCamLoadFileEventHandler::operator=( const QuatCamLoadFileEventHandler& rhs )
 void QuatCamLoadFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {}
 /////////////////////////////////////////////////////////////////////////////////////
-void QuatCamLoadFileEventHandler::Execute( XMLObjectPtr veXMLObject )
+void QuatCamLoadFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     std::string fileName;
     try

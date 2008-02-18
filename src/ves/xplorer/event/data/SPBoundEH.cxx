@@ -92,7 +92,7 @@ void SeedPointBoundsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SeedPointBoundsEventHandler::Execute( XMLObjectPtr veXMLObject )
+void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     if( !_activeModel )
         throw;

@@ -94,7 +94,7 @@ void SeedPointActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SeedPointActivateEventHandler::Execute( XMLObjectPtr veXMLObject )
+void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {

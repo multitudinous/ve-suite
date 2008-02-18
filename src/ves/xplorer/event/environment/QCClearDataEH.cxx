@@ -66,7 +66,7 @@ QuatCamClearDataEventHandler::operator=( const QuatCamClearDataEventHandler& rhs
 void QuatCamClearDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject )
 {}
 /////////////////////////////////////////////////////////////////////////////////////
-void QuatCamClearDataEventHandler::Execute( XMLObjectPtr veXMLObject )
+void QuatCamClearDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {

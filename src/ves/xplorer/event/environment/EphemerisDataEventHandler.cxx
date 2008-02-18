@@ -67,7 +67,7 @@ EphemerisDataEventHandler::operator=( const EphemerisDataEventHandler& rhs )
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////
-void EphemerisDataEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
+void EphemerisDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
     {

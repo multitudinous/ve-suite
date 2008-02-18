@@ -72,7 +72,7 @@ void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHan
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceEventHandler::Execute( XMLObjectPtr veXMLObject )
+void DeviceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
 

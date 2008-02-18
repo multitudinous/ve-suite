@@ -103,7 +103,7 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SwitchXplorerViewEventHandler::Execute( XMLObjectPtr xmlObject )
+void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP =

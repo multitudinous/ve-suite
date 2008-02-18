@@ -686,7 +686,7 @@ void CreateVisObjectEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
        }*/
 }
 //////////////////////////////////////////////////////////////////////////
-void CreateVisObjectEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
+void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     // Set the active dataset
     SetActiveDataSet( xmlObject );

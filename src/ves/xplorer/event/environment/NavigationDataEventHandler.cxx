@@ -82,7 +82,7 @@ void NavigationDataEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* 
     _baseObject = modelHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationDataEventHandler::Execute( XMLObjectPtr veXMLObject )
+void NavigationDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
     dynamic_cast< Device* >( _baseObject )->SetVECommand( command );

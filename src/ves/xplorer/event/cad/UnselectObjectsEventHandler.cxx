@@ -71,7 +71,7 @@ void UnselectObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UnselectObjectsEventHandler::Execute( XMLObjectPtr veXMLObject )
+void UnselectObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
 

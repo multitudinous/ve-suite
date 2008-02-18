@@ -88,7 +88,7 @@ void SoundActivateEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* b
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SoundActivateEventHandler::Execute( XMLObjectPtr veXMLObject )
+void SoundActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {

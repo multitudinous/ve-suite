@@ -73,7 +73,7 @@ public:
 
     ///The call to handle the event
     ///\param objectToProcess The xml Object to process
-    virtual void Execute( ves::open::xml::XMLObjectPtr objectToProcess = 0 ) = 0;
+    virtual void Execute( const ves::open::xml::XMLObjectPtr& objectToProcess = 0 ) = 0;
 
     ///\param baseObject The GlobalBase object to apply the command to.
     virtual void SetGlobalBaseObject( ves::xplorer::GlobalBase* baseObject = 0 ) = 0;

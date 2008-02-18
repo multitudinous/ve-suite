@@ -62,7 +62,7 @@ public:
 
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObjectPtr veXMLObject );
+    void Execute( const ves::open::xml::XMLObjectPtr& veXMLObject );
 
     ///Set the cfdModel.
     ///\param model The cfdModel to execute the Command on\n.

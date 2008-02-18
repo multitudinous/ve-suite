@@ -75,7 +75,7 @@ void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::Globa
 ///////////////////////////////////////////////////////////////////////////////
 ///Exectute the event                                                        //
 ///////////////////////////////////////////////////////////////////////////////
-void ChangeBackgroundColorEventHandler::Execute( XMLObjectPtr veXMLObject )
+void ChangeBackgroundColorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
     DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );

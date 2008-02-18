@@ -67,7 +67,7 @@ public:
 
     //Exectute the event
     //param xmlObject The current xmlObject event.
-    void Execute( ves::open::xml::XMLObjectPtr command );
+    void Execute( const ves::open::xml::XMLObjectPtr& command );
 
     //Equal operator
     StreamLineEventHandler& operator=( const StreamLineEventHandler& rhs );

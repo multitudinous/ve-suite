@@ -108,7 +108,7 @@ void AxesLabelsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void AxesLabelsEventHandler::Execute( XMLObjectPtr xmlObject )
+void AxesLabelsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 

@@ -93,7 +93,7 @@ void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::Glo
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void DeleteObjectFromNetworkEventHandler::Execute( XMLObjectPtr xmlObject )
+void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     // Get the active object
     CommandPtr command = xmlObject;

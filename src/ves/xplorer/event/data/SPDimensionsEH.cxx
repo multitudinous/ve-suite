@@ -91,7 +91,7 @@ void SeedPointDimensionsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalB
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void SeedPointDimensionsEventHandler::Execute( XMLObjectPtr veXMLObject )
+void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     if( !_activeModel )
         throw;

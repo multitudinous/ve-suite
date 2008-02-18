@@ -122,7 +122,7 @@ void CADEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 ///////////////////////////////////////////////////////
-void CADEventHandler::Execute( XMLObjectPtr veXMLObject )
+void CADEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     if( m_cadHandler && m_activeModel )
     {

@@ -78,7 +78,7 @@ void DeviceModeEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceModeEventHandler::Execute( XMLObjectPtr veXMLObject )
+void DeviceModeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
 

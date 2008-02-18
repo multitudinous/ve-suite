@@ -67,7 +67,7 @@ EphemerisAutoDateTimeEventHandler::operator=( const EphemerisAutoDateTimeEventHa
     return *this;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-void EphemerisAutoDateTimeEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
+void EphemerisAutoDateTimeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
     {

@@ -69,7 +69,7 @@ EphemerisHeightMapEventHandler::operator=( const EphemerisHeightMapEventHandler&
     return *this;
 }
 //////////////////////////////////////////////////////////////////////////////////
-void EphemerisHeightMapEventHandler::Execute( ves::open::xml::XMLObjectPtr xmlObject )
+void EphemerisHeightMapEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     try
     {

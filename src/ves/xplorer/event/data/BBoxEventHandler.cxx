@@ -108,7 +108,7 @@ void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
     }
 }
 //////////////////////////////////////////////////////////////////////////
-void BBoxEventHandler::Execute( XMLObjectPtr xmlObject )
+void BBoxEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     CommandPtr command = xmlObject;
     DataValuePairWeakPtr activeModelDVP = 

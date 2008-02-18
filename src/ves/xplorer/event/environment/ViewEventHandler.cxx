@@ -82,7 +82,7 @@ void ViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandl
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ViewEventHandler::Execute( XMLObjectPtr veXMLObject )
+void ViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
 

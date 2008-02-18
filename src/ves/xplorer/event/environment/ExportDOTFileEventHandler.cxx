@@ -70,7 +70,7 @@ void ExportDOTFileEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* b
     ;
 }
 //////////////////////////////////////////////////////////////////////////
-void ExportDOTFileEventHandler::Execute( XMLObjectPtr veXMLObject )
+void ExportDOTFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     try
     {

@@ -77,7 +77,7 @@ void DisplayEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHa
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::Execute( XMLObjectPtr veXMLObject )
+void DisplayEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     CommandPtr command = veXMLObject;
     DataValuePairWeakPtr DVP;

@@ -91,7 +91,7 @@ void TextureBasedEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
 ///////////////////////////////////////////////////////
 ///Exectute the event                                //
 //////////////////////////////////////////////////////////////////////
-void TextureBasedEventHandler::Execute( XMLObjectPtr veXMLObject )
+void TextureBasedEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
     //this is ridiculously simple now...Just testing to see how things will work.
     if( _activeModel )
