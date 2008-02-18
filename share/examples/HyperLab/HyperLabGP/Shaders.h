@@ -34,6 +34,8 @@ public:
                      float* reflectionPercent = NULL,
                      osg::ref_ptr< osg::Texture2D > shadow = NULL );
 
+    void Lights( osg::ref_ptr< osg::Node > node );
+
     std::map< std::string, osg::ref_ptr< osg::Image > > m_imageMap;
     osg::ref_ptr< osg::TextureCubeMap > m_tcm;
 };

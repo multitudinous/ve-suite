@@ -29,6 +29,7 @@ void Shaders::ReadTextures()
 {
     m_imageMap.insert( std::make_pair( "Decoration", osgDB::readImageFile( "./Textures/Decoration.tga" ) ) );
     m_imageMap.insert( std::make_pair( "WallMap", osgDB::readImageFile( "./Textures/WallMap.tga" ) ) );
+    m_imageMap.insert( std::make_pair( "Corona", osgDB::readImageFile( "./Textures/Corona.tga" ) ) );
 
     m_tcm = new osg::TextureCubeMap();
     m_tcm->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
@@ -127,5 +128,26 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
 
     vertexShader->setShaderSource( options_vertex );
     fragmentShader->setShaderSource( options_fragment );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Shaders::Lights( osg::ref_ptr< osg::Node > node )
+{
+    osg::ref_ptr< osg::StateSet > stateset = node->getOrCreateStateSet();
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    vertexShader->setType( osg::Shader::VERTEX );
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+    stateset->setAttribute( program.get() );
+
+    stateset->setTextureAttributeAndModes( 0, new osg::Texture2D( m_imageMap[ "Corona" ].get() ) );
+
+    osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 0 );
+    stateset->addUniform( baseMap.get() );
+
+    vertexShader->setShaderSource( lights_vertex );
+    fragmentShader->setShaderSource( lights_fragment );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -26,6 +26,7 @@ namespace osg
 {
     class Node;
     class Group;
+    class Geode;
     class MatrixTransform;
     class Texture2D;
     class Texture3D;
@@ -80,6 +81,7 @@ private:
     osg::ref_ptr< osg::Node > m_black;
     osg::ref_ptr< osg::Node > m_brown;
     osg::ref_ptr< osg::Node > m_ceiling;
+    osg::ref_ptr< osg::Geode > m_coronas;
     osg::ref_ptr< osg::Node > m_details;
     osg::ref_ptr< osg::Node > m_floor;
     osg::ref_ptr< osg::Node > m_glass;

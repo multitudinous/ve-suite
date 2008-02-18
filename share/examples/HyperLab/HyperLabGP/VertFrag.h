@@ -2,6 +2,53 @@
 #define VERT_FRAG_H
 
 ////////////////////////////////////////////////////////////////////////////////
+char lights_vertex[] =
+    "void main() \n"
+    "{ \n"
+        //Billboard the quads
+        "float coronaSize = 20.0; \n"
+        "vec3 pos = coronaSize * ( gl_Vertex.x * vec3( gl_ModelViewMatrix[ 0 ][ 0 ], \n"
+                                                      "gl_ModelViewMatrix[ 1 ][ 0 ], \n"
+                                                      "gl_ModelViewMatrix[ 2 ][ 0 ] ) +  \n"
+                                  "gl_Vertex.y * vec3( gl_ModelViewMatrix[ 0 ][ 1 ],  \n"
+                                                      "gl_ModelViewMatrix[ 1 ][ 1 ],  \n"
+                                                      "gl_ModelViewMatrix[ 2 ][ 1 ] ) ); \n"
+
+        "pos.x += 0.0; \n"
+        "pos.y += 0.0; \n"
+        "pos.z += 100.0; \n"
+
+        "gl_Position = gl_ModelViewProjectionMatrix * vec4( pos, 1.0 ); \n"
+        //"gl_Position = ftransform(); \n"
+
+        "gl_TexCoord[ 0 ].xy = 0.5 * gl_Vertex.xy + 0.5; \n"
+    "} \n";
+
+char lights_fragment[] =
+    "uniform sampler2D baseMap; \n"
+
+    "float saturate( float inValue ) \n"
+    "{ \n"
+        "return clamp( inValue, 0.0, 1.0 ); \n"
+    "} \n"
+
+    "void main() \n"
+    "{ \n"
+        "vec4 corona = texture2D( baseMap, gl_TexCoord[ 0 ].xy ); \n"
+
+        //"vec3 vdir = vec3( view_direction.x, view_direction.y, view_direction.z ); \n"
+        //"vec3 cdir = vec3( coronaDir.x, coronaDir.y, coronaDir.z ); \n"
+
+        //Glow depending on cosine dot product with corona directon
+        //"float glow = saturate( dot( vdir, cdir ) ); \n"
+
+        //"float strength = 1.0; \n"
+        //"float coronaExp = 1.0; \n"
+        //"gl_FragColor = strength * pow( glow, coronaExp ) * corona * lightColor; \n"
+
+        "gl_FragColor = vec4( 1.0, 0.0, 0.0, 1.0 ); \n"
+    "} \n";
+////////////////////////////////////////////////////////////////////////////////
 char base_vertex[] =
     "void main() \n"
     "{ \n"
@@ -150,17 +197,15 @@ char options_fragment[] =
 
             "vec4 shadowColor = shadow2D( shadowMap, shadowUV ); \n"
 
-            "for( int i = 1; i < 2; ++i ) \n"
-            "{ \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  i * mapScale,  i * mapScale, 0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  i * mapScale, -i * mapScale, 0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -i * mapScale,  i * mapScale, 0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -i * mapScale, -i * mapScale, 0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  i * mapScale,  0,            0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -i * mapScale,  0,            0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0,             i * mapScale, 0 ) ); \n"
-                "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0,            -i * mapScale, 0 ) ); \n"
-            "} \n"
+            //1AA on shadowMap
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale,  mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale, -mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale,  mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale, -mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale,  0.0,      0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale,  0.0,      0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,       mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,      -mapScale, 0.0 ) ); \n"
 
             "shadowColor = shadowColor / 18.0; \n"
 

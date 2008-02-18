@@ -13,6 +13,7 @@
 #include <osg/Texture3D>
 #include <osg/Group>
 #include <osg/Geode>
+#include <osg/Geometry>
 #include <osg/ShapeDrawable>
 #include <osg/MatrixTransform>
 #include <osg/Light>
@@ -48,6 +49,7 @@ m_aluminumPipes( 0 ),
 m_black( 0 ),
 m_brown( 0 ),
 m_ceiling( 0 ),
+m_coronas( 0 ),
 m_details( 0 ),
 m_floor( 0 ),
 m_glass( 0 ),
@@ -117,15 +119,14 @@ Scene::~Scene()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::DefaultVisuals()
 {
-    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
-    shader->SetOptions( m_details.get(), false, false, "Decoration" );
-    shader->SetOptions( m_floor.get(), false, false, "WallMap" );
-    shader->SetOptions( m_walls.get(), false, false, "WallMap" );
-
     shader->SetOptions( m_aluminumParts.get(), false, true );
     shader->SetOptions( m_aluminumPipes.get(), false, true );
     shader->SetOptions( m_black.get(), false, true );
     shader->SetOptions( m_brown.get(), false, true );
+    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
+    shader->Lights( m_coronas.get() );
+    shader->SetOptions( m_details.get(), false, false, "Decoration" );
+    shader->SetOptions( m_floor.get(), false, false, "WallMap" );
     shader->SetOptions( m_glass.get(), false, true );
     shader->SetOptions( m_lights.get(), false, true );
     shader->SetOptions( m_ltGreen.get(), false, true );
@@ -133,6 +134,7 @@ void Scene::DefaultVisuals()
     shader->SetOptions( m_orange.get(), false, true );
     shader->SetOptions( m_red.get(), false, true );
     shader->SetOptions( m_redBrown.get(), false, true );
+    shader->SetOptions( m_walls.get(), false, false, "WallMap" );
     shader->SetOptions( m_whiteDucts.get(), false, true );
     shader->SetOptions( m_whitePipes.get(), false, true );
     shader->SetOptions( m_yellow.get(), false, true );
@@ -165,13 +167,7 @@ void Scene::DefaultVisuals()
 void Scene::AdvancedVisuals()
 {
     float reflectionPercentage;
-    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
-    shader->SetOptions( m_details.get(), false, false, "Decoration",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_floor.get(), false, false, "WallMap",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_walls.get(), false, false, "WallMap",
-                        NULL, m_shadow.get() );
+
     shader->SetOptions( m_aluminumParts.get(), false, true, "",
                         &( reflectionPercentage = 0.05 ), m_shadow.get() );
     shader->SetOptions( m_aluminumPipes.get(), false, true, "",
@@ -180,6 +176,12 @@ void Scene::AdvancedVisuals()
                         NULL, m_shadow.get() );
     shader->SetOptions( m_brown.get(), false, true, "",
                         NULL, m_shadow.get() );
+    shader->Lights( m_coronas.get() );
+    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
+    shader->SetOptions( m_details.get(), false, false, "Decoration",
+                        NULL, m_shadow.get() );
+    shader->SetOptions( m_floor.get(), false, false, "WallMap",
+                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
     shader->SetOptions( m_glass.get(), false, true, "",
                         &( reflectionPercentage = 0.05 ), m_shadow.get() );
     shader->SetOptions( m_lights.get(), false, true );
@@ -192,6 +194,8 @@ void Scene::AdvancedVisuals()
     shader->SetOptions( m_red.get(), false, true, "",
                         NULL, m_shadow.get() );
     shader->SetOptions( m_redBrown.get(), false, true );
+    shader->SetOptions( m_walls.get(), false, false, "WallMap",
+                        NULL, m_shadow.get() );
     shader->SetOptions( m_whiteDucts.get(), false, true, "",
                         NULL, m_shadow.get() );
     shader->SetOptions( m_whitePipes.get(), false, true, "",
@@ -253,6 +257,7 @@ void Scene::XRay()
     shader->SetOptions( m_black.get(), true );
     shader->SetOptions( m_brown.get(), true );
     shader->SetOptions( m_ceiling.get(), true );
+    m_coronas->setNodeMask( 0 );
     shader->SetOptions( m_details.get(), true );
     shader->SetOptions( m_floor.get(), true );
     shader->SetOptions( m_glass.get(), true );
@@ -327,8 +332,29 @@ void Scene::CreateLights()
 
     //Set light defaults
     m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-    m_light->setDiffuse( osg::Vec4( 0.9f, 0.9f, 0.9f, 1.0f ) );
-    m_light->setSpecular( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    m_light->setDiffuse( osg::Vec4( 1.0f, 0.9f, 0.8f, 1.0f ) );
+    m_light->setSpecular( osg::Vec4( 0.6f, 0.6f, 0.4f, 1.0f ) );
+
+    //Add in the corona quads for added effects
+    m_coronas = new osg::Geode();
+    osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > positions = new osg::Vec3Array();
+
+    vertices->push_back( osg::Vec3( -1.0,  1.0, 0.0 ) );
+    vertices->push_back( osg::Vec3( -1.0, -1.0, 0.0 ) );
+    vertices->push_back( osg::Vec3(  1.0, -1.0, 0.0 ) );
+    vertices->push_back( osg::Vec3(  1.0,  1.0, 0.0 ) );
+    
+    //positions->push_back( osg::Vec3( 1.0, 1.0, 500.0 ) );
+
+    geometry->setVertexArray( vertices.get() );
+    geometry->setTexCoordArray( 0, positions.get() );
+
+    geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices->size() ) );
+    
+    m_coronas->addDrawable( geometry.get() );
+    //m_pluginDCS->addChild( m_coronas.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateNodes()
@@ -373,11 +399,11 @@ void Scene::CreateNodes()
         m_redBrown = osgDB::readNodeFile( "./Models/IVEs/Room/RedBrown.ive" );
         m_room->GetDCS()->addChild( m_redBrown.get() );
         m_walls = osgDB::readNodeFile( "./Models/IVEs/Room/Walls.ive" );
-        m_room->GetDCS()->addChild( m_whitePipes.get() );
+        //m_room->GetDCS()->addChild( m_walls.get() );
         m_whiteDucts = osgDB::readNodeFile( "./Models/IVEs/Room/WhiteDucts.ive" );
-        roomPhysics->addChild( m_walls.get() );
+        roomPhysics->addChild( m_whiteDucts.get() );
         m_whitePipes = osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
-        m_room->GetDCS()->addChild( m_whiteDucts.get() );
+        m_room->GetDCS()->addChild( m_whitePipes.get() );
         m_yellow = osgDB::readNodeFile( "./Models/IVEs/Room/Yellow.ive" );
         m_room->GetDCS()->addChild( m_yellow.get() );
 
@@ -456,8 +482,8 @@ void Scene::CreateNodes()
 
         osg::ref_ptr< osg::Material > lightsMaterial = new osg::Material();
         lightsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        lightsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        lightsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        lightsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+        lightsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
         lightsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         lightsMaterial->setShininess( osg::Material::FRONT, 15.0f );
         stateset = m_lights->getOrCreateStateSet();
@@ -510,7 +536,7 @@ void Scene::CreateNodes()
 
         osg::ref_ptr< osg::Material > wallsMaterial = new osg::Material();
         wallsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 3.0f, 3.0f, 3.0f, 1.0f ) );
-        wallsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.85f, 0.7f, 0.3f, 1.0f ) );
+        wallsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.6f, 0.5f, 0.4f, 1.0f ) );
         wallsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         wallsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
         wallsMaterial->setShininess( osg::Material::FRONT, 5.0f );
@@ -659,8 +685,8 @@ void Scene::CreateNodes()
 
     osg::ref_ptr< osg::Material > frameMaterial = new osg::Material();
     frameMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    frameMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-    frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    frameMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
+    frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
     frameMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     frameMaterial->setShininess( osg::Material::FRONT, 12.0f );
     stateset = m_frame->getOrCreateStateSet();
@@ -886,8 +912,8 @@ void Scene::CreateShadowTexture()
         osg::ref_ptr< osg::StateSet > localStateset = m_camera->getOrCreateStateSet();
         localStateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-        float factor = 0.0f;
-        float units = 1.0f;
+        float factor = 2.0f;
+        float units = 4.0f;
 
         osg::ref_ptr< osg::PolygonOffset > polygonOffset = new osg::PolygonOffset();
         polygonOffset->setFactor( factor );
