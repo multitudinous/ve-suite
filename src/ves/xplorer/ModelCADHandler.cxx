@@ -343,12 +343,12 @@ void ModelCADHandler::MakeCADRootTransparent()
         return;
     }
 
-    osg::ref_ptr< osg::StateSet > attribute = new osg::StateSet;
+    osg::ref_ptr< osg::StateSet > attribute =
+           m_assemblyList[m_rootCADNodeID]->getOrCreateStateSet();
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
 
     bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    attribute->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-    attribute->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+    attribute->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     attribute->setMode( GL_BLEND, osg::StateAttribute::ON );
     attribute->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
 

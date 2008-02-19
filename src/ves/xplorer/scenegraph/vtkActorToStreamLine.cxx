@@ -252,7 +252,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
-    stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    stateset->setRenderBinDetails( 10, "DepthSortedBin" );
     stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();

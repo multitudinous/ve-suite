@@ -159,13 +159,12 @@ void MaterialHelper::LoadMaterial( CADMaterialPtr material )
 
     if( opacity == 1.0 )
     {
-        m_ss->setRenderingHint( osg::StateSet::OPAQUE_BIN );
+        m_ss->setRenderBinDetails( 0, "RenderBin" );
         m_ss->setMode( GL_BLEND, osg::StateAttribute::ON );
     }
     else
     {
-        m_ss->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-        m_ss->setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+        m_ss->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
         m_ss->setMode( GL_BLEND, osg::StateAttribute::ON );
     }
     m_ss->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );

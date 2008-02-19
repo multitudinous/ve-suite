@@ -214,8 +214,7 @@ void Attribute::CreateTransparencyStateSet()
 
     osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
     bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-    setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+    setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     setMode( GL_BLEND, osg::StateAttribute::ON );
     setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
 
@@ -251,13 +250,12 @@ void Attribute::CreateStateSetFromAttribute( CADAttributePtr attribute )
         //so either enable "typical" blending (1-alpha) and bin appropriately.
         if( !blending )
         {
-            setRenderingHint( osg::StateSet::OPAQUE_BIN );
+            setRenderBinDetails( 0, std::string( "RenderBin" ) );
             setMode( GL_BLEND, osg::StateAttribute::ON );
         }
         else
         {
-            setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-            setRenderBinDetails( 99, std::string( "DepthSortedBin" ) );
+            setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
             setMode( GL_BLEND, osg::StateAttribute::ON );
         }
         setAttributeAndModes( bf.get(), osg::StateAttribute::ON );

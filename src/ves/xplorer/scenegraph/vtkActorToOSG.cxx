@@ -294,8 +294,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::processPrimitive( vtkAct
     // if not opaque
     if( actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag )
     {
-        stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN ); // draw last
-        // stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+        stateset->setRenderBinDetails( 10, "DepthSortedBin "); 
         stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
         stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
     }
