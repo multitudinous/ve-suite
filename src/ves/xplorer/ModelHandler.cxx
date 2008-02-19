@@ -63,6 +63,7 @@
 #include <ves/xplorer/event/cad/CADTransformEH.h>
 #include <ves/xplorer/event/cad/MaterialUpdateEH.h>
 #include <ves/xplorer/event/cad/MaterialModeUpdateEH.h>
+#include <ves/xplorer/event/cad/CADSetOpacityEventHandler.h>
 
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 #include <ves/xplorer/event/data/AxesEventHandler.h>
@@ -156,6 +157,7 @@ ModelHandler::ModelHandler( void )
     _eventHandlers[ std::string( "INITIALIZE_PHYSICS" )] = new ves::xplorer::event::CADInitializePhysicsEventHandler();
     _eventHandlers[ std::string( "PHYSICS_MESH" )] = new ves::xplorer::event::CADPhysicsMeshEventHandler();
     _eventHandlers[ std::string( "PHYSICS_PROPERTIES" )] = new ves::xplorer::event::CADPhysicsPropertiesEventHandler();
+    _eventHandlers[ std::string( "CAD_OPACITY_UPDATE" )] = new ves::xplorer::event::CADSetOpacityEventHandler();
 
 #ifdef _OSG
     _activeTDSet = 0;
