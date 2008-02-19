@@ -73,10 +73,10 @@ public:
 
     ///Accessor to set the VECommand to be used in any class within Xplorer
     ///\param command holds the current command to be executed
-    void SetVECommand( ves::open::xml::CommandPtr command );
+    void SetVECommand( const ves::open::xml::CommandPtr& command );
 
     ///Get the current command
-    ves::open::xml::CommandPtr GetVECommand();
+    const ves::open::xml::CommandPtr& GetVECommand();
 protected:
 
     ves::open::xml::CommandPtr veCommand;///<cfdApp side variables declared in VjObs_i.h

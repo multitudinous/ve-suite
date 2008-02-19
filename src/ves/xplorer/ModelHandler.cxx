@@ -210,12 +210,12 @@ ModelHandler::~ModelHandler( void )
 // Helper functions
 ///////////////////////
 /////////////////////////////////////////////////////////////
-void ModelHandler::SetXMLCommand( ves::open::xml::CommandPtr inputCommand )
+void ModelHandler::SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand )
 {
     activeCommand = inputCommand;
 }
 /////////////////////////////////////////////////////////////
-ves::open::xml::CommandPtr ModelHandler::GetXMLCommand( void )
+const ves::open::xml::CommandPtr& ModelHandler::GetXMLCommand( void )
 {
     return activeCommand;
 }

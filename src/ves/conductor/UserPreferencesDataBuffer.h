@@ -68,13 +68,13 @@ public:
     void CleanUp( void );
     ///Get Command with key
     ///The key MUST be the command name
-    ves::open::xml::CommandWeakPtr GetCommand( std::string commandKey );
+    const ves::open::xml::CommandPtr& GetCommand( const std::string& commandKey );
     ///set Command with key
-    void SetCommand( std::string commandKey, ves::open::xml::CommandWeakPtr command );
+    void SetCommand( const std::string& commandKey, const ves::open::xml::CommandPtr& command );
     ///Get all the commands
     std::map< std::string, ves::open::xml::CommandWeakPtr > GetCommandMap( void );
     ///Set all the commands
-    void SetCommandMap( std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap );
+    void SetCommandMap( const std::map< std::string, ves::open::xml::CommandWeakPtr >& tempMap );
 private:
     ///Mapp to hold all the preference data to be written to the ves file
     std::map< std::string, ves::open::xml::CommandPtr > commandMap;

@@ -55,69 +55,85 @@ XMLObjectPtr XMLCreator::CreateNewXMLObject( const std::string& objectType )
 {
     if( objectType == "FloatArray" )
     {
-        return new FloatArray();
+        FloatArrayPtr temp = new FloatArray();
+        return temp;
     }
     else if( objectType == "Transform" )
     {
-        return new Transform();
+        TransformPtr temp = new Transform();
+        return temp;
     }
     else if( objectType == "Command" )
     {
-        return new Command();
+        CommandPtr temp = new Command();
+        return temp;
     }
     else if( objectType == "vecommand" )
     {
-        return new Command();
+        CommandPtr temp = new Command();
+        return temp;
     }
     else if( objectType == "DataValuePair" )
     {
-        return new DataValuePair();
+        DataValuePairPtr temp = new DataValuePair();
+        return temp;
     }
     else if( objectType == "OneDDoubleArray" )
     {
-        return new OneDDoubleArray();
+        OneDDoubleArrayPtr temp = new OneDDoubleArray();
+        return temp;
     }
     else if( objectType == "OneDIntArray" )
     {
-        return new OneDIntArray();
+        OneDIntArrayPtr temp = new OneDIntArray();
+        return temp;
     }
     else if( objectType == "OneDStringArray" )
     {
-        return new OneDStringArray();
+        OneDStringArrayPtr temp = new OneDStringArray();
+        return temp;
     }
     else if( objectType == "ParameterBlock" )
     {
-        return new ParameterBlock();
+        ParameterBlockPtr temp = new ParameterBlock();
+        return temp;
     }
     else if( objectType == "StateInfo" )
     {
-        return new StateInfo();
+        StateInfoPtr temp = new StateInfo();
+        return temp;
     }
     else if( objectType == "ThreeDDoubleArray" )
     {
-        return new ThreeDDoubleArray();
+        ThreeDDoubleArrayPtr temp = new ThreeDDoubleArray();
+        return temp;
     }
     else if( objectType == "Transform" )
     {
-        return new Transform();
+        TransformPtr temp = new Transform();
+        return temp;
     }
     else if( objectType == "TwoDDoubleArray" )
     {
-        return new TwoDDoubleArray();
+        TwoDDoubleArrayPtr temp = new TwoDDoubleArray();
+        return temp;
     }
     else if( objectType == "TwoDIntArray" )
     {
-        return new TwoDIntArray();
+        TwoDIntArrayPtr temp = new TwoDIntArray();
+        return temp;
     }
     else if( objectType == "ThreeDIntArray" )
     {
-        return new ThreeDIntArray();
+        ThreeDIntArrayPtr temp = new ThreeDIntArray();
+        return temp;
     }
     else if( objectType == "User" )
     {
-        return new User();
+        UserPtr temp = new User();
+        return temp;
     }
-    return 0;
+    return XMLObjectPtr();
 }
 ////////////////////////////////////////////////////////////////////////////
 XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( const std::string& objectType,

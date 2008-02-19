@@ -72,14 +72,8 @@ private:
     //friend class vpr::Singleton< SceneManager >;
     //SceneManager(const SceneManager& o) { ; }
     //SceneManager& operator=(const SceneManager& o) { ; }
-    CORBAServiceList( void )
-    {
-        ;
-    }
-    ~CORBAServiceList()
-    {
-        ;
-    } // Never gets called, don't implement
+    CORBAServiceList( void );
+    ~CORBAServiceList();
     vprSingletonHeader( CORBAServiceList );
 
 public:
@@ -124,7 +118,7 @@ public:
     PEThread* GetMessageLog( void );
 
     ///Get the current commands from xplorer
-    ves::open::xml::CommandPtr GetGUIUpdateCommands( std::string commandName );
+    const ves::open::xml::CommandPtr& GetGUIUpdateCommands( const std::string& commandName );
 
     ///Call set id on all modules in the current network
     bool SetID( int moduleId, std::string moduleName );
@@ -162,6 +156,7 @@ private:
     PEThread* pelog;
     int peArgc;
     char** peArgv;
+    ves::open::xml::CommandPtr nullTextPtr;
 };
 }
 }

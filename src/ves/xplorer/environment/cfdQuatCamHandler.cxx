@@ -77,7 +77,6 @@ cfdQuatCamHandler::cfdQuatCamHandler() :
         lastCommandId( 0 ),
         currentFrame( 0 ),
         writeFrame( 0 ),
-        command( 0 ),
         thisQuatCam( 0 ),
         t( 0.0f ),
         numQuatCams( 0 ),
@@ -419,9 +418,9 @@ void cfdQuatCamHandler::ProcessCommand()
 
     bool flag = false;
     std::string commandType;
-    if( command )
+    if( veCommand )
     {
-        commandType = command->GetCommandName();
+        commandType = veCommand->GetCommandName();
     }
     else
     {
@@ -431,7 +430,7 @@ void cfdQuatCamHandler::ProcessCommand()
 
     if( !commandType.compare( "ViewLoc_Data" ) )
     {
-        DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
+        DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
 
         ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
         std::vector< long > commandIds;
@@ -700,11 +699,6 @@ double cfdQuatCamHandler::GetQuatCamIncrementor( void )
 bool cfdQuatCamHandler::IsActive( void )
 {
     return activecam;
-}
-////////////////////////////////////////////////////////////////////////////////
-void cfdQuatCamHandler::SetVECommand( CommandPtr veCommand )
-{
-    command = veCommand;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::SetMasterNode( bool masterNode )

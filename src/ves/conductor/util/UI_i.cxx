@@ -188,7 +188,7 @@ void Body_UI_i::SetLogWindow( PEThread* logWindow )
     this->logWindow = logWindow;
 }
 ///////////////////////////////////////////////////////////////////////////////
-ves::open::xml::CommandPtr Body_UI_i::GetXplorerData( std::string commandName )
+const ves::open::xml::CommandPtr& Body_UI_i::GetXplorerData( const std::string& commandName )
 {
     std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
     iter = m_commandNameMap.find( commandName );

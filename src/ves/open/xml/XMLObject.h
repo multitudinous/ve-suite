@@ -70,10 +70,12 @@ namespace xml
 class VE_XML_EXPORTS XMLObject
 {
 public:
-    ///Base constructor
-    XMLObject( );
     ///Destructor
     virtual ~XMLObject();
+
+protected:
+    ///Base constructor
+    XMLObject();
     ///Copy Construstor
     XMLObject( const XMLObject& );
     ///equal operator
@@ -82,7 +84,6 @@ public:
     ///http://xml.apache.org/xerces-c/apiDocs/classDOMNode.html#z233_0
     XMLObject& operator= ( const XMLObject& );
 
-protected:
     ///Set the XMLObject type
     ///\param veObjectType
     void SetObjectType( const std::string& veObjectType );

@@ -140,8 +140,6 @@ public:
 
     bool IsActive( void );
 
-    // New function for testing the new VECommand structure
-    void SetVECommand( ves::open::xml::CommandPtr veCommand );
     ///Process the command that was set by conductor
     virtual void ProcessCommand();
 
@@ -187,9 +185,6 @@ private:
 
     std::vector< std::vector <int> > flyThroughList;
     std::vector < int > completionTest;
-
-    // class used to store xml command
-    ves::open::xml::CommandPtr command;
 
     // Required so that vpr::Singleton can instantiate this class.
     //friend class vpr::Singleton< TextureBasedVizHandler >;

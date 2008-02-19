@@ -178,9 +178,15 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
         {
             
         }*/
-        //tempSystem = SystemPtr( objectVector.at( 0 ) );
+        //std::vector< ves::open::xml::XMLObjectPtr >::const_iterator constObjIter;
+        //constObjIter = objectVector.begin();
+        //tempSystem = SystemPtr( *constObjIter );
+        //tempSystem = objectVector.at( 0 );
+        //System* tempSysOld = dynamic_cast< System* >( &(*( *constObjIter )));
+        //typeid
         //If the file is a new xml file with a system element
         if( objectVector.at( 0 )->GetObjectType() == "System" )
+        //if( tempSystem )
         {
             tempSystem = objectVector.at( 0 );
             m_systemMap[tempSystem->GetID()] = tempSystem;

@@ -84,17 +84,7 @@ ves::open::xml::XMLObjectPtr ModelCreator::CreateNewXMLObject( const std::string
     {
         return SystemPtr( new System() );
     }
-    return 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr
-ModelCreator::CreateNewXMLObjectSmart( const std::string& objectType )
-{
-    if( objectType == "Tag" )
-    {
-        return TagPtr( new Tag() );
-    }
-    return 0;
+    return XMLObjectPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr
@@ -144,15 +134,3 @@ ModelCreator::CreateNewXMLObjectCopy( const std::string& objectType,
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::XMLObjectPtr
-ModelCreator::CreateNewXMLObjectCopySmart( const std::string& objectType,
-                                           const ves::open::xml::XMLObjectPtr& objectToCopy )
-{
-    if( objectType == "Tag" )
-    {
-        ///This is a hack and will be corrected
-        //with the proper use of a factory
-        return TagPtr( objectToCopy );
-    }
-    return 0;
-}

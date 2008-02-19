@@ -53,6 +53,17 @@ using namespace ves::conductor::util;
 vprSingletonImp( CORBAServiceList );
 
 ////////////////////////////////////////////////////////////////////////////////
+CORBAServiceList::CORBAServiceList( void )
+{
+    nullTextPtr = new ves::open::xml::Command();
+    nullTextPtr->SetCommandName( "NULL" );
+}
+////////////////////////////////////////////////////////////////////////////////
+CORBAServiceList::~CORBAServiceList()
+{
+    ;
+} // Never gets called, don't implement
+////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetArgcArgv( int argc, char** argv )
 {
     p_ui_i = 0;
@@ -326,7 +337,7 @@ void CORBAServiceList::CheckORBWorkLoad( void )
                 orb->perform_work();
             }
 
-            ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
+            const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
             if( textOutput->GetCommandName() != "NULL" )
             {
                 GetMessageLog()->SetMessage( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
@@ -507,13 +518,11 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
     return true;
 }
 ///////////////////////////////////////////////////////////////////////
-ves::open::xml::CommandPtr CORBAServiceList::GetGUIUpdateCommands( std::string commandName )
+const ves::open::xml::CommandPtr& CORBAServiceList::GetGUIUpdateCommands( const std::string& commandName )
 {
     if( p_ui_i == 0 )
     {
-        ves::open::xml::CommandPtr tempCommand = new Command();
-        tempCommand->SetCommandName( "NULL" );
-        return tempCommand;
+        return nullTextPtr;
     }
     return p_ui_i->GetXplorerData( commandName );
 }

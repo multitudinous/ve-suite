@@ -45,23 +45,23 @@ ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObject( const std::string& 
 {
     if( objectType == "CADAssembly" )
     {
-        return new CADAssembly();
+        return CADAssemblyPtr( new CADAssembly() );
     }
     else if( objectType == "CADPart" )
     {
-        return new CADPart();
+        return CADPartPtr( new CADPart() );
     }
     else if( objectType == "CADAttribute" )
     {
-        return new CADAttribute();
+        return CADAttributePtr( new CADAttribute() );
     }
     else if( objectType == "CADMaterial" )
     {
-        return new CADMaterial();
+        return CADMaterialPtr( new CADMaterial() );
     }
     else if( objectType == "CADNodeAnimation" )
     {
-        return new CADNodeAnimation();
+        return CADNodeAnimationPtr( new CADNodeAnimation() );
     }
     return XMLObjectPtr();
 }

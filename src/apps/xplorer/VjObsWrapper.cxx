@@ -214,7 +214,7 @@ void VjObsWrapper::init( CosNaming::NamingContext* input,
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-CommandPtr VjObsWrapper::GetXMLCommand( void )
+const CommandPtr& VjObsWrapper::GetXMLCommand( void )
 {
     return _vjObs->bufferCommand;
 }
