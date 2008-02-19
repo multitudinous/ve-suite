@@ -1,28 +1,42 @@
-##Builds WinClient program
+##Builds ConstructionBots Graphical Plugin
 import os, sys, string
 import SConsAddons.Util as sca_util
+import distutils.util
 pj = os.path.join
 
-Import('baseEnv ves_pkg RootDir buildDir vtk_options osg_options xerces_options')
-openDir = os.path.abspath( pj( RootDir, 'ConstructionBotsGP' ) )
+host_type = distutils.util.get_platform()
 
+Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options bullet_options xerces_options vtk_options GetPlatform' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'ConstructionBots', 'ConstructionBotsGP' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append( LIBS = [ 'loki.0.1.6' ])
-lib_env.Append( LIBPATH = [ pj( os.getenv( 'VE_INSTALL_DIR' ), 'lib' ) ] )
-lib_env.Append( CPPPATH = [ pj( os.getenv( 'VE_INSTALL_DIR' ), 'include' ) ] )
+lib_env.Append( LIBS = [ 'ves_open_xml',
+                         'ves_xplorer',
+                         'ves_xplorer_scenegraph' ] )
+lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
+		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+#lib_env.Append( CPPPATH = [] )
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = [ 'LOKI_DLL' ] )
 
-lib_env.ParseConfig( 'flagpoll vrjuggler --libs --cflags' )
-lib_env.ParseConfig( 'flagpoll Boost.Filesystem --libs --cflags' )
-lib_env.ParseConfig( 'flagpoll bullet --libs --cflags' )
-
-vtk_options.apply( lib_env )
+gmtl_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
+osgal_options.apply( lib_env )
+bullet_options.apply( lib_env )
 xerces_options.apply( lib_env )
+vtk_options.apply( lib_env )
 
-lib = ves_pkg.createStaticAndSharedLibrary( 'ConstructionBotsGP', lib_env, pj( RootDir, 'Plugins', 'GE', 'linux-i686' ) )   
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+
+lib = ves_pkg.createLoadableModule( 'ConstructionBotsGP', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'ConstructionBots', 'Plugins', 'GE', host_type ) )  
+
 lib.addSources( sources )
-#lib.addHeaders( headers, pj( 'Plugins', 'GE' ) )
 lib.build()

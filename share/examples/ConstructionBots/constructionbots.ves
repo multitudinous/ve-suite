@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="d857d0c6-5764-9b44-866b-1c147c914afd">
+    <network>
+      <conductorState dataName="m_xUserScale" id="e8bc543b-3db3-bf44-85ae-ef4e23bb7450">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="65c6dc25-9691-6a41-b544-1cb63477cdef">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="0e9e4932-3e5a-e74f-bec9-22339f0d4896">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="5a4a2622-f111-2b44-b825-d16222fb8cd5">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="7813e571-77f1-c347-8a56-772416407ae0">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="831ffe1f-70c4-c841-bab0-b062a3a12f59">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="103" id="9d823b15-e480-e943-8841-5a4d00159a6e" name="ConstructionBotsUI" vendorUnit="ConstructionBotsUI">
+      <iconLocation xLocation="10" yLocation="10"/>
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <inputs commandName="portNumber">
+        <parameter dataName="portNumber" id="d8f0cf01-d807-1047-9c91-b95ca318c85a">
+          <dataValue type="xs:string"></dataValue>
+        </parameter>
+      </inputs>
+    </model>
+  </veSystem>
+
+  <User id="aeb713b9-544a-b64e-bfa4-50daf011b374" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="240828b4-518a-4243-a847-3127e552c43b">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
