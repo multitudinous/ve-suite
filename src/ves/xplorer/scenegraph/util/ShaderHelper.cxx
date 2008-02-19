@@ -30,10 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/xplorer/scenegraph/util/ShaderHelper.h>
 #include <ves/xplorer/scenegraph/util/PerlinNoiseTexture.h>
-#ifdef _OSG
+
 #include <osg/StateSet>
 #include <osg/Shader>
 #include <osg/Uniform>
@@ -44,8 +43,6 @@
 #include <osg/TextureCubeMap>
 #include <osg/TexGen>
 #include <osgDB/ReadFile>
-#elif _PEFORMER
-#endif
 
 #include <iostream>
 #include <sstream>
@@ -73,7 +70,7 @@ ShaderHelper::ShaderHelper( const ShaderHelper& rhs )
     {
         m_fragmentUniformNames.push_back( rhs.m_fragmentUniformNames.at( i ) );
     }
-#ifdef _OSG
+
     if( rhs.m_vshader.valid() )
         m_vshader = new osg::Shader( *rhs.m_vshader.get() );
 
@@ -82,8 +79,6 @@ ShaderHelper::ShaderHelper( const ShaderHelper& rhs )
 
     m_glslProgram = new osg::Program( *m_glslProgram.get() );
     m_ss = new osg::StateSet( *rhs.m_ss );
-#elif _PERFORMER
-#endif
 }
 //////////////////////////////////////////////////////////////
 ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
@@ -100,7 +95,6 @@ ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
         {
             m_fragmentUniformNames.push_back( rhs.m_fragmentUniformNames.at( i ) );
         }
-#ifdef _OSG
 
         if( rhs.m_vshader.valid() )
             m_vshader = rhs.m_vshader;
@@ -110,8 +104,6 @@ ShaderHelper& ShaderHelper::operator=( const ShaderHelper& rhs )
 
         m_glslProgram = rhs.m_glslProgram;
         m_ss = rhs.m_ss;
-#elif _PERFORMER
-#endif
     }
     return *this;
 }
@@ -123,18 +115,14 @@ ShaderHelper::~ShaderHelper()
     m_vertexUniformNames.clear();
     m_fragmentUniformNames.clear();
 }
-#ifdef _OSG
 /////////////////////////////////////////////////////
 void ShaderHelper::SetStateSet( osg::StateSet* shader )
 {
     m_ss = shader;
 }
-#elif _PERFORMER
-#endif
 ////////////////////////////////////////////
 void ShaderHelper::LoadTransparencyProgram()
 {
-#ifdef _OSG
     ShaderPtr vertShader = new Shader();
     vertShader->SetShaderType( "Vertex" );
     std::string vertexSource( " varying vec3 N;\n"
@@ -172,13 +160,10 @@ void ShaderHelper::LoadTransparencyProgram()
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );
     LoadGLSLProgram( glslProgram );
-#elif _PERFORMER
-#endif
 }
 ///////////////////////////////////////////////////////////////////
 void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
 {
-#ifdef _OSG
     //std::cout<<"Loading GLSLProgram: "<<glslProgram->GetProgramName()<<std::endl;
     if( !m_ss.valid() )
     {
@@ -206,9 +191,6 @@ void ShaderHelper::LoadGLSLProgram( ProgramPtr glslProgram )
     ///two-sided lighting hack until gl_FrontFacing works in glsl...
     ///only works if the shader implements it though...
     m_ss->setMode( GL_VERTEX_PROGRAM_TWO_SIDE, osg::StateAttribute::ON );
-#elif _PERFORMER
-    std::cout << "Not implemented for Performer yet!!!" << std::endl;
-#endif
     _attachGLSLProgramToStateSet();
 }
 ///////////////////////////////////////////////////////////////
@@ -219,8 +201,9 @@ void ShaderHelper::_createGLSLShader( ShaderPtr shader )
         std::cout << "Couldn't load shader from inline source because the source is empty!" << std::endl;
         return;
     }
+
     _extractUniformsFromShader( shader );
-#ifdef _OSG
+
     if( shader->GetShaderType() == std::string( "Fragment" ) )
     {
         if( !m_fshader )
@@ -245,9 +228,6 @@ void ShaderHelper::_createGLSLShader( ShaderPtr shader )
         }
         m_glslProgram->addShader( m_vshader.get() );
     }
-#elif _PERFORMER
-    std::cout << "Not implemented for Performer yet!!!" << std::endl;
-#endif
 }
 ///////////////////////////////////////////////////////////////////////////////////
 void ShaderHelper::_extractTextureFromShader( TextureImagePtr textureImage )
@@ -510,7 +490,7 @@ void ShaderHelper::UpdateUniform( UniformPtr uniformData )
         }
         else if( uniformType == "Sampler" )
         {
-            std::cout << "Updating Sampler!!" << std::endl;
+            //std::cout << "Updating Sampler!!" << std::endl;
         }
     }
 }
@@ -619,7 +599,7 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
         }
         else if( uniformType == "Sampler" )
         {
-            std::cout << "Extracting Sampler!!" << std::endl;
+            //std::cout << "Extracting Sampler!!" << std::endl;
             std::cout << "Unit: " << uniformData->GetTextureUnit() << std::endl;
 
             _extractTextureFromShader( shader->GetTextureImage( uniformData->GetTextureUnit() ) );
@@ -630,7 +610,6 @@ void ShaderHelper::_extractUniformsFromShader( ShaderPtr shader )
 /////////////////////////////////////////////////////////////////
 void ShaderHelper::_attachGLSLProgramToStateSet( bool override )
 {
-#ifdef _OSG
     if( m_ss.valid() )
     {
         if( m_glslProgram.valid() )
@@ -646,11 +625,7 @@ void ShaderHelper::_attachGLSLProgramToStateSet( bool override )
             }
         }
     }
-#elif _PERFORMER
-    std::cout << "Not implemented for Performer yet!!!" << std::endl;
-#endif
 }
-#ifdef _OSG
 //////////////////////////////////////////////////////////////
 osg::StateSet* ShaderHelper::GetProgramStateSet()
 {
@@ -664,5 +639,3 @@ osg::StateSet* ShaderHelper::GetProgramStateSet()
     }
     return 0;
 }
-#elif _PERFORMER
-#endif

@@ -39,7 +39,6 @@ cfdVEAvailModules API
 *
 */
 
-#include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/VEConfig.h>
 
 namespace ves
@@ -48,6 +47,8 @@ namespace xplorer
 {
 namespace network
 {
+class cfdVEPluginLoader;
+
 class VE_XPLORER_NETWORK_EXPORTS cfdVEAvailModules
 {
 public:

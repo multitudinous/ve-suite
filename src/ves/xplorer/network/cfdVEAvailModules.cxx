@@ -31,6 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/network/cfdVEAvailModules.h>
+#include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <iostream>
 
 #include <fstream>

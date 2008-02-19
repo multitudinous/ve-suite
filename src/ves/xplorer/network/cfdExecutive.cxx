@@ -33,6 +33,7 @@
 
 #include <ves/xplorer/network/VE_i.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
+#include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
 #include <ves/xplorer/ModelHandler.h>
