@@ -2275,12 +2275,12 @@ void AppFrame::OnInternalIdle()
         network = canvas->GetActiveNetwork();
     }
 
-    //only when not dragging
     if( !network )
     {
         return;
     }
 
+    //only when not dragging
     if( !network->IsDragging() )
     {
         ///Servicelist is initialized before network...

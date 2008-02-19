@@ -329,19 +329,25 @@ void CORBAServiceList::CheckORBWorkLoad( void )
 {
     try
     {
-        if( !CORBA::is_nil( orb.in() ) )
+        if( CORBA::is_nil( orb.in() ) )
         {
-            ::wxMilliSleep( 500 );
-            if( orb->work_pending() )
-            {
-                orb->perform_work();
-            }
+            return;
+        }
 
-            const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
-            if( textOutput->GetCommandName() != "NULL" )
-            {
-                GetMessageLog()->SetMessage( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
-            }
+        //This sleep is not needed in this use case since the ord work is in
+        // the main wx event thread. Therefore a sleep just slows down the 
+        // event loop and does not reduce the resources on the computer and
+        // only frustrates the user.
+        //::wxMilliSleep( 500 );
+        if( orb->work_pending() )
+        {
+            orb->perform_work();
+        }
+
+        const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );
+        if( textOutput->GetCommandName() != "NULL" )
+        {
+            GetMessageLog()->SetMessage( textOutput->GetDataValuePair( "TEXT_OUTPUT" )->GetDataString().c_str() );
         }
     }
     catch ( ... )
