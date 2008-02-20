@@ -20,9 +20,10 @@ BEGIN_EVENT_TABLE( ConstructionBotsUIDialog, wxDialog )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service, std::string* portNumber )
+ConstructionBotsUIDialog::ConstructionBotsUIDialog( wxWindow* parent, int id, 
+    ves::conductor::util::CORBAServiceList* service, std::string* portNumber )
 :
-UIDialog( (wxWindow *)parent, id, "ConstructionBots" ), p_portNumber( portNumber )
+UIDialog( (wxWindow *)parent, id, _("ConstructionBots") ), p_portNumber( portNumber )
 {
     serviceList = service;
 

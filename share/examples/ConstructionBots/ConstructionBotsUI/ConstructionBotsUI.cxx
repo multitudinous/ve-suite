@@ -15,9 +15,9 @@ ConstructionBotsUI::ConstructionBotsUI()
 {
     RegistVar( "portNumber", &portNumber );
 
-    name = "ConstructionBots";
+    name = _("ConstructionBots");
 
-    wxImage my_img( "Icons/ConstructionBots.xpm" );
+    wxImage my_img( _("Icons/ConstructionBots.xpm") );
     icon_w = static_cast< int >( my_img.GetWidth() );
     icon_h = static_cast< int >( my_img.GetHeight() );
     my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
@@ -98,7 +98,7 @@ ves::conductor::UIDialog* ConstructionBotsUI::UI( wxWindow* parent )
 wxString ConstructionBotsUI::GetConductorName()
 {         
     //Your name
-    wxString result = "NETL_ConstructionBots";
+    wxString result = _("NETL_ConstructionBots");
 
     return result;
 }
@@ -107,7 +107,7 @@ wxString ConstructionBotsUI::GetName()
 {
     if( name.IsEmpty() )
     {
-        name = "PleaseDefineClassName";
+        name = _("PleaseDefineClassName");
     }
 
     return name;
@@ -116,7 +116,7 @@ wxString ConstructionBotsUI::GetName()
 wxString ConstructionBotsUI::GetDesc()
 {
     //Your description
-    wxString result = "None";
+    wxString result = _("None");
 
     return result;
 }
