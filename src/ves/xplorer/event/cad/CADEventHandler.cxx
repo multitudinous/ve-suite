@@ -281,6 +281,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         SetNodeDescriptors( newAssembly->GetID(), "Assembly", "VE_XML_ID", newAssembly->GetID() );
         //Set a default material on nodes that have no initial material
         ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
+        m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
@@ -340,6 +341,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID", newPart->GetID() );
             //Set a default material on nodes that have no initial material
             ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( partNode->GetDCS() );
+            m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity() );
         }
         else
         {
