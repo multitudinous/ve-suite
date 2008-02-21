@@ -106,7 +106,7 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkAc
         geode->addDrawable( lines.get() );
     }
 
-    geode->setCullingActive( false );
+    //geode->setCullingActive( false );
 
     return geode;
 }

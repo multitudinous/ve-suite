@@ -75,12 +75,17 @@ void Clone::CloneNode( osg::Node* original )
     if( dynamic_cast< ves::xplorer::scenegraph::DCS* >( original ) )
     {
         m_cloneTransform = new ves::xplorer::scenegraph::DCS(
-                               *static_cast< ves::xplorer::scenegraph::DCS* >( original ),
-                               osg::CopyOp::DEEP_COPY_NODES );
+            *static_cast< ves::xplorer::scenegraph::DCS* >( original ),
+            osg::CopyOp::DEEP_COPY_NODES | 
+            osg::CopyOp::DEEP_COPY_STATESETS | 
+            osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
     }
     else if( dynamic_cast< osg::Geode* >( original ) )
     {
-        m_cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), osg::CopyOp::DEEP_COPY_NODES ) );
+        m_cloneTransform->addChild( new osg::Geode( *static_cast< osg::Geode* >( original ), 
+           osg::CopyOp::DEEP_COPY_NODES | 
+           osg::CopyOp::DEEP_COPY_STATESETS | 
+           osg::CopyOp::DEEP_COPY_STATEATTRIBUTES ) );
     }
     else
     {

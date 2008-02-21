@@ -111,12 +111,17 @@ CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
     if( input.m_cadNode->asGroup() )
     {
         m_cadNode = new osg::Group( *input.m_cadNode->asGroup(),
-                                    osg::CopyOp::DEEP_COPY_NODES );
+           osg::CopyOp::DEEP_COPY_NODES | 
+           osg::CopyOp::DEEP_COPY_STATESETS | 
+           osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
     }
     else if( dynamic_cast< osg::Geode* >( input.m_cadNode.get() ) )
     {
         m_cadNode = new osg::Geode( *static_cast< osg::Geode* >(
-                                        input.m_cadNode.get() ), osg::CopyOp::DEEP_COPY_NODES );
+                                        input.m_cadNode.get() ),
+           osg::CopyOp::DEEP_COPY_NODES | 
+           osg::CopyOp::DEEP_COPY_STATESETS | 
+           osg::CopyOp::DEEP_COPY_STATEATTRIBUTES );
     }
     else
     {
