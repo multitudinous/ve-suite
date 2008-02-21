@@ -54,7 +54,11 @@ vprSingletonImp( CORBAServiceList );
 
 ////////////////////////////////////////////////////////////////////////////////
 CORBAServiceList::CORBAServiceList( void )
+:
+mOrbCounter( 0 )
 {
+    mTimeZero = ACE_Time_Value::zero;
+    mTimeOutValue.msec( 3 );
     nullTextPtr = new ves::open::xml::Command();
     nullTextPtr->SetCommandName( "NULL" );
 }
@@ -339,9 +343,19 @@ void CORBAServiceList::CheckORBWorkLoad( void )
         // event loop and does not reduce the resources on the computer and
         // only frustrates the user.
         //::wxMilliSleep( 500 );
-        if( orb->work_pending() )
+        /*if( mOrbCounter > 4 )
         {
-            orb->perform_work();
+            mOrbCounter = 0;
+            return;
+        }
+        else
+        {
+            mOrbCounter++;
+        }*/
+        
+        if( orb->work_pending( mTimeOutValue ) )
+        {
+            orb->perform_work( mTimeZero );
         }
 
         const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );

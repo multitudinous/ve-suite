@@ -67,7 +67,6 @@ public:
     cfdVEPluginLoader();
     ~cfdVEPluginLoader();
 
-    //bool LoadPlugins(wxString dir);
     void LoadPlugins( void );
     void ScanAndLoad( void );
     ves::xplorer::plugin::cfdVEBaseClass* CreateNewPlugin( unsigned int );
@@ -76,22 +75,14 @@ public:
 
     void RegisterPlugins();
 
-    //Instantiate an instance of the plug_in. This instance is not used for any network composition but for information.
-    //void RegisterPlugin(wxClassInfo* info);
-
-    //char* GetPluginName(int);
     int GetNumberOfPlugins();
 
     ves::xplorer::plugin::cfdVEBaseClass* CreateObject( std::string );
 
-//private:
-    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* > plugins;
     //Keep the list of the first intance of each plugin
-    //std::vector<const wxClassInfo*> plugin_cls;
+    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* > plugins;
 
     vpr::LibraryFinder::LibraryList libs;
-    //The classinfo obj of the each plugin, will be use to generate more instances
-    //std::vector<wxPluginLibrary *> libs;
 };
 }
 }
