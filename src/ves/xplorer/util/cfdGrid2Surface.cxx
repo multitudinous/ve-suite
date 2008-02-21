@@ -43,21 +43,47 @@
 #include <vtkDecimatePro.h>
 #include <vtkSmoothPolyDataFilter.h>
 
-using namespace ves::xplorer::util;
+#include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkAlgorithmOutput.h>
+#include <vtkCompositeDataPipeline.h>
+#include <vtkDemandDrivenPipeline.h>
 
+
+using namespace ves::xplorer::util;
+//////////////////////////////////////////////////////////////////////////////////////////
 vtkPolyData * ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float deciVal )
 {
+    vtkPolyDataAlgorithm* geometryFilter = 0; 
+
+    if( dataSet->IsA( "vtkMultiGroupDataSet" ) )
+    {
+        // we have to use a compsite pipeline
+        vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
+        vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
+        prototype->Delete();
+        geometryFilter = vtkMultiGroupDataGeometryFilter::New();
+    }
+    else
+    {
+        geometryFilter = vtkGeometryFilter::New();
+        dynamic_cast<vtkGeometryFilter*>( geometryFilter )->MergingOff();
+        vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
+    }
+
     //convert vtkDataSet to polydata
-    vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
-    cFilter->SetInput( dataSet );
+    //vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
+    //cFilter->SetInput( dataSet );
+    geometryFilter->SetInput( dataSet );
     // Turn off merging of coincident points.
     // Note that if merging is on, points with different point attributes
     // (e.g., normals) are merged, which may cause rendering artifacts.
-    cFilter->MergingOff();
+    //cFilter->MergingOff();
+
 
     // generate triangles from input polygons
     vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
-    tFilter->SetInput( cFilter->GetOutput() );
+    //tFilter->SetInput( cFilter->GetOutput() );
+    tFilter->SetInput( geometryFilter->GetOutput() );
 
     // reduce the number of triangles...
     vtkDecimatePro *deci = vtkDecimatePro::New();
@@ -101,7 +127,8 @@ vtkPolyData * ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float
        std::cout << "\tactive scalar name is " << uGrid->GetPointData()->GetScalars()->GetName();
     */
 
-    cFilter->Delete();
+    //cFilter->Delete();
+    geometryFilter->Delete();
     tFilter->Delete();
     deci->Delete();
     smoother->Delete();
@@ -109,4 +136,3 @@ vtkPolyData * ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float
 
     return uGrid;
 }
-
