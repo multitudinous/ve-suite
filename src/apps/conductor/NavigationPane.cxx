@@ -617,7 +617,7 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-    CommandWeakPtr navPreferenceData =
+    const CommandWeakPtr navPreferenceData =
         UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
     if( navPreferenceData->GetCommandName() == "NULL" )
     {
@@ -637,7 +637,7 @@ void NavigationPane::UpdateNavigationData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateXplorerData( void )
 {
-    CommandPtr viewPointData = CORBAServiceList::instance()->
+    const CommandPtr viewPointData = CORBAServiceList::instance()->
                             GetGUIUpdateCommands( "START_POSITION" );
     //Hasn't updated yet
     if( viewPointData->GetCommandName() == "NULL" )
