@@ -2269,6 +2269,8 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnInternalIdle()
 {
+    wxFrame::OnInternalIdle();
+
     Network* network = 0;
     if( canvas )
     {

@@ -56,7 +56,7 @@ vprSingletonImp( CORBAServiceList );
 CORBAServiceList::CORBAServiceList( void )
 {
     mTimeZero = ACE_Time_Value::zero;
-    mTimeOutValue.msec( 3 );
+    mTimeOutValue.msec( 100 );
     nullTextPtr = new ves::open::xml::Command();
     nullTextPtr->SetCommandName( "NULL" );
 }
@@ -343,7 +343,7 @@ void CORBAServiceList::CheckORBWorkLoad( void )
         //::wxMilliSleep( 500 );
         if( orb->work_pending( mTimeOutValue ) )
         {
-            orb->perform_work( mTimeZero );
+            orb->perform_work( mTimeOutValue );
         }
 
         const ves::open::xml::CommandPtr textOutput = GetGUIUpdateCommands( "TEXT_FEEDBACK" );

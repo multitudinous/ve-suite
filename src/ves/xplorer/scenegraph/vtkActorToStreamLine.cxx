@@ -165,7 +165,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
             osg::Vec3d pointA( aVertex[ 0 ], aVertex[ 1 ], aVertex[ 2 ] );
             osg::Vec3d pointB( bVertex[ 0 ], bVertex[ 1 ], bVertex[ 2 ] );
 
-	    osg::Vec3d BminusA = pointB - pointA;
+            osg::Vec3d BminusA = pointB - pointA;
 
             if( isFirstPoint )
             {
@@ -185,8 +185,6 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
                                                aColor[ 1 ] / 255.0f,
                                                aColor[ 2 ] / 255.0f,
                                                aColor[ 3 ] / 255.0f ) );
-
-
 
                 count += 3;
                 isFirstPoint = false;

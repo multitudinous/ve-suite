@@ -265,6 +265,8 @@ public:
     void ShutdownXplorerOptionOff( void );
     HierarchyTree * GetHierarchyTree();
 
+    virtual void OnInternalIdle();
+
 protected:
     wxString fname;
     wxString directory;
@@ -368,8 +370,6 @@ protected:
     void RevisionInfo( wxCommandEvent& event );
 
     void OnDoubleClickSash( int, int );
-
-    void OnInternalIdle();
 
     std::string ConvertUnicode( const wxChar* data )
     {
