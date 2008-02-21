@@ -132,18 +132,18 @@ public:
 
     ///Set the name of the CADEntityHelper
     ///\param name The name of CADEntityHelper
-    void SetName( std::string name );
+    void SetName( const std::string& name );
 
     ///Toggle the display of this CADEntityHelper on/off
     ///Valid values are:
     ///ON == display this CADEntityHelper
     ///OFF == hide this CADEntityHelper
     ///\param onOff Turn on/off rendering of this CADEntityHelper
-    void ToggleDisplay( std::string onOff );
+    void ToggleDisplay( const std::string& onOff );
 
     ///Toggle the display of this CADEntityHelper on/off
     ///\param onOff Turn on/off rendering of this CADEntityHelper
-    void ToggleDisplay( bool onOff );
+    void ToggleDisplay( const bool onOff );
 
     ///Add occluder nodes
     ///Must call after this node has a parent
@@ -163,8 +163,8 @@ public:
     ///\param filename The name of the file to be loaded
     ///\param isStream Is the file a stream
     ///\param occlude Occlude the geom with osgOQ if desired
-    void LoadFile( std::string filename, bool isStream = false,
-                   bool occlude = false );
+    void LoadFile( const std::string& filename, const bool isStream = false,
+                   const bool occlude = false );
     ///Used for working with PolyTrans
     std::string ComputeIntermediateFileNameAndPath(
         const std::string& srcFile ) const;
@@ -172,7 +172,7 @@ public:
     ///Process a ven file
     ///\param directory Directory with txt patch files
     ///\return The node for the surface
-    osg::Node* parseOCCNURBSFile( std::string directory );
+    osg::Node* parseOCCNURBSFile( const std::string& directory );
 
 private:
 #ifdef _OSG

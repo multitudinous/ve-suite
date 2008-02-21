@@ -174,7 +174,7 @@ osg::Node* CADEntityHelper::GetNode()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::SetName( std::string name )
+void CADEntityHelper::SetName( const std::string& name )
 {
     if( GetNode() )
     {
@@ -182,14 +182,14 @@ void CADEntityHelper::SetName( std::string name )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::ToggleDisplay( bool onOff )
+void CADEntityHelper::ToggleDisplay( const bool onOff )
 {
     std::string value = ( onOff == true ) ? "ON" : "OFF";
 
     ToggleDisplay( value );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::ToggleDisplay( std::string onOff )
+void CADEntityHelper::ToggleDisplay( const std::string& onOff )
 {
     if( !GetNode() )
     {
@@ -212,8 +212,8 @@ void CADEntityHelper::ToggleDisplay( std::string onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::LoadFile( std::string filename,
-                                bool isStream, bool occlude )
+void CADEntityHelper::LoadFile( const std::string& filename,
+                                const bool isStream, const bool occlude )
 {
     if( strstr( filename.c_str(), ".stl" ) ||
             strstr( filename.c_str(), ".stla" ) )
@@ -459,7 +459,7 @@ ComputeIntermediateFileNameAndPath( const std::string& srcFile ) const
     return objTest;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Node* CADEntityHelper::parseOCCNURBSFile( std::string directory )
+osg::Node* CADEntityHelper::parseOCCNURBSFile( const std::string& directory )
 {
     std::vector< osg::ref_ptr<ves::xplorer::scenegraph::nurbs::NURBS> > nurbsPatches;
     //std::string nurbsfile(argv[1]);
