@@ -64,6 +64,12 @@ namespace PortableServer
 {
 class POA;
 }
+
+//namespace ACE
+//{
+    class ACE_Time_Value;
+//}
+
 #include <vector>
 #include <string>
 
@@ -109,6 +115,10 @@ public:
     VjObs_i* _vjObs;///< holds the vjobs pointer for tao
     Body_VEXplorer_i* m_xplorer;///< holds the xplorer pointer for tao
 private:
+    ///Time out value used for pending orb work call
+    ACE_Time_Value* mTimeOutValue;
+    ///Time out value used for doing orb work call
+    ACE_Time_Value* mTimeZero;
     CORBA::ORB* m_orbPtr;///<holds the orb pointer for tao
     bool isMaster;///is the master should be removed
 };

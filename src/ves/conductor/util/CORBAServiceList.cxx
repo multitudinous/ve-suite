@@ -54,8 +54,6 @@ vprSingletonImp( CORBAServiceList );
 
 ////////////////////////////////////////////////////////////////////////////////
 CORBAServiceList::CORBAServiceList( void )
-:
-mOrbCounter( 0 )
 {
     mTimeZero = ACE_Time_Value::zero;
     mTimeOutValue.msec( 3 );
@@ -343,16 +341,6 @@ void CORBAServiceList::CheckORBWorkLoad( void )
         // event loop and does not reduce the resources on the computer and
         // only frustrates the user.
         //::wxMilliSleep( 500 );
-        /*if( mOrbCounter > 4 )
-        {
-            mOrbCounter = 0;
-            return;
-        }
-        else
-        {
-            mOrbCounter++;
-        }*/
-        
         if( orb->work_pending( mTimeOutValue ) )
         {
             orb->perform_work( mTimeZero );

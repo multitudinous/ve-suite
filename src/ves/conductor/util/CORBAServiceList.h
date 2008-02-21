@@ -158,7 +158,6 @@ private:
     char** peArgv;
     ves::open::xml::CommandPtr nullTextPtr;
     
-    unsigned int mOrbCounter;
     ACE_Time_Value mTimeOutValue;
     ACE_Time_Value mTimeZero;
 };

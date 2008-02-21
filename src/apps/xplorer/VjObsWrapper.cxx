@@ -34,6 +34,7 @@
 #include <orbsvcs/CosNamingC.h>
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <ace/Time_Value.h>
 //End TAO headers
 
 #include "VjObsWrapper.h"
@@ -60,6 +61,9 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 VjObsWrapper::VjObsWrapper( void )
 {
+    mTimeZero = new ACE_Time_Value( ACE_Time_Value::zero );
+    mTimeOutValue = new ACE_Time_Value();
+    mTimeOutValue->msec( 3 );
     _vjObs = new VjObs_i();
     m_xplorer = new Body_VEXplorer_i();
     isMaster = false;
@@ -239,9 +243,9 @@ void VjObsWrapper::CheckORBWorkLoad( void )
     }*/
 
     //Now process if there is work to do
-    if( m_orbPtr->work_pending() )
+    if( m_orbPtr->work_pending( *mTimeOutValue ) )
     {
-        m_orbPtr->perform_work();
+        m_orbPtr->perform_work( mTimeZero );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
