@@ -526,7 +526,7 @@ bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
     return true;
 }
 ///////////////////////////////////////////////////////////////////////
-const ves::open::xml::CommandPtr& CORBAServiceList::GetGUIUpdateCommands( const std::string& commandName )
+const ves::open::xml::CommandPtr CORBAServiceList::GetGUIUpdateCommands( const std::string& commandName )
 {
     if( p_ui_i == 0 )
     {

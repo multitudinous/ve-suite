@@ -118,7 +118,7 @@ public:
     PEThread* GetMessageLog( void );
 
     ///Get the current commands from xplorer
-    const ves::open::xml::CommandPtr& GetGUIUpdateCommands( const std::string& commandName );
+    const ves::open::xml::CommandPtr GetGUIUpdateCommands( const std::string& commandName );
 
     ///Call set id on all modules in the current network
     bool SetID( int moduleId, std::string moduleName );
