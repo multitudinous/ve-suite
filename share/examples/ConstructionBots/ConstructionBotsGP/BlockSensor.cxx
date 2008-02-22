@@ -28,15 +28,36 @@ m_angle( 0 ),
 m_angleInc( 0.1 ),
 m_range( 4 ),
 m_normalizedBlockVector( 0, 0, 0 ),
-m_beamGeode( 0 ),
+m_line( new osg::Geometry() ),
+m_beamGeode( new osg::Geode() ),
 m_beamLineSegment( new osg::LineSegment() )
 {
-    ;
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 BlockSensor::~BlockSensor()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockSensor::Initialize()
+{
+    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
+    osg::ref_ptr< osg::Vec3Array > lineNormals = new osg::Vec3Array();
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+
+    colors->push_back( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    m_line->setColorArray( colors.get() );
+    m_line->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    lineNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
+    m_line->setNormalArray( lineNormals.get() );
+    m_line->setNormalBinding( osg::Geometry::BIND_OVERALL );
+
+    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+    lineWidth->setWidth( 2.0f );
+    stateset->setAttribute( lineWidth.get() );
+    m_line->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
@@ -55,12 +76,12 @@ void BlockSensor::CollectInformation()
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
-    startPoint.set( agentPosition[ 0 ],
-                    agentPosition[ 1 ],
-                    agentPosition[ 2 ] );
-    endPoint.set( agentPosition[ 0 ] + m_range * cos( m_angle ),
-                  agentPosition[ 1 ] + m_range * sin( m_angle ),
-                  agentPosition[ 2 ] );
+    osg::Vec3d startPoint( agentPosition[ 0 ],
+                           agentPosition[ 1 ],
+                           agentPosition[ 2 ] );
+    osg::Vec3d endPoint( agentPosition[ 0 ] + m_range * cos( m_angle ),
+                         agentPosition[ 1 ] + m_range * sin( m_angle ),
+                         agentPosition[ 2 ] );
 
     m_beamLineSegment->set( startPoint, endPoint );
 
@@ -129,39 +150,18 @@ void BlockSensor::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 
     if( m_beamGeode.valid() )
     {
+        m_line->removePrimitiveSet( 0 );
+        m_beamGeode->removeDrawable( m_line.get() );
         pluginDCS->removeChild( m_beamGeode.get() );
     }
 
-    m_beamGeode = new osg::Geode();
-    m_beamGeode->setName( "Optical Sensor" );
-
-    osg::ref_ptr< osg::Geometry > line = new osg::Geometry();
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
-    osg::ref_ptr< osg::Vec3Array > lineNormals = new osg::Vec3Array();
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-
     vertices->push_back( startPoint );
     vertices->push_back( endPoint );
-    line->setVertexArray( vertices.get() );
+    m_line->setVertexArray( vertices.get() );
 
-    colors->push_back( osg::Vec4( 0.0f, 1.0f, 1.0f, 1.0f ) );
-    line->setColorArray( colors.get() );
-    line->setColorBinding( osg::Geometry::BIND_OVERALL );
-
-    lineNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
-    line->setNormalArray( lineNormals.get() );
-    line->setNormalBinding( osg::Geometry::BIND_OVERALL );
-
-    osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth();
-    line_width->setWidth( 1.0f );
-    stateset->setAttribute( line_width.get() );
-    line->setStateSet( stateset.get() );
-
-    line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
-
-    m_beamGeode->addDrawable( line.get() );      
-
+    m_line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
+    m_beamGeode->addDrawable( m_line.get() );      
     pluginDCS->addChild( m_beamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

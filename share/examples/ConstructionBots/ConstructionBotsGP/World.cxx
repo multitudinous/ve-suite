@@ -199,7 +199,7 @@ void World::InitFramework()
         m_pluginDCS.get(),
         m_physicsSimulator );
     //m_entities.push_back( m_startBlock );
-    m_startBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 0.5 );
+    m_startBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 1.0 );
     //Set name and descriptions for blocks
     m_startBlock->SetNameAndDescriptions( 0 );
     m_startBlock->GetDCS()->SetTranslationArray( startBlockPosition );

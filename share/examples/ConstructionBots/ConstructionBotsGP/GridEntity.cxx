@@ -25,8 +25,8 @@ void GridEntity::SetNameAndDescriptions()
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
     descriptorsList.push_back( "" );
-    GetDCS()->setDescriptions( descriptorsList );
+    m_dcs->setDescriptions( descriptorsList );
 
-    GetDCS()->setName( "Grid" );
+    m_dcs->setName( "Grid" );
 }
 ////////////////////////////////////////////////////////////////////////////////

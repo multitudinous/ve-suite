@@ -84,7 +84,7 @@ void Agent::CreateAgent()
     agent->setVertexArray( agentVertices.get() );
 
 	osg::ref_ptr< osg::Vec4Array > agentColor = new osg::Vec4Array();
-	agentColor->push_back( osg::Vec4( 0.9, 0.8, 0.5, 1.0 ) );
+	agentColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     agent->setColorArray( agentColor.get() );
     agent->setColorBinding( osg::Geometry::BIND_OVERALL );
 

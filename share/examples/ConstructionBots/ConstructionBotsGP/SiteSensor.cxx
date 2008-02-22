@@ -55,12 +55,12 @@ void SiteSensor::CollectInformation()
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
-    startPoint.set( agentPosition[ 0 ],
-                    agentPosition[ 1 ],
-                    agentPosition[ 2 ] );
-    endPoint.set( agentPosition[ 0 ] + m_range * cos( m_angle ),
-                  agentPosition[ 1 ] + m_range * sin( m_angle ),
-                  agentPosition[ 2 ] );
+    osg::Vec3d startPoint( agentPosition[ 0 ],
+                           agentPosition[ 1 ],
+                           agentPosition[ 2 ] );
+    osg::Vec3d endPoint( agentPosition[ 0 ] + m_range * cos( m_angle ),
+                         agentPosition[ 1 ] + m_range * sin( m_angle ),
+                         agentPosition[ 2 ] );
 
     m_beamLineSegment->set( startPoint, endPoint );
 
@@ -145,7 +145,7 @@ void SiteSensor::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     vertices->push_back( endPoint );
     line->setVertexArray( vertices.get() );
 
-    colors->push_back( osg::Vec4( 0.0f, 1.0f, 1.0f, 1.0f ) );
+    colors->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
     line->setColorArray( colors.get() );
     line->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -154,7 +154,7 @@ void SiteSensor::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     line->setNormalBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth();
-    line_width->setWidth( 1.0f );
+    line_width->setWidth( 2.0f );
     stateset->setAttribute( line_width.get() );
     line->setStateSet( stateset.get() );
 

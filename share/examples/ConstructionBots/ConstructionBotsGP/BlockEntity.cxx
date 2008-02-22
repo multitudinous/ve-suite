@@ -61,12 +61,12 @@ void BlockEntity::SetNameAndDescriptions( int number )
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
     descriptorsList.push_back( "" );
-    GetDCS()->setDescriptions( descriptorsList );
+    m_dcs->setDescriptions( descriptorsList );
 
     std::stringstream ss;
     ss << "Block" << number;
     std::cout << ss.str() << std::endl;
-    GetDCS()->setName( ss.str() );
+    m_dcs->setName( ss.str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetConstraints( int gridSize )
@@ -76,7 +76,7 @@ void BlockEntity::SetConstraints( int gridSize )
     trans.setOrigin( btVector3( 0, 0, 0.5 ) );
 
     //Must disable deactivation so constraint is always applied
-    GetPhysicsRigidBody()->setActivationState( DISABLE_DEACTIVATION );
+    m_physicsRigidBody->setActivationState( DISABLE_DEACTIVATION );
     btRigidBody* fixedBody = m_physicsSimulator->CreateRigidBody( 0, trans, 0 );
 
     btTransform frameInA, frameInB;
@@ -84,9 +84,9 @@ void BlockEntity::SetConstraints( int gridSize )
     frameInB = btTransform::getIdentity();
 
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 63 )
-    m_constraint = new btGeneric6DofConstraint( *GetPhysicsRigidBody(), *fixedBody, frameInA, frameInB, false );
+    m_constraint = new btGeneric6DofConstraint( *m_physicsRigidBody, *fixedBody, frameInA, frameInB, false );
 #else
-    m_constraint = new btGeneric6DofConstraint( *GetPhysicsRigidBody(), *fixedBody, frameInA, frameInB );
+    m_constraint = new btGeneric6DofConstraint( *m_physicsRigidBody, *fixedBody, frameInA, frameInB );
 #endif
 
     //Fix the translation range for the agents

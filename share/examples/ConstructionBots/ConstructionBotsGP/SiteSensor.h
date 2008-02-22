@@ -49,9 +49,6 @@ private:
 
     osg::ref_ptr< osg::Geode > m_beamGeode;
     osg::ref_ptr< osg::LineSegment > m_beamLineSegment;
-
-    osg::Vec3d startPoint;
-    osg::Vec3d endPoint;
 };
 }
 
