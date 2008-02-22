@@ -1265,6 +1265,10 @@ void Vistab::UpdateScalarBar( wxCommandEvent& event )
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
     
+    ves::open::xml::DataValuePairPtr activeScalar = new ves::open::xml::DataValuePair();
+    activeScalar->SetData( "Active Scalar", GetActiveScalarName() );
+    veCommand->AddDataValuePair( activeScalar );
+
     bool connected = CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////

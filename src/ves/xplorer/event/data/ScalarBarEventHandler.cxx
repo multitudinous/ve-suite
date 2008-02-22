@@ -116,6 +116,11 @@ void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObje
     std::string datasetName = 
         command->GetDataValuePair( "Active Dataset" )->GetDataString();
     
+    DataValuePairWeakPtr activeScalar = 
+        command->GetDataValuePair( "Active Scalar" );
+    std::string scalarName;
+    activeScalar->GetData( scalarName );
+
     unsigned int state = 0;
     activeModelDVP->GetData( state );
     if( _activeModel )
@@ -123,6 +128,7 @@ void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObje
         DataSet* dataSet = _activeModel->GetCfdDataSet( 
             _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
+        dataSet->SetActiveScalar( scalarName );
         dataSet->SetDataSetScalarState( state );
     }
 }
