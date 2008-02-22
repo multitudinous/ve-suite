@@ -153,7 +153,7 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
     //std::cout << "cfdVTKFileHandler::Checking file type...";
     if( _xmlTester->TestReadFile() )
     {
-        std::cout << "|\tXML ";
+        std::cout << "|\t\tXML ";
         std::cout << _xmlTester->GetFileDataType() << std::endl;
         //process xml file
         if( !strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
@@ -206,27 +206,27 @@ void cfdVTKFileHandler::_readClassicVTKFile()
     {
         if( genericReader->IsFileUnstructuredGrid() )
         {
-            std::cout << "Unstructured Grid..." << std::endl;
+            std::cout << "|\t\tUnstructured Grid..." << std::endl;
             _dataSet = vtkUnstructuredGrid::New();
         }
         else if( genericReader->IsFileStructuredGrid() )
         {
-            std::cout << "Structured Grid..." << std::endl;
+            std::cout << "|\t\tStructured Grid..." << std::endl;
             _dataSet = vtkStructuredGrid::New();
         }
         else if( genericReader->IsFileRectilinearGrid() )
         {
-            std::cout << "Rectilinear Grid..." << std::endl;
+            std::cout << "|\t\tRectilinear Grid..." << std::endl;
             _dataSet = vtkRectilinearGrid::New();
         }
         else if( genericReader->IsFilePolyData() )
         {
-            std::cout << "PolyData..." << std::endl;
+            std::cout << "|\t\tPolyData..." << std::endl;
             _dataSet = vtkPolyData::New();
         }
         else if( genericReader->IsFileStructuredPoints() )
         {
-            std::cout << "Structured Points..." << std::endl;
+            std::cout << "|\t\tStructured Points..." << std::endl;
             _dataSet = vtkStructuredPoints::New();
         }
         else
