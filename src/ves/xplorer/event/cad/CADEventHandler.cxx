@@ -209,6 +209,7 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( descriptorName );
     descriptorsList.push_back( descriptorValue );
+    descriptorsList.push_back( nodeType );
 
     if( nodeType == "Assembly" )
     {
@@ -222,9 +223,10 @@ void CADEventHandler::SetNodeDescriptors( std::string nodeID,
     }
     else if( nodeType == "Clone" )
     {
-        ves::xplorer::scenegraph::Clone* cloneNode = m_cadHandler->GetClone( nodeID );
+        /*ves::xplorer::scenegraph::Clone* cloneNode = m_cadHandler->GetClone( nodeID );
         ves::xplorer::scenegraph::UpdateIDOnChildrenVisitor idUpdate( cloneNode->GetClonedGraph(), descriptorValue );
-        cloneNode->GetClonedGraph()->setDescriptions( descriptorsList );
+        cloneNode->GetClonedGraph()->setDescriptions( descriptorsList );*/
+        std::cerr << "ERROR: CADEventHandler::SetNodeDescriptors clone node" << std::endl;
     }
 }
 /////////////////////////////////////////////////////////////

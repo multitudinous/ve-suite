@@ -343,18 +343,8 @@ void ModelCADHandler::MakeCADRootTransparent()
         return;
     }
 
-    osg::ref_ptr< osg::StateSet > attribute =
-           m_assemblyList[m_rootCADNodeID]->getOrCreateStateSet();
-    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
-
-    bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    attribute->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
-    attribute->setMode( GL_BLEND, osg::StateAttribute::ON );
-    attribute->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
-
     try
     {
-        m_assemblyList[m_rootCADNodeID]->setStateSet( attribute.get() );
         ves::xplorer::scenegraph::util::OpacityVisitor
         opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true, 0.3f );
     }
@@ -380,7 +370,6 @@ void ModelCADHandler::MakeCADRootOpaque()
     {
         if( m_assemblyList[m_rootCADNodeID]->getStateSet() )
         {
-            m_assemblyList[ m_rootCADNodeID ]->getStateSet()->clear();
             ves::xplorer::scenegraph::util::OpacityVisitor
             opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false, 1.0f );
         }

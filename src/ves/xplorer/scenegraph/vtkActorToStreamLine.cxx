@@ -57,7 +57,7 @@ using namespace ves::xplorer::scenegraph;
 typedef double vtkReal;
 
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose )
+osg::Geode* ves::xplorer::scenegraph::vtkActorToStreamLine( vtkActor *actor, osg::Geode* geode, int verbose )
 {
     //Make actor current
     actor->GetMapper()->Update();
@@ -71,7 +71,7 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkAc
     }
 
     //If geode doesn't exist, then create a new one
-    if( !geode.valid() )
+    if( !geode )
     {
         geode = new osg::Geode();
         //std::cout << " creating a new geode in vtkactortoosg" << std::endl;
@@ -111,7 +111,7 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToStreamLine( vtkAc
     return geode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
+osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
 {
     if( verbose )
     {
@@ -135,7 +135,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
         return NULL;
     }
 
-    osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
+    osg::Geometry* geometry = new osg::Geometry();
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
     osg::ref_ptr< osg::Vec3Array > normals = new osg::Vec3Array();
@@ -264,7 +264,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     stateset->setMode( GL_CULL_FACE, osg::StateAttribute::OFF );
     stateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
-    stateset->setAttribute( GetShader().get(), osg::StateAttribute::ON );
+    stateset->setAttribute( GetShader(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > parSize = new osg::Uniform( "particleSize", static_cast< float >( 0.4 ) );
     stateset->addUniform( parSize.get() );
@@ -277,7 +277,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::ProcessPrimitive( vtkAct
     return geometry;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
+osg::Program* ves::xplorer::scenegraph::GetShader()
 {
     char vertexPass[] =
         "uniform float particleSpeed; \n"
@@ -317,7 +317,7 @@ osg::ref_ptr< osg::Program > ves::xplorer::scenegraph::GetShader()
             "gl_FragColor = totalColor; \n"
         "} \n";
 
-    osg::ref_ptr< osg::Program > program = new osg::Program();
+    osg::Program* program = new osg::Program();
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
 

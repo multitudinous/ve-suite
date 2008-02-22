@@ -48,7 +48,7 @@ CADAttribute::CADAttribute( )
 {
     _attributeType = std::string( "Material" );
     _material = 0;
-    _blending = true;
+    _blending = false;
     _glslProgram = 0;
     SetObjectType( "CADAttribute" );
     SetObjectNamespace( "CAD" );

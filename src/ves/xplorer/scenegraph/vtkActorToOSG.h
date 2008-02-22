@@ -54,9 +54,9 @@ namespace scenegraph
 // vtkActorToOSG - translates vtkActor to osg::Geode. If geode is NULL, new one
 //   will be created. Optional verbose parameter prints debugging and
 //   performance information.
-osg::ref_ptr< osg::Geode > vtkActorToOSG( vtkActor* actor, osg::ref_ptr< osg::Geode > geode = NULL, int verbose = 0 );
+osg::Geode* vtkActorToOSG( vtkActor* actor, osg::Geode* geode = NULL, int verbose = 0 );
 
-osg::ref_ptr< osg::Geometry > processPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
+osg::Geometry* processPrimitive( vtkActor *a, vtkCellArray *prims, int pType, int v );
 }
 }
 }

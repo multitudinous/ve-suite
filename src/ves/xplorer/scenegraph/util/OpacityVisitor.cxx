@@ -65,12 +65,12 @@ void OpacityVisitor::apply( osg::Geode& node )
 {
     osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
     osg::ref_ptr< osg::Material > geode_material = static_cast< osg::Material* >( geode_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
-    SetupBlendingForStateSet( geode_stateset.get() );
 
     if( geode_material.valid() )
     {
         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
         geode_stateset->setAttribute( geode_material.get(), osg::StateAttribute::ON );
+        SetupBlendingForStateSet( geode_stateset.get() );
     }
 
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
@@ -134,15 +134,33 @@ void OpacityVisitor::apply( osg::Geode& node )
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Group& node )
 {
-    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
-    osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
-
-    if( material.valid() )
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList = node.getDescriptions();
+    bool isAssembly = false;
+    //Find if the node is an assembly
+    for( size_t i = 0; i < descriptorsList.size(); i++ )
     {
-        material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
-        stateset->setAttribute( material.get(), osg::StateAttribute::ON );
+        if( descriptorsList.at( i ) == "Assembly" )
+        {
+            isAssembly = true;
+            break;
+        }
     }
-    SetupBlendingForStateSet( stateset.get() );
+
+    if( !isAssembly )
+    {
+        osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+        osg::ref_ptr< osg::Material > material = 
+            static_cast< osg::Material* >( stateset->
+                getAttribute( osg::StateAttribute::MATERIAL ) );
+        
+        if( material.valid() )
+        {
+            material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
+            stateset->setAttribute( material.get(), osg::StateAttribute::ON );
+            SetupBlendingForStateSet( stateset.get() );
+        }
+    }
 
     osg::NodeVisitor::apply( node );
 }

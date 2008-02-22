@@ -66,7 +66,7 @@ typedef float vtkReal;
 
 using namespace ves::xplorer::scenegraph;
 
-osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose )
+osg::Geode* ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *actor, osg::Geode* geode, int verbose )
 {
 
     // make actor current
@@ -81,7 +81,7 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *ac
     }
 
     // if geode doesn't exist, then create a new one
-    if( !geode.valid() )
+    if( !geode )
     {
         geode = new osg::Geode();
         //std::cout << " creating a new geode in vtkactortoosg" << std::endl;
@@ -117,7 +117,7 @@ osg::ref_ptr< osg::Geode > ves::xplorer::scenegraph::vtkActorToOSG( vtkActor *ac
     return geode;
 }
 
-osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
+osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkCellArray *primArray, int primType, int verbose )
 {
 
     if( verbose )
@@ -141,7 +141,7 @@ osg::ref_ptr< osg::Geometry > ves::xplorer::scenegraph::processPrimitive( vtkAct
         return NULL;
     }
     //Initialize the Geometry
-    osg::ref_ptr< osg::Geometry > geom = new osg::Geometry;
+    osg::Geometry* geom = new osg::Geometry;
 
     // get number of indices in the vtk prim array. Each vtkCell has the length
     // (not counted), followed by the indices.

@@ -90,11 +90,11 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
         {
             childName = std::string( "Class" ) + childNode->className();
         }
-
+        
         //Write the link
         m_dotFile << "\"" << tempGroup.get() << "\" -> \""
             << childNode.get() << "\";" << std::endl;
-        if( !childNode->asGroup() )
+        if( !childNode->asGroup() || (!childNode->getNodeMask()) )
         {
             //Write the child node label
             m_dotFile << "\"" << childNode.get() << "\" " << "[label=\""
@@ -104,7 +104,7 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
                 << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
         }
     }
-
+    
     //Write the label info for the parent
     m_dotFile << "\"" << tempGroup.get() << "\" " << "[label=\""
         << nodeName << "\\n"
@@ -197,10 +197,40 @@ std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
         binMode = tempState->getRenderBinMode();
         renderingHint = tempState->getRenderingHint();
     }
+    
+    std::string stringRenderHint = "None";
+    if( renderingHint == 0 )
+    {
+        stringRenderHint = "DEFAULT_BIN";
+    }
+    else if( renderingHint == 1 )
+    {
+        stringRenderHint = "OPAQUE_BIN";
+    }
+    else if( renderingHint == 2 )
+    {
+        stringRenderHint = "TRANSPARENT_BIN";
+    }
 
-    textureData << " StateSet => Bin Name = " << binName 
-        << ", Bin Mode = " << binMode << ", Bin Number = " << binNum 
-        << ", Rendering Hint = " << renderingHint;
+    std::string stringBinMode = "None";
+    if( binMode == 0 )
+    {
+        stringBinMode = "INHERIT_RENDERBIN_DETAILS";
+    }
+    else if( binMode == 1 )
+    {
+        stringBinMode = "USE_RENDERBIN_DETAILS";
+    }
+    else if( binMode == 2 )
+    {
+        stringBinMode = "OVERRIDE_RENDERBIN_DETAILS";
+    }
+
+    textureData << " StateSet " <<  "\\n" 
+                << "Bin Name = " << binName <<  "\\n" 
+                << "Bin Mode = " << stringBinMode <<  "\\n" 
+                << "Bin Number = " << binNum <<  "\\n" 
+                << "Rendering Hint = " << stringRenderHint;
 
     return textureData.str();
 }

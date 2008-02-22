@@ -191,22 +191,19 @@ void cfdGraphicsObject::SetGeodes( ves::xplorer::cfdObjects* input )
         isStreamLine = true;
     }
 
-    for( unsigned int i = 0; i < input->GetGeodes().size(); ++i )
+    for( size_t i = 0; i < input->GetGeodes().size(); ++i )
     {
         //std::cout << "1 " << input.at( i ).get() << std::endl;
-        geodes.push_back( new ves::xplorer::scenegraph::Geode( *input->GetGeodes().at( i ) ) );
+        //geodes.push_back( new ves::xplorer::scenegraph::Geode( *input->GetGeodes().at( i ) ) );
+        geodes.push_back( input->GetGeodes().at( i ) );
         //std::cout << input.at( i ).get() << std::endl;
 
-        //Add phong shading to the geodes
-        osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
-        ves::xplorer::scenegraph::util::PhongLoader phongShader;
 
-        if( isStreamLine )
+        if( !isStreamLine )
         {
-            ;
-        }
-        else
-        {
+            //Add phong shading to the geodes
+            osg::ref_ptr< osg::StateSet > geodeProperties = geodes.at( i )->getOrCreateStateSet();
+            ves::xplorer::scenegraph::util::PhongLoader phongShader;
             phongShader.SetStateSet( geodeProperties.get() );
             phongShader.SyncShaderAndStateSet();
         }
