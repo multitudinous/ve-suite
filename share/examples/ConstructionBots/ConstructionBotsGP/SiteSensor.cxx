@@ -91,32 +91,32 @@ void SiteSensor::CollectInformation()
                     colorArray->at( 0 ).g() == 0.0 &&
                     colorArray->at( 0 ).b() == 0.0 )
                 {
-                    //std::cout << "Sensor Found Block!" << std::endl;
+                    //std::cout << "Sensor Found Site!" << std::endl;
 
                     ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( geode.get() );
                     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
                     if( parentNode.valid() )
                     {
-                        m_blockPosition = 
-                            static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() )->GetVETranslationArray();
+                        double* sitePosition = static_cast< ves::xplorer::scenegraph::DCS* >
+                            ( parentNode.get() )->GetVETranslationArray();
+
+                        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = 
+                            static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+                        m_agentEntity->SetTargetDCS( tempDCS.get() );
+
+                        btVector3 siteVector( sitePosition[ 0 ] - agentPosition[ 0 ],
+                                              sitePosition[ 1 ] - agentPosition[ 1 ],
+                                              0 );
+
+                        if( siteVector.length() < 1.415 )//sqrt( 2 * blockScale )
+                        {
+                            m_closeToSite = true;
+                        }
+
+                        m_normalizedSiteVector = siteVector.normalize();
+
+                        m_siteInView = true;
                     }
-
-				    osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = 
-                        static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
-				    m_agentEntity->SetTargetDCS( tempDCS.get() );
-
-                    btVector3 blockVector( m_blockPosition[ 0 ] - agentPosition[ 0 ],
-                                           m_blockPosition[ 1 ] - agentPosition[ 1 ],
-                                           0 );
-
-                    if( blockVector.length() < 1.415 )//sqrt( 2 * blockScale )
-                    {
-                        m_closeToSite = true;
-                    }
-
-                    m_normalizedSiteVector = blockVector.normalize();
-
-                    m_siteInView = true;
                 }
             }
         }

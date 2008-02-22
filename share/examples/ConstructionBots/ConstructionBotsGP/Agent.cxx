@@ -14,7 +14,7 @@ using namespace Construction;
 ////////////////////////////////////////////////////////////////////////////////
 Agent::Agent()
 {
-    this->CreateAgent();
+    CreateAgent();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Agent::Agent( const Agent& agent, const osg::CopyOp& copyop )
@@ -31,7 +31,7 @@ Agent::~Agent()
 ////////////////////////////////////////////////////////////////////////////////
 void Agent::CreateAgent()
 {
-    //this->addChild( osgDB::readNodeFile( "Models/Agent.obj" ) );
+    //addChild( osgDB::readNodeFile( "Models/Agent.obj" ) );
 
     int blockScale = 1;
 
@@ -163,6 +163,6 @@ void Agent::CreateAgent()
     blockStateSet->setTextureAttributeAndModes( 0, texture.get() ,osg::StateAttribute::ON );
     //block->setStateSet( blockStateSet.get() );
 
-    this->addDrawable( block.get() );
+    addDrawable( block.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

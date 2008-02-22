@@ -65,7 +65,10 @@ m_physicsSimulator( physicsSimulator )
 World::~World()
 {
 #ifdef VE_SOUND
-    delete m_ambientSound;
+    if( m_ambientSound )
+    {
+        delete m_ambientSound;
+    }
 #endif
 
     if( m_grid )
@@ -104,12 +107,12 @@ void World::InitFramework()
 #ifdef VE_SOUND
     try
     {
-        //m_ambientSound->LoadFile( "Sounds/AmbientSound.wav" );
-        //m_ambientSound->GetSoundState()->setLooping( true );
+        m_ambientSound->LoadFile( "Sounds/AmbientSound.wav" );
+        m_ambientSound->GetSoundState()->setLooping( true );
     }
     catch( ... )
     {
-        std::cerr << "Could not load sounds!" << std::endl;
+        std::cerr << "Could not load AmbientSound.wav!" << std::endl;
     }
 #endif
 

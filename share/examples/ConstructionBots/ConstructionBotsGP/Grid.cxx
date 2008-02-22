@@ -22,7 +22,7 @@ Grid::Grid()
 ////////////////////////////////////////////////////////////////////////////////
 Grid::Grid( int gridSize, int gridScale, std::vector< bool > occMatrix )
 {
-    this->CreateGrid( gridSize, gridScale, occMatrix );
+    CreateGrid( gridSize, gridScale, occMatrix );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Grid::Grid( const Grid& grid, const osg::CopyOp& copyop )
@@ -250,9 +250,9 @@ void Grid::CreateGrid( int gridSize, int gridScale, std::vector< bool > occMatri
     lines->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, lineVertices->size() ) );
     walls->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, wallVertices->size() ) );
 
-    this->addDrawable( grid.get() );
-    this->addDrawable( platform.get() );
-    this->addDrawable( lines.get() );
-    this->addDrawable( walls.get() );
+    addDrawable( grid.get() );
+    addDrawable( platform.get() );
+    addDrawable( lines.get() );
+    addDrawable( walls.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -45,8 +45,6 @@ private:
     double m_angleInc;
     double m_range;
 
-    double* m_blockPosition;
-
     btVector3 m_normalizedSiteVector;
 
     osg::ref_ptr< osg::Geode > m_beamGeode;

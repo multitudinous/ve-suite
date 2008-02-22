@@ -97,26 +97,26 @@ void BlockSensor::CollectInformation()
                     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
                     if( parentNode.valid() )
                     {
-                        m_blockPosition = 
-                            static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() )->GetVETranslationArray();
+                        double* blockPosition = static_cast< ves::xplorer::scenegraph::DCS* >
+                            ( parentNode.get() )->GetVETranslationArray();
+                        
+                        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = 
+                            static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+                        m_agentEntity->SetTargetDCS( tempDCS.get() );
+
+                        btVector3 blockVector( blockPosition[ 0 ] - agentPosition[ 0 ],
+                                               blockPosition[ 1 ] - agentPosition[ 1 ],
+                                               0 );
+
+                        if( blockVector.length() < 1.415 )//sqrt( 2 * blockScale )
+                        {
+                            m_closeToBlock = true;
+                        }
+
+                        m_normalizedBlockVector = blockVector.normalize();
+
+                        m_blockInView = true;
                     }
-
-				    osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = 
-                        static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
-				    m_agentEntity->SetTargetDCS( tempDCS.get() );
-
-                    btVector3 blockVector( m_blockPosition[ 0 ] - agentPosition[ 0 ],
-                                           m_blockPosition[ 1 ] - agentPosition[ 1 ],
-                                           0 );
-
-                    if( blockVector.length() < 1.415 )//sqrt( 2 * blockScale )
-                    {
-                        m_closeToBlock = true;
-                    }
-
-                    m_normalizedBlockVector = blockVector.normalize();
-
-                    m_blockInView = true;
                 }
             }
         }
