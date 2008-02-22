@@ -128,7 +128,7 @@ vtkDataObject* DataLoader::GetVTKDataSet( int argc, char** argv )
     iter = translatorMap.find( fileExtension );
     if( iter == translatorMap.end() )
     {
-        std::cout << " Loader " << fileExtension << " not supported." << std::endl;
+        std::cout << "|\tLoader " << fileExtension << " not supported." << std::endl;
         return 0;
     }
     // process data with appropriate loader

@@ -376,7 +376,7 @@ bool cfdTranslatorToVTK::_extractOptionFromCmdLine( int argc, char** argv,
         if( curArg == optionFlag )
         {
             optionArg = std::string( argv[++i] );
-            std::cout << "Found option: " << optionFlag << ":" << optionArg << std::endl;
+            std::cout << "|\tFound option: " << optionFlag << ":" << optionArg << std::endl;
 
             return true;
         }

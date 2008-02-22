@@ -137,7 +137,7 @@ void cfdVTKFileHandler::SetOutputFileName( std::string oFile )
 ////////////////////////////////////////////////////////////////////
 vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
 {
-    std::cout << "Loading: " << vtkFileName << std::endl;
+    std::cout << "|\tLoading: " << vtkFileName << std::endl;
     if( vtkFileName.empty() )
     {
         return 0;
@@ -150,10 +150,10 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
     }
     _xmlTester->SetFileName( vtkFileName.c_str() );
 
-    std::cout << "cfdVTKFileHandler::Checking file type...";
+    //std::cout << "cfdVTKFileHandler::Checking file type...";
     if( _xmlTester->TestReadFile() )
     {
-        std::cout << " XML ";
+        std::cout << "|\tXML ";
         std::cout << _xmlTester->GetFileDataType() << std::endl;
         //process xml file
         if( !strcmp( _xmlTester->GetFileDataType(), "UnstructuredGrid" ) )
@@ -178,7 +178,6 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
         }
         else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
         {
-            std::cout << "MultiBlockDataset!!" << std::endl;
             _getXMLMultiGroupDataSet();
         }
 
@@ -233,7 +232,7 @@ void cfdVTKFileHandler::_readClassicVTKFile()
         else
         {
             std::cerr << "\nERROR - Unable to read this vtk file format"
-            << std::endl;
+                << std::endl;
             return ;
         }
         _dataSet->DeepCopy( genericReader->GetOutput() );
@@ -263,7 +262,7 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
 void cfdVTKFileHandler::_getXMLUGrid()
 {
     vtkXMLUnstructuredGridReader* ugReader
-    = vtkXMLUnstructuredGridReader::New();
+        = vtkXMLUnstructuredGridReader::New();
     ugReader->SetFileName( _inFileName.c_str() );
     ugReader->Update();
     _dataSet = vtkUnstructuredGrid::New();
@@ -307,14 +306,14 @@ void cfdVTKFileHandler::_getXMLPolyData()
 ////////////////////////////////////////////////
 void cfdVTKFileHandler::GetXMLImageData( void )
 {
-    std::cout << "Reading image data..." << std::endl;
+    //std::cout << "Reading image data..." << std::endl;
     vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
     reader->SetFileName( _inFileName.c_str() );
     reader->Update();
     _dataSet = vtkImageData::New();
     _dataSet->ShallowCopy( reader->GetOutput() );
     reader->Delete();
-    std::cout << "Finished Reading image data..." << std::endl;
+    //std::cout << "Finished Reading image data..." << std::endl;
 }
 /////////////////////////////////////////////////////////////////////////////////
 bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFileName )

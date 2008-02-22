@@ -454,17 +454,19 @@ void ModelHandler::InitScene( void )
     //this->arrow->ShallowCopy( tempArrow->GetPolyData());
 
     for( unsigned int j = 0; j < _modelList.size(); j++ )
+    {
         for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++ )
         {
-            std::cout << "|   Loading data for file "
-            << _modelList.at( j )->GetCfdDataSet( i )->GetFileName()
-            << std::endl;
+            std::cout << "|\tLoading data for file "
+                << _modelList.at( j )->GetCfdDataSet( i )->GetFileName()
+                << std::endl;
             _modelList.at( j )->GetCfdDataSet( i )->LoadData();
             _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
             if( _modelList.at( j )->GetCfdDataSet( i )->GetParent() == _modelList.at( j )->GetCfdDataSet( i ) )
                 ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
                 AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
         }
+    }
 
     // set default active dataset to be the meshed volume
     if( !_modelList.empty() )

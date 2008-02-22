@@ -593,7 +593,7 @@ void DataSet::LoadData()
                                                       strcpy(parameters[8], "stream" );*/
 
         dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
-        dataSet->Print( std::cout );
+        //dataSet->Print( std::cout );
 
         for( unsigned int i = 0; i < nParams; ++i )
         {
@@ -603,7 +603,7 @@ void DataSet::LoadData()
         if( !dataSet )
         {
             vprDEBUG( vesDBG, 1 ) << "|\tInvalid input file: " << fileName
-            << std::endl << vprDEBUG_FLUSH;
+                << std::endl << vprDEBUG_FLUSH;
             return;
         }
     }
@@ -635,11 +635,9 @@ void DataSet::LoadData()
     for( int i = 0; i < noOfData; i++ )
     {
         this->dataReader[i] = vtkUnstructuredGridReader::New();
-        //sprintf( label, "./POST_DATA/octant%d.vtk", i);
         std::ostringstream dirStringStream;
         dirStringStream << "./POST_DATA/octant" << i << ".vtk";
         std::string dirString = dirStringStream.str();
-        //label = dirString.c_str();
 
         this->dataReader[i]->SetFileName( dirString.c_str() );
         this->dataReader[i]->Update();
