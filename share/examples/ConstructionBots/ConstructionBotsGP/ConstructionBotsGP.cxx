@@ -32,7 +32,13 @@ void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldD
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-    world = new Construction::World( 1, m_dcs.get(), m_physicsSimulator );
+    world = new Construction::World( 1, 
+                                     m_dcs.get(),
+                                     m_physicsSimulator
+#ifdef VE_SOUND
+                                   , m_soundManager
+#endif
+                                   );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::PreFrameUpdate()

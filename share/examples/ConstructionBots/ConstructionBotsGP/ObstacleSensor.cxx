@@ -25,9 +25,9 @@ ObstacleSensor::ObstacleSensor( Construction::AgentEntity* agentEntity )
 Sensor( agentEntity ),
 m_obstacleDetected( false ),
 m_angleIncrement( 30 ),
-m_range( 5.0 ),
+m_range( 2.0 ),
 m_forceRepellingConstant( 1.0 ),
-m_forceAttractionConstant( 2.0 ),
+m_forceAttractionConstant( 1.0 ),
 m_resultantForce( 0, 0, 0 ),
 m_obstacleHits()
 {
@@ -94,7 +94,6 @@ void ObstacleSensor::CalculateResultantForce()
 {
     Pair totalForce( 0, 0 );
 
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = m_agentEntity->GetPluginDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = m_agentEntity->GetTargetDCS();
 

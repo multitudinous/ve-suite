@@ -14,9 +14,15 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/Sound.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+
+// --- osgAL Includes --- //
+#ifdef VE_SOUND
+#include <osgAL/SoundState>
+#endif
 
 // --- Bullet Includes --- //
 #include "btBulletDynamicsCommon.h"
@@ -31,7 +37,11 @@ using namespace Construction;
 ////////////////////////////////////////////////////////////////////////////////
 World::World( int worldScale,
               ves::xplorer::scenegraph::DCS* pluginDCS,
-              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+#ifdef VE_SOUND
+            , osgAL::SoundManager* soundManager
+#endif
+              )
 :
 m_structureNotComplete( true ),
 m_grid( 0 ),
@@ -41,6 +51,9 @@ m_startBlock( 0 ),
 m_worldScale( worldScale ),
 m_pluginDCS( pluginDCS ),
 m_physicsSimulator( physicsSimulator )
+#ifdef VE_SOUND
+, m_ambientSound( new ves::xplorer::scenegraph::Sound( "AmbientSound", pluginDCS, soundManager ) )
+#endif
 {
     //Seed the random number generator
     srand( time( 0 ) );
@@ -51,6 +64,10 @@ m_physicsSimulator( physicsSimulator )
 ////////////////////////////////////////////////////////////////////////////////
 World::~World()
 {
+#ifdef VE_SOUND
+    delete m_ambientSound;
+#endif
+
     if( m_grid )
     {
         delete m_grid;   
@@ -84,6 +101,18 @@ World::~World()
 ////////////////////////////////////////////////////////////////////////////////
 void World::InitFramework()
 {
+#ifdef VE_SOUND
+    try
+    {
+        //m_ambientSound->LoadFile( "Sounds/AmbientSound.wav" );
+        //m_ambientSound->GetSoundState()->setLooping( true );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load sounds!" << std::endl;
+    }
+#endif
+
     //Ifstream constructor opens the occupancy matrix file
     std::ifstream occMatFile( "Data/omat.txt", std::ios::in );			
 	
@@ -151,7 +180,7 @@ void World::InitFramework()
     m_physicsSimulator->SetCollisionInformation( true );
 
     //Initialize the grid
-    m_grid = new Construction::GridEntity( 
+    m_grid = new Construction::GridEntity(
         new Construction::Grid( gridSize, m_worldScale, occMatrix ),
         m_pluginDCS.get(),
         m_physicsSimulator );
@@ -318,13 +347,14 @@ void World::CommunicatingBlocksAlgorithm()
         Construction::SiteSensor* siteSensor = agent->GetSiteSensor();
         Construction::HoldBlockSensor* holdBlockSensor = agent->GetHoldBlockSensor();
 
+        holdBlockSensor->CollectInformation();
         if( holdBlockSensor->HoldingBlock() )
         {
             siteSensor->CollectInformation();
-            if( siteSensor->BlockInView() )
+            if( siteSensor->SiteInView() )
             {
                 agent->GoToSite();
-                if( siteSensor->GetBlockDistance() < 1.5 )
+                if( siteSensor->CloseToSite() )
                 {
                     bool collision = agent->GetPhysicsRigidBody()->CollisionInquiry(
                         m_entities[ agent->GetTargetDCS()->GetName() ]->GetPhysicsRigidBody() );
@@ -345,7 +375,7 @@ void World::CommunicatingBlocksAlgorithm()
             if( blockSensor->BlockInView() )
             {
                 agent->GoToBlock();
-                if( blockSensor->GetBlockDistance() < 1.5 )
+                if( blockSensor->CloseToBlock() )
                 {
                     Construction::BlockEntity* targetEntity = static_cast< Construction::BlockEntity* >
                         ( m_entities[ agent->GetTargetDCS()->GetName() ] );

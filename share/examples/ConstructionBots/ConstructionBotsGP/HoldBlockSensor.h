@@ -6,8 +6,11 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/LineSegment>
 
-//Simulates a 3D ring of ultrasound sensors for obstacle detection
+#include <osgUtil/IntersectVisitor>
+
+//Detects if an agent is holding a block
 namespace Construction
 {
 class HoldBlockSensor : public Sensor
@@ -24,6 +27,12 @@ public:
 private:
     bool m_holdingBlock;
 
+    double m_range;
+
+    osg::ref_ptr< osg::LineSegment > beamLineSegment;
+
+    osg::Vec3d startPoint;
+    osg::Vec3d endPoint;
 };
 }
 

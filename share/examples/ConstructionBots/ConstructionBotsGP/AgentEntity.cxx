@@ -90,7 +90,7 @@ void AgentEntity::PickUpBlock( Construction::BlockEntity* blockEntity )
     double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
     blockEntity->GetDCS()->SetTranslationArray( transArray );
     m_targetDCS = NULL;
-    blockEntity->GetPhysicsRigidBody()->setLinearVelocity( btVector3( 0, 0, 0 ) );
+    blockEntity->GetPhysicsRigidBody()->clearForces();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
@@ -100,7 +100,7 @@ void AgentEntity::Build()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToSite()
 {
-    ;
+    GetPhysicsRigidBody()->setLinearVelocity( m_siteSensor->GetNormalizedSiteVector() );;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetNameAndDescriptions( int number )
@@ -140,7 +140,7 @@ void AgentEntity::SetConstraints( int gridSize )
     //Give 0.5 units extra in xy plane for agent/wall collision
     //Give small z-range for agent/grid collision
     m_constraint->setLinearLowerLimit( btVector3( -gridSize * 0.5, -gridSize * 0.5, -0.1 ) );
-    m_constraint->setLinearUpperLimit( btVector3( gridSize * 0.5, gridSize * 0.5, 0.1 ) );
+    m_constraint->setLinearUpperLimit( btVector3( gridSize * 0.5, gridSize * 0.5, 0.0 ) );
 
     //Remove rotation from agents
     //Range should be small, otherwise singularities will 'explode' the constraint

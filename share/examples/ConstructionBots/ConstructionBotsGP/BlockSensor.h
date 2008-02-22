@@ -31,24 +31,26 @@ public:
     void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
     bool BlockInView();
-    double GetBlockDistance();
-    double* GetBlockPosition();
+    bool CloseToBlock();
+
     btVector3 GetNormalizedBlockVector();
+
+    void SetRange( double range );
 
 private:
     bool m_blockInView;
+    bool m_closeToBlock;
 
     double m_angle;
     double m_angleInc;
     double m_range;
-    double m_blockDistance;
 
     double* m_blockPosition;
 
     btVector3 m_normalizedBlockVector;
 
-    osg::ref_ptr< osg::Geode > beamGeode;
-    osg::ref_ptr< osg::LineSegment > beamLineSegment;
+    osg::ref_ptr< osg::Geode > m_beamGeode;
+    osg::ref_ptr< osg::LineSegment > m_beamLineSegment;
 
     osg::Vec3d startPoint;
     osg::Vec3d endPoint;

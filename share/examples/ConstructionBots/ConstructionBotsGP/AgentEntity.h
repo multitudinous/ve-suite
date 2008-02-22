@@ -55,6 +55,8 @@ public:
     Construction::HoldBlockSensor* GetHoldBlockSensor();
 
 private:
+    //void Set
+
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_targetDCS;
 

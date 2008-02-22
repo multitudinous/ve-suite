@@ -11,9 +11,20 @@ namespace scenegraph
     class DCS;
     class CADEntity;
     class PhysicsSimulator;
+#ifdef VE_SOUND
+    class Sound;
+#endif
 }
 }
 }
+
+// --- osgAL Includes --- //
+#ifdef VE_SOUND
+namespace osgAL
+{
+    class SoundManager;
+}
+#endif
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -36,7 +47,11 @@ class World
 public:
     World( int worldScale,
            ves::xplorer::scenegraph::DCS* pluginDCS,
-           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+#ifdef VE_SOUND
+         , osgAL::SoundManager* soundManager
+#endif
+           );
 
     ~World();
 
@@ -63,6 +78,10 @@ private:
     int m_worldScale;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
+
+#ifdef VE_SOUND
+    ves::xplorer::scenegraph::Sound* m_ambientSound;
+#endif
 };
 }
 
