@@ -98,8 +98,12 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
         {
             //Write the child node label
             m_dotFile << "\"" << childNode.get() << "\" " << "[label=\""
-                << childName << "\\n"
-                << GetStateSetDataString( childNode.get() ) << "\\n"
+                << childName << "\\n";
+            if( !childNode->getNodeMask() )
+            {
+                m_dotFile << "*This node is OFF*" << "\\n";
+            }
+            m_dotFile << GetStateSetDataString( childNode.get() ) << "\\n"
                 << GetMaterialDataString( childNode.get() ) << "\\n"
                 << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
         }

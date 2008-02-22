@@ -757,8 +757,8 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 
     // get the active vis object
     vprDEBUG( vesDBG, 1 ) << " setting viz object " << activeObject->GetObjectType()
-    << " to _activeObject"
-    << std::endl << vprDEBUG_FLUSH;
+        << " to _activeObject"
+        << std::endl << vprDEBUG_FLUSH;
 
     //SceneManager::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
 
@@ -766,8 +766,8 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 
     // add active dataset DCS to scene graph if not already there...
     vprDEBUG( vesDBG, 1 ) << " setting DCS to activeDCS = "
-    << activeDataSetDCS.get()
-    << std::endl << vprDEBUG_FLUSH;
+        << activeDataSetDCS.get()
+        << std::endl << vprDEBUG_FLUSH;
     //this->activeObject->SetActiveDataSet( ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() );
     //this->activeObject->SetNormal( EnvironmentHandler::instance()->GetNavigate()->GetDirection() );
     //this->activeObject->SetOrigin( EnvironmentHandler::instance()->GetNavigate()->GetObjLocation() );

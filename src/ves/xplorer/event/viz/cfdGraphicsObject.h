@@ -123,9 +123,7 @@ public:
     ///Clear geodes vector and geode from memory and the graph
     void RemoveGeodeFromDCS();
 
-    // Return the animation so that we can change the speed of the animation
-    //ves::xplorer::scenegraph::cfdTempAnimation* GetAnimation();
-
+    ///Used to enable the animated streamlines
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes();
 
 protected:
