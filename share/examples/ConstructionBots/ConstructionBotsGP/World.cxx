@@ -184,7 +184,7 @@ void World::InitFramework()
 
     //Initialize the grid
     m_grid = new Construction::GridEntity(
-        new Construction::Grid( gridSize, m_worldScale, occMatrix ),
+        new Construction::Grid( gridSize, occMatrix ),
         m_pluginDCS.get(),
         m_physicsSimulator );
     m_grid->SetNameAndDescriptions();
@@ -195,7 +195,7 @@ void World::InitFramework()
 
     //Initialize the starting block
     m_startBlock = new Construction::BlockEntity(
-        new Construction::Block( m_worldScale ),
+        new Construction::Block(),
         m_pluginDCS.get(),
         m_physicsSimulator );
     //m_entities.push_back( m_startBlock );
@@ -214,7 +214,7 @@ void World::InitFramework()
     for( int i = 0; i < numBlocks; ++i )
     {
         m_blocks.push_back( new Construction::BlockEntity(
-            new Construction::Block( m_worldScale ),
+            new Construction::Block(),
             m_pluginDCS.get(),
             m_physicsSimulator ) );
     }

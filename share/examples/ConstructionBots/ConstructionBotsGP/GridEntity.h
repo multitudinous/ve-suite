@@ -18,7 +18,7 @@ namespace Construction
 class GridEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    GridEntity( Construction::Grid* grid,
+    GridEntity( osg::ref_ptr< Construction::Grid > grid,
                 ves::xplorer::scenegraph::DCS* pluginDCS,
                 ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 

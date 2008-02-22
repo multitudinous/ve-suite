@@ -28,7 +28,7 @@ namespace Construction
 class AgentEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    AgentEntity( Construction::Agent* agent,
+    AgentEntity( osg::ref_ptr< Construction::Agent > agent,
                  ves::xplorer::scenegraph::DCS* pluginDCS,
                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 

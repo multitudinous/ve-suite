@@ -21,12 +21,12 @@
 using namespace Construction;
 
 ////////////////////////////////////////////////////////////////////////////////
-AgentEntity::AgentEntity( Construction::Agent* agent,
+AgentEntity::AgentEntity( osg::ref_ptr< Construction::Agent > agent,
                           ves::xplorer::scenegraph::DCS* pluginDCS,
                           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( agent, pluginDCS, physicsSimulator ),
-m_geometry( agent ),
+CADEntity( agent.get(), pluginDCS, physicsSimulator ),
+m_geometry( agent.get() ),
 m_pluginDCS( pluginDCS ),
 m_targetDCS( 0 ),
 m_constraint( 0 )
@@ -42,6 +42,10 @@ AgentEntity::~AgentEntity()
 {
     if( m_constraint )
     {
+        if( m_physicsSimulator )
+        {
+            m_physicsSimulator->GetDynamicsWorld()->removeConstraint( m_constraint );
+        }
         delete m_constraint;
     }
 
@@ -124,7 +128,7 @@ void AgentEntity::SetConstraints( int gridSize )
 
     //Must disable deactivation so constraint is always applied
     GetPhysicsRigidBody()->setActivationState( DISABLE_DEACTIVATION );
-    btRigidBody* fixedBody = ves::xplorer::scenegraph::PhysicsSimulator::instance()->CreateRigidBody( 0, trans, 0 );
+    btRigidBody* fixedBody = m_physicsSimulator->CreateRigidBody( 0, trans, 0 );
 
     btTransform frameInA, frameInB;
     frameInA = btTransform::getIdentity();
@@ -147,7 +151,7 @@ void AgentEntity::SetConstraints( int gridSize )
     m_constraint->setAngularLowerLimit( btVector3( 0, 0, 0 ) );
     m_constraint->setAngularUpperLimit( btVector3( 0, 0, 0 ) );
 
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addConstraint( m_constraint );
+    m_physicsSimulator->GetDynamicsWorld()->addConstraint( m_constraint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS )

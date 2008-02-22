@@ -24,12 +24,12 @@
 using namespace Construction;
 
 ////////////////////////////////////////////////////////////////////////////////
-BlockEntity::BlockEntity( Construction::Block* block,
+BlockEntity::BlockEntity( osg::ref_ptr< Construction::Block > block,
                           ves::xplorer::scenegraph::DCS* pluginDCS,
                           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( block, pluginDCS, physicsSimulator ),
-m_geometry( block ),
+CADEntity( block.get(), pluginDCS, physicsSimulator ),
+m_geometry( block.get() ),
 m_constraint( 0 )
 //start( false )
 {
@@ -43,6 +43,10 @@ BlockEntity::~BlockEntity()
 {
     if( m_constraint )
     {
+        if( m_physicsSimulator )
+        {
+            m_physicsSimulator->GetDynamicsWorld()->removeConstraint( m_constraint );
+        }
         delete m_constraint;
     }
 }
@@ -73,7 +77,7 @@ void BlockEntity::SetConstraints( int gridSize )
 
     //Must disable deactivation so constraint is always applied
     GetPhysicsRigidBody()->setActivationState( DISABLE_DEACTIVATION );
-    btRigidBody* fixedBody = ves::xplorer::scenegraph::PhysicsSimulator::instance()->CreateRigidBody( 0, trans, 0 );
+    btRigidBody* fixedBody = m_physicsSimulator->CreateRigidBody( 0, trans, 0 );
 
     btTransform frameInA, frameInB;
     frameInA = btTransform::getIdentity();
@@ -96,7 +100,7 @@ void BlockEntity::SetConstraints( int gridSize )
     m_constraint->setAngularLowerLimit( btVector3( 0, 0, 0 ) );
     m_constraint->setAngularUpperLimit( btVector3( 0, 0, 0 ) );
 
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->addConstraint( m_constraint );
+    m_physicsSimulator->GetDynamicsWorld()->addConstraint( m_constraint );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*

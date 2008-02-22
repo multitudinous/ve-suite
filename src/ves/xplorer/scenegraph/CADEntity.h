@@ -56,9 +56,9 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class DCS;
-class CADEntityHelper;
-class PhysicsRigidBody;
+    class DCS;
+    class CADEntityHelper;
+    class PhysicsRigidBody;
 }
 }
 }
@@ -70,7 +70,7 @@ class PhysicsRigidBody;
 
 namespace osg
 {
-class Fog;
+    class Fog;
 }
 #endif
 
@@ -84,7 +84,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class PhysicsSimulator;
+    class PhysicsSimulator;
 
 class VE_SCENEGRAPH_EXPORTS CADEntity
 {
@@ -144,7 +144,7 @@ public:
     ///\param flag The transparency state
     void SetTransparencyFlag( bool flag );
 
-private:
+protected:
     ///A helper class to give added functionality to CADEntity
     ves::xplorer::scenegraph::CADEntityHelper* m_cadEntityHelper;
     ///The DCS of CADEntity

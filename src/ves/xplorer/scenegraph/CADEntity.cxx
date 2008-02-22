@@ -49,6 +49,9 @@
 #include <osg/MatrixTransform>
 #endif //_OSG
 
+// --- Bullet Includes --- //
+#include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
+
 // --- C/C++ Libraries --- //
 #include <cassert>
 
@@ -129,6 +132,10 @@ CADEntity::~CADEntity()
 
     if( m_physicsRigidBody )
     {
+        if( m_physicsSimulator )
+        {
+            m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_physicsRigidBody );
+        }
         delete m_physicsRigidBody;
     }
 }

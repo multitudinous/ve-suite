@@ -5,12 +5,12 @@
 using namespace Construction;
 
 ////////////////////////////////////////////////////////////////////////////////
-GridEntity::GridEntity( Construction::Grid* grid,
+GridEntity::GridEntity( osg::ref_ptr< Construction::Grid > grid,
                         ves::xplorer::scenegraph::DCS* pluginDCS,
                         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( grid, pluginDCS, physicsSimulator ),
-geometry( grid )
+CADEntity( grid.get(), pluginDCS, physicsSimulator ),
+geometry( grid.get() )
 {
    ;
 }

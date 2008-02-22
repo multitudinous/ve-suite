@@ -43,7 +43,7 @@ void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldD
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::PreFrameUpdate()
 {
-    if( !ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetIdle() )
+    if( !m_physicsSimulator->GetIdle() )
     {
         world->PreFrameUpdate();
     }

@@ -13,7 +13,7 @@ class Grid : public osg::Geode
 {
 public:
     Grid();
-    Grid( int gridSize, int gridScale, std::vector< bool > occMatrix );
+    Grid( int gridSize, std::vector< bool > occMatrix );
 
 protected:
     virtual ~Grid();
@@ -23,7 +23,7 @@ public:
    
     META_Node( Construction, Grid );
    	
-    void CreateGrid( int gridSize, int gridScale, std::vector< bool > occMatrix );
+    void CreateGrid( int gridSize, std::vector< bool > occMatrix );
 
 private:
 

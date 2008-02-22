@@ -10,7 +10,6 @@ class Block : public osg::Geode
 {
 public:
     Block();
-    Block( float blockScale );
 
 protected:
     virtual ~Block();
@@ -20,7 +19,7 @@ public:
 
     META_Node( Construction, Block );
 
-    void CreateBlock( float blockScale );
+    void CreateBlock();
 
     void SetColor( float r, float g, float b, float a );
 

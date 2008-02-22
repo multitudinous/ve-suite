@@ -21,7 +21,7 @@ namespace Construction
 class BlockEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    BlockEntity( Construction::Block* block,
+    BlockEntity( osg::ref_ptr< Construction::Block > block,
                  ves::xplorer::scenegraph::DCS* pluginDCS,
                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
