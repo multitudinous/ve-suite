@@ -157,9 +157,10 @@ public:
 
     ///Allocate another input block for use
     ///\return The new input
-    #pragma deprecated( GetInput )
-    ves::open::xml::CommandPtr GetInput();
-
+    ///This function should be replaced with SetInput in users code since 
+    ///ves is now using smart pointers
+    vesDEPRECATED( ves::open::xml::CommandPtr GetInput() );
+    
     ///Set the input for this models
     void SetInput( ves::open::xml::CommandPtr& input );
 

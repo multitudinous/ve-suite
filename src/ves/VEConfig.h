@@ -203,4 +203,13 @@
 #  define VE_NURBS_UTILS_EXPORTS
 #endif
 
+///This is ripped straight from wxWidgets
+#if defined(_MSC_VER)
+    #define vesDEPRECATED(x) __declspec(deprecated) x
+#else
+    //#if wxCHECK_GCC_VERSION(3, 1)
+    #define vesDEPRECATED(x) x __attribute__ ((deprecated))
+    //#define wxDEPRECATED(x) x
+#endif
+
 #endif
