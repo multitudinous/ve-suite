@@ -410,7 +410,7 @@ void UIPluginBase::DrawName( wxDC* dc )
     y = y / n_pts;
 
     dc->GetTextExtent( name, &w, &h );
-    dc->DrawText( name, ( x - w / 2 + xoff ), pos.y + ( y * 2.1 ) );
+    dc->DrawText( name, int( x - w / 2 + xoff ), pos.y + int( y * 2.1 ) );
 }
 
 /////////////////////////////////////////////////////////////////////////////

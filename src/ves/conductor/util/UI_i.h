@@ -78,7 +78,7 @@ public:
     void SetLogWindow( PEThread* logWindow );
 
     ///Returns vector containing XMLObjects
-    const ves::open::xml::CommandPtr& GetXplorerData( const std::string& commandName );
+    const ves::open::xml::CommandPtr GetXplorerData( const std::string& commandName );
 
     virtual void UpdateNetwork(
         const char * network
