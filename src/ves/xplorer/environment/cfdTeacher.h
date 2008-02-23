@@ -95,7 +95,7 @@ public:
     ves::xplorer::scenegraph::DCS* GetDCS( );
     ///Get a performer node output
     ///\param node ID
-    ves::xplorer::scenegraph::CADEntityHelper* getpfNode( int );
+    ves::xplorer::scenegraph::CADEntityHelper* GetCurrentLoadedScene( int );
     ///Set/Get number of fles
     ///\param i file name ID
     int getNumberOfFiles();
@@ -115,7 +115,6 @@ public:
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-    //std::vector< ves::xplorer::scenegraph::CADEntityHelper* > node;  // array of nodes
     ves::xplorer::scenegraph::CADEntityHelper* m_currentScene;
     ///Sorted file filenames for stored scenes
     std::vector<std::string> pfbFileNames;

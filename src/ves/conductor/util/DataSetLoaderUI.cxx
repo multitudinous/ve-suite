@@ -684,10 +684,16 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
     wxTextEntryDialog newDataSetName( this,
                                       wxString( _( "New Dataset" ) ),
                                       wxString( _( "Enter name for new Dataset:" ) ),
-                                      wxString( _( "Dataset" ) ), wxOK );
+                                      wxString( _( "Dataset" ) ), 
+                                      wxOK | wxCANCEL | wxCENTRE );
 
     newDataSetName.CentreOnParent();
-    newDataSetName.ShowModal();
+
+    if( newDataSetName.ShowModal() == wxID_CANCEL )
+    {
+        return;
+    }
+    
     if( dataSetList->FindString( newDataSetName.GetValue() ) != wxNOT_FOUND )
     {
         wxMessageBox( _( "Data with this name is already loaded." ),

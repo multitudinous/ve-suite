@@ -187,7 +187,6 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
         temp.push_back( _yTransformCtrl->GetValue() );
         temp.push_back( _zTransformCtrl->GetValue() );
         _transform->GetTranslationArray()->SetArray( temp );
-        std::cout << "YTRANSFORM :" << temp.at( 1 ) << std::endl;
         temp.clear();
 
         double xScale = _xScaleCtrl->GetValue();

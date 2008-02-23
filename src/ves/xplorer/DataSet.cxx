@@ -1213,12 +1213,12 @@ void DataSet::LoadPrecomputedDataSlices()
         delete z_planes;
     }
 
-    if( precomputedDataSliceDir.size() )
+    if( !precomputedDataSliceDir.empty() )
     {
         double bounds[ 6 ];
         GetBounds( bounds );
         vprDEBUG( vesDBG, 0 ) << "\tLoading precomputed planes from "
-        << this->GetPrecomputedDataSliceDir() << std::endl << vprDEBUG_FLUSH;
+            << precomputedDataSliceDir << std::endl << vprDEBUG_FLUSH;
         this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir().c_str(), bounds );
         this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir().c_str(), bounds );
         this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir().c_str(), bounds );

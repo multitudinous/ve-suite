@@ -68,18 +68,19 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::cfdTeacher( std::string specifiedDir, ves::xplorer::scenegraph::DCS* worldDCS )
         :
-        m_currentScene( 0 )
+        m_currentScene( 0 ),
+        directory( specifiedDir ),
+        dcs( new ves::xplorer::scenegraph::DCS() ),
+        _worldDCS( worldDCS )
 {
-    this->directory = specifiedDir;
-
     vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
-    << "\"" << std::endl << vprDEBUG_FLUSH;
+        << "\"" << std::endl << vprDEBUG_FLUSH;
 
     // initialize in case the directory is not there...
-    this->dcs = new ves::xplorer::scenegraph::DCS();
-    this->dcs->SetName( "Teacher Node" );
-    _worldDCS = worldDCS;
-    _worldDCS->AddChild( this->dcs.get() );
+    // We use a node specifically for teacher to keep book keeping on loaded 
+    // scenes a little bit easier
+    dcs->SetName( "Teacher Node" );
+     _worldDCS->AddChild( this->dcs.get() );
     //Get ive, osg, and pfb filenames
     pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
@@ -93,23 +94,20 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, ves::xplorer::scenegraph::DCS*
 
     // how many performer binaries found ?
     vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of stored scenes found: "
-    << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
+        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdTeacher::~cfdTeacher( )
 {
     if( m_currentScene )
     {
-        this->dcs->removeChild( m_currentScene->GetNode() );
+        dcs->removeChild( m_currentScene->GetNode() );
         delete m_currentScene;
         m_currentScene = 0;
     }
-
-    //vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
-    //    << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntityHelper* cfdTeacher::getpfNode( int i )
+ves::xplorer::scenegraph::CADEntityHelper* cfdTeacher::GetCurrentLoadedScene( int i )
 {
     //only load the current one so clear out the list
     if( m_currentScene )
@@ -179,7 +177,7 @@ void cfdTeacher::RecordScene()
     pfbFileNames.push_back( pfb_filename );
 
     vprDEBUG( vesDBG, 0 ) << "|\tScene stored as " << pfb_filename
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
 
     // store the world DCS matrix..
     if( _worldDCS.valid() )
@@ -205,8 +203,8 @@ void cfdTeacher::RecordScene()
         writePFBFile( ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode(), pfb_filename );
     }
 
-    vprDEBUG( vesDBG, 1 ) << "|   Stored Scene Output " << pfbFileNames.size()
-    << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tStored Scene Output " << pfbFileNames.size()
+        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::LoadScene( unsigned int whichChild )
@@ -217,25 +215,20 @@ void cfdTeacher::LoadScene( unsigned int whichChild )
     }
 
     vprDEBUG( vesDBG, 2 ) << "LOAD_PFB_FILE: addChild" << std::endl
-    << vprDEBUG_FLUSH;
+        << vprDEBUG_FLUSH;
 
-    this->GetDCS()->addChild( this->getpfNode( whichChild )->GetNode() );
+    this->GetDCS()->addChild( GetCurrentLoadedScene( whichChild )->GetNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::ClearStoredScenes()
 {
     vprDEBUG( vesDBG, 2 )
-    << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
-    << std::endl  << vprDEBUG_FLUSH;
+        << "|\tcfdTeacher::ClearStoredScenes : CLEAR_ALL or CLEAR_PFB_FILE "
+        << std::endl  << vprDEBUG_FLUSH;
 
-    if( !this->dcs.valid() )
+    if( dcs->getNumChildren() > 0 )
     {
-        return;
-    }
-
-    if( this->GetDCS()->getNumChildren() > 0 )
-    {
-        this->GetDCS()->removeChild( this->GetDCS()->GetChild( 0 ) );
+        dcs->removeChild( dcs->GetChild( 0 ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -280,5 +273,6 @@ void cfdTeacher::Reset()
 
     // how many performer binaries found ?
     vprDEBUG( vesDBG, 1 ) << "|\t\tNumber of stored scenes found: "
-    << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
+        << pfbFileNames.size() << std::endl << vprDEBUG_FLUSH;
 }
+////////////////////////////////////////////////////////////////////////////////
