@@ -243,19 +243,12 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
         ves::open::xml::DataValuePairPtr paramBlockID = new ves::open::xml::DataValuePair();
         paramBlockID->SetData( std::string( "Parameter Block ID" ), _id );
         _instructions.push_back( paramBlockID );
-//std::cout<<"NO"<<std::endl;}
+
         std::cout << "PARAMID :" << _id << std::endl;
         ves::open::xml::DataValuePairPtr updateTransform = new ves::open::xml::DataValuePair();
         updateTransform->SetData( "Transform", _transform );
         _instructions.push_back( updateTransform );
         std::cout << "TRANSFORM :" << std::endl;
-//     paramBlock->GetTransform()
-//      VE_XML::DataValuePairPtr updateTransform = new VE_XML::DataValuePair();
-//      updateTransform->SetDataType("XMLOBJECT");
-//      updateTransform->SetData("Transform",paramBlock->GetTransform());
-//      _instructions.push_back(updateTransform);
-
-//      _sendCommandsToXplorer();
 
         ///send command to xplorer
         ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();

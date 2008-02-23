@@ -331,6 +331,8 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
                         << std::endl << vprDEBUG_FLUSH;
 
                         _activeModel->CreateCfdDataSet();
+                        ///This code needs updated BADLY
+                        ///There should be much better logic here.
                         unsigned int numDataSets = _activeModel->GetNumberOfCfdDataSets();
                         // subtract 1 because this number was 1 base not 0 base
                         numDataSets -= 1;

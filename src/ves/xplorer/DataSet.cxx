@@ -1232,20 +1232,7 @@ std::string DataSet::GetPrecomputedDataSliceDir()
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetPrecomputedSurfaceDir( const std::string newName )
 {
-    if( this->precomputedSurfaceDir.c_str() )
-    {
-        precomputedSurfaceDir.erase();//delete [] this->precomputedSurfaceDir;
-    }
-
-    //if ( newName == NULL )
-    if( newName.empty() )
-    {
-        this->precomputedSurfaceDir.empty();// = NULL;
-        return;
-    }
-
-    //this->precomputedSurfaceDir = new char [strlen(newName)+1];
-    precomputedSurfaceDir.assign( newName );//strcpy( this->precomputedSurfaceDir, newName );
+    precomputedSurfaceDir = newName;
 }
 ///////////////////////////////////////////////////////////////
 std::string DataSet::GetPrecomputedSurfaceDir()

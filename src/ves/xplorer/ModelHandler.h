@@ -109,8 +109,7 @@ public:
     void SetXMLCommand( const ves::open::xml::CommandPtr& inputCommand );
     ///Returns the current xml command
     const ves::open::xml::CommandPtr& GetXMLCommand( void );
-    //void CreateObjects( void );
-    void LoadSurfaceFiles( std::string );
+
     vtkPolyData* GetArrow( void );
     Model* GetModel( int );
     void AddModel( Model* );

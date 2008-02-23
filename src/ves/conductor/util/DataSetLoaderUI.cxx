@@ -552,7 +552,16 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
     mainSizer->Fit( &transformDialog );
 
     //set parameterblock unique (GUID) id for transform GUI
-    transformPanel->SetParamBlockID( mParamBlock->GetID() );
+    if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
+    {
+        transformPanel->SetParamBlockID( 
+            mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
+    }
+    else
+    {
+        transformPanel->SetParamBlockID( "NULL" );
+            //mParamBlock->GetID() );
+    }
     transformPanel->SetParamBlockTransform( mParamBlock->GetTransform() );
 
     if( transformDialog.ShowModal() == wxID_OK )
@@ -694,7 +703,6 @@ void DataSetLoaderUI::OnInformationPacketAdd( wxCommandEvent& WXUNUSED( event ) 
         std::string tempStr;
         tempStr = ( static_cast< const char* >( wxConvCurrent->cWX2MB( newDataSetName.GetValue() ) ) );
         mParamBlock->SetName( tempStr );
-        //mParamBlock->SetBlockId( ::wxNewId() );
         EnableUI( true );
         SetTextCtrls();
     }
@@ -775,6 +783,11 @@ ves::open::xml::ParameterBlockPtr DataSetLoaderUI::GetParamBlock()
 void DataSetLoaderUI::SendCommandToXplorer(
     ves::open::xml::DataValuePairSharedPtr tempObject )
 {
+    if( !mParamBlock )
+    {
+        return;
+    }
+    
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -786,7 +799,7 @@ void DataSetLoaderUI::SendCommandToXplorer(
     //Add the active dataset name to the command
     ves::open::xml::DataValuePairSharedPtr dataSetName =
         new ves::open::xml::DataValuePair();
-    if( mParamBlock )
+    if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
     {
         dataSetName->SetData( "VTK_DATASET_NAME",
                               mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );

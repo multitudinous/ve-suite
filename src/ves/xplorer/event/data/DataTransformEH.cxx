@@ -85,24 +85,41 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 {
     try
     {
-        if( _activeModel )
+        if( !_activeModel )
         {
-            CommandPtr command = xmlObject;
-            DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Parameter Block ID" );
-            DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
-            ves::xplorer::scenegraph::DCS* transform = 0;
-            transform = _activeModel->GetActiveDataSet()->GetDCS();
+            return;
+        }
 
-            if( transform )
-            {
-                TransformPtr dataTransform = newTransform->GetDataXMLObject();
-                transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-                transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-                transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
-                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
-                ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
-            }
+        CommandPtr command = xmlObject;
+        DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Parameter Block ID" );
+        std::string filename;
+        datasetName->GetData( filename );
+        if( filename != "NULL" )
+        {
+            _activeModel->SetActiveDataSet( 
+                _activeModel->GetCfdDataSet( 
+                    _activeModel->GetIndexOfDataSet(  filename ) ) );
+        }
+        
+        if( !_activeModel->GetActiveDataSet() )
+        {
+            std::cout << "|\tNo active dataset assigned." << std::endl;
+            return;
+        }
+
+        DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
+        ves::xplorer::scenegraph::DCS* transform = 0;
+        transform = _activeModel->GetActiveDataSet()->GetDCS();
+
+        if( transform )
+        {
+            TransformPtr dataTransform = newTransform->GetDataXMLObject();
+            transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+            transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+            transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
+            ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
         }
     }
     catch ( ... )
