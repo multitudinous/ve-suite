@@ -70,7 +70,11 @@ void OpacityVisitor::apply( osg::Geode& node )
     {
         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
         geode_stateset->setAttribute( geode_material.get(), osg::StateAttribute::ON );
-        SetupBlendingForStateSet( geode_stateset.get() );
+        //The stateset only needs set at the part level in VE-Suite.
+        //The alpha an material information can be set at the higher level
+        //because otherwise the renderbins end up being nested and cause odd
+        //problems.
+        //SetupBlendingForStateSet( geode_stateset.get() );
     }
 
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
@@ -80,7 +84,11 @@ void OpacityVisitor::apply( osg::Geode& node )
         osg::ref_ptr< osg::Vec4Array > color_array = static_cast< osg::Vec4Array* >( node.getDrawable( i )->asGeometry()->getColorArray() );
         osg::StateSet::TextureAttributeList drawable_tal = drawable_stateset->getTextureAttributeList();
 
-        SetupBlendingForStateSet( drawable_stateset.get() );
+        //The stateset only needs set at the part level in VE-Suite.
+        //The alpha an material information can be set at the higher level
+        //because otherwise the renderbins end up being nested and cause odd
+        //problems.
+        //SetupBlendingForStateSet( drawable_stateset.get() );
 
         if( color_array.valid() )
         {
@@ -136,18 +144,19 @@ void OpacityVisitor::apply( osg::Group& node )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = node.getDescriptions();
-    bool isAssembly = false;
+    bool isPart = false;
     //Find if the node is an assembly
     for( size_t i = 0; i < descriptorsList.size(); i++ )
     {
-        if( descriptorsList.at( i ) == "Assembly" )
+        if( descriptorsList.at( i ) == "Part" )
         {
-            isAssembly = true;
+            isPart = true;
             break;
         }
     }
 
-    if( !isAssembly )
+    ///Only process if it is a part
+    if( isPart )
     {
         osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
         osg::ref_ptr< osg::Material > material = 
