@@ -276,7 +276,7 @@ private:
     unsigned int mIconMirror;
     ///The sub network for this model
     ves::open::xml::model::SystemPtr mSubSystem;
-    ModelPtr mParentModel;
+    ModelWeakPtr mParentModel;
 };
 
 }

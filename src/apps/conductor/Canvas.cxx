@@ -47,9 +47,6 @@
 #include "Network.h"
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/TagPtr.h>
-#include <ves/open/xml/User.h>
-#include <ves/open/xml/UserPtr.h>
-
 
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
@@ -130,7 +127,6 @@ Canvas::Canvas( wxWindow* parent, int id )
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas()
 {
-    ;
 }
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::~Canvas()

@@ -68,7 +68,11 @@ Model::Model()
 ///////////////////////////////////
 Model::~Model()
 {
-
+    if( mSubSystem )
+    {
+        mSubSystem->SetParentModel( 0 );
+    }
+    
     mPorts.clear();
 
     mResults.clear();

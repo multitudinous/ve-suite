@@ -43,7 +43,6 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/User.h>
 #include <ves/open/xml/StateInfo.h>
 
 #include <wx/window.h>
@@ -768,7 +767,7 @@ void Link::DrawLink( wxDC* dc )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetLink( ves::open::xml::model::LinkWeakPtr inputLink )
+void Link::SetLink( ves::open::xml::model::LinkPtr inputLink )
 {
     m_veLink = inputLink;
 
@@ -807,17 +806,8 @@ void Link::SetLink( ves::open::xml::model::LinkWeakPtr inputLink )
     SetUUID( m_veLink->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::model::LinkWeakPtr Link::GetLink()
+ves::open::xml::model::LinkPtr Link::GetLink()
 {
-    //xmlLink->GetFromModule()->SetData( modules[ links[i].GetFromModule() ].
-    //                                   GetClassName(), static_cast< long int >( links[i].GetFromModule() ) );
-    //xmlLink->GetToModule()->SetData( modules[ links[i].GetToModule() ].
-    //                                 GetClassName(), static_cast< long int >( links[i].GetToModule() ) );
-    //*(m_veLink->GetFromPort()) = static_cast< long int >( GetFromPort() );
-    //*(m_veLink->GetToPort()) = static_cast< long int >( GetToPort() );
-    //m_veLink->SetLinkName( ConvertUnicode( GetName().c_str() ) );
-    //m_veLink->SetID( m_uuid );
-
     //Try to store link cons,
     //link cons are (x,y) wxpoint
     //here I store x in one vector and y in the other

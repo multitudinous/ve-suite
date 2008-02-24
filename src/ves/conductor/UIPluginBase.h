@@ -298,7 +298,7 @@ protected:
 
     ///Copy of the model element pointer
     ves::open::xml::model::ModelPtr m_veModel;
-    ves::open::xml::model::ModelPtr parentModel;
+    ves::open::xml::model::ModelWeakPtr parentModel;
     ///Name seen by the user and rendered on the canvas
     wxString name;
 

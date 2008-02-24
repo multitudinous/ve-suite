@@ -128,7 +128,7 @@ private:
     std::vector< ves::open::xml::DataValuePairPtr > mConductorState;///<Vector of data value pairs that hold conductor info.
     ///The vector of tags for this network
     std::vector< TagPtr > mTags;
-    ModelPtr mParentModel;
+    ModelWeakPtr mParentModel;
 };
 
 }

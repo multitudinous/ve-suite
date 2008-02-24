@@ -73,11 +73,11 @@ public:
     ///Get Command with key
     ///The key MUST be the command name
     ///\param commandKey command desired by the user
-    ves::open::xml::CommandWeakPtr GetCommand( std::string commandKey );
+    //ves::open::xml::CommandWeakPtr GetCommand( std::string commandKey );
     ///set Command with key
     ///\param commandKey key of the command desired
     ///\param command command to be stored
-    void SetCommand( std::string commandKey, ves::open::xml::CommandWeakPtr command );
+    //void SetCommand( std::string commandKey, ves::open::xml::CommandWeakPtr command );
     ///Get all the commands
     std::map< std::string, ves::open::xml::CommandWeakPtr > GetCommandMap( void );
     ///Set all the commands

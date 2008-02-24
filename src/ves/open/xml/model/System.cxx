@@ -52,6 +52,15 @@ System::System()
 ////////////////////////////////////////////////////////////////////////////////
 System::~System()
 {
+    if( mNetwork )
+    {
+        mNetwork->SetParentModel( 0 );
+    }
+
+    for( size_t i = 0; i < mModels.size(); ++i )
+    {
+        mModels.at( i )->SetParentModel( 0 );
+    }
     mModels.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -56,20 +56,6 @@ Network API
 #include <wx/dcclient.h>
 
 class wxProgressDialog;
-namespace ves
-{
-namespace open
-{
-namespace xml
-{
-namespace model
-{
-class User;
-}
-}
-}
-}
-
 class AppFrame;
 class Canvas;
 

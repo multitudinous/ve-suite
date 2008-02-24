@@ -133,9 +133,9 @@ public:
     ///Draw link
     void DrawLink( wxDC* dc );
     ///Set ves::open::xml::model::Link
-    void SetLink( ves::open::xml::model::LinkWeakPtr inputLink );
+    void SetLink( ves::open::xml::model::LinkPtr inputLink );
     ///Get ves::open::xml::model::Link
-    ves::open::xml::model::LinkWeakPtr GetLink();
+    ves::open::xml::model::LinkPtr GetLink();
     size_t GetMaxPointX()
     {
         return maxPointX;
@@ -203,8 +203,8 @@ private:
     /// second = y scale
     std::pair< double, double >* userScale;
     ///The XML Link rep
-    ves::open::xml::model::LinkSharedPtr m_veLink;
-    ves::open::xml::model::ModelSharedPtr parentModel;
+    ves::open::xml::model::LinkWeakPtr m_veLink;
+    ves::open::xml::model::ModelWeakPtr parentModel;
 
     std::string ConvertUnicode( const wxChar* data )
     {

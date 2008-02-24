@@ -120,6 +120,7 @@ using namespace ves::open::xml::shader;
 
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
+    EVT_CLOSE( AppFrame::OnFrameClose )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
@@ -312,7 +313,7 @@ AppFrame::~AppFrame()
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
     wx_nw_splitter->RemoveChild( canvas );
-    canvas->DestroyChildren();
+    //canvas->DestroyChildren();
     canvas->Destroy();
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
@@ -326,6 +327,8 @@ AppFrame::~AppFrame()
     StoreConfig();
     StoreRecentFile();
 
+    UserPreferencesDataBuffer::instance()->CleanUp();
+    
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
@@ -623,7 +626,15 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
+    //XMLDataBufferEngine::instance()->CleanUp();
     Close( true );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
+{
+    //XMLDataBufferEngine::instance()->CleanUp();
+    //::wxMilliSleep( 500 );
+    wxWindow::Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()

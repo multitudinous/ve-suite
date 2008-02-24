@@ -53,6 +53,10 @@ Network::Network( )
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
 {
+    for( size_t i = 0; i < mLinks.size(); ++i )
+    {
+        mLinks.at( i )->SetParentModel( 0 );
+    }
     mLinks.clear();
 
     mConductorState.clear();

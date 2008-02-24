@@ -116,7 +116,7 @@ private:
     NetworkPtr mNetwork;
     ///The vector of models for this system
     std::vector< ModelPtr > mModels;
-    ModelPtr mParentModel;
+    ModelSharedPtr mParentModel;
 };
 
 }

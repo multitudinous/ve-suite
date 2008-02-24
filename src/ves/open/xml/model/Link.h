@@ -124,7 +124,7 @@ public:
 
     void SetParentModel( ModelPtr parent );
 
-    ModelPtr GetParentModel( );
+    ModelPtr GetParentModel();
 
 protected:
     ///Internally update the data.
@@ -150,7 +150,7 @@ private:
     ///The link type
     std::string mType;
 
-    ModelPtr mParentModel;
+    ModelWeakPtr mParentModel;
 };
 
 }

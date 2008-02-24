@@ -41,7 +41,8 @@
 using namespace ves::open::xml;
 using namespace ves::conductor;
 
-vprSingletonImp( UserPreferencesDataBuffer );
+//vprSingletonImp( UserPreferencesDataBuffer );
+vprSingletonImpLifetime(UserPreferencesDataBuffer, 999);
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferencesDataBuffer::UserPreferencesDataBuffer( void )
 {

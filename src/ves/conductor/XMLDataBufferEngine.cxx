@@ -55,13 +55,14 @@ using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::conductor;
 
-vprSingletonImp( XMLDataBufferEngine );
+//vprSingletonImp( XMLDataBufferEngine );
+vprSingletonImpLifetime(XMLDataBufferEngine, 1000);
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 {
-    ves::open::xml::CommandWeakPtr nullCommand = new ves::open::xml::Command();
+    /*ves::open::xml::CommandWeakPtr nullCommand = new ves::open::xml::Command();
     nullCommand->SetCommandName( "NULL" );
-    m_commandMap[ "NULL" ] = nullCommand;
+    m_commandMap[ "NULL" ] = nullCommand;*/
 
     //Setup default system
     ves::open::xml::model::SystemPtr tempSystem =
@@ -73,21 +74,20 @@ XMLDataBufferEngine::XMLDataBufferEngine( void )
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::~XMLDataBufferEngine()
 {
-    //CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::CleanUp( void )
 {
-    m_commandMap.clear();
+    m_systemMap.clear();
     m_networkMap.clear();
     m_modelMap.clear();
     m_networkModelMap.clear();
-    m_userMap.clear();
     m_tagMap.clear();
-    m_systemMap.clear();
+    m_userMap.clear();
+    //m_commandMap.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
+/*ves::open::xml::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string commandKey )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     std::map< std::string, ves::open::xml::CommandPtr >::iterator iter;
@@ -97,34 +97,32 @@ ves::open::xml::CommandWeakPtr XMLDataBufferEngine::GetCommand( std::string comm
         return m_commandMap[ "NULL" ];
     }
     return iter->second;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-void XMLDataBufferEngine::SetCommand( std::string commandKey,
+/*void XMLDataBufferEngine::SetCommand( std::string commandKey,
                                       ves::open::xml::CommandWeakPtr command )
 {
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     m_commandMap[ commandKey ] = command;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::CommandWeakPtr >
+/*std::map< std::string, ves::open::xml::CommandWeakPtr >
 XMLDataBufferEngine::GetCommandMap( void )
 {
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     std::map< std::string, ves::open::xml::CommandWeakPtr >
     tempMap( m_commandMap.begin(), m_commandMap.end() );
     return tempMap;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-void XMLDataBufferEngine::SetCommandMap( std::map < std::string,
+/*void XMLDataBufferEngine::SetCommandMap( std::map < std::string,
                                          ves::open::xml::CommandWeakPtr > tempMap )
 {
     m_commandMap.clear();
     //vpr::Guard<vpr::Mutex> val_guard( m_commandMapLock );
     m_commandMap = std::map< std::string, ves::open::xml::CommandPtr >(
                        tempMap.begin(), tempMap.end() );
-}
-#include <loki/TypeTraits.h>
-
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 {
@@ -193,6 +191,8 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             //get the main systems id
             topId = tempSystem->GetID();
             m_networkMap[ "Network" ] = tempSystem->GetNetwork();
+            objectIter = objectVector.begin();
+            objectIter = objectVector.erase( objectIter );
         }
         //Else if the file jsut has a netowrk and a series of models
         else
@@ -201,7 +201,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             m_systemMap[tempSystem->GetID()] = tempSystem;
             topId = tempSystem->GetID();
 
-            m_networkMap[ "Network" ] = objectVector.at( 0 );
+            m_networkMap[ "Network" ] = new ves::open::xml::model::Network( *dynamic_cast< Network* >(&(*objectVector.at( 0 ))) );
             tempSystem->AddNetwork( m_networkMap[ "Network" ] );
             objectIter = objectVector.begin();
             objectIter = objectVector.erase( objectIter );
@@ -285,7 +285,6 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             }
             modelID.str( "" );
         }
-        objectIter = objectVector.erase( objectVector.begin() );
     }
    //For the case where there are no links between models
     //Just grab all the models in the ves file
@@ -306,11 +305,10 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
 
     if( !objectVector.empty() )
     {
-        ves::open::xml::UserWeakPtr userColor = objectVector.at( 0 );
-        m_userMap[ "Network" ] = userColor;
+        m_userMap[ "Network" ] = objectVector.at( 0 );
         //Set user preferences
         std::vector< ves::open::xml::CommandWeakPtr > tempStates =
-            userColor->GetUserStateInfo()->GetStateVector();
+            m_userMap[ "Network" ]->GetUserStateInfo()->GetStateVector();
         std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap;
         for( size_t i = 0; i < tempStates.size(); ++i )
         {
@@ -386,9 +384,9 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     //Erase all the maps
     CleanUp();
 
-    ves::open::xml::CommandWeakPtr nullCommand = new ves::open::xml::Command();
+    /*ves::open::xml::CommandWeakPtr nullCommand = new ves::open::xml::Command();
     nullCommand->SetCommandName( "NULL" );
-    m_commandMap[ "NULL" ] = nullCommand;
+    m_commandMap[ "NULL" ] = nullCommand;*/
 
     //Setup default system
     ves::open::xml::model::SystemPtr tempSystem =
