@@ -437,7 +437,7 @@ void cfdExecutive::PreFrameUpdate( void )
     ///Load the data from ce
     std::string tempNetworkCommand = ui_i->GetStatusString();
     bool updatePluginResults = false;
-    if( tempNetworkCommand.compare( 0, 30, "VES Network Execution Complete" ) == 0 )
+    if( tempNetworkCommand.compare( 0, 35, "VE-Suite Network Execution Complete" ) == 0 )
     {
         std::cout << "|\tLoading data into plugins" << std::endl;
         //LoadDataFromCE();

@@ -398,7 +398,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
                 int rt = _scheduler->execute( _network->GetModule( _network->moduleIdx( module_id ) ) ) - 1;
                 if( rt < 0 )
                 {
-                    ClientMessage( "VES Network Execution Complete\n" );
+                    ClientMessage( "VE-Suite Network Execution Complete\n" );
                 }
                 else if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == _mod_units.end() )
                 {
@@ -518,19 +518,19 @@ ACE_THROW_SPEC((
         // Make the new schedule
         if( !_scheduler->schedule( 0 ) )
         {
-            ClientMessage( "Error in VES Schedule\n" );
+            ClientMessage( "Problem in VE-Suite Schedule\n" );
             return;
         }
         else
         {
-            ClientMessage( "Successfully Scheduled VES Network\n" );
+            ClientMessage( "Successfully Scheduled VE-Suite Network\n" );
             _scheduler->print_schedule();
         }
     }
     else
     {
         _mutex.release();
-        ClientMessage( "Error in SetNetwork\n" );
+        ClientMessage( "Problem in VE-CE SetNetwork\n" );
         return;
     }
 }
@@ -550,7 +550,7 @@ ACE_THROW_SPEC((
 
     if( xmlNetwork.empty() )
     {
-        uis_[ moduleName ]->Raise( "No Current VES Network Present In VE-CE.\n" );
+        uis_[ moduleName ]->Raise( "No Current VE-Suite Network Present In VE-CE.\n" );
         //ClientMessage( "No Current VES Network Present In VE-CE.\n" );
     }
 
@@ -930,7 +930,7 @@ ACE_THROW_SPEC((
         uis_[ tempName ] = ui;
 
         _mutex.release();
-        std::string msg = tempName + " Connected to Executive\n";
+        std::string msg = tempName + " Connected to VE-CE\n";
         ui->Raise( msg.c_str() );
         //ClientMessage( msg.c_str() );
         std::cerr << tempName << " : registered a UI" << std::endl;
@@ -1100,7 +1100,7 @@ ACE_THROW_SPEC((
     iter = _mod_units.find( std::string( moduleName ) );
     if( iter == _mod_units.end() )
     {
-        std::string msg = "Failed to find " + std::string( moduleName ) + " Unit\n";
+        std::string msg = "Could not find " + std::string( moduleName ) + " unit\n";
         ClientMessage( msg.c_str() );
         _mutex.release();
         return;

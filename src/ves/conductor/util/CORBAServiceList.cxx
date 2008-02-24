@@ -169,7 +169,7 @@ bool CORBAServiceList::ConnectToCE( void )
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Can't find executive or UI registration error\n" );
+        GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
         GetMessageLog()->SetMessage( ex._info().c_str() );
         return false;
     }
@@ -203,11 +203,11 @@ bool CORBAServiceList::ConnectToXplorer( void )
         CORBA::Object_var ve_object = naming_context1->resolve( name );
         vjobs = VjObs::_narrow( ve_object.in() );
 
-        GetMessageLog()->SetMessage( "Connected to VE server.\n" );
+        GetMessageLog()->SetMessage( "Connected to VE-Xplorer.\n" );
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Can't find VE server\n" );
+        GetMessageLog()->SetMessage( "Cannot find VE-Xplorer.\n" );
         GetMessageLog()->SetMessage( ex._info().c_str() );
         return false;
     }
@@ -237,11 +237,11 @@ bool CORBAServiceList::ConnectToXplorer( void )
         CORBA::Object_var ve_object = naming_context1->resolve( xplorerCom );
         m_xplorer = Body::VEXplorer::_narrow( ve_object.in() );
         m_xplorer->RegisterUI( p_ui_i->UIName_.c_str(), m_ui.in() );
-        GetMessageLog()->SetMessage( "Connected to two-way VE server.\n" );
+        GetMessageLog()->SetMessage( "Connected to two-way VE-Xplorer.\n" );
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Can't find NEW VE server\n" );
+        GetMessageLog()->SetMessage( "Cannot find two-way VE-Xplorer.\n" );
         GetMessageLog()->SetMessage( ex._info().c_str() );
         return false;
     }
@@ -293,7 +293,7 @@ bool CORBAServiceList::ConnectToNamingService( void )
     catch ( CORBA::Exception& ex )
     {
         orb->destroy();
-        GetMessageLog()->SetMessage( "CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n" );
+        GetMessageLog()->SetMessage( "CORBA exception raised! Cannot init ORB or can't connect to the Naming Service\n" );
         GetMessageLog()->SetMessage( ex._info().c_str() );
         return false;
     }
@@ -322,7 +322,7 @@ bool CORBAServiceList::DisconnectFromCE( void )
 bool CORBAServiceList::DisconnectFromXplorer( void )
 {
     VjObs::_tao_release( vjobs );
-    GetMessageLog()->SetMessage( "Disconnect VE suceeded.\n" );
+    GetMessageLog()->SetMessage( "Disconnect VE-Xplorer suceeded.\n" );
     Body::VEXplorer::_tao_release( m_xplorer );
     return true;
 }
@@ -427,7 +427,7 @@ void CORBAServiceList::CreateCORBAModule( void )
             }
             catch ( CORBA::Exception& ex )
             {
-                GetMessageLog()->SetMessage( "Can't find executive or UI registration error.\n" );
+                GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
                 GetMessageLog()->SetMessage( ex._info().c_str() );
             }
         }
@@ -445,14 +445,14 @@ void CORBAServiceList::CreateCORBAModule( void )
             }
             catch ( CORBA::Exception& ex )
             {
-                GetMessageLog()->SetMessage( "Can't find executive or UI registration error.\n" );
+                GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
                 GetMessageLog()->SetMessage( ex._info().c_str() );
             }
         }
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Can't find executive or UI registration error.\n" );
+        GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
         GetMessageLog()->SetMessage( ex._info().c_str() );
     }
 }

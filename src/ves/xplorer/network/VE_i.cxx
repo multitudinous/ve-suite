@@ -181,13 +181,14 @@ ACE_THROW_SPEC((
     }
 
     std::cout << "|\tNotification Message : " << notification
-    << "|\tModule Being Called : " << UIName_ << " : Raise called" << std::endl;
+        << "|\tModule Being Called : " << UIName_ 
+        << " : Raise called" << std::endl;
 
     std::string temp( notification );
-    if( !temp.compare( 0, 30, "VES Network Execution Complete" ) ||
-            !temp.compare( 0, 34, "Successfully Scheduled VES Network" ) ||
+    if( !temp.compare( 0, 35, "VE-Suite Network Execution Complete" ) ||
+            !temp.compare( 0, 39, "Successfully Scheduled VE-Suite Network" ) ||
             //!temp.compare(0,22,"Connected to Executive") ||
-            !temp.compare( 0, 21, "Error in VES Schedule" ) )
+            !temp.compare( 0, 28, "Problem in VE-Suite Schedule" ) )
     {
         GetNetworkFromCE();
     }
