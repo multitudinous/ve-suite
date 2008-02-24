@@ -130,8 +130,10 @@ void Wand::UpdateNavigation()
     //Update the wand direction every frame
     UpdateWandLocalDirection();
 
+    buttonData[ 0 ] = digital[ 0 ]->getData();
     buttonData[ 1 ] = digital[ 1 ]->getData();
     buttonData[ 2 ] = digital[ 2 ]->getData();
+    buttonData[ 3 ] = digital[ 3 ]->getData();
     buttonData[ 4 ] = digital[ 4 ]->getData();
 
     m_rotIncrement.set( 0, 0, 0, 1 );
@@ -199,12 +201,19 @@ void Wand::UpdateNavigation()
         rotationStepSize = 0.001333f * powf(( cfdIso_value * 0.5f ), 2.2f );
     }
 
-    //Navigate with buttons now
+    //Free rotation
     if (( buttonData[ 1 ] == gadget::Digital::TOGGLE_ON ) ||
             ( buttonData[ 1 ] == gadget::Digital::ON ) )
     {
         m_buttonPushed = true;
-        RotateAboutWand();
+        FreeRotateAboutWand();
+    }
+    //Navigate about z up axis
+    else if (( buttonData[ 3 ] == gadget::Digital::TOGGLE_ON ) ||
+        ( buttonData[ 3 ] == gadget::Digital::ON ) )
+    {
+        m_buttonPushed = true;
+        FreeRotateAboutWand( false );
     }
     //Navigation based on current wand direction
     else if( buttonData[ 2 ] == gadget::Digital::TOGGLE_ON ||
@@ -601,7 +610,7 @@ void Wand::SetSubZeroFlag( int input )
     subzeroFlag = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Wand::RotateAboutWand()
+void Wand::FreeRotateAboutWand( const bool freeRotate )
 {
     gmtl::Matrix44d vrjWandMat = convertTo< double >( wand->getData() );
     gmtl::Quatd wandQuat = gmtl::make< gmtl::Quatd >( vrjWandMat );
@@ -619,8 +628,7 @@ void Wand::RotateAboutWand()
     vjHeadMat = convertTo< double >( head->getData() );
 
     //Get juggler Matrix of worldDCS
-    //Note:: for pf we are in juggler land
-    //       for osg we are in z up land
+    //Note:: for osg we are in z up land
     Matrix44d worldMat;
     worldMat = activeDCS->GetMat();
 
@@ -643,10 +651,21 @@ void Wand::RotateAboutWand()
         worldMatTrans * newJugglerHeadPoint;
 
     //Create rotation matrix and juggler head vector
-    tempVec.set( wandQuat[ 0 ], -wandQuat[ 2 ], wandQuat[ 1 ] );
+    if( freeRotate )
+    {
+        //Rotate about arbitrary axis
+        tempVec.set( wandQuat[ 0 ], -wandQuat[ 2 ], wandQuat[ 1 ] );
+    }
+    else
+    {
+        //Rotate about z-up axis
+        tempVec.set( 0, 0, wandQuat[ 1 ] );
+    }
+    
+    //Create rotation increment
     m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
-
+    //Now make it a 4 x 4
     gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >
                                  ( gmtl::Quat< double >( m_rotIncrement[ 0 ],
                                                          m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],

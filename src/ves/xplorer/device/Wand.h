@@ -164,7 +164,7 @@ protected:
     virtual void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
 
     ///Roate about arbitrary axis
-    void RotateAboutWand();
+    void FreeRotateAboutWand( const bool freeRotate = true );
 
 private:
     gadget::DigitalInterface digital[ 6 ]; ///Array handling button controls on wand
