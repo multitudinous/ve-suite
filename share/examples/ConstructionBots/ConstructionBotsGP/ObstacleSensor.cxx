@@ -15,8 +15,6 @@
 
 using namespace Construction;
 
-typedef std::pair< double, double > Pair;
-
 const double PI = 3.14159265358979323846;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,8 +62,8 @@ void ObstacleSensor::CollectInformation()
 
         osgUtil::IntersectVisitor intersectVisitor;
         intersectVisitor.addLineSegment( m_beamLineSegment.get() );
-		
-		pluginDCS->RemoveChild( targetDCS.get() );
+
+        pluginDCS->RemoveChild( targetDCS.get() );
         pluginDCS->accept( intersectVisitor );
         pluginDCS->AddChild( targetDCS.get() );
 
@@ -92,24 +90,25 @@ void ObstacleSensor::CollectInformation()
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CalculateResultantForce()
 {
-    Pair totalForce( 0, 0 );
-
+    // ------------------ Virtual Force Field (VFF) Method ------------------ //
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = m_agentEntity->GetTargetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
     
+    btVector3 totalForce( 0, 0, 0 );
+
     //Calculate the target force
     if( targetDCS.valid() )
     {
         double* targetPosition = targetDCS->GetVETranslationArray();
-        btVector3 targetVector( targetPosition[ 0 ] - agentPosition[ 0 ], targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
-        double targetDistance = targetVector.length();
-        Pair targetForce( m_forceAttractionConstant * targetVector[ 0 ] / targetDistance, 
-                          m_forceAttractionConstant * targetVector[ 1 ] / targetDistance );
+        btVector3 targetForce( targetPosition[ 0 ] - agentPosition[ 0 ],
+                               targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
 
-        totalForce.first += targetForce.first;
-        totalForce.second += targetForce.second;
+        targetForce /= targetForce.length();
+        targetForce *= m_forceAttractionConstant;
+
+        totalForce += targetForce;
     }
 
     //Calculate the total repulsive force
@@ -120,21 +119,18 @@ void ObstacleSensor::CalculateResultantForce()
         if( geode.valid() )
         {
             osg::Vec3d intersect = m_obstacleHits.at( i ).getWorldIntersectPoint();
-            btVector3 hitVector( intersect.x() - agentPosition[ 0 ], intersect.y() - agentPosition[ 1 ], 0 );
-            double distance = hitVector.length();
-            double distanceSquared = hitVector.length2();
+            btVector3 repulsiveForce( intersect.x() - agentPosition[ 0 ],
+                                      intersect.y() - agentPosition[ 1 ], 0 );
 
-            double variables = m_forceRepellingConstant / distanceSquared;
-            Pair repulsiveForce( variables * hitVector[ 0 ] / distance, variables * hitVector[ 1 ] / distance );
+            double variables = m_forceRepellingConstant / repulsiveForce.length2();
+            repulsiveForce /= repulsiveForce.length();
+            repulsiveForce *= variables;
 
-            totalForce.first -= repulsiveForce.first;
-            totalForce.second -= repulsiveForce.second;
+            totalForce -= repulsiveForce;
         }
     }
 
-    btVector3 temp( totalForce.first, totalForce.second, 0 );
-
-    m_resultantForce = temp.normalize();
+    m_resultantForce = totalForce.normalize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )
