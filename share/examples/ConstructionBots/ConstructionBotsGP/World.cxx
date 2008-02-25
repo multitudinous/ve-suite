@@ -259,6 +259,10 @@ void World::InitFramework()
         //Store collisions for the agents
         m_agents.at( i )->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
+        //Set the sensor range for the agents
+        m_agents.at( i )->GetBlockSensor()->SetRange( gridSize * 0.25 );
+        m_agents.at( i )->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
+
         //Set up map to entities
         m_entities[ m_agents.at( i )->GetDCS()->GetName() ] = m_agents.at( i );
     }

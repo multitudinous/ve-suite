@@ -28,7 +28,10 @@ public:
 
     virtual void CollectInformation();
 
+    void Rotate();
+
     void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
+    void RemoveLine();
 
     bool SiteInView();
     bool CloseToSite();
@@ -38,6 +41,8 @@ public:
     void SetRange( double range );
 
 private:
+    void Initialize();
+
     bool m_siteInView;
     bool m_closeToSite;
 
@@ -47,6 +52,7 @@ private:
 
     btVector3 m_normalizedSiteVector;
 
+    osg::ref_ptr< osg::Geometry > m_line;
     osg::ref_ptr< osg::Geode > m_beamGeode;
     osg::ref_ptr< osg::LineSegment > m_beamLineSegment;
 };

@@ -28,7 +28,10 @@ public:
 
     virtual void CollectInformation();
 
+    void Rotate();
+
     void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
+    void RemoveLine();
 
     bool BlockInView();
     bool CloseToBlock();

@@ -93,8 +93,10 @@ void AgentEntity::PickUpBlock( Construction::BlockEntity* blockEntity )
     double* position = m_dcs->GetVETranslationArray();
     double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
     blockEntity->GetDCS()->SetTranslationArray( transArray );
-    m_targetDCS = NULL;
     blockEntity->GetPhysicsRigidBody()->clearForces();
+    m_targetDCS = NULL;
+    //Remove the agent/block line
+    m_blockSensor->RemoveLine();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
