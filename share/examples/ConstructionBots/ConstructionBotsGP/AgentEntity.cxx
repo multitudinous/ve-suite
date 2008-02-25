@@ -96,7 +96,7 @@ void AgentEntity::PickUpBlock( Construction::BlockEntity* blockEntity )
     blockEntity->GetPhysicsRigidBody()->clearForces();
     m_targetDCS = NULL;
     //Remove the agent/block line
-    m_blockSensor->RemoveLine();
+    //m_blockSensor->RemoveLine();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
@@ -136,7 +136,7 @@ void AgentEntity::SetConstraints( int gridSize )
     frameInA = btTransform::getIdentity();
     frameInB = btTransform::getIdentity();
 
-#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 63 )
+#if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 61 )
     m_constraint = new btGeneric6DofConstraint( *m_physicsRigidBody, *fixedBody, frameInA, frameInB, false );
 #else
     m_constraint = new btGeneric6DofConstraint( *m_physicsRigidBody, *fixedBody, frameInA, frameInB );

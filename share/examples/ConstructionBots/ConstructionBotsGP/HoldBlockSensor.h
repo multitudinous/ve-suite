@@ -30,9 +30,6 @@ private:
     double m_range;
 
     osg::ref_ptr< osg::LineSegment > beamLineSegment;
-
-    osg::Vec3d startPoint;
-    osg::Vec3d endPoint;
 };
 }
 

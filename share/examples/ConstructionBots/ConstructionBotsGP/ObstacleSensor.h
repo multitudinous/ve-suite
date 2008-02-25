@@ -47,6 +47,7 @@ private:
 
     std::vector< osgUtil::Hit > m_obstacleHits;
 
+    osg::ref_ptr< osg::LineSegment > m_beamLineSegment;
 };
 }
 

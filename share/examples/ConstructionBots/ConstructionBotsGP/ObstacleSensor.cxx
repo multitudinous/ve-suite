@@ -29,7 +29,8 @@ m_range( 2.0 ),
 m_forceRepellingConstant( 1.0 ),
 m_forceAttractionConstant( 1.0 ),
 m_resultantForce( 0, 0, 0 ),
-m_obstacleHits()
+m_obstacleHits(),
+m_beamLineSegment( new osg::LineSegment() )
 {
     ;
 }
@@ -41,22 +42,23 @@ ObstacleSensor::~ObstacleSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CollectInformation()
 {
-	std::vector< osgUtil::Hit > obstacleHits;
-
+    //Get the DCSs
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = m_agentEntity->GetPluginDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = m_agentEntity->GetTargetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
-	osg::ref_ptr< osg::LineSegment > m_beamLineSegment = new osg::LineSegment();
+    //Reset results from last frame
+    m_obstacleHits.clear();
 
+    osg::Vec3d startPoint, endPoint;
+    startPoint.set( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
     for( double angle = 0; angle < 360; )
     {
-        osg::Vec3d startPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
-        osg::Vec3d endPoint( agentPosition[ 0 ] + m_range * cos( angle ), 
-                             agentPosition[ 1 ] + m_range * sin( angle ), 
-                             agentPosition[ 2 ] );
+        endPoint.set( agentPosition[ 0 ] + m_range * cos( angle ), 
+                      agentPosition[ 1 ] + m_range * sin( angle ), 
+                      agentPosition[ 2 ] );
 
         m_beamLineSegment->set( startPoint, endPoint );
 
@@ -72,13 +74,13 @@ void ObstacleSensor::CollectInformation()
         if( hitList.size() > 1 )
         {
             //Get the next hit excluding the agent itself
-            obstacleHits.push_back( hitList.at( 1 ) );
+            m_obstacleHits.push_back( hitList.at( 1 ) );
         }
 
         angle += m_angleIncrement;
     }
 
-	if( !obstacleHits.empty() )
+	if( !m_obstacleHits.empty() )
 	{
 		m_obstacleDetected = true;
 	}
@@ -86,8 +88,6 @@ void ObstacleSensor::CollectInformation()
 	{
 		m_obstacleDetected = false;
 	}
-
-	m_obstacleHits = obstacleHits;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CalculateResultantForce()
@@ -131,8 +131,6 @@ void ObstacleSensor::CalculateResultantForce()
             totalForce.second -= repulsiveForce.second;
         }
     }
-
-    m_obstacleHits.clear();
 
     btVector3 temp( totalForce.first, totalForce.second, 0 );
 

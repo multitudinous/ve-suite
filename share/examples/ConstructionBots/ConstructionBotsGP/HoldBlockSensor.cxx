@@ -34,8 +34,12 @@ void HoldBlockSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
-    startPoint.set( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
-    endPoint.set( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] + m_range );
+    osg::Vec3d startPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
+    osg::Vec3d endPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] + m_range );
+
+    //Reset results from last frame
+    m_holdingBlock = false;
+
     beamLineSegment->set( startPoint, endPoint );
 
     osgUtil::IntersectVisitor intersectVisitor;
@@ -43,11 +47,12 @@ void HoldBlockSensor::CollectInformation()
     m_agentEntity->GetPluginDCS()->accept( intersectVisitor );
 
     osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( beamLineSegment.get() );
-
     if( hitList.size() > 2 )
     {
+        m_holdingBlock = true;
+        /*
         //Get the next hit excluding the agent itself
-        osgUtil::Hit firstHit = hitList.at( 2 );
+        osgUtil::Hit firstHit = hitList.at( 1 );
 
         osg::ref_ptr< osg::Geode > geode = firstHit.getGeode();
 
@@ -62,10 +67,11 @@ void HoldBlockSensor::CollectInformation()
                     color_array->at( 0 ).g() == 1.0 &&
                     color_array->at( 0 ).b() == 1.0 )
                 {
-                    m_holdingBlock = true;
+                    
                 }
-            }
+            } 
         }
+        */
     }
 
 }

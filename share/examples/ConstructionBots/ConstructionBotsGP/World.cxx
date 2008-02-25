@@ -354,6 +354,10 @@ void World::CommunicatingBlocksAlgorithm()
         Construction::SiteSensor* siteSensor = agent->GetSiteSensor();
         Construction::HoldBlockSensor* holdBlockSensor = agent->GetHoldBlockSensor();
 
+        //Remove reference lines
+        blockSensor->RemoveLine();
+        siteSensor->RemoveLine();
+
         holdBlockSensor->CollectInformation();
         if( holdBlockSensor->HoldingBlock() )
         {
