@@ -93,7 +93,6 @@ void SiteSensor::CollectInformation()
     targetDCS = NULL;
 
     m_beamLineSegment->set( startPoint, endPoint );
-    //RemoveLine();
     DrawLine( startPoint, endPoint );
 
     osgUtil::IntersectVisitor intersectVisitor;

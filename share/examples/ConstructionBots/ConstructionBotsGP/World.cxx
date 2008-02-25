@@ -284,7 +284,7 @@ void World::CreateRandomPositions( int gridSize )
         objects.push_back( m_agents.at( i ) );
     }
 
-    bool isOverlapping( false );
+    bool needsNewPosition( false );
     int posNegOne, posNegTwo;
     double randOne, randTwo;
 
@@ -297,7 +297,7 @@ void World::CreateRandomPositions( int gridSize )
     {
         do
         {
-            isOverlapping = false;
+            needsNewPosition = false;
 
             posNegOne = rand() % 2;
             posNegTwo = rand() % 2;
@@ -319,23 +319,31 @@ void World::CreateRandomPositions( int gridSize )
             {
                 posNegTwo = -1;
             }
-
-            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - ( m_worldScale * 0.5 ) );
-            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - ( m_worldScale * 0.5 ) );
+                                                                      //Subtract m_worldScale
+                                                                      //to keep blocks off walls
+            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - m_worldScale );
+            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - m_worldScale );
 
             for( size_t j = 0; j < positions.size(); ++j )
             {
+                if( ( fabs( randOne ) < ( gridSize * 0.2 ) ||
+                      fabs( randTwo ) < ( gridSize * 0.2 ) ) )
+                {
+                    needsNewPosition = true;
+                    break;
+                }
+
                 if( ( randOne > ( positions.at( j ).first - m_worldScale ) &&
                       randOne < ( positions.at( j ).first + m_worldScale ) )
                       &&
                     ( randTwo > ( positions.at( j ).second - m_worldScale ) &&
                       randTwo < ( positions.at( j ).second + m_worldScale ) ) )
                 {
-                    isOverlapping = true;
+                    needsNewPosition = true;
                 }
             }
         }
-        while( isOverlapping );
+        while( needsNewPosition );
 
         positions.push_back( std::pair< double, double >( randOne, randTwo ) );
 
@@ -422,8 +430,6 @@ void World::PreFrameUpdate()
     else
     {
         std::cout << "Structure is finished!" << std::endl;
-
-        exit( 1 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
