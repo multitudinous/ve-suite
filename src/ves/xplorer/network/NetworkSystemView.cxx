@@ -113,10 +113,6 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
     }
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
-    osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
-    colorBlack->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-    osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
-    shared_normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );
     std::ofstream output( "scale.txt" );
     SystemPtr mainSystem = objectVector.at( 0 );
     // now lets create a list of them
@@ -149,6 +145,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
         //set the blocks name
         loadedModel->setName( model->GetModelName() );
+        //normalize the normals so that lighting works better
+        loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
 
         //calculate the original size of the icon
         //ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor;
@@ -347,8 +345,6 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         mModelTrans->setPosition( centerTrans );
         mModelTrans->setName( model->GetModelName() );
         loadedModels->addChild( mModelTrans.get() );
-        //normalize the normals so that lighting works better
-        loadedModels->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
     }
 
     //Streams
@@ -357,6 +353,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
     //Network* veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
     NetworkWeakPtr veNetwork = mainSystem->GetNetwork();
     //std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
+    osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
+    colorBlack->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
+    shared_normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     geode->setName( "Network Lines" );
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
@@ -380,6 +380,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         linesGeom->setColorArray( colorBlack.get() );
         geode->addDrawable( linesGeom );
     }
+    geode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
     loadedModels->addChild( geode.get() );
 
     //rotate the world about the X to normalize the flowsheet

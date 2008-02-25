@@ -121,6 +121,8 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
             ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS()->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );
         }
+        //Reset back to null after working with the dataset we are after.
+        _activeModel->SetActiveDataSet( 0 );
     }
     catch ( ... )
     {

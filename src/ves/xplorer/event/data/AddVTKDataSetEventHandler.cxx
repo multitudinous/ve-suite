@@ -302,12 +302,12 @@ void AddVTKDataSetEventHandler::LoadSurfaceFiles( std::string precomputedSurface
     vprDEBUG( vesDBG, 1 ) << "Loading surface files from "
     << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
-    boost::filesystem::path dir_path( precomputedSurfaceDir );
+    boost::filesystem::path dir_path( precomputedSurfaceDir, boost::filesystem::no_check );
 
     if( boost::filesystem::is_directory( dir_path ) )
     {
         std::cout << "|\tIn directory: "
-        << dir_path.native_directory_string() << "\n";
+            << dir_path.native_directory_string() << "\n";
         boost::filesystem::directory_iterator end_iter;
         for( boost::filesystem::directory_iterator dir_itr( dir_path );
                 dir_itr != end_iter; ++dir_itr )

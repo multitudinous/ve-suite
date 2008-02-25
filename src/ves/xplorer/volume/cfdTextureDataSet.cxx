@@ -212,7 +212,16 @@ void cfdTextureDataSet::CreateTextureManager( std::string textureDescriptionFile
 
     boost::filesystem::path scalarPath( textureDescriptionFile, boost::filesystem::no_check );
     
-    if( !boost::filesystem::is_directory( scalarPath ) )
+    try
+    {
+        if( !boost::filesystem::is_directory( scalarPath ) )
+        {
+            std::cout << "|\tNo directory " << textureDescriptionFile 
+            << " present." << std::endl;
+            return;
+        }
+    }
+    catch( ... )
     {
         std::cout << "|\tNo directory " << textureDescriptionFile 
             << " present." << std::endl;

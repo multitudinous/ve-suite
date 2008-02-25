@@ -87,7 +87,14 @@ void ChangeWorkingDirectoryEventHandler::Execute( const ves::open::xml::XMLObjec
         newWorkingDir.assign( "./" );
     }
     boost::filesystem::path dir_path( newWorkingDir, boost::filesystem::native );
-    if( !boost::filesystem::is_directory( dir_path ) )
+    try
+    {
+        if( !boost::filesystem::is_directory( dir_path ) )
+        {
+            return;
+        }
+    }
+    catch( ... )
     {
         return;
     }

@@ -161,6 +161,10 @@ void cfdTeacher::RecordScene()
     catch ( const std::exception& ex )
     {
         std::cout << ex.what() << std::endl;
+        std::cout << "|\tCreated " << directory 
+            << " directory." << std::endl;
+        //Needed for backwards compatibility
+        boost::filesystem::create_directory( dir_path );
     }
     
     // Generate a .pfb filename...

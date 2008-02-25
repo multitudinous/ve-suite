@@ -148,12 +148,11 @@ void cfdVEPluginLoader::ScanAndLoad( void )
             customPlugins = true;
         }
     }
-    catch ( const std::exception& ex )
+    catch( const std::exception& ex )
     {
         vprDEBUG( vesDBG, 1 ) << ex.what()
         << std::endl
         << vprDEBUG_FLUSH;
-
     }
 
     // Load the custon plugin
