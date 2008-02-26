@@ -58,6 +58,7 @@ void BKPParser::closeFile()
 	inLinkToModel.clear();
 	outLinkToModel.clear();
 	linkPoints.clear();
+	linkTypes.clear();
 	models.clear();
 	iconLocations.clear();
 	streamPortIDS.clear();
@@ -641,12 +642,13 @@ void BKPParser::ParseFile(const char * bkpFile)
                 idTokenizer >> discard;
                 idTokenizer >> xy.streamId;
                 
-                std::stringstream typeTokenizer(streamId);
+                std::stringstream typeTokenizer(streamType);
                 typeTokenizer >> discard;
                 typeTokenizer >> xy.streamType;
                 
                 streamCoordList.push_back(xy); //add one streams values to vector      
                 
+				linkTypes[sheetIter->first][xy.streamId] = (xy.streamType);
                 //Create map of stream names to points
                 for ( size_t k = 0; k < xy.value.size(); ++k )
                 {
@@ -663,7 +665,7 @@ void BKPParser::ParseFile(const char * bkpFile)
                     tester2<<" x: "<<scaledX<<" y: "<<scaledY;
                     //linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX+200, scaledY+200 ) );
                     //linkPoints[xy.streamId].push_back( std::pair< float, float >( scaledX + 1000, scaledY +1000 ) );
-                    linkPoints[sheetIter->first][xy.streamId].push_back( std::pair< float, float >( scaledX, scaledY ) );
+                    linkPoints[sheetIter->first][xy.streamId].push_back( std::pair< float, float >( scaledX, scaledY ) );	
                 }
                 // add converted points for wx
                 xy.value.erase(xy.value.begin(),xy.value.end() );//empty temporary vector
@@ -1009,6 +1011,7 @@ void BKPParser::CreateNetworkLinks( ves::open::xml::model::NetworkWeakPtr subNet
 		 
 		 //if (hierName == "0")
 			 xmlLink->SetLinkName(iter->first);
+			 xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
 		 //else
 			 //xmlLink->SetLinkName(hierName + "." + iter->first);
 		 

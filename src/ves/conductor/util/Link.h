@@ -117,6 +117,9 @@ public:
     void SetName( wxString name );
     wxString GetName();
 
+    void SetType( int type );
+    int GetType();
+
     ///Helper functions
     void DrawLinkCon( wxDC* dc );
     void CalcLinkPoly( void );
@@ -162,6 +165,9 @@ protected:
 private:
     ///Name of the link, should be unique
     wxString linkName;
+	//The Type of the link
+	//for aspen material = 0, heat = 1, & work = 2 
+    int linkType;
     ///The active link uuid for the network
     std::string activeUUID;
     ///From plugin for the link

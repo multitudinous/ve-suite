@@ -46,6 +46,7 @@ Link::Link()
         : XMLObject()
 {
     mLinkName = "noName";
+	mType = -9999;
     mModuleInfo.first = new DataValuePair( "FLOAT" );
     mModuleInfo.second = new DataValuePair( "FLOAT" );
     mPortInfo.first = 0;
@@ -98,7 +99,7 @@ Link& Link::operator=( const Link& input )
         mModuleInfo.second = input.mModuleInfo.second ;
         mPortInfo = input.mPortInfo;
         mLinkName = input.mLinkName;
-        mParentModel = input.mParentModel;
+		mParentModel = input.mParentModel;
     }
     return *this;
 }
@@ -117,7 +118,7 @@ void Link::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetAttribute( "name", mLinkName );
-    if( !mType.empty() )
+    if( mType != -9999 )
     {
         SetAttribute( "type", mType );
     }
@@ -252,12 +253,12 @@ void Link::SetObjectFromXMLData( DOMNode* element )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Link::SetLinkType( const std::string& type )
+void Link::SetLinkType( int type)
 {
     mType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::string& Link::GetLinkType()
+int Link::GetLinkType()
 {
     return mType;
 }

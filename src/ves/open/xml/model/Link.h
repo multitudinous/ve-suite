@@ -116,11 +116,11 @@ public:
 
     ///Set the link type
     ///\param type The type of linke
-    void SetLinkType( const std::string& type );
+    void SetLinkType( int );
 
     ///Get the link type
     ///\return The link type in a string
-    const std::string& GetLinkType();
+    int GetLinkType();
 
     void SetParentModel( ModelPtr parent );
 
@@ -148,7 +148,7 @@ private:
     std::string mLinkName;
 
     ///The link type
-    std::string mType;
+    int mType;
 
     ModelWeakPtr mParentModel;
 };

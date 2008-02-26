@@ -251,6 +251,16 @@ wxString Link::GetName()
     return linkName;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Link::SetType( int type )
+{
+    linkType = type;
+}
+////////////////////////////////////////////////////////////////////////////////
+int Link::GetType()
+{
+    return linkType;
+}
+////////////////////////////////////////////////////////////////////////////////
 ves::conductor::util::Polygon* Link::GetPolygon( void )
 {
     return &( poly );
@@ -328,13 +338,50 @@ void Link::DrawLinkLine( wxDC* dc )
         //std::cout << j << " " << points[ j ].x << " " <<  points[ j ].y << std::endl;
     }
 
+    if(linkType == 0)
+    {
     dc->SetPen( *wxBLACK_PEN );
     dc->SetBrush( *wxWHITE_BRUSH );
+    }
+    else if(linkType == 1)
+    {
+    dc->SetPen( *wxCYAN_PEN );
+    dc->SetBrush( *wxWHITE_BRUSH );
+    }
+    else if(linkType == 2)
+    {
+    dc->SetPen( *wxGREEN_PEN );
+    dc->SetBrush( *wxWHITE_BRUSH );
+    }
+	else
+    {
+    dc->SetPen( *wxBLACK_PEN );
+    dc->SetBrush( *wxWHITE_BRUSH );
+    }
+
     dc->DrawLines( cons.size(), points );
 
     //Now draw the arrow head
+    if(linkType == 0)
+    {
     dc->SetPen( *wxBLACK_PEN );
     dc->SetBrush( *wxBLACK_BRUSH );
+    }
+    else if(linkType == 1)
+    {
+    dc->SetPen( *wxCYAN_PEN );
+    dc->SetBrush( *wxCYAN_BRUSH );
+    }
+    else if(linkType == 2)
+    {
+    dc->SetPen( *wxGREEN_PEN );
+    dc->SetBrush( *wxGREEN_BRUSH );
+    }
+	else
+    {
+    dc->SetPen( *wxBLACK_PEN );
+    dc->SetBrush( *wxBLACK_BRUSH );
+    }
 
     wxPoint arrow[ 3 ];
     arrow[0] = points[0];
@@ -803,6 +850,7 @@ void Link::SetLink( ves::open::xml::model::LinkPtr inputLink )
     CalcLinkPoly();
     parentModel = m_veLink->GetParentModel();
     SetName( wxString( m_veLink->GetLinkName().c_str(), wxConvUTF8 ) );
+    SetType( m_veLink->GetLinkType() );
     SetUUID( m_veLink->GetID() );
 }
 ////////////////////////////////////////////////////////////////////////////////

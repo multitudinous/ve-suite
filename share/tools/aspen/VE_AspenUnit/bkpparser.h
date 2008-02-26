@@ -72,6 +72,7 @@ private:
    //container to hold link points with stream name
    //std::map< std::string, std::vector< std::pair< float, float > > > linkPoints;
    std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > > > linkPoints;
+   std::map< std::string, std::map< std::string, int > > linkTypes;
    // model name with number
    //std::map< std::string, int > models;
    std::map<std::string, std::map< std::string, int > >models;
