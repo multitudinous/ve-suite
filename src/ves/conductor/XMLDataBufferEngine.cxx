@@ -55,8 +55,8 @@ using namespace ves::open::xml;
 using namespace ves::open::xml::model;
 using namespace ves::conductor;
 
-//vprSingletonImp( XMLDataBufferEngine );
-vprSingletonImpLifetime(XMLDataBufferEngine, 1000);
+vprSingletonImp( XMLDataBufferEngine );
+//vprSingletonImpLifetime(XMLDataBufferEngine, 1000);
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 {
@@ -201,7 +201,7 @@ void XMLDataBufferEngine::LoadVESData( std::string xmlNetwork )
             m_systemMap[tempSystem->GetID()] = tempSystem;
             topId = tempSystem->GetID();
 
-            m_networkMap[ "Network" ] = ves::open::xml::model::NetworkPtr( new ves::open::xml::model::Network( *(boost::dynamic_pointer_cast<Network>( objectVector.at( 0 )))));
+            m_networkMap[ "Network" ] = ves::open::xml::model::NetworkPtr( boost::dynamic_pointer_cast<Network>( objectVector.at( 0 ) ) );
             tempSystem->AddNetwork( m_networkMap[ "Network" ] );
             objectIter = objectVector.begin();
             objectIter = objectVector.erase( objectIter );
