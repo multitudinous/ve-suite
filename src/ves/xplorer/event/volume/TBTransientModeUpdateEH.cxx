@@ -70,14 +70,14 @@ void TextureBasedTransientModeUpdateEventHandler::_operateOnNode( XMLObjectPtr v
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr playMode = command->GetDataValuePair( "Mode" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr playMode = command->GetDataValuePair( "Mode" );
         std::string mode;
         playMode->GetData( mode );
 
         if( mode == "Step" )
         {
-            DataValuePairWeakPtr playDirection = command->GetDataValuePair( "Direction" );
+            DataValuePairPtr playDirection = command->GetDataValuePair( "Direction" );
             std::string direction;
             playDirection->GetData( direction );
             ves::xplorer::TextureBasedVizHandler::instance()->StepTransientVisualization( direction );

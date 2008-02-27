@@ -227,23 +227,23 @@ void Streamlines::_updateAdvancedSettings()
 {
     _advancedSettings.clear();
 
-    ves::open::xml::DataValuePairPtr propagationTime = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr propagationTime( new ves::open::xml::DataValuePair() );
     propagationTime->SetData( "Propagation Time", _lastPropagationSize );
     _advancedSettings.push_back( propagationTime );
 
-    ves::open::xml::DataValuePairPtr integrationStep = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr integrationStep( new ves::open::xml::DataValuePair() );
     integrationStep->SetData( "Integration Step Size", _lastIntegrationStepSize );
     _advancedSettings.push_back( integrationStep );
 
-    ves::open::xml::DataValuePairPtr lineDiameter = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr lineDiameter( new ves::open::xml::DataValuePair() );
     lineDiameter->SetData( "Diameter", _lastLineDiameter );
     _advancedSettings.push_back( lineDiameter );
 
-    ves::open::xml::DataValuePairPtr sphereArrowParticles = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr sphereArrowParticles( new ves::open::xml::DataValuePair() );
     sphereArrowParticles->SetData( "Sphere/Arrow/Particle Size", _lastSphereArrowParticleSize );
     _advancedSettings.push_back( sphereArrowParticles );
 
-    ves::open::xml::DataValuePairPtr seedPtFlag = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr seedPtFlag( new ves::open::xml::DataValuePair() );
     seedPtFlag->SetDataName( "Use Last Seed Pt" );
     seedPtFlag->SetDataType( "UNSIGNED INT" );
     if( _lastSeedPtFlag )
@@ -256,7 +256,7 @@ void Streamlines::_updateAdvancedSettings()
     }
     _advancedSettings.push_back( seedPtFlag );
 
-    ves::open::xml::DataValuePairPtr streamArrow = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr streamArrow( new ves::open::xml::DataValuePair() );
     streamArrow->SetDataName( "Use Stream Arrows" );
     streamArrow->SetDataType( "UNSIGNED INT" );
     if( _lastStreamArrow )
@@ -274,33 +274,33 @@ void Streamlines::_updateAdvancedSettings()
 void Streamlines::_updateStreamlineInformation()
 {
     _streamlineInformation.clear();
-    ves::open::xml::DataValuePairPtr streamlineDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr streamlineDirection( new ves::open::xml::DataValuePair() );
     streamlineDirection->SetDataType( "STRING" );
     streamlineDirection->SetDataName( std::string( "Cursor Direction" ) );
     streamlineDirection->SetDataString( _streamlineDirection );
 
     _streamlineInformation.push_back( streamlineDirection );
 
-    ves::open::xml::DataValuePairPtr cursorSelection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr cursorSelection( new ves::open::xml::DataValuePair() );
     cursorSelection->SetDataType( "STRING" );
     cursorSelection->SetDataName( std::string( "Cursor Type" ) );
     cursorSelection->SetDataString( _cursorType );
 
     _streamlineInformation.push_back( cursorSelection );
 
-    ves::open::xml::DataValuePairPtr integrationDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr integrationDirection( new ves::open::xml::DataValuePair() );
     integrationDirection->SetDataType( "STRING" );
     integrationDirection->SetDataName( std::string( "Integration Direction" ) );
     integrationDirection->SetDataString( _integrationDirection );
 
     _streamlineInformation.push_back( integrationDirection );
 
-    ves::open::xml::DataValuePairPtr streamSize = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr streamSize( new ves::open::xml::DataValuePair() );
     streamSize->SetData( "Size", _streamSize );
 
     _streamlineInformation.push_back( streamSize );
 
-    ves::open::xml::DataValuePairPtr nPointsPerPlane = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr nPointsPerPlane( new ves::open::xml::DataValuePair() );
     nPointsPerPlane->SetDataName( "Number Of Points Per Plane" );
     nPointsPerPlane->SetDataType( "UNSIGNED INT" );
     nPointsPerPlane->SetDataValue( _nPointsPerPlane );
@@ -355,17 +355,17 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     _updateAdvancedSettings();
 
     //turn off streamlines-- probably need a function for this since it is used often
-    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "Display Seed Points" ) );
-    ves::open::xml::DataValuePairPtr seedPointDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr seedPointDVP( new ves::open::xml::DataValuePair() );
     seedPointDVP->SetData( "OnOff", static_cast<unsigned int>( 0 ) );
     veCommand->AddDataValuePair( seedPointDVP );
-    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
     activeDataset->SetData( "Active Dataset", dynamic_cast<Vistab*>( GetParent() )->GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
 
     ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
-    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     newCommand->SetCommandName( "UPDATE_STREAMLINE_SETTINGS" );
 
     for( size_t i = 0; i < _streamlineInformation.size(); i++ )
@@ -374,7 +374,7 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     }
 
     //The advanced settings command
-    ves::open::xml::CommandPtr advancedSettings = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr advancedSettings( new ves::open::xml::Command() );
     advancedSettings->SetCommandName( "ADVANCED_STREAMLINE_SETTINGS" );
     for( size_t i = 0; i < _advancedSettings.size(); i++ )
     {
@@ -388,7 +388,7 @@ void Streamlines::_onCompute( wxCommandEvent& WXUNUSED( event ) )
     }
 
     //dvp representing the advanced settings within the contours information
-    ves::open::xml::DataValuePairPtr advancedStreamlineSettings = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr advancedStreamlineSettings( new ves::open::xml::DataValuePair() );
     advancedStreamlineSettings->SetData( "Advanced Streamline Settings", advancedSettings );
     newCommand->AddDataValuePair( advancedStreamlineSettings );
 
@@ -443,15 +443,15 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
     }
     //seedPointDialog->SetActiveDataset(dynamic_cast<Vistab*>(GetParent())->GetActiveDatasetName());
     //display the seed points
-    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     try
     {
         newCommand->SetCommandName( "Display Seed Points" );
-        ves::open::xml::DataValuePairPtr seedPointDVP = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr seedPointDVP( new ves::open::xml::DataValuePair() );
         seedPointDVP->SetData( "OnOff", static_cast< unsigned int >( 1 ) );
         newCommand->AddDataValuePair( seedPointDVP );
 
-        ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair;
+        ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
         activeDataset->SetData( "Active Dataset", dynamic_cast< Vistab* >( GetParent() )->GetActiveDatasetName() );
         newCommand->AddDataValuePair( activeDataset );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( newCommand );
@@ -462,18 +462,18 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
                       wxOK | wxICON_INFORMATION );
 
     }
-    ves::open::xml::CommandPtr boundsCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr boundsCommand( new ves::open::xml::Command() );
     try
     {
         boundsCommand->SetCommandName( "Seed Points Bounds" );
         std::vector<double> seedPointBounds;
         seedPointDialog->GetBounds( seedPointBounds );
 
-        ves::open::xml::DataValuePairPtr coordinate = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr coordinate( new ves::open::xml::DataValuePair() );
         coordinate->SetData( "Coordinate", "All Bounds" );
         boundsCommand->AddDataValuePair( coordinate );
 
-        ves::open::xml::DataValuePairPtr seedPointBoundsDVP = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr seedPointBoundsDVP( new ves::open::xml::DataValuePair() );
         seedPointBoundsDVP->SetData( "Bounds", seedPointBounds );
         boundsCommand->AddDataValuePair( seedPointBoundsDVP );
         ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( boundsCommand );
@@ -484,14 +484,14 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
                       wxOK | wxICON_INFORMATION );
 
     }
-    ves::open::xml::CommandPtr dimensionsCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr dimensionsCommand( new ves::open::xml::Command() );
     try
     {
         dimensionsCommand->SetCommandName( "Seed Points Dimensions" );
         std::vector<long> seedPointDims;
         seedPointDialog->GetDimensions( seedPointDims );
 
-        ves::open::xml::DataValuePairPtr dimensions = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr dimensions( new ves::open::xml::DataValuePair() );
         dimensions->SetData( "Dimensions", seedPointDims );
         dimensionsCommand->AddDataValuePair( dimensions );
 
@@ -510,13 +510,13 @@ void Streamlines::SetSeedPoints( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void Streamlines::OnClose( wxCommandEvent& event )
 {
-    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "Display Seed Points" ) );
-    ves::open::xml::DataValuePairPtr seedPointDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr seedPointDVP( new ves::open::xml::DataValuePair() );
     seedPointDVP->SetData( "OnOff", static_cast<unsigned int>( 0 ) );
     veCommand->AddDataValuePair( seedPointDVP );
 
-    ves::open::xml::DataValuePairPtr activeDataset = new ves::open::xml::DataValuePair;
+    ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
     activeDataset->SetData( "Active Dataset", dataSetName );
     veCommand->AddDataValuePair( activeDataset );
 

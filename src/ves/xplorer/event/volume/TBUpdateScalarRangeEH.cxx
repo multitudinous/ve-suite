@@ -70,15 +70,15 @@ void TextureBasedUpdateScalarRangeEventHandler::_operateOnNode( XMLObjectPtr veX
 {
     try
     {
-        CommandPtr command = veXMLObject;
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateActiveTextureManager();
 
         double scalarRange[2] = {0.f, 100.f};
 
-        DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
+        DataValuePairPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
         minScalarRange->GetData( scalarRange[0] );
 
-        DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
+        DataValuePairPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
         maxScalarRange->GetData( scalarRange[1] );
 
         //this is overkill

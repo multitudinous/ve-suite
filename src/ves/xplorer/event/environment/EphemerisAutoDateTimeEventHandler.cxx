@@ -71,10 +71,10 @@ void EphemerisAutoDateTimeEventHandler::Execute( const ves::open::xml::XMLObject
 {
     try
     {
-        ves::open::xml::CommandPtr ephemerisAutoDateTime = xmlObject;
+        ves::open::xml::CommandPtr ephemerisAutoDateTime = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if( ephemerisAutoDateTime )
         {
-            ves::open::xml::DataValuePairWeakPtr autoDateTime =
+            ves::open::xml::DataValuePairPtr autoDateTime =
                 ephemerisAutoDateTime->GetDataValuePair( "Auto Date Time" );
             long int onOff = 0;
             autoDateTime->GetData( onOff );

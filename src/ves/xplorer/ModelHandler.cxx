@@ -125,10 +125,10 @@ ModelHandler::ModelHandler( void )
     arrow          = 0;
     //_readParam     = 0;
     _activeModel   = 0;
-    activeCommand  = 0;
+    activeCommand  = ves::open::xml::CommandPtr();
 
     //create null command to be returned when a command is not active
-    nullCommand = new ves::open::xml::Command();
+    nullCommand = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     nullCommand->SetCommandName( "NULL" );
 
     tbased = false;

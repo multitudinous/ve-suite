@@ -228,7 +228,7 @@ void Tag::SetVETagPtr( ves::open::xml::model::TagPtr inputTag )
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::model::TagPtr Tag::GetVETagPtr()
 {
-    ves::open::xml::model::TagPtr tagPtr = new ves::open::xml::model::Tag();
+    ves::open::xml::model::TagPtr tagPtr( new ves::open::xml::model::Tag() );
     tagPtr->SetText( ConvertUnicode( text.c_str() ) );
     tagPtr->SetID( uuid );
     //Order is important below

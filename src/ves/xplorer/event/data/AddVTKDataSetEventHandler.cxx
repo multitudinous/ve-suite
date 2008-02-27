@@ -116,15 +116,15 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         return;
     }
 
-    CommandPtr command = xmlObject;
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     std::string dataSetName =
         command->GetDataValuePair( "VTK_DATASET_NAME" )->GetDataString();
 
     if( command->GetDataValuePair( "CREATE_NEW_DATASETS" ) )
     {
-        DataValuePairWeakPtr veModelDVP = 
+        DataValuePairPtr veModelDVP =
             command->GetDataValuePair( "CREATE_NEW_DATASETS" );
-        xml::model::ModelPtr veModel = veModelDVP->GetDataXMLObject();
+        xml::model::ModelPtr veModel = boost::dynamic_pointer_cast<xml::model::Model>( veModelDVP->GetDataXMLObject() );
         size_t numInfoPackets = veModel->GetNumberOfInformationPackets();
         for( size_t i = 0; i < numInfoPackets; ++i )
         {
@@ -251,7 +251,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     }
     else if( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" ) )
     {
-        DataValuePairPtr tempDVP = command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject();
+        DataValuePairPtr tempDVP( boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_PRECOMPUTED_DATA_DIR" )->GetDataXMLObject() ) );
         std::string precomputedDataSliceDir = tempDVP->GetDataString();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_PRECOMPUTED_DIR_PATH", tempDVP->GetID() );
@@ -259,7 +259,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     }
     else if( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" ) )
     {
-        DataValuePairPtr tempDVP = command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject();
+        DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "ADD_SURFACE_DATA_DIR" )->GetDataXMLObject() );
         std::string precomputedSurfaceDir = tempDVP->GetDataString();
         DataSet* tempDataSet = _activeModel->GetCfdDataSet( _activeModel->GetIndexOfDataSet( dataSetName ) );
         tempDataSet->SetUUID( "VTK_SURFACE_DIR_PATH", tempDVP->GetID() );
@@ -273,7 +273,7 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
         vprDEBUG( vesDBG, 0 ) << "|\tCreating texture dataset."
             << std::endl << vprDEBUG_FLUSH;
         _activeModel->CreateTextureDataSet();
-        DataValuePairPtr tempDVP = command->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject();
+        DataValuePairPtr tempDVP = boost::dynamic_pointer_cast<DataValuePair>( command->GetDataValuePair( "VTK_TEXTURE_DIR_PATH" )->GetDataXMLObject() );
         _activeModel->AddDataSetToTextureDataSet( 0, tempDVP->GetDataString() );
 
         std::ostringstream textId;

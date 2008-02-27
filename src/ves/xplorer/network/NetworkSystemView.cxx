@@ -114,14 +114,14 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     std::ofstream output( "scale.txt" );
-    SystemPtr mainSystem = objectVector.at( 0 );
+    SystemPtr mainSystem = boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
     // now lets create a list of them
     //for ( size_t i = 0; i < objectVector.size(); ++i )
     for( size_t i = 0; i < mainSystem->GetModels().size(); ++i )
     {
         //_fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
         //Model* model = dynamic_cast< Model* >( objectVector.at( i ) );
-        ModelWeakPtr model = mainSystem->GetModel( i );
+        ModelPtr model = mainSystem->GetModel( i );
 
         //add 3d blocks
         osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile( "3DIcons/" + model->GetIconFilename() + ".obj" );
@@ -351,7 +351,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
     //networkWriter.ReadXMLData( network, "Model", "veNetwork" );
     //objectVector = networkWriter.GetLoadedXMLObjects();
     //Network* veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
-    NetworkWeakPtr veNetwork = mainSystem->GetNetwork();
+    NetworkPtr veNetwork = mainSystem->GetNetwork();
     //std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
     osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
     colorBlack->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );

@@ -173,7 +173,7 @@ public:
     void GeometryData();
     //This is the load function of the module,
     ///unpack the input string and fill up the UI according to this
-    ves::open::xml::model::ModelWeakPtr GetVEModel( void );
+    ves::open::xml::model::ModelPtr GetVEModel( void );
     ///Set the ve model
     void SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel );
     ///method to start a dialog to ask the user for a plugin name so that the

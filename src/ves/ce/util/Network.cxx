@@ -96,7 +96,7 @@ int Network::parse( std::string xmlNetwork )
         return 0;
     }
 
-    std::vector< model::ModelWeakPtr > models =
+    std::vector< model::ModelPtr > models =
         tempSystem->GetModels();
     // now lets create a list of them
     for( size_t i = 0; i < models.size(); ++i )

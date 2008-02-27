@@ -72,12 +72,12 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode( XMLObjectPtr veXMLO
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
         std::string dataName;
         activeDataset->GetData( dataName );
 
-        DataValuePairWeakPtr type = command->GetDataValuePair( "Data Type" );
+        DataValuePairPtr type = command->GetDataValuePair( "Data Type" );
         std::string dataType;
         type->GetData( dataType );
 
@@ -91,10 +91,10 @@ void TextureBasedUpdateSolutionEventHandler::_operateOnNode( XMLObjectPtr veXMLO
 
                 double scalarRange[2] = {0.f, 100.f};
 
-                DataValuePairWeakPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
+                DataValuePairPtr minScalarRange = command->GetDataValuePair( "Mininum Scalar Range" );
                 minScalarRange->GetData( scalarRange[0] );
 
-                DataValuePairWeakPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
+                DataValuePairPtr maxScalarRange = command->GetDataValuePair( "Maximum Scalar Range" );
                 maxScalarRange->GetData( scalarRange[1] );
                 //this is overkill
                 float floatRange[2];

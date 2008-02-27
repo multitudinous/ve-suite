@@ -70,8 +70,8 @@ void TextureBasedIsosurfaceUpdateEventHandler::_operateOnNode( XMLObjectPtr veXM
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr isovalue = command->GetDataValuePair( "Iso-Surface Value" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr isovalue = command->GetDataValuePair( "Iso-Surface Value" );
         double value;
         isovalue->GetData( value );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateIsosurface( value );

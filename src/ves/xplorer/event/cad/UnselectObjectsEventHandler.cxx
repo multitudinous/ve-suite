@@ -73,7 +73,7 @@ void UnselectObjectsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase*
 ////////////////////////////////////////////////////////////////////////////////
 void UnselectObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = veXMLObject;
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
 
     if( command->GetCommandName() == "UNSELECT_OBJECTS" )
     {

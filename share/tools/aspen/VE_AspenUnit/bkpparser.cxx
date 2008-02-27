@@ -1209,7 +1209,7 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
         paramList.push_back((char*)LPCTSTR(cur_block.getInputVarName(i)));
     }
 
-	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
+	ves::open::xml::DataValuePairPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
     params->AddDataValuePair( inpParams );
     
@@ -1236,7 +1236,7 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname, std::s
 	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	ves::open::xml::DataValuePairWeakPtr Props[propSize];
+	ves::open::xml::DataValuePairPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
@@ -1340,7 +1340,7 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
 	for (i = 0; i < (int)cur_block.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_block.getOutputVarName(i)));
 
-	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
+	ves::open::xml::DataValuePairPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
     params->AddDataValuePair( inpParams );
 
@@ -1368,7 +1368,7 @@ std::string BKPParser::GetOutputModuleParamProperties(std::string modname, std::
 	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	ves::open::xml::DataValuePairWeakPtr Props[propSize];
+	ves::open::xml::DataValuePairPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
@@ -1475,7 +1475,7 @@ std::string BKPParser::GetStreamInputModuleParams(std::string modname)
 		//paramList.push_back((char*)LPCTSTR(cur_stream.getStreamCompName(i)));
 		paramList.push_back((char*)LPCTSTR(cur_stream.getInputVarName(i)));
 
-	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
+	ves::open::xml::DataValuePairPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
     params.AddDataValuePair( inpParams );
 
@@ -1503,7 +1503,7 @@ std::string BKPParser::GetStreamInputModuleParamProperties(std::string modname, 
 	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	ves::open::xml::DataValuePairWeakPtr Props[propSize];
+	ves::open::xml::DataValuePairPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j] = new ves::open::xml::DataValuePair();
@@ -1607,7 +1607,7 @@ std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
 	for (i = 0; i < (int)cur_stream.getNumOutputVar(); i++)
 		paramList.push_back((char*)LPCTSTR(cur_stream.getOutputVarName(i)));
 
-	ves::open::xml::DataValuePairWeakPtr inpParams = new ves::open::xml::DataValuePair();
+	ves::open::xml::DataValuePairPtr inpParams = new ves::open::xml::DataValuePair();
 	inpParams->SetData("params",paramList);
     params->AddDataValuePair( inpParams );
 
@@ -1635,7 +1635,7 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	properties->SetCommandName((modname+paramName).c_str());
 	std::cout<<(modname+paramName).c_str()<<std::endl;
 
-	ves::open::xml::DataValuePairWeakPtr Props[propSize];
+	ves::open::xml::DataValuePairPtr Props[propSize];
 	for (j=0; j<propSize; j++)
 	{
 		Props[j] = new ves::open::xml::DataValuePair();

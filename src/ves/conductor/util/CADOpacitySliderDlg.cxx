@@ -114,12 +114,12 @@ void CADOpacitySliderDlg::_onSlider( wxScrollEvent& WXUNUSED( event ) )
     //build the command
     _commandName = std::string( "CAD_OPACITY_UPDATE" );
 
-    ves::open::xml::DataValuePairPtr nodeID = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
     nodeID->SetDataType( "STRING" );
     nodeID->SetData( std::string( "Node ID" ), _cadID );
     _instructions.push_back( nodeID );
 
-    ves::open::xml::DataValuePairPtr opacityUpdate = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr opacityUpdate( new ves::open::xml::DataValuePair() );
     opacityUpdate->SetData( "Opacity Value", GetOpacity() );
     _instructions.push_back( opacityUpdate );
 
@@ -136,7 +136,7 @@ void CADOpacitySliderDlg::_clearInstructions()
 //////////////////////////////////////////////////
 void CADOpacitySliderDlg::_sendCommandsToXplorer()
 {
-    ves::open::xml::CommandPtr opacityCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr opacityCommand( new ves::open::xml::Command() );
 
     for( size_t i = 0; i < _instructions.size(); i++ )
     {

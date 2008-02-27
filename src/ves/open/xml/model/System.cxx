@@ -54,12 +54,12 @@ System::~System()
 {
     if( mNetwork )
     {
-        mNetwork->SetParentModel( 0 );
+        mNetwork->SetParentModel( ModelPtr() );
     }
 
     for( size_t i = 0; i < mModels.size(); ++i )
     {
-        mModels.at( i )->SetParentModel( 0 );
+        mModels.at( i )->SetParentModel( ModelPtr() );
     }
     mModels.clear();
 }
@@ -186,9 +186,9 @@ void System::AddModel( ModelPtr inputModel )
     mModels.push_back( inputModel );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< ModelWeakPtr > System::GetModels()
+std::vector< ModelPtr > System::GetModels()
 {
-    std::vector< ModelWeakPtr > tempModels;
+    std::vector< ModelPtr > tempModels;
     std::copy( mModels.begin(),
                mModels.end(),
                std::back_inserter( tempModels ) );

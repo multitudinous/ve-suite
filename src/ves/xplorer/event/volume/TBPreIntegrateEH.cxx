@@ -70,8 +70,8 @@ void TextureBasedPreIntegrateEnableEventHandler::_operateOnNode( XMLObjectPtr ve
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr enable = command->GetDataValuePair( "Recalculate Pre-Integration" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr enable = command->GetDataValuePair( "Recalculate Pre-Integration" );
         unsigned int onOff;
         enable->GetData( onOff );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdatePreIntegrationTable(( onOff == 1 ) ? true : false );

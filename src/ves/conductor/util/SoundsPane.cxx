@@ -103,14 +103,14 @@ void SoundsPane::_onSounds( wxCommandEvent& event )
     unsigned int onOff = ( _soundCBox->IsChecked( checkSound ) ) ? 1 : 0;
     ///turn on/off sound
     ///send commands to xplorer
-    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( "Enable/Disable Sound" );
 
-    ves::open::xml::DataValuePairPtr soundName = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr soundName( new ves::open::xml::DataValuePair() );
     soundName->SetData( "Sound Name", ConvertUnicode( _soundCBox->GetString( checkSound ) ) );
     veCommand->AddDataValuePair( soundName );
 
-    ves::open::xml::DataValuePairPtr status = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr status( new ves::open::xml::DataValuePair() );
     status->SetData( "Status", onOff );
     veCommand->AddDataValuePair( status );
 
@@ -143,7 +143,7 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
                 ves::open::xml::ParameterBlockPtr modelSounds = 0;
                 modelSounds = m_activeModel->GetInformationPacket( "Model Sounds" );
 
-                ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
+                ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
                 veCommand->SetCommandName( "Add New Sound" );
 
                 //Have to do this so because of our current memory scheme in XML...
@@ -152,12 +152,12 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
                     ConvertUnicode( soundFileName.GetName().c_str() ),
                     ConvertUnicode( fileNamesVector.Item( i ).c_str() ) );
 
-                ves::open::xml::DataValuePairPtr soundName = new ves::open::xml::DataValuePair();
+                ves::open::xml::DataValuePairPtr soundName( new ves::open::xml::DataValuePair() );
                 soundName->SetData( "Sound Name",
                                     ConvertUnicode( soundFileName.GetName().c_str() ) );
                 veCommand->AddDataValuePair( soundName );
 
-                ves::open::xml::DataValuePairPtr soundFilename = new ves::open::xml::DataValuePair();
+                ves::open::xml::DataValuePairPtr soundFilename( new ves::open::xml::DataValuePair() );
                 soundFilename->SetData( "Sound Filename",
                                         ConvertUnicode( fileNamesVector.Item( i ).c_str() ) );
                 veCommand->AddDataValuePair( soundFilename );
@@ -229,16 +229,16 @@ void SoundsPane::_updateSoundsInformationFromModel()
                 break;
             }
 
-            ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
+            ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
             veCommand->SetCommandName( "Add New Sound" );
 
-            ves::open::xml::DataValuePairPtr soundNameDVP = new ves::open::xml::DataValuePair();
+            ves::open::xml::DataValuePairPtr soundNameDVP( new ves::open::xml::DataValuePair() );
             soundNameDVP->SetData( "Sound Name", soundName );
             veCommand->AddDataValuePair( soundNameDVP );
 
             std::string fileName;
             modelSounds->GetProperty( i )->GetData( fileName );
-            ves::open::xml::DataValuePairPtr soundFilename = new ves::open::xml::DataValuePair();
+            ves::open::xml::DataValuePairPtr soundFilename( new ves::open::xml::DataValuePair() );
             soundFilename->SetData( "Sound Filename", fileName );
             veCommand->AddDataValuePair( soundFilename );
 

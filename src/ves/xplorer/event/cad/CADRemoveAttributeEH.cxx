@@ -78,10 +78,10 @@ void CADRemoveAttributeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     {
         std::cout << "---Adding attribute to node---" << std::endl;
         std::cout << "CADRemoveAttributeEventHandler." << std::endl;
-        CommandPtr command =  xmlObject;
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
-        DataValuePairWeakPtr activeAttribute = command->GetDataValuePair( "Attribute Name" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
+        DataValuePairPtr activeAttribute = command->GetDataValuePair( "Attribute Name" );
 
         m_cadHandler->RemoveAttributeFromNode( nodeID->GetDataString(),
                                                nodeType->GetDataString(),

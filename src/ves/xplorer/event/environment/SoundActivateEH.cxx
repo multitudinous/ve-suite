@@ -94,13 +94,13 @@ void SoundActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veX
     {
         if( _activeModel )
         {
-            CommandPtr command = veXMLObject;
-            DataValuePairWeakPtr soundStatus = command->GetDataValuePair( "Status" );
+            CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+            DataValuePairPtr soundStatus = command->GetDataValuePair( "Status" );
             unsigned int onOff = 0;
             soundStatus->GetData( onOff );
 
             std::string name;
-            DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
+            DataValuePairPtr soundName = command->GetDataValuePair( "Sound Name" );
             soundName->GetData( name );
             ( onOff == 1 ) ? _activeModel->ActivateSound( name ) : _activeModel->DeactivateSound( name );
         }

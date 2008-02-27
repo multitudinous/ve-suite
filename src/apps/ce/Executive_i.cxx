@@ -830,7 +830,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
     {
-        DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
+        DataValuePairPtr tempPair = tempCommand->GetDataValuePair( i );
         /*if ( tempPair->GetDataName() == "moduleName" )
         {
            tempPair->GetData( moduleName );

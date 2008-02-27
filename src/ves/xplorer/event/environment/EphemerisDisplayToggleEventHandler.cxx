@@ -72,10 +72,10 @@ void EphemerisDisplayToggleEventHandler::Execute( const ves::open::xml::XMLObjec
 {
     try
     {
-        ves::open::xml::CommandPtr ephemerisToggleDisplay = xmlObject;
+        ves::open::xml::CommandPtr ephemerisToggleDisplay = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if( ephemerisToggleDisplay )
         {
-            ves::open::xml::DataValuePairWeakPtr toggleDisplayInfo =
+            ves::open::xml::DataValuePairPtr toggleDisplayInfo =
                 ephemerisToggleDisplay->GetDataValuePair( "Display Ephemeris Data" );
             unsigned int onOff = 0;
             toggleDisplayInfo->GetData( onOff );

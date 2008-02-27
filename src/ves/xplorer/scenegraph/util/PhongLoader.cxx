@@ -71,15 +71,15 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     //std::cout<<"Loading shader!!"<<std::endl;
     //std::cout<<"vertex shader!!"<<std::endl<<vertexSource<<std::endl;
     //std::cout<<"frag shader!!"<<std::endl<<fragmentSource<<std::endl;
-    ShaderPtr vertShader = new Shader();
+    ShaderPtr vertShader(  new Shader() );
     vertShader->SetShaderType( "Vertex" );
     vertShader->SetShaderSource( vertexSource );
 
-    ShaderPtr fragShader = new Shader();
+    ShaderPtr fragShader(  new Shader() );
     fragShader->SetShaderType( "Fragment" );
     fragShader->SetShaderSource( fragmentSource );
 
-    UniformPtr amaterial = new Uniform();
+    UniformPtr amaterial(  new Uniform() );
     amaterial->SetType( "Float" );
     amaterial->SetName( "ambientMaterial" );
     amaterial->SetSize( 3 );
@@ -89,7 +89,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     ambient.push_back( 0.368421 );
     amaterial->SetValues( ambient );
 
-    UniformPtr dmaterial = new Uniform();
+    UniformPtr dmaterial(  new Uniform() );
     dmaterial->SetType( "Float" );
     dmaterial->SetName( "diffuseMaterial" );
     dmaterial->SetSize( 3 );
@@ -99,7 +99,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     diffuse.push_back( 0.885003 );
     dmaterial->SetValues( diffuse );
 
-    UniformPtr smaterial = new Uniform();
+    UniformPtr smaterial(  new Uniform() );
     smaterial->SetType( "Float" );
     smaterial->SetName( "specularMaterial" );
     smaterial->SetSize( 3 );
@@ -109,7 +109,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     specular.push_back( 0.488722 );
     smaterial->SetValues( specular );
 
-    UniformPtr specularValues = new Uniform();
+    UniformPtr specularValues(  new Uniform() );
     specularValues->SetType( "Float" );
     specularValues->SetName( "specularPower" );
     specularValues->SetSize( 1 );
@@ -121,7 +121,7 @@ void PhongLoader::_loadShader( std::string vertexSource, std::string fragmentSou
     fragShader->AddUniform( dmaterial );
     fragShader->AddUniform( smaterial );
     fragShader->AddUniform( specularValues );
-    ProgramPtr glslProgram = new Program();
+    ProgramPtr glslProgram(  new Program() );
     glslProgram->SetProgramName( "Phong Shader" );
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );

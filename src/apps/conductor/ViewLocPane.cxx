@@ -127,7 +127,7 @@ void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
         viewPtsFilename.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
         wxString relativeViewLocationsPath( wxString( "./", wxConvUTF8 ) + viewPtsFilename.GetFullPath() );
 
-        DataValuePairPtr velFileName = new DataValuePair();
+        DataValuePairPtr velFileName( new DataValuePair() );
         velFileName->SetData( "View Locations file", ConvertUnicode( relativeViewLocationsPath.c_str() ) );
         _dataValuePairList.push_back( velFileName );
 
@@ -162,7 +162,7 @@ void ViewLocPane::_onSaveStoredPointsFile( wxCommandEvent& event )
     if( velFileName.HasName() )
     {
         _dataValuePairList.clear();
-        DataValuePairPtr velFile = new DataValuePair();
+        DataValuePairPtr velFile( new DataValuePair() );
         velFile->SetData( "View Points file", ConvertUnicode( velFileName.GetFullPath( wxPATH_NATIVE ).c_str() ) );
         _dataValuePairList.push_back( velFile );
 

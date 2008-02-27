@@ -46,6 +46,7 @@ XMLDataBufferEngine API
 
 #include <map>
 #include <string>
+#include <vector>
 
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/model/NetworkPtr.h>
@@ -113,7 +114,7 @@ public:
     ///Get data
     ves::open::xml::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
     ///Parse system for subsystems
-    void ParseSystem( ves::open::xml::model::SystemWeakPtr system );
+    void ParseSystem( ves::open::xml::model::SystemPtr system );
 
 private:
     ///Map to store the command name and command for easy lookup by the user

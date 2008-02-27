@@ -79,8 +79,8 @@ void DisplayEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHa
 ////////////////////////////////////////////////////////////////////////////////
 void DisplayEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = veXMLObject;
-    DataValuePairWeakPtr DVP;
+    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    DataValuePairPtr DVP;
     unsigned int value;
 
     if( command->GetDataValuePair( "FrameRateID" ) )

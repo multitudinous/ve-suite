@@ -71,7 +71,7 @@ void cfdDisplaySettings::ProcessCommand()
     if( commandType.compare( "Juggler_Display_Data" ) == 0 )
     {
         // Get datavalue pair from current command
-        DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
+        DataValuePairPtr commandData = veCommand->GetDataValuePair( 0 );
         double stereoToggle = commandData->GetDataValue();
         std::string newCommand = commandData->GetDataName();
 
@@ -118,7 +118,7 @@ void cfdDisplaySettings::ProcessCommand()
         std::vector< jccl::ConfigElementPtr > elements;
         oldCfg->getByType( "display_window", elements );
 
-        DataValuePairWeakPtr desktopData =
+        DataValuePairPtr desktopData =
             veCommand->GetDataValuePair( "desktop_width" );
         double configXValue = desktopData->GetDataValue();
         desktopData = veCommand->GetDataValuePair( "desktop_height" );
@@ -182,7 +182,7 @@ void cfdDisplaySettings::ProcessCommand()
         }
         jccl::ConfigManager::instance()->unlockActive();
     }
-    veCommand = 0;
+    veCommand = ves::open::xml::CommandPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< int, int > cfdDisplaySettings::GetScreenResolution( void )

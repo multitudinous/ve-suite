@@ -70,11 +70,11 @@ Wand::Wand()
         rotationFlag( 1 ),
         distance( 1000 ),
         cursorLen( 1.0f ),
-        command( 0 ),
         translationStepSize( 0.25f ),
         rotationStepSize( 1.0f ),
         m_buttonPushed( false )
 {
+    command = ves::open::xml::CommandPtr();
     wand.init( "VJWand" );
     head.init( "VJHead" );
     // trigger (and top right button) TODO: I think this is unused ?
@@ -163,7 +163,7 @@ void Wand::UpdateNavigation()
 
     if( !commandType.compare( "Navigation_Data" ) )
     {
-        DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
+        DataValuePairPtr commandData = command->GetDataValuePair( 0 );
         cfdIso_value = commandData->GetDataValue();
         newCommand = commandData->GetDataName();
     }

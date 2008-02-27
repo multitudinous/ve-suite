@@ -71,22 +71,22 @@ void EphemerisDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
 {
     try
     {
-        ves::open::xml::CommandPtr ephemerisInfo = xmlObject;
+        ves::open::xml::CommandPtr ephemerisInfo = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if( ephemerisInfo )
         {
             //std::cout<<"Got ephemeris data"<<std::endl;
-            ves::open::xml::DataValuePairWeakPtr latitude =
+            ves::open::xml::DataValuePairPtr latitude =
                 ephemerisInfo->GetDataValuePair( "Latitude" );
             double latitudeData = 0;
             latitude->GetData( latitudeData );
-            ves::open::xml::DataValuePairWeakPtr latitudeDir =
+            ves::open::xml::DataValuePairPtr latitudeDir =
                 ephemerisInfo->GetDataValuePair( "Latitude Direction" );
             std::string northSouth;
             latitudeDir->GetData( northSouth );
-            ves::open::xml::DataValuePairWeakPtr longitude =
+            ves::open::xml::DataValuePairPtr longitude =
                 ephemerisInfo->GetDataValuePair( "Longitude" );
             double longitudeData = 0;
-            ves::open::xml::DataValuePairWeakPtr longitudeDir =
+            ves::open::xml::DataValuePairPtr longitudeDir =
                 ephemerisInfo->GetDataValuePair( "Longitude Direction" );
             longitude->GetData( longitudeData );
             std::string eastWest;
@@ -98,7 +98,7 @@ void EphemerisDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             ephemerisModel->setLatitudeLongitude(( northSouth == "South" ) ? -1*latitudeData : latitudeData,
                                                  ( eastWest == "West" ) ? -1*longitudeData : longitudeData );
             std::vector<long> dateTimeInfo;
-            ves::open::xml::DataValuePairWeakPtr dateTimeData =
+            ves::open::xml::DataValuePairPtr dateTimeData =
                 ephemerisInfo->GetDataValuePair( "Date and Time Info" );
             dateTimeData->GetData( dateTimeInfo );
             //std::cout<<"Date: "<<dateTimeInfo[0]<<" "<<dateTimeInfo[1]<<" "

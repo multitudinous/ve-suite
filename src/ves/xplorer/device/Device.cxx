@@ -81,11 +81,11 @@ void Device::SetVECommand( CommandPtr command )
     {
         return;
     }
-    CommandPtr viewPointGUIData = new Command();
+    CommandPtr viewPointGUIData( new Command() );
     viewPointGUIData->SetCommandName( "START_POSITION" );
 
-    DataValuePairWeakPtr quatStartPosition = new DataValuePair();
-    OneDDoubleArrayPtr quatData = new OneDDoubleArray( 0 );
+    DataValuePairPtr quatStartPosition( new DataValuePair());
+    OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
     osg::Quat quat = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getAttitude();
     quatData->AddElementToArray( quat[ 0 ] );
     quatData->AddElementToArray( quat[ 1 ] );
@@ -94,8 +94,8 @@ void Device::SetVECommand( CommandPtr command )
     quatStartPosition->SetData( "QUAT_START_POSITION", quatData );
     viewPointGUIData->AddDataValuePair( quatStartPosition );
 
-    DataValuePairWeakPtr positionStartPosition = new DataValuePair();
-    OneDDoubleArrayPtr positionsData = new OneDDoubleArray( 0 );
+    DataValuePairPtr positionStartPosition( new DataValuePair() );
+    OneDDoubleArrayPtr positionsData( new OneDDoubleArray( 0 ) );
     osg::Vec3d trans = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->getPosition();
     positionsData->AddElementToArray( trans[ 0 ] );
     positionsData->AddElementToArray( trans[ 1 ] );

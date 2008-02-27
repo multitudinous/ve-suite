@@ -76,10 +76,10 @@ void CADSetActiveAttributeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
-        DataValuePairWeakPtr activeAttribute = command->GetDataValuePair( "Active Attribute" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
+        DataValuePairPtr activeAttribute = command->GetDataValuePair( "Active Attribute" );
 
         std::cout << "--Setting active attribute--" << std::endl;
         //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);

@@ -74,12 +74,12 @@ void MaterialUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
     std::cout << "Material update event handler" << std::endl;
     try
     {
-        CommandPtr componentUpdate = ( veXMLObject );
-        DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr material = componentUpdate->GetDataValuePair( "Material" );
-        DataValuePairWeakPtr component = componentUpdate->GetDataValuePair( "Material Component" );
+        CommandPtr componentUpdate( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
+        DataValuePairPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
+        DataValuePairPtr material = componentUpdate->GetDataValuePair( "Material" );
+        DataValuePairPtr component = componentUpdate->GetDataValuePair( "Material Component" );
 
-        CADMaterialPtr rawMaterial = ( material->GetDataXMLObject() );
+        CADMaterialPtr rawMaterial( boost::dynamic_pointer_cast<CADMaterial>( material->GetDataXMLObject() ) );
         std::string rawComponent = component->GetDataString();
         std::vector<double> values;
         if( rawComponent == "Diffuse" )

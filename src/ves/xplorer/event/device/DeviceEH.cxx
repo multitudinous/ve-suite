@@ -74,7 +74,7 @@ void DeviceEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHan
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = veXMLObject;
+    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
 
     std::string device;
     command->GetDataValuePair( "Device" )->GetData( device );

@@ -96,8 +96,8 @@ void DeleteObjectFromNetworkEventHandler::SetGlobalBaseObject( ves::xplorer::Glo
 void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     // Get the active object
-    CommandPtr command = xmlObject;
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Object ID" );
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Object ID" );
     unsigned int id = 0;
     activeModelDVP->GetData( id );
 

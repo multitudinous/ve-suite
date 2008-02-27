@@ -282,13 +282,15 @@ void EnvironmentHandler::InitScene()
         std::cout << "| 12. Initializing................................  Desktop Display |" << std::endl;
         // Create the command and data value pairs
         // to adjust the desktop settings.
-        ves::open::xml::DataValuePairPtr dvpDesktopWidth = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
+        ves::open::xml::DataValuePairPtr dvpDesktopWidth( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopWidth->SetDataName( "desktop_width" );
         dvpDesktopWidth->SetDataValue( static_cast< double >( desktopWidth ) );
-        ves::open::xml::DataValuePairPtr dvpDesktopHeight = new ves::open::xml::DataValuePair( std::string( "FLOAT" ) );
+
+        ves::open::xml::DataValuePairPtr dvpDesktopHeight( new ves::open::xml::DataValuePair( std::string( "FLOAT" ) ) );
         dvpDesktopHeight->SetDataName( "desktop_height" );
         dvpDesktopHeight->SetDataValue( static_cast< double >( desktopHeight ) );
-        ves::open::xml::CommandPtr displayCommand = new ves::open::xml::Command();
+
+        ves::open::xml::CommandPtr displayCommand( new ves::open::xml::Command() );
         displayCommand->SetCommandName( std::string( "Juggler_Desktop_Data" ) );
         displayCommand->AddDataValuePair( dvpDesktopWidth );
         displayCommand->AddDataValuePair( dvpDesktopHeight );

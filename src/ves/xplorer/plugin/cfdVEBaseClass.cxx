@@ -81,7 +81,6 @@ namespace plugin
 
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEBaseClass::cfdVEBaseClass():
-        m_xmlModel( 0 ),
         m_onSceneGraph( false ),
         m_device( 0 ),
         m_physicsSimulator( 0 ),
@@ -93,6 +92,7 @@ cfdVEBaseClass::cfdVEBaseClass():
         m_soundManager( 0 )
 #endif
 {
+    m_xmlModel = ves::open::xml::model::ModelPtr();
     m_network.empty();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -274,13 +274,13 @@ void cfdVEBaseClass::SetModuleResults( const std::string network )
         return;
     }
 
-    ves::open::xml::CommandPtr tempCommand = objectVector.at( 0 );
+    ves::open::xml::CommandPtr tempCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
     {
         ves::open::xml::CommandPtr command = m_xmlModel->GetResult( i );
-        ves::open::xml::DataValuePairWeakPtr tempPair = tempCommand->GetDataValuePair( i );
-        ves::open::xml::CommandPtr copyCommand = tempPair->GetDataXMLObject();
+        ves::open::xml::DataValuePairPtr tempPair = tempCommand->GetDataValuePair( i );
+        ves::open::xml::CommandPtr copyCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  tempPair->GetDataXMLObject() );
         *command = *copyCommand;
     }
 }
@@ -305,14 +305,14 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
     m_xmlModel = tempModel;
 
     //Decompose model to be utilized by the event handlers
-    ves::open::xml::cad::CADAssemblyPtr cadNodeData = m_xmlModel->GetGeometry();
+    ves::open::xml::cad::CADAssemblyPtr cadNodeData = boost::dynamic_pointer_cast<ves::open::xml::cad::CADAssembly>( m_xmlModel->GetGeometry() );
     if( cadNodeData )
     {
-        ves::open::xml::DataValuePairPtr cadNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr cadNode( new ves::open::xml::DataValuePair() );
         cadNode->SetDataType( std::string( "XMLOBJECT" ) );
         cadNode->SetData( "New Node", cadNodeData );
 
-        ves::open::xml::CommandPtr cadCommand = new ves::open::xml::Command();
+        ves::open::xml::CommandPtr cadCommand( new ves::open::xml::Command() );
         cadCommand->AddDataValuePair( cadNode );
         std::string _commandName = "CAD_ADD_NODE";
         cadCommand->SetCommandName( _commandName );
@@ -326,20 +326,20 @@ void cfdVEBaseClass::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
     //process the information blocks
     if( m_xmlModel->GetNumberOfInformationPackets() > 0 )
     {
-        ves::open::xml::DataValuePairPtr modelNode = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr modelNode( new ves::open::xml::DataValuePair() );
         modelNode->SetDataType( std::string( "XMLOBJECT" ) );
         modelNode->SetData( "CREATE_NEW_DATASETS",
-                            new ves::open::xml::model::Model( *m_xmlModel ) );
+                            ves::open::xml::model::ModelPtr( new ves::open::xml::model::Model( *m_xmlModel ) ) );
 
-        ves::open::xml::CommandPtr dataCommand = new ves::open::xml::Command();
+        ves::open::xml::CommandPtr dataCommand( new ves::open::xml::Command() );
         dataCommand->AddDataValuePair( modelNode );
         dataCommand->SetCommandName( "UPDATE_MODEL_DATASETS" );
 
         //Add the active dataset name to the command
         ves::open::xml::ParameterBlockPtr parameterBlock =
             m_xmlModel->GetInformationPacket( 0 );
-        ves::open::xml::DataValuePairPtr dataSetName =
-            new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr dataSetName(
+                     new ves::open::xml::DataValuePair() );
         dataSetName->SetData( "VTK_DATASET_NAME",
                               parameterBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString() );
         dataCommand->AddDataValuePair( dataSetName );

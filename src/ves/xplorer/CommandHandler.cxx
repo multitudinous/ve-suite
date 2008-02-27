@@ -42,10 +42,9 @@ using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 CommandHandler::CommandHandler():
-        m_xplorer( 0 ),
-        m_input( 0 )
+        m_xplorer( 0 )
 {
-    ;
+   m_input = ves::open::xml::CommandPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CommandHandler::Initialize()
@@ -108,11 +107,10 @@ void CommandHandler::SetXplorer( Body_VEXplorer_i* xplorer )
 void CommandHandler::SendConductorMessage( std::string message )
 {
     //Now tell conductor to display text
-    ves::open::xml::DataValuePairPtr dvp =
-        new ves::open::xml::DataValuePair( std::string( "STRING" ) );
+    ves::open::xml::DataValuePairPtr dvp( new ves::open::xml::DataValuePair( std::string( "STRING" ) ) );
     dvp->SetData( "TEXT_OUTPUT", message );
-    ves::open::xml::Command vec;
-    vec.SetCommandName( std::string( "TEXT_FEEDBACK" ) );
-    vec.AddDataValuePair( dvp );
-    SetXMLCommand( &vec );
+    ves::open::xml::CommandPtr vec( new ves::open::xml::Command() );
+    vec->SetCommandName( std::string( "TEXT_FEEDBACK" ) );
+    vec->AddDataValuePair( dvp );
+    SetXMLCommand( vec );
 }

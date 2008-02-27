@@ -209,7 +209,7 @@ void CADTreeBuilder::RemoveNodeFromGraph( wxTreeItemId nodeToRemove )
     _treeCtrl->Delete( nodeToRemove );
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-wxTreeItemId CADTreeBuilder::AddAssemblyToGraph(CADNodeWeakPtr assembly, wxTreeItemId parent )
+wxTreeItemId CADTreeBuilder::AddAssemblyToGraph(CADNodePtr assembly, wxTreeItemId parent )
 {
     wxTreeItemId currentId;
 
@@ -222,7 +222,7 @@ wxTreeItemId CADTreeBuilder::AddAssemblyToGraph(CADNodeWeakPtr assembly, wxTreeI
     return currentId;
 }
 ////////////////////////////////////////////////////////////////////////
-void CADTreeBuilder::AddPartToGraph(CADNodeWeakPtr part, wxTreeItemId parent )
+void CADTreeBuilder::AddPartToGraph(CADNodePtr part, wxTreeItemId parent )
 {
     _treeCtrl->AppendItem( parent,
                            wxString( part->GetNodeName().c_str(), wxConvUTF8 ),

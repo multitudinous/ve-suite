@@ -97,10 +97,10 @@ void SeedPointDimensionsEventHandler::Execute( const ves::open::xml::XMLObjectPt
         throw;
     try
     {
-        CommandPtr command = veXMLObject;
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
 
         std::vector<long> allDimensions;
-        DataValuePairWeakPtr dimensions = command->GetDataValuePair( "Dimensions" );
+        DataValuePairPtr dimensions = command->GetDataValuePair( "Dimensions" );
         dimensions->GetData( allDimensions );
         ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->SetDimensions( allDimensions[0],
                 allDimensions[1],

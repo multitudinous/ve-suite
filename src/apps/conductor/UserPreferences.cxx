@@ -249,9 +249,9 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
         backgroundColor[ "Alpha" ] = xplorerColor.at( 3 );
 
         // Create the command and data value pairs
-        DataValuePairPtr dataValuePair = new DataValuePair();
+        DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
-        CommandWeakPtr veCommand = new Command();
+        CommandWeakPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
         veCommand->AddDataValuePair( dataValuePair );
 
@@ -282,9 +282,9 @@ void UserPreferences::OnLODScale( wxScrollEvent& event )
     m_lodScale = m_lodScaleSlider->GetValue();
     
     // Create the command and data value pairs
-    DataValuePairWeakPtr dataValuePair = new DataValuePair();
+    DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Geometry LOD Scale" ), m_lodScale );
-    CommandWeakPtr veCommand = new Command();
+    CommandWeakPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Update LOD Scale" ) );
     veCommand->AddDataValuePair( dataValuePair );
 

@@ -1949,7 +1949,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 
         DataValuePair* dataValuePair = new DataValuePair( );
         dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
-        CommandWeakPtr veCommand = new Command();
+        CommandWeakPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
         veCommand->AddDataValuePair( dataValuePair );
         UserPreferencesDataBuffer::instance()->

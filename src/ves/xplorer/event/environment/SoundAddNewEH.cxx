@@ -94,13 +94,13 @@ void SoundAddNewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXML
     {
         if( _activeModel )
         {
-            CommandPtr command = veXMLObject;
-            DataValuePairWeakPtr soundName = command->GetDataValuePair( "Sound Name" );
+            CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+            DataValuePairPtr soundName = command->GetDataValuePair( "Sound Name" );
             std::string guiName;
             soundName->GetData( guiName );
 
             std::string fileName;
-            DataValuePairWeakPtr soundFile = command->GetDataValuePair( "Sound Filename" );
+            DataValuePairPtr soundFile = command->GetDataValuePair( "Sound Filename" );
             soundFile->GetData( fileName );
             _activeModel->AddNewSound( guiName, fileName );
         }

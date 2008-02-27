@@ -70,8 +70,8 @@ void TextureBasedSliceNumberUpdateEventHandler::_operateOnNode( XMLObjectPtr veX
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr isovalue = command->GetDataValuePair( "Number of Slice Planes" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr isovalue = command->GetDataValuePair( "Number of Slice Planes" );
         unsigned int value;
         isovalue->GetData( value );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateNumberOfSlicePlanes( value );

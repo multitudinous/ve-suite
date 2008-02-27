@@ -79,24 +79,24 @@ void CADMoveNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr movingNodeType =
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr movingNodeType =
             command->GetDataValuePair( "Move Node Type" );
 
         std::string nodeType;
         movingNodeType->GetData( nodeType );
 
-        DataValuePairWeakPtr movingNode =
+        DataValuePairPtr movingNode =
             command->GetDataValuePair( "Move Node ID" );
         std::string movingNodeID;
         movingNode->GetData( movingNodeID );
 
-        DataValuePairWeakPtr oldParent =
+        DataValuePairPtr oldParent =
             command->GetDataValuePair( "Old Parent ID" );
         std::string oldParentID;
         oldParent->GetData( oldParentID );
 
-        DataValuePairWeakPtr newParent =
+        DataValuePairPtr newParent =
             command->GetDataValuePair( "New Parent ID" );
         std::string newParentID;
         newParent->GetData( newParentID );

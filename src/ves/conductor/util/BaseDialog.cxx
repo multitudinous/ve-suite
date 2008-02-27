@@ -87,7 +87,7 @@ void BaseDialog::_addCancelButton( wxSizer* buttonRowSizer )
 void BaseDialog::_sendCommandsToXplorer()
 {
     //std::cout<<"---Sending commands to Xplorer---"<<std::endl;
-    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
 
     for( size_t i = 0; i < _instructions.size(); i++ )
     {

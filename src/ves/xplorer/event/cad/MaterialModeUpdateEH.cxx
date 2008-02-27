@@ -72,12 +72,12 @@ void MaterialModeUpdateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject )
 {
     try
     {
-        CommandPtr componentUpdate = veXMLObject;
-        DataValuePairWeakPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr material = componentUpdate->GetDataValuePair( "Material" );
-        DataValuePairWeakPtr updateMode = componentUpdate->GetDataValuePair( "Mode" );
+        CommandPtr componentUpdate( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
+        DataValuePairPtr nodeId = componentUpdate->GetDataValuePair( "Node ID" );
+        DataValuePairPtr material = componentUpdate->GetDataValuePair( "Material" );
+        DataValuePairPtr updateMode = componentUpdate->GetDataValuePair( "Mode" );
 
-        CADMaterialPtr rawMaterial = ( material->GetDataXMLObject() );
+        CADMaterialPtr rawMaterial( boost::dynamic_pointer_cast<CADMaterial>( material->GetDataXMLObject() ) );
         std::string newMode = updateMode->GetDataString();
         std::string value = "";
 

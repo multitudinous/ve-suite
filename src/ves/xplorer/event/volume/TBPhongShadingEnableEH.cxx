@@ -70,8 +70,8 @@ void TextureBasedPhongShadingEnableEventHandler::_operateOnNode( XMLObjectPtr ve
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr enable = command->GetDataValuePair( "Phong Shading State" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr enable = command->GetDataValuePair( "Phong Shading State" );
         std::string onOff;
         enable->GetData( onOff );
         ves::xplorer::TextureBasedVizHandler::instance()->EnsurePhongShading(( onOff == "On" ) ? true : false );

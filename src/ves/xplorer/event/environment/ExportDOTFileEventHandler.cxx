@@ -74,7 +74,7 @@ void ExportDOTFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veX
 {
     try
     {
-        ves::open::xml::CommandPtr command = veXMLObject;
+        ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
         std::string filename;
         command->GetDataValuePair( "Filename" )->GetData( filename );
         // store the active geometry and viz objects as a pfb

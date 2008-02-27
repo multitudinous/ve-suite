@@ -46,7 +46,7 @@ vprSingletonImpLifetime(UserPreferencesDataBuffer, 999);
 ////////////////////////////////////////////////////////////////////////////////
 UserPreferencesDataBuffer::UserPreferencesDataBuffer( void )
 {
-    ves::open::xml::CommandPtr nullCommand = new Command();
+    ves::open::xml::CommandPtr nullCommand( new Command() );
     nullCommand->SetCommandName( "NULL" );
     commandMap[ "NULL" ] = nullCommand;
 }
@@ -90,10 +90,10 @@ void UserPreferencesDataBuffer::SetCommand( const std::string& commandKey,
     commandMap[ commandKey ] = command;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::CommandWeakPtr > UserPreferencesDataBuffer::GetCommandMap( void )
+std::map< std::string, ves::open::xml::CommandPtr > UserPreferencesDataBuffer::GetCommandMap( void )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
-    std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap;
+    std::map< std::string, ves::open::xml::CommandPtr > tempMap;
     for( std::map< std::string, ves::open::xml::CommandPtr >::iterator
             iter = commandMap.begin(); iter != commandMap.end(); )
     {
@@ -118,11 +118,11 @@ std::map< std::string, ves::open::xml::CommandWeakPtr > UserPreferencesDataBuffe
     return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UserPreferencesDataBuffer::SetCommandMap( const std::map< std::string, ves::open::xml::CommandWeakPtr >& tempMap )
+void UserPreferencesDataBuffer::SetCommandMap( const std::map< std::string, ves::open::xml::CommandPtr >& tempMap )
 {
     vpr::Guard<vpr::Mutex> val_guard( m_valueLock );
     commandMap.clear();
-    for( std::map< std::string, ves::open::xml::CommandWeakPtr >::const_iterator
+    for( std::map< std::string, ves::open::xml::CommandPtr >::const_iterator
             iter = tempMap.begin(); iter != tempMap.end(); ++iter )
     {
         commandMap[ iter->first ] = iter->second;
@@ -132,7 +132,7 @@ void UserPreferencesDataBuffer::SetCommandMap( const std::map< std::string, ves:
     iter = commandMap.find( "NULL" );
     if( iter == commandMap.end() )
     {
-        ves::open::xml::CommandPtr nullCommand = new Command();
+        ves::open::xml::CommandPtr nullCommand( new Command() );
         nullCommand->SetCommandName( "NULL" );
         commandMap[ "NULL" ] = nullCommand;
     }

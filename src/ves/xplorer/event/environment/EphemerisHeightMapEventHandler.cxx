@@ -73,11 +73,11 @@ void EphemerisHeightMapEventHandler::Execute( const ves::open::xml::XMLObjectPtr
 {
     try
     {
-        ves::open::xml::CommandPtr ephemerisHeightMapData = xmlObject;
+        ves::open::xml::CommandPtr ephemerisHeightMapData = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if( ephemerisHeightMapData )
         {
             std::cout << "Getting height map info:" << std::endl;
-            ves::open::xml::DataValuePairWeakPtr heightMapInfo =
+            ves::open::xml::DataValuePairPtr heightMapInfo =
                 ephemerisHeightMapData->GetDataValuePair( "Height Map" );
             std::string heightMap;
             heightMapInfo->GetData( heightMap );

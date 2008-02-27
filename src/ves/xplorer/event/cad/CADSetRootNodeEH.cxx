@@ -77,8 +77,8 @@ void CADSetRootNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr newRootNode = 
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr newRootNode = 
             command->GetDataValuePair( "Root Node ID" );
 
         std::string rootNodeID;

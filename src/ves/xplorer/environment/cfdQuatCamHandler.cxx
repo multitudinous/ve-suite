@@ -437,7 +437,7 @@ void cfdQuatCamHandler::ProcessCommand()
 
     if( !commandType.compare( "ViewLoc_Data" ) )
     {
-        DataValuePairWeakPtr commandData = veCommand->GetDataValuePair( 0 );
+        DataValuePairPtr commandData = veCommand->GetDataValuePair( 0 );
 
         ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
         std::vector< long > commandIds;
@@ -554,7 +554,7 @@ void cfdQuatCamHandler::ProcessCommand()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::_updateViewGUIPointData()
 {
-    CommandPtr viewPointGUIData = new Command();
+    CommandPtr viewPointGUIData(  new Command() );
     viewPointGUIData->SetCommandName( "VIEWPOINT_GUI_DATA" );
     size_t nViewPoints = this->QuatCams.size( );
 
@@ -563,7 +563,7 @@ void cfdQuatCamHandler::_updateViewGUIPointData()
     for( size_t i = 0; i < nViewPoints; ++i )
     {
         name << "View Location_" << i;
-        DataValuePairPtr viewPointNames = new DataValuePair( );
+        DataValuePairPtr viewPointNames(  new DataValuePair( ) );
         viewPointNames->SetData( "View Location", name.str() );
         viewPointGUIData->AddDataValuePair( viewPointNames );
         name.clear( );

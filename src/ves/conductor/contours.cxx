@@ -374,25 +374,25 @@ void Contours::_updateAdvancedSettings()
 
     if( _dataType == "SCALAR" )
     {
-        ves::open::xml::DataValuePairPtr contourOpacity = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr contourOpacity( new ves::open::xml::DataValuePair() );
         contourOpacity->SetData( "Contour Opacity", _lastOpacity );
         _advancedSettings.push_back( contourOpacity );
 
-        ves::open::xml::DataValuePairPtr warpedScale = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr warpedScale( new ves::open::xml::DataValuePair() );
         warpedScale->SetData( "Warped Contour Scale", _lastWarpedScale );
         _advancedSettings.push_back( warpedScale );
 
-        ves::open::xml::DataValuePairPtr LODSetting = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr LODSetting( new ves::open::xml::DataValuePair() );
         LODSetting->SetData( "Contour LOD", _lastLOD );
         _advancedSettings.push_back( LODSetting );
 
-        ves::open::xml::DataValuePairPtr contourType = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr contourType( new ves::open::xml::DataValuePair() );
         contourType->SetDataType( "STRING" );
         contourType->SetDataName( std::string( "Type" ) );
         contourType->SetDataString( _planeType );
         _advancedSettings.push_back( contourType );
 
-        ves::open::xml::DataValuePairPtr warpOptionFlag = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr warpOptionFlag( new ves::open::xml::DataValuePair() );
         warpOptionFlag->SetDataName( "Warp Option" );
         warpOptionFlag->SetDataType( "UNSIGNED INT" );
         if( _warpOption )
@@ -407,19 +407,19 @@ void Contours::_updateAdvancedSettings()
     }
     else if( _dataType == "VECTOR" )
     {
-        ves::open::xml::DataValuePairPtr vectorThreshold = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr vectorThreshold( new ves::open::xml::DataValuePair() );
         vectorThreshold->SetData( "Vector Threshold", _lastVectorThreshold );
         _advancedSettings.push_back( vectorThreshold );
 
-        ves::open::xml::DataValuePairPtr vectorScale = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr vectorScale( new ves::open::xml::DataValuePair() );
         vectorScale->SetData( "Vector Scale", _lastVectorScale );
         _advancedSettings.push_back( vectorScale );
 
-        ves::open::xml::DataValuePairPtr vectorRatio = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr vectorRatio( new ves::open::xml::DataValuePair() );
         vectorRatio->SetData( "Vector Ratio", _lastVectorRatio );
         _advancedSettings.push_back( vectorRatio );
 
-        ves::open::xml::DataValuePairPtr scaleByMagFlag = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr scaleByMagFlag( new ves::open::xml::DataValuePair() );
         scaleByMagFlag->SetDataName( "Scale By Magnitude" );
         scaleByMagFlag->SetDataType( "UNSIGNED INT" );
         if( _lastScaleByMagnitude )
@@ -443,7 +443,7 @@ void Contours::_updateAdvancedSettings()
 void Contours::_updateContourInformation()
 {
     _contourInformation.clear();
-    ves::open::xml::DataValuePairPtr contourDirection = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr contourDirection( new ves::open::xml::DataValuePair() );
     contourDirection->SetDataType( "STRING" );
     contourDirection->SetDataName( std::string( "Direction" ) );
     contourDirection->SetDataString( _planeDirection );
@@ -457,21 +457,21 @@ void Contours::_updateContourInformation()
 
     _contourInformation.push_back(contourType);*/
 
-    ves::open::xml::DataValuePairPtr numberOfPlanes = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr numberOfPlanes( new ves::open::xml::DataValuePair() );
     numberOfPlanes->SetDataType( "STRING" );
     numberOfPlanes->SetDataName( std::string( "Number of Planes" ) );
     numberOfPlanes->SetDataString( _numberOfPlanesOption );
 
     _contourInformation.push_back( numberOfPlanes );
 
-    ves::open::xml::DataValuePairPtr planePosition = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr planePosition( new ves::open::xml::DataValuePair() );
     planePosition->SetData( "Position", _planePosition );
 
     _contourInformation.push_back( planePosition );
 
     if( !_planeOption.empty() )
     {
-        ves::open::xml::DataValuePairPtr planeOption = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr planeOption( new ves::open::xml::DataValuePair() );
         planeOption->SetDataType( "STRING" );
         planeOption->SetDataName( std::string( "Plane Option" ) );
         planeOption->SetDataString( _planeOption );
@@ -486,7 +486,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED( event ) )
     _updateContourInformation();
     _updateAdvancedSettings();
 
-    ves::open::xml::CommandPtr newCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr newCommand( new ves::open::xml::Command() );
     if( _dataType == "SCALAR" )
     {
         newCommand->SetCommandName( "UPDATE_SCALAR_SETTINGS" );
@@ -501,7 +501,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED( event ) )
     }
 
     //The advanced settings command
-    ves::open::xml::CommandPtr advancedSettings = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr advancedSettings( new ves::open::xml::Command() );
     advancedSettings->SetCommandName( "ADVANCED_CONTOUR_SETTINGS" );
     for( size_t i = 0; i < _advancedSettings.size(); i++ )
     {
@@ -510,7 +510,7 @@ void Contours::_onAddPlane( wxCommandEvent& WXUNUSED( event ) )
     std::string typeName = ( _dataType == "SCALAR" ) ? "Advanced Scalar Settings" : "Advanced Vector Settings";
 
     //dvp representing the advanced settings within the contours information
-    ves::open::xml::DataValuePairPtr advancedContourSettings = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr advancedContourSettings( new ves::open::xml::DataValuePair() );
     advancedContourSettings->SetData( typeName, advancedSettings );
     newCommand->AddDataValuePair( advancedContourSettings );
 

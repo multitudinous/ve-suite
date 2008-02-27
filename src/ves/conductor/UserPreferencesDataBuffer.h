@@ -72,9 +72,9 @@ public:
     ///set Command with key
     void SetCommand( const std::string& commandKey, const ves::open::xml::CommandPtr& command );
     ///Get all the commands
-    std::map< std::string, ves::open::xml::CommandWeakPtr > GetCommandMap( void );
+    std::map< std::string, ves::open::xml::CommandPtr > GetCommandMap( void );
     ///Set all the commands
-    void SetCommandMap( const std::map< std::string, ves::open::xml::CommandWeakPtr >& tempMap );
+    void SetCommandMap( const std::map< std::string, ves::open::xml::CommandPtr >& tempMap );
 private:
     ///Mapp to hold all the preference data to be written to the ves file
     std::map< std::string, ves::open::xml::CommandPtr > commandMap;

@@ -81,11 +81,11 @@ void CADTransformEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     try
     {
 
-        CommandPtr command = xmlObject;
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
 
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
-        DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
+        DataValuePairPtr newTransform = command->GetDataValuePair( "Transform" );
 
         ves::xplorer::scenegraph::DCS* transform = 0;
 
@@ -113,7 +113,7 @@ void CADTransformEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 
         if( transform )
         {
-            TransformPtr rawTransform = newTransform->GetDataXMLObject();
+            TransformPtr rawTransform( boost::dynamic_pointer_cast<Transform>( newTransform->GetDataXMLObject() ) );
             transform->SetTranslationArray( rawTransform->GetTranslationArray()->GetArray() );
             transform->SetRotationArray( rawTransform->GetRotationArray()->GetArray() );
             transform->SetScaleArray( rawTransform->GetScaleArray()->GetArray() );

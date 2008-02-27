@@ -76,10 +76,10 @@ void CADSetNameEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr newName = command->GetDataValuePair( "Node Name" );
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr newName = command->GetDataValuePair( "Node Name" );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
 
         std::string errorString;
 

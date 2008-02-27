@@ -260,8 +260,8 @@ void MainToolBar::OnSave( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 {
-    DataValuePairPtr dvp = new DataValuePair();
-    CommandSharedPtr command = new ves::open::xml::Command();
+    DataValuePairPtr dvp( new DataValuePair() );
+    CommandSharedPtr command( new ves::open::xml::Command() );
 
     std::string mode;
 
@@ -302,8 +302,8 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
 {
-    DataValuePairPtr dvp = new DataValuePair();
-    CommandSharedPtr command = new ves::open::xml::Command();
+    DataValuePairPtr dvp( new DataValuePair() );
+    CommandSharedPtr command( new ves::open::xml::Command() );
 
     std::string mode;
 
@@ -357,8 +357,8 @@ void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
 {
-    DataValuePairPtr dvp = new DataValuePair();
-    ves::open::xml::CommandPtr command = new ves::open::xml::Command();
+    DataValuePairPtr dvp( new DataValuePair() );
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
     SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
     SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
@@ -407,8 +407,8 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         EnableTool( TOOLBAR_PLAY, false );
         EnableTool( TOOLBAR_STEP, false );
 
-        DataValuePairPtr dvp = new DataValuePair();
-        ves::open::xml::CommandPtr command = new ves::open::xml::Command();
+        DataValuePairPtr dvp( new DataValuePair() );
+        ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
         std::string value;
 
@@ -423,8 +423,8 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
 {
-    DataValuePairPtr dvp = new DataValuePair();
-    ves::open::xml::CommandPtr command = new ves::open::xml::Command();
+    DataValuePairPtr dvp( new DataValuePair() );
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
     std::string value;
 

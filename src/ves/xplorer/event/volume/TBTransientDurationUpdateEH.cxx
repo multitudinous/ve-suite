@@ -70,8 +70,8 @@ void TextureBasedTransientDurationUpdateEventHandler::_operateOnNode( XMLObjectP
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr playDuration = command->GetDataValuePair( "Duration" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr playDuration = command->GetDataValuePair( "Duration" );
         double value;
         playDuration->GetData( value );
 

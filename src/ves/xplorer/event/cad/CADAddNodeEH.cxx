@@ -75,21 +75,21 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr cadNode = command->GetDataValuePair( "New Node" );
-        CADNodePtr tempNode = cadNode->GetDataXMLObject();
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr cadNode = command->GetDataValuePair( "New Node" );
+        CADNodePtr tempNode( boost::dynamic_pointer_cast<CADNode>( cadNode->GetDataXMLObject() ) );
         std::string nodeType =  tempNode->GetNodeType();
 
-        CADNodePtr node = 0;
-        CADAssemblyPtr assembly = 0;
-        CADPartPtr part = 0;
+        CADNodePtr node;
+        CADAssemblyPtr assembly;
+        CADPartPtr part;
         ves::xplorer::scenegraph::DCS* parentAssembly = 0;
 
         if( nodeType == "Assembly" )
         {
 
-            assembly = cadNode->GetDataXMLObject();
-            node = assembly;
+            assembly = boost::dynamic_pointer_cast<CADAssembly>( cadNode->GetDataXMLObject() );
+            node = boost::dynamic_pointer_cast<CADNode>( assembly );
             if( m_cadHandler->AssemblyExists( node->GetID() ) )
             {
                 throw( "Assembly already exists" );
@@ -97,8 +97,9 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         }
         else if( nodeType == "Part" )
         {
-            part = cadNode->GetDataXMLObject();
-            node = part; 
+            part = boost::dynamic_pointer_cast<CADPart>( cadNode->GetDataXMLObject() );
+            node = boost::dynamic_pointer_cast<CADNode>( part );
+
             if( m_cadHandler->PartExists( node->GetID() ) )
             {
                 throw( "Part already exists" );

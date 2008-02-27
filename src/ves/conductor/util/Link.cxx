@@ -484,7 +484,7 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
 
     ves::open::xml::Command returnState;
     returnState.SetCommandName( "getStreamInputModuleParamList" );
-    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
@@ -512,7 +512,7 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
 
     ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
-    ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );
 
@@ -548,7 +548,7 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
 
     ves::open::xml::Command returnState;
     returnState.SetCommandName( "getStreamOutputModuleParamList" );
-    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
@@ -573,7 +573,7 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
-    ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( 0 );
+    ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );
 

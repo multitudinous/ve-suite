@@ -77,10 +77,10 @@ void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr toggleValue = command->GetDataValuePair( "Toggle Value" );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
 
         //This assumes the part/assembly is there already
         if( nodeType->GetDataString() == std::string( "Assembly" ) )

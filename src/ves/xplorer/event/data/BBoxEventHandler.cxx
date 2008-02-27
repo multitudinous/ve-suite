@@ -110,8 +110,8 @@ void BBoxEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 //////////////////////////////////////////////////////////////////////////
 void BBoxEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    CommandPtr command = xmlObject;
-    DataValuePairWeakPtr activeModelDVP = 
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr activeModelDVP = 
         command->GetDataValuePair( "Bounding Box State" );
     std::string datasetName = 
         command->GetDataValuePair( "Active Dataset" )->GetDataString();

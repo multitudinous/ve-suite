@@ -94,7 +94,7 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
         return;
     }
 
-    DataValuePairWeakPtr dvp = new DataValuePair();
+    DataValuePairPtr dvp( new DataValuePair() );
     CommandPtr command = new Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
@@ -130,7 +130,7 @@ void ExportMenu::OnDOTFile( wxCommandEvent& event )
         return;
     }
 
-    DataValuePairWeakPtr dvp = new DataValuePair();
+    DataValuePairPtr dvp( new DataValuePair() );
     CommandPtr command = new Command();
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );

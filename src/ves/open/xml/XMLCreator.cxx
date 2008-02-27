@@ -134,12 +134,12 @@ XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( const std::string& objectType,
     else if( objectType == "Command" )
     {
         tmp = CommandPtr( new Command(
-            *( boost::dynamic_pointer_cast<Command>( objectToCopy ) ) ) );
+            *( boost::dynamic_pointer_cast<ves::open::xml::Command>( objectToCopy ) ) ) );
     }
     else if( objectType == "vecommand" )
     {
         tmp = CommandPtr( new Command(
-            *( boost::dynamic_pointer_cast<Command>( objectToCopy ) ) ) );
+            *( boost::dynamic_pointer_cast<ves::open::xml::Command>( objectToCopy ) ) ) );
     }
     else if( objectType == "DataValuePair" )
     {

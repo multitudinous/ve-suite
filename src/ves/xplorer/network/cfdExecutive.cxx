@@ -261,17 +261,17 @@ void cfdExecutive::GetNetwork( void )
     // do this for models
     networkWriter.ReadXMLData( network, "System", "veSystem" );
     currentModels = networkWriter.GetLoadedXMLObjects();
-    model::SystemWeakPtr tempSystem = currentModels.at( 0 );
+    model::SystemPtr tempSystem = boost::dynamic_pointer_cast<model::System>( currentModels.at( 0 ) );
 
     veNetwork = network;
 
     // now lets create a list of them
     _id_map.clear();
     idToModel.clear();
-    std::vector< model::ModelWeakPtr > tempModels = tempSystem->GetModels();
+    std::vector< model::ModelPtr > tempModels = tempSystem->GetModels();
     for( size_t i = 0; i < tempModels.size(); ++i )
     {
-        model::ModelWeakPtr model = tempModels.at( i );
+        model::ModelPtr model = tempModels.at( i );
         _id_map[  model->GetModelID()] = model->GetModelName();
         idToModel[ model->GetModelID()] = model;
     }
@@ -332,18 +332,18 @@ void cfdExecutive::GetEverything( void )
         modelIter = idToModel.find( iter->first );
         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
         //send command to get results
-        CommandPtr returnState = new Command();
+        CommandPtr returnState(  new Command() );
         returnState->SetCommandName( "Get XML Model Results" );
 
-        DataValuePairPtr data = new DataValuePair();
+        DataValuePairPtr data(  new DataValuePair() );
         data->SetData( "vendorUnit", modelIter->second->GetVendorName() );
         returnState->AddDataValuePair( data );
 
-        data = new DataValuePair();
+        data = DataValuePairPtr( new DataValuePair() );
         data->SetData( "moduleName", iter->second );
         returnState->AddDataValuePair( data );
 
-        data = new DataValuePair();
+        data = DataValuePairPtr( new DataValuePair() );
         data->SetData( "moduleId", static_cast< unsigned int >( iter->first ) );
         returnState->AddDataValuePair( data );
 
@@ -548,7 +548,7 @@ void cfdExecutive::LoadDataFromCE( void )
                 Command returnState;
                 returnState.SetCommandName("Get XML Model Results");
                 
-                DataValuePairWeakPtr data = new DataValuePair();      
+                DataValuePairPtr data(  new DataValuePair() );      
                 data->SetData("moduleName", idMap->second );
                 returnState.AddDataValuePair( data );
                 

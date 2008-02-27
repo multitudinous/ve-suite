@@ -86,7 +86,7 @@ using namespace ves::open::xml;
 
 cfdCursor::cfdCursor( vtkPolyData * arrow, ves::xplorer::scenegraph::DCS* worldDCS, ves::xplorer::scenegraph::Group* rootNode )
 {
-    veCommand = 0;
+    veCommand = ves::open::xml::CommandPtr();
     cursorId = NONE;
     this->arrow = arrow;
     this->worldDCS = worldDCS;
@@ -844,7 +844,7 @@ void cfdCursor::ProcessCommand()
 
     if( !commandType.compare( "Streamline_Data" ) )
     {
-        DataValuePairWeakPtr commandData =
+        DataValuePairPtr commandData =
             veCommand->GetDataValuePair( 0 );
         std::vector< long > commandIds;
         commandData->GetData( commandIds );

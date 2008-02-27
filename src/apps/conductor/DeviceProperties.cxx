@@ -125,7 +125,7 @@ void DeviceProperties::OnAnimate( wxCommandEvent &event )
 {
     animate = animate_check_box->GetValue();
 
-    DataValuePairPtr animateDVP = new DataValuePair();
+    DataValuePairPtr animateDVP( new DataValuePair() );
     animateDVP->SetData( std::string( "AnimateID" ), ( unsigned int )( animate ) );
     instructions.push_back( animateDVP );
 

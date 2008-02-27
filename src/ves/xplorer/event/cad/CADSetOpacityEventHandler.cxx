@@ -77,9 +77,9 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr opacityValue = command->GetDataValuePair( "Opacity Value" );
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr opacityValue = command->GetDataValuePair( "Opacity Value" );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
 
         std::string id;
         nodeID->GetData( id );

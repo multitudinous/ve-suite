@@ -83,10 +83,10 @@ void CADPhysicsMeshEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
 {
     try
     {
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr nodeType = command->GetDataValuePair( "Node Type" );
-        DataValuePairWeakPtr meshType = command->GetDataValuePair( "Mesh Type" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr nodeType = command->GetDataValuePair( "Node Type" );
+        DataValuePairPtr meshType = command->GetDataValuePair( "Mesh Type" );
 
         if( nodeType->GetDataString() == std::string( "Part" ) )
         {

@@ -70,9 +70,9 @@ Model::~Model()
 {
     if( mSubSystem )
     {
-        mSubSystem->SetParentModel( 0 );
+        mSubSystem->SetParentModel( ModelPtr() );
     }
-    
+    mSubSystem = SystemPtr();
     mPorts.clear();
 
     mResults.clear();
@@ -776,7 +776,7 @@ void Model::SetParentModel( ModelPtr parent )
 ////////////////////////////////////////////////////////////////////////////////
 ModelPtr Model::GetParentModel()
 {
-    return mParentModel;
+    return mParentModel.lock();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetInput( ves::open::xml::CommandPtr& input )

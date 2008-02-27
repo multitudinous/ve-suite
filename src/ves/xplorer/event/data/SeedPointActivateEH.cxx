@@ -103,9 +103,9 @@ void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
             //make the CAD transparent
             _activeModel->GetModelCADHandler()->MakeCADRootTransparent();
             ///what happens if texture is somehow added first? Is that possible?
-            CommandPtr command = veXMLObject;
-            DataValuePairWeakPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
-            DataValuePairWeakPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
+            CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+            DataValuePairPtr seedPointsFlag = command->GetDataValuePair( "OnOff" );
+            DataValuePairPtr activeDataset = command->GetDataValuePair( "Active Dataset" );
             std::string datasetname;
             activeDataset->GetData( datasetname );
             //check to see if the seed points exist

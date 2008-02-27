@@ -76,15 +76,15 @@ ConcreteLoader::~ConcreteLoader()
 /////////////////////////////////////////////////////////////////////////////////
 void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragmentSource )
 {
-    ShaderPtr vertShader = new Shader();
+    ShaderPtr vertShader(  new Shader() );
     vertShader->SetShaderType( "Vertex" );
     vertShader->SetShaderSource( vertexSource );
 
-    ShaderPtr fragShader = new Shader();
+    ShaderPtr fragShader(  new Shader() );
     fragShader->SetShaderType( "Fragment" );
     fragShader->SetShaderSource( fragmentSource );
 
-    UniformPtr lightPosition = new Uniform();
+    UniformPtr lightPosition(  new Uniform() );
     lightPosition->SetType( "Float" );
     lightPosition->SetName( "LightPos" );
     lightPosition->SetSize( 3 );
@@ -94,7 +94,7 @@ void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragment
     lightPos.push_back( 10.0 );
     lightPosition->SetValues( lightPos );
 
-    UniformPtr scale = new Uniform();
+    UniformPtr scale(  new Uniform() );
     scale->SetType( "Float" );
     scale->SetName( "Scale" );
     scale->SetSize( 1 );
@@ -102,7 +102,7 @@ void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragment
     value.push_back( 1.0 );
     scale->SetValues( value );
 
-    UniformPtr noiseScale = new Uniform();
+    UniformPtr noiseScale(  new Uniform() );
     noiseScale->SetType( "Float" );
     noiseScale->SetName( "NoiseScale" );
     noiseScale->SetSize( 1 );
@@ -110,7 +110,7 @@ void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragment
     ns.push_back( 1.0 );
     noiseScale->SetValues( ns );
 
-    UniformPtr specularValues = new Uniform();
+    UniformPtr specularValues(  new Uniform() );
     specularValues->SetType( "Float" );
     specularValues->SetName( "specularPower" );
     specularValues->SetSize( 1 );
@@ -122,7 +122,7 @@ void ConcreteLoader::_loadShader( std::string vertexSource, std::string fragment
     //fragShader->AddUniform(dmaterial);
     vertShader->AddUniform( scale );
     vertShader->AddUniform( lightPosition );
-    ProgramPtr glslProgram = new Program();
+    ProgramPtr glslProgram(  new Program() );
     glslProgram->SetProgramName( "Phong Shader" );
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );

@@ -98,16 +98,16 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
         throw;
     try
     {
-        CommandPtr command = veXMLObject;
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
 
-        DataValuePairWeakPtr coordinate = command->GetDataValuePair( "Coordinate" );
+        DataValuePairPtr coordinate = command->GetDataValuePair( "Coordinate" );
         std::string boundCoordinate;
         coordinate->GetData( boundCoordinate );
 
         if( boundCoordinate == "All Bounds" )
         {
             std::vector<double> allBoundaryData;
-            DataValuePairWeakPtr bounds = command->GetDataValuePair( "Bounds" );
+            DataValuePairPtr bounds = command->GetDataValuePair( "Bounds" );
             bounds->GetData( allBoundaryData );
             double databounds[6] = {0, 0, 0, 0, 0, 0};
             //_activeModel->GetActiveDataSet()->GetDataSet()->GetWholeBoundingBox(databounds);
@@ -129,13 +129,13 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
         }
         else
         {
-            DataValuePairWeakPtr minMaxDVP = command->GetDataValuePair( "MinMax" );
+            DataValuePairPtr minMaxDVP = command->GetDataValuePair( "MinMax" );
             std::string minMaxUpdate;
             minMaxDVP->GetData( minMaxUpdate );
 
             if( minMaxUpdate != "Both" )
             {
-                DataValuePairWeakPtr value = command->GetDataValuePair( "Value" );
+                DataValuePairPtr value = command->GetDataValuePair( "Value" );
                 ///Get the percentage
                 double alpha;
                 value->GetData( alpha );
@@ -154,7 +154,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
             }
             else if( minMaxUpdate == "Both" )
             {
-                DataValuePairWeakPtr minValue = command->GetDataValuePair( "Min Value" );
+                DataValuePairPtr minValue = command->GetDataValuePair( "Min Value" );
                 double minAlpha;
                 minValue->GetData( minAlpha );
 
@@ -171,7 +171,7 @@ void SeedPointBoundsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
                 ves::xplorer::EnvironmentHandler::instance()->GetSeedPoints()->UpdateBounds( newValue,
                         boundCoordinate,
                         "Min" );
-                DataValuePairWeakPtr maxValue = command->GetDataValuePair( "Max Value" );
+                DataValuePairPtr maxValue = command->GetDataValuePair( "Max Value" );
                 double maxAlpha;
                 maxValue->GetData( maxAlpha );
 

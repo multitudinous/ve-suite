@@ -58,7 +58,7 @@ Tablet::Tablet( )
 {
     head.init( "VJHead" );
 
-    command = 0;
+    command = CommandPtr();
     rotationFlag = 1;
     subzeroFlag = 0;
     Initialize();
@@ -96,7 +96,7 @@ void Tablet::UpdateNavigation()
 
     if( !commandType.compare( "Navigation_Data" ) )
     {
-        DataValuePairWeakPtr commandData = command->GetDataValuePair( 0 );
+        DataValuePairPtr commandData = command->GetDataValuePair( 0 );
         cfdIso_value = commandData->GetDataValue();
         newCommand = commandData->GetDataName();
     }

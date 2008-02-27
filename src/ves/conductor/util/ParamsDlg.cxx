@@ -174,7 +174,7 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
     }
 
 
-    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
     returnState.AddDataValuePair( data );
 
@@ -205,7 +205,7 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
     //output << "loop" << std::endl;
     for( int j = 0; j < static_cast<int>( num ); j++ )
     {
-        ves::open::xml::DataValuePairWeakPtr pair = cmd->GetDataValuePair( j );
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( j );
 
         //output<<j<<": " << pair->GetDataName().c_str()<<std::endl;
         //if(pair->GetDataName() == "Name")
@@ -272,7 +272,7 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     ves::open::xml::Command returnState;
     returnState.SetCommandName( "setParam" );
 
-    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( "ModuleName", compName );
     returnState.AddDataValuePair( data );
 

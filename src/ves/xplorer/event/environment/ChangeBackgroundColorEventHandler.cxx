@@ -77,8 +77,8 @@ void ChangeBackgroundColorEventHandler::SetGlobalBaseObject( ves::xplorer::Globa
 ///////////////////////////////////////////////////////////////////////////////
 void ChangeBackgroundColorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = veXMLObject;
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
+    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
     std::vector<double> color;
     activeModelDVP->GetData( color );
     if( !color.empty() )

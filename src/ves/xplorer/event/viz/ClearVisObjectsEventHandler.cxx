@@ -103,7 +103,7 @@ void ClearVisObjectsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     // I was unable to figure out what was going wrong with loading 
     // and reloading ves files and default plugins. Something appears to 
     // be incorrect in how we are setting activemodel in deleting plugins.
-    std::string tempCommandName = static_cast< ves::open::xml::CommandPtr >( xmlObject )->GetCommandName();
+    std::string tempCommandName = boost::dynamic_pointer_cast< ves::open::xml::Command >( xmlObject )->GetCommandName();
     if( "DELETE_OBJECT_FROM_NETWORK" == tempCommandName )
     {
         return;

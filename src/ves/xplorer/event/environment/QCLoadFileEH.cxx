@@ -71,8 +71,8 @@ void QuatCamLoadFileEventHandler::Execute( const ves::open::xml::XMLObjectPtr& v
     std::string fileName;
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr velFile = command->GetDataValuePair( "View Locations file" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr velFile = command->GetDataValuePair( "View Locations file" );
         velFile->GetData( fileName );
         ves::xplorer::cfdQuatCamHandler::instance()->LoadFromFile( fileName );
     }

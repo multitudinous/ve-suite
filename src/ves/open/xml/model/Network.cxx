@@ -55,7 +55,7 @@ Network::~Network()
 {
     for( size_t i = 0; i < mLinks.size(); ++i )
     {
-        mLinks.at( i )->SetParentModel( 0 );
+        mLinks.at( i )->SetParentModel( ModelPtr() );
     }
     mLinks.clear();
 
@@ -125,7 +125,7 @@ void Network::_updateVEElement( const std::string& input )
     SetSubElements( "tag", mTags );
 }
 ////////////////////////////////////////////////////////////////////////////////
-LinkWeakPtr Network::GetLink( int i )
+LinkPtr Network::GetLink( int i )
 {
     try
     {
@@ -180,7 +180,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
         {
             dataValueStringName = GetSubElement( currentElement, "link", i );
             ves::open::xml::model::LinkPtr newLink( new Link() );
-            newLink->SetParentModel( mParentModel );
+            newLink->SetParentModel( mParentModel.lock() );
             mLinks.push_back( newLink );
             mLinks.back()->SetObjectFromXMLData( dataValueStringName );
         }
@@ -270,5 +270,5 @@ void Network::SetParentModel( ModelSharedPtr parent )
 ////////////////////////////////////////////////////////////////////////////////
 ModelSharedPtr Network::GetParentModel( )
 {
-    return mParentModel;
+    return mParentModel.lock();
 }

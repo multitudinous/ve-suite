@@ -90,8 +90,8 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             return;
         }
 
-        CommandPtr command = xmlObject;
-        DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Parameter Block ID" );
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr datasetName = command->GetDataValuePair( "Parameter Block ID" );
         std::string filename;
         datasetName->GetData( filename );
         if( filename != "NULL" )
@@ -107,13 +107,13 @@ void DataTransformEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
             return;
         }
 
-        DataValuePairWeakPtr newTransform = command->GetDataValuePair( "Transform" );
+        DataValuePairPtr newTransform = command->GetDataValuePair( "Transform" );
         ves::xplorer::scenegraph::DCS* transform = 0;
         transform = _activeModel->GetActiveDataSet()->GetDCS();
 
         if( transform )
         {
-            TransformPtr dataTransform = newTransform->GetDataXMLObject();
+            TransformPtr dataTransform = boost::dynamic_pointer_cast<Transform>(  newTransform->GetDataXMLObject() );
             transform->SetTranslationArray( dataTransform->GetTranslationArray()->GetArray() );
             transform->SetRotationArray( dataTransform->GetRotationArray()->GetArray() );
             transform->SetScaleArray( dataTransform->GetScaleArray()->GetArray() );

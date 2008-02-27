@@ -73,7 +73,7 @@ void StoredSceneEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXML
 {
     try
     {
-        CommandPtr command = veXMLObject;
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
         unsigned int whichChild = 0;
 
         if( command->GetDataValuePair( "LOAD_PFB_FILE" ) )

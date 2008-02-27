@@ -695,30 +695,30 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
     // set the active vector
     SetActiveVector( xmlObject );
     // Get the active object
-    ves::open::xml::CommandPtr command = xmlObject;
-    ves::open::xml::DataValuePairWeakPtr scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
-    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
+    ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    ves::open::xml::DataValuePairPtr scalarDVP = command->GetDataValuePair( "Scalar Bar State" );
+    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
+    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
 
     std::string direction;
-    ves::open::xml::DataValuePairWeakPtr directionDVP = objectCommand->GetDataValuePair( "Direction" );
+    ves::open::xml::DataValuePairPtr directionDVP = objectCommand->GetDataValuePair( "Direction" );
     if( directionDVP )
     {
         directionDVP->GetData( direction );
     }
 
     std::string planes;
-    ves::open::xml::DataValuePairWeakPtr planesDVP = objectCommand->GetDataValuePair( "Number of Planes" );
+    ves::open::xml::DataValuePairPtr planesDVP = objectCommand->GetDataValuePair( "Number of Planes" );
     if( planesDVP )
     {
         planesDVP->GetData( planes );
     }
 
     std::string advanced;
-    ves::open::xml::DataValuePairWeakPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
+    ves::open::xml::DataValuePairPtr advancedDVP = objectCommand->GetDataValuePair( "Advanced Scalar Settings" );
     if( advancedDVP )
     {
-        ves::open::xml::CommandPtr advancedCommand = advancedDVP->GetDataXMLObject();
+        ves::open::xml::CommandPtr advancedCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  advancedDVP->GetDataXMLObject() );
         unsigned int warpOption = 0;
         advancedCommand->GetDataValuePair( "Warp Option" )->GetData( warpOption );
         if( warpOption )
@@ -782,8 +782,8 @@ void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& x
 //////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr xmlObject )
 {
-    ves::open::xml::CommandPtr command = xmlObject;
-    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Vector" );
+    ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Active Vector" );
     std::string activeVector;
     activeModelDVP->GetData( activeVector );
 
@@ -806,10 +806,10 @@ void CreateVisObjectEventHandler::SetActiveVector( ves::open::xml::XMLObjectPtr 
 //////////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLObjectPtr xmlObject )
 {
-    ves::open::xml::CommandPtr command = xmlObject;
+    ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
 
     std::string activeScalarName;
-    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Scalar" );
+    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Active Scalar" );
     activeModelDVP->GetData( activeScalarName );
     double scalarMin;
     activeModelDVP = command->GetDataValuePair( "Scalar Min" );
@@ -835,8 +835,8 @@ void CreateVisObjectEventHandler::SetActiveScalarAndRange( ves::open::xml::XMLOb
 //////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetActiveDataSet( ves::open::xml::XMLObjectPtr xmlObject )
 {
-    ves::open::xml::CommandPtr command = xmlObject;
-    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Active Dataset" );
+    ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Active Dataset" );
     std::string dataSetName;
     activeModelDVP->GetData( dataSetName );
 

@@ -291,9 +291,9 @@ void cfdPolyData::UpdateCommand()
     cfdObjects::UpdateCommand();
 
     //Extract the specific commands from the overall command
-    ves::open::xml::DataValuePairWeakPtr activeModelDVP =
+    ves::open::xml::DataValuePairPtr activeModelDVP =
         veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
+    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );

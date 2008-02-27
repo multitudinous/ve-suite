@@ -68,8 +68,8 @@ Body_VEXplorer_i::Body_VEXplorer_i( void )
         :
         m_xplorerAMIHandler()
 {
-    bufferCommand = new Command();
-    bufferCommand->AddDataValuePair( new DataValuePair() );
+    bufferCommand = CommandPtr( new Command() );
+    bufferCommand->AddDataValuePair( DataValuePairPtr( new DataValuePair() ) );
     bufferCommand->SetCommandName( "wait" );
     isCluster = false;
 }
@@ -161,7 +161,7 @@ ACE_THROW_SPEC(( ::CORBA::SystemException, ::Error::EUnknown ) )
 
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        commandVectorQueue.push_back(  objectVector.at( i ) );
+        commandVectorQueue.push_back( boost::dynamic_pointer_cast<ves::open::xml::Command>(  objectVector.at( i ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

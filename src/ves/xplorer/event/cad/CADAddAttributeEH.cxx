@@ -80,10 +80,10 @@ void CADAddAttributeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     {
         std::cout << "---Adding attribute to node---" << std::endl;
         std::cout << "CADAddAttributeEventHandler." << std::endl;
-        CommandPtr command =  xmlObject;
-        DataValuePairWeakPtr nodeID = command->GetDataValuePair( "Node ID" );
-        DataValuePairWeakPtr newAttribute = command->GetDataValuePair( "Attribute" );
-        CADAttributePtr rawAttribute =  newAttribute->GetDataXMLObject();
+        CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr newAttribute = command->GetDataValuePair( "Attribute" );
+        CADAttributePtr rawAttribute( boost::dynamic_pointer_cast<CADAttribute>( newAttribute->GetDataXMLObject() ) );
 
         //ves::xplorer::Model* activeModel = dynamic_cast<ves::xplorer::Model*>(_baseObject);
         std::cout << "Node:" << nodeID->GetDataString() << std::endl;

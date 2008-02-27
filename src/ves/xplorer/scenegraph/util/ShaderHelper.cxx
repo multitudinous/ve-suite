@@ -123,7 +123,7 @@ void ShaderHelper::SetStateSet( osg::StateSet* shader )
 ////////////////////////////////////////////
 void ShaderHelper::LoadTransparencyProgram()
 {
-    ShaderPtr vertShader = new Shader();
+    ShaderPtr vertShader(  new Shader() );
     vertShader->SetShaderType( "Vertex" );
     std::string vertexSource( " varying vec3 N;\n"
                               "varying vec3 I;\n"
@@ -139,7 +139,7 @@ void ShaderHelper::LoadTransparencyProgram()
                               "}\n" );
     vertShader->SetShaderSource( vertexSource );
 
-    ShaderPtr fragShader = new Shader();
+    ShaderPtr fragShader(  new Shader() );
     fragShader->SetShaderType( "Fragment" );
     std::string fragmentSource( "varying vec3 N;\n"
                                 " varying vec3 I;\n"
@@ -155,7 +155,7 @@ void ShaderHelper::LoadTransparencyProgram()
                               );
     fragShader->SetShaderSource( fragmentSource );
 
-    ProgramPtr glslProgram = new Program();
+    ProgramPtr glslProgram(  new Program() );
     glslProgram->SetProgramName( "Dataset Transparency" );
     glslProgram->SetVertexShader( vertShader );
     glslProgram->SetFragmentShader( fragShader );

@@ -110,13 +110,13 @@ void ScalarBarEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model
 //////////////////////////////////////////////////////////////////////////
 void ScalarBarEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    CommandPtr command = xmlObject;
-    DataValuePairWeakPtr activeModelDVP = 
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr activeModelDVP = 
         command->GetDataValuePair( "Scalar Bar State" );
     std::string datasetName = 
         command->GetDataValuePair( "Active Dataset" )->GetDataString();
     
-    DataValuePairWeakPtr activeScalar = 
+    DataValuePairPtr activeScalar = 
         command->GetDataValuePair( "Active Scalar" );
     std::string scalarName;
     activeScalar->GetData( scalarName );

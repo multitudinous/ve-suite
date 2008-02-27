@@ -270,5 +270,5 @@ void Link::SetParentModel( ModelPtr parent )
 ////////////////////////////////////////////////////////////////////////////////
 ModelPtr Link::GetParentModel( )
 {
-    return mParentModel;
+    return mParentModel.lock();
 }

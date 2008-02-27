@@ -63,8 +63,8 @@ void ActiveModelEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mod
 ///////////////////////////////////////////////////////
 void ActiveModelEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    ves::open::xml::CommandPtr command = veXMLObject;
-    ves::open::xml::DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
+    ves::open::xml::CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject ) );
+    ves::open::xml::DataValuePairPtr activeModelDVP = command->GetDataValuePair( "CHANGE_ACTIVE_MODEL" );
     unsigned int newModel;
     activeModelDVP->GetData( newModel );
     ves::xplorer::ModelHandler::instance()->SetActiveModel( newModel );

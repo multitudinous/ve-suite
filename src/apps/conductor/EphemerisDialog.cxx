@@ -319,8 +319,8 @@ void EphemerisDialog::CreateGUIControls()
 void EphemerisDialog::OnToggleDisplay( wxCommandEvent& event )
 {
     //Create the command and data value pairs
-    ves::open::xml::DataValuePairWeakPtr DVP = new DataValuePair();
-    ves::open::xml::CommandWeakPtr command = new Command();
+    ves::open::xml::DataValuePairPtr DVP( new DataValuePair() );
+    ves::open::xml::CommandWeakPtr command( new Command() );
     bool value = false;
     value = m_ephemerisToggleCheck->IsChecked();
     unsigned int displayValue = 0;
@@ -534,7 +534,7 @@ void EphemerisDialog::UpdateLatitudeInfo()
 ///////////////////////////////////////////
 void EphemerisDialog::UpdateEphemerisData()
 {
-    CommandWeakPtr ephemerisData = new Command();
+    CommandWeakPtr ephemerisData( new Command() );
     ephemerisData->SetCommandName( "Ephemeris Data" );
     ephemerisData->AddDataValuePair( m_latitudeDecimalValue );
     ephemerisData->AddDataValuePair( m_latitudeDirectionValue );
@@ -549,9 +549,9 @@ void EphemerisDialog::UpdateEphemerisData()
 //////////////////////////////////////////////////////////////
 void EphemerisDialog::UpdateAutoDateTime( bool useAutoDateTime )
 {
-    CommandWeakPtr ephemerisAutoDateTime = new Command();
+    CommandWeakPtr ephemerisAutoDateTime( new Command() );
     ephemerisAutoDateTime->SetCommandName( "Ephemeris Auto Date and Time" );
-    DataValuePairPtr autoDateTime = new ves::open::xml::DataValuePair();
+    DataValuePairPtr autoDateTime( new ves::open::xml::DataValuePair() );
     autoDateTime->SetData( "Auto Date Time", static_cast<long int>(( useAutoDateTime ) ? 1 : 0 ) );
     ephemerisAutoDateTime->AddDataValuePair( autoDateTime );
 
@@ -685,29 +685,29 @@ void EphemerisDialog::ReadLocationInformation()
 
         CommandPtr locationData = new Command();
         locationData->SetCommandName( ConvertUnicode( name.c_str() ) );
-        ves::open::xml::DataValuePairWeakPtr latitudeDecimalValue =
+        ves::open::xml::DataValuePairPtr latitudeDecimalValue =
             new ves::open::xml::DataValuePair();
         latitudeDecimalValue->SetData( "Latitude", latitude );
         locationData->AddDataValuePair( latitudeDecimalValue );
 
-        ves::open::xml::DataValuePairWeakPtr latitudeDirectionValue =
+        ves::open::xml::DataValuePairPtr latitudeDirectionValue =
             new ves::open::xml::DataValuePair();
         latitudeDirectionValue->SetData( "Latitude Direction",
                                          ConvertUnicode( latitudeDirection.c_str() ) );
         locationData->AddDataValuePair( latitudeDirectionValue );
 
-        ves::open::xml::DataValuePairWeakPtr longitudeDecimalValue =
+        ves::open::xml::DataValuePairPtr longitudeDecimalValue =
             new ves::open::xml::DataValuePair();
         longitudeDecimalValue->SetData( "Longitude", longitude );
         locationData->AddDataValuePair( longitudeDecimalValue );
 
-        ves::open::xml::DataValuePairWeakPtr longitudeDirectionValue =
+        ves::open::xml::DataValuePairPtr longitudeDirectionValue =
             new ves::open::xml::DataValuePair();
         longitudeDirectionValue->SetData( "Longitude Direction",
                                           ConvertUnicode( longitudeDirection.c_str() ) );
         locationData->AddDataValuePair( longitudeDirectionValue );
 
-        ves::open::xml::DataValuePairWeakPtr heightMapData =
+        ves::open::xml::DataValuePairPtr heightMapData =
             new ves::open::xml::DataValuePair();
         heightMapData->SetData( "Height Map",
                                 ConvertUnicode( heightMap.c_str() ) );
@@ -744,7 +744,7 @@ void EphemerisDialog::_writeLocation( ves::open::xml::CommandWeakPtr location,
     size_t nDvps = location->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < nDvps; ++i )
     {
-        ves::open::xml::DataValuePairWeakPtr locationInfo = 
+        ves::open::xml::DataValuePairPtr locationInfo = 
             location->GetDataValuePair( i );
         if (( locationInfo->GetDataName() == std::string( "Latitude" ) ) ||
                 ( locationInfo->GetDataName() == std::string( "Longitude" ) ) )
@@ -771,10 +771,10 @@ void EphemerisDialog::OnLoadHeightMap( wxFileDirPickerEvent& event )
 {
     m_heightMapInfo->SetData( "Height Map", 
         ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
-    CommandWeakPtr ephemerisHeightMapInfo = new Command();
+    CommandWeakPtr ephemerisHeightMapInfo( new Command() );
     ephemerisHeightMapInfo->SetCommandName( "Ephemeris Height Map" );
 
-    DataValuePairPtr heightMapInfo = new ves::open::xml::DataValuePair();
+    DataValuePairPtr heightMapInfo( new ves::open::xml::DataValuePair() );
     heightMapInfo->SetData( "Height Map", 
         ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
     ephemerisHeightMapInfo->AddDataValuePair( heightMapInfo );

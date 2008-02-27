@@ -105,8 +105,8 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
 ////////////////////////////////////////////////////////////////////////////////
 void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    CommandPtr command = xmlObject;
-    DataValuePairWeakPtr activeModelDVP =
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
 
     std::string viewData;

@@ -799,7 +799,7 @@ void DataSetLoaderUI::SendCommandToXplorer(
     netowrkWriter.UseStandaloneDOMDocumentManager();
 
     // Create the command and data value pairs
-    ves::open::xml::CommandPtr veCommand = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
     veCommand->AddDataValuePair( tempObject );
     //Add the active dataset name to the command

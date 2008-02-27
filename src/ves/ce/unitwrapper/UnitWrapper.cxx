@@ -149,7 +149,7 @@ ACE_THROW_SPEC((
     ves::open::xml::CommandPtr returnState;
 
     returnState->SetCommandName( "statusmessage" );
-    ves::open::xml::DataValuePairWeakPtr data = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetDataName( "RETURN_STATE" );
     data->SetDataType( "UNSIGNED INT" );
     data->SetDataValue( return_state );

@@ -166,7 +166,7 @@ char * Body_Unit_i::GetStatusMessage (
 	ves::open::xml::Command returnState;
 
 	returnState.SetCommandName("statusmessage");
-	ves::open::xml::DataValuePairWeakPtr data=returnState.GetDataValuePair(-1);
+	ves::open::xml::DataValuePairPtr data=returnState.GetDataValuePair(-1);
 	data->SetDataName("RETURN_STATE");
 	data->SetDataType("UNSIGNED INT");
 	data->SetDataValue(return_state);
@@ -497,7 +497,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -519,7 +519,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd
 
 	for ( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -540,7 +540,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd
 
 	for( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -562,7 +562,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cm
 
 	for ( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -584,7 +584,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPt
 
 	for ( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -606,7 +606,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandP
 
 	for ( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -627,7 +627,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandP
 
 	for( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
@@ -649,7 +649,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command
 
 	for( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="moduleId")
@@ -686,7 +686,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
 		size_t num = param->GetNumberOfDataValuePairs();
 		for (size_t j=0; j<num; j++)
 		{
-			ves::open::xml::DataValuePairWeakPtr curPair= param->GetDataValuePair("NodePath");
+			ves::open::xml::DataValuePairPtr curPair= param->GetDataValuePair("NodePath");
 			CString nodepath = curPair->GetDataString().c_str();
 			curPair = param->GetDataValuePair("Value");
 			CString nodevalue = curPair->GetDataString().c_str();
@@ -704,7 +704,7 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairWeakPtr curPair= cmd->GetDataValuePair(i);
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
 		if (curPair->GetDataName()=="ModuleName")
 			modname=curPair->GetDataString();
 		else if (curPair->GetDataName()=="ParamName")

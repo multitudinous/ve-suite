@@ -70,9 +70,9 @@ void QuatCamClearDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
 {
     try
     {
-        CommandPtr command = veXMLObject;
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
         //This isn't used but I think we need to pass in something to the command
-        DataValuePairWeakPtr velFile = command->GetDataValuePair( "Clear Quat Data" );
+        DataValuePairPtr velFile = command->GetDataValuePair( "Clear Quat Data" );
         std::string clearCmdDummy;
         velFile->GetData( clearCmdDummy );
         ves::xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();

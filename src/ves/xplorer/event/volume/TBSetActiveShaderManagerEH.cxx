@@ -68,8 +68,8 @@ void TextureBasedSetActiveShaderManagerEventHandler::_operateOnNode( XMLObjectPt
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr activeSM = command->GetDataValuePair( "Active Shader Manager" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr activeSM = command->GetDataValuePair( "Active Shader Manager" );
         std::string value;
         activeSM->GetData( value );
         ves::xplorer::TextureBasedVizHandler::instance()->SetActiveShaderManager( value );

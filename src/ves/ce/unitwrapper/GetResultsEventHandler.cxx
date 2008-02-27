@@ -90,7 +90,7 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
     for( size_t i = 0; i < numInputs; ++i )
     {
         ves::open::xml::CommandPtr tempResult = baseModel->GetResult( i );
-        ves::open::xml::DataValuePairWeakPtr tempPair = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr tempPair( new ves::open::xml::DataValuePair() );
         tempPair->SetData( tempResult->GetCommandName(), tempResult );
         resultsCommand->AddDataValuePair( tempPair );
     }

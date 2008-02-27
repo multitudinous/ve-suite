@@ -72,8 +72,8 @@ void TextureBasedActivateEventHandler::_operateOnNode( XMLObjectPtr veXMLObject 
     {
         if( _activeModel )
         {
-            CommandPtr command = veXMLObject;
-            DataValuePairWeakPtr datasetName = command->GetDataValuePair( "Active Dataset Name" );
+            CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+            DataValuePairPtr datasetName = command->GetDataValuePair( "Active Dataset Name" );
 
             std::string activeDatasetName;
             datasetName->GetData( activeDatasetName );

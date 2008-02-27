@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef WAND_H
-#define WAND_H
+#ifndef _VES_XPLORER_DEVICE_WAND_H
+#define _VES_XPLORER_DEVICE_WAND_H
 
 /*!\file Wand.h
 Wand API

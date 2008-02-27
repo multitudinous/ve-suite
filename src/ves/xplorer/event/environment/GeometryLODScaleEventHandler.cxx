@@ -72,10 +72,10 @@ void GeometryLODScaleEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
 {
     try
     {
-        ves::open::xml::CommandPtr  geometryLODScaleCmd = xmlObject;
+        ves::open::xml::CommandPtr geometryLODScaleCmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject );
         if(  geometryLODScaleCmd )
         {
-            ves::open::xml::DataValuePairWeakPtr scaleValue =
+            ves::open::xml::DataValuePairPtr scaleValue =
                 geometryLODScaleCmd->GetDataValuePair( "Geometry LOD Scale" );
             long alpha = 0;
             scaleValue->GetData( alpha );

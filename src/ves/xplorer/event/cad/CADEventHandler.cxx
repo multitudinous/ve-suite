@@ -73,7 +73,7 @@ using namespace ves::xplorer::scenegraph;
 CADEventHandler::CADEventHandler()
 : ves::xplorer::event::EventHandler()
 {
-    m_cadNode = 0;
+    m_cadNode = CADNodePtr();
     m_activeModel = 0;
     m_cadHandler = 0;
 }
@@ -90,7 +90,7 @@ CADEventHandler::CADEventHandler( const CADEventHandler& rhs )
 ////////////////////////////////////
 CADEventHandler::~CADEventHandler()
 {
-    m_cadNode = 0;
+    m_cadNode = CADNodePtr();
     m_activeModel = 0;
     m_cadHandler = 0;
 }
@@ -246,7 +246,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 
     if( activeNode->GetNodeType() == "Assembly" )
     {
-        CADAssemblyPtr newAssembly = activeNode;
+        CADAssemblyPtr newAssembly( boost::dynamic_pointer_cast<CADAssembly>( activeNode ) );
         vprDEBUG( vesDBG, 2 ) <<"|---Assembly---"<<std::endl<< vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 2 )<<"|\t---"<<newAssembly->GetID()<<"---"
             <<std::endl<< vprDEBUG_FLUSH;
@@ -287,7 +287,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
-        CADPartPtr newPart = activeNode;
+        CADPartPtr newPart( boost::dynamic_pointer_cast<CADPart>( activeNode ) );
         vprDEBUG( vesDBG, 1 ) << "|\t---Part---"
             << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t---" << newPart->GetID()

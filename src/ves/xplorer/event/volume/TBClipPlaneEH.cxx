@@ -70,18 +70,18 @@ void TextureBasedClipPlaneEventHandler::_operateOnNode( XMLObjectPtr veXMLObject
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr direction = command->GetDataValuePair( "Direction" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr direction = command->GetDataValuePair( "Direction" );
         std::string planeDirection;
         direction->GetData( planeDirection );
 
-        DataValuePairWeakPtr coordinate = command->GetDataValuePair( "Coordinate" );
+        DataValuePairPtr coordinate = command->GetDataValuePair( "Coordinate" );
         std::string planeCoordinate;
         coordinate->GetData( planeCoordinate );
 
         if( planeDirection != "Both" )
         {
-            DataValuePairWeakPtr value = command->GetDataValuePair( "ROI Value" );
+            DataValuePairPtr value = command->GetDataValuePair( "ROI Value" );
             double alpha;
             value->GetData( alpha );
             ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
@@ -90,14 +90,14 @@ void TextureBasedClipPlaneEventHandler::_operateOnNode( XMLObjectPtr veXMLObject
         }
         else if( planeDirection == "Both" )
         {
-            DataValuePairWeakPtr minValue = command->GetDataValuePair( "ROI Min Value" );
+            DataValuePairPtr minValue = command->GetDataValuePair( "ROI Min Value" );
             double minAlpha;
             minValue->GetData( minAlpha );
             ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,
                     "Positive",
                     minAlpha );
 
-            DataValuePairWeakPtr maxValue = command->GetDataValuePair( "ROI Max Value" );
+            DataValuePairPtr maxValue = command->GetDataValuePair( "ROI Max Value" );
             double maxAlpha;
             maxValue->GetData( maxAlpha );
             ves::xplorer::TextureBasedVizHandler::instance()->UpdateClipPlane( planeCoordinate,

@@ -285,7 +285,7 @@ void Module::SetVEModel( model::ModelWeakPtr mod )
    ///Get feedback info
    for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
    {
-       DataValuePairWeakPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
+       DataValuePairPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
        if( dvp )
        {
            unsigned int feedback;

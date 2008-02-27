@@ -70,8 +70,8 @@ void TextureBasedIsosurfaceEnableEventHandler::_operateOnNode( XMLObjectPtr veXM
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr enable = command->GetDataValuePair( "Iso-Surface State" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr enable = command->GetDataValuePair( "Iso-Surface State" );
         std::string onOff;
         enable->GetData( onOff );
         ves::xplorer::TextureBasedVizHandler::instance()->EnsureIsosurface(( onOff == "On" ) ? true : false );

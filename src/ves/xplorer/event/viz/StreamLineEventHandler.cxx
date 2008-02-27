@@ -87,9 +87,9 @@ void StreamLineEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mode
 ////////////////////////////////////////////////////////////////////////////////
 void StreamLineEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    ves::open::xml::CommandPtr command = veXMLObject;
-    ves::open::xml::DataValuePairWeakPtr sizeDVP = command->GetDataValuePair( "Size" );
-    ves::open::xml::DataValuePairWeakPtr glowDVP = command->GetDataValuePair( "Glow" );
+    ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    ves::open::xml::DataValuePairPtr sizeDVP = command->GetDataValuePair( "Size" );
+    ves::open::xml::DataValuePairPtr glowDVP = command->GetDataValuePair( "Glow" );
 
     double size, glow;
     std::vector< ves::xplorer::cfdGraphicsObject* > cfdGraphicsObject =

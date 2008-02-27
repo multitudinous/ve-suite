@@ -70,8 +70,8 @@ void TextureBasedBoundingBoxEventHandler::_operateOnNode( XMLObjectPtr veXMLObje
 {
     try
     {
-        CommandPtr command = veXMLObject;
-        DataValuePairWeakPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
+        CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+        DataValuePairPtr bboxFlag = command->GetDataValuePair( "BBox Flag" );
         ves::xplorer::TextureBasedVizHandler::instance()->UpdateBoundingBox(( bboxFlag->GetUIntData() == 1 ) ? true : false );
 
     }

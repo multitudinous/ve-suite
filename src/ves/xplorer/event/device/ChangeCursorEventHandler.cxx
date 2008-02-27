@@ -109,30 +109,30 @@ void ChangeCursorEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* mo
 void ChangeCursorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
     //Grab the subdialog settings from streamlines to adjust cursor settings
-    CommandPtr command = xmlObject;
-    DataValuePairWeakPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
-    CommandPtr objectCommand = activeModelDVP->GetDataXMLObject();
+    CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
+    DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Sub-Dialog Settings" );
+    CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
     if( objectCommand->GetCommandName() != "UPDATE_STREAMLINE_SETTINGS" )
     {
         return;
     }
 
     std::string direction;
-    DataValuePairWeakPtr directionDVP = objectCommand->GetDataValuePair( "Cursor Direction" );
+    DataValuePairPtr directionDVP = objectCommand->GetDataValuePair( "Cursor Direction" );
     if( directionDVP )
     {
         directionDVP->GetData( direction );
     }
 
     std::string planes;
-    DataValuePairWeakPtr planesDVP = objectCommand->GetDataValuePair( "Cursor Type" );
+    DataValuePairPtr planesDVP = objectCommand->GetDataValuePair( "Cursor Type" );
     if( planesDVP )
     {
         planesDVP->GetData( planes );
     }
 
     unsigned int numPointsPerPlane = 2;
-    DataValuePairWeakPtr pointsDVP = objectCommand->GetDataValuePair( "Number Of Points Per Plane" );
+    DataValuePairPtr pointsDVP = objectCommand->GetDataValuePair( "Number Of Points Per Plane" );
     if( pointsDVP )
     {
         pointsDVP->GetData( numPointsPerPlane );
@@ -142,7 +142,7 @@ void ChangeCursorEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlO
     }
 
     double planeSize = 1;
-    DataValuePairWeakPtr sizeDVP = objectCommand->GetDataValuePair( "Size" );
+    DataValuePairPtr sizeDVP = objectCommand->GetDataValuePair( "Size" );
     if( sizeDVP )
     {
         sizeDVP->GetData( planeSize );
