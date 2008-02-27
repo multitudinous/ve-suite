@@ -193,7 +193,7 @@ ACE_THROW_SPEC((
 
     // Should only be one item. But, maybe later...
     if( !_network->GetModule( _network->moduleIdx( module_id ) )->setPortData(
-                port_id, objectVector.at( 0 ) )
+                port_id, boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) ) )
        )
     {
         std::string msg = "Unable to set mod id# "
@@ -219,7 +219,7 @@ ACE_THROW_SPEC((
     //std::cout << "VE-CE : GetExportData "<< module_id << " " << port_id << std::endl;
 
     //Interface intf;
-    CommandPtr portData = new Command();
+    CommandPtr portData( new Command() );
     if( !_network->GetModule( _network->moduleIdx( module_id ) )->getPortData( port_id, portData ) )
     {
         std::string msg = "Mod #"
@@ -378,7 +378,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
 
         if( !objectVector.empty() )
         {
-            CommandPtr returnState = objectVector.at( 0 );
+            CommandPtr returnState =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
 
             long rs;
             // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
@@ -824,8 +824,8 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     std::string moduleName;
     std::string vendorUnit;
     unsigned int moduleId = 0;
-    CommandPtr tempCommand = objectVector.at( 0 );
-    CommandPtr passCommand = new Command();
+    CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+    CommandPtr passCommand( new Command() );
     passCommand->SetCommandName( tempCommand->GetCommandName() );
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
