@@ -449,8 +449,16 @@ if not SConsAddons.Util.hasHelpFlag():
    #baseEnv.Append( LIBS = ['loki.0.1.6'] )
    #baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
 
-   #baseEnv.AppendUnique( CPPPATH= opts.GetOption("BoostIncludeDir").getValue() )
-   boost_options.apply( baseEnv )
+   # Apply boost include path to whole build
+   tmpBoostEnv = base_bldr.buildEnvironment()
+   boost_options.apply( tmpBoostEnv )
+   if tmpBoostEnv.has_key('CXXFLAGS'):
+      baseEnv.AppendUnique( CXXFLAGS = tmpBoostEnv['CXXFLAGS'] )
+   if tmpBoostEnv.has_key('CPPPATH'):
+      baseEnv.AppendUnique( CPPPATH = tmpBoostEnv['CPPPATH'] )
+   if tmpBoostEnv.has_key('CPPDEFINES'):
+      baseEnv.AppendUnique( CPPDEFINES = tmpBoostEnv['CPPDEFINES'] )
+
 
    if GetPlatform() != 'win32':
       baseEnv.Append( LINKFLAGS = ['-g'] )
