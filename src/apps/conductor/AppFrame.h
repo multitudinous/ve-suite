@@ -314,7 +314,7 @@ protected:
     void StepAspenNetwork( wxCommandEvent& event );
     void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
     void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    void OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
     void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
     void SaveSimulation( wxCommandEvent& WXUNUSED( event ) );
     void SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) );
@@ -393,8 +393,10 @@ protected:
 
 private:
     void ExitXplorer();
+	void CloseAspenSimulation();
     void EnableCEGUIMenuItems();
     void IdleEvent( wxIdleEvent& event );
+	bool AspenSimOpen;
     //void TimerEvent( wxTimerEvent& event );
     NavigationPane* navPane;
     DeviceProperties* deviceProperties;

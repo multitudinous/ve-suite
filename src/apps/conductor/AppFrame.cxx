@@ -182,7 +182,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
     EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
     EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
-    EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::CloseAspenSimulation )
+    EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::OnCloseAspenSimulation )
     EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
     EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
@@ -305,6 +305,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
                                  
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
+	AspenSimOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
@@ -321,6 +322,11 @@ AppFrame::~AppFrame()
     {
         ExitXplorer();
     }
+
+	if(AspenSimOpen)
+	{
+		CloseAspenSimulation();
+	}
 
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
@@ -626,6 +632,7 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
+	CloseAspenSimulation();
     //XMLDataBufferEngine::instance()->CleanUp();
     Close( true );
 }
@@ -1295,6 +1302,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
         ///Submit job to xplorer
         wxCommandEvent event;
         SubmitToServer( event );
+		AspenSimOpen = true;
     }
     else
     {
@@ -1326,6 +1334,7 @@ void AppFrame::OpenSimulation( wxString simName )
     //Get results
     std::string nw_str = serviceList->Query( status );
     Log( nw_str.c_str() );
+	AspenSimOpen = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
@@ -1370,9 +1379,9 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
-{
-    Log( "Close Simulation.\n" );
+void AppFrame::CloseAspenSimulation( void )
+{    
+	Log( "Close Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     DataValuePairPtr data( new DataValuePair() );
@@ -1389,6 +1398,11 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 
     std::string nw_str = serviceList->Query( status ) + "\n";
     Log( nw_str.c_str() );
+	AspenSimOpen = false;
+}
+void AppFrame::OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+{
+    CloseAspenSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
@@ -1533,8 +1547,13 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
-    newCanvas = true;
+	if(AspenSimOpen)
+	{
+		CloseAspenSimulation();
+	}
+	newCanvas = true;
     fname.Clear();
+
 
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
@@ -2330,7 +2349,7 @@ void AppFrame::OnShowIconChooser( wxCommandEvent& event )
     }
 
 	UIPluginBase* tempPlugin = static_cast< UIPluginBase* >(event.GetClientData());
-    //iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
+    iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
     iconChooser->SetPlugin( tempPlugin );
     iconChooser->Show();
 }
