@@ -50,12 +50,7 @@ StateInfo::~StateInfo()
     ;
 }
 ////////////////////////////////////////////////////
-/*void StateInfo::AddState(CommandPtr state)
-{
-   mStateInfo.push_back(state);
-}*/
-////////////////////////////////////////////////////
-void StateInfo::AddState( CommandWeakPtr state )
+void StateInfo::AddState( CommandPtr state )
 {
     mStateInfo.push_back( state );
 }
@@ -107,14 +102,14 @@ void StateInfo::SetObjectFromXMLData( DOMNode* xmlInput )
         DOMElement* vecmdIn = dynamic_cast<DOMElement*>( subElements->item( i ) );
         if( vecmdIn )
         {
-            CommandWeakPtr command = new Command();
+            CommandPtr command( new Command() );
             command->SetObjectFromXMLData( vecmdIn );
             mStateInfo.push_back( command );
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-CommandWeakPtr StateInfo::GetState( std::string name )
+CommandPtr StateInfo::GetState( const std::string& name )
 {
     for( size_t i = 0; i < mStateInfo.size(); i++ )
     {
@@ -123,18 +118,18 @@ CommandWeakPtr StateInfo::GetState( std::string name )
             return mStateInfo.at( i );
         }
     }
-    return 0;
+    return CommandPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
-CommandWeakPtr StateInfo::GetState( size_t index )
+CommandPtr StateInfo::GetState( size_t index )
 {
     return mStateInfo.at( index );
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< CommandWeakPtr > StateInfo::GetStateVector( void )
+std::vector< CommandPtr > StateInfo::GetStateVector( void )
 {
-    std::vector< CommandWeakPtr > tempVec;
-    std::copy( mStateInfo.begin(), mStateInfo.end(), 
+    std::vector< CommandPtr > tempVec;
+    std::copy( mStateInfo.begin(), mStateInfo.end(),
               std::back_inserter( tempVec ) );
     return tempVec;
 }
@@ -144,7 +139,7 @@ StateInfo::StateInfo( const StateInfo& input )
 {
     for( size_t i = 0; i < input.mStateInfo.size(); i++ )
     {
-        mStateInfo.push_back( new Command( *( input.mStateInfo.at( i ) ) ) );
+        mStateInfo.push_back( CommandPtr( new Command( *( input.mStateInfo.at( i ) ) ) ) );
     }
 }
 /////////////////////////////////////////////////////////
@@ -155,7 +150,7 @@ StateInfo& StateInfo::operator= ( const StateInfo& input )
         ClearState();
         for( size_t i = 0; i < input.mStateInfo.size(); i++ )
         {
-            mStateInfo.push_back( new Command( *( input.mStateInfo.at( i ) ) ) );
+            mStateInfo.push_back( CommandPtr( new Command( *( input.mStateInfo.at( i ) ) ) ) );
         }
     }
     return *this;

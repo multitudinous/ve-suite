@@ -64,7 +64,7 @@ TwoDIntArray::TwoDIntArray( const TwoDIntArray& input )
     mNElements  = input.mNElements;
     for( size_t i = 0; i < input.mOneDArray.size(); ++i )
     {
-        mOneDArray.push_back( new OneDIntArray( *( input.mOneDArray.at( i ) ) ) );
+        mOneDArray.push_back( OneDIntArrayPtr( new OneDIntArray( *( input.mOneDArray.at( i ) ) ) ) );
     }
     mMinIndex = input.mMinIndex;
 }
@@ -82,7 +82,7 @@ TwoDIntArray& TwoDIntArray::operator=( const TwoDIntArray& input )
 
         for( size_t i = 0; i < input.mOneDArray.size(); ++i )
         {
-            mOneDArray.push_back( new OneDIntArray( *( input.mOneDArray.at( i ) ) ) );
+            mOneDArray.push_back( OneDIntArrayPtr( new OneDIntArray( *( input.mOneDArray.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -90,7 +90,7 @@ TwoDIntArray& TwoDIntArray::operator=( const TwoDIntArray& input )
 /////////////////////////////////////////////////
 void TwoDIntArray::AddElementToArray( std::vector< long > value )
 {
-    mOneDArray.push_back( new OneDIntArray( ) );
+    mOneDArray.push_back( OneDIntArrayPtr( new OneDIntArray( ) ) );
     mOneDArray.back()->SetArray( value );
     mNElements = static_cast< unsigned int >( mOneDArray.size() );
 }
@@ -109,7 +109,7 @@ void TwoDIntArray::SetArray( std::vector< std::vector< long > > input )
 
     for( size_t i = 0; i < input.size(); ++i )
     {
-        mOneDArray.push_back( new OneDIntArray( ) );
+        mOneDArray.push_back( OneDIntArrayPtr( new OneDIntArray( ) ) );
         mOneDArray.back()->SetArray( input.at( i ) );
     }
 }
@@ -193,7 +193,7 @@ void TwoDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
         for( XMLSize_t i = 0; i < numNodes; ++i )
         {
             //We know this about the node so we can cast it...
-            mOneDArray.push_back( new OneDIntArray( ) );
+            mOneDArray.push_back( OneDIntArrayPtr( new OneDIntArray( ) ) );
             mOneDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }

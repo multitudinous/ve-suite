@@ -66,7 +66,7 @@ public:
     ///Set the type of attribute.
     ///Valid types are "Material" or "Program".
     ///\param attributeType The type of attribute.
-    void SetAttributeType( std::string attributeType );
+    void SetAttributeType( const std::string& attributeType );
 
     ///Set the material for this node.
     ///\param material The material of this node.

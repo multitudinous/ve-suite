@@ -41,7 +41,7 @@ namespace ves
 {
 namespace xplorer
 {
-GlobalBase::GlobalBase() : veCommand( 0 )
+GlobalBase::GlobalBase() : veCommand(  )
 {
     ; // Do nothing.
 }

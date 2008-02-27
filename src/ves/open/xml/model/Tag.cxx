@@ -58,7 +58,7 @@ Tag::Tag( const Tag& input )
 
     for( size_t i = 0; i < input.mTagPoints.size(); ++i )
     {
-        mTagPoints.push_back( new Point( *( input.mTagPoints.at( i ) ) ) );
+        mTagPoints.push_back( PointPtr( new Point( *( input.mTagPoints.at( i ) ) ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +74,7 @@ Tag& Tag::operator=( const Tag& input )
 
         for( size_t i = 0; i < input.mTagPoints.size(); ++i )
         {
-            mTagPoints.push_back( new Point( *( input.mTagPoints.at( i ) ) ) );
+            mTagPoints.push_back( PointPtr( new Point( *( input.mTagPoints.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -142,7 +142,7 @@ void Tag::SetObjectFromXMLData( DOMNode* element )
     for( unsigned int i = 0; i < numberOfPoints; ++i )
     {
         dataValueStringName = GetSubElement( currentElement, "linkPoints", i );
-        mTagPoints.push_back( new Point() );
+        mTagPoints.push_back( PointPtr( new Point() ) );
         mTagPoints.back()->SetObjectFromXMLData( dataValueStringName );
     }
 

@@ -51,7 +51,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////
 //Constructor                             //
 ////////////////////////////////////////////
-DataValuePair::DataValuePair( std::string type )
+DataValuePair::DataValuePair( const std::string type )
         : XMLObject()
 {
     mDataType = type;
@@ -62,7 +62,7 @@ DataValuePair::DataValuePair( std::string type )
     mDataUInt = 0;
     mIntDataValue = 0;
 
-    mVeXMLObject = 0;
+    mVeXMLObject = XMLObjectPtr();
     SetObjectType( "DataValuePair" );
 
 }
@@ -83,7 +83,7 @@ DataValuePair::DataValuePair( const DataValuePair& input )
     mDataValue = input.mDataValue;
     mDataString = input.mDataString;
 
-    mVeXMLObject = 0;
+    mVeXMLObject = XMLObjectPtr();
 
     if( input.mVeXMLObject )
     {
@@ -128,14 +128,14 @@ void DataValuePair::SetDataValue( unsigned int data )
 
 }
 /////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, unsigned int data )
+void DataValuePair::SetData( const std::string& dataName, unsigned int data )
 {
     mDataName = dataName;
     SetDataType( std::string( "UNSIGNED INT" ) );
     mDataUInt = data;
 }
 ////////////////////////////////////////////
-void DataValuePair::SetDataType( std::string type )
+void DataValuePair::SetDataType( const std::string& type )
 {
     if (( type == std::string( "STRING" ) ) ||
             ( type == std::string( "UNSIGNED INT" ) ) ||
@@ -157,7 +157,7 @@ void DataValuePair::SetDataType( std::string type )
     }
 }
 /////////////////////////////////////////////////////
-void DataValuePair::SetDataString( std::string data )
+void DataValuePair::SetDataString( const std::string& data )
 {
     if( mDataType != std::string( "STRING" ) )
     {
@@ -180,7 +180,7 @@ void DataValuePair::SetDataValue( double data )
     mDataValue = data;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, XMLObjectPtr vexmlObject )
+void DataValuePair::SetData( const std::string& dataName, XMLObjectPtr vexmlObject )
 {
     if( vexmlObject )
     {
@@ -228,7 +228,7 @@ void DataValuePair::_updateVEElement( const std::string& input )
     }
 }
 ///////////////////////////////////////////////////
-void DataValuePair::SetDataName( std::string name )
+void DataValuePair::SetDataName( const std::string& name )
 {
     if( !name.empty() )
     {
@@ -236,23 +236,23 @@ void DataValuePair::SetDataName( std::string name )
     }
 }
 //////////////////////////////////////////
-std::string DataValuePair::GetDataName()
+const std::string DataValuePair::GetDataName()
 {
     return mDataName;
 }
 //////////////////////////////////////////
-std::string DataValuePair::GetDataType()
+const std::string DataValuePair::GetDataType()
 {
     return mDataType;
 }
 ////////////////////////////////////////////
-std::string DataValuePair::GetDataString()
+const std::string DataValuePair::GetDataString()
 {
     if( mDataType == std::string( "STRING" ) )
     {
         return mDataString;
     }
-    return 0;
+    return std::string();
 }
 /////////////////////////////////////
 double DataValuePair::GetDataValue()
@@ -270,10 +270,10 @@ XMLObjectPtr DataValuePair::GetDataXMLObject()
     {
         return mVeXMLObject;
     }
-    return 0;
+    return XMLObjectPtr();
 }
 //////////////////////////////////////////////////////////////////////////////////////
-void DataValuePair::_extractXMLObject( DOMElement* baseElement, std::string objectTypeName )
+void DataValuePair::_extractXMLObject( DOMElement* baseElement, const std::string& objectTypeName )
 {
     DOMElement* genericObject = GetSubElement( baseElement, objectTypeName, 0 );
     if( genericObject )
@@ -425,101 +425,99 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
    data = *(XMLObjectFactory::Instance()->CreateXMLObjectCopy( mVeXMLObject) );
 }*/
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::string data )
+void DataValuePair::SetData( const std::string& dataName, const std::string& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "STRING" ) );
     mDataString = data;
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< std::string > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< std::string >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    OneDStringArrayPtr oneDString = new OneDStringArray();
+    OneDStringArrayPtr oneDString( new OneDStringArray() );
 
     oneDString->SetArray( data );
     SetData( dataName, oneDString );
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, double data )
+void DataValuePair::SetData( const std::string& dataName, double data )
 {
     mDataName = dataName;
     SetDataType( std::string( "FLOAT" ) );
     mDataValue = data;
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< double > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< double >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    OneDDoubleArrayPtr oneDDouble = new OneDDoubleArray();
+    OneDDoubleArrayPtr oneDDouble( new OneDDoubleArray() );
 
     oneDDouble->SetArray( data );
     SetData( dataName, oneDDouble );
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< std::vector< double > > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< double > >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    TwoDDoubleArrayPtr twoDDouble = new TwoDDoubleArray();
+    TwoDDoubleArrayPtr twoDDouble( new TwoDDoubleArray() );
 
     twoDDouble->SetArray( data );
     SetData( dataName, twoDDouble );
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< std::vector< double > > >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    ThreeDDoubleArray* threeDDouble = new ThreeDDoubleArray();
+    ThreeDDoubleArrayPtr threeDDouble( new ThreeDDoubleArray() );
 
     threeDDouble->SetArray( data );
     SetData( dataName, threeDDouble );
-
-    delete threeDDouble;
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, long int data )
+void DataValuePair::SetData( const std::string& dataName, long int data )
 {
     mDataName = dataName;
     SetDataType( std::string( "LONG" ) );
     mIntDataValue = data;
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< long > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< long >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    OneDIntArrayPtr oneDInt = new OneDIntArray();
+    OneDIntArrayPtr oneDInt( new OneDIntArray() );
 
     oneDInt->SetArray( data );
     SetData( dataName, oneDInt );
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< std::vector< long > > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< long > >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    TwoDIntArrayPtr twoDInt = new TwoDIntArray();
+    TwoDIntArrayPtr twoDInt( new TwoDIntArray() );
 
     twoDInt->SetArray( data );
     SetData( dataName, twoDInt );
 }
 ////////////////////////////////////////////////////////////
-void DataValuePair::SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data )
+void DataValuePair::SetData( const std::string& dataName, const std::vector< std::vector< std::vector< long > > >& data )
 {
     mDataName = dataName;
     SetDataType( std::string( "XMLOBJECT" ) );
 
-    ThreeDIntArrayPtr threeDInt = new ThreeDIntArray();
+    ThreeDIntArrayPtr threeDInt( new ThreeDIntArray() );
 
     threeDInt->SetArray( data );
     SetData( dataName, threeDInt );
@@ -534,7 +532,7 @@ void DataValuePair::GetData( std::vector< std::string >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDStringArray" )
     {
-        OneDStringArrayPtr tempPtr = mVeXMLObject;
+        OneDStringArrayPtr tempPtr = boost::dynamic_pointer_cast<OneDStringArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -552,7 +550,7 @@ void DataValuePair::GetData( std::vector< double >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDDoubleArray" )
     {
-        OneDDoubleArrayPtr tempPtr = mVeXMLObject;
+        OneDDoubleArrayPtr tempPtr = boost::dynamic_pointer_cast<OneDDoubleArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -565,7 +563,7 @@ void DataValuePair::GetData( std::vector< std::vector< double > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDDoubleArray" )
     {
-        TwoDDoubleArrayPtr tempPtr = mVeXMLObject;
+        TwoDDoubleArrayPtr tempPtr =  boost::dynamic_pointer_cast<TwoDDoubleArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -578,7 +576,7 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > >
 {
     if( mVeXMLObject->GetObjectType() == "ThreeDDoubleArray" )
     {
-        ThreeDDoubleArrayPtr tempPtr = mVeXMLObject;
+        ThreeDDoubleArrayPtr tempPtr = boost::dynamic_pointer_cast<ThreeDDoubleArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -596,7 +594,7 @@ void DataValuePair::GetData( std::vector< long >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDIntArray" )
     {
-        OneDIntArrayPtr tempPtr = mVeXMLObject;
+        OneDIntArrayPtr tempPtr = boost::dynamic_pointer_cast<OneDIntArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -609,7 +607,7 @@ void DataValuePair::GetData( std::vector< std::vector< long > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDIntArray" )
     {
-        TwoDIntArrayPtr tempPtr = mVeXMLObject;
+        TwoDIntArrayPtr tempPtr = boost::dynamic_pointer_cast<TwoDIntArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -622,7 +620,7 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > > &
 {
     if( mVeXMLObject->GetObjectType() == "ThreeDIntArray" )
     {
-        ThreeDIntArrayPtr tempPtr = mVeXMLObject;
+        ThreeDIntArrayPtr tempPtr = boost::dynamic_pointer_cast<ThreeDIntArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else

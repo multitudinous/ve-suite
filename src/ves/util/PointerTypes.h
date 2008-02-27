@@ -33,18 +33,9 @@
 #ifndef VE_POINTER_TYPES_H
 #define VE_POINTER_TYPES_H
 
-/**
-* \file
- *
- * Include this file to get a forward declaration of the pointer type
- * VE_XML::CommandStrongPtr.  To get the full
- * declaration of VE_XML::CommandStrongPtr
- * VE_Open/XML/Command.h must be included, too.
- */
-
-
-#include <loki/StrongPtr.h>
-#include <loki/SmartPtr.h>
+#include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
+#include <boost/scoped_ptr.hpp>
 
 namespace ves
 {
@@ -52,104 +43,34 @@ namespace util
 {
 // ClassPtrDef is the regular ptr class to use.
 template
-<
-typename T,
-bool Strong = true,
-class OwnershipPolicy = Loki::LockableTwoRefCounts,
-class ConversionPolicy = Loki::DisallowConversion,
-template < class > class CheckingPolicy = Loki::AssertCheck,
-template < class > class ResetPolicy = Loki::CantResetWithStrong,
-template < class > class DeletePolicy = Loki::DeleteSingle
->
+< typename T >
 struct ClassPtrDef
 {
-    typedef Loki::StrongPtr
-    <
-    T,
-    Strong,
-    OwnershipPolicy,
-    ConversionPolicy,
-    CheckingPolicy,
-    ResetPolicy,
-    DeletePolicy
-    >
-    type;
+    typedef boost::shared_ptr< T > type;
 };
 
 // SharedPtrDef is for using shared ptrs explicitly.
 template
-<
-typename T,
-bool Strong = true,
-class OwnershipPolicy = Loki::LockableTwoRefCounts,
-class ConversionPolicy = Loki::DisallowConversion,
-template < class > class CheckingPolicy = Loki::AssertCheck,
-template < class > class ResetPolicy = Loki::CantResetWithStrong,
-template < class > class DeletePolicy = Loki::DeleteSingle
->
+< typename T >
 struct SharedPtrDef
 {
-    typedef Loki::StrongPtr
-    <
-    T,
-    Strong,
-    OwnershipPolicy,
-    ConversionPolicy,
-    CheckingPolicy,
-    ResetPolicy,
-    DeletePolicy
-    >
-    type;
+    typedef boost::shared_ptr< T > type;
 };
 
 // WeakPtrDef used for getting around circular references only.
 template
-<
-typename T,
-bool Strong = false,
-class OwnershipPolicy = Loki::LockableTwoRefCounts,
-class ConversionPolicy = Loki::DisallowConversion,
-template < class > class CheckingPolicy = Loki::AssertCheck,
-template < class > class ResetPolicy = Loki::CantResetWithStrong,
-template < class > class DeletePolicy = Loki::DeleteSingle
->
+< typename T >
 struct WeakPtrDef
 {
-    typedef Loki::StrongPtr
-    <
-    T,
-    Strong,
-    OwnershipPolicy,
-    ConversionPolicy,
-    CheckingPolicy,
-    ResetPolicy,
-    DeletePolicy
-    >
-    type;
+    typedef boost::weak_ptr< T > type;
 };
 
 // Simple scoped ptr for use within functions only.  Very lightweight.
 template
-<
-typename T,
-template <class> class OwnershipPolicy = Loki::NoCopy,
-class ConversionPolicy = Loki::DisallowConversion,
-template <class> class CheckingPolicy = Loki::AssertCheck,
-template <class> class StoragePolicy = Loki::DefaultSPStorage,
-template<class> class ConstnessPolicy = LOKI_DEFAULT_CONSTNESS
->
+< typename T >
 struct ScopedPtrDef
 {
-    typedef Loki::SmartPtr
-    <
-    T,
-    OwnershipPolicy,
-    ConversionPolicy,
-    CheckingPolicy,
-    StoragePolicy,
-    ConstnessPolicy
-    >
-    type;
+    typedef boost::scoped_ptr< T > type;
 };
 
 }

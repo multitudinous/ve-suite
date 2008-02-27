@@ -47,6 +47,8 @@
 
 #include <xercesc/dom/DOM.hpp>
 
+#include <boost/enable_shared_from_this.hpp>
+
 #include <string>
 #include <vector>
 
@@ -68,7 +70,8 @@ namespace model
 /*!\namespace ves::open::xml::model
  * Contains nodes for creating/managing a Model data.
  */
-class VE_MODEL_EXPORTS Model : public ves::open::xml::XMLObject
+class VE_MODEL_EXPORTS Model : public ves::open::xml::XMLObject,
+                               public boost::enable_shared_from_this<Model>
 {
 
 public:

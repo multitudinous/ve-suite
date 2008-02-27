@@ -48,7 +48,7 @@ Network::Network( )
 {
     SetObjectType( "Network" );
     SetObjectNamespace( "Model" );
-    mParentModel = NULL;
+    mParentModel = ModelPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -69,17 +69,17 @@ Network::Network( const Network& input )
 {
     for( size_t i = 0; i < input.mLinks.size(); ++i )
     {
-        mLinks.push_back( new Link( *( input.mLinks.at( i ) ) ) );
+        mLinks.push_back( LinkPtr( new Link( *( input.mLinks.at( i ) ) ) ) );
     }
 
     for( size_t i = 0; i < input.mConductorState.size(); ++i )
     {
-        mConductorState.push_back( new DataValuePair( *( input.mConductorState.at( i ) ) ) );
+        mConductorState.push_back( DataValuePairPtr( new DataValuePair( *( input.mConductorState.at( i ) ) ) ) );
     }
 
     for( size_t i = 0; i < input.mTags.size(); ++i )
     {
-        mTags.push_back( new Tag( *input.mTags.at( i ) ) );
+        mTags.push_back( TagPtr( new Tag( *input.mTags.at( i ) ) ) );
     }
     mParentModel = input.mParentModel;
 }
@@ -95,20 +95,20 @@ Network& Network::operator=( const Network& input )
 
         for( size_t i = 0; i < input.mLinks.size(); ++i )
         {
-            mLinks.push_back( new Link( *( input.mLinks.at( i ) ) ) );
+            mLinks.push_back( LinkPtr( new Link( *( input.mLinks.at( i ) ) ) ) );
         }
 
         mConductorState.clear();
 
         for( size_t i = 0; i < input.mConductorState.size(); ++i )
         {
-            mConductorState.push_back( new DataValuePair( *( input.mConductorState.at( i ) ) ) );
+            mConductorState.push_back( DataValuePairPtr( new DataValuePair( *( input.mConductorState.at( i ) ) ) ) );
         }
 
         mTags.clear();
         for( size_t i = 0; i < input.mTags.size(); ++i )
         {
-            mTags.push_back( new Tag( *input.mTags.at( i ) ) );
+            mTags.push_back( TagPtr( new Tag( *input.mTags.at( i ) ) ) );
         }
         mParentModel = input.mParentModel;
     }
@@ -150,7 +150,7 @@ DataValuePairPtr Network::GetDataValuePair( int i )
     }
     catch ( ... )
     {
-        mConductorState.push_back( new DataValuePair() );
+        mConductorState.push_back( DataValuePairPtr( new DataValuePair() ) );
         return mConductorState.back();
     }
 }
@@ -179,7 +179,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "link", i );
-            ves::open::xml::model::LinkPtr newLink = new Link();
+            ves::open::xml::model::LinkPtr newLink( new Link() );
             newLink->SetParentModel( mParentModel );
             mLinks.push_back( newLink );
             mLinks.back()->SetObjectFromXMLData( dataValueStringName );
@@ -195,7 +195,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
         {
             dataValueStringName = GetSubElement( currentElement,
                                                  "conductorState", i );
-            mConductorState.push_back( new DataValuePair( ) );
+            mConductorState.push_back( DataValuePairPtr( new DataValuePair( ) ) );
             mConductorState.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -207,7 +207,7 @@ void Network::SetObjectFromXMLData( DOMNode* element )
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "tag", i );
-            mTags.push_back( new Tag() );
+            mTags.push_back( TagPtr( new Tag() ) );
             mTags.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }

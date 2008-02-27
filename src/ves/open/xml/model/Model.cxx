@@ -55,11 +55,11 @@ Model::Model()
     mUniqueModelID = 0;
     //mIconFileName = '\0';
     mIconLocation = PointPtr( new Point() );
-    mGeometry = 0;
+    mGeometry = CADAssemblyPtr();
     SetObjectType( "Model" );
     SetObjectNamespace( "Model" );
     //mVendorUnit = '\0';
-    mModelAttribute = 0;
+    mModelAttribute = CommandPtr();
     mIconScale = 1.0f;
     mIconRotation = 0.0f;
     mIconMirror = 0;
@@ -323,7 +323,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "results", i );
-            mResults.push_back( new Command( ) );
+            mResults.push_back( CommandPtr( new Command( ) ) );
             mResults.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -335,7 +335,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "inputs", i );
-            mInputs.push_back( new Command( ) );
+            mInputs.push_back( CommandPtr( new Command( ) ) );
             mInputs.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -347,7 +347,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
-            mInformationPackets.push_back( new ParameterBlock( ) );
+            mInformationPackets.push_back( ParameterBlockPtr( new ParameterBlock( ) ) );
             mInformationPackets.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -358,7 +358,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
             Convert( "modelAttributes" ).toXMLString() )->getLength() > 0 )
         {
             dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
-            mModelAttribute = new Command();
+            mModelAttribute = CommandPtr( new Command() );
             mModelAttribute->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -367,9 +367,9 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "modelSubSystem", 0 );
         if( dataValueStringName )
         {
-            mSubSystem = new System();
+            mSubSystem = SystemPtr( new System() );
             //set parent
-            mSubSystem->SetParentModel( this );
+            mSubSystem->SetParentModel( shared_from_this() );
             mSubSystem->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -407,11 +407,11 @@ CommandPtr Model::GetResult( int i )
         {
             std::cerr << "The element request is out of sequence."
             << " Please ask for a lower number point." << std::endl;
-            return 0;
+            return CommandPtr();
         }
         //else
         {
-            mResults.push_back( new Command( ) );
+            mResults.push_back( CommandPtr( new Command( ) ) );
             return mResults.back();
         }
     }
@@ -431,7 +431,7 @@ CommandPtr Model::GetInput( const std::string& inputName )
             return mInputs.at( i );
         }
     }
-    return 0;
+    return CommandPtr();
 }
 ////////////////////////////////////////////////////////////
 CommandPtr Model::GetInput( int i )
@@ -476,11 +476,11 @@ PortPtr Model::GetPort( int i )
         {
             std::cerr << "The element request is out of sequence."
             << " Please ask for a lower number point." << std::endl;
-            return 0;
+            return PortPtr();
         }
         else
         {
-            mPorts.push_back( new Port( ) );
+            mPorts.push_back( PortPtr( new Port( ) ) );
             return mPorts.back();
         }
     }
@@ -542,7 +542,7 @@ Port* Model::GetOutputPort( unsigned int i )
       }
       else
       {
-         mPorts.push_back( new Port() );
+         mPorts.push_back( PortPtr( new Port() ) );
          outputPorts.push_back( mPorts.back() );
          return mPorts.back();
       }
@@ -567,7 +567,7 @@ ParameterBlockPtr Model::GetInformationPacket( const std::string& name )
     }
     //std::cout<<"Parameter Block: "<<name<<std::endl;
     //std::cout<<"not found in Model: "<<uuid<<std::endl;
-    return 0;
+    return ParameterBlockPtr();
 }
 ////////////////////////////////////////////////////////////
 ParameterBlockPtr Model::GetInformationPacket( int i )
@@ -582,7 +582,7 @@ ParameterBlockPtr Model::GetInformationPacket( int i )
         {
             std::cerr << "The element request is out of sequence."
             << " Please ask for a lower number point." << std::endl;
-            return 0;
+            return ParameterBlockPtr();
         }
         else
         {
@@ -607,7 +607,7 @@ CADNodePtr Model::GetGeometry( void )
 CADNodePtr Model::AddGeometry( void )
 {
     if( mGeometry == 0 )
-        mGeometry = new CADAssembly( "Model_Geometry" );
+        mGeometry = CADAssemblyPtr( new CADAssembly(  "Model_Geometry" ) );
 
     return mGeometry;
 }
@@ -616,7 +616,7 @@ void Model::DeleteGeometry( void )
 {
     if( mGeometry )
     {
-        mGeometry = CADNodePtr();
+        mGeometry = CADAssemblyPtr();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

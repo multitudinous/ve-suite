@@ -44,7 +44,7 @@ using namespace ves::open::xml::cad;
 ////////////////////////////////////
 CADNodeTraverser::CADNodeTraverser()
 {
-    _root = 0;
+    _root = CADNodePtr();
     _preFunc = 0;
     _postFunc = 0;
     _ts = CONT;
@@ -52,7 +52,7 @@ CADNodeTraverser::CADNodeTraverser()
 /////////////////////////////////////////////////////////////////
 CADNodeTraverser::CADNodeTraverser( const CADNodeTraverser& cfdNT )
 {
-    _root = 0;
+    _root = CADNodePtr();
     _preFunc = 0;
     _postFunc = 0;
     _ts = cfdNT._ts;
@@ -113,7 +113,8 @@ void CADNodeTraverser::_traverseNode( CADNodePtr cNode, void* currentParent )
 
     if( cNode->GetNodeType() == std::string( "Assembly" ) )
     {
-        ves::open::xml::cad::CADAssemblyPtr assembly = cNode;
+        ves::open::xml::cad::CADAssemblyPtr assembly =
+               boost::dynamic_pointer_cast<CADAssembly>( cNode );
         unsigned int nChildren = assembly->GetNumberOfChildren();
         //recurse the children of this node
         for( unsigned int i = 0; i < nChildren; i++ )

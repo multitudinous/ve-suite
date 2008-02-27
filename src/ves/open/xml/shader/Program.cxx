@@ -47,8 +47,8 @@ Program::Program()
         : XMLObject()
 {
     mName = std::string( "VEProgram" );
-    mVertexShader = 0;
-    mFragmentShader = 0;
+    mVertexShader = ShaderPtr();
+    mFragmentShader = ShaderPtr();
     SetObjectType( "Program" );
     SetObjectNamespace( "Shader" );
 
@@ -74,11 +74,11 @@ Program::Program( const Program& rhs )
 
     if( rhs.mVertexShader )
     {
-        mVertexShader = new Shader( *rhs.mVertexShader );
+        mVertexShader = ShaderPtr( new Shader(  *rhs.mVertexShader ) );
     }
     if( rhs.mFragmentShader )
     {
-        mFragmentShader = new Shader( *rhs.mFragmentShader );
+        mFragmentShader = ShaderPtr( new Shader(  *rhs.mFragmentShader ) );
     }
     mName = rhs.mName;
 }
@@ -119,7 +119,7 @@ void Program::SetObjectFromXMLData( DOMNode* xmlInput )
                 {
                     if( !mVertexShader )
                     {
-                        mVertexShader = new Shader();
+                        mVertexShader = ShaderPtr( new Shader() );
                     }
                     mVertexShader->SetObjectFromXMLData( vertexShader );
                 }
@@ -128,7 +128,7 @@ void Program::SetObjectFromXMLData( DOMNode* xmlInput )
                 {
                     if( !mFragmentShader )
                     {
-                        mFragmentShader = new Shader();
+                        mFragmentShader = ShaderPtr( new Shader() );
                     }
                     mFragmentShader->SetObjectFromXMLData( fragShader );
                 }
@@ -192,11 +192,11 @@ Program& Program::operator=( const Program& rhs )
         XMLObject::operator=( rhs );
         if( rhs.mVertexShader )
         {
-            mVertexShader = new Shader( *rhs.mVertexShader );
+            mVertexShader = ShaderPtr( new Shader(  *rhs.mVertexShader ) );
         }
         if( rhs.mFragmentShader )
         {
-            mFragmentShader = new Shader( *rhs.mFragmentShader );
+            mFragmentShader = ShaderPtr( new Shader(  *rhs.mFragmentShader ) );
         }
         mName = rhs.mName;
     }

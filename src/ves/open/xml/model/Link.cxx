@@ -46,12 +46,12 @@ Link::Link()
         : XMLObject()
 {
     mLinkName = "noName";
-	mType = -9999;
-    mModuleInfo.first = new DataValuePair( "FLOAT" );
-    mModuleInfo.second = new DataValuePair( "FLOAT" );
+    mType = -9999;
+    mModuleInfo.first = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
+    mModuleInfo.second = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
     mPortInfo.first = 0;
     mPortInfo.second = 0;
-    mParentModel = NULL;
+    mParentModel = ModelPtr();
 
     SetObjectType( "Link" );
     SetObjectNamespace( "Model" );
@@ -162,7 +162,7 @@ PointPtr Link::GetLinkPoint( unsigned int i )
         {
             std::cerr << "The element request is out of sequence."
             << " Please ask for a lower number point." << std::endl;
-            return 0;
+            return PointPtr();
         }
         else
         {
@@ -222,14 +222,14 @@ void Link::SetObjectFromXMLData( DOMNode* element )
         // for module location
         {
             dataValueStringName = GetSubElement( currentElement, "fromModule", 0 );
-            mModuleInfo.first = new ves::open::xml::DataValuePair( "FLOAT" );
+            mModuleInfo.first = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair(  "FLOAT" ) );
             mModuleInfo.first->SetObjectFromXMLData( dataValueStringName );
         }
         // for module location
         {
             dataValueStringName = GetSubElement( currentElement, "toModule", 0 );
 
-            mModuleInfo.second = new ves::open::xml::DataValuePair( "FLOAT" );
+            mModuleInfo.second = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair(  "FLOAT" ) );
             mModuleInfo.second->SetObjectFromXMLData( dataValueStringName );
         }
 

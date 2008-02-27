@@ -64,7 +64,7 @@ ThreeDDoubleArray::ThreeDDoubleArray( const ThreeDDoubleArray& input )
     mNElements  = input.mNElements;
     for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
     {
-        mTwoDArray.push_back( new TwoDDoubleArray( *( input.mTwoDArray.at( i ) ) ) );
+        mTwoDArray.push_back( TwoDDoubleArrayPtr( new TwoDDoubleArray( *( input.mTwoDArray.at( i ) ) ) ) );
     }
     mMinIndex = input.mMinIndex;
 }
@@ -82,7 +82,7 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input 
 
         for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
         {
-            mTwoDArray.push_back( new TwoDDoubleArray( *( input.mTwoDArray.at( i ) ) ) );
+            mTwoDArray.push_back( TwoDDoubleArrayPtr( new TwoDDoubleArray( *( input.mTwoDArray.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -90,7 +90,7 @@ ThreeDDoubleArray& ThreeDDoubleArray::operator=( const ThreeDDoubleArray& input 
 /////////////////////////////////////////////////
 void ThreeDDoubleArray::AddElementToArray( std::vector< std::vector< double > > value )
 {
-    mTwoDArray.push_back( new TwoDDoubleArray( ) );
+    mTwoDArray.push_back( TwoDDoubleArrayPtr( new TwoDDoubleArray( ) ) );
     mTwoDArray.back()->SetArray( value );
     mNElements = static_cast< unsigned int >( mTwoDArray.size() );
 }
@@ -109,7 +109,7 @@ void ThreeDDoubleArray::SetArray( std::vector< std::vector< std::vector< double 
 
     for( size_t i = 0; i < input.size(); ++i )
     {
-        mTwoDArray.push_back( new TwoDDoubleArray( ) );
+        mTwoDArray.push_back( TwoDDoubleArrayPtr( new TwoDDoubleArray( ) ) );
         mTwoDArray.back()->SetArray( input.at( i ) );
     }
 }
@@ -194,7 +194,7 @@ void ThreeDDoubleArray::SetObjectFromXMLData( DOMNode* xmlInput )
         for( XMLSize_t i = 0; i < numNodes; ++i )
         {
             //We know this about the node so we can cast it...
-            mTwoDArray.push_back( new TwoDDoubleArray() );
+            mTwoDArray.push_back( TwoDDoubleArrayPtr( new TwoDDoubleArray() ) );
             mTwoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }

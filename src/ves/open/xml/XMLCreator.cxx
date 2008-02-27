@@ -53,153 +53,155 @@ using namespace ves::open::xml;
 /////////////////////////////////////////////////////////////////////////
 XMLObjectPtr XMLCreator::CreateNewXMLObject( const std::string& objectType )
 {
+    XMLObjectPtr tmp = XMLObjectPtr();
+
     if( objectType == "FloatArray" )
     {
-        FloatArrayPtr temp = new FloatArray();
-        return temp;
+        tmp = FloatArrayPtr( new FloatArray() );
     }
     else if( objectType == "Transform" )
     {
-        TransformPtr temp = new Transform();
-        return temp;
+        tmp = TransformPtr( new Transform() );
     }
     else if( objectType == "Command" )
     {
-        CommandPtr temp = new Command();
-        return temp;
+        tmp = CommandPtr( new Command() );
     }
     else if( objectType == "vecommand" )
     {
-        CommandPtr temp = new Command();
-        return temp;
+        tmp = CommandPtr( new Command() );
     }
     else if( objectType == "DataValuePair" )
     {
-        DataValuePairPtr temp = new DataValuePair();
-        return temp;
+        tmp = DataValuePairPtr( new DataValuePair() );
     }
     else if( objectType == "OneDDoubleArray" )
     {
-        OneDDoubleArrayPtr temp = new OneDDoubleArray();
-        return temp;
+        tmp = OneDDoubleArrayPtr( new OneDDoubleArray() );
     }
     else if( objectType == "OneDIntArray" )
     {
-        OneDIntArrayPtr temp = new OneDIntArray();
-        return temp;
+        tmp = OneDIntArrayPtr( new OneDIntArray() );
     }
     else if( objectType == "OneDStringArray" )
     {
-        OneDStringArrayPtr temp = new OneDStringArray();
-        return temp;
+        tmp = OneDStringArrayPtr( new OneDStringArray() );
     }
     else if( objectType == "ParameterBlock" )
     {
-        ParameterBlockPtr temp = new ParameterBlock();
-        return temp;
+        tmp = ParameterBlockPtr( new ParameterBlock() );
     }
     else if( objectType == "StateInfo" )
     {
-        StateInfoPtr temp = new StateInfo();
-        return temp;
+        tmp = StateInfoPtr( new StateInfo() );
     }
     else if( objectType == "ThreeDDoubleArray" )
     {
-        ThreeDDoubleArrayPtr temp = new ThreeDDoubleArray();
-        return temp;
+        tmp = ThreeDDoubleArrayPtr( new ThreeDDoubleArray() );
     }
     else if( objectType == "Transform" )
     {
-        TransformPtr temp = new Transform();
-        return temp;
+        tmp = TransformPtr( new Transform() );
     }
     else if( objectType == "TwoDDoubleArray" )
     {
-        TwoDDoubleArrayPtr temp = new TwoDDoubleArray();
-        return temp;
+        tmp = TwoDDoubleArrayPtr( new TwoDDoubleArray() );
     }
     else if( objectType == "TwoDIntArray" )
     {
-        TwoDIntArrayPtr temp = new TwoDIntArray();
-        return temp;
+        tmp = TwoDIntArrayPtr( new TwoDIntArray() );
     }
     else if( objectType == "ThreeDIntArray" )
     {
-        ThreeDIntArrayPtr temp = new ThreeDIntArray();
-        return temp;
+        tmp = ThreeDIntArrayPtr( new ThreeDIntArray() );
     }
     else if( objectType == "User" )
     {
-        UserPtr temp = new User();
-        return temp;
+        tmp = UserPtr( new User() );
     }
-    return XMLObjectPtr();
+    return tmp;
 }
 ////////////////////////////////////////////////////////////////////////////
 XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( const std::string& objectType,
-                                               const XMLObjectPtr& objectToCopy )
+                                               const XMLObjectPtr objectToCopy )
 {
+    XMLObjectPtr tmp = XMLObjectPtr();
     if( objectType == "FloatArray" )
     {
-        return FloatArrayPtr( objectToCopy );
+        tmp = FloatArrayPtr( new FloatArray(
+            *( boost::dynamic_pointer_cast<FloatArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "Command" )
     {
-        return CommandPtr( objectToCopy );
+        tmp = CommandPtr( new Command(
+            *( boost::dynamic_pointer_cast<Command>( objectToCopy ) ) ) );
     }
     else if( objectType == "vecommand" )
     {
-        return CommandPtr( objectToCopy );
+        tmp = CommandPtr( new Command(
+            *( boost::dynamic_pointer_cast<Command>( objectToCopy ) ) ) );
     }
     else if( objectType == "DataValuePair" )
     {
-        return DataValuePairPtr( objectToCopy );
+        tmp = DataValuePairPtr( new DataValuePair(
+            *( boost::dynamic_pointer_cast<DataValuePair>( objectToCopy ) ) ) );
     }
     else if( objectType == "OneDDoubleArray" )
     {
-        return OneDDoubleArrayPtr( objectToCopy );
+        tmp = OneDDoubleArrayPtr( new OneDDoubleArray(
+            *( boost::dynamic_pointer_cast<OneDDoubleArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "OneDIntArray" )
     {
-        return OneDIntArrayPtr( objectToCopy );
+        tmp = OneDIntArrayPtr( new OneDIntArray(
+            *( boost::dynamic_pointer_cast<OneDIntArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "OneDStringArray" )
     {
-        return OneDStringArrayPtr( objectToCopy );
+        tmp = OneDStringArrayPtr( new OneDStringArray(
+            *( boost::dynamic_pointer_cast<OneDStringArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "ParameterBlock" )
     {
-        return ParameterBlockPtr( objectToCopy );
+        tmp = ParameterBlockPtr( new ParameterBlock(
+            *( boost::dynamic_pointer_cast<ParameterBlock>( objectToCopy ) ) ) );
     }
     else if( objectType == "StateInfo" )
     {
-        return StateInfoPtr( objectToCopy );
+        tmp = StateInfoPtr( new StateInfo(
+            *( boost::dynamic_pointer_cast<StateInfo>( objectToCopy ) ) ) );
     }
     else if( objectType == "ThreeDDoubleArray" )
     {
-        return ThreeDDoubleArrayPtr( objectToCopy );
+        tmp = ThreeDDoubleArrayPtr( new ThreeDDoubleArray(
+            *( boost::dynamic_pointer_cast<ThreeDDoubleArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "ThreeDIntArray" )
     {
-        return ThreeDIntArrayPtr( objectToCopy );
+        tmp = ThreeDIntArrayPtr( new ThreeDIntArray(
+            *( boost::dynamic_pointer_cast<ThreeDIntArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "Transform" )
     {
-        return TransformPtr( objectToCopy );
+        tmp = TransformPtr( new Transform(
+            *( boost::dynamic_pointer_cast<Transform>( objectToCopy ) ) ) );
     }
     else if( objectType == "TwoDDoubleArray" )
     {
-        return TwoDDoubleArrayPtr( objectToCopy );
+        tmp = TwoDDoubleArrayPtr( new TwoDDoubleArray(
+            *( boost::dynamic_pointer_cast<TwoDDoubleArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "TwoDIntArray" )
     {
-        return TwoDIntArrayPtr( objectToCopy );
+        tmp = TwoDIntArrayPtr( new TwoDIntArray(
+            *( boost::dynamic_pointer_cast<TwoDIntArray>( objectToCopy ) ) ) );
     }
     else if( objectType == "User" )
     {
-        return UserPtr( objectToCopy );
+        tmp = UserPtr( new User(
+            *( boost::dynamic_pointer_cast<User>( objectToCopy ) ) ) );
     }
-    return ves::open::xml::XMLObjectPtr();
+    return tmp;
 }
 
 

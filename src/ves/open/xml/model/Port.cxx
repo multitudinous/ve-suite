@@ -48,7 +48,7 @@ Port::Port( )
     mPortNumber = 0;
     //mModelName = '\0';
     //mDataFlow = '\0';
-    mPortLocation = new Point();
+    mPortLocation = PointPtr( new Point() );
     SetObjectType( "Port" );
     SetObjectNamespace( "Model" );
 }
@@ -65,13 +65,13 @@ Port::Port( const Port& input )
 
     for( size_t i = 0; i < input.mPortData.size(); ++i )
     {
-        mPortData.push_back( new DataValuePair( *( input.mPortData.at( i ) ) ) );
+        mPortData.push_back( DataValuePairPtr( new DataValuePair( *( input.mPortData.at( i ) ) ) ) );
     }
 
     mPortNumber = input.mPortNumber;
     mModelName = input.mModelName;
     mDataFlow = input.mDataFlow;
-    mPortLocation = new Point( *( input.mPortLocation ) );
+    mPortLocation = PointPtr( new Point( *( input.mPortLocation ) ) );
 }
 /////////////////////////////////////////////////////
 Port& Port::operator=( const Port& input )
@@ -84,7 +84,7 @@ Port& Port::operator=( const Port& input )
 
         for( size_t i = 0; i < input.mPortData.size(); ++i )
         {
-            mPortData.push_back( new DataValuePair( *( input.mPortData.at( i ) ) ) );
+            mPortData.push_back( DataValuePairPtr( new DataValuePair( *( input.mPortData.at( i ) ) ) ) );
         }
 
         mPortNumber = input.mPortNumber;
@@ -201,7 +201,7 @@ void Port::SetObjectFromXMLData( DOMNode* element )
     // for port location
     {
         dataValueStringName = GetSubElement( currentElement, "portLocation", 0 );
-        mPortLocation = new Point();
+        mPortLocation = PointPtr( new Point() );
         mPortLocation->SetObjectFromXMLData( dataValueStringName );
     }
     // for port data
@@ -212,7 +212,7 @@ void Port::SetObjectFromXMLData( DOMNode* element )
         for( unsigned int i = 0; i < numberOfmPortData; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "portData", i );
-            mPortData.push_back( new DataValuePair( ) );
+            mPortData.push_back( DataValuePairPtr( new DataValuePair( ) ) );
             mPortData.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }

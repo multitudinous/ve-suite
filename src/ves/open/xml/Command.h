@@ -72,14 +72,14 @@ public:
 
     ///Set the name of the command.
     ///\param name The name of the command to execute.
-    void SetCommandName( std::string name );
+    void SetCommandName( const std::string& name );
 
     ///Add a data value pair for the command.
     ///\param commandValuePair The data value pair representing command information.
     //void AddDataValuePair( DataValuePair* commandValuePair );
     ///Add a data value pair for the command.
     ///\param commandValuePair The data value pair representing command information.
-    void AddDataValuePair( DataValuePairWeakPtr commandValuePair );
+    void AddDataValuePair( DataValuePairPtr commandValuePair );
 
     ///Populate the Command data from an XML element.
     ///\param xmlInput The element to populate the command data from.
@@ -92,12 +92,12 @@ public:
     ///Get a specific DataValuePair by name.
     ///\param dataValueName The name of the DataValuePair to search for.
     ///\return The dvp with the requested name
-    DataValuePairWeakPtr GetDataValuePair( std::string dataValueName );
+    DataValuePairPtr GetDataValuePair( const std::string& dataValueName );
 
     ///Get a DataValuePair at the index.
     ///\param index The index of the DataValuePair to return.
     ///\return The dvp at the requested index
-    DataValuePairWeakPtr GetDataValuePair( size_t index );
+    DataValuePairPtr GetDataValuePair( size_t index );
 
     ///Return the number of DataValuePair s in this command.
     ///\return The number of dvps stored in this command

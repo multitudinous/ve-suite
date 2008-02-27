@@ -78,7 +78,7 @@ OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input )
     return *this;
 }
 /////////////////////////////////////////////////
-void OneDStringArray::AddElementToArray( std::string value )
+void OneDStringArray::AddElementToArray( const std::string& value )
 {
     mArray.push_back( value );
     mNElements = static_cast< unsigned int >( mArray.size() );

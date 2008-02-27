@@ -85,7 +85,7 @@ public:
     ///\param xmlData The input XML string or file.
     ///\param objectNamespace The namespace of the object to extract.
     ///\param tagName The tagname of the element to extract.
-    virtual void ReadXMLData( std::string xmlData,
+    virtual void ReadXMLData( const std::string& xmlData,
                               std::string objectNamespace,
                               std::string tagName );
 
@@ -93,7 +93,7 @@ public:
     ///based on user input
     ///\param xmlData The input XML string or file.
     ///\param elementTypes Vector of pairs of data types requested.
-    virtual void ReadXMLData( std::string xmlData,
+    virtual void ReadXMLData( const std::string& xmlData,
                               std::vector< std::pair< std::string, std::string > > elementTypes );
 
     ///Write the current XML document

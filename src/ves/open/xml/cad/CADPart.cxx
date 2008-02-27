@@ -39,7 +39,7 @@ using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////
 //Constructor                                             //
 ////////////////////////////////////////////////////////////
-CADPart::CADPart( std::string name )
+CADPart::CADPart( const std::string& name )
         : ves::open::xml::cad::CADNode( name )
 {
     m_cadFileName = std::string( "CADFile" );
@@ -52,7 +52,7 @@ CADPart::CADPart( std::string name )
 CADPart::~CADPart()
 {}
 /////////////////////////////////////////////////////
-void CADPart::SetCADFileName( std::string cadFileName )
+void CADPart::SetCADFileName( const std::string& cadFileName )
 {
     m_cadFileName = cadFileName;
 }

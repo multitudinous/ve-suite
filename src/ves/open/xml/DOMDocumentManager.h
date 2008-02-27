@@ -101,24 +101,24 @@ public:
 
     ///Set the output file to write the XML document to.
     ///\param xmlOutputFile The full path and name to write the XML document to.
-    void SetOuputXMLFile( std::string xmlOutputFile );
+    void SetOuputXMLFile( const std::string& xmlOutputFile );
 
     /// Functions used to create a document and then return it in a std::string
     std::string WriteAndReleaseCommandDocument( void );
     ///Create the command document.
     ///\param type The type of document to be encoded in the header of the xml document either: Network, Shader, Command
-    void CreateCommandDocument( std::string type );
+    void CreateCommandDocument( const std::string& type );
 
 private:
     std::string mOutputXMLFile;///<The output XML file to write.
 
     ///Read an input file.
     ///\param xmlFile The XML filename.
-    void _readInputFile( std::string xmlFile );
+    void _readInputFile( const std::string& xmlFile );
 
     ///Read an input string.
     ///\param xmlString The XML filename.
-    void _readInputString( std::string xmlString );
+    void _readInputString( const std::string& xmlString );
 
     bool mParseXMLFile;///<Should we parse an XML file or string.
     bool mWriteXMLFile;///<Should we write an XML file or string.

@@ -58,7 +58,7 @@ Command::Command( const Command& input )
     mCmdName =  input.mCmdName;
     for( size_t i = 0; i < input.mDataValuePairs.size(); ++i )
     {
-        mDataValuePairs.push_back( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) );
+        mDataValuePairs.push_back( DataValuePairPtr( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) ) );
         mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = mDataValuePairs.back();
     }
 }
@@ -76,7 +76,7 @@ Command& Command::operator=( const Command& input )
 
         for( size_t i = 0; i < input.mDataValuePairs.size(); ++i )
         {
-            mDataValuePairs.push_back( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) );
+            mDataValuePairs.push_back( DataValuePairPtr( new DataValuePair(( *( input.mDataValuePairs.at( i ) ) ) ) ) );
             mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = mDataValuePairs.back();
         }
     }
@@ -89,7 +89,7 @@ Command& Command::operator=( const Command& input )
    mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName() ] = commandValuePair;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void Command::AddDataValuePair( DataValuePairWeakPtr commandValuePair )
+void Command::AddDataValuePair( DataValuePairPtr commandValuePair )
 {
     mDataValuePairs.push_back( commandValuePair );
     mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = commandValuePair;
@@ -175,7 +175,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         for( unsigned int i = 0; i < nDVPairsIn; ++i )
         {
             DOMElement* dvPairIn = dynamic_cast<DOMElement*>( subElements->item( i ) );
-            DataValuePairPtr veDvp = new DataValuePair();
+            DataValuePairPtr veDvp( new DataValuePair() );
             veDvp->SetObjectFromXMLData( dvPairIn );
             mDataValuePairs.push_back( veDvp );
             mNameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
@@ -188,12 +188,12 @@ const std::string Command::GetCommandName()
     return mCmdName;
 }
 ///////////////////////////////////////
-void Command::SetCommandName( std::string name )
+void Command::SetCommandName( const std::string& name )
 {
     mCmdName = name;
 }
 //////////////////////////////////////////////////////////////////////////////
-DataValuePairWeakPtr Command::GetDataValuePair( std::string dataValueName )
+DataValuePairPtr Command::GetDataValuePair( const std::string& dataValueName )
 {
     std::map< std::string, DataValuePairPtr >::iterator iter;
     iter = mNameToDataValuePairMap.find( dataValueName );
@@ -201,10 +201,10 @@ DataValuePairWeakPtr Command::GetDataValuePair( std::string dataValueName )
     {
         return iter->second;
     }
-    return 0;
+    return DataValuePairPtr();
 }
 ////////////////////////////////////////////////////////////////////////
-DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
+DataValuePairPtr Command::GetDataValuePair( size_t index )
 {
     try
     {
@@ -216,7 +216,7 @@ DataValuePairWeakPtr Command::GetDataValuePair( size_t index )
         << "is out of sequence. Please ask for a lower number point."
         << std::endl;
 
-        return 0;
+        return DataValuePairPtr();
     }
 }
 ///////////////////////////////////////////////////

@@ -64,7 +64,7 @@ ThreeDIntArray::ThreeDIntArray( const ThreeDIntArray& input )
     mNElements  = input.mNElements;
     for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
     {
-        mTwoDArray.push_back( new TwoDIntArray( *( input.mTwoDArray.at( i ) ) ) );
+        mTwoDArray.push_back( TwoDIntArrayPtr( new TwoDIntArray( *( input.mTwoDArray.at( i ) ) ) ) );
     }
     mMinIndex = input.mMinIndex;
 }
@@ -82,7 +82,7 @@ ThreeDIntArray& ThreeDIntArray::operator=( const ThreeDIntArray& input )
 
         for( size_t i = 0; i < input.mTwoDArray.size(); ++i )
         {
-            mTwoDArray.push_back( new TwoDIntArray( *( input.mTwoDArray.at( i ) ) ) );
+            mTwoDArray.push_back( TwoDIntArrayPtr( new TwoDIntArray( *( input.mTwoDArray.at( i ) ) ) ) );
         }
     }
     return *this;
@@ -90,7 +90,7 @@ ThreeDIntArray& ThreeDIntArray::operator=( const ThreeDIntArray& input )
 /////////////////////////////////////////////////
 void ThreeDIntArray::AddElementToArray( std::vector< std::vector< long > > value )
 {
-    mTwoDArray.push_back( new TwoDIntArray( ) );
+    mTwoDArray.push_back( TwoDIntArrayPtr( new TwoDIntArray( ) ) );
     mTwoDArray.back()->SetArray( value );
     mNElements = static_cast< unsigned int >( mTwoDArray.size() );
 }
@@ -109,7 +109,7 @@ void ThreeDIntArray::SetArray( std::vector< std::vector< std::vector< long > > >
 
     for( size_t i = 0; i < input.size(); ++i )
     {
-        mTwoDArray.push_back( new TwoDIntArray( ) );
+        mTwoDArray.push_back( TwoDIntArrayPtr( new TwoDIntArray( ) ) );
         mTwoDArray.back()->SetArray( input.at( i ) );
     }
 }
@@ -194,7 +194,7 @@ void ThreeDIntArray::SetObjectFromXMLData( DOMNode* xmlInput )
         for( XMLSize_t i = 0; i < numNodes; ++i )
         {
             //We know this about the node so we can cast it...
-            mTwoDArray.push_back( new TwoDIntArray( ) );
+            mTwoDArray.push_back( TwoDIntArrayPtr( new TwoDIntArray( ) ) );
             mTwoDArray.back()->SetObjectFromXMLData( nodeList->item( i ) );
         }
     }

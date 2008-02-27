@@ -102,7 +102,7 @@ XMLObjectFactory* XMLObjectFactory::Instance()
     return mInstanceOfFactory;
 }
 /////////////////////////////////////////////////////////////////////////////////////
-XMLObjectPtr XMLObjectFactory::CreateXMLObject( std::string objectType,
+XMLObjectPtr XMLObjectFactory::CreateXMLObject( const std::string& objectType,
                                               std::string objectNameSpace )
 {
     std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
@@ -115,7 +115,7 @@ XMLObjectPtr XMLObjectFactory::CreateXMLObject( std::string objectType,
             return temp;
         }
     }
-    return 0;
+    return XMLObjectPtr();
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ XMLObjectPtr XMLObjectFactory::CreateXMLObjectCopy( XMLObjectPtr objectToCopy )
     //return 0;
 }
 /////////////////////////////////////////////////////////////////////////////
-bool XMLObjectFactory::ObjectCreatorIsRegistered( std::string objectNamespace )
+bool XMLObjectFactory::ObjectCreatorIsRegistered( const std::string& objectNamespace )
 {
     std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
     if( mObjectCreators.find( objectNamespace ) != mObjectCreators.end() )
@@ -146,7 +146,7 @@ bool XMLObjectFactory::ObjectCreatorIsRegistered( std::string objectNamespace )
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-bool XMLObjectFactory::RegisterObjectCreator( std::string objectNamespace, CreationEventHandler* newCreator )
+bool XMLObjectFactory::RegisterObjectCreator( const std::string& objectNamespace, CreationEventHandler* newCreator )
 {
     std::map<std::string, CreationEventHandler* >::iterator xmlCreator;
     if( mObjectCreators.find( objectNamespace ) != mObjectCreators.end() )

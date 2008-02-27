@@ -75,7 +75,7 @@ public:
 
     ///\param objectType The unique string specifying what object to create
     ///\param objectNamespace The namespace that the object belongs to.
-    XMLObjectPtr CreateXMLObject( std::string objectType,
+    XMLObjectPtr CreateXMLObject( const std::string& objectType,
                                 std::string objectNamespace );
 
     ///\param objectToCopy The object to pass to the copy constructor
@@ -88,7 +88,7 @@ public:
     ///Shader == Objects from the Shader
     ///\param objectNamespace The unique string specifying what namespace to register
     ///\param objectCreator The objectCreator to register
-    bool RegisterObjectCreator( std::string objectNamespace, CreationEventHandler* objectCreator );
+    bool RegisterObjectCreator( const std::string& objectNamespace, CreationEventHandler* objectCreator );
 
     ///Check if a CreationEventHandler is registered
     ///Valid types so far are:
@@ -96,7 +96,7 @@ public:
     ///CAD == Objects from the CAD namespace
     ///Shader == Objects from the Shader
     ///\param objectNamespace The unique string specifying what namespace to register
-    bool ObjectCreatorIsRegistered( std::string objectNamespace );
+    bool ObjectCreatorIsRegistered( const std::string& objectNamespace );
 protected:
     ///Base constructor
     XMLObjectFactory( );

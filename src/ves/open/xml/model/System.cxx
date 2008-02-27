@@ -47,7 +47,7 @@ System::System()
 {
     SetObjectType( "System" );
     SetObjectNamespace( "Model" );
-    mParentModel = NULL;
+    mParentModel = ModelPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 System::~System()
@@ -67,11 +67,11 @@ System::~System()
 System::System( const System& input )
         : XMLObject( input )
 {
-    mNetwork = new Network( *( input.mNetwork ) );
+    mNetwork = NetworkPtr( new Network( *(  input.mNetwork ) ) );
 
     for( size_t i = 0; i < input.mModels.size(); ++i )
     {
-        mModels.push_back( new Model( *input.mModels.at( i ) ) );
+        mModels.push_back( ModelPtr( new Model( *input.mModels.at( i ) ) ) );
     }
     mParentModel = input.mParentModel;
 }
@@ -82,12 +82,12 @@ System& System::operator=( const System& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        mNetwork = new Network( *input.mNetwork );
+        mNetwork = NetworkPtr( new Network(  *input.mNetwork ) );
 
         mModels.clear();
         for( size_t i = 0; i < input.mModels.size(); ++i )
         {
-            mModels.push_back( new Model( *input.mModels.at( i ) ) );
+            mModels.push_back( ModelPtr( new Model( *input.mModels.at( i ) ) ) );
         }
         mParentModel = input.mParentModel;
     }
@@ -135,7 +135,7 @@ void System::SetObjectFromXMLData( DOMNode* element )
     // for network
     {
         dataValueStringName = GetSubElement( currentElement, "network", 0 );
-        mNetwork = new Network();
+        mNetwork = NetworkPtr( new Network() );
         mNetwork->SetParentModel( mParentModel );
         mNetwork->SetObjectFromXMLData( dataValueStringName );
         dataValueStringName = 0;
@@ -153,7 +153,7 @@ void System::SetObjectFromXMLData( DOMNode* element )
             {
                 dataValueStringName =
                     static_cast< DOMElement* >( subElements->item( i ) );
-                ves::open::xml::model::ModelSharedPtr newModel = new Model();
+                ves::open::xml::model::ModelSharedPtr newModel( new Model() );
                 newModel->SetParentModel( mParentModel );
                 mModels.push_back( newModel );
                 mModels.back()->SetObjectFromXMLData( dataValueStringName );

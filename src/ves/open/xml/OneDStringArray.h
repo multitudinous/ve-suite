@@ -67,7 +67,7 @@ public:
 
     ///Add a new element to the end of this array
     ///\param newValue The new value to add.
-    void AddElementToArray( std::string newValue );
+    void AddElementToArray( const std::string& newValue );
     ///Set this array from an input vector
     ///\param newArrayValues The new values to set to this array.
     void SetArray( std::vector<std::string> newArrayValues );

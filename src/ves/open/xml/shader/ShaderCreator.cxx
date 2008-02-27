@@ -41,44 +41,50 @@ using namespace ves::open::xml::shader;
 ////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObject( const std::string& objectType )
 {
+    XMLObjectPtr tmp = XMLObjectPtr();
     if( objectType == "Program" )
     {
-        return ProgramPtr( new Program() );
+        tmp = ProgramPtr( new Program() );
     }
     else if( objectType == "Shader" )
     {
-        return ShaderPtr( new Shader() );
+        tmp = ShaderPtr( new Shader() );
     }
     else if( objectType == "Uniform" )
     {
-        return UniformPtr( new Uniform() );
+        tmp = UniformPtr( new Uniform() );
     }
     else if( objectType == "TextureImage" )
     {
-        return TextureImagePtr( new TextureImage() );
+        tmp = TextureImagePtr( new TextureImage() );
     }
-    return ves::open::xml::XMLObjectPtr();
+    return tmp;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr ShaderCreator::CreateNewXMLObjectCopy(
                                     const std::string& objectType,
                                     const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
+    ves::open::xml::XMLObjectPtr tmp = ves::open::xml::XMLObjectPtr();
     if( objectType == "Program" )
     {
-        return ProgramPtr( objectToCopy );
+        tmp = ProgramPtr( new Program(
+            *( boost::dynamic_pointer_cast<Program>( objectToCopy ) ) ) );
     }
     else if( objectType == "Shader" )
     {
-        return ShaderPtr( objectToCopy );
+        tmp = ShaderPtr( new Shader(
+            *( boost::dynamic_pointer_cast<Shader>( objectToCopy ) ) ) );
     }
     else if( objectType == "Uniform" )
     {
-        return UniformPtr( objectToCopy );
+        tmp = UniformPtr( new Uniform(
+            *( boost::dynamic_pointer_cast<Uniform>( objectToCopy ) ) ) );
     }
     else if( objectType == "TextureImage" )
     {
-        return TextureImagePtr( objectToCopy );
+        tmp = TextureImagePtr( new TextureImage(
+            *( boost::dynamic_pointer_cast<TextureImage>( objectToCopy ) ) ) );
     }
-    return ves::open::xml::XMLObjectPtr();
+    return tmp;
 }

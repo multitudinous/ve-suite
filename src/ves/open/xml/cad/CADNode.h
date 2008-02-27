@@ -68,16 +68,16 @@ class VE_CAD_EXPORTS CADNode: public ves::open::xml::XMLObject
 public:
     ///Constructor
     ///\param name The name of this node.
-    CADNode( std::string name );
+    CADNode( const std::string& name );
     virtual ~CADNode();
 
     ///Set the name of the node in the hierachy.
     ///\param name The name to set for this node.
-    void SetNodeName( std::string name );
+    void SetNodeName( const std::string& name );
 
     ///Set the parent for this node.
     ///\param parentID The parent ID of this node.
-    void SetParent( std::string parentID );
+    void SetParent( const std::string& parentID );
 
     ///Set the transform for this node.
     ///\param transform The transform of this node.
@@ -90,16 +90,16 @@ public:
     ///Add an animation file for this CADNode.
     ///\param animationFileName The path to the animation file.
     ///\param animationReferenceName The reference name to the CADNodeAnimation.
-    void AddAnimation( std::string animationReferenceName,
-                       std::string animationFileName );
+    void AddAnimation( const std::string& animationReferenceName,
+                       const std::string& animationFileName );
 
     ///Remove an attribute from the node
     ///\param attributeName The name of the attribute to remove.
-    void RemoveAttribute( std::string attributeName );
+    void RemoveAttribute( const std::string& attributeName );
 
     ///Set the name of the active attribute
     ///\param attributeName The name of the active attribute.
-    void SetActiveAttribute( std::string attributeName );
+    void SetActiveAttribute( const std::string& attributeName );
 
     ///Toggle this node "ON" or "OFF"
     ///\param onOff Flag for visibility\n true == "ON"\n false== "OFF"
@@ -157,7 +157,7 @@ public:
     double GetRestitution();
 
     ///Set the physics mesh of this CAD node.
-    void SetPhysicsMesh( std::string physicsMesh );
+    void SetPhysicsMesh( const std::string& physicsMesh );
 
     ///Get the physics mesh of this CAD node.
     std::string GetPhysicsMesh();
@@ -167,7 +167,7 @@ public:
 
     ///Get an attribute of this CAD node by a name
     ///\param name The name of the attribute to find.
-    ves::open::xml::cad::CADAttributePtr GetAttribute( std::string name );
+    ves::open::xml::cad::CADAttributePtr GetAttribute( const std::string& name );
 
     ///Get an attribute of this CAD node by a name
     ///\param index The index of the attribute to find.
@@ -175,7 +175,7 @@ public:
 
     ///There is probably only one of these but internally we keep a vector of them
     ///\param name The reference name of the animation to find.
-    ves::open::xml::cad::CADNodeAnimationPtr GetAnimation( std::string name );
+    ves::open::xml::cad::CADNodeAnimationPtr GetAnimation( const std::string& name );
 
     ///There is probably only one of these but internally we keep a vector of them
     ///\param index The animation file index in the list.

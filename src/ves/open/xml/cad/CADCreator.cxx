@@ -43,51 +43,58 @@ using namespace ves::open::xml::cad;
 //////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObject( const std::string& objectType )
 {
+    ves::open::xml::XMLObjectPtr tmp = ves::open::xml::XMLObjectPtr();
     if( objectType == "CADAssembly" )
     {
-        return CADAssemblyPtr( new CADAssembly() );
+        tmp = CADAssemblyPtr( new CADAssembly() );
     }
     else if( objectType == "CADPart" )
     {
-        return CADPartPtr( new CADPart() );
+        tmp = CADPartPtr( new CADPart() );
     }
     else if( objectType == "CADAttribute" )
     {
-        return CADAttributePtr( new CADAttribute() );
+        tmp = CADAttributePtr( new CADAttribute() );
     }
     else if( objectType == "CADMaterial" )
     {
-        return CADMaterialPtr( new CADMaterial() );
+        tmp = CADMaterialPtr( new CADMaterial() );
     }
     else if( objectType == "CADNodeAnimation" )
     {
-        return CADNodeAnimationPtr( new CADNodeAnimation() );
+        tmp = CADNodeAnimationPtr( new CADNodeAnimation() );
     }
-    return XMLObjectPtr();
+    return tmp;
 }
 //////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr CADCreator::CreateNewXMLObjectCopy( const std::string& objectType,
         const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
+    ves::open::xml::XMLObjectPtr tmp = ves::open::xml::XMLObjectPtr();
     if( objectType == "CADAssembly" )
     {
-        return CADAssemblyPtr( objectToCopy );
+        tmp = CADAssemblyPtr( new CADAssembly(
+            *( boost::dynamic_pointer_cast<CADAssembly>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADPart" )
     {
-        return CADPartPtr( objectToCopy );
+        tmp = CADPartPtr( new CADPart(
+            *( boost::dynamic_pointer_cast<CADPart>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADAttribute" )
     {
-        return CADAttributePtr( objectToCopy );
+        tmp = CADAttributePtr( new CADAttribute(
+            *( boost::dynamic_pointer_cast<CADAttribute>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADMaterial" )
     {
-        return CADMaterialPtr( objectToCopy );
+        tmp = CADMaterialPtr( new CADMaterial(
+            *( boost::dynamic_pointer_cast<CADMaterial>( objectToCopy ) ) ) );
     }
     else if( objectType == "CADNodeAnimation" )
     {
-        return CADNodeAnimationPtr( objectToCopy );
+        tmp = CADNodeAnimationPtr( new CADNodeAnimation(
+            *( boost::dynamic_pointer_cast<CADNodeAnimation>( objectToCopy ) ) ) );
     }
-    return XMLObjectPtr();
+    return tmp;
 }

@@ -42,6 +42,7 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/dom/DOM.hpp>
 
+#include <vector>
 #include <iostream>
 #include <string>
 #include <typeinfo>

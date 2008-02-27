@@ -59,12 +59,12 @@ CADNodeAnimation::CADNodeAnimation()
 CADNodeAnimation::~CADNodeAnimation()
 {}
 /////////////////////////////////////////////////////////
-void CADNodeAnimation::SetAnimationName( std::string name )
+void CADNodeAnimation::SetAnimationName( const std::string& name )
 {
     _name = name;
 }
 /////////////////////////////////////////////////////////////////
-void CADNodeAnimation::SetAnimationFileName( std::string fileName )
+void CADNodeAnimation::SetAnimationFileName( const std::string& fileName )
 {
     _animationFileName = fileName;
     size_t period = fileName.rfind( "." );
@@ -72,12 +72,12 @@ void CADNodeAnimation::SetAnimationFileName( std::string fileName )
     std::string outfileMinusExtension( fileName, period + 1, 3 );
 }
 //////////////////////////////////////////////////////////////
-void CADNodeAnimation::SetFileType( std::string fileSourceType )
+void CADNodeAnimation::SetFileType( const std::string& fileSourceType )
 {
     _fileSourceType = fileSourceType;
 }
 ////////////////////////////////////////////////////////
-void CADNodeAnimation::SetPlayMode( std::string playMode )
+void CADNodeAnimation::SetPlayMode( const std::string& playMode )
 {
     _playMode = playMode;
 }

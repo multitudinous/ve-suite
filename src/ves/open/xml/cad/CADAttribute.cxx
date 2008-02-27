@@ -47,9 +47,9 @@ CADAttribute::CADAttribute( )
         : XMLObject()
 {
     _attributeType = std::string( "Material" );
-    _material = 0;
+    _material = CADMaterialPtr();
     _blending = false;
-    _glslProgram = 0;
+    _glslProgram = ProgramPtr();
     SetObjectType( "CADAttribute" );
     SetObjectNamespace( "CAD" );
     //This may need to be somewhere else
@@ -81,20 +81,20 @@ void CADAttribute::DisableBlending()
     _blending = false;
 }
 //////////////////////////////////////////////////////////////
-void CADAttribute::SetAttributeType( std::string attributeType )
+void CADAttribute::SetAttributeType( const std::string& attributeType )
 {
     _attributeType = attributeType;
 }
 /////////////////////////////////////////////////////////////
 void CADAttribute::SetMaterial( ves::open::xml::cad::CADMaterial material )
 {
-    _material = new CADMaterial( material );
+    _material = CADMaterialPtr( new CADMaterial(  material ) );
     _attributeType = std::string( "Material" );
 }
 //////////////////////////////////////////////////////////////
 void CADAttribute::SetProgram( ves::open::xml::shader::Program glslProgram )
 {
-    _glslProgram = new Program( glslProgram );
+    _glslProgram = ProgramPtr( new Program(  glslProgram ) );
     _attributeType = std::string( "Program" );
 }
 //////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             if( !_material )
             {
-                _material = new CADMaterial();
+                _material = CADMaterialPtr( new CADMaterial() );
             }
             _material->SetObjectFromXMLData( materialNode );
         }
@@ -149,7 +149,7 @@ void CADAttribute::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             if( !_glslProgram )
             {
-                _glslProgram = new Program();
+                _glslProgram = ProgramPtr( new Program() );
             }
             _glslProgram->SetObjectFromXMLData( programNode );
         }
@@ -180,17 +180,17 @@ CADAttribute::CADAttribute( const CADAttribute& rhs )
         : XMLObject( rhs )
 {
     _attributeType = rhs._attributeType;
-    _material = 0;
-    _glslProgram = 0;
+    _material = CADMaterialPtr();
+    _glslProgram = ProgramPtr();
     _blending = rhs._blending;
 
     if( _attributeType == std::string( "Material" ) )
     {
-        _material = new CADMaterial( *rhs._material );
+        _material = CADMaterialPtr( new CADMaterial(  *rhs._material ) );
     }
     else if( _attributeType == std::string( "Program" ) )
     {
-        _glslProgram = new Program( *rhs._glslProgram );
+        _glslProgram = ProgramPtr( new Program(  *rhs._glslProgram ) );
     }
 }
 //////////////////////////////////////////////////////////////
@@ -204,11 +204,11 @@ CADAttribute& CADAttribute::operator=( const CADAttribute& rhs )
 
         if( _attributeType == std::string( "Material" ) )
         {
-            _material = new CADMaterial( *rhs._material );
+            _material = CADMaterialPtr( new CADMaterial(  *rhs._material ) );
         }
         else if( _attributeType == std::string( "Program" ) )
         {
-            _glslProgram = new Program( *rhs._glslProgram );
+            _glslProgram = ProgramPtr( new Program(  *rhs._glslProgram ) );
         }
     }
     return *this;

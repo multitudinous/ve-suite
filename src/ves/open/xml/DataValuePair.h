@@ -78,7 +78,7 @@ public:
     //UNSIGNED INT
     ///Constructor
     ///\param type The type of value in this pair.
-    DataValuePair( std::string type = std::string( "STRING" ) );
+    DataValuePair( const std::string type = std::string( "STRING" ) );
     ///Destructor
     virtual ~DataValuePair();
     ///Copy Constructor
@@ -88,15 +88,15 @@ public:
 
     /// Set the name
     ///\param name The name of this data value pair
-    void SetDataName( std::string name );
+    void SetDataName( const std::string& name );
 
     ///Set the data value type
     ///\param type Set the type of the data held.
-    void SetDataType( std::string type );
+    void SetDataType( const std::string& type );
 
     ///Set the string data
     ///\param data The string data.
-    void SetDataString( std::string data );
+    void SetDataString( const std::string& data );
 
     ///Set the float data
     ///\param data The float data.
@@ -114,12 +114,12 @@ public:
     unsigned int GetUIntData();
 
     ///Get the data type.
-    std::string GetDataType();
+    const std::string GetDataType();
     ///Get the data name.
-    std::string GetDataName();
+    const std::string GetDataName();
 
     ///Get the string data.
-    std::string GetDataString();
+    const std::string GetDataString();
 
     ///Get the value of the double data.
     double GetDataValue();
@@ -130,57 +130,57 @@ public:
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data XMLObject being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, XMLObjectPtr data );
+    void SetData( const std::string& dataName, XMLObjectPtr data );
 
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data unsgined int being passed in.
-    void SetData( std::string dataName, unsigned int data );
+    void SetData( const std::string& dataName, unsigned int data );
 
     ///String data
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::string data );
+    void SetData( const std::string& dataName, const std::string& data );
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< std::string > data );
+    void SetData( const std::string& dataName, const std::vector< std::string >& data );
 
     ///Double arrays
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, double data );
+    void SetData( const std::string& dataName, double data );
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< double > data );
+    void SetData( const std::string& dataName, const std::vector< double >& data );
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< std::vector< double > > data );
+    void SetData( const std::string& dataName, const std::vector< std::vector< double > >& data );
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< std::vector< std::vector< double > > > data );
+    void SetData( const std::string& dataName, const std::vector< std::vector< std::vector< double > > >& data );
 
     ///Int arrays
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, long data );
+    void SetData( const std::string& dataName, long data );
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< long > data );
+    void SetData( const std::string& dataName, const std::vector< long >& data );
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< std::vector< long > > data );
+    void SetData( const std::string& dataName, const std::vector< std::vector< long > >& data );
     ///Helper functions to set data easily
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
-    void SetData( std::string dataName, std::vector< std::vector< std::vector< long > > > data );
+    void SetData( const std::string& dataName, const std::vector< std::vector< std::vector< long > > >& data );
 
     ///String data
     ///Helper functions to get data easily
@@ -235,7 +235,7 @@ protected:
     ///In derived classes, this should be overridden
     ///\param baseElement The element to extract the XMLObject from.
     ///\param objectType The XMLObject::_objectType to extract
-    virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, std::string objectType );
+    virtual void _extractXMLObject( XERCES_CPP_NAMESPACE_QUALIFIER DOMElement* baseElement, const std::string& objectType  );
 
     std::string mDataType;///<The data type.
     std::string mDataName;///<The data name.

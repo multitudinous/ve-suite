@@ -73,7 +73,7 @@ public:
     //void AddState(CommandPtr state);
     ///Add new state information.
     ///\param state The new state to add which is held in a Command object.
-    void AddState( CommandWeakPtr state );
+    void AddState( CommandPtr state );
 
     ///Clear all current state information.
     void ClearState();
@@ -84,12 +84,12 @@ public:
 
     ///Get a state based on the name.
     ///\param name The name of the state to search for
-    CommandWeakPtr GetState( std::string name );
+    CommandPtr GetState( const std::string& name );
     ///Get the state based on an index
     ///\param index The index to search for.
-    CommandWeakPtr GetState( size_t index );
+    CommandPtr GetState( size_t index );
     ///Get the vector of states for this user
-    std::vector< CommandWeakPtr > GetStateVector( void );
+    std::vector< CommandPtr > GetStateVector( void );
 
 protected:
     ///Internally update the XML data.

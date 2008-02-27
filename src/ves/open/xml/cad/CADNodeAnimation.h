@@ -61,21 +61,21 @@ public:
 
     ///Set the source of animation file .
     ///\param attributeType The type of attribute.
-    void SetAnimationFileName( std::string fileName );
+    void SetAnimationFileName( const std::string& fileName );
 
     ///Set the source of animation file based on file extension.
     ///Currently valid sources are "osg" "txt".
     ///\param fileSourceType The type of attribute.
-    void SetFileType( std::string fileSourceType );
+    void SetFileType( const std::string& fileSourceType );
 
     ///Set the name of the animation
     ///\param name The name of the animation
-    void SetAnimationName( std::string name );
+    void SetAnimationName( const std::string& name );
 
     ///Set the play mode.
     ///Valid types are "Loop" or "Once".
     ///\param playMode The play mode for the animation.
-    void SetPlayMode( std::string playMode );
+    void SetPlayMode( const std::string& playMode );
 
     ///Set the object from XML data
     ///\param xmlNode Node to set this object from

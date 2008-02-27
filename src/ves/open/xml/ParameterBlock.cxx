@@ -44,7 +44,7 @@ ParameterBlock::ParameterBlock( unsigned int id )
         : XMLObject()
 {
     mId = id;
-    mDcs = new Transform();
+    mDcs = TransformPtr( new Transform() );
     SetName( "NULL" );
     SetObjectType( "ParameterBlock" );
 }
@@ -57,7 +57,7 @@ ParameterBlock::~ParameterBlock()
 ParameterBlock::ParameterBlock( const ParameterBlock& input )
         : XMLObject( input )
 {
-    mDcs = new Transform( *input.mDcs );
+    mDcs = TransformPtr( new Transform( *input.mDcs ) );
     mId = input.mId;
     mParamName = input.mParamName;
 
@@ -65,7 +65,7 @@ ParameterBlock::ParameterBlock( const ParameterBlock& input )
 
     for( size_t i = 0; i < input.mProperties.size(); ++i )
     {
-        mProperties.push_back( new DataValuePair( *( input.mProperties.at( i ) ) ) );
+        mProperties.push_back( DataValuePairPtr( new DataValuePair( *( input.mProperties.at( i ) ) ) ) );
     }
 }
 /////////////////////////////////////////////////////
@@ -83,7 +83,7 @@ ParameterBlock& ParameterBlock::operator=( const ParameterBlock& input )
 
         for( size_t i = 0; i < input.mProperties.size(); ++i )
         {
-            mProperties.push_back( new DataValuePair( *( input.mProperties.at( i ) ) ) );
+            mProperties.push_back( DataValuePairPtr( new DataValuePair( *( input.mProperties.at( i ) ) ) ));
         }
     }
     return *this;
@@ -96,7 +96,7 @@ void ParameterBlock::SetBlockId( unsigned int id )
 ///////////////////////////////////////////////////////////////////
 void ParameterBlock::SetTransform( TransformPtr transform )
 {
-    *mDcs = *transform;
+    mDcs = transform;
 }
 /////////////////////////////////////////////////////////////////
 void ParameterBlock::AddProperty( DataValuePairPtr prop )
@@ -130,7 +130,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
         DOMElement* dataValueStringName = 0;
         //get the transform
         dataValueStringName = GetSubElement( currentElement, "transform", 0 );
-        mDcs = new Transform();
+        mDcs = TransformPtr( new Transform() );
         mDcs->SetObjectFromXMLData( dataValueStringName );
 
         //Get the block id
@@ -148,7 +148,7 @@ void ParameterBlock::SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNod
         for( unsigned int i = 0; i < numberOfProperties; ++i )
         {
             dataValueStringName = GetSubElement( currentElement, "properties", i );
-            mProperties.push_back( new DataValuePair() );
+            mProperties.push_back( DataValuePairPtr( new DataValuePair() ) );
             mProperties.back()->SetObjectFromXMLData( dataValueStringName );
         }
     }
@@ -180,7 +180,7 @@ TransformPtr ParameterBlock::GetTransform()
     return mDcs;
 }
 ///////////////////////////////////////////////////////////////////////
-DataValuePairPtr ParameterBlock::GetProperty( std::string name )
+DataValuePairPtr ParameterBlock::GetProperty( const std::string& name )
 {
     size_t nProps = mProperties.size();
     for( size_t i = 0; i < nProps; i++ )
@@ -191,10 +191,10 @@ DataValuePairPtr ParameterBlock::GetProperty( std::string name )
         }
     }
     /*
-    mProperties.push_back( new DataValuePair() );
+    mProperties.push_back( DataValuePairPtr( new DataValuePair() ) );
     mProperties.back()->SetDataName( name );
     */
-    return 0;
+    return DataValuePairPtr();
 }
 /////////////////////////////////////////////////////////////////////////
 DataValuePairPtr ParameterBlock::GetProperty( int index )
@@ -209,11 +209,11 @@ DataValuePairPtr ParameterBlock::GetProperty( int index )
         {
             std::cerr << "The element request is out of sequence."
             << " Please ask for a lower number point." << std::endl;
-            return 0;
+            return DataValuePairPtr();
         }
         else
         {
-            mProperties.push_back( new DataValuePair() );
+            mProperties.push_back( DataValuePairPtr( new DataValuePair() ) );
             return mProperties.back();
         }
     }
@@ -242,7 +242,7 @@ void ParameterBlock::RemoveProperty( unsigned int index )
     }
 }
 /////////////////////////////////////////////////////////////////////////
-void ParameterBlock::SetName( std::string name )
+void ParameterBlock::SetName( const std::string& name )
 {
     mParamName = name;
 }

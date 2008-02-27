@@ -44,93 +44,105 @@ using namespace ves::open::xml::model;
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr ModelCreator::CreateNewXMLObject( const std::string& objectType )
 {
+    ves::open::xml::XMLObjectPtr tmp = ves::open::xml::XMLObjectPtr();
     if( objectType == "Link" )
     {
-        return LinkPtr( new Link() );
+        tmp = LinkPtr( new Link() );
     }
     else if( objectType == "veModel" )
     {
-        return ModelPtr( new Model() );
+        tmp = ModelPtr( new Model() );
     }
     else if( objectType == "veNetwork" )
     {
-        return NetworkPtr( new Network() );
+        tmp = NetworkPtr( new Network() );
     }
     else if( objectType == "Model" )
     {
-        return ModelPtr( new Model() );
+        tmp = ModelPtr( new Model() );
     }
     else if( objectType == "Network" )
     {
-        return NetworkPtr( new Network() );
+        tmp = NetworkPtr( new Network() );
     }
     else if( objectType == "Point" )
     {
-        return PointPtr( new Point() );
+        tmp = PointPtr( new Point() );
     }
     else if( objectType == "Port" )
     {
-        return PortPtr( new Port() );
+        tmp = PortPtr( new Port() );
     }
     else if( objectType == "Tag" )
     {
-        return TagPtr( new Tag() );
+        tmp = TagPtr( new Tag() );
     }
     else if( objectType == "System" )
     {
-        return SystemPtr( new System() );
+        tmp = SystemPtr( new System() );
     }
     else if( objectType == "veSystem" )
     {
-        return SystemPtr( new System() );
+        tmp = SystemPtr( new System() );
     }
-    return XMLObjectPtr();
+    return tmp;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::XMLObjectPtr
 ModelCreator::CreateNewXMLObjectCopy( const std::string& objectType,
                                       const ves::open::xml::XMLObjectPtr& objectToCopy )
 {
+    ves::open::xml::XMLObjectPtr tmp = ves::open::xml::XMLObjectPtr();
     if( objectType == "Link" )
     {
-        return LinkPtr( objectToCopy );
+        tmp = LinkPtr( new Link(
+            *( boost::dynamic_pointer_cast<Link>( objectToCopy ) ) ) );
     }
     else if( objectType == "Model" )
     {
-        return ModelPtr( objectToCopy );
+        tmp = ModelPtr( new Model(
+            *( boost::dynamic_pointer_cast<Model>( objectToCopy ) ) ) );
     }
     else if( objectType == "Network" )
     {
-        return NetworkPtr( objectToCopy );
+        tmp = NetworkPtr( new Network(
+            *( boost::dynamic_pointer_cast<Network>( objectToCopy ) ) ) );
     }
     else if( objectType == "veModel" )
     {
-        return ModelPtr( objectToCopy );
+        tmp = ModelPtr( new Model(
+            *( boost::dynamic_pointer_cast<Model>( objectToCopy ) ) ) );
     }
     else if( objectType == "veNetwork" )
     {
-        return NetworkPtr( objectToCopy );
+        tmp = NetworkPtr( new Network(
+            *( boost::dynamic_pointer_cast<Network>( objectToCopy ) ) ) );
     }
     else if( objectType == "Point" )
     {
-        return PointPtr( objectToCopy );
+        tmp = PointPtr( new Point(
+            *( boost::dynamic_pointer_cast<Point>( objectToCopy ) ) ) );
     }
     else if( objectType == "Port" )
     {
-        return PortPtr( objectToCopy );
+        tmp = PortPtr( new Port(
+            *( boost::dynamic_pointer_cast<Port>( objectToCopy ) ) ) );
     }
     else if( objectType == "Tag" )
     {
-        return TagPtr( objectToCopy );
+        tmp = TagPtr( new Tag(
+            *( boost::dynamic_pointer_cast<Tag>( objectToCopy ) ) ) );
     }
     else if( objectType == "System" )
     {
-        return SystemPtr( objectToCopy );
+        tmp = SystemPtr( new System(
+            *( boost::dynamic_pointer_cast<System>( objectToCopy ) ) ) );
     }
     else if( objectType == "veSystem" )
     {
-        return SystemPtr( objectToCopy );
+        tmp = SystemPtr( new System(
+            *( boost::dynamic_pointer_cast<System>( objectToCopy ) ) ) );
     }
-    return 0;
+    return tmp;
 }
 ////////////////////////////////////////////////////////////////////////////////

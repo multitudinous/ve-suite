@@ -75,7 +75,7 @@ public:
     void SetBlockId( unsigned int id );
     ///Set the name of the parameter block.
     ///\param name The name of the parameter block.
-    void SetName( std::string name );
+    void SetName( const std::string& name );
 
     ///Optional. Set the Transform.
     ///\param transform The Transform information. Commonly used with CFD datasets and CAD information.
@@ -98,7 +98,7 @@ public:
     TransformPtr GetTransform();
     ///Return a DataValuePair based on a name.
     ///\param name The name of the DataValuePair to search for.
-    DataValuePairPtr GetProperty( std::string name );
+    DataValuePairPtr GetProperty( const std::string& name );
     ///Return the DataValuePair at the index.
     ///\param index The index of the DataValuePair.
     DataValuePairPtr GetProperty( int index );

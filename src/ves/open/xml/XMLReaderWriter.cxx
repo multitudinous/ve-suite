@@ -113,7 +113,7 @@ DOMDocumentManager* XMLReaderWriter::GetDOMDocumentManager()
     return mDomDocumentManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLReaderWriter::ReadXMLData( std::string xmlData,
+void XMLReaderWriter::ReadXMLData( const std::string& xmlData,
                                    std::string objectNamespace,
                                    std::string tagname )
 {
@@ -126,7 +126,7 @@ void XMLReaderWriter::ReadXMLData( std::string xmlData,
     mXmlObjects = mInternalXmlObjects;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void XMLReaderWriter::ReadXMLData( std::string xmlData,
+void XMLReaderWriter::ReadXMLData( const std::string& xmlData,
                                    std::vector< std::pair< std::string, std::string > > elementTypes )
 {
     mDomDocumentManager->Load( xmlData );

@@ -47,55 +47,55 @@ using namespace ves::open::xml;
 TextureImage::TextureImage()
         : ves::open::xml::XMLObject()
 {
-    mTextureDescription = new ves::open::xml::Command();
+    mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     //std::cout<<"New texture image"<<std::endl;
     SetObjectType( "TextureImage" );
     SetObjectNamespace( "Shader" );
     mTextureDescription->SetCommandName( "Texture Image Data" );
 
-    DataValuePairWeakPtr storedDimension = new ves::open::xml::DataValuePair();
+    DataValuePairPtr storedDimension( new ves::open::xml::DataValuePair() );
     storedDimension->SetDataType( "UNSIGNED INT" );
     storedDimension->SetDataName( "Dimension" );
     storedDimension->SetDataValue( static_cast<unsigned int>( 2 ) );
     mTextureDescription->AddDataValuePair( storedDimension );
 
-    DataValuePairWeakPtr storedUnit = new ves::open::xml::DataValuePair();
+    DataValuePairPtr storedUnit( new ves::open::xml::DataValuePair() );
     storedUnit->SetDataType( "UNSIGNED INT" );
     storedUnit->SetDataName( "Unit" );
     storedUnit->SetDataValue( static_cast<unsigned int>( 0 ) );
     mTextureDescription->AddDataValuePair( storedUnit );
 
-    DataValuePairWeakPtr typeData = new ves::open::xml::DataValuePair();
+    DataValuePairPtr typeData( new ves::open::xml::DataValuePair() );
     typeData->SetDataType( "STRING" );
     typeData->SetDataName( "Type" );
     typeData->SetDataString( "2D" );
     mTextureDescription->AddDataValuePair( typeData );
 
-    DataValuePairWeakPtr minification = new ves::open::xml::DataValuePair();
+    DataValuePairPtr minification( new ves::open::xml::DataValuePair() );
     minification->SetDataType( "STRING" );
     minification->SetDataName( "Minification" );
     minification->SetDataString( "Linear" );
     mTextureDescription->AddDataValuePair( minification );
 
-    DataValuePairWeakPtr magnification = new ves::open::xml::DataValuePair();
+    DataValuePairPtr magnification( new ves::open::xml::DataValuePair() );
     magnification ->SetDataType( "STRING" );
     magnification ->SetDataName( "Magnification" );
     magnification ->SetDataString( "Linear" );
     mTextureDescription->AddDataValuePair( magnification );
 
-    DataValuePairWeakPtr wrapS = new ves::open::xml::DataValuePair();
+    DataValuePairPtr wrapS( new ves::open::xml::DataValuePair() );
     wrapS->SetDataType( "STRING" );
     wrapS->SetDataName( "Wrap S" );
     wrapS->SetDataString( "Clamp" );
     mTextureDescription->AddDataValuePair( wrapS );
 
-    DataValuePairWeakPtr wrapT = new ves::open::xml::DataValuePair();
+    DataValuePairPtr wrapT( new ves::open::xml::DataValuePair() );
     wrapT->SetDataType( "STRING" );
     wrapT->SetDataName( "Wrap T" );
     wrapT->SetDataString( "Clamp" );
     mTextureDescription->AddDataValuePair( wrapT );
 
-    DataValuePairWeakPtr wrapR = new ves::open::xml::DataValuePair();
+    DataValuePairPtr wrapR( new ves::open::xml::DataValuePair() );
     wrapR->SetDataType( "STRING" );
     wrapR->SetDataName( "Wrap R" );
     wrapR->SetDataString( "Clamp" );
@@ -112,7 +112,7 @@ TextureImage::~TextureImage()
 TextureImage::TextureImage( const TextureImage& rhs )
         : ves::open::xml::XMLObject( rhs )
 {
-    mTextureDescription = new ves::open::xml::Command(( *rhs.mTextureDescription ) );
+    mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command((  *rhs.mTextureDescription ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////
 void TextureImage::SetWrapMode( const std::string& direction, const std::string& wrapMode )
@@ -121,7 +121,7 @@ void TextureImage::SetWrapMode( const std::string& direction, const std::string&
             direction == "Wrap T" ||
             direction == "Wrap R" )
     {
-        ves::open::xml::DataValuePairWeakPtr wrapModeData = mTextureDescription->GetDataValuePair( direction );
+        ves::open::xml::DataValuePairPtr wrapModeData = mTextureDescription->GetDataValuePair( direction );
         if( wrapModeData )
         {
             wrapModeData->SetDataName( direction );
@@ -135,7 +135,7 @@ void TextureImage::SetFilterMode( const std::string& minMagFilter, const std::st
     if( minMagFilter == "Minification" ||
             minMagFilter == "Magnification" )
     {
-        ves::open::xml::DataValuePairWeakPtr filterModeData = mTextureDescription->GetDataValuePair( minMagFilter );
+        ves::open::xml::DataValuePairPtr filterModeData = mTextureDescription->GetDataValuePair( minMagFilter );
         if( filterModeData )
         {
             filterModeData->SetDataName( minMagFilter );
@@ -146,7 +146,7 @@ void TextureImage::SetFilterMode( const std::string& minMagFilter, const std::st
 ///////////////////////////////////////////////////////////////////////////
 bool TextureImage::GetWrapMode( const std::string& direction, std::string& wrapMode )
 {
-    ves::open::xml::DataValuePairWeakPtr wrapModeData = mTextureDescription->GetDataValuePair( direction );
+    ves::open::xml::DataValuePairPtr wrapModeData = mTextureDescription->GetDataValuePair( direction );
     if( wrapModeData )
     {
         wrapMode = wrapModeData->GetDataString();
@@ -158,7 +158,7 @@ bool TextureImage::GetWrapMode( const std::string& direction, std::string& wrapM
 /////////////////////////////////////////////
 bool TextureImage::GetType( std::string& type )
 {
-    ves::open::xml::DataValuePairWeakPtr textureType = mTextureDescription->GetDataValuePair( "Type" );
+    ves::open::xml::DataValuePairPtr textureType = mTextureDescription->GetDataValuePair( "Type" );
     if( textureType )
     {
         type = textureType->GetDataString();
@@ -169,7 +169,7 @@ bool TextureImage::GetType( std::string& type )
 ///////////////////////////////////////////////////////////////////////////
 bool TextureImage::GetFilterMode( const std::string& minMagFilter, std::string& mode )
 {
-    ves::open::xml::DataValuePairWeakPtr filterModeData = mTextureDescription->GetDataValuePair( minMagFilter );
+    ves::open::xml::DataValuePairPtr filterModeData = mTextureDescription->GetDataValuePair( minMagFilter );
     if( filterModeData )
     {
         mode = filterModeData->GetDataString();
@@ -180,7 +180,7 @@ bool TextureImage::GetFilterMode( const std::string& minMagFilter, std::string& 
 ///////////////////////////////////////////////////////
 void TextureImage::SetDimension( unsigned int dimension )
 {
-    ves::open::xml::DataValuePairWeakPtr storedDimension = mTextureDescription->GetDataValuePair( "Dimension" );
+    ves::open::xml::DataValuePairPtr storedDimension = mTextureDescription->GetDataValuePair( "Dimension" );
     if( storedDimension )
     {
         storedDimension->SetDataName( "Dimension" );
@@ -198,10 +198,10 @@ void TextureImage::SetImageFile( const std::string& face, const std::string& ima
             face == "Positive Z" ||
             face == "Negative Z" )
     {
-        ves::open::xml::DataValuePairWeakPtr faceImageData = mTextureDescription->GetDataValuePair( face );
+        ves::open::xml::DataValuePairPtr faceImageData = mTextureDescription->GetDataValuePair( face );
         if( !faceImageData )
         {
-            faceImageData = new ves::open::xml::DataValuePair();
+            faceImageData = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
             faceImageData->SetData( face, imageFileName );
             mTextureDescription->AddDataValuePair( faceImageData );
         }
@@ -219,7 +219,7 @@ void TextureImage::SetImageFile( const std::string& face, const std::string& ima
 ////////////////////////////////////////////////////
 void TextureImage::SetTextureUnit( unsigned int tUnit )
 {
-    ves::open::xml::DataValuePairWeakPtr storedUnit = mTextureDescription->GetDataValuePair( "Unit" );
+    ves::open::xml::DataValuePairPtr storedUnit = mTextureDescription->GetDataValuePair( "Unit" );
     if( storedUnit )
     {
         storedUnit->SetDataValue( tUnit );
@@ -228,7 +228,7 @@ void TextureImage::SetTextureUnit( unsigned int tUnit )
 ///////////////////////////////////////////
 unsigned int TextureImage::GetTextureUnit()
 {
-    ves::open::xml::DataValuePairWeakPtr storedUnit = mTextureDescription->GetDataValuePair( "Unit" );
+    ves::open::xml::DataValuePairPtr storedUnit = mTextureDescription->GetDataValuePair( "Unit" );
     if( storedUnit )
     {
         return storedUnit->GetUIntData();
@@ -238,7 +238,7 @@ unsigned int TextureImage::GetTextureUnit()
 /////////////////////////////////////////
 unsigned int TextureImage::GetDimension()
 {
-    ves::open::xml::DataValuePairWeakPtr storedDimension = mTextureDescription->GetDataValuePair( "Dimension" );
+    ves::open::xml::DataValuePairPtr storedDimension = mTextureDescription->GetDataValuePair( "Dimension" );
     if( storedDimension )
     {
         return storedDimension->GetUIntData();
@@ -250,7 +250,7 @@ const std::string TextureImage::GetImageFile( const std::string& face )
 {
     try
     {
-        ves::open::xml::DataValuePairWeakPtr faceImageData = mTextureDescription->GetDataValuePair( face );
+        ves::open::xml::DataValuePairPtr faceImageData = mTextureDescription->GetDataValuePair( face );
         if( !faceImageData )
         {
             throw "Invalid Texture Face";
@@ -278,10 +278,10 @@ void TextureImage::SetTextureImageType( const std::string& textureType )
             "Environment" ||
             "Perlin Noise" )
     {
-        ves::open::xml::DataValuePairWeakPtr typeData = mTextureDescription->GetDataValuePair( textureType );
+        ves::open::xml::DataValuePairPtr typeData = mTextureDescription->GetDataValuePair( textureType );
         if( !typeData )
         {
-            typeData = new ves::open::xml::DataValuePair();
+            typeData = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
             mTextureDescription->AddDataValuePair( typeData );
         }
         typeData->SetData( "Type", textureType );
@@ -336,7 +336,7 @@ TextureImage& TextureImage::operator=( const TextureImage& rhs )
     if( this != &rhs )
     {
         XMLObject::operator =( rhs );
-        mTextureDescription = new ves::open::xml::Command(( *rhs.mTextureDescription ) );
+        mTextureDescription = ves::open::xml::CommandPtr( new ves::open::xml::Command((  *rhs.mTextureDescription ) ) );
     }
     return *this;
 }

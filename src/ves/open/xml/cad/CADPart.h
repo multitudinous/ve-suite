@@ -62,14 +62,14 @@ class VE_CAD_EXPORTS CADPart: public ves::open::xml::cad::CADNode
 public:
     ///Constructor
     ///\param name The name of the part
-    CADPart( std::string name = std::string( "Part" ) );
+    CADPart( const std::string& name = std::string( "Part" ) );
 
     ///Destructor
     virtual ~CADPart();
 
     ///\param cadFileName The name of the part
     ///Set the name of the CAD file this node represents
-    void SetCADFileName( std::string cadFileName );
+    void SetCADFileName( const std::string& cadFileName );
 
     ///Set the object from XML data
     ///\param xmlNode Node to set this object from

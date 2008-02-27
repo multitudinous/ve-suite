@@ -74,20 +74,20 @@ public:
 
     ///Set the users ID
     ///\param id String to uniquely identify the user
-    void SetUserId( std::string id );
+    void SetUserId( const std::string& id );
     ///Set the control status of the user
     ///\param cs The control status.
     void SetControlStatus( VEControlStatus cs );
     ///Set the state information for this user
     ///\param userState The StateInfo for this user.
-    void SetStateInfo( StateInfoWeakPtr userState );
+    void SetStateInfo( StateInfoPtr userState );
 
     ///Return the user id
     const std::string& GetUserId();
     ///Return the VEControlStatus of this user
     VEControlStatus GetControlStatus();
     ///Return the StateInfo for this user.
-    StateInfoWeakPtr GetUserStateInfo();
+    StateInfoPtr GetUserStateInfo();
 
     ///Set the data for this object from an XML element
     ///\param xmlInput The input XML element

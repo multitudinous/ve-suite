@@ -64,7 +64,7 @@ class VE_CAD_EXPORTS CADMaterial: public ves::open::xml::XMLObject
 public:
     ///Constructor
     ///\param name The name of this material.
-    CADMaterial( std::string name = std::string( "Material" ) );
+    CADMaterial( const std::string& name = std::string( "Material" ) );
     ///Destructor
     virtual ~CADMaterial();
 
@@ -90,7 +90,7 @@ public:
 
     ///Set the name of this material.
     ///\param name The name of the material.
-    void SetMaterialName( std::string name );
+    void SetMaterialName( const std::string& name );
 
     ///Set the object from XML data
     ///\param xmlNode Node to set this object from
@@ -98,17 +98,17 @@ public:
 
     ///Set the face that this material applies to.
     ///\param faceToApplyTo The face that this material applies to.
-    void SetFace( std::string faceToApplyTo );
+    void SetFace( const std::string& faceToApplyTo );
 
     ///Set a component of the material
     ///\param componentName The name of the component to set the values to.
     ///\param values The new values to use
-    void SetComponent( std::string componentName, double* values );
+    void SetComponent( const std::string& componentName, double* values );
 
     ///Set a component of the material
     ///\param componentName The name of the component to set the values to.
     ///\param values The new values to use
-    void SetComponent( std::string componentName, std::vector<double> values );
+    void SetComponent( const std::string& componentName, std::vector<double> values );
 
     ///Set the color mode.
     ///Valid options are:
@@ -119,7 +119,7 @@ public:
     ///Ambient_and_Diffuse
     ///Off
     ///\param colorMode The color mode of this material.
-    void SetColorMode( std::string colorMode );
+    void SetColorMode( const std::string& colorMode );
 
     ///Set the overall opacity for this material
     ///\param  opacity The opacity value;

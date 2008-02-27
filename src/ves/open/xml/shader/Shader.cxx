@@ -121,7 +121,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
         unsigned int nUniforms = uniformList->getLength();
         for( unsigned int i = 0; i < nUniforms; i++ )
         {
-            UniformPtr newUniform = new Uniform();
+            UniformPtr newUniform( new Uniform() );
             newUniform->SetObjectFromXMLData( uniformList->item( i ) );
             mUniformList.push_back( newUniform );
         }
@@ -134,7 +134,7 @@ void Shader::SetObjectFromXMLData( DOMNode* xmlInput )
         for( unsigned int i = 0; i < nTextures; i++ )
         {
             std::cout << "Adding texture image." << std::endl;
-            TextureImagePtr newTexture = new TextureImage();
+            TextureImagePtr newTexture( new TextureImage() );
             newTexture->SetObjectFromXMLData( textureList->item( i ) );
             AddTextureImage( newTexture );
         }

@@ -96,12 +96,12 @@ void DOMDocumentManager::SetParseXMLStringOn()
     mParseXMLFile = false;
 }
 ///////////////////////////////////////////////////////////////////
-void DOMDocumentManager::SetOuputXMLFile( std::string xmlOutputFile )
+void DOMDocumentManager::SetOuputXMLFile( const std::string& xmlOutputFile )
 {
     mOutputXMLFile = xmlOutputFile;
 }
 ////////////////////////////////////////////////////////////////
-void DOMDocumentManager::_readInputString( std::string xmlString )
+void DOMDocumentManager::_readInputString( const std::string& xmlString )
 {
     if( xmlString.empty() )
     {
@@ -114,7 +114,7 @@ void DOMDocumentManager::_readInputString( std::string xmlString )
     mParser->parse( inputXML );
 }
 ////////////////////////////////////////////////////////////
-void DOMDocumentManager::_readInputFile( std::string xmlFile )
+void DOMDocumentManager::_readInputFile( const std::string& xmlFile )
 {
     if( !std::ifstream( xmlFile.c_str() ).good() )
     {
@@ -233,7 +233,7 @@ void DOMDocumentManager::UnLoadParser( void )
     }
 }
 /////////////////////////////////////////////////////
-void DOMDocumentManager::CreateCommandDocument( std::string type )
+void DOMDocumentManager::CreateCommandDocument( const std::string& type )
 {
     DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(
                               Convert( "LS" ).toXMLString() );

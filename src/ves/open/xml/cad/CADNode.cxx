@@ -56,13 +56,13 @@ using namespace ves::open::xml;
 //////////////////////////////////
 ///Constructor                  //
 //////////////////////////////////
-CADNode::CADNode( std::string name )
+CADNode::CADNode( const std::string& name )
         :
         ves::open::xml::XMLObject()
 {
     m_name = name;
     m_parent = "";
-    m_transform = new Transform();
+    m_transform = TransformPtr( new Transform() );
     m_type = std::string( "Node" );
     m_visibility = true;
 
@@ -97,27 +97,27 @@ CADNode::~CADNode()
     m_animations.clear();
 }
 //////////////////////////////////////////////////////////////////////////
-void CADNode::AddAnimation( std::string name, std::string animationFileName )
+void CADNode::AddAnimation( const std::string& name, const std::string& animationFileName )
 {
-    CADNodeAnimationPtr newAnimation = new CADNodeAnimation();
+    CADNodeAnimationPtr newAnimation( new CADNodeAnimation() );
     newAnimation->SetAnimationFileName( animationFileName );
     newAnimation->SetAnimationName( name );
     m_animations.push_back( newAnimation );
 }
 ///////////////////////////////////////////
-void CADNode::SetNodeName( std::string name )
+void CADNode::SetNodeName( const std::string& name )
 {
     m_name = name;
 }
 ////////////////////////////////////////////////////
-void CADNode::SetParent( std::string parent )
+void CADNode::SetParent( const std::string& parent )
 {
     m_parent = parent;
 }
 ///////////////////////////////////////////////////////
 void CADNode::SetTransform( ves::open::xml::TransformPtr transform )
 {
-    m_transform = new ves::open::xml::Transform( *transform );
+    m_transform = ves::open::xml::TransformPtr( new ves::open::xml::Transform(  *transform ) );
 }
 ///////////////////////////////////////////////////////////
 void CADNode::AddAttribute( ves::open::xml::cad::CADAttributePtr attribute )
@@ -130,7 +130,7 @@ void CADNode::SetOpacity( float alpha )
     mOpacity = alpha;
 }
 ////////////////////////////////////////////////////////
-void CADNode::RemoveAttribute( std::string attributeName )
+void CADNode::RemoveAttribute( const std::string& attributeName )
 {
     for( std::vector<CADAttributePtr>::iterator itr = m_attributeList.begin();
             itr != m_attributeList.end();
@@ -144,7 +144,7 @@ void CADNode::RemoveAttribute( std::string attributeName )
     }
 }
 ///////////////////////////////////////////////////////////
-void CADNode::SetActiveAttribute( std::string attributeName )
+void CADNode::SetActiveAttribute( const std::string& attributeName )
 {
     m_activeAttributeName = attributeName;
 }
@@ -194,7 +194,7 @@ double CADNode::GetRestitution()
     return m_restitution;
 }
 //////////////////////////////////
-void CADNode::SetPhysicsMesh( std::string physicsMesh )
+void CADNode::SetPhysicsMesh( const std::string& physicsMesh )
 {
     m_physicsMesh = physicsMesh;
 }
@@ -245,7 +245,7 @@ ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( unsigned int index )
     return m_attributeList.at( 0 );
 }
 /////////////////////////////////////////////////////////////////////
-ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( std::string name )
+ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( const std::string& name )
 {
     size_t nAttributes = m_attributeList.size();
     for( size_t i = 0; i < nAttributes; i++ )
@@ -280,7 +280,7 @@ void CADNode::_updateVEElement( const std::string& input )
     SetSubElement( std::string( "parent" ), m_parent );
     if( !m_transform )
     {
-        m_transform = new Transform();
+        m_transform = TransformPtr( new Transform() );
     }
     m_transform->SetOwnerDocument( mRootDocument );
     mVeElement->appendChild( m_transform->GetXMLData( "transform" ) );
@@ -455,7 +455,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
         //Need to check if the returned attribute belongs to this node
         if( attributeNode->getParentNode() == currentElement )
         {
-            CADAttributePtr newAttribute = new CADAttribute();
+            CADAttributePtr newAttribute( new CADAttribute() );
             newAttribute->SetObjectFromXMLData( attributeNode );
             m_attributeList.push_back( newAttribute );
         }
@@ -470,7 +470,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
 
         if( animationNode->getParentNode() == currentElement )
         {
-            CADNodeAnimationPtr newAnimation = new CADNodeAnimation();
+            CADNodeAnimationPtr newAnimation( new CADNodeAnimation() );
             newAnimation->SetObjectFromXMLData( animationNode );
             m_animations.push_back( newAnimation );
         }
@@ -490,7 +490,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         if( !m_transform )
         {
-            m_transform = new Transform();
+            m_transform = TransformPtr( new Transform() );
         }
         m_transform->SetObjectFromXMLData( transformNode );
     }
@@ -524,7 +524,7 @@ ves::open::xml::cad::CADNodeAnimationPtr CADNode::GetAnimation( unsigned int ind
     }
 }
 /////////////////////////////////////////////////////////
-CADNodeAnimationPtr CADNode::GetAnimation( std::string name )
+CADNodeAnimationPtr CADNode::GetAnimation( const std::string& name )
 {
     size_t nAnimations = m_animations.size();
     for( size_t i = 0; i < nAnimations; i++ )
@@ -545,9 +545,7 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
         : ves::open::xml::XMLObject( rhs )
 {
     m_parent = "";
-    m_transform = 0;
-    
-    m_transform = new ves::open::xml::Transform( *rhs.m_transform );
+    m_transform = ves::open::xml::TransformPtr( new ves::open::xml::Transform(  *rhs.m_transform ) );
 
     m_attributeList.clear();
     for( size_t i = 0; i < rhs.m_attributeList.size(); i++ )
@@ -604,7 +602,7 @@ CADNode& CADNode::operator=( const CADNode& rhs )
             m_animations.push_back( rhs.m_animations.at( i ) );
         }
 
-        m_transform = new Transform( *rhs.m_transform );
+        m_transform = TransformPtr( new Transform(  *rhs.m_transform ) );
         m_activeAttributeName = rhs.m_activeAttributeName;
         m_visibility = rhs.m_visibility;
 

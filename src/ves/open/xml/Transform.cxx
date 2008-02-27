@@ -47,13 +47,13 @@ Transform::Transform()
     std::vector< double > temp1;
     temp1.assign( 3, 1.0f );
 
-    mRotationArray = new FloatArray( );
+    mRotationArray= FloatArrayPtr( new FloatArray() );
     mRotationArray->SetArray( temp );
 
-    mScaleArray = new FloatArray( );
+    mScaleArray= FloatArrayPtr( new FloatArray() );
     mScaleArray->SetArray( temp1 );
 
-    mTranslationArray = new FloatArray( );
+    mTranslationArray= FloatArrayPtr( new FloatArray() );
     mTranslationArray->SetArray( temp );
     SetObjectType( "Transform" );
 }
@@ -68,9 +68,9 @@ Transform::~Transform()
 Transform::Transform( const Transform& input )
         : XMLObject( input )
 {
-    mRotationArray = new FloatArray( *input.mRotationArray );
-    mScaleArray = new FloatArray( *input.mScaleArray );
-    mTranslationArray = new FloatArray( *input.mTranslationArray );
+    mRotationArray = FloatArrayPtr( new FloatArray(  *input.mRotationArray ) );
+    mScaleArray = FloatArrayPtr( new FloatArray(  *input.mScaleArray ) );
+    mTranslationArray = FloatArrayPtr( new FloatArray(  *input.mTranslationArray ) );
 }
 /////////////////////////////////////////////////////
 Transform& Transform::operator=( const Transform& input )

@@ -64,7 +64,7 @@ class VE_CAD_EXPORTS CADAssembly: public ves::open::xml::cad::CADNode
 public:
     ///Constructor
     ///\param name Name of the assembly.
-    CADAssembly( std::string name = std::string( "Assembly" ) );
+    CADAssembly( const std::string& name = std::string( "Assembly" ) );
     virtual ~CADAssembly();
 
     ///Add a child to this assembly
@@ -81,7 +81,7 @@ public:
 
     ///Set the associated dataset (a ParameterBlock) to this CADNode
     ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock
-    void SetAssociatedDataset( std::string parameterBlockUUID );
+    void SetAssociatedDataset( const std::string& parameterBlockUUID );
 
     ///Get the associated dataset
     ///\param parameterBlockUUID The unique identifer to the dataset ParameterBlock if it exists
@@ -105,7 +105,7 @@ public:
 
     ///Get a child by a name
     ///\param name The of the child name to search for.
-    ves::open::xml::cad::CADNodePtr GetChild( std::string name );
+    ves::open::xml::cad::CADNodePtr GetChild( const std::string& name );
 
     ///Copy constructor
     //\param rhs The CADPart to copy
