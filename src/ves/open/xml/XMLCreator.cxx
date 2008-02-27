@@ -123,7 +123,7 @@ XMLObjectPtr XMLCreator::CreateNewXMLObject( const std::string& objectType )
 }
 ////////////////////////////////////////////////////////////////////////////
 XMLObjectPtr XMLCreator::CreateNewXMLObjectCopy( const std::string& objectType,
-                                               const XMLObjectPtr objectToCopy )
+                                               const XMLObjectPtr& objectToCopy )
 {
     XMLObjectPtr tmp = XMLObjectPtr();
     if( objectType == "FloatArray" )
