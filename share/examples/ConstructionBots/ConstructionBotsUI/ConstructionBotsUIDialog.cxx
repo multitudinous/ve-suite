@@ -76,7 +76,7 @@ void ConstructionBotsUIDialog::ClearInstructions()
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsUIDialog::SendCommandsToXplorer()
 {
-    ves::open::xml::Command* command = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
 
     for( size_t i = 0; i < instructions.size(); i++ )
     {
@@ -86,8 +86,5 @@ void ConstructionBotsUIDialog::SendCommandsToXplorer()
     command->SetCommandName( command_name );
 
     serviceList->SendCommandStringToXplorer( command );
-
-    //Clean up memory
-    delete command;
 }
 ////////////////////////////////////////////////////////////////////////////////

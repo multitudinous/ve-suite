@@ -113,7 +113,7 @@ class IntStoves_UI_Dialog : public ves::conductor::UIDialog
 
     std::vector< ves::open::xml::DataValuePair > parameters;        //The DataValuePairs for the current command
 
-    ves::open::xml::Command* m_command;
+    ves::open::xml::CommandPtr m_command;
     
     void SendCommandsToXplorer();
     void ClearParameters();

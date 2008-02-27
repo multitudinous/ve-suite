@@ -66,10 +66,10 @@ int main( int argc, char* argv[] )
         return false;
     }
 
-    ves::open::xml::shader::ProgramPtr program = new ves::open::xml::shader::Program();
+    ves::open::xml::shader::ProgramPtr program( new ves::open::xml::shader::Program() );
     program->SetProgramName( "testVEAFile" );
     
-    ves::open::xml::shader::ShaderPtr vertexShader = new ves::open::xml::shader::Shader();
+    ves::open::xml::shader::ShaderPtr vertexShader( new ves::open::xml::shader::Shader() );
     vertexShader->SetShaderType( "Vertex" );
 
     std::ostringstream vertexSource;
@@ -94,7 +94,7 @@ int main( int argc, char* argv[] )
     
     program->SetVertexShader( vertexShader );
     
-    ves::open::xml::shader::ShaderPtr fragmentShader  = new ves::open::xml::shader::Shader();
+    ves::open::xml::shader::ShaderPtr fragmentShader( new ves::open::xml::shader::Shader() );
     fragmentShader->SetShaderType( "Fragment" );
     std::ostringstream fragmentSource;
     fragmentSource << std::endl << "\t\tuniform vec3 ambientMaterial;" << std::endl
@@ -132,7 +132,7 @@ int main( int argc, char* argv[] )
     fragmentShader->SetShaderSource( fragmentSource.str() );
 
     {
-        ves::open::xml::shader::UniformPtr uniformFloat = new ves::open::xml::shader::Uniform();
+        ves::open::xml::shader::UniformPtr uniformFloat( new ves::open::xml::shader::Uniform() );
         uniformFloat->SetType( "Float" );
         uniformFloat->SetSize( 1 );
         uniformFloat->SetName( "specularPower" );
@@ -143,7 +143,7 @@ int main( int argc, char* argv[] )
     }
     
     {
-        ves::open::xml::shader::UniformPtr uniformSampler = new ves::open::xml::shader::Uniform();
+        ves::open::xml::shader::UniformPtr uniformSampler( new ves::open::xml::shader::Uniform() );
         uniformSampler->SetType( "Sampler" );
         uniformSampler->SetSize( 1 );
         uniformSampler->SetName( "baseMap" );
@@ -152,7 +152,7 @@ int main( int argc, char* argv[] )
     }
     
     {
-        ves::open::xml::shader::TextureImagePtr textureImage = new ves::open::xml::shader::TextureImage();
+        ves::open::xml::shader::TextureImagePtr textureImage( new ves::open::xml::shader::TextureImage() );
         textureImage->SetTextureImageType( "2D" );
         textureImage->SetDimension( 1 );
         textureImage->SetImageFile( "temp.jpg", "FRONT" );
@@ -181,8 +181,8 @@ int main( int argc, char* argv[] )
     netowrkWriter.WriteXMLDocument( nodes, filename, "Command" );
 
     {
-        std::cout << " deleting test object" << std::endl;
-        ves::open::xml::CommandWeakPtr testObject = new ves::open::xml::Command();
+        //std::cout << " deleting test object" << std::endl;
+        //ves::open::xml::CommandWeakPtr testObject = new ves::open::xml::Command();
     }
     
     return 0;

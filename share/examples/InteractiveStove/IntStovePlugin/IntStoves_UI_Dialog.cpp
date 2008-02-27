@@ -68,7 +68,7 @@ IntStoves_UI_Dialog
 
     serviceList = service;
 
-    m_command=new ves::open::xml::Command();
+    m_command= ves::open::xml::CommandPtr( new ves::open::xml::Command() );
 
     _buildPage();
 }
@@ -77,7 +77,6 @@ IntStoves_UI_Dialog
 IntStoves_UI_Dialog
 ::~IntStoves_UI_Dialog()
 {
-    delete m_command;
 }
 
 
@@ -557,7 +556,7 @@ void IntStoves_UI_Dialog::SetBaffleData()
         baffleParams.push_back( GetLength(i) );
         baffleParams.push_back( GetDepth(i) );
 
-        ves::open::xml::DataValuePairWeakPtr baffleParams_DVP = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr baffleParams_DVP( new ves::open::xml::DataValuePair() );
         baffleParams_DVP->SetData(std::string("baffleParams"),baffleParams);
         m_command->AddDataValuePair( baffleParams_DVP );
     
@@ -627,7 +626,7 @@ void IntStoves_UI_Dialog::ShowVectors(wxCommandEvent& event)
 
     command_name=std::string("SHOW_VECTORS");
 
-    ves::open::xml::DataValuePairWeakPtr vector_DVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr vector_DVP( new ves::open::xml::DataValuePair() );
     vector_DVP->SetData(std::string("vectors"),vectors);
     m_command->AddDataValuePair( vector_DVP );
     
@@ -648,7 +647,7 @@ void IntStoves_UI_Dialog::ShowContour(wxCommandEvent &event)
 
     command_name=std::string("SHOW_CONTOUR");
 
-    ves::open::xml::DataValuePairWeakPtr contour_DVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr contour_DVP( new ves::open::xml::DataValuePair() );
     contour_DVP->SetData(std::string("contour"),contour);
     m_command->AddDataValuePair( contour_DVP );
     

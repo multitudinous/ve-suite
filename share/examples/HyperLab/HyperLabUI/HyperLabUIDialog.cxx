@@ -354,7 +354,7 @@ void HyperLabUIDialog::OnShaderEffects( wxCommandEvent& event )
     //Build the command
     m_commandName = "SHADER_EFFECTS_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr shaderEffectsDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr shaderEffectsDVP( new ves::open::xml::DataValuePair() );
     shaderEffectsDVP->SetData( "shaderEffects", data );
     m_instructions.push_back( shaderEffectsDVP );
 
@@ -372,15 +372,15 @@ void HyperLabUIDialog::OnAmbientRGB( wxCommandEvent& event )
     //Build the command
     m_commandName = "AMBIENT_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr arDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr arDVP( new ves::open::xml::DataValuePair() );
     arDVP->SetData( "arColor", data[ 0 ] );
     m_instructions.push_back( arDVP );
 
-    ves::open::xml::DataValuePairSharedPtr agDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr agDVP( new ves::open::xml::DataValuePair() );
     agDVP->SetData( "agColor", data[ 1 ] );
     m_instructions.push_back( agDVP );
 
-    ves::open::xml::DataValuePairSharedPtr abDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr abDVP( new ves::open::xml::DataValuePair() );
     abDVP->SetData( "abColor", data[ 2 ] );
     m_instructions.push_back( abDVP );
 
@@ -398,15 +398,15 @@ void HyperLabUIDialog::OnDiffuseRGB( wxCommandEvent& event )
     //Build the command
     m_commandName = "DIFFUSE_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr drDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr drDVP( new ves::open::xml::DataValuePair() );
     drDVP->SetData( "drColor", data[ 0 ] );
     m_instructions.push_back( drDVP );
 
-    ves::open::xml::DataValuePairSharedPtr dgDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr dgDVP( new ves::open::xml::DataValuePair() );
     dgDVP->SetData( "dgColor",data[ 1 ] );
     m_instructions.push_back( dgDVP );
 
-    ves::open::xml::DataValuePairSharedPtr dbDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr dbDVP( new ves::open::xml::DataValuePair() );
     dbDVP->SetData( "dbColor", data[ 2 ] );
     m_instructions.push_back( dbDVP );
 
@@ -424,15 +424,15 @@ void HyperLabUIDialog::OnSpecularRGB( wxCommandEvent& event )
     //Build the command
     m_commandName = "SPECULAR_UPDATE";
 
-    ves::open::xml::DataValuePairSharedPtr srDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr srDVP( new ves::open::xml::DataValuePair() );
     srDVP->SetData( "srColor", data[ 0 ] );
     m_instructions.push_back( srDVP );
 
-    ves::open::xml::DataValuePairSharedPtr sgDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr sgDVP( new ves::open::xml::DataValuePair() );
     sgDVP->SetData( "sgColor", data[ 1 ] );
     m_instructions.push_back( sgDVP );
 
-    ves::open::xml::DataValuePairSharedPtr sbDVP = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr sbDVP( new ves::open::xml::DataValuePair() );
     sbDVP->SetData( "sbColor", data[ 2 ] );
     m_instructions.push_back( sbDVP );
 
@@ -458,7 +458,7 @@ void HyperLabUIDialog::ClearInstructions()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::SendCommandsToXplorer()
 {
-    ves::open::xml::CommandPtr command = new ves::open::xml::Command();
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
     for( size_t i = 0; i < m_instructions.size(); ++i )
     {
