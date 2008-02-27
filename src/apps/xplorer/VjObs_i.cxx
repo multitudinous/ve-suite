@@ -105,8 +105,8 @@ VjObs_i::VjObs_i()
     _models = NULL;
     time_since_start = 0.0f;
     frameNumber = 0;
-    bufferCommand = new Command( );
-    bufferCommand->AddDataValuePair( new DataValuePair( ) );
+    bufferCommand =  CommandPtr( new Command() );
+    bufferCommand->AddDataValuePair( DataValuePairPtr( new DataValuePair() ) );
     bufferCommand->SetCommandName( "wait" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -770,7 +770,7 @@ void VjObs_i::CreatCommandVector( std::string commandString )
 
     for( size_t i = 0; i < objectVector.size(); ++i )
     {
-        commandVectorQueue.push_back( objectVector.at( i ) );
+        commandVectorQueue.push_back(  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) ) );
     }
 }
 // Frame sync variables used by osg only at this point
