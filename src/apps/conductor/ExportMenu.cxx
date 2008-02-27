@@ -95,7 +95,7 @@ void ExportMenu::OnScreenShot( wxCommandEvent& event )
     }
 
     DataValuePairPtr dvp( new DataValuePair() );
-    CommandPtr command = new Command();
+    CommandPtr command( new Command() );
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "SCREEN_SHOT" ) );
@@ -131,7 +131,7 @@ void ExportMenu::OnDOTFile( wxCommandEvent& event )
     }
 
     DataValuePairPtr dvp( new DataValuePair() );
-    CommandPtr command = new Command();
+    CommandPtr command( new Command() );
     std::string mode = ConvertUnicode( vesFileName.GetFullPath().c_str() );
     dvp->SetData( std::string( "Filename" ), mode );
     command->SetCommandName( std::string( "DOT_FILE" ) );

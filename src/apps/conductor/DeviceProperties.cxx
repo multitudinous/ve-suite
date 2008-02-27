@@ -136,7 +136,7 @@ void DeviceProperties::OnAnimate( wxCommandEvent &event )
 void DeviceProperties::SendCommandsToXplorer()
 {
     //Build the command
-    CommandPtr command = new Command();
+    CommandPtr command( new Command() );
     command->SetCommandName( "TRACKBALL_PROPERTIES" );
 
     for( size_t i = 0;i < instructions.size();i++ )

@@ -363,8 +363,7 @@ void Avail_Modules::ResetPluginTree()
     LoadModules();
 
     //Now tell Xplorer to reload plugins
-    DataValuePairPtr dvp =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
     dvp->SetData( "Reload_Plugin_Objects", "Reload" );
     ves::open::xml::CommandPtr vec( new ves::open::xml::Command() );
     vec->SetCommandName( "Plugin_Control" );

@@ -396,26 +396,26 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     topId = tempSystem->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::model::NetworkWeakPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
+ves::open::xml::model::NetworkPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
     std::string dataNumber )
 {
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::model::ModelWeakPtr > XMLDataBufferEngine::GetXMLModels()
+std::map< std::string, ves::open::xml::model::ModelPtr > XMLDataBufferEngine::GetXMLModels()
 {
-    std::map< std::string, ves::open::xml::model::ModelWeakPtr >
+    std::map< std::string, ves::open::xml::model::ModelPtr >
         tempMap( m_modelMap.begin(), m_modelMap.end() );
     return tempMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::model::ModelWeakPtr XMLDataBufferEngine::GetXMLModelDataObject(
+ves::open::xml::model::ModelPtr XMLDataBufferEngine::GetXMLModelDataObject(
     std::string dataNumber )
 {
     return m_modelMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::UserWeakPtr XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
+ves::open::xml::UserPtr XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
 {
     return m_userMap[ dataNumber ];
 }

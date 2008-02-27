@@ -284,30 +284,30 @@ void EphemerisDialog::CreateGUIControls()
     SetAutoLayout( true );
 
     ////GUI Items Creation End
-    m_date = new Command();
+    m_date = CommandPtr( new Command() );
     m_date->SetCommandName( "Ephemeris Date" );
 
     //m_date->AddDataValuePair(new ves::open::xml::DataValuePair("Day",
     //                                                        m_calendar->GetDate().Get);
 
-    m_time = new ves::open::xml::Command();
+    m_time = CommandPtr( new ves::open::xml::Command() );
 
-    m_latitudeDecimalValue = new ves::open::xml::DataValuePair();
+    m_latitudeDecimalValue = DataValuePairPtr( new ves::open::xml::DataValuePair() );
     m_latitudeDecimalValue->SetData( "Latitude", 0.0 );
 
-    m_latitudeDirectionValue = new ves::open::xml::DataValuePair();
+    m_latitudeDirectionValue = DataValuePairPtr( new ves::open::xml::DataValuePair());
     m_latitudeDirectionValue->SetData( "Latitude Direction", "North" );
 
-    m_longitudeDecimalValue = new ves::open::xml::DataValuePair();
+    m_longitudeDecimalValue = DataValuePairPtr( new ves::open::xml::DataValuePair());
     m_longitudeDecimalValue->SetData( "Longitude", 0.0 );
 
-    m_longitudeDirectionValue = new ves::open::xml::DataValuePair();
+    m_longitudeDirectionValue = DataValuePairPtr( new ves::open::xml::DataValuePair());
     m_longitudeDirectionValue->SetData( "Longitude Direction", "East" );
 
-    m_dateAndTimeInfo = new ves::open::xml::DataValuePair();
+    m_dateAndTimeInfo = DataValuePairPtr( new ves::open::xml::DataValuePair());
     UpdateDateAndTimeInfo();
     ReadLocationInformation();
-    m_heightMapInfo = new ves::open::xml::DataValuePair();
+    m_heightMapInfo = DataValuePairPtr( new ves::open::xml::DataValuePair());
     m_heightMapInfo->SetData( "Height Map", std::string( "Default" ) );
 }
 //////////////////////////////////////////////////////
@@ -494,8 +494,8 @@ void EphemerisDialog::EnsureHour( int hourChange )
 /////////////////////////////////////////////
 void EphemerisDialog::UpdateDateAndTimeInfo()
 {
-    ves::open::xml::OneDIntArray* dateAndTime =
-        new ves::open::xml::OneDIntArray();
+    ves::open::xml::OneDIntArrayPtr dateAndTime( 
+        new ves::open::xml::OneDIntArray() );
     wxDateTime dt = m_calendar->GetDate();
 
     dateAndTime->AddElementToArray( dt.GetYear() );
@@ -645,13 +645,13 @@ void EphemerisDialog::OnSaveLocationInformation( wxCommandEvent& event )
                                        _( "Location" ), wxOK );
     locationNameDlg.CentreOnParent();
     locationNameDlg.ShowModal();
-    CommandPtr ephemerisData = new Command();
+    CommandPtr ephemerisData( new Command() );
     ephemerisData->SetCommandName( ConvertUnicode( locationNameDlg.GetValue().GetData() ) );
-    ephemerisData->AddDataValuePair( new ves::open::xml::DataValuePair( *m_latitudeDecimalValue ) );
-    ephemerisData->AddDataValuePair( new ves::open::xml::DataValuePair( *m_latitudeDirectionValue ) );
-    ephemerisData->AddDataValuePair( new ves::open::xml::DataValuePair( *m_longitudeDecimalValue ) );
-    ephemerisData->AddDataValuePair( new ves::open::xml::DataValuePair( *m_longitudeDirectionValue ) );
-    ephemerisData->AddDataValuePair( new ves::open::xml::DataValuePair( *m_heightMapInfo ) );
+    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_latitudeDecimalValue ) ) );
+    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_latitudeDirectionValue ) ) );
+    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_longitudeDecimalValue ) ) );
+    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_longitudeDirectionValue ))  );
+    ephemerisData->AddDataValuePair( DataValuePairPtr( new ves::open::xml::DataValuePair( *m_heightMapInfo ) ) );
     // ephemerisData->AddDataValuePair(new ves::open::xml::DataValuePair(*m_dateAndTimeInfo));
     m_storedLocations[ephemerisData->GetCommandName()] = ephemerisData;
 }
@@ -683,32 +683,30 @@ void EphemerisDialog::ReadLocationInformation()
         config->Read( key + _T( "/" ) + _T( "Latitude Direction" ), &latitudeDirection ) ;
         config->Read( key + _T( "/" ) + _T( "Height Map" ), &heightMap ) ;
 
-        CommandPtr locationData = new Command();
+        CommandPtr locationData( new Command() );
         locationData->SetCommandName( ConvertUnicode( name.c_str() ) );
-        ves::open::xml::DataValuePairPtr latitudeDecimalValue =
-            new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr latitudeDecimalValue( new ves::open::xml::DataValuePair() );
         latitudeDecimalValue->SetData( "Latitude", latitude );
         locationData->AddDataValuePair( latitudeDecimalValue );
 
-        ves::open::xml::DataValuePairPtr latitudeDirectionValue =
-            new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr latitudeDirectionValue( new ves::open::xml::DataValuePair() );
         latitudeDirectionValue->SetData( "Latitude Direction",
                                          ConvertUnicode( latitudeDirection.c_str() ) );
         locationData->AddDataValuePair( latitudeDirectionValue );
 
-        ves::open::xml::DataValuePairPtr longitudeDecimalValue =
-            new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr longitudeDecimalValue(
+            new ves::open::xml::DataValuePair() );
         longitudeDecimalValue->SetData( "Longitude", longitude );
         locationData->AddDataValuePair( longitudeDecimalValue );
 
-        ves::open::xml::DataValuePairPtr longitudeDirectionValue =
-            new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr longitudeDirectionValue(
+            new ves::open::xml::DataValuePair() );
         longitudeDirectionValue->SetData( "Longitude Direction",
                                           ConvertUnicode( longitudeDirection.c_str() ) );
         locationData->AddDataValuePair( longitudeDirectionValue );
 
-        ves::open::xml::DataValuePairPtr heightMapData =
-            new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairPtr heightMapData( 
+            new ves::open::xml::DataValuePair() );
         heightMapData->SetData( "Height Map",
                                 ConvertUnicode( heightMap.c_str() ) );
         locationData->AddDataValuePair( heightMapData );

@@ -999,8 +999,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
@@ -1014,8 +1013,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 
     //Dummy data that isn't used but I don't know if a command will work
     //w/o a DVP
-    DataValuePairPtr dvp =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
     dvp->SetData( "Clear Quat Data", tempDir );
     CommandPtr vec( new Command() );
     vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
@@ -1113,8 +1111,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
@@ -1123,8 +1120,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
 
     //Dummy data that isn't used but I don't know if a command will work
     //w/o a DVP
-    DataValuePairPtr dvp =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dvp( new DataValuePair( std::string( "STRING" ) ) );
     dvp->SetData( "Clear Quat Data", tempDir );
     CommandPtr vec( new Command() );
     vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
@@ -1248,13 +1244,13 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
     bkpFileName.SetName( newDataSetName.GetValue() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-    CommandPtr returnState = new Command();
+    CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "getNetwork" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "getNetwork" );
     returnState->AddDataValuePair( data );
 
-    data = new DataValuePair();
+    data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState->AddDataValuePair( data );
 
@@ -1290,7 +1286,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
         ///
         CommandPtr aspenBKPFile( new Command() );
         aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
-        data = new DataValuePair();
+        data = DataValuePairPtr( new DataValuePair() );
         data->SetData( "BKPFileName",
                        ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
         aspenBKPFile->AddDataValuePair( data );
@@ -1311,13 +1307,13 @@ void AppFrame::OpenSimulation( wxString simName )
     wxFileName bkpFileName;
     bkpFileName.SetName( simName );
 
-    CommandPtr returnState = new Command();
+    CommandPtr returnState ( new Command() );
     returnState->SetCommandName( "openSimulation" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "AspenPlus", "openSimulation" );
     returnState->AddDataValuePair( data );
 
-    data = new DataValuePair();
+    data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "BKPFileName",  ConvertUnicode( bkpFileName.GetFullName().c_str() ) );
     returnState->AddDataValuePair( data );
 
@@ -1335,7 +1331,7 @@ void AppFrame::OpenSimulation( wxString simName )
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Show Simulation.\n" );
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "showSimulation" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "showSimulation" );
@@ -1356,7 +1352,7 @@ void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Hide Simulation.\n" );
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "hideSimulation" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "hideSimulation" );
@@ -1377,7 +1373,7 @@ void AppFrame::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Close Simulation.\n" );
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "closeSimulation" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "closeSimulation" );
@@ -1398,7 +1394,7 @@ void AppFrame::CloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Run Simulation.\n" );
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "runNetwork" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
@@ -1418,7 +1414,7 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Run Simulation.\n" );
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "stepNetwork" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
@@ -1465,7 +1461,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Saving Simulation...\n" );
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveSimulation" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "saveSimulation" );
@@ -1503,13 +1499,13 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
     saveFileName.SetName( newDataSetName.GetValue() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
-    CommandPtr returnState = new Command();
+    CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveAsSimulation" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "saveAsSimulation" );
     returnState->AddDataValuePair( data );
 
-    data = new DataValuePair();
+    data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "SaveFileName",
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     returnState->AddDataValuePair( data );
@@ -1527,7 +1523,7 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 
     CommandPtr aspenAPWFile( new Command() );
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
-    data = new DataValuePair();
+    data = DataValuePairPtr( new DataValuePair() );
     data->SetData( "BKPFileName",
                    ConvertUnicode( saveFileName.GetFullName().c_str() ) );
     aspenAPWFile->AddDataValuePair( data );
@@ -2092,8 +2088,7 @@ void AppFrame::LaunchViewpointsPane( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::JugglerSettings( wxCommandEvent& event )
 {
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair =
-        new DataValuePair( std::string( "FLOAT" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "FLOAT" ) ) );
     dataValuePair->SetDataName( "Stereo" );
     if( event.GetId() == JUGGLER_STEREO )
     {
@@ -2112,8 +2107,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ExitXplorer( void )
 {
-    DataValuePairPtr dataValuePair =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
     dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
@@ -2165,8 +2159,7 @@ void AppFrame::ProcessCommandLineArgs( void )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
@@ -2240,7 +2233,7 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
         directory.Replace( _( "\\" ), _( "/" ), true );
 
         DataValuePairPtr dvp( new DataValuePair() );
-        CommandPtr command = new Command();
+        CommandPtr command( new Command() );
         std::string mode = ConvertUnicode( directory.c_str() );
         dvp->SetData( std::string( "Change Working Directory" ), mode );
         command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
@@ -2253,8 +2246,7 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 {
-    DataValuePairPtr dataValuePair =
-        new DataValuePair( std::string( "STRING" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
     if( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
     {
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );

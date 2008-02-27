@@ -80,10 +80,10 @@ public:
     ///\param command command to be stored
     //void SetCommand( std::string commandKey, ves::open::xml::CommandWeakPtr command );
     ///Get all the commands
-    std::map< std::string, ves::open::xml::CommandWeakPtr > GetCommandMap( void );
+    //std::map< std::string, ves::open::xml::CommandPtr > GetCommandMap( void );
     ///Set all the commands
     ///\param tempMap the the map of commands when initialized by the user
-    void SetCommandMap( std::map< std::string, ves::open::xml::CommandWeakPtr > tempMap );
+    //void SetCommandMap( std::map< std::string, ves::open::xml::CommandPtr > tempMap );
     ///Set data from CORBA receiver thread
     void SetXplorerData()
     {
@@ -96,12 +96,12 @@ public:
     ///New
     void NewVESData( bool promptClearXplorer );
     ///Get data
-    ves::open::xml::model::NetworkWeakPtr
+    ves::open::xml::model::NetworkPtr
     GetXMLNetworkDataObject( std::string dataNumber );
     ///Get the network
-    std::map< std::string, ves::open::xml::model::ModelWeakPtr > GetXMLModels();
+    std::map< std::string, ves::open::xml::model::ModelPtr > GetXMLModels();
     ///Get data
-    ves::open::xml::model::ModelWeakPtr GetXMLModelDataObject( std::string dataNumber );
+    ves::open::xml::model::ModelPtr GetXMLModelDataObject( std::string dataNumber );
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
     ///Get the map of all systems
@@ -112,13 +112,13 @@ public:
     ///Get a system
     ves::open::xml::model::SystemPtr GetXMLSystemDataObject( std::string id );
     ///Get data
-    ves::open::xml::UserWeakPtr GetXMLUserDataObject( std::string dataNumber );
+    ves::open::xml::UserPtr GetXMLUserDataObject( std::string dataNumber );
     ///Parse system for subsystems
     void ParseSystem( ves::open::xml::model::SystemPtr system );
 
 private:
     ///Map to store the command name and command for easy lookup by the user
-    std::map< std::string, ves::open::xml::CommandPtr > m_commandMap;
+    //std::map< std::string, ves::open::xml::CommandPtr > m_commandMap;
     ///mutex to lock the command map so that it is accessed appropriately
     vpr::Mutex m_commandMapLock;
     ///Map of systems

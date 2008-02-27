@@ -329,8 +329,8 @@ void Canvas::CreateDefaultNetwork()
 {
     XMLDataBufferEngine::instance()->NewVESData( true );
     ///Initialize tope level network
-    model::NetworkWeakPtr tempNetwork =
-        new model::Network();
+    model::NetworkPtr tempNetwork( new model::Network() );
+
     XMLDataBufferEngine::instance()->GetXMLSystemDataObject(
         XMLDataBufferEngine::instance()->GetTopSystemId() )->
     AddNetwork( tempNetwork );

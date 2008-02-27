@@ -597,7 +597,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
         _commandName = "ViewLoc_Data";
         // Create the command and data value pairs
-        DataValuePairPtr dataValuePair = new DataValuePair( std::string( "LONG" ) );
+        DataValuePairPtr dataValuePair( new DataValuePair( "LONG" ) );
         dataValuePair->SetData( dataValueName, commandInputs );
         _dataValuePairList.push_back( dataValuePair );
     }

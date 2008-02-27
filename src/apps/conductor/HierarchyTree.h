@@ -80,7 +80,7 @@ public:
     ///Populate the tree
     ///\param tree The tree to populate
     void PopulateTree( std::map < std::string,
-                       ves::open::xml::model::ModelWeakPtr > tree, std::string id );
+                       ves::open::xml::model::ModelPtr > tree, std::string id );
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList( int size = 16 );
@@ -104,7 +104,7 @@ protected:
     ///The size of the images
     int m_imageSize;
     void PopulateLevel( wxTreeItemId parentLeaf,
-                        std::vector< ves::open::xml::model::ModelWeakPtr > models, std::string id );
+                        std::vector< ves::open::xml::model::ModelPtr > models, std::string id );
     void OnSelChanged( wxTreeEvent& event );
     void OnExpanded( wxTreeEvent& WXUNUSED( event ) );
 

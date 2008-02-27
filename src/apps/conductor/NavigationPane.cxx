@@ -587,7 +587,7 @@ void NavigationPane::OnSubZeroCheck( wxCommandEvent& WXUNUSED( event ) )
 void NavigationPane::SendCommandsToXplorer( void )
 {
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( "FLOAT" ) );
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     CommandPtr veCommand( new Command() );
@@ -653,33 +653,32 @@ void NavigationPane::UpdateXplorerData( void )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::SetPreferenceNavigationData( void )
 {
-    CommandPtr navPreferenceData = new Command();
+    CommandPtr navPreferenceData( new Command() );
     navPreferenceData->SetCommandName( std::string( "Navigation_Data" ) );
 
     //////////////////////////////////////////////////////////////////
-    DataValuePairPtr dataValuePair;
-    dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( "FLOAT" ) );
     dataValueName = "CHANGE_TRANSLATION_STEP_SIZE";
     dataValuePair->SetDataName( dataValueName );
     cIso_value = translationStepSize->GetValue();
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     navPreferenceData->AddDataValuePair( dataValuePair );
     //////////////////////////////////////////////////////////////////
-    dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
+    dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
     dataValueName = "CHANGE_ROTATION_STEP_SIZE";
     cIso_value = rotationStepSize->GetValue();
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     navPreferenceData->AddDataValuePair( dataValuePair );
     //////////////////////////////////////////////////////////////////
-    dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
+    dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
     dataValueName = "ROTATE_ABOUT_HEAD";
     cIso_value = headRotationChk->GetValue();
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
     navPreferenceData->AddDataValuePair( dataValuePair );
     //////////////////////////////////////////////////////////////////
-    dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
+    dataValuePair = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
     dataValueName = "Z_ZERO_PLANE";
     cIso_value = subZeroChk->GetValue();
     dataValuePair->SetDataName( dataValueName );

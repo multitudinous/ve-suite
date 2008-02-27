@@ -1934,7 +1934,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         tempPoly.TransPoly( bbox.x, bbox.y, *( modules[ num ].GetPolygon() ) ); //Make the network recognize its polygon
     }
 
-    UserWeakPtr userInfo = XMLDataBufferEngine::instance()->
+    UserPtr userInfo = XMLDataBufferEngine::instance()->
                            GetXMLUserDataObject( "Network" );
 
     if( !userInfo->GetUserStateInfo() )
@@ -1947,7 +1947,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         backgroundColor.push_back( 0.0f );
         backgroundColor.push_back( 1.0f );
 
-        DataValuePair* dataValuePair = new DataValuePair( );
+        DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
         CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
@@ -2164,8 +2164,7 @@ void Network::ClearXplorer()
     for( std::map<int, Module>::iterator iter =
                 modules.begin(); iter != modules.end(); ++iter )
     {
-        DataValuePairPtr dataValuePair =
-            new DataValuePair( std::string( "UNSIGNED INT" ) );
+        DataValuePairPtr dataValuePair( new DataValuePair( "UNSIGNED INT" ) );
         dataValuePair->SetDataName( "Object ID" );
         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
         CommandPtr veCommand( new Command() );

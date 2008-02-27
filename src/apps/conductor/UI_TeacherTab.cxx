@@ -157,7 +157,7 @@ void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
 
     std::string _commandName = "Stored Scenes";
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair = new DataValuePair( std::string( "UNSIGNED INT" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( "UNSIGNED INT" ) );
     unsigned int sceneId = _teacherRBox->GetSelection() - 1;
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( sceneId );
@@ -183,7 +183,7 @@ void UI_TeacherTab::_onClear( wxCommandEvent& event )
 
     std::string _commandName = "Stored Scenes";
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair = new DataValuePair( std::string( "UNSIGNED INT" ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( "UNSIGNED INT" ) );
     unsigned int sceneId = _teacherRBox->GetSelection() - 1;
     dataValuePair->SetDataName( "RECORD_SCENE" );
     dataValuePair->SetDataValue( sceneId );
