@@ -98,7 +98,6 @@ END_EVENT_TABLE()
 
 DataSetLoaderUI::DataSetLoaderUI( )
 {
-    mParamBlock = 0;
 }
 
 DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
@@ -113,8 +112,7 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
 bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
 {
 ////@begin DataSetLoaderUI member initialisation
-    m_veModel = veModel;
-    mParamBlock = 0;
+    m_veModel = veModel.lock();
     lastAddition = -1;
     dataSetList = NULL;
     dataSetTextEntry = NULL;
@@ -438,10 +436,10 @@ void DataSetLoaderUI::OnLoadFile( wxCommandEvent& WXUNUSED( event ) )
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeDataSetPath.c_str() ) ) );
         tempDVP->SetData( "VTK_DATA_FILE", tempStr );
 
-        ves::open::xml::DataValuePairSharedPtr dataValuePair
-        = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairSharedPtr dataValuePair(
+         new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "CREATE_NEW_DATASETS",
-                                new ves::open::xml::model::Model( *m_veModel ) );
+                                ves::open::xml::model::ModelPtr( new ves::open::xml::model::Model( *m_veModel ) ) );
         SendCommandToXplorer( dataValuePair );
     }
 }
@@ -483,8 +481,8 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( relativeSurfaceDirPath.c_str() ) ) );
             tempDVP->SetData( "VTK_SURFACE_DIR_PATH", tempStr );
 
-            ves::open::xml::DataValuePairSharedPtr dataValuePair
-            = new ves::open::xml::DataValuePair();
+            ves::open::xml::DataValuePairSharedPtr dataValuePair(
+                  new ves::open::xml::DataValuePair() );
             dataValuePair->SetData( "ADD_SURFACE_DATA_DIR", tempDVP );
             SendCommandToXplorer( dataValuePair );
         }
@@ -502,8 +500,8 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             tempDVP->SetData( "VTK_PRECOMPUTED_DIR_PATH", tempStr );
             preComputDirTextEntry->SetValue( relativePrecomputedDirPath );
 
-            ves::open::xml::DataValuePairSharedPtr dataValuePair
-            = new ves::open::xml::DataValuePair();
+            ves::open::xml::DataValuePairSharedPtr dataValuePair(
+               new ves::open::xml::DataValuePair() );
             dataValuePair->SetData( "ADD_PRECOMPUTED_DATA_DIR", tempDVP );
             SendCommandToXplorer( dataValuePair );
         }
@@ -539,7 +537,8 @@ void DataSetLoaderUI::OnTransformDataset( wxCommandEvent& WXUNUSED( event ) )
     }
     else
     {
-        mainSizer->Add( new TransformUI( &transformDialog, _( "Transform Input" ), 0 ),
+        mainSizer->Add( new TransformUI( &transformDialog, _( "Transform Input" ),
+                        ves::open::xml::TransformPtr() ),
                         -1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     }
 
@@ -621,8 +620,8 @@ void DataSetLoaderUI::OnLoadTextureFile( wxCommandEvent& WXUNUSED( event ) )
         wxString* dirString = new wxString(( *iter ) );
         itemListBox24->InsertItems( 1, dirString, 0 );
         //Send data to xplorer
-        ves::open::xml::DataValuePairSharedPtr dataValuePair
-        = new ves::open::xml::DataValuePair();
+        ves::open::xml::DataValuePairSharedPtr dataValuePair(
+         new ves::open::xml::DataValuePair() );
         dataValuePair->SetData( "ADD_TEXTURE_DATA_DIR", tempDVP );
         SendCommandToXplorer( dataValuePair );
     }
@@ -729,10 +728,10 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED( event ) )
         mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString();
 
     m_veModel->RemoveInformationPacket( tempStr );
-    mParamBlock = 0;
+    mParamBlock = ves::open::xml::ParameterBlockPtr();
 
-    ves::open::xml::DataValuePairSharedPtr dataValuePair =
-        new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr dataValuePair(
+        new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "DELETE_DATASET", tempDataSetName );
 
     SendCommandToXplorer( dataValuePair );
@@ -803,8 +802,8 @@ void DataSetLoaderUI::SendCommandToXplorer(
     veCommand->SetCommandName( std::string( "UPDATE_MODEL_DATASETS" ) );
     veCommand->AddDataValuePair( tempObject );
     //Add the active dataset name to the command
-    ves::open::xml::DataValuePairSharedPtr dataSetName =
-        new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairSharedPtr dataSetName(
+        new ves::open::xml::DataValuePair() );
     if( mParamBlock->GetProperty( "VTK_DATA_FILE" ) )
     {
         dataSetName->SetData( "VTK_DATASET_NAME",

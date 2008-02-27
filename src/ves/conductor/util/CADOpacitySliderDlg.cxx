@@ -68,7 +68,7 @@ CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
         : wxDialog( parent, id, _( "CADMaterial Opacity" ), wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ), _( "CADMaterial Opacity" ) )
 {
-    _material = new CADMaterial();
+    _material = CADMaterialPtr( new CADMaterial() );
     _cadID = cadNodeID;
     _buildDialog( opacity );
     CentreOnParent();

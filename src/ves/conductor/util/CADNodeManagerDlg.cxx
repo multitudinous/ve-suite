@@ -344,7 +344,7 @@ void CADNodeManagerDlg::_createNewAssembly( wxCommandEvent& WXUNUSED( event ) )
             assemblyNameDlg.CentreOnParent();
             assemblyNameDlg.ShowModal();
 
-            CADAssemblyPtr tempAssembly = _activeCADNode;
+            CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
             CADAssemblyPtr newAssembly( new CADAssembly( ConvertUnicode( assemblyNameDlg.GetValue().GetData() ) ) );
             newAssembly->SetParent( tempAssembly->GetID() );
             //_toggleNodeOnOff[newAssembly->GetID()] = true;
@@ -452,15 +452,15 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
 {
     if( _activeCADNode )
     {
-        CADNodePtr newClone = 0;
+        CADNodePtr newClone;
         if( _activeCADNode->GetNodeType() == "Part" )
         {
-            CADPartPtr tempPart = _activeCADNode;
+            CADPartPtr tempPart = boost::dynamic_pointer_cast<CADPart>( _activeCADNode );
             newClone = CADPartPtr( new CADPart( *tempPart, true ) );
         }
         else if( _activeCADNode->GetNodeType() == "Assembly" )
         {
-            CADAssemblyPtr tempAssembly = _activeCADNode;
+            CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
             newClone = CADAssemblyPtr( new CADAssembly( *tempAssembly, true ) );
         }
         else
@@ -486,7 +486,7 @@ void CADNodeManagerDlg::_cloneNode( wxCommandEvent& WXUNUSED( event ) )
         CADTreeBuilder::TreeNodeData* parentCADNode =
             dynamic_cast<CADTreeBuilder::TreeNodeData*>( _geometryTree->GetItemData( parentID ) );
 
-        CADAssemblyPtr tempAssembly = parentCADNode->GetNode();
+        CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( parentCADNode->GetNode() );
         tempAssembly->AddChild( newClone );
 
         _cadTreeBuilder->SetCurrentParentNode( parentID );
@@ -569,16 +569,16 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
     cadReader.ReadXMLData( ConvertUnicode( fileName.c_str() ), "CAD", "CADAssembly" );
 
     //CADNode* loadedNode = 0;
-    CADAssemblyPtr newAssembly = 0;
-    CADPartPtr newPart = 0;
+    CADAssemblyPtr newAssembly;
+    CADPartPtr newPart;
     std::vector<ves::open::xml::XMLObjectPtr > loadedNodes;
     loadedNodes = cadReader.GetLoadedXMLObjects();
 
     if( loadedNodes.size() )
     {
         //std::cout<<"---Loaded Assembly---"<<std::endl;
-        CADAssemblyPtr tempAssembly = loadedNodes.at( 0 );
-        newAssembly = new CADAssembly( *tempAssembly );
+        CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( loadedNodes.at( 0 ) );
+        newAssembly = CADAssemblyPtr( new CADAssembly( *tempAssembly ) );
         //_toggleNodeOnOff[newAssembly->GetID()] = true;
         //newAssembly->SetVisibility(true);
     }
@@ -589,8 +589,8 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
         if( loadedNodes.size() )
         {
             //std::cout<<"---Loaded Part---"<<std::endl;
-            CADPartPtr trempPart = loadedNodes.at( 0 );
-            newPart = new CADPart( *trempPart );
+            CADPartPtr trempPart = boost::dynamic_pointer_cast<CADPart>( loadedNodes.at( 0 ) );
+            newPart = CADPartPtr( new CADPart( *trempPart ) );
             //_toggleNodeOnOff[newPart->GetID()] = true;
             //newPart->SetVisibility(true);
         }
@@ -603,20 +603,20 @@ void CADNodeManagerDlg::SendVEGNodesToXplorer( wxString fileName )
             _loadedCAD[fileName] = newAssembly;
             try
             {   
-                CADAssemblyPtr tempAssembly = _rootNode;
+                CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _rootNode );
                 tempAssembly->GetNumberOfChildren();
                 SetRootCADNode( newAssembly );
             }
             catch( ... )
             {
-                CADAssemblyPtr tempAssembly = _activeCADNode;
+                CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
                 tempAssembly->AddChild( newAssembly );
                 SetRootCADNode( _rootNode );
             }
         }
         else if( newPart )
         {
-            CADAssemblyPtr tempAssembly = _activeCADNode;
+            CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
             _loadedCAD[fileName] = newPart;
             tempAssembly->AddChild( newPart );
             SetRootCADNode( _rootNode );
@@ -680,12 +680,12 @@ void CADNodeManagerDlg::SendNewNodesToXplorer( wxString fileName )
     partNameDlg.CentreOnParent();
     partNameDlg.ShowModal();
 
-    CADPartPtr newCADPart = new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) );
+    CADPartPtr newCADPart( new CADPart( ConvertUnicode( partNameDlg.GetValue().GetData() ) ) );
     newCADPart->SetCADFileName( ConvertUnicode( vegFileNamePath.c_str() ) );
     //_toggleNodeOnOff[newCADPart->GetID()] = true;
     newCADPart->SetVisibility( true );
 
-    CADAssemblyPtr tempAssembly = _activeCADNode;
+    CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( _activeCADNode );
     tempAssembly->AddChild( newCADPart );
 
     _geometryTree->AppendItem( _activeTreeNode->GetId(), wxString( newCADPart->GetNodeName().c_str(), wxConvUTF8 ),
@@ -834,7 +834,7 @@ void CADNodeManagerDlg::_deleteNode( wxCommandEvent& WXUNUSED( event ) )
         _sendCommandsToXplorer();
         ClearInstructions();
 
-        CADAssemblyPtr tempAssembly = parentCADNode;
+        CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( parentCADNode );
         tempAssembly->RemoveChild( _activeCADNode->GetID() );
 
         for( std::map<wxString, ves::open::xml::cad::CADNodePtr >::iterator deletedNode = _loadedCAD.begin();
@@ -910,7 +910,7 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNodePtr mo
         dynamic_cast<CADTreeBuilder::TreeNodeData*>
         ( _geometryTree->GetItemData( newParentTreeID ) );
 
-    CADAssemblyPtr newParent = newParentCADNode->GetNode( );
+    CADAssemblyPtr newParent = boost::dynamic_pointer_cast<CADAssembly>( newParentCADNode->GetNode() );
 
     _commandName = std::string( "CAD_MOVE_NODE" );
 
@@ -942,7 +942,7 @@ void CADNodeManagerDlg::_moveNodeToNewParent( ves::open::xml::cad::CADNodePtr mo
         dynamic_cast<CADTreeBuilder::TreeNodeData*>
         ( _geometryTree->GetItemData( oldParentTreeID ) );
 
-    CADAssemblyPtr tempAssembly = oldParentTreeNode->GetNode();
+    CADAssemblyPtr tempAssembly = boost::dynamic_pointer_cast<CADAssembly>( oldParentTreeNode->GetNode() );
     tempAssembly->RemoveChild( movingChild->GetID() );
 
     newParent->AddChild( movingChild );

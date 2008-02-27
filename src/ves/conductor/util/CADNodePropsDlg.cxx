@@ -858,12 +858,12 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                         shaderLoader.ReadFromFile();
                         shaderLoader.ReadXMLData( ConvertUnicode( veaFileNamePath ), "Shader", "Program" );
 
-                        ves::open::xml::shader::ProgramPtr loadedShader = 0;
+                        ves::open::xml::shader::ProgramPtr loadedShader;
                         if( shaderLoader.GetLoadedXMLObjects().at( 0 ) )
                         {
                             try
                             {
-                                loadedShader = shaderLoader.GetLoadedXMLObjects().at( 0 );
+                                loadedShader = boost::dynamic_pointer_cast<ves::open::xml::shader::Program>( shaderLoader.GetLoadedXMLObjects().at( 0 ) );
                                 if( AttributeExists( loadedShader->GetProgramName().c_str() ) )
                                 {
                                     wxMessageBox( _( "Attribute with this name is already loaded." ),
@@ -1222,7 +1222,7 @@ void CADNodePropertiesDlg::_showColorDialog( wxCommandEvent& event )
     {
         CADAttributePtr activeAttribute = _cadNode->GetActiveAttribute();
         CADMaterialPtr material = activeAttribute->GetMaterial();
-        ves::open::xml::FloatArrayPtr activeComponent = 0;
+        ves::open::xml::FloatArrayPtr activeComponent;
         std::string updateComponent = "";
 
         std::vector<double> currentColor;

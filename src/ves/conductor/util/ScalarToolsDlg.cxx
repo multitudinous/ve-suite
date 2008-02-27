@@ -168,7 +168,7 @@ void ScalarToolsDialog::ScalarToolsSliderCallback::SliderOperation()
     minRangevalue ->SetData( "Mininum Scalar Range", static_cast<double>( _dualSlider->GetMinSliderValue() ) / 100.0 );
     _scalarDlg->AddInstruction( minRangevalue );
 
-    ves::open::xml::DataValuePairPtr maxRangevalue  = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr maxRangevalue( new ves::open::xml::DataValuePair() );
     maxRangevalue->SetData( "Maximum Scalar Range", static_cast<double>( _dualSlider->GetMaxSliderValue() ) / 100.0 );
     _scalarDlg->AddInstruction( maxRangevalue );
 
@@ -221,7 +221,7 @@ void ScalarToolsDialog::_updateActiveScalar( wxCommandEvent& command )
     minRangevalue->SetData( "Mininum Scalar Range", static_cast<double>( _scalarRange->GetMinSliderValue() ) / 100.0 );
     _instructions.push_back( minRangevalue );
 
-    ves::open::xml::DataValuePairPtr maxRangevalue  = new ves::open::xml::DataValuePair();
+    ves::open::xml::DataValuePairPtr maxRangevalue( new ves::open::xml::DataValuePair() );
     maxRangevalue->SetData( "Maximum Scalar Range", static_cast<double>( _scalarRange->GetMaxSliderValue() ) / 100.0 );
     _instructions.push_back( maxRangevalue );
 

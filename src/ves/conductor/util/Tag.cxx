@@ -232,19 +232,19 @@ ves::open::xml::model::TagPtr Tag::GetVETagPtr()
     tagPtr->SetText( ConvertUnicode( text.c_str() ) );
     tagPtr->SetID( uuid );
     //Order is important below
-    ves::open::xml::model::PointPtr con0Ptr = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr con0Ptr( new ves::open::xml::model::Point() );
     std::pair< unsigned int, unsigned int > point0;
     point0.first = cons[0].x;
     point0.second = cons[0].y;
     con0Ptr->SetPoint( point0 );
     tagPtr->AddPoint( con0Ptr );
-    ves::open::xml::model::PointPtr con1Ptr = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr con1Ptr( new ves::open::xml::model::Point() );
     std::pair< unsigned int, unsigned int > point1;
     point1.first = cons[1].x;
     point1.second = cons[1].y;
     con1Ptr->SetPoint( point1 );
     tagPtr->AddPoint( con1Ptr );
-    ves::open::xml::model::PointPtr con2Ptr = new ves::open::xml::model::Point();
+    ves::open::xml::model::PointPtr con2Ptr( new ves::open::xml::model::Point() );
     std::pair< unsigned int, unsigned int > point2;
     point2.first = box.x;
     point2.second = box.y;

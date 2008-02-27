@@ -209,7 +209,7 @@ private:
     /// second = y scale
     std::pair< double, double >* userScale;
     ///The XML Link rep
-    ves::open::xml::model::LinkWeakPtr m_veLink;
+    ves::open::xml::model::LinkPtr m_veLink;
     ves::open::xml::model::ModelWeakPtr parentModel;
 
     std::string ConvertUnicode( const wxChar* data )

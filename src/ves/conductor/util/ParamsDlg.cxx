@@ -151,24 +151,24 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
 {
     std::string compName = ConvertUnicode( CompName.c_str() );
 
-    ves::open::xml::Command returnState;
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
 
     //Block
     if( !DialogType.compare( wxT( "input" ) ) )
     {
         if( IsBlock )
-            returnState.SetCommandName( "getInputModuleProperties" );
+            returnState->SetCommandName( "getInputModuleProperties" );
         else
-            returnState.SetCommandName( "getStreamInputModuleProperties" );
+            returnState->SetCommandName( "getStreamInputModuleProperties" );
         ValueEdit->SetEditable( true );
         SetButton->Enable( true );
     }
     else
     {
         if( IsBlock )
-            returnState.SetCommandName( "getOutputModuleProperties" );
+            returnState->SetCommandName( "getOutputModuleProperties" );
         else
-            returnState.SetCommandName( "getStreamOutputModuleProperties" );
+            returnState->SetCommandName( "getStreamOutputModuleProperties" );
         ValueEdit->SetEditable( false );
         SetButton->Enable( false );
     }
@@ -176,14 +176,14 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
 
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
-    data = new ves::open::xml::DataValuePair();
+    data = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ParamName" ), ConvertUnicode( ParamChoice->GetStringSelection().c_str() ) );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -197,7 +197,7 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
     networkReader.ReadFromString();
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
-    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
+    ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
 
     unsigned int num = cmd->GetNumberOfDataValuePairs();
     std::vector< std::string > dataName;
@@ -269,23 +269,23 @@ void ParamsDlg::ParamChoiceSelected( wxCommandEvent& event )
 void ParamsDlg::SetButtonClick( wxCommandEvent& event )
 {
     std::string compName = ConvertUnicode( CompName.c_str() );
-    ves::open::xml::Command returnState;
-    returnState.SetCommandName( "setParam" );
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "setParam" );
 
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( "ModuleName", compName );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
-    data = new ves::open::xml::DataValuePair();
+    data = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
     data->SetData( "ParamName", ConvertUnicode( ParamChoice->GetStringSelection().c_str() ) );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
-    data = new ves::open::xml::DataValuePair();
+    data = ves::open::xml::DataValuePairPtr( new ves::open::xml::DataValuePair() );
     data->SetData( "ParamValue", ConvertUnicode( ValueEdit->GetValue().c_str() ) );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";

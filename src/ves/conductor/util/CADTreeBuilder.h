@@ -74,11 +74,11 @@ public:
     ///Add a CADAssembly to the graph, returning the wxTreeItemId
     ///\param assembly The assembly to add
     ///\param parent The wxTreeItemId of the parent
-    wxTreeItemId AddAssemblyToGraph( ves::open::xml::cad::CADNodeWeakPtr assembly, wxTreeItemId parent );
+    wxTreeItemId AddAssemblyToGraph( ves::open::xml::cad::CADNodePtr assembly, wxTreeItemId parent );
     ///Add a CADPart to the graph
     ///\param part The part to add
     ///\param parent The wxTreeItemId of the parent
-    void AddPartToGraph( ves::open::xml::cad::CADNodeWeakPtr part, wxTreeItemId parent );
+    void AddPartToGraph( ves::open::xml::cad::CADNodePtr part, wxTreeItemId parent );
 
     ///Remove a node from the graph
     ///\param nodeToRemove Remove a specified node from the tree

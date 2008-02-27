@@ -164,7 +164,7 @@ CADNodePtr CADTreeBuilder::GetCADNode( std::string name )
         if( _nodeList.at( i )->GetNodeName() == name )
             return _nodeList.at( i );
     }
-    return 0;
+    return CADNodePtr();
 }
 ///////////////////////////////////////////////////////////
 wxTreeItemId CADTreeBuilder::GetCurrentParentNode()

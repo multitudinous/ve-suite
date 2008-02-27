@@ -70,7 +70,7 @@ SoundsPane::SoundsPane( wxWindow* parent, ves::open::xml::model::ModelWeakPtr ac
     _soundCBox = 0;
     _loadButton = 0;
     _numSounds = 0;
-    m_activeModel = activeModel;
+    m_activeModel = activeModel.lock();
 
     _buildPage();
 }
@@ -140,7 +140,7 @@ void SoundsPane::_onLoadAndUpdate( wxCommandEvent& WXUNUSED( event ) )
             {
                 _soundCBox->Append( soundFileName.GetName() );
 
-                ves::open::xml::ParameterBlockPtr modelSounds = 0;
+                ves::open::xml::ParameterBlockPtr modelSounds;
                 modelSounds = m_activeModel->GetInformationPacket( "Model Sounds" );
 
                 ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
@@ -194,7 +194,7 @@ bool SoundsPane::_ensureSounds( wxString filename )
 ///////////////////////////////////////////////////////////////
 void SoundsPane::SetActiveModel( ves::open::xml::model::ModelWeakPtr model )
 {
-    m_activeModel = model;
+    m_activeModel = model.lock();
     _updateSoundsInformationFromModel();
 }
 ////////////////////////////////////////////////////
@@ -206,7 +206,7 @@ void SoundsPane::_updateSoundsInformationFromModel()
     _clearLoadedSounds();
 
     int numCheckboxes = 1;
-    ves::open::xml::ParameterBlockPtr modelSounds = 0;
+    ves::open::xml::ParameterBlockPtr modelSounds;
     modelSounds = m_activeModel->GetInformationPacket( "Model Sounds" );
     ///create the model sounds
     if( !modelSounds )

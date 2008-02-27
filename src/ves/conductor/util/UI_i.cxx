@@ -44,7 +44,7 @@ Body_UI_i::Body_UI_i( Body::Executive_ptr exec, std::string name )
         : UIName_( name ), executive_( Body::Executive::_duplicate( exec ) )
 {
     UIName_ = name;
-    m_commandNameMap[ "NULL" ] = new ves::open::xml::Command();
+    m_commandNameMap[ "NULL" ] = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     m_commandNameMap[ "NULL" ]->SetCommandName( "NULL" );
 }
 
@@ -171,7 +171,7 @@ ACE_THROW_SPEC((
     {
         //iter
         //  VE_XML::Command* temp = dynamic_cast< VE_XML::Command* >( *iter );
-        ves::open::xml::CommandPtr temp = xmlObjects.at( 0 );
+        ves::open::xml::CommandPtr temp = boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObjects.at( 0 ) );
         if( !temp )
         {
             std::cout << " bad stuff " << std::endl;

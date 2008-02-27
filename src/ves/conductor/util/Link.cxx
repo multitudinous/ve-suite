@@ -77,8 +77,7 @@ Link::Link( wxScrolledWindow* designCanvas )
         Fr_port( 1000000 ),
         To_port( 1000000 ),
         networkFrame( designCanvas ),
-        userScale( 0 ),
-        m_veLink( 0 )
+        userScale( 0 )
 {
     double a = atan( 3.0 / 10.0 );
     double b = -a;
@@ -89,7 +88,7 @@ Link::Link( wxScrolledWindow* designCanvas )
     linkName = wxString( "Link::Link-noname", wxConvUTF8 );
     m_uuid = "notSet";
     highlightFlag = false;
-    m_veLink = new ves::open::xml::model::Link();
+    m_veLink = ves::open::xml::model::LinkPtr( new ves::open::xml::model::Link() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Link::~Link( void )
@@ -109,7 +108,7 @@ Link::Link( const Link& input )
     cosa = input.cosa;
     if( input.m_veLink )
     {
-        m_veLink = new ves::open::xml::model::Link( *( input.m_veLink ) );
+        m_veLink = ves::open::xml::model::LinkPtr( new ves::open::xml::model::Link( *( input.m_veLink ) ) );
     }
     cons = input.cons;
     poly = input.poly;
@@ -137,7 +136,7 @@ Link& Link::operator= ( const Link& input )
         cosa = input.cosa;
         if( input.m_veLink )
         {
-            m_veLink = new ves::open::xml::model::Link( *( input.m_veLink ) );
+            m_veLink = ves::open::xml::model::LinkPtr( new ves::open::xml::model::Link( *( input.m_veLink ) ) );
         }
         cons.clear();
         cons = input.cons;
@@ -474,7 +473,7 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     compName = "Data.Streams." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
     while( parentTraverser != NULL )
     {
         //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
@@ -482,14 +481,14 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
         parentTraverser = parentTraverser->GetParentModel();
     }
 
-    ves::open::xml::Command returnState;
-    returnState.SetCommandName( "getStreamInputModuleParamList" );
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "getStreamInputModuleParamList" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -511,7 +510,7 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
 
-    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
+    ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );
@@ -538,7 +537,7 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     compName = "Data.Streams." + compName;
 
     //generate hierarchical name if necessary
-    ves::open::xml::model::ModelPtr parentTraverser = parentModel;
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
     while( parentTraverser != NULL )
     {
         //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
@@ -546,14 +545,14 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
         parentTraverser = parentTraverser->GetParentModel();
     }
 
-    ves::open::xml::Command returnState;
-    returnState.SetCommandName( "getStreamOutputModuleParamList" );
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "getStreamOutputModuleParamList" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
     data->SetData( std::string( "ModuleName" ), compName );
-    returnState.AddDataValuePair( data );
+    returnState->AddDataValuePair( data );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "vecommand" ) );
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
 
     ves::open::xml::XMLReaderWriter commandWriter;
     std::string status = "returnString";
@@ -572,7 +571,7 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     networkReader.ReadFromString();
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
-    ves::open::xml::CommandPtr cmd = objectVector.at( 0 );
+    ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
     ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
     std::vector< std::string > temp_vector;
     pair->GetData( temp_vector );

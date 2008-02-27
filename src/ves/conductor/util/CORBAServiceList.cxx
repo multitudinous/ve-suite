@@ -57,7 +57,7 @@ CORBAServiceList::CORBAServiceList( void )
 {
     mTimeZero = ACE_Time_Value::zero;
     mTimeOutValue.msec( 75 );
-    nullTextPtr = new ves::open::xml::Command();
+    nullTextPtr = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     nullTextPtr->SetCommandName( "NULL" );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -471,7 +471,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
 
     // New need to destroy document and send it
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veCommand, "vecommand" ) );
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veCommand.lock(), "vecommand" ) );
     std::string xmlDocument( "returnString" );
     netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
 

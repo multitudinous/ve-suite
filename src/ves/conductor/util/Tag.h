@@ -51,6 +51,7 @@ Tag API
 #include <wx/string.h>
 #include <wx/dc.h>
 #include <wx/event.h>
+#include <string>
 
 class wxScrolledWindow;
 
