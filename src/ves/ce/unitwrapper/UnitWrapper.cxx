@@ -216,7 +216,7 @@ ACE_THROW_SPEC((
     iter = xmlModelMap.find( strm.str() );
     if( iter == xmlModelMap.end() )
     {
-        xmlModelMap[ strm.str()] = new ves::open::xml::model::Model();
+        xmlModelMap[ strm.str()] = ves::open::xml::model::ModelPtr( new ves::open::xml::model::Model() );
     }
 
     std::cout << UnitName_ << " :SetID called" << std::endl;
@@ -294,7 +294,7 @@ ACE_THROW_SPEC((
     std::ostringstream strm;
     strm << activeId;
 
-    ves::open::xml::CommandPtr params = objectVector.at( 0 );
+    ves::open::xml::CommandPtr params = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
     std::string commandName = params->GetCommandName();
     std::map< std::string, VE_CE::EventHandler* >::iterator currentEventHandler;
     currentEventHandler = eventHandlerMap.find( commandName );

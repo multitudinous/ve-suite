@@ -44,7 +44,7 @@ using namespace VE_CE;
 GetResultsEventHandler::GetResultsEventHandler()
         : VE_CE::EventHandler()
 {
-    baseModel = 0;
+    baseModel = ves::open::xml::model::ModelPtr();
 }
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -60,12 +60,12 @@ void GetResultsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
     {
         if( model )
         {
-            baseModel = model;
+            baseModel = boost::dynamic_pointer_cast<ves::open::xml::model::Model>( model );
         }
     }
     catch ( ... )
     {
-        baseModel = 0;
+        baseModel = ves::open::xml::model::ModelPtr();
         std::cout << "Invalid object passed to SetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
     }
 }

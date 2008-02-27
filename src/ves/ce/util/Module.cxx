@@ -51,12 +51,12 @@ Module::Module()
     _return_state( 0 ),
     _is_feedback( 0 )
 {
-   veModel = new model::Model();
+   veModel = model::ModelPtr( new model::Model() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Module::Module( const Module &m )
 {
-   veModel = new model::Model();
+   veModel = model::ModelPtr( new model::Model() );
    copy( m );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +98,7 @@ void Module::copy( const Module &m )
    ports.clear();
    for( size_t i = 0; i < m.ports.size(); ++i )
    {
-       ports.push_back( new model::Port( *( m.ports.at( i ) ) ) );
+       ports.push_back( model::PortPtr( new model::Port( *( m.ports.at( i ) ) ) ) );
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -266,13 +266,13 @@ std::string Module::GetModuleName( void )
    return _name;
 }
 ////////////////////////////////////////////////////////////////////////////////
-model::ModelWeakPtr Module::GetVEModel( void )
+model::ModelPtr Module::GetVEModel( void )
 {
    //Set the input, results, port data data structures
    return veModel;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Module::SetVEModel( model::ModelWeakPtr mod )
+void Module::SetVEModel( model::ModelPtr mod )
 {
    veModel = mod;
    //Set the name of this module
@@ -319,7 +319,7 @@ void Module::SetInputData( std::vector< XMLObjectPtr > inputData )
 {
    for( size_t i = 0; i < inputData.size(); ++i )
    {
-       CommandPtr tempCommand = inputData.at( i );
+       CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( inputData.at( i ) );
        veModel->SetInput( tempCommand );
    }
 }
@@ -338,7 +338,7 @@ void Module::SetResultsData( std::vector< XMLObjectPtr > resultsData )
 {
    for( size_t i = 0; i < resultsData.size(); ++i )
    {
-       CommandPtr tempCommand = resultsData.at( i );
+       CommandPtr tempCommand =  boost::dynamic_pointer_cast<ves::open::xml::Command>( resultsData.at( i ) );
        veModel->SetResult( tempCommand );
    }
 }

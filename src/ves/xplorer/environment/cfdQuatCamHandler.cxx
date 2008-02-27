@@ -363,16 +363,16 @@ void cfdQuatCamHandler::RemoveViewPt( void )
     delete QuatCams.at( cam_id );
     QuatCams.erase( QuatCams.begin() + cam_id );
 
-    for( unsigned int i = 0; i < flyThroughList.size(); i++ )
+    for( size_t i = 0; i < flyThroughList.size(); i++ )
     {
-        for( unsigned int j = 0; j < flyThroughList.at( i ).size(); j++ )
+        for( size_t j = 0; j < flyThroughList.at( i ).size(); j++ )
         {
             if( flyThroughList.at( i ).at( j ) == cam_id )
             {
                 RemoveFlythroughPt( i, j );
             }
         }
-        for( unsigned int k = 0; k < flyThroughList.at( i ).size(); k++ )
+        for( size_t k = 0; k < flyThroughList.at( i ).size(); k++ )
         {
             if( flyThroughList.at( i ).at( k ) > cam_id )
             {

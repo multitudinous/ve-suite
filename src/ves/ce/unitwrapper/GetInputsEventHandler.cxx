@@ -44,7 +44,7 @@ using namespace VE_CE;
 GetInputsEventHandler::GetInputsEventHandler()
         : VE_CE::EventHandler()
 {
-    baseModel = 0;
+    baseModel = ves::open::xml::model::ModelPtr();
 }
 /////////////////////////////////////////////////////
 ///Destructor                                      //
@@ -60,12 +60,12 @@ void GetInputsEventHandler::SetBaseObject( ves::open::xml::XMLObjectPtr model )
     {
         if( model )
         {
-            baseModel = model;
+            baseModel = boost::dynamic_pointer_cast<ves::open::xml::model::Model>( model );
         }
     }
     catch ( ... )
     {
-        baseModel = 0;
+        baseModel = ves::open::xml::model::ModelPtr();
         std::cout << "Invalid object passed to GetInputsEventHandler::SetGlobalBaseObject!" << std::endl;
     }
 }
@@ -84,7 +84,7 @@ std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
         size_t numInputs = objectToProcess.size();
         for( size_t i = 0; i < numInputs; ++i )
         {
-            ves::open::xml::CommandPtr command = objectToProcess.at( i );
+            ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectToProcess.at( i ) );
             std::string dataName = command->GetCommandName();
             std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
             for( size_t j = 0; j < baseModel->GetNumberOfInputs(); ++j )

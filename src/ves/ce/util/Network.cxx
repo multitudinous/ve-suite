@@ -52,7 +52,7 @@ using namespace ves::open::xml;
 
 Network::Network()
 {
-    veNetwork = 0;
+    veNetwork = model::NetworkPtr();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Network::~Network()
@@ -88,7 +88,7 @@ int Network::parse( std::string xmlNetwork )
     networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
     std::vector< XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
-    model::SystemPtr tempSystem = objectVector.at( 0 );
+    model::SystemPtr tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
     if( !tempSystem )
     {
         std::cerr << "Improperly formated ves file."
@@ -190,8 +190,7 @@ std::string Network::GetNetworkString( void )
         return std::string( "" );
     }
 
-    model::SystemPtr tempSystem =
-        new model::System();
+    model::SystemPtr tempSystem( new model::System() );
     //  Models
     for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {

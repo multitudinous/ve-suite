@@ -109,10 +109,10 @@ public:
     std::string GetModuleName( void );
     ///Get the VE_Model for this module
     ///\return The model for this module
-    ves::open::xml::model::ModelWeakPtr GetVEModel( void );
+    ves::open::xml::model::ModelPtr GetVEModel( void );
     ///Set the VE_Model for this module
     ///\param mod The model to add
-    void SetVEModel( ves::open::xml::model::ModelWeakPtr mod );
+    void SetVEModel( ves::open::xml::model::ModelPtr mod );
 
     int _need_execute;
     int _return_state;
