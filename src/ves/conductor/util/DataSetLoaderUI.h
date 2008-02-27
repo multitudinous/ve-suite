@@ -110,7 +110,8 @@ public:
                      const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION,
                      const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE,
                      long style = SYMBOL_DATASETLOADERUI_STYLE,
-                     ves::open::xml::model::ModelWeakPtr veModel = 0 );
+                     ves::open::xml::model::ModelPtr veModel = 
+                         ves::open::xml::model::ModelPtr() );
 
     enum
     {
@@ -142,7 +143,8 @@ public:
                  const wxPoint& pos = SYMBOL_DATASETLOADERUI_POSITION,
                  const wxSize& size = SYMBOL_DATASETLOADERUI_SIZE,
                  long style = SYMBOL_DATASETLOADERUI_STYLE,
-                 ves::open::xml::model::ModelWeakPtr veModel = 0 );
+                 ves::open::xml::model::ModelPtr veModel = 
+                     ves::open::xml::model::ModelPtr() );
 
     /// Creates the controls and sizers
     void CreateControls();

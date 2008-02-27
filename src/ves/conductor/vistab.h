@@ -178,7 +178,7 @@ public:
 
     ///Send the current vistab data to xplorer.
     ///\param subDialogCommand The setting from any of the sub dialogs.
-    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand = 0 );
+    void SendUpdatedSettingsToXplorer( ves::open::xml::CommandPtr subDialogCommand );
 
     ///Clear out the DataValuePair(s) of basic info about the vistab
     void ClearBaseInformation();

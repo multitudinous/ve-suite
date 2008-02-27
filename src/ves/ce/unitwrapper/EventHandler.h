@@ -69,7 +69,7 @@ public:
 
     ///Function to set the xml object to work on
     ///\param baseObject The base object to apply the command to.
-    virtual void SetBaseObject( ves::open::xml::XMLObjectPtr baseObject = 0 ) = 0;
+    virtual void SetBaseObject( ves::open::xml::XMLObjectPtr baseObject ) = 0;
 
 protected:
     ///??

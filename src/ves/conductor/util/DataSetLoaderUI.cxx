@@ -100,7 +100,7 @@ DataSetLoaderUI::DataSetLoaderUI( )
 {
 }
 
-DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
+DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelPtr veModel )
 {
     Create( parent, id, caption, pos, size, style, veModel );
 }
@@ -109,10 +109,10 @@ DataSetLoaderUI::DataSetLoaderUI( wxWindow* parent, wxWindowID id, const wxStrin
  * DataSetLoaderUI creator
  */
 
-bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelWeakPtr veModel )
+bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style, ves::open::xml::model::ModelPtr veModel )
 {
 ////@begin DataSetLoaderUI member initialisation
-    m_veModel = veModel.lock();
+    m_veModel = veModel;
     lastAddition = -1;
     dataSetList = NULL;
     dataSetTextEntry = NULL;

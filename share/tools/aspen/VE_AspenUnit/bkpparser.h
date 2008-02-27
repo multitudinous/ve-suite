@@ -111,7 +111,7 @@ public:
 	int getStreamSize(int index);                           //returns the total number of points for a stream
 	bool isOpen();
 
-	void CreateNetworkLinks( ves::open::xml::model::NetworkWeakPtr subNetwork, std::string hierName );
+	void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
    void CreateNetworkInformation( std::string networkData );
    void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
    std::string CreateNetwork( void );

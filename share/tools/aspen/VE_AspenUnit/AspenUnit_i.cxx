@@ -163,10 +163,10 @@ char * Body_Unit_i::GetStatusMessage (
   ))
 {
   // Add your implementation here
-	ves::open::xml::Command returnState;
+	ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
 
-	returnState.SetCommandName("statusmessage");
-	ves::open::xml::DataValuePairPtr data=returnState.GetDataValuePair(-1);
+	returnState->SetCommandName("statusmessage");
+	ves::open::xml::DataValuePairPtr data = returnState->GetDataValuePair(-1);
 	data->SetDataName("RETURN_STATE");
 	data->SetDataType("UNSIGNED INT");
 	data->SetDataValue(return_state);
@@ -174,7 +174,7 @@ char * Body_Unit_i::GetStatusMessage (
 	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
 	nodes.push_back( 
-                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( &returnState, "Command" ) 
+                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "Command" ) 
                      );
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
@@ -292,7 +292,7 @@ char * Body_Unit_i::Query ( const char * query_str
 	ves::open::xml::CommandPtr cmd;	
 	std::string cmdname;
 	
-	cmd = objectVector.at( 0 );
+	cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
 	cmdname = cmd->GetCommandName();
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel(("Command: "+cmdname+"\r\n").c_str());
@@ -680,7 +680,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
    //this part would need rewrite later
    for( size_t i=0; i<objectVector.size(); i++)
    {
-		ves::open::xml::CommandPtr param = objectVector.at( i );
+		ves::open::xml::CommandPtr param = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( i ) );
 		std::string paramName = param->GetCommandName();
 		
 		size_t num = param->GetNumberOfDataValuePairs();
