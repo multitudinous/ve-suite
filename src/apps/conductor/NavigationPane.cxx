@@ -590,7 +590,7 @@ void NavigationPane::SendCommandsToXplorer( void )
     DataValuePairPtr dataValuePair = new DataValuePair( std::string( "FLOAT" ) );
     dataValuePair->SetDataName( dataValueName );
     dataValuePair->SetDataValue( static_cast<double>( cIso_value ) );
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Navigation_Data" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -617,7 +617,7 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void NavigationPane::UpdateNavigationData( void )
 {
-    const CommandWeakPtr navPreferenceData =
+    const CommandPtr navPreferenceData =
         UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
     if( navPreferenceData->GetCommandName() == "NULL" )
     {

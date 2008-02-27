@@ -586,7 +586,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
     //This assumes that the command name was set by the callback
     //as well as the DataValuePairs
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
 
     ///This is a hack to get around sending of only 1 command name and not using event handlers in the original
     ///code.

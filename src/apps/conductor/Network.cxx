@@ -1949,21 +1949,21 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 
         DataValuePair* dataValuePair = new DataValuePair( );
         dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
-        CommandWeakPtr veCommand( new Command() );
+        CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
         veCommand->AddDataValuePair( dataValuePair );
         UserPreferencesDataBuffer::instance()->
         SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
     }
     // Create the command and data value pairs
-    CommandWeakPtr colorCommand = UserPreferencesDataBuffer::instance()->
+    CommandPtr colorCommand = UserPreferencesDataBuffer::instance()->
                                   GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
     CORBAServiceList::instance()->
     SendCommandStringToXplorer( colorCommand );
 
     // Create the command and data value pairs
-    CommandWeakPtr startCommand = UserPreferencesDataBuffer::instance()->
+    CommandPtr startCommand = UserPreferencesDataBuffer::instance()->
                                   GetCommand( "Navigation_Data" );
     //startCommand->SetCommandName( "MOVE_TO_START_POSITION" );
     CORBAServiceList::instance()->
@@ -2168,7 +2168,7 @@ void Network::ClearXplorer()
             new DataValuePair( std::string( "UNSIGNED INT" ) );
         dataValuePair->SetDataName( "Object ID" );
         dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
-        CommandPtr veCommand = new Command();
+        CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = CORBAServiceList::instance()->

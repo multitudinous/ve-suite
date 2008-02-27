@@ -282,7 +282,7 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
 
     DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
     veCommand->AddDataValuePair( dataValuePair );
     ///Set the command on the buffer first so that a strong ptr is
@@ -1002,7 +1002,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     DataValuePairPtr dataValuePair =
         new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-    CommandWeakPtr veCommand( new Command() );
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
@@ -1017,7 +1017,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     DataValuePairPtr dvp =
         new DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "Clear Quat Data", tempDir );
-    CommandWeakPtr vec( new Command() );
+    CommandPtr vec( new Command() );
     vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
@@ -1044,7 +1044,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
-    CommandWeakPtr aspenBKPFile =
+    CommandPtr aspenBKPFile =
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
@@ -1116,7 +1116,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     DataValuePairPtr dataValuePair =
         new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", tempDir );
-    CommandWeakPtr veCommand( new Command() );
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
@@ -1126,7 +1126,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     DataValuePairPtr dvp =
         new DataValuePair( std::string( "STRING" ) );
     dvp->SetData( "Clear Quat Data", tempDir );
-    CommandWeakPtr vec( new Command() );
+    CommandPtr vec( new Command() );
     vec->SetCommandName( std::string( "QC_CLEAR_QUAT_DATA" ) );
     vec->AddDataValuePair( dvp );
     serviceList->SendCommandStringToXplorer( vec );
@@ -1153,7 +1153,7 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     }
 
     ///This code will be moved in the future. It is Aspen specific code.
-    CommandWeakPtr aspenBKPFile =
+    CommandPtr aspenBKPFile =
         UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
     if( aspenBKPFile->GetCommandName() != "NULL" )
@@ -1288,7 +1288,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
 
         Log( "Simulation Opened.\n" );
         ///
-        CommandWeakPtr aspenBKPFile( new Command() );
+        CommandPtr aspenBKPFile( new Command() );
         aspenBKPFile->SetCommandName( "Aspen_Plus_Preferences" );
         data = new DataValuePair();
         data->SetData( "BKPFileName",
@@ -1525,7 +1525,7 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
     std::string nw_str = serviceList->Query( status );
     Log( "Simulation Saved.\n" );
 
-    CommandWeakPtr aspenAPWFile( new Command() );
+    CommandPtr aspenAPWFile( new Command() );
     aspenAPWFile->SetCommandName( "Aspen_Plus_Preferences" );
     data = new DataValuePair();
     data->SetData( "BKPFileName",
@@ -1566,7 +1566,7 @@ void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED( event ) )
         // Tell xplorer to ask ce for the new data
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Load Data" ), xplorerColor );
-        CommandWeakPtr veCommand( new Command() );
+        CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "veNetwork Update" ) );
         veCommand->AddDataValuePair( dataValuePair );
         serviceList->SendCommandStringToXplorer( veCommand );
@@ -1943,7 +1943,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED( event ) )
     //this is kinda confusing...thanks wx!!!
     //wxColourData data;
     //data.SetChooseFull(true);
-    CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->
+    CommandPtr bkColor = UserPreferencesDataBuffer::instance()->
                              GetCommand( "CHANGE_BACKGROUND_COLOR" );
 
     if( bkColor->GetCommandName() != "NULL" )
@@ -1975,7 +1975,7 @@ void AppFrame::SetBackgroundColor( wxCommandEvent& WXUNUSED( event ) )
         // Create the command and data value pairs
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
-        CommandPtr veCommand = new Command();
+        CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
         veCommand->AddDataValuePair( dataValuePair );
 
@@ -1989,7 +1989,7 @@ void AppFrame::ChangeDevice( wxCommandEvent& event )
 {
     //Create the command and data value pairs
     DataValuePairPtr dvp( new DataValuePair() );
-    CommandWeakPtr command( new Command() );
+    CommandPtr command( new Command() );
 
     std::string device;
 
@@ -2015,7 +2015,7 @@ void AppFrame::DisplaySelection( wxCommandEvent& event )
 {
     //Create the command and data value pairs
     DataValuePairPtr DVP( new DataValuePair() );
-    CommandWeakPtr command( new Command() );
+    CommandPtr command( new Command() );
 
     unsigned int value;
 
@@ -2041,7 +2041,7 @@ void AppFrame::ViewSelection( wxCommandEvent& event )
 {
     //Create the command and data value pairs
     DataValuePairPtr dvp( new DataValuePair() );
-    CommandWeakPtr command( new Command() );
+    CommandPtr command( new Command() );
 
     std::string view;
 
@@ -2103,7 +2103,7 @@ void AppFrame::JugglerSettings( wxCommandEvent& event )
     {
         dataValuePair->SetDataValue( 0.0 );
     }
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Juggler_Display_Data" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -2115,7 +2115,7 @@ void AppFrame::ExitXplorer( void )
     DataValuePairPtr dataValuePair =
         new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "EXIT_FLAG", "EXIT" );
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "EXIT_XPLORER" ) );
     veCommand->AddDataValuePair( dataValuePair );
 
@@ -2168,7 +2168,7 @@ void AppFrame::ProcessCommandLineArgs( void )
     DataValuePairPtr dataValuePair =
         new DataValuePair( std::string( "STRING" ) );
     dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
@@ -2272,7 +2272,7 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
     }
 
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
@@ -2397,7 +2397,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         }
         
         ///This code will be moved in the future. It is Aspen specific code.
-        CommandWeakPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
+        CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
         
         if( aspenBKPFile->GetCommandName() != "NULL" )

@@ -153,7 +153,7 @@ void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
     }
     //This assumes that the command name was set by the callback
     //as well as the DataValuePairs
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
 
     std::string _commandName = "Stored Scenes";
     // Create the command and data value pairs
@@ -179,7 +179,7 @@ void UI_TeacherTab::_onTeacher( wxCommandEvent& WXUNUSED( event ) )
 
 void UI_TeacherTab::_onClear( wxCommandEvent& event )
 {
-    CommandPtr veCommand = new Command();
+    CommandPtr veCommand( new Command() );
 
     std::string _commandName = "Stored Scenes";
     // Create the command and data value pairs

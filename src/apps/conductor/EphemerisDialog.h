@@ -130,7 +130,7 @@ private:
     ///Write the location information to config block
     ///\param location The location information
     ///\param  key The block to write the location information
-    void _writeLocation( ves::open::xml::CommandWeakPtr location, wxString key );
+    void _writeLocation( ves::open::xml::CommandPtr location, wxString key );
     //Do not add custom control declarations between
     //GUI Control Declaration Start and GUI Control Declaration End.
     //wxDev-C++ will remove them. Add custom code after the block.

@@ -222,7 +222,7 @@ void UserPreferences::OnConductorCheck( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
 {
-    CommandWeakPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
+    CommandPtr bkColor = UserPreferencesDataBuffer::instance()->GetCommand( "CHANGE_BACKGROUND_COLOR" );
     if( bkColor->GetCommandName() != "NULL" )
     {
         bkColor->GetDataValuePair( "Background Color" )->GetData( xplorerColor );
@@ -251,7 +251,7 @@ void UserPreferences::OnSetBackgroundColor( wxCommandEvent& event )
         // Create the command and data value pairs
         DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( std::string( "Background Color" ), xplorerColor );
-        CommandWeakPtr veCommand( new Command() );
+        CommandPtr veCommand( new Command() );
         veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
         veCommand->AddDataValuePair( dataValuePair );
 
@@ -284,7 +284,7 @@ void UserPreferences::OnLODScale( wxScrollEvent& event )
     // Create the command and data value pairs
     DataValuePairPtr dataValuePair( new DataValuePair() );
     dataValuePair->SetData( std::string( "Geometry LOD Scale" ), m_lodScale );
-    CommandWeakPtr veCommand( new Command() );
+    CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Update LOD Scale" ) );
     veCommand->AddDataValuePair( dataValuePair );
 

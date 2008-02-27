@@ -320,7 +320,7 @@ void EphemerisDialog::OnToggleDisplay( wxCommandEvent& event )
 {
     //Create the command and data value pairs
     ves::open::xml::DataValuePairPtr DVP( new DataValuePair() );
-    ves::open::xml::CommandWeakPtr command( new Command() );
+    ves::open::xml::CommandPtr command( new Command() );
     bool value = false;
     value = m_ephemerisToggleCheck->IsChecked();
     unsigned int displayValue = 0;
@@ -534,7 +534,7 @@ void EphemerisDialog::UpdateLatitudeInfo()
 ///////////////////////////////////////////
 void EphemerisDialog::UpdateEphemerisData()
 {
-    CommandWeakPtr ephemerisData( new Command() );
+    CommandPtr ephemerisData( new Command() );
     ephemerisData->SetCommandName( "Ephemeris Data" );
     ephemerisData->AddDataValuePair( m_latitudeDecimalValue );
     ephemerisData->AddDataValuePair( m_latitudeDirectionValue );
@@ -549,7 +549,7 @@ void EphemerisDialog::UpdateEphemerisData()
 //////////////////////////////////////////////////////////////
 void EphemerisDialog::UpdateAutoDateTime( bool useAutoDateTime )
 {
-    CommandWeakPtr ephemerisAutoDateTime( new Command() );
+    CommandPtr ephemerisAutoDateTime( new Command() );
     ephemerisAutoDateTime->SetCommandName( "Ephemeris Auto Date and Time" );
     DataValuePairPtr autoDateTime( new ves::open::xml::DataValuePair() );
     autoDateTime->SetData( "Auto Date Time", static_cast<long int>(( useAutoDateTime ) ? 1 : 0 ) );
@@ -737,7 +737,7 @@ void EphemerisDialog::WriteLocationInformation()
     }
 }
 ////////////////////////////////////////////////////////////////////////////
-void EphemerisDialog::_writeLocation( ves::open::xml::CommandWeakPtr location,
+void EphemerisDialog::_writeLocation( ves::open::xml::CommandPtr location,
                                       wxString keySection )
 {
     wxConfig* config  = dynamic_cast<wxConfig*>( wxConfig::Get() );
@@ -771,7 +771,7 @@ void EphemerisDialog::OnLoadHeightMap( wxFileDirPickerEvent& event )
 {
     m_heightMapInfo->SetData( "Height Map", 
         ConvertUnicode( m_heightMapSelector->GetPath().c_str() ) );
-    CommandWeakPtr ephemerisHeightMapInfo( new Command() );
+    CommandPtr ephemerisHeightMapInfo( new Command() );
     ephemerisHeightMapInfo->SetCommandName( "Ephemeris Height Map" );
 
     DataValuePairPtr heightMapInfo( new ves::open::xml::DataValuePair() );
