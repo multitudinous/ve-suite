@@ -201,7 +201,7 @@ public:
     };
 
     ///Process the close event
-    void AppFrame::OnFrameClose( wxCloseEvent& event );
+    void OnFrameClose( wxCloseEvent& event );
     ///Process file quit option
     void FrameClose( wxCommandEvent& event );
     ///Log the creation of windows that are children of AppFrame
