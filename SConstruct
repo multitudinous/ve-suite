@@ -429,11 +429,9 @@ if not SConsAddons.Util.hasHelpFlag():
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
    baseEnv.Append( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
-   baseEnv.Append( CPPDEFINES = ['_OSG','VTK44','LOKI_OBJECT_LEVEL_THREADING'] )
+   baseEnv.Append( CPPDEFINES = ['_OSG','VTK44'] )
    if GetPlatform() == 'win32':
-        baseEnv.Append( CPPDEFINES = ['BOOST_ALL_DYN_LINK',
-            'WIN32_LEAN_AND_MEAN','LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT',
-	    'LOKI_OBJECT_LEVEL_THREADING'] )
+        baseEnv.Append( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
 	# for more information on WIN32_LEAN_AND_MEAN see:
 	# http://support.microsoft.com/kb/166474
 	baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
@@ -447,9 +445,12 @@ if not SConsAddons.Util.hasHelpFlag():
       #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 
    #setup default libraries and defines
-   baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
-   baseEnv.Append( LIBS = ['loki.0.1.6'] )
-   baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
+   #baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
+   #baseEnv.Append( LIBS = ['loki.0.1.6'] )
+   #baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
+
+   #baseEnv.AppendUnique( CPPPATH= opts.GetOption("BoostIncludeDir").getValue() )
+   boost_options.apply( baseEnv )
 
    if GetPlatform() != 'win32':
       baseEnv.Append( LINKFLAGS = ['-g'] )
@@ -497,12 +498,12 @@ if not SConsAddons.Util.hasHelpFlag():
    #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    #installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
-   lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
+   #lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, lokiSubdirs, osgOQSubdirs]
+               shareSubdirs, osgOQSubdirs]
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':

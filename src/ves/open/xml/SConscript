@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 ##import practice
 pj = os.path.join
 
-Import('baseEnv ves_pkg LIBDIR xerces_options apr_options apu_options RootDir GetPlatform')
+Import('baseEnv ves_pkg LIBDIR xerces_options apr_options apu_options RootDir GetPlatform boost_options')
 openDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'open', 'xml') )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
