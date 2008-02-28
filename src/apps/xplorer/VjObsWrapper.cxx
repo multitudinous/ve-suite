@@ -63,7 +63,7 @@ VjObsWrapper::VjObsWrapper( void )
 {
     mTimeZero = new ACE_Time_Value( ACE_Time_Value::zero );
     mTimeOutValue = new ACE_Time_Value();
-    mTimeOutValue->msec( 3 );
+    mTimeOutValue->msec( 5 );
     _vjObs = new VjObs_i();
     m_xplorer = new Body_VEXplorer_i();
     isMaster = false;
@@ -245,7 +245,7 @@ void VjObsWrapper::CheckORBWorkLoad( void )
     //Now process if there is work to do
     if( m_orbPtr->work_pending( *mTimeOutValue ) )
     {
-        m_orbPtr->perform_work( mTimeZero );
+        m_orbPtr->perform_work( mTimeOutValue );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
