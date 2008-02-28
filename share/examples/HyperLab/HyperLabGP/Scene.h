@@ -62,8 +62,8 @@ public:
 private:
     void InitScene();
 
-    void CreateNodes();
     void CreateLights();
+    void CreateNodes();
     void CreateShadowTexture();
     void CreateJitterTexture();
 

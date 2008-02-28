@@ -88,7 +88,19 @@ void ObstacleSensor::CollectInformation()
 	}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::CalculateResultantForce()
+void ObstacleSensor::CalculateResultantForce( bool buildMode )
+{
+    if( buildMode )
+    {
+        WallFollowing();
+    }
+    else
+    {
+        VirtualForceField();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::VirtualForceField()
 {
     // ------------------ Virtual Force Field (VFF) Method ------------------ //
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
@@ -131,6 +143,13 @@ void ObstacleSensor::CalculateResultantForce()
     }
 
     m_resultantForce = totalForce.normalize();
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::WallFollowing()
+{
+    // ----------------------- Wall Following Method ------------------------ //
+    // x' = x * cos( theta ) - y * sin( theta );
+    // y' = x * sin( theta ) + y * cos( theta );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )

@@ -330,14 +330,12 @@ void World::CreateRandomPositions( int gridSize )
                       fabs( randTwo ) < ( gridSize * 0.2 ) ) )
                 {
                     needsNewPosition = true;
-                    break;
                 }
-
-                if( ( randOne > ( positions.at( j ).first - m_worldScale ) &&
-                      randOne < ( positions.at( j ).first + m_worldScale ) )
-                      &&
-                    ( randTwo > ( positions.at( j ).second - m_worldScale ) &&
-                      randTwo < ( positions.at( j ).second + m_worldScale ) ) )
+                else if( ( randOne > ( positions.at( j ).first - m_worldScale ) &&
+                           randOne < ( positions.at( j ).first + m_worldScale ) )
+                           &&
+                         ( randTwo > ( positions.at( j ).second - m_worldScale ) &&
+                           randTwo < ( positions.at( j ).second + m_worldScale ) ) )
                 {
                     needsNewPosition = true;
                 }

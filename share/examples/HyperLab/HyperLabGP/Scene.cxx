@@ -101,7 +101,9 @@ m_lightTransform( 0 )
 {
     InitScene();
 
-    DefaultVisuals();
+    //shader->SetOptions( m_pluginDCS.get(), false, false );
+    //DefaultVisuals();
+    AdvancedVisuals();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Scene::~Scene()
@@ -257,7 +259,7 @@ void Scene::XRay()
     shader->SetOptions( m_black.get(), true );
     shader->SetOptions( m_brown.get(), true );
     shader->SetOptions( m_ceiling.get(), true );
-    m_coronas->setNodeMask( 0 );
+    //m_coronas->setNodeMask( 0 );
     shader->SetOptions( m_details.get(), true );
     shader->SetOptions( m_floor.get(), true );
     shader->SetOptions( m_glass.get(), true );
@@ -304,10 +306,10 @@ osg::Light* Scene::GetLight()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::InitScene()
 {
-    CreateNodes();
-
     //Setup the custom lighting for the scene
     CreateLights();
+
+    CreateNodes();
 
     CreateShadowTexture();
 
@@ -331,12 +333,13 @@ void Scene::CreateLights()
     m_pluginDCS->addChild( m_lightTransform.get() );
 
     //Set light defaults
-    m_light->setAmbient( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-    m_light->setDiffuse( osg::Vec4( 1.0f, 0.9f, 0.8f, 1.0f ) );
-    m_light->setSpecular( osg::Vec4( 0.6f, 0.6f, 0.4f, 1.0f ) );
+    m_light->setAmbient( osg::Vec4( 0.63f, 0.63f, 0.40f, 1.0f ) );
+    m_light->setDiffuse( osg::Vec4( 0.90f, 0.90f, 0.45f, 1.0f ) );
+    m_light->setSpecular( osg::Vec4( 0.78f, 0.78f, 0.5f, 1.0f ) );
 
-    //Add in the corona quads for added effects
+    //Add in the corona quads for added effets
     m_coronas = new osg::Geode();
+    m_coronas->setCullingActive( false );
     osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > positions = new osg::Vec3Array();
@@ -399,9 +402,9 @@ void Scene::CreateNodes()
         m_redBrown = osgDB::readNodeFile( "./Models/IVEs/Room/RedBrown.ive" );
         m_room->GetDCS()->addChild( m_redBrown.get() );
         m_walls = osgDB::readNodeFile( "./Models/IVEs/Room/Walls.ive" );
-        //m_room->GetDCS()->addChild( m_walls.get() );
+        roomPhysics->addChild( m_walls.get() );
         m_whiteDucts = osgDB::readNodeFile( "./Models/IVEs/Room/WhiteDucts.ive" );
-        roomPhysics->addChild( m_whiteDucts.get() );
+        m_room->GetDCS()->addChild( m_whiteDucts.get() );
         m_whitePipes = osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
         m_room->GetDCS()->addChild( m_whitePipes.get() );
         m_yellow = osgDB::readNodeFile( "./Models/IVEs/Room/Yellow.ive" );
@@ -464,7 +467,7 @@ void Scene::CreateNodes()
 
         osg::ref_ptr< osg::Material > floorMaterial = new osg::Material();
         floorMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.8f, 1.8f, 1.8f, 1.0f ) );
-        floorMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.9f, 0.75f, 0.2f, 1.0f ) );
+        floorMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.4f, 1.0f ) );
         floorMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         floorMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         floorMaterial->setShininess( osg::Material::FRONT, 5.0f );
@@ -536,7 +539,7 @@ void Scene::CreateNodes()
 
         osg::ref_ptr< osg::Material > wallsMaterial = new osg::Material();
         wallsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 3.0f, 3.0f, 3.0f, 1.0f ) );
-        wallsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.6f, 0.5f, 0.4f, 1.0f ) );
+        wallsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.4f, 1.0f ) );
         wallsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         wallsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
         wallsMaterial->setShininess( osg::Material::FRONT, 5.0f );
@@ -846,7 +849,7 @@ void Scene::CreateNodes()
     m_shadowedScene->addChild( m_ltGrey.get() );
     m_shadowedScene->addChild( m_orange.get() );
     m_shadowedScene->addChild( m_red.get() );
-    //m_shadowedScene->addChild( m_redBrown.get() );
+    m_shadowedScene->addChild( m_redBrown.get() );
     m_shadowedScene->addChild( m_walls.get() );
     m_shadowedScene->addChild( m_whiteDucts.get() );
     m_shadowedScene->addChild( m_whitePipes.get() );

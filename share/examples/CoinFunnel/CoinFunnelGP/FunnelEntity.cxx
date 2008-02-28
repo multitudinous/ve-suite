@@ -24,11 +24,23 @@ FunnelEntity::FunnelEntity( std::string geomFile,
                             ves::xplorer::scenegraph::DCS* pluginDCS,
                             ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-m_nonPhysicsGeometry( 0 ),
+m_nonPhysicsGeometry( new osg::Group() ),
+m_nonPhysicsGeometryII( new osg::Group() ),
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
-    m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/base.ive" );
+    osg::ref_ptr< osg::Node > base = osgDB::readNodeFile( "Models/IVEs/base.ive" );
+    osg::ref_ptr< osg::Node > column = osgDB::readNodeFile( "Models/IVEs/column.ive" );
+    osg::ref_ptr< osg::Node > columnTop = osgDB::readNodeFile( "Models/IVEs/column_top.ive" );
+    osg::ref_ptr< osg::Node > columnBase = osgDB::readNodeFile( "Models/IVEs/column_base.ive" );
+    osg::ref_ptr< osg::Node > columnDetail = osgDB::readNodeFile( "Models/IVEs/column_detail.ive" );
+
+    m_nonPhysicsGeometry->addChild( base.get() );
+    m_nonPhysicsGeometryII->addChild( column.get() );
+    m_nonPhysicsGeometryII->addChild( columnTop.get() );
+    m_nonPhysicsGeometryII->addChild( columnBase.get() );
+    m_nonPhysicsGeometryII->addChild( columnDetail.get() );
     GetDCS()->addChild( m_nonPhysicsGeometry.get() );
+    GetDCS()->addChild( m_nonPhysicsGeometryII.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 FunnelEntity::~FunnelEntity()
@@ -45,13 +57,14 @@ void FunnelEntity::SetNameAndDescriptions( std::string geomFile )
     GetDCS()->setName( geomFile );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FunnelEntity::SetShaders( osg::TextureCubeMap* tcm )
+void FunnelEntity::SetShaders()
 {
-    SetShaderOne( tcm );
+    SetShaderOne();
     SetShaderTwo();
+    SetShaderThree();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FunnelEntity::SetShaderOne( osg::TextureCubeMap* tcm )
+void FunnelEntity::SetShaderOne()
 {
     char vertexPass[]=
         "varying vec3 eyePos; \n"
@@ -293,6 +306,61 @@ void FunnelEntity::SetShaderTwo()
     stateset->addUniform( noise.get() );
         
     m_nonPhysicsGeometry->setStateSet( stateset.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void FunnelEntity::SetShaderThree()
+{
+    char vertexPass[]=
+        "varying vec3 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "gl_TexCoord[ 0 ].xy = gl_MultiTexCoord0.xy; \n"
+            "eyePos = vec3( gl_ModelViewMatrix * gl_Vertex ); \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+        "} \n";
+
+    char fragmentPass[]=
+        "varying vec3 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 color = vec3( 0.6, 0.6, 0.6 ); \n"
+
+            "vec3 TotalAmbient  = gl_LightSource[ 0 ].ambient.rgb  * color; \n"
+            "vec3 TotalDiffuse  = gl_LightSource[ 0 ].diffuse.rgb  * color * NDotL; \n"
+            "vec3 TotalSpecular = gl_LightSource[ 0 ].specular.rgb * color * pow( RDotL, 15.0 ); \n"
+
+            "gl_FragColor = vec4( TotalAmbient + TotalDiffuse + TotalSpecular, 1.0 ); \n"
+        "} \n";
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
+
+    program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+
+    stateset->setAttribute( program.get(), osg::StateAttribute::ON );
+        
+    m_nonPhysicsGeometryII->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

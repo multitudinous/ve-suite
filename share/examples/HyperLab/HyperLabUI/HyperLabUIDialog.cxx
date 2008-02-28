@@ -338,8 +338,8 @@ void HyperLabUIDialog::BuildGUI()
     wxButton* base_b_2=new wxButton(itemDialog,ID_CANCEL_BUTTON,_("Cancel"),wxDefaultPosition,wxDefaultSize,0);
     base_bs_5->Add(base_b_2,1,wxALIGN_CENTER_VERTICAL|wxALL,5);
 
-    SetBestFittingSize();
     CenterOnParent();
+    SetInitialSize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabUIDialog::UpdateGUI()

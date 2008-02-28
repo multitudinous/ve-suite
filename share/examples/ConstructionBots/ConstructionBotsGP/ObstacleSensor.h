@@ -27,7 +27,7 @@ public:
 
     virtual void CollectInformation();
 
-    void CalculateResultantForce();
+    void CalculateResultantForce( bool buildMode );
 
 	void SetAngleIncrement( double angleIncrement );
 	void SetRange( double range );
@@ -36,6 +36,9 @@ public:
     btVector3 GetResultantForce();
 
 private:
+    void VirtualForceField();
+    void WallFollowing();
+
     bool m_obstacleDetected;
 
     double m_angleIncrement;

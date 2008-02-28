@@ -26,6 +26,7 @@ AgentEntity::AgentEntity( osg::ref_ptr< Construction::Agent > agent,
                           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( agent.get(), pluginDCS, physicsSimulator ),
+m_buildMode( false ),
 m_geometry( agent.get() ),
 m_pluginDCS( pluginDCS ),
 m_targetDCS( 0 ),
@@ -72,7 +73,7 @@ AgentEntity::~AgentEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::AvoidObstacle()
 {
-    m_obstacleSensor->CalculateResultantForce();
+    m_obstacleSensor->CalculateResultantForce( m_buildMode );
     m_physicsRigidBody->setLinearVelocity( m_obstacleSensor->GetResultantForce() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -95,13 +96,11 @@ void AgentEntity::PickUpBlock( Construction::BlockEntity* blockEntity )
     blockEntity->GetDCS()->SetTranslationArray( transArray );
     blockEntity->GetPhysicsRigidBody()->clearForces();
     m_targetDCS = NULL;
-    //Remove the agent/block line
-    //m_blockSensor->RemoveLine();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
-    ;
+    m_buildMode = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToSite()

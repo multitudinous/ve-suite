@@ -56,7 +56,7 @@ void HyperLabGP::UpdateParams()
     //_excelData = socket.GetSensorData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HyperLabGP::SetCurrentCommand( ves::open::xml::Command* command )
+void HyperLabGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
     if( !command )
     {

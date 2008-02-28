@@ -83,7 +83,7 @@ void World::Initialize()
     m_imageMap.insert( std::make_pair( "bottom", osgDB::readImageFile(
         "Textures/CubeMaps/NvidiaLobby/nvlobby_new_negative_z.tga" ) ) );
 
-    CreateRoom( 200.0 );
+    CreateRoom( 100.0 );
 
     m_tcm->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     m_tcm->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
@@ -108,13 +108,13 @@ void World::Initialize()
     m_funnelEntity->GetPhysicsRigidBody()->setFriction( 0.5 );
     m_funnelEntity->GetPhysicsRigidBody()->setRestitution( 0.0 );
     m_funnelEntity->GetPhysicsRigidBody()->StaticConcaveShape();
-    m_funnelEntity->SetShaders( m_tcm.get() );
+    m_funnelEntity->SetShaders();
 
     m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive",
                                              m_pluginDCS.get(),
                                              m_physicsSimulator
 #ifdef VE_SOUND
-                                             , m_soundManager
+                                           , m_soundManager
 #endif
                                             );
     m_marbleEntity->SetNameAndDescriptions( "marble_physics" );
@@ -174,7 +174,7 @@ void World::Initialize()
     m_waterEntity = new demo::WaterEntity( "Models/IVEs/water.ive",
                                            m_pluginDCS.get()
 #ifdef VE_SOUND
-                                           , m_soundManager
+                                         , m_soundManager
 #endif 
                                           );
     m_waterEntity->SetNameAndDescriptions( "water" );
@@ -211,7 +211,7 @@ void World::CreateRoom( float width )
 {
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    osg::ref_ptr< osg::Box > room = new osg::Box( osg::Vec3( 0, 0, width * 0.5 ), width );
+    osg::ref_ptr< osg::Box > room = new osg::Box( osg::Vec3( 0, 0, 20.0 ), width );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable = new osg::ShapeDrawable( room.get() );
 
     geode->addDrawable( shapeDrawable.get() );

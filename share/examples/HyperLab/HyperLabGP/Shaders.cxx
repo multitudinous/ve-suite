@@ -70,8 +70,8 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
 
     if( xray )
     {
+        stateset->setRenderBinDetails( 10, "DepthSortedBin" );
         stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-        stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 
         vertexShader->setShaderSource( xray_vertex );
         fragmentShader->setShaderSource( xray_fragment );
@@ -142,9 +142,9 @@ void Shaders::Lights( osg::ref_ptr< osg::Node > node )
     program->addShader( fragmentShader.get() );
     stateset->setAttribute( program.get() );
 
-    stateset->setTextureAttributeAndModes( 0, new osg::Texture2D( m_imageMap[ "Corona" ].get() ) );
+    stateset->setTextureAttributeAndModes( 2, new osg::Texture2D( m_imageMap[ "Corona" ].get() ) );
 
-    osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 0 );
+    osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 2 );
     stateset->addUniform( baseMap.get() );
 
     vertexShader->setShaderSource( lights_vertex );

@@ -27,7 +27,7 @@ public:
     virtual ~HyperLabGP();
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
     virtual void PreFrameUpdate();
-    virtual void SetCurrentCommand( ves::open::xml::Command* command );
+    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
 private:
     void UpdateParams();

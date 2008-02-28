@@ -57,7 +57,6 @@ void CoinFunnelUIDialog::BuildGUI()
     SetForegroundColour( wxColour( 255, 255, 255 ) );
     SetBackgroundColour( wxColour( 0, 0, 0 ) );
 
-    SetBestFittingSize();
     CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////

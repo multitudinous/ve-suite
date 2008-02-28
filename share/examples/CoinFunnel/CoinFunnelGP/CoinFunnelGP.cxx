@@ -45,7 +45,7 @@ void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
     world = new demo::World( m_dcs.get(),
                              m_physicsSimulator
 #ifdef VE_SOUND
-                             , m_soundManager
+                           , m_soundManager
 #endif
                              );
 }

@@ -56,6 +56,7 @@ public:
 
 private:
     //void Set
+    bool m_buildMode;
 
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_targetDCS;
