@@ -52,6 +52,7 @@
 #include <osg/TextureRectangle>
 #include <osg/TexMat>
 #include <osg/StateSet>
+#include <osg/LightModel>
 
 #include <ves/open/xml/model/Model.h>
 #include <ves/xplorer/scenegraph/TextTexture.h>
@@ -147,8 +148,13 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         loadedModel->setName( model->GetModelName() );
         //normalize the normals so that lighting works better
         loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
-
-        //calculate the original size of the icon
+		//setup two sided lighting to account for poor modeling
+        osg::ref_ptr< osg::LightModel > lightModel;
+        lightModel = new osg::LightModel;
+        lightModel->setTwoSided( true );
+        loadedModel->getOrCreateStateSet()->setAttributeAndModes(
+            lightModel.get(), osg::StateAttribute::ON );     
+	    //calculate the original size of the icon
         //ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor;
         //loadedModel->accept( visitor );
         //osg::BoundingBox bounds = visitor.getBoundingBox();
