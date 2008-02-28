@@ -176,6 +176,8 @@ UIPluginBase::UIPluginBase() :
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
 {
+    if( !mDialogMemoryMap.empty() )
+    {
     DisconnectPluginDialogsDestroyEvent( dlg );
     DisconnectPluginDialogsDestroyEvent( result_dlg );
     DisconnectPluginDialogsDestroyEvent( port_dlg );
@@ -187,7 +189,7 @@ UIPluginBase::~UIPluginBase()
     DisconnectPluginDialogsDestroyEvent( m_iconChooser );
     DisconnectPluginDialogsDestroyEvent( vistab );
     //DisconnectPluginDialogsDestroyEvent( cadDialog );
-
+    }
     delete [] poly;
     poly = 0;
 
