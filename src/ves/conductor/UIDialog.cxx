@@ -41,7 +41,7 @@ UIDialog::UIDialog( wxWindow* parent, int id, wxString title )
             ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP
         )
 {
-    ;
+    CenterOnParent();
 }
 
 void UIDialog::Lock( bool l )
