@@ -56,7 +56,7 @@ using namespace ves::open::xml::model;
 using namespace ves::conductor;
 
 vprSingletonImp( XMLDataBufferEngine );
-//vprSingletonImpLifetime(XMLDataBufferEngine, 1000);
+
 ////////////////////////////////////////////////////////////////////////////////
 XMLDataBufferEngine::XMLDataBufferEngine( void )
 {

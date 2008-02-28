@@ -314,8 +314,8 @@ AppFrame::~AppFrame()
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
     wx_nw_splitter->RemoveChild( canvas );
-    //canvas->DestroyChildren();
     canvas->Destroy();
+
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
             ( !preferences->GetMode( "Shut_Down_Xplorer_Option" ) ) )
@@ -633,14 +633,11 @@ void AppFrame::StoreRecentFile()
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
 	CloseAspenSimulation();
-    //XMLDataBufferEngine::instance()->CleanUp();
     Close( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
 {
-    //XMLDataBufferEngine::instance()->CleanUp();
-    //::wxMilliSleep( 500 );
     wxWindow::Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////

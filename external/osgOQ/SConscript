@@ -41,13 +41,12 @@ libDB_env.Append( CPPDEFINES  = ['OSGOQ_EXPORTS'] )
 libDB_env.Append( LIBS = ['osgOQ'] )
 libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgOQ')] )
 osg_options.apply( libDB_env )
-if baseEnv['StaticLibs'] == "yes":
-   libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgOQ', libDB_env,
-                                               installPrefix = LIBDIR)
-else:
-   libDB = ves_pkg.createSharedLibrary('osgdb_osgOQ', libDB_env,
-                                      installPrefix = LIBDIR)
+#if baseEnv['StaticLibs'] == "yes":
+#   libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgOQ', libDB_env,
+#                                               installPrefix = LIBDIR)
+#else:
+#   libDB = ves_pkg.createSharedLibrary('osgdb_osgOQ', libDB_env,
+#                                      installPrefix = LIBDIR)
    
-libDB.addSources(sourcesDB)
-#libDB.addHeaders(headers, '..')
+#libDB.addSources(sourcesDB)
 #libDB.build()
