@@ -2064,24 +2064,28 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
 {
-    if( window )
+    if( !window )
     {
-        m_canvas->RemoveChild( window );
-        //window->DestroyChildren();
-        window->Destroy();
+        return;
     }
+    
+    m_canvas->RemoveChild( window );
+    window->Destroy();
+    window = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::ConfigurePluginDialogs( wxWindow* window ) 
 {
-    if( window )
+    if( !window )
     {
-        mDialogMemoryMap[ window->GetId() ] = true;
-        window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
-        window->Connect( wxEVT_DESTROY, 
-            wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 
-            NULL, this );
+        return;
     }
+
+    mDialogMemoryMap[ window->GetId() ] = true;
+    window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
+    window->Connect( wxEVT_DESTROY, 
+        wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 
+        NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
