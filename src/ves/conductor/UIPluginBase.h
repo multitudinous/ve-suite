@@ -122,8 +122,10 @@ public:
         DELETE_PORT,
         DIALOG_PLUGIN_UPDATE
     };
+protected:
     ///Defualt constructor
     UIPluginBase();
+public:
     ///Defualt destructor for plugins
     virtual ~UIPluginBase();
     ///Return the version number of the module

@@ -563,6 +563,7 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     m_name = rhs.m_name;
     m_type = rhs.m_type;
     m_visibility = rhs.m_visibility;
+    mOpacity = rhs.mOpacity;
 
     m_physics = rhs.m_physics;
     m_mass = rhs.m_mass;
@@ -605,6 +606,7 @@ CADNode& CADNode::operator=( const CADNode& rhs )
         m_transform = TransformPtr( new Transform(  *rhs.m_transform ) );
         m_activeAttributeName = rhs.m_activeAttributeName;
         m_visibility = rhs.m_visibility;
+        mOpacity = rhs.mOpacity;
 
         m_physics = rhs.m_physics;
         m_mass = rhs.m_mass;

@@ -51,11 +51,12 @@ namespace conductor
 {
 class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
-public:
+protected:
     UIDialog()
     {
         ;
     }
+public:
     UIDialog( wxWindow* parent, int id, wxString title = wxT( "UI" ) );
     virtual ~UIDialog()
     {
