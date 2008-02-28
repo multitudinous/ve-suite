@@ -16,7 +16,7 @@ class ConstructionBotsUI : public ves::conductor::UIPluginBase
 
 public:
     ConstructionBotsUI();
-    ~ConstructionBotsUI();
+    virtual ~ConstructionBotsUI();
 
     virtual double GetVersion();
     //Return the version number of the module

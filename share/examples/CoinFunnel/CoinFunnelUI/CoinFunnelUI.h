@@ -16,7 +16,7 @@ class CoinFunnelUI : public ves::conductor::UIPluginBase
 
 public:
     CoinFunnelUI();
-    ~CoinFunnelUI();
+    virtual ~CoinFunnelUI();
 
     virtual double GetVersion();
     //Return the version number of the module
