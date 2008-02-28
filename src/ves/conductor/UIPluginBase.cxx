@@ -176,6 +176,18 @@ UIPluginBase::UIPluginBase() :
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
 {
+    DisconnectPluginDialogsDestroyEvent( dlg );
+    DisconnectPluginDialogsDestroyEvent( result_dlg );
+    DisconnectPluginDialogsDestroyEvent( port_dlg );
+    DisconnectPluginDialogsDestroyEvent( m_dataSetLoaderDlg );
+    DisconnectPluginDialogsDestroyEvent( resultsDialog );
+    DisconnectPluginDialogsDestroyEvent( portsDialog );
+    DisconnectPluginDialogsDestroyEvent( inputsDialog );
+    DisconnectPluginDialogsDestroyEvent( _soundsDlg );
+    DisconnectPluginDialogsDestroyEvent( m_iconChooser );
+    DisconnectPluginDialogsDestroyEvent( vistab );
+    //DisconnectPluginDialogsDestroyEvent( cadDialog );
+
     delete [] poly;
     poly = 0;
 
@@ -215,8 +227,6 @@ UIPluginBase::~UIPluginBase()
         portsDialog->Destroy();
         portsDialog = 0;
     }
-    
-    //std::cout << " deleting plugins" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetCanvas( wxScrolledWindow* canvas )
@@ -2072,5 +2082,16 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
             wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 
             NULL, this );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
+{
+    if( !window )
+    {
+        return;
+    }
+    
+    window->Disconnect( wxEVT_DESTROY, 
+        wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////

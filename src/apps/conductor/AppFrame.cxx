@@ -313,8 +313,11 @@ AppFrame::~AppFrame()
     // Clean up the canvas and plugins first because
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
-    wx_nw_splitter->RemoveChild( canvas );
-    canvas->Destroy();
+    if( canvas )
+    {
+        wx_nw_splitter->RemoveChild( canvas );
+        canvas->Destroy();
+    }
 
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
@@ -638,6 +641,11 @@ void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
 {
+    //Cleanup all the plugins before wx does
+    wx_nw_splitter->RemoveChild( canvas );
+    canvas->Destroy();
+    canvas = 0;
+
     wxWindow::Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////

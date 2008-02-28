@@ -282,6 +282,8 @@ protected:
 
     ///Check the active id against the plugin id
     bool CheckID();
+    ///Disconnect the destroy event handler
+    void DisconnectPluginDialogsDestroyEvent( wxWindow* window );
 
     UIDialog* dlg;
     TextResultDialog* result_dlg;
