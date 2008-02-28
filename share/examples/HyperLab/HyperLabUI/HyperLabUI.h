@@ -16,7 +16,7 @@ class HyperLabUI : public ves::conductor::UIPluginBase
 
 public:
     HyperLabUI();
-    ~HyperLabUI();
+    virtual ~HyperLabUI();
 
     virtual double GetVersion();
     //Return the version number of the module
