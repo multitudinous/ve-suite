@@ -65,24 +65,24 @@ Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParse
     theParent = parent;
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
-    mQueryCommandNames.push_back( "getNetwork");
-    mQueryCommandNames.push_back( "openSimulation");
-    mQueryCommandNames.push_back( "runNetwork");
-    mQueryCommandNames.push_back( "stepNetwork");
-    mQueryCommandNames.push_back( "showSimulation");
-    mQueryCommandNames.push_back( "hideSimulation");
-    mQueryCommandNames.push_back( "closeSimulation");
-    mQueryCommandNames.push_back( "saveSimulation");
-    mQueryCommandNames.push_back( "saveAsSimulation");
-    mQueryCommandNames.push_back( "getInputModuleParamList");
-    mQueryCommandNames.push_back( "getInputModuleProperties");
-    mQueryCommandNames.push_back( "getOutputModuleParamList");
-    mQueryCommandNames.push_back( "getOutputModuleProperties");
-    mQueryCommandNames.push_back( "getStreamInputModuleParamList");
-    mQueryCommandNames.push_back( "getStreamInputModuleProperties");
-    mQueryCommandNames.push_back( "getStreamOutputModuleParamList");
-    mQueryCommandNames.push_back( "getStreamOutputModuleProperties");
-    mQueryCommandNames.push_back( "setParam");
+    mQueryCommandNames.insert( "getNetwork");
+    mQueryCommandNames.insert( "openSimulation");
+    mQueryCommandNames.insert( "runNetwork");
+    mQueryCommandNames.insert( "stepNetwork");
+    mQueryCommandNames.insert( "showSimulation");
+    mQueryCommandNames.insert( "hideSimulation");
+    mQueryCommandNames.insert( "closeSimulation");
+    mQueryCommandNames.insert( "saveSimulation");
+    mQueryCommandNames.insert( "saveAsSimulation");
+    mQueryCommandNames.insert( "getInputModuleParamList");
+    mQueryCommandNames.insert( "getInputModuleProperties");
+    mQueryCommandNames.insert( "getOutputModuleParamList");
+    mQueryCommandNames.insert( "getOutputModuleProperties");
+    mQueryCommandNames.insert( "getStreamInputModuleParamList");
+    mQueryCommandNames.insert( "getStreamInputModuleProperties");
+    mQueryCommandNames.insert( "getStreamOutputModuleParamList");
+    mQueryCommandNames.insert( "getStreamOutputModuleProperties");
+    mQueryCommandNames.insert( "setParam");
 }
 
 // Implementation skeleton destructor
