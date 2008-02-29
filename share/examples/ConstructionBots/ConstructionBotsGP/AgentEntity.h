@@ -46,6 +46,8 @@ public:
     void SetConstraints( int gridSize );
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
 
+    bool IsBuilding();
+
 	ves::xplorer::scenegraph::DCS* GetPluginDCS();
 	ves::xplorer::scenegraph::DCS* GetTargetDCS();
 

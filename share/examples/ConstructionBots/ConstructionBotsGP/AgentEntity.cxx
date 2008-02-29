@@ -105,6 +105,7 @@ void AgentEntity::Build()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToSite()
 {
+    m_buildMode = false;
     m_physicsRigidBody->setLinearVelocity( m_siteSensor->GetNormalizedSiteVector() );;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -158,6 +159,11 @@ void AgentEntity::SetConstraints( int gridSize )
 void AgentEntity::SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS )
 {
     m_targetDCS = targetDCS;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool AgentEntity::IsBuilding()
+{
+    return m_buildMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()

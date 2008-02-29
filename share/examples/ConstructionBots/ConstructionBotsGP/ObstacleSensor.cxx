@@ -63,9 +63,16 @@ void ObstacleSensor::CollectInformation()
         osgUtil::IntersectVisitor intersectVisitor;
         intersectVisitor.addLineSegment( m_beamLineSegment.get() );
 
-        pluginDCS->RemoveChild( targetDCS.get() );
-        pluginDCS->accept( intersectVisitor );
-        pluginDCS->AddChild( targetDCS.get() );
+        if( m_agentEntity->IsBuilding() )
+        {
+            pluginDCS->accept( intersectVisitor );
+        }
+        else
+        {
+            pluginDCS->RemoveChild( targetDCS.get() );
+            pluginDCS->accept( intersectVisitor );
+            pluginDCS->AddChild( targetDCS.get() );
+        }
 
         osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( m_beamLineSegment.get() );
 
@@ -110,6 +117,25 @@ void ObstacleSensor::VirtualForceField()
     
     btVector3 totalForce( 0, 0, 0 );
 
+    //Calculate the total repulsive force
+    for( size_t i = 0; i < m_obstacleHits.size(); ++i )
+    {
+        osg::ref_ptr< osg::Geode > geode = m_obstacleHits.at( i ).getGeode();
+
+        if( geode.valid() )
+        {
+            osg::Vec3d intersect = m_obstacleHits.at( i ).getWorldIntersectPoint();
+            btVector3 repulsiveForce( intersect.x() - agentPosition[ 0 ],
+                                      intersect.y() - agentPosition[ 1 ], 0 );
+
+            double variables = m_forceRepellingConstant / repulsiveForce.length2();
+            repulsiveForce /= repulsiveForce.length();
+            repulsiveForce *= variables;
+
+            totalForce -= repulsiveForce;
+        }
+    }
+
     //Calculate the target force
     if( targetDCS.valid() )
     {
@@ -122,6 +148,18 @@ void ObstacleSensor::VirtualForceField()
 
         totalForce += targetForce;
     }
+
+    m_resultantForce = totalForce.normalize();
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::WallFollowing()
+{
+    // ----------------------- Wall Following Method ------------------------ //
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
+
+    double* agentPosition = agentDCS->GetVETranslationArray();
+    
+    btVector3 totalForce( 0, 0, 0 );
 
     //Calculate the total repulsive force
     for( size_t i = 0; i < m_obstacleHits.size(); ++i )
@@ -142,14 +180,26 @@ void ObstacleSensor::VirtualForceField()
         }
     }
 
+    //Calculate the target force
+    {
+        //2D code to rotate vector about point (0, 0, 0) by theta
+        //x' = x * cos( theta ) - y * sin( theta );
+        //y' = x * sin( theta ) + y * cos( theta );
+
+        //Grab the repulsive force vector from last calculation
+        double x = totalForce.x();
+        double y = totalForce.y();
+        double cosTheta = cos( 175 * ( PI / 180 ) );
+        double sinTheta = sin( 175 * ( PI / 180 ) );
+        
+        double xNew = ( x * cosTheta ) - ( y * sinTheta );
+        double yNew = ( x * sinTheta ) + ( y * cosTheta );
+        
+        btVector3 targetForce( xNew, yNew, 0 );
+        totalForce += targetForce;
+    }
+
     m_resultantForce = totalForce.normalize();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::WallFollowing()
-{
-    // ----------------------- Wall Following Method ------------------------ //
-    // x' = x * cos( theta ) - y * sin( theta );
-    // y' = x * sin( theta ) + y * cos( theta );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )

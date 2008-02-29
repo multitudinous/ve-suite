@@ -107,8 +107,8 @@ void World::InitFramework()
 #ifdef VE_SOUND
     try
     {
-        m_ambientSound->LoadFile( "Sounds/AmbientSound.wav" );
-        m_ambientSound->GetSoundState()->setLooping( true );
+        //m_ambientSound->LoadFile( "Sounds/AmbientSound.wav" );
+        //m_ambientSound->GetSoundState()->setLooping( true );
     }
     catch( ... )
     {
@@ -326,7 +326,7 @@ void World::CreateRandomPositions( int gridSize )
 
             for( size_t j = 0; j < positions.size(); ++j )
             {
-                if( ( fabs( randOne ) < ( gridSize * 0.2 ) ||
+                if( ( fabs( randOne ) < ( gridSize * 0.2 ) &&
                       fabs( randTwo ) < ( gridSize * 0.2 ) ) )
                 {
                     needsNewPosition = true;
@@ -370,20 +370,14 @@ void World::CommunicatingBlocksAlgorithm()
             siteSensor->CollectInformation();
             if( siteSensor->SiteInView() )
             {
-                agent->GoToSite();
                 if( siteSensor->CloseToSite() )
                 {
-                    bool collision = agent->GetPhysicsRigidBody()->CollisionInquiry(
-                        m_entities[ agent->GetTargetDCS()->GetName() ]->GetPhysicsRigidBody() );
-                    if( collision )
-                    {
-                        agent->Build();
-                    }
+                    agent->Build();
                 }
-            }
-            else
-            {
-                agent->WanderAround();
+                else
+                {
+                    agent->GoToSite();
+                }
             }
         }
         else
@@ -391,7 +385,6 @@ void World::CommunicatingBlocksAlgorithm()
             blockSensor->CollectInformation();
             if( blockSensor->BlockInView() )
             {
-                agent->GoToBlock();
                 if( blockSensor->CloseToBlock() )
                 {
                     Construction::BlockEntity* targetEntity = static_cast< Construction::BlockEntity* >
@@ -403,12 +396,14 @@ void World::CommunicatingBlocksAlgorithm()
                         agent->PickUpBlock( targetEntity );
                     }
                 }
-            }
-            else
-            {
-                agent->WanderAround();
+                else
+                {
+                    agent->GoToBlock();
+                }
             }
         }
+
+        agent->WanderAround();
 
         obstacleSensor->CollectInformation();
         if( obstacleSensor->ObstacleDetected() )
