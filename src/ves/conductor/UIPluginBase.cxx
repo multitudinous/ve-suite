@@ -178,18 +178,19 @@ UIPluginBase::~UIPluginBase()
 {
     if( !mDialogMemoryMap.empty() )
     {
-    DisconnectPluginDialogsDestroyEvent( dlg );
-    DisconnectPluginDialogsDestroyEvent( result_dlg );
-    DisconnectPluginDialogsDestroyEvent( port_dlg );
-    DisconnectPluginDialogsDestroyEvent( m_dataSetLoaderDlg );
-    DisconnectPluginDialogsDestroyEvent( resultsDialog );
-    DisconnectPluginDialogsDestroyEvent( portsDialog );
-    DisconnectPluginDialogsDestroyEvent( inputsDialog );
-    DisconnectPluginDialogsDestroyEvent( _soundsDlg );
-    DisconnectPluginDialogsDestroyEvent( m_iconChooser );
-    DisconnectPluginDialogsDestroyEvent( vistab );
-    //DisconnectPluginDialogsDestroyEvent( cadDialog );
+        DisconnectPluginDialogsDestroyEvent( dlg );
+        DisconnectPluginDialogsDestroyEvent( result_dlg );
+        DisconnectPluginDialogsDestroyEvent( port_dlg );
+        DisconnectPluginDialogsDestroyEvent( m_dataSetLoaderDlg );
+        DisconnectPluginDialogsDestroyEvent( resultsDialog );
+        DisconnectPluginDialogsDestroyEvent( portsDialog );
+        DisconnectPluginDialogsDestroyEvent( inputsDialog );
+        DisconnectPluginDialogsDestroyEvent( _soundsDlg );
+        DisconnectPluginDialogsDestroyEvent( m_iconChooser );
+        DisconnectPluginDialogsDestroyEvent( vistab );
+        //DisconnectPluginDialogsDestroyEvent( cadDialog );
     }
+
     delete [] poly;
     poly = 0;
 
