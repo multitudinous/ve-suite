@@ -291,6 +291,9 @@ void cfdExecutive::GetEverything( void )
 
     std::map< int, std::string >::iterator iter;
     std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >::iterator foundPlugin;
+    std::map< int, model::ModelPtr >::iterator modelIter;
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    XMLReaderWriter commandWriter;
     // Add any plugins that are present in the current network
     for( iter = _id_map.begin(); iter != _id_map.end(); iter++ )
     {
@@ -327,7 +330,6 @@ void cfdExecutive::GetEverything( void )
             //_plugins[ iter->first ]->SetSoundHandler( EnvironmentHandler::instance()->GetSoundHandler() );
             pluginEHMap[ iter->first ] = _plugins[ iter->first ]->GetCommandNameMap();
         }
-        std::map< int, model::ModelPtr >::iterator modelIter;
         // this call always returns something because it is up to date with the id map
         modelIter = idToModel.find( iter->first );
         _plugins[ iter->first ]->SetXMLModel( modelIter->second );
@@ -347,14 +349,13 @@ void cfdExecutive::GetEverything( void )
         data->SetData( "moduleId", static_cast< unsigned int >( iter->first ) );
         returnState->AddDataValuePair( data );
 
-        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        std::string status = "returnString";
         nodes.push_back(
             std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" )
         );
-        XMLReaderWriter commandWriter;
-        std::string status = "returnString";
         commandWriter.UseStandaloneDOMDocumentManager();
         commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        nodes.clear();
         //Get results
         const char* tempResult = this->_exec->Query( status.c_str() );
         std::string resultData = tempResult;
@@ -362,12 +363,11 @@ void cfdExecutive::GetEverything( void )
         delete tempResult;
         _plugins[ iter->first ]->ProcessOnSubmitJob();
         _plugins[ iter->first ]->PreFrameUpdate();
-        int dummyVar = 0;
-        _plugins[ iter->first ]->CreateCustomVizFeature( dummyVar );
+        //int dummyVar = 0;
+        _plugins[ iter->first ]->CreateCustomVizFeature( 0 );
         vprDEBUG( vesDBG, 1 ) << "|\t\tPlugin [ " << iter->first
-        << " ]-> " << iter->second
-        << " is updated."
-        << std::endl << vprDEBUG_FLUSH;
+            << " ]-> " << iter->second << " is updated."
+            << std::endl << vprDEBUG_FLUSH;
     }
 
     // Remove any plugins that aren't present in the current network

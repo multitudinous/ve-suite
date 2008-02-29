@@ -37,10 +37,7 @@
 #include "VE_AspenUnitDlg.h"
 #include "CorbaUnitManager.h"
 
-#if !defined (ACE_LACKS_PRAGMA_ONCE)
-#pragma once
-#endif /* ACE_LACKS_PRAGMA_ONCE */
-
+#include <set>
 
 class  Body_Unit_i
   : public virtual POA_Body::Unit
@@ -65,6 +62,7 @@ public:
   CVE_AspenUnitDlg * theDialog;
   CorbaUnitManager * theParent;
   CEdit * AspenLog;
+  std::set< std::string > mQueryCommandNames;
 
 public:
   BKPParser* bkp;

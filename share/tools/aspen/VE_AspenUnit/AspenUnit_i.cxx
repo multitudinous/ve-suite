@@ -51,19 +51,38 @@
 Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent)
   : executive_(Body::Executive::_duplicate(exec))
 {
-  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
-  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
-  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
-  ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-  UnitName_=name;
-  return_state = 0;
-  //bkp = parser;
-  bkp = new BKPParser();
-  //theParent->CreateParser();
-  //bkp = theParent->CreateParser();
-  theDialog = dialog;
-  theParent = parent;
-  AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
+    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
+    UnitName_=name;
+    return_state = 0;
+    //bkp = parser;
+    bkp = new BKPParser();
+    //theParent->CreateParser();
+    //bkp = theParent->CreateParser();
+    theDialog = dialog;
+    theParent = parent;
+    AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
+
+    mQueryCommandNames.push_back( "getNetwork");
+    mQueryCommandNames.push_back( "openSimulation");
+    mQueryCommandNames.push_back( "runNetwork");
+    mQueryCommandNames.push_back( "stepNetwork");
+    mQueryCommandNames.push_back( "showSimulation");
+    mQueryCommandNames.push_back( "hideSimulation");
+    mQueryCommandNames.push_back( "closeSimulation");
+    mQueryCommandNames.push_back( "saveSimulation");
+    mQueryCommandNames.push_back( "saveAsSimulation");
+    mQueryCommandNames.push_back( "getInputModuleParamList");
+    mQueryCommandNames.push_back( "getInputModuleProperties");
+    mQueryCommandNames.push_back( "getOutputModuleParamList");
+    mQueryCommandNames.push_back( "getOutputModuleProperties");
+    mQueryCommandNames.push_back( "getStreamInputModuleParamList");
+    mQueryCommandNames.push_back( "getStreamInputModuleProperties");
+    mQueryCommandNames.push_back( "getStreamOutputModuleParamList");
+    mQueryCommandNames.push_back( "getStreamOutputModuleProperties");
+    mQueryCommandNames.push_back( "setParam");
 }
 
 // Implementation skeleton destructor
@@ -294,6 +313,16 @@ char * Body_Unit_i::Query ( const char * query_str
 	
 	cmd = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
 	cmdname = cmd->GetCommandName();
+    
+    std::set< std::string >::const_iterator commandItr
+        = mQueryCommandNames.find( cmdname );
+    
+    //If the command is not processed here then do not bother doing anything more
+    if( commandIter == mQueryCommandNames.end() )
+    {
+        return CORBA::string_dup("NULL");
+    }
+    
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel(("Command: "+cmdname+"\r\n").c_str());
 	char* returnValue = "empty";
