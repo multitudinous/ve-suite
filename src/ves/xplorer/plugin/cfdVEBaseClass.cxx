@@ -171,17 +171,17 @@ void cfdVEBaseClass::MakeGeodeByUserRequest( int )
     //dataRepresentation->UpdatecfdGeode();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string cfdVEBaseClass::GetName()
+const std::string& cfdVEBaseClass::GetName()
 {
     return m_objectName;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetObjectName( std::string input )
+void cfdVEBaseClass::SetObjectName( const std::string& input )
 {
     m_objectName = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string cfdVEBaseClass::GetDesc()
+const std::string& cfdVEBaseClass::GetDesc()
 {
     return m_objectDescription;
 }
@@ -253,7 +253,7 @@ void cfdVEBaseClass::SetSoundManager( osgAL::SoundManager* soundManager )
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::SetModuleResults( const std::string network )
+void cfdVEBaseClass::SetModuleResults( const std::string& network )
 {
     if( network.empty() || network == "NULL" )
     {

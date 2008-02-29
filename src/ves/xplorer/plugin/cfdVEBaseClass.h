@@ -114,10 +114,10 @@ public:
     virtual void MakeGeodeByUserRequest( int );
 
     //This returns the name of the module
-    std::string GetName();
+    const std::string& GetName();
 
     //This returns the description of the module, This should be a short description
-    std::string GetDesc();
+    const std::string& GetDesc();
 
     //Set the id for a particular module
     void SetID( int id );
@@ -147,9 +147,9 @@ public:
 
     //Set the results for a particluar module so that we can use
     //them for custom viz features
-    void SetModuleResults( const std::string );
+    void SetModuleResults( const std::string& input );
 
-    void SetObjectName( std::string );
+    void SetObjectName( const std::string& intput );
 
     //Viz feature for the devloper to define
     //Can be anything that creates a geode
