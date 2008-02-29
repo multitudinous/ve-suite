@@ -140,7 +140,7 @@ Canvas::~Canvas()
     // We do not need to remove any of the children dialogs on destruction 
     // because all the children are destroyed in AppFrame. Please see
     // the AppFrame destructor
-    CleanUpNetworks();
+    //CleanUpNetworks();
 
     for( std::map< std::string, Network* >::iterator iter = 
         networks.begin(); iter != networks.end(); ++iter )

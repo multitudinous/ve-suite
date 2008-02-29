@@ -221,7 +221,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         mainToolBar( 0 ),
         serviceList( CORBAServiceList::instance() ),
         newCanvas( false ),
-        mTimer( this, TIMER_ID )
+        mTimer( this, TIMER_ID ),
+        mDestoryFrame( false )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -318,11 +319,11 @@ AppFrame::~AppFrame()
     // Clean up the canvas and plugins first because
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
-    if( canvas )
+    /*if( canvas )
     {
         wx_nw_splitter->RemoveChild( canvas );
         canvas->Destroy();
-    }
+    }*/
 
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
@@ -647,11 +648,13 @@ void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
 {
     //Cleanup all the plugins before wx does
-    wx_nw_splitter->RemoveChild( canvas );
-    canvas->Destroy();
-    canvas = 0;
+    //wx_nw_splitter->RemoveChild( canvas );
+    //canvas->Destroy();
+    //canvas = 0;
 
-    wxWindow::Destroy();
+    mDestoryFrame = true;
+    canvas->CleanUpNetworks();
+    //wxWindow::Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()
@@ -2389,6 +2392,12 @@ void AppFrame::OnChildDestroy( wxWindowDestroyEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
+    if( mDestoryFrame )
+    {
+        wxWindow::Destroy();
+        return;
+    }
+    
     //Reloading plugins
     av_modules->ResetPluginTree();
     

@@ -420,7 +420,7 @@ private:
     std::vector< double > xplorerColor;
     wxColourData* xplorerWxColor;
     wxFileHistory* m_recentVESFiles;///<The list of recently opened VES files.
-
+    bool mDestoryFrame;
     wxTimer mTimer;
     DECLARE_EVENT_TABLE()
 };

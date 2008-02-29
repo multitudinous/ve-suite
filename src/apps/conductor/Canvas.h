@@ -94,7 +94,7 @@ public:
     void OnDelMod( wxCommandEvent& event );
     ///Event handler to delete networks
     void OnDelNetwork( wxUpdateUIEvent& event );
-protected:
+//protected:
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
 
