@@ -318,7 +318,7 @@ char * Body_Unit_i::Query ( const char * query_str
         = mQueryCommandNames.find( cmdname );
     
     //If the command is not processed here then do not bother doing anything more
-    if( commandIter == mQueryCommandNames.end() )
+    if( commandItr == mQueryCommandNames.end() )
     {
         return CORBA::string_dup("NULL");
     }
