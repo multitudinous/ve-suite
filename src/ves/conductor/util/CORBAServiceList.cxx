@@ -56,7 +56,7 @@ vprSingletonImp( CORBAServiceList );
 CORBAServiceList::CORBAServiceList( void )
 {
     mTimeZero = ACE_Time_Value::zero;
-    mTimeOutValue.msec( 100 );
+    mTimeOutValue.msec( 5 );
     nullTextPtr = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
     nullTextPtr->SetCommandName( "NULL" );
 }

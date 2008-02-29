@@ -120,6 +120,7 @@ using namespace ves::open::xml::shader;
 
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
+    EVT_TIMER( TIMER_ID, AppFrame::OnTimer )
     EVT_CLOSE( AppFrame::OnFrameClose )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
@@ -219,7 +220,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
         menubar( 0 ),
         mainToolBar( 0 ),
         serviceList( CORBAServiceList::instance() ),
-        newCanvas( false )
+        newCanvas( false ),
+        mTimer( this, TIMER_ID )
 {
     char** tempArray = new char*[ ::wxGetApp().argc ];
     for( unsigned int i = 0; i < ::wxGetApp().argc; ++i )
@@ -306,6 +308,9 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
 	AspenSimOpen = false;
+    
+    //Setup the orb timer
+    mTimer.Start( 500 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 AppFrame::~AppFrame()
@@ -2294,9 +2299,9 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
     serviceList->SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnInternalIdle()
+void AppFrame::OnTimer( wxTimerEvent& WXUNUSED( event ) )
 {
-    wxFrame::OnInternalIdle();
+    //wxFrame::OnInternalIdle();
 
     Network* network = 0;
     if( canvas )

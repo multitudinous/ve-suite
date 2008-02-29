@@ -74,6 +74,7 @@ class EphemerisDialog;
 #include <wx/config.h>
 #include <wx/filename.h>
 #include <wx/notebook.h>
+#include <wx/timer.h>
 
 class wxTextCtrl;
 class wxImage;
@@ -197,7 +198,8 @@ public:
         //Export menu
         EXPORT_MENU_OPT,
         //change working dir
-        CHANGE_WORKING_DIRECTORY
+        CHANGE_WORKING_DIRECTORY,
+        TIMER_ID
     };
 
     ///Process the close event
@@ -268,7 +270,9 @@ public:
     void ShutdownXplorerOptionOff( void );
     HierarchyTree * GetHierarchyTree();
 
-    virtual void OnInternalIdle();
+    //virtual void OnInternalIdle();
+    ///Internal function to make the orb run
+    void OnTimer(wxTimerEvent& event);
 
 protected:
     wxString fname;
@@ -417,6 +421,7 @@ private:
     wxColourData* xplorerWxColor;
     wxFileHistory* m_recentVESFiles;///<The list of recently opened VES files.
 
+    wxTimer mTimer;
     DECLARE_EVENT_TABLE()
 };
 
