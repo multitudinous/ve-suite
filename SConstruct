@@ -453,12 +453,12 @@ if not SConsAddons.Util.hasHelpFlag():
    tmpBoostEnv = base_bldr.buildEnvironment()
    boost_options.apply( tmpBoostEnv )
    if tmpBoostEnv.has_key('CXXFLAGS'):
-      baseEnv.AppendUnique( CXXFLAGS = tmpBoostEnv['CXXFLAGS'] )
+      baseEnv.AppendUnique( CXXFLAGS = tmpBoostEnv['CXXFLAGS'])
    if tmpBoostEnv.has_key('CPPPATH'):
       baseEnv.AppendUnique( CPPPATH = tmpBoostEnv['CPPPATH'] )
    if tmpBoostEnv.has_key('CPPDEFINES'):
-      baseEnv.AppendUnique( CPPDEFINES = tmpBoostEnv['CPPDEFINES'] )
-
+      baseEnv.AppendUnique( CPPDEFINES = tmpBoostEnv['CPPDEFINES']  )
+   baseEnv.AppendUnique( CPPDEFINES = ['BOOST_ALL_DYN_LINK'] )
 
    if GetPlatform() != 'win32':
       baseEnv.Append( LINKFLAGS = ['-g'] )
