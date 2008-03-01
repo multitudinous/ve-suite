@@ -381,6 +381,8 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     std::string* networkID = 
         static_cast< std::string* >( event.GetClientData() );
 
+    ::wxMilliSleep( 100 );
+
     std::map< std::string, Network* >::iterator iter = 
         networks.find( *networkID );
 

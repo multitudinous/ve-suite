@@ -2197,6 +2197,8 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
         idBeingDeleted = pluginData->first;
     }
     
+    ::wxMilliSleep( 100 );
+    
     std::map< int, Module >::iterator iter;
     iter = modules.find( idBeingDeleted );
     modules.erase( iter );

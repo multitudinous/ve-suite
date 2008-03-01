@@ -2055,7 +2055,8 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     RemoveWindowFromCanvas( m_iconChooser );
     RemoveWindowFromCanvas( vistab );
     //RemoveWindowFromCanvas( cadDialog );
-
+    //mDialogMemoryMap.clear();
+    
     if( mDialogMemoryMap.empty() )
     {
         pluginDialogPair = 
@@ -2073,7 +2074,10 @@ void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window )
     }
     
     m_canvas->RemoveChild( window );
-    window->Destroy();
+    //window->DestroyChildren();
+    //delete window;
+    bool delFlag = window->Destroy();
+    //std::cout << delFlag << std::endl;
     window = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////

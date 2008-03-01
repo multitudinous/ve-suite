@@ -2394,6 +2394,8 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
     if( mDestoryFrame )
     {
+        ::wxMilliSleep( 100 );
+
         wxWindow::Destroy();
         return;
     }
