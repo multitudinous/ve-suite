@@ -523,6 +523,7 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
         params->AppendList( temp_vector[i].c_str() );
     }
     params->ShowModal();
+    params->Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnQueryStreamOutputs( wxCommandEvent& event )
