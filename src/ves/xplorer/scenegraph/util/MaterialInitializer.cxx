@@ -69,7 +69,7 @@ void MaterialInitializer::apply( osg::Group& node )
     {
         material = new osg::Material();
         material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
-
+        material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
         stateset->setAttribute( material.get(), osg::StateAttribute::ON );
     }
 }
