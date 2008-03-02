@@ -2145,11 +2145,13 @@ void Network::RemoveAllEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void Network::RemovePluginDialogs()
 {
-    /*for( std::map< int, Module >::iterator iter
+    //If there are no dialogs present then go ahead and send the kill
+    // command to this class
+    for( std::map< int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); ++iter )
     {
-        //iter->second.GetPlugin()->RemovePluginDialogsFromCanvas();
-    }*/
+        iter->second.GetPlugin()->CheckPluginMapOnExit();
+    }
     
     //Send event to canvas
     if( modules.empty() )

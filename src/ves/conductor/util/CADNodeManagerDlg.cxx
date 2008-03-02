@@ -86,7 +86,7 @@ using namespace ves::conductor::util;
 /////////////////////////////////////////////////////////////////////
 CADNodeManagerDlg::CADNodeManagerDlg( CADNodePtr node, wxWindow* parent, wxWindowID id )
         : wxDialog( parent, id, _( "CADTree Manager" ), wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ), _( "CADTree Manager" ) )
+                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) )
 {
     _propsDlg = 0;
     _cadTreeBuilder = 0;

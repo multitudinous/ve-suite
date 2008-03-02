@@ -189,7 +189,9 @@ public:
     void OnChildDestroy( wxWindowDestroyEvent& event );
     ///Configure the plugin dialogs with some default settings
     void ConfigurePluginDialogs( wxWindow* window );
-    
+    ///On exit check to see if there on any dialogs open
+    void CheckPluginMapOnExit();
+
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it
 

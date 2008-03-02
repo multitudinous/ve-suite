@@ -1433,6 +1433,8 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
                                                                  m_canvas, ::wxNewId() );
 
         cadDialog->SetSize( dialogSize );
+        //Cannot use this until we are using a non modal dialog
+        //ConfigurePluginDialogs( cadDialog );
     }
     cadDialog->SetRootCADNode( veModel->GetGeometry() );
     cadDialog->ShowModal();
@@ -1443,9 +1445,9 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
         {
             veModel->AddGeometry();
         }
-        *( veModel->GetGeometry() ) =
-            *( cadDialog->GetRootCADNode() );
+        *( veModel->GetGeometry() ) = *( cadDialog->GetRootCADNode() );
     }
+    cadDialog->Destroy();
     cadDialog = 0;
 }
 ///////////////////////////////////////////
@@ -2057,15 +2059,6 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     RemoveWindowFromCanvas( m_iconChooser );
     RemoveWindowFromCanvas( vistab );
     //RemoveWindowFromCanvas( cadDialog );
-    //mDialogMemoryMap.clear();
-    
-/*    if( mDialogMemoryMap.empty() )
-    {
-        pluginDialogPair = 
-            std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
-        pluginDeleteEvent.SetClientData( &pluginDialogPair );
-        m_network->AddPendingEvent( pluginDeleteEvent );
-    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
@@ -2108,3 +2101,13 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
         wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
 }*/
 ////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::CheckPluginMapOnExit()
+{
+    if( mDialogMemoryMap.empty() )
+    {
+        pluginDialogPair = 
+        std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
+        pluginDeleteEvent.SetClientData( &pluginDialogPair );
+        m_network->AddPendingEvent( pluginDeleteEvent );
+    }
+}
