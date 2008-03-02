@@ -2,6 +2,8 @@
 #include "VertFrag.h"
 #include "Shaders.h"
 
+#include <ves/xplorer/scenegraph/ResourceManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Node>
 #include <osg/StateSet>
@@ -13,6 +15,7 @@
 // --- C/C++ Libraries --- //
 
 using namespace hyperlab;
+namespace xps = ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 Shaders::Shaders()
@@ -27,7 +30,13 @@ Shaders::~Shaders()
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::ReadTextures()
 {
-    m_imageMap.insert( std::make_pair( "Decoration", osgDB::readImageFile( "./Textures/Decoration.tga" ) ) );
+    #if 0
+    const std::string tmp_s = "./Textures/Decoration.tga";
+    osg::ref_ptr<osg::Image> tmp_img =
+         xps::ResourceManager::instance()->get< osg::Image, osg::ref_ptr >( tmp_s );
+   #endif
+
+    m_imageMap.insert( std::make_pair( "Decoration", xps::ResourceManager::instance()->get< osg::Image, osg::ref_ptr >( "./Textures/Decoration.tga" ) ) );
     m_imageMap.insert( std::make_pair( "WallMap", osgDB::readImageFile( "./Textures/WallMap.tga" ) ) );
     m_imageMap.insert( std::make_pair( "Corona", osgDB::readImageFile( "./Textures/Corona.tga" ) ) );
 

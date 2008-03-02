@@ -74,15 +74,15 @@ protected:
 public:
    /* Looks up resource and creates new if not available yet! */
    template<typename T, template< typename > class Container >
-   const Container<T>& get( const std::string& resourceName)
+   const Container<T> get( const std::string& resourceName)
    {
       ResourceMapIterator iter = mResourceMap.find( resourceName );
       if( iter != mResourceMap.end() )
       {
-         return iter->second;
+         return boost::any_cast<Container<T> >(iter->second);
       }
       // Was not found. So, lets make it!
-      Container<T> real_val = createResource( resourceName );
+      Container<T> real_val = createResource<T, Container>( resourceName );
       boost::any to_append = real_val;
       mResourceMap.insert( ResourcePair( resourceName, real_val) );
       return real_val;
