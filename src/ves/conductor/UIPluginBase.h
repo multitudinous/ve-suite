@@ -148,10 +148,6 @@ public:
     void GetPoly( POLY &polygon );
     ///This returns the UI dialog of the module
     virtual ves::conductor::UIDialog* UI( wxWindow* parent );
-    ///Remove all the dialogs that were opened for this plugin
-    void RemovePluginDialogsFromCanvas();
-    ///Remove a specific plugin from the canvas dialog
-    void RemoveWindowFromCanvas( wxWindow* window );
     
     ///This returns the Result dialog of the module
     virtual UIDialog* Result( wxWindow* parent );
@@ -285,7 +281,11 @@ protected:
     ///Check the active id against the plugin id
     bool CheckID();
     ///Disconnect the destroy event handler
-    void DisconnectPluginDialogsDestroyEvent( wxWindow* window );
+    //void DisconnectPluginDialogsDestroyEvent( wxWindow* window );
+    ///Remove all the dialogs that were opened for this plugin
+    void RemovePluginDialogsFromCanvas();
+    ///Remove a specific plugin from the canvas dialog
+    void RemoveWindowFromCanvas( wxWindow* window );
 
     UIDialog* dlg;
     TextResultDialog* result_dlg;

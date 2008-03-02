@@ -308,10 +308,27 @@ void Canvas::SetTreeViewWindow( wxWindow* treeView )
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::CleanUpNetworks()
 {
-    //std::cout << networks.size() << std::endl;
+    std::cout << this->GetChildren().size() << std::endl;
     RemoveEventHandler( networks[this->activeId] );
     networks[this->activeId]->RemoveAllEvents();        
 
+    size_t numChild = this->GetChildren().size();
+    for( size_t i = 0; i < numChild;)
+    {
+        std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetName().c_str() ) << std::endl;
+        std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetLabel().c_str() ) << std::endl;
+        if( dynamic_cast< wxDialog* >( GetChildren().Item( i )->GetData() ) )
+        {
+            GetChildren().Item( i )->GetData()->Destroy();
+            GetChildren().Erase( GetChildren().Item( i ) );
+            numChild -= 1;
+        }
+        else
+        {
+            ++i;
+        }
+    }
+    
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
             iter != networks.end(); ++iter )
     {

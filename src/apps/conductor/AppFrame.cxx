@@ -641,20 +641,16 @@ void AppFrame::StoreRecentFile()
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
-	CloseAspenSimulation();
     Close( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
 {
+    //Close Aspen no matter how conductor us shutdown
+	CloseAspenSimulation();
     //Cleanup all the plugins before wx does
-    //wx_nw_splitter->RemoveChild( canvas );
-    //canvas->Destroy();
-    //canvas = 0;
-
     mDestoryFrame = true;
     canvas->CleanUpNetworks();
-    //wxWindow::Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()

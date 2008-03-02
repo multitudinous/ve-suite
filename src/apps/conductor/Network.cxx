@@ -2145,11 +2145,11 @@ void Network::RemoveAllEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void Network::RemovePluginDialogs()
 {
-    for( std::map< int, Module >::iterator iter
+    /*for( std::map< int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); ++iter )
     {
-        iter->second.GetPlugin()->RemovePluginDialogsFromCanvas();
-    }
+        //iter->second.GetPlugin()->RemovePluginDialogsFromCanvas();
+    }*/
     
     //Send event to canvas
     if( modules.empty() )
@@ -2205,11 +2205,13 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
     //std::cout << " erasing the module" << std::endl;
     
     //Send event to canvas
-    if( modules.empty() )
+    if( !modules.empty() )
     {
-        networkDeleteEvent.SetClientData( &networkID );
-        parent->AddPendingEvent( networkDeleteEvent );    
+        return;
     }
+    
+    networkDeleteEvent.SetClientData( &networkID );
+    parent->AddPendingEvent( networkDeleteEvent );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::SetNetworkID( std::string id )

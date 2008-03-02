@@ -2018,12 +2018,12 @@ void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event)
     wxWindow* w = event.GetWindow(); 
     //std::cout << ConvertUnicode( event.GetEventObject()->GetClassInfo()->GetClassName() ) << std::endl;
     //wxLogMessage( _("destroyed") );
-    //std::cout << "destroyed " << std::endl;
+    std::cout << "destroyed " << std::endl;
     ///erase the found window
     std::map< int, bool >::iterator iter;
     iter = mDialogMemoryMap.find( w->GetId() );
-    //std::cout << "****** " << mDialogMemoryMap.size() << std::endl;
-    //std::cout << "deleting ui plugin base " << std::endl;
+    std::cout << "****** " << mDialogMemoryMap.size() << std::endl;
+    std::cout << "deleting ui plugin base " << std::endl;
     if( iter != mDialogMemoryMap.end() )
     {
         mDialogMemoryMap.erase( iter );
@@ -2033,13 +2033,15 @@ void UIPluginBase::OnChildDestroy(wxWindowDestroyEvent& event)
         std::cerr << "Problem deleting UIPluginBase dialogs" << std::endl;
     }
 
-    if( mDialogMemoryMap.empty() )
+    if( !mDialogMemoryMap.empty() )
     {
-        pluginDialogPair = 
-            std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
-        pluginDeleteEvent.SetClientData( &pluginDialogPair );
-        m_network->AddPendingEvent( pluginDeleteEvent );    
+        return;
     }
+    
+    pluginDialogPair = 
+        std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
+    pluginDeleteEvent.SetClientData( &pluginDialogPair );
+    m_network->AddPendingEvent( pluginDeleteEvent );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemovePluginDialogsFromCanvas() 
@@ -2057,13 +2059,13 @@ void UIPluginBase::RemovePluginDialogsFromCanvas()
     //RemoveWindowFromCanvas( cadDialog );
     //mDialogMemoryMap.clear();
     
-    if( mDialogMemoryMap.empty() )
+/*    if( mDialogMemoryMap.empty() )
     {
         pluginDialogPair = 
             std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
         pluginDeleteEvent.SetClientData( &pluginDialogPair );
         m_network->AddPendingEvent( pluginDeleteEvent );
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RemoveWindowFromCanvas( wxWindow* window ) 
@@ -2095,7 +2097,7 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
         NULL, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
+/*void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
 {
     if( !window )
     {
@@ -2104,5 +2106,5 @@ void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window )
     
     window->Disconnect( wxEVT_DESTROY, 
         wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
