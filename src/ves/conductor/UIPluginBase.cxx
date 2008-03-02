@@ -1300,7 +1300,7 @@ void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )
     for( size_t i = 0; i < temp_vector.size(); i++ )
         params->AppendList( temp_vector[i].c_str() );
     params->ShowModal();
-
+    params->Destroy();
     //serviceList->GetMessageLog()->SetMessage("gather");
     //gather requested inputs
     //std::vector< std::string > temp_vector2;
@@ -1364,7 +1364,7 @@ void  UIPluginBase::OnQueryOutputs( wxCommandEvent& event )
     for( size_t i = 0; i < temp_vector.size(); i++ )
         params->AppendList( temp_vector[i].c_str() );
     params->ShowModal();
-
+    params->Destroy();
     //std::vector< std::string > temp_vector2;
     //for(int testing = 0; testing < results->GetDataSize(); testing++)
     // temp_vector2.push_back(std::string(results->GetDataString(testing).c_str()));
