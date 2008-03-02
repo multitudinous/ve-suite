@@ -42,6 +42,8 @@
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
+#include <osgDB/ReadFile>
+
 #include <map>
 
 namespace ves
@@ -72,7 +74,7 @@ protected:
 public:
    /* Looks up resource and creates new if not available yet! */
    template<typename T, template< typename > class Container >
-   const Container<T>& get(const std::string& resourceName)
+   const Container<T>& get( const std::string& resourceName)
    {
       ResourceMapIterator iter = mResourceMap.find( resourceName );
       if( iter != mResourceMap.end() )
@@ -80,14 +82,21 @@ public:
          return iter->second;
       }
       // Was not found. So, lets make it!
-      Container<T> real_val( new T( resourceName ) );
+      Container<T> real_val = createResource( resourceName );
       boost::any to_append = real_val;
       mResourceMap.insert( ResourcePair( resourceName, real_val) );
       return real_val;
    }
 
    /* Explicitly add a resource. */
-   void add(const std::string& resourceName, boost::any& value);
+   void add( const std::string& resourceName, boost::any& value );
+
+protected:
+   template<typename T, template< typename > class Container >
+   Container<T> createResource( const std::string& resourceName)
+   {
+      return Container<T>( new T( resourceName ) );
+   }
 
 private:
     ///Base Constructor
@@ -101,6 +110,13 @@ private:
 
     ResourceMap mResourceMap;
 };
+
+template<>
+osg::ref_ptr< osg::Image > ResourceManager::createResource( const std::string& resourceName )
+{
+   osg::ref_ptr< osg::Image > ret_val( osgDB::readImageFile( resourceName ) );
+   return ret_val;
+}
 
 }
 }
