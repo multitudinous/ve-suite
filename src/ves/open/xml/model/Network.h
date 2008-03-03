@@ -128,6 +128,8 @@ private:
     std::vector< ves::open::xml::DataValuePairPtr > mConductorState;///<Vector of data value pairs that hold conductor info.
     ///The vector of tags for this network
     std::vector< TagPtr > mTags;
+    ///This variable is needed to enable the hiearchy data to be accessed 
+    ///from any level in a sub system configuration
     ModelWeakPtr mParentModel;
 };
 

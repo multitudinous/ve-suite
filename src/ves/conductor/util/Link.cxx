@@ -344,7 +344,7 @@ void Link::DrawLinkLine( wxDC* dc )
     }
     else if(linkType == 1)
     {
-    dc->SetPen( *wxCYAN_PEN );
+    dc->SetPen( *wxRED_PEN );
     dc->SetBrush( *wxWHITE_BRUSH );
     }
     else if(linkType == 2)

@@ -359,8 +359,13 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
     //Network* veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
     NetworkPtr veNetwork = mainSystem->GetNetwork();
     //std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
-    osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
+    //different typed of streams material, heat, & work
+	osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
+    osg::ref_ptr<osg::Vec4Array> colorGreen = new osg::Vec4Array;
+    osg::ref_ptr<osg::Vec4Array> colorRed = new osg::Vec4Array;
     colorBlack->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    colorGreen->push_back( osg::Vec4( 0.0f, 1.0f, 0.0f, 1.0f ) );
+    colorRed->push_back( osg::Vec4( 1.0f, 0.0f, 0.0f, 1.0f ) );
     osg::ref_ptr<osg::Vec3Array> shared_normals = new osg::Vec3Array;
     shared_normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
@@ -383,7 +388,22 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         linesGeom->setColorBinding( osg::Geometry::BIND_OVERALL );
         linesGeom->setNormalArray( shared_normals.get() );
         linesGeom->setNormalBinding( osg::Geometry::BIND_OVERALL );
-        linesGeom->setColorArray( colorBlack.get() );
+		if( veNetwork->GetLink( i )->GetLinkType() == 0 )
+		{
+            linesGeom->setColorArray( colorBlack.get() );
+		}
+		else if( veNetwork->GetLink( i )->GetLinkType() == 1 )
+		{
+            linesGeom->setColorArray( colorRed.get() );
+		}
+		else if( veNetwork->GetLink( i )->GetLinkType() == 2 )
+		{
+            linesGeom->setColorArray( colorGreen.get() );
+		}
+		else
+		{
+            linesGeom->setColorArray( colorBlack.get() );
+		}
         geode->addDrawable( linesGeom );
     }
     geode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF );

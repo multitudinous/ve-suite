@@ -149,7 +149,8 @@ private:
 
     ///The link type
     int mType;
-
+    ///This variable is needed to enable the hiearchy data to be accessed 
+    ///from any level in a sub system configuration
     ModelWeakPtr mParentModel;
 };
 
