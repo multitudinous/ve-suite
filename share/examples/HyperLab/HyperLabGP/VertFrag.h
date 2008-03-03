@@ -143,15 +143,84 @@ char options_vertex[] =
         //"} \n"
     "} \n";
 
-char options_fragment[] =
-    "uniform bvec4 options; \n"
-    "uniform sampler2DShadow shadowMap; \n"
-    "uniform samplerCube envMap; \n"
+char options_base_map_fragment[] =
     "uniform sampler2D baseMap; \n"
+    "vec3 getBaseMapValue() \n"
+    "{ \n"
+    "   return vec3( texture2D( baseMap, gl_TexCoord[ 1 ].st ) ); \n"
+    "} \n";
 
+char options_base_map_fragment_off[] =
+    "vec3 getBaseMapValue() \n"
+    "{ \n"
+    "   return vec3( 1.0, 1.0, 1.0 ); \n"
+    "} \n";
+
+char options_env_map_fragment[] =
+    "uniform samplerCube envMap; \n"
+    "void getReflectionValue( inout vec3 base, inout vec3 R ) \n"
+    "{ \n"
+        "vec3 reflection = textureCube( envMap, R ).rgb; \n"
+        "base = mix( base, reflection, 0.05 ); \n"
+    "} \n";
+
+char options_env_map_fragment_off[] =
+    "void getReflectionValue( inout vec3 base, inout vec3 R ) \n"
+    "{ \n"
+    "  base = base * vec3(1.0, 1.0, 1.0); \n"
+    "  R = R * vec3(1.0, 1.0, 1.0); \n"
+    "} \n";
+
+char options_shadow_map_fragment[] =
+    "uniform sampler2DShadow shadowMap; \n"
+    "vec4 getShadowMapValue() \n"
+    "{ \n"
+        "const float kTransparency = 0.4; \n"
+
+        "vec3 shadowUV = gl_TexCoord[ 0 ].stp / gl_TexCoord[ 0 ].q; \n"
+        "vec4 shadowColor = vec4( 1.0, 1.0, 1.0, 1.0 ); \n"
+
+        "if( shadowUV.x >= 0.0 && \n"
+            "shadowUV.y >= 0.0 && \n"
+            "shadowUV.x <= 1.0 && \n"
+            "shadowUV.y <= 1.0 ) \n"
+        "{ \n"
+            "float mapScale = 1.0 / 4096.0; \n"
+
+            "shadowColor = shadow2D( shadowMap, shadowUV ); \n"
+
+            //1AA on shadowMap
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale,  mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale, -mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale,  mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale, -mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale,  0.0,      0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale,  0.0,      0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,       mapScale, 0.0 ) ); \n"
+            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,      -mapScale, 0.0 ) ); \n"
+
+            "shadowColor = shadowColor / 18.0; \n"
+
+            "shadowColor += kTransparency; \n"
+            "shadowColor = clamp( shadowColor, 0.0, 1.0 ); \n"
+        "} \n"
+        "return shadowColor; \n"
+    "} \n";
+
+char options_shadow_map_fragment_off[] =
+    "vec4 getShadowMapValue() \n"
+    "{ \n"
+        "return vec4( 1.0, 1.0, 1.0, 1.0 ); \n"
+    "} \n";
+
+char options_fragment[] =
     "varying vec4 eyePos; \n"
     "varying vec3 lightPos; \n"
     "varying vec3 normal; \n"
+
+    "vec3 getBaseMapValue(); \n"
+    "void getReflectionValue( inout vec3 base, inout vec3 R ); \n"
+    "vec4 getShadowMapValue(); \n"
 
     "void main() \n"
     "{ \n"
@@ -172,63 +241,15 @@ char options_fragment[] =
                              "pow( RDotL, gl_FrontMaterial.shininess ); \n"
 
         "vec3 ambientDiffuse = TotalAmbient + TotalDiffuse; \n"
-        "if( options.y ) \n"
-        "{ \n"
-            "vec3 texture = vec3( texture2D( baseMap, gl_TexCoord[ 1 ].st ) ); \n"
-            "ambientDiffuse *= texture; \n"
-        "} \n"
+
+        "ambientDiffuse *= getBaseMapValue(); \n"
 
         "vec3 base = ambientDiffuse + TotalSpecular; \n"
         "base *= gl_FrontMaterial.emission.rgb; \n"
 
-        "if( options.z ) \n"
-        "{ \n"
-            "vec3 reflection = textureCube( envMap, R ).rgb; \n"
+        "getReflectionValue( base, R ); \n"
 
-            "base = mix( base, reflection, 0.05 ); \n"
-        "} \n"
-
-        "if( options.w ) \n"
-        "{ \n"
-            "const float kTransparency = 0.4; \n"
-
-            "vec3 shadowUV = gl_TexCoord[ 0 ].stp / gl_TexCoord[ 0 ].q; \n"
-            "float mapScale = 1.0 / 4096.0; \n"
-
-            "vec4 shadowColor = shadow2D( shadowMap, shadowUV ); \n"
-
-            //1AA on shadowMap
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale,  mapScale, 0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale, -mapScale, 0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale,  mapScale, 0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale, -mapScale, 0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  mapScale,  0.0,      0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3( -mapScale,  0.0,      0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,       mapScale, 0.0 ) ); \n"
-            "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,      -mapScale, 0.0 ) ); \n"
-
-            "shadowColor = shadowColor / 18.0; \n"
-
-            "shadowColor += kTransparency; \n"
-            "shadowColor = clamp( shadowColor, 0.0, 1.0 ); \n"
-
-            "if( shadowUV.x >= 0.0 && \n"
-                "shadowUV.y >= 0.0 && \n"
-                "shadowUV.x <= 1.0 && \n"
-                "shadowUV.y <= 1.0 ) \n"
-            "{ \n"
-                "gl_FragColor = vec4( base, 1.0 ) * shadowColor; \n"
-            "} \n"
-
-            "else \n"
-            "{ \n"
-                "gl_FragColor = vec4( base, 1.0 ); \n"
-            "} \n"
-        "} \n"
-        "else \n"
-        "{ \n"
-            "gl_FragColor = vec4( base, 1.0 ); \n"
-        "} \n"
+        "gl_FragColor = vec4( base, 1.0 ) * getShadowMapValue(); \n"
     "} \n";
 
 ////////////////////////////////////////////////////////////////////////////////

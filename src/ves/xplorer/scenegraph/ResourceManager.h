@@ -95,7 +95,8 @@ protected:
    template<typename T, template< typename > class Container >
    Container<T> createResource( const std::string& resourceName)
    {
-      return Container<T>( new T( resourceName ) );
+      //return Container<T>( new T( resourceName ) );
+      return Container<T>( new T( ) );
    }
 
 private:

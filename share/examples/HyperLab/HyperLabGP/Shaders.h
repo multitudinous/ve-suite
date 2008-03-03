@@ -26,6 +26,7 @@ public:
     ~Shaders();
 
     void ReadTextures();
+    void InitializeShaders();
 
     void SetOptions( osg::ref_ptr< osg::Node > node,
                      bool xray = false,
