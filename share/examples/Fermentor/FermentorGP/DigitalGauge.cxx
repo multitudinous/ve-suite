@@ -88,15 +88,16 @@ void DigitalGauge::Initialize()
 
     m_digitalText->setFont( font );
     m_digitalText->setAxisAlignment( osgText::Text::SCREEN );
+    m_digitalText->setAlignment( osgText::Text::RIGHT_CENTER );
     m_digitalText->setLayout( osgText::Text::LEFT_TO_RIGHT );
-    m_digitalText->setPosition( osg::Vec3f( -0.4, 0.0, -0.05 ) );
+    m_digitalText->setPosition( osg::Vec3f( 0.3, 0.0, -0.05 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DigitalGauge::UpdateText( double value )
 {
     std::stringstream ss;
-    ss << std::setw( 10 ) << std::setiosflags( std::ios_base::fixed );
-    ss << std::setprecision( m_precision ) << value;
+    //ss << std::setw( 10 ) << std::setiosflags( std::ios_base::fixed );
+    ss << std::setprecision( m_precision ) << std::setiosflags( std::ios_base::fixed ) << value;
 
     m_digitalText->setText( ss.str() );
 }
