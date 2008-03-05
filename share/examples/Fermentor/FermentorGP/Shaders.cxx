@@ -59,10 +59,10 @@ void Shaders::Initialize()
         "specularPower", specularPowerValue );
     m_phong->addUniform( specularPower.get() );
 
-    m_phong->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
-
+    m_xray->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     m_xray->setMode( GL_BLEND, osg::StateAttribute::ON );
-    m_xray->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    
+    m_phong->setRenderBinDetails( 0, std::string( "RenderBin" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::Phong( osg::ref_ptr< osg::Node > node )
