@@ -5,8 +5,6 @@
 // --- VE-Suite Includes --- //
 
 // --- OSG Includes --- //
-#include <osg/CameraNode>
-
 #include <osgText/Text>
 #include <osgText/Font>
 
@@ -71,22 +69,14 @@ void DigitalGauge::Initialize()
 {
     osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/digital_display.ive" );
     addChild( temp.get() );
-    temp->setStateSet( m_shader->Phong().get() );
-
-    osg::ref_ptr< osg::CameraNode > cameraNode = new osg::CameraNode();
-    cameraNode->setReferenceFrame( osg::Transform::RELATIVE_RF );
-    cameraNode->setViewMatrix( osg::Matrix::identity() );
-    cameraNode->setClearMask( GL_DEPTH_BUFFER_BIT );
-    cameraNode->setRenderOrder( osg::CameraNode::POST_RENDER );
+    m_shader->Phong( temp );
 
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-    cameraNode->addChild( geode.get() );
-
     m_nameText = new osgText::Text();
     m_digitalText = new osgText::Text();
     geode->addDrawable( m_nameText.get() );
     geode->addDrawable( m_digitalText.get() );
-    addChild( cameraNode.get() );
+    addChild( geode.get() );
 
     std::string font( "fonts/arial.ttf" );
 
@@ -94,10 +84,12 @@ void DigitalGauge::Initialize()
     m_nameText->setAxisAlignment( osgText::Text::SCREEN );
     m_nameText->setLayout( osgText::Text::LEFT_TO_RIGHT );
     m_nameText->setText( m_name );
+    m_nameText->setPosition( osg::Vec3f( -0.55, 0.0, 0.2 ) );
 
     m_digitalText->setFont( font );
     m_digitalText->setAxisAlignment( osgText::Text::SCREEN );
     m_digitalText->setLayout( osgText::Text::LEFT_TO_RIGHT );
+    m_digitalText->setPosition( osg::Vec3f( -0.4, 0.0, -0.05 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DigitalGauge::UpdateText( double value )

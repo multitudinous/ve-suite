@@ -3,12 +3,16 @@
 #include "VertFrag.h"
 
 // --- OSG Includes --- //
+#include <osg/Node>
 #include <osg/StateSet>
 
 ////////////////////////////////////////////////////////////////////////////////
 Shaders::Shaders()
+:
+m_phong( new osg::StateSet() ),
+m_xray( new osg::StateSet() )
 {
-    ;
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Shaders::~Shaders()
@@ -16,52 +20,58 @@ Shaders::~Shaders()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr< osg::StateSet > Shaders::Phong()
+void Shaders::Initialize()
 {
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    osg::ref_ptr< osg::Program > program = new osg::Program();
+    osg::ref_ptr< osg::Program > phongProgram = new osg::Program();
+    osg::ref_ptr< osg::Program > xrayProgram = new osg::Program();
 
-    stateset->setAttribute( program.get(), osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
+    m_phong->setAttribute( phongProgram.get(), osg::StateAttribute::ON );
+    m_xray->setAttribute( xrayProgram.get(), osg::StateAttribute::ON );
 
-    osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, phongVertex );
-    osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, phongFragment );
-    program->addShader( vertex_shader.get() );
-    program->addShader( fragment_shader.get() );
+    osg::ref_ptr< osg::Shader > phongVertexShader =
+        new osg::Shader( osg::Shader::VERTEX, phongVertex );
+    osg::ref_ptr< osg::Shader > phongFragmentShader =
+        new osg::Shader( osg::Shader::FRAGMENT, phongFragment );
+    phongProgram->addShader( phongVertexShader.get() );
+    phongProgram->addShader( phongFragmentShader.get() );
+
+    osg::ref_ptr< osg::Shader > xrayVertexShader =
+        new osg::Shader( osg::Shader::VERTEX, xrayVertex );
+    osg::ref_ptr< osg::Shader > xrayFragmentShader =
+        new osg::Shader( osg::Shader::FRAGMENT, xrayFragment );
+    xrayProgram->addShader( xrayVertexShader.get() );
+    xrayProgram->addShader( xrayFragmentShader.get() );
 
     osg::ref_ptr< osg::Uniform > ambientMaterial = new osg::Uniform(
         "ambientMaterial", osg::Vec3( 0.368627, 0.368421, 0.368421 ) );
-    stateset->addUniform( ambientMaterial.get() );
+    m_phong->addUniform( ambientMaterial.get() );
 
     osg::ref_ptr< osg::Uniform > diffuseMaterial = new osg::Uniform(
         "diffuseMaterial", osg::Vec3( 0.886275, 0.885003, 0.885003 ) );
-    stateset->addUniform( diffuseMaterial.get() );
+    m_phong->addUniform( diffuseMaterial.get() );
 
     osg::ref_ptr< osg::Uniform > specularMaterial = new osg::Uniform(
         "specularMaterial", osg::Vec3( 0.490196, 0.488722, 0.488722 ) );
-    stateset->addUniform( specularMaterial.get() );
+    m_phong->addUniform( specularMaterial.get() );
 
     float specularPowerValue = 20.0;
     osg::ref_ptr< osg::Uniform > specularPower = new osg::Uniform(
         "specularPower", specularPowerValue );
-    stateset->addUniform( specularPower.get() );
+    m_phong->addUniform( specularPower.get() );
 
-    return stateset.get();
+    m_phong->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+
+    m_xray->setMode( GL_BLEND, osg::StateAttribute::ON );
+    m_xray->setRenderBinDetails( 0, std::string( "RenderBin" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::ref_ptr<osg::StateSet> Shaders::XRay()
+void Shaders::Phong( osg::ref_ptr< osg::Node > node )
 {
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-
-    stateset->setAttribute( program.get() );
-    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-    stateset->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-    osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, xrayVertex );
-    osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, xrayFragment );
-    program->addShader( vertex_shader.get() );
-    program->addShader( fragment_shader.get() );
-
-    return stateset.get();
+    node->setStateSet( m_phong.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Shaders::XRay( osg::ref_ptr< osg::Node > node )
+{
+    node->setStateSet( m_xray.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

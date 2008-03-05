@@ -91,9 +91,9 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
 
     _fermentorGeometry = osgDB::readNodeFile( "Models/fermentor_noimpeller.ive" );
     _impellerGeometry = osgDB::readNodeFile( "Models/impeller_fixed.ive" );
-    _impellerGeometry->setStateSet( shader->Phong().get() );
+    shader->Phong( _impellerGeometry );
     _tankGeometry = osgDB::readNodeFile( "Models/opaque_tank.ive" );
-    _tankGeometry->setStateSet( shader->Phong().get() );
+    shader->Phong( _tankGeometry );
 
     transform_ferm->addChild( _fermentorGeometry.get() );
     transform_imp->addChild( _impellerGeometry.get() );
@@ -130,9 +130,9 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     {
         rootNode->addChild( itr->second.get() );
 
-        itr->second->GetNameText()->setCharacterSize( 1.5 );
-        itr->second->GetDigitalText()->setCharacterSize( 1.5 );
-        itr->second->GetNameText()->setColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
+        itr->second->GetNameText()->setCharacterSize( 0.12 );
+        itr->second->GetDigitalText()->setCharacterSize( 0.12 );
+        itr->second->GetNameText()->setColor( osg::Vec4( 0.3, 0.3, 0.3, 1.0 ) );
         itr->second->GetDigitalText()->setColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
     }
 
@@ -144,35 +144,13 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     _gauges[ 5 ]->SetPrecision( 2 );
     _gauges[ 6 ]->SetPrecision( 1 );
 
-    _gauges[ 0 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate(  2.5, 6, 3.5 ) );
-    _gauges[ 1 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate(  2.5, 6, 2.9 ) );
-    _gauges[ 2 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate( -2.5, 6, 4.7 ) );
-    _gauges[ 3 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate( -2.5, 6, 4.1 ) );
-    _gauges[ 4 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate( -2.5, 6, 3.5 ) );
-    _gauges[ 5 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate( -2.5, 6, 2.9 ) );
-    _gauges[ 6 ]->setMatrix( osg::Matrix::scale( 12, 12, 12 ) *
-                             osg::Matrix::translate( -2.5, 6, 2.3 ) );
-
-    _gauges[ 0 ]->GetNameText()->setPosition(    osg::Vec3(  2.10, 6,  0.20 ) );
-    _gauges[ 0 ]->GetDigitalText()->setPosition( osg::Vec3(  2.15, 6, -0.05 ) );
-    _gauges[ 1 ]->GetNameText()->setPosition(    osg::Vec3(  2.10, 6, -0.40 ) );
-    _gauges[ 1 ]->GetDigitalText()->setPosition( osg::Vec3(  2.15, 6, -0.65 ) );
-    _gauges[ 2 ]->GetNameText()->setPosition(    osg::Vec3( -2.95, 6,  1.40 ) );
-    _gauges[ 2 ]->GetDigitalText()->setPosition( osg::Vec3( -2.85, 6,  1.15 ) );
-    _gauges[ 3 ]->GetNameText()->setPosition(    osg::Vec3( -2.95, 6,  0.80 ) );
-    _gauges[ 3 ]->GetDigitalText()->setPosition( osg::Vec3( -2.85, 6,  0.55 ) );
-    _gauges[ 4 ]->GetNameText()->setPosition(    osg::Vec3( -2.95, 6,  0.20 ) );
-    _gauges[ 4 ]->GetDigitalText()->setPosition( osg::Vec3( -2.85, 6, -0.05 ) );
-    _gauges[ 5 ]->GetNameText()->setPosition(    osg::Vec3( -2.95, 6, -0.40 ) );
-    _gauges[ 5 ]->GetDigitalText()->setPosition( osg::Vec3( -2.85, 6, -0.65 ) );
-    _gauges[ 6 ]->GetNameText()->setPosition(    osg::Vec3( -2.95, 6, -1.00 ) );
-    _gauges[ 6 ]->GetDigitalText()->setPosition( osg::Vec3( -2.85, 6, -1.25 ) );
+    _gauges[ 0 ]->setMatrix( osg::Matrix::translate(  2.5, 6, 3.5 ) );
+    _gauges[ 1 ]->setMatrix( osg::Matrix::translate(  2.5, 6, 2.9 ) );
+    _gauges[ 2 ]->setMatrix( osg::Matrix::translate( -2.5, 6, 4.7 ) );
+    _gauges[ 3 ]->setMatrix( osg::Matrix::translate( -2.5, 6, 4.1 ) );
+    _gauges[ 4 ]->setMatrix( osg::Matrix::translate( -2.5, 6, 3.5 ) );
+    _gauges[ 5 ]->setMatrix( osg::Matrix::translate( -2.5, 6, 2.9 ) );
+    _gauges[ 6 ]->setMatrix( osg::Matrix::translate( -2.5, 6, 2.3 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
@@ -358,15 +336,11 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
     if( _xray_ID == 0 )
     {
-        _tankGeometry->setStateSet( shader->Phong().get() );
+        shader->Phong( _tankGeometry );
     }
     else if( _xray_ID == 1 )
     {
-        osg::ref_ptr< osg::StateSet > stateset_1 = new osg::StateSet();
-        stateset_1->setMode( GL_BLEND, osg::StateAttribute::ON );
-        stateset_1->setRenderingHint( osg::StateSet::OPAQUE_BIN );
-        _tankGeometry->setStateSet( stateset_1.get() );
-        _tankGeometry->setStateSet( shader->XRay().get() );
+        shader->XRay( _tankGeometry );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,7 @@
 
 namespace osg
 {
+    class Node;
     class StateSet;
 }
 
@@ -15,8 +16,15 @@ public:
     Shaders();
     ~Shaders();
 
-    osg::ref_ptr< osg::StateSet > Phong();
-    osg::ref_ptr< osg::StateSet > XRay();
+    void Phong( osg::ref_ptr< osg::Node > node );
+    void XRay( osg::ref_ptr< osg::Node > node );
+
+private:
+    void Initialize();
+
+    osg::ref_ptr< osg::StateSet > m_phong;
+    osg::ref_ptr< osg::StateSet > m_xray;
+
 };
 
 #endif //SHADERS_H
