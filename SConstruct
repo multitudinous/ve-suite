@@ -438,9 +438,9 @@ if not SConsAddons.Util.hasHelpFlag():
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
       #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
       #    baseEnv['PDB'] = 1
-      #baseEnv.AppendUnique( CPPPATH = os.environ['INCLUDE'] )
-      #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'] ) 
-      #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'] ) 
+      #baseEnv.AppendUnique( CPPPATH = os.environ['INCLUDE'].split(os.pathsep) )
+      #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'].split(os.pathsep) ) 
+      #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'].split(os.pathsep) ) 
 
 
    if GetPlatform() == 'darwin':
