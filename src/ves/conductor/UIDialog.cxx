@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/UIDialog.h>
+#include <iostream>
+
 using namespace ves::conductor;
 
 UIDialog::UIDialog( wxWindow* parent, int id, wxString title )
@@ -43,8 +45,14 @@ UIDialog::UIDialog( wxWindow* parent, int id, wxString title )
 {
     CenterOnParent();
 }
-
+///////////////////////////////////////////////////////////////////////
 void UIDialog::Lock( bool l )
 {
     lock = l;
 }
+///////////////////////////////////////////////////////////////////////
+UIDialog::~UIDialog()
+{
+    std::cout << " ui dialog destroy" << std::endl;
+}
+///////////////////////////////////////////////////////////////////////

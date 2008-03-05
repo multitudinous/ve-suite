@@ -319,7 +319,7 @@ void Canvas::CleanUpNetworks()
         std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetLabel().c_str() ) << std::endl;
         if( dynamic_cast< wxDialog* >( GetChildren().Item( i )->GetData() ) )
         {
-            GetChildren().Item( i )->GetData()->Destroy();
+            //GetChildren().Item( i )->GetData()->Destroy();
             GetChildren().Erase( GetChildren().Item( i ) );
             numChild -= 1;
         }
@@ -407,7 +407,7 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     activeId = "NULL";
     previousId = "-1";
 
-    //std::cout << " erasing the network" << std::endl;
+    std::cout << " erasing the network" << std::endl;
     
     if( networks.empty() )
     {

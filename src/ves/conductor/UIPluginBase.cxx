@@ -176,6 +176,7 @@ UIPluginBase::UIPluginBase() :
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
 {
+std::cout << " deleting plugin" << std::endl;
     /*if( !mDialogMemoryMap.empty() )
     {
         DisconnectPluginDialogsDestroyEvent( dlg );
@@ -190,6 +191,8 @@ UIPluginBase::~UIPluginBase()
         DisconnectPluginDialogsDestroyEvent( vistab );
         //DisconnectPluginDialogsDestroyEvent( cadDialog );
     }*/
+delete dlg;
+std::cout << " deleting plugin 2"  << std::endl;
 
     delete [] poly;
     poly = 0;
@@ -2083,11 +2086,15 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
         return;
     }
 
-    mDialogMemoryMap[ window->GetId() ] = true;
-    window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
+    //wxGTK does not implement the destroy event handler so there is no way
+    //for plugins in wxGTK apps to send back info when dialogs are destoryed
+#ifndef __WXGTK__
+    /*mDialogMemoryMap[ window->GetId() ] = true;
     window->Connect( wxEVT_DESTROY, 
         wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), 
-        NULL, this );
+        NULL, this );*/
+#endif
+    window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 

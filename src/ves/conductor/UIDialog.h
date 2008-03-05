@@ -58,10 +58,7 @@ protected:
     }
 public:
     UIDialog( wxWindow* parent, int id, wxString title = wxT( "UI" ) );
-    virtual ~UIDialog()
-    {
-        ;
-    }
+    virtual ~UIDialog();
     virtual void Lock( bool l );
     //This function locks/unlocks every input entry
 protected:

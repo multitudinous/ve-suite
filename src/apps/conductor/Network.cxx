@@ -2147,20 +2147,14 @@ void Network::RemovePluginDialogs()
 {
     //If there are no dialogs present then go ahead and send the kill
     // command to this class
-    //wxGTK does not implement the destroy event handler so there is no way
-    //for plugins in wxGTK apps to send back info when dialogs are destoryed
-#ifndef __WXGTK__
     for( std::map< int, Module >::iterator iter
         = modules.begin(); iter != modules.end(); ++iter )
     {
         iter->second.GetPlugin()->CheckPluginMapOnExit();
     }
-#endif
 
     //Send event to canvas
-#ifndef __WXGTK__
     if( modules.empty() )
-#endif
     {
         networkDeleteEvent.SetClientData( &networkID );
         parent->AddPendingEvent( networkDeleteEvent );    
@@ -2210,7 +2204,7 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
     std::map< int, Module >::iterator iter;
     iter = modules.find( idBeingDeleted );
     modules.erase( iter );
-    //std::cout << " erasing the module" << std::endl;
+    std::cout << " erasing the module" << std::endl;
     
     //Send event to canvas
     if( !modules.empty() )
