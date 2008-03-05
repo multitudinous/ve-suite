@@ -26,12 +26,9 @@ public:
 
 private:
     void SetShaderOne();
-    void SetShaderTwo();
-    void SetShaderThree();
 
     osg::ref_ptr< osg::Group > m_nonPhysicsGeometry;
     osg::ref_ptr< osg::Group > m_nonPhysicsGeometryII;
-
 };
 }
 

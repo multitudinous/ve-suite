@@ -83,7 +83,7 @@ void World::Initialize()
     m_imageMap.insert( std::make_pair( "bottom", osgDB::readImageFile(
         "Textures/CubeMaps/NvidiaLobby/nvlobby_new_negative_z.tga" ) ) );
 
-    CreateRoom( 100.0 );
+    CreateRoom( 150.0 );
 
     m_tcm->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     m_tcm->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
@@ -211,7 +211,7 @@ void World::CreateRoom( float width )
 {
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
-    osg::ref_ptr< osg::Box > room = new osg::Box( osg::Vec3( 0, 0, 20.0 ), width );
+    osg::ref_ptr< osg::Box > room = new osg::Box( osg::Vec3( 0, 0, 25 ), width );
     osg::ref_ptr< osg::ShapeDrawable > shapeDrawable = new osg::ShapeDrawable( room.get() );
 
     geode->addDrawable( shapeDrawable.get() );
@@ -229,7 +229,7 @@ void World::CreateRoom( float width )
 
 		"void main()  \n"
 		"{  \n"
-		    "gl_FragColor=textureCube( envMap, gl_TexCoord[ 0 ].xyz ); \n"
+		    "gl_FragColor = textureCube( envMap, gl_TexCoord[ 0 ].xyz ); \n"
 		"} \n";
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
