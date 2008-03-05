@@ -296,7 +296,7 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
             osg::ref_ptr< osg::StateSet > stateset_0 = new osg::StateSet();
             stateset_0->setMode( GL_BLEND, osg::StateAttribute::ON );
-            stateset_0->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+            stateset_0->setRenderBinDetails( 8, std::string( "DepthSortedBin" ) );
             sd->setStateSet( stateset_0.get() );
 
             geode_0->addDrawable( sd.get() );
