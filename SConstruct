@@ -431,13 +431,17 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.Append( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.Append( CPPDEFINES = ['_OSG','VTK44'] )
    if GetPlatform() == 'win32':
-        baseEnv.Append( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
-	# for more information on WIN32_LEAN_AND_MEAN see:
-	# http://support.microsoft.com/kb/166474
-	baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
-        baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
-        #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
-        #    baseEnv['PDB'] = 1
+      baseEnv.Append( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
+      # for more information on WIN32_LEAN_AND_MEAN see:
+      # http://support.microsoft.com/kb/166474
+      baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
+      baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
+      #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
+      #    baseEnv['PDB'] = 1
+      #baseEnv.AppendUnique( CPPPATH = os.environ['INCLUDE'] )
+      #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'] ) 
+      #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'] ) 
+
 
    if GetPlatform() == 'darwin':
       baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
