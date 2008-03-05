@@ -114,7 +114,7 @@ Model::Model( const Model& input )
     mInputs.clear();
     std::copy( input.mInputs.begin(),
                input.mInputs.end(),
-               mInputs.begin() );
+               std::back_inserter( mInputs ) );
 
 
     mInformationPackets.clear();
