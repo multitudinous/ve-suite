@@ -43,20 +43,26 @@ _loop_ID( 0 ),
 _rot_speed( 0 ),
 _sim_speed( 0 ),
 frame_count( 0 ),
-frame_speed_control( 0 )
+frame_speed_control( 0 ),
+
+shader( new Shaders() ),
+
+capsule_sequence( new osg::Sequence() ),
+
+_fermentorGeometry( 0 ),
+_impellerGeometry( 0 ),
+_tankGeometry( 0 ),
+
+_roomGeometry( new osg::MatrixTransform() ),
+fermentorGroup( new osg::MatrixTransform() ),
+
+transform_ferm( new osg::MatrixTransform() ),
+transform_imp( new osg::MatrixTransform() ),
+transform_tank( new osg::MatrixTransform() )
 {
     m_objectName = "FermentorUI";
 
-    capsule_sequence = new osg::Sequence();
     capsule_sequence->setValue( 0 );
-
-    _roomGeometry = new osg::MatrixTransform();
-    fermentorGroup = new osg::MatrixTransform();
-    transform_ferm = new osg::MatrixTransform();
-    transform_imp = new osg::MatrixTransform();
-    transform_tank = new osg::MatrixTransform();
-
-    shader = new Shaders();
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
@@ -91,9 +97,9 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
 
     _fermentorGeometry = osgDB::readNodeFile( "Models/fermentor_noimpeller.ive" );
     _impellerGeometry = osgDB::readNodeFile( "Models/impeller_fixed.ive" );
-    shader->Phong( _impellerGeometry );
     _tankGeometry = osgDB::readNodeFile( "Models/opaque_tank.ive" );
-    shader->Phong( _tankGeometry );
+    //shader->Phong( _impellerGeometry.get() );
+    shader->Phong( _tankGeometry.get() );
 
     transform_ferm->addChild( _fermentorGeometry.get() );
     transform_imp->addChild( _impellerGeometry.get() );
@@ -290,7 +296,7 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
             osg::ref_ptr< osg::StateSet > stateset_0 = new osg::StateSet();
             stateset_0->setMode( GL_BLEND, osg::StateAttribute::ON );
-            stateset_0->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+            stateset_0->setRenderBinDetails( 0, std::string( "RenderBin" ) );
             sd->setStateSet( stateset_0.get() );
 
             geode_0->addDrawable( sd.get() );
@@ -336,11 +342,11 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
     if( _xray_ID == 0 )
     {
-        shader->Phong( _tankGeometry );
+        shader->Phong( _tankGeometry.get() );
     }
     else if( _xray_ID == 1 )
     {
-        shader->XRay( _tankGeometry );
+        shader->XRay( _tankGeometry.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

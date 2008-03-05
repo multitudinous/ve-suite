@@ -59,6 +59,8 @@ private:
     std::vector< double > time_steps;
     std::vector< double > result_steps;
 
+    Shaders* shader;
+
     std::map< int, osg::ref_ptr< display::DigitalGauge > > _gauges;
 
     osg::ref_ptr< osg::Sequence > capsule_sequence;
@@ -73,8 +75,6 @@ private:
     osg::ref_ptr< osg::MatrixTransform > transform_ferm;
     osg::ref_ptr< osg::MatrixTransform > transform_imp;
     osg::ref_ptr< osg::MatrixTransform > transform_tank;
-
-    Shaders* shader;
 };
 
 extern "C"

@@ -16,8 +16,8 @@ public:
     Shaders();
     ~Shaders();
 
-    void Phong( osg::ref_ptr< osg::Node > node );
-    void XRay( osg::ref_ptr< osg::Node > node );
+    void Phong( osg::Node* node );
+    void XRay( osg::Node* node );
 
 private:
     void Initialize();

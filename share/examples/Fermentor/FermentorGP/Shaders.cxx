@@ -65,12 +65,12 @@ void Shaders::Initialize()
     m_phong->setRenderBinDetails( 0, std::string( "RenderBin" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Shaders::Phong( osg::ref_ptr< osg::Node > node )
+void Shaders::Phong( osg::Node* node )
 {
     node->setStateSet( m_phong.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Shaders::XRay( osg::ref_ptr< osg::Node > node )
+void Shaders::XRay( osg::Node* node )
 {
     node->setStateSet( m_xray.get() );
 }

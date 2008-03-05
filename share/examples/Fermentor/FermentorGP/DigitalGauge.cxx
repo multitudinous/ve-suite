@@ -69,7 +69,7 @@ void DigitalGauge::Initialize()
 {
     osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/digital_display.ive" );
     addChild( temp.get() );
-    m_shader->Phong( temp );
+    m_shader->Phong( temp.get() );
 
     osg::ref_ptr< osg::Geode > geode = new osg::Geode();
     m_nameText = new osgText::Text();
