@@ -1236,7 +1236,10 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
     vectorPath/=std::string("vectors");
     try
     {
-       boost::filesystem::is_directory( vectorPath );
+       if( !boost::filesystem::is_directory( vectorPath ) )
+       {
+           boost::filesystem::create_directory( vectorPath );
+       }
     }
     catch ( const std::exception& ex )
   	{
@@ -1248,7 +1251,10 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
     vectorPath/=(_vectorNames[whichVector]);
     try
     {
-        boost::filesystem::is_directory( vectorPath );
+        if( !boost::filesystem::is_directory( vectorPath ) )
+        {
+            boost::filesystem::create_directory( vectorPath );
+        }
     }
     catch ( const std::exception& ex )
 	{
@@ -1295,19 +1301,25 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
     scalarPath/=std::string("scalars");
     try
     {
-      boost::filesystem::is_directory( scalarPath );
+        if( !boost::filesystem::is_directory( scalarPath ) )
+        {
+            boost::filesystem::create_directory( scalarPath );
+        }
     }
     catch ( const std::exception& ex )
 	{
-	   std::cout << ex.what() << std::endl;
-      boost::filesystem::create_directory( scalarPath );
-	   std::cout << "...so we made it for you..." << std::endl;
+        std::cout << ex.what() << std::endl;
+        boost::filesystem::create_directory( scalarPath );
+        std::cout << "...so we made it for you..." << std::endl;
 	}
 
     scalarPath/=(_scalarNames[whichScalar]);
     try
     {
-        boost::filesystem::is_directory( scalarPath );
+        if( !boost::filesystem::is_directory( scalarPath ) )
+        {
+            boost::filesystem::create_directory( scalarPath );
+        }
     }
     catch ( const std::exception& ex )
 	{
