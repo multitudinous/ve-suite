@@ -82,7 +82,7 @@ Source: {#JUGGLERINSTHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion r
 Source: {#JUGGLERINSTHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs; Components: juggler
 Source: {#VTKHOME}\include\*; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
-Source: {#XERCESHOME}\include\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
+Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 ;Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Attribs: readonly; Flags: overwritereadonly uninsremovereadonly ignoreversion recursesubdirs; Components: depsbuildenv
 Source: {#VTKHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
 Source: {#OSGHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: overwritereadonly recursesubdirs uninsremovereadonly ignoreversion; Components: depsbuildenv
