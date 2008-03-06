@@ -145,6 +145,7 @@ Canvas::~Canvas()
     for( std::map< std::string, Network* >::iterator iter = 
         networks.begin(); iter != networks.end(); ++iter )
     {
+        //iter->second->RemoveAllEvents();
         delete iter->second;
     }
     networks.clear();
@@ -413,7 +414,7 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     {
         parent->AddPendingEvent( cleanEvent );    
         
-        Refresh( true );
+        //Refresh( true );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

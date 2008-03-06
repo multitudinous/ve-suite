@@ -176,8 +176,7 @@ UIPluginBase::UIPluginBase() :
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
 {
-std::cout << " deleting plugin" << std::endl;
-    /*if( !mDialogMemoryMap.empty() )
+    //if( !mDialogMemoryMap.empty() )
     {
         DisconnectPluginDialogsDestroyEvent( dlg );
         DisconnectPluginDialogsDestroyEvent( result_dlg );
@@ -190,9 +189,7 @@ std::cout << " deleting plugin" << std::endl;
         DisconnectPluginDialogsDestroyEvent( m_iconChooser );
         DisconnectPluginDialogsDestroyEvent( vistab );
         //DisconnectPluginDialogsDestroyEvent( cadDialog );
-    }*/
-delete dlg;
-std::cout << " deleting plugin 2"  << std::endl;
+    }
 
     delete [] poly;
     poly = 0;
@@ -2097,16 +2094,17 @@ void UIPluginBase::ConfigurePluginDialogs( wxWindow* window )
     window->SetExtraStyle( ~wxWS_EX_BLOCK_EVENTS );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
+void UIPluginBase::DisconnectPluginDialogsDestroyEvent( wxWindow* window ) 
 {
     if( !window )
     {
         return;
     }
     
-    window->Disconnect( wxEVT_DESTROY, 
-        wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
-}*/
+    delete window;
+    //window->Disconnect( wxEVT_DESTROY, 
+    //    wxWindowDestroyEventHandler(UIPluginBase::OnChildDestroy), NULL, this );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::CheckPluginMapOnExit()
 {

@@ -283,7 +283,7 @@ protected:
     ///Check the active id against the plugin id
     bool CheckID();
     ///Disconnect the destroy event handler
-    //void DisconnectPluginDialogsDestroyEvent( wxWindow* window );
+    void DisconnectPluginDialogsDestroyEvent( wxWindow* window );
     ///Remove all the dialogs that were opened for this plugin
     void RemovePluginDialogsFromCanvas();
     ///Remove a specific plugin from the canvas dialog

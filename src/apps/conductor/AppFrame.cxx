@@ -121,7 +121,7 @@ using namespace ves::open::xml::shader;
 
 BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_TIMER( TIMER_ID, AppFrame::OnTimer )
-    EVT_CLOSE( AppFrame::OnFrameClose )
+    //EVT_CLOSE( AppFrame::OnFrameClose )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
@@ -319,11 +319,15 @@ AppFrame::~AppFrame()
     // Clean up the canvas and plugins first because
     // if left to wx, on windows things get messy with unloading plugins
     // and cleaning up memory at the same time
-    /*if( canvas )
+	//CloseAspenSimulation();
+    //Cleanup all the plugins before wx does
+    //mDestoryFrame = true;
+    canvas->CleanUpNetworks();
+    if( canvas )
     {
-        wx_nw_splitter->RemoveChild( canvas );
+        //wx_nw_splitter->RemoveChild( canvas );
         canvas->Destroy();
-    }*/
+    }
 
     //Shutdown xplorer
     if (( GetDisplayMode() == "Desktop" ) ||
@@ -644,14 +648,14 @@ void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
     Close( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
+/*void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )
 {
     //Close Aspen no matter how conductor us shutdown
 	CloseAspenSimulation();
     //Cleanup all the plugins before wx does
     mDestoryFrame = true;
     canvas->CleanUpNetworks();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::CreateMenu()
 {
@@ -2388,13 +2392,14 @@ void AppFrame::OnChildDestroy( wxWindowDestroyEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
-    if( mDestoryFrame )
+    /*if( mDestoryFrame )
     {
         //::wxMilliSleep( 100 );
 
-        wxWindow::Destroy();
+        //Close( true );
+        //wxWindow::Destroy();
         return;
-    }
+    }*/
     
     //Reloading plugins
     av_modules->ResetPluginTree();

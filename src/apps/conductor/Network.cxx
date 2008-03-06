@@ -2204,7 +2204,7 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
     std::map< int, Module >::iterator iter;
     iter = modules.find( idBeingDeleted );
     modules.erase( iter );
-    std::cout << " erasing the module" << std::endl;
+    //std::cout << " erasing the module" << std::endl;
     
     //Send event to canvas
     if( !modules.empty() )
