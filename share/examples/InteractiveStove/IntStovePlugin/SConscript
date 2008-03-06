@@ -29,9 +29,7 @@ lib_env.AppendUnique( LIBS = ['ves_conductor_plugin',
 lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
                             pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
 
-if GetPlatform() == 'win32':
-   lib_env.AppendUnique( CPPDEFINES = [ 'LOKI_DLL' ] )
-else:
+if GetPlatform() != 'win32':
    lib_env.ParseConfig( 'wx-config --libs gl' )
 
 vpr_options.apply( lib_env )

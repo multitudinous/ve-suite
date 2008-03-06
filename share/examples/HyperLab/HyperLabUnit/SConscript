@@ -27,7 +27,6 @@ lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open' ),
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY',
                                'WIN32',
                                '_WINDOWS',
-                               'LOKI_DLL',
                                '_AFXDLL' ] )
   
 xerces_options.apply( lib_env )

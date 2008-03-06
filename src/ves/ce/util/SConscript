@@ -17,10 +17,6 @@ lib_env.Append(LIBPATH = [ pj('#', buildDir, 'src', 'ves', 'open'),
 
 xerces_options.apply( lib_env )
 tao_options.apply( lib_env )
-
-
-if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
  
 lib_env.Append( CPPDEFINES = ['VE_CE_UTILS_LIBRARY'])
 

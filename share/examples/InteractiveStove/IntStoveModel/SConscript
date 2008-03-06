@@ -26,7 +26,6 @@ lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 
 if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
    lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
    lib_env['no_import_lib'] = 1
    lib_env['WINDOWS_INSERT_MANIFEST'] = False

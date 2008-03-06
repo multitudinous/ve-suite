@@ -18,7 +18,6 @@ lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
                             pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
 #lib_env.Append( CPPPATH = [] )
 if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = [ 'LOKI_DLL' ] )
    lib_env['no_import_lib'] = 1
    #lib_env['SHLINKFLAGS'] = '$LINKFLAGS /dll /MANIFEST:NO'
    lib_env['WINDOWS_INSERT_MANIFEST'] = False

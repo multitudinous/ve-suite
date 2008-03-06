@@ -32,7 +32,6 @@ lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
 			                 pj(RootDir, buildDir, 'src', 'ves', 'ce', 'unitwrapper')])
 
 if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
    lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
 
 tao_options.apply( lib_env )

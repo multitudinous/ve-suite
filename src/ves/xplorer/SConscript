@@ -99,7 +99,6 @@ lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = ['LOKI_DLL'])
    lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
    
 if GetPlatform() == 'darwin':

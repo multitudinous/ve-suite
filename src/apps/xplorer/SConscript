@@ -55,9 +55,6 @@ bulletVersion = bullet_options.getVersion()
 env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
 
-if GetPlatform() == 'win32':
-   env.Append( CPPDEFINES = ['LOKI_DLL'])
-
 resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns'), 
     pj( RootDir, 'src', 'apps', 'xplorer','vrjuggler.plist')]
    

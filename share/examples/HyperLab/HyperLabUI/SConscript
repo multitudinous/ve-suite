@@ -17,8 +17,6 @@ lib_env.Append( LIBS = ['ves_conductor_plugin',
 lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','conductor' ),
                             pj('#', buildDir, 'src','ves','open', 'xml' ) ] )
 #lib_env.Append( CPPPATH = [] )
-if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = [ 'LOKI_DLL' ] )
 
 vpr_options.apply( lib_env )
 wxwidgets_options.apply( lib_env )

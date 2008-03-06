@@ -28,9 +28,6 @@ env.Append(LIBPATH = [
 xerces_options.apply( env )
 boost_options.apply( env )
 tao_options.apply( env )
-
-if GetPlatform() == 'win32':
-   env.Append( CPPDEFINES = ['LOKI_DLL'])
    
 ce_prog = ves_pkg.createProgram('ves_ce' + env["PROGSUFFIX"], env, 'bin')
 ce_prog.addSources( srcs )

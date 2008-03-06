@@ -23,8 +23,6 @@ bulletVersion = bullet_options.getVersion()
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY',
                                'BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                                'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )
-if GetPlatform() == 'win32':
-   lib_env.Append( CPPDEFINES = [ 'LOKI_DLL' ] )
 
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
