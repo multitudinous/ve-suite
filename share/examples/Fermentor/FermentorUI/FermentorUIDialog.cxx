@@ -131,6 +131,8 @@ void FermentorUIDialog::_buildPage()
     _XRayRadioBox = new wxRadioBox( this, XRAY_ID_RADIOBOX, _("X-Ray"), wxDefaultPosition, wxDefaultSize, 2, xraymode, 1, wxRA_SPECIFY_COLS );
     _LoopRadioBox = new wxRadioBox( this, LOOP_ID_RADIOBOX, _("Mode"), wxDefaultPosition, wxDefaultSize, 2, loopmode, 1, wxRA_SPECIFY_COLS );
 
+    _XRayRadioBox->SetSelection( 1 );
+
     _RotationSlider = new wxSlider( this, ROTATION_SLIDER, 0, 0, 5, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
     _SimulationSlider = new wxSlider( this, SIMULATION_SLIDER, 0, 0, 10, wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL );
 

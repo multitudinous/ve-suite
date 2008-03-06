@@ -98,8 +98,7 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     _fermentorGeometry = osgDB::readNodeFile( "Models/fermentor_noimpeller.ive" );
     _impellerGeometry = osgDB::readNodeFile( "Models/impeller_fixed.ive" );
     _tankGeometry = osgDB::readNodeFile( "Models/opaque_tank.ive" );
-    //shader->Phong( _impellerGeometry.get() );
-    shader->Phong( _tankGeometry.get() );
+    shader->XRay( _tankGeometry.get() );
 
     transform_ferm->addChild( _fermentorGeometry.get() );
     transform_imp->addChild( _impellerGeometry.get() );
