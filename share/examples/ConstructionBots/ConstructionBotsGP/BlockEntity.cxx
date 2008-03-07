@@ -29,14 +29,11 @@ BlockEntity::BlockEntity( osg::ref_ptr< Construction::Block > block,
                           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( block.get(), pluginDCS, physicsSimulator ),
-m_geometry( block.get() ),
-m_constraint( 0 )
-//start( false )
+m_block( block.get() ),
+m_constraint( 0 ),
+m_location( 0, 0 )
 {
-	//location[0] = location[1] = location[2] = 0.0f;
-	//sideState[0] = sideState[1] = sideState[2] = sideState[3] = false;
-
-    //set the uuid on the osg node so that we can get back to vexml
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 BlockEntity::~BlockEntity()
@@ -53,7 +50,12 @@ BlockEntity::~BlockEntity()
 ////////////////////////////////////////////////////////////////////////////////
 Construction::Block* BlockEntity::GetGeometry()
 {
-    return m_geometry.get();
+    return m_block.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+std::map< std::pair< int, int >, bool > BlockEntity::GetOccMatrix()
+{
+	return m_occMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetNameAndDescriptions( int number )
@@ -103,51 +105,13 @@ void BlockEntity::SetConstraints( int gridSize )
     m_physicsSimulator->GetDynamicsWorld()->addConstraint( m_constraint );
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-void BlockEntity::SetOccMatrix( std::vector< bool > temp )
+void BlockEntity::SetOccMatrix( std::map< std::pair< int, int >, bool > occMatrix )
 {
-	for( int i=0; i < (int)temp.size(); i++ )
-	{
-		occMatrix.push_back( temp.at( i ) );
-	}
+    m_occMatrix = occMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::SetLocation( osg::Vec3 temp )
+void BlockEntity::UpdateSideStates()
 {
-	location.set( temp );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::SetSideStates( bool* temp )
-{
-	for(int i = 0; i < 4; i++ )
-	{
-		sideState[i] = temp[i];
-	}
-}
-////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::SetStartBlock( bool temp )
-{
-   start = temp;
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::CADEntity* BlockEntity::GetEntity()
-{
-	return entity;
-}
-////////////////////////////////////////////////////////////////////////////////
-std::vector< bool > BlockEntity::GetOccMatrix()
-{
-	return occMatrix;
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Vec3 BlockEntity::GetLocation()
-{
-	return location;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool* BlockEntity::GetSideStates()
-{
-	return sideState;
-}
-////////////////////////////////////////////////////////////////////////////////
-*/

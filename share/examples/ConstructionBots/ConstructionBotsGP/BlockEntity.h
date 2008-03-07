@@ -29,49 +29,32 @@ public:
 
     Construction::Block* GetGeometry();
 
+    //Get the block's occupancy matrix
+    std::map< std::pair< int, int >, bool > GetOccMatrix();
+
     void SetNameAndDescriptions( int number );
 
     void SetConstraints( int gridSize );
 
-    /*
     //Set the block's occupancy matrix
-    void SetOccMatrix( std::vector< bool > temp );
-    //Set the block's location
-    void SetLocation( osg::Vec3 temp );
-    //Set the block's side states
-    void SetSideStates( bool* temp );
-    //Set the starting block
-    void SetStartBlock( bool temp );
+    void SetOccMatrix( std::map< std::pair< int, int >, bool > occMatrix );
 
-    //Get the block's CADEntity
-    ves::xplorer::scenegraph::CADEntity* GetEntity();
-    //Get the block's occupancy matrix
-    std::vector< bool > GetOccMatrix();
-    //Get the block's location
-    osg::Vec3 GetLocation();
-    //Get the block's side states
-    bool* GetSideStates();
-    */
+    void UpdateSideStates();
 
 private:
-    osg::ref_ptr< Construction::Block > m_geometry;
+    osg::ref_ptr< Construction::Block > m_block;
 
     btGeneric6DofConstraint* m_constraint;
-/*
-    ves::xplorer::scenegraph::CADEntity* entity;
 
     //Blocks have a copy of the occupancy matrix
-    std::vector< bool > occMatrix;
+    std::map< std::pair< int, int >, bool > m_occMatrix;
     //Blocks store location info for shared coordinate system
-    osg::Vec3 location;
-    //Is block starting block?
-    bool start;
+    std::pair< int, int > m_location;
     //Are blocks attatched to sides or not
             //[0]-F
     //[1]-L         //[3]-R
             //[2]-N
-    bool sideState[4];
-    */
+    bool sideState[ 4 ];
 };
 }
 

@@ -127,7 +127,7 @@ void SiteSensor::CollectInformation()
                                               sitePosition[ 1 ] - agentPosition[ 1 ],
                                               0 );
 
-                        if( siteVector.length() < 1.915 )//sqrt( 2 * 0.5 )
+                        if( siteVector.length() < 1.415 )//sqrt( 2 * 0.5 )
                         {
                             m_closeToSite = true;
                         }

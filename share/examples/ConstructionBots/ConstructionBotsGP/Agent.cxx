@@ -39,10 +39,7 @@ void Agent::CreateAgent()
 	if( !image )
 	{
         std::cout << "Invalid texture file!" << std::endl;
-        exit( 0 );
 	}
-
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
 
     osg::ref_ptr< osg::Geometry > agent = new osg::Geometry();
     osg::ref_ptr< osg::Geometry > lines = new osg::Geometry();

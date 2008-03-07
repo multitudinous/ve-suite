@@ -15,14 +15,11 @@
 
 //C/C++ Libraries
 #include <iostream>
-#include <string>
 
 using namespace Construction;
 
 ////////////////////////////////////////////////////////////////////////////////
 Block::Block()
-:
-m_isAttached( false )
 {
     CreateBlock();
 }
@@ -33,7 +30,7 @@ osg::Geode( block, copyop )
 {
     if( &block != this )
     {
-        m_isAttached = block.m_isAttached;
+        //m_isAttached = block.m_isAttached;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -49,17 +46,15 @@ void Block::CreateBlock()
 	if( !image )
 	{
         std::cout << "Invalid texture file!" << std::endl << std::endl;
-        exit( 0 );
 	}
 
-    osg::ref_ptr< osg::Geode > geode = new osg::Geode();
-
     osg::ref_ptr< osg::Geometry > block = new osg::Geometry();
-    osg::ref_ptr< osg::Geometry > lines = new osg::Geometry();
+    m_sideStates.insert( std::make_pair( "Left", new osg::Geometry() ) );
+    m_sideStates.insert( std::make_pair( "Near", new osg::Geometry() ) );
+    m_sideStates.insert( std::make_pair( "Right", new osg::Geometry() ) );
+    m_sideStates.insert( std::make_pair( "Far", new osg::Geometry() ) );
 
     osg::ref_ptr< osg::Vec3Array > blockVertices = new osg::Vec3Array();
-    osg::ref_ptr< osg::Vec3Array > lineVertices = new osg::Vec3Array();
-
     //Left
     blockVertices->push_back( osg::Vec3( -0.5f,  0.5f,  0.5f ) );
     blockVertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
@@ -91,37 +86,50 @@ void Block::CreateBlock()
     blockVertices->push_back( osg::Vec3(  0.5f,  0.5f, -0.5f ) );
     blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
 
-    lineVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
-    lineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-
-    lineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-    lineVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-
-    lineVertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
-    lineVertices->push_back( osg::Vec3( 0.5f,  0.5f, 0.5f ) );
-
-    lineVertices->push_back( osg::Vec3(  0.5f, 0.5f, 0.5f ) );
-    lineVertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
-
     block->setVertexArray( blockVertices.get() );
-    lines->setVertexArray( lineVertices.get() );
+
+    osg::ref_ptr< osg::Vec3Array > leftLineVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > nearLineVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > rightLineVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > farLineVertices = new osg::Vec3Array();
+    //Left
+    leftLineVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
+    leftLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+    m_sideStates[ "Left" ]->setVertexArray( leftLineVertices.get() );
+    //Near
+    nearLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+    nearLineVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
+    m_sideStates[ "Near" ]->setVertexArray( nearLineVertices.get() );
+    //Right
+    rightLineVertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
+    rightLineVertices->push_back( osg::Vec3( 0.5f,  0.5f, 0.5f ) );
+    m_sideStates[ "Right" ]->setVertexArray( rightLineVertices.get() );
+    //Far
+    farLineVertices->push_back( osg::Vec3(  0.5f, 0.5f, 0.5f ) );
+    farLineVertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
+    m_sideStates[ "Far" ]->setVertexArray( farLineVertices.get() );
 
 	osg::ref_ptr< osg::Vec4Array > blockColor = new osg::Vec4Array();
 	blockColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
     block->setColorArray( blockColor.get() );
     block->setColorBinding( osg::Geometry::BIND_OVERALL );
 	
-	osg::ref_ptr< osg::Vec4Array > lineColor = new osg::Vec4Array();
-	for( int i = 0; i < 4; ++i )
-	{
-	    lineColor->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
-	}
+	osg::ref_ptr< osg::Vec4Array > leftLineColor = new osg::Vec4Array();
+    osg::ref_ptr< osg::Vec4Array > nearLineColor = new osg::Vec4Array();
+    osg::ref_ptr< osg::Vec4Array > rightLineColor = new osg::Vec4Array();
+    osg::ref_ptr< osg::Vec4Array > farLineColor = new osg::Vec4Array();
 
-    lines->setColorArray( lineColor.get() );
-    lines->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+	leftLineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    nearLineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    rightLineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    farLineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+
+    m_sideStates[ "Left" ]->setColorArray( leftLineColor.get() );
+    m_sideStates[ "Near" ]->setColorArray( nearLineColor.get() );
+    m_sideStates[ "Right" ]->setColorArray( rightLineColor.get() );
+    m_sideStates[ "Far" ]->setColorArray( farLineColor.get() );
 
     osg::ref_ptr< osg::Vec3Array > blockNormals = new osg::Vec3Array();
-
     //Left
     blockNormals->push_back( osg::Vec3( -1.0f,  0.0f,  0.0f ) );
     //Near
@@ -138,16 +146,17 @@ void Block::CreateBlock()
     block->setNormalArray( blockNormals.get() );
     block->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
-    osg::ref_ptr< osg::Vec3Array > lineNormals = new osg::Vec3Array();
-    lineNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
-    lines->setNormalArray( lineNormals.get() );
-    lines->setNormalBinding( osg::Geometry::BIND_OVERALL );
-
     block->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, blockVertices.get()->size() ) );
-    lines->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, lineVertices.get()->size() ) );
+    m_sideStates[ "Left" ]->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, leftLineVertices->size() ) );
+    m_sideStates[ "Near" ]->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, nearLineVertices->size() ) );
+    m_sideStates[ "Right" ]->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, rightLineVertices->size() ) );
+    m_sideStates[ "Far" ]->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, farLineVertices->size() ) );
 
     osg::ref_ptr< osg::Vec2Array > texCoord = new osg::Vec2Array();
-
     //Left
     texCoord->push_back( osg::Vec2( 0, 1 ) );
     texCoord->push_back( osg::Vec2( 0, 0 ) );
@@ -191,10 +200,14 @@ void Block::CreateBlock()
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 2.0f );
     lineStateSet->setAttribute( lineWidth.get() );
-    lines->setStateSet( lineStateSet.get() );
 
+    std::map< std::string, osg::ref_ptr< osg::Geometry > >::const_iterator itr;
+    for( itr = m_sideStates.begin(); itr != m_sideStates.end(); ++itr )
+    {
+        itr->second->setStateSet( lineStateSet.get() );
+    }
+    
     addDrawable( block.get() );
-    addDrawable( lines.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Block::SetColor( float r, float g, float b, float a )

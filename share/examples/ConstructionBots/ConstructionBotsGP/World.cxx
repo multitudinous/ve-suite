@@ -29,7 +29,6 @@
 
 // --- C/C++ Libraries --- //
 #include <iostream>
-#include <fstream>
 #include <ctime>
 
 using namespace Construction;
@@ -116,68 +115,21 @@ void World::InitFramework()
     }
 #endif
 
-    //Ifstream constructor opens the occupancy matrix file
-    std::ifstream occMatFile( "Data/omat.txt", std::ios::in );			
-	
-    //Test for valid file
-    if( !occMatFile )
-    {														
-	    std::cerr << "File could not be opened\n";
-
-	    exit( 1 );
-    }
-
-    int itr = -1;
-    int startItr = 0;
-    int numBlocks = 0;
-    int numAgents = 0;
-    char tempChar = 0;
-
-    std::vector< bool > occMatrix;
-
-    while( occMatFile >> tempChar )
-    {
-        if( itr == -1 )
-	    {
-            numAgents = atoi( &tempChar );
-        }
-	    else if( tempChar == '0' )
-	    {
-		    occMatrix.push_back( false );
-	    }
-	    else if( tempChar == '1' )
-	    {
-		    occMatrix.push_back( true );
-            ++numBlocks;     
-	    }
-	    else if( tempChar == 'S' )
-	    {
-            startItr = itr + 1;
-		    occMatrix.push_back( true );
-	    }
-
-        ++itr;
-    }
-
+    std::map< std::pair< int, int >, bool > occMatrix;
+    int numBlocks = 12;
+    int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
-    if( occMatrix.size() % 2 )
-    {
-        std::cout << "Occupancy matrix successfully initialized!" << std::endl;
-    }
-    else
-    {
-        std::cout << "Error in initializing occupancy matrix!" << std::endl;
-        std::cout << "Please make the grid size odd for centrality purposes!" << std::endl;
+    int gridSize = 41;
 
-        exit( 1 );
+    int halfPosition = static_cast< int >( gridSize * 0.5f );
+    for( int j = 0; j < gridSize; ++j )
+    {
+        for( int i = 0; i < gridSize; ++i )
+        {
+            occMatrix.insert( std::make_pair( std::make_pair( 
+                i - halfPosition, -j + halfPosition ), false ) );
+        }
     }
-
-    double startBlockPosition[ 3 ] = { 0, 0, m_worldScale * 0.5 };
-    int gridSize = sqrt( static_cast< double >( occMatrix.size() ) );
-    int modulus = startItr % gridSize;
- 
-    startBlockPosition[ 0 ] = modulus - ( ( gridSize * 0.5 ) + ( m_worldScale * 0.5 ) );
-    startBlockPosition[ 1 ] = ( ( gridSize * 0.5 ) - ( m_worldScale * 0.5 ) ) - ( ( startItr - modulus ) / gridSize );
 
     //Tell PhysicsSimulator to store collision information
     m_physicsSimulator->SetCollisionInformation( true );
@@ -198,10 +150,10 @@ void World::InitFramework()
         new Construction::Block(),
         m_pluginDCS.get(),
         m_physicsSimulator );
-    //m_entities.push_back( m_startBlock );
     m_startBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 1.0 );
     //Set name and descriptions for blocks
     m_startBlock->SetNameAndDescriptions( 0 );
+    double startBlockPosition[ 3 ] = { 0, 0, m_worldScale * 0.5 };
     m_startBlock->GetDCS()->SetTranslationArray( startBlockPosition );
     m_startBlock->InitPhysics();
     m_startBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
@@ -209,7 +161,6 @@ void World::InitFramework()
     //Set up map to entities
     m_entities[ m_startBlock->GetDCS()->GetName() ] = m_startBlock;
     
-
     //Initialize the blocks
     for( int i = 0; i < numBlocks; ++i )
     {
@@ -269,6 +220,9 @@ void World::InitFramework()
 
     //Create random positions for the objects in the framework
     CreateRandomPositions( gridSize );
+
+    //Push back the starting block
+    m_blocks.push_back( m_startBlock );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void World::CreateRandomPositions( int gridSize )
@@ -364,46 +318,61 @@ void World::CommunicatingBlocksAlgorithm()
         blockSensor->RemoveLine();
         siteSensor->RemoveLine();
 
-        holdBlockSensor->CollectInformation();
-        if( holdBlockSensor->HoldingBlock() )
+        if( agent->IsBuilding() )
         {
-            siteSensor->CollectInformation();
-            if( siteSensor->SiteInView() )
-            {
-                if( siteSensor->CloseToSite() )
-                {
-                    agent->Build();
-                }
-                else
-                {
-                    agent->GoToSite();
-                }
-            }
+            agent->Build();
         }
         else
         {
-            blockSensor->CollectInformation();
-            if( blockSensor->BlockInView() )
+            holdBlockSensor->CollectInformation();
+            if( holdBlockSensor->HoldingBlock() )
             {
-                if( blockSensor->CloseToBlock() )
+                siteSensor->CollectInformation();
+                if( siteSensor->SiteInView() )
                 {
-                    Construction::BlockEntity* targetEntity = static_cast< Construction::BlockEntity* >
-                        ( m_entities[ agent->GetTargetDCS()->GetName() ] );
-                    bool collision = agent->GetPhysicsRigidBody()->
-                        CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
-                    if( collision )
+                    if( siteSensor->CloseToSite() )
                     {
-                        agent->PickUpBlock( targetEntity );
+                        Construction::BlockEntity* targetEntity = static_cast< Construction::BlockEntity* >
+                            ( m_entities[ agent->GetTargetDCS()->GetName() ] );
+                        bool collision = agent->GetPhysicsRigidBody()->
+                            CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
+                        if( collision )
+                        {
+                            agent->SetBuildMode( true );
+                            //agent->Get
+                        }
+                    }
+                    else
+                    {
+                        agent->GoToSite();
                     }
                 }
-                else
+            }
+            else
+            {
+                blockSensor->CollectInformation();
+                if( blockSensor->BlockInView() )
                 {
-                    agent->GoToBlock();
+                    if( blockSensor->CloseToBlock() )
+                    {
+                        Construction::BlockEntity* targetEntity = static_cast< Construction::BlockEntity* >
+                            ( m_entities[ agent->GetTargetDCS()->GetName() ] );
+                        bool collision = agent->GetPhysicsRigidBody()->
+                            CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
+                        if( collision )
+                        {
+                            agent->PickUpBlock( targetEntity );
+                        }
+                    }
+                    else
+                    {
+                        agent->GoToBlock();
+                    }
                 }
             }
-        }
 
-        agent->WanderAround();
+            agent->WanderAround();
+        }
 
         obstacleSensor->CollectInformation();
         if( obstacleSensor->ObstacleDetected() )
@@ -420,14 +389,5 @@ void World::PreFrameUpdate()
     {
         CommunicatingBlocksAlgorithm();
     }
-    else
-    {
-        std::cout << "Structure is finished!" << std::endl;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* World::GetPluginDCS()
-{
-    return m_pluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

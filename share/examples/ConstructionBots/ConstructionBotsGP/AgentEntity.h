@@ -45,6 +45,7 @@ public:
     void SetNameAndDescriptions( int number );
     void SetConstraints( int gridSize );
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
+    void SetBuildMode( bool buildMode );
 
     bool IsBuilding();
 

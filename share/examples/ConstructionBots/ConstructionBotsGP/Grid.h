@@ -5,7 +5,7 @@
 #include <osg/Geode>
 
 // --- C/C++ Libraries --- //
-//#include <vector>
+#include <vector>
 
 namespace Construction
 {
@@ -13,7 +13,7 @@ class Grid : public osg::Geode
 {
 public:
     Grid();
-    Grid( int gridSize, std::vector< bool > occMatrix );
+    Grid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix );
 
 protected:
     virtual ~Grid();
@@ -23,7 +23,7 @@ public:
    
     META_Node( Construction, Grid );
    	
-    void CreateGrid( int gridSize, std::vector< bool > occMatrix );
+    void CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix );
 
 private:
 

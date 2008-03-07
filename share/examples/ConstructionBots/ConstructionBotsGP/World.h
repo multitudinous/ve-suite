@@ -57,8 +57,6 @@ public:
 
     void PreFrameUpdate();
 
-    ves::xplorer::scenegraph::DCS* GetPluginDCS();
-
 private:
     void InitFramework();
     void CreateRandomPositions( int gridSize );
@@ -67,6 +65,8 @@ private:
 
     bool m_structureNotComplete;
 
+    int m_worldScale;
+
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
     std::map< std::string, ves::xplorer::scenegraph::CADEntity* > m_entities;
@@ -74,8 +74,6 @@ private:
     std::vector< Construction::BlockEntity* > m_blocks;
     std::vector< Construction::AgentEntity* > m_agents;
     Construction::BlockEntity* m_startBlock;
-
-    int m_worldScale;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
 

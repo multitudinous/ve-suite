@@ -4,6 +4,15 @@
 // --- OSG Includes --- //
 #include <osg/Geode>
 
+namespace osg
+{
+    class Geometry;
+}
+
+// --- C/C++ Libraries --- //
+#include <map>
+#include <string>
+
 namespace Construction
 {
 class Block : public osg::Geode
@@ -24,7 +33,7 @@ public:
     void SetColor( float r, float g, float b, float a );
 
 private:
-    bool m_isAttached;
+    std::map< std::string, osg::ref_ptr< osg::Geometry > > m_sideStates;
 };
 }
 
