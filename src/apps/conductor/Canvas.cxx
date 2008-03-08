@@ -309,15 +309,15 @@ void Canvas::SetTreeViewWindow( wxWindow* treeView )
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::CleanUpNetworks()
 {
-    std::cout << this->GetChildren().size() << std::endl;
+    //std::cout << this->GetChildren().size() << std::endl;
     RemoveEventHandler( networks[this->activeId] );
     networks[this->activeId]->RemoveAllEvents();        
 
     size_t numChild = this->GetChildren().size();
     for( size_t i = 0; i < numChild;)
     {
-        std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetName().c_str() ) << std::endl;
-        std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetLabel().c_str() ) << std::endl;
+        //std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetName().c_str() ) << std::endl;
+        //std::cout << ConvertUnicode( GetChildren().Item( i )->GetData()->GetLabel().c_str() ) << std::endl;
         if( dynamic_cast< wxDialog* >( GetChildren().Item( i )->GetData() ) )
         {
             //GetChildren().Item( i )->GetData()->Destroy();
@@ -333,11 +333,9 @@ void Canvas::CleanUpNetworks()
     for( std::map < std::string, Network* >::iterator iter = networks.begin();
             iter != networks.end(); ++iter )
     {
-        //std::cout << " here 1 " << std::endl;
         //we have to do this because the canvas is not destroyed when
         //new or open is selected
         iter->second->RemovePluginDialogs();
-        //std::cout << " here 2 " << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
