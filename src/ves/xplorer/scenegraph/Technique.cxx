@@ -88,40 +88,46 @@ osg::Node* Technique::GetOverrideChild( int )
 void Technique::TraverseImplementation( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node )
 {
     //Define passes if necessary
-    if( m_passes.empty() )
+    /*if( m_passes.empty() )
     {
         DefinePasses();
-    }
+    }*/
 
     //Special actions must be taken if the node visitor is actually a CullVisitor
     osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( &nv );
-
+    //Traverse the override node if defined
+    if( !cv )
+    {
+        node->InheritedTraverse( nv );
+        return;
+    }
+    //Otherwise traverse children as a Group would do
+    /*osg::Node* override = GetOverrideChild( i );
+    if( override )
+    {
+        override->accept( nv );
+    }
+    else*/
+    
     //Traverse all passes
     for( int i = 0; i < GetNumPasses(); ++i )
     {
         //Push the i-th pass' StateSet if necessary
-        if( cv )
+        //if( cv )
         {
             cv->pushStateSet( m_passes[ i ].get() );
         }
 
-        //Traverse the override node if defined
-        //Otherwise traverse children as a Group would do
-        osg::Node* override = GetOverrideChild( i );
-        if( override )
-        {
-            override->accept( nv );
-        }
-        else
         {
             node->InheritedTraverse( nv );
         }
-
+        
         //Pop the StateSet if necessary
-        if( cv )
+        //if( cv )
         {
             cv->popStateSet();
         }
     }
+    
 }
 ////////////////////////////////////////////////////////////////////////////////

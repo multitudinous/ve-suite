@@ -899,12 +899,14 @@ void KeyboardMouse::UpdateSelectionLine()
     osg::Vec3d startPoint, endPoint;
     SetStartEndPoint( &startPoint, &endPoint );
     m_beamLineSegment->set( startPoint, endPoint );
-    DrawLine( startPoint, endPoint );
+    //With the new implementation for the bounding volume this code 
+    //causes the scene to go black
+    //DrawLine( startPoint, endPoint );
 }
 /////////////////////////////////////////////////
 void KeyboardMouse::ProcessNURBSSelectionEvents()
 {
-    UpdateSelectionLine();
+    //UpdateSelectionLine();
     osg::ref_ptr<osgUtil::IntersectorGroup> intersectorGroup = new osgUtil::IntersectorGroup();
     osg::ref_ptr<ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector> intersector =
                             new ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector(m_beamLineSegment->start(),
@@ -945,7 +947,7 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
 {
-    UpdateSelectionLine();
+    //UpdateSelectionLine();
     osgUtil::IntersectVisitor objectBeamIntersectVisitor;
     objectBeamIntersectVisitor.addLineSegment( m_beamLineSegment.get() );
 
