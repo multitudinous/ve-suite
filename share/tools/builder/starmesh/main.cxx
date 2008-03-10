@@ -33,10 +33,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include "VE_Builder/Transient_Tools/Star_Moving_Mesh/transient.h"
+#include </home/abodeely/TSVEG/VE_Suite/share/tools/builder/starmesh/transient.h>
 #include <iostream>                 
 
-int main ( int argc, char* argv[] ) {
+int main ( int argc, char* argv[] )
+{
    Transient *transient = new Transient();
    transient->writeScript();
    transient->writeStarParam();

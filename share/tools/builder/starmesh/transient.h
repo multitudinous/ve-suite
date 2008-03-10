@@ -32,22 +32,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #ifndef TRANSIENT_H
 #define TRANSIENT_H
+
+#include <string>
+
 class Transient
 {
    public:
       Transient( void );
       ~Transient( void );
-      Transient( Transient * );
            
-      int num_time_steps;
-      int post_frequency;
-      int begin_step;
+      int timeSteps;
+      int postFreq;
+      int beginStep;
             
-      void writeScript( void );
-      void writeStarParam( void );
-      void writeTranslatorScript( void );
+      void writeScript( std::string filename, std::string units, long int timeSteps, long int beginStep, long int postFreq );
+      void writeStarParam( std::string filename, long int timeSteps, long int postFreq );
+      void writeTranslatorScript( std::string filename, std::string outputDir, long int timeSteps, long int postFreq );
 };
 #endif 

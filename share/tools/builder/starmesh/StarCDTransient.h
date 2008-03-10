@@ -33,6 +33,8 @@
 #ifndef _STARCDTRANSLATOR_H_
 #define _STARCDTRANSLATOR_H_
 
+#include "transient.h"
+
 #include <wx/frame.h>
 
 class wxButton;
@@ -41,6 +43,7 @@ class wxTextCtrl;
 class wxRadioBox;
 class wxStaticText;
 class wxStaticBox;
+class wxDirDialog;
 
 enum StarCDTranslatorIDs
 {
@@ -50,11 +53,10 @@ enum StarCDTranslatorIDs
     TIME_STEPS,
     BEGINNING_TIME,
     POST_FREQUENCY,
-    INPUT_DIRECTORY,
-    INPUT_DIRECTORY_BUTTON,
     OUTPUT_DIRECTORY,
     OUTPUT_DIRECTORY_BUTTON,
-    TRANSLATE_BUTTON
+    TRANSLATE_BUTTON,
+    QUIT_BUTTON
 };
 
 class StarCDTranslator: public wxFrame
@@ -72,22 +74,34 @@ public:
     ///Creates the controls and sizers
     void BuildGUI();
     
+    void FileName( wxCommandEvent& event );
+    void OutputDirectory( wxCommandEvent& event );
+    void Translate( wxCommandEvent& event );
+    void Quit( wxCommandEvent& event );
+    
 private:
     wxTextCtrl* m_fileName;
-    wxTextCtrl* m_inputDir;
     wxTextCtrl* m_outputDir;
     wxTextCtrl* m_timeSteps;
     wxTextCtrl* m_startTime;
     wxTextCtrl* m_frequency;
     
     wxButton* m_fileNameButton;
-    wxButton* m_inputDirButton;
     wxButton* m_outputDirButton;  
     wxButton* m_translateButton;
     wxButton* m_closeButton;
     
     wxRadioBox* m_units;    
     
+    wxString m_fileNameString;
+    wxString m_outputString;
+    wxString m_unitString;
+    wxString m_totalTimeString;
+    wxString m_beginTimeString;
+    wxString m_postFreqString;
+    
+    Transient* m_transient;
+       
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );

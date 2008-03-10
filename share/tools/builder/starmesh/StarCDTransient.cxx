@@ -38,9 +38,16 @@
 #include <wx/textctrl.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+#include <wx/filedlg.h>
+#include <wx/filename.h>
+#include <wx/dirdlg.h>
+#include <wx/dir.h>
 
 BEGIN_EVENT_TABLE( StarCDTranslator, wxFrame )
-
+    EVT_BUTTON(FILE_NAME_BUTTON, 	StarCDTranslator::FileName)
+    EVT_BUTTON(OUTPUT_DIRECTORY_BUTTON, StarCDTranslator::OutputDirectory)
+    EVT_BUTTON(TRANSLATE_BUTTON,	StarCDTranslator::Translate)
+    EVT_BUTTON(QUIT_BUTTON,	 	StarCDTranslator::Quit)
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,6 +59,8 @@ StarCDTranslator::StarCDTranslator( wxWindow* parent,
 				    long style )
 :wxFrame(parent, -1, title, pos, size, style)
 {
+    //m_inputDirectory = 0;
+
     BuildGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,10 +96,20 @@ void StarCDTranslator::BuildGUI()
     m_units->SetSelection(0);
     fileNameUnitsGroup->Add(m_units, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
+    wxStaticBox* outputDirSizer = new wxStaticBox(this, wxID_ANY, _("Output Directory"));
+    wxStaticBoxSizer* outputDirGroup = new wxStaticBoxSizer(outputDirSizer, wxHORIZONTAL);
+    frameSizer->Add(outputDirGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND, 5);
+
+    m_outputDir = new wxTextCtrl( this, OUTPUT_DIRECTORY, _("Add Output Directory"), wxDefaultPosition, wxDefaultSize, 0 );
+    outputDirGroup->Add(m_outputDir, 3, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+
+    m_outputDirButton = new wxButton( this, OUTPUT_DIRECTORY_BUTTON, _("Browse..."), wxDefaultPosition, wxDefaultSize, 0 );
+    outputDirGroup->Add(m_outputDirButton, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
+    
     wxStaticBox* dataGroupSizer = new wxStaticBox(this, wxID_ANY, _("Transient File Information"));
     wxStaticBoxSizer* dataGroup = new wxStaticBoxSizer(dataGroupSizer, wxHORIZONTAL);
     frameSizer->Add(dataGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND, 5);
-
+    
     wxBoxSizer* totalTimeSizer = new wxBoxSizer(wxVERTICAL);
     dataGroup->Add(totalTimeSizer, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
@@ -118,35 +137,70 @@ void StarCDTranslator::BuildGUI()
     m_frequency = new wxTextCtrl( this, POST_FREQUENCY, _T(""), wxDefaultPosition, wxDefaultSize, 0 );
     postFrequencySizer->Add(m_frequency, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
-    wxStaticBox* inputDirSizer = new wxStaticBox(this, wxID_ANY, _("Input Directory"));
-    wxStaticBoxSizer* inputDirGroup = new wxStaticBoxSizer(inputDirSizer, wxHORIZONTAL);
-    frameSizer->Add(inputDirGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND, 5);
-
-    m_inputDir = new wxTextCtrl( this, INPUT_DIRECTORY, _("Add Input Directory"), wxDefaultPosition, wxDefaultSize, 0 );
-    inputDirGroup->Add(m_inputDir,3, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_inputDirButton = new wxButton( this, INPUT_DIRECTORY_BUTTON, _("Browse..."), wxDefaultPosition, wxDefaultSize, 0 );
-    inputDirGroup->Add(m_inputDirButton, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    wxStaticBox* outputDirSizer = new wxStaticBox(this, wxID_ANY, _("Static"));
-    wxStaticBoxSizer* outputDirGroup = new wxStaticBoxSizer(outputDirSizer, wxHORIZONTAL);
-    frameSizer->Add(outputDirGroup, 1, wxALIGN_CENTER_HORIZONTAL|wxALL|wxEXPAND, 5);
-
-    m_outputDir = new wxTextCtrl( this, OUTPUT_DIRECTORY, _("Add Output Directory"), wxDefaultPosition, wxDefaultSize, 0 );
-    outputDirGroup->Add(m_outputDir, 3, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
-    m_outputDirButton = new wxButton( this, OUTPUT_DIRECTORY_BUTTON, _("Browse..."), wxDefaultPosition, wxDefaultSize, 0 );
-    outputDirGroup->Add(m_outputDirButton, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
-
     wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
     frameSizer->Add(buttonSizer, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
 
     m_translateButton = new wxButton( this, TRANSLATE_BUTTON, _("Translate Data"), wxDefaultPosition, wxDefaultSize, 0 );
     buttonSizer->Add(m_translateButton, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
 
-    m_closeButton = new wxButton( this, wxID_OK, _("Close"), wxDefaultPosition, wxDefaultSize, 0 );
+    m_closeButton = new wxButton(this, QUIT_BUTTON, wxT("Quit"));
     buttonSizer->Add(m_closeButton, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5);
     
     SetAutoLayout(true); 
     frameSizer->Fit(this);
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+void StarCDTranslator::FileName( wxCommandEvent& event )
+{
+    wxPoint pos( 0, 0 );
+    wxFileDialog dialog( this,
+                         _T( "Open file" ),
+                         _T( "" ),
+                         _T( "" ),
+                         _T( "StarCD Post Files (*.ccmt)|*.ccmt;|All Files (*.*)|*.*" ),
+                         wxOPEN | wxFILE_MUST_EXIST,
+                         wxDefaultPosition );
+    dialog.CentreOnParent();
+    
+    if( dialog.ShowModal() == wxID_OK )
+    {
+        wxFileName datasetFilename( dialog.GetPath() );
+	wxString filename = datasetFilename.GetName();
+	m_fileName->SetValue( filename );
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+void StarCDTranslator::OutputDirectory( wxCommandEvent& event )
+{
+     wxDirDialog m_outputDirectory(this, _T("Choose a directory"), ::wxGetCwd(), wxDD_DEFAULT_STYLE);
+
+     if ( m_outputDirectory.ShowModal() == wxID_OK )
+     {
+          m_outputString = wxString(m_outputDirectory.GetPath().c_str(), wxConvUTF8);
+          m_outputDir->SetValue(m_outputString);
+     }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+void StarCDTranslator::Translate( wxCommandEvent& event )
+{
+    std::string filename( static_cast< const char* >( wxConvCurrent->cWX2MB( m_fileName->GetValue().c_str() ) ) );
+    std::string units( static_cast< const char* >( wxConvCurrent->cWX2MB( m_units->GetStringSelection().c_str() ) ) );
+    std::string outputDir( static_cast< const char* >( wxConvCurrent->cWX2MB( m_outputDir->GetValue().c_str() ) ) );
+
+    long int temp1;
+    m_timeSteps->GetValue().ToLong( &temp1 );
+    long int temp2;
+    m_startTime->GetValue().ToLong( &temp2 );
+    long int temp3;
+    m_frequency->GetValue().ToLong( &temp3 );
+
+    m_transient->writeScript( filename, units, temp1, temp2, temp3 );
+    m_transient->writeStarParam( filename, temp1, temp3 );
+    m_transient->writeTranslatorScript( filename, outputDir, temp1, temp3 );
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+void StarCDTranslator::Quit( wxCommandEvent& event)
+{
+    Destroy();
+    exit(0);
 }

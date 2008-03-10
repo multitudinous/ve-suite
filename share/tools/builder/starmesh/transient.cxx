@@ -33,7 +33,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#include "VE_Builder/Transient_Tools/Star_Moving_Mesh/transient.h"
+#include "transient.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -41,243 +41,204 @@
 #include <sstream>
 
 using namespace std;
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Transient::Transient( void )
 {
 
-   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-   std::cout << "~                                                               ~" << std::endl;
-   std::cout << "~   Transient StarCD to VTK Routine (uses translateToVtk)       ~" << std::endl;
-   std::cout << "~                                                               ~" << std::endl;
-   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
-
-
-
-   std::cout << "Enter number of time steps: " << std::endl;
-   std::cin >> num_time_steps;
-
-   std::cout << "Enter the time step to begin at: " << std::endl;
-   std::cin >> begin_step;
-
-   std::cout << "Enter the Post Frequency: " << std::endl;
-   std::cin >> post_frequency;
-
-   std::cout << "Patience, please...." << std::endl;
 }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Transient::~Transient( void )
 {
+
 }
-
-Transient::Transient( Transient *copy )
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Transient::writeScript( std::string filename, std::string units, long int timeSteps, long int beginStep, long int postFreq )
 {
-}
-
-
-///////////////////////////////////////////////////////////////
-//
-//    This writes the usr, cel and vrt files from StarCD
-//
-///////////////////////////////////////////////////////////////
-
-void Transient::writeScript( void )
-{
-   ofstream outFile("transient");
-   outFile << "#! /bin/tcsh\n" 
-           << "\n"
-           << "proam << EOF\n"
-           << "x\n"
-           << "star\n"  ///////////////////////////////make sure this changes for the casename
-           << "n\n"
-           << "y\n\n"
-           << "evfi conn\n"
-           << "trload,star.pstt,mvgr\n"  ///////////////////////////////make sure this changes for the casename
-           << "c\n";
-   int i;
-   for ( i = 0; i < num_time_steps; i++ ) 
-   {
-      if (i < 10)  
-      {
-         outFile << "store iter " << begin_step + (i+1)*post_frequency << "\n"
-            << "getv all vmag\n"
-            //<< "oper getv conc 5 1\n"
-            //<< "oper getv conc 6 2\n"                        
-            << "savu,star_00" << i << ".usr,all,coded,all\n"
-            << "close star_00" << i << ".usr\n"
-            << "getv all\n"
-            << "vwrite,star_00" << i << ".vrt,all,coded,all\n"
-            << "close star_00" << i << ".vrt\n"
-            << "getc all\n"
-            << "cwrite,star_00" << i << ".cel,all,coded,all\n"
-            << "close star_00" << i << ".cel\n";
-      }        
-
-      else if ( i > 9 && i < 100) 
-      {
-         outFile << "store iter " << begin_step + (i+1)*post_frequency << "\n"
-            << "getv all vmag\n"
-            //<< "oper getv conc 5 1\n"
-            //<< "oper getv conc 6 2\n"                        
-            << "savu,star_0" << i << ".usr,all,coded,all\n"
-            << "close star_0" << i << ".usr\n"
-            << "getv all\n"
-            << "vwrite,star_0" << i << ".vrt,all,coded,all\n"
-            << "close star_0" << i << ".vrt\n"
-            << "getc all\n"
-            << "cwrite,star_0" << i << ".cel,all,coded,all\n"
-            << "close star_0" << i << ".cel\n";
-      }
-
-      else if ( i > 99 && i < 1000) 
-      {
-         outFile << "store iter " << begin_step + (i+1)*post_frequency << "\n"
-            << "getv all vmag\n"
-            //<< "oper getv conc 5 1\n"
-            //<< "oper getv conc 6 2\n"                        
-            << "savu,star_" << i << ".usr,all,coded,all\n"
-            << "close star_" << i << ".usr\n"
-            << "getv all\n"
-            << "vwrite,star_" << i << ".vrt,all,coded,all\n"
-            << "close star_" << i << ".vrt\n"
-            << "getc all\n"
-            << "cwrite,star_" << i << ".cel,all,coded,all\n"
-            << "close star_" << i << ".cel\n";
-      }
-   }
-   outFile << "quit,nosave\n" << "/\n\n";
+    ofstream outFile("transient.csh");
+    outFile << "#! /bin/tcsh\n" 
+            << "\n"
+            << "proam << EOF\n"
+            << "x\n"
+            << filename << "\n"
+            << "n\n"
+            << "y\n\n"
+            << "evfi conn\n"
+            << "trload," << filename << ".ccmt,nomvgr\n"  
+            << "c\n"
+	    << "memo maxsc2 20000000\n"
+	    << "units " << units << "\n";
+	   
+    for ( int i = 0; i < timeSteps/postFreq; i++ ) 
+    {
+        if (i < 10)  
+        {
+            outFile << "store itst " << beginStep + (i+1)*postFreq << "\n"	    
+            	    << "oper getv su 1\n"
+	    	    << "oper getv sv 2\n"
+	    	    << "oper getv sw 3\n"
+	    	    << "oper getv p 4 relative\n"
+            	    //<< "oper getv conc 5 1\n"
+            	    //<< "oper getv conc 6 2\n"                        
+            	    << "savu," << filename << "_00" << i << ".usr,all,coded,all\n"
+            	    << "close " << filename << "_00" << i << ".usr\n"
+            	    << "getv all\n"
+            	    << "vwrite," << filename << "_00" << i << ".vrt,all,coded,all\n"
+            	    << "close " << filename << "_00" << i << ".vrt\n"
+            	    << "getc all\n"
+            	    << "cwrite," << filename << "_00" << i << ".cel,all,coded,all\n"
+            	    << "close " << filename << "_00" << i << ".cel\n";
+      	 }        
+         else if ( i > 9 && i < 100) 
+         {
+            outFile << "store itst " << beginStep + (i+1)*postFreq << "\n"	    
+            	    << "oper getv su 1\n"
+	    	    << "oper getv sv 2\n"
+	    	    << "oper getv sw 3\n"
+	    	    << "oper getv p 4 relative\n"
+            	    //<< "oper getv conc 5 1\n"
+            	    //<< "oper getv conc 6 2\n"                        
+            	    << "savu," << filename << "_0" << i << ".usr,all,coded,all\n"
+            	    << "close " << filename << "_0" << i << ".usr\n"
+            	    << "getv all\n"
+            	    << "vwrite," << filename << "_0" << i << ".vrt,all,coded,all\n"
+            	    << "close " << filename << "_0" << i << ".vrt\n"
+            	    << "getc all\n"
+            	    << "cwrite," << filename << "_0" << i << ".cel,all,coded,all\n"
+            	    << "close " << filename << "_0" << i << ".cel\n";
+        }
+        else if ( i > 99 && i < 1000) 
+        {
+            outFile << "store itst " << beginStep + (i+1)*postFreq << "\n"	    
+            	    << "oper getv su 1\n"
+	    	    << "oper getv sv 2\n"
+	    	    << "oper getv sw 3\n"
+	    	    << "oper getv p 4 relative\n"
+            	    //<< "oper getv conc 5 1\n"
+            	    //<< "oper getv conc 6 2\n"                        
+            	    << "savu," << filename << "_" << i << ".usr,all,coded,all\n"
+            	    << "close " << filename << "_" << i << ".usr\n"
+            	    << "getv all\n"
+            	    << "vwrite," << filename << "_" << i << ".vrt,all,coded,all\n"
+            	    << "close " << filename << "_" << i << ".vrt\n"
+            	    << "getc all\n"
+            	    << "cwrite," << filename << "_" << i << ".cel,all,coded,all\n"
+            	    << "close " << filename << "_" << i << ".cel\n";
+        }
+    }
+    outFile << "quit,nosave\n" << "/\n\n";
             
-   outFile.close();
-	system( "chmod 770 ./transient" );  // eliminate system calls
+    outFile.close();
+    system( "chmod 770 ./transient.csh" );  // eliminate system calls
         
-   system("transient > /dev/null");    // eliminate system calls
-   system("rm -f transient");          // eliminate system calls
+    system("tcsh transient.csh");    // eliminate system calls
+   //system("rm -f transient");          // eliminate system calls
 }
-
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-// This creates the same number of param files to read in for the "translateToVtk" script
-//
-///////////////////////////////////////////////////////////////////////////////////////////
-
-void Transient::writeStarParam( void )
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Transient::writeStarParam( std::string filename, long int timeSteps, long int postFreq )
 {
-   system("rm -rf transient_VTK_data");
-   system("mkdir transient_VTK_data");   // these come out
+    //system( "mkdir transient_VTK_data");
+    for ( int i = 0; i < timeSteps/postFreq; i++ ) 
+    {
+        std::ostringstream dirStringStream;
 
-   int i;
-   for ( i = 0; i < num_time_steps/post_frequency; i++ ) 
-   {
-      std::ostringstream dirStringStream;
+        if (i < 10) 
+	{         
+            dirStringStream << filename << "_00" << i << ".param";
+	}
+      	else if ( i > 9 && i < 100)     
+        {
+	     dirStringStream << filename << "_0" << i << ".param";
+     	}
+	else if ( i > 99 && i < 1000)        
+        {
+	     dirStringStream << filename << "_" << i << ".param";              
+	}
+	
+        std::string dirString = dirStringStream.str();
+        const char * outputFileName;
+        outputFileName = dirString.c_str();
+        ofstream outputFile;
+        outputFile.open(outputFileName,ios::out);
 
-      if (i < 10)          
-         dirStringStream << "star_00" << i << ".param";
-      else if ( i > 9 && i < 100)     
-         dirStringStream << "star_0" << i << ".param";
-      else if ( i > 99 && i < 1000)        
-         dirStringStream << "star_" << i << ".param";              
+        if (i < 10)
+        {
+            outputFile 	<< "STARCEL=" << filename << "_00" << i << ".cel" << "\n"
+        	       	<< "STARVRT=" << filename << "_00" << i << ".vrt" << "\n"  
+        	       	<< "STARUSR=" << filename << "_00" << i << ".usr" << "\n" 
+        		<< "VECTORNAME=Velocity" << "\n"
+        		<< "SCALARNAME=Pressure" << "\n"
+        		<< "ROTATEX=0" << "\n"
+        		<< "ROTATEY=0" << "\n"
+        		<< "ROTATEZ=0" << "\n"
+        		<< "TRANSLATEX=0" << "\n"
+        		<< "TRANSLATEY=0" << "\n"
+        		<< "TRANSLATEZ=0" << "\n"
+        		<< "SCALEINDEX=1" << "\n"
+        		<< "SCALEFACTOR=0" << "\n"
+        		<< "WRITEOPTION=1" << "\n" 
+        		<< "OUTPUTFILENAME=flowdata_00" << i << ".vtk" << "\n";
+        }
 
-      std::string dirString = dirStringStream.str();
-      const char * outputFileName;
-      outputFileName = dirString.c_str();
-      ofstream outputFile;
-      outputFile.open(outputFileName,ios::out);
+        else if ( i > 9 && i < 100)
+        {
+            outputFile 	<< "STARCEL=" << filename << "_0" << i << ".cel" << "\n"
+        		<< "STARVRT=" << filename << "_0" << i << ".vrt" << "\n"  
+        		<< "STARUSR=" << filename << "_0" << i << ".usr" << "\n"  
+        		<< "VECTORNAME=Velocity" << "\n"
+        		<< "SCALARNAME=Pressure" << "\n"
+        		<< "ROTATEX=0" << "\n"
+        		<< "ROTATEY=0" << "\n"
+        		<< "ROTATEZ=0" << "\n"
+        		<< "TRANSLATEX=0" << "\n"
+        		<< "TRANSLATEY=0" << "\n"
+        		<< "TRANSLATEZ=0" << "\n"
+        		<< "SCALEINDEX=1" << "\n"
+        		<< "SCALEFACTOR=0" << "\n"
+        		<< "WRITEOPTION=1" << "\n" 
+        		<< "OUTPUTFILENAME=flowdata_0" << i << ".vtk" << "\n";
+           }
 
-         if (i < 10)
-         {
-            outputFile << "STARCEL=star_00" << i << ".cel" << "\n"
-                 << "STARVRT=star_00" << i << ".vrt" << "\n"  
-                 << "STARUSR=star_00" << i << ".usr" << "\n" 
-                 << "VECTORNAME=Velocity" << "\n"
-                 << "SCALARNAME=scalar1" << "\n"
-                 << "SCALARNAME=scalar2" << "\n"
-                 << "SCALARNAME=scalar3" << "\n"
-                 << "ROTATEX=0" << "\n"
-                 << "ROTATEY=0" << "\n"
-                 << "ROTATEZ=0" << "\n"
-                 << "TRANSLATEX=0" << "\n"
-                 << "TRANSLATEY=0" << "\n"
-                 << "TRANSLATEZ=0" << "\n"
-                 << "SCALEINDEX=1" << "\n"
-                 << "SCALEFACTOR=0" << "\n"
-                 << "WRITEOPTION=1" << "\n" 
-                 << "OUTPUTFILENAME=transient_VTK_data/flowdata_00" << i << ".vtk" << "\n";
-         }
-
-         else if ( i > 9 && i < 100)
-         {
-            outputFile << "STARCEL=star_0" << i << ".cel" << "\n"
-                 << "STARVRT=star_0" << i << ".vrt" << "\n"  
-                 << "STARUSR=star_0" << i << ".usr" << "\n" 
-                 << "VECTORNAME=Velocity" << "\n"
-                 << "SCALARNAME=scalar1" << "\n"
-                 << "SCALARNAME=scalar2" << "\n"
-                 << "SCALARNAME=scalar3" << "\n"
-                 << "ROTATEX=0" << "\n"
-                 << "ROTATEY=0" << "\n"
-                 << "ROTATEZ=0" << "\n"
-                 << "TRANSLATEX=0" << "\n"
-                 << "TRANSLATEY=0" << "\n"
-                 << "TRANSLATEZ=0" << "\n"
-                 << "SCALEINDEX=1" << "\n"
-                 << "SCALEFACTOR=0" << "\n"
-                 << "WRITEOPTION=1" << "\n" 
-                 << "OUTPUTFILENAME=transient_VTK_data/flowdata_0" << i << ".vtk" << "\n";
-            }
-
-         else if ( i > 99 && i < 1000)  
-         {  
-            outputFile << "STARCEL=star_" << i << ".cel" << "\n"
-                 << "STARVRT=star_" << i << ".vrt" << "\n"  
-                 << "STARUSR=star_" << i << ".usr" << "\n" 
-                 << "VECTORNAME=Velocity" << "\n"
-                 << "SCALARNAME=scalar1" << "\n"
-                 << "SCALARNAME=scalar2" << "\n"
-                 << "SCALARNAME=scalar3" << "\n"
-                 << "ROTATEX=0" << "\n"
-                 << "ROTATEY=0" << "\n"
-                 << "ROTATEZ=0" << "\n"
-                 << "TRANSLATEX=0" << "\n"
-                 << "TRANSLATEY=0" << "\n"
-                 << "TRANSLATEZ=0" << "\n"
-                 << "SCALEINDEX=1" << "\n"
-                 << "SCALEFACTOR=0" << "\n"
-                 << "WRITEOPTION=1" << "\n" 
-                 << "OUTPUTFILENAME=transient_VTK_data/flowdata_" << i << ".vtk" << "\n";
-         }
-         
-      outputFile.close();
-   }
+        else if ( i > 99 && i < 1000)  
+        {  
+            outputFile 	<< "STARCEL=" << filename << "_" << i << ".cel" << "\n"
+        		<< "STARVRT=" << filename << "_" << i << ".vrt" << "\n"  
+        		<< "STARUSR=" << filename << "_" << i << ".usr" << "\n" 
+        		<< "VECTORNAME=Velocity" << "\n"
+        		<< "SCALARNAME=Pressure" << "\n"
+        		<< "ROTATEX=0" << "\n"
+        		<< "ROTATEY=0" << "\n"
+        		<< "ROTATEZ=0" << "\n"
+        		<< "TRANSLATEX=0" << "\n"
+        		<< "TRANSLATEY=0" << "\n"
+        		<< "TRANSLATEZ=0" << "\n"
+        		<< "SCALEINDEX=1" << "\n"
+        		<< "SCALEFACTOR=0" << "\n"
+        		<< "WRITEOPTION=1" << "\n" 
+        		<< "OUTPUTFILENAME=flowdata_" << i << ".vtk" << "\n";
+        }
+        
+        outputFile.close();
+    }
 }
-
-
-/////////////////////////////////////////////////////////////////////////////////
-//
-// This creates the script that will run the "translateToVtk" script recursively 
-//
-/////////////////////////////////////////////////////////////////////////////////
-
-void Transient::writeTranslatorScript(void)
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+void Transient::writeTranslatorScript( std::string filename, std::string outputDir, long int timeSteps, long int postFreq )
 {
    ofstream translatorScript;
    translatorScript.open("transientStarToVtk.csh",ios::out);
    
-   translatorScript << "#! /bin/csh -f" << "\n" << "\n"
-                    << "setenv VE_SUITE_HOME /home/users/sgent/TSVEG/VE_Suite" << "\n"
-                    << "source $VE_SUITE_HOME/VE_Installer/setup.tsh" << "\n"; 
- 
+   translatorScript << "#! /bin/csh -f" << "\n" << "\n"; 
 
-   int j = 0;
-
-   for ( j = 0; j < num_time_steps/post_frequency; j++ )
+   for ( int j = 0; j < timeSteps/postFreq; j++ )
    {
       if (j < 10)          
-         translatorScript << "translateToVtk" << " " << "2" << " "<< "star_00" << j << ".param" << "\n";
+         translatorScript << "/usr/local/bin/loaderToVtk" << " " << "-singleFile" << " "<< filename << "_00" << j << ".param" << " " << "-loader" 
+	 		  << " " << "star" << " " << "-o" << " " << outputDir << " " << "-w" << " " << "file" << "\n";
       else if ( j > 9 && j < 100)     
-         translatorScript << "translateToVtk" << " " << "2" << " "<< "star_0" << j << ".param" << "\n"; 
+         translatorScript << "/usr/local/bin/loaderToVtk" << " " << "-singleFile" << " "<< filename << "_0" << j << ".param" << " " << "-loader" 
+	 		  << " " << "star" << " " << "-o" << " " << outputDir << " " << "-w" << " " << "file" << "\n"; 
       else if ( j > 99 && j < 1000)        
-         translatorScript << "translateToVtk" << " " << "2" << " "<< "star_" << j << ".param" << "\n";                                      
+         translatorScript << "/usr/local/bin/loaderToVtk" << " " << "-singleFile" << " "<< filename << "_" << j << ".param" << " " << "-loader" 
+	 		  << " " << "star" << " " << "-o" << " " << outputDir << " " << "-w" << " " << "file" << "\n";                                      
    }
 
    translatorScript.close();

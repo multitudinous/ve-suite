@@ -1,12 +1,18 @@
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv')
+Import('baseEnv ves_pkg LIBDIR GetPlatform buildDir vtk_options boost_options wxwidgets_options')
 
 sources = Split("""
-   main.cxx
    transient.cxx
+   StarCDTransient.cxx
+   StarCDTransientApp.cxx
 """)
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
-env.Program('vexplorer' + env["PROGSUFFIX"], source = sources)
+
+wxwidgets_options.apply( env )
+
+convertTransientStarCDData = ves_pkg.createProgram('convertTransientStarCDData' + env["PROGSUFFIX"], env, 'bin')
+convertTransientStarCDData.addSources( sources )
+convertTransientStarCDData.build()
