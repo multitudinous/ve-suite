@@ -220,10 +220,10 @@ void Wand::UpdateNavigation()
               buttonData[ 2 ] == gadget::Digital::ON )
     {
         double* tempWandDir = GetDirection();
-        vprDEBUG( vesDBG, 1 ) << "|\tWand direction :"
-        << tempWandDir[ 0 ] << " : "
-        << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
-        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 2 ) << "|\tWand direction :"
+            << tempWandDir[ 0 ] << " : "
+            << tempWandDir[ 1 ] << " : " << tempWandDir[ 2 ]
+            << std::endl << vprDEBUG_FLUSH;
 
         m_buttonPushed = true;
         for( int i = 0; i < 3; ++i )
@@ -666,7 +666,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
     //Now make it a 4 x 4
-    gmtl::Matrix44d rotMatTemp = gmtl::makeRot< gmtl::Matrix44d >
+    gmtl::Matrix44d rotMatTemp = gmtl::make< gmtl::Matrix44d >
                                  ( gmtl::Quat< double >( m_rotIncrement[ 0 ],
                                                          m_rotIncrement[ 1 ], m_rotIncrement[ 2 ],
                                                          m_rotIncrement[ 3 ] ) );
