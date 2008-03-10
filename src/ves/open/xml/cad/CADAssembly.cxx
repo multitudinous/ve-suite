@@ -177,11 +177,6 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
     //clear out the current list of children
     mChildren.clear();
 
-    //get the new number of children
-    {
-        //DOMElement* nChildrenElement = GetSubElement( currentElement, std::string( "numChildren" ), 0 );
-        //XMLObject::GetAttribute( nChildrenElement, "numChildren", mChildren.size() );
-    }
     if( currentElement->getAttributeNode(
         Convert( "associatedDataset" ).toXMLString() ) )
     {
@@ -207,6 +202,7 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
         {
             DOMElement* cadNode = dynamic_cast<DOMElement*>( childrenNodes->item( i ) );
             unsigned int g = 0;
+            ///Find the children with the immediate parent of this node
             while( cadNode->getParentNode() != childListElement )
             {
                 i++;
@@ -214,6 +210,8 @@ void CADAssembly::SetObjectFromXMLData( DOMNode* xmlNode )
                 if( i == nChilderenReally )
                     return;
             }
+            ///Get the node type element must loop over all of the subelements
+            ///to make sure we have the type element
             DOMElement* nodeType = 0;
             unsigned int k = 0;
             while( !nodeType )
@@ -261,7 +259,7 @@ CADAssembly::CADAssembly( CADAssembly& rhs, bool clone )
     mAssociatedDataset = rhs.mAssociatedDataset;
     for( size_t i = 0; i < rhs.mChildren.size(); i++ )
     {
-        mChildren.push_back( boost::dynamic_pointer_cast<CADPart>(
+        mChildren.push_back( boost::dynamic_pointer_cast<CADNode>(
             XMLObjectFactory::Instance()->CreateXMLObjectCopy(
                rhs.mChildren.at( i ) ) ) );
     }

@@ -128,7 +128,7 @@ void CADNodeManagerDlg::SetRootCADNode( CADNodePtr rootNode )
 {
     if( rootNode )
     {
-        _rootNode = rootNode;
+        _rootNode = boost::dynamic_pointer_cast<CADAssembly>( rootNode );
     }
     else
     {
@@ -1005,7 +1005,7 @@ void CADNodeManagerDlg::_sendCommandsToXplorer()
     ClearInstructions();
 }
 ////////////////////////////////////////
-CADNodePtr CADNodeManagerDlg::GetRootCADNode()
+CADAssemblyPtr CADNodeManagerDlg::GetRootCADNode()
 {
     return _rootNode;
 }

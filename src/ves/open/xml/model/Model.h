@@ -215,8 +215,12 @@ public:
 
     ///Add a geometry node and return it
     /// if there is already geometry then the function will return that pointer
-    ves::open::xml::cad::CADNodePtr AddGeometry( void );
+    void AddGeometry( const ves::open::xml::cad::CADAssemblyPtr& input );
 
+    ///Add a geometry node and return it
+    /// if there is already geometry then the function will return that pointer
+    ves::open::xml::cad::CADNodePtr AddGeometry( void );
+    
     ///Delete the geometry for this model
     void DeleteGeometry( void );
 

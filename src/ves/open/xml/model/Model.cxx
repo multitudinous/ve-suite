@@ -612,6 +612,11 @@ CADNodePtr Model::AddGeometry( void )
     return mGeometry;
 }
 ////////////////////////////////////////////////////////////
+void Model::AddGeometry( const ves::open::xml::cad::CADAssemblyPtr& input )
+{
+    mGeometry = input;    
+}
+////////////////////////////////////////////////////////////
 void Model::DeleteGeometry( void )
 {
     if( mGeometry )

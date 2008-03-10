@@ -1441,11 +1441,7 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
     // Get cadnode back
     if( cadDialog->GetRootCADNode() )
     {
-        if( !veModel->GetGeometry() )
-        {
-            veModel->AddGeometry();
-        }
-        *( veModel->GetGeometry() ) = *( cadDialog->GetRootCADNode() );
+        veModel->AddGeometry( cadDialog->GetRootCADNode() );
     }
     cadDialog->Destroy();
     cadDialog = 0;

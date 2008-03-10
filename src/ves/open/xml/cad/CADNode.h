@@ -66,9 +66,6 @@ namespace cad
 class VE_CAD_EXPORTS CADNode: public ves::open::xml::XMLObject
 {
 public:
-    ///Constructor
-    ///\param name The name of this node.
-    CADNode( const std::string& name );
     virtual ~CADNode();
 
     ///Set the name of the node in the hierachy.
@@ -190,16 +187,19 @@ public:
     ///Get the opacity attribute of this node
     float GetOpacity();
 
+protected:
+    ///Constructor
+    ///\param name The name of this node.
+    CADNode( const std::string& name );
+
     ///Copy constructor
     ///\param rhs The CADNode to copy
     ///\param clone Create a clone of this node
     CADNode( const CADNode& rhs, bool clone = false );
-
+    
     ///Equal operator
     CADNode& operator=( const CADNode& rhs );
-
-protected:
-
+        
     ///Internally update the XML data for this element.
     ///\param input The XML element information
     virtual void _updateVEElement( const std::string& input );

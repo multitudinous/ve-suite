@@ -96,7 +96,7 @@ public:
     void SetRootCADNode( ves::open::xml::cad::CADNodePtr rootNode );
 
     ///Get the root CADNode
-    ves::open::xml::cad::CADNodePtr GetRootCADNode();
+    ves::open::xml::cad::CADAssemblyPtr GetRootCADNode();
 protected:
 
     ///Create the dialog
@@ -222,7 +222,7 @@ protected:
     ves::open::xml::cad::CADNodePtr _activeCADNode;///<The active CADNode.
 
     bool _cloneFromSameFile;///<Flag for parent checking when cloning.
-    ves::open::xml::cad::CADNodePtr _rootNode;///<The active CADNode.
+    ves::open::xml::cad::CADAssemblyPtr _rootNode;///<The active CADNode.
     ves::conductor::util::CADTreeBuilder* _cadTreeBuilder;///<The tree manager.
     std::map<wxString, ves::open::xml::cad::CADNodePtr > _loadedCAD;///<The list of CAD/VEG files already loaded.
     //wxButton* _loadButton;
