@@ -94,8 +94,8 @@ void BlockEntity::SetConstraints( int gridSize )
     //Fix the translation range for the agents
     //Give 0.5 units extra in xy plane for agent/wall collision
     //Give small z-range for agent/grid collision
-    m_constraint->setLinearLowerLimit( btVector3( -gridSize * 0.5, -gridSize * 0.5, -5.0 ) );
-    m_constraint->setLinearUpperLimit( btVector3( gridSize * 0.5, gridSize * 0.5, 5.0 ) );
+    m_constraint->setLinearLowerLimit( btVector3( -gridSize * 0.5, -gridSize * 0.5, -1.0 ) );
+    m_constraint->setLinearUpperLimit( btVector3( gridSize * 0.5, gridSize * 0.5, 0.1 ) );
 
     //Remove rotation from agents
     //Range should be small, otherwise singularities will 'explode' the constraint
@@ -112,6 +112,6 @@ void BlockEntity::SetOccMatrix( std::map< std::pair< int, int >, bool > occMatri
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
 {
-    ;
+    //m_occMatrix[ ;
 }
 ////////////////////////////////////////////////////////////////////////////////

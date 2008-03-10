@@ -11,13 +11,11 @@ ConstructionBotsDemoDir = pj( RootDir, 'share', 'examples', 'ConstructionBots' )
 iveFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.ive' ] )
 xpmFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.xpm' ] )
 jpgFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.jpg' ] )
-txtFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.txt' ] )
 wavFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.wav' ] )
 
 fileBundle.addFiles( iveFile )
 fileBundle.addFiles( xpmFile )
 fileBundle.addFiles( jpgFile )
-fileBundle.addFiles( txtFile )
 fileBundle.addFiles( wavFile )
 fileBundle.addFiles( [ 'constructionbots.ves' ] )
 

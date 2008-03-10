@@ -241,7 +241,7 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
 
     osg::ref_ptr< osg::StateSet > wallStateSet = new osg::StateSet();
     wallStateSet->setMode( GL_BLEND, osg::StateAttribute::ON );
-    wallStateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+    wallStateSet->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     walls->setStateSet( wallStateSet.get() );
 
     grid->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, gridVertices->size() ) );

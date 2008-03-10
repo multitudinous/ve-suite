@@ -45,8 +45,7 @@ namespace Construction
 class World
 {
 public:
-    World( int worldScale,
-           ves::xplorer::scenegraph::DCS* pluginDCS,
+    World( ves::xplorer::scenegraph::DCS* pluginDCS,
            ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
          , osgAL::SoundManager* soundManager
@@ -64,8 +63,6 @@ private:
     void CommunicatingBlocksAlgorithm();
 
     bool m_structureNotComplete;
-
-    int m_worldScale;
 
     ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
 
