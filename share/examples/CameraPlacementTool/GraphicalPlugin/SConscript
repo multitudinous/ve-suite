@@ -1,0 +1,44 @@
+##Builds CameraPlacementTool Graphical Plugin
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import( 'baseEnv ves_pkg buildDir RootDir gmtl_options vrjuggler_options osg_options osgal_options bullet_options xerces_options vtk_options GetPlatform' )
+openDir = os.path.abspath( pj( RootDir, 'share', 'examples', 'CameraPlacementTool', 'GraphicalPlugin' ) )
+sources = sca_util.getSourcesRecursive( openDir )
+headers = sca_util.getHeadersRecursive( openDir )
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append( LIBS = [ 'ves_open_xml',
+                         'ves_xplorer',
+                         'ves_xplorer_scenegraph' ] )
+lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
+                            pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
+		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+#lib_env.Append( CPPPATH = [] )
+bulletVersion = bullet_options.getVersion()
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY',
+                               'BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
+                               'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )
+
+gmtl_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
+osg_options.apply( lib_env )
+osgal_options.apply( lib_env )
+bullet_options.apply( lib_env )
+xerces_options.apply( lib_env )
+vtk_options.apply( lib_env )
+
+lib_env.Append( CPPDEFINES = [ ] )  
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+
+lib = ves_pkg.createLoadableModule( 'CameraPlacementToolGraphicalPlugin', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'CameraPlacementTool', 'Plugins', 'GE', host_type ) )  
+
+lib.addSources( sources )
+lib.build()
