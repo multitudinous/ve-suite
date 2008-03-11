@@ -61,8 +61,6 @@ transform_imp( new osg::MatrixTransform() ),
 transform_tank( new osg::MatrixTransform() )
 {
     m_objectName = "FermentorUI";
-
-    capsule_sequence->setValue( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
@@ -175,9 +173,9 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
     _rot_speed = _rot_speed / 10.0f;
 
-    if( _sim_speed > 0.0f )
+    if( _sim_speed != 0 )
     {
-        _sim_speed = 1 / _sim_speed;
+        _sim_speed = 1.1 - ( _sim_speed / 10.0 );
     }
 
     std::fstream results;                                      //File for statistical results
@@ -186,7 +184,7 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
     //Biochemical reaction equations
     double c[ 8 ];
-    double speed = 0;
+    //double speed = 0;
     double min = 1000000000;
     double max = -1000000000;
 
@@ -300,9 +298,9 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
             geode_0->addDrawable( sd.get() );
 
-            capsule_sequence->addChild( geode_0.get() );
+            capsule_sequence->addChild( geode_0.get(), _sim_speed );
 
-            capsule_sequence->setTime( capsule_sequence->getNumChildren() - 1, _sim_speed );
+            //capsule_sequence->setTime( t, _sim_speed );
         }
 
         double _imp_speed = 0.0f;
@@ -324,7 +322,7 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
     results.close();
 
-    //Loop through all children
+    //Tell OSG how many childrend to loop through
     capsule_sequence->setInterval( osg::Sequence::LOOP, 0, -1 );
 
     //Real-time playback, repeat for a set number of reps
@@ -347,6 +345,9 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
     {
         shader->XRay( _tankGeometry.get() );
     }
+
+    //capsule_sequence->setValue( 0 );
+    //capsule_sequence->setSync( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VEFermentorGraphicalPlugin::PreFrameUpdate()
@@ -357,7 +358,7 @@ void VEFermentorGraphicalPlugin::PreFrameUpdate()
     }
 
     int seqVal = capsule_sequence->getValue();
-    if( ( seqVal > -1 ) && ( seqVal < static_cast< int >( time_steps.size() ) ) )
+    if( seqVal > -1 )
     {
         UpdateGauges( time_steps[ seqVal ],
                       result_steps[ seqVal ],
