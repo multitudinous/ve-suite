@@ -8,6 +8,8 @@
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
+using namespace cpt;
+
 IMPLEMENT_DYNAMIC_CLASS( UserInterfacePlugin, UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +91,7 @@ ves::conductor::UIDialog* UserInterfacePlugin::UI( wxWindow* parent )
         return dlg;
     }
 
-    dlg = new UserInterfaceDialog( parent, -1, serviceList, &portNumber );
+    dlg = new cpt::UserInterfaceDialog( parent, -1, serviceList, &portNumber );
     ConfigurePluginDialogs( dlg );
 
     return dlg;

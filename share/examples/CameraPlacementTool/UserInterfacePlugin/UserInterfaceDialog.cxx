@@ -15,13 +15,17 @@
 #include <wx/stattext.h>
 #include <wx/dialog.h>
 
+using namespace cpt;
+
 BEGIN_EVENT_TABLE( UserInterfaceDialog, wxDialog )
     EVT_BUTTON( OK_BUTTON, UserInterfaceDialog::OnOK )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-UserInterfaceDialog::UserInterfaceDialog( wxWindow* parent, int id, 
-    ves::conductor::util::CORBAServiceList* service, std::string* portNumber )
+UserInterfaceDialog::UserInterfaceDialog( wxWindow* parent,
+                                          int id, 
+                                          ves::conductor::util::CORBAServiceList* service,
+                                          std::string* portNumber )
 :
 UIDialog( ( wxWindow * )parent, id, _( "CameraPlacementTool" ) ), p_portNumber( portNumber )
 {

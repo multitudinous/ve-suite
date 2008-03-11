@@ -1,10 +1,12 @@
 #ifndef GRAPHICAL_PLUGIN_H
 #define GRAPHICAL_PLUGIN_H
 
-// --- My Includes --- //
-
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/cfdVEBaseClass.h>
+
+namespace cpt
+{
+class Scene;
 
 class VE_USER_PLUGIN_EXPORTS GraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass
 {
@@ -19,7 +21,7 @@ protected:
     void UpdateParams();
 
 private:
-
+    cpt::Scene* m_scene;
 };
 
 extern "C"
@@ -29,5 +31,6 @@ extern "C"
         return new GraphicalPlugin();
     }
 }
+} //end cpt
 
 #endif //GRAPHICAL_PLUGIN_H

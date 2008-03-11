@@ -8,6 +8,8 @@
 
 // --- C/C++ Includes --- //
 
+namespace cpt
+{
 class Scene
 {
 public:
@@ -17,5 +19,6 @@ public:
 private:
 
 };
+} //end cpt
 
 #endif //SCENE_H

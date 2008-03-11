@@ -21,10 +21,15 @@ namespace util
 #include <vector>
 #include <string>
 
+namespace cpt
+{
 class UserInterfaceDialog : public ves::conductor::UIDialog
 {
 public:
-    UserInterfaceDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service, std::string* portNumber );
+    UserInterfaceDialog( wxWindow* parent,
+                         int id,
+                         ves::conductor::util::CORBAServiceList* service,
+                         std::string* portNumber );
     UserInterfaceDialog(){;}
 
     enum
@@ -56,5 +61,6 @@ protected:
     DECLARE_EVENT_TABLE()
 
 };
+} //end cpt
 
 #endif //USER_INTERFACE_DIALOG_H
