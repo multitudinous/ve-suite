@@ -2,11 +2,18 @@
 #import os
 #pj = os.path.join
 
+Import( 'GetPlatform' )
+
 aspenSubdirs = Split("""
-    CASILib
-    VE_AspenUnit
     3DIcons
 """)
+
+if GetPlatform() == 'win32':
+   aspenSubdirs += Split("""    
+      CASILib
+      VE_AspenUnit
+   """)
+
 
 ##Run SConscript files in all of those folders.
 for d in aspenSubdirs:

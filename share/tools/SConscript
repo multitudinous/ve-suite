@@ -7,10 +7,8 @@ Import( 'GetPlatform' )
 toolsSubdirs = Split("""
     builder
     vea
+    aspen
 """)
-
-if GetPlatform() == 'win32':
-   toolsSubdirs += Split("""aspen""")
 
 ##Run SConscript files in all of those folders.
 for d in toolsSubdirs:
