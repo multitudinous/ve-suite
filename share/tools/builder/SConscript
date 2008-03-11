@@ -7,6 +7,7 @@ builderSubdirs = Split("""
     util
     vtkto3dtexture
 """)
+#    starmesh
 
 ##Run SConscript files in all of those folders.
 for d in builderSubdirs:
