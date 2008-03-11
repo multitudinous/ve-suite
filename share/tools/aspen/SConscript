@@ -1,6 +1,4 @@
-##Builds VE-Suite Libraries
-#import os
-#pj = os.path.join
+##Install aspen libraries, apps, and icons
 
 Import( 'GetPlatform' )
 

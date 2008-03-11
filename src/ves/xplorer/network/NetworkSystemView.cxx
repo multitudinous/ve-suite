@@ -60,6 +60,9 @@
 
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/scenegraph/util/ComputeBoundsVisitor.h>
+
+#include <vpr/System.h>
+
 #include <iostream>
 #include <fstream>
 
@@ -125,10 +128,14 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
         ModelPtr model = mainSystem->GetModel( i );
 
         //add 3d blocks
-        osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile( "3DIcons/" + model->GetIconFilename() + ".obj" );
-
-        //osg::ref_ptr<ves::xplorer::scenegraph::TextTexture> text = new ves::xplorer::scenegraph::TextTexture();
-        //text->UpdateText(model->GetModelName());
+        std::string dataPrefix;
+        vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
+        //try default location first
+        osg::ref_ptr<osg::Node> loadedModel = 
+            osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
+                model->GetIconFilename() + ".obj.ive" );
+        //Then try local directory
+        //osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile( "3DIcons/" + model->GetIconFilename() + ".obj.ive" );
 
         //add red block id if block .ive file is not found
         if( !loadedModel.valid() )
