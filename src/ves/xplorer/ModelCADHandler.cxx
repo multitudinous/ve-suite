@@ -343,21 +343,17 @@ void ModelCADHandler::MakeCADRootTransparent()
         return;
     }
 
-    try
+    // Put in logic to deal with transparency on a per component basis
+    for( std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator 
+        iter = m_partList.begin(); iter != m_partList.end(); ++iter )
     {
-        ves::xplorer::scenegraph::util::OpacityVisitor
-        opacity_visitor( m_assemblyList[m_rootCADNodeID].get(), true, 0.3f );
+        if( iter->second->GetTransparentFlag() )
+        {
+            ves::xplorer::scenegraph::util::OpacityVisitor
+            opacity_visitor( iter->second->GetDCS(), true, 0.3f );
+        }
     }
-
-    catch ( ... )
-    {
-        vprDEBUG( vesDBG, 1 ) << "|\tRoot CADNode not found!!!"
-            << std::endl
-            << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::MakeCADRootTransparent()---"
-            << std::endl << vprDEBUG_FLUSH;
-    }
-}
+ }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void ModelCADHandler::MakeCADRootOpaque()
 {
@@ -366,21 +362,15 @@ void ModelCADHandler::MakeCADRootOpaque()
         return;
     }
 
-    try
+    // Put in logic to deal with transparency on a per component basis
+    for( std::map< std::string, ves::xplorer::scenegraph::CADEntity* >::iterator 
+        iter = m_partList.begin(); iter != m_partList.end(); ++iter )
     {
-        if( m_assemblyList[m_rootCADNodeID]->getStateSet() )
+        if( iter->second->GetTransparentFlag() )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( m_assemblyList[ m_rootCADNodeID ].get(), false, 1.0f );
+            opacity_visitor( iter->second->GetDCS(), false, 1.0f );
         }
-    }
-    catch( ... )
-    {
-        vprDEBUG( vesDBG, 1 ) << "|\tRoot CADNode not found!!!"
-            << std::endl
-            << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::MakeCADRootOpaque()---"
-            << std::endl << vprDEBUG_FLUSH;
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////

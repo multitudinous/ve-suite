@@ -203,14 +203,22 @@ void CADEventHandler::_setTransformOnNode( CADNodePtr activeNode )
 void CADEventHandler::SetNodeDescriptors( std::string nodeID,
                                           std::string nodeType,
                                           std::string descriptorName,
-                                          std::string descriptorValue )
+                                          std::string descriptorValue,
+                                          CADNodePtr inputNodePtr )
 {
     //set the uuid on the osg node so that we can get back to vexml
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( descriptorName );
     descriptorsList.push_back( descriptorValue );
     descriptorsList.push_back( nodeType );
-
+    if( inputNodePtr )
+    {
+        descriptorsList.push_back( "Opacity" );
+        std::ostringstream temp;
+        temp << inputNodePtr->GetOpacity();
+        descriptorsList.push_back( temp.str() );
+    }
+    
     if( nodeType == "Assembly" )
     {
         ves::xplorer::scenegraph::DCS* assemblyNode = m_cadHandler->GetAssembly( nodeID );
@@ -280,7 +288,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             _addNodeToNode( newAssembly->GetID(), newAssembly->GetChild( i ) );
         }
         m_cadHandler->GetAssembly( newAssembly->GetID() )->ToggleDisplay( newAssembly->GetVisibility() );
-        SetNodeDescriptors( newAssembly->GetID(), "Assembly", "VE_XML_ID", newAssembly->GetID() );
+        SetNodeDescriptors( newAssembly->GetID(), "Assembly", "VE_XML_ID", newAssembly->GetID(), newAssembly );
         //Set a default material on nodes that have no initial material
         ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
         vprDEBUG( vesDBG, 1 ) << "|\t---Set Opacity---" << std::endl << vprDEBUG_FLUSH;
@@ -311,6 +319,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
 
             //set the visibility
             partNode->GetDCS()->ToggleDisplay( newPart->GetVisibility() );
+            partNode->SetOpacityValue( newPart->GetOpacity() );
+            partNode->SetTransparencyFlag( newPart->GetTransparentFlag() );
 
             if( newPart->HasPhysics() )
             {
@@ -335,14 +345,17 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 }
             }
 
-            vprDEBUG( vesDBG, 1 ) << "|\t---Setting node properties---" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Setting node properties---" 
+                << std::endl << vprDEBUG_FLUSH;
             _setTransformOnNode( newPart );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set transform---" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set transform---" 
+                << std::endl << vprDEBUG_FLUSH;
             _setAttributesOnNode( newPart );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set Attributes---" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Attributes---" 
+                << std::endl << vprDEBUG_FLUSH;
 
             //set the uuid on the osg node so that we can get back to vexml
-            SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID", newPart->GetID() );
+            SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID", newPart->GetID(), newPart );
             //Set a default material on nodes that have no initial material
             ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( partNode->GetDCS() );
             vprDEBUG( vesDBG, 1 ) << "|\t---Set Opacity---" << std::endl << vprDEBUG_FLUSH;

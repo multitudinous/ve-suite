@@ -186,7 +186,11 @@ public:
 
     ///Get the opacity attribute of this node
     float GetOpacity();
-
+    ///Get the mode of how to treat this node when vis is selected
+    bool GetTransparentFlag();
+    ///Set the mode of how to treat this node when vis is selected
+    void SetTransparentFlag( bool transparent );
+    
 protected:
     ///Constructor
     ///\param name The name of this node.
@@ -226,6 +230,9 @@ protected:
     std::string m_physicsMesh;///<Node physics mesh.
 
     float mOpacity;///<Opacity value for this node
+    ///Tells xplorer whether or not to change this node transparent when
+    ///vis is selected
+    bool mMakeTransparentOnVis;
 };
 
 }

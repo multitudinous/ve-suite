@@ -79,7 +79,8 @@ public:
     void SetNodeDescriptors( std::string nodeID,
                              std::string nodeType,
                              std::string descriptorName,
-                             std::string descriptorValue );
+                             std::string descriptorValue,
+                             ves::open::xml::cad::CADNodePtr inputNodePtr );
     ///Exectute the event
     ///\param xmlObject The current xmlObject event.
     void Execute( const ves::open::xml::XMLObjectPtr& command );

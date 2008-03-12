@@ -40,35 +40,41 @@
 #include <wx/sizer.h>
 #include <wx/statbox.h>
 #include <wx/msgdlg.h>
+#include <wx/checkbox.h>
 
 using namespace ves::open::xml::cad;
 using namespace ves::conductor::util;
 BEGIN_EVENT_TABLE( CADOpacitySliderDlg, wxDialog )
     EVT_COMMAND_SCROLL( OPACITY_SLIDER, CADOpacitySliderDlg::_onSlider )
+    EVT_CHECKBOX( ID_TRANSPARENT_ON_VIS, CADOpacitySliderDlg::OnChkBox )
 END_EVENT_TABLE()
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
 CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
                                           std::string cadNodeID,
-                                          CADMaterialPtr material )
+                                          CADMaterialPtr material,
+                                          bool transparentFlag )
         : wxDialog( parent, id, _( "CADMaterial Opacity" ), wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ), _( "CADMaterial Opacity" ) )
 {
     _cadID = cadNodeID;
-    _material = material;
-    _buildDialog( _material->GetOpacity() );
+    mTransparentflag = transparentFlag;
+    //_material = material;
+    _buildDialog( material->GetOpacity() );
 }
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
 CADOpacitySliderDlg::CADOpacitySliderDlg( wxWindow* parent, int id,
                                           std::string cadNodeID,
-                                          float opacity )
+                                          float opacity,
+                                          bool transparentFlag )
         : wxDialog( parent, id, _( "CADMaterial Opacity" ), wxDefaultPosition, wxDefaultSize,
                     ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ), _( "CADMaterial Opacity" ) )
 {
-    _material = CADMaterialPtr( new CADMaterial() );
+    //_material = CADMaterialPtr( new CADMaterial() );
+    mTransparentflag = transparentFlag;
     _cadID = cadNodeID;
     _buildDialog( opacity );
     CentreOnParent();
@@ -80,8 +86,8 @@ CADOpacitySliderDlg::~CADOpacitySliderDlg()
 void CADOpacitySliderDlg::_buildDialog(float opacity)
 {
     wxStaticBox* opacityGroup = new wxStaticBox( this, -1, wxT( "Opacity" ) );
-    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( opacityGroup, wxHORIZONTAL );
-
+    wxStaticBoxSizer* mainSizer = new wxStaticBoxSizer( opacityGroup, wxVERTICAL );
+    //////////////////////////////////////////////
     wxBoxSizer* sliderSizer = new wxBoxSizer( wxHORIZONTAL );
 
     _opacitySlider = new wxSlider( this, OPACITY_SLIDER, 0 , 0, 100, wxDefaultPosition, wxDefaultSize,
@@ -90,6 +96,22 @@ void CADOpacitySliderDlg::_buildDialog(float opacity)
     sliderSizer->Add( _opacitySlider, 1, wxALIGN_CENTER | wxEXPAND );
 
     mainSizer->Add( sliderSizer, 1, wxALIGN_CENTER | wxEXPAND );
+    /////////////////////////////////////////////
+    //wxBoxSizer* sliderSizer = new wxBoxSizer( wxHORIZONTAL );
+    
+    wxCheckBox* scalarBarCB = new wxCheckBox( this, ID_TRANSPARENT_ON_VIS,
+                                 _( "Make Transparent On Visualization" ), 
+                                 wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+    scalarBarCB->SetValue( mTransparentflag );
+
+    /*itemBoxSizer10->Add( scalarBarCB, 1, wxALIGN_CENTER_VERTICAL );
+    _opacitySlider = new wxSlider( this, OPACITY_SLIDER, 0 , 0, 100, wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL | wxSL_AUTOTICKS | wxSL_LABELS );
+    SetSliderValue( opacity );
+    sliderSizer->Add( _opacitySlider, 1, wxALIGN_CENTER | wxEXPAND );*/
+    
+    mainSizer->Add( scalarBarCB, 1, wxALIGN_CENTER | wxEXPAND );
+    ////////////////////////////////////////////
     SetAutoLayout( true );
     SetSizer( mainSizer );
 }
@@ -158,4 +180,29 @@ void CADOpacitySliderDlg::_sendCommandsToXplorer()
     //Clean up memory
     _clearInstructions();
 }
-
+////////////////////////////////////////////////////////////////////////////////
+void CADOpacitySliderDlg::OnChkBox( wxCommandEvent& event )
+{
+    mTransparentflag = event.IsChecked();
+    
+    _commandName = std::string( "CAD_OPACITY_UPDATE" );
+    
+    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
+    nodeID->SetDataType( "STRING" );
+    nodeID->SetData( std::string( "Node ID" ), _cadID );
+    _instructions.push_back( nodeID );
+    
+    ves::open::xml::DataValuePairPtr opacityUpdate( new ves::open::xml::DataValuePair() );
+    opacityUpdate->SetData( "Transparent Value", static_cast<unsigned int>( GetTransparentFlag() ) );
+    _instructions.push_back( opacityUpdate );
+    
+    _sendCommandsToXplorer();
+    
+    _clearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+bool CADOpacitySliderDlg::GetTransparentFlag()
+{
+    return mTransparentflag;
+}
+////////////////////////////////////////////////////////////////////////////////

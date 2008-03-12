@@ -67,7 +67,8 @@ CADEntity::CADEntity( std::string geomFile,
         m_physicsRigidBody( 0 ),
         m_physicsFlag( false ),
         m_transparencyFlag( false ),
-        m_physicsSimulator( physicsSimulator )
+        m_physicsSimulator( physicsSimulator ),
+        mOpacity( 1.0f )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -92,7 +93,8 @@ CADEntity::CADEntity( osg::Node* node,
         m_physicsRigidBody( 0 ),
         m_physicsFlag( false ),
         m_transparencyFlag( false ),
-        m_physicsSimulator( physicsSimulator )
+        m_physicsSimulator( physicsSimulator ),
+        mOpacity( 1.0f )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -113,7 +115,8 @@ CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
         m_physicsRigidBody( 0 ),
         m_physicsFlag( false ),
         m_transparencyFlag( false ),
-        m_physicsSimulator( physicsSimulator )
+        m_physicsSimulator( physicsSimulator ),
+        mOpacity( 1.0f )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
@@ -178,5 +181,15 @@ bool CADEntity::GetTransparentFlag()
 void CADEntity::SetTransparencyFlag( bool flag )
 {
     m_transparencyFlag = flag;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CADEntity::SetOpacityValue( float opacity )
+{
+    mOpacity = opacity;
+}
+////////////////////////////////////////////////////////////////////////////////
+float CADEntity::GetOpacityValue()
+{
+    return mOpacity;
 }
 ////////////////////////////////////////////////////////////////////////////////

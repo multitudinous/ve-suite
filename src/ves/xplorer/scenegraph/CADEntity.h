@@ -140,9 +140,14 @@ public:
     ///Returns the transparency state of the node
     bool GetTransparentFlag();
 
-    ///Set the transparency state of the node
+    ///Set the transparency state of the node to go 
+    ///transparent when data is selected
     ///\param flag The transparency state
     void SetTransparencyFlag( bool flag );
+    ///Set the opacity value for this file
+    void SetOpacityValue( float opacity );
+    ///Get the opacity value for this file
+    float GetOpacityValue();
 
 protected:
     ///A helper class to give added functionality to CADEntity
@@ -152,7 +157,9 @@ protected:
 
     bool m_physicsFlag;///<The current state of physics for CADEntity
     bool m_transparencyFlag;///<The current state of transparency
-
+    ///Set the opacity value
+    float mOpacity;
+    
     std::string m_fileName;///<The name of the geometry file loaded
 
     PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton

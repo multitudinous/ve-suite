@@ -79,13 +79,25 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     {
         CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
         DataValuePairPtr opacityValue = command->GetDataValuePair( "Opacity Value" );
+        DataValuePairPtr transparentFlag = command->GetDataValuePair( "Transparent Value" );
         DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
-
         std::string id;
         nodeID->GetData( id );
-        double opacity = 1.0;
-        opacityValue->GetData( opacity );
-        m_cadHandler->UpdateOpacity( id, opacity );
+
+        if( opacityValue )
+        {
+            double opacity = 1.0;
+            opacityValue->GetData( opacity );
+            m_cadHandler->UpdateOpacity( id, opacity );
+        }
+        else if( transparentFlag )
+        {
+            ves::xplorer::scenegraph::CADEntity* temp = 
+                m_cadHandler->GetPart( id );
+            unsigned int flag;
+            transparentFlag->GetData( flag );
+            temp->SetTransparencyFlag( flag );
+        }
     }
     catch ( ... )
     {

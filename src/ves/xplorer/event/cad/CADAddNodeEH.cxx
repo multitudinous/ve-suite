@@ -126,7 +126,7 @@ void CADAddNodeEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
                 m_cadHandler->GetAssembly( node->GetParent() )->setName( "Model_Geometry" );
 
                 //update the top level node descriptors
-                SetNodeDescriptors( node->GetParent(), "Assembly", "VE_XML_ID", node->GetParent() );
+                SetNodeDescriptors( node->GetParent(), "Assembly", "VE_XML_ID", node->GetParent(), CADNodePtr() );
                 //Add the top level CAD to the VEBaseClass
                 m_activeModel->GetDCS()->addChild( m_cadHandler->GetAssembly( node->GetParent() ) );
             }

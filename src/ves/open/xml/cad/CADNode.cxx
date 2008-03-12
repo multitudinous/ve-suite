@@ -58,7 +58,8 @@ using namespace ves::open::xml;
 //////////////////////////////////
 CADNode::CADNode( const std::string& name )
         :
-        ves::open::xml::XMLObject()
+        ves::open::xml::XMLObject(),
+        mMakeTransparentOnVis( true )
 {
     m_name = name;
     m_parent = "";
@@ -218,17 +219,27 @@ std::string CADNode::GetParent()
 {
     return m_parent;
 }
-//////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::TransformPtr CADNode::GetTransform()
 {
     return m_transform;
 }
-///////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 float CADNode::GetOpacity()
 {
     return mOpacity;
+}    
+////////////////////////////////////////////////////////////////////////////////
+bool CADNode::GetTransparentFlag()
+{
+    return mMakeTransparentOnVis;
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+void CADNode::SetTransparentFlag( bool transparent )
+{
+    mMakeTransparentOnVis = transparent;
+}
+////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::cad::CADAttributePtr CADNode::GetAttribute( unsigned int index )
 {
     try
@@ -275,6 +286,7 @@ void CADNode::_updateVEElement( const std::string& input )
     SetAttribute( "friction", m_friction );
     SetAttribute( "restitution", m_restitution );
     SetAttribute( "opacity", mOpacity );
+    SetAttribute( "makeTransparentOnVis", mMakeTransparentOnVis );
     //SetAttribute( "physics mesh", wxString( m_physicsMesh ) );
 
     SetSubElement( std::string( "parent" ), m_parent );
@@ -340,6 +352,7 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         return;
     }
+    ///Find opacity
     if( currentElement->getAttributeNode(
         Convert( "opacity" ).toXMLString() ) )
     {
@@ -349,6 +362,18 @@ void CADNode::SetObjectFromXMLData( DOMNode* xmlNode )
     {
         mOpacity = 1.f;
     }
+    ///Find transparent flag
+    if( currentElement->getAttributeNode(
+        Convert( "makeTransparentOnVis" ).toXMLString() ) )
+    {
+        XMLObject::GetAttribute( currentElement, 
+            "makeTransparentOnVis", mMakeTransparentOnVis );
+    }
+    else
+    {
+        mMakeTransparentOnVis = true;
+    }
+    ///Find if the node is on
     if( currentElement->getAttributeNode(
         Convert( "visibility" ).toXMLString() ) )
     {
@@ -564,6 +589,7 @@ CADNode::CADNode( const CADNode& rhs, bool clone )
     m_type = rhs.m_type;
     m_visibility = rhs.m_visibility;
     mOpacity = rhs.mOpacity;
+    mMakeTransparentOnVis = rhs.mMakeTransparentOnVis;
 
     m_physics = rhs.m_physics;
     m_mass = rhs.m_mass;
@@ -613,7 +639,8 @@ CADNode& CADNode::operator=( const CADNode& rhs )
         m_friction = rhs.m_friction;
         m_restitution = rhs.m_restitution;
         m_physicsMesh = rhs.m_physicsMesh;
-
+        mMakeTransparentOnVis = rhs.mMakeTransparentOnVis;
+        
         //_uID = rhs._uID;
         m_parent = rhs.m_parent;
         m_name = rhs.m_name;

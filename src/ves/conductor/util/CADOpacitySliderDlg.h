@@ -70,14 +70,16 @@ class VE_CONDUCTOR_UTILS_EXPORTS CADOpacitySliderDlg: public wxDialog
 public:
     enum OPACITY_DLG_IDS
     {
-        OPACITY_SLIDER
+        OPACITY_SLIDER,
+        ID_TRANSPARENT_ON_VIS
     };
     ///Constructor
     ///\param parent The parent wxWindow.
     ///\param id The unique id for this window.
     CADOpacitySliderDlg( wxWindow* parent,
                          int id, std::string cadID,
-                         ves::open::xml::cad::CADMaterialPtr material );
+                         ves::open::xml::cad::CADMaterialPtr material,
+                         bool transparentFlag );
     ///Constructor
     ///\param parent The parent wxWindow.
     ///\param id The unique id for this window.
@@ -85,7 +87,8 @@ public:
     ///\param opacity The current opacity.
     CADOpacitySliderDlg( wxWindow* parent,
                          int id, std::string cadID,
-                         float opacity );
+                         float opacity,
+                         bool transparentFlag );
 
     ///Destructor
     virtual ~CADOpacitySliderDlg();
@@ -96,11 +99,15 @@ public:
 
     ///Get the current opacity value
     double GetOpacity();
+    ///Get transparent value
+    bool GetTransparentFlag();
+
 protected:
     ///The wxSlider callback to update opacity.
     ///\param event The wxScrollEvent.
     void _onSlider( wxScrollEvent& event );
-
+    ///Callback for check box
+    void OnChkBox( wxCommandEvent& event );
     ///Clear out the current list of commands.
     void _clearInstructions();
 
@@ -110,13 +117,14 @@ protected:
     std::string _cadID;///<The id of the CADNode the material belongs to.
     std::vector<ves::open::xml::DataValuePairPtr> _instructions;///<The DataValuePair s for the current command.
     std::string _commandName;///<The command name.
-    ves::open::xml::cad::CADMaterialPtr _material;///<The CADMaterial we are updating.
+    //ves::open::xml::cad::CADMaterialPtr _material;///<The CADMaterial we are updating.
 
     ///Send CAD commands back to VE-Xplorer
     void _sendCommandsToXplorer();
 
     wxSlider* _opacitySlider;///<The wxSlider.
-
+    ///Transparent flag variable
+    bool mTransparentflag;
     DECLARE_EVENT_TABLE()
 };
 }

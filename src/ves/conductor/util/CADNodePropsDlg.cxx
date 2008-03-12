@@ -1158,10 +1158,11 @@ void CADNodePropertiesDlg::_showOpacityDialog( wxCommandEvent& WXUNUSED( event )
     if( _cadNode )
     {
         CADMaterialPtr material = _cadNode->GetActiveAttribute()->GetMaterial();
-        CADOpacitySliderDlg opacityDlg( this, -1, _cadNode->GetID(), _cadNode->GetActiveAttribute()->GetMaterial() );
+        CADOpacitySliderDlg opacityDlg( this, -1, _cadNode->GetID(), _cadNode->GetActiveAttribute()->GetMaterial(), _cadNode->GetTransparentFlag() );
         if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
         {
             material->SetOpacity( opacityDlg.GetOpacity() );
+            _cadNode->SetTransparentFlag( opacityDlg.GetTransparentFlag() );
         }
     }
 }

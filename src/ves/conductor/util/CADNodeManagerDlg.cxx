@@ -780,13 +780,17 @@ void CADNodeManagerDlg::_showPropertiesDialog( wxCommandEvent& WXUNUSED( event )
 void CADNodeManagerDlg::_showOpacityDialog( wxCommandEvent& WXUNUSED( event ) )
 {
     //We should only arrive in here if the attribute is a CADMaterial!!!!
-    if( _activeCADNode )
+    if( !_activeCADNode )
     {
-        CADOpacitySliderDlg opacityDlg( this, -1, _activeCADNode->GetID(), _activeCADNode->GetOpacity() );
-        if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
-        {
-            _activeCADNode->SetOpacity( opacityDlg.GetOpacity() );
-        }
+        return;
+    }
+    
+    CADOpacitySliderDlg opacityDlg( this, -1, _activeCADNode->GetID(), 
+        _activeCADNode->GetOpacity(), _activeCADNode->GetTransparentFlag() );
+    if( opacityDlg.ShowModal() == ( wxID_OK | wxID_CANCEL ) )
+    {
+        _activeCADNode->SetOpacity( opacityDlg.GetOpacity() );
+        _activeCADNode->SetTransparentFlag( opacityDlg.GetTransparentFlag() );
     }
 }
 
