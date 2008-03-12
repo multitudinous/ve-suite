@@ -30,8 +30,13 @@ public:
     Scene( ves::xplorer::scenegraph::DCS* pluginDCS );
     ~Scene();
 
+    void Initialize();
+
 private:
+    void CreateProjectionTexture();
+
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_torus;
 
     cpt::Camera* m_camera;
 };

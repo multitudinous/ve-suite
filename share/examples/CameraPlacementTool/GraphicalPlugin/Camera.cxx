@@ -36,40 +36,47 @@ void Camera::Initialize()
     m_dcs->addChild( osgDB::readNodeFile( std::string( "Models/camera.ive" ) ) );
 
     //Set the projection matrix for the camera
-    osg::Matrixd proj;
-    proj.makePerspective( 30.0, 1.0, 1.0, 5.0 );
-    m_projectionMatrix.set( proj.ptr() );
+    m_projectionMatrix.makePerspective( 1.0, 1.0, 5.0, 10.0 );
 
     DrawViewFrustum();
+}
+////////////////////////////////////////////////////////////////////////////////
+void Camera::SetNameAndDescriptions( const std::string& name )
+{
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_XML_ID" );
+    descriptorsList.push_back( "" );
+    m_dcs->setDescriptions( descriptorsList );
+    m_dcs->setName( name );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Camera::DrawViewFrustum()
 {
     //Get near and far from the Projection matrix.
-    const double near = m_projectionMatrix.mData[ 11 ] /
-                      ( m_projectionMatrix.mData[ 10 ] - 1.0 );
-    const double far =  m_projectionMatrix.mData[ 11 ] /
-                      ( m_projectionMatrix.mData[ 10 ] + 1.0 );
+    const double near = m_projectionMatrix( 3, 2 ) /
+                      ( m_projectionMatrix( 2, 2 ) - 1.0 );
+    const double far =  m_projectionMatrix( 3, 2 ) /
+                      ( m_projectionMatrix( 2, 2 ) + 1.0 );
 
     //Get the sides of the near plane.
-    const double nLeft =   near * ( m_projectionMatrix.mData[ 2 ] - 1.0 ) /
-                                    m_projectionMatrix.mData[ 0 ];
-    const double nRight =  near * ( m_projectionMatrix.mData[ 2 ] + 1.0 ) /
-                                    m_projectionMatrix.mData[ 0 ];
-    const double nTop =    near * ( m_projectionMatrix.mData[ 6 ] + 1.0 ) /
-                                    m_projectionMatrix.mData[ 5 ];
-    const double nBottom = near * ( m_projectionMatrix.mData[ 6 ] - 1.0 ) /
-                                    m_projectionMatrix.mData[ 5 ];
+    const double nLeft =   near * ( m_projectionMatrix( 2, 0 ) - 1.0 ) /
+                                    m_projectionMatrix( 0, 0 );
+    const double nRight =  near * ( m_projectionMatrix( 2, 0 ) + 1.0 ) /
+                                    m_projectionMatrix( 0, 0 );
+    const double nTop =    near * ( m_projectionMatrix( 2, 1 ) + 1.0 ) /
+                                    m_projectionMatrix( 1, 1 );
+    const double nBottom = near * ( m_projectionMatrix( 2, 1 ) - 1.0 ) /
+                                    m_projectionMatrix( 1, 1 );
 
     //Get the sides of the far plane.
-    const double fLeft =   far * ( m_projectionMatrix.mData[ 2 ] - 1.0 ) /
-                                   m_projectionMatrix.mData[ 0 ];
-    const double fRight =  far * ( m_projectionMatrix.mData[ 2 ] + 1.0 ) /
-                                   m_projectionMatrix.mData[ 0 ];
-    const double fTop =    far * ( m_projectionMatrix.mData[ 6 ] + 1.0 ) /
-                                   m_projectionMatrix.mData[ 5 ];
-    const double fBottom = far * ( m_projectionMatrix.mData[ 6 ] - 1.0 ) /
-                                   m_projectionMatrix.mData[ 5 ];
+    const double fLeft =   far * ( m_projectionMatrix( 2, 0 ) - 1.0 ) /
+                                   m_projectionMatrix( 0, 0 );
+    const double fRight =  far * ( m_projectionMatrix( 2, 0 ) + 1.0 ) /
+                                   m_projectionMatrix( 0, 0 );
+    const double fTop =    far * ( m_projectionMatrix( 2, 1 ) + 1.0 ) /
+                                   m_projectionMatrix( 1, 1 );
+    const double fBottom = far * ( m_projectionMatrix( 2, 1 ) - 1.0 ) /
+                                   m_projectionMatrix( 1, 1 );
 
     //Our vertex array needs only 9 vertices:
     //The origin, and the eight corners of the near and far planes.
@@ -111,5 +118,20 @@ void Camera::DrawViewFrustum()
     //osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform();
     //mt->setMatrix( osg::Matrixd::inverse( mv ) );
     //mt->addChild( geode.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* Camera::GetDCS()
+{
+    return m_dcs.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixd Camera::GetModelViewMatrix()
+{
+    return m_modelViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Matrixd Camera::GetProjectionMatrix()
+{
+    return m_projectionMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -14,10 +14,11 @@ namespace scenegraph
 }
 
 // --- vrJuggler Includes --- //
-#include <gmtl/Matrix.h>
+//#include <gmtl/Matrix.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+#include <osg/Matrix>
 
 namespace osg
 {
@@ -25,9 +26,11 @@ namespace osg
 }
 
 // --- C/C++ Libraries --- //
+#include <string>
 
 namespace cpt
 {
+
 /*----------------------------------------------------------------------------*/
 class Camera
 {
@@ -37,15 +40,22 @@ public:
 
     void Initialize();
 
+    void SetNameAndDescriptions( const std::string& name );
+
     void DrawViewFrustum();
+
+    ves::xplorer::scenegraph::DCS* GetDCS();
+
+    osg::Matrixd GetModelViewMatrix();
+    osg::Matrixd GetProjectionMatrix();
 
 protected:
     
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
 
-    gmtl::Matrix44d m_projectionMatrix;
-
+    osg::Matrixd m_modelViewMatrix;
+    osg::Matrixd m_projectionMatrix;
 };
 /*----------------------------------------------------------------------------*/
 
