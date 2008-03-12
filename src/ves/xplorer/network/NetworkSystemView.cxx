@@ -34,6 +34,10 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/User.h>
+#include <ves/open/xml/UserPtr.h>
+#include <ves/open/xml/StateInfo.h>
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/System.h>
@@ -79,7 +83,26 @@ NetworkSystemView::NetworkSystemView()
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( std::string network )
 {
-    this->network = network;
+	std::ofstream test ("testnet.txt");
+	test<<network;
+	test.close();
+    //this->network = network;    
+    //parse network into array of all subnets
+	LoadVESData( network );
+
+    //get the map count
+    //std::map< std::string, model::SystemPtr> systems =
+    //systems = ves::conductor::XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+
+    // iterate through the systems
+    //for( std::map< std::string, model::SystemPtr>::iterator
+    //        iter = systems.begin(); iter != systems.end(); iter++ )
+    //{
+    //    Network* tempNetwork = new Network( this );
+    //    tempNetwork->LoadSystem( iter->second, this );
+    //    networks[iter->first] = tempNetwork;
+    //    tempNetwork->SetNetworkID( iter->first );
+    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
@@ -102,23 +125,24 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 }
 
 ////////////////////////////////////////////////////////
-osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
+osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 {
-    XMLReaderWriter networkWriter;
-    networkWriter.UseStandaloneDOMDocumentManager();
-    std::vector< XMLObjectPtr > objectVector;
+    //XMLReaderWriter networkWriter;
+    //networkWriter.UseStandaloneDOMDocumentManager();
+    //std::vector< XMLObjectPtr > objectVector;
     // do this for models
-    //networkWriter.ReadXMLData( network, "Model", "veModel" );
-    networkWriter.ReadXMLData( network, "System", "veSystem" );
-    objectVector = networkWriter.GetLoadedXMLObjects();
-    if( objectVector.empty() )
-    {
-        return 0;
-    }
+    ////networkWriter.ReadXMLData( network, "Model", "veModel" );
+    //networkWriter.ReadXMLData( network, "System", "veSystem" );
+    //objectVector = networkWriter.GetLoadedXMLObjects();
+    //if( objectVector.empty() )
+    //{
+    //    return 0;
+    //}
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     std::ofstream output( "scale.txt" );
-    SystemPtr mainSystem = boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
+    //SystemPtr mainSystem = boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
+    SystemPtr mainSystem = systems[netId];
     // now lets create a list of them
     //for ( size_t i = 0; i < objectVector.size(); ++i )
     for( size_t i = 0; i < mainSystem->GetModels().size(); ++i )
@@ -437,4 +461,207 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( void )
     //phongShader.SyncShaderAndStateSet();
 
     return worldTranslate.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void NetworkSystemView::LoadVESData( std::string xmlNetwork )
+{
+
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+
+	std::string topId;
+	std::map< std::string, ves::open::xml::model::NetworkPtr > m_networkMap;
+    std::map< std::string, std::vector< std::string > > m_networkModelMap;
+    std::map< std::string, ves::open::xml::model::ModelPtr > m_modelMap;
+    std::map< std::string, ves::open::xml::UserPtr > m_userMap;
+    std::vector< std::pair< std::string, std::string > > dataToObtain;
+    std::vector< std::pair< std::string, std::string > >::iterator dataIter;
+    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
+    dataToObtain.push_back( std::make_pair( "Model", "veNetwork" ) );
+    dataToObtain.push_back( std::make_pair( "Model", "veModel" ) );
+    dataToObtain.push_back( std::make_pair( "XML", "User" ) );
+    networkWriter.ReadXMLData( xmlNetwork, dataToObtain );
+    std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkWriter.GetLoadedXMLObjects();
+    ves::open::xml::model::SystemPtr tempSystem;
+
+    // we are expecting that a network will be found
+    if( !objectVector.empty() )
+    {
+        //typeid
+        //If the file is a new xml file with a system element
+        if( objectVector.at( 0 )->GetObjectType() == "System" )
+        //if( tempSystem )
+        {
+            tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+            systems[tempSystem->GetID()] = tempSystem;
+            //get the main systems id
+            
+			topId = tempSystem->GetID();
+            m_networkMap[ "Network" ] = tempSystem->GetNetwork();
+            objectIter = objectVector.begin();
+            objectIter = objectVector.erase( objectIter );
+        }
+        //Else if the file jsut has a netowrk and a series of models
+        //else
+        //{
+        //    tempSystem = ves::open::xml::model::SystemPtr( new ves::open::xml::model::System() );
+        //    systems[tempSystem->GetID()] = tempSystem;
+        //    topId = tempSystem->GetID();
+
+        //    m_networkMap[ "Network" ] = ves::open::xml::model::NetworkPtr( boost::dynamic_pointer_cast<Network>( objectVector.at( 0 ) ) );
+        //    tempSystem->AddNetwork( m_networkMap[ "Network" ] );
+        //    objectIter = objectVector.begin();
+        //    objectIter = objectVector.erase( objectIter );
+        //    tempSystem = ves::open::xml::model::SystemPtr();
+        //}
+    }
+    else
+    {
+        std::cerr << "Improperly formated ves file."
+        << "VES File Read Error" << std::endl;
+    }
+
+    std::vector< std::string > networkModelVector;
+    std::vector< std::string >::iterator stringIter;
+    long moduleID = 0;
+    std::ostringstream fromID;
+    std::ostringstream toID;
+    ves::open::xml::model::NetworkPtr tempNetwork = m_networkMap[ "Network" ];
+    for( size_t i = 0; i < tempNetwork->GetNumberOfLinks(); ++i )
+    {
+        tempNetwork->GetLink( i )->GetFromModule()->GetData( moduleID );
+        fromID << moduleID;
+        tempNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
+        toID << moduleID;
+
+        stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), fromID.str() );
+        if( stringIter == networkModelVector.end() )
+        {
+            networkModelVector.push_back( fromID.str() );
+        }
+
+        stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), toID.str() );
+        if( stringIter == networkModelVector.end() )
+        {
+            networkModelVector.push_back( toID.str() );
+        }
+        fromID.str( "" );
+        toID.str( "" );
+    }
+
+    if( !tempSystem )
+    {
+        // now lets create a list of them
+        std::ostringstream modelID;
+        for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
+        {
+            if( (*objectIter)->GetObjectType() != "Model" )
+            {
+                //if this object is not a model continue
+                ++objectIter;
+                continue;
+            }
+            ves::open::xml::model::ModelPtr model = boost::dynamic_pointer_cast<Model>( *objectIter );
+            objectIter = objectVector.erase( objectIter );
+            modelID << model->GetModelID();
+            m_modelMap[ modelID.str()] = model;
+            systems[ topId ]->AddModel( model );
+            modelID.str( "" );
+        }
+    }
+    else
+    {
+        // now lets create a list of them
+        std::ostringstream modelID;
+        std::vector< ves::open::xml::model::ModelPtr >::iterator modelIter;
+        std::vector< ves::open::xml::model::ModelPtr > modelVector;
+        modelVector = tempSystem->GetModels();
+
+        for( modelIter = modelVector.begin(); modelIter != modelVector.end(); )
+        {
+            ves::open::xml::model::ModelPtr model = *modelIter;
+
+            modelIter = modelVector.erase( modelIter );
+            modelID << model->GetModelID();
+            m_modelMap[ modelID.str()] = model;
+            stringIter = std::find( networkModelVector.begin(),
+                                    networkModelVector.end(), modelID.str() );
+            if( stringIter == networkModelVector.end() )
+            {
+                networkModelVector.push_back( modelID.str() );
+            }
+            modelID.str( "" );
+        }
+    }
+   //For the case where there are no links between models
+    //Just grab all the models in the ves file
+    //this is somewhat of a hack but the schema does not support anything else
+    if( tempNetwork->GetNumberOfLinks() == 0 )
+    {
+        std::ostringstream modelID;
+        for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
+                modelIter = m_modelMap.begin(); modelIter != m_modelMap.end();
+                ++modelIter )
+        {
+            modelID << modelIter->second->GetModelID();
+            networkModelVector.push_back( modelID.str() );
+            modelID.str( "" );
+        }
+    }
+    m_networkModelMap[ "Network" ] = networkModelVector;
+
+    if( !objectVector.empty() )
+    {
+        m_userMap[ "Network" ] = boost::dynamic_pointer_cast<ves::open::xml::User>( objectVector.at( 0 ) );
+        //Set user preferences
+        std::vector< ves::open::xml::CommandPtr > tempStates =
+            m_userMap[ "Network" ]->GetUserStateInfo()->GetStateVector();
+        std::map< std::string, ves::open::xml::CommandPtr > tempMap;
+        for( size_t i = 0; i < tempStates.size(); ++i )
+        {
+            tempMap[ tempStates.at( i )->GetCommandName()] = tempStates.at( i );
+        }
+        //UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
+    }
+    else
+    {
+        m_userMap[ "Network" ] = ves::open::xml::UserPtr( new ves::open::xml::User() );
+    }
+
+    m_userMap[ "Network" ]->SetUserId( "User" );
+    m_userMap[ "Network" ]->SetControlStatus(
+        ves::open::xml::User::VEControlStatus( "MASTER" ) );
+
+    if( tempSystem )
+    {
+        //Parse out the remaining subsystems
+        int modelCount = tempSystem->GetNumberOfModels();
+        for( size_t j = 0; j < modelCount; j++ )
+        {
+            if( tempSystem->GetModel( j )->GetSubSystem() )
+            {
+                ParseSystem( tempSystem->GetModel( j )->GetSubSystem() );
+            }
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void NetworkSystemView::ParseSystem( ves::open::xml::model::SystemPtr system )
+{
+    //add the system to the map
+    systems[system->GetID()] = system;
+
+    //Parse out the subsystems
+    int modelCount = system->GetNumberOfModels();
+    for( size_t j = 0; j < modelCount; j++ )
+    {
+        if( system->GetModel( j )->GetSubSystem() )
+        {
+            ParseSystem( system->GetModel( j )->GetSubSystem() );
+        }
+    }
 }

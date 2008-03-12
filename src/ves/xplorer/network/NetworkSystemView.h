@@ -34,7 +34,9 @@
 #define NETWORK_SYSTEM_VIEW_H
 #include <ves/xplorer/GlobalBase.h>
 
+#include <ves/open/xml/model/SystemPtr.h>
 #include <string>
+#include <map>
 #include <osg/ref_ptr>
 namespace osg
 {
@@ -62,10 +64,15 @@ public:
     {
         ;
     }
-    osg::ref_ptr< osg::Group > DrawNetwork( void );
+    //osg::ref_ptr< osg::Group > DrawNetwork( void );
+	osg::ref_ptr< osg::Group > DrawNetwork( std::string netId );
+	void LoadVESData( std::string xmlNetwork );
+	void ParseSystem( ves::open::xml::model::SystemPtr system );
+
 private:
     std::string network;
     osg::ref_ptr<osg::AutoTransform> worldTranslate;
+	std::map< std::string, ves::open::xml::model::SystemPtr > systems;
 
 };
 }

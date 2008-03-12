@@ -2279,8 +2279,14 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
 void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 {
     DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
+
     if( event.GetId() == CHANGE_XPLORER_VIEW_NETWORK )
     {
+        DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "UNSIGNED INT" ) ) );
+		dataValuePair2->SetData( "SUBNET_ID", canvas->GetActiveNetworkID() );
+		veCommand->AddDataValuePair( dataValuePair2 );
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
     }
     else if( event.GetId() == CHANGE_XPLORER_VIEW_CAD )
@@ -2296,8 +2302,6 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
         dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "ERROR" );
     }
 
-    CommandPtr veCommand( new Command() );
-    veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
     veCommand->AddDataValuePair( dataValuePair );
     serviceList->SendCommandStringToXplorer( veCommand );
 }

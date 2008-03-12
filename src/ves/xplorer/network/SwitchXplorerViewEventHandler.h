@@ -44,6 +44,7 @@
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/event/EventHandler.h>
+#include <ves/xplorer/network/NetworkSystemView.h>
 
 // --- C/C++ Libraries --- //
 #include <map>
@@ -106,6 +107,7 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
 private:
+	NetworkSystemView * networkLayout;
 
 };
 }

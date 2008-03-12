@@ -115,13 +115,21 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
     {
         SceneManager::instance()->SetActiveSwitchNode( 2 );
         osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
-        NetworkSystemView networkLayout( cfdExecutive::instance()->GetCurrentNetwork() );
-        if( tempDCS->GetNumChildren() >= 1 )
+		if (tempDCS->GetNumChildren() == 0)
+		{
+            networkLayout = new NetworkSystemView( cfdExecutive::instance()->GetCurrentNetwork() );
+        }
+        //else if( tempDCS->GetNumChildren() >= 1 )
+		else
         {
             tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
         }
 
-        osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
+        activeModelDVP = command->GetDataValuePair("SUBNET_ID");
+        std::string netId; 
+        activeModelDVP->GetData(netId);
+        //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
+        osg::ref_ptr< osg::Group > tempGroup = networkLayout->DrawNetwork(netId);
         if( tempGroup.valid() )
         {
             tempDCS->addChild( tempGroup.get() );
