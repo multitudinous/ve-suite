@@ -88,16 +88,17 @@ int Network::parse( std::string xmlNetwork )
     networkWriter.ReadXMLData( xmlNetwork, "System", "veSystem" );
     std::vector< XMLObjectPtr > objectVector =
         networkWriter.GetLoadedXMLObjects();
-    model::SystemPtr tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
-    if( !tempSystem )
+    mSystemPtr = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+        
+    if( !mSystemPtr )
     {
         std::cerr << "Improperly formated ves file."
-        << "VES File Read Error" << std::endl;
+            << "VES File Read Error" << std::endl;
         return 0;
     }
 
     std::vector< model::ModelPtr > models =
-        tempSystem->GetModels();
+        mSystemPtr->GetModels();
     // now lets create a list of them
     for( size_t i = 0; i < models.size(); ++i )
     {
@@ -111,7 +112,7 @@ int Network::parse( std::string xmlNetwork )
     //assumes that the modules have already
     //been created
     //we are expecting that a network will be found
-    veNetwork = tempSystem->GetNetwork();
+    veNetwork = mSystemPtr->GetNetwork();
 
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
@@ -185,27 +186,29 @@ void Network::add_module( int m, std::string name )
 ////////////////////////////////////////////////////////////////////////////////
 std::string Network::GetNetworkString( void )
 {
-    if( !veNetwork )
+    if( !mSystemPtr )
     {
         return std::string( "" );
     }
 
-    model::SystemPtr tempSystem( new model::System() );
+    //We do not need to update the system in the ce anymore because
+    //the ce does not hold any input/results data anymore
+    //model::SystemPtr tempSystem( new model::System() );
     //  Models
-    for( size_t i = 0; i < _module_ptrs.size(); ++i )
+    /*for( size_t i = 0; i < _module_ptrs.size(); ++i )
     {
-        tempSystem->AddModel( _module_ptrs.at( i )->GetVEModel() );
-    }
+        mSystemPtr->AddModel( _module_ptrs.at( i )->GetVEModel() );
+    }*/
 
     //  Newtork
-    tempSystem->AddNetwork( veNetwork );
+    //tempSystem->AddNetwork( veNetwork );
 
     // Here we wshould loop over all of the following
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     // Just push on the old network as ce can't modify the network
     // it only uses the network. conductor modifies the network
     nodes.push_back( std::pair< XMLObjectPtr, std::string >(
-                         tempSystem, "veSystem" ) );
+                         mSystemPtr, "veSystem" ) );
 
     std::string fileName( "returnString" );
     XMLReaderWriter netowrkWriter;
@@ -213,4 +216,4 @@ std::string Network::GetNetworkString( void )
     netowrkWriter.WriteXMLDocument( nodes, fileName, "Network" );
     return fileName;
 }
-
+////////////////////////////////////////////////////////////////////////////////

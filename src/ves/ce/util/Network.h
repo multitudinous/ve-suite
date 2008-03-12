@@ -35,6 +35,7 @@
 #include <ves/VEConfig.h>
 #include <ves/open/moduleS.h>
 #include <ves/open/xml/model/NetworkPtr.h>
+#include <ves/open/xml/model/SystemPtr.h>
 
 #include <string>
 #include <vector>
@@ -81,6 +82,8 @@ protected:
     std::map< int, Module* > moduleIDMap;
     /// Holder of the network
     ves::open::xml::model::NetworkPtr veNetwork;
+    ///Holds the top level system for the current network
+    ves::open::xml::model::SystemPtr mSystemPtr;
 };
 }
 }
