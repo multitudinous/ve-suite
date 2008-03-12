@@ -143,7 +143,7 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
         {
             converter->Delete();
             std::cout << "\nAttempt failed: can not currently handle "
-            << "this type of data\n" << std::endl;
+                << "this type of data\n" << std::endl;
             exit( 1 );
         }
         if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )

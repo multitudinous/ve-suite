@@ -163,39 +163,42 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 continue;
             }
 
+            //////////////////////////////////////////////////////////////
+            // get vtk data set name...
+            std::string vtk_filein = 
+                tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
+            if( !ves::xplorer::util::fileIO::isFileReadable( vtk_filein ) )
+            {
+                std::cerr << "ERROR: unreadable vtk file = " << vtk_filein
+                    << ".  You may need to correct your param file."
+                    << std::endl;
+                continue;
+            }
+
+            ///////////////////////////////////////////////////////////////
             //If not already there lets create a new dataset
             _activeModel->CreateCfdDataSet();
             DataSet* lastDataAdded = _activeModel->GetCfdDataSet( -1 );
             vprDEBUG( vesDBG, 0 ) << "|\t************************************* "
                 << std::endl << vprDEBUG_FLUSH;
-
             vprDEBUG( vesDBG, 0 ) << "|\tvtk DCS parameters:"
                 << std::endl << vprDEBUG_FLUSH;
 
             // Pass in -1 to GetCfdDataSet to get the last dataset added
-            lastDataAdded->GetDCS()->SetScaleArray( tempInfoPacket->GetTransform()->GetScaleArray()->GetArray() );
-            lastDataAdded->GetDCS()->SetTranslationArray( tempInfoPacket->GetTransform()->GetTranslationArray()->GetArray() );
-            lastDataAdded->GetDCS()->SetRotationArray( tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );
+            lastDataAdded->GetDCS()->SetScaleArray( 
+                tempInfoPacket->GetTransform()->GetScaleArray()->GetArray() );
+            lastDataAdded->GetDCS()->SetTranslationArray( 
+                tempInfoPacket->GetTransform()->GetTranslationArray()->GetArray() );
+            lastDataAdded->GetDCS()->SetRotationArray( 
+                tempInfoPacket->GetTransform()->GetRotationArray()->GetArray() );
 
-            //////////////////////////////////////////////////////////////
-            // get vtk data set name...
-            std::string vtk_filein = tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetDataString();
-
-            if( ves::xplorer::util::fileIO::isFileReadable( vtk_filein ) )
-            {
-                vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
-                    << ", dcs = "  << lastDataAdded->GetDCS()
-                    << std::endl << vprDEBUG_FLUSH;
-                lastDataAdded->SetFileName( vtk_filein );
-                lastDataAdded->SetUUID( "VTK_DATA_FILE", tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() );
-            }
-            else
-            {
-                std::cerr << "ERROR: unreadable vtk file = " << vtk_filein
-                    << ".  You may need to correct your param file."
-                    << std::endl;
-                exit( 1 );
-            }
+            vprDEBUG( vesDBG, 0 ) << "|\tvtk file = " << vtk_filein
+                << ", dcs = "  << lastDataAdded->GetDCS()
+                << std::endl << vprDEBUG_FLUSH;
+            lastDataAdded->SetFileName( vtk_filein );
+            lastDataAdded->SetUUID( "VTK_DATA_FILE", 
+                tempInfoPacket->GetProperty( "VTK_DATA_FILE" )->GetID() );
+            
             //////////////////////////////////////////////////////////////
             if( tempInfoPacket->GetProperty( "VTK_PRECOMPUTED_DIR_PATH" ) )
             {

@@ -1302,8 +1302,7 @@ cfdPlanes* DataSet::GetPrecomputedSlices( int xyz )
     else
     {
         std::cerr << "ERROR: DataSet::GetPrecomputedSlices cannot "
-        << "handle index " << xyz << std::endl;
-        exit( 1 );
+            << "handle index " << xyz << std::endl;
         return NULL; // to eliminate compile warning
     }
 }
