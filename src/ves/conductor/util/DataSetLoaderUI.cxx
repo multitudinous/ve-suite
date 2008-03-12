@@ -119,8 +119,8 @@ bool DataSetLoaderUI::Create( wxWindow* parent, wxWindowID id, const wxString& c
     dataSetOpenButton = NULL;
     preComputDirTextEntry = NULL;
     preComputeOpenButton = NULL;
-    surfaceDataText = NULL;
-    surfaceDataOpenButton = NULL;
+    //surfaceDataText = NULL;
+    //surfaceDataOpenButton = NULL;
     transformButton = NULL;
     scalarButton = NULL;
     itemListBox24 = 0;
@@ -235,7 +235,10 @@ void DataSetLoaderUI::CreateControls()
     itemStaticBoxSizer9->Add( preComputeOpenButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
     preComputDirTextEntry->Raise();
     ///////////////////////////////////////////////////////
-    itemStaticBoxSizer12Static = new wxStaticBox( itemDialog1, wxID_ANY, _( "Surface Data Directory" ) );
+    //At this time the precomputed surfaces does not appear to work
+    //precomputed surface appear to be loaded as a normal dataset
+    //thus there is no more per data set association - 03-10-2008 -mccdo
+    /*itemStaticBoxSizer12Static = new wxStaticBox( itemDialog1, wxID_ANY, _( "Surface Data Directory" ) );
     wxStaticBoxSizer* itemStaticBoxSizer12 = new wxStaticBoxSizer( itemStaticBoxSizer12Static, wxHORIZONTAL );
     itemStaticBoxSizer4->Add( itemStaticBoxSizer12, 0, wxALIGN_LEFT | wxALL | wxEXPAND, 5 );
 
@@ -254,7 +257,7 @@ void DataSetLoaderUI::CreateControls()
     if( ShowToolTips() )
         surfaceDataOpenButton->SetToolTip( _( "Surface Data Dir" ) );
     itemStaticBoxSizer12->Add( surfaceDataOpenButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-    surfaceDataText->Raise();
+    surfaceDataText->Raise();*/
     ///////////////////////////////////////////////////////
     itemStaticBoxSizer15Static = new wxStaticBox( itemDialog1, wxID_ANY, _( "DataSet Attributes" ) );
     wxStaticBoxSizer* itemStaticBoxSizer15 = new wxStaticBoxSizer( itemStaticBoxSizer15Static, wxHORIZONTAL );
@@ -335,7 +338,7 @@ void DataSetLoaderUI::SetTextCtrls( void )
         // we can add the appropriate entries if need be
         itemListBox24->Clear();
         dataSetTextEntry->SetValue( _( "Enter Filename Here-->" ) );
-        surfaceDataText->SetValue( _( "Enter Dir Here-->" ) );
+        //surfaceDataText->SetValue( _( "Enter Dir Here-->" ) );
         preComputDirTextEntry->SetValue( _( "Enter Dir Here-->" ) );
         itemTextCtrl21->SetValue( _( "Enter Dir Here-->" ) );
 
@@ -357,7 +360,7 @@ void DataSetLoaderUI::SetTextCtrls( void )
             else if( tempDVP->GetDataName() == "VTK_SURFACE_DIR_PATH" )
             {
                 //clear...then append
-                surfaceDataText->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
+                //surfaceDataText->SetValue( wxString( tempDVP->GetDataString().c_str(), wxConvUTF8 ) );
             }
             else if( tempDVP->GetDataName() == "VTK_PRECOMPUTED_DIR_PATH" )
             {
@@ -453,7 +456,6 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
 {
     //Launch the surface data dir
     //Launch the precomputed data dir
-////@begin wxEVT_COMMAND_BUTTON_CLICKED event handler for ID_BUTTON4 in DataSetLoaderUI.
     wxPoint pos( 0, 0 );
     wxFileDialog dialog( this,
                          _T( "Open file" ),
@@ -470,7 +472,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
         surfaceDir.MakeRelativeTo( ::wxGetCwd() );
         if( event.GetId() == ID_BUTTON4 )
         {
-            wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
+            /*wxString relativeSurfaceDirPath( surfaceDir.GetPath() );
             relativeSurfaceDirPath.Replace( _( "\\" ), _( "/" ), true );
             surfaceDataText->SetValue( relativeSurfaceDirPath );
             ves::open::xml::DataValuePairPtr tempDVP = mParamBlock->GetProperty( "VTK_SURFACE_DIR_PATH" );
@@ -484,7 +486,7 @@ void DataSetLoaderUI::OnLoadSurfaceFile( wxCommandEvent& event )
             ves::open::xml::DataValuePairSharedPtr dataValuePair(
                   new ves::open::xml::DataValuePair() );
             dataValuePair->SetData( "ADD_SURFACE_DATA_DIR", tempDVP );
-            SendCommandToXplorer( dataValuePair );
+            SendCommandToXplorer( dataValuePair );*/
         }
         else if( event.GetId() == ID_BUTTON3 )
         {
@@ -770,7 +772,7 @@ void DataSetLoaderUI::EnableUI( bool flag )
     }
     dataSetOpenButton->Enable( flag );
     preComputeOpenButton->Enable( flag );
-    surfaceDataOpenButton->Enable( flag );
+    //surfaceDataOpenButton->Enable( flag );
     transformButton->Enable( flag );
     itemButton22->Enable( flag );
 }
