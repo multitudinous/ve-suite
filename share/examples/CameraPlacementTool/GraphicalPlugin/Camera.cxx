@@ -8,6 +8,7 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/MatrixTransform>
+
 #include <osgDB/ReadFile>
 
 //C/C++ Libraries
@@ -18,8 +19,10 @@ using namespace cpt;
 ////////////////////////////////////////////////////////////////////////////////
 Camera::Camera( ves::xplorer::scenegraph::DCS* parentDCS )
 :
-m_parentDCS( parentDCS )
+m_dcs( new ves::xplorer::scenegraph::DCS() )
 {
+    parentDCS->AddChild( m_dcs.get() );
+
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -30,9 +33,11 @@ Camera::~Camera()
 ////////////////////////////////////////////////////////////////////////////////
 void Camera::Initialize()
 {
+    m_dcs->addChild( osgDB::readNodeFile( std::string( "Models/camera.ive" ) ) );
+
     //Set the projection matrix for the camera
     osg::Matrixd proj;
-    proj.makePerspective( 30.0, 1.0, 1.0, 10.0 );
+    proj.makePerspective( 30.0, 1.0, 1.0, 5.0 );
     m_projectionMatrix.set( proj.ptr() );
 
     DrawViewFrustum();
@@ -41,8 +46,10 @@ void Camera::Initialize()
 void Camera::DrawViewFrustum()
 {
     //Get near and far from the Projection matrix.
-    const double near = m_projectionMatrix.mData[ 11 ] / ( m_projectionMatrix.mData[ 10 ] - 1.0 );
-    const double far = m_projectionMatrix.mData[ 11 ] / ( 1.0 + m_projectionMatrix.mData[ 10 ] );
+    const double near = m_projectionMatrix.mData[ 11 ] /
+                      ( m_projectionMatrix.mData[ 10 ] - 1.0 );
+    const double far =  m_projectionMatrix.mData[ 11 ] /
+                      ( m_projectionMatrix.mData[ 10 ] + 1.0 );
 
     //Get the sides of the near plane.
     const double nLeft =   near * ( m_projectionMatrix.mData[ 2 ] - 1.0 ) /
@@ -98,7 +105,7 @@ void Camera::DrawViewFrustum()
 
     geode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
-    m_parentDCS->addChild( geode.get() );
+    m_dcs->addChild( geode.get() );
 
     //Create parent MatrixTransform to transform the view volume by the inverse ModelView matrix 
     //osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform();

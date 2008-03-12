@@ -42,7 +42,7 @@ public:
 protected:
     
 private:
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_parentDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
 
     gmtl::Matrix44d m_projectionMatrix;
 
