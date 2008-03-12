@@ -6,8 +6,10 @@
 
 namespace cpt
 {
+// --- My Includes --- //
 class Scene;
 
+/*----------------------------------------------------------------------------*/
 class VE_USER_PLUGIN_EXPORTS GraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass
 {
 public:
@@ -23,6 +25,7 @@ protected:
 private:
     cpt::Scene* m_scene;
 };
+/*----------------------------------------------------------------------------*/
 
 extern "C"
 {

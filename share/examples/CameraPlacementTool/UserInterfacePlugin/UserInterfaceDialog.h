@@ -23,6 +23,8 @@ namespace util
 
 namespace cpt
 {
+
+/*----------------------------------------------------------------------------*/
 class UserInterfaceDialog : public ves::conductor::UIDialog
 {
 public:
@@ -61,6 +63,8 @@ protected:
     DECLARE_EVENT_TABLE()
 
 };
+/*----------------------------------------------------------------------------*/
+
 } //end cpt
 
 #endif //USER_INTERFACE_DIALOG_H

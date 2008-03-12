@@ -13,7 +13,8 @@ GraphicalPlugin::GraphicalPlugin()
 cfdVEBaseClass(),
 m_scene( 0 )
 {
-    m_objectName = "CameraPlacementTool";
+    //Needs to match inherited UIPluginBase class name
+    m_objectName = "UserInterfacePlugin";
 }
 ////////////////////////////////////////////////////////////////////////////////
 GraphicalPlugin::~GraphicalPlugin()
@@ -28,8 +29,7 @@ void GraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS 
 {
     cfdVEBaseClass::InitializeNode( veworldDCS );
 
-    m_scene = new cpt::Scene();
-    //m_dcs.get();
+    m_scene = new cpt::Scene( m_dcs.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void GraphicalPlugin::PreFrameUpdate()

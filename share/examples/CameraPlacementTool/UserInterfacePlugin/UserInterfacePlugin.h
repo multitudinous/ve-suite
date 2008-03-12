@@ -12,6 +12,8 @@
 
 namespace cpt
 {
+
+/*----------------------------------------------------------------------------*/
 class UserInterfacePlugin : public ves::conductor::UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( UserInterfacePlugin )
@@ -60,6 +62,8 @@ protected:
     int icon_w, icon_h;
 
 };
+/*----------------------------------------------------------------------------*/
+
 } //end cpt
 
 #endif //USER_INTERFACE_PLUGIN_H
