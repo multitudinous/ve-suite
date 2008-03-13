@@ -44,7 +44,7 @@ void Scene::Initialize()
     m_camera->SetNameAndDescriptions( std::string( "Camera" ) );
 
     m_torus->setPosition( osg::Vec3d( 0, 10, 0 ) );
-    osg::ref_ptr< osg::Node > node = osgDB::readNodeFile( std::string( "Models/torus.osg" ) );
+    osg::ref_ptr< osg::Node > node = osgDB::readNodeFile( std::string( "Models/torus.ive" ) );
     m_torus->addChild( node.get() );
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
