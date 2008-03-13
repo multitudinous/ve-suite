@@ -19,8 +19,6 @@ char vertex_shader[] =
         "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
         "gl_TexCoord[ 0 ].p = dot( eyePos, gl_EyePlaneR[ 0 ] ); \n"
         "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
-
-        "gl_TexCoord[ 1 ].st = gl_MultiTexCoord0.xy; \n"
     "} \n";
 /*----------------------------------------------------------------------------*/
 char fragment_shader[] =
@@ -29,13 +27,6 @@ char fragment_shader[] =
     "varying vec4 eyePos; \n"
     "varying vec3 lightPos; \n"
     "varying vec3 normal; \n"
-
-    "vec4 getProjectionMap() \n"
-    "{ \n"
-        "vec4 color = texture2DProj( shadowMap, gl_TexCoord[ 0 ] ); \n"
-
-        "return color; \n"
-    "} \n";
 
     "void main() \n"
     "{ \n"
@@ -48,16 +39,28 @@ char fragment_shader[] =
         "float RDotL = max( dot( R, L ), 0.0 ); \n"
 
         "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
-                            "gl_FrontMaterial.ambient.rgb; \n"
+                            "vec3( 0.368627, 0.368421 , 0.368421 ); \n"
         "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
-                            "gl_FrontMaterial.diffuse.rgb * NDotL; \n"
+                            "vec3( 0.886275, 0.885003 , 0.885003 ) * NDotL; \n"
         "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
-                             "gl_FrontMaterial.specular.rgb * \n"
-                             "pow( RDotL, gl_FrontMaterial.shininess ); \n"
+                             "vec3( 0.490196, 0.488722 , 0.488722 ) * \n"
+                             "pow( RDotL, 15.0 ); \n"
 
         "vec3 color = totalAmbient + totalDiffuse + totalSpecular; \n"
+        "vec3 projectionUV = gl_TexCoord[ 0 ].stp / gl_TexCoord[ 0 ].q; \n"
+        "vec4 projection = texture2D( projectionMap, projectionUV ); \n"
 
-        "gl_FragColor = vec4( color, 1.0 ) * getProjectionMap(); \n"
+        "if( projectionUV.s >= 0.0 && \n"
+            "projectionUV.t >= 0.0 && \n"
+            "projectionUV.s <= 1.0 && \n"
+            "projectionUV.t <= 1.0 ) \n"
+        "{ \n"
+            "gl_FragColor = projection; \n"
+        "} \n"
+        "else \n"
+        "{ \n"
+            "gl_FragColor = vec4( color, 1.0 ); \n"
+        "} \n"
     "} \n";
 /*----------------------------------------------------------------------------*/
 

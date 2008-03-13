@@ -1,6 +1,7 @@
 // --- My Includes --- //
 #include "Scene.h"
 #include "CameraEntity.h"
+#include "Shaders.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -14,9 +15,6 @@
 #include <osgDB/WriteFile>
 
 #include <gmtl/Xforms.h>
-#include <gmtl/Generate.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
 
 // --- Bullet Includes --- //
 
@@ -74,6 +72,21 @@ void Scene::CreateProjectionTexture()
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    vertexShader->setType( osg::Shader::VERTEX );
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    vertexShader->setShaderSource( vertex_shader );
+    fragmentShader->setShaderSource( fragment_shader );
+    program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+    stateset->setAttribute( program.get() );
+
+    osg::ref_ptr< osg::Uniform > projectionMap = new osg::Uniform( "projectionMap", 0 );
+    stateset->addUniform( projectionMap.get() );
+
     m_torus->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
