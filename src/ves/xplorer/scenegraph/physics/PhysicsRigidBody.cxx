@@ -81,6 +81,8 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsRigidBody::~PhysicsRigidBody()
 {
+    ClearCollisions();
+
     delete m_vesMotionState;
     delete m_collisionShape;
 }
