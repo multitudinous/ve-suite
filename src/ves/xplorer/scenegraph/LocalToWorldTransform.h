@@ -62,11 +62,13 @@ class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 public:
     LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldNode,
                            ves::xplorer::scenegraph::DCS* localNode );
-    virtual ~LocalToWorldTransform();
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
 
     gmtl::Matrix44d& GetLocalToWorldTransform();
+
+protected:
+    virtual ~LocalToWorldTransform();
 
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_worldNode;
