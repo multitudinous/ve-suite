@@ -98,6 +98,9 @@ void NavigationDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& ve
         quatPosition = command->GetDataValuePair( "POSITION_START_POSITION" );
         data = boost::dynamic_pointer_cast<OneDDoubleArray>(  quatPosition->GetDataXMLObject() );
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetTranslationArray( data->GetArray() );
+        
+        std::vector< double > tempPos = data->GetArray();
+        ves::xplorer::DeviceHandler::instance()->SetResetWorldPosition( quat, tempPos );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
