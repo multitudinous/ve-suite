@@ -47,22 +47,25 @@ void CameraEntityCallback::SetTexGenNode( osg::TexGenNode* texGenNode )
     m_texGenNode = texGenNode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntityCallback::SetMatrixPT( const osg::Matrixd& PT )
+void CameraEntityCallback::SetMatrixMVPT( const osg::Matrixd& MVPT )
 {
-    m_PT = PT;
+    m_MVPT = MVPT;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
-    osg::ref_ptr< osg::Camera > camera = static_cast< osg::Camera* >( node );
+    //osg::ref_ptr< osg::Camera > camera = static_cast< osg::Camera* >( node );
 
-    if( camera.valid() )
+    if( m_dcs.valid() )
     {
-        osg::Matrixd dcsMatrix;
-        dcsMatrix.set( gmtl::invert( m_dcs->GetMat() ).getData() );
-        osg::Matrixd modelViewMatrix = dcsMatrix * camera->getViewMatrix();
+        osg::Matrixd dcsInverseMatrix;
+        dcsInverseMatrix.set( gmtl::invert( m_dcs->GetMat() ).getData() );
+
         //Compute the matrix which takes a vertex from local coords into tex coords
-        m_texGenNode->getTexGen()->setPlanesFromMatrix( modelViewMatrix * m_PT );
+        osg::Matrixd MVPT = dcsInverseMatrix * m_MVPT;
+        m_texGenNode->getTexGen()->setPlanesFromMatrix( MVPT );
+
+        //Need to update CameraEntity's MVPT value somehow
     }
 
     traverse( node, nv );

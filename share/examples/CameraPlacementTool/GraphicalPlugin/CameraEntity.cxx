@@ -43,7 +43,7 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     m_camera->setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),     //eye position
                                      osg::Vec3( 0, 1, 0 ),     //center position
                                      osg::Vec3( 0, 0, 1 ) );   //up vector
-    m_camera->setProjectionMatrixAsPerspective( 2.0, 1.0, 5.0, 10.0 );
+    m_camera->setProjectionMatrixAsPerspective( 5.0, 1.0, 5.0, 10.0 );
     parentDCS->addChild( m_camera.get() );
 
     m_dcs = new ves::xplorer::scenegraph::DCS();
@@ -57,15 +57,18 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     m_texGenNode->setTextureUnit( 0 );
     parentDCS->addChild( m_texGenNode.get() );
 
-    //Multiply the Projection(P) matrix by the Texture(T) matrix
-    osg::Matrixd PT = m_camera->getProjectionMatrix() *
-                      osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
-                      osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
+    //Compute the matrix which takes a vertex from local coords into tex coords
+    //Multiply the ModelView(MV) by the Projection(P) by the Texture(T) matrix
+    osg::Matrixd MVPT = m_camera->getViewMatrix() *
+                        m_camera->getProjectionMatrix() *
+                        osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
+                        osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
 
+    //Set the callback on m_camera since m_dcs already has a callback
     m_cameraEntityCallback = new cpt::CameraEntityCallback();
     m_cameraEntityCallback->SetDCS( m_dcs.get() );
     m_cameraEntityCallback->SetTexGenNode( m_texGenNode.get() );
-    m_cameraEntityCallback->SetMatrixPT( PT );
+    m_cameraEntityCallback->SetMatrixMVPT( MVPT );
     m_camera->setUpdateCallback( m_cameraEntityCallback.get() );
 }
 

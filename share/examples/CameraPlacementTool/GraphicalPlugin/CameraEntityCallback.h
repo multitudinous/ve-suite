@@ -36,7 +36,7 @@ public:
 
     void SetDCS( ves::xplorer::scenegraph::DCS* dcs );
     void SetTexGenNode( osg::TexGenNode* texGenNode );
-    void SetMatrixPT( const osg::Matrixd& PT );
+    void SetMatrixMVPT( const osg::Matrixd& MVPT );
 
 protected:
     virtual ~CameraEntityCallback();
@@ -45,7 +45,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
     osg::ref_ptr< osg::TexGenNode > m_texGenNode;
 
-    osg::Matrixd m_PT;
+    osg::Matrixd m_MVPT;
 
 };
 /*----------------------------------------------------------------------------*/
