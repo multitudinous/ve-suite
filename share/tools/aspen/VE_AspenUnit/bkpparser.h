@@ -85,6 +85,8 @@ private:
    //VE_XML::VE_Model::Network* veNetwork;
    void StripCharacters( std::string& data, std::string character );   
 
+   std::string workingDir;
+
 public:
 	CASI::CASIDocument * aspendoc;
 
@@ -110,6 +112,8 @@ public:
 	int getNumStream();                                     //returns total number of the streams
 	int getStreamSize(int index);                           //returns the total number of points for a stream
 	bool isOpen();
+
+	void SetWorkingDir( std::string dir );
 
 	void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
    void CreateNetworkInformation( std::string networkData );

@@ -38,7 +38,7 @@ private:
 	Body_Unit_i* unitObject;
 	CString moduleName;
 	CorbaUnitManager* commManager;
-	CDialogThread* orbThread;
+	//CDialogThread* orbThread;
 	CString computerName;
 	CString unitName;
 	CString portNumber;
@@ -46,4 +46,5 @@ private:
 	bool initialized;
 public:
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedButton2();
 };

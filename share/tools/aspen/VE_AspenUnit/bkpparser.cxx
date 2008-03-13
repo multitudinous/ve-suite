@@ -23,6 +23,7 @@ using namespace Gdiplus;
 BKPParser::BKPParser()
 {
 	aspendoc = new CASI::CASIDocument();
+	workingDir = "";
 	//veNetwork = new VE_XML::VE_Model::Network();
 }
 
@@ -35,9 +36,9 @@ void BKPParser::openFile(const char * file)
 	std::string fileName(file);
 	std::string bkpExt(".bkp");
 	std::string apwExt(".apw");
-	ParseFile((fileName + bkpExt).c_str());	
+	ParseFile( ( workingDir + fileName + bkpExt ).c_str());	
 	CString filename = file;
-	aspendoc->open((fileName + apwExt).c_str());
+	aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
 }
 
 
@@ -1748,4 +1749,9 @@ std::string BKPParser::GetStreamOutputModuleParamProperties(std::string modname,
 	commandWriter.UseStandaloneDOMDocumentManager();
 	commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return status;
+}
+
+void BKPParser::SetWorkingDir( std::string dir )
+{
+    workingDir = dir;
 }

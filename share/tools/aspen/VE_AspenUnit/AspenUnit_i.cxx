@@ -48,7 +48,7 @@
 #include <iostream>
 
 // Implementation skeleton constructor
-Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent)
+Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent, std::string dir )
   : executive_(Body::Executive::_duplicate(exec))
 {
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
@@ -57,8 +57,10 @@ Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParse
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
     UnitName_=name;
     return_state = 0;
+    workingDir = dir;
     //bkp = parser;
     bkp = new BKPParser();
+	bkp->SetWorkingDir( workingDir );
     //theParent->CreateParser();
     //bkp = theParent->CreateParser();
     theDialog = dialog;
@@ -465,7 +467,8 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 	if (firsttime)
 	{
-		Display->SetWindowText(filename.c_str());
+		//Display->SetWindowText( ( workingDir + filename ).c_str());
+		Display->SetWindowText( ( filename ).c_str());
 		bkp->openFile(filename.c_str());
 		firsttime=false;
 	}

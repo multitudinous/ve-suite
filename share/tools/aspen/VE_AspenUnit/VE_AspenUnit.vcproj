@@ -191,6 +191,7 @@
 		</Configuration>
 		<Configuration
 			Name="VE-Suite_Scons_Release|Win32"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			>
 			<Tool
@@ -365,6 +366,10 @@
 			</File>
 			<File
 				RelativePath=".\CorbaUnitManager.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File

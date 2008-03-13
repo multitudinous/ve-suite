@@ -44,7 +44,7 @@ class  Body_Unit_i
 {
 public:
   // Constructor 
-   Body_Unit_i (Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent);
+	Body_Unit_i (Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent, std::string dir );
   //Body_Unit_i() {};
   //Destructor 
   virtual ~Body_Unit_i (void);
@@ -63,6 +63,7 @@ public:
   CorbaUnitManager * theParent;
   CEdit * AspenLog;
   std::set< std::string > mQueryCommandNames;
+  std::string workingDir;
 
 public:
   BKPParser* bkp;

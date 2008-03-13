@@ -21,11 +21,12 @@ CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
    parent = dialog;
    unit_i_instantiated = false;
 }
-void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString name, CString port, CString uname )
+void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
 {
    computerName = name;
    computerPort = port;
    unitName = uname;
+   workingDir = dir;
 }
 /////////////////////////////////////////////////////////////////
 void CorbaUnitManager::SetRunORBFlag( bool run )
@@ -149,7 +150,7 @@ void CorbaUnitManager::RunORB()
 		ACE_TRY_CHECK;
 
       //Create the Servant
-      unit_i = new Body_Unit_i(exec.in(), UNITNAME, /*parser,*/ parent, this);
+		unit_i = new Body_Unit_i(exec.in(), UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
 	  unit_i_instantiated = true;
 	  //Activate it to obtain the object reference
 

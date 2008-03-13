@@ -31,6 +31,7 @@ BEGIN_MESSAGE_MAP(CVE_AspenUnitDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(IDCANCEL, &CVE_AspenUnitDlg::OnBnClickedCancel)
 	ON_BN_CLICKED(IDC_OK, &CVE_AspenUnitDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON2, &CVE_AspenUnitDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -63,6 +64,8 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 	Display->SetWindowTextA("localhost");
 	Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
 	Display->SetWindowTextA("1239");
+	Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
+	Display->SetWindowTextA("C:\\");
 
 
 	// TODO: Add extra initialization here	
@@ -144,11 +147,12 @@ void CVE_AspenUnitDlg::OnBnClickedCancel()
 {   
 	if(commManager != NULL)
 	{
+		//delete unitObject;
 		commManager->DestroyORB();
+		delete commManager;
 	}
 	// TODO: Add your control notification handler code here
-	this->OnClose();
-	//this->DestroyWindow();
+	this->OnCancel();
 }
 
 void CVE_AspenUnitDlg::OnBnClickedOk()
@@ -162,11 +166,14 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
 	    Display->GetWindowText(name);
         Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
         CString port;
-	    Display->GetWindowText(port);   
+	    Display->GetWindowText(port);
+        Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
+        CString dir;
+	    Display->GetWindowText(dir);
 
 	    commManager = new CorbaUnitManager(this);
-        //commManager->SetComputerNameUnitNameAndPort( "dell29", "1239", "AspenUnit" );
-        commManager->SetComputerNameUnitNameAndPort( name , port, "AspenUnit" );
+        //commManager->SetComputerNameUnitNameAndPort( "localhost", "1239", "AspenUnit" );
+        commManager->SetComputerNameUnitNameAndPort( dir, name , port, "AspenUnit" );
         commManager->RunORB();
         unitObject = commManager->GetUnitObject();
         if ( !unitObject )
@@ -175,4 +182,32 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
         }
 		initialized = true;
 	}
+}
+
+void CVE_AspenUnitDlg::OnBnClickedButton2()
+{
+	// TODO: Add your control notification handler code here
+    BROWSEINFO bi = { 0 };
+    bi.lpszTitle = _T("Pick a Directory");
+    LPITEMIDLIST pidl = SHBrowseForFolder ( &bi );
+    if ( pidl != 0 )
+    {
+        // get the name of the folder
+        TCHAR path[MAX_PATH];
+        if ( SHGetPathFromIDList ( pidl, path ) )
+		{
+            CEdit *Display;
+            Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
+			CString thePath( path );
+            Display->SetWindowTextA( thePath + "\\" );
+        }
+
+        // free memory used
+        IMalloc * imalloc = 0;
+        if ( SUCCEEDED( SHGetMalloc ( &imalloc )) )
+        {
+            imalloc->Free ( pidl );
+            imalloc->Release ( );
+        }
+    }
 }
