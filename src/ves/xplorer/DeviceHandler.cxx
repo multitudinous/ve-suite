@@ -245,5 +245,19 @@ ves::xplorer::Device* DeviceHandler::GetActiveDevice()
     return active_device;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetResetWorldPosition( osg::Quat& quat, 
+    std::vector< double >& pos )
+{
+    mResetAxis = quat;
+    mResetPosition = pos;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GetResetWorldPosition( osg::Quat& quat, 
+    std::vector< double >& pos )
+{
+    quat = mResetAxis;
+    pos = mResetPosition;
+}
+////////////////////////////////////////////////////////////////////////////////
 }
 }

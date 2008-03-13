@@ -48,6 +48,8 @@
 #include <string>
 #include <map>
 
+#include <osg/Quat>
+
 namespace ves
 {
 namespace xplorer
@@ -125,7 +127,11 @@ public:
     ///Get active device
     ///\return Get the active device
     ves::xplorer::Device* GetActiveDevice();
-
+    ///Set the reset location for the world
+    ///This position is determined from the stored start position by the user
+    void SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
+    //Get the reset location of the world
+    void GetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
 private:
     std::map< std::string, ves::xplorer::Device* > devices; ///<
     std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
@@ -137,6 +143,10 @@ private:
     gmtl::Point3d center_point; ///<Do not know what this is
     double m_threshold;///<
     double m_jump;///<
+    ///The axis for the reset location of the world
+    osg::Quat mResetAxis;
+    ///The position of the reset location of the world
+    std::vector< double > mResetPosition;
 };
 }
 }

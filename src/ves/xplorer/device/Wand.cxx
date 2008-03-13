@@ -33,6 +33,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Wand.h>
 
+#include <ves/xplorer/DeviceHandler.h>
+
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
@@ -176,7 +178,7 @@ void Wand::UpdateNavigation()
     {
         SetSubZeroFlag( cfdIso_value );
     }
-    else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
+    /*else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
         for( unsigned int i = 0; i < 3; ++i )
         {
@@ -186,7 +188,7 @@ void Wand::UpdateNavigation()
         }
 
         world_quat[ 3 ] = 1.0f;
-    }
+    }*/
     else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
     {
         //This equation returns a range of ~ 0.01' -> 220'
@@ -238,14 +240,15 @@ void Wand::UpdateNavigation()
               buttonData[ 4 ] == gadget::Digital::ON )
     {
         m_buttonPushed = true;
+        std::vector< double > positionVec;
+        ves::xplorer::DeviceHandler::instance()->
+            GetResetWorldPosition( world_quat, positionVec );
         for( unsigned int i = 0; i < 3; ++i )
         {
-            m_worldTrans[ i ] = 0.0f;
-            world_quat[ i ] = 0.0f;
+            m_worldTrans[ i ] = -positionVec[ i ];
+            //world_quat[ i ] = 0.0f;
             center_point->mData[ i ] = 0.0f;
         }
-
-        world_quat[ 3 ] = 1.0f;
     }
 
     ///If we actually pushed a button then move things

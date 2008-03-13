@@ -126,14 +126,15 @@ void Tablet::UpdateNavigation()
     }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
+        std::vector< double > positionVec;
+        ves::xplorer::DeviceHandler::instance()->
+            GetResetWorldPosition( world_quat, positionVec );
         for( unsigned int i = 0; i < 3; ++i )
         {
-            worldTrans[ i ] = 0.0f;
-            world_quat.set( 0, 0, 0, 1 );
+            worldTrans[ i ] = -positionVec[ i ];
+            //world_quat[ i ] = 0.0f;
             center_point->mData[ i ] = 0.0f;
         }
-
-        center_point->mData[ 1 ] = worldTrans[ 1 ] = 2.0f;
     }
     else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
     {
