@@ -21,7 +21,7 @@ namespace scenegraph
 namespace cpt
 {
 // --- My Includes --- //
-class Camera;
+class CameraEntity;
 
 /*----------------------------------------------------------------------------*/
 class Scene
@@ -38,7 +38,9 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_torus;
 
-    cpt::Camera* m_camera;
+    cpt::CameraEntity* m_camera;
+
+
 };
 /*----------------------------------------------------------------------------*/
 

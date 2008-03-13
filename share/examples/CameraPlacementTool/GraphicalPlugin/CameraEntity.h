@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef CAMERA_ENTITY_H
+#define CAMERA_ENTITY_H
 
 // --- VE-Suite Includes --- //
 namespace ves
@@ -13,16 +13,14 @@ namespace scenegraph
 }
 }
 
-// --- vrJuggler Includes --- //
-//#include <gmtl/Matrix.h>
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Matrix>
 
 namespace osg
 {
-    class Node;
+    class Camera;
+    class Geode;
 }
 
 // --- C/C++ Libraries --- //
@@ -32,33 +30,34 @@ namespace cpt
 {
 
 /*----------------------------------------------------------------------------*/
-class Camera
+class CameraEntity
 {
 public:
-    Camera( ves::xplorer::scenegraph::DCS* parentDCS );
-    virtual ~Camera();
-
-    void Initialize();
+    CameraEntity( ves::xplorer::scenegraph::DCS* parentDCS );
+    ~CameraEntity();
 
     void SetNameAndDescriptions( const std::string& name );
-
-    void DrawViewFrustum();
-
+    void DrawViewFrustum( bool onOff );
+    
     ves::xplorer::scenegraph::DCS* GetDCS();
 
-    osg::Matrixd GetModelViewMatrix();
-    osg::Matrixd GetProjectionMatrix();
+    osg::Matrixd GetMatrixMVPT();
 
 protected:
     
 private:
+    void Initialize( ves::xplorer::scenegraph::DCS* parentDCS );
+    void CreateViewFrustumGeometry();
+
+    osg::ref_ptr< osg::Camera > m_camera;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
 
-    osg::Matrixd m_modelViewMatrix;
-    osg::Matrixd m_projectionMatrix;
+    osg::ref_ptr< osg::Geode > m_frustum;
+
+    osg::Matrixd m_PT;
 };
 /*----------------------------------------------------------------------------*/
 
 } //end cpt
 
-#endif //CAMERA_H
+#endif //CAMERA_ENTITY_H
