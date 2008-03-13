@@ -58,7 +58,8 @@ fermentorGroup( new osg::MatrixTransform() ),
 
 transform_ferm( new osg::MatrixTransform() ),
 transform_imp( new osg::MatrixTransform() ),
-transform_tank( new osg::MatrixTransform() )
+transform_tank( new osg::MatrixTransform() ),
+mSimulationStart( false )
 {
     m_objectName = "FermentorUI";
 }
@@ -173,9 +174,10 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 
     _rot_speed = _rot_speed / 10.0f;
 
-    if( _sim_speed != 0 )
+    //if( _sim_speed != 0 )
     {
         _sim_speed = 1.1 - ( _sim_speed / 10.0 );
+        std::cout << "Sim speed will be " << _sim_speed << std::endl;
     }
 
     std::fstream results;                                      //File for statistical results
@@ -312,7 +314,7 @@ void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
         transform_imp->setUpdateCallback( new osg::AnimationPathCallback(
             osg::Vec3( 0, 0, 0 ), osg::Z_AXIS, _imp_speed ) );
 
-        capsule_sequence->setMode( osg::Sequence::START );
+        mSimulationStart = true;
     }
 
     if( _sim_speed == 0 )
@@ -356,6 +358,12 @@ void VEFermentorGraphicalPlugin::PreFrameUpdate()
     {
         return;
     }
+    
+    if( mSimulationStart )
+    {
+        capsule_sequence->setMode( osg::Sequence::START );
+        mSimulationStart = false;
+    }
 
     int seqVal = capsule_sequence->getValue();
     if( seqVal > -1 )
@@ -373,6 +381,7 @@ void VEFermentorGraphicalPlugin::PreFrameUpdate()
     {
         transform_imp->setUpdateCallback(
             new osg::AnimationPathCallback( osg::Vec3( 0, 0, 0 ), osg::Z_AXIS, 0.0f ) );
+        capsule_sequence->setMode( osg::Sequence::STOP );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

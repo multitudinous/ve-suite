@@ -811,7 +811,7 @@ void App::update( void )
     // update the scene by traversing it with the the update visitor which will
     // call all node update callbacks and animations. This is equivalent to calling
     // SceneView::update
-    getScene()->accept( *mUpdateVisitor );
+    getScene()->accept( *mUpdateVisitor.get() );
     // now force a recompute of the bounding volume while we are still in
     // the read/write app phase, this should prevent the need to recompute
     // the bounding volumes from within the cull traversal which may be

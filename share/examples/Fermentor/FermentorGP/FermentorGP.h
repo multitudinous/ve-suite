@@ -39,6 +39,9 @@ public:
     void UpdateGauges( double, double, double, double, double, double, double );
 
 private:
+    ///Variable to let the plugin know when a simulation has jsut been changed
+    bool mSimulationStart;
+    
     int frame_count;
     int frame_speed_control;
 
