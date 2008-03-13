@@ -1,5 +1,6 @@
 // --- My Includes --- //
 #include "CameraEntity.h"
+#include "CameraEntityCallback.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -8,6 +9,7 @@
 #include <osg/Camera>
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/TexGenNode>
 
 #include <osgDB/ReadFile>
 
@@ -21,7 +23,9 @@ CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* parentDCS )
 :
 m_camera( 0 ),
 m_dcs( 0 ),
-m_frustum( 0 )
+m_frustum( 0 ),
+m_texGenNode( 0 ),
+m_cameraEntityCallback( 0 )
 {
     Initialize( parentDCS );
 }
@@ -34,23 +38,35 @@ CameraEntity::~CameraEntity()
 void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
 {   
     m_camera = new osg::Camera();
+    m_camera->setRenderOrder( osg::Camera::PRE_RENDER );
     //Set the camera defaults
     m_camera->setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),     //eye position
                                      osg::Vec3( 0, 1, 0 ),     //center position
                                      osg::Vec3( 0, 0, 1 ) );   //up vector
     m_camera->setProjectionMatrixAsPerspective( 2.0, 1.0, 5.0, 10.0 );
-
-    //Multiply the Projection(P) matrix by the Texture(T) matrix
-    m_PT = m_camera->getProjectionMatrix() *
-           osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
-           osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
+    parentDCS->addChild( m_camera.get() );
 
     m_dcs = new ves::xplorer::scenegraph::DCS();
     m_dcs->addChild( osgDB::readNodeFile( std::string( "Models/camera.ive" ) ) );
-
     parentDCS->addChild( m_dcs.get() );
 
     CreateViewFrustumGeometry();
+
+    m_texGenNode = new osg::TexGenNode();
+    m_texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
+    m_texGenNode->setTextureUnit( 0 );
+    parentDCS->addChild( m_texGenNode.get() );
+
+    //Multiply the Projection(P) matrix by the Texture(T) matrix
+    osg::Matrixd PT = m_camera->getProjectionMatrix() *
+                      osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
+                      osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
+
+    m_cameraEntityCallback = new cpt::CameraEntityCallback();
+    m_cameraEntityCallback->SetDCS( m_dcs.get() );
+    m_cameraEntityCallback->SetTexGenNode( m_texGenNode.get() );
+    m_cameraEntityCallback->SetMatrixPT( PT );
+    m_camera->setUpdateCallback( m_cameraEntityCallback.get() );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -140,9 +156,8 @@ ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()
     return m_dcs.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Matrixd CameraEntity::GetMatrixMVPT()
-{
-    //Compute the matrix which takes a vertex from local coords into tex coords
-    return m_camera->getViewMatrix() * m_PT;
+osg::TexGenNode* CameraEntity::GetTexGenNode()
+{    
+    return m_texGenNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -58,12 +58,6 @@ void Scene::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void Scene::CreateProjectionTexture()
 {
-    //Create a texture generation node
-    osg::ref_ptr< osg::TexGenNode > texGenNode = new osg::TexGenNode();
-    texGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
-    texGenNode->setTextureUnit( 0 );
-    m_pluginDCS->addChild( texGenNode.get() );
-    
     //Create a 2D texture
     osg::ref_ptr< osg::Texture2D > texture2D = new osg::Texture2D();
     texture2D->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
@@ -81,8 +75,5 @@ void Scene::CreateProjectionTexture()
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
     m_torus->setStateSet( stateset.get() );
-
-    //Texture Generation
-    texGenNode->getTexGen()->setPlanesFromMatrix( m_camera->GetMatrixMVPT() );
 }
 ////////////////////////////////////////////////////////////////////////////////

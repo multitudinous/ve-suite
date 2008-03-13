@@ -15,12 +15,12 @@ namespace scenegraph
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/Matrix>
 
 namespace osg
 {
     class Camera;
     class Geode;
+    class TexGenNode;
 }
 
 // --- C/C++ Libraries --- //
@@ -28,6 +28,8 @@ namespace osg
 
 namespace cpt
 {
+// --- My Includes --- //
+class CameraEntityCallback;
 
 /*----------------------------------------------------------------------------*/
 class CameraEntity
@@ -41,7 +43,7 @@ public:
     
     ves::xplorer::scenegraph::DCS* GetDCS();
 
-    osg::Matrixd GetMatrixMVPT();
+    osg::TexGenNode* GetTexGenNode();
 
 protected:
     
@@ -53,8 +55,9 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
 
     osg::ref_ptr< osg::Geode > m_frustum;
+    osg::ref_ptr< osg::TexGenNode > m_texGenNode;
 
-    osg::Matrixd m_PT;
+    osg::ref_ptr< cpt::CameraEntityCallback > m_cameraEntityCallback;
 };
 /*----------------------------------------------------------------------------*/
 
