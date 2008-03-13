@@ -169,13 +169,11 @@ void Sound::Pause()
 {
     m_soundState->setStopMethod( openalpp::Paused );
     m_soundState->setPlay( false );
-    m_soundState->setGain( 0.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::Play()
 {
     m_soundState->setPlay( true );
-    m_soundState->setGain( 1.0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Sound::Stop()
