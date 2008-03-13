@@ -4,13 +4,14 @@
 #import SConsAddons.Util as sca_util
 
 exampleSubdirs = Split("""
-    simple
+    CameraPlacementTool
     CoinFunnel
     ConstructionBots
     Fermentor
     HyperLab
     InteractiveStove
     nurbs
+    simple
 """)
 
 ##Run SConscript files in all of those folders.
