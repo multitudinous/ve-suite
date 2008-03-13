@@ -1037,7 +1037,7 @@ std::string BKPParser::CreateNetwork( void )
    ves::open::xml::model::NetworkPtr mainNetwork( new ves::open::xml::model::Network() );
    ves::open::xml::model::SystemPtr veSystem( new ves::open::xml::model::System() );
    
-   nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veSystem, "veSystem" ) );
+   //nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( veSystem, "veSystem" ) );
    
    // create default state info section
    mainNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
@@ -1111,6 +1111,30 @@ std::string BKPParser::CreateNetwork( void )
 	  //attach model to top system
 	  veSystem->AddModel(tempModel);
    }
+
+   ves::open::xml::model::SystemPtr topSystem( new ves::open::xml::model::System() );
+   ves::open::xml::model::ModelPtr topModel( new ves::open::xml::model::Model() );
+   topModel->SetModelName( "Aspen_Flowsheet" );
+   topModel->SetVendorName( "ASPENUNIT" );
+   //topModel->SetIconFilename("FSPLIT/FSPLIT.TRIANGLE");
+   //tempModel->SetIconRotation(BlockInfoList["0"][blockIter->first].rotation);
+   //tempModel->SetIconScale(BlockInfoList["0"][blockIter->first].scale);
+   //tempModel->SetIconMirror(BlockInfoList["0"][blockIter->first].mirror);
+   topModel->GetIconLocation()->SetPoint( std::pair< double, double >( 0, 0 ) );
+   topModel->SetSubSystem( veSystem );
+   topSystem->AddModel( topModel );
+   nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( topSystem, "veSystem" ) );
+   
+   ves::open::xml::model::NetworkPtr topNetwork( new ves::open::xml::model::Network() );
+   // create default state info section
+   topNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
+   topNetwork->GetDataValuePair( -1 )->SetData( "m_yUserScale", 1.0 );
+   topNetwork->GetDataValuePair( -1 )->SetData( "nPixX", static_cast< long int >( 20 ) );
+   topNetwork->GetDataValuePair( -1 )->SetData( "nPixY", static_cast< long int >( 20 ) );
+   topNetwork->GetDataValuePair( -1 )->SetData( "nUnitX", static_cast< long int >( 200 ) );
+   topNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( 200 ) );
+   topSystem->AddNetwork(topNetwork);
+
    std::string fileName( "returnString" );
    ves::open::xml::XMLReaderWriter netowrkWriter;
    netowrkWriter.UseStandaloneDOMDocumentManager();
