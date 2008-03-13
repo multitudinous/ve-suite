@@ -33,8 +33,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Wand.h>
 
-#include <ves/xplorer/DeviceHandler.h>
-
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 
@@ -240,12 +238,10 @@ void Wand::UpdateNavigation()
               buttonData[ 4 ] == gadget::Digital::ON )
     {
         m_buttonPushed = true;
-        std::vector< double > positionVec;
-        ves::xplorer::DeviceHandler::instance()->
-            GetResetWorldPosition( world_quat, positionVec );
+        world_quat = mResetAxis;
         for( unsigned int i = 0; i < 3; ++i )
         {
-            m_worldTrans[ i ] = -positionVec[ i ];
+            m_worldTrans[ i ] = -mResetPosition[ i ];
             //world_quat[ i ] = 0.0f;
             center_point->mData[ i ] = 0.0f;
         }

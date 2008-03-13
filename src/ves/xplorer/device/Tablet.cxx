@@ -34,7 +34,6 @@
 #include <ves/xplorer/device/Tablet.h>
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/Debug.h>
-#include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
@@ -126,12 +125,10 @@ void Tablet::UpdateNavigation()
     }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
-        std::vector< double > positionVec;
-        ves::xplorer::DeviceHandler::instance()->
-            GetResetWorldPosition( world_quat, positionVec );
+        world_quat = mResetAxis;
         for( unsigned int i = 0; i < 3; ++i )
         {
-            worldTrans[ i ] = -positionVec[ i ];
+            worldTrans[ i ] = -mResetPosition[ i ];
             //world_quat[ i ] = 0.0f;
             center_point->mData[ i ] = 0.0f;
         }

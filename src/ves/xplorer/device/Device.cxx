@@ -63,7 +63,7 @@ Device::Device()
         m_threshold( 0 ),
         m_jump( 0 )
 {
-    ;
+    mResetPosition.resize( 3 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateNavigation()
@@ -256,5 +256,11 @@ void Device::SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint )
 void Device::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Device::SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos )
+{
+    mResetAxis = quat;
+    mResetPosition = pos;
 }
 ////////////////////////////////////////////////////////////////////////////////

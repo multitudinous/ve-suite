@@ -123,6 +123,8 @@ public:
     ///Check if the head collides with the rest of the objects in the scene
     ///\param headPositionInWorld The head position in world coordinates
     bool CheckCollisionsWithHead( osg::Vec3 headPositionInWorld );
+    ///Set the reset position for the world
+    void SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
 
 protected:
     ///Process the selection of a piece of geometry
@@ -143,6 +145,10 @@ protected:
     gmtl::Point3d* center_point;///<The point about which rotation occurs
     double* m_threshold;///<
     double* m_jump;///<
+    ///The reset axis for the world
+    osg::Quat mResetAxis;
+    ///The reset position for the world
+    std::vector< double > mResetPosition;
 };
 }
 }

@@ -252,6 +252,12 @@ void DeviceHandler::SetResetWorldPosition( osg::Quat& quat,
 {
     mResetAxis = quat;
     mResetPosition = pos;
+    
+    for( std::map< std::string, ves::xplorer::Device* >::const_iterator 
+        itr = devices.begin(); itr != devices.end(); itr++ )
+    {
+        itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::GetResetWorldPosition( osg::Quat& quat, 
