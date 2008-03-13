@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Stuff --- //
 #include <ves/xplorer/CommandHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/device/Device.h>
 
@@ -104,6 +105,10 @@ void Device::SetVECommand( CommandPtr command )
     viewPointGUIData->AddDataValuePair( positionStartPosition );
 
     ves::xplorer::CommandHandler::instance()->SetXMLCommand( viewPointGUIData );
+    
+    std::vector< double > tempPos = positionsData->GetArray();
+    ves::xplorer::DeviceHandler::instance()->SetResetWorldPosition( quat, tempPos );
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateCommand()

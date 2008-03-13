@@ -92,6 +92,7 @@
 #include <ves/open/xml/model/System.h>
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/User.h>
+#include <ves/open/xml/OneDDoubleArray.h>
 
 // --- wxWidgets Includes --- //
 #include <wx/image.h>
@@ -2404,7 +2405,30 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         //wxWindow::Destroy();
         return;
     }*/
-    
+    {
+        //Send a new start position for all apps
+        //do this first so in case a file has a start position it will be used
+        CommandPtr viewPointGUIData( new Command() );
+        viewPointGUIData->SetCommandName( "START_POSITION" );
+        
+        DataValuePairPtr quatStartPosition( new DataValuePair());
+        OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
+        quatData->AddElementToArray( 0 );
+        quatData->AddElementToArray( 0 );
+        quatData->AddElementToArray( 0 );
+        quatData->AddElementToArray( 1 );
+        quatStartPosition->SetData( "QUAT_START_POSITION", quatData );
+        viewPointGUIData->AddDataValuePair( quatStartPosition );
+        
+        DataValuePairPtr positionStartPosition( new DataValuePair() );
+        OneDDoubleArrayPtr positionsData( new OneDDoubleArray( 0 ) );
+        positionsData->AddElementToArray( 0 );
+        positionsData->AddElementToArray( 0 );
+        positionsData->AddElementToArray( 0 );
+        positionStartPosition->SetData( "POSITION_START_POSITION", positionsData );
+        viewPointGUIData->AddDataValuePair( positionStartPosition );
+        serviceList->SendCommandStringToXplorer( viewPointGUIData );
+    }
     //Reloading plugins
     av_modules->ResetPluginTree();
     
@@ -2446,5 +2470,6 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
             OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
         }
     }
+    
     newCanvas = false;
 }

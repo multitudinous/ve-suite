@@ -35,6 +35,7 @@
 
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/DeviceHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/Model.h>
 
@@ -796,6 +797,16 @@ void KeyboardMouse::ResetTransforms()
     center_point->mData[1] = matrix[1][3] = *m_threshold;
 
     ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
+    
+    std::vector< double > positionVec;
+    osg::Quat tempQuat;
+    ves::xplorer::DeviceHandler::instance()->
+        GetResetWorldPosition( tempQuat, positionVec );
+    
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        GetWorldDCS()->SetQuat( tempQuat );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+        SetTranslationArray( positionVec );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( double dx, double dy )

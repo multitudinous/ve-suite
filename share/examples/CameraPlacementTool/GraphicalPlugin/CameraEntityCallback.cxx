@@ -59,7 +59,8 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
     if( m_dcs.valid() )
     {
         osg::Matrixd dcsInverseMatrix;
-        dcsInverseMatrix.set( gmtl::invert( m_dcs->GetMat() ).getData() );
+        gmtl::Matrix44d tempDCSMat = m_dcs->GetMat();
+        dcsInverseMatrix.set( gmtl::invert( tempDCSMat ).getData() );
 
         //Compute the matrix which takes a vertex from local coords into tex coords
         osg::Matrixd MVPT = dcsInverseMatrix * m_MVPT;

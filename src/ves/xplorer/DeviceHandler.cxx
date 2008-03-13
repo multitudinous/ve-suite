@@ -97,6 +97,8 @@ DeviceHandler::DeviceHandler()
     _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" )] = new ves::xplorer::event::CenterPointJumpEventHandler();
     _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" )] = new ves::xplorer::event::KeyboardMouseEventHandler();
     _eventHandlers[ std::string( "Navigation_Data" )] = new ves::xplorer::event::NavigationDataEventHandler();
+    
+    mResetPosition.resize( 3 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
