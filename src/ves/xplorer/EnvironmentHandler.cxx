@@ -66,6 +66,7 @@
 #include <ves/xplorer/event/environment/EphemerisHeightMapEventHandler.h>
 #include <ves/xplorer/event/environment/EphemerisDisplayToggleEventHandler.h>
 #include <ves/xplorer/event/environment/GeometryLODScaleEventHandler.h>
+#include <ves/xplorer/event/environment/SetResetStartPositionEventHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/Group.h>
@@ -160,6 +161,8 @@ m_lodScale(.01)
         new ves::xplorer::event::EphemerisDisplayToggleEventHandler();
     _eventHandlers[ std::string( "Update LOD Scale" )] =
         new ves::xplorer::event::GeometryLODScaleEventHandler();
+    _eventHandlers[ std::string( "Navigation_Data" )] =
+    new ves::xplorer::event::SetResetStartPositionEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::Initialize()

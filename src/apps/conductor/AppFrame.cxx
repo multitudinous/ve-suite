@@ -2409,7 +2409,7 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         //Send a new start position for all apps
         //do this first so in case a file has a start position it will be used
         CommandPtr viewPointGUIData( new Command() );
-        viewPointGUIData->SetCommandName( "START_POSITION" );
+        viewPointGUIData->SetCommandName( "Navigation_Data" );
         
         DataValuePairPtr quatStartPosition( new DataValuePair());
         OneDDoubleArrayPtr quatData( new OneDDoubleArray( 0 ) );
