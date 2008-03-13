@@ -294,83 +294,137 @@ void Model::SetObjectFromXMLData( DOMNode* element )
 
     //get the geometry nodes
     {
-        if( currentElement->getElementsByTagName(
-            Convert( "geometry" ).toXMLString() )->getLength() > 0 )
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+            Convert( "geometry" ).toXMLString() );
+        if( childNodes->getLength() > 0 )
         {
-            dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
-
-            mGeometry = CADAssemblyPtr( new CADAssembly( "oops" ) );
-            mGeometry->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( 0 ) );
+            //dataValueStringName = GetSubElement( currentElement, "geometry", 0 );
+            if( child->getParentNode() == currentElement )
+            {
+                mGeometry = CADAssemblyPtr( new CADAssembly( "oops" ) );
+                mGeometry->SetObjectFromXMLData( child );
+            }
         }
     }
-
+    //Get ports 
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName(
-                              Convert( "ports" ).toXMLString() )->getLength();
-
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+                              Convert( "ports" ).toXMLString() );
+        unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            dataValueStringName = GetSubElement( currentElement, "ports", i );
-            mPorts.push_back( PortPtr( new Port( ) ) );
-            mPorts.back()->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( i ) );
+            if( child->getParentNode() == currentElement )
+            {
+                //dataValueStringName = GetSubElement( currentElement, "ports", i );
+                mPorts.push_back( PortPtr( new Port() ) );
+                mPorts.back()->SetObjectFromXMLData( child );
+            }
+            else
+            {
+                break;
+            }
         }
     }
-
+    //Get Results
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName(
-                           Convert( "results" ).toXMLString() )->getLength();
-
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+                Convert( "results" ).toXMLString() );
+        unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            dataValueStringName = GetSubElement( currentElement, "results", i );
-            mResults.push_back( CommandPtr( new Command( ) ) );
-            mResults.back()->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( i ) );
+            if( child->getParentNode() == currentElement )
+            {
+                //dataValueStringName = GetSubElement( currentElement, "results", i );
+                mResults.push_back( CommandPtr( new Command( ) ) );
+                mResults.back()->SetObjectFromXMLData( child );
+            }
+            else
+            {
+                break;
+            }
         }
     }
-
+    //Get Inputs
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName(
-                           Convert( "inputs" ).toXMLString() )->getLength();
-
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+                Convert( "inputs" ).toXMLString() );
+        unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            dataValueStringName = GetSubElement( currentElement, "inputs", i );
-            mInputs.push_back( CommandPtr( new Command( ) ) );
-            mInputs.back()->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( i ) );
+            if( child->getParentNode() == currentElement )
+            {
+                //dataValueStringName = GetSubElement( currentElement, "inputs", i );
+                mInputs.push_back( CommandPtr( new Command() ) );
+                mInputs.back()->SetObjectFromXMLData( child );
+            }
+            else
+            {
+                break;
+            }
         }
     }
-
+    //Get Information packets
     {
-        unsigned int numberOfPortData = currentElement->getElementsByTagName(
-                  Convert( "informationPackets" ).toXMLString() )->getLength();
-
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+            Convert( "informationPackets" ).toXMLString() );
+        unsigned int numberOfPortData = childNodes->getLength();
         for( unsigned int i = 0; i < numberOfPortData; ++i )
         {
-            dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
-            mInformationPackets.push_back( ParameterBlockPtr( new ParameterBlock( ) ) );
-            mInformationPackets.back()->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( i ) );
+            if( child->getParentNode() == currentElement )
+            {
+                //dataValueStringName = GetSubElement( currentElement, "informationPackets", i );
+                mInformationPackets.push_back( ParameterBlockPtr( new ParameterBlock() ) );
+                mInformationPackets.back()->SetObjectFromXMLData( child );
+            }
+            else
+            {
+                break;
+            }
         }
     }
 
     //get the model attribute nodes
     {
-        if( currentElement->getElementsByTagName(
-            Convert( "modelAttributes" ).toXMLString() )->getLength() > 0 )
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+                Convert( "modelAttributes" ).toXMLString() );
+        if( childNodes->getLength() > 0 )
         {
-            dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
-            mModelAttribute = CommandPtr( new Command() );
-            mModelAttribute->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( 0 ) );
+            if( child->getParentNode() == currentElement )
+            {
+                //dataValueStringName = GetSubElement( currentElement, "modelAttributes", 0 );
+                mModelAttribute = CommandPtr( new Command() );
+                mModelAttribute->SetObjectFromXMLData( child );
+            }
         }
     }
     //Get the subSystem for this model
     {
-        dataValueStringName = GetSubElement( currentElement, "modelSubSystem", 0 );
-        if( dataValueStringName )
+        //dataValueStringName = GetSubElement( currentElement, "modelSubSystem", 0 );
+        DOMNodeList* childNodes = currentElement->getElementsByTagName(
+                Convert( "modelSubSystem" ).toXMLString() );
+        if( childNodes->getLength() > 0 )
         {
-            mSubSystem = SystemPtr( new System() );
-            //set parent
-            mSubSystem->SetParentModel( shared_from_this() );
-            mSubSystem->SetObjectFromXMLData( dataValueStringName );
+            DOMElement* child = 
+                static_cast< DOMElement* >( childNodes->item( 0 ) );
+            if( child->getParentNode() == currentElement )
+            {
+                mSubSystem = SystemPtr( new System() );
+                //set parent
+                mSubSystem->SetParentModel( shared_from_this() );
+                mSubSystem->SetObjectFromXMLData( child );
+            }
         }
     }
 }
@@ -653,10 +707,7 @@ void Model::RemoveInformationPacket( const std::string& name )
 ////////////////////////////////////////////////////////////////////////////////
 void Model::_updateVEElement( const std::string& input )
 {
-    // write all the elements according to verg_model.xsd
-    SetSubElements("ports", mPorts );
-    
-    SetSubElement<ves::open::xml::XMLObjectPtr>( "iconLocation", mIconLocation );
+    // write all the elements according to verg_model.xsd    
     SetAttribute( "name", mModelName );
     SetAttribute( "id", mUuid );
 
@@ -694,6 +745,8 @@ void Model::_updateVEElement( const std::string& input )
                                    Convert( int2string.str() ).toXMLString() );
     }
 
+    SetSubElement<ves::open::xml::XMLObjectPtr>( "iconLocation", mIconLocation );
+    SetSubElements("ports", mPorts );
     SetSubElements("results", mResults );
     SetSubElements("inputs", mInputs );
     SetSubElements("informationPackets", mInformationPackets );
