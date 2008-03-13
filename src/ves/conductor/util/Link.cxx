@@ -823,9 +823,12 @@ void Link::SetLink( ves::open::xml::model::LinkPtr inputLink )
 
     long moduleID;
     m_veLink->GetFromModule()->GetData( moduleID );
-    SetFromModule( moduleID );
+    //SetFromModule( moduleID );
+    Fr_mod = moduleID;
+
     m_veLink->GetToModule()->GetData( moduleID );
-    SetToModule( moduleID );
+    //SetToModule( moduleID );
+    To_mod = moduleID;
 
     size_t numberOfPoints = m_veLink->GetNumberOfLinkPoints();
     for( size_t j = 0; j < numberOfPoints; ++j )
