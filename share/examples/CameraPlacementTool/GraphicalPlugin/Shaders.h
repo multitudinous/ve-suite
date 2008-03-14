@@ -1,4 +1,4 @@
-#ifndef SHADERS_H
+#ifdef SHADERS_H_MAKE_GOOD_DEFINES
 #define SHADERS_H
 
 /*----------------------------------------------------------------------------*/

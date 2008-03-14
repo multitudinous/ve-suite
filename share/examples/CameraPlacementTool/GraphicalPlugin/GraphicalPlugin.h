@@ -23,9 +23,14 @@ protected:
     void UpdateParams();
 
 private:
-    cpt::Scene* m_scene;
+    cpt::Scene* mScene;
 };
 /*----------------------------------------------------------------------------*/
+
+#if 0
+
+
+THERE IS A MACRO FOR THIS IN THE BASE CLASS
 
 extern "C"
 {
@@ -35,5 +40,6 @@ extern "C"
     }
 }
 } //end cpt
+#endif
 
 #endif //GRAPHICAL_PLUGIN_H

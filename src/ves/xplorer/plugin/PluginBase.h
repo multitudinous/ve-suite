@@ -222,7 +222,7 @@ protected:
 }
 }
 
-#define VE_GRAPHICALPLUGIN_CLASS( name ) \
+#define CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( name ) \
     extern "C" \
     { \
         VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin() \

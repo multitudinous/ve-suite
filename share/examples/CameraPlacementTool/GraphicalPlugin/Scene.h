@@ -1,5 +1,5 @@
-#ifndef SCENE_H
-#define SCENE_H
+#ifdef SCENE_H
+#define _I_DONT_KNOW_HOW_TO_MAKE_GOOD_DEFINES_OR_ADD_COPYRIGHTS
 
 // --- VE-Suite Includes --- //
 namespace ves
@@ -35,10 +35,10 @@ public:
 private:
     void CreateProjectionTexture();
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_torus;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTorus;
 
-    cpt::CameraEntity* m_camera;
+    cpt::CameraEntity* mCamera;
 
 
 };

@@ -42,10 +42,10 @@ protected:
     virtual ~CameraEntityCallback();
 
 private:
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
-    osg::ref_ptr< osg::TexGenNode > m_texGenNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDcs;
+    osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
-    osg::Matrixd m_MVPT;
+    osg::Matrixd mMVPT;
 
 };
 /*----------------------------------------------------------------------------*/
