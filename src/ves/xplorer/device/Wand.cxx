@@ -70,7 +70,7 @@ Wand::Wand()
         rotationFlag( 1 ),
         distance( 1000 ),
         cursorLen( 1.0f ),
-        translationStepSize( 0.25f ),
+        translationStepSize( 0.75f ),
         rotationStepSize( 1.0f ),
         m_buttonPushed( false )
 {

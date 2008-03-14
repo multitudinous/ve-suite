@@ -429,7 +429,7 @@ void NavigationPane::BuildPane( void )
                                         wxDefaultPosition, wxDefaultSize,
                                         wxSL_HORIZONTAL |
                                         wxSL_AUTOTICKS );
-    rotationStepSize = new wxSlider( scrollWindow, ROT_STEP_SLIDER, 10, 1, 50,
+    rotationStepSize = new wxSlider( scrollWindow, ROT_STEP_SLIDER, 25, 1, 50,
                                      wxDefaultPosition, wxDefaultSize,
                                      wxSL_HORIZONTAL |
                                      wxSL_AUTOTICKS );
