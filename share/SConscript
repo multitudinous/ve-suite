@@ -6,11 +6,10 @@ import SConsAddons.Util as sca_util
 Import('ves_pkg buildDir RootDir GetPlatform')
 
 fontBundle = ves_pkg.createFileBundle( pj('share','vesuite') )
-fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
+fontFile = sca_util.getFilesRecursiveByExt( pj(RootDir, 'share'), ['.ttf'] )
 fontBundle.addFiles( fontFile )
 
 ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite') )
-##fontFile = sca_util.getFilesRecursiveByExt( '.', ['.ttf'] )
 ptConfigFile.addFiles( ['ptconfigfile.txt'] )
 
 shareSubdirs = Split("""
