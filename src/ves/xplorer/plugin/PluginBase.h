@@ -216,7 +216,7 @@ protected:
 #endif
 
     ves::open::xml::model::ModelPtr mXmlModel;
-    std::map< std::string, cfdVEBaseClass* > mEhMap;
+    std::map< std::string, cfdVEBaseClass* > mEventHandlerMap;
 };
 }
 }
