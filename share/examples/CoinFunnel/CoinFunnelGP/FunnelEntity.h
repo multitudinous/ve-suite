@@ -19,16 +19,21 @@ public:
                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~FunnelEntity();
-
+#if 0
+ pass by const reference
     void SetNameAndDescriptions( std::string geomFile );
+#endif
 
     void SetShaders();
 
 private:
     void SetShaderOne();
 
-    osg::ref_ptr< osg::Group > m_nonPhysicsGeometry;
-    osg::ref_ptr< osg::Group > m_nonPhysicsGeometryII;
+#if 0
+    osg::ref_ptr< osg::Group > mNonPhysicsGeometry;
+                            this is a terrible variable name
+    osg::ref_ptr< osg::Group > mNonPhysicsGeometryII;
+#endif
 };
 }
 

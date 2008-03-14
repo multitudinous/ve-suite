@@ -49,7 +49,7 @@ public:
 
     virtual ~MarbleEntity();
 
-    void SetNameAndDescriptions( std::string geomFile );
+    void SetNameAndDescriptions( const std::string& geomFile );
 
     void SetShaders( osg::TextureCubeMap* tcm );
 
@@ -60,16 +60,19 @@ public:
 #endif
 
 private:
+#if 0
+   terrible names
     void SetShaderOne( osg::TextureCubeMap* tcm );
     void SetShaderTwo();
-
-#ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* m_marbleOnWood;
-    ves::xplorer::scenegraph::Sound* m_marbleOnMetal;
-    ves::xplorer::scenegraph::Sound* m_marbleOnMarble;
 #endif
 
-    osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
+#ifdef VE_SOUND
+    ves::xplorer::scenegraph::Sound* mMarbleOnWood;
+    ves::xplorer::scenegraph::Sound* mMarbleOnMetal;
+    ves::xplorer::scenegraph::Sound* mMarbleOnMarble;
+#endif
+
+    osg::ref_ptr< osg::Node > mNonPhysicsGeometry;
 };
 }
 

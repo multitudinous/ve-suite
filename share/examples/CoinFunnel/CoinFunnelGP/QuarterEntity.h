@@ -24,16 +24,18 @@ public:
 
     virtual ~QuarterEntity();
 
-    void SetNameAndDescriptions( std::string geomFile );
+    void SetNameAndDescriptions( const std::string& geomFile );
 
     void SetShaders();
 
 private:
+#if 0
+this all needs to be cleaned up
     void SetShaderOne( osg::Node* node, osg::Texture2D* texture );
 
     osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
     osg::ref_ptr< osg::Node > m_nonPhysicsGeometryII;
-
+#endif
 };
 }
 

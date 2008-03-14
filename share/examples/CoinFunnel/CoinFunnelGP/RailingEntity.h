@@ -24,14 +24,16 @@ public:
 
     virtual ~RailingEntity();
 
-    void SetNameAndDescriptions( std::string geomFile );
+    void SetNameAndDescriptions( const std::string& geomFile );
 
     void SetShaders( osg::TextureCubeMap* tcm );
 
 private:
+#if 0
     void SetShaderOne( osg::TextureCubeMap* tcm );
 
     osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
+#endif
 };
 }
 
