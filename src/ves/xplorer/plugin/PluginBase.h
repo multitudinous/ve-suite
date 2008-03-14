@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef CFD_VE_BASE_CLASS_H
-#define CFD_VE_BASE_CLASS_H
+#ifndef _VES_XPLORER_PLUGIN_BASE_H_
+#define _VES_XPLORER_PLUGIN_BASE_H_
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -85,7 +85,7 @@ namespace plugin
 /*!\class ::cfdVEBaseClass
  *
  */
-class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass
+class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
 {
 public:
     cfdVEBaseClass();

@@ -5,11 +5,11 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR buildDir vtk_options osg_options xerces_options')
 
 sources = Split("""
-    cfdVEBaseClass.cxx
+    PluginBase.cxx
 """)
 
 headers = Split("""
-    cfdVEBaseClass.h
+    PluginBase.h
 """)
 
 ##srcs = map(lambda s: pj('#', 'VE_Xplorer', 'GraphicalPlugin', s), srcs)
