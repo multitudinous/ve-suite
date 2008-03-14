@@ -17,7 +17,7 @@ lib_env.Append( LIBS = [ 'ves_open_xml',
                          'ves_xplorer_scenegraph' ] )
 lib_env.Append( LIBPATH = [ pj( '#', buildDir, 'src', 'ves', 'open', 'xml' ),
                             pj( '#', buildDir, 'src', 'ves', 'xplorer' ),
-		            pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
+                           pj( '#', buildDir, 'src', 'ves', 'xplorer', 'scenegraph' ) ] )
 #lib_env.Append( CPPPATH = [] )
 lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
 if GetPlatform() == 'win32':

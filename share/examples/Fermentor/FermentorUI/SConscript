@@ -29,6 +29,6 @@ xerces_options.apply( lib_env )
 
 lib = ves_pkg.createLoadableModule( 'FermentorUI', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'Fermentor', 'Plugins', 'UI', host_type ) )
-   
+
 lib.addSources( sources )
 lib.build()
