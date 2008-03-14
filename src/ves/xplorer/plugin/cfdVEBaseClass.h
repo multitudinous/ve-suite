@@ -188,35 +188,35 @@ public:
     std::map< std::string, cfdVEBaseClass* > GetCommandNameMap();
 
 private:
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_worldDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
 
-    std::string m_objectDescription;
+    std::string mObjectDescription;
 
-    std::string m_network;
+    std::string mNetwork;
 
 protected:
-    long m_pos_x;
-    long m_pos_y;
+    long mPosX;
+    long mPosY;
 
-    ves::xplorer::cfdObjects* m_dataRepresentation;
+    ves::xplorer::cfdObjects* mDataRepresentation;
 
-    ves::xplorer::Model* m_model;
+    ves::xplorer::Model* mModel;
 
-    bool m_onSceneGraph;
+    bool mOnSceneGraph;
 
-    int m_modID;
-    std::string m_objectName;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
-    ves::xplorer::cfdCursor* m_cursor;
-    ves::xplorer::Device* m_device;
-    ves::xplorer::cfdSoundHandler* m_soundHandler;
-    ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
+    int mModelID;
+    std::string mObjectName;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    ves::xplorer::cfdCursor* mCursor;
+    ves::xplorer::Device* mDevice;
+    ves::xplorer::cfdSoundHandler* mSoundHandler;
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
-    osgAL::SoundManager* m_soundManager;
+    osgAL::SoundManager* mSoundManager;
 #endif
 
-    ves::open::xml::model::ModelPtr m_xmlModel;
-    std::map< std::string, cfdVEBaseClass* > m_ehMap;
+    ves::open::xml::model::ModelPtr mXmlModel;
+    std::map< std::string, cfdVEBaseClass* > mEhMap;
 };
 }
 }
