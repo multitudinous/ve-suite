@@ -17,7 +17,6 @@ char vertex_shader[] =
 
         "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
         "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
-        "gl_TexCoord[ 0 ].p = dot( eyePos, gl_EyePlaneR[ 0 ] ); \n"
         "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
     "} \n";
 /*----------------------------------------------------------------------------*/
@@ -46,9 +45,9 @@ char fragment_shader[] =
                              "vec3( 0.490196, 0.488722 , 0.488722 ) * \n"
                              "pow( RDotL, 15.0 ); \n"
 
-        "vec3 color = totalAmbient + totalDiffuse + totalSpecular; \n"
-        "vec3 projectionUV = gl_TexCoord[ 0 ].stp / gl_TexCoord[ 0 ].q; \n"
+        "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
         "vec4 projection = texture2D( projectionMap, projectionUV ); \n"
+        "vec4 color = vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
 
         "if( projectionUV.s >= 0.0 && \n"
             "projectionUV.t >= 0.0 && \n"
@@ -59,7 +58,7 @@ char fragment_shader[] =
         "} \n"
         "else \n"
         "{ \n"
-            "gl_FragColor = vec4( color, 1.0 ); \n"
+            "gl_FragColor = color; \n"
         "} \n"
     "} \n";
 /*----------------------------------------------------------------------------*/

@@ -70,7 +70,6 @@ void Scene::CreateProjectionTexture()
     stateset->setTextureAttributeAndModes( 0, texture2D.get(), osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Program > program = new osg::Program();
