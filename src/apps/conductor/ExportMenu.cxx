@@ -65,7 +65,7 @@ ExportMenu::~ExportMenu()
 ////////////////////////////////////////////////////////////////////////////////
 void ExportMenu::CreateExportMenu()
 {
-    Append( ExportMenu::EXPORT_SCREEN_SHOT, _( "Screen Shot" ) );
+    //Append( ExportMenu::EXPORT_SCREEN_SHOT, _( "Screen Shot" ) );
     Append( ExportMenu::EXPORT_DOT_FILE, _( "OSG Graph File" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
