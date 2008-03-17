@@ -474,7 +474,8 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
 
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    while( parentTraverser != NULL )
+    //while( parentTraverser != NULL )
+    while( parentTraverser->GetParentModel() != NULL )
     {
         //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
         compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
@@ -539,7 +540,8 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
 
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    while( parentTraverser != NULL )
+    //while( parentTraverser != NULL )
+    while( parentTraverser->GetParentModel() != NULL )
     {
         //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
         compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
