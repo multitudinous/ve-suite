@@ -2,7 +2,7 @@
 #define CONSTRUCTION_BOTS_GP_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 // --- My Includes --- //
 namespace Construction
@@ -10,14 +10,14 @@ namespace Construction
     class World;
 }
 
-class VE_USER_PLUGIN_EXPORTS ConstructionBotsGP : public ves::xplorer::plugin::cfdVEBaseClass
+class VE_USER_PLUGIN_EXPORTS ConstructionBotsGP : public ves::xplorer::plugin::PluginBase
 {
 public:
     ConstructionBotsGP();
     virtual ~ConstructionBotsGP();
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
     virtual void PreFrameUpdate();
-    virtual void SetCurrentCommand( ves::open::xml::Command* command );
+    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
 protected:
     void UpdateParams();
@@ -27,12 +27,6 @@ private:
 
 };
 
-extern "C"
-{
-    VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin()
-    {
-        return new ConstructionBotsGP();
-    }
-}
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( ConstructionBotsGP )
 
 #endif //CONSTRUCTION_BOTS_GP_H

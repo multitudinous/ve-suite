@@ -18,15 +18,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::HyperLabGP()
 :
-cfdVEBaseClass(),
+PluginBase(),
 m_scene( 0 )
 {
-    m_objectName = "HyperLabUI";
+    mObjectName = "HyperLabUI";
 
-    m_ehMap[ "SHADER_EFFECTS_UPDATE" ] = this;
-    m_ehMap[ "AMBIENT_UPDATE" ] = this;
-    m_ehMap[ "DIFFUSE_UPDATE" ] = this;
-    m_ehMap[ "SPECULAR_UPDATE" ] = this;
+    mEventHandlerMap[ "SHADER_EFFECTS_UPDATE" ] = this;
+    mEventHandlerMap[ "AMBIENT_UPDATE" ] = this;
+    mEventHandlerMap[ "DIFFUSE_UPDATE" ] = this;
+    mEventHandlerMap[ "SPECULAR_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::~HyperLabGP()
@@ -39,9 +39,9 @@ HyperLabGP::~HyperLabGP()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    cfdVEBaseClass::InitializeNode( veworldDCS );
+    PluginBase::InitializeNode( veworldDCS );
 
-    m_scene = new hyperlab::Scene( m_dcs.get(), m_physicsSimulator );
+    m_scene = new hyperlab::Scene( mDCS.get(), mPhysicsSimulator );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::PreFrameUpdate()
@@ -51,7 +51,7 @@ void HyperLabGP::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::UpdateParams()
 {
-    m_xmlModel->GetInput( "portNumber" )->GetDataValuePair( "portNumber" )->GetData( _portNumber );
+    mXmlModel->GetInput( "portNumber" )->GetDataValuePair( "portNumber" )->GetData( _portNumber );
 
     //_excelData = socket.GetSensorData();
 }

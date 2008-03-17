@@ -332,10 +332,8 @@ void World::CommunicatingBlocksAlgorithm()
                         //agent->Get
                     }
                 }
-                else
-                {
-                    agent->GoToSite();
-                }
+
+                agent->GoToSite();
             }
         }
         else
@@ -354,13 +352,12 @@ void World::CommunicatingBlocksAlgorithm()
                         agent->PickUpBlock( targetEntity );
                     }
                 }
-                else
-                {
-                    agent->GoToBlock();
-                }
+
+                agent->GoToBlock();
             }
         }
 
+        /*
         agent->WanderAround();
 
         obstacleSensor->CollectInformation();
@@ -368,6 +365,7 @@ void World::CommunicatingBlocksAlgorithm()
         {
             agent->AvoidObstacle();
         }
+        */
 
     }
 }

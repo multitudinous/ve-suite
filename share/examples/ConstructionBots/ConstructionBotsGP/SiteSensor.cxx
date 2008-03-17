@@ -46,7 +46,7 @@ void SiteSensor::Initialize()
     osg::ref_ptr< osg::Vec3Array > lineNormals = new osg::Vec3Array();
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
-    colors->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    colors->push_back( osg::Vec4( 0.0f, 1.0f, 1.0f, 1.0f ) );
     m_line->setColorArray( colors.get() );
     m_line->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -195,3 +195,4 @@ void SiteSensor::SetRange( double range )
     m_range = range;
 }
 ////////////////////////////////////////////////////////////////////////////////
+

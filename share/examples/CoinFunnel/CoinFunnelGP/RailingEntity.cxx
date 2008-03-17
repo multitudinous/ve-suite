@@ -24,11 +24,11 @@ RailingEntity::RailingEntity( std::string geomFile,
                               ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
-m_nonPhysicsGeometry( 0 )
+mNonPhysicsGeometry( 0 )
 {
-    m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/railing.ive" );
+    mNonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/railing.ive" );
 
-    pluginDCS->addChild( m_nonPhysicsGeometry.get() );
+    pluginDCS->addChild( mNonPhysicsGeometry.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 RailingEntity::~RailingEntity()
@@ -36,7 +36,7 @@ RailingEntity::~RailingEntity()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void RailingEntity::SetNameAndDescriptions( std::string geomFile )
+void RailingEntity::SetNameAndDescriptions( const std::string& geomFile )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
@@ -112,7 +112,7 @@ void RailingEntity::SetShaderOne( osg::TextureCubeMap* tcm )
     stateset->addUniform( Environment.get() );
         
     GetNode()->GetNode()->setStateSet( stateset.get() );
-    m_nonPhysicsGeometry->setStateSet( stateset.get() );
+    mNonPhysicsGeometry->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

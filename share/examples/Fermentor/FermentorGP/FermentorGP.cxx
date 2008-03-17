@@ -29,7 +29,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::VEFermentorGraphicalPlugin()
 :
-cfdVEBaseClass(),
+PluginBase(),
 _agitation( 200 ),
 _air_conc( 1.25 ),
 _ini_ph( 6 ),
@@ -61,7 +61,7 @@ transform_imp( new osg::MatrixTransform() ),
 transform_tank( new osg::MatrixTransform() ),
 mSimulationStart( false )
 {
-    m_objectName = "FermentorUI";
+    mObjectName = "FermentorUI";
 }
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
@@ -83,7 +83,7 @@ VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
 ////////////////////////////////////////////////////////////////////////////////
 void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    cfdVEBaseClass::InitializeNode( veworldDCS );
+    PluginBase::InitializeNode( veworldDCS );
 
     //Create the gauges
     osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
@@ -92,7 +92,7 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/fermentor_room.ive" );
     _roomGeometry->addChild( temp.get() );
     rootNode->addChild( _roomGeometry.get() );
-    m_dcs->addChild( fermentorGroup.get() );
+    mDCS->addChild( fermentorGroup.get() );
 
     _fermentorGeometry = osgDB::readNodeFile( "Models/fermentor_noimpeller.ive" );
     _impellerGeometry = osgDB::readNodeFile( "Models/impeller_fixed.ive" );
@@ -159,18 +159,18 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
 ////////////////////////////////////////////////////////////////////////////////
 void VEFermentorGraphicalPlugin::ProcessOnSubmitJob()
 {
-    m_xmlModel->GetInput( "agitation" )->GetDataValuePair( "agitation" )->GetData( _agitation );
-    m_xmlModel->GetInput( "air_conc" )->GetDataValuePair( "air_conc" )->GetData( _air_conc );
-    m_xmlModel->GetInput( "ini_ph" )->GetDataValuePair( "ini_ph" )->GetData( _ini_ph );
-    m_xmlModel->GetInput( "nitrate_conc" )->GetDataValuePair( "nitrate_conc" )->GetData( _nitrate_conc );
-    m_xmlModel->GetInput( "temperature" )->GetDataValuePair( "temperature" )->GetData( _temperature );
-    m_xmlModel->GetInput( "hours" )->GetDataValuePair( "hours" )->GetData( _hours );
-    m_xmlModel->GetInput( "cycle_ID" )->GetDataValuePair( "cycle_ID" )->GetData( _cycle_ID );
-    m_xmlModel->GetInput( "rotation_ID" )->GetDataValuePair( "rotation_ID" )->GetData( _rotation_ID );
-    m_xmlModel->GetInput( "xray_ID" )->GetDataValuePair( "xray_ID" )->GetData( _xray_ID );
-    m_xmlModel->GetInput( "loop_ID" )->GetDataValuePair( "loop_ID" )->GetData( _loop_ID );
-    m_xmlModel->GetInput( "rot_speed" )->GetDataValuePair( "rot_speed" )->GetData( _rot_speed );
-    m_xmlModel->GetInput( "sim_speed" )->GetDataValuePair( "sim_speed" )->GetData( _sim_speed );
+    mXmlModel->GetInput( "agitation" )->GetDataValuePair( "agitation" )->GetData( _agitation );
+    mXmlModel->GetInput( "air_conc" )->GetDataValuePair( "air_conc" )->GetData( _air_conc );
+    mXmlModel->GetInput( "ini_ph" )->GetDataValuePair( "ini_ph" )->GetData( _ini_ph );
+    mXmlModel->GetInput( "nitrate_conc" )->GetDataValuePair( "nitrate_conc" )->GetData( _nitrate_conc );
+    mXmlModel->GetInput( "temperature" )->GetDataValuePair( "temperature" )->GetData( _temperature );
+    mXmlModel->GetInput( "hours" )->GetDataValuePair( "hours" )->GetData( _hours );
+    mXmlModel->GetInput( "cycle_ID" )->GetDataValuePair( "cycle_ID" )->GetData( _cycle_ID );
+    mXmlModel->GetInput( "rotation_ID" )->GetDataValuePair( "rotation_ID" )->GetData( _rotation_ID );
+    mXmlModel->GetInput( "xray_ID" )->GetDataValuePair( "xray_ID" )->GetData( _xray_ID );
+    mXmlModel->GetInput( "loop_ID" )->GetDataValuePair( "loop_ID" )->GetData( _loop_ID );
+    mXmlModel->GetInput( "rot_speed" )->GetDataValuePair( "rot_speed" )->GetData( _rot_speed );
+    mXmlModel->GetInput( "sim_speed" )->GetDataValuePair( "sim_speed" )->GetData( _sim_speed );
 
     _rot_speed = _rot_speed / 10.0f;
 

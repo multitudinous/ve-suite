@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/open/xml/model/Model.h>
 #include <iostream>
@@ -61,7 +61,7 @@ cfdVEPluginLoader::cfdVEPluginLoader()
 ////////////////////////////////////////////////////////////////////////////////
 cfdVEPluginLoader::~cfdVEPluginLoader()
 {
-    std::map< int, cfdVEBaseClass* >::iterator iter;
+    std::map< int, PluginBase* >::iterator iter;
     for( iter = plugins.begin(); iter != plugins.end(); ++iter )
     {
         delete iter->second;
@@ -83,10 +83,10 @@ int cfdVEPluginLoader::GetNumberOfPlugins( void )
     return plugins.size();
 }
 //////////////////////////////////////////////////////////////////
-cfdVEBaseClass* cfdVEPluginLoader::CreateObject( std::string _objname )
+PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
 {
     int selectPlugin = -1;
-    std::map< int, cfdVEBaseClass* >::iterator iter;
+    std::map< int, PluginBase* >::iterator iter;
     for( iter = plugins.begin(); iter != plugins.end(); ++iter )
     {
         if( iter->second->GetName() == _objname )
@@ -203,7 +203,7 @@ void cfdVEPluginLoader::LoadPlugins( void )
 {
     for( size_t i = 0; i < libs.size(); ++i )
     {
-        cfdVEBaseClass* test_obj( 0 );
+        PluginBase* test_obj( 0 );
 
         if( libs.at( i )->isLoaded() )
         {
@@ -224,11 +224,11 @@ void cfdVEPluginLoader::LoadPlugins( void )
     }
 }
 //////////////////////////////////////////////////////////////////
-cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
+PluginBase* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
 {
     //std::cout << " CreateNewPlugin plugin " << input << std::endl;
     void*( *creator )();
-    cfdVEBaseClass* test_obj( NULL );
+    PluginBase* test_obj( NULL );
 
     // No, *this* is the weirdest cast I have ever written.
     creator = ( void * ( * )() ) libs[ input ]->findSymbol( std::string( "CreateVEPlugin" ) );
@@ -246,6 +246,6 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
         vprDEBUG( vesDBG, 1 )  <<  "|\tCreated object instance " << std::endl << vprDEBUG_FLUSH;
 
     // Is there a way to test that this cast was successful?
-    test_obj = static_cast<cfdVEBaseClass*>( object );
+    test_obj = static_cast<PluginBase*>( object );
     return test_obj;
 }

@@ -24,37 +24,37 @@
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelGP::CoinFunnelGP()
 :
-cfdVEBaseClass(),
-world( 0 )
+PluginBase(),
+mWorld( 0 )
 {
-    m_objectName = "CoinFunnelUI";
+    mObjectName = "CoinFunnelUI";
 }
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelGP::~CoinFunnelGP()
 {
-    if( world )
+    if( mWorld )
     {
-        delete world;
+        delete mWorld;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    cfdVEBaseClass::InitializeNode( veworldDCS );
+    PluginBase::InitializeNode( veworldDCS );
 
-    world = new demo::World( m_dcs.get(),
-                             m_physicsSimulator
+    mWorld = new demo::World( mDCS.get(),
+                              mPhysicsSimulator
 #ifdef VE_SOUND
-                           , m_soundManager
+                            , mSoundManager
 #endif
                              );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::PreFrameUpdate()
 {
-    if( !m_physicsSimulator->GetIdle() )
+    if( !mPhysicsSimulator->GetIdle() )
     {
-        world->PreFrameUpdate();
+        mWorld->PreFrameUpdate();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +63,7 @@ void CoinFunnelGP::UpdateParams()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CoinFunnelGP::SetCurrentCommand( ves::open::xml::Command* command )
+void CoinFunnelGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
     if( !command )
     {

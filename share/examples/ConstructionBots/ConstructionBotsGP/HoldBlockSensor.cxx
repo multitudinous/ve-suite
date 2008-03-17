@@ -18,7 +18,7 @@ HoldBlockSensor::HoldBlockSensor( Construction::AgentEntity* agentEntity )
 :
 Sensor( agentEntity ),
 m_holdingBlock( false ),
-m_range( 1.6 ),
+m_range( 2.6 ),
 beamLineSegment( new osg::LineSegment() )
 {
     ;
@@ -47,7 +47,7 @@ void HoldBlockSensor::CollectInformation()
     m_agentEntity->GetPluginDCS()->accept( intersectVisitor );
 
     osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( beamLineSegment.get() );
-    if( hitList.size() > 2 )
+    if( hitList.size() > 1 )
     {
         m_holdingBlock = true;
         /*

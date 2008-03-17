@@ -25,11 +25,11 @@ QuarterEntity::QuarterEntity( std::string geomFile,
 :
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
-    m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/quarter_front.ive" );
-    m_nonPhysicsGeometryII = osgDB::readNodeFile( "Models/IVEs/quarter_back.ive" );
+    mNonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/quarter_front.ive" );
+    mNonPhysicsGeometryII = osgDB::readNodeFile( "Models/IVEs/quarter_back.ive" );
 
-    GetDCS()->addChild( m_nonPhysicsGeometry.get() );
-    GetDCS()->addChild( m_nonPhysicsGeometryII.get() );
+    GetDCS()->addChild( mNonPhysicsGeometry.get() );
+    GetDCS()->addChild( mNonPhysicsGeometryII.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 QuarterEntity::~QuarterEntity()
@@ -37,7 +37,7 @@ QuarterEntity::~QuarterEntity()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void QuarterEntity::SetNameAndDescriptions( std::string geomFile )
+void QuarterEntity::SetNameAndDescriptions( const std::string& geomFile )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
@@ -59,8 +59,8 @@ void QuarterEntity::SetShaders()
         new osg::Texture2D( osgDB::readImageFile( "Textures/QuarterBack.jpg" ) );
 
     SetShaderOne( GetNode()->GetNode(), quarterEdge.get() );
-    SetShaderOne( m_nonPhysicsGeometry.get(), quarterFront.get() );
-    SetShaderOne( m_nonPhysicsGeometryII.get(), quarterBack.get() );
+    SetShaderOne( mNonPhysicsGeometry.get(), quarterFront.get() );
+    SetShaderOne( mNonPhysicsGeometryII.get(), quarterBack.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void QuarterEntity::SetShaderOne( osg::Node* node, osg::Texture2D* texture )

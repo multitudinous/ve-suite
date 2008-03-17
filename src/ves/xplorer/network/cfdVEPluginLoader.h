@@ -49,7 +49,7 @@ namespace xplorer
 {
 namespace plugin
 {
-class cfdVEBaseClass;
+class PluginBase;
 }
 }
 }
@@ -69,7 +69,7 @@ public:
 
     void LoadPlugins( void );
     void ScanAndLoad( void );
-    ves::xplorer::plugin::cfdVEBaseClass* CreateNewPlugin( unsigned int );
+    ves::xplorer::plugin::PluginBase* CreateNewPlugin( unsigned int );
 
     //Load all the dlls in the given dir
 
@@ -77,10 +77,10 @@ public:
 
     int GetNumberOfPlugins();
 
-    ves::xplorer::plugin::cfdVEBaseClass* CreateObject( std::string );
+    ves::xplorer::plugin::PluginBase* CreateObject( std::string );
 
     //Keep the list of the first intance of each plugin
-    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* > plugins;
+    std::map< int, ves::xplorer::plugin::PluginBase* > plugins;
 
     vpr::LibraryFinder::LibraryList libs;
 };

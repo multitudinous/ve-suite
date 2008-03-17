@@ -29,13 +29,13 @@ public:
     void SetShaders();
 
 private:
-#if 0
-this all needs to be cleaned up
+//#if 0
+//this all needs to be cleaned up
     void SetShaderOne( osg::Node* node, osg::Texture2D* texture );
 
-    osg::ref_ptr< osg::Node > m_nonPhysicsGeometry;
-    osg::ref_ptr< osg::Node > m_nonPhysicsGeometryII;
-#endif
+    osg::ref_ptr< osg::Node > mNonPhysicsGeometry;
+    osg::ref_ptr< osg::Node > mNonPhysicsGeometryII;
+//#endif
 };
 }
 

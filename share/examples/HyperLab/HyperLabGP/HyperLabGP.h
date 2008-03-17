@@ -8,7 +8,7 @@ namespace hyperlab
 }
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 // --- OSG Includes --- //
 #include <osg/Group>
@@ -20,7 +20,7 @@ namespace hyperlab
 // --- C/C++ Libraries --- //
 #include <string>
 
-class VE_USER_PLUGIN_EXPORTS HyperLabGP : public ves::xplorer::plugin::cfdVEBaseClass
+class VE_USER_PLUGIN_EXPORTS HyperLabGP : public ves::xplorer::plugin::PluginBase
 {
 public:
     HyperLabGP();
@@ -38,13 +38,7 @@ private:
     hyperlab::Scene* m_scene;
 };
 
-extern "C"
-{
-    VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin()
-    {
-        return new HyperLabGP();
-    }
-}
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( HyperLabGP )
 
 #endif //HYPER_LAB_GP_H
    

@@ -34,7 +34,7 @@
 
 #include <vtkActor.h>
 
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -67,7 +67,7 @@ class vtkUnstructuredGrid;
 class vtkGlyph3D;
 
 // Need to create or use this in our stuff
-class VEIntStovemod: public ves::xplorer::plugin::cfdVEBaseClass 
+class VEIntStovemod: public ves::xplorer::plugin::PluginBase 
 {
 public:
     VEIntStovemod( void );
@@ -143,6 +143,8 @@ public:
     ves::xplorer::scenegraph::CADEntity* baffleSeven;
 
 };
-VE_GRAPHICALPLUGIN_CLASS( VEIntStovemod )
+
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEIntStovemod )
+
 #endif
    

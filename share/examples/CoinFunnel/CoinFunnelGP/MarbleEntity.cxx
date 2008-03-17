@@ -34,20 +34,20 @@ MarbleEntity::MarbleEntity( std::string geomFile,
 :
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
 #ifdef VE_SOUND
-m_marbleOnWood( new ves::xplorer::scenegraph::Sound( "MarbleOnWood", GetDCS(), soundManager ) ),
-m_marbleOnMetal( new ves::xplorer::scenegraph::Sound( "MarbleOnMetal", GetDCS(), soundManager ) ),
-m_marbleOnMarble( new ves::xplorer::scenegraph::Sound( "MarbleOnMarble", GetDCS(), soundManager ) ),
+mMarbleOnWood( new ves::xplorer::scenegraph::Sound( "MarbleOnWood", GetDCS(), soundManager ) ),
+mMarbleOnMetal( new ves::xplorer::scenegraph::Sound( "MarbleOnMetal", GetDCS(), soundManager ) ),
+mMarbleOnMarble( new ves::xplorer::scenegraph::Sound( "MarbleOnMarble", GetDCS(), soundManager ) ),
 #endif
-m_nonPhysicsGeometry( 0 )
+mNonPhysicsGeometry( 0 )
 {
-    m_nonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
-    GetDCS()->addChild( m_nonPhysicsGeometry.get() );
+    mNonPhysicsGeometry = osgDB::readNodeFile( "Models/IVEs/marble.ive" );
+    GetDCS()->addChild( mNonPhysicsGeometry.get() );
 #ifdef VE_SOUND
     try
     {
-        m_marbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
-        m_marbleOnMetal->LoadFile( "Sounds/MarbleOnMetal.wav" );
-        m_marbleOnMarble->LoadFile( "Sounds/MarbleOnMarble.wav" );
+        mMarbleOnWood->LoadFile( "Sounds/MarbleOnWood.wav" );
+        mMarbleOnMetal->LoadFile( "Sounds/MarbleOnMetal.wav" );
+        mMarbleOnMarble->LoadFile( "Sounds/MarbleOnMarble.wav" );
     }
     catch( ... )
     {
@@ -59,13 +59,13 @@ m_nonPhysicsGeometry( 0 )
 MarbleEntity::~MarbleEntity()
 {
 #ifdef VE_SOUND
-    delete m_marbleOnWood;
-    delete m_marbleOnMetal;
-    delete m_marbleOnMarble;
+    delete mMarbleOnWood;
+    delete mMarbleOnMetal;
+    delete mMarbleOnMarble;
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MarbleEntity::SetNameAndDescriptions( std::string geomFile )
+void MarbleEntity::SetNameAndDescriptions( const std::string& geomFile )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
@@ -83,17 +83,17 @@ void MarbleEntity::SetShaders( osg::TextureCubeMap* tcm )
 #ifdef VE_SOUND
 ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnWoodSound()
 {
-    return m_marbleOnWood;
+    return mMarbleOnWood;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnMetalSound()
 {
-    return m_marbleOnMetal;
+    return mMarbleOnMetal;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Sound* MarbleEntity::GetMarbleOnMarbleSound()
 {
-    return m_marbleOnMarble;
+    return mMarbleOnMarble;
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////
@@ -248,7 +248,7 @@ void MarbleEntity::SetShaderTwo()
 
     stateset->setAttribute( program.get(), osg::StateAttribute::ON );
         
-    m_nonPhysicsGeometry->setStateSet( stateset.get() );
+    mNonPhysicsGeometry->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 

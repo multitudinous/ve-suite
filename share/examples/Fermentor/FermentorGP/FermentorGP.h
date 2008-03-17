@@ -10,7 +10,7 @@ namespace display
 }
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 namespace ves
 {
@@ -26,7 +26,7 @@ namespace scenegraph
 // --- C/C++ Libraries --- //
 #include <map>
 
-class VE_USER_PLUGIN_EXPORTS VEFermentorGraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass
+class VE_USER_PLUGIN_EXPORTS VEFermentorGraphicalPlugin : public ves::xplorer::plugin::PluginBase
 {
 public:
     VEFermentorGraphicalPlugin();
@@ -80,12 +80,6 @@ private:
     osg::ref_ptr< osg::MatrixTransform > transform_tank;
 };
 
-extern "C"
-{
-    VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin()
-    {
-        return new VEFermentorGraphicalPlugin();
-    }
-}
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( VEFermentorGraphicalPlugin )
 
 #endif //VE_FERMENTOR_GRAPHICAL_PLUGIN_H

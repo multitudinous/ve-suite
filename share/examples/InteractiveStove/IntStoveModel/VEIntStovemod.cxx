@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdVEBaseClass.cxx,v $
+ * File:          $RCSfile: PluginBase.cxx,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
@@ -98,7 +98,7 @@ using namespace ves::xplorer;
 
 // Constructor
 VEIntStovemod::VEIntStovemod( void ) : 
-    cfdVEBaseClass(),
+    PluginBase(),
     setcount( 0 ), 
     _outFileName( 0 ),
     _dataSet( 0 ),
@@ -115,15 +115,15 @@ VEIntStovemod::VEIntStovemod( void ) :
     m_contourPlane( 0 ),
     m_vectorPlane( 0 )
 {
-    m_objectName = "IntStoves";
+    mObjectName = "IntStoves";
 
     showVectors = false;
     showContour = false;
 
     stlColor[0] = 0.0; stlColor[1] = 0.0; stlColor[2] = 1.0;
-    m_ehMap["BAFFLE_UPDATE"]=this;
-    m_ehMap["SHOW_VECTORS"]=this;
-    m_ehMap["SHOW_CONTOUR"]=this;
+    mEventHandlerMap["BAFFLE_UPDATE"]=this;
+    mEventHandlerMap["SHOW_VECTORS"]=this;
+    mEventHandlerMap["SHOW_CONTOUR"]=this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Destructor
@@ -174,7 +174,7 @@ VEIntStovemod::~VEIntStovemod( void )
 ////////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    cfdVEBaseClass::InitializeNode( veworldDCS );
+    PluginBase::InitializeNode( veworldDCS );
 
     baffleOne = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
     baffleOne->GetNode()->ToggleDisplay(false);
@@ -383,7 +383,7 @@ void VEIntStovemod::SetCurrentCommand(ves::open::xml::Command* command)
         else
         {
             showVectors = false;
-            this->m_dcs->removeChild( m_vectorPlane.get() );
+            mDCS->removeChild( m_vectorPlane.get() );
         }
     }
     else if( command->GetCommandName() == "SHOW_CONTOUR" )
@@ -398,7 +398,7 @@ void VEIntStovemod::SetCurrentCommand(ves::open::xml::Command* command)
         else
         {
             showContour = false;
-            this->m_dcs->removeChild( m_contourPlane.get() );
+            mDCS->removeChild( m_contourPlane.get() );
         }
     }
 }
@@ -432,7 +432,7 @@ void VEIntStovemod::CreateContourPlane()
     ///Remove previous contour plane from graph
     if( m_contourPlane.valid() )
     {
-        this->m_dcs->removeChild( m_contourPlane.get() );
+        mDCS->removeChild( m_contourPlane.get() );
     }
 
     double bounds[6];
@@ -506,7 +506,7 @@ void VEIntStovemod::CreateContourPlane()
     ///Now add the contour plane
     if( m_contourPlane.valid() )
     {
-        this->m_dcs->addChild( m_contourPlane.get() );
+        mDCS->addChild( m_contourPlane.get() );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -520,7 +520,7 @@ void VEIntStovemod::CreateVectorPlane()
     ///Remove previous vector plane from graph
     if( m_vectorPlane.valid() )
     {
-        this->m_dcs->removeChild( m_vectorPlane.get() );
+        mDCS->removeChild( m_vectorPlane.get() );
     }
 
     double bounds[6];
@@ -591,6 +591,6 @@ void VEIntStovemod::CreateVectorPlane()
     ///Now add the vector plane
     if( m_vectorPlane.valid() )
     {
-        this->m_dcs->addChild( m_vectorPlane.get() );
+        mDCS->addChild( m_vectorPlane.get() );
     }
 }

@@ -46,7 +46,7 @@ namespace xplorer
 namespace DefaultGraphicalPlugin
 {
 ////////////////////////////////////////////////////////////////////////////////
-DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : cfdVEBaseClass()
+DefaultGraphicalPlugin::DefaultGraphicalPlugin( void ) : PluginBase()
 {
     SetObjectName( std::string( "DefaultPlugin" ) );
 }
@@ -58,7 +58,7 @@ DefaultGraphicalPlugin::~DefaultGraphicalPlugin( void )
 ////////////////////////////////////////////////////////////////////////////////
 void DefaultGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    cfdVEBaseClass::InitializeNode( veworldDCS );
+    PluginBase::InitializeNode( veworldDCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
 }

@@ -39,7 +39,7 @@ DefaultGraphicalPlugin API
 /*!\class ::DefaultGraphicalPlugin
 *
 */
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
@@ -65,7 +65,7 @@ namespace xplorer
 {
 namespace DefaultGraphicalPlugin
 {
-class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::cfdVEBaseClass
+class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::PluginBase
 {
 public:
     DefaultGraphicalPlugin( void );

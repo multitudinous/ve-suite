@@ -35,7 +35,7 @@
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/network/cfdVEPluginLoader.h>
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
@@ -165,7 +165,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
         new UpdateNetworkEventHandler();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map<int, ves::xplorer::plugin::cfdVEBaseClass* >* cfdExecutive::GetTheCurrentPlugins( void )
+std::map<int, ves::xplorer::plugin::PluginBase* >* cfdExecutive::GetTheCurrentPlugins( void )
 {
     return &_plugins;
 }
@@ -290,7 +290,7 @@ void cfdExecutive::GetEverything( void )
     GetNetwork();
 
     std::map< int, std::string >::iterator iter;
-    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >::iterator foundPlugin;
+    std::map< int, ves::xplorer::plugin::PluginBase* >::iterator foundPlugin;
     std::map< int, model::ModelPtr >::iterator modelIter;
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
     XMLReaderWriter commandWriter;
@@ -302,12 +302,12 @@ void cfdExecutive::GetEverything( void )
         {
             // if a new module is on the id map but not on the plugins map
             // create it...
-            cfdVEBaseClass* temp = dynamic_cast< ves::xplorer::plugin::cfdVEBaseClass* >( m_avModules->GetLoader()->CreateObject( iter->second ) );
+            PluginBase* temp = dynamic_cast< ves::xplorer::plugin::PluginBase* >( m_avModules->GetLoader()->CreateObject( iter->second ) );
             if( temp == 0 )
             {
                 //load the default plugin
                 temp = new ves::xplorer::DefaultGraphicalPlugin::DefaultGraphicalPlugin();
-                //dynamic_cast< cfdVEBaseClass* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
+                //dynamic_cast< PluginBase* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
             }
 
             _plugins[ iter->first ] = temp;
@@ -383,7 +383,7 @@ void cfdExecutive::GetEverything( void )
             ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
             // Remove a plugins event handler map
             // do this before the foundPlugin is deleted
-            std::map< int, std::map< std::string, cfdVEBaseClass* > >::iterator cmdIter;
+            std::map< int, std::map< std::string, PluginBase* > >::iterator cmdIter;
             cmdIter = pluginEHMap.find( foundPlugin->first );
             pluginEHMap.erase( cmdIter );
             // Must delete current instance of vebaseclass object
@@ -445,7 +445,7 @@ void cfdExecutive::PreFrameUpdate( void )
     }
 
     ///process the standard plugin stuff
-    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+    std::map< int, PluginBase* >::iterator foundPlugin;
     for( foundPlugin = _plugins.begin();
             foundPlugin != _plugins.end();
             ++foundPlugin )
@@ -469,7 +469,7 @@ void cfdExecutive::PreFrameUpdate( void )
             //if( tempCommand )
             {
                 std::string cmdName = tempCommand->GetCommandName();
-                cfdVEBaseClass* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
+                PluginBase* tempBase = pluginEHMap[ foundPlugin->first ][ cmdName ];
                 if( tempBase )
                 {
                     tempBase->SetCurrentCommand( tempCommand );
@@ -535,7 +535,7 @@ void cfdExecutive::LoadDataFromCE( void )
     //     pos3 != std::string::npos )
     {
         std::map< int, std::string >::iterator idMap;
-        for( std::map< int, cfdVEBaseClass* >::iterator foundPlugin =
+        for( std::map< int, PluginBase* >::iterator foundPlugin =
                     _plugins.begin();
                 foundPlugin != _plugins.end();
                 foundPlugin++ )
@@ -582,9 +582,9 @@ void cfdExecutive::LoadDataFromCE( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*bool cfdExecutive::RegisterEHForGEPlugin( std::string commandName, cfdVEBaseClass* baseClass )
+/*bool cfdExecutive::RegisterEHForGEPlugin( std::string commandName, PluginBase* baseClass )
 {
-   std::map< std::string, cfdVEBaseClass* >::iterator iter;
+   std::map< std::string, PluginBase* >::iterator iter;
    iter = pluginEHMap.find( commandName );
    if(iter == pluginEHMap.end() )
    {

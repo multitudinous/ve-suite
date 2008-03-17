@@ -34,7 +34,7 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/network/cfdExecutive.h>
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 
 #include <ves/open/xml/XMLObject.h>
@@ -104,7 +104,7 @@ void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObje
     _plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
 
     // Remove any plugins that aren't present in the current network
-    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+    std::map< int, PluginBase* >::iterator foundPlugin;
     foundPlugin = _plugins->find( id );
 
     if( foundPlugin != _plugins->end() )

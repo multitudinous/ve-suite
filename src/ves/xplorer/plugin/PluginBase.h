@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef _VES_XPLORER_PLUGIN_BASE_H_
-#define _VES_XPLORER_PLUGIN_BASE_H_
+#ifndef VES_XPLORER_PLUGIN_BASE_H
+#define VES_XPLORER_PLUGIN_BASE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
@@ -78,21 +78,21 @@ class PhysicsSimulator;
 
 namespace plugin
 {
-/*!\file cfdVEBaseClass.h
- * cfdVEBaseClass API
+/*!\file PluginBase.h
+ * PluginBase API
  */
 
-/*!\class ::cfdVEBaseClass
+/*!\class ::PluginBase
  *
  */
 class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
 {
 public:
-    cfdVEBaseClass();
+    PluginBase();
 
-    virtual ~cfdVEBaseClass();
+    virtual ~PluginBase();
 
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
+    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
 
     //Methods to do scene graph manipulations
     //New methods may have to be added later
@@ -101,7 +101,7 @@ public:
     virtual void RemoveSelfFromSG();
 
     //transform object based
-    void SetTransforms( double*, double*, double* );
+    void SetTransforms( double* scale, double* rot, double* trans );
 
     //Implement Gengxun's work by using socket
     //stuff from vtk. This will be used in parallel
@@ -111,7 +111,7 @@ public:
 
     //Basically uses vtkActorToPF to create a geode and
     //add it to the scene graph. Probably use cfdObject.
-    virtual void MakeGeodeByUserRequest( int );
+    //virtual void MakeGeodeByUserRequest( int );
 
     //This returns the name of the module
     const std::string& GetName();
@@ -124,20 +124,17 @@ public:
 
     ves::xplorer::Model* GetCFDModel();
 
-    bool OnSceneGraph()
-    {
-        return m_onSceneGraph;
-    }
+    bool OnSceneGraph();
 
     //Set the pointer to the cursor class so that dynamic
     //objects can do custom features with the wand input
-    void SetCursor( ves::xplorer::cfdCursor* );
+    void SetCursor( ves::xplorer::cfdCursor* input );
 
     //Set the pointer to the navigate class so that dynamic
     //objects can do custom features with the wand buttons
     void SetInteractionDevice( ves::xplorer::Device* device );
 
-    void SetSoundHandler( ves::xplorer::cfdSoundHandler* input );
+    //void SetSoundHandler( ves::xplorer::cfdSoundHandler* input );
 
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
@@ -153,21 +150,15 @@ public:
 
     //Viz feature for the devloper to define
     //Can be anything that creates a geode
-    virtual void CreateCustomVizFeature( int );
+    virtual void CreateCustomVizFeature( int input );
 
     ///This function gets called if the model is selected
-    virtual void SelectedPreFrameUpdate()
-    {
-        //Allows graphical plugins access to scenegraph
-        ;
-    }
+    //Allows graphical plugins access to scenegraph
+    virtual void SelectedPreFrameUpdate();
 
     ///This gets called every frame no matter what
-    virtual void PreFrameUpdate()
-    {
-        //Allows graphical plugins access to scenegraph
-        ;
-    }
+    //Allows graphical plugins access to scenegraph
+    virtual void PreFrameUpdate();
 
     ///Set the VE_Model to be used by this plugin
     ///\param tempModel Pointer to VE_Model
@@ -179,13 +170,10 @@ public:
 
     ///Allow the users to process new inputs after a job has
     ///been submitted for all plugins
-    virtual void ProcessOnSubmitJob()
-    {
-        ;
-    }
+    virtual void ProcessOnSubmitJob();
 
     ///Return map that maps command names to this plugin
-    std::map< std::string, cfdVEBaseClass* > GetCommandNameMap();
+    std::map< std::string, PluginBase* > GetCommandNameMap();
 
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
@@ -198,7 +186,7 @@ protected:
     long mPosX;
     long mPosY;
 
-    ves::xplorer::cfdObjects* mDataRepresentation;
+    //ves::xplorer::cfdObjects* mDataRepresentation;
 
     ves::xplorer::Model* mModel;
 
@@ -209,14 +197,15 @@ protected:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::Device* mDevice;
-    ves::xplorer::cfdSoundHandler* mSoundHandler;
+    //ves::xplorer::cfdSoundHandler* mSoundHandler;
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
     osgAL::SoundManager* mSoundManager;
 #endif
 
     ves::open::xml::model::ModelPtr mXmlModel;
-    std::map< std::string, cfdVEBaseClass* > mEventHandlerMap;
+    std::map< std::string, PluginBase* > mEventHandlerMap;
+
 };
 }
 }
@@ -231,4 +220,4 @@ protected:
         } \
     }
 
-#endif // end CFD_VE_BASE_CLASS_H
+#endif // end VES_XPLORER_PLUGIN_BASE_H

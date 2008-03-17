@@ -34,7 +34,7 @@
 #include <ves/xplorer/network/cfdExecutive.h>
 #include <ves/xplorer/network/cfdVEAvailModules.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -91,10 +91,10 @@ void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
 //////////////////////////////////////////////////////////////////////////
 void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >* plugins;
+    std::map< int, ves::xplorer::plugin::PluginBase* >* plugins;
     plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
 
-    for( std::map< int, ves::xplorer::plugin::cfdVEBaseClass* >::iterator iter = 
+    for( std::map< int, ves::xplorer::plugin::PluginBase* >::iterator iter = 
         plugins->begin(); iter != plugins->end(); )
     {
         // if a module is on the plugins map then remove it

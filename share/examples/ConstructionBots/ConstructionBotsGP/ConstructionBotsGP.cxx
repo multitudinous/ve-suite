@@ -14,10 +14,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsGP::ConstructionBotsGP()
 :
-cfdVEBaseClass(),
+PluginBase(),
 world( 0 )
 {
-    m_objectName = "ConstructionBotsUI";
+    mObjectName = "ConstructionBotsUI";
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsGP::~ConstructionBotsGP()
@@ -30,19 +30,19 @@ ConstructionBotsGP::~ConstructionBotsGP()
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    cfdVEBaseClass::InitializeNode( veworldDCS );
+    PluginBase::InitializeNode( veworldDCS );
 
-    world = new Construction::World( m_dcs.get(),
-                                     m_physicsSimulator
+    world = new Construction::World( mDCS.get(),
+                                     mPhysicsSimulator
 #ifdef VE_SOUND
-                                   , m_soundManager
+                                   , mSoundManager
 #endif
                                    );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::PreFrameUpdate()
 {
-    if( !m_physicsSimulator->GetIdle() )
+    if( !mPhysicsSimulator->GetIdle() )
     {
         world->PreFrameUpdate();
     }
@@ -53,7 +53,7 @@ void ConstructionBotsGP::UpdateParams()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsGP::SetCurrentCommand( ves::open::xml::Command* command )
+void ConstructionBotsGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
     if( !command )
     {

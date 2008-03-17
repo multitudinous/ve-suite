@@ -2,18 +2,16 @@
 #define COIN_FUNNEL_GP_H
 
 // --- VE-Suite Includes --- //
-#include <ves/xplorer/plugin/cfdVEBaseClass.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
 // --- My Includes --- //
-#if 0
-use boost shared ptrs
+//use boost shared ptrs
 namespace demo
 {
     class World;
 }
-#endif
 
-class VE_USER_PLUGIN_EXPORTS CoinFunnelGP : public ves::xplorer::plugin::cfdVEBaseClass
+class VE_USER_PLUGIN_EXPORTS CoinFunnelGP : public ves::xplorer::plugin::PluginBase
 {
 public:
     CoinFunnelGP();
@@ -26,19 +24,11 @@ protected:
     void UpdateParams();
 
 private:
-    demo::WorldPtr mWorld;
+    //demo::WorldPtr mWorld;
+    demo::World* mWorld;
 
 };
 
-#if 0
-use provided macro
-extern "C"
-{
-    VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin()
-    {
-        return new CoinFunnelGP();
-    }
-}
-#endif
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( CoinFunnelGP )
 
 #endif //COIN_FUNNEL_GP_H

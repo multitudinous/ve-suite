@@ -43,7 +43,7 @@ public:
                   ves::xplorer::scenegraph::DCS* pluginDCS,
                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-                  ,osgAL::SoundManager* soundManager
+                , osgAL::SoundManager* soundManager
 #endif
                  );
 
@@ -60,11 +60,11 @@ public:
 #endif
 
 private:
-#if 0
-   terrible names
+//#if 0
+   //terrible names
     void SetShaderOne( osg::TextureCubeMap* tcm );
     void SetShaderTwo();
-#endif
+//#endif
 
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* mMarbleOnWood;

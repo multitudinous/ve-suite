@@ -24,8 +24,8 @@ FunnelEntity::FunnelEntity( std::string geomFile,
                             ves::xplorer::scenegraph::DCS* pluginDCS,
                             ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-m_nonPhysicsGeometry( new osg::Group() ),
-m_nonPhysicsGeometryII( new osg::Group() ),
+mNonPhysicsGeometry( new osg::Group() ),
+mNonPhysicsGeometryII( new osg::Group() ),
 CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
 {
     osg::ref_ptr< osg::Node > base = osgDB::readNodeFile( "Models/IVEs/base.ive" );
@@ -34,14 +34,14 @@ CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
     osg::ref_ptr< osg::Node > columnBase = osgDB::readNodeFile( "Models/IVEs/column_base.ive" );
     osg::ref_ptr< osg::Node > columnDetail = osgDB::readNodeFile( "Models/IVEs/column_detail.ive" );
 
-    m_nonPhysicsGeometry->addChild( base.get() );
-    m_nonPhysicsGeometryII->addChild( column.get() );
-    m_nonPhysicsGeometryII->addChild( columnTop.get() );
-    m_nonPhysicsGeometryII->addChild( columnBase.get() );
-    m_nonPhysicsGeometryII->addChild( columnDetail.get() );
+    mNonPhysicsGeometry->addChild( base.get() );
+    mNonPhysicsGeometryII->addChild( column.get() );
+    mNonPhysicsGeometryII->addChild( columnTop.get() );
+    mNonPhysicsGeometryII->addChild( columnBase.get() );
+    mNonPhysicsGeometryII->addChild( columnDetail.get() );
 
-    GetDCS()->addChild( m_nonPhysicsGeometry.get() );
-    GetDCS()->addChild( m_nonPhysicsGeometryII.get() );
+    GetDCS()->addChild( mNonPhysicsGeometry.get() );
+    GetDCS()->addChild( mNonPhysicsGeometryII.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 FunnelEntity::~FunnelEntity()
@@ -49,7 +49,7 @@ FunnelEntity::~FunnelEntity()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void FunnelEntity::SetNameAndDescriptions( std::string geomFile )
+void FunnelEntity::SetNameAndDescriptions( const std::string& geomFile )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
@@ -208,8 +208,8 @@ void FunnelEntity::SetShaderOne()
     stateset->addUniform( veinColorII.get() );
         
     GetNode()->GetNode()->setStateSet( statesetII.get() );
-    m_nonPhysicsGeometry->setStateSet( statesetII.get() );
-    m_nonPhysicsGeometryII->setStateSet( stateset.get() );
+    mNonPhysicsGeometry->setStateSet( statesetII.get() );
+    mNonPhysicsGeometryII->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 
