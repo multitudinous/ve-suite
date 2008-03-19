@@ -18,7 +18,7 @@
 using namespace cpt;
 
 BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
-    EVT_BUTTON( OK_BUTTON, CameraPlacementToolUIDialog::OnOK )
+
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -62,16 +62,6 @@ void CameraPlacementToolUIDialog::Lock( bool l )
 void CameraPlacementToolUIDialog::BuildGUI()
 {
     CenterOnParent();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::UpdateGUI()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnOK( wxCommandEvent& event )
-{
-    Close( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ClearInstructions()

@@ -33,7 +33,7 @@ public:
 
     enum CPT_IDS
     {
-        OK_BUTTON
+        
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -46,12 +46,9 @@ protected:
 
 private:
     void BuildGUI();
-    void UpdateGUI();
 
     void SendCommandsToXplorer();
     void ClearInstructions();
-
-    void OnOK( wxCommandEvent& event );
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
