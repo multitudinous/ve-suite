@@ -49,6 +49,7 @@ CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
 :
 osg::Camera( cameraEntity, copyop ),
 mDCS( 0 ),
+mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
 mTexGenNode( 0 ),
 mCameraEntityCallback( 0 )
@@ -63,7 +64,7 @@ CameraEntity::~CameraEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
 {   
-    //Set the camera defaults
+    //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),     //eye position
@@ -72,20 +73,29 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     setProjectionMatrixAsPerspective( 5.0, 1.0, 5.0, 10.0 );
     parentDCS->addChild( this );
 
-    mDCS = new ves::xplorer::scenegraph::DCS();
-    mDCS->addChild( osgDB::readNodeFile( std::string( "Models/camera.ive" ) ) );
-    parentDCS->addChild( mDCS.get() );
-
-    CreateViewFrustumGeode();
-
+    //Initialize mTexGenNode
     mTexGenNode = new osg::TexGenNode();
     mTexGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     mTexGenNode->setTextureUnit( 0 );
+    CalculateMatrixMVPT();
     parentDCS->addChild( mTexGenNode.get() );
 
-    CalculateMatrixMVPT();
+    //Initialize mDCS
+    mDCS = new ves::xplorer::scenegraph::DCS();
+    parentDCS->addChild( mDCS.get() );
 
-    //Set the callback
+    //Initialize mCameraGeometry
+    mCameraGeometry = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
+    mDCS->addChild( mCameraGeometry.get() );
+    
+    //Initialize mFrustumGeode
+    mFrustumGeode = new osg::Geode();
+    mDCS->addChild( mFrustumGeode.get() );
+    mFrustumGeode->getOrCreateStateSet()->setMode( GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    CreateViewFrustumGeode();
+
+    //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
     setUpdateCallback( mCameraEntityCallback.get() );
 }
@@ -104,32 +114,31 @@ void CameraEntity::CreateViewFrustumGeode()
 {
     osg::Matrixd projectionMatrix = getProjectionMatrix();
 
-
     //Get near and far from the Projection matrix.
     const double nearPlane = projectionMatrix( 3, 2 ) /
-                      ( projectionMatrix( 2, 2 ) - 1.0 );
+                           ( projectionMatrix( 2, 2 ) - 1.0 );
     const double farPlane =  projectionMatrix( 3, 2 ) /
-                      ( projectionMatrix( 2, 2 ) + 1.0 );
+                           ( projectionMatrix( 2, 2 ) + 1.0 );
 
     //Get the sides of the near plane.
     const double nLeft =   nearPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                    projectionMatrix( 0, 0 );
+                                         projectionMatrix( 0, 0 );
     const double nRight =  nearPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                    projectionMatrix( 0, 0 );
+                                         projectionMatrix( 0, 0 );
     const double nTop =    nearPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                    projectionMatrix( 1, 1 );
+                                         projectionMatrix( 1, 1 );
     const double nBottom = nearPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                    projectionMatrix( 1, 1 );
+                                         projectionMatrix( 1, 1 );
 
     //Get the sides of the far plane.
     const double fLeft =   farPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                   projectionMatrix( 0, 0 );
+                                        projectionMatrix( 0, 0 );
     const double fRight =  farPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                   projectionMatrix( 0, 0 );
+                                        projectionMatrix( 0, 0 );
     const double fTop =    farPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                   projectionMatrix( 1, 1 );
+                                        projectionMatrix( 1, 1 );
     const double fBottom = farPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                   projectionMatrix( 1, 1 );
+                                        projectionMatrix( 1, 1 );
 
     //Our vertex array needs only 9 vertices:
     //The origin, and the eight corners of the near and far planes.
@@ -156,16 +165,14 @@ void CameraEntity::CreateViewFrustumGeode()
     GLushort idxLines[ 8 ]  = { 0, 5, 0, 6, 0, 7, 0, 8 };
     GLushort idxLoops0[ 4 ] = { 1, 2, 3, 4 };
     GLushort idxLoops1[ 4 ] = { 5, 6, 7, 8 };
-    geometry->addPrimitiveSet( new osg::DrawElementsUShort( osg::PrimitiveSet::LINES, 8, idxLines ) );
-    geometry->addPrimitiveSet( new osg::DrawElementsUShort( osg::PrimitiveSet::LINE_LOOP, 4, idxLoops0 ) );
-    geometry->addPrimitiveSet( new osg::DrawElementsUShort( osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
+    geometry->addPrimitiveSet( new osg::DrawElementsUShort(
+        osg::PrimitiveSet::LINES, 8, idxLines ) );
+    geometry->addPrimitiveSet( new osg::DrawElementsUShort(
+        osg::PrimitiveSet::LINE_LOOP, 4, idxLoops0 ) );
+    geometry->addPrimitiveSet( new osg::DrawElementsUShort(
+        osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
 
-    mFrustumGeode = new osg::Geode();
     mFrustumGeode->addDrawable( geometry.get() );
-
-    mFrustumGeode->getOrCreateStateSet()->setMode( GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-
-    mDCS->addChild( mFrustumGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetNameAndDescriptions( const std::string& name )
@@ -175,6 +182,11 @@ void CameraEntity::SetNameAndDescriptions( const std::string& name )
     descriptorsList.push_back( "" );
     mDCS->setDescriptions( descriptorsList );
     mDCS->setName( name );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::DrawCameraGeometry( bool onOff )
+{
+    mCameraGeometry->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DrawViewFrustum( bool onOff )

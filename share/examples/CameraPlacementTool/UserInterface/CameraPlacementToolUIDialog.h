@@ -15,6 +15,11 @@ namespace util
 }
 }
 
+// --- wxWidgets Includes --- //
+class wxRadioBox;
+class wxSlider;
+class wxSpinCtrl;
+
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
@@ -33,7 +38,9 @@ public:
 
     enum CPT_IDS
     {
-        
+        ID_CAMERA_RADIOBOX,
+        ID_FRUSTUM_RADIOBOX,
+        ID_PROJECTION_RADIOBOX
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -49,6 +56,16 @@ private:
 
     void SendCommandsToXplorer();
     void ClearInstructions();
+
+    void OnCameraRadioBox( wxCommandEvent& event );
+    void OnFrustumRadioBox( wxCommandEvent& event );
+    void OnProjectionRadioBox( wxCommandEvent& event );
+
+    wxRadioBox* mCameraRadioBox;
+    wxRadioBox* mFrustumRadioBox;
+    wxRadioBox* mProjectionRadioBox;
+    wxSlider* mFoVZSlider;
+    wxSpinCtrl* mAspectRatioSpinCtrl;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;

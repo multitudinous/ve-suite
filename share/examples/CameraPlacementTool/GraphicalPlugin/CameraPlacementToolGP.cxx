@@ -1,6 +1,7 @@
 // --- My Includes --- //
 #include "CameraPlacementToolGP.h"
 #include "CameraPlacementToolScene.h"
+#include "CameraEntity.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -18,7 +19,9 @@ mScene()
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
 
-    mEventHandlerMap[ "SHADER_EFFECTS_UPDATE" ] = this;
+    mEventHandlerMap[ "TOGGLE_CAMERA_UPDATE" ] = this;
+    mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
+    mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
@@ -53,26 +56,29 @@ void CameraPlacementToolGP::SetCurrentCommand(
         return;
     }
 
-    //double data[ 3 ] = { 0 };
-
-    //Set current shader effect
-    if( command->GetCommandName() == "SHADER_EFFECTS_UPDATE" )
+    if( command->GetCommandName() == "TOGGLE_CAMERA_UPDATE" )
     {
-        //unsigned int temp = 0;
-        //command->GetDataValuePair( "shaderEffects" )->GetData( temp );
+        unsigned int data = 0;
+        command->GetDataValuePair( "toggleCamera" )->GetData( data );
 
-        //if( temp == 0 )
-        //{
-            //m_scene->DefaultVisuals();
-        //}
+        bool onOff = ( data != 0 );
+        mScene->GetActiveCameraEntity()->DrawCameraGeometry( onOff );
     }
-    else if( command->GetCommandName() == "AMBIENT_UPDATE" )
+    else if( command->GetCommandName() == "TOGGLE_FRUSTUM_UPDATE" )
     {
-        //command->GetDataValuePair( "arColor" )->GetData( data[ 0 ] );
-        //command->GetDataValuePair( "agColor" )->GetData( data[ 1 ] );
-        //command->GetDataValuePair( "abColor" )->GetData( data[ 2 ] );
+        unsigned int data = 0;
+        command->GetDataValuePair( "toggleFrustum" )->GetData( data );
 
-        //m_scene->GetLight()->setAmbient( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
+        bool onOff = ( data != 0 );
+        mScene->GetActiveCameraEntity()->DrawViewFrustum( onOff );
+    }
+    else if( command->GetCommandName() == "TOGGLE_PROJECTION_UPDATE" )
+    {
+        unsigned int data = 0;
+        command->GetDataValuePair( "toggleProjection" )->GetData( data );
+
+        bool onOff = ( data != 0 );
+        //mScene->GetActiveCameraEntity()->GetDCS()->setNodeMask( onOff );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

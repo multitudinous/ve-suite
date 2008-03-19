@@ -44,6 +44,7 @@ public:
 
     void CalculateMatrixMVPT();
 
+    void DrawCameraGeometry( bool onOff );
     void DrawViewFrustum( bool onOff );
     
     ves::xplorer::scenegraph::DCS* GetDCS();
@@ -63,6 +64,7 @@ private:
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
 
+    osg::ref_ptr< osg::Node > mCameraGeometry;
     osg::ref_ptr< osg::Geode > mFrustumGeode;
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
