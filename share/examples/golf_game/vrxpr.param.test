@@ -1,0 +1,14 @@
+3
+0                    // OPTIONAL world DCS settings (default values shown)
+   1 1 1             // Scale values
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values (degrees, Z-X-Y format)
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.281 3.281 3.281                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   course_nosky.pfb          // Geometry file name
+14
+   locations.dat     //QuatCam file 

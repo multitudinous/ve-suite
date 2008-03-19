@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="458cb0fd-7bb9-4058-881d-5fe677c159c2">
+    <network>
+      <conductorState dataName="m_xUserScale" id="437d04bd-2ad6-4751-957f-97f1d97477b1">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="a52b5950-461a-4805-bac6-4538234207a7">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="8581691b-def0-4040-bc3f-4e15435f8eaf">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="27c5e427-d710-4221-aef1-f770691defdc">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="8d564b2e-235c-4539-8988-6a31a951b9fc">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="e64852af-c503-4ed5-8f6c-f2bd3d96df6e">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="103" id="e028f51a-2092-4b94-b409-2c77b0824896" name="DefaultPlugin" vendorUnit="DefaultPlugin">
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="10" yLocation="10"/>
+      <geometry associatedDataset="NONE" friction="1" id="d2e69c2f-d931-4db9-b3f5-1fc39b89ea22" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <children>
+          <child friction="1" id="655ccdc5-abb7-40d9-9e0a-a81162f1a731" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>cover</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>cover.ive</fileName>
+          </child>
+          <child friction="1" id="051dc65c-6866-4a48-ac95-e45f1e1938f9" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>emptysheds</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>emptysheds.ive</fileName>
+          </child>
+          <child friction="1" id="7d31f03a-c147-49bc-a61e-a55302654ce2" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>equipment</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>equipment.ive</fileName>
+          </child>
+          <child friction="1" id="66aa8ab6-0d16-4713-9427-83c73a82e774" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>ground</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>ground.ive</fileName>
+          </child>
+          <child friction="1" id="2c2c5131-82e8-469a-96c0-10d8113cd4cc" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>hummers</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>hummers.ive</fileName>
+          </child>
+          <child friction="1" id="b0b71025-d3fb-4e6b-a0b6-046cdddfc918" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>misc</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>misc.ive</fileName>
+          </child>
+          <child friction="1" id="d92b1f51-09bb-4b4a-b6bb-2493d1b43a4c" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>sheds</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>sheds.ive</fileName>
+          </child>
+          <child friction="1" id="fda74248-d0a9-4116-b81a-e75f06dfe628" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>tent</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>tent.ive</fileName>
+          </child>
+          <child friction="1" id="fde3061a-f273-40f4-9b09-768bae417713" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>skybox_large</name>
+            <parent type="xs:string">d2e69c2f-d931-4db9-b3f5-1fc39b89ea22</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>skybox_large.ive</fileName>
+          </child>
+        </children>
+      </geometry>
+    </model>
+  </veSystem>
+
+  <User id="33aa0667-ea0c-4c47-8e5e-bfc62ae12c2e" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="75e1e1c2-a49e-4cfb-b82a-a63ba89f51d8">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
