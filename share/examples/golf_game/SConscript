@@ -1,0 +1,16 @@
+##sets up jconf files for stereo_desktop
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg')
+
+launcherBundle = ves_pkg.createFileBundle( pj('share','vesuite','examples','golf_game') )
+osgFile = sca_util.getFilesRecursiveByExt( '.', ['.osg'] )
+rgbFile = sca_util.getFilesRecursiveByExt( '.', ['.rgb'] )
+vesFile = sca_util.getFilesRecursiveByExt( '.', ['.ves'] )
+launcherBundle.addFiles( osgFile )
+launcherBundle.addFiles( rgbFile )
+launcherBundle.addFiles( vesFile )
+
+

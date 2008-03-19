@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="7c0cf0da-ada9-4077-9861-4f916d99fb64">
+    <network>
+      <conductorState dataName="m_xUserScale" id="c278f61b-b5f5-44aa-a88a-62eee9dc356d">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="f00e60f3-c4d2-4b28-811e-b6af7337243a">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="258a81ec-e17b-42c1-9707-e46b4d4b8e68">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="c12543b0-5a97-47cc-9324-e1f71e16867e">
+        <dataValue type="xs:integer">7000</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="31532f3a-22c4-4c37-ad23-13134e259860">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="d42af23c-d75a-4ca0-b8ac-529df6b16077">
+        <dataValue type="xs:integer">10</dataValue>
+      </conductorState>
+    </network>
+    <model ID="103" id="0a844fed-9ecf-4918-8fe7-b684008e35c2" name="DefaultPlugin" vendorUnit="DefaultPlugin">
+      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="10" yLocation="10"/>
+      <geometry associatedDataset="NONE" friction="1" id="b9df5215-dfdd-4d43-9364-62f7fc1b9b79" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <children>
+          <child friction="1" id="48536fb3-1aa3-4874-b83c-131fc0a74662" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>course</name>
+            <parent type="xs:string">b9df5215-dfdd-4d43-9364-62f7fc1b9b79</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>course.osg</fileName>
+          </child>
+        </children>
+      </geometry>
+    </model>
+  </veSystem>
+
+  <User id="0ee8b595-ccb1-495d-8251-6b3aca9241cf" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="01e01553-e6a3-43a1-8c36-7964fcd86eb9">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
