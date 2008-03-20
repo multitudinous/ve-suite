@@ -18,6 +18,7 @@
 #include <wx/slider.h>
 #include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/statbox.h>
 
 using namespace cpt;
 
