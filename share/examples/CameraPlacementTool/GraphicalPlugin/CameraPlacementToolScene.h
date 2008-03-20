@@ -3,6 +3,7 @@
 
 // --- My Includes --- //
 #include "CameraPlacementToolScenePtr.h"
+#include "CameraPlacementToolShadersPtr.h"
 
 // --- VE-Suite Includes --- //
 namespace ves
@@ -36,17 +37,13 @@ public:
     cpt::CameraEntity* GetActiveCameraEntity();
 
 private:
-    void CreateShaderPrograms();
-    void CreateProjectionTexture();
-
     void Initialize();
 
-    unsigned int m_textureUnit;
+    cpt::CameraPlacementToolShadersPtr mShaders;
+    osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_torus;
-
-    osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTorus;
 
 };
 /*----------------------------------------------------------------------------*/

@@ -54,7 +54,7 @@ public:
 
     void SetNameAndDescriptions( const std::string& name );
 
-    void UpdateViewFrustumGeode();
+    void Update();
 
 protected:
     virtual ~CameraEntity();
@@ -62,9 +62,6 @@ protected:
 private:
     void Initialize( ves::xplorer::scenegraph::DCS* parentDCS );
     void CreateViewFrustumGeode();
-
-    double mNearPlane;
-    double mFarPlane;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
 
@@ -76,6 +73,9 @@ private:
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
+
+    osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
+    osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
 
     osg::Matrixd mMVPT;
 };

@@ -13,11 +13,11 @@ class CameraPlacementToolScene;
 typedef ves::util::ClassPtrDef< CameraPlacementToolScene >::type
     CameraPlacementToolScenePtr;
 typedef ves::util::SharedPtrDef< CameraPlacementToolScene >::type
-    CameraPlacementToolSharedPtr;
+    CameraPlacementToolSceneSharedPtr;
 typedef ves::util::WeakPtrDef< CameraPlacementToolScene >::type
-    CameraPlacementToolWeakPtr;
+    CameraPlacementToolSceneWeakPtr;
 typedef ves::util::ScopedPtrDef< CameraPlacementToolScene >::type
-    CameraPlacementToolScopedPtr;
+    CameraPlacementToolSceneScopedPtr;
 /*----------------------------------------------------------------------------*/
 
 } //end cpt

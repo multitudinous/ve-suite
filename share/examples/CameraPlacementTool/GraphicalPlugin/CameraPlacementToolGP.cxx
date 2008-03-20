@@ -94,7 +94,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
             projectionData[ 0 ], projectionData[ 1 ],
             projectionData[ 2 ], projectionData[ 3 ] );
 
-        mScene->GetActiveCameraEntity()->UpdateViewFrustumGeode();
+        mScene->GetActiveCameraEntity()->Update();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
