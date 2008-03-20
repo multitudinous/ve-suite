@@ -20,7 +20,8 @@
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolScene::CameraPlacementToolScene( ves::xplorer::scenegraph::DCS* pluginDCS )
+CameraPlacementToolScene::CameraPlacementToolScene(
+    ves::xplorer::scenegraph::DCS* pluginDCS )
 :
 m_textureUnit( 0 ),
 mPluginDCS( pluginDCS ),
@@ -57,25 +58,14 @@ void CameraPlacementToolScene::CreateProjectionTexture()
 {
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
-    //osg::ref_ptr< osg::Texture2D > texture2D = new osg::Texture2D();
-    //texture2D->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    //texture2D->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    //texture2D->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_BORDER );
-    //texture2D->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_BORDER );
-    //texture2D->setImage(
-        //( ves::xplorer::scenegraph::ResourceManager::instance()->get
-        //< osg::Image, osg::ref_ptr >( "Textures/highlight.tga" ) ).get() );
-
-    //stateset->setTextureAttributeAndModes( 0, texture2D.get(), osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
 
-    //osg::ref_ptr< osg::Uniform > projectionMap = new osg::Uniform( "projectionMap", 0 );
-    //stateset->addUniform( projectionMap.get() );
-
-    stateset->setAttribute( ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-        < osg::Program, osg::ref_ptr >( "HighlightProgram" ) ).get(), osg::StateAttribute::ON );
+    stateset->setAttribute(
+        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        < osg::Program, osg::ref_ptr >( "HighlightProgram" ) ).get(),
+        osg::StateAttribute::ON );
 
     m_torus->setStateSet( stateset.get() );
 }
@@ -93,7 +83,8 @@ void CameraPlacementToolScene::Initialize()
     mCameraEntity->SetNameAndDescriptions( std::string( "Camera" ) );
 
     m_torus->setPosition( osg::Vec3d( 0, 10, 0 ) );
-    osg::ref_ptr< osg::Node > node = osgDB::readNodeFile( std::string( "Models/torus.ive" ) );
+    osg::ref_ptr< osg::Node > node =
+        osgDB::readNodeFile( std::string( "Models/torus.ive" ) );
     m_torus->addChild( node.get() );
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );

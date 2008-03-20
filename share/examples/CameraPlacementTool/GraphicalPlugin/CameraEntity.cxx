@@ -23,6 +23,7 @@ CameraEntity::CameraEntity()
 :
 osg::Camera(),
 mDCS( 0 ),
+mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
 mTexGenNode( 0 ),
 mCameraEntityCallback( 0 )
@@ -37,6 +38,7 @@ CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* parentDCS )
 :
 osg::Camera(),
 mDCS( 0 ),
+mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
 mTexGenNode( 0 ),
 mCameraEntityCallback( 0 )

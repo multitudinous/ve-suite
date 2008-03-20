@@ -10,10 +10,14 @@ namespace cpt
 class CameraPlacementToolScene;
 
 //Typedef for a SmartPtr type for the CameraPlacementToolScene
-typedef ves::util::ClassPtrDef< CameraPlacementToolScene >::type  CameraPlacementToolScenePtr;
-typedef ves::util::SharedPtrDef< CameraPlacementToolScene >::type CameraPlacementToolSharedPtr;
-typedef ves::util::WeakPtrDef< CameraPlacementToolScene >::type   CameraPlacementToolWeakPtr;
-typedef ves::util::ScopedPtrDef< CameraPlacementToolScene >::type CameraPlacementToolScopedPtr;
+typedef ves::util::ClassPtrDef< CameraPlacementToolScene >::type
+    CameraPlacementToolScenePtr;
+typedef ves::util::SharedPtrDef< CameraPlacementToolScene >::type
+    CameraPlacementToolSharedPtr;
+typedef ves::util::WeakPtrDef< CameraPlacementToolScene >::type
+    CameraPlacementToolWeakPtr;
+typedef ves::util::ScopedPtrDef< CameraPlacementToolScene >::type
+    CameraPlacementToolScopedPtr;
 /*----------------------------------------------------------------------------*/
 
 } //end cpt
