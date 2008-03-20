@@ -1786,13 +1786,12 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     //Now delete the plugin from the module and then remove from the map
     ///This is so that we find the right eventhandler to pop rather than
     ///popping the last one
-//    networkFrame->RemoveEventHandler( this );
+    //networkFrame->RemoveEventHandler( this );
 
     ///Now send the erased module to xplorer to delete it as well
-    ves::open::xml::DataValuePairPtr dataValuePair( new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) ) );
-    dataValuePair->SetDataName( "Object ID" );
-    //dataValuePair->SetDataValue( static_cast< unsigned int >( id ) );
-    dataValuePair->SetDataValue( id );
+    ves::open::xml::DataValuePairPtr dataValuePair( 
+        new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "Object ID", m_veModel->GetID() );
     ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
     veCommand->SetCommandName( std::string( "DELETE_OBJECT_FROM_NETWORK" ) );
     veCommand->AddDataValuePair( dataValuePair );

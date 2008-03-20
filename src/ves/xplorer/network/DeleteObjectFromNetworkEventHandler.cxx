@@ -98,13 +98,14 @@ void DeleteObjectFromNetworkEventHandler::Execute( const ves::open::xml::XMLObje
     // Get the active object
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Object ID" );
-    unsigned int id = 0;
+    std::string id;
     activeModelDVP->GetData( id );
 
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >* _plugins;
     _plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
 
     // Remove any plugins that aren't present in the current network
-    std::map< int, PluginBase* >::iterator foundPlugin;
+    std::map< std::string, PluginBase* >::iterator foundPlugin;
     foundPlugin = _plugins->find( id );
 
     if( foundPlugin != _plugins->end() )

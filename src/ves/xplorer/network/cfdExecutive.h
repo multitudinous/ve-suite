@@ -46,6 +46,7 @@ cfdExecutive API
 #include <ves/xplorer/scenegraph/Group.h>
 
 #include <ves/open/xml/model/ModelPtr.h>
+#include <ves/open/xml/model/SystemPtr.h>
 
 #include <map>
 #include <string>
@@ -123,7 +124,7 @@ private:
     // this class should be a singleton
     // constructor
     cfdExecutive():
-        m_avModules( 0 ),
+        mAvailableModules( 0 ),
         ui_i( 0 ),
         naming_context( 0 ),
         _exec( 0 )
@@ -161,7 +162,7 @@ public:
     ///This function returns the map of the current plugins
     ///so that evehenthandlers can manipulate the plugins while
     ///with commands from the gui
-    std::map<int, ves::xplorer::plugin::PluginBase* >* GetTheCurrentPlugins( void );
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >* GetTheCurrentPlugins( void );
     ///Get available plugins object
     cfdVEAvailModules* GetAvailablePlugins( void );
     ///Accessor for ehs to use
@@ -175,28 +176,32 @@ public:
     void UnRegisterExecutive();
     
 private:
+    ///Recusive function to find all sub-systems
+    void ParseSystem( ves::open::xml::model::SystemPtr system, 
+        bool getResults = false );
     ///Loading the Available Modules
-    cfdVEAvailModules* m_avModules;
+    cfdVEAvailModules* mAvailableModules;
+    ///The raw xml network data from ce
     std::string veNetwork;
 
-    Body_UI_i* ui_i;
     osg::ref_ptr< ves::xplorer::scenegraph::Group > _masterNode;
 
-    // _name_map : maps a module id to it's module name.
-    std::map< int, std::string> _id_map;
-    std::map< int, ves::open::xml::model::ModelPtr > idToModel;
-
-    // _name_map : maps a module name to it's module id.
-    std::map<int, ves::xplorer::plugin::PluginBase* > _plugins;
-
-    // map to hold unique plugin command names and associated plugin pointers
-    std::map< int, std::map< std::string, ves::xplorer::plugin::PluginBase* > > pluginEHMap;
-
-    std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;///<The event handler for commands.
-
+    ///_name_map : maps a module id to it's module name.
+    std::map< std::string, std::string> _id_map;
+    ///map of all the systems
+    std::map< std::string, ves::open::xml::model::SystemPtr > mIDToSystem;
+    ///id of the top most system
+    std::string mTopSystemID;
+    ///_name_map : maps a module name to it's module id.
+    std::map< std::string, ves::xplorer::plugin::PluginBase* > mPluginsMap;
+    ///map to hold unique plugin command names and associated plugin pointers
+    std::map< std::string, std::map< std::string, ves::xplorer::plugin::PluginBase* > > pluginEHMap;
+    ///The event handler for commands.
+    std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
     ///the Computational Engine
     CosNaming::NamingContext* naming_context;
     Body::Executive* _exec;
+    Body_UI_i* ui_i;
 };
 }
 }

@@ -106,7 +106,6 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
 private:
-    std::map< int, ves::xplorer::plugin::PluginBase* >* _plugins;
 };
 }
 }

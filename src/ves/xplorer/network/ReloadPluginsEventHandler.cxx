@@ -91,10 +91,10 @@ void ReloadPluginsEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* m
 //////////////////////////////////////////////////////////////////////////
 void ReloadPluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
-    std::map< int, ves::xplorer::plugin::PluginBase* >* plugins;
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >* plugins;
     plugins = cfdExecutive::instance()->GetTheCurrentPlugins();
 
-    for( std::map< int, ves::xplorer::plugin::PluginBase* >::iterator iter = 
+    for( std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator iter = 
         plugins->begin(); iter != plugins->end(); )
     {
         // if a module is on the plugins map then remove it
