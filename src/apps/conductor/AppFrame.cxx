@@ -853,6 +853,9 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
     network->GetNumPix()->first += 1;
     network->GetNumPix()->second += 1;
 
+    canvas->userScale.first += 0.1;
+    canvas->userScale.second += 0.1;
+    
     int xpos, ypos;
     /*network->GetViewStart( &xpos, &ypos );
     network->SetScrollbars( 
@@ -881,6 +884,9 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
     network->GetUserScale()->second -= 0.1;
     network->GetNumPix()->first -= 1;
     network->GetNumPix()->second -= 1;
+
+    canvas->userScale.first -= 0.1;
+    canvas->userScale.second -= 0.1;
 
     int xpos, ypos;
     /*network->GetViewStart(&xpos, &ypos);
