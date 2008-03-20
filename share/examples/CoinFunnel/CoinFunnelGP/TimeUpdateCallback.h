@@ -15,15 +15,14 @@ public:
     ///Constructor
     TimeUpdateCallback();
 
-    ///Destructor
-    virtual ~TimeUpdateCallback(){;}
-
     ///Copy constructor
     TimeUpdateCallback( const TimeUpdateCallback& );
 
     virtual void operator()( osg::Uniform* uniform, osg::NodeVisitor* nv );
 
 protected:
+    ///Destructor
+    virtual ~TimeUpdateCallback(){;}
 
 };
 } // end demo
