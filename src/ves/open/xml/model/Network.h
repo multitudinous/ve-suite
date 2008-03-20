@@ -89,6 +89,8 @@ public:
     ///Get the i'th link from the Network.
     ///\param i The i'th link you are after.
     ves::open::xml::DataValuePairPtr GetDataValuePair( int i );
+    ///Get the number of states for the network
+    size_t GetNumberOfNetworkStates();
 
     ///Get the i'th tag from the Network.
     ///\param i The i'th tag you are after.

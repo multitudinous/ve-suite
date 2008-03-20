@@ -150,6 +150,8 @@ DataValuePairPtr Network::GetDataValuePair( int i )
     }
     catch ( ... )
     {
+        ///This is way bad code
+        ///Needs to be corrected
         mConductorState.push_back( DataValuePairPtr( new DataValuePair() ) );
         return mConductorState.back();
     }
@@ -271,4 +273,9 @@ void Network::SetParentModel( ModelSharedPtr parent )
 ModelSharedPtr Network::GetParentModel( )
 {
     return mParentModel.lock();
+}
+////////////////////////////////////////////////////////////////////////////////
+size_t Network::GetNumberOfNetworkStates()
+{
+    return mConductorState.size();
 }

@@ -1832,18 +1832,23 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 //This is needed because on windows the scale must be 1 for the
 //wxAutoBufferedPaintDC to work properly
 #ifndef WIN32
-    long int tempScaleInfo;
-    veNetwork->GetDataValuePair( 0 )->GetData(( userScale.first ) );
-    veNetwork->GetDataValuePair( 1 )->GetData(( userScale.second ) );
-    veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
-    numPix.first = tempScaleInfo;
-    veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
-    numPix.second = tempScaleInfo;
-    veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
-    numUnit.first = tempScaleInfo;
-    veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
-    numUnit.second = tempScaleInfo;
+    if( veNetwork->GetNumberOfNetworkStates() > 0 )
+    {
+        long int tempScaleInfo;
+        veNetwork->GetDataValuePair( 0 )->GetData( userScale.first );
+        veNetwork->GetDataValuePair( 1 )->GetData( userScale.second );
+        veNetwork->GetDataValuePair( 2 )->GetData( tempScaleInfo );
+        numPix.first = tempScaleInfo;
+        veNetwork->GetDataValuePair( 3 )->GetData( tempScaleInfo );
+        numPix.second = tempScaleInfo;
+        veNetwork->GetDataValuePair( 4 )->GetData( tempScaleInfo );
+        numUnit.first = tempScaleInfo;
+        veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
+        numUnit.second = tempScaleInfo;
+    }
 #endif
+    //These are set at 7000 so that the virtual size of the canvas is a 
+    //minimum of 7000 x 7000
     maxX = 7000;
     maxY = 7000;
     //Setup the links
@@ -1854,6 +1859,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         links.at( i ).SetLink( veNetwork->GetLink( i ) );
         size_t pointX = links.at( i ).GetMaxPointX();
         size_t pointY = links.at( i ).GetMaxPointY();
+
         if( pointX > maxX )
         {
             maxX = pointX + 100;
@@ -1865,11 +1871,6 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         ///Need to somehow get max and maxy from links here
     }
 
-//    for( size_t i = 0; i < veNetwork.GetNumberOfLinks(); ++i )
-//    {
-//        PushEventHandler( &links.at( i ) );
-//    }
-
     //Setup the tags
     for( size_t i = 0; i < veNetwork->GetNumberOfTags(); ++i )
     {
@@ -1878,11 +1879,6 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         // Create the polygon for tags
         tags.at( i ).CalcTagPoly();
     }
-
-//    for( size_t i = 0; i < veNetwork.GetNumberOfTags(); ++i )
-//    {
-//        parent->PushEventHandler( &tags.at( i ) );
-//    }
 
     size_t modelCount = system->GetModels().size();
     for( size_t j = 0; j < modelCount; j++ )
@@ -2198,9 +2194,7 @@ void Network::OnDeletePlugins( wxUpdateUIEvent& event )
         numDialogs = pluginData->second;
         idBeingDeleted = pluginData->first;
     }
-    
-    //::wxMilliSleep( 100 );
-    
+
     std::map< int, Module >::iterator iter;
     iter = modules.find( idBeingDeleted );
     modules.erase( iter );

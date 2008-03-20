@@ -83,9 +83,9 @@ NetworkSystemView::NetworkSystemView()
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( std::string network )
 {
-	std::ofstream test ("testnet.txt");
-	test<<network;
-	test.close();
+	//std::ofstream test ("testnet.txt");
+	//test<<network;
+	//test.close();
     //this->network = network;    
     //parse network into array of all subnets
 	LoadVESData( network );
@@ -140,7 +140,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
     //}
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
-    std::ofstream output( "scale.txt" );
+    //std::ofstream output( "scale.txt" );
     //SystemPtr mainSystem = boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
     SystemPtr mainSystem = systems[netId];
     // now lets create a list of them
