@@ -83,153 +83,153 @@ void CameraPlacementToolUIDialog::Lock( bool l )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::BuildGUI()
 {
-	SetSizeHints( wxDefaultSize, wxDefaultSize );
-	SetFont( wxFont(
+    SetSizeHints( wxDefaultSize, wxDefaultSize );
+    SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-	
-	wxBoxSizer* mainSizer;
-	mainSizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticBoxSizer* toggleSizer;
-	toggleSizer = new wxStaticBoxSizer( new wxStaticBox(
+
+    wxBoxSizer* mainSizer;
+    mainSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticBoxSizer* toggleSizer;
+    toggleSizer = new wxStaticBoxSizer( new wxStaticBox(
         this, wxID_ANY, wxT( "Toggle Settings" ) ), wxHORIZONTAL );
-	
-	wxBoxSizer* cameraRadioBoxSizer;
-	cameraRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxString mCameraRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-	int mCameraRadioBoxNChoices =
+
+    wxBoxSizer* cameraRadioBoxSizer;
+    cameraRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mCameraRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mCameraRadioBoxNChoices =
         sizeof( mCameraRadioBoxChoices ) / sizeof( wxString );
-	mCameraRadioBox = new wxRadioBox( this, ID_CAMERA_RADIOBOX, wxT( "Camera" ),
+    mCameraRadioBox = new wxRadioBox( this, ID_CAMERA_RADIOBOX, wxT( "Camera" ),
         wxDefaultPosition, wxDefaultSize, mCameraRadioBoxNChoices,
         mCameraRadioBoxChoices, 1, wxRA_SPECIFY_ROWS | wxDOUBLE_BORDER );
-	mCameraRadioBox->SetSelection( 1 );
-	mCameraRadioBox->SetFont( wxFont(
+    mCameraRadioBox->SetSelection( 1 );
+    mCameraRadioBox->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-	
-	cameraRadioBoxSizer->Add( mCameraRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
-	
-	toggleSizer->Add(
+
+    cameraRadioBoxSizer->Add( mCameraRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
+
+    toggleSizer->Add(
         cameraRadioBoxSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
-	
-	wxBoxSizer* frustumRadioBoxSizer;
-	frustumRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxString mFrustumRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-	int mFrustumRadioBoxNChoices =
+
+    wxBoxSizer* frustumRadioBoxSizer;
+    frustumRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mFrustumRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mFrustumRadioBoxNChoices =
         sizeof( mFrustumRadioBoxChoices ) / sizeof( wxString );
-	mFrustumRadioBox = new wxRadioBox( this, ID_FRUSTUM_RADIOBOX,
+    mFrustumRadioBox = new wxRadioBox( this, ID_FRUSTUM_RADIOBOX,
         wxT( "Frustum" ), wxDefaultPosition, wxDefaultSize,
         mFrustumRadioBoxNChoices, mFrustumRadioBoxChoices, 1,
         wxRA_SPECIFY_ROWS | wxDOUBLE_BORDER );
-	mFrustumRadioBox->SetSelection( 1 );
-	mFrustumRadioBox->SetFont( wxFont(
+    mFrustumRadioBox->SetSelection( 1 );
+    mFrustumRadioBox->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-	
-	frustumRadioBoxSizer->Add( mFrustumRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
-	
-	toggleSizer->Add(
+
+    frustumRadioBoxSizer->Add( mFrustumRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
+
+    toggleSizer->Add(
         frustumRadioBoxSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
-	
-	wxBoxSizer* projectionRadioBoxSizer;
-	projectionRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	wxString mProjectionRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-	int mProjectionRadioBoxNChoices =
+
+    wxBoxSizer* projectionRadioBoxSizer;
+    projectionRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mProjectionRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mProjectionRadioBoxNChoices =
         sizeof( mProjectionRadioBoxChoices ) / sizeof( wxString );
-	mProjectionRadioBox = new wxRadioBox( this, ID_PROJECTION_RADIOBOX,
+    mProjectionRadioBox = new wxRadioBox( this, ID_PROJECTION_RADIOBOX,
         wxT( "Projection" ), wxDefaultPosition, wxDefaultSize,
         mProjectionRadioBoxNChoices, mProjectionRadioBoxChoices, 1,
         wxRA_SPECIFY_ROWS | wxDOUBLE_BORDER );
-	mProjectionRadioBox->SetSelection( 1 );
-	mProjectionRadioBox->SetFont( wxFont(
+    mProjectionRadioBox->SetSelection( 1 );
+    mProjectionRadioBox->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-	
-	projectionRadioBoxSizer->Add(
+
+    projectionRadioBoxSizer->Add(
         mProjectionRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
-	
-	toggleSizer->Add(
+
+    toggleSizer->Add(
         projectionRadioBoxSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
-	
-	mainSizer->Add( toggleSizer, 0, wxALL | wxEXPAND, 5 );
-	
-	wxBoxSizer* spacerSizer;
-	spacerSizer = new wxBoxSizer( wxHORIZONTAL );
-	
-	
-	spacerSizer->Add( 0, 0, 1, wxALL | wxEXPAND, 5 );
-	
-	mainSizer->Add( spacerSizer, 0, wxALL | wxEXPAND, 0 );
-	
-	wxStaticBoxSizer* projectionSettingsSizer;
-	projectionSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+
+    mainSizer->Add( toggleSizer, 0, wxALL | wxEXPAND, 5 );
+
+    wxBoxSizer* spacerSizer;
+    spacerSizer = new wxBoxSizer( wxHORIZONTAL );
+
+
+    spacerSizer->Add( 0, 0, 1, wxALL | wxEXPAND, 5 );
+
+    mainSizer->Add( spacerSizer, 0, wxALL | wxEXPAND, 0 );
+
+    wxStaticBoxSizer* projectionSettingsSizer;
+    projectionSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
         this, wxID_ANY, wxT( "Projection Settings" ) ), wxVERTICAL );
-	
-	wxBoxSizer* fovzSizer;
-	fovzSizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* fovzTextSizer;
-	fovzTextSizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticText* fovzText;
-	fovzText = new wxStaticText(
+
+    wxBoxSizer* fovzSizer;
+    fovzSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxBoxSizer* fovzTextSizer;
+    fovzTextSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticText* fovzText;
+    fovzText = new wxStaticText(
         this, wxID_ANY, wxT( "FoVZ:" ),
         wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-	fovzText->Wrap( -1 );
-	fovzText->SetFont( wxFont(
+    fovzText->Wrap( -1 );
+    fovzText->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-	
-	fovzTextSizer->Add( fovzText, 0, wxALL | wxEXPAND, 5 );
-	
-	fovzSizer->Add( fovzTextSizer, 0, wxEXPAND, 5 );
-	
-	wxBoxSizer* fovzSliderSizer;
-	fovzSliderSizer = new wxBoxSizer( wxVERTICAL );
-	
-	mFoVZSlider = new wxSlider(
+
+    fovzTextSizer->Add( fovzText, 0, wxALL | wxEXPAND, 5 );
+
+    fovzSizer->Add( fovzTextSizer, 0, wxEXPAND, 5 );
+
+    wxBoxSizer* fovzSliderSizer;
+    fovzSliderSizer = new wxBoxSizer( wxVERTICAL );
+
+    mFoVZSlider = new wxSlider(
         this, ID_FOVZ_SLIDER, mProjectionData[ 0 ], 0, 180, wxDefaultPosition,
         wxDefaultSize, wxSL_HORIZONTAL | wxSL_LABELS );
-	fovzSliderSizer->Add( mFoVZSlider, 0, wxALL | wxEXPAND, 5 );
-	
-	fovzSizer->Add( fovzSliderSizer, 1, wxEXPAND, 5 );
-	
-	projectionSettingsSizer->Add( fovzSizer, 1, wxEXPAND, 5 );
-	
-	wxBoxSizer* aspectRatioSizer;
-	aspectRatioSizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxBoxSizer* aspectRatioTextSizer;
-	aspectRatioTextSizer = new wxBoxSizer( wxVERTICAL );
-	
-	wxStaticText* aspectRatioText;
-	aspectRatioText = new wxStaticText(
+    fovzSliderSizer->Add( mFoVZSlider, 0, wxALL | wxEXPAND, 5 );
+
+    fovzSizer->Add( fovzSliderSizer, 1, wxEXPAND, 5 );
+
+    projectionSettingsSizer->Add( fovzSizer, 1, wxEXPAND, 5 );
+
+    wxBoxSizer* aspectRatioSizer;
+    aspectRatioSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxBoxSizer* aspectRatioTextSizer;
+    aspectRatioTextSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticText* aspectRatioText;
+    aspectRatioText = new wxStaticText(
         this, wxID_ANY, wxT( "Aspect Ratio:" ),
         wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT );
-	aspectRatioText->Wrap( -1 );
-	aspectRatioText->SetFont( wxFont(
+    aspectRatioText->Wrap( -1 );
+    aspectRatioText->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-	
-	aspectRatioTextSizer->Add( aspectRatioText, 0, wxALL | wxEXPAND, 5 );
-	
-	aspectRatioSizer->Add( aspectRatioTextSizer, 0, wxEXPAND, 5 );
-	
-	wxBoxSizer* aspectRatioSpinCtrlSizer;
-	aspectRatioSpinCtrlSizer = new wxBoxSizer( wxVERTICAL );
-	
+
+    aspectRatioTextSizer->Add( aspectRatioText, 0, wxALL | wxEXPAND, 5 );
+
+    aspectRatioSizer->Add( aspectRatioTextSizer, 0, wxEXPAND, 5 );
+
+    wxBoxSizer* aspectRatioSpinCtrlSizer;
+    aspectRatioSpinCtrlSizer = new wxBoxSizer( wxVERTICAL );
+
     mAspectRatioSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
         *this, ID_ASPECTRATIO_SPINCTRL, wxEmptyString, wxDefaultPosition,
         wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, mProjectionData[ 1 ], 0.1 );
-	aspectRatioSpinCtrlSizer->Add( mAspectRatioSpinCtrl, 0, wxALL, 5 );
-	
-	aspectRatioSizer->Add( aspectRatioSpinCtrlSizer, 1, wxEXPAND, 5 );
-	
-	projectionSettingsSizer->Add( aspectRatioSizer, 1, wxEXPAND, 5 );
+    aspectRatioSpinCtrlSizer->Add( mAspectRatioSpinCtrl, 0, wxALL, 5 );
+
+    aspectRatioSizer->Add( aspectRatioSpinCtrlSizer, 1, wxEXPAND, 5 );
+
+    projectionSettingsSizer->Add( aspectRatioSizer, 1, wxEXPAND, 5 );
 
     wxBoxSizer* nearFarPlaneSizer;
-	nearFarPlaneSizer = new wxBoxSizer( wxVERTICAL );
+    nearFarPlaneSizer = new wxBoxSizer( wxVERTICAL );
 
     wxBoxSizer* nearFarPlaneDualSliderSizer;
-	nearFarPlaneDualSliderSizer = new wxBoxSizer( wxVERTICAL );
+    nearFarPlaneDualSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mNearFarPlaneDualSlider = new ves::conductor::util::DualSlider(
         this, wxID_ANY, 1, 0, 100, 0, 100, wxDefaultPosition,
@@ -254,7 +254,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
         nearFarPlaneSliderCallback );
     mNearFarPlaneDualSlider->SetMaxSliderCallback(
         farPlaneSliderCallback );
-    
+
     nearFarPlaneDualSliderSizer->Add(
         mNearFarPlaneDualSlider, 0, wxALL | wxEXPAND, 5 );
 
@@ -262,22 +262,22 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     projectionSettingsSizer->Add( nearFarPlaneSizer, 0, wxEXPAND, 5 );
 
-	mainSizer->Add( projectionSettingsSizer, 0, wxEXPAND, 5 );
-	
-	wxStdDialogButtonSizer* stdDialogButtonSizer;
-	wxButton* stdDialogButtonSizerOK;
-	wxButton* stdDialogButtonSizerCancel;
-	stdDialogButtonSizer = new wxStdDialogButtonSizer();
-	stdDialogButtonSizerOK = new wxButton( this, wxID_OK );
-	stdDialogButtonSizer->AddButton( stdDialogButtonSizerOK );
-	stdDialogButtonSizerCancel = new wxButton( this, wxID_CANCEL );
-	stdDialogButtonSizer->AddButton( stdDialogButtonSizerCancel );
-	stdDialogButtonSizer->Realize();
-	mainSizer->Add( stdDialogButtonSizer, 0, wxALL | wxEXPAND, 5 );
-	
-	SetSizer( mainSizer );
-	Layout();
-	mainSizer->Fit( this );
+    mainSizer->Add( projectionSettingsSizer, 0, wxEXPAND, 5 );
+
+    wxStdDialogButtonSizer* stdDialogButtonSizer;
+    wxButton* stdDialogButtonSizerOK;
+    wxButton* stdDialogButtonSizerCancel;
+    stdDialogButtonSizer = new wxStdDialogButtonSizer();
+    stdDialogButtonSizerOK = new wxButton( this, wxID_OK );
+    stdDialogButtonSizer->AddButton( stdDialogButtonSizerOK );
+    stdDialogButtonSizerCancel = new wxButton( this, wxID_CANCEL );
+    stdDialogButtonSizer->AddButton( stdDialogButtonSizerCancel );
+    stdDialogButtonSizer->Realize();
+    mainSizer->Add( stdDialogButtonSizer, 0, wxALL | wxEXPAND, 5 );
+
+    SetSizer( mainSizer );
+    Layout();
+    mainSizer->Fit( this );
     CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
