@@ -22,9 +22,14 @@ using namespace cpt;
 CameraEntity::CameraEntity()
 :
 osg::Camera(),
+mNearPlane( 5.0 ),
+mFarPlane( 10.0 ),
 mDCS( 0 ),
 mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
+mFrustumGeometry( 0 ),
+mFrustumVertices( 0 ),
+mFrustumColor( 0 ),
 mTexGenNode( 0 ),
 mCameraEntityCallback( 0 )
 {
@@ -37,9 +42,14 @@ mCameraEntityCallback( 0 )
 CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* parentDCS )
 :
 osg::Camera(),
+mNearPlane( 5.0 ),
+mFarPlane( 10.0 ),
 mDCS( 0 ),
 mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
+mFrustumGeometry( 0 ),
+mFrustumVertices( 0 ),
+mFrustumColor( 0 ),
 mTexGenNode( 0 ),
 mCameraEntityCallback( 0 )
 {
@@ -53,10 +63,17 @@ osg::Camera( cameraEntity, copyop ),
 mDCS( 0 ),
 mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
+mFrustumGeometry( 0 ),
+mFrustumVertices( 0 ),
+mFrustumColor( 0 ),
 mTexGenNode( 0 ),
 mCameraEntityCallback( 0 )
 {
-    ;
+    if( &cameraEntity != this )
+    {
+        mNearPlane = cameraEntity.mNearPlane;
+        mFarPlane = cameraEntity.mFarPlane;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::~CameraEntity()
@@ -69,10 +86,10 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
-    setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),     //eye position
-                           osg::Vec3( 0, 1, 0 ),     //center position
-                           osg::Vec3( 0, 0, 1 ) );   //up vector
-    setProjectionMatrixAsPerspective( 5.0, 1.0, 5.0, 10.0 );
+    setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),
+                           osg::Vec3( 0, 1, 0 ),
+                           osg::Vec3( 0, 0, 1 ) );
+    setProjectionMatrixAsPerspective( 30.0, 1.0, mNearPlane, mFarPlane );
     parentDCS->addChild( this );
 
     //Initialize mTexGenNode
@@ -91,10 +108,6 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     mDCS->addChild( mCameraGeometry.get() );
     
     //Initialize mFrustumGeode
-    mFrustumGeode = new osg::Geode();
-    mDCS->addChild( mFrustumGeode.get() );
-    mFrustumGeode->getOrCreateStateSet()->setMode( GL_LIGHTING,
-        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
     CreateViewFrustumGeode();
 
     //Initialize mCameraEntityCallback
@@ -114,67 +127,37 @@ void CameraEntity::CalculateMatrixMVPT()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateViewFrustumGeode()
 {
-    osg::Matrixd projectionMatrix = getProjectionMatrix();
+    mFrustumGeode = new osg::Geode();
+    mFrustumGeometry = new osg::Geometry();
+    mFrustumVertices = new osg::Vec3Array();
+    mFrustumColor = new osg::Vec4Array();
 
-    //Get near and far from the Projection matrix.
-    const double nearPlane = projectionMatrix( 3, 2 ) /
-                           ( projectionMatrix( 2, 2 ) - 1.0 );
-    const double farPlane =  projectionMatrix( 3, 2 ) /
-                           ( projectionMatrix( 2, 2 ) + 1.0 );
+    mFrustumVertices->resize( 9 );
+    mFrustumGeometry->setVertexArray( mFrustumVertices.get() );
 
-    //Get the sides of the near plane.
-    const double nLeft =   nearPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                         projectionMatrix( 0, 0 );
-    const double nRight =  nearPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                         projectionMatrix( 0, 0 );
-    const double nTop =    nearPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                         projectionMatrix( 1, 1 );
-    const double nBottom = nearPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                         projectionMatrix( 1, 1 );
-
-    //Get the sides of the far plane.
-    const double fLeft =   farPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
-                                        projectionMatrix( 0, 0 );
-    const double fRight =  farPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
-                                        projectionMatrix( 0, 0 );
-    const double fTop =    farPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
-                                        projectionMatrix( 1, 1 );
-    const double fBottom = farPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
-                                        projectionMatrix( 1, 1 );
-
-    //Our vertex array needs only 9 vertices:
-    //The origin, and the eight corners of the near and far planes.
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    vertices->resize( 9 );
-    (*vertices)[ 0 ].set( 0.0, 0.0, 0.0 );
-    (*vertices)[ 1 ].set( nLeft, nearPlane, nBottom );
-    (*vertices)[ 2 ].set( nRight, nearPlane, nBottom );
-    (*vertices)[ 3 ].set( nRight, nearPlane, nTop );
-    (*vertices)[ 4 ].set( nLeft, nearPlane, nTop );
-    (*vertices)[ 5 ].set( fLeft, farPlane, fBottom );
-    (*vertices)[ 6 ].set( fRight, farPlane, fBottom );
-    (*vertices)[ 7 ].set( fRight, farPlane, fTop );
-    (*vertices)[ 8 ].set( fLeft, farPlane, fTop );
-
-    osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
-    geometry->setVertexArray( vertices.get() );
-
-    osg::ref_ptr< osg::Vec4Array > color = new osg::Vec4Array();
-    color->push_back( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
-    geometry->setColorArray( color.get() );
-    geometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+    mFrustumColor->push_back( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    mFrustumGeometry->setColorArray( mFrustumColor.get() );
+    mFrustumGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     GLushort idxLines[ 8 ]  = { 0, 5, 0, 6, 0, 7, 0, 8 };
     GLushort idxLoops0[ 4 ] = { 1, 2, 3, 4 };
     GLushort idxLoops1[ 4 ] = { 5, 6, 7, 8 };
-    geometry->addPrimitiveSet( new osg::DrawElementsUShort(
+    mFrustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
         osg::PrimitiveSet::LINES, 8, idxLines ) );
-    geometry->addPrimitiveSet( new osg::DrawElementsUShort(
+    mFrustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
         osg::PrimitiveSet::LINE_LOOP, 4, idxLoops0 ) );
-    geometry->addPrimitiveSet( new osg::DrawElementsUShort(
+    mFrustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
         osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
 
-    mFrustumGeode->addDrawable( geometry.get() );
+    mFrustumGeode->addDrawable( mFrustumGeometry.get() );
+
+    mFrustumGeode->getOrCreateStateSet()->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+
+    mDCS->addChild( mFrustumGeode.get() );
+
+    UpdateViewFrustumGeode();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetNameAndDescriptions( const std::string& name )
@@ -184,6 +167,52 @@ void CameraEntity::SetNameAndDescriptions( const std::string& name )
     descriptorsList.push_back( "" );
     mDCS->setDescriptions( descriptorsList );
     mDCS->setName( name );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::UpdateViewFrustumGeode()
+{
+    osg::Matrixd projectionMatrix = getProjectionMatrix();
+
+    //Get near and far from the Projection matrix.
+    mNearPlane  = projectionMatrix( 3, 2 ) /
+                ( projectionMatrix( 2, 2 ) - 1.0 );
+    mFarPlane =  projectionMatrix( 3, 2 ) /
+               ( projectionMatrix( 2, 2 ) + 1.0 );
+
+    //Get the sides of the near plane.
+    const double nLeft =   mNearPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
+                                          projectionMatrix( 0, 0 );
+    const double nRight =  mNearPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
+                                          projectionMatrix( 0, 0 );
+    const double nTop =    mNearPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
+                                          projectionMatrix( 1, 1 );
+    const double nBottom = mNearPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
+                                          projectionMatrix( 1, 1 );
+
+    //Get the sides of the far plane.
+    const double fLeft =   mFarPlane * ( projectionMatrix( 2, 0 ) - 1.0 ) /
+                                         projectionMatrix( 0, 0 );
+    const double fRight =  mFarPlane * ( projectionMatrix( 2, 0 ) + 1.0 ) /
+                                         projectionMatrix( 0, 0 );
+    const double fTop =    mFarPlane * ( projectionMatrix( 2, 1 ) + 1.0 ) /
+                                         projectionMatrix( 1, 1 );
+    const double fBottom = mFarPlane * ( projectionMatrix( 2, 1 ) - 1.0 ) /
+                                         projectionMatrix( 1, 1 );
+
+    //Our vertex array needs only 9 vertices:
+    //The origin, and the eight corners of the near and far planes.
+    (*mFrustumVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
+    (*mFrustumVertices)[ 1 ].set( nLeft, mNearPlane, nBottom );
+    (*mFrustumVertices)[ 2 ].set( nRight, mNearPlane, nBottom );
+    (*mFrustumVertices)[ 3 ].set( nRight, mNearPlane, nTop );
+    (*mFrustumVertices)[ 4 ].set( nLeft, mNearPlane, nTop );
+    (*mFrustumVertices)[ 5 ].set( fLeft, mFarPlane, fBottom );
+    (*mFrustumVertices)[ 6 ].set( fRight, mFarPlane, fBottom );
+    (*mFrustumVertices)[ 7 ].set( fRight, mFarPlane, fTop );
+    (*mFrustumVertices)[ 8 ].set( fLeft, mFarPlane, fTop );
+    
+    mFrustumGeometry->dirtyDisplayList();
+    mFrustumGeometry->dirtyBound();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DrawCameraGeometry( bool onOff )

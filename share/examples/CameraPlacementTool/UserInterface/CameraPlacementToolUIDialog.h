@@ -54,9 +54,6 @@ public:
     virtual bool TransferDataToWindow();
     virtual void Lock( bool l );
 
-    void SetCommandName( const std::string& commandName );
-    void AddInstruction( ves::open::xml::DataValuePairSharedPtr instruction );
-
 protected:
 
 private:
@@ -70,6 +67,7 @@ private:
     void OnProjectionRadioBox( wxCommandEvent& event );
     void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void ProjectionUpdate();
 
     class NearPlaneSliderCallback :
         public ves::conductor::util::DualSlider::SliderCallback
@@ -109,6 +107,8 @@ private:
     private:
         CameraPlacementToolUIDialog* mDialog;
     };
+
+    double mProjectionData[ 4 ];
 
     wxRadioBox* mCameraRadioBox;
     wxRadioBox* mFrustumRadioBox;

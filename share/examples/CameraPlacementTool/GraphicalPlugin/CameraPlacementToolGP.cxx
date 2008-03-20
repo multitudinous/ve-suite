@@ -22,11 +22,7 @@ mScene()
     mEventHandlerMap[ "TOGGLE_CAMERA_UPDATE" ] = this;
     mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
     mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
-    mEventHandlerMap[ "PROJECTION_FOVZ_UPDATE" ] = this;
-    mEventHandlerMap[ "PROJECTION_ASPECTRATIO_UPDATE" ] = this;
-    mEventHandlerMap[ "PROJECTION_NEARPLANE_UPDATE" ] = this;
-    mEventHandlerMap[ "PROJECTION_NEARFARPLANE_UPDATE" ] = this;
-    mEventHandlerMap[ "PROJECTION_FARPLANE_UPDATE" ] = this;
+    mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
@@ -81,41 +77,24 @@ void CameraPlacementToolGP::SetCurrentCommand(
     {
         unsigned int selection = 0;
         command->GetDataValuePair( "toggleProjection" )->GetData( selection );
+    }
+    else if( command->GetCommandName() == "PROJECTION_UPDATE" )
+    {
+        double projectionData[ 4 ] = { 0, 0, 0, 0 };
+        command->GetDataValuePair(
+            "projectionFoVZ" )->GetData( projectionData[ 0 ] );
+        command->GetDataValuePair(
+            "projectionAspectRatio" )->GetData( projectionData[ 1 ] );
+        command->GetDataValuePair(
+            "projectionNearPlane" )->GetData( projectionData[ 2 ] );
+        command->GetDataValuePair(
+            "projectionFarPlane" )->GetData( projectionData[ 3 ] );
 
-        bool onOff = ( selection != 0 );
-        //mScene->GetActiveCameraEntity()->GetDCS()->setNodeMask( onOff );
-    }
-    else if( command->GetCommandName() == "PROJECTION_FOVZ_UPDATE" )
-    {
-        unsigned int fovzValue = 0;
-        command->GetDataValuePair( "projectionFoVZ" )->GetData( fovzValue );
-    }
-    else if( command->GetCommandName() == "PROJECTION_ASPECTRATIO_UPDATE" )
-    {
-        unsigned int aspectRatioValue = 0;
-        command->GetDataValuePair( "projectionAspectRatio" )->GetData(
-            aspectRatioValue );
-    }
-    else if( command->GetCommandName() == "PROJECTION_NEARPLANE_UPDATE" )
-    {
-        unsigned int nearPlaneValue = 0;
-        command->GetDataValuePair( "projectionNearPlane" )->GetData(
-            nearPlaneValue );
-    }
-    else if( command->GetCommandName() == "PROJECTION_NEARFARPLANE_UPDATE" )
-    {
-        unsigned int farPlaneValue = 0;
-        command->GetDataValuePair( "projectionFarPlane" )->GetData(
-            farPlaneValue );
-    }
-    else if( command->GetCommandName() == "PROJECTION_FARPLANE_UPDATE" )
-    {
-        unsigned int farPlaneValue = 0;
-        command->GetDataValuePair( "projectionFarPlane" )->GetData(
-            farPlaneValue );
+        mScene->GetActiveCameraEntity()->setProjectionMatrixAsPerspective(
+            projectionData[ 0 ], projectionData[ 1 ],
+            projectionData[ 2 ], projectionData[ 3 ] );
 
-        //mScene->GetActiveCameraEntity()->getProjectionMatrix();
-        //mScene->GetActiveCameraEntity()->CreateViewFrustumGeode();
+        mScene->GetActiveCameraEntity()->UpdateViewFrustumGeode();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,7 @@ namespace scenegraph
 namespace osg
 {
     class Geode;
+    class Geometry;
     class TexGenNode;
 }
 
@@ -48,24 +49,30 @@ public:
     void DrawViewFrustum( bool onOff );
     
     ves::xplorer::scenegraph::DCS* GetDCS();
-
     osg::TexGenNode* GetTexGenNode();
-
     osg::Matrixd GetMatrixMVPT();
 
     void SetNameAndDescriptions( const std::string& name );
+
+    void UpdateViewFrustumGeode();
 
 protected:
     virtual ~CameraEntity();
 
 private:
-    void CreateViewFrustumGeode();
     void Initialize( ves::xplorer::scenegraph::DCS* parentDCS );
+    void CreateViewFrustumGeode();
+
+    double mNearPlane;
+    double mFarPlane;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
 
     osg::ref_ptr< osg::Node > mCameraGeometry;
     osg::ref_ptr< osg::Geode > mFrustumGeode;
+    osg::ref_ptr< osg::Geometry > mFrustumGeometry;
+    osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
+    osg::ref_ptr< osg::Vec4Array > mFrustumColor;
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;

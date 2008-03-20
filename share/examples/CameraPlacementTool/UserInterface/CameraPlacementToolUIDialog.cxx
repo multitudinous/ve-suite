@@ -50,6 +50,11 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
 :
 UIDialog( ( wxWindow* )parent, id, _( "CameraPlacementTool" ) )
 {
+    mProjectionData[ 0 ] = 30.0;
+    mProjectionData[ 1 ] = 1.0;
+    mProjectionData[ 2 ] = 5.0;
+    mProjectionData[ 3 ] = 10.0;
+
     mServiceList = service;
 
     BuildGUI();
@@ -73,18 +78,6 @@ bool CameraPlacementToolUIDialog::TransferDataToWindow()
 void CameraPlacementToolUIDialog::Lock( bool l )
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::SetCommandName(
-    const std::string& commandName )
-{
-    mCommandName = commandName;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::AddInstruction(
-    ves::open::xml::DataValuePairSharedPtr instruction )
-{
-    mInstructions.push_back( instruction );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::BuildGUI()
@@ -193,7 +186,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 	fovzSliderSizer = new wxBoxSizer( wxVERTICAL );
 	
 	mFoVZSlider = new wxSlider(
-        this, ID_FOVZ_SLIDER, 50, 0, 180, wxDefaultPosition,
+        this, ID_FOVZ_SLIDER, mProjectionData[ 0 ], 0, 180, wxDefaultPosition,
         wxDefaultSize, wxSL_HORIZONTAL | wxSL_LABELS );
 	fovzSliderSizer->Add( mFoVZSlider, 0, wxALL | wxEXPAND, 5 );
 	
@@ -224,7 +217,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 	
     mAspectRatioSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
         *this, ID_ASPECTRATIO_SPINCTRL, wxEmptyString, wxDefaultPosition,
-        wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 1, 0.1 );
+        wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, mProjectionData[ 1 ], 0.1 );
 	aspectRatioSpinCtrlSizer->Add( mAspectRatioSpinCtrl, 0, wxALL, 5 );
 	
 	aspectRatioSizer->Add( aspectRatioSpinCtrlSizer, 1, wxEXPAND, 5 );
@@ -335,31 +328,44 @@ void CameraPlacementToolUIDialog::OnProjectionRadioBox( wxCommandEvent& event )
 void CameraPlacementToolUIDialog::OnFoVZSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    unsigned int fovzValue = mProjectionRadioBox->GetSelection();
-
-    mCommandName = "PROJECTION_FOVZ_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr projectionFoVZDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionFoVZDVP->SetData( "projectionFoVZ", fovzValue );
-    mInstructions.push_back( projectionFoVZDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
+    mProjectionData[ 0 ] = mFoVZSlider->GetValue();
+    ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl(
     wxScrollEvent& WXUNUSED( event ) )
 {
-    unsigned int aspectRatioValue = mProjectionRadioBox->GetSelection();
+    mProjectionData[ 1 ] = mAspectRatioSpinCtrl->GetValue();
+    ProjectionUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::ProjectionUpdate()
+{
+    mCommandName = std::string( "PROJECTION_UPDATE" );
 
-    mCommandName = "PROJECTION_ASPECTRATIO_UPDATE";
+    ves::open::xml::DataValuePairSharedPtr projectionFoVZDVP(
+        new ves::open::xml::DataValuePair() );
+    projectionFoVZDVP->SetData(
+        "projectionFoVZ", mProjectionData[ 0 ] );
+    mInstructions.push_back( projectionFoVZDVP );
 
     ves::open::xml::DataValuePairSharedPtr projectionAspectRatioDVP(
         new ves::open::xml::DataValuePair() );
     projectionAspectRatioDVP->SetData(
-        "projectionAspectRatio", aspectRatioValue );
+        "projectionAspectRatio", mProjectionData[ 1 ] );
     mInstructions.push_back( projectionAspectRatioDVP );
+
+    ves::open::xml::DataValuePairSharedPtr projectionNearPlaneDVP(
+        new ves::open::xml::DataValuePair() );
+    projectionNearPlaneDVP->SetData(
+        "projectionNearPlane", mProjectionData[ 2 ]  );
+    mInstructions.push_back( projectionNearPlaneDVP );
+
+    ves::open::xml::DataValuePairSharedPtr projectionFarPlaneDVP(
+        new ves::open::xml::DataValuePair() );
+    projectionFarPlaneDVP->SetData(
+        "projectionFarPlane", mProjectionData[ 3 ] );
+    mInstructions.push_back( projectionFarPlaneDVP );
 
     SendCommandsToXplorer();
     ClearInstructions();
@@ -423,52 +429,23 @@ CameraPlacementToolUIDialog::
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::NearPlaneSliderCallback::SliderOperation()
 {
-    unsigned int nearPlaneValue = _dualSlider->GetMinSliderValue();
+    mDialog->mProjectionData[ 2 ] = _dualSlider->GetMinSliderValue();
 
-    mDialog->SetCommandName( std::string( "PROJECTION_NEARPLANE_UPDATE" ) );
-
-    ves::open::xml::DataValuePairSharedPtr projectionNearPlaneDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionNearPlaneDVP->SetData( "projectionNearPlane", nearPlaneValue );
-    mDialog->AddInstruction( projectionNearPlaneDVP );
-
-    mDialog->SendCommandsToXplorer();
-    mDialog->ClearInstructions();
+    mDialog->ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::NearFarPlaneSliderCallback::SliderOperation()
 {
-    unsigned int nearPlaneValue = _dualSlider->GetMinSliderValue();
-    unsigned int farPlaneValue = _dualSlider->GetMaxSliderValue();
+    mDialog->mProjectionData[ 2 ] = _dualSlider->GetMinSliderValue();
+    mDialog->mProjectionData[ 3 ] = _dualSlider->GetMaxSliderValue();
 
-    mDialog->SetCommandName( std::string( "PROJECTION_NEARFARPLANE_UPDATE" ) );
-
-    ves::open::xml::DataValuePairSharedPtr projectionNearPlaneDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionNearPlaneDVP->SetData( "projectionNearPlane", nearPlaneValue );
-    mDialog->AddInstruction( projectionNearPlaneDVP );
-
-    ves::open::xml::DataValuePairSharedPtr projectionFarPlaneDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionFarPlaneDVP->SetData( "projectionFarPlane", farPlaneValue );
-    mDialog->AddInstruction( projectionFarPlaneDVP );
-
-    mDialog->SendCommandsToXplorer();
-    mDialog->ClearInstructions();
+    mDialog->ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::FarPlaneSliderCallback::SliderOperation()
 {
-    unsigned int farPlaneValue = _dualSlider->GetMaxSliderValue();
+    mDialog->mProjectionData[ 3 ] = _dualSlider->GetMaxSliderValue();
 
-    mDialog->SetCommandName( std::string( "PROJECTION_FARPLANE_UPDATE" ) );
-
-    ves::open::xml::DataValuePairSharedPtr projectionFarPlaneDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionFarPlaneDVP->SetData( "projectionFarPlane", farPlaneValue );
-    mDialog->AddInstruction( projectionFarPlaneDVP );
-
-    mDialog->SendCommandsToXplorer();
-    mDialog->ClearInstructions();
+    mDialog->ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////

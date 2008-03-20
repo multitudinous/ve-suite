@@ -21,6 +21,9 @@ char highlight_vertex[] =
 "} \n";
 /*----------------------------------------------------------------------------*/
 char highlight_fragment[] =
+"uniform float nearPlane; \n"
+"uniform float farPlane; \n"
+
 //"uniform sampler2D projectionMap; \n"
 
 "varying vec4 eyePos; \n"
@@ -54,8 +57,8 @@ char highlight_fragment[] =
         "projectionUV.t >= 0.0 && \n"
         "projectionUV.s <= 1.0 && \n"
         "projectionUV.t <= 1.0 && \n"
-        "gl_TexCoord[ 0 ].q >= 0.0 && \n"
-        "gl_TexCoord[ 0 ].q <= 10.0 ) \n"
+        "gl_TexCoord[ 0 ].q >= nearPlane && \n"
+        "gl_TexCoord[ 0 ].q <= farPlane ) \n"
     "{ \n"
         //If in the frustum
         "gl_FragColor = vec4( 1.0, 1.0, 0.0, 1.0 ); \n"
