@@ -191,36 +191,18 @@ DataSet::~DataSet()
     {
         delete this->x_planes;
         this->x_planes = NULL;
-        //vprDEBUG(vesDBG,1) << "deleting this->x_planes"
-        //                       << std::endl << vprDEBUG_FLUSH;
     }
 
     if( this->y_planes != NULL )
     {
         delete this->y_planes;
         this->y_planes = NULL;
-        //vprDEBUG(vesDBG,1) << "deleting this->y_planes"
-        //                       << std::endl << vprDEBUG_FLUSH;
     }
 
     if( this->z_planes != NULL )
     {
         delete this->z_planes;
         this->z_planes = NULL;
-        //vprDEBUG(vesDBG,1) << "deleting this->z_planes"
-        //                        << std::endl << vprDEBUG_FLUSH;
-    }
-
-    if( this->precomputedDataSliceDir.c_str() != NULL )
-    {
-        precomputedDataSliceDir.erase();//delete [] this->precomputedDataSliceDir;
-        precomputedDataSliceDir.empty();//this->precomputedDataSliceDir = NULL;
-    }
-
-    if( this->precomputedSurfaceDir.c_str() != NULL )
-    {
-        precomputedSurfaceDir.erase();//      delete [] this->precomputedSurfaceDir;
-        precomputedSurfaceDir.empty();//      this->precomputedSurfaceDir = NULL;
     }
 
     if( this->dataSet != NULL )
@@ -229,27 +211,18 @@ DataSet::~DataSet()
         this->dataSet = NULL;
     }
 
-    if( this->fileName.c_str() != NULL )
-    {
-        //vprDEBUG(vesDBG,2) << "deleting filename " << this->fileName
-        //                       << std::endl << vprDEBUG_FLUSH;
-        fileName.erase();//delete [] this->fileName;
-        fileName.empty();//this->fileName = NULL;
-    }
-
     if( _vtkFHndlr )
     {
         delete _vtkFHndlr;
         _vtkFHndlr = 0;
-        //vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
     }
 
     if( m_externalFileLoader )
     {
         delete m_externalFileLoader;
         m_externalFileLoader = 0;
-        //vprDEBUG(vesDBG,2) << "deleting m_externalFileLoader " << std::endl << vprDEBUG_FLUSH;
     }
+
     if( m_dataObjectHandler )
     {
         delete m_dataObjectHandler;

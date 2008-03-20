@@ -65,6 +65,8 @@
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/scenegraph/util/ComputeBoundsVisitor.h>
 
+#include <ves/xplorer/Debug.h>
+
 #include <vpr/System.h>
 
 #include <iostream>
@@ -310,7 +312,10 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 
         //rotate according to iconMirror value
         osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
-		std::cout<<"PP: x="<<mirrorComp->getPivotPoint().x()<<" y="<<mirrorComp->getPivotPoint().y()<<" z="<<mirrorComp->getPivotPoint().z()<<std::endl;
+		vprDEBUG( vesDBG, 2 ) << "PP: x="<<mirrorComp->getPivotPoint().x()
+            << " y="<<mirrorComp->getPivotPoint().y()
+            << " z="<<mirrorComp->getPivotPoint().z()
+            << std::endl << vprDEBUG_FLUSH;
         mirrorComp->addChild( rotatedComp.get() );
         
 		//move pivot point to center
@@ -521,7 +526,7 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
     else
     {
         std::cerr << "Improperly formated ves file."
-        << "VES File Read Error" << std::endl;
+            << "VES File Read Error" << std::endl;
     }
 
     std::vector< std::string > networkModelVector;

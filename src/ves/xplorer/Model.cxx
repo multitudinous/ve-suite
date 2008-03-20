@@ -201,7 +201,6 @@ ves::xplorer::ModelCADHandler* Model::GetModelCADHandler()
 void Model::PreFrameUpdate()
 {
     vprDEBUG( vesDBG, 1 ) << "Model::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::CreateCfdDataSet( void )
