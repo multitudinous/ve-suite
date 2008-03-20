@@ -236,13 +236,13 @@ void HierarchyTree::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
             m_currentNodeId = this->GetItemParent( this->GetSelection() );
 
             //tell xplorer to draw subnet
-    		CommandPtr veCommand( new ves::open::xml::Command() );
+            CommandPtr veCommand( new ves::open::xml::Command() );
             veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
             DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "UNSIGNED INT" ) ) );
             dataValuePair2->SetData( "SUBNET_ID", tempModData->systemId );
             veCommand->AddDataValuePair( dataValuePair2 );
             DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
-            dataValuePair->SetData( "CHANGE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
+            dataValuePair->SetData( "UPDATE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
             veCommand->AddDataValuePair( dataValuePair );
             CORBAServiceList::instance()->
                 SendCommandStringToXplorer( veCommand );

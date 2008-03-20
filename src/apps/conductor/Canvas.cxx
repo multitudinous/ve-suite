@@ -153,7 +153,7 @@ Canvas::~Canvas()
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 {
-    if( xmlNetwork.empty() )
+    if( xmlNetwork.empty() || ( xmlNetwork == "NULL" ) )
     {
         std::cout <<
             " Canvas::PopulateNetworks network string is empty" << std::endl;

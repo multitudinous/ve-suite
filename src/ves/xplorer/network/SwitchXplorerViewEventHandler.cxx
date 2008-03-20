@@ -109,46 +109,57 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
     DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
 
-    std::string viewData;
-    activeModelDVP->GetData( viewData );
-    if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
+    if( activeModelDVP )
     {
-        SceneManager::instance()->SetActiveSwitchNode( 2 );
-        osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
-		if (tempDCS->GetNumChildren() == 0)
-		{
-            networkLayout = new NetworkSystemView( cfdExecutive::instance()->GetCurrentNetwork() );
-        }
-        //else if( tempDCS->GetNumChildren() >= 1 )
-		else
+        std::string viewData;
+        activeModelDVP->GetData( viewData );
+        if( viewData == "CHANGE_XPLORER_VIEW_NETWORK" )
         {
-            tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
+            UpdateNetworkView( command );
+            SceneManager::instance()->SetActiveSwitchNode( 2 );
         }
-
-        activeModelDVP = command->GetDataValuePair("SUBNET_ID");
-        std::string netId; 
-        activeModelDVP->GetData(netId);
-        //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
-        osg::ref_ptr< osg::Group > tempGroup = networkLayout->DrawNetwork(netId);
-        if( tempGroup.valid() )
+        else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
         {
-            tempDCS->addChild( tempGroup.get() );
+            SceneManager::instance()->SetActiveSwitchNode( 0 );
         }
-    }
-    else if( viewData == "CHANGE_XPLORER_VIEW_CAD" )
-    {
-        SceneManager::instance()->SetActiveSwitchNode( 0 );
-    }
-    else if( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
-    {
-        SceneManager::instance()->SetActiveSwitchNode( 1 );
+        else if( viewData == "CHANGE_XPLORER_VIEW_LOGO" )
+        {
+            SceneManager::instance()->SetActiveSwitchNode( 1 );
+        }
+        else
+        {
+            SceneManager::instance()->SetActiveSwitchNode( 0 );
+        }
     }
     else
     {
-        SceneManager::instance()->SetActiveSwitchNode( 0 );
+        UpdateNetworkView( command );
     }
 
     ves::xplorer::DeviceHandler::instance()->GetActiveDevice()->SetActiveDCS(
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode() );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::CommandPtr& cmd )
+{
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
+    if (tempDCS->GetNumChildren() == 0)
+    {
+        networkLayout = new NetworkSystemView( cfdExecutive::instance()->GetCurrentNetwork() );
+    }
+    //else if( tempDCS->GetNumChildren() >= 1 )
+    else
+    {
+        tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
+    }
+
+    DataValuePairPtr dvp = cmd->GetDataValuePair("SUBNET_ID");
+    std::string netId; 
+    dvp->GetData(netId);
+    //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
+    osg::ref_ptr< osg::Group > tempGroup = networkLayout->DrawNetwork(netId);
+    if( tempGroup.valid() )
+    {
+        tempDCS->addChild( tempGroup.get() );
+    }
+}

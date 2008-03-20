@@ -45,6 +45,7 @@
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
+#include <ves/open/xml/CommandPtr.h>
 
 // --- C/C++ Libraries --- //
 #include <map>
@@ -107,7 +108,8 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
 private:
-	NetworkSystemView * networkLayout;
+    NetworkSystemView * networkLayout;
+    void UpdateNetworkView( const ves::open::xml::CommandPtr& cmd );
 
 };
 }
