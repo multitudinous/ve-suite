@@ -111,14 +111,14 @@ private:
 
     ResourceMap mResourceMap;
 };
-
+/*
 template<>
 osg::ref_ptr< osg::Image > ResourceManager::createResource( const std::string& resourceName )
 {
    osg::ref_ptr< osg::Image > ret_val( osgDB::readImageFile( resourceName ) );
    return ret_val;
 }
-
+*/
 }
 }
 }
