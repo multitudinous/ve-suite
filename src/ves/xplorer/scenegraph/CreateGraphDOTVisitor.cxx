@@ -264,17 +264,23 @@ std::string CreateGraphDOTVisitor::GetOSGStats( osg::Node* node )
     }
 
     std::ostringstream statsData;
-    statsData <<"Object Type  Number Unique  Number Instanced"<< "\\n"
+    statsData << "Object Type  Number Unique  Number Instanced" << "\\n"
         /*<<"StateSet      \t"<<_statesetSet.size()<<"\t"<<_numInstancedStateSet<< "\\n"
         <<"Group      \t"<<_groupSet.size()<<"\t"<<_numInstancedGroup<< "\\n"
         <<"Transform  \t"<<_transformSet.size()<<"\t"<<_numInstancedTransform<< "\\n"
         <<"LOD        \t"<<_lodSet.size()<<"\t"<<_numInstancedLOD<< "\\n"
-        <<"Switch     \t"<<_switchSet.size()<<"\t"<<_numInstancedSwitch<< "\\n"*/
-        <<"Geode       "<<osgStats._geodeSet.size()<<"  "<<osgStats._numInstancedGeode<< "\\n"
-        <<"Drawable    "<<osgStats._drawableSet.size()<<"  "<<osgStats._numInstancedDrawable<< "\\n"
-        <<"Geometry    "<<osgStats._geometrySet.size()<<"  "<<osgStats._numInstancedGeometry<< "\\n"
-        <<"Vertices    "<<osgStats._uniqueStats._vertexCount<<"  "<<osgStats._instancedStats._vertexCount<< "\\n"
-        <<"Primitives  "<<unique_primitives<<"  "<< instanced_primitives;
+        <<"Switch     \t"<<_switchSet.size()<<"\t"<<_numInstancedSwitch<< "\\n"
+        << "Geode       " << osgStats._geodeSet.size()
+        << "  "<< osgStats._numInstancedGeode << "\\n"*/
+        << "StateSet    " << osgStats._statesetSet.size() 
+        << "  " << osgStats._numInstancedStateSet << "\\n"
+        << "Drawable    " << osgStats._drawableSet.size()
+        << "  " << osgStats._numInstancedDrawable << "\\n"
+        << "Geometry    " << osgStats._geometrySet.size()
+        << "  " << osgStats._numInstancedGeometry << "\\n"
+        << "Vertices    " << osgStats._uniqueStats._vertexCount
+        << "  " << osgStats._instancedStats._vertexCount << "\\n"
+        << "Primitives  " << unique_primitives << "  " << instanced_primitives;
     return statsData.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
