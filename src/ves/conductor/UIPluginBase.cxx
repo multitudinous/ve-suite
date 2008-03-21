@@ -1779,7 +1779,8 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
 
-    int answer = wxMessageBox( _( "Do you really want to delete this module?" ), _( "Confirmation" ), wxYES_NO );
+    int answer = wxMessageBox( _( "Do you really want to delete this module?" ), 
+        _( "Confirmation" ), wxYES_NO );
     if( answer != wxYES )
         return;
 
