@@ -79,6 +79,7 @@
 
 #include <osgUtil/SceneView>
 #include <osgUtil/UpdateVisitor>
+#include <osgUtil/Statistics>
 
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
@@ -401,16 +402,26 @@ void App::latePreFrame( void )
         lastTime = current_time;
         lastFrame = _frameNumber;
     }
-    if (( vpr::Debug::instance()->isDebugEnabled() ) && ( 3 <= vpr::Debug::instance()->getLevel() ) )
+    
+    if( ( vpr::Debug::instance()->isDebugEnabled() ) )// && ( 3 <= vpr::Debug::instance()->getLevel() ) )
     {
-        if (( _frameNumber % 500 ) == 0.0f )
+        if( ( _frameNumber % 500 ) == 0.0f )
         {
             vprDEBUG( vesDBG, 3 ) << " App::latePreFrame Profiling data for frame "
-            << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
+                << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
             VPR_PROFILE_RESULTS();
         }
-    }
-
+        
+        if( 3 >= vpr::Debug::instance()->getLevel() )
+        {
+            osgUtil::StatsVisitor stats;
+            getScene()->accept( stats );
+            std::ostringstream statsStream;
+            stats.print( statsStream );
+            vprDEBUG( vesDBG, 3 ) << statsStream.str() << std::endl 
+                << vprDEBUG_FLUSH;
+        }        
+    }    
 #endif
 
     ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();

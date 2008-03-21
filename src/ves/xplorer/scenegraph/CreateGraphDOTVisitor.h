@@ -90,6 +90,11 @@ private:
     ///\return Node data in a string
     std::string GetStateSetDataString( osg::Node* node );
     
+    ///Get the OSG Stats string to write out
+    ///\param node Node to look at
+    ///\return Node data in a string
+    std::string GetOSGStats( osg::Node* node );
+
     ///DOT file stream to be written to
     std::ofstream m_dotFile;
 

@@ -38,6 +38,7 @@
 #include <osg/Material>
 #include <osg/Texture>
 #include <osg/StateSet>
+#include <osgUtil/Statistics>
 
 #include <algorithm>
 #include <iostream>
@@ -105,7 +106,8 @@ void CreateGraphDOTVisitor::apply( osg::Node& node )
             }
             m_dotFile << GetStateSetDataString( childNode.get() ) << "\\n"
                 << GetMaterialDataString( childNode.get() ) << "\\n"
-                << GetTextureDataString( childNode.get() ) << "\"];" << std::endl;
+                << GetTextureDataString( childNode.get() ) << "\\n"
+                << GetOSGStats( childNode.get() ) << "\"];" << std::endl;
         }
     }
     
@@ -237,5 +239,42 @@ std::string CreateGraphDOTVisitor::GetStateSetDataString( osg::Node* node )
                 << "Rendering Hint = " << stringRenderHint;
 
     return textureData.str();
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string CreateGraphDOTVisitor::GetOSGStats( osg::Node* node )
+{
+    osgUtil::StatsVisitor osgStats;
+    node->accept( osgStats );
+
+    unsigned int unique_primitives = 0;
+    osgUtil::Statistics::PrimitiveCountMap::iterator pcmitr;
+    for(pcmitr = osgStats._uniqueStats.GetPrimitivesBegin();
+        pcmitr != osgStats._uniqueStats.GetPrimitivesEnd();
+        ++pcmitr)
+    {
+        unique_primitives += pcmitr->second;
+    }
+
+    unsigned int instanced_primitives = 0;
+    for(pcmitr = osgStats._instancedStats.GetPrimitivesBegin();
+        pcmitr != osgStats._instancedStats.GetPrimitivesEnd();
+        ++pcmitr)
+    {
+        instanced_primitives += pcmitr->second;
+    }
+
+    std::ostringstream statsData;
+    statsData <<"Object Type  Number Unique  Number Instanced"<< "\\n"
+        /*<<"StateSet      \t"<<_statesetSet.size()<<"\t"<<_numInstancedStateSet<< "\\n"
+        <<"Group      \t"<<_groupSet.size()<<"\t"<<_numInstancedGroup<< "\\n"
+        <<"Transform  \t"<<_transformSet.size()<<"\t"<<_numInstancedTransform<< "\\n"
+        <<"LOD        \t"<<_lodSet.size()<<"\t"<<_numInstancedLOD<< "\\n"
+        <<"Switch     \t"<<_switchSet.size()<<"\t"<<_numInstancedSwitch<< "\\n"*/
+        <<"Geode       "<<osgStats._geodeSet.size()<<"  "<<osgStats._numInstancedGeode<< "\\n"
+        <<"Drawable    "<<osgStats._drawableSet.size()<<"  "<<osgStats._numInstancedDrawable<< "\\n"
+        <<"Geometry    "<<osgStats._geometrySet.size()<<"  "<<osgStats._numInstancedGeometry<< "\\n"
+        <<"Vertices    "<<osgStats._uniqueStats._vertexCount<<"  "<<osgStats._instancedStats._vertexCount<< "\\n"
+        <<"Primitives  "<<unique_primitives<<"  "<< instanced_primitives;
+    return statsData.str();
 }
 ////////////////////////////////////////////////////////////////////////////////
