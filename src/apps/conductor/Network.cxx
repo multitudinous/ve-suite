@@ -2149,6 +2149,7 @@ void Network::RemovePluginDialogs()
         iter->second.GetPlugin()->CheckPluginMapOnExit();
     }
 
+    //If there are modules then the plugins send the command below
     //Send event to canvas
     if( modules.empty() )
     {
@@ -2185,6 +2186,9 @@ void Network::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDeletePlugins( wxUpdateUIEvent& event )
 {
+    //This function may not be necessary
+    //The destructor may be able to be used in this case and not this
+    // update ui event
     std::pair< unsigned int, size_t >* pluginData = 
         static_cast< std::pair< unsigned int, size_t >* >( event.GetClientData() );
     size_t numDialogs = 1;

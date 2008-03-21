@@ -135,7 +135,7 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
         rootNode->addChild( itr->second.get() );
 
         itr->second->GetNameText()->setCharacterSize( 0.12 );
-        itr->second->GetDigitalText()->setCharacterSize( 0.12 );
+        itr->second->GetDigitalText()->setCharacterSize( 0.22 );
         itr->second->GetNameText()->setColor( osg::Vec4( 0.3, 0.3, 0.3, 1.0 ) );
         itr->second->GetDigitalText()->setColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
     }

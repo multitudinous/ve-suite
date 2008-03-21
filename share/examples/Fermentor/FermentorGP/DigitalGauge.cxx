@@ -90,7 +90,7 @@ void DigitalGauge::Initialize()
     m_digitalText->setAxisAlignment( osgText::Text::SCREEN );
     m_digitalText->setAlignment( osgText::Text::RIGHT_CENTER );
     m_digitalText->setLayout( osgText::Text::LEFT_TO_RIGHT );
-    m_digitalText->setPosition( osg::Vec3f( 0.3, 0.0, -0.05 ) );
+    m_digitalText->setPosition( osg::Vec3f( 0.35, 0.0, 0.00 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DigitalGauge::UpdateText( double value )

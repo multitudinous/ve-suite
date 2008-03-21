@@ -1574,7 +1574,6 @@ void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 	newCanvas = true;
     fname.Clear();
 
-
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
     canvas->New( true );
