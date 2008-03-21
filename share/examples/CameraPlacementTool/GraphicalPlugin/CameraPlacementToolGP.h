@@ -9,8 +9,6 @@
 
 namespace cpt
 {
-
-/*----------------------------------------------------------------------------*/
 class VE_USER_PLUGIN_EXPORTS CameraPlacementToolGP :
     public ves::xplorer::plugin::PluginBase
 {
@@ -27,10 +25,7 @@ protected:
 private:
     cpt::CameraPlacementToolScenePtr mScene;
 };
-/*----------------------------------------------------------------------------*/
-
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( CameraPlacementToolGP )
-
 } //end cpt
 
 #endif //CAMERA_PLACEMENT_TOOL_GP_H
