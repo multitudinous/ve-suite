@@ -49,7 +49,7 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
     int id, 
     ves::conductor::util::CORBAServiceList* service )
 :
-UIDialog( ( wxWindow* )parent, id, _( "CameraPlacementTool" ) )
+UIDialog( ( wxWindow* )parent, id, wxT( "CameraPlacementTool" ) )
 {
     mProjectionData[ 0 ] = 30.0;
     mProjectionData[ 1 ] = 1.0;
@@ -235,6 +235,8 @@ void CameraPlacementToolUIDialog::BuildGUI()
         this, wxID_ANY, 1, 0, 100, 0, 100, wxDefaultPosition,
         wxDefaultSize, wxSL_HORIZONTAL | wxSL_LABELS,
         wxString( wxT(  "Near / Far Plane" ) ) );
+    mNearFarPlaneDualSlider->SetMinimumSliderValue( mProjectionData[ 2 ] );
+    mNearFarPlaneDualSlider->SetMaximumSliderValue( mProjectionData[ 3 ] );
     cpt::CameraPlacementToolUIDialog::
         NearPlaneSliderCallback* nearPlaneSliderCallback =
             new cpt::CameraPlacementToolUIDialog::NearPlaneSliderCallback(
