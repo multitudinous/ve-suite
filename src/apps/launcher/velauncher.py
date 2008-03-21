@@ -301,7 +301,7 @@ class LauncherWindow(wx.Frame):
         ##Set the main sizer, add Launch button.
         mainSizer = wx.BoxSizer(wx.VERTICAL)
         mainSizer.Add(rowSizer2, 0, wx.ALL | wx.EXPAND, BORDER)
-        mainSizer.Add(self.bLaunch, 1, wx.EXPAND)
+        mainSizer.Add(self.bLaunch, 1, wx.ALL | wx.EXPAND, 10)
         mainSizer.SetSizeHints(self)
         panel.SetSizer(mainSizer)
         panel.Layout()
