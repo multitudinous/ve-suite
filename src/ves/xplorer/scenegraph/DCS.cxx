@@ -30,10 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/SelectTechnique.h>
+
+#include <ves/xplorer/scenegraph/util/NormalizeVisitor.h>
 
 #include <ves/xplorer/scenegraph/physics/TransferPhysicsDataCallback.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -222,22 +223,17 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetScaleArray( std::vector< double > scaleArray )
 {
-#ifdef _OSG
     setScale( osg::Vec3d( scaleArray[0], scaleArray[1], scaleArray[2] ) );
 
-    ///Do this so that the normals will not be affected by the scaling applied by the user
-    ///See osg post one April 19, 2007
     if( scaleArray[0] != 1 )
     {
-        getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
+        ves::xplorer::scenegraph::util::NormalizeVisitor normVis( this, true );
+        
     }
     else
     {
-        getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::OFF );
+        ves::xplorer::scenegraph::util::NormalizeVisitor normVis( this, false );
     }
-
-#elif _OPENSG
-#endif
 
     UpdatePhysicsTransform();
 }
