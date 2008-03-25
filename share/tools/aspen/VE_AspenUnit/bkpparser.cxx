@@ -89,7 +89,7 @@ std::string BKPParser::getBlockType(std::string blockName, std::string flowsheet
 {
 	if(flowsheetName == "NULL")
 		//return BlockInfoList["Top_Sheet"][blockName].type;
-		return BlockInfoList["0"][blockName].type;
+		return BlockInfoList["_main_sheet"][blockName].type;
 	else
 		return BlockInfoList[flowsheetName][blockName].type;
 }
@@ -98,7 +98,7 @@ std::string BKPParser::getBlockID(std::string blockName, std::string flowsheetNa
 {
 	if(flowsheetName == "NULL")
 		//return BlockInfoList["Top_Sheet"][blockName].id;
-		return BlockInfoList["0"][blockName].id;
+		return BlockInfoList["_main_sheet"][blockName].id;
 	else
 		return BlockInfoList[flowsheetName][blockName].id;
 }
@@ -277,7 +277,7 @@ void BKPParser::ParseFile(const char * bkpFile)
 				//tempBlockInfo.id = compID;
 				//HierarchicalBlockInfoList[tempHierarchyBlock][tempBlockInfo.id] = tempBlockInfo;
 				//BlockInfoList["Top_Sheet"][tempBlockInfo.id] = tempBlockInfo;
-				BlockInfoList["0"][tempBlockInfo.id] = tempBlockInfo;
+				BlockInfoList["_main_sheet"][tempBlockInfo.id] = tempBlockInfo;
 			}
 			else
 			{
@@ -336,12 +336,39 @@ void BKPParser::ParseFile(const char * bkpFile)
     //for (sheetIter = BlockInfoList.rbegin(); sheetIter != BlockInfoList.rend(); ++sheetIter)
     for (sheetIter = BlockInfoList.begin(); sheetIter != BlockInfoList.end(); ++sheetIter)
     {
+        //seek back to beginning of file because BlockInfoList is a map and
+        //is alphabetical not in the file order.
+        inFile.seekg(0);
         //find first block
-        while(temp.compare(0, 5, "BLOCK", 0, 5)!= 0 && !inFile.eof())
+        //while(temp.compare(0, 5, "BLOCK", 0, 5)!= 0 && !inFile.eof())
+        //{
+        //    getline(inFile, temp);
+        //}
+        //std::cout<<"First Block Found"<<std::endl;
+
+        //construct PFS Entry
+        std::string dataHeader;
+        if( sheetIter->first.compare(0,17,"_main_sheet", 0, 17) == 0 )
+        {
+            dataHeader = "PFSVData";
+        }
+        else
+        {
+            dataHeader = sheetIter->first + " PFSVData"; 
+        }
+
+        //locate the PFSVData Entry
+        while(temp.compare( 0, dataHeader.size(), dataHeader, 0, 
+            dataHeader.size() )!= 0 && !inFile.eof())
         {
             getline(inFile, temp);
         }
-        std::cout<<"First Block Found"<<std::endl;
+
+        //throw out
+        getline(inFile, temp);  //#PFS Objects
+        getline(inFile, temp);  //Size
+        getline(inFile, temp);  //Block
+        std::cout<<"Graphical Data Found"<<std::endl;
         
         //Read graphic blocks
         count =0;
@@ -781,7 +808,7 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
    
    // create the maps and network connectivity
    std::string blockName;
-   std::string hierName = "0";
+   std::string hierName = "_main_sheet";
    std::string discard;
    //find first entry either ? or / or ;
    do
@@ -987,7 +1014,7 @@ void BKPParser::CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork
 
 		 std::string toModelName;
 		 std::string fromModelName;
-		 if(hierName == "0")
+		 if(hierName == "_main_sheet")
 		 {
 			 toModelName = iter->second;
 			 fromModelName = fromModel->second;
@@ -1049,28 +1076,28 @@ std::string BKPParser::CreateNetwork( void )
    mainNetwork->GetDataValuePair( -1 )->SetData( "nUnitY", static_cast< long int >( 200 ) );
    veSystem->AddNetwork(mainNetwork);
 
-   CreateNetworkLinks(mainNetwork, "0");
+   CreateNetworkLinks(mainNetwork, "_main_sheet");
 
    // Loop over the top networks blocks
    std::map< std::string, int >::iterator blockIter;
-   for ( blockIter = models["0"].begin(); blockIter != models["0"].end(); ++blockIter )
+   for ( blockIter = models["_main_sheet"].begin(); blockIter != models["_main_sheet"].end(); ++blockIter )
    {
       ves::open::xml::model::ModelPtr tempModel( new ves::open::xml::model::Model() );
 	  tempModel->SetModelID( blockIter->second );
 	  tempModel->SetModelName( blockIter->first );
 	  tempModel->SetVendorName( "ASPENUNIT" );
-	  tempModel->SetIconFilename(BlockInfoList["0"][blockIter->first].type+"/"+BlockInfoList["0"][blockIter->first].type+"."+BlockInfoList["0"][blockIter->first].icon);
-	  tempModel->SetIconRotation(BlockInfoList["0"][blockIter->first].rotation);
-	  tempModel->SetIconScale(BlockInfoList["0"][blockIter->first].scale);
-	  tempModel->SetIconMirror(BlockInfoList["0"][blockIter->first].mirror);
-	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations["0"][ blockIter->first ].first, iconLocations["0"][ blockIter->first ].second ) );
+	  tempModel->SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type+"/"+BlockInfoList["_main_sheet"][blockIter->first].type+"."+BlockInfoList["_main_sheet"][blockIter->first].icon);
+	  tempModel->SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].rotation);
+	  tempModel->SetIconScale(BlockInfoList["_main_sheet"][blockIter->first].scale);
+	  tempModel->SetIconMirror(BlockInfoList["_main_sheet"][blockIter->first].mirror);
+	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations["_main_sheet"][ blockIter->first ].first, iconLocations["_main_sheet"][ blockIter->first ].second ) );
       
-	  double minX = iconLocations["0"][ blockIter->first ].first;
-	  double minY = iconLocations["0"][ blockIter->first ].second;
+	  double minX = iconLocations["_main_sheet"][ blockIter->first ].first;
+	  double minY = iconLocations["_main_sheet"][ blockIter->first ].second;
 
       // input ports
 	  std::map< std::string, std::string >::iterator streamIter;
-      for ( streamIter = inLinkToModel["0"].begin(); streamIter != inLinkToModel["0"].end(); ++streamIter )
+      for ( streamIter = inLinkToModel["_main_sheet"].begin(); streamIter != inLinkToModel["_main_sheet"].end(); ++streamIter )
       {
          if ( streamIter->second == blockIter->first )
          {
@@ -1079,11 +1106,11 @@ std::string BKPParser::CreateNetwork( void )
             tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].first );
             tempPort->SetModelName( streamIter->first );
             tempPort->SetDataFlowDirection( std::string( "input" ) );
-			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints["0"][tempPort->GetModelName()][0].first - minX ), (linkPoints["0"][tempPort->GetModelName()][0].second - minY ) ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints["_main_sheet"][tempPort->GetModelName()][0].first - minX ), (linkPoints["_main_sheet"][tempPort->GetModelName()][0].second - minY ) ) );
 		 }
       }
       // output ports
-      for ( streamIter = outLinkToModel["0"].begin(); streamIter != outLinkToModel["0"].end(); ++streamIter )
+      for ( streamIter = outLinkToModel["_main_sheet"].begin(); streamIter != outLinkToModel["_main_sheet"].end(); ++streamIter )
       {
          if ( streamIter->second == blockIter->first )
          {
@@ -1092,7 +1119,7 @@ std::string BKPParser::CreateNetwork( void )
             tempPort->SetPortNumber( streamPortIDS[ streamIter->first ].second );
             tempPort->SetModelName( streamIter->first );
             tempPort->SetDataFlowDirection( std::string( "output" ) );
-			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints["0"][tempPort->GetModelName()][linkPoints["0"][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints["0"][tempPort->GetModelName()][linkPoints["0"][tempPort->GetModelName()].size()-1].second - minY ) ) );
+			tempPort->GetPortLocation()->SetPoint( std::pair< double, double >( (linkPoints["_main_sheet"][tempPort->GetModelName()][linkPoints["_main_sheet"][tempPort->GetModelName()].size()-1].first - minX ), (linkPoints["_main_sheet"][tempPort->GetModelName()][linkPoints["_main_sheet"][tempPort->GetModelName()].size()-1].second - minY ) ) );
          }
       }
 
