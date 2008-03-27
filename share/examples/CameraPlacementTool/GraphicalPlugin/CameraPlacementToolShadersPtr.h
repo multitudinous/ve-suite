@@ -23,10 +23,10 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date: 2008-03-13 21:07:47 -0500 (Thu, 13 Mar 2008) $
- * Version:       $Rev: 10811 $
- * Author:        $Author: dshipton $
- * Id:            $Id: Command.h 10811 2008-03-14 02:07:47Z dshipton $
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
