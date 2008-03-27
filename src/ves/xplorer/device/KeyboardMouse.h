@@ -196,36 +196,36 @@ private:
     ///\param angle
     void Rotate( double x, double y, double z, double angle );
 
-    bool m_animate;///<Determines whether in animation mode
+    bool mAnimate;///<Determines whether in animation mode
 
-    unsigned int m_width;///<Width of the window
-    unsigned int m_height;///<Height of the window
+    unsigned int mWidth;///<Width of the window
+    unsigned int mHeight;///<Height of the window
 
-    int m_key;///<Holds the value of the key being used
-    int m_button;///<Holds the value of the mouse button being used
-    int m_state;///<Determines if mouse button is pressed or released
-    int m_x;///<x position of the mouse
-    int m_y;///<y position of the mouse
+    int mKey;///<Holds the value of the key being used
+    int mButton;///<Holds the value of the mouse button being used
+    int mState;///<Determines if mouse button is pressed or released
+    int mX;///<x position of the mouse
+    int mY;///<y position of the mouse
 
-    double m_aspectRatio;///<Aspect ratio of window
-    double m_fovy;///<Field of view in the y direction
-    double m_leftFrustum;///<The left frustum value
-    double m_rightFrustum;///<The right frustum value
-    double m_topFrustum;///<The top frustum value
-    double m_bottomFrustum;///<The bottom frustum value
-    double m_nearFrustum;///<The near frustum value
-    double m_farFrustum;///<The far frustum value
-    double m_magnitude;///<The magnitude of the mouse movement
-    double m_sensitivity;///<
+    double mAspectRatio;///<Aspect ratio of window
+    double mFoVY;///<Field of view in the y direction
+    double mLeftFrustum;///<The left frustum value
+    double mRightFrustum;///<The right frustum value
+    double mTopFrustum;///<The top frustum value
+    double mBottomFrustum;///<The bottom frustum value
+    double mNearFrustum;///<The near frustum value
+    double mFarFrustum;///<The far frustum value
+    double mMagnitude;///<The magnitude of the mouse movement
+    double mSensitivity;///<
 
-    double m_xminScreen;///<The minimum x position of the screen
-    double m_xmaxScreen;///<The maximum x position of the screen
-    double m_yminScreen;///<The minimum y position of the screen
-    double m_ymaxScreen;///<The maximum y position of the screen
-    double m_zvalScreen;///<The z position of the screen
+    double mXMinScreen;///<The minimum x position of the screen
+    double mXMaxScreen;///<The maximum x position of the screen
+    double mYMinScreen;///<The minimum y position of the screen
+    double mYMaxScreen;///<The maximum y position of the screen
+    double mZValScreen;///<The z position of the screen
 
-    std::pair< double, double > m_currPos;///<The current mouse position
-    std::pair< double, double > m_prevPos;///<The previous mouse position
+    std::pair< double, double > mCurrPos;///<The current mouse position
+    std::pair< double, double > mPrevPos;///<The previous mouse position
 
     //Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
     //For gmtl::Matrix
@@ -234,16 +234,16 @@ private:
     //[ 1 5  9 13 ]     [ 10 11 12 13 ]
     //[ 2 6 10 14 ]     [ 20 21 22 23 ]
     //[ 3 7 11 15 ]     [ 30 31 32 33 ]
-    gmtl::Matrix44d m_deltaTransform;///<The change to be applied to the current transform
-    gmtl::Matrix44d m_currentTransform;///<The current transform matrix being manipulated
-    gmtl::Matrix44d m_localToWorldTransform;///<The matrix which transforms local coordinates to world
+    gmtl::Matrix44d mDeltaTransform;///<The change to be applied to the current transform
+    gmtl::Matrix44d mCurrentTransform;///<The current transform matrix being manipulated
+    gmtl::Matrix44d mLocalToWorldTransform;///<The matrix which transforms local coordinates to world
 
-    osg::ref_ptr< osg::Geode > m_beamGeode;///<
-    osg::ref_ptr< osg::Geode > m_selectedGeometry;///<The geometry being selected
-    osg::ref_ptr< osg::LineSegment > m_beamLineSegment;///<
+    osg::ref_ptr< osg::Geode > mBeamGeode;///<
+    osg::ref_ptr< osg::Geode > mSelectedGeometry;///<The geometry being selected
+    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;///<
 
-    gadget::KeyboardMouseInterface m_keyboard;///<VRJuggler's keyboard/mouse positional interface
-    gadget::PositionInterface m_head;///<VRJuggler's head positional interface
+    gadget::KeyboardMouseInterface mKeyboard;///<VRJuggler's keyboard/mouse positional interface
+    gadget::PositionInterface mHead;///<VRJuggler's head positional interface
 };
 }
 }
