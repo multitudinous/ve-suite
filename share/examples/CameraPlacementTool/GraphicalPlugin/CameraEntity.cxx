@@ -154,6 +154,10 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
 
     osg::ref_ptr< osg::StateSet > stateset = getOrCreateStateSet();
+
+    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
     stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
@@ -161,6 +165,7 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
         ( ves::xplorer::scenegraph::ResourceManager::instance()->get
         < osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
         osg::StateAttribute::ON );
+
     stateset->addUniform( mNearPlaneUniform.get() );
     stateset->addUniform( mFarPlaneUniform.get() );
     setStateSet( stateset.get() );

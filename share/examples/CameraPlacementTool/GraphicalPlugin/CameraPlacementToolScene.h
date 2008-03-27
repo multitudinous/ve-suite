@@ -75,7 +75,7 @@ private:
     osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTorus;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mGrinder;
 
 };
 
