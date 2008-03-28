@@ -98,7 +98,7 @@ CameraEntityView::~CameraEntityView()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntityView::Render()
 {
-    wxPaintDC dc( this );
+    //wxPaintDC dc( this );
 
 #ifndef __WXMOTIF__
     if( !GetContext() )
