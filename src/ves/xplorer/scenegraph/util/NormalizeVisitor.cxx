@@ -82,7 +82,7 @@ void NormalizeVisitor::apply( osg::Group& node )
         SetupNormalizeForStateSet( stateset.get() );
     }
 
-    osg::NodeVisitor::apply( node );
+    osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////
 void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset )
