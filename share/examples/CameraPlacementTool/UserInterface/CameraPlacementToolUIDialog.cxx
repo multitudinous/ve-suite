@@ -36,6 +36,7 @@
 
 // --- My Includes --- //
 #include "CameraPlacementToolUIDialog.h"
+#include "CameraEntityView.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/spinctld.h>
@@ -52,10 +53,10 @@
 #include <wx/button.h>
 #include <wx/dialog.h>
 #include <wx/statbox.h>
+#include <wx/frame.h>
 
 using namespace cpt;
 
-/*----------------------------------------------------------------------------*/
 BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
 
 EVT_RADIOBOX( ID_CAMERA_RADIOBOX,
@@ -67,9 +68,10 @@ EVT_RADIOBOX( ID_PROJECTION_RADIOBOX,
 EVT_SLIDER( ID_FOVZ_SLIDER, CameraPlacementToolUIDialog::OnFoVZSlider )
 EVT_COMMAND_SCROLL( ID_ASPECTRATIO_SPINCTRL,
                     CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl )
+EVT_BUTTON( ID_DISPLAYCAMERAVIEW_BUTTON,
+            CameraPlacementToolUIDialog::OnDisplayCameraViewButton )
 
 END_EVENT_TABLE()
-/*----------------------------------------------------------------------------*/
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUIDialog::CameraPlacementToolUIDialog()
@@ -123,8 +125,8 @@ void CameraPlacementToolUIDialog::BuildGUI()
     wxBoxSizer* mainSizer;
     mainSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxStaticBoxSizer* toggleSizer;
-    toggleSizer = new wxStaticBoxSizer( new wxStaticBox(
+    wxStaticBoxSizer* toggleSettingsSizer;
+    toggleSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
         this, wxID_ANY, wxT( "Toggle Settings" ) ), wxHORIZONTAL );
 
     wxBoxSizer* cameraRadioBoxSizer;
@@ -142,7 +144,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     cameraRadioBoxSizer->Add( mCameraRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    toggleSizer->Add(
+    toggleSettingsSizer->Add(
         cameraRadioBoxSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
     wxBoxSizer* frustumRadioBoxSizer;
@@ -161,7 +163,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     frustumRadioBoxSizer->Add( mFrustumRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    toggleSizer->Add(
+    toggleSettingsSizer->Add(
         frustumRadioBoxSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
     wxBoxSizer* projectionRadioBoxSizer;
@@ -181,18 +183,10 @@ void CameraPlacementToolUIDialog::BuildGUI()
     projectionRadioBoxSizer->Add(
         mProjectionRadioBox, 0, wxALIGN_CENTER | wxALL, 5 );
 
-    toggleSizer->Add(
+    toggleSettingsSizer->Add(
         projectionRadioBoxSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
-    mainSizer->Add( toggleSizer, 0, wxALL | wxEXPAND, 5 );
-
-    wxBoxSizer* spacerSizer;
-    spacerSizer = new wxBoxSizer( wxHORIZONTAL );
-
-
-    spacerSizer->Add( 0, 0, 1, wxALL | wxEXPAND, 5 );
-
-    mainSizer->Add( spacerSizer, 0, wxALL | wxEXPAND, 0 );
+    mainSizer->Add( toggleSettingsSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxStaticBoxSizer* projectionSettingsSizer;
     projectionSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
@@ -299,6 +293,18 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     mainSizer->Add( projectionSettingsSizer, 0, wxEXPAND, 5 );
 
+    wxBoxSizer* displayCameraViewButtonSizer;
+    displayCameraViewButtonSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    mDisplayCameraViewButton = new wxButton(
+        this, ID_DISPLAYCAMERAVIEW_BUTTON, wxT( "Display Camera View" ),
+        wxPoint( -1, -1 ), wxDefaultSize, 0 );
+    displayCameraViewButtonSizer->Add(
+        mDisplayCameraViewButton, 1,
+        wxALIGN_CENTER | wxALL | wxSHAPED, 5 );
+
+    mainSizer->Add( displayCameraViewButtonSizer, 0, wxALL | wxEXPAND, 5 );
+
     wxStdDialogButtonSizer* stdDialogButtonSizer;
     wxButton* stdDialogButtonSizerOK;
     wxButton* stdDialogButtonSizerCancel;
@@ -373,6 +379,19 @@ void CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl(
 {
     mProjectionData[ 1 ] = mAspectRatioSpinCtrl->GetValue();
     ProjectionUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDisplayCameraViewButton(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+    wxString title( "Title", wxConvUTF8 );
+    wxFrame* frame = new wxFrame(
+        NULL, -1, title, wxPoint( 50, 50 ), wxSize( 800, 600 ) );
+
+    cpt::CameraEntityView* canvas;
+    canvas = new cpt::CameraEntityView( frame, wxNewId(), wxPoint( 0, 0 ) );
+
+    frame->Show( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ProjectionUpdate()

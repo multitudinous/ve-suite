@@ -55,6 +55,7 @@ class wxSpinCtrlDbl;
 class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
+class wxButton;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -78,7 +79,8 @@ public:
         ID_FRUSTUM_RADIOBOX,
         ID_PROJECTION_RADIOBOX,
         ID_FOVZ_SLIDER,
-        ID_ASPECTRATIO_SPINCTRL
+        ID_ASPECTRATIO_SPINCTRL,
+        ID_DISPLAYCAMERAVIEW_BUTTON
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -100,6 +102,7 @@ private:
     void OnProjectionRadioBox( wxCommandEvent& event );
     void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void OnDisplayCameraViewButton( wxCommandEvent& WXUNUSED( event ) );
     void ProjectionUpdate();
 
     class NearPlaneSliderCallback :
@@ -149,6 +152,7 @@ private:
     wxSlider* mFoVZSlider;
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
     ves::conductor::util::DualSlider* mNearFarPlaneDualSlider;
+    wxButton* mDisplayCameraViewButton;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;
