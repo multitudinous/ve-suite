@@ -4,7 +4,6 @@
 #import SConsAddons.Util as sca_util
 
 exampleSubdirs = Split("""
-    CameraPlacementTool
     CoinFunnel
     ConstructionBots
     Fermentor
@@ -15,6 +14,7 @@ exampleSubdirs = Split("""
     garage
     golf_game
 """)
+#     CameraPlacementTool
 
 ##Run SConscript files in all of those folders.
 for d in exampleSubdirs:
