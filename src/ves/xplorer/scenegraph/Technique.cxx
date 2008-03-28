@@ -46,6 +46,11 @@ Technique::Technique()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+Technique::~Technique()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 int Technique::GetNumPasses() const
 {
     return static_cast< int >( m_passes.size() );
@@ -61,11 +66,6 @@ const osg::StateSet* Technique::GetPassStateSet( int i ) const
     return m_passes[ i ].get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Technique::Traverse( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node )
-{
-    TraverseImplementation( nv, node );
-}
-////////////////////////////////////////////////////////////////////////////////
 void Technique::DirtyPasses()
 {
     m_passes.clear();
@@ -76,54 +76,29 @@ void Technique::AddPass( osg::StateSet* ss )
     if( ss )
     {
         m_passes.push_back( ss );
-        //ss->setRenderBinDetails( static_cast< int >( m_passes.size() ), "RenderBin" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Node* Technique::GetOverrideChild( int )
+void Technique::Traverse(
+    osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode )
 {
-    return 0;
-}
-////////////////////////////////////////////////////////////////////////////////
-void Technique::TraverseImplementation( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node )
-{
-    //Define passes if necessary
-    /*if( m_passes.empty() )
-    {
-        DefinePasses();
-    }*/
-
     //Special actions must be taken if the node visitor is actually a CullVisitor
     osgUtil::CullVisitor* cv = dynamic_cast< osgUtil::CullVisitor* >( &nv );
-    //Traverse the override node if defined
-    if( !cv )
-    {
-        node->InheritedTraverse( nv );
-        return;
-    }
-    //Otherwise traverse children as a Group would do
-    /*osg::Node* override = GetOverrideChild( i );
-    if( override )
-    {
-        override->accept( nv );
-    }
-    else*/
-    
+
     //Traverse all passes
     for( int i = 0; i < GetNumPasses(); ++i )
     {
         //Push the i-th pass' StateSet if necessary
-        //if( cv )
+        if( cv )
         {
             cv->pushStateSet( m_passes[ i ].get() );
         }
 
-        {
-            node->InheritedTraverse( nv );
-        }
+        //Traverse children as a Group would do
+        sceneNode->InheritedTraverse( nv );
         
         //Pop the StateSet if necessary
-        //if( cv )
+        if( cv )
         {
             cv->popStateSet();
         }

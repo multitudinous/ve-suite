@@ -542,11 +542,8 @@ void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 void DCS::traverse( osg::NodeVisitor& nv )
 {
     ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
-    //We always have a default technique
-    //if( technique )
-    {
-        technique->Traverse( nv, this );
-    }
+
+    technique->Traverse( nv, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::InheritedTraverse( osg::NodeVisitor& nv )

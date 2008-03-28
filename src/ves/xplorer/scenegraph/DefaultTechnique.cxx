@@ -48,10 +48,10 @@ DefaultTechnique::~DefaultTechnique()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DefaultTechnique::Traverse( osg::NodeVisitor& nv,
-                                 ves::xplorer::scenegraph::SceneNode* node )
+void DefaultTechnique::Traverse(
+    osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode )
 {
-    node->InheritedTraverse( nv );
+    sceneNode->InheritedTraverse( nv );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DefaultTechnique::DefinePasses()

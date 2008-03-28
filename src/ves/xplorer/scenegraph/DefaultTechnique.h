@@ -48,10 +48,10 @@ class VE_SCENEGRAPH_EXPORTS DefaultTechnique : public Technique
 {
 public:
     DefaultTechnique();
-    ~DefaultTechnique();
+    virtual ~DefaultTechnique();
 
-    virtual void Traverse( osg::NodeVisitor& nv,
-                           ves::xplorer::scenegraph::SceneNode* node );
+    virtual void Traverse(
+        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
 
 protected:
     virtual void DefinePasses();

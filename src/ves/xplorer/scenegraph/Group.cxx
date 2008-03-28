@@ -194,10 +194,7 @@ void Group::traverse( osg::NodeVisitor& nv )
 {
     ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
 
-    if( technique )
-    {
-        technique->Traverse( nv, this );
-    }
+    technique->Traverse( nv, this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Group::InheritedTraverse( osg::NodeVisitor& nv )

@@ -49,7 +49,7 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
         :
-        m_stateSet( stateSet )
+        mStateSet( stateSet )
 {
     DefinePasses();
 }
@@ -63,50 +63,49 @@ void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-        osg::ref_ptr<osg::PolygonOffset> polyoffset = new osg::PolygonOffset();
-        polyoffset->setFactor(1.0f);
-        polyoffset->setUnits(1.0f);
-        m_stateSet->setAttributeAndModes(polyoffset.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
-        
-        AddPass( m_stateSet.get() );
+        osg::ref_ptr< osg::PolygonOffset > polyoffset =
+            new osg::PolygonOffset();
+        polyoffset->setFactor( 1.0f );
+        polyoffset->setUnits( 1.0f );
+
+        mStateSet->setAttributeAndModes( polyoffset.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        AddPass( mStateSet.get() );
     }
 
     //Implement pass #2
     {
         char vertexPass[] =
-            "void main() \n"
-            "{ \n"
-				"gl_FrontColor = vec4( 0.0, 1.0, 0.0, 1.0 ); \n"
+        "void main() \n"
+        "{ \n"
+            "gl_FrontColor = vec4( 0.5, 1.0, 0.5, 1.0 ); \n"
 
-                "gl_Position = ftransform(); \n"
-            "} \n";
+            "gl_Position = ftransform(); \n"
+        "} \n";
 
-        osg::ref_ptr< osg::Material > material = new osg::Material();
-        material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
-        material->setDiffuse(osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f, 1.0f, 0.0f, 1.0f));
-        material->setAmbient(osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f, 0.0f, 0.0f, 1.0f));
-        material->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
-        material->setEmission(osg::Material::FRONT_AND_BACK, osg::Vec4(0.0f,0.0f,0.0f,1.0f));
-        
-        osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
+        osg::ref_ptr< osg::Shader > vertex_shader =
+            new osg::Shader( osg::Shader::VERTEX, vertexPass );
+
         osg::ref_ptr< osg::Program > program = new osg::Program();
-        osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, vertexPass );
-        //osg::ref_ptr< osg::Shader > fragment_shader = new osg::Shader( osg::Shader::FRAGMENT, fragmentPass );
-        osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-        osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
-
         program->addShader( vertex_shader.get() );
-        //program->addShader( fragment_shader.get() );
 
+        osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
         linewidth->setWidth( 2.0f );
-        polymode->setMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
 
-        stateSet->setMode(GL_LIGHTING, osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
-        
-        stateSet->setAttributeAndModes( linewidth.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
-        stateSet->setAttributeAndModes( polymode.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
-        stateSet->setAttributeAndModes( material.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
-        //stateSet->setAttributeAndModes( program.get(), osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON );
+        osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
+        polymode->setMode( osg::PolygonMode::FRONT_AND_BACK,
+                           osg::PolygonMode::LINE );
+
+        osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
+        stateSet->setMode( GL_LIGHTING,
+            osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+        stateSet->setAttributeAndModes( linewidth.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->setAttributeAndModes( polymode.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateSet->setAttributeAndModes( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( stateSet.get() );
     }

@@ -203,8 +203,9 @@ void DeviceHandler::UnselectObjects()
     m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
     active_device->SetActiveDCS( m_activeDCS.get() );
 
+    selectedDCS->SetTechnique( "Default" );
     selectedDCS = 0;
-    active_device->SetSelectedDCS( m_activeDCS.get() );
+    active_device->SetSelectedDCS( selectedDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()

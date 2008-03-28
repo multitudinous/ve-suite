@@ -212,25 +212,34 @@ void KeyboardMouse::SetStartEndPoint(
     jugglerHeadPointTemp[ 2 ] =  jugglerHeadPoint[ 1 ];
 
     //std::cout << " start point " << jugglerHeadPointTemp[ 0 ] << " " << jugglerHeadPointTemp[ 1 ] << " " << jugglerHeadPointTemp[ 2 ] << std::endl;
-    startPoint->set( jugglerHeadPointTemp[ 0 ], jugglerHeadPointTemp[ 1 ], jugglerHeadPointTemp[ 2 ] );
+    startPoint->set( jugglerHeadPointTemp[ 0 ],
+                     jugglerHeadPointTemp[ 1 ],
+                     jugglerHeadPointTemp[ 2 ] );
 
-    gmtl::Point3d mousePosition( osgTransformedPosition[ 0 ], osgTransformedPosition[ 1 ], osgTransformedPosition[ 2 ] );
+    gmtl::Point3d mousePosition( osgTransformedPosition[ 0 ],
+                                 osgTransformedPosition[ 1 ],
+                                 osgTransformedPosition[ 2 ] );
 
     //Get the vector
     gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
-    //std::cout << vjVec << " = " << mousePosition << " - " << jugglerHeadPointTemp << std::endl;
+    //std::cout << vjVec << " = "
+              //<< mousePosition << " - "
+              //<< jugglerHeadPointTemp << std::endl;
     //gmtl::normalize( vjVec );
     //std::cout << vjVec << std::endl;
 
     for( int i = 0; i < 3; ++i )
     {
-        wandEndPoint[i] = ( vjVec[i] * distance );
+        wandEndPoint[ i ] = vjVec[ i ] * distance;
     }
 
     //std::cout << " end point " << wandEndPoint[ 0 ] << " "
                                //<< wandEndPoint[ 1 ] << " "
                                //<< wandEndPoint[ 2 ] << std::endl;
-    endPoint->set( wandEndPoint[ 0 ], wandEndPoint[ 1 ], wandEndPoint[ 2 ] );
+
+    endPoint->set( wandEndPoint[ 0 ],
+                   wandEndPoint[ 1 ],
+                   wandEndPoint[ 2 ] );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
@@ -535,7 +544,8 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     mAspectRatio = static_cast< double >( mWidth ) / static_cast< double >( mHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SetFrustumValues( double l, double r, double t, double b, double n, double f )
+void KeyboardMouse::SetFrustumValues(
+    double l, double r, double t, double b, double n, double f )
 {
     mLeftFrustum = l;
     mRightFrustum = r;
@@ -852,14 +862,13 @@ void KeyboardMouse::Zoom( double dy )
     double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
     mDeltaTransform.mData[ 13 ] = d;
-
     center_point->mData[ 1 ] += d;
 
     //Test if center point has breached our specified threshold
     if( center_point->mData[ 1 ] < *m_threshold )
     {
         //Only jump center point for the worldDCS
-        if( activeDCS->GetName() == "World DCS" )
+        if( !selectedDCS.valid() )
         {
             center_point->mData[ 1 ] = *m_jump;
         }

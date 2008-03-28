@@ -67,10 +67,7 @@ class VE_SCENEGRAPH_EXPORTS Technique
 {
 public:
     Technique();
-    virtual ~Technique()
-    {
-        ;
-    }
+    virtual ~Technique();
 
     int GetNumPasses() const;
 
@@ -80,16 +77,13 @@ public:
 
     void DirtyPasses();
 
-    virtual void Traverse( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node );
+    virtual void Traverse(
+        osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* sceneNode );
 
 protected:
     virtual void DefinePasses() = 0;
 
     void AddPass( osg::StateSet* ss = 0 );
-
-    virtual osg::Node* GetOverrideChild( int );
-
-    void TraverseImplementation( osg::NodeVisitor& nv, ves::xplorer::scenegraph::SceneNode* node );
 
     std::vector< osg::ref_ptr< osg::StateSet > > m_passes;
 

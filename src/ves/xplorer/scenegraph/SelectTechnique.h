@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef SELECT_TECHNIQUE_H
 #define SELECT_TECHNIQUE_H
 
@@ -48,17 +49,18 @@ class VE_SCENEGRAPH_EXPORTS SelectTechnique : public Technique
 {
 public:
     SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet );
-    ~SelectTechnique();
+    virtual ~SelectTechnique();
 
 protected:
     virtual void DefinePasses();
 
-    osg::ref_ptr< osg::StateSet > m_stateSet;
+    osg::ref_ptr< osg::StateSet > mStateSet;
+
 private:
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //SELECT_TECHNIQUE_H
