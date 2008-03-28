@@ -104,7 +104,7 @@ void CameraPlacementToolShaders::CreateShaderSources()
 
         "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
         "vec4 color = \n"
-            "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.2 ); \n"
+            "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.3 ); \n"
 
         //If in frustum
         "if( projectionUV.s >= 0.0 && \n"

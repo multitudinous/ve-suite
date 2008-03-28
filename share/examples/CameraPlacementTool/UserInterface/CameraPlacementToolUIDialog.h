@@ -80,7 +80,8 @@ public:
         ID_PROJECTION_RADIOBOX,
         ID_FOVZ_SLIDER,
         ID_ASPECTRATIO_SPINCTRL,
-        ID_DISPLAYCAMERAVIEW_BUTTON
+        ID_DISPLAYCAMERAVIEW_BUTTON,
+        ID_DISPLAYWORLDVIEW_BUTTON
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -103,6 +104,7 @@ private:
     void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnDisplayCameraViewButton( wxCommandEvent& WXUNUSED( event ) );
+    void OnDisplayWorldViewButton( wxCommandEvent& WXUNUSED( event ) );
     void ProjectionUpdate();
 
     class NearPlaneSliderCallback :
@@ -153,6 +155,7 @@ private:
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
     ves::conductor::util::DualSlider* mNearFarPlaneDualSlider;
     wxButton* mDisplayCameraViewButton;
+    wxButton* mDisplayWorldViewButton;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;

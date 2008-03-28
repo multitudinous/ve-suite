@@ -86,11 +86,11 @@ void CameraPlacementToolScene::Initialize()
 
     mGrinder = new ves::xplorer::scenegraph::DCS();
 
-    mGrinder->setPosition( osg::Vec3d( 0, 10, 0 ) );
+    mGrinder->setPosition( osg::Vec3d( 0.0, 10.0, 0.0 ) );
     mGrinder->setScale( osg::Vec3d( 5.0, 5.0, 5.0 ) );
 
     osg::ref_ptr< osg::Node > grinder =
-        osgDB::readNodeFile( std::string( "Models/torus.ive" ) );
+        osgDB::readNodeFile( std::string( "Models/toppanel.ive" ) );
 
     mGrinder->addChild( grinder.get() );
 

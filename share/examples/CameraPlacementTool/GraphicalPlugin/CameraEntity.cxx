@@ -198,7 +198,7 @@ void CameraEntity::CreateViewFrustumGeode()
     mFrustumVertices->resize( 9 );
     mFrustumGeometry->setVertexArray( mFrustumVertices.get() );
 
-    mFrustumColor->push_back( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    mFrustumColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
     mFrustumGeometry->setColorArray( mFrustumColor.get() );
     mFrustumGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 

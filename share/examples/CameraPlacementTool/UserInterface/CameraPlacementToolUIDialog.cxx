@@ -36,7 +36,6 @@
 
 // --- My Includes --- //
 #include "CameraPlacementToolUIDialog.h"
-#include "CameraEntityView.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/conductor/util/spinctld.h>
@@ -70,6 +69,8 @@ EVT_COMMAND_SCROLL( ID_ASPECTRATIO_SPINCTRL,
                     CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl )
 EVT_BUTTON( ID_DISPLAYCAMERAVIEW_BUTTON,
             CameraPlacementToolUIDialog::OnDisplayCameraViewButton )
+EVT_BUTTON( ID_DISPLAYWORLDVIEW_BUTTON,
+            CameraPlacementToolUIDialog::OnDisplayWorldViewButton )
 
 END_EVENT_TABLE()
 
@@ -293,17 +294,29 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     mainSizer->Add( projectionSettingsSizer, 0, wxEXPAND, 5 );
 
-    wxBoxSizer* displayCameraViewButtonSizer;
-    displayCameraViewButtonSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxStaticBoxSizer* displaySettingsSizer;
+    displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+        this, wxID_ANY, wxT( "Display Settings:" ) ), wxHORIZONTAL );
+
+    wxBoxSizer* displaySettingsButtonSizer;
+    displaySettingsButtonSizer = new wxBoxSizer( wxHORIZONTAL );
 
     mDisplayCameraViewButton = new wxButton(
-        this, ID_DISPLAYCAMERAVIEW_BUTTON, wxT( "Display Camera View" ),
-        wxPoint( -1, -1 ), wxDefaultSize, 0 );
-    displayCameraViewButtonSizer->Add(
-        mDisplayCameraViewButton, 1,
-        wxALIGN_CENTER | wxALL | wxSHAPED, 5 );
+        this, ID_DISPLAYCAMERAVIEW_BUTTON, wxT( "Camera View" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+    displaySettingsButtonSizer->Add(
+        mDisplayCameraViewButton, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 
-    mainSizer->Add( displayCameraViewButtonSizer, 0, wxALL | wxEXPAND, 5 );
+    mDisplayWorldViewButton = new wxButton(
+        this, ID_DISPLAYWORLDVIEW_BUTTON, wxT( "World View" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+    displaySettingsButtonSizer->Add(
+        mDisplayWorldViewButton, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
+
+    displaySettingsSizer->Add(
+        displaySettingsButtonSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
+
+    mainSizer->Add( displaySettingsSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxStdDialogButtonSizer* stdDialogButtonSizer;
     wxButton* stdDialogButtonSizerOK;
@@ -384,14 +397,13 @@ void CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl(
 void CameraPlacementToolUIDialog::OnDisplayCameraViewButton(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    wxString title( "Title", wxConvUTF8 );
-    wxFrame* frame = new wxFrame(
-        NULL, -1, title, wxPoint( 50, 50 ), wxSize( 800, 600 ) );
-
-    cpt::CameraEntityView* canvas;
-    canvas = new cpt::CameraEntityView( frame, wxNewId(), wxPoint( 0, 0 ) );
-
-    frame->Show( true );
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDisplayWorldViewButton(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ProjectionUpdate()
