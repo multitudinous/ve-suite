@@ -16,23 +16,32 @@
 #include <wx/dialog.h>
 
 BEGIN_EVENT_TABLE( ConstructionBotsUIDialog, wxDialog )
-    EVT_BUTTON( OK_BUTTON, ConstructionBotsUIDialog::OnOK )
+
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog( wxWindow* parent, int id, 
-    ves::conductor::util::CORBAServiceList* service, std::string* portNumber )
-:
-UIDialog( (wxWindow *)parent, id, _("ConstructionBots") ), p_portNumber( portNumber )
+ConstructionBotsUIDialog::ConstructionBotsUIDialog()
 {
-    serviceList = service;
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+ConstructionBotsUIDialog::ConstructionBotsUIDialog(
+    wxWindow* parent,
+    int id, 
+    ves::conductor::util::CORBAServiceList* service )
+        :
+        UIDialog( static_cast< wxWindow* >( parent ),
+                  id,
+                  wxT( "ConstructionBots" ) )
+{
+    mServiceList = service;
 
     BuildGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsUIDialog::~ConstructionBotsUIDialog()
 {
-    ;
+    mServiceList->CleanUp();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ConstructionBotsUIDialog::TransferDataFromWindow()
@@ -52,9 +61,6 @@ void ConstructionBotsUIDialog::Lock( bool l )
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsUIDialog::BuildGUI()
 {
-    SetForegroundColour( wxColour( 255, 255, 255 ) );
-    SetBackgroundColour( wxColour( 0, 0, 0 ) );
-
     CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,28 +69,23 @@ void ConstructionBotsUIDialog::UpdateGUI()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::OnOK( wxCommandEvent& event )
-{
-    Close( true );
-}
-////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsUIDialog::ClearInstructions()
 {
-    instructions.clear();
-    command_name.clear();
+    mInstructions.clear();
+    mCommandName.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsUIDialog::SendCommandsToXplorer()
 {
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
 
-    for( size_t i = 0; i < instructions.size(); i++ )
+    for( size_t i = 0; i < mInstructions.size(); i++ )
     {
-        command->AddDataValuePair( instructions.at( i ) );
+        command->AddDataValuePair( mInstructions.at( i ) );
     }
 
-    command->SetCommandName( command_name );
+    command->SetCommandName( mCommandName );
 
-    serviceList->SendCommandStringToXplorer( command );
+    mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////

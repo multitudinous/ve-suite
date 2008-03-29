@@ -24,12 +24,14 @@ namespace util
 class ConstructionBotsUIDialog : public ves::conductor::UIDialog
 {
 public:
-    ConstructionBotsUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service, std::string* portNumber );
-    ConstructionBotsUIDialog(){;}
-
-    enum
+    ConstructionBotsUIDialog();
+    ConstructionBotsUIDialog( wxWindow* parent,
+                              int id,
+                              ves::conductor::util::CORBAServiceList* service );
+    
+    enum CONSTRUCTION_BOTS_IDS
     {
-        OK_BUTTON
+        
     };
 
     virtual ~ConstructionBotsUIDialog();
@@ -38,23 +40,21 @@ public:
     virtual bool TransferDataToWindow();
     virtual void Lock( bool l );
 
-    std::string* p_portNumber;
-
 protected:
+
+private:
     void BuildGUI();
     void UpdateGUI();
-
-    void OnOK( wxCommandEvent& event );
-
-    std::vector< ves::open::xml::DataValuePairSharedPtr > instructions;///<The DataValuePairs for the current command
-    std::string command_name;///<The command name
 
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    ves::conductor::util::CORBAServiceList* serviceList;
-    DECLARE_EVENT_TABLE()
+    ves::conductor::util::CORBAServiceList* mServiceList;
 
+    std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
+    std::string mCommandName;
+
+    DECLARE_EVENT_TABLE()
 };
 
 #endif //CONSTRUCTION_BOTS_UI_DIALOG_H

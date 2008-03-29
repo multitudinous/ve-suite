@@ -9,12 +9,10 @@ fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'Cons
 ConstructionBotsDemoDir = pj( RootDir, 'share', 'examples', 'ConstructionBots' )
 
 iveFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.ive' ] )
-xpmFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.xpm' ] )
 jpgFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.jpg' ] )
 wavFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.wav' ] )
 
 fileBundle.addFiles( iveFile )
-fileBundle.addFiles( xpmFile )
 fileBundle.addFiles( jpgFile )
 fileBundle.addFiles( wavFile )
 fileBundle.addFiles( [ 'constructionbots.ves' ] )
