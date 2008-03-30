@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- My Includes --- //
-#include "World.h"
+#include "ConstructionWorld.h"
 
 #include "Grid.h"
 #include "GridEntity.h"
@@ -67,10 +67,11 @@
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
-World::World( ves::xplorer::scenegraph::DCS* pluginDCS,
-              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
-#ifdef VE_SOUND
-            , osgAL::SoundManager* soundManager
+ConstructionWorld::ConstructionWorld(
+    ves::xplorer::scenegraph::DCS* pluginDCS,
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+    #ifdef VE_SOUND
+  , osgAL::SoundManager* soundManager
 #endif
               )
 :
@@ -82,7 +83,8 @@ mStartBlock( 0 ),
 mPluginDCS( pluginDCS ),
 mPhysicsSimulator( physicsSimulator )
 #ifdef VE_SOUND
-, mAmbientSound( new ves::xplorer::scenegraph::Sound( "AmbientSound", pluginDCS, soundManager ) )
+, mAmbientSound( new ves::xplorer::scenegraph::Sound(
+                "AmbientSound", pluginDCS, soundManager ) )
 #endif
 {
     //Seed the random number generator
@@ -92,7 +94,7 @@ mPhysicsSimulator( physicsSimulator )
     InitFramework();
 }
 ////////////////////////////////////////////////////////////////////////////////
-World::~World()
+ConstructionWorld::~ConstructionWorld()
 {
 #ifdef VE_SOUND
     if( mAmbientSound )
@@ -129,7 +131,7 @@ World::~World()
     mAgents.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void World::InitFramework()
+void ConstructionWorld::InitFramework()
 {
 #ifdef VE_SOUND
     try
@@ -167,8 +169,8 @@ void World::InitFramework()
     grid->CreateGrid( gridSize, occMatrix );
 
     mGrid = new bots::GridEntity( grid.get(),
-                                   mPluginDCS.get(),
-                                   mPhysicsSimulator );
+                                  mPluginDCS.get(),
+                                  mPhysicsSimulator );
     mGrid->SetNameAndDescriptions();
     mGrid->InitPhysics();
     mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
@@ -180,8 +182,8 @@ void World::InitFramework()
     startBlock->CreateBlock();
 
     mStartBlock = new bots::BlockEntity( startBlock.get(),
-                                          mPluginDCS.get(),
-                                          mPhysicsSimulator );
+                                         mPluginDCS.get(),
+                                         mPhysicsSimulator );
     mStartBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 1.0 );
     //Set name and descriptions for blocks
     mStartBlock->SetNameAndDescriptions( 0 );
@@ -201,8 +203,8 @@ void World::InitFramework()
         block->CreateBlock();
 
         mBlocks.push_back( new bots::BlockEntity( block.get(),
-                                                   mPluginDCS.get(),
-                                                   mPhysicsSimulator ) );
+                                                  mPluginDCS.get(),
+                                                  mPhysicsSimulator ) );
     }
 
     //Initialize the agents
@@ -212,8 +214,8 @@ void World::InitFramework()
         agent->CreateAgent();
 
         mAgents.push_back( new AgentEntity( agent.get(),
-                                             mPluginDCS.get(),
-                                             mPhysicsSimulator ) );
+                                            mPluginDCS.get(),
+                                            mPhysicsSimulator ) );
     }
 
     for( size_t i = 0; i < mBlocks.size(); ++i )
@@ -262,7 +264,7 @@ void World::InitFramework()
     mBlocks.push_back( mStartBlock );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void World::CreateRandomPositions( int gridSize )
+void ConstructionWorld::CreateRandomPositions( int gridSize )
 {
     std::vector< ves::xplorer::scenegraph::CADEntity* > objects;
     for( size_t i = 0; i < mBlocks.size(); ++i )
@@ -310,8 +312,8 @@ void World::CreateRandomPositions( int gridSize )
             {
                 posNegTwo = -1;
             }
-                                                                      //Subtract block width
-                                                                      //to keep blocks off walls
+                                                      //Subtract block width
+                                                      //to keep blocks off walls
             randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 1.0 );
             randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 1.0 );
 
@@ -341,7 +343,7 @@ void World::CreateRandomPositions( int gridSize )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void World::CommunicatingBlocksAlgorithm()
+void ConstructionWorld::CommunicatingBlocksAlgorithm()
 {
     for( size_t i = 0; i < mAgents.size(); ++i )
     {
@@ -413,7 +415,7 @@ void World::CommunicatingBlocksAlgorithm()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void World::PreFrameUpdate()
+void ConstructionWorld::PreFrameUpdate()
 {
     if( mStructureNotComplete )
     {

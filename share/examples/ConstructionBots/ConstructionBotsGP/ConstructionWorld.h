@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef WORLD_H
-#define WORLD_H
+#ifndef CONSTRUCTION_WORLD_H
+#define CONSTRUCTION_WORLD_H
 
 // --- VE-Suite Includes --- //
 namespace ves
@@ -73,17 +73,18 @@ class GridEntity;
 class BlockEntity;
 class AgentEntity;
 
-class World
+class ConstructionWorld
 {
 public:
-    World( ves::xplorer::scenegraph::DCS* pluginDCS,
-           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+    ConstructionWorld(
+        ves::xplorer::scenegraph::DCS* pluginDCS,
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-         , osgAL::SoundManager* soundManager
+      , osgAL::SoundManager* soundManager
 #endif
-           );
+        );
 
-    ~World();
+    ~ConstructionWorld();
 
     void PreFrameUpdate();
 
@@ -112,4 +113,4 @@ private:
 };
 } //end bots
 
-#endif //WORLD_H
+#endif //CONSTRUCTION_WORLD_H

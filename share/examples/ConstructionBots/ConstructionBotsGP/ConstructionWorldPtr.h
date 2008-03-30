@@ -31,37 +31,25 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CONSTRUCTION_BOTS_GP_H
-#define CONSTRUCTION_BOTS_GP_H
+#ifndef CONSTRUCTION_WORLD_PTR_H
+#define CONSTRUCTION_WORLD_PTR_H
 
-// --- My Includes --- //
-#include "ConstructionWorldPtr.h"
-
-// --- VE-Suite Includes --- //
-#include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/util/PointerTypes.h>
 
 namespace bots
 {
+class ConstructionWorld;
 
-class VE_USER_PLUGIN_EXPORTS ConstructionBotsGP : public ves::xplorer::plugin::PluginBase
-{
-public:
-    ConstructionBotsGP();
-    virtual ~ConstructionBotsGP();
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
-    virtual void PreFrameUpdate();
-    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
-
-protected:
-    void UpdateParams();
-
-private:
-    bots::ConstructionWorldPtr mConstructionWorld;
-
-};
-
-CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( ConstructionBotsGP )
+//Typedef for a SmartPtr type for the ConstructionWorld
+typedef ves::util::ClassPtrDef< ConstructionWorld >::type
+    ConstructionWorldPtr;
+typedef ves::util::SharedPtrDef< ConstructionWorld >::type
+    ConstructionWorldSharedPtr;
+typedef ves::util::WeakPtrDef< ConstructionWorld >::type
+    ConstructionWorldWeakPtr;
+typedef ves::util::ScopedPtrDef< ConstructionWorld >::type
+    ConstructionWorldScopedPtr;
 
 } //end bots
 
-#endif //CONSTRUCTION_BOTS_GP_H
+#endif //CONSTRUCTION_WORLD_PTR_H

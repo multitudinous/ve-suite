@@ -33,7 +33,7 @@
 
 // --- My Includes --- //
 #include "ConstructionBotsGP.h"
-#include "World.h"
+#include "ConstructionWorld.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -49,37 +49,34 @@ using namespace bots;
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsGP::ConstructionBotsGP()
 :
-PluginBase(),
-mWorld( 0 )
+PluginBase()
 {
     mObjectName = "ConstructionBotsUI";
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsGP::~ConstructionBotsGP()
 {
-    if( mWorld )
-    {
-        delete mWorld;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
-    mWorld = new bots::World( mDCS.get(),
-                              mPhysicsSimulator
+    mConstructionWorld = bots::ConstructionWorldPtr(
+        new bots::ConstructionWorld( mDCS.get(),
+                                     mPhysicsSimulator
 #ifdef VE_SOUND
-                            , mSoundManager
+                                   , mSoundManager
 #endif
-                                   );
+                                     ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::PreFrameUpdate()
 {
     if( !mPhysicsSimulator->GetIdle() )
     {
-        mWorld->PreFrameUpdate();
+        mConstructionWorld->PreFrameUpdate();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
