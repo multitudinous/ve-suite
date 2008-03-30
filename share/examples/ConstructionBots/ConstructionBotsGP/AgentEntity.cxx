@@ -65,11 +65,16 @@ mPluginDCS( pluginDCS ),
 mTargetDCS( 0 ),
 mConstraint( 0 )
 {
-	//These need to be initialized last
-    mObstacleSensor = new bots::ObstacleSensor( this );
-    mBlockSensor = new bots::BlockSensor( this );
-    mSiteSensor = new bots::SiteSensor( this );
-    mHoldBlockSensor = new bots::HoldBlockSensor( this );
+    Initialize();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::Initialize()
+{
+    
+    mBlockSensor = bots::BlockSensorPtr( new bots::BlockSensor( this ) );
+    mHoldBlockSensor = bots::HoldBlockSensorPtr( new bots::HoldBlockSensor( this ) );
+    mObstacleSensor = bots::ObstacleSensorPtr( new bots::ObstacleSensor( this ) );
+    mSiteSensor = bots::SiteSensorPtr( new bots::SiteSensor( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::~AgentEntity()
@@ -81,26 +86,6 @@ AgentEntity::~AgentEntity()
             mPhysicsSimulator->GetDynamicsWorld()->removeConstraint( mConstraint );
         }
         delete mConstraint;
-    }
-
-    if( mObstacleSensor )
-    {
-        delete mObstacleSensor;
-    }
-
-    if( mBlockSensor )
-    {
-        delete mBlockSensor;
-    }
-
-    if( mSiteSensor )
-    {
-        delete mSiteSensor;
-    }
-
-    if( mHoldBlockSensor )
-    {
-        delete mHoldBlockSensor;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,23 +198,24 @@ ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
 	return mTargetDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::ObstacleSensor* AgentEntity::GetObstacleSensor()
+bots::BlockSensorPtr AgentEntity::GetBlockSensor()
+{
+    return mBlockSensor;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bots::HoldBlockSensorPtr AgentEntity::GetHoldBlockSensor()
+{
+    return mHoldBlockSensor;
+}
+////////////////////////////////////////////////////////////////////////////////
+bots::ObstacleSensorPtr AgentEntity::GetObstacleSensor()
 {
     return mObstacleSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::BlockSensor* AgentEntity::GetBlockSensor()
-{
-    return mBlockSensor;
-}
-////////////////////////////////////////////////////////////////////////////////
-bots::SiteSensor* AgentEntity::GetSiteSensor()
+bots::SiteSensorPtr AgentEntity::GetSiteSensor()
 {
     return mSiteSensor;
-}
-////////////////////////////////////////////////////////////////////////////////
-bots::HoldBlockSensor* AgentEntity::GetHoldBlockSensor()
-{
-    return mHoldBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////

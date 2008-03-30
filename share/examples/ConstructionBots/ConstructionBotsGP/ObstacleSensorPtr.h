@@ -31,26 +31,25 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SENSOR_H
-#define SENSOR_H
+#ifndef OBSTACLE_SENSOR_PTR_H
+#define OBSTACLE_SENSOR_PTR_H
+
+#include <ves/util/PointerTypes.h>
 
 namespace bots
 {
-// --- My Includes --- //
-class AgentEntity;
+class ObstacleSensor;
 
-class Sensor
-{
-public:
-    Sensor( bots::AgentEntity* agentEntity );
-    virtual ~Sensor();
+//Typedef for a SmartPtr type for the ObstacleSensor
+typedef ves::util::ClassPtrDef< ObstacleSensor >::type
+    ObstacleSensorPtr;
+typedef ves::util::SharedPtrDef< ObstacleSensor >::type
+    ObstacleSensorSharedPtr;
+typedef ves::util::WeakPtrDef< ObstacleSensor >::type
+    ObstacleSensorWeakPtr;
+typedef ves::util::ScopedPtrDef< ObstacleSensor >::type
+    ObstacleSensorScopedPtr;
 
-    virtual void CollectInformation() = 0;
-
-protected:
-    bots::AgentEntity* mAgentEntity;
-
-};
 } //end bots
 
-#endif //SENSOR_H
+#endif //OBSTACLE_SENSOR_PTR_H

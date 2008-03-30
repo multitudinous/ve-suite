@@ -31,26 +31,25 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SENSOR_H
-#define SENSOR_H
+#ifndef HOLD_BLOCK_SENSOR_PTR_H
+#define HOLD_BLOCK_SENSOR_PTR_H
+
+#include <ves/util/PointerTypes.h>
 
 namespace bots
 {
-// --- My Includes --- //
-class AgentEntity;
+class HoldBlockSensor;
 
-class Sensor
-{
-public:
-    Sensor( bots::AgentEntity* agentEntity );
-    virtual ~Sensor();
+//Typedef for a SmartPtr type for the HoldBlockSensor
+typedef ves::util::ClassPtrDef< HoldBlockSensor >::type
+    HoldBlockSensorPtr;
+typedef ves::util::SharedPtrDef< HoldBlockSensor >::type
+    HoldBlockSensorSharedPtr;
+typedef ves::util::WeakPtrDef< HoldBlockSensor >::type
+    HoldBlockSensorWeakPtr;
+typedef ves::util::ScopedPtrDef< HoldBlockSensor >::type
+    HoldBlockSensorScopedPtr;
 
-    virtual void CollectInformation() = 0;
-
-protected:
-    bots::AgentEntity* mAgentEntity;
-
-};
 } //end bots
 
-#endif //SENSOR_H
+#endif //HOLD_BLOCK_SENSOR_PTR_H

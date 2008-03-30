@@ -346,10 +346,10 @@ void World::CommunicatingBlocksAlgorithm()
     for( size_t i = 0; i < mAgents.size(); ++i )
     {
         bots::AgentEntity* agent = mAgents.at( i );
-        bots::ObstacleSensor* obstacleSensor = agent->GetObstacleSensor();
-        bots::BlockSensor* blockSensor = agent->GetBlockSensor();
-        bots::SiteSensor* siteSensor = agent->GetSiteSensor();
-        bots::HoldBlockSensor* holdBlockSensor = agent->GetHoldBlockSensor();
+        bots::ObstacleSensorPtr obstacleSensor = agent->GetObstacleSensor();
+        bots::BlockSensorPtr blockSensor = agent->GetBlockSensor();
+        bots::SiteSensorPtr siteSensor = agent->GetSiteSensor();
+        bots::HoldBlockSensorPtr holdBlockSensor = agent->GetHoldBlockSensor();
 
         //Remove reference lines
         blockSensor->RemoveLine();

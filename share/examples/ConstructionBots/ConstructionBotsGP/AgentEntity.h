@@ -34,6 +34,12 @@
 #ifndef AGENT_ENTITY_H
 #define AGENT_ENTITY_H
 
+// --- My Includes --- //
+#include "BlockSensorPtr.h"
+#include "HoldBlockSensorPtr.h"
+#include "ObstacleSensorPtr.h"
+#include "SiteSensorPtr.h"
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
@@ -50,10 +56,6 @@ namespace bots
 // --- My Includes --- //
 class Agent;
 class BlockEntity;
-class ObstacleSensor;
-class BlockSensor;
-class SiteSensor;
-class HoldBlockSensor;
 
 class AgentEntity : public ves::xplorer::scenegraph::CADEntity
 {
@@ -82,13 +84,14 @@ public:
 	ves::xplorer::scenegraph::DCS* GetPluginDCS();
 	ves::xplorer::scenegraph::DCS* GetTargetDCS();
 
-    bots::ObstacleSensor* GetObstacleSensor();
-    bots::BlockSensor* GetBlockSensor();
-    bots::SiteSensor* GetSiteSensor();
-    bots::HoldBlockSensor* GetHoldBlockSensor();
+    bots::BlockSensorPtr GetBlockSensor();
+    bots::HoldBlockSensorPtr GetHoldBlockSensor();
+    bots::ObstacleSensorPtr GetObstacleSensor();
+    bots::SiteSensorPtr GetSiteSensor();
 
 private:
-    //void Set
+    void Initialize();
+
     bool mBuildMode;
 
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
@@ -99,10 +102,11 @@ private:
     osg::ref_ptr< bots::Agent > mGeometry;
 
     //The agent sensors
-    bots::ObstacleSensor* mObstacleSensor;
-    bots::BlockSensor* mBlockSensor;
-    bots::SiteSensor* mSiteSensor;
-    bots::HoldBlockSensor* mHoldBlockSensor;
+    bots::BlockSensorPtr mBlockSensor;
+    bots::HoldBlockSensorPtr mHoldBlockSensor;
+    bots::ObstacleSensorPtr mObstacleSensor;
+    bots::SiteSensorPtr mSiteSensor;
+    
 };
 }
 

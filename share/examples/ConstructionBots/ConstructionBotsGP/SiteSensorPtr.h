@@ -31,26 +31,21 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef SENSOR_H
-#define SENSOR_H
+#ifndef SITE_SENSOR_PTR_H
+#define SITE_SENSOR_PTR_H
+
+#include <ves/util/PointerTypes.h>
 
 namespace bots
 {
-// --- My Includes --- //
-class AgentEntity;
+class SiteSensor;
 
-class Sensor
-{
-public:
-    Sensor( bots::AgentEntity* agentEntity );
-    virtual ~Sensor();
+//Typedef for a SmartPtr type for the SiteSensor
+typedef ves::util::ClassPtrDef< SiteSensor >::type SiteSensorPtr;
+typedef ves::util::SharedPtrDef< SiteSensor >::type SiteSensorSharedPtr;
+typedef ves::util::WeakPtrDef< SiteSensor >::type SiteSensorWeakPtr;
+typedef ves::util::ScopedPtrDef< SiteSensor >::type SiteSensorScopedPtr;
 
-    virtual void CollectInformation() = 0;
-
-protected:
-    bots::AgentEntity* mAgentEntity;
-
-};
 } //end bots
 
-#endif //SENSOR_H
+#endif //SITE_SENSOR_PTR_H
