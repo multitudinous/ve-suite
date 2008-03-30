@@ -93,20 +93,20 @@ private:
 
     void CommunicatingBlocksAlgorithm();
 
-    bool m_structureNotComplete;
+    bool mStructureNotComplete;
 
-    ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
-    std::map< std::string, ves::xplorer::scenegraph::CADEntity* > m_entities;
-    bots::GridEntity* m_grid;
-    std::vector< bots::BlockEntity* > m_blocks;
-    std::vector< bots::AgentEntity* > m_agents;
-    bots::BlockEntity* m_startBlock;
+    std::map< std::string, ves::xplorer::scenegraph::CADEntity* > mEntities;
+    bots::GridEntity* mGrid;
+    std::vector< bots::BlockEntity* > mBlocks;
+    std::vector< bots::AgentEntity* > mAgents;
+    bots::BlockEntity* mStartBlock;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
 #ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* m_ambientSound;
+    ves::xplorer::scenegraph::Sound* mAmbientSound;
 #endif
 
 };

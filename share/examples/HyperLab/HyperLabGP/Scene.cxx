@@ -40,7 +40,7 @@ Scene::Scene( ves::xplorer::scenegraph::DCS* pluginDCS,
 shader( new hyperlab::Shaders() ),
 
 m_pluginDCS( pluginDCS ),
-m_physicsSimulator( physicsSimulator ),
+mPhysicsSimulator( physicsSimulator ),
 
 m_room( 0 ),
 
@@ -369,7 +369,7 @@ void Scene::CreateNodes()
     osg::ref_ptr< osg::Group > roomPhysics = new osg::Group();
     m_room = new ves::xplorer::scenegraph::CADEntity( roomPhysics.get(),
                                                       m_pluginDCS.get(),
-                                                      m_physicsSimulator );
+                                                      mPhysicsSimulator );
 
     //Load in the geometry for the room
     {

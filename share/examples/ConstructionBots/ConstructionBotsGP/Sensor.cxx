@@ -40,7 +40,7 @@ using namespace bots;
 ////////////////////////////////////////////////////////////////////////////////
 Sensor::Sensor( bots::AgentEntity* agentEntity )
 :
-m_agentEntity( agentEntity )
+mAgentEntity( agentEntity )
 {
    ;
 }

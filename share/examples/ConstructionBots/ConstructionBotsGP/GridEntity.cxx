@@ -43,7 +43,7 @@ GridEntity::GridEntity( osg::ref_ptr< bots::Grid > grid,
                         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( grid.get(), pluginDCS, physicsSimulator ),
-geometry( grid.get() )
+mGeometry( grid.get() )
 {
    ;
 }
@@ -58,8 +58,8 @@ void GridEntity::SetNameAndDescriptions()
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
     descriptorsList.push_back( "" );
-    m_dcs->setDescriptions( descriptorsList );
+    mDCS->setDescriptions( descriptorsList );
 
-    m_dcs->setName( "Grid" );
+    mDCS->setName( "Grid" );
 }
 ////////////////////////////////////////////////////////////////////////////////

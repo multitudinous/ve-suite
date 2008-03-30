@@ -41,7 +41,7 @@ World::World( ves::xplorer::scenegraph::DCS* pluginDCS,
               )
 :
 m_pluginDCS( pluginDCS ),
-m_physicsSimulator( physicsSimulator ),
+mPhysicsSimulator( physicsSimulator ),
 #ifdef VE_SOUND
 m_soundManager( soundManager ),
 #endif
@@ -97,11 +97,11 @@ void World::Initialize()
     m_tcm->setImage( osg::TextureCubeMap::POSITIVE_Z, m_imageMap[ "top" ] );
     m_tcm->setImage( osg::TextureCubeMap::NEGATIVE_Z, m_imageMap[ "bottom" ] );
 
-    m_physicsSimulator->SetCollisionInformation( true );
+    mPhysicsSimulator->SetCollisionInformation( true );
 
     m_funnelEntity = new demo::FunnelEntity( "Models/IVEs/funnel_physics.ive",
                                              m_pluginDCS.get(),
-                                             m_physicsSimulator );
+                                             mPhysicsSimulator );
     m_funnelEntity->SetNameAndDescriptions( "funnel_physics" );
     m_funnelEntity->InitPhysics();
     m_funnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -112,7 +112,7 @@ void World::Initialize()
 
     m_marbleEntity = new demo::MarbleEntity( "Models/IVEs/marble_physics.ive",
                                              m_pluginDCS.get(),
-                                             m_physicsSimulator
+                                             mPhysicsSimulator
 #ifdef VE_SOUND
                                            , m_soundManager
 #endif
@@ -132,7 +132,7 @@ void World::Initialize()
     /*
     m_quarterEntity = new demo::QuarterEntity( "Models/IVEs/quarter_physics.ive",
                                                m_pluginDCS.get(),
-                                               m_physicsSimulator );
+                                               mPhysicsSimulator );
     m_quarterEntity->SetNameAndDescriptions( "quarter_physics" );
     double quarterPosition[ 3 ] = { -3.5, 0.7, 4.0 };
     //m_quarterEntity->GetDCS()->setAttitude( osg::Quat( 90.0, osg::Vec3f( 0, 1, 0 ) ) );
@@ -151,7 +151,7 @@ void World::Initialize()
 
     m_railingEntity = new demo::RailingEntity( "Models/IVEs/railing_physics.ive",
                                                m_pluginDCS.get(),
-                                               m_physicsSimulator );
+                                               mPhysicsSimulator );
     m_railingEntity->SetNameAndDescriptions( "railing_physics" );
     m_railingEntity->InitPhysics();
     m_railingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -162,7 +162,7 @@ void World::Initialize()
 
     m_slideEntity = new demo::SlideEntity( "Models/IVEs/slide_physics.ive",
                                            m_pluginDCS.get(),
-                                           m_physicsSimulator );
+                                           mPhysicsSimulator );
     m_slideEntity->SetNameAndDescriptions( "slide_physics" );
     m_slideEntity->InitPhysics();
     m_slideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );

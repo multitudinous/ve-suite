@@ -54,7 +54,7 @@ using namespace bots;
 ////////////////////////////////////////////////////////////////////////////////
 Block::Block()
 {
-    CreateBlock();
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Block::Block( const Block& block, const osg::CopyOp& copyop )
@@ -72,6 +72,11 @@ Block::~Block()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Block::Initialize()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Block::CreateBlock()
 {
 	osg::ref_ptr< osg::Image > image = osgDB::readImageFile( "Textures/tile.jpg" );
@@ -82,10 +87,10 @@ void Block::CreateBlock()
 	}
 
     osg::ref_ptr< osg::Geometry > block = new osg::Geometry();
-    m_sideStates.insert( std::make_pair( "Left", new osg::Geometry() ) );
-    m_sideStates.insert( std::make_pair( "Near", new osg::Geometry() ) );
-    m_sideStates.insert( std::make_pair( "Right", new osg::Geometry() ) );
-    m_sideStates.insert( std::make_pair( "Far", new osg::Geometry() ) );
+    mSideStates.insert( std::make_pair( "Left", new osg::Geometry() ) );
+    mSideStates.insert( std::make_pair( "Near", new osg::Geometry() ) );
+    mSideStates.insert( std::make_pair( "Right", new osg::Geometry() ) );
+    mSideStates.insert( std::make_pair( "Far", new osg::Geometry() ) );
 
     osg::ref_ptr< osg::Vec3Array > blockVertices = new osg::Vec3Array();
     //Left
@@ -128,19 +133,19 @@ void Block::CreateBlock()
     //Left
     leftLineVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
     leftLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-    m_sideStates[ "Left" ]->setVertexArray( leftLineVertices.get() );
+    mSideStates[ "Left" ]->setVertexArray( leftLineVertices.get() );
     //Near
     nearLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
     nearLineVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-    m_sideStates[ "Near" ]->setVertexArray( nearLineVertices.get() );
+    mSideStates[ "Near" ]->setVertexArray( nearLineVertices.get() );
     //Right
     rightLineVertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
     rightLineVertices->push_back( osg::Vec3( 0.5f,  0.5f, 0.5f ) );
-    m_sideStates[ "Right" ]->setVertexArray( rightLineVertices.get() );
+    mSideStates[ "Right" ]->setVertexArray( rightLineVertices.get() );
     //Far
     farLineVertices->push_back( osg::Vec3(  0.5f, 0.5f, 0.5f ) );
     farLineVertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
-    m_sideStates[ "Far" ]->setVertexArray( farLineVertices.get() );
+    mSideStates[ "Far" ]->setVertexArray( farLineVertices.get() );
 
 	osg::ref_ptr< osg::Vec4Array > blockColor = new osg::Vec4Array();
 	blockColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
@@ -157,10 +162,10 @@ void Block::CreateBlock()
     rightLineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     farLineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
 
-    m_sideStates[ "Left" ]->setColorArray( leftLineColor.get() );
-    m_sideStates[ "Near" ]->setColorArray( nearLineColor.get() );
-    m_sideStates[ "Right" ]->setColorArray( rightLineColor.get() );
-    m_sideStates[ "Far" ]->setColorArray( farLineColor.get() );
+    mSideStates[ "Left" ]->setColorArray( leftLineColor.get() );
+    mSideStates[ "Near" ]->setColorArray( nearLineColor.get() );
+    mSideStates[ "Right" ]->setColorArray( rightLineColor.get() );
+    mSideStates[ "Far" ]->setColorArray( farLineColor.get() );
 
     osg::ref_ptr< osg::Vec3Array > blockNormals = new osg::Vec3Array();
     //Left
@@ -180,13 +185,13 @@ void Block::CreateBlock()
     block->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
     block->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, blockVertices.get()->size() ) );
-    m_sideStates[ "Left" ]->addPrimitiveSet(
+    mSideStates[ "Left" ]->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, leftLineVertices->size() ) );
-    m_sideStates[ "Near" ]->addPrimitiveSet(
+    mSideStates[ "Near" ]->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, nearLineVertices->size() ) );
-    m_sideStates[ "Right" ]->addPrimitiveSet(
+    mSideStates[ "Right" ]->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, rightLineVertices->size() ) );
-    m_sideStates[ "Far" ]->addPrimitiveSet(
+    mSideStates[ "Far" ]->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, farLineVertices->size() ) );
 
     osg::ref_ptr< osg::Vec2Array > texCoord = new osg::Vec2Array();
@@ -235,7 +240,7 @@ void Block::CreateBlock()
     lineStateSet->setAttribute( lineWidth.get() );
 
     std::map< std::string, osg::ref_ptr< osg::Geometry > >::const_iterator itr;
-    for( itr = m_sideStates.begin(); itr != m_sideStates.end(); ++itr )
+    for( itr = mSideStates.begin(); itr != mSideStates.end(); ++itr )
     {
         itr->second->setStateSet( lineStateSet.get() );
     }

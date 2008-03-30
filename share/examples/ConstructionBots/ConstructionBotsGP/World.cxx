@@ -74,15 +74,15 @@ World::World( ves::xplorer::scenegraph::DCS* pluginDCS,
 #endif
               )
 :
-m_structureNotComplete( true ),
-m_grid( 0 ),
-m_blocks( 0 ),
-m_agents( 0 ),
-m_startBlock( 0 ),
-m_pluginDCS( pluginDCS ),
-m_physicsSimulator( physicsSimulator )
+mStructureNotComplete( true ),
+mGrid( 0 ),
+mBlocks( 0 ),
+mAgents( 0 ),
+mStartBlock( 0 ),
+mPluginDCS( pluginDCS ),
+mPhysicsSimulator( physicsSimulator )
 #ifdef VE_SOUND
-, m_ambientSound( new ves::xplorer::scenegraph::Sound( "AmbientSound", pluginDCS, soundManager ) )
+, mAmbientSound( new ves::xplorer::scenegraph::Sound( "AmbientSound", pluginDCS, soundManager ) )
 #endif
 {
     //Seed the random number generator
@@ -95,38 +95,38 @@ m_physicsSimulator( physicsSimulator )
 World::~World()
 {
 #ifdef VE_SOUND
-    if( m_ambientSound )
+    if( mAmbientSound )
     {
-        delete m_ambientSound;
+        delete mAmbientSound;
     }
 #endif
 
-    if( m_grid )
+    if( mGrid )
     {
-        delete m_grid;   
+        delete mGrid;   
     }
 
-    //m_startBlock is added under m_blocks vector,
+    //mStartBlock is added under mBlocks vector,
     //so it gets deleted in here
-    for( size_t i = 0; i < m_blocks.size(); ++i )
+    for( size_t i = 0; i < mBlocks.size(); ++i )
     {
-        if( m_blocks.at( i ) )
+        if( mBlocks.at( i ) )
         {
-            delete m_blocks.at( i );
+            delete mBlocks.at( i );
         }
     }
 
-    for( size_t i = 0; i < m_agents.size(); ++i )
+    for( size_t i = 0; i < mAgents.size(); ++i )
     {
-        if( m_agents.at( i ) )
+        if( mAgents.at( i ) )
         {
-            delete m_agents.at( i );
+            delete mAgents.at( i );
         }
     }
 
-    m_entities.clear();
-    m_blocks.clear();
-    m_agents.clear();
+    mEntities.clear();
+    mBlocks.clear();
+    mAgents.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void World::InitFramework()
@@ -134,8 +134,8 @@ void World::InitFramework()
 #ifdef VE_SOUND
     try
     {
-        //m_ambientSound->LoadFile( "Sounds/AmbientSound.wav" );
-        //m_ambientSound->GetSoundState()->setLooping( true );
+        //mAmbientSound->LoadFile( "Sounds/AmbientSound.wav" );
+        //mAmbientSound->GetSoundState()->setLooping( true );
     }
     catch( ... )
     {
@@ -160,111 +160,119 @@ void World::InitFramework()
     }
 
     //Tell PhysicsSimulator to store collision information
-    m_physicsSimulator->SetCollisionInformation( true );
+    mPhysicsSimulator->SetCollisionInformation( true );
 
     //Initialize the grid
-    m_grid = new bots::GridEntity(
-        new bots::Grid( gridSize, occMatrix ),
-        m_pluginDCS.get(),
-        m_physicsSimulator );
-    m_grid->SetNameAndDescriptions();
-    m_grid->InitPhysics();
-    m_grid->GetPhysicsRigidBody()->setFriction( 0.0 );
-    m_grid->GetPhysicsRigidBody()->StaticConcaveShape();
-    m_entities[ m_grid->GetDCS()->GetName() ] = m_grid;
+    osg::ref_ptr< bots::Grid > grid = new bots::Grid();
+    grid->CreateGrid( gridSize, occMatrix );
+
+    mGrid = new bots::GridEntity( grid.get(),
+                                   mPluginDCS.get(),
+                                   mPhysicsSimulator );
+    mGrid->SetNameAndDescriptions();
+    mGrid->InitPhysics();
+    mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
+    mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
+    mEntities[ mGrid->GetDCS()->GetName() ] = mGrid;
 
     //Initialize the starting block
-    m_startBlock = new bots::BlockEntity(
-        new bots::Block(),
-        m_pluginDCS.get(),
-        m_physicsSimulator );
-    m_startBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 1.0 );
+    osg::ref_ptr< bots::Block > startBlock = new bots::Block();
+    startBlock->CreateBlock();
+
+    mStartBlock = new bots::BlockEntity( startBlock.get(),
+                                          mPluginDCS.get(),
+                                          mPhysicsSimulator );
+    mStartBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 1.0 );
     //Set name and descriptions for blocks
-    m_startBlock->SetNameAndDescriptions( 0 );
+    mStartBlock->SetNameAndDescriptions( 0 );
     double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
-    m_startBlock->GetDCS()->SetTranslationArray( startBlockPosition );
+    mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
     
-    m_startBlock->InitPhysics();
-    m_startBlock->GetPhysicsRigidBody()->setFriction( 0.0 );
-    m_startBlock->GetPhysicsRigidBody()->StaticConcaveShape();
+    mStartBlock->InitPhysics();
+    mStartBlock->GetPhysicsRigidBody()->setFriction( 0.0 );
+    mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
     //Set up map to entities
-    m_entities[ m_startBlock->GetDCS()->GetName() ] = m_startBlock;
+    mEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
     
     //Initialize the blocks
     for( int i = 0; i < numBlocks; ++i )
     {
-        m_blocks.push_back( new bots::BlockEntity(
-            new bots::Block(),
-            m_pluginDCS.get(),
-            m_physicsSimulator ) );
+        osg::ref_ptr< bots::Block > block = new bots::Block();
+        block->CreateBlock();
+
+        mBlocks.push_back( new bots::BlockEntity( block.get(),
+                                                   mPluginDCS.get(),
+                                                   mPhysicsSimulator ) );
     }
 
     //Initialize the agents
     for( int i = 0; i < numAgents; ++i )
     {
-        m_agents.push_back( new AgentEntity(
-            new bots::Agent(),
-            m_pluginDCS.get(),
-            m_physicsSimulator ) );
+        osg::ref_ptr< bots::Agent > agent = new bots::Agent();
+        agent->CreateAgent();
+
+        mAgents.push_back( new AgentEntity( agent.get(),
+                                             mPluginDCS.get(),
+                                             mPhysicsSimulator ) );
     }
 
-    for( size_t i = 0; i < m_blocks.size(); ++i )
+    for( size_t i = 0; i < mBlocks.size(); ++i )
     {
         //Set name and descriptions for blocks
-        m_blocks.at( i )->SetNameAndDescriptions( i + 1 );
+        mBlocks.at( i )->SetNameAndDescriptions( i + 1 );
 
         //Set physics properties for blocks
-        m_blocks.at( i )->InitPhysics();
-        m_blocks.at( i )->GetPhysicsRigidBody()->setFriction( 0.0 );
+        mBlocks.at( i )->InitPhysics();
+        mBlocks.at( i )->GetPhysicsRigidBody()->setFriction( 0.0 );
 
         //Set D6 constraint for blocks
-        m_blocks.at( i )->SetConstraints( gridSize );
+        mBlocks.at( i )->SetConstraints( gridSize );
 
         //Set up map to entities
-        m_entities[ m_blocks.at( i )->GetDCS()->GetName() ] = m_blocks.at( i );
+        mEntities[ mBlocks.at( i )->GetDCS()->GetName() ] = mBlocks.at( i );
     }
 
-    for( size_t i = 0; i < m_agents.size(); ++i )
+    for( size_t i = 0; i < mAgents.size(); ++i )
     {
         //Set name and descriptions for blocks
-        m_agents.at( i )->SetNameAndDescriptions( i );
+        mAgents.at( i )->SetNameAndDescriptions( i );
 
         //Set physics properties for blocks
-        m_agents.at( i )->InitPhysics();
-        m_agents.at( i )->GetPhysicsRigidBody()->setFriction( 0.0 );
+        mAgents.at( i )->InitPhysics();
+        mAgents.at( i )->GetPhysicsRigidBody()->setFriction( 0.0 );
 
         //Set D6 constraint for agents
-        m_agents.at( i )->SetConstraints( gridSize );
+        mAgents.at( i )->SetConstraints( gridSize );
 
         //Store collisions for the agents
-        m_agents.at( i )->GetPhysicsRigidBody()->SetStoreCollisions( true );
+        mAgents.at( i )->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
         //Set the sensor range for the agents
-        m_agents.at( i )->GetBlockSensor()->SetRange( gridSize * 0.25 );
-        m_agents.at( i )->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
+        mAgents.at( i )->GetBlockSensor()->SetRange( gridSize * 0.25 );
+        mAgents.at( i )->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
 
         //Set up map to entities
-        m_entities[ m_agents.at( i )->GetDCS()->GetName() ] = m_agents.at( i );
+        mEntities[ mAgents.at( i )->GetDCS()->GetName() ] = mAgents.at( i );
     }
 
     //Create random positions for the objects in the framework
     CreateRandomPositions( gridSize );
 
     //Push back the starting block
-    m_blocks.push_back( m_startBlock );
+    mBlocks.push_back( mStartBlock );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void World::CreateRandomPositions( int gridSize )
 {
     std::vector< ves::xplorer::scenegraph::CADEntity* > objects;
-    for( size_t i = 0; i < m_blocks.size(); ++i )
+    for( size_t i = 0; i < mBlocks.size(); ++i )
     {
-        objects.push_back( m_blocks.at( i ) );
+        objects.push_back( mBlocks.at( i ) );
     }
 
-    for( size_t i = 0; i < m_agents.size(); ++i )
+    for( size_t i = 0; i < mAgents.size(); ++i )
     {
-        objects.push_back( m_agents.at( i ) );
+        objects.push_back( mAgents.at( i ) );
     }
 
     bool needsNewPosition( false );
@@ -273,8 +281,8 @@ void World::CreateRandomPositions( int gridSize )
 
     std::vector< std::pair< double, double > > positions;
     positions.push_back( std::pair< double, double >
-        ( m_startBlock->GetDCS()->GetVETranslationArray()[ 0 ], 
-          m_startBlock->GetDCS()->GetVETranslationArray()[ 1 ] ) );
+        ( mStartBlock->GetDCS()->GetVETranslationArray()[ 0 ], 
+          mStartBlock->GetDCS()->GetVETranslationArray()[ 1 ] ) );
 
     for( size_t i = 0; i < objects.size(); ++i )
     {
@@ -335,9 +343,9 @@ void World::CreateRandomPositions( int gridSize )
 ////////////////////////////////////////////////////////////////////////////////
 void World::CommunicatingBlocksAlgorithm()
 {
-    for( size_t i = 0; i < m_agents.size(); ++i )
+    for( size_t i = 0; i < mAgents.size(); ++i )
     {
-        bots::AgentEntity* agent = m_agents.at( i );
+        bots::AgentEntity* agent = mAgents.at( i );
         bots::ObstacleSensor* obstacleSensor = agent->GetObstacleSensor();
         bots::BlockSensor* blockSensor = agent->GetBlockSensor();
         bots::SiteSensor* siteSensor = agent->GetSiteSensor();
@@ -357,7 +365,7 @@ void World::CommunicatingBlocksAlgorithm()
                 if( siteSensor->CloseToSite() )
                 {
                     bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
-                        ( m_entities[ agent->GetTargetDCS()->GetName() ] );
+                        ( mEntities[ agent->GetTargetDCS()->GetName() ] );
                     bool collision = agent->GetPhysicsRigidBody()->
                         CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
                     if( collision )
@@ -379,7 +387,7 @@ void World::CommunicatingBlocksAlgorithm()
                 //if( blockSensor->CloseToBlock() )
                 {
                     bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
-                        ( m_entities[ agent->GetTargetDCS()->GetName() ] );
+                        ( mEntities[ agent->GetTargetDCS()->GetName() ] );
                     bool collision = agent->GetPhysicsRigidBody()->
                         CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
                     if( collision )
@@ -407,7 +415,7 @@ void World::CommunicatingBlocksAlgorithm()
 ////////////////////////////////////////////////////////////////////////////////
 void World::PreFrameUpdate()
 {
-    if( m_structureNotComplete )
+    if( mStructureNotComplete )
     {
         CommunicatingBlocksAlgorithm();
     }

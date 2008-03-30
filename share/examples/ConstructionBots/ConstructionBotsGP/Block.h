@@ -53,20 +53,21 @@ class Block : public osg::Geode
 public:
     Block();
 
-protected:
-    virtual ~Block();
-
-public:
     Block( const Block& block, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
-    META_Node( Construction, Block );
+    META_Node( bots, Block );
 
     void CreateBlock();
 
     void SetColor( float r, float g, float b, float a );
 
+protected:
+    virtual ~Block();
+
 private:
-    std::map< std::string, osg::ref_ptr< osg::Geometry > > m_sideStates;
+    void Initialize();
+
+    std::map< std::string, osg::ref_ptr< osg::Geometry > > mSideStates;
 
 };
 } //end bots

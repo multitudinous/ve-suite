@@ -55,7 +55,7 @@ protected:
     void UpdateParams();
 
 private:
-    bots::World* world;
+    bots::World* mWorld;
 
 };
 

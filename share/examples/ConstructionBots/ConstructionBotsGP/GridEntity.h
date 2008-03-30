@@ -60,7 +60,7 @@ public:
     void SetNameAndDescriptions();
 
 private:
-    osg::ref_ptr< bots::Grid > geometry;
+    osg::ref_ptr< bots::Grid > mGeometry;
 
 };
 } //end bots

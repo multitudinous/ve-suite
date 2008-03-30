@@ -50,9 +50,9 @@ using namespace bots;
 HoldBlockSensor::HoldBlockSensor( bots::AgentEntity* agentEntity )
 :
 Sensor( agentEntity ),
-m_holdingBlock( false ),
-m_range( 2.6 ),
-beamLineSegment( new osg::LineSegment() )
+mHoldingBlock( false ),
+mRange( 2.6 ),
+mBeamLineSegment( new osg::LineSegment() )
 {
     ;
 }
@@ -64,25 +64,25 @@ HoldBlockSensor::~HoldBlockSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void HoldBlockSensor::CollectInformation()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
     osg::Vec3d startPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
-    osg::Vec3d endPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] + m_range );
+    osg::Vec3d endPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] + mRange );
 
     //Reset results from last frame
-    m_holdingBlock = false;
+    mHoldingBlock = false;
 
-    beamLineSegment->set( startPoint, endPoint );
+    mBeamLineSegment->set( startPoint, endPoint );
 
     osgUtil::IntersectVisitor intersectVisitor;
-    intersectVisitor.addLineSegment( beamLineSegment.get() );
-    m_agentEntity->GetPluginDCS()->accept( intersectVisitor );
+    intersectVisitor.addLineSegment( mBeamLineSegment.get() );
+    mAgentEntity->GetPluginDCS()->accept( intersectVisitor );
 
-    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( beamLineSegment.get() );
+    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mBeamLineSegment.get() );
     if( hitList.size() > 1 )
     {
-        m_holdingBlock = true;
+        mHoldingBlock = true;
         /*
         //Get the next hit excluding the agent itself
         osgUtil::Hit firstHit = hitList.at( 1 );
@@ -111,6 +111,6 @@ void HoldBlockSensor::CollectInformation()
 ////////////////////////////////////////////////////////////////////////////////
 bool HoldBlockSensor::HoldingBlock()
 {
-    return m_holdingBlock;
+    return mHoldingBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////

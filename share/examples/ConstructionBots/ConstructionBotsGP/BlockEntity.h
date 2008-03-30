@@ -72,19 +72,19 @@ public:
     void UpdateSideStates();
 
 private:
-    osg::ref_ptr< bots::Block > m_block;
+    osg::ref_ptr< bots::Block > mBlock;
 
-    btGeneric6DofConstraint* m_constraint;
+    btGeneric6DofConstraint* mConstraint;
 
     //Blocks have a copy of the occupancy matrix
-    std::map< std::pair< int, int >, bool > m_occMatrix;
+    std::map< std::pair< int, int >, bool > mOccMatrix;
     //Blocks store location info for shared coordinate system
-    std::pair< int, int > m_location;
+    std::pair< int, int > mLocation;
     //Are blocks attatched to sides or not
             //[0]-F
     //[1]-L         //[3]-R
             //[2]-N
-    bool sideState[ 4 ];
+    bool mSideState[ 4 ];
 
 };
 } //end bots

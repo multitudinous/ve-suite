@@ -46,17 +46,15 @@ class Grid : public osg::Geode
 {
 public:
     Grid();
-    Grid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix );
+
+    Grid( const Grid& grid, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+   
+    META_Node( bots, Grid );
+   	
+    void CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix );
 
 protected:
     virtual ~Grid();
-
-public:
-    Grid( const Grid& grid, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
-   
-    META_Node( Construction, Grid );
-   	
-    void CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix );
 
 private:
     void Initialize();

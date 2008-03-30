@@ -58,11 +58,11 @@ public:
     bool HoldingBlock();
 
 private:
-    bool m_holdingBlock;
+    bool mHoldingBlock;
 
-    double m_range;
+    double mRange;
 
-    osg::ref_ptr< osg::LineSegment > beamLineSegment;
+    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
 
 };
 } //end bots

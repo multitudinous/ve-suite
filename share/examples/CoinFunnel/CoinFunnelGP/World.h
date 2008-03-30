@@ -69,7 +69,7 @@ private:
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
 
-    ves::xplorer::scenegraph::PhysicsSimulator* m_physicsSimulator;
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
 #ifdef VE_SOUND
     osgAL::SoundManager* m_soundManager;

@@ -55,15 +55,15 @@ const double PI = 3.14159265358979323846;
 BlockSensor::BlockSensor( bots::AgentEntity* agentEntity )
 :
 Sensor( agentEntity ),
-m_blockInView( false ),
-m_closeToBlock( false ),
-m_angle( 0 ), 
-m_angleInc( 0.1 ),
-m_range( 0 ),
-m_normalizedBlockVector( 0, 0, 0 ),
-m_line( new osg::Geometry() ),
-m_beamGeode( new osg::Geode() ),
-m_beamLineSegment( new osg::LineSegment() )
+mBlockInView( false ),
+mCloseToBlock( false ),
+mAngle( 0 ), 
+mAngleInc( 0.1 ),
+mRange( 0 ),
+mNormalizedBlockVector( 0, 0, 0 ),
+mLine( new osg::Geometry() ),
+mBeamGeode( new osg::Geode() ),
+mBeamLineSegment( new osg::LineSegment() )
 {
     Initialize();
 }
@@ -80,25 +80,25 @@ void BlockSensor::Initialize()
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
     colors->push_back( osg::Vec4( 0.0f, 1.0f, 1.0f, 1.0f ) );
-    m_line->setColorArray( colors.get() );
-    m_line->setColorBinding( osg::Geometry::BIND_OVERALL );
+    mLine->setColorArray( colors.get() );
+    mLine->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     lineNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
-    m_line->setNormalArray( lineNormals.get() );
-    m_line->setNormalBinding( osg::Geometry::BIND_OVERALL );
+    mLine->setNormalArray( lineNormals.get() );
+    mLine->setNormalBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 1.0f );
     stateset->setAttribute( lineWidth.get() );
-    m_line->setStateSet( stateset.get() );
+    mLine->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = m_agentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = m_agentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = m_agentEntity->GetTargetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = mAgentEntity->GetTargetDCS();
 
     osg::Vec3d startPoint, endPoint;
     double* agentPosition = agentDCS->GetVETranslationArray();
@@ -115,24 +115,24 @@ void BlockSensor::CollectInformation()
     else
     {
         Rotate();
-        endPoint.set( agentPosition[ 0 ] + m_range * cos( m_angle ),
-                      agentPosition[ 1 ] + m_range * sin( m_angle ),
+        endPoint.set( agentPosition[ 0 ] + mRange * cos( mAngle ),
+                      agentPosition[ 1 ] + mRange * sin( mAngle ),
                       agentPosition[ 2 ] );
     }
 
     //Reset results from last frame
-    m_blockInView = false;
-    m_closeToBlock = false;
+    mBlockInView = false;
+    mCloseToBlock = false;
     targetDCS = NULL;
 
-    m_beamLineSegment->set( startPoint, endPoint );
+    mBeamLineSegment->set( startPoint, endPoint );
     DrawLine( startPoint, endPoint );
 
     osgUtil::IntersectVisitor intersectVisitor;
-    intersectVisitor.addLineSegment( m_beamLineSegment.get() );
+    intersectVisitor.addLineSegment( mBeamLineSegment.get() );
     pluginDCS->accept( intersectVisitor );
 
-    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( m_beamLineSegment.get() );
+    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mBeamLineSegment.get() );
     if( hitList.size() > 1 )
     {
         //Get the next hit excluding the agent itself
@@ -162,13 +162,13 @@ void BlockSensor::CollectInformation()
 
                         if( blockVector.length() < 1.415 )//sqrt( 2 * 0.5 )
                         {
-                            m_closeToBlock = true;
+                            mCloseToBlock = true;
                         }
 
-                        m_normalizedBlockVector = blockVector.normalize();
+                        mNormalizedBlockVector = blockVector.normalize();
 
-                        m_blockInView = true;
-                        m_agentEntity->SetTargetDCS( temp.get() );
+                        mBlockInView = true;
+                        mAgentEntity->SetTargetDCS( temp.get() );
                     }
                 }
             }
@@ -180,52 +180,52 @@ void BlockSensor::CollectInformation()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate()
 {
-    m_angle += m_angleInc;
+    mAngle += mAngleInc;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = m_agentEntity->GetPluginDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
 
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
     vertices->push_back( startPoint );
     vertices->push_back( endPoint );
-    m_line->setVertexArray( vertices.get() );
+    mLine->setVertexArray( vertices.get() );
 
-    m_line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
-    m_beamGeode->addDrawable( m_line.get() );      
-    pluginDCS->addChild( m_beamGeode.get() );
+    mLine->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
+    mBeamGeode->addDrawable( mLine.get() );      
+    pluginDCS->addChild( mBeamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::RemoveLine()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = m_agentEntity->GetPluginDCS();
-    unsigned int numPrimitives = m_line->getNumPrimitiveSets();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
+    unsigned int numPrimitives = mLine->getNumPrimitiveSets();
     if( numPrimitives == 1 )
     {
-        m_line->removePrimitiveSet( 0 );
+        mLine->removePrimitiveSet( 0 );
     }
-    m_beamGeode->removeDrawable( m_line.get() );
-    pluginDCS->removeChild( m_beamGeode.get() );
+    mBeamGeode->removeDrawable( mLine.get() );
+    pluginDCS->removeChild( mBeamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool BlockSensor::BlockInView()
 {
-    return m_blockInView;
+    return mBlockInView;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool BlockSensor::CloseToBlock()
 {
-    return m_closeToBlock;
+    return mCloseToBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btVector3 BlockSensor::GetNormalizedBlockVector()
 {
-    return m_normalizedBlockVector;
+    return mNormalizedBlockVector;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::SetRange( double range )
 {
-    m_range = range;
+    mRange = range;
 }
 ////////////////////////////////////////////////////////////////////////////////

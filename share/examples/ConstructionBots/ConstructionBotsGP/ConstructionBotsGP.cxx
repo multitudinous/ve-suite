@@ -50,16 +50,16 @@ using namespace bots;
 ConstructionBotsGP::ConstructionBotsGP()
 :
 PluginBase(),
-world( 0 )
+mWorld( 0 )
 {
     mObjectName = "ConstructionBotsUI";
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsGP::~ConstructionBotsGP()
 {
-    if( world )
+    if( mWorld )
     {
-        delete world;
+        delete mWorld;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,10 +67,10 @@ void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldD
 {
     PluginBase::InitializeNode( veworldDCS );
 
-    world = new bots::World( mDCS.get(),
-                                     mPhysicsSimulator
+    mWorld = new bots::World( mDCS.get(),
+                              mPhysicsSimulator
 #ifdef VE_SOUND
-                                   , mSoundManager
+                            , mSoundManager
 #endif
                                    );
 }
@@ -79,7 +79,7 @@ void ConstructionBotsGP::PreFrameUpdate()
 {
     if( !mPhysicsSimulator->GetIdle() )
     {
-        world->PreFrameUpdate();
+        mWorld->PreFrameUpdate();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

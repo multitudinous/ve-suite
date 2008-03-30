@@ -76,18 +76,18 @@ public:
 private:
     void Initialize();
 
-    bool m_siteInView;
-    bool m_closeToSite;
+    bool mSiteInView;
+    bool mCloseToSite;
 
-    double m_angle;
-    double m_angleInc;
-    double m_range;
+    double mAngle;
+    double mAngleInc;
+    double mRange;
 
-    btVector3 m_normalizedSiteVector;
+    btVector3 mNormalizedSiteVector;
 
-    osg::ref_ptr< osg::Geometry > m_line;
-    osg::ref_ptr< osg::Geode > m_beamGeode;
-    osg::ref_ptr< osg::LineSegment > m_beamLineSegment;
+    osg::ref_ptr< osg::Geometry > mLine;
+    osg::ref_ptr< osg::Geode > mBeamGeode;
+    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
 
 };
 } //end bots

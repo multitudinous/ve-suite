@@ -72,18 +72,18 @@ private:
     void VirtualForceField();
     void WallFollowing();
 
-    bool m_obstacleDetected;
+    bool mObstacleDetected;
 
-    double m_angleIncrement;
-    double m_range;
-    double m_forceRepellingConstant;
-    double m_forceAttractionConstant;
+    double mAngleIncrement;
+    double mRange;
+    double mForceRepellingConstant;
+    double mForceAttractionConstant;
 
-    btVector3 m_resultantForce;
+    btVector3 mResultantForce;
 
-    std::vector< osgUtil::Hit > m_obstacleHits;
+    std::vector< osgUtil::Hit > mObstacleHits;
 
-    osg::ref_ptr< osg::LineSegment > m_beamLineSegment;
+    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
 
 };
 } //end bots

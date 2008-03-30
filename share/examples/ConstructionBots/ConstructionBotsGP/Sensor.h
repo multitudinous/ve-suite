@@ -50,7 +50,7 @@ public:
     virtual void CollectInformation() = 0;
 
 protected:
-    bots::AgentEntity* m_agentEntity;
+    bots::AgentEntity* mAgentEntity;
 
 };
 } //end bots

@@ -89,20 +89,20 @@ public:
 
 private:
     //void Set
-    bool m_buildMode;
+    bool mBuildMode;
 
-	osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_targetDCS;
+	osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
 
-    btGeneric6DofConstraint* m_constraint;
+    btGeneric6DofConstraint* mConstraint;
 
-    osg::ref_ptr< bots::Agent > m_geometry;
+    osg::ref_ptr< bots::Agent > mGeometry;
 
     //The agent sensors
-    bots::ObstacleSensor* m_obstacleSensor;
-    bots::BlockSensor* m_blockSensor;
-    bots::SiteSensor* m_siteSensor;
-    bots::HoldBlockSensor* m_holdBlockSensor;
+    bots::ObstacleSensor* mObstacleSensor;
+    bots::BlockSensor* mBlockSensor;
+    bots::SiteSensor* mSiteSensor;
+    bots::HoldBlockSensor* mHoldBlockSensor;
 };
 }
 
