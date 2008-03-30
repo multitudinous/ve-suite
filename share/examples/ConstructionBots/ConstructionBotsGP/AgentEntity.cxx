@@ -1,3 +1,36 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- My Includes --- //
 #include "AgentEntity.h"
 #include "Agent.h"
@@ -18,10 +51,10 @@
 // --- C/C++ Libraries --- //
 #include <sstream>
 
-using namespace Construction;
+using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
-AgentEntity::AgentEntity( osg::ref_ptr< Construction::Agent > agent,
+AgentEntity::AgentEntity( osg::ref_ptr< bots::Agent > agent,
                           ves::xplorer::scenegraph::DCS* pluginDCS,
                           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
@@ -33,10 +66,10 @@ m_targetDCS( 0 ),
 m_constraint( 0 )
 {
 	//These need to be initialized last
-    m_obstacleSensor = new Construction::ObstacleSensor( this );
-    m_blockSensor = new Construction::BlockSensor( this );
-    m_siteSensor = new Construction::SiteSensor( this );
-    m_holdBlockSensor = new Construction::HoldBlockSensor( this );
+    m_obstacleSensor = new bots::ObstacleSensor( this );
+    m_blockSensor = new bots::BlockSensor( this );
+    m_siteSensor = new bots::SiteSensor( this );
+    m_holdBlockSensor = new bots::HoldBlockSensor( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::~AgentEntity()
@@ -89,7 +122,7 @@ void AgentEntity::GoToBlock()
     m_physicsRigidBody->setLinearVelocity( m_blockSensor->GetNormalizedBlockVector() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::PickUpBlock( Construction::BlockEntity* blockEntity )
+void AgentEntity::PickUpBlock( bots::BlockEntity* blockEntity )
 {
     double* position = m_dcs->GetVETranslationArray();
     double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
@@ -180,22 +213,22 @@ ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
 	return m_targetDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Construction::ObstacleSensor* AgentEntity::GetObstacleSensor()
+bots::ObstacleSensor* AgentEntity::GetObstacleSensor()
 {
     return m_obstacleSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Construction::BlockSensor* AgentEntity::GetBlockSensor()
+bots::BlockSensor* AgentEntity::GetBlockSensor()
 {
     return m_blockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Construction::SiteSensor* AgentEntity::GetSiteSensor()
+bots::SiteSensor* AgentEntity::GetSiteSensor()
 {
     return m_siteSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-Construction::HoldBlockSensor* AgentEntity::GetHoldBlockSensor()
+bots::HoldBlockSensor* AgentEntity::GetHoldBlockSensor()
 {
     return m_holdBlockSensor;
 }

@@ -1,3 +1,36 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef BLOCK_ENTITY_H
 #define BLOCK_ENTITY_H
 
@@ -10,24 +43,21 @@
 // --- Bullet Includes --- //
 class btGeneric6DofConstraint;
 
+namespace bots
+{
 // --- My Includes --- //
-namespace Construction
-{
-    class Block;
-}
+class Block;
 
-namespace Construction
-{
 class BlockEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    BlockEntity( osg::ref_ptr< Construction::Block > block,
+    BlockEntity( osg::ref_ptr< bots::Block > block,
                  ves::xplorer::scenegraph::DCS* pluginDCS,
                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~BlockEntity();
 
-    Construction::Block* GetGeometry();
+    bots::Block* GetGeometry();
 
     //Get the block's occupancy matrix
     std::map< std::pair< int, int >, bool > GetOccMatrix();
@@ -42,7 +72,7 @@ public:
     void UpdateSideStates();
 
 private:
-    osg::ref_ptr< Construction::Block > m_block;
+    osg::ref_ptr< bots::Block > m_block;
 
     btGeneric6DofConstraint* m_constraint;
 
@@ -55,7 +85,8 @@ private:
     //[1]-L         //[3]-R
             //[2]-N
     bool sideState[ 4 ];
+
 };
-}
+} //end bots
 
 #endif //BLOCK_ENTITY_H
