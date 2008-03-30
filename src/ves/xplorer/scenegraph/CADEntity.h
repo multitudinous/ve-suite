@@ -151,19 +151,19 @@ public:
 
 protected:
     ///A helper class to give added functionality to CADEntity
-    ves::xplorer::scenegraph::CADEntityHelper* m_cadEntityHelper;
+    ves::xplorer::scenegraph::CADEntityHelper* mCADEntityHelper;
     ///The DCS of CADEntity
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
 
-    bool m_physicsFlag;///<The current state of physics for CADEntity
-    bool m_transparencyFlag;///<The current state of transparency
+    bool mPhysicsFlag;///<The current state of physics for CADEntity
+    bool mTransparencyFlag;///<The current state of transparency
     ///Set the opacity value
     float mOpacity;
     
-    std::string m_fileName;///<The name of the geometry file loaded
+    std::string mFileName;///<The name of the geometry file loaded
 
-    PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
-    PhysicsRigidBody* m_physicsRigidBody;
+    PhysicsSimulator* mPhysicsSimulator;///<A pointer to the PhysicsSimulator singleton
+    PhysicsRigidBody* mPhysicsRigidBody;
 };
 }
 }

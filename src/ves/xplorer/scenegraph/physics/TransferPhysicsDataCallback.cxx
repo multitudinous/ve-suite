@@ -55,7 +55,7 @@ namespace scenegraph
 ////////////////////////////////////////////////////////////////////////////////
 TransferPhysicsDataCallback::TransferPhysicsDataCallback()
         :
-        m_physicsRigidBody( 0 )
+        mPhysicsRigidBody( 0 )
 {
     ;
 }
@@ -64,24 +64,24 @@ TransferPhysicsDataCallback::TransferPhysicsDataCallback( const TransferPhysicsD
         :
         osg::Object( input ),
         osg::NodeCallback( input ),
-        m_physicsRigidBody( 0 )
+        mPhysicsRigidBody( 0 )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransferPhysicsDataCallback::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 {
-    m_physicsRigidBody = physicsRigidBody;
+    mPhysicsRigidBody = physicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void TransferPhysicsDataCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 {
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs = static_cast< ves::xplorer::scenegraph::DCS* >( node );
 
-    if( dcs.valid() && m_physicsRigidBody )
+    if( dcs.valid() && mPhysicsRigidBody )
     {
         ves::xplorer::scenegraph::vesMotionState* motionState =
-            static_cast< vesMotionState* >( m_physicsRigidBody->getMotionState() );
+            static_cast< vesMotionState* >( mPhysicsRigidBody->getMotionState() );
         btTransform transform;
         if( motionState )
         {

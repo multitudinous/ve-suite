@@ -57,7 +57,7 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
         :
         m_storeCollisions( false ),
         m_mass( 1.0 ),
-        m_physicsSimulator( physicsSimulator ),
+        mPhysicsSimulator( physicsSimulator ),
         m_osgToBullet( new osgToBullet( node ) ),
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 65 )
         btRigidBody( btRigidBody::btRigidBodyConstructionInfo(
@@ -152,7 +152,7 @@ void PhysicsRigidBody::BoundingBoxShape()
 {
     if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
+        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -174,14 +174,14 @@ void PhysicsRigidBody::BoundingBoxShape()
         setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
+    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SphereShape( double radius )
 {
     if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
+        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -206,14 +206,14 @@ void PhysicsRigidBody::SphereShape( double radius )
         setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
+    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
 {
     if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
+        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -231,14 +231,14 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
         setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
+    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::StaticConcaveShape()
 {
     if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
+        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -251,14 +251,14 @@ void PhysicsRigidBody::StaticConcaveShape()
 
     SetMass( 0 );
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
+    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::ConvexShape()
 {
     if( this )
     {
-        m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
+        mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( this );
     }
 
     if( m_collisionShape )
@@ -276,6 +276,6 @@ void PhysicsRigidBody::ConvexShape()
         setActivationState( DISABLE_DEACTIVATION );
     }
 
-    m_physicsSimulator->GetDynamicsWorld()->addRigidBody( this );
+    mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
 ////////////////////////////////////////////////////////////////////////////////

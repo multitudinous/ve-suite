@@ -83,7 +83,7 @@ public:
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
 protected:
-    PhysicsRigidBody* m_physicsRigidBody;///<Pointer to the physics rigid body
+    PhysicsRigidBody* mPhysicsRigidBody;///<Pointer to the physics rigid body
 
 };
 #elif _OPENSG

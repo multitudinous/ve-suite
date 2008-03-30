@@ -110,7 +110,7 @@ public:
 private:
     osgAL::SoundManager* m_soundManager;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_dcs;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     osg::ref_ptr< osg::Geode > m_soundGeode;
 
     osg::ref_ptr< openalpp::Sample > m_sample;

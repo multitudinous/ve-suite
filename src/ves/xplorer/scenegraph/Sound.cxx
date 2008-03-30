@@ -60,15 +60,15 @@ Sound::Sound( const std::string& name,
               ves::xplorer::scenegraph::DCS* parentDCS )
         :
         m_soundManager( osgAL::SoundManager::instance() ),
-        m_dcs( new ves::xplorer::scenegraph::DCS() ),
+        mDCS( new ves::xplorer::scenegraph::DCS() ),
         m_soundGeode( new osg::Geode() ),
         m_sample( 0 ),
         m_soundState( new osgAL::SoundState( name ) ),
         m_soundNode( new osgAL::SoundNode( m_soundState.get() ) )
 {
-    parentDCS->AddChild( m_dcs.get() );
-    m_dcs->addChild( m_soundNode.get() );
-    m_dcs->addChild( m_soundGeode.get() );
+    parentDCS->AddChild( mDCS.get() );
+    mDCS->addChild( m_soundNode.get() );
+    mDCS->addChild( m_soundGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sound::Sound( const std::string& name,
@@ -76,15 +76,15 @@ Sound::Sound( const std::string& name,
               osgAL::SoundManager* soundManager )
         :
         m_soundManager( soundManager ),
-        m_dcs( new ves::xplorer::scenegraph::DCS() ),
+        mDCS( new ves::xplorer::scenegraph::DCS() ),
         m_soundGeode( new osg::Geode() ),
         m_sample( 0 ),
         m_soundState( new osgAL::SoundState( name, m_soundManager ) ),
         m_soundNode( new osgAL::SoundNode( m_soundState.get(), m_soundManager ) )
 {
-    parentDCS->AddChild( m_dcs.get() );
-    m_dcs->addChild( m_soundNode.get() );
-    m_dcs->addChild( m_soundGeode.get() );
+    parentDCS->AddChild( mDCS.get() );
+    mDCS->addChild( m_soundNode.get() );
+    mDCS->addChild( m_soundGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sound::~Sound()
@@ -98,7 +98,7 @@ Sound &Sound::operator=( const Sound &sound )
     if( &sound != this )
     {
         m_soundManager = sound.m_soundManager;
-        m_dcs = sound.m_dcs;
+        mDCS = sound.mDCS;
         m_soundGeode = sound.m_soundGeode;
         m_sample = sound.m_sample;
         m_soundState = sound.m_soundState;

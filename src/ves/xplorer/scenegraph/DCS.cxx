@@ -72,7 +72,7 @@ namespace scenegraph
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS()
         :
-        m_physicsRigidBody( 0 )
+        mPhysicsRigidBody( 0 )
 {
     double temp[3];
     for( unsigned int i = 0; i < 3; ++i )
@@ -100,7 +100,7 @@ DCS::DCS()
     _scale[0] = 1;
 
     m_udcb = new TransferPhysicsDataCallback();
-    m_udcb->SetPhysicsRigidBody( m_physicsRigidBody );
+    m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
     setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
@@ -109,14 +109,14 @@ DCS::DCS()
 ////////////////////////////////////////////////////////////////////////////////
 DCS::DCS( double* scale, double* trans, double* rot )
         :
-        m_physicsRigidBody( 0 )
+        mPhysicsRigidBody( 0 )
 {
     SetTranslationArray( trans );
     SetRotationArray( rot );
     SetScaleArray( scale );
 
     m_udcb = new TransferPhysicsDataCallback();
-    m_udcb->SetPhysicsRigidBody( m_physicsRigidBody );
+    m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
     setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
@@ -126,10 +126,10 @@ DCS::DCS( double* scale, double* trans, double* rot )
 DCS::DCS( const DCS& dcs, const osg::CopyOp& copyop )
         :
         osg::PositionAttitudeTransform( dcs, copyop ),
-        m_physicsRigidBody( 0 )
+        mPhysicsRigidBody( 0 )
 {
     m_udcb = new TransferPhysicsDataCallback();
-    m_udcb->SetPhysicsRigidBody( m_physicsRigidBody );
+    m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
     setUpdateCallback( m_udcb.get() );
 
     AddTechnique( "Select", new ves::xplorer::scenegraph::SelectTechnique
@@ -494,7 +494,7 @@ void DCS::ToggleDisplay( std::string onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::UpdatePhysicsTransform()
 {
-    if( !m_physicsRigidBody )
+    if( !mPhysicsRigidBody )
     {
         return;
     }
@@ -508,33 +508,33 @@ void DCS::UpdatePhysicsTransform()
     transform.setRotation( btQuat );
 
     ves::xplorer::scenegraph::vesMotionState* motionState =
-        static_cast< vesMotionState* >( m_physicsRigidBody->getMotionState() );
+        static_cast< vesMotionState* >( mPhysicsRigidBody->getMotionState() );
     if( motionState )
     {
         motionState->m_startWorldTrans = transform;
         motionState->m_graphicsWorldTrans = transform;
-        m_physicsRigidBody->setWorldTransform( transform );
-        m_physicsRigidBody->setInterpolationWorldTransform( transform );
+        mPhysicsRigidBody->setWorldTransform( transform );
+        mPhysicsRigidBody->setInterpolationWorldTransform( transform );
     }
 
     //Removed cached contact points
     ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->
     getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs
-    ( m_physicsRigidBody->getBroadphaseHandle(),
+    ( mPhysicsRigidBody->getBroadphaseHandle(),
       ves::xplorer::scenegraph::PhysicsSimulator::instance()->GetDynamicsWorld()->getDispatcher() );
 
-    if( m_physicsRigidBody && !m_physicsRigidBody->isStaticObject() )
+    if( mPhysicsRigidBody && !mPhysicsRigidBody->isStaticObject() )
     {
-        m_physicsRigidBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
-        m_physicsRigidBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
+        mPhysicsRigidBody->setLinearVelocity( btVector3( 0, 0, 0 ) );
+        mPhysicsRigidBody->setAngularVelocity( btVector3( 0, 0, 0 ) );
     }
 
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 {
-    m_physicsRigidBody = physicsRigidBody;
-    m_udcb->SetPhysicsRigidBody( m_physicsRigidBody );
+    mPhysicsRigidBody = physicsRigidBody;
+    m_udcb->SetPhysicsRigidBody( mPhysicsRigidBody );
 
     UpdatePhysicsTransform();
 }

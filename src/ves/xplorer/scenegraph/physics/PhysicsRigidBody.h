@@ -124,7 +124,7 @@ private:
 
     float m_mass;///<The mass of the rigid body
 
-    PhysicsSimulator* m_physicsSimulator;///<A pointer to the PhysicsSimulator singleton
+    PhysicsSimulator* mPhysicsSimulator;///<A pointer to the PhysicsSimulator singleton
 
     vesMotionState* m_vesMotionState;
 

@@ -64,123 +64,123 @@ CADEntity::CADEntity( std::string geomFile,
                       bool occlude,
                       PhysicsSimulator* physicsSimulator )
         :
-        m_physicsRigidBody( 0 ),
-        m_physicsFlag( false ),
-        m_transparencyFlag( false ),
-        m_physicsSimulator( physicsSimulator ),
+        mPhysicsRigidBody( 0 ),
+        mPhysicsFlag( false ),
+        mTransparencyFlag( false ),
+        mPhysicsSimulator( physicsSimulator ),
         mOpacity( 1.0f )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
-    m_dcs = new ves::xplorer::scenegraph::DCS();
-    m_cadEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
+    mDCS = new ves::xplorer::scenegraph::DCS();
+    mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
 
-    m_cadEntityHelper->LoadFile( geomFile.c_str(), isStream, occlude );
-    m_fileName.assign( geomFile );
-    m_dcs->SetName( "CADEntityDCS" );
-    m_dcs->addChild( m_cadEntityHelper->GetNode() );
+    mCADEntityHelper->LoadFile( geomFile.c_str(), isStream, occlude );
+    mFileName.assign( geomFile );
+    mDCS->SetName( "CADEntityDCS" );
+    mDCS->addChild( mCADEntityHelper->GetNode() );
     /*if( occlude )
     {
-        m_cadEntityHelper->AddOccluderNodes();
+        mCADEntityHelper->AddOccluderNodes();
     }*/
-    parentDCS->AddChild( m_dcs.get() );
+    parentDCS->AddChild( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( osg::Node* node,
                       ves::xplorer::scenegraph::DCS* parentDCS,
                       PhysicsSimulator* physicsSimulator )
         :
-        m_physicsRigidBody( 0 ),
-        m_physicsFlag( false ),
-        m_transparencyFlag( false ),
-        m_physicsSimulator( physicsSimulator ),
+        mPhysicsRigidBody( 0 ),
+        mPhysicsFlag( false ),
+        mTransparencyFlag( false ),
+        mPhysicsSimulator( physicsSimulator ),
         mOpacity( 1.0f )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
-    m_dcs = new ves::xplorer::scenegraph::DCS();
-    m_cadEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
+    mDCS = new ves::xplorer::scenegraph::DCS();
+    mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper();
 
-    m_cadEntityHelper->SetNode( node );
-    m_fileName.assign( "" );
-    m_dcs->SetName( "CADEntityDCS" );
-    m_dcs->addChild( m_cadEntityHelper->GetNode() );
-    parentDCS->AddChild( m_dcs.get() );
+    mCADEntityHelper->SetNode( node );
+    mFileName.assign( "" );
+    mDCS->SetName( "CADEntityDCS" );
+    mDCS->addChild( mCADEntityHelper->GetNode() );
+    parentDCS->AddChild( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( ves::xplorer::scenegraph::CADEntityHelper* nodeToCopy,
                       ves::xplorer::scenegraph::DCS* parentDCS,
                       PhysicsSimulator* physicsSimulator )
         :
-        m_physicsRigidBody( 0 ),
-        m_physicsFlag( false ),
-        m_transparencyFlag( false ),
-        m_physicsSimulator( physicsSimulator ),
+        mPhysicsRigidBody( 0 ),
+        mPhysicsFlag( false ),
+        mTransparencyFlag( false ),
+        mPhysicsSimulator( physicsSimulator ),
         mOpacity( 1.0f )
 {
     //Need to fix this and move some code to Node
     //Leave some code here no more FILEInfo
-    m_dcs = new ves::xplorer::scenegraph::DCS();
-    m_cadEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper( *nodeToCopy );
+    mDCS = new ves::xplorer::scenegraph::DCS();
+    mCADEntityHelper = new ves::xplorer::scenegraph::CADEntityHelper( *nodeToCopy );
 
-    m_fileName = m_cadEntityHelper->GetNode()->getName();
-    m_dcs->SetName( "CADEntityDCS" );
-    m_dcs->addChild( m_cadEntityHelper->GetNode() );
-    parentDCS->AddChild( m_dcs.get() );
+    mFileName = mCADEntityHelper->GetNode()->getName();
+    mDCS->SetName( "CADEntityDCS" );
+    mDCS->addChild( mCADEntityHelper->GetNode() );
+    parentDCS->AddChild( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::~CADEntity()
 {
-    delete m_cadEntityHelper;
+    delete mCADEntityHelper;
 
-    if( m_physicsRigidBody )
+    if( mPhysicsRigidBody )
     {
-        if( m_physicsSimulator )
+        if( mPhysicsSimulator )
         {
-            m_physicsSimulator->GetDynamicsWorld()->removeRigidBody( m_physicsRigidBody );
+            mPhysicsSimulator->GetDynamicsWorld()->removeRigidBody( mPhysicsRigidBody );
         }
-        delete m_physicsRigidBody;
+        delete mPhysicsRigidBody;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::InitPhysics()
 {
-    if( !m_physicsRigidBody )
+    if( !mPhysicsRigidBody )
     {
-        m_physicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
-                                 m_dcs.get(), m_physicsSimulator );
-        m_dcs->SetPhysicsRigidBody( m_physicsRigidBody );
+        mPhysicsRigidBody = new ves::xplorer::scenegraph::PhysicsRigidBody(
+                                 mDCS.get(), mPhysicsSimulator );
+        mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode()
 {
-    return m_cadEntityHelper;
+    return mCADEntityHelper;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CADEntity::GetDCS()
 {
-    return m_dcs.get();
+    return mDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::PhysicsRigidBody* CADEntity::GetPhysicsRigidBody()
 {
-    return m_physicsRigidBody;
+    return mPhysicsRigidBody;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntity::GetFilename()
 {
-    return m_fileName;
+    return mFileName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CADEntity::GetTransparentFlag()
 {
-    return m_transparencyFlag;
+    return mTransparencyFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetTransparencyFlag( bool flag )
 {
-    m_transparencyFlag = flag;
+    mTransparencyFlag = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntity::SetOpacityValue( float opacity )

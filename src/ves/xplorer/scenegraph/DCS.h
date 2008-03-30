@@ -233,7 +233,7 @@ protected:
     double m_Translation[ 3 ];///<The translation array
     double m_Scale[ 3 ];///<The scale array
 
-    PhysicsRigidBody* m_physicsRigidBody;///<The rigid body to access the respective btTransform
+    PhysicsRigidBody* mPhysicsRigidBody;///<The rigid body to access the respective btTransform
 
 private:
     ///Update the bullet matrix with the matrix from the osg node
