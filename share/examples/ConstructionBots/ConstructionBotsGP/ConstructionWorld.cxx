@@ -75,7 +75,6 @@ ConstructionWorld::ConstructionWorld(
 #endif
               )
 :
-mStructureNotComplete( true ),
 mGrid( 0 ),
 mBlocks( 0 ),
 mAgents( 0 ),
@@ -87,15 +86,15 @@ mPhysicsSimulator( physicsSimulator )
                 "AmbientSound", pluginDCS, soundManager ) )
 #endif
 {
-    //Seed the random number generator
-    srand( time( 0 ) );
-
     //Initialize the construction bot framework
-    InitFramework();
+    InitializeFramework();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionWorld::~ConstructionWorld()
 {
+    //Seed the random number generator
+    srand( time( 0 ) );
+
 #ifdef VE_SOUND
     if( mAmbientSound )
     {
@@ -131,7 +130,7 @@ ConstructionWorld::~ConstructionWorld()
     mAgents.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionWorld::InitFramework()
+void ConstructionWorld::InitializeFramework()
 {
 #ifdef VE_SOUND
     try
@@ -146,8 +145,8 @@ void ConstructionWorld::InitFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occMatrix;
-    int numBlocks = 36;
-    int numAgents = 1;
+    int numBlocks = 20;
+    int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -191,7 +190,7 @@ void ConstructionWorld::InitFramework()
     mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
     
     mStartBlock->InitPhysics();
-    mStartBlock->GetPhysicsRigidBody()->setFriction( 0.0 );
+    mStartBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
     mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
     //Set up map to entities
     mEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
@@ -225,7 +224,7 @@ void ConstructionWorld::InitFramework()
 
         //Set physics properties for blocks
         mBlocks.at( i )->InitPhysics();
-        mBlocks.at( i )->GetPhysicsRigidBody()->setFriction( 0.0 );
+        mBlocks.at( i )->GetPhysicsRigidBody()->setFriction( 1.0 );
 
         //Set D6 constraint for blocks
         mBlocks.at( i )->SetConstraints( gridSize );
@@ -241,7 +240,7 @@ void ConstructionWorld::InitFramework()
 
         //Set physics properties for blocks
         mAgents.at( i )->InitPhysics();
-        mAgents.at( i )->GetPhysicsRigidBody()->setFriction( 0.0 );
+        mAgents.at( i )->GetPhysicsRigidBody()->setFriction( 1.0 );
 
         //Set D6 constraint for agents
         mAgents.at( i )->SetConstraints( gridSize );
@@ -353,40 +352,13 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
         bots::SiteSensorPtr siteSensor = agent->GetSiteSensor();
         bots::HoldBlockSensorPtr holdBlockSensor = agent->GetHoldBlockSensor();
 
-        //Remove reference lines
-        blockSensor->RemoveLine();
-        siteSensor->RemoveLine();
-
-        /*
         holdBlockSensor->CollectInformation();
-        if( holdBlockSensor->HoldingBlock() )
-        {
-            siteSensor->CollectInformation();
-            if( siteSensor->SiteInView() )
-            {
-                if( siteSensor->CloseToSite() )
-                {
-                    bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
-                        ( mEntities[ agent->GetTargetDCS()->GetName() ] );
-                    bool collision = agent->GetPhysicsRigidBody()->
-                        CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
-                    if( collision )
-                    {
-                        //agent->SetBuildMode( true );
-                        //agent->Get
-                    }
-                }
-
-                agent->GoToSite();
-            }
-        }
-        else
-        */
+        if( !holdBlockSensor->HoldingBlock() )
         {
             blockSensor->CollectInformation();
             if( blockSensor->BlockInView() )
             {
-                //if( blockSensor->CloseToBlock() )
+                if( blockSensor->CloseToBlock() )
                 {
                     bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
                         ( mEntities[ agent->GetTargetDCS()->GetName() ] );
@@ -401,8 +373,28 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
                 agent->GoToBlock();
             }
         }
+        else
+        {
+            siteSensor->CollectInformation();
+            if( siteSensor->SiteInView() )
+            {
+                if( siteSensor->CloseToSite() )
+                {
+                    bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
+                        ( mEntities[ agent->GetTargetDCS()->GetName() ] );
+                    bool collision = agent->GetPhysicsRigidBody()->
+                        CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
+                    if( collision )
+                    {
+                        ;
+                    }
+                }
 
-        /*
+                agent->GoToSite();
+            }
+        }
+
+        //Need to look at this
         agent->WanderAround();
 
         obstacleSensor->CollectInformation();
@@ -410,14 +402,12 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
         {
             agent->AvoidObstacle();
         }
-        */
-
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::PreFrameUpdate()
 {
-    if( mStructureNotComplete )
+    if( !mPhysicsSimulator->GetIdle() )
     {
         CommunicatingBlocksAlgorithm();
     }

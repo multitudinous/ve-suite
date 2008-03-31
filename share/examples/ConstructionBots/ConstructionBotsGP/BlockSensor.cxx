@@ -43,6 +43,8 @@
 #include <osg/Geometry>
 #include <osg/LineWidth>
 
+#include <osgUtil/IntersectVisitor>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 #include <cmath>
@@ -61,9 +63,10 @@ mAngle( 0 ),
 mAngleInc( 0.1 ),
 mRange( 0 ),
 mNormalizedBlockVector( 0, 0, 0 ),
-mLine( new osg::Geometry() ),
-mBeamGeode( new osg::Geode() ),
-mBeamLineSegment( new osg::LineSegment() )
+mGeode( 0 ),
+mGeometry( 0 ),
+mVertexArray( 0 ),
+mLineSegment( 0 )
 {
     Initialize();
 }
@@ -75,64 +78,84 @@ BlockSensor::~BlockSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Initialize()
 {
-    osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array();
-    osg::ref_ptr< osg::Vec3Array > lineNormals = new osg::Vec3Array();
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    mLineSegment = new osg::LineSegment();
+    mGeode = new osg::Geode();
+    mGeometry = new osg::Geometry();
+    mVertexArray = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
+    osg::ref_ptr< osg::StateSet > stateset = mGeode->getOrCreateStateSet();
 
-    colors->push_back( osg::Vec4( 0.0f, 1.0f, 1.0f, 1.0f ) );
-    mLine->setColorArray( colors.get() );
-    mLine->setColorBinding( osg::Geometry::BIND_OVERALL );
+    //Only need 2 vertices for the line
+    mVertexArray->resize( 2 );
+    mGeometry->setVertexArray( mVertexArray.get() );
 
-    lineNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
-    mLine->setNormalArray( lineNormals.get() );
-    mLine->setNormalBinding( osg::Geometry::BIND_OVERALL );
+    colorArray->push_back( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    mGeometry->setColorArray( colorArray.get() );
+    mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    mGeometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+
+    mGeode->addDrawable( mGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 1.0f );
     stateset->setAttribute( lineWidth.get() );
-    mLine->setStateSet( stateset.get() );
+
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+
+    mGeode->setStateSet( stateset.get() );
+
+    mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
+
+    DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = mAgentEntity->GetTargetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
+        mAgentEntity->GetPluginDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
+        mAgentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
+        mAgentEntity->GetTargetDCS();
 
-    osg::Vec3d startPoint, endPoint;
     double* agentPosition = agentDCS->GetVETranslationArray();
-    startPoint.set( agentPosition[ 0 ],
-                    agentPosition[ 1 ],
-                    agentPosition[ 2 ] );
+    (*mVertexArray)[ 0 ].set( agentPosition[ 0 ],
+                              agentPosition[ 1 ],
+                              0.5 );
     if( targetDCS.valid() )
     {
         double* targetPosition = targetDCS->GetVETranslationArray();
-        endPoint.set( targetPosition[ 0 ],
-                      targetPosition[ 1 ],
-                      0.5 );
+        (*mVertexArray)[ 1 ].set( targetPosition[ 0 ],
+                                  targetPosition[ 1 ],
+                                  0.5 );
     }
     else
     {
         Rotate();
-        endPoint.set( agentPosition[ 0 ] + mRange * cos( mAngle ),
-                      agentPosition[ 1 ] + mRange * sin( mAngle ),
-                      agentPosition[ 2 ] );
+        (*mVertexArray)[ 1 ].set( agentPosition[ 0 ] + mRange * cos( mAngle ),
+                                  agentPosition[ 1 ] + mRange * sin( mAngle ),
+                                  0.5 );
     }
+
+    mLineSegment->set( (*mVertexArray)[ 0 ], (*mVertexArray)[ 1 ] );
 
     //Reset results from last frame
     mBlockInView = false;
     mCloseToBlock = false;
     targetDCS = NULL;
-
-    mBeamLineSegment->set( startPoint, endPoint );
-    DrawLine( startPoint, endPoint );
+    mGeometry->dirtyDisplayList();
+    mGeometry->dirtyBound();
 
     osgUtil::IntersectVisitor intersectVisitor;
-    intersectVisitor.addLineSegment( mBeamLineSegment.get() );
+    intersectVisitor.addLineSegment( mLineSegment.get() );
     pluginDCS->accept( intersectVisitor );
 
-    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mBeamLineSegment.get() );
+    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mLineSegment.get() );
     if( hitList.size() > 1 )
     {
         //Get the next hit excluding the agent itself
@@ -152,13 +175,13 @@ void BlockSensor::CollectInformation()
                     colorArray->at( 0 ).b() == 1.0 )
                 {
                     ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( geode.get() );
-                    osg::ref_ptr< ves::xplorer::scenegraph::DCS > temp  = static_cast< ves::xplorer::scenegraph::DCS* >( parentVisitor.GetParentNode() );
-                    if( temp.valid() )
+                    targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >( parentVisitor.GetParentNode() );
+                    if( targetDCS.valid() )
                     {
-                        double* blockPosition = temp->GetVETranslationArray();
+                        double* blockPosition = targetDCS->GetVETranslationArray();
                         btVector3 blockVector( blockPosition[ 0 ] - agentPosition[ 0 ],
                                                blockPosition[ 1 ] - agentPosition[ 1 ],
-                                               0 );
+                                               0.0 );
 
                         if( blockVector.length() < 1.415 )//sqrt( 2 * 0.5 )
                         {
@@ -166,16 +189,16 @@ void BlockSensor::CollectInformation()
                         }
 
                         mNormalizedBlockVector = blockVector.normalize();
+                        //mNormalizedBlockVector.setZ( 0.1 );
 
                         mBlockInView = true;
-                        mAgentEntity->SetTargetDCS( temp.get() );
                     }
                 }
             }
         }
     }
 
-    
+    mAgentEntity->SetTargetDCS( targetDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate()
@@ -183,30 +206,9 @@ void BlockSensor::Rotate()
     mAngle += mAngleInc;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockSensor::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
+void BlockSensor::DisplayLine( bool onOff )
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
-
-    osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
-    vertices->push_back( startPoint );
-    vertices->push_back( endPoint );
-    mLine->setVertexArray( vertices.get() );
-
-    mLine->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, vertices->size() ) );
-    mBeamGeode->addDrawable( mLine.get() );      
-    pluginDCS->addChild( mBeamGeode.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void BlockSensor::RemoveLine()
-{
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
-    unsigned int numPrimitives = mLine->getNumPrimitiveSets();
-    if( numPrimitives == 1 )
-    {
-        mLine->removePrimitiveSet( 0 );
-    }
-    mBeamGeode->removeDrawable( mLine.get() );
-    pluginDCS->removeChild( mBeamGeode.get() );
+    mGeode->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool BlockSensor::BlockInView()

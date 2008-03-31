@@ -112,8 +112,10 @@ void AgentEntity::PickUpBlock( bots::BlockEntity* blockEntity )
     double* position = mDCS->GetVETranslationArray();
     double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
     blockEntity->GetDCS()->SetTranslationArray( transArray );
-    blockEntity->GetPhysicsRigidBody()->clearForces();
+    //blockEntity->GetPhysicsRigidBody()->clearForces();
     mTargetDCS = NULL;
+    mBlockSensor->DisplayLine( false );
+    mSiteSensor->DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
@@ -123,7 +125,7 @@ void AgentEntity::Build()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToSite()
 {
-    mPhysicsRigidBody->setLinearVelocity( mSiteSensor->GetNormalizedSiteVector() );;
+    mPhysicsRigidBody->setLinearVelocity( mSiteSensor->GetNormalizedSiteVector() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetNameAndDescriptions( int number )
@@ -162,8 +164,8 @@ void AgentEntity::SetConstraints( int gridSize )
     //Fix the translation range for the agents
     //Give 0.5 units extra in xy plane for agent/wall collision
     //Give small z-range for agent/grid collision
-    mConstraint->setLinearLowerLimit( btVector3( -gridSize * 0.5, -gridSize * 0.5, 0.0 ) );
-    mConstraint->setLinearUpperLimit( btVector3( gridSize * 0.5, gridSize * 0.5, 0.1 ) );
+    mConstraint->setLinearLowerLimit( btVector3( -100.0, -100.0, -100.0 ) );
+    mConstraint->setLinearUpperLimit( btVector3(  100.0,  100.0,  100.0 ) );
 
     //Remove rotation from agents
     //Range should be small, otherwise singularities will 'explode' the constraint

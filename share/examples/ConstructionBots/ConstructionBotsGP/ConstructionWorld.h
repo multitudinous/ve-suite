@@ -89,12 +89,9 @@ public:
     void PreFrameUpdate();
 
 private:
-    void InitFramework();
+    void InitializeFramework();
     void CreateRandomPositions( int gridSize );
-
     void CommunicatingBlocksAlgorithm();
-
-    bool mStructureNotComplete;
 
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 

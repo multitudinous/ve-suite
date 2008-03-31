@@ -127,8 +127,8 @@ void BlockEntity::SetConstraints( int gridSize )
     //Fix the translation range for the agents
     //Give 0.5 units extra in xy plane for agent/wall collision
     //Give small z-range for agent/grid collision
-    mConstraint->setLinearLowerLimit( btVector3( -gridSize * 0.5, -gridSize * 0.5, -1.0 ) );
-    mConstraint->setLinearUpperLimit( btVector3( gridSize * 0.5, gridSize * 0.5, 0.1 ) );
+    mConstraint->setLinearLowerLimit( btVector3( -100.0, -100.0, -100.0 ) );
+    mConstraint->setLinearUpperLimit( btVector3(  100.0,  100.0,  100.0 ) );
 
     //Remove rotation from agents
     //Range should be small, otherwise singularities will 'explode' the constraint

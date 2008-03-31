@@ -74,10 +74,7 @@ void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldD
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::PreFrameUpdate()
 {
-    if( !mPhysicsSimulator->GetIdle() )
-    {
-        mConstructionWorld->PreFrameUpdate();
-    }
+    mConstructionWorld->PreFrameUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::UpdateParams()

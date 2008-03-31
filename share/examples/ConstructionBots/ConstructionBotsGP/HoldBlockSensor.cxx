@@ -51,7 +51,7 @@ HoldBlockSensor::HoldBlockSensor( bots::AgentEntity* agentEntity )
 :
 Sensor( agentEntity ),
 mHoldingBlock( false ),
-mRange( 2.6 ),
+mRange( 0.6 ),
 mBeamLineSegment( new osg::LineSegment() )
 {
     ;
@@ -83,30 +83,7 @@ void HoldBlockSensor::CollectInformation()
     if( hitList.size() > 1 )
     {
         mHoldingBlock = true;
-        /*
-        //Get the next hit excluding the agent itself
-        osgUtil::Hit firstHit = hitList.at( 1 );
-
-        osg::ref_ptr< osg::Geode > geode = firstHit.getGeode();
-
-        if( geode.valid() )
-        {
-            osg::ref_ptr< osg::Vec4Array > color_array = static_cast< osg::Vec4Array* >
-                ( geode->getDrawable( 0 )->asGeometry()->getColorArray() );
-
-            if( color_array.valid() )
-            {
-                if( color_array->at( 0 ).r() == 1.0 &&
-                    color_array->at( 0 ).g() == 1.0 &&
-                    color_array->at( 0 ).b() == 1.0 )
-                {
-                    
-                }
-            } 
-        }
-        */
     }
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool HoldBlockSensor::HoldingBlock()

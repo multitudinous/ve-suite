@@ -37,6 +37,7 @@
 // --- OSG Includes ---//
 #include <osg/Geometry>
 #include <osg/Texture2D>
+#include <osg/PolygonOffset>
 #include <osg/LineWidth>
 
 #include <osgDB/ReadFile>
@@ -126,11 +127,11 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
 
     for( int i = 0; i <= gridSize; ++i )
     {
-	    lineVertices->push_back( osg::Vec3( -halfGridSize, -i + halfGridSize, 0.001f ) );
-	    lineVertices->push_back( osg::Vec3(  halfGridSize, -i + halfGridSize, 0.001f ) );
+	    lineVertices->push_back( osg::Vec3( -halfGridSize, -i + halfGridSize, 0.0f ) );
+	    lineVertices->push_back( osg::Vec3(  halfGridSize, -i + halfGridSize, 0.0f ) );
 
-	    lineVertices->push_back( osg::Vec3( i - halfGridSize,  halfGridSize, 0.001f ) );
-	    lineVertices->push_back( osg::Vec3( i - halfGridSize, -halfGridSize, 0.001f ) );
+	    lineVertices->push_back( osg::Vec3( i - halfGridSize,  halfGridSize, 0.0f ) );
+	    lineVertices->push_back( osg::Vec3( i - halfGridSize, -halfGridSize, 0.0f ) );
    }
 	
     lineVertices->push_back( osg::Vec3( -halfGridSize, halfGridSize,  0.0f ) );
@@ -266,9 +267,18 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
     walls->setNormalArray( wallNormals.get() );
     walls->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
+    osg::ref_ptr< osg::StateSet > gridStateSet = new osg::StateSet();
+    osg::ref_ptr< osg::PolygonOffset > polyoffset = new osg::PolygonOffset();
+    polyoffset->setFactor( 1.0f );
+    polyoffset->setUnits( 1.0f );
+
+    gridStateSet->setAttributeAndModes( polyoffset.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    grid->setStateSet( gridStateSet.get() );
+
     osg::ref_ptr< osg::StateSet > lineStateSet = new osg::StateSet();
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 4.0f );
+    lineWidth->setWidth( 2.0f );
     lineStateSet->setAttribute( lineWidth.get() );
     lines->setStateSet( lineStateSet.get() );
 

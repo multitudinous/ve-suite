@@ -39,9 +39,14 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/LineSegment>
+#include <osg/Array>
 
-#include <osgUtil/IntersectVisitor>
+namespace osg
+{
+class Geode;
+class Geometry;
+class LineSegment;
+}
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -63,8 +68,7 @@ public:
 
     void Rotate();
 
-    void DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint );
-    void RemoveLine();
+    void DisplayLine( bool onOff );
 
     bool BlockInView();
     bool CloseToBlock();
@@ -85,9 +89,10 @@ private:
 
     btVector3 mNormalizedBlockVector;
 
-    osg::ref_ptr< osg::Geometry > mLine;
-    osg::ref_ptr< osg::Geode > mBeamGeode;
-    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
+    osg::ref_ptr< osg::Geode > mGeode;
+    osg::ref_ptr< osg::Geometry > mGeometry;
+    osg::ref_ptr< osg::Vec3Array > mVertexArray;
+    osg::ref_ptr< osg::LineSegment > mLineSegment;
 
 };
 } //end bots
