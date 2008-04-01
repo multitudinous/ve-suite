@@ -34,14 +34,13 @@
 #ifndef CAMERA_PLACEMENT_TOOL_GP_H
 #define CAMERA_PLACEMENT_TOOL_GP_H
 
-// --- My Includes --- //
-#include "CameraPlacementToolScenePtr.h"
-
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 
 namespace cpt
 {
+// --- My Includes --- //
+class CameraEntity;
 
 class VE_USER_PLUGIN_EXPORTS CameraPlacementToolGP :
     public ves::xplorer::plugin::PluginBase
@@ -57,7 +56,9 @@ protected:
     void UpdateParams();
 
 private:
-    cpt::CameraPlacementToolScenePtr mScene;
+    void InitializeResources();
+
+    osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( CameraPlacementToolGP )

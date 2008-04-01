@@ -70,7 +70,7 @@ class CameraEntity : public osg::Camera
 {
 public:
     CameraEntity();
-    CameraEntity( ves::xplorer::scenegraph::DCS* parentDCS );
+    CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS );
     CameraEntity( const CameraEntity& cameraEntity,
                   const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
@@ -93,32 +93,44 @@ protected:
     virtual ~CameraEntity();
 
 private:
-    void Initialize( ves::xplorer::scenegraph::DCS* parentDCS );
+    void Initialize( ves::xplorer::scenegraph::DCS* worldDCS );
     void CreateViewFrustumGeode();
     void CreateScreenAlignedQuadGeode();
     void CreateCameraViewTexture();
 
+    //The matrix that takes a vertex from local coords into tex coords
     osg::Matrixd mMVPT;
 
-    osg::ref_ptr< osg::Texture2D > mTexture;
+    //The texture used as this CameraEntity's color buffer
+    //              Texture Unit 1              //
+    osg::ref_ptr< osg::Texture2D > mQuadTexture;
+
+    //              Texture Unit 0              //
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
+    //
     osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
     osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    //Need to create a dcs for each selectable CAD object
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mQuadDCS;
 
-    osg::ref_ptr< osg::Node > mCameraGeometry;
+    //The loaded camera geometry
+    osg::ref_ptr< osg::Node > mCameraNode;
 
+    //The frustum geometry lines
     osg::ref_ptr< osg::Geode > mFrustumGeode;
     osg::ref_ptr< osg::Geometry > mFrustumGeometry;
     osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
     osg::ref_ptr< osg::Vec4Array > mFrustumColor;
 
+    //The screen aligned quad to show the camera view
     osg::ref_ptr< osg::Geode > mQuadGeode;
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
 
+    //A callback to update CameraEntity relative to its DCS
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 };
 
