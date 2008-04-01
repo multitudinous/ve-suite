@@ -50,7 +50,8 @@ using namespace cpt;
 CameraEntityCallback::CameraEntityCallback()
 :
 osg::Object(),
-osg::NodeCallback()
+osg::NodeCallback(),
+mInitialViewMatrix( osg::Matrix::identity() )
 {
     ;
 }
@@ -60,7 +61,10 @@ CameraEntityCallback::CameraEntityCallback( const CameraEntityCallback& input )
 osg::Object( input ),
 osg::NodeCallback( input )
 {
-    ;
+    if( &input != this )
+    {
+        mInitialViewMatrix = input.mInitialViewMatrix;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntityCallback::~CameraEntityCallback()
@@ -75,15 +79,26 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 
     if( cameraEntity.valid() )
     {
-        osg::Matrixd dcsInverseMatrix;
-        gmtl::Matrix44d temp = cameraEntity->GetDCS()->GetMat();
-        dcsInverseMatrix.set( gmtl::invert( temp ).getData() );
+        gmtl::Matrix44d cameraDCSMatrix = cameraEntity->GetDCS()->GetMat();
+        osg::Matrixd inverseCameraDCSMatrix(
+            gmtl::invert( cameraDCSMatrix ).getData() );
 
-        //Compute matrix that takes a vertex from local coords into tex coords
-        osg::Matrixd MVPT = dcsInverseMatrix * cameraEntity->GetMatrixMVPT();
-        cameraEntity->GetTexGenNode()->getTexGen()->setPlanesFromMatrix( MVPT );
+        osg::Matrixd currentViewMatrix =
+            inverseCameraDCSMatrix * mInitialViewMatrix;
+        
+        cameraEntity->setViewMatrix( currentViewMatrix );
+        
+        cameraEntity->CalculateMatrixMVPT();
+        cameraEntity->GetTexGenNode()->getTexGen()->setPlanesFromMatrix(
+            cameraEntity->GetMatrixMVPT() );
     }
 
     traverse( node, nv );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntityCallback::SetInitialViewMatrix(
+    const osg::Matrixd& initialViewMatrix )
+{
+    mInitialViewMatrix = initialViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

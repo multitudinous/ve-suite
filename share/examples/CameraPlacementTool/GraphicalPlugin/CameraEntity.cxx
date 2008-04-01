@@ -57,6 +57,8 @@ using namespace cpt;
 CameraEntity::CameraEntity()
 :
 osg::Camera(),
+mCameraPerspective( false ),
+mCameraEntityCallback( 0 ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
 mNearPlaneUniform( 0 ),
@@ -67,11 +69,9 @@ mCameraNode( 0 ),
 mFrustumGeode( 0 ),
 mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
-mFrustumColor( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 ),
-mCameraEntityCallback( 0 )
+mQuadVertices( 0 )
 {
     //osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
         //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
@@ -82,6 +82,8 @@ mCameraEntityCallback( 0 )
 CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS )
 :
 osg::Camera(),
+mCameraPerspective( false ),
+mCameraEntityCallback( 0 ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
 mNearPlaneUniform( 0 ),
@@ -92,11 +94,9 @@ mCameraNode( 0 ),
 mFrustumGeode( 0 ),
 mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
-mFrustumColor( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 ),
-mCameraEntityCallback( 0 )
+mQuadVertices( 0 )
 {
     Initialize( worldDCS );
 }
@@ -105,6 +105,7 @@ CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
                             const osg::CopyOp& copyop )
 :
 osg::Camera( cameraEntity, copyop ),
+mCameraEntityCallback( 0 ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
 mNearPlaneUniform( 0 ),
@@ -115,25 +116,18 @@ mCameraNode( 0 ),
 mFrustumGeode( 0 ),
 mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
-mFrustumColor( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 ),
-mCameraEntityCallback( 0 )
+mQuadVertices( 0 )
 {
     if( &cameraEntity != this )
     {
-        ;
+        mCameraPerspective = cameraEntity.mCameraPerspective;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::~CameraEntity()
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
-{   
     //stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     //stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
     //stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
@@ -146,6 +140,11 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
 
     //stateset->addUniform( mNearPlaneUniform.get() );
     //stateset->addUniform( mFarPlaneUniform.get() );
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
+{   
     //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -153,11 +152,21 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
     setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),
-                           osg::Vec3( 0, 1, 0 ),
-                           osg::Vec3( 0, 0, 1 ) );
-    setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
 
+    osg::Matrixd initialViewMatrix;
+    initialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
+                                  osg::Vec3( 0, 1, 0 ),
+                                  osg::Vec3( 0, 0, 1 ) );
+    setViewMatrix( initialViewMatrix );
+    setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
+    worldDCS->addChild( this );
+
+    //Initialize mCameraEntityCallback
+    mCameraEntityCallback = new cpt::CameraEntityCallback();
+    mCameraEntityCallback->SetInitialViewMatrix( initialViewMatrix );
+    setUpdateCallback( mCameraEntityCallback.get() );
+
+    /*
     //Add subgraph to render
     osg::ref_ptr< ves::xplorer::scenegraph::DCS >  mGrinder = new ves::xplorer::scenegraph::DCS();
 
@@ -169,9 +178,7 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
 
     mGrinder->addChild( grinder.get() );
     addChild( mGrinder.get() );
-    
-
-    worldDCS->addChild( this );
+    */
 
     //Initialize mMVPT
     mMVPT = osg::Matrix::identity();
@@ -191,13 +198,14 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
     mFarPlaneUniform = new osg::Uniform(
         "farPlane", static_cast< float >( 10.0 ) );
 
-    //Initialize mCameraDCS
+    //Initialize mCameraDCS & mQuadDCS
     mCameraDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->addChild( mCameraDCS.get() );
 
-    //Initialize mQuadDCS
     mQuadDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->addChild( mQuadDCS.get() );
+
+    SetNamesAndDescriptions();
 
     //Initialize mCameraNode
     mCameraNode = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
@@ -208,10 +216,6 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
 
     //Initialize mQuadGeode
     CreateScreenAlignedQuadGeode();
-
-    //Initialize mCameraEntityCallback
-    mCameraEntityCallback = new cpt::CameraEntityCallback();
-    setUpdateCallback( mCameraEntityCallback.get() );
 
     Update();
 }
@@ -231,15 +235,15 @@ void CameraEntity::CreateViewFrustumGeode()
     mFrustumGeode = new osg::Geode();
     mFrustumGeometry = new osg::Geometry();
     mFrustumVertices = new osg::Vec3Array();
-    mFrustumColor = new osg::Vec4Array();
+    osg::ref_ptr< osg::Vec4Array > frustumColors = new osg::Vec4Array();
 
     //Only need 9 vertices:
     //The origin, and the eight corners of the near and far planes.
     mFrustumVertices->resize( 9 );
     mFrustumGeometry->setVertexArray( mFrustumVertices.get() );
 
-    mFrustumColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
-    mFrustumGeometry->setColorArray( mFrustumColor.get() );
+    frustumColors->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    mFrustumGeometry->setColorArray( frustumColors.get() );
     mFrustumGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     GLushort idxLines[ 8 ]  = { 0, 5, 0, 6, 0, 7, 0, 8 };
@@ -299,7 +303,7 @@ void CameraEntity::CreateCameraViewTexture()
     mQuadTexture = new osg::Texture2D();
 
     //Create the texture
-    mQuadTexture->setTextureSize( 512, 512 );
+    mQuadTexture->setTextureSize( 1024, 1024 );
     mQuadTexture->setInternalFormat( GL_RGBA );
     mQuadTexture->setSourceFormat( GL_RGBA );
     mQuadTexture->setSourceType( GL_UNSIGNED_BYTE );
@@ -309,19 +313,23 @@ void CameraEntity::CreateCameraViewTexture()
     mQuadTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     mQuadTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
 
-    setViewport( 0, 0, 512, 512 );
+    setViewport( 0, 0, 1024, 1024 );
 
     //Attach the texture and use it as the color buffer
     attach( osg::Camera::COLOR_BUFFER, mQuadTexture.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::SetNameAndDescriptions( const std::string& name )
+void CameraEntity::SetNamesAndDescriptions()
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList.push_back( "VE_XML_ID" );
     descriptorsList.push_back( "" );
+
     mCameraDCS->setDescriptions( descriptorsList );
-    mCameraDCS->setName( name );
+    mCameraDCS->setName( std::string( "Camera" ) );
+
+    mQuadDCS->setDescriptions( descriptorsList );
+    mQuadDCS->setName( std::string( "Screen Aligned Quad" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Update()
@@ -381,14 +389,19 @@ void CameraEntity::Update()
     mFarPlaneUniform->set( static_cast< float >( farPlane ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::DrawCameraGeometry( bool onOff )
+void CameraEntity::DisplayCamera( bool onOff )
 {
     mCameraNode->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::DrawViewFrustum( bool onOff )
+void CameraEntity::DisplayViewFrustum( bool onOff )
 {
     mFrustumGeode->setNodeMask( onOff );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::DisplayScreenAlignedQuad( bool onOff )
+{
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()

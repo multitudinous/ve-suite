@@ -78,14 +78,15 @@ public:
 
     void CalculateMatrixMVPT();
 
-    void DrawCameraGeometry( bool onOff );
-    void DrawViewFrustum( bool onOff );
+    void DisplayCamera( bool onOff );
+    void DisplayViewFrustum( bool onOff );
+    void DisplayScreenAlignedQuad( bool onOff );
     
     ves::xplorer::scenegraph::DCS* GetDCS();
     osg::TexGenNode* GetTexGenNode();
     osg::Matrixd GetMatrixMVPT();
 
-    void SetNameAndDescriptions( const std::string& name );
+    void SetNamesAndDescriptions();
 
     void Update();
 
@@ -94,18 +95,24 @@ protected:
 
 private:
     void Initialize( ves::xplorer::scenegraph::DCS* worldDCS );
+
     void CreateViewFrustumGeode();
     void CreateScreenAlignedQuadGeode();
     void CreateCameraViewTexture();
 
+    bool mCameraPerspective;
+
+    //A callback to update CameraEntity relative to its DCS
+    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
+
     //The matrix that takes a vertex from local coords into tex coords
     osg::Matrixd mMVPT;
 
+    //Texture Unit 1
     //The texture used as this CameraEntity's color buffer
-    //              Texture Unit 1              //
     osg::ref_ptr< osg::Texture2D > mQuadTexture;
 
-    //              Texture Unit 0              //
+    //Texture Unit 0
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
     //
@@ -116,22 +123,19 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mQuadDCS;
 
-    //The loaded camera geometry
+    //The loaded camera geometry node
     osg::ref_ptr< osg::Node > mCameraNode;
 
     //The frustum geometry lines
     osg::ref_ptr< osg::Geode > mFrustumGeode;
     osg::ref_ptr< osg::Geometry > mFrustumGeometry;
     osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
-    osg::ref_ptr< osg::Vec4Array > mFrustumColor;
 
     //The screen aligned quad to show the camera view
     osg::ref_ptr< osg::Geode > mQuadGeode;
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
 
-    //A callback to update CameraEntity relative to its DCS
-    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 };
 
 } //end cpt

@@ -34,9 +34,8 @@
 #ifndef CAMERA_ENTITY_CALLBACK_H
 #define CAMERA_ENTITY_CALLBACK_H
 
-// --- VE-Suite Includes --- //
-
 // --- OSG Includes --- //
+#include <osg/Matrix>
 #include <osg/NodeCallback>
 
 namespace cpt
@@ -51,10 +50,13 @@ public:
 
     virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
 
+    void SetInitialViewMatrix( const osg::Matrixd& initialViewMatrix );
+
 protected:
     virtual ~CameraEntityCallback();
 
 private:
+    osg::Matrixd mInitialViewMatrix;
 
 };
 

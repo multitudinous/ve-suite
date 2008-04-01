@@ -57,6 +57,7 @@ mCameraEntity( 0 )
     mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
     mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
     mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
+    mEventHandlerMap[ "VIEW_PERSPECTIVE_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
@@ -181,7 +182,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
         command->GetDataValuePair( "toggleCamera" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        mCameraEntity->DrawCameraGeometry( onOff );
+        mCameraEntity->DisplayCamera( onOff );
     }
     else if( command->GetCommandName() == "TOGGLE_FRUSTUM_UPDATE" )
     {
@@ -189,7 +190,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
         command->GetDataValuePair( "toggleFrustum" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
-        mCameraEntity->DrawViewFrustum( onOff );
+        mCameraEntity->DisplayViewFrustum( onOff );
     }
     else if( command->GetCommandName() == "TOGGLE_PROJECTION_UPDATE" )
     {
@@ -213,6 +214,14 @@ void CameraPlacementToolGP::SetCurrentCommand(
             projectionData[ 2 ], projectionData[ 3 ] );
 
         mCameraEntity->Update();
+    }
+    else if( command->GetCommandName() == "VIEW_PERSPECTIVE_UPDATE" )
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair( "viewPerspective" )->GetData( selection );
+
+        bool onOff = ( selection != 0 );
+        //mCameraEntity
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

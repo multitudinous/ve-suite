@@ -67,10 +67,8 @@ EVT_RADIOBOX( ID_PROJECTION_RADIOBOX,
 EVT_SLIDER( ID_FOVZ_SLIDER, CameraPlacementToolUIDialog::OnFoVZSlider )
 EVT_COMMAND_SCROLL( ID_ASPECTRATIO_SPINCTRL,
                     CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl )
-EVT_BUTTON( ID_DISPLAYCAMERAVIEW_BUTTON,
-            CameraPlacementToolUIDialog::OnDisplayCameraViewButton )
-EVT_BUTTON( ID_DISPLAYWORLDVIEW_BUTTON,
-            CameraPlacementToolUIDialog::OnDisplayWorldViewButton )
+EVT_RADIOBOX( ID_VIEWPERSPECTIVE_RADIOBOX,
+              CameraPlacementToolUIDialog::OnViewPerspectiveRadioBox )
 
 END_EVENT_TABLE()
 
@@ -294,29 +292,33 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     mainSizer->Add( projectionSettingsSizer, 0, wxEXPAND, 5 );
 
-    wxStaticBoxSizer* displaySettingsSizer;
-    displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        this, wxID_ANY, wxT( "Display Settings:" ) ), wxHORIZONTAL );
-
-    wxBoxSizer* displaySettingsButtonSizer;
-    displaySettingsButtonSizer = new wxBoxSizer( wxHORIZONTAL );
-
-    mDisplayCameraViewButton = new wxButton(
-        this, ID_DISPLAYCAMERAVIEW_BUTTON, wxT( "Camera View" ),
-        wxDefaultPosition, wxDefaultSize, 0 );
-    displaySettingsButtonSizer->Add(
-        mDisplayCameraViewButton, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
-
-    mDisplayWorldViewButton = new wxButton(
-        this, ID_DISPLAYWORLDVIEW_BUTTON, wxT( "World View" ),
-        wxDefaultPosition, wxDefaultSize, 0 );
-    displaySettingsButtonSizer->Add(
-        mDisplayWorldViewButton, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
-
-    displaySettingsSizer->Add(
-        displaySettingsButtonSizer, 1, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
-
-    mainSizer->Add( displaySettingsSizer, 0, wxALL | wxEXPAND, 5 );
+	wxStaticBoxSizer* displaySettingsSizer;
+	displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+        this, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
+	
+	wxBoxSizer* viewPerspectiveRadioBoxSizer;
+	viewPerspectiveRadioBoxSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxString mViewPerspectiveRadioBoxChoices[] =
+        { wxT( "Camera" ), wxT( "World" ) };
+	int mViewPerspectiveRadioBoxNChoices =
+        sizeof( mViewPerspectiveRadioBoxChoices ) / sizeof( wxString );
+	mViewPerspectiveRadioBox = new wxRadioBox(
+        this, ID_VIEWPERSPECTIVE_RADIOBOX,
+        wxT( "View Perspective" ), wxDefaultPosition, wxDefaultSize,
+        mViewPerspectiveRadioBoxNChoices, mViewPerspectiveRadioBoxChoices,
+        1, wxRA_SPECIFY_COLS | wxDOUBLE_BORDER );
+	mViewPerspectiveRadioBox->SetSelection( 1 );
+	mViewPerspectiveRadioBox->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+	
+	viewPerspectiveRadioBoxSizer->Add( mViewPerspectiveRadioBox, 0, wxALL, 5 );
+	
+	displaySettingsSizer->Add(
+        viewPerspectiveRadioBoxSizer, 1,
+        wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
+	
+	mainSizer->Add( displaySettingsSizer, 0, wxALL|wxEXPAND, 5 );
 
     wxStdDialogButtonSizer* stdDialogButtonSizer;
     wxButton* stdDialogButtonSizerOK;
@@ -394,16 +396,20 @@ void CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl(
     ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnDisplayCameraViewButton(
-    wxCommandEvent& WXUNUSED( event ) )
+void CameraPlacementToolUIDialog::OnViewPerspectiveRadioBox(
+    wxCommandEvent& event )
 {
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnDisplayWorldViewButton(
-    wxCommandEvent& WXUNUSED( event ) )
-{
-    ;
+    unsigned int selection = mViewPerspectiveRadioBox->GetSelection();
+
+    mCommandName = "VIEW_PERSPECTIVE_UPDATE";
+
+    ves::open::xml::DataValuePairSharedPtr viewPerspectiveDVP(
+        new ves::open::xml::DataValuePair() );
+    viewPerspectiveDVP->SetData( "viewPerspective", selection );
+    mInstructions.push_back( viewPerspectiveDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ProjectionUpdate()
