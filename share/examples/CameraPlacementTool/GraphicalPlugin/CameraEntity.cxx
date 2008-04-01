@@ -43,6 +43,7 @@
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/Texture2D>
 #include <osg/TexGenNode>
 
 #include <osgDB/ReadFile>
@@ -56,36 +57,44 @@ using namespace cpt;
 CameraEntity::CameraEntity()
 :
 osg::Camera(),
+mTexture( 0 ),
+mTexGenNode( 0 ),
+mNearPlaneUniform( 0 ),
+mFarPlaneUniform( 0 ),
 mDCS( 0 ),
 mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
 mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mFrustumColor( 0 ),
-mTexGenNode( 0 ),
-mCameraEntityCallback( 0 ),
-mNearPlaneUniform( 0 ),
-mFarPlaneUniform( 0 )
+mQuadGeode( 0 ),
+mQuadGeometry( 0 ),
+mQuadVertices( 0 ),
+mCameraEntityCallback( 0 )
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > parentDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > parentDCS =
+        //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
-    Initialize( parentDCS.get() );
+    //Initialize( parentDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* parentDCS )
 :
 osg::Camera(),
+mTexture( 0 ),
+mTexGenNode( 0 ),
+mNearPlaneUniform( 0 ),
+mFarPlaneUniform( 0 ),
 mDCS( 0 ),
 mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
 mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mFrustumColor( 0 ),
-mTexGenNode( 0 ),
-mCameraEntityCallback( 0 ),
-mNearPlaneUniform( 0 ),
-mFarPlaneUniform( 0 )
+mQuadGeode( 0 ),
+mQuadGeometry( 0 ),
+mQuadVertices( 0 ),
+mCameraEntityCallback( 0 )
 {
     Initialize( parentDCS );
 }
@@ -94,16 +103,20 @@ CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
                             const osg::CopyOp& copyop )
 :
 osg::Camera( cameraEntity, copyop ),
+mTexture( 0 ),
+mTexGenNode( 0 ),
+mNearPlaneUniform( 0 ),
+mFarPlaneUniform( 0 ),
 mDCS( 0 ),
 mCameraGeometry( 0 ),
 mFrustumGeode( 0 ),
 mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mFrustumColor( 0 ),
-mTexGenNode( 0 ),
-mCameraEntityCallback( 0 ),
-mNearPlaneUniform( 0 ),
-mFarPlaneUniform( 0 )
+mQuadGeode( 0 ),
+mQuadGeometry( 0 ),
+mQuadVertices( 0 ),
+mCameraEntityCallback( 0 )
 {
     if( &cameraEntity != this )
     {
@@ -118,11 +131,52 @@ CameraEntity::~CameraEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
 {   
+    //stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+    //stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+    //stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
+    //stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
+    //stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
+    //stateset->setAttribute(
+        //( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        //< osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
+        //osg::StateAttribute::ON );
+
+    //stateset->addUniform( mNearPlaneUniform.get() );
+    //stateset->addUniform( mFarPlaneUniform.get() );
+    //Initialize this
+    setRenderOrder( osg::Camera::PRE_RENDER );
+    setClearMask( GL_COLOR_BUFFER_BIT );
+    setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
+    setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
+    setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+    setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),
+                           osg::Vec3( 0, 1, 0 ),
+                           osg::Vec3( 0, 0, 1 ) );
+    setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
+
+    //Add subgraph to render
+    //addChild(  );
+
+    parentDCS->addChild( this );
+
+    //Initialize mMVPT
+    mMVPT = osg::Matrix::identity();
+
+    //Initialize mTexture
+    CreateCameraViewTexture();
+
     //Initialize mTexGenNode
     mTexGenNode = new osg::TexGenNode();
     mTexGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     mTexGenNode->setTextureUnit( 0 );
     parentDCS->addChild( mTexGenNode.get() );
+
+    //Initialize mNearPlaneUniform, mFarPlaneUniform
+    mNearPlaneUniform = new osg::Uniform(
+        "nearPlane", static_cast< float >( 5.0 ) );
+    mFarPlaneUniform = new osg::Uniform(
+        "farPlane", static_cast< float >( 10.0 ) );
 
     //Initialize mDCS
     mDCS = new ves::xplorer::scenegraph::DCS();
@@ -135,44 +189,13 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* parentDCS )
     //Initialize mFrustumGeode
     CreateViewFrustumGeode();
 
+    //Initialize mQuadGeode
+    CreateScreenAlignedQuadGeode();
+
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
     setUpdateCallback( mCameraEntityCallback.get() );
 
-    //Initialize mNearPlaneUniform, mFarPlaneUniform
-    mNearPlaneUniform = new osg::Uniform(
-        "nearPlane", static_cast< float >( 5.0 ) );
-    mFarPlaneUniform = new osg::Uniform(
-        "farPlane", static_cast< float >( 10.0 ) );
-
-    //Initialize this
-    setRenderOrder( osg::Camera::PRE_RENDER );
-    setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
-    setViewMatrixAsLookAt( osg::Vec3( 0, 0, 0 ),
-                           osg::Vec3( 0, 1, 0 ),
-                           osg::Vec3( 0, 0, 1 ) );
-    setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
-
-    osg::ref_ptr< osg::StateSet > stateset = getOrCreateStateSet();
-
-    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
-    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
-    stateset->setAttribute(
-        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-        < osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
-        osg::StateAttribute::ON );
-
-    stateset->addUniform( mNearPlaneUniform.get() );
-    stateset->addUniform( mFarPlaneUniform.get() );
-    setStateSet( stateset.get() );
-
-    parentDCS->addChild( this );
-
-    //Update
     Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +216,7 @@ void CameraEntity::CreateViewFrustumGeode()
     mFrustumVertices = new osg::Vec3Array();
     mFrustumColor = new osg::Vec4Array();
 
-    //Our vertex array needs only 9 vertices:
+    //Only need 9 vertices:
     //The origin, and the eight corners of the near and far planes.
     mFrustumVertices->resize( 9 );
     mFrustumGeometry->setVertexArray( mFrustumVertices.get() );
@@ -211,14 +234,68 @@ void CameraEntity::CreateViewFrustumGeode()
         osg::PrimitiveSet::LINE_LOOP, 4, idxLoops0 ) );
     mFrustumGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
         osg::PrimitiveSet::LINE_LOOP, 4, idxLoops1 ) );
-
     mFrustumGeode->addDrawable( mFrustumGeometry.get() );
 
-    mFrustumGeode->getOrCreateStateSet()->setMode(
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    mFrustumGeode->setStateSet( stateset.get() );
 
     mDCS->addChild( mFrustumGeode.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::CreateScreenAlignedQuadGeode()
+{
+    mQuadGeode = new osg::Geode();
+    mQuadGeometry = new osg::Geometry();
+    mQuadVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
+
+    //Only need 4 vertices for a quad:
+    mQuadVertices->resize( 4 );
+    mQuadGeometry->setVertexArray( mQuadVertices.get() );
+
+    quadTexCoords->resize( 4 );
+    (*quadTexCoords)[ 0 ].set( 0, 0 );
+    (*quadTexCoords)[ 1 ].set( 1, 0 );
+    (*quadTexCoords)[ 2 ].set( 1, 1 );
+    (*quadTexCoords)[ 3 ].set( 0, 1 );
+    mQuadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
+
+    GLushort idxQuads[ 4 ]  = { 0, 1, 2, 3 };
+    mQuadGeometry->addPrimitiveSet( new osg::DrawElementsUShort(
+        osg::PrimitiveSet::QUADS, 4, idxQuads ) );
+    mQuadGeode->addDrawable( mQuadGeometry.get() );
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setTextureAttributeAndModes( 0, mTexture.get(), osg::StateAttribute::ON );
+    mQuadGeode->setStateSet( stateset.get() );
+
+    mDCS->addChild( mQuadGeode.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::CreateCameraViewTexture()
+{
+    mTexture = new osg::Texture2D();
+
+    unsigned int texWidth = 4096;
+    unsigned int texHeight = 4096;
+
+    //Create the texture
+    mTexture->setTextureSize( texWidth, texHeight );
+    mTexture->setInternalFormat( GL_RGBA );
+    mTexture->setSourceType( GL_UNSIGNED_INT );
+
+    mTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    mTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    mTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+    mTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+
+    setViewport( 0, 0, texWidth, texHeight );
+
+    //Attach the texture and use it as the color buffer
+    attach( osg::Camera::COLOR_BUFFER, mTexture.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetNameAndDescriptions( const std::string& name )
@@ -273,6 +350,14 @@ void CameraEntity::Update()
     
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
+
+    (*mQuadVertices)[ 0 ].set( -0.5, 5.0, -0.5 );
+    (*mQuadVertices)[ 1 ].set(  0.5, 5.0, -0.5 );
+    (*mQuadVertices)[ 2 ].set(  0.5, 5.0,  0.5 );
+    (*mQuadVertices)[ 3 ].set( -0.5, 5.0,  0.5 );
+
+    mQuadGeometry->dirtyDisplayList();
+    mQuadGeometry->dirtyBound();
 
     //Update the uniforms
     mNearPlaneUniform->set( static_cast< float >( nearPlane ) );

@@ -54,6 +54,7 @@ namespace osg
 {
 class Geode;
 class Geometry;
+class Texture2D;
 class TexGenNode;
 }
 
@@ -94,22 +95,31 @@ protected:
 private:
     void Initialize( ves::xplorer::scenegraph::DCS* parentDCS );
     void CreateViewFrustumGeode();
+    void CreateScreenAlignedQuadGeode();
+    void CreateCameraViewTexture();
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    osg::Matrixd mMVPT;
 
-    osg::ref_ptr< osg::Node > mCameraGeometry;
-    osg::ref_ptr< osg::Geode > mFrustumGeode;
-    osg::ref_ptr< osg::Geometry > mFrustumGeometry;
-    osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
-    osg::ref_ptr< osg::Vec4Array > mFrustumColor;
+    osg::ref_ptr< osg::Texture2D > mTexture;
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
-
-    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
     osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
     osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
 
-    osg::Matrixd mMVPT;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+
+    osg::ref_ptr< osg::Node > mCameraGeometry;
+
+    osg::ref_ptr< osg::Geode > mFrustumGeode;
+    osg::ref_ptr< osg::Geometry > mFrustumGeometry;
+    osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
+    osg::ref_ptr< osg::Vec4Array > mFrustumColor;
+
+    osg::ref_ptr< osg::Geode > mQuadGeode;
+    osg::ref_ptr< osg::Geometry > mQuadGeometry;
+    osg::ref_ptr< osg::Vec3Array > mQuadVertices;
+
+    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 };
 
 } //end cpt

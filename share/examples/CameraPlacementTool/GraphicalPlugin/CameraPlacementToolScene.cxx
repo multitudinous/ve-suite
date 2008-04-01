@@ -100,7 +100,7 @@ void CameraPlacementToolScene::Initialize()
     mGrinder->setDescriptions( descriptorsList );
     mGrinder->setName( std::string( "grinder" ) );
 
-    mGrinder->setStateSet( mCameraEntity->getStateSet() );
+    //mGrinder->setStateSet( mCameraEntity->getStateSet() );
 
     mPluginDCS->AddChild( mGrinder.get() );
 }
