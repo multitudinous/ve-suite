@@ -181,8 +181,6 @@ public:
     vtkPolyData* GetPolyData();
     ///Get the data object for the dataset
     vtkDataObject* GetDataSet();
-    ///Get the alorightm to use in the vtk pipelines
-    vtkAlgorithm* GetAlgorithm();
 
     void SetType();       // compute dataset type by looking at the file
     void SetType( int );  // manually set the dataset type

@@ -160,7 +160,7 @@ void cfdContour::Update( void )
 
 #else
 
-        this->cutter->SetInputConnection( GetActiveDataSet()->GetAlgorithm()->GetOutputPort() );
+        this->cutter->SetInput( GetActiveDataSet()->GetDataSet() );
         this->plane->SetOrigin( this->origin );
         this->plane->SetNormal( this->normal );
         this->cutter->Update();

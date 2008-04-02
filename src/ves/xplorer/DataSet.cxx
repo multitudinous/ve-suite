@@ -261,11 +261,6 @@ double * DataSet::GetRange()
     return this->range;
 }
 ////////////////////////////////////////////////////////////////////////////////
-vtkAlgorithm* DataSet::GetAlgorithm()
-{
-    return mDataReader;
-}
-////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetUserRange( double userRange[2] )
 {
     vprDEBUG( vesDBG, 1 ) << "DataSet::SetUserRange OLD userRange = "
