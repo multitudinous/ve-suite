@@ -38,8 +38,7 @@
 #include <ves/xplorer/event/viz/cfdObjects.h>
 
 class vtkGlyph3D;
-class vtkMultiGroupDataGeometryFilter;
-class vtkMultiGroupPolyDataMapper;
+class vtkPolyDataMapper;
 class vtkMaskPoints;
 class vtkTriangleFilter;
 class vtkStripper;
@@ -100,12 +99,12 @@ public:
 
 protected:
     vtkGlyph3D*          glyph;
-    //vtkMultiGroupDataGeometryFilter*   filter;
-    vtkMultiGroupPolyDataMapper*   mapper;
+    vtkPolyDataMapper*   mapper;
     vtkMaskPoints*       ptmask;
     vtkTriangleFilter*   tris;
     vtkStripper*         strip;
     vtkThresholdPoints*  tfilter;
+    
     void SetGlyphWithThreshold();
     void SetGlyphAttributes();
     float GetVectorScaleFactor();

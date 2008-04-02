@@ -42,10 +42,10 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
+#include <vtkPassThroughFilter.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -83,30 +83,18 @@ void cfdContours::Update( void )
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-        //std::string vectorName = this->GetActiveDataSet()->
-        //                         GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
-        //this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        //   ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
-
-        std::string scalarName = this->GetActiveDataSet()->
-                                 GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
-
-        this->SetMapperInput( this->GetActiveDataSet()
-                              ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
-
-        this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-        this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
-
-        //this->mapper->Update();
+        vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
+        tempPipe->SetInput( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        
+        this->SetMapperInput( tempPipe->GetOutputPort() );
+        tempPipe->Delete();
+        
+        this->mapper->Update();
         vtkActor* temp = vtkActor::New();
         temp->SetMapper( this->mapper );
         temp->GetProperty()->SetSpecularPower( 20.0f );
         temp->GetProperty()->SetOpacity( contourOpacity );
-        //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-        //geodes.back()->TranslateToGeode( temp );
-        //this->updateFlag = true;
+
         try
         {
             osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
@@ -117,7 +105,7 @@ void cfdContours::Update( void )
         catch ( std::bad_alloc )
         {
             mapper->Delete();
-            mapper = vtkMultiGroupPolyDataMapper::New();
+            mapper = vtkPolyDataMapper::New();
 
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdContours"
             << std::endl << vprDEBUG_FLUSH;

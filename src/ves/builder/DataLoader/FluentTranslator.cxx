@@ -35,7 +35,6 @@
 #include <vtkDataObject.h>
 #include <vtkFLUENTReader.h>
 #include <vtkUnstructuredGrid.h>
-#include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
 
 #include <vtkMultiBlockDataSet.h>
@@ -65,7 +64,8 @@ void FluentTranslator::FluentPreTranslateCbk::Preprocess( int argc, char** argv,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                      cfdTranslatorToVTK* toVTK )
+                                                      cfdTranslatorToVTK* toVTK,
+                                                      vtkAlgorithm*& dataReader )
 {
     FluentTranslator* FluentToVTK =
         dynamic_cast< FluentTranslator* >( toVTK );
@@ -74,7 +74,7 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
         vtkFLUENTReader* reader = vtkFLUENTReader::New();
         reader->SetFileName( FluentToVTK->GetFile( 0 ).c_str() );
         reader->Update();
-
+        dataReader = reader;
         if( !outputDataset )
         {
             outputDataset = vtkMultiBlockDataSet::New();
@@ -103,10 +103,10 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
         }
         else*/
         {
-            outputDataset->DeepCopy( reader->GetOutput() );
+            outputDataset->ShallowCopy( reader->GetOutput() );
+            outputDataset->Update();
             reader->Delete();
         }
-        outputDataset->Update();
 
         /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
         writer->SetInput( reader->GetOutput() );

@@ -112,16 +112,20 @@ void WireframeEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObje
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     DataValuePairPtr activeModelDVP = 
         command->GetDataValuePair( "Wire Frame State" );
-    std::string datasetName = 
-        command->GetDataValuePair( "Active Dataset" )->GetDataString();
-    
     unsigned int state = 0;
     activeModelDVP->GetData( state );
+
+    std::string datasetName = 
+        command->GetDataValuePair( "Active Dataset" )->GetDataString();
+    std::string scalarName = 
+        command->GetDataValuePair( "Active Scalar" )->GetDataString();
+
     if( _activeModel )
     {
         DataSet* dataSet = _activeModel->GetCfdDataSet( 
             _activeModel->GetIndexOfDataSet( datasetName ) );
         _activeModel->SetActiveDataSet( dataSet );
+        dataSet->SetActiveScalar( scalarName );
         dataSet->SetWireframeState( state );
     }
 

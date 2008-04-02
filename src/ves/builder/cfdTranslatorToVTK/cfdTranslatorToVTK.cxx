@@ -37,6 +37,7 @@
 #include <iomanip>
 
 #include <vtkDataObject.h>
+#include <vtkAlgorithm.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 #include <ves/xplorer/util/fileIO.h>
 using namespace ves::builder::cfdTranslatorToVTK;
@@ -44,22 +45,20 @@ using namespace ves::builder::cfdTranslatorToVTK;
 //Constructor                         //
 ////////////////////////////////////////
 cfdTranslatorToVTK::cfdTranslatorToVTK()
+    :mVTKReader( 0 ),
+    _nFoundFiles( 0 ),
+    _preTCbk( 0 ),
+    _postTCbk( 0 ),
+    _translateCbk( 0 ),
+    isTransient( false ),
+    _outputDataset( 0 )
 {
-    _nFoundFiles = 0;
 
     _baseFileName = "flowdata";
     _fileExtension = "vtk";
     _inputDir = ".";
     _outputDir = ".";
-
-    _preTCbk = 0;
-    _postTCbk = 0;
-    _translateCbk = 0;
-
-    _outputDataset = 0;
     _outputFile = "vtkFile";
-
-    isTransient = false;
 }
 /////////////////////////////////////////
 cfdTranslatorToVTK::~cfdTranslatorToVTK()
@@ -206,7 +205,7 @@ bool cfdTranslatorToVTK::TranslateToVTK( int argc, char** argv )
     {
         if( _translateCbk )
         {
-            _translateCbk->Translate( _outputDataset, this );
+            _translateCbk->Translate( _outputDataset, this, mVTKReader );
         }
 
         if( _postTCbk )
@@ -222,6 +221,7 @@ bool cfdTranslatorToVTK::TranslateToVTK( int argc, char** argv )
                 status.set( i, _writeToVTK( i ) );
                 // because we are done with it after this...
                 _outputDataset->Delete();
+                _outputDataset = 0;
             }
             else
             {
@@ -286,6 +286,11 @@ vtkDataObject* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
         std::cout << "cfdTranslatorToVTK::GetVTKFile" << std::endl;
         return 0;
     }
+}
+////////////////////////////////////////////////////////////////////////////////////
+vtkAlgorithm* cfdTranslatorToVTK::GetVTKAlgorithm()
+{
+    return mVTKReader;
 }
 ////////////////////////////////////////////////////////////////////////////////////
 //This is the default behavior to look for the input and output directory from the//

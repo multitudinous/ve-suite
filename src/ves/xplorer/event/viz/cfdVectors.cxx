@@ -47,7 +47,7 @@
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>
-#include <vtkMultiGroupPolyDataMapper.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPolyDataWriter.h>
 #include <vtkPointData.h>
@@ -148,8 +148,6 @@ void cfdVectors::Update( void )
 
         std::string scalarName = this->GetActiveDataSet()->
                                  GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
 
         // get every nth point from the dataSet data
         this->ptmask->SetInput( this->GetActiveDataSet()
@@ -160,28 +158,14 @@ void cfdVectors::Update( void )
         // Not VTK Functions
         this->SetGlyphWithThreshold();
         this->SetGlyphAttributes();
-        //this->glyph->Update();
-        //this->glyph->Print( cout );
 
-        //--biv do we need this call ??this->filter->ExtentClippingOff();
-        //this->filter->Update();
-
-        // Good Test code to see if you are actually getting streamlines
-        /*
-              vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
-              writer->SetInput( ( vtkPolyData * ) filter->GetOutput() );
-              writer->SetFileName( "teststreamers.vtk" );
-              writer->Write();
-        */
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->ImmediateModeRenderingOn();
-        this->mapper->SetScalarRange(
-            this->GetActiveDataSet()->GetUserRange() );
-        this->mapper->SetLookupTable(
-            this->GetActiveDataSet()->GetLookupTable() );
-        // this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
-
-        //this->mapper->Update();  //sgent
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+        mapper->Update();
     }
     else
     {
@@ -205,7 +189,7 @@ void cfdVectors::Update( void )
     catch ( std::bad_alloc )
     {
         mapper->Delete();
-        mapper = vtkMultiGroupPolyDataMapper::New();
+        mapper = vtkPolyDataMapper::New();
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdVectors "
         << std::endl << vprDEBUG_FLUSH;
     }

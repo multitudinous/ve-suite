@@ -66,7 +66,9 @@ class VE_USER_BUILDER_EXPORTS MFIXTranslateCbk: public ves::builder::cfdTranslat
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                                cfdTranslatorToVTK* toVTK );
+                               cfdTranslatorToVTK* toVTK,
+                               vtkAlgorithm*& dataReader );
+
     };
     //////////////////////////////////////////////////////
 class VE_USER_BUILDER_EXPORTS MFIXPreTranslateCbk:

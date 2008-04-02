@@ -58,12 +58,6 @@ DataObjectHandler::~DataObjectHandler()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject )
 {
-    /*if(m_datasetOperator)
-    {
-        std::cout<<"No operator defined for datasets!!!"<<std::endl;
-        std::cout<<"DataObjectHandler::operateOnAllDatasetsInObject."<<std::endl;
-     return;
-    }*/
     unsigned int numDatasets = 0;
     vtkDataSet* currentDataset = 0;
     if( dataObject->IsA( "vtkMultiGroupDataSet" ) )
@@ -126,11 +120,11 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
     if( m_numberOfCellDataArrays > 0 && m_numberOfPointDataArrays  == 0 )
     {
         std::cout << "|\tThe dataset has no point data -- "
-        << "will try to convert cell data to point data" << std::endl;
+            << "will try to convert cell data to point data" << std::endl;
 
-        vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
+        vtkCellDataToPointData* converter = vtkCellDataToPointData::New();
         converter->SetInput( 0, dataSet );
-        converter->PassCellDataOff();
+        converter->PassCellDataOn();
         converter->Update();
 
         ///Why do we need to do this only for unstructured grids?

@@ -59,6 +59,7 @@ class vtkUnstructuredGrid;
 class vtkUnstructuredGridReader;
 class vtkDataSet;
 class vtkDataObject;
+class vtkAlgorithm;
 
 namespace ves
 {
@@ -173,12 +174,15 @@ public:
     float GetTimeStep();
 
     // Get the vtk look up table.
-    vtkLookupTable * GetLookupTable();
+    vtkLookupTable* GetLookupTable();
 
     // Get the single piece original data.
-    vtkUnstructuredGrid * GetUnsData();
-    vtkPolyData * GetPolyData();
-    vtkDataObject * GetDataSet();
+    vtkUnstructuredGrid* GetUnsData();
+    vtkPolyData* GetPolyData();
+    ///Get the data object for the dataset
+    vtkDataObject* GetDataSet();
+    ///Get the alorightm to use in the vtk pipelines
+    vtkAlgorithm* GetAlgorithm();
 
     void SetType();       // compute dataset type by looking at the file
     void SetType( int );  // manually set the dataset type
@@ -189,6 +193,7 @@ public:
     void SetActiveScalar( int );
     void SetActiveScalar( std::string scalarName );
     int GetActiveScalar();
+    std::string GetActiveScalarName();
 
     void SetActiveVector( int );
     void SetActiveVector( std::string vectorName );
@@ -236,6 +241,7 @@ public:
 
     int GetNumberOfVectors();
     std::string GetVectorName( int );
+    std::string GetActiveVectorName();
 
     DataSet * GetParent();
     void SetParent( DataSet * );
@@ -338,10 +344,14 @@ private:
 
     float timeStep;          // Time step for streamline integration.
 
-    vtkLookupTable* lut;    // Lookup table.
-
-    vtkDataObject* dataSet;    // Original piece of vtk data.
-    int datasetType;         // used by gui to place in appropriate column
+    ///Lookup table.
+    vtkLookupTable* lut;
+    ///Original piece of vtk data
+    vtkDataObject* dataSet;   
+    ///holder for new vtk pipeline
+    vtkAlgorithm* mDataReader;
+    ///used by gui to place in appropriate column
+    int datasetType;
 
     int activeScalar;
     int activeVector;
@@ -376,7 +386,7 @@ private:
     ves::xplorer::util::DataObjectHandler* m_dataObjectHandler;///<Handle vtkDataObjects
     int partOfTransientSeries;
     ves::builder::DataLoader::DataLoader* m_externalFileLoader;///<Translator interface
-
+    
 #ifdef USE_OMP
     unsigned int noOfData;   // Total no. of octants.
     vtkUnstructuredGridReader *dataReader[MAX_DATA];

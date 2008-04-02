@@ -515,11 +515,11 @@ if not SConsAddons.Util.hasHelpFlag():
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, osgOQSubdirs]
+               shareSubdirs, osgOQSubdirs ]
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':
-      testDir = pj(buildDir,'test','testNURBS')
+      testDir = [ pj(buildDir,'test','testNURBS'),  pj(buildDir,'test','vtk') ]
       ves_dirs.append( testDir )
 
    # freeze the python code

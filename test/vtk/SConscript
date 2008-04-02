@@ -1,0 +1,18 @@
+##Builds a multitude of utilities
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir vtk_options')
+
+srcs = Split("""
+   fluentmulti.c2p.cpp
+""")
+
+
+#env = ves_pkg.getEnv().Copy()
+env = baseEnv.Copy()
+vtk_options.apply( env )
+
+multiblock = ves_pkg.createProgram('multiblockTest' + env["PROGSUFFIX"], env, 'bin')
+multiblock.addSources( srcs )
+multiblock.build()

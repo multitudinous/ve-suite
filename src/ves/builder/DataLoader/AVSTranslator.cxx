@@ -61,7 +61,8 @@ void AVSTranslator::AVSPreTranslateCbk::Preprocess( int argc, char** argv,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                cfdTranslatorToVTK* toVTK )
+                                               cfdTranslatorToVTK* toVTK,
+                                               vtkAlgorithm*& dataReader )
 {
     AVSTranslator* AVSToVTK =
         dynamic_cast<AVSTranslator*>( toVTK );
@@ -75,10 +76,10 @@ void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
             outputDataset = vtkUnstructuredGrid::New();
         }
         vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-        tmpDSet->DeepCopy( avsReader->GetOutput() );
+        tmpDSet->ShallowCopy( avsReader->GetOutput() );
 
         //get the info about the data in the data set
-        unsigned int nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
+        /*unsigned int nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
         if( !nPtDataArrays )
         {
             std::cout << "Warning!!!" << std::endl;
@@ -94,11 +95,13 @@ void AVSTranslator::AVSTranslateCbk::Translate( vtkDataObject*& outputDataset,
             outputDataset->Update();
             return;
         }
-        else
+        else*/
         {
-            outputDataset->DeepCopy( tmpDSet );
+            outputDataset->ShallowCopy( tmpDSet );
             outputDataset->Update();
         }
+        avsReader->Delete();
+        tmpDSet->Delete();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

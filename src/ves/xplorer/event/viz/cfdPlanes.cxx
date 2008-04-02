@@ -118,18 +118,20 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
         //planeReader = vtkPolyDataReader::New();
         //planeReader->SetFileName( dirString.c_str() );//(char*)dirString.c_str() );
         //planeReader->Update();
-        vtkPolyData* tempPolyData = dynamic_cast< vtkPolyData* >( readVtkThing( dirString.c_str() ) );
+        vtkPolyData* tempPolyData = 
+            dynamic_cast< vtkPolyData* >( readVtkThing( dirString.c_str() ) );
         // look at POINTS to see what coordinate that the plane goes through
         double vertex [ 3 ];
         tempPolyData->GetPoints()->GetPoint( 0, vertex );
         this->sliceLocation[ i ] = ( float )vertex[this->type];
         vprDEBUG( vesDBG, 1 ) << "\t\tplane[" << i
-        << "] goes through coordinate "
-        << this->sliceLocation[ i ] << std::endl << vprDEBUG_FLUSH;
+            << "] goes through coordinate "
+            << this->sliceLocation[ i ] 
+            << std::endl << vprDEBUG_FLUSH;
 
         this->append[ i ] = vtkPolyData::New();
         this->append[ i ]->DeepCopy( tempPolyData );
-        tempPolyData->Delete();
+        //tempPolyData->Delete();
     }
 
     // allocate space for the array that keeps track of which planes

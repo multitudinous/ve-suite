@@ -44,7 +44,6 @@
 #include <vtkPolyDataMapper.h>   // for inherited contourBase member mapper
 #include <vtkActor.h>
 #include <vtkProperty.h>
-#include <vtkMultiGroupPolyDataMapper.h>
 #ifdef USE_OMP
 #include <vtkAppendPolyData.h>
 #endif
@@ -136,7 +135,7 @@ void cfdContour::Update( void )
             this->plane->SetOrigin( this->center );
             this->plane->SetNormal( this->normal );
             this->cutter->Update();
-            this->SetMapperInput( this->cutter->GetOutput() );
+            this->SetMapperInput( cutter->GetOutputPort() );
             this->updateFlag = true;
 #endif
         }
@@ -157,16 +156,15 @@ void cfdContour::Update( void )
             this->plane[i]->SetNormal( this->normal );
             this->cutter[i]->Update();
         }
-        this->SetMapperInput( this->append->GetOutput() );
+        SetMapperInput( this->append->GetOutputPort() );
 
 #else
 
-        this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-        //this->cutter->SetInput( this->GetActiveMeshedVolume()->getProbe(cursor->getBox())->GetOutput() ); //temp change
+        this->cutter->SetInputConnection( GetActiveDataSet()->GetAlgorithm()->GetOutputPort() );
         this->plane->SetOrigin( this->origin );
         this->plane->SetNormal( this->normal );
         this->cutter->Update();
-        this->SetMapperInput( this->cutter->GetOutput() );
+        this->SetMapperInput( cutter->GetOutputPort() );
 
 #endif
 
@@ -195,7 +193,7 @@ void cfdContour::Update( void )
     catch ( std::bad_alloc )
     {
         mapper->Delete();
-        mapper = vtkMultiGroupPolyDataMapper::New();
+        mapper = vtkPolyDataMapper::New();
 
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdContour"
         << std::endl << vprDEBUG_FLUSH;

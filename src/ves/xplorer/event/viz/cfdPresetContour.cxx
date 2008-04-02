@@ -45,10 +45,8 @@
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkPolyData.h>
-
-// the following is for the PD stuff...
+#include <vtkPassThroughFilter.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
@@ -88,7 +86,7 @@ void cfdPresetContour::Update( void )
             return;
         }
 
-        vtkPolyData * preCalcData = precomputedPlanes
+        vtkPolyData* preCalcData = precomputedPlanes
                                     ->GetClosestPlane( this->requestedValue );
 
         if( preCalcData == NULL )
@@ -100,11 +98,10 @@ void cfdPresetContour::Update( void )
             return;
         }
 
-        this->SetMapperInput( preCalcData );
-        this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                      ->GetUserRange() );
-        this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                      ->GetLookupTable() );
+        vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
+        tempPipe->SetInput( preCalcData );
+        this->SetMapperInput( tempPipe->GetOutputPort() );
+        tempPipe->Delete();
     }
     else
     {
@@ -130,7 +127,7 @@ void cfdPresetContour::Update( void )
     catch ( std::bad_alloc )
     {
         mapper->Delete();
-        mapper = vtkMultiGroupPolyDataMapper::New();
+        mapper = vtkPolyDataMapper::New();
 
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetContour"
         << std::endl << vprDEBUG_FLUSH;

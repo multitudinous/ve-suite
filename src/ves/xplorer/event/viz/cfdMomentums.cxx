@@ -45,6 +45,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
+#include <vtkPassThroughFilter.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -88,23 +89,16 @@ void cfdMomentums::Update( void )
         std::string vectorName = this->GetActiveDataSet()->
                                  GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+            ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
 
-        std::string scalarName = this->GetActiveDataSet()->
-                                 GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        ->GetPlanesData()->GetPointData()->SetActiveScalars( scalarName.c_str() );
-
-        this->warper->SetInput( this->GetActiveDataSet()
-                                ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
+        tempPipe->SetInput( GetActiveDataSet()
+                           ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        this->warper->SetInputConnection( tempPipe->GetOutputPort() );
         this->warper->SetScaleFactor( this->warpedContourScale );
         this->warper->Update();//can this go???
 
-        this->SetMapperInput(( vtkPolyData* )this->warper->GetOutput() );
-
-        this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-        this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
-        //this->mapper->Update();//can this go???
+        this->SetMapperInput( warper->GetOutputPort() );
 
         vtkActor* temp = vtkActor::New();
         temp->SetMapper( this->mapper );
@@ -112,10 +106,6 @@ void cfdMomentums::Update( void )
         //temp->GetProperty()->SetSpecular( 100.0f );
         //temp->GetProperty()->SetDiffuse( 100.0f );
         //temp->GetProperty()->SetAmbient( 100.0f );
-        //geodes.push_back( new ves::xplorer::scenegraph::Geode() );
-        //geodes.back()->TranslateToGeode( temp );
-        //temp->Delete();
-        //this->updateFlag = true;
 
         try
         {
@@ -127,19 +117,20 @@ void cfdMomentums::Update( void )
         catch ( std::bad_alloc )
         {
             mapper->Delete();
-            mapper = vtkMultiGroupPolyDataMapper::New();
+            mapper = vtkPolyDataMapper::New();
 
             vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentums "
             << std::endl << vprDEBUG_FLUSH;
         }
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
         temp->Delete();
+        tempPipe->Delete();
     }
     else
     {
         vprDEBUG( vesDBG, 0 )
-        << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
-        << std::endl << vprDEBUG_FLUSH;
+            << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
+            << std::endl << vprDEBUG_FLUSH;
 
         this->updateFlag = false;
     }

@@ -42,6 +42,7 @@ cfdVTKFileHandler API
 class vtkXMLFileReadTester;
 class vtkDataSet;
 class vtkDataObject;
+class vtkAlgorithm;
 
 #include <ves/VEConfig.h>
 #include <string>
@@ -89,7 +90,9 @@ public:
     ///Get the dataobject from the file
     ///\param vtkFileName The name of the file to read in.
     vtkDataObject* GetDataSetFromFile( std::string vtkFileName );
-
+    ///Get the vtkAlgorithm for the reader being used
+    vtkAlgorithm* GetAlgorithm();
+    
     ///Write the DataObject to file
     ///\param dataObject The vtkDataObject to write
     ///\param outFileName The output filename.
@@ -123,8 +126,11 @@ protected:
 
     std::string _inFileName;///<input vtk file name
     std::string _outFileName;///<output vtk file name
+    
     vtkXMLFileReadTester* _xmlTester;///<Test if file is XML format
     vtkDataObject* _dataSet;///<The vtk data.
+    ///Hold a pointer to the raw reader
+    vtkAlgorithm* mDataReader;
 };
 }// end of util namesapce
 }// end of xplorer namesapce

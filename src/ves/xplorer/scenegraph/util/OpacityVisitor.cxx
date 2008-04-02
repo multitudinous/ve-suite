@@ -171,7 +171,9 @@ void OpacityVisitor::apply( osg::Group& node )
         }
     }
 
-    osg::NodeVisitor::apply( node );
+    osg::NodeVisitor::traverse( node );
+
+    //osg::NodeVisitor::apply( node );
 }
 ////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset)

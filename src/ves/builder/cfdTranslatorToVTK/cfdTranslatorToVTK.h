@@ -36,7 +36,7 @@
 #include <vector>
 
 
-//class vtkDataSet;
+class vtkAlgorithm;
 class vtkDataObject;
 #include <ves/VEConfig.h>
 namespace ves
@@ -103,7 +103,8 @@ public:
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                                cfdTranslatorToVTK* toVTK ) = 0;
+                                cfdTranslatorToVTK* toVTK,
+                                vtkAlgorithm*& dataReader = 0 ) = 0;
     protected:
     };
     ///////////////////////////////////////////////////////////
@@ -158,6 +159,8 @@ public:
     std::string GetFile( unsigned int fileNumber );
 
     vtkDataObject* GetVTKFile( unsigned int whichFile );
+    ///Get the reader for this translator
+    vtkAlgorithm* GetVTKAlgorithm();
 
     void SetIsTransient();
 protected:
@@ -181,7 +184,7 @@ protected:
     TranslateCallback* _translateCbk;
 
     vtkDataObject* _outputDataset;
-
+    vtkAlgorithm* mVTKReader;
     bool isTransient;
 };
 }

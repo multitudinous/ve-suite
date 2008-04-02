@@ -184,10 +184,10 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
     if( actor->GetMapper()->GetScalarVisibility() && colorArray != NULL )
     {
         int scalarMode = actor->GetMapper()->GetScalarMode();
-        if( scalarMode == VTK_SCALAR_MODE_USE_CELL_DATA ||
+        /*if( scalarMode == VTK_SCALAR_MODE_USE_CELL_DATA ||
                 !polyData->GetPointData()->GetScalars() ) // there is no point data
             colorPerCell = 1;
-        else
+        else*/
             colorPerVertex = 1;
     }
 

@@ -62,7 +62,9 @@ class VE_USER_BUILDER_EXPORTS StarCDTranslateCbk: public ves::builder::cfdTransl
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                                cfdTranslatorToVTK* toVTK );
+                               cfdTranslatorToVTK* toVTK,
+                               vtkAlgorithm*& dataReader );
+
     protected:
     };
 class VE_USER_BUILDER_EXPORTS StarCDPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback

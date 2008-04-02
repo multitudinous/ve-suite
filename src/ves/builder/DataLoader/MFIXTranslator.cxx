@@ -34,7 +34,6 @@
 #include <vtkDataSet.h>
 #include <vtkMFIXReader.h>
 #include <vtkUnstructuredGrid.h>
-#include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
 
 #include <iostream>
@@ -61,7 +60,8 @@ void MFIXTranslator::MFIXPreTranslateCbk::Preprocess( int argc, char** argv,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                  cfdTranslatorToVTK* toVTK )
+                                                 cfdTranslatorToVTK* toVTK,
+                                                 vtkAlgorithm*& dataReader )
 {
     MFIXTranslator* MFIXToVTK =
         dynamic_cast< MFIXTranslator* >( toVTK );
@@ -82,7 +82,7 @@ void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
         tmpDSet->DeepCopy( reader->GetOutput() );
 
         //get the info about the data in the data set
-        if( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
+        /*if( tmpDSet->GetPointData()->GetNumberOfArrays() == 0 )
         {
             vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();
             dataConvertCellToPoint->SetInput( tmpDSet );
@@ -91,7 +91,7 @@ void MFIXTranslator::MFIXTranslateCbk::Translate( vtkDataObject*& outputDataset,
             outputDataset->DeepCopy( dataConvertCellToPoint->GetOutput() );
             dataConvertCellToPoint->Delete();
         }
-        else
+        else*/
         {
             outputDataset->DeepCopy( tmpDSet );
         }

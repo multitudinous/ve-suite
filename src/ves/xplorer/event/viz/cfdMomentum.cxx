@@ -44,7 +44,6 @@
 #include <vtkCutter.h>
 #include <vtkWarpVector.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
@@ -99,7 +98,7 @@ cfdMomentum::cfdMomentum( )
 #ifdef USE_OMP
     this->warper->SetInput(( vtkPointSet * )this->append->GetOutput() );
 #else
-    this->warper->SetInput(( vtkPointSet * )this->cutter->GetOutput() );
+    this->warper->SetInputConnection( cutter->GetOutputPort() );
 #endif
 
 }
@@ -153,16 +152,13 @@ void cfdMomentum::Update( void )
             }
             this->append->Update( );
 #else
-            this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+            this->cutter->SetInputConnection( GetActiveDataSet()->GetAlgorithm()->GetOutputPort() );
             this->plane->SetOrigin( this->origin );
             this->plane->SetNormal( this->normal );
             this->cutter->Update();
 #endif
-            this->SetMapperInput(( vtkPolyData* )this->warper->GetOutput() );
-            this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                          ->GetUserRange() );
-            this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                          ->GetLookupTable() );
+            this->SetMapperInput( warper->GetOutputPort() );
+
             this->mapper->Update();
             vtkActor* temp = vtkActor::New();
             temp->SetMapper( this->mapper );
@@ -182,7 +178,7 @@ void cfdMomentum::Update( void )
             catch ( std::bad_alloc )
             {
                 mapper->Delete();
-                mapper = vtkMultiGroupPolyDataMapper::New();
+                mapper = vtkPolyDataMapper::New();
 
                 vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdMomentum "
                 << std::endl << vprDEBUG_FLUSH;

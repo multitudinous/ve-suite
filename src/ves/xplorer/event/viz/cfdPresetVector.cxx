@@ -49,8 +49,10 @@
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>
-#include <vtkMultiGroupPolyDataMapper.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkCellDataToPointData.h>
+#include <vtkPassThroughFilter.h>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
@@ -69,13 +71,12 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-    SetActiveVtkPipeline();
     vprDEBUG( vesDBG, 1 ) << "cfdPresetVector::ActiveDataSet = "
-    << this->GetActiveDataSet()
-    << std::endl << vprDEBUG_FLUSH;
-    vprDEBUG( vesDBG, 1 ) << this->cursorType
-    << " : " << usePreCalcData
-    << std::endl << vprDEBUG_FLUSH;
+        << this->GetActiveDataSet()
+        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << this->cursorType
+        << " : " << usePreCalcData
+        << std::endl << vprDEBUG_FLUSH;
 
     if( this->usePreCalcData )
     {
@@ -103,25 +104,29 @@ void cfdPresetVector::Update( void )
             this->updateFlag = false;
             return;
         }
+        //vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
+        //tempPipe->SetInput( preCalcData );
 
         // get every nth point from the dataSet data
-        this->ptmask->SetInput( preCalcData );
+        this->ptmask->SetInput( preCalcData );//ApplyGeometryFilterNew( tempPipe->GetOutputPort() ) );
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         this->ptmask->Update();
 
         this->SetGlyphWithThreshold();
         this->SetGlyphAttributes();
         this->glyph->Update();
-        //this->glyph->DebugOn();
 
-        this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                      ->GetUserRange() );
-        this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                      ->GetLookupTable() );
-        this->mapper->Update();
+        mapper->SetInputConnection( glyph->GetOutputPort() );
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+        mapper->Update();
+        
+        //tempPipe->Delete();
         vprDEBUG( vesDBG, 1 ) << "|\tcfdPresetVector::Update Yes Precalc : "
-        << this->cursorType << " : " << usePreCalcData
-        << std::endl << vprDEBUG_FLUSH;
+            << this->cursorType << " : " << usePreCalcData
+            << std::endl << vprDEBUG_FLUSH;
     }
     else
     {
@@ -134,14 +139,17 @@ void cfdPresetVector::Update( void )
             this->GetActiveDataSet()->GetBounds() );
         this->cuttingPlane->Advance( this->requestedValue );
         vtkCutter* cutter = vtkCutter::New();
-        cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+        cutter->SetInputConnection( GetActiveDataSet()->GetAlgorithm()->GetOutputPort() );
         cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
         cutter->Update();
         delete this->cuttingPlane;
         this->cuttingPlane = NULL;
+        vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+        c2p->SetInputConnection( cutter->GetOutputPort() );
+        c2p->Update();
 
         // get every nth point from the dataSet data
-        this->ptmask->SetInput( ApplyGeometryFilter( cutter->GetOutputPort() ) );
+        this->ptmask->SetInputConnection( ApplyGeometryFilterNew( c2p->GetOutputPort() ) );
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         this->ptmask->Update();
 
@@ -149,18 +157,20 @@ void cfdPresetVector::Update( void )
         this->SetGlyphAttributes();
         this->glyph->Update();
 
-        this->mapper->SetInputConnection( glyph->GetOutputPort() );
-        this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                      ->GetUserRange() );
-        this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                      ->GetLookupTable() );
-        this->mapper->Update();
+        mapper->SetInputConnection( glyph->GetOutputPort() );
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+        mapper->Update();
 
         cutter->Delete();
+        c2p->Delete();
         vprDEBUG( vesDBG, 1 )
-        << "No Precalc : " << this->cursorType << " : " << usePreCalcData
-        << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
+            << "No Precalc : " << this->cursorType << " : " << usePreCalcData
+            << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
     }
+
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( this->mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );
@@ -175,9 +185,9 @@ void cfdPresetVector::Update( void )
     catch ( std::bad_alloc )
     {
         mapper->Delete();
-        mapper = vtkMultiGroupPolyDataMapper::New();
+        mapper = vtkPolyDataMapper::New();
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetVectors "
-        << std::endl << vprDEBUG_FLUSH;
+            << std::endl << vprDEBUG_FLUSH;
     }
     temp->Delete();
 }

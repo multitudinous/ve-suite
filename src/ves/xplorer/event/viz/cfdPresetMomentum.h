@@ -73,10 +73,9 @@ public:
 
     ///Update the position, x, and normal direction to cut. Output a updated pfGeoSet.
     virtual void Update( void );
-//         void CreatePlane( void );
 
 private:
-    vtkWarpVector   * warper;///<warper.
+    vtkWarpVector* warper;///<warper.
 };
 }
 }

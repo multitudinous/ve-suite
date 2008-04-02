@@ -51,7 +51,7 @@
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>
-#include <vtkMultiGroupPolyDataMapper.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 
 #include <ves/xplorer/Debug.h>
@@ -120,16 +120,11 @@ cfdVector::cfdVector()
     // set the cut function
     this->cutter = vtkCutter::New();
     this->cutter->SetCutFunction( this->plane );
-
-    this->filter = vtkMultiGroupDataGeometryFilter::New();
-
 #endif
 
 #ifdef USE_OMP
     this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
 #endif
-
-    //biv--do we need this? this->filter->ExtentClippingOn();
 }
 
 cfdVector::~cfdVector()
@@ -184,19 +179,19 @@ void cfdVector::Update( void )
         << std::endl << vprDEBUG_FLUSH;
 
         // get every nth point from the dataSet data
-        this->ptmask->SetInput(( vtkDataSet * )this->cutter->GetOutput() );
+        this->ptmask->SetInputConnection( this->cutter->GetOutputPort() );
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
 
         // Using glyph3D to insert arrow to the data sets
-        this->glyph->SetInput(( vtkDataSet * )this->ptmask->GetOutput() );
+        this->glyph->SetInputConnection( this->ptmask->GetOutputPort() );
         this->glyph->SetScaleFactor( GetVectorScaleFactor() );
         this->glyph->SetScaleModeToDataScalingOff();
         this->cutter->Update();
         this->ptmask->Update();
         this->glyph->Update();
 #endif
-        this->filter->SetInput( this->glyph->GetOutput() );
-        this->filter->Update();
+
+        mapper->SetInputConnection( ApplyGeometryFilterNew( glyph->GetOutputPort() ) );
 
         this->mapper->SetScalarRange( this->GetActiveDataSet()
                                       ->GetUserRange() );
@@ -225,7 +220,7 @@ void cfdVector::Update( void )
     catch ( std::bad_alloc )
     {
         mapper->Delete();
-        mapper = vtkMultiGroupPolyDataMapper::New();
+        mapper = vtkPolyDataMapper::New();
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdVector "
         << std::endl << vprDEBUG_FLUSH;
     }

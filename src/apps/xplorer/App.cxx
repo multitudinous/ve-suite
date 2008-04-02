@@ -46,9 +46,6 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
-
-#include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/Debug.h>
 
 #include <ves/open/xml/XMLObjectFactory.h>

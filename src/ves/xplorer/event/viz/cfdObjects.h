@@ -49,7 +49,6 @@ class vtkMultiGroupDataGeometryFilter;
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
 
-
 namespace ves
 {
 namespace xplorer
@@ -85,10 +84,11 @@ public:
 ///Update the actors in the object
     void UpdateActors();
 
-///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
-///and the current dataset type
-///\param input The input vtkPolyDataAlgorithm to process
-    vtkPolyData* ApplyGeometryFilter( vtkAlgorithmOutput* input );
+    ///Create a vtkPolyData based on the input vtkPolyDataAlgorithm\n
+    ///and the current dataset type
+    ///\param input The input vtkPolyDataAlgorithm to process
+    vtkAlgorithmOutput* ApplyGeometryFilterNew( vtkAlgorithmOutput* input );
+    //vtkPolyData* ApplyGeometryFilter( vtkAlgorithmOutput* input );
 
     ///Returnd geodes.
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes( void );
@@ -164,9 +164,6 @@ public:
     ///Deletes the geode.
     void DeleteGeode( void );
 
-    //void SetSequence( cfdTempAnimation* );
-    //cfdTempAnimation* GetSequence( void );
-
     ///Sets the source points.
     ///\param pointSource
     void SetSourcePoints( vtkPolyData * pointSource );
@@ -198,22 +195,15 @@ public:
     ///Gets the active dataset.
     DataSet* GetActiveDataSet( void );
 
-    //void ClearTransientVector( void );
-    //static void SetVectorScale( float );
-    //static float GetVectorScale();
-
 protected:
     DataSet* activeDataSet;///<active dataset.
-
-    // used by vectors and intended for warped contours
-    //static float vectorScale;
 
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > geodes;///<geode vector.
     vtkPolyData* pointSource;///<point source for vtk polydata.
 
-///vtkMultiGroupGeometryFilter
+    ///vtkMultiGroupGeometryFilter
     vtkMultiGroupDataGeometryFilter* m_multiGroupGeomFilter;
-///vtkGeometryFilter
+    ///vtkGeometryFilter
     vtkGeometryFilter* m_geometryFilter;
 
     bool updateFlag;///<flag for updating.

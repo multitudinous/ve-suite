@@ -66,7 +66,9 @@ class VE_USER_BUILDER_EXPORTS EnSightTranslateCbk: public ves::builder::cfdTrans
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                                ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK );
+                               ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK* toVTK,
+                               vtkAlgorithm*& dataReader );
+
         ///This creates additional scalars from vector components
         ///\param outputDataset Dataset to be used and modified
         void AddScalarsFromVectors( vtkDataObject*& outputDataset );

@@ -57,19 +57,27 @@
 #include <vtkCutter.h>
 #include <vtkPlane.h>
 #include <vtkCompositeDataPipeline.h>
+#include <vtkAlgorithmOutput.h>
 
 #include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkCellDataToPointData.h>
+#include <vtkPCellDataToPointData.h>
+
+#include <vtkFLUENTReader.h>
+#include <vtkMultiBlockDataSet.h>
+
+#include <vtkPassThroughFilter.h>
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()
-        : cfdObjects()
+        : cfdObjects(),
+        mC2p( vtkCellDataToPointData::New() ),
+        deci( vtkDecimatePro::New() )
 {
-    deci = vtkDecimatePro::New();
-
-    //this->filter = vtkMultiGroupDataGeometryFilter::New();
     cfilter = vtkContourFilter::New();              // for contourlines
     bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
     // turn clipping on to avoid unnecessary value generations with
@@ -78,9 +86,9 @@ cfdContourBase::cfdContourBase()
     tris = vtkTriangleFilter::New();
     strip = vtkStripper::New();
 
-    mapper = vtkMultiGroupPolyDataMapper::New();
-    mapper->SetColorModeToMapScalars();
-    mapper->ImmediateModeRenderingOn();
+    mapper = vtkPolyDataMapper::New();
+    //mapper->SetColorModeToMapScalars();
+    //mapper->ImmediateModeRenderingOn();
     normals = vtkPolyDataNormals::New();
 
     warpedContourScale = 0.0f;
@@ -88,7 +96,7 @@ cfdContourBase::cfdContourBase()
     contourLOD = 1;
     cuttingPlane = 0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 cfdContourBase::~cfdContourBase()
 {
     //vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
@@ -143,27 +151,30 @@ cfdContourBase::~cfdContourBase()
         cuttingPlane = NULL;
     }
 }
-
-void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
+////////////////////////////////////////////////////////////////////////////////
+void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
 {
-    this->tris->SetInput( polydata );
+    mC2p->SetInputConnection( polydata );
+    mC2p->Update();
+    
+    tris->SetInputConnection( mC2p->GetOutputPort() );
     tris->Update();
-    tris->GetOutput()->ReleaseDataFlagOn();
+    //tris->GetOutput()->ReleaseDataFlagOn();
 
     // decimate points is used for lod control of contours
-    this->deci->SetInput( tris->GetOutput() );
+    this->deci->SetInputConnection( tris->GetOutputPort() );
     this->deci->PreserveTopologyOn();
     this->deci->BoundaryVertexDeletionOff();
     deci->Update();
-    deci->GetOutput()->ReleaseDataFlagOn();
+    //deci->GetOutput()->ReleaseDataFlagOn();
 
-    this->strip->SetInput( this->deci->GetOutput() );
+    this->strip->SetInputConnection( tris->GetOutputPort() );
     strip->Update();
-    strip->GetOutput()->ReleaseDataFlagOn();
+    //strip->GetOutput()->ReleaseDataFlagOn();
 
     if( this->fillType == 0 )
     {
-        normals->SetInput( strip->GetOutput() );
+        normals->SetInputConnection( strip->GetOutputPort() );
         normals->SetFeatureAngle( 130.0f );
         //normals->GetOutput()->ReleaseDataFlagOn();
         normals->ComputePointNormalsOn();
@@ -175,14 +186,18 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
     {
         // putting the decimation routines as inputs to the bfilter
         // cause the bfilter to crash while being updated
-        this->bfilter->SetInput( polydata );
+        this->bfilter->SetInputConnection( strip->GetOutputPort() );
         double range[2];
         this->GetActiveDataSet()->GetUserRange( range );
         this->bfilter->GenerateValues( 10, range[0], range[1] );
         this->bfilter->SetScalarModeToValue();
         this->bfilter->GenerateContourEdgesOn();
-        bfilter->GetOutput()->ReleaseDataFlagOn();
-        normals->SetInput( bfilter->GetOutput() );
+        bfilter->SetInputArrayToProcess( 0, 0, 0,
+              vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+              GetActiveDataSet()->GetActiveScalarName().c_str() );
+        
+        //bfilter->GetOutput()->ReleaseDataFlagOn();
+        normals->SetInputConnection( bfilter->GetOutputPort() );
         normals->SetFeatureAngle( 130.0f );
         //normals->GetOutput()->ReleaseDataFlagOn();
         normals->ComputePointNormalsOn();
@@ -191,23 +206,37 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
     }
     else if( this->fillType == 2 ) // contourlines
     {
-        this->cfilter->SetInput( this->strip->GetOutput() );
+        this->cfilter->SetInputConnection( mC2p->GetOutputPort() );
         double range[2];
         this->GetActiveDataSet()->GetUserRange( range );
         this->cfilter->GenerateValues( 10, range[0], range[1] );
-        this->cfilter->UseScalarTreeOn();
-        cfilter->GetOutput()->ReleaseDataFlagOn();
-        normals->SetInput( cfilter->GetOutput() );
+        //this->cfilter->UseScalarTreeOn();
+        cfilter->SetInputArrayToProcess( 0, 0, 0,
+            vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+            GetActiveDataSet()->GetActiveScalarName().c_str() );
+        //cfilter->GetOutput()->ReleaseDataFlagOn();
+        normals->SetInputConnection( cfilter->GetOutputPort() );
         normals->SetFeatureAngle( 130.0f );
         //normals->GetOutput()->ReleaseDataFlagOn();
         normals->ComputePointNormalsOn();
         //normals->ComputeCellNormalsOn();
         normals->FlipNormalsOn();
     }
-    mapper->SetInputConnection( normals->GetOutputPort() );
-    mapper->ImmediateModeRenderingOn();
+    vtkAlgorithmOutput* tempPolydata = 0;
+    tempPolydata = ApplyGeometryFilterNew( normals->GetOutputPort() );
+    
+    mapper->SetInputConnection( tempPolydata );
+    //mapper->SetScalarModeToDefault();
+    //mapper->SetColorModeToDefault();
+    //mapper->SetColorModeToMapScalars();
+    //mapper->InterpolateScalarsBeforeMappingOff();
+    mapper->SetScalarModeToUsePointFieldData();
+    mapper->UseLookupTableScalarRangeOn();
+    mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+    mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+    mapper->Update();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::UpdateCommand()
 {
     //Call base method - currently does nothing
@@ -255,9 +284,12 @@ void cfdContourBase::UpdateCommand()
     activeModelDVP->GetData( contourScale );
     double v[2];
     this->GetActiveDataSet()->GetUserRange( v );
-    int scale = contourScale;
-    this->warpedContourScale = ( scale / 50.0 ) * 0.2 * 1.0f / ( float )( v[1] - v[0] );
-
+    //double scale = contourScale;
+    this->warpedContourScale = ( contourScale / 5.0 ) * 2.0f / ( float )( v[1] - v[0] );
+    vprDEBUG( vesDBG, 0 ) << "Warped Contour Scale "
+        << warpedContourScale << " : " << v[1] << " - " << v[0]
+        << std::endl << vprDEBUG_FLUSH;
+    
     // Set the lod values
     activeModelDVP = objectCommand->GetDataValuePair( "Contour LOD" );
     double contourLOD;
@@ -286,7 +318,7 @@ void cfdContourBase::UpdateCommand()
         SetFillType( 2 );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::SetFillType( const int type )
 {
     if( -1 < type && type < 3 )
@@ -300,6 +332,7 @@ void cfdContourBase::SetFillType( const int type )
         fillType = 0;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
 void cfdContourBase::CreatePlane( void )
 {
     if( !cuttingPlane )
@@ -309,29 +342,21 @@ void cfdContourBase::CreatePlane( void )
                            xyz, numSteps );
     }
 
-
     // insure that we are using correct bounds for the given data set...
     cuttingPlane->SetBounds(
         GetActiveDataSet()->GetBounds() );
-
     cuttingPlane->Advance( requestedValue );
+    
     vtkCutter* tempCutter = vtkCutter::New();
     tempCutter->SetCutFunction( cuttingPlane->GetPlane() );
     tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );
     tempCutter->Update();
-    vtkPolyData* tempPolydata = 0;
-    tempPolydata = ApplyGeometryFilter( tempCutter->GetOutputPort() );
-    tempPolydata->Update();
-    SetMapperInput( tempPolydata );
+    
+    SetMapperInput( tempCutter->GetOutputPort(0) );
+    
+    delete cuttingPlane;
+    cuttingPlane = NULL;
 
-    mapper->SetScalarRange( GetActiveDataSet()
-                            ->GetUserRange() );
-    mapper->SetLookupTable( GetActiveDataSet()
-                            ->GetLookupTable() );
-    if( cuttingPlane )
-    {
-        delete cuttingPlane;
-        cuttingPlane = NULL;
-    }
     tempCutter->Delete();
 }
+////////////////////////////////////////////////////////////////////////////////

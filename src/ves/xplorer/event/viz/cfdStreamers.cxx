@@ -133,7 +133,7 @@ void cfdStreamers::Update()
         integrationStepLength = 0.050f;
     }
 
-    streamTracer->SetInput(( vtkDataSet* )GetActiveDataSet()->GetDataSet() );
+    streamTracer->SetInput( GetActiveDataSet()->GetDataSet() );
     //overall length of streamline
     streamTracer->SetMaximumPropagation( propagationTime );
 
@@ -150,7 +150,7 @@ void cfdStreamers::Update()
     if( streamArrows )
     {
         streamPoints = vtkStreamPoints::New();
-        streamPoints->SetInput( static_cast< vtkDataSet* >( GetActiveDataSet()->GetDataSet() ) );
+        streamPoints->SetInput( GetActiveDataSet()->GetDataSet() );
         streamPoints->SetSource( seedPoints );
         //streamPoints->SetTimeIncrement( stepLength * 500 );
         streamPoints->SetMaximumPropagationTime( propagationTime );
@@ -186,6 +186,9 @@ void cfdStreamers::Update()
 
     streamTracer->SetSource( seedPoints );
     streamTracer->SetIntegrator( integ );
+    streamTracer->SetInputArrayToProcess( 0, 0, 0,
+       vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+       GetActiveDataSet()->GetActiveVectorName().c_str() );
     // Good Test code to see if you are actually getting streamlines
     /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
     writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
@@ -198,7 +201,7 @@ void cfdStreamers::Update()
         cone->SetResolution( 5 );
 
         cones = vtkGlyph3D::New();
-        cones->SetInput( streamPoints->GetOutput() );
+        cones->SetInputConnection( streamPoints->GetOutputPort() );
         cones->SetSource( cone->GetOutput() );
         cones->SetScaleFactor( arrowDiameter );
         //cones->SetScaleModeToScaleByVector();
@@ -212,7 +215,7 @@ void cfdStreamers::Update()
         append->Update();
 
         normals = vtkPolyDataNormals::New();
-        normals->SetInput( append->GetOutput() );
+        normals->SetInputConnection( append->GetOutputPort() );
         normals->SplittingOff();
         normals->ConsistencyOn();
         normals->AutoOrientNormalsOn();
@@ -220,18 +223,20 @@ void cfdStreamers::Update()
         normals->ComputeCellNormalsOff();
         normals->NonManifoldTraversalOff();
 
-        mapper->SetInput( normals->GetOutput() );
+        mapper->SetInputConnection( normals->GetOutputPort() );
     }
     else
     {
-        mapper->SetInput( streamTracer->GetOutput() );
+        mapper->SetInputConnection( streamTracer->GetOutputPort() );
     }
 
     mapper->SetColorModeToMapScalars();
-    mapper->SetScalarRange( GetActiveDataSet()->GetUserRange() );
     mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
     mapper->ImmediateModeRenderingOn();
-
+    mapper->SetScalarModeToUsePointFieldData();
+    mapper->UseLookupTableScalarRangeOn();
+    mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+    
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );

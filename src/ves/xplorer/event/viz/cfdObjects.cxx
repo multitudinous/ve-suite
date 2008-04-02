@@ -149,23 +149,38 @@ void cfdObjects::UpdateCommand()
 ///////////////////////////////////////
 void cfdObjects::SetActiveVtkPipeline()
 {
-    if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
+    //if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
     {
         // we have to use a compsite pipeline
+        std::cout << "we have a composite data pipeline" << std::endl;
         vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
         vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
         prototype->Delete();
     }
-    else
+    //else
     {
-        vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
+        //vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
     }
 }
 ///////////////////////////////
 void cfdObjects::UpdateActors()
 {}
 /////////////////////////////////////////////////////////////////////////
-vtkPolyData* cfdObjects::ApplyGeometryFilter( vtkAlgorithmOutput* input )
+vtkAlgorithmOutput* cfdObjects::ApplyGeometryFilterNew( vtkAlgorithmOutput* input )
+{
+    if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
+    {
+        m_multiGroupGeomFilter->SetInputConnection( input );
+        return m_multiGroupGeomFilter->GetOutputPort(0);
+    }
+    else
+    {
+        m_geometryFilter->SetInputConnection( input );
+        return m_geometryFilter->GetOutputPort();
+    }
+}
+/////////////////////////////////////////////////////////////////////////
+/*vtkPolyData* cfdObjects::ApplyGeometryFilter( vtkAlgorithmOutput* input )
 {
     if( this->activeDataSet->GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
     {
@@ -178,6 +193,7 @@ vtkPolyData* cfdObjects::ApplyGeometryFilter( vtkAlgorithmOutput* input )
         return m_geometryFilter->GetOutput();
     }
 }
+*/
 /////////////////////////////////////////////
 DataSet* cfdObjects::GetActiveDataSet()
 {

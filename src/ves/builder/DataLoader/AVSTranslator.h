@@ -63,7 +63,9 @@ class VE_USER_BUILDER_EXPORTS AVSTranslateCbk: public ves::builder::cfdTranslato
         //appropriately by the translate callback.      //
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
-                                cfdTranslatorToVTK* toVTK );
+                               cfdTranslatorToVTK* toVTK,
+                               vtkAlgorithm*& dataReader );
+
     protected:
     };
 class VE_USER_BUILDER_EXPORTS AVSPreTranslateCbk: public ves::builder::cfdTranslatorToVTK::cfdTranslatorToVTK::PreTranslateCallback

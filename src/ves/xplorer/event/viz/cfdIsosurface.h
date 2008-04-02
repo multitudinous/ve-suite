@@ -44,9 +44,7 @@
 
 class vtkContourFilter;
 class vtkPolyDataNormals;
-class vtkMultiGroupDataGeometryFilter;
-class vtkMultiGroupPolyDataMapper;
-
+class vtkPolyDataMapper;
 
 namespace ves
 {
@@ -99,8 +97,7 @@ private:
     vtkPolyDataNormals *normals;///<Normals for vtk.
 #endif
 
-    vtkMultiGroupDataGeometryFilter* filter;///<Filter for vtk.
-    vtkMultiGroupPolyDataMapper* mapper;///<Mapper for vtk.
+    vtkPolyDataMapper* mapper;///<Mapper for vtk.
 };
 }
 }

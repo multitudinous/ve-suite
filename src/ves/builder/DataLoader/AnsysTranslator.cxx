@@ -59,7 +59,8 @@ void AnsysTranslator::AnsysPreTranslateCbk::Preprocess( int argc, char** argv,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AnsysTranslator::AnsysTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                    cfdTranslatorToVTK* toVTK )
+                                                   cfdTranslatorToVTK* toVTK,
+                                                   vtkAlgorithm*& dataReader )
 {
     AnsysTranslator* ansysTransVTK =
         dynamic_cast<AnsysTranslator*>( toVTK );
@@ -72,8 +73,8 @@ void AnsysTranslator::AnsysTranslateCbk::Translate( vtkDataObject*& outputDatase
             outputDataset = vtkUnstructuredGrid::New();
         }
         outputDataset->ShallowCopy( ansys->GetUGrid() );
-        delete ansys;
         outputDataset->Update();
+        delete ansys;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

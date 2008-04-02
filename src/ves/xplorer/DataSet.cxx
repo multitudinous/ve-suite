@@ -51,6 +51,7 @@
 #include <ves/xplorer/util/ActiveDataInformationCallback.h>
 #include <ves/xplorer/util/CreateDataObjectBBoxActorsCallback.h>
 #include <ves/builder/DataLoader/DataLoader.h>
+#include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
 #include <ves/open/xml/Command.h>
 
@@ -71,7 +72,8 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
-
+#include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkAlgorithm.h>
 
 #include <iostream>
 #include <sstream>
@@ -105,12 +107,11 @@ DataSet::DataSet( ) :
         dataSetScalarBar( 0 ),
         _vtkFHndlr( 0 ),
         m_externalFileLoader( 0 ),
-        m_dataObjectHandler( 0 )
+        m_dataObjectHandler( 0 ),
+        mDataReader( 0 ),
+        arrow( 0 ),
+        lut( vtkLookupTable::New() )
 {
-    this->lut = vtkLookupTable::New();
-    this->arrow = NULL;
-    this->scalarName.empty();// = NULL;
-    this->vectorName.empty();// = NULL;
     this->range = new double [ 2 ];
     this->range[ 0 ] = 0.0f;
     this->range[ 1 ] = 1.0f;
@@ -118,9 +119,6 @@ DataSet::DataSet( ) :
     this->definedRange[ 0 ] = 0.0f;
     this->definedRange[ 0 ] = 1.0f;
     this->isNewlyActivated = 0;
-    this->fileName.empty();// = NULL;
-    this->precomputedDataSliceDir.empty();// = NULL;
-    this->precomputedSurfaceDir.empty();// = NULL;
     // precomputed data that descends from a flowdata.vtk should
     // automatically have the same color mapping as the "parent"
     // By default, the dataset is assumed to have no parent, that is,
@@ -228,6 +226,12 @@ DataSet::~DataSet()
         delete m_dataObjectHandler;
         m_dataObjectHandler = 0;
     }
+    
+    if( mDataReader )
+    {
+        mDataReader->Delete();
+        mDataReader = 0;
+    }
 }
 
 void DataSet::SetRange( double * dataRange )
@@ -245,18 +249,23 @@ void DataSet::GetRange( double * dataRange )
 {
     this->GetRange( dataRange[ 0 ], dataRange[ 1 ] );
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::GetRange( double &dataMin, double &dataMax )
 {
     dataMin = this->range[ 0 ];
     dataMax = this->range[ 1 ];
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double * DataSet::GetRange()
 {
     return this->range;
 }
-
+////////////////////////////////////////////////////////////////////////////////
+vtkAlgorithm* DataSet::GetAlgorithm()
+{
+    return mDataReader;
+}
+////////////////////////////////////////////////////////////////////////////////
 void DataSet::SetUserRange( double userRange[2] )
 {
     vprDEBUG( vesDBG, 1 ) << "DataSet::SetUserRange OLD userRange = "
@@ -511,7 +520,7 @@ void DataSet::LoadData()
         vprDEBUG( vesDBG, 1 ) << "|\tLoadData: filename = " << this->fileName
         << std::endl << vprDEBUG_FLUSH;
     }
-
+    
     std::string extension = ves::xplorer::util::fileIO::getExtension( fileName );
     //What should the extension of the star.param file be?
     //The translator expects ".star" but we have things setup to
@@ -534,8 +543,9 @@ void DataSet::LoadData()
         {
             _vtkFHndlr = new cfdVTKFileHandler();
         }
-        ///This will need to be changed to handle mutliblockdatasets!!!!!!
+
         this->dataSet = _vtkFHndlr->GetDataSetFromFile( fileName );
+        //mDataReader = _vtkFHndlr->GetAlgorithm();
     }
     else
     {
@@ -566,7 +576,8 @@ void DataSet::LoadData()
                                                       strcpy(parameters[8], "stream" );*/
 
         dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
-        //dataSet->Print( std::cout );
+        ///Create the dataset vtkAlgorithm to work with the new vtk pipelines
+        //mDataReader = m_externalFileLoader->GetActiveTranslator()->GetVTKAlgorithm();
 
         for( unsigned int i = 0; i < nParams; ++i )
         {
@@ -580,6 +591,7 @@ void DataSet::LoadData()
             return;
         }
     }
+
     if( !m_dataObjectHandler )
     {
         m_dataObjectHandler = new ves::xplorer::util::DataObjectHandler();
@@ -756,14 +768,14 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
         << this->scalarName[ this->activeScalar ]
         << std::endl << vprDEBUG_FLUSH;
     }
-    ves::xplorer::util::ActiveDataInformationCallback* activeDataInfoCbk =
+/*    ves::xplorer::util::ActiveDataInformationCallback* activeDataInfoCbk =
         dynamic_cast<ves::xplorer::util::ActiveDataInformationCallback*>
         ( m_dataObjectOps["Active Data Information"] );
     activeDataInfoCbk->SetActiveDataName( this->scalarName[ this->activeScalar ] );
     m_dataObjectHandler->SetDatasetOperatorCallback( activeDataInfoCbk );
     m_dataObjectHandler->OperateOnAllDatasetsInObject( this->dataSet );
-
-    for( int i = 0; i < 3; i++ )
+*/
+    /*for( int i = 0; i < 3; i++ )
     {
         int numPlanes = 0;
         if( this->GetPrecomputedSlices( i ) )
@@ -775,12 +787,6 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
 
         if( numPlanes > 0 )
         {
-
-            /*this->GetPrecomputedSlices( i )->GetPlanesData()
-            ->GetPointData()->SetActiveScalars( 
-                                                this->scalarName[ this->activeScalar ].c_str() );
-            */
-
             for( int j = 0; j < numPlanes; j++ )
             {
                 this->GetPrecomputedSlices( i )->GetPlane( j )
@@ -788,7 +794,7 @@ void DataSet::SetActiveScalar( std::string tempActiveScalar )
                     this->scalarName[ this->activeScalar ].c_str() );
             }
         }
-    }
+    }*/
     // Store the actual range of the active scalar...
     double * temp = this->GetActualScalarRange( this->activeScalar );
     this->range [ 0 ] = temp[ 0 ];
@@ -871,7 +877,7 @@ void DataSet::SetActiveScalar( int scalar )
          << this->GetDataSet()->GetPointData()->GetScalars()->GetName()
          << "\"" << std::endl << vprDEBUG_FLUSH;*/
 
-    for( int i = 0; i < 3; i++ )
+    /*for( int i = 0; i < 3; i++ )
     {
         int numPlanes = 0;
         if( this->GetPrecomputedSlices( i ) )
@@ -883,12 +889,6 @@ void DataSet::SetActiveScalar( int scalar )
 
         if( numPlanes > 0 )
         {
-
-            /*this->GetPrecomputedSlices( i )->GetPlanesData()
-                ->GetPointData()->SetActiveScalars( 
-                                    this->scalarName[ this->activeScalar ].c_str() );
-            */
-
             for( int j = 0; j < numPlanes; j++ )
             {
                 this->GetPrecomputedSlices( i )->GetPlane( j )
@@ -896,7 +896,7 @@ void DataSet::SetActiveScalar( int scalar )
                     this->scalarName[ this->activeScalar ].c_str() );
             }
         }
-    }
+    }*/
     // Store the actual range of the active scalar...
     double * temp = this->GetActualScalarRange( this->activeScalar );
     this->range [ 0 ] = temp[ 0 ];
@@ -1322,9 +1322,9 @@ std::string DataSet::GetVectorName( int i )
     }
     else
     {
-        std::cerr << "ERROR: DataSet::GetScalarName cannot "
+        std::cerr << "ERROR: DataSet::GetVectorName cannot "
         << "handle index " << i << std::endl;
-        return NULL;
+        return std::string();
     }
 }
 //////////////////////////////////////////////
@@ -1603,26 +1603,48 @@ void DataSet::CreateBoundingBoxGeode( void )
 ////////////////////////////////////////////////////////////////////////////////
 void DataSet::CreateWireframeGeode( void )
 {
-    //vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
-    //wireframe->SetInput( this->GetDataSet() );
-    //wireframe->Update();
+    vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+    if( GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
+    {
+        vtkMultiGroupDataGeometryFilter* wireframe = vtkMultiGroupDataGeometryFilter::New();
+        wireframe->SetInput( GetDataSet() );
+        
+        c2p->SetInputConnection( wireframe->GetOutputPort() );
+        
+        wireframe->Delete();
+    }
+    else
+    {
+        vtkGeometryFilter* wireframe = vtkGeometryFilter::New();
+        wireframe->SetInput( GetDataSet() );
 
-    vtkPolyDataMapper *wireframeMapper = vtkPolyDataMapper::New();
-    //wireframeMapper->SetInput(wireframe->GetOutput());
-    vtkPolyData* poly = ves::xplorer::util::cfdGrid2Surface( this->GetDataSet(), 0.8f );
-    wireframeMapper->SetInput( poly );
+        c2p->SetInputConnection( wireframe->GetOutputPort() );
+        
+        wireframe->Delete();
+    }
 
+    vtkPolyDataMapper* wireframeMapper = vtkPolyDataMapper::New();
+    wireframeMapper->SetInputConnection(c2p->GetOutputPort());
+    //vtkPolyData* poly = ves::xplorer::util::cfdGrid2Surface( this->GetDataSet(), 0.8f );
+    wireframeMapper->SetScalarModeToUsePointFieldData();
+    //mapper->SetScalarModeToDefault();
+    wireframeMapper->UseLookupTableScalarRangeOn();
+    wireframeMapper->SelectColorArray( GetActiveScalar() );
+    wireframeMapper->SetLookupTable( GetLookupTable() );
+    //wireframeMapper->Update();
+    
     vtkActor *wireframeActor = vtkActor::New();
     wireframeActor->SetMapper( wireframeMapper );
-    wireframeActor->GetProperty()->SetColor( 0, 0, 1 );
+    //wireframeActor->GetProperty()->SetColor( 0, 0, 1 );
     wireframeActor->GetProperty()->SetOpacity( 0.7f );
-    wireframeActor->GetProperty()->SetRepresentationToWireframe();
+    //wireframeActor->GetProperty()->SetRepresentationToWireframe();
 
     wireframeGeode = new ves::xplorer::scenegraph::Geode();
     wireframeGeode->TranslateToGeode( wireframeActor );
 
     //wireframe->Delete();
-    poly->Delete();
+    //poly->Delete();
+    c2p->Delete();
     wireframeMapper->Delete();
     wireframeActor->Delete();
 }
@@ -1659,11 +1681,15 @@ void DataSet::SetWireframeState( unsigned int state )
     }
     else if( state == 1 )
     {
-        if( wireframeGeode == 0 )
+        if( wireframeGeode.valid() )
+        {
+            GetDCS()->RemoveChild( wireframeGeode.get() );
+        }
+        
+        //if( wireframeGeode == 0 )
         {
             CreateWireframeGeode();
         }
-        GetDCS()->RemoveChild( wireframeGeode.get() );
         GetDCS()->AddChild( wireframeGeode.get() );
     }
 }
@@ -1715,6 +1741,16 @@ void DataSet::SetDataSetScalarState( unsigned int state )
         GetDCS()->AddChild( dataSetScalarBar->GetScalarBar() );
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
+std::string DataSet::GetActiveScalarName()
+{
+    return GetScalarName( GetActiveScalar() );
+}
+////////////////////////////////////////////////////////////////////////////////
+std::string DataSet::GetActiveVectorName()
+{
+    return GetVectorName( GetActiveVector() );
+}    
+    
 } // end xplorer
 } // end ves

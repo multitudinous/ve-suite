@@ -34,8 +34,6 @@
 #include <ves/builder/DataLoader/starReader.h>
 #include <vtkDataSet.h>
 #include <vtkUnstructuredGrid.h>
-//#include <vtkCellDataToPointData.h>
-//#include <vtkPointData.h>
 
 #include <iostream>
 
@@ -61,7 +59,8 @@ void StarCDTranslator::StarCDPreTranslateCbk::Preprocess( int argc, char** argv,
 }
 ////////////////////////////////////////////////////////////////////////////////
 void StarCDTranslator::StarCDTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                      cfdTranslatorToVTK* toVTK )
+                                                     cfdTranslatorToVTK* toVTK,
+                                                     vtkAlgorithm*& dataReader )
 {
     StarCDTranslator* starCDToVTK =
         dynamic_cast<StarCDTranslator*>( toVTK );

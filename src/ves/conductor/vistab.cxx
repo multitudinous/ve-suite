@@ -1200,8 +1200,13 @@ void Vistab::UpdateWireFrame( wxCommandEvent& WXUNUSED( event ) )
     ves::open::xml::DataValuePairPtr activeDataset( new ves::open::xml::DataValuePair() );
     activeDataset->SetData( "Active Dataset", GetActiveDatasetName() );
     veCommand->AddDataValuePair( activeDataset );
+
+    ves::open::xml::DataValuePairPtr activeScalar( new ves::open::xml::DataValuePair() );
+    activeScalar->SetData( "Active Scalar", GetActiveScalarName() );
+    veCommand->AddDataValuePair( activeScalar );
     
-    bool connected = ves::conductor::util::CORBAServiceList::instance()->SendCommandStringToXplorer( veCommand );
+    bool connected = ves::conductor::util::CORBAServiceList::instance()->
+        SendCommandStringToXplorer( veCommand );
 }
 ////////////////////////////////////////////////////////////////////////
 void Vistab::UpdateAxes( wxCommandEvent& WXUNUSED( event ) )

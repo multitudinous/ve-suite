@@ -81,6 +81,8 @@
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
+#include <vtkCompositeDataPipeline.h>
+#include <vtkAlgorithm.h>
 
 vprSingletonImpLifetime( ves::xplorer::SteadyStateVizHandler, 10 );
 
@@ -103,8 +105,11 @@ SteadyStateVizHandler::SteadyStateVizHandler()
     texturesActive = false;
     transientActors = true;
     vjTh[ 0 ] = 0;
-    _param.erase();
 
+    vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
+    vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
+    prototype->Delete();
+    
     _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
         new ves::xplorer::event::CreateVisObjectEventHandler();
     _eventHandlers[ std::string( "CLEAR_VIS_OBJECTS" )] =

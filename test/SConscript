@@ -55,3 +55,6 @@ srcs.extend(loki_srcs)
 
 
 env.Program('TestRunner.exe', srcs)
+
+
+SConscript( dirs = ['vtk'] )

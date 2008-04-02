@@ -37,15 +37,15 @@
 
 class vtkPolyData;
 class vtkPolyDataMapper;
-class vtkMultiGroupPolyDataMapper;
 class vtkGeometryFilter;
-class vtkMultiGroupDataGeometryFilter;
 class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
 class vtkDecimatePro;
 class vtkTriangleFilter;
 class vtkStripper;
 class vtkPolyDataNormals;
+class vtkAlgorithmOutput;
+class vtkCellDataToPointData;
 
 namespace ves
 {
@@ -81,8 +81,12 @@ public:
 
     ///Sets the Mapper Input
     ///\param polydata
-    void SetMapperInput( vtkPolyData* polydata );
+    void SetMapperInput( vtkAlgorithmOutput* polydata );
 
+    ///Sets the Mapper Input
+    ///\param polydata
+    //void SetMapperInput( vtkPolyData* polydata );
+    
     ///Sets the Fill Type
     ///\param fillType
     void SetFillType( const int fillType );
@@ -91,16 +95,16 @@ public:
     void CreatePlane();
 
 protected:
-    //vtkPolyDataMapper*   mapper;
-    vtkMultiGroupPolyDataMapper* mapper;///<mapper.
-    //vtkMultiGroupDataGeometryFilter*   filter;
+    vtkPolyDataMapper* mapper;///<mapper.
     vtkContourFilter*    cfilter;///<Contour filter.
     vtkBandedPolyDataContourFilter* bfilter;///<banded contour filter.
     vtkDecimatePro*      deci;///<decimator.
     vtkTriangleFilter*   tris;///<trangle filter for vtk.
     vtkStripper*         strip;///<strip.
     vtkPolyDataNormals*  normals;///<polydata normals.
-
+    ///Convert cutting plane to point data
+    vtkCellDataToPointData* mC2p;
+    
     cfdCuttingPlane* cuttingPlane;///<cutting plane
 
     int fillType;///<Representation of contour line.

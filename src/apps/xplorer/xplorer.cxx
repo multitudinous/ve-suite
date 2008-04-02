@@ -44,20 +44,22 @@
 #include <vrj/Kernel/Kernel.h>
 
 #include <ves/VEConfig.h>
+
 using namespace ves::xplorer;
 
 int main( int argc, char* argv[] )
 {
     std::cout
-    << "|-----------------------------------------------------------------|"
-    << std::endl
-    << "|\tVE-Xplorer Version "
-    << VES_MAJOR_VERSION << "."
-    << VES_MINOR_VERSION << "."
-    << VES_PATCH_VERSION << "."
-    << SVN_VES_REVISION << std::endl
-    << "|-----------------------------------------------------------------|"
-    << std::endl;
+        << "|-----------------------------------------------------------------|"
+        << std::endl
+        << "|\tVE-Xplorer Version "
+        << VES_MAJOR_VERSION << "."
+        << VES_MINOR_VERSION << "."
+        << VES_PATCH_VERSION << "."
+        << SVN_VES_REVISION << std::endl
+        << "|-----------------------------------------------------------------|"
+        << std::endl;
+
     try
     {
         CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "VE_Suite_ORB" );

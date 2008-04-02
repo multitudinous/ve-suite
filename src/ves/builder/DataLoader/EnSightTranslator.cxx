@@ -74,7 +74,8 @@ void EnSightTranslator::EnSightPreTranslateCbk::Preprocess( int argc, char** arg
 }
 ////////////////////////////////////////////////////////////////////////////////
 void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                        cfdTranslatorToVTK* toVTK )
+                                                       cfdTranslatorToVTK* toVTK,
+                                                       vtkAlgorithm*& dataReader )
 {
     EnSightTranslator* EnSightToVTK =
         dynamic_cast< EnSightTranslator* >( toVTK );
@@ -124,7 +125,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
             {
                 outputDataset = vtkMultiBlockDataSet::New();
             }
-            outputDataset->DeepCopy( reader->GetOutput() );
+            outputDataset->ShallowCopy( reader->GetOutput() );
         }
         outputDataset->Update();
         //tmpDSet->Delete();
@@ -156,7 +157,7 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
                     outputDataset = vtkMultiBlockDataSet::New();
                 }
                 //vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-                outputDataset->DeepCopy( reader->GetOutput() );
+                outputDataset->ShallowCopy( reader->GetOutput() );
                 //appendFilter->Delete();
 
                 //get the info about the data in the data set

@@ -145,7 +145,8 @@ std::string plot3dReader::Plot3DPreTranslateCbk::GetQFilename( void )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                  cfdTranslatorToVTK* toVTK )
+                                                 cfdTranslatorToVTK* toVTK,
+                                                 vtkAlgorithm*& dataReader )
 {
     plot3dReader* plot3DToVTK =
         dynamic_cast< plot3dReader* >( toVTK );
@@ -154,6 +155,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
     {
         writer      = vtkStructuredGridWriter::New();
         reader      = vtkPLOT3DReader::New();
+        dataReader = reader;
         //reader->DebugOn();
         //reader->ReleaseDataFlagOn();
         unswriter   = vtkUnstructuredGridWriter::New();
@@ -333,7 +335,7 @@ void plot3dReader::Plot3DTranslateCbk::Translate( vtkDataObject*& outputDataset,
             outputDataset = vtkUnstructuredGrid::New();
         }
 
-        outputDataset->DeepCopy( unsgrid );
+        outputDataset->ShallowCopy( unsgrid );
         outputDataset->Update();
         //outputDataset->Print( std::cout );
 

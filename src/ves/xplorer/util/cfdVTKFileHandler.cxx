@@ -71,13 +71,13 @@ using namespace ves::xplorer::util;
 //////////////////////////////////////
 //Constructors                      //
 //////////////////////////////////////
-cfdVTKFileHandler::cfdVTKFileHandler()
+cfdVTKFileHandler::cfdVTKFileHandler():
+    mDataReader( 0 ),
+    _xmlTester( 0 ),
+    _dataSet( 0 )
 {
     _outFileType = CFD_XML;
     _outFileMode = CFD_BINARY;
-
-    _xmlTester = 0;
-    _dataSet = 0;
 }
 /////////////////////////////////////////////////////////////////
 cfdVTKFileHandler::cfdVTKFileHandler( const cfdVTKFileHandler& fh )
@@ -91,6 +91,7 @@ cfdVTKFileHandler::cfdVTKFileHandler( const cfdVTKFileHandler& fh )
     _xmlTester = vtkXMLFileReadTester::New();
     _xmlTester = fh._xmlTester;
     _dataSet = fh._dataSet;
+    std::cout << "cfdVTKFileHandler::cfdVTKFileHandler Bad News" << std::endl;
 }
 ///////////////////////////////////////
 //Destructor                         //
@@ -101,10 +102,6 @@ cfdVTKFileHandler::~cfdVTKFileHandler()
     {
         _xmlTester->Delete();
     }
-
-    _inFileName.erase();
-    _outFileName.erase();
-
 }
 ////////////////////////////////////////////////////////////
 void cfdVTKFileHandler::SetVTKOutFileType( OutFileType type )
@@ -119,20 +116,17 @@ void cfdVTKFileHandler::SetOutFileWriteMode( OutFileMode mode )
 //////////////////////////////////////////////////////
 void cfdVTKFileHandler::SetInputFileName( std::string inFile )
 {
-    if( inFile.empty() )
-        return;
-
-    _inFileName.clear();
     _inFileName = inFile;
 }
 //////////////////////////////////////////////////////
 void cfdVTKFileHandler::SetOutputFileName( std::string oFile )
 {
-    if( oFile.empty() )
-        return;
-
-    _outFileName.erase();
     _outFileName = oFile;
+}
+//////////////////////////////////////////////////////
+vtkAlgorithm* cfdVTKFileHandler::GetAlgorithm()
+{
+    return mDataReader;
 }
 ////////////////////////////////////////////////////////////////////
 vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
@@ -235,7 +229,7 @@ void cfdVTKFileHandler::_readClassicVTKFile()
                 << std::endl;
             return ;
         }
-        _dataSet->DeepCopy( genericReader->GetOutput() );
+        _dataSet->ShallowCopy( genericReader->GetOutput() );
         genericReader->Delete();
     }
 }
@@ -255,7 +249,7 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
     }
     mgdReader->SetFileName( _inFileName.c_str() );
     mgdReader->Update();
-    _dataSet->DeepCopy( mgdReader->GetOutput() );
+    _dataSet->ShallowCopy( mgdReader->GetOutput() );
     mgdReader->Delete();
 }
 //////////////////////////////////////
@@ -266,8 +260,7 @@ void cfdVTKFileHandler::_getXMLUGrid()
     ugReader->SetFileName( _inFileName.c_str() );
     ugReader->Update();
     _dataSet = vtkUnstructuredGrid::New();
-    //_dataSet->ShallowCopy(ugReader->GetOutput());
-    _dataSet->DeepCopy( ugReader->GetOutput() );
+    _dataSet->ShallowCopy(ugReader->GetOutput());
     ugReader->Delete();
 }
 //////////////////////////////////////
@@ -306,14 +299,12 @@ void cfdVTKFileHandler::_getXMLPolyData()
 ////////////////////////////////////////////////
 void cfdVTKFileHandler::GetXMLImageData( void )
 {
-    //std::cout << "Reading image data..." << std::endl;
     vtkXMLImageDataReader* reader = vtkXMLImageDataReader::New();
     reader->SetFileName( _inFileName.c_str() );
     reader->Update();
     _dataSet = vtkImageData::New();
     _dataSet->ShallowCopy( reader->GetOutput() );
     reader->Delete();
-    //std::cout << "Finished Reading image data..." << std::endl;
 }
 /////////////////////////////////////////////////////////////////////////////////
 bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFileName )

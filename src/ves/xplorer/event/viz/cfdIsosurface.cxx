@@ -41,19 +41,18 @@
 #include <ves/open/xml/Command.h>
 
 #include <vtkLookupTable.h>
-//#include <vtkUnstructuredGrid.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkDataSet.h>
 #include <vtkContourFilter.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkActor.h>
-#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkDataArray.h>
 #include <vtkPolyData.h>
+#include <vtkCellDataToPointData.h>
 
-//#include "VE_Xplorer/Utilities/readWriteVtkThings.h"
 using namespace ves::xplorer;
 using namespace ves::xplorer::scenegraph;
 
@@ -86,8 +85,7 @@ cfdIsosurface::cfdIsosurface( int numsteps )
     this->filter->SetInput(( vtkDataSet * )this->append->GetOutput() );
 #endif
 
-    this->mapper = vtkMultiGroupPolyDataMapper::New();
-    this->mapper->SetColorModeToMapScalars();
+    this->mapper = vtkPolyDataMapper::New();
 }
 
 cfdIsosurface::~cfdIsosurface()
@@ -107,7 +105,7 @@ cfdIsosurface::~cfdIsosurface()
 
 void cfdIsosurface::Update()
 {
-    SetActiveVtkPipeline();
+    //SetActiveVtkPipeline();
     vprDEBUG( vesDBG, 1 ) << "|\tcfdIsosurface::Update: FileName: "
     << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
@@ -133,29 +131,39 @@ void cfdIsosurface::Update()
     this->append->Update( );
 #else
     vprDEBUG( vesDBG, 1 )
-    << "cfdIsosurface: this->GetActiveMeshedVolume() = "
-    << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
+        << "cfdIsosurface: this->GetActiveMeshedVolume() = "
+        << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
 
     vprDEBUG( vesDBG, 1 )
-    << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()="
-    << this->GetActiveDataSet()->GetDataSet()
-    << std::endl << vprDEBUG_FLUSH;
+        << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()="
+        << this->GetActiveDataSet()->GetDataSet()
+        << std::endl << vprDEBUG_FLUSH;
 
+    vtkCellDataToPointData* c2p = vtkCellDataToPointData::New(); 
+    c2p->SetInput( GetActiveDataSet()->GetDataSet() );
+    c2p->Update();
+    
     vtkContourFilter* contourFilter = vtkContourFilter::New();
     contourFilter->UseScalarTreeOn();
-    contourFilter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+    contourFilter->SetInputConnection( 0, c2p->GetOutputPort( 0 ) );
     contourFilter->SetValue( 0, this->value );
+    contourFilter->ComputeNormalsOff();
+    contourFilter->SetInputArrayToProcess( 0, 0, 0,
+        vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+        GetActiveDataSet()->GetActiveScalarName().c_str() );
+    contourFilter->Update();
 
-    vtkPolyData* polydata = ApplyGeometryFilter( contourFilter->GetOutputPort() );
+    vtkAlgorithmOutput* polydata = 
+        ApplyGeometryFilterNew( contourFilter->GetOutputPort( 0 ) );
 
-    polydata->GetPointData()->SetActiveScalars( colorByScalar.c_str() );
-    polydata->Update();
-    this->normals->SetInput( polydata );
-    this->mapper->SetInputConnection( normals->GetOutputPort() );
+    normals->SetInputConnection( polydata );
+
+    mapper->SetInputConnection( normals->GetOutputPort() );
+    mapper->SetScalarModeToUsePointFieldData();
+    mapper->UseLookupTableScalarRangeOn();
+    mapper->SelectColorArray( colorByScalar.c_str() );
+    //this->mapper->SetColorModeToMapScalars();
 #endif
-
-    //double* tempRange = this->GetActiveDataSet()->GetScalarRange( colorByScalar.c_str() );
-    this->mapper->SetScalarRange( minValue, maxValue );
 
     vtkLookupTable* lut = vtkLookupTable::New();
     lut->SetNumberOfColors( 256 );            //default is 256
@@ -163,7 +171,8 @@ void cfdIsosurface::Update()
     lut->SetTableRange( minValue, maxValue );
     lut->Build();
 
-    this->mapper->SetLookupTable( lut );
+    mapper->SetLookupTable( lut );
+    mapper->Update();
 
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( this->mapper );
@@ -172,15 +181,16 @@ void cfdIsosurface::Update()
     geodes.back()->TranslateToGeode( temp );
     temp->Delete();
     lut->Delete();
+    c2p->Delete();
     contourFilter->Delete();
     this->updateFlag = true;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double cfdIsosurface::GetValue()
 {
     return this->value;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 double cfdIsosurface::convertPercentage( const int percentage )
 {
     // set the step-size for isosurface based on the "pretty" range

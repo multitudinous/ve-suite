@@ -45,7 +45,6 @@ class vtkPlane;
 class vtkCutter;
 class vtkGlyph3D;
 class vtkMaskPoints;
-class vtkMultiGroupDataGeometryFilter;
 
 namespace ves
 {
@@ -85,7 +84,6 @@ private:
 #else
     vtkPlane           *plane;
     vtkCutter          *cutter;
-    vtkMultiGroupDataGeometryFilter*   filter;
 #endif
 };
 }

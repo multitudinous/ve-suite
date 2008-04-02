@@ -64,7 +64,8 @@ cfdREITranslator::~cfdREITranslator()
 {}
 /////////////////////////////////////////
 void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDataset,
-                                                    cfdTranslatorToVTK* toVTK )
+                                                   cfdTranslatorToVTK* toVTK,
+                                                   vtkAlgorithm*& dataReader )
 {
     cfdREITranslator* reiTranslator =
         dynamic_cast<cfdREITranslator*>( toVTK );
@@ -498,9 +499,8 @@ void cfdREITranslator::REITranslatorCbk::Translate( vtkDataObject*& outputDatase
         {
             outputDataset = vtkStructuredGrid::New();
         }
-        outputDataset->DeepCopy( sGrid );
+        outputDataset->ShallowCopy( sGrid );
         outputDataset->Update();
-        //exit(0);
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

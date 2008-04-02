@@ -56,21 +56,21 @@ cfdDICOMTranslator::~cfdDICOMTranslator()
 {}
 ////////////////////////////////////////////////////////////////////////////////
 void cfdDICOMTranslator::DICOMTranslateCbk::Translate( vtkDataObject*& outputDataset,
-                                                       cfdTranslatorToVTK* toVTK )
+                                                      cfdTranslatorToVTK* toVTK,
+                                                      vtkAlgorithm*& dataReader )
 {
     cfdDICOMTranslator* dicomToVTK =
         dynamic_cast<cfdDICOMTranslator*>( toVTK );
     if( dicomToVTK )
     {
         vtkDICOMImageReader* dicomTranslator = vtkDICOMImageReader::New();
-        //dicomTranslator->DebugOn();
         dicomTranslator->SetDirectoryName( dicomToVTK->GetInputDirectory().c_str() );
         dicomTranslator->Update();
         if( !outputDataset )
         {
             outputDataset = vtkImageData::New();
         }
-        outputDataset->DeepCopy( dicomTranslator->GetOutput( 0 ) );
+        outputDataset->ShallowCopy( dicomTranslator->GetOutput( 0 ) );
         outputDataset->Update();
 
 

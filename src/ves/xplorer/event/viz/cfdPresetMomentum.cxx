@@ -46,7 +46,7 @@
 #include <vtkCutter.h>
 #include <vtkWarpVector.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkMultiGroupPolyDataMapper.h>
+#include <vtkCellDataToPointData.h>
 
 // the following is for the PD stuff...
 #include <vtkActor.h>
@@ -101,7 +101,7 @@ void cfdPresetMomentum::Update( void )
         this->warper->SetScaleFactor( this->warpedContourScale );
         //this->warper->Update();
 
-        this->SetMapperInput(( vtkPolyData* )this->warper->GetOutput() );
+        this->SetMapperInput( this->warper->GetOutputPort() );
 
         this->mapper->SetScalarRange( this->GetActiveDataSet()
                                       ->GetUserRange() );
@@ -119,36 +119,35 @@ void cfdPresetMomentum::Update( void )
             delete this->cuttingPlane;
             this->cuttingPlane = NULL;
         }
-        CreatePlane();
-        /*
-              this->cuttingPlane = new cfdCuttingPlane(
-                    this->GetActiveDataSet()->GetBounds(),
-                    this->xyz, numSteps );
 
-             // insure that we are using correct bounds for the given data set...
-              this->cuttingPlane->SetBounds(
-                    this->GetActiveDataSet()->GetBounds() );
-              this->cuttingPlane->Advance( this->requestedValue );
+        this->cuttingPlane = new cfdCuttingPlane(
+            this->GetActiveDataSet()->GetBounds(),
+            this->xyz, numSteps );
 
-              this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-              this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
-              this->cutter->Update();
+        // insure that we are using correct bounds for the given data set...
+        this->cuttingPlane->SetBounds(
+            this->GetActiveDataSet()->GetBounds() );
+        this->cuttingPlane->Advance( this->requestedValue );
+        vtkCutter* tempCutter = vtkCutter::New();        
+        tempCutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+        tempCutter->SetInput( GetActiveDataSet()->GetDataSet() );
+        tempCutter->Update();
+        
+        delete this->cuttingPlane;
+        this->cuttingPlane = NULL;
+        vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+        c2p->SetInputConnection( tempCutter->GetOutputPort() );
+        
+        warper->SetInputConnection( c2p->GetOutputPort() );
+        warper->SetScaleFactor( warpedContourScale );
+        warper->SetInputArrayToProcess( 0, 0, 0,
+            vtkDataObject::FIELD_ASSOCIATION_POINTS, 
+            GetActiveDataSet()->GetActiveVectorName().c_str() );
 
-              delete this->cuttingPlane;
-              this->cuttingPlane = NULL;
-
-              this->warper->SetInput( this->cutter->GetOutput() );
-              this->warper->SetScaleFactor( this->warpedContourScale );
-              //this->warper->Update();//can this go???
-
-              this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
-
-              this->mapper->SetScalarRange( this->GetActiveDataSet()
-                                                ->GetUserRange() );
-              this->mapper->SetLookupTable( this->GetActiveDataSet()
-                                                ->GetLookupTable() );
-              //this->mapper->Update();
-        */
+        SetMapperInput( warper->GetOutputPort() );
+        
+        tempCutter->Delete();
+        c2p->Delete();
     }
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( this->mapper );
@@ -167,7 +166,7 @@ void cfdPresetMomentum::Update( void )
     catch ( std::bad_alloc )
     {
         mapper->Delete();
-        mapper = vtkMultiGroupPolyDataMapper::New();
+        mapper = vtkPolyDataMapper::New();
 
         vprDEBUG( vesDBG, 0 ) << "|\tMemory allocation failure : cfdPresetMomentum "
         << std::endl << vprDEBUG_FLUSH;
