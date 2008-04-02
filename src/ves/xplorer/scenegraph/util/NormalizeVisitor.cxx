@@ -35,6 +35,7 @@
 // --- OSG Stuff --- //
 #include <osg/Geode>
 #include <osg/Group>
+#include <osg/PositionAttitudeTransform>
 #include <osg/Geometry>
 #include <osg/Material>
 #include <osg/Texture>
@@ -60,7 +61,7 @@ NormalizeVisitor::~NormalizeVisitor()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NormalizeVisitor::apply( osg::Group& node )
+void NormalizeVisitor::apply( osg::PositionAttitudeTransform& node )
 {
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = node.getDescriptions();
@@ -68,10 +69,25 @@ void NormalizeVisitor::apply( osg::Group& node )
     //Find if the node is an assembly
     for( size_t i = 0; i < descriptorsList.size(); i++ )
     {
-        if( descriptorsList.at( i ) == "Part" )
+        std::string nodeType = descriptorsList.at( i );
+        if( nodeType  == "Part" )
         {
             isPart = true;
             break;
+        }
+        else if( nodeType == "Assembly" )
+        {
+            //If a parent assembly node has a scale of 1 and is trying to
+            //normalize all the sub children BUT the children nodes have a
+            //scale != 1 then we do not want to traverse any farther 
+            //as normalization needs to be on still. If the children
+            //nodes have a scale == 1 then no big deal, go ahead and 
+            //turn off normalization
+            //NOTE::This is neccessary due to how statesets are managed in OSG
+            if( !mNormalize && node.getScale()[ 0 ] != 1.0f )
+            {
+                return;
+            }
         }
     }
 

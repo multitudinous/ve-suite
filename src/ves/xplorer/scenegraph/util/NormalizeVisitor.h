@@ -60,7 +60,7 @@ public:
     NormalizeVisitor( osg::Node* osg_node, bool state );
     virtual ~NormalizeVisitor();
 
-    virtual void apply( osg::Group& node );
+    virtual void apply( osg::PositionAttitudeTransform& node );
 
 private:
     //setup the normalize state for the node
