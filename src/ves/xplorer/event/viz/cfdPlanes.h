@@ -38,6 +38,8 @@
 #include <ves/VEConfig.h>
 
 class vtkPolyData;
+class vtkAppendPolyData;
+class vtkAlgorithm;
 
 namespace ves
 {
@@ -76,12 +78,12 @@ public:
     void SetAllPlanesSelected( void );
 
     // Get the cut planes polydata
-    vtkPolyData * GetPlanesData();
+    vtkAlgorithm* GetPlanesData();
 
     ///Selects the closest cutting plane depending on the slider bar position.
     ///0 <= sliderBarPos <= 100
     ///\param sliderBarPos The position of the slider bar.
-    vtkPolyData * GetClosestPlane( const int sliderBarPos );
+    vtkPolyData* GetClosestPlane( const int sliderBarPos );
 
     ///Concatenate them all into one.
     void ConcatenateSelectedPlanes( void );
@@ -91,7 +93,7 @@ public:
 
     ///Get a particular plane.
     ///\param i
-    vtkPolyData * GetPlane( const int i );
+    vtkPolyData* GetPlane( const int i );
 
 private:
     int numPlanes;///<Total number of precomputed planes found in the directory.
@@ -110,7 +112,7 @@ private:
     float * sliceLocation;///<array that keeps track of the physical location of a particular plane.
 
 
-    vtkPolyData * collectivePolyData;///<polydata planes of data stored in a single object.
+    vtkAppendPolyData* collectivePolyData;///<polydata planes of data stored in a single object.
 };
 }
 }

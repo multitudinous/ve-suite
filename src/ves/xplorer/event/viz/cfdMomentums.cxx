@@ -45,7 +45,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
-#include <vtkPassThroughFilter.h>
+#include <vtkAppendPolyData.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -86,15 +86,13 @@ void cfdMomentums::Update( void )
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-        std::string vectorName = this->GetActiveDataSet()->
+        /*std::string vectorName = this->GetActiveDataSet()->
                                  GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-            ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
+            ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );*/
 
-        vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
-        tempPipe->SetInput( GetActiveDataSet()
-                           ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
-        this->warper->SetInputConnection( tempPipe->GetOutputPort() );
+        this->warper->SetInputConnection(  GetActiveDataSet()
+                                         ->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
         this->warper->SetScaleFactor( this->warpedContourScale );
         this->warper->Update();//can this go???
 
@@ -124,7 +122,6 @@ void cfdMomentums::Update( void )
         }
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->Delete();
         temp->Delete();
-        tempPipe->Delete();
     }
     else
     {

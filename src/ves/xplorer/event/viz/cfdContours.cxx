@@ -45,7 +45,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
-#include <vtkPassThroughFilter.h>
+#include <vtkAppendPolyData.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -82,12 +82,8 @@ void cfdContours::Update( void )
     {
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
-
-        vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
-        tempPipe->SetInput( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
         
-        this->SetMapperInput( tempPipe->GetOutputPort() );
-        tempPipe->Delete();
+        SetMapperInput( GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
         
         this->mapper->Update();
         vtkActor* temp = vtkActor::New();

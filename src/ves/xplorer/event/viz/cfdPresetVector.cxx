@@ -139,7 +139,7 @@ void cfdPresetVector::Update( void )
             this->GetActiveDataSet()->GetBounds() );
         this->cuttingPlane->Advance( this->requestedValue );
         vtkCutter* cutter = vtkCutter::New();
-        cutter->SetInputConnection( GetActiveDataSet()->GetAlgorithm()->GetOutputPort() );
+        cutter->SetInput( GetActiveDataSet()->GetDataSet() );
         cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
         cutter->Update();
         delete this->cuttingPlane;

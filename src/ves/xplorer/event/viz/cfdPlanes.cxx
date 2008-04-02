@@ -204,7 +204,7 @@ void cfdPlanes::SetAllPlanesSelected( void )
     }
 }
 
-vtkPolyData * cfdPlanes::GetPlanesData( void )
+vtkAlgorithm* cfdPlanes::GetPlanesData( void )
 {
     return this->collectivePolyData;
 }
@@ -256,23 +256,23 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
         return;
     }
 
-    vtkAppendPolyData * appendPolyData = vtkAppendPolyData::New();
+    collectivePolyData = vtkAppendPolyData::New();
 
     for( int i = 0; i < this->numPlanes; i++ )
     {
         vprDEBUG( vesDBG, 1 )
-        << "isPlaneSelected[" << i << "] = " << isPlaneSelected[ i ]
-        << std::endl << vprDEBUG_FLUSH;
+            << "isPlaneSelected[" << i << "] = " << isPlaneSelected[ i ]
+            << std::endl << vprDEBUG_FLUSH;
 
-        if( ! isPlaneSelected[ i ] )
+        if( !isPlaneSelected[ i ] )
         {
             continue;
         }
-        appendPolyData->AddInput( append[ i ] );
+        collectivePolyData->AddInput( append[ i ] );
     }
 
-    appendPolyData->Update();
-
+    collectivePolyData->Update();
+/*
     if( this->collectivePolyData != NULL )
     {
         // user classes should delete
@@ -280,7 +280,8 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
     }
     this->collectivePolyData = vtkPolyData::New();
     this->collectivePolyData->ShallowCopy( appendPolyData->GetOutput() );
-    appendPolyData->Delete();
+    collectivePolyData->Update();
+    appendPolyData->Delete();*/
 }
 
 int cfdPlanes::GetNumberOfPlanes()

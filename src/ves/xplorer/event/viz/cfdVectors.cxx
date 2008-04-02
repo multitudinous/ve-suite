@@ -41,7 +41,7 @@
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
-//#include <vtkUnstructuredGrid.h>
+#include <vtkAppendPolyData.h>
 #include <vtkDataSet.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
@@ -141,17 +141,9 @@ void cfdVectors::Update( void )
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
 
-        std::string vectorName = this->GetActiveDataSet()->
-                                 GetVectorName( this->GetActiveDataSet()->GetActiveVector() );
-        this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
-        ->GetPlanesData()->GetPointData()->SetActiveVectors( vectorName.c_str() );
-
-        std::string scalarName = this->GetActiveDataSet()->
-                                 GetScalarName( this->GetActiveDataSet()->GetActiveScalar() );
-
         // get every nth point from the dataSet data
-        this->ptmask->SetInput( this->GetActiveDataSet()
-                                ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
+        this->ptmask->SetInputConnection( this->GetActiveDataSet()
+                                ->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
         this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
         this->ptmask->Update();
 

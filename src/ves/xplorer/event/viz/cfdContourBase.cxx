@@ -162,10 +162,10 @@ void cfdContourBase::SetMapperInput( vtkAlgorithmOutput* polydata )
     //tris->GetOutput()->ReleaseDataFlagOn();
 
     // decimate points is used for lod control of contours
-    this->deci->SetInputConnection( tris->GetOutputPort() );
+    /*this->deci->SetInputConnection( tris->GetOutputPort() );
     this->deci->PreserveTopologyOn();
     this->deci->BoundaryVertexDeletionOff();
-    deci->Update();
+    deci->Update();*/
     //deci->GetOutput()->ReleaseDataFlagOn();
 
     this->strip->SetInputConnection( tris->GetOutputPort() );
