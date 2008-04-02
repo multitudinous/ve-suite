@@ -130,7 +130,6 @@ KeyboardMouse::KeyboardMouse()
 
     gmtl::identity( mDeltaTransform );
     gmtl::identity( mCurrentTransform );
-    gmtl::identity( mLocalToWorldTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -437,21 +436,24 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+
     //Grab the active matrix to manipulate
     mCurrentTransform = activeDCS->GetMat();
 
-    //Convert to world space if not already in it
-    std::string name = ves::xplorer::scenegraph::SceneManager::instance()->
-                           GetActiveSwitchNode()->GetName();
+    //Convert mCurrentTransform to world space if not already in it
+    std::string name = activeSwitchNode->GetName();
     if( activeDCS->GetName() !=  name )
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
-            new ves::xplorer::scenegraph::LocalToWorldTransform( 
-                ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-                activeDCS.get() );
+        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
+            localToWorldTransform =
+                new ves::xplorer::scenegraph::LocalToWorldTransform( 
+                    activeSwitchNode.get(),
+                    activeDCS.get() );
 
-        mLocalToWorldTransform = ltwt->GetLocalToWorldTransform();
-        mCurrentTransform = mLocalToWorldTransform * mCurrentTransform;
+        mCurrentTransform = localToWorldTransform->GetLocalToWorldTransform();
     }
 
     //Translate active dcs by distance that the mHead is away from the origin
@@ -476,12 +478,12 @@ void KeyboardMouse::ProcessNavigationEvents()
     for( int i = 0; i < 3; ++i )
     {
         //Get the current rotation matrix
-        accuRotation[i][ 0 ] = mCurrentTransform[i][ 0 ];
-        accuRotation[i][ 1 ] = mCurrentTransform[i][ 1 ];
-        accuRotation[i][ 2 ] = mCurrentTransform[i][ 2 ];
+        accuRotation[ i ][ 0 ] = mCurrentTransform[ i ][ 0 ];
+        accuRotation[ i ][ 1 ] = mCurrentTransform[ i ][ 1 ];
+        accuRotation[ i ][ 2 ] = mCurrentTransform[ i ][ 2 ];
 
         //Get the current translation matrix
-        matrix[i][ 3 ] = rotateJugglerHeadVec[i] + center_point->mData[i];
+        matrix[ i ][ 3 ] = rotateJugglerHeadVec[ i ] + center_point->mData[ i ];
     }
     /*
     Convert head to world space to run intersection tests
@@ -515,7 +517,12 @@ void KeyboardMouse::ProcessNavigationEvents()
     //Convert matrix back to local space after delta transform has been applied
     if( activeDCS->GetName() != name )
     {
-        matrix = gmtl::invert( mLocalToWorldTransform ) * matrix;
+        //Remove local matrix from mCurrentTransform
+        //We are multiplying by a new transformed local matrix
+        gmtl::Matrix44d activeMatrix = activeDCS->GetMat();
+        mCurrentTransform *= gmtl::invert( activeMatrix );
+
+        matrix = gmtl::invert( mCurrentTransform ) * matrix;
     }
 
     //Set the activeDCS w/ new transform
@@ -996,6 +1003,10 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     osgUtil::Hit objectHit;
     mSelectedGeometry = 0;
 
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+
     if( selectedDCS.valid() )
     {
         selectedDCS->SetTechnique( "Default" );
@@ -1006,7 +1017,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+        activeDCS = activeSwitchNode;
 
         //Move the center point to the center of all objects in the world
         osg::Vec3d worldCenter = activeDCS->getBound().center();
@@ -1033,7 +1044,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit Invalid object selected"
                               << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+        activeDCS = activeSwitchNode;
 
         //Move the center point to the center of all objects in the world
         osg::Vec3d worldCenter = activeDCS->getBound().center();
@@ -1066,22 +1077,30 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << objectHit._geode->getParents().front()->getName()
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+        activeDCS = activeSwitchNode;
     }
 
-    std::string name = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->GetName();
+    std::string name = activeSwitchNode->GetName();
     if( activeDCS->GetName() != name )
     {
         //Move the center point to the center of the selected object
-        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
-            new ves::xplorer::scenegraph::LocalToWorldTransform(
-                ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-                activeDCS.get() );
+        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
+            localToWorldTransform = 
+                new ves::xplorer::scenegraph::LocalToWorldTransform(
+                    activeSwitchNode.get(),
+                    activeDCS.get() );
 
-        osg::Matrixd matrix;
-        matrix.set( ltwt->GetLocalToWorldTransform().getData() );
+        gmtl::Matrix44d localToWorldMatrix =
+            localToWorldTransform->GetLocalToWorldTransform();
+        //Remove the local matrix from localToWorldMatrix
+        //We are multiplying by a new local matrix( the center_point )
+        gmtl::Matrix44d activeMatrix = activeDCS->GetMat();
+        localToWorldMatrix *= gmtl::invert( activeMatrix );
 
-        osg::Vec3d center = activeDCS->getBound().center() * matrix;
+        osg::Matrixd tempMatrix;
+        tempMatrix.set( localToWorldMatrix.getData() );
+
+        osg::Vec3d center = activeDCS->getBound().center() * tempMatrix;
         center_point->set( center.x(), center.y(), center.z() );
     }
 

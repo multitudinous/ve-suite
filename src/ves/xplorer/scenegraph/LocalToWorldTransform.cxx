@@ -42,17 +42,15 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldTransform::LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldNode,
-                                              ves::xplorer::scenegraph::DCS* localNode )
+LocalToWorldTransform::LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldDCS,
+                                              ves::xplorer::scenegraph::DCS* localDCS )
         :
-        NodeVisitor( TRAVERSE_PARENTS )
+        NodeVisitor( TRAVERSE_PARENTS ),
+        mWorldDCS( worldDCS )
 {
-    gmtl::identity( m_localToWorldTransform );
+    gmtl::identity( mLocalToWorldTransform );
 
-    m_worldNode = worldNode;
-    m_localNode = localNode;
-
-    localNode->accept( *this );
+    localDCS->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 LocalToWorldTransform::~LocalToWorldTransform()
@@ -62,16 +60,14 @@ LocalToWorldTransform::~LocalToWorldTransform()
 ////////////////////////////////////////////////////////////////////////////////
 void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
 {
-    if( pat.getName() == m_worldNode->getName() )
+    if( pat.getName() == mWorldDCS->getName() )
     {
         for( size_t i = 0; i < _nodePath.size(); ++i )
         {
-            m_localToWorldTransform *= static_cast< ves::xplorer::scenegraph::DCS* >
-                                       ( _nodePath.at( i ) )->GetMat();
-            ;
+            mLocalToWorldTransform *=
+                static_cast< ves::xplorer::scenegraph::DCS* >(
+                    _nodePath.at( i ) )->GetMat();
         }
-        gmtl::Matrix44d tempLocalMat = m_localNode->GetMat();
-        m_localToWorldTransform = m_localToWorldTransform * gmtl::invert( tempLocalMat );
 
         return;
     }
@@ -81,6 +77,6 @@ void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
 ////////////////////////////////////////////////////////////////////////////////
 gmtl::Matrix44d& LocalToWorldTransform::GetLocalToWorldTransform()
 {
-    return m_localToWorldTransform;
+    return mLocalToWorldTransform;
 }
 ////////////////////////////////////////////////////////////////////////////////

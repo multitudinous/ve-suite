@@ -236,7 +236,6 @@ private:
     //[ 3 7 11 15 ]     [ 30 31 32 33 ]
     gmtl::Matrix44d mDeltaTransform;///<The change to be applied to the current transform
     gmtl::Matrix44d mCurrentTransform;///<The current transform matrix being manipulated
-    gmtl::Matrix44d mLocalToWorldTransform;///<The matrix which transforms local coordinates to world
 
     osg::ref_ptr< osg::Geode > mBeamGeode;///<
     osg::ref_ptr< osg::Geode > mSelectedGeometry;///<The geometry being selected

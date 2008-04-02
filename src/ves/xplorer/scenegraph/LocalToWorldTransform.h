@@ -60,8 +60,8 @@ namespace scenegraph
 class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldNode,
-                           ves::xplorer::scenegraph::DCS* localNode );
+    LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldDCS,
+                           ves::xplorer::scenegraph::DCS* localDCS );
 
     virtual void apply( osg::PositionAttitudeTransform& pat );
 
@@ -71,14 +71,13 @@ protected:
     virtual ~LocalToWorldTransform();
 
 private:
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_worldNode;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_localNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
 
-    gmtl::Matrix44d m_localToWorldTransform;
+    gmtl::Matrix44d mLocalToWorldTransform;
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //LOCAL_TO_WORLD_TRANSFORM_H
