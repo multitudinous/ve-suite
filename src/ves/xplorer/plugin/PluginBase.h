@@ -36,13 +36,12 @@
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
-#include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/Group.h>
-
-#include <ves/xplorer/ModelPtr.h>
-
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
+
+#include <ves/xplorer/scenegraph/DCS.h>
+
+#include <ves/xplorer/ModelPtr.h>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -66,13 +65,11 @@ namespace xplorer
 {
 class cfdCursor;
 class Device;
-class cfdObjects;
-class cfdSoundHandler;
 
 namespace scenegraph
 {
 class DCS;
-class Group;
+class SceneManager;
 class PhysicsSimulator;
 }
 
@@ -134,7 +131,7 @@ public:
     //objects can do custom features with the wand buttons
     void SetInteractionDevice( ves::xplorer::Device* device );
 
-    //void SetSoundHandler( ves::xplorer::cfdSoundHandler* input );
+    void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
 
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
@@ -183,21 +180,21 @@ private:
     std::string mNetwork;
 
 protected:
+    bool mOnSceneGraph;
+
     long mPosX;
     long mPosY;
 
-    //ves::xplorer::cfdObjects* mDataRepresentation;
+    int mModelID;
 
     ves::xplorer::Model* mModel;
 
-    bool mOnSceneGraph;
-
-    int mModelID;
     std::string mObjectName;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::Device* mDevice;
-    //ves::xplorer::cfdSoundHandler* mSoundHandler;
+
+    ves::xplorer::scenegraph::SceneManager* mSceneManager;
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
     osgAL::SoundManager* mSoundManager;

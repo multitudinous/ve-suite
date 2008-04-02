@@ -38,10 +38,8 @@
 #include <ves/xplorer/Debug.h>
 
 #include <ves/xplorer/scenegraph/CADEntity.h>
-
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-
-#include <ves/xplorer/environment/cfdSoundHandler.h>
 
 #include <ves/xplorer/device/Device.h>
 
@@ -83,14 +81,15 @@ namespace plugin
 PluginBase::PluginBase():
         mOnSceneGraph( false ),
         mDevice( 0 ),
+        mSceneManager( 0 ),
         mPhysicsSimulator( 0 ),
+#ifdef VE_SOUND
+        mSoundManager( 0 )
+        ,
+#endif
         mModelID( -1 ),
         mPosX( 0 ),
         mPosY( 0 )
-#ifdef VE_SOUND
-        ,
-        mSoundManager( 0 )
-#endif
 {
     mXmlModel = ves::open::xml::model::ModelPtr();
     mNetwork.empty();
@@ -234,6 +233,21 @@ void PluginBase::SetSoundHandler( cfdSoundHandler* input )
     }
 }
 */
+////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetSceneManager(
+    ves::xplorer::scenegraph::SceneManager* sceneManager )
+{
+    if( sceneManager )
+    {
+        mSceneManager = sceneManager;
+    }
+    else
+    {
+        std::cerr
+            << "ERROR: PluginBase::SetSceneManager sceneManager is NULL"
+            << std::endl;
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetPhysicsSimulator(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )

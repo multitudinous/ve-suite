@@ -574,6 +574,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             
             mPluginsMap[ modelID ] = temp;
             // When we create the _plugin map here we will do the following
+            temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator::instance() );
 #ifdef VE_SOUND
             temp->SetSoundManager( osgAL::SoundManager::instance() );
