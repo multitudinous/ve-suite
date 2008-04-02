@@ -56,8 +56,6 @@ protected:
     void UpdateParams();
 
 private:
-    void InitializeResources();
-
     osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
 };
 

@@ -37,6 +37,8 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
@@ -50,8 +52,7 @@ using namespace cpt;
 CameraEntityCallback::CameraEntityCallback()
 :
 osg::Object(),
-osg::NodeCallback(),
-mInitialViewMatrix( osg::Matrix::identity() )
+osg::NodeCallback()
 {
     ;
 }
@@ -63,7 +64,7 @@ osg::NodeCallback( input )
 {
     if( &input != this )
     {
-        mInitialViewMatrix = input.mInitialViewMatrix;
+        ;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -79,26 +80,24 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
 
     if( cameraEntity.valid() )
     {
-        gmtl::Matrix44d cameraDCSMatrix = cameraEntity->GetDCS()->GetMat();
-        osg::Matrixd inverseCameraDCSMatrix(
-            gmtl::invert( cameraDCSMatrix ).getData() );
+        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
+            localToWorldTransform =
+                new ves::xplorer::scenegraph::LocalToWorldTransform(
+                    cameraEntity->GetSceneManager()->GetWorldDCS(),
+                    cameraEntity->GetDCS() );
 
-        osg::Matrixd currentViewMatrix =
-            inverseCameraDCSMatrix * mInitialViewMatrix;
+        gmtl::Matrix44d localToWorldMatrix =
+            localToWorldTransform->GetLocalToWorldTransform();
+
+        osg::Matrixd tempMatrix( localToWorldMatrix.getData() );
+        tempMatrix = osg::Matrix::inverse( tempMatrix ) *
+                     cameraEntity->GetInitialViewMatrix();
         
-        cameraEntity->setViewMatrix( currentViewMatrix );
+        cameraEntity->setViewMatrix( tempMatrix );
         
         cameraEntity->CalculateMatrixMVPT();
-        cameraEntity->GetTexGenNode()->getTexGen()->setPlanesFromMatrix(
-            cameraEntity->GetMatrixMVPT() );
     }
 
     traverse( node, nv );
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraEntityCallback::SetInitialViewMatrix(
-    const osg::Matrixd& initialViewMatrix )
-{
-    mInitialViewMatrix = initialViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

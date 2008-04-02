@@ -71,15 +71,14 @@ mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 )
+mQuadVertices( 0 ),
+mSceneManager( 0 )
 {
-    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
-        //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
-
-    //Initialize( worldDCS.get() );
+    //Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS )
+CameraEntity::CameraEntity(
+    ves::xplorer::scenegraph::SceneManager* sceneManager )
 :
 osg::Camera(),
 mCameraPerspective( false ),
@@ -96,9 +95,10 @@ mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 )
+mQuadVertices( 0 ),
+mSceneManager( sceneManager )
 {
-    Initialize( worldDCS );
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
@@ -128,23 +128,19 @@ mQuadVertices( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::~CameraEntity()
 {
-    //stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
-    //stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-    //stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
-    //stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-    //stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
-    //stateset->setAttribute(
-        //( ves::xplorer::scenegraph::ResourceManager::instance()->get
-        //< osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
-        //osg::StateAttribute::ON );
-
-    //stateset->addUniform( mNearPlaneUniform.get() );
-    //stateset->addUniform( mFarPlaneUniform.get() );
-    ;
+    mSceneManager->GetRootNode()->removeChild( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
+void CameraEntity::Initialize()
 {   
+    osg::ref_ptr< osg::Group > rootNode =
+        mSceneManager->GetRootNode();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
+        mSceneManager->GetWorldDCS();
+    
+    //Initialize the resources
+    InitializeResources();
+
     //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
@@ -153,32 +149,17 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
 
-    osg::Matrixd initialViewMatrix;
-    initialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
-                                  osg::Vec3( 0, 1, 0 ),
-                                  osg::Vec3( 0, 0, 1 ) );
-    setViewMatrix( initialViewMatrix );
+    mInitialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
+                                   osg::Vec3( 0, 1, 0 ),
+                                   osg::Vec3( 0, 0, 1 ) );
+    setViewMatrix( mInitialViewMatrix );
     setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
-    worldDCS->addChild( this );
+
+    rootNode->addChild( this );
 
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
-    mCameraEntityCallback->SetInitialViewMatrix( initialViewMatrix );
     setUpdateCallback( mCameraEntityCallback.get() );
-
-    /*
-    //Add subgraph to render
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS >  mGrinder = new ves::xplorer::scenegraph::DCS();
-
-    mGrinder->setPosition( osg::Vec3d( 0.0, 10.0, 0.0 ) );
-    mGrinder->setScale( osg::Vec3d( 5.0, 5.0, 5.0 ) );
-
-    osg::ref_ptr< osg::Node > grinder =
-        osgDB::readNodeFile( std::string( "Models/toppanel.ive" ) );
-
-    mGrinder->addChild( grinder.get() );
-    addChild( mGrinder.get() );
-    */
 
     //Initialize mMVPT
     mMVPT = osg::Matrix::identity();
@@ -190,7 +171,7 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
     mTexGenNode = new osg::TexGenNode();
     mTexGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     mTexGenNode->setTextureUnit( 0 );
-    worldDCS->addChild( mTexGenNode.get() );
+    rootNode->addChild( mTexGenNode.get() );
 
     //Initialize mNearPlaneUniform, mFarPlaneUniform
     mNearPlaneUniform = new osg::Uniform(
@@ -217,7 +198,189 @@ void CameraEntity::Initialize( ves::xplorer::scenegraph::DCS* worldDCS )
     //Initialize mQuadGeode
     CreateScreenAlignedQuadGeode();
 
+
+
+
+
+
+        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+    stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
+    stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
+    stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
+    stateset->setAttribute(
+        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        < osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
+        osg::StateAttribute::ON );
+
+    stateset->addUniform( mNearPlaneUniform.get() );
+    stateset->addUniform( mFarPlaneUniform.get() );
+
+
+
+    //worldDCS->setStateSet( stateset.get() );
+
+    //Add the subgraph to render
+    addChild( worldDCS.get() );
+
+
+
+
+
+
+
+
     Update();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::InitializeResources()
+{
+    std::string mQuadVertexSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+
+            "gl_FrontColor = gl_Color; \n"
+
+            "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
+            "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
+            "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
+        "} \n" );
+
+    std::string mQuadFragmentSource = std::string(
+        "uniform float nearPlane; \n"
+        "uniform float farPlane; \n"
+
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos.xyz ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
+                                "gl_Color.rgb; \n"
+            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
+                                "gl_Color.rgb * NDotL; \n"
+            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
+                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
+
+            "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
+            "vec4 color = \n"
+                "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.3 ); \n"
+
+            //If in frustum
+            "if( projectionUV.s >= 0.0 && \n"
+                "projectionUV.t >= 0.0 && \n"
+                "projectionUV.s <= 1.0 && \n"
+                "projectionUV.t <= 1.0 && \n"
+                "gl_TexCoord[ 0 ].q >= nearPlane && \n"
+                "gl_TexCoord[ 0 ].q <= farPlane ) \n"
+            "{ \n"
+                "color.a = 1.0; \n"
+            "} \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+    std::string mProjectionVertexSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+
+            "gl_FrontColor = gl_Color; \n"
+
+            "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
+            "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
+            "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
+        "} \n" );
+
+    std::string mProjectionFragmentSource = std::string(
+        "uniform float nearPlane; \n"
+        "uniform float farPlane; \n"
+
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos.xyz ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
+                                "gl_Color.rgb; \n"
+            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
+                                "gl_Color.rgb * NDotL; \n"
+            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
+                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
+
+            "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
+            "vec4 color = \n"
+                "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.3 ); \n"
+
+            //If in frustum
+            "if( projectionUV.s >= 0.0 && \n"
+                "projectionUV.t >= 0.0 && \n"
+                "projectionUV.s <= 1.0 && \n"
+                "projectionUV.t <= 1.0 && \n"
+                "gl_TexCoord[ 0 ].q >= nearPlane && \n"
+                "gl_TexCoord[ 0 ].q <= farPlane ) \n"
+            "{ \n"
+                "color.a = 1.0; \n"
+            "} \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+    osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
+    projectionVertexShader->setType( osg::Shader::VERTEX );
+    projectionVertexShader->setShaderSource( mProjectionVertexSource );
+
+    osg::ref_ptr< osg::Shader > projectionFragmentShader = new osg::Shader();
+    projectionFragmentShader->setType( osg::Shader::FRAGMENT );
+    projectionFragmentShader->setShaderSource( mProjectionFragmentSource );
+
+    osg::ref_ptr< osg::Program > projectionProgram = new osg::Program();
+    projectionProgram->addShader( projectionVertexShader.get() );
+    projectionProgram->addShader( projectionFragmentShader.get() );
+    boost::any anyVal = projectionProgram;
+    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        std::string( "ProjectionProgram" ), anyVal );
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::SceneManager* CameraEntity::GetSceneManager()
+{
+    return mSceneManager;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CalculateMatrixMVPT()
@@ -228,6 +391,8 @@ void CameraEntity::CalculateMatrixMVPT()
             getProjectionMatrix() *
             osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
             osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
+
+    mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateViewFrustumGeode()
@@ -296,6 +461,8 @@ void CameraEntity::CreateScreenAlignedQuadGeode()
     mQuadGeode->setStateSet( stateset.get() );
 
     mQuadDCS->addChild( mQuadGeode.get() );
+
+    DisplayScreenAlignedQuad( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateCameraViewTexture()
@@ -401,7 +568,7 @@ void CameraEntity::DisplayViewFrustum( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayScreenAlignedQuad( bool onOff )
 {
-
+    mQuadDCS->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()
@@ -409,13 +576,8 @@ ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()
     return mCameraDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::TexGenNode* CameraEntity::GetTexGenNode()
-{    
-    return mTexGenNode.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Matrixd CameraEntity::GetMatrixMVPT()
+const osg::Matrixd& CameraEntity::GetInitialViewMatrix()
 {
-    return mMVPT;
+    return mInitialViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -40,7 +40,7 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-#include <ves/xplorer/scenegraph/ResourceManager.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 
 using namespace cpt;
 
@@ -65,97 +65,16 @@ CameraPlacementToolGP::~CameraPlacementToolGP()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolGP::InitializeResources()
-{
-    std::string mProjectionVertexSource = std::string(
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-
-        "void main() \n"
-        "{ \n"
-            "gl_Position = ftransform(); \n"
-
-            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
-            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
-            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
-
-            "gl_FrontColor = gl_Color; \n"
-
-            "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
-            "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
-            "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
-        "} \n" );
-
-    std::string mProjectionFragmentSource = std::string(
-        "uniform float nearPlane; \n"
-        "uniform float farPlane; \n"
-
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-
-        "void main() \n"
-        "{ \n"
-            "vec3 N = normalize( normal ); \n"
-            "vec3 L = normalize( lightPos ); \n"
-            "float NDotL = max( dot( N, L ), 0.0 ); \n"
-
-            "vec3 V = normalize( eyePos.xyz ); \n"
-            "vec3 R = reflect( V, N ); \n"
-            "float RDotL = max( dot( R, L ), 0.0 ); \n"
-
-            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
-                                "gl_Color.rgb; \n"
-            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
-                                "gl_Color.rgb * NDotL; \n"
-            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
-                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
-
-            "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
-            "vec4 color = \n"
-                "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.3 ); \n"
-
-            //If in frustum
-            "if( projectionUV.s >= 0.0 && \n"
-                "projectionUV.t >= 0.0 && \n"
-                "projectionUV.s <= 1.0 && \n"
-                "projectionUV.t <= 1.0 && \n"
-                "gl_TexCoord[ 0 ].q >= nearPlane && \n"
-                "gl_TexCoord[ 0 ].q <= farPlane ) \n"
-            "{ \n"
-                "color.a = 1.0; \n"
-            "} \n"
-
-            "gl_FragColor = color; \n"
-        "} \n" );
-
-    osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
-    projectionVertexShader->setType( osg::Shader::VERTEX );
-    projectionVertexShader->setShaderSource( mProjectionVertexSource );
-
-    osg::ref_ptr< osg::Shader > projectionFragmentShader = new osg::Shader();
-    projectionFragmentShader->setType( osg::Shader::FRAGMENT );
-    projectionFragmentShader->setShaderSource( mProjectionFragmentSource );
-
-    osg::ref_ptr< osg::Program > projectionProgram = new osg::Program();
-    projectionProgram->addShader( projectionVertexShader.get() );
-    projectionProgram->addShader( projectionFragmentShader.get() );
-    boost::any anyVal = projectionProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
-        std::string( "ProjectionProgram" ), anyVal );
-}
-////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::InitializeNode(
     ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
-    //Initialize the resources
-    InitializeResources();
-
     //Initialize the CameraEntity
-    mCameraEntity = new cpt::CameraEntity( veworldDCS );
+    mCameraEntity = new cpt::CameraEntity( mSceneManager );
+
+    double cameraPosition[ 3 ] = { 0, -5.0, 0 };
+    mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::PreFrameUpdate()
@@ -196,6 +115,8 @@ void CameraPlacementToolGP::SetCurrentCommand(
     {
         unsigned int selection = 0;
         command->GetDataValuePair( "toggleProjection" )->GetData( selection );
+
+        bool onOff = ( selection != 0 );
     }
     else if( command->GetCommandName() == "PROJECTION_UPDATE" )
     {
@@ -220,8 +141,8 @@ void CameraPlacementToolGP::SetCurrentCommand(
         unsigned int selection = 0;
         command->GetDataValuePair( "viewPerspective" )->GetData( selection );
 
-        bool onOff = ( selection != 0 );
-        //mCameraEntity
+        bool onOff = ( selection == 0 );
+        mCameraEntity->DisplayScreenAlignedQuad( onOff );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

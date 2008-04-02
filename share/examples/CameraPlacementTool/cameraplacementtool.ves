@@ -1,41 +1,88 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
 
-  <veSystem id="c6513ec0-ae48-0410-9865-290694fe17dd">
+  <veSystem id="97162806-bac7-f843-9d22-dd6a74899845">
     <network>
-      <conductorState dataName="m_xUserScale" id="4b553ec0-ae48-0410-9865-290694fe17dd">
+      <conductorState dataName="m_xUserScale" id="f8a1aa3e-b61e-8a4d-a70a-bc290aa8c792">
         <dataValue type="xs:double">1</dataValue>
       </conductorState>
-      <conductorState dataName="m_yUserScale" id="18563ec0-ae48-0410-9865-290694fe17dd">
+      <conductorState dataName="m_yUserScale" id="f77f91ba-a57d-5a4f-8e97-2bfaa993ea06">
         <dataValue type="xs:double">1</dataValue>
       </conductorState>
-      <conductorState dataName="nPixX" id="36563ec0-ae48-0410-9865-290694fe17dd">
+      <conductorState dataName="nPixX" id="7003dd83-55fc-674f-a28e-8afc811e2da2">
         <dataValue type="xs:integer">7000</dataValue>
       </conductorState>
-      <conductorState dataName="nPixY" id="58563ec0-ae48-0410-9865-290694fe17dd">
+      <conductorState dataName="nPixY" id="522f8088-face-be4e-9f9a-af67c3322271">
         <dataValue type="xs:integer">7000</dataValue>
       </conductorState>
-      <conductorState dataName="nUnitX" id="74563ec0-ae48-0410-9865-290694fe17dd">
+      <conductorState dataName="nUnitX" id="35c8d90a-9b3e-9f4a-b2ad-5df62a4c5c23">
         <dataValue type="xs:integer">10</dataValue>
       </conductorState>
-      <conductorState dataName="nUnitY" id="90563ec0-ae48-0410-9865-290694fe17dd">
+      <conductorState dataName="nUnitY" id="056ada02-eca6-0e45-90f4-c71a311b966a">
         <dataValue type="xs:integer">10</dataValue>
       </conductorState>
     </network>
-    <model ID="103" id="4e6680c0-ae48-0410-9865-290694fe17dd" name="CameraPlacementToolUI" vendorUnit="CameraPlacementToolUI">
+    <model ID="103" id="7fa279d8-9512-014e-8911-efb49d6c2f95" name="CameraPlacementToolUI" vendorUnit="CameraPlacementToolUI">
       <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
-      <iconLocation xLocation="86" yLocation="39"/>
+      <iconLocation xLocation="21" yLocation="10"/>
+      <geometry associatedDataset="NONE" friction="1" id="af96c92b-678b-5e4e-83ba-e2058d0abab0" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+        <type>Assembly</type>
+        <name>Model_Geometry</name>
+        <parent type="xs:string"></parent>
+        <transform>
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <children>
+          <child friction="1" id="e4b20121-a812-1a49-987a-cf6d27342022" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+            <type>Part</type>
+            <name>toppanel</name>
+            <parent type="xs:string">af96c92b-678b-5e4e-83ba-e2058d0abab0</parent>
+            <transform>
+              <translation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </translation>
+              <scale>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
+              </scale>
+              <rotation>
+                <value>0</value>
+                <value>0</value>
+                <value>0</value>
+              </rotation>
+            </transform>
+            <fileName>Models/toppanel.ive</fileName>
+          </child>
+        </children>
+      </geometry>
     </model>
   </veSystem>
 
-  <User id="b68693c1-ae48-0410-9865-290694fe17dd" userID="User" veControlStatus="MASTER">
+  <User id="394ea67f-c61a-c949-8bff-efc1185e1aa9" userID="User" veControlStatus="MASTER">
     <stateInfo>
       <Command commandName="CHANGE_BACKGROUND_COLOR">
-        <parameter dataName="Background Color" id="a07e40c0-ae48-0410-9865-290694fe17dd">
+        <parameter dataName="Background Color" id="2789937f-a412-414b-bac3-8f3f26069f9c">
           <genericObject objectType="OneDDoubleArray">
-            <data>0</data>
-            <data>0</data>
-            <data>0</data>
+            <data>0.5019607843</data>
+            <data>0.5019607843</data>
+            <data>0.5019607843</data>
             <data>1</data>
           </genericObject>
         </parameter>

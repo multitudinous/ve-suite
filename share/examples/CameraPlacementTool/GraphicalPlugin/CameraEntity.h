@@ -42,6 +42,7 @@ namespace xplorer
 namespace scenegraph
 {
 class DCS;
+class SceneManager;
 }
 }
 }
@@ -70,7 +71,7 @@ class CameraEntity : public osg::Camera
 {
 public:
     CameraEntity();
-    CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS );
+    CameraEntity( ves::xplorer::scenegraph::SceneManager* sceneManager );
     CameraEntity( const CameraEntity& cameraEntity,
                   const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
@@ -82,9 +83,9 @@ public:
     void DisplayViewFrustum( bool onOff );
     void DisplayScreenAlignedQuad( bool onOff );
     
+    ves::xplorer::scenegraph::SceneManager* GetSceneManager();
     ves::xplorer::scenegraph::DCS* GetDCS();
-    osg::TexGenNode* GetTexGenNode();
-    osg::Matrixd GetMatrixMVPT();
+    const osg::Matrixd& GetInitialViewMatrix();
 
     void SetNamesAndDescriptions();
 
@@ -94,7 +95,8 @@ protected:
     virtual ~CameraEntity();
 
 private:
-    void Initialize( ves::xplorer::scenegraph::DCS* worldDCS );
+    void Initialize();
+    void InitializeResources();
 
     void CreateViewFrustumGeode();
     void CreateScreenAlignedQuadGeode();
@@ -106,6 +108,7 @@ private:
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
     //The matrix that takes a vertex from local coords into tex coords
+    osg::Matrixd mInitialViewMatrix;
     osg::Matrixd mMVPT;
 
     //Texture Unit 1
@@ -136,6 +139,7 @@ private:
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
 
+    ves::xplorer::scenegraph::SceneManager* mSceneManager;
 };
 
 } //end cpt
