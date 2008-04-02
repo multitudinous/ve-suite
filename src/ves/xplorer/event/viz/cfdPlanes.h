@@ -39,7 +39,7 @@
 
 class vtkPolyData;
 class vtkAppendPolyData;
-class vtkAlgorithm;
+class vtkPolyDataAlgorithm;
 
 namespace ves
 {
@@ -78,7 +78,7 @@ public:
     void SetAllPlanesSelected( void );
 
     // Get the cut planes polydata
-    vtkAlgorithm* GetPlanesData();
+    vtkPolyDataAlgorithm* GetPlanesData();
 
     ///Selects the closest cutting plane depending on the slider bar position.
     ///0 <= sliderBarPos <= 100

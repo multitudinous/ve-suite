@@ -46,7 +46,7 @@
 #include <vtkCutter.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkPolyData.h>
-#include <vtkPassThroughFilter.h>
+#include <vtkCellDataToPointData.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
@@ -98,9 +98,13 @@ void cfdPresetContour::Update( void )
             return;
         }
 
-        vtkPassThroughFilter* tempPipe = vtkPassThroughFilter::New();
+        //Just need a filter to be able to pass the data into the SetMapper 
+        //function. May need to create another function so that this filter
+        //is not necessary.
+        vtkCellDataToPointData* tempPipe = vtkCellDataToPointData::New();
         tempPipe->SetInput( preCalcData );
         this->SetMapperInput( tempPipe->GetOutputPort() );
+        
         tempPipe->Delete();
     }
     else

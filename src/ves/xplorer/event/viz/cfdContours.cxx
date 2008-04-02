@@ -46,6 +46,7 @@
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkAppendPolyData.h>
+#include <vtkCellDataToPointData.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -82,8 +83,26 @@ void cfdContours::Update( void )
     {
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->SetAllPlanesSelected();
         this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->ConcatenateSelectedPlanes();
+        //Just need a filter to be able to pass the data into the SetMapper 
+        //function. May need to create another function so that this filter
+        //is not necessary.
+        /*vtkCellDataToPointData* tempPipe = vtkCellDataToPointData::New();
+        tempPipe->SetInput( GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutput() );
+        tempPipe->Update();
+        SetMapperInput( tempPipe->GetOutputPort() );
         
-        SetMapperInput( GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
+        tempPipe->Delete();*/
+        
+        mapper->SetInputConnection( GetActiveDataSet()->GetPrecomputedSlices( this->xyz )->GetPlanesData()->GetOutputPort() );
+        //mapper->SetScalarModeToDefault();
+        //mapper->SetColorModeToDefault();
+        //mapper->SetColorModeToMapScalars();
+        //mapper->InterpolateScalarsBeforeMappingOff();
+        mapper->SetScalarModeToUsePointFieldData();
+        mapper->UseLookupTableScalarRangeOn();
+        mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+        mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
+        mapper->Update();
         
         this->mapper->Update();
         vtkActor* temp = vtkActor::New();
