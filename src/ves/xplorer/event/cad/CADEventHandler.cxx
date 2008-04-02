@@ -244,11 +244,11 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
     ves::xplorer::scenegraph::DCS* parentAssembly = 0;
     parentAssembly = m_cadHandler->GetAssembly( parentID );
 
-    vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent---" << parentID
+    vprDEBUG( vesDBG, 1 ) << "|---Adding node to parent--- id = " << parentID
     << std::endl << vprDEBUG_FLUSH;
     if( !parentAssembly )
     {
-        std::cout << "|---No parent found---id " << parentID << std::endl;
+        std::cout << "|---No parent found--- id = " << parentID << std::endl;
         return;
     }
 
@@ -267,16 +267,6 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         m_cadHandler->GetAssembly( newAssembly->GetID() )->
             SetName( newAssembly->GetNodeName() );
 
-        vprDEBUG( vesDBG, 2 )<<"|\t---Setting node properties---"
-            <<std::endl<< vprDEBUG_FLUSH;
-
-        _setTransformOnNode( newAssembly );
-        vprDEBUG( vesDBG, 2 )<<"|\t---Set transform---"
-            <<std::endl<< vprDEBUG_FLUSH;
-
-        _setAttributesOnNode( newAssembly );
-        vprDEBUG( vesDBG, 2 )<<"|\t---Set Attributes---"
-            <<std::endl<< vprDEBUG_FLUSH;
         parentAssembly->AddChild( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
 
         unsigned int nChildren = newAssembly->GetNumberOfChildren();
@@ -287,11 +277,24 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 <<std::endl<< vprDEBUG_FLUSH;
             _addNodeToNode( newAssembly->GetID(), newAssembly->GetChild( i ) );
         }
+        //Add the properties to the nodes AFTER all the children
+        //are added so that vistor traversals will work properly
+        vprDEBUG( vesDBG, 2 )<<"|\t---Setting Assembly node properties---"
+            <<std::endl<< vprDEBUG_FLUSH;
+        
+        _setTransformOnNode( newAssembly );
+        vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Transform---"
+            <<std::endl<< vprDEBUG_FLUSH;
+        
+        _setAttributesOnNode( newAssembly );
+        vprDEBUG( vesDBG, 2 )<<"|\t---Set Assembly Attributes---"
+            <<std::endl<< vprDEBUG_FLUSH;
+        
         m_cadHandler->GetAssembly( newAssembly->GetID() )->ToggleDisplay( newAssembly->GetVisibility() );
         SetNodeDescriptors( newAssembly->GetID(), "Assembly", "VE_XML_ID", newAssembly->GetID(), newAssembly );
         //Set a default material on nodes that have no initial material
         ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
-        vprDEBUG( vesDBG, 1 ) << "|\t---Set Opacity---" << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t\t" << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
     }
@@ -348,17 +351,17 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
             vprDEBUG( vesDBG, 1 ) << "|\t---Setting node properties---" 
                 << std::endl << vprDEBUG_FLUSH;
             _setTransformOnNode( newPart );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set transform---" 
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Transform---" 
                 << std::endl << vprDEBUG_FLUSH;
             _setAttributesOnNode( newPart );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set Attributes---" 
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Attributes---" 
                 << std::endl << vprDEBUG_FLUSH;
 
             //set the uuid on the osg node so that we can get back to vexml
             SetNodeDescriptors( newPart->GetID(), "Part", "VE_XML_ID", newPart->GetID(), newPart );
             //Set a default material on nodes that have no initial material
             ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( partNode->GetDCS() );
-            vprDEBUG( vesDBG, 1 ) << "|\t---Set Opacity---" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Opacity---" << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( vesDBG, 1 ) << "|\t\t" << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity() );
         }
