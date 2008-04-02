@@ -104,7 +104,7 @@ public:
         //////////////////////////////////////////////////
         virtual void Translate( vtkDataObject*& outputDataset,
                                 cfdTranslatorToVTK* toVTK,
-                                vtkAlgorithm*& dataReader = 0 ) = 0;
+                                vtkAlgorithm*& dataReader ) = 0;
     protected:
     };
     ///////////////////////////////////////////////////////////
