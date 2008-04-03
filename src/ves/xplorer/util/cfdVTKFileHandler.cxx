@@ -60,6 +60,7 @@
 #include <vtkXMLHierarchicalBoxDataReader.h>
 #include <vtkXMLCompositeDataReader.h>
 #include <vtkXMLCompositeDataWriter.h>
+#include <vtkXMLMultiBlockDataWriter.h>
 #include <vtkHierarchicalBoxDataSet.h>
 #include <vtkXMLReader.h>
 #include <vtkXMLWriter.h>
@@ -72,7 +73,6 @@
 #include <vtkXMLHierarchicalDataReader.h>
 #include <vtkXMLMultiGroupDataReader.h>
 #include <vtkXMLMultiBlockDataReader.h>
-#include <vtkXMLMultiBlockDataWriter.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkGenericDataObjectReader.h>
 #include <vtkGenericDataObjectWriter.h>
