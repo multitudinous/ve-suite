@@ -65,6 +65,7 @@ class TexGenNode;
 namespace cpt
 {
 // --- My Includes --- //
+class ProjectionTechnique;
 class CameraEntityCallback;
 
 class CameraEntity : public osg::Camera
@@ -81,6 +82,7 @@ public:
 
     void DisplayCamera( bool onOff );
     void DisplayViewFrustum( bool onOff );
+    void DisplayProjectionEffect( bool onOff );
     void DisplayScreenAlignedQuad( bool onOff );
     
     ves::xplorer::scenegraph::SceneManager* GetSceneManager();
@@ -98,29 +100,32 @@ private:
     void Initialize();
     void InitializeResources();
 
-    void CreateViewFrustumGeode();
-    void CreateScreenAlignedQuadGeode();
+    void CreateCamera();
+    void CreateViewFrustum();
+    void CreateScreenAlignedQuad();
     void CreateCameraViewTexture();
 
     bool mCameraPerspective;
 
-    //A callback to update CameraEntity relative to its DCS
-    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
-
-    //The matrix that takes a vertex from local coords into tex coords
+    //The initial view matrix of the camera
     osg::Matrixd mInitialViewMatrix;
+    //The matrix that takes a vertex from local coords into tex coords
     osg::Matrixd mMVPT;
 
     //Texture Unit 1
     //The texture used as this CameraEntity's color buffer
     osg::ref_ptr< osg::Texture2D > mQuadTexture;
-
     //Texture Unit 0
+    //Used to generate texture coordinates for camera projection
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
-    //
-    osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
-    osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
+    cpt::ProjectionTechnique* mProjectionTechnique;
+
+    //Pointer to the SceneManager singleton
+    ves::xplorer::scenegraph::SceneManager* mSceneManager;
+
+    //A callback to update CameraEntity relative to its DCS
+    osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
     //Need to create a dcs for each selectable CAD object
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
@@ -138,8 +143,6 @@ private:
     osg::ref_ptr< osg::Geode > mQuadGeode;
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
-
-    ves::xplorer::scenegraph::SceneManager* mSceneManager;
 };
 
 } //end cpt

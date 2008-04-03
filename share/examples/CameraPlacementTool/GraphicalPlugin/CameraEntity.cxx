@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "CameraEntity.h"
 #include "CameraEntityCallback.h"
+#include "ProjectionTechnique.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -58,11 +59,11 @@ CameraEntity::CameraEntity()
 :
 osg::Camera(),
 mCameraPerspective( false ),
-mCameraEntityCallback( 0 ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
-mNearPlaneUniform( 0 ),
-mFarPlaneUniform( 0 ),
+mProjectionTechnique( 0 ),
+mSceneManager( 0 ),
+mCameraEntityCallback( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -71,8 +72,7 @@ mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 ),
-mSceneManager( 0 )
+mQuadVertices( 0 )
 {
     //Initialize();
 }
@@ -82,11 +82,11 @@ CameraEntity::CameraEntity(
 :
 osg::Camera(),
 mCameraPerspective( false ),
-mCameraEntityCallback( 0 ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
-mNearPlaneUniform( 0 ),
-mFarPlaneUniform( 0 ),
+mProjectionTechnique( 0 ),
+mSceneManager( sceneManager ),
+mCameraEntityCallback( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -95,8 +95,7 @@ mFrustumGeometry( 0 ),
 mFrustumVertices( 0 ),
 mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
-mQuadVertices( 0 ),
-mSceneManager( sceneManager )
+mQuadVertices( 0 )
 {
     Initialize();
 }
@@ -105,11 +104,11 @@ CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
                             const osg::CopyOp& copyop )
 :
 osg::Camera( cameraEntity, copyop ),
-mCameraEntityCallback( 0 ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
-mNearPlaneUniform( 0 ),
-mFarPlaneUniform( 0 ),
+mProjectionTechnique( 0 ),
+mSceneManager( 0 ),
+mCameraEntityCallback( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -149,13 +148,25 @@ void CameraEntity::Initialize()
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
 
+    //Initialize mInitialViewMatrix
     mInitialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
                                    osg::Vec3( 0, 1, 0 ),
                                    osg::Vec3( 0, 0, 1 ) );
     setViewMatrix( mInitialViewMatrix );
     setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
 
+    //Add the subgraph to render
+    addChild( worldDCS.get() );
     rootNode->addChild( this );
+
+    //Initialize mProjectionTechnique
+    mProjectionTechnique = new cpt::ProjectionTechnique();
+    mProjectionTechnique->GetNearPlaneUniform()->set(
+        static_cast< float >( 5.0 ) );
+    mProjectionTechnique->GetFarPlaneUniform()->set(
+        static_cast< float >( 10.0 ) );
+    worldDCS->AddTechnique( std::string( "Projection" ), mProjectionTechnique );
+    worldDCS->SetTechnique( std::string( "Projection" ) );
 
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
@@ -173,12 +184,6 @@ void CameraEntity::Initialize()
     mTexGenNode->setTextureUnit( 0 );
     rootNode->addChild( mTexGenNode.get() );
 
-    //Initialize mNearPlaneUniform, mFarPlaneUniform
-    mNearPlaneUniform = new osg::Uniform(
-        "nearPlane", static_cast< float >( 5.0 ) );
-    mFarPlaneUniform = new osg::Uniform(
-        "farPlane", static_cast< float >( 10.0 ) );
-
     //Initialize mCameraDCS & mQuadDCS
     mCameraDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->addChild( mCameraDCS.get() );
@@ -188,55 +193,153 @@ void CameraEntity::Initialize()
 
     SetNamesAndDescriptions();
 
-    //Initialize mCameraNode
-    mCameraNode = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
-    mCameraDCS->addChild( mCameraNode.get() );
+    //Initialize mCameraNode and stateset of mCameraDCS 
+    CreateCamera();
     
     //Initialize mFrustumGeode
-    CreateViewFrustumGeode();
+    CreateViewFrustum();
 
     //Initialize mQuadGeode
-    CreateScreenAlignedQuadGeode();
-
-
-
-
-
-
-        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
-    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-    stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
-    stateset->setAttribute(
-        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-        < osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
-        osg::StateAttribute::ON );
-
-    stateset->addUniform( mNearPlaneUniform.get() );
-    stateset->addUniform( mFarPlaneUniform.get() );
-
-
-
-    //worldDCS->setStateSet( stateset.get() );
-
-    //Add the subgraph to render
-    addChild( worldDCS.get() );
-
-
-
-
-
-
-
+    CreateScreenAlignedQuad();
 
     Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::InitializeResources()
 {
-    std::string mQuadVertexSource = std::string(
+    //Set up the program for mCameraNode
+    {
+        std::string cameraVertexSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+
+            "gl_FrontColor = vec4( 0.7, 0.7, 0.7, 1.0 ); \n"
+        "} \n" );
+
+        std::string cameraFragmentSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos.xyz ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
+                                "gl_Color.rgb; \n"
+            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
+                                "gl_Color.rgb * NDotL; \n"
+            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
+                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
+
+            "vec4 color = \n"
+                "vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > cameraVertexShader = new osg::Shader();
+        cameraVertexShader->setType( osg::Shader::VERTEX );
+        cameraVertexShader->setShaderSource( cameraVertexSource );
+
+        osg::ref_ptr< osg::Shader > cameraFragmentShader = new osg::Shader();
+        cameraFragmentShader->setType( osg::Shader::FRAGMENT );
+        cameraFragmentShader->setShaderSource( cameraFragmentSource );
+
+        osg::ref_ptr< osg::Program > cameraProgram = new osg::Program();
+        cameraProgram->addShader( cameraVertexShader.get() );
+        cameraProgram->addShader( cameraFragmentShader.get() );
+        boost::any anyVal = cameraProgram;
+        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+            std::string( "CameraProgram" ), anyVal );
+    }
+
+    //Set up the program for mFrustumGeode
+    {
+        std::string frustumVertexSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "gl_FrontColor = gl_Color; \n"
+        "} \n" );
+
+        std::string frustumFragmentSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_FragColor = gl_Color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > frustumVertexShader = new osg::Shader();
+        frustumVertexShader->setType( osg::Shader::VERTEX );
+        frustumVertexShader->setShaderSource( frustumVertexSource );
+
+        osg::ref_ptr< osg::Shader > frustumFragmentShader = new osg::Shader();
+        frustumFragmentShader->setType( osg::Shader::FRAGMENT );
+        frustumFragmentShader->setShaderSource( frustumFragmentSource );
+
+        osg::ref_ptr< osg::Program > frustumProgram = new osg::Program();
+        frustumProgram->addShader( frustumVertexShader.get() );
+        frustumProgram->addShader( frustumFragmentShader.get() );
+        boost::any anyVal = frustumProgram;
+        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+            std::string( "FrustumProgram" ), anyVal );
+    }
+
+    //Set up the program mQuadDCS
+    {
+        std::string quadVertexSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "gl_TexCoord[ 1 ].st = gl_MultiTexCoord1.st; \n"
+        "} \n" );
+
+        std::string quadFragmentSource = std::string(
+        "uniform sampler2D baseMap; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec4 color = texture2D( baseMap, gl_TexCoord[ 1 ].st ); \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > quadVertexShader = new osg::Shader();
+        quadVertexShader->setType( osg::Shader::VERTEX );
+        quadVertexShader->setShaderSource( quadVertexSource );
+
+        osg::ref_ptr< osg::Shader > quadFragmentShader = new osg::Shader();
+        quadFragmentShader->setType( osg::Shader::FRAGMENT );
+        quadFragmentShader->setShaderSource( quadFragmentSource );
+
+        osg::ref_ptr< osg::Program > quadProgram = new osg::Program();
+        quadProgram->addShader( quadVertexShader.get() );
+        quadProgram->addShader( quadFragmentShader.get() );
+        boost::any anyVal = quadProgram;
+        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+            std::string( "QuadProgram" ), anyVal );
+    }
+
+    //Set up the program for the world DCS 
+    {
+        std::string projectionVertexSource = std::string(
         "varying vec4 eyePos; \n"
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
@@ -256,7 +359,7 @@ void CameraEntity::InitializeResources()
             "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
         "} \n" );
 
-    std::string mQuadFragmentSource = std::string(
+        std::string projectionFragmentSource = std::string(
         "uniform float nearPlane; \n"
         "uniform float farPlane; \n"
 
@@ -299,83 +402,21 @@ void CameraEntity::InitializeResources()
             "gl_FragColor = color; \n"
         "} \n" );
 
-    std::string mProjectionVertexSource = std::string(
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
+        osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
+        projectionVertexShader->setType( osg::Shader::VERTEX );
+        projectionVertexShader->setShaderSource( projectionVertexSource );
 
-        "void main() \n"
-        "{ \n"
-            "gl_Position = ftransform(); \n"
+        osg::ref_ptr< osg::Shader > projectionFragmentShader = new osg::Shader();
+        projectionFragmentShader->setType( osg::Shader::FRAGMENT );
+        projectionFragmentShader->setShaderSource( projectionFragmentSource );
 
-            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
-            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
-            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
-
-            "gl_FrontColor = gl_Color; \n"
-
-            "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
-            "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
-            "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
-        "} \n" );
-
-    std::string mProjectionFragmentSource = std::string(
-        "uniform float nearPlane; \n"
-        "uniform float farPlane; \n"
-
-        "varying vec4 eyePos; \n"
-        "varying vec3 lightPos; \n"
-        "varying vec3 normal; \n"
-
-        "void main() \n"
-        "{ \n"
-            "vec3 N = normalize( normal ); \n"
-            "vec3 L = normalize( lightPos ); \n"
-            "float NDotL = max( dot( N, L ), 0.0 ); \n"
-
-            "vec3 V = normalize( eyePos.xyz ); \n"
-            "vec3 R = reflect( V, N ); \n"
-            "float RDotL = max( dot( R, L ), 0.0 ); \n"
-
-            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
-                                "gl_Color.rgb; \n"
-            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
-                                "gl_Color.rgb * NDotL; \n"
-            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
-                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
-
-            "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
-            "vec4 color = \n"
-                "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.3 ); \n"
-
-            //If in frustum
-            "if( projectionUV.s >= 0.0 && \n"
-                "projectionUV.t >= 0.0 && \n"
-                "projectionUV.s <= 1.0 && \n"
-                "projectionUV.t <= 1.0 && \n"
-                "gl_TexCoord[ 0 ].q >= nearPlane && \n"
-                "gl_TexCoord[ 0 ].q <= farPlane ) \n"
-            "{ \n"
-                "color.a = 1.0; \n"
-            "} \n"
-
-            "gl_FragColor = color; \n"
-        "} \n" );
-
-    osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
-    projectionVertexShader->setType( osg::Shader::VERTEX );
-    projectionVertexShader->setShaderSource( mProjectionVertexSource );
-
-    osg::ref_ptr< osg::Shader > projectionFragmentShader = new osg::Shader();
-    projectionFragmentShader->setType( osg::Shader::FRAGMENT );
-    projectionFragmentShader->setShaderSource( mProjectionFragmentSource );
-
-    osg::ref_ptr< osg::Program > projectionProgram = new osg::Program();
-    projectionProgram->addShader( projectionVertexShader.get() );
-    projectionProgram->addShader( projectionFragmentShader.get() );
-    boost::any anyVal = projectionProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
-        std::string( "ProjectionProgram" ), anyVal );
+        osg::ref_ptr< osg::Program > projectionProgram = new osg::Program();
+        projectionProgram->addShader( projectionVertexShader.get() );
+        projectionProgram->addShader( projectionFragmentShader.get() );
+        boost::any anyVal = projectionProgram;
+        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+            std::string( "ProjectionProgram" ), anyVal );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::SceneManager* CameraEntity::GetSceneManager()
@@ -395,7 +436,21 @@ void CameraEntity::CalculateMatrixMVPT()
     mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::CreateViewFrustumGeode()
+void CameraEntity::CreateCamera()
+{
+    mCameraNode = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
+    mCameraDCS->addChild( mCameraNode.get() );
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setAttribute(
+        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        < osg::Program, osg::ref_ptr >( "CameraProgram" ) ).get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    mCameraDCS->setStateSet( stateset.get() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::CreateViewFrustum()
 {
     mFrustumGeode = new osg::Geode();
     mFrustumGeometry = new osg::Geometry();
@@ -423,15 +478,20 @@ void CameraEntity::CreateViewFrustumGeode()
     mFrustumGeode->addDrawable( mFrustumGeometry.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    stateset->setAttribute(
+        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        < osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     mFrustumGeode->setStateSet( stateset.get() );
 
     mCameraDCS->addChild( mFrustumGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::CreateScreenAlignedQuadGeode()
+void CameraEntity::CreateScreenAlignedQuad()
 {
     mQuadGeode = new osg::Geode();
     mQuadGeometry = new osg::Geometry();
@@ -452,15 +512,24 @@ void CameraEntity::CreateScreenAlignedQuadGeode()
     mQuadGeometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
     mQuadGeode->addDrawable( mQuadGeometry.get() );
+    mQuadDCS->addChild( mQuadGeode.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    //Set bin number to 11 so quad does not cull out scene geometry behind it
+    stateset->setRenderBinDetails( 11, std::string( "DepthSortedBin" ) );
     stateset->setTextureAttributeAndModes( 1, mQuadTexture.get(), osg::StateAttribute::ON );
+    stateset->setAttribute(
+        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        < osg::Program, osg::ref_ptr >( "QuadProgram" ) ).get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-    mQuadGeode->setStateSet( stateset.get() );
 
-    mQuadDCS->addChild( mQuadGeode.get() );
+    osg::ref_ptr< osg::Uniform > baseMapUniform =
+        new osg::Uniform( "baseMap", 1 );
+    stateset->addUniform( baseMapUniform.get() );
+    mQuadDCS->setStateSet( stateset.get() );
 
     DisplayScreenAlignedQuad( false );
 }
@@ -543,17 +612,19 @@ void CameraEntity::Update()
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
 
-    (*mQuadVertices)[ 0 ].set( -0.5, 5.0, -0.5 );
-    (*mQuadVertices)[ 1 ].set(  0.5, 5.0, -0.5 );
-    (*mQuadVertices)[ 2 ].set(  0.5, 5.0,  0.5 );
-    (*mQuadVertices)[ 3 ].set( -0.5, 5.0,  0.5 );
+    (*mQuadVertices)[ 0 ].set( -0.5, 1.0, -0.5 );
+    (*mQuadVertices)[ 1 ].set(  0.5, 1.0, -0.5 );
+    (*mQuadVertices)[ 2 ].set(  0.5, 1.0,  0.5 );
+    (*mQuadVertices)[ 3 ].set( -0.5, 1.0,  0.5 );
 
     mQuadGeometry->dirtyDisplayList();
     mQuadGeometry->dirtyBound();
 
     //Update the uniforms
-    mNearPlaneUniform->set( static_cast< float >( nearPlane ) );
-    mFarPlaneUniform->set( static_cast< float >( farPlane ) );
+    mProjectionTechnique->GetNearPlaneUniform()->set(
+        static_cast< float >( nearPlane ) );
+    mProjectionTechnique->GetFarPlaneUniform()->set(
+        static_cast< float >( farPlane ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayCamera( bool onOff )
@@ -564,6 +635,21 @@ void CameraEntity::DisplayCamera( bool onOff )
 void CameraEntity::DisplayViewFrustum( bool onOff )
 {
     mFrustumGeode->setNodeMask( onOff );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::DisplayProjectionEffect( bool onOff )
+{
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
+        mSceneManager->GetWorldDCS();
+
+    if( onOff )
+    {
+        worldDCS->SetTechnique( std::string( "Projection" ) );
+    }
+    else
+    {
+        worldDCS->SetTechnique( std::string( "Default" ) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayScreenAlignedQuad( bool onOff )

@@ -117,6 +117,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
         command->GetDataValuePair( "toggleProjection" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
+        mCameraEntity->DisplayProjectionEffect( onOff );
     }
     else if( command->GetCommandName() == "PROJECTION_UPDATE" )
     {
