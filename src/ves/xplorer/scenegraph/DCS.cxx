@@ -541,7 +541,7 @@ void DCS::SetPhysicsRigidBody( PhysicsRigidBody* physicsRigidBody )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

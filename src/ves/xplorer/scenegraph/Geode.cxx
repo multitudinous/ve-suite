@@ -107,13 +107,13 @@ osg::Group* Geode::GetParent( unsigned int position )
 {
 #ifdef _OPENSG
 #elif _OSG
-    return this->getParent( position );
+    return getParent( position );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

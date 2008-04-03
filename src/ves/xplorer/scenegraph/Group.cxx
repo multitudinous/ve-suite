@@ -69,7 +69,7 @@ Group::~Group()
 int Group::RemoveChild( SceneNode* child )
 {
 #ifdef _OSG
-    return this->removeChild( dynamic_cast< osg::Node* >( child ) );
+    return removeChild( dynamic_cast< osg::Node* >( child ) );
 #elif _OPENSG
     cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -80,7 +80,7 @@ int Group::RemoveChild( SceneNode* child )
 int Group::AddChild( SceneNode* child )
 {
 #ifdef _OSG
-    return this->addChild( dynamic_cast< Node* >( child ) );
+    return addChild( dynamic_cast< Node* >( child ) );
 #elif _OPENSG
     cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -91,7 +91,7 @@ int Group::AddChild( SceneNode* child )
 void Group::InsertChild( int position, SceneNode* child )
 {
 #ifdef _OSG
-    this->insertChild( position, dynamic_cast< Node* >( child ) );
+    insertChild( position, dynamic_cast< Node* >( child ) );
 #elif _OPENSG
     cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -102,7 +102,7 @@ void Group::InsertChild( int position, SceneNode* child )
 int Group::GetNumChildren( void )
 {
 #ifdef _OSG
-    return this->getNumChildren();
+    return getNumChildren();
 #elif _OPENSG
     cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -113,7 +113,7 @@ int Group::GetNumChildren( void )
 const std::string Group::GetName( void )
 {
 #ifdef _OSG
-    return this->getName().data();
+    return getName().data();
 #elif _OPENSG
     return 0;
 #endif
@@ -122,7 +122,7 @@ const std::string Group::GetName( void )
 void Group::SetName( std::string name )
 {
 #ifdef _OSG
-    this->setName( name );
+    setName( name );
 #elif _OPENSG
     std::cerr << " ERROR: Group::SetName is NOT implemented " << std::endl;
     exit( 1 );
@@ -132,7 +132,7 @@ void Group::SetName( std::string name )
 int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 {
 #ifdef _OSG
-    return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
+    return replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
 #elif _OPENSG
     cerr << " ERROR: Group::ReplaceChild is NOT implemented " << endl;
     exit( 1 );
@@ -143,7 +143,7 @@ int Group::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
 bool Group::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 {
 #ifdef _OSG
-    return this->containsNode( dynamic_cast< osg::Node* >( searchChild ) );
+    return containsNode( dynamic_cast< osg::Node* >( searchChild ) );
 #elif _OPENSG
 #endif
 }
@@ -151,7 +151,7 @@ bool Group::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 osg::Group* Group::GetParent( unsigned int position )
 {
 #ifdef _OSG
-    return this->getParent( position );
+    return getParent( position );
 #elif _OPENSG
 #endif
 }
@@ -159,7 +159,7 @@ osg::Group* Group::GetParent( unsigned int position )
 osg::Node* Group::GetChild( unsigned int position )
 {
 #ifdef _OSG
-    return this->getChild( position );
+    return getChild( position );
 #elif _OPENSG
 #endif
 }
@@ -176,7 +176,7 @@ void Group::ToggleDisplay( std::string onOff )
     if( onOff == "ON" )
     {
 #ifdef _OSG
-        this->setNodeMask( 1 );
+        setNodeMask( 1 );
 #elif _OPENSG
 #endif
     }
@@ -184,7 +184,7 @@ void Group::ToggleDisplay( std::string onOff )
     else if( onOff == "OFF" )
     {
 #ifdef _OSG
-        this->setNodeMask( 0 );
+        setNodeMask( 0 );
 #elif _OPENSG
 #endif
     }
@@ -192,7 +192,7 @@ void Group::ToggleDisplay( std::string onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void Group::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

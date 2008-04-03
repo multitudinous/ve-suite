@@ -61,11 +61,11 @@ void Switch::SetVal( int whichChildIsActive )
 #ifdef _OSG
     if( whichChildIsActive == OFF )
     {
-        this->setAllChildrenOff();
+        setAllChildrenOff();
     }
     else
     {
-        this->setSingleChildOn( whichChildIsActive );
+        setSingleChildOn( whichChildIsActive );
     }
 
 #endif
@@ -78,7 +78,7 @@ int Switch::RemoveChild( SceneNode* child )
     exit( 1 );
     return -1;
 #elif _OSG
-    return this->removeChild( dynamic_cast< osg::Node* >( child ) );
+    return removeChild( dynamic_cast< osg::Node* >( child ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +89,7 @@ int Switch::AddChild( SceneNode* child )
     exit( 1 );
     return -1;
 #elif _OSG
-    return this->addChild( dynamic_cast< Node* >( child ) );
+    return addChild( dynamic_cast< Node* >( child ) );
 #endif
 
 }
@@ -101,7 +101,7 @@ void Switch::InsertChild( int position, SceneNode* child )
     exit( 1 );
     return -1;
 #elif _OSG
-    this->insertChild( position, dynamic_cast< Node* >( child ) );
+    insertChild( position, dynamic_cast< Node* >( child ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +112,7 @@ int Switch::GetNumChildren( void )
     exit( 1 );
     return -1;
 #elif _OSG
-    return this->getNumChildren();
+    return getNumChildren();
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ const std::string Switch::GetName( void )
 #ifdef _PERFORMER
     return _Switch->getName();
 #elif _OSG
-    return this->getName().data();
+    return getName().data();
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -137,7 +137,7 @@ void Switch::SetName( std::string name )
 #ifdef _PERFORMER
     _Switch->setName( name.c_str() );
 #elif _OSG
-    this->setName( name );
+    setName( name );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -148,7 +148,7 @@ int Switch::ReplaceChild( SceneNode* childToBeReplaced, SceneNode* newChild )
     exit( 1 );
     return -1;
 #elif _OSG
-    return this->replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
+    return replaceChild( dynamic_cast< Node* >( childToBeReplaced ), dynamic_cast< Node* >( newChild ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -157,7 +157,7 @@ bool Switch::SearchChild( ves::xplorer::scenegraph::SceneNode* searchChild )
 #ifdef _OPENSG
 
 #elif _OSG
-    return this->containsNode( dynamic_cast< osg::Node* >( searchChild ) );
+    return containsNode( dynamic_cast< osg::Node* >( searchChild ) );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -166,7 +166,7 @@ osg::Group* Switch::GetParent( unsigned int position )
 #ifdef _OPENSG
 
 #elif _OSG
-    return this->getParent( position );
+    return getParent( position );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -175,13 +175,13 @@ osg::Node* Switch::GetChild( unsigned int position )
 #ifdef _OPENSG
 
 #elif _OSG
-    return this->getChild( position );
+    return getChild( position );
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Switch::traverse( osg::NodeVisitor& nv )
 {
-    ves::xplorer::scenegraph::Technique* technique = m_techniques[ m_activeTechnique ];
+    ves::xplorer::scenegraph::Technique* technique = mTechniques[ mActiveTechnique ];
 
     technique->Traverse( nv, this );
 }

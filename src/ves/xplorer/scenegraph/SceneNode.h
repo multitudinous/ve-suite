@@ -45,7 +45,7 @@
 *
 */
 
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 namespace ves
@@ -60,13 +60,10 @@ class Technique;
 }
 
 // --- OSG Includes --- //
-#ifdef _OSG
 namespace osg
 {
 class NodeVisitor;
 }
-#elif _OPENSG
-#endif
 
 // --- C/C++ Libraries --- //
 #include <string>
@@ -81,36 +78,32 @@ namespace scenegraph
 class VE_SCENEGRAPH_EXPORTS SceneNode
 {
 public:
-    ///Base Constructor
     SceneNode();
 
-    ///Destructor
+protected:
     virtual ~SceneNode();
 
-// -------------------------------------------------- //
-// --- This stuff is used for multipass rendering --- //
-// -------------------------------------------------- //
 public:
     virtual void InheritedTraverse( osg::NodeVisitor& nv ) = 0;
 
     void DirtyTechniques();
 
-    void AddTechnique( std::string name, ves::xplorer::scenegraph::Technique* technique );
+    void AddTechnique( const std::string& name, Technique* technique );
 
-    void SetTechnique( std::string name );
+    void SetTechnique( const std::string& name );
 
-    ves::xplorer::scenegraph::Technique* GetTechnique( std::string name );
+    Technique* GetTechnique( const std::string& name );
 
-    ves::xplorer::scenegraph::Technique* GetActiveTechnique();
+    Technique* GetActiveTechnique();
 
 protected:
-    std::string m_activeTechnique;
+    std::string mActiveTechnique;
 
-    std::map< std::string, ves::xplorer::scenegraph::Technique* > m_techniques;
+    std::map< std::string, Technique* > mTechniques;
 
 };
-}
-}
-}
+} //end scenegraph
+} //end xplorer
+} //end ves
 
 #endif //SCENENODE_H
