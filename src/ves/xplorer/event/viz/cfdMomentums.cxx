@@ -41,7 +41,6 @@
 #include <vtkPolyData.h>
 #include <vtkWarpVector.h>
 #include <vtkPolyDataMapper.h>
-#include <vtkMultiGroupPolyDataMapper.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>

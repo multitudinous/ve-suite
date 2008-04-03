@@ -230,6 +230,7 @@ opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpol
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
 opts.Add('prefix', 'Installation prefix', '/usr/local')
+opts.Add('UseCVSVTKPostFeb20', 'If "yes", use the version of VTK with Composite Datasets', 'no')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
@@ -425,13 +426,16 @@ if not SConsAddons.Util.hasHelpFlag():
    if osgal_options.isAvailable():
       baseEnv.Append( CPPDEFINES = ['VE_SOUND'] )  
 
+   if baseEnv['UseCVSVTKPostFeb20'] == 'yes':
+      baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
+
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
    ##possible additional flags
-   baseEnv.Append( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
-   baseEnv.Append( CPPDEFINES = ['_OSG','VTK44'] )
+   baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
+   baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
    if GetPlatform() == 'win32':
-      baseEnv.Append( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
+      baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
       baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )

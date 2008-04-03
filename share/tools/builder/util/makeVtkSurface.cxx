@@ -48,10 +48,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkSTLWriter.h>
 #include <vtkDataObject.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
-#include <vtkMultiGroupDataSet.h>
 #include <vtkCellDataToPointData.h>
-#include <vtkCompositeDataPipeline.h>
 #include <vtkAlgorithm.h>
 
 #include <vtkAlgorithmOutput.h>
@@ -59,6 +56,10 @@
 #include <vtkAppendPolyData.h>
 #include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkMultiBlockDataSetAlgorithm.h>
+#include <vtkMultiGroupDataGeometryFilter.h>
+#include <vtkMultiGroupDataSet.h>
+#include <vtkCompositeDataPipeline.h>
+
 using namespace ves::xplorer::util;
 
 void writeVtkGeomToStl( vtkDataObject * dataset, std::string filename )

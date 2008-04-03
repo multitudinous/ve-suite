@@ -45,7 +45,11 @@ class vtkPolyData;
 class vtkActor;
 class vtkGlyph3D;
 class vtkMaskPoints;
+#ifdef VTK_POST_FEB20
+class vtkCompositeDataGeometryFilter;
+#else
 class vtkMultiGroupDataGeometryFilter;
+#endif
 class vtkGeometryFilter;
 class vtkAlgorithmOutput;
 
@@ -88,7 +92,6 @@ public:
     ///and the current dataset type
     ///\param input The input vtkPolyDataAlgorithm to process
     vtkAlgorithmOutput* ApplyGeometryFilterNew( vtkAlgorithmOutput* input );
-    //vtkPolyData* ApplyGeometryFilter( vtkAlgorithmOutput* input );
 
     ///Returnd geodes.
     std::vector< osg::ref_ptr< ves::xplorer::scenegraph::Geode > > GetGeodes( void );
@@ -176,9 +179,6 @@ public:
     ///\param x
     void SetGeodeFlag( bool x );
 
-///Set active vtk pipelines
-    void SetActiveVtkPipeline();
-
     ///Flag for the geode flag.
     bool GetGeodeFlag( void );
 
@@ -202,7 +202,11 @@ protected:
     vtkPolyData* pointSource;///<point source for vtk polydata.
 
     ///vtkMultiGroupGeometryFilter
+#ifdef VTK_POST_FEB20
+    vtkCompositeDataGeometryFilter* m_multiGroupGeomFilter;
+#else
     vtkMultiGroupDataGeometryFilter* m_multiGroupGeomFilter;
+#endif
     ///vtkGeometryFilter
     vtkGeometryFilter* m_geometryFilter;
 

@@ -56,14 +56,26 @@
 #include <iostream>
 #include <vtkUnstructuredGridReader.h>
 
-#include <vtkXMLMultiGroupDataReader.h>
-#include <vtkXMLHierarchicalDataReader.h>
-#include <vtkXMLMultiBlockDataReader.h>
+#ifdef VTK_POST_FEB20
+#include <vtkXMLHierarchicalBoxDataReader.h>
+#include <vtkXMLCompositeDataReader.h>
+#include <vtkXMLCompositeDataWriter.h>
+#include <vtkHierarchicalBoxDataSet.h>
+#include <vtkXMLReader.h>
+#include <vtkXMLWriter.h>
+#include <vtkAlgorithm.h>
+#else
+#include <vtkXMLMultiGroupDataWriter.h>
 #include <vtkHierarchicalDataSet.h>
+#endif
+
+#include <vtkXMLHierarchicalDataReader.h>
+#include <vtkXMLMultiGroupDataReader.h>
+#include <vtkXMLMultiBlockDataReader.h>
+#include <vtkXMLMultiBlockDataWriter.h>
 #include <vtkMultiBlockDataSet.h>
 #include <vtkGenericDataObjectReader.h>
 #include <vtkGenericDataObjectWriter.h>
-#include <vtkXMLMultiGroupDataWriter.h>
 #include <fstream>
 
 using namespace ves::xplorer::util;
@@ -170,14 +182,24 @@ vtkDataObject* cfdVTKFileHandler::GetDataSetFromFile( std::string vtkFileName )
         {
             GetXMLImageData();
         }
+#ifdef VTK_POST_FEB20
         else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiBlockDataSet" ) )
         {
             _getXMLMultiGroupDataSet();
         }
-
-        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
+        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
         {
             _getXMLMultiGroupDataSet( false );
+        }
+#else
+        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkMultiGroupDataSet" ) )
+        {
+            _getXMLMultiGroupDataSet();
+        }        
+#endif
+        else if( !strcmp( _xmlTester->GetFileDataType(), "vtkHierarchicalDataSet" ) )
+        {
+            GetXMLHierarchicalDataSet();
         }
     }
     else
@@ -236,7 +258,8 @@ void cfdVTKFileHandler::_readClassicVTKFile()
 /////////////////////////////////////////////////
 void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
 {
-    vtkXMLMultiGroupDataReader* mgdReader = 0;
+#ifdef VTK_POST_FEB20
+    vtkXMLCompositeDataReader* mgdReader = 0;
     if( isMultiBlock )
     {
         mgdReader = vtkXMLMultiBlockDataReader::New();
@@ -244,9 +267,29 @@ void cfdVTKFileHandler::_getXMLMultiGroupDataSet( bool isMultiBlock )
     }
     else
     {
-        mgdReader = vtkXMLHierarchicalDataReader::New();
-        _dataSet = vtkHierarchicalDataSet::New();
+        mgdReader = vtkXMLMultiGroupDataReader::New();
+        _dataSet = vtkMultiBlockDataSet::New();
     }
+#else
+    vtkXMLMultiGroupDataReader* mgdReader = 0;
+    mgdReader = vtkXMLMultiBlockDataReader::New();
+    _dataSet = vtkMultiBlockDataSet::New();
+#endif
+    mgdReader->SetFileName( _inFileName.c_str() );
+    mgdReader->Update();
+    _dataSet->ShallowCopy( mgdReader->GetOutput() );
+    mgdReader->Delete();
+}
+/////////////////////////////////////////////////
+void cfdVTKFileHandler::GetXMLHierarchicalDataSet()
+{
+    vtkXMLHierarchicalDataReader* mgdReader = 0;
+    mgdReader = vtkXMLHierarchicalDataReader::New();
+#ifdef VTK_POST_FEB20
+    _dataSet = vtkHierarchicalBoxDataSet::New();
+#else
+    _dataSet = vtkHierarchicalDataSet::New();
+#endif
     mgdReader->SetFileName( _inFileName.c_str() );
     mgdReader->Update();
     _dataSet->ShallowCopy( mgdReader->GetOutput() );
@@ -310,14 +353,19 @@ void cfdVTKFileHandler::GetXMLImageData( void )
 bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFileName )
 {
     if( outFileName.empty() )
-        return false;
-    if( dataSet->IsA( "vtkMultiGroupDataSet" ) )
     {
-        vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
+        return false;
+    }
+#ifdef VTK_POST_FEB20
+    if( dataSet->IsA( "vtkMultiBlockDataSet" ) )
+    {
+        vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
         writer->SetFileName( outFileName.c_str() );
         writer->SetInput( dataSet );
         if( _outFileMode == CFD_ASCII )
-            writer->SetDataModeToAscii();
+        {
+            writer->SetDataModeToAscii();            
+        }
         if( writer->Write() )
         {
             writer->Delete();
@@ -326,6 +374,26 @@ bool cfdVTKFileHandler::WriteDataSet( vtkDataObject* dataSet, std::string outFil
         writer->Delete();
         return false;
     }
+#else
+    if( dataSet->IsA( "vtkMultiGroupDataSet" ) )
+    {
+        vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
+        writer->SetFileName( outFileName.c_str() );
+        writer->SetInput( dataSet );
+        if( _outFileMode == CFD_ASCII )
+        {
+            writer->SetDataModeToAscii();
+        }
+
+        if( writer->Write() )
+        {
+            writer->Delete();
+            return true;
+        }
+        writer->Delete();
+        return false;
+    }
+#endif
     else
     {
         vtkXMLDataSetWriter* writer = vtkXMLDataSetWriter::New();

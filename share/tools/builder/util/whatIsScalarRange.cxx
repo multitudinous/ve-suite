@@ -41,8 +41,13 @@
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
 
+#ifdef VTK_POST_FEB20
+#include <vtkCompositeDataSet.h>
+#include <vtkCompositeDataIterator.h>
+#else
 #include <vtkMultiGroupDataSet.h>
-
+#include <vtkMultiGroupDataIterator.h>
+#endif
 using namespace ves::xplorer::util;
 void ProcessScalarRangeInfo(vtkDataObject* dataSet);
 int main( int argc, char *argv[] )
@@ -65,30 +70,66 @@ int main( int argc, char *argv[] )
    // read the data set ("1" means print info to screen)
    ///This will need to be changed to handle multiblock datasets
    vtkDataObject* dataObject = readVtkThing( inFileName, 1 );
-
-   if(dataObject->IsA("vtkMultiGroupDataSet"))
+#ifdef VTK_POST_FEB20
+   if(dataObject->IsA("vtkCompositeDataSet"))
    {
 	  try
 	  {
-	     vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>(dataObject);
-		  unsigned int nGroups = mgd->GetNumberOfGroups();
-		  unsigned int nDatasetsInGroup = 0;
-		  for(unsigned int i = 0; i < nGroups; i++)
-		  {
-			 std::cout<<"Group: "<<i<<std::endl;
-			 nDatasetsInGroup = mgd->GetNumberOfDataSets(i);
-			 for(unsigned int j = 0; j < nDatasetsInGroup; j++)
-			 {
-				 std::cout<<"Dataset: "<<j<<std::endl;
-			    ProcessScalarRangeInfo(mgd->GetDataSet(i,j));
-			 }
-        }
-     }
+          vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
+          //unsigned int nGroups = mgd->GetNumberOfGroups();
+          unsigned int nDatasetsInGroup = 0;
+          vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+          mgdIterator->SetDataSet( mgd );
+          ///For traversal of nested multigroupdatasets
+          mgdIterator->VisitOnlyLeavesOn();
+          mgdIterator->GoToFirstItem();
+          while( !mgdIterator->IsDoneWithTraversal() )
+          {
+              ProcessScalarRangeInfo( mgdIterator->GetCurrentDataObject() );
+              mgdIterator->GoToNextItem();
+          }
+          if( mgdIterator )
+          {
+              mgdIterator->Delete();
+              mgdIterator = 0;
+          }
+      }
 	  catch(...)
 	  {
 		  std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
 	  }
    }
+#else
+    if(dataObject->IsA("vtkMultiGroupDataSet"))
+    {
+        try
+        {
+            vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>( dataObject );
+            //unsigned int nGroups = mgd->GetNumberOfGroups();
+            unsigned int nDatasetsInGroup = 0;
+            vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
+            mgdIterator->SetDataSet( mgd );
+            ///For traversal of nested multigroupdatasets
+            mgdIterator->VisitOnlyLeavesOn();
+            mgdIterator->GoToFirstItem();
+            while( !mgdIterator->IsDoneWithTraversal() )
+            {
+                ProcessScalarRangeInfo( mgdIterator->GetCurrentDataObject() );
+
+                mgdIterator->GoToNextItem();
+            }
+            if( mgdIterator )
+            {
+                mgdIterator->Delete();
+                mgdIterator = 0;
+            }
+        }
+        catch(...)
+        {
+            std::cout<<"Invalid Dataset: "<<dataObject->GetClassName()<<std::endl;
+        }
+    }
+#endif
    else
    {
 	   ProcessScalarRangeInfo(dataObject);

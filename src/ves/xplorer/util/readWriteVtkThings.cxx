@@ -52,7 +52,6 @@
 #include <ves/xplorer/util/cfdVTKFileHandler.h>
 #include <ves/xplorer/util/DataObjectHandler.h>
 #include <ves/xplorer/util/ComputeDataObjectBoundsCallback.h>
-#include <vtkMultiGroupDataSet.h>
 
 using namespace ves::xplorer::util;
 

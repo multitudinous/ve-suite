@@ -34,7 +34,6 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkGeometryFilter.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
 
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
@@ -53,7 +52,7 @@ int main( int argc, char *argv[] )
    vtkDataObject* dataset= (readVtkThing( inFileName, 1 ));
    
    // convert vtkUnstructuredGrid to vtkPolyData    
-   vtkMultiGroupDataGeometryFilter *gFilter = vtkMultiGroupDataGeometryFilter::New();
+   vtkGeometryFilter *gFilter = vtkGeometryFilter::New();
       gFilter->SetInput( dataset );
 
    vtkPolyDataNormals * pdWithNormals = vtkPolyDataNormals::New();

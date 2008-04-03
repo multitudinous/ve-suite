@@ -68,9 +68,8 @@ cfdPresetContour::~cfdPresetContour()
 
 void cfdPresetContour::Update( void )
 {
-    SetActiveVtkPipeline();
     vprDEBUG( vesDBG, 1 ) << "cfdPresetContour::Update, usePreCalcData = "
-    << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
+        << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
     if( this->usePreCalcData )
     {

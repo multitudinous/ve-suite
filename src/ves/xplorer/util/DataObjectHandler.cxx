@@ -35,13 +35,18 @@
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
 #include <vtkUnstructuredGrid.h>
-#include <vtkMultiGroupDataSet.h>
-#include <vtkMultiGroupDataIterator.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
 #include <vtkPointData.h>
 #include <iostream>
-#include <vtkCompositeDataPipeline.h>
+
+#ifdef VTK_POST_FEB20
+#include <vtkCompositeDataSet.h>
+#include <vtkCompositeDataIterator.h>
+#else
+#include <vtkMultiGroupDataSet.h>
+#include <vtkMultiGroupDataIterator.h>
+#endif
 using namespace ves::xplorer::util;
 
 //////////////////////////////////////
@@ -60,19 +65,33 @@ void DataObjectHandler::OperateOnAllDatasetsInObject( vtkDataObject* dataObject 
 {
     unsigned int numDatasets = 0;
     vtkDataSet* currentDataset = 0;
+#ifdef VTK_POST_FEB20
+    if( dataObject->IsA( "vtkCompositeDataSet" ) )
+#else
     if( dataObject->IsA( "vtkMultiGroupDataSet" ) )
+#endif
     {
         try
         {
+#ifdef VTK_POST_FEB20
+            vtkCompositeDataSet* mgd = dynamic_cast<vtkCompositeDataSet*>( dataObject );
+            //unsigned int nGroups = mgd->GetNumberOfGroups();
+            unsigned int nDatasetsInGroup = 0;
+            vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+            mgdIterator->SetDataSet( mgd );
+            ///For traversal of nested multigroupdatasets
+            mgdIterator->VisitOnlyLeavesOn();
+            mgdIterator->GoToFirstItem();
+#else
             vtkMultiGroupDataSet* mgd = dynamic_cast<vtkMultiGroupDataSet*>( dataObject );
-            unsigned int nGroups = mgd->GetNumberOfGroups();
+            //unsigned int nGroups = mgd->GetNumberOfGroups();
             unsigned int nDatasetsInGroup = 0;
             vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
             mgdIterator->SetDataSet( mgd );
             ///For traversal of nested multigroupdatasets
             mgdIterator->VisitOnlyLeavesOn();
             mgdIterator->GoToFirstItem();
-
+#endif            
             while( !mgdIterator->IsDoneWithTraversal() )
             {
                 currentDataset = dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );

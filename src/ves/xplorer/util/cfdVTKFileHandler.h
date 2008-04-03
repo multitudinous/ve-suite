@@ -115,6 +115,8 @@ protected:
     void _getXMLMultiGroupDataSet( bool isMultiBlock = true );
     ///Reader function to open an vtkImageData file
     void GetXMLImageData( void );
+    ///Reader for hierarchical data sets
+    void GetXMLHierarchicalDataSet();
     ///Read old style(non-XML) vtk file
     void _readClassicVTKFile();
     ///Write old style(non-XML) vtk file

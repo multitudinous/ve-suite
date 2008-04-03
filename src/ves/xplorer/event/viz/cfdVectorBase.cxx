@@ -43,7 +43,6 @@
 #include <ves/xplorer/Debug.h>
 
 #include <vtkPolyData.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkThresholdPoints.h>

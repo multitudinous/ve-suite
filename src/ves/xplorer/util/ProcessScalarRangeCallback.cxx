@@ -33,6 +33,7 @@
 
 #include <ves/xplorer/util/ProcessScalarRangeCallback.h>
 #include <vtkDataSet.h>
+#include <vtkDataArray.h>
 #include <vtkPointData.h>
 #include <iostream>
 

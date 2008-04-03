@@ -43,7 +43,6 @@
 #include <vtkPolyData.h>
 #include <vtkAppendPolyData.h>
 #include <vtkDataSet.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>

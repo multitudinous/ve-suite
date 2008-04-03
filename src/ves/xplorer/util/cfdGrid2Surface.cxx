@@ -43,31 +43,37 @@
 #include <vtkDecimatePro.h>
 #include <vtkSmoothPolyDataFilter.h>
 
+#ifdef VTK_POST_FEB20
+#include <vtkCompositeDataGeometryFilter.h>
+#else
 #include <vtkMultiGroupDataGeometryFilter.h>
+#endif
 #include <vtkAlgorithmOutput.h>
-#include <vtkCompositeDataPipeline.h>
-#include <vtkDemandDrivenPipeline.h>
 
 
 using namespace ves::xplorer::util;
 //////////////////////////////////////////////////////////////////////////////////////////
-vtkPolyData * ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float deciVal )
+vtkPolyData* ves::xplorer::util::cfdGrid2Surface( vtkDataObject *dataSet, float deciVal )
 {
     vtkPolyDataAlgorithm* geometryFilter = 0; 
 
+#ifdef VTK_POST_FEB20
+    if( dataSet->IsA( "vtkCompositeDataSet" ) )
+    {
+        // we have to use a compsite pipeline
+        geometryFilter = vtkCompositeDataGeometryFilter::New();
+    }
+#else
     if( dataSet->IsA( "vtkMultiGroupDataSet" ) )
     {
         // we have to use a compsite pipeline
-        vtkCompositeDataPipeline* prototype = vtkCompositeDataPipeline::New();
-        vtkAlgorithm::SetDefaultExecutivePrototype( prototype );
-        prototype->Delete();
         geometryFilter = vtkMultiGroupDataGeometryFilter::New();
     }
+#endif
     else
     {
         geometryFilter = vtkGeometryFilter::New();
         dynamic_cast<vtkGeometryFilter*>( geometryFilter )->MergingOff();
-        vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
     }
 
     //convert vtkDataSet to polydata

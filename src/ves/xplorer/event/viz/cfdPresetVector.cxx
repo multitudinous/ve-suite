@@ -45,7 +45,6 @@
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkGlyph3D.h>
 #include <vtkMaskPoints.h>
 #include <vtkActor.h>

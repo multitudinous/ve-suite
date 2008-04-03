@@ -38,7 +38,6 @@
 #include <vtkPointData.h>
 
 #include <vtkMultiBlockDataSet.h>
-#include <vtkXMLMultiGroupDataWriter.h>
 
 #include <iostream>
 

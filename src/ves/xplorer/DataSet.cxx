@@ -72,7 +72,11 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 #include <vtkGeometryFilter.h>
+#ifdef VTK_POST_FEB20
+#include <vtkCompositeDataGeometryFilter.h>
+#else
 #include <vtkMultiGroupDataGeometryFilter.h>
+#endif
 #include <vtkAlgorithm.h>
 
 #include <iostream>
@@ -1599,6 +1603,17 @@ void DataSet::CreateBoundingBoxGeode( void )
 void DataSet::CreateWireframeGeode( void )
 {
     vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+#ifdef VTK_POST_FEB20
+    if( GetDataSet()->IsA( "vtkCompositeDataSet" ) )
+    {
+        vtkCompositeDataGeometryFilter* wireframe = vtkCompositeDataGeometryFilter::New();
+        wireframe->SetInput( GetDataSet() );
+        
+        c2p->SetInputConnection( wireframe->GetOutputPort() );
+        
+        wireframe->Delete();
+    }
+#else
     if( GetDataSet()->IsA( "vtkMultiGroupDataSet" ) )
     {
         vtkMultiGroupDataGeometryFilter* wireframe = vtkMultiGroupDataGeometryFilter::New();
@@ -1608,6 +1623,7 @@ void DataSet::CreateWireframeGeode( void )
         
         wireframe->Delete();
     }
+#endif
     else
     {
         vtkGeometryFilter* wireframe = vtkGeometryFilter::New();

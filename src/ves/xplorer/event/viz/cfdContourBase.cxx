@@ -56,11 +56,8 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkCutter.h>
 #include <vtkPlane.h>
-#include <vtkCompositeDataPipeline.h>
 #include <vtkAlgorithmOutput.h>
 
-#include <vtkMultiGroupPolyDataMapper.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkCellDataToPointData.h>
 #include <vtkPCellDataToPointData.h>
 

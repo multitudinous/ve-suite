@@ -40,9 +40,9 @@ createMiniFlowdata = Split("""
    createMiniFlowdata.cxx
 """)
 
-makeVtkSurface = Split("""
-   makeVtkSurface.cxx
-""")
+#makeVtkSurface = Split("""
+#   makeVtkSurface.cxx
+#""")
 
 mergeVertices = Split("""
    mergeVertices.cxx
@@ -60,9 +60,9 @@ removeVtkCellsOutsideBox = Split("""
    removeVtkCellsOutsideBox.cxx
 """)
 
-removeVtkPointData = Split("""
-   removeVtkPointData.cxx
-""")
+#removeVtkPointData = Split("""
+#   removeVtkPointData.cxx
+#""")
 
 scaleVTK = Split("""
    scaleVTK.cxx
@@ -118,9 +118,9 @@ mini = ves_pkg.createProgram('createMiniFlowdata' + env["PROGSUFFIX"], env, 'bin
 mini.addSources( createMiniFlowdata )
 mini.build()
 
-vtkSurf = ves_pkg.createProgram('makeVtkSurface' + env["PROGSUFFIX"], env, 'bin')
-vtkSurf.addSources( makeVtkSurface )
-vtkSurf.build()
+#vtkSurf = ves_pkg.createProgram('makeVtkSurface' + env["PROGSUFFIX"], env, 'bin')
+#vtkSurf.addSources( makeVtkSurface )
+#vtkSurf.build()
 
 merge = ves_pkg.createProgram('mergeVertices' + env["PROGSUFFIX"], env, 'bin')
 merge.addSources( mergeVertices )
@@ -138,9 +138,9 @@ removeCells = ves_pkg.createProgram('removeVtkCellsOutsideBox' + env["PROGSUFFIX
 removeCells.addSources( removeVtkCellsOutsideBox )
 removeCells.build()
 
-removePoint = ves_pkg.createProgram('removeVtkPointData' + env["PROGSUFFIX"], env, 'bin')
-removePoint.addSources( removeVtkPointData )
-removePoint.build()
+#removePoint = ves_pkg.createProgram('removeVtkPointData' + env["PROGSUFFIX"], env, 'bin')
+#removePoint.addSources( removeVtkPointData )
+#removePoint.build()
 
 scale = ves_pkg.createProgram('scaleVTK' + env["PROGSUFFIX"], env, 'bin')
 scale.addSources( scaleVTK )

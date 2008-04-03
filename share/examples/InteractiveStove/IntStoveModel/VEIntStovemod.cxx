@@ -83,7 +83,7 @@
 #include <vtkStripper.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkTriangleFilter.h>
-#include <vtkMultiGroupPolyDataMapper.h>
+#include <vtkPolyDataMapper.h>
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkProperty.h>
@@ -448,17 +448,17 @@ void VEIntStovemod::CreateContourPlane()
     cutter->SetInput( m_stoveData );
     
     vtkTriangleFilter* tris = vtkTriangleFilter::New();
-    tris->SetInput( cutter->GetOutput() );
+    tris->SetInputConnection( cutter->GetOutputPort() );
     tris->Update();
     tris->GetOutput()->ReleaseDataFlagOn();
     
     vtkStripper* strip = vtkStripper::New();
-    strip->SetInput( tris->GetOutput() );
+    strip->SetInputConnection( tris->GetOutputPort() );
     strip->Update();
     strip->GetOutput()->ReleaseDataFlagOn(); 
     
     vtkPolyDataNormals* normals = vtkPolyDataNormals::New();
-    normals->SetInput( strip->GetOutput() );
+    normals->SetInputConnection( strip->GetOutputPort() );
     normals->SetFeatureAngle( 130.0f );
     //normals->GetOutput()->ReleaseDataFlagOn(); 
     normals->ComputePointNormalsOn();
@@ -466,7 +466,7 @@ void VEIntStovemod::CreateContourPlane()
     normals->FlipNormalsOn();
     normals->Update();
 
-    vtkMultiGroupPolyDataMapper* mapper = vtkMultiGroupPolyDataMapper::New();
+    vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
     mapper->SetInputConnection( normals->GetOutputPort() );
     mapper->ImmediateModeRenderingOn();    
     mapper->SetScalarRange( 472.0f, 979.0f );
@@ -537,13 +537,13 @@ void VEIntStovemod::CreateVectorPlane()
     cutter->SetInput( m_stoveData );
 
     vtkMaskPoints* ptmask = vtkMaskPoints::New();
-    ptmask->SetInput( cutter->GetOutput() );
+    ptmask->SetInputConnection( cutter->GetOutputPort() );
     ptmask->SetOnRatio( 1 );
 
     ves::xplorer::DataSet* dataset = new ves::xplorer::DataSet();
 
     vtkGlyph3D* glyph = vtkGlyph3D::New();
-    glyph->SetInput( ptmask->GetOutput() );
+    glyph->SetInputConnection( ptmask->GetOutputPort() );
     glyph->SetSource( ves::xplorer::ModelHandler::instance()->GetArrow() );
     glyph->SetVectorModeToUseVector();
     glyph->SetScaleFactor( 2 );
@@ -553,7 +553,7 @@ void VEIntStovemod::CreateVectorPlane()
     glyph->SetRange( m_stoveData->GetScalarRange() );
     glyph->Update();
 
-    vtkMultiGroupPolyDataMapper* mapper = vtkMultiGroupPolyDataMapper::New();
+    vtkPolyDataMapper* mapper = vtkPolyDataMapper::New();
     mapper->SetInputConnection( glyph->GetOutputPort() );
     mapper->ImmediateModeRenderingOn();    
     mapper->SetScalarRange( m_stoveData->GetScalarRange() );

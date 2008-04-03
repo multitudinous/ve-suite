@@ -44,7 +44,6 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkDataSet.h>
 #include <vtkContourFilter.h>
-#include <vtkMultiGroupDataGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
