@@ -49,7 +49,6 @@
 #endif
 #include <vtkGeometryFilter.h>
 #include <vtkAlgorithmOutput.h>
-#include <vtkCompositeDataPipeline.h>
 
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;

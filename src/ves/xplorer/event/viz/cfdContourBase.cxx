@@ -71,7 +71,8 @@ using namespace ves::xplorer::scenegraph;
 
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()
-        : cfdObjects(),
+        : 
+        cfdObjects(),
         mC2p( vtkCellDataToPointData::New() ),
         deci( vtkDecimatePro::New() )
 {
@@ -102,6 +103,12 @@ cfdContourBase::~cfdContourBase()
     //this->filter->Delete();
     //this->filter = NULL;
 
+    mC2p->Delete();
+    mC2p = 0;
+
+    deci->Delete();
+    deci = 0;
+    
     if( cfilter )
     {
         this->cfilter->Delete();
@@ -131,11 +138,6 @@ cfdContourBase::~cfdContourBase()
         this->mapper = 0;
     }
 
-    if( deci )
-    {
-        this->deci->Delete();
-        this->deci = 0;
-    }
     if( normals )
     {
         normals->Delete();

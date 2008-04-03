@@ -146,6 +146,8 @@ SteadyStateVizHandler::~SteadyStateVizHandler()
         ;//do nothing
     }
     delete vjTh[ 0 ];
+    
+    vtkAlgorithm::SetDefaultExecutivePrototype( 0 );
 }
 bool SteadyStateVizHandler::TransientGeodesIsBusy()
 {
