@@ -89,6 +89,7 @@ public:
     void DirtyTechniques();
 
     void AddTechnique( const std::string& name, Technique* technique );
+    void RemoveTechnique( const std::string& name );
 
     void SetTechnique( const std::string& name );
 

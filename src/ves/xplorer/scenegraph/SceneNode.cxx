@@ -75,7 +75,12 @@ void SceneNode::DirtyTechniques()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::AddTechnique( const std::string& name, Technique* technique )
 {
-    mTechniques[ std::string( name ) ] = technique;
+    mTechniques[ name ] = technique;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneNode::RemoveTechnique( const std::string& name )
+{
+    mTechniques.erase( name );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneNode::SetTechnique( const std::string& name )
