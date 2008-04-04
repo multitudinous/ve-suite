@@ -546,7 +546,7 @@ void CameraEntity::CreateCameraViewTexture()
     mQuadTexture = new osg::Texture2D();
 
     //Create the texture
-    mQuadTexture->setTextureSize( 2048, 2048 );
+    mQuadTexture->setTextureSize( 1024, 1024 );
     mQuadTexture->setInternalFormat( GL_RGBA );
     mQuadTexture->setSourceFormat( GL_RGBA );
     mQuadTexture->setSourceType( GL_UNSIGNED_BYTE );
@@ -556,7 +556,7 @@ void CameraEntity::CreateCameraViewTexture()
     mQuadTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     mQuadTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
 
-    setViewport( 0, 0, 2048, 2048 );
+    setViewport( 0, 0, 1024, 1024 );
 
     //Attach the texture and use it as the color buffer
     attach( osg::Camera::COLOR_BUFFER, mQuadTexture.get() );
