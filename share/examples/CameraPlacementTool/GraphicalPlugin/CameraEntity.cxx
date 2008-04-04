@@ -509,10 +509,6 @@ void CameraEntity::CreateScreenAlignedQuad()
 
     //Only need 4 vertices for a quad:
     mQuadVertices->resize( 4 );
-    (*mQuadVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
-    (*mQuadVertices)[ 1 ].set( 1.0, 0.0, 0.0 );
-    (*mQuadVertices)[ 2 ].set( 1.0, 1.0, 0.0 );
-    (*mQuadVertices)[ 3 ].set( 0.0, 1.0, 0.0 );
     mQuadGeometry->setVertexArray( mQuadVertices.get() );
 
     quadTexCoords->resize( 4 );
@@ -623,6 +619,15 @@ void CameraEntity::Update()
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
 
+    double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
+    (*mQuadVertices)[ 0 ].set( 0.0,         0.0, 0.0 );
+    (*mQuadVertices)[ 1 ].set( aspectRatio, 0.0, 0.0 );
+    (*mQuadVertices)[ 2 ].set( aspectRatio, 1.0, 0.0 );
+    (*mQuadVertices)[ 3 ].set( 0.0,         1.0, 0.0 );
+
+    mQuadGeometry->dirtyDisplayList();
+    mQuadGeometry->dirtyBound();
+
     //Update the uniforms
     mProjectionTechnique->GetNearPlaneUniform()->set(
         static_cast< float >( nearPlane ) );
@@ -674,7 +679,7 @@ const osg::Matrixd& CameraEntity::GetInitialViewMatrix()
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetQuadResolution( unsigned int value )
 {
-    
-    mQuadDCS->setScale( osg::Vec3( value, value, 0 ) );
+    osg::Vec3 quadResolution( value, value, 0 );
+    mQuadDCS->setScale( quadResolution );
 }
 ////////////////////////////////////////////////////////////////////////////////
