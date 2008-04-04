@@ -37,7 +37,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 // --- vrJuggler Includes --- //
@@ -83,7 +82,7 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
         osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
             localToWorldTransform =
                 new ves::xplorer::scenegraph::LocalToWorldTransform(
-                    cameraEntity->GetSceneManager()->GetWorldDCS(),
+                    cameraEntity->GetWorldDCS(),
                     cameraEntity->GetDCS() );
 
         gmtl::Matrix44d localToWorldMatrix =

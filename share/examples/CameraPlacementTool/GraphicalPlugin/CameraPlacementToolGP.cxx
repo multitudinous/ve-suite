@@ -40,8 +40,6 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -71,7 +69,7 @@ void CameraPlacementToolGP::InitializeNode(
     PluginBase::InitializeNode( veworldDCS );
 
     //Initialize the CameraEntity
-    mCameraEntity = new cpt::CameraEntity( mSceneManager );
+    mCameraEntity = new cpt::CameraEntity( veworldDCS, mHeadsUpDisplay );
 
     double cameraPosition[ 3 ] = { 0, -5.0, 0 };
     mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );

@@ -37,8 +37,9 @@
 #include "ProjectionTechnique.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/environment/HeadsUpDisplay.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
 // --- OSG Includes --- //
@@ -62,8 +63,9 @@ mCameraPerspective( false ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
-mSceneManager( 0 ),
 mCameraEntityCallback( 0 ),
+mHeadsUpDisplay( 0 ),
+mWorldDCS( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -74,19 +76,20 @@ mQuadGeode( 0 ),
 mQuadGeometry( 0 ),
 mQuadVertices( 0 )
 {
-    //Initialize();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraEntity::CameraEntity(
-    ves::xplorer::scenegraph::SceneManager* sceneManager )
+CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS,
+                            ves::xplorer::HeadsUpDisplay* headsUpDisplay )
 :
 osg::Camera(),
 mCameraPerspective( false ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
-mSceneManager( sceneManager ),
 mCameraEntityCallback( 0 ),
+mHeadsUpDisplay( headsUpDisplay ),
+mWorldDCS( worldDCS ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -107,8 +110,9 @@ osg::Camera( cameraEntity, copyop ),
 mQuadTexture( 0 ),
 mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
-mSceneManager( 0 ),
 mCameraEntityCallback( 0 ),
+mHeadsUpDisplay( 0 ),
+mWorldDCS( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -127,15 +131,22 @@ mQuadVertices( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::~CameraEntity()
 {
-    mSceneManager->GetRootNode()->removeChild( this );
+    osg::ref_ptr< osg::Group > rootNode =
+        mWorldDCS->getParent( 0 )->getParent( 0 );
+
+    mWorldDCS->RemoveTechnique( std::string( "Projection" ) );
+    delete mProjectionTechnique;
+
+    mWorldDCS->removeChild( mCameraDCS.get() );
+
+    rootNode->removeChild( mTexGenNode.get() );
+    rootNode->removeChild( this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Initialize()
 {   
     osg::ref_ptr< osg::Group > rootNode =
-        mSceneManager->GetRootNode();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
-        mSceneManager->GetWorldDCS();
+        mWorldDCS->getParent( 0 )->getParent( 0 );
     
     //Initialize the resources
     InitializeResources();
@@ -156,7 +167,7 @@ void CameraEntity::Initialize()
     setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
 
     //Add the subgraph to render
-    addChild( worldDCS.get() );
+    addChild( mWorldDCS.get() );
     rootNode->addChild( this );
 
     //Initialize mProjectionTechnique
@@ -165,8 +176,8 @@ void CameraEntity::Initialize()
         static_cast< float >( 5.0 ) );
     mProjectionTechnique->GetFarPlaneUniform()->set(
         static_cast< float >( 10.0 ) );
-    worldDCS->AddTechnique( std::string( "Projection" ), mProjectionTechnique );
-    worldDCS->SetTechnique( std::string( "Projection" ) );
+    mWorldDCS->AddTechnique( std::string( "Projection" ), mProjectionTechnique );
+    mWorldDCS->SetTechnique( std::string( "Projection" ) );
 
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
@@ -186,11 +197,12 @@ void CameraEntity::Initialize()
 
     //Initialize mCameraDCS & mQuadDCS
     mCameraDCS = new ves::xplorer::scenegraph::DCS();
-    worldDCS->addChild( mCameraDCS.get() );
+    mWorldDCS->addChild( mCameraDCS.get() );
 
     mQuadDCS = new ves::xplorer::scenegraph::DCS();
-    worldDCS->addChild( mQuadDCS.get() );
-
+    mQuadDCS->setScale( osg::Vec3( 200, 200, 200 ) );
+    mHeadsUpDisplay->GetCamera()->addChild( mQuadDCS.get() );
+    
     SetNamesAndDescriptions();
 
     //Initialize mCameraNode and stateset of mCameraDCS 
@@ -419,11 +431,6 @@ void CameraEntity::InitializeResources()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::SceneManager* CameraEntity::GetSceneManager()
-{
-    return mSceneManager;
-}
-////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CalculateMatrixMVPT()
 {
     //Compute the matrix which takes a vertex from local coords into tex coords
@@ -442,7 +449,8 @@ void CameraEntity::CreateCamera()
     mCameraDCS->addChild( mCameraNode.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    //Set bin number to 11 so camera does not occlude geometry from scene
+    stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );
     stateset->setAttribute(
         ( ves::xplorer::scenegraph::ResourceManager::instance()->get
         < osg::Program, osg::ref_ptr >( "CameraProgram" ) ).get(),
@@ -478,7 +486,8 @@ void CameraEntity::CreateViewFrustum()
     mFrustumGeode->addDrawable( mFrustumGeometry.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    //Set bin number to 11 so camera does not occlude geometry from scene
+    stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
@@ -500,6 +509,10 @@ void CameraEntity::CreateScreenAlignedQuad()
 
     //Only need 4 vertices for a quad:
     mQuadVertices->resize( 4 );
+    (*mQuadVertices)[ 0 ].set( 0.0, 0.0, 0.0 );
+    (*mQuadVertices)[ 1 ].set( 1.0, 0.0, 0.0 );
+    (*mQuadVertices)[ 2 ].set( 1.0, 1.0, 0.0 );
+    (*mQuadVertices)[ 3 ].set( 0.0, 1.0, 0.0 );
     mQuadGeometry->setVertexArray( mQuadVertices.get() );
 
     quadTexCoords->resize( 4 );
@@ -515,9 +528,9 @@ void CameraEntity::CreateScreenAlignedQuad()
     mQuadDCS->addChild( mQuadGeode.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    //Set bin number to 11 so quad does not cull out scene geometry behind it
-    stateset->setRenderBinDetails( 11, std::string( "DepthSortedBin" ) );
-    stateset->setTextureAttributeAndModes( 1, mQuadTexture.get(), osg::StateAttribute::ON );
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setTextureAttributeAndModes(
+        1, mQuadTexture.get(), osg::StateAttribute::ON );
     stateset->setAttribute(
         ( ves::xplorer::scenegraph::ResourceManager::instance()->get
         < osg::Program, osg::ref_ptr >( "QuadProgram" ) ).get(),
@@ -530,8 +543,6 @@ void CameraEntity::CreateScreenAlignedQuad()
         new osg::Uniform( "baseMap", 1 );
     stateset->addUniform( baseMapUniform.get() );
     mQuadDCS->setStateSet( stateset.get() );
-
-    DisplayScreenAlignedQuad( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateCameraViewTexture()
@@ -539,7 +550,7 @@ void CameraEntity::CreateCameraViewTexture()
     mQuadTexture = new osg::Texture2D();
 
     //Create the texture
-    mQuadTexture->setTextureSize( 1024, 1024 );
+    mQuadTexture->setTextureSize( 2048, 2048 );
     mQuadTexture->setInternalFormat( GL_RGBA );
     mQuadTexture->setSourceFormat( GL_RGBA );
     mQuadTexture->setSourceType( GL_UNSIGNED_BYTE );
@@ -549,7 +560,7 @@ void CameraEntity::CreateCameraViewTexture()
     mQuadTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
     mQuadTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
 
-    setViewport( 0, 0, 1024, 1024 );
+    setViewport( 0, 0, 2048, 2048 );
 
     //Attach the texture and use it as the color buffer
     attach( osg::Camera::COLOR_BUFFER, mQuadTexture.get() );
@@ -612,13 +623,7 @@ void CameraEntity::Update()
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
 
-    (*mQuadVertices)[ 0 ].set( -0.5, 1.0, -0.5 );
-    (*mQuadVertices)[ 1 ].set(  0.5, 1.0, -0.5 );
-    (*mQuadVertices)[ 2 ].set(  0.5, 1.0,  0.5 );
-    (*mQuadVertices)[ 3 ].set( -0.5, 1.0,  0.5 );
-
-    mQuadGeometry->dirtyDisplayList();
-    mQuadGeometry->dirtyBound();
+    
 
     //Update the uniforms
     mProjectionTechnique->GetNearPlaneUniform()->set(
@@ -639,22 +644,24 @@ void CameraEntity::DisplayViewFrustum( bool onOff )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayProjectionEffect( bool onOff )
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
-        mSceneManager->GetWorldDCS();
-
     if( onOff )
     {
-        worldDCS->SetTechnique( std::string( "Projection" ) );
+        mWorldDCS->SetTechnique( std::string( "Projection" ) );
     }
     else
     {
-        worldDCS->SetTechnique( std::string( "Default" ) );
+        mWorldDCS->SetTechnique( std::string( "Default" ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayScreenAlignedQuad( bool onOff )
 {
     mQuadDCS->setNodeMask( onOff );
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* CameraEntity::GetWorldDCS()
+{
+    return mWorldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()

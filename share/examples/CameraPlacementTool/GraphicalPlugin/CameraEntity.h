@@ -39,10 +39,11 @@ namespace ves
 {
 namespace xplorer
 {
+class HeadsUpDisplay;
+
 namespace scenegraph
 {
 class DCS;
-class SceneManager;
 }
 }
 }
@@ -72,7 +73,8 @@ class CameraEntity : public osg::Camera
 {
 public:
     CameraEntity();
-    CameraEntity( ves::xplorer::scenegraph::SceneManager* sceneManager );
+    CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS,
+                  ves::xplorer::HeadsUpDisplay* headsUpDisplay );
     CameraEntity( const CameraEntity& cameraEntity,
                   const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
@@ -85,7 +87,7 @@ public:
     void DisplayProjectionEffect( bool onOff );
     void DisplayScreenAlignedQuad( bool onOff );
     
-    ves::xplorer::scenegraph::SceneManager* GetSceneManager();
+    ves::xplorer::scenegraph::DCS* GetWorldDCS();
     ves::xplorer::scenegraph::DCS* GetDCS();
     const osg::Matrixd& GetInitialViewMatrix();
 
@@ -121,11 +123,13 @@ private:
 
     cpt::ProjectionTechnique* mProjectionTechnique;
 
-    //Pointer to the SceneManager singleton
-    ves::xplorer::scenegraph::SceneManager* mSceneManager;
-
     //A callback to update CameraEntity relative to its DCS
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
+
+    //Pointer to the HeadsUpDisplay for xplorer window
+    ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
+
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
 
     //Need to create a dcs for each selectable CAD object
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
