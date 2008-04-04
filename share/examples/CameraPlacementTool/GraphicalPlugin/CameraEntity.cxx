@@ -623,8 +623,6 @@ void CameraEntity::Update()
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
 
-    
-
     //Update the uniforms
     mProjectionTechnique->GetNearPlaneUniform()->set(
         static_cast< float >( nearPlane ) );

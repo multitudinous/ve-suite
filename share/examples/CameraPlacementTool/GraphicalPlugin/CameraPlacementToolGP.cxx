@@ -40,6 +40,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+#include <ves/xplorer/EnvironmentHandler.h>
+
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +71,8 @@ void CameraPlacementToolGP::InitializeNode(
     PluginBase::InitializeNode( veworldDCS );
 
     //Initialize the CameraEntity
-    mCameraEntity = new cpt::CameraEntity( veworldDCS, mHeadsUpDisplay );
+    mCameraEntity = new cpt::CameraEntity(
+        veworldDCS, mEnvironmentHandler->GetHeadsUpDisplay() );
 
     double cameraPosition[ 3 ] = { 0, -5.0, 0 };
     mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );
@@ -140,7 +143,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
         unsigned int selection = 0;
         command->GetDataValuePair( "viewPerspective" )->GetData( selection );
 
-        bool onOff = ( selection == 0 );
+        bool onOff = ( selection != 0 );
         mCameraEntity->DisplayScreenAlignedQuad( onOff );
     }
 }

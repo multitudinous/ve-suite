@@ -177,7 +177,7 @@ public:
     
     ///Provide access to the environment handler in the plugins
     ///\param environment The environment handler
-    void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environment );
+    void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environmentHandler );
     
 #ifdef VE_SOUND
     void SetSoundManager( osgAL::SoundManager* soundManager );
@@ -199,7 +199,7 @@ protected:
     ///The scene manager pointer
     ves::xplorer::scenegraph::SceneManager* mSceneManager;
     ///The environment handler pointer
-    ves::xplorer::EnvironmentHandler* mEnvironment;
+    ves::xplorer::EnvironmentHandler* mEnvironmentHandler;
     ///The xml model pointer for this plugin
     ves::open::xml::model::ModelPtr mXmlModel;
 

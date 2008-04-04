@@ -81,7 +81,7 @@ PluginBase::PluginBase():
         mDevice( 0 ),
         mModel( 0 ),
         mPhysicsSimulator( 0 ),
-        mEnvironment( 0 ),
+        mEnvironmentHandler( 0 ),
         mSceneManager( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
@@ -201,9 +201,9 @@ void PluginBase::SetSceneManager(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetEnvironmentHandler(
-    ves::xplorer::EnvironmentHandler* environment )
+    ves::xplorer::EnvironmentHandler* environmentHandler )
 {
-    mEnvironment = environment;
+    mEnvironmentHandler = environmentHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )

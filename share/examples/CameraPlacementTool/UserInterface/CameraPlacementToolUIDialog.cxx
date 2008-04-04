@@ -79,8 +79,8 @@ EVT_COMMAND_SCROLL( ID_FARPLANE_SPINCTRL,
 //				CameraPlacementToolUIDialog::OnFarPlaneText )
 EVT_SLIDER( ID_FARPLANE_SLIDER, 
 		   CameraPlacementToolUIDialog::OnFarPlaneSlider )
-EVT_RADIOBOX( ID_VIEWPERSPECTIVE_RADIOBOX,
-              CameraPlacementToolUIDialog::OnViewPerspectiveRadioBox )
+EVT_RADIOBOX( ID_CAMERAVIEW_RADIOBOX,
+              CameraPlacementToolUIDialog::OnCameraViewRadioBox )
 
 END_EVENT_TABLE()
 
@@ -360,29 +360,28 @@ void CameraPlacementToolUIDialog::BuildGUI()
 	displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
         this, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
 	
-	wxBoxSizer* viewPerspectiveRadioBoxSizer;
-	viewPerspectiveRadioBoxSizer = new wxBoxSizer( wxVERTICAL );
+	wxBoxSizer* cameraViewRadioBoxSizer;
+	cameraViewRadioBoxSizer = new wxBoxSizer( wxVERTICAL );
 	
-	wxString mViewPerspectiveRadioBoxChoices[] =
-        { wxT( "Camera" ), wxT( "World" ) };
-	int mViewPerspectiveRadioBoxNChoices =
-        sizeof( mViewPerspectiveRadioBoxChoices ) / sizeof( wxString );
-	mViewPerspectiveRadioBox = new wxRadioBox(
-        this, ID_VIEWPERSPECTIVE_RADIOBOX,
-        wxT( "View Perspective" ), wxDefaultPosition, wxDefaultSize,
-        mViewPerspectiveRadioBoxNChoices, mViewPerspectiveRadioBoxChoices,
-        1, wxRA_SPECIFY_COLS | wxDOUBLE_BORDER );
-	mViewPerspectiveRadioBox->SetSelection( 1 );
-	mViewPerspectiveRadioBox->SetFont( wxFont(
+	wxString mCameraViewRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
+	int mCameraViewRadioBoxNChoices =
+        sizeof( mCameraViewRadioBoxChoices ) / sizeof( wxString );
+	mCameraViewRadioBox = new wxRadioBox(
+        this, ID_CAMERAVIEW_RADIOBOX,
+        wxT( "Camera View" ), wxDefaultPosition, wxDefaultSize,
+        mCameraViewRadioBoxNChoices, mCameraViewRadioBoxChoices,
+        1, wxRA_SPECIFY_ROWS | wxDOUBLE_BORDER );
+	mCameraViewRadioBox->SetSelection( 1 );
+	mCameraViewRadioBox->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	
-	viewPerspectiveRadioBoxSizer->Add( mViewPerspectiveRadioBox, 0, wxALL, 5 );
+	cameraViewRadioBoxSizer->Add( mCameraViewRadioBox, 0, wxALL, 5 );
 	
 	displaySettingsSizer->Add(
-        viewPerspectiveRadioBoxSizer, 1,
+        cameraViewRadioBoxSizer, 1,
         wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
 	
-	mainSizer->Add( displaySettingsSizer, 0, wxALL|wxEXPAND, 5 );
+	mainSizer->Add( displaySettingsSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxStdDialogButtonSizer* stdDialogButtonSizer;
     wxButton* stdDialogButtonSizerOK;
@@ -601,10 +600,10 @@ void CameraPlacementToolUIDialog::UpdateFarPlaneControls()
 	ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnViewPerspectiveRadioBox(
+void CameraPlacementToolUIDialog::OnCameraViewRadioBox(
     wxCommandEvent& event )
 {
-    unsigned int selection = mViewPerspectiveRadioBox->GetSelection();
+    unsigned int selection = mCameraViewRadioBox->GetSelection();
 
     mCommandName = "VIEW_PERSPECTIVE_UPDATE";
 
