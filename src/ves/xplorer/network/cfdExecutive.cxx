@@ -574,11 +574,11 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             
             mPluginsMap[ modelID ] = temp;
             // When we create the _plugin map here we will do the following
-            temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator::instance() );
 #ifdef VE_SOUND
             temp->SetSoundManager( osgAL::SoundManager::instance() );
 #endif
+            temp->SetHeadsUpDisplay( EnvironmentHandler::instance()->GetHeadsUpDisplay() );
             temp->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();
@@ -586,7 +586,6 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             ModelHandler::instance()->AddModel( tempCFDModel );
             // Give graphical plugins access to wand position, wand buttons, and gui variables
             temp->SetCursor( EnvironmentHandler::instance()->GetCursor() );
-            //temp->SetDisplaySettings( EnvironmentHandler::instance()->GetDisplaySettings() );
             //Need to pass an active device in here or something
             //This needs to be fixed
             //mPluginsMap[ iter->first ]->SetNavigate( EnvironmentHandler::instance()->GetNavigate() );

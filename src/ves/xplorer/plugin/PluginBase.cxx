@@ -34,10 +34,8 @@
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/Model.h>
-//#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/device/Device.h>
@@ -83,7 +81,6 @@ PluginBase::PluginBase():
         mCursor( 0 ),
         mDevice( 0 ),
         mModel( 0 ),
-        mSceneManager( 0 ),
         mPhysicsSimulator( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
@@ -203,6 +200,21 @@ void PluginBase::SetCursor( cfdCursor* cursor )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetHeadsUpDisplay(
+    ves::xplorer::HeadsUpDisplay* headsUpDisplay )
+{
+    if( headsUpDisplay != NULL )
+    {
+        mHeadsUpDisplay = headsUpDisplay;
+    }
+    else
+    {
+        std::cerr
+            << " ERROR : PluginBase::SetHeadsUpDisplay headsUpDisplay is NULL "
+            << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )
 {
     if( device != NULL )
@@ -213,21 +225,6 @@ void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )
     {
         std::cerr << " ERROR : PluginBase::SetInteractionDevice device is NULL "
                   << std::endl;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetSceneManager(
-    ves::xplorer::scenegraph::SceneManager* sceneManager )
-{
-    if( sceneManager )
-    {
-        mSceneManager = sceneManager;
-    }
-    else
-    {
-        std::cerr
-            << "ERROR: PluginBase::SetSceneManager sceneManager is NULL"
-            << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

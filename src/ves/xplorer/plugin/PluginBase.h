@@ -63,12 +63,12 @@ namespace xplorer
 {
 class cfdCursor;
 class Device;
+class HeadsUpDisplay;
 class Model;
 
 namespace scenegraph
 {
 class DCS;
-class SceneManager;
 class PhysicsSimulator;
 }
 
@@ -139,6 +139,8 @@ public:
     //objects can do custom features with the wand input
     void SetCursor( ves::xplorer::cfdCursor* cursor );
 
+    void SetHeadsUpDisplay( ves::xplorer::HeadsUpDisplay* headsUpDisplay );
+
     //Set the id for a particular module
     void SetID( int id );
 
@@ -153,7 +155,6 @@ public:
     void SetObjectName( const std::string& intput );
 
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
-    void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
 
 #ifdef VE_SOUND
     void SetSoundManager( osgAL::SoundManager* soundManager );
@@ -178,12 +179,12 @@ protected:
     
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::Device* mDevice;
+    ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
     ves::xplorer::Model* mModel;
 
     ves::open::xml::model::ModelPtr mXmlModel;
 
     //Singleton pointers
-    ves::xplorer::scenegraph::SceneManager* mSceneManager;
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
     osgAL::SoundManager* mSoundManager;

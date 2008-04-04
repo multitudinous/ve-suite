@@ -77,7 +77,7 @@ void HeadsUpDisplay::Initialize()
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
     mCamera = new osg::Camera();
-    mCamera->setName( "Framerate Camera" );
+    mCamera->setName( "Heads Up Display Camera" );
     mCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
     mCamera->setRenderOrder( osg::Camera::POST_RENDER );
     mCamera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
@@ -206,7 +206,6 @@ void HeadsUpDisplay::SetTextColor( std::vector< double > color )
         mWCSyText->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
         mWCSzText->setColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     }
-
     else
     {
         mFramerateText->setColor( osg::Vec4( ( 1.0 - color[ 0 ] ),
