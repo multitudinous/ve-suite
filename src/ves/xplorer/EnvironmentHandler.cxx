@@ -48,7 +48,7 @@
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
-#include <ves/xplorer/environment/DisplayInformation.h>
+#include <ves/xplorer/environment/HeadsUpDisplay.h>
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/data/SeedPointActivateEH.h>
@@ -99,7 +99,7 @@ _teacher( 0 ),
 cursor( 0 ),
 arrow( 0 ),
 displaySettings( 0 ),
-display_information( 0 ),
+mHeadsUpDisplay( 0 ),
 _activeGeomPicking( false ),
 desktopWidth( 0 ),
 desktopHeight( 0 ),
@@ -110,7 +110,7 @@ _frustumTop( 0 ),
 _frustumBottom( 0 ),
 _frustumNear( 0 ),
 _frustumFar( 0 ),
-m_lodScale(.01)
+m_lodScale( 0.01 )
 {
     for( unsigned int i = 0; i < 3; i++ )
     {
@@ -169,35 +169,35 @@ void EnvironmentHandler::Initialize()
 {
     displaySettings = new cfdDisplaySettings();
 
-    this->arrow = ModelHandler::instance()->GetArrow();
+    arrow = ModelHandler::instance()->GetArrow();
 }
 ////////////////////////////////////////////////////////////////////////////////
 EnvironmentHandler::~EnvironmentHandler()
 {
-    if( this->cursor )
+    if( cursor )
     {
-        delete this->cursor;
+        delete cursor;
     }
 
-    if( this->_teacher )
+    if( _teacher )
     {
         //vprDEBUG(vesDBG,2)
-        //  << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
-        delete this->_teacher;
+        //  << "|       deleting _teacher" << std::endl << vprDEBUG_FLUSH;
+        delete _teacher;
     }
 
-    if( this->displaySettings )
+    if( displaySettings )
     {
         //vprDEBUG(vesDBG,2)
-        //  << "|       deleting this->displaySettings" << std::endl << vprDEBUG_FLUSH;
-        delete this->displaySettings;
+        //  << "|       deleting displaySettings" << std::endl << vprDEBUG_FLUSH;
+        delete displaySettings;
     }
 
-    if( this->display_information )
+    if( mHeadsUpDisplay )
     {
         //vprDEBUG(vesDBG,2)
-        //  << "|       deleting this->display_information" << std::endl << vprDEBUG_FLUSH;
-        delete this->display_information;
+        //  << "|       deleting mHeadsUpDisplay" << std::endl << vprDEBUG_FLUSH;
+        delete mHeadsUpDisplay;
     }
 }
 /////////////////////////////////////////////////////////////
@@ -234,15 +234,13 @@ cfdDisplaySettings* EnvironmentHandler::GetDisplaySettings()
 ////////////////////////////////////////////////////////////////////////////////
 cfdCursor* EnvironmentHandler::GetCursor()
 {
-    return this->cursor;
+    return cursor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
-DisplayInformation* EnvironmentHandler::GetDisplayInformation()
+HeadsUpDisplay* EnvironmentHandler::GetHeadsUpDisplay()
 {
-    return this->display_information;
+    return mHeadsUpDisplay;
 }
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 void EnvironmentHandler::SetDesktopSize( int width, int height )
 {
@@ -263,7 +261,7 @@ void EnvironmentHandler::InitScene()
     // Initiate cursors.
     //
     std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
-    this->cursor = new cfdCursor( this->arrow,
+    cursor = new cfdCursor( arrow,
                                   ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
                                   ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
 
@@ -277,7 +275,7 @@ void EnvironmentHandler::InitScene()
     // Initiate the Performer Stored Binary objects.
     //
     std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
-    this->_teacher = new cfdTeacher( std::string( "STORED_FILES" ),
+    _teacher = new cfdTeacher( std::string( "STORED_FILES" ),
                                      ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 
     if (( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
@@ -302,12 +300,12 @@ void EnvironmentHandler::InitScene()
     }
 
     //
-    // Initialize DisplayInformation
+    // Initialize HeadsUpDisplay
     //
-    std::cout << "| 13. Initializing................................. Virtual cursors |" << std::endl;
-    this->display_information = new ves::xplorer::DisplayInformation();
     std::pair< int, int > screenDims = displaySettings->GetScreenResolution();
-    this->display_information->SetDisplayPositions( screenDims.first, screenDims.second );
+
+    std::cout << "| 13. Initializing................................. Heads Up Display |" << std::endl;
+    mHeadsUpDisplay = new ves::xplorer::HeadsUpDisplay( screenDims );
 
     static_cast< ves::xplorer::KeyboardMouse* >(
         ves::xplorer::DeviceHandler::instance()->GetDevice( "KeyboardMouse" ) )->
@@ -350,7 +348,7 @@ void EnvironmentHandler::LatePreFrameUpdate()
         }
     }
 
-    display_information->LatePreFrame();
+    mHeadsUpDisplay->LatePreFrame();
     vprDEBUG( vesDBG, 3 ) << "|\tEnd EnvironmentHandler::PreFrameUpdate " << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -446,35 +444,38 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool create
     return m_ephemerisModel.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*void EnvironmentHandler::CreateObjects()
+/*
+void EnvironmentHandler::CreateObjects()
 {
-   int numObjects;
-   char text[ 256 ];
-   std::ifstream input;
-   input.open( this->_param.c_str() );
-   input >> numObjects;
-   input.getline( text, 256 );   //skip past remainder of line
+    int numObjects;
+    char text[ 256 ];
+    std::ifstream input;
+    input.open( _param.c_str() );
+    input >> numObjects;
+    input.getline( text, 256 );   //Skip past remainder of line
 
-   vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
-   for( int i = 0; i < numObjects; i++ )
-   {
-      int id;
-      input >> id;
-      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
-      input.getline( text, 256 );   //skip past remainder of line
-      if(id == 0 )
-      {
-         vprDEBUG(vesDBG,0) << "|\tWorld DCS parameters : "
-                          << std::endl << vprDEBUG_FLUSH;
-         _readParam->read_pf_DCS_parameters( input,
-                        this->worldScale, this->worldTrans, this->worldRot );
-      }
-      else
-      {
-         // Skip past block
-         _readParam->ContinueRead( input, id );
-      }
-   }
+    vprDEBUG( vesDBG, 1 ) << " Number of Obejcts in Interactive Geometry : "
+                          << numObjects << std::endl  << vprDEBUG_FLUSH;
+    for( int i = 0; i < numObjects; i++ )
+    {
+        int id;
+        input >> id;
+        vprDEBUG( vesDBG, 1 ) << "Id of object in Interactive Geometry : "
+                              << id << std::endl << vprDEBUG_FLUSH;
+        input.getline( text, 256 );     //skip past remainder of line
+        if( id == 0 )
+        {
+            vprDEBUG( vesDBG, 0 ) << "|\tWorld DCS parameters : "
+                                  << std::endl << vprDEBUG_FLUSH;
+            _readParam->read_pf_DCS_parameters(
+                input, worldScale, worldTrans, worldRot );
+        }
+        else
+        {
+            //Skip past block
+            _readParam->ContinueRead( input, id );
+        }
+    }
 }
 */
 ////////////////////////////////////////////////////////////////////////////////

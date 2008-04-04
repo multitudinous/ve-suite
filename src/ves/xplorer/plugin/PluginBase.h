@@ -41,8 +41,6 @@
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <ves/xplorer/ModelPtr.h>
-
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 namespace osgAL
@@ -65,6 +63,7 @@ namespace xplorer
 {
 class cfdCursor;
 class Device;
+class Model;
 
 namespace scenegraph
 {
@@ -89,16 +88,36 @@ public:
 
     virtual ~PluginBase();
 
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
-
     //Methods to do scene graph manipulations
     //New methods may have to be added later
     virtual void AddSelfToSG();
 
+    //Viz feature for the devloper to define
+    //Can be anything that creates a geode
+    virtual void CreateCustomVizFeature( int input );
+
+    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
+
+    ///This gets called every frame no matter what
+    //Allows graphical plugins access to scenegraph
+    virtual void PreFrameUpdate();
+
+    ///Allow the users to process new inputs after a job has
+    ///been submitted for all plugins
+    virtual void ProcessOnSubmitJob();
+
     virtual void RemoveSelfFromSG();
 
-    //transform object based
-    void SetTransforms( double* scale, double* rot, double* trans );
+    ///This function gets called if the model is selected
+    //Allows graphical plugins access to scenegraph
+    virtual void SelectedPreFrameUpdate();
+
+    bool OnSceneGraph();
+
+    ///Return map that maps command names to this plugin
+    std::map< std::string, PluginBase* > GetCommandNameMap();
+
+    ves::xplorer::Model* GetCFDModel();
 
     //Implement Gengxun's work by using socket
     //stuff from vtk. This will be used in parallel
@@ -106,38 +125,26 @@ public:
     //computational engine.
     virtual void GetDataFromUnit();
 
-    //Basically uses vtkActorToPF to create a geode and
-    //add it to the scene graph. Probably use cfdObject.
-    //virtual void MakeGeodeByUserRequest( int );
+    //This returns the description of the module, This should be a short description
+    const std::string& GetDesc();
 
     //This returns the name of the module
     const std::string& GetName();
+    
+    ///Set current command whatever it is
+    ///\param command Current command from conductor
+    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
-    //This returns the description of the module, This should be a short description
-    const std::string& GetDesc();
+    //Set the pointer to the cursor class so that dynamic
+    //objects can do custom features with the wand input
+    void SetCursor( ves::xplorer::cfdCursor* cursor );
 
     //Set the id for a particular module
     void SetID( int id );
 
-    ves::xplorer::Model* GetCFDModel();
-
-    bool OnSceneGraph();
-
-    //Set the pointer to the cursor class so that dynamic
-    //objects can do custom features with the wand input
-    void SetCursor( ves::xplorer::cfdCursor* input );
-
     //Set the pointer to the navigate class so that dynamic
     //objects can do custom features with the wand buttons
     void SetInteractionDevice( ves::xplorer::Device* device );
-
-    void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
-
-    void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
-
-#ifdef VE_SOUND
-    void SetSoundManager( osgAL::SoundManager* soundManager );
-#endif
 
     //Set the results for a particluar module so that we can use
     //them for custom viz features
@@ -145,39 +152,19 @@ public:
 
     void SetObjectName( const std::string& intput );
 
-    //Viz feature for the devloper to define
-    //Can be anything that creates a geode
-    virtual void CreateCustomVizFeature( int input );
+    void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+    void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
 
-    ///This function gets called if the model is selected
-    //Allows graphical plugins access to scenegraph
-    virtual void SelectedPreFrameUpdate();
+#ifdef VE_SOUND
+    void SetSoundManager( osgAL::SoundManager* soundManager );
+#endif
 
-    ///This gets called every frame no matter what
-    //Allows graphical plugins access to scenegraph
-    virtual void PreFrameUpdate();
+    //transform object based
+    void SetTransforms( double* scale, double* rot, double* trans );
 
     ///Set the VE_Model to be used by this plugin
     ///\param tempModel Pointer to VE_Model
     void SetXMLModel( ves::open::xml::model::ModelPtr& tempModel );
-
-    ///Set current command whatever it is
-    ///\param command Current command from conductor
-    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
-
-    ///Allow the users to process new inputs after a job has
-    ///been submitted for all plugins
-    virtual void ProcessOnSubmitJob();
-
-    ///Return map that maps command names to this plugin
-    std::map< std::string, PluginBase* > GetCommandNameMap();
-
-private:
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
-
-    std::string mObjectDescription;
-
-    std::string mNetwork;
 
 protected:
     bool mOnSceneGraph;
@@ -187,21 +174,29 @@ protected:
 
     int mModelID;
 
-    ves::xplorer::Model* mModel;
-
     std::string mObjectName;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::Device* mDevice;
+    ves::xplorer::Model* mModel;
 
+    ves::open::xml::model::ModelPtr mXmlModel;
+
+    //Singleton pointers
     ves::xplorer::scenegraph::SceneManager* mSceneManager;
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
     osgAL::SoundManager* mSoundManager;
 #endif
 
-    ves::open::xml::model::ModelPtr mXmlModel;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
+
     std::map< std::string, PluginBase* > mEventHandlerMap;
+
+private:
+    std::string mNetwork;
+    std::string mObjectDescription;
 
 };
 }
@@ -217,4 +212,4 @@ protected:
         } \
     }
 
-#endif // end VES_XPLORER_PLUGIN_BASE_H
+#endif //end VES_XPLORER_PLUGIN_BASE_H

@@ -586,6 +586,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             ModelHandler::instance()->AddModel( tempCFDModel );
             // Give graphical plugins access to wand position, wand buttons, and gui variables
             temp->SetCursor( EnvironmentHandler::instance()->GetCursor() );
+            //temp->SetDisplaySettings( EnvironmentHandler::instance()->GetDisplaySettings() );
             //Need to pass an active device in here or something
             //This needs to be fixed
             //mPluginsMap[ iter->first ]->SetNavigate( EnvironmentHandler::instance()->GetNavigate() );

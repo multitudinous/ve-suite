@@ -34,7 +34,7 @@
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/environment/DisplayInformation.h>
+#include <ves/xplorer/environment/HeadsUpDisplay.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -79,13 +79,13 @@ void ChangeBackgroundColorEventHandler::Execute( const ves::open::xml::XMLObject
 {
     CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
     DataValuePairPtr activeModelDVP = command->GetDataValuePair( "Background Color" );
-    std::vector<double> color;
+    std::vector< double > color;
     activeModelDVP->GetData( color );
     if( !color.empty() )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->SetBackgroundColor( color );
         ves::xplorer::EnvironmentHandler::instance()->
-        GetDisplayInformation()->SetTextColor( color );
+            GetHeadsUpDisplay()->SetTextColor( color );
     }
 }
 ///////////////////////////////////////////////////////////////////////

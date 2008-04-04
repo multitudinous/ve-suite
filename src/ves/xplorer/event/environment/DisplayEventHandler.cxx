@@ -36,7 +36,7 @@
 
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/environment/DisplayInformation.h>
+#include <ves/xplorer/environment/HeadsUpDisplay.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
@@ -88,7 +88,7 @@ void DisplayEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObje
         DVP = command->GetDataValuePair( "FrameRateID" );
         DVP->GetData( value );
 
-        ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetFrameRateFlag( value );
+        ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->SetFrameRateFlag( value );
     }
 
     else if( command->GetDataValuePair( "CoordSysID" ) )
@@ -96,7 +96,7 @@ void DisplayEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObje
         DVP = command->GetDataValuePair( "CoordSysID" );
         DVP->GetData( value );
 
-        ves::xplorer::EnvironmentHandler::instance()->GetDisplayInformation()->SetCoordSysFlag( value );
+        ves::xplorer::EnvironmentHandler::instance()->GetHeadsUpDisplay()->SetCoordSysFlag( value );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -30,54 +30,65 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef DISPLAY_INFORMATION_H
-#define DISPLAY_INFORMATION_H
-/*!\file DisplayInformation.h
-DisplayInformation API
-*/
-/*!\class ves::xplorer::DisplayInformation
-*
-*/
+
+#ifndef VES_XPLORER_HEADS_UP_DISPLAY_H
+#define VES_XPLORER_HEADS_UP_DISPLAY_H
+
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/scenegraph/Switch.h>
 
-#ifdef _OSG
+// --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/CameraNode>
-#include <osgText/Text>
-#endif
 
-//C/C++ Libraries
+#include <osgText/Text>
+
+namespace osg
+{
+    class Camera;
+}
+
+// --- C/C++ Libraries --- //
 #include <vector>
 
 namespace ves
 {
 namespace xplorer
 {
+
+// --- VE-Suite Forward Declarations --- //
 namespace scenegraph
 {
 class Switch;
 class CADEntity;
 }
-}
-}
 
-namespace ves
-{
-namespace xplorer
-{
-class VE_XPLORER_EXPORTS DisplayInformation
+/*!\file HeadsUpDisplay.h
+ * HeadsUpDisplay API
+ */
+
+/*!\class ves::xplorer::HeadsUpDisplay
+ *
+ */
+class VE_XPLORER_EXPORTS HeadsUpDisplay
 {
 public:
     ///Constructor
-    DisplayInformation();
+    ///\param windowResolution Resolution of the xplorer window in pixels
+    HeadsUpDisplay( std::pair< unsigned int, unsigned int > windowResolution );
 
     ///Destructor
-    ~DisplayInformation();
+    ~HeadsUpDisplay();
 
     ///Do not know what this is
     void LatePreFrame();
+
+    ///Get the window resolution for the xplorer window in pixels
+    std::pair< unsigned int, unsigned int > GetWindowResolution();
+
+    ///Get the camera for the heads up display
+    osg::Camera* GetCamera();
 
     ///Set flag to display frame rate
     ///\param val Bool to determine is frame rate is displayed
@@ -88,34 +99,34 @@ public:
     void SetCoordSysFlag( bool val );
 
     ///Set the text color of the frame rate and world coordinate system
-    ///\param color A vector containing color properties
+    ///\param color A double pointer containing color properties
     void SetTextColor( std::vector< double > color );
 
-    ///Set position of the frame rate and world coordinate system
-    ///\param width Width of the screen
-    ///\param height Height of the screen
-    void SetDisplayPositions( unsigned int width, unsigned int height );
-
 private:
-    ///Initialize the framerate display
-    void InitFrameRateDisplay();
+    void Initialize();
 
-    ///Initialize the world coordinate system display
-    void InitCoordSysDisplay();
+    ///<The resolution of the xplorer window in pixels
+    std::pair< unsigned int, unsigned int > mWindowResolution;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::Switch > display_switch; ///<Allows switching between different display options
+    ///<The camera for the heads up display
+    osg::ref_ptr< osg::Camera > mCamera;
 
-    osg::ref_ptr< osg::CameraNode > framerate;
-    osg::ref_ptr< osg::CameraNode > wcs;
+    ///<Geode that contains the framerate text
+    osg::ref_ptr< osg::Geode > mFramerateTextGeode;
 
-    osg::ref_ptr< osgText::Text > framerate_text; ///<Text for the frame rate
-    osg::ref_ptr< osgText::Text > wcs_x_text; ///<Text for the x world coordinate system
-    osg::ref_ptr< osgText::Text > wcs_y_text; ///<Text for the y world coordinate system
-    osg::ref_ptr< osgText::Text > wcs_z_text; ///<Text for the z world coordinate system
+    ///<Geometry for world coordinate system representation
+    ves::xplorer::scenegraph::CADEntity* mGeometryWCS;
 
-    ves::xplorer::scenegraph::CADEntity* wcs_model; ///<Geometry for world coordinate system
+    ///<Text for the frame rate
+    osg::ref_ptr< osgText::Text > mFramerateText;
+    ///<Text for the x world coordinate system
+    osg::ref_ptr< osgText::Text > mWCSxText;
+    ///<Text for the y world coordinate system
+    osg::ref_ptr< osgText::Text > mWCSyText;
+    ///<Text for the z world coordinate system
+    osg::ref_ptr< osgText::Text > mWCSzText;
 };
 }
 }
 
-#endif //DISPLAY_INFORMATION
+#endif //VES_XPLORER_HEADS_UP_DISPLAY_H

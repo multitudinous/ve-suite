@@ -34,16 +34,14 @@
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DataSet.h>
+//#include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 
-#include <ves/xplorer/scenegraph/CADEntity.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/device/Device.h>
 
-#include <ves/xplorer/event/viz/cfdObjects.h>
 #include <ves/xplorer/event/cad/CADAddNodeEH.h>
 #include <ves/xplorer/event/data/AddVTKDataSetEventHandler.h>
 
@@ -54,17 +52,16 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLReaderWriter.h>
-#include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>
+
+// --- vrJuggler Includes --- //
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
 #include <osgAL/SoundManager>
 #endif
-
-// --- vrJuggler Includes --- //
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
-#include <boost/filesystem/path.hpp>
 
 // --- C/C++ Libraries
 #include <fstream>
@@ -80,16 +77,19 @@ namespace plugin
 ////////////////////////////////////////////////////////////////////////////////
 PluginBase::PluginBase():
         mOnSceneGraph( false ),
+        mPosX( 0 ),
+        mPosY( 0 ),
+        mModelID( -1 ),
+        mCursor( 0 ),
         mDevice( 0 ),
+        mModel( 0 ),
         mSceneManager( 0 ),
         mPhysicsSimulator( 0 ),
 #ifdef VE_SOUND
-        mSoundManager( 0 )
-        ,
+        mSoundManager( 0 ),
 #endif
-        mModelID( -1 ),
-        mPosX( 0 ),
-        mPosY( 0 )
+        mDCS( 0 ),
+        mWorldDCS( 0 )
 {
     mXmlModel = ves::open::xml::model::ModelPtr();
     mNetwork.empty();
@@ -129,12 +129,14 @@ void PluginBase::SetTransforms( double* scale, double* rot, double* trans )
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::GetDataFromUnit()
 {
+    /*
     //Need to get Gengxun's work
-    /*std::cout << "cfdId = " << geodeEnumToString( cfdId ) << std::endl;
+    std::cout << "cfdId = " << geodeEnumToString( cfdId ) << std::endl;
     sock = vtkSocketCommunicator::New();
     sock->WaitForConnection( 33000 );
 
-    std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
+    std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "
+              << std::endl;
 
     vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
 
@@ -159,19 +161,14 @@ void PluginBase::GetDataFromUnit()
 
     if( this -> sock )
     {
-        std::cout << "[DBG] testing if the sock is still connected" << std::endl;
+        std::cout << "[DBG] testing if the sock is still connected"
+                  << std::endl;
         sock->CloseConnection();
         sock->Delete();
         sock = NULL;
-    }*/
+    }
+    */
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-void PluginBase::MakeGeodeByUserRequest( int )
-{
-    //dataRepresentation->UpdatecfdGeode();
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 const std::string& PluginBase::GetName()
 {
@@ -193,16 +190,16 @@ bool PluginBase::OnSceneGraph()
     return mOnSceneGraph;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetCursor( cfdCursor* input )
+void PluginBase::SetCursor( cfdCursor* cursor )
 {
-    if( input != NULL )
+    if( cursor != NULL )
     {
-        mCursor = input;
+        mCursor = cursor;
     }
     else
     {
-        std::cerr << " ERROR : PluginBase::SetCursor input is NULL "
-        << std::endl;
+        std::cerr << " ERROR : PluginBase::SetCursor cursor is NULL "
+                  << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -214,25 +211,10 @@ void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )
     }
     else
     {
-        std::cerr << " ERROR : PluginBase::SetNavigate input is NULL "
-        << std::endl;
+        std::cerr << " ERROR : PluginBase::SetInteractionDevice device is NULL "
+                  << std::endl;
     }
 }
-////////////////////////////////////////////////////////////////////////////////
-/*
-void PluginBase::SetSoundHandler( cfdSoundHandler* input )
-{
-    if( input )
-    {
-        mSoundHandler = input;
-    }
-    else
-    {
-        std::cerr << " ERROR : PluginBase::SetSoundHandler input is NULL "
-        << std::endl;
-    }
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetSceneManager(
     ves::xplorer::scenegraph::SceneManager* sceneManager )
@@ -297,8 +279,8 @@ void PluginBase::SetModuleResults( const std::string& network )
 
     if( objectVector.empty() )
     {
-        std::cerr << "|\tBad command sent to graphical plugin : " << network
-                  << std::endl;
+        std::cerr << "|\tBad command sent to graphical plugin : "
+                  << network << std::endl;
         return;
     }
 

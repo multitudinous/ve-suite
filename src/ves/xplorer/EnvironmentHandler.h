@@ -58,7 +58,7 @@ class cfdTeacher;
 class cfdQuatCamHandler;
 class cfdDisplaySettings;
 
-class DisplayInformation;
+class HeadsUpDisplay;
 }
 }
 
@@ -154,8 +154,8 @@ public:
 
     ///Post frame update (look this up)
     void PostFrameUpdate();
-    ///Accessor for DisplayInformation
-    DisplayInformation* GetDisplayInformation();
+    ///Accessor for HeadsUpDisplay
+    HeadsUpDisplay* GetHeadsUpDisplay();
 
     ///Activate geometry picking functionality.
     void ActivateGeometryPicking();
@@ -190,7 +190,7 @@ private:
     cfdQuatCamHandler* _camHandler;///<Handle quat cam functionality.
 
 #ifdef _OSG
-    DisplayInformation* display_information;///<???
+    HeadsUpDisplay* mHeadsUpDisplay;///<???
 
     ///Flag for active geometry picking.
     bool _activeGeomPicking;
