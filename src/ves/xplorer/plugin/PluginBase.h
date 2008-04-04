@@ -63,13 +63,14 @@ namespace xplorer
 {
 class cfdCursor;
 class Device;
-class HeadsUpDisplay;
+class EnvironmentHandler;
 class Model;
 
 namespace scenegraph
 {
 class DCS;
 class PhysicsSimulator;
+class SceneManager;
 }
 
 namespace plugin
@@ -139,8 +140,6 @@ public:
     //objects can do custom features with the wand input
     void SetCursor( ves::xplorer::cfdCursor* cursor );
 
-    void SetHeadsUpDisplay( ves::xplorer::HeadsUpDisplay* headsUpDisplay );
-
     //Set the id for a particular module
     void SetID( int id );
 
@@ -153,9 +152,16 @@ public:
     void SetModuleResults( const std::string& input );
 
     void SetObjectName( const std::string& intput );
-
+    ///Provide access to the physics simulator in the plugins
+    ///\param physicsSimulator The physics simulator
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
-
+    ///Provide access to the scene manager in the plugins
+    ///\param sceneManager The scene manager
+    void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
+    ///Provide access to the environment handler in the plugins
+    ///\param environment The environment handler
+    void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environment );
+    
 #ifdef VE_SOUND
     void SetSoundManager( osgAL::SoundManager* soundManager );
 #endif
@@ -179,9 +185,13 @@ protected:
     
     ves::xplorer::cfdCursor* mCursor;
     ves::xplorer::Device* mDevice;
-    ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
+    ///The model for this plugin
     ves::xplorer::Model* mModel;
-
+    ///The scene manager pointer
+    ves::xplorer::scenegraph::SceneManager* mSceneManager;
+    ///The environment handler pointer
+    ves::xplorer::EnvironmentHandler* mEnvironment;
+    ///The xml model pointer for this plugin
     ves::open::xml::model::ModelPtr mXmlModel;
 
     //Singleton pointers

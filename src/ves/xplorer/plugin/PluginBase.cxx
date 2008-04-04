@@ -33,6 +33,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 
+#include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
 
@@ -82,6 +84,8 @@ PluginBase::PluginBase():
         mDevice( 0 ),
         mModel( 0 ),
         mPhysicsSimulator( 0 ),
+        mEnvironment( 0 ),
+        mSceneManager( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
 #endif
@@ -200,61 +204,33 @@ void PluginBase::SetCursor( cfdCursor* cursor )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetHeadsUpDisplay(
-    ves::xplorer::HeadsUpDisplay* headsUpDisplay )
+void PluginBase::SetSceneManager(
+    ves::xplorer::scenegraph::SceneManager* sceneManager )
 {
-    if( headsUpDisplay != NULL )
-    {
-        mHeadsUpDisplay = headsUpDisplay;
-    }
-    else
-    {
-        std::cerr
-            << " ERROR : PluginBase::SetHeadsUpDisplay headsUpDisplay is NULL "
-            << std::endl;
-    }
+    mSceneManager = sceneManager;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetEnvironmentHandler(
+    ves::xplorer::EnvironmentHandler* environment )
+{
+    mEnvironment = environment;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )
 {
-    if( device != NULL )
-    {
-        mDevice = device;
-    }
-    else
-    {
-        std::cerr << " ERROR : PluginBase::SetInteractionDevice device is NULL "
-                  << std::endl;
-    }
+    mDevice = device;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetPhysicsSimulator(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 {
-    if( physicsSimulator )
-    {
-        mPhysicsSimulator = physicsSimulator;
-    }
-    else
-    {
-        std::cerr
-            << "ERROR: PluginBase::SetPhysicsSimulator physicsSimulator is NULL"
-            << std::endl;
-    }
+    mPhysicsSimulator = physicsSimulator;
 }
 ////////////////////////////////////////////////////////////////////////////////
 #ifdef VE_SOUND
 void PluginBase::SetSoundManager( osgAL::SoundManager* soundManager )
 {
-    if( soundManager )
-    {
-        mSoundManager = soundManager;
-    }
-    else
-    {
-        std::cerr << "ERROR: PluginBase::SetSoundManager soundManager is NULL"
-                  << std::endl;
-    }
+    mSoundManager = soundManager;
 }
 #endif
 ////////////////////////////////////////////////////////////////////////////////

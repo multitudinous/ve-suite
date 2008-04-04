@@ -578,7 +578,8 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
 #ifdef VE_SOUND
             temp->SetSoundManager( osgAL::SoundManager::instance() );
 #endif
-            temp->SetHeadsUpDisplay( EnvironmentHandler::instance()->GetHeadsUpDisplay() );
+            temp->SetEnvironmentHandler( EnvironmentHandler::instance() );
+            temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();
