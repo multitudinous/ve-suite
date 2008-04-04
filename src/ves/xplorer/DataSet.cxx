@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/xplorer/CommandHandler.h>
+
 #include <ves/xplorer/DataSet.h>
 
 #include <ves/xplorer/Debug.h>
@@ -587,6 +589,8 @@ void DataSet::LoadData()
         {
             vprDEBUG( vesDBG, 1 ) << "|\tInvalid input file: " << fileName
                 << std::endl << vprDEBUG_FLUSH;
+            ves::xplorer::CommandHandler::instance()
+            ->SendConductorMessage( "Invalid input file: " + fileName + ".\n" );
             return;
         }
     }
@@ -676,6 +680,8 @@ void DataSet::LoadData()
     }
 
     this->SetType();
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
 }
 ////////////////////////////////////////////
 unsigned int DataSet::GetNumberOfPoints()
