@@ -81,7 +81,8 @@ EVT_SLIDER( ID_FARPLANE_SLIDER,
 		   CameraPlacementToolUIDialog::OnFarPlaneSlider )
 EVT_RADIOBOX( ID_CAMERAVIEW_RADIOBOX,
               CameraPlacementToolUIDialog::OnCameraViewRadioBox )
-
+EVT_SLIDER( ID_RESOLUTION_SLIDER,
+            CameraPlacementToolUIDialog::OnResolutionSlider )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,26 +361,47 @@ void CameraPlacementToolUIDialog::BuildGUI()
 	displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
         this, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
 	
+	wxBoxSizer* cameraViewSizer;
+	cameraViewSizer = new wxBoxSizer( wxHORIZONTAL );
+	
 	wxBoxSizer* cameraViewRadioBoxSizer;
-	cameraViewRadioBoxSizer = new wxBoxSizer( wxVERTICAL );
+	cameraViewRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
 	
 	wxString mCameraViewRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
 	int mCameraViewRadioBoxNChoices =
         sizeof( mCameraViewRadioBoxChoices ) / sizeof( wxString );
 	mCameraViewRadioBox = new wxRadioBox(
-        this, ID_CAMERAVIEW_RADIOBOX,
-        wxT( "Camera View" ), wxDefaultPosition, wxDefaultSize,
-        mCameraViewRadioBoxNChoices, mCameraViewRadioBoxChoices,
-        1, wxRA_SPECIFY_ROWS | wxDOUBLE_BORDER );
+        this, ID_CAMERAVIEW_RADIOBOX, wxT( "Camera View" ),
+        wxDefaultPosition, wxDefaultSize, mCameraViewRadioBoxNChoices,
+        mCameraViewRadioBoxChoices, 1, wxRA_SPECIFY_ROWS | wxDOUBLE_BORDER );
 	mCameraViewRadioBox->SetSelection( 1 );
 	mCameraViewRadioBox->SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 	
 	cameraViewRadioBoxSizer->Add( mCameraViewRadioBox, 0, wxALL, 5 );
 	
+	cameraViewSizer->Add(
+        cameraViewRadioBoxSizer, 0, wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
+	
+	wxBoxSizer* resolutionSizer;
+	resolutionSizer = new wxBoxSizer( wxVERTICAL );
+	
+	wxStaticText* resolutionText;
+	resolutionText = new wxStaticText(
+        this, wxID_ANY, wxT( "Resolution" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+	resolutionText->Wrap( -1 );
+	resolutionSizer->Add( resolutionText, 0, wxALL|wxEXPAND, 5 );
+	
+	mResolutionSlider = new wxSlider(
+        this, ID_RESOLUTION_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxDefaultSize, wxSL_HORIZONTAL | wxSL_LABELS );
+	resolutionSizer->Add( mResolutionSlider, 0, wxALL | wxEXPAND, 5 );
+	
+	cameraViewSizer->Add( resolutionSizer, 1, wxALIGN_CENTER | wxEXPAND, 5 );
+	
 	displaySettingsSizer->Add(
-        cameraViewRadioBoxSizer, 1,
-        wxALIGN_CENTER | wxALL | wxEXPAND, 5 );
+        cameraViewSizer, 1, wxALIGN_CENTER | wxEXPAND, 5 );
 	
 	mainSizer->Add( displaySettingsSizer, 0, wxALL | wxEXPAND, 5 );
 
@@ -605,12 +627,28 @@ void CameraPlacementToolUIDialog::OnCameraViewRadioBox(
 {
     unsigned int selection = mCameraViewRadioBox->GetSelection();
 
-    mCommandName = "VIEW_PERSPECTIVE_UPDATE";
+    mCommandName = "CAMERA_VIEW_UPDATE";
 
     ves::open::xml::DataValuePairSharedPtr viewPerspectiveDVP(
         new ves::open::xml::DataValuePair() );
     viewPerspectiveDVP->SetData( "viewPerspective", selection );
     mInstructions.push_back( viewPerspectiveDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnResolutionSlider(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+    unsigned int value = mResolutionSlider->GetValue();
+
+    mCommandName = "RESOLUTION_UPDATE";
+
+    ves::open::xml::DataValuePairSharedPtr resolutionDVP(
+        new ves::open::xml::DataValuePair() );
+    resolutionDVP->SetData( "resolution", value );
+    mInstructions.push_back( resolutionDVP );
 
     SendCommandsToXplorer();
     ClearInstructions();

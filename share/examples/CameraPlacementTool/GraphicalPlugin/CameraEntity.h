@@ -92,6 +92,7 @@ public:
     const osg::Matrixd& GetInitialViewMatrix();
 
     void SetNamesAndDescriptions();
+    void SetQuadResolution( unsigned int value );
 
     void Update();
 

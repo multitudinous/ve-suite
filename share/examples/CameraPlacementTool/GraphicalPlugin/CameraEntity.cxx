@@ -200,7 +200,7 @@ void CameraEntity::Initialize()
     mWorldDCS->addChild( mCameraDCS.get() );
 
     mQuadDCS = new ves::xplorer::scenegraph::DCS();
-    mQuadDCS->setScale( osg::Vec3( 200, 200, 200 ) );
+    mQuadDCS->setScale( osg::Vec3( 200, 200, 0 ) );
     mHeadsUpDisplay->GetCamera()->addChild( mQuadDCS.get() );
     
     SetNamesAndDescriptions();
@@ -670,5 +670,11 @@ ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()
 const osg::Matrixd& CameraEntity::GetInitialViewMatrix()
 {
     return mInitialViewMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::SetQuadResolution( unsigned int value )
+{
+    
+    mQuadDCS->setScale( osg::Vec3( value, value, 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

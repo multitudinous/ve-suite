@@ -83,7 +83,8 @@ public:
 		ID_NEARPLANE_SLIDER,
 		ID_FARPLANE_SPINCTRL,
 		ID_FARPLANE_SLIDER,
-        ID_CAMERAVIEW_RADIOBOX
+        ID_CAMERAVIEW_RADIOBOX,
+        ID_RESOLUTION_SLIDER
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -106,6 +107,7 @@ private:
     void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnCameraViewRadioBox( wxCommandEvent& event );
+    void OnResolutionSlider( wxCommandEvent& WXUNUSED( event ) );
 	void OnNearPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
 	void OnNearPlaneText( wxCommandEvent& event );
 	void OnNearPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
@@ -169,6 +171,7 @@ private:
 	wxSlider* mFarPlaneSlider;
     //ves::conductor::util::DualSlider* mNearFarPlaneDualSlider;
     wxRadioBox* mCameraViewRadioBox;
+    wxSlider* mResolutionSlider;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;

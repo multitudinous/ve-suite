@@ -57,7 +57,8 @@ mCameraEntity( 0 )
     mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
     mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
     mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
-    mEventHandlerMap[ "VIEW_PERSPECTIVE_UPDATE" ] = this;
+    mEventHandlerMap[ "CAMERA_VIEW_UPDATE" ] = this;
+    mEventHandlerMap[ "RESOLUTION_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
@@ -138,13 +139,20 @@ void CameraPlacementToolGP::SetCurrentCommand(
 
         mCameraEntity->Update();
     }
-    else if( command->GetCommandName() == "VIEW_PERSPECTIVE_UPDATE" )
+    else if( command->GetCommandName() == "CAMERA_VIEW_UPDATE" )
     {
         unsigned int selection = 0;
         command->GetDataValuePair( "viewPerspective" )->GetData( selection );
 
         bool onOff = ( selection != 0 );
         mCameraEntity->DisplayScreenAlignedQuad( onOff );
+    }
+    else if( command->GetCommandName() == "RESOLUTION_UPDATE" )
+    {
+        unsigned int value = 0;
+        command->GetDataValuePair( "resolution" )->GetData( value );
+
+        mCameraEntity->SetQuadResolution( value );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
