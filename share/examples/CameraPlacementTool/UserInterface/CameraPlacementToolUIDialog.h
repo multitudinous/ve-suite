@@ -79,6 +79,10 @@ public:
         ID_PROJECTION_RADIOBOX,
         ID_FOVZ_SLIDER,
         ID_ASPECTRATIO_SPINCTRL,
+		ID_NEARPLANE_SPINCTRL,
+		ID_NEARPLANE_SLIDER,
+		ID_FARPLANE_SPINCTRL,
+		ID_FARPLANE_SLIDER,
         ID_VIEWPERSPECTIVE_RADIOBOX
     };
 
@@ -102,8 +106,17 @@ private:
     void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnViewPerspectiveRadioBox( wxCommandEvent& event );
+	void OnNearPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnNearPlaneText( wxCommandEvent& event );
+	void OnNearPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
+	void OnFarPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnFarPlaneText( wxCommandEvent& event );
+	void OnFarPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
+	bool EnsureSliders( int activeSliderID );
+	void UpdateNearPlaneControls();
+	void UpdateFarPlaneControls();
     void ProjectionUpdate();
-
+/*
     class NearPlaneSliderCallback :
         public ves::conductor::util::DualSlider::SliderCallback
     {
@@ -142,7 +155,7 @@ private:
     private:
         CameraPlacementToolUIDialog* mDialog;
     };
-
+*/
     double mProjectionData[ 4 ];
 
     wxRadioBox* mCameraRadioBox;
@@ -150,7 +163,11 @@ private:
     wxRadioBox* mProjectionRadioBox;
     wxSlider* mFoVZSlider;
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
-    ves::conductor::util::DualSlider* mNearFarPlaneDualSlider;
+	ves::conductor::util::wxSpinCtrlDbl* mNearPlaneSpinCtrl;
+	wxSlider* mNearPlaneSlider;
+	ves::conductor::util::wxSpinCtrlDbl* mFarPlaneSpinCtrl;
+	wxSlider* mFarPlaneSlider;
+    //ves::conductor::util::DualSlider* mNearFarPlaneDualSlider;
     wxRadioBox* mViewPerspectiveRadioBox;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
