@@ -77,9 +77,6 @@ namespace plugin
 ////////////////////////////////////////////////////////////////////////////////
 PluginBase::PluginBase():
         mOnSceneGraph( false ),
-        mPosX( 0 ),
-        mPosY( 0 ),
-        mModelID( -1 ),
         mCursor( 0 ),
         mDevice( 0 ),
         mModel( 0 ),
@@ -90,10 +87,10 @@ PluginBase::PluginBase():
         mSoundManager( 0 ),
 #endif
         mDCS( 0 ),
-        mWorldDCS( 0 )
+        mWorldDCS( 0 ),
+        mXmlModel( ves::open::xml::model::ModelPtr() )
 {
-    mXmlModel = ves::open::xml::model::ModelPtr();
-    mNetwork.empty();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 PluginBase::~PluginBase()
@@ -119,13 +116,6 @@ void PluginBase::RemoveSelfFromSG()
 {
     mOnSceneGraph = false;
     mWorldDCS->RemoveChild( mDCS.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetTransforms( double* scale, double* rot, double* trans )
-{
-    mDCS->SetTranslationArray( trans );
-    mDCS->SetScaleArray( scale );
-    mDCS->SetRotationArray( rot );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::GetDataFromUnit()
@@ -286,11 +276,6 @@ void PluginBase::SelectedPreFrameUpdate()
 void PluginBase::PreFrameUpdate()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void PluginBase::SetID( int id )
-{
-    mModelID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Model* PluginBase::GetCFDModel()

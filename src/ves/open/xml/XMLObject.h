@@ -274,6 +274,7 @@ public:
     ///\param idVar new id
     void SetID( const std::string& idVar );
     ///Method to get id for object
+    ///\return The UUID for this XMLObject in string form
     const std::string& GetID( void );
 
 

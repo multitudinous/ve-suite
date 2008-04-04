@@ -85,20 +85,25 @@ namespace plugin
 class VE_GRAPHICALPLUGINS_EXPORTS PluginBase
 {
 public:
+    ///Default constructor
     PluginBase();
-
+    
+    ///Destructor
     virtual ~PluginBase();
 
-    //Methods to do scene graph manipulations
-    //New methods may have to be added later
+    ///Methods to do scene graph manipulations
+    ///New methods may have to be added later
     virtual void AddSelfToSG();
 
-    //Viz feature for the devloper to define
-    //Can be anything that creates a geode
+    ///Viz feature for the devloper to define
+    ///Can be anything that creates a geode
     virtual void CreateCustomVizFeature( int input );
-
+    
+    ///Pass in the scene graph node that this plugin should be adding
+    ///data to.
+    ///\param veworldDCS The DCS that his plugin will add data to
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
-
+    
     ///This gets called every frame no matter what
     //Allows graphical plugins access to scenegraph
     virtual void PreFrameUpdate();
@@ -107,57 +112,69 @@ public:
     ///been submitted for all plugins
     virtual void ProcessOnSubmitJob();
 
+    ///Remove this plugin from the scenegraph
     virtual void RemoveSelfFromSG();
 
     ///This function gets called if the model is selected
-    //Allows graphical plugins access to scenegraph
+    ///Allows graphical plugins access to scenegraph
     virtual void SelectedPreFrameUpdate();
-
+    ///Tell the cfdExecutive whether this plugin is on the scenegraph
+    ///\return Return true if this plugin is on the scenegraph
     bool OnSceneGraph();
 
     ///Return map that maps command names to this plugin
+    ///\return The map used by cfdExecutive to process commands send by the gui
     std::map< std::string, PluginBase* > GetCommandNameMap();
-
+    
+    ///Get the model for this plugin
+    ///\return The model for this plugin
     ves::xplorer::Model* GetCFDModel();
 
-    //Implement Gengxun's work by using socket
-    //stuff from vtk. This will be used in parallel
-    //with implementation of a unit connected to the
-    //computational engine.
+    ///Implement Gengxun's work by using socket
+    ///stuff from vtk. This will be used in parallel
+    ///with implementation of a unit connected to the
+    ///computational engine.
     virtual void GetDataFromUnit();
 
-    //This returns the description of the module, This should be a short description
+    ///This returns the description of the module, This should be a short description
+    ///\return The description of this plugin in string form
     const std::string& GetDesc();
 
-    //This returns the name of the module
+    ///This returns the name of the module
+    ///\return The name of the module in string form
     const std::string& GetName();
     
     ///Set current command whatever it is
     ///\param command Current command from conductor
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
-    //Set the pointer to the cursor class so that dynamic
-    //objects can do custom features with the wand input
+    ///Set the pointer to the cursor class so that dynamic
+    ///objects can do custom features with the wand input
+    ///\param cursor The cursor from xplorer
     void SetCursor( ves::xplorer::cfdCursor* cursor );
 
-    //Set the id for a particular module
-    void SetID( int id );
-
-    //Set the pointer to the navigate class so that dynamic
-    //objects can do custom features with the wand buttons
+    ///Set the pointer to the navigate class so that dynamic
+    ///objects can do custom features with the wand buttons
+    ///\param device The current active device
     void SetInteractionDevice( ves::xplorer::Device* device );
 
-    //Set the results for a particluar module so that we can use
-    //them for custom viz features
+    ///Set the results for a particluar module so that we can use
+    ///them for custom viz features
+    ///\param input The module results in xml form
     void SetModuleResults( const std::string& input );
 
+    ///Set the module name for this plugin
+    ///\param input The module name
     void SetObjectName( const std::string& intput );
+    
     ///Provide access to the physics simulator in the plugins
     ///\param physicsSimulator The physics simulator
     void SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+    
     ///Provide access to the scene manager in the plugins
     ///\param sceneManager The scene manager
     void SetSceneManager( ves::xplorer::scenegraph::SceneManager* sceneManager );
+    
     ///Provide access to the environment handler in the plugins
     ///\param environment The environment handler
     void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environment );
@@ -166,20 +183,12 @@ public:
     void SetSoundManager( osgAL::SoundManager* soundManager );
 #endif
 
-    //transform object based
-    void SetTransforms( double* scale, double* rot, double* trans );
-
     ///Set the VE_Model to be used by this plugin
     ///\param tempModel Pointer to VE_Model
     void SetXMLModel( ves::open::xml::model::ModelPtr& tempModel );
 
 protected:
     bool mOnSceneGraph;
-
-    long mPosX;
-    long mPosY;
-
-    int mModelID;
 
     std::string mObjectName;
     
@@ -208,7 +217,6 @@ protected:
 private:
     std::string mNetwork;
     std::string mObjectDescription;
-
 };
 }
 }
