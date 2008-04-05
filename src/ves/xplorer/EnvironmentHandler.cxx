@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/xplorer/EnvironmentHandler.h>
 
-
 #include <ves/xplorer/DataSet.h>
 #include <ves/xplorer/Debug.h>
 #include <ves/xplorer/DeviceHandler.h>
