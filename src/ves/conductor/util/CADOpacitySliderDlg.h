@@ -39,7 +39,6 @@ CADOpacitySliderDlg API
 /*!\class ves::conductor::util::CADOpacitySliderDlg
 *
 */
-#include <ves/open/VjObsC.h>
 #include <ves/VEConfig.h>
 
 #include <ves/open/xml/DataValuePairPtr.h>

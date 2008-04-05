@@ -44,7 +44,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/conductor/util/CORBAServiceList.h>
 
-//#include "VE_Installer/installer/installerImages/ve_icon32x32.xpm"
+#include <ves/util/icons/ve_icon32x32.xpm>
+
 using namespace ves::conductor::util;
 ////////////////////////////////////////////////////
 //Here is the constructor with passed in pointers //
@@ -53,18 +54,11 @@ BaseDialog::BaseDialog( wxWindow* parent, int id, std::string title )
         : wxDialog(( wxWindow* ) parent, id, wxString( title.c_str(), wxConvUTF8 ), wxDefaultPosition, wxDefaultSize,
                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX | wxCLOSE_BOX ) )
 {
-    //_vjObsPtr = 0;
-    _commandName = "";
-    //SetIcon( ve_icon32x32_xpm );
+    SetIcon( ve_icon32x32_xpm );
 }
 /////////////////////////////////////////////////////
 BaseDialog::~BaseDialog()
 {}
-//////////////////////////////////////////////////////////
-void BaseDialog::SetVjObsPtr( VjObs_ptr xplorerCom )
-{
-    //_vjObsPtr = xplorerCom;
-}
 //////////////////////////////////////////////
 void BaseDialog::ClearInstructions()
 {

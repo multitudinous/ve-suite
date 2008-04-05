@@ -147,25 +147,6 @@ BEGIN_EVENT_TABLE( Vectors, wxDialog )
     ////@end Vectors event table entries
 END_EVENT_TABLE()
 
-/*!
- * Vectors constructors
- */
-/*
-Vectors::Vectors(VjObs_ptr veEngine, VE_XML::DOMDocumentManager* domManagerIn)
-:wxDialog(NULL,-1, wxString("Vectors"),
-  wxDefaultPosition, wxDefaultSize,
-      (wxDEFAULT_DIALOG_STYLE|wxRESIZE_BORDER|wxMAXIMIZE_BOX|wxMINIMIZE_BOX) & ~ wxSTAY_ON_TOP)
-{
-   wxSize displaySize = ::wxGetDisplaySize();
-   wxRect dialogPosition( displaySize.GetWidth()-427, 440, 427, displaySize.GetHeight()-480 );
-   this->SetSize( dialogPosition );
-
-   xplorerPtr = VjObs::_duplicate( veEngine );
-   domManager = domManagerIn;
-
-   CreateControls();
-}
-*/
 Vectors::Vectors( wxWindow* parent, wxWindowID id, const wxString& caption, const wxPoint& pos, const wxSize& size, long style )
 {
     Create( parent, id, caption, pos, size, style );

@@ -39,10 +39,8 @@ CADNodePropsDlg API
 /*!\class ves::conductor::util::CADNodePropsDlg
 *
 */
-#ifndef STAND_ALONE
-#include <ves/open/VjObsC.h>
 #include <ves/VEConfig.h>
-#endif
+
 #include <vector>
 #include <string>
 #include <wx/window.h>

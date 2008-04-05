@@ -39,9 +39,6 @@ BaseDialog API
 /*!\class ves::conductor::util::BaseDialog
 *
 */
-#ifndef STAND_ALONE
-#include <ves/open/VjObsC.h>
-#endif
 #include <ves/VEConfig.h>
 #include <vector>
 #include <string>
@@ -69,12 +66,6 @@ public:
     ///Destructor
     virtual ~BaseDialog();
 
-#ifndef STAND_ALONE
-    ///Set the current vjObjs ptr for data passing.
-    ///\param xplorerCom The communication interface w/ xplorer.
-    void SetVjObsPtr( VjObs_ptr xplorerCom );
-#endif
-
     ///Clear out the current queue of instructions.
     void ClearInstructions();
 protected:
@@ -90,8 +81,6 @@ protected:
     void _addCancelButton( wxSizer* buttonRowSizer );
 
 #ifndef STAND_ALONE
-    VjObs_ptr _vjObsPtr;///<The VjObj ptr.
-
     ///Send the Command back to VE-Xplorer.
     void _sendCommandsToXplorer();
 

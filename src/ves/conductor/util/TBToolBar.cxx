@@ -246,7 +246,6 @@ void TextureBasedToolBar::_onTransient( wxCommandEvent& event )
     {
         _transientControls = new UI_TransientDialog( 0, this, -1 );
     }
-    _transientControls->SetVjObsPtr( _vjObsPtr );
     _transientControls->SetSize( GetRect() );
     _transientControls->ShowModal();
 }
@@ -259,7 +258,6 @@ void TextureBasedToolBar::_handleToolButtons( wxCommandEvent& event )
         {
             if( _availableScalars.GetCount() )
             {
-                //_scalarToolsDlg->SetVjObsPtr(_vjObsPtr);
                 _scalarToolsDlg->UpdateScalarList( _availableScalars );
                 _scalarToolsDlg->SetSize( _subDialogSize );
                 _scalarToolsDlg->CentreOnParent();
@@ -282,9 +280,6 @@ void TextureBasedToolBar::_handleToolButtons( wxCommandEvent& event )
                           wxOK | wxICON_INFORMATION );
             break;
         case TRANSFER_FUNCS_ID:
-            /*wxMessageBox( _("Transfer functions tools."),
-                           _("Unavailable!!"), wxOK | wxICON_INFORMATION );*/
-            //_transferFunctionDlg->SetVjObsPtr(_vjObsPtr);
             _transferFunctionDlg->SetSize( _subDialogSize );
             _transferFunctionDlg->CentreOnParent();
             if( _transferFunctionDlg->ShowModal() == wxID_OK )
@@ -294,7 +289,6 @@ void TextureBasedToolBar::_handleToolButtons( wxCommandEvent& event )
             break;
         case ROI_ID:
         {
-            //_roiDlg->SetVjObsPtr(_vjObsPtr);
             _roiDlg->SetSize( _subDialogSize );
             _roiDlg->CentreOnParent();
             if( _roiDlg->ShowModal() == wxID_OK )
