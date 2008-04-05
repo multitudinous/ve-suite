@@ -255,7 +255,7 @@ void ViewLocPane::_buildPage()
                                 wxSP_ARROW_KEYS,
                                 0.0,
                                 100.0,
-                                0,
+                                10.0,
                                 0.1,
                                 wxSPINCTRLDBL_AUTODIGITS,
                                 wxEmptyString );
@@ -597,7 +597,7 @@ void ViewLocPane::SendCommandsToXplorer( void )
 
         _commandName = "ViewLoc_Data";
         // Create the command and data value pairs
-        DataValuePairPtr dataValuePair( new DataValuePair( "LONG" ) );
+        DataValuePairPtr dataValuePair( new DataValuePair() );
         dataValuePair->SetData( dataValueName, commandInputs );
         _dataValuePairList.push_back( dataValuePair );
     }

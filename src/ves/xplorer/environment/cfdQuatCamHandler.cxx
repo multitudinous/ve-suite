@@ -212,7 +212,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName )
     {
         return;
     }
-    quatCamDirName = fileName;
+    /*quatCamDirName = fileName;
     boost::filesystem::path dir_path( quatCamDirName,
                                       boost::filesystem::no_check );
 
@@ -228,7 +228,7 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName )
     {
         std::cout << ex.what() << std::endl;
         return;
-    }
+    }*/
 
     char textLine [ 256 ];
     double transpts[3];
@@ -440,7 +440,7 @@ void cfdQuatCamHandler::ProcessCommand()
         DataValuePairPtr commandData = veCommand->GetDataValuePair( 0 );
 
         ///Change this to grab a OneDIntArray via GetDataXMLObject() from DataValuePair---biv
-        std::vector< long > commandIds;
+        std::vector< double > commandIds;
         commandData->GetData( commandIds );
         std::string newCommand = commandData->GetDataName();
 
@@ -459,15 +459,14 @@ void cfdQuatCamHandler::ProcessCommand()
         {
             //this->frameTimer->startTiming();
             this->activecam = true;
-            //this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-            this->cam_id = ( unsigned int )commandIds.at( 0 );
+            this->cam_id = static_cast< unsigned int >( commandIds.at( 0 ) );
             flag = true;
         }
         else if( !newCommand.compare( "REMOVE_SELECTED_VIEWPT" ) )
         {
             writeFrame = currentFrame;
             this->TurnOffMovement();
-            this->cam_id = ( unsigned int )commandIds.at( 0 );
+            this->cam_id = static_cast< unsigned int >( commandIds.at( 0 ) );
             this->RemoveViewPt();
             this->WriteToFile( this->quatCamFileName );
             this->writeReadComplete = true;
@@ -478,8 +477,8 @@ void cfdQuatCamHandler::ProcessCommand()
         {
             writeFrame = currentFrame;
             this->TurnOffMovement();
-            this->AddViewPtToFlyThrough(( unsigned int )commandIds.at( 0 ),
-                                        ( unsigned int )commandIds.at( 1 ) );
+            this->AddViewPtToFlyThrough( static_cast< unsigned int >( commandIds.at( 0 ) ),
+                                        static_cast< unsigned int >( commandIds.at( 1 ) ) );
             this->WriteToFile( this->quatCamFileName );
             this->writeReadComplete = true;
             this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
@@ -489,9 +488,9 @@ void cfdQuatCamHandler::ProcessCommand()
         {
             writeFrame = currentFrame;
             this->TurnOffMovement();
-            this->InsertViewPtInFlyThrough(( unsigned int )commandIds.at( 0 ),
-                                           ( unsigned int )commandIds.at( 1 ),
-                                           ( unsigned int )commandIds.at( 2 ) );
+            this->InsertViewPtInFlyThrough(static_cast< unsigned int >( commandIds.at( 0 ) ),
+                                           static_cast< unsigned int >( commandIds.at( 1 ) ),
+                                           static_cast< unsigned int >( commandIds.at( 2 ) ) );
             this->WriteToFile( this->quatCamFileName );
             this->writeReadComplete = true;
             this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
@@ -501,8 +500,8 @@ void cfdQuatCamHandler::ProcessCommand()
         {
             writeFrame = currentFrame;
             this->TurnOffMovement();
-            this->RemoveFlythroughPt(( unsigned int )commandIds.at( 0 ),
-                                     ( unsigned int )commandIds.at( 1 ) );
+            this->RemoveFlythroughPt(static_cast< unsigned int >( commandIds.at( 0 ) ),
+                                     static_cast< unsigned int >( commandIds.at( 0 ) ) );
             this->WriteToFile( this->quatCamFileName );
             this->writeReadComplete = true;
             this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
@@ -512,7 +511,7 @@ void cfdQuatCamHandler::ProcessCommand()
         {
             writeFrame = currentFrame;
             this->TurnOffMovement();
-            this->DeleteEntireFlythrough(( unsigned int )commandIds.at( 0 ) );
+            this->DeleteEntireFlythrough(static_cast< unsigned int >( commandIds.at( 0 ) ) );
             this->WriteToFile( this->quatCamFileName );
             this->writeReadComplete = true;
             this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
@@ -530,7 +529,7 @@ void cfdQuatCamHandler::ProcessCommand()
         }
         else if( !newCommand.compare( "RUN_ACTIVE_FLYTHROUGH" ) )
         {
-            this->activeFlyThrough = ( unsigned int )commandIds.at( 0 );
+            this->activeFlyThrough = static_cast< unsigned int >( commandIds.at( 0 ) );
             this->_runFlyThrough = true;
             this->activecam = true;
             flag = true;

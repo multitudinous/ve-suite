@@ -146,7 +146,7 @@ protected:
     int cId, cIso_value, cSc, cMin;
     std::string dataValueName;
 
-    std::vector< long > commandInputs;
+    std::vector< double > commandInputs;
     wxScrolledWindow* scrollWindow;
 
     wxComboBox* _activeflySel;
