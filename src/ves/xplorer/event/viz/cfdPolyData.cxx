@@ -82,9 +82,6 @@ cfdPolyData::cfdPolyData( float op_val )
 
 cfdPolyData::~cfdPolyData()
 {
-    //vprDEBUG(vesDBG,2) << "cfdPolyData destructor"
-    //                       << std::endl << vprDEBUG_FLUSH;
-
     this->map->Delete();
     warper->Delete();
 }
@@ -128,7 +125,7 @@ void cfdPolyData::Update()
         polyTubes->SetInput( pd );
         polyTubes->SetRadius( .05 );
         polyTubes->Update();
-        this->map->SetInput( polyTubes->GetOutput() );
+        this->map->SetInputConnection( polyTubes->GetOutputPort() );
         polyTubes->Delete();
         temp->GetProperty()->SetRepresentationToSurface();
     }
@@ -184,12 +181,12 @@ void cfdPolyData::Update()
         // move bottom of range back 10% so that low valued spheres do not completely disappear
         range[0] = range[0] - ( range[1] - range[0] ) * 0.1;
         vprDEBUG( vesDBG, 1 ) << " clamping range: "
-        << range[0] << " : " << range[1]
-        << std::endl << vprDEBUG_FLUSH;
+            << range[0] << " : " << range[1]
+            << std::endl << vprDEBUG_FLUSH;
         sphereGlyph->SetRange( range );
         //sphereGlyph->SetRange( this->GetActiveDataSet()->GetParent()->GetUserRange() );
 
-        this->map->SetInput( sphereGlyph->GetOutput() );
+        this->map->SetInputConnection( sphereGlyph->GetOutputPort() );
         sphereSrc->Delete();
         sphereGlyph->Delete();
         temp->GetProperty()->SetRepresentationToSurface();
@@ -214,7 +211,7 @@ void cfdPolyData::Update()
             this->warper->SetInput( pd );
             this->warper->SetScaleFactor( this->warpedContourScale );
             this->warper->Update();//can this go???
-            this->map->SetInput(( vtkPolyData* )warper->GetOutput() );
+            this->map->SetInputConnection( warper->GetOutputPort() );
             warpSurface = false;
         }
         else
@@ -226,32 +223,46 @@ void cfdPolyData::Update()
 
     types->Delete();
 
-    if( pd->GetPointData()->GetScalars()->GetLookupTable() != NULL )
+    if( pd->GetPointData() )
     {
-        vprDEBUG( vesDBG, 1 ) << " A lookup table ("
-        << pd->GetPointData()->GetScalars()->GetLookupTable()
-        << ")is being read from the vtk file"
-        << std::endl << vprDEBUG_FLUSH;
-        double range[ 2 ];
-        pd->GetPointData()->GetScalars()->GetRange( range );
-        this->map->SetScalarRange( range );
-        this->map->SetLookupTable( pd->GetPointData()->GetScalars()->GetLookupTable() );
+        if( pd->GetPointData()->GetScalars( 
+            GetActiveDataSet()->GetActiveScalarName().c_str() )->
+            GetLookupTable() != NULL )
+        {
+            vprDEBUG( vesDBG, 1 ) << " A lookup table ("
+                << pd->GetPointData()->GetScalars( 
+                    GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                    GetLookupTable()
+                << ")is being read from the vtk file"
+                << std::endl << vprDEBUG_FLUSH;
+            double range[ 2 ];
+            pd->GetPointData()->GetScalars( 
+                GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                GetRange( range );
+            this->map->SetScalarRange( range );
+            this->map->SetLookupTable( pd->GetPointData()->GetScalars( 
+                GetActiveDataSet()->GetActiveScalarName().c_str() )->
+                GetLookupTable() );
+        }
+        else
+        {
+            double * range = GetActiveDataSet()->GetParent()->GetUserRange();
+            vprDEBUG( vesDBG, 1 ) << "setting mapper using parent "
+                << this->GetActiveDataSet()->GetParent()
+                << ", range = " << range[0] << " : " << range[1]
+                << std::endl << vprDEBUG_FLUSH;
+            
+            this->map->SetScalarRange( this->GetActiveDataSet()
+                                      ->GetParent()->GetUserRange() );
+            this->map->SetLookupTable( this->GetActiveDataSet()
+                                      ->GetParent()->GetLookupTable() );
+        }
     }
-    else
-    {
-        double * range = this->GetActiveDataSet()->GetParent()->GetUserRange();
-        vprDEBUG( vesDBG, 1 ) << "setting mapper using parent "
-        << this->GetActiveDataSet()->GetParent()
-        << ", range = " << range[0] << " : " << range[1]
-        << std::endl << vprDEBUG_FLUSH;
 
-        this->map->SetScalarRange( this->GetActiveDataSet()
-                                   ->GetParent()->GetUserRange() );
-        this->map->SetLookupTable( this->GetActiveDataSet()
-                                   ->GetParent()->GetLookupTable() );
-    }
-
-    this->map->Update();
+    map->SetScalarModeToUsePointFieldData();
+    map->UseLookupTableScalarRangeOn();
+    map->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+    map->Update();
 
     temp->SetMapper( this->map );
     temp->GetProperty()->SetSpecularPower( 20.0f );
@@ -293,7 +304,9 @@ void cfdPolyData::UpdateCommand()
     //Extract the specific commands from the overall command
     ves::open::xml::DataValuePairPtr activeModelDVP =
         veCommand->GetDataValuePair( "Sub-Dialog Settings" );
-    ves::open::xml::CommandPtr objectCommand = boost::dynamic_pointer_cast<ves::open::xml::Command>(  activeModelDVP->GetDataXMLObject() );
+    ves::open::xml::CommandPtr objectCommand = 
+        boost::dynamic_pointer_cast<ves::open::xml::Command>(  
+        activeModelDVP->GetDataXMLObject() );
 
     //Extract the isosurface value
     activeModelDVP = objectCommand->GetDataValuePair( "Polydata Value" );

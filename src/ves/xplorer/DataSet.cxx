@@ -1600,8 +1600,9 @@ void DataSet::CreateBoundingBoxGeode( void )
         osg::ref_ptr<ves::xplorer::scenegraph::Geode> bboxGeode = new ves::xplorer::scenegraph::Geode();
         bboxGeode->TranslateToGeode( bboxActors.at( i ) );
         m_visualBBox->AddChild( bboxGeode.get() );
-
+        bboxActors.at( i )->Delete();
     }
+    bboxActors.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //create wireframe to ensure accurate representation
