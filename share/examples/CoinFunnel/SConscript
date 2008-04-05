@@ -9,13 +9,11 @@ fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'Coin
 coinDemoDir = pj( RootDir, 'share', 'examples', 'CoinFunnel' )
 iveFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.ive' ] )
 wavFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.wav' ] )
-jpgFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.jpg' ] )
 tgaFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.tga' ] )
 ddsFile = sca_util.getFilesRecursiveByExt( coinDemoDir, [ '.dds' ] )
 
 fileBundle.addFiles( iveFile )
 fileBundle.addFiles( wavFile )
-fileBundle.addFiles( jpgFile )
 fileBundle.addFiles( tgaFile )
 fileBundle.addFiles( ddsFile )
 fileBundle.addFiles( [ 'coinfunnel.ves' ] )

@@ -31,45 +31,37 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef QUARTER_ENTITY_H
-#define QUARTER_ENTITY_H
-
-// --- VE-Suite Includes --- //
-#include <ves/xplorer/scenegraph/CADEntity.h>
+// --- My Includes --- //
+#include "TimeCallback.h"
 
 // --- OSG Includes --- //
-namespace osg
+#include <osg/NodeVisitor>
+#include <osg/FrameStamp>
+
+using namespace funnel;
+
+////////////////////////////////////////////////////////////////////////////////
+TimeCallback::TimeCallback()
 {
-    class Texture2D;
+    ;
 }
-
-// --- C/C++ Libraries --- //
-#include <string>
-
-namespace demo
+////////////////////////////////////////////////////////////////////////////////
+TimeCallback::TimeCallback( const TimeCallback& input )
+:
+osg::Object( input ),
+osg::Uniform::Callback( input )
 {
-class QuarterEntity : public ves::xplorer::scenegraph::CADEntity
-{
-public:
-    QuarterEntity( std::string geomFile,
-                   ves::xplorer::scenegraph::DCS* pluginDCS,
-                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
-
-    virtual ~QuarterEntity();
-
-    void SetNameAndDescriptions( const std::string& geomFile );
-
-    void SetShaders();
-
-private:
-//#if 0
-//this all needs to be cleaned up
-    void SetShaderOne( osg::Node* node, osg::Texture2D* texture );
-
-    osg::ref_ptr< osg::Node > mNonPhysicsGeometry;
-    osg::ref_ptr< osg::Node > mNonPhysicsGeometryII;
-//#endif
-};
+    ;
 }
+////////////////////////////////////////////////////////////////////////////////
+void TimeCallback::operator()( osg::Uniform* uniform, osg::NodeVisitor* nv )
+{
+    if( uniform )
+    {
+        const osg::FrameStamp* frameStamp = nv->getFrameStamp();
+        double simulationTime = frameStamp->getSimulationTime();
 
-#endif // end SLIDE_ENTITY_H
+        uniform->set( static_cast< float >( simulationTime ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////

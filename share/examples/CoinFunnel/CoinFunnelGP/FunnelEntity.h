@@ -37,35 +37,29 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
-// --- OSG Includes --- //
-
 // --- C/C++ Libraries --- //
 #include <string>
 
-namespace demo
+namespace funnel
 {
 class FunnelEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    FunnelEntity( std::string geomFile,
-                  ves::xplorer::scenegraph::DCS* pluginDCS,
-                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+    FunnelEntity(
+        std::string geomFile,
+        ves::xplorer::scenegraph::DCS* pluginDCS,
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~FunnelEntity();
 
-    void SetNameAndDescriptions( const std::string& geomFile );
+    void SetNameAndDescriptions( const std::string& name );
 
-    void SetShaders();
+protected:
 
 private:
-    void SetShaderOne();
+    void Initialize();
 
-//#if 0
-    osg::ref_ptr< osg::Group > mNonPhysicsGeometry;
-                            //this is a terrible variable name
-    osg::ref_ptr< osg::Group > mNonPhysicsGeometryII;
-//#endif
 };
-}
+} //end funnel
 
 #endif // end FUNNEL_ENTITY_H

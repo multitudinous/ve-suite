@@ -37,37 +37,29 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
-// --- OSG Includes --- //
-namespace osg
-{
-    class TextureCubeMap;
-}
-
 // --- C/C++ Libraries --- //
 #include <string>
 
-namespace demo
+namespace funnel
 {
 class RailingEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    RailingEntity( std::string geomFile,
-                   ves::xplorer::scenegraph::DCS* pluginDCS,
-                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+    RailingEntity(
+        std::string geomFile,
+        ves::xplorer::scenegraph::DCS* pluginDCS,
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~RailingEntity();
 
-    void SetNameAndDescriptions( const std::string& geomFile );
+    void SetNameAndDescriptions( const std::string& name );
 
-    void SetShaders( osg::TextureCubeMap* tcm );
+protected:
 
 private:
-//#if 0
-    void SetShaderOne( osg::TextureCubeMap* tcm );
+    void Initialize();
 
-    osg::ref_ptr< osg::Node > mNonPhysicsGeometry;
-//#endif
 };
-}
+} //end funnel
 
-#endif // end RAILING_ENTITY_H
+#endif //RAILING_ENTITY_H

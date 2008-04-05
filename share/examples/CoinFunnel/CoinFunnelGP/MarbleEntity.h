@@ -58,16 +58,10 @@ namespace osgAL
 }
 #endif
 
-// --- OSG Includes --- //
-namespace osg
-{
-    class TextureCubeMap;
-}
-
 // --- C/C++ Libraries --- //
 #include <string>
 
-namespace demo
+namespace funnel
 {
 class MarbleEntity : public ves::xplorer::scenegraph::CADEntity
 {
@@ -76,15 +70,14 @@ public:
                   ves::xplorer::scenegraph::DCS* pluginDCS,
                   ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-                , osgAL::SoundManager* soundManager
+                  ,
+                  osgAL::SoundManager* soundManager
 #endif
-                 );
+                  );
 
     virtual ~MarbleEntity();
 
-    void SetNameAndDescriptions( const std::string& geomFile );
-
-    void SetShaders( osg::TextureCubeMap* tcm );
+    void SetNameAndDescriptions( const std::string& name );
 
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* GetMarbleOnWoodSound();
@@ -92,21 +85,17 @@ public:
     ves::xplorer::scenegraph::Sound* GetMarbleOnMarbleSound();
 #endif
 
+protected:
+
 private:
-//#if 0
-   //terrible names
-    void SetShaderOne( osg::TextureCubeMap* tcm );
-    void SetShaderTwo();
-//#endif
+    void Initialize();
 
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* mMarbleOnWood;
     ves::xplorer::scenegraph::Sound* mMarbleOnMetal;
     ves::xplorer::scenegraph::Sound* mMarbleOnMarble;
 #endif
-
-    osg::ref_ptr< osg::Node > mNonPhysicsGeometry;
 };
-}
+} //end funnel
 
 #endif // end MARBLE_ENTITY_H

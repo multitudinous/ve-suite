@@ -31,37 +31,30 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef VIEW_POSITION_UPDATE_CALLBACK_H
-#define VIEW_POSITION_UPDATE_CALLBACK_H
-
-// --- VE-Suite Includes --- //
-#include <ves/VEConfig.h>
-
-// --- vrJuggler Includes --- //
-#include <gadget/Type/PositionInterface.h>
+#ifndef TIME_UPDATE_CALLBACK_H
+#define TIME_UPDATE_CALLBACK_H
 
 // --- OSG Includes --- //
 #include <osg/Uniform>
 
-namespace demo
+namespace funnel
 {
-class ViewPositionUpdateCallback : public osg::Uniform::Callback
+class TimeCallback : public osg::Uniform::Callback
 {
 public:
     ///Constructor
-    ViewPositionUpdateCallback();
-
-    ///Destructor
-    virtual ~ViewPositionUpdateCallback(){;}
+    TimeCallback();
 
     ///Copy constructor
-    ViewPositionUpdateCallback( const ViewPositionUpdateCallback& );
+    TimeCallback( const TimeCallback& );
 
     virtual void operator()( osg::Uniform* uniform, osg::NodeVisitor* nv );
 
 protected:
-    gadget::PositionInterface m_head;
-};
-} // end demo
+    ///Destructor
+    virtual ~TimeCallback(){;}
 
-#endif // end VIEW_POSITION_UPDATE_CALLBACK_H
+};
+} //end funnel
+
+#endif //TIME_UPDATE_CALLBACK_H

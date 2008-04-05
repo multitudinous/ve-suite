@@ -58,40 +58,33 @@ namespace osgAL
 }
 #endif
 
-// --- OSG Includes --- //
-namespace osg
-{
-    class TextureCubeMap;
-}
-
 // --- C/C++ Libraries --- //
 #include <string>
 
-namespace demo
+namespace funnel
 {
-class UniformUpdateCallback;
-
 class WaterEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
     WaterEntity( std::string geomFile,
                  ves::xplorer::scenegraph::DCS* pluginDCS
 #ifdef VE_SOUND
-                  ,osgAL::SoundManager* soundManager
+                 ,
+                 osgAL::SoundManager* soundManager
 #endif
                 );
 
     virtual ~WaterEntity();
 
-    void SetNameAndDescriptions( std::string geomFile );
+    void SetNameAndDescriptions( const std::string& name );
 
-    void SetShaders( osg::TextureCubeMap* tcm );
+protected:
 
 private:
-    void SetShaderOne( osg::TextureCubeMap* tcm );
+    void Initialize();
 
 #ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* m_water;
+    ves::xplorer::scenegraph::Sound* mWaterSound;
 #endif
 
 };

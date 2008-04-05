@@ -31,8 +31,11 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef WORLD_H
-#define WORLD_H
+#ifndef COIN_FUNNEL_WORLD_H
+#define COIN_FUNNEL_WORLD_H
+
+// --- My Includes --- //
+#include "CoinFunnelWorldPtr.h"
 
 // --- VE-Suite Includes --- //
 namespace ves
@@ -59,64 +62,52 @@ namespace osgAL
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
-namespace osg
-{
-    class Image;
-    class TextureCubeMap;
-}
-
-// --- C/C++ Libraries --- //
-#include <string>
-#include <map>
-
-namespace demo
+namespace funnel
 {
 class FunnelEntity;
 class MarbleEntity;
-class QuarterEntity;
 class RailingEntity;
 class SlideEntity;
 class WaterEntity;
 
-class World
+class CoinFunnelWorld
 {
 public:
-    World( ves::xplorer::scenegraph::DCS* pluginDCS,
-           ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+    CoinFunnelWorld(
+        ves::xplorer::scenegraph::DCS* pluginDCS,
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-           , osgAL::SoundManager* soundManager
+        ,
+        osgAL::SoundManager* soundManager
 #endif
-           );
+        );
 
-    ~World();
+    ~CoinFunnelWorld();
 
-    void Initialize();
     void PreFrameUpdate();
 
-    ves::xplorer::scenegraph::DCS* GetPluginDCS();
+protected:
 
 private:
+    void Initialize();
+
     void CreateRoom( float width );
-
-    std::map< std::string, osg::Image* > m_imageMap;
-
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_pluginDCS;
 
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
 #ifdef VE_SOUND
-    osgAL::SoundManager* m_soundManager;
+    osgAL::SoundManager* mSoundManager;
 #endif
 
-    osg::ref_ptr< osg::TextureCubeMap > m_tcm;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
-    demo::FunnelEntity* m_funnelEntity;
-    demo::MarbleEntity* m_marbleEntity;
-    demo::QuarterEntity* m_quarterEntity;
-    demo::RailingEntity* m_railingEntity;
-    demo::SlideEntity* m_slideEntity;
-    demo::WaterEntity* m_waterEntity;
+    funnel::FunnelEntity* mFunnelEntity;
+    funnel::MarbleEntity* mMarbleEntity;
+    funnel::RailingEntity* mRailingEntity;
+    funnel::SlideEntity* mSlideEntity;
+    funnel::WaterEntity* mWaterEntity;
+
 };
-}
+} //end funnel
 
-#endif // end WORLD_H
+#endif //COIN_FUNNEL_WORLD_H

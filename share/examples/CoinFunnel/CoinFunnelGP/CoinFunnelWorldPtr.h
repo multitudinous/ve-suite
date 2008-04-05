@@ -31,33 +31,25 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef TIME_UPDATE_CALLBACK_H
-#define TIME_UPDATE_CALLBACK_H
+#ifndef COIN_FUNNEL_WORLD_PTR_H
+#define COIN_FUNNEL_WORLD_PTR_H
 
-// --- VE-Suite Includes --- //
-#include <ves/VEConfig.h>
+#include <ves/util/PointerTypes.h>
 
-// --- OSG Includes --- //
-#include <osg/Uniform>
-
-namespace demo
+namespace funnel
 {
-class TimeUpdateCallback : public osg::Uniform::Callback
-{
-public:
-    ///Constructor
-    TimeUpdateCallback();
+class CoinFunnelWorld;
 
-    ///Copy constructor
-    TimeUpdateCallback( const TimeUpdateCallback& );
+//Typedef for a SmartPtr type for the CoinFunnelWorld
+typedef ves::util::ClassPtrDef< CoinFunnelWorld >::type
+    CoinFunnelWorldPtr;
+typedef ves::util::SharedPtrDef< CoinFunnelWorld >::type
+    CoinFunnelWorldSharedPtr;
+typedef ves::util::WeakPtrDef< CoinFunnelWorld >::type
+    CoinFunnelWorldWeakPtr;
+typedef ves::util::ScopedPtrDef< CoinFunnelWorld >::type
+    CoinFunnelWorldScopedPtr;
 
-    virtual void operator()( osg::Uniform* uniform, osg::NodeVisitor* nv );
+} //end funnel
 
-protected:
-    ///Destructor
-    virtual ~TimeUpdateCallback(){;}
-
-};
-} // end demo
-
-#endif // end TIME_UPDATE_CALLBACK_H
+#endif //COIN_FUNNEL_WORLD_PTR_H
