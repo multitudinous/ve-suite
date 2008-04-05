@@ -66,7 +66,7 @@ public:
     virtual void OperateOnDataset( vtkDataSet* dataset );
 
     ///Get the actors representing the bounding boxes of the datasets
-    std::vector< vtkActor* > GetBBoxActors();
+    std::vector< vtkActor* >& GetBBoxActors();
 protected:
     ///<The bounds of the vtkDataObject as vtkActors;
     std::vector< vtkActor* > m_bboxActors;

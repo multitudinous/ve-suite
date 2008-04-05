@@ -73,7 +73,7 @@ void CreateDataObjectBBoxActorsCallback::OperateOnDataset( vtkDataSet* dataset )
 
 }
 ////////////////////////////////////////////////////////////////////////////
-std::vector< vtkActor* > CreateDataObjectBBoxActorsCallback::GetBBoxActors()
+std::vector< vtkActor* >& CreateDataObjectBBoxActorsCallback::GetBBoxActors()
 {
     return m_bboxActors;
 }
