@@ -975,10 +975,9 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
         directory = vesFileName.GetPath();
         fname = vesFileName.GetFullName();
         ///now write the file out from domdocument manager
-        //wrtie to path
-        //std::string data = network->Save( ConvertUnicode( fname.c_str() ) );
         std::string nw_str = XMLDataBufferEngine::instance()->SaveVESData( ConvertUnicode( fname.c_str() ) );
         SetTitle( vesFileName.GetFullName() );
+        SetRecentFile( vesFileName );
     }
 }
 
@@ -1085,6 +1084,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile( wxFileName vesFileName )
 {
+    vesFileName.MakeAbsolute();
     size_t numFilesInHistory = m_recentVESFiles->GetCount();
     for( size_t i = 0; i < numFilesInHistory; ++i )
     {
