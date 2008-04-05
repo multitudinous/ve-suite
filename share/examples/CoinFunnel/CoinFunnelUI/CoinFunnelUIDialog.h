@@ -37,8 +37,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/UIDialog.h>
 
-#include <ves/open/xml/DataValuePairPtr.h>
-
 namespace ves
 {
 namespace conductor
@@ -54,13 +52,15 @@ namespace util
 #include <vector>
 #include <string>
 
+namespace funnel
+{
 class CoinFunnelUIDialog : public ves::conductor::UIDialog
 {
 public:
-    CoinFunnelUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service, std::string* portNumber );
-    CoinFunnelUIDialog(){;}
-
-    enum
+    CoinFunnelUIDialog();
+    CoinFunnelUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service );
+    
+    enum COINFUNNEL_IDS
     {
         OK_BUTTON
     };
@@ -71,23 +71,21 @@ public:
     virtual bool TransferDataToWindow();
     virtual void Lock( bool l );
 
-    std::string* p_portNumber;
-
 protected:
+
+private:
     void BuildGUI();
-    void UpdateGUI();
-
-    void OnOK( wxCommandEvent& event );
-
-    std::vector< ves::open::xml::DataValuePairSharedPtr > instructions;///<The DataValuePairs for the current command
-    std::string command_name;///<The command name
 
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    ves::conductor::util::CORBAServiceList* serviceList;
+    ves::conductor::util::CORBAServiceList* mServiceList;
+    std::string mCommandName;
+    std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
+    
     DECLARE_EVENT_TABLE()
 
 };
+} //end funnel
 
 #endif //COIN_FUNNEL_UI_DIALOG_H
