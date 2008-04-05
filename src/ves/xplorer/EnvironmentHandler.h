@@ -47,7 +47,6 @@
 
 #include <map>
 #include <vector>
-#include <osgEphemeris/EphemerisModel.h>
 
 namespace ves
 {
@@ -63,6 +62,10 @@ class HeadsUpDisplay;
 }
 
 class vtkPolyData;
+namespace osgEphemeris
+{
+class EphemerisModel;
+}
 
 namespace ves
 {

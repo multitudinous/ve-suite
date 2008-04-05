@@ -45,6 +45,8 @@
 #include <osg/Geode>
 #include <osg/Camera>
 
+#include <sstream>
+
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -448,7 +448,8 @@ if not SConsAddons.Util.hasHelpFlag():
 
 
    if GetPlatform() == 'darwin':
-      baseEnv.Append( LINKFLAGS = ['-Wl,-bind_at_load'] )
+      baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
+      baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
       baseEnv['LDMODULESUFFIX'] = '.bundle'
       #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
 

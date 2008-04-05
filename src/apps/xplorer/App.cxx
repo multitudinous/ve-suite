@@ -71,6 +71,7 @@
 #include <osg/Camera>
 #include <osg/Image>
 #include <osg/TextureRectangle>
+#include <osg/Texture2D>
 
 #include <osgDB/WriteFile>
 
