@@ -130,9 +130,9 @@ void Isosurfaces::CreateControls()
     itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
 
-    _useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T( "Use Nearest Precomputed Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
-    _useNearestPreComputedCheckBox->SetValue( false );
-    itemStaticBoxSizer3->Add( _useNearestPreComputedCheckBox, 0, wxGROW | wxALL, 5 );
+    //_useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T( "Use Nearest Precomputed Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
+    //_useNearestPreComputedCheckBox->SetValue( false );
+    //itemStaticBoxSizer3->Add( _useNearestPreComputedCheckBox, 0, wxGROW | wxALL, 5 );
 
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText6, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
@@ -257,7 +257,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED( event ) )
     ves::open::xml::DataValuePairPtr nearestPrecomputed( new ves::open::xml::DataValuePair() );
     nearestPrecomputed->SetDataName( "Use Nearest Precomputed" );
     nearestPrecomputed->SetDataType( "UNSIGNED INT" );
-    if( _useNearestPreComputedCheckBox->GetValue() )
+    /*if( _useNearestPreComputedCheckBox->GetValue() )
     {
         nearestPrecomputed->SetDataValue( static_cast<unsigned int>( 1 ) );
     }
@@ -265,7 +265,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED( event ) )
     {
         nearestPrecomputed->SetDataValue( static_cast<unsigned int>( 0 ) );
     }
-    newCommand->AddDataValuePair( nearestPrecomputed );
+    newCommand->AddDataValuePair( nearestPrecomputed );*/
 
     try
     {
