@@ -1084,13 +1084,19 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile( wxFileName vesFileName )
 {
-    vesFileName.MakeAbsolute();
+    if( !vesFileName.IsAbsolute() )
+    {
+        vesFileName.MakeAbsolute( ::wxFileName::GetCwd() );
+    }
+    
     size_t numFilesInHistory = m_recentVESFiles->GetCount();
     for( size_t i = 0; i < numFilesInHistory; ++i )
     {
         if( !m_recentVESFiles->GetHistoryFile( i ).Cmp( vesFileName.GetFullPath() ) )
         {
-            return;
+            //If it is on the list remove it and add it back as 1
+            m_recentVESFiles->RemoveFileFromHistory( i );
+            break;
         }
     }
     m_recentVESFiles->AddFileToHistory( vesFileName.GetFullPath() );
@@ -1157,6 +1163,10 @@ void AppFrame::OpenRecentFile( wxCommandEvent& event )
     //clear the old networks so that all the event handlers are removed
     //before cleaning up the rest of the classes
     canvas->New( true );
+    
+    //Update recent file history and make it number 1
+    SetRecentFile( fileToOpen );
+    
     /*
     //Reloading plugins
     av_modules->ResetPluginTree();
