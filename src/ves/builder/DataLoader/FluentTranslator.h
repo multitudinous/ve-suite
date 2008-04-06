@@ -35,6 +35,8 @@
 
 #include <ves/builder/cfdTranslatorToVTK/cfdTranslatorToVTK.h>
 
+class vtkDataSet;
+
 namespace ves
 {
 namespace builder
@@ -61,6 +63,8 @@ class VE_USER_BUILDER_EXPORTS FluentTranslateCbk: public ves::builder::cfdTransl
         {
             ;
         }
+        void CreateVectorFromScalar( vtkDataSet* dataSet );
+
         //////////////////////////////////////////////////
         //ouputDataset should be populated              //
         //appropriately by the translate callback.      //

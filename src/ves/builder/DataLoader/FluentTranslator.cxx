@@ -39,6 +39,10 @@
 
 #include <vtkMultiBlockDataSet.h>
 
+#include <vtkCompositeDataIterator.h>
+#include <vtkCellData.h>
+#include <vtkDoubleArray.h>
+
 #include <iostream>
 
 using namespace ves::builder::DataLoader;
@@ -68,57 +72,87 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
 {
     FluentTranslator* FluentToVTK =
         dynamic_cast< FluentTranslator* >( toVTK );
-    if( FluentToVTK )
+    if( !FluentToVTK )
     {
-        vtkFLUENTReader* reader = vtkFLUENTReader::New();
-        reader->SetFileName( FluentToVTK->GetFile( 0 ).c_str() );
-        reader->Update();
-        dataReader = reader;
-        if( !outputDataset )
-        {
-            outputDataset = vtkMultiBlockDataSet::New();
-        }
-        /*vtkDataSet* tmpDSet = vtkUnstructuredGrid::New();
-        tmpDSet->DeepCopy( reader->GetOutput()*/ //);
-
-        //get the info about the data in the data set
-        //reader->GetOutput()
-        //GetNumberOfGroups ()
-        //GetNumberOfDataSets( );
-        //GetDataSet( )
-        /*if ( dynamic_cast< vtkDataSet* >( reader->GetOutput()->GetDataSet( 0, 0 ) )->GetPointData()->GetNumberOfArrays() == 0 )
-        {
-           //std::cout<<"Warning!!!"<<std::endl;
-           //std::cout<<"No point data found!"<<std::endl;
-           //std::cout<<"Attempting to convert cell data to point data."<<std::endl;
-
-           vtkCellDataToPointData* dataConvertCellToPoint = vtkCellDataToPointData::New();      
-           dataConvertCellToPoint->SetInput(reader->GetOutput());
-           dataConvertCellToPoint->PassCellDataOff();
-           dataConvertCellToPoint->Update();
-           outputDataset->DeepCopy(dataConvertCellToPoint->GetOutput());
-           reader->Delete();
-           dataConvertCellToPoint->Delete();
-        }
-        else*/
-        {
-            outputDataset->ShallowCopy( reader->GetOutput() );
-            outputDataset->Update();
-            reader->Delete();
-        }
-
-        /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
-        writer->SetInput( reader->GetOutput() );
-        writer->SetWriteMetaFile( 1 );
-        writer->SetFileName( "test_multigrou.vtu" );
-        writer->Write();*/
-        //tmpDSet->Delete();
+        return;
     }
+    vtkFLUENTReader* reader = vtkFLUENTReader::New();
+    reader->SetFileName( FluentToVTK->GetFile( 0 ).c_str() );
+    reader->Update();
+    dataReader = reader;
+    if( !outputDataset )
+    {
+        outputDataset = vtkMultiBlockDataSet::New();
+    }
+
+    outputDataset->ShallowCopy( reader->GetOutput() );
+    outputDataset->Update();
+    reader->Delete();
+
+#ifdef VTK_POST_FEB20
+    //vtkCompositeDataSet* mgd = outputDataset;
+    vtkCompositeDataIterator* mgdIterator = vtkCompositeDataIterator::New();
+    mgdIterator->SetDataSet( vtkCompositeDataSet::SafeDownCast( outputDataset ) );
+    ///For traversal of nested multigroupdatasets
+    mgdIterator->VisitOnlyLeavesOn();
+    mgdIterator->GoToFirstItem();
+#else
+    //vtkMultiGroupDataSet* mgd = outputDataset;
+    vtkMultiGroupDataIterator* mgdIterator = vtkMultiGroupDataIterator::New();
+    mgdIterator->SetDataSet( vtkMultiGroupDataSet::SafeDownCast( outputDataset ) );
+    ///For traversal of nested multigroupdatasets
+    mgdIterator->VisitOnlyLeavesOn();
+    mgdIterator->GoToFirstItem();
+#endif            
+    while( !mgdIterator->IsDoneWithTraversal() )
+    {
+        vtkDataSet* currentDataset = 
+            dynamic_cast<vtkDataSet*>( mgdIterator->GetCurrentDataObject() );
+        CreateVectorFromScalar( currentDataset );
+        mgdIterator->GoToNextItem();
+    }
+    mgdIterator->Delete();
+    mgdIterator = 0;
+
+    /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
+    writer->SetInput( reader->GetOutput() );
+    writer->SetWriteMetaFile( 1 );
+    writer->SetFileName( "test_multigrou.vtu" );
+    writer->Write();*/
+    //tmpDSet->Delete();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::DisplayHelp( void )
 {
     std::cout << "|\tFluent Translator Usage:" << std::endl
-    << "\t -singleFile <filename_to_load> -o <output_dir> "
-    << "-outFileName <output_filename> -loader cas -w file" << std::endl;
+        << "\t -singleFile <filename_to_load> -o <output_dir> "
+        << "-outFileName <output_filename> -loader cas -w file" << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* dataSet )
+{
+    vtkCellData* cData = dataSet->GetCellData();
+    if( !cData )
+    {
+        return;
+    }
+    
+    vtkDataArray* xComp = cData->GetArray( "X_VELOCITY" );
+    vtkDataArray* yComp = cData->GetArray( "Y_VELOCITY" );
+    vtkDataArray* zComp = cData->GetArray( "Z_VELOCITY" );
+
+    vtkDoubleArray* velocityVec = vtkDoubleArray::New();
+    velocityVec->SetNumberOfComponents( 3 );
+    velocityVec->SetName( "Velocity" );
+    double vec[ 3 ] = { 0, 0, 0 };
+    vtkIdType size = xComp->GetSize();
+    for( vtkIdType i = 0; i < size; ++i )
+    {
+        vec[ 0 ] = xComp->GetTuple1( i );
+        vec[ 1 ] = yComp->GetTuple1( i );
+        vec[ 2 ] = zComp->GetTuple1( i );
+        velocityVec->InsertNextTupleValue( vec );
+    }
+    cData->AddArray( velocityVec );
+    velocityVec->Delete();
 }
