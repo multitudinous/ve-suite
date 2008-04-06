@@ -23,8 +23,8 @@
       </conductorState>
     </network>
     <model ID="102" id="56b3dba4-fa6b-4b34-9226-c181996af2ca" name="DefaultPlugin" vendorUnit="DefaultPlugin">
-      <iconLocation xLocation="10" yLocation="10"/>
       <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="10" yLocation="10"/>
       <informationPackets id="5e62c92e-8820-4972-be32-a211a7b55fdc">
         <blockID type="xs:unsignedInt">105</blockID>
         <blockName type="xs:string">simple</blockName>
@@ -106,7 +106,31 @@
           <dataValue type="xs:string">mb.vtu</dataValue>
         </properties>
       </informationPackets>
-      <geometry associatedDataset="NONE" friction="1" id="5593f230-9f76-3449-acca-41bdeb92bc7a" mass="1" physics="false" restitution="0" visibility="true">
+      <informationPackets id="58b93cf6-6647-4a04-a196-b7a35210b265">
+        <blockID type="xs:unsignedInt">0</blockID>
+        <blockName type="xs:string">Dataset5</blockName>
+        <transform objectType="Transform">
+          <translation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </translation>
+          <scale>
+            <value>1</value>
+            <value>1</value>
+            <value>1</value>
+          </scale>
+          <rotation>
+            <value>0</value>
+            <value>0</value>
+            <value>0</value>
+          </rotation>
+        </transform>
+        <properties dataName="VTK_DATA_FILE" id="9907edf7-3e96-43da-aadc-e6a44cdb4e2c" objectType="DataValuePair">
+          <dataValue type="xs:string">SURFACE1/Surface.vtk</dataValue>
+        </properties>
+      </informationPackets>
+      <geometry associatedDataset="NONE" friction="1" id="5593f230-9f76-3449-acca-41bdeb92bc7a" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
         <type>Assembly</type>
         <name>Model_Geometry</name>
         <parent type="xs:string"></parent>
@@ -127,9 +151,8 @@
             <value>0</value>
           </rotation>
         </transform>
-        <numChildren>3</numChildren>
         <children>
-          <child friction="1" id="1cfa8fb2-b11b-0645-8a2e-7ddc3fc7c582" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="1cfa8fb2-b11b-0645-8a2e-7ddc3fc7c582" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>eightCorners</name>
             <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
@@ -152,7 +175,7 @@
             </transform>
             <attribute>
               <type type="xs:string">Material</type>
-              <blending type="xs:boolean">true</blending>
+              <blending type="xs:boolean">false</blending>
               <material>
                 <kDiffuse>
                   <value>1</value>
@@ -188,7 +211,7 @@
             <activeAttributeName type="xs:string">red</activeAttributeName>
             <fileName>eightCorners.stl</fileName>
           </child>
-          <child friction="1" id="6382ac8c-ebe1-5543-85b8-2f511424db9d" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="6382ac8c-ebe1-5543-85b8-2f511424db9d" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>Surface0.75</name>
             <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
@@ -211,7 +234,7 @@
             </transform>
             <fileName>Surface0.75.stl</fileName>
           </child>
-          <child friction="1" id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>Surface0.75_cloned</name>
             <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
