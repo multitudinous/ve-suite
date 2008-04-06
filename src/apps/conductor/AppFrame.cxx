@@ -2273,8 +2273,8 @@ void AppFrame::OnChangeWorkingDirectory( wxCommandEvent& event )
         DataValuePairPtr dvp( new DataValuePair() );
         CommandPtr command( new Command() );
         std::string mode = ConvertUnicode( directory.c_str() );
-        dvp->SetData( std::string( "Change Working Directory" ), mode );
-        command->SetCommandName( std::string( "WORKING_DIRECTORY" ) );
+        dvp->SetData( "WORKING_DIRECTORY", mode );
+        command->SetCommandName( "Change Working Directory" );
         command->AddDataValuePair( dvp );
 
         CORBAServiceList::instance()->
