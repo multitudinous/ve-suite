@@ -308,6 +308,9 @@ char * Body_Unit_i::Query ( const char * query_str
 	networkWriter.UseStandaloneDOMDocumentManager();
 	networkWriter.ReadFromString();
 	networkWriter.ReadXMLData( query_str, "Command", "vecommand" );
+	//std::ofstream packet("packet.txt");
+	//packet << query_str;
+	//packet.close();
 	std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
 
 	ves::open::xml::CommandPtr cmd;	
@@ -467,8 +470,31 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 	if (firsttime)
 	{
+        //make sure bkp file exists
+	    std::ifstream bkpFile( ( workingDir + filename + ".bkp" ).c_str() , std::ios::binary);
+        if( !bkpFile.is_open() )
+        {
+            //no bkp file
+		    AspenLog->SetSel(-1, -1);
+		    AspenLog->ReplaceSel("BKP File Does NOT exist.\r\n");
+	        return CORBA::string_dup( "BKPDNE" );
+        }
+        bkpFile.close();
+
+        //make sure apw file exists
+        std::ifstream apwFile( ( workingDir + filename + ".apw" ).c_str() , std::ios::binary);
+        if( !apwFile.is_open() )
+        {
+            //no apw file
+		    AspenLog->SetSel(-1, -1);
+		    AspenLog->ReplaceSel("APW File Does NOT exist.\r\n");
+	        return CORBA::string_dup( "APWDNE" );
+        }
+        apwFile.close();
+
 		//Display->SetWindowText( ( workingDir + filename ).c_str());
 		Display->SetWindowText( ( filename ).c_str());
+        //go through bkp parsing procedure
 		bkp->openFile(filename.c_str());
 		firsttime=false;
 	}
@@ -483,11 +509,12 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	catch(...)
 	{
 		std::cout << "GetNetwork Exception Aspen Unit" << std::endl;
+        return NULL;
 	}
-	std::ofstream output("returnString.txt");
-	output<<"Return String"<<std::endl;
-	output<<network<<std::endl;
-	output.close();   
+	//std::ofstream output("returnString.txt");
+	//output<<"Return String"<<std::endl;
+	//output<<network<<std::endl;
+	//output.close();   
 	
 	//Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
     //Display->set->SetWindowText(network.c_str());
@@ -540,6 +567,11 @@ char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 	//There shouldn't be two intances of an Aspen framework. so discard the moduleId
 	//the returned string will be a well formated XML within "vecommand" element
 	std::string netPak = bkp->GetInputModuleParams(modname);
+
+    //std::ofstream output("inputList.txt");
+    //output<<netPak;
+    //output.close();  
+
 	return CORBA::string_dup(netPak.c_str());
 }
 

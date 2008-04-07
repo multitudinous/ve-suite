@@ -747,10 +747,10 @@ void AppFrame::CreateMenu()
     edit_menu->Append( v21ID_ZOOMOUT, _( "Zoom &Out\tCtrl+DOWN" ) );
     //This is needed because on windows the scale must be 1 for the
     //wxAutoBufferedPaintDC to work properly
-#ifdef WIN32
-    edit_menu->Enable( v21ID_ZOOMIN, false );
-    edit_menu->Enable( v21ID_ZOOMOUT, false );
-#endif
+//#ifdef WIN32
+//    edit_menu->Enable( v21ID_ZOOMIN, false );
+//    edit_menu->Enable( v21ID_ZOOMOUT, false );
+//#endif
     //edit_menu->Enable(v21ID_UNDO, false);
     //edit_menu->Enable(v21ID_REDO, false);
 
@@ -1301,9 +1301,14 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
     std::string nw_str = serviceList->Query( status );
 
     // If there is nothing on the CE
-    if( nw_str.empty() )
+    if( nw_str.compare("BKPDNE") == 0 )
     {
-        Log( "No ves network available\n" );
+        Log( "BKP File Does NOT exist.\n" );
+        return;
+    }    
+    else if( nw_str.compare("APWDNE") == 0 )
+    {
+        Log( "APW File Does NOT exist.\n" );
         return;
     }
 
