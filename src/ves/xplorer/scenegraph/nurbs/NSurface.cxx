@@ -332,11 +332,11 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
             sw[3] = 0.0;
             for( unsigned int l = 0; l <= vdegree; l++ )
             {
-                sw[0] += ( tempUContribution[l].X()
+                sw[0] += ( tempUContribution[l].x()
                            * _derivativeBasisFunctions["V"][j][v].at( l ) );
-                sw[1] += ( tempUContribution[l].Y()
+                sw[1] += ( tempUContribution[l].y()
                            * _derivativeBasisFunctions["V"][j][v].at( l ) );
-                sw[2] += ( tempUContribution[l].Z()
+                sw[2] += ( tempUContribution[l].z()
                            * _derivativeBasisFunctions["V"][j][v].at( l ) );
                 sw[3] += ( tempUContribution[l].Weight()
                            * _derivativeBasisFunctions["V"][j][v].at( l ) );
@@ -353,32 +353,32 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
     {
         for( unsigned int l = 0; l <= d - k;l++ )
         {
-            vContrib[0] = aDerivatives[k][l].X();
-            vContrib[1] = aDerivatives[k][l].Y();
-            vContrib[2] = aDerivatives[k][l].Z();
+            vContrib[0] = aDerivatives[k][l].x();
+            vContrib[1] = aDerivatives[k][l].y();
+            vContrib[2] = aDerivatives[k][l].z();
             for( unsigned int j = 1; j <= l; j++ )
             {
                 bcoeff = _calculateBinomialCoefficients( l, j );
                 vContrib[0] -= ( bcoeff * aDerivatives[0][j].Weight()
-                                 * resutlingWeightedPoint[k][l-j].X() );
+                                 * resutlingWeightedPoint[k][l-j].x() );
 
                 vContrib[1] -= ( bcoeff * aDerivatives[0][j].Weight()
-                                 * resutlingWeightedPoint[k][l-j].Y() );
+                                 * resutlingWeightedPoint[k][l-j].y() );
 
                 vContrib[2] -= ( bcoeff * aDerivatives[0][j].Weight()
-                                 * resutlingWeightedPoint[k][l-j].Z() );
+                                 * resutlingWeightedPoint[k][l-j].z() );
             }
             for( unsigned int i = 1; i <= k; i++ )
             {
                 bcoeff = _calculateBinomialCoefficients( k, i );
                 vContrib[0] -= ( bcoeff * aDerivatives[i][0].Weight()
-                                 * resutlingWeightedPoint[k-i][l].X() );
+                                 * resutlingWeightedPoint[k-i][l].x() );
 
                 vContrib[1] -= ( bcoeff * aDerivatives[i][0].Weight()
-                                 * resutlingWeightedPoint[k-i][l].Y() );
+                                 * resutlingWeightedPoint[k-i][l].y() );
 
                 vContrib[2] -= ( bcoeff * aDerivatives[i][0].Weight()
-                                 * resutlingWeightedPoint[k-i][l].Z() );
+                                 * resutlingWeightedPoint[k-i][l].z() );
 
                 v2[0] = 0.0;
                 v2[1] = 0.0;
@@ -387,13 +387,13 @@ std::map<unsigned int, std::vector<ves::xplorer::scenegraph::nurbs::ControlPoint
                 {
                     bcoeff = _calculateBinomialCoefficients( l, g );
                     v2[0] += ( bcoeff * aDerivatives[i][g].Weight()
-                               * resutlingWeightedPoint[k-i][l-g].X() );
+                               * resutlingWeightedPoint[k-i][l-g].x() );
 
                     v2[1] += ( bcoeff * aDerivatives[i][g].Weight()
-                               * resutlingWeightedPoint[k-i][l-g].Y() );
+                               * resutlingWeightedPoint[k-i][l-g].y() );
 
                     v2[2] += ( bcoeff * aDerivatives[i][g].Weight()
-                               * resutlingWeightedPoint[k-i][l-g].Z() );
+                               * resutlingWeightedPoint[k-i][l-g].z() );
 
                 }
                 bcoeff = _calculateBinomialCoefficients( k, i );
@@ -458,9 +458,9 @@ void NURBSSurface::Write( std::ostream& stream )
     {
         for( size_t i = 0; i < points.at( j ).size(); ++i )
         {
-            X = points.at( j ).at( i ).X();
-            Y = points.at( j ).at( i ).Y();
-            Z = points.at( j ).at( i ).Z();
+            X = points.at( j ).at( i ).x();
+            Y = points.at( j ).at( i ).y();
+            Z = points.at( j ).at( i ).z();
             W = points.at( j ).at( i ).Weight();
             stream << "( " << X << " " << Y
             << " " << Z << " " << W << " ) ";

@@ -80,9 +80,9 @@ void NURBSDrawable::UpdateMesh( NURBSObject* nurbs )
     std::vector<unsigned int> changedVerts = nurbs->GetChangedTessellatedVertexIndecies();
     for( size_t i = 0; i < nChangedVerts; ++i )
     {
-        (*m_tessellatedPoints)[changedVerts.at(i)].set(osg::Vec3d( nurbs->InterpolatedPoints().at(changedVerts.at(i)).X(),
-                                                                   nurbs->InterpolatedPoints().at(changedVerts.at(i)).Y(),
-                                                                   nurbs->InterpolatedPoints().at(changedVerts.at(i)).Z() ) );
+        (*m_tessellatedPoints)[changedVerts.at(i)].set(osg::Vec3d( nurbs->InterpolatedPoints().at(changedVerts.at(i)).x(),
+                                                                   nurbs->InterpolatedPoints().at(changedVerts.at(i)).y(),
+                                                                   nurbs->InterpolatedPoints().at(changedVerts.at(i)).z() ) );
         (*m_normals)[changedVerts.at(i)].set( _calculateSurfaceNormalAtPoint( changedVerts.at( i ) ) );
     }
     m_tessellatedPoints->dirty();
@@ -116,11 +116,11 @@ void NURBSDrawable::_updateTessellatedSurface()
     }
     for(size_t i = 0; i < numTessellatedPoints; ++i)
     {
-        m_tessellatedPoints->push_back( osg::Vec3d( m_nurbsObject->InterpolatedPoints().at(i).X(),
-                                                    m_nurbsObject->InterpolatedPoints().at(i).Y(),
-                                                    m_nurbsObject->InterpolatedPoints().at(i).Z() ) );
-        m_texCoords->push_back( osg::Vec2d( m_nurbsObject->GetUVParameters().at(i).X(),
-                                            m_nurbsObject->GetUVParameters().at(i).Y() ) );
+        m_tessellatedPoints->push_back( osg::Vec3d( m_nurbsObject->InterpolatedPoints().at(i).x(),
+                                                    m_nurbsObject->InterpolatedPoints().at(i).y(),
+                                                    m_nurbsObject->InterpolatedPoints().at(i).z() ) );
+        m_texCoords->push_back( osg::Vec2d( m_nurbsObject->GetUVParameters().at(i).x(),
+                                            m_nurbsObject->GetUVParameters().at(i).y() ) );
         m_normals->push_back( _calculateSurfaceNormalAtPoint(i) );
         
     } 
@@ -194,7 +194,7 @@ osg::Vec3 NURBSDrawable::_calculateSurfaceNormalAtPoint( unsigned int index )
         ves::xplorer::scenegraph::nurbs::Point dSdV = surface->GetSurfaceDerivatives()[1][0].at( index );
         ves::xplorer::scenegraph::nurbs::Point dSdU = surface->GetSurfaceDerivatives()[0][1].at( index );
         ves::xplorer::scenegraph::nurbs::Point cross = dSdV ^ dSdU;
-        normal.set( cross.X(), cross.Y(), cross.Z() );
+        normal.set( cross.x(), cross.y(), cross.z() );
         normal.normalize();
         //std::cout<<"Normal: "<<normal.x()<<" "<<normal.y()<<" "<<normal.z()<<std::endl;
     }

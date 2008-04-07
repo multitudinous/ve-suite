@@ -90,9 +90,10 @@ void NURBSControlMesh::_initializeStateSet()
 ////////////////////////////////////////////////////////////////////////////////
 void NURBSControlMesh::UpdateControlPointPosition( int index, osg::Vec3 position)
 {
-    m_controlPoints.at(index).SetX(position.x());    
-    m_controlPoints.at(index).SetY(position.y());    
-    m_controlPoints.at(index).SetZ(position.z());    
+    //m_controlPoints.at(index).SetX(position.x());    
+    //m_controlPoints.at(index).SetY(position.y());    
+    //m_controlPoints.at(index).SetZ(position.z());
+    m_controlPoints.at(index).set( position );
     (*m_controlMeshVerts)[index].set(position);
     m_controlMeshVerts->dirty();
 }
@@ -126,9 +127,7 @@ void NURBSControlMesh::_updateControlMeshPrimitives()
     }
     for(size_t i = 0; i < numControlPoints; ++i)
     {
-        m_controlMeshVerts->push_back( osg::Vec3d( m_controlPoints.at(i).X(),
-                                                   m_controlPoints.at(i).Y(),
-                                                   m_controlPoints.at(i).Z()));
+        m_controlMeshVerts->push_back( m_controlPoints.at(i) );
         //m_controlMeshVerts->push_back( static_cast<osg::Vec3d>(m_controlPoints.at(i) ));
     }
 

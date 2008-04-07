@@ -63,6 +63,7 @@ NURBS::NURBS( ves::xplorer::scenegraph::nurbs::NURBSObject* object )
         {
             m_isSurface = true ; 
         }
+        ///This should pass in pointer from ControlPoints function
         m_controlMeshDrawable =
              new ves::xplorer::scenegraph::nurbs::NURBSControlMesh( m_nurbsObject->ControlPoints(),
                                                                     m_nurbsObject->NumControlPoints( "U" ),
@@ -70,6 +71,7 @@ NURBS::NURBS( ves::xplorer::scenegraph::nurbs::NURBSObject* object )
                                                                     m_isSurface );
         addDrawable( m_controlMeshDrawable.get() );
 
+        ///This function should use the data from the nurbsobject by reference
         m_nurbsDrawable =
            new ves::xplorer::scenegraph::nurbs::NURBSDrawable( m_nurbsObject );
         addDrawable( m_nurbsDrawable.get() );
@@ -145,9 +147,9 @@ void NURBS::MoveSelectedControlPoint( osg::Matrix currentView,
     //Eventually need to change this so that updates only happen in
     //NURBSObject and all drawable VBO's get updated appropriately
 
-    osg::Vec3 currentPt( m_nurbsObject->GetControlPoint( m_selectedControlPointIndex )->X(),
-                         m_nurbsObject->GetControlPoint( m_selectedControlPointIndex )->Y(),
-                         m_nurbsObject->GetControlPoint( m_selectedControlPointIndex )->Z() );
+    osg::Vec3 currentPt( m_nurbsObject->GetControlPoint( m_selectedControlPointIndex )->x(),
+                         m_nurbsObject->GetControlPoint( m_selectedControlPointIndex )->y(),
+                         m_nurbsObject->GetControlPoint( m_selectedControlPointIndex )->z() );
 
     //transform the point into eye space for translation
     currentPt = currentPt*currentView;
@@ -157,7 +159,7 @@ void NURBS::MoveSelectedControlPoint( osg::Matrix currentView,
     osg::Matrix inverse;
     inverse.invert(currentView);
     currentPt = currentPt*( inverse );
-
+// Need to look at these functions
     //update the NURBSObject information
     m_nurbsObject->UpdateControlPointPosition( m_selectedControlPointIndex,
                                                Point( currentPt[0],
@@ -171,11 +173,10 @@ void NURBS::MoveSelectedControlPoint( osg::Matrix currentView,
                                                        currentPt );
     //updating NURBSDrawable
     m_nurbsDrawable->UpdateMesh( m_nurbsObject );
+///************************
 }
 /////////////////////////////////////
 bool NURBS::HasSelectedControlPoint()
 {
     return ( m_selectedControlPointIndex >= 0 );
 }
-
-

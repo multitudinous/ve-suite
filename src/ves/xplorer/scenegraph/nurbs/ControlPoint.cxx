@@ -37,9 +37,9 @@ using namespace ves::xplorer::scenegraph::nurbs;
 ////////////////////////////
 Point::Point()
 {
-    _x = 0.0;
-    _y = 0.0;
-    _z = 0.0;
+    _v[ 0 ] = 0.0;
+    _v[ 1 ] = 0.0;
+    _v[ 2 ] = 0.0;
     _row = 0;
     _column = 0;
     _isSelected = false;
@@ -49,9 +49,9 @@ Point::Point()
 ///////////////////////////////////////
 Point::Point( double x, double y, double z )
 {
-    _x = x;
-    _y = y;
-    _z = z;
+    _v[ 0 ] = x;
+    _v[ 1 ] = y;
+    _v[ 2 ] = z;
     _row = 0;
     _column = 0;
     _isSelected = false;
@@ -61,9 +61,9 @@ Point::Point( double x, double y, double z )
 ///////////////////////////////////////////////////
 Point::Point( const Point& rhs )
 {
-    _x = rhs._x;
-    _y = rhs._y;
-    _z = rhs._z;
+    _v[ 0 ] = rhs._v[ 0 ];
+    _v[ 1 ] = rhs._v[ 1 ];
+    _v[ 2 ] = rhs._v[ 2 ];
     _row = rhs._row;
     _column = rhs._column;
     _isSelected = rhs._isSelected;
@@ -80,9 +80,9 @@ Point& Point::operator=( const Point& rhs )
 {
     if( this != &rhs )
     {
-        _x = rhs._x;
-        _y = rhs._y;
-        _z = rhs._z;
+        _v[ 0 ] = rhs._v[ 0 ];
+        _v[ 1 ] = rhs._v[ 1 ];
+        _v[ 2 ] = rhs._v[ 2 ];
         _row = rhs._row;
         _column = rhs._column;
         _isSelected = rhs._isSelected;
@@ -94,7 +94,7 @@ void Point::SetSelected( bool trueFalse )
 {
     _isSelected = trueFalse;
 }
-//////////////////////////////////////
+/*//////////////////////////////////////
 void Point::SetCoordinates( double* pt )
 {
     _x = pt[0];
@@ -124,13 +124,13 @@ void Point::SetY( double y )
 void Point::SetZ( double z )
 {
     _z = z;
-}
+}*/
 //////////////////////////////////////////////////
 void Point::Translate( double dx, double dy, double dz )
 {
-    _x += dx;
-    _y += dy;
-    _z += dz;
+    _v[ 0 ] += dx;
+    _v[ 1 ] += dy;
+    _v[ 2 ] += dz;
 }
 //////////////////////////////////////////////
 void Point::SetRowColumnIndex( unsigned int row,
@@ -149,7 +149,7 @@ unsigned int Point::GetColumnIndex()
 {
     return _column;
 }
-///////////////////////
+/*///////////////////////
 //Get the weight of  //
 //this point.        //
 ///////////////////////
@@ -172,7 +172,7 @@ double Point::Y()
 double Point::Z()
 {
     return _z;
-}
+}*/
 ////////////////////////
 bool Point::IsSelected()
 {
@@ -184,9 +184,9 @@ bool Point::IsSelected()
 ControlPoint::ControlPoint()
         : ves::xplorer::scenegraph::nurbs::Point()
 {
-    _xW = _x;
-    _yW = _y;
-    _zW = _z;
+    _xW = _v[ 0 ];
+    _yW = _v[ 1 ];
+    _zW = _v[ 2 ];
     _weight = 1.0;
     _eyeSpaceTranslation[0] = 0;
     _eyeSpaceTranslation[1] = 0;
@@ -214,9 +214,9 @@ ControlPoint::~ControlPoint()
 void ControlPoint::SetWeight( double weight )
 {
     _weight = weight;
-    _xW = _x * _weight;
-    _yW = _y * _weight;
-    _zW = _z * _weight;
+    _xW = _v[ 0 ] * _weight;
+    _yW = _v[ 1 ] * _weight;
+    _zW = _v[ 2 ] * _weight;
 }
 //////////////////////////////////////////////////////////
 void ControlPoint::SetEyeSpaceTranslation( double* deltaPt )
@@ -245,29 +245,29 @@ ControlPoint ControlPoint::GetWeightedPoint()
 ////////////////////////////////
 double ControlPoint::WeightedX()
 {
-    return _x*_weight;
+    return _v[ 0 ]*_weight;
 }
 ////////////////////////////////
 //Weighted component Y        //
 ////////////////////////////////
 double ControlPoint::WeightedY()
 {
-    return _y*_weight;
+    return _v[ 1 ]*_weight;
 }
 ////////////////////////////////
 //Weighted component Z        //
 ////////////////////////////////
 double ControlPoint::WeightedZ()
 {
-    return _z*_weight;
+    return _v[ 2 ]*_weight;
 }
 ///////////////////////////////////////////////////////
 ControlPoint ControlPoint::operator*( const double& lhs )
 {
     //not sure how to handle the weights here!!!
-    ControlPoint newPoint( lhs*_x,
-                           lhs*_y,
-                           lhs*_z,
+    ControlPoint newPoint( lhs*_v[ 0 ],
+                           lhs*_v[ 1 ],
+                           lhs*_v[ 2 ],
                            _weight );
 
     return newPoint;
@@ -278,9 +278,9 @@ ControlPoint ControlPoint::operator*( const double& lhs )
 ControlPoint ControlPoint::operator+( const ControlPoint& lhs )
 {
     //not sure how to handle the weights here!!!
-    ControlPoint newPoint( lhs._x + _x,
-                           lhs._y + _y,
-                           lhs._z + _z,
+    ControlPoint newPoint( lhs._v[ 0 ] + _v[ 0 ],
+                           lhs._v[ 1 ] + _v[ 1 ],
+                           lhs._v[ 2 ] + _v[ 2 ],
                            _weight );
 
     return newPoint;

@@ -299,9 +299,7 @@ void NURBSObject::UpdateMesh( )
 void NURBSObject::UpdateControlPointPosition( unsigned int index,
                                               Point newPosition )
 {
-    _controlPoints[0][index].SetX( newPosition.X() );
-    _controlPoints[0][index].SetY( newPosition.Y() );
-    _controlPoints[0][index].SetZ( newPosition.Z() );
+    _controlPoints[0][index].set( newPosition.x(), newPosition.y(), newPosition.z() );
 }          
 //////////////////////////////////////////////////////////////////////
 unsigned int NURBSObject::NumInterpolatedPoints( std::string direction )

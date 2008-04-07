@@ -48,7 +48,7 @@
 /*!\namespace ves::xplorer::scenegraph::nurbs
  * NURBS API namespace.
  */
-#include <osg/Vec3>
+#include <osg/Vec3d>
 #include <ves/VEConfig.h>
 
 #include <ostream>
@@ -62,7 +62,7 @@ namespace scenegraph
 namespace nurbs
 {
 ///???
-class VE_NURBS_EXPORTS Point : public osg::Vec3
+class VE_NURBS_EXPORTS Point : public osg::Vec3d
 {
 public:
     ///Constructor
@@ -88,65 +88,67 @@ public:
     ///\param dx Change to point's x-position.
     ///\param dy Change to point's y-position.
     ///\param dz Change to point's z-position.
-    void Translate( double dx, double dy, double dz );
+    void Translate( double dx, double dy, double dz ); // need
 
     ///Set the point coordinates
     ///\param pt The new point values
-    void SetCoordinates( double* pt );
+    //void SetCoordinates( double* pt );
 
     ///Set the x value.
     ///\param x The new value.
-    void SetX( double x );
+    //void SetX( double x );
 
     ///Set the y value.
     ///\param y The new value.
-    void SetY( double y );
+    //void SetY( double y );
 
     ///Set the z value.
     ///\param z The new value.
-    void SetZ( double z );
+    //void SetZ( double z );
 
     ///Set the (Row,Column) position of this control point in the mesh
     ///\param row Control point's new row.
     ///\param col Control point's new column.
-    void SetRowColumnIndex( unsigned int row, unsigned int col );
+    void SetRowColumnIndex( unsigned int row, unsigned int col ); // need
 
     ///Set the selection status of this point
     ///\param trueFalse true == selected\n false == not selected
-    void SetSelected( bool trueFalse = true );
+    void SetSelected( bool trueFalse = true ); // need 
 
     ///Get the value of the first directional coordinate.
-    double X();
+    //double X();
 
     ///Get the value of the second directional coordinate.
-    double Y();
+    //double Y();
 
     ///Get the value of the third directional coordinate.
-    double Z();
+    //double Z();
 
     ///Get the u Index of this control point in the overall mesh
-    unsigned int GetRowIndex();
+    unsigned int GetRowIndex(); // need 
 
     ///Get the v Index of this control point in the overall mesh
-    unsigned int GetColumnIndex();
+    unsigned int GetColumnIndex(); // need
 
     ///Query selection status
-    bool IsSelected();
+    bool IsSelected(); // need
+
+///Have to test all of these funcitons before removing
 
     ///Dot product.
     ///\param rhs ???
     inline double operator*( const Point& rhs ) const
     {
-        return _x*rhs._x + _y*rhs._x + _z*rhs._z;
+        return _v[ 0 ]*rhs._v[ 0 ] + _v[ 1 ]*rhs._v[ 0 ] + _v[ 2 ]*rhs._v[ 2 ];
     }
 
     ///Cross product.
     ///\param rhs ???
     inline const Point operator ^( const Point& rhs ) const
     {
-        return Point( _y*rhs._z - _z*rhs._y,
-                      _z*rhs._x - _x*rhs._z,
-                      _x*rhs._y - _y*rhs._x );
+        return Point( _v[ 1 ]*rhs._v[ 2 ] - _v[ 2 ]*rhs._v[ 1 ],
+                      _v[ 2 ]*rhs._v[ 0 ] - _v[ 0 ]*rhs._v[ 2 ],
+                      _v[ 0 ]*rhs._v[ 1 ] - _v[ 1 ]*rhs._v[ 0 ] );
     }
     ///Override ostream operator.
     ///\param os ???
@@ -154,7 +156,7 @@ public:
     inline friend std::ostream& operator<<( std::ostream& os,
                                             const Point& fpd )
     {
-        os << fpd._x << " " << fpd._y << " " << fpd._z << " ";
+        os << fpd._v[ 0 ] << " " << fpd._v[ 1 ] << " " << fpd._v[ 2 ] << " ";
         return os;
     }
 
@@ -163,9 +165,9 @@ public:
     ///\param rhs ???
     friend bool operator>( const Point& lhs, const Point& rhs )
     {
-        if( lhs._x > rhs._x ||
-                lhs._y > rhs._y ||
-                lhs._z > rhs._z )
+        if( lhs._v[ 0 ] > rhs._v[ 0 ] ||
+                lhs._v[ 1 ] > rhs._v[ 1 ] ||
+                lhs._v[ 2 ] > rhs._v[ 2 ] )
         {
             return true;
         }
@@ -175,9 +177,9 @@ public:
     ///\param lhs ???
     Point operator+( const Point& lhs )
     {
-        Point newPoint( lhs._x + _x,
-                        lhs._y + _y,
-                        lhs._z + _z );
+        Point newPoint( lhs._v[ 0 ] + _v[ 0 ],
+                        lhs._v[ 1 ] + _v[ 1 ],
+                        lhs._v[ 2 ] + _v[ 2 ] );
 
         return newPoint;
 
@@ -186,9 +188,9 @@ public:
     ///Multiplication with a scalar operator.
     Point operator*( const double& lhs )
     {
-        Point newPoint( lhs*_x,
-                        lhs*_y,
-                        lhs*_z );
+        Point newPoint( lhs*_v[ 0 ],
+                        lhs*_v[ 1 ],
+                        lhs*_v[ 2 ] );
 
         return newPoint;
 
@@ -196,10 +198,6 @@ public:
 
 protected:
     bool _isSelected;///<Selection status
-    double _x;///<The raw coordianate data
-    double _y;///<The raw coordianate data
-    double _z;///<The raw coordianate data
-
     unsigned int _row;///<The row of this control point in the overall mesh
     unsigned int _column;///<The column of this control point in the overall mesh
 };
@@ -253,28 +251,28 @@ public:
     ///Dot product
     inline double operator*( const ControlPoint& rhs ) const
     {
-        return _x*rhs._x + _y*rhs._x + _z*rhs._z;
+        return _v[ 0 ]*rhs._v[ 0 ] + _v[ 1 ]*rhs._v[ 0 ] + _v[ 2 ]*rhs._v[ 2 ];
     }
 
     ///Cross product.
     inline const ControlPoint operator ^( const ControlPoint& rhs ) const
     {
-        return ControlPoint( _y*rhs._z - _z*rhs._y,
-                             _z*rhs._x - _x*rhs._z,
-                             _x*rhs._y - _y*rhs._x );
+        return ControlPoint( _v[ 1 ]*rhs._v[ 2 ] - _v[ 2 ]*rhs._v[ 1 ],
+                             _v[ 2 ]*rhs._v[ 0 ] - _v[ 0 ]*rhs._v[ 2 ],
+                             _v[ 0 ]*rhs._v[ 1 ] - _v[ 1 ]*rhs._v[ 0 ] );
     }
     ///override "<<"operator
     inline friend std::ostream& operator<<( std::ostream& os,
                                             const ControlPoint& fpd )
     {
-        os << fpd._x << " " << fpd._y << " " << fpd._z << " " << fpd._weight << " ";
+        os << fpd._v[ 0 ] << " " << fpd._v[ 1 ] << " " << fpd._v[ 2 ] << " " << fpd._weight << " ";
         return os;
     }
     ///override "<<"operator
     inline friend std::ostream& operator<<( std::ostream& os,
                                             const ControlPoint* fpd )
     {
-        os << fpd->_x << " " << fpd->_y << " " << fpd->_z << " " << fpd->_weight << " ";
+        os << fpd->_v[ 0 ] << " " << fpd->_v[ 1 ] << " " << fpd->_v[ 2 ] << " " << fpd->_weight << " ";
         return os;
     }
 
