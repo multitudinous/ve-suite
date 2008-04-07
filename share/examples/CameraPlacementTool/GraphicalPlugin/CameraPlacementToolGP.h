@@ -53,7 +53,6 @@ public:
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
 protected:
-    void UpdateParams();
 
 private:
     osg::ref_ptr< cpt::CameraEntity > mCameraEntity;

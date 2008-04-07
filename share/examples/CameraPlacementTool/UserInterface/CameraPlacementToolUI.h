@@ -37,15 +37,8 @@
 // --- VE-Suite Includes --- //
 #include <ves/conductor/UIPluginBase.h>
 
-// --- wxWidgets Includes --- //
-#include <wx/image.h>
-
-// --- C/C++ Libraries --- //
-#include <string>
-
 namespace cpt
 {
-
 class CameraPlacementToolUI : public ves::conductor::UIPluginBase
 {
     DECLARE_DYNAMIC_CLASS( CameraPlacementToolUI )
@@ -77,7 +70,6 @@ protected:
 private:
 
 };
-
 } //end cpt
 
 #endif //CAMERA_PLACEMENT_TOOL_UI_H

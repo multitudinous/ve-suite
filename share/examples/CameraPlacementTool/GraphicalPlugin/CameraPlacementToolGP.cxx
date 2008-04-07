@@ -42,6 +42,8 @@
 
 #include <ves/xplorer/EnvironmentHandler.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -63,7 +65,8 @@ mCameraEntity( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
 {
-    ;
+    //mSceneManager->GetRootNode()->removeChild( mTexGenNode.get() );
+    mSceneManager->GetRootNode()->removeChild( mCameraEntity.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::InitializeNode(
@@ -80,11 +83,6 @@ void CameraPlacementToolGP::InitializeNode(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::PreFrameUpdate()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolGP::UpdateParams()
 {
     ;
 }

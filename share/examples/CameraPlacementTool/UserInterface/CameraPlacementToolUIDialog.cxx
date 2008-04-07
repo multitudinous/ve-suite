@@ -101,8 +101,8 @@ UIDialog( ( wxWindow* )parent, id, wxT( "CameraPlacementTool" ) )
 {
     mProjectionData[ 0 ] = 30.0;
     mProjectionData[ 1 ] = 1.0;
-    mProjectionData[ 2 ] = 50.0;
-    mProjectionData[ 3 ] = 100.0;
+    mProjectionData[ 2 ] = 5.0;
+    mProjectionData[ 3 ] = 10.0;
 
     mServiceList = service;
 
@@ -316,9 +316,9 @@ void CameraPlacementToolUIDialog::BuildGUI()
 	mNearPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl( 
 		*this, ID_NEARPLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
 		wxDefaultSize, wxSP_ARROW_KEYS, 0, 99.9,
-		mProjectionData[ 2 ] / 10, 0.1, -1, wxEmptyString );
+		mProjectionData[ 2 ], 0.1, -1, wxEmptyString );
     mNearPlaneSlider = new wxSlider( 
-		this, ID_NEARPLANE_SLIDER, mProjectionData[ 2 ], 0, 1000,
+		this, ID_NEARPLANE_SLIDER, mProjectionData[ 2 ] * 10.0, 0, 1000,
 		wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL );
 
     nearPlaneSizer->Add( mNearPlaneSpinCtrl, 0,
@@ -332,9 +332,9 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mFarPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
 		*this, ID_FARPLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
 		wxDefaultSize, wxSP_ARROW_KEYS, 0.1, 100,
-		mProjectionData[ 3 ] / 10, 0.1, -1, wxEmptyString );
+		mProjectionData[ 3 ], 0.1, -1, wxEmptyString );
     mFarPlaneSlider = new wxSlider(
-		this, ID_FARPLANE_SLIDER, mProjectionData[ 3 ], 0, 1000,
+		this, ID_FARPLANE_SLIDER, mProjectionData[ 3 ] * 10.0, 0, 1000,
 		wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL );
 
     farPlaneSizer->Add( mFarPlaneSpinCtrl, 0,
@@ -353,8 +353,6 @@ void CameraPlacementToolUIDialog::BuildGUI()
     projectionSettingsSizer->Add( nearPlaneSizer, 0, wxALL | wxGROW );
     projectionSettingsSizer->Add( farPlaneText, 0, wxALL | wxGROW );
     projectionSettingsSizer->Add( farPlaneSizer, 0, wxALL | wxGROW );
-
-    //projectionSettingsSizer->Add( nearFarPlaneSizer, 0, wxEXPAND, 5 );
 
     mainSizer->Add( projectionSettingsSizer, 0, wxEXPAND, 5 );
 
@@ -502,9 +500,9 @@ void CameraPlacementToolUIDialog::OnNearPlaneSlider(
     }
 	
     mNearPlaneSpinCtrl->SetValue(
-		static_cast<double>( mNearPlaneSlider->GetValue() )/ 10 );
+		static_cast< double >( mNearPlaneSlider->GetValue() ) / 10.0 );
     mFarPlaneSpinCtrl->SetValue(
-		static_cast<double>( mFarPlaneSlider->GetValue() ) / 10 );
+		static_cast< double >( mFarPlaneSlider->GetValue() ) / 10.0 );
 
 	mProjectionData[ 2 ] = mNearPlaneSpinCtrl->GetValue();
 	mProjectionData[ 3 ] = mFarPlaneSpinCtrl->GetValue();
@@ -532,9 +530,9 @@ void CameraPlacementToolUIDialog::OnFarPlaneSlider(
     }
 
     mNearPlaneSpinCtrl->SetValue(
-		static_cast<double>( mNearPlaneSlider->GetValue() ) / 10  );
+		static_cast< double >( mNearPlaneSlider->GetValue() ) / 10.0 );
     mFarPlaneSpinCtrl->SetValue(
-		static_cast<double>( mFarPlaneSlider->GetValue() ) / 10 );
+		static_cast< double >( mFarPlaneSlider->GetValue() ) / 10.0 );
 
 	mProjectionData[ 2 ] = mNearPlaneSpinCtrl->GetValue();
 	mProjectionData[ 3 ] = mFarPlaneSpinCtrl->GetValue();
@@ -704,64 +702,4 @@ void CameraPlacementToolUIDialog::SendCommandsToXplorer()
 
     mServiceList->SendCommandStringToXplorer( command );
 }
-/*
 ////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::NearPlaneSliderCallback::
-    NearPlaneSliderCallback( CameraPlacementToolUIDialog* dialog )
-{
-    mDialog = dialog;
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::NearFarPlaneSliderCallback::
-    NearFarPlaneSliderCallback( CameraPlacementToolUIDialog* dialog )
-{
-    mDialog = dialog;
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::FarPlaneSliderCallback::
-    FarPlaneSliderCallback( CameraPlacementToolUIDialog* dialog )
-{
-    mDialog = dialog;
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::
-    NearPlaneSliderCallback::~NearPlaneSliderCallback()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::
-    NearFarPlaneSliderCallback::~NearFarPlaneSliderCallback()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-CameraPlacementToolUIDialog::
-    FarPlaneSliderCallback::~FarPlaneSliderCallback()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::NearPlaneSliderCallback::SliderOperation()
-{
-    mDialog->mProjectionData[ 2 ] = _dualSlider->GetMinSliderValue();
-
-    mDialog->ProjectionUpdate();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::NearFarPlaneSliderCallback::SliderOperation()
-{
-    mDialog->mProjectionData[ 2 ] = _dualSlider->GetMinSliderValue();
-    mDialog->mProjectionData[ 3 ] = _dualSlider->GetMaxSliderValue();
-
-    mDialog->ProjectionUpdate();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::FarPlaneSliderCallback::SliderOperation()
-{
-    mDialog->mProjectionData[ 3 ] = _dualSlider->GetMaxSliderValue();
-
-    mDialog->ProjectionUpdate();
-}
-////////////////////////////////////////////////////////////////////////////////
-*/

@@ -118,46 +118,7 @@ private:
 	void UpdateNearPlaneControls();
 	void UpdateFarPlaneControls();
     void ProjectionUpdate();
-/*
-    class NearPlaneSliderCallback :
-        public ves::conductor::util::DualSlider::SliderCallback
-    {
-    public:
-        NearPlaneSliderCallback( CameraPlacementToolUIDialog* dialog );
-        virtual ~NearPlaneSliderCallback();
 
-        virtual void SliderOperation();
-        
-    private:
-        CameraPlacementToolUIDialog* mDialog;
-    };
-
-    class NearFarPlaneSliderCallback :
-        public ves::conductor::util::DualSlider::SliderCallback
-    {
-    public:
-        NearFarPlaneSliderCallback( CameraPlacementToolUIDialog* dialog );
-        virtual ~NearFarPlaneSliderCallback();
-
-        virtual void SliderOperation();
-        
-    private:
-        CameraPlacementToolUIDialog* mDialog;
-    };
-
-    class FarPlaneSliderCallback :
-        public ves::conductor::util::DualSlider::SliderCallback
-    {
-    public:
-        FarPlaneSliderCallback( CameraPlacementToolUIDialog* dialog );
-        virtual ~FarPlaneSliderCallback();
-
-        virtual void SliderOperation();
-
-    private:
-        CameraPlacementToolUIDialog* mDialog;
-    };
-*/
     double mProjectionData[ 4 ];
 
     wxRadioBox* mCameraRadioBox;
@@ -169,7 +130,6 @@ private:
 	wxSlider* mNearPlaneSlider;
 	ves::conductor::util::wxSpinCtrlDbl* mFarPlaneSpinCtrl;
 	wxSlider* mFarPlaneSlider;
-    //ves::conductor::util::DualSlider* mNearFarPlaneDualSlider;
     wxRadioBox* mCameraViewRadioBox;
     wxSlider* mResolutionSlider;
 

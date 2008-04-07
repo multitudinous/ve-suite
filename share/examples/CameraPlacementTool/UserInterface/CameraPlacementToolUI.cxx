@@ -37,9 +37,6 @@
 
 #include "Icons/camera.xpm"
 
-// --- VE-Suite Includes --- //
-#include <ves/open/xml/DataValuePair.h>
-
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 

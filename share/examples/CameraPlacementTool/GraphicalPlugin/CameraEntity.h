@@ -130,6 +130,7 @@ private:
     //Pointer to the HeadsUpDisplay for xplorer window
     ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
 
+    osg::ref_ptr< osg::Group > mRootNode;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
 
     //Need to create a dcs for each selectable CAD object

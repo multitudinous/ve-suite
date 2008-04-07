@@ -65,6 +65,7 @@ mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( 0 ),
+mRootNode( 0 ),
 mWorldDCS( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
@@ -89,6 +90,7 @@ mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( headsUpDisplay ),
+mRootNode( 0 ),
 mWorldDCS( worldDCS ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
@@ -112,6 +114,7 @@ mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( 0 ),
+mRootNode( 0 ),
 mWorldDCS( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
@@ -131,22 +134,19 @@ mQuadVertices( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::~CameraEntity()
 {
-    osg::ref_ptr< osg::Group > rootNode =
-        mWorldDCS->getParent( 0 )->getParent( 0 );
-
-    mWorldDCS->RemoveTechnique( std::string( "Projection" ) );
-    delete mProjectionTechnique;
+    removeChild( mWorldDCS.get() );
 
     mWorldDCS->removeChild( mCameraDCS.get() );
+    mHeadsUpDisplay->GetCamera()->removeChild( mQuadDCS.get() );
 
-    rootNode->removeChild( mTexGenNode.get() );
-    rootNode->removeChild( this );
+    mWorldDCS->SetTechnique( std::string( "Default" ) );
+    mWorldDCS->RemoveTechnique( std::string( "Projection" ) );
+    delete mProjectionTechnique;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Initialize()
-{   
-    osg::ref_ptr< osg::Group > rootNode =
-        mWorldDCS->getParent( 0 )->getParent( 0 );
+{   //Initialize mRootNode
+    mRootNode = mWorldDCS->getParent( 0 )->getParent( 0 );
     
     //Initialize the resources
     InitializeResources();
@@ -168,7 +168,7 @@ void CameraEntity::Initialize()
 
     //Add the subgraph to render
     addChild( mWorldDCS.get() );
-    rootNode->addChild( this );
+    mRootNode->addChild( this );
 
     //Initialize mProjectionTechnique
     mProjectionTechnique = new cpt::ProjectionTechnique();
@@ -193,7 +193,7 @@ void CameraEntity::Initialize()
     mTexGenNode = new osg::TexGenNode();
     mTexGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     mTexGenNode->setTextureUnit( 0 );
-    rootNode->addChild( mTexGenNode.get() );
+    mRootNode->addChild( mTexGenNode.get() );
 
     //Initialize mCameraDCS & mQuadDCS
     mCameraDCS = new ves::xplorer::scenegraph::DCS();
@@ -553,8 +553,8 @@ void CameraEntity::CreateCameraViewTexture()
 
     mQuadTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
     mQuadTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    mQuadTexture->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
-    mQuadTexture->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+    mQuadTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    mQuadTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
     setViewport( 0, 0, 1024, 1024 );
 
@@ -620,7 +620,9 @@ void CameraEntity::Update()
     mFrustumGeometry->dirtyBound();
 
     double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
-    (*mQuadVertices)[ 0 ].set( 0.0,         0.0, 0.0 );
+    (*mQuadVertices)[ 0 ].set( 0.0,           0.0, 0.0 );
+    //(*mQuadVertices)[ 1 ].set( 1.0, 0.0, 0.0 );
+    //(*mQuadVertices)[ 2 ].set( 1.0, 1.0, 0.0 );
     (*mQuadVertices)[ 1 ].set( aspectRatio, 0.0, 0.0 );
     (*mQuadVertices)[ 2 ].set( aspectRatio, 1.0, 0.0 );
     (*mQuadVertices)[ 3 ].set( 0.0,         1.0, 0.0 );
