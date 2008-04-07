@@ -143,12 +143,7 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
 void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::CommandPtr& cmd )
 {
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
-    if (tempDCS->GetNumChildren() == 0)
-    {
-        networkLayout = new NetworkSystemView( cfdExecutive::instance()->GetCurrentNetwork() );
-    }
-    //else if( tempDCS->GetNumChildren() >= 1 )
-    else
+    if (tempDCS->GetNumChildren() > 0)
     {
         tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
     }
@@ -157,7 +152,8 @@ void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::Com
     std::string netId; 
     dvp->GetData(netId);
     //osg::ref_ptr< osg::Group > tempGroup = networkLayout.DrawNetwork();
-    osg::ref_ptr< osg::Group > tempGroup = networkLayout->DrawNetwork(netId);
+    osg::ref_ptr< osg::Group > tempGroup = cfdExecutive::instance()->
+        GetNetworkSystemView()->DrawNetwork( netId );
     if( tempGroup.valid() )
     {
         tempDCS->addChild( tempGroup.get() );
