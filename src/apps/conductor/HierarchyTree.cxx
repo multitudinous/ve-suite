@@ -116,9 +116,17 @@ void HierarchyTree::PopulateTree( std::map < std::string,
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
     std::string fullPath;
+    std::map< std::string, ves::open::xml::model::ModelPtr > alphaTree;
+
+    //alphabetize tree
+    for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
+        iter = tree.begin(); iter != tree.end(); ++iter )
+    {
+        alphaTree[iter->second->GetModelName()]=iter->second;
+    }
 
     for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
-            iter = tree.begin(); iter != tree.end(); ++iter )
+            iter = alphaTree.begin(); iter != alphaTree.end(); ++iter )
     {
         ModuleData* modData = new ModuleData();
         modData->modId = iter->second->GetModelID();
