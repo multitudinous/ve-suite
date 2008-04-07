@@ -72,17 +72,17 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml:
     wxStaticBoxSizer* transSizer = new wxStaticBoxSizer( translation, wxHORIZONTAL );
     _xTransformCtrl =  new wxSpinCtrlDbl( this, TRANSFORM_PANEL_ID );
     _xTransformCtrl->SetValue( 0 );
-    _xTransformCtrl->SetRange( -1000.0, 1000.0 );
+    _xTransformCtrl->SetRange( -1000000.0, 1000000.0 );
     _xTransformCtrl->SetIncrement( 1.0 );
 
     _yTransformCtrl =  new wxSpinCtrlDbl( this, TRANSFORM_PANEL_ID );
     _yTransformCtrl->SetValue( 0 );
-    _yTransformCtrl->SetRange( -1000.0, 1000.0 );
+    _yTransformCtrl->SetRange( -1000000.0, 1000000.0 );
     _yTransformCtrl->SetIncrement( 1.0 );
 
     _zTransformCtrl =  new wxSpinCtrlDbl( this, TRANSFORM_PANEL_ID );
     _zTransformCtrl->SetValue( 0 );
-    _zTransformCtrl->SetRange( -1000.0, 1000.0 );
+    _zTransformCtrl->SetRange( -1000000.0, 1000000.0 );
     _zTransformCtrl->SetIncrement( 1.0 );
 
     transSizer->Add( _xTransformCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
@@ -124,15 +124,15 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml:
     _zScaleCtrl =  new wxSpinCtrlDbl( this, TRANSFORM_PANEL_ID );
 
     _xScaleCtrl->SetValue( 1.0 );
-    _xScaleCtrl->SetRange( 0.0, 100.0 );
+    _xScaleCtrl->SetRange( 0.0, 1000000.0 );
     _xScaleCtrl->SetIncrement( 1.0 );
 
     _yScaleCtrl->SetValue( 1.0 );
-    _yScaleCtrl->SetRange( 0.0, 100.0 );
+    _yScaleCtrl->SetRange( 0.0, 1000000.0 );
     _yScaleCtrl->SetIncrement( 1.0 );
 
     _zScaleCtrl->SetValue( 1.0 );
-    _zScaleCtrl->SetRange( 0.0, 100.0 );
+    _zScaleCtrl->SetRange( 0.0, 1000000.0 );
     _zScaleCtrl->SetIncrement( 1.0 );
 
     scaleSizer->Add( _xScaleCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
