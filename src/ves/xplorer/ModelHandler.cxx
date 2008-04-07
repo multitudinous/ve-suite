@@ -498,14 +498,6 @@ void ModelHandler::InitScene( void )
         << activeDataset->GetFileName() << " , "
         << oldDatasetName << std::endl << vprDEBUG_FLUSH;
     }
-
-    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
-    // Create Scalar bar
-    //This code is broken due to the get parent call
-    //_scalarBar = new cfdScalarBarActor( _param, //dynamic_cast< ves::xplorer::scenegraph::Group* >
-    // ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
-    // Assumes active dataset isn't null
-    //_scalarBar->RefreshScalarBar();
 }
 
 /////////////////////////////////
@@ -531,11 +523,6 @@ void ModelHandler::PreFrameUpdate( void )
             currentEventHandler->second->Execute( activeCommand );
         }
     }
-
-    // Check and see if we need to refresh the scalar bar
-    // May use in the future
-    //bool updateScalarRange = false;
-    //_scalarBar->UpdateCommand();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ModelHandler::GetVisOption()
