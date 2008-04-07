@@ -292,8 +292,8 @@ void cfdVectorBase::SetGlyphAttributes()
 {
     glyph->SetSource( GetActiveDataSet()->GetArrow() );
     glyph->SetVectorModeToUseVector();
-
     glyph->SetScaleFactor( GetVectorScaleFactor() );
+
     if( _scaleByVector == 0 )
     {
         glyph->SetScaleModeToDataScalingOff();
@@ -323,8 +323,6 @@ float cfdVectorBase::GetVectorScaleFactor()
     // This scale returns a range of ~ 0.024' -> 0.75'
     float range = 2.5;
     float scaleFactor = ( exp( this->GetVectorScale() / ( 100.0 / range ) ) ) * 0.30f;
-
-
 
     vprDEBUG( vesDBG, 1 )
     << "|\tcfdVectorBase::GetVectorScaleFactor scaleFactor = "

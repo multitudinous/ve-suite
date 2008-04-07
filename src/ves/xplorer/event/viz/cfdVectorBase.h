@@ -98,7 +98,7 @@ public:
     float GetVectorScale();
 
 protected:
-    vtkGlyph3D*          glyph;
+    vtkGlyph3D* glyph;
     vtkPolyDataMapper*   mapper;
     vtkMaskPoints*       ptmask;
     vtkTriangleFilter*   tris;
