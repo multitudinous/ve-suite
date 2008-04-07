@@ -39,10 +39,16 @@
 
 #include <vtkMultiBlockDataSet.h>
 
+#ifdef VTK_POST_FEB20
 #include <vtkCompositeDataIterator.h>
+#else
+#include <vtkMultiGroupDataIterator.h>
+#endif
+
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
 
+#include <vtkXMLMultiBlockDataWriter.h>
 #include <iostream>
 
 using namespace ves::builder::DataLoader;
@@ -114,12 +120,13 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     mgdIterator->Delete();
     mgdIterator = 0;
 
-    /*vtkXMLMultiGroupDataWriter* writer = vtkXMLMultiGroupDataWriter::New();
-    writer->SetInput( reader->GetOutput() );
+    /*vtkXMLMultiBlockDataWriter* writer = vtkXMLMultiBlockDataWriter::New();
+    writer->SetInput( outputDataset );
     writer->SetWriteMetaFile( 1 );
     writer->SetFileName( "test_multigrou.vtu" );
-    writer->Write();*/
-    //tmpDSet->Delete();
+    writer->SetDataModeToAscii();
+    std::cout << " write " << writer->Write() << std::endl;
+    writer->Delete();*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void FluentTranslator::DisplayHelp( void )
