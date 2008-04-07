@@ -30,20 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef LOCAL_TO_WORLD_TRANSFORM_H
 #define LOCAL_TO_WORLD_TRANSFORM_H
 
-/*!\file LocalToWorldTransform.h
-*/
-
-/*!\class LocalToWorldTransform
-*
-*/
-
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
-
-#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
@@ -57,13 +49,19 @@ namespace xplorer
 {
 namespace scenegraph
 {
+/*!\file LocalToWorldTransform.h
+ */
+
+/*!\class LocalToWorldTransform
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldDCS,
-                           ves::xplorer::scenegraph::DCS* localDCS );
+    LocalToWorldTransform( osg::Node* stopNode,
+                           osg::Node* startNode );
 
-    virtual void apply( osg::PositionAttitudeTransform& pat );
+    virtual void apply( osg::Node& node );
 
     gmtl::Matrix44d& GetLocalToWorldTransform();
 
@@ -71,7 +69,7 @@ protected:
     virtual ~LocalToWorldTransform();
 
 private:
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
+    osg::ref_ptr< osg::Node > mStopNode;
 
     gmtl::Matrix44d mLocalToWorldTransform;
 

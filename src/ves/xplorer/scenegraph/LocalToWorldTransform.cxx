@@ -30,8 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Xforms.h>
@@ -42,15 +44,15 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-LocalToWorldTransform::LocalToWorldTransform( ves::xplorer::scenegraph::DCS* worldDCS,
-                                              ves::xplorer::scenegraph::DCS* localDCS )
+LocalToWorldTransform::LocalToWorldTransform( osg::Node* stopNode,
+                                              osg::Node* startNode )
         :
         NodeVisitor( TRAVERSE_PARENTS ),
-        mWorldDCS( worldDCS )
+        mStopNode( stopNode )
 {
     gmtl::identity( mLocalToWorldTransform );
 
-    localDCS->accept( *this );
+    startNode->accept( *this );
 }
 ////////////////////////////////////////////////////////////////////////////////
 LocalToWorldTransform::~LocalToWorldTransform()
@@ -58,21 +60,25 @@ LocalToWorldTransform::~LocalToWorldTransform()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void LocalToWorldTransform::apply( osg::PositionAttitudeTransform& pat )
+void LocalToWorldTransform::apply( osg::Node& node )
 {
-    if( pat.getName() == mWorldDCS->getName() )
+    if( &node == mStopNode.get() )
     {
         for( size_t i = 0; i < _nodePath.size(); ++i )
         {
-            mLocalToWorldTransform *=
-                static_cast< ves::xplorer::scenegraph::DCS* >(
-                    _nodePath.at( i ) )->GetMat();
+            ves::xplorer::scenegraph::DCS* dcs =
+                dynamic_cast< ves::xplorer::scenegraph::DCS* >(
+                    _nodePath.at( i ) );
+            if( dcs )
+            {
+                mLocalToWorldTransform *= dcs->GetMat();
+            }
         }
 
         return;
     }
 
-    osg::NodeVisitor::apply( pat );
+    osg::NodeVisitor::apply( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
 gmtl::Matrix44d& LocalToWorldTransform::GetLocalToWorldTransform()
