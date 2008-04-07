@@ -37,6 +37,7 @@
 #include <ves/xplorer/network/UpdateNetworkEventHandler.h>
 #include <ves/xplorer/plugin/PluginBase.h>
 #include <ves/xplorer/ModelHandler.h>
+#include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
@@ -50,6 +51,7 @@
 #include <ves/open/xml/model/System.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/ResourceManager.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -612,6 +614,8 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
 #endif
             temp->SetEnvironmentHandler( EnvironmentHandler::instance() );
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
+            temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
+            temp->SetCommandHandler( ves::xplorer::CommandHandler::instance() );
             temp->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();

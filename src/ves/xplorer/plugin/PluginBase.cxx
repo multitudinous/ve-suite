@@ -31,13 +31,16 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/CommandHandler.h>
+
 #include <ves/xplorer/plugin/PluginBase.h>
 
 #include <ves/xplorer/EnvironmentHandler.h>
-#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/ResourceManager.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/device/Device.h>
@@ -83,6 +86,8 @@ PluginBase::PluginBase():
         mPhysicsSimulator( 0 ),
         mEnvironmentHandler( 0 ),
         mSceneManager( 0 ),
+        mResourceManager( 0 ),
+        mCommandHandler( 0 ),
 #ifdef VE_SOUND
         mSoundManager( 0 ),
 #endif
@@ -204,6 +209,18 @@ void PluginBase::SetEnvironmentHandler(
     ves::xplorer::EnvironmentHandler* environmentHandler )
 {
     mEnvironmentHandler = environmentHandler;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetResourceManager(
+    ves::xplorer::scenegraph::ResourceManager* resourceManager )
+{
+    mResourceManager = resourceManager;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PluginBase::SetCommandHandler(
+    ves::xplorer::CommandHandler* commandHandler )
+{
+    mCommandHandler = commandHandler;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetInteractionDevice( ves::xplorer::Device* device )

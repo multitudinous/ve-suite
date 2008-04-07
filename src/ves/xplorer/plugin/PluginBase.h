@@ -65,12 +65,14 @@ class cfdCursor;
 class Device;
 class EnvironmentHandler;
 class Model;
+class CommandHandler;
 
 namespace scenegraph
 {
 class DCS;
 class PhysicsSimulator;
 class SceneManager;
+class ResourceManager;
 }
 
 namespace plugin
@@ -178,6 +180,14 @@ public:
     ///Provide access to the environment handler in the plugins
     ///\param environment The environment handler
     void SetEnvironmentHandler( ves::xplorer::EnvironmentHandler* environmentHandler );
+
+    ///Provide the resource manager instance for plugins
+    ///\param resourceManager The resource manager
+    void SetResourceManager( ves::xplorer::scenegraph::ResourceManager* resourceManager );
+
+    ///Provide the conductor communication manager for plugins
+    ///\param conductorComm The conductor CORBA pointer
+    void SetCommandHandler( ves::xplorer::CommandHandler* commandHandler ); 
     
 #ifdef VE_SOUND
     void SetSoundManager( osgAL::SoundManager* soundManager );
@@ -200,6 +210,10 @@ protected:
     ves::xplorer::scenegraph::SceneManager* mSceneManager;
     ///The environment handler pointer
     ves::xplorer::EnvironmentHandler* mEnvironmentHandler;
+    ///The resource manager pointer
+    ves::xplorer::scenegraph::ResourceManager* mResourceManager;
+    ///The command handler pointer
+    ves::xplorer::CommandHandler* mCommandHandler;
     ///The xml model pointer for this plugin
     ves::open::xml::model::ModelPtr mXmlModel;
 
