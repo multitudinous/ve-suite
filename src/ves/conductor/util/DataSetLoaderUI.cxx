@@ -729,15 +729,15 @@ void DataSetLoaderUI::OnDeleteDataset( wxCommandEvent& WXUNUSED( event ) )
     std::string tempDataSetName =
         mParamBlock->GetProperty( "VTK_DATA_FILE" )->GetDataString();
 
-    m_veModel->RemoveInformationPacket( tempStr );
-    mParamBlock = ves::open::xml::ParameterBlockPtr();
-
     ves::open::xml::DataValuePairSharedPtr dataValuePair(
         new ves::open::xml::DataValuePair() );
     dataValuePair->SetData( "DELETE_DATASET", tempDataSetName );
 
     SendCommandToXplorer( dataValuePair );
     //Rebuild GUI
+    m_veModel->RemoveInformationPacket( tempStr );
+    mParamBlock = ves::open::xml::ParameterBlockPtr();
+
     InitializeWidgets();
     dataSetList->SetSelection( 0 );
     wxCommandEvent event;
