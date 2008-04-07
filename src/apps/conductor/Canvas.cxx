@@ -48,6 +48,9 @@
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/TagPtr.h>
 
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/open/xml/Command.h>
+
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
 using namespace ves::open::xml;
@@ -272,6 +275,18 @@ void Canvas::New( bool promptClearXplorer )
             iter->second->ClearXplorer();
         }
     }
+
+    //clear the network system view
+    //DataValuePairPtr dataValuePair( new DataValuePair( "UNSIGNED INT" ) );
+    //dataValuePair->SetDataName( "Object ID" );
+    //dataValuePair->SetDataValue( static_cast< unsigned int >( iter->first ) );
+    DataValuePairPtr dataValuePair( new DataValuePair( "STRING" ) );
+    dataValuePair->SetData( "NETWORK_SYSTEM_VIEW", "DELETE" );
+    CommandPtr veCommand( new Command() );
+    veCommand->SetCommandName( std::string( "DELETE_NETWORK_SYSTEM_VIEW" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    bool connected = CORBAServiceList::instance()->
+        SendCommandStringToXplorer( veCommand );
 
     CleanUpNetworks();
 }

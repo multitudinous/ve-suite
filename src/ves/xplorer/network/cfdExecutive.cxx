@@ -40,6 +40,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
+#include <ves/xplorer/network/NetworkSystemView.h>
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -53,6 +54,7 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 #include <ves/xplorer/network/DeleteObjectFromNetworkEventHandler.h>
+#include <ves/xplorer/network/DeleteNetworkViewEventHandler.h>
 #include <ves/xplorer/network/SwitchXplorerViewEventHandler.h>
 #include <ves/xplorer/network/ReloadPluginsEventHandler.h>
 
@@ -114,6 +116,8 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
         << "-" <<  vpr::GUID( vpr::GUID::generateTag ).toString();
     std::string UINAME = dirStringStream.str();
 
+    netSystemView = NULL;
+
     try
     {
         CosNaming::Name name( 1 );
@@ -157,6 +161,8 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
 
     _eventHandlers[std::string( "DELETE_OBJECT_FROM_NETWORK" )] = 
         new DeleteObjectFromNetworkEventHandler();
+    _eventHandlers[std::string( "DELETE_NETWORK_SYSTEM_VIEW" )] = 
+        new DeleteNetworkViewEventHandler();
     _eventHandlers[std::string( "CHANGE_XPLORER_VIEW" )] = 
         new SwitchXplorerViewEventHandler();
     _eventHandlers[std::string( "Plugin_Control" )] = 
@@ -181,6 +187,11 @@ cfdExecutive::~cfdExecutive( void )
     //idToModel.clear();
     pluginEHMap.clear();
     _eventHandlers.clear();
+
+    if(netSystemView)
+    {
+        delete netSystemView;
+    }
 
     delete ui_i;
     ui_i = 0;
@@ -277,6 +288,9 @@ void cfdExecutive::GetNetwork( void )
     //Construct map of systems
     //Loop over all systems and get all models on the map
     ParseSystem( tempSystem, true );
+
+    //create network system view
+    netSystemView = new NetworkSystemView( veNetwork );
 }
 ///////////////////////////////////////////////////////////////////
 void cfdExecutive::GetEverything( void )
@@ -534,13 +548,28 @@ std::string cfdExecutive::GetCurrentNetwork()
     return veNetwork;
 }
 ////////////////////////////////////////////////////////////////////////////////
+NetworkSystemView* cfdExecutive::GetNetworkSystemView()
+{
+    return netSystemView;
+}
+////////////////////////////////////////////////////////////////////////////////
+void cfdExecutive::DeleteNetworkSystemView()
+{
+    if(netSystemView)
+    {
+        delete netSystemView;
+        netSystemView = NULL;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system, 
     bool getResults )
 {
     //add the system to the map
     mIDToSystem[ system->GetID() ] = system;
     
-    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator foundPlugin;
+    std::map< std::string, ves::xplorer::plugin::PluginBase* >::iterator
+        foundPlugin;
     //Parse out the subsystems
     std::vector< model::ModelPtr > tempModels = system->GetModels();
     size_t modelCount = system->GetNumberOfModels();
@@ -568,13 +597,16 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             if( temp == 0 )
             {
                 //load the default plugin
-                temp = new ves::xplorer::DefaultGraphicalPlugin::DefaultGraphicalPlugin();
-                //dynamic_cast< PluginBase* >( av_modules->GetLoader()->CreateObject( "DefaultGraphicalPlugin" ) );
+                temp = new ves::xplorer::DefaultGraphicalPlugin::
+                    DefaultGraphicalPlugin();
+                //dynamic_cast< PluginBase* >( av_modules->GetLoader()->
+                    //CreateObject( "DefaultGraphicalPlugin" ) );
             }
             
             mPluginsMap[ modelID ] = temp;
             // When we create the _plugin map here we will do the following
-            temp->SetPhysicsSimulator( ves::xplorer::scenegraph::PhysicsSimulator::instance() );
+            temp->SetPhysicsSimulator( ves::xplorer::scenegraph::
+                PhysicsSimulator::instance() );
 #ifdef VE_SOUND
             temp->SetSoundManager( osgAL::SoundManager::instance() );
 #endif
@@ -585,14 +617,17 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             Model* tempCFDModel = temp->GetCFDModel();
             tempCFDModel->SetID( model->GetModelID() );
             ModelHandler::instance()->AddModel( tempCFDModel );
-            // Give graphical plugins access to wand position, wand buttons, and gui variables
+            // Give graphical plugins access to wand position, wand buttons,
+            //and gui variables
             temp->SetCursor( EnvironmentHandler::instance()->GetCursor() );
             //Need to pass an active device in here or something
             //This needs to be fixed
-            //mPluginsMap[ iter->first ]->SetNavigate( EnvironmentHandler::instance()->GetNavigate() );
+            //mPluginsMap[ iter->first ]->SetNavigate( 
+                //EnvironmentHandler::instance()->GetNavigate() );
             pluginEHMap[ modelID ] = temp->GetCommandNameMap();
         }
-        // this call always returns something because it is up to date with the id map
+        // this call always returns something because it is up to 
+        // date with the id map
         ves::xplorer::plugin::PluginBase* newPlugin = mPluginsMap[ modelID ];
         newPlugin->SetXMLModel( model );
         //send command to get results
@@ -613,13 +648,13 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             
             //This needs to pass in the uuid not the fake id
             data = DataValuePairPtr( new DataValuePair() );
-            data->SetData( "moduleId", static_cast< unsigned int >( model->GetModelID() ) );
+            data->SetData( "moduleId", static_cast< unsigned int >(
+                model->GetModelID() ) );
             returnState->AddDataValuePair( data );
             
             std::string status = "returnString";
-            nodes.push_back(
-                            std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" )
-                            );
+            nodes.push_back( std::pair< XMLObjectPtr, std::string >(
+                            returnState, "vecommand" ) );
             commandWriter.UseStandaloneDOMDocumentManager();
             commandWriter.WriteXMLDocument( nodes, status, "Command" );
             nodes.clear();

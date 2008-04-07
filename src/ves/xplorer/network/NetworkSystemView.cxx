@@ -62,6 +62,7 @@
 #include <ves/xplorer/scenegraph/TextTexture.h>
 #include <ves/xplorer/network/UnsupportedComponent.h>
 
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/util/PhongLoader.h>
 #include <ves/xplorer/scenegraph/util/ComputeBoundsVisitor.h>
 
@@ -85,26 +86,7 @@ NetworkSystemView::NetworkSystemView()
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( std::string network )
 {
-	//std::ofstream test ("testnet.txt");
-	//test<<network;
-	//test.close();
-    //this->network = network;    
-    //parse network into array of all subnets
 	LoadVESData( network );
-
-    //get the map count
-    //std::map< std::string, model::SystemPtr> systems =
-    //systems = ves::conductor::XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
-
-    // iterate through the systems
-    //for( std::map< std::string, model::SystemPtr>::iterator
-    //        iter = systems.begin(); iter != systems.end(); iter++ )
-    //{
-    //    Network* tempNetwork = new Network( this );
-    //    tempNetwork->LoadSystem( iter->second, this );
-    //    networks[iter->first] = tempNetwork;
-    //    tempNetwork->SetNetworkID( iter->first );
-    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
@@ -114,7 +96,9 @@ NetworkSystemView::NetworkSystemView( const NetworkSystemView& input )
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView::~NetworkSystemView( void )
 {
-    ;
+    ves::xplorer::scenegraph::SceneManager::instance()->GetNetworkDCS()->
+        removeChildren( 0, ves::xplorer::scenegraph::SceneManager::instance()->
+        GetNetworkDCS()->GetNumChildren() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input )
@@ -143,7 +127,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
     //std::ofstream output( "scale.txt" );
-    //SystemPtr mainSystem = boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
+    //SystemPtr mainSystem = 
+       //boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
     SystemPtr mainSystem = systems[netId];
     // now lets create a list of them
     //for ( size_t i = 0; i < objectVector.size(); ++i )
@@ -161,12 +146,15 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
             osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
                 model->GetIconFilename() + ".obj.ive" );
         //Then try local directory
-        //osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile( "3DIcons/" + model->GetIconFilename() + ".obj.ive" );
+        //osg::ref_ptr<osg::Node> loadedModel = 
+            //osgDB::readNodeFile( "3DIcons/" + model->GetIconFilename() 
+            //+ ".obj.ive" );
 
         //add red block id if block .ive file is not found
         if( !loadedModel.valid() )
         {
-            std::istringstream textNodeStream( GetVESuite_UnsupportedComponent() );
+            std::istringstream textNodeStream( 
+                GetVESuite_UnsupportedComponent() );
             loadedModel = osgDB::Registry::instance()->
                           getReaderWriterForExtension( "osg" )->
                           readNode( textNodeStream ).getNode();
@@ -180,7 +168,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
         //set the blocks name
         loadedModel->setName( model->GetModelName() );
         //normalize the normals so that lighting works better
-        loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
+        loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, 
+            osg::StateAttribute::ON );
 		//setup two sided lighting to account for poor modeling
         osg::ref_ptr< osg::LightModel > lightModel;
         lightModel = new osg::LightModel;
@@ -200,16 +189,20 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 		//for (int corn = 0; corn < 8; corn ++)
 		//{
 		//	osg::Vec3d corner = bounds.corner(corn);
-		//	std::cout<<"corner "<<corn<<": x="<<corner.x()<<" y="<<corner.y()<<" z="<<corner.z()<<std::endl;
 		//}
 
         //scale icon to 2d worksheet size
-        //osg::ref_ptr<osg::Image> image = osgDB::readImageFile( "2DIcons/" + model->GetIconFilename() + ".jpg" );
-        ////osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = new osg::AutoTransform();
+        //osg::ref_ptr<osg::Image> image = 
+            //osgDB::readImageFile( "2DIcons/" + model->GetIconFilename() + 
+            //".jpg" );
+        ////osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = 
+            //new osg::AutoTransform();
         //if( image.valid() )
         //{
-          //  output << "width: " << image->s() << "height: " << image->t() << std::endl;
-           // //output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<image->t()/dz<<std::endl;
+          //  output << "width: " << image->s() << "height: " 
+              //<< image->t() << std::endl;
+           // //output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<
+               //image->t()/dz<<std::endl;
         //}
 
         //scales
@@ -225,7 +218,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
         // worksheetScaledModel->getPosition().z() + (0.5*image->t())));
 
         //Put origin in the center of the model
-        //osg::ref_ptr<osg::AutoTransform> loadedModelNormalized = new osg::AutoTransform();
+        //osg::ref_ptr<osg::AutoTransform> loadedModelNormalized = 
+            //new osg::AutoTransform();
         //loadedModelNormalized->addChild(loadedModel.get());
         //float radius = loadedModel.get()->getBound().radius();
         //loadedModelNormalized->setPosition(osg::Vec3(0, 0, 0-radius));
@@ -239,25 +233,29 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
           text->setColor(layoutColor);
         text->setText(model->GetModelName());
         //text->setAutoRotateToScreen(true);
-        text->setRotation(osg::Quat(osg::DegreesToRadians(90.0), osg::Vec3d(1.0, 0.0, 0.0)));
+        text->setRotation(osg::Quat(osg::DegreesToRadians(90.0), 
+            osg::Vec3d(1.0, 0.0, 0.0)));
         text->setCharacterSize(0.5);
 
         osg::ref_ptr<osg::Geode> textGeode = new osg::Geode();
         textGeode->addDrawable(text.get());
 
-        osg::ref_ptr<osg::AutoTransform> transTextGeode = new osg::AutoTransform();
+        osg::ref_ptr<osg::AutoTransform> transTextGeode = 
+            new osg::AutoTransform();
         transTextGeode->addChild(textGeode.get());
         transTextGeode->setPosition(osg::Vec3d(-1.0, -0.1, 1.0));
 
         osg::ref_ptr<osg::Geometry> pane = new osg::Geometry;
         osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array(4);
-        (*coords)[0] = osg::Vec3f(-1.5, 0.0, -2.0);//original png size is 300X400 => 3X4
+        //original png size is 300X400 => 3X4
+        (*coords)[0] = osg::Vec3f(-1.5, 0.0, -2.0);
         (*coords)[1] = osg::Vec3f(1.5, 0.0, -2.0);
         (*coords)[2] = osg::Vec3f(1.5, 0.0, 2.0);
         (*coords)[3] = osg::Vec3f(-1.5, 0.0, 2.0);
 
         pane->setVertexArray(coords.get());
-        pane->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4));
+        pane->
+            addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4));
 
         osg::Vec2Array* texcoords = new osg::Vec2Array(4);
         (*texcoords)[0].set(0.0f, 0.0f);
@@ -303,7 +301,8 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 		rotatedComp->setPivotPoint(bounds2.center());
 		
 		//rotate
-        rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+        rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), 
+            osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
 
         //rotate/scale/mirror component
         int mirror = model->GetIconMirror();
@@ -328,10 +327,14 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
         {
             //horizontally
             if( mirror == 1 )
-                mirrorComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
+                mirrorComp->setRotation( osg::Quat( 
+                    osg::DegreesToRadians( 180.0 ), 
+                    osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
             //vertically
             else
-                mirrorComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+                mirrorComp->setRotation( osg::Quat( 
+                    osg::DegreesToRadians( 180.0 ), 
+                    osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
         }
 
         //rotate according to iconRotation value
@@ -345,13 +348,17 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 		reRotatedComp->setPivotPoint(bounds4.center());
 		
 		//rotate
-		reRotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( rotation ), osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
+		reRotatedComp->setRotation( osg::Quat( 
+                osg::DegreesToRadians( rotation ), 
+                osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
 
         //move the text to the -y
         //osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
         //textTrans->addChild(resultPane.get());
-        //textTrans->setPosition(osg::Vec3d(0.0, 0.0, loadedModel.get()->getBound().radius()));
-        //textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), osg::Vec3d(1.0, 0.0, 0.0)));
+        //textTrans->setPosition(osg::Vec3d(0.0, 0.0, 
+            //loadedModel.get()->getBound().radius()));
+        //textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), 
+            //osg::Vec3d(1.0, 0.0, 0.0)));
 
         //Scale up 3D comps & text
         //osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
@@ -367,20 +374,27 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
         //std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
         osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
         //osg::Vec3 center = mModelTrans.get()->getBound().center();
-        //20 and 28 should be replaced with conductor icon width and height respectively
-        //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), (xyPair.second + 28) - center.y(), 0 - center.z());
-        //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 0 - center.z(), (xyPair.second + 22) - center.y());
+        //20 and 28 should be replaced with conductor icon width and height
+        //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 
+            //(xyPair.second + 28) - center.y(), 0 - center.z());
+        //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 
+            //0 - center.z(), (xyPair.second + 22) - center.y());
         //osg::Vec3 centerTrans = osg::Vec3(xyPair.first + 20, xyPair.second + 25, 0 );
-        //std::cout << " center " << center.x() << " " << center.z() << " " << center.y() << std::endl;
-        //osg::Vec3 centerTrans = osg::Vec3( xyPair.first - center.x(), 0 - center.z(), xyPair.second - center.y() );
+        //std::cout << " center " << center.x() << " " << center.z() << " " 
+            //<< center.y() << std::endl;
+        //osg::Vec3 centerTrans = osg::Vec3( xyPair.first - center.x(), 
+            //0 - center.z(), xyPair.second - center.y() );
         mModelTrans->addChild( reRotatedComp.get() );
 		
 		//find offset from center to upper left corner
 		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
         mModelTrans->accept( visitor5 );
         osg::BoundingBox bounds5 = visitor5.getBoundingBox();
-		osg::Vec3 centerTrans = osg::Vec3( xyPair.first + ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + ((bounds5.zMax()-bounds5.zMin())/2));
-		//std::cout<< (bounds5.xMax()-bounds5.xMin())/2<<" "<< (bounds5.zMax()-bounds5.zMin())/2<<std::endl;
+		osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
+            ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + 
+            ((bounds5.zMax()-bounds5.zMin())/2));
+		//std::cout<< (bounds5.xMax()-bounds5.xMin())/2<<" "
+            //<< (bounds5.zMax()-bounds5.zMin())/2<<std::endl;
 		
 		//osg::Vec3 centerTrans = osg::Vec3( xyPair.first, 0, xyPair.second );
         //mModelTrans->addChild(scale.get());
@@ -408,19 +422,23 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
     geode->setName( "Network Lines" );
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
     {
-        size_t numberOfPoints = veNetwork->GetLink( i )->GetNumberOfLinkPoints();
+        size_t numberOfPoints = veNetwork->GetLink( i )->
+            GetNumberOfLinkPoints();
         osg::Vec3Array* vertices = new osg::Vec3Array( numberOfPoints );
         osg::Geometry* linesGeom = new osg::Geometry();
         //std::cout<<"NP: "<< numberOfPoints<<std::endl;
         for( size_t j = 0; j < numberOfPoints; j++ )
         {
-            std::pair< unsigned int, unsigned int > rawPoint = veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
-            //std::cout << "links X: " << rawPoint.first << " Y: " << rawPoint.second << std::endl;
+            std::pair< unsigned int, unsigned int > rawPoint = 
+                veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
+            //std::cout << "links X: " << rawPoint.first << " Y: " 
+                //<< rawPoint.second << std::endl;
             //(*vertices)[j].set(rawPoint.first, rawPoint.second, 0.0);
             ( *vertices )[j].set( rawPoint.first, 0.0, rawPoint.second );
         }
         linesGeom->setVertexArray( vertices );
-        linesGeom->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints ) );
+        linesGeom->addPrimitiveSet( new osg::DrawArrays(
+            osg::PrimitiveSet::LINE_STRIP, 0, numberOfPoints ) );
         linesGeom->setColorBinding( osg::Geometry::BIND_OVERALL );
         linesGeom->setNormalArray( shared_normals.get() );
         linesGeom->setNormalBinding( osg::Geometry::BIND_OVERALL );
@@ -448,19 +466,23 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
     //rotate the world about the X to normalize the flowsheet
     osg::ref_ptr<osg::AutoTransform> worldRotate = new osg::AutoTransform();
     worldRotate->addChild( loadedModels.get() );
-    worldRotate->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+    worldRotate->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ),
+        osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
 
     //center the world
     worldTranslate = new osg::AutoTransform();
     worldTranslate->addChild( worldRotate.get() );
     //osg::Vec3 worldCenter = worldRotate.get()->getBound().center();
-    //osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0 - worldCenter.y(), 0 - worldCenter.z());
-    //osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0, 0 - worldCenter.z());
+    //osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(),
+        //0 - worldCenter.y(), 0 - worldCenter.z());
+    //osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0,
+        //0 - worldCenter.z());
     //std::cout << worldCenter.x() << " " << worldCenter.y() << std::endl;
     //worldTranslate->setPosition(worldTrans);
 
     //Add phong shading to the geodes
-    //osg::ref_ptr< osg::StateSet > geodeProperties = worldTranslate->getOrCreateStateSet();
+    //osg::ref_ptr< osg::StateSet > geodeProperties =
+        //worldTranslate->getOrCreateStateSet();
     //ves::xplorer::scenegraph::util::PhongLoader phongShader;
     //phongShader.SetStateSet( geodeProperties.get() );
     //phongShader.SyncShaderAndStateSet();
@@ -500,7 +522,9 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
         if( objectVector.at( 0 )->GetObjectType() == "System" )
         //if( tempSystem )
         {
-            tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+            tempSystem = 
+                boost::dynamic_pointer_cast<ves::open::xml::model::System>(
+                objectVector.at( 0 ) );
             systems[tempSystem->GetID()] = tempSystem;
             //get the main systems id
             
@@ -512,11 +536,13 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
         //Else if the file jsut has a netowrk and a series of models
         //else
         //{
-        //    tempSystem = ves::open::xml::model::SystemPtr( new ves::open::xml::model::System() );
+        //    tempSystem = ves::open::xml::model::SystemPtr( 
+        //        new ves::open::xml::model::System() );
         //    systems[tempSystem->GetID()] = tempSystem;
         //    topId = tempSystem->GetID();
 
-        //    m_networkMap[ "Network" ] = ves::open::xml::model::NetworkPtr( boost::dynamic_pointer_cast<Network>( objectVector.at( 0 ) ) );
+        //    m_networkMap[ "Network" ] = ves::open::xml::model::NetworkPtr( 
+        //      boost::dynamic_pointer_cast<Network>( objectVector.at( 0 ) ) );
         //    tempSystem->AddNetwork( m_networkMap[ "Network" ] );
         //    objectIter = objectVector.begin();
         //    objectIter = objectVector.erase( objectIter );
@@ -542,13 +568,15 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
         tempNetwork->GetLink( i )->GetToModule()->GetData( moduleID );
         toID << moduleID;
 
-        stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), fromID.str() );
+        stringIter = std::find( networkModelVector.begin(),
+            networkModelVector.end(), fromID.str() );
         if( stringIter == networkModelVector.end() )
         {
             networkModelVector.push_back( fromID.str() );
         }
 
-        stringIter = std::find( networkModelVector.begin(), networkModelVector.end(), toID.str() );
+        stringIter = std::find( networkModelVector.begin(),
+            networkModelVector.end(), toID.str() );
         if( stringIter == networkModelVector.end() )
         {
             networkModelVector.push_back( toID.str() );
@@ -561,7 +589,8 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
     {
         // now lets create a list of them
         std::ostringstream modelID;
-        for( objectIter = objectVector.begin(); objectIter != objectVector.end(); )
+        for( objectIter = objectVector.begin();
+            objectIter != objectVector.end(); )
         {
             if( (*objectIter)->GetObjectType() != "Model" )
             {
@@ -569,7 +598,8 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
                 ++objectIter;
                 continue;
             }
-            ves::open::xml::model::ModelPtr model = boost::dynamic_pointer_cast<Model>( *objectIter );
+            ves::open::xml::model::ModelPtr model =
+                boost::dynamic_pointer_cast<Model>( *objectIter );
             objectIter = objectVector.erase( objectIter );
             modelID << model->GetModelID();
             m_modelMap[ modelID.str()] = model;
@@ -620,20 +650,24 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
 
     if( !objectVector.empty() )
     {
-        m_userMap[ "Network" ] = boost::dynamic_pointer_cast<ves::open::xml::User>( objectVector.at( 0 ) );
+        m_userMap[ "Network" ] = 
+            boost::dynamic_pointer_cast<ves::open::xml::User>
+            ( objectVector.at( 0 ) );
         //Set user preferences
         std::vector< ves::open::xml::CommandPtr > tempStates =
             m_userMap[ "Network" ]->GetUserStateInfo()->GetStateVector();
         std::map< std::string, ves::open::xml::CommandPtr > tempMap;
         for( size_t i = 0; i < tempStates.size(); ++i )
         {
-            tempMap[ tempStates.at( i )->GetCommandName()] = tempStates.at( i );
+            tempMap[ tempStates.at( i )->GetCommandName()] =
+                tempStates.at( i );
         }
         //UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
     }
     else
     {
-        m_userMap[ "Network" ] = ves::open::xml::UserPtr( new ves::open::xml::User() );
+        m_userMap[ "Network" ] =
+            ves::open::xml::UserPtr( new ves::open::xml::User() );
     }
 
     m_userMap[ "Network" ]->SetUserId( "User" );
@@ -669,4 +703,10 @@ void NetworkSystemView::ParseSystem( ves::open::xml::model::SystemPtr system )
             ParseSystem( system->GetModel( j )->GetSubSystem() );
         }
     }
+}
+///////////////////////////////////////////////////////////////////////////////
+std::map< std::string, ves::open::xml::model::SystemPtr > 
+    NetworkSystemView::GetSystemsMap( void )
+{
+   return systems;
 }

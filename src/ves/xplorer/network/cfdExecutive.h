@@ -114,6 +114,7 @@ namespace network
 {
 class cfdVEAvailModules;
 class Body_UI_i;
+class NetworkSystemView;
 class VE_XPLORER_NETWORK_EXPORTS cfdExecutive : public ves::xplorer::GlobalBase
 {
 private:
@@ -171,6 +172,10 @@ public:
     void LoadDataFromCE( void );
     ///Get the current network string being used by cfdExecutive
     std::string GetCurrentNetwork();
+    ///Get the current network system view being used by cfdExecutive
+    NetworkSystemView* GetNetworkSystemView();
+    ///Delete the network system view
+    void cfdExecutive::DeleteNetworkSystemView();
     ///Unregister in the executive from the ce. This should be called before the
     /// destrucutor is called.
     void UnRegisterExecutive();
@@ -196,6 +201,8 @@ private:
     std::map< std::string, ves::xplorer::plugin::PluginBase* > mPluginsMap;
     ///map to hold unique plugin command names and associated plugin pointers
     std::map< std::string, std::map< std::string, ves::xplorer::plugin::PluginBase* > > pluginEHMap;
+    //Network View
+    NetworkSystemView* netSystemView;
     ///The event handler for commands.
     std::map< std::string, ves::xplorer::event::EventHandler*> _eventHandlers;
     ///the Computational Engine
