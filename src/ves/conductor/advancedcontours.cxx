@@ -30,7 +30,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #include <ves/conductor/advancedcontours.h>
 
 #include <wx/sizer.h>
@@ -42,6 +41,8 @@
 #include <wx/bmpbuttn.h>
 #include <wx/stattext.h>
 #include <wx/statbox.h>
+
+#include <ves/util/icons/ve_icon32x32.xpm>
 
 /*BEGIN_EVENT_TABLE( AdvancedContours, wxDialog )
 ////@begin AdvancedContours event table entries
@@ -90,7 +91,7 @@ bool AdvancedContours::Create( wxWindow* parent, wxWindowID id,
     GetSizer()->Fit( this );
     GetSizer()->SetSizeHints( this );
     Centre();
-////@end AdvancedContours creation
+    SetIcon( ve_icon32x32_xpm );
     return true;
 }
 
@@ -112,11 +113,11 @@ void AdvancedContours::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
     itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
-    wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Contour Opacity" ), wxDefaultPosition, wxDefaultSize, 0 );
+    /*wxStaticText* itemStaticText4 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Contour Opacity" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText4, 0, wxALIGN_LEFT | wxLEFT | wxRIGHT | wxTOP | wxADJUST_MINSIZE, 5 );
 
     _opacitySlider = new wxSlider( itemDialog1, OPACITY_SLIDER, 100, 0, 100, wxDefaultPosition, wxSize( 300, -1 ), wxSL_HORIZONTAL | wxSL_LABELS );
-    itemStaticBoxSizer3->Add( _opacitySlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );
+    itemStaticBoxSizer3->Add( _opacitySlider, 0, wxGROW | wxLEFT | wxRIGHT, 5 );*/
 
     wxBoxSizer* itemBoxSizer6 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer6, 0, wxGROW | wxALL, 5 );
@@ -235,7 +236,8 @@ wxIcon AdvancedContours::GetIconResource( const wxString& name )
 /////////////////////////////////////
 double AdvancedContours::GetOpacity()
 {
-    return  static_cast<double>( _opacitySlider->GetValue() / 100.0 );
+    //return  static_cast<double>( _opacitySlider->GetValue() / 100.0 );
+    return  1.0f;//static_cast<double>( _opacitySlider->GetValue() / 100.0 );
 }
 /////////////////////////////////////////
 double AdvancedContours::GetWarpedScale()
