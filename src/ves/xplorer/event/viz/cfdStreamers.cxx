@@ -41,7 +41,7 @@
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
 #include <vtkPointSet.h>
-#include <vtkRungeKutta45.h>
+#include <vtkRungeKutta4.h>
 #include <vtkStreamLine.h>
 #include <vtkStreamTracer.h>
 #include <vtkTubeFilter.h>
@@ -57,6 +57,7 @@
 #include <vtkStripper.h>
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
+#include <vtkCellDataToPointData.h>
 
 #include <ves/xplorer/Debug.h>
 
@@ -87,7 +88,7 @@ cfdStreamers::cfdStreamers()
         zMaxBB( 1 )
 {
     streamTracer = vtkStreamTracer::New();
-    integ = vtkRungeKutta45::New();
+    integ = vtkRungeKutta4::New();
     tubeFilter = vtkTubeFilter::New();
     mapper = vtkPolyDataMapper::New();
 }
@@ -133,7 +134,10 @@ void cfdStreamers::Update()
         integrationStepLength = 0.050f;
     }
 
-    streamTracer->SetInput( GetActiveDataSet()->GetDataSet() );
+    vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
+    c2p->SetInput(  GetActiveDataSet()->GetDataSet() );
+    
+    streamTracer->SetInputConnection( c2p->GetOutputPort() );
     //overall length of streamline
     streamTracer->SetMaximumPropagation( propagationTime );
 
@@ -150,7 +154,7 @@ void cfdStreamers::Update()
     if( streamArrows )
     {
         streamPoints = vtkStreamPoints::New();
-        streamPoints->SetInput( GetActiveDataSet()->GetDataSet() );
+        streamPoints->SetInputConnection( c2p->GetOutputPort() );
         streamPoints->SetSource( seedPoints );
         //streamPoints->SetTimeIncrement( stepLength * 500 );
         streamPoints->SetMaximumPropagationTime( propagationTime );
@@ -236,7 +240,7 @@ void cfdStreamers::Update()
     mapper->SetScalarModeToUsePointFieldData();
     mapper->UseLookupTableScalarRangeOn();
     mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
-    
+
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );
@@ -247,6 +251,7 @@ void cfdStreamers::Update()
         osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
         //tempGeode->TranslateToGeode( temp );
         tempGeode->StreamLineToGeode( temp );
+
         geodes.push_back( tempGeode );
         updateFlag = true;
     }
@@ -261,7 +266,7 @@ void cfdStreamers::Update()
     }
 
     temp->Delete();
-
+    c2p->Delete();
     if( streamArrows )
     {
         // Clean Up Now...

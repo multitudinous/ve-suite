@@ -39,7 +39,7 @@ class vtkStreamTracer;
 class vtkTubeFilter;
 class vtkPolyDataMapper;
 class vtkPolyData;
-class vtkRungeKutta45;
+class vtkRungeKutta4;
 class vtkPoints;
 
 
@@ -94,7 +94,7 @@ private:
     vtkStreamTracer* streamTracer;
     vtkTubeFilter* tubeFilter;
     vtkPolyDataMapper* mapper;
-    vtkRungeKutta45* integ;
+    vtkRungeKutta4* integ;
     vtkPolyData* seedPoints;///>PolyData for the seed points
     vtkPoints* points;///>Seed Points raw data
 
