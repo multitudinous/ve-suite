@@ -111,13 +111,6 @@ public:
     /// Creates the controls and sizers
     void CreateControls();
 
-    ///Set the data type\n
-    ///\param type The type of data\n
-    ///Valid types are:\n
-    ///SCALAR\n
-    ///VECTOR
-    void SetDataType( std::string type = "SCALAR" );
-
     ///Get the data type being displayed
     std::string GetDataType();
 
@@ -134,6 +127,13 @@ public:
     /// Should we show tooltips?
     static bool ShowToolTips();
 protected:
+    ///Set the data type\n
+    ///\param type The type of data\n
+    ///Valid types are:\n
+    ///SCALAR\n
+    ///VECTOR
+    void SetDataType( std::string type = "SCALAR" );
+    
     ///Update the contour with the current settings.
     void _updateContourInformation();
     ///Update the advanced settings

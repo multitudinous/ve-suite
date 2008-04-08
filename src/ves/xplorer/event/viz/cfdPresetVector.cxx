@@ -77,7 +77,7 @@ void cfdPresetVector::Update( void )
         << " : " << usePreCalcData
         << std::endl << vprDEBUG_FLUSH;
 
-    if( this->usePreCalcData )
+    if( this->usePreCalcData && ( xyz < 3 ) )
     {
 
         cfdPlanes* precomputedPlanes =
@@ -129,23 +129,31 @@ void cfdPresetVector::Update( void )
     }
     else
     {
-        this->cuttingPlane = 
-            new cfdCuttingPlane( GetActiveDataSet()->GetBounds(), 
-            xyz, numSteps );
-
-        // insure that we are using correct bounds for the given data set...
-        this->cuttingPlane->SetBounds(
-            this->GetActiveDataSet()->GetBounds() );
-        this->cuttingPlane->Advance( this->requestedValue );
-        vtkCutter* cutter = vtkCutter::New();
-        cutter->SetInput( GetActiveDataSet()->GetDataSet() );
-        cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-        cutter->Update();
-        delete this->cuttingPlane;
-        this->cuttingPlane = NULL;
         vtkCellDataToPointData* c2p = vtkCellDataToPointData::New();
-        c2p->SetInputConnection( cutter->GetOutputPort() );
-        c2p->Update();
+        if( xyz < 3 )
+        {
+            this->cuttingPlane = 
+                new cfdCuttingPlane( GetActiveDataSet()->GetBounds(), 
+                xyz, numSteps );
+            // insure that we are using correct bounds for the given data set...
+            this->cuttingPlane->SetBounds(
+                                          this->GetActiveDataSet()->GetBounds() );
+            this->cuttingPlane->Advance( this->requestedValue );
+            vtkCutter* cutter = vtkCutter::New();
+            cutter->SetInput( GetActiveDataSet()->GetDataSet() );
+            cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+            cutter->Update();
+            delete this->cuttingPlane;
+            this->cuttingPlane = NULL;
+            c2p->SetInputConnection( cutter->GetOutputPort() );
+            c2p->Update();
+            cutter->Delete();
+        }
+        else if( xyz == 3 )
+        {
+            c2p->SetInput( GetActiveDataSet()->GetDataSet() );
+            c2p->Update();
+        }
 
         // get every nth point from the dataSet data
         this->ptmask->SetInputConnection( ApplyGeometryFilterNew( c2p->GetOutputPort() ) );
@@ -163,7 +171,6 @@ void cfdPresetVector::Update( void )
         mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
         mapper->Update();
 
-        cutter->Delete();
         c2p->Delete();
         vprDEBUG( vesDBG, 1 )
             << "No Precalc : " << this->cursorType << " : " << usePreCalcData

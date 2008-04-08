@@ -52,6 +52,8 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+#include <ves/util/icons/ve_icon32x32.xpm>
+
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( Contours, wxDialog )
@@ -71,9 +73,11 @@ END_EVENT_TABLE()
 Contours::Contours( wxWindow* parent, wxWindowID id,
                     const wxString& caption, const wxPoint& pos,
                     const wxSize& size, long style, std::string type )
+    :
+    _dataType( type )
 {
-    Create( parent, id, caption, pos, size, style );
     SetDataType( type );
+    Create( parent, id, caption, pos, size, style );
 }
 /////////////////////////////////////////////////////////////////////////////////
 bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
@@ -111,6 +115,7 @@ bool Contours::Create( wxWindow* parent, wxWindowID id, const wxString& caption,
     GetSizer()->Fit( this );
     GetSizer()->SetSizeHints( this );
     Centre();
+    SetIcon( ve_icon32x32_xpm );
     return true;
 }
 ///////////////////////////////
@@ -121,32 +126,51 @@ void Contours::CreateControls()
     wxBoxSizer* itemBoxSizer2 = new wxBoxSizer( wxVERTICAL );
     itemDialog1->SetSizer( itemBoxSizer2 );
 
-    wxStaticBox* itemStaticBoxSizer3Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Contour Controls" ) );
-    wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
+    wxString dataStaticBox;
+    if( _dataType == "SCALAR" )
+    {
+        dataStaticBox = _T( "Contour Controls" );
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        dataStaticBox = _T( "Vector Controls" );
+    }
+    wxStaticBox* itemStaticBoxSizer3Static = 
+        new wxStaticBox( itemDialog1, wxID_ANY, dataStaticBox );
+    wxStaticBoxSizer* itemStaticBoxSizer3 = 
+        new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
     itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
     wxBoxSizer* itemBoxSizer4 = new wxBoxSizer( wxHORIZONTAL );
     itemStaticBoxSizer3->Add( itemBoxSizer4, 0, wxGROW | wxALL, 5 );
 
-    wxString itemRadioBox5Strings[] = {
-                                          _T( "x" ),
-                                          _T( "y" ),
-                                          _T( "z" ),
-                                          _T( "By Wand" )
-                                      };
-
-    _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 4, itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    if( _dataType == "SCALAR" )
+    {
+        wxString itemRadioBox5Strings[] = {
+            _T( "x" ),
+            _T( "y" ),
+            _T( "z" ),
+            _T( "By Wand" )
+        };
+        _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, 
+            _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 4, 
+            itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    }
+    else if( _dataType == "VECTOR" )
+    {
+        wxString itemRadioBox5Strings[] = {
+            _T( "x" ),
+            _T( "y" ),
+            _T( "z" ),
+            _T( "By Wand" ),
+            _T( "All" )
+        };
+        _directionRBox = new wxRadioBox( itemDialog1, CONTOUR_DIR_RBOX, 
+            _T( "Direction" ), wxDefaultPosition, wxDefaultSize, 5, 
+            itemRadioBox5Strings, 1, wxRA_SPECIFY_COLS );
+    }
     itemBoxSizer4->Add( _directionRBox, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
 
-    /*wxString itemRadioBox6Strings[] = {
-        _T("Graduated"),
-        _T("Banded"),
-        _T("Lined")
-    };
-
-    _contourTypeRBox = new wxRadioBox( itemDialog1, CONTOUR_TYPE_RBOX, _T("Contour Type"), wxDefaultPosition, wxDefaultSize, 3, itemRadioBox6Strings, 1, wxRA_SPECIFY_COLS );
-    itemBoxSizer4->Add(_contourTypeRBox, 0, wxALIGN_TOP|wxALL, 5);
-    */
     wxStaticBox* itemStaticBoxSizer7Static = new wxStaticBox( itemDialog1, wxID_ANY, _T( "Multiple Planes" ) );
     wxStaticBoxSizer* itemStaticBoxSizer7 = new wxStaticBoxSizer( itemStaticBoxSizer7Static, wxVERTICAL );
     itemStaticBoxSizer3->Add( itemStaticBoxSizer7, 0, wxGROW | wxALL, 5 );

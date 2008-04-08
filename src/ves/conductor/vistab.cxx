@@ -33,7 +33,6 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/conductor/util/TBToolBar.h>
 #include <ves/conductor/util/UI_TransientDialog.h>
-#include <ves/conductor/vectors.h>
 #include <ves/conductor/contours.h>
 #include <ves/conductor/streamlines.h>
 #include <ves/conductor/isosurfaces.h>

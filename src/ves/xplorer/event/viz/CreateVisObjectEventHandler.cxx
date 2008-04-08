@@ -262,10 +262,21 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler()
     objectType.second.first = std::string( "z" );
     objectType.second.second = std::string( "Single" );
     std::cout << "| 27. Initializing................................. Preset z Vector |" << std::endl;
-    this->z_vector = new cfdPresetVector( 2, 10 );
+    cfdPresetVector* tempVector = new cfdPresetVector( 2, 10 );
+    tempVector->SetObjectType( Z_VECTOR );
+    visObjectMap[ objectType ] = tempVector;
+
+    //
+    // Initiate the preset z vector.
+    //
+    objectType.first = std::string( "UPDATE_VECTOR_SETTINGS" );
+    objectType.second.first = std::string( "All" );
+    objectType.second.second = std::string( "Single" );
+    std::cout << "| 28. Initializing..................................... All Vectors |" << std::endl;
+    this->z_vector = new cfdPresetVector( 3, 10 );
     this->z_vector->SetObjectType( Z_VECTOR );
     visObjectMap[ objectType ] = this->z_vector;
-
+    
     //
     // Initiate the preset x contour lines.
     //
@@ -444,6 +455,15 @@ CreateVisObjectEventHandler::CreateVisObjectEventHandler( const CreateVisObjectE
 ////////////////////////////////////////////////////////////////////////////////
 CreateVisObjectEventHandler::~CreateVisObjectEventHandler()
 {
+    for( std::map< std::pair< std::string, 
+        std::pair< std::string, std::string > >, 
+        ves::xplorer::cfdObjects* >::iterator iter = visObjectMap.begin(); 
+        iter != visObjectMap.end(); ++iter  )
+    {
+        delete iter->second;
+    }
+    visObjectMap.clear();
+    /*
     //delete all the objects from ssvishandler
     if( this->isosurface )
     {
@@ -646,7 +666,7 @@ CreateVisObjectEventHandler::~CreateVisObjectEventHandler()
         //<< "deleting this->animStreamer" << std::endl << vprDEBUG_FLUSH;
         delete this->animStreamer;
     }
-
+*/
     /*if ( this->textOutput )
     {
        //vprDEBUG(vesDBG,2)  
@@ -668,22 +688,6 @@ CreateVisObjectEventHandler& CreateVisObjectEventHandler::operator=( const Creat
 ////////////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* model )
 {
-    /*   try
-       {
-          if(model )
-          {
-             _activeModel = dynamic_cast< ves::xplorer::Model* >( model );
-          }
-          else
-          {
-             _activeModel = ves::xplorer::ModelHandler::instance()->GetActiveModel();
-          }
-       }
-       catch(...)
-       {
-          _activeModel = 0;
-          std::cout<<"Invalid object passed to AddVTKDataSetEventHandler::SetGlobalBaseObject!"<<std::endl;
-       }*/
 }
 //////////////////////////////////////////////////////////////////////////
 void CreateVisObjectEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )

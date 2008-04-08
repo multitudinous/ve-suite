@@ -42,6 +42,8 @@
 #include <wx/stattext.h>
 #include <wx/statbox.h>
 
+#include <ves/util/icons/ve_icon32x32.xpm>
+
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 //////////////////////////////////////////////////////////////////
@@ -78,6 +80,7 @@ bool AdvancedVectors::Create( wxWindow* parent, wxWindowID id,
     temp.SetHeight( temp.GetHeight() + 1 );
     temp.SetWidth( temp.GetWidth() + 1 );
     SetSize( temp );
+    SetIcon( ve_icon32x32_xpm );
     return true;
 }
 //////////////////////////////////////
