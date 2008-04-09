@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/conductor/vistab.h>
 #include <ves/conductor/util/UI_TransientDialog.h>
 
 #include <ves/conductor/util/TBToolBar.h>
-#include <ves/conductor/vistab.h>
 
 #include <wx/sizer.h>
 #include <wx/combobox.h>

@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 // --- VE-Suite Includes --- //
-#include <ves/conductor/util/UI_TransientDialog.h>
 #include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/conductor/advancedstreamlines.h>
+#include <ves/conductor/util/UI_TransientDialog.h>
 
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>

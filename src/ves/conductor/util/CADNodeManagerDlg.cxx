@@ -30,12 +30,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/util/CADNodeMenu.h>
 #include <ves/conductor/util/CADTreeBuilder.h>
 #include <ves/conductor/util/CADNodePropsDlg.h>
 #include <ves/conductor/util/CADOpacitySliderDlg.h>
-#include <ves/conductor/util/CORBAServiceList.h>
 
 #include <ves/open/xml/cad/CADNode.h>
 #include <ves/open/xml/cad/CADAssembly.h>

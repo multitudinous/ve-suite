@@ -79,8 +79,6 @@
 #include <osg/BoundingSphere>
 #include <osg/Group>
 
-#include <osgEphemeris/EphemerisModel.h>
-
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>

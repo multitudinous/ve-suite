@@ -43,6 +43,7 @@
 #include <vpr/Util/Singleton.h>
 #include <vrj/vrjParam.h>
 
+#include <osgEphemeris/EphemerisModel.h>
 #include <osg/ref_ptr>
 
 #include <map>
