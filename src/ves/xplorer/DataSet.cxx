@@ -116,7 +116,9 @@ DataSet::DataSet( ) :
         m_dataObjectHandler( 0 ),
         mDataReader( 0 ),
         arrow( 0 ),
-        lut( vtkLookupTable::New() )
+        lut( vtkLookupTable::New() ),
+        maxTime( 1000 ),
+        bbDiagonal( 10 )
 {
     this->range = new double [ 2 ];
     this->range[ 0 ] = 0.0f;

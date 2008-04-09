@@ -99,6 +99,11 @@ cfdStreamers::~cfdStreamers()
     integ->Delete();
     tubeFilter->Delete();
     mapper->Delete();
+
+    if( seedPoints )
+    {
+        seedPoints->Delete();
+    }
 }
 //////////////////////////////////////////////////////////////////////////////////
 void cfdStreamers::Update()
@@ -459,10 +464,6 @@ void cfdStreamers::CreateSeedPoints()
     int number = 0;
 
     //insert evenly spaced points inside bounding box
-    if( points )
-    {
-        points->Delete();
-    }
     points = vtkPoints::New();
 
     double deltaX = ( xValue == 1 ) ? 0 : ( xMax - xMin ) / double( xValue - 1 );
@@ -495,5 +496,6 @@ void cfdStreamers::CreateSeedPoints()
 
     seedPoints = vtkPolyData::New();
     seedPoints->SetPoints( points );
+    points->Delete();
 }
 //////////////////////////////////////////////////////////////////////////////////
