@@ -35,6 +35,7 @@
 #include <vtkDataSet.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
+#include <vtkCellData.h>
 #include <iostream>
 
 using namespace ves::xplorer::util;
@@ -58,33 +59,88 @@ ProcessScalarRangeCallback::~ProcessScalarRangeCallback()
 void ProcessScalarRangeCallback::OperateOnDataset( vtkDataSet* dataset )
 {
     // store actual range...
-    int ii = 0;
-    double scalarRange[2] = {100000., -10000.};
-
     std::map<std::string, double* >::iterator scalarRangeInfo;
-    for( int i = 0; i < dataset->GetPointData()->GetNumberOfArrays(); ++i )
+    if( dataset->GetCellData()->GetNumberOfArrays() > 0 )
     {
-        vtkDataArray* array = dataset->GetPointData()->GetArray( i );
-        if( array->GetNumberOfComponents() != 1 )
+        int numArrays = dataset->GetCellData()->GetNumberOfArrays();
+        for( int i = 0; i < numArrays; ++i )
         {
-            continue;
+            vtkDataArray* array = dataset->GetCellData()->GetArray( i );
+            //if it is a vector
+            if( array->GetNumberOfComponents() != 1 )
+            {
+                continue;
+            }
+            //Not already in the list so find the range
+            //This assumes that there are only unique
+            //scalars AND that each dataset has the same
+            //unique scalars---This may be incorrect because
+            //each dataset in the multiblock may have it's own scalar range but
+            //it's not clear if that is the case...
+            scalarRangeInfo = m_scalarRanges.find( array->GetName() );
+            if( scalarRangeInfo == m_scalarRanges.end() )
+            {
+                m_scalarRanges[array->GetName()] = new double[2];
+                array->GetRange( m_scalarRanges[array->GetName()] );
+            }
+            else
+            {
+                double tempRange[ 2 ] = { 0.0f, 0.0f };
+                array->GetRange( tempRange );
+                if( scalarRangeInfo->second[ 0 ] > tempRange[ 0 ] )
+                {
+                    scalarRangeInfo->second[ 0 ] = tempRange[ 0 ];
+                }
+                
+                if( scalarRangeInfo->second[ 1 ] < tempRange[ 1 ] )
+                {
+                    scalarRangeInfo->second[ 1 ] = tempRange[ 1 ];
+                }                
+            }
         }
-        //Not already in the list so find the range
-        //This assumes that there are only unique
-        //scalars AND that each dataset has the same
-        //unique scalars---This may be incorrect because
-        //each dataset in the multiblock may have it's own scalar range but
-        //it's not clear if that is the case...
-        scalarRangeInfo = m_scalarRanges.find( array->GetName() );
-        if( scalarRangeInfo == m_scalarRanges.end() )
+    }
+    else if( dataset->GetPointData()->GetNumberOfArrays() > 0 )
+    {
+        int numArrays = dataset->GetPointData()->GetNumberOfArrays();
+        for( int i = 0; i < numArrays; ++i )
         {
-            m_scalarRanges[array->GetName()] = new double[2];
-            array->GetRange( m_scalarRanges[array->GetName()] );
+            vtkDataArray* array = dataset->GetPointData()->GetArray( i );
+            //if it is a vector
+            if( array->GetNumberOfComponents() != 1 )
+            {
+                continue;
+            }
+            //Not already in the list so find the range
+            //This assumes that there are only unique
+            //scalars AND that each dataset has the same
+            //unique scalars---This may be incorrect because
+            //each dataset in the multiblock may have it's own scalar range but
+            //it's not clear if that is the case...
+            scalarRangeInfo = m_scalarRanges.find( array->GetName() );
+            if( scalarRangeInfo == m_scalarRanges.end() )
+            {
+                m_scalarRanges[array->GetName()] = new double[2];
+                array->GetRange( m_scalarRanges[array->GetName()] );
+            }
+            else
+            {
+                double tempRange[ 2 ] = { 0.0f, 0.0f };
+                array->GetRange( tempRange );
+                if( scalarRangeInfo->second[ 0 ] > tempRange[ 0 ] )
+                {
+                    scalarRangeInfo->second[ 0 ] = tempRange[ 0 ];
+                }
+                
+                if( scalarRangeInfo->second[ 1 ] < tempRange[ 1 ] )
+                {
+                    scalarRangeInfo->second[ 1 ] = tempRange[ 1 ];
+                }                
+            }
         }
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void ProcessScalarRangeCallback::GetScalarRange( std::string scalarName, double range[] )
+void ProcessScalarRangeCallback::GetScalarRange( const std::string& scalarName, double*& range )
 {
     try
     {

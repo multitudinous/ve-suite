@@ -68,7 +68,7 @@ public:
     ///Get scalar range for a specified scalar
     ///\param scalarName The name of the scalar to find the range
     ///\param  range The scalar range
-    void GetScalarRange( std::string scalarName, double range[2] );
+    void GetScalarRange( const std::string& scalarName, double*& range );
 protected:
     std::map<std::string, double* > m_scalarRanges;///<The scalar names
 };
