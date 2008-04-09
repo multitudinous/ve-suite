@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "CameraEntityCallback.h"
 #include "CameraEntity.h"
+#include "CustomKeyboardMouseInterface.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -43,16 +44,14 @@
 // --- vrJuggler Includes --- //
 #include <gmtl/Xforms.h>
 
-// --- OSG Includes --- //
-#include <osg/TexGenNode>
-
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntityCallback::CameraEntityCallback()
 :
 osg::Object(),
-osg::NodeCallback()
+osg::NodeCallback(),
+mCustomKeyboardMouseInterface( new cpt::CustomKeyboardMouseInterface() )
 {
     ;
 }
@@ -60,7 +59,8 @@ osg::NodeCallback()
 CameraEntityCallback::CameraEntityCallback( const CameraEntityCallback& input )
 :
 osg::Object( input ),
-osg::NodeCallback( input )
+osg::NodeCallback( input ),
+mCustomKeyboardMouseInterface( 0 )
 {
     if( &input != this )
     {
@@ -70,7 +70,7 @@ osg::NodeCallback( input )
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntityCallback::~CameraEntityCallback()
 {
-    ;
+    delete mCustomKeyboardMouseInterface;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
@@ -96,6 +96,14 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
         cameraEntity->setViewMatrix( tempMatrix );
         
         cameraEntity->CalculateMatrixMVPT();
+
+        if( mCustomKeyboardMouseInterface->ProcessEvents() )
+        {
+            std::pair< int, int > temp =
+                mCustomKeyboardMouseInterface->GetMousePosition();
+            std::cout << "x: " << temp.first << std::endl;
+            std::cout << "y: " << temp.second << std::endl << std::endl;
+        }
     }
 
     traverse( node, nv );

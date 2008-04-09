@@ -31,34 +31,32 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CAMERA_ENTITY_CALLBACK_H
-#define CAMERA_ENTITY_CALLBACK_H
+#ifndef CUSTOM_KEYBOARD_MOUSE_INTERFACE_H
+#define CUSTOM_KEYBOARD_MOUSE_INTERFACE_H
 
-// --- OSG Includes --- //
-#include <osg/NodeCallback>
+// --- vrJugglerIncludes --- //
+#include <gadget/Type/KeyboardMouseInterface.h>
 
 namespace cpt
 {
-// --- My Includes --- //
-class CustomKeyboardMouseInterface;
-
-class CameraEntityCallback : public osg::NodeCallback
+class CustomKeyboardMouseInterface
 {
 public:
+    CustomKeyboardMouseInterface();
+    ~CustomKeyboardMouseInterface();
 
-    CameraEntityCallback();
-    CameraEntityCallback( const CameraEntityCallback& input );
+    bool ProcessEvents();
 
-    virtual void operator()( osg::Node* node, osg::NodeVisitor* nv );
+    std::pair< int, int > GetMousePosition();
 
 protected:
-    virtual ~CameraEntityCallback();
 
 private:
-    cpt::CustomKeyboardMouseInterface* mCustomKeyboardMouseInterface;
+    std::pair< int, int > mMousePosition;
+
+    gadget::KeyboardMouseInterface mKeyboard;
 
 };
-
 } //end cpt
 
-#endif //CAMERA_ENTITY_CALLBACK_H
+#endif //CUSTOM_KEYBOARD_MOUSE_INTERFACE_H
