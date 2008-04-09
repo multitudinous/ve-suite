@@ -32,6 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef ANSYSREADER_H
 #define ANSYSREADER_H
+#include <vtkType.h>
 
 #include <iostream>
 typedef int int32;
@@ -155,7 +156,7 @@ private:
     int32 * realConstantsForElement;
     int32 * coordSystemforElement;
     int32 * numCornerNodesInElement;
-    int32 ** cornerNodeNumbersForElement;
+    vtkIdType** cornerNodeNumbersForElement;
     vtkDoubleArray * summedFullGraphicsS1Stress;
     vtkDoubleArray * summedFullGraphicsS3Stress;
     vtkDoubleArray * summedFullGraphicsVonMisesStress;

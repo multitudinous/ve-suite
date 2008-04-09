@@ -221,12 +221,12 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
         return uGrid;
     }
 
-    int cId, cPt[8], cGroup, cType;
+    vtkIdType cId, cPt[8], cGroup, cType;
     int sId, sPt[8], sGroup, sType;  // used for samm cells - second record line
     int tPt[8];                      // used for samm cells - third record line
     int resolutionType, REG;         // used for samm cells
     //int PERM;                      // used for samm cells
-    int temp[8];                     // used for samm cells
+    vtkIdType temp[8];                     // used for samm cells
     int numVtkCells = 0;
     int numStarCells = 0;
     int i;

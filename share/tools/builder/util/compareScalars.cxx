@@ -125,8 +125,8 @@ int main( int argc, char *argv[] )
       datasetPIV->GetPointData()->SetActiveScalars("Absolute Velocity");
        datasetCFD->GetPointData()->SetActiveScalars("Velocity_magnitude");
 #ifdef VTK_POST_FEB20
-       absVelPIV = datasetPIV->GetPointData()->GetArray( "Absolute Velocity" )->GetComponent( countPoints, 0 );
-       absVelCFD = datasetCFD->GetPointData()->GetArray( "Velocity_magnitude" )->GetComponent( countPoints, 0 );
+       absVelPIV = datasetPIV->GetPointData()->GetArray( "Absolute Velocity" )->GetTuple1( countPoints );
+       absVelCFD = datasetCFD->GetPointData()->GetArray( "Velocity_magnitude" )->GetTuple1( countPoints );
 #else
        absVelPIV = datasetPIV->GetPointData()->GetComponent( countPoints, 0 );
        absVelCFD = datasetCFD->GetPointData()->GetComponent( countPoints, 0 );

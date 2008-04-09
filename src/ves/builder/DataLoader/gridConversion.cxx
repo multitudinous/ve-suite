@@ -58,7 +58,7 @@ vtkUnstructuredGrid* ves::builder::DataLoader::convertToUnstructuredGrid( vtkDat
     if( numCells == 0 )
         return ugrid;
 
-    int pt, npts;
+    vtkIdType pt, npts;
     vtkIdList *pts = vtkIdList::New();
     vtkGenericCell *cell = vtkGenericCell::New();
 

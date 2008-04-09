@@ -203,7 +203,7 @@ osg::Geometry* ves::xplorer::scenegraph::processPrimitive( vtkActor *actor, vtkC
 
     // copy data from vtk prim array to osg Geometry
     int prim = 0, vert = 0;
-    int i, npts, totpts = 0, *pts, transparentFlag = 0;
+    vtkIdType i, npts, totpts = 0, *pts, transparentFlag = 0;
     ;
     // go through cells (primitives)
     for( primArray->InitTraversal(); primArray->GetNextCell( npts, pts ); prim++ )

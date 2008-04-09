@@ -311,7 +311,7 @@ vtkPolyData* ModelHandler::_GetArrowPolyData( )
     int numCells = 6;
 
     float vertex[3];
-    int vertexList[4];     // make large enough for rectangles
+    vtkIdType vertexList[4];     // make large enough for rectangles
     vtkPolyData * arrow = vtkPolyData::New();
 
     int memSize = numCells;

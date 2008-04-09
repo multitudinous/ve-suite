@@ -667,7 +667,8 @@ void VTKDataToTexture::_createValidityTexture()
       vectorcells.push_back( vtkGenericCell::New() );
    }
 
-   vtkIdType cellId,subId;
+   vtkIdType cellId;
+   int subId;
    double dist = 0;
    double closestPt[3];
    double pcoords[3];
@@ -824,7 +825,8 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    //our original cell that contains our cartesian point
    vtkGenericCell* cell = vtkGenericCell::New();
    
-   vtkIdType cellId,subId;
+   vtkIdType cellId;
+   int subId;
    double dist = 0;
    double closestPt[3];
    double pcoords[3];

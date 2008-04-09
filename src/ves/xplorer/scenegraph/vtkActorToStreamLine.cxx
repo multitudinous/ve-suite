@@ -146,7 +146,7 @@ osg::Geometry* ves::xplorer::scenegraph::ProcessPrimitive( vtkActor *actor, vtkC
 
     //Copy data from vtk prim array to osg Geometry
     int prim = 0, totpts = 0;
-    int npts, *pts;
+    vtkIdType npts, *pts;
 
     //Go through cells (primitives)
     for( primArray->InitTraversal(); primArray->GetNextCell( npts, pts ); ++prim )

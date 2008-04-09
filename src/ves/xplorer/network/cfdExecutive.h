@@ -175,7 +175,7 @@ public:
     ///Get the current network system view being used by cfdExecutive
     NetworkSystemView* GetNetworkSystemView();
     ///Delete the network system view
-    void cfdExecutive::DeleteNetworkSystemView();
+    void DeleteNetworkSystemView();
     ///Unregister in the executive from the ce. This should be called before the
     /// destrucutor is called.
     void UnRegisterExecutive();

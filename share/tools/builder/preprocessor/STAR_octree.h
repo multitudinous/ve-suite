@@ -401,8 +401,8 @@ void Octree::InitOctantsTable( )
 
 void Octree::InsertOctantsTable( )
 {
-  int ptId;
-  int cellPtId[8];
+  vtkIdType ptId;
+  vtkIdType cellPtId[8];
   double xtmp[3];
 
   // Set the boundary of the octant

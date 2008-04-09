@@ -134,7 +134,7 @@ int main( int argc, char *argv[] )
 
    uGrid->SetPoints( vertices );
 
-   int temp [ 8 ] = {0,1,2,3,4,5,6,7};
+   vtkIdType temp [ 8 ] = {0,1,2,3,4,5,6,7};
    uGrid->Allocate( 1, 1 );
    uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
 

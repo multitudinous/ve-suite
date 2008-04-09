@@ -1645,7 +1645,7 @@ void ansysReader::ReadElementDescriptionIndexTable()
     this->realConstantsForElement = new int32 [ this->numElems ];
     this->coordSystemforElement = new int32 [ this->numElems ];
     this->numCornerNodesInElement = new int32 [ this->numElems ];
-    this->cornerNodeNumbersForElement = new int32 * [ this->numElems ];
+    this->cornerNodeNumbersForElement = new vtkIdType * [ this->numElems ];
 
     // read all values
     for( int i = 0; i < this->numElems; i++ )
@@ -1827,10 +1827,10 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
     //PRINT( numCornerNodes );
 
     this->numCornerNodesInElement[ elemIndex ] = numCornerNodes;
-    this->cornerNodeNumbersForElement[ elemIndex ] = new int32 [ numCornerNodes ];
+    this->cornerNodeNumbersForElement[ elemIndex ] = new vtkIdType[ numCornerNodes ];
 
     // allocate space for the node IDs that define the corners of the element
-    int32 * nodes = new int32 [ numNodesInElement ];
+    vtkIdType* nodes = new vtkIdType[ numNodesInElement ];
 
     // read the node IDs that define the element
     if( fileIO::readNByteBlockFromFile( nodes,
@@ -1999,7 +1999,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
         }
 #endif // PRINT_HEADERS
 
-        int * expandedNodes = new int [ 2 * numCornerNodes ];
+        vtkIdType* expandedNodes = new vtkIdType[ 2 * numCornerNodes ];
         for( int i = 0; i < numCornerNodes; i++ )
         {
             double midPlaneCoordinates [ 3 ];
