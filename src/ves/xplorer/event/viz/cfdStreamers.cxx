@@ -73,8 +73,6 @@ cfdStreamers::cfdStreamers()
         lineDiameter( 1.0f ),
         arrowDiameter( 1 ),
         streamArrows( 0 ),
-//pointSource( 0 ),
-
         xValue( 4 ),
         yValue( 4 ),
         zValue( 4 ),
@@ -254,8 +252,8 @@ void cfdStreamers::Update()
     try
     {
         osg::ref_ptr< ves::xplorer::scenegraph::Geode > tempGeode = new ves::xplorer::scenegraph::Geode();
-        //tempGeode->TranslateToGeode( temp );
-        tempGeode->StreamLineToGeode( temp );
+        tempGeode->TranslateToGeode( temp );
+        //tempGeode->StreamLineToGeode( temp );
 
         geodes.push_back( tempGeode );
         updateFlag = true;
