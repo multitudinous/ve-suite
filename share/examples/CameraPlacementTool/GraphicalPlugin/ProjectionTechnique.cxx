@@ -43,6 +43,7 @@ using namespace cpt;
 ProjectionTechnique::ProjectionTechnique()
 :
 ves::xplorer::scenegraph::Technique(),
+mAlpha( new osg::Uniform( osg::Uniform::FLOAT, "alpha" ) ),
 mNearPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "nearPlane" ) ),
 mFarPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "farPlane" ) )
 {
@@ -69,11 +70,17 @@ void ProjectionTechnique::DefinePasses()
             < osg::Program, osg::ref_ptr >( "ProjectionProgram" ) ).get(),
             osg::StateAttribute::ON );
 
+        stateset->addUniform( mAlpha.get() );
         stateset->addUniform( mNearPlaneUniform.get() );
         stateset->addUniform( mFarPlaneUniform.get() );
 
         AddPass( stateset.get() );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Uniform* ProjectionTechnique::GetAlpha()
+{
+    return mAlpha.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Uniform* ProjectionTechnique::GetNearPlaneUniform()

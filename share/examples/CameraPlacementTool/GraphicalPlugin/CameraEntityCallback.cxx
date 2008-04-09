@@ -37,6 +37,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/Group.h>
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 
 // --- vrJuggler Includes --- //

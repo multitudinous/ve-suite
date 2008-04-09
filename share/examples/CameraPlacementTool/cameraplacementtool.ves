@@ -54,13 +54,13 @@
             <transform>
               <translation>
                 <value>0</value>
-                <value>0</value>
+                <value>5</value>
                 <value>0</value>
               </translation>
               <scale>
-                <value>1</value>
-                <value>1</value>
-                <value>1</value>
+                <value>5</value>
+                <value>5</value>
+                <value>5</value>
               </scale>
               <rotation>
                 <value>0</value>

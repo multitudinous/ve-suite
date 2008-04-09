@@ -40,6 +40,7 @@
 #include <ves/xplorer/environment/HeadsUpDisplay.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
 // --- OSG Includes --- //
@@ -65,8 +66,11 @@ mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( 0 ),
+mSceneManager( 0 ),
+mResourceManager( 0 ),
 mRootNode( 0 ),
 mWorldDCS( 0 ),
+mPluginDCS( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -80,8 +84,11 @@ mQuadVertices( 0 )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CameraEntity::CameraEntity( ves::xplorer::scenegraph::DCS* worldDCS,
-                            ves::xplorer::HeadsUpDisplay* headsUpDisplay )
+CameraEntity::CameraEntity(
+    ves::xplorer::scenegraph::DCS* pluginDCS, 
+    ves::xplorer::scenegraph::SceneManager* sceneManager,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager,
+    ves::xplorer::HeadsUpDisplay* headsUpDisplay )
 :
 osg::Camera(),
 mCameraPerspective( false ),
@@ -90,8 +97,11 @@ mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( headsUpDisplay ),
+mSceneManager( sceneManager ),
+mResourceManager( resourceManager ),
 mRootNode( 0 ),
-mWorldDCS( worldDCS ),
+mWorldDCS( 0 ),
+mPluginDCS( pluginDCS ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -114,8 +124,11 @@ mTexGenNode( 0 ),
 mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( 0 ),
+mSceneManager( 0 ),
+mResourceManager( 0 ),
 mRootNode( 0 ),
 mWorldDCS( 0 ),
+mPluginDCS( 0 ),
 mCameraDCS( 0 ),
 mQuadDCS( 0 ),
 mCameraNode( 0 ),
@@ -134,19 +147,18 @@ mQuadVertices( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::~CameraEntity()
 {
-    removeChild( mWorldDCS.get() );
-
-    mWorldDCS->removeChild( mCameraDCS.get() );
     mHeadsUpDisplay->GetCamera()->removeChild( mQuadDCS.get() );
 
-    mWorldDCS->SetTechnique( std::string( "Default" ) );
-    mWorldDCS->RemoveTechnique( std::string( "Projection" ) );
+    mPluginDCS->SetTechnique( std::string( "Default" ) );
+    mPluginDCS->RemoveTechnique( std::string( "Projection" ) );
     delete mProjectionTechnique;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Initialize()
-{   //Initialize mRootNode
-    mRootNode = mWorldDCS->getParent( 0 )->getParent( 0 );
+{
+    //Initialize mRootNode & mWorldDCS
+    mRootNode = mSceneManager->GetRootNode();
+    mWorldDCS = mSceneManager->GetWorldDCS();
     
     //Initialize the resources
     InitializeResources();
@@ -168,16 +180,17 @@ void CameraEntity::Initialize()
 
     //Add the subgraph to render
     addChild( mWorldDCS.get() );
-    mRootNode->addChild( this );
 
     //Initialize mProjectionTechnique
     mProjectionTechnique = new cpt::ProjectionTechnique();
+    mProjectionTechnique->GetAlpha()->set(
+        static_cast< float >( 0.3 ) );
     mProjectionTechnique->GetNearPlaneUniform()->set(
         static_cast< float >( 5.0 ) );
     mProjectionTechnique->GetFarPlaneUniform()->set(
         static_cast< float >( 10.0 ) );
-    mWorldDCS->AddTechnique( std::string( "Projection" ), mProjectionTechnique );
-    mWorldDCS->SetTechnique( std::string( "Projection" ) );
+    mPluginDCS->AddTechnique( std::string( "Projection" ), mProjectionTechnique );
+    mPluginDCS->SetTechnique( std::string( "Projection" ) );
 
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
@@ -197,7 +210,7 @@ void CameraEntity::Initialize()
 
     //Initialize mCameraDCS & mQuadDCS
     mCameraDCS = new ves::xplorer::scenegraph::DCS();
-    mWorldDCS->addChild( mCameraDCS.get() );
+    mPluginDCS->addChild( mCameraDCS.get() );
 
     mQuadDCS = new ves::xplorer::scenegraph::DCS();
     mQuadDCS->setScale( osg::Vec3( 200, 200, 0 ) );
@@ -277,7 +290,7 @@ void CameraEntity::InitializeResources()
         cameraProgram->addShader( cameraVertexShader.get() );
         cameraProgram->addShader( cameraFragmentShader.get() );
         boost::any anyVal = cameraProgram;
-        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        mResourceManager->add(
             std::string( "CameraProgram" ), anyVal );
     }
 
@@ -309,7 +322,7 @@ void CameraEntity::InitializeResources()
         frustumProgram->addShader( frustumVertexShader.get() );
         frustumProgram->addShader( frustumFragmentShader.get() );
         boost::any anyVal = frustumProgram;
-        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        mResourceManager->add(
             std::string( "FrustumProgram" ), anyVal );
     }
 
@@ -345,7 +358,7 @@ void CameraEntity::InitializeResources()
         quadProgram->addShader( quadVertexShader.get() );
         quadProgram->addShader( quadFragmentShader.get() );
         boost::any anyVal = quadProgram;
-        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        mResourceManager->add(
             std::string( "QuadProgram" ), anyVal );
     }
 
@@ -372,6 +385,7 @@ void CameraEntity::InitializeResources()
         "} \n" );
 
         std::string projectionFragmentSource = std::string(
+        "uniform float alpha; \n"
         "uniform float nearPlane; \n"
         "uniform float farPlane; \n"
 
@@ -398,7 +412,7 @@ void CameraEntity::InitializeResources()
 
             "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
             "vec4 color = \n"
-                "vec4( totalAmbient + totalDiffuse + totalSpecular, 0.3 ); \n"
+                "vec4( totalAmbient + totalDiffuse + totalSpecular, alpha ); \n"
 
             //If in frustum
             "if( projectionUV.s >= 0.0 && \n"
@@ -426,7 +440,7 @@ void CameraEntity::InitializeResources()
         projectionProgram->addShader( projectionVertexShader.get() );
         projectionProgram->addShader( projectionFragmentShader.get() );
         boost::any anyVal = projectionProgram;
-        ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        mResourceManager->add(
             std::string( "ProjectionProgram" ), anyVal );
     }
 }
@@ -446,16 +460,17 @@ void CameraEntity::CalculateMatrixMVPT()
 void CameraEntity::CreateCamera()
 {
     mCameraNode = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
-    mCameraDCS->addChild( mCameraNode.get() );
-
+    
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     //Set bin number to 11 so camera does not occlude geometry from scene
     stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );
     stateset->setAttribute(
-        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "CameraProgram" ) ).get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     mCameraDCS->setStateSet( stateset.get() );
+
+    mCameraDCS->addChild( mCameraNode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateViewFrustum()
@@ -487,12 +502,12 @@ void CameraEntity::CreateViewFrustum()
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     //Set bin number to 11 so camera does not occlude geometry from scene
-    stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
     stateset->setAttribute(
-        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "FrustumProgram" ) ).get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     mFrustumGeode->setStateSet( stateset.get() );
@@ -528,7 +543,7 @@ void CameraEntity::CreateScreenAlignedQuad()
     stateset->setTextureAttributeAndModes(
         1, mQuadTexture.get(), osg::StateAttribute::ON );
     stateset->setAttribute(
-        ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+        ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "QuadProgram" ) ).get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     stateset->setMode(
@@ -615,18 +630,14 @@ void CameraEntity::Update()
     (*mFrustumVertices)[ 6 ].set( fRight, farPlane, fBottom );
     (*mFrustumVertices)[ 7 ].set( fRight, farPlane, fTop );
     (*mFrustumVertices)[ 8 ].set( fLeft, farPlane, fTop );
-    
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
 
-    double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
-    (*mQuadVertices)[ 0 ].set( 0.0,           0.0, 0.0 );
-    //(*mQuadVertices)[ 1 ].set( 1.0, 0.0, 0.0 );
-    //(*mQuadVertices)[ 2 ].set( 1.0, 1.0, 0.0 );
+    float aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
+    (*mQuadVertices)[ 0 ].set( 0.0,         0.0, 0.0 );
     (*mQuadVertices)[ 1 ].set( aspectRatio, 0.0, 0.0 );
     (*mQuadVertices)[ 2 ].set( aspectRatio, 1.0, 0.0 );
     (*mQuadVertices)[ 3 ].set( 0.0,         1.0, 0.0 );
-
     mQuadGeometry->dirtyDisplayList();
     mQuadGeometry->dirtyBound();
 
@@ -651,17 +662,22 @@ void CameraEntity::DisplayProjectionEffect( bool onOff )
 {
     if( onOff )
     {
-        mWorldDCS->SetTechnique( std::string( "Projection" ) );
+        mPluginDCS->SetTechnique( std::string( "Projection" ) );
     }
     else
     {
-        mWorldDCS->SetTechnique( std::string( "Default" ) );
+        mPluginDCS->SetTechnique( std::string( "Default" ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayScreenAlignedQuad( bool onOff )
 {
     mQuadDCS->setNodeMask( onOff );
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::Group* CameraEntity::GetRootNode()
+{
+    return mRootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CameraEntity::GetWorldDCS()
@@ -679,9 +695,20 @@ const osg::Matrixd& CameraEntity::GetInitialViewMatrix()
     return mInitialViewMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::TexGenNode* CameraEntity::GetTexGenNode()
+{
+    return mTexGenNode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetQuadResolution( unsigned int value )
 {
     osg::Vec3 quadResolution( value, value, 0 );
     mQuadDCS->setScale( quadResolution );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::SetProjectionEffectOpacity( double value )
+{
+    mProjectionTechnique->GetAlpha()->set(
+        static_cast< float >( value ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

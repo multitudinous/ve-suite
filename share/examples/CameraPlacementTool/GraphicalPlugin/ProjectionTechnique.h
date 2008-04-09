@@ -45,6 +45,7 @@ public:
     ProjectionTechnique();
     virtual ~ProjectionTechnique();
 
+    osg::Uniform* GetAlpha();
     osg::Uniform* GetNearPlaneUniform();
     osg::Uniform* GetFarPlaneUniform();
 
@@ -52,6 +53,7 @@ protected:
     virtual void DefinePasses();
 
 private:
+    osg::ref_ptr< osg::Uniform > mAlpha;
     osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
     osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
 };

@@ -74,17 +74,20 @@ public:
 
     enum CPT_IDS
     {
-        ID_CAMERA_RADIOBOX,
-        ID_FRUSTUM_RADIOBOX,
-        ID_PROJECTION_RADIOBOX,
+        ID_FOVZ_SPINCTRL,
         ID_FOVZ_SLIDER,
         ID_ASPECTRATIO_SPINCTRL,
+        ID_ASPECTRATIO_SLIDER,
 		ID_NEARPLANE_SPINCTRL,
 		ID_NEARPLANE_SLIDER,
 		ID_FARPLANE_SPINCTRL,
 		ID_FARPLANE_SLIDER,
         ID_CAMERAVIEW_RADIOBOX,
-        ID_RESOLUTION_SLIDER
+        ID_RESOLUTION_SLIDER,
+        ID_PROJECTION_RADIOBOX,
+        ID_OPACITY_SLIDER,
+        ID_CAMERA_RADIOBOX,
+        ID_FRUSTUM_RADIOBOX
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -101,37 +104,48 @@ private:
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    void OnCameraRadioBox( wxCommandEvent& event );
-    void OnFrustumRadioBox( wxCommandEvent& event );
-    void OnProjectionRadioBox( wxCommandEvent& event );
+    void OnFoVZSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnFoVZText( wxCommandEvent& event );
     void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-    void OnCameraViewRadioBox( wxCommandEvent& event );
-    void OnResolutionSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnAspectRatioText( wxCommandEvent& event );
+    void OnAspectRatioSlider( wxCommandEvent& WXUNUSED( event ) );
 	void OnNearPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
 	void OnNearPlaneText( wxCommandEvent& event );
 	void OnNearPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
 	void OnFarPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
 	void OnFarPlaneText( wxCommandEvent& event );
 	void OnFarPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
-	bool EnsureSliders( int activeSliderID );
+	void OnCameraViewRadioBox( wxCommandEvent& event );
+    void OnResolutionSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnProjectionRadioBox( wxCommandEvent& event );
+    void OnOpacitySlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnCameraRadioBox( wxCommandEvent& event );
+    void OnFrustumRadioBox( wxCommandEvent& event );
+
+    bool EnsureSliders( int activeSliderID );
+    void UpdateFoVZControls();
+    void UpdateAspectRatioControls();
 	void UpdateNearPlaneControls();
 	void UpdateFarPlaneControls();
     void ProjectionUpdate();
 
     double mProjectionData[ 4 ];
 
-    wxRadioBox* mCameraRadioBox;
-    wxRadioBox* mFrustumRadioBox;
-    wxRadioBox* mProjectionRadioBox;
+    ves::conductor::util::wxSpinCtrlDbl* mFoVZSpinCtrl;
     wxSlider* mFoVZSlider;
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
-	ves::conductor::util::wxSpinCtrlDbl* mNearPlaneSpinCtrl;
+    wxSlider* mAspectRatioSlider;
+    ves::conductor::util::wxSpinCtrlDbl* mNearPlaneSpinCtrl;
 	wxSlider* mNearPlaneSlider;
 	ves::conductor::util::wxSpinCtrlDbl* mFarPlaneSpinCtrl;
 	wxSlider* mFarPlaneSlider;
     wxRadioBox* mCameraViewRadioBox;
     wxSlider* mResolutionSlider;
+    wxRadioBox* mProjectionRadioBox;
+    wxSlider* mOpacitySlider;
+    wxRadioBox* mCameraRadioBox;
+    wxRadioBox* mFrustumRadioBox;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;

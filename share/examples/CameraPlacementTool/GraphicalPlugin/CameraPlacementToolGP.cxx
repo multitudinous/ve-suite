@@ -44,6 +44,9 @@
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 
+// --- OSG Includes --- //
+#include <osg/TexGenNode>
+
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,18 +58,28 @@ mCameraEntity( 0 )
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
 
-    mEventHandlerMap[ "TOGGLE_CAMERA_UPDATE" ] = this;
-    mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
-    mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
     mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
     mEventHandlerMap[ "CAMERA_VIEW_UPDATE" ] = this;
     mEventHandlerMap[ "RESOLUTION_UPDATE" ] = this;
+    mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
+    mEventHandlerMap[ "OPACITY_UPDATE" ] = this;
+    mEventHandlerMap[ "TOGGLE_CAMERA_UPDATE" ] = this;
+    mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
 {
-    //mSceneManager->GetRootNode()->removeChild( mTexGenNode.get() );
-    mSceneManager->GetRootNode()->removeChild( mCameraEntity.get() );
+    if( mSceneManager )
+    {
+        osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
+            mSceneManager->GetRootNode();
+
+        if( rootNode.valid() && mCameraEntity.valid() )
+        {
+            rootNode->removeChild( mCameraEntity->GetTexGenNode() );
+            rootNode->removeChild( mCameraEntity.get() );
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::InitializeNode(
@@ -76,10 +89,15 @@ void CameraPlacementToolGP::InitializeNode(
 
     //Initialize the CameraEntity
     mCameraEntity = new cpt::CameraEntity(
-        veworldDCS, mEnvironmentHandler->GetHeadsUpDisplay() );
+        mDCS.get(),
+        mSceneManager,
+        mResourceManager,
+        mEnvironmentHandler->GetHeadsUpDisplay() );
 
     double cameraPosition[ 3 ] = { 0, -5.0, 0 };
     mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );
+
+    mSceneManager->GetRootNode()->addChild( mCameraEntity.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::PreFrameUpdate()
@@ -95,31 +113,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
         return;
     }
 
-    if( command->GetCommandName() == "TOGGLE_CAMERA_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "toggleCamera" )->GetData( selection );
-
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayCamera( onOff );
-    }
-    else if( command->GetCommandName() == "TOGGLE_FRUSTUM_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "toggleFrustum" )->GetData( selection );
-
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayViewFrustum( onOff );
-    }
-    else if( command->GetCommandName() == "TOGGLE_PROJECTION_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "toggleProjection" )->GetData( selection );
-
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayProjectionEffect( onOff );
-    }
-    else if( command->GetCommandName() == "PROJECTION_UPDATE" )
+    if( command->GetCommandName() == "PROJECTION_UPDATE" )
     {
         double projectionData[ 4 ] = { 0, 0, 0, 0 };
         command->GetDataValuePair(
@@ -151,6 +145,37 @@ void CameraPlacementToolGP::SetCurrentCommand(
         command->GetDataValuePair( "resolution" )->GetData( value );
 
         mCameraEntity->SetQuadResolution( value );
+    }
+    else if( command->GetCommandName() == "TOGGLE_PROJECTION_UPDATE" )
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair( "toggleProjection" )->GetData( selection );
+
+        bool onOff = ( selection != 0 );
+        mCameraEntity->DisplayProjectionEffect( onOff );
+    }
+    else if( command->GetCommandName() == "OPACITY_UPDATE" )
+    {
+        double value = 0;
+        command->GetDataValuePair( "opacity" )->GetData( value );
+
+        mCameraEntity->SetProjectionEffectOpacity( value );
+    }
+    else if( command->GetCommandName() == "TOGGLE_CAMERA_UPDATE" )
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair( "toggleCamera" )->GetData( selection );
+
+        bool onOff = ( selection != 0 );
+        mCameraEntity->DisplayCamera( onOff );
+    }
+    else if( command->GetCommandName() == "TOGGLE_FRUSTUM_UPDATE" )
+    {
+        unsigned int selection = 0;
+        command->GetDataValuePair( "toggleFrustum" )->GetData( selection );
+
+        bool onOff = ( selection != 0 );
+        mCameraEntity->DisplayViewFrustum( onOff );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
