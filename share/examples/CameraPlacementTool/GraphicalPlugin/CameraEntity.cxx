@@ -43,11 +43,16 @@
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
+// --- vrJuggler Includes --- //
+#include <gmtl/Xforms.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/Texture2D>
 #include <osg/TexGenNode>
+
+#include <osgUtil/IntersectVisitor>
 
 #include <osgDB/ReadFile>
 
@@ -457,6 +462,95 @@ void CameraEntity::CalculateMatrixMVPT()
     mTexGenNode->getTexGen()->setPlanesFromMatrix( mMVPT );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::CustomKeyboardMouseSelection(
+    std::pair< unsigned int, unsigned int > mousePosition,
+    gmtl::Matrix44d localToWorldMatrix )
+{
+    std::pair< unsigned int, unsigned int > windowResolution =
+        mHeadsUpDisplay->GetWindowResolution();
+    mousePosition.second = windowResolution.second - mousePosition.second;
+
+    std::pair< unsigned int, unsigned int > quadResolution( 0, 0 );
+    quadResolution.first =
+        (*mQuadVertices)[ 2 ].x() * mQuadDCS->getScale().x();
+    quadResolution.second =
+        (*mQuadVertices)[ 2 ].y() * mQuadDCS->getScale().y();
+
+    if( mousePosition.first <= quadResolution.first &&
+        mousePosition.second <= quadResolution.second )
+    {
+        std::pair< double, double > frustumQuadRatio( 0, 0 );
+        frustumQuadRatio.first =
+            ( (*mFrustumVertices)[ 3 ].x() - (*mFrustumVertices)[ 4 ].x() ) /
+            static_cast< double >( quadResolution.first );
+        frustumQuadRatio.second =
+            ( (*mFrustumVertices)[ 3 ].z() - (*mFrustumVertices)[ 2 ].z() ) /
+            static_cast< double >( quadResolution.second );
+
+        //We may have to offset negative mX because
+        //the frustums are being setup for the mLeftFrustum eye
+        //( 0.0345 * 3.2808399 )
+        osg::Vec3d startPoint( 0, 0, 0 );
+        startPoint.x() = (*mFrustumVertices)[ 4 ].x() +
+                         ( mousePosition.first * frustumQuadRatio.first );
+        startPoint.y() = (*mFrustumVertices)[ 3 ].y();
+        startPoint.z() = (*mFrustumVertices)[ 2 ].z() +
+                         ( mousePosition.second * frustumQuadRatio.second );
+
+        
+        double yRatio = (*mFrustumVertices)[ 7 ].y() /
+                        (*mFrustumVertices)[ 3 ].y();
+
+        osg::Vec3d endPoint( 0, 0, 0 );
+        endPoint.x() = yRatio * startPoint.x();
+        endPoint.y() = (*mFrustumVertices)[ 7 ].y();
+        endPoint.z() = yRatio * startPoint.z();
+
+        osg::Matrixd tempMatrix;
+        tempMatrix.set( localToWorldMatrix.getData() );
+        startPoint = startPoint * tempMatrix;
+        endPoint = endPoint * tempMatrix;
+
+        std::cout << std::endl;
+        std::cout << "startPoint: ( " << startPoint.x() << ", "
+                                      << startPoint.y() << ", "
+                                      << startPoint.z() << " )" << std::endl;
+        std::cout << "endPoint: ( " << endPoint.x() << ", "
+                                    << endPoint.y() << ", "
+                                    << endPoint.z() << " )" << std::endl;
+        std::cout << std::endl;
+
+        osg::ref_ptr< osg::LineSegment > lineSegment = new osg::LineSegment();
+        lineSegment->set( startPoint, endPoint );
+        
+        osgUtil::IntersectVisitor intersectVisitor;
+        intersectVisitor.addLineSegment( lineSegment.get() );
+
+        //Either pluginDCS or rootNode should add this probably
+        //If pluginDCS is used, need to multiply by local to pluginDCS
+        //for startPoint and endPoint
+        mWorldDCS->accept( intersectVisitor );
+
+        osgUtil::IntersectVisitor::HitList hitList;
+        hitList = intersectVisitor.getHitList( lineSegment.get() );
+
+        if( hitList.empty() )
+        {
+            return;
+        }
+
+        std::cout << std::endl;
+        std::cout << hitList.size() << std::endl;
+        for( size_t i = 0; i <  hitList.size(); ++i )
+        {
+            osgUtil::Hit objectHit = hitList[ i ];
+            std::cout << "Hit( " << i << " ): "
+                      << objectHit._geode->getName() << std::endl;
+        }
+        std::cout << std::endl;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateCamera()
 {
     mCameraNode = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
@@ -577,19 +671,6 @@ void CameraEntity::CreateCameraViewTexture()
     attach( osg::Camera::COLOR_BUFFER, mQuadTexture.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::SetNamesAndDescriptions()
-{
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList.push_back( "VE_XML_ID" );
-    descriptorsList.push_back( "" );
-
-    mCameraDCS->setDescriptions( descriptorsList );
-    mCameraDCS->setName( std::string( "Camera" ) );
-
-    mQuadDCS->setDescriptions( descriptorsList );
-    mQuadDCS->setName( std::string( "Screen Aligned Quad" ) );
-}
-////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Update()
 {
     //Update the MVPT matrix
@@ -700,15 +781,27 @@ osg::TexGenNode* CameraEntity::GetTexGenNode()
     return mTexGenNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraEntity::SetQuadResolution( unsigned int value )
+void CameraEntity::SetNamesAndDescriptions()
 {
-    osg::Vec3 quadResolution( value, value, 0 );
-    mQuadDCS->setScale( quadResolution );
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_XML_ID" );
+    descriptorsList.push_back( "" );
+
+    mCameraDCS->setDescriptions( descriptorsList );
+    mCameraDCS->setName( std::string( "Camera" ) );
+
+    mQuadDCS->setDescriptions( descriptorsList );
+    mQuadDCS->setName( std::string( "Screen Aligned Quad" ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetProjectionEffectOpacity( double value )
 {
     mProjectionTechnique->GetAlpha()->set(
         static_cast< float >( value ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::SetQuadResolution( unsigned int value )
+{
+    mQuadDCS->setScale( osg::Vec3( value, value, 0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

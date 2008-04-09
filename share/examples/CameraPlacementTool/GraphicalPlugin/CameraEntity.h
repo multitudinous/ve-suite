@@ -51,6 +51,9 @@ class ResourceManager;
 }
 }
 
+// --- vrJuggler Includes --- //
+#include <gmtl/Matrix.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Camera>
@@ -88,6 +91,9 @@ public:
     META_Node( cpt, CameraEntity );
 
     void CalculateMatrixMVPT();
+    void CustomKeyboardMouseSelection(
+        std::pair< unsigned int, unsigned int > mousePosition,
+        gmtl::Matrix44d localToWorldMatrix );
 
     void DisplayCamera( bool onOff );
     void DisplayViewFrustum( bool onOff );
@@ -102,8 +108,8 @@ public:
     osg::TexGenNode* GetTexGenNode();
 
     void SetNamesAndDescriptions();
-    void SetQuadResolution( unsigned int value );
     void SetProjectionEffectOpacity( double value );
+    void SetQuadResolution( unsigned int value );
 
     void Update();
 

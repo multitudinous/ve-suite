@@ -94,15 +94,13 @@ void CameraEntityCallback::operator()( osg::Node* node, osg::NodeVisitor* nv )
                      cameraEntity->GetInitialViewMatrix();
         
         cameraEntity->setViewMatrix( tempMatrix );
-        
         cameraEntity->CalculateMatrixMVPT();
 
         if( mCustomKeyboardMouseInterface->ProcessEvents() )
         {
-            std::pair< int, int > temp =
-                mCustomKeyboardMouseInterface->GetMousePosition();
-            std::cout << "x: " << temp.first << std::endl;
-            std::cout << "y: " << temp.second << std::endl << std::endl;
+            cameraEntity->CustomKeyboardMouseSelection(
+                mCustomKeyboardMouseInterface->GetMousePosition(),
+                localToWorldMatrix );
         }
     }
 

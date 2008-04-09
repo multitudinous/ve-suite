@@ -47,12 +47,12 @@ public:
 
     bool ProcessEvents();
 
-    std::pair< int, int > GetMousePosition();
+    std::pair< unsigned int, unsigned int > GetMousePosition();
 
 protected:
 
 private:
-    std::pair< int, int > mMousePosition;
+    std::pair< unsigned int, unsigned int > mMousePosition;
 
     gadget::KeyboardMouseInterface mKeyboard;
 

@@ -84,7 +84,8 @@ bool CustomKeyboardMouseInterface::ProcessEvents()
     return leftMouseButtonState;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::pair< int, int > CustomKeyboardMouseInterface::GetMousePosition()
+std::pair< unsigned int, unsigned int > CustomKeyboardMouseInterface::
+    GetMousePosition()
 {
     return mMousePosition;
 }
