@@ -231,31 +231,47 @@ void HierarchyTree::Clear()
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
 {
-    if( GetSelection() != m_currentNodeId )
+    //return if current selection is top folder
+    if( GetSelection() == m_rootId )
     {
-        if( GetItemParent(GetSelection()) != m_currentNodeId )
-        {
-            //set the active network to the selected subnet
-            ModuleData* tempModData = static_cast< ModuleData* >( this->
-               GetItemData( GetSelection() ) );
-            m_canvas->SetActiveNetwork( tempModData->systemId );
-            m_canvas->GetActiveNetwork()->
-               HighlightCenter( tempModData->modId );
-            m_currentNodeId = this->GetItemParent( this->GetSelection() );
+        return;
+    }
 
-            //tell xplorer to draw subnet
-            CommandPtr veCommand( new ves::open::xml::Command() );
-            veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
-            DataValuePairPtr dataValuePair2( new DataValuePair( std::string( "UNSIGNED INT" ) ) );
-            dataValuePair2->SetData( "SUBNET_ID", tempModData->systemId );
-            veCommand->AddDataValuePair( dataValuePair2 );
-            DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
-            dataValuePair->SetData( "UPDATE_XPLORER_VIEW", "CHANGE_XPLORER_VIEW_NETWORK" );
-            veCommand->AddDataValuePair( dataValuePair );
-            CORBAServiceList::instance()->
-                SendCommandStringToXplorer( veCommand );
-        }
-	}
+    //find and highlight selected module
+    ModuleData* tempModData = static_cast< ModuleData* >( this->
+        GetItemData( GetSelection() ) );
+    m_canvas->SetActiveNetwork( tempModData->systemId );
+    m_canvas->GetActiveNetwork()->
+               HighlightCenter( tempModData->modId );
+
+    //check if on current module
+    if( GetSelection() == m_currentNodeId )
+    {
+        return;
+    }
+
+    //if a subnet redraw in conductor and xplorer
+    if( GetItemParent(GetSelection()) != m_currentNodeId )
+    {
+        //set the active network to the selected subnet
+        m_currentNodeId = this->GetItemParent( this->GetSelection() );
+
+        //tell xplorer to draw subnet
+        CommandPtr veCommand( new ves::open::xml::Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_XPLORER_VIEW" ) );
+        DataValuePairPtr dataValuePair2( 
+            new DataValuePair( std::string( "UNSIGNED INT" ) ) );
+        dataValuePair2->SetData( "SUBNET_ID", tempModData->systemId );
+        veCommand->AddDataValuePair( dataValuePair2 );
+        DataValuePairPtr dataValuePair( 
+            new DataValuePair( std::string( "STRING" ) ) );
+        dataValuePair->
+            SetData( "UPDATE_XPLORER_VIEW",
+            "CHANGE_XPLORER_VIEW_NETWORK" );
+        veCommand->AddDataValuePair( dataValuePair );
+        CORBAServiceList::instance()->
+            SendCommandStringToXplorer( veCommand );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnExpanded( wxTreeEvent& WXUNUSED( event ) )

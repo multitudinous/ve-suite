@@ -70,6 +70,7 @@ void FindDialog::CreateGUIControls()
     CancelButton = new wxButton( this, ID_CANCELBUTTON, wxT( "Cancel" ), wxPoint( 165, 57 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
 
     FindButton = new wxButton( this, ID_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 57 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
+    selectedModulePos = wxNOT_FOUND;
 }
 
 /*void FindDialog::OnClose( wxCloseEvent& event )

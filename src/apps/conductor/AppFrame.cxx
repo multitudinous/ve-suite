@@ -1484,8 +1484,7 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 {
     Network* network = canvas->GetActiveNetwork();
 
-    Log( "Find Block.\n" );
-    FindDialog* fd = new FindDialog( this );
+    FindDialog fd( this );
     std::vector< std::string > moduleNames;
     std::vector< unsigned int > moduleIDs;
 
@@ -1498,13 +1497,19 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
                              GetVEModel()->GetModelID() );
     }
 
-    fd->SetModuleList( moduleNames );
-    fd->ShowModal();
+    fd.SetModuleList( moduleNames );
+    fd.ShowModal();
 
-    int selectedModulePos = fd->GetSelectedModulePos();
+    int selectedModulePos = fd.GetSelectedModulePos();
 
     //highlight and center block
-    network->HighlightCenter( moduleIDs[selectedModulePos] );
+    if(selectedModulePos != wxNOT_FOUND)
+    {
+        network->HighlightCenter( moduleIDs[selectedModulePos] );
+        std::string selectModuleName = 
+            "\nFind Block: " + std::string( fd.GetSelectedModule() ) + "\n";
+        Log( selectModuleName.c_str() );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
@@ -2469,14 +2474,6 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
             GetXMLModels(), XMLDataBufferEngine::instance()->
             GetTopSystemId() );
 
-        wxCommandEvent submitEvent;
-        SubmitToServer( submitEvent );
-        
-        if( recordScenes )
-        {
-            recordScenes->_buildPage();
-        }
-        
         ///This code will be moved in the future. It is Aspen specific code.
         CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
         GetCommand( "Aspen_Plus_Preferences" );
@@ -2488,6 +2485,14 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
             std::string bkpFilename;
             bkpPtr->GetData( bkpFilename );
             OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
+        }
+        
+        wxCommandEvent submitEvent;
+        SubmitToServer( submitEvent );
+        
+        if( recordScenes )
+        {
+            recordScenes->_buildPage();
         }
     }
     
