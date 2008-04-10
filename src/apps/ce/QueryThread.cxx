@@ -83,8 +83,8 @@ void QueryThread::QueryData( std::string command, CORBA::Long modId )
     queryCommand = command;
     queryData.erase();
     moduleId = modId;
-    isComplete = false;
     _mutex.release();
+    isComplete = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool QueryThread::GettingData( void )
