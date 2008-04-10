@@ -139,23 +139,37 @@ TransformUI::TransformUI( wxWindow* parent, wxString dialogName, ves::open::xml:
     scaleSizer->Add( _yScaleCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
     scaleSizer->Add( _zScaleCtrl, 1, wxALIGN_CENTER_HORIZONTAL );
 
+    m_uniformScale = new wxCheckBox( this, UNIFORM_SCALE, wxT( "Uniform Scaling" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
+
     if( transform )
     {
+        //Set the translation values
         _xTransformCtrl->SetValue( transform->GetTranslationArray()->GetElement( 0 ) );
         _yTransformCtrl->SetValue( transform->GetTranslationArray()->GetElement( 1 ) );
         _zTransformCtrl->SetValue( transform->GetTranslationArray()->GetElement( 2 ) );
 
-        _xScaleCtrl->SetValue( transform->GetScaleArray()->GetElement( 0 ) );
-        _yScaleCtrl->SetValue( transform->GetScaleArray()->GetElement( 1 ) );
-        _zScaleCtrl->SetValue( transform->GetScaleArray()->GetElement( 2 ) );
-
+        //Set the scale values
+        double xTempScale =  transform->GetScaleArray()->GetElement( 0 );
+        double yTempScale =  transform->GetScaleArray()->GetElement( 1 );
+        double zTempScale =  transform->GetScaleArray()->GetElement( 2 );
+        _xScaleCtrl->SetValue( xTempScale );
+        _yScaleCtrl->SetValue( yTempScale );
+        _zScaleCtrl->SetValue( zTempScale );
+        if( ( xTempScale == yTempScale ) && ( xTempScale == zTempScale ) )
+        {
+            m_uniformScale->SetValue( true );
+        }
+        else
+        {
+            m_uniformScale->SetValue( false );
+        }
+        
+        //Set the rotation values
         _xRotationCtrl->SetValue( transform->GetRotationArray()->GetElement( 0 ) );
         _yRotationCtrl->SetValue( transform->GetRotationArray()->GetElement( 1 ) );
         _zRotationCtrl->SetValue( transform->GetRotationArray()->GetElement( 2 ) );
     }
 
-    m_uniformScale = new wxCheckBox( this, UNIFORM_SCALE, wxT( "Uniform Scaling" ), wxDefaultPosition, wxDefaultSize, wxCHK_2STATE );
-    m_uniformScale->SetValue( true );
 
     scaleInfo->Add( scaleSizer, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
     scaleInfo->Add( m_uniformScale, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL );
