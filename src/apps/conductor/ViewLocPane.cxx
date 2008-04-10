@@ -35,6 +35,7 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+#include <ves/util/icons/ve_icon32x32.xpm>
 
 #include <iostream>
 #include <string>
@@ -101,7 +102,8 @@ ViewLocPane::ViewLocPane( wxWindow* parent )
     GetSizer()->Fit( this );
     GetSizer()->SetSizeHints( this );
     Centre();
-
+    
+    SetIcon( ve_icon32x32_xpm );
 }
 /////////////////////////////////
 ViewLocPane::~ViewLocPane( void )
@@ -254,7 +256,7 @@ void ViewLocPane::_buildPage()
                                 wxDefaultSize,
                                 wxSP_ARROW_KEYS,
                                 0.0,
-                                100.0,
+                                100000.0,
                                 10.0,
                                 0.1,
                                 wxSPINCTRLDBL_AUTODIGITS,
