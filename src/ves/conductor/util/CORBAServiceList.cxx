@@ -38,6 +38,7 @@
 
 #include <ves/conductor/util/OrbThread.h>
 
+#include <tao/TAO_Internal.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <ace/SString.h>
 #include <ace/SStringfwd.h>
@@ -169,8 +170,10 @@ bool CORBAServiceList::ConnectToCE( void )
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
-        GetMessageLog()->SetMessage( ex._info().c_str() );
+        std::string tempMessage =
+            "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
+            std::string( ex._info().c_str() ) + "\n";
+        GetMessageLog()->SetMessage( tempMessage.c_str() );
         return false;
     }
     return true;
@@ -243,8 +246,10 @@ bool CORBAServiceList::ConnectToXplorer( void )
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Cannot find two-way VE-Xplorer.\n" );
-        GetMessageLog()->SetMessage( ex._info().c_str() );
+        std::string tempMessage =
+            "Cannot find two-way VE-Xplorer: CORBA Exception " +
+            std::string( ex._info().c_str() ) + "\n";
+        GetMessageLog()->SetMessage( tempMessage.c_str() );
         return false;
     }
     return true;
@@ -274,6 +279,12 @@ bool CORBAServiceList::ConnectToNamingService( void )
 
     try
     {
+        //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
+        //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
+        //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
+        
+        //resource factory args, server strategy factory args, client args
+        //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
         // First initialize the ORB,
         orb = CORBA::ORB_init( argc, argv, "" ); // the ORB name, it can be anything!
         //delete the left over char*
@@ -295,8 +306,10 @@ bool CORBAServiceList::ConnectToNamingService( void )
     catch ( CORBA::Exception& ex )
     {
         orb->destroy();
-        GetMessageLog()->SetMessage( "CORBA exception raised! Cannot init ORB or can't connect to the Naming Service\n" );
-        GetMessageLog()->SetMessage( ex._info().c_str() );
+        std::string tempMessage =
+            "Cannot init ORB or can't connect to the Naming Service: CORBA Exception " +
+            std::string( ex._info().c_str() ) + "\n";
+        GetMessageLog()->SetMessage( tempMessage.c_str() );
         return false;
     }
 }
@@ -429,8 +442,10 @@ void CORBAServiceList::CreateCORBAModule( void )
             }
             catch ( CORBA::Exception& ex )
             {
-                GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
-                GetMessageLog()->SetMessage( ex._info().c_str() );
+                std::string tempMessage =
+                    "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
+                    std::string( ex._info().c_str() ) + "\n";
+                GetMessageLog()->SetMessage( tempMessage.c_str() );
             }
         }
         else
@@ -447,15 +462,19 @@ void CORBAServiceList::CreateCORBAModule( void )
             }
             catch ( CORBA::Exception& ex )
             {
-                GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
-                GetMessageLog()->SetMessage( ex._info().c_str() );
+                std::string tempMessage =
+                    "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
+                    std::string( ex._info().c_str() ) + "\n";
+                GetMessageLog()->SetMessage( tempMessage.c_str() );
             }
         }
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Cannot find VE-CE or VE-Conductor registration problem.\n" );
-        GetMessageLog()->SetMessage( ex._info().c_str() );
+        std::string tempMessage =
+            "Cannot find VE-CE or VE-Conductor registration problem: CORBA Exception " +
+            std::string( ex._info().c_str() ) + "\n";
+        GetMessageLog()->SetMessage( tempMessage.c_str() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

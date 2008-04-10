@@ -41,6 +41,7 @@
 #include <iostream>
 
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <tao/TAO_Internal.h>
 #include <orbsvcs/CosNamingC.h>
 
 //This Exe_server act as the servant of the Executive
@@ -63,8 +64,15 @@ int main( int argc, char* argv[] )
 
     try
     {
+        //Taken from the Cubit example in TAO TAO/performance-tests/Cubit/TAO/IDL_Cubit
+        //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
+        //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
+        //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
+        
+        //resource factory args, server strategy factory args, client args
+        //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), Client_Strategy_Factory.c_str() );
         // First initialize the ORB,
-        CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "Yang" );
+        CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "ves_ce" );
 
         //Here is the part to contact the naming service and get the reference for the executive
         CORBA::Object_var naming_context_object =
@@ -135,9 +143,12 @@ int main( int argc, char* argv[] )
         // Finally destroy the ORB
         orb->destroy();
     }
-    catch ( CORBA::Exception & )
+    catch ( CORBA::Exception& ex )
     {
-        std::cerr << "CORBA exception raised : Unable to connect to Naming Service!" << std::endl;
+        std::cerr 
+            << "CORBA exception raised : Unable to connect to Naming Service!" 
+            << std::endl
+            << ex._info().c_str() << std::endl;
     }
     return 0;
 }

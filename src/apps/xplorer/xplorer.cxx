@@ -32,6 +32,7 @@
 //TAO headers need to be first or else windows complains
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <tao/TAO_Internal.h>
 //End TAO headers
 
 #include <ves/open/moduleS.h>
@@ -62,6 +63,13 @@ int main( int argc, char* argv[] )
 
     try
     {
+        //std::string Advanced_Resource_Factory( "static Advanced_Resource_Factory \"-ORBReactorType select_st -ORBInputCDRAllocator null -ORBConnectionCacheLock null -ORBFlushingStrategy blocking\"" );
+        //std::string Client_Strategy_Factory( "static Client_Strategy_Factory \"-ORBProfileLock null -ORBClientConnectionHandler RW\"" );
+        //std::string  Server_Strategy_Factory( "static Server_Strategy_Factory \"-ORBConcurrency thread-per-connection -ORBPOALock thread -ORBThreadPerConnectionTimeout 1\"" );
+        
+        //resource factory args, server strategy factory args, client args
+        //TAO::ORB::default_svc_conf_entries( 0, Server_Strategy_Factory.c_str(), 0 );
+        
         CORBA::ORB_var orb = CORBA::ORB_init( argc, argv, "VE_Suite_ORB" );
 
         //Here is the part to contact the naming service and get the reference for the executive
