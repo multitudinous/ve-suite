@@ -162,7 +162,7 @@ void cfdPresetVector::Update( void )
 
         this->SetGlyphWithThreshold();
         this->SetGlyphAttributes();
-        this->glyph->Update();
+        //this->glyph->Update();
 
         mapper->SetInputConnection( glyph->GetOutputPort() );
         mapper->SetScalarModeToUsePointFieldData();

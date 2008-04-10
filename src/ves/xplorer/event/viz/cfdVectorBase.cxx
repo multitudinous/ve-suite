@@ -305,8 +305,6 @@ void cfdVectorBase::SetGlyphAttributes()
         glyph->ClampingOn();
         glyph->SetRange( GetActiveDataSet()->GetVectorMagRange() );
     }
-
-    glyph->Update();
 }
 
 float cfdVectorBase::GetVectorScaleFactor()
