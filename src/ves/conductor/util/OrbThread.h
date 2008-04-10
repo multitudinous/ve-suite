@@ -68,6 +68,7 @@ protected:
     //wxTextCtrl* logWindow;
     ACE_Thread_Mutex _mutex;
     std::string message;
+    std::string mPreviousMessage;
     bool shutdown;
     DECLARE_EVENT_TABLE()
 };

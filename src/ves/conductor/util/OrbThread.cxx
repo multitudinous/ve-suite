@@ -89,9 +89,13 @@ void PEThread::ShutDownThread( void )
 ////////////////////////////////////////////////////////////////////////////////
 void PEThread::SetMessage( const char* msg )
 {
+    if( std::string( msg ) == mPreviousMessage )
+    {
+        return;
+    }
     _mutex.acquire();
-    //message+=msg;
     this->AppendText( wxString( msg, wxConvUTF8 ) );
+    mPreviousMessage = msg;
     _mutex.release();
 }
 

@@ -207,8 +207,10 @@ bool CORBAServiceList::ConnectToXplorer( void )
     }
     catch ( CORBA::Exception& ex )
     {
-        GetMessageLog()->SetMessage( "Cannot find VE-Xplorer.\n" );
-        GetMessageLog()->SetMessage( ex._info().c_str() );
+        std::string tempMessage = 
+            "Cannot find VE-Xplorer: CORBA Exception " + 
+            std::string( ex._info().c_str() ) + "\n";
+        GetMessageLog()->SetMessage( tempMessage.c_str() );
         return false;
     }
 
