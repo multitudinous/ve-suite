@@ -572,15 +572,13 @@ void DataSet::LoadData()
         parameters[5] = new char[strlen( "-o" ) + 1];
         strcpy( parameters[5], "-o" );
         parameters[6] = new char[strlen( "." ) + 1];
-        strcpy( parameters[6], "." );/*
-                                                      parameters[7] = new char[strlen( "-w" ) + 1];
-                                                      strcpy(parameters[7], "-w" );
-                                                      parameters[8] = new char[strlen( "stream" ) + 1];
-                                                      strcpy(parameters[8], "stream" );*/
+        strcpy( parameters[6], "." );
+        /*parameters[7] = new char[strlen( "-w" ) + 1];
+        strcpy(parameters[7], "-w" );
+        parameters[8] = new char[strlen( "stream" ) + 1];
+        strcpy(parameters[8], "stream" );*/
 
         dataSet = m_externalFileLoader->GetVTKDataSet( nParams, parameters );
-        ///Create the dataset vtkAlgorithm to work with the new vtk pipelines
-        //mDataReader = m_externalFileLoader->GetActiveTranslator()->GetVTKAlgorithm();
 
         for( unsigned int i = 0; i < nParams; ++i )
         {
@@ -681,7 +679,7 @@ void DataSet::LoadData()
         << std::endl << vprDEBUG_FLUSH;
     }
 
-    this->SetType();
+    SetType();
     ves::xplorer::CommandHandler::instance()
         ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
 }
