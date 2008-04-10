@@ -185,10 +185,10 @@ ACE_THROW_SPEC((
         << " : Raise called" << std::endl;
 
     std::string temp( notification );
-    if( !temp.compare( 0, 35, "VE-Suite Network Execution Complete" ) ||
-            !temp.compare( 0, 39, "Successfully Scheduled VE-Suite Network" ) ||
+    if( !temp.compare( 0, 35, "VE-Suite Network Execution Complete" ) )//||
+            //!temp.compare( 0, 39, "Successfully Scheduled VE-Suite Network" ) ||
             //!temp.compare(0,22,"Connected to Executive") ||
-            !temp.compare( 0, 28, "Problem in VE-Suite Schedule" ) )
+            //!temp.compare( 0, 28, "Problem in VE-Suite Schedule" ) )
     {
         GetNetworkFromCE();
     }
