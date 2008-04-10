@@ -45,7 +45,6 @@ namespace scenegraph
 {
 class DCS;
 class Group;
-class SceneManager;
 class ResourceManager;
 }
 }
@@ -62,8 +61,6 @@ namespace osg
 {
 class Geode;
 class Geometry;
-class Texture2D;
-//class TexGenNode;
 }
 
 // --- C/C++ Libraries --- //
@@ -80,8 +77,9 @@ class CameraEntity : public osg::Camera
 public:
     CameraEntity();
     CameraEntity(
+        ves::xplorer::scenegraph::Group* rootNode,
+        ves::xplorer::scenegraph::DCS* worldDCS,
         ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::SceneManager* sceneManager,
         ves::xplorer::scenegraph::ResourceManager* resourceManager,
         ves::xplorer::HeadsUpDisplay* headsUpDisplay );
 
@@ -118,24 +116,17 @@ protected:
 
 private:
     void Initialize();
-    void InitializeResources();
 
-    void CreateCamera();
-    void CreateViewFrustum();
-    void CreateScreenAlignedQuad();
-    void CreateCameraViewTexture();
-
-    bool mCameraPerspective;
+    void CreateCameraNode();
+    void CreateViewFrustumGeode();
+    void CreateHitQuadGeode();
+    void CreateCameraViewQuadGeode();
 
     //The initial view matrix of the camera
     osg::Matrixd mInitialViewMatrix;
     //The matrix that takes a vertex from local coords into tex coords
     osg::Matrixd mMVPT;
 
-    //Texture Unit 1
-    //The texture used as this CameraEntity's color buffer
-    osg::ref_ptr< osg::Texture2D > mQuadTexture;
-    //Texture Unit 0
     //Used to generate texture coordinates for camera projection
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
@@ -147,28 +138,29 @@ private:
     //Pointer to the HeadsUpDisplay for xplorer window
     ves::xplorer::HeadsUpDisplay* mHeadsUpDisplay;
 
-    ves::xplorer::scenegraph::SceneManager* mSceneManager;
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
+
     osg::ref_ptr< ves::xplorer::scenegraph::Group > mRootNode;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
-
-    //Need to create a dcs for each selectable CAD object
+    
+    //The loaded camera geometry node and frustum geometry lines
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraDCS;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mQuadDCS;
-
-    //The loaded camera geometry node
     osg::ref_ptr< osg::Node > mCameraNode;
-
-    //The frustum geometry lines
+    //
     osg::ref_ptr< osg::Geode > mFrustumGeode;
     osg::ref_ptr< osg::Geometry > mFrustumGeometry;
     osg::ref_ptr< osg::Vec3Array > mFrustumVertices;
+    //The quad to show the intersection hit
+    osg::ref_ptr< osg::Geode > mHitQuadGeode;
+    osg::ref_ptr< osg::Geometry > mHitQuadGeometry;
+    osg::ref_ptr< osg::Vec3Array > mHitQuadVertices;
 
     //The screen aligned quad to show the camera view
-    osg::ref_ptr< osg::Geode > mQuadGeode;
-    osg::ref_ptr< osg::Geometry > mQuadGeometry;
-    osg::ref_ptr< osg::Vec3Array > mQuadVertices;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mCameraViewQuadDCS;
+    osg::ref_ptr< osg::Geode > mCameraViewQuadGeode;
+    osg::ref_ptr< osg::Geometry > mCameraViewQuadGeometry;
+    osg::ref_ptr< osg::Vec3Array > mCameraViewQuadVertices;
 
 };
 

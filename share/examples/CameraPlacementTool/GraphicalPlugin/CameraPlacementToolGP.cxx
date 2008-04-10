@@ -43,6 +43,7 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/ResourceManager.h>
 
 // --- OSG Includes --- //
 #include <osg/TexGenNode>
@@ -87,10 +88,14 @@ void CameraPlacementToolGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
 
+    //Initialize the resources for this plugin
+    InitializeResources();
+
     //Initialize the CameraEntity
     mCameraEntity = new cpt::CameraEntity(
+        mSceneManager->GetRootNode(),
+        mSceneManager->GetWorldDCS(),
         mDCS.get(),
-        mSceneManager,
         mResourceManager,
         mEnvironmentHandler->GetHeadsUpDisplay() );
 
@@ -176,6 +181,261 @@ void CameraPlacementToolGP::SetCurrentCommand(
 
         bool onOff = ( selection != 0 );
         mCameraEntity->DisplayViewFrustum( onOff );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolGP::InitializeResources()
+{
+    //Create the texture that will be used for the FBO
+    osg::ref_ptr< osg::Texture2D > quadTexture = new osg::Texture2D();
+    quadTexture->setTextureSize( 1024, 1024 );
+    quadTexture->setInternalFormat( GL_RGBA );
+    quadTexture->setSourceFormat( GL_RGBA );
+    quadTexture->setSourceType( GL_UNSIGNED_BYTE );
+    quadTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    quadTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    quadTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    quadTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    boost::any anyVal = quadTexture;
+    mResourceManager->add( std::string( "CameraViewTexture" ), anyVal );
+
+    //Set up the program for mCameraNode
+    {
+        std::string cameraVertexSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+
+            "gl_FrontColor = vec4( 0.7, 0.7, 0.7, 1.0 ); \n"
+        "} \n" );
+
+        std::string cameraFragmentSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos.xyz ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
+                                "gl_Color.rgb; \n"
+            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
+                                "gl_Color.rgb * NDotL; \n"
+            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
+                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
+
+            "vec4 color = \n"
+                "vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > cameraVertexShader = new osg::Shader();
+        cameraVertexShader->setType( osg::Shader::VERTEX );
+        cameraVertexShader->setShaderSource( cameraVertexSource );
+
+        osg::ref_ptr< osg::Shader > cameraFragmentShader = new osg::Shader();
+        cameraFragmentShader->setType( osg::Shader::FRAGMENT );
+        cameraFragmentShader->setShaderSource( cameraFragmentSource );
+
+        osg::ref_ptr< osg::Program > cameraProgram = new osg::Program();
+        cameraProgram->addShader( cameraVertexShader.get() );
+        cameraProgram->addShader( cameraFragmentShader.get() );
+        boost::any anyVal = cameraProgram;
+        mResourceManager->add( std::string( "CameraProgram" ), anyVal );
+    }
+
+    //Set up the program for mFrustumGeode
+    {
+        std::string frustumVertexSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "gl_FrontColor = gl_Color; \n"
+        "} \n" );
+
+        std::string frustumFragmentSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_FragColor = gl_Color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > frustumVertexShader = new osg::Shader();
+        frustumVertexShader->setType( osg::Shader::VERTEX );
+        frustumVertexShader->setShaderSource( frustumVertexSource );
+
+        osg::ref_ptr< osg::Shader > frustumFragmentShader = new osg::Shader();
+        frustumFragmentShader->setType( osg::Shader::FRAGMENT );
+        frustumFragmentShader->setShaderSource( frustumFragmentSource );
+
+        osg::ref_ptr< osg::Program > frustumProgram = new osg::Program();
+        frustumProgram->addShader( frustumVertexShader.get() );
+        frustumProgram->addShader( frustumFragmentShader.get() );
+        boost::any anyVal = frustumProgram;
+        mResourceManager->add( std::string( "FrustumProgram" ), anyVal );
+    }
+
+    //Set up the program for mCameraViewQuadDCS
+    {
+        std::string hitQuadVertexSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+        "} \n" );
+
+        std::string hitQuadFragmentSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "vec4 color = vec4( 1.0, 1.0, 0.0, 0.4 ); \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > hitQuadVertexShader = new osg::Shader();
+        hitQuadVertexShader->setType( osg::Shader::VERTEX );
+        hitQuadVertexShader->setShaderSource( hitQuadVertexSource );
+
+        osg::ref_ptr< osg::Shader > hitQuadFragmentShader = new osg::Shader();
+        hitQuadFragmentShader->setType( osg::Shader::FRAGMENT );
+        hitQuadFragmentShader->setShaderSource( hitQuadFragmentSource );
+
+        osg::ref_ptr< osg::Program > hitQuadProgram = new osg::Program();
+        hitQuadProgram->addShader( hitQuadVertexShader.get() );
+        hitQuadProgram->addShader( hitQuadFragmentShader.get() );
+        boost::any anyVal = hitQuadProgram;
+        mResourceManager->add( std::string( "HitQuadProgram" ), anyVal );
+    }
+
+    //Set up the program for mCameraViewQuadDCS
+    {
+        std::string quadVertexSource = std::string(
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "gl_TexCoord[ 1 ].st = gl_MultiTexCoord1.st; \n"
+        "} \n" );
+
+        std::string quadFragmentSource = std::string(
+        "uniform sampler2D baseMap; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec4 color = texture2D( baseMap, gl_TexCoord[ 1 ].st ); \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > quadVertexShader = new osg::Shader();
+        quadVertexShader->setType( osg::Shader::VERTEX );
+        quadVertexShader->setShaderSource( quadVertexSource );
+
+        osg::ref_ptr< osg::Shader > quadFragmentShader = new osg::Shader();
+        quadFragmentShader->setType( osg::Shader::FRAGMENT );
+        quadFragmentShader->setShaderSource( quadFragmentSource );
+
+        osg::ref_ptr< osg::Program > quadProgram = new osg::Program();
+        quadProgram->addShader( quadVertexShader.get() );
+        quadProgram->addShader( quadFragmentShader.get() );
+        boost::any anyVal = quadProgram;
+        mResourceManager->add( std::string( "CameraViewProgram" ), anyVal );
+    }
+
+    //Set up the camera projection effect
+    {
+        std::string projectionVertexSource = std::string(
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_Position = ftransform(); \n"
+
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+            "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
+            "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+
+            "gl_FrontColor = gl_Color; \n"
+
+            "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
+            "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
+            "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
+        "} \n" );
+
+        std::string projectionFragmentSource = std::string(
+        "uniform float alpha; \n"
+        "uniform float nearPlane; \n"
+        "uniform float farPlane; \n"
+
+        "varying vec4 eyePos; \n"
+        "varying vec3 lightPos; \n"
+        "varying vec3 normal; \n"
+
+        "void main() \n"
+        "{ \n"
+            "vec3 N = normalize( normal ); \n"
+            "vec3 L = normalize( lightPos ); \n"
+            "float NDotL = max( dot( N, L ), 0.0 ); \n"
+
+            "vec3 V = normalize( eyePos.xyz ); \n"
+            "vec3 R = reflect( V, N ); \n"
+            "float RDotL = max( dot( R, L ), 0.0 ); \n"
+
+            "vec3 totalAmbient = gl_LightSource[ 0 ].ambient.rgb * \n"
+                                "gl_Color.rgb; \n"
+            "vec3 totalDiffuse = gl_LightSource[ 0 ].diffuse.rgb * \n"
+                                "gl_Color.rgb * NDotL; \n"
+            "vec3 totalSpecular = gl_LightSource[ 0 ].specular.rgb * \n"
+                                 "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
+
+            "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
+            "vec4 color = \n"
+                "vec4( totalAmbient + totalDiffuse + totalSpecular, alpha ); \n"
+
+            //If in frustum
+            "if( projectionUV.s >= 0.0 && \n"
+                "projectionUV.t >= 0.0 && \n"
+                "projectionUV.s <= 1.0 && \n"
+                "projectionUV.t <= 1.0 && \n"
+                "gl_TexCoord[ 0 ].q >= nearPlane && \n"
+                "gl_TexCoord[ 0 ].q <= farPlane ) \n"
+            "{ \n"
+                "color.a = 1.0; \n"
+            "} \n"
+
+            "gl_FragColor = color; \n"
+        "} \n" );
+
+        osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
+        projectionVertexShader->setType( osg::Shader::VERTEX );
+        projectionVertexShader->setShaderSource( projectionVertexSource );
+
+        osg::ref_ptr< osg::Shader > projectionFragmentShader = new osg::Shader();
+        projectionFragmentShader->setType( osg::Shader::FRAGMENT );
+        projectionFragmentShader->setShaderSource( projectionFragmentSource );
+
+        osg::ref_ptr< osg::Program > projectionProgram = new osg::Program();
+        projectionProgram->addShader( projectionVertexShader.get() );
+        projectionProgram->addShader( projectionFragmentShader.get() );
+        boost::any anyVal = projectionProgram;
+        mResourceManager->add( std::string( "ProjectionProgram" ), anyVal );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
