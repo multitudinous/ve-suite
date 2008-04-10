@@ -214,7 +214,7 @@ void Body_UI_i::GetNetworkFromCE( void )
         if( !network.empty() )
         {
             this->SetNetworkString( network );
-            std::cout << "|\tGoing To Do Something" << std::endl;
+            std::cout << "|\tGoing to store the network" << std::endl;
         }
         delete tempNetwork;
     }

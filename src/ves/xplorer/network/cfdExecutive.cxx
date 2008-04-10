@@ -154,6 +154,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
         _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
         std::cout << "|\tConnected to the Executive " << std::endl;
         ui_i->GetNetworkFromCE();
+        LoadDataFromCE();
     }
     catch ( CORBA::Exception& )
     {
