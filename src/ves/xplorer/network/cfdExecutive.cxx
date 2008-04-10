@@ -345,6 +345,8 @@ void cfdExecutive::GetEverything( void )
     //Set active model to null so that if the previous active model is deleted
     //that we don't get errors in our code other places.
     ModelHandler::instance()->SetActiveModel( 0 );
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Finished loading data in VE-Xplorer\n" );
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
         << std::endl << vprDEBUG_FLUSH;
 }
