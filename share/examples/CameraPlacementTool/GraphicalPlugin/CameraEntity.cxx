@@ -497,7 +497,6 @@ void CameraEntity::CustomKeyboardMouseSelection(
         startPoint.z() = (*mFrustumVertices)[ 2 ].z() +
                          ( mousePosition.second * frustumQuadRatio.second );
 
-        
         double yRatio = (*mFrustumVertices)[ 7 ].y() /
                         (*mFrustumVertices)[ 3 ].y();
 
@@ -506,10 +505,13 @@ void CameraEntity::CustomKeyboardMouseSelection(
         endPoint.y() = (*mFrustumVertices)[ 7 ].y();
         endPoint.z() = yRatio * startPoint.z();
 
+        osg::Vec3d cameraLensPoint( 0, 0, 0 );
+
         osg::Matrixd tempMatrix;
         tempMatrix.set( localToWorldMatrix.getData() );
         startPoint = startPoint * tempMatrix;
         endPoint = endPoint * tempMatrix;
+        cameraLensPoint = cameraLensPoint * tempMatrix;
 
         std::cout << std::endl;
         std::cout << "startPoint: ( " << startPoint.x() << ", "
@@ -548,6 +550,34 @@ void CameraEntity::CustomKeyboardMouseSelection(
                       << objectHit._geode->getName() << std::endl;
         }
         std::cout << std::endl;
+
+        //Get the first intersection hit
+        osgUtil::Hit firstHit = hitList[ 0 ];
+        osg::Vec3d intersectPoint = firstHit.getWorldIntersectPoint();
+
+        
+        std::cout << std::endl;
+        std::cout << "Intersect Point: ( "
+                  << intersectPoint.x() << ", "
+                  << intersectPoint.y() << ", "
+                  << intersectPoint.z() << " )" << std::endl;
+        std::cout << std::endl;
+
+        //Calculate the distance hit point is from the camera lens
+        osg::Vec3d hitToCameraVector = intersectPoint - cameraLensPoint;
+        double hitDistanceFromCamera = hitToCameraVector.length();
+
+        std::cout << std::endl;
+        std::cout << "Distance: "
+                  << hitDistanceFromCamera
+                  << std::endl;
+        std::cout << std::endl;
+
+        //Get y distance from first hit to calculate yRatio
+        //double yRatio = localIntersectPoint.y() /
+                        //(*mFrustumVertices)[ 3 ].y();
+
+
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -711,14 +741,16 @@ void CameraEntity::Update()
     (*mFrustumVertices)[ 6 ].set( fRight, farPlane, fBottom );
     (*mFrustumVertices)[ 7 ].set( fRight, farPlane, fTop );
     (*mFrustumVertices)[ 8 ].set( fLeft, farPlane, fTop );
+    //mFrustumGeometry->computeFastPathsUsed(); 
     mFrustumGeometry->dirtyDisplayList();
     mFrustumGeometry->dirtyBound();
 
-    float aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
+    const double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
     (*mQuadVertices)[ 0 ].set( 0.0,         0.0, 0.0 );
     (*mQuadVertices)[ 1 ].set( aspectRatio, 0.0, 0.0 );
     (*mQuadVertices)[ 2 ].set( aspectRatio, 1.0, 0.0 );
     (*mQuadVertices)[ 3 ].set( 0.0,         1.0, 0.0 );
+    //mQuadGeometry->computeFastPathsUsed();
     mQuadGeometry->dirtyDisplayList();
     mQuadGeometry->dirtyBound();
 

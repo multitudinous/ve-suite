@@ -54,7 +54,6 @@ CustomKeyboardMouseInterface::~CustomKeyboardMouseInterface()
 ////////////////////////////////////////////////////////////////////////////////
 bool CustomKeyboardMouseInterface::ProcessEvents()
 {
- 
     gadget::KeyboardMouse::EventQueue eventQueue = mKeyboard->getEventQueue();
     if( eventQueue.empty() )
     {
