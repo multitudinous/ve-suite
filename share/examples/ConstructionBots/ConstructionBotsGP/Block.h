@@ -53,13 +53,12 @@ class Block : public osg::Geode
 public:
     Block();
 
-    Block( const Block& block, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    Block( const Block& block,
+           const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     META_Node( bots, Block );
 
-    void CreateBlock();
-
-    void SetColor( float r, float g, float b, float a );
+    void SetColor( const std::string& drawableName, osg::Vec4 color );
 
 protected:
     virtual ~Block();
@@ -67,7 +66,7 @@ protected:
 private:
     void Initialize();
 
-    std::map< std::string, osg::ref_ptr< osg::Geometry > > mSideStates;
+    std::map< std::string, osg::ref_ptr< osg::Geometry > > mDrawables;
 
 };
 } //end bots

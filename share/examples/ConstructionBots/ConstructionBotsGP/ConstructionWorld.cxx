@@ -179,12 +179,11 @@ void ConstructionWorld::InitializeFramework()
 
     //Initialize the starting block
     osg::ref_ptr< bots::Block > startBlock = new bots::Block();
-    startBlock->CreateBlock();
-
     mStartBlock = new bots::BlockEntity( startBlock.get(),
                                          mPluginDCS.get(),
                                          mPhysicsSimulator );
-    mStartBlock->GetGeometry()->SetColor( 0.0, 0.0, 0.0, 1.0 );
+    mStartBlock->GetGeometry()->SetColor(
+        std::string( "Block" ), osg::Vec4( 0, 0, 0, 1 ) );
     //Set name and descriptions for blocks
     mStartBlock->SetNameAndDescriptions( 0 );
     double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
@@ -200,8 +199,6 @@ void ConstructionWorld::InitializeFramework()
     for( int i = 0; i < numBlocks; ++i )
     {
         osg::ref_ptr< bots::Block > block = new bots::Block();
-        block->CreateBlock();
-
         mBlocks.push_back( new bots::BlockEntity( block.get(),
                                                   mPluginDCS.get(),
                                                   mPhysicsSimulator ) );
@@ -211,8 +208,6 @@ void ConstructionWorld::InitializeFramework()
     for( int i = 0; i < numAgents; ++i )
     {
         osg::ref_ptr< bots::Agent > agent = new bots::Agent();
-        agent->CreateAgent();
-
         mAgents.push_back( new AgentEntity( agent.get(),
                                             mPluginDCS.get(),
                                             mPhysicsSimulator ) );

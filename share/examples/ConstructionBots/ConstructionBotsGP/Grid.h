@@ -47,7 +47,8 @@ class Grid : public osg::Geode
 public:
     Grid();
 
-    Grid( const Grid& grid, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    Grid( const Grid& grid,
+          const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
    
     META_Node( bots, Grid );
    	

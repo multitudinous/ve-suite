@@ -44,11 +44,10 @@ class Agent : public osg::Geode
 public:
 	Agent();
 
-    Agent( const Agent& agent, const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
+    Agent( const Agent& agent,
+           const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     META_Node( bots, Agent );
-
-    void CreateAgent();
 
 protected:
 	virtual ~Agent();
