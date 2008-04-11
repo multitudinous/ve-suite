@@ -187,8 +187,6 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 void Canvas::OnPaint( wxPaintEvent& paintEvent )
 {
     wxAutoBufferedPaintDC dc( this );
-    dc.Clear();
-
     dc.SetUserScale( userScale.first, userScale.second );
     int xpix, ypix;
     GetScrollPixelsPerUnit( &xpix, &ypix );
@@ -197,11 +195,14 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
     // account for the horz and vert scrollbar offset
     dc.SetDeviceOrigin( -x * xpix, -y * ypix );
     dc.SetFont( GetFont() );
-
+    dc.Clear();
+    
     if( activeId != "NULL" )
     {
         DrawNetwork( dc, this->activeId );
     }
+    //Set the scale back after using it
+    dc.SetUserScale( 1.0f, 1.0f );
 }
 ///////////////////////////////////////////////////////////////////////////////
 Network* Canvas::GetActiveNetwork()
