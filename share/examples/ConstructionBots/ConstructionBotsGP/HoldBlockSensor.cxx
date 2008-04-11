@@ -35,11 +35,9 @@
 #include "HoldBlockSensor.h"
 #include "AgentEntity.h"
 
-// --- VE-Suite Includes --- //
-
-
 // --- OSG Includes --- //
-#include <osg/Geometry>
+#include <osgUtil/LineSegmentIntersector>
+#include <osgUtil/IntersectionVisitor>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -52,7 +50,8 @@ HoldBlockSensor::HoldBlockSensor( bots::AgentEntity* agentEntity )
 Sensor( agentEntity ),
 mHoldingBlock( false ),
 mRange( 0.6 ),
-mBeamLineSegment( new osg::LineSegment() )
+mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
+                             osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
 {
     ;
 }
@@ -64,23 +63,30 @@ HoldBlockSensor::~HoldBlockSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void HoldBlockSensor::CollectInformation()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
+        mAgentEntity->GetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
-    osg::Vec3d startPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
-    osg::Vec3d endPoint( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] + mRange );
+    osg::Vec3d startPoint( agentPosition[ 0 ],
+                           agentPosition[ 1 ],
+                           agentPosition[ 2 ] );
+    osg::Vec3d endPoint( agentPosition[ 0 ],
+                         agentPosition[ 1 ],
+                         agentPosition[ 2 ] + mRange );
 
     //Reset results from last frame
     mHoldingBlock = false;
 
-    mBeamLineSegment->set( startPoint, endPoint );
+    mLineSegmentIntersector->reset();
+    mLineSegmentIntersector->setStart( startPoint );
+    mLineSegmentIntersector->setEnd( endPoint );
 
-    osgUtil::IntersectVisitor intersectVisitor;
-    intersectVisitor.addLineSegment( mBeamLineSegment.get() );
-    mAgentEntity->GetPluginDCS()->accept( intersectVisitor );
+    osgUtil::IntersectionVisitor intersectionVisitor(
+        mLineSegmentIntersector.get() );
+    mAgentEntity->GetPluginDCS()->accept( intersectionVisitor );
 
-    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mBeamLineSegment.get() );
-    if( hitList.size() > 1 )
+    size_t hitCount = mLineSegmentIntersector->getIntersections().size();
+    if( hitCount > 1 )
     {
         mHoldingBlock = true;
     }

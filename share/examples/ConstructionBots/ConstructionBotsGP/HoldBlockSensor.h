@@ -39,9 +39,11 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/LineSegment>
 
-#include <osgUtil/IntersectVisitor>
+namespace osgUtil
+{
+class LineSegmentIntersector;
+}
 
 //Detects if an agent is holding a block
 namespace bots
@@ -62,7 +64,7 @@ private:
 
     double mRange;
 
-    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots

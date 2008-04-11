@@ -45,14 +45,15 @@ namespace osg
 {
 class Geode;
 class Geometry;
-class LineSegment;
+}
+
+namespace osgUtil
+{
+class LineSegmentIntersector;
 }
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
-
-// --- C/C++ Libraries --- //
-#include <vector>
 
 //Simulates an optical type sensor
 namespace bots
@@ -92,7 +93,8 @@ private:
     osg::ref_ptr< osg::Geode > mGeode;
     osg::ref_ptr< osg::Geometry > mGeometry;
     osg::ref_ptr< osg::Vec3Array > mVertexArray;
-    osg::ref_ptr< osg::LineSegment > mLineSegment;
+    
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots

@@ -239,11 +239,11 @@ void Block::CreateBlock()
     lineWidth->setWidth( 2.0f );
     lineStateSet->setAttribute( lineWidth.get() );
 
-    std::map< std::string, osg::ref_ptr< osg::Geometry > >::const_iterator itr;
-    for( itr = mSideStates.begin(); itr != mSideStates.end(); ++itr )
-    {
-        itr->second->setStateSet( lineStateSet.get() );
-    }
+    //std::map< std::string, osg::ref_ptr< osg::Geometry > >::const_iterator itr;
+    //for( itr = mSideStates.begin(); itr != mSideStates.end(); ++itr )
+    //{
+        //itr->second->setStateSet( lineStateSet.get() );
+    //}
     
     addDrawable( block.get() );
 }

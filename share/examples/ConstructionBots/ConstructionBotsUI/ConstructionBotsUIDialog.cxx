@@ -64,10 +64,10 @@ ConstructionBotsUIDialog::ConstructionBotsUIDialog(
     wxWindow* parent,
     int id, 
     ves::conductor::util::CORBAServiceList* service )
-        :
-        UIDialog( static_cast< wxWindow* >( parent ),
-                  id,
-                  wxT( "ConstructionBots" ) )
+:
+UIDialog( static_cast< wxWindow* >( parent ),
+          id,
+          wxT( "ConstructionBots" ) )
 {
     mServiceList = service;
 
@@ -97,11 +97,6 @@ void ConstructionBotsUIDialog::Lock( bool l )
 void ConstructionBotsUIDialog::BuildGUI()
 {
     CenterOnParent();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::UpdateGUI()
-{
-    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsUIDialog::ClearInstructions()

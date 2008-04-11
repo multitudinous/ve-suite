@@ -79,13 +79,11 @@ protected:
 
 private:
     void BuildGUI();
-    void UpdateGUI();
 
     void SendCommandsToXplorer();
     void ClearInstructions();
 
     ves::conductor::util::CORBAServiceList* mServiceList;
-
     std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
     std::string mCommandName;
 

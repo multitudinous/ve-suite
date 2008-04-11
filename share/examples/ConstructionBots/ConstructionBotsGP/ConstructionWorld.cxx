@@ -70,10 +70,11 @@ using namespace bots;
 ConstructionWorld::ConstructionWorld(
     ves::xplorer::scenegraph::DCS* pluginDCS,
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
-    #ifdef VE_SOUND
-  , osgAL::SoundManager* soundManager
+#ifdef VE_SOUND
+    ,
+    osgAL::SoundManager* soundManager
 #endif
-              )
+    )
 :
 mGrid( 0 ),
 mBlocks( 0 ),
@@ -92,9 +93,6 @@ mPhysicsSimulator( physicsSimulator )
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionWorld::~ConstructionWorld()
 {
-    //Seed the random number generator
-    srand( time( 0 ) );
-
 #ifdef VE_SOUND
     if( mAmbientSound )
     {
@@ -132,6 +130,9 @@ ConstructionWorld::~ConstructionWorld()
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::InitializeFramework()
 {
+    //Seed the random number generator
+    srand( time( 0 ) );
+
 #ifdef VE_SOUND
     try
     {

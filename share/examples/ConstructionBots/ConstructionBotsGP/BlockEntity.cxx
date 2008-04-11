@@ -57,9 +57,10 @@
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
-BlockEntity::BlockEntity( osg::ref_ptr< bots::Block > block,
-                          ves::xplorer::scenegraph::DCS* pluginDCS,
-                          ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+BlockEntity::BlockEntity(
+    osg::ref_ptr< bots::Block > block,
+    ves::xplorer::scenegraph::DCS* pluginDCS,
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( block.get(), pluginDCS, physicsSimulator ),
 mBlock( block.get() ),

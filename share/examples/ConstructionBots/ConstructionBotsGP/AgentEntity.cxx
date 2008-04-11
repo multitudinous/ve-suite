@@ -68,15 +68,6 @@ mConstraint( 0 )
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::Initialize()
-{
-    
-    mBlockSensor = bots::BlockSensorPtr( new bots::BlockSensor( this ) );
-    mHoldBlockSensor = bots::HoldBlockSensorPtr( new bots::HoldBlockSensor( this ) );
-    mObstacleSensor = bots::ObstacleSensorPtr( new bots::ObstacleSensor( this ) );
-    mSiteSensor = bots::SiteSensorPtr( new bots::SiteSensor( this ) );
-}
-////////////////////////////////////////////////////////////////////////////////
 AgentEntity::~AgentEntity()
 {
     if( mConstraint )
@@ -87,6 +78,15 @@ AgentEntity::~AgentEntity()
         }
         delete mConstraint;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::Initialize()
+{
+    
+    mBlockSensor = bots::BlockSensorPtr( new bots::BlockSensor( this ) );
+    mHoldBlockSensor = bots::HoldBlockSensorPtr( new bots::HoldBlockSensor( this ) );
+    mObstacleSensor = bots::ObstacleSensorPtr( new bots::ObstacleSensor( this ) );
+    mSiteSensor = bots::SiteSensorPtr( new bots::SiteSensor( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::AvoidObstacle()

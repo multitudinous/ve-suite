@@ -40,10 +40,12 @@
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 // --- OSG Includes --- //
+#include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
 
-#include <osgUtil/IntersectVisitor>
+#include <osgUtil/IntersectionVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -60,13 +62,13 @@ Sensor( agentEntity ),
 mBlockInView( false ),
 mCloseToBlock( false ),
 mAngle( 0 ), 
-mAngleInc( 0.1 ),
+mAngleInc( 0.05 ),
 mRange( 0 ),
 mNormalizedBlockVector( 0, 0, 0 ),
 mGeode( 0 ),
 mGeometry( 0 ),
 mVertexArray( 0 ),
-mLineSegment( 0 )
+mLineSegmentIntersector( 0 )
 {
     Initialize();
 }
@@ -78,7 +80,8 @@ BlockSensor::~BlockSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Initialize()
 {
-    mLineSegment = new osg::LineSegment();
+    mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
+        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -137,12 +140,11 @@ void BlockSensor::CollectInformation()
     else
     {
         Rotate();
-        (*mVertexArray)[ 1 ].set( agentPosition[ 0 ] + mRange * cos( mAngle ),
-                                  agentPosition[ 1 ] + mRange * sin( mAngle ),
-                                  0.5 );
+        (*mVertexArray)[ 1 ].set(
+            agentPosition[ 0 ] + mRange * cos( mAngle ),
+            agentPosition[ 1 ] + mRange * sin( mAngle ),
+            0.5 );
     }
-
-    mLineSegment->set( (*mVertexArray)[ 0 ], (*mVertexArray)[ 1 ] );
 
     //Reset results from last frame
     mBlockInView = false;
@@ -151,50 +153,45 @@ void BlockSensor::CollectInformation()
     mGeometry->dirtyDisplayList();
     mGeometry->dirtyBound();
 
-    osgUtil::IntersectVisitor intersectVisitor;
-    intersectVisitor.addLineSegment( mLineSegment.get() );
-    pluginDCS->accept( intersectVisitor );
+    mLineSegmentIntersector->reset();
+    mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
+    mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
 
-    osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mLineSegment.get() );
-    if( hitList.size() > 1 )
+    osgUtil::IntersectionVisitor intersectionVisitor(
+        mLineSegmentIntersector.get() );
+    pluginDCS->accept( intersectionVisitor );
+
+    osgUtil::LineSegmentIntersector::Intersections& intersections =
+        mLineSegmentIntersector->getIntersections();
+    if( intersections.size() > 1 )
     {
-        //Get the next hit excluding the agent itself
-        osgUtil::Hit firstHit = hitList.at( 1 );
+        osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+            intersections.begin(); itr++;
 
-        osg::ref_ptr< osg::Geode > geode = firstHit.getGeode();
+        osg::ref_ptr< osg::Drawable > drawable = itr->drawable;
 
-        if( geode.valid() )
+        osg::Vec4 color = static_cast< osg::Vec4Array* >(
+            drawable->asGeometry()->getColorArray() )->at( 0 );
+        if( color.length() == 2.0 )
         {
-            osg::ref_ptr< osg::Vec4Array > colorArray = static_cast< osg::Vec4Array* >
-                ( geode->getDrawable( 0 )->asGeometry()->getColorArray() );
+            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                drawable->getParent( 0 ) );
+            targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
+                parentVisitor.GetParentNode() );
 
-            if( colorArray.valid() )
+            double* blockPosition = targetDCS->GetVETranslationArray();
+            btVector3 blockVector( blockPosition[ 0 ] - agentPosition[ 0 ],
+                                   blockPosition[ 1 ] - agentPosition[ 1 ],
+                                   0.0 );
+
+            if( blockVector.length() < 1.415 )//sqrt( 2 * 0.5 )
             {
-                if( colorArray->at( 0 ).r() == 1.0 &&
-                    colorArray->at( 0 ).g() == 1.0 &&
-                    colorArray->at( 0 ).b() == 1.0 )
-                {
-                    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( geode.get() );
-                    targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >( parentVisitor.GetParentNode() );
-                    if( targetDCS.valid() )
-                    {
-                        double* blockPosition = targetDCS->GetVETranslationArray();
-                        btVector3 blockVector( blockPosition[ 0 ] - agentPosition[ 0 ],
-                                               blockPosition[ 1 ] - agentPosition[ 1 ],
-                                               0.0 );
-
-                        if( blockVector.length() < 1.415 )//sqrt( 2 * 0.5 )
-                        {
-                            mCloseToBlock = true;
-                        }
-
-                        mNormalizedBlockVector = blockVector.normalize();
-                        //mNormalizedBlockVector.setZ( 0.1 );
-
-                        mBlockInView = true;
-                    }
-                }
+                mCloseToBlock = true;
             }
+
+            mNormalizedBlockVector = blockVector.normalize();
+
+            mBlockInView = true;
         }
     }
 

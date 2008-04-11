@@ -35,16 +35,10 @@
 #include "ObstacleSensor.h"
 #include "AgentEntity.h"
 
-// --- VE-Suite Includes --- //
-
 // --- OSG Includes --- //
 #include <osg/Geometry>
 
-#include <osgUtil/IntersectVisitor>
-
-// --- C/C++ Libraries --- //
-#include <vector>
-#include <cmath>
+#include <osgUtil/IntersectionVisitor>
 
 using namespace bots;
 
@@ -60,7 +54,8 @@ mRange( 2.0 ),
 mForceRepellingConstant( 1.0 ),
 mForceAttractionConstant( 1.0 ),
 mResultantForce( 0, 0, 0 ),
-mBeamLineSegment( new osg::LineSegment() )
+mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
+                             osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
 {
     ;
 }
@@ -73,51 +68,61 @@ ObstacleSensor::~ObstacleSensor()
 void ObstacleSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS = mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = mAgentEntity->GetTargetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
+        mAgentEntity->GetPluginDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
+        mAgentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
+        mAgentEntity->GetTargetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
     //Reset results from last frame
-    mObstacleHits.clear();
+    mIntersections.clear();
 
     osg::Vec3d startPoint, endPoint;
-    startPoint.set( agentPosition[ 0 ], agentPosition[ 1 ], agentPosition[ 2 ] );
+    startPoint.set( agentPosition[ 0 ],
+                    agentPosition[ 1 ],
+                    agentPosition[ 2 ] );
+    mLineSegmentIntersector->setStart( startPoint );
     for( double angle = 0; angle < 360; )
     {
         endPoint.set( agentPosition[ 0 ] + mRange * cos( angle ), 
                       agentPosition[ 1 ] + mRange * sin( angle ), 
                       agentPosition[ 2 ] );
 
-        mBeamLineSegment->set( startPoint, endPoint );
+        mLineSegmentIntersector->reset();
+        mLineSegmentIntersector->setEnd( endPoint );
 
-        osgUtil::IntersectVisitor intersectVisitor;
-        intersectVisitor.addLineSegment( mBeamLineSegment.get() );
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            mLineSegmentIntersector.get() );
 
         if( mAgentEntity->IsBuilding() )
         {
-            pluginDCS->accept( intersectVisitor );
+            pluginDCS->accept( intersectionVisitor );
         }
         else
         {
             pluginDCS->RemoveChild( targetDCS.get() );
-            pluginDCS->accept( intersectVisitor );
+            pluginDCS->accept( intersectionVisitor );
             pluginDCS->AddChild( targetDCS.get() );
         }
 
-        osgUtil::IntersectVisitor::HitList hitList = intersectVisitor.getHitList( mBeamLineSegment.get() );
-
-        if( hitList.size() > 1 )
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            mLineSegmentIntersector->getIntersections();
+        if( intersections.size() > 1 )
         {
+            osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+                intersections.begin(); itr++;
+
             //Get the next hit excluding the agent itself
-            mObstacleHits.push_back( hitList.at( 1 ) );
+            mIntersections.push_back( *itr );
         }
 
         angle += mAngleIncrement;
     }
 
-	if( !mObstacleHits.empty() )
+	if( !mIntersections.empty() )
 	{
 		mObstacleDetected = true;
 	}
@@ -125,6 +130,28 @@ void ObstacleSensor::CollectInformation()
 	{
 		mObstacleDetected = false;
 	}
+
+    /*
+    osgUtil::IntersectorGroup::Intersectors& intersectors =
+    mIntersectorGroup->getIntersectors();
+    for( osgUtil::IntersectorGroup::Intersectors::iterator intersectorItr =
+         intersectors.begin(); intersectorItr != intersectors.end();
+         ++intersectorItr )
+    {
+        osgUtil::LineSegmentIntersector* lsi =
+            static_cast< osgUtil::LineSegmentIntersector* >(
+                intersectorItr->get() );
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            lsi->getIntersections();
+        if( intersections.size() > 1 )
+        {
+            osgUtil::LineSegmentIntersector::Intersections::iterator itr =
+                intersections.begin(); itr++;
+
+            mIntersections.push_back( *itr );
+        }
+    }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CalculateResultantForce( bool buildMode )
@@ -142,30 +169,27 @@ void ObstacleSensor::CalculateResultantForce( bool buildMode )
 void ObstacleSensor::VirtualForceField()
 {
     // ------------------ Virtual Force Field (VFF) Method ------------------ //
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS = mAgentEntity->GetTargetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
+        mAgentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
+        mAgentEntity->GetTargetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
     
     btVector3 totalForce( 0, 0, 0 );
 
     //Calculate the total repulsive force
-    for( size_t i = 0; i < mObstacleHits.size(); ++i )
+    for( size_t i = 0; i < mIntersections.size(); ++i )
     {
-        osg::ref_ptr< osg::Geode > geode = mObstacleHits.at( i ).getGeode();
+        osg::Vec3d intersect = mIntersections.at( i ).getWorldIntersectPoint();
+        btVector3 repulsiveForce( intersect.x() - agentPosition[ 0 ],
+                                  intersect.y() - agentPosition[ 1 ], 0 );
 
-        if( geode.valid() )
-        {
-            osg::Vec3d intersect = mObstacleHits.at( i ).getWorldIntersectPoint();
-            btVector3 repulsiveForce( intersect.x() - agentPosition[ 0 ],
-                                      intersect.y() - agentPosition[ 1 ], 0 );
+        double variables = mForceRepellingConstant / repulsiveForce.length2();
+        repulsiveForce /= repulsiveForce.length();
+        repulsiveForce *= variables;
 
-            double variables = mForceRepellingConstant / repulsiveForce.length2();
-            repulsiveForce /= repulsiveForce.length();
-            repulsiveForce *= variables;
-
-            totalForce -= repulsiveForce;
-        }
+        totalForce -= repulsiveForce;
     }
 
     //Calculate the target force
@@ -187,29 +211,25 @@ void ObstacleSensor::VirtualForceField()
 void ObstacleSensor::WallFollowing()
 {
     // ----------------------- Wall Following Method ------------------------ //
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS = mAgentEntity->GetDCS();
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
+        mAgentEntity->GetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
     
     btVector3 totalForce( 0, 0, 0 );
 
     //Calculate the total repulsive force
-    for( size_t i = 0; i < mObstacleHits.size(); ++i )
+    for( size_t i = 0; i < mIntersections.size(); ++i )
     {
-        osg::ref_ptr< osg::Geode > geode = mObstacleHits.at( i ).getGeode();
+        osg::Vec3d intersect = mIntersections.at( i ).getWorldIntersectPoint();
+        btVector3 repulsiveForce( intersect.x() - agentPosition[ 0 ],
+                                  intersect.y() - agentPosition[ 1 ], 0 );
 
-        if( geode.valid() )
-        {
-            osg::Vec3d intersect = mObstacleHits.at( i ).getWorldIntersectPoint();
-            btVector3 repulsiveForce( intersect.x() - agentPosition[ 0 ],
-                                      intersect.y() - agentPosition[ 1 ], 0 );
+        double variables = mForceRepellingConstant / repulsiveForce.length2();
+        repulsiveForce /= repulsiveForce.length();
+        repulsiveForce *= variables;
 
-            double variables = mForceRepellingConstant / repulsiveForce.length2();
-            repulsiveForce /= repulsiveForce.length();
-            repulsiveForce *= variables;
-
-            totalForce -= repulsiveForce;
-        }
+        totalForce -= repulsiveForce;
     }
 
     //Calculate the target force

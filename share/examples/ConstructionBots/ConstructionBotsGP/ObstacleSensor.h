@@ -40,7 +40,7 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
-#include <osgUtil/IntersectVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
@@ -81,9 +81,9 @@ private:
 
     btVector3 mResultantForce;
 
-    std::vector< osgUtil::Hit > mObstacleHits;
+    std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
 
-    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots
