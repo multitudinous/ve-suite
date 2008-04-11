@@ -1433,7 +1433,7 @@ void DataSet::SetDisplayedScalarRange( int index, double* range )
 //////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::Switch* DataSet::GetSwitchNode()
 {
-    if( !switchNode )
+    if( !switchNode.valid() )
     {
         switchNode = new ves::xplorer::scenegraph::Switch();
     }
@@ -1443,7 +1443,7 @@ ves::xplorer::scenegraph::Switch* DataSet::GetSwitchNode()
 /////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* DataSet::GetDCS()
 {
-    if( dcs == NULL )
+    if( !dcs.valid() )
     {
         dcs = new ves::xplorer::scenegraph::DCS();
         return this->dcs.get();

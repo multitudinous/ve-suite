@@ -43,9 +43,7 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/ref_ptr>
-#endif
 
 // --- C/C++ Libraries --- //
 #include <vector>

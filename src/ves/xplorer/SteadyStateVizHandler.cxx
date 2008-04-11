@@ -261,7 +261,7 @@ void SteadyStateVizHandler::PreFrameUpdate()
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( _activeObject->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( ModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+            temp->SetWorldNode( ModelHandler::instance()->GetActiveModel()->GetDCS() );
             temp->SetGeodes( _activeObject );
             temp->AddGraphicsObjectToSceneGraph();
 

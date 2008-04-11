@@ -180,7 +180,9 @@ public:
     ///Get the node for the cfd data set
     ves::xplorer::scenegraph::CADEntityHelper* GetCfdNode( void );
 
-    ///Get the dcs for the cfd data set
+    ///Get the dcs for the CAD and the data viz to be added to
+    ///All plugins have only one model and thus have one DCS
+    ///\return The plugin DCS that everything will be added to
     ves::xplorer::scenegraph::DCS* GetDCS( void );
 
     ///Set the id for this model
