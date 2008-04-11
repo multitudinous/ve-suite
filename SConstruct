@@ -389,7 +389,8 @@ base_bldr.addOptions( opts )
 
 baseEnv = base_bldr.buildEnvironment()
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
-
+# add in once we are using 0.98
+# baseEnv.Decider('MD5-timestamp')
 # Add doxygen builder to the base environment
 doxygen.generate(baseEnv)
 
