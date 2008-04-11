@@ -44,7 +44,6 @@ class HeadsUpDisplay;
 namespace scenegraph
 {
 class DCS;
-class Group;
 class ResourceManager;
 }
 }
@@ -77,11 +76,9 @@ class CameraEntity : public osg::Camera
 public:
     CameraEntity();
     CameraEntity(
-        ves::xplorer::scenegraph::Group* rootNode,
-        ves::xplorer::scenegraph::DCS* worldDCS,
         ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::ResourceManager* resourceManager,
-        ves::xplorer::HeadsUpDisplay* headsUpDisplay );
+        ves::xplorer::HeadsUpDisplay* headsUpDisplay,
+        ves::xplorer::scenegraph::ResourceManager* resourceManager );
 
     CameraEntity( const CameraEntity& cameraEntity,
                   const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
@@ -98,8 +95,7 @@ public:
     void DisplayProjectionEffect( bool onOff );
     void DisplayScreenAlignedQuad( bool onOff );
     
-    ves::xplorer::scenegraph::Group* GetRootNode();
-    ves::xplorer::scenegraph::DCS* GetWorldDCS();
+    ves::xplorer::scenegraph::DCS* GetPluginDCS();
     ves::xplorer::scenegraph::DCS* GetDCS();
     ves::xplorer::scenegraph::DCS* GetQuadDCS();
     const osg::Matrixd& GetInitialViewMatrix();
@@ -140,8 +136,6 @@ private:
 
     ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > mRootNode;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
     
     //The loaded camera geometry node and frustum geometry lines

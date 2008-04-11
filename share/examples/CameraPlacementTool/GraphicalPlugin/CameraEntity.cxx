@@ -72,8 +72,6 @@ mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( 0 ),
 mResourceManager( 0 ),
-mRootNode( 0 ),
-mWorldDCS( 0 ),
 mPluginDCS( 0 ),
 mCameraDCS( 0 ),
 mCameraNode( 0 ),
@@ -89,11 +87,9 @@ mCameraViewQuadVertices( 0 )
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::CameraEntity(
-    ves::xplorer::scenegraph::Group* rootNode,
-    ves::xplorer::scenegraph::DCS* worldDCS,
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::ResourceManager* resourceManager,
-    ves::xplorer::HeadsUpDisplay* headsUpDisplay )
+    ves::xplorer::HeadsUpDisplay* headsUpDisplay,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager )
 :
 osg::Camera(),
 mTexGenNode( 0 ),
@@ -101,8 +97,6 @@ mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( headsUpDisplay ),
 mResourceManager( resourceManager ),
-mRootNode( rootNode ),
-mWorldDCS( worldDCS ),
 mPluginDCS( pluginDCS ),
 mCameraDCS( 0 ),
 mCameraNode( 0 ),
@@ -126,8 +120,6 @@ mProjectionTechnique( 0 ),
 mCameraEntityCallback( 0 ),
 mHeadsUpDisplay( 0 ),
 mResourceManager( 0 ),
-mRootNode( 0 ),
-mWorldDCS( 0 ),
 mPluginDCS( 0 ),
 mCameraDCS( 0 ),
 mCameraNode( 0 ),
@@ -169,7 +161,7 @@ void CameraEntity::Initialize()
           ( mResourceManager->get< osg::Texture2D, osg::ref_ptr >
           ( "CameraViewTexture" ) ).get() );
     //Add the subgraph to render
-    addChild( mWorldDCS.get() );
+    addChild( mPluginDCS.get() );
 
     //Initialize mInitialViewMatrix
     mInitialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
@@ -185,7 +177,7 @@ void CameraEntity::Initialize()
     mTexGenNode = new osg::TexGenNode();
     mTexGenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
     mTexGenNode->setTextureUnit( 0 );
-    mRootNode->addChild( mTexGenNode.get() );
+    mPluginDCS->addChild( mTexGenNode.get() );
 
     //Initialize mProjectionTechnique
     mProjectionTechnique = new cpt::ProjectionTechnique();
@@ -288,7 +280,7 @@ void CameraEntity::CustomKeyboardMouseSelection(
             new osgUtil::LineSegmentIntersector( startPoint, endPoint );
         osgUtil::IntersectionVisitor intersectionVisitor( intersector.get() );
 
-        mWorldDCS->accept( intersectionVisitor );
+        mPluginDCS->accept( intersectionVisitor );
 
         if( !intersector->containsIntersections() )
         {
@@ -548,14 +540,9 @@ void CameraEntity::DisplayScreenAlignedQuad( bool onOff )
     mCameraViewQuadDCS->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Group* CameraEntity::GetRootNode()
+ves::xplorer::scenegraph::DCS* CameraEntity::GetPluginDCS()
 {
-    return mRootNode.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* CameraEntity::GetWorldDCS()
-{
-    return mWorldDCS.get();
+    return mPluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* CameraEntity::GetDCS()

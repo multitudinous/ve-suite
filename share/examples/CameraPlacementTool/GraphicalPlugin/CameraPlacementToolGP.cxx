@@ -77,7 +77,6 @@ CameraPlacementToolGP::~CameraPlacementToolGP()
 
         if( rootNode.valid() && mCameraEntity.valid() )
         {
-            rootNode->removeChild( mCameraEntity->GetTexGenNode() );
             rootNode->removeChild( mCameraEntity.get() );
         }
     }
@@ -93,11 +92,9 @@ void CameraPlacementToolGP::InitializeNode(
 
     //Initialize the CameraEntity
     mCameraEntity = new cpt::CameraEntity(
-        mSceneManager->GetRootNode(),
-        mSceneManager->GetWorldDCS(),
         mDCS.get(),
-        mResourceManager,
-        mEnvironmentHandler->GetHeadsUpDisplay() );
+        mEnvironmentHandler->GetHeadsUpDisplay(),
+        mResourceManager );
 
     double cameraPosition[ 3 ] = { 0, -5.0, 0 };
     mCameraEntity->GetDCS()->SetTranslationArray( cameraPosition );
@@ -302,7 +299,7 @@ void CameraPlacementToolGP::InitializeResources()
         std::string hitQuadFragmentSource = std::string(
         "void main() \n"
         "{ \n"
-            "vec4 color = vec4( 1.0, 1.0, 0.0, 0.4 ); \n"
+            "vec4 color = vec4( 1.0, 0.0, 0.0, 0.3 ); \n"
 
             "gl_FragColor = color; \n"
         "} \n" );
