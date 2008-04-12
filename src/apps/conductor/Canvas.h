@@ -30,8 +30,8 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef CANVAS_H
-#define CANVAS_H
+#ifndef VES_APP_CANVAS_H
+#define VES_APP_CANVAS_H
 /*!\file Canvas.h
 Canvas API
 */
@@ -45,11 +45,11 @@ Canvas API
 #include <wx/menu.h>
 #include <wx/dcclient.h>
 
-class AppFrame;
-class Network;
-
 #include <vector>
 #include <map>
+
+class AppFrame;
+class Network;
 
 class Canvas : public wxScrolledWindow
 {
@@ -66,11 +66,16 @@ public:
     ///Destructor
     virtual ~Canvas();
     ///On Paint controls the draw loop for the canvas
-    void OnPaint( wxPaintEvent &event );
+    ///\param event wxWidgets event
+    void OnPaint( wxPaintEvent& event );
     ///Get the active network being rendered
-    Network * GetActiveNetwork();
-    std::string GetActiveNetworkID( );
+    ///\return The active network as selected by the user
+    Network* GetActiveNetwork();
+    ///Get the id of the active network, this is a guid
+    ///\return The id guid as a string
+    std::string GetActiveNetworkID();
     ///Set active network id from hierarchy tree
+    ///\param id The guid of the network to be activated
     void SetActiveNetwork( std::string id );
     ///Populate canvas with network string
     ///Note: Must call Canvas::New( bool ) before calling this function
@@ -78,6 +83,7 @@ public:
     ///Net design canvas
     void New( bool promptClearXplorer );
     ///Get the correct size for sub dialogs
+    ///\return The wxRect for this scrolled window
     wxRect GetAppropriateSubDialogSize();
     ///Creates a default network for the user to work on a clean canvas
     void CreateDefaultNetwork();
@@ -94,15 +100,17 @@ public:
     void CleanUpNetworks();
 
 private:
-    ///User scale
-    /// first = x scale
-    /// second = y scale
-    //std::pair< double, double > userScale;
+    ///Map of the networks for this system
     std::map< std::string, Network* > networks;
+    ///active guid
     std::string activeId;
+    ///previous guid
     std::string previousId;
+    ///Draw function
     void DrawNetwork( wxDC &dc, std::string id );
+    ///treeview widget
     wxWindow* m_treeView;
+    ///parent window
     wxWindow* parent;
     ///canvas is cleaned up
     wxUpdateUIEvent cleanEvent;
@@ -116,4 +124,4 @@ private:
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
 
-#endif
+#endif /// VES_APP_CANVAS_H
