@@ -66,6 +66,9 @@ protected:
 private:
     void Initialize();
 
+    /*    F
+        L B R
+          N    */
     std::map< std::string, osg::ref_ptr< osg::Geometry > > mDrawables;
 
 };

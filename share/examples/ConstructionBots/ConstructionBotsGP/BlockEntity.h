@@ -43,6 +43,10 @@
 // --- Bullet Includes --- //
 class btGeneric6DofConstraint;
 
+// --- C/C++ Libraries --- //
+#include <map>
+#include <string>
+
 namespace bots
 {
 // --- My Includes --- //
@@ -58,34 +62,54 @@ public:
 
     virtual ~BlockEntity();
 
+    void AttachUpdate();
+
     bots::Block* GetGeometry();
 
     //Get the block's occupancy matrix
-    std::map< std::pair< int, int >, bool > GetOccMatrix();
+    const std::map< std::pair< int, int >, bool >& GetOccupancyMatrix();
 
-    void SetNameAndDescriptions( int number );
+    void SetBlockEntityMap(
+        std::map< std::string, bots::BlockEntity* >& blockEntityMap );
 
     void SetConstraints( int gridSize );
 
-    //Set the block's occupancy matrix
-    void SetOccMatrix( std::map< std::pair< int, int >, bool > occMatrix );
+    void SetNameAndDescriptions( int number );
 
-    void UpdateSideStates();
+    //Set the block's occupancy matrix
+    void SetOccupancyMatrix(
+        const std::map< std::pair< int, int >, bool >& occMatrix );
+
+protected:
 
 private:
-    osg::ref_ptr< bots::Block > mBlock;
+    void ConnectionDetection();
 
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+
+    //This in only here to get connections when first attached to structure
+    std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
+
+    //The geometry of this block
+    osg::ref_ptr< bots::Block > mGeometry;
+
+    //The physics constraints of this block
     btGeneric6DofConstraint* mConstraint;
 
     //Blocks have a copy of the occupancy matrix
+    //The occupancy matrix stores the desired structure to be built
     std::map< std::pair< int, int >, bool > mOccMatrix;
-    //Blocks store location info for shared coordinate system
+
+    //Are blocks attached to sides or not
+    //This map stores the physical connections to this block
+    //This forms the basis for a data line in the structure
+    /*    F
+        L B R
+          N    */
+    std::map< std::string, bots::BlockEntity* > mAttachedBlocks;
+
+    //The location of this block in the shared coordinate system
     std::pair< int, int > mLocation;
-    //Are blocks attatched to sides or not
-            //[0]-F
-    //[1]-L         //[3]-R
-            //[2]-N
-    bool mSideState[ 4 ];
 
 };
 } //end bots

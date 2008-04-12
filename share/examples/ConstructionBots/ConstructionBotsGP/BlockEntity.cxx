@@ -36,20 +36,22 @@
 #include "Block.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
-#include <osg/Texture2D>
 #include <osg/LineWidth>
 
+#include <osgUtil/IntersectionVisitor>
+#include <osgUtil/LineSegmentIntersector>
+
 #include <osgDB/ReadFile>
-#include <osgDB/WriteFile>
 
 // --- Bullet Includes --- //
-#include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h>
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
+#include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h>
 
 // --- C/C++ Libraries --- //
 #include <sstream>
@@ -63,11 +65,16 @@ BlockEntity::BlockEntity(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( block.get(), pluginDCS, physicsSimulator ),
-mBlock( block.get() ),
+mPluginDCS( pluginDCS ),
+mGeometry( block.get() ),
 mConstraint( 0 ),
 mLocation( 0, 0 )
 {
-    ;
+    //Initialize side attachments
+    mAttachedBlocks[ "Left" ] = NULL;
+    mAttachedBlocks[ "Near" ] = NULL;
+    mAttachedBlocks[ "Right" ] = NULL;
+    mAttachedBlocks[ "Far" ] = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 BlockEntity::~BlockEntity()
@@ -76,33 +83,162 @@ BlockEntity::~BlockEntity()
     {
         if( mPhysicsSimulator )
         {
-            mPhysicsSimulator->GetDynamicsWorld()->removeConstraint( mConstraint );
+            mPhysicsSimulator->GetDynamicsWorld()->removeConstraint(
+                mConstraint );
         }
+
         delete mConstraint;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockEntity::AttachUpdate()
+{
+    mGeometry->SetColor( std::string( "Block" ), osg::Vec4( 0, 0, 0, 1 ) );
+
+    ConnectionDetection();
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockEntity::ConnectionDetection()
+{
+    ves::xplorer::scenegraph::DCS* temp;
+    osg::Vec3 blockPosition = mDCS->getPosition();
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > lineSegmentIntersector =
+        new osgUtil::LineSegmentIntersector( osg::Vec3( blockPosition.x() - 1,
+                                                        blockPosition.y(),
+                                                        blockPosition.z() ),
+                                                        blockPosition );
+
+    //Test the left connection
+    {
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            lineSegmentIntersector.get() );
+        mPluginDCS->accept( intersectionVisitor );
+
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            lineSegmentIntersector->getIntersections();
+        if( intersections.size() == 2 )
+        {
+            osg::ref_ptr< osg::Drawable > drawable =
+                intersections.begin()->drawable;
+
+            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                drawable->getParent( 0 ) );
+
+            temp = static_cast< ves::xplorer::scenegraph::DCS* >(
+                parentVisitor.GetParentNode() );
+
+            if( temp )
+            {
+                mAttachedBlocks[ "Left" ] = mBlockEntityMap[ temp->GetName() ];
+            }
+        }
+    }
+    //Test the near connection
+    {
+        lineSegmentIntersector->reset();
+        lineSegmentIntersector->setStart( osg::Vec3( blockPosition.x(),
+                                                     blockPosition.y() - 1,
+                                                     blockPosition.z() ) );
+
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            lineSegmentIntersector.get() );
+        mPluginDCS->accept( intersectionVisitor );
+
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            lineSegmentIntersector->getIntersections();
+        if( intersections.size() == 2 )
+        {
+            osg::ref_ptr< osg::Drawable > drawable =
+                intersections.begin()->drawable;
+
+            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                drawable->getParent( 0 ) );
+
+            temp = static_cast< ves::xplorer::scenegraph::DCS* >(
+                parentVisitor.GetParentNode() );
+
+            if( temp )
+            {
+                mAttachedBlocks[ "Near" ] = mBlockEntityMap[ temp->GetName() ];
+            }
+        }
+    }
+    //Test the right connection
+    {
+        lineSegmentIntersector->reset();
+        lineSegmentIntersector->setStart( osg::Vec3( blockPosition.x() + 1,
+                                                     blockPosition.y(),
+                                                     blockPosition.z() ) );
+
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            lineSegmentIntersector.get() );
+        mPluginDCS->accept( intersectionVisitor );
+
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            lineSegmentIntersector->getIntersections();
+        if( intersections.size() == 2 )
+        {
+            osg::ref_ptr< osg::Drawable > drawable =
+                intersections.begin()->drawable;
+
+            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                drawable->getParent( 0 ) );
+
+            temp = static_cast< ves::xplorer::scenegraph::DCS* >(
+                parentVisitor.GetParentNode() );
+
+            if( temp )
+            {
+                mAttachedBlocks[ "Right" ] = mBlockEntityMap[ temp->GetName() ];
+            }
+        }
+    }
+    //Test the far connection
+    {
+        lineSegmentIntersector->reset();
+        lineSegmentIntersector->setStart( osg::Vec3( blockPosition.x(),
+                                                     blockPosition.y() + 1,
+                                                     blockPosition.z() ) );
+
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            lineSegmentIntersector.get() );
+        mPluginDCS->accept( intersectionVisitor );
+
+        osgUtil::LineSegmentIntersector::Intersections& intersections =
+            lineSegmentIntersector->getIntersections();
+        if( intersections.size() == 2 )
+        {
+            osg::ref_ptr< osg::Drawable > drawable =
+                intersections.begin()->drawable;
+
+            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                drawable->getParent( 0 ) );
+
+            temp = static_cast< ves::xplorer::scenegraph::DCS* >(
+                parentVisitor.GetParentNode() );
+
+            if( temp )
+            {
+                mAttachedBlocks[ "Far" ] = mBlockEntityMap[ temp->GetName() ];
+            }
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bots::Block* BlockEntity::GetGeometry()
 {
-    return mBlock.get();
+    return mGeometry.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::pair< int, int >, bool > BlockEntity::GetOccMatrix()
+const std::map< std::pair< int, int >, bool >& BlockEntity::GetOccupancyMatrix()
 {
 	return mOccMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::SetNameAndDescriptions( int number )
+void BlockEntity::SetBlockEntityMap(
+    std::map< std::string, bots::BlockEntity* >& blockEntityMap )
 {
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList.push_back( "VE_XML_ID" );
-    descriptorsList.push_back( "" );
-    mDCS->setDescriptions( descriptorsList );
-
-    std::stringstream ss;
-    ss << "Block" << number;
-    std::cout << ss.str() << std::endl;
-    mDCS->setName( ss.str() );
+    mBlockEntityMap = blockEntityMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetConstraints( int gridSize )
@@ -120,9 +256,11 @@ void BlockEntity::SetConstraints( int gridSize )
     frameInB = btTransform::getIdentity();
 
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 61 )
-    mConstraint = new btGeneric6DofConstraint( *mPhysicsRigidBody, *fixedBody, frameInA, frameInB, false );
+    mConstraint = new btGeneric6DofConstraint(
+        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB, false );
 #else
-    mConstraint = new btGeneric6DofConstraint( *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );
+    mConstraint = new btGeneric6DofConstraint(
+        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );
 #endif
 
     //Fix the translation range for the agents
@@ -139,13 +277,22 @@ void BlockEntity::SetConstraints( int gridSize )
     mPhysicsSimulator->GetDynamicsWorld()->addConstraint( mConstraint );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::SetOccMatrix( std::map< std::pair< int, int >, bool > occMatrix )
+void BlockEntity::SetNameAndDescriptions( int number )
 {
-    mOccMatrix = occMatrix;
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_XML_ID" );
+    descriptorsList.push_back( "" );
+    mDCS->setDescriptions( descriptorsList );
+
+    std::stringstream ss;
+    ss << "Block" << number;
+    std::cout << ss.str() << std::endl;
+    mDCS->setName( ss.str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::UpdateSideStates()
+void BlockEntity::SetOccupancyMatrix(
+    const std::map< std::pair< int, int >, bool >& occMatrix )
 {
-    //mOccMatrix[ ;
+    mOccMatrix = occMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

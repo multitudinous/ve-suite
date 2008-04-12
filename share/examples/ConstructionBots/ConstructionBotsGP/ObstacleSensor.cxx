@@ -133,7 +133,7 @@ void ObstacleSensor::CollectInformation()
 
     /*
     osgUtil::IntersectorGroup::Intersectors& intersectors =
-    mIntersectorGroup->getIntersectors();
+        mIntersectorGroup->getIntersectors();
     for( osgUtil::IntersectorGroup::Intersectors::iterator intersectorItr =
          intersectors.begin(); intersectorItr != intersectors.end();
          ++intersectorItr )
@@ -168,7 +168,7 @@ void ObstacleSensor::CalculateResultantForce( bool buildMode )
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::VirtualForceField()
 {
-    // ------------------ Virtual Force Field (VFF) Method ------------------ //
+    // ----------------- Virtual Force Field( VFF ) Method ------------------ //
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
@@ -234,7 +234,7 @@ void ObstacleSensor::WallFollowing()
 
     //Calculate the target force
     {
-        //2D code to rotate vector about point (0, 0, 0) by theta
+        //2D code to rotate vector about point( 0, 0, 0 ) by theta
         //x' = x * cos( theta ) - y * sin( theta );
         //y' = x * sin( theta ) + y * cos( theta );
 

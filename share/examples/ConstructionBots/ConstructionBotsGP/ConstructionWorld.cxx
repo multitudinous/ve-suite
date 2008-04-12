@@ -77,14 +77,14 @@ ConstructionWorld::ConstructionWorld(
     )
 :
 mGrid( 0 ),
-mBlocks( 0 ),
 mAgents( 0 ),
 mStartBlock( 0 ),
 mPluginDCS( pluginDCS ),
 mPhysicsSimulator( physicsSimulator )
 #ifdef VE_SOUND
-, mAmbientSound( new ves::xplorer::scenegraph::Sound(
-                "AmbientSound", pluginDCS, soundManager ) )
+,
+mAmbientSound( new ves::xplorer::scenegraph::Sound(
+                   "AmbientSound", pluginDCS, soundManager ) )
 #endif
 {
     //Initialize the construction bot framework
@@ -105,13 +105,13 @@ ConstructionWorld::~ConstructionWorld()
         delete mGrid;   
     }
 
-    //mStartBlock is added under mBlocks vector,
-    //so it gets deleted in here
-    for( size_t i = 0; i < mBlocks.size(); ++i )
+    //mStartBlock gets deleted here as well
+    for( std::map< std::string, bots::BlockEntity* >::iterator itr =
+         mBlockEntities.begin(); itr != mBlockEntities.end(); ++itr )
     {
-        if( mBlocks.at( i ) )
+        if( itr->second )
         {
-            delete mBlocks.at( i );
+            delete itr->second;
         }
     }
 
@@ -123,8 +123,7 @@ ConstructionWorld::~ConstructionWorld()
         }
     }
 
-    mEntities.clear();
-    mBlocks.clear();
+    mBlockEntities.clear();
     mAgents.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +144,7 @@ void ConstructionWorld::InitializeFramework()
     }
 #endif
 
-    std::map< std::pair< int, int >, bool > occMatrix;
+    std::map< std::pair< int, int >, bool > occupancyMatrix;
     int numBlocks = 20;
     int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
@@ -156,8 +155,15 @@ void ConstructionWorld::InitializeFramework()
     {
         for( int i = 0; i < gridSize; ++i )
         {
-            occMatrix.insert( std::make_pair( std::make_pair( 
-                i - halfPosition, -j + halfPosition ), false ) );
+            bool temp = false;
+            if( j == 25 && i <= 30 && i >= 20 )
+            {
+                temp = true;
+            }
+
+            int x =  i - halfPosition;
+            int y = -j + halfPosition;
+            occupancyMatrix[ std::make_pair( x, y ) ] = temp;
         }
     }
 
@@ -166,7 +172,7 @@ void ConstructionWorld::InitializeFramework()
 
     //Initialize the grid
     osg::ref_ptr< bots::Grid > grid = new bots::Grid();
-    grid->CreateGrid( gridSize, occMatrix );
+    grid->CreateGrid( gridSize, occupancyMatrix );
 
     mGrid = new bots::GridEntity( grid.get(),
                                   mPluginDCS.get(),
@@ -175,101 +181,90 @@ void ConstructionWorld::InitializeFramework()
     mGrid->InitPhysics();
     mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
     mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
-    mEntities[ mGrid->GetDCS()->GetName() ] = mGrid;
 
     //Initialize the starting block
     osg::ref_ptr< bots::Block > startBlock = new bots::Block();
     mStartBlock = new bots::BlockEntity( startBlock.get(),
                                          mPluginDCS.get(),
                                          mPhysicsSimulator );
-    mStartBlock->GetGeometry()->SetColor(
-        std::string( "Block" ), osg::Vec4( 0, 0, 0, 1 ) );
-    //Set name and descriptions for blocks
-    mStartBlock->SetNameAndDescriptions( 0 );
     double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
     mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
-    
     mStartBlock->InitPhysics();
     mStartBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
     mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
-    //Set up map to entities
-    mEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
+    mStartBlock->SetBlockEntityMap( mBlockEntities );
+    mStartBlock->SetNameAndDescriptions( 0 );
+    mStartBlock->SetOccupancyMatrix( occupancyMatrix );
+    mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
     
     //Initialize the blocks
     for( int i = 0; i < numBlocks; ++i )
     {
-        osg::ref_ptr< bots::Block > block = new bots::Block();
-        mBlocks.push_back( new bots::BlockEntity( block.get(),
-                                                  mPluginDCS.get(),
-                                                  mPhysicsSimulator ) );
+        bots::BlockEntity* blockEntity = new bots::BlockEntity(
+            new bots::Block(), mPluginDCS.get(), mPhysicsSimulator );
+
+        //Set physics properties for blocks
+        blockEntity->InitPhysics();
+        blockEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
+
+        blockEntity->SetBlockEntityMap( mBlockEntities );
+
+        //Set D6 constraint for blocks
+        blockEntity->SetConstraints( gridSize );
+
+        //Set name and descriptions for blocks
+        blockEntity->SetNameAndDescriptions( i + 1 );
+
+        //Set up map to blocks
+        mBlockEntities[ blockEntity->GetDCS()->GetName() ] = blockEntity;
     }
 
     //Initialize the agents
     for( int i = 0; i < numAgents; ++i )
     {
-        osg::ref_ptr< bots::Agent > agent = new bots::Agent();
-        mAgents.push_back( new AgentEntity( agent.get(),
-                                            mPluginDCS.get(),
-                                            mPhysicsSimulator ) );
-    }
-
-    for( size_t i = 0; i < mBlocks.size(); ++i )
-    {
-        //Set name and descriptions for blocks
-        mBlocks.at( i )->SetNameAndDescriptions( i + 1 );
+        bots::AgentEntity* agentEntity = new AgentEntity(
+            new bots::Agent(), mPluginDCS.get(), mPhysicsSimulator );
 
         //Set physics properties for blocks
-        mBlocks.at( i )->InitPhysics();
-        mBlocks.at( i )->GetPhysicsRigidBody()->setFriction( 1.0 );
-
-        //Set D6 constraint for blocks
-        mBlocks.at( i )->SetConstraints( gridSize );
-
-        //Set up map to entities
-        mEntities[ mBlocks.at( i )->GetDCS()->GetName() ] = mBlocks.at( i );
-    }
-
-    for( size_t i = 0; i < mAgents.size(); ++i )
-    {
-        //Set name and descriptions for blocks
-        mAgents.at( i )->SetNameAndDescriptions( i );
-
-        //Set physics properties for blocks
-        mAgents.at( i )->InitPhysics();
-        mAgents.at( i )->GetPhysicsRigidBody()->setFriction( 1.0 );
+        agentEntity->InitPhysics();
+        agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
 
         //Set D6 constraint for agents
-        mAgents.at( i )->SetConstraints( gridSize );
+        agentEntity->SetConstraints( gridSize );
 
         //Store collisions for the agents
-        mAgents.at( i )->GetPhysicsRigidBody()->SetStoreCollisions( true );
+        agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
         //Set the sensor range for the agents
-        mAgents.at( i )->GetBlockSensor()->SetRange( gridSize * 0.25 );
-        mAgents.at( i )->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
+        agentEntity->GetBlockSensor()->SetRange( gridSize * 0.25 );
+        agentEntity->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
 
-        //Set up map to entities
-        mEntities[ mAgents.at( i )->GetDCS()->GetName() ] = mAgents.at( i );
+        //Set name and descriptions for blocks
+        agentEntity->SetNameAndDescriptions( i );
+
+        mAgents.push_back( agentEntity );
     }
 
     //Create random positions for the objects in the framework
     CreateRandomPositions( gridSize );
 
-    //Push back the starting block
-    mBlocks.push_back( mStartBlock );
+    //mStartBlock acts as the first block of the structure so we must attach it
+    mStartBlock->AttachUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::CreateRandomPositions( int gridSize )
 {
-    std::vector< ves::xplorer::scenegraph::CADEntity* > objects;
-    for( size_t i = 0; i < mBlocks.size(); ++i )
+    std::vector< ves::xplorer::scenegraph::CADEntity* > entities;
+    std::map< std::string, bots::BlockEntity* >::iterator itr =
+        mBlockEntities.begin(); itr++;
+    for( itr; itr != mBlockEntities.end(); ++itr )
     {
-        objects.push_back( mBlocks.at( i ) );
+        entities.push_back( itr->second );
     }
 
     for( size_t i = 0; i < mAgents.size(); ++i )
     {
-        objects.push_back( mAgents.at( i ) );
+        entities.push_back( mAgents.at( i ) );
     }
 
     bool needsNewPosition( false );
@@ -277,11 +272,12 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
     double randOne, randTwo;
 
     std::vector< std::pair< double, double > > positions;
-    positions.push_back( std::pair< double, double >
-        ( mStartBlock->GetDCS()->GetVETranslationArray()[ 0 ], 
-          mStartBlock->GetDCS()->GetVETranslationArray()[ 1 ] ) );
+    positions.push_back(
+        std::pair< double, double >(
+            mStartBlock->GetDCS()->GetVETranslationArray()[ 0 ], 
+            mStartBlock->GetDCS()->GetVETranslationArray()[ 1 ] ) );
 
-    for( size_t i = 0; i < objects.size(); ++i )
+    for( size_t i = 0; i < entities.size(); ++i )
     {
         do
         {
@@ -334,7 +330,7 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
         positions.push_back( std::pair< double, double >( randOne, randTwo ) );
 
         double objectPosition[ 3 ] = { randOne, randTwo, 0.5 };
-        objects.at( i )->GetDCS()->SetTranslationArray( objectPosition );
+        entities.at( i )->GetDCS()->SetTranslationArray( objectPosition );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -356,6 +352,7 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
             {
                 if( blockSensor->CloseToBlock() )
                 {
+                    /*
                     bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
                         ( mEntities[ agent->GetTargetDCS()->GetName() ] );
                     bool collision = agent->GetPhysicsRigidBody()->
@@ -364,6 +361,7 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
                     {
                         agent->PickUpBlock( targetEntity );
                     }
+                    */
                 }
                 
                 agent->GoToBlock();
@@ -376,14 +374,17 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
             {
                 if( siteSensor->CloseToSite() )
                 {
+                    /*
                     bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
                         ( mEntities[ agent->GetTargetDCS()->GetName() ] );
                     bool collision = agent->GetPhysicsRigidBody()->
                         CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
+
                     if( collision )
                     {
                         ;
                     }
+                    */
                 }
 
                 agent->GoToSite();

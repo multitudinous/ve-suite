@@ -63,8 +63,9 @@ namespace osgAL
 #endif
 
 // --- C/C++ Includes --- //
-#include <vector>
 #include <map>
+#include <vector>
+#include <string>
 
 namespace bots
 {
@@ -80,7 +81,8 @@ public:
         ves::xplorer::scenegraph::DCS* pluginDCS,
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-      , osgAL::SoundManager* soundManager
+        ,
+        osgAL::SoundManager* soundManager
 #endif
         );
 
@@ -93,15 +95,15 @@ private:
     void CreateRandomPositions( int gridSize );
     void CommunicatingBlocksAlgorithm();
 
-    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
-
-    std::map< std::string, ves::xplorer::scenegraph::CADEntity* > mEntities;
-    bots::GridEntity* mGrid;
-    std::vector< bots::BlockEntity* > mBlocks;
-    std::vector< bots::AgentEntity* > mAgents;
-    bots::BlockEntity* mStartBlock;
-
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+
+    bots::GridEntity* mGrid;
+    bots::BlockEntity* mStartBlock;
+    std::map< std::string, bots::BlockEntity* > mBlockEntities;
+    std::vector< bots::AgentEntity* > mAgents;
+    //std::map< std::string, ves::xplorer::scenegraph::CADEntity* > mEntities;
+
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* mAmbientSound;

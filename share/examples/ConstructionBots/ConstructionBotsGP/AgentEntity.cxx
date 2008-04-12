@@ -111,7 +111,7 @@ void AgentEntity::PickUpBlock( bots::BlockEntity* blockEntity )
 {
     double* position = mDCS->GetVETranslationArray();
     double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
-    blockEntity->GetDCS()->SetTranslationArray( transArray );
+    mTargetDCS->SetTranslationArray( transArray );
     //blockEntity->GetPhysicsRigidBody()->clearForces();
     mTargetDCS = NULL;
     mBlockSensor->DisplayLine( false );

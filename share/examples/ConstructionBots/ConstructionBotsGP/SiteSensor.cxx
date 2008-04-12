@@ -44,8 +44,8 @@
 #include <osg/Geometry>
 #include <osg/LineWidth>
 
-#include <osgUtil/LineSegmentIntersector>
 #include <osgUtil/IntersectionVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
 #include <iostream>

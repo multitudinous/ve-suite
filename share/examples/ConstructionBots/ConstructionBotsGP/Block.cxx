@@ -64,9 +64,9 @@ Block::~Block()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Block::Initialize()
-{
+{    
     //Create the block
-    mDrawables.insert( std::make_pair( "Block", new osg::Geometry() ) );
+    mDrawables[ "Block" ] = new osg::Geometry();
     osg::ref_ptr< osg::StateSet > blockStateSet = new osg::StateSet();
     blockStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     mDrawables[ "Block" ]->setStateSet( blockStateSet.get() );
@@ -130,10 +130,10 @@ void Block::Initialize()
     addDrawable( mDrawables[ "Block" ].get() );
 
     //Create the lines
-    mDrawables.insert( std::make_pair( "LeftLine", new osg::Geometry() ) );
-    mDrawables.insert( std::make_pair( "NearLine", new osg::Geometry() ) );
-    mDrawables.insert( std::make_pair( "RightLine", new osg::Geometry() ) );
-    mDrawables.insert( std::make_pair( "FarLine", new osg::Geometry() ) );
+    mDrawables[ "LeftLine" ] = new osg::Geometry();
+    mDrawables[ "NearLine" ] = new osg::Geometry();
+    mDrawables[ "RightLine" ] = new osg::Geometry();
+    mDrawables[ "FarLine" ] = new osg::Geometry();
 
     osg::ref_ptr< osg::StateSet > lineStateSet = new osg::StateSet();
     lineStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -196,6 +196,11 @@ void Block::SetColor( const std::string& drawableName, osg::Vec4 color )
     if( colorArray.valid() )
     {
         colorArray->at( 0 ) = color;
+    }
+
+    if( color.length() == 1.0 )
+    {
+
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
