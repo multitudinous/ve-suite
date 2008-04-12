@@ -18,7 +18,7 @@ AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}_{#VEVERSION}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
 OutputBaseFilename=vesuite{#VEVERSION}_{#SVNVERSION}
 Compression=lzma
 SolidCompression=true
@@ -47,7 +47,7 @@ Name: custom; Description: Custom installation; Flags: iscustom
 Name: nameserver; Description: Name Server; Types: full
 Name: vexplorer; Description: VE-Xplorer; Types: full
 Name: veconductor; Description: VE-Conductor (GUI); Types: full
-Name: vebuildenv; Description: Headers and Libs; Types: full
+Name: vebuildenv; Description: Headers and Libs
 Name: examples; Description: Example datasets; Types: full
 ;Name: buildertools; Description: VE-Suite BuilderTools; Types: full
 [Registry]
@@ -84,7 +84,7 @@ Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe;
 Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
 [_ISTool]
 UseAbsolutePaths=false
-LogFile=C:\devEnv\VE_Suite_1.0\VE_Installer\installer\compile.log
+LogFile={#VEDEVHOME}\compile.log
 LogFileAppend=false
 [UninstallDelete]
 Name: {app}; Type: filesandordirs
