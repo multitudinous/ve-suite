@@ -75,10 +75,6 @@ public:
     ///Populate canvas with network string
     ///Note: Must call Canvas::New( bool ) before calling this function
     void PopulateNetworks( std::string xmlNetwork, bool clearXplorer = true );
-    ///User scale
-    /// first = x scale
-    /// second = y scale
-    std::pair< double, double > userScale;
     ///Net design canvas
     void New( bool promptClearXplorer );
     ///Get the correct size for sub dialogs
@@ -94,11 +90,14 @@ public:
     void OnDelMod( wxCommandEvent& event );
     ///Event handler to delete networks
     void OnDelNetwork( wxUpdateUIEvent& event );
-//protected:
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
 
 private:
+    ///User scale
+    /// first = x scale
+    /// second = y scale
+    //std::pair< double, double > userScale;
     std::map< std::string, Network* > networks;
     std::string activeId;
     std::string previousId;

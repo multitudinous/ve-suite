@@ -1816,8 +1816,8 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
     this->parent = parent;
     modules.clear();
     links.clear();
-    userScale.first = parent->userScale.first;
-    userScale.second = parent->userScale.second;
+    userScale.first = 1.0f;//parent->userScale.first;
+    userScale.second = 1.0f;//parent->userScale.second;
     GetNumUnit()->first = 700;
     GetNumUnit()->second = 700;
     GetNumPix()->first = 10;
@@ -1831,7 +1831,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
 
 //This is needed because on windows the scale must be 1 for the
 //wxAutoBufferedPaintDC to work properly
-#ifndef WIN32
+//#ifndef WIN32
     if( veNetwork->GetNumberOfNetworkStates() > 0 )
     {
         long int tempScaleInfo;
@@ -1846,7 +1846,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         veNetwork->GetDataValuePair( 5 )->GetData( tempScaleInfo );
         numUnit.second = tempScaleInfo;
     }
-#endif
+//#endif
     //These are set at 7000 so that the virtual size of the canvas is a 
     //minimum of 7000 x 7000
     maxX = 7000;

@@ -103,8 +103,6 @@ Canvas::Canvas( wxWindow* parent, int id )
         previousId( "-1" ),
         m_treeView( 0 )
 {
-    userScale.first = 1;
-    userScale.second = 1;
     std::pair< long int, long int > numPix;
     numPix.first = 7000;
     numPix.second = 7000;
@@ -187,7 +185,8 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 void Canvas::OnPaint( wxPaintEvent& paintEvent )
 {
     wxAutoBufferedPaintDC dc( this );
-    dc.SetUserScale( userScale.first, userScale.second );
+    dc.SetUserScale( GetActiveNetwork()->GetUserScale()->first, 
+        GetActiveNetwork()->GetUserScale()->second );
     int xpix, ypix;
     GetScrollPixelsPerUnit( &xpix, &ypix );
     int x, y;
@@ -381,9 +380,9 @@ void Canvas::CreateDefaultNetwork()
     numUnit.first = 10;
     numUnit.second = 10;
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_xUserScale", userScale.first );
+        SetData( "m_xUserScale", 1.0f );
     tempNetwork->GetDataValuePair( -1 )->
-        SetData( "m_yUserScale", userScale.second );
+        SetData( "m_yUserScale", 1.0f );
     tempNetwork->GetDataValuePair( -1 )->
         SetData( "nPixX", static_cast< long int >( numPix.first ) );
     tempNetwork->GetDataValuePair( -1 )->
