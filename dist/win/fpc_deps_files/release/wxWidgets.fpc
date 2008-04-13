@@ -1,4 +1,4 @@
-prefix=${fp_file_cwd}/../../WxWidgets_2.8.4_Pre-Compile_vc8.0_SP1/
+prefix=${fp_file_cwd}/../../WxWidgets_2.8.7_Pre-Compile_vc8.0_SP1
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib/vc_dll
 includedir=${prefix}/include ${prefix}/lib/vc_dll/msw
