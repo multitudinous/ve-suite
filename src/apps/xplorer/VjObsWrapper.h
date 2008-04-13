@@ -65,10 +65,8 @@ namespace PortableServer
 class POA;
 }
 
-//namespace ACE
-//{
-    class ACE_Time_Value;
-//}
+class ACE_Time_Value;
+class ACE_Countdown_Time;
 
 #include <vector>
 #include <string>
@@ -119,8 +117,12 @@ private:
     ACE_Time_Value* mTimeOutValue;
     ///Time out value used for doing orb work call
     ACE_Time_Value* mTimeZero;
-    CORBA::ORB* m_orbPtr;///<holds the orb pointer for tao
-    bool isMaster;///is the master should be removed
+    ///Profile timer to pause for the ord
+    ACE_Countdown_Time* mTimer;
+    ///holds the orb pointer for tao
+    CORBA::ORB* m_orbPtr;
+    ///is the master should be removed
+    bool isMaster;
 };
 }
 }

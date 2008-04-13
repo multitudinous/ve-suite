@@ -35,6 +35,7 @@
 #include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <ace/Time_Value.h>
+#include <ace/Countdown_Time.h>
 //End TAO headers
 
 #include "VjObsWrapper.h"
@@ -60,13 +61,20 @@ using namespace ves::xplorer;
 using namespace ves::open::xml;
 ////////////////////////////////////////////////////////////////////////////////
 VjObsWrapper::VjObsWrapper( void )
+    :
+    mTimer( 0 )
 {
-    mTimeZero = new ACE_Time_Value( ACE_Time_Value::zero );
+    mTimeZero = new ACE_Time_Value();// ACE_Time_Value::zero );
+    mTimeZero->msec( 50 );
     mTimeOutValue = new ACE_Time_Value();
-    mTimeOutValue->msec( 5 );
+    mTimeOutValue->msec( 1 );
+    
+    mTimer = new ACE_Countdown_Time( mTimeZero );
+    
     _vjObs = new VjObs_i();
     m_xplorer = new Body_VEXplorer_i();
     isMaster = false;
+    //mTimer->start();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void VjObsWrapper::InitCluster( void )
@@ -241,12 +249,20 @@ void VjObsWrapper::CheckORBWorkLoad( void )
     {
         return;
     }*/
+    
+    mTimer->update();
+    if( *mTimeZero !=  ACE_Time_Value::zero )
+    {
+        return;
+    }
 
     //Now process if there is work to do
     if( m_orbPtr->work_pending( *mTimeOutValue ) )
     {
         m_orbPtr->perform_work( mTimeOutValue );
     }
+    mTimeZero->msec( 50 );
+    mTimer->start();
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Frame sync variables used by osg only at this point
