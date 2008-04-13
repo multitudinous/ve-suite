@@ -1,4 +1,4 @@
-prefix=${fp_file_cwd}\..\..\OpenSceneGraph-2.2_vs80_sp1
+prefix=${fp_file_cwd}\..\..\OSG_2.2.0_Pre-Compile_vc8.0_SP1
 exec_prefix=${prefix}
 libdir=${exec_prefix}\lib
 includedir=${prefix}\include 
