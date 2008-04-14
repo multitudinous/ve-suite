@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osgDLL", "osgDLL\osgDLL.vcproj", "{BEC22C7A-3037-46D4-9B2F-73D35D4A0A60}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osgTest", "osgTest\osgTest.vcproj", "{12F5317B-CACF-41C3-A90A-1ABBBA9661D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEC22C7A-3037-46D4-9B2F-73D35D4A0A60}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BEC22C7A-3037-46D4-9B2F-73D35D4A0A60}.Debug|Win32.Build.0 = Debug|Win32
+		{BEC22C7A-3037-46D4-9B2F-73D35D4A0A60}.Release|Win32.ActiveCfg = Release|Win32
+		{BEC22C7A-3037-46D4-9B2F-73D35D4A0A60}.Release|Win32.Build.0 = Release|Win32
+		{12F5317B-CACF-41C3-A90A-1ABBBA9661D4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{12F5317B-CACF-41C3-A90A-1ABBBA9661D4}.Debug|Win32.Build.0 = Debug|Win32
+		{12F5317B-CACF-41C3-A90A-1ABBBA9661D4}.Release|Win32.ActiveCfg = Release|Win32
+		{12F5317B-CACF-41C3-A90A-1ABBBA9661D4}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
