@@ -98,6 +98,8 @@ public:
     void OnDelNetwork( wxUpdateUIEvent& event );
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
+    ///Set the User scale
+    void SetUserScale(double x, double y);
 
 private:
     ///Map of the networks for this system
@@ -114,6 +116,7 @@ private:
     wxWindow* parent;
     ///canvas is cleaned up
     wxUpdateUIEvent cleanEvent;
+    std::pair< double, double > userScale;
 
     std::string ConvertUnicode( const wxChar* data )
     {

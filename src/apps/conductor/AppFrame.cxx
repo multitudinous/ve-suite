@@ -859,6 +859,8 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
         network->GetNumPix()->first, network->GetNumPix()->second,
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
+    canvas->SetUserScale(network->GetUserScale()->first, 
+        network->GetUserScale()->second  );
     canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -882,6 +884,8 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
         network->GetNumPix()->first, network->GetNumPix()->second,
         network->GetNumUnit()->first, network->GetNumUnit()->second,
         xpos, ypos );
+    canvas->SetUserScale(network->GetUserScale()->first, 
+        network->GetUserScale()->second  );
     canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
