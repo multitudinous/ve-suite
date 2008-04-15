@@ -109,6 +109,8 @@ Canvas::Canvas( wxWindow* parent, int id )
     std::pair< long int, long int > numUnit;
     numUnit.first = 10;
     numUnit.second = 10;
+    userScale.first = 1.0;
+    userScale.second = 1.0;
     SetScrollRate( numUnit.first, numUnit.second );
     SetVirtualSize( numPix.first, numPix.second );
 
@@ -234,6 +236,8 @@ void Canvas::SetActiveNetwork( std::string id )
     PushEventHandler( networks[this->activeId] );
     networks[this->activeId]->PushAllEvents();
     this->previousId = this->activeId;
+    SetUserScale( networks[this->activeId]->GetUserScale()->first,
+        networks[this->activeId]->GetUserScale()->second );
     SetVirtualSize( networks[this->activeId]->GetMaxX(), networks[this->activeId]->GetMaxY() );
     Refresh( true );
 }
