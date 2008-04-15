@@ -55,19 +55,19 @@ using namespace ves::xplorer::scenegraph;
 PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
                                     PhysicsSimulator* physicsSimulator )
         :
-        m_storeCollisions( false ),
-        m_mass( 1.0 ),
+        mStoreCollisions( false ),
+        mMass( 1.0 ),
         mPhysicsSimulator( physicsSimulator ),
-        m_osgToBullet( new osgToBullet( node ) ),
+        mOSGToBullet( new osgToBullet( node ) ),
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 65 )
         btRigidBody( btRigidBody::btRigidBodyConstructionInfo(
-                     btScalar( m_mass ),                         //mass
-                     m_vesMotionState = new vesMotionState(),    //motionState
+                     btScalar( mMass ),                         //mass
+                     mVESMotionState = new vesMotionState(),    //motionState
                      0,                                          //collisionShape
                      btVector3( 0.0f, 0.0f, 0.0f ) ) )           //localInertia
 #else
-        btRigidBody( btScalar( m_mass ),                         //mass
-                     m_vesMotionState = new vesMotionState(),    //motionState
+        btRigidBody( btScalar( mMass ),                         //mass
+                     mVESMotionState = new vesMotionState(),    //motionState
                      0,                                          //collisionShape
                      btVector3( 0.0f, 0.0f, 0.0f ),              //localInertia
                      btScalar( 0.0f ),                           //linearDamping
@@ -83,13 +83,19 @@ PhysicsRigidBody::~PhysicsRigidBody()
 {
     ClearCollisions();
 
-    delete m_vesMotionState;
+    delete mVESMotionState;
     delete m_collisionShape;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::multimap< PhysicsRigidBody*, btVector3 >& PhysicsRigidBody::
+    GetCollisions()
+{
+    return mCollisions;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMass( float mass )
 {
-    m_mass = mass;
+    mMass = mass;
     SetMassProps();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -100,17 +106,22 @@ void PhysicsRigidBody::SetStoreCollisions( bool storeCollisions )
         ClearCollisions();
     }
 
-    m_storeCollisions = storeCollisions;
+    mStoreCollisions = storeCollisions;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PhysicsRigidBody::HasCollisions()
+{
+    return !mCollisions.empty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PhysicsRigidBody::IsStoringCollisions()
 {
-    return m_storeCollisions;
+    return mStoreCollisions;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PhysicsRigidBody::CollisionInquiry( PhysicsRigidBody* physicsRigidBody )
 {
-    int count = m_collisions.count( physicsRigidBody );
+    int count = mCollisions.count( physicsRigidBody );
     if( count > 0 )
     {
         return true;
@@ -126,26 +137,26 @@ void PhysicsRigidBody::SetMassProps()
     if( m_collisionShape )
     {
         //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-        bool dynamic = ( m_mass != 0.0f );
+        bool dynamic = ( mMass != 0.0f );
 
         btVector3 localInertia( 0, 0, 0 );
         if( dynamic )
         {
-            m_collisionShape->calculateLocalInertia( m_mass, localInertia );
+            m_collisionShape->calculateLocalInertia( mMass, localInertia );
         }
 
-        setMassProps( m_mass, localInertia );
+        setMassProps( mMass, localInertia );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location )
 {
-    m_collisions.insert( std::make_pair( physicsRigidBody, location ) );
+    mCollisions.insert( std::make_pair( physicsRigidBody, location ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::ClearCollisions()
 {
-    m_collisions.clear();
+    mCollisions.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::BoundingBoxShape()
@@ -161,7 +172,7 @@ void PhysicsRigidBody::BoundingBoxShape()
         m_collisionShape = 0;
     }
 
-    osg::BoundingBox bb = m_osgToBullet->GetBoundingBox();
+    osg::BoundingBox bb = mOSGToBullet->GetBoundingBox();
     m_collisionShape = new btBoxShape(
                            btVector3( ( bb.xMax() - bb.xMin() ) * 0.5f,
                                       ( bb.yMax() - bb.yMin() ) * 0.5f,
@@ -169,7 +180,7 @@ void PhysicsRigidBody::BoundingBoxShape()
 
     SetMassProps();
 
-    if( m_mass != 0 )
+    if( mMass != 0 )
     {
         setActivationState( DISABLE_DEACTIVATION );
     }
@@ -192,7 +203,7 @@ void PhysicsRigidBody::SphereShape( double radius )
 
     if( radius == 0 )
     {
-        m_collisionShape = new btSphereShape( m_osgToBullet->GetBoundingSphere().radius() );
+        m_collisionShape = new btSphereShape( mOSGToBullet->GetBoundingSphere().radius() );
     }
     else
     {
@@ -201,7 +212,7 @@ void PhysicsRigidBody::SphereShape( double radius )
 
     SetMassProps();
 
-    if( m_mass != 0 )
+    if( mMass != 0 )
     {
         setActivationState( DISABLE_DEACTIVATION );
     }
@@ -226,7 +237,7 @@ void PhysicsRigidBody::UserDefinedShape( btCollisionShape* collisionShape )
 
     SetMassProps();
 
-    if( m_mass != 0 )
+    if( mMass != 0 )
     {
         setActivationState( DISABLE_DEACTIVATION );
     }
@@ -247,7 +258,7 @@ void PhysicsRigidBody::StaticConcaveShape()
         m_collisionShape = 0;
     }
 
-    m_collisionShape = new btBvhTriangleMeshShape( m_osgToBullet->GetTriangleMesh(), false );
+    m_collisionShape = new btBvhTriangleMeshShape( mOSGToBullet->GetTriangleMesh(), false );
 
     SetMass( 0 );
 
@@ -267,11 +278,11 @@ void PhysicsRigidBody::ConvexShape()
         m_collisionShape = 0;
     }
 
-    m_collisionShape = new btConvexTriangleMeshShape( m_osgToBullet->GetTriangleMesh() );
+    m_collisionShape = new btConvexTriangleMeshShape( mOSGToBullet->GetTriangleMesh() );
 
     SetMassProps();
 
-    if( m_mass != 0 )
+    if( mMass != 0 )
     {
         setActivationState( DISABLE_DEACTIVATION );
     }

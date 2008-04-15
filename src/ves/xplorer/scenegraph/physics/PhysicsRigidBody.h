@@ -87,50 +87,53 @@ public:
     ///Destructor
     virtual ~PhysicsRigidBody();
 
+    ///Creates a box shape from the osg::BoundingBox of the mesh shape
+    void BoundingBoxShape();
+
+    bool CollisionInquiry( PhysicsRigidBody* physicsRigidBody );
+
+    ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
+    void ConvexShape();
+
+    const std::multimap< PhysicsRigidBody*, btVector3 >& GetCollisions();
+
+    bool HasCollisions();
+    bool IsStoringCollisions();
+
     ///Set the mass for the rigid body
     ///\param mass The mass value
     void SetMass( float mass );
 
     void SetStoreCollisions( bool storeCollisions );
 
-    bool IsStoringCollisions();
-
-    bool CollisionInquiry( PhysicsRigidBody* physicsRigidBody );
-
-    ///Creates a box shape from the osg::BoundingBox of the mesh shape
-    void BoundingBoxShape();
-
     ///Creates a sphere shape from the osg::BoundingSphere of the mesh shape
     void SphereShape( double radius = 0 );
-
-    void UserDefinedShape( btCollisionShape* collisionShape );
 
     ///Creates a concave static-triangle mesh shape with Bounding Volume Hierarchy optimization
     void StaticConcaveShape();
 
-    ///Creates a convex hull shape from a triangle mesh - mesh can be concave or convex
-    void ConvexShape();
+    void UserDefinedShape( btCollisionShape* collisionShape );
 
 private:
     friend class PhysicsSimulator;
 
-    void SetMassProps();
+    void ClearCollisions();
 
     void PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location );
 
-    void ClearCollisions();
+    void SetMassProps();
 
-    bool m_storeCollisions;///<Store bodies currently in collision with this body, yes or no
+    bool mStoreCollisions;///<Store bodies currently in collision with this body, yes or no
 
-    float m_mass;///<The mass of the rigid body
+    float mMass;///<The mass of the rigid body
 
     PhysicsSimulator* mPhysicsSimulator;///<A pointer to the PhysicsSimulator singleton
 
-    vesMotionState* m_vesMotionState;
+    vesMotionState* mVESMotionState;
 
-    osg::ref_ptr< osgToBullet > m_osgToBullet;
+    osg::ref_ptr< osgToBullet > mOSGToBullet;
 
-    std::multimap< PhysicsRigidBody*, btVector3 > m_collisions;
+    std::multimap< PhysicsRigidBody*, btVector3 > mCollisions;
 
 };
 
