@@ -70,7 +70,7 @@ void* CreateOSGGeode()
     geometry->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
     geometry->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::QUADS, 0, vertices.get()->size() ) );
+        osg::PrimitiveSet::QUADS, 0, vertices->size() ) );
     geode->addDrawable( geometry.get() );
 
     return geode;

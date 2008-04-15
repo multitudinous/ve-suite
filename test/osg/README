@@ -1,0 +1,5 @@
+To reproduce windows crash:
+
+1. Press the 'l' key once to load the dll.
+
+2. Press the 'u' key once to unload the dll.
