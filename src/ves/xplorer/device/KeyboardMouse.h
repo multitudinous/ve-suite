@@ -176,9 +176,7 @@ private:
     void RotateView( double dx, double dy );
 
     ///Do not know how to describe this
-    ///\param dx The change in the x direction
-    ///\param dy The change in the y direction
-    void Twist( double dx, double dy );
+    void Twist();
 
     ///Handles movement in and out of the scene
     ///\param dy The change in the y direction

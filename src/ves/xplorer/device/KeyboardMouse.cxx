@@ -785,7 +785,7 @@ void KeyboardMouse::NavMotion( std::pair< double, double > delta )
     }
     else if( mButton == gadget::MBUTTON1 )
     {
-        Twist( delta.first, delta.second );
+        Twist();
     }
 
     ProcessNavigationEvents();
@@ -851,16 +851,15 @@ void KeyboardMouse::RotateView( double dx, double dy )
     Rotate( tb_axis[ 0 ], tb_axis[ 1 ], tb_axis[ 2 ], angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::Twist( double dx, double dy )
+void KeyboardMouse::Twist()
 {
-    gmtl::Matrix44d matrix;
-    gmtl::identity( matrix );
-
     double theta = atan2f( mPrevPos.first - 0.5, mPrevPos.second - 0.5 );
     double newTheta = atan2f( mCurrPos.first - 0.5, mCurrPos.second - 0.5 );
     double angle = ( OneEightyDivPI ) * ( theta - newTheta );
 
-    Rotate( matrix[ 1 ][ 0 ], matrix[ 1 ][ 1 ], matrix[ 1 ][ 2 ], angle );
+    //The axis to twist about
+    osg::Vec3 twist( 0, 1, 0 );
+    Rotate( twist.x(), twist.y(), twist.z(), angle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )
@@ -958,7 +957,7 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
     //checked and no transforms are done to the line segement
     ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( controlMeshPointIntersectVisitor );
 
-    if ( intersectorGroup->containsIntersections() )
+    if( intersectorGroup->containsIntersections() )
     {
          //std::cout<<"Found intersections "<<std::endl;
          ///only want the first one
@@ -979,7 +978,6 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
          }
          
     }
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
