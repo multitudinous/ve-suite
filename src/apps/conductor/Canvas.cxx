@@ -187,6 +187,7 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 void Canvas::OnPaint( wxPaintEvent& paintEvent )
 {
     wxAutoBufferedPaintDC dc( this );
+    DoPrepareDC( dc );
     dc.SetUserScale( userScale.first, userScale.second );
     int xpix, ypix;
     GetScrollPixelsPerUnit( &xpix, &ypix );

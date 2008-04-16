@@ -855,10 +855,11 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
     
     int xpos, ypos;
     canvas->GetViewStart( &xpos, &ypos );
-    canvas->SetScrollbars(
-        network->GetNumPix()->first, network->GetNumPix()->second,
-        network->GetNumUnit()->first, network->GetNumUnit()->second,
-        xpos, ypos );
+    //canvas->SetScrollbars(
+    //    network->GetNumPix()->first, network->GetNumPix()->second,
+    //    network->GetNumUnit()->first, network->GetNumUnit()->second,
+    //    xpos, ypos );
+    canvas->SetScrollRate( 1, 1 );
     canvas->SetUserScale(network->GetUserScale()->first, 
         network->GetUserScale()->second  );
     canvas->Refresh( true );
@@ -880,10 +881,11 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
 
     int xpos, ypos;
     canvas->GetViewStart( &xpos, &ypos );
-    canvas->SetScrollbars(
-        network->GetNumPix()->first, network->GetNumPix()->second,
-        network->GetNumUnit()->first, network->GetNumUnit()->second,
-        xpos, ypos );
+    //canvas->SetScrollbars(
+    //    network->GetNumPix()->first, network->GetNumPix()->second,
+    //    network->GetNumUnit()->first, network->GetNumUnit()->second,
+    //    xpos, ypos );
+    canvas->SetScrollRate( 1, 1 );
     canvas->SetUserScale(network->GetUserScale()->first, 
         network->GetUserScale()->second  );
     canvas->Refresh( true );
