@@ -145,7 +145,7 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 20;
+    int numBlocks = 30;
     int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
@@ -228,6 +228,8 @@ void ConstructionWorld::InitializeFramework()
         //Set physics properties for blocks
         agentEntity->InitPhysics();
         agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
+
+        agentEntity->SetBlockEntityMap( mBlockEntities );
 
         //Set D6 constraint for agents
         agentEntity->SetConstraints( gridSize );
@@ -350,45 +352,41 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
             blockSensor->CollectInformation();
             if( blockSensor->BlockInView() )
             {
+                agent->GoToBlock();
+
                 if( blockSensor->CloseToBlock() )
                 {
-                    /*
-                    bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
-                        ( mEntities[ agent->GetTargetDCS()->GetName() ] );
-                    bool collision = agent->GetPhysicsRigidBody()->
-                        CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
-                    if( collision )
-                    {
-                        agent->PickUpBlock( targetEntity );
-                    }
-                    */
+                    agent->PickUpBlock();
                 }
-                
-                agent->GoToBlock();
             }
+
+            if( agent->IsBuilding() )
+            {
+                agent->SetBuildMode( false );
+            }
+            
+            blockSensor->DisplayLine( true );
+            siteSensor->DisplayLine( false );
+        }
+        else if( agent->IsBuilding() )
+        {
+            agent->Build();
         }
         else
         {
             siteSensor->CollectInformation();
             if( siteSensor->SiteInView() )
             {
+                agent->GoToSite();
+
                 if( siteSensor->CloseToSite() )
                 {
-                    /*
-                    bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >
-                        ( mEntities[ agent->GetTargetDCS()->GetName() ] );
-                    bool collision = agent->GetPhysicsRigidBody()->
-                        CollisionInquiry( targetEntity->GetPhysicsRigidBody() );
-
-                    if( collision )
-                    {
-                        ;
-                    }
-                    */
+                    agent->InitiateBuildMode();
                 }
-
-                agent->GoToSite();
             }
+
+            blockSensor->DisplayLine( false );
+            siteSensor->DisplayLine( true );
         }
 
         //Need to look at this

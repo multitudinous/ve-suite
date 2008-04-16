@@ -60,28 +60,23 @@ class BlockEntity;
 class AgentEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    AgentEntity( osg::ref_ptr< bots::Agent > agent,
-                 ves::xplorer::scenegraph::DCS* pluginDCS,
-                 ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+    AgentEntity(
+        osg::ref_ptr< bots::Agent > agent,
+        ves::xplorer::scenegraph::DCS* pluginDCS,
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~AgentEntity();
 
     //The agent behaviors
     void AvoidObstacle();
-    void WanderAround();
-    void GoToBlock();
-    void PickUpBlock( bots::BlockEntity* blockEntity );
-    void GoToSite();
     void Build();
+    void GoToBlock();
+    void GoToSite();
+    void InitiateBuildMode();
+    void PickUpBlock();
+    void WanderAround();
 
-    void SetNameAndDescriptions( int number );
-    void SetConstraints( int gridSize );
-    void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
-    void SetBuildMode( bool buildMode );
-
-    bool IsBuilding();
-
-	ves::xplorer::scenegraph::DCS* GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* GetPluginDCS();
 	ves::xplorer::scenegraph::DCS* GetTargetDCS();
 
     bots::BlockSensorPtr GetBlockSensor();
@@ -89,10 +84,24 @@ public:
     bots::ObstacleSensorPtr GetObstacleSensor();
     bots::SiteSensorPtr GetSiteSensor();
 
+    void SetBlockEntityMap(
+        const std::map< std::string, bots::BlockEntity* >& blockEntityMap );
+
+    void SetBuildMode( bool buildMode );
+
+    void SetConstraints( int gridSize );
+    void SetNameAndDescriptions( int number );
+    void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
+
+    bool IsBuilding();
+
 private:
     void Initialize();
 
     bool mBuildMode;
+
+    //This in only here to test for collisions and for site interaction
+    std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
 
 	osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;

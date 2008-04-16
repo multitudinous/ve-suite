@@ -65,17 +65,15 @@ public:
     void AttachUpdate();
 
     bots::Block* GetGeometry();
-
+    const std::pair< int, int >& GetLocation();
     //Get the block's occupancy matrix
     const std::map< std::pair< int, int >, bool >& GetOccupancyMatrix();
 
+    void SetBlockConnection( const std::string& side, bots::BlockEntity* blockEntity );
     void SetBlockEntityMap(
-        std::map< std::string, bots::BlockEntity* >& blockEntityMap );
-
+        const std::map< std::string, bots::BlockEntity* >& blockEntityMap );
     void SetConstraints( int gridSize );
-
     void SetNameAndDescriptions( int number );
-
     //Set the block's occupancy matrix
     void SetOccupancyMatrix(
         const std::map< std::pair< int, int >, bool >& occMatrix );
@@ -98,7 +96,7 @@ private:
 
     //Blocks have a copy of the occupancy matrix
     //The occupancy matrix stores the desired structure to be built
-    std::map< std::pair< int, int >, bool > mOccMatrix;
+    std::map< std::pair< int, int >, bool > mOccupancyMatrix;
 
     //Are blocks attached to sides or not
     //This map stores the physical connections to this block
@@ -106,7 +104,7 @@ private:
     /*    F
         L B R
           N    */
-    std::map< std::string, bots::BlockEntity* > mAttachedBlocks;
+    std::map< std::string, bots::BlockEntity* > mConnectedBlocks;
 
     //The location of this block in the shared coordinate system
     std::pair< int, int > mLocation;

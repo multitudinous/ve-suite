@@ -71,10 +71,10 @@ mConstraint( 0 ),
 mLocation( 0, 0 )
 {
     //Initialize side attachments
-    mAttachedBlocks[ "Left" ] = NULL;
-    mAttachedBlocks[ "Near" ] = NULL;
-    mAttachedBlocks[ "Right" ] = NULL;
-    mAttachedBlocks[ "Far" ] = NULL;
+    mConnectedBlocks[ "Left" ] = NULL;
+    mConnectedBlocks[ "Near" ] = NULL;
+    mConnectedBlocks[ "Right" ] = NULL;
+    mConnectedBlocks[ "Far" ] = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 BlockEntity::~BlockEntity()
@@ -93,9 +93,27 @@ BlockEntity::~BlockEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::AttachUpdate()
 {
+    ConnectionDetection();
+
     mGeometry->SetColor( std::string( "Block" ), osg::Vec4( 0, 0, 0, 1 ) );
 
-    ConnectionDetection();
+    std::map< std::string, bots::BlockEntity* >::const_iterator itr;
+    itr = mConnectedBlocks.begin();
+    if( itr->second )
+    {
+        mOccupancyMatrix = itr->second->GetOccupancyMatrix();
+        mLocation = itr->second->GetLocation();
+
+    }
+    for( itr; itr != mConnectedBlocks.end(); ++itr )
+    {
+        if( itr->second )
+        {
+            mGeometry->SetColor( itr->first, osg::Vec4( 0, 0, 0, 1 ) );
+            itr->second->GetGeometry()->SetColor( itr->first, osg::Vec4( 0, 0, 0, 1 ) );
+        }
+    }
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::ConnectionDetection()
@@ -129,7 +147,8 @@ void BlockEntity::ConnectionDetection()
 
             if( temp )
             {
-                mAttachedBlocks[ "Left" ] = mBlockEntityMap[ temp->GetName() ];
+                mConnectedBlocks[ "Left" ] = mBlockEntityMap[ temp->GetName() ];
+                //mConnectedBlocks[ "Left" ]->SetBlockConnection( std::string( "Right" ), this );
             }
         }
     }
@@ -159,7 +178,8 @@ void BlockEntity::ConnectionDetection()
 
             if( temp )
             {
-                mAttachedBlocks[ "Near" ] = mBlockEntityMap[ temp->GetName() ];
+                mConnectedBlocks[ "Near" ] = mBlockEntityMap[ temp->GetName() ];
+                //mConnectedBlocks[ "Near" ]->SetBlockConnection( std::string( "Far" ), this );
             }
         }
     }
@@ -189,7 +209,8 @@ void BlockEntity::ConnectionDetection()
 
             if( temp )
             {
-                mAttachedBlocks[ "Right" ] = mBlockEntityMap[ temp->GetName() ];
+                mConnectedBlocks[ "Right" ] = mBlockEntityMap[ temp->GetName() ];
+                //mConnectedBlocks[ "Right" ]->SetBlockConnection( std::string( "Left" ), this );
             }
         }
     }
@@ -219,7 +240,8 @@ void BlockEntity::ConnectionDetection()
 
             if( temp )
             {
-                mAttachedBlocks[ "Far" ] = mBlockEntityMap[ temp->GetName() ];
+                mConnectedBlocks[ "Far" ] = mBlockEntityMap[ temp->GetName() ];
+                //mConnectedBlocks[ "Far" ]->SetBlockConnection( std::string( "Near" ), this );
             }
         }
     }
@@ -230,13 +252,24 @@ bots::Block* BlockEntity::GetGeometry()
     return mGeometry.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
+const std::pair< int, int >& BlockEntity::GetLocation()
+{
+    return mLocation;
+}
+////////////////////////////////////////////////////////////////////////////////
 const std::map< std::pair< int, int >, bool >& BlockEntity::GetOccupancyMatrix()
 {
-	return mOccMatrix;
+	return mOccupancyMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockEntity::SetBlockConnection(
+    const std::string& side, bots::BlockEntity* blockEntity )
+{
+    mConnectedBlocks[ side ] = blockEntity;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockEntityMap(
-    std::map< std::string, bots::BlockEntity* >& blockEntityMap )
+    const std::map< std::string, bots::BlockEntity* >& blockEntityMap )
 {
     mBlockEntityMap = blockEntityMap;
 }
@@ -293,6 +326,6 @@ void BlockEntity::SetNameAndDescriptions( int number )
 void BlockEntity::SetOccupancyMatrix(
     const std::map< std::pair< int, int >, bool >& occMatrix )
 {
-    mOccMatrix = occMatrix;
+    mOccupancyMatrix = occMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

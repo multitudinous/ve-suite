@@ -54,9 +54,10 @@
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
-AgentEntity::AgentEntity( osg::ref_ptr< bots::Agent > agent,
-                          ves::xplorer::scenegraph::DCS* pluginDCS,
-                          ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+AgentEntity::AgentEntity(
+    osg::ref_ptr< bots::Agent > agent,
+    ves::xplorer::scenegraph::DCS* pluginDCS,
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
 CADEntity( agent.get(), pluginDCS, physicsSimulator ),
 mBuildMode( false ),
@@ -74,7 +75,8 @@ AgentEntity::~AgentEntity()
     {
         if( mPhysicsSimulator )
         {
-            mPhysicsSimulator->GetDynamicsWorld()->removeConstraint( mConstraint );
+            mPhysicsSimulator->GetDynamicsWorld()->removeConstraint(
+                mConstraint );
         }
         delete mConstraint;
     }
@@ -83,16 +85,88 @@ AgentEntity::~AgentEntity()
 void AgentEntity::Initialize()
 {
     
-    mBlockSensor = bots::BlockSensorPtr( new bots::BlockSensor( this ) );
-    mHoldBlockSensor = bots::HoldBlockSensorPtr( new bots::HoldBlockSensor( this ) );
-    mObstacleSensor = bots::ObstacleSensorPtr( new bots::ObstacleSensor( this ) );
-    mSiteSensor = bots::SiteSensorPtr( new bots::SiteSensor( this ) );
+    mBlockSensor = bots::BlockSensorPtr(
+        new bots::BlockSensor( this ) );
+    mHoldBlockSensor = bots::HoldBlockSensorPtr(
+        new bots::HoldBlockSensor( this ) );
+    mObstacleSensor = bots::ObstacleSensorPtr(
+        new bots::ObstacleSensor( this ) );
+    mSiteSensor = bots::SiteSensorPtr(
+        new bots::SiteSensor( this ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::AvoidObstacle()
 {
-    mObstacleSensor->CalculateResultantForce( mBuildMode );
-    mPhysicsRigidBody->setLinearVelocity( mObstacleSensor->GetResultantForce() );
+    mPhysicsRigidBody->setLinearVelocity(
+        mObstacleSensor->GetResultantForce() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::Build()
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::GoToBlock()
+{
+    mPhysicsRigidBody->setLinearVelocity(
+        mBlockSensor->GetNormalizedBlockVector() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::GoToSite()
+{
+    mPhysicsRigidBody->setLinearVelocity(
+        mSiteSensor->GetNormalizedSiteVector() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::InitiateBuildMode()
+{
+    if( GetPhysicsRigidBody()->HasCollisions() )
+    {
+        bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >(
+            mBlockEntityMap[ mTargetDCS->GetName() ] );
+        bool collision = GetPhysicsRigidBody()->CollisionInquiry(
+            targetEntity->GetPhysicsRigidBody() );
+        if( collision )
+        {
+            double* position = mDCS->GetVETranslationArray();
+            GetPhysicsRigidBody()->clearForces();
+            mTargetDCS = NULL;
+            mBlockSensor->DisplayLine( false );
+            mSiteSensor->DisplayLine( false );
+            
+            std::pair< int, int > newPosition( 0, 0 );
+            newPosition.first = static_cast< int >( position[ 0 ] + 0.5 );
+            newPosition.second = static_cast< int >( position[ 1 ] + 0.5 );
+
+            
+
+            //if( newPosition.first == 
+
+            std::cout << mDCS->GetName() << " position: ( " << newPosition.first << ", "
+                                                            << newPosition.second << " )"
+                                                            << std::endl << std::endl;
+
+            GetDCS()->setPosition( osg::Vec3( newPosition.first, newPosition.second, position[ 2 ] ) );
+
+            mBuildMode = true;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::PickUpBlock()
+{
+    bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >(
+        mBlockEntityMap[ mTargetDCS->GetName() ] );
+    bool collision = GetPhysicsRigidBody()->CollisionInquiry(
+        targetEntity->GetPhysicsRigidBody() );
+    if( collision )
+    {
+        double* position = mDCS->GetVETranslationArray();
+        double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
+        mTargetDCS->SetTranslationArray( transArray );
+        GetPhysicsRigidBody()->clearForces();
+        mTargetDCS = NULL;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::WanderAround()
@@ -102,43 +176,45 @@ void AgentEntity::WanderAround()
     mPhysicsRigidBody->setLinearVelocity( velocity.normalize() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::GoToBlock()
+bots::BlockSensorPtr AgentEntity::GetBlockSensor()
 {
-    mPhysicsRigidBody->setLinearVelocity( mBlockSensor->GetNormalizedBlockVector() );
+    return mBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::PickUpBlock( bots::BlockEntity* blockEntity )
+bots::HoldBlockSensorPtr AgentEntity::GetHoldBlockSensor()
 {
-    double* position = mDCS->GetVETranslationArray();
-    double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
-    mTargetDCS->SetTranslationArray( transArray );
-    //blockEntity->GetPhysicsRigidBody()->clearForces();
-    mTargetDCS = NULL;
-    mBlockSensor->DisplayLine( false );
-    mSiteSensor->DisplayLine( true );
+    return mHoldBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::Build()
+bots::ObstacleSensorPtr AgentEntity::GetObstacleSensor()
 {
-    ;
+    return mObstacleSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::GoToSite()
+ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()
 {
-    mPhysicsRigidBody->setLinearVelocity( mSiteSensor->GetNormalizedSiteVector() );
+	return mPluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::SetNameAndDescriptions( int number )
+bots::SiteSensorPtr AgentEntity::GetSiteSensor()
 {
-    osg::Node::DescriptionList descriptorsList;
-    descriptorsList.push_back( "VE_XML_ID" );
-    descriptorsList.push_back( "" );
-    mDCS->setDescriptions( descriptorsList );
-
-    std::stringstream ss;
-    ss << "Agent" << number;
-    std::cout << ss.str() << std::endl;
-    mDCS->setName( ss.str() );
+    return mSiteSensor;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
+{
+	return mTargetDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::SetBlockEntityMap(
+    const std::map< std::string, bots::BlockEntity* >& blockEntityMap )
+{
+    mBlockEntityMap = blockEntityMap;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::SetBuildMode( bool buildMode )
+{
+    mBuildMode = buildMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetConstraints( int gridSize )
@@ -156,9 +232,11 @@ void AgentEntity::SetConstraints( int gridSize )
     frameInB = btTransform::getIdentity();
 
 #if ( BULLET_MAJOR_VERSION >= 2 ) && ( BULLET_MINOR_VERSION > 61 )
-    mConstraint = new btGeneric6DofConstraint( *mPhysicsRigidBody, *fixedBody, frameInA, frameInB, false );
+    mConstraint = new btGeneric6DofConstraint(
+        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB, false );
 #else
-    mConstraint = new btGeneric6DofConstraint( *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );
+    mConstraint = new btGeneric6DofConstraint(
+        *mPhysicsRigidBody, *fixedBody, frameInA, frameInB );
 #endif
 
     //Fix the translation range for the agents
@@ -168,11 +246,24 @@ void AgentEntity::SetConstraints( int gridSize )
     mConstraint->setLinearUpperLimit( btVector3(  100.0,  100.0,  100.0 ) );
 
     //Remove rotation from agents
-    //Range should be small, otherwise singularities will 'explode' the constraint
+    //Range should be small or singularities will 'explode' the constraint
     mConstraint->setAngularLowerLimit( btVector3( 0, 0, 0 ) );
     mConstraint->setAngularUpperLimit( btVector3( 0, 0, 0 ) );
 
     mPhysicsSimulator->GetDynamicsWorld()->addConstraint( mConstraint );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::SetNameAndDescriptions( int number )
+{
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList.push_back( "VE_XML_ID" );
+    descriptorsList.push_back( "" );
+    mDCS->setDescriptions( descriptorsList );
+
+    std::stringstream ss;
+    ss << "Agent" << number;
+    std::cout << ss.str() << std::endl;
+    mDCS->setName( ss.str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS )
@@ -180,44 +271,8 @@ void AgentEntity::SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS )
     mTargetDCS = targetDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::SetBuildMode( bool buildMode )
-{
-    mBuildMode = buildMode;
-}
-////////////////////////////////////////////////////////////////////////////////
 bool AgentEntity::IsBuilding()
 {
     return mBuildMode;
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()
-{
-	return mPluginDCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
-{
-	return mTargetDCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-bots::BlockSensorPtr AgentEntity::GetBlockSensor()
-{
-    return mBlockSensor;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-bots::HoldBlockSensorPtr AgentEntity::GetHoldBlockSensor()
-{
-    return mHoldBlockSensor;
-}
-////////////////////////////////////////////////////////////////////////////////
-bots::ObstacleSensorPtr AgentEntity::GetObstacleSensor()
-{
-    return mObstacleSensor;
-}
-////////////////////////////////////////////////////////////////////////////////
-bots::SiteSensorPtr AgentEntity::GetSiteSensor()
-{
-    return mSiteSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////

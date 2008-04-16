@@ -130,10 +130,10 @@ void Block::Initialize()
     addDrawable( mDrawables[ "Block" ].get() );
 
     //Create the lines
-    mDrawables[ "LeftLine" ] = new osg::Geometry();
-    mDrawables[ "NearLine" ] = new osg::Geometry();
-    mDrawables[ "RightLine" ] = new osg::Geometry();
-    mDrawables[ "FarLine" ] = new osg::Geometry();
+    mDrawables[ "Left" ] = new osg::Geometry();
+    mDrawables[ "Near" ] = new osg::Geometry();
+    mDrawables[ "Right" ] = new osg::Geometry();
+    mDrawables[ "Far" ] = new osg::Geometry();
 
     osg::ref_ptr< osg::StateSet > lineStateSet = new osg::StateSet();
     lineStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -151,34 +151,34 @@ void Block::Initialize()
     //Left
     leftLineVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
     leftLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-    mDrawables[ "LeftLine" ]->setVertexArray( leftLineVertices.get() );
+    mDrawables[ "Left" ]->setVertexArray( leftLineVertices.get() );
     //Near
     nearLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
     nearLineVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-    mDrawables[ "NearLine" ]->setVertexArray( nearLineVertices.get() );
+    mDrawables[ "Near" ]->setVertexArray( nearLineVertices.get() );
     //Right
     rightLineVertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
     rightLineVertices->push_back( osg::Vec3( 0.5f,  0.5f, 0.5f ) );
-    mDrawables[ "RightLine" ]->setVertexArray( rightLineVertices.get() );
+    mDrawables[ "Right" ]->setVertexArray( rightLineVertices.get() );
     //Far
     farLineVertices->push_back( osg::Vec3(  0.5f, 0.5f, 0.5f ) );
     farLineVertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
-    mDrawables[ "FarLine" ]->setVertexArray( farLineVertices.get() );
+    mDrawables[ "Far" ]->setVertexArray( farLineVertices.get() );
 
-    mDrawables[ "LeftLine" ]->addPrimitiveSet( new osg::DrawArrays(
+    mDrawables[ "Left" ]->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::LINES, 0, leftLineVertices->size() ) );
-    mDrawables[ "NearLine" ]->addPrimitiveSet( new osg::DrawArrays(
+    mDrawables[ "Near" ]->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::LINES, 0, nearLineVertices->size() ) );
-    mDrawables[ "RightLine" ]->addPrimitiveSet( new osg::DrawArrays(
+    mDrawables[ "Right" ]->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::LINES, 0, rightLineVertices->size() ) );
-    mDrawables[ "FarLine" ]->addPrimitiveSet( new osg::DrawArrays(
+    mDrawables[ "Far" ]->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::LINES, 0, farLineVertices->size() ) );
 
     std::map< std::string, osg::ref_ptr< osg::Geometry > >::const_iterator itr;
-    for( itr = mDrawables.find( "FarLine" ); itr != mDrawables.end(); ++itr )
+    for( itr = mDrawables.find( "Far" ); itr != mDrawables.end(); ++itr )
     {
         osg::ref_ptr< osg::Vec4Array > lineColor = new osg::Vec4Array();
-        lineColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+        lineColor->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
         itr->second->setColorArray( lineColor.get() );
         itr->second->setColorBinding( osg::Geometry::BIND_OVERALL );
 

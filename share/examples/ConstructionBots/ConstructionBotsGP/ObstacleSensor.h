@@ -60,17 +60,18 @@ public:
 
     virtual void CollectInformation();
 
-    void CalculateResultantForce( bool buildMode );
+    btVector3 GetResultantForce();
 
 	void SetAngleIncrement( double angleIncrement );
 	void SetRange( double range );
 
     bool ObstacleDetected();
-    btVector3 GetResultantForce();
 
 private:
-    void VirtualForceField();
-    void WallFollowing();
+    btVector3 GetRepulsiveForce( double* agentPosition );
+
+    void VirtualForceField( double* agentPosition, double* targetPosition );
+    void WallFollowing( double* agentPosition );
 
     bool mObstacleDetected;
 
