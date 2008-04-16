@@ -60,7 +60,7 @@ public:
 
     virtual void CollectInformation();
 
-    btVector3 GetResultantForce();
+    btVector3 GetNormalizedResultantForceVector();
 
 	void SetAngleIncrement( double angleIncrement );
 	void SetRange( double range );
@@ -76,7 +76,8 @@ private:
     bool mObstacleDetected;
 
     double mAngleIncrement;
-    double mRange;
+    double mShortRange;
+    double mLongRange;
     double mForceRepellingConstant;
     double mForceAttractionConstant;
 

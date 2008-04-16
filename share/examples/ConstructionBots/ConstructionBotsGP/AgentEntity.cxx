@@ -97,8 +97,13 @@ void AgentEntity::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::AvoidObstacle()
 {
-    mPhysicsRigidBody->setLinearVelocity(
-        mObstacleSensor->GetResultantForce() );
+    //Get normalized resultant force vector and multiply by speed
+    btVector3 linearVelocity =
+        mObstacleSensor->GetNormalizedResultantForceVector() * 3.0;
+    //Keep gravity in velocity
+    linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+
+    mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
@@ -108,14 +113,22 @@ void AgentEntity::Build()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToBlock()
 {
-    mPhysicsRigidBody->setLinearVelocity(
-        mBlockSensor->GetNormalizedBlockVector() );
+    //Get normalized block vector and multiply by speed
+    btVector3 linearVelocity = mBlockSensor->GetNormalizedBlockVector() * 3.0;
+    //Keep gravity in velocity
+    linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+
+    mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToSite()
 {
-    mPhysicsRigidBody->setLinearVelocity(
-        mSiteSensor->GetNormalizedSiteVector() );
+    //Get normalized site vector and multiply by speed
+    btVector3 linearVelocity = mSiteSensor->GetNormalizedSiteVector() * 3.0;
+    //Keep gravity in velocity
+    linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+
+    mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::InitiateBuildMode()
@@ -134,19 +147,16 @@ void AgentEntity::InitiateBuildMode()
             mBlockSensor->DisplayLine( false );
             mSiteSensor->DisplayLine( false );
             
-            std::pair< int, int > newPosition( 0, 0 );
-            newPosition.first = static_cast< int >( position[ 0 ] + 0.5 );
-            newPosition.second = static_cast< int >( position[ 1 ] + 0.5 );
+            double transArray[ 3 ];
+            transArray[ 0 ] = static_cast< int >( position[ 0 ] + 0.5 );
+            transArray[ 1 ] = static_cast< int >( position[ 1 ] + 0.5 );
+            transArray[ 2 ] = position[ 2 ];
 
-            
-
-            //if( newPosition.first == 
-
-            std::cout << mDCS->GetName() << " position: ( " << newPosition.first << ", "
-                                                            << newPosition.second << " )"
+            std::cout << mDCS->GetName() << " position: ( " << transArray[ 0 ] << ", "
+                                                            << transArray[ 1 ] << " )"
                                                             << std::endl << std::endl;
 
-            GetDCS()->setPosition( osg::Vec3( newPosition.first, newPosition.second, position[ 2 ] ) );
+            GetDCS()->SetTranslationArray( transArray );
 
             mBuildMode = true;
         }
@@ -157,14 +167,18 @@ void AgentEntity::PickUpBlock()
 {
     bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >(
         mBlockEntityMap[ mTargetDCS->GetName() ] );
-    bool collision = GetPhysicsRigidBody()->CollisionInquiry(
-        targetEntity->GetPhysicsRigidBody() );
+    ves::xplorer::scenegraph::PhysicsRigidBody* targetPhysicsRigidBody =
+        targetEntity->GetPhysicsRigidBody();
+    bool collision =
+        GetPhysicsRigidBody()->CollisionInquiry( targetPhysicsRigidBody );
     if( collision )
     {
         double* position = mDCS->GetVETranslationArray();
-        double transArray[ 3 ] = { position[ 0 ], position[ 1 ], 1.5 };
+        double transArray[ 3 ] =
+            { position[ 0 ], position[ 1 ], position[ 2 ] + 1.0 };
         mTargetDCS->SetTranslationArray( transArray );
-        GetPhysicsRigidBody()->clearForces();
+        //targetPhysicsRigidBody->clearForces();
+        //GetPhysicsRigidBody()->clearForces();
         mTargetDCS = NULL;
     }
 }

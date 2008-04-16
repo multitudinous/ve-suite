@@ -63,19 +63,21 @@ HoldBlockSensor::~HoldBlockSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void HoldBlockSensor::CollectInformation()
 {
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
+        mAgentEntity->GetPluginDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
 
-    double* agentPosition = agentDCS->GetVETranslationArray();
-    osg::Vec3d startPoint( agentPosition[ 0 ],
-                           agentPosition[ 1 ],
-                           agentPosition[ 2 ] );
-    osg::Vec3d endPoint( agentPosition[ 0 ],
-                         agentPosition[ 1 ],
-                         agentPosition[ 2 ] + mRange );
+    osg::Vec3d startPoint = agentDCS->getPosition();
+    osg::Vec3d endPoint = startPoint;
+    endPoint.z() += mRange;
 
     //Reset results from last frame
     mHoldingBlock = false;
+    if( mAgentEntity->IsBuilding() )
+    {
+        mAgentEntity->SetBuildMode( false );
+    }
 
     mLineSegmentIntersector->reset();
     mLineSegmentIntersector->setStart( startPoint );
@@ -83,10 +85,11 @@ void HoldBlockSensor::CollectInformation()
 
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
-    mAgentEntity->GetPluginDCS()->accept( intersectionVisitor );
+    pluginDCS->RemoveChild( agentDCS.get() );
+    pluginDCS->accept( intersectionVisitor );
+    pluginDCS->AddChild( agentDCS.get() );
 
-    size_t hitCount = mLineSegmentIntersector->getIntersections().size();
-    if( hitCount > 1 )
+    if( mLineSegmentIntersector->containsIntersections() )
     {
         mHoldingBlock = true;
     }

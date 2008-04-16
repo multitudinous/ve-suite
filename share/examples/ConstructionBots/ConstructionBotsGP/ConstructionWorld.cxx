@@ -145,7 +145,7 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 30;
+    int numBlocks = 20;
     int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
@@ -179,7 +179,7 @@ void ConstructionWorld::InitializeFramework()
                                   mPhysicsSimulator );
     mGrid->SetNameAndDescriptions();
     mGrid->InitPhysics();
-    mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
+    mGrid->GetPhysicsRigidBody()->setFriction( 1.0 );
     mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
 
     //Initialize the starting block
@@ -359,11 +359,6 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
                     agent->PickUpBlock();
                 }
             }
-
-            if( agent->IsBuilding() )
-            {
-                agent->SetBuildMode( false );
-            }
             
             blockSensor->DisplayLine( true );
             siteSensor->DisplayLine( false );
@@ -390,7 +385,7 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
         }
 
         //Need to look at this
-        agent->WanderAround();
+        //agent->WanderAround();
 
         obstacleSensor->CollectInformation();
         if( obstacleSensor->ObstacleDetected() )

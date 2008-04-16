@@ -126,24 +126,17 @@ void SiteSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
         mAgentEntity->GetTargetDCS();
 
-    double* agentPosition = agentDCS->GetVETranslationArray();
-    (*mVertexArray)[ 0 ].set( agentPosition[ 0 ],
-                              agentPosition[ 1 ],
-                              0.5 );
+    (*mVertexArray)[ 0 ] = agentDCS->getPosition();
     if( targetDCS.valid() )
     {
-        double* targetPosition = targetDCS->GetVETranslationArray();
-        (*mVertexArray)[ 1 ].set( targetPosition[ 0 ],
-                                  targetPosition[ 1 ],
-                                  0.5 );
+        (*mVertexArray)[ 1 ] = targetDCS->getPosition();
     }
     else
     {
         Rotate();
-        (*mVertexArray)[ 1 ].set(
-            agentPosition[ 0 ] + mRange * cos( mAngle ),
-            agentPosition[ 1 ] + mRange * sin( mAngle ),
-            0.5 );
+        (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
+        (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
+        (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
     }
 
     //Reset results from last frame
@@ -159,16 +152,14 @@ void SiteSensor::CollectInformation()
 
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
+    pluginDCS->RemoveChild( agentDCS.get() );
     pluginDCS->accept( intersectionVisitor );
+    pluginDCS->AddChild( agentDCS.get() );
 
-    osgUtil::LineSegmentIntersector::Intersections& intersections =
-        mLineSegmentIntersector->getIntersections();
-    if( intersections.size() > 1 )
+    if( mLineSegmentIntersector->containsIntersections() )
     {
-        osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-            intersections.begin(); itr++;
-
-        osg::ref_ptr< osg::Drawable > drawable = itr->drawable;
+        osg::ref_ptr< osg::Drawable > drawable =
+            mLineSegmentIntersector->getFirstIntersection().drawable;
 
         osg::Vec4 color = static_cast< osg::Vec4Array* >(
             drawable->asGeometry()->getColorArray() )->at( 0 );
@@ -180,8 +171,8 @@ void SiteSensor::CollectInformation()
                 parentVisitor.GetParentNode() );
 
             double* sitePosition = targetDCS->GetVETranslationArray();
-            btVector3 siteVector( sitePosition[ 0 ] - agentPosition[ 0 ],
-                                  sitePosition[ 1 ] - agentPosition[ 1 ],
+            btVector3 siteVector( sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
+                                  sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(),
                                   0.0 );
 
             if( siteVector.length() < 1.415 )//sqrt( 2 * 0.5 )

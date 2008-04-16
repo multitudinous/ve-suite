@@ -50,7 +50,8 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
 Sensor( agentEntity ),
 mObstacleDetected( false ),
 mAngleIncrement( 30 ),
-mRange( 2.0 ),
+mShortRange( 0.6 ),
+mLongRange( 3.0 ),
 mForceRepellingConstant( 1.0 ),
 mForceAttractionConstant( 1.0 ),
 mResultantForce( 0, 0, 0 ),
@@ -75,21 +76,26 @@ void ObstacleSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
         mAgentEntity->GetTargetDCS();
 
-    double* agentPosition = agentDCS->GetVETranslationArray();
-
     //Reset results from last frame
     mIntersections.clear();
 
     osg::Vec3d startPoint, endPoint;
-    startPoint.set( agentPosition[ 0 ],
-                    agentPosition[ 1 ],
-                    agentPosition[ 2 ] );
+    startPoint = agentDCS->getPosition();
     mLineSegmentIntersector->setStart( startPoint );
     for( double angle = 0; angle < 360; )
     {
-        endPoint.set( agentPosition[ 0 ] + mRange * cos( angle ), 
-                      agentPosition[ 1 ] + mRange * sin( angle ), 
-                      agentPosition[ 2 ] );
+        double range( 0 );
+        if( mAgentEntity->IsBuilding() )
+        {
+            range = mShortRange;
+        }
+        else
+        {
+            range = mLongRange;
+        }
+        endPoint.set( startPoint.x() + range * cos( angle ), 
+                      startPoint.y() + range * sin( angle ), 
+                      startPoint.z() );
 
         mLineSegmentIntersector->reset();
         mLineSegmentIntersector->setEnd( endPoint );
@@ -99,28 +105,27 @@ void ObstacleSensor::CollectInformation()
 
         if( mAgentEntity->IsBuilding() )
         {
+            pluginDCS->RemoveChild( agentDCS.get() );
             pluginDCS->accept( intersectionVisitor );
+            pluginDCS->AddChild( agentDCS.get() );
 
             angle += 90;
         }
         else
         {
+            pluginDCS->RemoveChild( agentDCS.get() );
             pluginDCS->RemoveChild( targetDCS.get() );
             pluginDCS->accept( intersectionVisitor );
+            pluginDCS->AddChild( agentDCS.get() );
             pluginDCS->AddChild( targetDCS.get() );
 
             angle += mAngleIncrement;
         }
 
-        osgUtil::LineSegmentIntersector::Intersections& intersections =
-            mLineSegmentIntersector->getIntersections();
-        if( intersections.size() > 1 )
+        if( mLineSegmentIntersector->containsIntersections() )
         {
-            osgUtil::LineSegmentIntersector::Intersections::iterator itr =
-                intersections.begin(); itr++;
-
-            //Get the next hit excluding the agent itself
-            mIntersections.push_back( *itr );
+            mIntersections.push_back(
+                mLineSegmentIntersector->getFirstIntersection() );
         }
     }
 
@@ -134,7 +139,7 @@ void ObstacleSensor::CollectInformation()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 ObstacleSensor::GetResultantForce()
+btVector3 ObstacleSensor::GetNormalizedResultantForceVector()
 {
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
@@ -152,7 +157,7 @@ btVector3 ObstacleSensor::GetResultantForce()
         WallFollowing( agentPosition );
     }
 
-    return mResultantForce;
+    return mResultantForce.normalize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
@@ -192,12 +197,13 @@ void ObstacleSensor::VirtualForceField(
     btVector3 targetForce( targetPosition[ 0 ] - agentPosition[ 0 ],
                            targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
 
+    //Gets normalized
     targetForce /= targetForce.length();
     targetForce *= mForceAttractionConstant;
 
     totalForce += targetForce;
 
-    mResultantForce = totalForce.normalize();
+    mResultantForce = totalForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::WallFollowing( double* agentPosition )
@@ -216,10 +222,10 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
     double x = totalForce.x();
     double y = totalForce.y();
 
-    double angle( 110 );
+    double angle( 145 );
     if( mAgentEntity->IsBuilding() )
     {
-        angle = 90;
+        angle = 180;
     }
     double cosTheta = cos( angle * ( PI / 180 ) );
     double sinTheta = sin( angle * ( PI / 180 ) );
@@ -227,10 +233,12 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
     double xNew = ( x * cosTheta ) - ( y * sinTheta );
     double yNew = ( x * sinTheta ) + ( y * cosTheta );
     
+
+    //Repulsive and target forces will have same magnitude
     btVector3 targetForce( xNew, yNew, 0 );
     totalForce += targetForce;
 
-    mResultantForce = totalForce.normalize();
+    mResultantForce = totalForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )
@@ -240,7 +248,7 @@ void ObstacleSensor::SetAngleIncrement( double angleIncrement )
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetRange( double range )
 {
-    mRange = range;
+    mLongRange = range;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool ObstacleSensor::ObstacleDetected()
