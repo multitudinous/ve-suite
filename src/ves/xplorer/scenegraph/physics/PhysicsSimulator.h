@@ -33,17 +33,6 @@
 #ifndef VE_PHYSICS_SIMULATOR_H
 #define VE_PHYSICS_SIMULATOR_H
 
-/*!\file PhysicsSimulator.h
-*/
-
-/*!\class ves::xplorer::scenegraph::PhysicsSimulator
-*
-*/
-
-/*!\namespace ves::xplorer::scenegraph
-*
-*/
-
 // --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
@@ -86,6 +75,17 @@ namespace xplorer
 {
 namespace scenegraph
 {
+/*!\file PhysicsSimulator.h
+ *
+ */
+
+/*!\class ves::xplorer::scenegraph::PhysicsSimulator
+ *
+ */
+
+/*!\namespace ves::xplorer::scenegraph
+ *
+ */
 class VE_SCENEGRAPH_EXPORTS PhysicsSimulator
 {
 public:
@@ -137,10 +137,7 @@ private:
     PhysicsSimulator();
 
     ///Destructor - never gets called, don't implement
-    ~PhysicsSimulator()
-    {
-        ;
-    }
+    ~PhysicsSimulator();
 
     ///VPR singleton header
     vprSingletonHeader( PhysicsSimulator );
@@ -148,23 +145,23 @@ private:
     ///Sets up the dynamics, collision algorithms, and solvers
     void InitializePhysicsSimulation();
 
-    int m_debugMode;///<The debug level for bullet physics
+    int mDebugMode;///<The debug level for bullet physics
 
-    bool m_idle;///<Determines whether the physics simulation is idle or not
-    bool m_collisionInformation;
+    bool mIdle;///<Determines whether the physics simulation is idle or not
+    bool mCollisionInformation;
 
     float shoot_speed;///<
 
     gadget::PositionInterface head;///<The head in vr juggler
 
-    std::vector< ves::xplorer::scenegraph::CADEntity* > box_vector;///<
+    std::vector< ves::xplorer::scenegraph::CADEntity* > mBoxVector;///<
 
-    btDynamicsWorld* m_dynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
+    btDynamicsWorld* mDynamicsWorld;///<Implements dynamics - basic, discrete, parallel, and continuous
 
-    btDefaultCollisionConfiguration* m_collisionConfiguration;
-    btCollisionDispatcher* m_dispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
-    btBroadphaseInterface* m_broadphase;///<Maintains objects with overlapping AABB
-    btSequentialImpulseConstraintSolver* m_solver;///<A physics solver which sequentially applies impulses
+    btDefaultCollisionConfiguration* mCollisionConfiguration;
+    btCollisionDispatcher* mDispatcher;///<Creates/Registers default collision algorithms, for convex, compound and concave shape support
+    btBroadphaseInterface* mBroadphase;///<Maintains objects with overlapping AABB
+    btSequentialImpulseConstraintSolver* mSolver;///<A physics solver which sequentially applies impulses
 };
 }
 }

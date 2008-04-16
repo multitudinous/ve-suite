@@ -42,26 +42,13 @@
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
-#include <osg/ShapeDrawable>
-
-#include <osgDB/ReadFile>
-#include <osgDB/WriteFile>
-#include <osgDB/ReaderWriter>
-#include <osgDB/Registry>
-#include <osgDB/FileUtils>
 
 // --- Bullet Includes --- //
 #include <btBulletDynamicsCommon.h>
 #include <btBulletCollisionCommon.h>
-//#include <BulletCollision/CollisionDispatch/btSimulationIslandManager.h>
-
-//#include "BulletCollision/CollisionDispatch/btSphereSphereCollisionAlgorithm.h>
-//#include "../Extras/AlternativeCollisionAlgorithms/BoxBoxCollisionAlgorithm.h>
-//#include "BulletCollision/CollisionDispatch/btSphereTriangleCollisionAlgorithm.h>
 
 // --- C/C++ Libraries --- //
 #include <sstream>
-#include <ostream>
 #include <string>
 
 const int maxProxies = 32766;
@@ -74,114 +61,125 @@ const int maxProxies = 32766;
 //#define USE_CUSTOM_NEAR_CALLBACK 1
 //#define REGISTER_CUSTOM_COLLISION_ALGORITHM 1
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
+using namespace ves::xplorer::scenegraph;
 
 vprSingletonImp( PhysicsSimulator );
 
 ////////////////////////////////////////////////////////////////////////////////
 PhysicsSimulator::PhysicsSimulator()
-        :
-        m_dynamicsWorld( 0 ),
-        m_collisionConfiguration( 0 ),
-        m_dispatcher( 0 ),
-        m_broadphase( 0 ),
-        m_solver( 0 ),
-        m_debugMode( 0 ),
-        m_idle( true ),
-        m_collisionInformation( false ),
-        shoot_speed( 50.0f )
+    :
+    mDynamicsWorld( 0 ),
+    mCollisionConfiguration( 0 ),
+    mDispatcher( 0 ),
+    mBroadphase( 0 ),
+    mSolver( 0 ),
+    mDebugMode( 0 ),
+    mIdle( true ),
+    mCollisionInformation( false ),
+    shoot_speed( 50.0f )
 {
     head.init( "VJHead" );
 
     InitializePhysicsSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
+PhysicsSimulator::~PhysicsSimulator()
+{
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ExitPhysics()
 {
-    if( m_dynamicsWorld )
+
+    for( size_t i = 0; i < mBoxVector.size(); ++i )
+    {
+        delete mBoxVector.at( i );
+    }
+
+    mBoxVector.clear();
+
+    if( mDynamicsWorld )
     {
         //Remove the rigidbodies from the dynamics world and delete them
-        for( int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); ++i )
+        for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
         {
-            btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[ i ];
-            m_dynamicsWorld->removeCollisionObject( obj );
+            btCollisionObject* obj =
+                mDynamicsWorld->getCollisionObjectArray()[ i ];
+            mDynamicsWorld->removeCollisionObject( obj );
 
             delete obj;
         }
 
         //Delete dynamics world
-        delete m_dynamicsWorld;
+        delete mDynamicsWorld;
     }
 
-    //*************************************************************************//
-    //Don't know if btDynamicsWorld's destructor will clean these up in the future
+    //************************************************************************//
+    //Don't know if btDynamicsWorld's destructor will clean these up
     //But, it looks like they are still hanging around, so delete them for now
 
-    if( m_collisionConfiguration )
+    if( mCollisionConfiguration )
     {
-        delete m_collisionConfiguration;
+        delete mCollisionConfiguration;
     }
 
-    //Delete m_dispatcher
-    if( m_dispatcher )
+    //Delete mDispatcher
+    if( mDispatcher )
     {
-        delete m_dispatcher;
+        delete mDispatcher;
     }
 
-    //Delete m_broadphase
-    if( m_broadphase )
+    //Delete mBroadphase
+    if( mBroadphase )
     {
-        delete m_broadphase;
+        delete mBroadphase;
     }
 
-    //Delete m_solver
-    if( m_solver )
+    //Delete mSolver
+    if( mSolver )
     {
-        delete m_solver;
+        delete mSolver;
     }
-    //*************************************************************************//
-
-    for( size_t i = 0; i < box_vector.size(); ++i )
-    {
-        delete box_vector.at( i );
-    }
-
-    box_vector.clear();
+    //************************************************************************//
 }
 ////////////////////////////////////////////////////////////////////////////////
-//By default, Bullet will use its own nearcallback, but you can override it using m_dispatcher->setNearCallback()
-void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher& m_dispatcher, btDispatcherInfo& dispatchInfo )
+//By default, Bullet will use its own nearcallback
+//But, you can override it using mDispatcher->setNearCallback()
+void customNearCallback( btBroadphasePair& collisionPair,
+                         btCollisionDispatcher& mDispatcher,
+                         btDispatcherInfo& dispatchInfo )
 {
-    btCollisionObject* colObj0 = ( btCollisionObject* )collisionPair.m_pProxy0->m_clientObject;
-    btCollisionObject* colObj1 = ( btCollisionObject* )collisionPair.m_pProxy1->m_clientObject;
+    btCollisionObject* colObj0 =
+        ( btCollisionObject* )collisionPair.m_pProxy0->m_clientObject;
+    btCollisionObject* colObj1 =
+        ( btCollisionObject* )collisionPair.m_pProxy1->m_clientObject;
 
-    if( m_dispatcher.needsCollision( colObj0, colObj1 ) )
+    if( mDispatcher.needsCollision( colObj0, colObj1 ) )
     {
         //Dispatcher will keep algorithms persistent in the collision pair
         if( !collisionPair.m_algorithm )
         {
-            collisionPair.m_algorithm = m_dispatcher.findAlgorithm( colObj0, colObj1 );
+            collisionPair.m_algorithm =
+                mDispatcher.findAlgorithm( colObj0, colObj1 );
         }
 
         if( collisionPair.m_algorithm )
         {
             btManifoldResult contactPointResult( colObj0, colObj1 );
 
-            if( dispatchInfo.m_dispatchFunc == btDispatcherInfo::DISPATCH_DISCRETE )
+            if( dispatchInfo.m_dispatchFunc ==
+                btDispatcherInfo::DISPATCH_DISCRETE )
             {
                 //Discrete collision detection query
-                collisionPair.m_algorithm->processCollision( colObj0, colObj1, dispatchInfo, &contactPointResult );
+                collisionPair.m_algorithm->processCollision(
+                    colObj0, colObj1, dispatchInfo, &contactPointResult );
             }
 
             else
             {
-                //Continuous collision detection query, time of impact ( toi )
-                float toi = collisionPair.m_algorithm->calculateTimeOfImpact( colObj0, colObj1, dispatchInfo, &contactPointResult );
+                //Continuous collision detection query, time of impact( toi )
+                float toi = collisionPair.m_algorithm->calculateTimeOfImpact(
+                    colObj0, colObj1, dispatchInfo, &contactPointResult );
 
                 if( dispatchInfo.m_timeOfImpact > toi )
                 {
@@ -194,64 +192,70 @@ void customNearCallback( btBroadphasePair& collisionPair, btCollisionDispatcher&
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::InitializePhysicsSimulation()
 {
-    m_collisionConfiguration = new btDefaultCollisionConfiguration();
-    m_dispatcher = new btCollisionDispatcher( m_collisionConfiguration );
+    mCollisionConfiguration = new btDefaultCollisionConfiguration();
+    mDispatcher = new btCollisionDispatcher( mCollisionConfiguration );
 
 #ifdef USE_CUSTOM_NEAR_CALLBACK
-    m_dispatcher->setNearCallback( customNearCallback );
+    mDispatcher->setNearCallback( customNearCallback );
 #else
 #endif
 
     btVector3 worldAabbMin( -10000, -10000, -10000 );
     btVector3 worldAabbMax( 10000, 10000, 10000 );
 
-    m_broadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
+    mBroadphase = new btAxisSweep3( worldAabbMin, worldAabbMax, maxProxies );
 
 #ifdef REGISTER_CUSTOM_COLLISION_ALGORITHM
 #else
     //Default constraint solver
-    m_solver = new btSequentialImpulseConstraintSolver();
+    mSolver = new btSequentialImpulseConstraintSolver();
 #endif
 
 #if (BULLET_MAJOR_VERSION >= 2) && (BULLET_MINOR_VERSION > 63)
-    m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver, m_collisionConfiguration );
+    mDynamicsWorld = new btDiscreteDynamicsWorld(
+        mDispatcher, mBroadphase, mSolver, mCollisionConfiguration );
 #else
-    m_dynamicsWorld = new btDiscreteDynamicsWorld( m_dispatcher, m_broadphase, m_solver );
+    mDynamicsWorld = new btDiscreteDynamicsWorld(
+        mDispatcher, mBroadphase, mSolver );
 #endif
-    //m_dynamicsWorld->getDispatchInfo().m_enableSPU = true;
-    m_dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
+    //mDynamicsWorld->getDispatchInfo().m_enableSPU = true;
+    mDynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
 
-    //m_dynamicsWorld->setDebugDrawer( &debugDrawer );
+    //mDynamicsWorld->setDebugDrawer( &debugDrawer );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::UpdatePhysics( float dt )
 {
-    if( m_dynamicsWorld && !m_idle )
+    if( mDynamicsWorld && !mIdle )
     {
-        m_dynamicsWorld->stepSimulation( dt );
+        mDynamicsWorld->stepSimulation( dt );
 
-        if( m_collisionInformation )
+        if( mCollisionInformation )
         {
-            for( int i = 0; i < m_dynamicsWorld->getNumCollisionObjects(); ++i )
+            for( int i = 0; i < mDynamicsWorld->getNumCollisionObjects(); ++i )
             {
                 PhysicsRigidBody* obj = static_cast< PhysicsRigidBody* >(
-                    m_dynamicsWorld->getCollisionObjectArray()[ i ] );
+                    mDynamicsWorld->getCollisionObjectArray()[ i ] );
                 obj->ClearCollisions();
             }
 
-            int numManifolds = m_dispatcher->getNumManifolds();
+            int numManifolds = mDispatcher->getNumManifolds();
             for( int i = 0; i < numManifolds; ++i )
             {
-                btPersistentManifold* contactManifold = m_dispatcher->getManifoldByIndexInternal( i );
-                //contactManifold->refreshContactPoints( bodyA->getWorldTransform(), bodyB->getWorldTransform() );
+                btPersistentManifold* contactManifold =
+                    mDispatcher->getManifoldByIndexInternal( i );
+                //contactManifold->refreshContactPoints(
+                    //bodyA->getWorldTransform(), bodyB->getWorldTransform() );
 
                 int numContacts = contactManifold->getNumContacts();
                 for( int j = 0; j < numContacts; ++j )
                 {
                     btManifoldPoint& pt = contactManifold->getContactPoint( j );
 
-                    PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >( contactManifold->getBody0() );
-                    PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >( contactManifold->getBody1() );
+                    PhysicsRigidBody* bodyA = static_cast< PhysicsRigidBody* >(
+                        contactManifold->getBody0() );
+                    PhysicsRigidBody* bodyB = static_cast< PhysicsRigidBody* >(
+                        contactManifold->getBody1() );
 
                     if( bodyA->IsStoringCollisions() )
                     {
@@ -267,48 +271,14 @@ void PhysicsSimulator::UpdatePhysics( float dt )
                 }
             }
         }
-
-        /*
-        printf( "dt = %f: ", dt );
-
-        if( m_dynamicsWorld )
-        {
-            //During m_idle mode, just run 1 simulation step maximum
-            int maxSimSubSteps = m_idle ? 1 : 1;
-            if( m_idle )
-            {
-                dt = 1.0/420.f;
-            }
-
-            int numSimSteps = m_dynamicsWorld->stepSimulation( dt, maxSimSubSteps );
-            if( !numSimSteps )
-            {
-                printf( "Interpolated transforms\n" );
-            }
-
-            else
-            {
-                if( numSimSteps > maxSimSubSteps )
-                {
-                    //Detect dropping frames
-                    printf( "Dropped (%i) simulation steps out of %i\n", numSimSteps - maxSimSubSteps, numSimSteps );
-                }
-
-                else
-                {
-                    printf( "Simulated (%i) steps\n", numSimSteps );
-                }
-            }
-        }
-        */
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::StepSimulation()
 {
-    if( m_idle )
+    if( mIdle )
     {
-        m_dynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
+        mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -321,42 +291,50 @@ void PhysicsSimulator::ResetScene()
     #endif
     */
 
-    if( m_dynamicsWorld )
+    if( mDynamicsWorld )
     {
-        m_dynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
+        mDynamicsWorld->stepSimulation( 1.0f / 60.0f, 0 );
     }
 
-    int numObjects = m_dynamicsWorld->getNumCollisionObjects();
+    int numObjects = mDynamicsWorld->getNumCollisionObjects();
 
     for( int i = 0; i < numObjects; ++i )
     {
-        btCollisionObject* colObj = m_dynamicsWorld->getCollisionObjectArray()[ i ];
+        btCollisionObject* colObj =
+            mDynamicsWorld->getCollisionObjectArray()[ i ];
         btRigidBody* body = btRigidBody::upcast( colObj );
 
         if( body && body->getMotionState() )
         {
             ves::xplorer::scenegraph::vesMotionState* motionState =
-                static_cast< ves::xplorer::scenegraph::vesMotionState* >( body->getMotionState() );
+                static_cast< ves::xplorer::scenegraph::vesMotionState* >(
+                    body->getMotionState() );
             motionState->m_graphicsWorldTrans = motionState->m_startWorldTrans;
 
             colObj->setWorldTransform( motionState->m_graphicsWorldTrans );
-            colObj->setInterpolationWorldTransform( motionState->m_startWorldTrans );
+            colObj->setInterpolationWorldTransform(
+                motionState->m_startWorldTrans );
             colObj->activate();
 
             //Removed cached contact points
-            m_dynamicsWorld->getBroadphase()->getOverlappingPairCache()->cleanProxyFromPairs( colObj->getBroadphaseHandle(), m_dynamicsWorld->getDispatcher() );
+            mDynamicsWorld->getBroadphase()->getOverlappingPairCache()->
+                cleanProxyFromPairs( colObj->getBroadphaseHandle(),
+                                     mDynamicsWorld->getDispatcher() );
 
             btRigidBody* body = btRigidBody::upcast( colObj );
 
             if( body && !body->isStaticObject() )
             {
-                btRigidBody::upcast( colObj )->setLinearVelocity( btVector3( 0, 0, 0 ) );
-                btRigidBody::upcast( colObj )->setAngularVelocity( btVector3( 0, 0, 0 ) );
+                btRigidBody::upcast( colObj )->setLinearVelocity(
+                    btVector3( 0, 0, 0 ) );
+                btRigidBody::upcast( colObj )->setAngularVelocity(
+                    btVector3( 0, 0, 0 ) );
             }
         }
 
         /*
-        //Quickly search some issue at a certain simulation frame, pressing space to reset
+        //Quickly search some issue at a certain simulation frame
+        //pressing space to reset
         int fixed = 18;
         for( int i = 0; i < fixed; ++i )
         {
@@ -368,50 +346,43 @@ void PhysicsSimulator::ResetScene()
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::ShootBox( const btVector3& destination )
 {
-    if( m_dynamicsWorld )
+    if( mDynamicsWorld )
     {
         //Create osg::Box to visually represent rigid body
         osg::ref_ptr< osg::Geode > geode = new osg::Geode;
-
         osg::ref_ptr< osg::Geometry > box = new osg::Geometry;
-
         osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
 
         //Left
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3( -0.5f,  0.5f,  0.5f ) );
+        vertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
         vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-
+        vertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
         //Near
-        vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+        vertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
         vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
-
+        vertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3(  0.5f, -0.5f,  0.5f ) );
         //Right
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
+        vertices->push_back( osg::Vec3( 0.5f, -0.5f,  0.5f ) );
         vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, 0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, 0.5f, 0.5f ) );
-
+        vertices->push_back( osg::Vec3( 0.5f,  0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3( 0.5f,  0.5f,  0.5f ) );
         //Far
-        vertices->push_back( osg::Vec3( 0.5f, 0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, 0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3(  0.5f, 0.5f,  0.5f ) );
+        vertices->push_back( osg::Vec3(  0.5f, 0.5f, -0.5f ) );
         vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
-
+        vertices->push_back( osg::Vec3( -0.5f, 0.5f,  0.5f ) );
         //Top
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
+        vertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
         vertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, 0.5f, 0.5f ) );
-
+        vertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
+        vertices->push_back( osg::Vec3(  0.5f,  0.5f, 0.5f ) );
         //Bottom
         vertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, 0.5f, -0.5f ) );
-        vertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3(  0.5f,  0.5f, -0.5f ) );
+        vertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
 
         box->setVertexArray( vertices.get() );
 
@@ -421,65 +392,53 @@ void PhysicsSimulator::ShootBox( const btVector3& destination )
         box->setColorBinding( osg::Geometry::BIND_OVERALL );
 
         osg::ref_ptr< osg::Vec3Array > normals = new osg::Vec3Array;
-        normals->push_back( osg::Vec3( -1.0f, 0.0f, 0.0f ) );     //Left
-        normals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );     //Near
-        normals->push_back( osg::Vec3( 1.0f, 0.0f, 0.0f ) );     //Right
-        normals->push_back( osg::Vec3( 0.0f, 1.0f, 0.0f ) );     //Far
-        normals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );     //Top
-        normals->push_back( osg::Vec3( 0.0f, 0.0f, -1.0f ) );     //Bottom
+        normals->push_back( osg::Vec3( -1.0f,  0.0f,  0.0f ) );
+        normals->push_back( osg::Vec3(  0.0f, -1.0f,  0.0f ) );
+        normals->push_back( osg::Vec3(  1.0f,  0.0f,  0.0f ) );
+        normals->push_back( osg::Vec3(  0.0f,  1.0f,  0.0f ) );
+        normals->push_back( osg::Vec3(  0.0f,  0.0f,  1.0f ) );
+        normals->push_back( osg::Vec3(  0.0f,  0.0f, -1.0f ) );
         box->setNormalArray( normals.get() );
         box->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
-        box->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices.get()->size() ) );
+        box->addPrimitiveSet( new osg::DrawArrays(
+            osg::PrimitiveSet::QUADS, 0, vertices.get()->size() ) );
 
         geode->addDrawable( box.get() );
 
-        std::ostringstream box_ss;
+        ves::xplorer::scenegraph::CADEntity* boxEntity =
+            new ves::xplorer::scenegraph::CADEntity( geode.get(),
+                ves::xplorer::scenegraph::SceneManager::instance()->
+                GetWorldDCS(), this );
 
-        osgDB::writeNodeFile( *geode, "C:/Users/JK/Desktop/Models/box.osg" );
+        osg::Node::DescriptionList descriptorsList;
+        descriptorsList.push_back( "VE_XML_ID" );
+        descriptorsList.push_back( "" );
 
-        osgDB::Registry::instance()->getReaderWriterForExtension( "osg" )->writeNode( *geode, box_ss );
+        boxEntity->GetDCS()->setDescriptions( descriptorsList );
+        //boxEntity->GetDCS()->setName(  );
+        //boxEntity->GetDCS()->SetTranslationArray(  );
+        boxEntity->InitPhysics();
+        boxEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
+        boxEntity->GetPhysicsRigidBody()->BoundingBoxShape();
 
-        box_vector.push_back( new ves::xplorer::scenegraph::CADEntity(
-                                  "C:/Users/JK/Desktop/Models/box.osg",
-                                  ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
-                                  false, false ) );
-
-        float mass = 1.0f;
-        btTransform transform;
-        transform.setIdentity();
-        const gadget::PositionData* head_pos = head->getPositionData();
-        btVector3 position;
-        position.setValue( head_pos->mPosData[ 0 ][ 3 ], head_pos->mPosData[ 1 ][ 3 ], head_pos->mPosData[ 2 ][ 3 ] );
-        transform.setOrigin( position );
-
-        btCollisionShape* box_shape = new btBoxShape( btVector3( 1.0f, 1.0f, 1.0f ) );
-        btRigidBody* body = CreateRigidBody( mass, transform, box_shape );
-
-        btVector3 lin_vel( destination[ 0 ] + position[ 0 ], destination[ 1 ] + position[ 1 ], destination[ 2 ] + position[ 2 ] );
-        lin_vel.normalize();
-        lin_vel *= shoot_speed;
-
-        body->getWorldTransform().setOrigin( position );
-        body->getWorldTransform().setRotation( btQuaternion( 0, 0, 0, 1 ) );
-        body->setLinearVelocity( lin_vel );
-        body->setAngularVelocity( btVector3( 0, 0, 0 ) );
+        mBoxVector.push_back( boxEntity );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetDebugMode( int mode )
 {
-    m_debugMode = mode;
+    mDebugMode = mode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetIdle( bool state )
 {
-    m_idle = state;
+    mIdle = state;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetCollisionInformation( bool collisionInformation )
 {
-    m_collisionInformation = collisionInformation;
+    mCollisionInformation = collisionInformation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsSimulator::SetShootSpeed( float speed )
@@ -489,15 +448,16 @@ void PhysicsSimulator::SetShootSpeed( float speed )
 ////////////////////////////////////////////////////////////////////////////////
 bool PhysicsSimulator::GetIdle()
 {
-    return m_idle;
+    return mIdle;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int PhysicsSimulator::GetDebugMode()
 {
-    return m_debugMode;
+    return mDebugMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btRigidBody* PhysicsSimulator::CreateRigidBody( float mass, const btTransform& startTransform, btCollisionShape* shape )
+btRigidBody* PhysicsSimulator::CreateRigidBody(
+    float mass, const btTransform& startTransform, btCollisionShape* shape )
 {
     //RigidBody is dynamic if and only if mass is non zero, otherwise static
     bool dynamic = ( mass != 0.0f );
@@ -508,21 +468,20 @@ btRigidBody* PhysicsSimulator::CreateRigidBody( float mass, const btTransform& s
         shape->calculateLocalInertia( mass, localInertia );
     }
 
-    //Using motionstate is recommended, it provides interpolation capabilities, and only synchronizes 'active' objects
-    btDefaultMotionState* myMotionState = new btDefaultMotionState( startTransform );
-    btRigidBody* body = new btRigidBody( mass, myMotionState, shape, localInertia );
+    //Using motionstate is recommended, it provides interpolation capabilities
+    //and only synchronizes 'active' objects
+    btDefaultMotionState* myMotionState =
+        new btDefaultMotionState( startTransform );
+    btRigidBody* body = new btRigidBody(
+        mass, myMotionState, shape, localInertia );
 
-    m_dynamicsWorld->addRigidBody( body );
+    mDynamicsWorld->addRigidBody( body );
 
     return body;
 }
 ////////////////////////////////////////////////////////////////////////////////
 btDynamicsWorld* PhysicsSimulator::GetDynamicsWorld()
 {
-    return m_dynamicsWorld;
+    return mDynamicsWorld;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
-} // end scenegraph
-} // end xplorer
-} // end ves
