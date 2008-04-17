@@ -361,6 +361,7 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //no longer dragging
     dragging = false;
 
+    //grab the events position
     wxClientDC dc( parent );
     parent->PrepareDC( dc );
     dc.SetUserScale( userScale.first, userScale.second );
@@ -369,23 +370,10 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     long x = evtpos.x;
     long y = evtpos.y;
     
-    //resize the network size when modules or links are drug beyond
-    //current size
-    if( x > networkSize.first )
-    {
-        networkSize.first = x;
-        parent->SetVirtualSize(
-            networkSize.first * userScale.first,
-            networkSize.second * userScale.second );
-    }
-
-    if( y > networkSize.second )
-    {
-        networkSize.second = y;
-        parent->SetVirtualSize(
-            networkSize.first * userScale.first,
-            networkSize.second * userScale.second );
-    }
+    //grab the size of the selected object
+    //-need to account for its size when updating network size
+    int height = 0;
+    int width = 0;
 
     //release link connector
     if( m_selLinkCon >= 0 && m_selLink >= 0 )
@@ -393,10 +381,16 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         // We will create the link connector (basically a bend point)
         DropLinkCon( x, y, m_selLink, m_selLinkCon, dc );
         m_selLinkCon = -1;
+
         //m_selLink=-1;
         //Refresh(true);
         //Update();
-        //links[m_selLink].DrawLinkCon( true, userScale );
+        //links[m_selLink].DrawLinkCon( true, userScale );        
+
+        //accounts for the size of the link connector
+        //-will need to be updated if link connector size changes
+        width = 6;
+        height = 6;
     }
 
     //release tag
@@ -404,7 +398,11 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     {
         // drop the tag we just created
         DropTag( x, y, m_selTag, dc );
+
         //m_selTag=-1;
+
+        width = tags[m_selTag].GetTagSize().first;
+        height = tags[m_selTag].GetTagSize().second;
     }
 
     //release tag connection
@@ -412,8 +410,14 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     {
         // We will create the tag connector (basically a bend point)
         DropTagCon( x, y, m_selTag, m_selTagCon, dc );
+
         //m_selTag=-1;
         m_selTagCon = -1;
+
+        //accounts for the size of the tag connector
+        //-will need to be updated if tag connector size changes
+        width = 10;
+        height = 10;
     }
 
     //release start point of link
@@ -421,8 +425,14 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     {
         // drop the start point of the link
         DropLink( x, y, m_selMod, m_selFrPort, dc, true );
+
         //m_selMod = -1;
         m_selFrPort = -1;
+
+        //accounts for the size of the link connector
+        //-will need to be updated if link connector size changes
+        width = 6;
+        height = 6;
     }
 
     //release end point of link
@@ -432,6 +442,11 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         DropLink( x, y, m_selMod, m_selToPort, dc, false );
         //m_selMod = -1;
         m_selToPort = -1;
+
+        //accounts for the size of the link connector
+        //-will need to be updated if link connector size changes
+        width = 6;
+        height = 6;
     }
 
     //release the module
@@ -439,6 +454,29 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     {
         //drop a module after dragging it around
         DropModule( x, y, m_selMod );
+
+        width = modules[m_selMod].GetPlugin()->GetBBox().width;
+        height = modules[m_selMod].GetPlugin()->GetBBox().height;
+    }
+    
+    //resize the network size when modules or links are drug beyond
+    //current size
+    if( x + width > networkSize.first )
+    {
+        networkSize.first = x + width;
+        networkSize.second = networkSize.second + height;
+        parent->SetVirtualSize(
+            networkSize.first * userScale.first,
+            networkSize.second * userScale.second );
+    }
+
+    if( y + height > networkSize.second )
+    {
+        networkSize.first = networkSize.first + width;
+        networkSize.second = y + height;
+        parent->SetVirtualSize(
+            networkSize.first * userScale.first,
+            networkSize.second * userScale.second );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

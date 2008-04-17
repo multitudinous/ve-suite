@@ -253,3 +253,10 @@ ves::open::xml::model::TagPtr Tag::GetVETagPtr()
     return tagPtr;
 }
 ////////////////////////////////////////////////////////////////////////////////
+std::pair< int, int > Tag::GetTagSize()
+{
+    std::pair< int, int > temp;
+    temp.first = box.width;
+    temp.second = box.height;
+    return temp;
+}

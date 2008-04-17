@@ -93,6 +93,8 @@ public:
     void DrawTagCon( bool flag, std::pair< double, double > scale );
     ///Draw functions
     void DrawTag( bool flag, wxDC& dc, std::pair< double, double > scale );
+    ///Tag Size
+    std::pair< int, int > GetTagSize();
 
 private:
     ///2 connectors for a tag, end and middle
