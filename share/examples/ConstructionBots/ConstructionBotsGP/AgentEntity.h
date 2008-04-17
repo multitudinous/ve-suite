@@ -61,7 +61,7 @@ class AgentEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
     AgentEntity(
-        osg::ref_ptr< bots::Agent > agent,
+        bots::Agent* agent,
         ves::xplorer::scenegraph::DCS* pluginDCS,
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 

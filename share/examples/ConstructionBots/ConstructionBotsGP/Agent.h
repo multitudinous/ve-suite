@@ -37,6 +37,9 @@
 // --- OSG Includes --- //
 #include <osg/Geode>
 
+// --- Bullet Includes --- //
+class btCompoundShape;
+
 namespace bots
 {
 class Agent : public osg::Geode
@@ -48,6 +51,8 @@ public:
            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
     META_Node( bots, Agent );
+
+    btCompoundShape* CreateCompoundShape();
 
 protected:
 	virtual ~Agent();

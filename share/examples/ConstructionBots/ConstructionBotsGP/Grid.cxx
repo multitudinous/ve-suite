@@ -68,6 +68,10 @@ void Grid::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix )
 {
+    //osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    //stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    //setStateSet( stateset.get() );
+
     float halfGridSize = gridSize * 0.5f;
 
     osg::ref_ptr< osg::Geometry > grid = new osg::Geometry();

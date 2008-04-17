@@ -56,7 +56,7 @@ class BlockEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
     BlockEntity(
-        osg::ref_ptr< bots::Block > block,
+        bots::Block* block,
         ves::xplorer::scenegraph::DCS* pluginDCS,
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 

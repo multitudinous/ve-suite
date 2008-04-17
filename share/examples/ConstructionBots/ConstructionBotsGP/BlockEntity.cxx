@@ -60,13 +60,13 @@ using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 BlockEntity::BlockEntity(
-    osg::ref_ptr< bots::Block > block,
+    bots::Block* block,
     ves::xplorer::scenegraph::DCS* pluginDCS,
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( block.get(), pluginDCS, physicsSimulator ),
+CADEntity( block, pluginDCS, physicsSimulator ),
 mPluginDCS( pluginDCS ),
-mGeometry( block.get() ),
+mGeometry( block ),
 mConstraint( 0 ),
 mLocation( 0, 0 )
 {
@@ -278,7 +278,7 @@ void BlockEntity::SetConstraints( int gridSize )
 {
     btTransform trans;
     trans.setIdentity();
-    trans.setOrigin( btVector3( 0, 0, 0.5 ) );
+    trans.setOrigin( btVector3( 0.0, 0.0, 0.5 ) );
 
     //Must disable deactivation so constraint is always applied
     mPhysicsRigidBody->setActivationState( DISABLE_DEACTIVATION );

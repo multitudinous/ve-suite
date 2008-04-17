@@ -200,8 +200,10 @@ void ConstructionWorld::InitializeFramework()
     //Initialize the blocks
     for( int i = 0; i < numBlocks; ++i )
     {
+        //Need to check this interaction for memory leaks
+        osg::ref_ptr< bots::Block > block = new bots::Block();
         bots::BlockEntity* blockEntity = new bots::BlockEntity(
-            new bots::Block(), mPluginDCS.get(), mPhysicsSimulator );
+            block.get(), mPluginDCS.get(), mPhysicsSimulator );
 
         //Set physics properties for blocks
         blockEntity->InitPhysics();
@@ -222,13 +224,16 @@ void ConstructionWorld::InitializeFramework()
     //Initialize the agents
     for( int i = 0; i < numAgents; ++i )
     {
+        //Need to check this interaction for memory leaks
+        osg::ref_ptr< bots::Agent > agent = new bots::Agent();
         bots::AgentEntity* agentEntity = new AgentEntity(
-            new bots::Agent(), mPluginDCS.get(), mPhysicsSimulator );
+            agent.get(), mPluginDCS.get(), mPhysicsSimulator );
 
         //Set physics properties for blocks
         agentEntity->InitPhysics();
         agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
-
+        agentEntity->GetPhysicsRigidBody()->UserDefinedShape(
+            agent->CreateCompoundShape() );
         agentEntity->SetBlockEntityMap( mBlockEntities );
 
         //Set D6 constraint for agents

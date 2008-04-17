@@ -38,12 +38,12 @@
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
-GridEntity::GridEntity( osg::ref_ptr< bots::Grid > grid,
+GridEntity::GridEntity( bots::Grid* grid,
                         ves::xplorer::scenegraph::DCS* pluginDCS,
                         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( grid.get(), pluginDCS, physicsSimulator ),
-mGeometry( grid.get() )
+CADEntity( grid, pluginDCS, physicsSimulator ),
+mGeometry( grid )
 {
    ;
 }

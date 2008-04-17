@@ -86,7 +86,6 @@ void BlockSensor::Initialize()
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
-    osg::ref_ptr< osg::StateSet > stateset = mGeode->getOrCreateStateSet();
 
     //Only need 2 vertices for the line
     mVertexArray->resize( 2 );
@@ -103,12 +102,13 @@ void BlockSensor::Initialize()
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 1.0f );
-    stateset->setAttribute( lineWidth.get() );
 
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setAttribute( lineWidth.get() );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-
     mGeode->setStateSet( stateset.get() );
 
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
@@ -130,6 +130,7 @@ void BlockSensor::CollectInformation()
     if( targetDCS.valid() )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
+        (*mVertexArray)[ 1 ].z() = (*mVertexArray)[ 0 ].z();
     }
     else
     {

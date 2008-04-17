@@ -55,13 +55,13 @@ using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::AgentEntity(
-    osg::ref_ptr< bots::Agent > agent,
+    bots::Agent* agent,
     ves::xplorer::scenegraph::DCS* pluginDCS,
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
 :
-CADEntity( agent.get(), pluginDCS, physicsSimulator ),
+CADEntity( agent, pluginDCS, physicsSimulator ),
 mBuildMode( false ),
-mGeometry( agent.get() ),
+mGeometry( agent ),
 mPluginDCS( pluginDCS ),
 mTargetDCS( 0 ),
 mConstraint( 0 )
@@ -142,7 +142,7 @@ void AgentEntity::InitiateBuildMode()
         if( collision )
         {
             double* position = mDCS->GetVETranslationArray();
-            GetPhysicsRigidBody()->clearForces();
+            //GetPhysicsRigidBody()->clearForces();
             mTargetDCS = NULL;
             mBlockSensor->DisplayLine( false );
             mSiteSensor->DisplayLine( false );
@@ -177,8 +177,7 @@ void AgentEntity::PickUpBlock()
         double transArray[ 3 ] =
             { position[ 0 ], position[ 1 ], position[ 2 ] + 1.0 };
         mTargetDCS->SetTranslationArray( transArray );
-        //targetPhysicsRigidBody->clearForces();
-        //GetPhysicsRigidBody()->clearForces();
+
         mTargetDCS = NULL;
     }
 }
@@ -235,7 +234,7 @@ void AgentEntity::SetConstraints( int gridSize )
 {
     btTransform trans;
     trans.setIdentity();
-    trans.setOrigin( btVector3( 0, 0, 0.5 ) );
+    trans.setOrigin( btVector3( 0.0, 0.0, 0.5 ) );
 
     //Must disable deactivation so constraint is always applied
     mPhysicsRigidBody->setActivationState( DISABLE_DEACTIVATION );

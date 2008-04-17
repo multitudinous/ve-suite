@@ -51,7 +51,7 @@ namespace bots
 class GridEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
-    GridEntity( osg::ref_ptr< bots::Grid > grid,
+    GridEntity( bots::Grid* grid,
                 ves::xplorer::scenegraph::DCS* pluginDCS,
                 ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
