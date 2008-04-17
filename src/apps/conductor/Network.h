@@ -132,6 +132,8 @@ public:
     ///Set the id for this network
     void SetNetworkID( std::string id );
     std::pair< int, int > GetNetworkSize( );
+    std::pair< int, int > GetScrollPosition();
+    void SetScrollPosition( int x, int y );
     
 protected:
     //Draw functions
@@ -195,10 +197,13 @@ protected:
     int m_selTag; //selected Tag
     int m_selTagCon; //selected Tag Connector
     //Three main list of network objs
-    std::vector< ves::conductor::util::Link > links; //The list of links between the nodes of moduls.
-    std::vector< ves::conductor::util::Tag > tags; //The list of text tags
-
-    wxPoint relative_pt; // the relative point of the polygon, used by the move module function
+    //The list of links between the nodes of moduls.
+    std::vector< ves::conductor::util::Link > links;
+    //The list of text tags
+    std::vector< ves::conductor::util::Tag > tags;
+    
+    // the relative point of the polygon, used by the move module function
+    wxPoint relative_pt;
 
 private:
     int intfssize;
@@ -218,9 +223,13 @@ private:
     unsigned int pluginID;
 
     std::string tempXMLNetworkData;
-    std::vector< wxRect > sbboxes; //start up bounding box; used by GetFreePos to calc start module location
-    int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
-    wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
+    //start up bounding box; used by GetFreePos to calc start module location
+    std::vector< wxRect > sbboxes;
+    //The old location of the mouse position, used by the TryLink to wipe
+    //the old tried link route
+    int xold, yold;
+    //The mouse position when the right button clicked, used by menu event handlers
+    wxPoint action_point;
     ///System for this network
     ves::open::xml::model::SystemPtr systemPtr;
     ///Parent window pointer to the splitter in AppFrame
@@ -240,6 +249,7 @@ private:
     /// second = y unit
     std::pair< unsigned int, unsigned int > numUnit;
     std::pair< int, int > networkSize;
+    std::pair< int, int > scrollPos;
 
     std::string ConvertUnicode( const wxChar* data )
     {

@@ -70,8 +70,8 @@ Source: {#VEINSTALLHOME}\share\*; DestDir: {app}\share\; Components: examples; F
 Source: {#VEINSTALLHOME}\include\*; DestDir: {app}\include\; Attribs: readonly; Flags: replacesameversion uninsremovereadonly recursesubdirs createallsubdirs; Components: vebuildenv
 Source: {#VEINSTALLHOME}\lib\*.lib; DestDir: {app}\lib; Attribs: readonly; Flags: uninsremovereadonly replacesameversion; Components: vebuildenv
 Source: {#VEINSTALLHOME}\bin\installerImages\*; DestDir: {app}\bin\installerImages; Flags: replacesameversion
-; Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
-Source: {#MSREDISTRIBUTABLE}; DestDir: {tmp}; DestName: vcredist_x86.exe
+Source: {#SKEWMATRIXHOME}\osgPT\trunk\bin\win32\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
+Source: {#VEDEVHOME}\external\vcredist_x86_sp1.exe; DestDir: {tmp}; DestName: vcredist_x86.exe
 Source: {#VEINSTALLHOME}\bin\velauncher.exe; DestDir: {app}\bin
 Source: {#MSREDISTRIBUTABLE}; DestDir: {app}\bin
 
@@ -82,6 +82,8 @@ Name: {commondesktop}\VE-Suite-{#VEVERSION}; Filename: {app}\bin\velauncher.exe;
 
 [Run]
 Filename: {tmp}\vcredist_x86.exe; Description: Install Microsoft Runtime Redistributable for SP1 (NOTE: This is REQIURED to run VE-Suite if Microsoft Visual Studio SP1 compatible runtime libraries are not already installed); StatusMsg: Installing Microsoft Runtime Redistributable for SP1...; Flags: postinstall unchecked; Components: 
+[_ISToolPreCompile]
+Name: D:\devEnv\VES\share\scripts\win\buildVELauncher.exe.bat; Parameters: ; Flags: abortonerror
 [_ISTool]
 UseAbsolutePaths=false
 LogFile={#VEDEVHOME}\compile.log

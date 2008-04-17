@@ -243,10 +243,15 @@ void Canvas::SetActiveNetwork( std::string id )
     {
         RemoveEventHandler( networks[this->previousId] );
         networks[this->previousId]->RemoveAllEvents();
+        //set scroll position for previous network
+        int x, y;
+        GetViewStart( &x, &y );
+        networks[this->previousId]->SetScrollPosition( x, y );
     }
+
     PushEventHandler( networks[this->activeId] );
     networks[this->activeId]->PushAllEvents();
-    
+
     //update the current id
     this->previousId = this->activeId;
     
@@ -260,6 +265,11 @@ void Canvas::SetActiveNetwork( std::string id )
     SetVirtualSize(
         networks[this->activeId]->GetNetworkSize().first * tempScaleX,
         networks[this->activeId]->GetNetworkSize().second * tempScaleY);
+
+    //scroll to the stored location
+    Scroll(
+        networks[this->activeId]->GetScrollPosition().first,
+        networks[this->activeId]->GetScrollPosition().second );
 
     //update network
     Refresh( true );

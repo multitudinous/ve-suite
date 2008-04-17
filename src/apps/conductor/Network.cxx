@@ -134,6 +134,10 @@ Network::Network( wxWindow* parent ):
     this->parent = dynamic_cast< Canvas* >( parent );
     isDataSet = false;
     dragging = false;
+
+    scrollPos.first = 0;
+    scrollPos.second = 0;
+
     //SetBackgroundColour(*wxWHITE);
     //This is for the paint buffer
     //SetBackgroundStyle(wxBG_STYLE_CUSTOM);
@@ -2205,4 +2209,15 @@ void Network::SetNetworkSize(int x, int y)
 std::pair< int, int > Network::GetNetworkSize()
 {
     return networkSize;
+}
+////////////////////////////////////////////////////////////////////////////////
+std::pair< int, int > Network::GetScrollPosition()
+{
+    return scrollPos;
+}
+///////////////////////////////////////////////////////////////////////////////
+void Network::SetScrollPosition( int x, int y )
+{
+    scrollPos.first = x;
+    scrollPos.second = y;
 }
