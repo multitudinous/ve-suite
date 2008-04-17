@@ -357,17 +357,35 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //no longer dragging
     dragging = false;
 
+    wxClientDC dc( parent );
+    parent->PrepareDC( dc );
+    dc.SetUserScale( userScale.first, userScale.second );
+
+    wxPoint evtpos = event.GetLogicalPosition( dc );
+    long x = evtpos.x;
+    long y = evtpos.y;
+    
+    //resize the network size when modules or links are drug beyond
+    //current size
+    if( x > networkSize.first )
+    {
+        networkSize.first = x;
+        parent->SetVirtualSize(
+            networkSize.first * userScale.first,
+            networkSize.second * userScale.second );
+    }
+
+    if( y > networkSize.second )
+    {
+        networkSize.second = y;
+        parent->SetVirtualSize(
+            networkSize.first * userScale.first,
+            networkSize.second * userScale.second );
+    }
+
     //release link connector
     if( m_selLinkCon >= 0 && m_selLink >= 0 )
     {
-        wxClientDC dc( parent );
-        parent->PrepareDC( dc );
-        dc.SetUserScale( userScale.first, userScale.second );
-
-        wxPoint evtpos = event.GetLogicalPosition( dc );
-        long x = evtpos.x;
-        long y = evtpos.y;
-
         // We will create the link connector (basically a bend point)
         DropLinkCon( x, y, m_selLink, m_selLinkCon, dc );
         m_selLinkCon = -1;
@@ -380,14 +398,6 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //release tag
     else if( m_selTag >= 0 && m_selTagCon < 0 )
     {
-        wxClientDC dc( parent );
-        parent->PrepareDC( dc );
-        dc.SetUserScale( userScale.first, userScale.second );
-
-        wxPoint evtpos = event.GetLogicalPosition( dc );
-        long x = evtpos.x;
-        long y = evtpos.y;
-
         // drop the tag we just created
         DropTag( x, y, m_selTag, dc );
         //m_selTag=-1;
@@ -396,14 +406,6 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //release tag connection
     else if( m_selTag >= 0 && m_selTagCon >= 0 )
     {
-        wxClientDC dc( parent );
-        parent->PrepareDC( dc );
-        dc.SetUserScale( userScale.first, userScale.second );
-
-        wxPoint evtpos = event.GetLogicalPosition( dc );
-        long x = evtpos.x;
-        long y = evtpos.y;
-
         // We will create the tag connector (basically a bend point)
         DropTagCon( x, y, m_selTag, m_selTagCon, dc );
         //m_selTag=-1;
@@ -413,14 +415,6 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //release start point of link
     else if( m_selMod >= 0 && m_selFrPort >= 0 )
     {
-        wxClientDC dc( parent );
-        parent->PrepareDC( dc );
-        dc.SetUserScale( userScale.first, userScale.second );
-
-        wxPoint evtpos = event.GetLogicalPosition( dc );
-        long x = evtpos.x;
-        long y = evtpos.y;
-
         // drop the start point of the link
         DropLink( x, y, m_selMod, m_selFrPort, dc, true );
         //m_selMod = -1;
@@ -430,14 +424,6 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //release end point of link
     else if( m_selMod >= 0 && m_selToPort >= 0 )
     {
-        wxClientDC dc( parent );
-        parent->PrepareDC( dc );
-        dc.SetUserScale( userScale.first, userScale.second );
-
-        wxPoint evtpos = event.GetLogicalPosition( dc );
-        long x = evtpos.x;
-        long y = evtpos.y;
-
         // drop the final point of the link
         DropLink( x, y, m_selMod, m_selToPort, dc, false );
         //m_selMod = -1;
@@ -447,14 +433,6 @@ void Network::OnMLeftUp( wxMouseEvent& event )
     //release the module
     else if( m_selMod >= 0 && m_selFrPort < 0 && m_selToPort < 0 )
     {
-        wxClientDC dc( parent );
-        parent->PrepareDC( dc );
-        dc.SetUserScale( userScale.first, userScale.second );
-
-        wxPoint evtpos = event.GetLogicalPosition( dc );
-        long x = evtpos.x;
-        long y = evtpos.y;
-
         //drop a module after dragging it around
         DropModule( x, y, m_selMod );
     }
@@ -834,8 +812,8 @@ void Network::UnSelectTag( wxDC &dc )
 void Network::CleanRect( wxRect box, wxDC &dc )
 {
     wxRect windowRect( wxPoint( 0, 0 ), parent->GetClientSize() );
-    parent->CalcUnscrolledPosition( windowRect.x, windowRect.y,
-                                    &windowRect.x, &windowRect.y );
+    //parent->CalcUnscrolledPosition( windowRect.x, windowRect.y,
+    //                                &windowRect.x, &windowRect.y );
     dc.DrawRectangle( windowRect );
 }
 /////////////////////////////////////////////////
@@ -939,15 +917,15 @@ void Network::MoveModule( int x, int y, int mod )
     if( x - relative_pt.x + bbox.width > sx )
     {
         GetNumUnit()->first += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
 
     if( y - relative_pt.y + bbox.height > sy )
     {
         GetNumUnit()->second += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
 
     cur_module->SetPos( wxPoint( x - relative_pt.x, y - relative_pt.y ) );
@@ -976,7 +954,7 @@ void Network::MoveModule( int x, int y, int mod )
     {
         xpos = ( int )( 1.0 * xpos * userScale.first );
         ypos = ( int )( 1.0 * ypos * userScale.second );
-        parent->Scroll( xpos, ypos );
+        //parent->Scroll( xpos, ypos );
     }
 
     parent->Refresh( true );
@@ -1026,16 +1004,16 @@ void Network::DropModule( int ix, int iy, int mod )
     {
         r = ( 1.0 * ( x - relative_pt.x + bbox.width ) / sx );
         GetNumUnit()->first = int( r * GetNumUnit()->first + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
         vx = GetNumUnit()->first;
     }
     if( y - relative_pt.y + bbox.height > sy )
     {
         r = ( 1.0 * ( y - relative_pt.y + bbox.width ) / sy );
         GetNumUnit()->second = int( r * GetNumUnit()->second + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
         vy = GetNumUnit()->second;
     }
 
@@ -1321,14 +1299,14 @@ void Network::MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc )
     if( x > sx )
     {
         GetNumUnit()->first += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
     if( y > sy )
     {
         GetNumUnit()->second += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
 
     *( links[ln].GetPoint( ln_con ) ) = wxPoint( x, y );
@@ -1338,7 +1316,7 @@ void Network::MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc )
         xpos = ( int )( 1.0 * xpos * userScale.first );
         ypos = ( int )( 1.0 * ypos * userScale.second );
 
-        parent->Scroll( xpos, ypos );
+        //parent->Scroll( xpos, ypos );
     }
 
     parent->Refresh( true );
@@ -1365,8 +1343,8 @@ void Network::DropLinkCon( int x, int y, int ln, int ln_con, wxDC &dc )
     {
         r = ( 1.0 * x / sx );
         GetNumUnit()->first = int( r * GetNumUnit()->first + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
         vx = GetNumUnit()->first;
     }
 
@@ -1374,8 +1352,8 @@ void Network::DropLinkCon( int x, int y, int ln, int ln_con, wxDC &dc )
     {
         r = ( 1.0 * y / sy );
         GetNumUnit()->second = int( r * GetNumUnit()->second + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
         vy = GetNumUnit()->second;
     }
 
@@ -1446,14 +1424,14 @@ void Network::MoveTagCon( int x, int y, int t, int t_con, wxDC& dc )
     if( x > sx )
     {
         GetNumUnit()->first += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
     if( y > sy )
     {
         GetNumUnit()->second += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
 
     //erase the original Tag;
@@ -1465,7 +1443,7 @@ void Network::MoveTagCon( int x, int y, int t, int t_con, wxDC& dc )
         xpos = ( int )( 1.0 * xpos * userScale.first );
         ypos = ( int )( 1.0 * ypos * userScale.second );
 
-        parent->Scroll( xpos, ypos );
+        //parent->Scroll( xpos, ypos );
     }
 
     tags[t].DrawTagCon( true, userScale );
@@ -1494,17 +1472,17 @@ void Network::DropTagCon( int x, int y, int t, int t_con, wxDC &dc )
     {
         r = ( 1.0 * x / sx );
         GetNumUnit()->first = int( r * GetNumUnit()->first + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
         vx = GetNumUnit()->first;
-        scroll = true;
+        //scroll = true;
     }
     if( y > sy )
     {
         r = ( 1.0 * y / sy );
         GetNumUnit()->second = int( r * GetNumUnit()->second + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
         scroll = true;
-        vy = GetNumUnit()->second;
+        //vy = GetNumUnit()->second;
     }
 
     *( tags[t].GetConnectorsPoint( t_con ) ) = wxPoint( x, y );
@@ -1551,14 +1529,14 @@ void Network::MoveTag( int x, int y, int t, wxDC &dc )
     if( x > sx )
     {
         GetNumUnit()->first += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
     if( y > sy )
     {
         GetNumUnit()->second += 2;
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
     }
 
     //erase the original Tag;
@@ -1573,7 +1551,7 @@ void Network::MoveTag( int x, int y, int t, wxDC &dc )
         xpos = ( int )( 1.0 * xpos * userScale.first );
         ypos = ( int )( 1.0 * ypos * userScale.second );
 
-        parent->Scroll( xpos, ypos );
+        //parent->Scroll( xpos, ypos );
     }
 
     tags[t].DrawTagCon( true, userScale );
@@ -1601,16 +1579,16 @@ void Network::DropTag( int x, int y, int t, wxDC &dc )
     {
         r = ( 1.0 * x / sx );
         GetNumUnit()->first = int( r * GetNumUnit()->first + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
         vx = GetNumUnit()->first;
     }
     if( y > sy )
     {
         r = ( 1.0 * y / sy );
         GetNumUnit()->second = int( r * GetNumUnit()->second + 1 );
-        parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
-        scroll = true;
+        //parent->SetScrollbars( GetNumPix()->first, GetNumPix()->second, GetNumUnit()->first, GetNumUnit()->second );
+        //scroll = true;
         vy = GetNumUnit()->second;
     }
 
@@ -1847,10 +1825,10 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         numUnit.second = tempScaleInfo;
     }
 //#endif
-    //These are set at 7000 so that the virtual size of the canvas is a 
-    //minimum of 7000 x 7000
-    maxX = 7000;
-    maxY = 7000;
+    //initialize to 1 for canvas size 
+    networkSize.first = 1;
+    networkSize.second = 1;
+
     //Setup the links
     links.assign( veNetwork->GetNumberOfLinks(), Link( parent ) );
     for( size_t i = 0; i < veNetwork->GetNumberOfLinks(); ++i )
@@ -1860,13 +1838,13 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         size_t pointX = links.at( i ).GetMaxPointX();
         size_t pointY = links.at( i ).GetMaxPointY();
 
-        if( pointX > maxX )
+        if( pointX > networkSize.first )
         {
-            maxX = pointX + 100;
+            networkSize.first = pointX + 100;
         }
-        if( pointY > maxY )
+        if( pointY > networkSize.second )
         {
-            maxY = pointY + 100;
+            networkSize.second = pointY + 100;
         }
         ///Need to somehow get max and maxy from links here
     }
@@ -2092,10 +2070,10 @@ void Network::HighlightCenter( int modId )
 {
     UnSelectMod();
     //recenter the flowsheet around the icon
-    int xPix, yPix;
-    parent->GetScrollPixelsPerUnit( &xPix, &yPix );
-    parent->Scroll( modules[modId].GetPlugin()->GetBBox().GetX() / ( xPix ),
-                    modules[modId].GetPlugin()->GetBBox().GetY() / ( yPix ) );
+    //int xPix, yPix;
+    //parent->GetScrollPixelsPerUnit( &xPix, &yPix );
+    //parent->Scroll( modules[modId].GetPlugin()->GetBBox().GetX() / ( xPix ),
+    //                modules[modId].GetPlugin()->GetBBox().GetY() / ( yPix ) );
 
     //highlight the selected icon
     SetSelectedModule( modId );
@@ -2219,3 +2197,12 @@ void Network::SetNetworkID( std::string id )
     networkID = id;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Network::SetNetworkSize(int x, int y)
+{
+    networkSize.first = x;
+    networkSize.second = y;
+}////////////////////////////////////////////////////////////////////////////////
+std::pair< int, int > Network::GetNetworkSize()
+{
+    return networkSize;
+}

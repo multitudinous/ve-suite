@@ -131,16 +131,8 @@ public:
     void OnDeletePlugins( wxUpdateUIEvent& event );
     ///Set the id for this network
     void SetNetworkID( std::string id );
+    std::pair< int, int > GetNetworkSize( );
     
-    size_t GetMaxX()
-    {
-        return maxX;
-    }
-    size_t GetMaxY()
-    {
-        return maxY;
-    }
-
 protected:
     //Draw functions
     //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
@@ -192,6 +184,9 @@ protected:
     //Check if the two port is compatible
     bool IsPortCompatible( int frmod, int frport, int tomod, int toport );
 
+    //Used to keep track of the network size
+    void SetNetworkSize(int x, int y);
+
     int m_selMod; // selected module
     int m_selFrPort; // selected From port
     int m_selToPort; // selected To port;
@@ -215,8 +210,6 @@ private:
     wxBitmap * bitmapBuffer;
     wxPoint point1;
     wxPoint point2;
-    size_t maxX;
-    size_t maxY;
     ///UUID for this network
     std::string networkID;
     ///Event to delete networks
@@ -246,6 +239,7 @@ private:
     /// first = x unit
     /// second = y unit
     std::pair< unsigned int, unsigned int > numUnit;
+    std::pair< int, int > networkSize;
 
     std::string ConvertUnicode( const wxChar* data )
     {

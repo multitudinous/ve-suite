@@ -104,17 +104,22 @@ Canvas::Canvas( wxWindow* parent, int id )
         m_treeView( 0 )
 {
     std::pair< long int, long int > numPix;
-    numPix.first = 7000;
-    numPix.second = 7000;
+    numPix.first = 1;
+    numPix.second = 1;
     std::pair< long int, long int > numUnit;
-    numUnit.first = 10;
-    numUnit.second = 10;
+    numUnit.first = 1;
+    numUnit.second = 1;
     userScale.first = 1.0;
     userScale.second = 1.0;
-    SetScrollRate( numUnit.first, numUnit.second );
-    SetVirtualSize( numPix.first, numPix.second );
 
+    //initalize canvas size to 1x1
+    SetVirtualSize( numPix.first, numPix.second );
+    //SetCanvasSize( numPix.first, numPix.second );
+    
+    SetScrollRate( numUnit.first, numUnit.second );
+    
     SetBackgroundColour( *wxWHITE );
+    
     //This is for the paint buffer
     SetBackgroundStyle( wxBG_STYLE_CUSTOM );
 
@@ -188,13 +193,16 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
 {
     wxAutoBufferedPaintDC dc( this );
     DoPrepareDC( dc );
+
+    //set scale
     dc.SetUserScale( userScale.first, userScale.second );
-    int xpix, ypix;
-    GetScrollPixelsPerUnit( &xpix, &ypix );
-    int x, y;
-    GetViewStart( &x, &y );
+    
+    //int xpix, ypix;
+    //GetScrollPixelsPerUnit( &xpix, &ypix );
+    //int x, y;
+    //GetViewStart( &x, &y );
     // account for the horz and vert scrollbar offset
-    dc.SetDeviceOrigin( -x * xpix, -y * ypix );
+    //dc.SetDeviceOrigin( -x * xpix, -y * ypix );
     dc.SetFont( GetFont() );
     dc.Clear();
     
@@ -202,7 +210,9 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
     {
         DrawNetwork( dc, this->activeId );
     }
+
     //Set the scale back after using it
+    //-necessary for zooming functionality
     dc.SetUserScale( 1.0f, 1.0f );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -228,18 +238,28 @@ void Canvas::SetActiveNetwork( std::string id )
 
     this->activeId = id;
 
+    //update all event handlers
     if( this->previousId != "-1" )
     {
         RemoveEventHandler( networks[this->previousId] );
         networks[this->previousId]->RemoveAllEvents();
     }
-
     PushEventHandler( networks[this->activeId] );
     networks[this->activeId]->PushAllEvents();
+    
+    //update the current id
     this->previousId = this->activeId;
+    
+    //scale the canvas according to the network view
     SetUserScale( networks[this->activeId]->GetUserScale()->first,
         networks[this->activeId]->GetUserScale()->second );
-    SetVirtualSize( networks[this->activeId]->GetMaxX(), networks[this->activeId]->GetMaxY() );
+
+    //set the canvas size to the initial size of the network
+    SetVirtualSize(
+        networks[this->activeId]->GetNetworkSize().first,
+        networks[this->activeId]->GetNetworkSize().second );
+
+    //update network
     Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -378,11 +398,11 @@ void Canvas::CreateDefaultNetwork()
 
     ///Set canvas parameters
     std::pair< long int, long int > numPix;
-    numPix.first = 7000;
-    numPix.second = 7000;
+    numPix.first = 1;
+    numPix.second = 1;
     std::pair< long int, long int > numUnit;
-    numUnit.first = 10;
-    numUnit.second = 10;
+    numUnit.first = 1;
+    numUnit.second = 1;
     tempNetwork->GetDataValuePair( -1 )->
         SetData( "m_xUserScale", 1.0f );
     tempNetwork->GetDataValuePair( -1 )->

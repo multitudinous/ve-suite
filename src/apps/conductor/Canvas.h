@@ -99,7 +99,7 @@ public:
     ///Delete and remove the network event handlers
     void CleanUpNetworks();
     ///Set the User scale
-    void SetUserScale(double x, double y);
+    void SetUserScale( double x, double y );
 
 private:
     ///Map of the networks for this system

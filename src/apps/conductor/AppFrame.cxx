@@ -850,18 +850,21 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
 
     network->GetUserScale()->first += 0.1;
     network->GetUserScale()->second += 0.1;
-    network->GetNumPix()->first += 1;
-    network->GetNumPix()->second += 1;
-    
-    int xpos, ypos;
-    canvas->GetViewStart( &xpos, &ypos );
+
+    std::pair< int, int > networkSize = network->GetNetworkSize( );
+    networkSize.first *= network->GetUserScale()->first;
+    networkSize.second *= network->GetUserScale()->second;
+
+    //int xpos, ypos;
+    //canvas->GetViewStart( &xpos, &ypos );
     //canvas->SetScrollbars(
     //    network->GetNumPix()->first, network->GetNumPix()->second,
     //    network->GetNumUnit()->first, network->GetNumUnit()->second,
     //    xpos, ypos );
-    canvas->SetScrollRate( 1, 1 );
+    
     canvas->SetUserScale(network->GetUserScale()->first, 
         network->GetUserScale()->second  );
+    canvas->SetVirtualSize( networkSize.first, networkSize.second );
     canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -876,18 +879,21 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
 
     network->GetUserScale()->first -= 0.1;
     network->GetUserScale()->second -= 0.1;
-    network->GetNumPix()->first -= 1;
-    network->GetNumPix()->second -= 1;
+    
+    std::pair< int, int > networkSize = network->GetNetworkSize( );
+    networkSize.first *= network->GetUserScale()->first;
+    networkSize.second *= network->GetUserScale()->second;
 
-    int xpos, ypos;
-    canvas->GetViewStart( &xpos, &ypos );
+    //int xpos, ypos;
+    //canvas->GetViewStart( &xpos, &ypos );
     //canvas->SetScrollbars(
     //    network->GetNumPix()->first, network->GetNumPix()->second,
     //    network->GetNumUnit()->first, network->GetNumUnit()->second,
     //    xpos, ypos );
-    canvas->SetScrollRate( 1, 1 );
+
     canvas->SetUserScale(network->GetUserScale()->first, 
         network->GetUserScale()->second  );
+    canvas->SetVirtualSize( networkSize.first, networkSize.second );
     canvas->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
