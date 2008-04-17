@@ -30,7 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-// --- VE-Suite Stuff --- //
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Device.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
@@ -39,28 +40,32 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/OneDDoubleArray.h>
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
+#include <osg/Polytope>
 #include <osg/LineSegment>
 #include <osg/Material>
 
 #include <osgUtil/IntersectVisitor>
 #include <osgUtil/IntersectionVisitor>
-#include <osg/Polytope>
 #include <osgUtil/PolytopeIntersector>
 
 using namespace ves::xplorer;
-using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
-        :
-        activeDCS( 0 ),
-        selectedDCS( 0 ),
-        center_point( 0 ),
-        m_threshold( 0 ),
-        m_jump( 0 )
+    :
+    mActiveDCS( 0 ),
+    mSelectedDCS( 0 ),
+    mCenterPoint( 0 ),
+    mCenterPointThreshold( 0 ),
+    mCenterPointJump( 0 )
 {
     mResetPosition.resize( 3 );
+}
+////////////////////////////////////////////////////////////////////////////////
+Device::~Device()
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::UpdateNavigation()
@@ -73,7 +78,7 @@ void Device::UpdateSelection()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetVECommand( CommandPtr command )
+void Device::SetVECommand( ves::open::xml::CommandPtr command )
 {
     ;
 }
@@ -85,51 +90,44 @@ void Device::UpdateCommand()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* Device::GetActiveDCS()
 {
-    return activeDCS.get();
+    return mActiveDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetActiveDCS( ves::xplorer::scenegraph::DCS* dcs )
+void Device::SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS )
 {
-    activeDCS = dcs;
+    mActiveDCS = activeDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* Device::GetSelectedDCS()
 {
-    return selectedDCS.get();
+    return mSelectedDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetSelectedDCS( ves::xplorer::scenegraph::DCS* dcs )
+void Device::SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS )
 {
-    selectedDCS = dcs;
+    mSelectedDCS = selectedDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetCenterPoint( gmtl::Point3d* cp )
+void Device::SetCenterPoint( gmtl::Point3d* centerPoint )
 {
-    center_point = cp;
+    mCenterPoint = centerPoint;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPointThreshold( double* threshold )
 {
-    m_threshold = threshold;
+    mCenterPointThreshold = threshold;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPointJump( double* jump )
 {
-    m_jump = jump;
+    mCenterPointJump = jump;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::ProcessSelection()
 {
     osg::Vec3d start_point;
     osg::Vec3d end_point;
-    this->SetStartEndPoint( &start_point, &end_point );
-
-    /*
-    std::cout << start_point.x() << std::endl;
-    std::cout << start_point.y() << std::endl;
-    std::cout << start_point.z() << std::endl;
-    std::cout << std::endl;
-    */
+    SetStartEndPoint( &start_point, &end_point );
 
     osg::ref_ptr< osg::LineSegment > line_segment = new osg::LineSegment();
     line_segment->set( start_point, end_point );
@@ -158,7 +156,7 @@ void Device::ProcessSelection()
         {
             objectHit = hit_list[i];
             /*
-            if( objectHit._geode->getName() != this->laserName )
+            if( objectHit._geode->getName() != laserName )
             {
                break;
             }
@@ -169,7 +167,7 @@ void Device::ProcessSelection()
         {
             if( !objectHit._geode->getName().empty() )
             {
-                if( /*objectHit._geode->getName() != this->laserName
+                if( /*objectHit._geode->getName() != laserName
                                                                                                                                           && */objectHit._geode->getName() != "Root Node" )
                 {
                     selected_geometry = objectHit._geode;
@@ -184,9 +182,9 @@ void Device::ProcessSelection()
         }
     }
 
-    this->DrawLine( start_point, end_point );
+    DrawLine( start_point, end_point );
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
 {
     //Simple  box for the head/body 
@@ -212,6 +210,7 @@ bool Device::CheckCollisionsWithHead( osg::Vec3 headPositionInWorld )
     {
         return true;
     }
+
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -225,7 +224,8 @@ void Device::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Device::SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos )
+void Device::SetResetWorldPosition(
+    osg::Quat& quat, std::vector< double >& pos )
 {
     mResetAxis = quat;
     mResetPosition = pos;

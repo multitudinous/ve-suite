@@ -30,58 +30,48 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef VE_XPLORER_DEVICE_HANDLER
 #define VE_XPLORER_DEVICE_HANDLER
 
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 #include <ves/xplorer/DeviceHandlerPtr.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-// --- VR Juggler Stuff --- //
+// --- vrJuggler Includes --- //
 #include <vpr/Util/Singleton.h>
 
 #include <gmtl/Point.h>
 
-//C/C++ Libraries
+// --- OSG Includes --- //
+#include <osg/Quat>
+
+// --- C/C++ Libraries --- //
 #include <string>
 #include <map>
 
-#include <osg/Quat>
-
 namespace ves
 {
 namespace xplorer
 {
+
 class Device;
 class Wand;
 class KeyboardMouse;
-}
-}
 
-namespace ves
-{
-namespace xplorer
-{
 namespace event
 {
 class EventHandler;
 }
-}
-}
-
-namespace ves
-{
-namespace xplorer
-{
 
 /*!\file DeviceHandler.h
-DeviceHandler API
-*/
+ * DeviceHandler API
+ */
 /*!\class ves::xplorer::DeviceHandler
-*
-*/
+ *
+ */
 class VE_XPLORER_EXPORTS DeviceHandler
 {
 private:
@@ -94,8 +84,9 @@ private:
     ///Do not know what this is
     ///\param DeviceHandler
     vprSingletonHeader( DeviceHandler );
+
 public:
-    ///Delete existing devices
+    ///Delete existing mDevices
     //void CleanUp();
 
     ///Execute navigation commands from active device
@@ -103,15 +94,15 @@ public:
 
     ///Set the active device
     ///\param device The active device
-    void SetActiveDevice( std::string device );
+    void SetActiveDevice( const std::string& activeDevice );
 
     ///Set the device mode
     ///\param mode Do not know what this does
-    void SetDeviceMode( std::string mode );
+    void SetDeviceMode( const std::string& deviceMode );
 
     ///Set the center point mode
     ///\param mode Do not know what this does
-    void SetCenterPointJumpMode( std::string mode );
+    void SetCenterPointJumpMode( const std::string& jumpMode );
 
     ///Unselect all currently selected objects
     void UnselectObjects();
@@ -122,33 +113,52 @@ public:
     ///Get a device
     ///\param device The device
     ///\return Get the device being requested
-    ves::xplorer::Device* GetDevice( std::string device );
+    ves::xplorer::Device* GetDevice( const std::string& device );
 
     ///Get active device
     ///\return Get the active device
     ves::xplorer::Device* GetActiveDevice();
+
     ///Set the reset location for the world
     ///This position is determined from the stored start position by the user
     void SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
+
     //Get the reset location of the world
     void GetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
-private:
-    std::map< std::string, ves::xplorer::Device* > devices; ///<
-    std::map< std::string, ves::xplorer::event::EventHandler* > _eventHandlers;
 
-    ves::xplorer::Device* active_device; ///<The active device
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > m_activeDCS;///<The active coordinate system
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > selectedDCS;///<The selected coordinate system
-    std::string device_mode; ///<Tells whether navigation or selection is active
-    gmtl::Point3d center_point; ///<Do not know what this is
-    double m_threshold;///<
-    double m_jump;///<
-    ///The axis for the reset location of the world
-    osg::Quat mResetAxis;
+private:
+    ///Triggers a center point jump after this distance has been breached
+    double mCenterPointThreshold;
+    ///The distance the center point jumps along the +y axis
+    double mCenterPointJump;
+
     ///The position of the reset location of the world
     std::vector< double > mResetPosition;
-};
-}
-}
 
-#endif //DEVICE_HANDLER_H
+    ///The point about which rotation occurs
+    gmtl::Point3d mCenterPoint;
+
+    ///The axis for the reset location of the world
+    osg::Quat mResetAxis;
+
+    ///The current device mode
+    std::string mDeviceMode;
+
+    ///The current active device
+    ves::xplorer::Device* mActiveDevice;
+
+    ///A map of all the devices
+    std::map< std::string, ves::xplorer::Device* > mDevices;
+    ///A map of all the event handlers
+    std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
+
+    ///The current active DCS
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveDCS;
+    ///The current selected DCS
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mSelectedDCS;
+
+};
+} //end xplorer
+} //end ves
+
+#endif //VE_XPLORER_DEVICE_HANDLER

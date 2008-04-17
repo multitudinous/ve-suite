@@ -90,40 +90,40 @@ const double PIDivOneEighty = 0.0174532925;
 
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::KeyboardMouse()
-        :
-        mKey( -1 ),
-        mButton( -1 ),
-        mState( 0 ),
-        mX( 0 ),
-        mY( 0 ),
+    :
+    mKey( -1 ),
+    mButton( -1 ),
+    mState( 0 ),
+    mX( 0 ),
+    mY( 0 ),
 
-        mWidth( 1 ),
-        mHeight( 1 ),
+    mWidth( 1 ),
+    mHeight( 1 ),
 
-        mAspectRatio( 0.0f ),
-        mFoVY( 0.0f ),
-        mLeftFrustum( 0.0f ),
-        mRightFrustum( 0.0f ),
-        mTopFrustum( 0.0f ),
-        mBottomFrustum( 0.0f ),
-        mNearFrustum( 0.0f ),
-        mFarFrustum( 0.0f ),
+    mAspectRatio( 0.0f ),
+    mFoVY( 0.0f ),
+    mLeftFrustum( 0.0f ),
+    mRightFrustum( 0.0f ),
+    mTopFrustum( 0.0f ),
+    mBottomFrustum( 0.0f ),
+    mNearFrustum( 0.0f ),
+    mFarFrustum( 0.0f ),
 
-        mXMinScreen( 0.0f ),
-        mXMaxScreen( 0.0f ),
-        mYMinScreen( 0.0f ),
-        mYMaxScreen( 0.0f ),
-        mZValScreen( 0.0f ),
+    mXMinScreen( 0.0f ),
+    mXMaxScreen( 0.0f ),
+    mYMinScreen( 0.0f ),
+    mYMaxScreen( 0.0f ),
+    mZValScreen( 0.0f ),
 
-        mMagnitude( 0.0f ),
-        mSensitivity( 1.0e-06 ),
+    mMagnitude( 0.0f ),
+    mSensitivity( 1.0e-06 ),
 
-        mCurrPos( 0, 0 ),
-        mPrevPos( 0, 0 ),
+    mCurrPos( 0, 0 ),
+    mPrevPos( 0, 0 ),
 
-        mAnimate( false ),
+    mAnimate( false ),
 
-        mBeamLineSegment( new osg::LineSegment )
+    mBeamLineSegment( new osg::LineSegment )
 {
     mKeyboard.init( "VJKeyboard" );
     mHead.init( "VJHead" );
@@ -159,22 +159,21 @@ void KeyboardMouse::SetStartEndPoint(
     std::pair< double, double > screenRatios =
         std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
-    double transformedPosition[ 3 ];
-    double osgTransformedPosition[ 3 ];
+    //Get the mouse position in juggler world coordinates
+    gmtl::Point3d transformedPosition;
     transformedPosition[ 0 ] = mXMinScreen + ( mX * screenRatios.first );
     transformedPosition[ 1 ] = mYMaxScreen - ( mY * screenRatios.second );
     transformedPosition[ 2 ] = mZValScreen;
+    //Convert feet to meters
+    transformedPosition *= 3.2808399;
 
-    transformedPosition[ 0 ] *= 3.2808399;
-    transformedPosition[ 1 ] *= 3.2808399;
-    transformedPosition[ 2 ] *= 3.2808399;
+    //Get the mouse position in osg world coordinates
+    gmtl::Point3d mousePosition;
+    mousePosition[ 0 ] =  transformedPosition[ 0 ];
+    mousePosition[ 1 ] = -transformedPosition[ 2 ];
+    mousePosition[ 2 ] =  transformedPosition[ 1 ];
 
-    osgTransformedPosition[ 0 ] =  transformedPosition[ 0 ];
-    osgTransformedPosition[ 1 ] = -transformedPosition[ 2 ];
-    osgTransformedPosition[ 2 ] =  transformedPosition[ 1 ];
-
-    /*
-    std::cout << " mX location = " << mX << std::endl 
+  /*std::cout << " mX location = " << mX << std::endl 
               << " mY location = " << mY << std::endl 
               << " location = " << osgTransformedPosition[ 0 ]
               << " " << osgTransformedPosition[ 1 ] << " "
@@ -189,64 +188,55 @@ void KeyboardMouse::SetStartEndPoint(
               << " mY " << mYMinScreen << " " << mYMaxScreen 
               << " z " << mZValScreen 
               << " mWidth " << mWidth << " mHeight "
-              << mHeight << std::endl;
-    */
-
-    double wandEndPoint[ 3 ];
-    double distance = mFarFrustum;
-
-    gmtl::Matrix44d vjHeadMat;
-    vjHeadMat = convertTo< double >( mHead->getData() );
+              << mHeight << std::endl;*/
 
     //Get juggler Matrix of worldDCS
     //Note:: for pf we are in juggler land
     //       for osg we are in z up land
-    gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
-    jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
+    gmtl::Matrix44d vjHeadMat = convertTo< double >( mHead->getData() );
+    gmtl::Point3d jugglerHeadPoint =
+        gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
 
-    //We have to offset negative mX because the view is being drawn for the
-    //mLeftFrustum eye which means the the frustums are being setup for the mLeftFrustum eye
+    //We have to offset negative mX because
+    //the view and frustum are drawn for the left eye
+    gmtl::Point3d jugglerHeadPointTemp;
     jugglerHeadPointTemp[ 0 ] =  jugglerHeadPoint[ 0 ] - ( 0.0345 * 3.2808399 );
     jugglerHeadPointTemp[ 1 ] = -jugglerHeadPoint[ 2 ];
     jugglerHeadPointTemp[ 2 ] =  jugglerHeadPoint[ 1 ];
 
-    //std::cout << " start point " << jugglerHeadPointTemp[ 0 ] << " " << jugglerHeadPointTemp[ 1 ] << " " << jugglerHeadPointTemp[ 2 ] << std::endl;
+    //Set the start point
     startPoint->set( jugglerHeadPointTemp[ 0 ],
                      jugglerHeadPointTemp[ 1 ],
                      jugglerHeadPointTemp[ 2 ] );
-
-    gmtl::Point3d mousePosition( osgTransformedPosition[ 0 ],
-                                 osgTransformedPosition[ 1 ],
-                                 osgTransformedPosition[ 2 ] );
+  /*std::cout << " start point "
+              << jugglerHeadPointTemp[ 0 ] << " "
+              << jugglerHeadPointTemp[ 1 ] << " "
+              << jugglerHeadPointTemp[ 2 ] << std::endl;*/
 
     //Get the vector
     gmtl::Vec3d vjVec = mousePosition - jugglerHeadPointTemp;
-    //std::cout << vjVec << " = "
-              //<< mousePosition << " - "
-              //<< jugglerHeadPointTemp << std::endl;
-    //gmtl::normalize( vjVec );
-    //std::cout << vjVec << std::endl;
+    gmtl::normalize( vjVec );
 
-    for( int i = 0; i < 3; ++i )
-    {
-        wandEndPoint[ i ] = vjVec[ i ] * distance;
-    }
-
-    //std::cout << " end point " << wandEndPoint[ 0 ] << " "
-                               //<< wandEndPoint[ 1 ] << " "
-                               //<< wandEndPoint[ 2 ] << std::endl;
-
-    endPoint->set( wandEndPoint[ 0 ],
-                   wandEndPoint[ 1 ],
-                   wandEndPoint[ 2 ] );
+    //Set the end point
+    double distance = mFarFrustum;
+    gmtl::Point3d endPointGMTL = vjVec * distance;
+    endPoint->set( endPointGMTL[ 0 ],
+                   endPointGMTL[ 1 ],
+                   endPointGMTL[ 2 ] );
+  /*std::cout << " end point " 
+              << endPointGMTL[ 0 ] << " "
+              << endPointGMTL[ 1 ] << " "
+              << endPointGMTL[ 2 ] << std::endl;*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
-{
+{   
+    ves::xplorer::scenegraph::Group* rootNode =
+        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+
     if( mBeamGeode.valid() )
     {
-        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->
-        removeChild( mBeamGeode.get() );
+        rootNode->removeChild( mBeamGeode.get() );
     }
 
     mBeamGeode = new osg::Geode();
@@ -265,22 +255,21 @@ void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
     line->setColorArray( colors.get() );
     line->setColorBinding( osg::Geometry::BIND_OVERALL );
 
-    osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth;
-    line_width->setWidth( 4.0f );
+    osg::ref_ptr< osg::LineWidth > line_width = new osg::LineWidth();
+    line_width->setWidth( 2.0f );
     m_stateset->setAttribute( line_width.get() );
     line->setStateSet( m_stateset.get() );
 
-    line->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::LINES, 0,
-                                                vertices->size() ) );
+    line->addPrimitiveSet( new osg::DrawArrays(
+        osg::PrimitiveSet::LINES, 0, vertices->size() ) );
 
     mBeamGeode->addDrawable( line.get() );
 
-    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->addChild(
-        mBeamGeode.get() );
+    rootNode->addChild( mBeamGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::
-SetScreenCornerValues( std::map< std::string, double > values )
+void KeyboardMouse::SetScreenCornerValues(
+    std::map< std::string, double > values )
 {
     mXMinScreen = values[ "xmin" ];
     mXMaxScreen = values[ "xmax" ];
@@ -441,26 +430,26 @@ void KeyboardMouse::ProcessNavigationEvents()
             GetActiveSwitchNode();
 
     //Grab the active matrix to manipulate
-    mCurrentTransform = activeDCS->GetMat();
+    mCurrentTransform = mActiveDCS->GetMat();
 
     //Convert mCurrentTransform to world space if not already in it
     std::string name = activeSwitchNode->GetName();
-    if( activeDCS->GetName() !=  name )
+    if( mActiveDCS->GetName() !=  name )
     {
         osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
             localToWorldTransform =
                 new ves::xplorer::scenegraph::LocalToWorldTransform( 
-                    activeSwitchNode.get(),
-                    activeDCS.get() );
+                    activeSwitchNode.get(), mActiveDCS.get() );
 
         mCurrentTransform = localToWorldTransform->GetLocalToWorldTransform();
     }
 
     //Translate active dcs by distance that the mHead is away from the origin
-    gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+    gmtl::Matrix44d transMat =
+        gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
     gmtl::Matrix44d worldMatTrans = transMat * mCurrentTransform;
 
-    //Get the position of the mHead in the new world space as if the mHead is on the origin
+    //Get the position of the mHead in the new world space as if it is on the origin
     gmtl::Point3d newJugglerHeadPoint;
     gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
     gmtl::Vec4d newGlobalHeadPointVec;
@@ -483,7 +472,7 @@ void KeyboardMouse::ProcessNavigationEvents()
         accuRotation[ i ][ 2 ] = mCurrentTransform[ i ][ 2 ];
 
         //Get the current translation matrix
-        matrix[ i ][ 3 ] = rotateJugglerHeadVec[ i ] + center_point->mData[ i ];
+        matrix[ i ][ 3 ] = rotateJugglerHeadVec[ i ] + mCenterPoint->mData[ i ];
     }
     /*
     Convert head to world space to run intersection tests
@@ -515,18 +504,18 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix = matrix * mDeltaTransform * accuRotation;
 
     //Convert matrix back to local space after delta transform has been applied
-    if( activeDCS->GetName() != name )
+    if( mActiveDCS->GetName() != name )
     {
         //Remove local matrix from mCurrentTransform
         //We are multiplying by a new transformed local matrix
-        gmtl::Matrix44d activeMatrix = activeDCS->GetMat();
+        gmtl::Matrix44d activeMatrix = mActiveDCS->GetMat();
         mCurrentTransform *= gmtl::invert( activeMatrix );
 
         matrix = gmtl::invert( mCurrentTransform ) * matrix;
     }
 
-    //Set the activeDCS w/ new transform
-    activeDCS->SetMat( matrix );
+    //Set the mActiveDCS w/ new transform
+    mActiveDCS->SetMat( matrix );
 
     //If not in animation mode, reset the transform
     if( !mAnimate )
@@ -548,7 +537,8 @@ void KeyboardMouse::SetWindowValues( unsigned int w, unsigned int h )
     mWidth = w;
     mHeight = h;
 
-    mAspectRatio = static_cast< double >( mWidth ) / static_cast< double >( mHeight );
+    mAspectRatio = static_cast< double >( mWidth ) /
+                   static_cast< double >( mHeight );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SetFrustumValues(
@@ -572,7 +562,8 @@ void KeyboardMouse::FrameAll()
 {
     //Grab the current matrix
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
     gmtl::Matrix44d matrix = activeSwitchDCS->GetMat();
 
     //Move the current matrix to its original position
@@ -582,35 +573,34 @@ void KeyboardMouse::FrameAll()
     //Grab the bound and corresponding center values of the current matrix
     osg::BoundingSphere bs = activeSwitchDCS->computeBound();
 
-    //std::cout << "bs.radius: " << bs.radius() << std::endl;
-    //std::cout << "bs.x: " << bs._center.x() << std::endl;
-    //std::cout << "bs.y: " << bs._center.y() << std::endl;
-    //std::cout << "bs.z: " << bs._center.z() << std::endl;
-
     //Calculate the distance needed to fit current bounding sphere inside viewing frustum
     double distance;
     double theta = ( mFoVY * 0.5f ) * PIDivOneEighty;
 
-    if( mAspectRatio <= 1.0f )
-    {
+    //if( mAspectRatio <= 1.0f )
+    //{
         distance = ( bs.radius() / tan( theta ) ) * mAspectRatio;
-    }
-    else
-    {
-        distance = bs.radius() / tan( theta );
-    }
+    //}
+    //else
+    //{
+        //distance = bs.radius() / tan( theta );
+    //}
 
     //Transform the current matrix to the center of the juggler screen
-    double wc_x_trans_ratio = ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
-    double wc_y_trans_ratio = ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
+    double wc_x_trans_ratio =
+        ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
+    double wc_y_trans_ratio =
+        ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
 
-    std::pair< double, double > screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
+    std::pair< double, double > screenRatios =
+        std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
 
-    //std::cout << screenRatios.first << " " << screenRatios.second << " " << distance << " " << bs.radius() << std::endl;
     double transformedPosition[ 3 ];
     double osgTransformedPosition[ 3 ];
-    transformedPosition[ 0 ] = mXMinScreen + ( ( static_cast< double >( mWidth ) * 0.5 ) * screenRatios.first );
-    transformedPosition[ 1 ] = mYMaxScreen - ( ( static_cast< double >( mHeight ) * 0.5 ) * screenRatios.second );
+    transformedPosition[ 0 ] = mXMinScreen +
+        0.5 * static_cast< double >( mWidth ) * screenRatios.first;
+    transformedPosition[ 1 ] = mYMaxScreen -
+        0.5 * static_cast< double >( mHeight ) * screenRatios.second;
     transformedPosition[ 2 ] = mZValScreen;
 
     transformedPosition[ 0 ] *= 3.2808399;
@@ -633,36 +623,36 @@ void KeyboardMouse::FrameAll()
     matrix.mData[ 13 ] -= bs.center().y();
     matrix.mData[ 14 ] -= bs.center().z();
 
-    //std::cout << bs.center().x() << " " << bs.center().y() << " " << bs.center().z() << std::endl;
     //Set the current matrix w/ the new matrix
     activeSwitchDCS->SetMat( matrix );
 
-    //Get the new center of the bounding sphere and set the center_point accordingly
+    //Get the new center of the bounding sphere and set the mCenterPoint accordingly
     bs = activeSwitchDCS->computeBound();
-    center_point->set( bs.center().x(), bs.center().y(), bs.center().z() );
+    mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameSelection()
 {
     /*
-    if( selectedDCS.valid() )
+    if( mSelectedDCS.valid() )
     {
         //Grab the selected matrix    
-        gmtl::Matrix44d matrix = selectedDCS->GetMat();
+        gmtl::Matrix44d matrix = mSelectedDCS->GetMat();
 
         //Convert the selected matrix to world space
         osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt = 
-        new ves::xplorer::scenegraph::LocalToWorldTransform( ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(), selectedDCS.get() );
+            new ves::xplorer::scenegraph::LocalToWorldTransform(
+                ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(), mSelectedDCS.get() );
 
         mLocalToWorldTransform = ltwt->GetLocalToWorldTransform();
         matrix = mLocalToWorldTransform * matrix;
 
         //Move the current matrix to its original position
         double position[ 3 ] = { 0, 0, 0 };
-        selectedDCS->SetTranslationArray( position );
+        mSelectedDCS->SetTranslationArray( position );
 
         //Grab the bound and corresponding center values of the current matrix
-        osg::BoundingSphere bs = selectedDCS->computeBound();
+        osg::BoundingSphere bs = mSelectedDCS->computeBound();
 
         //Calculate the distance needed to fit current bounding sphere inside viewing frustum
         double distance;
@@ -710,14 +700,14 @@ void KeyboardMouse::FrameSelection()
         matrix.mData[ 14 ] -= bs.center().z();
 
         //Set the current matrix w/ the new matrix
-        selectedDCS->SetMat( matrix );
+        mSelectedDCS->SetMat( matrix );
 
-        //Get the new center of the bounding sphere and set the center_point accordingly
+        //Get the new center of the bounding sphere and set the mCenterPoint accordingly
         osg::Matrixd transform;
         transform.set( ltwt->GetLocalToWorldTransform().getData() );
 
-        osg::Vec3d center = selectedDCS->getBound().center() * transform;
-        center_point->set( center.x(), center.y(), center.z() );
+        osg::Vec3d center = mSelectedDCS->getBound().center() * transform;
+        mCenterPoint->set( center.x(), center.y(), center.z() );
     }
     */
 }
@@ -734,7 +724,8 @@ void KeyboardMouse::NavKeyboard()
     }
     else if( mKey == gadget::KEY_S )
     {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->StepSimulation();
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->
+            StepSimulation();
     }
     else if( mKey == gadget::KEY_SPACE )
     {
@@ -799,16 +790,22 @@ void KeyboardMouse::SelKeyboard()
 void KeyboardMouse::SelMouse()
 {
     UpdateSelectionLine();
+
     if( mState == 1 && mButton == gadget::MBUTTON1 )
     {
         ProcessNURBSSelectionEvents();
+
+
+
         return;
     }
     else if( mState == 0 && mButton == gadget::MBUTTON1 )
     {
         ves::xplorer::scenegraph::SetStateOnNURBSNodeVisitor(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-            false, false, mCurrPos, std::pair<double,double>(0.0,0.0) );
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                GetActiveSwitchNode(), false, false, mCurrPos,
+                std::pair< double, double >( 0.0, 0.0 ) );
+
         ProcessSelectionEvents();
     }
 }
@@ -818,15 +815,15 @@ void KeyboardMouse::SelMotion( std::pair< double, double > delta )
     if( mButton == gadget::MBUTTON1 )
     {
         ves::xplorer::scenegraph::SetStateOnNURBSNodeVisitor(
-            ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(),
-            true, true, mCurrPos, delta );
+            ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode(), true, true, mCurrPos, delta );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
     gmtl::Matrix44d matrix;
-    center_point->mData[ 1 ] = matrix[ 1 ][ 3 ] = *m_threshold;
+    mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
 
     ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
     
@@ -864,32 +861,33 @@ void KeyboardMouse::Twist()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Zoom( double dy )
 {
-    double viewlength = center_point->mData[ 1 ];
+    double viewlength = mCenterPoint->mData[ 1 ];
     double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
 
     mDeltaTransform.mData[ 13 ] = d;
-    center_point->mData[ 1 ] += d;
+    mCenterPoint->mData[ 1 ] += d;
 
     //Test if center point has breached our specified threshold
-    if( center_point->mData[ 1 ] < *m_threshold )
+    if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
         //Only jump center point for the worldDCS
-        if( !selectedDCS.valid() )
+        if( !mSelectedDCS.valid() )
         {
-            center_point->mData[ 1 ] = *m_jump;
+            mCenterPoint->mData[ 1 ] = *mCenterPointJump;
         }
-        //Prevent the center point from jumping if we are manipulating a selected object
+        //Prevent the center point from jumping
+        //if we are manipulating a selected object
         else
         {
             mDeltaTransform.mData[ 13 ] = 0;
-            center_point->mData[ 1 ] -= d;
+            mCenterPoint->mData[ 1 ] -= d;
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Pan( double dx, double dy )
 {
-    double d = center_point->mData[ 1 ];
+    double d = mCenterPoint->mData[ 1 ];
     double theta = ( mFoVY * 0.5f ) * ( PIDivOneEighty );
     double b = 2 * d * tan( theta );
     double dwx = dx * b * mAspectRatio;
@@ -898,38 +896,46 @@ void KeyboardMouse::Pan( double dx, double dy )
     mDeltaTransform.mData[ 12 ] = dwx;
     mDeltaTransform.mData[ 14 ] = dwy;
 
-    center_point->mData[ 0 ] += dwx;
-    center_point->mData[ 2 ] += dwy;
+    mCenterPoint->mData[ 0 ] += dwx;
+    mCenterPoint->mData[ 2 ] += dwy;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Rotate( double x, double y, double z, double angle )
 {
+    double temp = sqrtf( x * x + y * y + z * z );
+    if( temp != 0.0f )
+    {
+        x /= temp;
+        y /= temp;
+        z /= temp;
+    }
+
     double rad = angle * PIDivOneEighty;
     double cosAng = cos( rad );
     double sinAng = sin( rad );
-    double denom = sqrtf( x * x + y * y + z * z );
-
-    if( denom != 0.0f )
-    {
-        x /= denom;
-        y /= denom;
-        z /= denom;
-    }
 
     gmtl::zero( mDeltaTransform );
-
-    mDeltaTransform.mData[ 0 ]  = ( x * x ) + ( cosAng * ( 1 - ( x * x ) ) );
-    mDeltaTransform.mData[ 1 ]  = ( y * x ) - ( cosAng * ( y * x ) ) + ( sinAng * z );
-    mDeltaTransform.mData[ 2 ]  = ( z * x ) - ( cosAng * ( z * x ) ) - ( sinAng * y );
-    mDeltaTransform.mData[ 4 ]  = ( x * y ) - ( cosAng * ( x * y ) ) - ( sinAng * z );
-    mDeltaTransform.mData[ 5 ]  = ( y * y ) + ( cosAng * ( 1 - ( y * y ) ) );
-    mDeltaTransform.mData[ 6 ]  = ( z * y ) - ( cosAng * ( z * y ) ) + ( sinAng * x );
-    mDeltaTransform.mData[ 8 ]  = ( x * z ) - ( cosAng * ( x * z ) ) + ( sinAng * y );
-    mDeltaTransform.mData[ 9 ]  = ( y * z ) - ( cosAng * ( y * z ) ) - ( sinAng * x );
-    mDeltaTransform.mData[ 10 ] = ( z * z ) + ( cosAng * ( 1 - ( z * z ) ) );
+    mDeltaTransform.mData[ 0 ]  = ( x * x ) +
+                                  ( cosAng * ( 1 - ( x * x ) ) );
+    mDeltaTransform.mData[ 1 ]  = ( y * x ) -
+                                  ( cosAng * ( y * x ) ) + ( sinAng * z );
+    mDeltaTransform.mData[ 2 ]  = ( z * x ) -
+                                  ( cosAng * ( z * x ) ) - ( sinAng * y );
+    mDeltaTransform.mData[ 4 ]  = ( x * y ) -
+                                  ( cosAng * ( x * y ) ) - ( sinAng * z );
+    mDeltaTransform.mData[ 5 ]  = ( y * y ) +
+                                  ( cosAng * ( 1 - ( y * y ) ) );
+    mDeltaTransform.mData[ 6 ]  = ( z * y ) -
+                                  ( cosAng * ( z * y ) ) + ( sinAng * x );
+    mDeltaTransform.mData[ 8 ]  = ( x * z ) -
+                                  ( cosAng * ( x * z ) ) + ( sinAng * y );
+    mDeltaTransform.mData[ 9 ]  = ( y * z ) -
+                                  ( cosAng * ( y * z ) ) - ( sinAng * x );
+    mDeltaTransform.mData[ 10 ] = ( z * z ) +
+                                  ( cosAng * ( 1 - ( z * z ) ) );
     mDeltaTransform.mData[ 15 ] = 1.0f;
 }
-/////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelectionLine()
 {
     osg::Vec3d startPoint, endPoint;
@@ -939,14 +945,14 @@ void KeyboardMouse::UpdateSelectionLine()
     //causes the scene to go black
     //DrawLine( startPoint, endPoint );
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNURBSSelectionEvents()
 {
-    //UpdateSelectionLine();
-    osg::ref_ptr<osgUtil::IntersectorGroup> intersectorGroup = new osgUtil::IntersectorGroup();
-    osg::ref_ptr<ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector> intersector =
-                            new ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector(mBeamLineSegment->start(),
-                                                                                                    mBeamLineSegment->end() );
+    osg::ref_ptr< osgUtil::IntersectorGroup > intersectorGroup =
+        new osgUtil::IntersectorGroup();
+    osg::ref_ptr< ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector > intersector =
+        new ves::xplorer::scenegraph::nurbs::PointLineSegmentIntersector(
+            mBeamLineSegment->start(), mBeamLineSegment->end() );
     intersectorGroup->addIntersector( intersector.get() );
 
     osgUtil::IntersectionVisitor controlMeshPointIntersectVisitor;
@@ -955,7 +961,8 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( controlMeshPointIntersectVisitor );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept(
+        controlMeshPointIntersectVisitor );
 
     if( intersectorGroup->containsIntersections() )
     {
@@ -982,16 +989,17 @@ void KeyboardMouse::ProcessNURBSSelectionEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessSelectionEvents()
 {
-    //UpdateSelectionLine();
     osgUtil::IntersectVisitor objectBeamIntersectVisitor;
     objectBeamIntersectVisitor.addLineSegment( mBeamLineSegment.get() );
 
     //Add the IntersectVisitor to the root Node so that all geometry will be
     //checked and no transforms are done to the line segement
-    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept( objectBeamIntersectVisitor );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode()->accept(
+        objectBeamIntersectVisitor );
 
     osgUtil::IntersectVisitor::HitList beamHitList;
-    beamHitList = objectBeamIntersectVisitor.getHitList( mBeamLineSegment.get() );
+    beamHitList = objectBeamIntersectVisitor.getHitList(
+        mBeamLineSegment.get() );
 
     ProcessHit( beamHitList );
 }
@@ -1005,9 +1013,9 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveSwitchNode();
 
-    if( selectedDCS.valid() )
+    if( mSelectedDCS.valid() )
     {
-        selectedDCS->SetTechnique( "Default" );
+        mSelectedDCS->SetTechnique( "Default" );
     }
 
     if( listOfHits.empty() )
@@ -1015,13 +1023,13 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = activeSwitchNode;
+        mActiveDCS = activeSwitchNode;
 
         //Move the center point to the center of all objects in the world
-        osg::Vec3d worldCenter = activeDCS->getBound().center();
-        center_point->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
+        osg::Vec3d worldCenter = mActiveDCS->getBound().center();
+        mCenterPoint->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
 
-        selectedDCS = 0;
+        mSelectedDCS = 0;
 
         return;
     }
@@ -1042,13 +1050,13 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit Invalid object selected"
                               << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = activeSwitchNode;
+        mActiveDCS = activeSwitchNode;
 
         //Move the center point to the center of all objects in the world
-        osg::Vec3d worldCenter = activeDCS->getBound().center();
-        center_point->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
+        osg::Vec3d worldCenter = mActiveDCS->getBound().center();
+        mCenterPoint->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
 
-        selectedDCS = 0;
+        mSelectedDCS = 0;
 
         return;
     }
@@ -1066,7 +1074,7 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << parentNode->getDescriptions().at( 1 ) << std::endl
         << vprDEBUG_FLUSH;
 
-        activeDCS = static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+        mActiveDCS = static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
     }
     else
     {
@@ -1075,35 +1083,35 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << objectHit._geode->getParents().front()->getName()
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = activeSwitchNode;
+        mActiveDCS = activeSwitchNode;
     }
 
     std::string name = activeSwitchNode->GetName();
-    if( activeDCS->GetName() != name )
+    if( mActiveDCS->GetName() != name )
     {
         //Move the center point to the center of the selected object
         osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
             localToWorldTransform = 
                 new ves::xplorer::scenegraph::LocalToWorldTransform(
                     activeSwitchNode.get(),
-                    activeDCS.get() );
+                    mActiveDCS.get() );
 
         gmtl::Matrix44d localToWorldMatrix =
             localToWorldTransform->GetLocalToWorldTransform();
         //Remove the local matrix from localToWorldMatrix
-        //We are multiplying by a new local matrix( the center_point )
-        gmtl::Matrix44d activeMatrix = activeDCS->GetMat();
+        //We are multiplying by a new local matrix( the mCenterPoint )
+        gmtl::Matrix44d activeMatrix = mActiveDCS->GetMat();
         localToWorldMatrix *= gmtl::invert( activeMatrix );
 
         osg::Matrixd tempMatrix;
         tempMatrix.set( localToWorldMatrix.getData() );
 
-        osg::Vec3d center = activeDCS->getBound().center() * tempMatrix;
-        center_point->set( center.x(), center.y(), center.z() );
+        osg::Vec3d center = mActiveDCS->getBound().center() * tempMatrix;
+        mCenterPoint->set( center.x(), center.y(), center.z() );
     }
 
-    selectedDCS = activeDCS;
+    mSelectedDCS = mActiveDCS;
 
-    selectedDCS->SetTechnique( "Select" );
+    mSelectedDCS->SetTechnique( "Select" );
 }
 ////////////////////////////////////////////////////////////////////////////////

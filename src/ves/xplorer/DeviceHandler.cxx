@@ -30,9 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/DeviceHandler.h>
-
 #include <ves/xplorer/ModelHandler.h>
 
 #include <ves/xplorer/device/KeyboardMouse.h>
@@ -52,160 +52,176 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+// --- OSG Includes --- //
 #include <osg/BoundingSphere>
 
-vprSingletonImp( ves::xplorer::DeviceHandler );
+using namespace ves::xplorer;
 
-namespace ves
-{
-namespace xplorer
-{
+vprSingletonImp( DeviceHandler );
+
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::DeviceHandler()
-        :
-        m_activeDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
-        selectedDCS( 0 ),
-        device_mode( "World Navigation" ),
-        center_point( 0, 2, 0 ),
-        m_threshold( 0.5f ),
-        m_jump( 10.0f )
+    :
+    mActiveDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
+    mSelectedDCS( 0 ),
+    mDeviceMode( "World Navigation" ),
+    mCenterPoint( 0, 0.1, 0 ),
+    mCenterPointThreshold( 0.5f ),
+    mCenterPointJump( 10.0f )
 {
-    //Move the world DCS forward a little bit
-    //activeDCS->setPosition( osg::Vec3d( 0.0, 2.0, 0.0 ) );
-
     //Initialize Devices
-    devices[ std::string( "Tablet" )] = new ves::xplorer::Tablet();
-    devices[ std::string( "Wand" )] = new ves::xplorer::Wand();
-    devices[ std::string( "KeyboardMouse" )] = new ves::xplorer::KeyboardMouse();
+    mDevices[ std::string( "Tablet" ) ] =
+        new ves::xplorer::Tablet();
+    mDevices[ std::string( "Wand" ) ] =
+        new ves::xplorer::Wand();
+    mDevices[ std::string( "KeyboardMouse" ) ] =
+        new ves::xplorer::KeyboardMouse();
 
     //Set properties in Devices
     std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
-    for( itr = devices.begin(); itr != devices.end(); itr++ )
+    for( itr = mDevices.begin(); itr != mDevices.end(); itr++ )
     {
-        itr->second->SetActiveDCS( m_activeDCS.get() );
-        itr->second->SetSelectedDCS( selectedDCS.get() );
-        itr->second->SetCenterPoint( &center_point );
-        itr->second->SetCenterPointThreshold( &m_threshold );
-        itr->second->SetCenterPointJump( &m_jump );
+        itr->second->SetActiveDCS( mActiveDCS.get() );
+        itr->second->SetSelectedDCS( mSelectedDCS.get() );
+        itr->second->SetCenterPoint( &mCenterPoint );
+        itr->second->SetCenterPointThreshold( &mCenterPointThreshold );
+        itr->second->SetCenterPointJump( &mCenterPointJump );
     }
 
-    active_device = devices[ "KeyboardMouse" ];
+    mActiveDevice = mDevices[ "KeyboardMouse" ];
 
-    _eventHandlers[ std::string( "CHANGE_DEVICE" )] = new ves::xplorer::event::DeviceEventHandler();
-    _eventHandlers[ std::string( "CHANGE_DEVICE_MODE" )] = new ves::xplorer::event::DeviceModeEventHandler();
-    _eventHandlers[ std::string( "UNSELECT_OBJECTS" )] = new ves::xplorer::event::UnselectObjectsEventHandler();
-    _eventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" )] = new ves::xplorer::event::CenterPointJumpEventHandler();
-    _eventHandlers[ std::string( "TRACKBALL_PROPERTIES" )] = new ves::xplorer::event::KeyboardMouseEventHandler();
-    _eventHandlers[ std::string( "Navigation_Data" )] = new ves::xplorer::event::NavigationDataEventHandler();
+    mEventHandlers[ std::string( "CHANGE_DEVICE" ) ] =
+        new ves::xplorer::event::DeviceEventHandler();
+    mEventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] =
+        new ves::xplorer::event::DeviceModeEventHandler();
+    mEventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] =
+        new ves::xplorer::event::UnselectObjectsEventHandler();
+    mEventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" ) ] =
+        new ves::xplorer::event::CenterPointJumpEventHandler();
+    mEventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] =
+        new ves::xplorer::event::KeyboardMouseEventHandler();
+    mEventHandlers[ std::string( "Navigation_Data" ) ] =
+        new ves::xplorer::event::NavigationDataEventHandler();
     
     mResetPosition.resize( 3 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 DeviceHandler::~DeviceHandler()
 {
-    //Delete devices in map
+    //Delete mDevices in map
     for( std::map< std::string, ves::xplorer::Device* >::iterator
-            itr = devices.begin(); itr != devices.end(); ++itr )
+            itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         delete itr->second;
     }
 
-    devices.clear();
+    mDevices.clear();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ExecuteCommands()
 {
-    std::map< std::string, ves::xplorer::event::EventHandler* >::iterator currentEventHandler;
+    std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
+        currentEventHandler;
     if( ModelHandler::instance()->GetXMLCommand() )
     {
-        currentEventHandler = _eventHandlers.find( ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+        currentEventHandler = mEventHandlers.find(
+            ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
 
-        if( currentEventHandler != _eventHandlers.end() )
+        if( currentEventHandler != mEventHandlers.end() )
         {
             //Set properties in Devices
             std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
-            for( itr = devices.begin(); itr != devices.end(); itr++ )
+            for( itr = mDevices.begin(); itr != mDevices.end(); itr++ )
             {
-                itr->second->SetActiveDCS( m_activeDCS.get() );
-                itr->second->SetSelectedDCS( selectedDCS.get() );
+                itr->second->SetActiveDCS( mActiveDCS.get() );
+                itr->second->SetSelectedDCS( mSelectedDCS.get() );
             }
 
-            currentEventHandler->second->SetGlobalBaseObject( active_device );
-            currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
+            currentEventHandler->second->SetGlobalBaseObject( mActiveDevice );
+            currentEventHandler->second->Execute(
+                ModelHandler::instance()->GetXMLCommand() );
             //Tablet and Wand is always active and need updated...
-            if( ModelHandler::instance()->GetXMLCommand()->GetCommandName() == "Navigation_Data" )
+            if( ModelHandler::instance()->GetXMLCommand()->GetCommandName() ==
+                "Navigation_Data" )
             {
-                currentEventHandler->second->SetGlobalBaseObject( devices[ "Tablet" ] );
-                currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
-                currentEventHandler->second->SetGlobalBaseObject( devices[ "Wand" ] );
-                currentEventHandler->second->Execute( ModelHandler::instance()->GetXMLCommand() );
+                currentEventHandler->second->SetGlobalBaseObject(
+                    mDevices[ "Tablet" ] );
+                currentEventHandler->second->Execute(
+                    ModelHandler::instance()->GetXMLCommand() );
+                currentEventHandler->second->SetGlobalBaseObject(
+                    mDevices[ "Wand" ] );
+                currentEventHandler->second->Execute(
+                    ModelHandler::instance()->GetXMLCommand() );
             }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetActiveDevice( std::string device )
+void DeviceHandler::SetActiveDevice( const std::string& activeDevice )
 {
-    std::map< std::string, ves::xplorer::Device* >::iterator itr = devices.find( device );
-    if( itr != devices.end() )
+    std::map< std::string, ves::xplorer::Device* >::iterator itr =
+        mDevices.find( activeDevice );
+    if( itr != mDevices.end() )
     {
-        active_device = devices[ device ];
+        mActiveDevice = mDevices[ activeDevice ];
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetDeviceMode( std::string mode )
+void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
 {
-    device_mode = mode;
+    mDeviceMode = deviceMode;
 
-    if( device_mode == "World Navigation" )
+    if( mDeviceMode == "World Navigation" )
     {
-        m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->
-                      GetActiveSwitchNode();
-        active_device->SetActiveDCS( m_activeDCS.get() );
+        mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
+                         GetActiveSwitchNode();
+        mActiveDevice->SetActiveDCS( mActiveDCS.get() );
     }
-    else if( device_mode == "Object Navigation" )
+    else if( mDeviceMode == "Object Navigation" )
     {
-        if( selectedDCS.valid() )
+        if( mSelectedDCS.valid() )
         {
-            m_activeDCS = selectedDCS;
+            mActiveDCS = mSelectedDCS;
         }
 
-        active_device->SetActiveDCS( m_activeDCS.get() );
+        mActiveDevice->SetActiveDCS( mActiveDCS.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetCenterPointJumpMode( std::string mode )
+void DeviceHandler::SetCenterPointJumpMode( const std::string& jumpMode )
 {
-    if( mode == "Small" )
+    if( jumpMode == "Small" )
     {
-        m_jump = 10.0;
-        m_threshold = 0.5;
+        mCenterPointJump = 10.0;
+        mCenterPointThreshold = 0.5;
     }
-    else if( mode == "Medium" )
+    else if( jumpMode == "Medium" )
     {
-        m_jump = 100.0;
-        m_threshold = 5.0;
+        mCenterPointJump = 100.0;
+        mCenterPointThreshold = 5.0;
     }
-    else if( mode == "Large" )
+    else if( jumpMode == "Large" )
     {
-        m_jump = 1000.0;
-        m_threshold = 50.0;
+        mCenterPointJump = 1000.0;
+        mCenterPointThreshold = 50.0;
     }
-    else if( mode == "Bounding Box" )
+    else if( jumpMode == "Bounding Box" )
     {
-        m_jump = m_activeDCS->getBound().radius();
-        m_threshold = m_jump * 0.05;
+        mCenterPointJump = mActiveDCS->getBound().radius();
+        mCenterPointThreshold = mCenterPointJump * 0.05;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::UnselectObjects()
 {
-    m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
-    active_device->SetActiveDCS( m_activeDCS.get() );
+    mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
+        GetActiveSwitchNode();
+    mActiveDevice->SetActiveDCS( mActiveDCS.get() );
 
-    selectedDCS->SetTechnique( "Default" );
-    selectedDCS = 0;
-    active_device->SetSelectedDCS( selectedDCS.get() );
+    mSelectedDCS->SetTechnique( "Default" );
+    mSelectedDCS = 0;
+    mActiveDevice->SetSelectedDCS( mSelectedDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ProcessDeviceEvents()
@@ -213,39 +229,42 @@ void DeviceHandler::ProcessDeviceEvents()
     //Update Device properties
     ExecuteCommands();
 
-    if( device_mode == "World Navigation" || device_mode == "Object Navigation" )
+    if( mDeviceMode == "World Navigation" ||
+        mDeviceMode == "Object Navigation" )
     {
-        devices[ "Wand" ]->UpdateNavigation();
-        devices[ "KeyboardMouse" ]->UpdateNavigation();
+        mDevices[ "Wand" ]->UpdateNavigation();
+        mDevices[ "KeyboardMouse" ]->UpdateNavigation();
 
-        if (( active_device != devices[ "Wand" ] ) && ( active_device != devices[ "KeyboardMouse" ] ) )
+        if( ( mActiveDevice != mDevices[ "Wand" ] ) && 
+            ( mActiveDevice != mDevices[ "KeyboardMouse" ] ) )
         {
-            active_device->UpdateNavigation();
+            mActiveDevice->UpdateNavigation();
         }
     }
-    else if( device_mode == "Selection" )
+    else if( mDeviceMode == "Selection" )
     {
-        active_device->UpdateSelection();
+        mActiveDevice->UpdateSelection();
     }
 
     //Get the active dcs from the scenemanager
-    //m_activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
+    //mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
+        //GetActiveSwitchNode();
 
     //Get the selected dcs from the active device
-    selectedDCS = active_device->GetSelectedDCS();
+    mSelectedDCS = mActiveDevice->GetSelectedDCS();
 
     //Always do this be default
-    devices[ "Tablet" ]->UpdateNavigation();
+    mDevices[ "Tablet" ]->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::Device* DeviceHandler::GetDevice( std::string device )
+ves::xplorer::Device* DeviceHandler::GetDevice( const std::string& device )
 {
-    return devices[ device ];
+    return mDevices[ device ];
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::Device* DeviceHandler::GetActiveDevice()
 {
-    return active_device;
+    return mActiveDevice;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetResetWorldPosition( osg::Quat& quat, 
@@ -255,18 +274,16 @@ void DeviceHandler::SetResetWorldPosition( osg::Quat& quat,
     mResetPosition = pos;
     
     for( std::map< std::string, ves::xplorer::Device* >::const_iterator 
-        itr = devices.begin(); itr != devices.end(); itr++ )
+        itr = mDevices.begin(); itr != mDevices.end(); itr++ )
     {
         itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GetResetWorldPosition( osg::Quat& quat, 
-    std::vector< double >& pos )
+void DeviceHandler::GetResetWorldPosition(
+    osg::Quat& quat, std::vector< double >& pos )
 {
     quat = mResetAxis;
     pos = mResetPosition;
 }
 ////////////////////////////////////////////////////////////////////////////////
-}
-}

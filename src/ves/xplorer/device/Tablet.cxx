@@ -130,7 +130,7 @@ void Tablet::UpdateNavigation()
         {
             worldTrans[ i ] = -mResetPosition[ i ];
             //world_quat[ i ] = 0.0f;
-            center_point->mData[ i ] = 0.0f;
+            mCenterPoint->mData[ i ] = 0.0f;
         }
     }
     else if( !newCommand.compare( "CHANGE_TRANSLATION_STEP_SIZE" ) )
@@ -151,37 +151,37 @@ void Tablet::UpdateNavigation()
         if( cfdIso_value == NAV_FWD )
         {
             worldTrans[ 1 ] += translationStepSize;
-            center_point->mData[ 1 ] -= translationStepSize;
+            mCenterPoint->mData[ 1 ] -= translationStepSize;
         }
         //Backward translate
         else if( cfdIso_value == NAV_BKWD )
         {
             worldTrans[ 1 ] -= translationStepSize;
-            center_point->mData[ 1 ] += translationStepSize;
+            mCenterPoint->mData[ 1 ] += translationStepSize;
         }
         //Right translate
         else if( cfdIso_value == NAV_RIGHT )
         {
             worldTrans[ 0 ] += translationStepSize;
-            center_point->mData[ 0 ] -= translationStepSize;
+            mCenterPoint->mData[ 0 ] -= translationStepSize;
         }
         //Left translate
         else if( cfdIso_value == NAV_LEFT )
         {
             worldTrans[ 0 ] -= translationStepSize;
-            center_point->mData[ 0 ] += translationStepSize;
+            mCenterPoint->mData[ 0 ] += translationStepSize;
         }
         //Upward translate
         else if( cfdIso_value == NAV_UP )
         {
             worldTrans[ 2 ] += translationStepSize;
-            center_point->mData[ 2 ] -= translationStepSize;
+            mCenterPoint->mData[ 2 ] -= translationStepSize;
         }
         //Downward translate
         else if( cfdIso_value == NAV_DOWN )
         {
             worldTrans[ 2 ] -= translationStepSize;
-            center_point->mData[ 2 ] += translationStepSize;
+            mCenterPoint->mData[ 2 ] += translationStepSize;
         }
         //CCW rotation
         else if( cfdIso_value == YAW_CCW )
@@ -228,12 +228,12 @@ void Tablet::UpdateNavigation()
                 worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
 
-                //Calculate the new center_point position based off the swept rotation
+                //Calculate the new mCenterPoint position based off the swept rotation
                 // --- If the head ever moves off of z = 0, that distance will have to be taken into account --- //
                 double theta = osg::DegreesToRadians( rotationStepSize );
-                double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
-                center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
-                center_point->mData[ 1 ] = ( pos[ 0 ] * sin( theta ) ) + ( pos[ 1 ] * cos( theta ) );
+                double pos[ 2 ] = { mCenterPoint->mData[ 0 ], mCenterPoint->mData[ 1 ] };
+                mCenterPoint->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
+                mCenterPoint->mData[ 1 ] = ( pos[ 0 ] * sin( theta ) ) + ( pos[ 1 ] * cos( theta ) );
             }
             else
             {
@@ -244,7 +244,7 @@ void Tablet::UpdateNavigation()
                 worldMat = world->GetMat();
 
                 //Translate world dcs by distance that the head is away from the origin
-                gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+                gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
                 gmtl::Matrix44d worldMatTrans = transMat * worldMat;
 
                 //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -264,8 +264,8 @@ void Tablet::UpdateNavigation()
 
                 //Create translation from new rotated point and add original head offset to the newly found location
                 //Set world translation accordingly
-                worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
-                worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
+                worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + mCenterPoint->mData[ 0 ] );
+                worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + mCenterPoint->mData[ 1 ] );
             }
         }
         //CW rotation
@@ -315,12 +315,12 @@ void Tablet::UpdateNavigation()
                 worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + jugglerHeadPointTemp[ 0 ] );
                 worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + jugglerHeadPointTemp[ 1 ] );
 
-                //Calculate the new center_point position based off the swept rotation
+                //Calculate the new mCenterPoint position based off the swept rotation
                 // --- If the head ever moves off of z = 0, that distance will have to be taken into account --- //
                 double theta = osg::DegreesToRadians( -rotationStepSize );
-                double pos[ 2 ] = { center_point->mData[ 0 ], center_point->mData[ 1 ] };
-                center_point->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
-                center_point->mData[ 1 ] = ( pos[ 0 ] * sin( theta ) ) + ( pos[ 1 ] * cos( theta ) );
+                double pos[ 2 ] = { mCenterPoint->mData[ 0 ], mCenterPoint->mData[ 1 ] };
+                mCenterPoint->mData[ 0 ] = ( pos[ 0 ] * cos( theta ) ) - ( pos[ 1 ] * sin( theta ) );
+                mCenterPoint->mData[ 1 ] = ( pos[ 0 ] * sin( theta ) ) + ( pos[ 1 ] * cos( theta ) );
             }
             else
             {
@@ -331,7 +331,7 @@ void Tablet::UpdateNavigation()
                 worldMat = world->GetMat();
 
                 //Translate world dcs by distance that the head is away from the origin
-                gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+                gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
                 gmtl::Matrix44d worldMatTrans = transMat * worldMat;
 
                 //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -351,8 +351,8 @@ void Tablet::UpdateNavigation()
 
                 //Create translation from new rotated point and add original head offset to the newly found location
                 //Set world translation accordingly
-                worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
-                worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
+                worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + mCenterPoint->mData[ 0 ] );
+                worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + mCenterPoint->mData[ 1 ] );
             }
         }
         else if( cfdIso_value == PITCH_DOWN )
@@ -366,7 +366,7 @@ void Tablet::UpdateNavigation()
             worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
-            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
             gmtl::Matrix44d worldMatTrans = transMat * worldMat;
 
             //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -386,8 +386,8 @@ void Tablet::UpdateNavigation()
 
             //Create translation from new rotated point and add original head offset to the newly found location
             //Set world translation accordingly
-            worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
-            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
+            worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + mCenterPoint->mData[ 1 ] );
+            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + mCenterPoint->mData[ 2 ] );
         }
         else if( cfdIso_value == PITCH_UP )
         {
@@ -400,7 +400,7 @@ void Tablet::UpdateNavigation()
             worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
-            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
             gmtl::Matrix44d worldMatTrans = transMat * worldMat;
 
             //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -420,8 +420,8 @@ void Tablet::UpdateNavigation()
 
             //Create translation from new rotated point and add original head offset to the newly found location
             //Set world translation accordingly
-            worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + center_point->mData[ 1 ] );
-            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
+            worldTrans[ 1 ] = -( rotateJugglerHeadVec[ 1 ] + mCenterPoint->mData[ 1 ] );
+            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + mCenterPoint->mData[ 2 ] );
         }
         else if( cfdIso_value == ROLL_CW )
         {
@@ -434,7 +434,7 @@ void Tablet::UpdateNavigation()
             worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
-            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
             gmtl::Matrix44d worldMatTrans = transMat * worldMat;
 
             //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -454,8 +454,8 @@ void Tablet::UpdateNavigation()
 
             //Create translation from new rotated point and add original head offset to the newly found location
             //Set world translation accordingly
-            worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
-            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
+            worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + mCenterPoint->mData[ 0 ] );
+            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + mCenterPoint->mData[ 2 ] );
         }
         else if( cfdIso_value == ROLL_CCW )
         {
@@ -468,7 +468,7 @@ void Tablet::UpdateNavigation()
             worldMat = world->GetMat();
 
             //Translate world dcs by distance that the head is away from the origin
-            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*center_point );
+            gmtl::Matrix44d transMat = gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
             gmtl::Matrix44d worldMatTrans = transMat * worldMat;
 
             //Get the position of the m_head in the new world space as if the m_head is on the origin
@@ -488,8 +488,8 @@ void Tablet::UpdateNavigation()
 
             //Create translation from new rotated point and add original head offset to the newly found location
             //Set world translation accordingly
-            worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + center_point->mData[ 0 ] );
-            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + center_point->mData[ 2 ] );
+            worldTrans[ 0 ] = -( rotateJugglerHeadVec[ 0 ] + mCenterPoint->mData[ 0 ] );
+            worldTrans[ 2 ] = -( rotateJugglerHeadVec[ 2 ] + mCenterPoint->mData[ 2 ] );
         }
     }
 

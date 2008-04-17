@@ -137,9 +137,9 @@ void Wand::UpdateNavigation()
     buttonData[ 4 ] = digital[ 4 ]->getData();
 
     m_rotIncrement.set( 0, 0, 0, 1 );
-    osg::Quat world_quat = activeDCS->getAttitude();
+    osg::Quat world_quat = mActiveDCS->getAttitude();
 
-    double* tempWorldTrans = activeDCS->GetVETranslationArray();
+    double* tempWorldTrans = mActiveDCS->GetVETranslationArray();
     m_worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
     m_worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
     m_worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
@@ -182,7 +182,7 @@ void Wand::UpdateNavigation()
         {
             m_worldTrans[ i ] = 0.0f;
             world_quat[ i ] = 0.0f;
-            center_point->mData[ i ] = 0.0f;
+            mCenterPoint->mData[ i ] = 0.0f;
         }
 
         world_quat[ 3 ] = 1.0f;
@@ -243,7 +243,7 @@ void Wand::UpdateNavigation()
         {
             m_worldTrans[ i ] = -mResetPosition[ i ];
             //world_quat[ i ] = 0.0f;
-            center_point->mData[ i ] = 0.0f;
+            mCenterPoint->mData[ i ] = 0.0f;
         }
     }
 
@@ -266,9 +266,9 @@ void Wand::UpdateNavigation()
             }
         }
 
-        activeDCS->SetTranslationArray( m_worldTrans );
+        mActiveDCS->SetTranslationArray( m_worldTrans );
         world_quat *= m_rotIncrement;
-        activeDCS->SetQuat( world_quat );
+        mActiveDCS->SetQuat( world_quat );
     }
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
@@ -325,7 +325,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
 
         return;
     }
@@ -361,7 +361,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << parentNode->getDescriptions().at( 1 )
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+        mActiveDCS = dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
     }
     else
     {
@@ -371,7 +371,7 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << objectHit._geode->getParents().front()->getName()
         << std::endl << vprDEBUG_FLUSH;
 
-        activeDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -532,13 +532,13 @@ void Wand::TranslateObject()
     //double* wandPosition = GetObjLocation();
     osg::Vec3d offsetFromLastPosition;
 
-    double* tempWorldRot = activeDCS->GetRotationArray();
+    double* tempWorldRot = mActiveDCS->GetRotationArray();
     double worldRot[ 3 ];
     worldRot[ 0 ] = tempWorldRot[ 0 ];
     worldRot[ 1 ] = tempWorldRot[ 1 ];
     worldRot[ 2 ] = tempWorldRot[ 2 ];
 
-    double* tempWorldTrans = activeDCS->GetVETranslationArray();
+    double* tempWorldTrans = mActiveDCS->GetVETranslationArray();
     double worldTrans[ 3 ];
     worldTrans[ 0 ] = tempWorldTrans[ 0 ];
     worldTrans[ 1 ] = tempWorldTrans[ 1 ];
@@ -629,7 +629,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     //Get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
     Matrix44d worldMat;
-    worldMat = activeDCS->GetMat();
+    worldMat = mActiveDCS->GetMat();
 
     gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
     jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );

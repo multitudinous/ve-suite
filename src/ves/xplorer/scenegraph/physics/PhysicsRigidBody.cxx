@@ -63,17 +63,17 @@ PhysicsRigidBody::PhysicsRigidBody( osg::Node* node,
         btRigidBody( btRigidBody::btRigidBodyConstructionInfo(
                      btScalar( mMass ),                         //mass
                      mVESMotionState = new vesMotionState(),    //motionState
-                     0,                                          //collisionShape
-                     btVector3( 0.0f, 0.0f, 0.0f ) ) )           //localInertia
+                     0,                                         //collisionShape
+                     btVector3( 0.0f, 0.0f, 0.0f ) ) )          //localInertia
 #else
         btRigidBody( btScalar( mMass ),                         //mass
                      mVESMotionState = new vesMotionState(),    //motionState
-                     0,                                          //collisionShape
-                     btVector3( 0.0f, 0.0f, 0.0f ),              //localInertia
-                     btScalar( 0.0f ),                           //linearDamping
-                     btScalar( 0.0f ),                           //angularDamping
-                     btScalar( 0.5f ),                           //friction
-                     btScalar( 0.0f ) )                          //restitution
+                     0,                                         //collisionShape
+                     btVector3( 0.0f, 0.0f, 0.0f ),             //localInertia
+                     btScalar( 0.0f ),                          //linearDamping
+                     btScalar( 0.0f ),                          //angularDamping
+                     btScalar( 0.5f ),                          //friction
+                     btScalar( 0.0f ) )                         //restitution
 #endif
 {
     BoundingBoxShape();
@@ -126,10 +126,8 @@ bool PhysicsRigidBody::CollisionInquiry( PhysicsRigidBody* physicsRigidBody )
     {
         return true;
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PhysicsRigidBody::SetMassProps()
@@ -149,7 +147,8 @@ void PhysicsRigidBody::SetMassProps()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location )
+void PhysicsRigidBody::PushBackCollision(
+    PhysicsRigidBody* physicsRigidBody, btVector3 location )
 {
     mCollisions.insert( std::make_pair( physicsRigidBody, location ) );
 }

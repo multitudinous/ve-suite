@@ -30,15 +30,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+
 #ifndef KEYBOARD_MOUSE_H
 #define KEYBOARD_MOUSE_H
-
-/*!\file KeyboardMouse.h
-*/
-
-/*!\class VE_XPlorer::KeyboardMouse
-*
-*/
 
 // --- VE-Suite Stuff --- //
 #include <ves/VEConfig.h>
@@ -74,6 +68,12 @@ namespace ves
 {
 namespace xplorer
 {
+/*!\file KeyboardMouse.h
+ *
+ */
+/*!\class VE_XPlorer::KeyboardMouse
+ *
+ */
 class VE_XPLORER_EXPORTS KeyboardMouse : public Device
 {
 public:
@@ -109,7 +109,8 @@ public:
     ///\param b
     ///\param n
     ///\param f
-    void SetFrustumValues( double l, double r, double t, double b, double n, double f );
+    void SetFrustumValues(
+        double l, double r, double t, double b, double n, double f );
 
     ///Fit the world bounding volume into the viewing frustum
     void FrameAll();
@@ -127,7 +128,8 @@ protected:
     ///Set the start and end point
     ///\param startPoint The start point
     ///\param endPoint The end point
-    virtual void SetStartEndPoint( osg::Vec3d* startPoint, osg::Vec3d* endPoint );
+    virtual void SetStartEndPoint(
+        osg::Vec3d* startPoint, osg::Vec3d* endPoint );
 
     ///Draws a line to help visualize the selection process
     ///\param startPoint The start position
@@ -222,17 +224,23 @@ private:
     double mYMaxScreen;///<The maximum y position of the screen
     double mZValScreen;///<The z position of the screen
 
-    std::pair< double, double > mCurrPos;///<The current mouse position
-    std::pair< double, double > mPrevPos;///<The previous mouse position
+    ///The current mouse position
+    std::pair< double, double > mCurrPos;
+    ///The previous mouse position
+    std::pair< double, double > mPrevPos;
 
-    //Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
-    //For gmtl::Matrix
-    //In mData form     In row by column form
-    //[ 0 4  8 12 ]     [ 00 01 02 03 ]
-    //[ 1 5  9 13 ]     [ 10 11 12 13 ]
-    //[ 2 6 10 14 ]     [ 20 21 22 23 ]
-    //[ 3 7 11 15 ]     [ 30 31 32 33 ]
-    gmtl::Matrix44d mDeltaTransform;///<The change to be applied to the current transform
+    /*
+    Note: osg::Matrix multiplication is reverse of gmtl::Matrix multiplication
+    For: gmtl::Matrix
+                    In mData form    In row by column form
+                    [ 0 4  8 12 ]    [ 00 01 02 03 ]
+                    [ 1 5  9 13 ]    [ 10 11 12 13 ]
+                    [ 2 6 10 14 ]    [ 20 21 22 23 ]
+                    [ 3 7 11 15 ]    [ 30 31 32 33 ]
+    */
+
+    ///The change to be applied to the current transform
+    gmtl::Matrix44d mDeltaTransform;
     gmtl::Matrix44d mCurrentTransform;///<The current transform matrix being manipulated
 
     osg::ref_ptr< osg::Geode > mBeamGeode;///<
@@ -241,7 +249,9 @@ private:
 
     gadget::KeyboardMouseInterface mKeyboard;///<VRJuggler's keyboard/mouse positional interface
     gadget::PositionInterface mHead;///<VRJuggler's head positional interface
+
 };
-}
-}
+} //end xplorer
+} //end ves
+
 #endif //KEYBOARD_MOUSE_H
