@@ -250,14 +250,16 @@ void Canvas::SetActiveNetwork( std::string id )
     //update the current id
     this->previousId = this->activeId;
     
+    double tempScaleX = networks[this->activeId]->GetUserScale()->first;
+    double tempScaleY = networks[this->activeId]->GetUserScale()->second;
+
     //scale the canvas according to the network view
-    SetUserScale( networks[this->activeId]->GetUserScale()->first,
-        networks[this->activeId]->GetUserScale()->second );
+    SetUserScale( tempScaleX, tempScaleY );
 
     //set the canvas size to the initial size of the network
     SetVirtualSize(
-        networks[this->activeId]->GetNetworkSize().first,
-        networks[this->activeId]->GetNetworkSize().second );
+        networks[this->activeId]->GetNetworkSize().first * tempScaleX,
+        networks[this->activeId]->GetNetworkSize().second * tempScaleY);
 
     //update network
     Refresh( true );
