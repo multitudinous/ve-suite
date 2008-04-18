@@ -53,6 +53,8 @@
 #include <osg/Texture2D>
 #include <osg/TexGenNode>
 
+#include <osgText/Text>
+
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
 
@@ -60,6 +62,7 @@
 
 //C/C++ Libraries
 #include <iostream>
+#include <sstream>
 
 using namespace cpt;
 
@@ -81,7 +84,8 @@ mFrustumVertices( 0 ),
 mCameraViewQuadDCS( 0 ),
 mCameraViewQuadGeode( 0 ),
 mCameraViewQuadGeometry( 0 ),
-mCameraViewQuadVertices( 0 )
+mCameraViewQuadVertices( 0 ),
+mDistanceText( 0 )
 {
     ;
 }
@@ -106,30 +110,32 @@ mFrustumVertices( 0 ),
 mCameraViewQuadDCS( 0 ),
 mCameraViewQuadGeode( 0 ),
 mCameraViewQuadGeometry( 0 ),
-mCameraViewQuadVertices( 0 )
+mCameraViewQuadVertices( 0 ),
+mDistanceText( 0 )
 {
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
                             const osg::CopyOp& copyop )
-:
-osg::Camera( cameraEntity, copyop ),
-mTexGenNode( 0 ),
-mProjectionTechnique( 0 ),
-mCameraEntityCallback( 0 ),
-mHeadsUpDisplay( 0 ),
-mResourceManager( 0 ),
-mPluginDCS( 0 ),
-mCameraDCS( 0 ),
-mCameraNode( 0 ),
-mFrustumGeode( 0 ),
-mFrustumGeometry( 0 ),
-mFrustumVertices( 0 ),
-mCameraViewQuadDCS( 0 ),
-mCameraViewQuadGeode( 0 ),
-mCameraViewQuadGeometry( 0 ),
-mCameraViewQuadVertices( 0 )
+    :
+    osg::Camera( cameraEntity, copyop ),
+    mTexGenNode( 0 ),
+    mProjectionTechnique( 0 ),
+    mCameraEntityCallback( 0 ),
+    mHeadsUpDisplay( 0 ),
+    mResourceManager( 0 ),
+    mPluginDCS( 0 ),
+    mCameraDCS( 0 ),
+    mCameraNode( 0 ),
+    mFrustumGeode( 0 ),
+    mFrustumGeometry( 0 ),
+    mFrustumVertices( 0 ),
+    mCameraViewQuadDCS( 0 ),
+    mCameraViewQuadGeode( 0 ),
+    mCameraViewQuadGeometry( 0 ),
+    mCameraViewQuadVertices( 0 ),
+    mDistanceText( 0 )
 {
     if( &cameraEntity != this )
     {
@@ -162,6 +168,7 @@ void CameraEntity::Initialize()
           ( "CameraViewTexture" ) ).get() );
     //Add the subgraph to render
     addChild( mPluginDCS.get() );
+    removeChild( mHitQuadGeode.get() );
 
     //Initialize mInitialViewMatrix
     mInitialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
@@ -206,7 +213,7 @@ void CameraEntity::Initialize()
 
     //Initialize mCameraViewQuadDCS
     mCameraViewQuadDCS = new ves::xplorer::scenegraph::DCS();
-    mCameraViewQuadDCS->setScale( osg::Vec3( 200, 200, 0 ) );
+    mCameraViewQuadDCS->setScale( osg::Vec3( 200, 200, 1 ) );
     mHeadsUpDisplay->GetCamera()->addChild( mCameraViewQuadDCS.get() );
     //Initialize mCameraViewQuadGeode
     CreateCameraViewQuadGeode();
@@ -284,6 +291,8 @@ void CameraEntity::CustomKeyboardMouseSelection(
 
         if( !intersector->containsIntersections() )
         {
+            mDistanceText->setText( std::string( "Distance: " ) );
+
             return;
         }
 
@@ -311,6 +320,7 @@ void CameraEntity::CustomKeyboardMouseSelection(
         double x = yRatio * (*mFrustumVertices)[ 3 ].x();
         double z = yRatio * (*mFrustumVertices)[ 3 ].z();
 
+        /*
         (*mHitQuadVertices)[ 0 ].set( -x, yCenterLength, -z );
         (*mHitQuadVertices)[ 1 ].set(  x, yCenterLength, -z );
         (*mHitQuadVertices)[ 2 ].set(  x, yCenterLength,  z );
@@ -318,6 +328,12 @@ void CameraEntity::CustomKeyboardMouseSelection(
         //mHitQuadGeometry->computeFastPathsUsed();
         mHitQuadGeometry->dirtyDisplayList();
         mHitQuadGeometry->dirtyBound();
+        */
+
+        std::stringstream ss;
+        ss << "Distance: ";
+        ss << yCenterLength;
+        mDistanceText->setText( ss.str() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -332,7 +348,7 @@ void CameraEntity::CreateCameraNode()
         ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "CameraProgram" ) ).get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    mCameraDCS->setStateSet( stateset.get() );
+    //mCameraDCS->setStateSet( stateset.get() );
 
     mCameraDCS->addChild( mCameraNode.get() );
 }
@@ -365,7 +381,6 @@ void CameraEntity::CreateViewFrustumGeode()
     mFrustumGeode->addDrawable( mFrustumGeometry.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    //Set bin number to 11 so camera does not occlude geometry from scene
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     stateset->setMode(
         GL_LIGHTING,
@@ -431,8 +446,6 @@ void CameraEntity::CreateCameraViewQuadGeode()
 
     mCameraViewQuadGeometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
-    mCameraViewQuadGeode->addDrawable( mCameraViewQuadGeometry.get() );
-    mCameraViewQuadDCS->addChild( mCameraViewQuadGeode.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -450,7 +463,21 @@ void CameraEntity::CreateCameraViewQuadGeode()
     osg::ref_ptr< osg::Uniform > baseMapUniform =
         new osg::Uniform( "baseMap", 1 );
     stateset->addUniform( baseMapUniform.get() );
-    mCameraViewQuadDCS->setStateSet( stateset.get() );
+    mCameraViewQuadGeometry->setStateSet( stateset.get() );
+    mCameraViewQuadGeode->addDrawable( mCameraViewQuadGeometry.get() );
+
+    mDistanceText = new osgText::Text();
+    std::string textFont( "fonts/arial.ttf" );
+    mDistanceText->setFont( textFont );
+    mDistanceText->setCharacterSize( 20 );
+    mDistanceText->setAxisAlignment( osgText::Text::SCREEN );
+    mDistanceText->setAlignment( osgText::Text::LEFT_TOP );
+    mDistanceText->setPosition( osg::Vec3(  0, 1, 0 ) );
+    mDistanceText->setColor( osg::Vec4( 1, 1, 1, 1 ) );
+    mDistanceText->setText( std::string( "Distance: " ) );
+    mCameraViewQuadGeode->addDrawable( mDistanceText.get() );
+
+    mCameraViewQuadDCS->addChild( mCameraViewQuadGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Update()
@@ -498,10 +525,11 @@ void CameraEntity::Update()
     mFrustumGeometry->dirtyBound();
 
     const double aspectRatio = fabs( fRight - fLeft ) / fabs( fTop - fBottom );
-    (*mCameraViewQuadVertices)[ 0 ].set( 0.0,         0.0, 0.0 );
-    (*mCameraViewQuadVertices)[ 1 ].set( aspectRatio, 0.0, 0.0 );
-    (*mCameraViewQuadVertices)[ 2 ].set( aspectRatio, 1.0, 0.0 );
-    (*mCameraViewQuadVertices)[ 3 ].set( 0.0,         1.0, 0.0 );
+
+    (*mCameraViewQuadVertices)[ 0 ].set( 0.0,         0.0, -1.0 );
+    (*mCameraViewQuadVertices)[ 1 ].set( aspectRatio, 0.0, -1.0 );
+    (*mCameraViewQuadVertices)[ 2 ].set( aspectRatio, 1.0, -1.0 );
+    (*mCameraViewQuadVertices)[ 3 ].set( 0.0,         1.0, -1.0 );
     //mCameraViewQuadGeometry->computeFastPathsUsed();
     mCameraViewQuadGeometry->dirtyDisplayList();
     mCameraViewQuadGeometry->dirtyBound();
@@ -581,6 +609,6 @@ void CameraEntity::SetProjectionEffectOpacity( double value )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetQuadResolution( unsigned int value )
 {
-    mCameraViewQuadDCS->setScale( osg::Vec3( value, value, 0 ) );
+    mCameraViewQuadDCS->setScale( osg::Vec3( value, value, 1 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

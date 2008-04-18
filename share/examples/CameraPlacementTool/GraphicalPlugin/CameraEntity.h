@@ -62,12 +62,16 @@ class Geode;
 class Geometry;
 }
 
+namespace osgText
+{
+class Text;
+}
+
 // --- C/C++ Libraries --- //
 #include <string>
 
 namespace cpt
 {
-// --- My Includes --- //
 class ProjectionTechnique;
 class CameraEntityCallback;
 
@@ -155,6 +159,8 @@ private:
     osg::ref_ptr< osg::Geode > mCameraViewQuadGeode;
     osg::ref_ptr< osg::Geometry > mCameraViewQuadGeometry;
     osg::ref_ptr< osg::Vec3Array > mCameraViewQuadVertices;
+
+    osg::ref_ptr< osgText::Text > mDistanceText;
 
 };
 
