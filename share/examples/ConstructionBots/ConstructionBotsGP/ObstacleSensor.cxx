@@ -40,16 +40,19 @@
 
 #include <osgUtil/IntersectionVisitor>
 
+// --- c/C++ Includes --- //
+#include <iostream>
+
 using namespace bots;
 
-const double PI = 3.14159265358979323846;
+const double piDivOneEighty = 0.0174532925;
 
 ////////////////////////////////////////////////////////////////////////////////
 ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
 :
 Sensor( agentEntity ),
 mObstacleDetected( false ),
-mAngleIncrement( 30 ),
+mAngleIncrement( 20 ),
 mShortRange( 0.6 ),
 mLongRange( 3.0 ),
 mForceRepellingConstant( 1.0 ),
@@ -93,8 +96,8 @@ void ObstacleSensor::CollectInformation()
         {
             range = mLongRange;
         }
-        endPoint.set( startPoint.x() + range * cos( angle ), 
-                      startPoint.y() + range * sin( angle ), 
+        endPoint.set( startPoint.x() + range * cos( angle * piDivOneEighty ), 
+                      startPoint.y() + range * sin( angle * piDivOneEighty ), 
                       startPoint.z() );
 
         mLineSegmentIntersector->reset();
@@ -170,16 +173,16 @@ btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
         btVector3 deltaForce( intersect.x() - agentPosition[ 0 ],
                               intersect.y() - agentPosition[ 1 ], 0 );
 
+        if( mAgentEntity->IsBuilding() )
+        {
+            return -deltaForce;
+        }
+
         double variables = mForceRepellingConstant / deltaForce.length2();
         deltaForce /= deltaForce.length();
         deltaForce *= variables;
 
         repulsiveForce -= deltaForce;
-
-        if( mAgentEntity->IsBuilding() )
-        {
-            return repulsiveForce;
-        }
     }
 
     return repulsiveForce;
@@ -214,7 +217,7 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
     totalForce = GetRepulsiveForce( agentPosition );
 
     //Calculate the target force
-    //2D code to rotate vector about point( 0, 0, 0 ) by theta
+    //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );
     //y' = x * sin( theta ) + y * cos( theta );
 
@@ -222,13 +225,15 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
     double x = totalForce.x();
     double y = totalForce.y();
 
-    double angle( 145 );
     if( mAgentEntity->IsBuilding() )
     {
-        angle = 180;
+        mResultantForce.setValue( -y, x, 0 );
+
+        return;
     }
-    double cosTheta = cos( angle * ( PI / 180 ) );
-    double sinTheta = sin( angle * ( PI / 180 ) );
+
+    double cosTheta = cos( 145 * piDivOneEighty );
+    double sinTheta = sin( 145 * piDivOneEighty );
     
     double xNew = ( x * cosTheta ) - ( y * sinTheta );
     double yNew = ( x * sinTheta ) + ( y * cosTheta );

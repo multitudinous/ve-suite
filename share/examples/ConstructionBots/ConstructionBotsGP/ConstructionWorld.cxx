@@ -146,7 +146,7 @@ void ConstructionWorld::InitializeFramework()
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
     int numBlocks = 20;
-    int numAgents = 2;
+    int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -368,11 +368,7 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
             blockSensor->DisplayLine( true );
             siteSensor->DisplayLine( false );
         }
-        else if( agent->IsBuilding() )
-        {
-            agent->Build();
-        }
-        else
+        else if( !agent->IsBuilding() )
         {
             siteSensor->CollectInformation();
             if( siteSensor->SiteInView() )
@@ -388,6 +384,11 @@ void ConstructionWorld::CommunicatingBlocksAlgorithm()
             blockSensor->DisplayLine( false );
             siteSensor->DisplayLine( true );
         }
+        else
+        {
+            agent->Build();
+        }
+
 
         //Need to look at this
         //agent->WanderAround();

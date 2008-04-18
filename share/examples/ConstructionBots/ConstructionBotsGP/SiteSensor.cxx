@@ -57,18 +57,18 @@ const double PI = 3.14159265358979323846;
 
 ////////////////////////////////////////////////////////////////////////////////
 SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
-:
-Sensor( agentEntity ),
-mSiteInView( false ),
-mCloseToSite( false ),
-mAngle( 0 ), 
-mAngleInc( 0.05 ),
-mRange( 0 ),
-mNormalizedSiteVector( 0, 0, 0 ),
-mGeode( 0 ),
-mGeometry( 0 ),
-mVertexArray( 0 ),
-mLineSegmentIntersector( 0 )
+    :
+    Sensor( agentEntity ),
+    mSiteInView( false ),
+    mCloseToSite( false ),
+    mAngle( 0 ), 
+    mAngleInc( 0.05 ),
+    mRange( 0 ),
+    mNormalizedSiteVector( 0, 0, 0 ),
+    mGeode( 0 ),
+    mGeometry( 0 ),
+    mVertexArray( 0 ),
+    mLineSegmentIntersector( 0 )
 {
     Initialize();
 }

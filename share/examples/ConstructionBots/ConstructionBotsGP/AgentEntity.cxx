@@ -84,7 +84,6 @@ AgentEntity::~AgentEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Initialize()
 {
-    
     mBlockSensor = bots::BlockSensorPtr(
         new bots::BlockSensor( this ) );
     mHoldBlockSensor = bots::HoldBlockSensorPtr(
@@ -108,7 +107,12 @@ void AgentEntity::AvoidObstacle()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
-
+    btVector3 velocity = GetPhysicsRigidBody()->getLinearVelocity();
+    std::cout << "velocity: ( " << velocity.x() << ", " << velocity.y() << ", " << velocity.z() << " )" << std::endl;
+    if( velocity.length() == 0 )
+    {
+        std::cout << "Yayyyyyyyyyyyyyyyyyyyyyy" << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToBlock()
@@ -156,7 +160,7 @@ void AgentEntity::InitiateBuildMode()
                                                             << transArray[ 1 ] << " )"
                                                             << std::endl << std::endl;
 
-            GetDCS()->SetTranslationArray( transArray );
+
 
             mBuildMode = true;
         }
@@ -186,7 +190,14 @@ void AgentEntity::WanderAround()
 {
     btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
 
-    mPhysicsRigidBody->setLinearVelocity( velocity.normalize() );
+    if( velocity.length() < 0.05 )
+    {
+        //mPhysicsRigidBody->setLinearVelocity( velocity.normalize() * 3.0 );
+    }
+    else
+    {
+        //mPhysicsRigidBody->setLinearVelocity( velocity.normalize() * 3.0 );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 bots::BlockSensorPtr AgentEntity::GetBlockSensor()

@@ -74,10 +74,6 @@ void HoldBlockSensor::CollectInformation()
 
     //Reset results from last frame
     mHoldingBlock = false;
-    if( mAgentEntity->IsBuilding() )
-    {
-        mAgentEntity->SetBuildMode( false );
-    }
 
     mLineSegmentIntersector->reset();
     mLineSegmentIntersector->setStart( startPoint );
@@ -92,6 +88,11 @@ void HoldBlockSensor::CollectInformation()
     if( mLineSegmentIntersector->containsIntersections() )
     {
         mHoldingBlock = true;
+    }
+
+    if( !mHoldingBlock && mAgentEntity->IsBuilding() )
+    {
+        mAgentEntity->SetBuildMode( false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

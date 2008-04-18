@@ -87,13 +87,13 @@ btCompoundShape* Agent::CreateCompoundShape()
     btTransform transform;
     transform.setIdentity();
     compoundShape->addChildShape( transform, mainBox );
-    transform.setOrigin( btVector3( -offset, 0.0, offset ) );
+    transform.setOrigin( btVector3( -offset, 0.0, 2.0 * boxHalfWidth ) );
     compoundShape->addChildShape( transform, leftHolderBox );
-    transform.setOrigin( btVector3( 0.0, -offset, offset ) );
+    transform.setOrigin( btVector3( 0.0, -offset, 2.0 * boxHalfWidth ) );
     compoundShape->addChildShape( transform, nearHolderBox );
-    transform.setOrigin( btVector3( offset, 0.0, offset ) );
+    transform.setOrigin( btVector3( offset, 0.0, 2.0 * boxHalfWidth ) );
     compoundShape->addChildShape( transform, rightHolderBox );
-    transform.setOrigin( btVector3( 0.0, offset, offset ) );
+    transform.setOrigin( btVector3( 0.0, offset, 2.0 * boxHalfWidth ) );
     compoundShape->addChildShape( transform, farHolderBox );
 
     return compoundShape;
