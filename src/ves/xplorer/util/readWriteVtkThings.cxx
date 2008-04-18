@@ -53,9 +53,12 @@
 #include <ves/xplorer/util/DataObjectHandler.h>
 #include <ves/xplorer/util/ComputeDataObjectBoundsCallback.h>
 
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/operations.hpp>
+
 using namespace ves::xplorer::util;
 
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void ves::xplorer::util::printWhatItIs( vtkDataObject * dataSet )
 {
     if( dataSet == NULL )
@@ -65,8 +68,8 @@ void ves::xplorer::util::printWhatItIs( vtkDataObject * dataSet )
     }
     std::cout << dataSet->GetClassName() << std::endl;
 }
-///////////////////////////////////////////////////////
-void ves::xplorer::util::printBounds( vtkDataObject* dataObject )//double bounds[6] )
+///////////////////////////////////////////////////////////////////////////////
+void ves::xplorer::util::printBounds( vtkDataObject* dataObject )
 {
     double bounds[6];
     DataObjectHandler dataObjectHandler;
@@ -89,9 +92,26 @@ void ves::xplorer::util::printBounds( vtkDataObject* dataObject )//double bounds
         boundsCallback = 0;
     }
 }
-/////////////////////////////////////////////////////////////////////////////
-vtkDataObject* ves::xplorer::util::readVtkThing( std::string vtkFilename, int printFlag )
+///////////////////////////////////////////////////////////////////////////////
+vtkDataObject* ves::xplorer::util::readVtkThing( 
+	std::string vtkFilename, int printFlag )
 {
+	try
+    {
+        if( !boost::filesystem::exists( vtkFilename ) )
+        {
+            std::cout << "|\tFile " << vtkFilename 
+            << " does not exist." << std::endl;
+            return 0;
+        }
+    }
+    catch( ... )
+    {
+        std::cout << "|\tFile " << vtkFilename 
+            << " does not exist." << std::endl;
+        return 0;
+    }
+
     cfdVTKFileHandler fileReader;
     vtkDataObject* temp = fileReader.GetDataSetFromFile( vtkFilename );
     if( printFlag )
@@ -101,8 +121,9 @@ vtkDataObject* ves::xplorer::util::readVtkThing( std::string vtkFilename, int pr
     }
     return temp;
 }
-///////////////////////////////////////////////////////////////////////////////////////////////
-bool ves::xplorer::util::writeVtkThing( vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
+///////////////////////////////////////////////////////////////////////////////
+bool ves::xplorer::util::writeVtkThing( 
+	vtkDataObject* vtkThing, std::string vtkFilename, int binaryFlag )
 {
     cfdVTKFileHandler fileWriter;
     if( !binaryFlag )
