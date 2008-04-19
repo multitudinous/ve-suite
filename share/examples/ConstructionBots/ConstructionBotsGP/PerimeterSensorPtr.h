@@ -31,83 +31,25 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CONSTRUCTION_WORLD_H
-#define CONSTRUCTION_WORLD_H
+#ifndef PERIMETER_SENSOR_PTR_H
+#define PERIMETER_SENSOR_PTR_H
 
-// --- VE-Suite Includes --- //
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-    class DCS;
-    class CADEntity;
-    class PhysicsSimulator;
-#ifdef VE_SOUND
-    class Sound;
-#endif
-}
-}
-}
-
-// --- OSG Includes --- //
-#include <osg/ref_ptr>
-
-// --- osgAL Includes --- //
-#ifdef VE_SOUND
-namespace osgAL
-{
-    class SoundManager;
-}
-#endif
-
-// --- C/C++ Includes --- //
-#include <map>
-#include <vector>
-#include <string>
+#include <ves/util/PointerTypes.h>
 
 namespace bots
 {
-// --- My Includes --- //
-class GridEntity;
-class BlockEntity;
-class AgentEntity;
+class PerimeterSensor;
 
-class ConstructionWorld
-{
-public:
-    ConstructionWorld(
-        ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
-#ifdef VE_SOUND
-        ,
-        osgAL::SoundManager* soundManager
-#endif
-        );
+//Typedef for a SmartPtr type for the PerimeterSensor
+typedef ves::util::ClassPtrDef< PerimeterSensor >::type
+    PerimeterSensorPtr;
+typedef ves::util::SharedPtrDef< PerimeterSensor >::type
+    PerimeterSensorSharedPtr;
+typedef ves::util::WeakPtrDef< PerimeterSensor >::type
+    PerimeterSensorWeakPtr;
+typedef ves::util::ScopedPtrDef< PerimeterSensor >::type
+    PerimeterSensorScopedPtr;
 
-    ~ConstructionWorld();
-
-    void PreFrameUpdate();
-
-private:
-    void InitializeFramework();
-    void CreateRandomPositions( int gridSize );
-
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
-
-    bots::GridEntity* mGrid;
-    bots::BlockEntity* mStartBlock;
-    std::map< std::string, bots::BlockEntity* > mBlockEntities;
-    std::vector< bots::AgentEntity* > mAgents;
-
-    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
-
-#ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* mAmbientSound;
-#endif
-
-};
 } //end bots
 
-#endif //CONSTRUCTION_WORLD_H
+#endif //PERIMETER_SENSOR_PTR_H

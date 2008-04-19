@@ -38,6 +38,7 @@
 #include "BlockSensorPtr.h"
 #include "HoldBlockSensorPtr.h"
 #include "ObstacleSensorPtr.h"
+#include "PerimeterSensorPtr.h"
 #include "SiteSensorPtr.h"
 
 // --- VE-Suite Includes --- //
@@ -67,6 +68,8 @@ public:
 
     virtual ~AgentEntity();
 
+    void CommunicatingBlocksAlgorithm();
+
     //The agent behaviors
     void AvoidObstacle();
     void Build();
@@ -74,7 +77,6 @@ public:
     void GoToSite();
     void InitiateBuildMode();
     void PickUpBlock();
-    void WanderAround();
 
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
 	ves::xplorer::scenegraph::DCS* GetTargetDCS();
@@ -100,6 +102,9 @@ private:
 
     bool mBuildMode;
 
+    double mMaxSpeed;
+    double mBuildSpeed;
+
     //This in only here to test for collisions and for site interaction
     std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
 
@@ -114,6 +119,7 @@ private:
     bots::BlockSensorPtr mBlockSensor;
     bots::HoldBlockSensorPtr mHoldBlockSensor;
     bots::ObstacleSensorPtr mObstacleSensor;
+    bots::PerimeterSensorPtr mPerimeterSensor;
     bots::SiteSensorPtr mSiteSensor;
     
 };

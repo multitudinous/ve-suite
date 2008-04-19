@@ -31,83 +31,67 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef CONSTRUCTION_WORLD_H
-#define CONSTRUCTION_WORLD_H
+#ifndef PERIMETER_SENSOR_H
+#define PERIMETER_SENSOR_H
 
-// --- VE-Suite Includes --- //
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-    class DCS;
-    class CADEntity;
-    class PhysicsSimulator;
-#ifdef VE_SOUND
-    class Sound;
-#endif
-}
-}
-}
+// --- My Includes --- //
+#include "Sensor.h"
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
-// --- osgAL Includes --- //
-#ifdef VE_SOUND
-namespace osgAL
-{
-    class SoundManager;
-}
-#endif
+#include <osgUtil/LineSegmentIntersector>
 
-// --- C/C++ Includes --- //
-#include <map>
+// --- Bullet Includes --- //
+#include <LinearMath/btVector3.h>
+
+// --- C/C++ Libraries --- //
 #include <vector>
-#include <string>
 
+//Simulates a 3D ring of ultrasound sensors for obstacle detection
 namespace bots
 {
-// --- My Includes --- //
-class GridEntity;
-class BlockEntity;
-class AgentEntity;
-
-class ConstructionWorld
+class PerimeterSensor : public Sensor
 {
 public:
-    ConstructionWorld(
-        ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
-#ifdef VE_SOUND
-        ,
-        osgAL::SoundManager* soundManager
-#endif
-        );
+    PerimeterSensor( bots::AgentEntity* agentEntity );
 
-    ~ConstructionWorld();
+    virtual ~PerimeterSensor();
 
-    void PreFrameUpdate();
+    virtual void CollectInformation();
+
+    btVector3 GetNormalizedResultantForceVector();
+
+	void SetRange( double range );
+
+    bool ObstacleDetected();
 
 private:
-    void InitializeFramework();
-    void CreateRandomPositions( int gridSize );
+    void Initialize();
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+    /* There are eight perimeter sensors as shown below
+        _|____|_
+         |    |
+        _|____|_
+         |    |
+    */
+    void CalculateLocalPositions();
 
-    bots::GridEntity* mGrid;
-    bots::BlockEntity* mStartBlock;
-    std::map< std::string, bots::BlockEntity* > mBlockEntities;
-    std::vector< bots::AgentEntity* > mAgents;
+    void PerimeterFollowing();
 
-    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
+    bool mObstacleDetected;
 
-#ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* mAmbientSound;
-#endif
+    double mRange;
 
+
+    btVector3 mResultantForce;
+
+    osg::ref_ptr< osg::Vec3Array > mLocalPositions;
+
+    std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
+
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 };
 } //end bots
 
-#endif //CONSTRUCTION_WORLD_H
+#endif //PERIMETER_SENSOR_H

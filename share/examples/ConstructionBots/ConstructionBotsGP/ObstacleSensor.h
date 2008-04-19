@@ -76,8 +76,7 @@ private:
     bool mObstacleDetected;
 
     double mAngleIncrement;
-    double mShortRange;
-    double mLongRange;
+    double mRange;
     double mForceRepellingConstant;
     double mForceAttractionConstant;
 

@@ -35,10 +35,12 @@
 #include "AgentEntity.h"
 #include "Agent.h"
 #include "BlockEntity.h"
-#include "ObstacleSensor.h"
 #include "BlockSensor.h"
-#include "SiteSensor.h"
 #include "HoldBlockSensor.h"
+#include "ObstacleSensor.h"
+#include "PerimeterSensor.h"
+#include "SiteSensor.h"
+
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
@@ -58,13 +60,15 @@ AgentEntity::AgentEntity(
     bots::Agent* agent,
     ves::xplorer::scenegraph::DCS* pluginDCS,
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
-:
-CADEntity( agent, pluginDCS, physicsSimulator ),
-mBuildMode( false ),
-mGeometry( agent ),
-mPluginDCS( pluginDCS ),
-mTargetDCS( 0 ),
-mConstraint( 0 )
+    :
+    CADEntity( agent, pluginDCS, physicsSimulator ),
+    mBuildMode( false ),
+    mMaxSpeed( 3.0 ),
+    mBuildSpeed( 1.0 ),
+    mGeometry( agent ),
+    mPluginDCS( pluginDCS ),
+    mTargetDCS( 0 ),
+    mConstraint( 0 )
 {
     Initialize();
 }
@@ -90,15 +94,66 @@ void AgentEntity::Initialize()
         new bots::HoldBlockSensor( this ) );
     mObstacleSensor = bots::ObstacleSensorPtr(
         new bots::ObstacleSensor( this ) );
+    mPerimeterSensor = bots::PerimeterSensorPtr(
+        new bots::PerimeterSensor( this ) );
     mSiteSensor = bots::SiteSensorPtr(
         new bots::SiteSensor( this ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::CommunicatingBlocksAlgorithm()
+{
+    mHoldBlockSensor->CollectInformation();
+    if( !mHoldBlockSensor->HoldingBlock() )
+    {
+        mBlockSensor->CollectInformation();
+        if( mBlockSensor->BlockInView() )
+        {
+            GoToBlock();
+
+            if( mBlockSensor->CloseToBlock() )
+            {
+                PickUpBlock();
+            }
+        }
+        
+        mBlockSensor->DisplayLine( true );
+        mSiteSensor->DisplayLine( false );
+    }
+    else if( IsBuilding() )
+    {
+        Build();
+
+        return;
+    }
+    else
+    {
+        mSiteSensor->CollectInformation();
+        if( mSiteSensor->SiteInView() )
+        {
+            GoToSite();
+
+            if( mSiteSensor->CloseToSite() )
+            {
+                InitiateBuildMode();
+            }
+        }
+
+        mBlockSensor->DisplayLine( false );
+        mSiteSensor->DisplayLine( true );
+    }
+
+    mObstacleSensor->CollectInformation();
+    if( mObstacleSensor->ObstacleDetected() )
+    {
+        AvoidObstacle();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::AvoidObstacle()
 {
     //Get normalized resultant force vector and multiply by speed
     btVector3 linearVelocity =
-        mObstacleSensor->GetNormalizedResultantForceVector() * 3.0;
+        mObstacleSensor->GetNormalizedResultantForceVector() * mMaxSpeed;
     //Keep gravity in velocity
     linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
@@ -107,18 +162,24 @@ void AgentEntity::AvoidObstacle()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
-    btVector3 velocity = GetPhysicsRigidBody()->getLinearVelocity();
-    std::cout << "velocity: ( " << velocity.x() << ", " << velocity.y() << ", " << velocity.z() << " )" << std::endl;
-    if( velocity.length() == 0 )
+    mPerimeterSensor->CollectInformation();
+    if( mPerimeterSensor->ObstacleDetected() )
     {
-        std::cout << "Yayyyyyyyyyyyyyyyyyyyyyy" << std::endl;
+        //Get normalized resultant force vector and multiply by speed
+        btVector3 linearVelocity =
+            mPerimeterSensor->GetNormalizedResultantForceVector() * mBuildSpeed;
+        //Keep gravity in velocity
+        linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+
+        mPhysicsRigidBody->setLinearVelocity( linearVelocity );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToBlock()
 {
     //Get normalized block vector and multiply by speed
-    btVector3 linearVelocity = mBlockSensor->GetNormalizedBlockVector() * 3.0;
+    btVector3 linearVelocity =
+        mBlockSensor->GetNormalizedBlockVector() * mMaxSpeed;
     //Keep gravity in velocity
     linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
@@ -128,7 +189,8 @@ void AgentEntity::GoToBlock()
 void AgentEntity::GoToSite()
 {
     //Get normalized site vector and multiply by speed
-    btVector3 linearVelocity = mSiteSensor->GetNormalizedSiteVector() * 3.0;
+    btVector3 linearVelocity =
+        mSiteSensor->GetNormalizedSiteVector() * mMaxSpeed;
     //Keep gravity in velocity
     linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
@@ -151,17 +213,6 @@ void AgentEntity::InitiateBuildMode()
             mBlockSensor->DisplayLine( false );
             mSiteSensor->DisplayLine( false );
             
-            double transArray[ 3 ];
-            transArray[ 0 ] = static_cast< int >( position[ 0 ] + 0.5 );
-            transArray[ 1 ] = static_cast< int >( position[ 1 ] + 0.5 );
-            transArray[ 2 ] = position[ 2 ];
-
-            std::cout << mDCS->GetName() << " position: ( " << transArray[ 0 ] << ", "
-                                                            << transArray[ 1 ] << " )"
-                                                            << std::endl << std::endl;
-
-
-
             mBuildMode = true;
         }
     }
@@ -183,20 +234,6 @@ void AgentEntity::PickUpBlock()
         mTargetDCS->SetTranslationArray( transArray );
 
         mTargetDCS = NULL;
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::WanderAround()
-{
-    btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
-
-    if( velocity.length() < 0.05 )
-    {
-        //mPhysicsRigidBody->setLinearVelocity( velocity.normalize() * 3.0 );
-    }
-    else
-    {
-        //mPhysicsRigidBody->setLinearVelocity( velocity.normalize() * 3.0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

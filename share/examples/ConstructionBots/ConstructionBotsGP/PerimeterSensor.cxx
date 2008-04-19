@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- My Includes --- //
-#include "ObstacleSensor.h"
+#include "PerimeterSensor.h"
 #include "AgentEntity.h"
 
 // --- OSG Includes --- //
@@ -48,67 +48,113 @@ using namespace bots;
 const double piDivOneEighty = 0.0174532925;
 
 ////////////////////////////////////////////////////////////////////////////////
-ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
+PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     :
     Sensor( agentEntity ),
     mObstacleDetected( false ),
-    mAngleIncrement( 20 ),
-    mRange( 0 ),
-    mForceRepellingConstant( 2.0 ),
-    mForceAttractionConstant( 1.0 ),
+    mRange( 0.01 ),
     mResultantForce( 0, 0, 0 ),
+    mLocalPositions( new osg::Vec3Array() ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
                                  osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
 {
-    ;
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ObstacleSensor::~ObstacleSensor()
+PerimeterSensor::~PerimeterSensor()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::CollectInformation()
+void PerimeterSensor::Initialize()
+{
+    CalculateLocalPositions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void PerimeterSensor::CalculateLocalPositions()
+{
+    mLocalPositions->resize( 16 );
+
+    double blockHalfWidth = 0.5;
+    osg::Vec3d rightStartPoint, rightEndPoint;
+    rightStartPoint.set( blockHalfWidth, -blockHalfWidth, 0 );
+    rightEndPoint.set( blockHalfWidth + mRange, -blockHalfWidth, 0 );
+
+    osg::Vec3d leftStartPoint, leftEndPoint;
+    leftStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
+    leftEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
+
+    //Rotate vector about point( 0, 0, 0 ) by theta
+    //x' = x * cos( theta ) - y * sin( theta );
+    //y' = x * sin( theta ) + y * cos( theta );
+    for( int i = 0; i < 4; ++i )
+    {
+        double x, y, xNew, yNew;
+        double cosTheta = cos( i * 90 * piDivOneEighty );
+        double sinTheta = sin( i * 90 * piDivOneEighty );
+        
+        x = rightStartPoint.x();
+        y = rightStartPoint.y();
+        xNew = ( x * cosTheta ) - ( y * sinTheta );
+        yNew = ( x * sinTheta ) + ( y * cosTheta );
+        (*mLocalPositions)[ i * 4 ] = osg::Vec3( xNew, yNew, 0 );
+
+        x = rightEndPoint.x();
+        y = rightEndPoint.y();
+        xNew = ( x * cosTheta ) - ( y * sinTheta );
+        yNew = ( x * sinTheta ) + ( y * cosTheta );
+        (*mLocalPositions)[ i * 4 + 1 ] = osg::Vec3( xNew, yNew, 0 );
+
+        x = leftStartPoint.x();
+        y = leftStartPoint.y();
+        xNew = ( x * cosTheta ) - ( y * sinTheta );
+        yNew = ( x * sinTheta ) + ( y * cosTheta );
+        (*mLocalPositions)[ i * 4 + 2 ] = osg::Vec3( xNew, yNew, 0 );
+
+        x = leftEndPoint.x();
+        y = leftEndPoint.y();
+        xNew = ( x * cosTheta ) - ( y * sinTheta );
+        yNew = ( x * sinTheta ) + ( y * cosTheta );
+        (*mLocalPositions)[ i * 4 + 3 ] = osg::Vec3( xNew, yNew, 0 );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PerimeterSensor::CollectInformation()
 {
     //Get the DCSs
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
         mAgentEntity->GetPluginDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
-        mAgentEntity->GetTargetDCS();
 
     //Reset results from last frame
     mIntersections.clear();
 
-    osg::Vec3d startPoint, endPoint;
-    startPoint = agentDCS->getPosition();
-    mLineSegmentIntersector->setStart( startPoint );
-    for( double angle = 0; angle < 360; )
+    osg::Vec3d agentPosition = agentDCS->getPosition();
+    for( int i = 0; i < 8; ++i )
     {
-        endPoint.set( startPoint.x() + mRange * cos( angle * piDivOneEighty ), 
-                      startPoint.y() + mRange * sin( angle * piDivOneEighty ), 
-                      startPoint.z() );
+        osg::Vec3d startPoint = (*mLocalPositions)[ i * 2 ];
+        osg::Vec3d endPoint = (*mLocalPositions)[ i * 2 + 1 ];
+
+        startPoint += agentPosition;
+        endPoint += agentPosition;
 
         mLineSegmentIntersector->reset();
+        mLineSegmentIntersector->setStart( startPoint );
         mLineSegmentIntersector->setEnd( endPoint );
 
         osgUtil::IntersectionVisitor intersectionVisitor(
             mLineSegmentIntersector.get() );
 
         pluginDCS->RemoveChild( agentDCS.get() );
-        pluginDCS->RemoveChild( targetDCS.get() );
         pluginDCS->accept( intersectionVisitor );
         pluginDCS->AddChild( agentDCS.get() );
-        pluginDCS->AddChild( targetDCS.get() );
 
         if( mLineSegmentIntersector->containsIntersections() )
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
         }
-
-        angle += mAngleIncrement;
     }
 
     if( !mIntersections.empty() )
@@ -121,108 +167,39 @@ void ObstacleSensor::CollectInformation()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 ObstacleSensor::GetNormalizedResultantForceVector()
+btVector3 PerimeterSensor::GetNormalizedResultantForceVector()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
-        mAgentEntity->GetTargetDCS();
-
-    double* agentPosition = agentDCS->GetVETranslationArray();
-    if( targetDCS.valid() )
-    {
-        double* targetPosition = targetDCS->GetVETranslationArray();
-        VirtualForceField( agentPosition, targetPosition );
-    }
-    else
-    {
-        WallFollowing( agentPosition );
-    }
+    PerimeterFollowing();
 
     return mResultantForce.normalize();
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
-{
-    btVector3 repulsiveForce( 0, 0, 0 );
-
-    for( size_t i = 0; i < mIntersections.size(); ++i )
-    {
-        osg::Vec3d intersect = mIntersections.at( i ).getWorldIntersectPoint();
-        btVector3 deltaForce( intersect.x() - agentPosition[ 0 ],
-                              intersect.y() - agentPosition[ 1 ], 0 );
-
-        double variables = mForceRepellingConstant / deltaForce.length2();
-        deltaForce /= deltaForce.length();
-        deltaForce *= variables;
-
-        repulsiveForce -= deltaForce;
-    }
-
-    return repulsiveForce;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::VirtualForceField(
-    double* agentPosition, double* targetPosition )
+void PerimeterSensor::PerimeterFollowing()
 {
     btVector3 totalForce( 0, 0, 0 );
 
     //Calculate the total repulsive force
-    totalForce = GetRepulsiveForce( agentPosition );
 
-    //Calculate the target force        
-    btVector3 targetForce( targetPosition[ 0 ] - agentPosition[ 0 ],
-                           targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
 
-    //Gets normalized
-    targetForce /= targetForce.length();
-    targetForce *= mForceAttractionConstant;
+    osg::Vec3d intersect = mIntersections.at( 0 ).getWorldIntersectPoint();
+    btVector3 repulsiveForce( intersect.x() - 0,
+                              intersect.y() - 0, 0 );
 
-    totalForce += targetForce;
-
-    mResultantForce = totalForce;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::WallFollowing( double* agentPosition )
-{
-    btVector3 totalForce( 0, 0, 0 );
-
-    //Calculate the total repulsive force
-    totalForce = GetRepulsiveForce( agentPosition );
-
-    //Calculate the target force
-    //Rotate vector about point( 0, 0, 0 ) by theta
-    //x' = x * cos( theta ) - y * sin( theta );
-    //y' = x * sin( theta ) + y * cos( theta );
+    totalForce = -repulsiveForce;
 
     //Grab the repulsive force vector from last calculation
     double x = totalForce.x();
     double y = totalForce.y();
 
-    double cosTheta = cos( 165 * piDivOneEighty );
-    double sinTheta = sin( 165 * piDivOneEighty );
-    
-    double xNew = ( x * cosTheta ) - ( y * sinTheta );
-    double yNew = ( x * sinTheta ) + ( y * cosTheta );
-
-    //Repulsive and target forces will have same magnitude
-    btVector3 targetForce( xNew, yNew, 0 );
-    totalForce += targetForce;
-
-    mResultantForce = totalForce;
+    mResultantForce.setValue( -y, x, 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::SetAngleIncrement( double angleIncrement )
-{
-    mAngleIncrement = angleIncrement;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::SetRange( double range )
+void PerimeterSensor::SetRange( double range )
 {
     mRange = range;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ObstacleSensor::ObstacleDetected()
+bool PerimeterSensor::ObstacleDetected()
 {
     return mObstacleDetected;
 }

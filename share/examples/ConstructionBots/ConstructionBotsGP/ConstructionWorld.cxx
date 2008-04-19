@@ -75,16 +75,16 @@ ConstructionWorld::ConstructionWorld(
     osgAL::SoundManager* soundManager
 #endif
     )
-:
-mGrid( 0 ),
-mAgents( 0 ),
-mStartBlock( 0 ),
-mPluginDCS( pluginDCS ),
-mPhysicsSimulator( physicsSimulator )
+    :
+    mGrid( 0 ),
+    mAgents( 0 ),
+    mStartBlock( 0 ),
+    mPluginDCS( pluginDCS ),
+    mPhysicsSimulator( physicsSimulator )
 #ifdef VE_SOUND
-,
-mAmbientSound( new ves::xplorer::scenegraph::Sound(
-                   "AmbientSound", pluginDCS, soundManager ) )
+    ,
+    mAmbientSound( new ves::xplorer::scenegraph::Sound(
+                       "AmbientSound", pluginDCS, soundManager ) )
 #endif
 {
     //Initialize the construction bot framework
@@ -145,8 +145,8 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 20;
-    int numAgents = 3;
+    int numBlocks = 5;
+    int numAgents = 1;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -244,6 +244,7 @@ void ConstructionWorld::InitializeFramework()
 
         //Set the sensor range for the agents
         agentEntity->GetBlockSensor()->SetRange( gridSize * 0.25 );
+        agentEntity->GetObstacleSensor()->SetRange( gridSize * 0.25 );
         agentEntity->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
 
         //Set name and descriptions for blocks
@@ -341,71 +342,14 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionWorld::CommunicatingBlocksAlgorithm()
-{
-    for( size_t i = 0; i < mAgents.size(); ++i )
-    {
-        bots::AgentEntity* agent = mAgents.at( i );
-        bots::ObstacleSensorPtr obstacleSensor = agent->GetObstacleSensor();
-        bots::BlockSensorPtr blockSensor = agent->GetBlockSensor();
-        bots::SiteSensorPtr siteSensor = agent->GetSiteSensor();
-        bots::HoldBlockSensorPtr holdBlockSensor = agent->GetHoldBlockSensor();
-
-        holdBlockSensor->CollectInformation();
-        if( !holdBlockSensor->HoldingBlock() )
-        {
-            blockSensor->CollectInformation();
-            if( blockSensor->BlockInView() )
-            {
-                agent->GoToBlock();
-
-                if( blockSensor->CloseToBlock() )
-                {
-                    agent->PickUpBlock();
-                }
-            }
-            
-            blockSensor->DisplayLine( true );
-            siteSensor->DisplayLine( false );
-        }
-        else if( !agent->IsBuilding() )
-        {
-            siteSensor->CollectInformation();
-            if( siteSensor->SiteInView() )
-            {
-                agent->GoToSite();
-
-                if( siteSensor->CloseToSite() )
-                {
-                    agent->InitiateBuildMode();
-                }
-            }
-
-            blockSensor->DisplayLine( false );
-            siteSensor->DisplayLine( true );
-        }
-        else
-        {
-            agent->Build();
-        }
-
-
-        //Need to look at this
-        //agent->WanderAround();
-
-        obstacleSensor->CollectInformation();
-        if( obstacleSensor->ObstacleDetected() )
-        {
-            agent->AvoidObstacle();
-        }
-    }
-}
-////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::PreFrameUpdate()
 {
     if( !mPhysicsSimulator->GetIdle() )
     {
-        CommunicatingBlocksAlgorithm();
+        for( size_t i = 0; i < mAgents.size(); ++i )
+        {
+            mAgents.at( i )->CommunicatingBlocksAlgorithm();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
