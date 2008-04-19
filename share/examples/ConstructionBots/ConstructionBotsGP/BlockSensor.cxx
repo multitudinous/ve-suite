@@ -208,7 +208,7 @@ bool BlockSensor::CloseToBlock()
     return mCloseToBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 BlockSensor::GetNormalizedBlockVector()
+const btVector3& BlockSensor::GetNormalizedBlockVector()
 {
     return mNormalizedBlockVector;
 }

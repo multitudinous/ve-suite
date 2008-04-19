@@ -55,16 +55,15 @@ class PerimeterSensor : public Sensor
 {
 public:
     PerimeterSensor( bots::AgentEntity* agentEntity );
-
     virtual ~PerimeterSensor();
 
     virtual void CollectInformation();
 
-    btVector3 GetNormalizedResultantForceVector();
+    const btVector3& GetNormalizedResultantForceVector();
 
 	void SetRange( double range );
 
-    bool ObstacleDetected();
+    bool PerimeterDetected();
 
 private:
     void Initialize();
@@ -76,21 +75,21 @@ private:
          |    |
     */
     void CalculateLocalPositions();
-
     void PerimeterFollowing();
 
-    bool mObstacleDetected;
+    bool mPerimeterDetected;
 
     double mRange;
 
-
     btVector3 mResultantForce;
 
-    osg::ref_ptr< osg::Vec3Array > mLocalPositions;
-
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
+    
+    std::pair< osg::Vec3d, osg::Vec3d > mLastDetectionCCW;
 
+    osg::ref_ptr< osg::Vec3Array > mLocalPositions;
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
+
 };
 } //end bots
 

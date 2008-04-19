@@ -48,8 +48,8 @@ using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsGP::ConstructionBotsGP()
-:
-PluginBase()
+    :
+    PluginBase()
 {
     mObjectName = "ConstructionBotsUI";
 }
@@ -65,11 +65,10 @@ void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldD
 
     mConstructionWorld = bots::ConstructionWorldPtr(
         new bots::ConstructionWorld( mDCS.get(),
-                                     mPhysicsSimulator
 #ifdef VE_SOUND
-                                   , mSoundManager
+                                     mSoundManager,
 #endif
-                                     ) );
+                                     mPhysicsSimulator ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionBotsGP::PreFrameUpdate()

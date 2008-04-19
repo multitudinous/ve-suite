@@ -74,7 +74,7 @@ public:
     bool SiteInView();
     bool CloseToSite();
 
-    btVector3 GetNormalizedSiteVector();
+    const btVector3& GetNormalizedSiteVector();
 
     void SetRange( double range );
 

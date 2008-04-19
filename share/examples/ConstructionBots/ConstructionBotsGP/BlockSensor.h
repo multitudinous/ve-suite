@@ -74,7 +74,7 @@ public:
     bool BlockInView();
     bool CloseToBlock();
 
-    btVector3 GetNormalizedBlockVector();
+    const btVector3& GetNormalizedBlockVector();
 
     void SetRange( double range );
 

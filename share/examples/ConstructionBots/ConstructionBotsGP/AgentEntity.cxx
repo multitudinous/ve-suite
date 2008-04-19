@@ -41,7 +41,6 @@
 #include "PerimeterSensor.h"
 #include "SiteSensor.h"
 
-
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -64,7 +63,7 @@ AgentEntity::AgentEntity(
     CADEntity( agent, pluginDCS, physicsSimulator ),
     mBuildMode( false ),
     mMaxSpeed( 3.0 ),
-    mBuildSpeed( 1.0 ),
+    mBuildSpeed( 2.0 ),
     mGeometry( agent ),
     mPluginDCS( pluginDCS ),
     mTargetDCS( 0 ),
@@ -121,6 +120,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
     }
     else if( IsBuilding() )
     {
+        mPerimeterSensor->CollectInformation();
         Build();
 
         return;
@@ -135,6 +135,8 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
             if( mSiteSensor->CloseToSite() )
             {
                 InitiateBuildMode();
+
+                return;
             }
         }
 
@@ -161,18 +163,14 @@ void AgentEntity::AvoidObstacle()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
-{
-    mPerimeterSensor->CollectInformation();
-    if( mPerimeterSensor->ObstacleDetected() )
-    {
-        //Get normalized resultant force vector and multiply by speed
-        btVector3 linearVelocity =
-            mPerimeterSensor->GetNormalizedResultantForceVector() * mBuildSpeed;
-        //Keep gravity in velocity
-        linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
+{  
+    //Get normalized resultant force vector and multiply by speed
+    btVector3 linearVelocity =
+        mPerimeterSensor->GetNormalizedResultantForceVector() * mBuildSpeed;
+    //Keep gravity in velocity
+    linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
-        mPhysicsRigidBody->setLinearVelocity( linearVelocity );
-    }
+    mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::GoToBlock()
@@ -207,13 +205,16 @@ void AgentEntity::InitiateBuildMode()
             targetEntity->GetPhysicsRigidBody() );
         if( collision )
         {
-            double* position = mDCS->GetVETranslationArray();
-            //GetPhysicsRigidBody()->clearForces();
             mTargetDCS = NULL;
             mBlockSensor->DisplayLine( false );
             mSiteSensor->DisplayLine( false );
-            
             mBuildMode = true;
+
+            //btVector3 linearVelocity( 0, 0, 0 );
+            //Keep gravity in velocity
+            //linearVelocity.setZ(
+                //mPhysicsRigidBody->getLinearVelocity().getZ() );
+            //GetPhysicsRigidBody()->setLinearVelocity( linearVelocity );
         }
     }
 }
@@ -252,14 +253,19 @@ bots::ObstacleSensorPtr AgentEntity::GetObstacleSensor()
     return mObstacleSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()
+bots::PerimeterSensorPtr AgentEntity::GetPerimeterSensor()
 {
-	return mPluginDCS.get();
+    return mPerimeterSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bots::SiteSensorPtr AgentEntity::GetSiteSensor()
 {
     return mSiteSensor;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()
+{
+	return mPluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()

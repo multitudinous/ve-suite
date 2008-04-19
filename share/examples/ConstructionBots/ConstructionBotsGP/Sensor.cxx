@@ -39,8 +39,8 @@ using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 Sensor::Sensor( bots::AgentEntity* agentEntity )
-:
-mAgentEntity( agentEntity )
+    :
+    mAgentEntity( agentEntity )
 {
    ;
 }

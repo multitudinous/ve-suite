@@ -211,7 +211,7 @@ bool SiteSensor::CloseToSite()
     return mCloseToSite;
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 SiteSensor::GetNormalizedSiteVector()
+const btVector3& SiteSensor::GetNormalizedSiteVector()
 {
     return mNormalizedSiteVector;
 }

@@ -49,8 +49,8 @@ Block::Block()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Block::Block( const Block& block, const osg::CopyOp& copyop )
-:
-osg::Geode( block, copyop )
+    :
+    osg::Geode( block, copyop )
 {
     if( &block != this )
     {

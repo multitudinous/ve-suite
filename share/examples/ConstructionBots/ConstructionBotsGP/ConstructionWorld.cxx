@@ -69,12 +69,10 @@ using namespace bots;
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionWorld::ConstructionWorld(
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-    ,
-    osgAL::SoundManager* soundManager
+    osgAL::SoundManager* soundManager,
 #endif
-    )
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     mGrid( 0 ),
     mAgents( 0 ),
@@ -146,7 +144,7 @@ void ConstructionWorld::InitializeFramework()
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
     int numBlocks = 5;
-    int numAgents = 1;
+    int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 

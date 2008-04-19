@@ -121,7 +121,7 @@ void ObstacleSensor::CollectInformation()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 ObstacleSensor::GetNormalizedResultantForceVector()
+const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 {
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
@@ -199,8 +199,8 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
     double x = totalForce.x();
     double y = totalForce.y();
 
-    double cosTheta = cos( 165 * piDivOneEighty );
-    double sinTheta = sin( 165 * piDivOneEighty );
+    double cosTheta = cos( 175 * piDivOneEighty );
+    double sinTheta = sin( 175 * piDivOneEighty );
     
     double xNew = ( x * cosTheta ) - ( y * sinTheta );
     double yNew = ( x * sinTheta ) + ( y * cosTheta );

@@ -46,12 +46,12 @@ using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 HoldBlockSensor::HoldBlockSensor( bots::AgentEntity* agentEntity )
-:
-Sensor( agentEntity ),
-mHoldingBlock( false ),
-mRange( 0.6 ),
-mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-                             osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
+    :
+    Sensor( agentEntity ),
+    mHoldingBlock( false ),
+    mRange( 0.6 ),
+    mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
+                                 osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
 {
     ;
 }

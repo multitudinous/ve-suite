@@ -84,6 +84,7 @@ public:
     bots::BlockSensorPtr GetBlockSensor();
     bots::HoldBlockSensorPtr GetHoldBlockSensor();
     bots::ObstacleSensorPtr GetObstacleSensor();
+    bots::PerimeterSensorPtr GetPerimeterSensor();
     bots::SiteSensorPtr GetSiteSensor();
 
     void SetBlockEntityMap(

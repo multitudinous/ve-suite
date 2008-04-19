@@ -52,8 +52,8 @@ Agent::Agent()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Agent::Agent( const Agent& agent, const osg::CopyOp& copyop )
-:
-osg::Geode( agent, copyop )
+    :
+    osg::Geode( agent, copyop )
 {
     if( &agent != this )
     {

@@ -79,12 +79,10 @@ class ConstructionWorld
 public:
     ConstructionWorld(
         ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
 #ifdef VE_SOUND
-        ,
-        osgAL::SoundManager* soundManager
+        osgAL::SoundManager* soundManager,
 #endif
-        );
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     ~ConstructionWorld();
 

@@ -51,9 +51,10 @@ const double piDivOneEighty = 0.0174532925;
 PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     :
     Sensor( agentEntity ),
-    mObstacleDetected( false ),
-    mRange( 0.01 ),
+    mPerimeterDetected( false ),
+    mRange( 0.1 ),
     mResultantForce( 0, 0, 0 ),
+    mLastDetectionCCW( osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) ),
     mLocalPositions( new osg::Vec3Array() ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
                                  osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
@@ -77,11 +78,11 @@ void PerimeterSensor::CalculateLocalPositions()
 
     double blockHalfWidth = 0.5;
     osg::Vec3d rightStartPoint, rightEndPoint;
-    rightStartPoint.set( blockHalfWidth, -blockHalfWidth, 0 );
+    rightStartPoint.set( blockHalfWidth - mRange, -blockHalfWidth, 0 );
     rightEndPoint.set( blockHalfWidth + mRange, -blockHalfWidth, 0 );
 
     osg::Vec3d leftStartPoint, leftEndPoint;
-    leftStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
+    leftStartPoint.set( blockHalfWidth - mRange, blockHalfWidth, 0 );
     leftEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
@@ -127,9 +128,10 @@ void PerimeterSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
 
-    //Reset results from last frame
+    //Reset intersections from last frame
     mIntersections.clear();
 
+    bool previousDetection( false );
     osg::Vec3d agentPosition = agentDCS->getPosition();
     for( int i = 0; i < 8; ++i )
     {
@@ -154,44 +156,72 @@ void PerimeterSensor::CollectInformation()
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
+
+            //Store the current detection
+            mLastDetectionCCW.first = startPoint;
+            mLastDetectionCCW.second = endPoint;
+
+            previousDetection = true;
+        }
+        else
+        {
+            if( previousDetection )
+            {
+                i = 7;
+            }
+
+            previousDetection = false;
         }
     }
 
     if( !mIntersections.empty() )
     {
-        mObstacleDetected = true;
+        mPerimeterDetected = true;
     }
     else
     {
-        mObstacleDetected = false;
+        mPerimeterDetected = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-btVector3 PerimeterSensor::GetNormalizedResultantForceVector()
+const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 {
     PerimeterFollowing();
 
-    return mResultantForce.normalize();
+    if( mResultantForce.length() != 0.0 )
+    {
+        return mResultantForce.normalize();
+    }
+
+    return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::PerimeterFollowing()
 {
-    btVector3 totalForce( 0, 0, 0 );
-
     //Calculate the total repulsive force
+    btVector3 repulsiveForce( 0, 0, 0 );
 
+    double x = mLastDetectionCCW.first.x() - mLastDetectionCCW.second.x();
+    double y = mLastDetectionCCW.first.y() - mLastDetectionCCW.second.y();
+    if( mIntersections.empty() )
+    {
+        repulsiveForce.setX( -x );
+        repulsiveForce.setY( -y );
+    }
+    else if( mIntersections.size() == 1 )
+    {   
+        repulsiveForce.setX( -y );
+        repulsiveForce.setY(  x );
+    }
+    else
+    {
+        repulsiveForce.setX( x );
+        repulsiveForce.setY( y );
+    }
 
-    osg::Vec3d intersect = mIntersections.at( 0 ).getWorldIntersectPoint();
-    btVector3 repulsiveForce( intersect.x() - 0,
-                              intersect.y() - 0, 0 );
+    //May need to reduce rounding error here
 
-    totalForce = -repulsiveForce;
-
-    //Grab the repulsive force vector from last calculation
-    double x = totalForce.x();
-    double y = totalForce.y();
-
-    mResultantForce.setValue( -y, x, 0 );
+    mResultantForce = repulsiveForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::SetRange( double range )
@@ -199,8 +229,8 @@ void PerimeterSensor::SetRange( double range )
     mRange = range;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PerimeterSensor::ObstacleDetected()
+bool PerimeterSensor::PerimeterDetected()
 {
-    return mObstacleDetected;
+    return mPerimeterDetected;
 }
 ////////////////////////////////////////////////////////////////////////////////

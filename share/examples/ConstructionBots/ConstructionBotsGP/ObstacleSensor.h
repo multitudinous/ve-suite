@@ -60,7 +60,7 @@ public:
 
     virtual void CollectInformation();
 
-    btVector3 GetNormalizedResultantForceVector();
+    const btVector3& GetNormalizedResultantForceVector();
 
 	void SetAngleIncrement( double angleIncrement );
 	void SetRange( double range );

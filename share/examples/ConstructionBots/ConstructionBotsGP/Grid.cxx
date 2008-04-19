@@ -50,8 +50,8 @@ Grid::Grid()
 }
 ////////////////////////////////////////////////////////////////////////////////
 Grid::Grid( const Grid& grid, const osg::CopyOp& copyop )
-:
-osg::Geode( grid, copyop )
+    :
+    osg::Geode( grid, copyop )
 {
     ;
 }
