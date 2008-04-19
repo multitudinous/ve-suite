@@ -62,8 +62,8 @@ public:
 
     const btVector3& GetNormalizedResultantForceVector();
 
-	void SetAngleIncrement( double angleIncrement );
-	void SetRange( double range );
+    void SetAngleIncrement( double angleIncrement );
+    void SetRange( double range );
 
     bool ObstacleDetected();
 

@@ -66,7 +66,8 @@ void Grid::Initialize()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occMatrix )
+void Grid::CreateGrid(
+    int gridSize, std::map< std::pair< int, int >, bool > occMatrix )
 {
     //osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     //stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -87,17 +88,17 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
     osg::ref_ptr< osg::Vec3Array > gridVertices = new osg::Vec3Array();
     for( int j = 0; j < gridSize; ++j )
     {
-	    for( int i = 0; i < gridSize; ++i )
-	    {
-		    gridVertices->push_back( osg::Vec3( i -       halfGridSize,
+        for( int i = 0; i < gridSize; ++i )
+        {
+            gridVertices->push_back( osg::Vec3( i -       halfGridSize,
                                                -j +       halfGridSize, 0.0f ) );
-		    gridVertices->push_back( osg::Vec3( i -       halfGridSize,
+            gridVertices->push_back( osg::Vec3( i -       halfGridSize,
                                                -j - 1.0 + halfGridSize, 0.0f ) );
-		    gridVertices->push_back( osg::Vec3( i + 1.0 - halfGridSize,
+            gridVertices->push_back( osg::Vec3( i + 1.0 - halfGridSize,
                                                -j - 1.0 + halfGridSize, 0.0f ) );
-		    gridVertices->push_back( osg::Vec3( i + 1.0 - halfGridSize,
+            gridVertices->push_back( osg::Vec3( i + 1.0 - halfGridSize,
                                                -j +       halfGridSize, 0.0f ) );
-	    }
+        }
     }
     grid->setVertexArray( gridVertices.get() );
 
@@ -105,15 +106,15 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
     std::map< std::pair< int, int >, bool >::const_iterator itr;
     for( itr = occMatrix.begin(); itr != occMatrix.end(); ++itr )
     {
-	    if( itr->second == true )
-	    {
-		    gridColor->push_back( osg::Vec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
-	    }
+        if( itr->second == true )
+        {
+            gridColor->push_back( osg::Vec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
+        }
 
-	    else if( itr->second == false )
-	    {
-		    gridColor->push_back( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-	    }
+        else if( itr->second == false )
+        {
+            gridColor->push_back( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        }
     }
     grid->setColorArray( gridColor.get() );
     grid->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
@@ -126,7 +127,7 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
     grid->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, gridVertices->size() ) );
     addDrawable( grid.get() );
-    
+
     osg::ref_ptr< osg::Geometry > platform = new osg::Geometry();
     osg::ref_ptr< osg::StateSet > platformStateSet = new osg::StateSet();
     platformStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -189,13 +190,13 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
     osg::ref_ptr< osg::Vec3Array > lineVertices = new osg::Vec3Array();
     for( int i = 0; i <= gridSize; ++i )
     {
-	    lineVertices->push_back( osg::Vec3( -halfGridSize, -i + halfGridSize, 0.0f ) );
-	    lineVertices->push_back( osg::Vec3(  halfGridSize, -i + halfGridSize, 0.0f ) );
+        lineVertices->push_back( osg::Vec3( -halfGridSize, -i + halfGridSize, 0.0f ) );
+        lineVertices->push_back( osg::Vec3(  halfGridSize, -i + halfGridSize, 0.0f ) );
 
-	    lineVertices->push_back( osg::Vec3( i - halfGridSize,  halfGridSize, 0.0f ) );
-	    lineVertices->push_back( osg::Vec3( i - halfGridSize, -halfGridSize, 0.0f ) );
-   }
-	
+        lineVertices->push_back( osg::Vec3( i - halfGridSize,  halfGridSize, 0.0f ) );
+        lineVertices->push_back( osg::Vec3( i - halfGridSize, -halfGridSize, 0.0f ) );
+    }
+
     lineVertices->push_back( osg::Vec3( -halfGridSize, halfGridSize,  0.0f ) );
     lineVertices->push_back( osg::Vec3( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
 
@@ -275,7 +276,7 @@ void Grid::CreateGrid( int gridSize, std::map< std::pair< int, int >, bool > occ
     wallVertices->push_back( osg::Vec3( -halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back( osg::Vec3(  halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back( osg::Vec3(  halfGridSize, -halfGridSize, halfGridSize ) );
-			
+
     wallVertices->push_back( osg::Vec3( halfGridSize, -halfGridSize, halfGridSize ) );
     wallVertices->push_back( osg::Vec3( halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back( osg::Vec3( halfGridSize,  halfGridSize, 0.0f ) );

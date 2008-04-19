@@ -64,7 +64,7 @@ Block::~Block()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Block::Initialize()
-{    
+{
     //Create the block
     mDrawables[ "Block" ] = new osg::Geometry();
     osg::ref_ptr< osg::StateSet > blockStateSet = new osg::StateSet();
@@ -81,7 +81,7 @@ void Block::Initialize()
     blockVertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
     blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
     blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f, -0.5f,  0.5f ) );		
+    blockVertices->push_back( osg::Vec3(  0.5f, -0.5f,  0.5f ) );
     //Right
     blockVertices->push_back( osg::Vec3( 0.5f, -0.5f,  0.5f ) );
     blockVertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
@@ -91,12 +91,12 @@ void Block::Initialize()
     blockVertices->push_back( osg::Vec3(  0.5f, 0.5f,  0.5f ) );
     blockVertices->push_back( osg::Vec3(  0.5f, 0.5f, -0.5f ) );
     blockVertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, 0.5f,  0.5f ) );	
+    blockVertices->push_back( osg::Vec3( -0.5f, 0.5f,  0.5f ) );
     //Top
     blockVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
     blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
     blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f,  0.5f, 0.5f ) );	
+    blockVertices->push_back( osg::Vec3(  0.5f,  0.5f, 0.5f ) );
     //Bottom
     blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
     blockVertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
@@ -104,8 +104,8 @@ void Block::Initialize()
     blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
     mDrawables[ "Block" ]->setVertexArray( blockVertices.get() );
 
-	osg::ref_ptr< osg::Vec4Array > blockColor = new osg::Vec4Array();
-	blockColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    osg::ref_ptr< osg::Vec4Array > blockColor = new osg::Vec4Array();
+    blockColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
     mDrawables[ "Block" ]->setColorArray( blockColor.get() );
     mDrawables[ "Block" ]->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -123,7 +123,8 @@ void Block::Initialize()
     //Bottom
     blockNormals->push_back( osg::Vec3(  0.0f,  0.0f, -1.0f ) );
     mDrawables[ "Block" ]->setNormalArray( blockNormals.get() );
-    mDrawables[ "Block" ]->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+    mDrawables[ "Block" ]->setNormalBinding(
+        osg::Geometry::BIND_PER_PRIMITIVE );
 
     mDrawables[ "Block" ]->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, blockVertices.get()->size() ) );

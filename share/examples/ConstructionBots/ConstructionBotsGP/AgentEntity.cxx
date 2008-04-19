@@ -63,7 +63,7 @@ AgentEntity::AgentEntity(
     CADEntity( agent, pluginDCS, physicsSimulator ),
     mBuildMode( false ),
     mMaxSpeed( 3.0 ),
-    mBuildSpeed( 2.0 ),
+    mBuildSpeed( 1.0 ),
     mGeometry( agent ),
     mPluginDCS( pluginDCS ),
     mTargetDCS( 0 ),
@@ -114,7 +114,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
                 PickUpBlock();
             }
         }
-        
+
         mBlockSensor->DisplayLine( true );
         mSiteSensor->DisplayLine( false );
     }
@@ -163,7 +163,7 @@ void AgentEntity::AvoidObstacle()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
-{  
+{
     //Get normalized resultant force vector and multiply by speed
     btVector3 linearVelocity =
         mPerimeterSensor->GetNormalizedResultantForceVector() * mBuildSpeed;
@@ -209,12 +209,6 @@ void AgentEntity::InitiateBuildMode()
             mBlockSensor->DisplayLine( false );
             mSiteSensor->DisplayLine( false );
             mBuildMode = true;
-
-            //btVector3 linearVelocity( 0, 0, 0 );
-            //Keep gravity in velocity
-            //linearVelocity.setZ(
-                //mPhysicsRigidBody->getLinearVelocity().getZ() );
-            //GetPhysicsRigidBody()->setLinearVelocity( linearVelocity );
         }
     }
 }
@@ -265,12 +259,12 @@ bots::SiteSensorPtr AgentEntity::GetSiteSensor()
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()
 {
-	return mPluginDCS.get();
+    return mPluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
 {
-	return mTargetDCS.get();
+    return mTargetDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetBlockEntityMap(

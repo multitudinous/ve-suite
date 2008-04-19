@@ -54,7 +54,7 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
     mObstacleDetected( false ),
     mAngleIncrement( 20 ),
     mRange( 0 ),
-    mForceRepellingConstant( 2.0 ),
+    mForceRepellingConstant( 1.0 ),
     mForceAttractionConstant( 1.0 ),
     mResultantForce( 0, 0, 0 ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
@@ -201,7 +201,7 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
 
     double cosTheta = cos( 175 * piDivOneEighty );
     double sinTheta = sin( 175 * piDivOneEighty );
-    
+
     double xNew = ( x * cosTheta ) - ( y * sinTheta );
     double yNew = ( x * sinTheta ) + ( y * cosTheta );
 

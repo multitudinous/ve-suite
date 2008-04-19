@@ -259,7 +259,7 @@ const std::pair< int, int >& BlockEntity::GetLocation()
 ////////////////////////////////////////////////////////////////////////////////
 const std::map< std::pair< int, int >, bool >& BlockEntity::GetOccupancyMatrix()
 {
-	return mOccupancyMatrix;
+    return mOccupancyMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(

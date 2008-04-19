@@ -61,7 +61,7 @@ public:
 
     const btVector3& GetNormalizedResultantForceVector();
 
-	void SetRange( double range );
+    void SetRange( double range );
 
     bool PerimeterDetected();
 
@@ -84,7 +84,7 @@ private:
     btVector3 mResultantForce;
 
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
-    
+
     std::pair< osg::Vec3d, osg::Vec3d > mLastDetectionCCW;
 
     osg::ref_ptr< osg::Vec3Array > mLocalPositions;

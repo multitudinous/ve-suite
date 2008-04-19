@@ -93,7 +93,7 @@ private:
     osg::ref_ptr< osg::Geode > mGeode;
     osg::ref_ptr< osg::Geometry > mGeometry;
     osg::ref_ptr< osg::Vec3Array > mVertexArray;
-    
+
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };

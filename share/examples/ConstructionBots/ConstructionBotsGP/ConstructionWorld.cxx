@@ -100,7 +100,7 @@ ConstructionWorld::~ConstructionWorld()
 
     if( mGrid )
     {
-        delete mGrid;   
+        delete mGrid;
     }
 
     //mStartBlock gets deleted here as well
@@ -144,7 +144,7 @@ void ConstructionWorld::InitializeFramework()
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
     int numBlocks = 5;
-    int numAgents = 2;
+    int numAgents = 5;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -194,7 +194,7 @@ void ConstructionWorld::InitializeFramework()
     mStartBlock->SetNameAndDescriptions( 0 );
     mStartBlock->SetOccupancyMatrix( occupancyMatrix );
     mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
-    
+
     //Initialize the blocks
     for( int i = 0; i < numBlocks; ++i )
     {
@@ -280,7 +280,7 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
     std::vector< std::pair< double, double > > positions;
     positions.push_back(
         std::pair< double, double >(
-            mStartBlock->GetDCS()->GetVETranslationArray()[ 0 ], 
+            mStartBlock->GetDCS()->GetVETranslationArray()[ 0 ],
             mStartBlock->GetDCS()->GetVETranslationArray()[ 1 ] ) );
 
     for( size_t i = 0; i < entities.size(); ++i )

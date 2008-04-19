@@ -79,7 +79,7 @@ public:
     void PickUpBlock();
 
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
-	ves::xplorer::scenegraph::DCS* GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* GetTargetDCS();
 
     bots::BlockSensorPtr GetBlockSensor();
     bots::HoldBlockSensorPtr GetHoldBlockSensor();
@@ -109,7 +109,7 @@ private:
     //This in only here to test for collisions and for site interaction
     std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
 
-	osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
 
     btGeneric6DofConstraint* mConstraint;
@@ -122,7 +122,7 @@ private:
     bots::ObstacleSensorPtr mObstacleSensor;
     bots::PerimeterSensorPtr mPerimeterSensor;
     bots::SiteSensorPtr mSiteSensor;
-    
+
 };
 }
 

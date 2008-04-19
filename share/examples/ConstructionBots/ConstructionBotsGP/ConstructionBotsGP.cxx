@@ -59,7 +59,8 @@ ConstructionBotsGP::~ConstructionBotsGP()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+void ConstructionBotsGP::InitializeNode(
+    ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
@@ -89,4 +90,3 @@ void ConstructionBotsGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-

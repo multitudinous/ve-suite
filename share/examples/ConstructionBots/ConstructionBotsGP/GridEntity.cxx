@@ -38,9 +38,10 @@
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
-GridEntity::GridEntity( bots::Grid* grid,
-                        ves::xplorer::scenegraph::DCS* pluginDCS,
-                        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+GridEntity::GridEntity(
+    bots::Grid* grid,
+    ves::xplorer::scenegraph::DCS* pluginDCS,
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     CADEntity( grid, pluginDCS, physicsSimulator ),
     mGeometry( grid )

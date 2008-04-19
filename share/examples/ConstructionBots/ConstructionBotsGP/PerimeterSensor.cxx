@@ -93,7 +93,7 @@ void PerimeterSensor::CalculateLocalPositions()
         double x, y, xNew, yNew;
         double cosTheta = cos( i * 90 * piDivOneEighty );
         double sinTheta = sin( i * 90 * piDivOneEighty );
-        
+
         x = rightStartPoint.x();
         y = rightStartPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
@@ -209,7 +209,7 @@ void PerimeterSensor::PerimeterFollowing()
         repulsiveForce.setY( -y );
     }
     else if( mIntersections.size() == 1 )
-    {   
+    {
         repulsiveForce.setX( -y );
         repulsiveForce.setY(  x );
     }

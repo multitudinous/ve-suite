@@ -42,8 +42,9 @@
 
 namespace bots
 {
-
-class VE_USER_PLUGIN_EXPORTS ConstructionBotsGP : public ves::xplorer::plugin::PluginBase
+class VE_USER_PLUGIN_EXPORTS ConstructionBotsGP
+    :
+    public ves::xplorer::plugin::PluginBase
 {
 public:
     ConstructionBotsGP();

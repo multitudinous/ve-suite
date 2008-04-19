@@ -45,7 +45,7 @@ namespace bots
 class Agent : public osg::Geode
 {
 public:
-	Agent();
+    Agent();
 
     Agent( const Agent& agent,
            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
@@ -55,11 +55,11 @@ public:
     btCompoundShape* CreateCompoundShape();
 
 protected:
-	virtual ~Agent();
+    virtual ~Agent();
 
 private:
     void Initialize();
-    
+
 };
 } //end bots
 
