@@ -143,8 +143,8 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 5;
-    int numAgents = 5;
+    int numBlocks = 3;
+    int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -177,7 +177,7 @@ void ConstructionWorld::InitializeFramework()
                                   mPhysicsSimulator );
     mGrid->SetNameAndDescriptions();
     mGrid->InitPhysics();
-    mGrid->GetPhysicsRigidBody()->setFriction( 1.0 );
+    mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
     mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
 
     //Initialize the starting block

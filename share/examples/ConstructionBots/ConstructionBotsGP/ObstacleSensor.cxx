@@ -174,7 +174,6 @@ void ObstacleSensor::VirtualForceField(
     btVector3 targetForce( targetPosition[ 0 ] - agentPosition[ 0 ],
                            targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
 
-    //Gets normalized
     targetForce /= targetForce.length();
     targetForce *= mForceAttractionConstant;
 

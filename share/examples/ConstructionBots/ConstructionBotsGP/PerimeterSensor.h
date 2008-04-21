@@ -42,13 +42,18 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
+namespace osg
+{
+class Geode;
+class Geometry;
+}
+
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
 // --- C/C++ Libraries --- //
 #include <vector>
 
-//Simulates a 3D ring of ultrasound sensors for obstacle detection
 namespace bots
 {
 class PerimeterSensor : public Sensor
@@ -63,6 +68,7 @@ public:
 
     void SetRange( double range );
 
+    bool IsAligned();
     bool PerimeterDetected();
 
 private:
@@ -77,6 +83,7 @@ private:
     void CalculateLocalPositions();
     void PerimeterFollowing();
 
+    bool mAligned;
     bool mPerimeterDetected;
 
     double mRange;
@@ -87,7 +94,10 @@ private:
 
     std::pair< osg::Vec3d, osg::Vec3d > mLastDetectionCCW;
 
+    osg::ref_ptr< osg::Geode > mGeode;
+    osg::ref_ptr< osg::Geometry > mGeometry;
     osg::ref_ptr< osg::Vec3Array > mLocalPositions;
+
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };

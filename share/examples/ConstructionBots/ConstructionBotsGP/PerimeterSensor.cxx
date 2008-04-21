@@ -35,8 +35,14 @@
 #include "PerimeterSensor.h"
 #include "AgentEntity.h"
 
+// --- VE-Suite Includes --- //
+//#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
+//#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 // --- OSG Includes --- //
+#include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/LineWidth>
 
 #include <osgUtil/IntersectionVisitor>
 
@@ -51,10 +57,13 @@ const double piDivOneEighty = 0.0174532925;
 PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     :
     Sensor( agentEntity ),
+    mAligned( false ),
     mPerimeterDetected( false ),
-    mRange( 0.1 ),
+    mRange( 0.05 ),
     mResultantForce( 0, 0, 0 ),
     mLastDetectionCCW( osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) ),
+    mGeode( 0 ),
+    mGeometry( 0 ),
     mLocalPositions( new osg::Vec3Array() ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
                                  osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
@@ -118,6 +127,34 @@ void PerimeterSensor::CalculateLocalPositions()
         yNew = ( x * sinTheta ) + ( y * cosTheta );
         (*mLocalPositions)[ i * 4 + 3 ] = osg::Vec3( xNew, yNew, 0 );
     }
+
+    mGeode = new osg::Geode();
+    mGeometry = new osg::Geometry();
+    osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
+
+    mGeometry->setVertexArray( mLocalPositions.get() );
+
+    colorArray->push_back( osg::Vec4( 0.0f, 0.0f, 1.0f, 1.0f ) );
+    mGeometry->setColorArray( colorArray.get() );
+    mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+    mGeometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 16 ) );
+
+    mGeode->addDrawable( mGeometry.get() );
+
+    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+    lineWidth->setWidth( 1.0f );
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setAttribute( lineWidth.get() );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    mGeode->setStateSet( stateset.get() );
+
+    mAgentEntity->GetDCS()->addChild( mGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::CollectInformation()
@@ -131,7 +168,14 @@ void PerimeterSensor::CollectInformation()
     //Reset intersections from last frame
     mIntersections.clear();
 
+    bool lastCCW( false );
     bool previousDetection( false );
+    //btTransform transform;
+    //mAgentEntity->GetPhysicsRigidBody()->getMotionState()->getWorldTransform(
+        //transform );
+    //btVector3 position = transform.getOrigin();
+    //osg::Vec3d agentPosition(
+        //osg::Vec3d( position[ 0 ], position[ 1 ], position[ 2 ] ) );
     osg::Vec3d agentPosition = agentDCS->getPosition();
     for( int i = 0; i < 8; ++i )
     {
@@ -157,9 +201,14 @@ void PerimeterSensor::CollectInformation()
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
 
+            //std::cout << i << std::endl;
+
             //Store the current detection
-            mLastDetectionCCW.first = startPoint;
-            mLastDetectionCCW.second = endPoint;
+            if( !lastCCW )
+            {
+                mLastDetectionCCW.first = startPoint;
+                mLastDetectionCCW.second = endPoint;
+            }
 
             previousDetection = true;
         }
@@ -167,7 +216,7 @@ void PerimeterSensor::CollectInformation()
         {
             if( previousDetection )
             {
-                i = 7;
+                lastCCW = true;
             }
 
             previousDetection = false;
@@ -190,8 +239,15 @@ const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 
     if( mResultantForce.length() != 0.0 )
     {
-        return mResultantForce.normalize();
+        mResultantForce = mResultantForce.normalize();
     }
+
+    /*
+    std::cout << "mResultantForce: ( " << mResultantForce.x() << ", "
+                                       << mResultantForce.y() << ", "
+                                       << mResultantForce.z() << " )"
+                                       << std::endl << std::endl;
+    */
 
     return mResultantForce;
 }
@@ -227,6 +283,11 @@ void PerimeterSensor::PerimeterFollowing()
 void PerimeterSensor::SetRange( double range )
 {
     mRange = range;
+}
+////////////////////////////////////////////////////////////////////////////////
+bool PerimeterSensor::IsAligned()
+{
+    return mAligned;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool PerimeterSensor::PerimeterDetected()

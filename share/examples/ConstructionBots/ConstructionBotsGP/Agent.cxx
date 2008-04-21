@@ -69,7 +69,7 @@ Agent::~Agent()
 btCompoundShape* Agent::CreateCompoundShape()
 {
     btScalar boxHalfWidth = 0.5;
-    btScalar holderHalfThickness = 0.1;
+    btScalar holderHalfThickness = 0.01;
     btScalar offset = boxHalfWidth + holderHalfThickness;
 
     btCompoundShape* compoundShape = new btCompoundShape();
@@ -101,7 +101,6 @@ btCompoundShape* Agent::CreateCompoundShape()
 ////////////////////////////////////////////////////////////////////////////////
 void Agent::Initialize()
 {
-    double delta = 0.05;
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     setStateSet( stateset.get() );
