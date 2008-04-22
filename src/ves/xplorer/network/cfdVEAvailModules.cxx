@@ -64,7 +64,19 @@ cfdVEPluginLoader* cfdVEAvailModules::GetLoader()
 ////////////////////////////////////////////////////////////////////////////////
 void cfdVEAvailModules::ResetPluginLoader()
 {
+#ifndef WIN32
+//This define is required because on windows when dll's are unloaded the
+//memory allocated by the dll's is also unloaded. This causes problems with
+//OSG because OSG has ref_ptr's still pointing to memory allocated by the dll
+//a few frames AFTER the dll has been unloaded. This is not a problem
+//on other operating systems due to the way plugable modules are handled
+//by the operating system. For more information on this bug please see
+//the thread on the osg list by Paul Martz on April 19th, 2008
+//titled: Clearing RenderLeaf ref_ptrs
+//If a better solution for managing this problem can be created it should be
+//investigated as this solution is a major hack.
     delete pl_loader;
+#endif
     pl_loader = new cfdVEPluginLoader();
     LoadModules();
 }
