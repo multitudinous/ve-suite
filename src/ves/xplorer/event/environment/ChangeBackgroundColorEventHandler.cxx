@@ -40,6 +40,8 @@
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+#include <osgText/Text>
+
 #include <string>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp

@@ -42,11 +42,14 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
-#include <osgText/Text>
-
 namespace osg
 {
     class Camera;
+}
+
+namespace osgText
+{
+class Text;
 }
 
 // --- C/C++ Libraries --- //

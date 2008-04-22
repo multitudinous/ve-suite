@@ -45,6 +45,8 @@
 #include <boost/filesystem/operations.hpp>   //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+#include <osgText/Text>
+
 #ifdef WIN32
 #include <direct.h>
 #else
@@ -72,7 +74,8 @@ DisplayEventHandler::~DisplayEventHandler()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DisplayEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void DisplayEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
@@ -100,7 +103,8 @@ void DisplayEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObje
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-DisplayEventHandler& DisplayEventHandler::operator=( const DisplayEventHandler& rhs )
+DisplayEventHandler& DisplayEventHandler::operator=(
+    const DisplayEventHandler& rhs )
 {
     if( this != &rhs )
     {

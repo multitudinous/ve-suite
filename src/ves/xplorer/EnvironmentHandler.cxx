@@ -79,6 +79,8 @@
 #include <osg/BoundingSphere>
 #include <osg/Group>
 
+#include <osgText/Text>
+
 /// C/C++ libraries
 #include <fstream>
 #include <cstdlib>
