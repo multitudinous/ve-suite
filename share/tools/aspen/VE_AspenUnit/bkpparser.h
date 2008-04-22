@@ -86,6 +86,7 @@ private:
    void StripCharacters( std::string& data, std::string character );   
 
    std::string workingDir;
+   int redundantID;
 
 public:
 	CASI::CASIDocument * aspendoc;
