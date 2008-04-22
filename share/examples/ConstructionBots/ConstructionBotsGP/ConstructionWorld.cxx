@@ -144,7 +144,7 @@ void ConstructionWorld::InitializeFramework()
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
     int numBlocks = 3;
-    int numAgents = 3;
+    int numAgents = 1;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 

@@ -90,9 +90,14 @@ void HoldBlockSensor::CollectInformation()
         mHoldingBlock = true;
     }
 
-    if( !mHoldingBlock && mAgentEntity->IsBuilding() )
+    if( !mHoldingBlock )
     {
-        mAgentEntity->SetBuildMode( false );
+        mAgentEntity->mHeldBlock = NULL;
+
+        if( mAgentEntity->mBuildMode )
+        {
+            mAgentEntity->mBuildMode = false;
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

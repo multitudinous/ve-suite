@@ -44,6 +44,7 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h>
@@ -64,10 +65,11 @@ AgentEntity::AgentEntity(
     mBuildMode( false ),
     mMaxSpeed( 3.0 ),
     mBuildSpeed( 1.0 ),
-    mGeometry( agent ),
     mPluginDCS( pluginDCS ),
     mTargetDCS( 0 ),
-    mConstraint( 0 )
+    mConstraint( 0 ),
+    mAgentGeometry( agent ),
+    mHeldBlock( 0 )
 {
     Initialize();
 }
@@ -118,10 +120,17 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         mBlockSensor->DisplayLine( true );
         mSiteSensor->DisplayLine( false );
     }
-    else if( IsBuilding() )
+    else if( mBuildMode )
     {
         mPerimeterSensor->CollectInformation();
-        Build();
+        if( mPerimeterSensor->IsAligned() )
+        {
+            QueryBlock();
+        }
+        else
+        {
+            FollowPerimeter();
+        }
 
         return;
     }
@@ -164,6 +173,16 @@ void AgentEntity::AvoidObstacle()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
+    //Get the block close to the attach site
+    mHeldBlock->GetDCS()->SetTranslationArray(
+        GetDCS()->GetVETranslationArray() );
+    GetDCS()->setPosition( osg::Vec3( -20, -20, 0.5 ) );
+
+    mHeldBlock->AttachUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::FollowPerimeter()
+{
     //Get normalized resultant force vector and multiply by speed
     btVector3 linearVelocity =
         mPerimeterSensor->GetNormalizedResultantForceVector() * mBuildSpeed;
@@ -197,38 +216,51 @@ void AgentEntity::GoToSite()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::InitiateBuildMode()
 {
-    if( GetPhysicsRigidBody()->HasCollisions() )
+    bots::BlockEntity* targetEntity = mBlockEntityMap[ mTargetDCS->GetName() ];
+    bool collision = GetPhysicsRigidBody()->CollisionInquiry(
+        targetEntity->GetPhysicsRigidBody() );
+    if( collision )
     {
-        bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >(
-            mBlockEntityMap[ mTargetDCS->GetName() ] );
-        bool collision = GetPhysicsRigidBody()->CollisionInquiry(
-            targetEntity->GetPhysicsRigidBody() );
-        if( collision )
-        {
-            mTargetDCS = NULL;
-            mBlockSensor->DisplayLine( false );
-            mSiteSensor->DisplayLine( false );
-            mBuildMode = true;
-        }
+        mTargetDCS = NULL;
+        mBlockSensor->DisplayLine( false );
+        mSiteSensor->DisplayLine( false );
+        mBuildMode = true;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
 {
-    bots::BlockEntity* targetEntity = static_cast< bots::BlockEntity* >(
-        mBlockEntityMap[ mTargetDCS->GetName() ] );
+    bots::BlockEntity* targetEntity = mBlockEntityMap[ mTargetDCS->GetName() ];
     ves::xplorer::scenegraph::PhysicsRigidBody* targetPhysicsRigidBody =
         targetEntity->GetPhysicsRigidBody();
     bool collision =
         GetPhysicsRigidBody()->CollisionInquiry( targetPhysicsRigidBody );
     if( collision )
     {
+        mHeldBlock = targetEntity;
+
         double* position = mDCS->GetVETranslationArray();
         double transArray[ 3 ] =
             { position[ 0 ], position[ 1 ], position[ 2 ] + 1.0 };
         mTargetDCS->SetTranslationArray( transArray );
 
         mTargetDCS = NULL;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::QueryBlock()
+{
+    osg::Drawable* drawable = mPerimeterSensor->GetQueriedConnection();
+    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+        drawable->getParent( 0 ) );
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
+        static_cast< ves::xplorer::scenegraph::DCS* >(
+            parentVisitor.GetParentNode() );
+
+    bots::BlockEntity* blockEntity = mBlockEntityMap[ dcs->GetName() ];
+    if( blockEntity->PermissionToAttach( drawable ) )
+    {
+        Build();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -271,11 +303,6 @@ void AgentEntity::SetBlockEntityMap(
     const std::map< std::string, bots::BlockEntity* >& blockEntityMap )
 {
     mBlockEntityMap = blockEntityMap;
-}
-////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::SetBuildMode( bool buildMode )
-{
-    mBuildMode = buildMode;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetConstraints( int gridSize )
@@ -330,10 +357,5 @@ void AgentEntity::SetNameAndDescriptions( int number )
 void AgentEntity::SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS )
 {
     mTargetDCS = targetDCS;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool AgentEntity::IsBuilding()
-{
-    return mBuildMode;
 }
 ////////////////////////////////////////////////////////////////////////////////

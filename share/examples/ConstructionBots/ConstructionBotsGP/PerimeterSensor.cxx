@@ -34,16 +34,9 @@
 // --- My Includes --- //
 #include "PerimeterSensor.h"
 #include "AgentEntity.h"
-
-// --- VE-Suite Includes --- //
-//#include <ves/xplorer/scenegraph/physics/vesMotionState.h>
-//#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+#include "BlockEntity.h"
 
 // --- OSG Includes --- //
-#include <osg/Geode>
-#include <osg/Geometry>
-#include <osg/LineWidth>
-
 #include <osgUtil/IntersectionVisitor>
 
 // --- c/C++ Includes --- //
@@ -59,14 +52,13 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mAligned( false ),
     mPerimeterDetected( false ),
+    mPreviousSensor( -1 ),
     mRange( 0.05 ),
     mResultantForce( 0, 0, 0 ),
+    mQueriedConnection( 0 ),
     mLastDetectionCCW( osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) ),
-    mGeode( 0 ),
-    mGeometry( 0 ),
-    mLocalPositions( new osg::Vec3Array() ),
-    mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-                                 osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
+    mLocalPositions( 0 ),
+    mLineSegmentIntersector( 0 )
 {
     Initialize();
 }
@@ -83,6 +75,10 @@ void PerimeterSensor::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::CalculateLocalPositions()
 {
+    mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
+        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+
+    mLocalPositions = new osg::Vec3Array();
     mLocalPositions->resize( 16 );
 
     double blockHalfWidth = 0.5;
@@ -127,34 +123,6 @@ void PerimeterSensor::CalculateLocalPositions()
         yNew = ( x * sinTheta ) + ( y * cosTheta );
         (*mLocalPositions)[ i * 4 + 3 ] = osg::Vec3( xNew, yNew, 0 );
     }
-
-    mGeode = new osg::Geode();
-    mGeometry = new osg::Geometry();
-    osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
-
-    mGeometry->setVertexArray( mLocalPositions.get() );
-
-    colorArray->push_back( osg::Vec4( 0.0f, 0.0f, 1.0f, 1.0f ) );
-    mGeometry->setColorArray( colorArray.get() );
-    mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
-
-    mGeometry->addPrimitiveSet(
-        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 16 ) );
-
-    mGeode->addDrawable( mGeometry.get() );
-
-    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.0f );
-
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
-    stateset->setAttribute( lineWidth.get() );
-    stateset->setMode(
-        GL_LIGHTING,
-        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-    mGeode->setStateSet( stateset.get() );
-
-    mAgentEntity->GetDCS()->addChild( mGeode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::CollectInformation()
@@ -165,17 +133,14 @@ void PerimeterSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
 
-    //Reset intersections from last frame
+    //Reset
     mIntersections.clear();
+    mPreviousSensor = -1;
+    mQueriedConnection = NULL;
+    mAligned = false;
 
     bool lastCCW( false );
     bool previousDetection( false );
-    //btTransform transform;
-    //mAgentEntity->GetPhysicsRigidBody()->getMotionState()->getWorldTransform(
-        //transform );
-    //btVector3 position = transform.getOrigin();
-    //osg::Vec3d agentPosition(
-        //osg::Vec3d( position[ 0 ], position[ 1 ], position[ 2 ] ) );
     osg::Vec3d agentPosition = agentDCS->getPosition();
     for( int i = 0; i < 8; ++i )
     {
@@ -201,13 +166,20 @@ void PerimeterSensor::CollectInformation()
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
 
-            //std::cout << i << std::endl;
-
             //Store the current detection
             if( !lastCCW )
             {
                 mLastDetectionCCW.first = startPoint;
                 mLastDetectionCCW.second = endPoint;
+
+                unsigned int modulusTest = ( mPreviousSensor + i ) % 4;
+                if( modulusTest == 1  )
+                {
+                    mAligned = true;
+                    mQueriedConnection = mIntersections.back().drawable.get();
+                }
+
+                mPreviousSensor = i;
             }
 
             previousDetection = true;
@@ -235,49 +207,36 @@ void PerimeterSensor::CollectInformation()
 ////////////////////////////////////////////////////////////////////////////////
 const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 {
-    PerimeterFollowing();
+    //Calculate the total resultant force
+    double x = mLastDetectionCCW.first.x() - mLastDetectionCCW.second.x();
+    double y = mLastDetectionCCW.first.y() - mLastDetectionCCW.second.y();
+    if( mIntersections.empty() )
+    {
+        mResultantForce.setX( -x );
+        mResultantForce.setY( -y );
+    }
+    else if( mIntersections.size() == 1 )
+    {
+        mResultantForce.setX( -y );
+        mResultantForce.setY(  x );
+    }
+    else
+    {
+        mResultantForce.setX( x );
+        mResultantForce.setY( y );
+    }
 
     if( mResultantForce.length() != 0.0 )
     {
         mResultantForce = mResultantForce.normalize();
     }
 
-    /*
-    std::cout << "mResultantForce: ( " << mResultantForce.x() << ", "
-                                       << mResultantForce.y() << ", "
-                                       << mResultantForce.z() << " )"
-                                       << std::endl << std::endl;
-    */
-
     return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PerimeterSensor::PerimeterFollowing()
+osg::Drawable* PerimeterSensor::GetQueriedConnection()
 {
-    //Calculate the total repulsive force
-    btVector3 repulsiveForce( 0, 0, 0 );
-
-    double x = mLastDetectionCCW.first.x() - mLastDetectionCCW.second.x();
-    double y = mLastDetectionCCW.first.y() - mLastDetectionCCW.second.y();
-    if( mIntersections.empty() )
-    {
-        repulsiveForce.setX( -x );
-        repulsiveForce.setY( -y );
-    }
-    else if( mIntersections.size() == 1 )
-    {
-        repulsiveForce.setX( -y );
-        repulsiveForce.setY(  x );
-    }
-    else
-    {
-        repulsiveForce.setX( x );
-        repulsiveForce.setY( y );
-    }
-
-    //May need to reduce rounding error here
-
-    mResultantForce = repulsiveForce;
+    return mQueriedConnection;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::SetRange( double range )

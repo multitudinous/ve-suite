@@ -44,7 +44,6 @@ namespace osg
 
 // --- C/C++ Libraries --- //
 #include <map>
-#include <string>
 
 namespace bots
 {
@@ -58,7 +57,7 @@ public:
 
     META_Node( bots, Block );
 
-    void SetColor( const std::string& drawableName, osg::Vec4 color );
+    void SetColor( unsigned int drawable, const osg::Vec4& color );
 
 protected:
     virtual ~Block();
@@ -66,10 +65,10 @@ protected:
 private:
     void Initialize();
 
-    /*    F
-        L B R
-          N    */
-    std::map< std::string, osg::ref_ptr< osg::Geometry > > mDrawables;
+    /*    1
+        2 B 0
+          3    */
+    std::map< unsigned int, osg::ref_ptr< osg::Geometry > > mDrawables;
 
 };
 } //end bots

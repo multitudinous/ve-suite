@@ -70,14 +70,6 @@ public:
 
     void CommunicatingBlocksAlgorithm();
 
-    //The agent behaviors
-    void AvoidObstacle();
-    void Build();
-    void GoToBlock();
-    void GoToSite();
-    void InitiateBuildMode();
-    void PickUpBlock();
-
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
     ves::xplorer::scenegraph::DCS* GetTargetDCS();
 
@@ -89,32 +81,41 @@ public:
 
     void SetBlockEntityMap(
         const std::map< std::string, bots::BlockEntity* >& blockEntityMap );
-
-    void SetBuildMode( bool buildMode );
-
     void SetConstraints( int gridSize );
     void SetNameAndDescriptions( int number );
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
 
-    bool IsBuilding();
-
 private:
+    //Give sensors easy access to AgentEntity
+    friend class BlockSensor;
+    friend class HoldBlockSensor;
+    friend class ObstacleSensor;
+    friend class PerimeterSensor;
+    friend class SiteSensor;
+    
     void Initialize();
+
+    //The agent behaviors
+    void AvoidObstacle();
+    void Build();
+    void FollowPerimeter();
+    void GoToBlock();
+    void GoToSite();
+    void InitiateBuildMode();
+    void PickUpBlock();
+    void QueryBlock();
 
     bool mBuildMode;
 
     double mMaxSpeed;
     double mBuildSpeed;
 
-    //This in only here to test for collisions and for site interaction
-    std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
-
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
 
     btGeneric6DofConstraint* mConstraint;
 
-    osg::ref_ptr< bots::Agent > mGeometry;
+    osg::ref_ptr< bots::Agent > mAgentGeometry;
 
     //The agent sensors
     bots::BlockSensorPtr mBlockSensor;
@@ -122,6 +123,11 @@ private:
     bots::ObstacleSensorPtr mObstacleSensor;
     bots::PerimeterSensorPtr mPerimeterSensor;
     bots::SiteSensorPtr mSiteSensor;
+
+    //This in only here to test for collisions and for site interaction
+    std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
+
+    bots::BlockEntity* mHeldBlock;
 
 };
 }

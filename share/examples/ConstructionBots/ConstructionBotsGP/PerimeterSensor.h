@@ -42,12 +42,6 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
-namespace osg
-{
-class Geode;
-class Geometry;
-}
-
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -65,6 +59,7 @@ public:
     virtual void CollectInformation();
 
     const btVector3& GetNormalizedResultantForceVector();
+    osg::Drawable* GetQueriedConnection();
 
     void SetRange( double range );
 
@@ -75,29 +70,31 @@ private:
     void Initialize();
 
     /* There are eight perimeter sensors as shown below
-        _|____|_
-         |    |
-        _|____|_
-         |    |
+          3    2
+       4 _|____|_ 1
+          |    |
+       5 _|____|_ 0
+          |    |
+          6    7
     */
     void CalculateLocalPositions();
-    void PerimeterFollowing();
 
     bool mAligned;
     bool mPerimeterDetected;
+
+    unsigned int mPreviousSensor;
 
     double mRange;
 
     btVector3 mResultantForce;
 
+    osg::Drawable* mQueriedConnection;
+
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
 
     std::pair< osg::Vec3d, osg::Vec3d > mLastDetectionCCW;
 
-    osg::ref_ptr< osg::Geode > mGeode;
-    osg::ref_ptr< osg::Geometry > mGeometry;
     osg::ref_ptr< osg::Vec3Array > mLocalPositions;
-
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };

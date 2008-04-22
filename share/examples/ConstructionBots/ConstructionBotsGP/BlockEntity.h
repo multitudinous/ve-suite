@@ -40,6 +40,13 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
+#include <osgUtil/LineSegmentIntersector>
+
+namespace osg
+{
+class Drawable;
+}
+
 // --- Bullet Includes --- //
 class btGeneric6DofConstraint;
 
@@ -62,17 +69,29 @@ public:
 
     virtual ~BlockEntity();
 
+    //
     void AttachUpdate();
+    //
+    void UpdateSideStates();
+    //
+    bool PermissionToAttach( osg::Drawable* drawable );
 
-    bots::Block* GetGeometry();
+    //
+    bots::Block* GetBlockGeometry();
+    //
     const std::pair< int, int >& GetLocation();
     //Get the block's occupancy matrix
     const std::map< std::pair< int, int >, bool >& GetOccupancyMatrix();
 
-    void SetBlockConnection( const std::string& side, bots::BlockEntity* blockEntity );
+    //
+    void SetBlockConnection(
+        unsigned int side, bots::BlockEntity* blockEntity );
+    //
     void SetBlockEntityMap(
         const std::map< std::string, bots::BlockEntity* >& blockEntityMap );
+    //
     void SetConstraints( int gridSize );
+    //
     void SetNameAndDescriptions( int number );
     //Set the block's occupancy matrix
     void SetOccupancyMatrix(
@@ -81,18 +100,24 @@ public:
 protected:
 
 private:
+    void Initialize();
+    void CalculateLocalPositions();
     void ConnectionDetection();
 
+    //A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
     //This in only here to get connections when first attached to structure
     std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
 
     //The geometry of this block
-    osg::ref_ptr< bots::Block > mGeometry;
+    osg::ref_ptr< bots::Block > mBlockGeometry;
 
     //The physics constraints of this block
     btGeneric6DofConstraint* mConstraint;
+
+    //
+    std::map< osg::Drawable*, bool > mSideStates;
 
     //Blocks have a copy of the occupancy matrix
     //The occupancy matrix stores the desired structure to be built
@@ -101,13 +126,18 @@ private:
     //Are blocks attached to sides or not
     //This map stores the physical connections to this block
     //This forms the basis for a data line in the structure
-    /*    F
-        L B R
-          N    */
-    std::map< std::string, bots::BlockEntity* > mConnectedBlocks;
+    /*    1
+        2 B 0
+          3    */
+    std::map< unsigned int, bots::BlockEntity* > mConnectedBlocks;
 
     //The location of this block in the shared coordinate system
     std::pair< int, int > mLocation;
+
+    //
+    osg::ref_ptr< osg::Vec3Array > mLocalPositions;
+    //
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots
