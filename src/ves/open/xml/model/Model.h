@@ -90,7 +90,7 @@ public:
 
     ///Set the unique model id
     ///\param id id of the model
-    void SetModelID( unsigned int id );
+    vesDEPRECATED( void SetModelID( unsigned int id ) );
 
     ///Set the icon filename
     ///\param filename filename for the icon to be loaded
@@ -106,7 +106,7 @@ public:
 
     ///Get the model id
     ///\return The model ID used my third party solver
-    unsigned int GetModelID( void );
+    vesDEPRECATED( unsigned int GetModelID( void ) );
 
     ///Get the icon file name
     ///\return The icon filename
