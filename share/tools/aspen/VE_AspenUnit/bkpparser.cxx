@@ -974,215 +974,284 @@ void BKPParser::CreateNetworkInformation( std::string networkData )
    while( tagBegin < network.size()-1);
 }
 ///////////////////////////////////////////////////////////
-void BKPParser::CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName )
+void BKPParser::CreateNetworkLinks
+( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName )
 {
-	// remove duplicate points
-	std::map< std::string, std::vector< std::pair< float, float > > >::iterator pointsIter;
-	for ( pointsIter = linkPoints[hierName].begin(); pointsIter != linkPoints[hierName].end(); ++pointsIter )
-	{
-	  std::vector< std::pair< float, float > > tempPoints;
-	  tempPoints = pointsIter->second;
-	  std::vector< std::pair< float, float > >::iterator pairIter;
-	  for ( pairIter = tempPoints.begin(); pairIter != tempPoints.end(); )
-	  {
-		 // need to remove duplicate points
-		 std::vector< std::pair< float, float > >::iterator tempPairIter;
-		 tempPairIter = std::find( pairIter+1, tempPoints.end(), *pairIter );
-		 if ( tempPairIter != tempPoints.end() )
-		 {
-			tempPoints.erase( tempPairIter );
-		 }
-		 else
-			++pairIter;
-	  }
-	  pointsIter->second = tempPoints;
-	}
-	
-	std::map< std::string, std::string >::iterator iter;
-	// create links for the network
-	int counter = 0;
-	for ( iter = inLinkToModel[hierName].begin(); iter != inLinkToModel[hierName].end(); ++iter )
-	{
-	  std::map< std::string, std::string >::iterator fromModel;
-	  fromModel = outLinkToModel[hierName].find( iter->first );
-      //add all 
-	  if ( fromModel != outLinkToModel[hierName].end() )
-	  {
-		 //define link
-		 // these are unique remember...
-		 std::string toPortName = iter->first;
-		 // these are unique remember...
-		 std::string fromPortName = fromModel->first;
-
-		 std::string toModelName;
-		 std::string fromModelName;
-		 if(hierName == "_main_sheet")
-		 {
-			 toModelName = iter->second;
-			 fromModelName = fromModel->second;
-		 }
-		 else
-		 {
-			 toModelName = hierName + "." + iter->second;
-			 fromModelName = hierName + "." + fromModel->second;
-		 }
-
-		 int toPortId = counter++;
-		 int fromPortId = counter++;
-		 int toModelId = models[hierName][ iter->second ];
-		 int fromModelId = models[hierName][ fromModel->second ];
-		 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
+    // remove duplicate points
+    std::map< std::string, std::vector< std::pair< float, float > > >::iterator
+        pointsIter;
+    for ( pointsIter = linkPoints[hierName].begin();
+        pointsIter != linkPoints[hierName].end();
+        ++pointsIter )
+    {
+        std::vector< std::pair< float, float > > tempPoints;
+        tempPoints = pointsIter->second;
+        std::vector< std::pair< float, float > >::iterator pairIter;
+        for ( pairIter = tempPoints.begin(); pairIter != tempPoints.end(); )
+        {
+            // need to remove duplicate points
+            std::vector< std::pair< float, float > >::iterator tempPairIter;
+            tempPairIter =
+                std::find( pairIter+1, tempPoints.end(), *pairIter );
+            if ( tempPairIter != tempPoints.end() )
+            {
+                tempPoints.erase( tempPairIter );
+            }
+            else
+            {
+                ++pairIter;
+            }
+        }
+        pointsIter->second = tempPoints;
+    }
+    
+    std::map< std::string, std::string >::iterator iter;
+    // create links for the network
+    int counter = 0;
+    for ( iter = inLinkToModel[hierName].begin();
+        iter != inLinkToModel[hierName].end();
+        ++iter )
+    {
+        std::map< std::string, std::string >::iterator fromModel;
+        fromModel = outLinkToModel[hierName].find( iter->first );
+        
+        //find matching port
+        if ( fromModel != outLinkToModel[hierName].end() )
+        {
+            //define link
+            // these are unique remember...
+            std::string toPortName = iter->first;
+            // these are unique remember...
+            std::string fromPortName = fromModel->first;
+            
+            std::string toModelName;
+            std::string fromModelName;
+            if(hierName == "_main_sheet")
+            {
+                toModelName = iter->second;
+                fromModelName = fromModel->second;
+            }
+            else
+            {
+                toModelName = hierName + "." + iter->second;
+                fromModelName = hierName + "." + fromModel->second;
+            }
+            
+            int toPortId = counter++;
+            int fromPortId = counter++;
+            int toModelId = models[hierName][ iter->second ];
+            int fromModelId = models[hierName][ fromModel->second ];
+            streamPortIDS[ iter->first ] =
+                std::pair< int, int >( toPortId, fromPortId );
+            
+            //Now we create a link
+            ves::open::xml::model::LinkPtr
+                xmlLink( new ves::open::xml::model::Link() );
+            xmlLink->GetFromModule()->SetData(
+                fromModelName, static_cast< long int >( fromModelId ) );
+            xmlLink->GetToModule()->SetData(
+                toModelName, static_cast< long int >( toModelId ) );
+            
+            xmlLink->SetLinkName(iter->first);
+            xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
+            
+            *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
+            *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
+            
+            for ( size_t j = linkPoints[hierName][ fromPortName ].size();
+                j > 0 ; --j )
+            {
+                // I am not sure why we need to reverse the points but we do
+                xmlLink->GetLinkPoint(
+                    linkPoints[hierName][ fromPortName ].size() - j )->
+                    SetPoint(linkPoints[hierName][ fromPortName ].
+                    at( j - 1 ) );
+            }
+            subNetwork->AddLink( xmlLink );
+        }
+        
+        //create stand alone input streams
+        else
+        {
+            //create the dummy entry in the models list
+            models[hierName][iter->first + "_dummy_connection"] =
+                redundantID++;
+            
+            //define link
+            // these are unique remember...
+            std::string toPortName = iter->first;
+            // these are unique remember...
+            std::string fromPortName = iter->first + "_dummy_connection";
+            
+            std::string toModelName;
+            std::string fromModelName;
+            
+            if(hierName == "_main_sheet")
+            {
+                toModelName = iter->second;
+                fromModelName = iter->first + "_dummy_connection";
+            }
+            else
+            {
+                toModelName = hierName + "." + iter->second;
+                fromModelName =
+                    hierName + "." + iter->first + "_dummy_connection";
+            }
+            
+            int toPortId = counter++;
+            int fromPortId = counter++;
+            int toModelId = models[hierName][ iter->second ];
+            int fromModelId =
+                models[hierName][ iter->first + "_dummy_connection" ];
+            streamPortIDS[ iter->first ] =
+                std::pair< int, int >( toPortId, fromPortId );
+            
+            //Now we create a link
+            ves::open::xml::model::LinkPtr
+                xmlLink( new ves::open::xml::model::Link() );
+            xmlLink->GetFromModule()->SetData(
+                fromModelName, static_cast< long int >( fromModelId ) );
+            xmlLink->GetToModule()->SetData(
+                toModelName, static_cast< long int >( toModelId ) );
+            
+            xmlLink->SetLinkName(iter->first);
+            xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
+            
+            *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
+            *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
+            
+            for ( size_t j = linkPoints[hierName][ toPortName ].size();
+                j > 0 ; --j )
+            {
+                // I am not sure why we need to reverse the points but we do
+                xmlLink->GetLinkPoint(
+                    linkPoints[hierName][ toPortName ].size() - j )->SetPoint(
+                    linkPoints[hierName][ toPortName ].at( j - 1 ) );
+            }
          
-		 //Now we create a link
-		 //VE_XML::VE_Model::LinkWeakPtr xmlLink = subNetwork->GetLink( -1 );
-		 ves::open::xml::model::LinkPtr xmlLink( new ves::open::xml::model::Link() );
-		 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
-		 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
-		 
-		 //if (hierName == "0")
-			 xmlLink->SetLinkName(iter->first);
-			 xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
-		 //else
-			 //xmlLink->SetLinkName(hierName + "." + iter->first);
-		 
-		 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
-		 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
-
-		 for ( size_t j = linkPoints[hierName][ fromPortName ].size(); j > 0 ; --j )
-		 {
-			// I am not sure why we need to reverse the points but we do
-			xmlLink->GetLinkPoint( linkPoints[hierName][ fromPortName ].size() - j )->SetPoint( linkPoints[hierName][ fromPortName ].at( j - 1 ) );
-		 }
-		 subNetwork->AddLink( xmlLink );
-	  }
-      else
-	  {
-          //create the dummy entry in the models list
-          models[hierName][iter->first + "_dummy_connection"] = redundantID++;
-
-		 //define link
-		 // these are unique remember...
-		 std::string toPortName = iter->first;
-		 // these are unique remember...
-		 std::string fromPortName = iter->first + "_dummy_connection";
-
-		 std::string toModelName;
-		 std::string fromModelName;
-		 if(hierName == "_main_sheet")
-		 {
-			 toModelName = iter->second;
-			 fromModelName = iter->first + "_dummy_connection";
-		 }
-		 else
-		 {
-			 toModelName = hierName + "." + iter->second;
-			 fromModelName = hierName + "." + iter->first + "_dummy_connection";
-		 }
-
-		 int toPortId = counter++;
-		 int fromPortId = counter++;
-		 int toModelId = models[hierName][ iter->second ];
-		 int fromModelId = models[hierName][ iter->first + "_dummy_connection" ];
-		 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
+            //add location for dummy icon
+            iconLocations[hierName][iter->first+"_dummy_connection"] = 
+                linkPoints[hierName][toPortName].at(
+                linkPoints[hierName][ toPortName ].size()-1);
+            
+            //add information for dummy block
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].type ="dummy";
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].icon = "dummy";
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].scale = 1;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].rotation = 0;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].mirror = 0;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].hierarchical =
+                false;
          
-		 //Now we create a link
-		 //VE_XML::VE_Model::LinkWeakPtr xmlLink = subNetwork->GetLink( -1 );
-		 ves::open::xml::model::LinkPtr xmlLink( new ves::open::xml::model::Link() );
-		 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
-		 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
-		 
-		 //if (hierName == "0")
-			 xmlLink->SetLinkName(iter->first);
-			 xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
-		 //else
-			 //xmlLink->SetLinkName(hierName + "." + iter->first);
-		 
-		 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
-		 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
+            //added for output port on dummy block
+            outLinkToModel[hierName][iter->first] =
+                iter->first+"_dummy_connection";
 
-		 for ( size_t j = linkPoints[hierName][ toPortName ].size(); j > 0 ; --j )
-		 {
-			// I am not sure why we need to reverse the points but we do
-			xmlLink->GetLinkPoint( linkPoints[hierName][ toPortName ].size() - j )->SetPoint( linkPoints[hierName][ toPortName ].at( j - 1 ) );
-		 }
-         iconLocations[hierName][iter->first+"_dummy_connection"] = linkPoints[hierName][toPortName].at(linkPoints[hierName][ toPortName ].size()-1);
-         //BlockInfoList[hierName][iter->first+"_dummy_connection"].id = 888888888;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].type = "dummy";
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].icon = "dummy";
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].scale = 1;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].rotation = 0;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].mirror = 0;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].hierarchical = false;
-         outLinkToModel[hierName][iter->first] = iter->first+"_dummy_connection";
-		 subNetwork->AddLink( xmlLink );
-	  }
-   }
+            //add the link
+            subNetwork->AddLink( xmlLink );
+        }
+    }
 
-   	for ( iter = outLinkToModel[hierName].begin(); iter != outLinkToModel[hierName].end(); ++iter )
-	{
-	  std::map< std::string, std::string >::iterator toModel;
-	  toModel = inLinkToModel[hierName].find( iter->first );
-	  if ( toModel == inLinkToModel[hierName].end() )
-	  {
-          //create the dummy entry in the models list
-          models[hierName][iter->first + "_dummy_connection"] = redundantID++;
+    //create standalone output streams
+    for ( iter = outLinkToModel[hierName].begin();
+        iter != outLinkToModel[hierName].end();
+        ++iter )
+    {
+        std::map< std::string, std::string >::iterator toModel;
+        toModel = inLinkToModel[hierName].find( iter->first );
 
-		 //define link
-		 // these are unique remember...
-		 std::string toPortName = iter->first + "_dummy_connection";
-		 // these are unique remember...
-		 std::string fromPortName = iter->first;
+        //make sure the link is standalone
+        if ( toModel == inLinkToModel[hierName].end() )
+        {
+            //create the dummy entry in the models list
+            models[hierName][iter->first + "_dummy_connection"] =
+                redundantID++;
 
-		 std::string toModelName;
-		 std::string fromModelName;
-		 if(hierName == "_main_sheet")
-		 {
-			 toModelName = iter->first + "_dummy_connection";
-			 fromModelName = iter->second;
-		 }
-		 else
-		 {
-			 toModelName = hierName + "." + iter->first + "_dummy_connection";
-			 fromModelName = hierName + "." + iter->second;
-		 }
+            //define link
+            // these are unique remember...
+            std::string toPortName = iter->first + "_dummy_connection";
+            // these are unique remember...
+            std::string fromPortName = iter->first;
 
-		 int toPortId = counter++;
-		 int fromPortId = counter++;
-		 int toModelId = models[hierName][ iter->first + "_dummy_connection"];
-		 int fromModelId = models[hierName][ iter->second ];
-		 streamPortIDS[ iter->first ] = std::pair< int, int >( toPortId, fromPortId );
+            std::string toModelName;
+            std::string fromModelName;
+            if(hierName == "_main_sheet")
+            {
+                toModelName = iter->first + "_dummy_connection";
+                fromModelName = iter->second;
+            }
+            else
+            {
+                toModelName =
+                    hierName + "." + iter->first + "_dummy_connection";
+                fromModelName = hierName + "." + iter->second;
+            }
+
+            int toPortId = counter++;
+            int fromPortId = counter++;
+            int toModelId =
+                models[hierName][ iter->first + "_dummy_connection"];
+            int fromModelId = models[hierName][ iter->second ];
+            streamPortIDS[ iter->first ] =
+                std::pair< int, int >( toPortId, fromPortId );
          
-		 //Now we create a link
-		 //VE_XML::VE_Model::LinkWeakPtr xmlLink = subNetwork->GetLink( -1 );
-		 ves::open::xml::model::LinkPtr xmlLink( new ves::open::xml::model::Link() );
-		 xmlLink->GetFromModule()->SetData( fromModelName, static_cast< long int >( fromModelId ) );
-		 xmlLink->GetToModule()->SetData( toModelName, static_cast< long int >( toModelId ) );
+            //Now we create a link
+            ves::open::xml::model::LinkPtr xmlLink(
+                new ves::open::xml::model::Link() );
+            xmlLink->GetFromModule()->SetData(
+                fromModelName, static_cast< long int >( fromModelId ) );
+            xmlLink->GetToModule()->SetData(
+                toModelName, static_cast< long int >( toModelId ) );
+         
+            xmlLink->SetLinkName(iter->first);
+            xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
 		 
-		 //if (hierName == "0")
-			 xmlLink->SetLinkName(iter->first);
-			 xmlLink->SetLinkType(linkTypes[hierName][iter->first]);
-		 //else
-			 //xmlLink->SetLinkName(hierName + "." + iter->first);
-		 
-		 *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
-		 *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
+            *(xmlLink->GetFromPort()) = static_cast< long int >( fromPortId );
+            *(xmlLink->GetToPort()) = static_cast< long int >( toPortId );
 
-		 for ( size_t j = linkPoints[hierName][ fromPortName ].size(); j > 0 ; --j )
-		 {
-			// I am not sure why we need to reverse the points but we do
-			xmlLink->GetLinkPoint( linkPoints[hierName][ fromPortName ].size() - j )->SetPoint( linkPoints[hierName][ fromPortName ].at( j - 1 ) );
-		 }
-         iconLocations[hierName][iter->first+"_dummy_connection"] = linkPoints[hierName][fromPortName].at(0);
-         //BlockInfoList[hierName][iter->first+"_dummy_connection"].id = 888888888;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].type = "dummy";
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].icon = "dummy";
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].scale = 1;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].rotation = 0;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].mirror = 0;
-         BlockInfoList[hierName][iter->first+"_dummy_connection"].hierarchical = false;
-         inLinkToModel[hierName][iter->first] = iter->first+"_dummy_connection";
-		 subNetwork->AddLink( xmlLink );
-	  }
+            for ( size_t j = linkPoints[hierName][ fromPortName ].size();
+                j > 0 ; --j )
+            {
+                // I am not sure why we need to reverse the points but we do
+                xmlLink->
+                    GetLinkPoint(
+                    linkPoints[hierName][ fromPortName ].size() - j )->
+                    SetPoint( 
+                    linkPoints[hierName][ fromPortName ].at( j - 1 ) );
+            }
+
+            //add location for dummy icon
+            iconLocations[hierName][iter->first+"_dummy_connection"] =
+                linkPoints[hierName][fromPortName].at(0);
+          
+            //add information for dummy block
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].type = "dummy";
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].icon = "dummy";
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].scale = 1;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].rotation = 0;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].mirror = 0;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].hierarchical =
+                false;
+         
+            //added for output port on dummy block         
+            inLinkToModel[hierName][iter->first] =
+                iter->first+"_dummy_connection";
+
+            //add the link		 
+            subNetwork->AddLink( xmlLink );
+        }
     }
 }
 ///////////////////////////////////////////////////////////////////////
