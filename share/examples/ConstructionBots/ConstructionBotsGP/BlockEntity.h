@@ -74,6 +74,8 @@ public:
     //
     void UpdateSideStates();
     //
+    bool IsAttached();
+    //
     bool PermissionToAttach( osg::Drawable* drawable );
 
     //
@@ -95,7 +97,7 @@ public:
     void SetNameAndDescriptions( int number );
     //Set the block's occupancy matrix
     void SetOccupancyMatrix(
-        const std::map< std::pair< int, int >, bool >& occMatrix );
+        const std::map< std::pair< int, int >, bool >& occupancyMatrix );
 
 protected:
 
@@ -103,6 +105,15 @@ private:
     void Initialize();
     void CalculateLocalPositions();
     void ConnectionDetection();
+
+    bool mAttached;
+
+    //Store neighbors to be or not to be occupied
+    bool mNeighborOccupancy[ 4 ];
+
+    osg::Vec4d mSiteColor;
+    osg::Vec4d mAttachColor;
+    osg::Vec4d mNoAttachColor;
 
     //A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
@@ -116,12 +127,12 @@ private:
     //The physics constraints of this block
     btGeneric6DofConstraint* mConstraint;
 
-    //
-    std::map< osg::Drawable*, bool > mSideStates;
-
     //Blocks have a copy of the occupancy matrix
     //The occupancy matrix stores the desired structure to be built
     std::map< std::pair< int, int >, bool > mOccupancyMatrix;
+
+    //
+    std::map< osg::Drawable*, bool > mSideStates;
 
     //Are blocks attached to sides or not
     //This map stores the physical connections to this block

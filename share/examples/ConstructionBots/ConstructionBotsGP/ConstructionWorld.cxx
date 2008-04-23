@@ -143,8 +143,8 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 3;
-    int numAgents = 1;
+    int numBlocks = 4;
+    int numAgents = 2;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -154,7 +154,7 @@ void ConstructionWorld::InitializeFramework()
         for( int i = 0; i < gridSize; ++i )
         {
             bool temp = false;
-            if( j == 25 && i <= 30 && i >= 20 )
+            if( j == 25 && i < 28 && i > 22 )
             {
                 temp = true;
             }
@@ -256,6 +256,7 @@ void ConstructionWorld::InitializeFramework()
 
     //mStartBlock acts as the first block of the structure so we must attach it
     mStartBlock->AttachUpdate();
+    mStartBlock->UpdateSideStates();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::CreateRandomPositions( int gridSize )

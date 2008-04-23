@@ -63,76 +63,11 @@ Block::~Block()
 ////////////////////////////////////////////////////////////////////////////////
 void Block::Initialize()
 {
-    //Create the block
-    mDrawables[ 4 ] = new osg::Geometry();
-    osg::ref_ptr< osg::StateSet > blockStateSet = new osg::StateSet();
-    blockStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
-    mDrawables[ 4 ]->setStateSet( blockStateSet.get() );
-
-    osg::ref_ptr< osg::Vec3Array > blockVertices = new osg::Vec3Array();
-    //Left
-    blockVertices->push_back( osg::Vec3( -0.5f,  0.5f,  0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
-    //Near
-    blockVertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f, -0.5f,  0.5f ) );
-    //Right
-    blockVertices->push_back( osg::Vec3( 0.5f, -0.5f,  0.5f ) );
-    blockVertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( 0.5f,  0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( 0.5f,  0.5f,  0.5f ) );
-    //Far
-    blockVertices->push_back( osg::Vec3(  0.5f, 0.5f,  0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f, 0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, 0.5f,  0.5f ) );
-    //Top
-    blockVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f,  0.5f, 0.5f ) );
-    //Bottom
-    blockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f,  0.5f, -0.5f ) );
-    blockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
-    mDrawables[ 4 ]->setVertexArray( blockVertices.get() );
-
-    osg::ref_ptr< osg::Vec4Array > blockColor = new osg::Vec4Array();
-    blockColor->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
-    mDrawables[ 4 ]->setColorArray( blockColor.get() );
-    mDrawables[ 4 ]->setColorBinding( osg::Geometry::BIND_OVERALL );
-
-    osg::ref_ptr< osg::Vec3Array > blockNormals = new osg::Vec3Array();
-    //Left
-    blockNormals->push_back( osg::Vec3( -1.0f,  0.0f,  0.0f ) );
-    //Near
-    blockNormals->push_back( osg::Vec3(  0.0f, -1.0f,  0.0f ) );
-    //Right
-    blockNormals->push_back( osg::Vec3(  1.0f,  0.0f,  0.0f ) );
-    //Far
-    blockNormals->push_back( osg::Vec3(  0.0f,  1.0f,  0.0f ) );
-    //Top
-    blockNormals->push_back( osg::Vec3(  0.0f,  0.0f,  1.0f ) );
-    //Bottom
-    blockNormals->push_back( osg::Vec3(  0.0f,  0.0f, -1.0f ) );
-    mDrawables[ 4 ]->setNormalArray( blockNormals.get() );
-    mDrawables[ 4 ]->setNormalBinding(
-        osg::Geometry::BIND_PER_PRIMITIVE );
-
-    mDrawables[ 4 ]->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::QUADS, 0, blockVertices.get()->size() ) );
-    addDrawable( mDrawables[ 4 ].get() );
-
     //Create the lines
-    mDrawables[ 2 ] = new osg::Geometry();
-    mDrawables[ 3 ] = new osg::Geometry();
     mDrawables[ 0 ] = new osg::Geometry();
     mDrawables[ 1 ] = new osg::Geometry();
+    mDrawables[ 2 ] = new osg::Geometry();
+    mDrawables[ 3 ] = new osg::Geometry();
 
     osg::ref_ptr< osg::StateSet > lineStateSet = new osg::StateSet();
     lineStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -143,18 +78,11 @@ void Block::Initialize()
     lineWidth->setWidth( 2.0f );
     lineStateSet->setAttribute( lineWidth.get() );
 
-    osg::ref_ptr< osg::Vec3Array > leftLineVertices = new osg::Vec3Array();
-    osg::ref_ptr< osg::Vec3Array > nearLineVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > rightLineVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > farLineVertices = new osg::Vec3Array();
-    //Left
-    leftLineVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
-    leftLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-    mDrawables[ 2 ]->setVertexArray( leftLineVertices.get() );
-    //Near
-    nearLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
-    nearLineVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
-    mDrawables[ 3 ]->setVertexArray( nearLineVertices.get() );
+    osg::ref_ptr< osg::Vec3Array > leftLineVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > nearLineVertices = new osg::Vec3Array();
+
     //Right
     rightLineVertices->push_back( osg::Vec3( 0.5f, -0.5f, 0.5f ) );
     rightLineVertices->push_back( osg::Vec3( 0.5f,  0.5f, 0.5f ) );
@@ -163,26 +91,127 @@ void Block::Initialize()
     farLineVertices->push_back( osg::Vec3(  0.5f, 0.5f, 0.5f ) );
     farLineVertices->push_back( osg::Vec3( -0.5f, 0.5f, 0.5f ) );
     mDrawables[ 1 ]->setVertexArray( farLineVertices.get() );
+    //Left
+    leftLineVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
+    leftLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+    mDrawables[ 2 ]->setVertexArray( leftLineVertices.get() );
+    //Near
+    nearLineVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+    nearLineVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
+    mDrawables[ 3 ]->setVertexArray( nearLineVertices.get() );
 
-    mDrawables[ 2 ]->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::LINES, 0, leftLineVertices->size() ) );
-    mDrawables[ 3 ]->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::LINES, 0, nearLineVertices->size() ) );
-    mDrawables[ 0 ]->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::LINES, 0, rightLineVertices->size() ) );
-    mDrawables[ 1 ]->addPrimitiveSet( new osg::DrawArrays(
-        osg::PrimitiveSet::LINES, 0, farLineVertices->size() ) );
-
-    std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator itr;
-    for( itr = mDrawables.begin(); itr != mDrawables.find( 4 ); ++itr )
+    std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator lgi;
+    for( lgi = mDrawables.begin(); lgi != mDrawables.find( 4 ); ++lgi )
     {
+        lgi->second->setStateSet( lineStateSet.get() );
+
         osg::ref_ptr< osg::Vec4Array > lineColor = new osg::Vec4Array();
         lineColor->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
-        itr->second->setColorArray( lineColor.get() );
-        itr->second->setColorBinding( osg::Geometry::BIND_OVERALL );
+        lgi->second->setColorArray( lineColor.get() );
+        lgi->second->setColorBinding( osg::Geometry::BIND_OVERALL );
 
-        itr->second->setStateSet( lineStateSet.get() );
-        addDrawable( itr->second.get() );
+        lgi->second->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+
+        addDrawable( lgi->second.get() );
+    }
+
+    //Create the block
+    mDrawables[ 4 ] = new osg::Geometry();
+    mDrawables[ 5 ] = new osg::Geometry();
+    mDrawables[ 6 ] = new osg::Geometry();
+    mDrawables[ 7 ] = new osg::Geometry();
+    mDrawables[ 8 ] = new osg::Geometry();
+    mDrawables[ 9 ] = new osg::Geometry();
+
+    osg::ref_ptr< osg::StateSet > blockStateSet = new osg::StateSet();
+    blockStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+
+    osg::ref_ptr< osg::Vec3Array > rightBlockVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > farBlockVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > leftBlockVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > nearBlockVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > topBlockVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > bottomBlockVertices = new osg::Vec3Array();
+    //Right
+    rightBlockVertices->push_back( osg::Vec3( 0.5f, -0.5f,  0.5f ) );
+    rightBlockVertices->push_back( osg::Vec3( 0.5f, -0.5f, -0.5f ) );
+    rightBlockVertices->push_back( osg::Vec3( 0.5f,  0.5f, -0.5f ) );
+    rightBlockVertices->push_back( osg::Vec3( 0.5f,  0.5f,  0.5f ) );
+    mDrawables[ 4 ]->setVertexArray( rightBlockVertices.get() );
+    //Far
+    farBlockVertices->push_back( osg::Vec3(  0.5f, 0.5f,  0.5f ) );
+    farBlockVertices->push_back( osg::Vec3(  0.5f, 0.5f, -0.5f ) );
+    farBlockVertices->push_back( osg::Vec3( -0.5f, 0.5f, -0.5f ) );
+    farBlockVertices->push_back( osg::Vec3( -0.5f, 0.5f,  0.5f ) );
+    mDrawables[ 5 ]->setVertexArray( farBlockVertices.get() );
+    //Left
+    leftBlockVertices->push_back( osg::Vec3( -0.5f,  0.5f,  0.5f ) );
+    leftBlockVertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
+    leftBlockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
+    leftBlockVertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
+    mDrawables[ 6 ]->setVertexArray( leftBlockVertices.get() );
+    //Near
+    nearBlockVertices->push_back( osg::Vec3( -0.5f, -0.5f,  0.5f ) );
+    nearBlockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
+    nearBlockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
+    nearBlockVertices->push_back( osg::Vec3(  0.5f, -0.5f,  0.5f ) );
+    mDrawables[ 7 ]->setVertexArray( nearBlockVertices.get() );
+    //Top
+    topBlockVertices->push_back( osg::Vec3( -0.5f,  0.5f, 0.5f ) );
+    topBlockVertices->push_back( osg::Vec3( -0.5f, -0.5f, 0.5f ) );
+    topBlockVertices->push_back( osg::Vec3(  0.5f, -0.5f, 0.5f ) );
+    topBlockVertices->push_back( osg::Vec3(  0.5f,  0.5f, 0.5f ) );
+    mDrawables[ 8 ]->setVertexArray( topBlockVertices.get() );
+    //Bottom
+    bottomBlockVertices->push_back( osg::Vec3( -0.5f, -0.5f, -0.5f ) );
+    bottomBlockVertices->push_back( osg::Vec3( -0.5f,  0.5f, -0.5f ) );
+    bottomBlockVertices->push_back( osg::Vec3(  0.5f,  0.5f, -0.5f ) );
+    bottomBlockVertices->push_back( osg::Vec3(  0.5f, -0.5f, -0.5f ) );
+    mDrawables[ 9 ]->setVertexArray( bottomBlockVertices.get() );
+
+    osg::ref_ptr< osg::Vec3Array > rightBlockNormals = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > farBlockNormals = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > leftBlockNormals = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > nearBlockNormals = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > topBlockNormals = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec3Array > bottomBlockNormals = new osg::Vec3Array();
+    //Right
+    rightBlockNormals->push_back( osg::Vec3(  1.0f,  0.0f,  0.0f ) );
+    //Far
+    farBlockNormals->push_back( osg::Vec3(  0.0f,  1.0f,  0.0f ) );
+    //Left
+    leftBlockNormals->push_back( osg::Vec3( -1.0f,  0.0f,  0.0f ) );
+    //Near
+    nearBlockNormals->push_back( osg::Vec3(  0.0f, -1.0f,  0.0f ) );
+    //Top
+    topBlockNormals->push_back( osg::Vec3(  0.0f,  0.0f,  1.0f ) );
+    //Bottom
+    bottomBlockNormals->push_back( osg::Vec3(  0.0f,  0.0f, -1.0f ) );
+
+    mDrawables[ 4 ]->setNormalArray( rightBlockNormals.get() );
+    mDrawables[ 5 ]->setNormalArray( farBlockNormals.get() );
+    mDrawables[ 6 ]->setNormalArray( leftBlockNormals.get() );
+    mDrawables[ 7 ]->setNormalArray( nearBlockNormals.get() );
+    mDrawables[ 8 ]->setNormalArray( topBlockNormals.get() );
+    mDrawables[ 9 ]->setNormalArray( bottomBlockNormals.get() );
+
+    std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator bgi;
+    for( bgi = mDrawables.find( 4 ); bgi != mDrawables.end(); ++bgi )
+    {
+        bgi->second->setStateSet( blockStateSet.get() );
+
+        osg::ref_ptr< osg::Vec4Array > color = new osg::Vec4Array();
+        color->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+        bgi->second->setColorArray( color.get() );
+        bgi->second->setColorBinding( osg::Geometry::BIND_OVERALL );
+
+        bgi->second->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+
+        bgi->second->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
+
+        addDrawable( bgi->second.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

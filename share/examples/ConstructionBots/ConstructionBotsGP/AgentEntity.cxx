@@ -174,11 +174,22 @@ void AgentEntity::AvoidObstacle()
 void AgentEntity::Build()
 {
     //Get the block close to the attach site
-    mHeldBlock->GetDCS()->SetTranslationArray(
-        GetDCS()->GetVETranslationArray() );
-    GetDCS()->setPosition( osg::Vec3( -20, -20, 0.5 ) );
+    double* position = GetDCS()->GetVETranslationArray();
+    mHeldBlock->GetDCS()->SetTranslationArray( position );
+    position[ 2 ] += 1.0;
+    GetDCS()->SetTranslationArray( position );
 
     mHeldBlock->AttachUpdate();
+
+    std::map< std::string, bots::BlockEntity* >::const_iterator itr;
+    for( itr = mBlockEntityMap.begin(); itr != mBlockEntityMap.end(); ++itr )
+    {
+        if( itr->second->IsAttached() )
+        {
+            std::cout << "Is attached!" << std::endl;
+            itr->second->UpdateSideStates();
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -240,9 +251,8 @@ void AgentEntity::PickUpBlock()
         mHeldBlock = targetEntity;
 
         double* position = mDCS->GetVETranslationArray();
-        double transArray[ 3 ] =
-            { position[ 0 ], position[ 1 ], position[ 2 ] + 1.0 };
-        mTargetDCS->SetTranslationArray( transArray );
+        position[ 2 ] += 1.0;
+        mTargetDCS->SetTranslationArray( position );
 
         mTargetDCS = NULL;
     }

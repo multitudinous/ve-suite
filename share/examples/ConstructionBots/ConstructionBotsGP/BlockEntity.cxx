@@ -61,6 +61,10 @@ BlockEntity::BlockEntity(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     CADEntity( block, pluginDCS, physicsSimulator ),
+    mAttached( false ),
+    mSiteColor( 0.0, 0.0, 0.0, 1.0 ),
+    mAttachColor( 0.0, 1.0, 0.0, 1.0 ),
+    mNoAttachColor( 1.0, 0.0, 0.0, 1.0 ),
     mPluginDCS( pluginDCS ),
     mBlockGeometry( block ),
     mConstraint( 0 ),
@@ -137,68 +141,93 @@ void BlockEntity::AttachUpdate()
     //Get coordinates and occupancy matrix from neighbors
     std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
     itr = mConnectedBlocks.begin();
-    if( itr->second )
+    for( itr = mConnectedBlocks.begin(); itr != mConnectedBlocks.end(); ++itr )
     {
-        mOccupancyMatrix = itr->second->GetOccupancyMatrix();
-        mLocation = itr->second->GetLocation();
-        switch( itr->first )
+        if( itr->second )
         {
-            case 0:
+            //Get this block's location from neighbor
+            mLocation = itr->second->GetLocation();
+            switch( itr->first )
             {
-                mLocation.first -= 1;
-            }
-            break;
+                case 0:
+                {
+                    mLocation.first -= 1;
+                }
+                break;
 
-            case 1:
-            {
-                mLocation.second -= 1;
-            }
-            break;
+                case 1:
+                {
+                    mLocation.second -= 1;
+                }
+                break;
 
-            case 2:
-            {
-                mLocation.first += 1;
-            }
-            break;
+                case 2:
+                {
+                    mLocation.first += 1;
+                }
+                break;
 
-            case 3:
-            {
-                mLocation.second -= 1;
+                case 3:
+                {
+                    mLocation.second += 1;
+                }
+                break;
             }
+
+            //Get a copy of the occupancy from neighbor
+            SetOccupancyMatrix( itr->second->GetOccupancyMatrix() );
+
             break;
         }
     }
 
     //Self align w/ blocks
     GetPhysicsRigidBody()->StaticConcaveShape();
-    //double alignedPosition[ 3 ] = { mLocation.first, mLocation.second, 0.5 };
-    //GetDCS()->SetTranslationArray( alignedPosition );
+    double* alignedPosition = GetDCS()->GetVETranslationArray();
+    alignedPosition[ 0 ] = mLocation.first;
+    alignedPosition[ 1 ] = mLocation.second;
+    GetDCS()->SetTranslationArray( alignedPosition );
 
-    //Update side states for this and neighbors
-    for( itr; itr != mConnectedBlocks.end(); ++itr )
+    //Change the block color
+    for( int i = 4; i < 10; ++i )
     {
-
+        mBlockGeometry->SetColor( i, mSiteColor );
     }
 
-    mBlockGeometry->SetColor( 4, osg::Vec4( 0, 0, 0, 1 ) );
-
+    mAttached = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
 {
-    //First test the occupancy matrix for valid attachment sites
+    std::map< osg::Drawable*, bool >::iterator itrSS;
     std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
-    for( itr = mConnectedBlocks.begin(); itr != mConnectedBlocks.end(); ++itr )
+    for( itrSS = mSideStates.begin(), itr = mConnectedBlocks.begin();
+         itrSS != mSideStates.end(), itr != mConnectedBlocks.end();
+         ++itrSS, ++itr )
     {
         if( !itr->second )
         {
-            itr->first;
+            itrSS->second = mNeighborOccupancy[ itr->first ];
+            if( itrSS->second == false )
+            {
+                mBlockGeometry->SetColor( itr->first, mSiteColor );
+            }
         }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool BlockEntity::IsAttached()
+{
+    return mAttached;
+}
+////////////////////////////////////////////////////////////////////////////////
 bool BlockEntity::PermissionToAttach( osg::Drawable* drawable )
 {
+    if( !drawable )
+    {
+        return false;
+    }
+
     return mSideStates[ drawable ];
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -251,11 +280,11 @@ void BlockEntity::ConnectionDetection()
                 oppositeSide += 2;
             }
 
-            mBlockGeometry->SetColor( i, osg::Vec4( 0, 0, 0, 1 ) );
+            mBlockGeometry->SetColor( i, mSiteColor );
             mConnectedBlocks[ i ] = mBlockEntityMap[ dcs->GetName() ];
             mConnectedBlocks[ i ]->SetBlockConnection( oppositeSide, this );
             mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
-                oppositeSide, osg::Vec4( 0, 0, 0, 1 ) );
+                oppositeSide, mSiteColor );
             mSideStates[ thisDrawable.get() ] = false;
         }
     }
@@ -338,8 +367,22 @@ void BlockEntity::SetNameAndDescriptions( int number )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetOccupancyMatrix(
-    const std::map< std::pair< int, int >, bool >& occMatrix )
+    const std::map< std::pair< int, int >, bool >& occupancyMatrix )
 {
-    mOccupancyMatrix = occMatrix;
+    mOccupancyMatrix = occupancyMatrix;
+
+    //Store neighbors to be or not to be occupied
+    mNeighborOccupancy[ 0 ] =
+        mOccupancyMatrix[ std::make_pair( mLocation.first + 1,
+                                          mLocation.second ) ];
+    mNeighborOccupancy[ 1 ] =
+        mOccupancyMatrix[ std::make_pair( mLocation.first,
+                                          mLocation.second + 1 ) ];
+    mNeighborOccupancy[ 2 ] =
+        mOccupancyMatrix[ std::make_pair( mLocation.first - 1,
+                                          mLocation.second ) ];
+    mNeighborOccupancy[ 3 ] =
+        mOccupancyMatrix[ std::make_pair( mLocation.first,
+                                          mLocation.second - 1 ) ];
 }
 ////////////////////////////////////////////////////////////////////////////////

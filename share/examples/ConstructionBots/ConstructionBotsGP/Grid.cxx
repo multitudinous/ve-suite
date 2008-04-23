@@ -86,36 +86,31 @@ void Grid::CreateGrid(
     grid->setStateSet( gridStateSet.get() );
 
     osg::ref_ptr< osg::Vec3Array > gridVertices = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec4Array > gridColor = new osg::Vec4Array();
     for( int j = 0; j < gridSize; ++j )
     {
         for( int i = 0; i < gridSize; ++i )
         {
-            gridVertices->push_back( osg::Vec3( i -       halfGridSize,
-                                               -j +       halfGridSize, 0.0f ) );
-            gridVertices->push_back( osg::Vec3( i -       halfGridSize,
-                                               -j - 1.0 + halfGridSize, 0.0f ) );
-            gridVertices->push_back( osg::Vec3( i + 1.0 - halfGridSize,
-                                               -j - 1.0 + halfGridSize, 0.0f ) );
-            gridVertices->push_back( osg::Vec3( i + 1.0 - halfGridSize,
-                                               -j +       halfGridSize, 0.0f ) );
+            double x =  i - halfGridSize;
+            double y = -j + halfGridSize;
+            gridVertices->push_back( osg::Vec3( x,       y,       0.0f ) );
+            gridVertices->push_back( osg::Vec3( x,       y - 1.0, 0.0f ) );
+            gridVertices->push_back( osg::Vec3( x + 1.0, y - 1.0, 0.0f ) );
+            gridVertices->push_back( osg::Vec3( x + 1.0, y,       0.0f ) );
+
+            bool occupancy =
+                occMatrix[ std::make_pair( x + 0.5, y - 0.5 ) ];
+            if( occupancy )
+            {
+                gridColor->push_back( osg::Vec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
+            }
+            else
+            {
+                gridColor->push_back( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+            }
         }
     }
     grid->setVertexArray( gridVertices.get() );
-
-    osg::ref_ptr< osg::Vec4Array > gridColor = new osg::Vec4Array();
-    std::map< std::pair< int, int >, bool >::const_iterator itr;
-    for( itr = occMatrix.begin(); itr != occMatrix.end(); ++itr )
-    {
-        if( itr->second == true )
-        {
-            gridColor->push_back( osg::Vec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
-        }
-
-        else if( itr->second == false )
-        {
-            gridColor->push_back( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        }
-    }
     grid->setColorArray( gridColor.get() );
     grid->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 

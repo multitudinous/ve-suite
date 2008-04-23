@@ -82,7 +82,7 @@ private:
     bool mAligned;
     bool mPerimeterDetected;
 
-    unsigned int mPreviousSensor;
+    unsigned int* mPreviousSensor;
 
     double mRange;
 

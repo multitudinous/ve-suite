@@ -52,7 +52,7 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mAligned( false ),
     mPerimeterDetected( false ),
-    mPreviousSensor( -1 ),
+    mPreviousSensor( NULL ),
     mRange( 0.05 ),
     mResultantForce( 0, 0, 0 ),
     mQueriedConnection( 0 ),
@@ -65,7 +65,10 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
 ////////////////////////////////////////////////////////////////////////////////
 PerimeterSensor::~PerimeterSensor()
 {
-    ;
+    if( mPreviousSensor )
+    {
+        delete mPreviousSensor;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Initialize()
@@ -135,14 +138,13 @@ void PerimeterSensor::CollectInformation()
 
     //Reset
     mIntersections.clear();
-    mPreviousSensor = -1;
     mQueriedConnection = NULL;
     mAligned = false;
 
     bool lastCCW( false );
     bool previousDetection( false );
     osg::Vec3d agentPosition = agentDCS->getPosition();
-    for( int i = 0; i < 8; ++i )
+    for( unsigned int i = 0; i < 8; ++i )
     {
         osg::Vec3d startPoint = (*mLocalPositions)[ i * 2 ];
         osg::Vec3d endPoint = (*mLocalPositions)[ i * 2 + 1 ];
@@ -166,23 +168,36 @@ void PerimeterSensor::CollectInformation()
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
 
+            previousDetection = true;
+
             //Store the current detection
             if( !lastCCW )
             {
                 mLastDetectionCCW.first = startPoint;
                 mLastDetectionCCW.second = endPoint;
-
-                unsigned int modulusTest = ( mPreviousSensor + i ) % 4;
+                
+                unsigned int modulusTest( 0 );
+                if( mPreviousSensor )
+                {
+                    modulusTest = ( *mPreviousSensor + i ) % 4;
+                }
                 if( modulusTest == 1  )
                 {
                     mAligned = true;
                     mQueriedConnection = mIntersections.back().drawable.get();
+                    delete mPreviousSensor;
+                    mPreviousSensor = NULL;
                 }
+                else
+                {
+                    if( !mPreviousSensor )
+                    {
+                        mPreviousSensor = new unsigned int();
+                    }
 
-                mPreviousSensor = i;
+                    *mPreviousSensor = i;
+                }
             }
-
-            previousDetection = true;
         }
         else
         {
