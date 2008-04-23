@@ -185,8 +185,11 @@ void PerimeterSensor::CollectInformation()
                 {
                     mAligned = true;
                     mQueriedConnection = mIntersections.back().drawable.get();
+
                     delete mPreviousSensor;
                     mPreviousSensor = NULL;
+
+                    break;
                 }
                 else
                 {
@@ -239,6 +242,9 @@ const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
     {
         mResultantForce.setX( x );
         mResultantForce.setY( y );
+
+        mAligned = true;
+        mQueriedConnection = mIntersections.back().drawable.get();
     }
 
     if( mResultantForce.length() != 0.0 )

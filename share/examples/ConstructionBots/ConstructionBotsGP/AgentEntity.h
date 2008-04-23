@@ -80,7 +80,7 @@ public:
     bots::SiteSensorPtr GetSiteSensor();
 
     void SetBlockEntityMap(
-        const std::map< std::string, bots::BlockEntity* >& blockEntityMap );
+        std::map< std::string, bots::BlockEntity* >* blockEntityMap );
     void SetConstraints( int gridSize );
     void SetNameAndDescriptions( int number );
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
@@ -125,7 +125,7 @@ private:
     bots::SiteSensorPtr mSiteSensor;
 
     //This in only here to test for collisions and for site interaction
-    std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
+    std::map< std::string, bots::BlockEntity* >* mBlockEntityMap;
 
     bots::BlockEntity* mHeldBlock;
 

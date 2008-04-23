@@ -143,8 +143,8 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 4;
-    int numAgents = 2;
+    int numBlocks = 12;
+    int numAgents = 4;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -153,17 +153,28 @@ void ConstructionWorld::InitializeFramework()
     {
         for( int i = 0; i < gridSize; ++i )
         {
-            bool temp = false;
-            if( j == 25 && i < 28 && i > 22 )
-            {
-                temp = true;
-            }
-
             int x =  i - halfPosition;
             int y = -j + halfPosition;
-            occupancyMatrix[ std::make_pair( x, y ) ] = temp;
+            occupancyMatrix[ std::make_pair( x, y ) ] = false;
         }
     }
+
+    occupancyMatrix[ std::make_pair(  0,  0 ) ] = true;
+
+    occupancyMatrix[ std::make_pair(  1,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0,  1 ) ] = true;
+    occupancyMatrix[ std::make_pair( -1,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0, -1 ) ] = true;
+
+    occupancyMatrix[ std::make_pair(  1,  1 ) ] = true;
+    occupancyMatrix[ std::make_pair( -1,  1 ) ] = true;
+    occupancyMatrix[ std::make_pair( -1, -1 ) ] = true;
+    occupancyMatrix[ std::make_pair(  1, -1 ) ] = true;
+
+    occupancyMatrix[ std::make_pair(  2,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0,  2 ) ] = true;
+    occupancyMatrix[ std::make_pair( -2,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0, -2 ) ] = true;
 
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
@@ -190,7 +201,7 @@ void ConstructionWorld::InitializeFramework()
     mStartBlock->InitPhysics();
     mStartBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
     mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
-    mStartBlock->SetBlockEntityMap( mBlockEntities );
+    mStartBlock->SetBlockEntityMap( &mBlockEntities );
     mStartBlock->SetNameAndDescriptions( 0 );
     mStartBlock->SetOccupancyMatrix( occupancyMatrix );
     mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
@@ -207,7 +218,7 @@ void ConstructionWorld::InitializeFramework()
         blockEntity->InitPhysics();
         blockEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
 
-        blockEntity->SetBlockEntityMap( mBlockEntities );
+        blockEntity->SetBlockEntityMap( &mBlockEntities );
 
         //Set D6 constraint for blocks
         blockEntity->SetConstraints( gridSize );
@@ -232,7 +243,7 @@ void ConstructionWorld::InitializeFramework()
         agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
         agentEntity->GetPhysicsRigidBody()->UserDefinedShape(
             agent->CreateCompoundShape() );
-        agentEntity->SetBlockEntityMap( mBlockEntities );
+        agentEntity->SetBlockEntityMap( &mBlockEntities );
 
         //Set D6 constraint for agents
         agentEntity->SetConstraints( gridSize );

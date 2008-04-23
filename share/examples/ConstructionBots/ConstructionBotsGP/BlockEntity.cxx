@@ -281,7 +281,7 @@ void BlockEntity::ConnectionDetection()
             }
 
             mBlockGeometry->SetColor( i, mSiteColor );
-            mConnectedBlocks[ i ] = mBlockEntityMap[ dcs->GetName() ];
+            mConnectedBlocks[ i ] = ( *mBlockEntityMap )[ dcs->GetName() ];
             mConnectedBlocks[ i ]->SetBlockConnection( oppositeSide, this );
             mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
                 oppositeSide, mSiteColor );
@@ -312,7 +312,7 @@ void BlockEntity::SetBlockConnection(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockEntityMap(
-    const std::map< std::string, bots::BlockEntity* >& blockEntityMap )
+    std::map< std::string, bots::BlockEntity* >* blockEntityMap )
 {
     mBlockEntityMap = blockEntityMap;
 }

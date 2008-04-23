@@ -182,11 +182,11 @@ void AgentEntity::Build()
     mHeldBlock->AttachUpdate();
 
     std::map< std::string, bots::BlockEntity* >::const_iterator itr;
-    for( itr = mBlockEntityMap.begin(); itr != mBlockEntityMap.end(); ++itr )
+    itr = ( *mBlockEntityMap ).begin();
+    for( itr; itr != ( *mBlockEntityMap ).end(); ++itr )
     {
         if( itr->second->IsAttached() )
         {
-            std::cout << "Is attached!" << std::endl;
             itr->second->UpdateSideStates();
         }
     }
@@ -227,7 +227,8 @@ void AgentEntity::GoToSite()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::InitiateBuildMode()
 {
-    bots::BlockEntity* targetEntity = mBlockEntityMap[ mTargetDCS->GetName() ];
+    bots::BlockEntity* targetEntity =
+        ( *mBlockEntityMap )[ mTargetDCS->GetName() ];
     bool collision = GetPhysicsRigidBody()->CollisionInquiry(
         targetEntity->GetPhysicsRigidBody() );
     if( collision )
@@ -241,7 +242,8 @@ void AgentEntity::InitiateBuildMode()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
 {
-    bots::BlockEntity* targetEntity = mBlockEntityMap[ mTargetDCS->GetName() ];
+    bots::BlockEntity* targetEntity =
+        ( *mBlockEntityMap )[ mTargetDCS->GetName() ];
     ves::xplorer::scenegraph::PhysicsRigidBody* targetPhysicsRigidBody =
         targetEntity->GetPhysicsRigidBody();
     bool collision =
@@ -267,7 +269,7 @@ void AgentEntity::QueryBlock()
         static_cast< ves::xplorer::scenegraph::DCS* >(
             parentVisitor.GetParentNode() );
 
-    bots::BlockEntity* blockEntity = mBlockEntityMap[ dcs->GetName() ];
+    bots::BlockEntity* blockEntity = ( *mBlockEntityMap )[ dcs->GetName() ];
     if( blockEntity->PermissionToAttach( drawable ) )
     {
         Build();
@@ -310,7 +312,7 @@ ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetBlockEntityMap(
-    const std::map< std::string, bots::BlockEntity* >& blockEntityMap )
+    std::map< std::string, bots::BlockEntity* >* blockEntityMap )
 {
     mBlockEntityMap = blockEntityMap;
 }

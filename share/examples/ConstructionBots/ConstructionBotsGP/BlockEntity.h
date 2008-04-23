@@ -90,7 +90,7 @@ public:
         unsigned int side, bots::BlockEntity* blockEntity );
     //
     void SetBlockEntityMap(
-        const std::map< std::string, bots::BlockEntity* >& blockEntityMap );
+        std::map< std::string, bots::BlockEntity* >* blockEntityMap );
     //
     void SetConstraints( int gridSize );
     //
@@ -119,7 +119,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
     //This in only here to get connections when first attached to structure
-    std::map< std::string, bots::BlockEntity* > mBlockEntityMap;
+    std::map< std::string, bots::BlockEntity* >* mBlockEntityMap;
 
     //The geometry of this block
     osg::ref_ptr< bots::Block > mBlockGeometry;
