@@ -2498,15 +2498,16 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 ///////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnKeyPress( wxKeyEvent &event )
 {
+    wxCommandEvent tempCommand;
     if( event.GetModifiers() == wxMOD_CONTROL)
     {
     if( event.GetKeyCode() == WXK_UP )
     {
-        ZoomIn( wxCommandEvent() );
+        ZoomIn( tempCommand );
     }
     else if( event.GetKeyCode() == WXK_DOWN )
     {
-        ZoomOut( wxCommandEvent() );
+        ZoomOut( tempCommand );
     }
     }
     else
