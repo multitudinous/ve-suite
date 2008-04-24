@@ -252,6 +252,8 @@ void Network::OnMLeftDown( wxMouseEvent& event )
             SelectTag( x, y );
     }
     parent->Refresh( true );
+    //necessary for setting the canvas active to handle keyboard input
+    parent->SetFocus();
     //Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -532,6 +534,9 @@ void Network::OnMRightDown( wxMouseEvent& event )
     m_selTag = -1;
     m_selTagCon = -1;
     xold = yold = 0;
+
+    //necessary for setting the canvas active to handle keyboard input
+    parent->SetFocus();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //////// Menu event handlers ////////////////////////

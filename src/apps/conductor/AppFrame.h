@@ -306,6 +306,7 @@ protected:
     void OpenRecentFile( wxCommandEvent& event );
     ///Clear the recent file history menu
     void OnClearRecentFiles( wxCommandEvent& event );
+    void OnKeyPress( wxKeyEvent &event );
 
 protected:
     void LoadFromServer( wxCommandEvent &event );

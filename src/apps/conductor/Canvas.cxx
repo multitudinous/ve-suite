@@ -53,6 +53,7 @@
 
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
+#include <wx/defs.h>
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
@@ -94,6 +95,7 @@ BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
     EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
     EVT_UPDATE_UI( Network::DELETE_NETWORK, Canvas::OnDelNetwork )
+    EVT_CHAR( Canvas::OnZoom )
 END_EVENT_TABLE()
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -440,7 +442,7 @@ void Canvas::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::OnDelMod( wxCommandEvent& event )
 {
-    ::wxPostEvent( parent, event );
+    ::wxPostEvent( mainFrame, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
@@ -461,7 +463,7 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     
     if( networks.empty() )
     {
-        parent->AddPendingEvent( cleanEvent );    
+        mainFrame->AddPendingEvent( cleanEvent );    
         
         //Refresh( true );
     }
@@ -471,4 +473,26 @@ void Canvas::SetUserScale(double x, double y)
 {
     userScale.first = x;
     userScale.second = y;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Canvas::OnZoom( wxKeyEvent &event )
+{
+    //pass zooming key presses to appframe
+    if( event.GetModifiers() == wxMOD_CONTROL)
+    {
+        if( event.GetKeyCode() == WXK_UP ||
+            event.GetKeyCode() == WXK_DOWN )
+        {
+             ::wxPostEvent( mainFrame, event );
+        }
+    }
+    else
+    {
+        event.Skip();
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void Canvas::SetMainFrame(wxWindow *window)
+{
+    this->mainFrame = window;
 }

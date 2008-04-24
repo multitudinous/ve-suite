@@ -125,6 +125,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     //EVT_CLOSE( AppFrame::OnFrameClose )
     EVT_MENU( v21ID_ZOOMIN, AppFrame::ZoomIn )
     EVT_MENU( v21ID_ZOOMOUT, AppFrame::ZoomOut )
+    EVT_CHAR( AppFrame::OnKeyPress )
     EVT_MENU( wxID_SAVE, AppFrame::Save )
     EVT_MENU( wxID_SAVEAS, AppFrame::SaveAs )
     EVT_MENU( wxID_NEW, AppFrame::NewCanvas )
@@ -438,6 +439,8 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     {
         canvas->SetTreeViewWindow( _treeView );
     }
+    canvas->SetMainFrame(this);
+
 
     //tells module panel where to send the selected module
     //Network * network = canvas->GetActiveNetwork();
@@ -743,8 +746,8 @@ void AppFrame::CreateMenu()
     //edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
     //edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
     //edit_menu->AppendSeparator();
-    edit_menu->Append( v21ID_ZOOMIN, _( "Zoom &In\tCtrl+UP" ) );
-    edit_menu->Append( v21ID_ZOOMOUT, _( "Zoom &Out\tCtrl+DOWN" ) );
+    edit_menu->Append( v21ID_ZOOMIN, _( "Zoom &In" ) );
+    edit_menu->Append( v21ID_ZOOMOUT, _( "Zoom &Out" ) );
     //This is needed because on windows the scale must be 1 for the
     //wxAutoBufferedPaintDC to work properly
 //#ifdef WIN32
@@ -2491,4 +2494,23 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
     }
     
     newCanvas = false;
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnKeyPress( wxKeyEvent &event )
+{
+    if( event.GetModifiers() == wxMOD_CONTROL)
+    {
+    if( event.GetKeyCode() == WXK_UP )
+    {
+        ZoomIn( wxCommandEvent() );
+    }
+    else if( event.GetKeyCode() == WXK_DOWN )
+    {
+        ZoomOut( wxCommandEvent() );
+    }
+    }
+    else
+    {
+        event.Skip();
+    }
 }

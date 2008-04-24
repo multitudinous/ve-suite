@@ -100,6 +100,7 @@ public:
     void CleanUpNetworks();
     ///Set the User scale
     void SetUserScale( double x, double y );
+    void SetMainFrame(wxWindow *window);
 
 private:
     ///Map of the networks for this system
@@ -117,12 +118,14 @@ private:
     ///canvas is cleaned up
     wxUpdateUIEvent cleanEvent;
     std::pair< double, double > userScale;
+    wxWindow* mainFrame;
 
     std::string ConvertUnicode( const wxChar* data )
     {
         std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
+    void OnZoom( wxKeyEvent &event );
     
     DECLARE_EVENT_TABLE() // no semicolon needed
 };

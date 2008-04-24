@@ -1160,6 +1160,9 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
     {
         hello->Show();
     }
+
+    //necessary for setting the canvas active to handle keyboard input
+    m_canvas->SetFocus();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool UIPluginBase::SelectMod( int x, int y )
@@ -1730,6 +1733,8 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     m_selTagCon = -1;
     //xold = yold =0;
     m_canvas->Refresh( true );
+    //necessary for setting the canvas active to handle keyboard input
+    m_canvas->SetFocus();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnSetActiveXplorerModel( wxCommandEvent& event )
