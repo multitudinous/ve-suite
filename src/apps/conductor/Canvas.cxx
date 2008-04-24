@@ -101,7 +101,7 @@ END_EVENT_TABLE()
 ///////////////////////////////////////////////////////////////////////////////
 Canvas::Canvas( wxWindow* parent, int id )
         : wxScrolledWindow( parent, id, wxDefaultPosition, wxDefaultSize,
-                            wxHSCROLL | wxVSCROLL | wxNO_FULL_REPAINT_ON_RESIZE ),
+                            wxHSCROLL | wxVSCROLL | wxFULL_REPAINT_ON_RESIZE ),
         previousId( "-1" ),
         m_treeView( 0 )
 {
@@ -198,13 +198,6 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
 
     //set scale
     dc.SetUserScale( userScale.first, userScale.second );
-    
-    //int xpix, ypix;
-    //GetScrollPixelsPerUnit( &xpix, &ypix );
-    //int x, y;
-    //GetViewStart( &x, &y );
-    // account for the horz and vert scrollbar offset
-    //dc.SetDeviceOrigin( -x * xpix, -y * ypix );
     dc.SetFont( GetFont() );
     dc.Clear();
     
@@ -217,7 +210,7 @@ void Canvas::OnPaint( wxPaintEvent& paintEvent )
     //-necessary for zooming functionality
     dc.SetUserScale( 1.0f, 1.0f );
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 Network* Canvas::GetActiveNetwork()
 {
     std::map < std::string, Network * >::iterator iter;
@@ -230,7 +223,7 @@ Network* Canvas::GetActiveNetwork()
     }
     return 0;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Canvas::SetActiveNetwork( std::string id )
 {
     if( id == activeId )
@@ -450,16 +443,12 @@ void Canvas::OnDelNetwork( wxUpdateUIEvent& event )
     std::string* networkID = 
         static_cast< std::string* >( event.GetClientData() );
 
-    //::wxMilliSleep( 100 );
-
     std::map< std::string, Network* >::iterator iter = 
         networks.find( *networkID );
 
     networks.erase( iter );
     activeId = "NULL";
     previousId = "-1";
-
-    std::cout << " erasing the network" << std::endl;
     
     if( networks.empty() )
     {

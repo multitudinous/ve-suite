@@ -73,8 +73,6 @@
 #include <ves/conductor/xpm/vector.xpm>
 #include <ves/conductor/xpm/vectortb.xpm>
 
-
-
 #include <wx/dc.h>
 #include <wx/dcbuffer.h>
 #include <wx/msgdlg.h>
