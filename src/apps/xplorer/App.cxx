@@ -741,7 +741,7 @@ void App::writeImageFileForWeb()
                                                              rttList.at(i).get(),
                                                              osg::StateAttribute::ON );
         fullScreenQuads.back()->getStateSet()->addUniform( new osg::Uniform ( "baseTexture", static_cast<int>(i) ) );
-        fullScreenQuads.back()->getStateSet()->addUniform( new osg::Uniform ( "dimensions", osg::Vec2(w,h) ) );
+        fullScreenQuads.back()->getStateSet()->addUniform( new osg::Uniform ( "dimensions", osg::Vec2(w * 2,h * 2) ) );
         fullScreenQuads.back()->getStateSet()->setAttribute( ssaaProgram.get() );
         float scoord = 1.0/(float)(w*2);
         float tcoord = 1.0/(float)(h*2);
