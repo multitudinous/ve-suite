@@ -111,7 +111,7 @@ void BlockSensor::Initialize()
 
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
-    DisplayLine( true );
+    DisplayLine( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
@@ -186,6 +186,8 @@ void BlockSensor::CollectInformation()
     }
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
+
+    DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate()

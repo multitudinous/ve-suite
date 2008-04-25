@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "ObstacleSensor.h"
 #include "AgentEntity.h"
+#include "PerimeterSensor.h"
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -80,14 +81,20 @@ void ObstacleSensor::CollectInformation()
 
     //Reset results from last frame
     mIntersections.clear();
+    mWallIntersections.clear();
 
     osg::Vec3d startPoint, endPoint;
     startPoint = agentDCS->getPosition();
     mLineSegmentIntersector->setStart( startPoint );
     for( double angle = 0; angle < 360; )
     {
-        endPoint.set( startPoint.x() + mRange * cos( angle * piDivOneEighty ), 
-                      startPoint.y() + mRange * sin( angle * piDivOneEighty ), 
+        double range = mRange;
+        if( mAgentEntity->mBuildMode )
+        {
+            range = 1.5;
+        }
+        endPoint.set( startPoint.x() + range * cos( angle * piDivOneEighty ), 
+                      startPoint.y() + range * sin( angle * piDivOneEighty ), 
                       startPoint.z() );
 
         mLineSegmentIntersector->reset();
@@ -104,8 +111,33 @@ void ObstacleSensor::CollectInformation()
 
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            mIntersections.push_back(
-                mLineSegmentIntersector->getFirstIntersection() );
+            osgUtil::LineSegmentIntersector::Intersection intersection =
+                mLineSegmentIntersector->getFirstIntersection();
+            osg::Drawable* drawable = intersection.drawable.get();
+            if( drawable->getName() == "Wall" )
+            {
+                mWallIntersections.push_back( intersection );
+            }
+            else
+            {
+                mIntersections.push_back( intersection );
+            }
+
+            if( mAgentEntity->mBuildMode )
+            {
+                osg::Vec4* color = &( static_cast< osg::Vec4Array* >(
+                    drawable->asGeometry()->getColorArray() )->at( 0 ) );
+                if( color->length() == 1.0 )
+                {
+                    mIntersections.pop_back();
+                }
+                else
+                {
+                    angle = 0;
+                    mAgentEntity->mBuildMode = false;
+                    mAgentEntity->mPerimeterSensor->Reset();
+                }
+            }
         }
 
         angle += mAngleIncrement;
@@ -127,25 +159,13 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         mAgentEntity->GetDCS();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
         mAgentEntity->GetTargetDCS();
-
     double* agentPosition = agentDCS->GetVETranslationArray();
-    if( targetDCS.valid() )
-    {
-        double* targetPosition = targetDCS->GetVETranslationArray();
-        VirtualForceField( agentPosition, targetPosition );
-    }
-    else
-    {
-        WallFollowing( agentPosition );
-    }
 
-    return mResultantForce.normalize();
-}
-////////////////////////////////////////////////////////////////////////////////
-btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
-{
+    //
+    btVector3 totalForce( 0, 0, 0 );
+
+    //Get the repulsive force
     btVector3 repulsiveForce( 0, 0, 0 );
-
     for( size_t i = 0; i < mIntersections.size(); ++i )
     {
         osg::Vec3d intersect = mIntersections.at( i ).getWorldIntersectPoint();
@@ -158,8 +178,63 @@ btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
 
         repulsiveForce -= deltaForce;
     }
+    totalForce += repulsiveForce;
 
-    return repulsiveForce;
+    //Get the wall repulsive force
+    btVector3 wallRepulsiveForce( 0, 0, 0 );
+    for( size_t i = 0; i < mWallIntersections.size(); ++i )
+    {
+        osg::Vec3d intersect =
+            mWallIntersections.at( i ).getWorldIntersectPoint();
+        btVector3 deltaForce( intersect.x() - agentPosition[ 0 ],
+                              intersect.y() - agentPosition[ 1 ], 0 );
+
+        double variables = mForceRepellingConstant / deltaForce.length2();
+        deltaForce /= deltaForce.length();
+        deltaForce *= variables;
+
+        wallRepulsiveForce -= deltaForce;
+    }
+    totalForce += wallRepulsiveForce;
+
+    //Calculate the target force
+    btVector3 targetForce( 0, 0, 0 );
+    if( targetDCS.valid() )
+    {
+        double* targetPosition = targetDCS->GetVETranslationArray();
+        targetForce.setValue( targetPosition[ 0 ] - agentPosition[ 0 ],
+                              targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
+
+        targetForce /= targetForce.length();
+        targetForce *= mForceAttractionConstant;
+    }
+    totalForce += targetForce;
+
+    btVector3 wallTargetForce( 0, 0, 0 );
+    double x = wallRepulsiveForce.x();
+    double y = wallRepulsiveForce.y();
+
+    double cosTheta = cos( 175 * piDivOneEighty );
+    double sinTheta = sin( 175 * piDivOneEighty );
+
+    double xNew = ( x * cosTheta ) - ( y * sinTheta );
+    double yNew = ( x * sinTheta ) + ( y * cosTheta );
+
+    wallTargetForce.setValue( xNew, yNew, 0 );
+    totalForce += wallTargetForce;
+
+    mResultantForce = totalForce;
+    if( mResultantForce.length() != 0.0 )
+    {
+        mResultantForce = mResultantForce.normalize();
+    }
+    return mResultantForce;
+}
+////////////////////////////////////////////////////////////////////////////////
+/*
+btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
+{
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::VirtualForceField(
@@ -210,6 +285,7 @@ void ObstacleSensor::WallFollowing( double* agentPosition )
 
     mResultantForce = totalForce;
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )
 {

@@ -298,6 +298,7 @@ void Grid::CreateGrid(
 
     walls->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, wallVertices->size() ) );
+    walls->setName( std::string( "Wall" ) );
     addDrawable( walls.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

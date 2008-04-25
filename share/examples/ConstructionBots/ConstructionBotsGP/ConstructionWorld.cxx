@@ -78,12 +78,11 @@ ConstructionWorld::ConstructionWorld(
     mAgents( 0 ),
     mStartBlock( 0 ),
     mPluginDCS( pluginDCS ),
-    mPhysicsSimulator( physicsSimulator )
 #ifdef VE_SOUND
-    ,
     mAmbientSound( new ves::xplorer::scenegraph::Sound(
-                       "AmbientSound", pluginDCS, soundManager ) )
+                       "AmbientSound", pluginDCS, soundManager ) ),
 #endif
+    mPhysicsSimulator( physicsSimulator )
 {
     //Initialize the construction bot framework
     InitializeFramework();
@@ -143,8 +142,8 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 12;
-    int numAgents = 4;
+    int numBlocks = 20;
+    int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -175,6 +174,16 @@ void ConstructionWorld::InitializeFramework()
     occupancyMatrix[ std::make_pair(  0,  2 ) ] = true;
     occupancyMatrix[ std::make_pair( -2,  0 ) ] = true;
     occupancyMatrix[ std::make_pair(  0, -2 ) ] = true;
+
+    occupancyMatrix[ std::make_pair(  3,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0,  3 ) ] = true;
+    occupancyMatrix[ std::make_pair( -3,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0, -3 ) ] = true;
+
+    occupancyMatrix[ std::make_pair(  4,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0,  4 ) ] = true;
+    occupancyMatrix[ std::make_pair( -4,  0 ) ] = true;
+    occupancyMatrix[ std::make_pair(  0, -4 ) ] = true;
 
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );

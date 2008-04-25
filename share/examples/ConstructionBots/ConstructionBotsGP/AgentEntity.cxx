@@ -106,6 +106,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
     mHoldBlockSensor->CollectInformation();
     if( !mHoldBlockSensor->HoldingBlock() )
     {
+        mSiteSensor->DisplayLine( false );
         mBlockSensor->CollectInformation();
         if( mBlockSensor->BlockInView() )
         {
@@ -116,41 +117,35 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
                 PickUpBlock();
             }
         }
-
-        mBlockSensor->DisplayLine( true );
-        mSiteSensor->DisplayLine( false );
-    }
-    else if( mBuildMode )
-    {
-        mPerimeterSensor->CollectInformation();
-        if( mPerimeterSensor->IsAligned() )
-        {
-            QueryBlock();
-        }
-        else
-        {
-            FollowPerimeter();
-        }
-
-        return;
     }
     else
     {
-        mSiteSensor->CollectInformation();
-        if( mSiteSensor->SiteInView() )
+        if( mBuildMode )
         {
-            GoToSite();
-
-            if( mSiteSensor->CloseToSite() )
+            mPerimeterSensor->CollectInformation();
+            if( mPerimeterSensor->Aligned() )
             {
-                InitiateBuildMode();
-
-                return;
+                QueryBlock();
+            }
+            if( mPerimeterSensor->PerimeterDetected() )
+            {
+                FollowPerimeter();
             }
         }
+        else
+        {
+            mBlockSensor->DisplayLine( false );
+            mSiteSensor->CollectInformation();
+            if( mSiteSensor->SiteInView() )
+            {
+                GoToSite();
 
-        mBlockSensor->DisplayLine( false );
-        mSiteSensor->DisplayLine( true );
+                if( mSiteSensor->CloseToSite() )
+                {
+                    InitiateBuildMode();
+                }
+            }
+        }
     }
 
     mObstacleSensor->CollectInformation();
@@ -173,6 +168,8 @@ void AgentEntity::AvoidObstacle()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
+    btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
+
     //Get the block close to the attach site
     double* position = GetDCS()->GetVETranslationArray();
     mHeldBlock->GetDCS()->SetTranslationArray( position );
@@ -180,6 +177,7 @@ void AgentEntity::Build()
     GetDCS()->SetTranslationArray( position );
 
     mHeldBlock->AttachUpdate();
+    position = mHeldBlock->GetDCS()->GetVETranslationArray();
 
     std::map< std::string, bots::BlockEntity* >::const_iterator itr;
     itr = ( *mBlockEntityMap ).begin();
@@ -190,6 +188,17 @@ void AgentEntity::Build()
             itr->second->UpdateSideStates();
         }
     }
+
+    //Rotate normalized velocity vector -90 degrees
+    velocity = velocity.normalize() * 0.6;
+    position[ 0 ] +=  velocity.y();
+    position[ 1 ] += -velocity.x();
+    position[ 0 ] += -velocity.x();
+    position[ 1 ] += -velocity.y();
+    GetDCS()->SetTranslationArray( position );
+
+    mBuildMode = false;
+    mPerimeterSensor->Reset();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -227,27 +236,18 @@ void AgentEntity::GoToSite()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::InitiateBuildMode()
 {
-    bots::BlockEntity* targetEntity =
-        ( *mBlockEntityMap )[ mTargetDCS->GetName() ];
-    bool collision = GetPhysicsRigidBody()->CollisionInquiry(
-        targetEntity->GetPhysicsRigidBody() );
-    if( collision )
-    {
-        mTargetDCS = NULL;
-        mBlockSensor->DisplayLine( false );
-        mSiteSensor->DisplayLine( false );
-        mBuildMode = true;
-    }
+    mTargetDCS = NULL;
+    mBlockSensor->DisplayLine( false );
+    mSiteSensor->DisplayLine( false );
+    mBuildMode = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
 {
     bots::BlockEntity* targetEntity =
         ( *mBlockEntityMap )[ mTargetDCS->GetName() ];
-    ves::xplorer::scenegraph::PhysicsRigidBody* targetPhysicsRigidBody =
-        targetEntity->GetPhysicsRigidBody();
-    bool collision =
-        GetPhysicsRigidBody()->CollisionInquiry( targetPhysicsRigidBody );
+    bool collision = mPhysicsRigidBody->CollisionInquiry(
+        targetEntity->GetPhysicsRigidBody() );
     if( collision )
     {
         mHeldBlock = targetEntity;

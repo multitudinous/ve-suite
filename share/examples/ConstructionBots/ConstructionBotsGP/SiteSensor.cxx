@@ -177,7 +177,7 @@ void SiteSensor::CollectInformation()
                                   sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(),
                                   0.0 );
 
-            if( siteVector.length() < 1.415 )//sqrt( 2 * 0.5 )
+            if( siteVector.length() < 2.828 )//4 * sqrt( 0.5 )
             {
                 mCloseToSite = true;
             }
@@ -189,6 +189,8 @@ void SiteSensor::CollectInformation()
     }
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
+
+    DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::Rotate()

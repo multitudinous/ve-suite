@@ -44,7 +44,7 @@ GridEntity::GridEntity(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     CADEntity( grid, pluginDCS, physicsSimulator ),
-    mGeometry( grid )
+    mGridGeometry( grid )
 {
    ;
 }

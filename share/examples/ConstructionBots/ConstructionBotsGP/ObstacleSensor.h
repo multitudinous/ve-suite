@@ -68,11 +68,6 @@ public:
     bool ObstacleDetected();
 
 private:
-    btVector3 GetRepulsiveForce( double* agentPosition );
-
-    void VirtualForceField( double* agentPosition, double* targetPosition );
-    void WallFollowing( double* agentPosition );
-
     bool mObstacleDetected;
 
     double mAngleIncrement;
@@ -83,6 +78,7 @@ private:
     btVector3 mResultantForce;
 
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
+    std::vector< osgUtil::LineSegmentIntersector::Intersection > mWallIntersections;
 
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 

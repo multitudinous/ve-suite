@@ -58,41 +58,42 @@ public:
 
     virtual void CollectInformation();
 
+    void Reset();
+
     const btVector3& GetNormalizedResultantForceVector();
     osg::Drawable* GetQueriedConnection();
 
     void SetRange( double range );
 
-    bool IsAligned();
+    bool Aligned();
     bool PerimeterDetected();
 
 private:
     void Initialize();
 
     /* There are eight perimeter sensors as shown below
-          3    2
-       4 _|____|_ 1
+          2    1
+       3 _|____|_ 0
           |    |
-       5 _|____|_ 0
+       4 _|____|_ 7
           |    |
-          6    7
+          5    6
     */
     void CalculateLocalPositions();
 
     bool mAligned;
     bool mPerimeterDetected;
 
-    unsigned int* mPreviousSensor;
+    int mLastClockWiseDetection;
+    osg::ref_ptr< osg::Drawable > previousDrawable;
 
     double mRange;
 
     btVector3 mResultantForce;
 
     osg::Drawable* mQueriedConnection;
-
+    
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
-
-    std::pair< osg::Vec3d, osg::Vec3d > mLastDetectionCCW;
 
     osg::ref_ptr< osg::Vec3Array > mLocalPositions;
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;

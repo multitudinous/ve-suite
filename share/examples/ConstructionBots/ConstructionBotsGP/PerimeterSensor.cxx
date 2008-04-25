@@ -36,7 +36,12 @@
 #include "AgentEntity.h"
 #include "BlockEntity.h"
 
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 // --- OSG Includes --- //
+#include <osg/Geometry>
+
 #include <osgUtil/IntersectionVisitor>
 
 // --- c/C++ Includes --- //
@@ -52,11 +57,11 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mAligned( false ),
     mPerimeterDetected( false ),
-    mPreviousSensor( NULL ),
-    mRange( 0.05 ),
+    mLastClockWiseDetection( 0 ),
+    previousDrawable( NULL ),
+    mRange( 0.1 ),
     mResultantForce( 0, 0, 0 ),
     mQueriedConnection( 0 ),
-    mLastDetectionCCW( osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) ),
     mLocalPositions( 0 ),
     mLineSegmentIntersector( 0 )
 {
@@ -65,10 +70,7 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
 ////////////////////////////////////////////////////////////////////////////////
 PerimeterSensor::~PerimeterSensor()
 {
-    if( mPreviousSensor )
-    {
-        delete mPreviousSensor;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Initialize()
@@ -86,12 +88,12 @@ void PerimeterSensor::CalculateLocalPositions()
 
     double blockHalfWidth = 0.5;
     osg::Vec3d rightStartPoint, rightEndPoint;
-    rightStartPoint.set( blockHalfWidth - mRange, -blockHalfWidth, 0 );
-    rightEndPoint.set( blockHalfWidth + mRange, -blockHalfWidth, 0 );
+    rightStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
+    rightEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
 
     osg::Vec3d leftStartPoint, leftEndPoint;
-    leftStartPoint.set( blockHalfWidth - mRange, blockHalfWidth, 0 );
-    leftEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
+    leftStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
+    leftEndPoint.set( blockHalfWidth, blockHalfWidth + mRange, 0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );
@@ -136,15 +138,13 @@ void PerimeterSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
 
+    osg::Vec3d agentPosition = agentDCS->getPosition();
+
     //Reset
+    mAligned = false;
     mIntersections.clear();
     mQueriedConnection = NULL;
-    mAligned = false;
-
-    bool lastCCW( false );
-    bool previousDetection( false );
-    osg::Vec3d agentPosition = agentDCS->getPosition();
-    for( unsigned int i = 0; i < 8; ++i )
+    for( int i = 7; i > -1; --i )
     {
         osg::Vec3d startPoint = (*mLocalPositions)[ i * 2 ];
         osg::Vec3d endPoint = (*mLocalPositions)[ i * 2 + 1 ];
@@ -162,89 +162,79 @@ void PerimeterSensor::CollectInformation()
         pluginDCS->RemoveChild( agentDCS.get() );
         pluginDCS->accept( intersectionVisitor );
         pluginDCS->AddChild( agentDCS.get() );
-
+        
         if( mLineSegmentIntersector->containsIntersections() )
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
+            osg::Drawable* currentDrawable =
+                mIntersections.back().drawable.get();
 
-            previousDetection = true;
-
-            //Store the current detection
-            if( !lastCCW )
+            unsigned int modulusTest = ( mLastClockWiseDetection + i ) % 4;
+            bool drawableTest( false );
+            if( previousDrawable.valid() )
             {
-                mLastDetectionCCW.first = startPoint;
-                mLastDetectionCCW.second = endPoint;
-                
-                unsigned int modulusTest( 0 );
-                if( mPreviousSensor )
-                {
-                    modulusTest = ( *mPreviousSensor + i ) % 4;
-                }
-                if( modulusTest == 1  )
-                {
-                    mAligned = true;
-                    mQueriedConnection = mIntersections.back().drawable.get();
-
-                    delete mPreviousSensor;
-                    mPreviousSensor = NULL;
-
-                    break;
-                }
-                else
-                {
-                    if( !mPreviousSensor )
-                    {
-                        mPreviousSensor = new unsigned int();
-                    }
-
-                    *mPreviousSensor = i;
-                }
+                drawableTest = ( previousDrawable == currentDrawable );
             }
+            if( ( mLastClockWiseDetection - i == 1 && modulusTest == 1 ) ||
+                ( drawableTest && modulusTest == 3 ) )
+            {
+                mAligned = true;
+                mPerimeterDetected = false;
+                mQueriedConnection = currentDrawable;
+                previousDrawable = NULL;
+            }
+
+            mLastClockWiseDetection = i;
+            if( !previousDrawable.valid() )
+            {
+                previousDrawable = new osg::Geometry();
+            }
+            previousDrawable = currentDrawable;
         }
-        else
+    }
+
+    if( !mPerimeterDetected )
+    {
+        mPerimeterDetected = !mIntersections.empty();
+    
+        btVector3 linearVelocity =
+            mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
+        if( linearVelocity.length() != 0.0 )
         {
-            if( previousDetection )
-            {
-                lastCCW = true;
-            }
-
-            previousDetection = false;
+            linearVelocity.normalize();
         }
-    }
 
-    if( !mIntersections.empty() )
-    {
-        mPerimeterDetected = true;
+        mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
+            linearVelocity );
     }
-    else
-    {
-        mPerimeterDetected = false;
-    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void PerimeterSensor::Reset()
+{
+    mPerimeterDetected = false;
+    previousDrawable = NULL;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 {
     //Calculate the total resultant force
-    double x = mLastDetectionCCW.first.x() - mLastDetectionCCW.second.x();
-    double y = mLastDetectionCCW.first.y() - mLastDetectionCCW.second.y();
+    osg::Vec3* startPoint =
+        &mLocalPositions->at( mLastClockWiseDetection * 2 );
+    osg::Vec3* endPoint =
+        &mLocalPositions->at( mLastClockWiseDetection * 2 + 1 );
+
+    double x = endPoint->x() - startPoint->x();
+    double y = endPoint->y() - startPoint->y();
     if( mIntersections.empty() )
-    {
-        mResultantForce.setX( -x );
-        mResultantForce.setY( -y );
-    }
-    else if( mIntersections.size() == 1 )
-    {
-        mResultantForce.setX( -y );
-        mResultantForce.setY(  x );
-    }
-    else
     {
         mResultantForce.setX( x );
         mResultantForce.setY( y );
-
-        mAligned = true;
-        mQueriedConnection = mIntersections.back().drawable.get();
+    }
+    else
+    {
+        mResultantForce.setX(  y );
+        mResultantForce.setY( -x );
     }
 
     if( mResultantForce.length() != 0.0 )
@@ -265,7 +255,7 @@ void PerimeterSensor::SetRange( double range )
     mRange = range;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool PerimeterSensor::IsAligned()
+bool PerimeterSensor::Aligned()
 {
     return mAligned;
 }

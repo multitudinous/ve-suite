@@ -99,11 +99,11 @@ private:
     std::map< std::string, bots::BlockEntity* > mBlockEntities;
     std::vector< bots::AgentEntity* > mAgents;
 
-    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
-
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* mAmbientSound;
 #endif
+
+    ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
 };
 } //end bots
