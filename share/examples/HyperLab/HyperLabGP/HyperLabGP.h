@@ -35,25 +35,19 @@
 #define HYPER_LAB_GP_H
 
 // --- My Includes --- //
-namespace hyperlab
-{
-    class Scene;
-}
+#include "HyperLabScenePtr.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
 
-// --- OSG Includes --- //
-#include <osg/Group>
-#include <osg/MatrixTransform>
-#include <osg/Texture2D>
-#include <osg/CameraNode>
-#include <osg/TexGenNode>
-
 // --- C/C++ Libraries --- //
 #include <string>
 
-class VE_USER_PLUGIN_EXPORTS HyperLabGP : public ves::xplorer::plugin::PluginBase
+namespace hyperlab
+{
+class VE_USER_PLUGIN_EXPORTS HyperLabGP
+    :
+    public ves::xplorer::plugin::PluginBase
 {
 public:
     HyperLabGP();
@@ -65,13 +59,15 @@ public:
 private:
     void UpdateParams();
 
-    std::string _portNumber;
-    std::string _excelData;
+    std::string mPortNumber;
+    std::string mExcelData;
 
-    hyperlab::Scene* m_scene;
+    hyperlab::HyperLabScenePtr mHyperLabScene;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( HyperLabGP )
+
+} //end hyperlab
 
 #endif //HYPER_LAB_GP_H
    

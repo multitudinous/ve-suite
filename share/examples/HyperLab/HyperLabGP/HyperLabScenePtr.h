@@ -31,55 +31,21 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef HYPER_LAB_H
-#define HYPER_LAB_H
+#ifndef HYPER_LAB_SCENE_PTR_H
+#define HYPER_LAB_SCENE_PTR_H
 
-// --- VE-Suite Includes --- //
-#include <ves/conductor/UIPluginBase.h>
-
-// --- wxWidgets Includes --- //
-#include <wx/image.h>
-
-// --- C/C++ Libraries --- //
-#include <string>
+#include <ves/util/PointerTypes.h>
 
 namespace hyperlab
 {
-class HyperLabUI : public ves::conductor::UIPluginBase
-{
-    DECLARE_DYNAMIC_CLASS( HyperLabUI )
+class HyperLabScene;
 
-public:
-    HyperLabUI();
-    virtual ~HyperLabUI();
+//Typedef for a SmartPtr type for the HyperLabScene
+typedef ves::util::ClassPtrDef< HyperLabScene >::type HyperLabScenePtr;
+typedef ves::util::SharedPtrDef< HyperLabScene >::type HyperLabSceneSharedPtr;
+typedef ves::util::WeakPtrDef< HyperLabScene >::type HyperLabSceneWeakPtr;
+typedef ves::util::ScopedPtrDef< HyperLabScene >::type HyperLabSceneScopedPtr;
 
-    virtual double GetVersion();
-
-    virtual void DrawIcon( wxDC* dc );
-
-    virtual int GetNumPoly();
-
-    virtual ves::conductor::UIDialog* UI( wxWindow* parent );
-
-    virtual wxString GetConductorName();
-
-    virtual wxString GetName();
-
-    virtual wxString GetDesc();
-
-    virtual int GetNumIports();
-    virtual void GetIPorts( POLY& ports );
-
-    virtual int GetNumOports();
-    virtual void GetOPorts( POLY& ports );
-
-    std::string portNumber;
-
-protected:
-
-private:
-
-};
 } //end hyperlab
 
-#endif //HYPER_LAB_H
+#endif //HYPER_LAB_SCENE_PTR_H

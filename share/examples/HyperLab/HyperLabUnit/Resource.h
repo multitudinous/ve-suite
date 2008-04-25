@@ -1,7 +1,9 @@
+
+
+
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by HyperLabUnit.rc
-//
+//Microsoft Visual C++ generated include file.
+//Used by HyperLabUnit.rc
 #define ID_OPEN                         3
 #define ID_CONNECT                      4
 #define IDM_ABOUTBOX                    0x0010
@@ -16,8 +18,7 @@
 #define ID_PORT_BOX                     1010
 #define ID_UNIT_BOX                     1011
 
-// Next default values for new objects
-// 
+// Next default values for new objects 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        129

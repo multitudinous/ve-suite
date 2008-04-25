@@ -74,6 +74,8 @@ enum HYPER_IDS
     ID_CANCEL_BUTTON
 };
 
+namespace hyperlab
+{
 class HyperLabUIDialog : public ves::conductor::UIDialog
 {
 public:
@@ -125,5 +127,6 @@ private:
 
     DECLARE_EVENT_TABLE()
 };
+} //end hyperlab
 
 #endif //HYPER_LAB_UI_DIALOG_H

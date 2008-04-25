@@ -70,8 +70,8 @@ public:
 
     void Lights( osg::ref_ptr< osg::Node > node );
 
-    std::map< std::string, osg::ref_ptr< osg::Image > > m_imageMap;
-    osg::ref_ptr< osg::TextureCubeMap > m_tcm;
+    std::map< std::string, osg::ref_ptr< osg::Image > > mImageMap;
+    osg::ref_ptr< osg::TextureCubeMap > mTcm;
 };
 } //end hyperlab
 

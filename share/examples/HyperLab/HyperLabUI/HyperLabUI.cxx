@@ -38,6 +38,8 @@
 // --- wxWidgets Includes --- //
 #include <wx/wx.h>
 
+using namespace hyperlab;
+
 IMPLEMENT_DYNAMIC_CLASS( HyperLabUI, UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////

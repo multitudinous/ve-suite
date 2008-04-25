@@ -33,7 +33,7 @@
 
 // --- My Includes --- //
 #include "Shaders.h"
-#include "Scene.h"
+#include "HyperLabScene.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
@@ -67,83 +67,79 @@
 using namespace hyperlab;
 
 ////////////////////////////////////////////////////////////////////////////////
-Scene::Scene( ves::xplorer::scenegraph::DCS* pluginDCS,
-              ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
-:
-shader( new hyperlab::Shaders() ),
+HyperLabScene::HyperLabScene(
+    ves::xplorer::scenegraph::DCS* pluginDCS,
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+    :
+    mPluginDCS( pluginDCS ),
+    mPhysicsSimulator( physicsSimulator ),
 
-m_pluginDCS( pluginDCS ),
-mPhysicsSimulator( physicsSimulator ),
+    shader( new hyperlab::Shaders() ),
 
-m_room( 0 ),
+    mLight( 0 ),
+    mLightSource( 0 ),
+    mLightTransform( 0 ),
+    
+    mCamera( 0 ),
+    mShadow( 0 ),
+    mTexgenNode( 0 ),
+    mShadowedScene( 0 ),
 
-m_aluminumParts( 0 ),
-m_aluminumPipes( 0 ),
-m_black( 0 ),
-m_brown( 0 ),
-m_ceiling( 0 ),
-m_coronas( 0 ),
-m_details( 0 ),
-m_floor( 0 ),
-m_glass( 0 ),
-m_lights( 0 ),
-m_ltGreen( 0 ),
-m_ltGrey( 0 ),
-m_orange( 0 ),
-m_red( 0 ),
-m_redBrown( 0 ),
-m_walls( 0 ),
-m_whiteDucts( 0 ),
-m_whitePipes( 0 ),
-m_yellow( 0 ),
+    mRoom( 0 ),
+    mAluminumParts( 0 ),
+    mAluminumPipes( 0 ),
+    mBlack( 0 ),
+    mBrown( 0 ),
+    mCeiling( 0 ),
+    mCoronas( 0 ),
+    mDetails( 0 ),
+    mFloor( 0 ),
+    mGlass( 0 ),
+    mLights( 0 ),
+    mLtGreen( 0 ),
+    mLtGrey( 0 ),
+    mOrange( 0 ),
+    mRed( 0 ),
+    mRedBrown( 0 ),
+    mWalls( 0 ),
+    mWhiteDucts( 0 ),
+    mWhitePipes( 0 ),
+    mYellow( 0 ),
 
-m_blowerComponents( 0 ),
-m_brackets( 0 ),
-m_cableTray( 0 ),
-m_cementBase( 0 ),
-m_combustorInternals( 0 ),
-m_combustorPiping( 0 ),
-m_compressorInlet( 0 ),
-m_frame( 0 ),
-m_groundBolts( 0 ),
-m_heatExchanger( 0 ),
-m_heatExchangerSweep( 0 ),
-m_instrumentation( 0 ),
-m_load( 0 ),
-m_plenumPiping( 0 ),
-m_plenumSystem( 0 ),
-m_railing( 0 ),
-m_reliefPiping( 0 ),
-m_reliefPipingAM( 0 ),
-m_shell( 0 ),
-m_stack( 0 ),
-m_turbineExhaust( 0 ),
-m_turbinePostCombustor( 0 ),
-m_turbineSupport( 0 ),
-
-m_shadowedScene( 0 ),
-
-m_shadow( 0 ),
-m_jitter( 0 ),
-m_camera( 0 ),
-m_texgenNode( 0 ),
-
-m_light( 0 ),
-m_lightSource( 0 ),
-m_lightTransform( 0 )
+    mBlowerComponents( 0 ),
+    mBrackets( 0 ),
+    mCableTray( 0 ),
+    mCementBase( 0 ),
+    mCombustorInternals( 0 ),
+    mCombustorPiping( 0 ),
+    mCompressorInlet( 0 ),
+    mFrame( 0 ),
+    mGroundBolts( 0 ),
+    mHeatExchanger( 0 ),
+    mHeatExchangerSweep( 0 ),
+    mInstrumentation( 0 ),
+    mLoad( 0 ),
+    mPlenumPiping( 0 ),
+    mPlenumSystem( 0 ),
+    mRailing( 0 ),
+    mReliefPiping( 0 ),
+    mReliefPipingAM( 0 ),
+    mShell( 0 ),
+    mStack( 0 ),
+    mTurbineExhaust( 0 ),
+    mTurbinePostCombustor( 0 ),
+    mTurbineSupport( 0 )
 {
-    InitScene();
+    InitializeScene();
 
-    //shader->SetOptions( m_pluginDCS.get(), false, false );
-    //DefaultVisuals();
-    AdvancedVisuals();
+    DefaultVisuals();
 }
 ////////////////////////////////////////////////////////////////////////////////
-Scene::~Scene()
+HyperLabScene::~HyperLabScene()
 {
-    if( m_room )
+    if( mRoom )
     {
-        delete m_room;
+        delete mRoom;
     }
 
     if( shader )
@@ -152,192 +148,192 @@ Scene::~Scene()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::DefaultVisuals()
+void HyperLabScene::DefaultVisuals()
 {
-    shader->SetOptions( m_aluminumParts.get(), false, true );
-    shader->SetOptions( m_aluminumPipes.get(), false, true );
-    shader->SetOptions( m_black.get(), false, true );
-    shader->SetOptions( m_brown.get(), false, true );
-    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
-    shader->Lights( m_coronas.get() );
-    shader->SetOptions( m_details.get(), false, false, "Decoration" );
-    shader->SetOptions( m_floor.get(), false, false, "WallMap" );
-    shader->SetOptions( m_glass.get(), false, true );
-    shader->SetOptions( m_lights.get(), false, true );
-    shader->SetOptions( m_ltGreen.get(), false, true );
-    shader->SetOptions( m_ltGrey.get(), false, true );
-    shader->SetOptions( m_orange.get(), false, true );
-    shader->SetOptions( m_red.get(), false, true );
-    shader->SetOptions( m_redBrown.get(), false, true );
-    shader->SetOptions( m_walls.get(), false, false, "WallMap" );
-    shader->SetOptions( m_whiteDucts.get(), false, true );
-    shader->SetOptions( m_whitePipes.get(), false, true );
-    shader->SetOptions( m_yellow.get(), false, true );
+    shader->SetOptions( mAluminumParts.get(), false, true );
+    shader->SetOptions( mAluminumPipes.get(), false, true );
+    shader->SetOptions( mBlack.get(), false, true );
+    shader->SetOptions( mBrown.get(), false, true );
+    shader->SetOptions( mCeiling.get(), false, false, "WallMap" );
+    shader->Lights( mCoronas.get() );
+    shader->SetOptions( mDetails.get(), false, false, "Decoration" );
+    shader->SetOptions( mFloor.get(), false, false, "WallMap" );
+    shader->SetOptions( mGlass.get(), false, true );
+    shader->SetOptions( mLights.get(), false, true );
+    shader->SetOptions( mLtGreen.get(), false, true );
+    shader->SetOptions( mLtGrey.get(), false, true );
+    shader->SetOptions( mOrange.get(), false, true );
+    shader->SetOptions( mRed.get(), false, true );
+    shader->SetOptions( mRedBrown.get(), false, true );
+    shader->SetOptions( mWalls.get(), false, true, "WallMap" );
+    shader->SetOptions( mWhiteDucts.get(), false, true );
+    shader->SetOptions( mWhitePipes.get(), false, true );
+    shader->SetOptions( mYellow.get(), false, true );
     
-    shader->SetOptions( m_blowerComponents.get(), false, true );
-    shader->SetOptions( m_brackets.get(), false, true );
-    shader->SetOptions( m_cableTray.get(), false, true );
-    shader->SetOptions( m_cementBase.get(), false, true );
-    //shader->SetOptions( m_combustorInternals.get(), false, true );
-    shader->SetOptions( m_combustorPiping.get(), false, true );
-    shader->SetOptions( m_compressorInlet.get(), false, true );
-    shader->SetOptions( m_frame.get(), false, true );
-    shader->SetOptions( m_groundBolts.get(), false, true );
-    shader->SetOptions( m_heatExchanger.get(), false, true );
-    shader->SetOptions( m_heatExchangerSweep.get(), false, true );
-    shader->SetOptions( m_instrumentation.get(), false, true );
-    shader->SetOptions( m_load.get(), false, true );
-    shader->SetOptions( m_plenumPiping.get(), false, true );
-    shader->SetOptions( m_plenumSystem.get(), false, true );
-    shader->SetOptions( m_railing.get(), false, true );
-    shader->SetOptions( m_reliefPiping.get(), false, true );
-    shader->SetOptions( m_reliefPipingAM.get(), false, true );
-    shader->SetOptions( m_shell.get(), false, true );
-    shader->SetOptions( m_stack.get(), false, true );
-    shader->SetOptions( m_turbineExhaust.get(), false, true );
-    shader->SetOptions( m_turbinePostCombustor.get(), false, true );
-    shader->SetOptions( m_turbineSupport.get(), false, true );
+    shader->SetOptions( mBlowerComponents.get(), false, true );
+    shader->SetOptions( mBrackets.get(), false, true );
+    shader->SetOptions( mCableTray.get(), false, true );
+    shader->SetOptions( mCementBase.get(), false, true );
+    //shader->SetOptions( mCombustorInternals.get(), false, true );
+    shader->SetOptions( mCombustorPiping.get(), false, true );
+    shader->SetOptions( mCompressorInlet.get(), false, true );
+    shader->SetOptions( mFrame.get(), false, true );
+    shader->SetOptions( mGroundBolts.get(), false, true );
+    shader->SetOptions( mHeatExchanger.get(), false, true );
+    shader->SetOptions( mHeatExchangerSweep.get(), false, true );
+    shader->SetOptions( mInstrumentation.get(), false, true );
+    shader->SetOptions( mLoad.get(), false, true );
+    shader->SetOptions( mPlenumPiping.get(), false, true );
+    shader->SetOptions( mPlenumSystem.get(), false, true );
+    shader->SetOptions( mRailing.get(), false, true );
+    shader->SetOptions( mReliefPiping.get(), false, true );
+    shader->SetOptions( mReliefPipingAM.get(), false, true );
+    shader->SetOptions( mShell.get(), false, true );
+    shader->SetOptions( mStack.get(), false, true );
+    shader->SetOptions( mTurbineExhaust.get(), false, true );
+    shader->SetOptions( mTurbinePostCombustor.get(), false, true );
+    shader->SetOptions( mTurbineSupport.get(), false, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::AdvancedVisuals()
+void HyperLabScene::AdvancedVisuals()
 {
     float reflectionPercentage;
 
-    shader->SetOptions( m_aluminumParts.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_aluminumPipes.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_black.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_brown.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->Lights( m_coronas.get() );
-    shader->SetOptions( m_ceiling.get(), false, false, "WallMap" );
-    shader->SetOptions( m_details.get(), false, false, "Decoration",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_floor.get(), false, false, "WallMap",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_glass.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_lights.get(), false, true );
-    shader->SetOptions( m_ltGreen.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_ltGrey.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_orange.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_red.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_redBrown.get(), false, true );
-    shader->SetOptions( m_walls.get(), false, false, "WallMap",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_whiteDucts.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_whitePipes.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_yellow.get(), false, true, "",
-                        NULL, m_shadow.get() );
+    shader->SetOptions( mAluminumParts.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mAluminumPipes.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mBlack.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mBrown.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->Lights( mCoronas.get() );
+    shader->SetOptions( mCeiling.get(), false, false, "WallMap" );
+    shader->SetOptions( mDetails.get(), false, false, "Decoration",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mFloor.get(), false, false, "WallMap",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mGlass.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mLights.get(), false, true );
+    shader->SetOptions( mLtGreen.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mLtGrey.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mOrange.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mRed.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mRedBrown.get(), false, true );
+    shader->SetOptions( mWalls.get(), false, false, "WallMap",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mWhiteDucts.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mWhitePipes.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mYellow.get(), false, true, "",
+                        NULL, mShadow.get() );
 
-    shader->SetOptions( m_blowerComponents.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_brackets.get(), false, true );
-    shader->SetOptions( m_cableTray.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_cementBase.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    //shader->SetOptions( m_combustorInternals.get(), false, true, "",
+    shader->SetOptions( mBlowerComponents.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mBrackets.get(), false, true );
+    shader->SetOptions( mCableTray.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mCementBase.get(), false, true, "",
+                        NULL, mShadow.get() );
+    //shader->SetOptions( mCombustorInternals.get(), false, true, "",
                         //NULL, NULL );
-    shader->SetOptions( m_combustorPiping.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_compressorInlet.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_frame.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_groundBolts.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_heatExchanger.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_heatExchangerSweep.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_instrumentation.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_load.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_plenumPiping.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_plenumSystem.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_railing.get(), false, true, "",
-                        NULL, m_shadow.get() );
-    shader->SetOptions( m_reliefPiping.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_reliefPipingAM.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_shell.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_stack.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_turbineExhaust.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_turbinePostCombustor.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
-    shader->SetOptions( m_turbineSupport.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), m_shadow.get() );
+    shader->SetOptions( mCombustorPiping.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mCompressorInlet.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mFrame.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mGroundBolts.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mHeatExchanger.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mHeatExchangerSweep.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mInstrumentation.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mLoad.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mPlenumPiping.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mPlenumSystem.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mRailing.get(), false, true, "",
+                        NULL, mShadow.get() );
+    shader->SetOptions( mReliefPiping.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mReliefPipingAM.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mShell.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mStack.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mTurbineExhaust.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mTurbinePostCombustor.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+    shader->SetOptions( mTurbineSupport.get(), false, true, "",
+                        &( reflectionPercentage = 0.05 ), mShadow.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::XRay()
+void HyperLabScene::XRay()
 {
-    shader->SetOptions( m_aluminumParts.get(), true );
-    shader->SetOptions( m_aluminumPipes.get(), true );
-    shader->SetOptions( m_black.get(), true );
-    shader->SetOptions( m_brown.get(), true );
-    shader->SetOptions( m_ceiling.get(), true );
-    //m_coronas->setNodeMask( 0 );
-    shader->SetOptions( m_details.get(), true );
-    shader->SetOptions( m_floor.get(), true );
-    shader->SetOptions( m_glass.get(), true );
-    shader->SetOptions( m_lights.get(), true );
-    shader->SetOptions( m_ltGreen.get(), true );
-    shader->SetOptions( m_ltGrey.get(), true );
-    shader->SetOptions( m_orange.get(), true );
-    shader->SetOptions( m_red.get(), true );
-    shader->SetOptions( m_redBrown.get(), true );
-    shader->SetOptions( m_walls.get(), true );
-    shader->SetOptions( m_whiteDucts.get(), true );
-    shader->SetOptions( m_whitePipes.get(), true );
-    shader->SetOptions( m_yellow.get(), true );
+    shader->SetOptions( mAluminumParts.get(), true );
+    shader->SetOptions( mAluminumPipes.get(), true );
+    shader->SetOptions( mBlack.get(), true );
+    shader->SetOptions( mBrown.get(), true );
+    shader->SetOptions( mCeiling.get(), true );
+    //mCoronas->setNodeMask( 0 );
+    shader->SetOptions( mDetails.get(), true );
+    shader->SetOptions( mFloor.get(), true );
+    shader->SetOptions( mGlass.get(), true );
+    shader->SetOptions( mLights.get(), true );
+    shader->SetOptions( mLtGreen.get(), true );
+    shader->SetOptions( mLtGrey.get(), true );
+    shader->SetOptions( mOrange.get(), true );
+    shader->SetOptions( mRed.get(), true );
+    shader->SetOptions( mRedBrown.get(), true );
+    shader->SetOptions( mWalls.get(), true );
+    shader->SetOptions( mWhiteDucts.get(), true );
+    shader->SetOptions( mWhitePipes.get(), true );
+    shader->SetOptions( mYellow.get(), true );
 
-    shader->SetOptions( m_blowerComponents.get(), true );
-    shader->SetOptions( m_brackets.get(), true );
-    shader->SetOptions( m_cableTray.get(), true );
-    shader->SetOptions( m_cementBase.get(), true );
-    //shader->SetOptions( m_combustorInternals.get(), true );
-    shader->SetOptions( m_combustorPiping.get(), true );
-    shader->SetOptions( m_compressorInlet.get(), true );
-    shader->SetOptions( m_frame.get(), true );
-    shader->SetOptions( m_groundBolts.get(), true );
-    shader->SetOptions( m_heatExchanger.get(), true );
-    shader->SetOptions( m_heatExchangerSweep.get(), true );
-    shader->SetOptions( m_instrumentation.get(), true );
-    shader->SetOptions( m_load.get(), true );
-    shader->SetOptions( m_plenumPiping.get(), true );
-    shader->SetOptions( m_plenumSystem.get(), true );
-    shader->SetOptions( m_railing.get(), true );
-    shader->SetOptions( m_reliefPiping.get(), true );
-    shader->SetOptions( m_reliefPipingAM.get(), true );
-    shader->SetOptions( m_shell.get(), true );
-    shader->SetOptions( m_stack.get(), true );
-    shader->SetOptions( m_turbineExhaust.get(), true );
-    shader->SetOptions( m_turbinePostCombustor.get(), true );
-    shader->SetOptions( m_turbineSupport.get(), true );
+    shader->SetOptions( mBlowerComponents.get(), true );
+    shader->SetOptions( mBrackets.get(), true );
+    shader->SetOptions( mCableTray.get(), true );
+    shader->SetOptions( mCementBase.get(), true );
+    //shader->SetOptions( mCombustorInternals.get(), true );
+    shader->SetOptions( mCombustorPiping.get(), true );
+    shader->SetOptions( mCompressorInlet.get(), true );
+    shader->SetOptions( mFrame.get(), true );
+    shader->SetOptions( mGroundBolts.get(), true );
+    shader->SetOptions( mHeatExchanger.get(), true );
+    shader->SetOptions( mHeatExchangerSweep.get(), true );
+    shader->SetOptions( mInstrumentation.get(), true );
+    shader->SetOptions( mLoad.get(), true );
+    shader->SetOptions( mPlenumPiping.get(), true );
+    shader->SetOptions( mPlenumSystem.get(), true );
+    shader->SetOptions( mRailing.get(), true );
+    shader->SetOptions( mReliefPiping.get(), true );
+    shader->SetOptions( mReliefPipingAM.get(), true );
+    shader->SetOptions( mShell.get(), true );
+    shader->SetOptions( mStack.get(), true );
+    shader->SetOptions( mTurbineExhaust.get(), true );
+    shader->SetOptions( mTurbinePostCombustor.get(), true );
+    shader->SetOptions( mTurbineSupport.get(), true );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Light* Scene::GetLight()
+osg::Light* HyperLabScene::GetLight()
 {
-    return m_light.get();
+    return mLight.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::InitScene()
+void HyperLabScene::InitializeScene()
 {
     //Setup the custom lighting for the scene
     CreateLights();
@@ -349,30 +345,31 @@ void Scene::InitScene()
     //CreateJitterTexture();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::CreateLights()
+void HyperLabScene::CreateLights()
 {
-    m_light = new osg::Light();
-    m_light->setLightNum( 1 );
-    m_light->setPosition( osg::Vec4( 0.0f, 0.0f, 10000.0f, 0.0f ) );
+    mLight = new osg::Light();
+    mLight->setLightNum( 1 );
+    mLight->setPosition( osg::Vec4( 0.0f, 0.0f, 10000.0f, 0.0f ) );
 
-    m_lightSource = new osg::LightSource();
-    m_lightSource->setLight( m_light.get() );
-    m_lightSource->setLocalStateSetModes( osg::StateAttribute::ON );
+    mLightSource = new osg::LightSource();
+    mLightSource->setLight( mLight.get() );
+    mLightSource->setLocalStateSetModes( osg::StateAttribute::ON );
 
-    m_lightTransform = new osg::MatrixTransform();
-    m_lightTransform->setMatrix( osg::Matrix::translate( osg::Vec3( 0.0f, 0.0f, 10000.0f ) ) );
-    m_lightTransform->addChild( m_lightSource.get() );
+    mLightTransform = new osg::MatrixTransform();
+    mLightTransform->setMatrix(
+        osg::Matrix::translate( osg::Vec3( 0.0f, 0.0f, 10000.0f ) ) );
+    mLightTransform->addChild( mLightSource.get() );
 
-    m_pluginDCS->addChild( m_lightTransform.get() );
+    mPluginDCS->addChild( mLightTransform.get() );
 
     //Set light defaults
-    m_light->setAmbient( osg::Vec4( 0.63f, 0.63f, 0.40f, 1.0f ) );
-    m_light->setDiffuse( osg::Vec4( 0.90f, 0.90f, 0.45f, 1.0f ) );
-    m_light->setSpecular( osg::Vec4( 0.78f, 0.78f, 0.5f, 1.0f ) );
+    mLight->setAmbient( osg::Vec4( 0.63f, 0.63f, 0.40f, 1.0f ) );
+    mLight->setDiffuse( osg::Vec4( 0.90f, 0.90f, 0.45f, 1.0f ) );
+    mLight->setSpecular( osg::Vec4( 0.78f, 0.78f, 0.5f, 1.0f ) );
 
     //Add in the corona quads for added effets
-    m_coronas = new osg::Geode();
-    m_coronas->setCullingActive( false );
+    mCoronas = new osg::Geode();
+    mCoronas->setCullingActive( false );
     osg::ref_ptr< osg::Geometry > geometry = new osg::Geometry();
     osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > positions = new osg::Vec3Array();
@@ -387,70 +384,90 @@ void Scene::CreateLights()
     geometry->setVertexArray( vertices.get() );
     geometry->setTexCoordArray( 0, positions.get() );
 
-    geometry->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices->size() ) );
+    geometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices->size() ) );
     
-    m_coronas->addDrawable( geometry.get() );
-    //m_pluginDCS->addChild( m_coronas.get() );
+    mCoronas->addDrawable( geometry.get() );
+    //mPluginDCS->addChild( mCoronas.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::CreateNodes()
+void HyperLabScene::CreateNodes()
 {
     //Pointer to set StateSets for the nodes
     osg::ref_ptr< osg::StateSet > stateset;
 
     //Set up the collision detection nodes for the room
     osg::ref_ptr< osg::Group > roomPhysics = new osg::Group();
-    m_room = new ves::xplorer::scenegraph::CADEntity( roomPhysics.get(),
-                                                      m_pluginDCS.get(),
+    mRoom = new ves::xplorer::scenegraph::CADEntity( roomPhysics.get(),
+                                                      mPluginDCS.get(),
                                                       mPhysicsSimulator );
 
     //Load in the geometry for the room
     {
-        m_aluminumParts = osgDB::readNodeFile( "./Models/IVEs/Room/AluminumParts.ive" );
-        m_room->GetDCS()->addChild( m_aluminumParts.get() );
-        m_aluminumPipes = osgDB::readNodeFile( "./Models/IVEs/Room/AluminumPipes.ive" );
-        m_room->GetDCS()->addChild( m_aluminumPipes.get() );
-        m_black = osgDB::readNodeFile( "./Models/IVEs/Room/Black.ive" );
-        m_room->GetDCS()->addChild( m_black.get() );
-        m_brown = osgDB::readNodeFile( "./Models/IVEs/Room/Brown.ive" );
-        m_room->GetDCS()->addChild( m_brown.get() );
-        m_ceiling = osgDB::readNodeFile( "./Models/IVEs/Room/Ceiling.ive" );
-        roomPhysics->addChild( m_ceiling.get() );
-        m_details = osgDB::readNodeFile( "./Models/IVEs/Room/Details.ive" );
-        m_room->GetDCS()->addChild( m_details.get() );
-        m_floor = osgDB::readNodeFile( "./Models/IVEs/Room/Floor.ive" );
-        roomPhysics->addChild( m_floor.get() );
-        m_glass = osgDB::readNodeFile( "./Models/IVEs/Room/Glass.ive" );
-        m_room->GetDCS()->addChild( m_glass.get() );
-        m_lights = osgDB::readNodeFile( "./Models/IVEs/Room/Lights.ive" );
-        m_room->GetDCS()->addChild( m_lights.get() );
-        m_ltGreen = osgDB::readNodeFile( "./Models/IVEs/Room/LtGreen.ive" );
-        m_room->GetDCS()->addChild( m_ltGreen.get() );
-        m_ltGrey = osgDB::readNodeFile( "./Models/IVEs/Room/LtGrey.ive" );
-        m_room->GetDCS()->addChild( m_ltGrey.get() );
-        m_orange = osgDB::readNodeFile( "./Models/IVEs/Room/Orange.ive" );
-        m_room->GetDCS()->addChild( m_orange.get() );
-        m_red = osgDB::readNodeFile( "./Models/IVEs/Room/Red.ive" );
-        m_room->GetDCS()->addChild( m_red.get() );
-        m_redBrown = osgDB::readNodeFile( "./Models/IVEs/Room/RedBrown.ive" );
-        m_room->GetDCS()->addChild( m_redBrown.get() );
-        m_walls = osgDB::readNodeFile( "./Models/IVEs/Room/Walls.ive" );
-        roomPhysics->addChild( m_walls.get() );
-        m_whiteDucts = osgDB::readNodeFile( "./Models/IVEs/Room/WhiteDucts.ive" );
-        m_room->GetDCS()->addChild( m_whiteDucts.get() );
-        m_whitePipes = osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
-        m_room->GetDCS()->addChild( m_whitePipes.get() );
-        m_yellow = osgDB::readNodeFile( "./Models/IVEs/Room/Yellow.ive" );
-        m_room->GetDCS()->addChild( m_yellow.get() );
+        mAluminumParts =
+            osgDB::readNodeFile( "./Models/IVEs/Room/AluminumParts.ive" );
+        mRoom->GetDCS()->addChild( mAluminumParts.get() );
+        mAluminumPipes =
+            osgDB::readNodeFile( "./Models/IVEs/Room/AluminumPipes.ive" );
+        mRoom->GetDCS()->addChild( mAluminumPipes.get() );
+        mBlack =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Black.ive" );
+        mRoom->GetDCS()->addChild( mBlack.get() );
+        mBrown =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Brown.ive" );
+        mRoom->GetDCS()->addChild( mBrown.get() );
+        mCeiling =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Ceiling.ive" );
+        mRoom->GetDCS()->addChild( mCeiling.get() );
+        mDetails =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Details.ive" );
+        mRoom->GetDCS()->addChild( mDetails.get() );
+        mFloor =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Floor.ive" );
+        mRoom->GetDCS()->addChild( mFloor.get() );
+        mGlass =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Glass.ive" );
+        mRoom->GetDCS()->addChild( mGlass.get() );
+        mLights =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Lights.ive" );
+        mRoom->GetDCS()->addChild( mLights.get() );
+        mLtGreen =
+            osgDB::readNodeFile( "./Models/IVEs/Room/LtGreen.ive" );
+        mRoom->GetDCS()->addChild( mLtGreen.get() );
+        mLtGrey =
+            osgDB::readNodeFile( "./Models/IVEs/Room/LtGrey.ive" );
+        mRoom->GetDCS()->addChild( mLtGrey.get() );
+        mOrange =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Orange.ive" );
+        mRoom->GetDCS()->addChild( mOrange.get() );
+        mRed =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Red.ive" );
+        mRoom->GetDCS()->addChild( mRed.get() );
+        mRedBrown =
+            osgDB::readNodeFile( "./Models/IVEs/Room/RedBrown.ive" );
+        mRoom->GetDCS()->addChild( mRedBrown.get() );
+        mWalls =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Walls.ive" );
+        mRoom->GetDCS()->addChild( mWalls.get() );
+        mWhiteDucts =
+            osgDB::readNodeFile( "./Models/IVEs/Room/WhiteDucts.ive" );
+        mRoom->GetDCS()->addChild( mWhiteDucts.get() );
+        mWhitePipes =
+            osgDB::readNodeFile( "./Models/IVEs/Room/WhitePipes.ive" );
+        mRoom->GetDCS()->addChild( mWhitePipes.get() );
+        mYellow =
+            osgDB::readNodeFile( "./Models/IVEs/Room/Yellow.ive" );
+        mRoom->GetDCS()->addChild( mYellow.get() );
 
         //Set up material properties for the room geometry
-        osg::ref_ptr< osg::Material > aluminumPartsMaterial = new osg::Material();
+        osg::ref_ptr< osg::Material > aluminumPartsMaterial =
+            new osg::Material();
         aluminumPartsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
         aluminumPartsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
         aluminumPartsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.6f, 1.0f ) );
         aluminumPartsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         aluminumPartsMaterial->setShininess( osg::Material::FRONT, 5.0f );
-        stateset = m_aluminumParts->getOrCreateStateSet();
+        stateset = mAluminumParts->getOrCreateStateSet();
         stateset->setAttributeAndModes( aluminumPartsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > aluminumPipesMaterial = new osg::Material();
@@ -459,7 +476,7 @@ void Scene::CreateNodes()
         aluminumPipesMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.6f, 1.0f ) );
         aluminumPipesMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         aluminumPipesMaterial->setShininess( osg::Material::FRONT, 5.0f );
-        stateset = m_aluminumPipes->getOrCreateStateSet();
+        stateset = mAluminumPipes->getOrCreateStateSet();
         stateset->setAttributeAndModes( aluminumPipesMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > blackMaterial = new osg::Material();
@@ -468,7 +485,7 @@ void Scene::CreateNodes()
         blackMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
         blackMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         blackMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_black->getOrCreateStateSet();
+        stateset = mBlack->getOrCreateStateSet();
         stateset->setAttributeAndModes( blackMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > brownMaterial = new osg::Material();
@@ -477,7 +494,7 @@ void Scene::CreateNodes()
         brownMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.5f, 0.3f, 0.15f, 1.0f ) );
         brownMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         brownMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_brown->getOrCreateStateSet();
+        stateset = mBrown->getOrCreateStateSet();
         stateset->setAttributeAndModes( brownMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > ceilingMaterial = new osg::Material();
@@ -486,7 +503,7 @@ void Scene::CreateNodes()
         ceilingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.3f, 0.3f, 0.3f, 1.0f ) );
         ceilingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
         ceilingMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_ceiling->getOrCreateStateSet();
+        stateset = mCeiling->getOrCreateStateSet();
         stateset->setAttributeAndModes( ceilingMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > detailsMaterial = new osg::Material();
@@ -495,7 +512,7 @@ void Scene::CreateNodes()
         detailsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
         detailsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
         detailsMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_details->getOrCreateStateSet();
+        stateset = mDetails->getOrCreateStateSet();
         stateset->setAttributeAndModes( detailsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > floorMaterial = new osg::Material();
@@ -504,7 +521,7 @@ void Scene::CreateNodes()
         floorMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         floorMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         floorMaterial->setShininess( osg::Material::FRONT, 5.0f );
-        stateset = m_floor->getOrCreateStateSet();
+        stateset = mFloor->getOrCreateStateSet();
         stateset->setAttributeAndModes( floorMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > glassMaterial = new osg::Material();
@@ -513,7 +530,7 @@ void Scene::CreateNodes()
         glassMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
         glassMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         glassMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_glass->getOrCreateStateSet();
+        stateset = mGlass->getOrCreateStateSet();
         stateset->setAttributeAndModes( glassMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > lightsMaterial = new osg::Material();
@@ -522,7 +539,7 @@ void Scene::CreateNodes()
         lightsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
         lightsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         lightsMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_lights->getOrCreateStateSet();
+        stateset = mLights->getOrCreateStateSet();
         stateset->setAttributeAndModes( lightsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > ltGreenMaterial = new osg::Material();
@@ -531,7 +548,7 @@ void Scene::CreateNodes()
         ltGreenMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.8f, 0.5f, 1.0f ) );
         ltGreenMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         ltGreenMaterial->setShininess( osg::Material::FRONT, 10.0f );
-        stateset = m_ltGreen->getOrCreateStateSet();
+        stateset = mLtGreen->getOrCreateStateSet();
         stateset->setAttributeAndModes( ltGreenMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > ltGreyMaterial = new osg::Material();
@@ -540,7 +557,7 @@ void Scene::CreateNodes()
         ltGreyMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         ltGreyMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.2f, 0.2f, 0.2f, 1.0f ) );
         ltGreyMaterial->setShininess( osg::Material::FRONT, 5.0f );
-        stateset = m_ltGrey->getOrCreateStateSet();
+        stateset = mLtGrey->getOrCreateStateSet();
         stateset->setAttributeAndModes( ltGreyMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > orangeMaterial = new osg::Material();
@@ -549,7 +566,7 @@ void Scene::CreateNodes()
         orangeMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.65f, 0.3f, 1.0f ) );
         orangeMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         orangeMaterial->setShininess( osg::Material::FRONT, 10.0f );
-        stateset = m_orange->getOrCreateStateSet();
+        stateset = mOrange->getOrCreateStateSet();
         stateset->setAttributeAndModes( orangeMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > redMaterial = new osg::Material();
@@ -558,7 +575,7 @@ void Scene::CreateNodes()
         redMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
         redMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         redMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_red->getOrCreateStateSet();
+        stateset = mRed->getOrCreateStateSet();
         stateset->setAttributeAndModes( redMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > redBrownMaterial = new osg::Material();
@@ -567,7 +584,7 @@ void Scene::CreateNodes()
         redBrownMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.14f, 0.07f, 0.0f, 1.0f ) );
         redBrownMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
         redBrownMaterial->setShininess( osg::Material::FRONT, 10.0f );
-        stateset = m_redBrown->getOrCreateStateSet();
+        stateset = mRedBrown->getOrCreateStateSet();
         stateset->setAttributeAndModes( redBrownMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > wallsMaterial = new osg::Material();
@@ -576,7 +593,7 @@ void Scene::CreateNodes()
         wallsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
         wallsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
         wallsMaterial->setShininess( osg::Material::FRONT, 5.0f );
-        stateset = m_walls->getOrCreateStateSet();
+        stateset = mWalls->getOrCreateStateSet();
         stateset->setAttributeAndModes( wallsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > whiteDuctsMaterial = new osg::Material();
@@ -585,7 +602,7 @@ void Scene::CreateNodes()
         whiteDuctsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
         whiteDuctsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         whiteDuctsMaterial->setShininess( osg::Material::FRONT, 10.0f );
-        stateset = m_whiteDucts->getOrCreateStateSet();
+        stateset = mWhiteDucts->getOrCreateStateSet();
         stateset->setAttributeAndModes( whiteDuctsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > whitePipesMaterial = new osg::Material();
@@ -594,7 +611,7 @@ void Scene::CreateNodes()
         whitePipesMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
         whitePipesMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         whitePipesMaterial->setShininess( osg::Material::FRONT, 15.0f );
-        stateset = m_whitePipes->getOrCreateStateSet();
+        stateset = mWhitePipes->getOrCreateStateSet();
         stateset->setAttributeAndModes( whitePipesMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > yellowMaterial = new osg::Material();
@@ -603,56 +620,79 @@ void Scene::CreateNodes()
         yellowMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.85f, 0.3f, 1.0f ) );
         yellowMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
         yellowMaterial->setShininess( osg::Material::FRONT, 10.0f );
-        stateset = m_yellow->getOrCreateStateSet();
+        stateset = mYellow->getOrCreateStateSet();
         stateset->setAttributeAndModes( yellowMaterial.get(), osg::StateAttribute::ON );
     }
 
-    m_blowerComponents = osgDB::readNodeFile( "./Models/IVEs/BlowerComponents.ive" );
-    m_pluginDCS->addChild( m_blowerComponents.get() );
-    m_brackets = osgDB::readNodeFile( "./Models/IVEs/Brackets.ive" );
-    m_pluginDCS->addChild( m_brackets.get() );
-    m_cableTray = osgDB::readNodeFile( "./Models/IVEs/CableTray.ive" );
-    m_pluginDCS->addChild( m_cableTray.get() );
-    m_cementBase = osgDB::readNodeFile( "./Models/IVEs/CementBase.ive" );
-    m_pluginDCS->addChild( m_cementBase.get() );
-    //m_combustorInternals = osgDB::readNodeFile( "./Models/IVEs/CombustorInternals.ive" );
-    //m_pluginDCS->addChild( m_combustorInternals.get() );
-    m_combustorPiping = osgDB::readNodeFile( "./Models/IVEs/CombustorPiping.ive" );
-    m_pluginDCS->addChild( m_combustorPiping.get() );
-    m_compressorInlet = osgDB::readNodeFile( "./Models/IVEs/CompressorInlet.ive" );
-    m_pluginDCS->addChild( m_compressorInlet.get() );
-    m_frame = osgDB::readNodeFile( "./Models/IVEs/Frame.ive" );
-    m_pluginDCS->addChild( m_frame.get() );
-    m_groundBolts = osgDB::readNodeFile( "./Models/IVEs/GroundBolts.ive" );
-    m_pluginDCS->addChild( m_groundBolts.get() );
-    m_heatExchanger = osgDB::readNodeFile( "./Models/IVEs/HeatExchanger.ive" );
-    m_pluginDCS->addChild( m_heatExchanger.get() );
-    m_heatExchangerSweep = osgDB::readNodeFile( "./Models/IVEs/HeatExchangerSweep.ive" );
-    m_pluginDCS->addChild( m_heatExchangerSweep.get() );
-    m_instrumentation = osgDB::readNodeFile( "./Models/IVEs/Instrumentation.ive" );
-    m_pluginDCS->addChild( m_instrumentation.get() );
-    m_load = osgDB::readNodeFile( "./Models/IVEs/Load.ive" );
-    m_pluginDCS->addChild( m_load.get() );
-    m_plenumPiping = osgDB::readNodeFile( "./Models/IVEs/PlenumPiping.ive" );
-    m_pluginDCS->addChild( m_plenumPiping.get() );
-    m_plenumSystem = osgDB::readNodeFile( "./Models/IVEs/PlenumSystem.ive" );
-    m_pluginDCS->addChild( m_plenumSystem.get() );
-    m_railing = osgDB::readNodeFile( "./Models/IVEs/Railing.ive" );
-    m_pluginDCS->addChild( m_railing.get() );
-    m_reliefPiping = osgDB::readNodeFile( "./Models/IVEs/ReliefPiping.ive" );
-    m_pluginDCS->addChild( m_reliefPiping.get() );
-    m_reliefPipingAM = osgDB::readNodeFile( "./Models/IVEs/ReliefPipingAM.ive" );
-    m_pluginDCS->addChild( m_reliefPipingAM.get() );
-    m_shell = osgDB::readNodeFile( "./Models/IVEs/Shell.ive" );
-    m_pluginDCS->addChild( m_shell.get() );
-    m_stack = osgDB::readNodeFile( "./Models/IVEs/Stack.ive" );
-    m_pluginDCS->addChild( m_stack.get() );
-    m_turbineExhaust = osgDB::readNodeFile( "./Models/IVEs/TurbineExhaust.ive" );
-    m_pluginDCS->addChild( m_turbineExhaust.get() );
-    m_turbinePostCombustor = osgDB::readNodeFile( "./Models/IVEs/TurbinePostCombustor.ive" );
-    m_pluginDCS->addChild( m_turbinePostCombustor.get() );
-    m_turbineSupport = osgDB::readNodeFile( "./Models/IVEs/TurbineSupport.ive" );
-    m_pluginDCS->addChild( m_turbineSupport.get() );
+    mBlowerComponents =
+        osgDB::readNodeFile( "./Models/IVEs/BlowerComponents.ive" );
+    mPluginDCS->addChild( mBlowerComponents.get() );
+    mBrackets =
+        osgDB::readNodeFile( "./Models/IVEs/Brackets.ive" );
+    mPluginDCS->addChild( mBrackets.get() );
+    mCableTray =
+        osgDB::readNodeFile( "./Models/IVEs/CableTray.ive" );
+    mPluginDCS->addChild( mCableTray.get() );
+    mCementBase =
+        osgDB::readNodeFile( "./Models/IVEs/CementBase.ive" );
+    mPluginDCS->addChild( mCementBase.get() );
+    //mCombustorInternals =
+        //osgDB::readNodeFile( "./Models/IVEs/CombustorInternals.ive" );
+    //mPluginDCS->addChild( mCombustorInternals.get() );
+    mCombustorPiping =
+        osgDB::readNodeFile( "./Models/IVEs/CombustorPiping.ive" );
+    mPluginDCS->addChild( mCombustorPiping.get() );
+    mCompressorInlet =
+        osgDB::readNodeFile( "./Models/IVEs/CompressorInlet.ive" );
+    mPluginDCS->addChild( mCompressorInlet.get() );
+    mFrame =
+        osgDB::readNodeFile( "./Models/IVEs/Frame.ive" );
+    mPluginDCS->addChild( mFrame.get() );
+    mGroundBolts =
+        osgDB::readNodeFile( "./Models/IVEs/GroundBolts.ive" );
+    mPluginDCS->addChild( mGroundBolts.get() );
+    mHeatExchanger =
+        osgDB::readNodeFile( "./Models/IVEs/HeatExchanger.ive" );
+    mPluginDCS->addChild( mHeatExchanger.get() );
+    mHeatExchangerSweep =
+        osgDB::readNodeFile( "./Models/IVEs/HeatExchangerSweep.ive" );
+    mPluginDCS->addChild( mHeatExchangerSweep.get() );
+    mInstrumentation =
+        osgDB::readNodeFile( "./Models/IVEs/Instrumentation.ive" );
+    mPluginDCS->addChild( mInstrumentation.get() );
+    mLoad =
+        osgDB::readNodeFile( "./Models/IVEs/Load.ive" );
+    mPluginDCS->addChild( mLoad.get() );
+    mPlenumPiping =
+        osgDB::readNodeFile( "./Models/IVEs/PlenumPiping.ive" );
+    mPluginDCS->addChild( mPlenumPiping.get() );
+    mPlenumSystem =
+        osgDB::readNodeFile( "./Models/IVEs/PlenumSystem.ive" );
+    mPluginDCS->addChild( mPlenumSystem.get() );
+    mRailing =
+        osgDB::readNodeFile( "./Models/IVEs/Railing.ive" );
+    mPluginDCS->addChild( mRailing.get() );
+    mReliefPiping =
+        osgDB::readNodeFile( "./Models/IVEs/ReliefPiping.ive" );
+    mPluginDCS->addChild( mReliefPiping.get() );
+    mReliefPipingAM =
+        osgDB::readNodeFile( "./Models/IVEs/ReliefPipingAM.ive" );
+    mPluginDCS->addChild( mReliefPipingAM.get() );
+    mShell =
+        osgDB::readNodeFile( "./Models/IVEs/Shell.ive" );
+    mPluginDCS->addChild( mShell.get() );
+    mStack =
+        osgDB::readNodeFile( "./Models/IVEs/Stack.ive" );
+    mPluginDCS->addChild( mStack.get() );
+    mTurbineExhaust =
+        osgDB::readNodeFile( "./Models/IVEs/TurbineExhaust.ive" );
+    mPluginDCS->addChild( mTurbineExhaust.get() );
+    mTurbinePostCombustor =
+        osgDB::readNodeFile( "./Models/IVEs/TurbinePostCombustor.ive" );
+    mPluginDCS->addChild( mTurbinePostCombustor.get() );
+    mTurbineSupport =
+        osgDB::readNodeFile( "./Models/IVEs/TurbineSupport.ive" );
+    mPluginDCS->addChild( mTurbineSupport.get() );
 
     osg::ref_ptr< osg::Material > blowerComponentsMaterial = new osg::Material();
     blowerComponentsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
@@ -660,7 +700,7 @@ void Scene::CreateNodes()
     blowerComponentsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     blowerComponentsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     blowerComponentsMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_blowerComponents->getOrCreateStateSet();
+    stateset = mBlowerComponents->getOrCreateStateSet();
     stateset->setAttributeAndModes( blowerComponentsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > bracketsMaterial = new osg::Material();
@@ -669,7 +709,7 @@ void Scene::CreateNodes()
     bracketsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     bracketsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     bracketsMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_brackets->getOrCreateStateSet();
+    stateset = mBrackets->getOrCreateStateSet();
     stateset->setAttributeAndModes( bracketsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > cableTrayMaterial = new osg::Material();
@@ -678,7 +718,7 @@ void Scene::CreateNodes()
     cableTrayMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     cableTrayMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     cableTrayMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_cableTray->getOrCreateStateSet();
+    stateset = mCableTray->getOrCreateStateSet();
     stateset->setAttributeAndModes( cableTrayMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > cementBaseMaterial = new osg::Material();
@@ -687,7 +727,7 @@ void Scene::CreateNodes()
     cementBaseMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     cementBaseMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     cementBaseMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_cementBase->getOrCreateStateSet();
+    stateset = mCementBase->getOrCreateStateSet();
     stateset->setAttributeAndModes( cementBaseMaterial.get(), osg::StateAttribute::ON );
 
     /*
@@ -697,7 +737,7 @@ void Scene::CreateNodes()
     combustorInternalsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     combustorInternalsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     combustorInternalsMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_combustorInternals->getOrCreateStateSet();
+    stateset = mCombustorInternals->getOrCreateStateSet();
     stateset->setAttributeAndModes( combustorInternalsMaterial.get(), osg::StateAttribute::ON );
     */
 
@@ -707,7 +747,7 @@ void Scene::CreateNodes()
     combustorPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     combustorPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     combustorPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_combustorPiping->getOrCreateStateSet();
+    stateset = mCombustorPiping->getOrCreateStateSet();
     stateset->setAttributeAndModes( combustorPipingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > compressorInletMaterial = new osg::Material();
@@ -716,7 +756,7 @@ void Scene::CreateNodes()
     compressorInletMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     compressorInletMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     compressorInletMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_compressorInlet->getOrCreateStateSet();
+    stateset = mCompressorInlet->getOrCreateStateSet();
     stateset->setAttributeAndModes( compressorInletMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > frameMaterial = new osg::Material();
@@ -725,7 +765,7 @@ void Scene::CreateNodes()
     frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
     frameMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     frameMaterial->setShininess( osg::Material::FRONT, 12.0f );
-    stateset = m_frame->getOrCreateStateSet();
+    stateset = mFrame->getOrCreateStateSet();
     stateset->setAttributeAndModes( frameMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > groundBoltsMaterial = new osg::Material();
@@ -734,7 +774,7 @@ void Scene::CreateNodes()
     groundBoltsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
     groundBoltsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     groundBoltsMaterial->setShininess( osg::Material::FRONT, 12.0f );
-    stateset = m_groundBolts->getOrCreateStateSet();
+    stateset = mGroundBolts->getOrCreateStateSet();
     stateset->setAttributeAndModes( groundBoltsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > heatExchangerMaterial = new osg::Material();
@@ -743,7 +783,7 @@ void Scene::CreateNodes()
     heatExchangerMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     heatExchangerMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     heatExchangerMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_heatExchanger->getOrCreateStateSet();
+    stateset = mHeatExchanger->getOrCreateStateSet();
     stateset->setAttributeAndModes( heatExchangerMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > heatExchangerSweepMaterial = new osg::Material();
@@ -752,7 +792,7 @@ void Scene::CreateNodes()
     heatExchangerSweepMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     heatExchangerSweepMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     heatExchangerSweepMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_heatExchangerSweep->getOrCreateStateSet();
+    stateset = mHeatExchangerSweep->getOrCreateStateSet();
     stateset->setAttributeAndModes( heatExchangerSweepMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > instrumentationMaterial = new osg::Material();
@@ -761,7 +801,7 @@ void Scene::CreateNodes()
     instrumentationMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     instrumentationMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     instrumentationMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_instrumentation->getOrCreateStateSet();
+    stateset = mInstrumentation->getOrCreateStateSet();
     stateset->setAttributeAndModes( instrumentationMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > loadMaterial = new osg::Material();
@@ -770,7 +810,7 @@ void Scene::CreateNodes()
     loadMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     loadMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     loadMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_load->getOrCreateStateSet();
+    stateset = mLoad->getOrCreateStateSet();
     stateset->setAttributeAndModes( loadMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > plenumPipingMaterial = new osg::Material();
@@ -779,7 +819,7 @@ void Scene::CreateNodes()
     plenumPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     plenumPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     plenumPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_plenumPiping->getOrCreateStateSet();
+    stateset = mPlenumPiping->getOrCreateStateSet();
     stateset->setAttributeAndModes( plenumPipingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > plenumSystemMaterial = new osg::Material();
@@ -788,7 +828,7 @@ void Scene::CreateNodes()
     plenumSystemMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     plenumSystemMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     plenumSystemMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_plenumSystem->getOrCreateStateSet();
+    stateset = mPlenumSystem->getOrCreateStateSet();
     stateset->setAttributeAndModes( plenumSystemMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > railingMaterial = new osg::Material();
@@ -797,7 +837,7 @@ void Scene::CreateNodes()
     railingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.9f, 0.2f, 1.0f ) );
     railingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     railingMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_railing->getOrCreateStateSet();
+    stateset = mRailing->getOrCreateStateSet();
     stateset->setAttributeAndModes( railingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > reliefPipingMaterial = new osg::Material();
@@ -806,7 +846,7 @@ void Scene::CreateNodes()
     reliefPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     reliefPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     reliefPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_reliefPiping->getOrCreateStateSet();
+    stateset = mReliefPiping->getOrCreateStateSet();
     stateset->setAttributeAndModes( reliefPipingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > reliefPipingAMMaterial = new osg::Material();
@@ -815,7 +855,7 @@ void Scene::CreateNodes()
     reliefPipingAMMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     reliefPipingAMMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     reliefPipingAMMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_reliefPipingAM->getOrCreateStateSet();
+    stateset = mReliefPipingAM->getOrCreateStateSet();
     stateset->setAttributeAndModes( reliefPipingAMMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > shellMaterial = new osg::Material();
@@ -824,7 +864,7 @@ void Scene::CreateNodes()
     shellMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     shellMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     shellMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_shell->getOrCreateStateSet();
+    stateset = mShell->getOrCreateStateSet();
     stateset->setAttributeAndModes( shellMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > stackMaterial = new osg::Material();
@@ -833,7 +873,7 @@ void Scene::CreateNodes()
     stackMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     stackMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     stackMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_stack->getOrCreateStateSet();
+    stateset = mStack->getOrCreateStateSet();
     stateset->setAttributeAndModes( stackMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > turbineExhaustMaterial = new osg::Material();
@@ -842,7 +882,7 @@ void Scene::CreateNodes()
     turbineExhaustMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     turbineExhaustMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     turbineExhaustMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_turbineExhaust->getOrCreateStateSet();
+    stateset = mTurbineExhaust->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbineExhaustMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > turbinePostCombustorMaterial = new osg::Material();
@@ -851,7 +891,7 @@ void Scene::CreateNodes()
     turbinePostCombustorMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     turbinePostCombustorMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     turbinePostCombustorMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_turbinePostCombustor->getOrCreateStateSet();
+    stateset = mTurbinePostCombustor->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbinePostCombustorMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > turbineSupportMaterial = new osg::Material();
@@ -860,92 +900,92 @@ void Scene::CreateNodes()
     turbineSupportMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
     turbineSupportMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
     turbineSupportMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = m_turbineSupport->getOrCreateStateSet();
+    stateset = mTurbineSupport->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbineSupportMaterial.get(), osg::StateAttribute::ON );
 
     //Create physics mesh for room
-    m_room->InitPhysics();
-    m_room->GetPhysicsRigidBody()->SetMass( 0.0 );
-    m_room->GetPhysicsRigidBody()->setFriction( 0.5 );
-    m_room->GetPhysicsRigidBody()->setRestitution( 0.0 );
-    m_room->GetPhysicsRigidBody()->StaticConcaveShape();
+    //mRoom->InitPhysics();
+    //mRoom->GetPhysicsRigidBody()->SetMass( 0.0 );
+    //mRoom->GetPhysicsRigidBody()->setFriction( 0.5 );
+    //mRoom->GetPhysicsRigidBody()->setRestitution( 0.0 );
+    //mRoom->GetPhysicsRigidBody()->StaticConcaveShape();
 
     //Collect the showed nodes into a group for easy reference
-    m_shadowedScene = new osg::Group();
-    m_shadowedScene->addChild( m_aluminumParts.get() );
-    m_shadowedScene->addChild( m_aluminumPipes.get() );
-    m_shadowedScene->addChild( m_black.get() );
-    m_shadowedScene->addChild( m_brown.get() );
-    m_shadowedScene->addChild( m_details.get() );
-    m_shadowedScene->addChild( m_floor.get() );
-    m_shadowedScene->addChild( m_ltGreen.get() );
-    m_shadowedScene->addChild( m_ltGrey.get() );
-    m_shadowedScene->addChild( m_orange.get() );
-    m_shadowedScene->addChild( m_red.get() );
-    m_shadowedScene->addChild( m_redBrown.get() );
-    m_shadowedScene->addChild( m_walls.get() );
-    m_shadowedScene->addChild( m_whiteDucts.get() );
-    m_shadowedScene->addChild( m_whitePipes.get() );
-    m_shadowedScene->addChild( m_yellow.get() );
+    mShadowedScene = new osg::Group();
+    mShadowedScene->addChild( mAluminumParts.get() );
+    mShadowedScene->addChild( mAluminumPipes.get() );
+    mShadowedScene->addChild( mBlack.get() );
+    mShadowedScene->addChild( mBrown.get() );
+    mShadowedScene->addChild( mDetails.get() );
+    mShadowedScene->addChild( mFloor.get() );
+    mShadowedScene->addChild( mLtGreen.get() );
+    mShadowedScene->addChild( mLtGrey.get() );
+    mShadowedScene->addChild( mOrange.get() );
+    mShadowedScene->addChild( mRed.get() );
+    mShadowedScene->addChild( mRedBrown.get() );
+    mShadowedScene->addChild( mWalls.get() );
+    mShadowedScene->addChild( mWhiteDucts.get() );
+    mShadowedScene->addChild( mWhitePipes.get() );
+    mShadowedScene->addChild( mYellow.get() );
 
-    m_shadowedScene->addChild( m_blowerComponents.get() );
-    //m_shadowedScene->addChild( m_brackets.get() );
-    m_shadowedScene->addChild( m_cableTray.get() );
-    m_shadowedScene->addChild( m_cementBase.get() );
-    //m_shadowedScene->addChild( m_combustorInternals.get() );
-    m_shadowedScene->addChild( m_combustorPiping.get() );
-    m_shadowedScene->addChild( m_compressorInlet.get() );
-    m_shadowedScene->addChild( m_frame.get() );
-    //m_shadowedScene->addChild( m_groundBolts.get() );
-    m_shadowedScene->addChild( m_heatExchanger.get() );
-    m_shadowedScene->addChild( m_heatExchangerSweep.get() );
-    m_shadowedScene->addChild( m_instrumentation.get() );
-    m_shadowedScene->addChild( m_load.get() );
-    m_shadowedScene->addChild( m_plenumPiping.get() );
-    m_shadowedScene->addChild( m_plenumSystem.get() );
-    m_shadowedScene->addChild( m_railing.get() );
-    m_shadowedScene->addChild( m_reliefPiping.get() );
-    m_shadowedScene->addChild( m_reliefPipingAM.get() );
-    m_shadowedScene->addChild( m_shell.get() );
-    m_shadowedScene->addChild( m_turbineExhaust.get() );
-    m_shadowedScene->addChild( m_turbinePostCombustor.get() );
-    m_shadowedScene->addChild( m_turbineSupport.get() );
+    mShadowedScene->addChild( mBlowerComponents.get() );
+    mShadowedScene->addChild( mBrackets.get() );
+    mShadowedScene->addChild( mCableTray.get() );
+    mShadowedScene->addChild( mCementBase.get() );
+    //mShadowedScene->addChild( mCombustorInternals.get() );
+    mShadowedScene->addChild( mCombustorPiping.get() );
+    mShadowedScene->addChild( mCompressorInlet.get() );
+    mShadowedScene->addChild( mFrame.get() );
+    mShadowedScene->addChild( mGroundBolts.get() );
+    mShadowedScene->addChild( mHeatExchanger.get() );
+    mShadowedScene->addChild( mHeatExchangerSweep.get() );
+    mShadowedScene->addChild( mInstrumentation.get() );
+    mShadowedScene->addChild( mLoad.get() );
+    mShadowedScene->addChild( mPlenumPiping.get() );
+    mShadowedScene->addChild( mPlenumSystem.get() );
+    mShadowedScene->addChild( mRailing.get() );
+    mShadowedScene->addChild( mReliefPiping.get() );
+    mShadowedScene->addChild( mReliefPipingAM.get() );
+    mShadowedScene->addChild( mShell.get() );
+    mShadowedScene->addChild( mTurbineExhaust.get() );
+    mShadowedScene->addChild( mTurbinePostCombustor.get() );
+    mShadowedScene->addChild( mTurbineSupport.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Scene::CreateShadowTexture()
+void HyperLabScene::CreateShadowTexture()
 {
-    m_shadow = new osg::Texture2D();
-    m_camera = new osg::Camera();
-    m_texgenNode = new osg::TexGenNode();
+    mShadow = new osg::Texture2D();
+    mCamera = new osg::Camera();
+    mTexgenNode = new osg::TexGenNode();
 
     unsigned int texWidth = 4096;
     unsigned int texHeight = 4096;
 
     //Create the shadow texture
-    m_shadow->setTextureSize( texWidth, texHeight );
-    m_shadow->setInternalFormat( GL_DEPTH_COMPONENT );
-    m_shadow->setSourceType( GL_UNSIGNED_INT );
+    mShadow->setTextureSize( texWidth, texHeight );
+    mShadow->setInternalFormat( GL_DEPTH_COMPONENT );
+    mShadow->setSourceType( GL_UNSIGNED_INT );
 
-    m_shadow->setShadowComparison( true );
-    m_shadow->setShadowCompareFunc( osg::Texture::LEQUAL );
+    mShadow->setShadowComparison( true );
+    mShadow->setShadowCompareFunc( osg::Texture::LEQUAL );
 
-    m_shadow->setShadowTextureMode( osg::Texture::LUMINANCE );
-    m_shadow->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    m_shadow->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    m_shadow->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
-    m_shadow->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+    mShadow->setShadowTextureMode( osg::Texture::LUMINANCE );
+    mShadow->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    mShadow->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    mShadow->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+    mShadow->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
 
     //Set up the "render to texture" camera
     {
         //Create the camera
-        m_camera->setClearMask( GL_DEPTH_BUFFER_BIT );
-        m_camera->setClearColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        m_camera->setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
+        mCamera->setClearMask( GL_DEPTH_BUFFER_BIT );
+        mCamera->setClearColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        mCamera->setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
 
         //Set viewport
-        m_camera->setViewport( 0, 0, texWidth, texHeight );
+        mCamera->setViewport( 0, 0, texWidth, texHeight );
 
-        osg::ref_ptr< osg::StateSet > localStateset = m_camera->getOrCreateStateSet();
+        osg::ref_ptr< osg::StateSet > localStateset = mCamera->getOrCreateStateSet();
         localStateset->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
 
         float factor = 2.0f;
@@ -963,27 +1003,27 @@ void Scene::CreateShadowTexture()
         localStateset->setMode( GL_CULL_FACE, osg::StateAttribute::ON );
 
         //Set the camera to render before the main camera
-        m_camera->setRenderOrder( osg::Camera::PRE_RENDER );
+        mCamera->setRenderOrder( osg::Camera::PRE_RENDER );
 
         //Tell the camera to use OpenGL frame buffer object where supported
-        m_camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
+        mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
 
         //Attach the texture and use it as the color buffer
-        m_camera->attach( osg::Camera::DEPTH_BUFFER, m_shadow.get() );
+        mCamera->attach( osg::Camera::DEPTH_BUFFER, mShadow.get() );
 
         //Add subgraph to render
-        m_camera->addChild( m_shadowedScene.get() );
+        mCamera->addChild( mShadowedScene.get() );
 
         //Create the texgen node to project the tex coords onto the subgraph  
-        m_texgenNode->setTextureUnit( 0 );
+        mTexgenNode->setTextureUnit( 0 );
 
         osg::BoundingSphere bs;
-        for( unsigned int i = 0; i < m_camera->getNumChildren(); ++i )
+        for( unsigned int i = 0; i < mCamera->getNumChildren(); ++i )
         {
-            bs.expandBy( m_camera->getChild( i )->getBound() );
+            bs.expandBy( mCamera->getChild( i )->getBound() );
         }
 
-        osg::Vec3 position = m_lightTransform->getMatrix().getTrans();
+        osg::Vec3 position = mLightTransform->getMatrix().getTrans();
 
         float centerDistance = ( position - bs.center() ).length();
 
@@ -998,103 +1038,22 @@ void Scene::CreateShadowTexture()
         float top = ( bs.radius() / centerDistance ) * znear;
         float right = top;
 
-        m_camera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-        m_camera->setProjectionMatrixAsFrustum( -right, right, -top, top, znear, zfar );
-        m_camera->setViewMatrixAsLookAt( position, bs.center(), osg::Vec3( 0.0f, 1.0f, 0.0f ) );
+        mCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
+        mCamera->setProjectionMatrixAsFrustum( -right, right, -top, top, znear, zfar );
+        mCamera->setViewMatrixAsLookAt( position, bs.center(), osg::Vec3( 0.0f, 1.0f, 0.0f ) );
 
         //Compute the matrix which takes a vertex from local coords into tex coords
-        osg::Matrix MVPT = m_camera->getViewMatrix() *
-                           m_camera->getProjectionMatrix() *
+        osg::Matrix MVPT = mCamera->getViewMatrix() *
+                           mCamera->getProjectionMatrix() *
                            osg::Matrix::translate( 1.0f, 1.0f, 1.0f ) *
                            osg::Matrix::scale( 0.5f, 0.5f, 0.5f );
 
         //Texture Generation
-        m_texgenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
-        m_texgenNode->getTexGen()->setPlanesFromMatrix( MVPT );
+        mTexgenNode->getTexGen()->setMode( osg::TexGen::EYE_LINEAR );
+        mTexgenNode->getTexGen()->setPlanesFromMatrix( MVPT );
     }
 
-    m_pluginDCS->addChild( m_camera.get() );
-    m_pluginDCS->addChild( m_texgenNode.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-// Implementation from Chapter 17, Efficient Soft-Edged Shadows Using Pixel Shader Branching, Yury Uralsky.
-// GPU Gems 2, Matt Pharr ed. Addison-Wesley.
-//
-// Creates a 3D texture containing jittering data used in the shader to take samples of the shadow map.
-void Scene::CreateJitterTexture()
-{
-    m_jitter = new osg::Texture3D();
-
-    //Create a 3D texture with hw mipmapping
-    m_jitter->setFilter( osg::Texture3D::MIN_FILTER, osg::Texture3D::NEAREST );
-    m_jitter->setFilter( osg::Texture3D::MAG_FILTER, osg::Texture3D::NEAREST );
-    m_jitter->setWrap( osg::Texture3D::WRAP_S, osg::Texture3D::REPEAT );
-    m_jitter->setWrap( osg::Texture3D::WRAP_T, osg::Texture3D::REPEAT );
-    m_jitter->setWrap( osg::Texture3D::WRAP_R, osg::Texture3D::REPEAT );
-    m_jitter->setUseHardwareMipMapGeneration( true );
-
-    const unsigned int size = 16;
-    const unsigned int gridW = 8;
-    const unsigned int gridH = 8;
-    unsigned int R = ( gridW * gridH / 2 );
-    m_jitter->setTextureSize( size, size, R );
-
-    //Then create the 3d image to fill with jittering data
-    osg::ref_ptr< osg::Image > image3D = new osg::Image();
-    unsigned char* data3D = new unsigned char[ size * size * R * 4 ];
-
-    for( unsigned int s = 0; s < size; ++s )
-    {
-        for( unsigned int t = 0; t < size; ++t )
-        {
-            float v[ 4 ], d[ 4 ];
-
-            for( unsigned int r = 0; r < R; ++r )
-            {
-                const int x = r % ( gridW / 2 );
-                const int y = ( gridH - 1 ) - ( r / ( gridW / 2 ) );
-
-                //Generate points on a  regular gridW x gridH rectangular
-                //grid.   We  multiply  x   by  2  because,  we  treat  2
-                //consecutive x  each loop iteration.  Add 0.5f  to be in
-                //the center of the pixel. x, y belongs to [ 0.0, 1.0 ].
-                v[ 0 ] = static_cast< float >( x * 2     + 0.5f ) / gridW;
-                v[ 1 ] = static_cast< float >( y         + 0.5f ) / gridH;
-                v[ 2 ] = static_cast< float >( x * 2 + 1 + 0.5f ) / gridW;
-                v[ 3 ] = v[ 1 ];
-
-                //Jitter positions. ( 0.5f / w ) == ( 1.0f / 2*w )
-                v[ 0 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridW );
-                v[ 1 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridH );
-                v[ 2 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridW );
-                v[ 3 ] += ( static_cast< float >( rand() ) * 2.f / RAND_MAX - 1.f ) * ( 0.5f / gridH );
-
-                //Warp to disk; values in [ -1, 1 ]
-                d[ 0 ] = sqrtf( v[ 1 ] ) * cosf( 2.f * 3.1415926f * v[ 0 ] );
-                d[ 1 ] = sqrtf( v[ 1 ] ) * sinf( 2.f * 3.1415926f * v[ 0 ] );
-                d[ 2 ] = sqrtf( v[ 3 ] ) * cosf( 2.f * 3.1415926f * v[ 2 ] );
-                d[ 3 ] = sqrtf( v[ 3 ] ) * sinf( 2.f * 3.1415926f * v[ 2 ] );
-
-                //store d into unsigned values [ 0, 255 ]
-                const unsigned int tmp = ( ( r * size * size ) + ( t * size ) + s ) * 4;
-                data3D[ tmp + 0 ] = static_cast< unsigned char >( ( 1.f + d[ 0 ] ) * 127  );
-                data3D[ tmp + 1 ] = static_cast< unsigned char >( ( 1.f + d[ 1 ] ) * 127  );
-                data3D[ tmp + 2 ] = static_cast< unsigned char >( ( 1.f + d[ 2 ] ) * 127  );
-                data3D[ tmp + 3 ] = static_cast< unsigned char >( ( 1.f + d[ 3 ] ) * 127  );
-            }
-        }
-    }
-
-    //The GPU Gem implementation uses a NV specific internal texture format (GL_SIGNED_RGBA_NV)
-    //In order to make it more generic, we use GL_RGBA4 which should be cross platform.
-    image3D->setImage( size, size, R, GL_RGBA4, GL_RGBA, GL_UNSIGNED_BYTE, data3D, osg::Image::USE_NEW_DELETE );
-    m_jitter->setImage( image3D.get() );
-
-    /*
-    ss->setTextureAttributeAndModes( (int)_textureUnit + 1, m_jitter, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE );
-    ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
-    ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-    ss->setTextureMode( (int)_textureUnit + 1, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
-    */
+    mPluginDCS->addChild( mCamera.get() );
+    mPluginDCS->addChild( mTexgenNode.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

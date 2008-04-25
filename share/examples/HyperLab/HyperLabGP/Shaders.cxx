@@ -64,22 +64,18 @@ Shaders::~Shaders()
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::ReadTextures()
 {
+    mImageMap.insert( std::make_pair( "Decoration",
+        xps::ResourceManager::instance()-> get< osg::Image, osg::ref_ptr >(
+            "Textures/Decoration.tga" ) ) );
 
-    m_imageMap.insert(
-        std::make_pair(
-            "Decoration",
-            xps::ResourceManager::instance()->
-                get< osg::Image, osg::ref_ptr >( "./Textures/Decoration.tga" )
-            ) );
-
-    m_imageMap.insert(
+    mImageMap.insert(
         std::make_pair(
             "WallMap",
             xps::ResourceManager::instance()->
                 get< osg::Image, osg::ref_ptr >( "./Textures/WallMap.tga" )
             ) );
 
-    m_imageMap.insert(
+    mImageMap.insert(
         std::make_pair(
             "Corona",
             xps::ResourceManager::instance()->
@@ -88,7 +84,7 @@ void Shaders::ReadTextures()
 
     // Register own map as textures
     typedef std::map< std::string, osg::ref_ptr< osg::Image > >::iterator img_map_iter;
-    for( img_map_iter iter = m_imageMap.begin(); iter != m_imageMap.end(); ++iter )
+    for( img_map_iter iter = mImageMap.begin(); iter != mImageMap.end(); ++iter )
     {
         osg::ref_ptr< osg::Image > tmp_img = iter->second;
         osg::ref_ptr< osg::Texture2D > tmp_tex = new osg::Texture2D( tmp_img.get() );
@@ -96,38 +92,38 @@ void Shaders::ReadTextures()
         xps::ResourceManager::instance()->add( iter->first, any_val );
     }
 
-    m_tcm = new osg::TextureCubeMap();
-    m_tcm->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
-    m_tcm->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
-    m_tcm->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
-    m_tcm->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR );
+    mTcm = new osg::TextureCubeMap();
+    mTcm->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+    mTcm->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+    mTcm->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
+    mTcm->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR );
 
-    m_tcm->setImage(
+    mTcm->setImage(
         osg::TextureCubeMap::POSITIVE_X,
         (xps::ResourceManager::instance()->
             get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Right.tga" )).get() );
 
-    m_tcm->setImage(
+    mTcm->setImage(
         osg::TextureCubeMap::NEGATIVE_X,
         (xps::ResourceManager::instance()->
             get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Left.tga" )).get() );
 
-    m_tcm->setImage(
+    mTcm->setImage(
         osg::TextureCubeMap::POSITIVE_Y,
         (xps::ResourceManager::instance()->
             get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Top.tga" )).get() );
 
-    m_tcm->setImage(
+    mTcm->setImage(
         osg::TextureCubeMap::NEGATIVE_Y,
         (xps::ResourceManager::instance()->
             get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Bottom.tga" )).get() );
 
-    m_tcm->setImage(
+    mTcm->setImage(
         osg::TextureCubeMap::POSITIVE_Z,
         (xps::ResourceManager::instance()->
             get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Back.tga" )).get() );
 
-    m_tcm->setImage(
+    mTcm->setImage(
         osg::TextureCubeMap::NEGATIVE_Z,
         (xps::ResourceManager::instance()->
             get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Front.tga" )).get() );
@@ -149,7 +145,6 @@ void Shaders::InitializeShaders()
 
     boost::any any_val = xray_program;
     xps::ResourceManager::instance()->add( "XRayShaderProgram", any_val );
-
 
     osg::ref_ptr< osg::Shader > options_vert_shader = new osg::Shader();
     options_vert_shader->setType( osg::Shader::VERTEX );
@@ -280,31 +275,31 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
     if( !baseMap.empty() )
     {
         optionsMap[ "baseMap" ] = true;
-        options_shader_name+= "-BaseMap";
+        options_shader_name += "-BaseMap";
     }
     else
     {
-        options_shader_name+= "-NoBaseMap";
+        options_shader_name += "-NoBaseMap";
     }
 
     if( reflectionPercent )
     {
         optionsMap[ "envMap" ] = true;
-        options_shader_name+= "-EnvMap";
+        options_shader_name += "-EnvMap";
     }
     else
     {
-        options_shader_name+= "-NoEnvMap";
+        options_shader_name += "-NoEnvMap";
     }
 
     if( shadow.valid() )
     {
         optionsMap[ "shadowMap" ] = true;
-        options_shader_name+= "-ShadowMap";
+        options_shader_name += "-ShadowMap";
     }
     else
     {
-        options_shader_name+= "-NoShadowMap";
+        options_shader_name += "-NoShadowMap";
     }
 
     program = xps::ResourceManager::instance()->
@@ -315,15 +310,14 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
     if( !baseMap.empty() )
     {
         stateset->setTextureAttributeAndModes( 2,
-                ( xps::ResourceManager::instance()->
-                    get< osg::Texture2D, osg::ref_ptr >( baseMap ) ).get() );
+        ( xps::ResourceManager::instance()->get< osg::Texture2D, osg::ref_ptr >( baseMap ) ).get() );
         osg::ref_ptr< osg::Uniform > baseMapUniform = new osg::Uniform( "baseMap", 2 );
         stateset->addUniform( baseMapUniform.get() );
     }
 
     if( reflectionPercent )
     {
-        stateset->setTextureAttributeAndModes( 1, m_tcm.get(), osg::StateAttribute::ON );
+        stateset->setTextureAttributeAndModes( 1, mTcm.get(), osg::StateAttribute::ON );
         osg::ref_ptr< osg::Uniform > envMap = new osg::Uniform( "envMap", 1 );
         stateset->addUniform( envMap.get() );
     }
@@ -364,7 +358,8 @@ void Shaders::Lights( osg::ref_ptr< osg::Node > node )
     program->addShader( fragmentShader.get() );
     stateset->setAttribute( program.get() );
 
-    stateset->setTextureAttributeAndModes( 2, new osg::Texture2D( m_imageMap[ "Corona" ].get() ) );
+    stateset->setTextureAttributeAndModes(
+        2, new osg::Texture2D( mImageMap[ "Corona" ].get() ) );
 
     osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 2 );
     stateset->addUniform( baseMap.get() );

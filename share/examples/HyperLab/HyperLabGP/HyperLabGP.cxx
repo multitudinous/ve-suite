@@ -33,7 +33,7 @@
 
 // --- My Includes --- //
 #include "HyperLabGP.h"
-#include "Scene.h"
+#include "HyperLabScene.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/model/Model.h>
@@ -44,15 +44,14 @@
 #include <osg/Light>
 
 // --- C/C++ Libraries --- //
-#include <fstream>
-#include <map>
-#include <cstdlib>
+#include <iostream>
+
+using namespace hyperlab;
 
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::HyperLabGP()
-:
-PluginBase(),
-m_scene( 0 )
+    :
+    PluginBase()
 {
     mObjectName = "HyperLabUI";
 
@@ -64,17 +63,15 @@ m_scene( 0 )
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabGP::~HyperLabGP()
 {
-    if( m_scene )
-    {
-        delete m_scene;
-    }
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
-    m_scene = new hyperlab::Scene( mDCS.get(), mPhysicsSimulator );
+    mHyperLabScene = hyperlab::HyperLabScenePtr(
+        new hyperlab::HyperLabScene( mDCS.get(), mPhysicsSimulator ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::PreFrameUpdate()
@@ -84,9 +81,10 @@ void HyperLabGP::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::UpdateParams()
 {
-    mXmlModel->GetInput( "portNumber" )->GetDataValuePair( "portNumber" )->GetData( _portNumber );
+    mXmlModel->GetInput( "portNumber" )->GetDataValuePair(
+        "portNumber" )->GetData( mPortNumber );
 
-    //_excelData = socket.GetSensorData();
+    //mExcelData = socket.GetSensorData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
@@ -106,15 +104,15 @@ void HyperLabGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 
         if( temp == 0 )
         {
-            m_scene->DefaultVisuals();
+            mHyperLabScene->DefaultVisuals();
         }
         else if( temp == 1 )
         {
-            m_scene->AdvancedVisuals();
+            mHyperLabScene->AdvancedVisuals();
         }
         else if( temp == 2 )
         {
-            m_scene->XRay();
+            mHyperLabScene->XRay();
         }
     }
     else if( command->GetCommandName() == "AMBIENT_UPDATE" )
@@ -123,7 +121,8 @@ void HyperLabGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         command->GetDataValuePair( "agColor" )->GetData( data[ 1 ] );
         command->GetDataValuePair( "abColor" )->GetData( data[ 2 ] );
 
-        m_scene->GetLight()->setAmbient( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
+        mHyperLabScene->GetLight()->setAmbient(
+            osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
     }
     else if( command->GetCommandName() == "DIFFUSE_UPDATE" )
     {
@@ -131,7 +130,8 @@ void HyperLabGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         command->GetDataValuePair( "dgColor" )->GetData( data[ 1 ] );
         command->GetDataValuePair( "dbColor" )->GetData( data[ 2 ] );
 
-        m_scene->GetLight()->setDiffuse( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
+        mHyperLabScene->GetLight()->setDiffuse(
+            osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
     }
     else if( command->GetCommandName() == "SPECULAR_UPDATE" )
     {
@@ -139,7 +139,8 @@ void HyperLabGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         command->GetDataValuePair( "sgColor" )->GetData( data[ 1 ] );
         command->GetDataValuePair( "sbColor" )->GetData( data[ 2 ] );
 
-        m_scene->GetLight()->setSpecular( osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
+        mHyperLabScene->GetLight()->setSpecular(
+            osg::Vec4( data[ 0 ], data[ 1 ], data[ 2 ], 1.0f ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

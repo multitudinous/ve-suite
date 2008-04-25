@@ -55,6 +55,8 @@
 #include <wx/spinctrl.h>
 #include <wx/panel.h>
 
+using namespace hyperlab;
+
 BEGIN_EVENT_TABLE( HyperLabUIDialog, wxDialog )
 EVT_RADIOBOX( ID_SHADER_EFFECTS, HyperLabUIDialog::OnShaderEffects )
 EVT_SLIDER( ID_AMBIENT_SLIDER, HyperLabUIDialog::OnAmbientRGB )
