@@ -64,14 +64,16 @@ public:
     void SetOptions( osg::ref_ptr< osg::Node > node,
                      bool xray = false,
                      bool phong = false,
-                     const std::string baseMap = "",
+                     const std::string& baseMap = "",
                      float* reflectionPercent = NULL,
                      osg::ref_ptr< osg::Texture2D > shadow = NULL );
 
     void Lights( osg::ref_ptr< osg::Node > node );
 
-    std::map< std::string, osg::ref_ptr< osg::Image > > mImageMap;
-    osg::ref_ptr< osg::TextureCubeMap > mTcm;
+protected:
+
+private:
+
 };
 } //end hyperlab
 

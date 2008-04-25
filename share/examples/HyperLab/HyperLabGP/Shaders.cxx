@@ -64,69 +64,81 @@ Shaders::~Shaders()
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::ReadTextures()
 {
-    mImageMap.insert( std::make_pair( "Decoration",
-        xps::ResourceManager::instance()-> get< osg::Image, osg::ref_ptr >(
-            "Textures/Decoration.tga" ) ) );
+    osg::ref_ptr< osg::Texture2D > decorationTexture = new osg::Texture2D();
+    decorationTexture->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    decorationTexture->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    decorationTexture->setWrap(
+        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    decorationTexture->setWrap(
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    decorationTexture->setImage(
+        osgDB::readImageFile( "Textures/Decoration.tga" ) );
 
-    mImageMap.insert(
-        std::make_pair(
-            "WallMap",
-            xps::ResourceManager::instance()->
-                get< osg::Image, osg::ref_ptr >( "./Textures/WallMap.tga" )
-            ) );
+    boost::any decorationVal = decorationTexture;
+    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        std::string( "Decoration" ), decorationVal );
 
-    mImageMap.insert(
-        std::make_pair(
-            "Corona",
-            xps::ResourceManager::instance()->
-                get< osg::Image, osg::ref_ptr >( "./Textures/Corona.tga" )
-            ) );
+    osg::ref_ptr< osg::Texture2D > wallMapTexture = new osg::Texture2D();
+    wallMapTexture->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    wallMapTexture->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    wallMapTexture->setWrap(
+        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    wallMapTexture->setWrap(
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    wallMapTexture->setImage(
+        osgDB::readImageFile( "Textures/WallMap.tga" ) );
 
-    // Register own map as textures
-    typedef std::map< std::string, osg::ref_ptr< osg::Image > >::iterator img_map_iter;
-    for( img_map_iter iter = mImageMap.begin(); iter != mImageMap.end(); ++iter )
-    {
-        osg::ref_ptr< osg::Image > tmp_img = iter->second;
-        osg::ref_ptr< osg::Texture2D > tmp_tex = new osg::Texture2D( tmp_img.get() );
-        boost::any any_val = tmp_tex;
-        xps::ResourceManager::instance()->add( iter->first, any_val );
-    }
+    boost::any wallMapVal = wallMapTexture;
+    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        std::string( "WallMap" ), wallMapVal );
 
-    mTcm = new osg::TextureCubeMap();
-    mTcm->setWrap( osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
-    mTcm->setWrap( osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
-    mTcm->setWrap( osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
-    mTcm->setFilter( osg::Texture::MIN_FILTER, osg::Texture::LINEAR );
+    osg::ref_ptr< osg::Texture2D > coronaTexture = new osg::Texture2D();
+    coronaTexture->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    coronaTexture->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    coronaTexture->setWrap(
+        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    coronaTexture->setWrap(
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    coronaTexture->setImage(
+        osgDB::readImageFile( "Textures/Corona.tga" ) );
 
-    mTcm->setImage(
-        osg::TextureCubeMap::POSITIVE_X,
-        (xps::ResourceManager::instance()->
-            get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Right.tga" )).get() );
+    boost::any coronaVal = coronaTexture;
+    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        std::string( "Corona" ), coronaVal );
 
-    mTcm->setImage(
-        osg::TextureCubeMap::NEGATIVE_X,
-        (xps::ResourceManager::instance()->
-            get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Left.tga" )).get() );
+    osg::ref_ptr< osg::TextureCubeMap > textureCubeMap =
+        new osg::TextureCubeMap();
+    textureCubeMap->setWrap(
+        osg::Texture::WRAP_S, osg::Texture::CLAMP_TO_EDGE );
+    textureCubeMap->setWrap(
+        osg::Texture::WRAP_T, osg::Texture::CLAMP_TO_EDGE );
+    textureCubeMap->setWrap(
+        osg::Texture::WRAP_R, osg::Texture::CLAMP_TO_EDGE );
+    textureCubeMap->setFilter(
+        osg::Texture::MIN_FILTER, osg::Texture::LINEAR );
 
-    mTcm->setImage(
-        osg::TextureCubeMap::POSITIVE_Y,
-        (xps::ResourceManager::instance()->
-            get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Top.tga" )).get() );
+    textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_X,
+        osgDB::readImageFile( "Textures/CubeMap/Right.tga" ) );
+    textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_X,
+        osgDB::readImageFile( "Textures/CubeMap/Left.tga" ) );
+    textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Y,
+        osgDB::readImageFile( "Textures/CubeMap/Top.tga" ) );
+    textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Y,
+        osgDB::readImageFile( "Textures/CubeMap/Bottom.tga" ) );
+    textureCubeMap->setImage( osg::TextureCubeMap::POSITIVE_Z,
+        osgDB::readImageFile( "Textures/CubeMap/Back.tga" ) );
+    textureCubeMap->setImage( osg::TextureCubeMap::NEGATIVE_Z,
+        osgDB::readImageFile( "Textures/CubeMap/Front.tga" ) );
 
-    mTcm->setImage(
-        osg::TextureCubeMap::NEGATIVE_Y,
-        (xps::ResourceManager::instance()->
-            get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Bottom.tga" )).get() );
-
-    mTcm->setImage(
-        osg::TextureCubeMap::POSITIVE_Z,
-        (xps::ResourceManager::instance()->
-            get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Back.tga" )).get() );
-
-    mTcm->setImage(
-        osg::TextureCubeMap::NEGATIVE_Z,
-        (xps::ResourceManager::instance()->
-            get< osg::Image, osg::ref_ptr >( "./Textures/CubeMap/Front.tga" )).get() );
+    boost::any cubeMapVal = textureCubeMap;
+    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+        std::string( "CubeMap" ), cubeMapVal );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::InitializeShaders()
@@ -153,17 +165,8 @@ void Shaders::InitializeShaders()
     osg::ref_ptr< osg::Shader > options_frag_shader = new osg::Shader();
     options_frag_shader->setType( osg::Shader::FRAGMENT );
     options_frag_shader->setShaderSource( options_fragment );
-#if 0
-    osg::ref_ptr< osg::Program > options_program = new osg::Program();
-    options_program->addShader( options_vert_shader.get() );
-    options_program->addShader( options_frag_shader.get() );
 
-    any_val = options_program;
-    xps::ResourceManager::instance()->add( "OptionsShaderProgram", any_val );
-#endif
-
-
-    // Enumerate the variants
+    //Enumerate the variants
     osg::ref_ptr< osg::Shader > options_basemap_frag_shader = new osg::Shader();
     options_basemap_frag_shader->setType( osg::Shader::FRAGMENT );
     options_basemap_frag_shader->setShaderSource( options_base_map_fragment );
@@ -235,14 +238,12 @@ void Shaders::InitializeShaders()
             }
         }
     }
-
-    return;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
                           bool xray,
                           bool phong,
-                          const std::string baseMap,
+                          const std::string& baseMap,
                           float* reflectionPercent,
                           osg::ref_ptr< osg::Texture2D > shadow )
 {
@@ -256,25 +257,23 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
         stateset->setAttribute( program.get() );
         stateset->setRenderBinDetails( 10, "DepthSortedBin" );
         stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
+
         return;
     }
 
-    std::map< std::string, bool > optionsMap;
-    optionsMap.insert( std::make_pair( "phong", false ) );
-    optionsMap.insert( std::make_pair( "baseMap", false ) );
-    optionsMap.insert( std::make_pair( "envMap", false ) );
-    optionsMap.insert( std::make_pair( "shadowMap", false ) );
-
-    std::string options_shader_name("OptionsShaderProgram");
-
-    if( phong )
-    {
-        optionsMap[ "phong" ] = true;
-    }
+    std::string options_shader_name( "OptionsShaderProgram" );
 
     if( !baseMap.empty() )
     {
-        optionsMap[ "baseMap" ] = true;
+        stateset->setTextureAttributeAndModes( 2,
+            ( xps::ResourceManager::instance()->get
+            < osg::Texture2D, osg::ref_ptr >( baseMap ) ).get(),
+            osg::StateAttribute::ON );
+
+        osg::ref_ptr< osg::Uniform > baseMapUniform =
+            new osg::Uniform( "baseMap", 2 );
+        stateset->addUniform( baseMapUniform.get() );
+
         options_shader_name += "-BaseMap";
     }
     else
@@ -284,7 +283,15 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
 
     if( reflectionPercent )
     {
-        optionsMap[ "envMap" ] = true;
+        stateset->setTextureAttributeAndModes( 1,
+            ( xps::ResourceManager::instance()->get
+            < osg::TextureCubeMap, osg::ref_ptr >( "CubeMap" ) ).get(),
+            osg::StateAttribute::ON );
+
+        osg::ref_ptr< osg::Uniform > envMap =
+            new osg::Uniform( "envMap", 1 );
+        stateset->addUniform( envMap.get() );
+
         options_shader_name += "-EnvMap";
     }
     else
@@ -294,7 +301,21 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
 
     if( shadow.valid() )
     {
-        optionsMap[ "shadowMap" ] = true;
+        stateset->setTextureAttributeAndModes(
+            0, shadow.get(), osg::StateAttribute::ON );
+        stateset->setTextureMode(
+            0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
+        stateset->setTextureMode(
+            0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
+        stateset->setTextureMode(
+            0, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
+        stateset->setTextureMode(
+            0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
+
+        osg::ref_ptr< osg::Uniform > shadowMap =
+            new osg::Uniform( "shadowMap", 0 );
+        stateset->addUniform( shadowMap.get() );
+
         options_shader_name += "-ShadowMap";
     }
     else
@@ -304,46 +325,7 @@ void Shaders::SetOptions( osg::ref_ptr< osg::Node > node,
 
     program = xps::ResourceManager::instance()->
         get< osg::Program, osg::ref_ptr >( options_shader_name );
-
     stateset->setAttribute( program.get() );
-
-    if( !baseMap.empty() )
-    {
-        stateset->setTextureAttributeAndModes( 2,
-        ( xps::ResourceManager::instance()->get< osg::Texture2D, osg::ref_ptr >( baseMap ) ).get() );
-        osg::ref_ptr< osg::Uniform > baseMapUniform = new osg::Uniform( "baseMap", 2 );
-        stateset->addUniform( baseMapUniform.get() );
-    }
-
-    if( reflectionPercent )
-    {
-        stateset->setTextureAttributeAndModes( 1, mTcm.get(), osg::StateAttribute::ON );
-        osg::ref_ptr< osg::Uniform > envMap = new osg::Uniform( "envMap", 1 );
-        stateset->addUniform( envMap.get() );
-    }
-
-    if( shadow.valid() )
-    {
-        stateset->setTextureAttributeAndModes( 0, shadow.get(), osg::StateAttribute::ON );
-        stateset->setTextureMode( 0, GL_TEXTURE_GEN_S, osg::StateAttribute::ON );
-        stateset->setTextureMode( 0, GL_TEXTURE_GEN_T, osg::StateAttribute::ON );
-        stateset->setTextureMode( 0, GL_TEXTURE_GEN_R, osg::StateAttribute::ON );
-        stateset->setTextureMode( 0, GL_TEXTURE_GEN_Q, osg::StateAttribute::ON );
-
-        osg::ref_ptr< osg::Uniform > shadowMap = new osg::Uniform( "shadowMap", 0 );
-        stateset->addUniform( shadowMap.get() );
-    }
-
-#if 0
-    osg::ref_ptr< osg::Uniform > options =
-            new osg::Uniform( "options", optionsMap[ "phong" ],
-                                         optionsMap[ "baseMap" ],
-                                         optionsMap[ "envMap" ],
-                                         optionsMap[ "shadowMap" ] );
-
-    stateset->addUniform( options.get() );
-#endif
-
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Shaders::Lights( osg::ref_ptr< osg::Node > node )
@@ -358,8 +340,10 @@ void Shaders::Lights( osg::ref_ptr< osg::Node > node )
     program->addShader( fragmentShader.get() );
     stateset->setAttribute( program.get() );
 
-    stateset->setTextureAttributeAndModes(
-        2, new osg::Texture2D( mImageMap[ "Corona" ].get() ) );
+    stateset->setTextureAttributeAndModes( 2,
+        ( xps::ResourceManager::instance()->get
+        < osg::Texture2D, osg::ref_ptr >( "Corona" ) ).get(),
+        osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > baseMap = new osg::Uniform( "baseMap", 2 );
     stateset->addUniform( baseMap.get() );

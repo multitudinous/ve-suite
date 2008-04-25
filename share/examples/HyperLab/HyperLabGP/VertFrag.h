@@ -34,7 +34,6 @@
 #ifndef VERT_FRAG_H
 #define VERT_FRAG_H
 
-
 char lights_vertex[] =
 "void main() \n"
 "{ \n"
@@ -177,19 +176,21 @@ char options_vertex[] =
 
 char options_base_map_fragment[] =
 "uniform sampler2D baseMap; \n"
+
 "vec3 getBaseMapValue() \n"
 "{ \n"
-"   return vec3( texture2D( baseMap, gl_TexCoord[ 1 ].st ) ); \n"
+    "return vec3( texture2D( baseMap, gl_TexCoord[ 1 ].st ) ); \n"
 "} \n";
 
 char options_base_map_fragment_off[] =
 "vec3 getBaseMapValue() \n"
 "{ \n"
-"   return vec3( 1.0, 1.0, 1.0 ); \n"
+    "return vec3( 1.0, 1.0, 1.0 ); \n"
 "} \n";
 
 char options_env_map_fragment[] =
 "uniform samplerCube envMap; \n"
+
 "void getReflectionValue( inout vec3 base, inout vec3 R ) \n"
 "{ \n"
     "vec3 reflection = textureCube( envMap, R ).rgb; \n"
@@ -199,15 +200,16 @@ char options_env_map_fragment[] =
 char options_env_map_fragment_off[] =
 "void getReflectionValue( inout vec3 base, inout vec3 R ) \n"
 "{ \n"
-"  base = base * vec3(1.0, 1.0, 1.0); \n"
-"  R = R * vec3(1.0, 1.0, 1.0); \n"
+    "base = base * vec3( 1.0, 1.0, 1.0 ); \n"
+    "R = R * vec3( 1.0, 1.0, 1.0 ); \n"
 "} \n";
 
 char options_shadow_map_fragment[] =
 "uniform sampler2DShadow shadowMap; \n"
+
 "vec4 getShadowMapValue() \n"
 "{ \n"
-    "const float kTransparency = 0.4; \n"
+    "const float kTransparency = 0.6; \n"
 
     "vec3 shadowUV = gl_TexCoord[ 0 ].stp / gl_TexCoord[ 0 ].q; \n"
     "vec4 shadowColor = vec4( 1.0, 1.0, 1.0, 1.0 ); \n"
@@ -231,11 +233,12 @@ char options_shadow_map_fragment[] =
         "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,       mapScale, 0.0 ) ); \n"
         "shadowColor += shadow2D( shadowMap, shadowUV.xyz + vec3(  0.0,      -mapScale, 0.0 ) ); \n"
 
-        "shadowColor = shadowColor / 18.0; \n"
+        "shadowColor = shadowColor / 27.0; \n"
 
         "shadowColor += kTransparency; \n"
         "shadowColor = clamp( shadowColor, 0.0, 1.0 ); \n"
     "} \n"
+
     "return shadowColor; \n"
 "} \n";
 

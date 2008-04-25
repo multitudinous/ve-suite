@@ -132,7 +132,7 @@ HyperLabScene::HyperLabScene(
 {
     InitializeScene();
 
-    DefaultVisuals();
+    AdvancedVisuals();
 }
 ////////////////////////////////////////////////////////////////////////////////
 HyperLabScene::~HyperLabScene()
@@ -200,85 +200,85 @@ void HyperLabScene::AdvancedVisuals()
     float reflectionPercentage;
 
     shader->SetOptions( mAluminumParts.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mAluminumPipes.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mBlack.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mBrown.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->Lights( mCoronas.get() );
     shader->SetOptions( mCeiling.get(), false, false, "WallMap" );
     shader->SetOptions( mDetails.get(), false, false, "Decoration",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mFloor.get(), false, false, "WallMap",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mGlass.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mLights.get(), false, true );
     shader->SetOptions( mLtGreen.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mLtGrey.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mOrange.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mRed.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mRedBrown.get(), false, true );
     shader->SetOptions( mWalls.get(), false, false, "WallMap",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mWhiteDucts.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mWhitePipes.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mYellow.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
 
     shader->SetOptions( mBlowerComponents.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mBrackets.get(), false, true );
     shader->SetOptions( mCableTray.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mCementBase.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     //shader->SetOptions( mCombustorInternals.get(), false, true, "",
                         //NULL, NULL );
     shader->SetOptions( mCombustorPiping.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mCompressorInlet.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mFrame.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mGroundBolts.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mHeatExchanger.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mHeatExchangerSweep.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mInstrumentation.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mLoad.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mPlenumPiping.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mPlenumSystem.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mRailing.get(), false, true, "",
-                        NULL, mShadow.get() );
+                        NULL, mShadow );
     shader->SetOptions( mReliefPiping.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mReliefPipingAM.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mShell.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mStack.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mTurbineExhaust.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mTurbinePostCombustor.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
     shader->SetOptions( mTurbineSupport.get(), false, true, "",
-                        &( reflectionPercentage = 0.05 ), mShadow.get() );
+                        &( reflectionPercentage = 0.01 ), mShadow );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabScene::XRay()
@@ -335,21 +335,16 @@ osg::Light* HyperLabScene::GetLight()
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabScene::InitializeScene()
 {
-    //Setup the custom lighting for the scene
     CreateLights();
-
     CreateNodes();
-
     CreateShadowTexture();
-
-    //CreateJitterTexture();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HyperLabScene::CreateLights()
 {
     mLight = new osg::Light();
     mLight->setLightNum( 1 );
-    mLight->setPosition( osg::Vec4( 0.0f, 0.0f, 10000.0f, 0.0f ) );
+    mLight->setPosition( osg::Vec4( 0.0f, 0.0f, 5000.0f, 0.0f ) );
 
     mLightSource = new osg::LightSource();
     mLightSource->setLight( mLight.get() );
@@ -357,7 +352,7 @@ void HyperLabScene::CreateLights()
 
     mLightTransform = new osg::MatrixTransform();
     mLightTransform->setMatrix(
-        osg::Matrix::translate( osg::Vec3( 0.0f, 0.0f, 10000.0f ) ) );
+        osg::Matrix::translate( osg::Vec3( 0.0f, 0.0f, 5000.0f ) ) );
     mLightTransform->addChild( mLightSource.get() );
 
     mPluginDCS->addChild( mLightTransform.get() );
@@ -387,7 +382,7 @@ void HyperLabScene::CreateLights()
     geometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, vertices->size() ) );
     
-    mCoronas->addDrawable( geometry.get() );
+    //mCoronas->addDrawable( geometry.get() );
     //mPluginDCS->addChild( mCoronas.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -462,164 +457,164 @@ void HyperLabScene::CreateNodes()
         //Set up material properties for the room geometry
         osg::ref_ptr< osg::Material > aluminumPartsMaterial =
             new osg::Material();
-        aluminumPartsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        aluminumPartsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        aluminumPartsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.6f, 1.0f ) );
-        aluminumPartsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        aluminumPartsMaterial->setShininess( osg::Material::FRONT, 5.0f );
+        aluminumPartsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        aluminumPartsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        aluminumPartsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.6f, 1.0f ) );
+        aluminumPartsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        aluminumPartsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 5.0f );
         stateset = mAluminumParts->getOrCreateStateSet();
         stateset->setAttributeAndModes( aluminumPartsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > aluminumPipesMaterial = new osg::Material();
-        aluminumPipesMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        aluminumPipesMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        aluminumPipesMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.6f, 1.0f ) );
-        aluminumPipesMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        aluminumPipesMaterial->setShininess( osg::Material::FRONT, 5.0f );
+        aluminumPipesMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        aluminumPipesMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        aluminumPipesMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.6f, 1.0f ) );
+        aluminumPipesMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        aluminumPipesMaterial->setShininess( osg::Material::FRONT_AND_BACK, 5.0f );
         stateset = mAluminumPipes->getOrCreateStateSet();
         stateset->setAttributeAndModes( aluminumPipesMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > blackMaterial = new osg::Material();
-        blackMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        blackMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        blackMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        blackMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        blackMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        blackMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        blackMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        blackMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        blackMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        blackMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mBlack->getOrCreateStateSet();
         stateset->setAttributeAndModes( blackMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > brownMaterial = new osg::Material();
-        brownMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        brownMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.2f, 0.1f, 0.05f, 1.0f ) );
-        brownMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.5f, 0.3f, 0.15f, 1.0f ) );
-        brownMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        brownMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        brownMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        brownMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.2f, 0.1f, 0.05f, 1.0f ) );
+        brownMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.3f, 0.15f, 1.0f ) );
+        brownMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        brownMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mBrown->getOrCreateStateSet();
         stateset->setAttributeAndModes( brownMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > ceilingMaterial = new osg::Material();
-        ceilingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        ceilingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.3f, 0.3f, 0.3f, 1.0f ) );
-        ceilingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.3f, 0.3f, 0.3f, 1.0f ) );
-        ceilingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-        ceilingMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        ceilingMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        ceilingMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+        ceilingMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.3f, 0.3f, 0.3f, 1.0f ) );
+        ceilingMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+        ceilingMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mCeiling->getOrCreateStateSet();
         stateset->setAttributeAndModes( ceilingMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > detailsMaterial = new osg::Material();
-        detailsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 2.0f, 2.0f, 2.0f, 1.0f ) );
-        detailsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.8f, 0.8f, 0.8f, 1.0f ) );
-        detailsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-        detailsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-        detailsMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        detailsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 2.0f, 2.0f, 2.0f, 1.0f ) );
+        detailsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.8f, 0.8f, 0.8f, 1.0f ) );
+        detailsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+        detailsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+        detailsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mDetails->getOrCreateStateSet();
         stateset->setAttributeAndModes( detailsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > floorMaterial = new osg::Material();
-        floorMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.8f, 1.8f, 1.8f, 1.0f ) );
-        floorMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.4f, 1.0f ) );
-        floorMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
-        floorMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
-        floorMaterial->setShininess( osg::Material::FRONT, 5.0f );
+        floorMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.8f, 1.8f, 1.8f, 1.0f ) );
+        floorMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.4f, 1.0f ) );
+        floorMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
+        floorMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
+        floorMaterial->setShininess( osg::Material::FRONT_AND_BACK, 5.0f );
         stateset = mFloor->getOrCreateStateSet();
         stateset->setAttributeAndModes( floorMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > glassMaterial = new osg::Material();
-        glassMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        glassMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        glassMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        glassMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        glassMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        glassMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        glassMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        glassMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        glassMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        glassMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mGlass->getOrCreateStateSet();
         stateset->setAttributeAndModes( glassMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > lightsMaterial = new osg::Material();
-        lightsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        lightsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-        lightsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-        lightsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        lightsMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        lightsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        lightsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+        lightsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+        lightsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        lightsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mLights->getOrCreateStateSet();
         stateset->setAttributeAndModes( lightsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > ltGreenMaterial = new osg::Material();
-        ltGreenMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        ltGreenMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.65f, 0.5f, 1.0f ) );
-        ltGreenMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.8f, 0.5f, 1.0f ) );
-        ltGreenMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        ltGreenMaterial->setShininess( osg::Material::FRONT, 10.0f );
+        ltGreenMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        ltGreenMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.65f, 0.5f, 1.0f ) );
+        ltGreenMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.8f, 0.5f, 1.0f ) );
+        ltGreenMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        ltGreenMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
         stateset = mLtGreen->getOrCreateStateSet();
         stateset->setAttributeAndModes( ltGreenMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > ltGreyMaterial = new osg::Material();
-        ltGreyMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        ltGreyMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        ltGreyMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        ltGreyMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.2f, 0.2f, 0.2f, 1.0f ) );
-        ltGreyMaterial->setShininess( osg::Material::FRONT, 5.0f );
+        ltGreyMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        ltGreyMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        ltGreyMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        ltGreyMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.2f, 0.2f, 0.2f, 1.0f ) );
+        ltGreyMaterial->setShininess( osg::Material::FRONT_AND_BACK, 5.0f );
         stateset = mLtGrey->getOrCreateStateSet();
         stateset->setAttributeAndModes( ltGreyMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > orangeMaterial = new osg::Material();
-        orangeMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        orangeMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.5f, 0.1f, 0.1f, 1.0f ) );
-        orangeMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.65f, 0.3f, 1.0f ) );
-        orangeMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        orangeMaterial->setShininess( osg::Material::FRONT, 10.0f );
+        orangeMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        orangeMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.1f, 0.1f, 1.0f ) );
+        orangeMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 0.65f, 0.3f, 1.0f ) );
+        orangeMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        orangeMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
         stateset = mOrange->getOrCreateStateSet();
         stateset->setAttributeAndModes( orangeMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > redMaterial = new osg::Material();
-        redMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        redMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        redMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
-        redMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        redMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        redMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        redMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        redMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+        redMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        redMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mRed->getOrCreateStateSet();
         stateset->setAttributeAndModes( redMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > redBrownMaterial = new osg::Material();
-        redBrownMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        redBrownMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.3f, 0.25f, 0.2f, 1.0f ) );
-        redBrownMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.14f, 0.07f, 0.0f, 1.0f ) );
-        redBrownMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
-        redBrownMaterial->setShininess( osg::Material::FRONT, 10.0f );
+        redBrownMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        redBrownMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.3f, 0.25f, 0.2f, 1.0f ) );
+        redBrownMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.14f, 0.07f, 0.0f, 1.0f ) );
+        redBrownMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
+        redBrownMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
         stateset = mRedBrown->getOrCreateStateSet();
         stateset->setAttributeAndModes( redBrownMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > wallsMaterial = new osg::Material();
-        wallsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 3.0f, 3.0f, 3.0f, 1.0f ) );
-        wallsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.4f, 1.0f ) );
-        wallsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
-        wallsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
-        wallsMaterial->setShininess( osg::Material::FRONT, 5.0f );
+        wallsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 3.0f, 3.0f, 3.0f, 1.0f ) );
+        wallsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.4f, 1.0f ) );
+        wallsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.02f, 0.02f, 0.01f, 1.0f ) );
+        wallsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.01f, 0.01f, 0.01f, 1.0f ) );
+        wallsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 5.0f );
         stateset = mWalls->getOrCreateStateSet();
         stateset->setAttributeAndModes( wallsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > whiteDuctsMaterial = new osg::Material();
-        whiteDuctsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        whiteDuctsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        whiteDuctsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
-        whiteDuctsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        whiteDuctsMaterial->setShininess( osg::Material::FRONT, 10.0f );
+        whiteDuctsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        whiteDuctsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        whiteDuctsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
+        whiteDuctsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        whiteDuctsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
         stateset = mWhiteDucts->getOrCreateStateSet();
         stateset->setAttributeAndModes( whiteDuctsMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > whitePipesMaterial = new osg::Material();
-        whitePipesMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        whitePipesMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
-        whitePipesMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
-        whitePipesMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        whitePipesMaterial->setShininess( osg::Material::FRONT, 15.0f );
+        whitePipesMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        whitePipesMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+        whitePipesMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.9f, 0.9f, 0.95f, 1.0f ) );
+        whitePipesMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        whitePipesMaterial->setShininess( osg::Material::FRONT_AND_BACK, 15.0f );
         stateset = mWhitePipes->getOrCreateStateSet();
         stateset->setAttributeAndModes( whitePipesMaterial.get(), osg::StateAttribute::ON );
 
         osg::ref_ptr< osg::Material > yellowMaterial = new osg::Material();
-        yellowMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-        yellowMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
-        yellowMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.85f, 0.3f, 1.0f ) );
-        yellowMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-        yellowMaterial->setShininess( osg::Material::FRONT, 10.0f );
+        yellowMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        yellowMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
+        yellowMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 0.85f, 0.3f, 1.0f ) );
+        yellowMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+        yellowMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
         stateset = mYellow->getOrCreateStateSet();
         stateset->setAttributeAndModes( yellowMaterial.get(), osg::StateAttribute::ON );
     }
@@ -695,211 +690,209 @@ void HyperLabScene::CreateNodes()
     mPluginDCS->addChild( mTurbineSupport.get() );
 
     osg::ref_ptr< osg::Material > blowerComponentsMaterial = new osg::Material();
-    blowerComponentsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    blowerComponentsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    blowerComponentsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    blowerComponentsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    blowerComponentsMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    blowerComponentsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    blowerComponentsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    blowerComponentsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    blowerComponentsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    blowerComponentsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mBlowerComponents->getOrCreateStateSet();
     stateset->setAttributeAndModes( blowerComponentsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > bracketsMaterial = new osg::Material();
-    bracketsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    bracketsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    bracketsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    bracketsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    bracketsMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    bracketsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    bracketsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    bracketsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    bracketsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    bracketsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mBrackets->getOrCreateStateSet();
     stateset->setAttributeAndModes( bracketsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > cableTrayMaterial = new osg::Material();
-    cableTrayMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    cableTrayMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    cableTrayMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    cableTrayMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    cableTrayMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    cableTrayMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    cableTrayMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    cableTrayMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    cableTrayMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    cableTrayMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mCableTray->getOrCreateStateSet();
     stateset->setAttributeAndModes( cableTrayMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > cementBaseMaterial = new osg::Material();
-    cementBaseMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    cementBaseMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    cementBaseMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    cementBaseMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    cementBaseMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    cementBaseMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    cementBaseMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    cementBaseMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    cementBaseMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    cementBaseMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mCementBase->getOrCreateStateSet();
     stateset->setAttributeAndModes( cementBaseMaterial.get(), osg::StateAttribute::ON );
 
-    /*
-    osg::ref_ptr< osg::Material > combustorInternalsMaterial = new osg::Material();
-    combustorInternalsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    combustorInternalsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    combustorInternalsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    combustorInternalsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    combustorInternalsMaterial->setShininess( osg::Material::FRONT, 10.0f );
-    stateset = mCombustorInternals->getOrCreateStateSet();
-    stateset->setAttributeAndModes( combustorInternalsMaterial.get(), osg::StateAttribute::ON );
-    */
+    //osg::ref_ptr< osg::Material > combustorInternalsMaterial = new osg::Material();
+    //combustorInternalsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    //combustorInternalsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    //combustorInternalsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    //combustorInternalsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    //combustorInternalsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
+    //stateset = mCombustorInternals->getOrCreateStateSet();
+    //stateset->setAttributeAndModes( combustorInternalsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > combustorPipingMaterial = new osg::Material();
-    combustorPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    combustorPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    combustorPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    combustorPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    combustorPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    combustorPipingMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    combustorPipingMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    combustorPipingMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    combustorPipingMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    combustorPipingMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mCombustorPiping->getOrCreateStateSet();
     stateset->setAttributeAndModes( combustorPipingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > compressorInletMaterial = new osg::Material();
-    compressorInletMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    compressorInletMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    compressorInletMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    compressorInletMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    compressorInletMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    compressorInletMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    compressorInletMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    compressorInletMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    compressorInletMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    compressorInletMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mCompressorInlet->getOrCreateStateSet();
     stateset->setAttributeAndModes( compressorInletMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > frameMaterial = new osg::Material();
-    frameMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    frameMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
-    frameMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
-    frameMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    frameMaterial->setShininess( osg::Material::FRONT, 12.0f );
+    frameMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    frameMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
+    frameMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.15f, 0.15f, 0.15f, 1.0f ) );
+    frameMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    frameMaterial->setShininess( osg::Material::FRONT_AND_BACK, 12.0f );
     stateset = mFrame->getOrCreateStateSet();
     stateset->setAttributeAndModes( frameMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > groundBoltsMaterial = new osg::Material();
-    groundBoltsMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    groundBoltsMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-    groundBoltsMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
-    groundBoltsMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    groundBoltsMaterial->setShininess( osg::Material::FRONT, 12.0f );
+    groundBoltsMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    groundBoltsMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    groundBoltsMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.1f, 0.1f, 0.1f, 1.0f ) );
+    groundBoltsMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    groundBoltsMaterial->setShininess( osg::Material::FRONT_AND_BACK, 12.0f );
     stateset = mGroundBolts->getOrCreateStateSet();
     stateset->setAttributeAndModes( groundBoltsMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > heatExchangerMaterial = new osg::Material();
-    heatExchangerMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    heatExchangerMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    heatExchangerMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    heatExchangerMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    heatExchangerMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    heatExchangerMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    heatExchangerMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    heatExchangerMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    heatExchangerMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    heatExchangerMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mHeatExchanger->getOrCreateStateSet();
     stateset->setAttributeAndModes( heatExchangerMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > heatExchangerSweepMaterial = new osg::Material();
-    heatExchangerSweepMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    heatExchangerSweepMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    heatExchangerSweepMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    heatExchangerSweepMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    heatExchangerSweepMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    heatExchangerSweepMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    heatExchangerSweepMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    heatExchangerSweepMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    heatExchangerSweepMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    heatExchangerSweepMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mHeatExchangerSweep->getOrCreateStateSet();
     stateset->setAttributeAndModes( heatExchangerSweepMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > instrumentationMaterial = new osg::Material();
-    instrumentationMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    instrumentationMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    instrumentationMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    instrumentationMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    instrumentationMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    instrumentationMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    instrumentationMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    instrumentationMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    instrumentationMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    instrumentationMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mInstrumentation->getOrCreateStateSet();
     stateset->setAttributeAndModes( instrumentationMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > loadMaterial = new osg::Material();
-    loadMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    loadMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    loadMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    loadMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    loadMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    loadMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    loadMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    loadMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    loadMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    loadMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mLoad->getOrCreateStateSet();
     stateset->setAttributeAndModes( loadMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > plenumPipingMaterial = new osg::Material();
-    plenumPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    plenumPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    plenumPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    plenumPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    plenumPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    plenumPipingMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    plenumPipingMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    plenumPipingMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    plenumPipingMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    plenumPipingMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mPlenumPiping->getOrCreateStateSet();
     stateset->setAttributeAndModes( plenumPipingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > plenumSystemMaterial = new osg::Material();
-    plenumSystemMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    plenumSystemMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    plenumSystemMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    plenumSystemMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    plenumSystemMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    plenumSystemMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    plenumSystemMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    plenumSystemMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    plenumSystemMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    plenumSystemMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mPlenumSystem->getOrCreateStateSet();
     stateset->setAttributeAndModes( plenumSystemMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > railingMaterial = new osg::Material();
-    railingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    railingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
-    railingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 1.0f, 0.9f, 0.2f, 1.0f ) );
-    railingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    railingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    railingMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    railingMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.3f, 1.0f ) );
+    railingMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 0.9f, 0.2f, 1.0f ) );
+    railingMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    railingMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mRailing->getOrCreateStateSet();
     stateset->setAttributeAndModes( railingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > reliefPipingMaterial = new osg::Material();
-    reliefPipingMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    reliefPipingMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    reliefPipingMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    reliefPipingMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    reliefPipingMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    reliefPipingMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    reliefPipingMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    reliefPipingMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    reliefPipingMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    reliefPipingMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mReliefPiping->getOrCreateStateSet();
     stateset->setAttributeAndModes( reliefPipingMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > reliefPipingAMMaterial = new osg::Material();
-    reliefPipingAMMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    reliefPipingAMMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    reliefPipingAMMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    reliefPipingAMMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    reliefPipingAMMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    reliefPipingAMMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    reliefPipingAMMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    reliefPipingAMMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    reliefPipingAMMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    reliefPipingAMMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mReliefPipingAM->getOrCreateStateSet();
     stateset->setAttributeAndModes( reliefPipingAMMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > shellMaterial = new osg::Material();
-    shellMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    shellMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    shellMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    shellMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    shellMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    shellMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    shellMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    shellMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    shellMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    shellMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mShell->getOrCreateStateSet();
     stateset->setAttributeAndModes( shellMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > stackMaterial = new osg::Material();
-    stackMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    stackMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    stackMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    stackMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    stackMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    stackMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    stackMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    stackMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    stackMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    stackMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mStack->getOrCreateStateSet();
     stateset->setAttributeAndModes( stackMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > turbineExhaustMaterial = new osg::Material();
-    turbineExhaustMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    turbineExhaustMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    turbineExhaustMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    turbineExhaustMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    turbineExhaustMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    turbineExhaustMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    turbineExhaustMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    turbineExhaustMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    turbineExhaustMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    turbineExhaustMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mTurbineExhaust->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbineExhaustMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > turbinePostCombustorMaterial = new osg::Material();
-    turbinePostCombustorMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    turbinePostCombustorMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    turbinePostCombustorMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    turbinePostCombustorMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    turbinePostCombustorMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    turbinePostCombustorMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    turbinePostCombustorMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    turbinePostCombustorMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    turbinePostCombustorMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    turbinePostCombustorMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mTurbinePostCombustor->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbinePostCombustorMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Material > turbineSupportMaterial = new osg::Material();
-    turbineSupportMaterial->setEmission( osg::Material::FRONT, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    turbineSupportMaterial->setAmbient( osg::Material::FRONT, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
-    turbineSupportMaterial->setDiffuse( osg::Material::FRONT, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
-    turbineSupportMaterial->setSpecular( osg::Material::FRONT, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
-    turbineSupportMaterial->setShininess( osg::Material::FRONT, 10.0f );
+    turbineSupportMaterial->setEmission( osg::Material::FRONT_AND_BACK, osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    turbineSupportMaterial->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.45f, 0.45f, 0.45f, 1.0f ) );
+    turbineSupportMaterial->setDiffuse( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.6f, 0.6f, 0.6f, 1.0f ) );
+    turbineSupportMaterial->setSpecular( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    turbineSupportMaterial->setShininess( osg::Material::FRONT_AND_BACK, 10.0f );
     stateset = mTurbineSupport->getOrCreateStateSet();
     stateset->setAttributeAndModes( turbineSupportMaterial.get(), osg::StateAttribute::ON );
 
@@ -910,7 +903,7 @@ void HyperLabScene::CreateNodes()
     //mRoom->GetPhysicsRigidBody()->setRestitution( 0.0 );
     //mRoom->GetPhysicsRigidBody()->StaticConcaveShape();
 
-    //Collect the showed nodes into a group for easy reference
+    //Collect the shadowed nodes into a group for easy reference
     mShadowedScene = new osg::Group();
     mShadowedScene->addChild( mAluminumParts.get() );
     mShadowedScene->addChild( mAluminumPipes.get() );
