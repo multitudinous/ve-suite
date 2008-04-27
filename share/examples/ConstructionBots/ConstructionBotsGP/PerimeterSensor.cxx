@@ -70,7 +70,10 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
 ////////////////////////////////////////////////////////////////////////////////
 PerimeterSensor::~PerimeterSensor()
 {
-    ;
+    if( mLastClockWiseDetection )
+    {
+        delete mLastClockWiseDetection;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Initialize()
@@ -88,12 +91,12 @@ void PerimeterSensor::CalculateLocalPositions()
 
     double blockHalfWidth = 0.5;
     osg::Vec3d rightStartPoint, rightEndPoint;
-    rightStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
-    rightEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
+    rightStartPoint.set( blockHalfWidth, -blockHalfWidth, 0 );
+    rightEndPoint.set( blockHalfWidth + mRange, -blockHalfWidth, 0 );
 
     osg::Vec3d leftStartPoint, leftEndPoint;
     leftStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
-    leftEndPoint.set( blockHalfWidth, blockHalfWidth + mRange, 0 );
+    leftEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );
@@ -144,6 +147,7 @@ void PerimeterSensor::CollectInformation()
     mAligned = false;
     mIntersections.clear();
     mQueriedConnection = NULL;
+    bool previousSensor( false );
     for( int i = 7; i > -1; --i )
     {
         osg::Vec3d startPoint = (*mLocalPositions)[ i * 2 ];
@@ -170,36 +174,67 @@ void PerimeterSensor::CollectInformation()
             osg::Drawable* currentDrawable =
                 mIntersections.back().drawable.get();
 
-            unsigned int modulusTest = ( mLastClockWiseDetection + i ) % 4;
-            bool drawableTest( false );
-            if( previousDrawable.valid() )
+            if( mLastClockWiseDetection )
             {
-                drawableTest = ( previousDrawable == currentDrawable );
-            }
-            if( ( mLastClockWiseDetection - i == 1 && modulusTest == 1 ) ||
-                ( drawableTest && modulusTest == 3 ) )
-            {
-                mAligned = true;
-                mPerimeterDetected = false;
-                mQueriedConnection = currentDrawable;
-                previousDrawable = NULL;
+                unsigned int modulusTest = ( *mLastClockWiseDetection + i ) % 4;
+
+                int cornerValue = *mLastClockWiseDetection - i;
+                bool cornerTest( false );
+                if( cornerValue == 1 || cornerValue == -7 )
+                {
+                    cornerTest = true;
+                }
+
+                bool drawableTest( false );
+                if( previousDrawable.valid() )
+                {
+                    drawableTest = ( previousDrawable == currentDrawable );
+                }
+
+                if( ( modulusTest == 3 && cornerTest ) ||
+                    ( modulusTest == 1 && drawableTest ) )
+                {
+                    mAligned = true;
+                    mPerimeterDetected = false;
+                    mQueriedConnection = currentDrawable;
+                    delete mLastClockWiseDetection;
+                    mLastClockWiseDetection = NULL;
+                    //previousDrawable = NULL;
+                }
             }
 
-            mLastClockWiseDetection = i;
+            if( !mLastClockWiseDetection )
+            {
+                mLastClockWiseDetection = new int();
+            }
+            *mLastClockWiseDetection = i;
+
             if( !previousDrawable.valid() )
             {
                 previousDrawable = new osg::Geometry();
             }
             previousDrawable = currentDrawable;
+
+            previousSensor = true;
+        }
+        else
+        {
+            if( previousSensor )
+            {
+                break;
+            }
         }
     }
 
     if( !mPerimeterDetected )
     {
         mPerimeterDetected = !mIntersections.empty();
-    
+
+        //Need to simulate braking before the structure
         btVector3 linearVelocity =
             mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
+
+        //linearVelocity *= 0.99;
         if( linearVelocity.length() != 0.0 )
         {
             linearVelocity.normalize();
@@ -207,6 +242,7 @@ void PerimeterSensor::CollectInformation()
 
         mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
             linearVelocity );
+
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -220,9 +256,9 @@ const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 {
     //Calculate the total resultant force
     osg::Vec3* startPoint =
-        &mLocalPositions->at( mLastClockWiseDetection * 2 );
+        &mLocalPositions->at( *mLastClockWiseDetection * 2 );
     osg::Vec3* endPoint =
-        &mLocalPositions->at( mLastClockWiseDetection * 2 + 1 );
+        &mLocalPositions->at( *mLastClockWiseDetection * 2 + 1 );
 
     double x = endPoint->x() - startPoint->x();
     double y = endPoint->y() - startPoint->y();

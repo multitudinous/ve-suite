@@ -91,7 +91,7 @@ void ObstacleSensor::CollectInformation()
         double range = mRange;
         if( mAgentEntity->mBuildMode )
         {
-            range = 1.5;
+            range = 1.0;
         }
         endPoint.set( startPoint.x() + range * cos( angle * piDivOneEighty ), 
                       startPoint.y() + range * sin( angle * piDivOneEighty ), 
@@ -143,7 +143,7 @@ void ObstacleSensor::CollectInformation()
         angle += mAngleIncrement;
     }
 
-    if( !mIntersections.empty() )
+    if( !mIntersections.empty() || !mWallIntersections.empty() )
     {
         mObstacleDetected = true;
     }
@@ -208,20 +208,20 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         targetForce /= targetForce.length();
         targetForce *= mForceAttractionConstant;
     }
+    else if( !mWallIntersections.empty() )
+    {
+        double x = wallRepulsiveForce.x();
+        double y = wallRepulsiveForce.y();
+
+        double cosTheta = cos( 145 * piDivOneEighty );
+        double sinTheta = sin( 145 * piDivOneEighty );
+
+        double xNew = ( x * cosTheta ) - ( y * sinTheta );
+        double yNew = ( x * sinTheta ) + ( y * cosTheta );
+
+        targetForce.setValue( xNew, yNew, 0 );
+    }
     totalForce += targetForce;
-
-    btVector3 wallTargetForce( 0, 0, 0 );
-    double x = wallRepulsiveForce.x();
-    double y = wallRepulsiveForce.y();
-
-    double cosTheta = cos( 175 * piDivOneEighty );
-    double sinTheta = sin( 175 * piDivOneEighty );
-
-    double xNew = ( x * cosTheta ) - ( y * sinTheta );
-    double yNew = ( x * sinTheta ) + ( y * cosTheta );
-
-    wallTargetForce.setValue( xNew, yNew, 0 );
-    totalForce += wallTargetForce;
 
     mResultantForce = totalForce;
     if( mResultantForce.length() != 0.0 )

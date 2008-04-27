@@ -72,19 +72,19 @@ private:
     void Initialize();
 
     /* There are eight perimeter sensors as shown below
-          2    1
-       3 _|____|_ 0
+          3    2
+       4 _|____|_ 1
           |    |
-       4 _|____|_ 7
+       5 _|____|_ 0
           |    |
-          5    6
+          6    7
     */
     void CalculateLocalPositions();
 
     bool mAligned;
     bool mPerimeterDetected;
 
-    int mLastClockWiseDetection;
+    int* mLastClockWiseDetection;
     osg::ref_ptr< osg::Drawable > previousDrawable;
 
     double mRange;

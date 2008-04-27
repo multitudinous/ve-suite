@@ -190,7 +190,7 @@ void SiteSensor::CollectInformation()
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
 
-    DisplayLine( true );
+    //DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::Rotate()

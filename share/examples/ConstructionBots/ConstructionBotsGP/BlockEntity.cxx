@@ -108,7 +108,7 @@ void BlockEntity::CalculateLocalPositions()
     double blockHalfWidth = 0.5;
     osg::Vec3d startPoint, endPoint;
     startPoint.set( 0, 0, 0 );
-    endPoint.set( 2 * blockHalfWidth, 0, 0 );
+    endPoint.set( blockHalfWidth + 0.2, 0, 0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );
@@ -195,6 +195,7 @@ void BlockEntity::AttachUpdate()
     }
 
     mAttached = true;
+    ( *mOccupancyMatrix )[ mLocation ].second = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
@@ -211,6 +212,102 @@ void BlockEntity::UpdateSideStates()
             if( itrSS->second == false )
             {
                 mBlockGeometry->SetColor( itr->first, mSiteColor );
+            }
+            else
+            {
+                //Prove that you can't attach block
+                bool canAttachBlock( true );
+
+                osg::Vec3 tempVector = mLocalPositions->at( itr->first * 2 + 1 );
+                tempVector.normalize();
+                std::pair< int, int > posNinety( -tempVector.y(),  tempVector.x() );
+                std::pair< int, int > negNinety(  tempVector.y(), -tempVector.x() );
+                std::pair< int, int > location;
+
+                //Go in positive direction first
+                bool emptyOccupance( false );
+                location = mLocation;
+                location.first += tempVector.x();
+                location.second += tempVector.y();
+                do
+                {
+                    location.first += posNinety.first;
+                    location.second += posNinety.second;
+
+                    if( (*mOccupancyMatrix)[ location ].first )
+                    {
+                        if( (*mOccupancyMatrix)[ location ].second )
+                        {
+                            if( emptyOccupance )
+                            {
+                                canAttachBlock = false;
+
+                                break;
+                            }
+
+                            emptyOccupance = false;
+                        }
+                        else
+                        {
+                            emptyOccupance = true;
+                        }
+                    }
+                    else
+                    {
+                        emptyOccupance = false;
+                    }
+                }
+                while( emptyOccupance );
+
+                //Go in negative direction if passed first test
+                if( canAttachBlock )
+                {
+                    emptyOccupance = false;
+                    location = mLocation;
+                    location.first += tempVector.x();
+                    location.second += tempVector.y();
+                    do
+                    {
+                        location.first += negNinety.first;
+                        location.second += negNinety.second;
+
+                        if( (*mOccupancyMatrix)[ location ].first )
+                        {
+                            if( (*mOccupancyMatrix)[ location ].second )
+                            {
+                                if( emptyOccupance )
+                                {
+                                    canAttachBlock = false;
+
+                                    break;
+                                }
+
+                                emptyOccupance = false;
+                            }
+                            else
+                            {
+                                emptyOccupance = true;
+                            }
+                        }
+                        else
+                        {
+                            emptyOccupance = false;
+                        }
+                    }
+                    while( emptyOccupance );
+                }
+
+                if( canAttachBlock )
+                {
+                    itrSS->second = true;
+                    mBlockGeometry->SetColor( itr->first, mAttachColor );
+                    
+                }
+                else
+                {
+                    itrSS->second = false;
+                    mBlockGeometry->SetColor( itr->first, mNoAttachColor );
+                }
             }
         }
     }
@@ -300,7 +397,8 @@ const std::pair< int, int >& BlockEntity::GetLocation()
     return mLocation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::map< std::pair< int, int >, bool >& BlockEntity::GetOccupancyMatrix()
+std::map< std::pair< int, int >, std::pair< bool, bool > >* BlockEntity::
+    GetOccupancyMatrix()
 {
     return mOccupancyMatrix;
 }
@@ -367,22 +465,22 @@ void BlockEntity::SetNameAndDescriptions( int number )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetOccupancyMatrix(
-    const std::map< std::pair< int, int >, bool >& occupancyMatrix )
+    std::map< std::pair< int, int >, std::pair< bool, bool > >* occupancyMatrix )
 {
     mOccupancyMatrix = occupancyMatrix;
 
-    //Store neighbors to be or not to be occupied
+    //Store the neighbors occupation
     mNeighborOccupancy[ 0 ] =
-        mOccupancyMatrix[ std::make_pair( mLocation.first + 1,
-                                          mLocation.second ) ];
+        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first + 1,
+                                               mLocation.second ) ].first;
     mNeighborOccupancy[ 1 ] =
-        mOccupancyMatrix[ std::make_pair( mLocation.first,
-                                          mLocation.second + 1 ) ];
+        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first,
+                                               mLocation.second + 1 ) ].first;
     mNeighborOccupancy[ 2 ] =
-        mOccupancyMatrix[ std::make_pair( mLocation.first - 1,
-                                          mLocation.second ) ];
+        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first - 1,
+                                               mLocation.second ) ].first;
     mNeighborOccupancy[ 3 ] =
-        mOccupancyMatrix[ std::make_pair( mLocation.first,
-                                          mLocation.second - 1 ) ];
+        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first,
+                                               mLocation.second - 1 ) ].first;
 }
 ////////////////////////////////////////////////////////////////////////////////

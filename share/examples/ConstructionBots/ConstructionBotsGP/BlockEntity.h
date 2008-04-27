@@ -83,7 +83,7 @@ public:
     //
     const std::pair< int, int >& GetLocation();
     //Get the block's occupancy matrix
-    const std::map< std::pair< int, int >, bool >& GetOccupancyMatrix();
+    std::map< std::pair< int, int >, std::pair< bool, bool > >* GetOccupancyMatrix();
 
     //
     void SetBlockConnection(
@@ -97,7 +97,7 @@ public:
     void SetNameAndDescriptions( int number );
     //Set the block's occupancy matrix
     void SetOccupancyMatrix(
-        const std::map< std::pair< int, int >, bool >& occupancyMatrix );
+        std::map< std::pair< int, int >, std::pair< bool, bool > >* occupancyMatrix );
 
 protected:
 
@@ -108,7 +108,12 @@ private:
 
     bool mAttached;
 
-    //Store neighbors to be or not to be occupied
+    /*Store the neighbors occupation
+            __
+         __|__|__
+        |__|__|__|
+           |__|
+    */
     bool mNeighborOccupancy[ 4 ];
 
     osg::Vec4d mSiteColor;
@@ -129,7 +134,7 @@ private:
 
     //Blocks have a copy of the occupancy matrix
     //The occupancy matrix stores the desired structure to be built
-    std::map< std::pair< int, int >, bool > mOccupancyMatrix;
+    std::map< std::pair< int, int >, std::pair< bool, bool > >* mOccupancyMatrix;
 
     //
     std::map< osg::Drawable*, bool > mSideStates;

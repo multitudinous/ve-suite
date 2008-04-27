@@ -67,7 +67,8 @@ void Grid::Initialize()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Grid::CreateGrid(
-    int gridSize, std::map< std::pair< int, int >, bool > occMatrix )
+    int gridSize, std::map< std::pair< int, int >,
+                            std::pair< bool, bool > >* occupancyMatrix )
 {
     //osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     //stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -99,7 +100,7 @@ void Grid::CreateGrid(
             gridVertices->push_back( osg::Vec3( x + 1.0, y,       0.0f ) );
 
             bool occupancy =
-                occMatrix[ std::make_pair( x + 0.5, y - 0.5 ) ];
+                ( *occupancyMatrix )[ std::make_pair( x + 0.5, y - 0.5 ) ].first;
             if( occupancy )
             {
                 gridColor->push_back( osg::Vec4( 0.7f, 0.7f, 0.7f, 1.0f ) );

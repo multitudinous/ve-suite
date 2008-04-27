@@ -52,7 +52,8 @@ public:
     META_Node( bots, Grid );
 
     void CreateGrid(
-        int gridSize, std::map< std::pair< int, int >, bool > occMatrix );
+        int gridSize, std::map< std::pair< int, int >,
+                                std::pair< bool, bool > >* occupancyMatrix );
 
 protected:
     virtual ~Grid();

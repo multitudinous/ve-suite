@@ -97,6 +97,7 @@ private:
     bots::GridEntity* mGrid;
     bots::BlockEntity* mStartBlock;
     std::map< std::string, bots::BlockEntity* > mBlockEntities;
+    std::map< std::pair< int, int >, std::pair< bool, bool > > mOccupancyMatrix;
     std::vector< bots::AgentEntity* > mAgents;
 
 #ifdef VE_SOUND

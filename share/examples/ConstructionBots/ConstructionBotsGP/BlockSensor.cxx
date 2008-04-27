@@ -187,7 +187,7 @@ void BlockSensor::CollectInformation()
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
 
-    DisplayLine( true );
+    //DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate()

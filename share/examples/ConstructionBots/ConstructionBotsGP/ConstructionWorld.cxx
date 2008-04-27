@@ -141,9 +141,8 @@ void ConstructionWorld::InitializeFramework()
     }
 #endif
 
-    std::map< std::pair< int, int >, bool > occupancyMatrix;
-    int numBlocks = 20;
-    int numAgents = 3;
+    int numBlocks = 28;
+    int numAgents = 4;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -154,43 +153,54 @@ void ConstructionWorld::InitializeFramework()
         {
             int x =  i - halfPosition;
             int y = -j + halfPosition;
-            occupancyMatrix[ std::make_pair( x, y ) ] = false;
+            mOccupancyMatrix[ std::make_pair( x, y ) ] =
+                std::make_pair( false, false );
         }
     }
 
-    occupancyMatrix[ std::make_pair(  0,  0 ) ] = true;
+    mOccupancyMatrix[ std::make_pair(  0,  0 ) ].first = true;
 
-    occupancyMatrix[ std::make_pair(  1,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0,  1 ) ] = true;
-    occupancyMatrix[ std::make_pair( -1,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0, -1 ) ] = true;
+    mOccupancyMatrix[ std::make_pair(  1,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
 
-    occupancyMatrix[ std::make_pair(  1,  1 ) ] = true;
-    occupancyMatrix[ std::make_pair( -1,  1 ) ] = true;
-    occupancyMatrix[ std::make_pair( -1, -1 ) ] = true;
-    occupancyMatrix[ std::make_pair(  1, -1 ) ] = true;
+    mOccupancyMatrix[ std::make_pair(  1,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1, -1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  1, -1 ) ].first = true;
 
-    occupancyMatrix[ std::make_pair(  2,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0,  2 ) ] = true;
-    occupancyMatrix[ std::make_pair( -2,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0, -2 ) ] = true;
+    mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0, -2 ) ].first = true;
 
-    occupancyMatrix[ std::make_pair(  3,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0,  3 ) ] = true;
-    occupancyMatrix[ std::make_pair( -3,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0, -3 ) ] = true;
+    mOccupancyMatrix[ std::make_pair(  2,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -2,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -2, -1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  2, -1 ) ].first = true;
 
-    occupancyMatrix[ std::make_pair(  4,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0,  4 ) ] = true;
-    occupancyMatrix[ std::make_pair( -4,  0 ) ] = true;
-    occupancyMatrix[ std::make_pair(  0, -4 ) ] = true;
+    mOccupancyMatrix[ std::make_pair(  1,  2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1,  2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1, -2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  1, -2 ) ].first = true;
+
+    mOccupancyMatrix[ std::make_pair(  3,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0,  3 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -3,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0, -3 ) ].first = true;
+
+    mOccupancyMatrix[ std::make_pair(  4,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0,  4 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -4,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0, -4 ) ].first = true;
 
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
 
     //Initialize the grid
     osg::ref_ptr< bots::Grid > grid = new bots::Grid();
-    grid->CreateGrid( gridSize, occupancyMatrix );
+    grid->CreateGrid( gridSize, &mOccupancyMatrix );
 
     mGrid = new bots::GridEntity( grid.get(),
                                   mPluginDCS.get(),
@@ -212,7 +222,7 @@ void ConstructionWorld::InitializeFramework()
     mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
     mStartBlock->SetBlockEntityMap( &mBlockEntities );
     mStartBlock->SetNameAndDescriptions( 0 );
-    mStartBlock->SetOccupancyMatrix( occupancyMatrix );
+    mStartBlock->SetOccupancyMatrix( &mOccupancyMatrix );
     mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
 
     //Initialize the blocks
@@ -262,7 +272,7 @@ void ConstructionWorld::InitializeFramework()
 
         //Set the sensor range for the agents
         agentEntity->GetBlockSensor()->SetRange( gridSize * 0.25 );
-        agentEntity->GetObstacleSensor()->SetRange( gridSize * 0.25 );
+        agentEntity->GetObstacleSensor()->SetRange( gridSize * 0.5 );
         agentEntity->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
 
         //Set name and descriptions for blocks
