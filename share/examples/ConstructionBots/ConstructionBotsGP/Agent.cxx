@@ -69,7 +69,7 @@ Agent::~Agent()
 btCompoundShape* Agent::CreateCompoundShape()
 {
     btScalar boxHalfWidth = 0.5;
-    btScalar holderHalfThickness = 0.01;
+    btScalar holderHalfThickness = 0.02;
     btScalar offset = boxHalfWidth + holderHalfThickness;
 
     btCompoundShape* compoundShape = new btCompoundShape();

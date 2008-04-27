@@ -69,35 +69,37 @@ public:
 
     virtual ~BlockEntity();
 
-    //
+    //Update with the structure on attachment
     void AttachUpdate();
-    //
+    //Update the side states when new block is attached
     void UpdateSideStates();
-    //
+    //Return if this block is attached to the structure
     bool IsAttached();
-    //
+    //Return if a block can be attached to a side of this block
     bool PermissionToAttach( osg::Drawable* drawable );
 
-    //
+    //Get this block's geometry
     bots::Block* GetBlockGeometry();
-    //
+    //Get this block's location
     const std::pair< int, int >& GetLocation();
-    //Get the block's occupancy matrix
-    std::map< std::pair< int, int >, std::pair< bool, bool > >* GetOccupancyMatrix();
+    //Get this block's occupancy matrix
+    std::map< std::pair< int, int >,
+              std::pair< bool, bool > >* GetOccupancyMatrix();
 
-    //
+    //Set a connection to this block
     void SetBlockConnection(
         unsigned int side, bots::BlockEntity* blockEntity );
-    //
+    //Set the block entity map
     void SetBlockEntityMap(
         std::map< std::string, bots::BlockEntity* >* blockEntityMap );
-    //
+    //Set the physics constraints
     void SetConstraints( int gridSize );
-    //
+    //Set the name and descriptions
     void SetNameAndDescriptions( int number );
     //Set the block's occupancy matrix
     void SetOccupancyMatrix(
-        std::map< std::pair< int, int >, std::pair< bool, bool > >* occupancyMatrix );
+        std::map< std::pair< int, int >,
+                  std::pair< bool, bool > >* occupancyMatrix );
 
 protected:
 
@@ -106,24 +108,29 @@ private:
     void CalculateLocalPositions();
     void ConnectionDetection();
 
+    //Is this block attached to the structure?
     bool mAttached;
 
-    /*Store the neighbors occupation
-            __
-         __|__|__
-        |__|__|__|
-           |__|
-    */
+    //Store the neighbors occupation
+    //            __
+    //         __|__|__
+    //        |__|__|__|
+    //           |__|
+    //
     bool mNeighborOccupancy[ 4 ];
 
+    //The color of the site
     osg::Vec4d mSiteColor;
+    //The color that shows valid attachments
     osg::Vec4d mAttachColor;
+    //The color that shows invalid attachments
     osg::Vec4d mNoAttachColor;
 
     //A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
     //This in only here to get connections when first attached to structure
+    //A pointer to the block entity map
     std::map< std::string, bots::BlockEntity* >* mBlockEntityMap;
 
     //The geometry of this block
@@ -134,9 +141,11 @@ private:
 
     //Blocks have a copy of the occupancy matrix
     //The occupancy matrix stores the desired structure to be built
-    std::map< std::pair< int, int >, std::pair< bool, bool > >* mOccupancyMatrix;
+    //A pointer to the occupancy matrix
+    std::map< std::pair< int, int >,
+              std::pair< bool, bool > >* mOccupancyMatrix;
 
-    //
+    //A map of the side states
     std::map< osg::Drawable*, bool > mSideStates;
 
     //Are blocks attached to sides or not
@@ -150,9 +159,7 @@ private:
     //The location of this block in the shared coordinate system
     std::pair< int, int > mLocation;
 
-    //
     osg::ref_ptr< osg::Vec3Array > mLocalPositions;
-    //
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };

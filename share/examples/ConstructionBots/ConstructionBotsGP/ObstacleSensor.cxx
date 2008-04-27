@@ -231,62 +231,6 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*
-btVector3 ObstacleSensor::GetRepulsiveForce( double* agentPosition )
-{
-
-}
-////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::VirtualForceField(
-    double* agentPosition, double* targetPosition )
-{
-    btVector3 totalForce( 0, 0, 0 );
-
-    //Calculate the total repulsive force
-    totalForce = GetRepulsiveForce( agentPosition );
-
-    //Calculate the target force        
-    btVector3 targetForce( targetPosition[ 0 ] - agentPosition[ 0 ],
-                           targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
-
-    targetForce /= targetForce.length();
-    targetForce *= mForceAttractionConstant;
-
-    totalForce += targetForce;
-
-    mResultantForce = totalForce;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ObstacleSensor::WallFollowing( double* agentPosition )
-{
-    btVector3 totalForce( 0, 0, 0 );
-
-    //Calculate the total repulsive force
-    totalForce = GetRepulsiveForce( agentPosition );
-
-    //Calculate the target force
-    //Rotate vector about point( 0, 0, 0 ) by theta
-    //x' = x * cos( theta ) - y * sin( theta );
-    //y' = x * sin( theta ) + y * cos( theta );
-
-    //Grab the repulsive force vector from last calculation
-    double x = totalForce.x();
-    double y = totalForce.y();
-
-    double cosTheta = cos( 175 * piDivOneEighty );
-    double sinTheta = sin( 175 * piDivOneEighty );
-
-    double xNew = ( x * cosTheta ) - ( y * sinTheta );
-    double yNew = ( x * sinTheta ) + ( y * cosTheta );
-
-    //Repulsive and target forces will have same magnitude
-    btVector3 targetForce( xNew, yNew, 0 );
-    totalForce += targetForce;
-
-    mResultantForce = totalForce;
-}
-*/
-////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )
 {
     mAngleIncrement = angleIncrement;

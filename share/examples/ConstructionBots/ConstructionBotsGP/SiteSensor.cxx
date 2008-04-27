@@ -53,8 +53,6 @@
 
 using namespace bots;
 
-const double PI = 3.14159265358979323846;
-
 ////////////////////////////////////////////////////////////////////////////////
 SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
     :
@@ -223,4 +221,3 @@ void SiteSensor::SetRange( double range )
     mRange = range;
 }
 ////////////////////////////////////////////////////////////////////////////////
-

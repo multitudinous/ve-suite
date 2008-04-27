@@ -103,7 +103,7 @@ void BlockEntity::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::CalculateLocalPositions()
 {
-    mLocalPositions->resize( 16 );
+    mLocalPositions->resize( 8 );
 
     double blockHalfWidth = 0.5;
     osg::Vec3d startPoint, endPoint;
@@ -216,19 +216,24 @@ void BlockEntity::UpdateSideStates()
             else
             {
                 //Prove that you can't attach block
+                //This is the "separation rule"
                 bool canAttachBlock( true );
 
-                osg::Vec3 tempVector = mLocalPositions->at( itr->first * 2 + 1 );
+                osg::Vec3 tempVector =
+                    mLocalPositions->at( itr->first * 2 + 1 );
                 tempVector.normalize();
-                std::pair< int, int > posNinety( -tempVector.y(),  tempVector.x() );
-                std::pair< int, int > negNinety(  tempVector.y(), -tempVector.x() );
                 std::pair< int, int > location;
+                std::pair< int, int > posNinety( -tempVector.y(),
+                                                  tempVector.x() );
+                std::pair< int, int > negNinety(  tempVector.y(),
+                                                 -tempVector.x() );
 
                 //Go in positive direction first
                 bool emptyOccupance( false );
                 location = mLocation;
-                location.first += tempVector.x();
-                location.second += tempVector.y();
+                //Static cast to remove small precision errors
+                location.first += static_cast< int >( tempVector.x() );
+                location.second += static_cast< int >( tempVector.y() );
                 do
                 {
                     location.first += posNinety.first;
@@ -241,11 +246,7 @@ void BlockEntity::UpdateSideStates()
                             if( emptyOccupance )
                             {
                                 canAttachBlock = false;
-
-                                break;
                             }
-
-                            emptyOccupance = false;
                         }
                         else
                         {
@@ -264,8 +265,9 @@ void BlockEntity::UpdateSideStates()
                 {
                     emptyOccupance = false;
                     location = mLocation;
-                    location.first += tempVector.x();
-                    location.second += tempVector.y();
+                    //Static cast to remove small precision errors
+                    location.first += static_cast< int >( tempVector.x() );
+                    location.second += static_cast< int >( tempVector.y() );
                     do
                     {
                         location.first += negNinety.first;
@@ -278,11 +280,7 @@ void BlockEntity::UpdateSideStates()
                                 if( emptyOccupance )
                                 {
                                     canAttachBlock = false;
-
-                                    break;
                                 }
-
-                                emptyOccupance = false;
                             }
                             else
                             {
@@ -397,8 +395,8 @@ const std::pair< int, int >& BlockEntity::GetLocation()
     return mLocation;
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::pair< int, int >, std::pair< bool, bool > >* BlockEntity::
-    GetOccupancyMatrix()
+std::map< std::pair< int, int >,
+          std::pair< bool, bool > >* BlockEntity::GetOccupancyMatrix()
 {
     return mOccupancyMatrix;
 }
@@ -465,7 +463,8 @@ void BlockEntity::SetNameAndDescriptions( int number )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetOccupancyMatrix(
-    std::map< std::pair< int, int >, std::pair< bool, bool > >* occupancyMatrix )
+    std::map< std::pair< int, int >,
+              std::pair< bool, bool > >* occupancyMatrix )
 {
     mOccupancyMatrix = occupancyMatrix;
 

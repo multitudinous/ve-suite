@@ -170,9 +170,9 @@ void BlockSensor::CollectInformation()
                 parentVisitor.GetParentNode() );
 
             double* blockPosition = targetDCS->GetVETranslationArray();
-            btVector3 blockVector( blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
-                                   blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(),
-                                   0.0 );
+            btVector3 blockVector(
+                blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
+                blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
 
             if( blockVector.length() < 1.415 )//sqrt( 2 * 0.5 )
             {
