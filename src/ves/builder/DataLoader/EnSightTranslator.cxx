@@ -137,8 +137,13 @@ void EnSightTranslator::EnSightTranslateCbk::Translate( vtkDataObject*& outputDa
         for( int i = tempArray->GetNumberOfItems() - 1; i >= 0; --i )
         {
             std::cout << "Number of Timesteps = " << tempArray->GetItem( i )->GetNumberOfTuples() << std::endl;
+
             //this must be an int because j goes negative
-            for( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 5; j >= 0; --j )
+            // for( int j = tempArray->GetItem( i )->GetNumberOfTuples() - 5; j >= 0; --j )
+            //  unsure why the previous line has a - 5
+
+            // This allows the timesteps to go through the loop with positive values.
+            for( int j = tempArray->GetItem( i )->GetNumberOfTuples(); j >= 0; --j )
             {
                 std::cout << "Translating Timestep = " << tempArray->GetItem( i )->GetTuple1( j ) << std::endl;
                 reader->SetTimeValue( tempArray->GetItem( i )->GetTuple1( j ) );
