@@ -561,7 +561,7 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap["2DIcons/HEATER/HEATER.BLOCK.jpg" ] = Heater_Heater_BLOCK;
     tempIconMap["2DIcons/HEATER/HEATER.COMPR.jpg" ] = Heater_Heater_COMPR;
     tempIconMap["2DIcons/HEATER/HEATER.FURNACE.jpg" ] = Heater_Heater_FURNACE;
-    tempIconMap["2DIcons/HEATER/HEATER.Heater.jpg" ] = Heater_Heater_Heater;
+    tempIconMap["2DIcons/HEATER/HEATER.HEATER.jpg" ] = Heater_Heater_Heater;
     tempIconMap["2DIcons/HEATER/HEATER.PUMP.jpg" ] = Heater_Heater_PUMP;
     tempIconMap["2DIcons/HEATER/HEATER.VALVE.jpg" ] = Heater_Heater_VALVE;
     tempIconMap["2DIcons/HEATER/HEATER.VALVE2.jpg" ] = Heater_Heater_VALVE2;
