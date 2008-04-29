@@ -1136,9 +1136,9 @@ void BKPParser::CreateNetworkLinks
             
             //add information for dummy block
             BlockInfoList
-                [hierName][iter->first+"_dummy_connection"].type ="dummy";
+                [hierName][iter->first+"_dummy_connection"].type ="standalone";
             BlockInfoList
-                [hierName][iter->first+"_dummy_connection"].icon = "dummy";
+                [hierName][iter->first+"_dummy_connection"].icon = "standalone";
             BlockInfoList
                 [hierName][iter->first+"_dummy_connection"].scale = 1;
             BlockInfoList
@@ -1232,9 +1232,9 @@ void BKPParser::CreateNetworkLinks
           
             //add information for dummy block
             BlockInfoList
-                [hierName][iter->first+"_dummy_connection"].type = "dummy";
+                [hierName][iter->first+"_dummy_connection"].type = "standalone";
             BlockInfoList
-                [hierName][iter->first+"_dummy_connection"].icon = "dummy";
+                [hierName][iter->first+"_dummy_connection"].icon = "standalone";
             BlockInfoList
                 [hierName][iter->first+"_dummy_connection"].scale = 1;
             BlockInfoList
@@ -1343,10 +1343,10 @@ std::string BKPParser::CreateNetwork( void )
    ves::open::xml::model::ModelPtr topModel( new ves::open::xml::model::Model() );
    topModel->SetModelName( "Aspen_Flowsheet" );
    topModel->SetVendorName( "ASPENUNIT" );
-   //topModel->SetIconFilename("FSPLIT/FSPLIT.TRIANGLE");
-   //tempModel->SetIconRotation(BlockInfoList["0"][blockIter->first].rotation);
-   //tempModel->SetIconScale(BlockInfoList["0"][blockIter->first].scale);
-   //tempModel->SetIconMirror(BlockInfoList["0"][blockIter->first].mirror);
+   topModel->SetIconFilename("aspen");
+   topModel->SetIconRotation( 0 );
+   topModel->SetIconScale( 1 );
+   topModel->SetIconMirror( 0 );
    topModel->GetIconLocation()->SetPoint( std::pair< double, double >( 0, 0 ) );
    topModel->SetSubSystem( veSystem );
    topSystem->AddModel( topModel );
