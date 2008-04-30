@@ -408,6 +408,13 @@ void Link::DrawLinkLine( wxDC* dc )
     dc->SetBrush( old_brush );
     delete [] points;
 }
+/////////////////////////////////////////////////////////////////////////////
+void Link::DrawName( wxDC* dc )
+{
+    wxPoint middle = cons[ cons.size()/2 ];
+    //dc->GetTextExtent( linkName, &w, &h );
+    dc->DrawText( linkName, middle.x, middle.y );
+}
 ////////////////////////////////////////////////////////////////////////////////
 void Link::OnShowLinkContent( wxCommandEvent& event )
 {
@@ -814,6 +821,7 @@ void Link::DrawLink( wxDC* dc )
     {
         DrawLinkCon( dc );
     }
+    DrawName( dc );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Link::SetLink( ves::open::xml::model::LinkPtr inputLink )

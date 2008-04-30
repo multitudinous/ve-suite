@@ -124,6 +124,7 @@ public:
     void DrawLinkCon( wxDC* dc );
     void CalcLinkPoly( void );
     void DrawLinkLine( wxDC* dc );
+    void DrawName( wxDC* dc );
     double computenorm( wxPoint pt1, wxPoint pt2 );
     ///Set the user scale to enable working with the dc
     void SetDCScale( std::pair< double, double >* scale );
