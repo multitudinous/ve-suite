@@ -922,6 +922,9 @@ void AppFrame::Save( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
 {
+    //Update the canvas xml data first
+    canvas->Update();
+
     wxFileName vesFileName;
     int answer = 0;
     do
