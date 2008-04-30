@@ -120,7 +120,10 @@ public:
         ADD_INPUT_PORT,
         ADD_OUTPUT_PORT,
         DELETE_PORT,
-        DIALOG_PLUGIN_UPDATE
+        DIALOG_PLUGIN_UPDATE,
+        PLUGIN_TOGGLE_ALL_ON,
+        PLUGIN_TOGGLE_PLUGIN_ON,
+        PLUGIN_TOGGLE_MENU
     };
 protected:
     ///Defualt constructor
@@ -191,6 +194,9 @@ public:
     void ConfigurePluginDialogs( wxWindow* window );
     ///On exit check to see if there on any dialogs open
     void CheckPluginMapOnExit();
+    ///Handle all events to toggle graphics for plugin off/on in cad mode
+    ///\param event WX Event for menu event
+    void TogglePlugin( wxCommandEvent& event );
 
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it

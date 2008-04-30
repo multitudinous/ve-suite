@@ -112,6 +112,8 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( ADD_INPUT_PORT, UIPluginBase::AddPort )
     EVT_MENU( ADD_OUTPUT_PORT, UIPluginBase::AddPort )
     EVT_MENU( DELETE_PORT, UIPluginBase::DeletePort )
+    EVT_MENU( PLUGIN_TOGGLE_ALL_ON, UIPluginBase::TogglePlugin )
+    EVT_MENU( PLUGIN_TOGGLE_PLUGIN_ON, UIPluginBase::TogglePlugin )
     EVT_UPDATE_UI( SET_ACTIVE_PLUGIN, UIPluginBase::OnSetActivePluginID )
 END_EVENT_TABLE()
 
@@ -1664,6 +1666,16 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     pop_menu.Append( SHOW_FINANCIAL, _( "Financial Data" ) );
     pop_menu.Enable( SHOW_FINANCIAL, true );
 
+    //Toggle Plugin Menu
+    wxMenu* pluginMenu = new wxMenu();
+    pluginMenu->Append( PLUGIN_TOGGLE_ALL_ON, _( "Toggle All On" ) );
+    pluginMenu->Enable( PLUGIN_TOGGLE_ALL_ON, true );
+    pluginMenu->Append( PLUGIN_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
+    pluginMenu->Enable( PLUGIN_TOGGLE_PLUGIN_ON, true );
+    pop_menu.Append( PLUGIN_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
+                    _( "Used to toggle plugin" ) );
+    pop_menu.Enable( PLUGIN_TOGGLE_MENU, true );
+
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
     aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
@@ -2115,5 +2127,32 @@ void UIPluginBase::CheckPluginMapOnExit()
         std::pair< unsigned int, size_t >( id, mDialogMemoryMap.size() );
         pluginDeleteEvent.SetClientData( &pluginDialogPair );
         m_network->AddPendingEvent( pluginDeleteEvent );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::TogglePlugin( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    if( event.GetId() == UIPluginBase::PLUGIN_TOGGLE_ALL_ON )
+    {
+        ves::open::xml::DataValuePairPtr dataValuePair( 
+            new ves::open::xml::DataValuePair() );
+        dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", "ALL" );
+        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+        veCommand->SetCommandName( 
+            std::string( "Xplorer Toggle Plugin Events" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+    }
+    else if( event.GetId() == UIPluginBase::PLUGIN_TOGGLE_PLUGIN_ON )
+    {
+        ves::open::xml::DataValuePairPtr dataValuePair( 
+            new ves::open::xml::DataValuePair() );
+        dataValuePair->SetData( "VE_XPLORER_PLUGIN_ID", m_veModel->GetID() );
+        ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+        veCommand->SetCommandName( 
+            std::string( "Xplorer Toggle Plugin Events" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     }
 }

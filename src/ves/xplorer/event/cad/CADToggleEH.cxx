@@ -94,9 +94,12 @@ void CADToggleEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
             m_cadHandler->GetPart( nodeID->GetDataString() )->GetDCS()->ToggleDisplay( toggleValue->GetDataString() );
             std::cout << "---Toggled part---" << std::endl;
         }
-        else if( nodeType->GetDataString() == std::string( "Clone" ) )
+        //else if( nodeType->GetDataString() == std::string( "Clone" ) )
+        else
         {
-            m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph()->ToggleDisplay( toggleValue->GetDataString() );
+            std::cout << "Error!!" << std::endl;
+            std::cout << "---Invalid node specified to toggle!---" << std::endl;
+            //m_cadHandler->GetClone( nodeID->GetDataString() )->GetClonedGraph()->ToggleDisplay( toggleValue->GetDataString() );
         }
     }
     catch ( ... )

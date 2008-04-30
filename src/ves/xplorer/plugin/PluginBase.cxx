@@ -304,6 +304,30 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
 {
     mXmlModel = tempModel;
 
+    {
+        bool hasID = false;
+        osg::Node::DescriptionList descriptList;
+        descriptList = mDCS->getDescriptions();
+        for( size_t i = 0; i < descriptList.size(); ++i )
+        {
+            if( descriptList.at( i ) == "VE_XPLORER_PLUGIN_ID" )
+            {
+                descriptList.at( i + 1 ) = mXmlModel->GetID();
+                mDCS->setDescriptions( descriptList );
+                hasID = true;
+                break;
+            }
+        }
+        
+        if( !hasID )
+        {
+            //Add this descriptor so that the whole "plugin" 
+            //can be turned "off" easily
+            mDCS->addDescription( "VE_XPLORER_PLUGIN_ID" );   
+            mDCS->addDescription( mXmlModel->GetID() );   
+        }
+    }
+
     //Decompose model to be utilized by the event handlers
     ves::open::xml::cad::CADAssemblyPtr cadNodeData =
         boost::dynamic_pointer_cast< ves::open::xml::cad::CADAssembly >(
