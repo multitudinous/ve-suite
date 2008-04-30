@@ -196,9 +196,6 @@ void Network::OnMLeftDown( wxMouseEvent& event )
     if( m_selTag >= 0 )
         UnSelectTag( dc );
 
-    //Refresh(true);
-    //Update();
-
     //Select Mod/Link/Tag
     SelectMod( x, y, dc );
     if( m_selMod >= 0 )
@@ -254,7 +251,6 @@ void Network::OnMLeftDown( wxMouseEvent& event )
     parent->Refresh( true );
     //necessary for setting the canvas active to handle keyboard input
     parent->SetFocus();
-    //Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnMouseMove( wxMouseEvent& event )
@@ -385,8 +381,6 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         m_selLinkCon = -1;
 
         //m_selLink=-1;
-        //Refresh(true);
-        //Update();
         //links[m_selLink].DrawLinkCon( true, userScale );        
 
         //accounts for the size of the link connector
@@ -504,7 +498,6 @@ void Network::OnMRightDown( wxMouseEvent& event )
      SelectLink(x, y );*/
     SelectTag( evtpos.x,  evtpos.y );
     parent->Refresh( true );
-    //Update();
     /////////////////////////////////////////////////
 
     wxMenu the_pop_menu( _( "Action" ) );
@@ -663,7 +656,6 @@ void Network::OnDelLink( wxCommandEvent& event )
     this->PushAllEvents();
 
     parent->Refresh( true );
-    //Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDelMod( wxCommandEvent& event )
@@ -1005,7 +997,6 @@ void Network::MoveModule( int x, int y, int mod )
     }
 
     parent->Refresh( true );
-    //Update();
 }
 /////////////////////////////////////////////////////////////
 void Network::DropModule( int ix, int iy, int mod )
@@ -1148,7 +1139,6 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
     point2 = wxPoint( x, y );
     tryingLink = true;
     parent->Refresh( true );
-    //Update();
 
     xold = x;
     yold = y;
@@ -1367,7 +1357,6 @@ void Network::MoveLinkCon( int x, int y, int ln, int ln_con, wxDC& dc )
     }
 
     parent->Refresh( true );
-    //Update();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1495,7 +1484,6 @@ void Network::MoveTagCon( int x, int y, int t, int t_con, wxDC& dc )
 
     tags[t].DrawTagCon( true, userScale );
     parent->Refresh( true );
-    //Update();
 }
 
 //////////////////////////////////////////////////////////////////
@@ -1537,7 +1525,6 @@ void Network::DropTagCon( int x, int y, int t, int t_con, wxDC &dc )
     tags[t].CalcTagPoly();
 
     parent->Refresh( true );
-    //Update();
 }
 
 ///////////////////////////////////////////////////////
@@ -1603,7 +1590,6 @@ void Network::MoveTag( int x, int y, int t, wxDC &dc )
 
     tags[t].DrawTagCon( true, userScale );
     parent->Refresh( true );
-    //Update();
 }
 
 /////////////////////////////////////////////////////
@@ -1645,7 +1631,6 @@ void Network::DropTag( int x, int y, int t, wxDC &dc )
     tags[t].CalcTagPoly();
 
     parent->Refresh( true );
-    //Update();
 }
 //////////////////////////////////////////////////////
 ///////// Add to Network Funtions ////////////////////
@@ -2000,8 +1985,6 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
     m_selTagCon = -1;
     xold = yold = 0;
 
-// parent->SetVirtualSize( maxX, maxY );
-//    _fileProgress->Update( 100, _("Done") );
     parent->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -2110,7 +2093,6 @@ void Network::SetSelectedModule( int modId )
     m_selMod = modId;
     modules[ m_selMod ].GetPlugin()->SetHighlightFlag( true );
     parent->Refresh( true );
-    ///Update();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::HighlightCenter( int modId )
