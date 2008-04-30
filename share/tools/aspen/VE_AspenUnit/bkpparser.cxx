@@ -270,6 +270,9 @@ void BKPParser::ParseFile(const char * bkpFile)
 				tempBlockInfo.hierarchical = false;
 			else
 				tempBlockInfo.hierarchical = true;
+            
+            //default hidden value for aspen is false
+            tempBlockInfo.iconHidden = 0;
 
 			if(compID.find(".") == std::string::npos)
 			{
@@ -1148,6 +1151,9 @@ void BKPParser::CreateNetworkLinks
             BlockInfoList
                 [hierName][iter->first+"_dummy_connection"].hierarchical =
                 false;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].iconHidden =
+                1;
          
             //added for output port on dummy block
             outLinkToModel[hierName][iter->first] =
@@ -1244,6 +1250,9 @@ void BKPParser::CreateNetworkLinks
             BlockInfoList
                 [hierName][iter->first+"_dummy_connection"].hierarchical =
                 false;
+            BlockInfoList
+                [hierName][iter->first+"_dummy_connection"].iconHidden =
+                1;
          
             //added for output port on dummy block         
             inLinkToModel[hierName][iter->first] =
@@ -1290,7 +1299,8 @@ std::string BKPParser::CreateNetwork( void )
 	  tempModel->SetIconScale(BlockInfoList["_main_sheet"][blockIter->first].scale);
 	  tempModel->SetIconMirror(BlockInfoList["_main_sheet"][blockIter->first].mirror);
 	  tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations["_main_sheet"][ blockIter->first ].first, iconLocations["_main_sheet"][ blockIter->first ].second ) );
-      
+      tempModel->SetIconHiddenFlag( BlockInfoList["_main_sheet"][blockIter->first].iconHidden );
+
 	  double minX = iconLocations["_main_sheet"][ blockIter->first ].first;
 	  double minY = iconLocations["_main_sheet"][ blockIter->first ].second;
 
@@ -1347,6 +1357,7 @@ std::string BKPParser::CreateNetwork( void )
    topModel->SetIconRotation( 0 );
    topModel->SetIconScale( 1 );
    topModel->SetIconMirror( 0 );
+   topModel->SetIconHiddenFlag( 0 );
    topModel->GetIconLocation()->SetPoint( std::pair< double, double >( 0, 0 ) );
    topModel->SetSubSystem( veSystem );
    topSystem->AddModel( topModel );
@@ -1391,6 +1402,7 @@ void BKPParser::ParseSubSystem(ves::open::xml::model::ModelPtr model, std::strin
 		tempModel->SetIconScale(BlockInfoList[networkName][blockIter->first].scale);
 		tempModel->SetIconMirror(BlockInfoList[networkName][blockIter->first].mirror);
 		tempModel->GetIconLocation()->SetPoint( std::pair< double, double >( iconLocations[networkName][ blockIter->first ].first, iconLocations[networkName][ blockIter->first ].second ) );
+        tempModel->SetIconHiddenFlag( BlockInfoList[networkName][blockIter->first].iconHidden );
 
 		double minX = iconLocations[networkName][ blockIter->first ].first;
 		double minY = iconLocations[networkName][ blockIter->first ].second;

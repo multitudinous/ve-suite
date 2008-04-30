@@ -63,6 +63,7 @@ Model::Model()
     mIconScale = 1.0f;
     mIconRotation = 0.0f;
     mIconMirror = 0;
+    mIconHiddenFlag = 0;
     mParentModel = ModelPtr();
 }
 ///////////////////////////////////
@@ -92,6 +93,7 @@ Model::Model( const Model& input )
     mIconScale = input.mIconScale;
     mIconRotation = input.mIconRotation;
     mIconMirror = input.mIconMirror;
+    mIconHiddenFlag = input.mIconHiddenFlag;
 
     mSubSystem = SystemPtr();
     if( input.mSubSystem )
@@ -151,6 +153,7 @@ Model& Model::operator=( const Model& input )
         mIconScale = input.mIconScale;
         mIconRotation = input.mIconRotation;
         mIconMirror = input.mIconMirror;
+        mIconHiddenFlag = input.mIconHiddenFlag;
 
         mSubSystem = SystemPtr();
         if( input.mSubSystem )
@@ -283,6 +286,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         GetAttribute( dataValueStringName, "iconScale", mIconScale );
         GetAttribute( dataValueStringName, "iconRotation", mIconRotation );
         GetAttribute( dataValueStringName, "iconMirror", mIconMirror );
+        GetAttribute( dataValueStringName, "iconHidden", mIconHiddenFlag );
     }
 
     {
@@ -745,6 +749,14 @@ void Model::_updateVEElement( const std::string& input )
                                    Convert( int2string.str() ).toXMLString() );
     }
 
+    ///
+    {
+        std::stringstream int2string;
+        int2string << mIconHiddenFlag;
+        iconElement->setAttribute( Convert( "iconHidden" ).toXMLString(),
+                                   Convert( int2string.str() ).toXMLString() );
+    }
+
     SetSubElement<ves::open::xml::XMLObjectPtr>( "iconLocation", mIconLocation );
     SetSubElements("ports", mPorts );
     SetSubElements("results", mResults );
@@ -810,6 +822,16 @@ float Model::GetIconScale( void )
 void Model::SetIconMirror( int mirror )
 {
     mIconMirror = mirror;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetIconHiddenFlag( int flag )
+{
+    mIconHiddenFlag = flag;
+}
+////////////////////////////////////////////////////////////////////////////////
+int Model::GetIconHiddenFlag( void )
+{
+    return mIconHiddenFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 int Model::GetIconMirror( void )

@@ -1914,12 +1914,17 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         tempPlugin->SetName( wxString( model->GetModelName().c_str(), wxConvUTF8 ) );
         tempPlugin->SetCORBAService( CORBAServiceList::instance() );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
-        if( model->GetIconFilename() != "DefaultPlugin" )
+        if(  model->GetModelName() != "DefaultPlugin" )
         {
             tempPlugin->SetImageIcon( model->GetIconFilename(),
                                       model->GetIconRotation(),
                                       model->GetIconMirror(),
-                                      model->GetIconScale() );
+                                      model->GetIconScale() );        
+            //flag it if the name shouldnt be drawn
+            if( model->GetIconHiddenFlag() == 1 )
+            {
+                tempPlugin->SetNameFlag( false );
+            }
         }
 
         Module temp_mod;

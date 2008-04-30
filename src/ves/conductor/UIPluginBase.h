@@ -274,6 +274,7 @@ public:
     void OnShowIconChooser( wxCommandEvent &event );
 
     void SetDialogSize( wxRect dialogSize );
+    void SetNameFlag( bool flag );
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
                         std::vector< wxString >& tagNames,
@@ -381,6 +382,7 @@ protected:
     int activeId;
     ///Determine wether to draw the ports and highlight band
     bool highlightFlag;
+    bool nameFlag;
 
     ///User scale
     /// first = x scale

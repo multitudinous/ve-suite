@@ -133,6 +133,15 @@ public:
     ///\return The mirror flag for the icon
     int GetIconMirror( void );
 
+    ///set the icon hidden flag
+    ///used in conductor to hide icons
+    //necessary for standalone links
+    void SetIconHiddenFlag( int flag );
+
+    ///Get icon hidden flag
+    ///\return The icon hidden flag
+    int GetIconHiddenFlag( void );
+
     ///Get point for the icon location referenced to the upper left hand corner
     ///\return The point for the icon location
     PointPtr GetIconLocation( void );
@@ -279,6 +288,7 @@ private:
     ves::open::xml::CommandPtr mModelAttribute;///<The structure that stores all of the model attributes
     float mIconScale;///<The icon scale to set the right size for conductor and xplorer
     float mIconRotation;///<The icon rotation for conductor and xplorer
+    int mIconHiddenFlag;  //hides icon
     ///the icon image needs to be mirrored 1 = no, 2 = horizontally, 3= vertically
     unsigned int mIconMirror;
     ///The sub network for this model

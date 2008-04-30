@@ -142,6 +142,7 @@ UIPluginBase::UIPluginBase() :
         m_selTag( 0 ),
         m_selTagCon( 0 ),
         highlightFlag( false ),
+        nameFlag( true ),
         serviceList( 0 ),
         m_veModel( new Model() ),
         m_dataSetLoaderDlg( 0 ),
@@ -1839,7 +1840,10 @@ void UIPluginBase::DrawPlugin( wxDC* dc )
 {
     DrawIcon( dc );
     DrawID( dc );
-    DrawName( dc );
+    if(nameFlag)
+    {
+        DrawName( dc );
+    }
     if( highlightFlag )
     {
         HighlightSelectedIcon( dc );
@@ -2128,6 +2132,11 @@ void UIPluginBase::CheckPluginMapOnExit()
         pluginDeleteEvent.SetClientData( &pluginDialogPair );
         m_network->AddPendingEvent( pluginDeleteEvent );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetNameFlag( bool flag )
+{
+    nameFlag = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::TogglePlugin( wxCommandEvent& event )

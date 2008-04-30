@@ -128,41 +128,44 @@ void HierarchyTree::PopulateTree( std::map < std::string,
     for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
             iter = alphaTree.begin(); iter != alphaTree.end(); ++iter )
     {
-        ModuleData* modData = new ModuleData();
-        modData->modId = iter->second->GetModelID();
-        modData->modName = iter->second->GetModelName();
-        modData->systemId = id;
-        if( iter->second->GetSubSystem() )
+        if( iter->second->GetIconHiddenFlag() == 0 )
         {
-            modData->subSystemId = iter->second->GetSubSystem()->GetID();
-        }
-        else
-        {
-            modData->subSystemId = -1;
-        }
+            ModuleData* modData = new ModuleData();
+            modData->modId = iter->second->GetModelID();
+            modData->modName = iter->second->GetModelName();
+            modData->systemId = id;
+            if( iter->second->GetSubSystem() )
+            {
+                modData->subSystemId = iter->second->GetSubSystem()->GetID();
+            }
+            else
+            {
+                modData->subSystemId = -1;
+            }
 
-        //Add the icon to the image list
-        fullPath = "2DIcons/" + iter->second->GetIconFilename() + ".jpg";
-        aspenIconIter = aspenPlusIconMap.find( fullPath );
-        if( aspenIconIter != aspenPlusIconMap.end() )
-        {
-            AddtoImageList( wxBitmap( wxBitmap(
-                                          aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
-        }
-        else
-        {
-            AddtoImageList( wxIcon( icon1_xpm ) );
-        }
+            //Add the icon to the image list
+            fullPath = "2DIcons/" + iter->second->GetIconFilename() + ".jpg";
+            aspenIconIter = aspenPlusIconMap.find( fullPath );
+            if( aspenIconIter != aspenPlusIconMap.end() )
+            {
+                AddtoImageList( wxBitmap( wxBitmap(
+                                              aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
+            }
+            else
+            {
+                AddtoImageList( wxIcon( icon1_xpm ) );
+            }
 
-        wxTreeItemId leaf = AppendItem( m_rootId,
-                                        wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
-                                        images->GetImageCount() - 1 , -1, modData );
-        SetItemImage( leaf, images->GetImageCount() - 1 );
+            wxTreeItemId leaf = AppendItem( m_rootId,
+                                            wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
+                                            images->GetImageCount() - 1 , -1, modData );
+            SetItemImage( leaf, images->GetImageCount() - 1 );
 
-        if( iter->second->GetSubSystem() )
-        {
-            PopulateLevel( leaf, iter->second->GetSubSystem()->GetModels(),
-                           iter->second->GetSubSystem()->GetID() );
+            if( iter->second->GetSubSystem() )
+            {
+                PopulateLevel( leaf, iter->second->GetSubSystem()->GetModels(),
+                               iter->second->GetSubSystem()->GetID() );
+            }
         }
     }
     m_currentNodeId = m_rootId;
@@ -177,41 +180,44 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
 
     for( size_t i = 0; i < models.size(); ++i )
     {
-        ModuleData* modData = new ModuleData();
-        modData->modId = models[i]->GetModelID();
-        modData->modName = models[i]->GetModelName();
-        modData->systemId = id;
-        if( models[i]->GetSubSystem() )
+        if( models[i]->GetIconHiddenFlag() == 0 )
         {
-            modData->subSystemId = models[i]->GetSubSystem()->GetID();
-        }
-        else
-        {
-            modData->subSystemId = -1;
-        }
+            ModuleData* modData = new ModuleData();
+            modData->modId = models[i]->GetModelID();
+            modData->modName = models[i]->GetModelName();
+            modData->systemId = id;
+            if( models[i]->GetSubSystem() )
+            {
+                modData->subSystemId = models[i]->GetSubSystem()->GetID();
+            }
+            else
+            {
+                modData->subSystemId = -1;
+            }
 
-        //Add the icon to the image list
-        fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
-        aspenIconIter = aspenPlusIconMap.find( fullPath );
-        if( aspenIconIter != aspenPlusIconMap.end() )
-        {
-            AddtoImageList( wxBitmap( wxBitmap(
-                                          aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
-        }
-        else
-        {
-            AddtoImageList( wxIcon( icon1_xpm ) );
-        }
+            //Add the icon to the image list
+            fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
+            aspenIconIter = aspenPlusIconMap.find( fullPath );
+            if( aspenIconIter != aspenPlusIconMap.end() )
+            {
+                AddtoImageList( wxBitmap( wxBitmap(
+                                              aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
+            }
+            else
+            {
+                AddtoImageList( wxIcon( icon1_xpm ) );
+            }
 
-        wxTreeItemId leaf = AppendItem( parentLeaf,
-                                        wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ),
-                                        images->GetImageCount() - 1 , -1, modData );
-        SetItemImage( leaf, images->GetImageCount() - 1 );
+            wxTreeItemId leaf = AppendItem( parentLeaf,
+                                            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ),
+                                            images->GetImageCount() - 1 , -1, modData );
+            SetItemImage( leaf, images->GetImageCount() - 1 );
 
-        if( models[i]->GetSubSystem() )
-        {
-            PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels(),
-                           models[i]->GetSubSystem()->GetID() );
+            if( models[i]->GetSubSystem() )
+            {
+                PopulateLevel( leaf, models[i]->GetSubSystem()->GetModels(),
+                               models[i]->GetSubSystem()->GetID() );
+            }
         }
     }
 }

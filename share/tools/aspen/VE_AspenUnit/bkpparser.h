@@ -47,6 +47,7 @@ private:
 		float rotation;
 		int mirror;
 		bool hierarchical;
+        bool iconHidden;
 	}BlockInfo;
 
 	//std::map< std::string, BlockInfo> BlockInfoList;
