@@ -261,7 +261,7 @@ void VjObsWrapper::CheckORBWorkLoad( void )
     {
         m_orbPtr->perform_work( mTimeOutValue );
     }
-    mTimeZero->msec( 50 );
+    mTimeZero->msec( 10 );
     mTimer->start();
 }
 ////////////////////////////////////////////////////////////////////////////////
