@@ -2207,6 +2207,13 @@ void Network::Update()
     {
         iter->second.GetPlugin()->GetVEModel();
     }
+    
+    //For links
+    for( std::vector< Link >::iterator iter = links.begin();
+        iter != links.end(); ++iter )
+    {
+        iter->GetLink();
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::OnDeletePlugins( wxUpdateUIEvent& event )
