@@ -275,6 +275,7 @@ public:
 
     void SetDialogSize( wxRect dialogSize );
     void SetNameFlag( bool flag );
+    bool GetNameFlag( );
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
                         std::vector< wxString >& tagNames,

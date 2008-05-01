@@ -1488,13 +1488,23 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     std::vector< std::string > moduleNames;
     std::vector< unsigned int > moduleIDs;
 
+    //alphabetize map
+    std::map< std::string, unsigned int > alphaMap;
     for( std::map<int, Module>::iterator iter = network->modules.begin();
-            iter != network->modules.end(); iter++ )
+        iter != network->modules.end(); ++iter )
     {
-        moduleNames.push_back( ConvertUnicode(
-                                   network->modules[ iter->first ].GetPlugin()->GetName().c_str() ) );
-        moduleIDs.push_back( network->modules[ iter->first ].GetPlugin()->
-                             GetVEModel()->GetModelID() );
+        if( iter->second.GetPlugin()->GetNameFlag() )
+        {
+            alphaMap[ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() )]
+                = iter->second.GetPlugin()->GetVEModel()->GetModelID();
+        }
+    }
+
+    for( std::map< std::string, unsigned int >::iterator
+            iter = alphaMap.begin(); iter != alphaMap.end(); ++iter )
+    {
+        moduleNames.push_back( iter->first );
+        moduleIDs.push_back( iter->second );
     }
 
     fd.SetModuleList( moduleNames );

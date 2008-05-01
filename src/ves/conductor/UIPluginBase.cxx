@@ -2139,6 +2139,11 @@ void UIPluginBase::SetNameFlag( bool flag )
     nameFlag = flag;
 }
 ////////////////////////////////////////////////////////////////////////////////
+bool UIPluginBase::GetNameFlag( )
+{
+    return nameFlag;
+}
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::TogglePlugin( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
