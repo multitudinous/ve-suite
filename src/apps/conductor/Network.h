@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef NETWORK_H
-#define NETWORK_H
+#ifndef VES_APPS_CONDUCTOR_NETWORK_H
+#define VES_APPS_CONDUCTOR_NETWORK_H
 /*!\file Network.h
 Network API
 */
@@ -75,34 +75,32 @@ public:
 
     ///Fucntion called during submit job to send the id of all active
     ///modules to the CE
-    void SetIDOnAllActiveModules( void );
+    void SetIDOnAllActiveModules();
 
     ///This is needed to reduce flicker
     ///Erase background callback
     void OnEraseBackground( wxEraseEvent& event );
-    void OnMouseMove( wxMouseEvent &event );
-    void OnMLeftDown( wxMouseEvent &event );
-    void OnMLeftUp( wxMouseEvent &event );
+    void OnMouseMove( wxMouseEvent& event );
+    void OnMLeftDown( wxMouseEvent& event );
+    void OnMLeftUp( wxMouseEvent& event );
 
-    void OnMRightDown( wxMouseEvent &event );
-    void OnAddTag( wxCommandEvent &event );
-    void OnEditTag( wxCommandEvent &event );
-    void OnDelTag( wxCommandEvent &event );
-    void OnDelMod( wxCommandEvent &event );
+    void OnMRightDown( wxMouseEvent& event );
+    void OnAddTag( wxCommandEvent& event );
+    void OnEditTag( wxCommandEvent& event );
+    void OnDelTag( wxCommandEvent& event );
+    void OnDelMod( wxCommandEvent& event );
     void OnDelPort( wxCommandEvent& event );
     void OnDelLink( wxCommandEvent& event );
 
-    //Add to network fuctions
+    ///Add to network fuctions
     void AddtoNetwork( ves::conductor::UIPluginBase *new_mod, std::string cls_name );
     void AddTag( int x, int y, wxString text );
-
-    //Save and Load the network
-    //std::string Save( std::string fileName );
     ///Load calls new when loading the network
     ///this also calls delete objects on xplorer but the user may not
     ///always want this action
-    void Load( std::string xmlNetwork, bool promptClearXplorer );
-    void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas * parent );
+    ///\param system The system pointer for this network to represent
+    ///\param parent The parent canvas for this network
+    void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas* parent );
     ///Acessors
     std::pair< double, double >* GetUserScale( void );
     std::pair< unsigned int, unsigned int >* GetNumPix( void );
@@ -136,13 +134,6 @@ public:
     void SetScrollPosition( int x, int y );
     
 protected:
-    //Draw functions
-    //void DrawPorti( UIPluginBase* cur_module, int index, bool flag);
-    //void DrawLinkCon( VE_Conductor::GUI_Utilities::Link l, bool flag);
-    //void DrawTagCon( VE_Conductor::GUI_Utilities::Tag t, bool flag);
-    //void DrawLink( VE_Conductor::GUI_Utilities::Link *l, bool flag);
-    //void DrawTag( VE_Conductor::GUI_Utilities::Tag *t, bool flag);
-
     //Selection functions
     int SelectMod( int x, int y, wxDC& dc );
     void UnSelectMod();
@@ -164,20 +155,11 @@ protected:
     void DropLink( int x, int y, int mod, int pt, wxDC &dc, bool flag );
 
     //Math functions for the relationship of points and polygons
-    //int ccw( wxPoint pt1, wxPoint pt2, wxPoint pt3 );
-    //int intersect( VE_Conductor::GUI_Utilities::Polygon l1, VE_Conductor::GUI_Utilities::Polygon l2);
-    //int inside( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly);
     double computenorm( wxPoint pt1, wxPoint pt2 );
-    //double nearpnt( wxPoint pt, VE_Conductor::GUI_Utilities::Polygon poly,
-    //                                 VE_Conductor::GUI_Utilities::Polygon &near);
-    //void TransPoly( VE_Conductor::GUI_Utilities::Polygon oldpoly,
-    //                int x, int y, VE_Conductor::GUI_Utilities::Polygon &newpoly);
 
     //Misc functions
     void CleanRect( wxRect box, wxDC& dc ); // for wipeout a rectangular area
     wxPoint GetFreePos( wxRect bbox ); // for finding a free start location for a new module
-    //VE_Conductor::GUI_Utilities::Polygon CalcLinkPoly( VE_Conductor::GUI_Utilities::Tag l); // calculate the bounding polygon of a link
-    //VE_Conductor::GUI_Utilities::Polygon CalcTagPoly( VE_Conductor::GUI_Utilities::Tag t); // calculate the bounding polygon of a tag
 
     ///Get the point for a port or connector for a selected plugin
     ///portType is either input or output
@@ -234,8 +216,6 @@ private:
     ves::open::xml::model::SystemPtr systemPtr;
     ///Parent window pointer to the splitter in AppFrame
     Canvas* parent;
-    ///wxframe pointer for frame.cxx
-    //AppFrame* frame;
     ///User scale
     /// first = x scale
     /// second = y scale
@@ -260,4 +240,4 @@ private:
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
 
-#endif
+#endif //VES_APPS_CONDUCTOR_NETWORK_H

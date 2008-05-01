@@ -36,6 +36,7 @@
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/System.h>
+#include <ves/open/xml/User.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/StateInfo.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
@@ -188,6 +189,42 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     }
     
     SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
+    
+    //Now manage the data that is user specific to this ves file
+    UserPtr userInfo = XMLDataBufferEngine::instance()->
+    GetXMLUserDataObject( "Network" );
+    
+    if( !userInfo->GetUserStateInfo() )
+    {
+        ///Color vector
+        std::vector<double> backgroundColor;
+        backgroundColor.clear();
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 0.0f );
+        backgroundColor.push_back( 1.0f );
+        
+        DataValuePairPtr dataValuePair( new DataValuePair() );
+        dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
+        CommandPtr veCommand( new Command() );
+        veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
+        veCommand->AddDataValuePair( dataValuePair );
+        UserPreferencesDataBuffer::instance()->
+            SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
+    }
+    // Create the command and data value pairs
+    CommandPtr tempCommand = UserPreferencesDataBuffer::instance()->
+        GetCommand( "CHANGE_BACKGROUND_COLOR" );
+    
+    CORBAServiceList::instance()->SendCommandStringToXplorer( tempCommand );
+    
+    // Create the command and data value pairs
+    tempCommand = 
+        UserPreferencesDataBuffer::instance()->GetCommand( "Navigation_Data" );
+
+    CORBAServiceList::instance()->SendCommandStringToXplorer( tempCommand );
+    
+    //Finally tell the canvas to redraw
     Refresh( true );
 }
 ///////////////////////////////////////////////////////////////////////////////

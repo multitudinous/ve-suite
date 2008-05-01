@@ -1799,29 +1799,8 @@ double Network::computenorm( wxPoint pt1, wxPoint pt2 )
 //////// Save and Load Functions /////////////
 //////////////////////////////////////////////
 ////////////////////////////////////////////////////////
-void Network::Load( std::string xmlNetwork, bool promptClearXplorer )
-{
-    /*//Get a new canvas first to cleanup memory
-    this->New( promptClearXplorer );
-    //Now...lets process some files
-    _fileProgress = new wxProgressDialog(_("Translation Progress"),
-                   _("Load..."), 
-                   100,this,
-                   wxPD_AUTO_HIDE|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME);
-    ::wxBeginBusyCursor();
-    //::wxSafeYield();
-    //LoadThread* loadThread = new LoadThread( this );
-    //loadThread->SetFileName( xmlNetwork );
-    tempXMLNetworkData = xmlNetwork;
-    //wxThreadHelper::Create();
-    //this->GetThread()->Run();
-    CreateNetwork( xmlNetwork );
-    ::wxEndBusyCursor();
-    delete _fileProgress;
-    */
-}
 ////////////////////////////////////////////////////////
-void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
+void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
 {
     this->parent = parent;
     modules.clear();
@@ -1944,41 +1923,6 @@ void Network::LoadSystem( model::SystemPtr system, Canvas * parent )
         *( tempPoly.GetPolygon() ) = tmpPoly;
         tempPoly.TransPoly( bbox.x, bbox.y, *( modules[ num ].GetPolygon() ) ); //Make the network recognize its polygon
     }
-
-    UserPtr userInfo = XMLDataBufferEngine::instance()->
-                           GetXMLUserDataObject( "Network" );
-
-    if( !userInfo->GetUserStateInfo() )
-    {
-        ///Color vector
-        std::vector<double> backgroundColor;
-        backgroundColor.clear();
-        backgroundColor.push_back( 0.0f );
-        backgroundColor.push_back( 0.0f );
-        backgroundColor.push_back( 0.0f );
-        backgroundColor.push_back( 1.0f );
-
-        DataValuePairPtr dataValuePair( new DataValuePair() );
-        dataValuePair->SetData( std::string( "Background Color" ), backgroundColor );
-        CommandPtr veCommand( new Command() );
-        veCommand->SetCommandName( std::string( "CHANGE_BACKGROUND_COLOR" ) );
-        veCommand->AddDataValuePair( dataValuePair );
-        UserPreferencesDataBuffer::instance()->
-        SetCommand( std::string( "CHANGE_BACKGROUND_COLOR" ), veCommand );
-    }
-    // Create the command and data value pairs
-    CommandPtr colorCommand = UserPreferencesDataBuffer::instance()->
-                                  GetCommand( "CHANGE_BACKGROUND_COLOR" );
-
-    CORBAServiceList::instance()->
-    SendCommandStringToXplorer( colorCommand );
-
-    // Create the command and data value pairs
-    CommandPtr startCommand = UserPreferencesDataBuffer::instance()->
-                                  GetCommand( "Navigation_Data" );
-    //startCommand->SetCommandName( "MOVE_TO_START_POSITION" );
-    CORBAServiceList::instance()->
-    SendCommandStringToXplorer( startCommand );
 
     //Reset values
     m_selMod = -1;

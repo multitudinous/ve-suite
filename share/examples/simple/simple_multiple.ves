@@ -23,8 +23,8 @@
       </conductorState>
     </network>
     <model ID="102" id="56b3dba4-fa6b-4b34-9226-c181996af2ca" name="DefaultPlugin" vendorUnit="DefaultPlugin">
-      <iconLocation xLocation="57" yLocation="151"/>
       <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="57" yLocation="151"/>
       <informationPackets id="5e62c92e-8820-4972-be32-a211a7b55fdc">
         <blockID type="xs:unsignedInt">105</blockID>
         <blockName type="xs:string">simple</blockName>
@@ -106,7 +106,7 @@
           <dataValue type="xs:string">mb.vtu</dataValue>
         </properties>
       </informationPackets>
-      <geometry associatedDataset="NONE" friction="1" id="5593f230-9f76-3449-acca-41bdeb92bc7a" mass="1" physics="false" restitution="0" visibility="true">
+      <geometry associatedDataset="NONE" friction="1" id="5593f230-9f76-3449-acca-41bdeb92bc7a" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
         <type>Assembly</type>
         <name>Model_Geometry</name>
         <parent type="xs:string"></parent>
@@ -127,9 +127,8 @@
             <value>0</value>
           </rotation>
         </transform>
-        <numChildren>3</numChildren>
         <children>
-          <child friction="1" id="1cfa8fb2-b11b-0645-8a2e-7ddc3fc7c582" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="1cfa8fb2-b11b-0645-8a2e-7ddc3fc7c582" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>eightCorners</name>
             <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
@@ -152,7 +151,7 @@
             </transform>
             <attribute>
               <type type="xs:string">Material</type>
-              <blending type="xs:boolean">true</blending>
+              <blending type="xs:boolean">false</blending>
               <material>
                 <kDiffuse>
                   <value>1</value>
@@ -188,7 +187,7 @@
             <activeAttributeName type="xs:string">red</activeAttributeName>
             <fileName>eightCorners.stl</fileName>
           </child>
-          <child friction="1" id="6382ac8c-ebe1-5543-85b8-2f511424db9d" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="6382ac8c-ebe1-5543-85b8-2f511424db9d" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>Surface0.75</name>
             <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
@@ -211,7 +210,7 @@
             </transform>
             <fileName>Surface0.75.stl</fileName>
           </child>
-          <child friction="1" id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="72bd0eb4-bac9-9f4e-894d-2bb98e5c7bef" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>Surface0.75_cloned</name>
             <parent type="xs:string">5593f230-9f76-3449-acca-41bdeb92bc7a</parent>
@@ -238,9 +237,9 @@
       </geometry>
     </model>
     <model ID="101" id="89e57f24-8ece-480c-9ea2-9680761d2874" name="DefaultPlugin" vendorUnit="DefaultPlugin">
-      <iconLocation xLocation="57" yLocation="14"/>
       <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
-      <geometry associatedDataset="NONE" friction="1" id="a94e6c27-862d-4945-80fe-b6048becfa06" mass="1" physics="false" restitution="0" visibility="true">
+      <iconLocation xLocation="57" yLocation="14"/>
+      <geometry associatedDataset="NONE" friction="1" id="a94e6c27-862d-4945-80fe-b6048becfa06" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
         <type>Assembly</type>
         <name>Model_Geometry</name>
         <parent type="xs:string"></parent>
@@ -261,9 +260,8 @@
             <value>0</value>
           </rotation>
         </transform>
-        <numChildren>1</numChildren>
         <children>
-          <child friction="1" id="a25026a3-9471-408d-8fbd-dddcc0b79998" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="a25026a3-9471-408d-8fbd-dddcc0b79998" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>Surface0.75</name>
             <parent type="xs:string">a94e6c27-862d-4945-80fe-b6048becfa06</parent>
@@ -290,9 +288,9 @@
       </geometry>
     </model>
     <model ID="103" id="0a089a49-461c-4bd8-bc22-d445cb6023e7" name="DefaultPlugin" vendorUnit="DefaultPlugin">
-      <iconLocation xLocation="58" yLocation="83"/>
       <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
-      <geometry associatedDataset="NONE" friction="1" id="c670a522-80b4-4b42-a345-af02a310490e" mass="1" physics="false" restitution="0" visibility="true">
+      <iconLocation xLocation="58" yLocation="83"/>
+      <geometry associatedDataset="NONE" friction="1" id="c670a522-80b4-4b42-a345-af02a310490e" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
         <type>Assembly</type>
         <name>Model_Geometry</name>
         <parent type="xs:string"></parent>
@@ -313,17 +311,16 @@
             <value>0</value>
           </rotation>
         </transform>
-        <numChildren>1</numChildren>
         <children>
-          <child friction="1" id="6037c04a-ebec-4a04-896d-ac211e62ee16" mass="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="6037c04a-ebec-4a04-896d-ac211e62ee16" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
             <name>Surface0.75</name>
             <parent type="xs:string">c670a522-80b4-4b42-a345-af02a310490e</parent>
             <transform>
               <translation>
+                <value>8</value>
                 <value>0</value>
-                <value>0</value>
-                <value>0</value>
+                <value>6</value>
               </translation>
               <scale>
                 <value>1</value>
@@ -332,8 +329,8 @@
               </scale>
               <rotation>
                 <value>0</value>
-                <value>0</value>
-                <value>0</value>
+                <value>28</value>
+                <value>30</value>
               </rotation>
             </transform>
             <fileName>Surface0.75.stl</fileName>
@@ -346,11 +343,11 @@
   <User id="231bf178-8cad-4174-b8ad-25a1ca28681d" userID="User" veControlStatus="MASTER">
     <stateInfo>
       <Command commandName="CHANGE_BACKGROUND_COLOR">
-        <parameter dataName="Background Color" id="9b147e9c-22dc-47b1-90c7-3dd46e7b8081">
+        <parameter dataName="Background Color" id="a1bddade-243a-46c9-9007-af09e3789fd6">
           <genericObject objectType="OneDDoubleArray">
-            <data>0</data>
-            <data>0</data>
-            <data>0</data>
+            <data>0.2784313725</data>
+            <data>0.6470588235</data>
+            <data>0.9529411765</data>
             <data>1</data>
           </genericObject>
         </parameter>

@@ -2186,11 +2186,12 @@ void AppFrame::ProcessCommandLineArgs( void )
     std::string vesFile;
     for( int i = 0; i < argc; ++ i )
     {
-        if (( ConvertUnicode( ::wxGetApp().argv[ i ] ) == std::string( "-VESFile" ) ) &&
+        if( ( ConvertUnicode( ::wxGetApp().argv[ i ] ) == "-VESFile" ) &&
                 (( i + 1 ) < argc )
            )
         {
-            Log( std::string( std::string( "Loading VES file: " ) + ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) ).c_str() );
+            Log( std::string( std::string( "Loading VES file: " ) + 
+                ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) ).c_str() );
             Log( "\n" );
             vesFile.assign( ConvertUnicode( ::wxGetApp().argv[ i + 1 ] ) );
             break;
@@ -2217,8 +2218,10 @@ void AppFrame::ProcessCommandLineArgs( void )
 
     //Send Command to change xplorer working dir
     // Create the command and data value pairs
-    DataValuePairPtr dataValuePair( new DataValuePair( std::string( "STRING" ) ) );
-    dataValuePair->SetData( "WORKING_DIRECTORY", ConvertUnicode( directory.c_str() ) );
+    DataValuePairPtr dataValuePair( 
+        new DataValuePair( std::string( "STRING" ) ) );
+    dataValuePair->SetData( "WORKING_DIRECTORY", 
+        ConvertUnicode( directory.c_str() ) );
     CommandPtr veCommand( new Command() );
     veCommand->SetCommandName( std::string( "Change Working Directory" ) );
     veCommand->AddDataValuePair( dataValuePair );
@@ -2231,9 +2234,9 @@ void AppFrame::ProcessCommandLineArgs( void )
     //network->Load( ConvertUnicode( fname.c_str() ), true );
     canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     //create hierarchy page
-    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                 GetXMLModels(), XMLDataBufferEngine::instance()->
-                                 GetTopSystemId() );
+    hierarchyTree->PopulateTree( 
+        XMLDataBufferEngine::instance()->GetXMLModels(), 
+        XMLDataBufferEngine::instance()->GetTopSystemId() );
     // we submit after load to give ce and ge the new network
     SubmitToServer( event );
 }
@@ -2334,8 +2337,6 @@ void AppFrame::ChangeXplorerViewSettings( wxCommandEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnTimer( wxTimerEvent& WXUNUSED( event ) )
 {
-    //wxFrame::OnInternalIdle();
-
     Network* network = 0;
     if( canvas )
     {
@@ -2422,14 +2423,6 @@ void AppFrame::OnChildDestroy( wxWindowDestroyEvent& event )
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
 {
-    /*if( mDestoryFrame )
-    {
-        //::wxMilliSleep( 100 );
-
-        //Close( true );
-        //wxWindow::Destroy();
-        return;
-    }*/
     {
         //Send a new start position for all apps
         //do this first so in case a file has a start position it will be used
