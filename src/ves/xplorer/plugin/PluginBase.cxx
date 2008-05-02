@@ -411,7 +411,11 @@ std::map< std::string, PluginBase* > PluginBase::GetCommandNameMap()
     return mEventHandlerMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-
+ves::xplorer::scenegraph::DCS* PluginBase::GetPluginDCS()
+{
+    return mDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 } // end plugin
 } // end xplorer
 } // end ves

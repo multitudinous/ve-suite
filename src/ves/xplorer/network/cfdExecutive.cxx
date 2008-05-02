@@ -290,7 +290,8 @@ void cfdExecutive::GetNetwork( void )
     mTopSystemID = tempSystem->GetID();
     //Construct map of systems
     //Loop over all systems and get all models on the map
-    ParseSystem( tempSystem, true );
+    ParseSystem( tempSystem, true, 
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 
     //create network system view
     netSystemView = new NetworkSystemView( veNetwork );
@@ -568,7 +569,7 @@ void cfdExecutive::DeleteNetworkSystemView()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system, 
-    bool getResults )
+    bool getResults, ves::xplorer::scenegraph::DCS* parentNode )
 {
     //add the system to the map
     mIDToSystem[ system->GetID() ] = system;
@@ -619,7 +620,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             temp->SetSceneManager( ves::xplorer::scenegraph::SceneManager::instance() );
             temp->SetResourceManager( ves::xplorer::scenegraph::ResourceManager::instance() );
             temp->SetCommandHandler( ves::xplorer::CommandHandler::instance() );
-            temp->InitializeNode( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+            temp->InitializeNode( parentNode );
             temp->AddSelfToSG();
             Model* tempCFDModel = temp->GetCFDModel();
             tempCFDModel->SetID( model->GetModelID() );
@@ -687,7 +688,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
         if( system->GetModel( i )->GetSubSystem() )
         {
             ParseSystem( system->GetModel( i )->GetSubSystem(), 
-                !parentResultsFailed );
+                !parentResultsFailed, newPlugin->GetPluginDCS() );
         }
     }    
 }

@@ -197,6 +197,10 @@ public:
     ///\param tempModel Pointer to VE_Model
     void SetXMLModel( ves::open::xml::model::ModelPtr& tempModel );
 
+    ///Get the DCS for this plugin
+    ///\return The DCS that the CAD and viz are added to
+    ves::xplorer::scenegraph::DCS* GetPluginDCS();
+    
 protected:
     bool mOnSceneGraph;
 
