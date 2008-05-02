@@ -30,6 +30,7 @@ BKPParser::BKPParser()
 
 BKPParser::~BKPParser()
 {
+    delete aspendoc;
 }
 
 void BKPParser::openFile(const char * file)

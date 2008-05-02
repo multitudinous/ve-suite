@@ -11,7 +11,7 @@ class CorbaUnitManager
 {
 public:
 	CorbaUnitManager(CVE_AspenUnitDlg *);
-   ~CorbaUnitManager(){;}
+   ~CorbaUnitManager();
    void SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname );
    void SetRunORBFlag( bool run );
    void RunORB( void );

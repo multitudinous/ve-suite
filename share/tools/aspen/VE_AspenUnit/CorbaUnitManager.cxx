@@ -21,6 +21,10 @@ CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
    parent = dialog;
    unit_i_instantiated = false;
 }
+CorbaUnitManager::~CorbaUnitManager()
+{
+    delete unit_i;
+}
 void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
 {
    computerName = name;

@@ -90,6 +90,7 @@ Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParse
 // Implementation skeleton destructor
 Body_Unit_i::~Body_Unit_i (void)
 {
+    delete bkp;
 }
 
 void Body_Unit_i::ShowAspen()

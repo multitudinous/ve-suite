@@ -10,22 +10,13 @@ namespace CASI
 
 	CASIDocument::CASIDocument()
 	{
-		//[Yang+
-		/*BOOL bSuccess = hAPsim.CreateDispatch(_T("apwn.document.IP"));
-		//BOOL bSuccess = hAPsim.CreateDispatch(_T("apwn.document"));
-		if (!bSuccess) 
-			AfxMessageBox("hAPsim initialization failed.");
-		*/
-		//Yang+]
 		simOpened = false;
 		ihRoot=NULL;
 		hAPsim=NULL;
-
 	}
 
 	CASIDocument::~CASIDocument()
 	{
-		close();
 	}
 
 	IHNode CASIDocument::getRoot()
@@ -35,39 +26,36 @@ namespace CASI
 	//File operating functions
 	void CASIDocument::open(CString filename) //Open an Aspen Document
 	{
-		//[Yang+
 		if (simOpened)
               close();
 
+        //the default constructor sets auto release of memory so there is no 
+        //need to delete this mmeory later. ReleaseDispatch must be called to
+        //make this happen.
 		hAPsim = new IHapp(); 
 		BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document.IP"));
 		if (!bSuccess) 
+        {
 			AfxMessageBox("hAPsim initialization failed.");
-		//Yang+]
+            return;
+        }
 		CString sim = filename;
 		BSTR bstr = sim.AllocSysString();
-		//OLECHAR* szName = OLESTR("");
-		static bool firstTime=true;
 	
 		
 		VARIANT args[7];
-		int i;
-		for (i=0; i<7; i++)
+		for (int i=0; i<7; i++)
 			::VariantInit(&args[i]);
-		
-		//if (firstTime)
-		//{
-			hAPsim->InitFromArchive2(&bstr, args[0], args[1], args[2], args[3], args[4], args[5]);//, args[6]);
-			firstTime=false;
-		//}
-		//else
-		//	hAPsim.Readback(LPCTSTR (filename), 0);
+        
+        hAPsim->InitFromArchive2(&bstr, args[0], args[1], args[2], args[3], args[4], args[5]);
 		
 		hAPsim->SetVisible(TRUE);
 
-		//nodePath=_T("Data");
 		nodePath=_T("");
 
+        //the default constructor sets auto release of memory so there is no 
+        //need to delete this mmeory later. ReleaseDispatch must be called to
+        //make this happen.
 		ihRoot = new IHNode();
 		(*ihRoot) = hAPsim->GetTree();
 
@@ -75,7 +63,6 @@ namespace CASI
 
 		std::vector<CASIObj> testblocks;
 		std::vector<CASIObj> teststreams;
-//		readStreamsAndBlocks(ihRoot,testblocks,teststreams);
 #ifdef YANGDEBUG
 		CreateDummyDesignSpec();
 #endif
@@ -85,29 +72,18 @@ namespace CASI
 	{
 		VARIANTARG reserved;
 		::VariantInit(&reserved);
-		//Yang+[
 		reserved.vt=VT_BOOL;
 		reserved.boolVal=VARIANT_TRUE;
-		//Yang+]
 		if (simOpened)
 		{
 			hAPsim->Close(reserved);
-			//Yang+[
-			hAPsim->DetachDispatch();
-			hAPsim->ReleaseDispatch();
-			//Yang+]
-			//hAPsim.Reinit();
-
-			ihRoot->DetachDispatch();
 			ihRoot->ReleaseDispatch();
-			delete hAPsim;  
-			delete ihRoot;
+            hAPsim->ReleaseDispatch();
 
-             hAPsim = NULL;
-			 ihRoot = NULL;
-             CoFreeUnusedLibraries();
+			ihRoot = NULL;
 			simOpened = false;
 		}
+        hAPsim = NULL;
 	}
 	
 	void CASIDocument::save() //Save the document back;
