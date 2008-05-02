@@ -192,7 +192,7 @@ void Network::OnMLeftDown( wxMouseEvent& event )
     //if (m_selMod >= 0)
     UnSelectMod();
     //if (m_selLink >= 0)
-    UnSelectLink( dc );
+    UnSelectLink( );
     if( m_selTag >= 0 )
         UnSelectTag( dc );
 
@@ -813,7 +813,7 @@ int Network::SelectLink( int x, int y )
     return -1;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::UnSelectLink( wxDC &dc )
+void Network::UnSelectLink( )
 {
     for( size_t i = 0; i < links.size(); ++i )
         links[i].SetHighlightFlag( false );
@@ -2044,6 +2044,19 @@ void Network::SetSelectedModule( int modId )
     parent->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Network::SetSelectedLink( int linkId )
+{
+    m_selFrPort = -1;
+    m_selToPort = -1;
+    m_selMod = -1;
+    m_selLinkCon = -1;
+    m_selTag = -1;
+    m_selTagCon = -1;
+    m_selLink = linkId;
+    links[ m_selLink ].SetHighlightFlag( true );
+    parent->Refresh( true );
+}
+////////////////////////////////////////////////////////////////////////////////
 void Network::HighlightCenter( int modId )
 {
     UnSelectMod();
@@ -2055,6 +2068,16 @@ void Network::HighlightCenter( int modId )
 
     //highlight the selected icon
     SetSelectedModule( modId );
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::HighlightCenterLink( int linkId )
+{
+    UnSelectLink();
+    parent->Scroll( links[linkId].GetPoints()->at(0).x*userScale.first,
+        links[linkId].GetPoints()->at(0).y*userScale.second);
+
+    //highlight the selected icon
+    SetSelectedLink( linkId );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Network::PushAllEvents( )

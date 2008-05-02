@@ -417,9 +417,10 @@ void AppFrame::_createTreeAndLogWindow( wxWindow* parent )
     side_pane->AddPage( modPage, wxT( "Modules" ) );
 
     //create hierarchy page
-    wxPanel * hierPage = new wxPanel( side_pane, -1, wxDefaultPosition, wxDefaultSize );
+    wxPanel * hierPage = new wxPanel( side_pane, -1, wxDefaultPosition,
+        wxDefaultSize );
     hierarchyTree = new HierarchyTree( hierPage, HierarchyTree::TREE_CTRL,
-                                       wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
+        wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS );
 
     //make hierarchy panel fill the notebook page
     sizerPanel = new wxBoxSizer( wxVERTICAL );
@@ -1485,9 +1486,11 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     Network* network = canvas->GetActiveNetwork();
 
     FindDialog fd( this );
+
     std::vector< std::string > moduleNames;
     std::vector< unsigned int > moduleIDs;
 
+    //Find for modules
     //alphabetize map
     std::map< std::string, unsigned int > alphaMap;
     for( std::map<int, Module>::iterator iter = network->modules.begin();
@@ -1507,17 +1510,53 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
         moduleIDs.push_back( iter->second );
     }
 
+    std::vector< std::string > streamNames;
+    std::vector< int > streamIDs;
+
+    //Find for streams
+    //alphabetize map
+    //std::map< std::string, std::string > alphaMapStreams;
+    std::map< std::string, int > alphaMapStreams;
+    for( int i = 0; i < network->links.size(); i++ )
+    {
+        //alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
+        //    = network->links[i].GetUUID();
+        alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
+            = i;
+    }
+
+    for( std::map< std::string, int >::iterator
+            iter = alphaMapStreams.begin(); iter != alphaMapStreams.end(); ++iter )
+    {
+        streamNames.push_back( iter->first );
+        streamIDs.push_back( iter->second );
+    }
+
+    fd.SetStreamList( streamNames );
     fd.SetModuleList( moduleNames );
     fd.ShowModal();
 
-    int selectedModulePos = fd.GetSelectedModulePos();
+    std::pair< int, int > selectedModulePos = fd.GetSelectedModulePos();
 
     //highlight and center block
-    if(selectedModulePos != wxNOT_FOUND)
+    if( selectedModulePos.first != wxNOT_FOUND ||
+        selectedModulePos.second != wxNOT_FOUND )
     {
-        network->HighlightCenter( moduleIDs[selectedModulePos] );
-        std::string selectModuleName = 
-            "\nFind Block: " + std::string( fd.GetSelectedModule() ) + "\n";
+        std::string selectModuleName = "Find Failed!";
+        if( selectedModulePos.first == 0)
+        {
+            network->
+                HighlightCenter( moduleIDs[selectedModulePos.second] );
+            selectModuleName = "\nFind Block: " +
+                std::string( fd.GetSelectedModule() ) + "\n";
+        }
+        else
+        {
+            network->
+                HighlightCenterLink( streamIDs[selectedModulePos.second] );
+            selectModuleName = "\nFind Link: " +
+                std::string( fd.GetSelectedModule() ) + "\n";
+        }
         Log( selectModuleName.c_str() );
     }
 }

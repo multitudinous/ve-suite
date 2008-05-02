@@ -39,9 +39,9 @@
 using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( FindDialog, wxDialog )
-    //EVT_CLOSE( FindDialog::OnClose )
-    EVT_BUTTON( ID_CANCELBUTTON, FindDialog::CancelButtonClick )
     EVT_BUTTON( ID_FINDBUTTON, FindDialog::FindButtonClick )
+    EVT_CHOICE( ID_WXCHOICE1, GetChoice )
+    EVT_CHOICE( ID_WXCHOICE2, GetChoice )
 END_EVENT_TABLE()
 
 FindDialog::FindDialog( wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
@@ -63,31 +63,43 @@ void FindDialog::CreateGUIControls()
     UnitLabel = new wxStaticText( this, ID_UNITLABEL, wxT( "Unit Operations" ), wxPoint( 4, 22 ), wxDefaultSize, 0, wxT( "UnitLabel" ) );
     UnitLabel->SetFont( wxFont( 10, wxSWISS, wxNORMAL, wxBOLD, FALSE, wxT( "Times New Roman" ) ) );
 
+    StreamLabel = new wxStaticText( this, ID_STREAMLABEL, wxT( "Streams" ), wxPoint( 4, 45 ), wxDefaultSize, 0, wxT( "StreamLabel" ) );
+    StreamLabel->SetFont( wxFont( 10, wxSWISS, wxNORMAL, wxBOLD, FALSE, wxT( "Times New Roman" ) ) );
+
     wxArrayString arrayStringFor_WxChoice1;
     WxChoice1 = new wxChoice( this, ID_WXCHOICE1, wxPoint( 96, 19 ), wxSize( 145, 21 ), arrayStringFor_WxChoice1, 0, wxDefaultValidator, wxT( "WxChoice1" ) );
     WxChoice1->SetSelection( -1 );
 
-    CancelButton = new wxButton( this, ID_CANCELBUTTON, wxT( "Cancel" ), wxPoint( 165, 57 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
+    wxArrayString arrayStringFor_WxChoice2;
+    WxChoice2 = new wxChoice( this, ID_WXCHOICE2, wxPoint( 96, 42 ), wxSize( 145, 21 ), arrayStringFor_WxChoice2, 0, wxDefaultValidator, wxT( "WxChoice2" ) );
+    WxChoice2->SetSelection( -1 );
 
-    FindButton = new wxButton( this, ID_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 57 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
+    CancelButton = new wxButton( this, wxID_CANCEL, wxT( "Cancel" ), wxPoint( 165, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "CancelButton" ) );
+
+    FindButton = new wxButton( this, ID_FINDBUTTON, wxT( "Find" ), wxPoint( 86, 67 ), wxSize( 75, 25 ), 0, wxDefaultValidator, wxT( "FindButton" ) );
+    
+    //initialize member variables
     selectedModulePos = wxNOT_FOUND;
+    type = wxNOT_FOUND;
+    mLastChoice = wxNOT_FOUND;
 }
 
-/*void FindDialog::OnClose( wxCloseEvent& event )
-{
-    Destroy();
-}*/
-
-void FindDialog::CancelButtonClick( wxCommandEvent& event )
-{
-    Destroy();
-}
 
 void FindDialog::FindButtonClick( wxCommandEvent& event )
 {
-    selectedModule = WxChoice1->GetString( WxChoice1->GetSelection() );
-    selectedModulePos = WxChoice1->GetSelection();
-    Destroy();
+    if ( mLastChoice == ID_WXCHOICE1 )
+    {
+        selectedModule = WxChoice1->GetString( WxChoice1->GetSelection() );
+        selectedModulePos = WxChoice1->GetSelection();
+        type = 0;
+    }
+    else if( mLastChoice == ID_WXCHOICE2 )
+    {
+        selectedModule = WxChoice2->GetString( WxChoice2->GetSelection() );
+        selectedModulePos = WxChoice2->GetSelection();
+        type = 1;
+    }
+    this->Close();
 }
 
 void FindDialog::SetModuleList( std::vector< std::string > modules )
@@ -96,12 +108,25 @@ void FindDialog::SetModuleList( std::vector< std::string > modules )
         WxChoice1->Insert( wxString( modules[i].c_str(), wxConvUTF8 ), i );
 }
 
+void FindDialog::SetStreamList( std::vector< std::string > modules )
+{
+    for( int i = 0; i < ( int )modules.size(); i++ )
+        WxChoice2->Insert( wxString( modules[i].c_str(), wxConvUTF8 ), i );
+}
+
 const char * FindDialog::GetSelectedModule()
 {
     return selectedModule.mb_str();
 }
 
-int FindDialog::GetSelectedModulePos()
+std::pair< int, int > FindDialog::GetSelectedModulePos()
 {
-    return selectedModulePos;
+    std::pair< int, int > returnValue;
+    returnValue.first = type;
+    returnValue.second = selectedModulePos;
+    return returnValue;
+}
+void FindDialog::GetChoice(wxCommandEvent &event)
+{
+    mLastChoice = event.GetId();
 }

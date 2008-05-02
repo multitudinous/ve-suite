@@ -111,7 +111,11 @@ public:
     bool IsDragging();
     void SetSelectedModule( int mod );
     void HighlightCenter( int modId );
+    void SetSelectedLink( int link );
+    void HighlightCenterLink( int linkId );
     std::map< int, ves::conductor::Module > modules; //The list of modules;
+    //The list of links between the nodes of moduls.
+    std::vector< ves::conductor::util::Link > links;
     //void ReDraw(wxDC &dc);
     void DrawNetwork( wxDC &dc );
     ///Push all the event handlers from the tags, plugins, and links onto canvas
@@ -138,7 +142,7 @@ protected:
     int SelectMod( int x, int y, wxDC& dc );
     void UnSelectMod();
     int  SelectLink( int x, int y );
-    void UnSelectLink( wxDC& dc );
+    void UnSelectLink( );
     int SelectTag( int x, int y );
     void UnSelectTag( wxDC& dc );
 
@@ -179,8 +183,6 @@ protected:
     int m_selTag; //selected Tag
     int m_selTagCon; //selected Tag Connector
     //Three main list of network objs
-    //The list of links between the nodes of moduls.
-    std::vector< ves::conductor::util::Link > links;
     //The list of text tags
     std::vector< ves::conductor::util::Tag > tags;
     
