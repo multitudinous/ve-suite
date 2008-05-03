@@ -40,8 +40,8 @@ using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( FindDialog, wxDialog )
     EVT_BUTTON( ID_FINDBUTTON, FindDialog::FindButtonClick )
-    EVT_CHOICE( ID_WXCHOICE1, GetChoice )
-    EVT_CHOICE( ID_WXCHOICE2, GetChoice )
+    EVT_CHOICE( ID_WXCHOICE1, FindDialog::GetChoice )
+    EVT_CHOICE( ID_WXCHOICE2, FindDialog::GetChoice )
 END_EVENT_TABLE()
 
 FindDialog::FindDialog( wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style )
