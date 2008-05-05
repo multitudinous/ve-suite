@@ -1,0 +1,38 @@
+##
+import os, sys, string
+import SConsAddons.Util as sca_util
+pj = os.path.join
+
+Import( 'RootDir ves_pkg' )
+
+fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'SimpleNetwork' ) )
+InteractiveStoveDir = pj( RootDir, 'share', 'examples', 'SimpleNetwork' )
+
+#stlFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.stl' ] )
+#jpgFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.jpg' ] )
+#objFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.obj' ] )
+#mtlFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.mtl' ] )
+#rgbFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.rgb' ] )
+
+#fileBundle.addFiles( stlFile )
+#fileBundle.addFiles( jpgFile )
+#fileBundle.addFiles( objFile )
+#fileBundle.addFiles( mtlFile )
+#fileBundle.addFiles( rgbFile )
+
+#fileBundle.addFiles( 'interactivestove.ves' )
+#fileBundle.addFiles( 'star.param' )
+#fileBundle.addFiles( 'RunUnit.csh' )
+
+InteractiveStoveSubdirs = Split("""
+    NetworkOneModel
+    NetworkOnePlugin
+    NetworkOneUnit
+    NetworkTwoModel
+    NetworkTwoPlugin
+    NetworkTwoUnit
+""")
+
+##Run SConscript files in all of these folders.
+for d in InteractiveStoveSubdirs:
+   SConscript( dirs = d )
