@@ -113,302 +113,134 @@ NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input 
 ////////////////////////////////////////////////////////
 osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
 {
-    //XMLReaderWriter networkWriter;
-    //networkWriter.UseStandaloneDOMDocumentManager();
-    //std::vector< XMLObjectPtr > objectVector;
-    // do this for models
-    ////networkWriter.ReadXMLData( network, "Model", "veModel" );
-    //networkWriter.ReadXMLData( network, "System", "veSystem" );
-    //objectVector = networkWriter.GetLoadedXMLObjects();
-    //if( objectVector.empty() )
-    //{
-    //    return 0;
-    //}
-
     osg::ref_ptr<osg::Group> loadedModels = new osg::Group();
-    //std::ofstream output( "scale.txt" );
-    //SystemPtr mainSystem = 
-       //boost::dynamic_pointer_cast<System>( objectVector.at( 0 ) );
     SystemPtr mainSystem = systems[netId];
     // now lets create a list of them
-    //for ( size_t i = 0; i < objectVector.size(); ++i )
     for( size_t i = 0; i < mainSystem->GetModels().size(); ++i )
     {
-        //_fileProgress->Update( 75 + (i*timeCalc), _("Loading data") );
-        //Model* model = dynamic_cast< Model* >( objectVector.at( i ) );
         ModelPtr model = mainSystem->GetModel( i );
 
-        //add 3d blocks
-        std::string dataPrefix;
-        vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
-        //try default location first
-        osg::ref_ptr<osg::Node> loadedModel = 
-            osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
-                model->GetIconFilename() + ".obj.ive" );
-        //Then try local directory
-        //osg::ref_ptr<osg::Node> loadedModel = 
-            //osgDB::readNodeFile( "3DIcons/" + model->GetIconFilename() 
-            //+ ".obj.ive" );
-
-        //add red block id if block .ive file is not found
-        if( !loadedModel.valid() )
+        if( model->GetIconHiddenFlag() == 0 )
         {
-            std::istringstream textNodeStream( 
-                GetVESuite_UnsupportedComponent() );
-            loadedModel = osgDB::Registry::instance()->
-                          getReaderWriterForExtension( "osg" )->
-                          readNode( textNodeStream ).getNode();
+            //add 3d blocks
+            std::string dataPrefix;
+            vpr::System::getenv( "XPLORER_DATA_DIR", dataPrefix );
+            //try default location first
+            osg::ref_ptr<osg::Node> loadedModel = 
+                osgDB::readNodeFile( dataPrefix + "/3DIcons/" + 
+                    model->GetIconFilename() + ".obj.ive" );
+
+            //add red block id if block .ive file is not found
+            if( !loadedModel.valid() )
+            {
+                std::istringstream textNodeStream( 
+                    GetVESuite_UnsupportedComponent() );
+                loadedModel = osgDB::Registry::instance()->
+                              getReaderWriterForExtension( "osg" )->
+                              readNode( textNodeStream ).getNode();
+            }
+
+            if( !loadedModel.valid() )
+            {
+                return 0;
+            }
+
+            //set the blocks name
+            loadedModel->setName( model->GetModelName() );
+            //normalize the normals so that lighting works better
+            loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, 
+                osg::StateAttribute::ON );
+		    //setup two sided lighting to account for poor modeling
+            osg::ref_ptr< osg::LightModel > lightModel;
+            lightModel = new osg::LightModel;
+            lightModel->setTwoSided( true );
+            loadedModel->getOrCreateStateSet()->setAttributeAndModes(
+                lightModel.get(), osg::StateAttribute::ON );     
+
+            //Rotate the 3d comps 180 degrees around X axis
+            //corrects issue with initial model location
+            osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
+		    rotatedComp->addChild( loadedModel.get() );
+    		
+		    //move pivot point to center
+		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
+            rotatedComp->accept( visitor2 );
+            osg::BoundingBox bounds2 = visitor2.getBoundingBox();
+		    rotatedComp->setPivotPoint(bounds2.center());
+    		
+		    //rotate
+            rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), 
+                osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+
+            //rotate/scale/mirror component
+            int mirror = model->GetIconMirror();
+            float rotation = model->GetIconRotation();
+            float iconScale = model->GetIconScale();
+
+            //rotate according to iconMirror value
+            osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
+		    vprDEBUG( vesDBG, 2 ) << "PP: x="<<mirrorComp->getPivotPoint().x()
+                << " y="<<mirrorComp->getPivotPoint().y()
+                << " z="<<mirrorComp->getPivotPoint().z()
+                << std::endl << vprDEBUG_FLUSH;
+            mirrorComp->addChild( rotatedComp.get() );
+            
+		    //move pivot point to center
+		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor3;
+            mirrorComp->accept( visitor3 );
+            osg::BoundingBox bounds3 = visitor3.getBoundingBox();
+		    mirrorComp->setPivotPoint(bounds3.center());
+    		
+		    if( mirror > 0 && mirror < 3 )
+            {
+                //horizontally
+                if( mirror == 1 )
+                    mirrorComp->setRotation( osg::Quat( 
+                        osg::DegreesToRadians( 180.0 ), 
+                        osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
+                //vertically
+                else
+                    mirrorComp->setRotation( osg::Quat( 
+                        osg::DegreesToRadians( 180.0 ), 
+                        osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
+            }
+
+            //rotate according to iconRotation value
+            osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
+            reRotatedComp->addChild( mirrorComp.get() );
+            
+		    //move pivot point to center
+		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor4;
+            reRotatedComp->accept( visitor4 );
+            osg::BoundingBox bounds4 = visitor4.getBoundingBox();
+		    reRotatedComp->setPivotPoint(bounds4.center());
+    		
+		    //rotate
+		    reRotatedComp->setRotation( osg::Quat( 
+                    osg::DegreesToRadians( rotation ), 
+                    osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
+
+            //translate to comp with name to correct location
+            PointPtr iconLocation = model->GetIconLocation();
+            std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
+            osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
+            mModelTrans->addChild( reRotatedComp.get() );
+    		
+		    //find offset from center to upper left corner
+		    ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
+            mModelTrans->accept( visitor5 );
+            osg::BoundingBox bounds5 = visitor5.getBoundingBox();
+		    osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
+                ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + 
+                ((bounds5.zMax()-bounds5.zMin())/2));
+            mModelTrans->setPosition( centerTrans );
+            mModelTrans->setName( model->GetModelName() );
+            loadedModels->addChild( mModelTrans.get() );
         }
-
-        if( !loadedModel.valid() )
-        {
-            return 0;
-        }
-
-        //set the blocks name
-        loadedModel->setName( model->GetModelName() );
-        //normalize the normals so that lighting works better
-        loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, 
-            osg::StateAttribute::ON );
-		//setup two sided lighting to account for poor modeling
-        osg::ref_ptr< osg::LightModel > lightModel;
-        lightModel = new osg::LightModel;
-        lightModel->setTwoSided( true );
-        loadedModel->getOrCreateStateSet()->setAttributeAndModes(
-            lightModel.get(), osg::StateAttribute::ON );     
-	    //calculate the original size of the icon
-        //ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor;
-        //loadedModel->accept( visitor );
-        //osg::BoundingBox bounds = visitor.getBoundingBox();
-        //float dx = bounds.xMax() - bounds.xMin();
-        //float dy = bounds.yMax() - bounds.yMin();
-        //float dz = bounds.zMax() - bounds.zMin();
-        //std::cout <<model->GetModelName()<<std::endl;
-        //std::cout <<"dx: "<<dx<<"dy: "<<dy<<"dz: "<<dz<<std::endl;
-
-		//for (int corn = 0; corn < 8; corn ++)
-		//{
-		//	osg::Vec3d corner = bounds.corner(corn);
-		//}
-
-        //scale icon to 2d worksheet size
-        //osg::ref_ptr<osg::Image> image = 
-            //osgDB::readImageFile( "2DIcons/" + model->GetIconFilename() + 
-            //".jpg" );
-        ////osg::ref_ptr<osg::AutoTransform> worksheetScaledModel = 
-            //new osg::AutoTransform();
-        //if( image.valid() )
-        //{
-          //  output << "width: " << image->s() << "height: " 
-              //<< image->t() << std::endl;
-           // //output<<"nx: "<<image->s()/dx<<"ny: "<<image->s()/dy<<"nz: "<<
-               //image->t()/dz<<std::endl;
-        //}
-
-        //scales
-        //osg::Vec3 vec;
-        //vec.set(image->s()/dx, image->s()/dy, image->t()/dz);
-        //worksheetScaledModel->addChild(loadedModel.get());
-        //worksheetScaledModel->setScale(vec);
-
-        //problem with coords - wx has upper left origin
-        //worksheetScaledModel->setPosition(osg::Vec3d(
-        // worksheetScaledModel->getPosition().x() + (0.5*image->s()),
-        // worksheetScaledModel->getPosition().y() ,
-        // worksheetScaledModel->getPosition().z() + (0.5*image->t())));
-
-        //Put origin in the center of the model
-        //osg::ref_ptr<osg::AutoTransform> loadedModelNormalized = 
-            //new osg::AutoTransform();
-        //loadedModelNormalized->addChild(loadedModel.get());
-        //float radius = loadedModel.get()->getBound().radius();
-        //loadedModelNormalized->setPosition(osg::Vec3(0, 0, 0-radius));
-
-        //Result Pane
-        /*
-        osg::ref_ptr<osg::Group> resultPane = new osg::Group();
-
-        osg::ref_ptr<osgText::Text> text = new osgText::Text();
-        osg::Vec4 layoutColor(0.0f,0.0f,0.0f,1.0f);
-          text->setColor(layoutColor);
-        text->setText(model->GetModelName());
-        //text->setAutoRotateToScreen(true);
-        text->setRotation(osg::Quat(osg::DegreesToRadians(90.0), 
-            osg::Vec3d(1.0, 0.0, 0.0)));
-        text->setCharacterSize(0.5);
-
-        osg::ref_ptr<osg::Geode> textGeode = new osg::Geode();
-        textGeode->addDrawable(text.get());
-
-        osg::ref_ptr<osg::AutoTransform> transTextGeode = 
-            new osg::AutoTransform();
-        transTextGeode->addChild(textGeode.get());
-        transTextGeode->setPosition(osg::Vec3d(-1.0, -0.1, 1.0));
-
-        osg::ref_ptr<osg::Geometry> pane = new osg::Geometry;
-        osg::ref_ptr<osg::Vec3Array> coords = new osg::Vec3Array(4);
-        //original png size is 300X400 => 3X4
-        (*coords)[0] = osg::Vec3f(-1.5, 0.0, -2.0);
-        (*coords)[1] = osg::Vec3f(1.5, 0.0, -2.0);
-        (*coords)[2] = osg::Vec3f(1.5, 0.0, 2.0);
-        (*coords)[3] = osg::Vec3f(-1.5, 0.0, 2.0);
-
-        pane->setVertexArray(coords.get());
-        pane->
-            addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,4));
-
-        osg::Vec2Array* texcoords = new osg::Vec2Array(4);
-        (*texcoords)[0].set(0.0f, 0.0f);
-        (*texcoords)[1].set(1.0f, 0.0f);
-        (*texcoords)[2].set(1.0f, 1.0f);
-        (*texcoords)[3].set(0.0f, 1.0f);
-        pane->setTexCoordArray(0,texcoords);
-
-        osg::Vec3Array* normals = new osg::Vec3Array(1);
-        (*normals)[0].set(1.0f,0.0f,0.0f);
-        pane->setNormalArray(normals);
-        pane->setNormalBinding(osg::Geometry::BIND_OVERALL);
-
-        // load image
-        osg::Image* img = osgDB::readImageFile("F:/suite/share/dashboard.png");
-
-        // setup texture
-        osg::TextureRectangle* texture = new osg::TextureRectangle(img);
-        osg::TexMat* texmat = new osg::TexMat;
-        texmat->setScaleByTextureRectangleSize(true);
-
-        // setup state
-        osg::StateSet* state = pane->getOrCreateStateSet();
-        state->setTextureAttributeAndModes(0, texture, osg::StateAttribute::ON);
-        state->setTextureAttributeAndModes(0, texmat, osg::StateAttribute::ON);
-
-        osg::ref_ptr<osg::Geode> paneGeode = new osg::Geode();
-        paneGeode->addDrawable(pane.get());
-
-        resultPane->addChild(transTextGeode.get());
-        resultPane->addChild(paneGeode.get());
-        */
-
-        //Rotate the 3d comps 180 degrees around X axis
-        //corrects issue with initial model location
-        osg::ref_ptr<osg::AutoTransform> rotatedComp = new osg::AutoTransform();
-		rotatedComp->addChild( loadedModel.get() );
-		
-		//move pivot point to center
-		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor2;
-        rotatedComp->accept( visitor2 );
-        osg::BoundingBox bounds2 = visitor2.getBoundingBox();
-		rotatedComp->setPivotPoint(bounds2.center());
-		
-		//rotate
-        rotatedComp->setRotation( osg::Quat( osg::DegreesToRadians( 180.0 ), 
-            osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
-
-        //rotate/scale/mirror component
-        int mirror = model->GetIconMirror();
-        float rotation = model->GetIconRotation();
-        float iconScale = model->GetIconScale();
-
-        //rotate according to iconMirror value
-        osg::ref_ptr<osg::AutoTransform> mirrorComp = new osg::AutoTransform();
-		vprDEBUG( vesDBG, 2 ) << "PP: x="<<mirrorComp->getPivotPoint().x()
-            << " y="<<mirrorComp->getPivotPoint().y()
-            << " z="<<mirrorComp->getPivotPoint().z()
-            << std::endl << vprDEBUG_FLUSH;
-        mirrorComp->addChild( rotatedComp.get() );
-        
-		//move pivot point to center
-		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor3;
-        mirrorComp->accept( visitor3 );
-        osg::BoundingBox bounds3 = visitor3.getBoundingBox();
-		mirrorComp->setPivotPoint(bounds3.center());
-		
-		if( mirror > 0 && mirror < 3 )
-        {
-            //horizontally
-            if( mirror == 1 )
-                mirrorComp->setRotation( osg::Quat( 
-                    osg::DegreesToRadians( 180.0 ), 
-                    osg::Vec3d( 0.0, 0.0, 1.0 ) ) );
-            //vertically
-            else
-                mirrorComp->setRotation( osg::Quat( 
-                    osg::DegreesToRadians( 180.0 ), 
-                    osg::Vec3d( 1.0, 0.0, 0.0 ) ) );
-        }
-
-        //rotate according to iconRotation value
-        osg::ref_ptr<osg::AutoTransform> reRotatedComp = new osg::AutoTransform();
-        reRotatedComp->addChild( mirrorComp.get() );
-        
-		//move pivot point to center
-		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor4;
-        reRotatedComp->accept( visitor4 );
-        osg::BoundingBox bounds4 = visitor4.getBoundingBox();
-		reRotatedComp->setPivotPoint(bounds4.center());
-		
-		//rotate
-		reRotatedComp->setRotation( osg::Quat( 
-                osg::DegreesToRadians( rotation ), 
-                osg::Vec3d( 0.0, 1.0, 0.0 ) ) );
-
-        //move the text to the -y
-        //osg::ref_ptr<osg::AutoTransform> textTrans = new osg::AutoTransform();
-        //textTrans->addChild(resultPane.get());
-        //textTrans->setPosition(osg::Vec3d(0.0, 0.0, 
-            //loadedModel.get()->getBound().radius()));
-        //textTrans->setRotation(osg::Quat(osg::DegreesToRadians(180.0), 
-            //osg::Vec3d(1.0, 0.0, 0.0)));
-
-        //Scale up 3D comps & text
-        //osg::ref_ptr<osg::AutoTransform> scale = new osg::AutoTransform;
-        //scale->addChild(reRotatedComp.get());
-        //scale.get()->addChild(rotatedComp.get());
-        //scale->addChild(textTrans.get());
-        //scale->setScale(6.0f * iconScale);
-        //scale->setScale(100);
-
-        //translate to comp with name to correct location
-        PointPtr iconLocation = model->GetIconLocation();
-        std::pair<unsigned int, unsigned int> xyPair = iconLocation->GetPoint();
-        //std::cout<<"X: "<< xyPair.first <<" Y: " << xyPair.second <<std::endl;
-        osg::ref_ptr<osg::AutoTransform> mModelTrans = new osg::AutoTransform();
-        //osg::Vec3 center = mModelTrans.get()->getBound().center();
-        //20 and 28 should be replaced with conductor icon width and height
-        //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 
-            //(xyPair.second + 28) - center.y(), 0 - center.z());
-        //osg::Vec3 centerTrans = osg::Vec3((xyPair.first + 20) - center.x(), 
-            //0 - center.z(), (xyPair.second + 22) - center.y());
-        //osg::Vec3 centerTrans = osg::Vec3(xyPair.first + 20, xyPair.second + 25, 0 );
-        //std::cout << " center " << center.x() << " " << center.z() << " " 
-            //<< center.y() << std::endl;
-        //osg::Vec3 centerTrans = osg::Vec3( xyPair.first - center.x(), 
-            //0 - center.z(), xyPair.second - center.y() );
-        mModelTrans->addChild( reRotatedComp.get() );
-		
-		//find offset from center to upper left corner
-		ves::xplorer::scenegraph::util::ComputeBoundsVisitor visitor5;
-        mModelTrans->accept( visitor5 );
-        osg::BoundingBox bounds5 = visitor5.getBoundingBox();
-		osg::Vec3 centerTrans = osg::Vec3( xyPair.first + 
-            ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + 
-            ((bounds5.zMax()-bounds5.zMin())/2));
-		//std::cout<< (bounds5.xMax()-bounds5.xMin())/2<<" "
-            //<< (bounds5.zMax()-bounds5.zMin())/2<<std::endl;
-		
-		//osg::Vec3 centerTrans = osg::Vec3( xyPair.first, 0, xyPair.second );
-        //mModelTrans->addChild(scale.get());
-        mModelTrans->setPosition( centerTrans );
-        mModelTrans->setName( model->GetModelName() );
-        loadedModels->addChild( mModelTrans.get() );
     }
 
     //Streams
-    //networkWriter.ReadXMLData( network, "Model", "veNetwork" );
-    //objectVector = networkWriter.GetLoadedXMLObjects();
-    //Network* veNetwork = dynamic_cast< Network* >( objectVector.at( 0 ) );
     NetworkPtr veNetwork = mainSystem->GetNetwork();
-    //std::cout << "num links " <<  veNetwork->GetNumberOfLinks() << std::endl;
     //different typed of streams material, heat, & work
 	osg::ref_ptr<osg::Vec4Array> colorBlack = new osg::Vec4Array;
     osg::ref_ptr<osg::Vec4Array> colorGreen = new osg::Vec4Array;
@@ -431,9 +263,6 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
         {
             std::pair< unsigned int, unsigned int > rawPoint = 
                 veNetwork->GetLink( i )->GetLinkPoint( j )->GetPoint();
-            //std::cout << "links X: " << rawPoint.first << " Y: " 
-                //<< rawPoint.second << std::endl;
-            //(*vertices)[j].set(rawPoint.first, rawPoint.second, 0.0);
             ( *vertices )[j].set( rawPoint.first, 0.0, rawPoint.second );
         }
         linesGeom->setVertexArray( vertices );
@@ -472,20 +301,6 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
     //center the world
     worldTranslate = new osg::AutoTransform();
     worldTranslate->addChild( worldRotate.get() );
-    //osg::Vec3 worldCenter = worldRotate.get()->getBound().center();
-    //osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(),
-        //0 - worldCenter.y(), 0 - worldCenter.z());
-    //osg::Vec3 worldTrans = osg::Vec3(0 - worldCenter.x(), 0,
-        //0 - worldCenter.z());
-    //std::cout << worldCenter.x() << " " << worldCenter.y() << std::endl;
-    //worldTranslate->setPosition(worldTrans);
-
-    //Add phong shading to the geodes
-    //osg::ref_ptr< osg::StateSet > geodeProperties =
-        //worldTranslate->getOrCreateStateSet();
-    //ves::xplorer::scenegraph::util::PhongLoader phongShader;
-    //phongShader.SetStateSet( geodeProperties.get() );
-    //phongShader.SyncShaderAndStateSet();
 
     return worldTranslate.get();
 }
@@ -533,21 +348,6 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
             objectIter = objectVector.begin();
             objectIter = objectVector.erase( objectIter );
         }
-        //Else if the file jsut has a netowrk and a series of models
-        //else
-        //{
-        //    tempSystem = ves::open::xml::model::SystemPtr( 
-        //        new ves::open::xml::model::System() );
-        //    systems[tempSystem->GetID()] = tempSystem;
-        //    topId = tempSystem->GetID();
-
-        //    m_networkMap[ "Network" ] = ves::open::xml::model::NetworkPtr( 
-        //      boost::dynamic_pointer_cast<Network>( objectVector.at( 0 ) ) );
-        //    tempSystem->AddNetwork( m_networkMap[ "Network" ] );
-        //    objectIter = objectVector.begin();
-        //    objectIter = objectVector.erase( objectIter );
-        //    tempSystem = ves::open::xml::model::SystemPtr();
-        //}
     }
     else
     {
@@ -662,7 +462,6 @@ void NetworkSystemView::LoadVESData( std::string xmlNetwork )
             tempMap[ tempStates.at( i )->GetCommandName()] =
                 tempStates.at( i );
         }
-        //UserPreferencesDataBuffer::instance()->SetCommandMap( tempMap );
     }
     else
     {
