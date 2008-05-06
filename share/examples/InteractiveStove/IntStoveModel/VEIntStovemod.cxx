@@ -41,14 +41,11 @@
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/DataSet.h>
-//#include <VE_Xplorer/XplorerHandlers/cfdReadParam.h>
 
 #include <ves/xplorer/util/fileIO.h>
 #include <ves/xplorer/util/readWriteVtkThings.h>
 
 #include <ves/xplorer/event/viz/cfdCuttingPlane.h>
-
-//#include <ves/conductor/network/string_ops.h>
 
 #include <ves/open/xml/model/Model.h>
 
@@ -92,11 +89,9 @@
 #include <vtkMaskPoints.h>
 
 using namespace std;
-//using namespace vtkutil;
 using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer;
-
-// Constructor
+///////////////////////////////////////////////////////////////////////////////
 VEIntStovemod::VEIntStovemod( void ) : 
     PluginBase(),
     setcount( 0 ), 
@@ -126,7 +121,6 @@ VEIntStovemod::VEIntStovemod( void ) :
     mEventHandlerMap["SHOW_CONTOUR"]=this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-// Destructor
 VEIntStovemod::~VEIntStovemod( void )
 {
     if ( baffleOne )
@@ -176,34 +170,41 @@ void VEIntStovemod::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
-    baffleOne = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleOne->GetNode()->ToggleDisplay(false);
+    baffleOne = new ves::xplorer::scenegraph::CADEntity(
+		"baffle_new2.stl",veworldDCS );
+    baffleOne->GetNode()->ToggleDisplay( false );
 
-    baffleTwo = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleTwo->GetNode()->ToggleDisplay(false);
+    baffleTwo = new ves::xplorer::scenegraph::CADEntity(
+		"baffle_new2.stl",veworldDCS );
+    baffleTwo->GetNode()->ToggleDisplay( false );
 
-    baffleThree = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleThree->GetNode()->ToggleDisplay(false);
+    baffleThree = new ves::xplorer::scenegraph::CADEntity(
+		"baffle_new2.stl",veworldDCS );
+    baffleThree->GetNode()->ToggleDisplay( false );
 
-    baffleFour = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleFour->GetNode()->ToggleDisplay(false);
+    baffleFour = new ves::xplorer::scenegraph::CADEntity(
+		"baffle_new2.stl",veworldDCS );
+    baffleFour->GetNode()->ToggleDisplay( false );
 
-    baffleFive = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleFive->GetNode()->ToggleDisplay(false);
+    baffleFive = new ves::xplorer::scenegraph::CADEntity(
+		"baffle_new2.stl",veworldDCS );
+    baffleFive->GetNode()->ToggleDisplay( false );
 
-    baffleSix = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleSix->GetNode()->ToggleDisplay(false);
+    baffleSix = new ves::xplorer::scenegraph::CADEntity(
+		"baffle_new2.stl",veworldDCS );
+    baffleSix->GetNode()->ToggleDisplay( false );
 
-    baffleSeven = new ves::xplorer::scenegraph::CADEntity("baffle_new2.stl",veworldDCS);
-    baffleSeven->GetNode()->ToggleDisplay(false);
+    baffleSeven = new ves::xplorer::scenegraph::CADEntity( 
+		"baffle_new2.stl",veworldDCS );
+    baffleSeven->GetNode()->ToggleDisplay( false );
 }
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::PreFrameUpdate( void )
 {
     //LoadStoveDataSet();
     //CreateContourPlane();
 }
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::CreateCustomVizFeature( int input )
 {
     LoadStoveDataSet();
@@ -215,67 +216,9 @@ void VEIntStovemod::CreateCustomVizFeature( int input )
     {
         CreateVectorPlane();
     }
-/*
-   setcount += 1; 
-   ofstream scpFile;
-
-   scpFile.open( "secure_copy", ios::out);
-   scpFile << "#!/bin/csh -f" << endl;
-	scpFile << "scp /home/vr/Applications/TSVEG/Test_Pit/Interactive_Stove/IntStoveUnit/outFile" << setcount << ".vtk"
-           << " jaredabo@keymaker.vrac.iastate.edu:/home/users/jaredabo/TSVEG/stoves/interactive_stoves/IntStoveUnit/outFile" 
-           << setcount << ".vtk" << endl;
-	//compileFile << "./STAR/execu &" << endl;
-	scpFile.close();
-   system( "chmod a+rwx secure_copy && ./secure_copy > /dev/null" );
-
-   std::ostringstream vtkFileStream;
-   vtkFileStream << "./IntStoveUnit/outFile" << setcount << ".vtk";
-   //vtkFileStream << "./IntStoveUnit/flowdata.vtk";
-   std::string vtkFileString = vtkFileStream.str();
-   const char * _inFileName;
-   _inFileName = vtkFileString.c_str();
-   std::cout<<"New VTK FileName: " << _inFileName <<std::endl;
-   //vtkUnstructuredGridReader *ugr = vtkUnstructuredGridReader::New();
-   //ugr->SetFileName( _inFileName );
-   //ugr->Update();
-   //_dataSet = vtkUnstructuredGrid::New();
-   //_dataSet->DeepCopy( ugr->GetOutput() );
-   //ugr->Delete();
-
-   scale[0]=2.54;scale[1]=2.54;scale[2]=2.54;
-   trans[0]=0.0; trans[1]=0.0; trans[2]=0.0;
-   rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
-
-   //_model->DynamicLoadingData(_dataSet,setcount,scale,trans,rotate);
-   _model->CreateCfdDataSet();
-   _model->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
-   _model->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
-   _model->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
-   _model->GetCfdDataSet( -1 )->LoadData( _inFileName );  
-
-
-   std::ostringstream geomFileStream;
-   geomFileStream << "./IntStoveUnit/bafflegeom_" << setcount << ".stl";
-   std::string geomFileString = geomFileStream.str();
-   char * geomFilename;
-   geomFilename = new char[geomFileString.length() + 1];
-   strcpy(geomFilename, geomFileString.c_str());
-   stlColor[0]=1; stlColor[1]=0; stlColor[2]=0;
-   color =1;
-   transFlag =1;
-   _model->CreateGeomDataSet(geomFilename);
-   std::cout<<"[DBG]...after cfdFile constructor"<<std::endl;
-   //_model->GetGeomDataSet(-1)->GetDCS()->SetScaleArray( scale );
-   //_model->GetGeomDataSet(-1)->GetDCS()->SetTranslationArray( trans );
-   //_model->GetGeomDataSet(-1)->GetDCS()->SetRotationArray(rotate);
-   //_model->GetGeomDataSet(-1)->SetFILEProperties(color, transFlag, stlColor);
-   //_model->GetGeomDataSet(-1)->setOpac(1.0f);
-
-//   _model->DynamicLoadingGeom( geomFilename,scale,trans,rotate,stlColor,color,transFlag );   
-*/
 }
-////////////////////////////////////////////////////////////////////////////////
-void VEIntStovemod::SetCurrentCommand(ves::open::xml::Command* command)
+///////////////////////////////////////////////////////////////////////////////
+void VEIntStovemod::SetCurrentCommand(ves::open::xml::CommandPtr command)
 { 
     if( !command )
     {
@@ -402,7 +345,7 @@ void VEIntStovemod::SetCurrentCommand(ves::open::xml::Command* command)
         }
     }
 }
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::LoadStoveDataSet()
 {
     ///Cleanup
@@ -419,9 +362,10 @@ void VEIntStovemod::LoadStoveDataSet()
 #else
     tempStr = "star.vtu";
 #endif
-    m_stoveData = static_cast< vtkDataSet* >(ves::xplorer::util::readVtkThing( tempStr ));
+    m_stoveData = static_cast< vtkDataSet* >
+		( ves::xplorer::util::readVtkThing( tempStr ) );
 }
-////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 void VEIntStovemod::CreateContourPlane()
 {
     if( !m_stoveData )

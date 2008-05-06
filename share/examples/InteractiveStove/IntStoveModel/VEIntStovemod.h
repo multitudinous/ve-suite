@@ -76,7 +76,7 @@ public:
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
     virtual void CreateCustomVizFeature( int );
     void BuildBaffleGeom( vtkUnstructuredGrid* );
-    virtual void SetCurrentCommand(ves::open::xml::Command* command);
+    virtual void SetCurrentCommand(ves::open::xml::CommandPtr command);
       virtual void PreFrameUpdate( void );
 private:
     ///Load the stove dataset when needed
