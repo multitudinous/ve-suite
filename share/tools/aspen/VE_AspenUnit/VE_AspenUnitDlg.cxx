@@ -181,6 +181,7 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
             AfxMessageBox( _T("Unable to connect to VE-CE" ));
         }
 		initialized = true;
+        GetDlgItem(IDC_OK)->EnableWindow(FALSE);
 	}
 }
 
