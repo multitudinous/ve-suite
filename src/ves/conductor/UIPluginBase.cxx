@@ -1838,15 +1838,21 @@ bool UIPluginBase::GetHighlightFlag()
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::DrawPlugin( wxDC* dc )
 {
-    DrawIcon( dc );
-    DrawID( dc );
+    //if hidden
     if(nameFlag)
     {
+        DrawIcon( dc );
+        DrawID( dc );
         DrawName( dc );
     }
+
+    //if highlighted
     if( highlightFlag )
     {
-        HighlightSelectedIcon( dc );
+        if(nameFlag)
+        {
+            HighlightSelectedIcon( dc );
+        }
         DrawPorts( true, dc );
     }
 }
