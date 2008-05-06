@@ -36,6 +36,12 @@ namespace CASI
 		BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document.IP"));
 		if (!bSuccess) 
         {
+            //clean up
+            hAPsim->ReleaseDispatch();
+            delete hAPsim;
+            hAPsim = NULL;
+
+            //throw error
 			AfxMessageBox("hAPsim initialization failed.");
             return;
         }
@@ -70,20 +76,23 @@ namespace CASI
 	
 	void CASIDocument::close() //Close the file, clear up 
 	{
-		VARIANTARG reserved;
-		::VariantInit(&reserved);
-		reserved.vt=VT_BOOL;
-		reserved.boolVal=VARIANT_TRUE;
 		if (simOpened)
 		{
+            VARIANTARG reserved;
+            ::VariantInit(&reserved);
+            reserved.vt=VT_BOOL;
+            reserved.boolVal=VARIANT_TRUE;
+
 			hAPsim->Close(reserved);
 			ihRoot->ReleaseDispatch();
             hAPsim->ReleaseDispatch();
-
+            delete ihRoot;
 			ihRoot = NULL;
+            delete hAPsim;
+            hAPsim = NULL;
+
 			simOpened = false;
 		}
-        hAPsim = NULL;
 	}
 	
 	void CASIDocument::save() //Save the document back;
