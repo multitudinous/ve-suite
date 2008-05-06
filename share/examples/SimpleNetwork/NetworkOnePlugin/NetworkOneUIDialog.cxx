@@ -2,10 +2,10 @@
 
 #include "NetworkOneUIDialog.h"
 
-#include <wx\sizer.h>
-#include <wx\statbox.h>
-#include <wx\textctrl.h>
-#include <wx\button.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/textctrl.h>
+#include <wx/button.h>
 
 BEGIN_EVENT_TABLE( NetworkOneUIDialog, wxDialog )
 EVT_BUTTON(		wxID_OK,		NetworkOneUIDialog::SetText )

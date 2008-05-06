@@ -14,8 +14,8 @@ exampleSubdirs = Split("""
     simple
     garage
     golf_game
+    SimpleNetwork
 """)
-#     CameraPlacementTool
 
 ##Run SConscript files in all of those folders.
 for d in exampleSubdirs:

@@ -1,8 +1,8 @@
 #include "NetworkOneGP.h"
 
-#include <ves\xplorer\scenegraph\DCS.h>
+#include <ves/xplorer/scenegraph/DCS.h>
 
-#include <ves\open\xml\Command.h>
+#include <ves/open/xml/Command.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 NetworkOneGP::NetworkOneGP() : PluginBase()

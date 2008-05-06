@@ -2,10 +2,10 @@
 
 #include "NetworkTwoUIDialog.h"
 
-#include <wx\sizer.h>
-#include <wx\statbox.h>
-#include <wx\textctrl.h>
-#include <wx\button.h>
+#include <wx/sizer.h>
+#include <wx/statbox.h>
+#include <wx/textctrl.h>
+#include <wx/button.h>
 
 BEGIN_EVENT_TABLE( NetworkTwoUIDialog, wxDialog )
 EVT_BUTTON(		wxID_OK,		NetworkTwoUIDialog::SetText )
