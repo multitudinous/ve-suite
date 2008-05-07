@@ -47,7 +47,6 @@
 #include <ves/xplorer/scenegraph/nurbs/util/OCCNURBSFileReader.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/Fog>
 #include <osg/Group>
 #include <osg/Geode>
@@ -66,14 +65,14 @@
 #include <osg/ShadeModel>
 #include <osg/LightModel>
 
+#include <osgUtil/SmoothingVisitor>
+
 #include <osgDB/ReadFile>
 #include <osgDB/Registry>
 #include <osgDB/FileUtils>
 #include <osgDB/ReaderWriter>
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
-#elif _OPENSG
-#endif
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <osgOQ/OcclusionQueryNode.h>
@@ -232,8 +231,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                                           osgDB::getLowerCaseFileExtension( filename ) );
             if( !rw )
             {
-                std::cerr << "Error: could not find a suitable " <<
-                "reader/writer to load the specified file" << std::endl;
+                std::cerr << "Error: could not find a suitable " 
+                    << "reader/writer to load the specified file" << std::endl;
                 return;
             }
 
@@ -242,7 +241,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             if( !pb->is_open() )
             {
                 std::cerr << "Error: could not open file `"
-                << filename << "'" << std::endl;
+                    << filename << "'" << std::endl;
                 return;
             }
 
@@ -322,7 +321,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     if( !tempCADNode.valid() )
     {
         std::cerr << "|\tERROR (CADEntityHelper::LoadFile) loading file name: "
-        << filename << std::endl;
+            << filename << std::endl;
         return;
     }
 
@@ -385,6 +384,10 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             m_cadNode->setName( "NULL_FILENAME" );
         }
     }
+    
+    //Set per vertex lighting on all files that are loaded
+    osgUtil::SmoothingVisitor smoother;
+    m_cadNode->accept( smoother );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::AddOccluderNodes()
