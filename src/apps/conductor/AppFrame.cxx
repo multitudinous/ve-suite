@@ -338,10 +338,10 @@ AppFrame::~AppFrame()
         ExitXplorer();
     }
 
-	if(AspenSimOpen)
-	{
-		CloseAspenSimulation();
-	}
+	//if(AspenSimOpen)
+	//{
+		//CloseAspenSimulation();
+	//}
 
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
@@ -1636,10 +1636,10 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
-	if(AspenSimOpen)
-	{
-		CloseAspenSimulation();
-	}
+	//if(AspenSimOpen)
+	//{
+	//	CloseAspenSimulation();
+	//}
 	newCanvas = true;
     fname.Clear();
 
