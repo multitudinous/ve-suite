@@ -90,6 +90,7 @@ void CORBAServiceList::CleanUp()
     {
        delete pelog;
     }*/
+    DisconnectFromCE();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_context )
