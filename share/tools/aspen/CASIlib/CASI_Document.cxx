@@ -67,11 +67,12 @@ namespace CASI
 
 		simOpened = true;
 
-		std::vector<CASIObj> testblocks;
-		std::vector<CASIObj> teststreams;
+		//std::vector<CASIObj> testblocks;
+		//std::vector<CASIObj> teststreams;
 #ifdef YANGDEBUG
 		CreateDummyDesignSpec();
 #endif
+        
 	}
 	
 	void CASIDocument::close() //Close the file, clear up 
@@ -84,11 +85,11 @@ namespace CASI
             reserved.boolVal=VARIANT_TRUE;
 
 			hAPsim->Close(reserved);
-			ihRoot->ReleaseDispatch();
+			//ihRoot->ReleaseDispatch();
             hAPsim->ReleaseDispatch();
-            delete ihRoot;
-			ihRoot = NULL;
+            //delete ihRoot;
             delete hAPsim;
+			ihRoot = NULL;
             hAPsim = NULL;
 
 			simOpened = false;

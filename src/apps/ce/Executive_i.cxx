@@ -1047,22 +1047,24 @@ ACE_THROW_SPEC((
     iter = _exec_thread.find( std::string( UnitName ) );
     if( iter != _exec_thread.end() )
     {
-        ACE_Task_Base::cleanup( iter->second, NULL );
-        if( iter->second )
-            delete iter->second;
+        //ACE_Task_Base::cleanup( iter->second, NULL );
+        //if( iter->second )
+        //    delete iter->second;
 
         _exec_thread.erase( iter );
+        std::cout << "VE-CE : " << UnitName << " Unregistered!\n";
     }
 
     std::map< std::string, QueryThread* >::iterator iterQuery;
     iterQuery = queryThreads.find( std::string( UnitName ) );
     if( iterQuery != queryThreads.end() )
     {
-        ACE_Task_Base::cleanup( iterQuery->second, NULL );
-        if( iterQuery->second )
-            delete iterQuery->second;
+        //ACE_Task_Base::cleanup( iterQuery->second, NULL );
+        //if( iterQuery->second )
+        //    delete iterQuery->second;
 
         queryThreads.erase( iterQuery );
+        std::cout << "VE-CE : " << UnitName << " Query Unregistered!\n";
     }
 
     _mutex.release();

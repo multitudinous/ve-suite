@@ -23,7 +23,7 @@ CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
 }
 CorbaUnitManager::~CorbaUnitManager()
 {
-    delete unit_i;
+
 }
 void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
 {
@@ -111,7 +111,7 @@ void CorbaUnitManager::RunORB()
 
       //Now downcast the object reference to the appropriate type
 
-      Body::Executive_var exec = Body::Executive::_narrow(exec_object.in());
+      exec = Body::Executive::_narrow(exec_object.in());
 
       // other client code
 
@@ -154,7 +154,7 @@ void CorbaUnitManager::RunORB()
 		ACE_TRY_CHECK;
 
       //Create the Servant
-		unit_i = new Body_Unit_i(exec.in(), UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
+		unit_i = new Body_Unit_i(/*exec.in(),*/ UNITNAME, /*parser,*/ parent, this, std::string(workingDir) );
 	  unit_i_instantiated = true;
 	  //Activate it to obtain the object reference
 
@@ -196,11 +196,17 @@ void CorbaUnitManager::DestroyORB( void )
 	if(unit_i_instantiated)
 	{
 		unit_i->CloseAspen();
+Sleep(5000);
+
+CleanUp();
 		// Destroy the POA, waiting until the destruction terminates
-		poa->destroy (1, 1);
+		//poa->destroy (1, 1);
+
+        //exec->UnRegisterUnit( unit_i->UnitName_.c_str() );
 	}
 	// Finally destroy the ORB
-	orb->destroy();
+	//orb->destroy();
+
 }
 /////////////////////////////////////////////////////////////
 Body_Unit_i* CorbaUnitManager::GetUnitObject( void )
@@ -225,4 +231,21 @@ BKPParser * CorbaUnitManager::CreateParser( void )
 {
 	return new BKPParser();
 	//unit_i->bkp = new BKPParser();
+}
+/////////////////////////////////////////////////////////////
+bool CorbaUnitManager::CleanUp( void )
+{
+    try
+    {
+        exec->UnRegisterUnit( unit_i->UnitName_.c_str() );
+        delete unit_i;
+        unit_i = NULL;
+
+    }
+    catch ( CORBA::SystemException& ex )
+    {
+        return false;
+    }
+
+    return true;
 }

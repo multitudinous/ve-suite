@@ -159,6 +159,7 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
 {
 	if(!initialized)
 	{
+        GetDlgItem(IDC_OK)->EnableWindow(FALSE);
         // TODO: Add your control notification handler code here
         CEdit *Display;
         Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
@@ -181,7 +182,6 @@ void CVE_AspenUnitDlg::OnBnClickedOk()
             AfxMessageBox( _T("Unable to connect to VE-CE" ));
         }
 		initialized = true;
-        GetDlgItem(IDC_OK)->EnableWindow(FALSE);
 	}
 }
 

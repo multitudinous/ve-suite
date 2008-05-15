@@ -21,6 +21,7 @@ public:
    BKPParser * CreateParser( void );
    //void CreateParser( void );
    bool unit_i_instantiated;
+   bool CleanUp( );
 
 private:
    CString workingDir;
@@ -31,5 +32,6 @@ private:
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
    CVE_AspenUnitDlg * parent;
+   Body::Executive_var exec;
 };
 #endif

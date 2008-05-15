@@ -48,8 +48,8 @@
 #include <iostream>
 
 // Implementation skeleton constructor
-Body_Unit_i::Body_Unit_i( Body::Executive_ptr exec, std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent, std::string dir )
-  : executive_(Body::Executive::_duplicate(exec))
+Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent, std::string dir )
+  //: executive_(Body::Executive::_duplicate(exec))
 {
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
     ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
@@ -127,9 +127,9 @@ void Body_Unit_i::StartCalc (
   ))
 {
   // Add your implementation here
-	executive_->SetModuleMessage(cur_id_,"Simulation running...\n");
+	//executive_->SetModuleMessage(cur_id_,"Simulation running...\n");
 	bkp->aspendoc->runSolver(false);
-	executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
+	//executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
 	return_state=0;
 }
 
@@ -144,7 +144,7 @@ void Body_Unit_i::StopCalc (
   // Add your implementation here
 	std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage(cur_id_,msg.c_str());
+    //executive_->SetModuleMessage(cur_id_,msg.c_str());
 
 }
 
@@ -159,7 +159,7 @@ void Body_Unit_i::PauseCalc (
   // Add your implementation here
 	std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage(cur_id_,msg.c_str());
+    //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
 
 void Body_Unit_i::Resume (
@@ -173,7 +173,7 @@ void Body_Unit_i::Resume (
   // Add your implementation here
 	std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
-    executive_->SetModuleMessage(cur_id_,msg.c_str());
+    //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
 
 char * Body_Unit_i::GetStatusMessage (
@@ -401,9 +401,9 @@ char * Body_Unit_i::Query ( const char * query_str
 	//Blocks
 	else if (cmdname=="getInputModuleParamList")
 	{
-		executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
 		returnValue = handleGetInputModuleParamList(cmd);
-		executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
 		return returnValue;
 	}
 	else if (cmdname=="getInputModuleProperties")
@@ -413,9 +413,9 @@ char * Body_Unit_i::Query ( const char * query_str
 	}
 	else if (cmdname=="getOutputModuleParamList")
 	{
-		executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying outputs...\n");
 		returnValue = handleGetOutputModuleParamList(cmd);
-		executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
 		return returnValue;
 	}
 	else if (cmdname=="getOutputModuleProperties")
@@ -427,9 +427,9 @@ char * Body_Unit_i::Query ( const char * query_str
 	//Streams
 	else if (cmdname=="getStreamInputModuleParamList")
 	{
-		executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying link inputs...\n");
 		returnValue = handleGetStreamInputModuleParamList(cmd);
-		executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
 		return returnValue;
 	}
 	else if (cmdname=="getStreamInputModuleProperties")
@@ -439,9 +439,9 @@ char * Body_Unit_i::Query ( const char * query_str
 	}
 	else if (cmdname=="getStreamOutputModuleParamList")
 	{
-		executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying link outputs...\n");
 		returnValue = handleGetStreamOutputModuleParamList(cmd);
-		executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
+		//executive_->SetModuleMessage(cur_id_,"Querying link completed.\n");
 		return returnValue;
 	}
 	else if (cmdname=="getStreamOutputModuleProperties")
