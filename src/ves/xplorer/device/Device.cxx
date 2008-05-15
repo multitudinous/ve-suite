@@ -54,8 +54,6 @@ using namespace ves::xplorer;
 ////////////////////////////////////////////////////////////////////////////////
 Device::Device()
     :
-    mActiveDCS( 0 ),
-    mSelectedDCS( 0 ),
     mCenterPoint( 0 ),
     mCenterPointThreshold( 0 ),
     mCenterPointJump( 0 )
@@ -86,26 +84,6 @@ void Device::SetVECommand( ves::open::xml::CommandPtr command )
 void Device::UpdateCommand()
 {
     ;
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* Device::GetActiveDCS()
-{
-    return mActiveDCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS )
-{
-    mActiveDCS = activeDCS;
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* Device::GetSelectedDCS()
-{
-    return mSelectedDCS.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-void Device::SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS )
-{
-    mSelectedDCS = selectedDCS;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetCenterPoint( gmtl::Point3d* centerPoint )

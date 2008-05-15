@@ -30,17 +30,24 @@
 * -----------------------------------------------------------------
 *
 *************** <auto-copyright.rb END do not edit this line> ***************/
+
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/device/Wand.h>
 
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/DataValuePair.h>
+
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/DeviceHandler.h>
+
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
-#include <ves/open/xml/Command.h>
-#include <ves/open/xml/DataValuePair.h>
+// --- vrJuggler Includes --- //
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
 
 // --- OSG Includes --- //
 #include <osg/LineSegment>
@@ -49,10 +56,6 @@
 #include <osg/MatrixTransform>
 #include <osg/Array>
 #include <osg/NodeVisitor>
-
-// --- VR Juggler Stuff --- //
-#include <gmtl/Xforms.h>
-#include <gmtl/Generate.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -65,14 +68,14 @@ using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
 Wand::Wand()
-        :
-        subzeroFlag( 0 ),
-        rotationFlag( 1 ),
-        distance( 1000 ),
-        cursorLen( 1.0f ),
-        translationStepSize( 0.75f ),
-        rotationStepSize( 1.0f ),
-        m_buttonPushed( false )
+    :
+    subzeroFlag( 0 ),
+    rotationFlag( 1 ),
+    distance( 1000 ),
+    cursorLen( 1.0f ),
+    translationStepSize( 0.75f ),
+    rotationStepSize( 1.0f ),
+    m_buttonPushed( false )
 {
     command = ves::open::xml::CommandPtr();
     wand.init( "VJWand" );
@@ -113,6 +116,9 @@ Wand::~Wand()
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::UpdateNavigation()
 {
+    ves::xplorer::scenegraph::DCS* const activeDCS =
+        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+
     //Remove the pointer if present
     if( beamGeode.valid() )
     {
@@ -137,9 +143,9 @@ void Wand::UpdateNavigation()
     buttonData[ 4 ] = digital[ 4 ]->getData();
 
     m_rotIncrement.set( 0, 0, 0, 1 );
-    osg::Quat world_quat = mActiveDCS->getAttitude();
+    osg::Quat world_quat = activeDCS->getAttitude();
 
-    double* tempWorldTrans = mActiveDCS->GetVETranslationArray();
+    double* tempWorldTrans = activeDCS->GetVETranslationArray();
     m_worldTrans[ 0 ] = -tempWorldTrans[ 0 ];
     m_worldTrans[ 1 ] = -tempWorldTrans[ 1 ];
     m_worldTrans[ 2 ] = -tempWorldTrans[ 2 ];
@@ -266,9 +272,9 @@ void Wand::UpdateNavigation()
             }
         }
 
-        mActiveDCS->SetTranslationArray( m_worldTrans );
+        activeDCS->SetTranslationArray( m_worldTrans );
         world_quat *= m_rotIncrement;
-        mActiveDCS->SetQuat( world_quat );
+        activeDCS->SetQuat( world_quat );
     }
 
     vprDEBUG( vesDBG, 3 ) << "|\tEnd Navigate" << std::endl << vprDEBUG_FLUSH;
@@ -319,13 +325,14 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 {
     osgUtil::Hit objectHit;
     selectedGeometry = 0;
-
+    
     if( listOfHits.empty() )
     {
         vprDEBUG( vesDBG, 1 ) << "|\tWand::ProcessHit No object selected"
         << std::endl << vprDEBUG_FLUSH;
 
-        mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 
         return;
     }
@@ -361,7 +368,8 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << parentNode->getDescriptions().at( 1 )
         << std::endl << vprDEBUG_FLUSH;
 
-        mActiveDCS = dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+        ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+            dynamic_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() ) );
     }
     else
     {
@@ -371,7 +379,8 @@ void Wand::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         << objectHit._geode->getParents().front()->getName()
         << std::endl << vprDEBUG_FLUSH;
 
-        mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -529,16 +538,19 @@ void Wand::SetupStartEndPoint( osg::Vec3d * startPoint, osg::Vec3d * endPoint )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::TranslateObject()
 {
+    ves::xplorer::scenegraph::DCS* const activeDCS =
+        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+
     //double* wandPosition = GetObjLocation();
     osg::Vec3d offsetFromLastPosition;
 
-    double* tempWorldRot = mActiveDCS->GetRotationArray();
+    double* tempWorldRot = activeDCS->GetRotationArray();
     double worldRot[ 3 ];
     worldRot[ 0 ] = tempWorldRot[ 0 ];
     worldRot[ 1 ] = tempWorldRot[ 1 ];
     worldRot[ 2 ] = tempWorldRot[ 2 ];
 
-    double* tempWorldTrans = mActiveDCS->GetVETranslationArray();
+    double* tempWorldTrans = activeDCS->GetVETranslationArray();
     double worldTrans[ 3 ];
     worldTrans[ 0 ] = tempWorldTrans[ 0 ];
     worldTrans[ 1 ] = tempWorldTrans[ 1 ];
@@ -611,6 +623,9 @@ void Wand::SetSubZeroFlag( int input )
 ////////////////////////////////////////////////////////////////////////////////
 void Wand::FreeRotateAboutWand( const bool freeRotate )
 {
+    ves::xplorer::scenegraph::DCS* const activeDCS =
+        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+
     gmtl::Matrix44d vrjWandMat = convertTo< double >( wand->getData() );
     gmtl::Quatd wandQuat = gmtl::make< gmtl::Quatd >( vrjWandMat );
 
@@ -618,7 +633,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     m_rotIncrement =
         osg::Quat( osg::DegreesToRadians( -rotationStepSize ), tempVec );
 
-    ///If we are rotating about the users position
+    //If we are rotating about the users position
     if( !rotationFlag )
     {
         return;
@@ -629,7 +644,7 @@ void Wand::FreeRotateAboutWand( const bool freeRotate )
     //Get juggler Matrix of worldDCS
     //Note:: for osg we are in z up land
     Matrix44d worldMat;
-    worldMat = mActiveDCS->GetMat();
+    worldMat = activeDCS->GetMat();
 
     gmtl::Point3d jugglerHeadPoint, jugglerHeadPointTemp;
     jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
@@ -709,3 +724,4 @@ double* Wand::GetPlaneEquationConstantsNormalToWand()
     m_planeConstants[3] =  4;
     return m_planeConstants;
 }
+////////////////////////////////////////////////////////////////////////////////

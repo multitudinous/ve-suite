@@ -30,19 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-// --- VE-Suite Stuff --- //
+
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/device/KeyboardMouse.h>
 
+#include <ves/open/xml/Command.h>
+
 #include <ves/xplorer/Debug.h>
+#include <ves/xplorer/Model.h>
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
-#include <ves/xplorer/Model.h>
+#include <ves/xplorer/DeviceHandler.h>
 
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/Group.h>
+
 #include <ves/xplorer/scenegraph/nurbs/PointLineSegmentIntersector.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBS.h>
 #include <ves/xplorer/scenegraph/nurbs/NURBSControlMesh.h>
@@ -50,12 +55,10 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
-#include <ves/open/xml/Command.h>
-
-// --- Bullet Stuff --- //
+// --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
-// --- VR Juggler Stuff --- //
+// --- vrJuggler Includes --- //
 #include <gadget/Type/KeyboardMouse/KeyEvent.h>
 #include <gadget/Type/KeyboardMouse/MouseEvent.h>
 
@@ -64,7 +67,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
 #include <osg/Array>
 #include <osg/Matrix>
 #include <osg/Group>
@@ -316,7 +319,6 @@ void KeyboardMouse::ProcessKBEvents( int mode )
             mKey = -1;
         }
         */
-
         else if( type == gadget::MouseButtonPressEvent )
         {
             gadget::MouseEventPtr mouse_evt =
@@ -425,21 +427,23 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchNode =
+     ves::xplorer::scenegraph::DCS* const activeDCS =
+        ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
+    ves::xplorer::scenegraph::DCS* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveSwitchNode();
 
     //Grab the active matrix to manipulate
-    mCurrentTransform = mActiveDCS->GetMat();
+    mCurrentTransform = activeDCS->GetMat();
 
     //Convert mCurrentTransform to world space if not already in it
     std::string name = activeSwitchNode->GetName();
-    if( mActiveDCS->GetName() !=  name )
+    if( activeDCS->GetName() !=  name )
     {
         osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
             localToWorldTransform =
                 new ves::xplorer::scenegraph::LocalToWorldTransform( 
-                    activeSwitchNode.get(), mActiveDCS.get() );
+                    activeSwitchNode, activeDCS );
 
         mCurrentTransform = localToWorldTransform->GetLocalToWorldTransform();
     }
@@ -504,18 +508,18 @@ void KeyboardMouse::ProcessNavigationEvents()
     matrix = matrix * mDeltaTransform * accuRotation;
 
     //Convert matrix back to local space after delta transform has been applied
-    if( mActiveDCS->GetName() != name )
+    if( activeDCS->GetName() != name )
     {
         //Remove local matrix from mCurrentTransform
         //We are multiplying by a new transformed local matrix
-        gmtl::Matrix44d activeMatrix = mActiveDCS->GetMat();
+        gmtl::Matrix44d activeMatrix = activeDCS->GetMat();
         mCurrentTransform *= gmtl::invert( activeMatrix );
 
         matrix = gmtl::invert( mCurrentTransform ) * matrix;
     }
 
-    //Set the mActiveDCS w/ new transform
-    mActiveDCS->SetMat( matrix );
+    //Set the activeDCS w/ new transform
+    activeDCS->SetMat( matrix );
 
     //If not in animation mode, reset the transform
     if( !mAnimate )
@@ -738,13 +742,20 @@ void KeyboardMouse::NavKeyboard()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavMouse()
 {
-    if( mState == 0 )
+    return;
+
+    //Would be cool to change mouse cursor for nav events here
+    if( mButton == gadget::MBUTTON1 )
     {
-        return;
+        ;
     }
-    else if( mState == 1 )
+    else if( mButton == gadget::MBUTTON2 )
     {
-        return;
+        ;
+    }
+    else if( mButton == gadget::MBUTTON3 )
+    {
+        ;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -870,8 +881,10 @@ void KeyboardMouse::Zoom( double dy )
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
     {
+        ves::xplorer::scenegraph::DCS* const selectedDCS =
+            ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
         //Only jump center point for the worldDCS
-        if( !mSelectedDCS.valid() )
+        if( !selectedDCS )
         {
             mCenterPoint->mData[ 1 ] = *mCenterPointJump;
         }
@@ -1006,39 +1019,26 @@ void KeyboardMouse::ProcessSelectionEvents()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
 {
-    osgUtil::Hit objectHit;
-    mSelectedGeometry = 0;
+    //Unselect the previous selected DCS
+    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchNode =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
-
-    if( mSelectedDCS.valid() )
-    {
-        mSelectedDCS->SetTechnique( "Default" );
-    }
-
+    //Now find the new selected DCS
     if( listOfHits.empty() )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit No object selected"
-        << std::endl << vprDEBUG_FLUSH;
-
-        mActiveDCS = activeSwitchNode;
-
-        //Move the center point to the center of all objects in the world
-        osg::Vec3d worldCenter = mActiveDCS->getBound().center();
-        mCenterPoint->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
-
-        mSelectedDCS = 0;
+        vprDEBUG( vesDBG, 1 )
+            << "|\tKeyboardMouse::ProcessHit No object selected"
+            << std::endl << vprDEBUG_FLUSH;
 
         return;
     }
 
     //Search for first item that is not the laser
+    osgUtil::Hit objectHit;
     for( size_t i = 0; i <  listOfHits.size(); ++i )
     {
         objectHit = listOfHits[ i ];
-        if( ( objectHit._geode->getName() != "Laser" ) && ( objectHit._geode->getName() != "Root Node" ) )
+        if( objectHit._geode->getName() != "Laser" &&
+            objectHit._geode->getName() != "Root Node" )
         {
             break;
         }
@@ -1047,71 +1047,54 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
     //Make sure it is good
     if( !objectHit._geode.valid() )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tKeyboardMouse::ProcessHit Invalid object selected"
-                              << std::endl << vprDEBUG_FLUSH;
-
-        mActiveDCS = activeSwitchNode;
-
-        //Move the center point to the center of all objects in the world
-        osg::Vec3d worldCenter = mActiveDCS->getBound().center();
-        mCenterPoint->set( worldCenter.x(), worldCenter.y(), worldCenter.z() );
-
-        mSelectedDCS = 0;
+        vprDEBUG( vesDBG, 1 )
+            << "|\tKeyboardMouse::ProcessHit Invalid object selected"
+            << std::endl << vprDEBUG_FLUSH;
 
         return;
     }
 
     //Now find the id for the cad
-    mSelectedGeometry = objectHit._geode;
-    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor( mSelectedGeometry.get() );
+    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+        objectHit._geode.get() );
     osg::ref_ptr< osg::Node > parentNode = parentVisitor.GetParentNode();
-    if( parentNode.valid() )
+    if( !parentNode.valid() )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
-        << parentNode->getName() << std::endl
-        << vprDEBUG_FLUSH;
-        vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
-        << parentNode->getDescriptions().at( 1 ) << std::endl
-        << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 )
+            << "|\tObject does not have name parent name"
+            << objectHit._geode->getParents().front()->getName()
+            << std::endl << vprDEBUG_FLUSH;
 
-        mActiveDCS = static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
-    }
-    else
-    {
-        mSelectedGeometry = objectHit._geode;
-        vprDEBUG( vesDBG, 1 ) << "|\tObject does not have name parent name "
-        << objectHit._geode->getParents().front()->getName()
-        << std::endl << vprDEBUG_FLUSH;
-
-        mActiveDCS = activeSwitchNode;
+        return;
     }
 
-    std::string name = activeSwitchNode->GetName();
-    if( mActiveDCS->GetName() != name )
-    {
-        //Move the center point to the center of the selected object
-        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
-            localToWorldTransform = 
-                new ves::xplorer::scenegraph::LocalToWorldTransform(
-                    activeSwitchNode.get(),
-                    mActiveDCS.get() );
+    vprDEBUG( vesDBG, 1 ) << "|\tObjects has name "
+                          << parentNode->getName()
+                          << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 1 ) << "|\tObjects descriptors "
+                          << parentNode->getDescriptions().at( 1 )
+                          << std::endl << vprDEBUG_FLUSH;
 
-        gmtl::Matrix44d localToWorldMatrix =
-            localToWorldTransform->GetLocalToWorldTransform();
-        //Remove the local matrix from localToWorldMatrix
-        //We are multiplying by a new local matrix( the mCenterPoint )
-        gmtl::Matrix44d activeMatrix = mActiveDCS->GetMat();
-        localToWorldMatrix *= gmtl::invert( activeMatrix );
+    ves::xplorer::scenegraph::DCS* newSelectedDCS =
+        static_cast< ves::xplorer::scenegraph::DCS* >( parentNode.get() );
+    newSelectedDCS->SetTechnique( "Select" );
+    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( newSelectedDCS );
 
-        osg::Matrixd tempMatrix;
-        tempMatrix.set( localToWorldMatrix.getData() );
+    //Move the center point to the center of the selected object
+    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
+        new ves::xplorer::scenegraph::LocalToWorldTransform(
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                GetActiveSwitchNode(), newSelectedDCS );
+    gmtl::Matrix44d localToWorldMatrix = ltwt->GetLocalToWorldTransform();
 
-        osg::Vec3d center = mActiveDCS->getBound().center() * tempMatrix;
-        mCenterPoint->set( center.x(), center.y(), center.z() );
-    }
+    //Remove the local matrix from localToWorldMatrix
+    gmtl::Matrix44d activeMatrix = newSelectedDCS->GetMat();
+    localToWorldMatrix *= gmtl::invert( activeMatrix );
 
-    mSelectedDCS = mActiveDCS;
-
-    mSelectedDCS->SetTechnique( "Select" );
+    //Multiplying by the new local matrix (mCenterPoint)
+    osg::Matrixd tempMatrix;
+    tempMatrix.set( localToWorldMatrix.getData() );
+    osg::Vec3d center = newSelectedDCS->getBound().center() * tempMatrix;
+    mCenterPoint->set( center.x(), center.y(), center.z() );
 }
 ////////////////////////////////////////////////////////////////////////////////

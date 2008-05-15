@@ -97,16 +97,6 @@ public:
     ///\param headPositionInWorld The head position in world coordinates
     bool CheckCollisionsWithHead( osg::Vec3 headPositionInWorld );
 
-    ///Get the active coordinate system
-    ves::xplorer::scenegraph::DCS* GetActiveDCS();
-
-    ///Get the active coordinate system
-    ves::xplorer::scenegraph::DCS* GetSelectedDCS();
-
-    ///Set the active coordinate system
-    ///\param dcs The current active coordinate system
-    void SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS );
-
     ///Set the center point
     ///\param cp The center point
     void SetCenterPoint( gmtl::Point3d* centerPoint );
@@ -119,10 +109,6 @@ public:
 
     ///Set the reset position for the world
     void SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
-
-    ///Set the selected dcs
-    ///\param dcs The current selected dcs
-    void SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS );
 
 protected:
     ///Process the selection of a piece of geometry
@@ -152,11 +138,6 @@ protected:
 
     ///The reset axis for the world
     osg::Quat mResetAxis;
-
-    ///The current active DCS
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mActiveDCS;
-    ///The current selected DCS
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mSelectedDCS;
     
 };
 } //end xplorer

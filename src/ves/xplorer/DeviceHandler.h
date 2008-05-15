@@ -56,7 +56,6 @@ namespace ves
 {
 namespace xplorer
 {
-
 class Device;
 class Wand;
 class KeyboardMouse;
@@ -86,45 +85,61 @@ private:
     vprSingletonHeader( DeviceHandler );
 
 public:
-    ///Delete existing mDevices
-    //void CleanUp();
-
     ///Execute navigation commands from active device
     void ExecuteCommands();
 
-    ///Set the active device
-    ///\param device The active device
-    void SetActiveDevice( const std::string& activeDevice );
+    ///Get the active coordinate system
+    ves::xplorer::scenegraph::DCS* const GetActiveDCS() const;
 
-    ///Set the device mode
-    ///\param mode Do not know what this does
-    void SetDeviceMode( const std::string& deviceMode );
+    ///Get active device
+    ///\return Get the active device
+    ves::xplorer::Device* const GetActiveDevice() const;
 
-    ///Set the center point mode
-    ///\param mode Do not know what this does
-    void SetCenterPointJumpMode( const std::string& jumpMode );
+    ///Get a device
+    ///\param deviceName The device name
+    ///\return Get the device being requested
+    ves::xplorer::Device* const GetDevice(
+        const std::string& deviceName ) const;
 
-    ///Unselect all currently selected objects
-    void UnselectObjects();
+    ///Get the reset location of the world
+    ///\param quat
+    ///\param pos
+    void GetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
+
+    ///Get the active coordinate system
+    ves::xplorer::scenegraph::DCS* const GetSelectedDCS() const;
 
     ///Process navigation and selection commands
     void ProcessDeviceEvents();
 
-    ///Get a device
-    ///\param device The device
-    ///\return Get the device being requested
-    ves::xplorer::Device* GetDevice( const std::string& device );
+    ///Set the active coordinate system
+    ///\param dcs The current active coordinate system
+    void SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS );
 
-    ///Get active device
-    ///\return Get the active device
-    ves::xplorer::Device* GetActiveDevice();
+    ///Set the active device
+    ///\param activeDevice The active device
+    void SetActiveDevice( const std::string& activeDevice );
+
+    ///Set the center point mode
+    ///\param jumpMode Do not know what this does
+    void SetCenterPointJumpMode( const std::string& jumpMode );
+
+    ///Set the device mode
+    ///\param deviceMode Do not know what this does
+    void SetDeviceMode( const std::string& deviceMode );
 
     ///Set the reset location for the world
     ///This position is determined from the stored start position by the user
+    ///\param quat
+    ///\param pos
     void SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
 
-    //Get the reset location of the world
-    void GetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
+    ///Set the selected dcs
+    ///\param dcs The current selected dcs
+    void SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS );
+
+    ///Unselect all currently selected objects
+    void UnselectObjects();
 
 private:
     ///Triggers a center point jump after this distance has been breached
@@ -148,7 +163,7 @@ private:
     ves::xplorer::Device* mActiveDevice;
 
     ///A map of all the devices
-    std::map< std::string, ves::xplorer::Device* > mDevices;
+    std::map< const std::string, ves::xplorer::Device* > mDevices;
     ///A map of all the event handlers
     std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
 

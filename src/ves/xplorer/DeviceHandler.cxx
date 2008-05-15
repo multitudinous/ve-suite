@@ -71,25 +71,23 @@ DeviceHandler::DeviceHandler()
     mCenterPointJump( 10.0f )
 {
     //Initialize Devices
-    mDevices[ std::string( "Tablet" ) ] =
+    mDevices[ const std::string( "Tablet" ) ] =
         new ves::xplorer::Tablet();
-    mDevices[ std::string( "Wand" ) ] =
+    mDevices[ const std::string( "Wand" ) ] =
         new ves::xplorer::Wand();
-    mDevices[ std::string( "KeyboardMouse" ) ] =
+    mDevices[ const std::string( "KeyboardMouse" ) ] =
         new ves::xplorer::KeyboardMouse();
 
     //Set properties in Devices
-    std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
+    std::map< const std::string, ves::xplorer::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); itr++ )
     {
-        itr->second->SetActiveDCS( mActiveDCS.get() );
-        itr->second->SetSelectedDCS( mSelectedDCS.get() );
         itr->second->SetCenterPoint( &mCenterPoint );
         itr->second->SetCenterPointThreshold( &mCenterPointThreshold );
         itr->second->SetCenterPointJump( &mCenterPointJump );
     }
 
-    mActiveDevice = mDevices[ "KeyboardMouse" ];
+    mActiveDevice = mDevices.find( "KeyboardMouse" )->second;
 
     mEventHandlers[ std::string( "CHANGE_DEVICE" ) ] =
         new ves::xplorer::event::DeviceEventHandler();
@@ -110,8 +108,8 @@ DeviceHandler::DeviceHandler()
 DeviceHandler::~DeviceHandler()
 {
     //Delete mDevices in map
-    for( std::map< std::string, ves::xplorer::Device* >::iterator
-            itr = mDevices.begin(); itr != mDevices.end(); ++itr )
+    std::map< const std::string, ves::xplorer::Device* >::iterator itr;
+    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         delete itr->second;
     }
@@ -130,27 +128,20 @@ void DeviceHandler::ExecuteCommands()
 
         if( currentEventHandler != mEventHandlers.end() )
         {
-            //Set properties in Devices
-            std::map< std::string, ves::xplorer::Device* >::const_iterator itr;
-            for( itr = mDevices.begin(); itr != mDevices.end(); itr++ )
-            {
-                itr->second->SetActiveDCS( mActiveDCS.get() );
-                itr->second->SetSelectedDCS( mSelectedDCS.get() );
-            }
-
             currentEventHandler->second->SetGlobalBaseObject( mActiveDevice );
             currentEventHandler->second->Execute(
                 ModelHandler::instance()->GetXMLCommand() );
+
             //Tablet and Wand is always active and need updated...
-            if( ModelHandler::instance()->GetXMLCommand()->GetCommandName() ==
-                "Navigation_Data" )
+            if( ModelHandler::instance()->GetXMLCommand()->
+                GetCommandName() == "Navigation_Data" )
             {
                 currentEventHandler->second->SetGlobalBaseObject(
-                    mDevices[ "Tablet" ] );
+                    mDevices.find( "Tablet" )->second );
                 currentEventHandler->second->Execute(
                     ModelHandler::instance()->GetXMLCommand() );
                 currentEventHandler->second->SetGlobalBaseObject(
-                    mDevices[ "Wand" ] );
+                    mDevices.find( "Wand" )->second );
                 currentEventHandler->second->Execute(
                     ModelHandler::instance()->GetXMLCommand() );
             }
@@ -158,13 +149,71 @@ void DeviceHandler::ExecuteCommands()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* const DeviceHandler::GetActiveDCS() const
+{
+    return mActiveDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::Device* const DeviceHandler::GetActiveDevice() const
+{
+    return mActiveDevice;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::Device* const DeviceHandler::GetDevice(
+    const std::string& deviceName ) const
+{
+    return mDevices.find( deviceName )->second;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::GetResetWorldPosition(
+    osg::Quat& quat, std::vector< double >& pos )
+{
+    quat = mResetAxis;
+    pos = mResetPosition;
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* const DeviceHandler::GetSelectedDCS() const
+{
+    return mSelectedDCS.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::ProcessDeviceEvents()
+{
+    //Update Device properties
+    ExecuteCommands();
+
+    if( mDeviceMode == "Selection" )
+    {
+        mActiveDevice->UpdateSelection();
+    }
+    else
+    {
+        mDevices.find( "Wand" )->second->UpdateNavigation();
+        mDevices.find( "KeyboardMouse" )->second->UpdateNavigation();
+
+        if( ( mActiveDevice != mDevices.find( "Wand" )->second ) && 
+            ( mActiveDevice != mDevices.find( "KeyboardMouse" )->second ) )
+        {
+            mActiveDevice->UpdateNavigation();
+        }
+    }
+
+    //Always do this by default
+    mDevices.find( "Tablet" )->second->UpdateNavigation();
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS )
+{
+    mActiveDCS = activeDCS;
+}
+////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDevice( const std::string& activeDevice )
 {
-    std::map< std::string, ves::xplorer::Device* >::iterator itr =
+    std::map< const std::string, ves::xplorer::Device* >::const_iterator itr =
         mDevices.find( activeDevice );
     if( itr != mDevices.end() )
     {
-        mActiveDevice = mDevices[ activeDevice ];
+        mActiveDevice = itr->second;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +225,6 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
     {
         mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
                          GetActiveSwitchNode();
-        mActiveDevice->SetActiveDCS( mActiveDCS.get() );
     }
     else if( mDeviceMode == "Object Navigation" )
     {
@@ -184,8 +232,6 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
         {
             mActiveDCS = mSelectedDCS;
         }
-
-        mActiveDevice->SetActiveDCS( mActiveDCS.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -213,77 +259,33 @@ void DeviceHandler::SetCenterPointJumpMode( const std::string& jumpMode )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::UnselectObjects()
-{
-    mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetActiveSwitchNode();
-    mActiveDevice->SetActiveDCS( mActiveDCS.get() );
-
-    mSelectedDCS->SetTechnique( "Default" );
-    mSelectedDCS = 0;
-    mActiveDevice->SetSelectedDCS( mSelectedDCS.get() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::ProcessDeviceEvents()
-{
-    //Update Device properties
-    ExecuteCommands();
-
-    if( mDeviceMode == "World Navigation" ||
-        mDeviceMode == "Object Navigation" )
-    {
-        mDevices[ "Wand" ]->UpdateNavigation();
-        mDevices[ "KeyboardMouse" ]->UpdateNavigation();
-
-        if( ( mActiveDevice != mDevices[ "Wand" ] ) && 
-            ( mActiveDevice != mDevices[ "KeyboardMouse" ] ) )
-        {
-            mActiveDevice->UpdateNavigation();
-        }
-    }
-    else if( mDeviceMode == "Selection" )
-    {
-        mActiveDevice->UpdateSelection();
-    }
-
-    //Get the active dcs from the scenemanager
-    //mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
-        //GetActiveSwitchNode();
-
-    //Get the selected dcs from the active device
-    mSelectedDCS = mActiveDevice->GetSelectedDCS();
-
-    //Always do this be default
-    mDevices[ "Tablet" ]->UpdateNavigation();
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::Device* DeviceHandler::GetDevice( const std::string& device )
-{
-    return mDevices[ device ];
-}
-////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::Device* DeviceHandler::GetActiveDevice()
-{
-    return mActiveDevice;
-}
-////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::SetResetWorldPosition( osg::Quat& quat, 
-    std::vector< double >& pos )
+void DeviceHandler::SetResetWorldPosition(
+    osg::Quat& quat, std::vector< double >& pos )
 {
     mResetAxis = quat;
     mResetPosition = pos;
     
-    for( std::map< std::string, ves::xplorer::Device* >::const_iterator 
-        itr = mDevices.begin(); itr != mDevices.end(); itr++ )
+    std::map< const std::string, ves::xplorer::Device* >::const_iterator itr;
+    for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DeviceHandler::GetResetWorldPosition(
-    osg::Quat& quat, std::vector< double >& pos )
+void DeviceHandler::SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS )
 {
-    quat = mResetAxis;
-    pos = mResetPosition;
+    mSelectedDCS = selectedDCS;
+}
+////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::UnselectObjects()
+{
+    mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
+        GetActiveSwitchNode();
+
+    if( mSelectedDCS.valid() )
+    {
+        mSelectedDCS->SetTechnique( "Default" );
+        mSelectedDCS = 0;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
