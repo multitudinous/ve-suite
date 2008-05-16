@@ -16,7 +16,6 @@ headers = Split("""
    tcFrame.h 
    textureCreator.h
 """)
-##srcs = map(lambda s: pj('#', 'VE_Builder', 'vtkTo3DTexture', 'tcGUI', s), srcs)
 
 programName = 'vtkTo3DTexture'
 
@@ -36,7 +35,7 @@ resources = [ pj( RootDir, 'dist', 'installerImages', 've_icon128x128.icns') ]
 
 prog = ves_pkg.createProgram( programName + env["PROGSUFFIX"], env, 'bin',
                              True,resources,
-                             pj( RootDir, 'share', 'tools', 'builder','vtkTo3DTexture', 'Info.plist'),
+                             pj( RootDir, 'share', 'tools', 'builder','vtkto3dtexture', 'Info.plist'),
                              pj( RootDir, 'dist', 'darwin', 'PkgInfo') )
 prog.addSources( srcs )
 prog.addHeaders( headers )

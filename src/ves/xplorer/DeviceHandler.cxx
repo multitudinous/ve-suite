@@ -71,11 +71,11 @@ DeviceHandler::DeviceHandler()
     mCenterPointJump( 10.0f )
 {
     //Initialize Devices
-    mDevices[ const std::string( "Tablet" ) ] =
+    mDevices[ "Tablet" ] =
         new ves::xplorer::Tablet();
-    mDevices[ const std::string( "Wand" ) ] =
+    mDevices[ "Wand" ] =
         new ves::xplorer::Wand();
-    mDevices[ const std::string( "KeyboardMouse" ) ] =
+    mDevices[ "KeyboardMouse" ] =
         new ves::xplorer::KeyboardMouse();
 
     //Set properties in Devices
@@ -89,17 +89,17 @@ DeviceHandler::DeviceHandler()
 
     mActiveDevice = mDevices.find( "KeyboardMouse" )->second;
 
-    mEventHandlers[ std::string( "CHANGE_DEVICE" ) ] =
+    mEventHandlers[ "CHANGE_DEVICE" ] =
         new ves::xplorer::event::DeviceEventHandler();
-    mEventHandlers[ std::string( "CHANGE_DEVICE_MODE" ) ] =
+    mEventHandlers[ "CHANGE_DEVICE_MODE" ] =
         new ves::xplorer::event::DeviceModeEventHandler();
-    mEventHandlers[ std::string( "UNSELECT_OBJECTS" ) ] =
+    mEventHandlers[ "UNSELECT_OBJECTS" ] =
         new ves::xplorer::event::UnselectObjectsEventHandler();
-    mEventHandlers[ std::string( "CHANGE_CENTERPOINT_MODE" ) ] =
+    mEventHandlers[ "CHANGE_CENTERPOINT_MODE" ] =
         new ves::xplorer::event::CenterPointJumpEventHandler();
-    mEventHandlers[ std::string( "TRACKBALL_PROPERTIES" ) ] =
+    mEventHandlers[ "TRACKBALL_PROPERTIES" ] =
         new ves::xplorer::event::KeyboardMouseEventHandler();
-    mEventHandlers[ std::string( "Navigation_Data" ) ] =
+    mEventHandlers[ "Navigation_Data" ] =
         new ves::xplorer::event::NavigationDataEventHandler();
     
     mResetPosition.resize( 3 );
