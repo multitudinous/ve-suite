@@ -1047,7 +1047,7 @@ ACE_THROW_SPEC((
     iter = _exec_thread.find( std::string( UnitName ) );
     if( iter != _exec_thread.end() )
     {
-        //ACE_Task_Base::cleanup( iter->second, NULL );
+        ACE_Task_Base::cleanup( iter->second, NULL );
         //if( iter->second )
         //    delete iter->second;
 
@@ -1059,7 +1059,7 @@ ACE_THROW_SPEC((
     iterQuery = queryThreads.find( std::string( UnitName ) );
     if( iterQuery != queryThreads.end() )
     {
-        //ACE_Task_Base::cleanup( iterQuery->second, NULL );
+        ACE_Task_Base::cleanup( iterQuery->second, NULL );
         //if( iterQuery->second )
         //    delete iterQuery->second;
 
@@ -1068,6 +1068,7 @@ ACE_THROW_SPEC((
     }
 
     _mutex.release();
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 CORBA::Long Body_Executive_i::GetGlobalMod(
