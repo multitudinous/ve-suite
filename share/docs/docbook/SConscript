@@ -35,9 +35,7 @@ else:
     JAI_JAR = pj(JAR_PATH,'jai_linux-i586.jar')
 
 #Set Classpath in ENV
-env['ENV']['CLASSPATH'] = ['${FOP_JAR}','${BATIK_JAR}','${AVALON_JAR}'
-			   ,'${JAI_JAR}','${XALAN_JAR}','${RESOLVER_JAR}'
-			   ,'${XALAN_JAR}','${XERCES_JAR}','${XML_JAR}','${JIMI_JAR}']
+env['ENV']['CLASSPATH'] = '${FOP_JAR}' + os.pathsep +'${BATIK_JAR}' + os.pathsep +'${AVALON_JAR}' + os.pathsep +'${JAI_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${RESOLVER_JAR}' + os.pathsep +'${XALAN_JAR}' + os.pathsep +'${XERCES_JAR}' + os.pathsep +'${XML_JAR}' + os.pathsep +'${JIMI_JAR}'
 
 ##Base parameters.
 relativeDir = pj('share', 'docs', 'docbook')
@@ -102,7 +100,7 @@ env.Append(BUILDERS = {'xmlResolve': xmlResolveBuilder,
 
 env.xmlResolve(srcs)
 env.fo(resolvedSrcs)
-
+print " here 6 "
 ##Build the docs.
 env.html(target = htmlTargets, source = resolvedSrcs)
 env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)

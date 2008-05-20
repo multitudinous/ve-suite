@@ -18,7 +18,7 @@ srcs = Split("""
 chLogSrc = map(lambda s: pj(baseDir, "%s.xml" %(s)), srcs)
 chLogTarget = map(lambda s: pj(baseDir, "%s" %(s)), srcs)
 
-if env.has_key('SVN_Previous_Date'):
+if env[ 'SVN_Previous_Date' ] != '':
     sys.stdout.write("Generating the ChangeLog....\n")
 else:
     sys.stdout.write("No SVN_Previous_Date defined")
