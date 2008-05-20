@@ -75,6 +75,7 @@ void QuatCamClearDataEventHandler::Execute( const ves::open::xml::XMLObjectPtr& 
         DataValuePairPtr velFile = command->GetDataValuePair( "Clear Quat Data" );
         std::string clearCmdDummy;
         velFile->GetData( clearCmdDummy );
+        ves::xplorer::cfdQuatCamHandler::instance()->TurnOffMovement();
         ves::xplorer::cfdQuatCamHandler::instance()->ClearQuaternionData();
     }
     catch ( ... )

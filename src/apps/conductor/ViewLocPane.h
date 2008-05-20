@@ -114,6 +114,8 @@ public:
         VIEWLOC_SPEED_CONTROL_SPIN
     };
 
+    void SendCommandsToXplorer();
+
     unsigned int _numStoredLocations;
     unsigned int _numStoredFlythroughs;
     unsigned int _vwptsInActiveFly;
@@ -127,9 +129,8 @@ public:
     wxArrayString _locNamesLocal;
     wxArrayString _activeFlyNamesLocal;
     wxArrayString _flythroughNamesLocal;
-    void SendCommandsToXplorer( void );
 
-    short    num_viewlocs;
+    short num_viewlocs;
 
 protected:
     void _buildPage( void );

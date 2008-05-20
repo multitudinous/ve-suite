@@ -47,8 +47,7 @@ namespace event
 /*!\class QuatCamClearDataEventHandler
  * Activate the texture based visualization.
  */
-class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler :
-            public EventHandler
+class VE_XPLORER_EXPORTS QuatCamClearDataEventHandler : public EventHandler
 {
 public:
     ///Constructor

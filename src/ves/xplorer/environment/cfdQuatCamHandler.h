@@ -31,168 +31,237 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef _CFD_QUAT_CAM_HANDLER_H_
-#define _CFD_QUAT_CAM_HANDLER_H_
-/*!\file cfdQuatCamHandler.h
-cfdQuatCamHandler API
-*/
-/*!\class ves::xplorer::cfdQuatCamHandler
-*
-*/
+#ifndef CFD_QUAT_CAM_HANDLER_H
+#define CFD_QUAT_CAM_HANDLER_H
+
+// --- VE-Suite Includes --- //
+#include <ves/open/xml/CommandPtr.h>
+
+#include <ves/xplorer/GlobalBase.h>
+
+#include <ves/xplorer/event/EventHandler.h>
+
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#include <gmtl/Math.h>
+// --- vrJuggler Includes --- //
 #include <gmtl/Vec.h>
-#include <gmtl/Point.h>
-#include <gmtl/Xforms.h>
-#include <gmtl/Output.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Coord.h>
-#include <gmtl/Generate.h>
 
 #include <vpr/Util/Timer.h>
 #include <vpr/Util/Singleton.h>
 
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+
+// --- C/C++ Libraries --- //
+#include <vector>
+#include <map>
+
 namespace ves
 {
 namespace xplorer
 {
+
+class cfdQuatCam;
+
 namespace scenegraph
 {
 class DCS;
 }
-}
-}
 
-namespace ves
-{
-namespace xplorer
-{
-class cfdQuatCam;
-}
-}
-
-#include <vector>
-#include <map>
-
-#include <ves/xplorer/GlobalBase.h>
-#include <ves/xplorer/event/EventHandler.h>
-#include <ves/open/xml/CommandPtr.h>
-
-#ifdef _OSG
-#include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
-
-namespace ves
-{
-namespace xplorer
-{
+/*!\file cfdQuatCamHandler.h
+ * cfdQuatCamHandler API
+ */
+/*!\class ves::xplorer::cfdQuatCamHandler
+ *
+ */
 class VE_XPLORER_EXPORTS cfdQuatCamHandler : public GlobalBase
 {
+private:
+    ///Constructor
+    cfdQuatCamHandler();
+
+    ///Destructor
+    ~cfdQuatCamHandler();
+
+    ///Do not know what this is
+    ///\param DeviceHandler
+    vprSingletonHeader( cfdQuatCamHandler );
+
 public:
-    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+    ///In future, multi-threaded apps will make a copy of VjObs_i commandArray
     virtual void UpdateCommand();
+
+    ///Process the command that was set by conductor
+    virtual void ProcessCommand();
+
     ///Set the DCS
     ///\param newDCS The new DCS
     void SetDCS( ves::xplorer::scenegraph::DCS* newDCS );
+
     ///This function is for quatecam handler only
     ///This should be removed once the new animation code is in place
+    ///\param masterNode
     void SetMasterNode( bool masterNode );
 
     ///Clear out all the saved quaternions
     void ClearQuaternionData();
 
-    void LoadData( ves::xplorer::scenegraph::DCS* );
+    ///
+    ///\param
+    void LoadData( ves::xplorer::scenegraph::DCS* worldDCS );
 
+    ///
+    ///\param
     void WriteToFile( std::string );
 
+    ///
+    ///\param
     void LoadFromFile( std::string );
 
+    ///
+    ///\param worldDCS
     void Relocate( ves::xplorer::scenegraph::DCS* worldDCS );
 
-    void RemoveViewPt( void );
+    ///
+    void RemoveViewPt();
 
-    void RemoveFlythroughPt( unsigned int, unsigned int );
+    ///
+    ///\param flyindex
+    ///\param ptindex
+    void RemoveFlythroughPt( unsigned int flyindex, unsigned int ptindex );
 
-    void AddViewPtToFlyThrough( unsigned int, unsigned int );
+    ///
+    ///\param flyindex
+    ///\param ptindex
+    void AddViewPtToFlyThrough( unsigned int flyindex, unsigned int ptindex );
 
-    void InsertViewPtInFlyThrough( unsigned int, unsigned int, unsigned int );
+    ///
+    ///\param flyindex
+    ///\param beforept
+    ///\param ptindex
+    void InsertViewPtInFlyThrough(
+        unsigned int flyindex, unsigned int beforept, unsigned int ptindex );
 
-    void DeleteEntireFlythrough( unsigned int );
+    ///
+    ///\param flyindex
+    void DeleteEntireFlythrough( unsigned int flyindex );
 
-    void AddNewFlythrough( void );
+    ///
+    void AddNewFlythrough();
 
-    void TurnOffMovement( void );
+    ///
+    void TurnOffMovement();
 
-    double getLinearDistance( gmtl::Vec3d, gmtl::Vec3d );
+    ///
+    ///\param
+    ///\param
+    ///\return
+    double getLinearDistance( gmtl::Vec3d vjVecLast, gmtl::Vec3d vjVecNext );
 
+    ///
+    ///\return
     int getNumLocs();
 
-    std::vector< std::vector <int> > getFlyThroughs();
+    ///
+    ///\return
+    std::vector< std::vector< int > > getFlyThroughs();
 
-    std::vector < int > getCompletionTest();
+    ///
+    ///\return
+    std::vector< int > getCompletionTest();
 
-    // If a quat is active this will move the cam to the next location
+    ///If a quat is active this will move the cam to the next location
     void PreFrameUpdate();
 
-    double GetQuatCamIncrementor( void );
+    ///
+    ///\return
+    double GetQuatCamIncrementor();
 
-    bool IsActive( void );
+    ///
+    ///\return
+    bool IsActive();
 
-    ///Process the command that was set by conductor
-    virtual void ProcessCommand();
-
+    ///
     unsigned int numQuatCams;
+    ///
     unsigned int numFlyThroughs;
+    ///
     unsigned int* numPointsInFlyThrough;
 
+    ///
     int cfdId;
+    ///
     int cfdIso_value;
+
 protected:
     ///Update the gui with the new data
-    void _updateViewGUIPointData();
+    void UpdateViewGUIPointData();
 
-    std::map<std::string, ves::xplorer::event::EventHandler* > _eventHandlers;///<Map of event handlers for texture-based vis
-
+    ///Map of event handlers for texture-based vis
+    std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
 
 private:
-
-    cfdQuatCam* thisQuatCam;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
-    std::string   _param;
-    double t;
-    std::string quatCamFileName;
-    std::string quatCamDirName;
-    std::vector<cfdQuatCam*> QuatCams;
-    int run;
-    int cam_id;
-    double rotvec[3];
-    double angle;
+    ///
     bool activecam;
+    ///
     bool _runFlyThrough;
-    int activeFlyThrough;
-    unsigned int pointCounter;
+    ///
     bool writeReadComplete;
-    double movementIntervalCalc;
-    double movementSpeed;
+    ///
     bool onMasterNode;
+
+    ///
+    unsigned int pointCounter;
+
+    ///
+    int run;
+    ///
+    int cam_id;
+    ///
+    int activeFlyThrough;
+    ///
     int lastCommandId;
+    ///
     int currentFrame;
+    ///
     int writeFrame;
 
+    ///
+    double t;
+    ///
+    double rotvec[ 3 ];
+    ///
+    double angle;
+    ///
+    double movementIntervalCalc;
+    ///
+    double movementSpeed;
+
+    ///
+    std::string _param;
+    ///
+    std::string quatCamFileName;
+    ///
+    std::string quatCamDirName;
+
+    ///
+    std::vector< cfdQuatCam* > QuatCams;
+    ///
+    std::vector< std::vector< int > > flyThroughList;
+    ///
+    std::vector< int > completionTest;
+
+    ///
     vpr::Timer* frameTimer;
 
-    std::vector< std::vector <int> > flyThroughList;
-    std::vector < int > completionTest;
+    ///
+    cfdQuatCam* thisQuatCam;
 
-    // Required so that vpr::Singleton can instantiate this class.
-    //friend class vpr::Singleton< TextureBasedVizHandler >;
-    cfdQuatCamHandler( void );
+    ///
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
 
-    virtual ~cfdQuatCamHandler( void );// Never gets called, don't implement
-    vprSingletonHeader( cfdQuatCamHandler );
 };
-}
-}
-#endif
+} //end xplorer
+} //end ves
+
+#endif //CFD_QUAT_CAM_HANDLER_H

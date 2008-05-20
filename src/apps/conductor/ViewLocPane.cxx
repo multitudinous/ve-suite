@@ -66,9 +66,8 @@ BEGIN_EVENT_TABLE( ViewLocPane, wxDialog )
     EVT_SPINCTRL( VIEWLOC_SPEED_CONTROL_SPIN, ViewLocPane::_onSpeedChange )
     EVT_IDLE( ViewLocPane::_refreshGUIFromXplorerData )
 END_EVENT_TABLE()
-///////////////
-//Constructor//
-///////////////
+
+////////////////////////////////////////////////////////////////////////////////
 ViewLocPane::ViewLocPane( wxWindow* parent )
         : wxDialog( parent, -1, _( "Viewpoints Pane" ),
                     wxDefaultPosition, wxDefaultSize,
@@ -105,12 +104,12 @@ ViewLocPane::ViewLocPane( wxWindow* parent )
     
     SetIcon( ve_icon32x32_xpm );
 }
-/////////////////////////////////
-ViewLocPane::~ViewLocPane( void )
+////////////////////////////////////////////////////////////////////////////////
+ViewLocPane::~ViewLocPane()
 {
     ;
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
 {
     ///this is Waaaaaaaaaaaaaaay hacked... --biv
@@ -137,7 +136,7 @@ void ViewLocPane::_onLoadStoredPointsFile( wxCommandEvent& event )
         SendCommandsToXplorer();
     }
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onSaveStoredPointsFile( wxCommandEvent& event )
 {
     wxFileName velFileName;
@@ -172,9 +171,7 @@ void ViewLocPane::_onSaveStoredPointsFile( wxCommandEvent& event )
         SendCommandsToXplorer();
     }
 }
-//////////////////////////////
-//build the viewing locations tab       //
-//////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_buildPage()
 {
 //*******Setting up the widgets for making and naming a new view point
@@ -309,8 +306,8 @@ void ViewLocPane::_buildPage()
     _rebuildPage();
     _resetSelections();
 }
-/////////////////////////////////////////////
-void ViewLocPane::_rebuildNameArrays( void )
+////////////////////////////////////////////////////////////////////////////////
+void ViewLocPane::_rebuildNameArrays()
 {
     //This will get called every time there's a change so all
     //dynamic memory allocations have to be cleaned up
@@ -355,7 +352,7 @@ void ViewLocPane::_rebuildNameArrays( void )
     }
 
 }
-///////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_setUpActiveFlyThroughNames( int index )
 {
     _activeFlyNames.Clear();
@@ -370,16 +367,20 @@ void ViewLocPane::_setUpActiveFlyThroughNames( int index )
     }
 
 }
-///////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED( event ) )
 {
+    /*
     if( !IsShown() )
     {
         return;
     }
+    */
 
-    CommandPtr viewPointData = CORBAServiceList::instance()->
-                            GetGUIUpdateCommands( "VIEWPOINT_GUI_DATA" );
+    CommandPtr viewPointData =
+        CORBAServiceList::instance()->GetGUIUpdateCommands(
+            "VIEWPOINT_GUI_DATA" );
+
     //Hasn't updated yet
     if( viewPointData->GetCommandName() == "NULL" )
     {
@@ -390,6 +391,7 @@ void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED( event ) )
     _numView_LocsGlobal = _numStoredLocations;
 
     _rebuildNameArrays();
+
     if( flyThroughList.size() > 0 )
     {
         _setUpActiveFlyThroughNames( 0 );
@@ -398,13 +400,10 @@ void ViewLocPane::_refreshGUIFromXplorerData( wxIdleEvent& WXUNUSED( event ) )
     {
         _setUpActiveFlyThroughNames( 0 );
     }
+
     _rebuildPage();
 }
-//////////////////
-//event handling//
-///////////////////
-
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onLoad( wxCommandEvent& WXUNUSED( event ) )
 {
     dataValueName = "LOAD_NEW_VIEWPT";
@@ -413,7 +412,7 @@ void ViewLocPane::_onLoad( wxCommandEvent& WXUNUSED( event ) )
     SendCommandsToXplorer();
     _resetSelections();
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAcceptNewVPName( wxCommandEvent& WXUNUSED( event ) )
 {
     //This will be used once user defined names are implemented
@@ -421,7 +420,7 @@ void ViewLocPane::_onAcceptNewVPName( wxCommandEvent& WXUNUSED( event ) )
     //we can handle this now with the new schema. All we have to do is send back
     //a string name for each view point. ---biv
 }
-/////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onCancelNewVPName( wxCommandEvent& WXUNUSED( event ) )
 {
     //This will be used once user defined names are implemented
@@ -429,7 +428,7 @@ void ViewLocPane::_onCancelNewVPName( wxCommandEvent& WXUNUSED( event ) )
     //we can handle this now with the new schema. All we have to do is send back
     //a string name for each view point. ---biv
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onRemoveVP( wxCommandEvent& WXUNUSED( event ) )
 {
     if( _numView_LocsGlobal > 0 )
@@ -457,7 +456,7 @@ void ViewLocPane::_onRemoveVP( wxCommandEvent& WXUNUSED( event ) )
         }
     }
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onMoveToVP( wxCommandEvent& WXUNUSED( event ) )
 {
     {
@@ -473,10 +472,10 @@ void ViewLocPane::_onMoveToVP( wxCommandEvent& WXUNUSED( event ) )
         }
     }
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onBuildNewFlyButton( wxCommandEvent& WXUNUSED( event ) )
 {}
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAcceptNewFlyName( wxCommandEvent& WXUNUSED( event ) )
 {
     //This will be used once user defined names are implemented
@@ -484,7 +483,7 @@ void ViewLocPane::_onAcceptNewFlyName( wxCommandEvent& WXUNUSED( event ) )
     //we can handle this now with the new schema. All we have to do is send back
     //a string name for each view point. ---biv
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onCancelNewFlyName( wxCommandEvent& WXUNUSED( event ) )
 {
     //This will be used once user defined names are implemented
@@ -492,10 +491,10 @@ void ViewLocPane::_onCancelNewFlyName( wxCommandEvent& WXUNUSED( event ) )
     //we can handle this now with the new schema. All we have to do is send back
     //a string name for each view point. ---biv
 }
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onActiveFlySel( wxCommandEvent& WXUNUSED( event ) )
 {}
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onAddVPtoFlySel( wxCommandEvent& WXUNUSED( event ) )
 {
     if( _numView_LocsGlobal > 0 )
@@ -523,16 +522,16 @@ void ViewLocPane::_onAddVPtoFlySel( wxCommandEvent& WXUNUSED( event ) )
     }
 
 }
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onInsertVPinFlySel( wxCommandEvent& WXUNUSED( event ) )
 {}
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onRemoveVPfromFlySel( wxCommandEvent& WXUNUSED( event ) )
 {}
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onDeleteFlySel( wxCommandEvent& WXUNUSED( event ) )
 {}
-////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onStartActiveFly( wxCommandEvent& WXUNUSED( event ) )
 {
     dataValueName = "RUN_ACTIVE_FLYTHROUGH";
@@ -540,7 +539,7 @@ void ViewLocPane::_onStartActiveFly( wxCommandEvent& WXUNUSED( event ) )
     commandInputs.push_back( 0 );
     SendCommandsToXplorer();
 }
-/////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onStopFly( wxCommandEvent& WXUNUSED( event ) )
 {
     dataValueName = "STOP_ACTIVE_FLYTHROUGH";
@@ -548,10 +547,10 @@ void ViewLocPane::_onStopFly( wxCommandEvent& WXUNUSED( event ) )
     commandInputs.push_back( 0 );
     SendCommandsToXplorer();
 }
-///////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onFlyBuilderListBox( wxCommandEvent& WXUNUSED( event ) )
 {}
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void ViewLocPane::_onSpeedChange( wxSpinEvent& WXUNUSED( event ) )
 {
     dataValueName = "CHANGE_MOVEMENT_SPEED";
@@ -559,8 +558,8 @@ void ViewLocPane::_onSpeedChange( wxSpinEvent& WXUNUSED( event ) )
     commandInputs.push_back( 0 );
     SendCommandsToXplorer();
 }
-///////////////////////////////////////
-void ViewLocPane::_rebuildPage( void )
+////////////////////////////////////////////////////////////////////////////////
+void ViewLocPane::_rebuildPage()
 {
     if( _movetovwptSel )
         _movetovwptSel->Clear();
@@ -574,16 +573,16 @@ void ViewLocPane::_rebuildPage( void )
         }
     }
 }
-///////////////////////////////////////////
-void ViewLocPane::_resetSelections( void )
+////////////////////////////////////////////////////////////////////////////////
+void ViewLocPane::_resetSelections()
 {
     if( _removevwptSel )
     {
         _removevwptSel->SetSelection( 0 );
     }
 }
-////////////////////////////////////////////////
-void ViewLocPane::SendCommandsToXplorer( void )
+////////////////////////////////////////////////////////////////////////////////
+void ViewLocPane::SendCommandsToXplorer()
 {
 
     //This assumes that the command name was set by the callback
@@ -626,3 +625,4 @@ void ViewLocPane::SendCommandsToXplorer( void )
     _commandName = " ";
     _resetSelections();
 }
+////////////////////////////////////////////////////////////////////////////////
