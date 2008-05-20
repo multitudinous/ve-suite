@@ -329,6 +329,8 @@ void cfdQuatCamHandler::LoadFromFile( std::string fileName )
 ////////////////////////////////////////////////////////////////////////////////
 void cfdQuatCamHandler::ClearQuaternionData()
 {
+    TurnOffMovement();
+
     for( size_t i = 0; i < QuatCams.size(); ++i )
     {
         delete QuatCams.at( i );
@@ -656,7 +658,7 @@ void cfdQuatCamHandler::PreFrameUpdate()
             double* veTransTemp = _worldDCS->GetVETranslationArray();
             for( int i = 0; i < 3; ++i )
             {
-                vjVecTemp[ i ] = veTransTemp[i];
+                vjVecTemp[ i ] = veTransTemp[ i ];
             }
             vecDistance = getLinearDistance(
                 vjVecTemp, QuatCams.at( cam_id )->GetTrans() );
