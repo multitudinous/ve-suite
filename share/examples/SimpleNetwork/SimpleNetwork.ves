@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="c4b01697-7bea-3544-a98d-6bfe160ae59e">
+    <network>
+      <conductorState dataName="m_xUserScale" id="12b1a4df-c9f6-e643-822e-483f8bb20ebf">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="35c32809-fb4d-c14f-9e1b-adcf942710c5">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="7d8bcede-49f1-f64b-a35e-ede7d6cc86e6">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="2b9f75d0-faee-2845-8205-a94c5bd5f53a">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="4c259379-03e7-a74b-958a-f948ce920e0f">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="bc03bdc6-04ed-7c41-8ccd-4b170dd79fd9">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+    </network>
+  </veSystem>
+
+  <User id="aee09ed4-875e-1f43-9c19-f648777a4e69" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="c0da88a8-bbbd-c843-a6b7-f5e377ad7f50">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>

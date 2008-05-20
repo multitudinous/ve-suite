@@ -20,9 +20,7 @@ InteractiveStoveDir = pj( RootDir, 'share', 'examples', 'SimpleNetwork' )
 #fileBundle.addFiles( mtlFile )
 #fileBundle.addFiles( rgbFile )
 
-#fileBundle.addFiles( 'interactivestove.ves' )
-#fileBundle.addFiles( 'star.param' )
-#fileBundle.addFiles( 'RunUnit.csh' )
+fileBundle.addFiles( 'SimpleNetwork.ves' )
 
 InteractiveStoveSubdirs = Split("""
     NetworkOneModel
