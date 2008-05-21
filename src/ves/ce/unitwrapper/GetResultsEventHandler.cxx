@@ -78,16 +78,16 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
         return std::string( "NULL" );
     }
 
-    ves::open::xml::CommandPtr resultsCommand;
+    ves::open::xml::CommandPtr resultsCommand( new ves::open::xml::Command() );
     resultsCommand->SetCommandName( "Model Results" );
 
-    size_t numInputs = baseModel->GetNumberOfResults();
-    if( numInputs == 0 )
+    size_t numResults = baseModel->GetNumberOfResults();
+    if( numResults == 0 )
     {
         return std::string( "NULL" );
     }
 
-    for( size_t i = 0; i < numInputs; ++i )
+    for( size_t i = 0; i < numResults; ++i )
     {
         ves::open::xml::CommandPtr tempResult = baseModel->GetResult( i );
         ves::open::xml::DataValuePairPtr tempPair( new ves::open::xml::DataValuePair() );

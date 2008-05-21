@@ -50,6 +50,8 @@
 // Event handlers
 #include <ves/ce/unitwrapper/SetInputsEventHandler.h>
 #include <ves/ce/unitwrapper/GetInputsEventHandler.h>
+//#include <ves/ce/unitwrapper/SetResultsEventHandler.h>
+#include <ves/ce/unitwrapper/GetResultsEventHandler.h>
 #include <ves/ce/unitwrapper/EventHandler.h>
 
 #include <sstream>
@@ -68,7 +70,8 @@ UnitWrapper::UnitWrapper( Body::Executive_ptr exec, std::string name )
 
     eventHandlerMap[ "Set XML Model Inputs" ] = new VE_CE::SetInputsEventHandler();
     eventHandlerMap[ "Get XML Model Inputs" ] = new VE_CE::GetInputsEventHandler();
-    eventHandlerMap[ "Get XML Model Results" ] = new VE_CE::SetInputsEventHandler();
+    //eventHandlerMap[ "Set XML Model Results" ] = new VE_CE::SetResultsEventHandler();
+    eventHandlerMap[ "Get XML Model Results" ] = new VE_CE::GetResultsEventHandler();
     //eventHandlerMap[ "Get XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
     //eventHandlerMap[ "Set XML Model Port Data" ] = new VE_CE::SetInputsEventHandler();
 }
@@ -276,7 +279,8 @@ ACE_THROW_SPEC((
                    ::Error::EUnknown
                ) )
 {
-    //std::cout << "UnitWrapper::Query called = " << command << std::endl;
+    //use print statement below to check command coming in
+    std::cout << "UnitWrapper::Query called = " << command << std::endl;
     ves::open::xml::XMLReaderWriter networkWriter;
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
@@ -308,7 +312,8 @@ ACE_THROW_SPEC((
     {
         network = "NULL";
     }
-
+    //use print statement below to check network string
+    std::cout<<network.c_str()<<std::endl;
     return CORBA::string_dup( network.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
