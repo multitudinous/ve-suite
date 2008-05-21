@@ -353,8 +353,8 @@ AppFrame::~AppFrame()
     //We have to mannually destroy these to make sure that things shutdown
     //properly with CORBA. There may be a possible way to get around this but
     //am not sure.
-    serviceList->CleanUp();
-    serviceList = 0;
+    //serviceList->CleanUp();
+    //serviceList = 0;
 
     delete m_recentVESFiles;
     m_recentVESFiles = 0;
@@ -651,6 +651,7 @@ void AppFrame::StoreRecentFile()
 void AppFrame::FrameClose( wxCommandEvent& WXUNUSED( event ) )
 {
     Close( true );
+    serviceList->DisconnectFromCE();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void AppFrame::OnFrameClose( wxCloseEvent& WXUNUSED( event ) )

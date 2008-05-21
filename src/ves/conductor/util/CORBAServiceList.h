@@ -127,7 +127,7 @@ public:
 
     ///Excutive wrapper functions
     std::string GetNetwork( void );
-    void SetNetwork( std::string );
+    void SetNetwork( const std::string& command );
     void StopCalc( void );
     void StartCalc( void );
     void PauseCalc( void );

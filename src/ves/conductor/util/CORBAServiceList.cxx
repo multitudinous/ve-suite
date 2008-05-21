@@ -64,8 +64,12 @@ CORBAServiceList::CORBAServiceList( void )
 ////////////////////////////////////////////////////////////////////////////////
 CORBAServiceList::~CORBAServiceList()
 {
-    ;
-} // Never gets called, don't implement
+    if( p_ui_i )
+    {
+        delete p_ui_i;
+        p_ui_i = NULL;
+    }
+}
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetArgcArgv( int argc, char** argv )
 {
@@ -85,12 +89,7 @@ void CORBAServiceList::SetArgcArgv( int argc, char** argv )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::CleanUp()
 {
-    //Gets deleted by wx now
-    /*if ( pelog )
-    {
-       delete pelog;
-    }*/
-    DisconnectFromCE();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNamingContext( CosNaming::NamingContext_ptr naming_context )
@@ -320,8 +319,6 @@ bool CORBAServiceList::DisconnectFromCE( void )
     try
     {
         veCE->UnRegisterUI( p_ui_i->UIName_.c_str() );
-        delete p_ui_i;
-        p_ui_i = NULL;
 
         GetMessageLog()->SetMessage( "Disconnect successful.\n" );
     }
@@ -662,7 +659,7 @@ std::string CORBAServiceList::Query( std::string command )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CORBAServiceList::SetNetwork( std::string command )
+void CORBAServiceList::SetNetwork( const std::string& command )
 {
     if( !CORBAServiceList::IsConnectedToCE() )
     {
@@ -678,3 +675,4 @@ void CORBAServiceList::SetNetwork( std::string command )
         return;
     }
 }
+////////////////////////////////////////////////////////////////////////////////
