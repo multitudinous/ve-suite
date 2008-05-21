@@ -345,7 +345,7 @@ void Model::SetObjectFromXMLData( DOMNode* element )
             if( child->getParentNode() == currentElement )
             {
                 //dataValueStringName = GetSubElement( currentElement, "results", i );
-                mResults.push_back( CommandPtr( new Command( ) ) );
+                mResults.push_back( CommandPtr( new Command() ) );
                 mResults.back()->SetObjectFromXMLData( child );
             }
             else
