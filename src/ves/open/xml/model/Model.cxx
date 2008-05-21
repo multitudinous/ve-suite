@@ -464,13 +464,9 @@ CommandPtr Model::GetResult( int i )
         if( i >= 0 )
         {
             std::cerr << "The element request is out of sequence."
-            << " Please ask for a lower number point." << std::endl;
+                << " Please ask for a lower number point."
+                << " Returning NULL result command" << std::endl;
             return CommandPtr();
-        }
-        //else
-        {
-            mResults.push_back( CommandPtr( new Command( ) ) );
-            return mResults.back();
         }
     }
 }

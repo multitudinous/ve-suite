@@ -270,13 +270,12 @@ void PluginBase::SetModuleResults( const std::string& network )
     size_t numDVP = tempCommand->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numDVP; ++i )
     {
-        ves::open::xml::CommandPtr command = mXmlModel->GetResult( i );
         ves::open::xml::DataValuePairPtr tempPair =
             tempCommand->GetDataValuePair( i );
         ves::open::xml::CommandPtr copyCommand =
             boost::dynamic_pointer_cast< ves::open::xml::Command >(
                 tempPair->GetDataXMLObject() );
-        *command = *copyCommand;
+        mXmlModel->SetResult( copyCommand );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
