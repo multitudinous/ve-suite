@@ -19,30 +19,37 @@
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
   is used for management of the virtual environment. (version 2.0.1+)</para>
-  
+
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
   dependencies zip file</ulink></para>
 
   <para>VRJuggler has its own set of dependencies, if you are building it
   yourself. They are:</para>
+
   <itemizedlist>
-  <?dbfo label-width="0.25in"?>
+    <?dbfo label-width="0.25in"?>
+
     <listitem>
       <para>GMTL 0.4.12+</para>
     </listitem>
+
     <listitem>
       <para>Boost 1.33.1+</para>
     </listitem>
+
     <listitem>
       <para>Cppdom 0.6.6+</para>
     </listitem>
+
     <listitem>
       <para>openAL 0.0.8+</para>
     </listitem>
+
     <listitem>
       <para>omniORB 4.1.0+</para>
     </listitem>
+
     <listitem>
       <para>VRPN 0.7.03+</para>
     </listitem>
@@ -65,10 +72,11 @@
   is used for cross-platform communications. (ACE version 5.5+, TAO version
   1.5+)</para>
 
-  <para><ulink url="http://apr.apache.org/">APR</ulink> is used to generate the
-  GUIDs. (version 1.2.8)</para>
+  <para><ulink url="http://apr.apache.org/">APR</ulink> is used to generate
+  the GUIDs. (version 1.2.8)</para>
 
-  <para><ulink url="http://ox.slug.louisville.edu/~o0lozi01/opal_wiki/index.php/Main_Page">OPAL</ulink>
+  <para><ulink
+  url="http://ox.slug.louisville.edu/~o0lozi01/opal_wiki/index.php/Main_Page">OPAL</ulink>
   (Open Physics Abstraction Layer) is used as a wrapper to ODE for physics
   integration. (version 0.4.0)</para>
 
@@ -90,32 +98,32 @@
 
   <section id="development_dependencies_guidelines">
     <title>Development Dependency Guidelines</title>
-    
+
     <para>To avoid dependencies problems during development, we have provided
     guidelines for using dependencies with VE-Suite. These are the guidelines
     the main VE-Suite development group follows; we suggest you do so as
     well.</para>
-    
+
     <para><emphasis role="bold">Windows:</emphasis></para>
-    
+
     <orderedlist>
       <listitem>
         <para>The developer must either download all the installers for a
-	particular windows IDE and OS, or build all the dependencies
-	for VE-Suite themselves.</para>
+        particular windows IDE and OS, or build all the dependencies for
+        VE-Suite themselves.</para>
       </listitem>
 
       <listitem>
         <para>The VE-Suite development team will maintain certain installers
-	for all dependencies so that the external developers will have easier
-	access to the current development tools.</para>
+        for all dependencies so that the external developers will have easier
+        access to the current development tools.</para>
       </listitem>
 
       <listitem>
         <para>The development libraries will be kept in the native directory
-	structure for a respective library. This ensures that a developer is
-	able to swap libraries as necessary for research purposes without
-	having to change the build system.</para>
+        structure for a respective library. This ensures that a developer is
+        able to swap libraries as necessary for research purposes without
+        having to change the build system.</para>
       </listitem>
     </orderedlist>
 
@@ -123,25 +131,25 @@
 
     <orderedlist>
       <listitem>
-        <para>The developer must either download all of the dependencies' rpms,
-	use their platform's respective package management system, or build all
-	of the dependencies for VE-Suite themselves.</para>
+        <para>The developer must either download all of the dependencies'
+        rpms, use their platform's respective package management system, or
+        build all of the dependencies for VE-Suite themselves.</para>
       </listitem>
 
       <listitem>
-        <para>The VE-Suite development team will maintain rpm files
-	for all dependencies so that the external developers will have easier
-	access to the current development tools.</para>
+        <para>The VE-Suite development team will maintain rpm files for all
+        dependencies so that the external developers will have easier access
+        to the current development tools.</para>
       </listitem>
 
       <listitem>
         <para>On Linux platforms the dependency directory structure will be
-	assumed to be include, bin, lib, and share as is the cast for most
-	libraries when the install target is used on a build system.</para>
+        assumed to be include, bin, lib, and share as is the cast for most
+        libraries when the install target is used on a build system.</para>
       </listitem>
     </orderedlist>
   </section>
-  
+
   <section id="building_dependencies_on_windows">
     <title>Building Dependencies on Windows</title>
 
@@ -153,8 +161,8 @@
     Visual Studio 8.0(2005).</para>
 
     <para>You can find the development libraries at <ulink
-    url="www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32">www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32</ulink>.</para>
-    
+    url="http://www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32">www.vrac.iastate.edu/~biv/vesuite_install/prebuiltDeps/win32</ulink>.</para>
+
     <para><emphasis role="bold">Notes on installation of
     dependencies</emphasis></para>
 
@@ -215,20 +223,18 @@
           <row>
             <entry>VE-Xplorer</entry>
 
-            <entry>ACE/TAO, OpenSceneGraph, VTK,
-            VRJuggler</entry>
+            <entry>ACE/TAO, OpenSceneGraph, VTK, VRJuggler</entry>
           </row>
         </tbody>
       </tgroup>
     </informaltable>
   </section>
-  
+
   <section id="vesuite_other_requirements">
     <title>Other Requirements</title>
-    
+
     <para>Computers running VE-Suite must be able to run all of the
-    dependencies listed above. They must also have shader support;
-    VE-Suite will not run properly without shader support.</para>
+    dependencies listed above. They must also have shader support; VE-Suite
+    will not run properly without shader support.</para>
   </section>
-  
 </chapter>
