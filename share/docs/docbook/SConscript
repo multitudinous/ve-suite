@@ -100,7 +100,7 @@ env.Append(BUILDERS = {'xmlResolve': xmlResolveBuilder,
 
 env.xmlResolve(srcs)
 env.fo(resolvedSrcs)
-print " here 6 "
+
 ##Build the docs.
 env.html(target = htmlTargets, source = resolvedSrcs)
 env.htmlChunk(target = htmlChunkTargets, source = resolvedSrcs)
