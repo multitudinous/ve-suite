@@ -74,7 +74,8 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
 {
     if( !baseModel )
     {
-        std::cerr << "Must call GetResultsEventHandler::SetBaseObject first" << std::endl;
+        std::cerr << "Must call GetResultsEventHandler::SetBaseObject first" 
+            << std::endl;
         return std::string( "NULL" );
     }
 
@@ -84,6 +85,8 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
     size_t numResults = baseModel->GetNumberOfResults();
     if( numResults == 0 )
     {
+        std::cout << "No results for this unit : " 
+            << baseModel->GetVendorName() << std::endl;
         return std::string( "NULL" );
     }
 

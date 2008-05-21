@@ -135,7 +135,7 @@ char * UnitWrapper::GetStatusMessage()
     ACE_THROW_SPEC((::CORBA::SystemException,::Error::EUnknown) )
 {
     // Add your implementation here
-    ves::open::xml::CommandPtr returnState;
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
 
     returnState->SetCommandName( "statusmessage" );
     ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
@@ -271,7 +271,7 @@ char * UnitWrapper::Query( const char* command )
         network = "NULL";
     }
     //use print statement below to check network string
-    std::cout<<network.c_str()<<std::endl;
+    std::cout << "UnitWrapper::Query result " << network << std::endl;
     return CORBA::string_dup( network.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////

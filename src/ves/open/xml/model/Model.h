@@ -160,7 +160,7 @@ public:
     ///Get input data
     ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
     ///\return The ith input in this model
-    ves::open::xml::CommandPtr GetInput( int i );
+    vesDEPRECATED( ves::open::xml::CommandPtr GetInput( int i ) );
 
     ///Get the input variable by name
     ///\param inputName Then name of the input to retrieve
@@ -295,7 +295,6 @@ private:
     ves::open::xml::model::SystemPtr mSubSystem;
     ModelWeakPtr mParentModel;
 };
-
 }
 }
 }

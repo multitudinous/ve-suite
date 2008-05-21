@@ -344,6 +344,8 @@ ACE_THROW_SPEC((
 /////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
 {
+    //module_id is the currently active module_id and this function
+    //is determining which is the next module to execute
     //id is module jsut executed
     std::string msg( "" );
 
@@ -368,69 +370,109 @@ void Body_Executive_i::execute_next_mod( long module_id )
         return;
     }
 
-    if( msg != "" )
+    if( msg == "" )
     {
-        XMLReaderWriter networkWriter;
+        return;
+    }
+    
+    XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    networkWriter.ReadXMLData( msg, "Command", "vecommand" );
+    std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
+
+    if( objectVector.empty() )
+    {
+        return;
+    }
+
+    CommandPtr returnState =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+
+    long rs;
+    // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
+    returnState->GetDataValuePair( "RETURN_STATE" )->GetData( rs );
+
+    if( rs == -1 )
+    {
+        returnState->GetDataValuePair( "return_state" )->GetData( rs );
+    }
+    //delete the object vector
+    objectVector.clear();
+
+    _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = rs;
+    //If we have an error - see above
+    if( rs == 1 )
+    {
+        return;
+    }
+
+    //rt counts down from n to -1 where -1 is the last module to be exectued.
+    //rt is the next module index which is why -1 is subtracted
+    int rt = _scheduler->execute( _network->GetModule( _network->moduleIdx( module_id ) ) ) - 1;
+    std::cout << " rt " << rt << " module id " << module_id << std::endl;
+    int previousModuleIndex = rt + 1;
+    if( rt < 0 )
+    {
+        ClientMessage( "VE-Suite Network Execution Complete\n" );
+    }
+    else if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == _mod_units.end() )
+    {
+        std::cerr <<  "Cannot find running unit " << _network->GetModule( rt )->GetModuleName() << std::endl;
+    }
+    else
+    {
+        //call query on previous module with "Get XML Model Results"
+        CommandPtr resultsCommand( new Command() );
+        resultsCommand->SetCommandName( "Get XML Model Results" );
+        //Get module id and unit name
+        //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
+        DataValuePairPtr vendorData( new DataValuePair() );
+        vendorData->SetData( "vendorUnit", _network->GetModule( previousModuleIndex )->GetModuleName() );
+        resultsCommand->AddDataValuePair( vendorData );
+        DataValuePairPtr moduleIdData( new DataValuePair() );
+        moduleIdData->SetData( "moduleId", static_cast< long int >( _network->GetModule( previousModuleIndex )->get_id() ) );
+        resultsCommand->AddDataValuePair( moduleIdData );
+        //Then parse command
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< CommandPtr, std::string  >(
+            resultsCommand, std::string( "vecommand" ) ) );
+        std::string fileName( "returnString" );
         networkWriter.UseStandaloneDOMDocumentManager();
-        networkWriter.ReadFromString();
-        networkWriter.ReadXMLData( msg, "Command", "vecommand" );
-        std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
+        networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+        //Now query the unit for data
+        std::string unitResultsData = Query( fileName.c_str() );
+        std::cout << " results test = " << unitResultsData << std::endl;
 
-        if( !objectVector.empty() )
+        //Then set inputs on next module
+        /*nodes.clear();
+        std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
+        for( size_t k = 0; k < inputList.size(); ++k )
         {
-            CommandPtr returnState =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectVector.at( 0 ) );
+            nodes.push_back( std::pair< CommandPtr, std::string  >(
+                                 inputList.at( k ), std::string( "vecommand" ) )
+                           );
+        }
+        
+        fileName.assign( "returnString" );
+        networkWriter.UseStandaloneDOMDocumentManager();
+        networkWriter.WriteXMLDocument( nodes, fileName, "Command" );*/
 
-            long rs;
-            // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
-            returnState->GetDataValuePair( "RETURN_STATE" )->GetData( rs );
-
-            if( rs == -1 )
+        try
+        {
+            long int tempID = 
+                static_cast< long int >( _network->GetModule( rt )->get_id() );
+            _mod_units[ _network->GetModule( rt )->GetModuleName()]->
+                SetCurID( tempID );
+            if( unitResultsData != "NULL" )
             {
-                returnState->GetDataValuePair( "return_state" )->GetData( rs );
+                _mod_units[ _network->GetModule( rt )->GetModuleName()]->
+                    SetParams( tempID, unitResultsData.c_str() );
             }
-            //delete the object vector
-            objectVector.clear();
-
-            _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = rs;
-
-            if( rs != 1 )
-            {
-                int rt = _scheduler->execute( _network->GetModule( _network->moduleIdx( module_id ) ) ) - 1;
-                if( rt < 0 )
-                {
-                    ClientMessage( "VE-Suite Network Execution Complete\n" );
-                }
-                else if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == _mod_units.end() )
-                {
-                    std::cerr <<  "Cannot find running unit " << _network->GetModule( rt )->GetModuleName() << std::endl;
-                }
-                else
-                {
-                    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-                    std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
-                    for( size_t k = 0; k < inputList.size(); ++k )
-                    {
-                        nodes.push_back( std::pair< CommandPtr, std::string  >(
-                                             inputList.at( k ), std::string( "vecommand" ) )
-                                       );
-                    }
-                    std::string fileName( "returnString" );
-                    networkWriter.UseStandaloneDOMDocumentManager();
-                    networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-
-                    try
-                    {
-                        long int tempID = static_cast< long int >( _network->GetModule( rt )->get_id() );
-                        _mod_units[ _network->GetModule( rt )->GetModuleName()]->SetParams( tempID, fileName.c_str() );
-                        _mod_units[ _network->GetModule( rt )->GetModuleName()]->SetCurID( tempID );
-                        execute( _network->GetModule( rt )->GetModuleName() );
-                    }
-                    catch ( CORBA::Exception & )
-                    {
-                        std::cerr << "Cannot contact Module " << module_id << std::endl;
-                    }
-                }
-            }
+            execute( _network->GetModule( rt )->GetModuleName() );
+        }
+        catch ( CORBA::Exception & )
+        {
+            std::cerr << "Cannot contact Module " << module_id << std::endl;
         }
     }
 }
