@@ -40,8 +40,13 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 	  std::ostringstream strm;
 	  strm << activeId;
 	  //std::cout<<"ID NAME :"<<activeId<<std::endl;
-	  xmlModelMap[ strm.str() ]->GetInput( "mText" )->
-		  GetDataValuePair( "mText" )->GetData( mText );
+	  //xmlModelMap[ strm.str() ]->GetInput( "mText" )->
+		//  GetDataValuePair( "mText" )->GetData( mText );
+
+      ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+      command->SetCommandName( "SimpleNetworkTest" );
+
+      xmlModelMap[ strm.str() ]->SetResult( command );
 	  //std::cout<<"THIS IS THE TEST: "<<mText<<std::endl;
 	  std::string msg;
 	  msg = UnitName_+" : Instant calculation, already finished\n";

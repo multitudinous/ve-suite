@@ -5,6 +5,8 @@
 
 #include <ves/ce/unitwrapper/UnitWrapper.h>
 
+#include <ves/open/xml/CommandPtr.h>
+
 namespace ves
 {
 namespace ce
