@@ -20,7 +20,8 @@ InteractiveStoveDir = pj( RootDir, 'share', 'examples', 'SimpleNetwork' )
 #fileBundle.addFiles( mtlFile )
 #fileBundle.addFiles( rgbFile )
 
-fileBundle.addFiles( 'SimpleNetwork.ves' )
+fileBundle.addFiles( 'SimpleTwoNetwork.ves' )
+fileBundle.addFiles( 'SimpleThreeNetwork.ves' )
 fileBundle.addFiles( 'RunUnits.bat' )
 
 InteractiveStoveSubdirs = Split("""
