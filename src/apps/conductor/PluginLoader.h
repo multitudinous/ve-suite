@@ -45,6 +45,7 @@ PluginLoader API
 #include <wx/msgdlg.h>
 
 class wxClassInfo;
+class wxPluginLibrary;
 
 namespace ves
 {
@@ -79,7 +80,9 @@ private:
     ///Keep the list of the first intance of each plugin
     std::vector< ves::conductor::UIPluginBase*> plugins;
     ///The classinfo obj of the each plugin, will be use to generate more instances
-    std::vector<wxClassInfo*> plugin_cls;
+    std::vector< wxClassInfo* > plugin_cls;
+    ///Vector of the plugins that will be loaded
+    std::vector< wxPluginLibrary* > mPluginLibs;
     ///Vector of the plugins that will be loaded
     std::vector< wxString > mPluginNames;
     ///Function used to work with unicode strings

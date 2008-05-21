@@ -53,6 +53,7 @@ PluginLoader::PluginLoader()
 {
     plugins.clear();
     plugin_cls.clear();
+    wxPluginManager::CreateManifest();
     ::wxInitAllImageHandlers();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,11 +65,22 @@ PluginLoader::~PluginLoader()
     }
     plugins.clear();
     
-    for( size_t i = 0; i < mPluginNames.size(); ++i )
+    for( size_t i = 0; i < mPluginLibs.size(); ++i )
     {
-        wxPluginManager::UnloadLibrary( mPluginNames.at( i ) );
+        //std::cout << "Loaded " << ConvertUnicode( mPluginNames.at( i ).c_str() )
+        //    << std::endl;
+        //wxPluginManager::UnloadLibrary( mPluginNames.at( i ) );
+        if( mPluginLibs.at( i )->IsLoaded() )
+        {
+            wxDllType tempDLL = mPluginLibs.at( i )->Detach();
+            wxDynamicLibrary::Unload( tempDLL );
+            //mPluginNames.at( i )->Unload();
+            //wxPluginManager::UnloadLibrary( mPluginNames.at( i ) );
+        }
     }
     mPluginNames.clear();
+    mPluginLibs.clear();
+    wxPluginManager::ClearManifest();
 
     plugin_cls.clear();
 }
@@ -126,8 +138,9 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         if( lib )
         {
             wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
-            //std::cout << "Loaded " << ConvertUnicode( filename.c_str() )
+            //std::cout << "Loaded " << ConvertUnicode( libn.c_str() )
             //    << std::endl;
+            mPluginLibs.push_back( lib );
             mPluginNames.push_back( libn );
         }
 
@@ -166,8 +179,8 @@ void PluginLoader::RegisterPlugins()
             RegisterPlugin( classInfo );
             wxLogDebug( _( "|\tRegister plugins : %s" ),
                         classInfo->GetClassName() );
-            //std::cout << "|\tRegister plugins : "
-            //    << ConvertUnicode( classInfo->GetClassName() ) << std::endl;
+            std::cout << "|\tRegister plugins : "
+                << ConvertUnicode( classInfo->GetClassName() ) << std::endl;
         }
         node = wxClassInfo::sm_classTable->Next();
     }
