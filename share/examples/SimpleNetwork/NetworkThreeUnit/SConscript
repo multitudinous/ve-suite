@@ -1,0 +1,37 @@
+##Builds BaffleUnit program
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import('ves_pkg buildDir RootDir osg_options xerces_options tao_options GetPlatform')
+
+srcs = Split("""
+	NetworkThreeUnit_client.cxx
+	NetworkThreeUnit_i.cxx
+""")
+
+headers = Split("""
+	NetworkThreeUnit_i.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env.Append(LIBS = ['ves_open_xml', 'ves_ce_unitwrapper', 'ves_open_module'])
+lib_env.Append(LIBPATH = [pj(RootDir, buildDir, 'src', 'ves', 'open'),
+			                 pj(RootDir, buildDir, 'src', 'ves', 'open', 'xml'),
+			                 pj(RootDir, buildDir, 'src', 'ves', 'ce', 'unitwrapper')])
+
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
+
+tao_options.apply( lib_env )
+osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+
+prog = ves_pkg.createProgram('NetworkThreeUnit' + lib_env["PROGSUFFIX"], lib_env,
+          installPrefix = pj( 'share', 'vesuite', 'examples', 'SimpleNetwork', 'Plugins', 'Unit', host_type ))
+
+prog.addSources(srcs)
+prog.build()

@@ -1,0 +1,44 @@
+##Builds InteractiveStove Graphical Plugin
+import os, sys, string
+import SConsAddons.Util as sca_util
+import distutils.util
+pj = os.path.join
+
+host_type = distutils.util.get_platform()
+
+Import('GetPlatform RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options bullet_options osg_options xerces_options')
+
+srcs = Split("""
+   NetworkThreeGP.cxx
+""")
+
+headers = Split("""
+   NetworkThreeGP.h
+""")
+
+lib_env = ves_pkg.getEnv().Copy()
+lib_env. AppendUnique( LIBS = [ 'ves_xplorer', 'ves_open_xml', 'ves_xplorer_util', 'ves_xplorer_scenegraph' ] )
+lib_env.AppendUnique( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
+		            	    pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
+		            	    pj('#', buildDir, 'src','ves','xplorer','util'),
+                           	    pj('#', buildDir, 'src','ves','open','xml') ] )
+
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+
+if GetPlatform() == 'win32':
+   lib_env.Append( CPPDEFINES = ['_WIN32_WINNT=0x400'] )
+   lib_env['no_import_lib'] = 1
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+
+vtk_options.apply( lib_env )
+osg_options.apply( lib_env )
+xerces_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
+boost_options.apply( lib_env )
+bullet_options.apply( lib_env )
+
+lib = ves_pkg.createLoadableModule( 'NetworkThreeGP', lib_env,
+    installPrefix = pj( 'share', 'vesuite', 'examples', 'SimpleNetwork', 'Plugins', 'GE', host_type ) ) 
+
+lib.addSources(srcs)
+lib.build()
