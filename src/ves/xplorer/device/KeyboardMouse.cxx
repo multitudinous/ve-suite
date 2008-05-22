@@ -167,7 +167,7 @@ void KeyboardMouse::SetStartEndPoint(
     transformedPosition[ 0 ] = mXMinScreen + ( mX * screenRatios.first );
     transformedPosition[ 1 ] = mYMaxScreen - ( mY * screenRatios.second );
     transformedPosition[ 2 ] = mZValScreen;
-    //Convert feet to meters
+    //Convert meters to feet
     transformedPosition *= 3.2808399;
 
     //Get the mouse position in osg world coordinates
@@ -581,8 +581,7 @@ void KeyboardMouse::FrameAll()
     osg::Vec3d endPoint( 0, 0, 0 );
 
     //Set the start point to the juggler head position in osg coordinates
-    gmtl::Matrix44d vjHeadMatrix =
-        convertTo< double >( mHead->getData( 3.2808399 ) );
+    gmtl::Matrix44d vjHeadMatrix = convertTo< double >( mHead->getData() );
     gmtl::Point3d vjHeadPosition =
         gmtl::makeTrans< gmtl::Point3d >( vjHeadMatrix );
     //We have to offset negative mX because
