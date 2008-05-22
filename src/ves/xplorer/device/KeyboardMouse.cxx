@@ -427,7 +427,7 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
-     ves::xplorer::scenegraph::DCS* const activeDCS =
+    ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     ves::xplorer::scenegraph::DCS* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
@@ -564,18 +564,145 @@ void KeyboardMouse::SetFrustumValues(
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::FrameAll()
 {
-    //Grab the current matrix
+    //Grab the current switch node's matrix from SceneManager
+    //We want to manipulate the translation of the matrix until
+    //all geometry is framed within the current viewing frustum
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveSwitchNode();
     gmtl::Matrix44d matrix = activeSwitchDCS->GetMat();
+
+    //////////////////////////////////////////////////////////////////////
+    //Now we need to find the center of the viewing frustum in osg coordinates
+    //////////////////////////////////////////////////////////////////////
+    //Find the vector which goes down the center of the viewing frustum
+    osg::Vec3d frustumCenterVector( 0, 0, 0 );
+    osg::Vec3d startPoint( 0, 0, 0 );
+    osg::Vec3d endPoint( 0, 0, 0 );
+
+    //Set the start point to the juggler head position in osg coordinates
+    gmtl::Matrix44d vjHeadMatrix =
+        convertTo< double >( mHead->getData( 3.2808399 ) );
+    gmtl::Point3d vjHeadPosition =
+        gmtl::makeTrans< gmtl::Point3d >( vjHeadMatrix );
+    //We have to offset negative mX because
+    //the view and frustum are drawn for the left eye
+    startPoint[ 0 ] =  vjHeadPosition.mData[ 0 ] - ( 0.0345 * 3.2808399 );
+    startPoint[ 1 ] = -vjHeadPosition.mData[ 2 ];
+    startPoint[ 2 ] =  vjHeadPosition.mData[ 1 ];
+
+    //Move our matrix translation array to the head position
+    matrix.mData[ 12 ] = startPoint[ 0 ];
+    matrix.mData[ 13 ] = startPoint[ 1 ];
+    matrix.mData[ 14 ] = startPoint[ 2 ];
+
+    //Set the end point to the center of the juggler screen in osg coordinates
+    //Calculate the screen pixel/juggler coordinate ratios
+    double wc_x_trans_ratio =
+        ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
+    double wc_y_trans_ratio =
+        ( mYMaxScreen - mYMinScreen ) / static_cast< double >( mHeight );
+    std::pair< double, double > screenRatios =
+        std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
+
+    //Convert the center screen pixel to a real world juggler coordinate
+    gmtl::Point3d vjCenterScreenPosition;;
+    vjCenterScreenPosition.mData[ 0 ] = mXMinScreen +
+        0.5 * static_cast< double >( mWidth ) * screenRatios.first;
+    vjCenterScreenPosition.mData[ 1 ] = mYMaxScreen -
+        0.5 * static_cast< double >( mHeight ) * screenRatios.second;
+    vjCenterScreenPosition.mData[ 2 ] = mZValScreen;
+
+    //Convert meters to feet
+    vjCenterScreenPosition *= 3.2808399;
+
+    endPoint[ 0 ] =  vjCenterScreenPosition.mData[ 0 ];
+    endPoint[ 1 ] = -vjCenterScreenPosition.mData[ 2 ];
+    endPoint[ 2 ] =  vjCenterScreenPosition.mData[ 1 ];
+
+    //Now we can get our center frustum vector
+    frustumCenterVector = endPoint - startPoint;
+
+    //////////////////////////////////////////////////////////////////////
+    //Since not all geometry is drawn about the point (0, 0, 0),
+    //we need to offset my the bounding sphere center
+    //////////////////////////////////////////////////////////////////////
+    //Move active switch node to (0, 0, 0) and then compute the bounding sphere
+    double position[ 3 ] = { 0, 0, 0 };
+    activeSwitchDCS->SetTranslationArray( position );
+    osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+
+    //Bring the center of the geometry to the vj head position
+    matrix.mData[ 12 ] -= bs.center().x();
+    matrix.mData[ 13 ] -= bs.center().y();
+    matrix.mData[ 14 ] -= bs.center().z();
+
+    //////////////////////////////////////////////////////////////////////
+    //Calculate the distance we need to move along the frustum center vector
+    //to fit the bounding sphere of all the geometry inside the viewing frustum
+    //////////////////////////////////////////////////////////////////////
+    //Calculate the distance
+    double distance;
+    double theta = ( mFoVY * 0.5f ) * PIDivOneEighty;
+    distance = ( bs.radius() / tan( theta ) );
+    /*
+    //This calculation assumes our screen width >= screen height
+    if( mAspectRatio < 1.0 )
+    {
+        //Need to increase distance to fit the width FoV
+        distance *= 1.0 / mAspectRatio;
+    }
+    */
+
+    //Now move along the frustum center vector by the distance we calculated
+    frustumCenterVector.normalize();
+    frustumCenterVector *= distance;
+
+    //Translate our matrix to this new frustum center vector position
+    matrix.mData[ 12 ] += frustumCenterVector[ 0 ];
+    matrix.mData[ 13 ] += frustumCenterVector[ 1 ];
+    matrix.mData[ 14 ] += frustumCenterVector[ 2 ];
+
+    //Set the current switch node's matrix w/ the new "frame all" transform 
+    activeSwitchDCS->SetMat( matrix );
+
+    //Get the new center of the bounding sphere
+    bs = activeSwitchDCS->computeBound();
+    //Set the center point of rotation to the new center of the bounding sphere
+    mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::FrameSelection()
+{
+    /*
+    //Grab the selected DCS
+    ves::xplorer::scenegraph::DCS* const selectedDCS =
+        ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
+
+    if( !selectedDCS )
+    {
+        FrameAll();
+        return;
+    }
+
+    ves::xplorer::scenegraph::DCS* activeSwitchDCS =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+
+    //Convert the selected matrix to world space
+    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt = 
+        new ves::xplorer::scenegraph::LocalToWorldTransform(
+            activeSwitchDCS, selectedDCS );
+    gmtl::Matrix44d matrix = ltwt->GetLocalToWorldTransform();
+
+    //activeSwitchDCS->SetMat( matrix );
 
     //Move the current matrix to its original position
     double position[ 3 ] = { 0, 0, 0 };
     activeSwitchDCS->SetTranslationArray( position );
 
     //Grab the bound and corresponding center values of the current matrix
-    osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+    osg::BoundingSphere bs = selectedDCS->computeBound();
 
     //Calculate the distance needed to fit current bounding sphere inside viewing frustum
     double distance;
@@ -630,110 +757,49 @@ void KeyboardMouse::FrameAll()
     //Set the current matrix w/ the new matrix
     activeSwitchDCS->SetMat( matrix );
 
-    //Get the new center of the bounding sphere and set the mCenterPoint accordingly
-    bs = activeSwitchDCS->computeBound();
-    mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
-}
-////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::FrameSelection()
-{
-    /*
-    if( mSelectedDCS.valid() )
-    {
-        //Grab the selected matrix    
-        gmtl::Matrix44d matrix = mSelectedDCS->GetMat();
+    //Remove the local matrix from localToWorldMatrix
+    gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
+    matrix *= gmtl::invert( activeMatrix );
 
-        //Convert the selected matrix to world space
-        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt = 
-            new ves::xplorer::scenegraph::LocalToWorldTransform(
-                ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode(), mSelectedDCS.get() );
-
-        mLocalToWorldTransform = ltwt->GetLocalToWorldTransform();
-        matrix = mLocalToWorldTransform * matrix;
-
-        //Move the current matrix to its original position
-        double position[ 3 ] = { 0, 0, 0 };
-        mSelectedDCS->SetTranslationArray( position );
-
-        //Grab the bound and corresponding center values of the current matrix
-        osg::BoundingSphere bs = mSelectedDCS->computeBound();
-
-        //Calculate the distance needed to fit current bounding sphere inside viewing frustum
-        double distance;
-        double theta = ( mFoVY * 0.5f ) * PIDivOneEighty;
-
-        if( mAspectRatio <= 1.0f )
-        {
-            distance = ( bs.radius() / tan( theta ) ) * mAspectRatio;
-        }
-        else
-        {
-            distance = bs.radius() / tan( theta );
-        }
-
-        //Transform the current matrix to the center of the juggler screen
-        double wc_x_trans_ratio = ( ( mXMaxScreen - mXMinScreen ) ) / static_cast< double >( mWidth );
-        double wc_y_trans_ratio = ( ( mYMaxScreen - mYMinScreen ) ) / static_cast< double >( mHeight );
-
-        std::pair< double, double > screenRatios = std::pair< double, double >( wc_x_trans_ratio, wc_y_trans_ratio );
-
-        double transformedPosition[ 3 ];
-        double osgTransformedPosition[ 3 ];
-        transformedPosition[ 0 ] = mXMinScreen + ( ( static_cast< double >( mWidth ) * 0.5 ) * screenRatios.first );
-        transformedPosition[ 1 ] = mYMaxScreen - ( ( static_cast< double >( mHeight ) * 0.5 ) * screenRatios.second );
-        transformedPosition[ 2 ] = mZValScreen;
-
-        transformedPosition[ 0 ] *= 3.2808399;
-        transformedPosition[ 1 ] *= 3.2808399;
-        transformedPosition[ 2 ] *= 3.2808399;
-
-        osgTransformedPosition[ 0 ] =  transformedPosition[ 0 ];
-        osgTransformedPosition[ 1 ] = -transformedPosition[ 2 ];
-        osgTransformedPosition[ 2 ] =  transformedPosition[ 1 ];
-
-        matrix.mData[ 12 ] = osgTransformedPosition[ 0 ];
-        matrix.mData[ 13 ] = osgTransformedPosition[ 1 ];
-        matrix.mData[ 14 ] = osgTransformedPosition[ 2 ];
-
-        //Translate into the screen for the calculated distance
-        matrix.mData[ 13 ] += distance;
-
-        //Translate center of bounding volume to the center of the screen
-        matrix.mData[ 12 ] -= bs.center().x();
-        matrix.mData[ 13 ] -= bs.center().y();
-        matrix.mData[ 14 ] -= bs.center().z();
-
-        //Set the current matrix w/ the new matrix
-        mSelectedDCS->SetMat( matrix );
-
-        //Get the new center of the bounding sphere and set the mCenterPoint accordingly
-        osg::Matrixd transform;
-        transform.set( ltwt->GetLocalToWorldTransform().getData() );
-
-        osg::Vec3d center = mSelectedDCS->getBound().center() * transform;
-        mCenterPoint->set( center.x(), center.y(), center.z() );
-    }
+    //Multiplying by the new local matrix (mCenterPoint)
+    osg::Matrixd tempMatrix;
+    tempMatrix.set( matrix.getData() );
+    osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
+    mCenterPoint->set( center.x(), center.y(), center.z() );
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
 {
-    if( mKey == gadget::KEY_R )
+    switch( mKey )
     {
-        ResetTransforms();
-    }
-    else if( mKey == gadget::KEY_F )
-    {
-        FrameAll();
-    }
-    else if( mKey == gadget::KEY_S )
-    {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->
-            StepSimulation();
-    }
-    else if( mKey == gadget::KEY_SPACE )
-    {
-        ves::xplorer::scenegraph::PhysicsSimulator::instance()->ResetScene();
+        case gadget::KEY_R:
+        {
+            ResetTransforms();
+            break;
+        }
+        case gadget::KEY_F:
+        {
+            FrameAll();
+            break;
+        }
+        case gadget::KEY_C:
+        {
+            FrameSelection();
+            break;
+        }
+        case gadget::KEY_S:
+        {
+            ves::xplorer::scenegraph::PhysicsSimulator::instance()->
+                StepSimulation();
+            break;
+        }
+        case gadget::KEY_SPACE:
+        {
+            ves::xplorer::scenegraph::PhysicsSimulator::instance()->
+                ResetScene();
+            break;
+        }
     }
 
     //Reset mKey
@@ -806,8 +872,6 @@ void KeyboardMouse::SelMouse()
     {
         ProcessNURBSSelectionEvents();
 
-
-
         return;
     }
     else if( mState == 0 && mButton == gadget::MBUTTON1 )
@@ -836,7 +900,8 @@ void KeyboardMouse::ResetTransforms()
     gmtl::Matrix44d matrix;
     mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
 
-    ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        GetActiveSwitchNode()->SetMat( matrix );
     
     ves::xplorer::scenegraph::SceneManager::instance()->
         GetWorldDCS()->SetQuat( mResetAxis );

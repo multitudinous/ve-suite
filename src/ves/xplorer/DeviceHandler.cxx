@@ -66,9 +66,9 @@ DeviceHandler::DeviceHandler()
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
     mSelectedDCS( 0 ),
     mDeviceMode( "World Navigation" ),
-    mCenterPoint( 0, 0.1, 0 ),
-    mCenterPointThreshold( 0.5f ),
-    mCenterPointJump( 10.0f )
+    mCenterPoint( 0.0, 0.1, 0.0 ),
+    mCenterPointThreshold( 0.5 ),
+    mCenterPointJump( 10.0 )
 {
     //Initialize Devices
     mDevices[ "Tablet" ] =

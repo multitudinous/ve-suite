@@ -34,12 +34,12 @@
 #ifndef KEYBOARD_MOUSE_H
 #define KEYBOARD_MOUSE_H
 
-// --- VE-Suite Stuff --- //
+// --- VE-Suite Includes --- //
 #include <ves/VEConfig.h>
 
 #include <ves/xplorer/device/Device.h>
 
-// --- VRJuggler Stuff --- //
+// --- vrJuggler Includes --- //
 #include <gadget/Type/KeyboardMouseInterface.h>
 #include <gadget/Type/PositionInterface.h>
 
@@ -47,7 +47,7 @@
 
 #include <gmtl/Matrix.h>
 
-// --- OSG Stuff --- //
+// --- OSG Includes --- //
 #include <osg/Geometry>
 
 #include <osgUtil/IntersectVisitor>
@@ -238,17 +238,22 @@ private:
                     [ 2 6 10 14 ]    [ 20 21 22 23 ]
                     [ 3 7 11 15 ]    [ 30 31 32 33 ]
     */
-
     ///The change to be applied to the current transform
     gmtl::Matrix44d mDeltaTransform;
-    gmtl::Matrix44d mCurrentTransform;///<The current transform matrix being manipulated
+    ///The current transform matrix being manipulated
+    gmtl::Matrix44d mCurrentTransform;
 
-    osg::ref_ptr< osg::Geode > mBeamGeode;///<
-    osg::ref_ptr< osg::Geode > mSelectedGeometry;///<The geometry being selected
-    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;///<
+    ///
+    osg::ref_ptr< osg::Geode > mBeamGeode;
+    ///The geometry being selected
+    osg::ref_ptr< osg::Geode > mSelectedGeometry;
+    ///
+    osg::ref_ptr< osg::LineSegment > mBeamLineSegment;
 
-    gadget::KeyboardMouseInterface mKeyboard;///<VRJuggler's keyboard/mouse positional interface
-    gadget::PositionInterface mHead;///<VRJuggler's head positional interface
+    ///VRJuggler's keyboard/mouse positional interface
+    gadget::KeyboardMouseInterface mKeyboard;
+    ///VRJuggler's head positional interface
+    gadget::PositionInterface mHead;
 
 };
 } //end xplorer
