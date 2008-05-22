@@ -85,15 +85,16 @@ std::string SetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
         {
             ves::open::xml::CommandPtr command =  boost::dynamic_pointer_cast<ves::open::xml::Command>( objectToProcess.at( i ) );
             std::string dataName = command->GetCommandName();
-            ves::open::xml::CommandPtr tempInput = baseModel->GetInput( dataName );
-            if( tempInput )
+            //ves::open::xml::CommandPtr tempInput = baseModel->GetInput( dataName );
+            baseModel->SetInput( command );
+            /*if( tempInput )
             {
                 ( *tempInput ) = ( *command );
             }
             else
             {
                 *( baseModel->GetInput() ) = ( *command );
-            }
+            }*/
         }
     }
     catch ( ... )

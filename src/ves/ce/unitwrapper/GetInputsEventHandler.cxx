@@ -87,9 +87,11 @@ std::string GetInputsEventHandler::Execute( std::vector< ves::open::xml::XMLObje
             ves::open::xml::CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( objectToProcess.at( i ) );
             std::string dataName = command->GetCommandName();
             std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
-            for( size_t j = 0; j < baseModel->GetNumberOfInputs(); ++j )
+            const std::vector< ves::open::xml::CommandPtr > inputsVec = baseModel->GetInputs();
+
+            for( size_t j = 0; j < inputsVec.size(); ++j )
             {
-                ves::open::xml::CommandPtr tempInput = baseModel->GetInput( j );
+                ves::open::xml::CommandPtr tempInput = inputsVec.at( j );
                 nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( tempInput, "vecommand" ) );
             }
 

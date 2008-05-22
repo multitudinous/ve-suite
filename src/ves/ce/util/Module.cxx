@@ -283,15 +283,16 @@ void Module::SetVEModel( model::ModelPtr mod )
    _return_state = 0;
 
    ///Get feedback info
-   for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
+   //for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
    {
-       DataValuePairPtr dvp = veModel->GetInput( i )->GetDataValuePair( "FEEDBACK" );
-       if( dvp )
+       CommandPtr command = veModel->GetInput( "FEEDBACK" );
+       if( command )
        {
+           DataValuePairPtr dvp = command->GetDataValuePair( "FEEDBACK" );
            unsigned int feedback;
            dvp->GetData( feedback );
            _is_feedback = static_cast< int >( feedback );
-           break;
+           //break;
        }
    }
 
@@ -305,7 +306,7 @@ void Module::SetVEModel( model::ModelPtr mod )
    //Probably now need to set port data pointers on the port vectors
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< CommandPtr > Module::GetInputData( void )
+/*std::vector< CommandPtr > Module::GetInputData( void )
 {
    inputs.clear();
    for( size_t i = 0; i < veModel->GetNumberOfInputs(); ++i )
@@ -313,7 +314,7 @@ std::vector< CommandPtr > Module::GetInputData( void )
        inputs.push_back( veModel->GetInput( i ) );
    }
    return inputs;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Module::SetInputData( std::vector< XMLObjectPtr > inputData )
 {
@@ -324,7 +325,7 @@ void Module::SetInputData( std::vector< XMLObjectPtr > inputData )
    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< CommandPtr > Module::GetResultsData( void )
+/*std::vector< CommandPtr > Module::GetResultsData( void )
 {
    results.clear();
    for( size_t i = 0; i < veModel->GetNumberOfResults(); ++i )
@@ -332,7 +333,7 @@ std::vector< CommandPtr > Module::GetResultsData( void )
        results.push_back( veModel->GetResult( i ) );
    }
    return results;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Module::SetResultsData( std::vector< XMLObjectPtr > resultsData )
 {

@@ -109,14 +109,16 @@ Model::Model( const Model& input )
     mIconLocation =  input.mIconLocation;
 
     mResults.clear();
-    std::copy( input.mResults.begin(),
-               input.mResults.end(),
-               std::back_inserter( mResults ) );
+    mResults = input.mResults;
+    //std::copy( input.mResults.begin(),
+    //           input.mResults.end(),
+    //           mResults );
 
     mInputs.clear();
-    std::copy( input.mInputs.begin(),
-               input.mInputs.end(),
-               std::back_inserter( mInputs ) );
+    mInputs = input.mInputs;
+    //std::copy( input.mInputs.begin(),
+    //           input.mInputs.end(),
+    //           mInputs );
 
 
     mInformationPackets.clear();
@@ -169,15 +171,17 @@ Model& Model::operator=( const Model& input )
         mIconLocation =  input.mIconLocation;
 
         mResults.clear();
-        std::copy( input.mResults.begin(),
-                   input.mResults.end(),
-                   std::back_inserter( mResults ) );
-
+        mResults = input.mResults;
+        //std::copy( input.mResults.begin(),
+        //           input.mResults.end(),
+        //           mResults );
+        
         mInputs.clear();
-        std::copy( input.mInputs.begin(),
-                   input.mInputs.end(),
-                   std::back_inserter( mInputs ) );
-
+        mInputs = input.mInputs;
+        //std::copy( input.mInputs.begin(),
+        //           input.mInputs.end(),
+        //           mInputs );
+        
 
         mInformationPackets.clear();
         std::copy( input.mInformationPackets.begin(),
@@ -345,8 +349,9 @@ void Model::SetObjectFromXMLData( DOMNode* element )
             if( child->getParentNode() == currentElement )
             {
                 //dataValueStringName = GetSubElement( currentElement, "results", i );
-                mResults.push_back( CommandPtr( new Command() ) );
-                mResults.back()->SetObjectFromXMLData( child );
+                CommandPtr tempCommand( new Command() );
+                tempCommand->SetObjectFromXMLData( child );
+                mResults[ tempCommand->GetCommandName() ] = tempCommand;
             }
             else
             {
@@ -366,8 +371,9 @@ void Model::SetObjectFromXMLData( DOMNode* element )
             if( child->getParentNode() == currentElement )
             {
                 //dataValueStringName = GetSubElement( currentElement, "inputs", i );
-                mInputs.push_back( CommandPtr( new Command() ) );
-                mInputs.back()->SetObjectFromXMLData( child );
+                CommandPtr tempCommand( new Command() );
+                tempCommand->SetObjectFromXMLData( child );
+                mInputs[ tempCommand->GetCommandName() ] = tempCommand;
             }
             else
             {
@@ -453,7 +459,7 @@ PointPtr Model::GetIconLocation( void )
     return mIconLocation;
 }
 ////////////////////////////////////////////////////////////
-CommandPtr Model::GetResult( int i )
+/*CommandPtr Model::GetResult( int i )
 {
     try
     {
@@ -469,26 +475,38 @@ CommandPtr Model::GetResult( int i )
             return CommandPtr();
         }
     }
-}
+}*/
 ////////////////////////////////////////////////////////////
-size_t Model::GetNumberOfResults( void )
+/*size_t Model::GetNumberOfResults( void )
 {
     return mResults.size();
+}*/
+////////////////////////////////////////////////
+CommandPtr Model::GetResult( const std::string& inputName )
+{
+    std::map< std::string, CommandPtr >::iterator iter = 
+        mResults.find( inputName );
+    if( iter != mResults.end() )
+    {
+        return iter->second;
+    }
+    
+    return CommandPtr();
 }
 ////////////////////////////////////////////////
 CommandPtr Model::GetInput( const std::string& inputName )
 {
-    for( size_t i = 0; i < mInputs.size(); i++ )
+    std::map< std::string, CommandPtr >::iterator iter = 
+        mInputs.find( inputName );
+    if( iter != mInputs.end() )
     {
-        if( mInputs.at( i )->GetCommandName() == inputName )
-        {
-            return mInputs.at( i );
-        }
+        return iter->second;
     }
+
     return CommandPtr();
 }
 ////////////////////////////////////////////////////////////
-CommandPtr Model::GetInput( int i )
+/*CommandPtr Model::GetInput( int i )
 {
     try
     {
@@ -504,18 +522,18 @@ CommandPtr Model::GetInput( int i )
         mInputs.push_back( CommandPtr(new Command() ) );
         return mInputs.back();
     }
-}
+}*/
 ////////////////////////////////////////////////////////////
-ves::open::xml::CommandPtr Model::GetInput( void )
+/*ves::open::xml::CommandPtr Model::GetInput( void )
 {
     mInputs.push_back( CommandPtr( new Command() ) );
     return mInputs.back();
-}
+}*/
 ////////////////////////////////////////////////////////////
-size_t Model::GetNumberOfInputs( void )
+/*size_t Model::GetNumberOfInputs( void )
 {
     return mInputs.size();
-}
+}*/
 ////////////////////////////////////////////////////////////
 PortPtr Model::GetPort( int i )
 {
@@ -755,8 +773,23 @@ void Model::_updateVEElement( const std::string& input )
 
     SetSubElement<ves::open::xml::XMLObjectPtr>( "iconLocation", mIconLocation );
     SetSubElements("ports", mPorts );
-    SetSubElements("results", mResults );
-    SetSubElements("inputs", mInputs );
+    
+    std::vector< CommandPtr > tempResults;
+    for( std::map< std::string, CommandPtr >::iterator
+        iter = mResults.begin(); iter != mResults.end(); ++iter )
+    {
+        tempResults.push_back( iter->second );
+    }
+    SetSubElements("results", tempResults );
+
+    std::vector< CommandPtr > tempInputs;
+    for( std::map< std::string, CommandPtr >::iterator
+        iter = mInputs.begin(); iter != mInputs.end(); ++iter )
+    {
+        tempInputs.push_back( iter->second );
+    }
+    SetSubElements("inputs", tempInputs );
+    
     SetSubElements("informationPackets", mInformationPackets );
 
     if( mGeometry )
@@ -857,11 +890,33 @@ ModelPtr Model::GetParentModel()
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetInput( ves::open::xml::CommandPtr& input )
 {
-    mInputs.push_back( input );
+    mInputs[ input->GetCommandName() ] = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetResult( ves::open::xml::CommandPtr& input )
 {
-    mResults.push_back( input );
+    mResults[ input->GetCommandName() ] = input;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::vector< CommandPtr > Model::GetResults()
+{
+    std::vector< CommandPtr > tempResults;
+    for( std::map< std::string, CommandPtr >::iterator
+        iter = mResults.begin(); iter != mResults.end(); ++iter )
+    {
+        tempResults.push_back( iter->second );
+    }
+    return tempResults;
+}
+////////////////////////////////////////////////////////////////////////////////
+const std::vector< CommandPtr > Model::GetInputs()
+{
+    std::vector< CommandPtr > tempResults;
+    for( std::map< std::string, CommandPtr >::iterator
+        iter = mInputs.begin(); iter != mInputs.end(); ++iter )
+    {
+        tempResults.push_back( iter->second );
+    }
+    return tempResults;
 }
 ////////////////////////////////////////////////////////////////////////////////

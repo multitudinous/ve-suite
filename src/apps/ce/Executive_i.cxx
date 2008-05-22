@@ -699,7 +699,7 @@ ACE_THROW_SPEC((
     }
     else
     {
-        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        /*std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
         std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
         for( size_t k = 0; k < inputList.size(); ++k )
         {
@@ -711,7 +711,7 @@ ACE_THROW_SPEC((
         std::string fileName( "returnString" );
         XMLReaderWriter netowrkWriter;
         netowrkWriter.UseStandaloneDOMDocumentManager();
-        netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+        netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );*/
 
         try
         {
@@ -722,7 +722,7 @@ ACE_THROW_SPEC((
                 if( _mod_units.find( moduleName ) != _mod_units.end() )
                 {
                     long int tempID = static_cast< long >( _network->GetModule( rt )->get_id() );
-                    _mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
+                    //_mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
                     _mod_units[ moduleName ]->SetCurID( tempID );
                     // This starts a chain reaction which eventually leads to Execute_Thread
                     // which calls executenextmod in this class

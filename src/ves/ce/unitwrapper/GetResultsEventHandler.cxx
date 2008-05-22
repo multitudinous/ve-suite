@@ -82,7 +82,9 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
     ves::open::xml::CommandPtr resultsCommand( new ves::open::xml::Command() );
     resultsCommand->SetCommandName( "Model Results" );
 
-    size_t numResults = baseModel->GetNumberOfResults();
+    const std::vector< ves::open::xml::CommandPtr > resultsVec = baseModel->GetResults();
+    size_t numResults = resultsVec.size();
+
     if( numResults == 0 )
     {
         std::cout << "No results for this unit : " 
@@ -92,7 +94,7 @@ std::string GetResultsEventHandler::Execute( std::vector< ves::open::xml::XMLObj
 
     for( size_t i = 0; i < numResults; ++i )
     {
-        ves::open::xml::CommandPtr tempResult = baseModel->GetResult( i );
+        ves::open::xml::CommandPtr tempResult = resultsVec.at( i );
         ves::open::xml::DataValuePairPtr tempPair( new ves::open::xml::DataValuePair() );
         tempPair->SetData( tempResult->GetCommandName(), tempResult );
         resultsCommand->AddDataValuePair( tempPair );

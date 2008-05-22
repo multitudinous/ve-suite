@@ -51,7 +51,7 @@
 
 #include <string>
 #include <vector>
-
+#include <map>
 
 namespace ves
 {
@@ -148,11 +148,19 @@ public:
 
     ///Get results data
     ///\return The ith result stored as a command
-    ves::open::xml::CommandPtr GetResult( int i );
+    //ves::open::xml::CommandPtr GetResult( int i );
+
+    ///Get results data
+    ///\return The ith result stored as a command
+    ves::open::xml::CommandPtr GetResult( const std::string& inputName );
+    
+    ///Get results data
+    ///\return The ith result stored as a command
+    const std::vector< ves::open::xml::CommandPtr > GetResults();
 
     ///Get results data
     ///\return The number of results in this model
-    size_t GetNumberOfResults( void );
+    //size_t GetNumberOfResults( void );
 
     ///Set the result for this models
     void SetResult( ves::open::xml::CommandPtr& input );
@@ -160,25 +168,29 @@ public:
     ///Get input data
     ///\param i get the i'th input, to allocate a new DataValuePair pass in -1
     ///\return The ith input in this model
-    vesDEPRECATED( ves::open::xml::CommandPtr GetInput( int i ) );
+    //vesDEPRECATED( ves::open::xml::CommandPtr GetInput( int i ) );
 
     ///Get the input variable by name
     ///\param inputName Then name of the input to retrieve
     ///\return The input with the given name
     ves::open::xml::CommandPtr GetInput( const std::string& inputName );
 
+    ///Get input data
+    ///\return The ith result stored as a command
+    const std::vector< ves::open::xml::CommandPtr > GetInputs();
+    
     ///Allocate another input block for use
     ///\return The new input
     ///This function should be replaced with SetInput in users code since 
     ///ves is now using smart pointers
-    vesDEPRECATED( ves::open::xml::CommandPtr GetInput() );
+    //vesDEPRECATED( ves::open::xml::CommandPtr GetInput() );
     
     ///Set the input for this models
     void SetInput( ves::open::xml::CommandPtr& input );
 
     ///Get number of input data
     ///\return The total number of inputs
-    size_t GetNumberOfInputs( void );
+    //size_t GetNumberOfInputs( void );
 
     ///Get the i'th port for the model.
     ///\param i The i'th port you are after.
@@ -275,9 +287,9 @@ private:
     std::vector< PortPtr >  mPorts;///<The vector port data if any for a model.
     PointPtr                mIconLocation;///<The icon location point container.
     ///The data value pair will contain all the results for a paticular model
-    std::vector< ves::open::xml::CommandPtr > mResults;///<The classes hold the results for the model.
+    std::map< std::string, ves::open::xml::CommandPtr > mResults;///<The classes hold the results for the model.
     ///The data value pair will contain the model inputs for the model
-    std::vector< ves::open::xml::CommandPtr > mInputs;///<The classes hold the inputs for the model.
+    std::map< std::string, ves::open::xml::CommandPtr > mInputs;///<The classes hold the inputs for the model.
     ///The parameter block holds all the data the was formerly stored in the param file
     std::vector< ves::open::xml::ParameterBlockPtr > mInformationPackets;///<The classes hold relevant data to represent the model.
 

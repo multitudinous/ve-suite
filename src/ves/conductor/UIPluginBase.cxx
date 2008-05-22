@@ -527,7 +527,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
             CommandPtr tempCommand = m_veModel->GetInput( iteri->first );
             if( !tempCommand )
             {
-                tempCommand = m_veModel->GetInput( -1 );
+                tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( iteri->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( iteri->first, *( iteri->second ) );
@@ -548,7 +548,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
             CommandPtr tempCommand = m_veModel->GetInput( iterd->first );
             if( !tempCommand )
             {
-                tempCommand = m_veModel->GetInput( -1 );
+                tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( iterd->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( iterd->first, *( iterd->second ) );
@@ -569,7 +569,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
             CommandPtr tempCommand = m_veModel->GetInput( iters->first );
             if( !tempCommand )
             {
-                tempCommand = m_veModel->GetInput( -1 );
+                tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( iters->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( iters->first, *( iters->second ) );
@@ -590,7 +590,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
             CommandPtr tempCommand = m_veModel->GetInput( itervi->first );
             if( !tempCommand )
             {
-                tempCommand = m_veModel->GetInput( -1 );
+                tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( itervi->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( itervi->first, *( itervi->second ) );
@@ -611,7 +611,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
             CommandPtr tempCommand = m_veModel->GetInput( itervd->first );
             if( !tempCommand )
             {
-                tempCommand = m_veModel->GetInput( -1 );
+                tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( itervd->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( itervd->first, *( itervd->second ) );
@@ -632,7 +632,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
             CommandPtr tempCommand = m_veModel->GetInput( itervs->first );
             if( !tempCommand )
             {
-                tempCommand = m_veModel->GetInput( -1 );
+                tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( itervs->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( itervs->first, *( itervs->second ) );
@@ -648,7 +648,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
     // EPRI TAG
     if( financial_dlg != NULL )
     {
-        CommandPtr tempCommand = m_veModel->GetInput( -1 );
+        CommandPtr tempCommand = CommandPtr( new Command() );
         tempCommand->SetCommandName( "EPRI TAG" );
 
         ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
@@ -723,10 +723,12 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
     pos.x = m_veModel->GetIconLocation()->GetPoint().first;
     pos.y = m_veModel->GetIconLocation()->GetPoint().second;
 
-    unsigned int numInputs = m_veModel->GetNumberOfInputs();
-    for( unsigned int i = 0; i < numInputs; ++i )
+    //unsigned int numInputs = m_veModel->GetNumberOfInputs();
+    const std::vector< CommandPtr > inputsVec = m_veModel->GetInputs();
+
+    for( size_t i = 0; i < inputsVec.size(); ++i )
     {
-        CommandPtr commandData = m_veModel->GetInput( i );
+        CommandPtr commandData = inputsVec.at( i );
         // Add if statement for input variables
         //if "EPRI TAG"
         //else
@@ -887,7 +889,9 @@ void UIPluginBase::ViewInputVariables( void )
         inputsDialog = 0;
     }
 
-    size_t numInputs = m_veModel->GetNumberOfInputs();
+    const std::vector< CommandPtr > inputsVec = m_veModel->GetInputs();
+
+    size_t numInputs = inputsVec.size();
     ///First try check and see if there are any local variables
     if( numInputs == 0 )
     {
@@ -950,7 +954,7 @@ void UIPluginBase::ViewInputVariables( void )
     {
         std::vector< wxString > tagNames;
         std::vector< wxString > values;
-        ves::open::xml::CommandPtr inputCommand = m_veModel->GetInput( i );
+        ves::open::xml::CommandPtr inputCommand = inputsVec.at( i );
         GetDataTables( inputCommand, tagNames, values );
         std::string inputParamter = inputCommand->GetCommandName();
         inputsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );
@@ -969,7 +973,8 @@ void UIPluginBase::ViewResultsVariables( void )
         resultsDialog = 0;
     }
 
-    if( m_veModel->GetNumberOfResults() == 0 )
+    const std::vector< CommandPtr > resultsVec = m_veModel->GetResults();
+    if( resultsVec.size() == 0 )
     {
         serviceList->GetMessageLog()->SetMessage( "Model contains no results variables\n" );
         return;
@@ -977,11 +982,11 @@ void UIPluginBase::ViewResultsVariables( void )
 
     resultsDialog = new SummaryResultDialog( NULL, wxT( "Results Variables" ), wxSize( 560, 400 ) );
     // Get all the inputs form the model
-    for( size_t i = 0; i < m_veModel->GetNumberOfResults(); ++i )
+    for( size_t i = 0; i < resultsVec.size(); ++i )
     {
         std::vector< wxString > tagNames;
         std::vector< wxString > values;
-        ves::open::xml::CommandPtr inputCommand = m_veModel->GetResult( i );
+        ves::open::xml::CommandPtr inputCommand = resultsVec.at( i );
         GetDataTables( inputCommand, tagNames, values );
         std::string inputParamter = inputCommand->GetCommandName();
         resultsDialog->NewTab( wxString( inputParamter.c_str(), wxConvUTF8 ) );

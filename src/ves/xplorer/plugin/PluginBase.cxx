@@ -379,7 +379,7 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
     }
 
     //process inputs
-    if( mXmlModel->GetNumberOfInputs() > 0 )
+    /*if( mXmlModel->GetNumberOfInputs() > 0 )
     {
         ;
     }
@@ -388,7 +388,7 @@ void PluginBase::SetXMLModel( ves::open::xml::model::ModelPtr& tempModel )
     if( mXmlModel->GetNumberOfResults() > 0 )
     {
         ;
-    }
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::SetCurrentCommand( ves::open::xml::CommandPtr command )
