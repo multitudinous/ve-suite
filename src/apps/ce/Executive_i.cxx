@@ -33,6 +33,7 @@
 #include <apps/ce/Executive_i.h>
 
 #include <ves/open/xml/model/ModelCreator.h>
+#include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/shader/ShaderCreator.h>
 #include <ves/open/xml/cad/CADCreator.h>
 #include <ves/open/xml/XMLCreator.h>
@@ -410,70 +411,87 @@ void Body_Executive_i::execute_next_mod( long module_id )
     //rt is the next module index which is why -1 is subtracted
     int rt = _scheduler->execute( _network->GetModule( _network->moduleIdx( module_id ) ) ) - 1;
     std::cout << " rt " << rt << " module id " << module_id << std::endl;
+    //This onyl works for serial exectuion and for units with 1 input and output port
     int previousModuleIndex = rt + 1;
     if( rt < 0 )
     {
         ClientMessage( "VE-Suite Network Execution Complete\n" );
+        return;
     }
-    else if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == _mod_units.end() )
+    
+    if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == _mod_units.end() )
     {
-        std::cerr <<  "Cannot find running unit " << _network->GetModule( rt )->GetModuleName() << std::endl;
+        std::cerr <<  "Cannot find running unit " 
+            << _network->GetModule( rt )->GetModuleName() << std::endl;
+        return;
     }
-    else
-    {
-        //call query on previous module with "Get XML Model Results"
-        CommandPtr resultsCommand( new Command() );
-        resultsCommand->SetCommandName( "Get XML Model Results" );
-        //Get module id and unit name
-        //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
-        DataValuePairPtr vendorData( new DataValuePair() );
-        vendorData->SetData( "vendorUnit", _network->GetModule( previousModuleIndex )->GetModuleName() );
-        resultsCommand->AddDataValuePair( vendorData );
-        DataValuePairPtr moduleIdData( new DataValuePair() );
-        moduleIdData->SetData( "moduleId", static_cast< long int >( _network->GetModule( previousModuleIndex )->get_id() ) );
-        resultsCommand->AddDataValuePair( moduleIdData );
-        //Then parse command
-        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-        nodes.push_back( std::pair< CommandPtr, std::string  >(
-            resultsCommand, std::string( "vecommand" ) ) );
-        std::string fileName( "returnString" );
-        networkWriter.UseStandaloneDOMDocumentManager();
-        networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-        //Now query the unit for data
-        std::string unitResultsData = Query( fileName.c_str() );
-        std::cout << " results test = " << unitResultsData << std::endl;
 
+    //call query on previous module with "Get XML Model Results"
+    CommandPtr resultsCommand( new Command() );
+    resultsCommand->SetCommandName( "Get XML Model Results" );
+    //Get module id and unit name
+    //gets tagged as vendorUnit (module name) and moduleId (number id not uuid)
+    DataValuePairPtr vendorData( new DataValuePair() );
+    vendorData->SetData( "vendorUnit", _network->
+        GetModule( previousModuleIndex )->GetModuleName() );
+    resultsCommand->AddDataValuePair( vendorData );
+    DataValuePairPtr moduleIdData( new DataValuePair() );
+    moduleIdData->SetData( "moduleId", static_cast< long int >( 
+        _network->GetModule( previousModuleIndex )->get_id() ) );
+    resultsCommand->AddDataValuePair( moduleIdData );
+    //Then parse command
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< CommandPtr, std::string  >(
+        resultsCommand, std::string( "vecommand" ) ) );
+    std::string fileName( "returnString" );
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
+    //Now query the unit for data
+    std::string unitResultsData = Query( fileName.c_str() );
+    std::cout << " results test = " << unitResultsData << std::endl;
+    nodes.clear();
+    if( unitResultsData != "NULL" )
+    {
+        XMLReaderWriter networkReader;
+        networkReader.UseStandaloneDOMDocumentManager();
+        networkReader.ReadFromString();
+        networkReader.ReadXMLData( unitResultsData, "Command", "vecommand" );
+        objectVector = networkReader.GetLoadedXMLObjects();
+    
         //Then set inputs on next module
-        /*nodes.clear();
-        std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
-        for( size_t k = 0; k < inputList.size(); ++k )
-        {
-            nodes.push_back( std::pair< CommandPtr, std::string  >(
-                                 inputList.at( k ), std::string( "vecommand" ) )
-                           );
-        }
-        
-        fileName.assign( "returnString" );
-        networkWriter.UseStandaloneDOMDocumentManager();
-        networkWriter.WriteXMLDocument( nodes, fileName, "Command" );*/
+        nodes.push_back( std::pair< CommandPtr, std::string  >(
+            boost::dynamic_pointer_cast< ves::open::xml::Command >( 
+            objectVector.at( 0 ) ), std::string( "vecommand" ) ) );
+    }
+    //Now get the input data for the current model
+    const std::vector< CommandPtr > inputList = 
+        _network->GetModule( rt )->GetVEModel()->GetInputs();
+    for( size_t k = 0; k < inputList.size(); ++k )
+    {
+        nodes.push_back( std::pair< CommandPtr, std::string  >(
+            inputList.at( k ), std::string( "vecommand" ) ) );
+    }
+    
+    fileName.assign( "returnString" );
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
 
-        try
+    try
+    {
+        long int tempID = 
+            static_cast< long int >( _network->GetModule( rt )->get_id() );
+        _mod_units[ _network->GetModule( rt )->GetModuleName() ]->
+            SetCurID( tempID );
+        if( fileName != "NULL" )
         {
-            long int tempID = 
-                static_cast< long int >( _network->GetModule( rt )->get_id() );
             _mod_units[ _network->GetModule( rt )->GetModuleName()]->
-                SetCurID( tempID );
-            if( unitResultsData != "NULL" )
-            {
-                _mod_units[ _network->GetModule( rt )->GetModuleName()]->
-                    SetParams( tempID, unitResultsData.c_str() );
-            }
-            execute( _network->GetModule( rt )->GetModuleName() );
+                SetParams( tempID, fileName.c_str() );
         }
-        catch ( CORBA::Exception & )
-        {
-            std::cerr << "Cannot contact Module " << module_id << std::endl;
-        }
+        execute( _network->GetModule( rt )->GetModuleName() );
+    }
+    catch ( CORBA::Exception & )
+    {
+        std::cerr << "Cannot contact Module " << module_id << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -699,8 +717,8 @@ ACE_THROW_SPEC((
     }
     else
     {
-        /*std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
-        std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetInputData();
+        std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+        const std::vector< CommandPtr > inputList = _network->GetModule( rt )->GetVEModel()->GetInputs();
         for( size_t k = 0; k < inputList.size(); ++k )
         {
             nodes.push_back( std::pair< CommandPtr, std::string  >(
@@ -711,7 +729,7 @@ ACE_THROW_SPEC((
         std::string fileName( "returnString" );
         XMLReaderWriter netowrkWriter;
         netowrkWriter.UseStandaloneDOMDocumentManager();
-        netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );*/
+        netowrkWriter.WriteXMLDocument( nodes, fileName, "Command" );
 
         try
         {
@@ -721,8 +739,13 @@ ACE_THROW_SPEC((
                 std::string moduleName = _network->GetModule( rt )->GetModuleName();
                 if( _mod_units.find( moduleName ) != _mod_units.end() )
                 {
+                    //This must be called because the raw model is not passed
+                    //to the unit anymore. Only the input variables are passed
+                    //to the unit. This should be changed in the future so 
+                    //that the veopen model data is passed directly to
+                    //the respective unit.
                     long int tempID = static_cast< long >( _network->GetModule( rt )->get_id() );
-                    //_mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
+                    _mod_units[ moduleName ]->SetParams( tempID, fileName.c_str() );
                     _mod_units[ moduleName ]->SetCurID( tempID );
                     // This starts a chain reaction which eventually leads to Execute_Thread
                     // which calls executenextmod in this class
@@ -732,18 +755,18 @@ ACE_THROW_SPEC((
                 else
                 {
                     std::cerr << "Initial Execute, module " << moduleName
-                    << " is not registered yet" << std::endl;
+                        << " is not registered yet" << std::endl;
                 }
             }
             else
             {
-                std::cerr << " No Module Units connected to the VE-CE, skipping execution " << std::endl;
+                ClientMessage( "No Module Units connected to the VE-CE, skipping execution\n" );
             }
         }
         catch ( CORBA::Exception & )
         {
             std::cerr << "Initial Execute, cannot contact Module "
-            << _network->GetModule( rt )->GetModuleName() << std::endl;
+                << _network->GetModule( rt )->GetModuleName() << std::endl;
         }
     }
 
@@ -858,10 +881,7 @@ ACE_THROW_SPEC(( CORBA::SystemException, Error::EUnknown ) )
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.ReadFromString();
     networkWriter.ReadXMLData( command, "Command", "vecommand" );
-    //delete command;
     std::vector< XMLObjectPtr > objectVector = networkWriter.GetLoadedXMLObjects();
-    //I think the above is a memory leak
-    // we need to cleanup the vector of objects
 
     std::string moduleName;
     std::string vendorUnit;
