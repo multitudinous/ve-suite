@@ -184,11 +184,13 @@ void CameraPlacementToolGP::SetCurrentCommand(
 void CameraPlacementToolGP::InitializeResources()
 {
     //Create the texture that will be used for the FBO
+    //glTexImage2D( target, level, internal format, width, height, border, format, type, *pixels );
+    //glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB16F_ARB,  width, height, 0, GL_RGB, GL_FLOAT, NULL );
     osg::ref_ptr< osg::Texture2D > quadTexture = new osg::Texture2D();
-    quadTexture->setTextureSize( 1024, 1024 );
-    quadTexture->setInternalFormat( GL_RGBA );
+    quadTexture->setInternalFormat( GL_RGB16F_ARB );
+    quadTexture->setTextureSize( 512, 512 );
     quadTexture->setSourceFormat( GL_RGBA );
-    quadTexture->setSourceType( GL_UNSIGNED_BYTE );
+    quadTexture->setSourceType( GL_FLOAT );
     quadTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
     quadTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     quadTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
@@ -198,7 +200,7 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the program for mCameraNode
     {
-        std::string cameraVertexSource = std::string(
+        std::string cameraVertexSource =
         "varying vec4 eyePos; \n"
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
@@ -212,9 +214,9 @@ void CameraPlacementToolGP::InitializeResources()
             "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
 
             "gl_FrontColor = vec4( 0.7, 0.7, 0.7, 1.0 ); \n"
-        "} \n" );
+        "} \n";
 
-        std::string cameraFragmentSource = std::string(
+        std::string cameraFragmentSource =
         "varying vec4 eyePos; \n"
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
@@ -240,7 +242,7 @@ void CameraPlacementToolGP::InitializeResources()
                 "vec4( totalAmbient + totalDiffuse + totalSpecular, 1.0 ); \n"
 
             "gl_FragColor = color; \n"
-        "} \n" );
+        "} \n";
 
         osg::ref_ptr< osg::Shader > cameraVertexShader = new osg::Shader();
         cameraVertexShader->setType( osg::Shader::VERTEX );
@@ -259,19 +261,19 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the program for mFrustumGeode
     {
-        std::string frustumVertexSource = std::string(
+        std::string frustumVertexSource =
         "void main() \n"
         "{ \n"
             "gl_Position = ftransform(); \n"
 
             "gl_FrontColor = gl_Color; \n"
-        "} \n" );
+        "} \n";
 
-        std::string frustumFragmentSource = std::string(
+        std::string frustumFragmentSource =
         "void main() \n"
         "{ \n"
             "gl_FragColor = gl_Color; \n"
-        "} \n" );
+        "} \n";
 
         osg::ref_ptr< osg::Shader > frustumVertexShader = new osg::Shader();
         frustumVertexShader->setType( osg::Shader::VERTEX );
@@ -290,19 +292,19 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the program for mCameraViewQuadDCS
     {
-        std::string hitQuadVertexSource = std::string(
+        std::string hitQuadVertexSource =
         "void main() \n"
         "{ \n"
             "gl_Position = ftransform(); \n"
-        "} \n" );
+        "} \n";
 
-        std::string hitQuadFragmentSource = std::string(
+        std::string hitQuadFragmentSource =
         "void main() \n"
         "{ \n"
             "vec4 color = vec4( 1.0, 0.0, 0.0, 0.3 ); \n"
 
             "gl_FragColor = color; \n"
-        "} \n" );
+        "} \n";
 
         osg::ref_ptr< osg::Shader > hitQuadVertexShader = new osg::Shader();
         hitQuadVertexShader->setType( osg::Shader::VERTEX );
@@ -321,15 +323,15 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the program for mCameraViewQuadDCS
     {
-        std::string quadVertexSource = std::string(
+        std::string quadVertexSource =
         "void main() \n"
         "{ \n"
             "gl_Position = ftransform(); \n"
 
             "gl_TexCoord[ 1 ].st = gl_MultiTexCoord1.st; \n"
-        "} \n" );
+        "} \n";
 
-        std::string quadFragmentSource = std::string(
+        std::string quadFragmentSource =
         "uniform sampler2D baseMap; \n"
 
         "void main() \n"
@@ -337,7 +339,7 @@ void CameraPlacementToolGP::InitializeResources()
             "vec4 color = texture2D( baseMap, gl_TexCoord[ 1 ].st ); \n"
 
             "gl_FragColor = color; \n"
-        "} \n" );
+        "} \n";
 
         osg::ref_ptr< osg::Shader > quadVertexShader = new osg::Shader();
         quadVertexShader->setType( osg::Shader::VERTEX );
@@ -356,7 +358,7 @@ void CameraPlacementToolGP::InitializeResources()
 
     //Set up the camera projection effect
     {
-        std::string projectionVertexSource = std::string(
+        std::string projectionVertexSource =
         "varying vec4 eyePos; \n"
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
@@ -374,9 +376,9 @@ void CameraPlacementToolGP::InitializeResources()
             "gl_TexCoord[ 0 ].s = dot( eyePos, gl_EyePlaneS[ 0 ] ); \n"
             "gl_TexCoord[ 0 ].t = dot( eyePos, gl_EyePlaneT[ 0 ] ); \n"
             "gl_TexCoord[ 0 ].q = dot( eyePos, gl_EyePlaneQ[ 0 ] ); \n"
-        "} \n" );
+        "} \n";
 
-        std::string projectionFragmentSource = std::string(
+        std::string projectionFragmentSource =
         "uniform float alpha; \n"
         "uniform float nearPlane; \n"
         "uniform float farPlane; \n"
@@ -418,7 +420,7 @@ void CameraPlacementToolGP::InitializeResources()
             "} \n"
 
             "gl_FragColor = color; \n"
-        "} \n" );
+        "} \n";
 
         osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
         projectionVertexShader->setType( osg::Shader::VERTEX );

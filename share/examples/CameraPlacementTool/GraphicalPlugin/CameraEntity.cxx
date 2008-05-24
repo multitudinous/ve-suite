@@ -155,20 +155,20 @@ CameraEntity::~CameraEntity()
 void CameraEntity::Initialize()
 {
     //Initialize this
-    setRenderOrder( osg::Camera::PRE_RENDER );
+    setRenderOrder( osg::Camera::POST_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    setViewport( 0, 0, 1024, 1024 );
+    setViewport( 0, 0, 512, 512 );
     //Attach the texture and use it as the color buffer
     attach( osg::Camera::COLOR_BUFFER,
-          ( mResourceManager->get< osg::Texture2D, osg::ref_ptr >
-          ( "CameraViewTexture" ) ).get() );
+          ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+          < osg::Texture2D, osg::ref_ptr >( "CameraViewTexture" ) ).get() );
+
     //Add the subgraph to render
     addChild( mPluginDCS.get() );
-    removeChild( mHitQuadGeode.get() );
 
     //Initialize mInitialViewMatrix
     mInitialViewMatrix.makeLookAt( osg::Vec3( 0, 0, 0 ),
@@ -194,8 +194,9 @@ void CameraEntity::Initialize()
         static_cast< float >( 5.0 ) );
     mProjectionTechnique->GetFarPlaneUniform()->set(
         static_cast< float >( 10.0 ) );
-    mPluginDCS->AddTechnique( std::string( "Projection" ), mProjectionTechnique );
-    mPluginDCS->SetTechnique( std::string( "Projection" ) );
+    mPluginDCS->AddTechnique(
+        std::string( "Projection" ), mProjectionTechnique );
+    mPluginDCS->SetTechnique( "Projection" );
 
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
@@ -215,6 +216,9 @@ void CameraEntity::Initialize()
     mCameraViewQuadDCS = new ves::xplorer::scenegraph::DCS();
     mCameraViewQuadDCS->setScale( osg::Vec3( 200, 200, 1 ) );
     mHeadsUpDisplay->GetCamera()->addChild( mCameraViewQuadDCS.get() );
+
+    //mCameraViewQuadDCS->AddTechnique( "DepthOfField", mDepthOfFieldTechnique );
+
     //Initialize mCameraViewQuadGeode
     CreateCameraViewQuadGeode();
 
@@ -291,7 +295,7 @@ void CameraEntity::CustomKeyboardMouseSelection(
 
         if( !intersector->containsIntersections() )
         {
-            mDistanceText->setText( std::string( "Distance: " ) );
+            mDistanceText->setText( std::string( "" ) );
 
             return;
         }
@@ -348,7 +352,7 @@ void CameraEntity::CreateCameraNode()
         ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "CameraProgram" ) ).get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    //mCameraDCS->setStateSet( stateset.get() );
+    mCameraDCS->setStateSet( stateset.get() );
 
     mCameraDCS->addChild( mCameraNode.get() );
 }

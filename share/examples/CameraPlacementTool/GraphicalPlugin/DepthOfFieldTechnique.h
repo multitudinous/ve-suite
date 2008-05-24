@@ -31,32 +31,34 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef PROJECTION_TECHNIQUE_H
-#define PROJECTION_TECHNIQUE_H
+#ifndef DEPTH_OF_FIELD_TECHNIQUE_H
+#define DEPTH_OF_FIELD_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Technique.h>
 
 namespace cpt
 {
-class ProjectionTechnique : public ves::xplorer::scenegraph::Technique
+class CameraEntity;
+
+class DepthOfFieldTechnique : public ves::xplorer::scenegraph::Technique
 {
 public:
-    ProjectionTechnique();
-    virtual ~ProjectionTechnique();
-
-    osg::Uniform* const GetAlpha() const;
-    osg::Uniform* const GetNearPlaneUniform() const;
-    osg::Uniform* const GetFarPlaneUniform() const;
+    DepthOfFieldTechnique( cpt::CameraEntity* cameraEntity );
+    virtual ~DepthOfFieldTechnique();
 
 protected:
     virtual void DefinePasses();
 
 private:
-    osg::ref_ptr< osg::Uniform > mAlpha;
-    osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
-    osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
+    void FirstPass();
+    void SecondPass();
+    void ThirdPass();
+    void BlurOverlay();
+
+    osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
+
 };
 } //end cpt
 
-#endif //PROJECTION_TECHNIQUE_H
+#endif //DEPTH_OF_FIELD_TECHNIQUE_H

@@ -33,8 +33,9 @@
 
 // --- My Includes --- //
 #include "ProjectionTechnique.h"
+#include "CameraEntity.h"
 
-// --- OSG Includes --- //
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/ResourceManager.h>
 
 using namespace cpt;
@@ -78,17 +79,17 @@ void ProjectionTechnique::DefinePasses()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* ProjectionTechnique::GetAlpha()
+osg::Uniform* const ProjectionTechnique::GetAlpha() const
 {
     return mAlpha.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* ProjectionTechnique::GetNearPlaneUniform()
+osg::Uniform* const ProjectionTechnique::GetNearPlaneUniform() const
 {
     return mNearPlaneUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* ProjectionTechnique::GetFarPlaneUniform()
+osg::Uniform* const ProjectionTechnique::GetFarPlaneUniform() const
 {
     return mFarPlaneUniform.get();
 }
