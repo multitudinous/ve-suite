@@ -35,22 +35,28 @@ Body_Unit_i::~Body_Unit_i (void)
 void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
 ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
-	  // Add your implementation here
-	  std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
-	  std::ostringstream strm;
-	  strm << activeId;
-	  //std::cout<<"ID NAME :"<<activeId<<std::endl;
-	  //xmlModelMap[ strm.str() ]->GetInput( "mText" )->
-		//  GetDataValuePair( "mText" )->GetData( mText );
+    // Add your implementation here
+    std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
+    std::ostringstream strm;
+    strm << activeId;
+    //std::cout<<"ID NAME :"<<activeId<<std::endl;
+    //xmlModelMap[ strm.str() ]->GetInput( "mText" )->
+    //  GetDataValuePair( "mText" )->GetData( mText );
+    const std::vector< CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
+    std::cout << "Active ID = " << activeId << " Num Inputs = " << inputsVec.size() << std::endl;
+    for( size_t i = 0; i < inputsVec.size(); ++i )
+    {
+        std::cout << "Input i = " << i << " = " << inputsVec.at( i )->GetCommandName() << std::endl;
+    }
 
-      ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-      command->SetCommandName( "SimpleNetworkTest" );
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "SimpleNetworkTest" );
 
-      xmlModelMap[ strm.str() ]->SetResult( command );
-	  //std::cout<<"THIS IS THE TEST: "<<mText<<std::endl;
-	  std::string msg;
-	  msg = UnitName_+" : Instant calculation, already finished\n";
-	  //executive_->SetModuleMessage(activeId,msg.c_str());
+    xmlModelMap[ strm.str() ]->SetResult( command );
+    //std::cout<<"THIS IS THE TEST: "<<mText<<std::endl;
+    std::string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    //executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::error (std::string msg)
