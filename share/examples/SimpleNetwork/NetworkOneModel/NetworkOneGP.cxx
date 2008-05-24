@@ -26,7 +26,7 @@ void NetworkOneGP::PreFrameUpdate()
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkOneGP::SetCurrentCommand( ves::open::xml::Command* command )
+void NetworkOneGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
 
 }

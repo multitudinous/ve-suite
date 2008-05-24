@@ -11,7 +11,7 @@ public:
 
 	virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
     virtual void CreateCustomVizFeature( int );
-    virtual void SetCurrentCommand(ves::open::xml::Command* command);
+    virtual void SetCurrentCommand(ves::open::xml::CommandPtr command);
     virtual void PreFrameUpdate( void );
 };
 

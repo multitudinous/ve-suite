@@ -26,7 +26,7 @@ void NetworkTwoGP::PreFrameUpdate()
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkTwoGP::SetCurrentCommand( ves::open::xml::Command* command )
+void NetworkTwoGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
 
 }

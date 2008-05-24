@@ -26,7 +26,7 @@ void NetworkThreeGP::PreFrameUpdate()
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-void NetworkThreeGP::SetCurrentCommand( ves::open::xml::Command* command )
+void NetworkThreeGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
 
 }
