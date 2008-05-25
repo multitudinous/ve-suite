@@ -271,7 +271,31 @@ public:
     void SetParentModel( ModelPtr parent );
 
     ///Get the parent model pointer of this class
+    ///\return The pointer to the parent model, may be null
     ModelPtr GetParentModel();
+    
+    ///Print operator to help debug veopen issues
+    friend std::ostream& operator<<( std::ostream& os, const ModelPtr model )
+    {
+        os << "***********(ves::open::xml::model::Model)***********" <<
+            << "Model Name = " << model->mModelName << std::endl
+            << "The Unit Name = " << model->mVendorUnit << std::endl
+            << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
+            << "GUID = " << model->mUuid << std::endl
+            << "Object Type = " << model->mObjectType << std::endl
+            << "Object Namespace = " << model->mObjectNamespace << std::endl
+            << "Number of Ports = " << model->mPorts.size() << std::endl
+            << "Number of Results = " << model->mResults.size() << std::endl
+            << "Number of Inputs = " << model->mInputs.size() << std::endl
+            << "Number of Info Packets = " 
+                <<  model->mInformationPackets.size() << std::endl
+            << "Icon Scale = " << model->mIconScale << std::endl
+            << "Icon Rotation = " << model->mIconRotation << std::endl
+            << "Icons Hidden Flag = " << model->mIconHiddenFlag << std::endl
+            << "Icon Mirror = " << model->mIconMirror << std::endl;
+            return os;
+    }
+    
 
 protected:
     ///Internally update the data.

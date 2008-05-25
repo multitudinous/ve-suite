@@ -206,22 +206,41 @@ Model& Model::operator=( const Model& input )
     }
     return *this;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+/*std::ostream& operator<<( std::ostream& os, const Model& model )
+{
+    os << "Model Name = " << model.mModelName << std::endl
+        << "The Unit Name = " << model->mVendorUnit << std::endl
+        << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
+        << "GUID = " << model->mUuid << std::endl
+        << "Object Type = " << model->mObjectType << std::endl
+        << "Object Namespace = " << model->mObjectNamespace << std::endl
+        << "Number of Ports = " << model->mPorts.size() << std::endl
+        << "Number of Results = " << model->mResults.size() << std::endl
+        << "Number of Inputs = " << model->mInputs.size() << std::endl
+        << "Number of Info Packets = " <<  model->mInformationPackets.size() << std::endl
+        << "Icon Scale = " << model->mIconScale << std::endl
+        << "Icon Rotation = " << model->mIconRotation << std::endl
+        << "Icons Hidden Flag = " << model->mIconHiddenFlag << std::endl
+        << "Icon Mirror = " << model->mIconMirror << std::endl;
+    return os;
+}*/
+////////////////////////////////////////////////////////////////////////////////
 void Model::SetModelName( const std::string& name )
 {
     mModelName = name;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::SetModelID( unsigned int id )
 {
     mUniqueModelID = id;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::SetIconFilename( const std::string& filename )
 {
     mIconFileName = filename;
 }
-////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Model::SetObjectFromXMLData( DOMNode* element )
 {
     DOMElement* currentElement = 0;

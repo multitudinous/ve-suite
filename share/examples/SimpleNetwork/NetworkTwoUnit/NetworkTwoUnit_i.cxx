@@ -53,7 +53,7 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
     command->SetCommandName( "SimpleNetworkTest" );
 
     xmlModelMap[ strm.str() ]->SetResult( command );
-    //std::cout<<"THIS IS THE TEST: "<<mText<<std::endl;
+
     std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(activeId,msg.c_str());

@@ -23,7 +23,8 @@ XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 ///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
-  : UnitWrapper(exec,name)
+    : 
+    UnitWrapper(exec,name)
 {
 	UnitName_ = name;
 }
@@ -35,23 +36,25 @@ Body_Unit_i::~Body_Unit_i (void)
 void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
   ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
-	  // Add your implementation here
-	  std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
-	  std::ostringstream strm;
-	  strm << activeId;
-      const std::vector< CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
-      std::cout << "Active ID = " << activeId << " Num Inputs = " << inputsVec.size() << std::endl;
-      for( size_t i = 0; i < inputsVec.size(); ++i )
-      {
-          std::cout << "Input i = " << i << " = " << inputsVec.at( i )->GetCommandName() << std::endl;
-      }
-	  //std::cout<<"ID NAME :"<<activeId<<std::endl;
-	  xmlModelMap[ strm.str() ]->GetInput( "mText" )->
-		  GetDataValuePair( "mText" )->GetData( mText );
-	  std::cout<<"THIS IS THE TEST: "<<mText<<std::endl;
-	  std::string msg;
-	  msg = UnitName_+" : Instant calculation, already finished\n";
-	  //executive_->SetModuleMessage(activeId,msg.c_str());
+    // Add your implementation here
+    std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
+    std::ostringstream strm;
+    strm << activeId;
+    const std::vector< CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
+    std::cout << "Active ID = " << activeId << std::endl;
+    std::cout << " model " << std::endl << xmlModelMap[ strm.str() ] << std::endl;
+    for( size_t i = 0; i < inputsVec.size(); ++i )
+    {
+        std::cout << "Input i = " << i << " = " 
+            << inputsVec.at( i )->GetCommandName() << std::endl;
+    }
+
+    xmlModelMap[ strm.str() ]->GetInput( "mText" )->
+        GetDataValuePair( "mText" )->GetData( mText );
+    std::cout << "Input mText : "<< mText << std::endl;
+    std::string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    //executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::error (std::string msg)
