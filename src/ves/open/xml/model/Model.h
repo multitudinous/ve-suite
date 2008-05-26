@@ -277,7 +277,7 @@ public:
     ///Print operator to help debug veopen issues
     friend std::ostream& operator<<( std::ostream& os, const ModelPtr model )
     {
-        os << "***********(ves::open::xml::model::Model)***********" <<
+        os << "***********(ves::open::xml::model::Model)***********"
             << "Model Name = " << model->mModelName << std::endl
             << "The Unit Name = " << model->mVendorUnit << std::endl
             << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
