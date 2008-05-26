@@ -39,24 +39,16 @@
 
 namespace cpt
 {
-class CameraEntity;
-
 class DepthOfFieldTechnique : public ves::xplorer::scenegraph::Technique
 {
 public:
-    DepthOfFieldTechnique( cpt::CameraEntity* cameraEntity );
+    DepthOfFieldTechnique();
     virtual ~DepthOfFieldTechnique();
 
 protected:
     virtual void DefinePasses();
 
 private:
-    void FirstPass();
-    void SecondPass();
-    void ThirdPass();
-    void BlurOverlay();
-
-    osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
 
 };
 } //end cpt

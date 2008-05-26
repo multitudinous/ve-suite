@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "CameraEntity.h"
 #include "CameraEntityCallback.h"
+#include "DepthOfFieldTechnique.h"
 #include "ProjectionTechnique.h"
 
 // --- VE-Suite Includes --- //
@@ -52,6 +53,8 @@
 #include <osg/Geometry>
 #include <osg/Texture2D>
 #include <osg/TexGenNode>
+//Needed for FBO GL extensions
+#include <osg/FrameBufferObject>
 
 #include <osgText/Text>
 
@@ -68,24 +71,25 @@ using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
 CameraEntity::CameraEntity()
-:
-osg::Camera(),
-mTexGenNode( 0 ),
-mProjectionTechnique( 0 ),
-mCameraEntityCallback( 0 ),
-mHeadsUpDisplay( 0 ),
-mResourceManager( 0 ),
-mPluginDCS( 0 ),
-mCameraDCS( 0 ),
-mCameraNode( 0 ),
-mFrustumGeode( 0 ),
-mFrustumGeometry( 0 ),
-mFrustumVertices( 0 ),
-mCameraViewQuadDCS( 0 ),
-mCameraViewQuadGeode( 0 ),
-mCameraViewQuadGeometry( 0 ),
-mCameraViewQuadVertices( 0 ),
-mDistanceText( 0 )
+    :
+    osg::Camera(),
+    mTexGenNode( 0 ),
+    mDepthOfFieldTechnique( 0 ),
+    mProjectionTechnique( 0 ),
+    mCameraEntityCallback( 0 ),
+    mHeadsUpDisplay( 0 ),
+    mResourceManager( 0 ),
+    mPluginDCS( 0 ),
+    mCameraDCS( 0 ),
+    mCameraNode( 0 ),
+    mFrustumGeode( 0 ),
+    mFrustumGeometry( 0 ),
+    mFrustumVertices( 0 ),
+    mCameraViewQuadDCS( 0 ),
+    mCameraViewQuadGeode( 0 ),
+    mCameraViewQuadGeometry( 0 ),
+    mCameraViewQuadVertices( 0 ),
+    mDistanceText( 0 )
 {
     ;
 }
@@ -94,24 +98,25 @@ CameraEntity::CameraEntity(
     ves::xplorer::scenegraph::DCS* pluginDCS,
     ves::xplorer::HeadsUpDisplay* headsUpDisplay,
     ves::xplorer::scenegraph::ResourceManager* resourceManager )
-:
-osg::Camera(),
-mTexGenNode( 0 ),
-mProjectionTechnique( 0 ),
-mCameraEntityCallback( 0 ),
-mHeadsUpDisplay( headsUpDisplay ),
-mResourceManager( resourceManager ),
-mPluginDCS( pluginDCS ),
-mCameraDCS( 0 ),
-mCameraNode( 0 ),
-mFrustumGeode( 0 ),
-mFrustumGeometry( 0 ),
-mFrustumVertices( 0 ),
-mCameraViewQuadDCS( 0 ),
-mCameraViewQuadGeode( 0 ),
-mCameraViewQuadGeometry( 0 ),
-mCameraViewQuadVertices( 0 ),
-mDistanceText( 0 )
+    :
+    osg::Camera(),
+    mTexGenNode( 0 ),
+    mDepthOfFieldTechnique( 0 ),
+    mProjectionTechnique( 0 ),
+    mCameraEntityCallback( 0 ),
+    mHeadsUpDisplay( headsUpDisplay ),
+    mResourceManager( resourceManager ),
+    mPluginDCS( pluginDCS ),
+    mCameraDCS( 0 ),
+    mCameraNode( 0 ),
+    mFrustumGeode( 0 ),
+    mFrustumGeometry( 0 ),
+    mFrustumVertices( 0 ),
+    mCameraViewQuadDCS( 0 ),
+    mCameraViewQuadGeode( 0 ),
+    mCameraViewQuadGeometry( 0 ),
+    mCameraViewQuadVertices( 0 ),
+    mDistanceText( 0 )
 {
     Initialize();
 }
@@ -121,6 +126,7 @@ CameraEntity::CameraEntity( const CameraEntity& cameraEntity,
     :
     osg::Camera( cameraEntity, copyop ),
     mTexGenNode( 0 ),
+    mDepthOfFieldTechnique( 0 ),
     mProjectionTechnique( 0 ),
     mCameraEntityCallback( 0 ),
     mHeadsUpDisplay( 0 ),
@@ -147,25 +153,41 @@ CameraEntity::~CameraEntity()
 {
     mHeadsUpDisplay->GetCamera()->removeChild( mCameraViewQuadDCS.get() );
 
-    mPluginDCS->SetTechnique( std::string( "Default" ) );
-    mPluginDCS->RemoveTechnique( std::string( "Projection" ) );
+    mCameraViewQuadDCS->SetTechnique( "Default" );
+    mCameraViewQuadDCS->RemoveTechnique( "DepthOfField" );
+    delete mDepthOfFieldTechnique;
+
+    mPluginDCS->SetTechnique( "Default" );
+    mPluginDCS->RemoveTechnique( "Projection" );
     delete mProjectionTechnique;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::Initialize()
 {
     //Initialize this
-    setRenderOrder( osg::Camera::POST_RENDER );
+    setRenderOrder( osg::Camera::PRE_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     setViewport( 0, 0, 512, 512 );
-    //Attach the texture and use it as the color buffer
-    attach( osg::Camera::COLOR_BUFFER,
-          ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-          < osg::Texture2D, osg::ref_ptr >( "CameraViewTexture" ) ).get() );
+
+    //Set the internal format for the first render target
+    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
+            GL_DEPTH_COMPONENT32 );
+    //Set the internal format for the second render target
+    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 + 1 ),
+            GL_DEPTH_COMPONENT32 );
+
+    //Attach the camera view texture and use it as the first render target
+    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
+            ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+            < osg::Texture2D, osg::ref_ptr >( "CameraViewTexture" ) ).get() );
+    //Attach the depth texture and use it as the second render target
+    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 + 1 ),
+            ( ves::xplorer::scenegraph::ResourceManager::instance()->get
+            < osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
     //Add the subgraph to render
     addChild( mPluginDCS.get() );
@@ -186,18 +208,6 @@ void CameraEntity::Initialize()
     mTexGenNode->setTextureUnit( 0 );
     mPluginDCS->addChild( mTexGenNode.get() );
 
-    //Initialize mProjectionTechnique
-    mProjectionTechnique = new cpt::ProjectionTechnique();
-    mProjectionTechnique->GetAlpha()->set(
-        static_cast< float >( 0.3 ) );
-    mProjectionTechnique->GetNearPlaneUniform()->set(
-        static_cast< float >( 5.0 ) );
-    mProjectionTechnique->GetFarPlaneUniform()->set(
-        static_cast< float >( 10.0 ) );
-    mPluginDCS->AddTechnique(
-        std::string( "Projection" ), mProjectionTechnique );
-    mPluginDCS->SetTechnique( "Projection" );
-
     //Initialize mCameraEntityCallback
     mCameraEntityCallback = new cpt::CameraEntityCallback();
     setUpdateCallback( mCameraEntityCallback.get() );
@@ -217,10 +227,24 @@ void CameraEntity::Initialize()
     mCameraViewQuadDCS->setScale( osg::Vec3( 200, 200, 1 ) );
     mHeadsUpDisplay->GetCamera()->addChild( mCameraViewQuadDCS.get() );
 
-    //mCameraViewQuadDCS->AddTechnique( "DepthOfField", mDepthOfFieldTechnique );
-
     //Initialize mCameraViewQuadGeode
     CreateCameraViewQuadGeode();
+
+    //Initialize mProjectionTechnique
+    mDepthOfFieldTechnique = new cpt::DepthOfFieldTechnique();
+    mCameraViewQuadDCS->AddTechnique( "DepthOfField", mDepthOfFieldTechnique );
+    mCameraViewQuadDCS->SetTechnique( "DepthOfField" );
+
+    //Initialize mProjectionTechnique
+    mProjectionTechnique = new cpt::ProjectionTechnique();
+    mProjectionTechnique->GetAlpha()->set(
+        static_cast< float >( 0.3 ) );
+    mProjectionTechnique->GetNearPlaneUniform()->set(
+        static_cast< float >( 5.0 ) );
+    mProjectionTechnique->GetFarPlaneUniform()->set(
+        static_cast< float >( 10.0 ) );
+    mPluginDCS->AddTechnique( "Projection", mProjectionTechnique );
+    mPluginDCS->SetTechnique( "Projection" );
 
     SetNamesAndDescriptions();
 
@@ -446,28 +470,12 @@ void CameraEntity::CreateCameraViewQuadGeode()
     (*quadTexCoords)[ 1 ].set( 1, 0 );
     (*quadTexCoords)[ 2 ].set( 1, 1 );
     (*quadTexCoords)[ 3 ].set( 0, 1 );
-    mCameraViewQuadGeometry->setTexCoordArray( 1, quadTexCoords.get() );
+    mCameraViewQuadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
 
     mCameraViewQuadGeometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
 
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
-    stateset->setTextureAttributeAndModes( 1,
-        ( mResourceManager->get< osg::Texture2D, osg::ref_ptr >
-        ( "CameraViewTexture" ) ).get(), osg::StateAttribute::ON );
-    stateset->setAttribute(
-        ( mResourceManager->get
-        < osg::Program, osg::ref_ptr >( "CameraViewProgram" ) ).get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setMode(
-        GL_LIGHTING,
-        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-
-    osg::ref_ptr< osg::Uniform > baseMapUniform =
-        new osg::Uniform( "baseMap", 1 );
-    stateset->addUniform( baseMapUniform.get() );
-    mCameraViewQuadGeometry->setStateSet( stateset.get() );
+    //mCameraViewQuadGeometry->setStateSet( stateset.get() );
     mCameraViewQuadGeode->addDrawable( mCameraViewQuadGeometry.get() );
 
     mDistanceText = new osgText::Text();

@@ -72,6 +72,7 @@ class Text;
 
 namespace cpt
 {
+class DepthOfFieldTechnique;
 class ProjectionTechnique;
 class CameraEntityCallback;
 
@@ -130,6 +131,7 @@ private:
     //Used to generate texture coordinates for camera projection
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
+    cpt::DepthOfFieldTechnique* mDepthOfFieldTechnique;
     cpt::ProjectionTechnique* mProjectionTechnique;
 
     //A callback to update CameraEntity relative to its DCS

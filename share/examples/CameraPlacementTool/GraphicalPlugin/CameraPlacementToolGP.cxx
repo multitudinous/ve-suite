@@ -183,20 +183,55 @@ void CameraPlacementToolGP::SetCurrentCommand(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::InitializeResources()
 {
-    //Create the texture that will be used for the FBO
-    //glTexImage2D( target, level, internal format, width, height, border, format, type, *pixels );
-    //glTexImage2D( GL_TEXTURE_2D, 0, GL_RGB16F_ARB,  width, height, 0, GL_RGB, GL_FLOAT, NULL );
-    osg::ref_ptr< osg::Texture2D > quadTexture = new osg::Texture2D();
-    quadTexture->setInternalFormat( GL_RGB16F_ARB );
-    quadTexture->setTextureSize( 512, 512 );
-    quadTexture->setSourceFormat( GL_RGBA );
-    quadTexture->setSourceType( GL_FLOAT );
-    quadTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    quadTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    quadTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    quadTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-    boost::any anyVal = quadTexture;
-    mResourceManager->add( std::string( "CameraViewTexture" ), anyVal );
+    /*
+    glTexImage2D( target,
+                  level,
+                  internal format,
+                  width,
+                  height,
+                  border,
+                  format,
+                  type,
+                  *pixels );
+    */
+
+    //Create the texture used for the first render target of the camera FBO
+    {
+        osg::ref_ptr< osg::Texture2D > cameraViewTexture = new osg::Texture2D();
+        cameraViewTexture->setInternalFormat( GL_RGB16F_ARB );
+        cameraViewTexture->setTextureSize( 512, 512 );
+        cameraViewTexture->setSourceFormat( GL_RGBA );
+        cameraViewTexture->setSourceType( GL_FLOAT );
+        cameraViewTexture->setFilter( osg::Texture2D::MIN_FILTER,
+                                      osg::Texture2D::LINEAR );
+        cameraViewTexture->setFilter( osg::Texture2D::MAG_FILTER,
+                                      osg::Texture2D::LINEAR );
+        cameraViewTexture->setWrap( osg::Texture2D::WRAP_S,
+                                    osg::Texture2D::CLAMP_TO_EDGE );
+        cameraViewTexture->setWrap( osg::Texture2D::WRAP_T,
+                                    osg::Texture2D::CLAMP_TO_EDGE );
+        boost::any anyVal = cameraViewTexture;
+        mResourceManager->add( std::string( "CameraViewTexture" ), anyVal );
+    }
+
+    //Create the texture used for the second render target of the camera FBO
+    {
+        osg::ref_ptr< osg::Texture2D > depthTexture = new osg::Texture2D();
+        depthTexture->setInternalFormat( GL_RGB16F_ARB );
+        depthTexture->setTextureSize( 512, 512 );
+        depthTexture->setSourceFormat( GL_RGBA );
+        depthTexture->setSourceType( GL_FLOAT );
+        depthTexture->setFilter( osg::Texture2D::MIN_FILTER,
+                                 osg::Texture2D::LINEAR );
+        depthTexture->setFilter( osg::Texture2D::MAG_FILTER,
+                                 osg::Texture2D::LINEAR );
+        depthTexture->setWrap( osg::Texture2D::WRAP_S,
+                               osg::Texture2D::CLAMP_TO_EDGE );
+        depthTexture->setWrap( osg::Texture2D::WRAP_T,
+                               osg::Texture2D::CLAMP_TO_EDGE );
+        boost::any anyVal = depthTexture;
+        mResourceManager->add( std::string( "DepthTexture" ), anyVal );
+    }
 
     //Set up the program for mCameraNode
     {
@@ -326,19 +361,68 @@ void CameraPlacementToolGP::InitializeResources()
         std::string quadVertexSource =
         "void main() \n"
         "{ \n"
-            "gl_Position = ftransform(); \n"
+	        "gl_Position = ftransform(); \n"
 
-            "gl_TexCoord[ 1 ].st = gl_MultiTexCoord1.st; \n"
+	        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+	        //"gl_TexCoord[ 1 ] = gl_MultiTexCoord1; \n"
         "} \n";
 
         std::string quadFragmentSource =
-        "uniform sampler2D baseMap; \n"
+        //"uniform int Width; \n"
+        //"uniform int Height; \n"
+
+        //"uniform float maxCoC; \n"
+
+        "uniform sampler2D Tex0; \n"
+        "uniform sampler2D Tex1; \n"
 
         "void main() \n"
         "{ \n"
-            "vec4 color = texture2D( baseMap, gl_TexCoord[ 1 ].st ); \n"
 
-            "gl_FragColor = color; \n"
+            "int width = 512; \n"
+            "int height = 512; \n"
+            "float maxCoC = 5.0; \n"
+
+            "vec4 colorSum, tapColor; \n"
+            "vec2 centerDepthBlur, tapCoord, tapDepthBlur; \n"
+	        "float totalContribution, tapContribution; \n"
+
+	        //Poissonian disc distribution
+	        "float dx = 1.0 / float( width ); \n"
+	        "float dy = 1.0 / float( height ); \n"
+
+	        "vec2 filterTaps[ 12 ]; \n"
+	        "filterTaps[ 0 ]  = vec2( -0.326212 * dx, -0.405810 * dy ); \n"
+	        "filterTaps[ 1 ]  = vec2( -0.840144 * dx, -0.073580 * dy ); \n"
+	        "filterTaps[ 2 ]  = vec2( -0.695914 * dx,  0.457137 * dy ); \n"
+	        "filterTaps[ 3 ]  = vec2( -0.203345 * dx,  0.620716 * dy ); \n"
+	        "filterTaps[ 4 ]  = vec2(  0.962340 * dx, -0.194983 * dy ); \n"
+	        "filterTaps[ 5 ]  = vec2(  0.473434 * dx, -0.480026 * dy ); \n"
+	        "filterTaps[ 6 ]  = vec2(  0.519456 * dx,  0.767022 * dy ); \n"
+	        "filterTaps[ 7 ]  = vec2(  0.185461 * dx, -0.893124 * dy ); \n"
+	        "filterTaps[ 8 ]  = vec2(  0.507431 * dx,  0.064425 * dy ); \n"
+	        "filterTaps[ 9 ]  = vec2(  0.896420 * dx,  0.412458 * dy ); \n"
+	        "filterTaps[ 10 ] = vec2( -0.321940 * dx, -0.932615 * dy ); \n"
+	        "filterTaps[ 11 ] = vec2( -0.791559 * dx, -0.597710 * dy ); \n"
+
+	        //Starting with center sample
+	        "colorSum = texture2D( Tex0, gl_TexCoord[ 0 ].st ); \n"
+	        "totalContribution = 1.0; \n"
+	        "centerDepthBlur = texture2D( Tex1, gl_TexCoord[ 0 ].st ).xy; \n"
+
+	        "float sizeCoC = centerDepthBlur.y * maxCoC; \n"
+
+	        "for( int i = 0; i < 12; ++i ) \n"
+            "{ \n"
+		        "tapCoord = gl_TexCoord[ 0 ].st + filterTaps[ i ] * sizeCoC; \n"
+		        "tapColor = texture2D( Tex0, tapCoord ); \n"
+		        "tapDepthBlur = texture2D( Tex1, tapCoord ).xy; \n"
+		        "tapContribution = ( tapDepthBlur.x > centerDepthBlur.x ) ? 1.0 : tapDepthBlur.y; \n"
+		        "colorSum += tapColor * tapContribution; \n"
+		        "totalContribution += tapContribution; \n"
+	        "} \n"
+
+	        "gl_FragColor = colorSum / totalContribution; \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > quadVertexShader = new osg::Shader();
@@ -356,20 +440,58 @@ void CameraPlacementToolGP::InitializeResources()
         mResourceManager->add( std::string( "CameraViewProgram" ), anyVal );
     }
 
+    {
+        std::string DoFRenderBlurVertexSource =
+        "void main() \n"
+        "{ \n"
+	        "gl_Position = ftransform(); \n"
+
+	        "gl_TexCoord[ 0 ] = gl_MultiTexCoord0; \n"
+        "} \n";
+
+        std::string DoFRenderBlurFragmentSource =
+        "uniform sampler2D Tex1; \n"
+
+        "void main() \n"
+        "{ \n"
+	        "float blurAmount = texture2D( Tex1, gl_TexCoord[ 0 ].st ).y; \n"
+	        "gl_FragColor = vec4( 0.0, blurAmount, 0.0, 1.0 ); \n"
+        "} \n";
+
+        osg::ref_ptr< osg::Shader > renderBlurVertexShader = new osg::Shader();
+        renderBlurVertexShader->setType( osg::Shader::VERTEX );
+        renderBlurVertexShader->setShaderSource( DoFRenderBlurVertexSource );
+
+        osg::ref_ptr< osg::Shader > renderBlurFragmentShader = new osg::Shader();
+        renderBlurFragmentShader->setType( osg::Shader::FRAGMENT );
+        renderBlurFragmentShader->setShaderSource( DoFRenderBlurFragmentSource );
+
+        osg::ref_ptr< osg::Program > renderBlurProgram = new osg::Program();
+        renderBlurProgram->addShader( renderBlurVertexShader.get() );
+        renderBlurProgram->addShader( renderBlurFragmentShader.get() );
+        boost::any anyVal = renderBlurProgram;
+        mResourceManager->add( std::string( "RenderBlurProgram" ), anyVal );
+    }
+
     //Set up the camera projection effect
     {
         std::string projectionVertexSource =
-        "varying vec4 eyePos; \n"
+        "varying float fDepth; \n"
+
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
+
+        "varying vec4 eyePos; \n"
 
         "void main() \n"
         "{ \n"
             "gl_Position = ftransform(); \n"
 
-            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
             "lightPos = gl_LightSource[ 0 ].position.xyz; \n"
             "normal = vec3( gl_NormalMatrix * gl_Normal ); \n"
+            "eyePos = gl_ModelViewMatrix * gl_Vertex; \n"
+
+            "fDepth = -eyePos.z; \n"
 
             "gl_FrontColor = gl_Color; \n"
 
@@ -383,9 +505,16 @@ void CameraPlacementToolGP::InitializeResources()
         "uniform float nearPlane; \n"
         "uniform float farPlane; \n"
 
-        "varying vec4 eyePos; \n"
+        //"uniform float focalLen; \n"
+        //"uniform float Zfocus; \n"
+        //"uniform float maxCoC; \n"
+
+        "varying float fDepth; \n"
+
         "varying vec3 lightPos; \n"
         "varying vec3 normal; \n"
+
+        "varying vec4 eyePos; \n"
 
         "void main() \n"
         "{ \n"
@@ -405,21 +534,36 @@ void CameraPlacementToolGP::InitializeResources()
                                  "gl_Color.rgb * pow( RDotL, 15.0 ); \n"
 
             "vec2 projectionUV = gl_TexCoord[ 0 ].st / gl_TexCoord[ 0 ].q; \n"
-            "vec4 color = \n"
+            "vec4 color0 = \n"
                 "vec4( totalAmbient + totalDiffuse + totalSpecular, alpha ); \n"
 
+            "vec4 color1 = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
+
             //If in frustum
-            "if( projectionUV.s >= 0.0 && \n"
-                "projectionUV.t >= 0.0 && \n"
-                "projectionUV.s <= 1.0 && \n"
-                "projectionUV.t <= 1.0 && \n"
+            "if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 && \n"
+                "projectionUV.t >= 0.0 && projectionUV.t <= 1.0 && \n"
                 "gl_TexCoord[ 0 ].q >= nearPlane && \n"
                 "gl_TexCoord[ 0 ].q <= farPlane ) \n"
             "{ \n"
-                "color.a = 1.0; \n"
+                "color0.a = 1.0; \n"
+                "fDepth = gl_TexCoord[ 0 ].q; \n"
+
+                "float Dlens = 1.0; \n"
+                "float scale  = 1.0; \n"
+                "float sceneRange = farPlane; \n"
+                "float focalLen = 10.0; \n"
+                "float Zfocus = 11.0; \n"
+                "float maxCoC = 5.0; \n"
+
+                "float pixCoC = abs( Dlens * focalLen * ( Zfocus - fDepth ) / \n"
+                                       "( Zfocus * ( fDepth - focalLen ) ) ); \n"
+                "float blur = clamp( pixCoC * scale / maxCoC, 0.0, 1.0 ); \n"
+
+                "color1 = vec4( -fDepth / sceneRange, blur, 0.0, 1.0 ); \n"
             "} \n"
 
-            "gl_FragColor = color; \n"
+            "gl_FragData[ 0 ] = color0; \n"
+            "gl_FragData[ 1 ] = color1; \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > projectionVertexShader = new osg::Shader();
