@@ -14,9 +14,9 @@ END_EVENT_TABLE()
 NetworkThreeUIDialog
 ::NetworkThreeUIDialog( wxWindow* parent, int id, 
 						 ves::conductor::util::CORBAServiceList* service,
-						 std::string* mText)
+						 std::string* mTextThree)
 : UIDialog( (wxWindow*) parent, id, _("NetworkThree") ),
-		   p_mText( mText )
+		   p_mTextThree( mTextThree )
 {
 	BuildPage();
 
@@ -38,9 +38,9 @@ void NetworkThreeUIDialog::BuildPage()
 		new wxStaticBoxSizer( networkThreeStaticBox, wxVERTICAL );
     mainSizer->Add( networkThreeSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-    mTextCtrl = new wxTextCtrl( this, ID_TEXTCTRL, _T(""), 
+    mTextThreeCtrl = new wxTextCtrl( this, ID_TEXTCTRL, _T(""), 
 		wxDefaultPosition, wxDefaultSize, 0 );
-    networkThreeSizer->Add( mTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    networkThreeSizer->Add( mTextThreeCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	mUpdateButton = new wxButton( this, wxID_OK, _("Update"), 
 		wxDefaultPosition, wxDefaultSize, 0 );
@@ -64,6 +64,6 @@ bool NetworkThreeUIDialog::TransferDataToWindow()
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkThreeUIDialog::SetText( wxCommandEvent &event )
 {		
-	(*p_mText) = ConvertUnicode( mTextCtrl->GetValue() );
+	(*p_mTextThree) = ConvertUnicode( mTextThreeCtrl->GetValue() );
 	event.Skip();
 }

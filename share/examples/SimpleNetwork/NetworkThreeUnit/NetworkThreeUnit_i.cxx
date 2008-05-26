@@ -40,9 +40,9 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
 	  std::ostringstream strm;
 	  strm << activeId;
 	  //std::cout<<"ID NAME :"<<activeId<<std::endl;
-	  xmlModelMap[ strm.str() ]->GetInput( "mText" )->
-		  GetDataValuePair( "mText" )->GetData( mText );
-	  //std::cout<<"THIS IS THE TEST: "<<mText<<std::endl;
+	  xmlModelMap[ strm.str() ]->GetInput( "mTextThree" )->
+		  GetDataValuePair( "mTextThree" )->GetData( mTextThree );
+	  //std::cout<<"THIS IS THE TEST: "<<mTextThree<<std::endl;
 	  std::string msg;
 	  msg = UnitName_+" : Instant calculation, already finished\n";
 	  //executive_->SetModuleMessage(activeId,msg.c_str());

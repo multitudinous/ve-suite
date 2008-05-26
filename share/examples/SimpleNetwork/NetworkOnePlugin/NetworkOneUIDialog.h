@@ -22,10 +22,10 @@ class NetworkOneUIDialog : public ves::conductor::UIDialog
 public:
 	NetworkOneUIDialog( wxWindow* parent, int id, 
 		ves::conductor::util::CORBAServiceList* service,
-		std::string* mText);
+		std::string* mTextOne);
 	virtual ~NetworkOneUIDialog();
 
-	std::string* p_mText;
+	std::string* p_mTextOne;
 
 	enum NETWORK_ONE_IDS
 	{
@@ -39,7 +39,7 @@ public:
 
 	void SetText( wxCommandEvent& event );
 
-	wxTextCtrl* mTextCtrl;
+	wxTextCtrl* mTextOneCtrl;
 	wxButton* mUpdateButton;
 
 	ves::conductor::util::CORBAServiceList* mServiceList;

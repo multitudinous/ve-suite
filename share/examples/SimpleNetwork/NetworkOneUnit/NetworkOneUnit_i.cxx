@@ -49,9 +49,11 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
             << inputsVec.at( i )->GetCommandName() << std::endl;
     }
 
-    xmlModelMap[ strm.str() ]->GetInput( "mText" )->
-        GetDataValuePair( "mText" )->GetData( mText );
-    std::cout << "Input mText : "<< mText << std::endl;
+	CommandPtr tempCommand( new Command() );
+	tempCommand = xmlModelMap[ strm.str() ]->GetResult( "mTextTwo" );
+    xmlModelMap[ strm.str() ]->GetInput( "mTextOne" )->
+        GetDataValuePair( "mTextOne" )->GetData( mTextOne );
+    std::cout << "Input mTextOne : "<< mTextOne << std::endl;
     std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(activeId,msg.c_str());

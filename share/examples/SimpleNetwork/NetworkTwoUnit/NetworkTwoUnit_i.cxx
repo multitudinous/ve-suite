@@ -8,7 +8,6 @@
 #include <ves/open/xml/model/ModelCreator.h>
 
 #include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/XMLObjectFactory.h>
@@ -40,8 +39,8 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
     std::ostringstream strm;
     strm << activeId;
     //std::cout<<"ID NAME :"<<activeId<<std::endl;
-    //xmlModelMap[ strm.str() ]->GetInput( "mText" )->
-    //  GetDataValuePair( "mText" )->GetData( mText );
+    xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" )->
+		GetDataValuePair( "mTextTwo" )->GetData( mTextTwo );
     const std::vector< CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
     std::cout << "Active ID = " << activeId << " Num Inputs = " << inputsVec.size() << std::endl;
     for( size_t i = 0; i < inputsVec.size(); ++i )
@@ -49,8 +48,14 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
         std::cout << "Input i = " << i << " = " << inputsVec.at( i )->GetCommandName() << std::endl;
     }
 
+	//DataValuePairPtr dvp( new DataValuePair() );
+	//dvp->SetDataString( mTextTwo );
+	//dvp->SetData( "STRING TEST", mTextTwo );
+
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-    command->SetCommandName( "SimpleNetworkTest" );
+	command = xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" );
+    //command->SetCommandName( "SimpleNetworkTest" );
+	//command->AddDataValuePair( dvp );
 
     xmlModelMap[ strm.str() ]->SetResult( command );
 

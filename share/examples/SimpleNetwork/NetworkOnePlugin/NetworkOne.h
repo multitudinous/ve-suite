@@ -31,7 +31,7 @@ public:
     virtual int GetNumOports();
     virtual void GetOPorts( POLY& ports );
 
-	std::string mText;
+	std::string mTextOne;
 
 protected:
 

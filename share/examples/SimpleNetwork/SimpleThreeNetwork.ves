@@ -56,8 +56,8 @@
         <portLocation xLocation="182" yLocation="98"/>
         <portType type="xs:string"></portType>
       </ports>
-      <inputs commandName="mText">
-        <parameter dataName="mText" id="f88d37d3-1267-2b42-90d1-f1e8ad281b8b">
+      <inputs commandName="mTextOne">
+        <parameter dataName="mTextOne" id="f88d37d3-1267-2b42-90d1-f1e8ad281b8b">
           <dataValue type="xs:string"></dataValue>
         </parameter>
       </inputs>
@@ -79,8 +79,8 @@
         <portLocation xLocation="185" yLocation="103"/>
         <portType type="xs:string"></portType>
       </ports>
-      <inputs commandName="mText">
-        <parameter dataName="mText" id="f879753d-6efa-4446-9c16-171d57c65228">
+      <inputs commandName="mTextTwo">
+        <parameter dataName="mTextTwo" id="f879753d-6efa-4446-9c16-171d57c65228">
           <dataValue type="xs:string"></dataValue>
         </parameter>
       </inputs>
@@ -95,8 +95,8 @@
         <portLocation xLocation="0" yLocation="96"/>
         <portType type="xs:string"></portType>
       </ports>
-      <inputs commandName="mText">
-        <parameter dataName="mText" id="ffeba77f-14fb-ee4c-9444-b92f07bf9196">
+      <inputs commandName="mTextThree">
+        <parameter dataName="mTextThree" id="ffeba77f-14fb-ee4c-9444-b92f07bf9196">
           <dataValue type="xs:string"></dataValue>
         </parameter>
       </inputs>

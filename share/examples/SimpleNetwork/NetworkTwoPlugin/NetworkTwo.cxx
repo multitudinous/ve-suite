@@ -11,7 +11,7 @@ NetworkTwo::NetworkTwo()
 {
 	name = wxT("NetworkTwo");
 	
-	RegistVar("mText", &mText);
+	RegistVar("mTextTwo", &mTextTwo);
 
 	wxImage my_img( network_xpm );
 	icon_w = my_img.GetWidth();
@@ -78,7 +78,7 @@ ves::conductor::UIDialog* NetworkTwo::UI(wxWindow* parent)
 	}
   
 	dlg = new NetworkTwoUIDialog(parent, -1, serviceList,
-		&mText);
+		&mTextTwo);
       
 	dlg->CenterOnScreen(wxBOTH);
 

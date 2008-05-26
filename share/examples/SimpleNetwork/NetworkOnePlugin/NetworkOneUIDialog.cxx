@@ -14,9 +14,9 @@ END_EVENT_TABLE()
 NetworkOneUIDialog
 ::NetworkOneUIDialog( wxWindow* parent, int id, 
 						 ves::conductor::util::CORBAServiceList* service,
-						 std::string* mText)
+						 std::string* mTextOne)
 : UIDialog( (wxWindow*) parent, id, _("NetworkOne") ),
-		   p_mText( mText )
+		   p_mTextOne( mTextOne )
 {
 	BuildPage();
 
@@ -38,9 +38,9 @@ void NetworkOneUIDialog::BuildPage()
 		new wxStaticBoxSizer( networkOneStaticBox, wxVERTICAL );
     mainSizer->Add( networkOneSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-    mTextCtrl = new wxTextCtrl( this, ID_TEXTCTRL, _T(""), 
+    mTextOneCtrl = new wxTextCtrl( this, ID_TEXTCTRL, _T(""), 
 		wxDefaultPosition, wxDefaultSize, 0 );
-    networkOneSizer->Add( mTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    networkOneSizer->Add( mTextOneCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	mUpdateButton = new wxButton( this, wxID_OK, _("Update"), 
 		wxDefaultPosition, wxDefaultSize, 0 );
@@ -64,6 +64,6 @@ bool NetworkOneUIDialog::TransferDataToWindow()
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkOneUIDialog::SetText( wxCommandEvent &event )
 {		
-	(*p_mText) = ConvertUnicode( mTextCtrl->GetValue() );
+	(*p_mTextOne) = ConvertUnicode( mTextOneCtrl->GetValue() );
 	event.Skip();
 }

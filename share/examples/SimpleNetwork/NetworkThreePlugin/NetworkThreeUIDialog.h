@@ -22,10 +22,10 @@ class NetworkThreeUIDialog : public ves::conductor::UIDialog
 public:
 	NetworkThreeUIDialog( wxWindow* parent, int id, 
 		ves::conductor::util::CORBAServiceList* service,
-		std::string* mText);
+		std::string* mTextThree);
 	virtual ~NetworkThreeUIDialog();
 
-	std::string* p_mText;
+	std::string* p_mTextThree;
 
 	enum NETWORK_THREE_IDS
 	{
@@ -39,7 +39,7 @@ public:
 
 	void SetText( wxCommandEvent& event );
 
-	wxTextCtrl* mTextCtrl;
+	wxTextCtrl* mTextThreeCtrl;
 	wxButton* mUpdateButton;
 
 	ves::conductor::util::CORBAServiceList* mServiceList;

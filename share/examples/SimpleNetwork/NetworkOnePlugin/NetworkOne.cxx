@@ -11,7 +11,7 @@ NetworkOne::NetworkOne()
 {
 	name = wxT("NetworkOne");
 	
-	RegistVar("mText", &mText);
+	RegistVar("mTextOne", &mTextOne);
 
 	wxImage my_img( network_xpm );
 	icon_w = my_img.GetWidth();
@@ -78,7 +78,7 @@ ves::conductor::UIDialog* NetworkOne::UI(wxWindow* parent)
 	}
   
 	dlg = new NetworkOneUIDialog(parent, -1, serviceList,
-		&mText);
+		&mTextOne);
       
 	dlg->CenterOnScreen(wxBOTH);
 

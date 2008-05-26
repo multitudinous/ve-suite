@@ -11,7 +11,7 @@ NetworkThree::NetworkThree()
 {
 	name = wxT("NetworkThree");
 	
-	RegistVar("mText", &mText);
+	RegistVar("mTextThree", &mTextThree);
 
 	wxImage my_img( network_xpm );
 	icon_w = my_img.GetWidth();
@@ -78,7 +78,7 @@ ves::conductor::UIDialog* NetworkThree::UI(wxWindow* parent)
 	}
   
 	dlg = new NetworkThreeUIDialog(parent, -1, serviceList,
-		&mText);
+		&mTextThree);
       
 	dlg->CenterOnScreen(wxBOTH);
 

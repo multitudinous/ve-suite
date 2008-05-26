@@ -22,10 +22,10 @@ class NetworkTwoUIDialog : public ves::conductor::UIDialog
 public:
 	NetworkTwoUIDialog( wxWindow* parent, int id, 
 		ves::conductor::util::CORBAServiceList* service,
-		std::string* mText);
+		std::string* mTextTwo);
 	virtual ~NetworkTwoUIDialog();
 
-	std::string* p_mText;
+	std::string* p_mTextTwo;
 
 	enum NETWORK_TWO_IDS
 	{
@@ -39,7 +39,7 @@ public:
 
 	void SetText( wxCommandEvent& event );
 
-	wxTextCtrl* mTextCtrl;
+	wxTextCtrl* mTextTwoCtrl;
 	wxButton* mUpdateButton;
 
 	ves::conductor::util::CORBAServiceList* mServiceList;

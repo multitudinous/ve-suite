@@ -38,7 +38,7 @@ protected:
 	void error(std::string msg);
 	void warning(std::string msg);
 
-	std::string mText;
+	std::string mTextTwo;
 
 public:
 	virtual void StartCalc( ACE_ENV_SINGLE_ARG_DECL )

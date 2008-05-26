@@ -14,9 +14,9 @@ END_EVENT_TABLE()
 NetworkTwoUIDialog
 ::NetworkTwoUIDialog( wxWindow* parent, int id, 
 						 ves::conductor::util::CORBAServiceList* service,
-						 std::string* mText)
+						 std::string* mTextTwo)
 : UIDialog( (wxWindow*) parent, id, _("NetworkTwo") ),
-		   p_mText( mText )
+		   p_mTextTwo( mTextTwo )
 {
 	BuildPage();
 
@@ -33,14 +33,14 @@ void NetworkTwoUIDialog::BuildPage()
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
     wxStaticBox* networkOneStaticBox = 
-		new wxStaticBox( this, wxID_ANY, _("Network One Input") );
+		new wxStaticBox( this, wxID_ANY, _("Network Two Input") );
     wxStaticBoxSizer* networkOneSizer = 
 		new wxStaticBoxSizer( networkOneStaticBox, wxVERTICAL );
     mainSizer->Add( networkOneSizer, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
-    mTextCtrl = new wxTextCtrl( this, ID_TEXTCTRL, _T(""), 
+    mTextTwoCtrl = new wxTextCtrl( this, ID_TEXTCTRL, _T(""), 
 		wxDefaultPosition, wxDefaultSize, 0 );
-    networkOneSizer->Add( mTextCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+    networkOneSizer->Add( mTextTwoCtrl, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 
 	mUpdateButton = new wxButton( this, wxID_OK, _("Update"), 
 		wxDefaultPosition, wxDefaultSize, 0 );
@@ -64,6 +64,6 @@ bool NetworkTwoUIDialog::TransferDataToWindow()
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkTwoUIDialog::SetText( wxCommandEvent &event )
 {		
-	(*p_mText) = ConvertUnicode( mTextCtrl->GetValue() );
+	(*p_mTextTwo) = ConvertUnicode( mTextTwoCtrl->GetValue() );
 	event.Skip();
 }
