@@ -48,14 +48,13 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
         std::cout << "Input i = " << i << " = " << inputsVec.at( i )->GetCommandName() << std::endl;
     }
 
-	//DataValuePairPtr dvp( new DataValuePair() );
-	//dvp->SetDataString( mTextTwo );
-	//dvp->SetData( "STRING TEST", mTextTwo );
+	DataValuePairPtr dvp( new DataValuePair() );
+	dvp->SetData( "STRING TEST", "this is test data from unit two" );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-	command = xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" );
-    //command->SetCommandName( "SimpleNetworkTest" );
-	//command->AddDataValuePair( dvp );
+	//command = xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" );
+    command->SetCommandName( "SimpleNetworkTest-Two Unit" );
+	command->AddDataValuePair( dvp );
 
     xmlModelMap[ strm.str() ]->SetResult( command );
 

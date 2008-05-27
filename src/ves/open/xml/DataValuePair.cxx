@@ -174,7 +174,7 @@ void DataValuePair::SetDataValue( double data )
 {
     if( mDataType != std::string( "FLOAT" ) )
     {
-        std::cout << "Invalid type passed into DataValuePair::SetCommandDataTransform" << std::endl;
+        std::cout << "Invalid type passed into DataValuePair::SetDataValue" << std::endl;
         return;
     }
     mDataValue = data;

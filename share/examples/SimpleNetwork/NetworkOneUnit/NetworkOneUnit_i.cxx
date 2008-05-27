@@ -53,6 +53,10 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
         {
             std::string tempString;
             tempString = inputsVec.at( i )->GetDataValuePair( j )->GetDataString();
+            if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject() ) )
+            {
+                std::cout << " Data type = " << boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject() )->GetCommandName() << std::endl;
+            }
             std::cout << "DataValuePair j = " << j << " = " << tempString << std::endl;
         }
     }

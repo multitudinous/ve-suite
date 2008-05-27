@@ -48,6 +48,7 @@
 #include <string>
 #include <vector>
 #include <ves/open/xml/XMLObject.h>
+#include <ves/open/xml/Command.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -235,6 +236,15 @@ public:
         << "Object Type = " << dvp->mObjectType << std::endl
         << "Object Namespace = " << dvp->mObjectNamespace << std::endl
         << "Data Type = " << dvp->mDataType << std::endl;
+        
+        if( dvp->mVeXMLObject )
+        {
+            if( boost::dynamic_pointer_cast< Command >( dvp->mVeXMLObject ) )
+            {
+                const CommandPtr tempCommand = boost::static_pointer_cast< Command >( dvp->mVeXMLObject );
+                os << tempCommand;
+            }
+        }
         
         return os;
     }
