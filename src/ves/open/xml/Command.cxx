@@ -173,7 +173,7 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         if( subElements->getLength() > 0 )
         {
             //should only be the name of the command
-            DOMElement* name = dynamic_cast< DOMElement* >( subElements->item( 0 ) );
+            DOMElement* name = static_cast< DOMElement* >( subElements->item( 0 ) );
             GetDataFromElement( name, mCmdName );
         }
         else

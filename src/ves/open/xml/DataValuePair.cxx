@@ -315,7 +315,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
             if( subElements->getLength() > 0 )
             {
                 //should only be the name of the command
-                DOMElement* dataName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
+                DOMElement* dataName = static_cast<DOMElement*>( subElements->item( 0 ) );
                 GetDataFromElement( dataName, mDataName );
             }
             else
@@ -347,7 +347,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
             {
                 subElements = currentElement->getElementsByTagName( ves::open::xml::Convert( "dataValueString" ).toXMLString() );
 
-                DOMElement* dataValueStringName = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
+                DOMElement* dataValueStringName = static_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueStringName )
                 {
                     GetDataFromElement( dataValueStringName, mDataString);
@@ -376,7 +376,7 @@ void DataValuePair::SetObjectFromXMLData( DOMNode* element )
                 //DOMNodeList* subElements = 0;
                 subElements = currentElement->getElementsByTagName( ves::open::xml::Convert( "dataValueNum" ).toXMLString() );
 
-                DOMElement* dataValueNum = dynamic_cast<DOMElement*>( subElements->item( 0 ) );
+                DOMElement* dataValueNum = static_cast<DOMElement*>( subElements->item( 0 ) );
                 if( dataValueNum )
                 {
                     GetDataFromElement( dataValueNum, mDataValue );
@@ -532,7 +532,7 @@ void DataValuePair::GetData( std::vector< std::string >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDStringArray" )
     {
-        OneDStringArrayPtr tempPtr = boost::dynamic_pointer_cast<OneDStringArray>( mVeXMLObject );
+        OneDStringArrayPtr tempPtr = boost::static_pointer_cast<OneDStringArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -550,7 +550,7 @@ void DataValuePair::GetData( std::vector< double >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDDoubleArray" )
     {
-        OneDDoubleArrayPtr tempPtr = boost::dynamic_pointer_cast<OneDDoubleArray>( mVeXMLObject );
+        OneDDoubleArrayPtr tempPtr = boost::static_pointer_cast<OneDDoubleArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -563,7 +563,7 @@ void DataValuePair::GetData( std::vector< std::vector< double > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDDoubleArray" )
     {
-        TwoDDoubleArrayPtr tempPtr =  boost::dynamic_pointer_cast<TwoDDoubleArray>( mVeXMLObject );
+        TwoDDoubleArrayPtr tempPtr =  boost::static_pointer_cast<TwoDDoubleArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -576,7 +576,7 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< double > > >
 {
     if( mVeXMLObject->GetObjectType() == "ThreeDDoubleArray" )
     {
-        ThreeDDoubleArrayPtr tempPtr = boost::dynamic_pointer_cast<ThreeDDoubleArray>( mVeXMLObject );
+        ThreeDDoubleArrayPtr tempPtr = boost::static_pointer_cast<ThreeDDoubleArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -594,7 +594,7 @@ void DataValuePair::GetData( std::vector< long >& data )
 {
     if( mVeXMLObject->GetObjectType() == "OneDIntArray" )
     {
-        OneDIntArrayPtr tempPtr = boost::dynamic_pointer_cast<OneDIntArray>( mVeXMLObject );
+        OneDIntArrayPtr tempPtr = boost::static_pointer_cast<OneDIntArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -607,7 +607,7 @@ void DataValuePair::GetData( std::vector< std::vector< long > > & data )
 {
     if( mVeXMLObject->GetObjectType() == "TwoDIntArray" )
     {
-        TwoDIntArrayPtr tempPtr = boost::dynamic_pointer_cast<TwoDIntArray>( mVeXMLObject );
+        TwoDIntArrayPtr tempPtr = boost::static_pointer_cast<TwoDIntArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
@@ -620,7 +620,7 @@ void DataValuePair::GetData( std::vector< std::vector< std::vector< long > > > &
 {
     if( mVeXMLObject->GetObjectType() == "ThreeDIntArray" )
     {
-        ThreeDIntArrayPtr tempPtr = boost::dynamic_pointer_cast<ThreeDIntArray>( mVeXMLObject );
+        ThreeDIntArrayPtr tempPtr = boost::static_pointer_cast<ThreeDIntArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else
