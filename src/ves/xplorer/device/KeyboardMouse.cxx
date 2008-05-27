@@ -772,6 +772,9 @@ void KeyboardMouse::FrameSelection()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SkyCam( )
 {
+    //Unselect the previous selected DCS
+    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
     //gmtl::Matrix44d matrix;
     //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
     //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
@@ -811,6 +814,9 @@ void KeyboardMouse::SkyCam( )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SkyCamTo( )
 {
+    //Unselect the previous selected DCS
+    ves::xplorer::DeviceHandler::instance()->UnselectObjects();
+
     //gmtl::Matrix44d matrix;
     //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
     //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
@@ -826,6 +832,7 @@ void KeyboardMouse::SkyCamTo( )
     osg::ref_ptr< ves::xplorer::scenegraph::DCS >selectedDCS =
         ModelHandler::instance()->GetActiveModel()->GetDCS();
     selectedDCS->SetTechnique("Select");
+    ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
     osg::BoundingSphere sbs = selectedDCS->computeBound();
     
     //Grab the current matrix
