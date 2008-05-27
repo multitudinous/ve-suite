@@ -101,6 +101,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
     EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
     EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
+    EVT_MENU( NAVTO, UIPluginBase::OnNavigateTo )
     EVT_MENU( DATASET, UIPluginBase::OnDataSet )
     EVT_MENU( MODEL_INPUTS, UIPluginBase::OnInputsWindow ) /* EPRI TAG */
     EVT_MENU( MODEL_RESULTS, UIPluginBase::OnResultsWindow ) /* EPRI TAG */
@@ -1426,6 +1427,25 @@ void UIPluginBase::OnResultsWindow( wxCommandEvent& event )
     ViewResultsVariables();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::OnNavigateTo( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    //Set the active model so that we do not have to in every function
+    if( !SetActiveModel() )
+    {
+        return;
+    }
+
+    ves::open::xml::DataValuePairPtr dataValuePair( 
+        new ves::open::xml::DataValuePair() );
+    dataValuePair->SetData( "NAVIGATE_TO", m_veModel->GetID() );
+    ves::open::xml::CommandPtr veCommand( new ves::open::xml::Command() );
+    veCommand->SetCommandName( 
+        std::string( "Move to cad" ) );
+    veCommand->AddDataValuePair( dataValuePair );
+    bool connected = serviceList->SendCommandStringToXplorer( veCommand );
+}
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnGeometry( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
@@ -1457,6 +1477,7 @@ void UIPluginBase::OnGeometry( wxCommandEvent& event )
     cadDialog->Destroy();
     cadDialog = 0;
 }
+
 ///////////////////////////////////////////
 void UIPluginBase::OnDataSet( wxCommandEvent& event )
 {
@@ -1711,6 +1732,9 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     pop_menu.Append( ICON_MENU,   _( "Icon" ), icon_menu,
                      _( "Controls for icon images" ) );
     pop_menu.Enable( ICON_MENU, true );
+    
+    pop_menu.Append( NAVTO, _( "Navigate To" ) );
+    pop_menu.Enable( NAVTO, true );
     // GUI to configure geometry for graphical env
     pop_menu.Append( GEOMETRY, _( "Geometry Config" ) );
     pop_menu.Enable( GEOMETRY, true );

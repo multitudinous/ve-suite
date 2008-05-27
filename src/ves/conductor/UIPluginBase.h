@@ -108,6 +108,7 @@ public:
         ICON_MENU,
         SHOW_ICON_CHOOSER,
         GEOMETRY,
+        NAVTO,
         MODEL_INPUTS,
         MODEL_RESULTS,
         DATASET,
@@ -197,6 +198,7 @@ public:
     ///Handle all events to toggle graphics for plugin off/on in cad mode
     ///\param event WX Event for menu event
     void TogglePlugin( wxCommandEvent& event );
+    void OnNavigateTo( wxCommandEvent& event );
 
     //To Get around the Memory allocation problem of windows dll
     //Add the calls for the size. So the main program can preallocate memory for it

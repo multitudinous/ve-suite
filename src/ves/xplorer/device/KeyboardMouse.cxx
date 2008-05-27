@@ -3,7 +3,7 @@
  * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
  *
  * Original Development Team:
- *   - ISU's Thermal Systems Virtual Engineering Group,
+ *   - ISU's Thermal Systems Virtual Engineering Group,fmin
  *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iam_state.edu/~kmbryden
  *   - Reaction Engineering International, www.reaction-eng.com
  *
@@ -79,6 +79,8 @@
 #include <osg/BoundingBox>
 #include <osg/Texture2D>
 #include <osg/CameraNode>
+#include <osg/Shape>
+#include <osg/ShapeDrawable>
 //#include <osg/PolygonStipple>
 #include <osgUtil/LineSegmentIntersector>
 
@@ -768,6 +770,102 @@ void KeyboardMouse::FrameSelection()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SkyCam( )
+{
+    //gmtl::Matrix44d matrix;
+    //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
+    //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
+    
+    //reset view
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        GetWorldDCS()->SetQuat( mResetAxis );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+        SetTranslationArray( mResetPosition );
+    
+    //Grab the current matrix
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+
+    osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+
+    //Calculate the distance
+    double distance = 2 * bs.radius();
+
+    //move the cad
+    double osgTransformedPosition[ 3 ];
+    osgTransformedPosition[ 0 ] = - bs.center( ).x( );
+    osgTransformedPosition[ 1 ] = - bs.center( ).y( ) + distance;
+    osgTransformedPosition[ 2 ] = - bs.center( ).z( );
+    activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
+
+    //Get the new center of the bounding sphere
+    bs = activeSwitchDCS->computeBound();
+    //Set the center point of rotation to the new center of the bounding sphere
+    mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
+
+    //put it at 45 degrees
+    Rotate( 1, 0, 0, 45 );
+    ProcessNavigationEvents();
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::SkyCamTo( )
+{
+    //gmtl::Matrix44d matrix;
+    //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
+    //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
+    
+    //reset view
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        GetWorldDCS()->SetQuat( mResetAxis );
+    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+        SetTranslationArray( mResetPosition );
+
+    //get the selected plugins cad
+    //highlight it.
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS >selectedDCS =
+        ModelHandler::instance()->GetActiveModel()->GetDCS();
+    selectedDCS->SetTechnique("Select");
+    osg::BoundingSphere sbs = selectedDCS->computeBound();
+    
+    //Grab the current matrix
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+        ves::xplorer::scenegraph::SceneManager::instance()->
+            GetActiveSwitchNode();
+
+    //Calculate the distance
+    double distance = 2 * sbs.radius();
+
+    //move the cad
+    double osgTransformedPosition[ 3 ];
+    osgTransformedPosition[ 0 ] = - sbs.center( ).x( );
+    osgTransformedPosition[ 1 ] = - sbs.center( ).y( ) + distance;
+    osgTransformedPosition[ 2 ] = - sbs.center( ).z( );
+    activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
+
+    //Move the center point to the center of the selected object
+    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
+        new ves::xplorer::scenegraph::LocalToWorldTransform(
+            ves::xplorer::scenegraph::SceneManager::instance()->
+                GetActiveSwitchNode(), selectedDCS.get() );
+    gmtl::Matrix44d localToWorldMatrix = ltwt->GetLocalToWorldTransform();
+
+    //Remove the local matrix from localToWorldMatrix
+    gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
+    localToWorldMatrix *= gmtl::invert( activeMatrix );
+
+    //Multiplying by the new local matrix (mCenterPoint)
+    osg::Matrixd tempMatrix;
+    tempMatrix.set( localToWorldMatrix.getData() );
+    osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
+    //osg::Vec3d center = sbs.center() * tempMatrix;
+    mCenterPoint->set( center.x(), center.y(), center.z( ) );
+
+    //put it at 45 degrees
+    Rotate( 1, 0, 0, 45 );
+    ProcessNavigationEvents();
+}
+////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
 {
     switch( mKey )
@@ -799,6 +897,33 @@ void KeyboardMouse::NavKeyboard()
                 ResetScene();
             break;
         }
+        case gadget::KEY_K:
+        {
+            SkyCam();
+        }
+
+        //keystrokes for skycam mode
+        case gadget::KEY_UP:
+        {
+            Zoom45( 0.002 );
+            ProcessNavigationEvents();
+        }
+        case gadget::KEY_DOWN: 
+        {
+            Zoom45( -0.002 );
+            ProcessNavigationEvents();
+        }
+        case gadget::KEY_LEFT:
+        {
+            Pan( 0.001, 0 );
+            ProcessNavigationEvents();
+        }
+        case gadget::KEY_RIGHT:
+        {
+            Pan( -0.001, 0 );
+            ProcessNavigationEvents();
+        }
+
     }
 
     //Reset mKey
@@ -941,6 +1066,37 @@ void KeyboardMouse::Zoom( double dy )
 
     mDeltaTransform.mData[ 13 ] = d;
     mCenterPoint->mData[ 1 ] += d;
+
+    //Test if center point has breached our specified threshold
+    if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )
+    {
+        ves::xplorer::scenegraph::DCS* const selectedDCS =
+            ves::xplorer::DeviceHandler::instance()->GetSelectedDCS();
+        //Only jump center point for the worldDCS
+        if( !selectedDCS )
+        {
+            mCenterPoint->mData[ 1 ] = *mCenterPointJump;
+        }
+        //Prevent the center point from jumping
+        //if we are manipulating a selected object
+        else
+        {
+            mDeltaTransform.mData[ 13 ] = 0;
+            mCenterPoint->mData[ 1 ] -= d;
+        }
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void KeyboardMouse::Zoom45( double dy )
+{
+    //needed for sky cam control
+    double viewlength = mCenterPoint->mData[ 1 ];
+    double d = ( viewlength * ( 1 / ( 1 + dy * 2 ) ) ) - viewlength;
+
+    mDeltaTransform.mData[ 13 ] = d;
+    mDeltaTransform.mData[ 14 ] = d;
+    mCenterPoint->mData[ 1 ] += d;
+    mCenterPoint->mData[ 2 ] += d;
 
     //Test if center point has breached our specified threshold
     if( mCenterPoint->mData[ 1 ] < *mCenterPointThreshold )

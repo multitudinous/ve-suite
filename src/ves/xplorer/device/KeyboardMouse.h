@@ -115,6 +115,10 @@ public:
     ///Fit the world bounding volume into the viewing frustum
     void FrameAll();
 
+    ///Fit the world bounding volume into the viewing frustum
+    void SkyCam( );
+    void SkyCamTo( );
+
     ///Fit the selected objects bounding volume into the viewing frustum
     void FrameSelection();
 
@@ -183,6 +187,10 @@ private:
     ///Handles movement in and out of the scene
     ///\param dy The change in the y direction
     void Zoom( double dy );
+
+    ///Handles movement in and out of the scene
+    ///\param dy The change in the y direction
+    void Zoom45( double dy  );
 
     ///Handles panning movements through the scene
     ///\param dx The change in the x direction
