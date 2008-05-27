@@ -475,7 +475,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     fileName.assign( "returnString" );
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-
+std::cout << fileName << std::endl;
     try
     {
         long int tempID = 

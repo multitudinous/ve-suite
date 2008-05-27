@@ -37,7 +37,7 @@
 
 #include <ves/open/xml/XMLObject.h>
 
-#include <ves/open/xml/CommandPtr.h>
+#include <ves/open/xml/Command.h>
 #include <ves/open/xml/ParameterBlockPtr.h>
 #include <ves/open/xml/model/SystemPtr.h>
 #include <ves/open/xml/model/PortPtr.h>
@@ -277,7 +277,7 @@ public:
     ///Print operator to help debug veopen issues
     friend std::ostream& operator<<( std::ostream& os, const ModelPtr model )
     {
-        os << "***********(ves::open::xml::model::Model)***********"
+        os << "***********(ves::open::xml::model::Model)***********" << std::endl
             << "Model Name = " << model->mModelName << std::endl
             << "The Unit Name = " << model->mVendorUnit << std::endl
             << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
@@ -292,7 +292,16 @@ public:
             << "Icon Scale = " << model->mIconScale << std::endl
             << "Icon Rotation = " << model->mIconRotation << std::endl
             << "Icons Hidden Flag = " << model->mIconHiddenFlag << std::endl
-            << "Icon Mirror = " << model->mIconMirror << std::endl;
+            << "Icon Mirror = " << model->mIconMirror << std::endl
+            << "Model Inputs are: " << std::endl;
+            
+            for( std::map< std::string, ves::open::xml::CommandPtr >::iterator 
+                iter = model->mInputs.begin(); 
+                iter != model->mInputs.end(); ++iter )
+            {
+                os << (iter->second);
+            }
+        
             return os;
     }
     

@@ -226,6 +226,19 @@ public:
     ///\param data Name of the data being passed in
     //void GetData( VE_XML::XMLObject& data );
 
+    ///Print operator to help debug veopen issues
+    friend std::ostream& operator<<( std::ostream& os, const DataValuePairPtr dvp )
+    {
+        os << "***********(ves::open::xml::DataValuePair)***********" << std::endl
+        << "DVP Name = " << dvp->mDataName << std::endl
+        << "GUID = " << dvp->mUuid << std::endl
+        << "Object Type = " << dvp->mObjectType << std::endl
+        << "Object Namespace = " << dvp->mObjectNamespace << std::endl
+        << "Data Type = " << dvp->mDataType << std::endl;
+        
+        return os;
+    }
+    
 protected:
     ///Internally update the data.
     ///\param tagName The tag name of this element.

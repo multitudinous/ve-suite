@@ -91,9 +91,31 @@ Command& Command::operator=( const Command& input )
 ////////////////////////////////////////////////////////////////////////////////
 void Command::AddDataValuePair( DataValuePairPtr commandValuePair )
 {
-    mDataValuePairs.push_back( commandValuePair );
-    mNameToDataValuePairMap[ mDataValuePairs.back()->GetDataName()] = commandValuePair;
-}
+
+    if( mNameToDataValuePairMap.find( commandValuePair->GetDataName() ) == mNameToDataValuePairMap.end() )
+    {
+        mDataValuePairs.push_back( commandValuePair );
+        mNameToDataValuePairMap[ commandValuePair->GetDataName() ] = commandValuePair;
+        return;
+    }
+
+    mNameToDataValuePairMap[ commandValuePair->GetDataName() ] = commandValuePair;
+
+    bool hasDVP = false;
+    for( std::vector< DataValuePairPtr >::iterator iter = mDataValuePairs.begin(); iter != mDataValuePairs.end(); ++iter )
+    {
+        if( (*iter)->GetDataName() == commandValuePair->GetDataName() )
+        {
+            hasDVP = true;
+            break;
+        }
+    }
+    
+    if( hasDVP )
+    {
+        mDataValuePairs.push_back( commandValuePair );
+    }
+ }
 ////////////////////////////////////////////////////////////////////////////////
 void Command::_updateVEElement( const std::string& input )
 {
@@ -174,11 +196,14 @@ void Command::SetObjectFromXMLData( DOMNode* xmlInput )
         //read in new data value pairs
         for( unsigned int i = 0; i < nDVPairsIn; ++i )
         {
-            DOMElement* dvPairIn = dynamic_cast<DOMElement*>( subElements->item( i ) );
-            DataValuePairPtr veDvp( new DataValuePair() );
-            veDvp->SetObjectFromXMLData( dvPairIn );
-            mDataValuePairs.push_back( veDvp );
-            mNameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
+            DOMElement* dvPairIn = static_cast<DOMElement*>( subElements->item( i ) );
+            if( dvPairIn->getParentNode() == currentElement )
+            {
+                DataValuePairPtr veDvp( new DataValuePair() );
+                veDvp->SetObjectFromXMLData( dvPairIn );
+                mDataValuePairs.push_back( veDvp );
+                mNameToDataValuePairMap[ veDvp->GetDataName()] = veDvp;
+            }
         }
     }
 }

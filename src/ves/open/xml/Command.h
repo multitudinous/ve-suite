@@ -47,7 +47,7 @@
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/CommandPtr.h>
 
-#include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/DataValuePair.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -103,6 +103,26 @@ public:
     ///\return The number of dvps stored in this command
     size_t GetNumberOfDataValuePairs();
 
+    ///Print operator to help debug veopen issues
+    friend std::ostream& operator<<( std::ostream& os, const CommandPtr command )
+    {
+        os << "***********(ves::open::xml::Command)***********" << std::endl
+            << "Command Name = " << command->mCmdName << std::endl
+            << "GUID = " << command->mUuid << std::endl
+            << "Object Type = " << command->mObjectType << std::endl
+            << "Object Namespace = " << command->mObjectNamespace << std::endl
+            << "Number of DVPs = " << command->mDataValuePairs.size() << std::endl;
+
+            for( std::vector< DataValuePairPtr >::iterator 
+                iter = command->mDataValuePairs.begin(); 
+                iter != command->mDataValuePairs.end(); ++iter )
+            {
+                os << *iter;
+            }
+
+        return os;
+    }
+    
 protected:
     ///Internally update the command element.
     ///\param tagName The tagName of this element
