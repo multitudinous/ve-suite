@@ -448,7 +448,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
     //Now query the unit for data
     std::string unitResultsData = Query( fileName.c_str() );
-    std::cout << " results test = " << unitResultsData << std::endl;
+    //std::cout << " results test = " << std::endl << unitResultsData << std::endl;
     nodes.clear();
     if( unitResultsData != "NULL" )
     {
@@ -475,7 +475,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     fileName.assign( "returnString" );
     networkWriter.UseStandaloneDOMDocumentManager();
     networkWriter.WriteXMLDocument( nodes, fileName, "Command" );
-std::cout << fileName << std::endl;
+    //std::cout << fileName << std::endl;
     try
     {
         long int tempID = 
