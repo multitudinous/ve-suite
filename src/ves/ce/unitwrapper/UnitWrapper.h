@@ -41,6 +41,7 @@
 #include <ves/VEConfig.h>
 #include <vector>
 #include <map>
+#include <string>
 
 namespace VE_CE
 {
