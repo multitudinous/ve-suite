@@ -76,7 +76,7 @@ void DepthOfFieldTechnique::DefinePasses()
 
         stateset->setAttribute(
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-            < osg::Program, osg::ref_ptr >( "CameraViewProgram" ) ).get(),
+            < osg::Program, osg::ref_ptr >( "RenderBlurProgram" ) ).get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         stateset->setMode(

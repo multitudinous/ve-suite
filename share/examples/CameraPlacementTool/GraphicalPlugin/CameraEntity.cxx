@@ -167,11 +167,11 @@ void CameraEntity::Initialize()
     //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
     setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    setViewport( 0, 0, 512, 512 );
+    setViewport( 0, 0, 1024, 1024 );
 
     //Set the internal format for the first render target
     attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),

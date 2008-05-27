@@ -198,8 +198,8 @@ void CameraPlacementToolGP::InitializeResources()
     //Create the texture used for the first render target of the camera FBO
     {
         osg::ref_ptr< osg::Texture2D > cameraViewTexture = new osg::Texture2D();
-        cameraViewTexture->setInternalFormat( GL_RGB16F_ARB );
-        cameraViewTexture->setTextureSize( 512, 512 );
+        cameraViewTexture->setInternalFormat( GL_RGBA16F_ARB );
+        cameraViewTexture->setTextureSize( 1024, 1024 );
         cameraViewTexture->setSourceFormat( GL_RGBA );
         cameraViewTexture->setSourceType( GL_FLOAT );
         cameraViewTexture->setFilter( osg::Texture2D::MIN_FILTER,
@@ -217,8 +217,8 @@ void CameraPlacementToolGP::InitializeResources()
     //Create the texture used for the second render target of the camera FBO
     {
         osg::ref_ptr< osg::Texture2D > depthTexture = new osg::Texture2D();
-        depthTexture->setInternalFormat( GL_RGB16F_ARB );
-        depthTexture->setTextureSize( 512, 512 );
+        depthTexture->setInternalFormat( GL_RGBA16F_ARB );
+        depthTexture->setTextureSize( 1024, 1024 );
         depthTexture->setSourceFormat( GL_RGBA );
         depthTexture->setSourceType( GL_FLOAT );
         depthTexture->setFilter( osg::Texture2D::MIN_FILTER,
@@ -379,9 +379,9 @@ void CameraPlacementToolGP::InitializeResources()
         "void main() \n"
         "{ \n"
 
-            "int width = 512; \n"
-            "int height = 512; \n"
-            "float maxCoC = 5.0; \n"
+            "int width = 1024; \n"
+            "int height = 1024; \n"
+            "float maxCoC = 8.0; \n"
 
             "vec4 colorSum, tapColor; \n"
             "vec2 centerDepthBlur, tapCoord, tapDepthBlur; \n"
@@ -454,8 +454,8 @@ void CameraPlacementToolGP::InitializeResources()
 
         "void main() \n"
         "{ \n"
-	        "float blurAmount = texture2D( Tex1, gl_TexCoord[ 0 ].st ).y; \n"
-	        "gl_FragColor = vec4( 0.0, blurAmount, 0.0, 1.0 ); \n"
+	        "vec4 BlurDepth = texture2D( Tex1, gl_TexCoord[ 0 ].st ); \n"
+	        "gl_FragColor = vec4( 0.0, BlurDepth.y, 0.0, 1.0 ); \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > renderBlurVertexShader = new osg::Shader();
@@ -537,30 +537,22 @@ void CameraPlacementToolGP::InitializeResources()
             "vec4 color0 = \n"
                 "vec4( totalAmbient + totalDiffuse + totalSpecular, alpha ); \n"
 
-            "vec4 color1 = vec4( 0.0, 0.0, 0.0, 1.0 ); \n"
-
             //If in frustum
+            //"fDepth = gl_TexCoord[ 0 ].q; \n"
             "if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 && \n"
                 "projectionUV.t >= 0.0 && projectionUV.t <= 1.0 && \n"
                 "gl_TexCoord[ 0 ].q >= nearPlane && \n"
                 "gl_TexCoord[ 0 ].q <= farPlane ) \n"
             "{ \n"
                 "color0.a = 1.0; \n"
-                "fDepth = gl_TexCoord[ 0 ].q; \n"
-
-                "float Dlens = 1.0; \n"
-                "float scale  = 1.0; \n"
-                "float sceneRange = farPlane; \n"
-                "float focalLen = 10.0; \n"
-                "float Zfocus = 11.0; \n"
-                "float maxCoC = 5.0; \n"
-
-                "float pixCoC = abs( Dlens * focalLen * ( Zfocus - fDepth ) / \n"
-                                       "( Zfocus * ( fDepth - focalLen ) ) ); \n"
-                "float blur = clamp( pixCoC * scale / maxCoC, 0.0, 1.0 ); \n"
-
-                "color1 = vec4( -fDepth / sceneRange, blur, 0.0, 1.0 ); \n"
             "} \n"
+
+            "float focalDist = 5.0; \n"
+            "float focalRange = 10.0; \n"
+            "focalRange = 2.0 / focalRange; \n"
+
+            "float blur = saturate( abs( fDepth - focalDist ) * focalRange ); \n"
+            "vec4 color1 = vec4( fDepth, blur, 0.0, 1.0 ); \n"
 
             "gl_FragData[ 0 ] = color0; \n"
             "gl_FragData[ 1 ] = color1; \n"
