@@ -30,10 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
 #ifndef _XML_VE_DATA_VALUE_PAIR_H_
 #define _XML_VE_DATA_VALUE_PAIR_H_
-
 #include <ves/open/xml/DataValuePairPtr.h>
 
 /*!\file DataValuePair.h
@@ -48,7 +46,6 @@
 #include <string>
 #include <vector>
 #include <ves/open/xml/XMLObject.h>
-#include <ves/open/xml/Command.h>
 
 #include <xercesc/dom/DOM.hpp>
 #include <iostream>
@@ -231,20 +228,23 @@ public:
     friend std::ostream& operator<<( std::ostream& os, const DataValuePairPtr dvp )
     {
         os << "***********(ves::open::xml::DataValuePair)***********" << std::endl
-        << "DVP Name = " << dvp->mDataName << std::endl
-        << "GUID = " << dvp->mUuid << std::endl
-        << "Object Type = " << dvp->mObjectType << std::endl
-        << "Object Namespace = " << dvp->mObjectNamespace << std::endl
-        << "Data Type = " << dvp->mDataType << std::endl;
+            << "DVP Name = " << dvp->mDataName << std::endl
+            << "GUID = " << dvp->mUuid << std::endl
+            << "Object Type = " << dvp->mObjectType << std::endl
+            << "Object Namespace = " << dvp->mObjectNamespace << std::endl
+            << "Data Type = " << dvp->mDataType << std::endl;
         
-        if( dvp->mVeXMLObject )
+        /*if( dvp->mVeXMLObject )
         {
             if( boost::dynamic_pointer_cast< Command >( dvp->mVeXMLObject ) )
             {
-                const CommandPtr tempCommand = boost::static_pointer_cast< Command >( dvp->mVeXMLObject );
+                const ves::open::xml::CommandPtr tempCommand = 
+                    boost::dynamic_pointer_cast< ves::open::xml::Command >( dvp->mVeXMLObject );
                 os << tempCommand;
+                os << tempCommand->GetCommandName() << std::endl
+                    << tempCommand->GetDataValuePair( 0 )->GetDataName() << std::endl;
             }
-        }
+        }*/
         
         return os;
     }

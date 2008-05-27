@@ -38,6 +38,7 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
     std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
+
     xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" )->
 		GetDataValuePair( "mTextTwo" )->GetData( mTextTwo );
 
@@ -79,7 +80,6 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 	dvp->SetData( "UNIT 2 STRING TEST", "this is test data from unit two" );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-
     command->SetCommandName( "SimpleNetworkTest-Two Unit" );
 	command->AddDataValuePair( dvp );
 
@@ -87,7 +87,7 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 
     std::string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
-    //executive_->SetModuleMessage(activeId,msg.c_str());
+    executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::error (std::string msg)
