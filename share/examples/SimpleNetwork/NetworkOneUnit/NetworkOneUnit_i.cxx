@@ -47,6 +47,14 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
     {
         std::cout << "Input i = " << i << " = " 
             << inputsVec.at( i )->GetCommandName() << std::endl;
+
+        size_t tempValue = inputsVec.at( i )->GetNumberOfDataValuePairs();
+        for( size_t j=0; j<tempValue; ++j )
+        {
+            std::string tempString;
+            tempString = inputsVec.at( i )->GetDataValuePair( j )->GetDataString();
+            std::cout << "DataValuePair j = " << j << " = " << tempString << std::endl;
+        }
     }
 
 	CommandPtr tempCommand( new Command() );
