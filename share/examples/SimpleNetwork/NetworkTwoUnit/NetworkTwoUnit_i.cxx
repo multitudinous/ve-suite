@@ -38,21 +38,48 @@ ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
     std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
-    //std::cout<<"ID NAME :"<<activeId<<std::endl;
     xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" )->
 		GetDataValuePair( "mTextTwo" )->GetData( mTextTwo );
-    const std::vector< CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
-    std::cout << "Active ID = " << activeId << " Num Inputs = " << inputsVec.size() << std::endl;
+
+    const std::vector< CommandPtr > inputsVec = 
+		xmlModelMap[ strm.str() ]->GetInputs();
+    std::cout << "Active ID = " << activeId << " Num Inputs = " 
+		<< inputsVec.size() << std::endl;
+	std::cout << " model " << std::endl 
+		<< xmlModelMap[ strm.str() ] << std::endl;
+
     for( size_t i = 0; i < inputsVec.size(); ++i )
     {
-        std::cout << "Input i = " << i << " = " << inputsVec.at( i )->GetCommandName() << std::endl;
+        std::cout << "Input i = " << i << " = " 
+            << inputsVec.at( i )->GetCommandName() << std::endl;
+
+        size_t tempValue = inputsVec.at( i )->GetNumberOfDataValuePairs();
+        for( size_t j=0; j<tempValue; ++j )
+        {
+            std::string tempString;
+            if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
+				GetDataValuePair( j )->GetDataXMLObject() ) )
+            {
+				tempString = boost::dynamic_pointer_cast< Command >( 
+					inputsVec.at( i )->GetDataValuePair( j )->
+					GetDataXMLObject() )->GetDataValuePair( j )->
+					GetDataString();
+            }
+			else
+			{
+				tempString = inputsVec.at( i )->
+					GetDataValuePair( j )->GetDataString();
+			}
+            std::cout << "DataValuePair j = " << j << " = " 
+				<< tempString << std::endl;
+        }
     }
 
 	DataValuePairPtr dvp( new DataValuePair() );
-	dvp->SetData( "STRING TEST", "this is test data from unit two" );
+	dvp->SetData( "UNIT 2 STRING TEST", "this is test data from unit two" );
 
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
-	//command = xmlModelMap[ strm.str() ]->GetInput( "mTextTwo" );
+
     command->SetCommandName( "SimpleNetworkTest-Two Unit" );
 	command->AddDataValuePair( dvp );
 

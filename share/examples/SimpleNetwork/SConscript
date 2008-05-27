@@ -22,7 +22,8 @@ InteractiveStoveDir = pj( RootDir, 'share', 'examples', 'SimpleNetwork' )
 
 fileBundle.addFiles( 'SimpleTwoNetwork.ves' )
 fileBundle.addFiles( 'SimpleThreeNetwork.ves' )
-fileBundle.addFiles( 'RunUnits.bat' )
+fileBundle.addFiles( 'RunTwoUnits.bat' )
+fileBundle.addFiles( 'RunThreeUnits.bat' )
 
 InteractiveStoveSubdirs = Split("""
     NetworkOneModel

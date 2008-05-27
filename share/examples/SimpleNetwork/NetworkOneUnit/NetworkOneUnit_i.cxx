@@ -11,6 +11,7 @@
 #include <ves/open/xml/DataValuePairPtr.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
+//#include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
 #include <ves/open/xml/cad/CADCreator.h>
@@ -40,9 +41,11 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
     std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
-    const std::vector< CommandPtr > inputsVec = xmlModelMap[ strm.str() ]->GetInputs();
+    const std::vector< CommandPtr > inputsVec = 
+		xmlModelMap[ strm.str() ]->GetInputs();
     std::cout << "Active ID = " << activeId << std::endl;
-    std::cout << " model " << std::endl << xmlModelMap[ strm.str() ] << std::endl;
+    std::cout << " model " << std::endl 
+		<< xmlModelMap[ strm.str() ] << std::endl;
     for( size_t i = 0; i < inputsVec.size(); ++i )
     {
         std::cout << "Input i = " << i << " = " 
@@ -52,17 +55,25 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
         for( size_t j=0; j<tempValue; ++j )
         {
             std::string tempString;
-            tempString = inputsVec.at( i )->GetDataValuePair( j )->GetDataString();
-            if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject() ) )
+            if( boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->
+				GetDataValuePair( j )->GetDataXMLObject() ) )
             {
-                std::cout << " Data type = " << boost::dynamic_pointer_cast< Command >( inputsVec.at( i )->GetDataValuePair( j )->GetDataXMLObject() )->GetCommandName() << std::endl;
+				tempString = boost::dynamic_pointer_cast< Command >( 
+					inputsVec.at( i )->GetDataValuePair( j )->
+					GetDataXMLObject() )->GetDataValuePair( j )->
+					GetDataString();
             }
-            std::cout << "DataValuePair j = " << j << " = " << tempString << std::endl;
+			else
+			{
+				tempString = inputsVec.at( i )->
+					GetDataValuePair( j )->GetDataString();
+			}
+            std::cout << "DataValuePair j = " << j << " = " 
+				<< tempString << std::endl;
         }
     }
 
 	CommandPtr tempCommand( new Command() );
-	tempCommand = xmlModelMap[ strm.str() ]->GetResult( "mTextTwo" );
     xmlModelMap[ strm.str() ]->GetInput( "mTextOne" )->
         GetDataValuePair( "mTextOne" )->GetData( mTextOne );
     std::cout << "Input mTextOne : "<< mTextOne << std::endl;

@@ -36,15 +36,45 @@ void Body_Unit_i::StartCalc (ACE_ENV_SINGLE_ARG_DECL )
   ACE_THROW_SPEC (( CORBA::SystemException, Error::EUnknown ))
 {
 	  // Add your implementation here
-	  std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
-	  std::ostringstream strm;
-	  strm << activeId;
-	  //std::cout<<"ID NAME :"<<activeId<<std::endl;
-	  xmlModelMap[ strm.str() ]->GetInput( "mTextThree" )->
-		  GetDataValuePair( "mTextThree" )->GetData( mTextThree );
-	  //std::cout<<"THIS IS THE TEST: "<<mTextThree<<std::endl;
-	  std::string msg;
-	  msg = UnitName_+" : Instant calculation, already finished\n";
+    std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
+    std::ostringstream strm;
+    strm << activeId;
+    xmlModelMap[ strm.str() ]->GetInput( "mTextThree" )->
+		GetDataValuePair( "mTextThree" )->GetData( mTextThree );
+
+    const std::vector< CommandPtr > inputsVec = 
+		xmlModelMap[ strm.str() ]->GetInputs();
+    std::cout << "Active ID = " << activeId << " Num Inputs = " 
+		<< inputsVec.size() << std::endl;
+
+    for( size_t i = 0; i < inputsVec.size(); ++i )
+    {
+        std::cout << "Input i = " << i << " = " 
+            << inputsVec.at( i )->GetCommandName() << std::endl;
+
+        size_t tempValue = inputsVec.at( i )->GetNumberOfDataValuePairs();
+        for( size_t j=0; j<tempValue; ++j )
+        {
+            std::string tempString;
+			tempString = inputsVec.at( i )->
+				GetDataValuePair( j )->GetDataString();
+            std::cout << "DataValuePair j = " << j << " = " 
+				<< tempString << std::endl;
+        }
+    }
+
+	DataValuePairPtr dvp( new DataValuePair() );
+	dvp->SetData( "UNIT 3 STRING TEST", "this is test data from unit three" );
+
+    ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
+
+    command->SetCommandName( "SimpleNetworkTest-Three Unit" );
+	command->AddDataValuePair( dvp );
+
+    xmlModelMap[ strm.str() ]->SetResult( command );
+
+    std::string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
 	  //executive_->SetModuleMessage(activeId,msg.c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
