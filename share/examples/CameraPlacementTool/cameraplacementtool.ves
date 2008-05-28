@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
 <network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
 
-  <veSystem id="97162806-bac7-f843-9d22-dd6a74899845">
+  <veSystem id="17689ffd-0bb4-914a-b6fd-ae42907df9ff">
     <network>
-      <conductorState dataName="m_xUserScale" id="f8a1aa3e-b61e-8a4d-a70a-bc290aa8c792">
+      <conductorState dataName="m_xUserScale" id="926c9c1b-35bc-dd43-a6f3-11d618377e8f">
         <dataValue type="xs:double">1</dataValue>
       </conductorState>
-      <conductorState dataName="m_yUserScale" id="f77f91ba-a57d-5a4f-8e97-2bfaa993ea06">
+      <conductorState dataName="m_yUserScale" id="c11e2c8b-c063-a04c-9326-8d467a9acd1b">
         <dataValue type="xs:double">1</dataValue>
       </conductorState>
-      <conductorState dataName="nPixX" id="7003dd83-55fc-674f-a28e-8afc811e2da2">
-        <dataValue type="xs:integer">7000</dataValue>
+      <conductorState dataName="nPixX" id="5f201081-13ab-5348-824f-308ba714e79b">
+        <dataValue type="xs:integer">1</dataValue>
       </conductorState>
-      <conductorState dataName="nPixY" id="522f8088-face-be4e-9f9a-af67c3322271">
-        <dataValue type="xs:integer">7000</dataValue>
+      <conductorState dataName="nPixY" id="baefe2d2-d591-a545-8d5d-edaf09933f1c">
+        <dataValue type="xs:integer">1</dataValue>
       </conductorState>
-      <conductorState dataName="nUnitX" id="35c8d90a-9b3e-9f4a-b2ad-5df62a4c5c23">
-        <dataValue type="xs:integer">10</dataValue>
+      <conductorState dataName="nUnitX" id="c4d2984f-7fdd-8041-a5da-18d9a9b4539b">
+        <dataValue type="xs:integer">1</dataValue>
       </conductorState>
-      <conductorState dataName="nUnitY" id="056ada02-eca6-0e45-90f4-c71a311b966a">
-        <dataValue type="xs:integer">10</dataValue>
+      <conductorState dataName="nUnitY" id="ec00b721-26b9-1440-b4c5-d2e5e5b6a14f">
+        <dataValue type="xs:integer">1</dataValue>
       </conductorState>
     </network>
-    <model ID="103" id="7fa279d8-9512-014e-8911-efb49d6c2f95" name="CameraPlacementToolUI" vendorUnit="CameraPlacementToolUI">
-      <icon iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
-      <iconLocation xLocation="21" yLocation="10"/>
-      <geometry associatedDataset="NONE" friction="1" id="af96c92b-678b-5e4e-83ba-e2058d0abab0" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+    <model ID="103" id="c8d606ef-c8b2-d24f-9ca7-32d086571ab5" name="CameraPlacementToolUI" vendorUnit="CameraPlacementToolUI">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="10" yLocation="10"/>
+      <geometry associatedDataset="NONE" friction="1" id="40694521-997c-6643-9004-8ef30c76c806" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
         <type>Assembly</type>
         <name>Model_Geometry</name>
         <parent type="xs:string"></parent>
@@ -47,10 +47,10 @@
           </rotation>
         </transform>
         <children>
-          <child friction="1" id="e4b20121-a812-1a49-987a-cf6d27342022" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
+          <child friction="1" id="07d01d59-d34a-af44-92f7-e1bb9d41d67b" makeTransparentOnVis="true" mass="1" opacity="1" physics="false" restitution="0" visibility="true">
             <type>Part</type>
-            <name>toppanel</name>
-            <parent type="xs:string">af96c92b-678b-5e4e-83ba-e2058d0abab0</parent>
+            <name>spheres</name>
+            <parent type="xs:string">40694521-997c-6643-9004-8ef30c76c806</parent>
             <transform>
               <translation>
                 <value>0</value>
@@ -58,9 +58,9 @@
                 <value>0</value>
               </translation>
               <scale>
-                <value>5</value>
-                <value>5</value>
-                <value>5</value>
+                <value>1</value>
+                <value>1</value>
+                <value>1</value>
               </scale>
               <rotation>
                 <value>0</value>
@@ -68,21 +68,21 @@
                 <value>0</value>
               </rotation>
             </transform>
-            <fileName>Models/toppanel.ive</fileName>
+            <fileName>Models/spheres.ive</fileName>
           </child>
         </children>
       </geometry>
     </model>
   </veSystem>
 
-  <User id="394ea67f-c61a-c949-8bff-efc1185e1aa9" userID="User" veControlStatus="MASTER">
+  <User id="1d9f9938-7ccd-3548-87f7-eb8f6ca207d7" userID="User" veControlStatus="MASTER">
     <stateInfo>
       <Command commandName="CHANGE_BACKGROUND_COLOR">
-        <parameter dataName="Background Color" id="2789937f-a412-414b-bac3-8f3f26069f9c">
+        <parameter dataName="Background Color" id="498b2b5e-baf6-af49-a544-909a664a4e54">
           <genericObject objectType="OneDDoubleArray">
-            <data>0.5019607843</data>
-            <data>0.5019607843</data>
-            <data>0.5019607843</data>
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
             <data>1</data>
           </genericObject>
         </parameter>
