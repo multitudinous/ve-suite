@@ -1,8 +1,8 @@
 #ifndef JPG_VARIANT_TEST_H_
 #define JPG_VARIANT_TEST_H_
 
-#include "VE_Xplorer/TextureBased/Variant.h"
-#include "VE_Xplorer/TextureBased/Database.h"
+#include "ves/xplorer/volume/Variant.h"
+#include "ves/xplorer/volume/Database.h"
 
 #include <loki/Typelist.h>
 #include <loki/Visitor.h>

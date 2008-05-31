@@ -1,7 +1,7 @@
 #ifndef JPG_SCALAR_DATA_TEST_H_
 #define JPG_SCALAR_DATA_TEST_H_
 
-#include "VE_Xplorer/TextureBased/ScalarData.h"
+#include "ves/xplorer/volume/ScalarData.h"
 
 #include <cxxtest/TestSuite.h>
 #include <limits>

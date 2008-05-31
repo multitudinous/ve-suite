@@ -291,7 +291,7 @@ gadgeteer_options = fp_option.FlagPollBasedOption("Gadgeteer",
 
 vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
 
-osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, 
+osgal_options = fp_option.FlagPollBasedOption("osgal", "osgal", "0.6.1", False, True, 
                                               None, 
                                               True, headerToCheck=None)
 

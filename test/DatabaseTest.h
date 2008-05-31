@@ -1,7 +1,7 @@
 #ifndef JPG_DATABASE_TEST_H_
 #define JPG_DATABASE_TEST_H_
 
-#include "VE_Xplorer/TextureBased/Database.h"
+#include "ves/xplorer/volume/Database.h"
 
 #include <cxxtest/TestSuite.h>
 

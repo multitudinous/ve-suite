@@ -1,8 +1,8 @@
 #ifndef JPG_SQLITE_DRIVER_TEST_H_
 #define JPG_SQLITE_DRIVER_TEST_H_
 
-#include "VE_Xplorer/TextureBased/SQLiteDriver.h"
-#include "VE_Xplorer/TextureBased/Data.h"
+#include "ves/xplorer/volume/SQLiteDriver.h"
+#include "ves/xplorer/volume/Data.h"
 
 #include <cxxtest/TestSuite.h>
 

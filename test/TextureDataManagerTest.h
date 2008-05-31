@@ -1,8 +1,8 @@
 #ifndef JPG_TEXTURE_DATA_MANAGER_TEST_H_
 #define JPG_TEXTURE_DATA_MANAGER_TEST_H_
 
-#include "VE_Xplorer/TextureBased/TextureDataManager.h"
-#include "VE_Xplorer/TextureBased/TimestepData.h"
+#include "ves/xplorer/volume/TextureDataManager.h"
+#include "ves/xplorer/volume/TimestepData.h"
 
 #include <cxxtest/TestSuite.h>
 

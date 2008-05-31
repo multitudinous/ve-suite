@@ -1,7 +1,7 @@
 #ifndef JPG_VECTOR_DATA_TEST_H_
 #define JPG_VECTOR_DATA_TEST_H_
 
-#include "VE_Xplorer/TextureBased/VectorData.h"
+#include "ves/xplorer/volume/VectorData.h"
 
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>

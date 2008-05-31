@@ -1,7 +1,7 @@
 #ifndef JPG_TEXTURE_DATA_TEST_H_
 #define JPG_TEXTURE_DATA_TEST_H_
 
-#include "VE_Xplorer/TextureBased/TextureData.h"
+#include "ves/xplorer/volume/TextureData.h"
 
 #include <cxxtest/TestSuite.h>
 

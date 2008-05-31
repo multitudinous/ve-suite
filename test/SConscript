@@ -15,12 +15,17 @@ cxx_test = Action('python %s %s -o $TARGET $SOURCES' % (
 CxxTestBuilder = Builder(action=cxx_test)
 env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
                   CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
-                             pj('#', 'external', 'loki-0.1.6', 'include')],
+                             pj('#', 'external', 'loki-0.1.6', 'include'),
+                             pj('#', 'src'),
+                             '#'],
                   LIBS = ['sqlite3'])
 
 # Provide a list of headers that have to be run through CxxTest to create
 # the source files.
 test_hdrs = Split("""
+   CircularQueueTest.h
+""")
+"""
    DatabaseTest.h
    ScalarDataTest.h
    SQLiteDriverTest.h
@@ -28,21 +33,21 @@ test_hdrs = Split("""
    TextureDataManagerTest.h
    VariantTest.h
    VectorDataTest.h
-""")
+"""
 env.CxxTest('TestRunner.cpp', test_hdrs)
 
 srcs = Split("""
    TestRunner.cpp
 """)
 
-orig_srcs = Split("""
-   Database.cxx
-   SQLiteDriver.cxx
-   TextureDataManager.cxx
-   VectorData.cxx
-""")
-orig_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), orig_srcs)
-srcs.extend(orig_srcs)
+#orig_srcs = Split("""
+#   Database.cxx
+#   SQLiteDriver.cxx
+#   TextureDataManager.cxx
+#   VectorData.cxx
+#""")
+#orig_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), orig_srcs)
+#srcs.extend(orig_srcs)
    
 loki_srcs = Split("""
    SmallObj.cpp
@@ -54,7 +59,7 @@ loki_srcs = map(lambda s: pj('#', 'external', 'loki-0.1.6', 'src', s),
 srcs.extend(loki_srcs)
 
 
-env.Program('TestRunner.exe', srcs)
+env.Program('TestRunner', srcs)
 
 
 SConscript( dirs = ['vtk'] )
