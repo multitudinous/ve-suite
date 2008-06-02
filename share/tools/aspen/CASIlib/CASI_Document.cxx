@@ -44,6 +44,7 @@ namespace CASI
             //throw error
 			AfxMessageBox("hAPsim initialization failed.");
             return;
+
         }
 		CString sim = filename;
 		BSTR bstr = sim.AllocSysString();

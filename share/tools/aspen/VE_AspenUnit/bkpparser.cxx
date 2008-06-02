@@ -1467,10 +1467,13 @@ std::string BKPParser::GetInputModuleParams(std::string modname)
 	std::vector<std::string> paramList;
 	//input variables;
 	params->SetCommandName((modname+"InputParams").c_str());
-	
 	for (i = 0; i < (int)cur_block.getNumInputVar(); i++)
 	{	
-        paramList.push_back((char*)LPCTSTR(cur_block.getInputVarName(i)));
+        paramList.push_back( (char*)LPCTSTR(cur_block.getInputVarName(i)) );
+	    for (int j = 0; j < (int)cur_block.getNumSubInputVar( cur_block.getInputVarName(i) ); j++)
+        {
+            paramList.push_back( (char*)LPCTSTR(cur_block.getInputVarName(i)+"."+cur_block.getInputSubVarName(cur_block.getInputVarName(i),j)) );
+        }
     }
 
 	ves::open::xml::DataValuePairPtr inpParams( new ves::open::xml::DataValuePair() );
@@ -1602,7 +1605,13 @@ std::string BKPParser::GetOutputModuleParams(std::string modname)
 	params->SetCommandName((modname+"OutputParams").c_str());
 	
 	for (i = 0; i < (int)cur_block.getNumOutputVar(); i++)
-		paramList.push_back((char*)LPCTSTR(cur_block.getOutputVarName(i)));
+    {
+        paramList.push_back((char*)LPCTSTR(cur_block.getOutputVarName(i)));
+	    for (int j = 0; j < (int)cur_block.getNumSubOutputVar( cur_block.getOutputVarName(i) ); j++)
+        {
+            paramList.push_back( (char*)LPCTSTR(cur_block.getOutputVarName(i)+"."+cur_block.getOutputSubVarName(cur_block.getOutputVarName(i),j)) );
+        }
+    }
 
 	ves::open::xml::DataValuePairPtr inpParams( new ves::open::xml::DataValuePair() );
 	inpParams->SetData("params",paramList);
@@ -1736,8 +1745,14 @@ std::string BKPParser::GetStreamInputModuleParams(std::string modname)
 	params->SetCommandName((modname+"InputParams").c_str());
 	int test = (int)cur_stream.getNumInputVar();
 	for (i = 0; i < (int)cur_stream.getNumInputVar(); i++)
+    {
 		//paramList.push_back((char*)LPCTSTR(cur_stream.getStreamCompName(i)));
 		paramList.push_back((char*)LPCTSTR(cur_stream.getInputVarName(i)));
+	    for (int j = 0; j < (int)cur_stream.getNumSubInputVar( cur_stream.getInputVarName(i) ); j++)
+        {
+            paramList.push_back( (char*)LPCTSTR(cur_stream.getInputVarName(i)+"."+cur_stream.getInputSubVarName(cur_stream.getInputVarName(i),j)) );
+        }
+    }
 
 	ves::open::xml::DataValuePairPtr inpParams( new ves::open::xml::DataValuePair() );
 	inpParams->SetData("params",paramList);
@@ -1869,7 +1884,13 @@ std::string BKPParser::GetStreamOutputModuleParams(std::string modname)
 	params->SetCommandName((modname+"OutputParams").c_str());
 	
 	for (i = 0; i < (int)cur_stream.getNumOutputVar(); i++)
+    {
 		paramList.push_back((char*)LPCTSTR(cur_stream.getOutputVarName(i)));
+	    for (int j = 0; j < (int)cur_stream.getNumSubOutputVar( cur_stream.getOutputVarName(i) ); j++)
+        {
+            paramList.push_back( (char*)LPCTSTR(cur_stream.getOutputVarName(i)+"."+cur_stream.getOutputSubVarName(cur_stream.getOutputVarName(i),j)) );
+        }
+    }
 
 	ves::open::xml::DataValuePairPtr inpParams( new ves::open::xml::DataValuePair() );
 	inpParams->SetData("params",paramList);

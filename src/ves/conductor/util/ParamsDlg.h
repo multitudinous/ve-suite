@@ -46,6 +46,7 @@
 #include <wx/statbox.h>
 #include <wx/choice.h>
 #include <wx/textctrl.h>
+#include <wx/treectrl.h>
 #include <wx/stattext.h>
 
 #undef ParamsDlg_STYLE
@@ -126,7 +127,7 @@ public:
     };
 
     void WxButton1Click( wxCommandEvent& event );
-    void ParamChoiceSelected( wxCommandEvent& event );
+    void ParamChoiceSelected( wxTreeEvent& event );
     void SetButtonClick( wxCommandEvent& event );
     void AppendList( const char * );
     void SetCompName( const char * );
@@ -192,12 +193,15 @@ private:
     wxStaticBox *VARBox;
     wxStaticText *DimensionLabel;
     wxTextCtrl *DimensionEdit;
-    wxChoice *ParamChoice;
+    wxTreeCtrl *ParamChoice;
     wxStaticText *NodePathLabel;
     wxTextCtrl *NodePath;
     wxStaticText *ParameterLabel;
 
     bool IsBlock;
+    wxTreeItemId m_rootId;
+    wxTreeItemId m_prevId;
+    wxTreeItemId m_prevSelection;
 
 private:
     //void OnClose( wxCloseEvent& event );
