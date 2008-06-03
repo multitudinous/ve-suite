@@ -271,10 +271,11 @@ void ParamsDlg::CreateGUIControls()
     wxArrayString arrayStringFor_ParamChoice;
     ParamChoice =
         new wxTreeCtrl( this, ID_PARAMCHOICE,
-        wxPoint( 5, 5 ), wxSize( 200, 345 ), wxTR_HIDE_ROOT,
+        wxPoint( 5, 5 ), wxSize( 200, 345 ),
+        wxTR_HAS_BUTTONS | wxTR_HIDE_ROOT | wxTR_LINES_AT_ROOT,
         wxDefaultValidator, wxT( "ParamChoice" ) );
     
-    m_rootId = ParamChoice->AddRoot( wxT( "Data" ), 0, -1, NULL );
+    m_rootId = ParamChoice->AddRoot( wxT( "Inputs" ), 0, -1, NULL );
     m_prevSelection = m_rootId;
     //ParamChoice->SetSelection( -1 );
 
@@ -292,7 +293,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
 {
     //get selection
     wxTreeItemId selection = ParamChoice->GetSelection();
-    if( m_prevSelection != selection )
+    if( m_prevSelection != selection | selection != m_rootId  )
     {
         //get components name
         std::string compName = ConvertUnicode( CompName.c_str() );
