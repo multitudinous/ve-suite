@@ -186,6 +186,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
     EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
     EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::OnCloseAspenSimulation )
+	EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, AppFrame::ReinitializeAspenSimulation )
     EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
     EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
@@ -712,6 +713,7 @@ void AppFrame::CreateMenu()
     aspenMenu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
     aspenMenu->Append( CLOSE_ASPEN_SIMULATION, _( "Close Simulation" ) );
     aspenMenu->Append( RUN_ASPEN_NETWORK, _( "Run" ) );
+	aspenMenu->Append( REINITIALIZE_ASPEN_SIMULATION, _( "Reinitialize" ) );
     aspenMenu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
     aspenMenu->Append( CONDUCTOR_FIND, _( "Find" ) );
     aspenMenu->Append( SAVE_SIMULATION, _( "Save Simulation" ) );
@@ -1449,6 +1451,26 @@ void AppFrame::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     returnState->SetCommandName( "runNetwork" );
     DataValuePairPtr data( new DataValuePair() );
     data->SetData( "NetworkQuery", "runNetwork" );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    serviceList->Query( status );
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+{
+	Log( "Reinitialize Simulation.\n" );
+	CommandPtr returnState( new Command() );
+    returnState->SetCommandName( "reinitNetwork" );
+    DataValuePairPtr data( new DataValuePair() );
+    data->SetData( "NetworkQuery", "reinitNetwork" );
     returnState->AddDataValuePair( data );
 
     std::vector< std::pair< XMLObjectPtr, std::string > > nodes;

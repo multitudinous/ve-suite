@@ -126,6 +126,7 @@ public:
         SHOW_ASPEN_SIMULATION,
         HIDE_ASPEN_SIMULATION,
         CLOSE_ASPEN_SIMULATION,
+		REINITIALIZE_ASPEN_SIMULATION,
         CONDUCTOR_FIND,
         SAVE_SIMULATION,
         SAVEAS_SIMULATION,
@@ -320,6 +321,7 @@ protected:
     void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
     void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
     void OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+	void ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
     void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
     void SaveSimulation( wxCommandEvent& WXUNUSED( event ) );
     void SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) );

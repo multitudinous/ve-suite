@@ -70,6 +70,7 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name, /*BKPP
     mQueryCommandNames.insert( "getNetwork");
     mQueryCommandNames.insert( "openSimulation");
     mQueryCommandNames.insert( "runNetwork");
+	mQueryCommandNames.insert( "reinitNetwork");
     mQueryCommandNames.insert( "stepNetwork");
     mQueryCommandNames.insert( "showSimulation");
     mQueryCommandNames.insert( "hideSimulation");
@@ -118,6 +119,10 @@ void Body_Unit_i::StepSim()
 	bkp->step();
 }
 
+void Body_Unit_i::ReinitializeAspen()
+{
+	bkp->ReinitAspen();
+}
 void Body_Unit_i::StartCalc (
     
   )
@@ -397,6 +402,11 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleSaveAs(cmd);
 		return returnValue;
 	}
+	else if( cmdname == "reinitNetwork" )
+	{
+		ReinitializeAspen();
+		return CORBA::string_dup( "Simulation reinitialized." );
+	}
 
 	//Blocks
 	else if (cmdname=="getInputModuleParamList")
@@ -423,7 +433,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleGetOutputModuleProperties(cmd);
 		return returnValue;
 	}
-	
+
 	//Streams
 	else if (cmdname=="getStreamInputModuleParamList")
 	{

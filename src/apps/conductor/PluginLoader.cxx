@@ -64,7 +64,7 @@ PluginLoader::~PluginLoader()
         delete plugins.at( i );
     }
     plugins.clear();
-    
+
     for( size_t i = 0; i < mPluginLibs.size(); ++i )
     {
         //std::cout << "Loaded " << ConvertUnicode( mPluginNames.at( i ).c_str() )

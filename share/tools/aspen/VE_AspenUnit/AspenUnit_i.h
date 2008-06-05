@@ -71,6 +71,7 @@ public:
   void ShowAspen ();  
   void HideAspen ();  
   void CloseAspen ();
+  void ReinitializeAspen();
   void SaveAspen ();
   void StepSim ();
   

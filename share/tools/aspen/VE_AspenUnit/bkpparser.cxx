@@ -89,6 +89,11 @@ void BKPParser::step()
     aspendoc->step();
 }
 ///////////////////////////////////////////////////////////////////////////////
+void BKPParser::ReinitAspen()
+{
+	aspendoc->initializeSolver();
+}
+///////////////////////////////////////////////////////////////////////////////
 int BKPParser::getNumComponents()
 {
 	return BlockInfoList.size(); //vectors are all same length

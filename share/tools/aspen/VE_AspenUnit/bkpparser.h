@@ -98,7 +98,8 @@ public:
 	void closeFile();                                             //close the file
 	void saveFile();  
 	void saveAs(const char *);                
-	void showAspen(bool);                 
+	void showAspen(bool);    
+	void ReinitAspen();
 	void step();
 	int getNumComponents();                                            //returns total components
 	//std::string getBlockType(std::string);                                     //returns the filename of component
