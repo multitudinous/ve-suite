@@ -386,8 +386,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     }
     
     //Set per vertex lighting on all files that are loaded
-    osgUtil::SmoothingVisitor smoother;
-    m_cadNode->accept( smoother );
+    //osgUtil::SmoothingVisitor smoother;
+    //m_cadNode->accept( smoother );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CADEntityHelper::AddOccluderNodes()
