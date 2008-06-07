@@ -350,8 +350,8 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         else
         {
             data->SetData( std::string( "ParamName" ),
-                ConvertUnicode( ParamChoice->GetItemText( parentId ) + "." +
-                ParamChoice->GetItemText( selection ).c_str() ) );
+                ConvertUnicode( ParamChoice->GetItemText( parentId ) ) + std::string( "." ) +
+                ConvertUnicode( ParamChoice->GetItemText( selection ) ) );
         }
         returnState->AddDataValuePair( data );
         std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >

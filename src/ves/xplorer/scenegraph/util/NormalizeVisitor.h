@@ -65,7 +65,7 @@ public:
 private:
     //setup the normalize state for the node
     ///\param stateset The stateset to modify
-    void SetupNormalizeForStateSet( osg::StateSet* stateset);
+    void SetupNormalizeForStateSet( osg::StateSet* stateset, osg::Node* node );
     ///Decide whether to set normalize on the nodes
     bool mNormalize;
 };

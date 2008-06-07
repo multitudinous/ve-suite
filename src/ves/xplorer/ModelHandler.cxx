@@ -503,7 +503,7 @@ void ModelHandler::InitScene( void )
         << oldDatasetName << std::endl << vprDEBUG_FLUSH;
     }
 }
-
+////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////
 // PreFrameUpdate - Be sure to set the commandArray before calling this
 // function.
