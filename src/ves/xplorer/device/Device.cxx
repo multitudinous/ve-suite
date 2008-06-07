@@ -56,9 +56,11 @@ Device::Device()
     :
     mCenterPoint( 0 ),
     mCenterPointThreshold( 0 ),
-    mCenterPointJump( 0 )
+    mCenterPointJump( 0 ),
+    mResetPosition( 0 ),
+    mResetAxis( 0 )
 {
-    mResetPosition.resize( 3 );
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Device::~Device()
@@ -203,7 +205,7 @@ void Device::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Device::SetResetWorldPosition(
-    osg::Quat& quat, std::vector< double >& pos )
+    osg::Quat* quat, std::vector< double >* pos )
 {
     mResetAxis = quat;
     mResetPosition = pos;

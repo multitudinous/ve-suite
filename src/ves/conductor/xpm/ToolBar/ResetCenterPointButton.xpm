@@ -1,5 +1,5 @@
 /* XPM */
-static char * BBCenterPointJumpButton_xpm[] = {
+static char * ResetCenterPointButton_xpm[] = {
 "32 32 254 2",
 "  	c #9AC2DB",
 ". 	c #64A2C7",

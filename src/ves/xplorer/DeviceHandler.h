@@ -112,6 +112,9 @@ public:
     ///Process navigation and selection commands
     void ProcessDeviceEvents();
 
+    ///Reset the center point of rotation
+    void ResetCenterPoint();
+
     ///Set the active coordinate system
     ///\param dcs The current active coordinate system
     void SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS );
@@ -152,6 +155,9 @@ private:
 
     ///The point about which rotation occurs
     gmtl::Point3d mCenterPoint;
+
+    ///The reset position for the center point
+    gmtl::Point3d mResetCenterPointPosition;
 
     ///The axis for the reset location of the world
     osg::Quat mResetAxis;

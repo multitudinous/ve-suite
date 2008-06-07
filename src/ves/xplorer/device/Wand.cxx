@@ -244,10 +244,10 @@ void Wand::UpdateNavigation()
               buttonData[ 4 ] == gadget::Digital::ON )
     {
         m_buttonPushed = true;
-        world_quat = mResetAxis;
+        world_quat = *mResetAxis;
         for( unsigned int i = 0; i < 3; ++i )
         {
-            m_worldTrans[ i ] = -mResetPosition[ i ];
+            m_worldTrans[ i ] = -mResetPosition->at( i );
             //world_quat[ i ] = 0.0f;
             mCenterPoint->mData[ i ] = 0.0f;
         }

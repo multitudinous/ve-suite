@@ -588,7 +588,7 @@ void KeyboardMouse::FrameAll()
         gmtl::makeTrans< gmtl::Point3d >( vjHeadMatrix );
     //We have to offset negative mX because
     //the view and frustum are drawn for the left eye
-    startPoint[ 0 ] =  vjHeadPosition.mData[ 0 ] - ( 0.0345 * 3.2808399 );
+    startPoint[ 0 ] =  vjHeadPosition.mData[ 0 ];
     startPoint[ 1 ] = -vjHeadPosition.mData[ 2 ];
     startPoint[ 2 ] =  vjHeadPosition.mData[ 1 ];
 
@@ -781,9 +781,9 @@ void KeyboardMouse::SkyCam( )
     
     //reset view
     ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->SetQuat( mResetAxis );
+        GetWorldDCS()->SetQuat( *mResetAxis );
     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-        SetTranslationArray( mResetPosition );
+        SetTranslationArray( *mResetPosition );
     
     //Grab the current matrix
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
@@ -823,9 +823,9 @@ void KeyboardMouse::SkyCamTo( )
     
     //reset view
     ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->SetQuat( mResetAxis );
+        GetWorldDCS()->SetQuat( *mResetAxis );
     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-        SetTranslationArray( mResetPosition );
+        SetTranslationArray( *mResetPosition );
 
     //get the selected plugins cad
     //highlight it.
@@ -1028,16 +1028,17 @@ void KeyboardMouse::SelMotion( std::pair< double, double > delta )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ResetTransforms()
 {
-    gmtl::Matrix44d matrix;
-    mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
+    ves::xplorer::DeviceHandler::instance()->ResetCenterPoint();
 
+    gmtl::Matrix44d matrix;
+    gmtl::identity( matrix );
     ves::xplorer::scenegraph::SceneManager::instance()->
         GetActiveSwitchNode()->SetMat( matrix );
     
     ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->SetQuat( mResetAxis );
+        GetWorldDCS()->SetQuat( *mResetAxis );
     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-        SetTranslationArray( mResetPosition );
+        SetTranslationArray( *mResetPosition );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::RotateView( double dx, double dy )

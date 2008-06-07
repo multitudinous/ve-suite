@@ -30,9 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef CENTER_POINT_JUMP_EVENT_HANDLER_H
-#define CENTER_POINT_JUMP_EVENT_HANDLER_H
+#ifndef CENTER_POINT_EVENT_HANDLER_H
+#define CENTER_POINT_EVENT_HANDLER_H
 
+// --- VE-Suite Includes --- //
 #include <ves/xplorer/event/EventHandler.h>
 
 namespace ves
@@ -41,24 +42,23 @@ namespace xplorer
 {
 namespace event
 {
-/*!\file CenterPointJumpEventHandler.h
+/*!\file CenterPointEventHandler.h
  *
  */
-
-/*!\class CenterPointJumpEventHandler
+/*!\class CenterPointEventHandler
  *
  */
-class CenterPointJumpEventHandler : public EventHandler
+class CenterPointEventHandler : public EventHandler
 {
 public:
     //Constructor
-    CenterPointJumpEventHandler();
+    CenterPointEventHandler();
 
     //Copy Constructor
-    CenterPointJumpEventHandler( const CenterPointJumpEventHandler& ceh );
+    CenterPointEventHandler( const CenterPointEventHandler& ceh );
 
     //Destructor
-    virtual ~CenterPointJumpEventHandler();
+    virtual ~CenterPointEventHandler();
 
     //Set the cfdModel
     //param model The ModelHandler to execute the Command on
@@ -69,13 +69,15 @@ public:
     void Execute( const ves::open::xml::XMLObjectPtr& command );
 
     //Equal operator
-    CenterPointJumpEventHandler& operator=( const CenterPointJumpEventHandler& rhs );
+    CenterPointEventHandler& operator=( const CenterPointEventHandler& rhs );
 
 protected:
 
-};
-}
-}
-}
+private:
 
-#endif //CENTER_POINT_JUMP_EVENT_HANDLER_H
+};
+} //end event
+} //end xplorer
+} //end ves
+
+#endif //CENTER_POINT_EVENT_HANDLER_H

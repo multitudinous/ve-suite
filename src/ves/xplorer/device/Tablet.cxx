@@ -126,10 +126,10 @@ void Tablet::UpdateNavigation()
     }
     else if( !newCommand.compare( "RESET_NAVIGATION_POSITION" ) )
     {
-        world_quat = mResetAxis;
+        world_quat = *mResetAxis;
         for( unsigned int i = 0; i < 3; ++i )
         {
-            worldTrans[ i ] = -mResetPosition[ i ];
+            worldTrans[ i ] = -mResetPosition->at( i );
             //world_quat[ i ] = 0.0f;
             mCenterPoint->mData[ i ] = 0.0f;
         }

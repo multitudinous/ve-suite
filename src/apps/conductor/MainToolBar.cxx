@@ -51,8 +51,7 @@
 #include <ves/conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm>
 #include <ves/conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm>
-#include <ves/conductor/xpm/ToolBar/BBCenterPointJumpButton.xpm>
-#include <ves/conductor/xpm/ToolBar/BBCenterPointJumpButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/ResetCenterPointButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButtonDisabled.xpm>
@@ -87,10 +86,10 @@ BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_OBJECT_NAVIGATION, MainToolBar::OnChangeDeviceMode )
     EVT_MENU( TOOLBAR_UNSELECT, MainToolBar::OnUnselectObjects )
 
-    EVT_MENU( TOOLBAR_SMALL_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
-    EVT_MENU( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
-    EVT_MENU( TOOLBAR_LARGE_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
-    EVT_MENU( TOOLBAR_BB_CENTERPOINT_JUMP, MainToolBar::OnChangeCenterPointJump )
+    EVT_MENU( TOOLBAR_SMALL_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
+    EVT_MENU( TOOLBAR_MEDIUM_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
+    EVT_MENU( TOOLBAR_LARGE_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
+    EVT_MENU( TOOLBAR_RESET_CENTER_POINT, MainToolBar::OnCenterPointUpdate )
 
     EVT_MENU( TOOLBAR_PHYSICS, MainToolBar::OnPhysicsState )
 
@@ -121,72 +120,70 @@ MainToolBar::~MainToolBar()
 ////////////////////////////////////////////////////////////////////////////////
 void MainToolBar::LoadToolBarBitmaps()
 {
-    m_toolbarBitmaps[ std::string( "newBitmap" )] =
+    mToolbarBitmaps[ std::string( "newBitmap" )] =
         wxBitmap( NewDocumentButton_xpm );
-    m_toolbarBitmaps[ std::string( "openBitmap" )] =
+    mToolbarBitmaps[ std::string( "openBitmap" )] =
         wxBitmap( OpenButton_xpm );
-    m_toolbarBitmaps[ std::string( "saveBitmap" )] =
+    mToolbarBitmaps[ std::string( "saveBitmap" )] =
         wxBitmap( SaveButton_xpm );
 
-    m_toolbarBitmaps[ std::string( "cursorBitmap" )] =
+    mToolbarBitmaps[ std::string( "cursorBitmap" )] =
         wxBitmap( CursorButton_xpm );
-    m_toolbarBitmaps[ std::string( "cursorSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "cursorSelectBitmap" )] =
         wxBitmap( CursorButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "worldNavigationBitmap" )] =
+    mToolbarBitmaps[ std::string( "worldNavigationBitmap" )] =
         wxBitmap( WorldNavigationButton_xpm );
-    m_toolbarBitmaps[ std::string( "worldNavigationSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "worldNavigationSelectBitmap" )] =
         wxBitmap( WorldNavigationButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "objectNavigationBitmap" )] =
+    mToolbarBitmaps[ std::string( "objectNavigationBitmap" )] =
         wxBitmap( ObjectNavigationButton_xpm );
-    m_toolbarBitmaps[ std::string( "objectNavigationSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "objectNavigationSelectBitmap" )] =
         wxBitmap( ObjectNavigationButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "unselectBitmap" )] =
+    mToolbarBitmaps[ std::string( "unselectBitmap" )] =
         wxBitmap( UnselectButton_xpm );
 
-    m_toolbarBitmaps[ std::string( "smallCenterPointBitmap" )] =
+    mToolbarBitmaps[ std::string( "smallCenterPointBitmap" )] =
         wxBitmap( SmallCenterPointJumpButton_xpm );
-    m_toolbarBitmaps[ std::string( "smallCenterPointSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "smallCenterPointSelectBitmap" )] =
         wxBitmap( SmallCenterPointJumpButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "mediumCenterPointBitmap" )] =
+    mToolbarBitmaps[ std::string( "mediumCenterPointBitmap" )] =
         wxBitmap( MediumCenterPointJumpButton_xpm );
-    m_toolbarBitmaps[ std::string( "mediumCenterPointSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "mediumCenterPointSelectBitmap" )] =
         wxBitmap( MediumCenterPointJumpButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "largeCenterPointBitmap" )] =
+    mToolbarBitmaps[ std::string( "largeCenterPointBitmap" )] =
         wxBitmap( LargeCenterPointJumpButton_xpm );
-    m_toolbarBitmaps[ std::string( "largeCenterPointSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "largeCenterPointSelectBitmap" )] =
         wxBitmap( LargeCenterPointJumpButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "bbCenterPointBitmap" )] =
-        wxBitmap( BBCenterPointJumpButton_xpm );
-    m_toolbarBitmaps[ std::string( "bbCenterPointSelectBitmap" )] =
-        wxBitmap( BBCenterPointJumpButtonSelect_xpm );
+    mToolbarBitmaps[ std::string( "resetCenterPointBitmap" )] =
+        wxBitmap( ResetCenterPointButton_xpm );
 
-    m_toolbarBitmaps[ std::string( "physicsBitmap" )] =
+    mToolbarBitmaps[ std::string( "physicsBitmap" )] =
         wxBitmap( PhysicsButton_xpm );
-    m_toolbarBitmaps[ std::string( "physicsSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "physicsSelectBitmap" )] =
         wxBitmap( PhysicsButtonSelect_xpm );
 
-    m_toolbarBitmaps[ std::string( "resetBitmap" )] =
+    mToolbarBitmaps[ std::string( "resetBitmap" )] =
         wxBitmap( ResetButton_xpm );
-    m_toolbarBitmaps[ std::string( "resetDisabledBitmap" )] =
+    mToolbarBitmaps[ std::string( "resetDisabledBitmap" )] =
         wxBitmap( ResetButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "pauseBitmap" )] =
+    mToolbarBitmaps[ std::string( "pauseBitmap" )] =
         wxBitmap( PauseButton_xpm );
-    m_toolbarBitmaps[ std::string( "pauseSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "pauseSelectBitmap" )] =
         wxBitmap( PauseButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "pauseDisabledBitmap" )] =
+    mToolbarBitmaps[ std::string( "pauseDisabledBitmap" )] =
         wxBitmap( PauseButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "playBitmap" )] =
+    mToolbarBitmaps[ std::string( "playBitmap" )] =
         wxBitmap( PlayButton_xpm );
-    m_toolbarBitmaps[ std::string( "playSelectBitmap" )] =
+    mToolbarBitmaps[ std::string( "playSelectBitmap" )] =
         wxBitmap( PlayButtonSelect_xpm );
-    m_toolbarBitmaps[ std::string( "playDisabledBitmap" )] =
+    mToolbarBitmaps[ std::string( "playDisabledBitmap" )] =
         wxBitmap( PlayButtonDisabled_xpm );
-    m_toolbarBitmaps[ std::string( "stepBitmap" )] =
+    mToolbarBitmaps[ std::string( "stepBitmap" )] =
         wxBitmap( StepButton_xpm );
-    m_toolbarBitmaps[ std::string( "stepDisabledBitmap" )] =
+    mToolbarBitmaps[ std::string( "stepDisabledBitmap" )] =
         wxBitmap( StepButtonDisabled_xpm );
 
-    m_toolbarBitmaps[ std::string( "sendJobBitmap" )] =
+    mToolbarBitmaps[ std::string( "sendJobBitmap" )] =
         wxBitmap( SendJobButton_xpm );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,45 +193,45 @@ void MainToolBar::CreateMainToolBar()
     SetToolBitmapSize( wxSize( 32, 32 ) );
     SetToolSeparation( 10 );
 
-    AddTool( wxID_NEW, _( "" ), m_toolbarBitmaps[ "newBitmap" ], _( "New" ), wxITEM_NORMAL );
-    AddTool( wxID_OPEN, _( "" ), m_toolbarBitmaps[ "openBitmap" ], _( "Open" ), wxITEM_NORMAL );
-    AddTool( wxID_SAVE, _( "" ), m_toolbarBitmaps[ "saveBitmap" ], _( "Save" ), wxITEM_NORMAL );
+    AddTool( wxID_NEW, _( "" ), mToolbarBitmaps[ "newBitmap" ], _( "New" ), wxITEM_NORMAL );
+    AddTool( wxID_OPEN, _( "" ), mToolbarBitmaps[ "openBitmap" ], _( "Open" ), wxITEM_NORMAL );
+    AddTool( wxID_SAVE, _( "" ), mToolbarBitmaps[ "saveBitmap" ], _( "Save" ), wxITEM_NORMAL );
     AddSeparator();
 
-    AddTool( TOOLBAR_SELECTION, _( "" ), m_toolbarBitmaps[ "cursorBitmap" ], _( "Selection" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_WORLD_NAVIGATION, _( "" ), m_toolbarBitmaps[ "worldNavigationSelectBitmap" ], _( "World Navigation" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_OBJECT_NAVIGATION, _( "" ), m_toolbarBitmaps[ "objectNavigationBitmap" ], _( "Object Navigation" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_UNSELECT, _( "" ), m_toolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
+    AddTool( TOOLBAR_SELECTION, _( "" ), mToolbarBitmaps[ "cursorBitmap" ], _( "Selection" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_WORLD_NAVIGATION, _( "" ), mToolbarBitmaps[ "worldNavigationSelectBitmap" ], _( "World Navigation" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_OBJECT_NAVIGATION, _( "" ), mToolbarBitmaps[ "objectNavigationBitmap" ], _( "Object Navigation" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_UNSELECT, _( "" ), mToolbarBitmaps[ "unselectBitmap" ], _( "Unselect Objects" ), wxITEM_NORMAL );
     AddSeparator();
 
-    AddTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_LARGE_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
-    AddTool( TOOLBAR_BB_CENTERPOINT_JUMP, _( "" ), m_toolbarBitmaps[ "bbCenterPointBitmap" ], _( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_SMALL_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_MEDIUM_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_LARGE_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_RESET_CENTER_POINT, _( "" ), mToolbarBitmaps[ "resetCenterPointBitmap" ], _( "Reset Centerpoint" ), wxITEM_NORMAL );
     AddSeparator();
 
-    AddTool( TOOLBAR_PHYSICS, _( "" ), m_toolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
+    AddTool( TOOLBAR_PHYSICS, _( "" ), mToolbarBitmaps[ "physicsBitmap" ], _( "Physics On/Off" ), wxITEM_CHECK );
 #ifdef WIN32
-    AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], m_toolbarBitmaps[ "resetDisabledBitmap" ], wxITEM_NORMAL, _( "Reset Simulation" ) );
-    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], m_toolbarBitmaps[ "pauseDisabledBitmap" ], wxITEM_CHECK, _( "Pause Simulation" ) );
-    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], m_toolbarBitmaps[ "playDisabledBitmap" ], wxITEM_CHECK, _( "Start Simulation" ) );
-    AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], m_toolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL, _( "Step Simulation" ) );
+    AddTool( TOOLBAR_RESET, _( "" ), mToolbarBitmaps[ "resetBitmap" ], mToolbarBitmaps[ "resetDisabledBitmap" ], wxITEM_NORMAL, _( "Reset Simulation" ) );
+    AddTool( TOOLBAR_PAUSE, _( "" ), mToolbarBitmaps[ "pauseBitmap" ], mToolbarBitmaps[ "pauseDisabledBitmap" ], wxITEM_CHECK, _( "Pause Simulation" ) );
+    AddTool( TOOLBAR_PLAY, _( "" ), mToolbarBitmaps[ "playBitmap" ], mToolbarBitmaps[ "playDisabledBitmap" ], wxITEM_CHECK, _( "Start Simulation" ) );
+    AddTool( TOOLBAR_STEP, _( "" ), mToolbarBitmaps[ "stepBitmap" ], mToolbarBitmaps[ "stepDisabledBitmap" ], wxITEM_NORMAL, _( "Step Simulation" ) );
 #else
-    AddTool( TOOLBAR_RESET, _( "" ), m_toolbarBitmaps[ "resetBitmap" ], _( "Reset Simulation" ), wxITEM_NORMAL );
-    AddTool( TOOLBAR_PAUSE, _( "" ), m_toolbarBitmaps[ "pauseBitmap" ], _( "Pause Simulation" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_PLAY, _( "" ), m_toolbarBitmaps[ "playBitmap" ], _( "Start Simulation" ), wxITEM_CHECK );
-    AddTool( TOOLBAR_STEP, _( "" ), m_toolbarBitmaps[ "stepBitmap" ], _( "Step Simulation" ), wxITEM_NORMAL );
+    AddTool( TOOLBAR_RESET, _( "" ), mToolbarBitmaps[ "resetBitmap" ], _( "Reset Simulation" ), wxITEM_NORMAL );
+    AddTool( TOOLBAR_PAUSE, _( "" ), mToolbarBitmaps[ "pauseBitmap" ], _( "Pause Simulation" ), wxITEM_CHECK );
+    AddTool( TOOLBAR_PLAY, _( "" ), mToolbarBitmaps[ "playBitmap" ], _( "Start Simulation" ), wxITEM_CHECK );
+    AddTool( TOOLBAR_STEP, _( "" ), mToolbarBitmaps[ "stepBitmap" ], _( "Step Simulation" ), wxITEM_NORMAL );
 #endif
     AddSeparator();
 
-    AddTool( TOOLBAR_SUMMIT_JOB, _( "" ), m_toolbarBitmaps[ "sendJobBitmap" ], _( "Submit Job" ), wxITEM_NORMAL );
+    AddTool( TOOLBAR_SUMMIT_JOB, _( "" ), mToolbarBitmaps[ "sendJobBitmap" ], _( "Submit Job" ), wxITEM_NORMAL );
 
     Realize();
 
     ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
-    ToggleTool( TOOLBAR_SMALL_CENTERPOINT_JUMP, true );
+    ToggleTool( TOOLBAR_SMALL_CENTER_POINT_JUMP, true );
 #ifdef WIN32
-    SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
+    SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseDisabledBitmap" ] );
 #endif
 
     EnableTool( TOOLBAR_RESET, false );
@@ -269,27 +266,27 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     {
         mode = "Selection";
 
-        SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_SELECTION, mToolbarBitmaps[ "cursorSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, mToolbarBitmaps[ "worldNavigationBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, mToolbarBitmaps[ "objectNavigationBitmap" ] );
     }
 
     else if( event.GetId() == TOOLBAR_WORLD_NAVIGATION )
     {
         mode = "World Navigation";
 
-        SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_SELECTION, mToolbarBitmaps[ "cursorBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, mToolbarBitmaps[ "worldNavigationSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, mToolbarBitmaps[ "objectNavigationBitmap" ] );
     }
 
     else if( event.GetId() == TOOLBAR_OBJECT_NAVIGATION )
     {
         mode = "Object Navigation";
 
-        SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_SELECTION, mToolbarBitmaps[ "cursorBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, mToolbarBitmaps[ "worldNavigationBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, mToolbarBitmaps[ "objectNavigationSelectBitmap" ] );
     }
 
     dvp->SetData( std::string( "Mode" ), mode );
@@ -300,58 +297,69 @@ void MainToolBar::OnChangeDeviceMode( wxCommandEvent& event )
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MainToolBar::OnChangeCenterPointJump( wxCommandEvent& event )
+void MainToolBar::OnCenterPointUpdate( wxCommandEvent& event )
 {
-    DataValuePairPtr dvp( new DataValuePair() );
     CommandSharedPtr command( new ves::open::xml::Command() );
+    command->SetCommandName( "CENTER_POINT_UPDATE" );
+
+    if( event.GetId() == TOOLBAR_RESET_CENTER_POINT )
+    {
+        DataValuePairPtr resetDVP( new DataValuePair() );
+        resetDVP->SetData( "Reset", static_cast< unsigned int >( 0 ) );
+        command->AddDataValuePair( resetDVP );
+
+        CORBAServiceList::instance()->SendCommandStringToXplorer( command );
+
+        return;
+    }
 
     std::string mode;
-
-    if( event.GetId() == TOOLBAR_SMALL_CENTERPOINT_JUMP )
+    if( event.GetId() == TOOLBAR_SMALL_CENTER_POINT_JUMP )
     {
         mode = "Small";
 
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_SMALL_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "smallCenterPointSelectBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_MEDIUM_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "mediumCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_LARGE_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "largeCenterPointBitmap" ] );
     }
-
-    else if( event.GetId() == TOOLBAR_MEDIUM_CENTERPOINT_JUMP )
+    else if( event.GetId() == TOOLBAR_MEDIUM_CENTER_POINT_JUMP )
     {
         mode = "Medium";
 
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_SMALL_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "smallCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_MEDIUM_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "mediumCenterPointSelectBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_LARGE_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "largeCenterPointBitmap" ] );
     }
-
-    else if( event.GetId() == TOOLBAR_LARGE_CENTERPOINT_JUMP )
+    else if( event.GetId() == TOOLBAR_LARGE_CENTER_POINT_JUMP )
     {
         mode = "Large";
 
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_SMALL_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "smallCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_MEDIUM_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "mediumCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_LARGE_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "largeCenterPointSelectBitmap" ] );
     }
 
-    else if( event.GetId() == TOOLBAR_BB_CENTERPOINT_JUMP )
-    {
-        mode = "Bounding Box";
-
-        SetToolNormalBitmap( TOOLBAR_SMALL_CENTERPOINT_JUMP, m_toolbarBitmaps[ "smallCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_MEDIUM_CENTERPOINT_JUMP, m_toolbarBitmaps[ "mediumCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_LARGE_CENTERPOINT_JUMP, m_toolbarBitmaps[ "largeCenterPointBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_BB_CENTERPOINT_JUMP, m_toolbarBitmaps[ "bbCenterPointSelectBitmap" ] );
-    }
-
-    dvp->SetData( std::string( "Mode" ), mode );
-
-    command->SetCommandName( std::string( "CHANGE_CENTERPOINT_MODE" ) );
-    command->AddDataValuePair( dvp );
-
+    DataValuePairPtr jumpModeDVP( new DataValuePair() );
+    jumpModeDVP->SetData( "Mode", mode );
+    command->AddDataValuePair( jumpModeDVP );
     CORBAServiceList::instance()->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -360,9 +368,9 @@ void MainToolBar::OnUnselectObjects( wxCommandEvent& event )
     DataValuePairPtr dvp( new DataValuePair() );
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() );
 
-    SetToolNormalBitmap( TOOLBAR_SELECTION, m_toolbarBitmaps[ "cursorBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, m_toolbarBitmaps[ "worldNavigationSelectBitmap" ] );
-    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, m_toolbarBitmaps[ "objectNavigationBitmap" ] );
+    SetToolNormalBitmap( TOOLBAR_SELECTION, mToolbarBitmaps[ "cursorBitmap" ] );
+    SetToolNormalBitmap( TOOLBAR_WORLD_NAVIGATION, mToolbarBitmaps[ "worldNavigationSelectBitmap" ] );
+    SetToolNormalBitmap( TOOLBAR_OBJECT_NAVIGATION, mToolbarBitmaps[ "objectNavigationBitmap" ] );
 
     ToggleTool( TOOLBAR_WORLD_NAVIGATION, true );
 
@@ -376,11 +384,11 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
 {
     if( GetToolState( TOOLBAR_PHYSICS ) )
     {
-        SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PHYSICS, mToolbarBitmaps[ "physicsSelectBitmap" ] );
 
 #ifdef WIN32
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playBitmap" ] );
 #endif
 
         EnableTool( TOOLBAR_RESET, true );
@@ -393,13 +401,13 @@ void MainToolBar::OnPhysicsState( wxCommandEvent& event )
         ToggleTool( TOOLBAR_PAUSE, false );
         ToggleTool( TOOLBAR_PLAY, false );
 
-        SetToolNormalBitmap( TOOLBAR_PHYSICS, m_toolbarBitmaps[ "physicsBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PHYSICS, mToolbarBitmaps[ "physicsBitmap" ] );
 #ifdef WIN32
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseDisabledBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playDisabledBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseDisabledBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playDisabledBitmap" ] );
 #else
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playBitmap" ] );
 #endif
 
         EnableTool( TOOLBAR_RESET, false );
@@ -432,8 +440,8 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     {
         ToggleTool( TOOLBAR_PAUSE, true );
         ToggleTool( TOOLBAR_PLAY, false );
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playBitmap" ] );
 
         dvp->SetData( std::string( "ResetPhysicsSimulation" ), value );
     }
@@ -441,8 +449,8 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     {
         ToggleTool( TOOLBAR_PAUSE, true );
         ToggleTool( TOOLBAR_PLAY, false );
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playBitmap" ] );
 
         dvp->SetData( std::string( "PausePhysicsSimulation" ), value );
     }
@@ -450,8 +458,8 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     {
         ToggleTool( TOOLBAR_PLAY, true );
         ToggleTool( TOOLBAR_PAUSE, false );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseBitmap" ] );
 
         dvp->SetData( std::string( "StartPhysicsSimulation" ), value );
     }
@@ -459,8 +467,8 @@ void MainToolBar::OnPhysicsSimulation( wxCommandEvent& event )
     {
         ToggleTool( TOOLBAR_PAUSE, true );
         ToggleTool( TOOLBAR_PLAY, false );
-        SetToolNormalBitmap( TOOLBAR_PAUSE, m_toolbarBitmaps[ "pauseSelectBitmap" ] );
-        SetToolNormalBitmap( TOOLBAR_PLAY, m_toolbarBitmaps[ "playBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PAUSE, mToolbarBitmaps[ "pauseSelectBitmap" ] );
+        SetToolNormalBitmap( TOOLBAR_PLAY, mToolbarBitmaps[ "playBitmap" ] );
 
         dvp->SetData( std::string( "StepPhysicsSimulation" ), value );
     }

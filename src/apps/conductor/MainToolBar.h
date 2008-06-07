@@ -69,10 +69,14 @@ public:
         TOOLBAR_OBJECT_NAVIGATION,///<ID for object navigation tool
         TOOLBAR_UNSELECT,///<ID for unselect tool
 
-        TOOLBAR_SMALL_CENTERPOINT_JUMP,///<ID for fixed centerpoint small jump setting
-        TOOLBAR_MEDIUM_CENTERPOINT_JUMP,///<ID for fixed centerpoint medium jump setting
-        TOOLBAR_LARGE_CENTERPOINT_JUMP,///<ID for fixed centerpoint large jump setting
-        TOOLBAR_BB_CENTERPOINT_JUMP,///<ID for centerpoint boundingbox jump setting
+        ///ID for fixed center point small jump setting
+        TOOLBAR_SMALL_CENTER_POINT_JUMP,
+        ///ID for fixed center point medium jump setting
+        TOOLBAR_MEDIUM_CENTER_POINT_JUMP,
+        ///ID for fixed center point large jump setting
+        TOOLBAR_LARGE_CENTER_POINT_JUMP,
+        ///ID for resetting the center point
+        TOOLBAR_RESET_CENTER_POINT,
 
         TOOLBAR_PHYSICS,///<ID for physics simulation tool
         TOOLBAR_RESET,///<ID for reset simulation tool
@@ -106,9 +110,9 @@ private:
     ///\param event The wxCommand event
     void OnChangeDeviceMode( wxCommandEvent& event );
 
-    ///Handles events for changing the centerpoint jump distance
+    ///Handles events for changing the center point
     ///\param event The wxCommand event
-    void OnChangeCenterPointJump( wxCommandEvent& event );
+    void OnCenterPointUpdate( wxCommandEvent& event );
 
     ///Handles the event to unselect all objects in xplorer
     ///\param event The wxCommand event
@@ -126,7 +130,8 @@ private:
     ///\param event The wxCommand event
     void OnSummitJob( wxCommandEvent& event );
 
-    std::map< std::string, wxBitmap > m_toolbarBitmaps;///<A map that holds the bitmaps for this toolbar
+    ///A map that holds the bitmaps for this toolbar
+    std::map< std::string, wxBitmap > mToolbarBitmaps;
 
     DECLARE_EVENT_TABLE()
 };

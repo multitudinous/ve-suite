@@ -108,7 +108,7 @@ public:
     void SetCenterPointThreshold( double* threshold );
 
     ///Set the reset position for the world
-    void SetResetWorldPosition( osg::Quat& quat, std::vector< double >& pos );
+    void SetResetWorldPosition( osg::Quat* quat, std::vector< double >* pos );
 
 protected:
     ///Process the selection of a piece of geometry
@@ -131,13 +131,13 @@ protected:
     double* mCenterPointJump;
 
     ///The reset position for the world
-    std::vector< double > mResetPosition;
+    std::vector< double >* mResetPosition;
 
     ///The point about which rotation occurs
     gmtl::Point3d* mCenterPoint;
 
     ///The reset axis for the world
-    osg::Quat mResetAxis;
+    osg::Quat* mResetAxis;
     
 };
 } //end xplorer

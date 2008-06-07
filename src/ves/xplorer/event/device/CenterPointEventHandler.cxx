@@ -30,21 +30,25 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
-#include <ves/xplorer/event/device/CenterPointJumpEventHandler.h>
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/event/device/CenterPointEventHandler.h>
 
 #include <ves/xplorer/GlobalBase.h>
 #include <ves/xplorer/DeviceHandler.h>
-
 
 #include <ves/open/xml/XMLObject.h>
 #include <ves/open/xml/Command.h>
 #include <ves/open/xml/DataValuePair.h>
 
+// --- VR Juggler Includes --- //
 #include <boost/filesystem/operations.hpp> //includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
+// --- C/C++ Libraries --- //
 #include <string>
 
+// --- Win32 Includes --- //
 #ifdef WIN32
 #include <direct.h>
 #else
@@ -52,44 +56,70 @@
 #endif
 
 using namespace ves::xplorer::event;
-using namespace ves::open::xml;
 
 ////////////////////////////////////////////////////////////////////////////////
-CenterPointJumpEventHandler::CenterPointJumpEventHandler()
-        :
-        ves::xplorer::event::EventHandler()
+CenterPointEventHandler::CenterPointEventHandler()
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CenterPointJumpEventHandler::CenterPointJumpEventHandler( const CenterPointJumpEventHandler& rhs )
-        :
-        ves::xplorer::event::EventHandler()
+CenterPointEventHandler::CenterPointEventHandler(
+    const CenterPointEventHandler& rhs )
+    :
+    ves::xplorer::event::EventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-CenterPointJumpEventHandler::~CenterPointJumpEventHandler()
+CenterPointEventHandler::~CenterPointEventHandler()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CenterPointJumpEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBase* modelHandler )
+void CenterPointEventHandler::SetGlobalBaseObject(
+    ves::xplorer::GlobalBase* modelHandler )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CenterPointJumpEventHandler::Execute( const ves::open::xml::XMLObjectPtr& veXMLObject )
+void CenterPointEventHandler::Execute(
+    const ves::open::xml::XMLObjectPtr& veXMLObject )
 {
-    CommandPtr command = boost::dynamic_pointer_cast<ves::open::xml::Command>( veXMLObject );
+    try
+    {
+        ves::open::xml::CommandPtr command =
+            boost::dynamic_pointer_cast< ves::open::xml::Command >(
+                veXMLObject );
 
-    std::string mode;
-    command->GetDataValuePair( "Mode" )->GetData( mode );
+        if( command->GetDataValuePair( "Reset" ) )
+        {
+            ves::xplorer::DeviceHandler::instance()->ResetCenterPoint();
 
-    ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode( mode );
+            return;
+        }
+
+        ves::open::xml::DataValuePairPtr jumpModeDVP =
+            command->GetDataValuePair( "Mode" );
+        if( jumpModeDVP )
+        {
+            std::string mode;
+            jumpModeDVP->GetData( mode );
+            ves::xplorer::DeviceHandler::instance()->SetCenterPointJumpMode(
+                mode );
+        }
+    }
+    catch( ... )
+    {
+        std::cout << "Error!!" << std::endl;
+        std::cout << "CenterPointEventHandler::_operateOnNode()"
+                  << std::endl;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-CenterPointJumpEventHandler& CenterPointJumpEventHandler::operator=( const CenterPointJumpEventHandler& rhs )
+CenterPointEventHandler& CenterPointEventHandler::operator=(
+    const CenterPointEventHandler& rhs )
 {
     if( this != &rhs )
     {

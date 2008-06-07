@@ -2519,6 +2519,17 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         viewPointGUIData->AddDataValuePair( positionStartPosition );
         serviceList->SendCommandStringToXplorer( viewPointGUIData );
     }
+    {
+        //Reset the center point when a new app is loaded
+        //do this first in case a file has a default center point it will be used
+        CommandPtr centerPointUpdateData( new Command() );
+        centerPointUpdateData->SetCommandName( "CENTER_POINT_UPDATE" );
+        
+        DataValuePairPtr resetDVP( new DataValuePair() );
+        resetDVP->SetData( "Reset", static_cast< unsigned int >( 0 ) );
+        centerPointUpdateData->AddDataValuePair( resetDVP );
+        serviceList->SendCommandStringToXplorer( centerPointUpdateData );
+    }
     //Reloading plugins
     av_modules->ResetPluginTree();
     

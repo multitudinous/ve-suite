@@ -43,7 +43,7 @@
 #include <ves/xplorer/event/device/DeviceEH.h>
 #include <ves/xplorer/event/device/DeviceModeEH.h>
 #include <ves/xplorer/event/cad/UnselectObjectsEventHandler.h>
-#include <ves/xplorer/event/device/CenterPointJumpEventHandler.h>
+#include <ves/xplorer/event/device/CenterPointEventHandler.h>
 #include <ves/xplorer/event/device/KeyboardMouseEH.h>
 #include <ves/xplorer/event/environment/NavigationDataEventHandler.h>
 
@@ -66,8 +66,9 @@ DeviceHandler::DeviceHandler()
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() ),
     mSelectedDCS( 0 ),
     mDeviceMode( "World Navigation" ),
-    mCenterPoint( 0.0, 0.1, 0.0 ),
-    mCenterPointThreshold( 0.5 ),
+    mResetCenterPointPosition( 0.0, 0.1, 0.0 ),
+    mCenterPoint( mResetCenterPointPosition ),
+    mCenterPointThreshold( 0.1 ),
     mCenterPointJump( 10.0 )
 {
     //Initialize Devices
@@ -85,6 +86,7 @@ DeviceHandler::DeviceHandler()
         itr->second->SetCenterPoint( &mCenterPoint );
         itr->second->SetCenterPointThreshold( &mCenterPointThreshold );
         itr->second->SetCenterPointJump( &mCenterPointJump );
+        itr->second->SetResetWorldPosition( &mResetAxis, &mResetPosition );
     }
 
     mActiveDevice = mDevices.find( "KeyboardMouse" )->second;
@@ -95,8 +97,8 @@ DeviceHandler::DeviceHandler()
         new ves::xplorer::event::DeviceModeEventHandler();
     mEventHandlers[ "UNSELECT_OBJECTS" ] =
         new ves::xplorer::event::UnselectObjectsEventHandler();
-    mEventHandlers[ "CHANGE_CENTERPOINT_MODE" ] =
-        new ves::xplorer::event::CenterPointJumpEventHandler();
+    mEventHandlers[ "CENTER_POINT_UPDATE" ] =
+        new ves::xplorer::event::CenterPointEventHandler();
     mEventHandlers[ "TRACKBALL_PROPERTIES" ] =
         new ves::xplorer::event::KeyboardMouseEventHandler();
     mEventHandlers[ "Navigation_Data" ] =
@@ -202,6 +204,11 @@ void DeviceHandler::ProcessDeviceEvents()
     mDevices.find( "Tablet" )->second->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void DeviceHandler::ResetCenterPoint()
+{
+    mCenterPoint = mResetCenterPointPosition;
+}
+////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetActiveDCS( ves::xplorer::scenegraph::DCS* activeDCS )
 {
     mActiveDCS = activeDCS;
@@ -240,23 +247,25 @@ void DeviceHandler::SetCenterPointJumpMode( const std::string& jumpMode )
     if( jumpMode == "Small" )
     {
         mCenterPointJump = 10.0;
-        mCenterPointThreshold = 0.5;
+        mCenterPointThreshold = 0.1;
     }
     else if( jumpMode == "Medium" )
     {
         mCenterPointJump = 100.0;
-        mCenterPointThreshold = 5.0;
+        mCenterPointThreshold = 1.0;
     }
     else if( jumpMode == "Large" )
     {
         mCenterPointJump = 1000.0;
-        mCenterPointThreshold = 50.0;
+        mCenterPointThreshold = 10.0;
     }
+    /*
     else if( jumpMode == "Bounding Box" )
     {
         mCenterPointJump = mActiveDCS->getBound().radius();
-        mCenterPointThreshold = mCenterPointJump * 0.05;
+        mCenterPointThreshold = mCenterPointJump * 0.01;
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetResetWorldPosition(
@@ -265,11 +274,13 @@ void DeviceHandler::SetResetWorldPosition(
     mResetAxis = quat;
     mResetPosition = pos;
     
+    /*
     std::map< const std::string, ves::xplorer::Device* >::const_iterator itr;
     for( itr = mDevices.begin(); itr != mDevices.end(); ++itr )
     {
         itr->second->SetResetWorldPosition( mResetAxis, mResetPosition );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS )
