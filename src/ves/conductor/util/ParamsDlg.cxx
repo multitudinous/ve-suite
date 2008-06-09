@@ -33,6 +33,7 @@
 #include <ves/conductor/util/ParamsDlg.h>
 
 #include <wx/msgdlg.h>
+#include <wx/progdlg.h>
 
 using namespace ves::conductor::util;
 
@@ -365,11 +366,11 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         std::string status = "returnString";
         commandWriter.UseStandaloneDOMDocumentManager();
         commandWriter.WriteXMLDocument( nodes, status, "Command" );
-        wxMessageDialog tempMessageDialog( this, 
-            wxString( _("Gathering inputs") ), 
-            wxString( _("Message box") ), wxICON_INFORMATION );
-        tempMessageDialog.CenterOnParent();
-        tempMessageDialog.Show();
+        wxProgressDialog tempMessageDialog(  
+            wxString( _("Message box") ),
+            wxString( _("Gathering inputs") ), 100, this );
+        //tempMessageDialog.CenterOnParent();
+        //tempMessageDialog.ShowModal();
         std::string nw_str = serviceList->Query( status );
 
         ves::open::xml::XMLReaderWriter networkReader;
