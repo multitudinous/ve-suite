@@ -49,7 +49,6 @@ ParamsDlg::ParamsDlg(
 {
     CreateGUIControls();
 }
-
 ParamsDlg::~ParamsDlg()
 {}
 
@@ -336,15 +335,14 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         //create the dvp
         ves::open::xml::DataValuePairPtr
             data( new ves::open::xml::DataValuePair() );
-        data->SetData( std::string( "ModuleName" ), compName );
+        data->SetData( std::string( "ModuleName" ), compName + "." );
         returnState->AddDataValuePair( data );
         data = ves::open::xml::DataValuePairPtr(
             new ves::open::xml::DataValuePair() );
         
         //get the variable path
-        wxTreeItemId parentId =
-            ParamChoice->GetItemParent( selection );
-        if( parentId == m_rootId ) //|| selection == m_rootId )
+        mParentId = ParamChoice->GetItemParent( selection );
+        if( mParentId == m_rootId ) //|| selection == m_rootId )
         {
             data->SetData( std::string( "ParamName" ),
                 ConvertUnicode( ParamChoice->GetItemText(
@@ -521,21 +519,31 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     returnState->SetCommandName( "setParam" );
 
     ves::open::xml::DataValuePairPtr
-        data( new ves::open::xml::DataValuePair() );
-    data->SetData( "ModuleName", compName );
-    returnState->AddDataValuePair( data );
+        moduleName( new ves::open::xml::DataValuePair() );
+    moduleName->SetData( "ModuleName", compName );
+    returnState->AddDataValuePair( moduleName );
 
-    data = ves::open::xml::DataValuePairPtr(
-        new ves::open::xml::DataValuePair() );
-    data->SetData( std::string( "ParamName" ), ConvertUnicode(
-        ParamChoice->GetItemText(ParamChoice->GetSelection()).c_str() ) );
-    returnState->AddDataValuePair( data );
+	ves::open::xml::DataValuePairPtr 
+		paramName( new ves::open::xml::DataValuePair() );
+	if( mParentId == m_rootId )
+	{
+		paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
+			ParamChoice->GetItemText( 
+			ParamChoice->GetSelection() ).c_str() ) );
+	}
+	else
+	{
+		paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
+			ParamChoice->GetItemText( mParentId ) + "." +
+			ParamChoice->GetItemText( ParamChoice->GetSelection() ).c_str() ) );
+	}
+    returnState->AddDataValuePair( paramName );
 
-    data = ves::open::xml::DataValuePairPtr(
-        new ves::open::xml::DataValuePair() );
-    data->SetData( "ParamValue", ConvertUnicode(
+    ves::open::xml::DataValuePairPtr
+        paramValue( new ves::open::xml::DataValuePair() );
+    paramValue->SetData( "ParamValue", ConvertUnicode(
         ValueEdit->GetValue().c_str() ) );
-    returnState->AddDataValuePair( data );
+    returnState->AddDataValuePair( paramValue );
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
