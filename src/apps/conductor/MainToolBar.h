@@ -69,14 +69,11 @@ public:
         TOOLBAR_OBJECT_NAVIGATION,///<ID for object navigation tool
         TOOLBAR_UNSELECT,///<ID for unselect tool
 
-        ///ID for fixed center point small jump setting
-        TOOLBAR_SMALL_CENTER_POINT_JUMP,
-        ///ID for fixed center point medium jump setting
-        TOOLBAR_MEDIUM_CENTER_POINT_JUMP,
-        ///ID for fixed center point large jump setting
-        TOOLBAR_LARGE_CENTER_POINT_JUMP,
-        ///ID for resetting the center point
-        TOOLBAR_RESET_CENTER_POINT,
+        TOOLBAR_SMALL_CENTER_POINT_JUMP,///<ID for center point small jump
+        TOOLBAR_MEDIUM_CENTER_POINT_JUMP,///<ID for center point medium jump
+        TOOLBAR_LARGE_CENTER_POINT_JUMP,///<ID for center point large jump
+        TOOLBAR_BB_CENTER_POINT_JUMP,///<ID for center point bounding box jump
+        TOOLBAR_RESET_CENTER_POINT,///<ID for resetting the center point
 
         TOOLBAR_PHYSICS,///<ID for physics simulation tool
         TOOLBAR_RESET,///<ID for reset simulation tool

@@ -51,6 +51,8 @@
 #include <ves/conductor/xpm/ToolBar/MediumCenterPointJumpButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/LargeCenterPointJumpButton.xpm>
 #include <ves/conductor/xpm/ToolBar/LargeCenterPointJumpButtonSelect.xpm>
+#include <ves/conductor/xpm/ToolBar/BBCenterPointJumpButton.xpm>
+#include <ves/conductor/xpm/ToolBar/BBCenterPointJumpButtonSelect.xpm>
 #include <ves/conductor/xpm/ToolBar/ResetCenterPointButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButton.xpm>
 #include <ves/conductor/xpm/ToolBar/PauseButtonSelect.xpm>
@@ -89,6 +91,7 @@ BEGIN_EVENT_TABLE( MainToolBar, wxToolBar )
     EVT_MENU( TOOLBAR_SMALL_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
     EVT_MENU( TOOLBAR_MEDIUM_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
     EVT_MENU( TOOLBAR_LARGE_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
+    EVT_MENU( TOOLBAR_BB_CENTER_POINT_JUMP, MainToolBar::OnCenterPointUpdate )
     EVT_MENU( TOOLBAR_RESET_CENTER_POINT, MainToolBar::OnCenterPointUpdate )
 
     EVT_MENU( TOOLBAR_PHYSICS, MainToolBar::OnPhysicsState )
@@ -154,6 +157,10 @@ void MainToolBar::LoadToolBarBitmaps()
         wxBitmap( LargeCenterPointJumpButton_xpm );
     mToolbarBitmaps[ std::string( "largeCenterPointSelectBitmap" )] =
         wxBitmap( LargeCenterPointJumpButtonSelect_xpm );
+    mToolbarBitmaps[ std::string( "bbCenterPointBitmap" )] =
+        wxBitmap( BBCenterPointJumpButton_xpm );
+    mToolbarBitmaps[ std::string( "bbCenterPointSelectBitmap" )] =
+        wxBitmap( BBCenterPointJumpButtonSelect_xpm );
     mToolbarBitmaps[ std::string( "resetCenterPointBitmap" )] =
         wxBitmap( ResetCenterPointButton_xpm );
 
@@ -207,6 +214,7 @@ void MainToolBar::CreateMainToolBar()
     AddTool( TOOLBAR_SMALL_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "smallCenterPointSelectBitmap" ], _( "Small Centerpoint Jump" ), wxITEM_RADIO );
     AddTool( TOOLBAR_MEDIUM_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "mediumCenterPointBitmap" ], _( "Medium Centerpoint Jump" ), wxITEM_RADIO );
     AddTool( TOOLBAR_LARGE_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "largeCenterPointBitmap" ], _( "Large Centerpoint Jump" ), wxITEM_RADIO );
+    AddTool( TOOLBAR_BB_CENTER_POINT_JUMP, _( "" ), mToolbarBitmaps[ "bbCenterPointBitmap" ], _( "Bounding Box Centerpoint Jump" ), wxITEM_RADIO );
     AddTool( TOOLBAR_RESET_CENTER_POINT, _( "" ), mToolbarBitmaps[ "resetCenterPointBitmap" ], _( "Reset Centerpoint" ), wxITEM_NORMAL );
     AddSeparator();
 
@@ -327,6 +335,9 @@ void MainToolBar::OnCenterPointUpdate( wxCommandEvent& event )
         SetToolNormalBitmap(
             TOOLBAR_LARGE_CENTER_POINT_JUMP,
             mToolbarBitmaps[ "largeCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_BB_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "bbCenterPointBitmap" ] );
     }
     else if( event.GetId() == TOOLBAR_MEDIUM_CENTER_POINT_JUMP )
     {
@@ -341,6 +352,9 @@ void MainToolBar::OnCenterPointUpdate( wxCommandEvent& event )
         SetToolNormalBitmap(
             TOOLBAR_LARGE_CENTER_POINT_JUMP,
             mToolbarBitmaps[ "largeCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_BB_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "bbCenterPointBitmap" ] );
     }
     else if( event.GetId() == TOOLBAR_LARGE_CENTER_POINT_JUMP )
     {
@@ -355,6 +369,26 @@ void MainToolBar::OnCenterPointUpdate( wxCommandEvent& event )
         SetToolNormalBitmap(
             TOOLBAR_LARGE_CENTER_POINT_JUMP,
             mToolbarBitmaps[ "largeCenterPointSelectBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_BB_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "bbCenterPointBitmap" ] );
+    }
+    else if( event.GetId() == TOOLBAR_BB_CENTER_POINT_JUMP )
+    {
+        mode = "Bounding Box";
+
+        SetToolNormalBitmap(
+            TOOLBAR_SMALL_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "smallCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_MEDIUM_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "mediumCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_LARGE_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "largeCenterPointBitmap" ] );
+        SetToolNormalBitmap(
+            TOOLBAR_BB_CENTER_POINT_JUMP,
+            mToolbarBitmaps[ "bbCenterPointSelectBitmap" ] );
     }
 
     DataValuePairPtr jumpModeDVP( new DataValuePair() );

@@ -259,13 +259,11 @@ void DeviceHandler::SetCenterPointJumpMode( const std::string& jumpMode )
         mCenterPointJump = 1000.0;
         mCenterPointThreshold = 10.0;
     }
-    /*
     else if( jumpMode == "Bounding Box" )
     {
         mCenterPointJump = mActiveDCS->getBound().radius();
         mCenterPointThreshold = mCenterPointJump * 0.01;
     }
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::SetResetWorldPosition(
