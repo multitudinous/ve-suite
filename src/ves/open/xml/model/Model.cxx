@@ -49,22 +49,20 @@ using namespace ves::open::xml::model;
 //Constructor                             //
 ////////////////////////////////////////////
 Model::Model()
-        : XMLObject( )
+        : 
+        XMLObject(),
+        mUniqueModelID( 0 ),
+        mIconScale( 1.0f ),
+        mIconRotation( 0.0f ),
+        mIconMirror( 0 ),
+        mIconHiddenFlag( 0 ),
+        mModelAttribute( CommandPtr() ),
+        mParentModel( ModelPtr() ),
+        mGeometry( CADAssemblyPtr() )
 {
-    //mModelName = '\0';
-    mUniqueModelID = 0;
-    //mIconFileName = '\0';
     mIconLocation = PointPtr( new Point() );
-    mGeometry = CADAssemblyPtr();
     SetObjectType( "Model" );
     SetObjectNamespace( "Model" );
-    //mVendorUnit = '\0';
-    mModelAttribute = CommandPtr();
-    mIconScale = 1.0f;
-    mIconRotation = 0.0f;
-    mIconMirror = 0;
-    mIconHiddenFlag = 0;
-    mParentModel = ModelPtr();
 }
 ///////////////////////////////////
 Model::~Model()

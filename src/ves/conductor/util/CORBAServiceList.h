@@ -52,9 +52,6 @@ CORBAServiceList API
 #include <vector>
 #include <string>
 
-class wxTextCtrl;
-class wxUpdateUIEvent;
-
 #include <ves/VEConfig.h>
 
 namespace ves
@@ -122,8 +119,6 @@ public:
 
     ///Call set id on all modules in the current network
     bool SetID( int moduleId, std::string moduleName );
-    ///Event to update the text feedback window
-    void OnUpdateUIPop( wxUpdateUIEvent& event );
 
     ///Excutive wrapper functions
     std::string GetNetwork( void );
@@ -132,7 +127,7 @@ public:
     void StartCalc( void );
     void PauseCalc( void );
     void Resume( void );
-    std::string Query( std::string command );
+    std::string Query( const std::string& command );
 
 private:
     void CreateCORBAModule( void );

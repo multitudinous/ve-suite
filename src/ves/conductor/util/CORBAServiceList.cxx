@@ -45,9 +45,6 @@
 
 #include <sstream>
 
-#include <wx/app.h>
-#include <wx/utils.h>
-
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
@@ -640,11 +637,10 @@ void CORBAServiceList::Resume( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::string CORBAServiceList::Query( std::string command )
+std::string CORBAServiceList::Query( const std::string& command )
 {
     if( !CORBAServiceList::IsConnectedToCE() )
     {
-
         return std::string( "Not Connected" );
     }
 

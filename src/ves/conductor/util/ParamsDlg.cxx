@@ -31,6 +31,9 @@
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
 #include <ves/conductor/util/ParamsDlg.h>
+
+#include <wx/msgdlg.h>
+
 using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( ParamsDlg, wxDialog )
@@ -364,7 +367,13 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         std::string status = "returnString";
         commandWriter.UseStandaloneDOMDocumentManager();
         commandWriter.WriteXMLDocument( nodes, status, "Command" );
+        wxMessageDialog tempMessageDialog( this, 
+            wxString( _("Gathering inputs") ), 
+            wxString( _("Message box") ), wxICON_INFORMATION );
+        tempMessageDialog.CenterOnParent();
+        tempMessageDialog.Show();
         std::string nw_str = serviceList->Query( status );
+
         ves::open::xml::XMLReaderWriter networkReader;
         networkReader.UseStandaloneDOMDocumentManager();
         networkReader.ReadFromString();
