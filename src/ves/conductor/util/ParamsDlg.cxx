@@ -351,7 +351,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         else
         {
             data->SetData( std::string( "ParamName" ),
-                ConvertUnicode( ParamChoice->GetItemText( parentId ) ) + std::string( "." ) +
+                ConvertUnicode( ParamChoice->GetItemText( mParentId ) ) + std::string( "." ) +
                 ConvertUnicode( ParamChoice->GetItemText( selection ) ) );
         }
         returnState->AddDataValuePair( data );
