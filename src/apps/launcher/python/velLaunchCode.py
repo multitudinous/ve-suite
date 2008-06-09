@@ -531,8 +531,10 @@ class Launch:
             vesOutFile = "ves." + ves_userName +"."+ves_machineName+".out"
             
             slaveCommand = "%s" %(string.join(self.XplorerCall("slave")))
+            #slaveCommand = slaveCommand + "> & $1.%s.log" %vesOutFile
             masterCommand = "%s" %(string.join(self.XplorerCall("master")))
-            self.clusterScript+='cd "%s"\n' %self.settings["Directory"]
+            self.clusterScript += 'cd "%s"\n' %self.settings["Directory"]
+            #self.clusterScript += 'limit coredumpsize 1000000000000\n'
             self.clusterScript += 'if ( $2 == "slave" ) then\n'
             self.clusterScript += "    %s\n" %(slaveCommand)
             self.clusterScript += "else\n"
@@ -567,8 +569,9 @@ class Launch:
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
+                s = self.XplorerCall()
                 try:
-                    subprocess.Popen(self.XplorerCall())
+                    subprocess.Popen( s ) #self.XplorerCall())
                 except OSError:
                     exe = "ves_xplorer"
                     print "Xplorer Call Error, \"%s\" not found on your environment."

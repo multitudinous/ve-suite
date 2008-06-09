@@ -241,22 +241,25 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     newSceneViewer->init();
     newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
 
-    // Needed for stereo to work.
-    newSceneViewer->setDrawBufferValue( GL_NONE );
+    {
+        vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+        // Needed for stereo to work.
+        newSceneViewer->setDrawBufferValue( GL_NONE );
 
-    newSceneViewer->getGlobalStateSet()->setAssociatedModes(
-        light_0.get(), osg::StateAttribute::ON );
+        newSceneViewer->getGlobalStateSet()->setAssociatedModes(
+            light_0.get(), osg::StateAttribute::ON );
 
-    newSceneViewer->getGlobalStateSet()->setMode(
-        GL_LIGHTING, osg::StateAttribute::ON );
+        newSceneViewer->getGlobalStateSet()->setMode(
+            GL_LIGHTING, osg::StateAttribute::ON );
 
-    newSceneViewer->getGlobalStateSet()->setAttributeAndModes(
-        light_model_0.get(), osg::StateAttribute::ON );
+        newSceneViewer->getGlobalStateSet()->setAttributeAndModes(
+            light_model_0.get(), osg::StateAttribute::ON );
 
-    newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
+        newSceneViewer->setSmallFeatureCullingPixelSize( 10 );
+    }
 
     ///With this code in culling culs the near and far planes. I believe
-    ///we discovered this awhile ago buit removed the comments about it.
+    ///we discovered this awhile ago but removed the comments about it.
     ///Please see cullvisitor (osg/CullSettings)
     // for the possible settings for this function.
     //This defaults to setting the near and far plane based on the
