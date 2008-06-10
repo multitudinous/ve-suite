@@ -61,8 +61,8 @@ IntStoves::IntStoves()
     RegistVar( "baffle7", &baffle7 );
 
     wxImage my_img( plancha_xpm );
-    icon_w = static_cast< int >( my_img.GetWidth() * 0.7 );
-    icon_h = static_cast< int >( my_img.GetHeight() * 0.7 );
+    icon_w = static_cast< int >( my_img.GetWidth() );
+    icon_h = static_cast< int >( my_img.GetHeight() );
     my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
 
     n_pts = 4;
@@ -121,7 +121,7 @@ void IntStoves::DrawIcon( wxDC* dc )
     dc->DrawBitmap( *my_icon, pos.x, pos.y );
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::conductor::UIDialog* IntStoves::UI(wxWindow* parent)
+ves::conductor::UIDialog* IntStoves::UI( wxWindow* parent )
 {
     if( dlg != NULL )
     {
@@ -165,7 +165,7 @@ wxString IntStoves::GetDesc()
 ////////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetConductorName()
 {         
-    wxString result( wxT( "IntStoves" ) );
+    wxString result( wxT( "TempName_IntStoves" ) );
 
     return result;
 }

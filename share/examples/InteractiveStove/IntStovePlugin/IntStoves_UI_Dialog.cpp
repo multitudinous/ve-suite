@@ -1,18 +1,49 @@
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
+
+// --- VE-Suite Includes --- //
 #include <ves/conductor/util/CORBAServiceList.h>
 
+// --- My Includes --- //
 #include "IntStoves_UI_Dialog.h"
 #include "GLCanvasWrapper.h"
 
+// --- VE-Suite Includes --- //
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
 
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <ostream>
-#include <vector>
-
+// --- wxWidgets Includes --- //
 #include <wx/dc.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
@@ -22,68 +53,77 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 
-using namespace std;
+// --- C/C++ Libraries --- //
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <ostream>
 
-BEGIN_EVENT_TABLE(IntStoves_UI_Dialog, UIDialog)
-  //EVT_COMBOBOX      (NUMBAFFSEL_COMBOBOX,            IntStoves_UI_Dialog::_onNumBafSel)
-  EVT_COMBOBOX      (ACTBAFFSEL_COMBOBOX,            IntStoves_UI_Dialog::_onActBafSel)
-  EVT_COMBOBOX      (REMOVEBAFF_COMBOBOX,            IntStoves_UI_Dialog::_onRemoveBaff)
-  //EVT_BUTTON		(DESIGN_BUTTON,					 IntStoves_UI_Dialog::_onDesignStove)
-  //EVT_BUTTON		(ADDBAFF_BUTTON,				 IntStoves_UI_Dialog::_onAddBaff)
-  EVT_BUTTON		(REMOVEBAFF_BUTTON,				 IntStoves_UI_Dialog::_onRemoveBaff)
-  EVT_SPINCTRL      (CHANGE_DEPTH,                   IntStoves_UI_Dialog::SetDepth)
-  EVT_BUTTON        (UPDATE_PARAMS,                  IntStoves_UI_Dialog::UpdateParams)
-  EVT_CHECKBOX      (VECTOR_CHECKBOX,                IntStoves_UI_Dialog::ShowVectors)
-  EVT_CHECKBOX      (CONTOUR_CHECKBOX,               IntStoves_UI_Dialog::ShowContour)
+BEGIN_EVENT_TABLE( IntStoves_UI_Dialog, UIDialog )
+//EVT_COMBOBOX( NUMBAFFSEL_COMBOBOX, IntStoves_UI_Dialog::_onNumBafSel )
+EVT_COMBOBOX( ACTBAFFSEL_COMBOBOX, IntStoves_UI_Dialog::_onActBafSel )
+EVT_COMBOBOX( REMOVEBAFF_COMBOBOX,IntStoves_UI_Dialog::_onRemoveBaff )
+//EVT_BUTTON( DESIGN_BUTTON, IntStoves_UI_Dialog::_onDesignStove )
+//EVT_BUTTON( ADDBAFF_BUTTON, IntStoves_UI_Dialog::_onAddBaff )
+EVT_BUTTON( REMOVEBAFF_BUTTON, IntStoves_UI_Dialog::_onRemoveBaff )
+EVT_SPINCTRL( CHANGE_DEPTH, IntStoves_UI_Dialog::SetDepth )
+EVT_BUTTON( UPDATE_PARAMS, IntStoves_UI_Dialog::UpdateParams )
+EVT_CHECKBOX( VECTOR_CHECKBOX, IntStoves_UI_Dialog::ShowVectors )
+EVT_CHECKBOX( CONTOUR_CHECKBOX, IntStoves_UI_Dialog::ShowContour )
 END_EVENT_TABLE()
 
-//IMPLEMENT_DYNAMIC_CLASS(IntStoves_UI_Dialog, UIDialog);
-
-//Here is the constructor with passed in pointers
-IntStoves_UI_Dialog
-::IntStoves_UI_Dialog
-(wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service,
-  long* numbaffles,
-  vector<double>* baffle1,
-  vector<double>* baffle2,
-  vector<double>* baffle3,
-  vector<double>* baffle4,
-  vector<double>* baffle5,
-  vector<double>* baffle6,
-  vector<double>* baffle7)
-: UIDialog( parent, id, _("IntStoves") ),
-  p_numbaffles(numbaffles),
-  p_baffle1(baffle1),
-  p_baffle2(baffle2),
-  p_baffle3(baffle3),
-  p_baffle4(baffle4),
-  p_baffle5(baffle5),
-  p_baffle6(baffle6),
-  p_baffle7(baffle7)
+////////////////////////////////////////////////////////////////////////////////
+IntStoves_UI_Dialog::IntStoves_UI_Dialog()
 {
-    (m_numbaffles) = 0;
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+IntStoves_UI_Dialog::IntStoves_UI_Dialog(
+    wxWindow* parent,
+    int id,
+    ves::conductor::util::CORBAServiceList* service,
+    long* numbaffles,
+    std::vector< double >* baffle1,
+    std::vector< double >* baffle2,
+    std::vector< double >* baffle3,
+    std::vector< double >* baffle4,
+    std::vector< double >* baffle5,
+    std::vector< double >* baffle6,
+    std::vector< double >* baffle7 )
+    :
+    UIDialog( static_cast< wxWindow* >( parent ),
+              id,
+              wxT( "IntStoves" ) ),
+    p_numbaffles( numbaffles ),
+    p_baffle1( baffle1 ),
+    p_baffle2( baffle2 ),
+    p_baffle3( baffle3 ),
+    p_baffle4( baffle4 ),
+    p_baffle5( baffle5 ),
+    p_baffle6( baffle6 ),
+    p_baffle7( baffle7 )
+{
+    m_numbaffles = 0;
 
     vectors = 0;
     contour = 0;
 
     serviceList = service;
 
-    m_command= ves::open::xml::CommandPtr( new ves::open::xml::Command() );
+    m_command = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
 
     _buildPage();
 }
 
-/////////////////////////////////////////////////////
-IntStoves_UI_Dialog
-::~IntStoves_UI_Dialog()
+////////////////////////////////////////////////////////////////////////////////
+IntStoves_UI_Dialog::~IntStoves_UI_Dialog()
 {
+    serviceList->CleanUp();
 }
-
-
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_buildPage()
 {
-    for (int i=0; i<7; i++)
+    for( int i = 0; i < 7; ++i )
     {
         baffnums[i] << (i + 1);
         activebaff[i] << (i + 1);
@@ -125,7 +165,7 @@ void IntStoves_UI_Dialog::_buildPage()
 
     for ( int i=0; i<7; i++ )
     {
-        wxString temp( _("Baffle Number " ) );
+        wxString temp( wxT("Baffle Number " ) );
         temp << (i+1);
         _baff[i] = new wxStaticBox(this,-1, temp );
         _baffGroup[i] = new wxStaticBoxSizer(_baff[i],wxHORIZONTAL);
@@ -196,23 +236,22 @@ void IntStoves_UI_Dialog::_buildPage()
     SetSizer(_mainSizer);
     _mainSizer->Fit(this);
 }
-
-/////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////
 bool IntStoves_UI_Dialog::TransferDataFromWindow()
 {
     return true;
 }
-
-////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 bool IntStoves_UI_Dialog::TransferDataToWindow()
 {
     return true;
 }
-
-void IntStoves_UI_Dialog::Lock(bool l)
+////////////////////////////////////////////////////////////////////////////////
+void IntStoves_UI_Dialog::Lock( bool l )
 {
+    ;
 }
+////////////////////////////////////////////////////////////////////////////////
 /*
 void IntStoves_UI_Dialog::_onNumBafSel(wxCommandEvent& event)
 {
@@ -248,6 +287,7 @@ void IntStoves_UI_Dialog::_onNumBafSel(wxCommandEvent& event)
 }
 */
 /*
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_onDesignStove(wxCommandEvent& event)
 {
     
@@ -265,10 +305,12 @@ void IntStoves_UI_Dialog::_onDesignStove(wxCommandEvent& event)
     
 }
 */
-void IntStoves_UI_Dialog::_onActBafSel(wxCommandEvent& event)
+////////////////////////////////////////////////////////////////////////////////
+void IntStoves_UI_Dialog::_onActBafSel( wxCommandEvent& event )
 {
+    ;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_onAddBaff()
 {	
     float* tempGrid = mCanvasWrapper->GetGridInfo();
@@ -376,12 +418,12 @@ void IntStoves_UI_Dialog::_onRemoveBaff(wxCommandEvent& event)
 		
 	}
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::SetDepth( wxSpinEvent& event )
 {
     SetBaffleData();
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_removeBaff(int index)
 {
     long int temp1;
@@ -400,7 +442,7 @@ void IntStoves_UI_Dialog::_removeBaff(int index)
 	_length[index]->Clear();
 	actbaffdrawn[index] = false;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_rebuildActBaffSel()
 {
     /*
@@ -419,7 +461,7 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
         number << tempNum;
         _removebafCombo->Append(number);
     }
-    _removebafCombo->SetValue( _("Select the Baffle to Remove") );
+    _removebafCombo->SetValue( wxT("Select the Baffle to Remove") );
 
 	static bool test = false;
 	int flag = 0;
@@ -453,7 +495,7 @@ void IntStoves_UI_Dialog::_rebuildActBaffSel()
 	}
 	_designCanvas->SwapBuffers();*/
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::_reOrganizeBaffs()
 {
 	(m_numbaffles) -= 1;
@@ -489,11 +531,11 @@ void IntStoves_UI_Dialog::_reOrganizeBaffs()
 	{
 		if ( i >= (m_numbaffles) )
 		{
-			_startposx[i]->SetValue( _("0") );
-			_startposy[i]->SetValue( _("0") );
-			_direction[i]->SetValue( _("0") );
-			_length[i]->SetValue( _("0") );
-			_depth[i]->SetValue( _("1") );
+			_startposx[i]->SetValue( wxT("0") );
+			_startposy[i]->SetValue( wxT("0") );
+			_direction[i]->SetValue( wxT("0") );
+			_length[i]->SetValue( wxT("0") );
+			_depth[i]->SetValue( wxT("1") );
 
 			_baff[i]->Enable( false );
 			_startposx[i]->Enable( false );
@@ -506,40 +548,40 @@ void IntStoves_UI_Dialog::_reOrganizeBaffs()
 	_rebuildActBaffSel();
     SetBaffleData();
 }
-///////////////////////////////////////////////////////////////////////////////
-int IntStoves_UI_Dialog::GetStartX(int index)
+////////////////////////////////////////////////////////////////////////////////
+int IntStoves_UI_Dialog::GetStartX( int index )
 {
     long int temp1;
     _startposx[index]->GetValue().ToLong( &temp1 );
     return temp1;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetStartY( int index )
 {
     long int temp1;
     _startposy[index]->GetValue().ToLong( &temp1 );
     return temp1;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetDirection( int index )
 {
     long int temp1;
     _direction[index]->GetValue().ToLong( &temp1 );
     return temp1;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetLength( int index )
 {
     long int temp1;
     _length[index]->GetValue().ToLong( &temp1 );
     return temp1;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetDepth( int index )
 {
     return _depth[index]->GetValue();
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::SetBaffleData()
 {
 
@@ -564,12 +606,12 @@ void IntStoves_UI_Dialog::SetBaffleData()
         ClearParameters();
     }
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::UpdateParams(wxCommandEvent& event)
 {
 	(*p_numbaffles) = m_numbaffles;
 
-	vector<double> temp[7];
+	std::vector<double> temp[7];
 
     long int temp1;
 	for ( int i=0; i<7; i++ )
@@ -607,12 +649,12 @@ void IntStoves_UI_Dialog::UpdateParams(wxCommandEvent& event)
 	(*p_baffle7).clear();
 	(*p_baffle7) = temp[6];
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetNumBaffles()
 {
     return m_numbaffles;
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::ShowVectors(wxCommandEvent& event)
 {
     if( m_vectorCheckBox->IsChecked() )
@@ -633,7 +675,7 @@ void IntStoves_UI_Dialog::ShowVectors(wxCommandEvent& event)
     SendCommandsToXplorer();
     ClearParameters();
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::ShowContour(wxCommandEvent &event)
 {
     if( m_contourCheckBox->IsChecked() )
@@ -654,15 +696,16 @@ void IntStoves_UI_Dialog::ShowContour(wxCommandEvent &event)
     SendCommandsToXplorer();
     ClearParameters();
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::SendCommandsToXplorer()
 {
    m_command->SetCommandName(command_name);
    serviceList->SendCommandStringToXplorer(m_command);
 }
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::ClearParameters()
 {
    parameters.clear();
    command_name.clear() ;
 }
+////////////////////////////////////////////////////////////////////////////////
