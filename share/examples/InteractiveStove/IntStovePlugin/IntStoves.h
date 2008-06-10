@@ -1,72 +1,91 @@
-#ifndef IntStoves_H
-#define IntStoves_H
+/*************** <auto-copyright.rb BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2008 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * Date modified: $Date$
+ * Version:       $Rev$
+ * Author:        $Author$
+ * Id:            $Id$
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.rb END do not edit this line> ***************/
 
+#ifndef INT_STOVES_H
+#define INT_STOVES_H
+
+// --- VE-Suite Includes --- //
 #include <ves/conductor/UIPluginBase.h>
 
-#include <vector>
-
+// --- wxWidgets Includes --- //
 #include <wx/image.h>
 
-using namespace std;
+// --- C/C++ Libraries --- //
+#include <vector>
 
 class IntStoves : public ves::conductor::UIPluginBase
 {
-  DECLARE_DYNAMIC_CLASS(IntStoves)
+    DECLARE_DYNAMIC_CLASS( IntStoves )
 
- public:
+public:
 
-  IntStoves();
-  virtual ~IntStoves();
+    IntStoves();
 
-  virtual double GetVersion();
-  //Return the version number of the module
+    virtual ~IntStoves();
 
-  virtual void DrawIcon(wxDC* dc);
-  //This call return a window to be displayed on the framework
-  
-  //To Get around the Memory allocation problem of windows dll
-  //Add the calls for the size. So the main program can preallocate memory for it
+    virtual double GetVersion();
 
-  virtual int GetNumPoly();
-  
-  //virtual void GetPoly(POLY &polygon); 
-  //Return the outline polygon
+    virtual void DrawIcon( wxDC* dc );
 
-  virtual ves::conductor::UIDialog* UI(wxWindow* parent);
-  //This returns the UI dialog of the module
+    virtual int GetNumPoly();
 
-  virtual wxString GetName();
-  //This returns the name of the module
+    virtual ves::conductor::UIDialog* UI( wxWindow* parent );
 
-  virtual wxString GetDesc();
-  //This returns the description of the module, This should be a short description
+    virtual wxString GetConductorName();
+    virtual wxString GetName();
+    virtual wxString GetDesc();
 
-  wxString GetConductorName();
+    virtual int GetNumIports();
+    virtual void GetIPorts( POLY& ports );
 
-  //To Get around the Memory allocation problem of windows dll
-  //Add the calls for the size. So the main program can preallocate memory for it
+    virtual int GetNumOports();
+    virtual void GetOPorts( POLY& ports );
 
-  virtual int GetNumIports();
-  virtual void GetIPorts(POLY& ports);
+protected:
 
-  virtual int GetNumOports();
-  virtual void GetOPorts(POLY& ports);
+private:
 
- public:
-  long numbaffles;
-  vector<double> baffle1;
-  vector<double> baffle2;
-  vector<double> baffle3;
-  vector<double> baffle4;
-  vector<double> baffle5;
-  vector<double> baffle6;
-  vector<double> baffle7;
-  //HERE is the GUI variable passed to the Dialog and Packed
-  protected:
-  wxBitmap *my_icon;
-  int icon_w, icon_h;
+public:
+    long numbaffles;
+
+    std::vector< double > baffle1;
+    std::vector< double > baffle2;
+    std::vector< double > baffle3;
+    std::vector< double > baffle4;
+    std::vector< double > baffle5;
+    std::vector< double > baffle6;
+    std::vector< double > baffle7;
   
 };
 
-#endif
-
+#endif //INT_STOVES_H
