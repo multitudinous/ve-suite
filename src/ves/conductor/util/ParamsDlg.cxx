@@ -530,13 +530,14 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
 	{
 		paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
 			ParamChoice->GetItemText( 
-			ParamChoice->GetSelection() ).c_str() ) );
+			ParamChoice->GetSelection() ) ) );
 	}
 	else
 	{
-		paramName->SetData( std::string( "ParamName" ), ConvertUnicode( 
-			ParamChoice->GetItemText( mParentId ) + "." +
-			ParamChoice->GetItemText( ParamChoice->GetSelection() ).c_str() ) );
+		paramName->SetData( std::string( "ParamName" ), 
+            ConvertUnicode( ParamChoice->GetItemText( mParentId ) ) + 
+            std::string( "." ) +
+			ConvertUnicode( ParamChoice->GetItemText( ParamChoice->GetSelection() ) ) );
 	}
     returnState->AddDataValuePair( paramName );
 
