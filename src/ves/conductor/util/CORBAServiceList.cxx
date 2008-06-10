@@ -45,6 +45,8 @@
 
 #include <sstream>
 
+#include <wx/utils.h>
+
 using namespace ves::open::xml;
 using namespace ves::conductor::util;
 
@@ -475,13 +477,13 @@ void CORBAServiceList::CreateCORBAModule( void )
 ////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::CommandWeakPtr& veCommand )
 {
+    ::wxBusyCursor();
     //Calling function is responsible for the command memory
     if( !IsConnectedToXplorer() )
     {
         return false;
     }
 
-    wxBeginBusyCursor();
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -494,7 +496,6 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
 
     if( CORBA::is_nil( vjobs.in() ) || xmlDocument.empty() )
     {
-        wxEndBusyCursor();
         return false;
     }
 
@@ -505,11 +506,9 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
     }
     catch ( ... )
     {
-        wxEndBusyCursor();
         return false;
     }
 
-    wxEndBusyCursor();
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -558,6 +557,7 @@ const ves::open::xml::CommandPtr CORBAServiceList::GetGUIUpdateCommands( const s
 ////////////////////////////////////////////////////////////////////////////////
 std::string CORBAServiceList::GetNetwork( void )
 {
+    ::wxBusyCursor();
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return std::string();
@@ -565,9 +565,7 @@ std::string CORBAServiceList::GetNetwork( void )
 
     try
     {
-        wxBeginBusyCursor();
         std::string network = veCE->GetNetwork( p_ui_i->UIName_.c_str() );
-        wxEndBusyCursor();
         return network;
     }
     catch ( ... )
@@ -646,6 +644,7 @@ void CORBAServiceList::Resume( void )
 ////////////////////////////////////////////////////////////////////////////////
 std::string CORBAServiceList::Query( const std::string& command )
 {
+    ::wxBusyCursor();
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return std::string( "Not Connected" );
@@ -653,20 +652,18 @@ std::string CORBAServiceList::Query( const std::string& command )
 
     try
     {
-        wxBeginBusyCursor();
         std::string network = veCE->Query( command.c_str() );
-        wxEndBusyCursor();
         return network;
     }
     catch ( ... )
     {
-        wxEndBusyCursor();
         return std::string( "Error" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNetwork( const std::string& command )
 {
+    ::wxBusyCursor();
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return;
@@ -674,13 +671,10 @@ void CORBAServiceList::SetNetwork( const std::string& command )
 
     try
     {
-        wxBeginBusyCursor();
         veCE->SetNetwork( command.c_str() );
-        wxEndBusyCursor();
     }
     catch ( ... )
     {
-        wxEndBusyCursor();
         return;
     }
 }
