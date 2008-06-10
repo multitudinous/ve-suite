@@ -481,6 +481,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
         return false;
     }
 
+    wxBeginBusyCursor();
     //Now send the data to xplorer
     ves::open::xml::XMLReaderWriter netowrkWriter;
     netowrkWriter.UseStandaloneDOMDocumentManager();
@@ -493,6 +494,7 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
 
     if( CORBA::is_nil( vjobs.in() ) || xmlDocument.empty() )
     {
+        wxEndBusyCursor();
         return false;
     }
 
@@ -503,8 +505,11 @@ bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::Command
     }
     catch ( ... )
     {
+        wxEndBusyCursor();
         return false;
     }
+
+    wxEndBusyCursor();
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -560,7 +565,9 @@ std::string CORBAServiceList::GetNetwork( void )
 
     try
     {
+        wxBeginBusyCursor();
         std::string network = veCE->GetNetwork( p_ui_i->UIName_.c_str() );
+        wxEndBusyCursor();
         return network;
     }
     catch ( ... )
@@ -646,11 +653,14 @@ std::string CORBAServiceList::Query( const std::string& command )
 
     try
     {
+        wxBeginBusyCursor();
         std::string network = veCE->Query( command.c_str() );
+        wxEndBusyCursor();
         return network;
     }
     catch ( ... )
     {
+        wxEndBusyCursor();
         return std::string( "Error" );
     }
 }
@@ -664,10 +674,13 @@ void CORBAServiceList::SetNetwork( const std::string& command )
 
     try
     {
+        wxBeginBusyCursor();
         veCE->SetNetwork( command.c_str() );
+        wxEndBusyCursor();
     }
     catch ( ... )
     {
+        wxEndBusyCursor();
         return;
     }
 }

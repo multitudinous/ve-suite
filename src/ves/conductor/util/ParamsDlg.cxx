@@ -366,11 +366,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         std::string status = "returnString";
         commandWriter.UseStandaloneDOMDocumentManager();
         commandWriter.WriteXMLDocument( nodes, status, "Command" );
-        wxProgressDialog tempMessageDialog(  
-            wxString( _("Message box") ),
-            wxString( _("Gathering inputs") ), 100, this );
-        //tempMessageDialog.CenterOnParent();
-        //tempMessageDialog.ShowModal();
+
         std::string nw_str = serviceList->Query( status );
 
         ves::open::xml::XMLReaderWriter networkReader;
