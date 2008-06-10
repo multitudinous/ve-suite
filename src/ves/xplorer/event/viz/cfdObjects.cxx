@@ -57,8 +57,25 @@ cfdObjects::cfdObjects( void ):
         pointSource( 0 ),
         vtkToPFDebug( 0 ),
         usePreCalcData( false ),
-        activeDataSet( 0 )
+        activeDataSet( 0 ),
+        updateFlag( false ),
+        requestedValue( 0 ),
+        objectType( 0 ),
+        cursorType( 0 ),
+        scale( 0 )
 {
+    for( size_t i = 0; i < 3; ++i )
+    {
+        origin[ i ] = 0;
+        center[ i ] = 0;
+        normal[ i ] = 0;
+    }
+    
+    for( size_t i = 0; i < 6; ++i )
+    {
+        box_size[ i ] = 0;
+    }
+    
 #ifdef VTK_POST_FEB20
     m_multiGroupGeomFilter = vtkCompositeDataGeometryFilter::New();
 #else
