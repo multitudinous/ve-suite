@@ -477,7 +477,7 @@ void CORBAServiceList::CreateCORBAModule( void )
 ////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SendCommandStringToXplorer( const ves::open::xml::CommandWeakPtr& veCommand )
 {
-    ::wxBusyCursor();
+    ::wxBusyCursor wait;
     //Calling function is responsible for the command memory
     if( !IsConnectedToXplorer() )
     {
@@ -530,6 +530,7 @@ PEThread* CORBAServiceList::GetMessageLog( void )
 ////////////////////////////////////////////////////////////////////////////////
 bool CORBAServiceList::SetID( int moduleId, std::string moduleName )
 {
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return false;
@@ -557,7 +558,7 @@ const ves::open::xml::CommandPtr CORBAServiceList::GetGUIUpdateCommands( const s
 ////////////////////////////////////////////////////////////////////////////////
 std::string CORBAServiceList::GetNetwork( void )
 {
-    ::wxBusyCursor();
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return std::string();
@@ -576,6 +577,7 @@ std::string CORBAServiceList::GetNetwork( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::StopCalc( void )
 {
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return;
@@ -593,6 +595,7 @@ void CORBAServiceList::StopCalc( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::StartCalc( void )
 {
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return;
@@ -610,6 +613,7 @@ void CORBAServiceList::StartCalc( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::PauseCalc( void )
 {
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return;
@@ -627,6 +631,7 @@ void CORBAServiceList::PauseCalc( void )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::Resume( void )
 {
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return;
@@ -644,7 +649,7 @@ void CORBAServiceList::Resume( void )
 ////////////////////////////////////////////////////////////////////////////////
 std::string CORBAServiceList::Query( const std::string& command )
 {
-    ::wxBusyCursor();
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return std::string( "Not Connected" );
@@ -663,7 +668,7 @@ std::string CORBAServiceList::Query( const std::string& command )
 ////////////////////////////////////////////////////////////////////////////////
 void CORBAServiceList::SetNetwork( const std::string& command )
 {
-    ::wxBusyCursor();
+    ::wxBusyCursor wait;
     if( !CORBAServiceList::IsConnectedToCE() )
     {
         return;
