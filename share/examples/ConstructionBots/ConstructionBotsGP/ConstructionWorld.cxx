@@ -47,6 +47,7 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
+#include <ves/xplorer/scenegraph/CADEntityHelper.h>
 #include <ves/xplorer/scenegraph/Sound.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
@@ -141,10 +142,10 @@ void ConstructionWorld::InitializeFramework()
     }
 #endif
 
-    int numBlocks = 28;
+    int numBlocks = 16;
     int numAgents = 4;
     //Ensure that the grid size is odd for centrality purposes
-    int gridSize = 51;
+    int gridSize = 41;
 
     int halfPosition = static_cast< int >( gridSize * 0.5f );
     for( int j = 0; j < gridSize; ++j )
@@ -165,25 +166,10 @@ void ConstructionWorld::InitializeFramework()
     mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
 
-    mOccupancyMatrix[ std::make_pair(  1,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1, -1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  1, -1 ) ].first = true;
-
     mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
     mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -2 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  2,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -2,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -2, -1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  2, -1 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  1,  2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1,  2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1, -2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  1, -2 ) ].first = true;
 
     mOccupancyMatrix[ std::make_pair(  3,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  3 ) ].first = true;
@@ -272,8 +258,8 @@ void ConstructionWorld::InitializeFramework()
 
         //Set the sensor range for the agents
         agentEntity->GetBlockSensor()->SetRange( gridSize * 0.25 );
-        agentEntity->GetObstacleSensor()->SetRange( gridSize * 0.5 );
-        agentEntity->GetSiteSensor()->SetRange( gridSize * sqrt( 2.0 ) );
+        agentEntity->GetObstacleSensor()->SetRange( gridSize );
+        agentEntity->GetSiteSensor()->SetRange( gridSize );
 
         //Set name and descriptions for blocks
         agentEntity->SetNameAndDescriptions( i );

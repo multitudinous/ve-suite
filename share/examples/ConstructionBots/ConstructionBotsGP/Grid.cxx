@@ -313,6 +313,7 @@ void Grid::CreateGrid(
     addDrawable( lines.get() );
 
     osg::ref_ptr< osg::Geometry > walls = new osg::Geometry();
+    walls->setName( std::string( "Wall" ) );
     osg::ref_ptr< osg::StateSet > wallStateSet = new osg::StateSet();
     wallStateSet->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     wallStateSet->setMode( GL_BLEND, osg::StateAttribute::ON );
@@ -371,7 +372,6 @@ void Grid::CreateGrid(
 
     walls->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, wallVertices->size() ) );
-    walls->setName( std::string( "Wall" ) );
     addDrawable( walls.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

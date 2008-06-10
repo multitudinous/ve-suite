@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "SiteSensor.h"
 #include "AgentEntity.h"
+#include "ObstacleSensor.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/DCS.h>
@@ -142,7 +143,7 @@ void SiteSensor::CollectInformation()
     //Reset results from last frame
     mSiteInView = false;
     mCloseToSite = false;
-    targetDCS = NULL;
+    //targetDCS = NULL;
     mGeometry->dirtyDisplayList();
     mGeometry->dirtyBound();
 
@@ -175,7 +176,7 @@ void SiteSensor::CollectInformation()
                                   sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(),
                                   0.0 );
 
-            if( siteVector.length() < 2.828 )//4 * sqrt( 0.5 )
+            if( siteVector.length() <= 2.121 )
             {
                 mCloseToSite = true;
             }
@@ -187,8 +188,6 @@ void SiteSensor::CollectInformation()
     }
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
-
-    //DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::Rotate()

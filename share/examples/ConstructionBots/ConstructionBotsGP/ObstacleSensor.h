@@ -60,25 +60,34 @@ public:
 
     virtual void CollectInformation();
 
+    void DisplayLine( bool onOff );
+
     const btVector3& GetNormalizedResultantForceVector();
 
     void SetAngleIncrement( double angleIncrement );
+    void SetForceAttractionConstant( double forceAttractionConstant );
+    void SetForceRepellingConstant( double forceRepellingConstant );
     void SetRange( double range );
 
     bool ObstacleDetected();
 
 private:
+    void Initialize();
+
     bool mObstacleDetected;
 
     double mAngleIncrement;
     double mRange;
-    double mForceRepellingConstant;
     double mForceAttractionConstant;
+    double mForceRepellingConstant;
 
     btVector3 mResultantForce;
 
+    osg::ref_ptr< osg::Geode > mGeode;
+    osg::ref_ptr< osg::Geometry > mGeometry;
+    osg::ref_ptr< osg::Vec3Array > mVertexArray;
+
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
-    std::vector< osgUtil::LineSegmentIntersector::Intersection > mWallIntersections;
 
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 

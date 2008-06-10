@@ -35,9 +35,15 @@
 #include "ObstacleSensor.h"
 #include "AgentEntity.h"
 #include "PerimeterSensor.h"
+#include "HoldBlockSensor.h"
+
+// --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
+#include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/LineWidth>
 
 #include <osgUtil/IntersectionVisitor>
 
@@ -47,6 +53,7 @@
 using namespace bots;
 
 const double piDivOneEighty = 0.0174532925;
+const double oneEightyDivPI = 57.2957795;
 
 ////////////////////////////////////////////////////////////////////////////////
 ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
@@ -55,18 +62,64 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
     mObstacleDetected( false ),
     mAngleIncrement( 20 ),
     mRange( 0 ),
-    mForceRepellingConstant( 1.0 ),
     mForceAttractionConstant( 1.0 ),
+    mForceRepellingConstant( 1.0 ),
     mResultantForce( 0, 0, 0 ),
-    mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-                                 osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
+    mGeode( 0 ),
+    mGeometry( 0 ),
+    mVertexArray( 0 ),
+    mLineSegmentIntersector( 0 )
 {
-    ;
+    Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ObstacleSensor::~ObstacleSensor()
 {
     ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::Initialize()
+{
+    mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
+        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+    mGeode = new osg::Geode();
+    mGeometry = new osg::Geometry();
+    mVertexArray = new osg::Vec3Array();
+    osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
+
+    //Only need 4 vertices 2 lines
+    mVertexArray->resize( 6 );
+    mGeometry->setVertexArray( mVertexArray.get() );
+
+    colorArray->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    mGeometry->setColorArray( colorArray.get() );
+    mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+
+    mGeometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
+    mGeometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
+    mGeometry->addPrimitiveSet(
+        new osg::DrawArrays( osg::PrimitiveSet::LINES, 4, 2 ) );
+
+    mGeode->addDrawable( mGeometry.get() );
+
+    osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
+    lineWidth->setWidth( 1.0f );
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setAttribute( lineWidth.get() );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+    mGeode->setStateSet( stateset.get() );
+
+    mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
+
+    DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CollectInformation()
@@ -81,7 +134,7 @@ void ObstacleSensor::CollectInformation()
 
     //Reset results from last frame
     mIntersections.clear();
-    mWallIntersections.clear();
+    mObstacleDetected = false;
 
     osg::Vec3d startPoint, endPoint;
     startPoint = agentDCS->getPosition();
@@ -114,43 +167,30 @@ void ObstacleSensor::CollectInformation()
             osgUtil::LineSegmentIntersector::Intersection intersection =
                 mLineSegmentIntersector->getFirstIntersection();
             osg::Drawable* drawable = intersection.drawable.get();
-            if( drawable->getName() == "Wall" )
-            {
-                mWallIntersections.push_back( intersection );
-            }
-            else
+            osg::Vec4* color = &( static_cast< osg::Vec4Array* >(
+                drawable->asGeometry()->getColorArray() )->at( 0 ) );
+            if( !mAgentEntity->mBuildMode )
             {
                 mIntersections.push_back( intersection );
             }
-
-            if( mAgentEntity->mBuildMode )
+            else if( color->length() != 1.0 )
             {
-                osg::Vec4* color = &( static_cast< osg::Vec4Array* >(
-                    drawable->asGeometry()->getColorArray() )->at( 0 ) );
-                if( color->length() == 1.0 )
-                {
-                    mIntersections.pop_back();
-                }
-                else
-                {
-                    angle = 0;
-                    mAgentEntity->mBuildMode = false;
-                    mAgentEntity->mPerimeterSensor->Reset();
-                }
+                mIntersections.push_back( intersection );         
             }
         }
 
         angle += mAngleIncrement;
     }
 
-    if( !mIntersections.empty() || !mWallIntersections.empty() )
+    if( !mIntersections.empty() )
     {
         mObstacleDetected = true;
     }
-    else
-    {
-        mObstacleDetected = false;
-    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::DisplayLine( bool onOff )
+{
+    mGeode->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
 const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
@@ -160,6 +200,10 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
         mAgentEntity->GetTargetDCS();
     double* agentPosition = agentDCS->GetVETranslationArray();
+
+    (*mVertexArray)[ 0 ] = (*mVertexArray)[ 1 ] =
+    (*mVertexArray)[ 2 ] = (*mVertexArray)[ 3 ] =
+    (*mVertexArray)[ 4 ] = (*mVertexArray)[ 5 ] = agentDCS->getPosition();
 
     //
     btVector3 totalForce( 0, 0, 0 );
@@ -178,24 +222,6 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
         repulsiveForce -= deltaForce;
     }
-    totalForce += repulsiveForce;
-
-    //Get the wall repulsive force
-    btVector3 wallRepulsiveForce( 0, 0, 0 );
-    for( size_t i = 0; i < mWallIntersections.size(); ++i )
-    {
-        osg::Vec3d intersect =
-            mWallIntersections.at( i ).getWorldIntersectPoint();
-        btVector3 deltaForce( intersect.x() - agentPosition[ 0 ],
-                              intersect.y() - agentPosition[ 1 ], 0 );
-
-        double variables = mForceRepellingConstant / deltaForce.length2();
-        deltaForce /= deltaForce.length();
-        deltaForce *= variables;
-
-        wallRepulsiveForce -= deltaForce;
-    }
-    totalForce += wallRepulsiveForce;
 
     //Calculate the target force
     btVector3 targetForce( 0, 0, 0 );
@@ -204,36 +230,91 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         double* targetPosition = targetDCS->GetVETranslationArray();
         targetForce.setValue( targetPosition[ 0 ] - agentPosition[ 0 ],
                               targetPosition[ 1 ] - agentPosition[ 1 ], 0 );
+    }
+    else
+    {
+        //Drive straight
+        targetForce =
+            mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
+    }
 
+    if( targetForce.length() != 0.0 )
+    {
         targetForce /= targetForce.length();
         targetForce *= mForceAttractionConstant;
     }
-    else if( !mWallIntersections.empty() )
-    {
-        double x = wallRepulsiveForce.x();
-        double y = wallRepulsiveForce.y();
+    totalForce += repulsiveForce;
+    totalForce += targetForce;
 
-        double cosTheta = cos( 145 * piDivOneEighty );
-        double sinTheta = sin( 145 * piDivOneEighty );
+    //A . B = |A||B|cos( theta )
+    //theta = acos[ ( A . B ) / |A||B| ]
+    double theta = acos( targetForce.dot( totalForce ) /
+        ( targetForce.length() * totalForce.length() ) );
+    theta *= oneEightyDivPI;
+
+    //std::cout << "theta: " << theta << std::endl;
+
+    if( theta > 90.0 )
+    {
+        double x = repulsiveForce.x();
+        double y = repulsiveForce.y();
+
+        double cosTheta = cos( 145.0 * piDivOneEighty );
+        double sinTheta = sin( 145.0 * piDivOneEighty );
 
         double xNew = ( x * cosTheta ) - ( y * sinTheta );
         double yNew = ( x * sinTheta ) + ( y * cosTheta );
 
+        totalForce -= targetForce;
         targetForce.setValue( xNew, yNew, 0 );
+        if( targetForce.length() != 0.0 )
+        {
+            targetForce /= targetForce.length();
+            targetForce *= mForceAttractionConstant;
+        }
+        totalForce += targetForce;
+
+        //std::cout << "Here" << std::endl;
     }
-    totalForce += targetForce;
+
+    (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * 10.0;
+    (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * 10.0;
+    (*mVertexArray)[ 1 ].z() += repulsiveForce.z();
+
+    (*mVertexArray)[ 3 ].x() += targetForce.x() * 10.0;
+    (*mVertexArray)[ 3 ].y() += targetForce.y() * 10.0;
+    (*mVertexArray)[ 3 ].z() += targetForce.z();
+
+    mGeometry->dirtyDisplayList();
+    mGeometry->dirtyBound();
 
     mResultantForce = totalForce;
     if( mResultantForce.length() != 0.0 )
     {
         mResultantForce = mResultantForce.normalize();
     }
+
+    (*mVertexArray)[ 5 ].x() += mResultantForce.x() * 10.0;
+    (*mVertexArray)[ 5 ].y() += mResultantForce.y() * 10.0;
+    (*mVertexArray)[ 5 ].z() += mResultantForce.z();
+
     return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )
 {
     mAngleIncrement = angleIncrement;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::SetForceAttractionConstant(
+    double forceAttractionConstant )
+{
+    mForceAttractionConstant = forceAttractionConstant;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::SetForceRepellingConstant( double forceRepellingConstant )
+{
+    mForceRepellingConstant = forceRepellingConstant;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetRange( double range )

@@ -119,11 +119,17 @@ void Block::Initialize()
 
     //Create the block
     mDrawables[ 4 ] = new osg::Geometry();
+    mDrawables[ 4 ]->setName( std::string( "BlockRight" ) );
     mDrawables[ 5 ] = new osg::Geometry();
+    mDrawables[ 5 ]->setName( std::string( "BlockFar" ) );
     mDrawables[ 6 ] = new osg::Geometry();
+    mDrawables[ 6 ]->setName( std::string( "BlockLeft" ) );
     mDrawables[ 7 ] = new osg::Geometry();
+    mDrawables[ 7 ]->setName( std::string( "BlockNear" ) );
     mDrawables[ 8 ] = new osg::Geometry();
+    mDrawables[ 8 ]->setName( std::string( "BlockTop" ) );
     mDrawables[ 9 ] = new osg::Geometry();
+    mDrawables[ 9 ]->setName( std::string( "BlockBottom" ) );
 
     osg::ref_ptr< osg::StateSet > blockStateSet = new osg::StateSet();
     blockStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );

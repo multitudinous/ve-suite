@@ -83,6 +83,7 @@ AgentEntity::~AgentEntity()
             mPhysicsSimulator->GetDynamicsWorld()->removeConstraint(
                 mConstraint );
         }
+
         delete mConstraint;
     }
 }
@@ -106,7 +107,6 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
     mHoldBlockSensor->CollectInformation();
     if( !mHoldBlockSensor->HoldingBlock() )
     {
-        mSiteSensor->DisplayLine( false );
         mBlockSensor->CollectInformation();
         if( mBlockSensor->BlockInView() )
         {
@@ -127,6 +127,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
             {
                 QueryBlock();
             }
+
             if( mPerimeterSensor->PerimeterDetected() )
             {
                 FollowPerimeter();
@@ -134,7 +135,6 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         }
         else
         {
-            mBlockSensor->DisplayLine( false );
             mSiteSensor->CollectInformation();
             if( mSiteSensor->SiteInView() )
             {
@@ -169,6 +169,7 @@ void AgentEntity::AvoidObstacle()
 void AgentEntity::Build()
 {
     btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
+    velocity.normalize();
 
     //Get the block close to the attach site
     double* position = GetDCS()->GetVETranslationArray();
@@ -190,7 +191,7 @@ void AgentEntity::Build()
     }
 
     //Rotate normalized velocity vector -90 degrees
-    velocity = velocity.normalize() * 0.6;
+    velocity *= 0.6;
     position[ 0 ] +=  velocity.y();
     position[ 1 ] += -velocity.x();
     position[ 0 ] += -velocity.x();
@@ -199,6 +200,8 @@ void AgentEntity::Build()
 
     mBuildMode = false;
     mPerimeterSensor->Reset();
+    mBlockSensor->DisplayLine( true );
+    mObstacleSensor->DisplayLine( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -237,9 +240,11 @@ void AgentEntity::GoToSite()
 void AgentEntity::InitiateBuildMode()
 {
     mTargetDCS = NULL;
-    mBlockSensor->DisplayLine( false );
-    mSiteSensor->DisplayLine( false );
     mBuildMode = true;
+
+    //mObstacleSensor->SetForceAttractionConstant( 1.0 );
+    mSiteSensor->DisplayLine( false );
+    mObstacleSensor->DisplayLine( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
@@ -257,6 +262,9 @@ void AgentEntity::PickUpBlock()
         mTargetDCS->SetTranslationArray( position );
 
         mTargetDCS = NULL;
+
+        mBlockSensor->DisplayLine( false );
+        mSiteSensor->DisplayLine( true );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
