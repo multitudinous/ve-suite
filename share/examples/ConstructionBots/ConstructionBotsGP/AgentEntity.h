@@ -70,20 +70,22 @@ public:
 
     void CommunicatingBlocksAlgorithm();
 
-    ves::xplorer::scenegraph::DCS* GetPluginDCS();
-    ves::xplorer::scenegraph::DCS* GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* const GetPluginDCS() const;
+    ves::xplorer::scenegraph::DCS* const GetTargetDCS() const;
 
-    bots::BlockSensorPtr GetBlockSensor();
-    bots::HoldBlockSensorPtr GetHoldBlockSensor();
-    bots::ObstacleSensorPtr GetObstacleSensor();
-    bots::PerimeterSensorPtr GetPerimeterSensor();
-    bots::SiteSensorPtr GetSiteSensor();
+    bots::BlockSensorPtr const GetBlockSensor() const;
+    bots::HoldBlockSensorPtr const GetHoldBlockSensor() const;
+    bots::ObstacleSensorPtr const GetObstacleSensor() const;
+    bots::PerimeterSensorPtr const GetPerimeterSensor() const;
+    bots::SiteSensorPtr const GetSiteSensor() const;
 
     void SetBlockEntityMap(
         std::map< std::string, bots::BlockEntity* >* blockEntityMap );
     void SetConstraints( int gridSize );
     void SetNameAndDescriptions( int number );
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
+
+protected:
 
 private:
     //Give sensors easy access to AgentEntity

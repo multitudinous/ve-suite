@@ -68,9 +68,10 @@ public:
     bool Aligned();
     bool PerimeterDetected();
 
-private:
-    void Initialize();
+protected:
+    virtual void Initialize();
 
+private:
     /* There are eight perimeter sensors as shown below
           3    2
        4 _|____|_ 1
@@ -94,10 +95,6 @@ private:
     osg::Drawable* mQueriedConnection;
     
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
-
-    osg::ref_ptr< osg::Vec3Array > mLocalPositions;
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
-
 };
 } //end bots
 

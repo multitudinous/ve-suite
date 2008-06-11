@@ -35,18 +35,34 @@
 #include "Sensor.h"
 #include "AgentEntity.h"
 
+// --- OSG Includes --- //
+#include <osg/Geode>
+#include <osg/Geometry>
+
+#include <osgUtil/LineSegmentIntersector>
+//#include <osgUtil/IntersectionVisitor>
+
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 Sensor::Sensor( bots::AgentEntity* agentEntity )
     :
-    mAgentEntity( agentEntity )
+    mAgentEntity( agentEntity ),
+    mGeode( 0 ),
+    mGeometry( 0 ),
+    mVertexArray( 0 ),
+    mLineSegmentIntersector( 0 )
 {
-   ;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 Sensor::~Sensor()
 {
-   ;
+    ;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Sensor::DisplayGeometry( bool onOff )
+{
+    mGeode->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////

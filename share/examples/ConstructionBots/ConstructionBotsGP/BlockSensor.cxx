@@ -62,11 +62,7 @@ BlockSensor::BlockSensor( bots::AgentEntity* agentEntity )
     mAngle( 0 ), 
     mAngleInc( 0.05 ),
     mRange( 0 ),
-    mNormalizedBlockVector( 0, 0, 0 ),
-    mGeode( 0 ),
-    mGeometry( 0 ),
-    mVertexArray( 0 ),
-    mLineSegmentIntersector( 0 )
+    mNormalizedBlockVector( 0, 0, 0 )
 {
     Initialize();
 }
@@ -85,7 +81,6 @@ void BlockSensor::Initialize()
     mVertexArray = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
 
-    //Only need 2 vertices for the line
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
@@ -111,7 +106,7 @@ void BlockSensor::Initialize()
 
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
-    DisplayLine( true );
+    DisplayGeometry( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
@@ -191,11 +186,6 @@ void BlockSensor::CollectInformation()
 void BlockSensor::Rotate()
 {
     mAngle += mAngleInc;
-}
-////////////////////////////////////////////////////////////////////////////////
-void BlockSensor::DisplayLine( bool onOff )
-{
-    mGeode->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool BlockSensor::BlockInView()

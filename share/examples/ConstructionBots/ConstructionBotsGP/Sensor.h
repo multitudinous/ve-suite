@@ -34,6 +34,21 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+// --- OSG Includes --- //
+#include <osg/ref_ptr>
+#include <osg/Array>
+
+namespace osg
+{
+class Geode;
+class Geometry;
+}
+
+namespace osgUtil
+{
+class LineSegmentIntersector;
+}
+
 namespace bots
 {
 // --- My Includes --- //
@@ -47,8 +62,18 @@ public:
 
     virtual void CollectInformation() = 0;
 
+    virtual void DisplayGeometry( bool onOff );
+
 protected:
+    virtual void Initialize() = 0;
+
     bots::AgentEntity* mAgentEntity;
+
+    osg::ref_ptr< osg::Geode > mGeode;
+    osg::ref_ptr< osg::Geometry > mGeometry;
+    osg::ref_ptr< osg::Vec3Array > mVertexArray;
+
+    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots

@@ -60,8 +60,6 @@ public:
 
     virtual void CollectInformation();
 
-    void DisplayLine( bool onOff );
-
     const btVector3& GetNormalizedResultantForceVector();
 
     void SetAngleIncrement( double angleIncrement );
@@ -71,9 +69,10 @@ public:
 
     bool ObstacleDetected();
 
-private:
-    void Initialize();
+protected:
+    virtual void Initialize();
 
+private:
     bool mObstacleDetected;
 
     double mAngleIncrement;
@@ -83,13 +82,7 @@ private:
 
     btVector3 mResultantForce;
 
-    osg::ref_ptr< osg::Geode > mGeode;
-    osg::ref_ptr< osg::Geometry > mGeometry;
-    osg::ref_ptr< osg::Vec3Array > mVertexArray;
-
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
-
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots

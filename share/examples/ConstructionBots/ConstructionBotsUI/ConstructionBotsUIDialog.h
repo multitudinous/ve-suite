@@ -63,13 +63,13 @@ public:
     ConstructionBotsUIDialog( wxWindow* parent,
                               int id,
                               ves::conductor::util::CORBAServiceList* service );
+
+    virtual ~ConstructionBotsUIDialog();
     
     enum CONSTRUCTION_BOTS_IDS
     {
         
     };
-
-    virtual ~ConstructionBotsUIDialog();
 
     virtual bool TransferDataFromWindow();
     virtual bool TransferDataToWindow();

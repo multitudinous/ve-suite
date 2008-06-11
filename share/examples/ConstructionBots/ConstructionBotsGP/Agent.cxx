@@ -72,6 +72,8 @@ btCompoundShape* Agent::CreateCompoundShape()
     btScalar holderHalfThickness = 0.02;
     btScalar offset = boxHalfWidth + holderHalfThickness;
 
+    //This memory should be handled by
+    //ves/xplorer/scenegraph/physics/PhysicsRigidBody
     btCompoundShape* compoundShape = new btCompoundShape();
     btBoxShape* mainBox = new btBoxShape(
         btVector3( boxHalfWidth, boxHalfWidth, boxHalfWidth ) );

@@ -109,7 +109,7 @@ void ConstructionBotsUIDialog::SendCommandsToXplorer()
 {
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
 
-    for( size_t i = 0; i < mInstructions.size(); i++ )
+    for( size_t i = 0; i < mInstructions.size(); ++i )
     {
         command->AddDataValuePair( mInstructions.at( i ) );
     }

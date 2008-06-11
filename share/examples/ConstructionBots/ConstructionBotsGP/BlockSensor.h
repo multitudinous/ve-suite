@@ -37,21 +37,6 @@
 // --- My Includes --- //
 #include "Sensor.h"
 
-// --- OSG Includes --- //
-#include <osg/ref_ptr>
-#include <osg/Array>
-
-namespace osg
-{
-class Geode;
-class Geometry;
-}
-
-namespace osgUtil
-{
-class LineSegmentIntersector;
-}
-
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -69,8 +54,6 @@ public:
 
     void Rotate();
 
-    void DisplayLine( bool onOff );
-
     bool BlockInView();
     bool CloseToBlock();
 
@@ -78,9 +61,10 @@ public:
 
     void SetRange( double range );
 
-private:
-    void Initialize();
+protected:
+    virtual void Initialize();
 
+private:
     bool mBlockInView;
     bool mCloseToBlock;
 
@@ -89,12 +73,6 @@ private:
     double mRange;
 
     btVector3 mNormalizedBlockVector;
-
-    osg::ref_ptr< osg::Geode > mGeode;
-    osg::ref_ptr< osg::Geometry > mGeometry;
-    osg::ref_ptr< osg::Vec3Array > mVertexArray;
-
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots

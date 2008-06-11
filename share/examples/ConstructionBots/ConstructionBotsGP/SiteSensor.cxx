@@ -46,7 +46,6 @@
 #include <osg/LineWidth>
 
 #include <osgUtil/IntersectionVisitor>
-#include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -60,14 +59,10 @@ SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mSiteInView( false ),
     mCloseToSite( false ),
-    mAngle( 0 ), 
+    mAngle( 0.0 ), 
     mAngleInc( 0.05 ),
-    mRange( 0 ),
-    mNormalizedSiteVector( 0, 0, 0 ),
-    mGeode( 0 ),
-    mGeometry( 0 ),
-    mVertexArray( 0 ),
-    mLineSegmentIntersector( 0 )
+    mRange( 0.0 ),
+    mNormalizedSiteVector( 0.0, 0.0, 0.0 )
 {
     Initialize();
 }
@@ -87,7 +82,6 @@ void SiteSensor::Initialize()
     mVertexArray = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
 
-    //Only need 2 vertices for the line
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
@@ -113,7 +107,7 @@ void SiteSensor::Initialize()
 
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
-    DisplayLine( false );
+    DisplayGeometry( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::CollectInformation()
@@ -193,11 +187,6 @@ void SiteSensor::CollectInformation()
 void SiteSensor::Rotate()
 {
     mAngle += mAngleInc;
-}
-////////////////////////////////////////////////////////////////////////////////
-void SiteSensor::DisplayLine( bool onOff )
-{
-    mGeode->setNodeMask( onOff );
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool SiteSensor::SiteInView()

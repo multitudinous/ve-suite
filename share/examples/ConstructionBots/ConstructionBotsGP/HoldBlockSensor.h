@@ -37,14 +37,6 @@
 // --- My Includes --- //
 #include "Sensor.h"
 
-// --- OSG Includes --- //
-#include <osg/ref_ptr>
-
-namespace osgUtil
-{
-class LineSegmentIntersector;
-}
-
 //Detects if an agent is holding a block
 namespace bots
 {
@@ -59,12 +51,13 @@ public:
 
     bool HoldingBlock();
 
+protected:
+    virtual void Initialize();
+
 private:
     bool mHoldingBlock;
 
     double mRange;
-
-    osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };
 } //end bots

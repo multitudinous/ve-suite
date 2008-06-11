@@ -110,7 +110,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         mBlockSensor->CollectInformation();
         if( mBlockSensor->BlockInView() )
         {
-            GoToBlock();
+            //GoToBlock();
 
             if( mBlockSensor->CloseToBlock() )
             {
@@ -138,7 +138,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
             mSiteSensor->CollectInformation();
             if( mSiteSensor->SiteInView() )
             {
-                GoToSite();
+                //GoToSite();
 
                 if( mSiteSensor->CloseToSite() )
                 {
@@ -200,8 +200,8 @@ void AgentEntity::Build()
 
     mBuildMode = false;
     mPerimeterSensor->Reset();
-    mBlockSensor->DisplayLine( true );
-    mObstacleSensor->DisplayLine( true );
+    mBlockSensor->DisplayGeometry( true );
+    mObstacleSensor->DisplayGeometry( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -243,8 +243,8 @@ void AgentEntity::InitiateBuildMode()
     mBuildMode = true;
 
     //mObstacleSensor->SetForceAttractionConstant( 1.0 );
-    mSiteSensor->DisplayLine( false );
-    mObstacleSensor->DisplayLine( false );
+    mSiteSensor->DisplayGeometry( false );
+    mObstacleSensor->DisplayGeometry( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
@@ -263,8 +263,8 @@ void AgentEntity::PickUpBlock()
 
         mTargetDCS = NULL;
 
-        mBlockSensor->DisplayLine( false );
-        mSiteSensor->DisplayLine( true );
+        mBlockSensor->DisplayGeometry( false );
+        mSiteSensor->DisplayGeometry( true );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -284,37 +284,37 @@ void AgentEntity::QueryBlock()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::BlockSensorPtr AgentEntity::GetBlockSensor()
+bots::BlockSensorPtr const AgentEntity::GetBlockSensor() const
 {
     return mBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::HoldBlockSensorPtr AgentEntity::GetHoldBlockSensor()
+bots::HoldBlockSensorPtr const AgentEntity::GetHoldBlockSensor() const
 {
     return mHoldBlockSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::ObstacleSensorPtr AgentEntity::GetObstacleSensor()
+bots::ObstacleSensorPtr const AgentEntity::GetObstacleSensor() const
 {
     return mObstacleSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::PerimeterSensorPtr AgentEntity::GetPerimeterSensor()
+bots::PerimeterSensorPtr const AgentEntity::GetPerimeterSensor() const
 {
     return mPerimeterSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::SiteSensorPtr AgentEntity::GetSiteSensor()
+bots::SiteSensorPtr const AgentEntity::GetSiteSensor() const
 {
     return mSiteSensor;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* AgentEntity::GetPluginDCS()
+ves::xplorer::scenegraph::DCS* const AgentEntity::GetPluginDCS() const
 {
     return mPluginDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* AgentEntity::GetTargetDCS()
+ves::xplorer::scenegraph::DCS* const AgentEntity::GetTargetDCS() const
 {
     return mTargetDCS.get();
 }
