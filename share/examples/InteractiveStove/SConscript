@@ -13,15 +13,20 @@ jpgFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.jpg' ] )
 objFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.obj' ] )
 mtlFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.mtl' ] )
 rgbFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.rgb' ] )
+mdlFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.mdl' ] )
+celFile = sca_util.getFilesRecursiveByExt( InteractiveStoveDir, [ '.cel' ] )
 
 fileBundle.addFiles( stlFile )
 fileBundle.addFiles( jpgFile )
 fileBundle.addFiles( objFile )
 fileBundle.addFiles( mtlFile )
 fileBundle.addFiles( rgbFile )
+fileBundle.addFiles( mdlFile )
+fileBundle.addFiles( celFile )
 
 fileBundle.addFiles( 'interactivestove.ves' )
 fileBundle.addFiles( 'star.param' )
+fileBundle.addFiles( 'STAR\setup' )
 #fileBundle.addFiles( 'RunUnit.csh' )
 
 InteractiveStoveSubdirs = Split("""

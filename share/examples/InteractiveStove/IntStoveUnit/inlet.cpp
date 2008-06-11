@@ -337,7 +337,7 @@ void InletOutlet::readSurfaceFile( void ) {
 
      std::cout << "|--- Reading Surface File ------|"<< std::endl;
      surface.clear();
-     fp = fopen( "./STAR/surface.cel", "r" );
+     fp = fopen( "../../../STAR/surface.cel", "r" );
      if ( fp != NULL ) {
       for ( k = 0; k < numCellsInSurface; k ++ ) {
          fscanf( fp, "%i", &cell );
