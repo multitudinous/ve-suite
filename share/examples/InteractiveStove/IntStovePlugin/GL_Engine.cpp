@@ -572,11 +572,10 @@ void GL_Engine::InletText()
 {
     glColor3f( 0.0, 0.0, 0.0 );
     glRasterPos2f( 0.75, 0.7 );
-    char* string = "INLET";
-    for( size_t i = 0; i < strlen( string ); ++i )
+    char* textString = "INLET";
+    for( size_t i = 0; i < strlen( textString ); ++i )
     {
-        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24,
-                             //static_cast< int >( string[ i ] ) );
+        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, textString[ i ] );
     }
 
 }
@@ -585,11 +584,10 @@ void GL_Engine::OutletText()
 {
     glColor3f( 0.0, 0.0, 0.0 );
     glRasterPos2f( -0.94, -0.75 );
-    char* string = "OUTLET";
-    for( size_t i = 0; i < strlen( string ); ++i )
+    char* textString = "OUTLET";
+    for( size_t i = 0; i < strlen( textString ); ++i )
     {
-        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24,
-                             //static_cast< int >( string[ i ] ) );
+        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, textString[ i ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -628,15 +626,14 @@ void GL_Engine::AddBaffleLabel(
     glColor3f( 0.0, 0.0, 0.0 );
     glRasterPos2f( xPos, yPos );
     
-    std::ostringstream string;
-    string << baffleNum + 1;
-    std::string testing = string.str();
+    std::ostringstream textString;
+    textString << baffleNum + 1;
+    std::string testing = textString.str();
     char* test = const_cast< char* >( testing.c_str() );
 
     for( size_t i = 0; i < strlen( test ); ++i )
     {
-        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24,
-                             //static_cast< int >( test[ i ] ) );
+        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, test[ i ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
