@@ -83,7 +83,12 @@ GL_Engine::GL_Engine( wxWindow* parent,
     wxGLCanvas( parent, id, pos, size, style, name, attrlist )
 #endif
 {
-    for ( int i = 0; i < 2; ++i )
+    //You must initialize glut before using certain functions
+    int argc = 0;
+    char** argv = NULL;
+    glutInit( &argc, argv );
+
+    for( int i = 0; i < 2; ++i )
     {
         actindex[ i ] = -1;
 	    actpt1[ i ] = -1;
@@ -515,11 +520,13 @@ void GL_Engine::_onMouse( wxMouseEvent& event )
 	    ypos2 = 600 - ypos2;
         xPoint = xpos2;
         yPoint = ypos2;
+
 #ifndef __WXMAC__
 	    SetCurrent( *GetContext() );
 #else
         SetCurrent();
 #endif
+
         _checkForMouseHitsTwo( xpos2, ypos2 );
 
         if(	actpt2[ 0 ] == actpt1[ 0 ] && actpt2[ 1 ] == actpt1[ 1 ] )
@@ -575,7 +582,7 @@ void GL_Engine::InletText()
     char* textString = "INLET";
     for( size_t i = 0; i < strlen( textString ); ++i )
     {
-        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, textString[ i ] );
+        glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, textString[ i ] );
     }
 
 }
@@ -587,7 +594,7 @@ void GL_Engine::OutletText()
     char* textString = "OUTLET";
     for( size_t i = 0; i < strlen( textString ); ++i )
     {
-        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, textString[ i ] );
+        glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, textString[ i ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -633,7 +640,7 @@ void GL_Engine::AddBaffleLabel(
 
     for( size_t i = 0; i < strlen( test ); ++i )
     {
-        //glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, test[ i ] );
+        glutBitmapCharacter( GLUT_BITMAP_TIMES_ROMAN_24, test[ i ] );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
