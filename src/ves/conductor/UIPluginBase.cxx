@@ -525,19 +525,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, long *>::iterator iteri;
         for( iteri = _int.begin(); iteri != _int.end(); iteri++ )
         {
-            CommandPtr tempCommand = m_veModel->GetInput( iteri->first );
-            if( !tempCommand )
-            {
-                tempCommand = CommandPtr( new Command() );
+                CommandPtr tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( iteri->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( iteri->first, *( iteri->second ) );
                 tempCommand->AddDataValuePair( dataDVP );
-            }
-            else
-            {
-                tempCommand->GetDataValuePair( 0 )->SetData( iteri->first, *( iteri->second ) );
-            }
+                m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -546,19 +539,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, double *>::iterator iterd;
         for( iterd = _double.begin(); iterd != _double.end(); iterd++ )
         {
-            CommandPtr tempCommand = m_veModel->GetInput( iterd->first );
-            if( !tempCommand )
-            {
-                tempCommand = CommandPtr( new Command() );
+                CommandPtr tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( iterd->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( iterd->first, *( iterd->second ) );
                 tempCommand->AddDataValuePair( dataDVP );
-            }
-            else
-            {
-                tempCommand->GetDataValuePair( 0 )->SetData( iterd->first, *( iterd->second ) );
-            }
+                m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -567,19 +553,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::string *>::iterator iters;
         for( iters = _string.begin(); iters != _string.end(); iters++ )
         {
-            CommandPtr tempCommand = m_veModel->GetInput( iters->first );
-            if( !tempCommand )
-            {
-                tempCommand = CommandPtr( new Command() );
+                CommandPtr tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( iters->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( iters->first, *( iters->second ) );
                 tempCommand->AddDataValuePair( dataDVP );
-            }
-            else
-            {
-                tempCommand->GetDataValuePair( 0 )->SetData( iters->first, *( iters->second ) );
-            }
+                m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -588,19 +567,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<long> * >::iterator itervi;
         for( itervi = _int1D.begin(); itervi != _int1D.end(); itervi++ )
         {
-            CommandPtr tempCommand = m_veModel->GetInput( itervi->first );
-            if( !tempCommand )
-            {
-                tempCommand = CommandPtr( new Command() );
+                CommandPtr tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( itervi->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( itervi->first, *( itervi->second ) );
                 tempCommand->AddDataValuePair( dataDVP );
-            }
-            else
-            {
-                tempCommand->GetDataValuePair( 0 )->SetData( itervi->first, *( itervi->second ) );
-            }
+                m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -609,19 +581,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<double> * >::iterator itervd;
         for( itervd = _double1D.begin(); itervd != _double1D.end(); itervd++ )
         {
-            CommandPtr tempCommand = m_veModel->GetInput( itervd->first );
-            if( !tempCommand )
-            {
-                tempCommand = CommandPtr( new Command() );
+                CommandPtr tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( itervd->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( itervd->first, *( itervd->second ) );
                 tempCommand->AddDataValuePair( dataDVP );
-            }
-            else
-            {
-                tempCommand->GetDataValuePair( 0 )->SetData( itervd->first, *( itervd->second ) );
-            }
+                m_veModel->SetInput( tempCommand );
         }
     }
 
@@ -630,19 +595,12 @@ ModelPtr UIPluginBase::GetVEModel( void )
         std::map<std::string, std::vector<std::string> * >::iterator itervs;
         for( itervs = _string1D.begin(); itervs != _string1D.end(); itervs++ )
         {
-            CommandPtr tempCommand = m_veModel->GetInput( itervs->first );
-            if( !tempCommand )
-            {
-                tempCommand = CommandPtr( new Command() );
+                CommandPtr tempCommand = CommandPtr( new Command() );
                 tempCommand->SetCommandName( itervs->first );
                 ves::open::xml::DataValuePairPtr dataDVP( new ves::open::xml::DataValuePair() );
                 dataDVP->SetData( itervs->first, *( itervs->second ) );
                 tempCommand->AddDataValuePair( dataDVP );
-            }
-            else
-            {
-                tempCommand->GetDataValuePair( 0 )->SetData( itervs->first, *( itervs->second ) );
-            }
+                m_veModel->SetInput( tempCommand );
         }
     }
 
