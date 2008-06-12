@@ -40,6 +40,8 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -121,6 +123,7 @@ void SiteSensor::CollectInformation()
         mAgentEntity->GetTargetDCS();
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
+
     if( targetDCS.valid() )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
@@ -137,9 +140,13 @@ void SiteSensor::CollectInformation()
     //Reset results from last frame
     mSiteInView = false;
     mCloseToSite = false;
-    //targetDCS = NULL;
-    mGeometry->dirtyDisplayList();
-    mGeometry->dirtyBound();
+    mNormalizedSiteVector.setValue( 0.0, 0.0, 0.0 );
+
+    if( mGeode->getNodeMask() )
+    {
+        mGeometry->dirtyDisplayList();
+        mGeometry->dirtyBound();
+    }
 
     mLineSegmentIntersector->reset();
     mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
@@ -151,6 +158,7 @@ void SiteSensor::CollectInformation()
     pluginDCS->accept( intersectionVisitor );
     pluginDCS->AddChild( agentDCS.get() );
 
+    bool goToSite( false );
     if( mLineSegmentIntersector->containsIntersections() )
     {
         osg::ref_ptr< osg::Drawable > drawable =
@@ -160,28 +168,43 @@ void SiteSensor::CollectInformation()
             drawable->asGeometry()->getColorArray() )->at( 0 );
         if( color.length() == 1.0 )
         {
-            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                drawable->getParent( 0 ) );
-            targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
-                parentVisitor.GetParentNode() );
-
-            double* sitePosition = targetDCS->GetVETranslationArray();
-            btVector3 siteVector( sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
-                                  sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(),
-                                  0.0 );
-
-            if( siteVector.length() <= 2.121 )
-            {
-                mCloseToSite = true;
-            }
-
-            mNormalizedSiteVector = siteVector.normalize();
-
             mSiteInView = true;
+
+            if( !targetDCS.valid() )
+            {
+                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                    drawable->getParent( 0 ) );
+                targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
+                    parentVisitor.GetParentNode() );
+
+                mAgentEntity->SetTargetDCS( targetDCS.get() );
+
+                goToSite = true;
+            }
         }
     }
 
-    mAgentEntity->SetTargetDCS( targetDCS.get() );
+    double* sitePosition( 0 );
+    btVector3 siteVector( 0.0, 0.0, 0.0 );
+    if( targetDCS.valid() )
+    {
+        sitePosition = targetDCS->GetVETranslationArray();
+        siteVector.setValue(
+            sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
+            sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
+        if( siteVector.length() <= 2.121 )
+        {
+            mCloseToSite = true;
+        }
+    }
+
+    mNormalizedSiteVector = siteVector.normalize();
+
+    if( goToSite )
+    {
+        mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
+            mNormalizedSiteVector * mAgentEntity->mMaxSpeed );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::Rotate()

@@ -42,9 +42,10 @@
 #include "SiteSensor.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
+
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h>

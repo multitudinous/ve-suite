@@ -39,6 +39,8 @@
 #include <ves/xplorer/scenegraph/DCS.h>
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 
+#include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
+
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
@@ -120,6 +122,7 @@ void BlockSensor::CollectInformation()
         mAgentEntity->GetTargetDCS();
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
+
     if( targetDCS.valid() )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
@@ -136,9 +139,13 @@ void BlockSensor::CollectInformation()
     //Reset results from last frame
     mBlockInView = false;
     mCloseToBlock = false;
-    targetDCS = NULL;
-    mGeometry->dirtyDisplayList();
-    mGeometry->dirtyBound();
+    mNormalizedBlockVector.setValue( 0.0, 0.0, 0.0 );
+
+    if( mGeode->getNodeMask() )
+    {
+        mGeometry->dirtyDisplayList();
+        mGeometry->dirtyBound();
+    }
 
     mLineSegmentIntersector->reset();
     mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
@@ -150,6 +157,7 @@ void BlockSensor::CollectInformation()
     pluginDCS->accept( intersectionVisitor );
     pluginDCS->AddChild( agentDCS.get() );
 
+    bool goToBlock( false );
     if( mLineSegmentIntersector->containsIntersections() )
     {
         osg::ref_ptr< osg::Drawable > drawable =
@@ -159,28 +167,51 @@ void BlockSensor::CollectInformation()
             drawable->asGeometry()->getColorArray() )->at( 0 );
         if( color.length() == 2.0 )
         {
+            mBlockInView = true;
+
+            if( !targetDCS.valid() )
+            {
+                goToBlock = true;
+            }
+
             ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
                 drawable->getParent( 0 ) );
             targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
                 parentVisitor.GetParentNode() );
-
-            double* blockPosition = targetDCS->GetVETranslationArray();
-            btVector3 blockVector(
-                blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
-                blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
-
-            if( blockVector.length() < 1.415 )//sqrt( 2 * 0.5 )
-            {
-                mCloseToBlock = true;
-            }
-
-            mNormalizedBlockVector = blockVector.normalize();
-
-            mBlockInView = true;
         }
+        else
+        {
+            targetDCS = NULL;
+        }
+    }
+    else
+    {
+        targetDCS = NULL;
     }
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
+
+    double* blockPosition( 0 );
+    btVector3 blockVector( 0.0, 0.0, 0.0 );
+    if( targetDCS.valid() )
+    {
+        blockPosition = targetDCS->GetVETranslationArray();
+        blockVector.setValue(
+            blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
+            blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
+        if( blockVector.length() <= 2.121 )
+        {
+            mCloseToBlock = true;
+        }
+    }
+
+    mNormalizedBlockVector = blockVector.normalize();
+
+    if( goToBlock )
+    {
+        mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
+            mNormalizedBlockVector * mAgentEntity->mMaxSpeed );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate()

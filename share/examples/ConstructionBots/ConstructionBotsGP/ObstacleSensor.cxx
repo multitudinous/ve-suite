@@ -192,13 +192,6 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
-    (*mVertexArray)[ 0 ] = (*mVertexArray)[ 1 ] =
-    (*mVertexArray)[ 2 ] = (*mVertexArray)[ 3 ] =
-    (*mVertexArray)[ 4 ] = (*mVertexArray)[ 5 ] = agentDCS->getPosition();
-
-    //
-    btVector3 totalForce( 0, 0, 0 );
-
     //Get the repulsive force
     btVector3 repulsiveForce( 0, 0, 0 );
     for( size_t i = 0; i < mIntersections.size(); ++i )
@@ -222,19 +215,25 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         targetForce.setValue( targetPosition[ 0 ] - agentPosition[ 0 ],
                               targetPosition[ 1 ] - agentPosition[ 1 ], 0.0 );
 
+        //Code to find angle between two vectors sharing origin
+        //Dot product rule
         //A . B = |A||B|cos( theta )
         //theta = acos[ ( A . B ) / |A||B| ]
         btVector3 currentForce =
             mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
-        //currentForce /= currentForce.length();
-        //currentForce *= mForceAttractionConstant;
 
-        double theta = acos( targetForce.dot( currentForce ) /
-            ( targetForce.length() * currentForce.length() ) );
-        theta *= oneEightyDivPI;
+        double theta( 0 );
+        double targetForceLength = targetForce.length();
+        double currentForceLength = currentForce.length();
+        if( targetForceLength != 0.0 && currentForceLength != 0.0 )
+        {
+            theta = acos( targetForce.dot( currentForce ) /
+                ( targetForceLength * currentForceLength ) );
+            theta *= oneEightyDivPI;
+        }
 
-        std::cout << "theta: " << theta << std::endl;
-
+        //Wall following algorithm
+        //Set threshold to 80 instead of 90 to help with rounding corners
         if( theta > 80.0 )
         {
             double x = repulsiveForce.x();
@@ -246,18 +245,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
             double xNew = ( x * cosTheta ) - ( y * sinTheta );
             double yNew = ( x * sinTheta ) + ( y * cosTheta );
 
-            //totalForce -= targetForce;
             targetForce.setValue( xNew, yNew, 0.0 );
-            /*
-            if( targetForce.length() != 0.0 )
-            {
-                targetForce /= targetForce.length();
-                targetForce *= mForceAttractionConstant;
-            }
-            totalForce += targetForce;
-            */
-
-            //std::cout << "Here" << std::endl;
         }
 
     }
@@ -273,19 +261,11 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         targetForce /= targetForce.length();
         targetForce *= mForceAttractionConstant;
     }
+
+    //Calculate the total force
+    btVector3 totalForce( 0, 0, 0 );
     totalForce += repulsiveForce;
     totalForce += targetForce;
-
-    (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * 10.0;
-    (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * 10.0;
-    (*mVertexArray)[ 1 ].z() += repulsiveForce.z();
-
-    (*mVertexArray)[ 3 ].x() += targetForce.x() * 10.0;
-    (*mVertexArray)[ 3 ].y() += targetForce.y() * 10.0;
-    (*mVertexArray)[ 3 ].z() += targetForce.z();
-
-    mGeometry->dirtyDisplayList();
-    mGeometry->dirtyBound();
 
     mResultantForce = totalForce;
     if( mResultantForce.length() != 0.0 )
@@ -293,9 +273,27 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         mResultantForce = mResultantForce.normalize();
     }
 
-    (*mVertexArray)[ 5 ].x() += mResultantForce.x() * 10.0;
-    (*mVertexArray)[ 5 ].y() += mResultantForce.y() * 10.0;
-    (*mVertexArray)[ 5 ].z() += mResultantForce.z();
+    if( mGeode->getNodeMask() )
+    {
+        (*mVertexArray)[ 0 ] = (*mVertexArray)[ 1 ] =
+        (*mVertexArray)[ 2 ] = (*mVertexArray)[ 3 ] =
+        (*mVertexArray)[ 4 ] = (*mVertexArray)[ 5 ] = agentDCS->getPosition();
+
+        (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * 10.0;
+        (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * 10.0;
+        (*mVertexArray)[ 1 ].z() += repulsiveForce.z();
+
+        (*mVertexArray)[ 3 ].x() += targetForce.x() * 10.0;
+        (*mVertexArray)[ 3 ].y() += targetForce.y() * 10.0;
+        (*mVertexArray)[ 3 ].z() += targetForce.z();
+
+        (*mVertexArray)[ 5 ].x() += mResultantForce.x() * 10.0;
+        (*mVertexArray)[ 5 ].y() += mResultantForce.y() * 10.0;
+        (*mVertexArray)[ 5 ].z() += mResultantForce.z();
+
+        mGeometry->dirtyDisplayList();
+        mGeometry->dirtyBound();
+    }
 
     return mResultantForce;
 }
