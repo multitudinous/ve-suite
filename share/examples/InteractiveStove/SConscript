@@ -26,7 +26,7 @@ fileBundle.addFiles( celFile )
 
 fileBundle.addFiles( 'interactivestove.ves' )
 fileBundle.addFiles( 'star.param' )
-fileBundle.addFiles( 'STAR\setup' )
+fileBundle.addFiles( pj( 'STAR','setup' ) )
 #fileBundle.addFiles( 'RunUnit.csh' )
 
 InteractiveStoveSubdirs = Split("""
