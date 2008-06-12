@@ -83,10 +83,12 @@ GL_Engine::GL_Engine( wxWindow* parent,
     wxGLCanvas( parent, id, pos, size, style, name, attrlist )
 #endif
 {
+#ifndef WIN32
     //You must initialize glut before using certain functions
     int argc = 0;
     char** argv = NULL;
     glutInit( &argc, argv );
+#endif
 
     for( int i = 0; i < 2; ++i )
     {
