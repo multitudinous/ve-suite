@@ -22,6 +22,7 @@ InteractiveStoveDir = pj( RootDir, 'share', 'examples', 'SimpleNetwork' )
 
 fileBundle.addFiles( 'SimpleTwoNetwork.ves' )
 fileBundle.addFiles( 'SimpleThreeNetwork.ves' )
+fileBundle.addFiles( 'simplenetworkone.ves' )
 fileBundle.addFiles( 'RunTwoUnits.bat' )
 fileBundle.addFiles( 'RunThreeUnits.bat' )
 

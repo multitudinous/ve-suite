@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<network name="Network" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="veshader.xsd">
+
+  <veSystem id="81bc3cab-54d6-4cfd-ba04-fbc84792587b">
+    <network>
+      <conductorState dataName="m_xUserScale" id="bbb2ef30-1b56-4993-a6ae-deb487ba2309">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="m_yUserScale" id="f9fe0d57-742d-4c1b-93a9-cee0f71413e9">
+        <dataValue type="xs:double">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixX" id="1c575671-ad6f-46a3-bfad-be0b7869d04d">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nPixY" id="4003284c-f9e5-4336-8771-933805694db0">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitX" id="66e2c439-29a4-4ac3-a773-511dee39ea62">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+      <conductorState dataName="nUnitY" id="a5563b8f-8e03-4366-b8f7-eeb7db530b91">
+        <dataValue type="xs:integer">1</dataValue>
+      </conductorState>
+    </network>
+    <model ID="104" id="30bba44d-8cda-4931-a751-fd810b4704b4" name="NetworkOne" vendorUnit="NetworkOne">
+      <icon iconHidden="0" iconMirror="0" iconRotation="0" iconScale="1" type="xs:string">DefaultPlugin</icon>
+      <iconLocation xLocation="10" yLocation="10"/>
+    </model>
+  </veSystem>
+
+  <User id="51f7aa87-2488-492d-a1c3-9ddf3be475d7" userID="User" veControlStatus="MASTER">
+    <stateInfo>
+      <Command commandName="CHANGE_BACKGROUND_COLOR">
+        <parameter dataName="Background Color" id="bb51f544-7bdd-164b-931a-8790010b4ed9">
+          <genericObject objectType="OneDDoubleArray">
+            <data>0</data>
+            <data>0</data>
+            <data>0</data>
+            <data>1</data>
+          </genericObject>
+        </parameter>
+      </Command>
+    </stateInfo>
+  </User>
+
+</network>
