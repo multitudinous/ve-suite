@@ -6,28 +6,29 @@
 
 using namespace std;
 
-class Create_stove{
+class Create_stove
+{
 public:
-   
-   Create_stove();
-   ~Create_stove();
-
-   void RunNewStove(int,vector<double>,vector<double>,vector<double>,
+	Create_stove();
+	virtual ~Create_stove();
+	
+	void RunNewStove(int,vector<double>,vector<double>,vector<double>,
                      vector<double>,vector<double>,vector<double>,vector<double>,int);
 
-   Stove *stove;
 
-   int numBaffInts;
-   int numBaffs;
-   int *baff;
-   int inlet;
-   int outlet;
+	Stove *stove;
 
-   double n_fit_new;
-   double sigma;
-   double fitness;
-   double area;
+  
+	int numBaffInts;
+	int numBaffs;
+	int *baff;
+	int inlet;
+	int outlet;
 
+	double n_fit_new;
+	double sigma;
+	double fitness;
+	double area;
 };
 
 #endif

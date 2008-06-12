@@ -10,9 +10,14 @@
 #include <math.h>
 //#include "../../GA/H/randomlib.h"
 
-class Baffle{
-  public:    
-    int  x_cell_ct;       // number of cells in the x-direction
+class Baffle
+{
+public: 
+	Baffle();
+	Baffle(int params[],int i);
+	virtual ~Baffle(void);
+
+	int  x_cell_ct;       // number of cells in the x-direction
     int  y_cell_ct;	  // number of cells in the y-direction
     int  z_cell_ct;	  // number of cells in the z-direction
     int  maxyLth;  	  // maximum allowable baffle size
@@ -28,20 +33,17 @@ class Baffle{
     int* baff;
     int  start_vertex;
     
-  Baffle();
-  Baffle(int params[],int i);
-  ~Baffle(void);
-  void setStoveParams();
-  void findFirst();             
-  void convertParams(int params[],int baffNum);
-  void defineVerts(int* &baff);
-  void RandDef(int* &baff);
-  bool intoWall( void );
-  void alongWall( void ); 
-  void chopBaff(int* &baff,int chopVal); 
-  void makeNull(int* &baff);
-  void writeBaffle(FILE *log);
-  int Rand( void );
+	void setStoveParams();
+	void findFirst();    
+	void convertParams(int params[],int baffNum);
+	void defineVerts(int* &baff);
+	void RandDef(int* &baff);
+	bool intoWall( void );
+	void alongWall( void ); 
+	void chopBaff(int* &baff,int chopVal); 
+	void makeNull(int* &baff);
+	void writeBaffle(FILE *log);
+	int Rand( void );
 };
 
 #endif

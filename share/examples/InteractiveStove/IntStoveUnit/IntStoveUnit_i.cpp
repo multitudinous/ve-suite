@@ -1,8 +1,6 @@
 #include "IntStoveUnit_i.h"
 #include "create_stove.h"
 
-//#include "VE_Conductor/Network/string_ops.h"
-
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
@@ -25,37 +23,34 @@
 XERCES_CPP_NAMESPACE_USE
 using namespace ves::open::xml;
 
-// Implementation skeleton constructor
+///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : UnitWrapper(exec,name)
 {
-  UnitName_=name;
-  return_state = 0;
-  runnum = 0;
-  m_baffNum = 0;
-  m_runNum = 0;
-  New_stove = new Create_stove();
+	UnitName_=name;
+	return_state = 0;
+	runnum = 0;
+	m_baffNum = 0;
+	m_runNum = 0;
+	New_stove = new Create_stove();
 }
-  
-// Implementation skeleton destructor
+///////////////////////////////////////////////////////////////////////////////
 Body_Unit_i::~Body_Unit_i (void)
-  {
-  }
-  
-void Body_Unit_i::StartCalc (
-    ACE_ENV_SINGLE_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-  {
-    // Add your implementation here
-    std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
+{
+}
+///////////////////////////////////////////////////////////////////////////////
+void Body_Unit_i::StartCalc ( ACE_ENV_SINGLE_ARG_DECL )
+  ACE_THROW_SPEC (( CORBA::SystemException , Error::EUnknown ))
+{
+	// Add your implementation here
+	std::cout<<UnitName_<<" : Starting Calculations"<<std::endl;
     std::ostringstream strm;
     strm << activeId;
 
-    system("rm -f ../star.vtu");
+    //system("rm -f ../star.vtu");
+
+	//ves::open::xml::model::ModelPtr model( new ves::open::xml::model::Model() );
+	//model = xmlModelMap[ strm.str() ];
 
     xmlModelMap[ strm.str() ]->GetInput( "numbaffles" )->GetDataValuePair( "numbaffles" )->GetData( numbaffles );
     xmlModelMap[ strm.str() ]->GetInput( "baffle1" )->GetDataValuePair( "baffle1" )->GetData( baffle1 );
@@ -67,10 +62,10 @@ void Body_Unit_i::StartCalc (
     xmlModelMap[ strm.str() ]->GetInput( "baffle7" )->GetDataValuePair( "baffle7" )->GetData( baffle7 );
     //xmlModelMap[ strm.str() ]->GetInput( "m_runNum" )->GetDataValuePair( "m_runNum" )->GetData( runNum );
 
-      runnum++;
+	runnum++;
 
-      New_stove->RunNewStove( numbaffles, baffle1, baffle2, baffle3, 
-                                       baffle4, baffle5, baffle6, baffle7, runnum );
+	New_stove->RunNewStove( numbaffles, baffle1, baffle2, baffle3, 
+							baffle4, baffle5, baffle6, baffle7, runnum );
       //cout << "|--- Creating VTK Files -------------|"<<endl;
       //system( "./createvtk > /dev/null" );
 
@@ -124,7 +119,7 @@ void Body_Unit_i::StartCalc (
 	return_state = 1;
 	executive_->SetModuleResult(id_, result); //this marks the end the execution*/
 
-    string msg;
+	string msg;
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(activeId,msg.c_str());
   }
@@ -301,9 +296,9 @@ void Body_Unit_i::error (std::string msg)
   //return_state = 1;
   //executive_->SetModuleResult(id_, result); //this marks the end the execution
 }
-
-void Body_Unit_i::warning (std::string msg)
+///////////////////////////////////////////////////////////////////////////////
+void Body_Unit_i::warning ( std::string msg )
 {
-  msg+="\n";
-  executive_->SetModuleMessage(activeId, msg.c_str());
+	msg+="\n";
+	executive_->SetModuleMessage(activeId, msg.c_str());
 }

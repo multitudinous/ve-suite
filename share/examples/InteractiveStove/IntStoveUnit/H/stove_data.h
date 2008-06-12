@@ -10,20 +10,20 @@
 	
 /**************************************************************************/
 // used in simulation mode
-class StoveData {
-  public:
-  
+class StoveData
+{
+public:
+	StoveData( Control *);
+	virtual ~StoveData();
+
 	typedef std::vector<Stove *> StoveList;
 	StoveList s_initpop, s_me;
 
-	StoveData( Control *);
-	~StoveData();
 	void OutputSimulationData( void );
 	Stove *GetStoveFromInitialPopulation( int i );
 	Stove *GetStoveFromMatingEventNumber( int i );
 	int FindNearestStoveFromInitialPopulation( Stove *s2 );
 	int FindNearestStoveFromMatingEvents( Stove *s2 );
-   void writeData( FILE *file );
-	};
-
+	void writeData( FILE *file );
+};
 #endif

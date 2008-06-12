@@ -38,38 +38,39 @@ class vtkUnstructuredGrid;
 
 class starReader
 {
-   public:
-      starReader( std::string paramFile );
-      ~starReader( void );
+public:
+	starReader( std::string paramFile );
+	virtual ~starReader( void );
 
-      void SetDebugLevel( int );
+    void SetDebugLevel( int );
 
-      float * GetRotations( void );
-      float * GetTranslations( void );
-      int     GetScaleIndex( void );
-      float   GetScaleFactor( void );
-      int     GetWriteOption( void );
-      std::string GetVTKFileName( void );
+  
+	float* GetRotations( void );
+	float* GetTranslations( void );
+	int GetScaleIndex( void );
+	float GetScaleFactor( void );
+	int GetWriteOption( void );
+	std::string GetVTKFileName( void );
+	   
+	void  ReadParameterFile( void );
+	vtkUnstructuredGrid * GetUnsGrid();
 
-      void  ReadParameterFile( void );
-      vtkUnstructuredGrid * GetUnsGrid();
-
-   private:
-      std::string paramFileName;
-      std::string starCellFileName;
-      std::string starVertFileName;
-      std::string starUsrFileName;
-      std::string vtkFileName;
-      char  textline[256];//std::string textline;//
-      int   numScalars;
-      std::vector< std::string > scalarName;
-      int   numVectors;
-      std::vector< std::string > vectorName;
-      int   debug;
-      int   writeOption;
-      float rotations[ 3 ];
-      float translations[ 3 ];
-      int   scaleIndex;
-      float scaleFactor;
+private:
+	std::string paramFileName;
+	std::string starCellFileName;
+	std::string starVertFileName;
+	std::string starUsrFileName;
+	std::string vtkFileName;
+	char textline[256];//std::string textline;//
+	int numScalars;
+	std::vector< std::string > scalarName;
+	int numVectors;
+	std::vector< std::string > vectorName;
+	int debug;
+	int writeOption;
+	float rotations[ 3 ];
+	float translations[ 3 ];
+	int scaleIndex;
+	float scaleFactor;
 };
 #endif
