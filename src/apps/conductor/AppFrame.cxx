@@ -1760,6 +1760,11 @@ void AppFrame::ViewResult( wxCommandEvent& WXUNUSED( event ) )
     serviceList->IsConnectedToCE();
     EnableCEGUIMenuItems();
 
+    //This code has not been tested in ages and needs to be rewritten
+    //and moved to its own class. Until this is done this will be
+    //commented out.
+    return;
+    
     char* result = 0;
     //char buf[80];
     std::map<int, Module>::iterator iter;
