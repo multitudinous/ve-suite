@@ -38,6 +38,8 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
 #include <vtkPointData.h>
+#include <vtkPolyData.h>
+
 #include <iostream>
 
 #ifdef VTK_POST_FEB20
@@ -152,11 +154,17 @@ void DataObjectHandler::_convertCellDataToPointData( vtkDataSet* dataSet )
             dataSet->DeepCopy( converter->GetUnstructuredGridOutput() );
             converter->Delete();
         }
+        else if( dataSet->GetDataObjectType() == VTK_POLY_DATA )
+        {
+            dataSet->DeepCopy( converter->GetPolyDataOutput() );
+            converter->Delete();
+        }
         else
         {
             converter->Delete();
             std::cout << "\nAttempt failed: can not currently handle "
-                << "this type of data\n" << std::endl;
+                << "this type of data - " 
+                << "DataObjectHandler::_convertCellDataToPointData" << std::endl;
             exit( 1 );
         }
         if( dataSet->GetPointData()->GetNumberOfArrays() > m_numberOfPointDataArrays )
