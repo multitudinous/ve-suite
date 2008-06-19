@@ -54,46 +54,109 @@
 #include <wx/statbox.h>
 #include <wx/frame.h>
 #include <wx/textctrl.h>
+#include <wx/notebook.h>
 
 using namespace cpt;
 
 BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
-EVT_COMMAND_SCROLL( ID_FOVZ_SPINCTRL, 
-                    CameraPlacementToolUIDialog::OnFoVZSpinCtrl )
-EVT_TEXT_ENTER( ID_FOVZ_SPINCTRL, 
-                CameraPlacementToolUIDialog::OnFoVZText )
-EVT_SLIDER( ID_FOVZ_SLIDER,
-            CameraPlacementToolUIDialog::OnFoVZSlider )
-EVT_COMMAND_SCROLL( ID_ASPECTRATIO_SPINCTRL,
-                    CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl )
-EVT_TEXT_ENTER( ID_ASPECTRATIO_SPINCTRL, 
-                CameraPlacementToolUIDialog::OnAspectRatioText )
-EVT_SLIDER( ID_ASPECTRATIO_SLIDER,
-            CameraPlacementToolUIDialog::OnAspectRatioSlider )
-EVT_COMMAND_SCROLL( ID_NEARPLANE_SPINCTRL, 
-                    CameraPlacementToolUIDialog::OnNearPlaneSpinCtrl )
-EVT_TEXT_ENTER( ID_NEARPLANE_SPINCTRL, 
-                CameraPlacementToolUIDialog::OnNearPlaneText )
-EVT_SLIDER( ID_NEARPLANE_SLIDER, 
-            CameraPlacementToolUIDialog::OnNearPlaneSlider )
-EVT_COMMAND_SCROLL( ID_FARPLANE_SPINCTRL, 
-                    CameraPlacementToolUIDialog::OnFarPlaneSpinCtrl )
-EVT_TEXT_ENTER( ID_FARPLANE_SPINCTRL, 
-                CameraPlacementToolUIDialog::OnFarPlaneText )
-EVT_SLIDER( ID_FARPLANE_SLIDER, 
-            CameraPlacementToolUIDialog::OnFarPlaneSlider )
-EVT_RADIOBOX( ID_CAMERAVIEW_RADIOBOX,
-              CameraPlacementToolUIDialog::OnCameraViewRadioBox )
-EVT_SLIDER( ID_RESOLUTION_SLIDER,
-            CameraPlacementToolUIDialog::OnResolutionSlider )
-EVT_RADIOBOX( ID_PROJECTION_RADIOBOX,
-              CameraPlacementToolUIDialog::OnProjectionRadioBox )
-EVT_SLIDER( ID_OPACITY_SLIDER,
-            CameraPlacementToolUIDialog::OnOpacitySlider )
-EVT_RADIOBOX( ID_CAMERA_RADIOBOX,
-              CameraPlacementToolUIDialog::OnCameraRadioBox )
-EVT_RADIOBOX( ID_FRUSTUM_RADIOBOX,
-              CameraPlacementToolUIDialog::OnFrustumRadioBox )
+    EVT_RADIOBOX(
+        ID_DRUM_ANIMATION_ON_OFF,
+        CameraPlacementToolUIDialog::OnDrumAnimationOnOffRadioBox )
+    EVT_RADIOBOX(
+        ID_CAMERA_GEOMETRY_ON_OFF,
+        CameraPlacementToolUIDialog::OnCameraGeometryOnOffRadioBox )
+    EVT_RADIOBOX(
+        ID_FRUSTUM_GEOMETRY_ON_OFF,
+        CameraPlacementToolUIDialog::OnFrustumGeometryOnOffRadioBox )
+
+    EVT_RADIOBOX(
+        ID_DEPTH_OF_FIELD_EFFECT_ON_OFF,
+        CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox )
+    EVT_RADIOBOX(
+        ID_PROJECTION_EFFECT_ON_OFF,
+        CameraPlacementToolUIDialog::OnProjectionEffectOnOffRadioBox )
+    EVT_SLIDER(
+        ID_PROJECTION_EFFECT_OPACITY,
+        CameraPlacementToolUIDialog::OnProjectionEffectOpacitySlider )
+
+    EVT_RADIOBOX(
+        ID_CAMERA_WINDOW_ON_OFF,
+        CameraPlacementToolUIDialog::OnCameraWindowOnOffRadioBox )
+    EVT_SLIDER(
+        ID_CAMERA_WINDOW_RESOLUTION,
+        CameraPlacementToolUIDialog::OnCameraWindowResolutionSlider )
+
+    EVT_RADIOBOX(
+        ID_DEPTH_HELPER_WINDOW_ON_OFF,
+        CameraPlacementToolUIDialog::OnDepthHelperWindowOnOffRadioBox )
+    EVT_SLIDER(
+        ID_DEPTH_HELPER_WINDOW_RESOLUTION,
+        CameraPlacementToolUIDialog::OnDepthHelperWindowResolutionSlider )
+
+    EVT_COMMAND_SCROLL(
+        ID_FIELD_OF_VIEW_SPINCTRL,
+        CameraPlacementToolUIDialog::OnFieldOfViewSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_FIELD_OF_VIEW_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFieldOfViewText )
+    EVT_SLIDER(
+        ID_FIELD_OF_VIEW_SLIDER,
+        CameraPlacementToolUIDialog::OnFieldOfViewSlider )
+    EVT_COMMAND_SCROLL(
+        ID_ASPECT_RATIO_SPINCTRL,
+        CameraPlacementToolUIDialog::OnAspectRatioSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_ASPECT_RATIO_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnAspectRatioText )
+    EVT_SLIDER(
+        ID_ASPECT_RATIO_SLIDER,
+        CameraPlacementToolUIDialog::OnAspectRatioSlider )
+    EVT_COMMAND_SCROLL(
+        ID_NEAR_PLANE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnNearPlaneSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_NEAR_PLANE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnNearPlaneText )
+    EVT_SLIDER(
+        ID_NEAR_PLANE_SLIDER, 
+        CameraPlacementToolUIDialog::OnNearPlaneSlider )
+    EVT_COMMAND_SCROLL(
+        ID_FAR_PLANE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFarPlaneSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_FAR_PLANE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFarPlaneText )
+    EVT_SLIDER(
+        ID_FAR_PLANE_SLIDER, 
+        CameraPlacementToolUIDialog::OnFarPlaneSlider )
+
+    EVT_COMMAND_SCROLL(
+        ID_FOCAL_DISTANCE_SPINCTRL,
+        CameraPlacementToolUIDialog::OnFocalDistanceSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_FOCAL_DISTANCE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFocalDistanceText )
+    EVT_SLIDER(
+        ID_FOCAL_DISTANCE_SLIDER,
+        CameraPlacementToolUIDialog::OnFocalDistanceSlider )
+    EVT_COMMAND_SCROLL(
+        ID_FOCUS_RANGE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFocusRangeSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_FOCUS_RANGE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFocusRangeText )
+    EVT_SLIDER(
+        ID_FOCUS_RANGE_SLIDER, 
+        CameraPlacementToolUIDialog::OnFocusRangeSlider )
+    EVT_COMMAND_SCROLL(
+        ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSpinCtrl )
+    EVT_TEXT_ENTER(
+        ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnMaxCircleOfConfusionText )
+    EVT_SLIDER(
+        ID_MAX_CIRCLE_OF_CONFUSION_SLIDER, 
+        CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSlider )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,57 +207,307 @@ void CameraPlacementToolUIDialog::BuildGUI()
     SetSizeHints( wxDefaultSize, wxDefaultSize );
     SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
-    SetBackgroundColour( wxColour( 255, 180, 0 ) );
 
     wxBoxSizer* mainSizer;
     mainSizer = new wxBoxSizer( wxVERTICAL );
 
+    wxNotebook* notebook;
+    notebook = new wxNotebook(
+        this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+        wxNB_FIXEDWIDTH | wxNB_TOP );
+    wxPanel* mainPanel;
+    mainPanel = new wxPanel(
+        notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+    mainPanel->SetBackgroundColour( wxColour( 150, 150, 255 ) );
+
+    wxBoxSizer* mainPanelSizer;
+    mainPanelSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticBoxSizer* lensSettingsSizer;
+    lensSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+        mainPanel, wxID_ANY, wxT( "Lens Settings" ) ), wxVERTICAL );
+
+    mainPanelSizer->Add( lensSettingsSizer, 0, wxALL|wxEXPAND, 10 );
+
+    wxStaticBoxSizer* geometrySettingsSizer;
+    geometrySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+        mainPanel, wxID_ANY, wxT( "Geometry Settings" ) ), wxHORIZONTAL );
+
+    wxBoxSizer* drumAnimationOnOffSizer;
+    drumAnimationOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mDrumAnimationOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mDrumAnimationOnOffNChoices =
+        sizeof( mDrumAnimationOnOffChoices ) / sizeof( wxString );
+    mDrumAnimationOnOff = new wxRadioBox(
+        mainPanel, ID_DRUM_ANIMATION_ON_OFF, wxT( "Drum Animation" ),
+        wxDefaultPosition, wxSize( 144,-1 ), mDrumAnimationOnOffNChoices,
+        mDrumAnimationOnOffChoices, 1, wxRA_SPECIFY_ROWS );
+    mDrumAnimationOnOff->SetSelection( 0 );
+    mDrumAnimationOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    drumAnimationOnOffSizer->Add( mDrumAnimationOnOff, 0, wxALL, 5 );
+
+    geometrySettingsSizer->Add( drumAnimationOnOffSizer, 0, wxALL, 5 );
+
+    wxBoxSizer* cameraGeometryOnOffSizer;
+    cameraGeometryOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mCameraGeometryOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mCameraGeometryOnOffNChoices =
+        sizeof( mCameraGeometryOnOffChoices ) / sizeof( wxString );
+    mCameraGeometryOnOff = new wxRadioBox(
+        mainPanel, ID_CAMERA_GEOMETRY_ON_OFF, wxT( "Camera Geometry" ),
+        wxDefaultPosition, wxSize( 144,-1 ), mCameraGeometryOnOffNChoices,
+        mCameraGeometryOnOffChoices, 1, wxRA_SPECIFY_ROWS );
+    mCameraGeometryOnOff->SetSelection( 1 );
+    mCameraGeometryOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    cameraGeometryOnOffSizer->Add( mCameraGeometryOnOff, 0, wxALL, 5 );
+
+    geometrySettingsSizer->Add( cameraGeometryOnOffSizer, 0, wxALL, 5 );
+
+    wxBoxSizer* frustumGeometryOnOffSizer;
+    frustumGeometryOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mFrustumGeometryOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mFrustumGeometryOnOffNChoices =
+        sizeof( mFrustumGeometryOnOffChoices ) / sizeof( wxString );
+    mFrustumGeometryOnOff = new wxRadioBox(
+        mainPanel, ID_FRUSTUM_GEOMETRY_ON_OFF, wxT( "Frustum Geometry" ),
+        wxDefaultPosition, wxSize( 144,-1 ), mFrustumGeometryOnOffNChoices,
+        mFrustumGeometryOnOffChoices, 1, wxRA_SPECIFY_ROWS );
+    mFrustumGeometryOnOff->SetSelection( 1 );
+    mFrustumGeometryOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    frustumGeometryOnOffSizer->Add( mFrustumGeometryOnOff, 0, wxALL, 5 );
+
+    geometrySettingsSizer->Add( frustumGeometryOnOffSizer, 0, wxALL, 5 );
+
+    mainPanelSizer->Add( geometrySettingsSizer, 0, wxALL|wxEXPAND, 10 );
+
+    wxStaticBoxSizer* displaySettingsSizer;
+    displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+        mainPanel, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
+
+    wxBoxSizer* depthOfFieldEffectOnOffSizer;
+    depthOfFieldEffectOnOffSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxString mDepthOfFieldEffectOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mDepthOfFieldEffectOnOffNChoices =
+        sizeof( mDepthOfFieldEffectOnOffChoices ) / sizeof( wxString );
+    mDepthOfFieldEffectOnOff = new wxRadioBox(
+        mainPanel, ID_DEPTH_OF_FIELD_EFFECT_ON_OFF,
+        wxT( "Depth of Field Effect" ), wxDefaultPosition, wxSize( 144,-1 ),
+        mDepthOfFieldEffectOnOffNChoices, mDepthOfFieldEffectOnOffChoices, 1,
+        wxRA_SPECIFY_ROWS );
+    mDepthOfFieldEffectOnOff->SetSelection( 0 );
+    mDepthOfFieldEffectOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    depthOfFieldEffectOnOffSizer->Add( mDepthOfFieldEffectOnOff, 0, wxALL, 5 );
+
+    displaySettingsSizer->Add( depthOfFieldEffectOnOffSizer, 0, wxALL, 5 );
+
+    wxBoxSizer* projectionEffectSizer;
+    projectionEffectSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxBoxSizer* projectionEffectOnOffSizer;
+    projectionEffectOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mProjectionEffectOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mProjectionEffectOnOffNChoices =
+        sizeof( mProjectionEffectOnOffChoices ) / sizeof( wxString );
+    mProjectionEffectOnOff = new wxRadioBox(
+        mainPanel, ID_PROJECTION_EFFECT_ON_OFF, wxT( "Projection Effect" ),
+        wxDefaultPosition, wxSize( 144,-1 ), mProjectionEffectOnOffNChoices,
+        mProjectionEffectOnOffChoices, 1, wxRA_SPECIFY_ROWS );
+    mProjectionEffectOnOff->SetSelection( 1 );
+    mProjectionEffectOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    projectionEffectOnOffSizer->Add( mProjectionEffectOnOff, 0, wxALL, 5 );
+
+    projectionEffectSizer->Add( projectionEffectOnOffSizer, 0, wxALL, 5 );
+
+    wxBoxSizer* projectionEffectOpacitySizer;
+    projectionEffectOpacitySizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticText* projectionEffectOpacityText;
+    projectionEffectOpacityText = new wxStaticText(
+        mainPanel, wxID_ANY, wxT( "Opacity" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+    projectionEffectOpacityText->Wrap( -1 );
+    projectionEffectOpacitySizer->Add(
+        projectionEffectOpacityText, 0, wxALL, 5 );
+
+    mProjectionEffectOpacity = new wxSlider(
+        mainPanel, ID_PROJECTION_EFFECT_OPACITY, 0, 0, 1,
+        wxPoint( -1,-1 ), wxSize( -1,-1 ),
+        wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS | wxSL_TOP );
+    projectionEffectOpacitySizer->Add(
+        mProjectionEffectOpacity, 0, wxEXPAND, 5 );
+
+    projectionEffectSizer->Add( projectionEffectOpacitySizer, 1, wxALL, 5 );
+
+    displaySettingsSizer->Add( projectionEffectSizer, 0, wxEXPAND, 5 );
+
+    wxStaticLine* displaySettingsSeparator;
+    displaySettingsSeparator = new wxStaticLine(
+        mainPanel, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+        wxLI_HORIZONTAL );
+    displaySettingsSizer->Add(
+        displaySettingsSeparator, 0, wxEXPAND | wxALL, 5 );
+
+    wxBoxSizer* cameraWindowSizer;
+    cameraWindowSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxBoxSizer* cameraWindowOnOffSizer;
+    cameraWindowOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mCameraWindowOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mCameraWindowOnOffNChoices =
+        sizeof( mCameraWindowOnOffChoices ) / sizeof( wxString );
+    mCameraWindowOnOff = new wxRadioBox(
+        mainPanel, ID_CAMERA_WINDOW_ON_OFF, wxT( "Camera Window" ),
+        wxDefaultPosition, wxSize( 144,-1 ), mCameraWindowOnOffNChoices,
+        mCameraWindowOnOffChoices, 1, wxRA_SPECIFY_ROWS );
+    mCameraWindowOnOff->SetSelection( 1 );
+    mCameraWindowOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    cameraWindowOnOffSizer->Add( mCameraWindowOnOff, 0, wxALL, 5 );
+
+    cameraWindowSizer->Add( cameraWindowOnOffSizer, 0, wxALL, 5 );
+
+    wxBoxSizer* cameraWindowResolutionSizer;
+    cameraWindowResolutionSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticText* cameraWindowResolutionText;
+    cameraWindowResolutionText = new wxStaticText(
+        mainPanel, wxID_ANY, wxT( "Resolution (pixels)" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+    cameraWindowResolutionText->Wrap( -1 );
+    cameraWindowResolutionSizer->Add( cameraWindowResolutionText, 0, wxALL, 5 );
+
+    mCameraWindowResolution = new wxSlider(
+        mainPanel, ID_CAMERA_WINDOW_RESOLUTION, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1,-1 ),
+        wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS | wxSL_TOP );
+    cameraWindowResolutionSizer->Add( mCameraWindowResolution, 0, wxEXPAND, 5 );
+
+    cameraWindowSizer->Add( cameraWindowResolutionSizer, 1, wxALL, 5 );
+
+    displaySettingsSizer->Add( cameraWindowSizer, 0, wxEXPAND, 5 );
+
+    wxBoxSizer* depthHelperWindowSizer;
+    depthHelperWindowSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxBoxSizer* depthHelperWindowOnOffSizer;
+    depthHelperWindowOnOffSizer = new wxBoxSizer( wxHORIZONTAL );
+
+    wxString mDepthHelperWindowOnOffChoices[] = { wxT( "Off" ), wxT( "On" ) };
+    int mDepthHelperWindowOnOffNChoices =
+        sizeof( mDepthHelperWindowOnOffChoices ) / sizeof( wxString );
+    mDepthHelperWindowOnOff = new wxRadioBox(
+        mainPanel, ID_DEPTH_HELPER_WINDOW_ON_OFF, wxT( "Depth Helper Window" ),
+        wxDefaultPosition, wxSize( 144,-1 ), mDepthHelperWindowOnOffNChoices,
+        mDepthHelperWindowOnOffChoices, 1, wxRA_SPECIFY_ROWS );
+    mDepthHelperWindowOnOff->SetSelection( 1 );
+    mDepthHelperWindowOnOff->SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    depthHelperWindowOnOffSizer->Add( mDepthHelperWindowOnOff, 0, wxALL, 5 );
+
+    depthHelperWindowSizer->Add( depthHelperWindowOnOffSizer, 0, wxALL, 5 );
+
+    wxBoxSizer* depthHelperWindowResolutionSizer;
+    depthHelperWindowResolutionSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticText* depthHelperWindowResolutionText;
+    depthHelperWindowResolutionText = new wxStaticText(
+        mainPanel, wxID_ANY, wxT( "Resolution (pixels)" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+    depthHelperWindowResolutionText->Wrap( -1 );
+    depthHelperWindowResolutionSizer->Add(
+        depthHelperWindowResolutionText, 0, wxALL, 5 );
+
+    mDepthHelperWindowResolution = new wxSlider(
+        mainPanel, ID_DEPTH_HELPER_WINDOW_RESOLUTION, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1,-1 ),
+        wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS | wxSL_TOP );
+    depthHelperWindowResolutionSizer->Add(
+        mDepthHelperWindowResolution, 0, wxEXPAND, 5 );
+
+    depthHelperWindowSizer->Add(
+        depthHelperWindowResolutionSizer, 1, wxALL, 5 );
+
+    displaySettingsSizer->Add( depthHelperWindowSizer, 0, wxEXPAND, 5 );
+
+    mainPanelSizer->Add( displaySettingsSizer, 0, wxALL|wxEXPAND, 10 );
+
+    mainPanel->SetSizer( mainPanelSizer );
+    mainPanel->Layout();
+    mainPanelSizer->Fit( mainPanel );
+    notebook->AddPage( mainPanel, wxT( "Main" ), true );
+    wxPanel* cameraPanel;
+    cameraPanel = new wxPanel(
+        notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+    cameraPanel->SetBackgroundColour( wxColour( 150, 150, 255 ) );
+
+    wxBoxSizer* cameraPanelSizer;
+    cameraPanelSizer = new wxBoxSizer( wxVERTICAL );
+
     wxStaticBoxSizer* projectionSettingsSizer;
     projectionSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        this, wxID_ANY, wxT( "Projection Settings" ) ), wxVERTICAL );
+        cameraPanel, wxID_ANY, wxT( "Projection Settings" ) ), wxVERTICAL );
 
-    wxBoxSizer* fovzSizer;
-    fovzSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* fieldOfViewSizer;
+    fieldOfViewSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxBoxSizer* fovzTextSpinSizer;
-    fovzTextSpinSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* fieldOfViewTextSpinSizer;
+    fieldOfViewTextSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxBoxSizer* fovzTextSizer;
-    fovzTextSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* fieldOfViewTextSizer;
+    fieldOfViewTextSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxStaticText* fovzText;
-    fovzText = new wxStaticText(
-        this, wxID_ANY, wxT( "Field of View( z )" ),
+    wxStaticText* fieldOfViewText;
+    fieldOfViewText = new wxStaticText(
+        cameraPanel, wxID_ANY, wxT( "Field of View (z)" ),
         wxDefaultPosition, wxDefaultSize, 0 );
-    fovzText->Wrap( -1 );
-    fovzTextSizer->Add( fovzText, 0, wxALL, 5 );
+    fieldOfViewText->Wrap( -1 );
+    fieldOfViewTextSizer->Add( fieldOfViewText, 0, wxALL, 5 );
 
-    fovzTextSpinSizer->Add( fovzTextSizer, 0, 0, 5 );
+    fieldOfViewTextSpinSizer->Add( fieldOfViewTextSizer, 0, 0, 5 );
 
-    wxBoxSizer* fovzSpinSizer;
-    fovzSpinSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* fieldOfViewSpinSizer;
+    fieldOfViewSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    mFoVZSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
-        *this, ID_FOVZ_SPINCTRL, wxEmptyString, wxDefaultPosition,
-        wxDefaultSize, wxSP_ARROW_KEYS, 0, 180, mProjectionData[ 0 ], 0.1 );
-    fovzSpinSizer->Add( mFoVZSpinCtrl, 0, wxLEFT, 5 );
+    mFieldOfViewSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
+        *cameraPanel, ID_FIELD_OF_VIEW_SPINCTRL, wxEmptyString,
+        wxDefaultPosition, wxSize( 144,-1 ), wxSP_ARROW_KEYS,
+        0, 180, mProjectionData[ 0 ], 0.1 );
+    fieldOfViewSpinSizer->Add( mFieldOfViewSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
-    fovzTextSpinSizer->Add( fovzSpinSizer, 0, 0, 5 );
+    fieldOfViewTextSpinSizer->Add( fieldOfViewSpinSizer, 0, 0, 5 );
 
-    fovzSizer->Add( fovzTextSpinSizer, 0, 0, 5 );
+    fieldOfViewSizer->Add( fieldOfViewTextSpinSizer, 0, 0, 5 );
 
-    wxBoxSizer* fovzSliderSizer;
-    fovzSliderSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* fieldOfViewSliderSizer;
+    fieldOfViewSliderSizer = new wxBoxSizer( wxVERTICAL );
 
-    mFoVZSlider = new wxSlider(
-        this, ID_FOVZ_SLIDER, mProjectionData[ 0 ] * 10.0, 0, 1800,
-        wxDefaultPosition, wxSize( 200, -1 ),
-        wxSL_BOTH | wxSL_HORIZONTAL );
-    fovzSliderSizer->Add( mFoVZSlider, 0, 0, 5 );
+    mFieldOfViewSlider = new wxSlider(
+        cameraPanel, ID_FIELD_OF_VIEW_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    fieldOfViewSliderSizer->Add(
+        mFieldOfViewSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
-    fovzSizer->Add( fovzSliderSizer, 0, wxALIGN_BOTTOM, 5 );
+    fieldOfViewSizer->Add( fieldOfViewSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSettingsSizer->Add( fovzSizer, 0, 0, 5 );
+    projectionSettingsSizer->Add( fieldOfViewSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxBoxSizer* aspectRatioSizer;
     aspectRatioSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -207,7 +520,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     wxStaticText* aspectRatioText;
     aspectRatioText = new wxStaticText(
-        this, wxID_ANY, wxT( "Aspect Ratio:" ),
+        cameraPanel, wxID_ANY, wxT( "Aspect Ratio:" ),
         wxDefaultPosition, wxDefaultSize, 0 );
     aspectRatioText->Wrap( -1 );
     aspectRatioTextSizer->Add( aspectRatioText, 0, wxALL, 5 );
@@ -218,9 +531,9 @@ void CameraPlacementToolUIDialog::BuildGUI()
     aspectRatioSpinSizer = new wxBoxSizer( wxVERTICAL );
 
     mAspectRatioSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
-        *this, ID_ASPECTRATIO_SPINCTRL, wxEmptyString, wxDefaultPosition,
-        wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, mProjectionData[ 1 ], 0.1 );
-    aspectRatioSpinSizer->Add( mAspectRatioSpinCtrl, 0, wxLEFT, 5 );
+        *cameraPanel, ID_ASPECT_RATIO_SPINCTRL, wxEmptyString,
+        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS, 0, 1, 1 );
+    aspectRatioSpinSizer->Add( mAspectRatioSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
     aspectRatioTextSpinSizer->Add( aspectRatioSpinSizer, 0, 0, 5 );
 
@@ -230,14 +543,14 @@ void CameraPlacementToolUIDialog::BuildGUI()
     aspectRatioSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mAspectRatioSlider = new wxSlider(
-        this, ID_ASPECTRATIO_SLIDER, mProjectionData[ 1 ] * 10.0, 0, 100,
-        wxDefaultPosition, wxSize( 200, -1 ),
-        wxSL_BOTH | wxSL_HORIZONTAL );
-    aspectRatioSliderSizer->Add( mAspectRatioSlider, 0, 0, 5 );
+        cameraPanel, ID_ASPECT_RATIO_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    aspectRatioSliderSizer->Add(
+        mAspectRatioSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
-    aspectRatioSizer->Add( aspectRatioSliderSizer, 0, wxALIGN_BOTTOM, 5 );
+    aspectRatioSizer->Add( aspectRatioSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSettingsSizer->Add( aspectRatioSizer, 0, 0, 5 );
+    projectionSettingsSizer->Add( aspectRatioSizer, 0, wxALL | wxEXPAND, 5 );
 
     wxBoxSizer* nearPlaneSizer;
     nearPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -250,7 +563,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     wxStaticText* nearPlaneText;
     nearPlaneText = new wxStaticText(
-        this, wxID_ANY, wxT( "Near Plane:" ),
+        cameraPanel, wxID_ANY, wxT( "Near Plane:" ),
         wxDefaultPosition, wxDefaultSize, 0 );
     nearPlaneText->Wrap( -1 );
     nearPlaneTextSizer->Add( nearPlaneText, 0, wxALL, 5 );
@@ -260,10 +573,10 @@ void CameraPlacementToolUIDialog::BuildGUI()
     wxBoxSizer* nearPlaneSpinSizer;
     nearPlaneSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    mNearPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl( 
-        *this, ID_NEARPLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
-        wxDefaultSize, wxSP_ARROW_KEYS, 0, 100, mProjectionData[ 2 ], 0.1 );
-    nearPlaneSpinSizer->Add( mNearPlaneSpinCtrl, 0, wxLEFT, 5 );
+    mNearPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
+        *cameraPanel, ID_NEAR_PLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
+        wxSize( 144, -1 ), wxSP_ARROW_KEYS, 0, 100, 5 );
+    nearPlaneSpinSizer->Add( mNearPlaneSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
     nearPlaneTextSpinSizer->Add( nearPlaneSpinSizer, 0, 0, 5 );
 
@@ -273,13 +586,14 @@ void CameraPlacementToolUIDialog::BuildGUI()
     nearPlaneSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mNearPlaneSlider = new wxSlider(
-        this, ID_NEARPLANE_SLIDER, mProjectionData[ 2 ] * 10.0, 0, 1000,
-        wxDefaultPosition, wxSize( 200, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
-    nearPlaneSliderSizer->Add( mNearPlaneSlider, 0, 0, 5 );
+        cameraPanel, ID_NEAR_PLANE_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    nearPlaneSliderSizer->Add(
+        mNearPlaneSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
-    nearPlaneSizer->Add( nearPlaneSliderSizer, 0, wxALIGN_BOTTOM, 5 );
+    nearPlaneSizer->Add( nearPlaneSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSettingsSizer->Add( nearPlaneSizer, 0, 0, 5 );
+    projectionSettingsSizer->Add( nearPlaneSizer, 0, wxALL|wxEXPAND, 5 );
 
     wxBoxSizer* farPlaneSizer;
     farPlaneSizer = new wxBoxSizer( wxHORIZONTAL );
@@ -292,7 +606,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     wxStaticText* farPlaneText;
     farPlaneText = new wxStaticText(
-        this, wxID_ANY, wxT( "Far Plane:" ),
+        cameraPanel, wxID_ANY, wxT( "Far Plane:" ),
         wxDefaultPosition, wxDefaultSize, 0 );
     farPlaneText->Wrap( -1 );
     farPlaneTextSizer->Add( farPlaneText, 0, wxALL, 5 );
@@ -303,9 +617,9 @@ void CameraPlacementToolUIDialog::BuildGUI()
     farPlaneSpinSizer = new wxBoxSizer( wxVERTICAL );
 
     mFarPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
-        *this, ID_FARPLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
-        wxDefaultSize, wxSP_ARROW_KEYS, 0.1, 100, mProjectionData[ 3 ], 0.1 );
-    farPlaneSpinSizer->Add( mFarPlaneSpinCtrl, 0, wxLEFT, 5 );
+        cameraPanel, ID_FAR_PLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
+        wxSize( 144,-1 ), wxSP_ARROW_KEYS, 0, 100, 10 );
+    farPlaneSpinSizer->Add( mFarPlaneSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
     farPlaneTextSpinSizer->Add( farPlaneSpinSizer, 0, 0, 5 );
 
@@ -315,156 +629,166 @@ void CameraPlacementToolUIDialog::BuildGUI()
     farPlaneSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mFarPlaneSlider = new wxSlider(
-        this, ID_FARPLANE_SLIDER, mProjectionData[ 3 ] * 10.0, 0, 1000,
-        wxDefaultPosition, wxSize( 200, -1 ),
-        wxSL_BOTH | wxSL_HORIZONTAL );
-    farPlaneSliderSizer->Add( mFarPlaneSlider, 0, 0, 5 );
+        cameraPanel, ID_FAR_PLANE_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    farPlaneSliderSizer->Add( mFarPlaneSlider, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
-    farPlaneSizer->Add( farPlaneSliderSizer, 0, wxALIGN_BOTTOM, 5 );
+    farPlaneSizer->Add( farPlaneSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSettingsSizer->Add( farPlaneSizer, 0, 0, 5 );
+    projectionSettingsSizer->Add( farPlaneSizer, 0, wxALL|wxEXPAND, 5 );
 
-    mainSizer->Add( projectionSettingsSizer, 0, wxALL | wxEXPAND, 5 );
+    cameraPanelSizer->Add( projectionSettingsSizer, 0, wxALL|wxEXPAND, 10 );
 
-    wxStaticBoxSizer* displaySettingsSizer;
-    displaySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        this, wxID_ANY, wxT( "Display Settings" ) ), wxVERTICAL );
+    wxStaticBoxSizer* depthOfFieldSettingsSizer;
+    depthOfFieldSettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
+        cameraPanel, wxID_ANY, wxT( "Depth of Field Settings" ) ), wxVERTICAL );
 
-    wxBoxSizer* cameraViewSizer;
-    cameraViewSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* focalDistanceSizer;
+    focalDistanceSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxBoxSizer* cameraViewRadioBoxSizer;
-    cameraViewRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* focalDistanceTextSpinSizer;
+    focalDistanceTextSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxString mCameraViewRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-    int mCameraViewRadioBoxNChoices =
-        sizeof( mCameraViewRadioBoxChoices ) / sizeof( wxString );
-    mCameraViewRadioBox = new wxRadioBox(
-        this, ID_CAMERAVIEW_RADIOBOX, wxT( "Camera Window" ),
-        wxDefaultPosition, wxDefaultSize, mCameraViewRadioBoxNChoices,
-        mCameraViewRadioBoxChoices, 1, wxRA_SPECIFY_ROWS );
-    mCameraViewRadioBox->SetSelection( 1 );
-    mCameraViewRadioBox->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+    wxBoxSizer* focalDistanceTextSizer;
+    focalDistanceTextSizer = new wxBoxSizer( wxVERTICAL );
 
-    cameraViewRadioBoxSizer->Add( mCameraViewRadioBox, 0, wxALL, 5 );
-
-    cameraViewSizer->Add( cameraViewRadioBoxSizer, 0, wxALIGN_BOTTOM, 5 );
-
-    wxBoxSizer* resolutionSizer;
-    resolutionSizer = new wxBoxSizer( wxVERTICAL );
-
-    wxStaticText* resolutionText;
-    resolutionText = new wxStaticText(
-        this, wxID_ANY, wxT( "Resolution( pixels )" ),
+    wxStaticText* focalDistaceText;
+    focalDistaceText = new wxStaticText(
+        cameraPanel, wxID_ANY, wxT( "Focal Distance:" ),
         wxDefaultPosition, wxDefaultSize, 0 );
-    resolutionText->Wrap( -1 );
-    resolutionSizer->Add( resolutionText, 0, wxBOTTOM | wxLEFT, 5 );
+    focalDistaceText->Wrap( -1 );
+    focalDistanceTextSizer->Add( focalDistaceText, 0, wxALL, 5 );
 
-    mResolutionSlider = new wxSlider(
-        this, ID_RESOLUTION_SLIDER, 200, 0, 1000,
-        wxDefaultPosition, wxSize( -1, -1 ),
-        wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS | wxSL_TOP );
-    resolutionSizer->Add( mResolutionSlider, 0, wxEXPAND, 5 );
+    focalDistanceTextSpinSizer->Add( focalDistanceTextSizer, 0, 0, 5 );
 
-    cameraViewSizer->Add( resolutionSizer, 1, wxEXPAND, 5 );
+    wxBoxSizer* focalDistanceSpinSizer;
+    focalDistanceSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    displaySettingsSizer->Add( cameraViewSizer, 0, wxEXPAND, 5 );
+    mFocalDistanceSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
+        *cameraPanel, ID_FOCAL_DISTANCE_SPINCTRL, wxEmptyString,
+        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS, 0, 180, 30 );
+    focalDistanceSpinSizer->Add(
+        mFocalDistanceSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
-    wxStaticLine* staticLine;
-    staticLine = new wxStaticLine(
-        this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL );
-    displaySettingsSizer->Add( staticLine, 0, wxALL | wxEXPAND, 10 );
+    focalDistanceTextSpinSizer->Add( focalDistanceSpinSizer, 0, 0, 5 );
 
-    wxBoxSizer* projectionSizer;
-    projectionSizer = new wxBoxSizer( wxHORIZONTAL );
+    focalDistanceSizer->Add( focalDistanceTextSpinSizer, 0, 0, 5 );
 
-    wxBoxSizer* projectionRadioBoxSizer;
-    projectionRadioBoxSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* focalDistanceSliderSizer;
+    focalDistanceSliderSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxString mProjectionRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-    int mProjectionRadioBoxNChoices =
-        sizeof( mProjectionRadioBoxChoices ) / sizeof( wxString );
-    mProjectionRadioBox = new wxRadioBox(
-        this, ID_PROJECTION_RADIOBOX, wxT( "Projection Effect" ),
-        wxDefaultPosition, wxDefaultSize, mProjectionRadioBoxNChoices,
-        mProjectionRadioBoxChoices, 1, wxRA_SPECIFY_ROWS );
-    mProjectionRadioBox->SetSelection( 1 );
-    mProjectionRadioBox->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+    mFocalDistanceSlider = new wxSlider(
+        cameraPanel, ID_FOCAL_DISTANCE_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    focalDistanceSliderSizer->Add(
+        mFocalDistanceSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
-    projectionRadioBoxSizer->Add( mProjectionRadioBox, 0, wxALL, 5 );
+    focalDistanceSizer->Add( focalDistanceSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    projectionSizer->Add( projectionRadioBoxSizer, 0, wxALIGN_BOTTOM, 5 );
+    depthOfFieldSettingsSizer->Add(
+        focalDistanceSizer, 0, wxALL | wxEXPAND, 5 );
 
-    wxBoxSizer* opacitySizer;
-    opacitySizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* focusRangeSizer;
+    focusRangeSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxStaticText* opacityText;
-    opacityText = new wxStaticText(
-        this, wxID_ANY, wxT( "Opacity" ),
+    wxBoxSizer* focusRangeTextSpinSizer;
+    focusRangeTextSpinSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxBoxSizer* focusRangeTextSizer;
+    focusRangeTextSizer = new wxBoxSizer( wxVERTICAL );
+
+    wxStaticText* focusRangeText;
+    focusRangeText = new wxStaticText(
+        cameraPanel, wxID_ANY, wxT( "Focus Range:" ),
         wxDefaultPosition, wxDefaultSize, 0 );
-    opacityText->Wrap( -1 );
-    opacitySizer->Add( opacityText, 0, wxBOTTOM | wxLEFT, 5 );
+    focusRangeText->Wrap( -1 );
+    focusRangeTextSizer->Add( focusRangeText, 0, wxALL, 5 );
 
-    mOpacitySlider = new wxSlider(
-        this, ID_OPACITY_SLIDER, 30, 0, 100,
-        wxDefaultPosition, wxSize( -1, -1 ),
-        wxSL_BOTH | wxSL_HORIZONTAL );
-    opacitySizer->Add( mOpacitySlider, 0, wxEXPAND, 5 );
+    focusRangeTextSpinSizer->Add( focusRangeTextSizer, 0, 0, 5 );
 
-    projectionSizer->Add( opacitySizer, 1, wxEXPAND, 5 );
+    wxBoxSizer* focusRangeSpinSizer;
+    focusRangeSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    displaySettingsSizer->Add( projectionSizer, 0, wxEXPAND, 5 );
+    mFocusRangeSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
+        *cameraPanel, ID_FOCUS_RANGE_SPINCTRL, wxEmptyString,
+        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS, 0, 1, 1 );
+    focusRangeSpinSizer->Add( mFocusRangeSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
-    mainSizer->Add( displaySettingsSizer, 0, wxALL | wxEXPAND, 5 );
+    focusRangeTextSpinSizer->Add( focusRangeSpinSizer, 0, 0, 5 );
 
-    wxStaticBoxSizer* geometrySettingsSizer;
-    geometrySettingsSizer = new wxStaticBoxSizer( new wxStaticBox(
-        this, wxID_ANY, wxT( "Geometry Settings" ) ), wxVERTICAL );
+    focusRangeSizer->Add( focusRangeTextSpinSizer, 0, 0, 5 );
 
-    wxBoxSizer* geometryCenterSizer;
-    geometryCenterSizer = new wxBoxSizer( wxHORIZONTAL );
+    wxBoxSizer* focusRangeSliderSizer;
+    focusRangeSliderSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxBoxSizer* cameraRadioBoxSizer;
-    cameraRadioBoxSizer = new wxBoxSizer( wxVERTICAL );
+    mFocusRangeSlider = new wxSlider(
+        cameraPanel, ID_FOCUS_RANGE_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    focusRangeSliderSizer->Add(
+        mFocusRangeSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
-    wxString mCameraRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-    int mCameraRadioBoxNChoices =
-        sizeof( mCameraRadioBoxChoices ) / sizeof( wxString );
-    mCameraRadioBox = new wxRadioBox(
-        this, ID_CAMERA_RADIOBOX, wxT( "Camera" ),
-        wxDefaultPosition, wxDefaultSize, mCameraRadioBoxNChoices,
-        mCameraRadioBoxChoices, 1, wxRA_SPECIFY_ROWS );
-    mCameraRadioBox->SetSelection( 1 );
-    mCameraRadioBox->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+    focusRangeSizer->Add( focusRangeSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
-    cameraRadioBoxSizer->Add( mCameraRadioBox, 0, wxALIGN_RIGHT | wxALL, 5 );
+    depthOfFieldSettingsSizer->Add( focusRangeSizer, 0, wxALL|wxEXPAND, 5 );
 
-    geometryCenterSizer->Add( cameraRadioBoxSizer, 1, wxEXPAND, 5 );
+    wxBoxSizer* maxCircleOfConfusionSizer;
+    maxCircleOfConfusionSizer = new wxBoxSizer( wxHORIZONTAL );
 
-    wxBoxSizer* frustumRadioBoxSizer;
-    frustumRadioBoxSizer = new wxBoxSizer( wxVERTICAL );
+    wxBoxSizer* maxCircleOfConfusionTextSpinSizer;
+    maxCircleOfConfusionTextSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    wxString mFrustumRadioBoxChoices[] = { wxT( "Off" ), wxT( "On" ) };
-    int mFrustumRadioBoxNChoices =
-        sizeof( mFrustumRadioBoxChoices ) / sizeof( wxString );
-    mFrustumRadioBox = new wxRadioBox(
-        this, ID_FRUSTUM_RADIOBOX, wxT( "Frustum" ),
-        wxDefaultPosition, wxDefaultSize, mFrustumRadioBoxNChoices,
-        mFrustumRadioBoxChoices, 1, wxRA_SPECIFY_ROWS );
-    mFrustumRadioBox->SetSelection( 1 );
-    mFrustumRadioBox->SetFont( wxFont(
-        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+    wxBoxSizer* maxCircleOfConfusionTextSizer;
+    maxCircleOfConfusionTextSizer = new wxBoxSizer( wxVERTICAL );
 
-    frustumRadioBoxSizer->Add( mFrustumRadioBox, 0, wxALIGN_LEFT | wxALL, 5 );
+    wxStaticText* maxCircleOfConfusionText;
+    maxCircleOfConfusionText = new wxStaticText(
+        cameraPanel, wxID_ANY, wxT( "Max Circle of Confusion:" ),
+        wxDefaultPosition, wxDefaultSize, 0 );
+    maxCircleOfConfusionText->Wrap( -1 );
+    maxCircleOfConfusionTextSizer->Add(
+        maxCircleOfConfusionText, 0, wxALL, 5 );
 
-    geometryCenterSizer->Add( frustumRadioBoxSizer, 1, wxEXPAND, 5 );
+    maxCircleOfConfusionTextSpinSizer->Add(
+        maxCircleOfConfusionTextSizer, 0, 0, 5 );
 
-    geometrySettingsSizer->Add( geometryCenterSizer, 0, wxEXPAND, 5 );
+    wxBoxSizer* maxCircleOfConfusionSpinSizer;
+    maxCircleOfConfusionSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    mainSizer->Add( geometrySettingsSizer, 0, wxALL | wxEXPAND, 5 );
+    mMaxCircleOfConfusionSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
+        *cameraPanel, ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL, wxEmptyString,
+        wxDefaultPosition, wxSize( 144,-1 ), wxSP_ARROW_KEYS, 0, 100, 5 );
+    maxCircleOfConfusionSpinSizer->Add(
+        mMaxCircleOfConfusionSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
+
+    maxCircleOfConfusionTextSpinSizer->Add(
+        maxCircleOfConfusionSpinSizer, 0, 0, 5 );
+
+    maxCircleOfConfusionSizer->Add(
+        maxCircleOfConfusionTextSpinSizer, 0, 0, 5 );
+
+    wxBoxSizer* maxCircleOfConfusionSliderSizer;
+    maxCircleOfConfusionSliderSizer = new wxBoxSizer( wxVERTICAL );
+
+    mMaxCircleOfConfusionSlider = new wxSlider(
+        cameraPanel, ID_MAX_CIRCLE_OF_CONFUSION_SLIDER, 200, 0, 1000,
+        wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
+    maxCircleOfConfusionSliderSizer->Add(
+        mMaxCircleOfConfusionSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
+
+    maxCircleOfConfusionSizer->Add(
+        maxCircleOfConfusionSliderSizer, 1, wxALIGN_BOTTOM, 5 );
+
+    depthOfFieldSettingsSizer->Add(
+        maxCircleOfConfusionSizer, 0, wxALL | wxEXPAND, 5 );
+
+    cameraPanelSizer->Add( depthOfFieldSettingsSizer, 0, wxALL | wxEXPAND, 10 );
+
+    cameraPanel->SetSizer( cameraPanelSizer );
+    cameraPanel->Layout();
+    cameraPanelSizer->Fit( cameraPanel );
+    notebook->AddPage( cameraPanel, wxT( "Camera" ), false );
+
+    mainSizer->Add( notebook, 1, wxEXPAND | wxALL, 5 );
 
     wxStdDialogButtonSizer* stdDialogButtonSizer;
     wxButton* stdDialogButtonSizerOK;
@@ -475,7 +799,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     stdDialogButtonSizerCancel = new wxButton( this, wxID_CANCEL );
     stdDialogButtonSizer->AddButton( stdDialogButtonSizerCancel );
     stdDialogButtonSizer->Realize();
-    mainSizer->Add( stdDialogButtonSizer, 0, wxALL | wxEXPAND, 10 );
+    mainSizer->Add( stdDialogButtonSizer, 0, wxALL | wxEXPAND, 5 );
 
     SetSizer( mainSizer );
     Layout();
@@ -503,23 +827,145 @@ void CameraPlacementToolUIDialog::SendCommandsToXplorer()
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFoVZSpinCtrl(
+void CameraPlacementToolUIDialog::OnDrumAnimationOnOffRadioBox(
+    wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnCameraGeometryOnOffRadioBox(
+    wxCommandEvent& event )
+{
+    unsigned int selection = mCameraWindowOnOff->GetSelection();
+
+    mCommandName = "CAMERA_GEOMETRY_ON_OFF";
+
+    ves::open::xml::DataValuePairSharedPtr toggleCameraDVP(
+        new ves::open::xml::DataValuePair() );
+    toggleCameraDVP->SetData( "toggleCamera", selection );
+    mInstructions.push_back( toggleCameraDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFrustumGeometryOnOffRadioBox(
+    wxCommandEvent& event )
+{
+    unsigned int selection = mFrustumGeometryOnOff->GetSelection();
+
+    mCommandName = "FRUSTUM_GEOMETRY_ON_OFF";
+
+    ves::open::xml::DataValuePairSharedPtr toggleFrustumDVP(
+        new ves::open::xml::DataValuePair() );
+    toggleFrustumDVP->SetData( "toggleFrustum", selection );
+    mInstructions.push_back( toggleFrustumDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDepthOfFieldEffectOnOffRadioBox(
+    wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnProjectionEffectOnOffRadioBox(
+    wxCommandEvent& event )
+{
+    unsigned int selection = mProjectionEffectOnOff->GetSelection();
+
+    mCommandName = "PROJECTION_EFFECT_ON_OFF";
+
+    ves::open::xml::DataValuePairSharedPtr toggleProjectionDVP(
+        new ves::open::xml::DataValuePair() );
+    toggleProjectionDVP->SetData( "toggleProjection", selection );
+    mInstructions.push_back( toggleProjectionDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnProjectionEffectOpacitySlider(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+    unsigned int value = mProjectionEffectOpacity->GetValue();
+
+    double opacity = static_cast< double >( value ) / 100.0;
+
+    mCommandName = "PROJECTION_EFFECT_OPACITY";
+
+    ves::open::xml::DataValuePairSharedPtr opacityDVP(
+        new ves::open::xml::DataValuePair() );
+    opacityDVP->SetData( "opacity", opacity );
+    mInstructions.push_back( opacityDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnCameraWindowOnOffRadioBox(
+    wxCommandEvent& event )
+{
+    unsigned int selection = mCameraWindowOnOff->GetSelection();
+
+    mCommandName = "CAMERA_WINDOW_ON_OFF";
+
+    ves::open::xml::DataValuePairSharedPtr viewPerspectiveDVP(
+        new ves::open::xml::DataValuePair() );
+    viewPerspectiveDVP->SetData( "viewPerspective", selection );
+    mInstructions.push_back( viewPerspectiveDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnCameraWindowResolutionSlider(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+    unsigned int value = mCameraWindowResolution->GetValue();
+
+    mCommandName = "CAMERA_WINDOW_RESOLUTION";
+
+    ves::open::xml::DataValuePairSharedPtr resolutionDVP(
+        new ves::open::xml::DataValuePair() );
+    resolutionDVP->SetData( "resolution", value );
+    mInstructions.push_back( resolutionDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDepthHelperWindowOnOffRadioBox(
+    wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnDepthHelperWindowResolutionSlider(
+    wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFieldOfViewSpinCtrl(
     wxScrollEvent& WXUNUSED( event ) )
 {
     UpdateFoVZControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFoVZText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFieldOfViewText( wxCommandEvent& event )
 {
     UpdateFoVZControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFoVZSlider(
+void CameraPlacementToolUIDialog::OnFieldOfViewSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
     mProjectionData[ 0 ] =
-        static_cast< double >( mFoVZSlider->GetValue() ) / 10.0;
-    mFoVZSpinCtrl->SetValue( mProjectionData[ 0 ] );
+        static_cast< double >( mFieldOfViewSlider->GetValue() ) / 10.0;
+    mFieldOfViewSpinCtrl->SetValue( mProjectionData[ 0 ] );
     
     ProjectionUpdate();
 }
@@ -561,7 +1007,7 @@ void CameraPlacementToolUIDialog::OnNearPlaneSlider(
 {
     if( mNearPlaneSlider->GetValue() >= mFarPlaneSlider->GetValue() )
     {
-        EnsureSliders( ID_NEARPLANE_SLIDER );
+        EnsureSliders( ID_NEAR_PLANE_SLIDER );
     }
 
     mNearPlaneSpinCtrl->SetValue(
@@ -591,7 +1037,7 @@ void CameraPlacementToolUIDialog::OnFarPlaneSlider(
 {
     if( mFarPlaneSlider->GetValue() <= mNearPlaneSlider->GetValue() )
     {
-        EnsureSliders( ID_FARPLANE_SLIDER );
+        EnsureSliders( ID_FAR_PLANE_SLIDER );
     }
 
     mNearPlaneSpinCtrl->SetValue(
@@ -605,99 +1051,56 @@ void CameraPlacementToolUIDialog::OnFarPlaneSlider(
     ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnCameraViewRadioBox(
+void CameraPlacementToolUIDialog::OnFocalDistanceSpinCtrl(
+    wxScrollEvent& WXUNUSED( event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFocalDistanceText( wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFocalDistanceSlider(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFocusRangeSpinCtrl(
+    wxScrollEvent& WXUNUSED( event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFocusRangeText( wxCommandEvent& event )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnFocusRangeSlider(
+    wxCommandEvent& WXUNUSED( event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSpinCtrl(
+    wxScrollEvent& WXUNUSED( event ) )
+{
+
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionText(
     wxCommandEvent& event )
 {
-    unsigned int selection = mCameraViewRadioBox->GetSelection();
 
-    mCommandName = "CAMERA_VIEW_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr viewPerspectiveDVP(
-        new ves::open::xml::DataValuePair() );
-    viewPerspectiveDVP->SetData( "viewPerspective", selection );
-    mInstructions.push_back( viewPerspectiveDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnResolutionSlider(
+void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-    unsigned int value = mResolutionSlider->GetValue();
 
-    mCommandName = "RESOLUTION_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr resolutionDVP(
-        new ves::open::xml::DataValuePair() );
-    resolutionDVP->SetData( "resolution", value );
-    mInstructions.push_back( resolutionDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnProjectionRadioBox( wxCommandEvent& event )
-{
-    unsigned int selection = mProjectionRadioBox->GetSelection();
-
-    mCommandName = "TOGGLE_PROJECTION_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr toggleProjectionDVP(
-        new ves::open::xml::DataValuePair() );
-    toggleProjectionDVP->SetData( "toggleProjection", selection );
-    mInstructions.push_back( toggleProjectionDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnOpacitySlider(
-    wxCommandEvent& WXUNUSED( event ) )
-{
-    unsigned int value = mOpacitySlider->GetValue();
-
-    double opacity = static_cast< double >( value ) / 100.0;
-
-    mCommandName = "OPACITY_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr opacityDVP(
-        new ves::open::xml::DataValuePair() );
-    opacityDVP->SetData( "opacity", opacity );
-    mInstructions.push_back( opacityDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnCameraRadioBox( wxCommandEvent& event )
-{
-    unsigned int selection = mCameraRadioBox->GetSelection();
-
-    mCommandName = "TOGGLE_CAMERA_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr toggleCameraDVP(
-        new ves::open::xml::DataValuePair() );
-    toggleCameraDVP->SetData( "toggleCamera", selection );
-    mInstructions.push_back( toggleCameraDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
-}
-////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFrustumRadioBox( wxCommandEvent& event )
-{
-    unsigned int selection = mFrustumRadioBox->GetSelection();
-
-    mCommandName = "TOGGLE_FRUSTUM_UPDATE";
-
-    ves::open::xml::DataValuePairSharedPtr toggleFrustumDVP(
-        new ves::open::xml::DataValuePair() );
-    toggleFrustumDVP->SetData( "toggleFrustum", selection );
-    mInstructions.push_back( toggleFrustumDVP );
-
-    SendCommandsToXplorer();
-    ClearInstructions();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
@@ -717,12 +1120,12 @@ bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
             mFarPlaneSlider->SetValue( 1 );
         }
 
-        if( activeSliderID == ID_NEARPLANE_SLIDER )
+        if( activeSliderID == ID_NEAR_PLANE_SLIDER )
         {
             mFarPlaneSlider->SetValue( mNearPlaneSlider->GetValue() + 1 );
             return true;
         }
-        else if( activeSliderID == ID_FARPLANE_SLIDER )
+        else if( activeSliderID == ID_FAR_PLANE_SLIDER )
         {
             mNearPlaneSlider->SetValue( mFarPlaneSlider->GetValue() - 1 );
             return true;
@@ -733,8 +1136,8 @@ bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::UpdateFoVZControls()
 {
-    mProjectionData[ 0 ] = mFoVZSpinCtrl->GetValue();
-    mFoVZSlider->SetValue(
+    mProjectionData[ 0 ] = mFieldOfViewSpinCtrl->GetValue();
+    mFieldOfViewSlider->SetValue(
         static_cast< int >( mProjectionData[ 0 ] ) * 10 );
 
     ProjectionUpdate();

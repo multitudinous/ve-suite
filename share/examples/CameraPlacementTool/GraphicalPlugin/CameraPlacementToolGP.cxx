@@ -59,13 +59,43 @@ mCameraEntity( 0 )
     //Needs to match inherited UIPluginBase class name
     mObjectName = "CameraPlacementToolUI";
 
+    mEventHandlerMap[ "DRUM_ANIMATION_ON_OFF" ] = this;
+    mCommandNameToInt[ "DRUM_ANIMATION_ON_OFF" ] =
+        DRUM_ANIMATION_ON_OFF;
+    mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = this;
+    mCommandNameToInt[ "CAMERA_GEOMETRY_ON_OFF" ] =
+        CAMERA_GEOMETRY_ON_OFF;
+    mEventHandlerMap[ "FRUSTUM_GEOMETRY_ON_OFF" ] = this;
+    mCommandNameToInt[ "FRUSTUM_GEOMETRY_ON_OFF" ] =
+        FRUSTUM_GEOMETRY_ON_OFF;
+
+    mEventHandlerMap[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] = this;
+    mCommandNameToInt[ "DEPTH_OF_FIELD_EFFECT_ON_OFF" ] =
+        DEPTH_OF_FIELD_EFFECT_ON_OFF;
+    mEventHandlerMap[ "PROJECTION_EFFECT_ON_OFF" ] = this;
+    mCommandNameToInt[ "PROJECTION_EFFECT_ON_OFF" ] =
+        PROJECTION_EFFECT_ON_OFF;
+    mEventHandlerMap[ "PROJECTION_EFFECT_OPACITY" ] = this;
+    mCommandNameToInt[ "PROJECTION_EFFECT_OPACITY" ] =
+        PROJECTION_EFFECT_OPACITY;
+
+    mEventHandlerMap[ "CAMERA_WINDOW_ON_OFF" ] = this;
+    mCommandNameToInt[ "CAMERA_WINDOW_ON_OFF" ] =
+        CAMERA_WINDOW_ON_OFF;
+    mEventHandlerMap[ "CAMERA_WINDOW_RESOLUTION" ] = this;
+    mCommandNameToInt[ "CAMERA_WINDOW_RESOLUTION" ] =
+        CAMERA_WINDOW_RESOLUTION;
+
+    mEventHandlerMap[ "DEPTH_HELPER_WINDOW_ON_OFF" ] = this;
+    mCommandNameToInt[ "DEPTH_HELPER_WINDOW_ON_OFF" ] =
+        DEPTH_HELPER_WINDOW_ON_OFF;
+    mEventHandlerMap[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] = this;
+    mCommandNameToInt[ "DEPTH_HELPER_WINDOW_RESOLUTION" ] =
+        DEPTH_HELPER_WINDOW_RESOLUTION;
+    
     mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
-    mEventHandlerMap[ "CAMERA_VIEW_UPDATE" ] = this;
-    mEventHandlerMap[ "RESOLUTION_UPDATE" ] = this;
-    mEventHandlerMap[ "TOGGLE_PROJECTION_UPDATE" ] = this;
-    mEventHandlerMap[ "OPACITY_UPDATE" ] = this;
-    mEventHandlerMap[ "TOGGLE_CAMERA_UPDATE" ] = this;
-    mEventHandlerMap[ "TOGGLE_FRUSTUM_UPDATE" ] = this;
+    mCommandNameToInt[ "PROJECTION_UPDATE" ] =
+        PROJECTION_UPDATE;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
@@ -115,69 +145,94 @@ void CameraPlacementToolGP::SetCurrentCommand(
         return;
     }
 
-    if( command->GetCommandName() == "PROJECTION_UPDATE" )
+    int commandName =
+        mCommandNameToInt.find( command->GetCommandName() )->second;
+
+    switch( commandName )
     {
-        double projectionData[ 4 ] = { 0, 0, 0, 0 };
-        command->GetDataValuePair(
-            "projectionFoVZ" )->GetData( projectionData[ 0 ] );
-        command->GetDataValuePair(
-            "projectionAspectRatio" )->GetData( projectionData[ 1 ] );
-        command->GetDataValuePair(
-            "projectionNearPlane" )->GetData( projectionData[ 2 ] );
-        command->GetDataValuePair(
-            "projectionFarPlane" )->GetData( projectionData[ 3 ] );
+        case DRUM_ANIMATION_ON_OFF:
+        {
 
-        mCameraEntity->setProjectionMatrixAsPerspective(
-            projectionData[ 0 ], projectionData[ 1 ],
-            projectionData[ 2 ], projectionData[ 3 ] );
+        }
+        break;
 
-        mCameraEntity->Update();
-    }
-    else if( command->GetCommandName() == "CAMERA_VIEW_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "viewPerspective" )->GetData( selection );
+        case CAMERA_GEOMETRY_ON_OFF:
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair( "toggleCamera" )->GetData( selection );
 
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayScreenAlignedQuad( onOff );
-    }
-    else if( command->GetCommandName() == "RESOLUTION_UPDATE" )
-    {
-        unsigned int value = 0;
-        command->GetDataValuePair( "resolution" )->GetData( value );
+            bool onOff = ( selection != 0 );
+            mCameraEntity->DisplayCamera( onOff );
+        }
+        break;
 
-        mCameraEntity->SetQuadResolution( value );
-    }
-    else if( command->GetCommandName() == "TOGGLE_PROJECTION_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "toggleProjection" )->GetData( selection );
+        case FRUSTUM_GEOMETRY_ON_OFF:
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair( "toggleFrustum" )->GetData( selection );
 
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayProjectionEffect( onOff );
-    }
-    else if( command->GetCommandName() == "OPACITY_UPDATE" )
-    {
-        double value = 0;
-        command->GetDataValuePair( "opacity" )->GetData( value );
+            bool onOff = ( selection != 0 );
+            mCameraEntity->DisplayViewFrustum( onOff );
+        }
+        break;
 
-        mCameraEntity->SetProjectionEffectOpacity( value );
-    }
-    else if( command->GetCommandName() == "TOGGLE_CAMERA_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "toggleCamera" )->GetData( selection );
+        case PROJECTION_EFFECT_ON_OFF:
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair( "toggleProjection" )->GetData( selection );
 
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayCamera( onOff );
-    }
-    else if( command->GetCommandName() == "TOGGLE_FRUSTUM_UPDATE" )
-    {
-        unsigned int selection = 0;
-        command->GetDataValuePair( "toggleFrustum" )->GetData( selection );
+            bool onOff = ( selection != 0 );
+            mCameraEntity->DisplayProjectionEffect( onOff );
+        }
+        break;
 
-        bool onOff = ( selection != 0 );
-        mCameraEntity->DisplayViewFrustum( onOff );
+        case PROJECTION_EFFECT_OPACITY:
+        {
+            double value = 0;
+            command->GetDataValuePair( "opacity" )->GetData( value );
+
+            mCameraEntity->SetProjectionEffectOpacity( value );
+        }
+        break;
+
+        case CAMERA_WINDOW_ON_OFF:
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair( "viewPerspective" )->GetData( selection );
+
+            bool onOff = ( selection != 0 );
+            mCameraEntity->DisplayScreenAlignedQuad( onOff );
+        }
+        break;
+
+        case CAMERA_WINDOW_RESOLUTION:
+        {
+            unsigned int value = 0;
+            command->GetDataValuePair( "resolution" )->GetData( value );
+
+            mCameraEntity->SetQuadResolution( value );
+        }
+        break;
+
+        case PROJECTION_UPDATE:
+        {
+            double projectionData[ 4 ] = { 0, 0, 0, 0 };
+            command->GetDataValuePair(
+                "projectionFoVZ" )->GetData( projectionData[ 0 ] );
+            command->GetDataValuePair(
+                "projectionAspectRatio" )->GetData( projectionData[ 1 ] );
+            command->GetDataValuePair(
+                "projectionNearPlane" )->GetData( projectionData[ 2 ] );
+            command->GetDataValuePair(
+                "projectionFarPlane" )->GetData( projectionData[ 3 ] );
+
+            mCameraEntity->setProjectionMatrixAsPerspective(
+                projectionData[ 0 ], projectionData[ 1 ],
+                projectionData[ 2 ], projectionData[ 3 ] );
+
+            mCameraEntity->Update();
+        }
+        break;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -547,7 +602,7 @@ void CameraPlacementToolGP::InitializeResources()
                 "color0.a = 1.0; \n"
             "} \n"
 
-            "float focalDist = 15.0; \n"
+            "float focalDist = 5.0; \n"
             "float focalRange = 10.0; \n"
             "focalRange = 2.0 / focalRange; \n"
 

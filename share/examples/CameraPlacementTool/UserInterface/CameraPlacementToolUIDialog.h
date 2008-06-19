@@ -62,32 +62,46 @@ class wxSpinCtrl;
 
 namespace cpt
 {
-
 class CameraPlacementToolUIDialog : public ves::conductor::UIDialog
 {
 public:
     CameraPlacementToolUIDialog();
-    CameraPlacementToolUIDialog( 
+    CameraPlacementToolUIDialog(
         wxWindow* parent,
         int id,
         ves::conductor::util::CORBAServiceList* service );
 
     enum CPT_IDS
     {
-        ID_FOVZ_SPINCTRL,
-        ID_FOVZ_SLIDER,
-        ID_ASPECTRATIO_SPINCTRL,
-        ID_ASPECTRATIO_SLIDER,
-		ID_NEARPLANE_SPINCTRL,
-		ID_NEARPLANE_SLIDER,
-		ID_FARPLANE_SPINCTRL,
-		ID_FARPLANE_SLIDER,
-        ID_CAMERAVIEW_RADIOBOX,
-        ID_RESOLUTION_SLIDER,
-        ID_PROJECTION_RADIOBOX,
-        ID_OPACITY_SLIDER,
-        ID_CAMERA_RADIOBOX,
-        ID_FRUSTUM_RADIOBOX
+        ID_DRUM_ANIMATION_ON_OFF,
+        ID_CAMERA_GEOMETRY_ON_OFF,
+        ID_FRUSTUM_GEOMETRY_ON_OFF,
+
+        ID_DEPTH_OF_FIELD_EFFECT_ON_OFF,
+        ID_PROJECTION_EFFECT_ON_OFF,
+        ID_PROJECTION_EFFECT_OPACITY,
+
+        ID_CAMERA_WINDOW_ON_OFF,
+        ID_CAMERA_WINDOW_RESOLUTION,
+
+        ID_DEPTH_HELPER_WINDOW_ON_OFF,
+        ID_DEPTH_HELPER_WINDOW_RESOLUTION,
+
+        ID_FIELD_OF_VIEW_SPINCTRL,
+        ID_FIELD_OF_VIEW_SLIDER,
+        ID_ASPECT_RATIO_SPINCTRL,
+        ID_ASPECT_RATIO_SLIDER,
+		ID_NEAR_PLANE_SPINCTRL,
+		ID_NEAR_PLANE_SLIDER,
+		ID_FAR_PLANE_SPINCTRL,
+		ID_FAR_PLANE_SLIDER,
+
+        ID_FOCAL_DISTANCE_SPINCTRL,
+        ID_FOCAL_DISTANCE_SLIDER,
+		ID_FOCUS_RANGE_SPINCTRL,
+		ID_FOCUS_RANGE_SLIDER,
+		ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL,
+		ID_MAX_CIRCLE_OF_CONFUSION_SLIDER,
     };
 
     virtual ~CameraPlacementToolUIDialog();
@@ -104,9 +118,23 @@ private:
     void SendCommandsToXplorer();
     void ClearInstructions();
 
-    void OnFoVZSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnFoVZText( wxCommandEvent& event );
-    void OnFoVZSlider( wxCommandEvent& WXUNUSED( event ) );
+    void OnDrumAnimationOnOffRadioBox( wxCommandEvent& event );
+    void OnCameraGeometryOnOffRadioBox( wxCommandEvent& event );
+    void OnFrustumGeometryOnOffRadioBox( wxCommandEvent& event );
+
+    void OnDepthOfFieldEffectOnOffRadioBox( wxCommandEvent& event );
+    void OnProjectionEffectOnOffRadioBox( wxCommandEvent& event );
+    void OnProjectionEffectOpacitySlider( wxCommandEvent& WXUNUSED( event ) );
+
+    void OnCameraWindowOnOffRadioBox( wxCommandEvent& event );
+    void OnCameraWindowResolutionSlider( wxCommandEvent& WXUNUSED( event ) );
+
+    void OnDepthHelperWindowOnOffRadioBox( wxCommandEvent& event );
+    void OnDepthHelperWindowResolutionSlider( wxCommandEvent& event );
+
+    void OnFieldOfViewSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnFieldOfViewText( wxCommandEvent& event );
+    void OnFieldOfViewSlider( wxCommandEvent& WXUNUSED( event ) );
     void OnAspectRatioSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnAspectRatioText( wxCommandEvent& event );
     void OnAspectRatioSlider( wxCommandEvent& WXUNUSED( event ) );
@@ -116,12 +144,16 @@ private:
 	void OnFarPlaneSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
 	void OnFarPlaneText( wxCommandEvent& event );
 	void OnFarPlaneSlider( wxCommandEvent& WXUNUSED( event ) );
-	void OnCameraViewRadioBox( wxCommandEvent& event );
-    void OnResolutionSlider( wxCommandEvent& WXUNUSED( event ) );
-    void OnProjectionRadioBox( wxCommandEvent& event );
-    void OnOpacitySlider( wxCommandEvent& WXUNUSED( event ) );
-    void OnCameraRadioBox( wxCommandEvent& event );
-    void OnFrustumRadioBox( wxCommandEvent& event );
+
+    void OnFocalDistanceSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+    void OnFocalDistanceText( wxCommandEvent& event );
+    void OnFocalDistanceSlider( wxCommandEvent& WXUNUSED( event ) );
+	void OnFocusRangeSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnFocusRangeText( wxCommandEvent& event );
+	void OnFocusRangeSlider( wxCommandEvent& WXUNUSED( event ) );
+	void OnMaxCircleOfConfusionSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnMaxCircleOfConfusionText( wxCommandEvent& event );
+	void OnMaxCircleOfConfusionSlider( wxCommandEvent& WXUNUSED( event ) );
 
     bool EnsureSliders( int activeSliderID );
     void UpdateFoVZControls();
@@ -129,30 +161,45 @@ private:
 	void UpdateNearPlaneControls();
 	void UpdateFarPlaneControls();
     void ProjectionUpdate();
+    void DepthOfFieldUpdate();
 
     double mProjectionData[ 4 ];
+    double mDepthOfFieldData[ 3 ];
 
-    ves::conductor::util::wxSpinCtrlDbl* mFoVZSpinCtrl;
-    wxSlider* mFoVZSlider;
+    wxRadioBox* mDrumAnimationOnOff;
+    wxRadioBox* mCameraGeometryOnOff;
+    wxRadioBox* mFrustumGeometryOnOff;
+
+    wxRadioBox* mDepthOfFieldEffectOnOff;
+    wxRadioBox* mProjectionEffectOnOff;
+    wxSlider* mProjectionEffectOpacity;
+
+    wxRadioBox* mCameraWindowOnOff;
+    wxSlider* mCameraWindowResolution;
+    wxRadioBox* mDepthHelperWindowOnOff;
+    wxSlider* mDepthHelperWindowResolution;
+
+    ves::conductor::util::wxSpinCtrlDbl* mFieldOfViewSpinCtrl;
+    wxSlider* mFieldOfViewSlider;
     ves::conductor::util::wxSpinCtrlDbl* mAspectRatioSpinCtrl;
     wxSlider* mAspectRatioSlider;
     ves::conductor::util::wxSpinCtrlDbl* mNearPlaneSpinCtrl;
-	wxSlider* mNearPlaneSlider;
-	ves::conductor::util::wxSpinCtrlDbl* mFarPlaneSpinCtrl;
-	wxSlider* mFarPlaneSlider;
-    wxRadioBox* mCameraViewRadioBox;
-    wxSlider* mResolutionSlider;
-    wxRadioBox* mProjectionRadioBox;
-    wxSlider* mOpacitySlider;
-    wxRadioBox* mCameraRadioBox;
-    wxRadioBox* mFrustumRadioBox;
+    wxSlider* mNearPlaneSlider;
+    ves::conductor::util::wxSpinCtrlDbl* mFarPlaneSpinCtrl;
+    wxSlider* mFarPlaneSlider;
+
+    ves::conductor::util::wxSpinCtrlDbl* mFocalDistanceSpinCtrl;
+    wxSlider* mFocalDistanceSlider;
+    ves::conductor::util::wxSpinCtrlDbl* mFocusRangeSpinCtrl;
+    wxSlider* mFocusRangeSlider;
+    ves::conductor::util::wxSpinCtrlDbl* mMaxCircleOfConfusionSpinCtrl;
+    wxSlider* mMaxCircleOfConfusionSlider;
 
     ves::conductor::util::CORBAServiceList* mServiceList;
     std::string mCommandName;
     std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
     
     DECLARE_EVENT_TABLE()
-
 };
 
 } //end cpt

@@ -48,6 +48,26 @@ class VE_USER_PLUGIN_EXPORTS CameraPlacementToolGP :
 public:
     CameraPlacementToolGP();
     virtual ~CameraPlacementToolGP();
+
+    enum STRING_TO_INT_IDS
+    {
+        DRUM_ANIMATION_ON_OFF,
+        CAMERA_GEOMETRY_ON_OFF,
+        FRUSTUM_GEOMETRY_ON_OFF,
+
+        DEPTH_OF_FIELD_EFFECT_ON_OFF,
+        PROJECTION_EFFECT_ON_OFF,
+        PROJECTION_EFFECT_OPACITY,
+
+        CAMERA_WINDOW_ON_OFF,
+        CAMERA_WINDOW_RESOLUTION,
+
+        DEPTH_HELPER_WINDOW_ON_OFF,
+        DEPTH_HELPER_WINDOW_RESOLUTION,
+
+        PROJECTION_UPDATE,
+    };
+
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
     virtual void PreFrameUpdate();
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
@@ -58,6 +78,8 @@ private:
     void InitializeResources();
 
     osg::ref_ptr< cpt::CameraEntity > mCameraEntity;
+
+    std::map< const std::string, STRING_TO_INT_IDS > mCommandNameToInt;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( CameraPlacementToolGP )
