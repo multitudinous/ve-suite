@@ -31,33 +31,26 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef DEPTH_OF_FIELD_TECHNIQUE_H
-#define DEPTH_OF_FIELD_TECHNIQUE_H
+#ifndef DEPTH_HELPER_TECHNIQUE_H
+#define DEPTH_HELPER_TECHNIQUE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/Technique.h>
 
 namespace cpt
 {
-class DepthOfFieldTechnique : public ves::xplorer::scenegraph::Technique
+class DepthHelperTechnique : public ves::xplorer::scenegraph::Technique
 {
 public:
-    DepthOfFieldTechnique();
-    virtual ~DepthOfFieldTechnique();
-
-    osg::Uniform* const GetAlpha() const;
-    osg::Uniform* const GetNearPlaneUniform() const;
-    osg::Uniform* const GetFarPlaneUniform() const;
+    DepthHelperTechnique();
+    virtual ~DepthHelperTechnique();
 
 protected:
     virtual void DefinePasses();
 
 private:
-    osg::ref_ptr< osg::Uniform > mAlpha;
-    osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
-    osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
 
 };
 } //end cpt
 
-#endif //DEPTH_OF_FIELD_TECHNIQUE_H
+#endif //DEPTH_HELPER_TECHNIQUE_H

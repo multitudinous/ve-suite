@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 // --- My Includes --- //
-#include "DepthOfFieldTechnique.h"
+#include "DepthHelperTechnique.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/ResourceManager.h>
@@ -43,22 +43,19 @@
 using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
-DepthOfFieldTechnique::DepthOfFieldTechnique()
+DepthHelperTechnique::DepthHelperTechnique()
 :
-ves::xplorer::scenegraph::Technique(),
-mAlpha( new osg::Uniform( osg::Uniform::FLOAT, "alpha" ) ),
-mNearPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "nearPlane" ) ),
-mFarPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "farPlane" ) )
+ves::xplorer::scenegraph::Technique()
 {
     DefinePasses();
 }
 ////////////////////////////////////////////////////////////////////////////////
-DepthOfFieldTechnique::~DepthOfFieldTechnique()
+DepthHelperTechnique::~DepthHelperTechnique()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void DepthOfFieldTechnique::DefinePasses()
+void DepthHelperTechnique::DefinePasses()
 {
     //Implement pass #1
     {
@@ -67,11 +64,6 @@ void DepthOfFieldTechnique::DefinePasses()
 
         stateset->setRenderBinDetails( 1, std::string( "RenderBin" ) );
 
-        stateset->setTextureAttributeAndModes( 0,
-            ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-            < osg::Texture2D, osg::ref_ptr >( "CameraViewTexture" ) ).get(),
-            osg::StateAttribute::ON );
-
         stateset->setTextureAttributeAndModes( 1,
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
             < osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get(),
@@ -79,37 +71,19 @@ void DepthOfFieldTechnique::DefinePasses()
 
         stateset->setAttribute(
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
-            < osg::Program, osg::ref_ptr >( "CameraViewProgram" ) ).get(),
+            < osg::Program, osg::ref_ptr >( "RenderBlurProgram" ) ).get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         stateset->setMode(
             GL_LIGHTING,
             osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
-        osg::ref_ptr< osg::Uniform > textureZeroUniform =
-            new osg::Uniform( "Tex0", 0 );
         osg::ref_ptr< osg::Uniform > textureOneUniform =
             new osg::Uniform( "Tex1", 1 );
 
-        stateset->addUniform( textureZeroUniform.get() );
         stateset->addUniform( textureOneUniform.get() );
 
         AddPass( stateset.get() );
     }
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetAlpha() const
-{
-    return mAlpha.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetNearPlaneUniform() const
-{
-    return mNearPlaneUniform.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetFarPlaneUniform() const
-{
-    return mFarPlaneUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

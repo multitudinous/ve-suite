@@ -72,9 +72,10 @@ class Text;
 
 namespace cpt
 {
-class DepthOfFieldTechnique;
-class ProjectionTechnique;
 class CameraEntityCallback;
+class DepthOfFieldTechnique;
+class DepthHelperTechnique;
+class ProjectionTechnique;
 
 class CameraEntity : public osg::Camera
 {
@@ -98,7 +99,8 @@ public:
     void DisplayCamera( bool onOff );
     void DisplayViewFrustum( bool onOff );
     void DisplayProjectionEffect( bool onOff );
-    void DisplayScreenAlignedQuad( bool onOff );
+    void DisplayCameraViewQuad( bool onOff );
+    void DisplayDepthHelperQuad( bool onOff );
     
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
     ves::xplorer::scenegraph::DCS* GetDCS();
@@ -108,7 +110,8 @@ public:
 
     void SetNamesAndDescriptions();
     void SetProjectionEffectOpacity( double value );
-    void SetQuadResolution( unsigned int value );
+    void SetCameraViewQuadResolution( unsigned int value );
+    void SetDepthHelperQuadResolution( unsigned int value );
 
     void Update();
 
@@ -121,7 +124,8 @@ private:
     void CreateCameraNode();
     void CreateViewFrustumGeode();
     void CreateHitQuadGeode();
-    void CreateCameraViewQuadGeode();
+    void CreateCameraViewQuad();
+    void CreateDepthHelperQuad();
 
     //The initial view matrix of the camera
     osg::Matrixd mInitialViewMatrix;
@@ -132,8 +136,9 @@ private:
     osg::ref_ptr< osg::TexGenNode > mTexGenNode;
 
     cpt::DepthOfFieldTechnique* mDepthOfFieldTechnique;
+    cpt::DepthHelperTechnique* mDepthHelperTechnique;
     cpt::ProjectionTechnique* mProjectionTechnique;
-
+    
     //A callback to update CameraEntity relative to its DCS
     osg::ref_ptr< cpt::CameraEntityCallback > mCameraEntityCallback;
 
@@ -163,6 +168,12 @@ private:
     osg::ref_ptr< osg::Vec3Array > mCameraViewQuadVertices;
 
     osg::ref_ptr< osgText::Text > mDistanceText;
+
+    //The screen aligned quad to show the depth of field helper view
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDepthHelperQuadDCS;
+    osg::ref_ptr< osg::Geode > mDepthHelperQuadGeode;
+    osg::ref_ptr< osg::Geometry > mDepthHelperQuadGeometry;
+    osg::ref_ptr< osg::Vec3Array > mDepthHelperQuadVertices;
 
 };
 

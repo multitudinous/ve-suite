@@ -145,21 +145,27 @@ void CameraPlacementToolGP::SetCurrentCommand(
         return;
     }
 
-    int commandName =
+    const int commandName =
         mCommandNameToInt.find( command->GetCommandName() )->second;
 
     switch( commandName )
     {
         case DRUM_ANIMATION_ON_OFF:
         {
+            unsigned int selection = 0;
+            command->GetDataValuePair(
+                "drumAnimationOnOff" )->GetData( selection );
 
+            bool onOff = ( selection != 0 );
+            //mCameraEntity->DisplayCamera( onOff );
         }
         break;
 
         case CAMERA_GEOMETRY_ON_OFF:
         {
             unsigned int selection = 0;
-            command->GetDataValuePair( "toggleCamera" )->GetData( selection );
+            command->GetDataValuePair(
+                "cameraGeometryOnOff" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
             mCameraEntity->DisplayCamera( onOff );
@@ -169,17 +175,30 @@ void CameraPlacementToolGP::SetCurrentCommand(
         case FRUSTUM_GEOMETRY_ON_OFF:
         {
             unsigned int selection = 0;
-            command->GetDataValuePair( "toggleFrustum" )->GetData( selection );
+            command->GetDataValuePair(
+                "frustumGeometryOnOff" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
             mCameraEntity->DisplayViewFrustum( onOff );
         }
         break;
 
+        case DEPTH_OF_FIELD_EFFECT_ON_OFF:
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair(
+                "depthOfFieldEffectOnOff" )->GetData( selection );
+
+            bool onOff = ( selection != 0 );
+            //mCameraEntity->DisplayProjectionEffect( onOff );
+        }
+        break;
+
         case PROJECTION_EFFECT_ON_OFF:
         {
             unsigned int selection = 0;
-            command->GetDataValuePair( "toggleProjection" )->GetData( selection );
+            command->GetDataValuePair(
+                "projectionEffectOnOff" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
             mCameraEntity->DisplayProjectionEffect( onOff );
@@ -189,7 +208,8 @@ void CameraPlacementToolGP::SetCurrentCommand(
         case PROJECTION_EFFECT_OPACITY:
         {
             double value = 0;
-            command->GetDataValuePair( "opacity" )->GetData( value );
+            command->GetDataValuePair(
+                "projectionEffectOpacity" )->GetData( value );
 
             mCameraEntity->SetProjectionEffectOpacity( value );
         }
@@ -198,19 +218,42 @@ void CameraPlacementToolGP::SetCurrentCommand(
         case CAMERA_WINDOW_ON_OFF:
         {
             unsigned int selection = 0;
-            command->GetDataValuePair( "viewPerspective" )->GetData( selection );
+            command->GetDataValuePair(
+                "cameraWindowOnOff" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
-            mCameraEntity->DisplayScreenAlignedQuad( onOff );
+            mCameraEntity->DisplayCameraViewQuad( onOff );
         }
         break;
 
         case CAMERA_WINDOW_RESOLUTION:
         {
             unsigned int value = 0;
-            command->GetDataValuePair( "resolution" )->GetData( value );
+            command->GetDataValuePair(
+                "cameraWindowResolution" )->GetData( value );
 
-            mCameraEntity->SetQuadResolution( value );
+            mCameraEntity->SetCameraViewQuadResolution( value );
+        }
+        break;
+
+        case DEPTH_HELPER_WINDOW_ON_OFF:
+        {
+            unsigned int selection = 0;
+            command->GetDataValuePair(
+                "depthHelperWindowOnOff" )->GetData( selection );
+
+            bool onOff = ( selection != 0 );
+            mCameraEntity->DisplayDepthHelperQuad( onOff );
+        }
+        break;
+
+        case DEPTH_HELPER_WINDOW_RESOLUTION:
+        {
+            unsigned int value = 0;
+            command->GetDataValuePair(
+                "depthHelperWindowResolution" )->GetData( value );
+
+            mCameraEntity->SetDepthHelperQuadResolution( value );
         }
         break;
 
@@ -218,7 +261,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
         {
             double projectionData[ 4 ] = { 0, 0, 0, 0 };
             command->GetDataValuePair(
-                "projectionFoVZ" )->GetData( projectionData[ 0 ] );
+                "projectionFieldOfView" )->GetData( projectionData[ 0 ] );
             command->GetDataValuePair(
                 "projectionAspectRatio" )->GetData( projectionData[ 1 ] );
             command->GetDataValuePair(
