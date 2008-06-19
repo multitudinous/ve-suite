@@ -98,6 +98,7 @@ public:
 
     void DisplayCamera( bool onOff );
     void DisplayViewFrustum( bool onOff );
+    void DisplayDepthOfFieldEffect( bool onOff );
     void DisplayProjectionEffect( bool onOff );
     void DisplayCameraViewQuad( bool onOff );
     void DisplayDepthHelperQuad( bool onOff );
@@ -110,6 +111,9 @@ public:
 
     void SetNamesAndDescriptions();
     void SetProjectionEffectOpacity( double value );
+    void SetFocalDistance( double value );
+    void SetFocalRange( double value );
+    void SetMaxCircleOfConfusion( double value );
     void SetCameraViewQuadResolution( unsigned int value );
     void SetDepthHelperQuadResolution( unsigned int value );
 

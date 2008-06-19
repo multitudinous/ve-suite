@@ -48,6 +48,8 @@ public:
     osg::Uniform* const GetAlpha() const;
     osg::Uniform* const GetNearPlaneUniform() const;
     osg::Uniform* const GetFarPlaneUniform() const;
+    osg::Uniform* const GetFocalDistanceUniform() const;
+    osg::Uniform* const GetFocalRangeUniform() const;
 
 protected:
     virtual void DefinePasses();
@@ -56,6 +58,8 @@ private:
     osg::ref_ptr< osg::Uniform > mAlpha;
     osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
     osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
+    osg::ref_ptr< osg::Uniform > mFocalDistanceUniform;
+    osg::ref_ptr< osg::Uniform > mFocalRangeUniform;
 };
 } //end cpt
 

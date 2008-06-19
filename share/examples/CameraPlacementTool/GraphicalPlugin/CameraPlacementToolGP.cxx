@@ -96,6 +96,16 @@ mCameraEntity( 0 )
     mEventHandlerMap[ "PROJECTION_UPDATE" ] = this;
     mCommandNameToInt[ "PROJECTION_UPDATE" ] =
         PROJECTION_UPDATE;
+
+    mEventHandlerMap[ "FOCAL_DISTANCE" ] = this;
+    mCommandNameToInt[ "FOCAL_DISTANCE" ] =
+        FOCAL_DISTANCE;
+    mEventHandlerMap[ "FOCAL_RANGE" ] = this;
+    mCommandNameToInt[ "FOCAL_RANGE" ] =
+        FOCAL_RANGE;
+    mEventHandlerMap[ "MAX_CIRCLE_OF_CONFUSION" ] = this;
+    mCommandNameToInt[ "MAX_CIRCLE_OF_CONFUSION" ] =
+        MAX_CIRCLE_OF_CONFUSION;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolGP::~CameraPlacementToolGP()
@@ -157,7 +167,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
                 "drumAnimationOnOff" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayCamera( onOff );
+            //mCameraEntity->DrumAnimation( onOff );
         }
         break;
 
@@ -190,7 +200,7 @@ void CameraPlacementToolGP::SetCurrentCommand(
                 "depthOfFieldEffectOnOff" )->GetData( selection );
 
             bool onOff = ( selection != 0 );
-            //mCameraEntity->DisplayProjectionEffect( onOff );
+            mCameraEntity->DisplayDepthOfFieldEffect( onOff );
         }
         break;
 
@@ -274,6 +284,36 @@ void CameraPlacementToolGP::SetCurrentCommand(
                 projectionData[ 2 ], projectionData[ 3 ] );
 
             mCameraEntity->Update();
+        }
+        break;
+
+        case FOCAL_DISTANCE:
+        {
+            double value = 0;
+            command->GetDataValuePair(
+                "focalDistance" )->GetData( value );
+
+            mCameraEntity->SetFocalDistance( value );
+        }
+        break;
+
+        case FOCAL_RANGE:
+        {
+            double value = 0;
+            command->GetDataValuePair(
+                "focalRange" )->GetData( value );
+
+            mCameraEntity->SetFocalRange( value );
+        }
+        break;
+
+        case MAX_CIRCLE_OF_CONFUSION:
+        {
+            double value = 0;
+            command->GetDataValuePair(
+                "maxCircleOfConfusion" )->GetData( value );
+
+            mCameraEntity->SetMaxCircleOfConfusion( value );
         }
         break;
     }
@@ -423,7 +463,7 @@ void CameraPlacementToolGP::InitializeResources()
         mResourceManager->add( std::string( "FrustumProgram" ), anyVal );
     }
 
-    //Set up the program for mCameraViewQuadDCS
+    //Set up the program for mHitQuadGeode
     {
         std::string hitQuadVertexSource =
         "void main() \n"
@@ -462,32 +502,25 @@ void CameraPlacementToolGP::InitializeResources()
 	        "gl_Position = ftransform(); \n"
 
 	        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
-	        //"gl_TexCoord[ 1 ] = gl_MultiTexCoord1; \n"
         "} \n";
 
         std::string quadFragmentSource =
-        //"uniform int Width; \n"
-        //"uniform int Height; \n"
+        "uniform ivec2 textureDimensions; \n"
 
-        //"uniform float maxCoC; \n"
+        "uniform float maxCoC; \n"
 
-        "uniform sampler2D Tex0; \n"
-        "uniform sampler2D Tex1; \n"
+        "uniform sampler2D texture0; \n"
+        "uniform sampler2D texture1; \n"
 
         "void main() \n"
         "{ \n"
-
-            "int width = 512; \n"
-            "int height = 512; \n"
-            "float maxCoC = 6.0; \n"
-
             "vec4 colorSum, tapColor; \n"
             "vec2 centerDepthBlur, tapCoord, tapDepthBlur; \n"
 	        "float totalContribution, tapContribution; \n"
 
 	        //Poissonian disc distribution
-	        "float dx = 1.0 / float( width ); \n"
-	        "float dy = 1.0 / float( height ); \n"
+	        "float dx = 1.0 / float( textureDimensions.x ); \n"
+	        "float dy = 1.0 / float( textureDimensions.y ); \n"
 
 	        "vec2 filterTaps[ 12 ]; \n"
 	        "filterTaps[ 0 ]  = vec2( -0.326212 * dx, -0.405810 * dy ); \n"
@@ -504,17 +537,17 @@ void CameraPlacementToolGP::InitializeResources()
 	        "filterTaps[ 11 ] = vec2( -0.791559 * dx, -0.597710 * dy ); \n"
 
 	        //Starting with center sample
-	        "colorSum = texture2D( Tex0, gl_TexCoord[ 0 ].st ); \n"
+	        "colorSum = texture2D( texture0, gl_TexCoord[ 0 ].st ); \n"
 	        "totalContribution = 1.0; \n"
-	        "centerDepthBlur = texture2D( Tex1, gl_TexCoord[ 0 ].st ).xy; \n"
+	        "centerDepthBlur = texture2D( texture1, gl_TexCoord[ 0 ].st ).xy; \n"
 
 	        "float sizeCoC = centerDepthBlur.y * maxCoC; \n"
 
 	        "for( int i = 0; i < 12; ++i ) \n"
             "{ \n"
 		        "tapCoord = gl_TexCoord[ 0 ].st + filterTaps[ i ] * sizeCoC; \n"
-		        "tapColor = texture2D( Tex0, tapCoord ); \n"
-		        "tapDepthBlur = texture2D( Tex1, tapCoord ).xy; \n"
+		        "tapColor = texture2D( texture0, tapCoord ); \n"
+		        "tapDepthBlur = texture2D( texture1, tapCoord ).xy; \n"
 		        "tapContribution = ( tapDepthBlur.x > centerDepthBlur.x ) ? 1.0 : tapDepthBlur.y; \n"
 		        "colorSum += tapColor * tapContribution; \n"
 		        "totalContribution += tapContribution; \n"
@@ -548,11 +581,11 @@ void CameraPlacementToolGP::InitializeResources()
         "} \n";
 
         std::string DoFRenderBlurFragmentSource =
-        "uniform sampler2D Tex1; \n"
+        "uniform sampler2D texture1; \n"
 
         "void main() \n"
         "{ \n"
-	        "vec4 BlurDepth = texture2D( Tex1, gl_TexCoord[ 0 ].st ); \n"
+	        "vec4 BlurDepth = texture2D( texture1, gl_TexCoord[ 0 ].st ); \n"
 	        "gl_FragColor = vec4( 0.2, BlurDepth.y, 0.2, 1.0 ); \n"
         "} \n";
 
@@ -603,9 +636,8 @@ void CameraPlacementToolGP::InitializeResources()
         "uniform float nearPlane; \n"
         "uniform float farPlane; \n"
 
-        //"uniform float focalLen; \n"
-        //"uniform float Zfocus; \n"
-        //"uniform float maxCoC; \n"
+        "uniform float focalDistance; \n"
+        "uniform float focalRange; \n"
 
         "varying float fDepth; \n"
 
@@ -636,7 +668,6 @@ void CameraPlacementToolGP::InitializeResources()
                 "vec4( totalAmbient + totalDiffuse + totalSpecular, alpha ); \n"
 
             //If in frustum
-            //"fDepth = gl_TexCoord[ 0 ].q; \n"
             "if( projectionUV.s >= 0.0 && projectionUV.s <= 1.0 && \n"
                 "projectionUV.t >= 0.0 && projectionUV.t <= 1.0 && \n"
                 "gl_TexCoord[ 0 ].q >= nearPlane && \n"
@@ -645,11 +676,9 @@ void CameraPlacementToolGP::InitializeResources()
                 "color0.a = 1.0; \n"
             "} \n"
 
-            "float focalDist = 5.0; \n"
-            "float focalRange = 10.0; \n"
             "focalRange = 2.0 / focalRange; \n"
 
-            "float blur = saturate( abs( fDepth - focalDist ) * focalRange ); \n"
+            "float blur = saturate( abs( fDepth - focalDistance ) * focalRange ); \n"
             "vec4 color1 = vec4( fDepth, blur, 0.0, 1.0 ); \n"
 
             "gl_FragData[ 0 ] = color0; \n"

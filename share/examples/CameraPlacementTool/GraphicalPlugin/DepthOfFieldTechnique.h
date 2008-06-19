@@ -45,17 +45,15 @@ public:
     DepthOfFieldTechnique();
     virtual ~DepthOfFieldTechnique();
 
-    osg::Uniform* const GetAlpha() const;
-    osg::Uniform* const GetNearPlaneUniform() const;
-    osg::Uniform* const GetFarPlaneUniform() const;
+    osg::Uniform* const GetTextureDimensionsUniform() const;
+    osg::Uniform* const GetMaxCircleOfConfusionUniform() const;
 
 protected:
     virtual void DefinePasses();
 
 private:
-    osg::ref_ptr< osg::Uniform > mAlpha;
-    osg::ref_ptr< osg::Uniform > mNearPlaneUniform;
-    osg::ref_ptr< osg::Uniform > mFarPlaneUniform;
+    osg::ref_ptr< osg::Uniform > mTextureDimensionsUniform;
+    osg::ref_ptr< osg::Uniform > mMaxCircleOfConfusionUniform;
 
 };
 } //end cpt

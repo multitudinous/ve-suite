@@ -42,11 +42,18 @@ using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
 ProjectionTechnique::ProjectionTechnique()
-:
-ves::xplorer::scenegraph::Technique(),
-mAlpha( new osg::Uniform( osg::Uniform::FLOAT, "alpha" ) ),
-mNearPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "nearPlane" ) ),
-mFarPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "farPlane" ) )
+    :
+    ves::xplorer::scenegraph::Technique(),
+    mAlpha( new osg::Uniform(
+        osg::Uniform::FLOAT, "alpha" ) ),
+    mNearPlaneUniform( new osg::Uniform(
+        osg::Uniform::FLOAT, "nearPlane" ) ),
+    mFarPlaneUniform( new osg::Uniform(
+        osg::Uniform::FLOAT, "farPlane" ) ),
+    mFocalDistanceUniform( new osg::Uniform(
+        osg::Uniform::FLOAT, "focalDistance" ) ),
+    mFocalRangeUniform( new osg::Uniform(
+        osg::Uniform::FLOAT, "focalRange" ) )
 {
     DefinePasses();
 }
@@ -74,6 +81,8 @@ void ProjectionTechnique::DefinePasses()
         stateset->addUniform( mAlpha.get() );
         stateset->addUniform( mNearPlaneUniform.get() );
         stateset->addUniform( mFarPlaneUniform.get() );
+        stateset->addUniform( mFocalDistanceUniform.get() );
+        stateset->addUniform( mFocalRangeUniform.get() );
 
         AddPass( stateset.get() );
     }
@@ -92,5 +101,15 @@ osg::Uniform* const ProjectionTechnique::GetNearPlaneUniform() const
 osg::Uniform* const ProjectionTechnique::GetFarPlaneUniform() const
 {
     return mFarPlaneUniform.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Uniform* const ProjectionTechnique::GetFocalDistanceUniform() const
+{
+    return mFocalDistanceUniform.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Uniform* const ProjectionTechnique::GetFocalRangeUniform() const
+{
+    return mFocalRangeUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

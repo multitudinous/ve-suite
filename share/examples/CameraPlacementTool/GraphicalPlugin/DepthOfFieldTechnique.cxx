@@ -44,11 +44,12 @@ using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
 DepthOfFieldTechnique::DepthOfFieldTechnique()
-:
-ves::xplorer::scenegraph::Technique(),
-mAlpha( new osg::Uniform( osg::Uniform::FLOAT, "alpha" ) ),
-mNearPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "nearPlane" ) ),
-mFarPlaneUniform( new osg::Uniform( osg::Uniform::FLOAT, "farPlane" ) )
+    :
+    ves::xplorer::scenegraph::Technique(),
+    mTextureDimensionsUniform( new osg::Uniform(
+    osg::Uniform::INT_VEC2, "textureDimensions" ) ),
+    mMaxCircleOfConfusionUniform( new osg::Uniform(
+        osg::Uniform::FLOAT, "maxCoC" ) )
 {
     DefinePasses();
 }
@@ -62,7 +63,6 @@ void DepthOfFieldTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
         stateset->setRenderBinDetails( 1, std::string( "RenderBin" ) );
@@ -87,29 +87,26 @@ void DepthOfFieldTechnique::DefinePasses()
             osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
         osg::ref_ptr< osg::Uniform > textureZeroUniform =
-            new osg::Uniform( "Tex0", 0 );
+            new osg::Uniform( "texture0", 0 );
         osg::ref_ptr< osg::Uniform > textureOneUniform =
-            new osg::Uniform( "Tex1", 1 );
+            new osg::Uniform( "texture1", 1 );
 
         stateset->addUniform( textureZeroUniform.get() );
         stateset->addUniform( textureOneUniform.get() );
+        stateset->addUniform( mTextureDimensionsUniform.get() );
+        stateset->addUniform( mMaxCircleOfConfusionUniform.get() );
 
         AddPass( stateset.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetAlpha() const
+osg::Uniform* const DepthOfFieldTechnique::GetTextureDimensionsUniform() const
 {
-    return mAlpha.get();
+    return mTextureDimensionsUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetNearPlaneUniform() const
+osg::Uniform* const DepthOfFieldTechnique::GetMaxCircleOfConfusionUniform() const
 {
-    return mNearPlaneUniform.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Uniform* const DepthOfFieldTechnique::GetFarPlaneUniform() const
-{
-    return mFarPlaneUniform.get();
+    return mMaxCircleOfConfusionUniform.get();
 }
 ////////////////////////////////////////////////////////////////////////////////

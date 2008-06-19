@@ -140,14 +140,14 @@ BEGIN_EVENT_TABLE( CameraPlacementToolUIDialog, wxDialog )
         ID_FOCAL_DISTANCE_SLIDER,
         CameraPlacementToolUIDialog::OnFocalDistanceSlider )
     EVT_COMMAND_SCROLL(
-        ID_FOCUS_RANGE_SPINCTRL, 
-        CameraPlacementToolUIDialog::OnFocusRangeSpinCtrl )
+        ID_FOCAL_RANGE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFocalRangeSpinCtrl )
     EVT_TEXT_ENTER(
-        ID_FOCUS_RANGE_SPINCTRL, 
-        CameraPlacementToolUIDialog::OnFocusRangeText )
+        ID_FOCAL_RANGE_SPINCTRL, 
+        CameraPlacementToolUIDialog::OnFocalRangeText )
     EVT_SLIDER(
-        ID_FOCUS_RANGE_SLIDER, 
-        CameraPlacementToolUIDialog::OnFocusRangeSlider )
+        ID_FOCAL_RANGE_SLIDER, 
+        CameraPlacementToolUIDialog::OnFocalRangeSlider )
     EVT_COMMAND_SCROLL(
         ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL, 
         CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSpinCtrl )
@@ -172,10 +172,14 @@ CameraPlacementToolUIDialog::CameraPlacementToolUIDialog(
 :
 UIDialog( ( wxWindow* )parent, id, wxT( "CameraPlacementTool" ) )
 {
-    mProjectionData[ 0 ] = 30.0;
+    mProjectionData[ 0 ] = 40.0;
     mProjectionData[ 1 ] = 1.0;
-    mProjectionData[ 2 ] = 5.0;
-    mProjectionData[ 3 ] = 10.0;
+    mProjectionData[ 2 ] = 1.0;
+    mProjectionData[ 3 ] = 50.0;
+
+    mDepthOfFieldData[ 0 ] = 15.0;
+    mDepthOfFieldData[ 1 ] = 5.0;
+    mDepthOfFieldData[ 2 ] = 6.0;
 
     mServiceList = service;
 
@@ -345,9 +349,9 @@ void CameraPlacementToolUIDialog::BuildGUI()
         projectionEffectOpacityText, 0, wxALL, 5 );
 
     mProjectionEffectOpacity = new wxSlider(
-        mainPanel, ID_PROJECTION_EFFECT_OPACITY, 0, 0, 1,
+        mainPanel, ID_PROJECTION_EFFECT_OPACITY, 30, 0, 100,
         wxPoint( -1, -1 ), wxSize( -1, -1 ),
-        wxSL_BOTH | wxSL_HORIZONTAL | wxSL_LABELS | wxSL_TOP );
+        wxSL_BOTH | wxSL_HORIZONTAL | wxSL_TOP );
     projectionEffectOpacitySizer->Add(
         mProjectionEffectOpacity, 0, wxEXPAND, 5 );
 
@@ -578,7 +582,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mNearPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
         *cameraPanel, ID_NEAR_PLANE_SPINCTRL, wxEmptyString,
         wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS,
-        0, 100, mProjectionData[ 2 ], 1 );
+        0, 1000, mProjectionData[ 2 ], 1 );
     nearPlaneSpinSizer->Add( mNearPlaneSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
     nearPlaneTextSpinSizer->Add( nearPlaneSpinSizer, 0, 0, 5 );
@@ -589,7 +593,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     nearPlaneSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mNearPlaneSlider = new wxSlider(
-        cameraPanel, ID_NEAR_PLANE_SLIDER, mProjectionData[ 2 ] * 10, 0, 1000,
+        cameraPanel, ID_NEAR_PLANE_SLIDER, mProjectionData[ 2 ] * 10, 0, 10000,
         wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
     nearPlaneSliderSizer->Add(
         mNearPlaneSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
@@ -622,7 +626,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     mFarPlaneSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
         *cameraPanel, ID_FAR_PLANE_SPINCTRL, wxEmptyString, wxDefaultPosition,
         wxSize( 144, -1 ), wxSP_ARROW_KEYS,
-        0, 100, mProjectionData[ 3 ], 1 );
+        0, 1000, mProjectionData[ 3 ], 1 );
     farPlaneSpinSizer->Add( mFarPlaneSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
     farPlaneTextSpinSizer->Add( farPlaneSpinSizer, 0, 0, 5 );
@@ -633,7 +637,7 @@ void CameraPlacementToolUIDialog::BuildGUI()
     farPlaneSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mFarPlaneSlider = new wxSlider(
-        cameraPanel, ID_FAR_PLANE_SLIDER, mProjectionData[ 3 ] * 10, 0, 1000,
+        cameraPanel, ID_FAR_PLANE_SLIDER, mProjectionData[ 3 ] * 10, 0, 10000,
         wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
     farPlaneSliderSizer->Add( mFarPlaneSlider, 0, wxEXPAND|wxLEFT|wxRIGHT, 5 );
 
@@ -670,7 +674,8 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     mFocalDistanceSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
         *cameraPanel, ID_FOCAL_DISTANCE_SPINCTRL, wxEmptyString,
-        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS, 0, 180, 30 );
+        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS,
+        0, 100, mDepthOfFieldData[ 0 ], 0.1 );
     focalDistanceSpinSizer->Add(
         mFocalDistanceSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
@@ -682,7 +687,8 @@ void CameraPlacementToolUIDialog::BuildGUI()
     focalDistanceSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mFocalDistanceSlider = new wxSlider(
-        cameraPanel, ID_FOCAL_DISTANCE_SLIDER, 200, 0, 1000,
+        cameraPanel, ID_FOCAL_DISTANCE_SLIDER,
+        mDepthOfFieldData[ 0 ] * 10, 0, 1000,
         wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
     focalDistanceSliderSizer->Add(
         mFocalDistanceSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
@@ -713,11 +719,11 @@ void CameraPlacementToolUIDialog::BuildGUI()
     wxBoxSizer* focusRangeSpinSizer;
     focusRangeSpinSizer = new wxBoxSizer( wxVERTICAL );
 
-    mFocusRangeSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
-        *cameraPanel, ID_FOCUS_RANGE_SPINCTRL, wxEmptyString,
+    mFocalRangeSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
+        *cameraPanel, ID_FOCAL_RANGE_SPINCTRL, wxEmptyString,
         wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS,
-        0, 1, mProjectionData[ 3 ], 0.01 );
-    focusRangeSpinSizer->Add( mFocusRangeSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
+        0, 100, mDepthOfFieldData[ 1 ], 0.1 );
+    focusRangeSpinSizer->Add( mFocalRangeSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
     focusRangeTextSpinSizer->Add( focusRangeSpinSizer, 0, 0, 5 );
 
@@ -726,11 +732,12 @@ void CameraPlacementToolUIDialog::BuildGUI()
     wxBoxSizer* focusRangeSliderSizer;
     focusRangeSliderSizer = new wxBoxSizer( wxVERTICAL );
 
-    mFocusRangeSlider = new wxSlider(
-        cameraPanel, ID_FOCUS_RANGE_SLIDER, 200, 0, 1000,
+    mFocalRangeSlider = new wxSlider(
+        cameraPanel, ID_FOCAL_RANGE_SLIDER,
+        mDepthOfFieldData[ 1 ] * 10, 0, 1000,
         wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
     focusRangeSliderSizer->Add(
-        mFocusRangeSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
+        mFocalRangeSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
 
     focusRangeSizer->Add( focusRangeSliderSizer, 1, wxALIGN_BOTTOM, 5 );
 
@@ -761,7 +768,8 @@ void CameraPlacementToolUIDialog::BuildGUI()
 
     mMaxCircleOfConfusionSpinCtrl = new ves::conductor::util::wxSpinCtrlDbl(
         *cameraPanel, ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL, wxEmptyString,
-        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS, 0, 100, 5 );
+        wxDefaultPosition, wxSize( 144, -1 ), wxSP_ARROW_KEYS,
+        0, 15, mDepthOfFieldData[ 2 ], 0.1 );
     maxCircleOfConfusionSpinSizer->Add(
         mMaxCircleOfConfusionSpinCtrl, 0, wxLEFT | wxRIGHT, 5 );
 
@@ -775,7 +783,8 @@ void CameraPlacementToolUIDialog::BuildGUI()
     maxCircleOfConfusionSliderSizer = new wxBoxSizer( wxVERTICAL );
 
     mMaxCircleOfConfusionSlider = new wxSlider(
-        cameraPanel, ID_MAX_CIRCLE_OF_CONFUSION_SLIDER, 200, 0, 1000,
+        cameraPanel, ID_MAX_CIRCLE_OF_CONFUSION_SLIDER,
+        mDepthOfFieldData[ 2 ] * 10, 0, 150,
         wxDefaultPosition, wxSize( -1, -1 ), wxSL_BOTH | wxSL_HORIZONTAL );
     maxCircleOfConfusionSliderSizer->Add(
         mMaxCircleOfConfusionSlider, 0, wxEXPAND | wxLEFT | wxRIGHT, 5 );
@@ -998,12 +1007,12 @@ void CameraPlacementToolUIDialog::OnDepthHelperWindowResolutionSlider(
 void CameraPlacementToolUIDialog::OnFieldOfViewSpinCtrl(
     wxScrollEvent& WXUNUSED( event ) )
 {
-    UpdateFoVZControls();
+    UpdateFieldOfViewControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnFieldOfViewText( wxCommandEvent& event )
 {
-    UpdateFoVZControls();
+    UpdateFieldOfViewControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnFieldOfViewSlider(
@@ -1100,53 +1109,65 @@ void CameraPlacementToolUIDialog::OnFarPlaneSlider(
 void CameraPlacementToolUIDialog::OnFocalDistanceSpinCtrl(
     wxScrollEvent& WXUNUSED( event ) )
 {
-
+    UpdateFocalDistanceControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnFocalDistanceText( wxCommandEvent& event )
 {
-
+    UpdateFocalDistanceControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnFocalDistanceSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-
+    mDepthOfFieldData[ 0 ] =
+        static_cast< double >( mFocalDistanceSlider->GetValue() ) / 10.0;
+    mFocalDistanceSpinCtrl->SetValue( mDepthOfFieldData[ 0 ] );
+    
+    FocalDistanceUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFocusRangeSpinCtrl(
+void CameraPlacementToolUIDialog::OnFocalRangeSpinCtrl(
     wxScrollEvent& WXUNUSED( event ) )
 {
-
+    UpdateFocalRangeControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFocusRangeText( wxCommandEvent& event )
+void CameraPlacementToolUIDialog::OnFocalRangeText( wxCommandEvent& event )
 {
-
+    UpdateFocalRangeControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::OnFocusRangeSlider(
+void CameraPlacementToolUIDialog::OnFocalRangeSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
-
+    mDepthOfFieldData[ 1 ] =
+        static_cast< double >( mFocalRangeSlider->GetValue() ) / 10.0;
+    mFocalRangeSpinCtrl->SetValue( mDepthOfFieldData[ 1 ] );
+    
+    FocalRangeUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSpinCtrl(
     wxScrollEvent& WXUNUSED( event ) )
 {
-
+    UpdateMaxCircleOfConfusionControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionText(
     wxCommandEvent& event )
 {
-
+    UpdateMaxCircleOfConfusionControls();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::OnMaxCircleOfConfusionSlider(
     wxCommandEvent& WXUNUSED( event ) )
 {
+    mDepthOfFieldData[ 2 ] =
+        static_cast< double >( mMaxCircleOfConfusionSlider->GetValue() ) / 10.0;
+    mMaxCircleOfConfusionSpinCtrl->SetValue( mDepthOfFieldData[ 2 ] );
 
+    MaxCircleOfConfusionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
@@ -1180,7 +1201,7 @@ bool CameraPlacementToolUIDialog::EnsureSliders( int activeSliderID )
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CameraPlacementToolUIDialog::UpdateFoVZControls()
+void CameraPlacementToolUIDialog::UpdateFieldOfViewControls()
 {
     mProjectionData[ 0 ] = mFieldOfViewSpinCtrl->GetValue();
     mFieldOfViewSlider->SetValue(
@@ -1252,33 +1273,102 @@ void CameraPlacementToolUIDialog::UpdateFarPlaneControls()
     ProjectionUpdate();
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::UpdateFocalDistanceControls()
+{
+    mDepthOfFieldData[ 0 ] = mFocalDistanceSpinCtrl->GetValue();
+    mFocalDistanceSlider->SetValue(
+        static_cast< int >( mDepthOfFieldData[ 0 ] ) * 10 );
+
+    FocalDistanceUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::UpdateFocalRangeControls()
+{
+    mDepthOfFieldData[ 1 ] = mFocalRangeSpinCtrl->GetValue();
+    mFocalRangeSlider->SetValue(
+        static_cast< int >( mDepthOfFieldData[ 1 ] ) * 10 );
+
+    FocalRangeUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::UpdateMaxCircleOfConfusionControls()
+{
+    mDepthOfFieldData[ 2 ] = mMaxCircleOfConfusionSpinCtrl->GetValue();
+    mMaxCircleOfConfusionSlider->SetValue(
+        static_cast< int >( mDepthOfFieldData[ 2 ] ) * 10 );
+
+    MaxCircleOfConfusionUpdate();
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolUIDialog::ProjectionUpdate()
 {
-    mCommandName = std::string( "PROJECTION_UPDATE" );
+mCommandName = std::string( "PROJECTION_UPDATE" );
 
-    ves::open::xml::DataValuePairSharedPtr projectionFieldOfViewDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionFieldOfViewDVP->SetData(
-        "projectionFieldOfView", mProjectionData[ 0 ] );
-    mInstructions.push_back( projectionFieldOfViewDVP );
+ves::open::xml::DataValuePairSharedPtr projectionFieldOfViewDVP(
+    new ves::open::xml::DataValuePair() );
+projectionFieldOfViewDVP->SetData(
+    "projectionFieldOfView", mProjectionData[ 0 ] );
+mInstructions.push_back( projectionFieldOfViewDVP );
 
-    ves::open::xml::DataValuePairSharedPtr projectionAspectRatioDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionAspectRatioDVP->SetData(
-        "projectionAspectRatio", mProjectionData[ 1 ] );
-    mInstructions.push_back( projectionAspectRatioDVP );
+ves::open::xml::DataValuePairSharedPtr projectionAspectRatioDVP(
+    new ves::open::xml::DataValuePair() );
+projectionAspectRatioDVP->SetData(
+    "projectionAspectRatio", mProjectionData[ 1 ] );
+mInstructions.push_back( projectionAspectRatioDVP );
 
-    ves::open::xml::DataValuePairSharedPtr projectionNearPlaneDVP(
-        new ves::open::xml::DataValuePair() );
-    projectionNearPlaneDVP->SetData(
-        "projectionNearPlane", mProjectionData[ 2 ]  );
-    mInstructions.push_back( projectionNearPlaneDVP );
+ves::open::xml::DataValuePairSharedPtr projectionNearPlaneDVP(
+    new ves::open::xml::DataValuePair() );
+projectionNearPlaneDVP->SetData(
+    "projectionNearPlane", mProjectionData[ 2 ]  );
+mInstructions.push_back( projectionNearPlaneDVP );
 
-    ves::open::xml::DataValuePairSharedPtr projectionFarPlaneDVP(
+ves::open::xml::DataValuePairSharedPtr projectionFarPlaneDVP(
+    new ves::open::xml::DataValuePair() );
+projectionFarPlaneDVP->SetData(
+    "projectionFarPlane", mProjectionData[ 3 ] );
+mInstructions.push_back( projectionFarPlaneDVP );
+
+SendCommandsToXplorer();
+ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::FocalDistanceUpdate()
+{
+    mCommandName = std::string( "FOCAL_DISTANCE" );
+
+    ves::open::xml::DataValuePairSharedPtr focalDistanceDVP(
         new ves::open::xml::DataValuePair() );
-    projectionFarPlaneDVP->SetData(
-        "projectionFarPlane", mProjectionData[ 3 ] );
-    mInstructions.push_back( projectionFarPlaneDVP );
+    focalDistanceDVP->SetData(
+        "focalDistance", mDepthOfFieldData[ 0 ] );
+    mInstructions.push_back( focalDistanceDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::FocalRangeUpdate()
+{
+    mCommandName = std::string( "FOCAL_RANGE" );
+
+    ves::open::xml::DataValuePairSharedPtr focalRangeDVP(
+        new ves::open::xml::DataValuePair() );
+    focalRangeDVP->SetData(
+        "focalRange", mDepthOfFieldData[ 1 ] );
+    mInstructions.push_back( focalRangeDVP );
+
+    SendCommandsToXplorer();
+    ClearInstructions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraPlacementToolUIDialog::MaxCircleOfConfusionUpdate()
+{
+    mCommandName = std::string( "MAX_CIRCLE_OF_CONFUSION" );
+
+    ves::open::xml::DataValuePairSharedPtr maxCircleOfConfusionDVP(
+        new ves::open::xml::DataValuePair() );
+    maxCircleOfConfusionDVP->SetData(
+        "maxCircleOfConfusion", mDepthOfFieldData[ 2 ] );
+    mInstructions.push_back( maxCircleOfConfusionDVP );
 
     SendCommandsToXplorer();
     ClearInstructions();

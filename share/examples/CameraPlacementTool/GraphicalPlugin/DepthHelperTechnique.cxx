@@ -44,8 +44,8 @@ using namespace cpt;
 
 ////////////////////////////////////////////////////////////////////////////////
 DepthHelperTechnique::DepthHelperTechnique()
-:
-ves::xplorer::scenegraph::Technique()
+    :
+    ves::xplorer::scenegraph::Technique()
 {
     DefinePasses();
 }
@@ -59,12 +59,11 @@ void DepthHelperTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
 
-        stateset->setRenderBinDetails( 1, std::string( "RenderBin" ) );
+        stateset->setRenderBinDetails( 2, std::string( "RenderBin" ) );
 
-        stateset->setTextureAttributeAndModes( 1,
+        stateset->setTextureAttributeAndModes( 0,
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
             < osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get(),
             osg::StateAttribute::ON );
@@ -79,7 +78,7 @@ void DepthHelperTechnique::DefinePasses()
             osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
 
         osg::ref_ptr< osg::Uniform > textureOneUniform =
-            new osg::Uniform( "Tex1", 1 );
+            new osg::Uniform( "texture1", 0 );
 
         stateset->addUniform( textureOneUniform.get() );
 

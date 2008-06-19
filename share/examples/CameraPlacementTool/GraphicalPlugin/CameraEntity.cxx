@@ -218,7 +218,7 @@ void CameraEntity::Initialize()
                                    osg::Vec3( 0, 1, 0 ),
                                    osg::Vec3( 0, 0, 1 ) );
     setViewMatrix( mInitialViewMatrix );
-    setProjectionMatrixAsPerspective( 30.0, 1.0, 5.0, 10.0 );
+    setProjectionMatrixAsPerspective( 40.0, 1.0, 1.0, 50.0 );
 
     //Initialize mMVPT
     mMVPT = osg::Matrix::identity();
@@ -252,6 +252,10 @@ void CameraEntity::Initialize()
 
     //Initialize mDepthOfFieldTechnique
     mDepthOfFieldTechnique = new cpt::DepthOfFieldTechnique();
+    mDepthOfFieldTechnique->GetTextureDimensionsUniform()->set(
+        static_cast< int >( 512 ), static_cast< int >( 512 ) );
+    mDepthOfFieldTechnique->GetMaxCircleOfConfusionUniform()->set(
+        static_cast< float >( 6.0 ) );
     mCameraViewQuadDCS->AddTechnique( "DepthOfField", mDepthOfFieldTechnique );
     mCameraViewQuadDCS->SetTechnique( "DepthOfField" );
 
@@ -264,9 +268,13 @@ void CameraEntity::Initialize()
     mProjectionTechnique->GetAlpha()->set(
         static_cast< float >( 0.3 ) );
     mProjectionTechnique->GetNearPlaneUniform()->set(
-        static_cast< float >( 5.0 ) );
+        static_cast< float >( 1.0 ) );
     mProjectionTechnique->GetFarPlaneUniform()->set(
-        static_cast< float >( 10.0 ) );
+        static_cast< float >( 50.0 ) );
+    mProjectionTechnique->GetFocalDistanceUniform()->set(
+        static_cast< float >( 15.0 ) );
+    mProjectionTechnique->GetFocalRangeUniform()->set(
+        static_cast< float >( 5.0 ) );
     mPluginDCS->AddTechnique( "Projection", mProjectionTechnique );
     mPluginDCS->SetTechnique( "Projection" );
 
@@ -639,6 +647,18 @@ void CameraEntity::DisplayProjectionEffect( bool onOff )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::DisplayDepthOfFieldEffect( bool onOff )
+{
+    if( onOff )
+    {
+        mCameraViewQuadDCS->SetTechnique( std::string( "DepthOfField" ) );
+    }
+    else
+    {
+        mCameraViewQuadDCS->SetTechnique( std::string( "Default" ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::DisplayCameraViewQuad( bool onOff )
 {
     mCameraViewQuadDCS->setNodeMask( onOff );
@@ -685,6 +705,24 @@ void CameraEntity::SetNamesAndDescriptions()
 void CameraEntity::SetProjectionEffectOpacity( double value )
 {
     mProjectionTechnique->GetAlpha()->set(
+        static_cast< float >( value ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::SetFocalDistance( double value )
+{
+    mProjectionTechnique->GetFocalDistanceUniform()->set(
+        static_cast< float >( value ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::SetFocalRange( double value )
+{
+    mProjectionTechnique->GetFocalRangeUniform()->set(
+        static_cast< float >( value ) );
+}
+////////////////////////////////////////////////////////////////////////////////
+void CameraEntity::SetMaxCircleOfConfusion( double value )
+{
+    mDepthOfFieldTechnique->GetMaxCircleOfConfusionUniform()->set(
         static_cast< float >( value ) );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -66,6 +66,10 @@ public:
         DEPTH_HELPER_WINDOW_RESOLUTION,
 
         PROJECTION_UPDATE,
+
+        FOCAL_DISTANCE,
+        FOCAL_RANGE,
+        MAX_CIRCLE_OF_CONFUSION,
     };
 
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );

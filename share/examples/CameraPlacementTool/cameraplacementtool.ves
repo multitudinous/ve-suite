@@ -54,7 +54,7 @@
             <transform>
               <translation>
                 <value>0</value>
-                <value>5</value>
+                <value>10</value>
                 <value>0</value>
               </translation>
               <scale>
@@ -64,7 +64,7 @@
               </scale>
               <rotation>
                 <value>0</value>
-                <value>0</value>
+                <value>35</value>
                 <value>0</value>
               </rotation>
             </transform>

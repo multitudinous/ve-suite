@@ -98,8 +98,8 @@ public:
 
         ID_FOCAL_DISTANCE_SPINCTRL,
         ID_FOCAL_DISTANCE_SLIDER,
-		ID_FOCUS_RANGE_SPINCTRL,
-		ID_FOCUS_RANGE_SLIDER,
+		ID_FOCAL_RANGE_SPINCTRL,
+		ID_FOCAL_RANGE_SLIDER,
 		ID_MAX_CIRCLE_OF_CONFUSION_SPINCTRL,
 		ID_MAX_CIRCLE_OF_CONFUSION_SLIDER,
     };
@@ -148,20 +148,28 @@ private:
     void OnFocalDistanceSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
     void OnFocalDistanceText( wxCommandEvent& event );
     void OnFocalDistanceSlider( wxCommandEvent& WXUNUSED( event ) );
-	void OnFocusRangeSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
-	void OnFocusRangeText( wxCommandEvent& event );
-	void OnFocusRangeSlider( wxCommandEvent& WXUNUSED( event ) );
+	void OnFocalRangeSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
+	void OnFocalRangeText( wxCommandEvent& event );
+	void OnFocalRangeSlider( wxCommandEvent& WXUNUSED( event ) );
 	void OnMaxCircleOfConfusionSpinCtrl( wxScrollEvent& WXUNUSED( event ) );
 	void OnMaxCircleOfConfusionText( wxCommandEvent& event );
 	void OnMaxCircleOfConfusionSlider( wxCommandEvent& WXUNUSED( event ) );
 
     bool EnsureSliders( int activeSliderID );
-    void UpdateFoVZControls();
+
+    void UpdateFieldOfViewControls();
     void UpdateAspectRatioControls();
 	void UpdateNearPlaneControls();
 	void UpdateFarPlaneControls();
+
+    void UpdateFocalDistanceControls();
+    void UpdateFocalRangeControls();
+    void UpdateMaxCircleOfConfusionControls();
+
     void ProjectionUpdate();
-    void DepthOfFieldUpdate();
+    void FocalDistanceUpdate();
+    void FocalRangeUpdate();
+    void MaxCircleOfConfusionUpdate();
 
     double mProjectionData[ 4 ];
     double mDepthOfFieldData[ 3 ];
@@ -190,8 +198,8 @@ private:
 
     ves::conductor::util::wxSpinCtrlDbl* mFocalDistanceSpinCtrl;
     wxSlider* mFocalDistanceSlider;
-    ves::conductor::util::wxSpinCtrlDbl* mFocusRangeSpinCtrl;
-    wxSlider* mFocusRangeSlider;
+    ves::conductor::util::wxSpinCtrlDbl* mFocalRangeSpinCtrl;
+    wxSlider* mFocalRangeSlider;
     ves::conductor::util::wxSpinCtrlDbl* mMaxCircleOfConfusionSpinCtrl;
     wxSlider* mMaxCircleOfConfusionSlider;
 
