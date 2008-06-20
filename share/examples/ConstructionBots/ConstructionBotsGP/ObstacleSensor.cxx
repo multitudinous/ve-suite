@@ -162,7 +162,7 @@ void ObstacleSensor::CollectInformation()
             osgUtil::LineSegmentIntersector::Intersection intersection =
                 mLineSegmentIntersector->getFirstIntersection();
             osg::Drawable* drawable = intersection.drawable.get();
-            osg::Vec4* color = &( static_cast< osg::Vec4Array* >(
+            const osg::Vec4* color = &( static_cast< osg::Vec4Array* >(
                 drawable->asGeometry()->getColorArray() )->at( 0 ) );
             if( !mAgentEntity->mBuildMode )
             {
@@ -170,7 +170,10 @@ void ObstacleSensor::CollectInformation()
             }
             else if( color->length() != 1.0 )
             {
-                mIntersections.push_back( intersection );         
+                mIntersections.push_back( intersection );
+
+                mAgentEntity->mBuildMode = false;
+                mAgentEntity->mPerimeterSensor->Reset();
             }
         }
 
@@ -247,7 +250,6 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
             targetForce.setValue( xNew, yNew, 0.0 );
         }
-
     }
     else
     {

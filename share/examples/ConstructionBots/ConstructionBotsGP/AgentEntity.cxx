@@ -109,19 +109,16 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
     if( !mHoldBlockSensor->HoldingBlock() )
     {
         mBlockSensor->CollectInformation();
-        if( mBlockSensor->BlockInView() )
+        if( mBlockSensor->BlockInView() &&
+            mBlockSensor->CloseToBlock() )
         {
-            //GoToBlock();
-
-            if( mBlockSensor->CloseToBlock() )
-            {
-                PickUpBlock();
-            }
+            PickUpBlock();
         }
     }
     else
     {
-        if( mBuildMode )
+        mSiteSensor->CollectInformation();
+        if( mSiteSensor->CloseToSite() )
         {
             mPerimeterSensor->CollectInformation();
             if( mPerimeterSensor->Aligned() )
@@ -132,19 +129,6 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
             if( mPerimeterSensor->PerimeterDetected() )
             {
                 FollowPerimeter();
-            }
-        }
-        else
-        {
-            mSiteSensor->CollectInformation();
-            if( mSiteSensor->SiteInView() )
-            {
-                //GoToSite();
-
-                if( mSiteSensor->CloseToSite() )
-                {
-                    InitiateBuildMode();
-                }
             }
         }
     }
@@ -159,8 +143,19 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
 void AgentEntity::AvoidObstacle()
 {
     //Get normalized resultant force vector and multiply by speed
+    double* speed( 0 );
+    if( mHoldBlockSensor->HoldingBlock() &&
+        mSiteSensor->CloseToSite() )
+    {
+        speed = &mBuildSpeed;
+    }
+    else
+    {
+        speed = &mMaxSpeed;
+    }
+
     btVector3 linearVelocity =
-        mObstacleSensor->GetNormalizedResultantForceVector() * mMaxSpeed;
+        mObstacleSensor->GetNormalizedResultantForceVector() * *speed;
     //Keep gravity in velocity
     linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
@@ -200,7 +195,8 @@ void AgentEntity::Build()
     GetDCS()->SetTranslationArray( position );
 
     mBuildMode = false;
-    mPerimeterSensor->Reset();
+    //mPerimeterSensor->Reset();
+    mObstacleSensor->SetForceAttractionConstant( 1.0 );
     mBlockSensor->DisplayGeometry( true );
     mObstacleSensor->DisplayGeometry( true );
 }
@@ -243,7 +239,6 @@ void AgentEntity::InitiateBuildMode()
     mTargetDCS = NULL;
     mBuildMode = true;
 
-    //mObstacleSensor->SetForceAttractionConstant( 1.0 );
     mSiteSensor->DisplayGeometry( false );
     mObstacleSensor->DisplayGeometry( false );
 }

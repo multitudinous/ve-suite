@@ -62,7 +62,7 @@ BlockSensor::BlockSensor( bots::AgentEntity* agentEntity )
     mBlockInView( false ),
     mCloseToBlock( false ),
     mAngle( 0 ), 
-    mAngleInc( 0.05 ),
+    mAngleInc( 0.1 ),
     mRange( 0 ),
     mNormalizedBlockVector( 0, 0, 0 )
 {
@@ -199,7 +199,7 @@ void BlockSensor::CollectInformation()
         blockVector.setValue(
             blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
-        if( blockVector.length() <= 2.121 )
+        if( blockVector.length() <= 1.5 )
         {
             mCloseToBlock = true;
         }

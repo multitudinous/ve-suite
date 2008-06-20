@@ -86,7 +86,7 @@ private:
     bool mPerimeterDetected;
 
     int* mLastClockWiseDetection;
-    osg::ref_ptr< osg::Drawable > previousDrawable;
+    osg::ref_ptr< osg::Drawable > mPreviousDrawable;
 
     double mRange;
 

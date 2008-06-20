@@ -142,10 +142,10 @@ void ConstructionWorld::InitializeFramework()
     }
 #endif
 
-    int numBlocks = 16;
+    int numBlocks = 8;
     int numAgents = 1;
     //Ensure that the grid size is odd for centrality purposes
-    int gridSize = 41;
+    int gridSize = 51;
 
     int halfPosition = static_cast< int >( gridSize * 0.5f );
     for( int j = 0; j < gridSize; ++j )
@@ -163,9 +163,10 @@ void ConstructionWorld::InitializeFramework()
 
     mOccupancyMatrix[ std::make_pair(  1,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
+    //mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
 
+    /*
     mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
     mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
@@ -180,7 +181,7 @@ void ConstructionWorld::InitializeFramework()
     mOccupancyMatrix[ std::make_pair(  0,  4 ) ].first = true;
     mOccupancyMatrix[ std::make_pair( -4,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -4 ) ].first = true;
-
+    */
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
 

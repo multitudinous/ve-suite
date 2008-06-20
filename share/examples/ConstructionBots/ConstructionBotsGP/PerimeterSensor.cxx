@@ -61,7 +61,7 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     mAligned( false ),
     mPerimeterDetected( false ),
     mLastClockWiseDetection( 0 ),
-    previousDrawable( NULL ),
+    mPreviousDrawable( 0 ),
     mRange( 0.1 ),
     mResultantForce( 0, 0, 0 ),
     mQueriedConnection( 0 )
@@ -214,8 +214,8 @@ void PerimeterSensor::CollectInformation()
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
-            osg::Drawable* currentDrawable =
-                mIntersections.back().drawable.get();
+            osg::ref_ptr< osg::Drawable > currentDrawable =
+                mIntersections.back().drawable;
 
             if( mLastClockWiseDetection )
             {
@@ -229,20 +229,20 @@ void PerimeterSensor::CollectInformation()
                 }
 
                 bool drawableTest( false );
-                if( previousDrawable.valid() )
+                if( mPreviousDrawable.valid() )
                 {
-                    drawableTest = ( previousDrawable == currentDrawable );
+                    drawableTest = ( mPreviousDrawable == currentDrawable );
                 }
 
                 if( ( modulusTest == 3 && cornerTest ) ||
                     ( modulusTest == 1 && drawableTest ) )
                 {
                     mAligned = true;
-                    mPerimeterDetected = false;
-                    mQueriedConnection = currentDrawable;
-                    delete mLastClockWiseDetection;
-                    mLastClockWiseDetection = NULL;
-                    //previousDrawable = NULL;
+                    //mPerimeterDetected = false;
+                    mQueriedConnection = currentDrawable.get();
+                    //delete mLastClockWiseDetection;
+                    //mLastClockWiseDetection = NULL;
+                    //mPreviousDrawable = NULL;
                 }
             }
 
@@ -252,11 +252,11 @@ void PerimeterSensor::CollectInformation()
             }
             *mLastClockWiseDetection = i;
 
-            if( !previousDrawable.valid() )
+            if( !mPreviousDrawable.valid() )
             {
-                previousDrawable = new osg::Geometry();
+                mPreviousDrawable = new osg::Geometry();
             }
-            previousDrawable = currentDrawable;
+            mPreviousDrawable = currentDrawable;
 
             previousSensor = true;
         }
@@ -272,27 +272,21 @@ void PerimeterSensor::CollectInformation()
     if( !mPerimeterDetected )
     {
         mPerimeterDetected = !mIntersections.empty();
-
-        //Need to simulate braking before the structure
-        btVector3 linearVelocity =
-            mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
-
-        //linearVelocity *= 0.99;
-        if( linearVelocity.length() != 0.0 )
+        if( mPerimeterDetected )
         {
-            linearVelocity.normalize();
+            mAgentEntity->InitiateBuildMode();
         }
-
-        mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
-            linearVelocity );
-
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Reset()
 {
+    delete mLastClockWiseDetection;
+    mLastClockWiseDetection = NULL;
+    mPreviousDrawable = NULL;
+
     mPerimeterDetected = false;
-    previousDrawable = NULL;
+    mAligned = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()

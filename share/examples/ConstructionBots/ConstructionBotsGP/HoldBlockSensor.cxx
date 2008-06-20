@@ -34,6 +34,9 @@
 // --- My Includes --- //
 #include "HoldBlockSensor.h"
 #include "AgentEntity.h"
+#include "PerimeterSensor.h"
+#include "BlockSensor.h"
+#include "ObstacleSensor.h"
 
 // --- OSG Includes --- //
 #include <osg/Geode>
@@ -131,6 +134,10 @@ void HoldBlockSensor::CollectInformation()
     if( !mHoldingBlock )
     {
         mAgentEntity->mHeldBlock = NULL;
+        mAgentEntity->mBlockSensor->DisplayGeometry( true );
+        mAgentEntity->mObstacleSensor->DisplayGeometry( true );
+
+        mAgentEntity->mPerimeterSensor->Reset();
 
         if( mAgentEntity->mBuildMode )
         {

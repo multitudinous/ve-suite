@@ -62,7 +62,7 @@ SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
     mSiteInView( false ),
     mCloseToSite( false ),
     mAngle( 0.0 ), 
-    mAngleInc( 0.05 ),
+    mAngleInc( 0.1 ),
     mRange( 0.0 ),
     mNormalizedSiteVector( 0.0, 0.0, 0.0 )
 {
@@ -192,9 +192,17 @@ void SiteSensor::CollectInformation()
         siteVector.setValue(
             sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
-        if( siteVector.length() <= 2.121 )
+        if( siteVector.length() <= 3.0 )
         {
             mCloseToSite = true;
+
+            double normalizeDistance = siteVector.length() / 3.0;
+            //std::cout << normalizeDistance << std::endl;
+
+            double forceAttractionConstant = 1 - 4.0 * log( normalizeDistance );
+            mAgentEntity->mObstacleSensor->SetForceAttractionConstant(
+                forceAttractionConstant );
+            //std::cout << forceAttractionConstant << std::endl;
         }
     }
 
