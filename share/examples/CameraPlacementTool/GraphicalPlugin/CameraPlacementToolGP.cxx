@@ -585,8 +585,8 @@ void CameraPlacementToolGP::InitializeResources()
 
         "void main() \n"
         "{ \n"
-	        "vec4 BlurDepth = texture2D( texture1, gl_TexCoord[ 0 ].st ); \n"
-	        "gl_FragColor = vec4( 0.2, BlurDepth.y, 0.2, 1.0 ); \n"
+	        "vec4 blurDepth = texture2D( texture1, gl_TexCoord[ 0 ].st ); \n"
+	        "gl_FragColor = vec4( blurDepth.x * 0.03, blurDepth.y, 0.0, 1.0 ); \n"
         "} \n";
 
         osg::ref_ptr< osg::Shader > renderBlurVertexShader = new osg::Shader();
