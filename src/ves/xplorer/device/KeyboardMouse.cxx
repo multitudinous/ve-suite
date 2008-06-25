@@ -793,7 +793,7 @@ void KeyboardMouse::SkyCam( )
     osg::BoundingSphere bs = activeSwitchDCS->computeBound();
 
     //Calculate the distance
-    double distance = 2 * bs.radius();
+    double distance =  bs.radius();
 
     //move the cad
     double osgTransformedPosition[ 3 ];
@@ -907,30 +907,62 @@ void KeyboardMouse::NavKeyboard()
         case gadget::KEY_K:
         {
             SkyCam();
+            break;
         }
 
         //keystrokes for skycam mode
         case gadget::KEY_UP:
         {
-            Zoom45( 0.002 );
+            //Grab the current matrix
+            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+            //    ves::xplorer::scenegraph::SceneManager::instance()->
+            //    GetActiveSwitchNode();
+            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+            
+            //Zoom45( ( bs.radius()) / 100000 );
+            Zoom45( 0.2 );
             ProcessNavigationEvents();
+            break;
         }
         case gadget::KEY_DOWN: 
         {
-            Zoom45( -0.002 );
+            //Grab the current matrix
+            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+            //    ves::xplorer::scenegraph::SceneManager::instance()->
+            //    GetActiveSwitchNode();
+            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+            
+            //Zoom45( -( bs.radius()) / 100000 );
+            Zoom45( -0.2 );
             ProcessNavigationEvents();
+            break;
         }
         case gadget::KEY_LEFT:
         {
-            Pan( 0.001, 0 );
+            //Grab the current matrix
+            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+            //    ves::xplorer::scenegraph::SceneManager::instance()->
+            //    GetActiveSwitchNode();
+            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+            
+            //Pan( ( bs.radius()) / 100000, 0 );
+            Pan( 0.1, 0 );
             ProcessNavigationEvents();
+            break;
         }
         case gadget::KEY_RIGHT:
         {
-            Pan( -0.001, 0 );
+            //Grab the current matrix
+            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+            //    ves::xplorer::scenegraph::SceneManager::instance()->
+            //    GetActiveSwitchNode();
+            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
+            
+            //Pan( -( bs.radius()) / 100000, 0 );
+            Pan( -0.1, 0 );
             ProcessNavigationEvents();
+            break;
         }
-
     }
 
     //Reset mKey
