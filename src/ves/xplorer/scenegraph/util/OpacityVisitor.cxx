@@ -64,12 +64,15 @@ OpacityVisitor::~OpacityVisitor()
 void OpacityVisitor::apply( osg::Geode& node )
 {
     osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
-    osg::ref_ptr< osg::Material > geode_material = static_cast< osg::Material* >( geode_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
+    osg::ref_ptr< osg::Material > geode_material = 
+        static_cast< osg::Material* >( geode_stateset->
+        getAttribute( osg::StateAttribute::MATERIAL ) );
 
     if( geode_material.valid() )
     {
         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
-        geode_stateset->setAttribute( geode_material.get(), osg::StateAttribute::ON );
+        geode_stateset->setAttribute( geode_material.get(), 
+            osg::StateAttribute::ON );
         //The stateset only needs set at the part level in VE-Suite.
         //The alpha an material information can be set at the higher level
         //because otherwise the renderbins end up being nested and cause odd
@@ -79,10 +82,17 @@ void OpacityVisitor::apply( osg::Geode& node )
 
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
     {
-        osg::ref_ptr< osg::StateSet > drawable_stateset = node.getDrawable( i )->getOrCreateStateSet();
-        osg::ref_ptr< osg::Material > drawable_material = static_cast< osg::Material* >( drawable_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
-        osg::ref_ptr< osg::Vec4Array > color_array = static_cast< osg::Vec4Array* >( node.getDrawable( i )->asGeometry()->getColorArray() );
-        osg::StateSet::TextureAttributeList drawable_tal = drawable_stateset->getTextureAttributeList();
+        osg::ref_ptr< osg::StateSet > drawable_stateset = 
+            node.getDrawable( i )->getOrCreateStateSet();
+        osg::ref_ptr< osg::Material > drawable_material = 
+            static_cast< osg::Material* >( 
+                drawable_stateset->getAttribute( 
+                osg::StateAttribute::MATERIAL ) );
+        osg::ref_ptr< osg::Vec4Array > color_array = 
+            static_cast< osg::Vec4Array* >( node.getDrawable( i )->
+                asGeometry()->getColorArray() );
+        osg::StateSet::TextureAttributeList drawable_tal = 
+            drawable_stateset->getTextureAttributeList();
 
         //The stateset only needs set at the part level in VE-Suite.
         //The alpha an material information can be set at the higher level
@@ -95,14 +105,17 @@ void OpacityVisitor::apply( osg::Geode& node )
             for( size_t j = 0; j < color_array->size(); j++ )
             {
                 color_array->at( j ).a() = m_alpha;
-                node.getDrawable( i )->asGeometry()->setColorArray( color_array.get() );
+                node.getDrawable( i )->asGeometry()->
+                    setColorArray( color_array.get() );
             }
         }
 
         if( drawable_material.valid() )
         {
-            drawable_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
-            drawable_stateset->setAttribute( drawable_material.get(), osg::StateAttribute::ON );
+            drawable_material->setAlpha( 
+                osg::Material::FRONT_AND_BACK, m_alpha );
+            drawable_stateset->setAttribute( drawable_material.get(), 
+                osg::StateAttribute::ON );
         }
 
         //This sets the gl blend mode for the textures on geometry so
@@ -113,23 +126,14 @@ void OpacityVisitor::apply( osg::Geode& node )
                 static_cast< osg::TexEnv* >( drawable_stateset->
                     getTextureAttribute( k, osg::StateAttribute::TEXENV ) );
 
-            if( texenv.valid() )
+            if( !texenv.valid() )
             {
-                texenv->setMode( osg::TexEnv::MODULATE );
-            }
-            else
-            {
-                if( transparent == true )
-                {
-                    texenv = new osg::TexEnv( osg::TexEnv::BLEND );
-                }
-                else
-                {
-                    texenv = new osg::TexEnv( osg::TexEnv::DECAL );
-                }
+                texenv = new osg::TexEnv();
             }
 
-            drawable_stateset->setTextureAttribute( k, texenv.get(), osg::StateAttribute::ON );
+            texenv->setMode( osg::TexEnv::MODULATE );
+            drawable_stateset->setTextureAttribute( k, texenv.get(), 
+                osg::StateAttribute::ON );
         }
     }
 }
@@ -171,7 +175,8 @@ void OpacityVisitor::apply( osg::Group& node )
 void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset)
 {
     osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
-    bf->setFunction( osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
+    bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
+        osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
     stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
     stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
 
