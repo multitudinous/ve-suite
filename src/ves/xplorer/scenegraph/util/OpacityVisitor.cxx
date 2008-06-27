@@ -105,30 +105,24 @@ void OpacityVisitor::apply( osg::Geode& node )
             drawable_stateset->setAttribute( drawable_material.get(), osg::StateAttribute::ON );
         }
 
+        //This sets the gl blend mode for the textures on geometry so
+        //that when transparency is needed tyhe texture renders properly
         for( size_t k = 0; k < drawable_tal.size(); k++ )
         {
-            osg::ref_ptr< osg::TexEnv > texenv = static_cast< osg::TexEnv* >( drawable_stateset->getTextureAttribute( k, osg::StateAttribute::TEXENV ) );
+            osg::ref_ptr< osg::TexEnv > texenv = 
+                static_cast< osg::TexEnv* >( drawable_stateset->
+                    getTextureAttribute( k, osg::StateAttribute::TEXENV ) );
 
             if( texenv.valid() )
             {
-                if( transparent == true )
-                {
-                    texenv->setMode( osg::TexEnv::BLEND );
-                }
-
-                else
-                {
-                    texenv->setMode( osg::TexEnv::DECAL );
-                }
+                texenv->setMode( osg::TexEnv::MODULATE );
             }
-
             else
             {
                 if( transparent == true )
                 {
                     texenv = new osg::TexEnv( osg::TexEnv::BLEND );
                 }
-
                 else
                 {
                     texenv = new osg::TexEnv( osg::TexEnv::DECAL );
@@ -172,8 +166,6 @@ void OpacityVisitor::apply( osg::Group& node )
     }
 
     osg::NodeVisitor::traverse( node );
-
-    //osg::NodeVisitor::apply( node );
 }
 ////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset)
