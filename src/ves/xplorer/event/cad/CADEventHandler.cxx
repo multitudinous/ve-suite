@@ -367,8 +367,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 material_initializer( partNode->GetDCS() );
             vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Opacity---" 
                 << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " << newPart->GetOpacity() 
-                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
+                << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
             m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity() );
         }
         else
