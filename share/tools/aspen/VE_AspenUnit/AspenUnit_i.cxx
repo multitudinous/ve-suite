@@ -134,6 +134,8 @@ void Body_Unit_i::StartCalc (
   // Add your implementation here
 	//executive_->SetModuleMessage(cur_id_,"Simulation running...\n");
 	bkp->aspendoc->runSolver(false);
+	AspenLog->SetSel(-1, -1);
+	AspenLog->ReplaceSel("Simulation Complete\r\n");
 	//executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
 	return_state=0;
 }
