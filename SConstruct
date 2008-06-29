@@ -516,12 +516,12 @@ if not SConsAddons.Util.hasHelpFlag():
    #fpcSubdirs = pj(buildDir,'VE_Installer','fpc')
    #installerSubdirs = pj(buildDir,'VE_Installer' )
    shareSubdirs = pj(buildDir,'share')
-   #lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
+   lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, osgOQSubdirs ]
+               shareSubdirs, osgOQSubdirs, lokiSubdirs ]
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':
