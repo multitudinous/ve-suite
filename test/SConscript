@@ -7,7 +7,7 @@ Import("baseEnv RootDir")
 env = baseEnv.Copy()
 
 # Make an action for generating the test files.
-cxx_test_flags = '--error-printer --have-eh'
+cxx_test_flags = '--error-printer --have-eh --abort-on-fail'
 cxx_test = Action('python %s %s -o $TARGET $SOURCES' % (
                   pj(RootDir, 'external', 'cxxtest-3.10.1', 'cxxtestgen.py'),
                   cxx_test_flags) )
@@ -18,13 +18,17 @@ env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
                              pj('#', 'external', 'loki-0.1.6', 'include'),
                              pj('#', 'src'),
                              '#'],
-                  LIBS = ['sqlite3'])
+                  LIBS = ['sqlite3', 'xerces-c'],
+                  CPPDEFINES = ['LOKI_ENABLE_FUNCTION',
+                                'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 
 # Provide a list of headers that have to be run through CxxTest to create
 # the source files.
 test_hdrs = Split("""
    CircularQueueTest.h
+   JuliusXMLParserTest.h
 """)
+# FIXME:  These files were commented out since they no longer build.
 """
    DatabaseTest.h
    ScalarDataTest.h
@@ -40,14 +44,12 @@ srcs = Split("""
    TestRunner.cpp
 """)
 
-#orig_srcs = Split("""
-#   Database.cxx
-#   SQLiteDriver.cxx
-#   TextureDataManager.cxx
-#   VectorData.cxx
-#""")
-#orig_srcs = map(lambda s: pj('#', 'VE_Xplorer', 'TextureBased', s), orig_srcs)
-#srcs.extend(orig_srcs)
+orig_srcs = Split("""
+   JuliusXMLParser.cxx
+""")
+
+orig_srcs = map(lambda s: pj('#', 'src', 'apps', 'voice', s), orig_srcs)
+srcs.extend(orig_srcs)
    
 loki_srcs = Split("""
    SmallObj.cpp
