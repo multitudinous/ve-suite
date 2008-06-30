@@ -46,6 +46,7 @@ NavigationPane API
 #include <wx/statbox.h>
 #include <wx/statbmp.h>
 #include <wx/scrolwin.h>
+#include <wx/timer.h>
 
 #include <vector>
 #include <string>
@@ -101,7 +102,8 @@ public:
         HEAD_ROTATE_CHK,
         SUB_ZERO_CHK,
         RESET_NAV_POSITION,
-        STORE_START_POSITION
+        STORE_START_POSITION,
+        UPDATE_TIMER_ID
         //NONE= -1000
     };
 
@@ -140,7 +142,7 @@ public:
     void SetPreferenceNavigationData( void );
     ///Idle function
     //virtual void OnInternalIdle( void );
-    void OnIdle( wxIdleEvent& event );
+    void OnTimer( wxTimerEvent& event );
     ///Store Start Position event handler
     void OnStoreStartPosition( wxCommandEvent& event );
     ///Get data back from xplorer
@@ -175,6 +177,8 @@ protected:
     wxCheckBox* headRotationChk;
     wxCheckBox* subZeroChk;
     wxButton*   resetNavPosition;
+    wxTimer mTimer;
+
 protected:
     wxImage* _image1;
     wxImage* _image2;

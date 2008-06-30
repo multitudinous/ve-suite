@@ -86,7 +86,8 @@ BEGIN_EVENT_TABLE( NavigationPane, wxDialog )
     EVT_CHECKBOX( HEAD_ROTATE_CHK,      NavigationPane::OnHeadCheck )
     EVT_CHECKBOX( SUB_ZERO_CHK,         NavigationPane::OnSubZeroCheck )
     //EVT_LEFT_UP(NavigationPane::onMouse)
-    EVT_IDLE( NavigationPane::OnIdle )
+    //EVT_IDLE( NavigationPane::OnIdle )
+    EVT_TIMER( UPDATE_TIMER_ID, NavigationPane::OnTimer )
 END_EVENT_TABLE()
 
 BEGIN_EVENT_TABLE( UI_NavButton, wxButton )
@@ -97,9 +98,11 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 NavigationPane::NavigationPane( wxWindow* parent )
-        : wxDialog( parent, -1, _( "Navigation Pane" ),
+        : 
+        wxDialog( parent, -1, _( "Navigation Pane" ),
                     wxDefaultPosition, wxDefaultSize,
-                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP )
+                    ( wxDEFAULT_DIALOG_STYLE | wxRESIZE_BORDER | wxMAXIMIZE_BOX | wxMINIMIZE_BOX ) & ~ wxSTAY_ON_TOP ),
+        mTimer( this, UPDATE_TIMER_ID )
 {
     _activeButton = NONE;
 
@@ -152,6 +155,9 @@ NavigationPane::NavigationPane( wxWindow* parent )
     dataValueName = "Z_ZERO_PLANE";
     cIso_value = subZeroChk->GetValue();
     SendCommandsToXplorer();
+
+    //Setup the update timer
+    mTimer.Start( 500 );
 }
 ////////////////////////////////////////////////////
 NavigationPane::~NavigationPane( void )
@@ -600,7 +606,7 @@ void NavigationPane::SendCommandsToXplorer( void )
     SetPreferenceNavigationData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED( event ) )
+void NavigationPane::OnTimer( wxTimerEvent& WXUNUSED( event ) )
 {
     //only update the gui when it is in focus and is being used
     //another method would be the wxTopLevelWindow::IsActive
@@ -611,7 +617,10 @@ void NavigationPane::OnIdle( wxIdleEvent& WXUNUSED( event ) )
     {
         UpdateNavigationData();
         UpdateXplorerData();
-        UpdateWindowUI( wxUPDATE_UI_FROMIDLE );
+        if( wxUpdateUIEvent::CanUpdate( this ) )
+        {
+            UpdateWindowUI( wxUPDATE_UI_FROMIDLE );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
