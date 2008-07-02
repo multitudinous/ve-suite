@@ -469,7 +469,7 @@ void App::contextPostDraw()
     VPR_PROFILE_GUARD_HISTORY( "App::contextPostDraw", 20 );
     _tbvHandler->PingPongTextures();
     //here for testing...
-    glFinish();
+    //glFinish();
 }
 #endif//_OSG
 ////////////////////////////////////////////////////////////////////////////////
@@ -949,7 +949,7 @@ void App::draw()
     glPopAttrib();
 
     //Here for testing purposes
-    glFlush();
+    //glFlush();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::update( void )
