@@ -306,7 +306,7 @@ void ModelCADHandler::SetActiveAttributeOnNode( std::string nodeID,
     }
 }
 ////////////////////////////////////////////////////////////////////////
-void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity )
+void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity, bool storeState )
 {
     try
     {
@@ -318,12 +318,12 @@ void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity )
         if( AssemblyExists(nodeID) )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( m_assemblyList[nodeID].get(), transparent, opacity );
+            opacity_visitor( m_assemblyList[nodeID].get(), storeState, transparent, opacity );
         }
         else if( PartExists( nodeID ) )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( m_partList[nodeID]->GetDCS(), transparent, opacity );
+            opacity_visitor( m_partList[nodeID]->GetDCS(), storeState, transparent, opacity );
         }
     }
     catch ( ... )
@@ -350,7 +350,7 @@ void ModelCADHandler::MakeCADRootTransparent()
         if( iter->second->GetTransparentFlag() )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( iter->second->GetDCS(), true, 0.3f );
+            opacity_visitor( iter->second->GetDCS(), false, true, 0.3f );
         }
     }
  }
@@ -369,7 +369,7 @@ void ModelCADHandler::MakeCADRootOpaque()
         if( iter->second->GetTransparentFlag() )
         {
             ves::xplorer::scenegraph::util::OpacityVisitor
-            opacity_visitor( iter->second->GetDCS(), false, 1.0f );
+            opacity_visitor( iter->second->GetDCS(), false, false, 1.0f );
         }
     }
 }

@@ -160,7 +160,9 @@ public:
     ///Update the opacity for a specified CADNode
     ///\param nodeID The CADNode
     ///\param opacity The value of the opacity.
-    void UpdateOpacity( std::string nodeID, float opacity );
+    ///\param storeState Tell the opacity visitor wether or not to 
+    ///store the original color and material state
+    void UpdateOpacity( std::string nodeID, float opacity, bool storeState );
 
     ///Get a specific part.
     ///\param partID The ID of the part to search form

@@ -57,7 +57,8 @@ namespace util
 class VE_SCENEGRAPH_UTILS_EXPORTS OpacityVisitor : public osg::NodeVisitor
 {
 public:
-    OpacityVisitor( osg::Node* osg_node, bool state, float alpha=1.0 );
+    OpacityVisitor( osg::Node* osg_node, bool storeState, 
+        bool state, float alpha=1.0 );
     virtual ~OpacityVisitor();
 
     virtual void apply( osg::Geode& node );
@@ -72,7 +73,9 @@ public:
 private:
     bool transparent;
     float m_alpha;
-
+    ///If you want the visitor to attach the statesets to the drawables
+    ///so that state can be saved after a file is loaded in
+    bool mStoreState;
 };
 }
 }

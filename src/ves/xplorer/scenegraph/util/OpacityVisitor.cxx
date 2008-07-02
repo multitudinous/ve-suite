@@ -48,10 +48,12 @@
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool state, float alpha )
+OpacityVisitor::OpacityVisitor( osg::Node* osg_node, bool storeState, 
+    bool state, float alpha )
         :NodeVisitor( TRAVERSE_ALL_CHILDREN ),
          transparent( state ),
-         m_alpha( alpha )
+         m_alpha( alpha ),
+         mStoreState( storeState )
 {
     osg_node->accept( *this );
 }
@@ -82,15 +84,19 @@ void OpacityVisitor::apply( osg::Geode& node )
 
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
     {
+        //Stateset for the drawable
         osg::ref_ptr< osg::StateSet > drawable_stateset = 
             node.getDrawable( i )->getOrCreateStateSet();
+        //Material from the stateset
         osg::ref_ptr< osg::Material > drawable_material = 
             static_cast< osg::Material* >( 
                 drawable_stateset->getAttribute( 
                 osg::StateAttribute::MATERIAL ) );
+        //Colors for the stateset
         osg::ref_ptr< osg::Vec4Array > color_array = 
             static_cast< osg::Vec4Array* >( node.getDrawable( i )->
                 asGeometry()->getColorArray() );
+        //Texture for the stateset
         osg::StateSet::TextureAttributeList drawable_tal = 
             drawable_stateset->getTextureAttributeList();
 
@@ -99,24 +105,63 @@ void OpacityVisitor::apply( osg::Geode& node )
         //because otherwise the renderbins end up being nested and cause odd
         //problems.
         //SetupBlendingForStateSet( drawable_stateset.get() );
-
-        if( color_array.valid() )
+        if( mStoreState )
         {
-            for( size_t j = 0; j < color_array->size(); j++ )
+            //The first time we come through here store the original state
+            //for the colors and the materials so that we can determine
+            //if we should mess with the opacity
+            if( color_array.valid() )
             {
-                color_array->at( j ).a() = m_alpha;
-                node.getDrawable( i )->asGeometry()->
-                    setColorArray( color_array.get() );
+                node.getDrawable( i )->setUserData( 
+                    new osg::Vec4Array( (*color_array.get()), 
+                    osg::CopyOp::DEEP_COPY_ALL ) );
+            }
+            
+            if( drawable_material.valid() )
+            {
+                drawable_stateset->setUserData( 
+                    new osg::Material( (*drawable_material.get()), 
+                    osg::CopyOp::DEEP_COPY_ALL ) );
             }
         }
-
+        
+        if( color_array.valid() )
+        {
+            osg::ref_ptr< osg::Vec4Array > temp_color_array = 
+                static_cast< osg::Vec4Array* >( 
+                node.getDrawable( i )->getUserData() );
+            for( size_t j = 0; j < color_array->size(); j++ )
+            {
+                //If it is opaque then change the surface but if it is 
+                //transparent then do not mess with the surface
+                if( temp_color_array->at( j ).a() == 1.0f )
+                {
+                    color_array->at( j ).a() = m_alpha;                        
+                }
+            }
+            node.getDrawable( i )->asGeometry()->
+                setColorArray( color_array.get() );
+        }
+        
         if( drawable_material.valid() )
         {
-            drawable_material->setAlpha( 
-                osg::Material::FRONT_AND_BACK, m_alpha );
-            drawable_stateset->setAttribute( drawable_material.get(), 
-                osg::StateAttribute::ON );
-        }
+            osg::ref_ptr< osg::Material > temp_drawable_material = 
+                static_cast< osg::Material* >( 
+                drawable_stateset->getUserData() );
+                
+            //If it is opaque then change the surface but if it is 
+            //transparent then do not mess with the surface
+            if( ( temp_drawable_material->getAmbient( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) && 
+               ( temp_drawable_material->getDiffuse( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) && 
+               ( temp_drawable_material->getSpecular( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) && 
+               ( temp_drawable_material->getEmission( osg::Material::FRONT_AND_BACK )[3] == 1.0f ) )
+            {
+                drawable_material->setAlpha( 
+                    osg::Material::FRONT_AND_BACK, m_alpha );
+                drawable_stateset->setAttribute( drawable_material.get(), 
+                                                osg::StateAttribute::ON );
+            }
+        }            
 
         //This sets the gl blend mode for the textures on geometry so
         //that when transparency is needed tyhe texture renders properly

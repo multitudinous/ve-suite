@@ -297,7 +297,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
         vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t\t" << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
-        m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity() );
+        m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity(), true );
     }
     else if( activeNode->GetNodeType() == "Part" )
     {
@@ -369,7 +369,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
                 << newPart->GetOpacity() << std::endl << vprDEBUG_FLUSH;
-            m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity() );
+            m_cadHandler->UpdateOpacity( newPart->GetID(), newPart->GetOpacity(), true );
         }
         else
         {
