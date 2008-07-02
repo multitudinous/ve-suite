@@ -54,6 +54,7 @@ class Text;
 
 // --- C/C++ Libraries --- //
 #include <vector>
+#include <sstream>
 
 namespace ves
 {
@@ -128,6 +129,8 @@ private:
     osg::ref_ptr< osgText::Text > mWCSyText;
     ///<Text for the z world coordinate system
     osg::ref_ptr< osgText::Text > mWCSzText;
+    ///Used for print fps to the screen
+    std::stringstream mFps;
 };
 }
 }

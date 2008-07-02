@@ -47,9 +47,6 @@
 
 #include <osgText/Text>
 
-// --- C/C++ Libraries --- //
-#include <sstream>
-
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,6 +146,12 @@ void HeadsUpDisplay::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void HeadsUpDisplay::LatePreFrame()
 {
+    if( (mFramerateTextGeode->getNodeMask() == 0) && 
+        (mGeometryWCS->GetDCS()->getNodeMask() == 0) )
+    {
+        return;
+    }
+
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
@@ -165,11 +168,11 @@ void HeadsUpDisplay::LatePreFrame()
 
     if( mFramerateTextGeode->getNodeMask() != 0 )
     {
-        std::stringstream ss;
-        ss << ves::xplorer::EnvironmentHandler::instance()->GetFrameRate();
-        ss << " fps";
+        mFps.str( "" );
+        mFps << ves::xplorer::EnvironmentHandler::instance()->GetFrameRate();
+        mFps << " fps";
 
-        mFramerateText->setText( ss.str() );
+        mFramerateText->setText( mFps.str() );
     }
 
     if( mGeometryWCS->GetDCS()->getNodeMask() != 0 )

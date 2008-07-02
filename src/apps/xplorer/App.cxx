@@ -365,14 +365,19 @@ void App::latePreFrame( void )
     static long lastFrame = 0;
     //Used for framerate calculation as integers only
     static float lastTime = 0.0f;
+    static unsigned int profileCounter = 0;
 
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
-    //The calls below are order dependent so do not move them around
-    //call the parent method
-    m_vjobsWrapper->GetUpdateClusterStateVariables();
-    //This should be called after the update so that
-    //all the singletons below get the updated command
-    m_vjobsWrapper->PreFrameUpdate();
+    ///////////////////////
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame m_vjobsWrapper", 20 );
+        //The calls below are order dependent so do not move them around
+        //call the parent method
+        m_vjobsWrapper->GetUpdateClusterStateVariables();
+        //This should be called after the update so that
+        //all the singletons below get the updated command
+        m_vjobsWrapper->PreFrameUpdate();
+    }
     //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
     if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
     {
@@ -381,72 +386,96 @@ void App::latePreFrame( void )
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel
     }
-
-    float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
+    float deltaTime = 0;
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
+        float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
 #ifdef _OSG
-    //This is order dependent
-    //don't move above function call
-    _frameStamp->setFrameNumber( _frameNumber );
-    _frameStamp->setReferenceTime( current_time );
+        //This is order dependent
+        //don't move above function call
+        _frameStamp->setFrameNumber( _frameNumber );
+        _frameStamp->setReferenceTime( current_time );
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-    _frameStamp->setSimulationTime( current_time );
+        _frameStamp->setSimulationTime( current_time );
 #endif
-    //This is a frame rate calculation
-    float deltaTime = current_time - lastTime;
-    ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( deltaTime );
-    if( deltaTime >= 1.0f )
-    {
-        float framerate;
-        framerate = _frameNumber - lastFrame;
-        ves::xplorer::EnvironmentHandler::instance()->SetFrameRate( framerate );
-
-        lastTime = current_time;
-        lastFrame = _frameNumber;
-    }
-    
-    if( ( vpr::Debug::instance()->isDebugEnabled() ) )// && ( 3 <= vpr::Debug::instance()->getLevel() ) )
-    {
-        if( ( _frameNumber % 500 ) == 0.0f )
+        //This is a frame rate calculation
+        deltaTime = current_time - lastTime;
+        if( deltaTime > 1 )
         {
-            vprDEBUG( vesDBG, 3 ) << " App::latePreFrame Profiling data for frame "
-                << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
-            VPR_PROFILE_RESULTS();
+            float framerate;
+            framerate = _frameNumber - lastFrame;
+            ves::xplorer::EnvironmentHandler::instance()->SetFrameRate( framerate );
+
+            lastTime = current_time;
+            lastFrame = _frameNumber;
         }
-        
-        if( 3 >= vpr::Debug::instance()->getLevel() )
+
+        if( ( vpr::Debug::instance()->isDebugEnabled() ) )// && ( 3 <= vpr::Debug::instance()->getLevel() ) )
         {
-            osgUtil::StatsVisitor stats;
-            getScene()->accept( stats );
-            std::ostringstream statsStream;
-            stats.print( statsStream );
-            vprDEBUG( vesDBG, 3 ) << statsStream.str() << std::endl 
-                << vprDEBUG_FLUSH;
-        }        
-    }    
+            if( profileCounter == 500 )
+            {
+                vprDEBUG( vesDBG, 3 ) << " App::latePreFrame Profiling data for frame "
+                    << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
+                VPR_PROFILE_RESULTS();
+                profileCounter = 0;
+            }
+
+            if( 2 < vpr::Debug::instance()->getLevel() )
+            {
+                osgUtil::StatsVisitor stats;
+                getScene()->accept( stats );
+                std::ostringstream statsStream;
+                stats.print( statsStream );
+                vprDEBUG( vesDBG, 3 ) << statsStream.str() << std::endl 
+                    << vprDEBUG_FLUSH;
+            }        
+        }  
 #endif
-
-    ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();
+    }
     ///////////////////////
-    ModelHandler::instance()->PreFrameUpdate();
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame PhysicsSimulator", 20 );
+        ves::xplorer::scenegraph::PhysicsSimulator::instance()->UpdatePhysics( deltaTime );
+    }
     ///////////////////////
-    EnvironmentHandler::instance()->LatePreFrameUpdate();
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame SceneManager", 20 );
+        ves::xplorer::scenegraph::SceneManager::instance()->PreFrameUpdate();
+    }
     ///////////////////////
-    SteadyStateVizHandler::instance()->PreFrameUpdate();
-
-    _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
-    _tbvHandler->PreFrameUpdate();
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame ModelHandler", 20 );
+        ModelHandler::instance()->PreFrameUpdate();
+    }
     ///////////////////////
-    cfdExecutive::instance()->PreFrameUpdate();
-
-#ifdef _OSG
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame EnvironmentHandler", 20 );
+        EnvironmentHandler::instance()->LatePreFrameUpdate();
+    }
+    ///////////////////////
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame SteadyStateVizHandler", 20 );
+        SteadyStateVizHandler::instance()->PreFrameUpdate();
+    }
+    ///////////////////////
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame _tbvHandler", 20 );
+        _tbvHandler->SetCurrentTime( this->m_vjobsWrapper->GetSetAppTime( -1 ) );
+        _tbvHandler->PreFrameUpdate();
+    }
+    ///////////////////////
+    {
+        VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame cfdExecutive", 20 );
+        cfdExecutive::instance()->PreFrameUpdate();
+    }
     //profile the update call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame update", 20 );
         this->update();
     }
-#endif
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
+    profileCounter += 1;
 
     if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "SCREEN_SHOT" )
     {
