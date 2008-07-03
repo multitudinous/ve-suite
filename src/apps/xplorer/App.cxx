@@ -469,7 +469,7 @@ void App::latePreFrame( void )
     _frameNumber += 1;
     mProfileCounter += 1;
 
-    if( tempCommandName == "SCREEN_SHOT" )
+    if( !tempCommandName.compare( "SCREEN_SHOT" ) )
     {
         captureNextFrameForWeb = true;
         m_vjobsWrapper->GetXMLCommand()->
@@ -499,21 +499,14 @@ void App::postFrame()
     VPR_PROFILE_GUARD_HISTORY( "App::postFrame", 20 );
     vprDEBUG( vesDBG, 3 ) << "|postFrame" << std::endl << vprDEBUG_FLUSH;
 
-#ifdef _OSG
-    //svUpdate = false;
-    //cfdEnvironmentHandler::instance()->ResetBackgroundColorUpdateFlag();
     time_since_start = _timer.delta_s( _start_tick, _timer.tick() );
-#endif  //_OSG
 
-
-#ifdef _OSG
     this->m_vjobsWrapper->GetSetAppTime( time_since_start );
     EnvironmentHandler::instance()->PostFrameUpdate();
     //this->m_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 
     ///update the transient frame number on the master
     _tbvHandler->UpdateTransientFrame();
-#endif   //_OSG
     cfdExecutive::instance()->PostFrameUpdate();
 
     this->m_vjobsWrapper->GetCfdStateVariables();

@@ -30,6 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/xplorer/CommandHandler.h>
+
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/ModelHandler.h>
 
@@ -183,6 +185,8 @@ void ModelCADHandler::CreateAssembly( std::string assemblyID )
 void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
                                   std::string parentID )
 {
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Loading file: " + fileName +".\n" );
     ves::xplorer::scenegraph::CADEntity* tempCAD =
         ModelHandler::instance()->IsCADFileLoaded( fileName );
     if( tempCAD )
@@ -214,6 +218,8 @@ void ModelCADHandler::CreatePart( std::string fileName, std::string partID,
     ModelHandler::instance()->RegisterCADFile( m_partList[ partID ] );
     //add key pointer to physics map for bullet rigid body
     //add data pair for transform node
+    ves::xplorer::CommandHandler::instance()
+        ->SendConductorMessage( "Loaded file: " + fileName +".\n" );
 }
 /////////////////////////////////////////////////////
 void ModelCADHandler::RemoveNode( std::string nodeID,

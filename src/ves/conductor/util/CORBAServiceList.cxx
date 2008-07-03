@@ -317,9 +317,12 @@ bool CORBAServiceList::DisconnectFromCE( void )
 {
     try
     {
-        veCE->UnRegisterUI( p_ui_i->UIName_.c_str() );
-
-        GetMessageLog()->SetMessage( "Disconnect successful.\n" );
+        if( p_ui_i )
+        {
+            veCE->UnRegisterUI( p_ui_i->UIName_.c_str() );
+            
+            GetMessageLog()->SetMessage( "Disconnect successful.\n" );            
+        }
     }
     catch ( CORBA::SystemException& ex )
     {

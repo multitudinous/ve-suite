@@ -601,26 +601,26 @@ void cfdQuatCamHandler::PreFrameUpdate()
 {
     //If a quat is active this will move the cam to the next location
     currentFrame += 1;
-
-    std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
-        currentEventHandler;
-    if( ModelHandler::instance()->GetXMLCommand() )
+    ves::open::xml::CommandPtr tempCommand = 
+        ModelHandler::instance()->GetXMLCommand();
+    if( tempCommand )
     {
         vprDEBUG( vesDBG, 3 )
             << "|\tcfdQuatCamHandler::PreFrameUpdate Command Name : "
-            << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
+            << tempCommand->GetCommandName()
             << std::endl << vprDEBUG_FLUSH;
+        std::map< std::string, ves::xplorer::event::EventHandler* >::iterator
+            currentEventHandler;
         currentEventHandler = mEventHandlers.find(
-            ModelHandler::instance()->GetXMLCommand()->GetCommandName() );
+            tempCommand->GetCommandName() );
         if( currentEventHandler != mEventHandlers.end() )
         {
             vprDEBUG( vesDBG, 1 )
                 << "|\t cfdQuatCamHandler::PreFrameUpdate Executing: "
-                << ModelHandler::instance()->GetXMLCommand()->GetCommandName()
+                << tempCommand->GetCommandName()
                 << std::endl << vprDEBUG_FLUSH;
             currentEventHandler->second->SetGlobalBaseObject();
-            currentEventHandler->second->Execute(
-                ModelHandler::instance()->GetXMLCommand() );
+            currentEventHandler->second->Execute( tempCommand );
         }
         else
         {
