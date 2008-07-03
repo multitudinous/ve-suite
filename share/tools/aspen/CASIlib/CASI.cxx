@@ -372,6 +372,13 @@ namespace CASI
 			return s;
 		case VT_BSTR|VT_BYREF:
 			return CString(*(va.pbstrVal));
+        case VT_EMPTY:
+            //used with variant is empty
+            return CString("");
+        case VT_DISPATCH:
+            //not sure what is supposed to be returned
+            //i am just hardcoding some results
+            return CString("Node");
 		default:
           //ASSERT(FALSE); // unknown VARIANT type (this ASSERT is optional)
 			sprintf_s(str, "%d", va.vt);

@@ -58,7 +58,8 @@ namespace CASI
 		CString getOptionList(); //The string displayed in the Option List Box
 		CString getOptions(); //The string displayed in the Option Box, deliminate by /n for each option
 		CString getRecordType(); //The string displayed in the Record Type Box;
-		CString isOutput(); //The string in the Output Box, 1 means true, 0 means false
+		long getDimension();
+        CString isOutput(); //The string in the Output Box, 1 means true, 0 means false
 		CString isEnterable(); //The string in the Enterable Box, 1 means true, 0 means false
 		CString hasChild(); //The string in the HasChild Box, 1 means true, 0 means false
 		CString upLimit(); //the up Limit of the value

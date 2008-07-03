@@ -252,6 +252,28 @@ namespace CASI
 		
 	}
 
+    long Variable::getDimension()
+    {
+		IHNode node;
+
+		node=nodeNav(ihRoot,  nodePath);
+		if (node.m_lpDispatch==NULL)
+			return _T(0);
+		VARIANT val;
+		VARIANTARG force;
+
+		::VariantInit(&val);
+		::VariantInit(&force);
+
+		//if (node.GetHasAttribute(HAP_RECORDTYPE))
+		//{
+		//	val=node.GetAttributeValue(HAP_RECORDTYPE, force);
+		//	return variantToString(val);	
+		//}
+		//return CString("NOATTR");
+        return node.GetDimension();
+    }
+
 	CString Variable::isOutput() //The string in the Output Box, 1 means true, 0 means false
 	{
 		IHNode node;

@@ -336,7 +336,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
         //create the dvp
         ves::open::xml::DataValuePairPtr
             data( new ves::open::xml::DataValuePair() );
-        data->SetData( std::string( "ModuleName" ), compName + "." );
+        data->SetData( std::string( "ModuleName" ), compName );
         returnState->AddDataValuePair( data );
         data = ves::open::xml::DataValuePairPtr(
             new ves::open::xml::DataValuePair() );
@@ -410,6 +410,11 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
                 DefaultValueEdit->SetValue( wxString(
                     pair->GetDataString().c_str(),wxConvUTF8 ) );
             }
+            else if( pair->GetDataName() == "Dimension" )
+            {
+                DimensionEdit->SetValue( wxString(
+                    pair->GetDataString().c_str(), wxConvUTF8 ) );
+            }
             else if( pair->GetDataName() == "Gender" )
             {
                 GenderEdit->SetValue( wxString( pair->GetDataString().c_str(),
@@ -425,16 +430,16 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
                 MultiportEdit->SetValue( wxString(
                     pair->GetDataString().c_str(), wxConvUTF8 ) );
             }
-            else if( pair->GetDataName() == "NumChild" )
-            {
-                std::stringstream conversion;
-                unsigned int intValue;
-                pair->GetData( intValue );
-                conversion << intValue;
-                DimensionEdit->SetValue( wxString( conversion.str().c_str(),
-                    wxConvUTF8 ) );
-            }
-            else if( pair->GetDataName() == "optionList" )
+            //else if( pair->GetDataName() == "NumChild" )
+            //{
+            //    std::stringstream conversion;
+            //    unsigned int intValue;
+            //    pair->GetData( intValue );
+            //    conversion << intValue;
+            //    DimensionEdit->SetValue( wxString( conversion.str().c_str(),
+            //        wxConvUTF8 ) );
+            //}
+            else if( pair->GetDataName() == "OptionList" )
             {
                 OptionListEdit->SetValue( wxString(
                     pair->GetDataString().c_str(), wxConvUTF8 ) );

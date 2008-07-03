@@ -1593,7 +1593,7 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname,
     unsigned int j;
 
     ves::open::xml::CommandPtr properties( new ves::open::xml::Command() );
-    const int propSize=23;
+    const int propSize = 24;
     properties->SetCommandName((modname+paramName).c_str());
     std::cout<<(modname+paramName).c_str()<<std::endl;
 
@@ -1623,6 +1623,11 @@ std::string BKPParser::GetInputModuleParamProperties(std::string modname,
 
     Props[j]->SetDataName("CompletionStatus");
     Props[j++]->SetDataString((char*)LPCTSTR(tempvar.getCompletionStatus()));
+
+    Props[j]->SetDataName("Dimension");
+    std::stringstream convert;
+    convert << tempvar.getDimension();
+    Props[j++]->SetDataString(convert.str().c_str());
 
     Props[j]->SetDataName("DefaultValue");
     Props[j++]->SetDataString((char*)LPCTSTR(tempvar.getDefaultValue()));
