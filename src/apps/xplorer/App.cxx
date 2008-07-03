@@ -111,7 +111,10 @@ App::App( int argc, char* argv[] )
         readyToWriteWebImage( false ),
         writingWebImageNow( false ),
         captureNextFrameForWeb( false ),
-        isCluster( false )
+        isCluster( false ),
+        mLastFrame( 0 ),
+        mLastTime( 0 ),
+        mProfileCounter( 0 )
 {
 #ifdef _OSG
     osg::Referenced::setThreadSafeReferenceCounting( true );
@@ -160,18 +163,12 @@ void App::exit()
     ves::xplorer::network::cfdExecutive::instance()->UnRegisterExecutive();
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
 osg::Group* App::getScene()
-#endif
 {
     //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
     //   "C:/test.osg");
-#ifdef _OSG
     return ( osg::Group* )ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
-#endif
 }
-
-#ifdef _OSG
 ////////////////////////////////////////////////////////////////////////////////
 void App::contextInit()
 {
@@ -276,7 +273,6 @@ void App::bufferPreDraw()
 {
     ;
 }
-#endif //_OSG
 ////////////////////////////////////////////////////////////////////////////////
 void App::SetWrapper( VjObsWrapper* input )
 {
@@ -300,9 +296,7 @@ void App::initScene( void )
 
     this->getScene()->addChild( light_source_0.get() );
 
-#ifdef _OSG
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
-#endif
 
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
@@ -312,7 +306,8 @@ void App::initScene( void )
     EnvironmentHandler::instance()->Initialize();
     for( int i = 1;i < argc;++i )
     {
-        if (( std::string( argv[i] ) == std::string( "-VESDesktop" ) ) && ( argc >= i + 2 ) )
+        if( ( std::string( argv[i] ) == std::string( "-VESDesktop" ) ) && 
+            ( argc >= i + 2 ) )
         {
             EnvironmentHandler::instance()->
             SetDesktopSize( atoi( argv[i+1] ), atoi( argv[i+2] ) );
@@ -362,11 +357,8 @@ void App::preFrame( void )
 void App::latePreFrame( void )
 {
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
-    static long lastFrame = 0;
-    //Used for framerate calculation as integers only
-    static float lastTime = 0.0f;
-    static unsigned int profileCounter = 0;
-
+    std::string tempCommandName = 
+        m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
     {
@@ -379,7 +371,7 @@ void App::latePreFrame( void )
         m_vjobsWrapper->PreFrameUpdate();
     }
     //Exit - must be called AFTER m_vjobsWrapper->PreFrameUpdate();
-    if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "EXIT_XPLORER" )
+    if( tempCommandName == "EXIT_XPLORER" )
     {
         std::cout << "|\tShutting down xplorer." << std::endl;
         VPR_PROFILE_RESULTS();
@@ -399,34 +391,34 @@ void App::latePreFrame( void )
         _frameStamp->setSimulationTime( current_time );
 #endif
         //This is a frame rate calculation
-        deltaTime = current_time - lastTime;
+        deltaTime = current_time - mLastTime;
         if( deltaTime > 1 )
         {
             float framerate;
-            framerate = _frameNumber - lastFrame;
+            framerate = _frameNumber - mLastFrame;
             ves::xplorer::EnvironmentHandler::instance()->SetFrameRate( framerate );
 
-            lastTime = current_time;
-            lastFrame = _frameNumber;
+            mLastTime = current_time;
+            mLastFrame = _frameNumber;
         }
 
-        if( ( vpr::Debug::instance()->isDebugEnabled() ) )// && ( 3 <= vpr::Debug::instance()->getLevel() ) )
+        if( vpr::Debug::instance()->isDebugEnabled() )
         {
-            if( profileCounter == 500 )
+            if( mProfileCounter == 500 )
             {
                 vprDEBUG( vesDBG, 3 ) << " App::latePreFrame Profiling data for frame "
                     << _frameNumber << " and time " << current_time << std::endl << vprDEBUG_FLUSH;
                 VPR_PROFILE_RESULTS();
-                profileCounter = 0;
+                mProfileCounter = 0;
             }
 
             if( 2 < vpr::Debug::instance()->getLevel() )
             {
+                mStatsStream.str( "" );
                 osgUtil::StatsVisitor stats;
                 getScene()->accept( stats );
-                std::ostringstream statsStream;
-                stats.print( statsStream );
-                vprDEBUG( vesDBG, 3 ) << statsStream.str() << std::endl 
+                stats.print( mStatsStream );
+                vprDEBUG( vesDBG, 3 ) << mStatsStream.str() << std::endl 
                     << vprDEBUG_FLUSH;
             }        
         }  
@@ -475,14 +467,16 @@ void App::latePreFrame( void )
     }
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
-    profileCounter += 1;
+    mProfileCounter += 1;
 
-    if( m_vjobsWrapper->GetXMLCommand()->GetCommandName() == "SCREEN_SHOT" )
+    if( tempCommandName == "SCREEN_SHOT" )
     {
         captureNextFrameForWeb = true;
-        m_vjobsWrapper->GetXMLCommand()->GetDataValuePair( "Filename" )->GetData( m_filename );
+        m_vjobsWrapper->GetXMLCommand()->
+            GetDataValuePair( "Filename" )->GetData( m_filename );
     }
-    vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
+        << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::intraFrame()
@@ -492,7 +486,6 @@ void App::intraFrame()
     // Usually slows things down
 }
 ////////////////////////////////////////////////////////////////////////////////
-#ifdef _OSG
 void App::contextPostDraw()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::contextPostDraw", 20 );
@@ -500,7 +493,6 @@ void App::contextPostDraw()
     //here for testing...
     //glFinish();
 }
-#endif//_OSG
 ////////////////////////////////////////////////////////////////////////////////
 void App::postFrame()
 {

@@ -221,7 +221,6 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         m_twoSidedLighting = true;
     }
 
-#ifdef _OSG
     osg::ref_ptr< osg::Node > tempCADNode;
     if( !isStream )
     {
@@ -351,11 +350,6 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            osgUtil::Optimizer::MERGE_GEODES |
                            osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
     }
-    
-#elif _OPENSG
-    std::cout << " Error:LoadFile !!! " << std::endl;
-    exit( 1 );
-#endif
 
     osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
     root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );

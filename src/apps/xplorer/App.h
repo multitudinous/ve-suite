@@ -50,9 +50,7 @@ class VjObsWrapper;
 }
 }
 
-// Scene graph dependent forward declarations
-// The sleep time for sampling of threads.
-const float SAMPLE_TIME = 1.0f;
+#include <sstream>
 
 #ifdef _OSG
 
@@ -206,7 +204,6 @@ public:
     void update();///< update the framestamp and traverse the scenegraph
 private:
     bool isCluster;///< are we in cluster mode
-    //   std::set<vpr::Int32> mThreadIDs;
 
     vpr::Mutex mValueLock;  ///< A mutex to protect variables accesses
     ///file name for screen capture filename
@@ -221,13 +218,20 @@ private:
     int webImageWidth;///< not sure what this is for
     int webImageHeight;///< not sure what this is for
 
-#ifdef _OSG
+    ///The last frame executed
+    long mLastFrame;
+    ///Used for framerate calculation as integers only
+    float mLastTime;
+    ///Used to count frames specifically for profilling
+    unsigned int mProfileCounter;
+    ///Stream buffer to write stats too
+    std::ostringstream mStatsStream;
+
     osg::ref_ptr<osg::NodeVisitor> mUpdateVisitor;///<update visitor
     osg::ref_ptr<osg::FrameStamp> frameStamp;///<framestamp
     osg::ref_ptr< osg::Light > light_0;///< ligth for the scene
     osg::ref_ptr< osg::LightSource > light_source_0;///< light source for the scene
     osg::ref_ptr< osg::LightModel > light_model_0;///< light model for the scene
-#endif
 };
 }
 }
