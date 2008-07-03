@@ -66,6 +66,7 @@
 #include <osg/LightModel>
 
 #include <osgUtil/SmoothingVisitor>
+#include <osgUtil/Optimizer>
 
 #include <osgDB/ReadFile>
 #include <osgDB/Registry>
@@ -334,6 +335,23 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             lightModel.get(), osg::StateAttribute::ON );
     }
 
+    //Run the optimizer to improve performance
+    {
+        osgUtil::Optimizer graphOpti;
+        graphOpti.optimize( tempCADNode.get(), 
+                           osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                           osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
+                           osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                           osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
+                           osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                           osgUtil::Optimizer::MERGE_GEOMETRY |
+                           osgUtil::Optimizer::CHECK_GEOMETRY |
+                           osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                           osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
+                           osgUtil::Optimizer::MERGE_GEODES |
+                           osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
+    }
+    
 #elif _OPENSG
     std::cout << " Error:LoadFile !!! " << std::endl;
     exit( 1 );
