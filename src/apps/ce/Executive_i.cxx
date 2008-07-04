@@ -408,7 +408,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     //delete the object vector
     objectVector.clear();
 
-    _network->GetModule( _network->moduleIdx( module_id ) )->_return_state = rs;
+    _network->GetModule( moduleIndex )->_return_state = rs;
     //If we have an error - see above
     if( rs == 1 )
     {
@@ -417,8 +417,9 @@ void Body_Executive_i::execute_next_mod( long module_id )
 
     //rt counts down from n to -1 where -1 is the last module to be exectued.
     //rt is the next module index which is why -1 is subtracted
-    int rt = _scheduler->execute( _network->GetModule( _network->moduleIdx( module_id ) ) ) - 1;
-    std::cout << " rt " << rt << " module id " << module_id << std::endl;
+    int rt = _scheduler->execute( _network->GetModule( moduleIndex ) ) - 1;
+    std::cout << "VE-CE::execute_next_mod rt " 
+        << rt << " module id " << module_id << std::endl;
     //This onyl works for serial exectuion and for units with 1 input and output port
     int previousModuleIndex = rt + 1;
     if( rt < 0 )
@@ -430,7 +431,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == 
        _mod_units.end() )
     {
-        std::cerr <<  "Cannot find running unit " 
+        std::cerr <<  "VE-CE : Cannot find running unit " 
             << _network->GetModule( rt )->GetModuleName() << std::endl
             << "The units that are registerd are " << std::endl;
         for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
@@ -506,7 +507,7 @@ void Body_Executive_i::execute_next_mod( long module_id )
     }
     catch ( CORBA::Exception & )
     {
-        std::cerr << "Cannot contact Module " << module_id << std::endl;
+        std::cerr << "VE-CE : Cannot contact Module " << module_id << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////
