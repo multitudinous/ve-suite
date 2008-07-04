@@ -121,7 +121,12 @@ void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset,
     ///scaling applied by the user - See osg post on April 19, 2007
     if( mNormalize )
     {
-        stateset->setMode( GL_NORMALIZE, osg::StateAttribute::ON );
+        //This is a new setting that can be used when the scaling is 
+        //uniform. In general we are going to use this because non-uniform
+        //scaling does not occur frequently.
+        //http://www.opengl.org/resources/features/KilgardTechniques/oglpitfall/
+        //See osg post on July 3, 2008 by Paul Martz
+        stateset->setMode( GL_RESCALE_NORMAL, osg::StateAttribute::ON );
     }
     else
     {
@@ -132,7 +137,7 @@ void NormalizeVisitor::SetupNormalizeForStateSet( osg::StateSet* stateset,
            (dynamic_cast< osg::PositionAttitudeTransform* >( 
                 node->getParent( 0 ) )->getScale()[ 0 ] == 1.0f) )
         {
-            stateset->setMode( GL_NORMALIZE, osg::StateAttribute::OFF );
+            stateset->setMode( GL_RESCALE_NORMAL, osg::StateAttribute::OFF );
         }
     }
 }
