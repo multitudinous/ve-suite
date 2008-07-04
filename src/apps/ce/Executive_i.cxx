@@ -345,12 +345,20 @@ ACE_THROW_SPEC((
 /////////////////////////////////////////////////////////////////////////////
 void Body_Executive_i::execute_next_mod( long module_id )
 {
+    int moduleIndex = _network->moduleIdx( module_id );
+    if( moduleIndex < 0 )
+    {
+        std::cerr << "Unit ID " << module_id << " cannot be found in the list"
+            << " of available units." << std::endl;
+        return;
+    }
+    
     //module_id is the currently active module_id and this function
     //is determining which is the next module to execute
     //id is module jsut executed
     std::string msg( "" );
 
-    std::string mod_type = _network->GetModule( _network->moduleIdx( module_id ) )->GetModuleName();
+    std::string mod_type = _network->GetModule( moduleIndex )->GetModuleName();
     if( _mod_units.find( mod_type ) != _mod_units.end() )
     {
         try
@@ -419,10 +427,17 @@ void Body_Executive_i::execute_next_mod( long module_id )
         return;
     }
     
-    if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == _mod_units.end() )
+    if( _mod_units.find( _network->GetModule( rt )->GetModuleName() ) == 
+       _mod_units.end() )
     {
         std::cerr <<  "Cannot find running unit " 
-            << _network->GetModule( rt )->GetModuleName() << std::endl;
+            << _network->GetModule( rt )->GetModuleName() << std::endl
+            << "The units that are registerd are " << std::endl;
+        for( std::map< std::string, Body::Unit_var >::const_iterator iter = 
+            _mod_units.begin(); iter != _mod_units.end(); ++iter )
+        {
+            std::cout << "Unit name = " << iter->first << std::endl;
+        }
         return;
     }
 

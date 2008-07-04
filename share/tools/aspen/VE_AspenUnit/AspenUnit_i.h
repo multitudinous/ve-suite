@@ -39,34 +39,35 @@
 
 #include <set>
 
-class  Body_Unit_i
-  : public virtual POA_Body::Unit
+class  Body_Unit_i : public virtual POA_Body::Unit
 {
 public:
-  // Constructor 
-	Body_Unit_i (/*Body::Executive_ptr exec,*/ std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent, std::string dir );
-  //Body_Unit_i() {};
-  //Destructor 
-  virtual ~Body_Unit_i (void);
-  
-  std::string UnitName_;
-  Types::ArrayLong ids_;
-  ::CORBA::Long cur_id_;
+    // Constructor 
+    Body_Unit_i (/*Body::Executive_ptr exec,*/ std::string name, 
+                 /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, 
+                 CorbaUnitManager * parent, std::string dir );
+    //Body_Unit_i() {};
+    //Destructor 
+    virtual ~Body_Unit_i (void);
 
-  std::string status_;
-  std::string data_;
+    std::string UnitName_;
+    Types::ArrayLong ids_;
+    ::CORBA::Long cur_id_;
 
- protected:
-  //Body::Executive_var executive_;
-  unsigned int return_state;
-  CVE_AspenUnitDlg * theDialog;
-  CorbaUnitManager * theParent;
-  CEdit * AspenLog;
-  std::set< std::string > mQueryCommandNames;
-  std::string workingDir;
+    std::string status_;
+    std::string data_;
+
+protected:
+    //Body::Executive_var executive_;
+    unsigned int return_state;
+    CVE_AspenUnitDlg * theDialog;
+    CorbaUnitManager * theParent;
+    CEdit * AspenLog;
+    std::set< std::string > mQueryCommandNames;
+    std::string workingDir;
 
 public:
-  BKPParser* bkp;
+    BKPParser* bkp;
   
   void ShowAspen ();  
   void HideAspen ();  

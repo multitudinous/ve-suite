@@ -48,23 +48,30 @@
 #include <iostream>
 
 // Implementation skeleton constructor
-Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name, /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, CorbaUnitManager * parent, std::string dir )
-  //: executive_(Body::Executive::_duplicate(exec))
+Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name, 
+    /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, 
+    CorbaUnitManager* parent, std::string dir )
+    :
+    bkp( new BKPParser() ),
+    AspenLog( 0 ),
+    theParent( parent ),
+    theDialog( dialog ),
+    return_state( 0 ),
+    cur_id_( 0 ),
+    UnitName_( name ),
+    workingDir( dir )
 {
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
-    ves::open::xml::XMLObjectFactory::Instance()->RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
-    UnitName_=name;
-    return_state = 0;
-    workingDir = dir;
-    //bkp = parser;
-    bkp = new BKPParser();
+    ves::open::xml::XMLObjectFactory::Instance()->
+        RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->
+        RegisterObjectCreator( "Shader",new ves::open::xml::shader::ShaderCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->
+        RegisterObjectCreator( "Model",new ves::open::xml::model::ModelCreator() );
+    ves::open::xml::XMLObjectFactory::Instance()->
+        RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
+
 	bkp->SetWorkingDir( workingDir );
-    //theParent->CreateParser();
-    //bkp = theParent->CreateParser();
-    theDialog = dialog;
-    theParent = parent;
+
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");
@@ -87,42 +94,43 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name, /*BKPP
     mQueryCommandNames.insert( "getStreamOutputModuleProperties");
     mQueryCommandNames.insert( "setParam");
 }
-
+////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
-Body_Unit_i::~Body_Unit_i (void)
+Body_Unit_i::~Body_Unit_i( void )
 {
     delete bkp;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::ShowAspen()
 {
 	bkp->showAspen(true);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::HideAspen()
 {
 	bkp->showAspen(false);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::CloseAspen()
 {
 	bkp->closeFile();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SaveAspen()
 {
 	bkp->saveFile();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::StepSim()
 {
 	bkp->step();
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::ReinitializeAspen()
 {
 	bkp->ReinitAspen();
 }
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::StartCalc (
     
   )
@@ -139,7 +147,7 @@ void Body_Unit_i::StartCalc (
 	//executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
 	return_state=0;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::StopCalc (
     
   )
@@ -154,7 +162,7 @@ void Body_Unit_i::StopCalc (
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::PauseCalc (
     
   )
@@ -168,7 +176,7 @@ void Body_Unit_i::PauseCalc (
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::Resume (
     
   )
@@ -182,7 +190,7 @@ void Body_Unit_i::Resume (
     msg = UnitName_+" : Instant calculation, already finished\n";
     //executive_->SetModuleMessage(cur_id_,msg.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Unit_i::GetStatusMessage (
     
   )
@@ -211,7 +219,7 @@ char * Body_Unit_i::GetStatusMessage (
 	commandWriter.WriteXMLDocument( nodes, status, "vecommand" );
     return CORBA::string_dup(status.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Unit_i::GetUserData (
     
   )
@@ -224,7 +232,7 @@ char * Body_Unit_i::GetUserData (
 	char * result = 0;
 	return result;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetID (
     ::CORBA::Long id
   )
@@ -235,8 +243,9 @@ void Body_Unit_i::SetID (
 {
   // Add your implementation here
   // no need to implement this
+  std::cout << "This not implemented for the Aspen Unit" << std::endl;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetCurID (
     ::CORBA::Long id
   )
@@ -245,11 +254,9 @@ void Body_Unit_i::SetCurID (
     ::Error::EUnknown
   ))
 {
-  // Add your implementation here
-  // no need to implement this
+    cur_id_ = id;
 }
-
-
+////////////////////////////////////////////////////////////////////////////////
 ::Types::ArrayLong* Body_Unit_i::GetID (
     
   )
@@ -260,7 +267,7 @@ void Body_Unit_i::SetCurID (
 {
 	return &ids_;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 CORBA::Long Body_Unit_i::GetCurID (
     
   )
@@ -271,7 +278,7 @@ CORBA::Long Body_Unit_i::GetCurID (
 {
     return cur_id_;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::DeleteModuleInstance(CORBA::Long id) 
 ACE_THROW_SPEC ((
     ::CORBA::SystemException,
@@ -280,7 +287,7 @@ ACE_THROW_SPEC ((
 {
 	return; //do nothing;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetName (
     const char * name
   )
@@ -292,7 +299,7 @@ void Body_Unit_i::SetName (
   // Add your implementation here
 	UnitName_ = std::string(name);
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Unit_i::GetName (
     
   )
@@ -303,7 +310,7 @@ char * Body_Unit_i::GetName (
 {
     return CORBA::string_dup(UnitName_.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char * Body_Unit_i::Query ( const char * query_str
     
   )
@@ -471,7 +478,7 @@ char * Body_Unit_i::Query ( const char * query_str
 	else
 		return CORBA::string_dup("NULL");
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
@@ -536,7 +543,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 		//AspenLog->ReplaceSel(network.c_str());
 	return CORBA::string_dup(network.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 {
     CEdit *Display;
@@ -548,7 +555,7 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
 	bkp->openFile(filename.c_str());
 	return CORBA::string_dup("Simulation Opened.");
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
 	AspenLog->SetSel(-1, -1);
@@ -559,8 +566,7 @@ char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 	AspenLog->ReplaceSel("saved.\r\n");
 	return CORBA::string_dup("Simulation Saved.");
 }
-
-//BLOCKS
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -587,7 +593,7 @@ char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 
 	return CORBA::string_dup(netPak.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -608,7 +614,7 @@ char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd
 	return CORBA::string_dup(netPak.c_str());
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -630,7 +636,7 @@ char* Body_Unit_i::handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd
 	std::string netPak = bkp->GetOutputModuleParams(modname);
 	return CORBA::string_dup(netPak.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -651,8 +657,7 @@ char* Body_Unit_i::handleGetOutputModuleProperties(ves::open::xml::CommandPtr cm
 	return CORBA::string_dup(netPak.c_str());
 
 }
-
-//Streams
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -674,7 +679,7 @@ char* Body_Unit_i::handleGetStreamInputModuleParamList(ves::open::xml::CommandPt
 	std::string netPak = bkp->GetStreamInputModuleParams(modname);
 	return CORBA::string_dup(netPak.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -695,7 +700,7 @@ char* Body_Unit_i::handleGetStreamInputModuleProperties(ves::open::xml::CommandP
 	return CORBA::string_dup(netPak.c_str());
 
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -717,7 +722,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleParamList(ves::open::xml::CommandP
 	std::string netPak = bkp->GetStreamOutputModuleParams(modname);
 	return CORBA::string_dup(netPak.c_str());
 }
-
+////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -738,8 +743,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command
 	return CORBA::string_dup(netPak.c_str());
 
 }
-
-//PARAMS
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetParams (CORBA::Long id,
     const char * param)
   ACE_THROW_SPEC ((
@@ -774,6 +778,7 @@ void Body_Unit_i::SetParams (CORBA::Long id,
 		}
    }
 }
+////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
@@ -797,3 +802,4 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 	newValue = paramValue.c_str();
 	bool success = cur_var.setValue(newValue);
 }
+////////////////////////////////////////////////////////////////////////////////
