@@ -34,11 +34,6 @@
 
 #include <ves/xplorer/Debug.h>
 
-#ifdef _PERFORMER
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pf/pfNode.h>
-#include <ves/xplorer/scenegraph/vtkActorToPF.h>
-#elif _OSG
 #include <ves/xplorer/scenegraph/vtkActorToOSG.h>
 #include <ves/xplorer/scenegraph/vtkActorToStreamLine.h>
 #include <ves/xplorer/scenegraph/Technique.h>
@@ -47,8 +42,7 @@
 #include <osg/Node>
 #include <osg/LightModel>
 #include <osg/CopyOp>
-#elif _OPENSG
-#endif
+#include <osgUtil/Optimizer>
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -83,17 +77,27 @@ Geode::~Geode()
 ////////////////////////////////////////////////////////////////////////////////
 void Geode::TranslateToGeode( vtkActor* actor )
 {
-#ifdef _PERFORMER
-    ves::xplorer::scenegraph::vtkActorToPF( actor, this, _vtkDebugLevel );
-#elif _OSG
     ves::xplorer::scenegraph::vtkActorToOSG( actor, this, _vtkDebugLevel );
     osg::ref_ptr< osg::LightModel > lightModel = new osg::LightModel();
     lightModel->setTwoSided( true );
-    getOrCreateStateSet()->setAttributeAndModes( lightModel.get(), osg::StateAttribute::ON );
-#elif _OPENSG
-#endif
+    getOrCreateStateSet()->setAttributeAndModes( 
+        lightModel.get(), osg::StateAttribute::ON );
+    osgUtil::Optimizer geodeOpti;
+    geodeOpti.optimize( this, 
+                       osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
+                       osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
+                       osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
+                       osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
+                       osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                       osgUtil::Optimizer::MERGE_GEOMETRY |
+                       osgUtil::Optimizer::CHECK_GEOMETRY |
+                       osgUtil::Optimizer::SPATIALIZE_GROUPS |
+                       osgUtil::Optimizer::TRISTRIP_GEOMETRY |
+                       osgUtil::Optimizer::OPTIMIZE_TEXTURE_SETTINGS |
+                       osgUtil::Optimizer::MERGE_GEODES |
+                       osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void Geode::StreamLineToGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
@@ -102,7 +106,7 @@ void Geode::StreamLineToGeode( vtkActor* actor )
 #elif _OPENSG
 #endif
 }
-//////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 osg::Group* Geode::GetParent( unsigned int position )
 {
 #ifdef _OPENSG
