@@ -4,6 +4,7 @@
 
 #include "apps/voice/SpeechRecognitionObserver.h"
 
+#include <loki/SmartPtr.h>
 #include <xercesc/sax2/SAX2XMLReader.hpp>
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
@@ -71,5 +72,7 @@ private:
                       const XMLCh* const qname, 
                       const XERCES_CPP_NAMESPACE_QUALIFIER Attributes& attrs);
 };
+
+typedef Loki::SmartPtrDef<JuliusXMLParser>::type JuliusXMLParserPtr;
 
 #endif

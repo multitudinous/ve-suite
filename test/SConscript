@@ -18,7 +18,7 @@ env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
                              pj('#', 'external', 'loki-0.1.6', 'include'),
                              pj('#', 'src'),
                              '#'],
-                  LIBS = ['sqlite3', 'xerces-c'],
+                  LIBS = ['sqlite3', 'xerces-c', 'ACE'],
                   CPPDEFINES = ['LOKI_ENABLE_FUNCTION',
                                 'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 
@@ -26,6 +26,7 @@ env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
 # the source files.
 test_hdrs = Split("""
    CircularQueueTest.h
+   JuliusNetworkClientTest.h
    JuliusXMLParserTest.h
 """)
 # FIXME:  These files were commented out since they no longer build.
@@ -45,6 +46,7 @@ srcs = Split("""
 """)
 
 orig_srcs = Split("""
+   JuliusNetworkClient.cxx
    JuliusXMLParser.cxx
 """)
 

@@ -204,10 +204,6 @@ public:
       parser.attach(ptr);
       parser.parse(mTestText);
       std::vector<std::string> phrases = observer->getPhrases(); 
-      for (size_t i = 0; i < phrases.size(); ++i)
-      {
-         std::cout << "[DBG] phrases: " << phrases[i] << std::endl;
-      }
       TS_ASSERT_EQUALS(phrases.size(), 23);
       TS_ASSERT_EQUALS(phrases[0], "CALL STEVE");
       TS_ASSERT_EQUALS(phrases[1], "CALL JOHNSTON");

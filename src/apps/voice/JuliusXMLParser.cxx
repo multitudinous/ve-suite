@@ -10,7 +10,6 @@
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/parsers/SAX2XMLReaderImpl.hpp>
 
-// XXX:  Remove this!
 #include <iostream>
 
 namespace 
@@ -77,14 +76,8 @@ namespace
          mSkippedEntityHandler = handler;
       }
 
-      // TODO:  Remove the debugging handlers once the SAX event hierarchy
-      //        is better understood.
-
       void characters(const XMLCh* const chars, const unsigned int length)
       {
-         std::cout << "[DBG] Characters Event Size: " << length
-                   << "Chars '" 
-                   << XMLString::transcode(chars) << "'." << std::endl;
          if (!mCharacterHandler.empty())
          {
             mCharacterHandler(chars, length);
@@ -93,7 +86,6 @@ namespace
 
       void endDocument()
       {
-         std::cout << "[DBG] End document" << std::endl;
          if (!mEndDocumentHandler.empty())
          {
             mEndDocumentHandler();
@@ -103,11 +95,6 @@ namespace
       void endElement(const XMLCh* const uri, const XMLCh* const localname,
                       const XMLCh* const qname)
       {
-         std::cout << "[DBG] End Element URI: '" << XMLString::transcode(uri)
-                   << "' localname: '" << XMLString::transcode(localname)
-                   << "' qname: '" << XMLString::transcode(qname)
-                   << "'." << std::endl;
-
          if (!mEndElementHandler.empty())
          {
             mEndElementHandler(uri, localname, qname);
@@ -119,42 +106,12 @@ namespace
       {
          if (!mStartElementHandler.empty())
          {
-            std::cout << "[DBG] Invoking Functor." << std::endl;
             mStartElementHandler(uri, localname, qname, attrs);
          }
-         else
-         {
-            std::cout << "[DBG] Functor is empty." << std::endl;
-         }
-         /*
-         std::cout << "[DBG] Start Element: URI: '" 
-                   << XMLString::transcode(uri)
-                   << "' localname: '" << XMLString::transcode(localname)
-                   << "' qname: '" << XMLString::transcode(qname) << "'." 
-                   << std::endl;
-         std::cout << "[DBG] There are " << attrs.getLength() << " attributes."
-                   << std::endl;
-         for (size_t i = 0; i < attrs.getLength(); ++i)
-         {
-            std::cout << "[DBG] Attribute " << i << " "
-                      << "Qname: " << XMLString::transcode(attrs.getQName(i))
-                      << " "
-                      << "URI: " << XMLString::transcode(attrs.getURI(i)) 
-                      << " "
-                      << "local: "<< XMLString::transcode(attrs.getLocalName(i))
-                      << " "
-                      << "type: " << XMLString::transcode(attrs.getType(i)) 
-                      << " "
-                      << "value: " << XMLString::transcode(attrs.getValue(i)) 
-                      << std::endl;
-         }
-         */
       }
 
       void skippedEntity(const XMLCh* const name)
       {
-         std::cout << "[DBG] Skipped Entity: '" 
-                   << XMLString::transcode(name) << "'." << std::endl;
          if (!mSkippedEntityHandler.empty())
          {
             mSkippedEntityHandler(name);
@@ -226,7 +183,6 @@ bool
 JuliusXMLParser::parse(const std::string& text)
 {
    XERCES_CPP_NAMESPACE_USE;
-   std::cout << "[DBG] I got: \"" << text << "\"" << std::endl;
 
    size_t size = text.size() + 1;
    // Create an input source from the text string.
@@ -236,6 +192,7 @@ JuliusXMLParser::parse(const std::string& text)
 
    try
    {
+      // FIXME:  Probably should use progressive parse.
       mParser->parse(*mem_buf_is);
    }
    catch (const XMLException& e)
@@ -261,7 +218,8 @@ JuliusXMLParser::startElement(const XMLCh* const uri,
                               const XMLCh* const localname,
                               const XMLCh* const qname, const Attributes& attrs)
 {
-   std::cout << "[DBG] In Functor." << std::endl;
+   // TODO:  How to get rid of static variables and preserve spaces
+   //        correctly?
    static bool phrase_begun = false;
    static std::string phrase = "";
    static std::string space = "";
@@ -274,13 +232,12 @@ JuliusXMLParser::startElement(const XMLCh* const uri,
       const XMLCh* word_value = attrs.getValue(word_tag);
       if (!word_value)
       {
-         std::cout << "[ERR] WHYPO had no word!" << std::endl;
+         std::cerr << "[ERR] WHYPO had no word!" << std::endl;
       }
       else
       {
          char* word = XMLString::transcode(word_value);
          std::string word_str = word;
-         std::cout << "[DBG] Recognized: " << word_str << std::endl;
          if ("<s>" == word_str)
          {
             phrase_begun = true;
@@ -314,31 +271,9 @@ JuliusXMLParser::startElement(const XMLCh* const uri,
    }
    else
    {
-      std::cout << "[DBG] Not a WHYPO." << std::endl;
+      // The element is not a WHYPO, so we ignore it.
    }
    XMLString::release(&whypo);
    XMLString::release(&word_tag);
    XMLString::release(&recogfail);
-   
-   /*std::cout << "[DBG] Start Element: URI: '" 
-             << XMLString::transcode(uri)
-             << "' localname: '" << XMLString::transcode(localname)
-             << "' qname: '" << XMLString::transcode(qname) << "'." 
-             << std::endl;
-   std::cout << "[DBG] There are " << attrs.getLength() << " attributes."
-             << std::endl;
-   for (size_t i = 0; i < attrs.getLength(); ++i)
-   {
-      std::cout << "[DBG] Attribute " << i << " "
-                << "Qname: " << XMLString::transcode(attrs.getQName(i))
-                << " "
-                << "URI: " << XMLString::transcode(attrs.getURI(i)) 
-                << " "
-                << "local: "<< XMLString::transcode(attrs.getLocalName(i))
-                << " "
-                << "type: " << XMLString::transcode(attrs.getType(i)) 
-                << " "
-                << "value: " << XMLString::transcode(attrs.getValue(i)) 
-                << std::endl;
-   }*/
 }
