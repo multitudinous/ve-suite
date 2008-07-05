@@ -63,6 +63,9 @@ public:
     * @note    This call will block indefinitely, so spinning it off in a new
     *          thread is required.  The only way to stop such a thread is to
     *          kill it.
+    *
+    * @return     true if no errors occurred, false if there was a problem
+    *             setting it up.
     */
    bool startDataLoop();
 

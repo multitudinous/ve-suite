@@ -10,32 +10,6 @@
 #include <string>
 #include <vector>
 
-class TestObserver : public SpeechRecognitionObserver
-{
-public:
-
-   void onPhraseRecognition(const std::string& phrase)
-   {
-      mPhrases.push_back(phrase);
-   }
-
-   void onFailedRecognition()
-   {
-      mPhrases.push_back("FAIL");
-   }
-
-   std::vector<std::string> getPhrases()
-   {
-      return mPhrases;
-   }
-
-private:
-
-   /// List of recognized strings 
-   std::vector<std::string>                        mPhrases;
-
-};
-
 class JuliusXMLParserTest : public CxxTest::TestSuite
 {
 public:
@@ -194,46 +168,63 @@ public:
    void tearDown()
    {
       mTestText = "";
+      mPhrases.clear();
    }
 
    void testParse()
    {
-      TestObserver* observer = new TestObserver();
-      SpeechRecognitionObserverPtr ptr(observer);
+      SpeechRecognitionObserverPtr ptr(
+            new SpeechRecognitionObserver(
+               SpeechRecognitionObserver::PhraseRecognitionHandler(this,
+               &JuliusXMLParserTest::onPhraseRecognition),
+               SpeechRecognitionObserver::FailedRecognitionHandler(this, 
+                  &JuliusXMLParserTest::onFailedRecognition)));
       JuliusXMLParser parser;
       parser.attach(ptr);
       parser.parse(mTestText);
-      std::vector<std::string> phrases = observer->getPhrases(); 
-      TS_ASSERT_EQUALS(phrases.size(), 23);
-      TS_ASSERT_EQUALS(phrases[0], "CALL STEVE");
-      TS_ASSERT_EQUALS(phrases[1], "CALL JOHNSTON");
-      TS_ASSERT_EQUALS(phrases[2], "FAIL");
-      TS_ASSERT_EQUALS(phrases[3], "FAIL");
-      TS_ASSERT_EQUALS(phrases[4], "FAIL");
-      TS_ASSERT_EQUALS(phrases[5], "FAIL");
-      TS_ASSERT_EQUALS(phrases[6], "FAIL");
-      TS_ASSERT_EQUALS(phrases[7], "FAIL");
-      TS_ASSERT_EQUALS(phrases[8], "FAIL");
-      TS_ASSERT_EQUALS(phrases[9], "FAIL");
-      TS_ASSERT_EQUALS(phrases[10], "FAIL");
-      TS_ASSERT_EQUALS(phrases[11], "FAIL");
-      TS_ASSERT_EQUALS(phrases[12], "FAIL");
-      TS_ASSERT_EQUALS(phrases[13], "FAIL");
-      TS_ASSERT_EQUALS(phrases[14], "FAIL");
-      TS_ASSERT_EQUALS(phrases[15], "FAIL");
-      TS_ASSERT_EQUALS(phrases[16], "FAIL");
-      TS_ASSERT_EQUALS(phrases[17], "FAIL");
-      TS_ASSERT_EQUALS(phrases[18], "CALL STEVE");
-      TS_ASSERT_EQUALS(phrases[19], "FAIL");
-      TS_ASSERT_EQUALS(phrases[20], "FAIL");
-      TS_ASSERT_EQUALS(phrases[21], "FAIL");
-      TS_ASSERT_EQUALS(phrases[22], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases.size(), 23);
+      TS_ASSERT_EQUALS(mPhrases[0], "CALL STEVE");
+      TS_ASSERT_EQUALS(mPhrases[1], "CALL JOHNSTON");
+      TS_ASSERT_EQUALS(mPhrases[2], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[3], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[4], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[5], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[6], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[7], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[8], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[9], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[10], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[11], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[12], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[13], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[14], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[15], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[16], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[17], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[18], "CALL STEVE");
+      TS_ASSERT_EQUALS(mPhrases[19], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[20], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[21], "FAIL");
+      TS_ASSERT_EQUALS(mPhrases[22], "FAIL");
+   }
+
+   void onPhraseRecognition(const std::string& phrase)
+   {
+      mPhrases.push_back(phrase);
+   }
+
+   void onFailedRecognition()
+   {
+      mPhrases.push_back("FAIL");
    }
 
 private:
 
    /// Test text
    std::string                                  mTestText;
+
+   /// Phrases that have been recognized.
+   std::vector<std::string>                     mPhrases;
    
 };
 

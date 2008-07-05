@@ -57,7 +57,7 @@ JuliusNetworkClient::startDataLoop()
    while (mConnected)
    {
       iovec data = {0, 0};
-      ACE_Time_Value timeout(ACE_Time_Value::max_time);
+      ACE_Time_Value timeout(30);
       ssize_t read = mDataStream.recvv(&data, &timeout);
       if (read > 0 && data.iov_len > 0)
       {

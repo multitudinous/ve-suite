@@ -133,7 +133,7 @@ namespace
       StartElementHandler                        mStartElementHandler;
 
       /// The functor to invoke when a Skipped element event is received.
-      SkippedEntityHandler                      mSkippedEntityHandler;
+      SkippedEntityHandler                       mSkippedEntityHandler;
 
    };
 
