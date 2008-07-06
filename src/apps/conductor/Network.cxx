@@ -462,8 +462,8 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         networkSize.first = x + width;
         networkSize.second = networkSize.second + height;
         parent->SetVirtualSize(
-            networkSize.first * userScale.first,
-            networkSize.second * userScale.second );
+            static_cast< int >( networkSize.first * userScale.first ),
+            static_cast< int >( networkSize.second * userScale.second ) );
     }
 
     if( y + height > networkSize.second )
@@ -471,8 +471,8 @@ void Network::OnMLeftUp( wxMouseEvent& event )
         networkSize.first = networkSize.first + width;
         networkSize.second = y + height;
         parent->SetVirtualSize(
-            networkSize.first * userScale.first,
-            networkSize.second * userScale.second );
+            static_cast< int >( networkSize.first * userScale.first ),
+            static_cast< int >( networkSize.second * userScale.second ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1082,11 +1082,12 @@ void Network::TryLink( int x, int y, int mod, int pt, wxDC& dc, bool flag )
     //This loop causes a tremendous perfomance decrease
     wxPoint temp;
     //must remove the scale because the points are scaled in the draw function
-    x = x / userScale.first;//dc.DeviceToLogicalX( x );
-    y = y / userScale.second;//dc.DeviceToLogicalY( y );
+    x = static_cast< int >( x / userScale.first );
+    y = static_cast< int >( y / userScale.second );
     temp.x = x;//dc.LogicalToDeviceX( x );
     temp.y = y;//dc.LogicalToDeviceY( y );
-    for( std::map< int, Module >::iterator iter = modules.begin(); iter != modules.end(); iter++ )
+    for( std::map< int, Module >::iterator iter = 
+        modules.begin(); iter != modules.end(); iter++ )
     {
         if( iter->second.GetPolygon()->inside( temp ) && dest_mod != mod )
         {
@@ -2063,8 +2064,9 @@ void Network::HighlightCenter( int modId )
     //recenter the flowsheet around the icon
     //int xPix, yPix;
     //parent->GetScrollPixelsPerUnit( &xPix, &yPix );
-    parent->Scroll( modules[modId].GetPlugin()->GetBBox().GetX()*userScale.first,
-        modules[modId].GetPlugin()->GetBBox().GetY()*userScale.second);
+    parent->Scroll( 
+        static_cast< int >( modules[modId].GetPlugin()->GetBBox().GetX()*userScale.first ),
+        static_cast< int >( modules[modId].GetPlugin()->GetBBox().GetY()*userScale.second ) );
 
     //highlight the selected icon
     SetSelectedModule( modId );
@@ -2073,8 +2075,9 @@ void Network::HighlightCenter( int modId )
 void Network::HighlightCenterLink( int linkId )
 {
     UnSelectLink();
-    parent->Scroll( links[linkId].GetPoints()->at(0).x*userScale.first,
-        links[linkId].GetPoints()->at(0).y*userScale.second);
+    parent->Scroll( 
+        static_cast< int >( links[linkId].GetPoints()->at(0).x*userScale.first ),
+        static_cast< int >( links[linkId].GetPoints()->at(0).y*userScale.second ) );
 
     //highlight the selected icon
     SetSelectedLink( linkId );

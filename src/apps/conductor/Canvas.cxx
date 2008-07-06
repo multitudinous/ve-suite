@@ -295,8 +295,8 @@ void Canvas::SetActiveNetwork( std::string id )
 
     //set the canvas size to the initial size of the network
     SetVirtualSize(
-        networks[this->activeId]->GetNetworkSize().first * tempScaleX,
-        networks[this->activeId]->GetNetworkSize().second * tempScaleY);
+        static_cast< int >( networks[this->activeId]->GetNetworkSize().first * tempScaleX ),
+        static_cast< int >( networks[this->activeId]->GetNetworkSize().second * tempScaleY ) );
 
     //scroll to the stored location
     Scroll(
