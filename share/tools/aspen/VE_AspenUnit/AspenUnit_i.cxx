@@ -213,11 +213,11 @@ char * Body_Unit_i::GetStatusMessage (
 
 	nodes.push_back( 
         std::pair< ves::open::xml::XMLObjectPtr, std::string >( 
-        returnState, "Command" ) );
+        returnState, "vecommand" ) );
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
-	commandWriter.WriteXMLDocument( nodes, status, "vecommand" );
+	commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return CORBA::string_dup(status.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
