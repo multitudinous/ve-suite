@@ -95,7 +95,11 @@ PluginBase::PluginBase():
         mWorldDCS( 0 ),
         mXmlModel( ves::open::xml::model::ModelPtr() )
 {
-    ;
+    //This needs to match the name of the gui plugin.
+    //It is used in cfdVEPluginLoader::CreateObject. The name used is the name
+    //in the ves::open::xml::Model model name. This name comes from the gui
+    //plugin.
+    mObjectName = "Please set mObjectName in your plugin.";
 }
 ////////////////////////////////////////////////////////////////////////////////
 PluginBase::~PluginBase()

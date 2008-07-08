@@ -202,8 +202,12 @@ public:
     ves::xplorer::scenegraph::DCS* GetPluginDCS();
     
 protected:
+    ///Easy check to see if this plugin is on the scene graph
     bool mOnSceneGraph;
-
+    ///This needs to match the name of the gui plugin.
+    ///It is used in cfdVEPluginLoader::CreateObject. The name used is the name
+    ///in the ves::open::xml::Model model name. This name comes from the gui
+    ///plugin.
     std::string mObjectName;
     
     ves::xplorer::cfdCursor* mCursor;
