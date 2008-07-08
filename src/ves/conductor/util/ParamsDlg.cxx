@@ -342,16 +342,15 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
             new ves::open::xml::DataValuePair() );
         
         //get the variable path
-        std::string paramName = ParamChoice->GetItemText( selection );
+        std::string paramName = ConvertUnicode( ParamChoice->GetItemText( selection ).c_str() );
         wxTreeItemId parentId = ParamChoice->GetItemParent( selection );
         while( parentId != m_rootId )
         {
             paramName.insert( 0,
-                ( ParamChoice->GetItemText( parentId ) + "." ) );
+                ( ConvertUnicode( ParamChoice->GetItemText( parentId ).c_str() ) + "." ) );
             parentId = ParamChoice->GetItemParent( parentId );
         }
-        data->SetData( std::string( "ParamName" ),
-                ConvertUnicode( paramName.c_str() ) );
+        data->SetData( std::string( "ParamName" ), paramName );
 
         returnState->AddDataValuePair( data );
         std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
