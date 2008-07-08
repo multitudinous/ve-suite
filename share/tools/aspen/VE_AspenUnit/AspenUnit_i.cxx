@@ -203,16 +203,17 @@ char * Body_Unit_i::GetStatusMessage (
 	ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
 
 	returnState->SetCommandName("statusmessage");
-	ves::open::xml::DataValuePairPtr data = returnState->GetDataValuePair(-1);
+	ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
 	data->SetDataName("RETURN_STATE");
 	data->SetDataType("UNSIGNED INT");
-	data->SetDataValue(return_state);
-	
+	data->SddDataValue(return_state);
+    returnState->AddDataValuePair( data );
+    
 	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
 
 	nodes.push_back( 
-                  std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "Command" ) 
-                     );
+        std::pair< ves::open::xml::XMLObjectPtr, std::string >( 
+        returnState, "Command" ) );
 	ves::open::xml::XMLReaderWriter commandWriter;
 	std::string status="returnString";
 	commandWriter.UseStandaloneDOMDocumentManager();
