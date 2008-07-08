@@ -92,10 +92,10 @@ namespace CASI
 	public:
 		CASIObj():Variable() {};
 		CASIObj(IHNode root, CString nodepath, VARTYPE nodetype);
-		CString getOutputVarName(int index); //get a varaible name in the output category by index
-		CString getOutputSubVarName(CString name, int index); //get a varaible name in the input category by index
 		CString getInputVarName(int index); //get a varaible name in the input category by index
-		CString getInputSubVarName(CString name, int index); //get a varaible name in the input category by index
+        int getNumberOfInputVars( );
+		CString getOutputVarName(int index); //get a varaible name in the output category by index
+        int getNumberOfOutputVars( );
 		CString getSIPortName(int index); //get the source or input port name by index
 		CString getDOPortName(int index); //get the destination or output port name by index
 
@@ -122,12 +122,16 @@ namespace CASI
 		private:
 		void prepStream();
 		void prepBlock();
-		void prepBlockSubs();
+		void processBlocks();
+		void prepBlockInputSubs( CString, CString );
+		void prepBlockOutputSubs( CString, CString );
 		std::set< CString > streamComps;
 		std::vector< CString > blockInputs;
 		std::vector< CString > blockOutputs;
-        std::map< CString, std::vector< CString > > blockInputsWithSubs;
-		std::map< CString, std::vector< CString > > blockOutputsWithSubs;
+		std::vector< CString > blockInputsWithSubs;
+		std::vector< CString > blockOutputsWithSubs;
+        //std::map< CString, std::vector< CString > > blockInputsWithSubs;
+		//std::map< CString, std::vector< CString > > blockOutputsWithSubs;
 	};
 		
 	class CASI_EXPORTS CASIDocument

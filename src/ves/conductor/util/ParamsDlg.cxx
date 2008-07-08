@@ -342,19 +342,17 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
             new ves::open::xml::DataValuePair() );
         
         //get the variable path
-        mParentId = ParamChoice->GetItemParent( selection );
-        if( mParentId == m_rootId ) //|| selection == m_rootId )
+        std::string paramName = ParamChoice->GetItemText( selection );
+        wxTreeItemId parentId = ParamChoice->GetItemParent( selection );
+        while( parentId != m_rootId )
         {
-            data->SetData( std::string( "ParamName" ),
-                ConvertUnicode( ParamChoice->GetItemText(
-                selection ).c_str() ) );
+            paramName.insert( 0,
+                ( ParamChoice->GetItemText( parentId ) + "." ) );
+            parentId = ParamChoice->GetItemParent( parentId );
         }
-        else
-        {
-            data->SetData( std::string( "ParamName" ),
-                ConvertUnicode( ParamChoice->GetItemText( mParentId ) ) + std::string( "." ) +
-                ConvertUnicode( ParamChoice->GetItemText( selection ) ) );
-        }
+        data->SetData( std::string( "ParamName" ),
+                ConvertUnicode( paramName.c_str() ) );
+
         returnState->AddDataValuePair( data );
         std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
             nodes;
@@ -564,17 +562,23 @@ void ParamsDlg::AppendList( const char * input )
     std::string inputName( input );
     if( inputName.find(".") == std::string::npos )
     {
-        m_prevId =
-            ParamChoice->AppendItem( m_rootId, wxString( input, wxConvUTF8 ) );
+        m_prevIds[ inputName ] =
+            ParamChoice->
+            AppendItem( m_rootId, wxString( inputName.c_str(), wxConvUTF8 ) );
     }
     else
     {
-        std::string subInputName = inputName.substr( inputName.find(".")+1 );
-        ParamChoice->AppendItem(
-            m_prevId, wxString( subInputName.c_str(), wxConvUTF8 ) );
+        std::string parentName =
+            inputName.substr( 0, inputName.find_last_of(".") );
+
+        std::string subName =
+            inputName.substr( inputName.find_last_of(".") + 1 );
+
+        m_prevIds[ inputName ] =
+            ParamChoice->AppendItem( m_prevIds[ parentName ],
+            wxString( subName.c_str(), wxConvUTF8 ) );
     }
 }
-
 void ParamsDlg::SetCompName( const char * name )
 {
     this->CompName = wxString( name, wxConvUTF8 );

@@ -13,29 +13,28 @@ namespace CASI
 		//	prepStream();
 		//else if (nodeType==BLOCK)
 			prepBlock();
-			prepBlockSubs();
-	}
-	
-	CString CASIObj::getOutputVarName(int index) //get a varaible name in the output category by index
-	{
-		return  blockOutputs[index];//(varnodePath.Right(slength-lastDot-1));
+			processBlocks();
 	}
 	
 	CString CASIObj::getInputVarName(int index) //get a varaible name in the input category by index
 	{
-		return  blockInputs[index];//(varnodePath.Right(slength-lastDot-1));
+		return  blockInputsWithSubs[index];//(varnodePath.Right(slength-lastDot-1));
 	}
 
-    CString CASIObj::getInputSubVarName(CString name, int index) //get a varaible name in the input category by index
+	CString CASIObj::getOutputVarName(int index) //get a varaible name in the output category by index
 	{
-		return  blockInputsWithSubs[name][index];//(varnodePath.Right(slength-lastDot-1));
-	}
-
-    CString CASIObj::getOutputSubVarName(CString name, int index) //get a varaible name in the input category by index
-	{
-		return  blockOutputsWithSubs[name][index];//(varnodePath.Right(slength-lastDot-1));
+		return  blockOutputsWithSubs[index];//(varnodePath.Right(slength-lastDot-1));
 	}
 	
+	int CASIObj::getNumberOfInputVars( ) //get the total number of input variable
+	{
+        return blockInputsWithSubs.size();
+    }
+    int CASIObj::getNumberOfOutputVars( ) //get the total number of output variable
+	{
+        return blockOutputsWithSubs.size();
+    }
+
 	CString CASIObj::getSIPortName(int index) //get the source or input port name by index
 	{
 		CString siPortPath;
@@ -633,12 +632,15 @@ void CASIObj::prepBlock()
 		return getChildNum(node);
 	}
 
-    void CASIObj::prepBlockSubs()
+    void CASIObj::processBlocks()
 	{
 		//////get inputs var names
 		CString inputVarPath;
 		CString thePath;
 		int slength = nodePath.GetLength();
+
+		std::vector< CString > tempBlockInputs;
+		std::vector< CString > tempBlockOutputs;
 
 		inputVarPath=nodePath;
 		inputVarPath.Insert(slength,".Input");
@@ -646,23 +648,15 @@ void CASIObj::prepBlock()
 		inputVarPath.Insert(slength,".");
 		slength = inputVarPath.GetLength();
 
-		IHNode node;
-        std::vector< CString > tempSubs;
+		//IHNode node;
+        //std::vector< CString > tempSubs;
         for( int i = 0; i < blockInputs.size(); i++)
         {
-                thePath = inputVarPath;
-		        thePath.Insert(slength,blockInputs[i]);
+            blockInputsWithSubs.push_back( blockInputs[i] );
+            prepBlockInputSubs( inputVarPath, blockInputs[i] );
 
-		        node=nodeNav(ihRoot, thePath);
-
-                int size = getNumSubInputVar(blockInputs[i]);
-		        tempSubs.clear();
-                if( size > 0 )
-                {
-                    getChildNames(node, tempSubs);
-                    blockInputsWithSubs[blockInputs[i]] = tempSubs;
-                }
         }
+
 		///////get outputs var names
 
 		CString outputVarPath;
@@ -676,20 +670,56 @@ void CASIObj::prepBlock()
 
         for( int i = 0; i < blockOutputs.size(); i++)
         {
-                thePath = outputVarPath;
-		        thePath.Insert(slength,blockOutputs[i]);
-
-		        node=nodeNav(ihRoot, thePath);
-
-                int size = getNumSubOutputVar(blockOutputs[i]);
-		        tempSubs.clear();
-                if( size > 0 )
-                {
-                    getChildNames(node, tempSubs);
-                    blockOutputsWithSubs[blockOutputs[i]] = tempSubs;
-                }
+            blockOutputsWithSubs.push_back( blockOutputs[i] );
+            prepBlockOutputSubs( outputVarPath, blockOutputs[i] );
         }
 
 		return;
 	}
+
+    void CASIObj::prepBlockInputSubs( CString path, CString block )
+    {
+		int slength = path.GetLength();
+        CString thePath = path;
+		thePath.Insert( slength, block );
+        IHNode node = nodeNav( ihRoot, thePath );
+
+        int size = getNumSubInputVar( block );
+        std::vector< CString > tempSubs;
+        if( size > 0 )
+        {
+            getChildNames( node, tempSubs );
+            for( int i = 0; i < tempSubs.size(); i++ )
+            {
+                if( tempSubs[i] != "" )
+                {
+                    blockInputsWithSubs.push_back( block + _T(".") + tempSubs[i] );
+                    prepBlockInputSubs( path, blockInputsWithSubs.back() );
+                }
+            }
+        }
+    }
+
+    void CASIObj::prepBlockOutputSubs( CString path, CString block )
+    {
+		int slength = path.GetLength();
+        CString thePath = path;
+		thePath.Insert( slength, block );
+        IHNode node = nodeNav( ihRoot, thePath );
+
+        int size = getNumSubOutputVar( block );
+        std::vector< CString > tempSubs;
+        if( size > 0 )
+        {
+            getChildNames( node, tempSubs );
+            for( int i = 0; i < tempSubs.size(); i++ )
+            {
+                if( tempSubs[i] != "" )
+                {
+                    blockOutputsWithSubs.push_back( block + _T(".") + tempSubs[i] );
+                    prepBlockOutputSubs( path, blockOutputsWithSubs.back() );
+                }
+            }
+        }
+    }
 } //namespace CASI

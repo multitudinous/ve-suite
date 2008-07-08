@@ -200,7 +200,7 @@ private:
 
     bool IsBlock;
     wxTreeItemId m_rootId;
-    wxTreeItemId m_prevId;
+    std::map< std::string, wxTreeItemId > m_prevIds;
     wxTreeItemId m_prevSelection;
 	wxTreeItemId mParentId;
 
