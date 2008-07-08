@@ -277,3 +277,4 @@ JuliusXMLParser::startElement(const XMLCh* const uri,
    XMLString::release(&word_tag);
    XMLString::release(&recogfail);
 }
+// vim:ts=4:sw=4:et:tw=0

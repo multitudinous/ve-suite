@@ -24,50 +24,50 @@ class JuliusXMLParser
 {
 public:
 
-   JuliusXMLParser();
+    JuliusXMLParser();
 
-   ~JuliusXMLParser();
+    ~JuliusXMLParser();
 
-   /**
-    * Attaches the given observer to this Subject.
-    *
-    * @param   observer    the observer to attach. 
-    */
-   void attach(const SpeechRecognitionObserverPtr& observer)
-   {
+    /**
+     * Attaches the given observer to this Subject.
+     *
+     * @param   observer    the observer to attach. 
+     */
+    void attach(const SpeechRecognitionObserverPtr& observer)
+    {
       mObservers.push_back(observer);
-   }
+    }
 
-   /**
-    * Detaches the given observer from this Subject; the observer will no
-    * longere be notified when new events occur.
-    *
-    * @param   observer    the observer to detach.
-    */
-   void detach(const SpeechRecognitionObserverPtr& observer);
+    /**
+     * Detaches the given observer from this Subject; the observer will no
+     * longer be notified when new events occur.
+     *
+     * @param   observer    the observer to detach.
+     */
+    void detach(const SpeechRecognitionObserverPtr& observer);
 
-   /**
-    * Parses the given XML text and notifies observers of the results.
-    *
-    * @param   text        the text to parse.
-    *
-    * @return     true if successful, false otherwise.
-    */
-   bool parse(const std::string& text);
+    /**
+     * Parses the given XML text and notifies observers of the results.
+     *
+     * @param   text        the text to parse.
+     *
+     * @return     true if successful, false otherwise.
+     */
+    bool parse(const std::string& text);
 
 private:
 
-   /// The list of observers that are attached to this subject.
-   std::vector<SpeechRecognitionObserverPtr>          mObservers;
+    /// The list of observers that are attached to this subject.
+    std::vector<SpeechRecognitionObserverPtr>          mObservers;
 
-   /// The SAX parser used to parse the XML.
-   XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader*      mParser;
+    /// The SAX parser used to parse the XML.
+    XERCES_CPP_NAMESPACE_QUALIFIER SAX2XMLReader*      mParser;
     
-   /* Private Functions */
+    /* Private Functions */
 
-   /**
-    * This function handles a start element event from SAX.
-    */
+    /**
+     * This function handles a start element event from SAX.
+     */
     void startElement(const XMLCh* const uri, const XMLCh* const localname,
                       const XMLCh* const qname, 
                       const XERCES_CPP_NAMESPACE_QUALIFIER Attributes& attrs);
@@ -76,3 +76,4 @@ private:
 typedef Loki::SmartPtrDef<JuliusXMLParser>::type JuliusXMLParserPtr;
 
 #endif
+// vim:ts=4:sw=4:et:tw=0

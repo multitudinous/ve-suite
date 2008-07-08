@@ -2,7 +2,8 @@ import os
 import sys
 import string
 pj = os.path.join
-Import("baseEnv RootDir")
+Import("baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options")
+Import("wxwidgets_options")
 
 env = baseEnv.Copy()
 
@@ -18,16 +19,21 @@ env.AppendUnique( BUILDERS = {'CxxTest':CxxTestBuilder},
                              pj('#', 'external', 'loki-0.1.6', 'include'),
                              pj('#', 'src'),
                              '#'],
-                  LIBS = ['sqlite3', 'xerces-c', 'ACE'],
+                  LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open')],
+                  LIBS = ['sqlite3', 'ves_open_module'],
                   CPPDEFINES = ['LOKI_ENABLE_FUNCTION',
                                 'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 
+tao_options.apply(env)
+xerces_options.apply(env)
+wxwidgets_options.apply(env)
 # Provide a list of headers that have to be run through CxxTest to create
 # the source files.
 test_hdrs = Split("""
    CircularQueueTest.h
    JuliusNetworkClientTest.h
    JuliusXMLParserTest.h
+   SpeechNavigatorTest.h
 """)
 # FIXME:  These files were commented out since they no longer build.
 """
@@ -48,6 +54,7 @@ srcs = Split("""
 orig_srcs = Split("""
    JuliusNetworkClient.cxx
    JuliusXMLParser.cxx
+   SpeechNavigator.cxx
 """)
 
 orig_srcs = map(lambda s: pj('#', 'src', 'apps', 'voice', s), orig_srcs)
