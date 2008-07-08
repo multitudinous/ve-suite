@@ -54,6 +54,9 @@ vprSingletonImp( CORBAServiceList );
 
 ////////////////////////////////////////////////////////////////////////////////
 CORBAServiceList::CORBAServiceList( void )
+    :
+    p_ui_i( 0 ),
+    pelog( 0 )
 {
     mTimeZero = ACE_Time_Value::zero;
     mTimeOutValue.msec( 5 );
@@ -66,7 +69,7 @@ CORBAServiceList::~CORBAServiceList()
     if( p_ui_i )
     {
         delete p_ui_i;
-        p_ui_i = NULL;
+        p_ui_i = 0;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
