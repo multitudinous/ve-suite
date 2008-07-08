@@ -206,7 +206,7 @@ char * Body_Unit_i::GetStatusMessage (
 	ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
 	data->SetDataName("RETURN_STATE");
 	data->SetDataType("UNSIGNED INT");
-	data->SddDataValue(return_state);
+	data->SetDataValue(return_state);
     returnState->AddDataValuePair( data );
     
 	std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
