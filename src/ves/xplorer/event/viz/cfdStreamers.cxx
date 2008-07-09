@@ -242,8 +242,8 @@ void cfdStreamers::Update()
     mapper->ImmediateModeRenderingOn();
     mapper->SetScalarModeToUsePointFieldData();
     mapper->UseLookupTableScalarRangeOn();
-    mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
-
+    mapper->SelectColorArray( GetActiveDataSet()->
+        GetActiveScalarName().c_str() );
     vtkActor* temp = vtkActor::New();
     temp->SetMapper( mapper );
     temp->GetProperty()->SetSpecularPower( 20.0f );

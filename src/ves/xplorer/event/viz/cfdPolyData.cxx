@@ -261,7 +261,8 @@ void cfdPolyData::Update()
 
     map->SetScalarModeToUsePointFieldData();
     map->UseLookupTableScalarRangeOn();
-    map->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+    map->SelectColorArray( GetActiveDataSet()->
+        GetActiveScalarName().c_str() );
     map->Update();
 
     temp->SetMapper( this->map );

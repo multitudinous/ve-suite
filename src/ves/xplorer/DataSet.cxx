@@ -1127,19 +1127,20 @@ void DataSet::ResetScalarBarRange( double min, double max )
     this->GetParent()->GetRange( rawRange );
 
     double newRawRange[2];
-    newRawRange[0] = min;//rawRange[0] + (rawRange[1]-rawRange[0])*(double)min/100.;
-    newRawRange[1] = max;//rawRange[0] + (rawRange[1]-rawRange[0])*(double)max/100.;
+    newRawRange[0] = min;
+    newRawRange[1] = max;
 
     double newPrettyRange[2];
     this->AutoComputeUserRange( newRawRange, newPrettyRange );
     vprDEBUG( vesDBG, 1 ) << "newPrettyRange[0] = " << newPrettyRange[0]
-    << ", newPrettyRange[1] = " << newPrettyRange[1]
-    << std::endl << vprDEBUG_FLUSH;
+        << ", newPrettyRange[1] = " << newPrettyRange[1]
+        << std::endl << vprDEBUG_FLUSH;
 
     this->SetUserRange( newPrettyRange );
 
     // Update vtkLookupTable
-    this->lut->SetTableRange( this->GetUserRange() );
+    double* tempRange1 = GetUserRange();
+    this->lut->SetTableRange( tempRange1 );
     this->lut->Build();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1647,7 +1648,7 @@ void DataSet::CreateWireframeGeode( void )
     wireframeMapper->SetScalarModeToUsePointFieldData();
     //mapper->SetScalarModeToDefault();
     wireframeMapper->UseLookupTableScalarRangeOn();
-    wireframeMapper->SelectColorArray( GetActiveScalar() );
+    wireframeMapper->SelectColorArray( GetActiveScalarName().c_str() );
     wireframeMapper->SetLookupTable( GetLookupTable() );
     //wireframeMapper->Update();
     

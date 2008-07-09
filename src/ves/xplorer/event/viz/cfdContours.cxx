@@ -100,7 +100,8 @@ void cfdContours::Update( void )
         //mapper->InterpolateScalarsBeforeMappingOff();
         mapper->SetScalarModeToUsePointFieldData();
         mapper->UseLookupTableScalarRangeOn();
-        mapper->SelectColorArray( GetActiveDataSet()->GetActiveScalar() );
+        mapper->SelectColorArray( GetActiveDataSet()->
+            GetActiveScalarName().c_str() );
         mapper->SetLookupTable( GetActiveDataSet()->GetLookupTable() );
         mapper->Update();
         
