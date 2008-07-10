@@ -1045,85 +1045,86 @@ class LauncherWindow(wx.Frame):
             velShell.Start(self.state.GetSurface("ShellScript"), globalPath)                
 
 
-##START MAIN PROGRAM
-##Get & clean up command line arguments.
-arguments = sys.argv[1:]
+if __name__ == '__main__':
+    ##START MAIN PROGRAM
+    ##Get & clean up command line arguments.
+    arguments = sys.argv[1:]
 
-VALID_ARGUMENTS = {'c' : "conductor",
-                   'n' : "nameserver",
-                   'x' : "xplorer",
-                   'l:' : "cluster=",
-##                   'k' : "desktop",
-                   'j:' : "jconf=",
-                   't:' : "taomachine=",
-                   'p:' : "port=",
-                   'w:' : "dir=",
-##                   'm:' : "master=",
-                   'd' : "dev",
-                   's' : "shell",
-                   'q' : "quick",
-                   'b' : "debug",
-                   'g:' : "config=",
-                   'v' : "version"}
-shortArgs = ""
-longArgs = []
-for arg in VALID_ARGUMENTS:
-    shortArgs = shortArgs + arg
-    longArgs.append(VALID_ARGUMENTS[arg])
-try:
-    opts, args = getopt.getopt(arguments, shortArgs, longArgs)
-except getopt.GetoptError:
-    usage()
-    sys.exit(2)
+    VALID_ARGUMENTS = {'c' : "conductor",
+                       'n' : "nameserver",
+                       'x' : "xplorer",
+                       'l:' : "cluster=",
+    ##                   'k' : "desktop",
+                       'j:' : "jconf=",
+                       't:' : "taomachine=",
+                       'p:' : "port=",
+                       'w:' : "dir=",
+    ##                   'm:' : "master=",
+                       'd' : "dev",
+                       's' : "shell",
+                       'q' : "quick",
+                       'b' : "debug",
+                       'g:' : "config=",
+                       'v' : "version"}
+    shortArgs = ""
+    longArgs = []
+    for arg in VALID_ARGUMENTS:
+        shortArgs = shortArgs + arg
+        longArgs.append(VALID_ARGUMENTS[arg])
+    try:
+        opts, args = getopt.getopt(arguments, shortArgs, longArgs)
+    except getopt.GetoptError:
+        usage()
+        sys.exit(2)
 
-##Check if dev mode's on
-if ("--dev", "") in opts or ("-d", "") in opts:
-    ##Run VE-Suite in dev mode? Turned to True if --dev passed.
-    devMode = True
-    ##Change Desktop mode's jconf for dev mode.
-    devDesktopName = "DevDesktop"
-    devDesktop = JconfDict({devDesktopName: DEFAULT_DEV_JCONF})
-    MODE_DICT["Desktop"]["JconfDict"] = devDesktop
-    MODE_DICT["Desktop"]["JconfSelection"] = devDesktopName
-    BASE_CONFIG["JconfDict"] = devDesktop
-    BASE_CONFIG["JconfSelection"] = devDesktopName
-    BASE_CONFIG["Directory"] = VELAUNCHER_DIR
-else:
-    devMode = False
+    ##Check if dev mode's on
+    if ("--dev", "") in opts or ("-d", "") in opts:
+        ##Run VE-Suite in dev mode? Turned to True if --dev passed.
+        devMode = True
+        ##Change Desktop mode's jconf for dev mode.
+        devDesktopName = "DevDesktop"
+        devDesktop = JconfDict({devDesktopName: DEFAULT_DEV_JCONF})
+        MODE_DICT["Desktop"]["JconfDict"] = devDesktop
+        MODE_DICT["Desktop"]["JconfSelection"] = devDesktopName
+        BASE_CONFIG["JconfDict"] = devDesktop
+        BASE_CONFIG["JconfSelection"] = devDesktopName
+        BASE_CONFIG["Directory"] = VELAUNCHER_DIR
+    else:
+        devMode = False
 
-##Prepare previous config
-##Prepare data storage
-previousState = CoveredConfig()
-##Restore config values from last time.
-LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
+    ##Prepare previous config
+    ##Prepare data storage
+    previousState = CoveredConfig()
+    ##Restore config values from last time.
+    LoadConfig(DEFAULT_CONFIG, previousState, loadLastConfig = True)
 
-app = wx.PySimpleApp()
-if not CommandLine(opts, args, config, previousState).AutoLaunched():
-    Launchframe = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-app.MainLoop()
-##Command Line Check, then Window Boot (if necessary)
-del app
-"""
-app = wx.PySimpleApp()
-if not CommandLine(opts, args, previousState).AutoLaunched():
-    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-app.MainLoop()
-##Command Line Check, then Window Boot (if necessary)
-del config
-"""
-####Window boot 
-##if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
-##   (len(opts) == 0 or (len(opts) == 1 and devMode)):
-##    ##Launch the application
-##    app = wx.PySimpleApp()
-##    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
-##    app.MainLoop()
-##    ##Delete the config link to avoid memory leakage.
-##    del config
-####Command line boot
-####Takes arguments passed, uses defaults for the rest, launches immediately.
-##else:
-##    app = wx.PySimpleApp()
-##    app.MainLoop()
-##    CommandLine(opts, args, previousState)
-
+    app = wx.PySimpleApp()
+    if not CommandLine(opts, args, config, previousState).AutoLaunched():
+        Launchframe = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+    app.MainLoop()
+    ##Command Line Check, then Window Boot (if necessary)
+    del app
+    """
+    app = wx.PySimpleApp()
+    if not CommandLine(opts, args, previousState).AutoLaunched():
+        frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+    app.MainLoop()
+    ##Command Line Check, then Window Boot (if necessary)
+    del config
+    """
+    ####Window boot 
+    ##if not (len(args) > 0 and previousState.GetSurface("AutoRunVes")) and \
+    ##   (len(opts) == 0 or (len(opts) == 1 and devMode)):
+    ##    ##Launch the application
+    ##    app = wx.PySimpleApp()
+    ##    frame = LauncherWindow(None, -1, 'VE Suite Launcher', args, previousState)
+    ##    app.MainLoop()
+    ##    ##Delete the config link to avoid memory leakage.
+    ##    del config
+    ####Command line boot
+    ####Takes arguments passed, uses defaults for the rest, launches immediately.
+    ##else:
+    ##    app = wx.PySimpleApp()
+    ##    app.MainLoop()
+    ##    CommandLine(opts, args, previousState)
+    # vim:ts=4:sw=4:et:tw=0
