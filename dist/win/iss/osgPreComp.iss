@@ -6,7 +6,9 @@
 #define MyAppVerName "OSG_{#OSGVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define OSGSRCHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_2.2.0_Pre-Compile_vc8.0_SP1"
+#define OSGSRCHOME "D:\devEnv\VES-Deps_1.1\source\OpenSceneGraph-2.2.0\install"
+#define SIMAGEHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\simage-1.6.1"
+#define COINHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\Coin-2.4.6-msvc8"
 [Setup]
 AppName={#MyAppName}
 AppVerName=OSG_{#OSGVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -19,7 +21,7 @@ DefaultGroupName={#MyAppName}
 OutputBaseFilename=osg{#OSGVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
 WindowVisible=true
 WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
 BackColor=$a16502
