@@ -59,13 +59,17 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 	{
 		AfxMessageBox( _T("Unable to connect to VE-CE" ));
 	}*/
+
+    CString path = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Path"), _T("C:\\") );
+    CString name = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Name"), _T("localhost") );
+    CString port = AfxGetApp()->GetProfileString( _T("Aspen"), _T("Port"), _T("1239") );
     CEdit *Display;
     Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
-	Display->SetWindowTextA("localhost");
+	Display->SetWindowTextA(name);
 	Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
-	Display->SetWindowTextA("1239");
+	Display->SetWindowTextA(port);
 	Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
-	Display->SetWindowTextA("C:\\");
+	Display->SetWindowTextA( path );
 
 
 	// TODO: Add extra initialization here	
@@ -145,6 +149,20 @@ LRESULT CVE_AspenUnitDlg::WindowProc(UINT message,
 }
 void CVE_AspenUnitDlg::OnBnClickedCancel()
 {   
+    CEdit *Display;
+    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT5));
+    CString path;
+    Display->GetWindowText( path );
+    AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Path"), path );
+    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT3));
+    CString name;
+    Display->GetWindowText( name );
+    AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Name"), name );
+    Display = reinterpret_cast<CEdit *>(GetDlgItem(IDC_EDIT4));
+    CString port;
+    Display->GetWindowText( port );
+    AfxGetApp()->WriteProfileString( _T("Aspen"), _T("Port"), port );
+
 	if(commManager != NULL)
 	{
 		//delete unitObject;

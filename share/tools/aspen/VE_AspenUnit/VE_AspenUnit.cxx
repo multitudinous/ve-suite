@@ -53,7 +53,7 @@ BOOL CVE_AspenUnitApp::InitInstance()
     }
     AfxEnableControlContainer();
 
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T("Aspen Unit"));
 
 	CVE_AspenUnitDlg dlg;
 	m_pMainWnd = &dlg;
