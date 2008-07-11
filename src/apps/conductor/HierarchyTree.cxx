@@ -72,6 +72,9 @@ using namespace ves::conductor;
 BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
     EVT_TREE_SEL_CHANGED( TREE_CTRL, HierarchyTree::OnSelChanged )
     EVT_TREE_ITEM_EXPANDING( TREE_CTRL, HierarchyTree::OnExpanded )
+    EVT_TREE_ITEM_RIGHT_CLICK( TREE_CTRL, HierarchyTree::OnRightClick )
+    EVT_MENU_RANGE( UIPluginBase::BEGIN_MENU_ID, UIPluginBase::END_MENU_ID,
+    HierarchyTree::ProcessRightClickMenuEvents )
 END_EVENT_TABLE()
 
 HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
@@ -237,30 +240,28 @@ void HierarchyTree::Clear()
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
 {
+    SelectNetworkPlugin( GetSelection() );
+}
+void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
+{
     //return if current selection is top folder
-    if( GetSelection() == m_rootId )
+    //or the clicking the same node
+    if( selectedId == m_rootId || selectedId == m_currentNodeId )
     {
         return;
     }
 
     //find and highlight selected module
     ModuleData* tempModData = static_cast< ModuleData* >( this->
-        GetItemData( GetSelection() ) );
+        GetItemData( selectedId ) );
     m_canvas->SetActiveNetwork( tempModData->systemId );
     m_canvas->GetActiveNetwork()->
                HighlightCenter( tempModData->modId );
 
-    //check if on current module
-    if( GetSelection() == m_currentNodeId )
-    {
-        return;
-    }
-
     //if a subnet redraw in conductor and xplorer
-    if( GetItemParent(GetSelection()) != m_currentNodeId )
+    if( GetItemParent( selectedId ) != GetItemParent( m_currentNodeId ) )
     {
         //set the active network to the selected subnet
-        m_currentNodeId = this->GetItemParent( this->GetSelection() );
 
         //tell xplorer to draw subnet
         CommandPtr veCommand( new ves::open::xml::Command() );
@@ -278,10 +279,39 @@ void HierarchyTree::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
         CORBAServiceList::instance()->
             SendCommandStringToXplorer( veCommand );
     }
+
+    //keep track of previous selection
+    m_currentNodeId = selectedId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnExpanded( wxTreeEvent& WXUNUSED( event ) )
 {
+}
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::OnRightClick( wxTreeEvent& event )
+{
+    wxTreeItemId selected = event.GetItem();
+    SelectItem( selected );
+    
+    ModuleData* tempModData = static_cast< ModuleData* >( this->
+        GetItemData( selected ));
+    m_canvas->SetActiveNetwork( tempModData->systemId );
+    wxMenu * popupMenu =
+    m_canvas->GetActiveNetwork()->modules[tempModData->modId].
+        GetPlugin()->GetPopupMenu();
+    popupMenu->SetTitle( this->GetItemText( selected ) );
+    m_canvas->GetActiveNetwork()->modules[tempModData->modId].
+        GetPlugin()->SendActiveId();
+
+    PopupMenu( popupMenu );//, event.GetPoint() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::ProcessRightClickMenuEvents( wxCommandEvent& event )
+{
+    ModuleData* tempModData = static_cast< ModuleData* >( this->
+        GetItemData( m_currentNodeId ));
+    ::wxPostEvent( m_canvas->GetActiveNetwork()->modules[tempModData->modId].
+        GetPlugin(), event );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::AddtoTree( UIPluginBase* cur_module )

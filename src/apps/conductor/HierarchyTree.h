@@ -62,6 +62,40 @@ class PluginLoader;
 class HierarchyTree : public wxTreeCtrl
 {
 public:
+    
+    enum PLUGIN_ENUMS
+    {
+        SHOW_RESULT = 3500,
+        SHOW_DESC,
+        PARAVIEW,
+        SHOW_FINANCIAL, /* EPRI TAG */
+        ASPEN_MENU,
+        SHOW_ASPEN_NAME,
+        QUERY_INPUTS,
+        QUERY_OUTPUTS,
+        ASPEN_ICON,
+        ICON_MENU,
+        SHOW_ICON_CHOOSER,
+        GEOMETRY,
+        NAVTO,
+        MODEL_INPUTS,
+        MODEL_RESULTS,
+        DATASET,
+        VISUALIZATION,
+        SET_UI_PLUGIN_NAME,
+        SET_ACTIVE_MODEL,
+        ACTIVE_MODEL_SOUNDS,
+        DEL_MOD,
+        SET_ACTIVE_PLUGIN,
+        ADD_INPUT_PORT,
+        ADD_OUTPUT_PORT,
+        DELETE_PORT,
+        DIALOG_PLUGIN_UPDATE,
+        PLUGIN_TOGGLE_ALL_ON,
+        PLUGIN_TOGGLE_PLUGIN_ON,
+        PLUGIN_TOGGLE_MENU
+    };
+
     ///Default constructor
     HierarchyTree()
     {
@@ -107,6 +141,9 @@ protected:
                         std::vector< ves::open::xml::model::ModelPtr > models, std::string id );
     void OnSelChanged( wxTreeEvent& event );
     void OnExpanded( wxTreeEvent& WXUNUSED( event ) );
+    void OnRightClick( wxTreeEvent& event );
+    void SelectNetworkPlugin( wxTreeItemId );
+    void ProcessRightClickMenuEvents( wxCommandEvent& event );
 
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;

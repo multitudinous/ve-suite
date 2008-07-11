@@ -59,6 +59,7 @@ class wxWindow;
 class wxDialog;
 class wxImage;
 class wxScrolledWindow;
+class wxMenu;
 
 #include <wx/event.h>
 #define edge_size 10
@@ -96,35 +97,38 @@ class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler
 public:
     enum PLUGIN_ENUMS
     {
-        SHOW_RESULT = 3500,
-        SHOW_DESC,
+        BEGIN_MENU_ID = 3500, //this ids and the END_MENU_ID are used for
+                              //posting events using EVT_MENU_RANGE
+        SHOW_RESULT,
         PARAVIEW,
+        SHOW_DESC,
         SHOW_FINANCIAL, /* EPRI TAG */
-        ASPEN_MENU,
         SHOW_ASPEN_NAME,
         QUERY_INPUTS,
         QUERY_OUTPUTS,
-        ASPEN_ICON,
-        ICON_MENU,
         SHOW_ICON_CHOOSER,
         GEOMETRY,
         NAVTO,
+        DATASET,
         MODEL_INPUTS,
         MODEL_RESULTS,
-        DATASET,
         VISUALIZATION,
         SET_UI_PLUGIN_NAME,
         SET_ACTIVE_MODEL,
         ACTIVE_MODEL_SOUNDS,
         DEL_MOD,
-        SET_ACTIVE_PLUGIN,
         ADD_INPUT_PORT,
         ADD_OUTPUT_PORT,
         DELETE_PORT,
-        DIALOG_PLUGIN_UPDATE,
         PLUGIN_TOGGLE_ALL_ON,
         PLUGIN_TOGGLE_PLUGIN_ON,
-        PLUGIN_TOGGLE_MENU
+        END_MENU_ID,
+        DIALOG_PLUGIN_UPDATE,
+        PLUGIN_TOGGLE_MENU,
+        ASPEN_MENU,
+        ASPEN_ICON,
+        ICON_MENU,
+        SET_ACTIVE_PLUGIN
     };
 protected:
     ///Defualt constructor
@@ -278,6 +282,8 @@ public:
     void SetDialogSize( wxRect dialogSize );
     void SetNameFlag( bool flag );
     bool GetNameFlag( );
+    wxMenu* GetPopupMenu( );
+    void SendActiveId( );
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
                         std::vector< wxString >& tagNames,
@@ -396,6 +402,7 @@ protected:
     /// second = memory map size
     std::pair< unsigned int, size_t > pluginDialogPair;
     wxUpdateUIEvent pluginDeleteEvent;
+    wxMenu * pop_menu;
     
     DECLARE_DYNAMIC_CLASS( UIPluginBase )
     DECLARE_EVENT_TABLE()

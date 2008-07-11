@@ -174,6 +174,93 @@ UIPluginBase::UIPluginBase() :
     defaultIconMap[ "vectortb.xpm" ] = wxImage( vectortb_xpm );
     
     pluginDeleteEvent.SetId( DIALOG_PLUGIN_UPDATE );
+
+    //create the menu
+    pop_menu = new wxMenu();
+    pop_menu->Append( SHOW_DESC, _( "Show Module Description" ) );
+    pop_menu->Enable( SHOW_DESC, true );
+    pop_menu->Append( SHOW_RESULT, _( "Show Module Result" ) );
+    //pop_menu->Enable( SHOW_RESULT, true);
+    pop_menu->Enable( SHOW_RESULT, false );
+    pop_menu->Append( PARAVIEW, _( "ParaView 3D Result" ) );
+    pop_menu->Enable( PARAVIEW, false );
+    if( Has3Ddata() )
+    {
+        pop_menu->Enable( PARAVIEW, true );
+    }
+    pop_menu->Append( SHOW_FINANCIAL, _( "Financial Data" ) );
+    pop_menu->Enable( SHOW_FINANCIAL, true );
+
+    //Toggle Plugin Menu
+    wxMenu* pluginMenu = new wxMenu();
+    pluginMenu->Append( PLUGIN_TOGGLE_ALL_ON, _( "Toggle All On" ) );
+    pluginMenu->Enable( PLUGIN_TOGGLE_ALL_ON, true );
+    pluginMenu->Append( PLUGIN_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
+    pluginMenu->Enable( PLUGIN_TOGGLE_PLUGIN_ON, true );
+    pop_menu->Append( PLUGIN_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
+                    _( "Used to toggle plugin" ) );
+    pop_menu->Enable( PLUGIN_TOGGLE_MENU, true );
+
+    //Aspen Menu
+    wxMenu * aspen_menu = new wxMenu();
+    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
+    aspen_menu->Append( QUERY_INPUTS, _( "Query Inputs" ) );
+    aspen_menu->Enable( QUERY_INPUTS, true );
+    aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
+    aspen_menu->Enable( QUERY_OUTPUTS, true );
+    pop_menu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+                     _( "Used in conjunction with Aspen" ) );
+    pop_menu->Enable( ASPEN_MENU, true );
+    //Port Menu
+    wxMenu * port_menu = new wxMenu();
+    port_menu->Append( ADD_INPUT_PORT, _( "Add Input Port" ) );
+    port_menu->Enable( ADD_INPUT_PORT, true );
+    port_menu->Append( ADD_OUTPUT_PORT, _( "Add Output Port" ) );
+    port_menu->Enable( ADD_OUTPUT_PORT, true );
+    port_menu->Append( DELETE_PORT, _( "Delete Port" ) );
+    port_menu->Enable( DELETE_PORT, true );
+    pop_menu->Append( ::wxNewId(), _( "Ports" ), port_menu,
+                     _( "Used to manipulate ports" ) );
+
+    //Icon Menu
+    wxMenu * icon_menu = new wxMenu();
+    icon_menu->Append( SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
+    icon_menu->Enable( SHOW_ICON_CHOOSER, true );
+    pop_menu->Append( ICON_MENU,   _( "Icon" ), icon_menu,
+                     _( "Controls for icon images" ) );
+    pop_menu->Enable( ICON_MENU, true );
+    
+    pop_menu->Append( NAVTO, _( "Navigate To" ) );
+    pop_menu->Enable( NAVTO, true );
+    // GUI to configure geometry for graphical env
+    pop_menu->Append( GEOMETRY, _( "Geometry Config" ) );
+    pop_menu->Enable( GEOMETRY, true );
+    // GUI to configure dataset for graphical env
+    pop_menu->Append( DATASET, _( "Data Set Config" ) );
+    pop_menu->Enable( DATASET, true );
+    //UI for input variables
+    pop_menu->Append( MODEL_INPUTS, _( "Input Variables" ) );
+    pop_menu->Enable( MODEL_INPUTS, true );
+    //UI for results variables
+    pop_menu->Append( MODEL_RESULTS, _( "Result Variables" ) );
+    pop_menu->Enable( MODEL_RESULTS, true );
+    //UI for vis variables
+    pop_menu->Append( VISUALIZATION, _( "Visualization" ) );
+    pop_menu->Enable( VISUALIZATION, true );
+    //Sounds dialog
+    pop_menu->Append( ACTIVE_MODEL_SOUNDS, _( "Model Sounds" ) );
+    pop_menu->Enable( ACTIVE_MODEL_SOUNDS, true );
+    //Make a specific plusing active in xplorer
+    pop_menu->Append( SET_ACTIVE_MODEL, _( "Set Active Xplorer Model" ) );
+    pop_menu->Enable( SET_ACTIVE_MODEL, true );
+    //Set the plugin name for a model
+    pop_menu->Append( SET_UI_PLUGIN_NAME, _( "Set UI Plugin Name" ) );
+    pop_menu->Enable( SET_UI_PLUGIN_NAME, true );
+    pop_menu->Append( DEL_MOD, _( "Del Module" ) );
+    pop_menu->Enable( DEL_MOD, true );
+
+    //pop_menu->SetClientData( &id );
 }
 ////////////////////////////////////////////////////////////////////////////////
 UIPluginBase::~UIPluginBase()
@@ -1628,100 +1715,12 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     actionPoint = evtpos;
     highlightFlag = true;
     m_canvas->Refresh( true );
-    //send the active id so that each plugin knows what to do
-    wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
-    setActivePluginId.SetClientData( &id );
-    setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
-    m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
 
+    SendActiveId();
     wxString menuName = name + wxString( " Menu", wxConvUTF8 );
-    wxMenu pop_menu( menuName );
+    pop_menu->SetTitle( menuName );
 
-    pop_menu.Append( SHOW_DESC, _( "Show Module Description" ) );
-    pop_menu.Enable( SHOW_DESC, true );
-    pop_menu.Append( SHOW_RESULT, _( "Show Module Result" ) );
-    //pop_menu.Enable( SHOW_RESULT, true);
-    pop_menu.Enable( SHOW_RESULT, false );
-    pop_menu.Append( PARAVIEW, _( "ParaView 3D Result" ) );
-    pop_menu.Enable( PARAVIEW, false );
-    if( Has3Ddata() )
-    {
-        pop_menu.Enable( PARAVIEW, true );
-    }
-    pop_menu.Append( SHOW_FINANCIAL, _( "Financial Data" ) );
-    pop_menu.Enable( SHOW_FINANCIAL, true );
-
-    //Toggle Plugin Menu
-    wxMenu* pluginMenu = new wxMenu();
-    pluginMenu->Append( PLUGIN_TOGGLE_ALL_ON, _( "Toggle All On" ) );
-    pluginMenu->Enable( PLUGIN_TOGGLE_ALL_ON, true );
-    pluginMenu->Append( PLUGIN_TOGGLE_PLUGIN_ON, _( "Toggle Plugin On" ) );
-    pluginMenu->Enable( PLUGIN_TOGGLE_PLUGIN_ON, true );
-    pop_menu.Append( PLUGIN_TOGGLE_MENU, _( "Toggle Plugin" ), pluginMenu,
-                    _( "Used to toggle plugin" ) );
-    pop_menu.Enable( PLUGIN_TOGGLE_MENU, true );
-
-    //Aspen Menu
-    wxMenu * aspen_menu = new wxMenu();
-    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
-    aspen_menu->Append( QUERY_INPUTS, _( "Query Inputs" ) );
-    aspen_menu->Enable( QUERY_INPUTS, true );
-    aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
-    aspen_menu->Enable( QUERY_OUTPUTS, true );
-    pop_menu.Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
-                     _( "Used in conjunction with Aspen" ) );
-    pop_menu.Enable( ASPEN_MENU, true );
-    //Port Menu
-    wxMenu * port_menu = new wxMenu();
-    port_menu->Append( ADD_INPUT_PORT, _( "Add Input Port" ) );
-    port_menu->Enable( ADD_INPUT_PORT, true );
-    port_menu->Append( ADD_OUTPUT_PORT, _( "Add Output Port" ) );
-    port_menu->Enable( ADD_OUTPUT_PORT, true );
-    port_menu->Append( DELETE_PORT, _( "Delete Port" ) );
-    port_menu->Enable( DELETE_PORT, true );
-    pop_menu.Append( ::wxNewId(), _( "Ports" ), port_menu,
-                     _( "Used to manipulate ports" ) );
-
-    //Icon Menu
-    wxMenu * icon_menu = new wxMenu();
-    icon_menu->Append( SHOW_ICON_CHOOSER, _( "Icon Chooser" ) );
-    icon_menu->Enable( SHOW_ICON_CHOOSER, true );
-    pop_menu.Append( ICON_MENU,   _( "Icon" ), icon_menu,
-                     _( "Controls for icon images" ) );
-    pop_menu.Enable( ICON_MENU, true );
-    
-    pop_menu.Append( NAVTO, _( "Navigate To" ) );
-    pop_menu.Enable( NAVTO, true );
-    // GUI to configure geometry for graphical env
-    pop_menu.Append( GEOMETRY, _( "Geometry Config" ) );
-    pop_menu.Enable( GEOMETRY, true );
-    // GUI to configure dataset for graphical env
-    pop_menu.Append( DATASET, _( "Data Set Config" ) );
-    pop_menu.Enable( DATASET, true );
-    //UI for input variables
-    pop_menu.Append( MODEL_INPUTS, _( "Input Variables" ) );
-    pop_menu.Enable( MODEL_INPUTS, true );
-    //UI for results variables
-    pop_menu.Append( MODEL_RESULTS, _( "Result Variables" ) );
-    pop_menu.Enable( MODEL_RESULTS, true );
-    //UI for vis variables
-    pop_menu.Append( VISUALIZATION, _( "Visualization" ) );
-    pop_menu.Enable( VISUALIZATION, true );
-    //Sounds dialog
-    pop_menu.Append( ACTIVE_MODEL_SOUNDS, _( "Model Sounds" ) );
-    pop_menu.Enable( ACTIVE_MODEL_SOUNDS, true );
-    //Make a specific plusing active in xplorer
-    pop_menu.Append( SET_ACTIVE_MODEL, _( "Set Active Xplorer Model" ) );
-    pop_menu.Enable( SET_ACTIVE_MODEL, true );
-    //Set the plugin name for a model
-    pop_menu.Append( SET_UI_PLUGIN_NAME, _( "Set UI Plugin Name" ) );
-    pop_menu.Enable( SET_UI_PLUGIN_NAME, true );
-    pop_menu.Append( DEL_MOD, _( "Del Module" ) );
-    pop_menu.Enable( DEL_MOD, true );
-
-    //pop_menu.SetClientData( &id );
-    m_canvas->PopupMenu( &pop_menu, event.GetPosition() );
+    m_canvas->PopupMenu( pop_menu, event.GetPosition() );
 
     m_selFrPort = -1;
     m_selToPort = -1;
@@ -2162,4 +2161,18 @@ void UIPluginBase::TogglePlugin( wxCommandEvent& event )
         veCommand->AddDataValuePair( dataValuePair );
         bool connected = serviceList->SendCommandStringToXplorer( veCommand );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+wxMenu* UIPluginBase::GetPopupMenu( )
+{
+    return pop_menu;
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SendActiveId( )
+{
+    //send the active id so that each plugin knows what to do
+    wxUpdateUIEvent setActivePluginId( SET_ACTIVE_PLUGIN );
+    setActivePluginId.SetClientData( &id );
+    setActivePluginId.SetId( SET_ACTIVE_PLUGIN );
+    m_canvas->GetEventHandler()->ProcessEvent( setActivePluginId );
 }
