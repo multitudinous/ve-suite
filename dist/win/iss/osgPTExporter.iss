@@ -10,6 +10,7 @@
 #define SVNVERSION "1.0.0"
 #define VEHOME "D:\devEnv\VES"
 #define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_2.2.0_Pre-Compile_vc8.0_SP1"
+#define OSGPTEXPORTERHOME "D:\devEnv\VES-Deps_1.1\source\skewmatrix\osgPT\trunk\OSGExport"
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}
@@ -63,6 +64,9 @@ Source: {#OSGHOME}\bin\osg25-osg.dll; DestDir: {app}; Components:
 Source: {#OSGHOME}\bin\osg25-osgUtil.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osg25-osgSim.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osg25-osgDB.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg25-osgFX.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\osg25-osgText.dll; DestDir: {app}; Components: 
+Source: {#OSGHOME}\bin\ot9-OpenThreads.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_ive.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_jpeg.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_gif.dll; DestDir: {app}; Components: 
@@ -70,6 +74,8 @@ Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_png.dll; DestDir: {app}; Component
 Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_osg.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_rgb.dll; DestDir: {app}; Components: 
 Source: {#OSGHOME}\bin\osgPlugins-2.2.0\osgdb_tiff.dll; DestDir: {app}; Components: 
+Source: {#OSGPTEXPORTERHOME}\exp_isu_osg.dll; DestDir: {app}\vcplugin; Components: 
+Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.RTI; DestDir: {app}\vcplugin; Components: 
 
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
