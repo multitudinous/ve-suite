@@ -107,9 +107,9 @@ protected:
     void PopulateLevel( wxTreeItemId parentLeaf,
                         std::vector< ves::open::xml::model::ModelPtr > models, std::string id );
     void OnSelChanged( wxTreeEvent& event );
-    void OnExpanded( wxTreeEvent& WXUNUSED( event ) );
+    void OnExpanded( wxTreeEvent& event );
     void OnRightClick( wxTreeEvent& event );
-    void SelectNetworkPlugin( wxTreeItemId );
+    void SelectNetworkPlugin( wxTreeItemId treeId );
     void ProcessRightClickMenuEvents( wxCommandEvent& event );
 
     wxTreeItemId m_rootId;

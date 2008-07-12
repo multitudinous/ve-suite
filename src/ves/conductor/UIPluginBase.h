@@ -265,25 +265,34 @@ public:
     void OnSetUIPluginName( wxCommandEvent& event );
     void OnSetActiveXplorerModel( wxCommandEvent& event );
     void OnSetActivePluginID( wxUpdateUIEvent& event );
-    void OnDelMod( wxCommandEvent &event );
+    void OnDelMod( wxCommandEvent& event );
     // EPRI TAG
-    void OnShowFinancial( wxCommandEvent &event );
-    void OnShowAspenName( wxCommandEvent &event );
-    void OnQueryInputs( wxCommandEvent &event );
-    void OnQueryOutputs( wxCommandEvent &event );
-    void OnSetInput( wxCommandEvent &event );
+    void OnShowFinancial( wxCommandEvent& event );
+    void OnShowAspenName( wxCommandEvent& event );
+    void OnQueryInputs( wxCommandEvent& event );
+    void OnQueryOutputs( wxCommandEvent& event );
+    void OnSetInput( wxCommandEvent& event );
     void OnQueryInputModuleProperties( std::vector< std::string >, std::string );
     void OnQueryOutputModuleProperties( std::vector< std::string >, std::string );
     void OnQueryModuleProperties( std::vector< std::string > requestedInputs, std::string compName );
     ///Show the sounds available for this model
-    void OnModelSounds( wxCommandEvent &event );
-    void OnShowIconChooser( wxCommandEvent &event );
+    void OnModelSounds( wxCommandEvent& event );
+    void OnShowIconChooser( wxCommandEvent& event );
 
     void SetDialogSize( wxRect dialogSize );
+    ///Tell the plugin whether to render the name of the plugin during draw
+    ///\param flag Render the name or not
     void SetNameFlag( bool flag );
-    bool GetNameFlag( );
-    wxMenu* GetPopupMenu( );
-    void SendActiveId( );
+    ///Get the status of rendering the name of the plugin
+    ///\return The state of the name rendering
+    bool GetNameFlag();
+    ///return the right click pop up menu for the plugin
+    ///\return The wxWidgets wxMenu for the right click menu
+    wxMenu* GetPopupMenu();
+    ///Send the id of this plugin to xplorer so that it is active for all 
+    ///other xplorer events
+    void SendActiveId();
+
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
                         std::vector< wxString >& tagNames,
@@ -401,8 +410,10 @@ protected:
     /// first = id
     /// second = memory map size
     std::pair< unsigned int, size_t > pluginDialogPair;
+    ///THe plugin delete event
     wxUpdateUIEvent pluginDeleteEvent;
-    wxMenu * pop_menu;
+    ///The member that stores the right click menu
+    wxMenu* mPopMenu;
     
     DECLARE_DYNAMIC_CLASS( UIPluginBase )
     DECLARE_EVENT_TABLE()
