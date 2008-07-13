@@ -2,6 +2,7 @@
 #ifndef VE_VOICE_CIRCULAR_QUEUE_H_
 #define VE_VOICE_CIRCULAR_QUEUE_H_
 
+#include <cstdlib>
 /**
  * A CircularQueue data structure implementation intended for use with a
  * single producer and a single consumer thread.  The idea was take from

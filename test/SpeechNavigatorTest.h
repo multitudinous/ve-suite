@@ -35,6 +35,27 @@ public:
       TS_ASSERT(mNavigator->connectToXplorer());
    }
 
+   void testStartParserThread()
+   {
+      TS_ASSERT_EQUALS(mNavigator->isParserThreadRunning(), false);
+      TS_ASSERT(mNavigator->startParserThread());
+      TS_ASSERT(mNavigator->isParserThreadRunning());
+   }
+
+   void testStopParserThread()
+   {
+      TS_ASSERT_EQUALS(mNavigator->isParserThreadRunning(), false);
+      TS_ASSERT(mNavigator->startParserThread());
+      TS_ASSERT(mNavigator->isParserThreadRunning());
+      mNavigator->stopParserThread();
+      TS_ASSERT_EQUALS(mNavigator->isParserThreadRunning(), false);
+   }
+
+   void testRunDataIteration()
+   {
+      TS_WARN("Test not yet implemented.");
+   }
+
 private:
 
    SpeechNavigator*                                mNavigator;

@@ -22,8 +22,13 @@ public:
    void testStartDataLoop()
    {
       JuliusNetworkClient* jnc = new JuliusNetworkClient();
+      JuliusXMLParserPtr parser = new JuliusXMLParser();
+      TS_ASSERT_EQUALS(jnc->startDataLoop(), false);
       TS_ASSERT(jnc->connect(std::string("localhost")));
-      TS_ASSERT(jnc->startDataLoop());
+      TS_ASSERT_EQUALS(jnc->startDataLoop(), false);
+      jnc->disconnect();
+      jnc->setParser(parser);
+      TS_ASSERT_EQUALS(jnc->startDataLoop(), false);
       delete jnc;
    }
 

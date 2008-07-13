@@ -1,6 +1,7 @@
 
 #include "src/apps/voice/SpeechNavigator.h"
 
+#include <ace/Thread_Manager.h>
 #include <ace/SString.h>
 #include <ace/SStringfwd.h>
 #include <tao/TAO_Internal.h>
@@ -14,20 +15,62 @@
 
 #include <sstream>
 
+#include <iostream>
+
+namespace 
+{
+
+    /**
+     * Function invoked by the Parser thread.
+     *
+     * @param   arg         the network client to spin in this thread.
+     */
+    void* parserThreadFunction(void* arg)
+    {
+        if (!arg)
+        {
+            // FIXME:  Indicate a problem in a different manner.
+            std::cout << "[DBG] The parser thread did not receive an "
+                      << "argument!" << std::endl;
+            return NULL;
+        }
+        JuliusNetworkClient* client = 
+            reinterpret_cast<JuliusNetworkClient*>(arg);
+        client->startDataLoop();
+    }
+}
+
 SpeechNavigator::SpeechNavigator()
    : mClient(new JuliusNetworkClient()), mParser(new JuliusXMLParser()),
+     mThreadGroupId(-1), mParserThread(0), mStop(false),
      mArgc(0), mArgv(NULL)
 {
+    mParserObserver = new SpeechRecognitionObserver(
+        SpeechRecognitionObserver::PhraseRecognitionHandler(this, 
+            &SpeechNavigator::onPhraseRecognition));
+    mClient->setParser(mParser);
 }
 
 SpeechNavigator::~SpeechNavigator()
 {
-    delete mClient;
-    delete mParser;
+    if (mThreadGroupId != -1)
+    {
+        // Politely tell the parser loop to stop.
+        if (mParserThread)
+        {
+            mClient->stopDataLoop();
+        }
+        if (isParserThreadRunning())
+        {
+            ACE_Thread_Manager::instance()->join(mParserThread);
+        }
+    }
+    mParser->detach(mParserObserver);
     for (int i = 0; i < mArgc; ++i)
     {
         delete[] mArgv[i];
     }
+    delete mClient;
 }
 
 bool
@@ -69,6 +112,8 @@ SpeechNavigator::connectToNamingService()
         std::string tempMessage =
     "Cannot init ORB or can't connect to the Naming Service: CORBA Exception " +
             std::string( ex._info().c_str() ) + "\n";
+        std::cerr << "[ERR] Unable to connect to CORBA Naming Service: "
+                  << tempMessage << std::endl;
         return false;
     }
     return true;
@@ -104,6 +149,8 @@ SpeechNavigator::connectToXplorer()
         std::string tempMessage = 
             "Cannot find VE-Xplorer: CORBA Exception " + 
             std::string( ex._info().c_str() ) + "\n";
+        std::cerr << "[ERR] Unable to connect to VE Xplorer: "
+                  << tempMessage << std::endl;
         return false;
     }
     return true;
@@ -121,6 +168,73 @@ SpeechNavigator::setArgcArgv( int argc, char** argv )
         mArgv[ i ] = new char[ stringLength + 1 ];
         strncpy( mArgv[ i ], argv[ i ], stringLength + 1 );
     }
+}
+
+bool
+SpeechNavigator::startParserThread()
+{
+    mParser->attach(mParserObserver);
+    mThreadGroupId = ACE_Thread_Manager::instance()->spawn(
+                                          &parserThreadFunction, 
+                                          reinterpret_cast<void*>(mClient),
+                                THR_NEW_LWP | THR_JOINABLE | THR_INHERIT_SCHED,
+                                          &mParserThread);
+    if (mThreadGroupId == -1)
+    {
+        std::cerr << "[ERR] Unable to spawn parser thread!." << std::endl;
+        return false;
+    }
+    return true;
+}
+
+void
+SpeechNavigator::stopParserThread()
+{
+    if (isParserThreadRunning())
+    {
+        mClient->stopDataLoop();         
+        ACE_Thread_Manager::instance()->join(mParserThread);
+        mParserThread = 0;
+        mThreadGroupId = -1;
+    }
+}
+
+bool
+SpeechNavigator::runDataIteration()
+{
+    std::string data;
+    if (mSpeechQueue.remove(data))
+    {
+         
+    }
+}
+
+bool
+SpeechNavigator::startDataLoop()
+{
+    while (!mStop)
+    {
+        if (!runDataIteration())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+void
+SpeechNavigator::onPhraseRecognition(const std::string& phrase)
+{
+    mSpeechQueue.add(phrase);
+}
+
+bool
+SpeechNavigator::isParserThreadRunning() const
+{
+    ACE_UINT32 state = 0;
+    ACE_Thread_Manager::instance()->thr_state(mParserThread, state);
+    return (ACE_Thread_Manager::ACE_THR_SPAWNED == state || 
+            ACE_Thread_Manager::ACE_THR_RUNNING == state);
 }
 
 // vim:ts=4:sw=4:et:tw=0

@@ -2,10 +2,12 @@
 #ifndef VE_VOICE_SPEECH_NAVIGATOR_H_
 #define VE_VOICE_SPEECH_NAVIGATOR_H_
 
+#include "apps/voice/CircularQueue.h"
 #include "apps/voice/SpeechRecognitionObserver.h"
 #include "apps/voice/JuliusXMLParser.h"
 #include "apps/voice/JuliusNetworkClient.h"
 
+#include <ace/Thread.h>
 #include <tao/TAO_Internal.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 
@@ -14,6 +16,8 @@
 #include <ves/open/VjObsC.h>
 #include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
+
+#include <string>
 
 /**
  * This class mediates between the Speech Recognition network client and the
@@ -68,9 +72,68 @@ public:
     bool connectToNamingService();
 
     /**
+     * This function will spawn a new thread for the speech parsing
+     * (if necessary) and have it run.
+     *
+     * @pre     connectToJulius() has been successfully called.
+     *
+     * @return      true if successful, false otherwise.
+     */
+    bool startParserThread();
+
+    /**
+     * Returns true if the parser thread is running, false if it is
+     * suspended (or hasn't been created).
+     */
+    bool isParserThreadRunning() const;
+
+    /**
+     * Stops the execution of the parser thread if it is running
+     *
+     * @note        the parser thread will have to be started again with
+     *              start parser thread after this, which will create a new
+     *              thread.  This function is NOT a thread suspend operation.
+     */
+    void stopParserThread();
+
+    /**
+     * Runs one iteration of the data loop and returns.
+     *
+     * @pre     connectToJulius() and connectToXplorer() have been called.
+     *
+     * @return      true if successful, false if an error occurred.
+     */
+    bool runDataIteration();
+
+    /**
+     * Starts the data loop.  This call will block indefinitely until an
+     * error occurs or stopDataLoop() is called.
+     *
+     * @pre     connectToJulius() and connectToXplorer() have been called.
+     *
+     * @return      false if an error occurred.
+     */
+    bool startDataLoop();
+
+    /**
+     * Stops the data loop.
+     */
+    void stopDataLoop()
+    {
+        mStop = true;
+    }
+
+
+    /**
      * Sets the local copies of argc and argv
      */
     void setArgcArgv(int argc, char** argv);
+
+    /**
+     * Responds to changes in the Phrase Parsing subject; the changes will
+     * be notification of recognized parsing events.
+     */
+    void onPhraseRecognition(const std::string& phrase);
 
 private:
 
@@ -78,7 +141,23 @@ private:
     JuliusNetworkClient*                                  mClient;
 
     /// The Julius XML parser this navigator is using.
-    JuliusXMLParser*                                      mParser;
+    JuliusXMLParserPtr                                    mParser;
+
+    /// The Observer that responds to changes in the Julius XML Parser subject.
+    SpeechRecognitionObserverPtr                          mParserObserver;
+
+    /// The Circular Queue used by the Parser and the Xplorer threads for
+    /// storing shared input and output.
+    CircularQueue<std::string>                            mSpeechQueue;
+
+    /// The ACE Group ID for the Parser and Xplorer Threads
+    int                                                   mThreadGroupId;
+
+    /// The Speech Client Parser Thread (the Producer).
+    ACE_thread_t                                          mParserThread;
+
+    /// Is it time to stop the data loop?
+    bool                                                  mStop;
 
     /* Stuff used to connect to VE Xplorer */
 

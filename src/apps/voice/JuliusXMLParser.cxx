@@ -160,23 +160,25 @@ JuliusXMLParser::~JuliusXMLParser()
 {
    /// This is required by the Xerces-C++ API.
    XERCES_CPP_NAMESPACE_USE;
-   delete mParser;
+   // FIXME:  For some reason, SaX causes a segfault if we delete the parser.
+   // delete mParser;
    XMLPlatformUtils::Terminate();
 }
 
 void
 JuliusXMLParser::detach(const SpeechRecognitionObserverPtr& observer)
 {
-   // Linear search should be okay here since there shouldn't ever be
-   // a large number of observers.
-   std::vector<SpeechRecognitionObserverPtr>::iterator itr;
-   for (itr = mObservers.begin(); itr != mObservers.end(); ++itr)
-   {
-      if ((*itr) == observer)
-      {
-         mObservers.erase(itr);
-      }
-   }
+    // Linear search should be okay here since there shouldn't ever be
+    // a large number of observers.
+    std::vector<SpeechRecognitionObserverPtr>::iterator itr;
+    for (itr = mObservers.begin(); itr != mObservers.end(); ++itr)
+    {
+        if ((*itr) == observer)
+        {
+            mObservers.erase(itr);
+            return;
+        }
+    }
 }
 
 bool

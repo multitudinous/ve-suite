@@ -42,7 +42,7 @@ public:
      */
     bool isConnected() const
     {
-      return mConnected;
+        return mConnected;
     }
 
     /**
@@ -53,7 +53,7 @@ public:
      */
     void setParser(const JuliusXMLParserPtr& parser)
     {
-      mParser = parser;
+        mParser = parser;
     }
 
     /**
@@ -61,13 +61,21 @@ public:
      * the Julius daemon until the data loop is stopped.
      *
      * @note    This call will block indefinitely, so spinning it off in a new
-     *          thread is required.  The only way to stop such a thread is to
-     *          kill it.
+     *          thread is required.  Call stopDataLoop() to make this function
+     *          return.
      *
      * @return     true if no errors occurred, false if there was a problem
      *             setting it up.
      */
     bool startDataLoop();
+
+    /**
+     * Stops the data loop if it is already running.
+     */
+    void stopDataLoop()
+    {
+        mStop = true;
+    }
 
 private:
 
@@ -83,6 +91,9 @@ private:
 
     /// The socket connector used to connect the data stream and remote host.
     ACE_SOCK_Connector                              mConnector;
+
+    /// Is it time to stop the data loop?
+    bool                                            mStop;
 };
 
 #endif
