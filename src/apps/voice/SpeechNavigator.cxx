@@ -24,6 +24,10 @@ SpeechNavigator::~SpeechNavigator()
 {
     delete mClient;
     delete mParser;
+    for (int i = 0; i < mArgc; ++i)
+    {
+        delete[] mArgv[i];
+    }
 }
 
 bool
@@ -58,7 +62,6 @@ SpeechNavigator::connectToNamingService()
             mOrb->resolve_initial_references( "NameService" );
         mNamingContext = CosNaming::NamingContext::_narrow( 
                 naming_context_object.in() );
-        return true;
     }
     catch ( CORBA::Exception& ex )
     {
@@ -68,6 +71,7 @@ SpeechNavigator::connectToNamingService()
             std::string( ex._info().c_str() ) + "\n";
         return false;
     }
+    return true;
 }
 
 bool
@@ -94,7 +98,6 @@ SpeechNavigator::connectToXplorer()
             CosNaming::NamingContext::_narrow( naming_context_object.in() );
         CORBA::Object_var ve_object = naming_context1->resolve( name );
         vjobs = VjObs::_narrow( ve_object.in() );
-
     }
     catch ( CORBA::Exception& ex )
     {
@@ -103,6 +106,7 @@ SpeechNavigator::connectToXplorer()
             std::string( ex._info().c_str() ) + "\n";
         return false;
     }
+    return true;
 }
 
 void 
@@ -115,7 +119,7 @@ SpeechNavigator::setArgcArgv( int argc, char** argv )
     {
         int stringLength = strlen( argv[ i ] );
         mArgv[ i ] = new char[ stringLength + 1 ];
-        strncpy( mArgv[ i ], argv[ i ], stringLength );
+        strncpy( mArgv[ i ], argv[ i ], stringLength + 1 );
     }
 }
 

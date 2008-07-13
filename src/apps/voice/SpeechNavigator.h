@@ -72,11 +72,6 @@ public:
      */
     void setArgcArgv(int argc, char** argv);
 
-    /**
-     * Creates the CORBA Module?
-     */
-    void createCORBAModule();
-
 private:
 
     /// The Julius Network Client that this navigator is using.
