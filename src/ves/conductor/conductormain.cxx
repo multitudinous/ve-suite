@@ -70,9 +70,9 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
             char* env_dir(NULL);
 #if defined(_MSC_VER) && _MSC_VER >= 1400
             size_t len;
-            _dupenv_s(&env_dir, &len, "XPLORER_BASE_DIR");
+            _dupenv_s(&env_dir, &len, "CONDUCTOR_BASE_DIR");
 #else
-            env_dir = std::getenv("XPLORER_BASE_DIR");
+            env_dir = std::getenv("CONDUCTOR_BASE_DIR");
 #endif
 
             try
@@ -100,14 +100,14 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                         base_dir.native_directory_string();
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-                    _putenv_s("XPLORER_BASE_DIR", base_dir_str.c_str());
-                    std::cout << "XPLORER_BASE_DIR=" 
+                    _putenv_s("CONDUCTOR_BASE_DIR", base_dir_str.c_str());
+                    std::cout << "CONDUCTOR_BASE_DIR=" 
                         << base_dir_str << std::endl;
 #else
                     std::ostringstream env_stream;
-                    env_stream << "XPLORER_BASE_DIR=" << base_dir_str;
+                    env_stream << "CONDUCTOR_BASE_DIR=" << base_dir_str;
                     putenv(env_stream.str().c_str());
-                    std::cout << "XPLORER_BASE_DIR=" 
+                    std::cout << "CONDUCTOR_BASE_DIR=" 
                         << env_stream.str() << std::endl;
 #endif
                 }
@@ -121,28 +121,28 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
                 }
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-                _dupenv_s(&env_dir, &len, "XPLORER_DATA_DIR");
+                _dupenv_s(&env_dir, &len, "CONDUCTOR_DATA_DIR");
 #else
-                env_dir = std::getenv("XPLORER_DATA_DIR");
+                env_dir = std::getenv("CONDUCTOR_DATA_DIR");
 #endif
 
                 // If VRKIT_DATA_DIR is not set, set a default relative to
                 // base_dir.
                 if( NULL == env_dir )
                 {
-                    fs::path data_dir(base_dir / "share" / "vesuite" / "xplorer");
+                    fs::path data_dir(base_dir / "share" / "vesuite" / "conductor");
                     const std::string data_dir_str =
                         data_dir.native_directory_string();
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-                    _putenv_s("XPLORER_DATA_DIR", data_dir_str.c_str());
-                    std::cout << "XPLORER_DATA_DIR=" 
+                    _putenv_s("CONDUCTOR_DATA_DIR", data_dir_str.c_str());
+                    std::cout << "CONDUCTOR_DATA_DIR=" 
                         << data_dir_str << std::endl;
 #else
                     std::ostringstream env_stream;
-                    env_stream << "XPLORER_DATA_DIR=" << data_dir_str;
+                    env_stream << "CONDUCTOR_DATA_DIR=" << data_dir_str;
                     putenv(env_stream.str().c_str());
-                    std::cout << "XPLORER_DATA_DIR=" 
+                    std::cout << "CONDUCTOR_DATA_DIR=" 
                         << env_stream.str() << std::endl;
 #endif
                 }
@@ -155,24 +155,24 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 #endif
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-                _dupenv_s(&env_dir, &len, "XPLORER_PLUGINS_DIR");
+                _dupenv_s(&env_dir, &len, "CONDUCTOR_PLUGINS_DIR");
 #else
-                env_dir = std::getenv("XPLORER_PLUGINS_DIR");
+                env_dir = std::getenv("CONDUCTOR_PLUGINS_DIR");
 #endif
 
                 // If VRKIT_PLUGINS_DIR is not set, set a default relative to
                 // base_dir.
                 if( NULL == env_dir )
                 {
-                    fs::path plugin_dir(base_dir / "lib" / "xplorer" / "plugins");
+                    fs::path plugin_dir(base_dir / "lib" / "conductor" / "plugins");
                     const std::string plugin_dir_str =
                         plugin_dir.native_directory_string();
 
 #if defined(_MSC_VER) && _MSC_VER >= 1400
-                    _putenv_s("XPLORER_PLUGINS_DIR", plugin_dir_str.c_str());
+                    _putenv_s("CONDUCTOR_PLUGINS_DIR", plugin_dir_str.c_str());
 #else
                     std::ostringstream env_stream;
-                    env_stream << "XPLORER_PLUGINS_DIR=" << plugin_dir_str;
+                    env_stream << "CONDUCTOR_PLUGINS_DIR=" << plugin_dir_str;
                     putenv(env_stream.str().c_str());
 #endif
                 }
@@ -218,7 +218,7 @@ BOOL __stdcall DllMain(HINSTANCE module, DWORD reason, LPVOID reserved)
 extern "C" void __attribute ((constructor)) vrkitLibraryInit()
 {
     fs::path base_dir;
-    const char* env_dir = std::getenv("XPLORER_BASE_DIR");
+    const char* env_dir = std::getenv("CONDUCTOR_BASE_DIR");
 
 #if (defined(__linux__) || defined(__linux)) && defined(__x86_64__)
     const std::string bit_suffix("64");
@@ -280,15 +280,15 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
 
                 if ( found )
                 {
-                    setenv("XPLORER_BASE_DIR",
+                    setenv("CONDUCTOR_BASE_DIR",
                            base_dir.native_directory_string().c_str(), 1);
-                    std::cout << "XPLORER_BASE_DIR=" 
+                    std::cout << "CONDUCTOR_BASE_DIR=" 
                         << base_dir.native_directory_string() << std::endl;
                 }
             }
             catch (fs::filesystem_error& ex)
             {
-                std::cerr << "Automatic assignment of XPLORER_BASE_DIR failed:\n"
+                std::cerr << "Automatic assignment of CONDUCTOR_BASE_DIR failed:\n"
                       << ex.what() << std::endl;
             }
         }
@@ -301,7 +301,7 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
         }
         catch (fs::filesystem_error& ex)
         {
-            std::cerr << "Invalid path set in XPLORER_BASE_DIR environment "
+            std::cerr << "Invalid path set in CONDUCTOR_BASE_DIR environment "
                    << "variable:\n" << ex.what() << std::endl;
         }
     }
@@ -310,7 +310,7 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
     // being relative to the current working directory.
     if ( ! base_dir.empty() )
     {
-        std::string versioned_dir_name("xplorer");
+        std::string versioned_dir_name("conductor");
 #if defined(VRKIT_USE_VERSIONING)
         versioned_dir_name += std::string("-") +
                                std::string(vrkit::getVersion());
@@ -324,13 +324,13 @@ extern "C" void __attribute ((constructor)) vrkitLibraryInit()
 
         // We use the overwrite value of 0 as a way around testing whether the
         // environment variable is already set.
-        setenv("XPLORER_DATA_DIR", 
+        setenv("CONDUCTOR_DATA_DIR", 
             data_dir.native_directory_string().c_str(), 0);
-        setenv("XPLORER_PLUGINS_DIR",
+        setenv("CONDUCTOR_PLUGINS_DIR",
             plugin_dir.native_directory_string().c_str(), 0);
-        std::cout << "XPLORER_DATA_DIR=" 
+        std::cout << "CONDUCTOR_DATA_DIR=" 
             << data_dir.native_directory_string() << std::endl;
-        std::cout << "XPLORER_PLUGINS_DIR=" 
+        std::cout << "CONDUCTOR_PLUGINS_DIR=" 
             << plugin_dir.native_directory_string() << std::endl;
     }
 }
