@@ -102,6 +102,7 @@ public:
         SHOW_RESULT,
         PARAVIEW,
         SHOW_DESC,
+        USER_DIALOG,
         SHOW_FINANCIAL, /* EPRI TAG */
         SHOW_ASPEN_NAME,
         QUERY_INPUTS,
@@ -257,6 +258,7 @@ public:
     void OnShowResult( wxCommandEvent& event );
     void OnParaView( wxCommandEvent& event );
     void OnShowDesc( wxCommandEvent& event );
+    void OnShowUserDialog( wxCommandEvent& event );
     void OnGeometry( wxCommandEvent& event );
     void OnDataSet( wxCommandEvent& event );
     void OnInputsWindow( wxCommandEvent& event );
@@ -313,6 +315,8 @@ protected:
     void RemovePluginDialogsFromCanvas();
     ///Remove a specific plugin from the canvas dialog
     void RemoveWindowFromCanvas( wxWindow* window );
+
+    void CreateUserDialog( wxPoint extpos );
 
     UIDialog* dlg;
     TextResultDialog* result_dlg;

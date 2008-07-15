@@ -95,6 +95,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( SHOW_RESULT, UIPluginBase::OnShowResult )
     EVT_MENU( PARAVIEW, UIPluginBase::OnParaView )
     EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
+    EVT_MENU( USER_DIALOG, UIPluginBase::OnShowUserDialog )
     EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
     EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
     EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
@@ -179,6 +180,8 @@ UIPluginBase::UIPluginBase() :
     mPopMenu = new wxMenu();
     mPopMenu->Append( SHOW_DESC, _( "Show Module Description" ) );
     mPopMenu->Enable( SHOW_DESC, true );
+    mPopMenu->Append( USER_DIALOG, _( "User Dialog" ) );
+    mPopMenu->Enable( USER_DIALOG, true );
     mPopMenu->Append( SHOW_RESULT, _( "Show Module Result" ) );
     //mPopMenu->Enable( SHOW_RESULT, true);
     mPopMenu->Enable( SHOW_RESULT, false );
@@ -1194,7 +1197,11 @@ void UIPluginBase::OnDClick( wxMouseEvent &event )
         event.Skip();
         return;
     }
-
+    CreateUserDialog( evtpos );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::CreateUserDialog( wxPoint extpos )
+{
     ves::open::xml::DataValuePairPtr dataValuePair(
         new ves::open::xml::DataValuePair( std::string( "UNSIGNED INT" ) ) );
     dataValuePair->SetDataName( "CHANGE_ACTIVE_MODEL" );
@@ -1263,6 +1270,11 @@ void  UIPluginBase::OnShowResult( wxCommandEvent& event )
         if(hello != NULL )
            hello->Show();*/
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void  UIPluginBase::OnShowUserDialog( wxCommandEvent& event )
+{
+    CreateUserDialog( wxPoint(0,0) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowFinancial( wxCommandEvent& WXUNUSED( event ) )
