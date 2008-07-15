@@ -256,16 +256,16 @@ void BKPParser::ParseFile( const char * bkpFile )
     {
         getline(inFile, compVer);
         getline(inFile, compID);
-        getline(inFile, compName);
-        getline(inFile, compLib);
         getline(inFile, compLibName);
+        getline(inFile, compLib);
+        getline(inFile, compName);
 
 
         //remove newline
         std::stringstream tokenizer(compLibName);
         tokenizer >> tempBlockInfo.type;
 
-        if(compLibName.find("HIERARCHY") == std::string::npos)
+        if(compLibName.find("Hierarchy") == std::string::npos)
 	        tempBlockInfo.hierarchical = false;
         else
 	        tempBlockInfo.hierarchical = true;
@@ -1372,7 +1372,7 @@ std::string BKPParser::CreateNetwork( void )
         }
 
         //recursively parse subsystems of each block
-        if( tempModel->GetIconFilename().find("HIERARCHY") !=
+        if( tempModel->GetIconFilename().find("Hierarchy") !=
             std::string::npos )
         ParseSubSystem( tempModel, blockIter->first );
 
@@ -1518,7 +1518,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         }
 
         //recursively parse subsystems of each block
-        if( tempModel->GetIconFilename().find("HIERARCHY") !=
+        if( tempModel->GetIconFilename().find("Hierarchy") !=
             std::string::npos )
         {
             ParseSubSystem( tempModel, networkName + "." + blockIter->first );
