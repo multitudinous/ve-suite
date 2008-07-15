@@ -30,9 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-
-#ifndef CFD_QUAT_CAM_HANDLER_H
-#define CFD_QUAT_CAM_HANDLER_H
+#ifndef VES_XPLORER_NAVIGATION_ANIMATION_ENGINE_H
+#define VES_XPLORER_NAVIGATION_ANIMATION_ENGINE_H
 
 // --- VE-Suite Includes --- //
 #include <ves/open/xml/CommandPtr.h>
@@ -45,6 +44,7 @@
 
 // --- vrJuggler Includes --- //
 #include <gmtl/Vec.h>
+#include <gmtl/Quat.h>
 
 #include <vpr/Util/Timer.h>
 #include <vpr/Util/Singleton.h>
@@ -55,6 +55,7 @@
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <map>
+#include <utility>
 
 namespace ves
 {
@@ -68,24 +69,24 @@ namespace scenegraph
 class DCS;
 }
 
-/*!\file cfdQuatCamHandler.h
- * cfdQuatCamHandler API
+/*!\file NavigationAnimationEngine.h
+ * NavigationAnimationEngine API
  */
-/*!\class ves::xplorer::cfdQuatCamHandler
+/*!\class ves::xplorer::NavigationAnimationEngine
  *
  */
-class VE_XPLORER_EXPORTS cfdQuatCamHandler : public GlobalBase
+class VE_XPLORER_EXPORTS NavigationAnimationEngine : public GlobalBase
 {
 private:
     ///Constructor
-    cfdQuatCamHandler();
+    NavigationAnimationEngine();
 
     ///Destructor
-    virtual ~cfdQuatCamHandler();
+    virtual ~NavigationAnimationEngine();
 
     ///Do not know what this is
     ///\param DeviceHandler
-    vprSingletonHeader( cfdQuatCamHandler );
+    vprSingletonHeader( NavigationAnimationEngine );
 
 public:
     ///In future, multi-threaded apps will make a copy of VjObs_i commandArray
@@ -107,49 +108,6 @@ public:
     void ClearQuaternionData();
 
     ///
-    ///\param
-    void LoadData( ves::xplorer::scenegraph::DCS* worldDCS );
-
-    ///
-    ///\param
-    void WriteToFile( std::string );
-
-    ///
-    ///\param
-    void LoadFromFile( std::string );
-
-    ///
-    ///\param worldDCS
-    void Relocate( ves::xplorer::scenegraph::DCS* worldDCS );
-
-    ///
-    void RemoveViewPt();
-
-    ///
-    ///\param flyindex
-    ///\param ptindex
-    void RemoveFlythroughPt( unsigned int flyindex, unsigned int ptindex );
-
-    ///
-    ///\param flyindex
-    ///\param ptindex
-    void AddViewPtToFlyThrough( unsigned int flyindex, unsigned int ptindex );
-
-    ///
-    ///\param flyindex
-    ///\param beforept
-    ///\param ptindex
-    void InsertViewPtInFlyThrough(
-        unsigned int flyindex, unsigned int beforept, unsigned int ptindex );
-
-    ///
-    ///\param flyindex
-    void DeleteEntireFlythrough( unsigned int flyindex );
-
-    ///
-    void AddNewFlythrough();
-
-    ///
     void TurnOffMovement();
 
     ///
@@ -157,18 +115,6 @@ public:
     ///\param
     ///\return
     double getLinearDistance( gmtl::Vec3d vjVecLast, gmtl::Vec3d vjVecNext );
-
-    ///
-    ///\return
-    int getNumLocs();
-
-    ///
-    ///\return
-    std::vector< std::vector< int > > getFlyThroughs();
-
-    ///
-    ///\return
-    std::vector< int > getCompletionTest();
 
     ///If a quat is active this will move the cam to the next location
     void PreFrameUpdate();
@@ -180,20 +126,28 @@ public:
     ///
     ///\return
     bool IsActive();
+    
+    ///Set the quaternions and position for the animation
+    void SetAnimationEndPoints( gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint );
+    
+    ///Set the quaternions and position for the animation
+    void SetAnimationPoints( std::vector< std::pair< gmtl::Vec3d, 
+        gmtl::Quatd > > animationPoints );
+    
 
+protected:
     ///
     unsigned int numQuatCams;
     ///
     unsigned int numFlyThroughs;
     ///
     unsigned int* numPointsInFlyThrough;
-
+    
     ///
     int cfdId;
     ///
     int cfdIso_value;
-
-protected:
+    
     ///Update the gui with the new data
     void UpdateViewGUIPointData();
 
