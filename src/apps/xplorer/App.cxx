@@ -93,6 +93,9 @@ using namespace ves::xplorer::volume;
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
 
+#include <jccl/RTRC/ConfigManager.h>
+#include <vrj/Display/DisplayManager.h>
+
 using namespace ves::xplorer;
 using namespace ves::xplorer::util;
 using namespace ves::open::xml;
@@ -264,7 +267,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     //newSceneViewer->setComputeNearFarMode(
     //    osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR );
     newSceneViewer->setComputeNearFarMode(
-        osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );
+        osgUtil::CullVisitor::COMPUTE_NEAR_FAR_USING_BOUNDING_VOLUMES );    
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -336,12 +339,6 @@ void App::initScene( void )
 
     // This may need to be fixed
     this->m_vjobsWrapper->GetCfdStateVariables();
-
-    //Setup near and far plane
-    float nearPlane;
-    float farPlane;
-    vrj::Projection::getNearFar( nearPlane, farPlane );
-    vrj::Projection::setNearFar( nearPlane, farPlane + 100000 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::preFrame( void )
@@ -475,6 +472,46 @@ void App::latePreFrame( void )
         m_vjobsWrapper->GetXMLCommand()->
             GetDataValuePair( "Filename" )->GetData( m_filename );
     }
+    
+    /*static bool changed = false;
+    //if desktop mode and if osg 2.5.4 or later
+    //if reset screen resolution is called or if first time through
+    if( jccl::ConfigManager::instance()->isPendingStale() && !changed )
+    {
+        //Handle setting up the render to texture
+        //displaymanager->getActivedisplays()
+        const std::vector< vrj::DisplayPtr > activeDisplays = vrj::DisplayManager::instance()->getActiveDisplays();
+        for( size_t i = 0; i < activeDisplays.size(); ++i )
+        {
+            //get origin and size of display
+            int originX;
+            int originY;
+            int width; 
+            int height;
+            activeDisplays.at( i )->getOriginAndSize ( originX, originY, width, height);
+            //display->getViewports()
+            std::vector< vrj::Viewport* >::size_type numViewports = activeDisplays.at( i )->getNumViewports();
+            for( size_t j = 0; j < numViewports; ++j )
+            {
+                //vieport if active and surface viewport
+                vrj::Viewport* vp = activeDisplays.at( i )->getViewport( j );
+                if( vp->isActive() && vp->isSurface() )
+                {
+                    float xOrigin;
+                    float yOrigin;
+                    float vpWidth;
+                    float vpHeight;
+                    //get origin and size of the vieport
+                    vp->getOriginAndSize( xOrigin, yOrigin, vpWidth, vpHeight);
+                    //now create texture with viewport info
+                    //create quad
+                    //place quad in propoer location to be inline with dispaly
+                    //and for corners to match position on the display
+                }
+            }
+        }
+        changed = true;
+    }*/
     vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
 }

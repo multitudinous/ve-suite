@@ -676,9 +676,10 @@ void CameraPlacementToolGP::InitializeResources()
                 "color0.a = 1.0; \n"
             "} \n"
 
-            "focalRange = 2.0 / focalRange; \n"
-
-            "float blur = saturate( abs( fDepth - focalDistance ) * focalRange ); \n"
+            "float tempFocalRange = 2.0 / focalRange; \n"
+            "float tempSat =  abs( fDepth - focalDistance ) * tempFocalRange; \n"
+            //"float blur = saturate( tempSat ); \n"
+            "float blur = clamp( tempSat, 0.0, 1.0 ); \n"
             "vec4 color1 = vec4( fDepth, blur, 0.0, 1.0 ); \n"
 
             "gl_FragData[ 0 ] = color0; \n"
