@@ -86,9 +86,9 @@ namespace CASI
             reserved.boolVal=VARIANT_TRUE;
 
 			hAPsim->Close(reserved);
-			//ihRoot->ReleaseDispatch();
+			ihRoot->ReleaseDispatch();
             hAPsim->ReleaseDispatch();
-            //delete ihRoot;
+            delete ihRoot;
             delete hAPsim;
 			ihRoot = NULL;
             hAPsim = NULL;

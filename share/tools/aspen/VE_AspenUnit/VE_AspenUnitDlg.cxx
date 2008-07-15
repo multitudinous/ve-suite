@@ -168,9 +168,10 @@ void CVE_AspenUnitDlg::OnBnClickedCancel()
 		//delete unitObject;
 		commManager->DestroyORB();
 		delete commManager;
+        commManager = NULL;
 	}
 	// TODO: Add your control notification handler code here
-	this->OnCancel();
+	this->OnOK();
 }
 
 void CVE_AspenUnitDlg::OnBnClickedOk()

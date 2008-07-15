@@ -188,7 +188,7 @@ void CorbaUnitManager::RunORB()
 /////////////////////////////////////////////////////////////
 void CorbaUnitManager::DestroyORB( void )
 {	  
-    if( unit_i_instantiated )
+    if( !unit_i_instantiated )
     {
         return;
     }
