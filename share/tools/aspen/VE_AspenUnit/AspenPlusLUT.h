@@ -1024,13 +1024,13 @@ std::map< std::pair< std::string, std::string >, std::vector< double > > GetAspe
 	tempVector[ 0 ] = -0.5; tempVector[ 1 ] = 0.5; tempVector[ 2 ] = 0.5; tempVector[ 3 ] = -0.5; tempVector[ 4 ] = 0.5; tempVector[ 5 ] = 0.5;
 	tempMap[ std::pair< std::string, std::string >( "SUBFLOWSHEET", "BLOCK" ) ] = tempVector; 
 	tempVector[ 0 ] = -0.45; tempVector[ 1 ] = 0.45; tempVector[ 2 ] = 0.45; tempVector[ 3 ] = -0.45; tempVector[ 4 ] = 0.5; tempVector[ 5 ] = 0.5;
-	tempMap[ std::pair< std::string, std::string >( "SELECTOR", "BLOCK" ) ] = tempVector; 
+	tempMap[ std::pair< std::string, std::string >( "Selector", "BLOCK" ) ] = tempVector; 
 	tempVector[ 0 ] = -0.45; tempVector[ 1 ] = 0.45; tempVector[ 2 ] = 0.45; tempVector[ 3 ] = -0.45; tempVector[ 4 ] = 0.5; tempVector[ 5 ] = 0.5;
-	tempMap[ std::pair< std::string, std::string >( "SELECTOR", "HEAT" ) ] = tempVector; 
+	tempMap[ std::pair< std::string, std::string >( "Selector", "HEAT" ) ] = tempVector; 
 	tempVector[ 0 ] = -0.45; tempVector[ 1 ] = 0.45; tempVector[ 2 ] = 0.45; tempVector[ 3 ] = -0.45; tempVector[ 4 ] = 0.5; tempVector[ 5 ] = 0.5;
-	tempMap[ std::pair< std::string, std::string >( "SELECTOR", "WORK" ) ] = tempVector; 
+	tempMap[ std::pair< std::string, std::string >( "Selector", "WORK" ) ] = tempVector; 
 	tempVector[ 0 ] = -0.5; tempVector[ 1 ] = 0; tempVector[ 2 ] = 0.2625; tempVector[ 3 ] = -0.2375; tempVector[ 4 ] = 1; tempVector[ 5 ] = 0.525;
-	tempMap[ std::pair< std::string, std::string >( "SELECTOR", "TRIANGLE" ) ] = tempVector; 
+	tempMap[ std::pair< std::string, std::string >( "Selector", "TRIANGLE" ) ] = tempVector; 
 	tempVector[ 0 ] = -0.45; tempVector[ 1 ] = 0.45; tempVector[ 2 ] = 0.45; tempVector[ 3 ] = -0.45; tempVector[ 4 ] = 0.5; tempVector[ 5 ] = 0.5;
 	tempMap[ std::pair< std::string, std::string >( "Measurement", "BLOCK" ) ] = tempVector; 
 	tempVector[ 0 ] = -0.1; tempVector[ 1 ] = 0.1; tempVector[ 2 ] = 0.35; tempVector[ 3 ] = 0; tempVector[ 4 ] = 0.5; tempVector[ 5 ] = 1;
