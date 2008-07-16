@@ -30,23 +30,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+// --- VE-Suite Includes --- //
 #include "App.h"
 #include "VjObsWrapper.h"
+#include "SceneRenderToTexture.h"
 
 #include <ves/xplorer/TextureBasedVizHandler.h>
-
-#include <ves/xplorer/util/fileIO.h>
-
-#include <ves/xplorer/scenegraph/SceneManager.h>
-
-#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
-
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/SteadyStateVizHandler.h>
 #include <ves/xplorer/ModelHandler.h>
-#include <ves/xplorer/environment/cfdQuatCamHandler.h>
 #include <ves/xplorer/Model.h>
 #include <ves/xplorer/Debug.h>
+
+#include <ves/xplorer/util/fileIO.h>
+#include <ves/xplorer/scenegraph/SceneManager.h>
+#include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
+#include <ves/xplorer/environment/cfdQuatCamHandler.h>
+#include <ves/xplorer/network/cfdExecutive.h>
+#include <ves/xplorer/volume/cfdPBufferManager.h>
 
 #include <ves/open/xml/XMLObjectFactory.h>
 #include <ves/open/xml/XMLCreator.h>
@@ -57,9 +58,7 @@
 #include <ves/open/xml/model/ModelCreator.h>
 #include <ves/open/xml/model/Model.h>
 
-#include <ves/xplorer/network/cfdExecutive.h>
-
-// Scene graph dependant headers
+// --- OSG Includes --- //
 #include <osg/Group>
 #include <osg/FrameStamp>
 #include <osg/MatrixTransform>
@@ -79,45 +78,44 @@
 #include <osgUtil/UpdateVisitor>
 #include <osgUtil/Statistics>
 
+// --- VR Juggler Includes --- //
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
 
-#include <ves/xplorer/volume/cfdPBufferManager.h>
-using namespace ves::xplorer::volume;
-
-/// C/C++ libraries
-#include <iostream>
-
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Display/DisplayManager.h>
+
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/System.h>
 
 #include <jccl/RTRC/ConfigManager.h>
-#include <vrj/Display/DisplayManager.h>
+
+// --- C/C++ Libraries --- //
+#include <iostream>
 
 using namespace ves::xplorer;
 using namespace ves::xplorer::util;
+using namespace ves::xplorer::volume;
 using namespace ves::open::xml;
 using namespace ves::xplorer::network;
-
 
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[] )
 #if __VJ_version >= 2003000
-        :
-        vrj::osg::App( vrj::Kernel::instance() ),
+    :
+    vrj::osg::App( vrj::Kernel::instance() ),
 #else
-        :
-        vrj::OsgApp( vrj::Kernel::instance() ),
+    :
+    vrj::OsgApp( vrj::Kernel::instance() ),
 #endif
-        readyToWriteWebImage( false ),
-        writingWebImageNow( false ),
-        captureNextFrameForWeb( false ),
-        isCluster( false ),
-        mLastFrame( 0 ),
-        mLastTime( 0 ),
-        mProfileCounter( 0 )
+    readyToWriteWebImage( false ),
+    writingWebImageNow( false ),
+    captureNextFrameForWeb( false ),
+    isCluster( false ),
+    mLastFrame( 0 ),
+    mLastTime( 0 ),
+    mProfileCounter( 0 )
 {
 #ifdef _OSG
     osg::Referenced::setThreadSafeReferenceCounting( true );
@@ -155,6 +153,11 @@ App::App( int argc, char* argv[] )
 #endif
     this->argc = argc;
     this->argv = argv;
+}
+////////////////////////////////////////////////////////////////////////////////
+App::~App()
+{
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::exit()
@@ -1024,3 +1027,4 @@ void App::update( void )
     // multi-threaded.
     getScene()->getBound();
 }
+////////////////////////////////////////////////////////////////////////////////

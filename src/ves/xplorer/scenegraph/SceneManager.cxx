@@ -53,18 +53,15 @@
 #include <ves/xplorer/Debug.h>
 
 // --- OSG Includes --- //
-#include <osg/Group>
 #include <osg/Node>
+#include <osg/Group>
+#include <osg/Switch>
+#include <osg/MatrixTransform>
+#include <osg/PositionAttitudeTransform>
+
 #include <osgDB/Registry>
 #include <osgDB/ReaderWriter>
 #include <osgDB/WriteFile>
-#include <osg/PositionAttitudeTransform>
-#include <osg/MatrixTransform>
-#include <osg/Switch>
-#include <osg/Camera>
-#include <osg/Texture2D>
-#include <osg/Geode>
-#include <osg/Geometry>
 
 #ifdef VE_SOUND
 // --- osgAL Includes --- //
@@ -74,6 +71,7 @@
 #include <osgAL/SoundState>
 #endif
 
+// --- VR Juggler Includes --- //
 #include <jccl/RTRC/ConfigManager.h>
 
 // --- C/C++ Libraries --- //
@@ -206,32 +204,8 @@ void SceneManager::InitScene()
     m_matrixStore[ 1 ] = gmtl::Matrix44d();
     ///Network DCS
     m_matrixStore[ 2 ] = gmtl::Matrix44d();
-
-    //////Setup for render to texture
-    //Now setup quad for default render view
-    osg::ref_ptr< osg::Geode > cameraViewQuadGeode = new osg::Geode();
-    osg::ref_ptr< osg::Geometry > cameraViewQuadGeometry = new osg::Geometry();
-    osg::ref_ptr< osg::Vec3Array > cameraViewQuadVertices = new osg::Vec3Array();
-    osg::ref_ptr< osg::Vec2Array > cameraViewQuadTexCoords = new osg::Vec2Array();
-    
-    cameraViewQuadVertices->resize( 4 );
-    cameraViewQuadGeometry->setVertexArray( cameraViewQuadVertices.get() );
-    
-    cameraViewQuadTexCoords->resize( 4 );
-    (*cameraViewQuadTexCoords)[ 0 ].set( 0, 0 );
-    (*cameraViewQuadTexCoords)[ 0 ].set( 1, 0 );
-    (*cameraViewQuadTexCoords)[ 0 ].set( 1, 1 );
-    (*cameraViewQuadTexCoords)[ 0 ].set( 0, 1 );
-    cameraViewQuadGeometry->setTexCoordArray( 0, cameraViewQuadTexCoords.get() );
-    
-    cameraViewQuadGeometry->addPrimitiveSet(
-                                            new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
-    
-    cameraViewQuadGeode->addDrawable( cameraViewQuadGeometry.get() );
-    
     
     rootNode->addChild( m_clrNode.get() );
-    //m_clrNode->addChild( cameraViewQuadGeode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
 
     ///Try to load the osgPT Polytans plugin to load all
@@ -369,51 +343,7 @@ void SceneManager::SetActiveSwitchNode( int activeNode )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::PreFrameUpdate()
 {
-    /*static bool changed = false;
-    static unsigned int counter = 0;
-    //if desktop mode and if osg 2.5.4 or later
-    //if reset screen resolution is called or if first time through
-    if( counter == 100 )  
-    //jccl::ConfigManager::instance()->isPendingStale() && !changed )
-    {
-        osg::ref_ptr< osg::Texture2D > cameraViewTexture = new osg::Texture2D();
-        cameraViewTexture->setInternalFormat( GL_RGB16F_ARB );
-        cameraViewTexture->setTextureSize( 512, 512 );
-        cameraViewTexture->setSourceFormat( GL_RGBA );
-        cameraViewTexture->setSourceType( GL_FLOAT );
-        cameraViewTexture->setFilter( osg::Texture2D::MIN_FILTER,
-                                 osg::Texture2D::LINEAR );
-        cameraViewTexture->setFilter( osg::Texture2D::MAG_FILTER,
-                                 osg::Texture2D::LINEAR );
-        cameraViewTexture->setWrap( osg::Texture2D::WRAP_S,
-                               osg::Texture2D::CLAMP_TO_EDGE );
-        cameraViewTexture->setWrap( osg::Texture2D::WRAP_T,
-                               osg::Texture2D::CLAMP_TO_EDGE );
-
-        osg::ref_ptr< osg::Camera > camera = new osg::Camera();
-
-        // set view
-        camera->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
-
-        // set the camera to render before after the main camera.
-        camera->setRenderOrder( osg::Camera::PRE_RENDER );
-        //camera->setClearColor( oldcamera->getClearColor() );
-        camera->setClearMask( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT );
-        //camera->setColorMask( oldcamera->getColorMask() );
-
-        camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-        //Set the internal format for the render target
-        camera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
-                   GL_DEPTH_COMPONENT24 );
-        //Attach the camera view texture and use it as the render target
-        camera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER ),
-                   cameraViewTexture.get(), 0, 0, false, 8, 0 );
-        m_clrNode->addChild( camera.get() );
-        camera->addChild( _logoSwitch.get() );
-
-        changed = true;
-    }
-    counter++;*/
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* SceneManager::GetActiveSwitchNode()
