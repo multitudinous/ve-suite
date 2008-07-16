@@ -291,6 +291,7 @@ public:
     ///return the right click pop up menu for the plugin
     ///\return The wxWidgets wxMenu for the right click menu
     wxMenu* GetPopupMenu();
+    void CreateUserDialog( wxPoint extpos );
     ///Send the id of this plugin to xplorer so that it is active for all 
     ///other xplorer events
     void SendActiveId();
@@ -316,7 +317,6 @@ protected:
     ///Remove a specific plugin from the canvas dialog
     void RemoveWindowFromCanvas( wxWindow* window );
 
-    void CreateUserDialog( wxPoint extpos );
 
     UIDialog* dlg;
     TextResultDialog* result_dlg;

@@ -72,6 +72,7 @@ using namespace ves::conductor;
 BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
     EVT_TREE_SEL_CHANGED( TREE_CTRL, HierarchyTree::OnSelChanged )
     EVT_TREE_ITEM_EXPANDING( TREE_CTRL, HierarchyTree::OnExpanded )
+    EVT_TREE_ITEM_ACTIVATED( TREE_CTRL, HierarchyTree::OnDoubleClick )
     EVT_TREE_ITEM_RIGHT_CLICK( TREE_CTRL, HierarchyTree::OnRightClick )
     EVT_MENU_RANGE( UIPluginBase::BEGIN_MENU_ID, UIPluginBase::END_MENU_ID,
         HierarchyTree::ProcessRightClickMenuEvents )
@@ -304,6 +305,21 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
         GetPlugin()->SendActiveId();
 
     PopupMenu( popupMenu );//, event.GetPoint() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::OnDoubleClick( wxTreeEvent& event )
+{
+    wxTreeItemId selected = event.GetItem();
+    SelectItem( selected );
+    
+    if( selected != m_rootId )
+    {
+    ModuleData* tempModData = static_cast< ModuleData* >( this->
+        GetItemData( selected ));
+    m_canvas->SetActiveNetwork( tempModData->systemId );
+    m_canvas->GetActiveNetwork()->modules[tempModData->modId].
+        GetPlugin()->CreateUserDialog( wxPoint(0,0) );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::ProcessRightClickMenuEvents( wxCommandEvent& event )

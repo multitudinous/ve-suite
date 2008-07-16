@@ -109,6 +109,7 @@ protected:
     void OnSelChanged( wxTreeEvent& event );
     void OnExpanded( wxTreeEvent& event );
     void OnRightClick( wxTreeEvent& event );
+    void OnDoubleClick( wxTreeEvent& event );
     void SelectNetworkPlugin( wxTreeItemId treeId );
     void ProcessRightClickMenuEvents( wxCommandEvent& event );
 
