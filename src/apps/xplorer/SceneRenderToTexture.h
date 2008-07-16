@@ -38,12 +38,20 @@
 #include <osg/ref_ptr>
 #include <osg/Array>
 
+#include "SceneRenderToTexturePtr.h"
+
 namespace osg
 {
 class Camera;
 class Geode;
 class Geometry;
 class Texture2D;
+class Group;
+}
+
+namespace osgUtil
+{
+class SceneView;
 }
 
 namespace ves
@@ -74,6 +82,12 @@ public:
     ///Return the texture that is being rendered for the desktop display
     ///\return The osg::Texture2D for the dispaly
     osg::Texture2D* GetRenderToTexture();
+    ///Take a high resolution screen capture of the render window for SceneView
+    ///\param root The osg::Group to be rendered
+    ///\param sv The osgUtil::SceneView to provide the context for the render
+    ///\param filename The file name to be used for the screen capture
+    void WriteImageFileForWeb( osg::Group* root, osgUtil::SceneView* sv, 
+        std::string& filename );
 
 protected:
 

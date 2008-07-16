@@ -192,9 +192,6 @@ public:
     ///Update the framestamp and traverse the scenegraph
     void update();
 
-    ///
-    void writeImageFileForWeb();
-
 #ifdef _OSG
     ///Update sceneview
     bool svUpdate;
