@@ -241,13 +241,11 @@ void cfdTeacher::UpdateCommand()
     std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void cfdTeacher::writePFBFile( ves::xplorer::scenegraph::SceneNode* graph, std::string fileName )
+void cfdTeacher::writePFBFile( osg::Node* graph, std::string fileName )
 {
-#ifdef _OSG
     osgUtil::Optimizer optimizer;
-    optimizer.optimize( dynamic_cast< osg::Node* >( graph ) );
-    osgDB::writeNodeFile( *dynamic_cast< osg::Node* >( graph ), fileName );
-#endif
+    optimizer.optimize( graph );
+    osgDB::writeNodeFile( *graph, fileName );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdTeacher::Reset()

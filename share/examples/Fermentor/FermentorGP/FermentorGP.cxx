@@ -99,8 +99,8 @@ VEFermentorGraphicalPlugin::VEFermentorGraphicalPlugin()
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+    osg::ref_ptr< osg::Group > rootNode =
+        mSceneManager->GetRootNode();
     rootNode->removeChild( _roomGeometry.get() );
 
     for( std::map< int, osg::ref_ptr< display::DigitalGauge > >::iterator
@@ -119,7 +119,7 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     PluginBase::InitializeNode( veworldDCS );
 
     //Create the gauges
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
+    osg::ref_ptr< osg::Group > rootNode =
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
     osg::ref_ptr< osg::Node > temp = osgDB::readNodeFile( "Models/fermentor_room.ive" );

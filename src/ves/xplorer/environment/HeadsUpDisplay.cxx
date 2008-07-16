@@ -75,7 +75,7 @@ HeadsUpDisplay::~HeadsUpDisplay()
 ////////////////////////////////////////////////////////////////////////////////
 void HeadsUpDisplay::Initialize()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
+    osg::ref_ptr< osg::Group > rootNode =
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
     mCamera = new osg::Camera();

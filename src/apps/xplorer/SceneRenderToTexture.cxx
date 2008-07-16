@@ -35,6 +35,7 @@
 #include "SceneRenderToTexture.h"
 
 #include <ves/xplorer/EnvironmentHandler.h>
+#include <ves/xplorer/environment/cfdDisplaySettings.h>
 
 // --- OSG Includes --- //
 #include <osg/Camera>
@@ -62,6 +63,8 @@ SceneRenderToTexture::SceneRenderToTexture()
     CreateTexture();
     CreateQuad();
     CreateCamera();
+    
+    mRootGroup = new osg::Group();
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -130,9 +133,48 @@ void SceneRenderToTexture::CreateCamera()
     mCamera->setProjectionMatrix( osg::Matrix::identity() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* const SceneRenderToTexture::GetCamera() const
+void SceneRenderToTexture::InitScene()
+{
+    //Get state info about the screen
+    std::pair< int, int > screenDims = 
+        EnvironmentHandler::instance()->
+        GetDisplaySettings()->GetScreenResolution();
+    
+    std::map< std::string, double > screenCorners = 
+        EnvironmentHandler::instance()->
+        GetDisplaySettings()->GetScreenCornerValues();
+    
+    //Setup texture and quad
+    mTexture->setTextureSize( screenDims.first, screenDims.second );
+    
+    double xMin = screenCorners.find( "xmin" )->second;
+    double xMax = screenCorners.find( "xmax" )->second;
+    double yMin = screenCorners.find( "ymin" )->second;
+    double yMax = screenCorners.find( "ymax" )->second;
+    double zVal = screenCorners.find( "zval" )->second;
+    
+    (*mQuadVertices)[ 0 ].set( xMin, -zVal, yMin );
+    (*mQuadVertices)[ 0 ].set( xMax, -zVal, yMin );
+    (*mQuadVertices)[ 0 ].set( xMax, -zVal, yMax );
+    (*mQuadVertices)[ 0 ].set( xMin, -zVal, yMax );
+    
+    mQuadGeometry->dirtyDisplayList();
+    mQuadGeometry->dirtyBound();
+}
+////////////////////////////////////////////////////////////////////////////////
+/*void SceneRenderToTexture::LatePreFrameUpdate()
+{
+    ;
+}*/
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* const SceneRenderToTexture::GetCamera() const
 {
     return mCamera.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* const SceneRenderToTexture::GetGroup() const
+{
+    return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Geode* const SceneRenderToTexture::GetQuad() const

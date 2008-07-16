@@ -236,7 +236,7 @@ void KeyboardMouse::SetStartEndPoint(
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::DrawLine( osg::Vec3d startPoint, osg::Vec3d endPoint )
 {   
-    ves::xplorer::scenegraph::Group* rootNode =
+    osg::Group* rootNode =
         ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 
     if( mBeamGeode.valid() )

@@ -151,9 +151,9 @@ void SceneManager::InitScene()
         "|  1. Initializing.................................... SceneManager |" 
         << std::endl;
 
-    rootNode = new ves::xplorer::scenegraph::Group();
-    rootNode->SetName( "Root Node" );
-    rootNode->setThreadSafeRefUnref( true );
+    //mRootNode = new ves::xplorer::scenegraph::Group();
+    mRootNode->setName( "Root Node" );
+    mRootNode->setThreadSafeRefUnref( true );
 
 #ifdef VE_SOUND
     try
@@ -166,7 +166,7 @@ void SceneManager::InitScene()
         
         osg::ref_ptr< osgAL::SoundRoot > soundRoot = new osgAL::SoundRoot();
         soundRoot->setName( "Sound Root" );
-        rootNode->addChild( soundRoot.get() );
+        mRootNode->addChild( soundRoot.get() );
     }
     catch( ... )
     {
@@ -205,7 +205,7 @@ void SceneManager::InitScene()
     ///Network DCS
     m_matrixStore[ 2 ] = gmtl::Matrix44d();
     
-    rootNode->addChild( m_clrNode.get() );
+    mRootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
 
     ///Try to load the osgPT Polytans plugin to load all
@@ -223,9 +223,14 @@ void SceneManager::InitScene()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::Group* SceneManager::GetRootNode()
+void SceneManager::SetRootNode( osg::Group* rootNode )
 {
-    return rootNode.get();
+    mRootNode = rootNode;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Group* SceneManager::GetRootNode()
+{
+    return mRootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* SceneManager::GetWorldDCS()

@@ -262,9 +262,9 @@ void EnvironmentHandler::InitScene()
     // Initiate cursors.
     //
     std::cout << "| 8. Initializing................................. Virtual cursors |" << std::endl;
-    cursor = new cfdCursor( arrow,
-                                  ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
-                                  ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
+    //cursor = new cfdCursor( arrow,
+    //                              ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS(),
+    //                              ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode() );
 
     //
     // Initiate quatcam

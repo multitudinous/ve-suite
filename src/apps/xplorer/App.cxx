@@ -299,11 +299,11 @@ void App::initScene( void )
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
     // define the rootNode, worldDCS, and lighting
+    ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
+        mSceneRenderToTexture->GetGroup() );
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
-
-    this->getScene()->addChild( light_source_0.get() );
-
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
+    this->getScene()->addChild( light_source_0.get() );
 
     // modelHandler stores the arrow and holds all data and geometry
     ModelHandler::instance()->SetXMLCommand( m_vjobsWrapper->GetXMLCommand() );
@@ -327,6 +327,9 @@ void App::initScene( void )
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
 
+    //Setup the scene render to texture
+    mSceneRenderToTexture->InitScene();
+    
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->Initialize( std::string() );
     SteadyStateVizHandler::instance()->InitScene();
@@ -649,6 +652,17 @@ void App::draw()
     osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
     osg_proj_xform_mat->set( _vjMatrixLeft.mData );
     sv->setViewMatrix( *( osg_proj_xform_mat.get() ) );
+
+    //setup the render to texture camera
+    /*{
+        osg::ref_ptr< osg::Camera > textureCamera =
+        mSceneRenderToTexture->GetCamera();
+        osg::ref_ptr< osg::Camera > svCamera = sv->getCamera();
+        
+        textureCamera->setViewport( svCamera->getViewport() );
+        textureCamera->setViewMatrix( svCamera->getViewMatrix() );
+        textureCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );        
+    }*/
 
     //Draw the scene
     // NOTE: It is not safe to call osgUtil::SceneView::update() here; it

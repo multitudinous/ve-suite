@@ -77,11 +77,17 @@ public:
 
     ///Destructor
     ~SceneRenderToTexture();
+    
+    ///Initialize correct screen info for the texture and quad
+    ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
+    void InitScene();
 
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
     ///\return The osg::Camera being used to render to the FBO
-    osg::Camera* const GetCamera() const;
+    osg::Group* const GetCamera() const;
+
+    osg::Group* const GetGroup() const;
 
     ///Return the geode being used for the screen aligned quad
     ///\return The osg::Geode for the screen aligned quad
@@ -120,6 +126,8 @@ private:
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
     ///The verts for the quad
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
+    
+    osg::ref_ptr< osg::Group > mRootGroup;
 
 };
 } //end xplorer

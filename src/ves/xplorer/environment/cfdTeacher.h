@@ -89,7 +89,7 @@ public:
 
     ///Write out a performer bindary file
     ///\param SceneNode* and file name
-    void writePFBFile( ves::xplorer::scenegraph::SceneNode* graph, std::string fileName );
+    void writePFBFile( osg::Node* graph, std::string fileName );
 
     ///Get DCS
     ves::xplorer::scenegraph::DCS* GetDCS( );

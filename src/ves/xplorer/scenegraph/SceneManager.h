@@ -83,14 +83,14 @@ public:
     ///\param param
     void Initialize( std::string param );
 
-    ///Acts as the destructor
-    //void CleanUp();
-
     ///Initialize the scene
     void InitScene();
-
+    
+    ///Set the root node from the render to texture class
+    void SetRootNode( osg::Group* rootNode );
+    
     ///Return the root node of the scenegraph
-    ves::xplorer::scenegraph::Group* GetRootNode();
+    osg::Group* GetRootNode();
 
     ///Return the world DCS of the scenegraph
     ves::xplorer::scenegraph::DCS* GetWorldDCS();
@@ -142,7 +142,7 @@ private:
     vprSingletonHeader( SceneManager );
 
     std::string _param;///<
-    osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode;///<The root node of our scenegraph
+    osg::ref_ptr< osg::Group > mRootNode;///<The root node of our scenegraph
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _logoNode;///<The node which contains our logo
     osg::ref_ptr< ves::xplorer::scenegraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;///<Node to control navigation

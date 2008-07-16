@@ -112,7 +112,7 @@ CameraPlacementToolGP::~CameraPlacementToolGP()
 {
     if( mSceneManager )
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::Group > rootNode =
+        osg::ref_ptr< osg::Group > rootNode =
             mSceneManager->GetRootNode();
 
         if( rootNode.valid() && mCameraEntity.valid() )
