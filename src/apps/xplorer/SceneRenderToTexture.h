@@ -63,22 +63,37 @@ namespace xplorer
 class SceneRenderToTexture
 {
 public:
+    ///Constructor
     SceneRenderToTexture();
+    ///Destructor
     ~SceneRenderToTexture();
+    ///Return the camera being used to render the ves scenegraph 
+    ///to texture. This is the root node for the scenegraph
+    ///\return The osg::Camera being used to render to the FBO
+    osg::Camera* GetRenderToTextureCamera();
+    ///Return the texture that is being rendered for the desktop display
+    ///\return The osg::Texture2D for the dispaly
+    osg::Texture2D* GetRenderToTexture();
 
 protected:
 
 private:
+    ///Create the texture of the appropriate size for the FBO to write to
     void CreateTexture();
+    ///Create the quad to blit the texture to
     void CreateQuad();
+    ///Create the camera wit hthe appropriate settings to render to an FBO
     void CreateCamera();
 
+    ///The texture being used by the camera
     osg::ref_ptr< osg::Texture2D > mTexture;
-
+    ///The render to texture camera
     osg::ref_ptr< osg::Camera > mCamera;
-
+    ///The geode for the quad
     osg::ref_ptr< osg::Geode > mQuadGeode;
+    ///The geometry for the quad
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
+    ///The verts for the quad
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
 };
 } //end xplorer

@@ -37,9 +37,12 @@
 Wand API
 */
 
-/*!\class VE_XPlorer::Wand
+/*!\class ves::xplorer::Wand
 *
 */
+/*!\namespace ves::xplorer
+ *
+ */
 
 // --- VE-Suite Includes
 #include <ves/VEConfig.h>

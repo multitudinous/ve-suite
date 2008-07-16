@@ -57,7 +57,7 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::CreateTexture()
 {
-    osg::ref_ptr< osg::Texture2D > mTexture = new osg::Texture2D();
+    mTexture = new osg::Texture2D();
     mTexture->setInternalFormat( GL_RGB16F_ARB );
     mTexture->setTextureSize( 512, 512 );
     mTexture->setSourceFormat( GL_RGBA );
