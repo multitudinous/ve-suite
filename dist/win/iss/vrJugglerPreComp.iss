@@ -27,17 +27,17 @@ BackColor2=$1b84f7
 WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
 PrivilegesRequired=none
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#JUGGLERINSTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
-Source: {#JUGGLERINSTHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
+Source: {#DEPENDSINSTALLHOME}\{#JUGGLERINSTHOME}\share\*; DestDir: {app}\share; Flags: ignoreversion recursesubdirs createallsubdirs skipifsourcedoesntexist
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
