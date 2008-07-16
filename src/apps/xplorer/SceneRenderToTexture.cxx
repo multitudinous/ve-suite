@@ -34,26 +34,34 @@
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexture.h"
 
+#include <ves/xplorer/EnvironmentHandler.h>
+
 // --- OSG Includes --- //
 #include <osg/Camera>
+#include <osg/Group>
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/Texture2D>
-//Needed for FBO GL extensions
 #include <osg/FrameBufferObject>
 
-#include <osg/Group>
-#include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 
-#include <ves/xplorer/EnvironmentHandler.h>
+#include <osgUtil/SceneView>
 
 using namespace ves::xplorer;
 
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
+    :
+    mTexture( 0 ),
+    mCamera( 0 ),
+    mQuadGeode( 0 ),
+    mQuadGeometry( 0 ),
+    mQuadVertices( 0 )
 {
-    ;
+    CreateTexture();
+    CreateQuad();
+    CreateCamera();
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::~SceneRenderToTexture()
@@ -108,7 +116,6 @@ void SceneRenderToTexture::CreateCamera()
     mCamera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-    
     mCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF );
     mCamera->setViewport( 0, 0, 512, 512 );
 
@@ -123,7 +130,23 @@ void SceneRenderToTexture::CreateCamera()
     mCamera->setProjectionMatrix( osg::Matrix::identity() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::WriteImageFileForWeb( osg::Group* root, osgUtil::SceneView* sv, std::string& filename )
+osg::Camera* const SceneRenderToTexture::GetCamera() const
+{
+    return mCamera.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Geode* const SceneRenderToTexture::GetQuad() const
+{
+    return mQuadGeode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture2D* const SceneRenderToTexture::GetTexture() const
+{
+    return mTexture.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::WriteImageFileForWeb(
+    osg::Group* root, osgUtil::SceneView* sv, std::string& filename )
 {
     /* while(runWebImageSaveThread)
      {
@@ -441,3 +464,4 @@ void SceneRenderToTexture::WriteImageFileForWeb( osg::Group* root, osgUtil::Scen
     //This would work, too:
     osgDB::writeImageFile( *( shot.get() ), filename );
 }
+////////////////////////////////////////////////////////////////////////////////

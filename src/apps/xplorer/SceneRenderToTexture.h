@@ -34,11 +34,12 @@
 #ifndef SCENE_RENDER_TO_TEXTURE
 #define SCENE_RENDER_TO_TEXTURE
 
+// --- VE-Suite Includes --- //
+#include "SceneRenderToTexturePtr.h"
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 #include <osg/Array>
-
-#include "SceneRenderToTexturePtr.h"
 
 namespace osg
 {
@@ -73,31 +74,41 @@ class SceneRenderToTexture
 public:
     ///Constructor
     SceneRenderToTexture();
+
     ///Destructor
     ~SceneRenderToTexture();
+
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
     ///\return The osg::Camera being used to render to the FBO
-    osg::Camera* GetRenderToTextureCamera();
+    osg::Camera* const GetCamera() const;
+
+    ///Return the geode being used for the screen aligned quad
+    ///\return The osg::Geode for the screen aligned quad
+    osg::Geode* const GetQuad() const;
+
     ///Return the texture that is being rendered for the desktop display
-    ///\return The osg::Texture2D for the dispaly
-    osg::Texture2D* GetRenderToTexture();
+    ///\return The osg::Texture2D for the display
+    osg::Texture2D* const GetTexture() const;
+
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
     ///\param sv The osgUtil::SceneView to provide the context for the render
     ///\param filename The file name to be used for the screen capture
-    void WriteImageFileForWeb( osg::Group* root, osgUtil::SceneView* sv, 
-        std::string& filename );
+    void WriteImageFileForWeb(
+        osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
 protected:
 
 private:
-    ///Create the texture of the appropriate size for the FBO to write to
-    void CreateTexture();
-    ///Create the quad to blit the texture to
-    void CreateQuad();
     ///Create the camera wit hthe appropriate settings to render to an FBO
     void CreateCamera();
+
+    ///Create the quad to blit the texture to
+    void CreateQuad();
+
+    ///Create the texture of the appropriate size for the FBO to write to
+    void CreateTexture();
 
     ///The texture being used by the camera
     osg::ref_ptr< osg::Texture2D > mTexture;
@@ -109,6 +120,7 @@ private:
     osg::ref_ptr< osg::Geometry > mQuadGeometry;
     ///The verts for the quad
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
+
 };
 } //end xplorer
 } //end ves
