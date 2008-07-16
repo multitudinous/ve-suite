@@ -29,7 +29,8 @@ vrjuggler_options.apply( lib_env )
 vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
-osgal_options.apply( lib_env )
+if osgal_options.isAvailable():
+   osgal_options.apply( lib_env )
 
 bulletVersion = bullet_options.getVersion()
 lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],

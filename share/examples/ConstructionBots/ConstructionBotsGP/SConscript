@@ -29,7 +29,8 @@ lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY',
 gmtl_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
-osgal_options.apply( lib_env )
+if osgal_options.isAvailable():
+   osgal_options.apply( lib_env )
 bullet_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vtk_options.apply( lib_env )
