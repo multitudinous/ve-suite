@@ -46,7 +46,7 @@ vtk_options.apply( env )
 osg_options.apply( env )
 xerces_options.apply( env )
 if osgal_options.isAvailable():
-   osgal_options.apply( lib_env )
+   osgal_options.apply( env )
 tao_options.apply( env )
 boost_options.apply( env )
 vrjuggler_options.apply( env )
