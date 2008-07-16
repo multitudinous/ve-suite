@@ -94,16 +94,16 @@ void SceneRenderToTexture::CreateQuad()
     
     mQuadVertices->resize( 4 );
     (*mQuadVertices)[ 0 ].set( 0, 0, 0 );
-    (*mQuadVertices)[ 0 ].set( 1, 0, 0 );
-    (*mQuadVertices)[ 0 ].set( 1, 0, 1 );
-    (*mQuadVertices)[ 0 ].set( 0, 0, 1 );
+    (*mQuadVertices)[ 1 ].set( 1, 0, 0 );
+    (*mQuadVertices)[ 2 ].set( 1, 0, 1 );
+    (*mQuadVertices)[ 3 ].set( 0, 0, 1 );
     mQuadGeometry->setVertexArray( mQuadVertices.get() );
     
     quadTexCoords->resize( 4 );
     (*quadTexCoords)[ 0 ].set( 0, 0 );
-    (*quadTexCoords)[ 0 ].set( 1, 0 );
-    (*quadTexCoords)[ 0 ].set( 1, 1 );
-    (*quadTexCoords)[ 0 ].set( 0, 1 );
+    (*quadTexCoords)[ 1 ].set( 1, 0 );
+    (*quadTexCoords)[ 2 ].set( 1, 1 );
+    (*quadTexCoords)[ 3 ].set( 0, 1 );
     mQuadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
     
     mQuadGeometry->addPrimitiveSet(
@@ -147,19 +147,66 @@ void SceneRenderToTexture::InitScene()
     //Setup texture and quad
     mTexture->setTextureSize( screenDims.first, screenDims.second );
     
-    double xMin = screenCorners.find( "xmin" )->second;
-    double xMax = screenCorners.find( "xmax" )->second;
-    double yMin = screenCorners.find( "ymin" )->second;
-    double yMax = screenCorners.find( "ymax" )->second;
-    double zVal = screenCorners.find( "zval" )->second;
+    double xMin = screenCorners.find( "xmin" )->second * 3.2808399;
+    double xMax = screenCorners.find( "xmax" )->second * 3.2808399;
+    double yMin = screenCorners.find( "ymin" )->second * 3.2808399;
+    double yMax = screenCorners.find( "ymax" )->second * 3.2808399;
+    double zVal = screenCorners.find( "zval" )->second * 3.2808399;
     
     (*mQuadVertices)[ 0 ].set( xMin, -zVal, yMin );
-    (*mQuadVertices)[ 0 ].set( xMax, -zVal, yMin );
-    (*mQuadVertices)[ 0 ].set( xMax, -zVal, yMax );
-    (*mQuadVertices)[ 0 ].set( xMin, -zVal, yMax );
+    (*mQuadVertices)[ 1 ].set( xMax, -zVal, yMin );
+    (*mQuadVertices)[ 2 ].set( xMax, -zVal, yMax );
+    (*mQuadVertices)[ 3 ].set( xMin, -zVal, yMax );
     
     mQuadGeometry->dirtyDisplayList();
     mQuadGeometry->dirtyBound();
+
+    std::string vertexSource =
+    "void main() \n"
+    "{ \n"
+        "gl_Position = ftransform(); \n"
+
+        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
+    "} \n";
+
+    std::string fragmentSource =
+    "uniform sampler2D baseMap; \n"
+
+    "void main() \n"
+    "{ \n"
+        "vec4 color = texture2D( baseMap, gl_TexCoord[ 0 ].st ); \n"
+
+        "gl_FragColor = color; \n"
+    "} \n";
+
+    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
+    vertexShader->setType( osg::Shader::VERTEX );
+    vertexShader->setShaderSource( vertexSource );
+
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( vertexShader.get() );
+    program->addShader( fragmentShader.get() );
+
+    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setAttribute(
+        program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setTextureAttributeAndModes(
+        0, mTexture.get(), osg::StateAttribute::ON );
+    stateset->setMode(
+        GL_LIGHTING,
+        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
+
+    osg::ref_ptr< osg::Uniform > baseMapUniform =
+        new osg::Uniform( "baseMap", 0 );
+    stateset->addUniform( baseMapUniform.get() );
+
+    mQuadGeode->setStateSet( stateset.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void SceneRenderToTexture::LatePreFrameUpdate()
@@ -167,7 +214,7 @@ void SceneRenderToTexture::InitScene()
     ;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-osg::Group* const SceneRenderToTexture::GetCamera() const
+osg::Camera* const SceneRenderToTexture::GetCamera() const
 {
     return mCamera.get();
 }

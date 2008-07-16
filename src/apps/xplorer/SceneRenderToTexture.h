@@ -85,7 +85,7 @@ public:
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
     ///\return The osg::Camera being used to render to the FBO
-    osg::Group* const GetCamera() const;
+    osg::Camera* const GetCamera() const;
 
     osg::Group* const GetGroup() const;
 

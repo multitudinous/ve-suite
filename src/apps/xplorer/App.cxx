@@ -195,6 +195,8 @@ void App::contextInit()
     {
         vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
         new_sv->setSceneData( getScene() );
+        //new_sv->getCamera()->addChild( mSceneRenderToTexture->GetQuad() );
+        //new_sv->getCamera()->addChild( mSceneRenderToTexture->GetCamera() );
     }
 
     ( *sceneViewer ) = new_sv;
@@ -301,6 +303,8 @@ void App::initScene( void )
     // define the rootNode, worldDCS, and lighting
     ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
         mSceneRenderToTexture->GetGroup() );
+    //ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
+        //mSceneRenderToTexture->GetCamera() );
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
     this->getScene()->addChild( light_source_0.get() );
@@ -654,15 +658,14 @@ void App::draw()
     sv->setViewMatrix( *( osg_proj_xform_mat.get() ) );
 
     //setup the render to texture camera
-    /*{
-        osg::ref_ptr< osg::Camera > textureCamera =
-        mSceneRenderToTexture->GetCamera();
-        osg::ref_ptr< osg::Camera > svCamera = sv->getCamera();
+    {
+        osg::Camera* const textureCamera = mSceneRenderToTexture->GetCamera();
+        osg::Camera* svCamera = sv->getCamera();
         
         textureCamera->setViewport( svCamera->getViewport() );
         textureCamera->setViewMatrix( svCamera->getViewMatrix() );
         textureCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );        
-    }*/
+    }
 
     //Draw the scene
     // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
