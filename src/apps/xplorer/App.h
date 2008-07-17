@@ -279,6 +279,8 @@ private:
 
     ///
     ves::xplorer::SceneRenderToTexturePtr mSceneRenderToTexture;
+    ///Turn off/on RTT
+    bool mRTT;
 };
 } //end xplorer
 } //end ves

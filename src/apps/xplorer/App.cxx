@@ -115,7 +115,8 @@ App::App( int argc, char* argv[] )
     isCluster( false ),
     mLastFrame( 0 ),
     mLastTime( 0 ),
-    mProfileCounter( 0 )
+    mProfileCounter( 0 ),
+    mRTT( false )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
@@ -174,7 +175,7 @@ osg::Group* App::getScene()
 {
     //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
     //   "C:/test.osg");
-    return ( osg::Group* )ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
+    return ves::xplorer::scenegraph::SceneManager::instance()->GetRootNode();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::contextInit()
@@ -194,9 +195,14 @@ void App::contextInit()
     // Add the tree to the scene viewer and set properties
     {
         vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
-        new_sv->setSceneData( getScene() );
-        //new_sv->getCamera()->addChild( mSceneRenderToTexture->GetQuad() );
-        //new_sv->getCamera()->addChild( mSceneRenderToTexture->GetCamera() );
+        if( mRTT )
+        {
+            new_sv->getCamera()->addChild( mSceneRenderToTexture->GetQuad() );
+        }
+        else
+        {
+            new_sv->setSceneData( getScene() );
+        }
     }
 
     ( *sceneViewer ) = new_sv;
@@ -301,10 +307,16 @@ void App::initScene( void )
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
     // define the rootNode, worldDCS, and lighting
-    ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
-        mSceneRenderToTexture->GetGroup() );
-    //ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
-        //mSceneRenderToTexture->GetCamera() );
+    if( mRTT )
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
+            mSceneRenderToTexture->GetCamera() );
+    }
+    else
+    {
+        ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
+            mSceneRenderToTexture->GetGroup() );
+    }
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
     this->getScene()->addChild( light_source_0.get() );
@@ -538,8 +550,6 @@ void App::contextPostDraw()
 {
     VPR_PROFILE_GUARD_HISTORY( "App::contextPostDraw", 20 );
     _tbvHandler->PingPongTextures();
-    //here for testing...
-    //glFinish();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void App::postFrame()
@@ -561,12 +571,25 @@ void App::postFrame()
     vprDEBUG( vesDBG, 3 ) << "|End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
 ///so setting variables should not be done here
 void App::contextPreDraw( void )
 {
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
+    if( mRTT )
+    {
+        static bool changed = false;
+        if( !changed )
+        {
+            if( jccl::ConfigManager::instance()->isPendingStale() )
+            {
+                vpr::Guard<vpr::Mutex> val_guard( mValueLock );
+                (*sceneViewer)->getCamera()->
+                    addChild( mSceneRenderToTexture->GetCamera() );
+                changed = true;
+            }
+        }
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 ///Remember that this is called in parrallel in a multiple context situation
@@ -659,6 +682,7 @@ void App::draw()
 
     //setup the render to texture camera
     {
+        VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
         osg::Camera* const textureCamera = mSceneRenderToTexture->GetCamera();
         osg::Camera* svCamera = sv->getCamera();
         
