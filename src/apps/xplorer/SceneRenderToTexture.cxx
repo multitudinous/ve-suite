@@ -127,7 +127,7 @@ void SceneRenderToTexture::CreateCamera()
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
                      GL_DEPTH_COMPONENT24 );
     //Attach a texture and use it as the render target
-#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 4 ) )
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 5 ) && ( OSG_VERSION_PATCH >=4 ) )
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
                      mTexture.get(), 0, 0, false, 8, 4 );
 #else
