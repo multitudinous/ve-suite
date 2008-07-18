@@ -57,7 +57,7 @@ class HDF4(SConsAddons.Options.PackageOption):
       self.requiredVersion = requiredVersion
       self.required = required
       self.useCppPath = useCppPath
-      SConsAddons.Options.LocalUpdateOption.__init__(self, name,
+      SConsAddons.Options.PackageOption.__init__(self, name,
                                                      self.baseDirKey,
                                                      help_text)
 
