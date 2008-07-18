@@ -681,6 +681,7 @@ void App::draw()
     sv->setViewMatrix( *( osg_proj_xform_mat.get() ) );
 
     //setup the render to texture camera
+    /*
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
         osg::Camera* const textureCamera = mSceneRenderToTexture->GetCamera();
@@ -690,6 +691,7 @@ void App::draw()
         textureCamera->setViewMatrix( svCamera->getViewMatrix() );
         textureCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );        
     }
+    */
 
     //Draw the scene
     // NOTE: It is not safe to call osgUtil::SceneView::update() here; it

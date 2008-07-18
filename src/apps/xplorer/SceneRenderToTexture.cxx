@@ -116,11 +116,11 @@ void SceneRenderToTexture::CreateQuad()
 void SceneRenderToTexture::CreateCamera()
 {
     mCamera = new osg::Camera();
-    //mCamera->setRenderOrder( osg::Camera::PRE_RENDER );
-    //mCamera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    //mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    mCamera->setRenderOrder( osg::Camera::POST_RENDER );
+    mCamera->setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-    mCamera->setReferenceFrame( osg::Camera::ABSOLUTE_RF_INHERIT_VIEWPOINT );
+    mCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
     mCamera->setViewport( 0, 0, 512, 512 );
 
     //Set the internal format for the render target
@@ -129,7 +129,7 @@ void SceneRenderToTexture::CreateCamera()
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 5 ) && ( OSG_VERSION_PATCH >=4 ) )
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
-                     mTexture.get(), 0, 0, false, 8, 4 );
+                     mTexture.get() );//, 0, 0, false, 8, 4 );
 #else
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
                      mTexture.get() );
@@ -150,8 +150,9 @@ void SceneRenderToTexture::InitScene()
         EnvironmentHandler::instance()->
         GetDisplaySettings()->GetScreenCornerValues();
     
-    //Setup texture and quad
+    //Setup texture, camera, and quad
     mTexture->setTextureSize( screenDims.first, screenDims.second );
+    mCamera->setViewport( 0, 0, screenDims.first, screenDims.second );
     
     double xMin = screenCorners.find( "xmin" )->second * 3.2808399;
     double xMax = screenCorners.find( "xmax" )->second * 3.2808399;
