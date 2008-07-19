@@ -441,6 +441,9 @@ if not SConsAddons.Util.hasHelpFlag():
       # http://support.microsoft.com/kb/166474
       baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
       baseEnv.Append( WINDOWS_INSERT_MANIFEST = True )
+      # As noted below WINVER will be defined as 0x0502
+      # http://msdn.microsoft.com/en-us/library/aa383745(VS.85).aspx
+      baseEnv.AppendUnique( CPPDEFINES = ['WINVER=0x0502'] )
       #if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
       #    baseEnv['PDB'] = 1
       #baseEnv.AppendUnique( CPPPATH = os.environ['INCLUDE'].split(os.pathsep) )
