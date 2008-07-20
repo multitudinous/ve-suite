@@ -175,11 +175,11 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
     XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
 
     //get the map count
-    std::map< std::string, model::SystemPtr> systems =
+    const std::map< std::string, model::SystemPtr> systems =
         XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
 
     // iterate through the systems
-    for( std::map< std::string, model::SystemPtr>::iterator
+    for( std::map< std::string, model::SystemPtr>::const_iterator
             iter = systems.begin(); iter != systems.end(); iter++ )
     {
         Network* tempNetwork = new Network( this );

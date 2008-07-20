@@ -437,8 +437,8 @@ ves::open::xml::model::SystemPtr XMLDataBufferEngine::GetXMLSystemDataObject(
     return m_systemMap[id];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::model::SystemPtr >XMLDataBufferEngine::
-GetXMLSystemDataMap( )
+const std::map< std::string, ves::open::xml::model::SystemPtr > 
+    XMLDataBufferEngine::GetXMLSystemDataMap()
 {
     return m_systemMap;
 }
@@ -446,7 +446,7 @@ GetXMLSystemDataMap( )
 void XMLDataBufferEngine::ParseSystem( ves::open::xml::model::SystemPtr system )
 {
     //add the system to the map
-    m_systemMap[system->GetID()] = system;
+    AddSubSystem( system );
 
     //Parse out the subsystems
     int modelCount = system->GetNumberOfModels();
@@ -457,4 +457,19 @@ void XMLDataBufferEngine::ParseSystem( ves::open::xml::model::SystemPtr system )
             ParseSystem( system->GetModel( j )->GetSubSystem() );
         }
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+bool XMLDataBufferEngine::AddSubSystem( ves::open::xml::model::SystemPtr system )
+{
+    std::map< std::string, ves::open::xml::model::SystemPtr >::const_iterator 
+        iter = m_systemMap.find( system->GetID() );
+    if( iter != m_systemMap.end() )
+    {
+        std::cerr << "XMLDataBufferEngine::AddSubSystem : "
+            << "System already on system map." << std::endl;
+        return false;
+    }
+    
+    m_systemMap[ system->GetID() ] = system;
+    return true;
 }

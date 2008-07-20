@@ -105,7 +105,7 @@ public:
     ///Get data
     std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
     ///Get the map of all systems
-    std::map< std::string, ves::open::xml::model::SystemPtr >
+    const std::map< std::string, ves::open::xml::model::SystemPtr >
     GetXMLSystemDataMap();
     ///Get a system
     std::string GetTopSystemId( );
@@ -115,6 +115,8 @@ public:
     ves::open::xml::UserPtr GetXMLUserDataObject( std::string dataNumber );
     ///Parse system for subsystems
     void ParseSystem( ves::open::xml::model::SystemPtr system );
+    ///Add a system so that users can create sub systems on the fly
+    bool AddSubSystem( ves::open::xml::model::SystemPtr system );
 
 private:
     ///Map to store the command name and command for easy lookup by the user
