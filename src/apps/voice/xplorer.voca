@@ -1,0 +1,29 @@
+% NS_B
+<s>                     sil
+
+% NS_E
+</s>                    sil
+
+% MOVE
+MOVE                    m uw v
+
+% PITCH
+PITCH                   p ih ch
+
+% ROTATE
+ROLL                    r ow l
+YAW                     y ao
+
+% ROTATION
+CLOCKWISE               k l aa k w ay z
+COUNTER                 k aw n t er
+
+% VERTICAL
+UP                      ah p
+DOWN                    d aw n
+
+% NON_VERTICAL
+LEFT                    l eh f t
+RIGHT                   r ay dx 
+FORWARD                 f ao r w er d
+BACKWARD                b ae k w er d

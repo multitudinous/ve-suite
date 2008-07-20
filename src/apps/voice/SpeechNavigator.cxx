@@ -7,11 +7,14 @@
 #include <tao/TAO_Internal.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 
+#include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/moduleC.h>
 #include <ves/open/VjObsC.h>
-#include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/DataValuePairPtr.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/CommandPtr.h>
 #include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/xplorer/environment/cfdEnum.h>
 
 #include <sstream>
 
@@ -202,16 +205,83 @@ SpeechNavigator::stopParserThread()
 bool
 SpeechNavigator::runDataIteration()
 {
+    using namespace ves::open::xml;
+    using namespace ves::conductor::util;
+
     std::string data;
+    int nav_value = 0;
     if (mSpeechQueue.remove(data))
     {
-         
+        if ("MOVE UP" == data)
+        {
+            nav_value = NAV_UP;
+        }
+        else if ("MOVE DOWN" == data)
+        {
+            nav_value = NAV_DOWN;
+        }
+        else if ("MOVE LEFT" == data)
+        {
+            nav_value = NAV_LEFT;
+        }
+        else if ("MOVE RIGHT" == data)
+        {
+            nav_value = NAV_RIGHT;
+        }
+        else if ("MOVE FORWARD" == data)
+        {
+            nav_value = NAV_FWD;
+        }
+        else if ("MOVE BACKWARD" == data)
+        {
+            nav_value = NAV_BKWD;
+        }
+        else if ("PITCH DOWN" == data)
+        {
+            nav_value = PITCH_DOWN;
+        }
+        else if ("PITCH UP" == data)
+        {
+            nav_value = PITCH_UP;
+        }
+        else if ("ROLL CLOCKWISE" == data)
+        {
+            nav_value = ROLL_CW;
+        }
+        else if ("ROLL COUNTERCLOCKWISE" == data)
+        {
+            nav_value = ROLL_CCW;
+        }
+        else if ("YAW CLOCKWISE" == data)
+        {
+            nav_value = YAW_CW;
+        }
+        else if ("YAW COUNTERCLOCKWISE" == data)
+        {
+            nav_value = YAW_CCW;
+        }
+        else
+        {
+            // Return here since we don't know what type of data to send to
+            // Xplorer.
+            std::cerr << "[ERR] Unrecognized speech data '" << data 
+                      << "'" << std::endl;
+            return false;
+        }
+        DataValuePairPtr data_value_pair(new DataValuePair("FLOAT"));
+        data_value_pair->SetDataName(std::string("GUI_NAV"));
+        data_value_pair->SetDataValue( static_cast<double>(nav_value) );
+        CommandPtr ve_command( new Command() );
+        ve_command->SetCommandName( std::string("Navigation_Data") );
+        ve_command->AddDataValuePair(data_value_pair);
+        CORBAServiceList::instance()->SendCommandStringToXplorer(ve_command);
     }
 }
 
 bool
 SpeechNavigator::startDataLoop()
 {
+    mStop = false;
     while (!mStop)
     {
         if (!runDataIteration())
