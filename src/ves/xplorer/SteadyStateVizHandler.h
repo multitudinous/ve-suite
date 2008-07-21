@@ -140,7 +140,7 @@ public:
 #endif
 
     ///The function used to create streamlines
-    void streamers();
+    //void streamers();
 
     ///Set the active vis object - to be used by the addvis eh
     ///\param tempObject The active Object to be used by the handler

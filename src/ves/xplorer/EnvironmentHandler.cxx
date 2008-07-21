@@ -134,8 +134,8 @@ m_lodScale( 0.01 )
         new ves::xplorer::event::PhysicsSimulationEventHandler();
     _eventHandlers[ std::string( "VIEW_SELECTION" )] =
         new ves::xplorer::event::ViewEventHandler();
-    _eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
-        new ves::xplorer::event::ChangeCursorEventHandler();
+    //_eventHandlers[ std::string( "VISUALIZATION_SETTINGS" )] =
+    //    new ves::xplorer::event::ChangeCursorEventHandler();
     _eventHandlers[ std::string( "Stored Scenes" )] =
         new ves::xplorer::event::StoredSceneEventHandler();
     _eventHandlers[ std::string( "Change Working Directory" )] =

@@ -123,7 +123,7 @@ SteadyStateVizHandler::SteadyStateVizHandler()
 void SteadyStateVizHandler::Initialize( std::string param )
 {
     _param = param;
-    cursor = EnvironmentHandler::instance()->GetCursor();
+    //cursor = EnvironmentHandler::instance()->GetCursor();
 }
 ////////////////////////////////////////////////////////////////////////////////
 SteadyStateVizHandler::~SteadyStateVizHandler()
@@ -423,7 +423,7 @@ void SteadyStateVizHandler::CreateActorThread( void* )
     } // End of While loop
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SteadyStateVizHandler::streamers()
+/*void SteadyStateVizHandler::streamers()
 {
     vprDEBUG( vesDBG, 1 ) << "In streamers" << std::endl << vprDEBUG_FLUSH;
     if( cursor->GetCursorID() == NONE )
@@ -461,7 +461,7 @@ void SteadyStateVizHandler::streamers()
 
     _activeObject->Update();
     //_activeObject = NULL;
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 
 } // end xplorer
