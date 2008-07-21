@@ -7,7 +7,6 @@
 #include <tao/TAO_Internal.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 
-#include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/moduleC.h>
 #include <ves/open/VjObsC.h>
 #include <ves/open/xml/DataValuePairPtr.h>
@@ -17,6 +16,8 @@
 #include <ves/xplorer/environment/cfdEnum.h>
 
 #include <sstream>
+#include <map>
+#include <vector>
 
 #include <iostream>
 
@@ -206,7 +207,6 @@ bool
 SpeechNavigator::runDataIteration()
 {
     using namespace ves::open::xml;
-    using namespace ves::conductor::util;
 
     std::string data;
     int nav_value = 0;
@@ -274,7 +274,31 @@ SpeechNavigator::runDataIteration()
         CommandPtr ve_command( new Command() );
         ve_command->SetCommandName( std::string("Navigation_Data") );
         ve_command->AddDataValuePair(data_value_pair);
-        CORBAServiceList::instance()->SendCommandStringToXplorer(ve_command);
+        // Copied from CORBAServiceList::SendCommandStringToXplorer().
+        //Now send the data to xplorer
+        ves::open::xml::XMLReaderWriter netowrkWriter;
+        netowrkWriter.UseStandaloneDOMDocumentManager();
+
+        // New need to destroy document and send it
+        std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+        nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( ve_command, "vecommand" ) );
+        std::string xmlDocument( "returnString" );
+        netowrkWriter.WriteXMLDocument( nodes, xmlDocument, "Command" );
+
+        if( CORBA::is_nil( vjobs.in() ) || xmlDocument.empty() )
+        {
+            return false;
+        }
+
+        try
+        {
+            // CORBA releases the allocated memory so we do not have to
+            vjobs->SetCommandString( xmlDocument.c_str() );
+        }
+        catch ( ... )
+        {
+            return false;
+        }
     }
 }
 
