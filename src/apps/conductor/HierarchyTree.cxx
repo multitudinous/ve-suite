@@ -369,7 +369,7 @@ void HierarchyTree::AppendToTree( unsigned int id )
         
         AddtoImageList( wxBitmap( square_xpm ) );
         wxTreeItemId leaf = AppendItem( selected, 
-            wxString( "DefaultPlugin" ), -1 , -1, modData );
+            _( "DefaultPlugin" ), -1 , -1, modData );
         SetItemImage( leaf, images->GetImageCount() - 1 );
     }
 }

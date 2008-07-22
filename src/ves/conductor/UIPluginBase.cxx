@@ -1842,7 +1842,7 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
     XMLDataBufferEngine::instance()->AddXMLSystemDataObject( system );
     
     //pass info to canvas to draw the new network and model
-    event.SetString( GetVEModel()->GetSubSystem()->GetID() );
+    event.SetString( wxString( GetVEModel()->GetSubSystem()->GetID().c_str(), wxConvUTF8 ) );
     event.SetClientData( &id );
     ::wxPostEvent( m_canvas, event );
 

@@ -1959,7 +1959,7 @@ void Network::CreateSystem( Canvas* parent )
     tempPlugin->SetNetwork( this );
     tempPlugin->SetCanvas( parent );
     tempPlugin->SetDCScale( &userScale );
-    tempPlugin->SetName( wxString( "DefaultPlugin" ) );
+    tempPlugin->SetName( _( "DefaultPlugin" ) );
     tempPlugin->SetCORBAService( CORBAServiceList::instance() );
     tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     

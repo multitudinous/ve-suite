@@ -487,7 +487,7 @@ void Canvas::CreateNewSystem( wxCommandEvent& event )
     //create conductor graphics
     Network* tempNetwork = new Network( this );
     //tempNetwork->CreateSystem( system, this );
-    std::string name = event.GetString();
+    std::string name = ConvertUnicode( event.GetString().c_str() );
     model::SystemPtr system = 
         XMLDataBufferEngine::instance()->GetXMLSystemDataObject( name );
     tempNetwork->SetSystem( system );
