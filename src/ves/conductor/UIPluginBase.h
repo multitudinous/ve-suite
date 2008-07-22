@@ -297,6 +297,7 @@ public:
     ///Send the id of this plugin to xplorer so that it is active for all 
     ///other xplorer events
     void SendActiveId();
+    void SetAsHierarchy( );
 
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,

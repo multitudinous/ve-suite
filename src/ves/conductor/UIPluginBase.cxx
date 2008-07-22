@@ -1835,17 +1835,24 @@ void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
     ves::open::xml::model::NetworkPtr tempXMLNetwork(
         new ves::open::xml::model::Network() );
     system->AddNetwork( tempXMLNetwork );
-    //system->AddModel(  );
     GetVEModel()->SetSubSystem( system );
 
-    //add xml model to new system
-    XMLDataBufferEngine::instance()->AddXMLSystemDataObject( system );
+    //add system to system list
+    XMLDataBufferEngine::instance()->AddSubSystem( system );
     
+    //disables menu entry for make hierarchy
+    SetAsHierarchy( );
+
     //pass info to canvas to draw the new network and model
     event.SetString( wxString( GetVEModel()->GetSubSystem()->GetID().c_str(), wxConvUTF8 ) );
     event.SetClientData( &id );
     ::wxPostEvent( m_canvas, event );
 
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::SetAsHierarchy( )
+{
+    mPopMenu->Enable( MAKE_HIER, false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDCScale( std::pair< double, double >* scale )

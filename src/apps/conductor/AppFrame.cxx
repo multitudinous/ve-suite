@@ -2458,8 +2458,10 @@ void AppFrame::OnDelMod( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnMakeIntoHierarchy( wxCommandEvent& event )
 {
-    int* mod = static_cast< int* >( event.GetClientData() );
-    hierarchyTree->AppendToTree( *mod );
+    std::pair< unsigned int, unsigned int > *ids =
+        static_cast< std::pair< unsigned int, unsigned int > * >
+        ( event.GetClientData() );
+    hierarchyTree->AppendToTree( ids->first, ids->second );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnChangeIcon(wxCommandEvent& event )

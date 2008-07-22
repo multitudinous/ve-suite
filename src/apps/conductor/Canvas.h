@@ -102,6 +102,7 @@ public:
     void SetUserScale( double x, double y );
     void SetMainFrame(wxWindow *window);
 
+
 private:
     ///Map of the networks for this system
     std::map< std::string, Network* > networks;
@@ -121,6 +122,7 @@ private:
     wxUpdateUIEvent cleanEvent;
     std::pair< double, double > userScale;
     wxWindow* mainFrame;
+    std::pair< unsigned int, unsigned int > ids;
 
     std::string ConvertUnicode( const wxChar* data )
     {

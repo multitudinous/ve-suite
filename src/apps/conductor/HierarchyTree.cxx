@@ -355,15 +355,17 @@ void HierarchyTree::RemoveFromTree( unsigned int id )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::AppendToTree( unsigned int id )
+void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
 {
     wxTreeItemId root = GetRootItem();
-    wxTreeItemId selected = SearchTree( root, id );
+    wxTreeItemId selected = SearchTree( root, parentID );
     if( selected.IsOk() )
     {
         UIPluginBase* cur_module = new DefaultPlugin();
         ModuleData* modData = new ModuleData();
-        modData->modId = cur_module->GetID();
+
+        //modData->modId = cur_module->GetID();
+        modData->modId = id;
         modData->modName = ConvertUnicode( cur_module->GetName() );
         modData->systemId = m_canvas->GetActiveNetworkID( );
         

@@ -1914,6 +1914,10 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         modules[ num ].GetPlugin()->SetID( num );
         //modules[ num ].SetClassName( model->GetModelName() );
         modules[ num ].GetPlugin()->SetVEModel( model );
+        if( model->GetSubSystem() )
+        {
+            modules[num].GetPlugin()->SetAsHierarchy();
+        }
         //Second, calculate the polyes
         wxRect bbox = modules[ num ].GetPlugin()->GetBBox();
         int polynum = modules[ num ].GetPlugin()->GetNumPoly();
@@ -1943,7 +1947,7 @@ void Network::SetSystem( model::SystemPtr system )
     systemPtr = system;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void Network::CreateSystem( Canvas* parent )
+void Network::CreateSystem( Canvas* parent, unsigned int id )
 {
     this->parent = parent;
     modules.clear();
@@ -1963,11 +1967,11 @@ void Network::CreateSystem( Canvas* parent )
     tempPlugin->SetCORBAService( CORBAServiceList::instance() );
     tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     
-    modules[ 0 ].SetPlugin( tempPlugin );
-    modules[ 0 ].GetPlugin()->SetID( 0 );
+    modules[ id ].SetPlugin( tempPlugin );
+    modules[ id ].GetPlugin()->SetID( id );
+    
     //modules[ 0 ].GetPlugin()->SetVEModel( model );
-    systemPtr->AddModel( modules[0].GetPlugin()->GetVEModel() );
-
+    systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )

@@ -478,7 +478,7 @@ void Canvas::OnDelMod( wxCommandEvent& event )
 ///////////////////////////////////////////////////////////////////////////////
 void Canvas::CreateNewSystem( wxCommandEvent& event )
 {   
-    int id = wxNewId();
+    unsigned int id = wxNewId();
     
     std::stringstream ssId;
     ssId << id;
@@ -491,9 +491,16 @@ void Canvas::CreateNewSystem( wxCommandEvent& event )
     model::SystemPtr system = 
         XMLDataBufferEngine::instance()->GetXMLSystemDataObject( name );
     tempNetwork->SetSystem( system );
-    tempNetwork->CreateSystem( this );
-    networks[sId] = tempNetwork;
+    tempNetwork->CreateSystem( this, id );
+    networks[ system->GetID() ] = tempNetwork;
 
+    ///Now set it active
+    SetActiveNetwork( system->GetID() );
+
+    unsigned int* parentID = static_cast< unsigned int* >( event.GetClientData() );
+    ids.first = *parentID;
+    ids.second = id;
+    event.SetClientData( &ids );
     //pass event to app frame
     ::wxPostEvent( mainFrame, event );
 }

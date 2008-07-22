@@ -102,7 +102,7 @@ public:
     ///\param parent The parent canvas for this network
     void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas* parent );
     void SetSystem( ves::open::xml::model::SystemPtr system );
-    void CreateSystem( Canvas* parent );
+    void CreateSystem( Canvas* parent, unsigned int id );
     ///Acessors
     std::pair< double, double >* GetUserScale( void );
     std::pair< unsigned int, unsigned int >* GetNumPix( void );
