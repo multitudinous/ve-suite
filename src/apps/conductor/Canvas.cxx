@@ -95,6 +95,7 @@ lrintf( float flt )
 BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
     EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
+    EVT_MENU( UIPluginBase::MAKE_HIER, Canvas::CreateNewSystem )
     EVT_UPDATE_UI( Network::DELETE_NETWORK, Canvas::OnDelNetwork )
     EVT_CHAR( Canvas::OnZoom )
 END_EVENT_TABLE()
@@ -472,6 +473,28 @@ void Canvas::Update()
 ////////////////////////////////////////////////////////////////////////////////
 void Canvas::OnDelMod( wxCommandEvent& event )
 {
+    ::wxPostEvent( mainFrame, event );
+}
+///////////////////////////////////////////////////////////////////////////////
+void Canvas::CreateNewSystem( wxCommandEvent& event )
+{   
+    int id = wxNewId();
+    
+    std::stringstream ssId;
+    ssId << id;
+    std::string sId = ssId.str();
+
+    //create conductor graphics
+    Network* tempNetwork = new Network( this );
+    //tempNetwork->CreateSystem( system, this );
+    std::string name = event.GetString();
+    model::SystemPtr system = 
+        XMLDataBufferEngine::instance()->GetXMLSystemDataObject( name );
+    tempNetwork->SetSystem( system );
+    tempNetwork->CreateSystem( this );
+    networks[sId] = tempNetwork;
+
+    //pass event to app frame
     ::wxPostEvent( mainFrame, event );
 }
 ////////////////////////////////////////////////////////////////////////////////

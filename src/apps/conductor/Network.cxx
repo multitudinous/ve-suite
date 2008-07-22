@@ -1938,6 +1938,38 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
     parent->Refresh( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Network::SetSystem( model::SystemPtr system )
+{
+    systemPtr = system;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Network::CreateSystem( Canvas* parent )
+{
+    this->parent = parent;
+    modules.clear();
+    links.clear();
+    userScale.first = 1.0f;//parent->userScale.first;
+    userScale.second = 1.0f;//parent->userScale.second;
+    GetNumUnit()->first = 700;
+    GetNumUnit()->second = 700;
+    GetNumPix()->first = 10;
+    GetNumPix()->second = 10;
+
+    UIPluginBase* tempPlugin = new DefaultPlugin();
+    tempPlugin->SetNetwork( this );
+    tempPlugin->SetCanvas( parent );
+    tempPlugin->SetDCScale( &userScale );
+    tempPlugin->SetName( wxString( "DefaultPlugin" ) );
+    tempPlugin->SetCORBAService( CORBAServiceList::instance() );
+    tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
+    
+    modules[ 0 ].SetPlugin( tempPlugin );
+    modules[ 0 ].GetPlugin()->SetID( 0 );
+    //modules[ 0 ].GetPlugin()->SetVEModel( model );
+    systemPtr->AddModel( modules[0].GetPlugin()->GetVEModel() );
+
+}
+////////////////////////////////////////////////////////////////////////////////
 std::pair< double, double >* Network::GetUserScale( void )
 {
     return &userScale;

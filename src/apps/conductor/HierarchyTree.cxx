@@ -36,6 +36,7 @@
 #include "HierarchyTree.h"
 #include <ves/conductor/AspenPlus2DIcons.h>
 #include <ves/conductor/UIPluginBase.h>
+#include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
@@ -157,7 +158,7 @@ void HierarchyTree::PopulateTree( std::map < std::string,
             }
             else
             {
-                AddtoImageList( wxIcon( icon1_xpm ) );
+                AddtoImageList( wxIcon( square_xpm ) );
             }
 
             wxTreeItemId leaf = AppendItem( m_rootId,
@@ -209,7 +210,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             }
             else
             {
-                AddtoImageList( wxIcon( icon1_xpm ) );
+                AddtoImageList( wxIcon( square_xpm ) );
             }
 
             wxTreeItemId leaf = AppendItem( parentLeaf,
@@ -351,6 +352,25 @@ void HierarchyTree::RemoveFromTree( unsigned int id )
     if( selected.IsOk() )
     {
         Delete( selected );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::AppendToTree( unsigned int id )
+{
+    wxTreeItemId root = GetRootItem();
+    wxTreeItemId selected = SearchTree( root, id );
+    if( selected.IsOk() )
+    {
+        UIPluginBase* cur_module = new DefaultPlugin();
+        ModuleData* modData = new ModuleData();
+        modData->modId = cur_module->GetID();
+        modData->modName = ConvertUnicode( cur_module->GetName() );
+        modData->systemId = m_canvas->GetActiveNetworkID( );
+        
+        AddtoImageList( wxBitmap( square_xpm ) );
+        wxTreeItemId leaf = AppendItem( selected, 
+            wxString( "DefaultPlugin" ), -1 , -1, modData );
+        SetItemImage( leaf, images->GetImageCount() - 1 );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////

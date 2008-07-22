@@ -52,6 +52,7 @@
 
 // EPRI TAG
 #include <ves/conductor/FinancialDialog.h>
+#include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/Point.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -60,6 +61,10 @@
 #include <ves/open/xml/ParameterBlock.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/cad/CADAssembly.h>
+#include <ves/open/xml/model/SystemPtr.h>
+#include <ves/open/xml/model/System.h>
+#include <ves/open/xml/model/NetworkPtr.h>
+#include <ves/open/xml/model/Network.h>
 
 #include <ves/conductor/util/CADNodeManagerDlg.h>
 #include <ves/conductor/xpm/contour.xpm>
@@ -111,6 +116,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( SET_ACTIVE_MODEL, UIPluginBase::OnSetActiveXplorerModel )
     EVT_MENU( ACTIVE_MODEL_SOUNDS, UIPluginBase::OnModelSounds )
     EVT_MENU( DEL_MOD, UIPluginBase::OnDelMod )
+    EVT_MENU( MAKE_HIER, UIPluginBase::OnMakeIntoHierarchy )
     EVT_MENU( ADD_INPUT_PORT, UIPluginBase::AddPort )
     EVT_MENU( ADD_OUTPUT_PORT, UIPluginBase::AddPort )
     EVT_MENU( DELETE_PORT, UIPluginBase::DeletePort )
@@ -262,6 +268,8 @@ UIPluginBase::UIPluginBase() :
     mPopMenu->Enable( SET_UI_PLUGIN_NAME, true );
     mPopMenu->Append( DEL_MOD, _( "Del Module" ) );
     mPopMenu->Enable( DEL_MOD, true );
+    mPopMenu->Append( MAKE_HIER, _( "Make Into Hierarchy" ) );
+    mPopMenu->Enable( MAKE_HIER, true );
 
     //mPopMenu->SetClientData( &id );
 }
@@ -1817,6 +1825,27 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
     
     event.SetClientData( &id );
     ::wxPostEvent( m_network, event );
+}
+////////////////////////////////////////////////////////////////////////////////
+void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
+{
+    //add xml system
+    ves::open::xml::model::SystemPtr system(
+        new ves::open::xml::model::System() );
+    ves::open::xml::model::NetworkPtr tempXMLNetwork(
+        new ves::open::xml::model::Network() );
+    system->AddNetwork( tempXMLNetwork );
+    //system->AddModel(  );
+    GetVEModel()->SetSubSystem( system );
+
+    //add xml model to new system
+    XMLDataBufferEngine::instance()->AddXMLSystemDataObject( system );
+    
+    //pass info to canvas to draw the new network and model
+    event.SetString( GetVEModel()->GetSubSystem()->GetID() );
+    event.SetClientData( &id );
+    ::wxPostEvent( m_canvas, event );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetDCScale( std::pair< double, double >* scale )

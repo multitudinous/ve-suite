@@ -101,6 +101,8 @@ public:
     ///\param system The system pointer for this network to represent
     ///\param parent The parent canvas for this network
     void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas* parent );
+    void SetSystem( ves::open::xml::model::SystemPtr system );
+    void CreateSystem( Canvas* parent );
     ///Acessors
     std::pair< double, double >* GetUserScale( void );
     std::pair< unsigned int, unsigned int >* GetNumPix( void );

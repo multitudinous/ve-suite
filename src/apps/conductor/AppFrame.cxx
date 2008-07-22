@@ -194,6 +194,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( ExportMenu::EXPORT_SCREEN_SHOT, ExportMenu::OnScreenShot )
     EVT_MENU( ExportMenu::EXPORT_DOT_FILE, ExportMenu::OnDOTFile )
     EVT_MENU( UIPluginBase::DEL_MOD, AppFrame::OnDelMod )
+    EVT_MENU( UIPluginBase::MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
 	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
     EVT_WINDOW_CREATE(AppFrame::OnChildCreate) 
 	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
@@ -2453,6 +2454,12 @@ void AppFrame::OnDelMod( wxCommandEvent& event )
 {
     int* mod = static_cast< int* >( event.GetClientData() );
     hierarchyTree->RemoveFromTree( *mod );
+}
+///////////////////////////////////////////////////////////////////////////////
+void AppFrame::OnMakeIntoHierarchy( wxCommandEvent& event )
+{
+    int* mod = static_cast< int* >( event.GetClientData() );
+    hierarchyTree->AppendToTree( *mod );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OnChangeIcon(wxCommandEvent& event )

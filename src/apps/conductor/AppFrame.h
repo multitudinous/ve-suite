@@ -395,6 +395,7 @@ protected:
     void OnChangeWorkingDirectory( wxCommandEvent& event );
 
     void OnDelMod( wxCommandEvent& event );
+    void OnMakeIntoHierarchy( wxCommandEvent& event );
     void OnChangeIcon(wxCommandEvent& event );
     void OnShowIconChooser(wxCommandEvent& event );
 

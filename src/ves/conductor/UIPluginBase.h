@@ -123,6 +123,7 @@ public:
         DELETE_PORT,
         PLUGIN_TOGGLE_ALL_ON,
         PLUGIN_TOGGLE_PLUGIN_ON,
+        MAKE_HIER,
         END_MENU_ID,
         DIALOG_PLUGIN_UPDATE,
         PLUGIN_TOGGLE_MENU,
@@ -268,6 +269,7 @@ public:
     void OnSetActiveXplorerModel( wxCommandEvent& event );
     void OnSetActivePluginID( wxUpdateUIEvent& event );
     void OnDelMod( wxCommandEvent& event );
+    void OnMakeIntoHierarchy( wxCommandEvent& event );
     // EPRI TAG
     void OnShowFinancial( wxCommandEvent& event );
     void OnShowAspenName( wxCommandEvent& event );

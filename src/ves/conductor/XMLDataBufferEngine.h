@@ -111,6 +111,8 @@ public:
     std::string GetTopSystemId( );
     ///Get a system
     ves::open::xml::model::SystemPtr GetXMLSystemDataObject( std::string id );
+    //Add a system to the buffer
+    void AddXMLSystemDataObject( ves::open::xml::model::SystemPtr system );
     ///Get data
     ves::open::xml::UserPtr GetXMLUserDataObject( std::string dataNumber );
     ///Parse system for subsystems

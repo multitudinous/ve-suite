@@ -437,6 +437,12 @@ ves::open::xml::model::SystemPtr XMLDataBufferEngine::GetXMLSystemDataObject(
     return m_systemMap[id];
 }
 ////////////////////////////////////////////////////////////////////////////////
+void XMLDataBufferEngine::AddXMLSystemDataObject(
+    ves::open::xml::model::SystemPtr system )
+{
+    m_systemMap[system->GetID()] = system;
+}
+////////////////////////////////////////////////////////////////////////////////
 const std::map< std::string, ves::open::xml::model::SystemPtr > 
     XMLDataBufferEngine::GetXMLSystemDataMap()
 {
