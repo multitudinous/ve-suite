@@ -492,6 +492,7 @@ void Canvas::CreateNewSystem( wxCommandEvent& event )
         XMLDataBufferEngine::instance()->GetXMLSystemDataObject( name );
     tempNetwork->SetSystem( system );
     tempNetwork->CreateSystem( this, id );
+    tempNetwork->SetNetworkID( system->GetID() );
     networks[ system->GetID() ] = tempNetwork;
 
     ///Now set it active
