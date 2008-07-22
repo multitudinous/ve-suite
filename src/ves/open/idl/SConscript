@@ -15,10 +15,7 @@ targetModule = [pj('#', buildDir,'src','ves','open','moduleS.h'),
                 pj('#', buildDir,'src','ves','open','moduleC.inl'),
                 pj('#', buildDir,'src','ves','open','moduleI.cpp'),
                 pj('#', buildDir,'src','ves','open','moduleI.h'),
-                pj('#', buildDir,'src','ves','open','moduleS.inl'),
-                pj('#', buildDir,'src','ves','open','moduleS_T.cpp'),
-                pj('#', buildDir,'src','ves','open','moduleS_T.h'),
-                pj('#', buildDir,'src','ves','open','moduleS_T.inl')]
+                pj('#', buildDir,'src','ves','open','moduleS.inl')]
 targetVjObs = [pj('#', buildDir,'src','ves','open','VjObsS.h'), 
                pj('#', buildDir,'src','ves','open','VjObsC.h'),
                pj('#', buildDir,'src','ves','open','VjObsS.cpp'), 
@@ -26,10 +23,7 @@ targetVjObs = [pj('#', buildDir,'src','ves','open','VjObsS.h'),
                pj('#', buildDir,'src','ves','open','VjObsC.inl'),
                pj('#', buildDir,'src','ves','open','VjObsI.cpp'),
                pj('#', buildDir,'src','ves','open','VjObsI.h'),
-               pj('#', buildDir,'src','ves','open','VjObsS.inl'),
-               pj('#', buildDir,'src','ves','open','VjObsS_T.cpp'),
-               pj('#', buildDir,'src','ves','open','VjObsS_T.h'),
-               pj('#', buildDir,'src','ves','open','VjObsS_T.inl')]
+               pj('#', buildDir,'src','ves','open','VjObsS.inl')]
 
 #taoPrefix=os.popen('flagpoll TAO --variable=prefix').read().strip()
 #env.PrependENVPath( 'LD_LIBRARY_PATH',pj( taoPrefix,'lib'))
