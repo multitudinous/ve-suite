@@ -79,9 +79,8 @@ public:
     };
 
     ///Populate the tree
-    ///\param tree The tree to populate
-    void PopulateTree( std::map < std::string,
-                       ves::open::xml::model::ModelPtr > tree, std::string id );
+    ///\param id The top level system id to use for this tree to populate
+    void PopulateTree( const std::string& id );
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList( int size = 16 );

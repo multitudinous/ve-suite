@@ -307,8 +307,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     }
     
     //create hierarchy page
-    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-        GetXMLModels(), XMLDataBufferEngine::instance()->GetTopSystemId() );
+    hierarchyTree->PopulateTree( 
+        XMLDataBufferEngine::instance()->GetTopSystemId() );
                                  
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
@@ -1228,9 +1228,8 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED( event ) )
     canvas->PopulateNetworks( nw_str, false );
 
     //create hierarchy page
-    hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                 GetXMLModels(), XMLDataBufferEngine::instance()->
-                                 GetTopSystemId() );
+    hierarchyTree->PopulateTree( 
+        XMLDataBufferEngine::instance()->GetTopSystemId() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
@@ -1255,9 +1254,8 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
         canvas->PopulateNetworks( nw_str );
 
         //create hierarchy page
-        hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                     GetXMLModels(), XMLDataBufferEngine::instance()->
-                                     GetTopSystemId() );
+        hierarchyTree->PopulateTree( 
+            XMLDataBufferEngine::instance()->GetTopSystemId() );
         ///Submit job to xplorer
         wxCommandEvent event;
         SubmitToServer( event );
@@ -1325,9 +1323,8 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
         canvas->PopulateNetworks( nw_str );
 
         //create hierarchy page
-        hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-                                     GetXMLModels(), XMLDataBufferEngine::instance()->
-                                     GetTopSystemId() );
+        hierarchyTree->PopulateTree( 
+            XMLDataBufferEngine::instance()->GetTopSystemId() );
 
         Log( "Simulation Opened.\n" );
         ///
@@ -2313,7 +2310,6 @@ void AppFrame::ProcessCommandLineArgs( void )
     canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     //create hierarchy page
     hierarchyTree->PopulateTree( 
-        XMLDataBufferEngine::instance()->GetXMLModels(), 
         XMLDataBufferEngine::instance()->GetTopSystemId() );
     // we submit after load to give ce and ge the new network
     SubmitToServer( event );
@@ -2560,9 +2556,8 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
         
         //create hierarchy page
-        hierarchyTree->PopulateTree( XMLDataBufferEngine::instance()->
-            GetXMLModels(), XMLDataBufferEngine::instance()->
-            GetTopSystemId() );
+        hierarchyTree->PopulateTree(
+            XMLDataBufferEngine::instance()->GetTopSystemId() );
 
         ///This code will be moved in the future. It is Aspen specific code.
         CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
@@ -2608,3 +2603,4 @@ void AppFrame::OnKeyPress( wxKeyEvent &event )
         event.Skip();
     }
 }
+///////////////////////////////////////////////////////////////////////////////

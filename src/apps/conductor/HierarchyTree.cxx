@@ -34,6 +34,7 @@
 #include "Network.h"
 #include "Canvas.h"
 #include "HierarchyTree.h"
+#include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/AspenPlus2DIcons.h>
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
@@ -112,22 +113,27 @@ void HierarchyTree::AddtoImageList( wxBitmap icon )
     images->Add( icon );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::PopulateTree( std::map < std::string,
-                                  ves::open::xml::model::ModelPtr > tree, std::string id )
+void HierarchyTree::PopulateTree( const std::string& id )
 {
     ///Reset Tree
     Clear();
 
+    ves::open::xml::model::SystemPtr tempSys = 
+        XMLDataBufferEngine::instance()->GetXMLSystemDataObject( id );
+    std::vector< ves::open::xml::model::ModelPtr > topLevelModels = 
+        tempSys->GetModels();
+    
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
     std::string fullPath;
     std::map< std::string, ves::open::xml::model::ModelPtr > alphaTree;
 
     //alphabetize tree
-    for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
-        iter = tree.begin(); iter != tree.end(); ++iter )
+    for( std::vector< ves::open::xml::model::ModelPtr >::iterator
+        iter = topLevelModels.begin(); iter != topLevelModels.end(); ++iter )
     {
-        alphaTree[iter->second->GetModelName()]=iter->second;
+        ves::open::xml::model::ModelPtr tempModel = (*iter);
+        alphaTree[ tempModel->GetModelName() ] = tempModel;
     }
 
     for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator

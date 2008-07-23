@@ -402,13 +402,6 @@ ves::open::xml::model::NetworkPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
     return m_networkMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::map< std::string, ves::open::xml::model::ModelPtr > XMLDataBufferEngine::GetXMLModels()
-{
-    std::map< std::string, ves::open::xml::model::ModelPtr >
-        tempMap( m_modelMap.begin(), m_modelMap.end() );
-    return tempMap;
-}
-////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::model::ModelPtr XMLDataBufferEngine::GetXMLModelDataObject(
     std::string dataNumber )
 {
