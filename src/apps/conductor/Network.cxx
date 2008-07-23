@@ -1967,9 +1967,22 @@ void Network::CreateSystem( Canvas* parent, unsigned int id )
     tempPlugin->SetCORBAService( CORBAServiceList::instance() );
     tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
     
+    Module mod;
+    modules[ id ] = mod;
     modules[ id ].SetPlugin( tempPlugin );
     modules[ id ].GetPlugin()->SetID( id );
-    
+
+    int num = tempPlugin->GetNumPoly();
+    POLY tmpPoly;
+    tmpPoly.resize( num );
+    tempPlugin->GetPoly( tmpPoly );
+    ves::conductor::util::Polygon newPolygon;
+    *( newPolygon.GetPolygon() ) = tmpPoly;
+    //Get the Boundoing box of the modul
+    wxRect bbox = tempPlugin->GetBBox(); 
+    //Make the network recognize its polygon
+    newPolygon.TransPoly( bbox.x, bbox.y, *( modules[id].GetPolygon() ) ); 
+
     //modules[ 0 ].GetPlugin()->SetVEModel( model );
     systemPtr->AddModel( modules[id].GetPlugin()->GetVEModel() );
 }
