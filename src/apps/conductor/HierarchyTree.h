@@ -115,7 +115,7 @@ protected:
 
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
-    wxTreeItemId m_currentNodeId;
+    wxTreeItemId m_currentLevelId;
     Canvas* m_canvas;
     wxImageList *images;
     std::map< std::string, wxImage > defaultIconMap;

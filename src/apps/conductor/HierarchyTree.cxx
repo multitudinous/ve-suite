@@ -92,7 +92,8 @@ HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
     AddtoImageList( wxIcon( icon4_xpm ) );
     AddtoImageList( wxIcon( icon5_xpm ) );
     m_rootId = AddRoot( wxT( "Top Sheet" ), 0, -1, NULL );
-    m_currentNodeId = m_rootId;
+    m_currentLevelId = m_rootId;
+    m_selection = m_rootId;
     SetItemImage( m_rootId, 2, wxTreeItemIcon_Expanded );
     SetItemFont( m_rootId, *wxITALIC_FONT );
 
@@ -179,7 +180,8 @@ void HierarchyTree::PopulateTree( const std::string& id )
             }
         }
     }
-    m_currentNodeId = m_rootId;
+    m_currentLevelId = m_rootId;
+    m_selection = m_rootId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
@@ -243,7 +245,8 @@ void HierarchyTree::Clear()
     m_rootId = AddRoot( wxT( "Top Sheet" ), 0, 1, NULL );
     SetItemImage( m_rootId, 2, wxTreeItemIcon_Expanded );
     SetItemFont( m_rootId, *wxITALIC_FONT );
-    m_currentNodeId = m_rootId;
+    m_currentLevelId = m_rootId;
+    m_selection = m_rootId;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
@@ -254,7 +257,7 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
 {
     //return if current selection is top folder
     //or the clicking the same node
-    if( selectedId == m_rootId || selectedId == m_currentNodeId )
+    if( selectedId == m_rootId || selectedId == m_selection )
     {
         return;
     }
@@ -267,7 +270,8 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
                HighlightCenter( tempModData->modId );
 
     //if a subnet redraw in conductor and xplorer
-    if( GetItemParent( selectedId ) != GetItemParent( m_currentNodeId ) )
+    m_currentLevelId = GetItemParent( m_selection );
+    if( GetItemParent( selectedId ) != m_currentLevelId )
     {
         //set the active network to the selected subnet
 
@@ -289,7 +293,8 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
     }
 
     //keep track of previous selection
-    m_currentNodeId = selectedId;
+    m_selection = selectedId;
+    m_currentLevelId = GetItemParent( selectedId );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnExpanded( wxTreeEvent& WXUNUSED( event ) )
@@ -311,6 +316,8 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
     m_canvas->GetActiveNetwork()->modules[tempModData->modId].
         GetPlugin()->SendActiveId();
 
+    m_selection = selected;
+    m_currentLevelId = GetItemParent( selected );
     PopupMenu( popupMenu );//, event.GetPoint() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -321,18 +328,20 @@ void HierarchyTree::OnDoubleClick( wxTreeEvent& event )
     
     if( selected != m_rootId )
     {
-    ModuleData* tempModData = static_cast< ModuleData* >( this->
-        GetItemData( selected ));
-    m_canvas->SetActiveNetwork( tempModData->systemId );
-    m_canvas->GetActiveNetwork()->modules[tempModData->modId].
-        GetPlugin()->CreateUserDialog( wxPoint(0,0) );
+        ModuleData* tempModData = static_cast< ModuleData* >( this->
+            GetItemData( selected ));
+        m_canvas->SetActiveNetwork( tempModData->systemId );
+        m_canvas->GetActiveNetwork()->modules[tempModData->modId].
+            GetPlugin()->CreateUserDialog( wxPoint(0,0) );
+        m_currentLevelId = GetItemParent( selected );
     }
+    m_selection = selected;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::ProcessRightClickMenuEvents( wxCommandEvent& event )
 {
     ModuleData* tempModData = static_cast< ModuleData* >( this->
-        GetItemData( m_currentNodeId ));
+        GetItemData( m_selection ));
     ::wxPostEvent( m_canvas->GetActiveNetwork()->modules[tempModData->modId].
         GetPlugin(), event );
 }
@@ -345,7 +354,7 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
     modData->systemId = m_canvas->GetActiveNetworkID( );
     AddtoImageList( wxBitmap( square_xpm ) );
 
-    wxTreeItemId leaf = AppendItem( m_currentNodeId, 
+    wxTreeItemId leaf = AppendItem( m_currentLevelId, 
         wxString( cur_module->GetName().c_str(), wxConvUTF8 ), 
                 -1 , -1, modData );
     SetItemImage( leaf, images->GetImageCount() - 1 );
@@ -379,6 +388,7 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
         wxTreeItemId leaf = AppendItem( selected, 
             _( "DefaultPlugin" ), -1 , -1, modData );
         SetItemImage( leaf, images->GetImageCount() - 1 );
+        Update();
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
