@@ -1828,7 +1828,9 @@ void UIPluginBase::OnDelMod( wxCommandEvent& event )
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnMakeIntoHierarchy( wxCommandEvent& event )
-{
+{    
+    UIPLUGIN_CHECKID( event )
+
     //add xml system
     ves::open::xml::model::SystemPtr system(
         new ves::open::xml::model::System() );

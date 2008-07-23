@@ -294,7 +294,6 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
 
     //keep track of previous selection
     m_selection = selectedId;
-    m_currentLevelId = GetItemParent( selectedId );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnExpanded( wxTreeEvent& WXUNUSED( event ) )
@@ -376,12 +375,11 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
     wxTreeItemId selected = SearchTree( root, parentID );
     if( selected.IsOk() )
     {
-        UIPluginBase* cur_module = new DefaultPlugin();
+        //UIPluginBase* cur_module = new DefaultPlugin();
         ModuleData* modData = new ModuleData();
 
-        //modData->modId = cur_module->GetID();
         modData->modId = id;
-        modData->modName = ConvertUnicode( cur_module->GetName() );
+        modData->modName = "DefaultPlugin";
         modData->systemId = m_canvas->GetActiveNetworkID( );
         
         AddtoImageList( wxBitmap( square_xpm ) );
