@@ -105,6 +105,12 @@ void SwitchXplorerViewEventHandler::SetGlobalBaseObject( ves::xplorer::GlobalBas
 ////////////////////////////////////////////////////////////////////////////////
 void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObject )
 {
+    //If the job is not submitted return
+    if( !cfdExecutive::instance()->GetNetworkSystemView() )
+    {
+        return;
+    }
+
     CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
     DataValuePairPtr activeModelDVP =
         command->GetDataValuePair( "CHANGE_XPLORER_VIEW" );
