@@ -386,7 +386,17 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
         wxTreeItemId leaf = AppendItem( selected, 
             _( "DefaultPlugin" ), -1 , -1, modData );
         SetItemImage( leaf, images->GetImageCount() - 1 );
-        Update();
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void HierarchyTree::SetTreeItemName( unsigned int id, wxString name )
+{
+    wxTreeItemId root = GetRootItem();
+    wxTreeItemId selected = SearchTree( root, id );
+    if( selected.IsOk() )
+    {
+        SetItemText( selected, name );
     }
 }
 ///////////////////////////////////////////////////////////////////////////////

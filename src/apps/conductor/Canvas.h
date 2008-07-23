@@ -114,6 +114,7 @@ private:
     void DrawNetwork( wxDC &dc, std::string id );
     //used for adding a system to a plugin
     void CreateNewSystem( wxCommandEvent& event );
+    void SetTreeItemName( wxCommandEvent& event );
     ///treeview widget
     wxWindow* m_treeView;
     ///parent window

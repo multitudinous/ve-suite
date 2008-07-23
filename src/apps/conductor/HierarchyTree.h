@@ -95,6 +95,7 @@ public:
     void AddtoTree( ves::conductor::UIPluginBase *cur_module );
     void RemoveFromTree( unsigned int id );
     void AppendToTree( unsigned int parentID, unsigned int id );
+    void SetTreeItemName( unsigned int id, wxString name );
     wxTreeItemId SearchTree( wxTreeItemId root, int id );
 	void ChangeLeafIcon( unsigned int id, std::string path );
     ///Clear the hierarchy tree

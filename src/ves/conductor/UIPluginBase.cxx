@@ -1695,6 +1695,12 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
     UIPLUGIN_CHECKID( event )
     // Here we launch a dialog for a specific plugins input values
     SetPluginNameDialog();
+    
+    //pass event up to hierarchy tree
+    event.SetClientData( &id );
+    event.SetString( name );
+    ::wxPostEvent( m_canvas, event );
+
     m_canvas->Refresh( true );
 }
 //////////////////////////////////////////////////

@@ -96,6 +96,7 @@ BEGIN_EVENT_TABLE( Canvas, wxScrolledWindow )
     EVT_PAINT( Canvas::OnPaint )
     EVT_MENU( UIPluginBase::DEL_MOD, Canvas::OnDelMod )
     EVT_MENU( UIPluginBase::MAKE_HIER, Canvas::CreateNewSystem )
+    EVT_MENU( UIPluginBase::SET_UI_PLUGIN_NAME, Canvas::SetTreeItemName )
     EVT_UPDATE_UI( Network::DELETE_NETWORK, Canvas::OnDelNetwork )
     EVT_CHAR( Canvas::OnZoom )
 END_EVENT_TABLE()
@@ -503,6 +504,11 @@ void Canvas::CreateNewSystem( wxCommandEvent& event )
     ids.second = id;
     event.SetClientData( &ids );
     //pass event to app frame
+    ::wxPostEvent( mainFrame, event );
+}
+///////////////////////////////////////////////////////////////////////////////
+void Canvas::SetTreeItemName( wxCommandEvent& event )
+{
     ::wxPostEvent( mainFrame, event );
 }
 ////////////////////////////////////////////////////////////////////////////////
