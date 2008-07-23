@@ -360,7 +360,11 @@ void cfdExecutive::InitModules( void )
 void cfdExecutive::PreFrameUpdate( void )
 {
     vprDEBUG( vesDBG, 3 ) << "|\tcfdExecutive::PreFrameUpdate"
-    << std::endl << vprDEBUG_FLUSH;
+        << std::endl << vprDEBUG_FLUSH;
+    if( !ui_i )
+    {
+        return;
+    }
 
     //process the current command form the gui
     if( ModelHandler::instance()->GetXMLCommand()->GetCommandName().compare( "wait" ) )
