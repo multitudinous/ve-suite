@@ -128,7 +128,7 @@ ves::conductor::UIDialog* IntStoves::UI( wxWindow* parent )
         return dlg;
     }
 
-    dlg = new IntStoves_UI_Dialog( parent, -1, serviceList,
+    dlg = new IntStoves_UI_Dialog( parent, -1,
                                    &numbaffles,
                                    &baffle1,
                                    &baffle2,

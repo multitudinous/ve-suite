@@ -44,6 +44,7 @@ namespace ves
 {
 namespace conductor
 {
+	class UIPluginBase;
 namespace util
 {
     class CORBAServiceList;
@@ -74,7 +75,6 @@ public:
     IntStoves_UI_Dialog();
     IntStoves_UI_Dialog( wxWindow* parent,
                          int id,
-                         ves::conductor::util::CORBAServiceList* service,
                          long* numbaffles,
                          std::vector< double >* baffle1,
                          std::vector< double >* baffle2,

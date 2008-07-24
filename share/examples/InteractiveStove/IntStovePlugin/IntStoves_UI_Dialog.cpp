@@ -43,6 +43,8 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/open/xml/Command.h>
 
+#include <ves/conductor/UIPluginBase.h>
+
 // --- wxWidgets Includes --- //
 #include <wx/dc.h>
 #include <wx/sizer.h>
@@ -58,6 +60,8 @@
 #include <iomanip>
 #include <fstream>
 #include <ostream>
+
+using namespace ves::conductor;
 
 BEGIN_EVENT_TABLE( IntStoves_UI_Dialog, UIDialog )
 //EVT_COMBOBOX( NUMBAFFSEL_COMBOBOX, IntStoves_UI_Dialog::_onNumBafSel )
@@ -81,7 +85,6 @@ IntStoves_UI_Dialog::IntStoves_UI_Dialog()
 IntStoves_UI_Dialog::IntStoves_UI_Dialog(
     wxWindow* parent,
     int id,
-    ves::conductor::util::CORBAServiceList* service,
     long* numbaffles,
     std::vector< double >* baffle1,
     std::vector< double >* baffle2,
@@ -107,8 +110,6 @@ IntStoves_UI_Dialog::IntStoves_UI_Dialog(
 
     vectors = 0;
     contour = 0;
-
-    serviceList = service;
 
     m_command = ves::open::xml::CommandPtr( new ves::open::xml::Command() );
 
@@ -584,8 +585,6 @@ int IntStoves_UI_Dialog::GetDepth( int index )
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::SetBaffleData()
 {
-
-    //double baffleNum = 1;
     for( size_t i=0; i<7; ++i )
     {
         command_name=std::string("BAFFLE_UPDATE");
@@ -609,6 +608,8 @@ void IntStoves_UI_Dialog::SetBaffleData()
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::UpdateParams(wxCommandEvent& event)
 {
+	mUIPluginBase->SetActiveModel();
+
 	(*p_numbaffles) = m_numbaffles;
 
 	std::vector<double> temp[7];
@@ -700,7 +701,7 @@ void IntStoves_UI_Dialog::ShowContour(wxCommandEvent &event)
 void IntStoves_UI_Dialog::SendCommandsToXplorer()
 {
    m_command->SetCommandName(command_name);
-   serviceList->SendCommandStringToXplorer(m_command);
+   mCORBAService->SendCommandStringToXplorer(m_command);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void IntStoves_UI_Dialog::ClearParameters()
