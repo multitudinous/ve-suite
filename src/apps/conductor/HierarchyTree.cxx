@@ -253,6 +253,7 @@ void HierarchyTree::OnSelChanged( wxTreeEvent& WXUNUSED( event ) )
 {
     SelectNetworkPlugin( GetSelection() );
 }
+////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
 {
     //return if current selection is top folder
@@ -386,6 +387,7 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
         wxTreeItemId leaf = AppendItem( selected, 
             _( "DefaultPlugin" ), -1 , -1, modData );
         SetItemImage( leaf, images->GetImageCount() - 1 );
+        Refresh();
     }
 }
 
