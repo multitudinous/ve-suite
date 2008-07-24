@@ -1223,6 +1223,9 @@ void UIPluginBase::CreateUserDialog( wxPoint extpos )
 
     // now show the custom dialog with no parent for the wxDialog
     UIDialog* hello = UI( m_canvas );
+    hello->SetCORBAServiceList( serviceList );
+    hello->SetUIPluginBase( this );
+
     if( hello != NULL )
     {
         hello->Show();

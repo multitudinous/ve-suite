@@ -49,19 +49,36 @@ namespace ves
 {
 namespace conductor
 {
+class UIPluginBase;
+namespace util
+{
+class CORBAServiceList;
+}
+
 class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
 protected:
     UIDialog()
+        :
+        mUIPluginBase( 0 ),
+        mCORBAService( 0 )
     {
         ;
     }
 public:
+    ///Constructor
     UIDialog( wxWindow* parent, int id, wxString title = wxT( "UI" ) );
+    ///Destructor
     virtual ~UIDialog();
+    ///This function locks/unlocks every input entry
     virtual void Lock( bool l );
-    //This function locks/unlocks every input entry
+    ///Set the corbaservicelist for this dialog
+    void SetCORBAServiceList( util::CORBAServiceList* serviceList );
+    ///Provide the managing UIPluginBase pointer to this dialog
+    void SetUIPluginBase( UIPluginBase* pluginBase );
 protected:
+    UIPluginBase* mUIPluginBase;
+    util::CORBAServiceList* mCORBAService;
     bool lock ;
 };
 }

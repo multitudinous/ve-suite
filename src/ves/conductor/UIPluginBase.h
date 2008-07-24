@@ -254,6 +254,12 @@ public:
     double computenorm( wxPoint pt1, wxPoint pt2 );
 
     void OnMRightDown( wxMouseEvent &event );
+    ///Sets the active model in Xplorer
+    ///NOTE: Keep in mind that after a user submits a job that the active model
+    ///in xplorer is set to NULL. This means that in some use cases the 
+    ///developer will have to set the active model manually from the derived
+    ///dialog classes.
+    ///\return Tell the user that the call to xplorer was successful
     bool SetActiveModel( void );
     ///Still need to be documented
     void OnShowResult( wxCommandEvent& event );
