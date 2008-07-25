@@ -59,7 +59,7 @@ int on_sigint(int signum, siginfo_t* si, ucontext_t* ut)
 int on_sigusr1(int signum, siginfo_t* si, ucontext_t* ut)
 {
     std::cout << "[DBG] Entering SIGUSR1 handler." << std::endl;
-    if (gSpeechNavigator->isParserThreadRunning())
+    if (gSpeechNavigator && gSpeechNavigator->isParserThreadRunning())
     {
         gSpeechNavigator->stopParserThread();
     }
@@ -74,7 +74,7 @@ int on_sigusr1(int signum, siginfo_t* si, ucontext_t* ut)
 int on_sigusr2(int signum, siginfo_t* si, ucontext_t* ut)
 {
     std::cout << "[DBG] Entering SIGUSR2 handler." << std::endl;
-    if (!gSpeechNavigator->isParserThreadRunning())
+    if (gSpeechNavigator && !gSpeechNavigator->isParserThreadRunning())
     {
         gSpeechNavigator->startParserThread();
     }
@@ -112,16 +112,22 @@ int main(int argc, char* argv[])
     signal_handler.register_handler(SIGUSR2, &sigusr2_handler);
      
     gSpeechNavigator->setArgcArgv(argc, argv);
+    std::cout << "Connecting to Julius on " << julius_host << ":"
+              << port << "..." << std::endl;
     if (!gSpeechNavigator->connectToJulius(std::string("localhost")))
     {
         std::cerr << "[ERR] Unable to connect to julius." << std::endl;
         return 2;
     }
+    std::cout << "Connected." << std::endl;
+    std::cout << "Connecting to Xplorer..." << std::endl;
     if (!gSpeechNavigator->connectToXplorer())
     {
         std::cerr << "[ERR] Unable to connect to Xplorer." << std::endl;
         return 3;
     }
+    std::cout << "Connected." << std::endl;
+    std::cout << "Starting the data loop..." << std::endl;
     // Start the data loop.
     if (!gSpeechNavigator->startDataLoop())
     {
