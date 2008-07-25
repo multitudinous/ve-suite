@@ -3,6 +3,7 @@ openSubdirs = Split("""
     ce
     conductor
     launcher
+    voice
     xplorer
 """)
 

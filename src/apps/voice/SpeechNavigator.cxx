@@ -287,6 +287,7 @@ SpeechNavigator::runDataIteration()
 
         if( CORBA::is_nil( vjobs.in() ) || xmlDocument.empty() )
         {
+            std::cerr << "[ERR] No XML Data to send to Xplorer." << std::endl;
             return false;
         }
 
@@ -297,9 +298,12 @@ SpeechNavigator::runDataIteration()
         }
         catch ( ... )
         {
+            std::cerr << "[ERR] Exception thrown while sending command string."
+                      << std::endl;
             return false;
         }
     }
+    return true;
 }
 
 bool
