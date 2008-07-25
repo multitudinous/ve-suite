@@ -1,8 +1,9 @@
 
-#include "src/apps/voice/SpeechNavigator.h"
-#include "src/apps/voice/AceFunctorHandler.h"
+#include "SpeechNavigator.h"
+#include "AceFunctorHandler.h"
 
 #include <ace/Signal.h>
+#include <ace/Sig_Handler.h>
 
 #include <cstdlib>
 #include <iostream>
