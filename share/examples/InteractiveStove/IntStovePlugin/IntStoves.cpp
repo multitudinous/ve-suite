@@ -165,7 +165,7 @@ wxString IntStoves::GetDesc()
 ////////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetConductorName()
 {         
-    wxString result( wxT( "TempName_IntStoves" ) );
+    wxString result( wxT( "StoveDemo_IntStoves" ) );
 
     return result;
 }
