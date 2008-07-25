@@ -28,7 +28,7 @@ fileBundle.addFiles( 'interactivestove.ves' )
 fileBundle.addFiles( 'star.param' )
 fileBundle.addFiles( pj( 'STAR','setup' ) )
 fileBundle.addFiles( 'RunUnit.csh' )
-fileBundle.addFiles( 'RunUnit.bat' )
+#fileBundle.addFiles( 'RunUnit.bat' )
 
 InteractiveStoveSubdirs = Split("""
     IntStoveModel
