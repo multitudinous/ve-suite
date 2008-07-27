@@ -340,6 +340,7 @@ AppFrame::~AppFrame()
     {
         ExitXplorer();
     }
+    //serviceList->DisconnectFromXplorer();
 
 	//if(AspenSimOpen)
 	//{
