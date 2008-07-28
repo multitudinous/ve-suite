@@ -649,6 +649,8 @@ void IntStoves_UI_Dialog::UpdateParams(wxCommandEvent& event)
 
 	(*p_baffle7).clear();
 	(*p_baffle7) = temp[6];
+
+	SetBaffleData();
 }
 ////////////////////////////////////////////////////////////////////////////////
 int IntStoves_UI_Dialog::GetNumBaffles()
