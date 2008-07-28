@@ -108,6 +108,8 @@ void SceneRenderToTexture::CreateQuad()
     
     mQuadGeometry->addPrimitiveSet(
         new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
+    //mQuadGeometry->setDataVariance( osg::Object::DYNAMIC );
+    //mQuadGeometry->setSupportsDisplayList(false);
     
     mQuadGeode->addDrawable( mQuadGeometry.get() );
     mQuadGeode->setCullingActive( false );
@@ -122,7 +124,8 @@ void SceneRenderToTexture::CreateCamera()
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     mCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
     mCamera->setViewport( 0, 0, 512, 512 );
-
+    //mCamera->setName( "RTT Camera" );
+    
     //Set the internal format for the render target
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
                      GL_DEPTH_COMPONENT24 );
