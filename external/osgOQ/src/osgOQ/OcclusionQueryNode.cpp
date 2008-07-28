@@ -91,8 +91,15 @@ OcclusionQueryNode::traverse( osg::NodeVisitor& nv )
     }
 
     osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>( &nv );
-    osg::Camera* camera = cv->getRenderStage()->getCamera();
-
+    //osg::Camera* camera = cv->getRenderStage()->getCamera();
+    
+    // Get Camera. To work with RTT, get the Camera from the
+    // current RenderBin. This is where apply(Camera&) stores it.
+    osgUtil::RenderStage* rs = dynamic_cast< osgUtil::RenderStage* >( cv->getCurrentRenderBin()->getStage() );
+    if ( rs == NULL )
+        // Fallback.
+        rs = cv->getRenderStage();
+    osg::Camera* camera = rs->getCamera();
 
     // In the future, we could hold a reference directly to the QueryDrawable
     //   to avoid the dynamic_cast.
