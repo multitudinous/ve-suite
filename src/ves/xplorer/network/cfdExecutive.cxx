@@ -320,6 +320,14 @@ void cfdExecutive::GetEverything( void )
         iter = _id_map.find( foundPlugin->first );
         if( iter == _id_map.end() )
         {
+            //Set active model to null so that if the previous active model 
+            //is deleted that we don't get errors in our code other places.
+            if(  ModelHandler::instance()->GetActiveModel() ==
+                foundPlugin->second->GetCFDModel() )
+            {
+                ModelHandler::instance()->SetActiveModel( 0 );
+            }
+            
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
             ModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
@@ -343,9 +351,6 @@ void cfdExecutive::GetEverything( void )
         }
         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
     }
-    //Set active model to null so that if the previous active model is deleted
-    //that we don't get errors in our code other places.
-    ModelHandler::instance()->SetActiveModel( 0 );
     ves::xplorer::CommandHandler::instance()
         ->SendConductorMessage( "Finished loading data in VE-Xplorer\n" );
     vprDEBUG( vesDBG, 0 ) << "|\t\tDone Getting Network From Executive"
