@@ -151,6 +151,7 @@ public:
     ///Set the attitude with a quat
     ///\param quat A quat to set the attitude
     void SetQuat( osg::Quat quat );
+    osg::Quat GetQuat( );
 
     ///Set the rotation array with a vector
     ///\param rotArray A vector to set the rotation array values

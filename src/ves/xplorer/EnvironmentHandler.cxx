@@ -46,6 +46,7 @@
 #include <ves/xplorer/environment/cfdEnum.h>
 #include <ves/xplorer/environment/cfdTeacher.h>
 #include <ves/xplorer/environment/cfdQuatCamHandler.h>
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 #include <ves/xplorer/environment/HeadsUpDisplay.h>
 
@@ -271,7 +272,7 @@ void EnvironmentHandler::InitScene()
     //
     std::cout << "| 9. Initializing..................................... cfdQuatCams |" << std::endl;
     ves::xplorer::cfdQuatCamHandler::instance()->SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
-
+    
     //
     // Initiate the Performer Stored Binary objects.
     //
@@ -324,6 +325,7 @@ void EnvironmentHandler::PreFrameUpdate()
     ves::xplorer::DeviceHandler::instance()->ProcessDeviceEvents();
 
     ves::xplorer::cfdQuatCamHandler::instance()->PreFrameUpdate();
+    ves::xplorer::NavigationAnimationEngine::instance()->PreFrameUpdate();
 
 }
 ////////////////////////////////////////////////////////////////////////////////

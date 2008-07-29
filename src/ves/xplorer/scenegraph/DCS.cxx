@@ -198,6 +198,14 @@ void DCS::SetQuat( osg::Quat quat )
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
+osg::Quat DCS::GetQuat( )
+{
+#ifdef _OSG
+    return getAttitude( );
+#elif _OPENSG
+#endif
+}
+////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector< double > rotArray )
 {
 #ifdef _OSG

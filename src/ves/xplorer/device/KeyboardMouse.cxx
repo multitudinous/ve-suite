@@ -41,6 +41,7 @@
 #include <ves/xplorer/ModelHandler.h>
 #include <ves/xplorer/ModelCADHandler.h>
 #include <ves/xplorer/DeviceHandler.h>
+#include <ves/xplorer/environment/NavigationAnimationEngine.h>
 
 #include <ves/xplorer/scenegraph/LocalToWorldTransform.h>
 #include <ves/xplorer/scenegraph/SetStateOnNURBSNodeVisitor.h>
@@ -66,6 +67,9 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
+#include <gmtl/Quat.h>
+#include <gmtl/gmtl.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 // --- OSG Includes --- //
 #include <osg/Array>
@@ -81,6 +85,8 @@
 #include <osg/CameraNode>
 #include <osg/Shape>
 #include <osg/ShapeDrawable>
+#include <osg/Quat>
+
 //#include <osg/PolygonStipple>
 #include <osgUtil/LineSegmentIntersector>
 
@@ -198,7 +204,7 @@ void KeyboardMouse::SetStartEndPoint(
     //Get juggler Matrix of worldDCS
     //Note:: for pf we are in juggler land
     //       for osg we are in z up land
-    gmtl::Matrix44d vjHeadMat = convertTo< double >( mHead->getData() );
+    gmtl::Matrix44d vjHeadMat = gmtl::convertTo< double >( mHead->getData() );
     gmtl::Point3d jugglerHeadPoint =
         gmtl::makeTrans< gmtl::Point3d >( vjHeadMat );
 
@@ -583,7 +589,7 @@ void KeyboardMouse::FrameAll()
     osg::Vec3d endPoint( 0, 0, 0 );
 
     //Set the start point to the juggler head position in osg coordinates
-    gmtl::Matrix44d vjHeadMatrix = convertTo< double >( mHead->getData() );
+    gmtl::Matrix44d vjHeadMatrix = gmtl::convertTo< double >( mHead->getData() );
     gmtl::Point3d vjHeadPosition =
         gmtl::makeTrans< gmtl::Point3d >( vjHeadMatrix );
     //We have to offset negative mX because
@@ -819,13 +825,15 @@ void KeyboardMouse::SkyCamTo( )
 
     //gmtl::Matrix44d matrix;
     //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
-    //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()->SetMat( matrix );
+    //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()
+    //->SetMat( matrix );
     
+
     //reset view
-    ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->SetQuat( *mResetAxis );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-        SetTranslationArray( *mResetPosition );
+    //ves::xplorer::scenegraph::SceneManager::instance()->
+    //    GetWorldDCS()->SetQuat( *mResetAxis );
+    //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+    //    SetTranslationArray( *mResetPosition );
 
     //get the selected plugins cad
     //highlight it.
@@ -833,22 +841,23 @@ void KeyboardMouse::SkyCamTo( )
         ModelHandler::instance()->GetActiveModel()->GetDCS();
     selectedDCS->SetTechnique("Select");
     ves::xplorer::DeviceHandler::instance()->SetSelectedDCS( selectedDCS.get() );
-    osg::BoundingSphere sbs = selectedDCS->computeBound();
+    osg::BoundingSphere sbs = selectedDCS->getBound();
     
     //Grab the current matrix
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+    //    ves::xplorer::scenegraph::SceneManager::instance()->
+    //        GetActiveSwitchNode();
 
     //Calculate the distance
     double distance = 2 * sbs.radius();
 
     //move the cad
-    double osgTransformedPosition[ 3 ];
-    osgTransformedPosition[ 0 ] = - sbs.center( ).x( );
-    osgTransformedPosition[ 1 ] = - sbs.center( ).y( ) + distance;
-    osgTransformedPosition[ 2 ] = - sbs.center( ).z( );
-    activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
+    gmtl::Point3d osgTransformedPosition;
+    osgTransformedPosition[ 0 ] = sbs.center( ).x( );
+    osgTransformedPosition[ 1 ] = sbs.center( ).y( );
+    osgTransformedPosition[ 2 ] = sbs.center( ).z( );
+    //osgTransformedPosition[3] = 1;
+    //activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
 
     //Move the center point to the center of the selected object
     osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
@@ -856,21 +865,66 @@ void KeyboardMouse::SkyCamTo( )
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveSwitchNode(), selectedDCS.get() );
     gmtl::Matrix44d localToWorldMatrix = ltwt->GetLocalToWorldTransform();
+    //localToWorldMatrix->
 
     //Remove the local matrix from localToWorldMatrix
     gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
     localToWorldMatrix *= gmtl::invert( activeMatrix );
 
+    //double* selectedPos = selectedDCS->GetVETranslationArray();
+    //gmtl::Vec4d selectedPosVec( selectedPos[ 0 ], selectedPos[ 1 ], 
+    //selectedPos[ 2 ], 1 ); 
+    gmtl::Quatd convQuat( 1, 0, 0, osg::DegreesToRadians( 180.0 ) );
+    gmtl::Matrix44d tempTrans;
+    //gmtl::Matrix44f tempTransFloat = 
+    //gmtl::convertTo<float>(localToWorldMatrix);
+    gmtl::Point3d tempTransPoint = 
+        gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
+    tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
+    //tempTrans = 
+    gmtl::Matrix44d tempRot;
+    gmtl::setRot( tempRot, convQuat );
+    //osgTransformedPosition = tempTrans * tempRot * osgTransformedPosition;
+    osgTransformedPosition = localToWorldMatrix * osgTransformedPosition;
+    //osg::Matrix inMat;
+    //inMat.set( localToWorldMatrix.getData() );
+    //osg::Vec3d trans( selectedPosVec[ 0 ], selectedPosVec[ 1 ], 
+    //selectedPosVec[ 2 ] );// = inMat.getTrans();
+
     //Multiplying by the new local matrix (mCenterPoint)
-    osg::Matrixd tempMatrix;
-    tempMatrix.set( localToWorldMatrix.getData() );
-    osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
+    //osg::Matrixd tempMatrix;
+    //tempMatrix.set( localToWorldMatrix.getData() );
+    //osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
     //osg::Vec3d center = sbs.center() * tempMatrix;
-    mCenterPoint->set( center.x(), center.y(), center.z( ) );
+    //mCenterPoint->set( center.x(), center.y(), center.z( ) );
 
     //put it at 45 degrees
-    Rotate( 1, 0, 0, 45 );
-    ProcessNavigationEvents();
+    //Rotate( 1, 0, 0, 45 );
+    //ves::xplorer::environment::NavigationAnimationEngine->
+    //instance()->SetWorldDCS();
+    double * temp = ves::xplorer::scenegraph::SceneManager::instance()->
+        GetWorldDCS()->GetVETranslationArray();
+    
+    mCenterPoint->set( osgTransformedPosition[0], osgTransformedPosition[1],
+        osgTransformedPosition[2] );
+    
+    gmtl::Vec3d pos;
+    pos[ 0 ] = -osgTransformedPosition[ 0 ] + temp[0];
+    pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[1];
+    pos[ 2 ] = -osgTransformedPosition[ 2 ] + temp[2];
+
+    //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+    //SetTranslationArray( pos.mData );
+
+    //osg::Quat tempQuat = selectedDCS->GetQuat();
+
+    ves::xplorer::NavigationAnimationEngine::instance()->
+        SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->
+        GetWorldDCS() );
+
+    ves::xplorer::NavigationAnimationEngine::instance()->
+        SetAnimationEndPoints( pos, convQuat );
+    //ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::NavKeyboard()
@@ -919,8 +973,8 @@ void KeyboardMouse::NavKeyboard()
             //    GetActiveSwitchNode();
             //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
             
-            //Zoom45( ( bs.radius()) / 100000 );
-            Zoom45( 0.2 );
+            //Zoom45( bs.radius() / 100 );
+            Zoom45( 0.05 );
             ProcessNavigationEvents();
             break;
         }
@@ -932,8 +986,8 @@ void KeyboardMouse::NavKeyboard()
             //    GetActiveSwitchNode();
             //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
             
-            //Zoom45( -( bs.radius()) / 100000 );
-            Zoom45( -0.2 );
+            //Zoom45( -bs.radius() / 100 );
+            Zoom45( -0.05 );
             ProcessNavigationEvents();
             break;
         }
@@ -945,8 +999,8 @@ void KeyboardMouse::NavKeyboard()
             //    GetActiveSwitchNode();
             //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
             
-            //Pan( ( bs.radius()) / 100000, 0 );
-            Pan( 0.1, 0 );
+            //Pan( bs.radius() / 100, 0 );
+            Pan( 0.05, 0 );
             ProcessNavigationEvents();
             break;
         }
@@ -958,8 +1012,8 @@ void KeyboardMouse::NavKeyboard()
             //    GetActiveSwitchNode();
             //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
             
-            //Pan( -( bs.radius()) / 100000, 0 );
-            Pan( -0.1, 0 );
+            //Pan( - bs.radius() / 100, 0 );
+            Pan( -0.05, 0 );
             ProcessNavigationEvents();
             break;
         }

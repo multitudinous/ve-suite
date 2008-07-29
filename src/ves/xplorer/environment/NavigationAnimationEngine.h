@@ -99,33 +99,8 @@ public:
     ///\param newDCS The new DCS
     void SetDCS( ves::xplorer::scenegraph::DCS* newDCS );
 
-    ///This function is for quatecam handler only
-    ///This should be removed once the new animation code is in place
-    ///\param masterNode
-    void SetMasterNode( bool masterNode );
-
-    ///Clear out all the saved quaternions
-    void ClearQuaternionData();
-
-    ///
-    void TurnOffMovement();
-
-    ///
-    ///\param
-    ///\param
-    ///\return
-    double getLinearDistance( gmtl::Vec3d vjVecLast, gmtl::Vec3d vjVecNext );
-
     ///If a quat is active this will move the cam to the next location
     void PreFrameUpdate();
-
-    ///
-    ///\return
-    double GetQuatCamIncrementor();
-
-    ///
-    ///\return
-    bool IsActive();
     
     ///Set the quaternions and position for the animation
     void SetAnimationEndPoints( gmtl::Vec3d navToPoint, gmtl::Quatd rotationPoint );
@@ -153,6 +128,8 @@ protected:
 
     ///Map of event handlers for texture-based vis
     std::map< std::string, ves::xplorer::event::EventHandler* > mEventHandlers;
+    void Relocate( ves::xplorer::scenegraph::DCS* worldDCS );
+    double GetQuatCamIncrementor();
 
 private:
     ///
@@ -213,6 +190,12 @@ private:
 
     ///
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
+
+    gmtl::Vec3d mEndVec;
+
+    gmtl::Quatd mEndQuat;
+
+    bool mBeginAnim;
 
 };
 } //end xplorer
