@@ -823,18 +823,6 @@ void KeyboardMouse::SkyCamTo( )
     //Unselect the previous selected DCS
     ves::xplorer::DeviceHandler::instance()->UnselectObjects();
 
-    //gmtl::Matrix44d matrix;
-    //mCenterPoint->mData[ 1 ] = matrix[ 1 ][ 3 ] = *mCenterPointThreshold;
-    //ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode()
-    //->SetMat( matrix );
-    
-
-    //reset view
-    //ves::xplorer::scenegraph::SceneManager::instance()->
-    //    GetWorldDCS()->SetQuat( *mResetAxis );
-    //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-    //    SetTranslationArray( *mResetPosition );
-
     //get the selected plugins cad
     //highlight it.
     osg::ref_ptr< ves::xplorer::scenegraph::DCS >selectedDCS =
@@ -848,16 +836,15 @@ void KeyboardMouse::SkyCamTo( )
     //    ves::xplorer::scenegraph::SceneManager::instance()->
     //        GetActiveSwitchNode();
 
-    //Calculate the distance
+    //Calculate the offset distance
     double distance = 2 * sbs.radius();
 
-    //move the cad
+    ///Get the location of the selected model in local coordinates
+    ///This value is always the same no matter where we are
     gmtl::Point3d osgTransformedPosition;
     osgTransformedPosition[ 0 ] = sbs.center( ).x( );
     osgTransformedPosition[ 1 ] = sbs.center( ).y( );
     osgTransformedPosition[ 2 ] = sbs.center( ).z( );
-    //osgTransformedPosition[3] = 1;
-    //activeSwitchDCS->SetTranslationArray( osgTransformedPosition );
 
     //Move the center point to the center of the selected object
     osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
@@ -870,56 +857,36 @@ void KeyboardMouse::SkyCamTo( )
     gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
     localToWorldMatrix *= gmtl::invert( activeMatrix );
 
-    //double* selectedPos = selectedDCS->GetVETranslationArray();
-    //gmtl::Vec4d selectedPosVec( selectedPos[ 0 ], selectedPos[ 1 ], 
-    //selectedPos[ 2 ], 1 ); 
     gmtl::Quatd convQuat( 1, 0, 0, osg::DegreesToRadians( 45.0 ) );
     gmtl::Matrix44d tempTrans;
-    //gmtl::Matrix44f tempTransFloat = 
-    //gmtl::convertTo<float>(localToWorldMatrix);
+
     gmtl::Point3d tempTransPoint = 
         gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
+    ///Remove the rotation from the transform matrix
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
     gmtl::Matrix44d tempRot;
     gmtl::setRot( tempRot, convQuat );
+    ///Add our end rotation back into the mix
     osgTransformedPosition = tempTrans * tempRot * osgTransformedPosition;
-    //osgTransformedPosition = localToWorldMatrix * osgTransformedPosition;
-    //osg::Matrix inMat;
-    //inMat.set( localToWorldMatrix.getData() );
-    //osg::Vec3d trans( selectedPosVec[ 0 ], selectedPosVec[ 1 ], 
-    //selectedPosVec[ 2 ] );// = inMat.getTrans();
-
-    //Multiplying by the new local matrix (mCenterPoint)
-    //osg::Matrixd tempMatrix;
-    //tempMatrix.set( localToWorldMatrix.getData() );
-    //osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
-    //osg::Vec3d center = sbs.center() * tempMatrix;
-    //mCenterPoint->set( center.x(), center.y(), center.z( ) );
-
-    //put it at 45 degrees
-    //Rotate( 1, 0, 0, 45 );
-    //ves::xplorer::environment::NavigationAnimationEngine->
-    //instance()->SetWorldDCS();
-    double * temp = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS()->GetVETranslationArray();
-    
+    ///Set the center point to the new location
     mCenterPoint->set( osgTransformedPosition[0], osgTransformedPosition[1],
         osgTransformedPosition[2] );
     
+    ///Since the math implies we are doing a delta translation
+    ///we need to go grab where we previously were
+    double * temp = ves::xplorer::scenegraph::SceneManager::instance()->
+        GetWorldDCS()->GetVETranslationArray();
+    ///Add our distance and previous position back in and get our new end point
     gmtl::Vec3d pos;
     pos[ 0 ] = -osgTransformedPosition[ 0 ] + temp[0];
     pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[1] + distance;
     pos[ 2 ] = -osgTransformedPosition[ 2 ] + temp[2];
 
-    //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-    //SetTranslationArray( pos.mData );
-
-    //osg::Quat tempQuat = selectedDCS->GetQuat();
-
+    ///Hand the node we are interested in off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->
         SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->
         GetWorldDCS() );
-
+    ///Hand our created end points off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->
         SetAnimationEndPoints( pos, convQuat );
     //ProcessNavigationEvents();
