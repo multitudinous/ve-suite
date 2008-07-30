@@ -865,7 +865,6 @@ void KeyboardMouse::SkyCamTo( )
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveSwitchNode(), selectedDCS.get() );
     gmtl::Matrix44d localToWorldMatrix = ltwt->GetLocalToWorldTransform();
-    //localToWorldMatrix->
 
     //Remove the local matrix from localToWorldMatrix
     gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
@@ -874,18 +873,17 @@ void KeyboardMouse::SkyCamTo( )
     //double* selectedPos = selectedDCS->GetVETranslationArray();
     //gmtl::Vec4d selectedPosVec( selectedPos[ 0 ], selectedPos[ 1 ], 
     //selectedPos[ 2 ], 1 ); 
-    gmtl::Quatd convQuat( 1, 0, 0, osg::DegreesToRadians( 180.0 ) );
+    gmtl::Quatd convQuat( 1, 0, 0, osg::DegreesToRadians( 45.0 ) );
     gmtl::Matrix44d tempTrans;
     //gmtl::Matrix44f tempTransFloat = 
     //gmtl::convertTo<float>(localToWorldMatrix);
     gmtl::Point3d tempTransPoint = 
         gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
-    //tempTrans = 
     gmtl::Matrix44d tempRot;
     gmtl::setRot( tempRot, convQuat );
-    //osgTransformedPosition = tempTrans * tempRot * osgTransformedPosition;
-    osgTransformedPosition = localToWorldMatrix * osgTransformedPosition;
+    osgTransformedPosition = tempTrans * tempRot * osgTransformedPosition;
+    //osgTransformedPosition = localToWorldMatrix * osgTransformedPosition;
     //osg::Matrix inMat;
     //inMat.set( localToWorldMatrix.getData() );
     //osg::Vec3d trans( selectedPosVec[ 0 ], selectedPosVec[ 1 ], 
@@ -910,7 +908,7 @@ void KeyboardMouse::SkyCamTo( )
     
     gmtl::Vec3d pos;
     pos[ 0 ] = -osgTransformedPosition[ 0 ] + temp[0];
-    pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[1];
+    pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[1] + distance;
     pos[ 2 ] = -osgTransformedPosition[ 2 ] + temp[2];
 
     //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
