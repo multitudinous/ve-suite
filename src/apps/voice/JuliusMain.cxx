@@ -3,7 +3,10 @@
 #include "AceFunctorHandler.h"
 
 #include <ace/Signal.h>
+#include <ace/Version.h>
+#if ACE_MAJOR_VERSION >= 5 && ACE_MINOR_VERSION >= 6 
 #include <ace/Sig_Handler.h>
+#endif
 
 #include <cstdlib>
 #include <iostream>
