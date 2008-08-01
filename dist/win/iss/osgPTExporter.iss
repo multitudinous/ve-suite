@@ -6,8 +6,8 @@
 #define MyAppVerName "osgPTExporter"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VEVERSION "1.0.0"
-#define SVNVERSION "1.0.0"
+#define VEVERSION "1.0.1"
+#define SVNVERSION "11410"
 #define VEHOME "D:\devEnv\VES"
 #define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_2.2.0_Pre-Compile_vc8.0_SP1"
 #define OSGPTEXPORTERHOME "D:\devEnv\VES-Deps_1.1\source\skewmatrix\osgPT\trunk\OSGExport"
@@ -108,3 +108,5 @@ begin
   end;
 
 end;
+[UninstallDelete]
+Name: {app}\vcplugin\exp_isu_osg.ini; Type: files; Components: 
