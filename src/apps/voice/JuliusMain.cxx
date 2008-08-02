@@ -4,7 +4,9 @@
 
 #include <ace/Signal.h>
 #include <ace/Version.h>
-#if ACE_MAJOR_VERSION >= 5 && ACE_MINOR_VERSION >= 6 
+#if ACE_MAJOR_VERSION >= 5 && \
+    ( ACE_MINOR_VERSION >= 6 || \
+    ( ACE_MINOR_VERSION >= 5 && ACE_BETA_VERSION >= 10 ) )
 #include <ace/Sig_Handler.h>
 #endif
 
