@@ -295,6 +295,7 @@ void HierarchyTree::SelectNetworkPlugin( wxTreeItemId selectedId )
 
     //keep track of previous selection
     m_selection = selectedId;
+    m_currentLevelId = GetItemParent( m_selection );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnExpanded( wxTreeEvent& WXUNUSED( event ) )
