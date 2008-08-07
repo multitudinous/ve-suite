@@ -248,8 +248,6 @@ private:
     */
     ///The change to be applied to the current transform
     gmtl::Matrix44d mDeltaTransform;
-    ///The current transform matrix being manipulated
-    gmtl::Matrix44d mCurrentTransform;
 
     ///
     osg::ref_ptr< osg::Geode > mBeamGeode;

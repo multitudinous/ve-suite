@@ -140,7 +140,6 @@ KeyboardMouse::KeyboardMouse()
     mHead.init( "VJHead" );
 
     gmtl::identity( mDeltaTransform );
-    gmtl::identity( mCurrentTransform );
 }
 ////////////////////////////////////////////////////////////////////////////////
 KeyboardMouse::~KeyboardMouse()
@@ -435,56 +434,60 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    gmtl::Matrix44d currentTransform;
+
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     ves::xplorer::scenegraph::DCS* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
             GetActiveSwitchNode();
 
-    //Grab the active matrix to manipulate
-    mCurrentTransform = activeDCS->GetMat();
+    osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
+        localToWorldTransform;
 
-    //Convert mCurrentTransform to world space if not already in it
+    //Grab the active matrix to manipulate 
     std::string name = activeSwitchNode->GetName();
     if( activeDCS->GetName() !=  name )
     {
-        osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
-            localToWorldTransform =
-                new ves::xplorer::scenegraph::LocalToWorldTransform( 
-                    activeSwitchNode, activeDCS );
+        //Convert currentTransform to world space if not already in it
+        localToWorldTransform =
+            new ves::xplorer::scenegraph::LocalToWorldTransform(
+                activeSwitchNode, activeDCS );
 
-        mCurrentTransform = localToWorldTransform->GetLocalToWorldTransform();
+        currentTransform = localToWorldTransform->GetLocalToWorldTransform();
+    }
+    else
+    {
+        currentTransform = activeDCS->GetMat();
     }
 
     //Translate active dcs by distance that the mHead is away from the origin
-    gmtl::Matrix44d transMat =
+    gmtl::Matrix44d worldMatTrans =
         gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
-    gmtl::Matrix44d worldMatTrans = transMat * mCurrentTransform;
+    worldMatTrans *= currentTransform;
 
     //Get the position of the mHead in the new world space as if it is on the origin
-    gmtl::Point3d newJugglerHeadPoint;
-    gmtl::Point3d newGlobalHeadPointTemp = worldMatTrans * newJugglerHeadPoint;
     gmtl::Vec4d newGlobalHeadPointVec;
-    newGlobalHeadPointVec[ 0 ] = newGlobalHeadPointTemp[ 0 ];
-    newGlobalHeadPointVec[ 1 ] = newGlobalHeadPointTemp[ 1 ];
-    newGlobalHeadPointVec[ 2 ] = newGlobalHeadPointTemp[ 2 ];
+    newGlobalHeadPointVec[ 0 ] = worldMatTrans[ 0 ][ 3 ];
+    newGlobalHeadPointVec[ 1 ] = worldMatTrans[ 1 ][ 3 ];
+    newGlobalHeadPointVec[ 2 ] = worldMatTrans[ 2 ][ 3 ];
 
     //Rotate the mHead vector by the rotation increment
     gmtl::Vec4d rotateJugglerHeadVec = mDeltaTransform * newGlobalHeadPointVec;
 
     //Split apart the current matrix into rotation and translation parts
-    gmtl::Matrix44d accuRotation;
-    gmtl::Matrix44d matrix;
-
+    gmtl::Matrix44d currentRotation;
+    gmtl::Matrix44d currentTranslation;
     for( int i = 0; i < 3; ++i )
     {
         //Get the current rotation matrix
-        accuRotation[ i ][ 0 ] = mCurrentTransform[ i ][ 0 ];
-        accuRotation[ i ][ 1 ] = mCurrentTransform[ i ][ 1 ];
-        accuRotation[ i ][ 2 ] = mCurrentTransform[ i ][ 2 ];
+        currentRotation[ i ][ 0 ] = currentTransform[ i ][ 0 ];
+        currentRotation[ i ][ 1 ] = currentTransform[ i ][ 1 ];
+        currentRotation[ i ][ 2 ] = currentTransform[ i ][ 2 ];
 
         //Get the current translation matrix
-        matrix[ i ][ 3 ] = rotateJugglerHeadVec[ i ] + mCenterPoint->mData[ i ];
+        currentTranslation[ i ][ 3 ] =
+            rotateJugglerHeadVec[ i ] + mCenterPoint->mData[ i ];
     }
     /*
     Convert head to world space to run intersection tests
@@ -513,21 +516,21 @@ void KeyboardMouse::ProcessNavigationEvents()
     */
 
     //Multiply by the transform and then by the rotation
-    matrix = matrix * mDeltaTransform * accuRotation;
+    gmtl::Matrix44d newTransform =
+        currentTranslation * mDeltaTransform * currentRotation;
 
     //Convert matrix back to local space after delta transform has been applied
     if( activeDCS->GetName() != name )
     {
-        //Remove local matrix from mCurrentTransform
+        //Remove local matrix from currentTransform
         //We are multiplying by a new transformed local matrix
-        gmtl::Matrix44d activeMatrix = activeDCS->GetMat();
-        mCurrentTransform *= gmtl::invert( activeMatrix );
-
-        matrix = gmtl::invert( mCurrentTransform ) * matrix;
+        currentTransform =
+            localToWorldTransform->GetLocalToWorldTransform( false );
+        newTransform = gmtl::invert( currentTransform ) * newTransform;
     }
 
     //Set the activeDCS w/ new transform
-    activeDCS->SetMat( matrix );
+    activeDCS->SetMat( newTransform );
 
     //If not in animation mode, reset the transform
     if( !mAnimate )
@@ -605,6 +608,12 @@ void KeyboardMouse::FrameAll()
 
     //Set the end point to the center of the juggler screen in osg coordinates
     //Calculate the screen pixel/juggler coordinate ratios
+
+    /***********************/
+    //This should probably be from the near plane, not the screen values,
+    //to appropriately calculate the distance.
+    /***********************/
+
     double wc_x_trans_ratio =
         ( mXMaxScreen - mXMinScreen ) / static_cast< double >( mWidth );
     double wc_y_trans_ratio =
@@ -818,7 +827,7 @@ void KeyboardMouse::SkyCam( )
     ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SkyCamTo( )
+void KeyboardMouse::SkyCamTo()
 {
     //Unselect the previous selected DCS
     ves::xplorer::DeviceHandler::instance()->UnselectObjects();
@@ -851,11 +860,8 @@ void KeyboardMouse::SkyCamTo( )
         new ves::xplorer::scenegraph::LocalToWorldTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveSwitchNode(), selectedDCS.get() );
-    gmtl::Matrix44d localToWorldMatrix = ltwt->GetLocalToWorldTransform();
-
-    //Remove the local matrix from localToWorldMatrix
-    gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
-    localToWorldMatrix *= gmtl::invert( activeMatrix );
+    gmtl::Matrix44d localToWorldMatrix =
+        ltwt->GetLocalToWorldTransform( false );
 
     gmtl::Quatd convQuat( 1, 0, 0, osg::DegreesToRadians( 45.0 ) );
     gmtl::Matrix44d tempTrans;
@@ -869,26 +875,26 @@ void KeyboardMouse::SkyCamTo( )
     ///Add our end rotation back into the mix
     osgTransformedPosition = tempTrans * tempRot * osgTransformedPosition;
     ///Set the center point to the new location
-    mCenterPoint->set( osgTransformedPosition[0], osgTransformedPosition[1],
+    mCenterPoint->set( osgTransformedPosition[ 0 ], osgTransformedPosition[1],
         osgTransformedPosition[2] );
     
     ///Since the math implies we are doing a delta translation
     ///we need to go grab where we previously were
-    double * temp = ves::xplorer::scenegraph::SceneManager::instance()->
+    double* temp = ves::xplorer::scenegraph::SceneManager::instance()->
         GetWorldDCS()->GetVETranslationArray();
     ///Add our distance and previous position back in and get our new end point
     gmtl::Vec3d pos;
-    pos[ 0 ] = -osgTransformedPosition[ 0 ] + temp[0];
-    pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[1] + distance;
-    pos[ 2 ] = -osgTransformedPosition[ 2 ] + temp[2];
+    pos[ 0 ] = -osgTransformedPosition[ 0 ] + temp[ 0 ];
+    pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[ 1 ] + distance;
+    pos[ 2 ] = -osgTransformedPosition[ 2 ] + temp[ 2 ];
 
     ///Hand the node we are interested in off to the animation engine
-    ves::xplorer::NavigationAnimationEngine::instance()->
-        SetDCS( ves::xplorer::scenegraph::SceneManager::instance()->
-        GetWorldDCS() );
+    ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
     ///Hand our created end points off to the animation engine
-    ves::xplorer::NavigationAnimationEngine::instance()->
-        SetAnimationEndPoints( pos, convQuat );
+    ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
+        pos, convQuat );
+
     //ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1364,11 +1370,8 @@ void KeyboardMouse::ProcessHit( osgUtil::IntersectVisitor::HitList listOfHits )
         new ves::xplorer::scenegraph::LocalToWorldTransform(
             ves::xplorer::scenegraph::SceneManager::instance()->
                 GetActiveSwitchNode(), newSelectedDCS );
-    gmtl::Matrix44d localToWorldMatrix = ltwt->GetLocalToWorldTransform();
-
-    //Remove the local matrix from localToWorldMatrix
-    gmtl::Matrix44d activeMatrix = newSelectedDCS->GetMat();
-    localToWorldMatrix *= gmtl::invert( activeMatrix );
+    gmtl::Matrix44d localToWorldMatrix =
+        ltwt->GetLocalToWorldTransform( false );
 
     //Multiplying by the new local matrix (mCenterPoint)
     osg::Matrixd tempMatrix;

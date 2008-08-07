@@ -46,11 +46,12 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 LocalToWorldTransform::LocalToWorldTransform( osg::Node* stopNode,
                                               osg::Node* startNode )
-        :
-        NodeVisitor( TRAVERSE_PARENTS ),
-        mStopNode( stopNode )
+    :
+    NodeVisitor( TRAVERSE_PARENTS ),
+    mStopNode( stopNode )
 {
-    gmtl::identity( mLocalToWorldTransform );
+    gmtl::identity( mLocalToWorldMatrix );
+    gmtl::identity( mLocalParentToWorldMatrix );
 
     startNode->accept( *this );
 }
@@ -64,16 +65,26 @@ void LocalToWorldTransform::apply( osg::Node& node )
 {
     if( &node == mStopNode.get() )
     {
-        for( size_t i = 0; i < _nodePath.size(); ++i )
+        ves::xplorer::scenegraph::DCS* localDCS = 
+            dynamic_cast< ves::xplorer::scenegraph::DCS* >(
+                _nodePath.at( _nodePath.size() - 1 ) );
+        if( localDCS )
+        {
+            mLocalToWorldMatrix *= localDCS->GetMat();
+        }
+
+        for( size_t i = 0; i < _nodePath.size() - 1; ++i )
         {
             ves::xplorer::scenegraph::DCS* dcs =
                 dynamic_cast< ves::xplorer::scenegraph::DCS* >(
                     _nodePath.at( i ) );
             if( dcs )
             {
-                mLocalToWorldTransform *= dcs->GetMat();
+                mLocalParentToWorldMatrix *= dcs->GetMat();
             }
         }
+
+        mLocalToWorldMatrix = mLocalParentToWorldMatrix * mLocalToWorldMatrix;
 
         return;
     }
@@ -81,8 +92,14 @@ void LocalToWorldTransform::apply( osg::Node& node )
     osg::NodeVisitor::apply( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
-gmtl::Matrix44d& LocalToWorldTransform::GetLocalToWorldTransform()
+const gmtl::Matrix44d& LocalToWorldTransform::GetLocalToWorldTransform(
+    bool includeLocalTransform ) const
 {
-    return mLocalToWorldTransform;
+    if( includeLocalTransform )
+    {
+        return mLocalToWorldMatrix;
+    }
+
+    return mLocalParentToWorldMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////

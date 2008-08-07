@@ -58,20 +58,36 @@ namespace scenegraph
 class VE_SCENEGRAPH_EXPORTS LocalToWorldTransform : public osg::NodeVisitor
 {
 public:
-    LocalToWorldTransform( osg::Node* stopNode,
-                           osg::Node* startNode );
+    ///Constructor
+    ///\param stopNode The node with coordinate system to transform to
+    ///\param startNode The local node to transform
+    LocalToWorldTransform( osg::Node* stopNode, osg::Node* startNode );
 
+    ///
     virtual void apply( osg::Node& node );
 
-    gmtl::Matrix44d& GetLocalToWorldTransform();
+    ///Return by reference
+    ///\param includeLocalTransform Specifies if the local transform
+    /// should be included in the transformation matrix
+    ///\return Get the desired transformation matrix
+    const gmtl::Matrix44d& GetLocalToWorldTransform(
+        bool includeLocalTransform = true ) const;
 
 protected:
+    ///Destructor
     virtual ~LocalToWorldTransform();
 
 private:
+    ///
     osg::ref_ptr< osg::Node > mStopNode;
 
-    gmtl::Matrix44d mLocalToWorldTransform;
+    ///Matrix containing the cummulative transforms from local to world space
+    ///This matrix includes the local transform
+    gmtl::Matrix44d mLocalToWorldMatrix;
+    ///Matrix containing the cummulative transforms from local to world space
+    ///This matrix does not include the local transform
+    gmtl::Matrix44d mLocalParentToWorldMatrix;
+    
 
 };
 } //end scenegraph
