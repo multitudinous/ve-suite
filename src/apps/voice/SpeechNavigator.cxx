@@ -179,7 +179,7 @@ SpeechNavigator::startParserThread()
 {
     mParser->attach(mParserObserver);
     mThreadGroupId = ACE_Thread_Manager::instance()->spawn(
-                                          &parserThreadFunction, 
+                                          reinterpret_cast<ACE_THR_FUNC>(&parserThreadFunction), 
                                           reinterpret_cast<void*>(mClient),
                                 THR_NEW_LWP | THR_JOINABLE | THR_INHERIT_SCHED,
                                           &mParserThread);
