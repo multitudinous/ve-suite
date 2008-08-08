@@ -145,10 +145,6 @@ public:
     ///\param onOff Turn on/off rendering of this CADEntityHelper
     void ToggleDisplay( const bool onOff );
 
-    ///Add occluder nodes
-    ///Must call after this node has a parent
-    void AddOccluderNodes();
-
 #ifdef _OSG
     ///Set the node of CADEntityHelper
     ///\param node An osg::Node pointer

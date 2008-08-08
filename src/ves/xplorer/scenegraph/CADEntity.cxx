@@ -79,10 +79,6 @@ CADEntity::CADEntity( std::string geomFile,
     mFileName.assign( geomFile );
     mDCS->SetName( "CADEntityDCS" );
     mDCS->addChild( mCADEntityHelper->GetNode() );
-    /*if( occlude )
-    {
-        mCADEntityHelper->AddOccluderNodes();
-    }*/
     parentDCS->AddChild( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////

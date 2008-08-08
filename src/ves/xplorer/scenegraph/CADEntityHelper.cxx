@@ -75,9 +75,13 @@
 #include <osgDB/FileNameUtils>
 
 #include <ves/xplorer/scenegraph/SceneManager.h>
+#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
+#include <osg/OcclusionQueryNode>
+#include <ves/xplorer/scenegraph/util/OcclusionQueryVisitor.h>
+#else
 #include <osgOQ/OcclusionQueryNode.h>
 #include <osgOQ/OcclusionQueryVisitor.h>
-
+#endif
 // --- C/C++ Libraries --- //
 #include <cctype>
 #include <sstream>
@@ -350,8 +354,13 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            osgUtil::Optimizer::STATIC_OBJECT_DETECTION );
     }
 
+#if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
+    osg::ref_ptr< osg::OcclusionQueryNode > root;
+    root = dynamic_cast< osg::OcclusionQueryNode* >( tempCADNode.get() );
+#else
     osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
     root = dynamic_cast< osgOQ::OcclusionQueryNode* >( tempCADNode.get() );
+#endif
     if( !root.valid() && occlude )
     {
         osg::ref_ptr< osg::Group > tempGroup = new osg::Group();
@@ -399,33 +408,6 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     //Set per vertex lighting on all files that are loaded
     //osgUtil::SmoothingVisitor smoother;
     //m_cadNode->accept( smoother );
-}
-////////////////////////////////////////////////////////////////////////////////
-void CADEntityHelper::AddOccluderNodes()
-{
-    osg::ref_ptr< osgOQ::OcclusionQueryNode > root;
-    root = dynamic_cast< osgOQ::OcclusionQueryNode* >( m_cadNode.get() );
-    if( !root.valid() && ( m_cadNode->getNumParents() > 0 ) )
-    {
-        osgOQ::OcclusionQueryNonFlatVisitor oqv;
-        //Specify the vertex count threshold for performing 
-        // occlusion query tests.
-        // If the child geometry has less than the specified number
-        //   of vertices, don't perform occlusion query testing (it's
-        //   an occluder). Otherwise, perform occlusion query testing
-        //   (it's an occludee).
-        oqv.setOccluderThreshold( 2500 );
-        m_cadNode->accept( oqv );
-        //Setup the number frames to skip
-        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
-        m_cadNode->accept( queryFrameVisitor );
-        // If the occlusion query test indicates that the number of
-        //   visible pixels is greater than this value, render the
-        //   child geometry. Otherwise, don't render and continue to
-        //   test for visibility in future frames.
-        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
-        m_cadNode->accept( visibilityThresholdVisitor );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::string CADEntityHelper::
