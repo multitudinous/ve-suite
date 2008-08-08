@@ -70,7 +70,6 @@
 
 #include <osgDB/ReadFile>
 #include <osgDB/Registry>
-#include <osgDB/FileUtils>
 #include <osgDB/ReaderWriter>
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
