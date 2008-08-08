@@ -59,7 +59,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-class VE_SCENEGRAPH_EXPORTS CreatePartTreeFileVisitor : public osg::NodeVisitor
+class CreatePartTreeFileVisitor : public osg::NodeVisitor
 {
 public:
     ///Constructor
