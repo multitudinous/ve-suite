@@ -132,7 +132,9 @@ void SceneRenderToTexture::CreateCamera()
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 5 ) && ( OSG_VERSION_PATCH >=4 ) )
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
-                     mTexture.get() );//, 0, 0, false, 8, 4 );
+                     mTexture.get(), 0, 0, false, 8, 4 );
+    //There is a website the describes what the sample values should be
+    //for various levels of AA but I am unable to find it again.
 #else
     mCamera->attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
                      mTexture.get() );
