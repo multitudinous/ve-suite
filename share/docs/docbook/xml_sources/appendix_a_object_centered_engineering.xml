@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<appendix>
+  <title>Object-Centered Engineering</title>
+
+  <section>
+    <title>Introduction</title>
+
+    <para>In object-centered engineering, objects carry with them context and
+    meaning as well as the ability to be modified by the user and should be
+    able to change the way they are represented at run time by manipulating
+    the information they contain. Most of all, an engineering object must have
+    the ability to self-discover and adapt to other objects that may need to
+    exchange information with that particular instance of the object.
+    Information that is exchanged with other objects must be able to be
+    managed internal to an engineering object without outside assistance from
+    the user.</para>
+
+    <para>Engineering objects help manage complexity because they manage
+    information in an object-oriented method in that information is grouped
+    based on its physical counterpart. Within engineering objects, even if
+    information is stored within disparate software packages, the user
+    interface into the object is through a single engineering object
+    interface. In addition, the user can decide at what level of immersion he
+    or she wishes to interact with the engineering object.</para>
+  </section>
+
+  <section>
+    <title>Implementing Object-Centered Engineering in VE-Suite</title>
+
+    <para>Creating an advanced engineering framework based on engineering
+    objects requires the following three tasks to be implemented:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Transparent interfaces. A transparent interface results in data
+        independent methods being exposed to the user to enable data from any
+        domain to be passed through the interface. The goal of transparent
+        interfaces is to avoid strong typed methods that are attached to a
+        specific problem domain.</para>
+      </listitem>
+
+      <listitem>
+        <para>Implementation of object-oriented principles. To enable
+        virtualized systems to be created, the methods that enable the objects
+        to be created for this engineering framework will include modularity,
+        hierarchy, abstraction, and design patterns to be utilized with
+        engineering objects. These qualities will be exhibited in the
+        engineering objects constructed here and will be supported by the
+        engineering framework. Through the use of transparent interfaces,
+        modularity, hierarchy, abstraction, and design, patterns can be
+        implicit in terms of the capability that the framework can
+        support.</para>
+      </listitem>
+
+      <listitem>
+        <para>Emergent behavior. TThe engineering framework will enable
+        emergent behavior in two ways. First, the structure of the information
+        that is received by the computational units and by the core engines
+        will provide key reference data so that UIs can be constructed,
+        three-dimensional graphical representations can be constructed, and
+        computational units can gain information about what is upstream or
+        downstream of them without user intervention. Second, any
+        computational unit will be able to query the rest of the virtual
+        environment for data if the respective unit requires other inputs to
+        perform its tasks. This querying capability also occurs without user
+        input and enables the computational unit to exhibit some autonomous
+        behavior.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The core components of VE-Suite require several changes to support
+    these tasks. These needs will be met through the extension of the current
+    VE-Open CORBA interface, implementation of an XML Schema and respective
+    API, and extension of VE-Xplorer to support the display of engineering
+    objects in a virtual world. Other changes will be made to VE-Conductor and
+    VE-CE.</para>
+
+    <para>XML schemas provide the basic structure by which information can be
+    transferred within the VE-Suite engineering framework. While the ontology
+    provides the broad framework that computers use to classify information
+    sources without human input, the schema provides the means by which the
+    data can be packaged to hold the information provided by a particular
+    source. For example, the ontology defines an object that can be a human or
+    an information provider. These objects, when broken down into an XML
+    document, would be composed of veDataValuePairs and other veXMLObjects,
+    described below. An example of such a document will be illustrated below,
+    but first the basic XML elements that compose the description of an object
+    will be described.</para>
+
+    <para>The schema is composed of a few key XML element types. The first
+    type is the veXMLObject element:</para>
+
+    <literallayout>&lt;xs:complexType name="veXMLObject"&gt;
+      &lt;xs:attribute name="objectType" type="xs:string" use="optional" /&gt;
+      &lt;xs:attribute name="id" type="xs:ID" use="optional" /&gt;
+&lt;/xs:complexType&gt;</literallayout>
+
+    <para>This element type is the basis for all other elements within the
+    VE-Open schema, enabling any other element type within the schema to be
+    embedded or referenced in a generalized manner. This enables abstraction,
+    hierarchy, and modularity to be embedded in the schema and is the enabling
+    factor for these qualities to be present in the objects that the XML
+    schema describes. Although a formality, this element type enables the
+    logic to be complete when embedding and referencing derived veXMLObjects
+    in other element types. The functionality that veXMLObject enables will be
+    illustrated below in veCommand. The veCommand is the element type that is
+    passed in the Query functions described earlier.</para>
+
+    <para>The second element type is the veDataValuePair:</para>
+
+    <literallayout>  &lt;xs:complexType name="veDataValuePair"&gt;
+      &lt;xs:complexContent&gt;
+         &lt;xs:extension base="veXMLObject"&gt;
+            &lt;xs:sequence&gt;
+               &lt;xs:element name="dataName" type="xs:string" maxOccurs="1" minOccurs="1" /&gt;
+               &lt;xs:choice maxOccurs="1" minOccurs="1"&gt;
+                  &lt;xs:element name="dataValue" type="xs:anyType" /&gt;
+                  &lt;xs:element name="genericObject" type="veXMLObject" /&gt;
+               &lt;/xs:choice&gt;
+            &lt;/xs:sequence&gt;
+         &lt;/xs:extension&gt;
+      &lt;/xs:complexContent&gt;
+   &lt;/xs:complexType&gt;</literallayout>
+
+    <para>The veDataValuePair type holds a descriptive name about the data it
+    contains as well as a veXMLObject or raw xs:anyType. This flexibility
+    enables veDataValuePair to be a generic container element that holds any
+    form of data being processed by a particular object. Note that a
+    veDataValuePair is a complete extension of a veXMLObject. This extension
+    permits a veDataValuePair to be embedded within another
+    veDataValuePair.</para>
+
+    <para>The third element type is veCommand:</para>
+
+    <literallayout>  &lt;xs:complexType name="vecommand"&gt;
+      &lt;xs:complexContent&gt;
+         &lt;xs:extension base="veXMLObject"&gt;
+            &lt;xs:sequence&gt;
+               &lt;xs:element name="command" type="xs:string" /&gt;
+               &lt;xs:element name="parameter" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt;
+            &lt;/xs:sequence&gt;
+         &lt;/xs:extension&gt;
+      &lt;/xs:complexContent&gt;
+   &lt;/xs:complexType&gt;</literallayout>
+
+    <para>This element type contains a descriptive name for the command in
+    addition to an xs:sequence of veDataValuePairs. The command is constructed
+    to enable any object to request or send a series of veDataValuePairs with
+    information about the potential application of the data contained within.
+    Because a veDataValuePair can contain any veXMLObject that is derived for
+    the VE-Open XML schema, a veCommand can be used as the overall container
+    to transmit information about objects and the attributes used to describe
+    them. This information is transferred in the Query methods and the
+    SetNetwork functions.</para>
+
+    <para>The previous three elements described (i.e., veXMLObject,
+    veDataValuePair, veCommand) are the core building blocks of the VE-Open
+    XML schema. Each of the following elements described will use the key
+    elements in the construction of the descriptors for an object.
+    veParameterBlock is a general component that contains information about
+    general information sources within VE-Suite:</para>
+
+    <literallayout>&lt;xs:complexType name="veParameterBlock"&gt;
+      &lt;xs:complexContent&gt;
+         &lt;xs:extension base="veXMLObject"&gt;
+            &lt;xs:sequence&gt;
+               &lt;xs:element name="blockID" type="xs:unsignedInt" maxOccurs="1" minOccurs="1" /&gt;
+               &lt;xs:element name="blockName" type="xs:string" /&gt;
+               &lt;xs:element name="transform" type="veTransform" minOccurs="0" maxOccurs="1" /&gt;
+               &lt;xs:element name="properties" type="veDataValuePair" minOccurs="0" maxOccurs="unbounded" /&gt;
+            &lt;/xs:sequence&gt;
+         &lt;/xs:extension&gt;
+      &lt;/xs:complexContent&gt;
+   &lt;/xs:complexType&gt;</literallayout>
+
+    <para>An example of a parameter block would be a reference to a VTK
+    dataset. The property element is configured to maintain a list of custom
+    elements for describing a particular information source. This list of
+    elements may also contain a list of hardware specifications for a sensor
+    array or for a CFD solver configuration. </para>
+
+    <para>CADNode describes the geometrical representations that are stored
+    for a particular object.</para>
+
+    <literallayout>&lt;xs:complexType name="CADNode"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="veXMLObject"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="parent" type="CADAssembly" maxOccurs="1" minOccurs="0" /&gt;
+          &lt;xs:element name="transform" type="veTransform" minOccurs="1" maxOccurs="1" /&gt;
+          &lt;xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1" default="Assembly" /&gt;
+          &lt;xs:element name="type" type="xs:string" /&gt;
+          &lt;xs:element name="attribute" type="CADAttribute" maxOccurs="unbounded" minOccurs="0" /&gt;
+          &lt;xs:element name="activeAttributeName" type="xs:string" /&gt;
+          &lt;xs:element name="animation" type="CADNodeAnimation" /&gt;
+        &lt;/xs:sequence&gt;
+        &lt;xs:attribute name="visiblility" type="xs:boolean" /&gt;
+        &lt;xs:attribute name="physics" type="xs:boolean" /&gt;
+        &lt;xs:attribute name="opacity" type="xs:double" use="optional" default="1.0" /&gt;
+        &lt;xs:attribute name="makeTransparentOnVis" type="xs:boolean" default="true" /&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;</literallayout>
+
+    <para>The CADNode contains two unique features. First, the CADNode does
+    not maintain its own geometrical information, but references a file that
+    contains this information. Second, the element can contain information
+    about how to apply high-fidelity lighting capabilities. These are stored
+    in the attribute element. This element contains a CADAttribute, which
+    maintains a GLSL program embedded in the CADAttribute.</para>
+
+    <para>The following veXMLObjects will be described to provide context for
+    the XSLT example that follows. These elements are used to construct the
+    connectivity between virtual objects that are modeled in a system. The
+    first element examined is a vePoint:</para>
+
+    <literallayout>&lt;xs:complexType name="vePoint"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="veXMLObject"&gt;
+        &lt;xs:attribute name="xLocation" type="xs:unsignedInt" use="required"/&gt;
+        &lt;xs:attribute name="yLocation" type="xs:unsignedInt" use="required"/&gt;      
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+&lt;/xs:complexType&gt;</literallayout>
+
+    <para>A vePoint is primarily used by the software within VE-Suite that
+    renders graphical representations of the network schematic for the system
+    under review. vePoint is composed of two unsigned integers representing
+    the X and Y locations of the point. Data types for a point are unsigned
+    integers so that graphical widgets libraries can easily render the point
+    location. Graphical widgets libraries typically work in whole numbers
+    rather than decimal values. The second element utilizes vePoint and is a
+    veLink:</para>
+
+    <literallayout>&lt;xs:complexType name="veLink"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="veXMLObject"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element name="fromModule" type="veDataValuePair"/&gt;
+          &lt;xs:element name="toModule" type="veDataValuePair"/&gt;
+          &lt;xs:element name="fromPort" type="xs:unsignedInt"/&gt;
+          &lt;xs:element name="toPort" type="xs:unsignedInt"/&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="2" name="linkPoints" type="vePoint"/&gt;
+        &lt;/xs:sequence&gt;
+        &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
+        &lt;xs:attribute use="optional" type="xs:string" name="type"/&gt; 
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+&lt;/xs:complexType&gt;</literallayout>
+
+    <para>A veLink is composed of the necessary components to link one system
+    component to another. The descriptors for the two modules that the link
+    couples are fully described in addition to the necessary information to
+    draw the link. This choice was made so that, upon obtaining the link, the
+    software would not only be able to describe the information in the link,
+    but would also be able to draw it. </para>
+
+    <para>The third element for a network description in VE-Suite is the
+    veNetwork:</para>
+
+    <literallayout>&lt;xs:complexType name="veNetwork"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="veXMLObject"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="link" type="veLink"/&gt;
+          &lt;xs:element maxOccurs="6" minOccurs="6" name="conductorState" type="veDataValuePair"/&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="tag" type="veTag"/&gt;
+        &lt;/xs:sequence&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;</literallayout>
+
+    <para>It should be noted that the veNetwork element is relatively simple,
+    but builds on the previous two elements for full description. A series of
+    links composes veNetwork and provides information about how the network
+    should be rendered by VE-Suite’s rendering software. veNetwork is
+    essentially a graph composed of edges (e.g., veLinks) and vertices (e.g.,
+    veModels). The representation of veNetwork follows closely on that defined
+    by the DOT language utilized by GraphViz. While the DOT language is not
+    utilized internally by VE-Suite, this task remains as future work to
+    leverage the DOT language in addition to the use of the Boost Graph
+    Language. These tools enable VE-Suite to use graph decomposition
+    algorithms and detection algorithms to determine disconnected and feedback
+    sections of graphs. </para>
+
+    <para>As noted previously, the veModel represents the nodes on the graph.
+    The veModel builds on all of the previous elements and has the main
+    responsibility for containing the inputs, outputs, CAD, and raw stream
+    data for a particular model representation. The veModel is the data
+    container for an object. In reference to the classification of objects,
+    the veModel contains the raw data that would tell other objects about
+    itself. In addition to containing the object’s raw representational data,
+    the veModel can also contain a veSystem, which will be described later.
+    The purpose of this embedded element is to provide the user with the
+    ability to:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Create a hierarchical assembly of complex objects</para>
+      </listitem>
+
+      <listitem>
+        <para>Embed a third-party solver into a broader simulation</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>This capability provides one of the main components that enable the
+    core VE-Suite software framework to support a broad range of problem
+    domains.</para>
+
+    <literallayout>  &lt;xs:complexType name="veModel"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="veXMLObject"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="ports" type="vePort"/&gt;
+          &lt;xs:element maxOccurs="1" minOccurs="1" name="iconLocation" type="vePoint"/&gt;
+          &lt;xs:element maxOccurs="1" minOccurs="0" name="icon" type="xs:string"/&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="results" type="vecommand"/&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="inputs" type="vecommand"/&gt;
+          &lt;xs:element maxOccurs="unbounded" minOccurs="0" name="informationPackets"
+            type="veParameterBlock"/&gt;
+          &lt;xs:element name="geometry" type="CADNode"/&gt;
+          &lt;xs:element maxOccurs="1" minOccurs="0" name="modelAttributes" type="vecommand"/&gt;
+          &lt;xs:element maxOccurs="1" minOccurs="0" name="modelSubSytem" type="veSystem"/&gt;
+        &lt;/xs:sequence&gt;
+        &lt;xs:attribute name="vendorID" type="xs:string" use="required"/&gt;
+        &lt;xs:attribute name="name" type="xs:string" use="required"/&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;</literallayout>
+
+    <para>The key components in the veModel element are the veParameterBlock,
+    CADNode, vecommand, and veSystem elements. These elements provide the
+    necessary information for each core software engine in VE-Suite to produce
+    the proper representation for the object. For example:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>If an object does not have CAD data, then nothing is rendered
+        for the object.</para>
+      </listitem>
+
+      <listitem>
+        <para>If the object does not have outputs, then other objects will not
+        be able to gather data from it.</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The attribute element within the veModel contains the classification
+    data for other objects to determine how to handle data from a particular
+    object. Currently, the classification data is limited and further
+    implementation is left for future research.</para>
+
+    <para>The veSystem element is the overall element that links the disparate
+    veModel and veNetwork elements. It is also the main element that is saved
+    when writing out a ves file (i.e., the DOMDocument storing all of the
+    objects) from VE-Suite. In addition to establishing a relationship between
+    veNetwork and veModel, it also enables systems to be embedded within
+    models. This element provides the capability to construct complex
+    engineering objects within VE-Suite. </para>
+
+    <literallayout>&lt;xs:complexType name="veSystem"&gt;
+    &lt;xs:complexContent&gt;
+      &lt;xs:extension base="veXMLObject"&gt;
+        &lt;xs:sequence&gt;
+          &lt;xs:element type="veModel" maxOccurs="unbounded" minOccurs="1" name="model"&gt; &lt;/xs:element&gt;
+          &lt;xs:element type="veNetwork" minOccurs="1" maxOccurs="1" name="network"&gt; &lt;/xs:element&gt;
+        &lt;/xs:sequence&gt;
+      &lt;/xs:extension&gt;
+    &lt;/xs:complexContent&gt;
+  &lt;/xs:complexType&gt;</literallayout>
+
+    <para>The veSystem element also provides the foundation to link multiple
+    third-party solvers together. For example, when integrating an Aspen Plus
+    flowsheet with another solver, the Aspen Plus solver and the other solver
+    each looks like a single system to the VE-CE. Within each of the systems
+    may reside complex subsystems, which are handled by their respective
+    solvers. Any subsystem corresponds to a single computational unit
+    connected to the VE-CE, which does not mean that subsystems cannot be
+    broken in terms of information transfer across subsystem boundaries.
+    </para>
+
+    <section>
+      <title>VE-Conductor</title>
+
+      <para>The changes in VE-Conductor enable real-time information retrieval
+      and queries from the computational units connected to VE-CE. Because of
+      these changes, the user can query a unit for subsystem information from
+      a third-party embedded network solver. The user can query for input and
+      result parameters from any computational unit attached to VE-CE. The
+      results and input data are provided in a browser-like user interface to
+      handle display and editing for query-enabled units. A developer can
+      override this base functionality with a specific plugin to handle the
+      respective query-enabled unit. As noted previously, the unit-specific
+      data is all accessed in real time by the user. This enables the user to
+      edit and interact with the system under investigation in the
+      three-dimensional environment created through VE-Suite while
+      simultaneously interacting with a computational unit to make low-level
+      changes to the flowsheet. This workflow is possible through the
+      implementation of the query interfaces in VE-Suite.</para>
+    </section>
+
+    <section>
+      <title>VE-CE</title>
+
+      <para>The changes to VE-CE have turned it into a data proxy that is
+      responsible for scheduling the execution of various units and the
+      transfer of information and queries between units. This enables VE-CE to
+      be run on a low-powered gateway computer, even when the network data is
+      large and must be passed through the VE-CE interfaces. This design is
+      beneficial because it enables the computational units and VE-Conductor
+      to be run anywhere on the Internet and to interact transparently through
+      a firewall. In addition, it enables VE-CE to promote emergent behavior
+      within the computational units by proxying the data without encumbering
+      the user with those requests. When operating with a process simulator as
+      one of the units in the VE-Suite framework, VE-CE passes commands from
+      the user through to the respective unit. The unit is then responsible
+      for sending the information on to the respective software
+      package.</para>
+
+      <para>As revised, VE-CE will not store unit input parameters as it did
+      before; rather, VE-CE only parses the top-level system. Subsystem
+      elements are assumed to be subsystems that will be managed by their
+      respective units. This design enables VE-CE to scale as the subnetworks
+      within a simulation expand. However, there is still not a direct link
+      between VE-Conductor and the computational unit. VE-CE is the proxy for
+      all calls. </para>
+    </section>
+
+    <section>
+      <title>Computational Unit</title>
+
+      <para>The changes to the computational unit support a command-driven
+      software interface through the implementation of unit wrappers to accept
+      an XML-formatted command through the query interface: </para>
+
+      <literallayout>string Query(in string commands) </literallayout>
+
+      <para>The computational unit parses the XML command sent from the VE-CE
+      and extracts the command element to determine what is needed by the
+      engineer. For each predefined command, a command handler is implemented
+      to perform the specified action. Following is a list of current
+      predefined commands supported by computational units. This list will
+      expand as needed in the future. </para>
+
+      <itemizedlist>
+        <listitem>
+          <para>"getNetwork" retrieves the flowsheet information from a
+          third-party solver so VE-Suite can draw the network and enable the
+          user to query individual unit operations for results
+          information</para>
+        </listitem>
+
+        <listitem>
+          <para>"getModuleParamList" returns the list of available parameters
+          for a given unit operation</para>
+        </listitem>
+
+        <listitem>
+          <para>Once the user has chosen a specific parameter, the properties
+          for that variable are queried via the "getParamProperties" command
+          and displayed to the engineer</para>
+        </listitem>
+      </itemizedlist>
+    </section>
+  </section>
+</appendix>

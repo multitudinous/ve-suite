@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" 
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <book>
   <title>VE-Suite Documentation</title>
@@ -14,25 +14,26 @@
 
     <para>In nearly all aspects of the engineering process-design,
     manufacturing, and maintenance-the tools employed at each phase rely on
-    virtual models (e.g., software tools) to reduce cost and shorten development
-    time. This results in a wider variety of software tools being used across
-    a wide range of vendors and engineering firms. In this environment,
-    engineers are required to manually move information from one software
-    package to another. Thus, the process does not support real-time,
-    collaborative design in which the engineer establishes the dynamic thinking
-    process needed to obtain an intuitive feel for the performance of a
-    product. It also does not permit the real-time exploration of questions
-    raised by other engineers, designers, or managers. This working arrangement
-    significantly lessens the number of alternatives that can be investigated,
-    limits the essential creative design process, and discourages "what if"
-    questions that allow breakthroughs in design. The result of this situation
-    is that the engineer ends up shifting his or her focus from engineering to
-    manual integration of information. To allow engineers to focus on
-    engineering, a new workflow and paradigm is needed. This new workflow is
-    described within a new enabling technology called virtual engineering and
-    is implemented via VE-Suite. Using VE-Suite to implement virtual engineering
-    reduces the design cycle time to allow new technologies to reach production
-    and operation more quickly than previously possible.</para>
+    virtual models (e.g., software tools) to reduce cost and shorten
+    development time. This results in a wider variety of software tools being
+    used across a wide range of vendors and engineering firms. In this
+    environment, engineers are required to manually move information from one
+    software package to another. Thus, the process does not support real-time,
+    collaborative design in which the engineer establishes the dynamic
+    thinking process needed to obtain an intuitive feel for the performance of
+    a product. It also does not permit the real-time exploration of questions
+    raised by other engineers, designers, or managers. This working
+    arrangement significantly lessens the number of alternatives that can be
+    investigated, limits the essential creative design process, and
+    discourages "what if" questions that allow breakthroughs in design. The
+    result of this situation is that the engineer ends up shifting his or her
+    focus from engineering to manual integration of information. To allow
+    engineers to focus on engineering, a new workflow and paradigm is needed.
+    This new workflow is described within a new enabling technology called
+    virtual engineering and is implemented via VE-Suite. Using VE-Suite to
+    implement virtual engineering reduces the design cycle time to allow new
+    technologies to reach production and operation more quickly than
+    previously possible.</para>
 
     <para>Engineering tools and information need to be integrated throughout
     each engineering project. That is, information from the design phase needs
@@ -43,15 +44,16 @@
     product design team from economists and numerical modelers to design and
     manufacturing firms. VE-Suite addresses this constraint by creating a tool
     with open interfaces that allows other commercial and open-source packages
-    to exchange data in a comprehensive design environment. In this environment,
-    all the data and tools necessary to make a particular engineering decision
-    are available to the stakeholder trying to move the engineering process
-    forward.</para>
+    to exchange data in a comprehensive design environment. In this
+    environment, all the data and tools necessary to make a particular
+    engineering decision are available to the stakeholder trying to move the
+    engineering process forward.</para>
 
     <para>VE-Suite is intended to be used in the engineering process, whether
-    for business model investigation or training. VE-Suite is used in a diverse
-    set of engineering applications to allow engineers and other project
-    stakeholders to gain insight into complex engineering problems.</para>
+    for business model investigation or training. VE-Suite is used in a
+    diverse set of engineering applications to allow engineers and other
+    project stakeholders to gain insight into complex engineering
+    problems.</para>
   </preface>
 
   <part id="Users_Guide">
@@ -102,5 +104,10 @@
 
     <xi:include href="chapter_14_testing_matrix.xml"
                 xmlns:xi="http://www.w3.org/2003/XInclude" />
+
+    <appendix>
+      <xi:include href="appendix_a_object_centered_engineering.xml"
+                  xmlns:xi="http://www.w3.org/2003/XInclude" />
+    </appendix>
   </part>
 </book>
