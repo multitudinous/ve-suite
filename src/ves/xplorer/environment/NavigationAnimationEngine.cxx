@@ -58,6 +58,10 @@
 
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
+#include <gmtl/gmtl.h>
+#include <gmtl/Quat.h>
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h>
 
 // --- C/C++ Libraries --- //
 #include <cmath>
@@ -185,7 +189,7 @@ void NavigationAnimationEngine::PreFrameUpdate()
     if( mBeginAnim )
     {
         //optimize
-        movementIntervalCalc = 0.1;
+        movementIntervalCalc = 0.01;
             //1 / ( vecDistance / ( movementSpeed * frameTimer->getTiming() ));
 
         //change
@@ -217,9 +221,14 @@ void NavigationAnimationEngine::PreFrameUpdate()
         tempConvVec[1] = tempVec[1];
         tempConvVec[2] = tempVec[2];
 
+        //gmtl::Quatd tempRotQuat = gmtl::makeRot< gmtl::Quatd >( curVec, tempVec );
+        //tempQuat = tempRotQuat * tempQuat;
+
         _worldDCS->SetTranslationArray( tempConvVec );
 
         //convert gmtl quat to osg quat
+        //osg::Quat tempOSGQuat(
+        //    mEndQuat[0], mEndQuat[1], mEndQuat[2], mEndQuat[3] );
         osg::Quat tempOSGQuat(
             tempResQuat[0], tempResQuat[1], tempResQuat[2], tempResQuat[3] );
         

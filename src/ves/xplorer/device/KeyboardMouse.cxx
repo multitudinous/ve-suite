@@ -829,6 +829,14 @@ void KeyboardMouse::SkyCam( )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SkyCamTo()
 {
+    //To make this work we must:
+    //1. get current state of world dcs
+    //2. set dcs back to zero.
+    //3. figure out where to set the center of the world
+    //4. set the new rotation
+    //5. get the vector of the this location
+    //6. hand of to nav animation engine
+    //7. reset the world dcs back to original state
     //Unselect the previous selected DCS
     ves::xplorer::DeviceHandler::instance()->UnselectObjects();
 
@@ -851,9 +859,13 @@ void KeyboardMouse::SkyCamTo()
     ///Get the location of the selected model in local coordinates
     ///This value is always the same no matter where we are
     gmtl::Point3d osgTransformedPosition;
+    gmtl::Point3d osgOrigPosition;
     osgTransformedPosition[ 0 ] = sbs.center( ).x( );
-    osgTransformedPosition[ 1 ] = sbs.center( ).y( );
+    osgTransformedPosition[ 1 ] = sbs.center( ).y( ) - distance;
     osgTransformedPosition[ 2 ] = sbs.center( ).z( );
+    osgOrigPosition[ 0 ] = sbs.center( ).x( );
+    osgOrigPosition[ 1 ] = sbs.center( ).y( );
+    osgOrigPosition[ 2 ] = sbs.center( ).z( );
 
     //Move the center point to the center of the selected object
     osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform > ltwt =
@@ -863,38 +875,77 @@ void KeyboardMouse::SkyCamTo()
     gmtl::Matrix44d localToWorldMatrix =
         ltwt->GetLocalToWorldTransform( false );
 
-    gmtl::Quatd convQuat( 1, 0, 0, osg::DegreesToRadians( 45.0 ) );
-    gmtl::Matrix44d tempTrans;
+    //Remove the local matrix from localToWorldMatrix
+    //gmtl::Matrix44d activeMatrix = selectedDCS->GetMat();
+    //localToWorldMatrix *= gmtl::invert( activeMatrix );
 
     gmtl::Point3d tempTransPoint = 
         gmtl::makeTrans< gmtl::Point3d >( localToWorldMatrix );
     ///Remove the rotation from the transform matrix
+    gmtl::Matrix44d tempTrans;
     tempTrans = gmtl::makeTrans< gmtl::Matrix44d >( tempTransPoint );
+    //gmtl::Matrix44d invertTransMat = tempTrans;
+    //gmtl::invert( invertTransMat );
+    //std::cout << ves::xplorer::scenegraph::SceneManager::instance()->
+    //GetActiveSwitchNode()->GetMat() << std::endl;
+    //double tempRotRad = osg::DegreesToRadians( 90.0 );
+    double tempRotRad2 = PIDivOneEighty * 0;
+    //std::cout << tempRotRad << " " << tempRotRad2 << std::endl;
+    //gmtl::Quatd convQuat( 1, 0, 0, tempRotRad2  );
+    //gmtl::normalize( convQuat );
+    gmtl::AxisAngled axisAngle( tempRotRad2, 1, 0, 0 );
+    gmtl::Quatd quatAxisAngle = gmtl::make< gmtl::Quatd >( axisAngle );
+    //std::cout << quatAxisAngle << std::endl;
     gmtl::Matrix44d tempRot;
-    gmtl::setRot( tempRot, convQuat );
+    gmtl::setRot( tempRot, quatAxisAngle );
+    //gmtl::Matrix44d rotateMat = tempTrans * tempRot * invertTransMat;
+    gmtl::Matrix44d combineMat = tempTrans;// * tempRot;
     ///Add our end rotation back into the mix
-    osgTransformedPosition = tempTrans * tempRot * osgTransformedPosition;
-    ///Set the center point to the new location
-    mCenterPoint->set( osgTransformedPosition[ 0 ], osgTransformedPosition[1],
-        osgTransformedPosition[2] );
-    
+    //std::cout << osgTransformedPosition << " first " << std::endl;
+
+    osgTransformedPosition = combineMat * osgTransformedPosition;
+    osgOrigPosition = combineMat * osgOrigPosition;
+    //osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] + distance;
+    //osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + distance;
+   // osgOrigPosition[ 1 ] = osgOrigPosition[ 1 ] - sbs.radius();
+   // osgOrigPosition[ 2 ] = osgOrigPosition[ 2 ] + sbs.radius();
+    //osgTransformedPosition =   tempTrans * tempRot * osgTransformedPosition;
+    //std::cout << osgTransformedPosition << " " << osgOrigPosition << std::endl;
     ///Since the math implies we are doing a delta translation
     ///we need to go grab where we previously were
     double* temp = ves::xplorer::scenegraph::SceneManager::instance()->
         GetWorldDCS()->GetVETranslationArray();
     ///Add our distance and previous position back in and get our new end point
-    gmtl::Vec3d pos;
-    pos[ 0 ] = -osgTransformedPosition[ 0 ] + temp[ 0 ];
-    pos[ 1 ] = -osgTransformedPosition[ 1 ] + temp[ 1 ] + distance;
-    pos[ 2 ] = -osgTransformedPosition[ 2 ] + temp[ 2 ];
+    gmtl::Vec4d pos;
+    pos[ 0 ] = - osgOrigPosition[ 0 ] + temp[ 0 ];
+    pos[ 1 ] = - ( osgOrigPosition[ 1 ] - distance ) + temp[ 1 ];
+    pos[ 2 ] = - ( osgOrigPosition[ 2 ] ) + temp[ 2 ];
+
+    //std::cout << pos << " " << osgTransformedPosition << std::endl;
+    gmtl::Vec3d pos2;
+    pos2[ 0 ] = pos[ 0 ];
+    pos2[ 1 ] = pos[ 1 ];
+    pos2[ 2 ] = pos[ 2 ];
+
+    ///Set the center point to the new location
+    mCenterPoint->set( -osgOrigPosition[ 0 ], -osgOrigPosition[1], -osgOrigPosition[2] );
 
     ///Hand the node we are interested in off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetDCS(
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
     ///Hand our created end points off to the animation engine
     ves::xplorer::NavigationAnimationEngine::instance()->SetAnimationEndPoints(
-        pos, convQuat );
-
+        pos2, quatAxisAngle );
+    //This code needs to go in the animation engine
+    /*
+    //Multiplying by the new local matrix (mCenterPoint)
+    osg::Matrixd tempMatrix;
+    tempMatrix.set( localToWorldMatrix.getData() );
+    osg::Vec3d center = selectedDCS->getBound().center() * tempMatrix;
+    //osg::Vec3d center = sbs.center() * tempMatrix;
+    mCenterPoint->set( center.x(), center.y(), center.z( ) );
+    */
+    
     //ProcessNavigationEvents();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1232,6 +1283,10 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
     mDeltaTransform.mData[ 10 ] = ( z * z ) +
                                   ( cosAng * ( 1 - ( z * z ) ) );
     mDeltaTransform.mData[ 15 ] = 1.0f;
+    
+    /*double rad = angle * PIDivOneEighty;
+    gmtl::AxisAngled axisAngle( rad, x, y, z );
+    mDeltaTransform = gmtl::make< gmtl::Matrix44d >( axisAngle );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelectionLine()
