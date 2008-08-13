@@ -434,8 +434,9 @@ void KeyboardMouse::ProcessKBEvents( int mode )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::ProcessNavigationEvents()
 {
+    gmtl::Matrix44d newTransform;
     gmtl::Matrix44d currentTransform;
-
+    
     ves::xplorer::scenegraph::DCS* const activeDCS =
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     ves::xplorer::scenegraph::DCS* activeSwitchNode =
@@ -445,11 +446,11 @@ void KeyboardMouse::ProcessNavigationEvents()
     osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
         localToWorldTransform;
 
-    //Grab the active matrix to manipulate 
+    //Test if we are manipulating the world dcs or a local dcs
     std::string name = activeSwitchNode->GetName();
     if( activeDCS->GetName() !=  name )
     {
-        //Convert currentTransform to world space if not already in it
+        //If local dcs, transform to world space
         localToWorldTransform =
             new ves::xplorer::scenegraph::LocalToWorldTransform(
                 activeSwitchNode, activeDCS );
@@ -458,37 +459,18 @@ void KeyboardMouse::ProcessNavigationEvents()
     }
     else
     {
+        //If world dcs, no transformations are needed
         currentTransform = activeDCS->GetMat();
     }
 
-    //Translate currentTransform by distance that the mCenterPoint is away from the origin
-    gmtl::Matrix44d worldMatTrans =
+    //Translate current transform origin back by the center point position
+    gmtl::Matrix44d negCenterPointMatrix =
         gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
-    worldMatTrans *= currentTransform;
+    newTransform = negCenterPointMatrix * currentTransform;
 
-    //Get the position of the mCenterPoint in the new world space as if it is on the mCenterPoint
-    gmtl::Vec4d newGlobalHeadPointVec;
-    newGlobalHeadPointVec[ 0 ] = worldMatTrans[ 0 ][ 3 ];
-    newGlobalHeadPointVec[ 1 ] = worldMatTrans[ 1 ][ 3 ];
-    newGlobalHeadPointVec[ 2 ] = worldMatTrans[ 2 ][ 3 ];
+    //Apply the delta transform at this new position
+    newTransform = mDeltaTransform * newTransform;
 
-    //Rotate the mHead vector by the rotation increment
-    gmtl::Vec4d rotateJugglerHeadVec = mDeltaTransform * newGlobalHeadPointVec;
-
-    //Split apart the current matrix into rotation and translation parts
-    gmtl::Matrix44d currentRotation;
-    gmtl::Matrix44d currentTranslation;
-    for( int i = 0; i < 3; ++i )
-    {
-        //Get the current rotation matrix
-        currentRotation[ i ][ 0 ] = currentTransform[ i ][ 0 ];
-        currentRotation[ i ][ 1 ] = currentTransform[ i ][ 1 ];
-        currentRotation[ i ][ 2 ] = currentTransform[ i ][ 2 ];
-
-        //Get the current translation matrix
-        currentTranslation[ i ][ 3 ] =
-            rotateJugglerHeadVec[ i ] + mCenterPoint->mData[ i ];
-    }
     /*
     Convert head to world space to run intersection tests
     gmtl::Matrix44d worldDCSInverse;
@@ -515,9 +497,10 @@ void KeyboardMouse::ProcessNavigationEvents()
     }
     */
 
-    //Multiply by the transform and then by the rotation
-    gmtl::Matrix44d newTransform =
-        currentTranslation * mDeltaTransform * currentRotation;
+    //Add back the center point position to the transform
+    gmtl::Matrix44d posCenterPointMatrix =
+        gmtl::makeTrans< gmtl::Matrix44d >( *mCenterPoint );
+    newTransform = posCenterPointMatrix * newTransform;
 
     //Convert matrix back to local space after delta transform has been applied
     if( activeDCS->GetName() != name )
@@ -785,7 +768,7 @@ void KeyboardMouse::FrameSelection()
     */
 }
 ////////////////////////////////////////////////////////////////////////////////
-void KeyboardMouse::SkyCam( )
+void KeyboardMouse::SkyCam()
 {
     //Unselect the previous selected DCS
     ves::xplorer::DeviceHandler::instance()->UnselectObjects();
