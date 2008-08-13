@@ -74,6 +74,8 @@
 #include <osgDB/FileUtils>
 #include <osgDB/FileNameUtils>
 
+#include <osg/Version>
+
 #include <ves/xplorer/scenegraph/SceneManager.h>
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
 #include <osg/OcclusionQueryNode>

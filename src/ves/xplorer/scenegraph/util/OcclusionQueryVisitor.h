@@ -32,7 +32,7 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #ifndef OSGOQ_OCCLUSION_QUERY_VISITOR_H
 #define OSGOQ_OCCLUSION_QUERY_VISITOR_H 1
-
+#include <osg/Version>
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
 
 //#include "osgOQ/QueryExportDeclaration.h"

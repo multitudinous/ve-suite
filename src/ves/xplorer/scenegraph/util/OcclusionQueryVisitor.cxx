@@ -30,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <osg/Version>
 #if ((OSG_VERSION_MAJOR>=2) && (OSG_VERSION_MINOR>=4))
 
 #include <ves/xplorer/scenegraph/util/OcclusionQueryVisitor.h>
