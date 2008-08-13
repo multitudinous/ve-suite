@@ -461,12 +461,12 @@ void KeyboardMouse::ProcessNavigationEvents()
         currentTransform = activeDCS->GetMat();
     }
 
-    //Translate active dcs by distance that the mHead is away from the origin
+    //Translate currentTransform by distance that the mCenterPoint is away from the origin
     gmtl::Matrix44d worldMatTrans =
         gmtl::makeTrans< gmtl::Matrix44d >( -*mCenterPoint );
     worldMatTrans *= currentTransform;
 
-    //Get the position of the mHead in the new world space as if it is on the origin
+    //Get the position of the mCenterPoint in the new world space as if it is on the mCenterPoint
     gmtl::Vec4d newGlobalHeadPointVec;
     newGlobalHeadPointVec[ 0 ] = worldMatTrans[ 0 ][ 3 ];
     newGlobalHeadPointVec[ 1 ] = worldMatTrans[ 1 ][ 3 ];
@@ -1251,14 +1251,16 @@ void KeyboardMouse::Pan( double dx, double dy )
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::Rotate( double x, double y, double z, double angle )
 {
-    double temp = sqrtf( x * x + y * y + z * z );
+    
+    double temp = ::sqrtf( x * x + y * y + z * z );
     if( temp != 0.0f )
     {
-        x /= temp;
-        y /= temp;
-        z /= temp;
+        double tempRatio = 1 / temp;
+        x *= tempRatio;
+        y *= tempRatio;
+        z *= tempRatio;
     }
-
+    /*
     double rad = angle * PIDivOneEighty;
     double cosAng = cos( rad );
     double sinAng = sin( rad );
@@ -1283,10 +1285,10 @@ void KeyboardMouse::Rotate( double x, double y, double z, double angle )
     mDeltaTransform.mData[ 10 ] = ( z * z ) +
                                   ( cosAng * ( 1 - ( z * z ) ) );
     mDeltaTransform.mData[ 15 ] = 1.0f;
-    
-    /*double rad = angle * PIDivOneEighty;
-    gmtl::AxisAngled axisAngle( rad, x, y, z );
-    mDeltaTransform = gmtl::make< gmtl::Matrix44d >( axisAngle );*/
+    */
+    double rad2 = angle * PIDivOneEighty;
+    gmtl::AxisAngled axisAngle( rad2, x, y, z );
+    mDeltaTransform = gmtl::makeRot< gmtl::Matrix44d >( axisAngle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::UpdateSelectionLine()
