@@ -84,7 +84,7 @@ void CreatePartTreeFileVisitor::apply( osg::Node& node )
                 {
                     for( unsigned int i = 0; i < mTabCounter; ++i )
                     {
-                        mDotFile << "\t";
+                        mDotFile << " ";
                     }
                     mDotFile << nodeName << std::endl;
                 }
@@ -114,9 +114,9 @@ void CreatePartTreeFileVisitor::apply( osg::Node& node )
                         {                            
                             for( unsigned int i = 0; i < mTabCounter+1; ++i )
                             {
-                                mDotFile << "\t";
+                                mDotFile << " ";
                             }
-                            mDotFile << "\t" << childName << std::endl;
+                            mDotFile << " " << childName << std::endl;
                         }
                     }
                 }
