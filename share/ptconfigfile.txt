@@ -17,7 +17,8 @@
 // and passes it to PolyTrans, which will then open subwindows parented
 // to your application window. If not set, PolyTrans parents subwindows
 // to the desktop window.
-COMHelper_AppWindowName c:\OSGDev\OpenSceneGraph\bin\win32\ptViewerd.exe
+//AppWindowName c:\OSGDev\OpenSceneGraph\bin\win32\ptViewerd.exe
+// NAME CHANGE. Formerly: COMHelper_AppWindowName
 
 // osgdb_PolyTrans converts input files to a temporary file. This
 // property sets the filename, without extension, that will be used for the intermediate file.
@@ -29,12 +30,14 @@ COMHelper_AppWindowName c:\OSGDev\OpenSceneGraph\bin\win32\ptViewerd.exe
 // a relative or absolute path, the folder must already exist.
 // Default if not specified: Use the source model's base file name.
 //
-//COMHelper_BaseIntermediateFileName testexportfilename
+//IntermediateFileNameBase testexportfilename
+// NAME CHANGE. Formerly: COMHelper_BaseIntermediateFileName
 
 // Used to control the exporter that will be used for the intermediate file that is generated.
 // Set to flt for OpenFlight and obj for WaveFront.
 // Default if not specified: flt
-COMHelper_IntermediateFileType obj
+IntermediateFileNameExt obj
+// NAME CHANGE. Formerly: COMHelper_IntermediateFileType
 
 // If set to "Y" or "true", the intermediate file will be deleted after loading.
 // This prohibits the CachedLoad option.
@@ -50,23 +53,27 @@ CachedLoad true
 // Set to "Y" to display the input conversion options dialog.
 // If set to "N", PolyTrans will import your file using the last
 // options set for the input file format.
-COMHelper_ShowImportOptions Y
+ShowImportOptions Y
+// NAME CHANGE. Formerly: COMHelper_ShowImportOptions
 
 // Set to "Y" to display the export conversion options dialog.
 // If set to "N", PolyTrans will export your file using the last
 // options set for the intermediate file format.
-COMHelper_ShowExportOptions Y
+ShowExportOptions Y
+// NAME CHANGE. Formerly: COMHelper_ShowExportOptions
 
 //Use to build a list of importers that should be used for each file extension.  The name of the importer to use
 // can be obtained by running PolyTrans, hovering your mouse over the desired importer in the menu, and looking
 // at the title bar.  The title bar will say "Execute the <importer name> geometry import plug-in".  Also, if you
 // have access to the Okino COM code, the value is the plugin_descriptive_name property of the Importer object.
+// Multiple extension/plugin name pairs can be specified, deparated by commas.
 //PolyTransImporter igs IGES Files
-PolyTransImporter igs IGES v5.3
+PolyTransPluginPreference igs IGES v5.3
+// NAME CHANGE. Formerly: PolyTransImporter
 
-// The .flt file that is generated could be put in a new folder, depending on that value set in the 
-// OpenFlight Export options window.  PolyTrans saves this value in its .ini file.  In the current version
-// of PolyTrans, this file is located in the Windows folder (ie. c:\Windows\\polytrans.ini). Our code
-// uses GetWindowsDirectory() to find this folder and look for a file named polytrans.ini.  If this is not
-// the correct location for this file, then use this config file property to set the absolute path and filename.
-// COMHelper_PolyTransINIFileName: c:\Windows\polytrans.ini
+// Use this option to tell the loader to NOT attempt to use PolyTrans to load the file.
+//   The plugin always rejects "osg", "osga", "ive", and "ive", as well as the extension
+//   specified in IntermediateFileNameExt. Specify additional extensions for this loader to reject
+//   separated by spaces.
+// Example: Tell the plugin to never attempt to load 3DS and ZIP files:
+RejectExtensions 3ds zip obj
