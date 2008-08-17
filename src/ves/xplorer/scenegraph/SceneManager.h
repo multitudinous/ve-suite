@@ -41,13 +41,9 @@
 #include <ves/xplorer/scenegraph/Switch.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/ref_ptr>
 #include <osg/ClearNode>
-#endif
-
-//#include <osgOQ/OcclusionQueryRoot.h>
-//#include <osgOQ/OcclusionQueryContext.h>
+#include <osg/FrameStamp>
 
 // --- VR Juggler Includes --- //
 #include <vpr/Util/Singleton.h>
@@ -122,9 +118,14 @@ public:
     ///Shutdown the sound manager and other extra engines used in the world
     void Shutdown();
     
-    ///Reset the osgOQC node accessor
-    ///Should be used when new ves files are loaded
-    //void ResetOcclusionQueryContext();
+    ///Set the framestamp to make it accessible to other areas of ves
+    ///This can be used when traditional access through osg does not work
+    ///for example when plugins need to set the SimulationTime
+    void SetFrameStamp( osg::FrameStamp* frameStamp );
+
+    ///Get the framestamp used by SceneView
+    ///\return The osg::FrameStamp for the osg::SceneView
+    osg::FrameStamp* GetFrameStamp();
 
 private:
     //Required so that vpr::Singleton can instantiate this class
@@ -161,17 +162,14 @@ private:
 
     ///Clear node to control the background color
     osg::ref_ptr< osg::ClearNode > m_clrNode;
-    //osg::ref_ptr< osgOQ::OcclusionQueryContext > m_oqc;
-
+    ///FrameStamp to control sequence nodes and other osg animations
+    osg::ref_ptr< osg::FrameStamp > mFrameStamp;
     ///Map to store state information about each dcs
     std::map< int, gmtl::Matrix44d > m_matrixStore;
 
 protected:
     ///Create the model for the logo
-#ifdef _OSG
     void _createLogo();
-#endif
-
 };
 }
 }

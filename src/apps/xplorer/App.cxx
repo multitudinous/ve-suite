@@ -120,10 +120,10 @@ App::App( int argc, char* argv[] )
 {
     osg::Referenced::setThreadSafeReferenceCounting( true );
     osg::DisplaySettings::instance()->setMaxNumberOfGraphicsContexts( 20 );
-    _frameStamp = new osg::FrameStamp;
+    mFrameStamp = new osg::FrameStamp;
     mUpdateVisitor = new osgUtil::UpdateVisitor();
-    _frameStamp->setReferenceTime( 0.0 );
-    _frameStamp->setFrameNumber( 0 );
+    mFrameStamp->setReferenceTime( 0.0 );
+    mFrameStamp->setFrameNumber( 0 );
     svUpdate = false;
 
     light_0 = new osg::Light;
@@ -195,6 +195,7 @@ void App::contextInit()
     // Add the tree to the scene viewer and set properties
     {
         vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
+        new_sv->getCamera()->setName( "SV Camera" );
         if( mRTT )
         {
             new_sv->getCamera()->addChild( mSceneRenderToTexture->GetQuad() );
@@ -248,7 +249,7 @@ void App::configSceneView( osgUtil::SceneView* newSceneViewer )
     // Set the timing information in the scene view. This has to be done
     // only once per osgUtil::SceneView instance and should be done before
     // calling osgUtil::SceneView::init().
-    newSceneViewer->setFrameStamp( _frameStamp.get() );
+    newSceneViewer->setFrameStamp( mFrameStamp.get() );
 
     newSceneViewer->init();
     newSceneViewer->setClearColor( osg::Vec4( 0.0f, 0.0f, 0.0f, 0.0f ) );
@@ -319,6 +320,9 @@ void App::initScene( void )
     }
     ves::xplorer::scenegraph::SceneManager::instance()->InitScene();
     ves::xplorer::scenegraph::SceneManager::instance()->ViewLogo( true );
+    ves::xplorer::scenegraph::SceneManager::instance()->
+        SetFrameStamp( mFrameStamp.get() );
+
     this->getScene()->addChild( light_source_0.get() );
 
     // modelHandler stores the arrow and holds all data and geometry
@@ -402,13 +406,12 @@ void App::latePreFrame( void )
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
         float current_time = this->m_vjobsWrapper->GetSetAppTime( -1 );
-#ifdef _OSG
         //This is order dependent
         //don't move above function call
-        _frameStamp->setFrameNumber( _frameNumber );
-        _frameStamp->setReferenceTime( current_time );
+        mFrameStamp->setFrameNumber( _frameNumber );
+        mFrameStamp->setReferenceTime( current_time );
 #if ((OSG_VERSION_MAJOR>=1) && (OSG_VERSION_MINOR>2) || (OSG_VERSION_MAJOR>=2))
-        _frameStamp->setSimulationTime( current_time );
+        mFrameStamp->setSimulationTime( current_time );
 #endif
         //This is a frame rate calculation
         deltaTime = current_time - mLastTime;
@@ -442,7 +445,6 @@ void App::latePreFrame( void )
                     << vprDEBUG_FLUSH;
             }        
         }  
-#endif
     }
     ///////////////////////
     {
@@ -684,12 +686,11 @@ void App::draw()
     /*
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        osg::Camera* const textureCamera = mSceneRenderToTexture->GetCamera();
         osg::Camera* svCamera = sv->getCamera();
         
         textureCamera->setViewport( svCamera->getViewport() );
         textureCamera->setViewMatrix( svCamera->getViewMatrix() );
-        textureCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );        
+        textureCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );
     }
     */
 
@@ -735,7 +736,7 @@ void App::update( void )
     // Set up the time and frame number so time dependant things (animations, particle system)
     // function correctly
     mUpdateVisitor->setTraversalNumber( _frameNumber );
-    mUpdateVisitor->setFrameStamp( _frameStamp.get() );
+    mUpdateVisitor->setFrameStamp( mFrameStamp.get() );
 
     // update the scene by traversing it with the the update visitor which will
     // call all node update callbacks and animations. This is equivalent to calling

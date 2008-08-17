@@ -376,34 +376,16 @@ void SceneManager::Shutdown()
 #endif
 }
 ////////////////////////////////////////////////////////////////////////////////
-/*osgOQ::OcclusionQueryContext* SceneManager::GetOcclusionQueryContext()
+void SceneManager::SetFrameStamp( osg::FrameStamp* frameStamp )
 {
-    return m_oqc.get();
+    mFrameStamp = frameStamp;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneManager::ResetOcclusionQueryContext()
+osg::FrameStamp* SceneManager::GetFrameStamp()
 {
-    m_oqc = new osgOQ::OcclusionQueryContext();
-    ///number of pixels
-    m_oqc->setVisibilityThreshold( 500 );
-    ///Number of verts
-    m_oqc->setOccluderThreshold( 1000 );
-    ///Specifies how many frames to wait before issuing another query
-    m_oqc->setQueryFrameCount( 5 );
-    ///Specify whether to use hierarchical ("NonFlat") placement for
-    m_oqc->setNonFlatPlacement( true );
-    ///Place bounding volumes in for osgOQ nodes
-    //m_oqc->setDebugDisplay( true );
-    // Sets the debug verbosity. Currently supported 'level' values:
-    //    0 -- Verbosity is controlled by osg::notify.
-    //    1 -- For each OQN in each frame, displays whether that node
-    //         thinks its actual geometry is visible or not and why.
-    // Call through OcclusionQueryRoot to set value only for a
-    //   specific number of frames.
-    //void setDebugVerbosity( 0 );
-    m_oqc->setStatistics( true );
-}*/
-
+    return mFrameStamp.get();
+}
+////////////////////////////////////////////////////////////////////////////////
 } // end scenegraph
 } // end xplorer
 } // end ves

@@ -202,8 +202,6 @@ public:
     ///Should be removed since this is a singleton
     ves::xplorer::TextureBasedVizHandler* _tbvHandler;
 
-    ///The framestamp to control animations
-    osg::ref_ptr< osg::FrameStamp > _frameStamp;
     ///The timer for framestamp
     osg::Timer _timer;
     ///The timer for framestamp
@@ -269,7 +267,7 @@ private:
     ///Update visitor
     osg::ref_ptr< osg::NodeVisitor > mUpdateVisitor;
     ///Framestamp
-    osg::ref_ptr< osg::FrameStamp > frameStamp;
+    osg::ref_ptr< osg::FrameStamp > mFrameStamp;
     ///Light for the scene
     osg::ref_ptr< osg::Light > light_0;
     ///Light source for the scene
