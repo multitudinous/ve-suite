@@ -1,0 +1,29 @@
+'Option Explicit
+Dim ADApp As Object
+Dim ADDocument As Object
+Dim ADSimulation As Object
+Dim nPoints As Integer
+Private Sub cmdOpen_Click()
+ Dim ls_FilePathName
+ On Error GoTo ErrorHandler
+ ls_FilePathName = Application.GetOpenFilename("Aspen Dynamics
+(*.dynf), *.dynf")
+ If ls_FilePathName <> False Then
+   ' Start AD unless it is already running
+   If ADApp Is Nothing Then
+     Set ADApp = CreateObject("AD Application")
+     ADApp.Visible = True
+   End If
+   Set ADDocument = ADApp.OpenDocument(ls_FilePathName)
+   Set ADSimulation = ADApp.simulation
+ End If
+ nPoints = 0
+ Exit Sub
+ErrorHandler:
+' here we report errors -- usually you would need to do more that just
+that
+ Application.Cursor = xlDefault
+ MsgBox "Error " & CInt(Err.Number) & " : " & Err.Description,
+vbCritical, _
+    "cmdOpen_Click"
+End Sub
