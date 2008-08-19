@@ -64,7 +64,8 @@ protected:
     CorbaUnitManager * theParent;
     CEdit * AspenLog;
     std::set< std::string > mQueryCommandNames;
-    std::string workingDir;
+    std::string mWorkingDir;
+    std::string mFilename;
 
 public:
     BKPParser* bkp;

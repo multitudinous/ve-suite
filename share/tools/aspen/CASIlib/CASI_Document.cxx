@@ -33,7 +33,7 @@ namespace CASI
         //need to delete this mmeory later. ReleaseDispatch must be called to
         //make this happen.
 		hAPsim = new IHapp(); 
-		BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document.IP"));
+		BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document"));
 		if (!bSuccess) 
         {
             //clean up

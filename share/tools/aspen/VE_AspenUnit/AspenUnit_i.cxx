@@ -59,7 +59,7 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name,
     return_state( 0 ),
     cur_id_( 0 ),
     UnitName_( name ),
-    workingDir( dir )
+    mWorkingDir( dir )
 {
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "XML",new ves::open::xml::XMLCreator() );
@@ -70,12 +70,12 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name,
     ves::open::xml::XMLObjectFactory::Instance()->
         RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
 
-	bkp->SetWorkingDir( workingDir );
+	bkp->SetWorkingDir( mWorkingDir );
 
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");
-    mQueryCommandNames.insert( "openSimulation");
+    //mQueryCommandNames.insert( "openSimulation");
     mQueryCommandNames.insert( "runNetwork");
 	mQueryCommandNames.insert( "reinitNetwork");
     mQueryCommandNames.insert( "stepNetwork");
@@ -356,11 +356,11 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleGetNetwork( cmd );
 		return returnValue;
 	}
-	else if(cmdname=="openSimulation")
-	{
-		returnValue = handleOpenSimulation(cmd);
-		return returnValue;
-	}
+	//else if(cmdname=="openSimulation")
+	//{
+	//	returnValue = handleOpenSimulation(cmd);
+	//	return returnValue;
+	//}
 	else if (cmdname=="runNetwork")
 	{
 		StartCalc();
@@ -396,7 +396,9 @@ char * Body_Unit_i::Query ( const char * query_str
 		AspenLog->ReplaceSel("saving...\r\n");
 		try
 		{
-			SaveAspen();
+			//SaveAspen();
+	        bkp->saveAs(( mWorkingDir + mFilename + ".apw" ).c_str());
+	        bkp->saveAs(( mWorkingDir + mFilename + ".bkp" ).c_str());
 		    AspenLog->SetSel(-1, -1);
 		    AspenLog->ReplaceSel("saved.\r\n");
 		}
@@ -492,7 +494,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	if (firsttime)
 	{
         //make sure bkp file exists
-	    std::ifstream bkpFile( ( workingDir + filename + ".bkp" ).c_str() , std::ios::binary);
+	    std::ifstream bkpFile( ( mWorkingDir + filename + ".bkp" ).c_str() , std::ios::binary);
         if( !bkpFile.is_open() )
         {
             //no bkp file
@@ -503,7 +505,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         bkpFile.close();
 
         //make sure apw file exists
-        std::ifstream apwFile( ( workingDir + filename + ".apw" ).c_str() , std::ios::binary);
+        std::ifstream apwFile( ( mWorkingDir + filename + ".apw" ).c_str() , std::ios::binary);
         if( !apwFile.is_open() )
         {
             //no apw file
@@ -513,10 +515,11 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
         }
         apwFile.close();
 
-		//Display->SetWindowText( ( workingDir + filename ).c_str());
+		//Display->SetWindowText( ( mWorkingDir + filename ).c_str());
 		Display->SetWindowText( ( filename ).c_str());
         //go through bkp parsing procedure
 		bkp->openFile(filename.c_str());
+        mFilename = filename;
 		firsttime=false;
 	}
 	   
@@ -545,24 +548,27 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	return CORBA::string_dup(network.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
-{
-    CEdit *Display;
-    Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
+//char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
+//{
+//    CEdit *Display;
+//    Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
 
 	//this command has no params
-	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
-	Display->SetWindowText(filename.c_str());
-	bkp->openFile(filename.c_str());
-	return CORBA::string_dup("Simulation Opened.");
-}
+//	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+//	Display->SetWindowText(filename.c_str());
+//	bkp->openFile(filename.c_str());
+//	return CORBA::string_dup("Simulation Opened.");
+//}
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel("saving...\r\n");
 	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
-	bkp->saveAs(filename.c_str());
+	mFilename = filename;
+    //bkp->saveAs(filename.c_str());
+	bkp->saveAs(( mWorkingDir + mFilename + ".apw" ).c_str());
+	bkp->saveAs(( mWorkingDir + mFilename + ".bkp" ).c_str());
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel("saved.\r\n");
 	return CORBA::string_dup("Simulation Saved.");
