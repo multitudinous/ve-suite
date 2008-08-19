@@ -128,7 +128,15 @@ void Body_Unit_i::StepSim()
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::ReinitializeAspen()
 {
-	bkp->ReinitAspen();
+    try
+    {
+	    bkp->ReinitAspen();
+    }
+    catch(...)
+    {
+	AspenLog->SetSel(-1, -1);
+	AspenLog->ReplaceSel("Reinitialize Failed.\r\n");
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::StartCalc (

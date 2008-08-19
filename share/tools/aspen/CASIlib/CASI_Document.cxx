@@ -360,7 +360,20 @@ namespace CASI
 		
 	void CASIDocument::initializeSolver() //Initializes the current solution to its initial state. May purge the current results form the problem.
 	{
-		hAPsim->Reinit();
+		//hAPsim->Reinit();
+        
+		VARIANT name;
+        ::VariantInit(&name);
+
+        VARIANT enumer;
+        ::VariantInit(&enumer);
+        enumer.vt = VT_I4;
+        enumer.lVal = IAP_REINIT_SIMULATION;
+        
+		IHAPEngine engine;
+		engine = hAPsim->GetEngine();
+        engine.Reinit( enumer, name  );
+        ::VariantClear( &enumer );
 	}
 
 	void CASIDocument::runSolver(bool async)
