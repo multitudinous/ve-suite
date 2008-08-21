@@ -78,6 +78,7 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name,
     //mQueryCommandNames.insert( "openSimulation");
     mQueryCommandNames.insert( "runNetwork");
 	mQueryCommandNames.insert( "reinitNetwork");
+	mQueryCommandNames.insert( "reinitBlock");
     mQueryCommandNames.insert( "stepNetwork");
     mQueryCommandNames.insert( "showSimulation");
     mQueryCommandNames.insert( "hideSimulation");
@@ -427,6 +428,11 @@ char * Body_Unit_i::Query ( const char * query_str
 		ReinitializeAspen();
 		return CORBA::string_dup( "Simulation reinitialized." );
 	}
+	else if( cmdname == "reinitBlock" )
+	{
+		ReinitializeBlock(cmd);
+		return CORBA::string_dup( "Block reinitialized." );
+	}
 
 	//Blocks
 	else if (cmdname=="getInputModuleParamList")
@@ -580,6 +586,24 @@ char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 	AspenLog->SetSel(-1, -1);
 	AspenLog->ReplaceSel("saved.\r\n");
 	return CORBA::string_dup("Simulation Saved.");
+}
+////////////////////////////////////////////////////////////////////////////////
+void Body_Unit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
+{
+	size_t num = cmd->GetNumberOfDataValuePairs();
+	std::string modname;
+	unsigned int modId;
+
+	for( size_t i=0; i < num; i++)
+	{
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+		
+		if (curPair->GetDataName()=="ModuleName")
+			modname=curPair->GetDataString();
+		else if (curPair->GetDataName()=="ModuleId")
+			curPair->GetData(modId);
+	}
+	bkp->ReinitBlock(modname);
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)

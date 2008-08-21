@@ -175,8 +175,9 @@ namespace CASI
 		//simulation control fucntions
 		
 		void initializeSolver(); //Initializes the current solution to its initial state. May purge the current results form the problem.
+        void reinitializeBlock( CString block );
 
-		void runSolver(bool async);
+        void runSolver(bool async);
 		void step();
 		
 		//call backs

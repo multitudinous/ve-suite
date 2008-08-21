@@ -208,7 +208,7 @@ public:
       ::CORBA::SystemException,
       ::Error::EUnknown
     ));
-
+  void ReinitializeBlock(ves::open::xml::CommandPtr cmd);
   char* handleGetNetwork(ves::open::xml::CommandPtr cmd);
   char* handleOpenSimulation(ves::open::xml::CommandPtr cmd);
   char* handleSaveAs(ves::open::xml::CommandPtr cmd);

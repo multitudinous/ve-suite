@@ -1543,6 +1543,12 @@ void BKPParser::StripCharacters( std::string& data, std::string character )
 }
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
+void BKPParser::ReinitBlock(std::string modname)
+{
+    aspendoc->reinitializeBlock( modname.c_str() );
+}
+///////////////////////////////////////////////////////////////////////////////
+//BLOCKS
 std::string BKPParser::GetInputModuleParams(std::string modname)
 {
     CASI::CASIObj cur_block =

@@ -100,6 +100,7 @@ public:
 	void saveAs(const char *);                
 	void showAspen(bool);    
 	void ReinitAspen();
+    void ReinitBlock( std::string modname );
 	void step();
 	int getNumComponents();                                            //returns total components
 	//std::string getBlockType(std::string);                                     //returns the filename of component

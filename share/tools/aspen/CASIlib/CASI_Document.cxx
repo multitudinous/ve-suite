@@ -68,6 +68,9 @@ namespace CASI
 
 		simOpened = true;
 
+		for (int i=0; i<7; i++)
+			::VariantClear(&args[i]);
+
 		//std::vector<CASIObj> testblocks;
 		//std::vector<CASIObj> teststreams;
 #ifdef YANGDEBUG
@@ -94,6 +97,7 @@ namespace CASI
             hAPsim = NULL;
 
 			simOpened = false;
+            ::VariantClear(&reserved);
 		}
 	}
 	
@@ -111,6 +115,7 @@ namespace CASI
 
 		BSTR bsfname = cfname.AllocSysString();
 		hAPsim->SaveAs(&bsfname, overwrite);
+		::VariantClear(&overwrite);	
 	}
 
 	void CASIDocument::showAspen(bool status)
@@ -376,6 +381,28 @@ namespace CASI
         ::VariantClear( &enumer );
 	}
 
+    void CASIDocument::reinitializeBlock( CString block ) //Initializes the current solution to its initial state. May purge the current results form the problem.
+	{
+		//hAPsim->Reinit();
+        
+		VARIANT name;
+        ::VariantInit(&name);
+        name.vt = VT_BSTR;
+        name.bstrVal = block.AllocSysString();
+
+        VARIANT enumer;
+        ::VariantInit(&enumer);
+        enumer.vt = VT_I4;
+        enumer.lVal = IAP_REINIT_BLOCK;
+        
+		IHAPEngine engine;
+		engine = hAPsim->GetEngine();
+        engine.Reinit( enumer, name  );
+
+        ::VariantClear( &name );
+        ::VariantClear( &enumer );
+	}
+
 	void CASIDocument::runSolver(bool async)
 	{
 		VARIANTARG vasync;
@@ -388,7 +415,7 @@ namespace CASI
 			vasync.boolVal = VARIANT_FALSE;
 
 		hAPsim->Run2(vasync);
-
+        ::VariantClear( &vasync );
 	}
 	
 	
@@ -480,6 +507,8 @@ namespace CASI
 			nodename = cnode.GetName(force);
 		}
 		
+        ::VariantClear( &val1 );
+        ::VariantClear( &val2 );
 		//readBranch(node);
 #ifdef YANGDEBUG		
 		fclose(test);

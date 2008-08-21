@@ -105,6 +105,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
     EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
     EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
+    EVT_MENU( REINIT_BLOCK, UIPluginBase::OnReinitBlocks )
     EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
     EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
     EVT_MENU( NAVTO, UIPluginBase::OnNavigateTo )
@@ -218,6 +219,8 @@ UIPluginBase::UIPluginBase() :
     aspen_menu->Enable( QUERY_INPUTS, true );
     aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
     aspen_menu->Enable( QUERY_OUTPUTS, true );
+    aspen_menu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
+    aspen_menu->Enable( REINIT_BLOCK, true );
     mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
     mPopMenu->Enable( ASPEN_MENU, true );
@@ -1451,6 +1454,39 @@ void  UIPluginBase::OnQueryOutputs( wxCommandEvent& event )
 
     //if(results->IsSubmit())
     // this->OnQueryOutputModuleProperties(temp_vector2, compName);
+}
+////////////////////////////////////////////////////////////////////////////////
+void  UIPluginBase::OnReinitBlocks( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    std::string compName = GetVEModel()->GetModelName();
+
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
+    //while( parentTraverser != NULL )
+    while( parentTraverser->GetParentModel() != NULL )
+    {
+        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+        compName = parentTraverser->GetModelName() + "." + compName;
+        parentTraverser = parentTraverser->GetParentModel();
+    }
+
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "reinitBlock" );
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
+    data->SetData( std::string( "ModuleName" ), compName );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    //Get results
+    serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnShowDesc( wxCommandEvent& event )
