@@ -107,6 +107,7 @@ public:
         SHOW_ASPEN_NAME,
         QUERY_INPUTS,
         QUERY_OUTPUTS,
+        REINIT_BLOCK,
         SHOW_ICON_CHOOSER,
         GEOMETRY,
         NAVTO,
@@ -285,6 +286,7 @@ public:
     void OnQueryInputModuleProperties( std::vector< std::string >, std::string );
     void OnQueryOutputModuleProperties( std::vector< std::string >, std::string );
     void OnQueryModuleProperties( std::vector< std::string > requestedInputs, std::string compName );
+    void OnReinitBlocks( wxCommandEvent& event );
     ///Show the sounds available for this model
     void OnModelSounds( wxCommandEvent& event );
     void OnShowIconChooser( wxCommandEvent& event );
