@@ -851,11 +851,11 @@ std::map< std::string, char** > GetAspenPlusIconMap()
     tempIconMap["2DIcons/RPlug/RPlug.ICON1.jpg" ] = RPlug_RPlug_ICON1;
     tempIconMap["2DIcons/RPlug/RPlug.ICON2.jpg" ] = RPlug_RPlug_ICON2;
     tempIconMap["2DIcons/RPlug/RPlug.ICON3.jpg" ] = RPlug_RPlug_ICON3;
-    tempIconMap["2DIcons/Rstoic/Rstoic.BLOCK.jpg" ] = RStoic_RStoic_BLOCK;
-    tempIconMap["2DIcons/Rstoic/Rstoic.ICON1.jpg" ] = RStoic_RStoic_ICON1;
-    tempIconMap["2DIcons/Rstoic/Rstoic.ICON2.jpg" ] = RStoic_RStoic_ICON2;
-    tempIconMap["2DIcons/Rstoic/Rstoic.ICON3.jpg" ] = RStoic_RStoic_ICON3;
-    tempIconMap["2DIcons/Rstoic/Rstoic.ICON4.jpg" ] = RStoic_RStoic_ICON4;
+    tempIconMap["2DIcons/RStoic/RStoic.BLOCK.jpg" ] = RStoic_RStoic_BLOCK;
+    tempIconMap["2DIcons/RStoic/RStoic.ICON1.jpg" ] = RStoic_RStoic_ICON1;
+    tempIconMap["2DIcons/RStoic/RStoic.ICON2.jpg" ] = RStoic_RStoic_ICON2;
+    tempIconMap["2DIcons/RStoic/RStoic.ICON3.jpg" ] = RStoic_RStoic_ICON3;
+    tempIconMap["2DIcons/RStoic/RStoic.ICON4.jpg" ] = RStoic_RStoic_ICON4;
     tempIconMap["2DIcons/RYield/RYield.BLOCK.jpg" ] = RYield_RYield_BLOCK;
     tempIconMap["2DIcons/RYield/RYield.ICON2.jpg" ] = RYield_RYield_ICON2;
     tempIconMap["2DIcons/RYield/RYield.ICON3.jpg" ] = RYield_RYield_ICON3;
