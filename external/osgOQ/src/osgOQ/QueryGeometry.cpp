@@ -91,6 +91,12 @@ struct RetrieveQueriesCallback : public osg::Camera::DrawCallback
             osg::notify( osg::DEBUG_INFO ) <<
                 "osgOQ: RQCB: Retrieving..." << std::endl;
 
+            GLint _tempready = 0;
+            while( !_tempready )
+            {
+                ext->glGetQueryObjectiv( tr->_id, GL_QUERY_RESULT_AVAILABLE, &(_tempready) );
+            };
+            
             ext->glGetQueryObjectiv( tr->_id, GL_QUERY_RESULT, &(tr->_numPixels) );
             if (tr->_numPixels < 0)
                 osg::notify( osg::WARN ) << "osgOQ: RQCB: " <<
