@@ -4,8 +4,7 @@
 #include "stdafx.h"
 #include "DynamicsUnit.h"
 #include "DynamicsUnitDlg.h"
-#include "happ.h"
-#include ".\dynamicsunitdlg.h"
+#include "dynparser.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -175,8 +174,6 @@ HCURSOR CDynamicsUnitDlg::OnQueryDragIcon()
 
 void CDynamicsUnitDlg::OnOK() 
 {
-	//CoInitialize(NULL);
-	//AfxOleInit();
 	// TODO: Add extra validation here
     hAPsim = new IAspenModeler(); 
 	BOOL bSuccess = hAPsim->CreateDispatch(_T("AD Application"));
@@ -188,6 +185,9 @@ void CDynamicsUnitDlg::OnOK()
 	Display->GetWindowText( str );
 	COleVariant strVar(str);
 	VARIANT var=strVar.Detach();
+
+	DynParser dyn;
+	dyn.ParseFile( str );
 
 	hAPsim->OpenDocument(var);
 

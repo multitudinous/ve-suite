@@ -44,6 +44,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 	IAspenModeler * hAPsim;
+
 public:
 	afx_msg void OnBnClickedCancel();
 };

@@ -202,6 +202,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\dynparser.cpp">
+			</File>
+			<File
 				RelativePath="happ.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -251,6 +254,9 @@
 			</File>
 			<File
 				RelativePath="DynamicsUnitDlg.h">
+			</File>
+			<File
+				RelativePath=".\dynparser.h">
 			</File>
 			<File
 				RelativePath="happ.h">
