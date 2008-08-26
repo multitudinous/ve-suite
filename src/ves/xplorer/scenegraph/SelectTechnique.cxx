@@ -35,21 +35,18 @@
 #include <ves/xplorer/scenegraph/SelectTechnique.h>
 
 // --- OSG Includes --- //
-#include <osg/BlendFunc>
-#include <osg/CameraNode>
-#include <osg/Texture2D>
+#include <osg/Stencil>
 #include <osg/LineWidth>
 #include <osg/Material>
 #include <osg/PolygonMode>
 #include <osg/PolygonOffset>
-#include <osg/Material>
 
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
 SelectTechnique::SelectTechnique( osg::ref_ptr< osg::StateSet > stateSet )
-        :
-        mStateSet( stateSet )
+    :
+    mStateSet( stateSet )
 {
     DefinePasses();
 }
@@ -63,6 +60,21 @@ void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
+        /*
+        osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
+        stencil->setFunction( osg::Stencil::ALWAYS,    //comparison function
+                              1,                       //reference value
+                              0x1 );                   //comparison mask
+        stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
+                               osg::Stencil::KEEP,     //stencil pass/depth fail
+                               osg::Stencil::REPLACE );//stencil pass/depth pass
+
+        mStateSet->setMode( GL_STENCIL_TEST,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        mStateSet->setAttributeAndModes( stencil.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        */
+
         osg::ref_ptr< osg::PolygonOffset > polyoffset =
             new osg::PolygonOffset();
         polyoffset->setFactor( 1.0f );
@@ -76,38 +88,43 @@ void SelectTechnique::DefinePasses()
 
     //Implement pass #2
     {
-        char vertexPass[] =
-        "void main() \n"
-        "{ \n"
-            "gl_FrontColor = vec4( 0.5, 1.0, 0.5, 1.0 ); \n"
-
-            "gl_Position = ftransform(); \n"
-        "} \n";
-
-        osg::ref_ptr< osg::Shader > vertex_shader =
-            new osg::Shader( osg::Shader::VERTEX, vertexPass );
-
-        osg::ref_ptr< osg::Program > program = new osg::Program();
-        program->addShader( vertex_shader.get() );
+        /*
+        osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
+        stencil->setFunction( osg::Stencil::NOTEQUAL,  //comparison function
+                              1,                       //reference value
+                              0x1 );                   //comparison mask
+        stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
+                               osg::Stencil::KEEP,     //stencil pass/depth fail
+                               osg::Stencil::REPLACE );//stencil pass/depth pass
+        */
 
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-        linewidth->setWidth( 2.0f );
+        linewidth->setWidth( 4.0 );
+
+        osg::ref_ptr< osg::Material > material = new osg::Material();
+        material->setColorMode( osg::Material::EMISSION );
+        material->setEmission(
+            osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
 
         osg::ref_ptr< osg::PolygonMode > polymode = new osg::PolygonMode();
-        polymode->setMode( osg::PolygonMode::FRONT_AND_BACK,
-                           osg::PolygonMode::LINE );
+        polymode->setMode(
+            osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
 
-        osg::ref_ptr< osg::StateSet > stateSet = new osg::StateSet();
-        stateSet->setMode( GL_LIGHTING,
+        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+        stateset->setMode( GL_LIGHTING,
             osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-        stateSet->setAttributeAndModes( linewidth.get(),
+        //stateset->setMode( GL_STENCIL_TEST,
+            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        //stateset->setAttributeAndModes( stencil.get(),
+            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateset->setAttributeAndModes( linewidth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateSet->setAttributeAndModes( polymode.get(),
+        stateset->setAttributeAndModes( material.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        stateSet->setAttributeAndModes( program.get(),
+        stateset->setAttributeAndModes( polymode.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
-        AddPass( stateSet.get() );
+        AddPass( stateset.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

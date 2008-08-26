@@ -43,17 +43,21 @@
 
 namespace osg
 {
+class Group;
 class Camera;
 class Geode;
 class Geometry;
 class Texture2D;
-class Group;
 }
 
 namespace osgUtil
 {
 class SceneView;
 }
+
+// --- C/C++ Libraries --- //
+#include <map>
+#include <string>
 
 namespace ves
 {
@@ -107,17 +111,20 @@ public:
 protected:
 
 private:
-    ///Create the camera wit hthe appropriate settings to render to an FBO
-    void CreateCamera();
+    ///Create the camera with the appropriate settings to render to an FBO
+    void InitCamera( std::pair< int, int >& screenDims );
 
     ///Create the quad to blit the texture to
-    void CreateQuad();
+    void InitSAQuad( std::map< std::string, double >& screenCorners );
 
     ///Create the texture of the appropriate size for the FBO to write to
-    void CreateTexture();
+    void InitTextures( std::pair< int, int >& screenDims );
 
-    ///The texture being used by the camera
-    osg::ref_ptr< osg::Texture2D > mTexture;
+    ///The texture attached to the color buffer of the camera
+    osg::ref_ptr< osg::Texture2D > mColorTexture;
+    ///The texture attached to the depth and stencil buffer of the camera
+    osg::ref_ptr< osg::Texture2D > mDepthStencilTexture;
+
     ///The render to texture camera
     osg::ref_ptr< osg::Camera > mCamera;
     ///The geode for the quad
@@ -127,6 +134,7 @@ private:
     ///The verts for the quad
     osg::ref_ptr< osg::Vec3Array > mQuadVertices;
     
+    ///
     osg::ref_ptr< osg::Group > mRootGroup;
 
 };
