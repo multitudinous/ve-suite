@@ -18,20 +18,14 @@ sys.path.append(pj(os.getcwd(), 'dist', 'build', 'tools'))
 import doxygen
 
 # Pull in SConsAddons from the source directory if necessary.
-try:
-   import SConsAddons
-except:
-   sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
-   sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
+sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'src'))
+sys.path.append(pj(os.getcwd(), 'Tools', 'scons-addons', 'templates'))
+import SConsAddons
 
 # Pull in HDF options files
-try:
-   import HDF5
-   import HDF4
-except:
-   sys.path.append(pj(os.getcwd(), 'share', 'python'))
-   import HDF5
-   import HDF4
+sys.path.append(pj(os.getcwd(), 'share', 'python'))
+import HDF5
+import HDF4
 
 # Add flagpoll from the source directory to the end of the path so it is found
 # LAST.
@@ -437,6 +431,7 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
    if GetPlatform() == 'win32':
       baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
+      #baseEnv.AppendUnique( CXXFLAGS = ['/wd4005'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
       # http://support.microsoft.com/kb/166474
       baseEnv.Append( ARFLAGS = '/MACHINE:X86', LINKFLAGS = '/MACHINE:X86' )
