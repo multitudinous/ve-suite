@@ -98,6 +98,7 @@ int main( int argc, char ** argv )
     viewer.addEventHandler( new KeyboardEventHandler( root.get() ) );
     viewer.setUpViewInWindow( 10, 510, 640, 480 );
     viewer.setSceneData( root.get() );
+    viewer.getCamera()->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
         
     return viewer.run();
 }
