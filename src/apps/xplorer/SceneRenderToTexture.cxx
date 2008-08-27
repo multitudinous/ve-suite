@@ -42,6 +42,7 @@
 #include <osg/Group>
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/ClearNode>
 #include <osg/Texture2D>
 #include <osg/FrameBufferObject>
 
@@ -148,7 +149,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     mCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
     mCamera->setRenderOrder( osg::Camera::POST_RENDER );
     mCamera->setClearMask( 
-        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
+        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     mCamera->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     mCamera->setViewport( 0, 0, screenDims.first, screenDims.second );
@@ -161,8 +162,8 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 #endif
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
-    //mCamera->attach( osg::Camera::DEPTH_BUFFER, mDepthStencilTexture.get() );
-    //mCamera->attach( osg::Camera::STENCIL_BUFFER, mDepthStencilTexture.get() );
+    mCamera->attach( osg::Camera::DEPTH_BUFFER, mDepthStencilTexture.get() );
+    mCamera->attach( osg::Camera::STENCIL_BUFFER, mDepthStencilTexture.get() );
 
     //Use renderbuffers to get a depth and stencil buffer
     //mCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
@@ -173,6 +174,12 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     //Therefore the transform is cumulative from parents transforms
     mCamera->setViewMatrix( osg::Matrix::identity() );
     mCamera->setProjectionMatrix( osg::Matrix::identity() );
+
+    osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
+    clearNode->setClearMask(
+        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+    mCamera->addChild( clearNode.get() );
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene()
@@ -555,7 +562,7 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         fullScreenQuadCameraList.back()->setReferenceFrame( osg::Transform::ABSOLUTE_RF );
         fullScreenQuadCameraList.back()->setRenderOrder( osg::Camera::PRE_RENDER );
         fullScreenQuadCameraList.back()->setRenderTargetImplementation(
-                                                                       osg::Camera::FRAME_BUFFER_OBJECT );
+            osg::Camera::FRAME_BUFFER_OBJECT );
         
         fullScreenQuadCameraList.back()->setViewport( 0, 0, w, h );
         fullScreenQuadCameraList.back()->setViewMatrix( osg::Matrix::identity() );

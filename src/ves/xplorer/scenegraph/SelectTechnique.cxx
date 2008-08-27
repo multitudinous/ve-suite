@@ -39,7 +39,6 @@
 #include <osg/LineWidth>
 #include <osg/Material>
 #include <osg/PolygonMode>
-#include <osg/PolygonOffset>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -60,11 +59,10 @@ void SelectTechnique::DefinePasses()
 {
     //Implement pass #1
     {
-        /*
         osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
         stencil->setFunction( osg::Stencil::ALWAYS,    //comparison function
                               1,                       //reference value
-                              0x1 );                   //comparison mask
+                              ~0u );                   //comparison mask
         stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
                                osg::Stencil::KEEP,     //stencil pass/depth fail
                                osg::Stencil::REPLACE );//stencil pass/depth pass
@@ -73,30 +71,19 @@ void SelectTechnique::DefinePasses()
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         mStateSet->setAttributeAndModes( stencil.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        */
-
-        osg::ref_ptr< osg::PolygonOffset > polyoffset =
-            new osg::PolygonOffset();
-        polyoffset->setFactor( 1.0f );
-        polyoffset->setUnits( 1.0f );
-
-        mStateSet->setAttributeAndModes( polyoffset.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( mStateSet.get() );
     }
 
     //Implement pass #2
     {
-        /*
         osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
         stencil->setFunction( osg::Stencil::NOTEQUAL,  //comparison function
                               1,                       //reference value
-                              0x1 );                   //comparison mask
+                              ~0u );                   //comparison mask
         stencil->setOperation( osg::Stencil::KEEP,     //stencil fail
                                osg::Stencil::KEEP,     //stencil pass/depth fail
                                osg::Stencil::REPLACE );//stencil pass/depth pass
-        */
 
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
         linewidth->setWidth( 4.0 );
@@ -113,10 +100,10 @@ void SelectTechnique::DefinePasses()
         osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
         stateset->setMode( GL_LIGHTING,
             osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-        //stateset->setMode( GL_STENCIL_TEST,
-            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-        //stateset->setAttributeAndModes( stencil.get(),
-            //osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateset->setMode( GL_STENCIL_TEST,
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        stateset->setAttributeAndModes( stencil.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( linewidth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( material.get(),
