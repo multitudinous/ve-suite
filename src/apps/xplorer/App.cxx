@@ -71,6 +71,7 @@
 #include <osg/Image>
 #include <osg/TextureRectangle>
 #include <osg/Texture2D>
+#include <osg/DeleteHandler>
 
 #include <osgDB/WriteFile>
 
@@ -381,7 +382,7 @@ void App::preFrame( void )
 void App::latePreFrame( void )
 {
     VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame", 20 );
-    std::string tempCommandName = 
+    const std::string tempCommandName = 
         m_vjobsWrapper->GetXMLCommand()->GetCommandName();
     vprDEBUG( vesDBG, 3 ) << "|App::latePreFrame" << std::endl << vprDEBUG_FLUSH;
     ///////////////////////
@@ -402,6 +403,13 @@ void App::latePreFrame( void )
         // exit App was selected
         vrj::Kernel::instance()->stop(); // Stopping kernel
     }
+    else if( !tempCommandName.compare( "SCREEN_SHOT" ) )
+    {
+        captureNextFrameForWeb = true;
+        m_vjobsWrapper->GetXMLCommand()->
+            GetDataValuePair( "Filename" )->GetData( m_filename );
+    }
+    
     float deltaTime = 0;
     {
         VPR_PROFILE_GUARD_HISTORY( "App::latePreFrame Framerate Calculations", 20 );
@@ -444,7 +452,16 @@ void App::latePreFrame( void )
                 vprDEBUG( vesDBG, 3 ) << mStatsStream.str() << std::endl 
                     << vprDEBUG_FLUSH;
             }        
-        }  
+        }
+        
+        ///This came from OSG/src/osgViewer/Viewer.cpp line 541
+        ///I am not sure what it does but it seems important
+        if( osg::Referenced::getDeleteHandler() )
+        {
+            osg::Referenced::getDeleteHandler()->flush();
+            osg::Referenced::getDeleteHandler()->
+                setFrameNumber( mFrameStamp->getFrameNumber() );
+        }        
     }
     ///////////////////////
     {
@@ -490,13 +507,6 @@ void App::latePreFrame( void )
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
     mProfileCounter += 1;
-
-    if( !tempCommandName.compare( "SCREEN_SHOT" ) )
-    {
-        captureNextFrameForWeb = true;
-        m_vjobsWrapper->GetXMLCommand()->
-            GetDataValuePair( "Filename" )->GetData( m_filename );
-    }
     
     /*static bool changed = false;
     //if desktop mode and if osg 2.5.4 or later
@@ -701,6 +711,8 @@ void App::draw()
     //profile the cull call
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
+        //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
+        //sv->inheritCullSettings(*(sv->getCamera()));
         sv->cull();
     }
     //profile the draw call
@@ -729,6 +741,21 @@ void App::draw()
 ////////////////////////////////////////////////////////////////////////////////
 void App::update( void )
 {
+    const std::string tempCommandName = 
+        m_vjobsWrapper->GetXMLCommand()->GetCommandName();
+    // This code came from osgViewer::Viewer::setSceneData
+    // The resize stuff is what is critical not sure how important it is
+    if( !tempCommandName.compare( "veNetwork Update" ) )
+    {
+        // make sure that existing scene graph objects are 
+        // allocated with thread safe ref/unref
+        getScene()->setThreadSafeRefUnref(true);
+        
+        // update the scene graph so that it has enough GL object buffer 
+        // memory for the graphics contexts that will be using it.
+        getScene()->resizeGLObjectBuffers( 
+            osg::DisplaySettings::instance()->getMaxNumberOfGraphicsContexts() );
+    }
     // Update the frame stamp with information from this frame
     //frameStamp->setFrameNumber( getFrameNumber() );
     //frameStamp->setReferenceTime( getFrameTime().secd() );
