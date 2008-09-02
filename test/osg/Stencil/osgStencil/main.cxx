@@ -176,12 +176,8 @@ osg::Geode* CreateSAQuad(
     "void main() \n"
     "{ \n"
         "vec4 color = texture2D( colorMap, gl_TexCoord[ 0 ].st ); \n"
-        "vec4 depthStencil = texture2D( depthStencilMap, gl_TexCoord[ 0 ].st ); \n"
-
-        //"depthStencil /= depthStencil.w; \n"
 
         "gl_FragColor = color; \n"
-        //"gl_FragColor = vec4( depthStencil.x, depthStencil.y, depthStencil.z, 1.0 ); \n"
     "} \n";
 
     osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
@@ -231,7 +227,7 @@ osg::Camera* CreateStencilScene( osg::Texture2D* colorTexture, osg::Texture2D* d
     camera->setRenderOrder( osg::Camera::POST_RENDER );
     camera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    camera->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    camera->setClearColor( osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
     camera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
 
     colorTexture->setInternalFormat( GL_RGBA16F_ARB );
@@ -243,7 +239,7 @@ osg::Camera* CreateStencilScene( osg::Texture2D* colorTexture, osg::Texture2D* d
     colorTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     colorTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
-    camera->attach( osg::Camera::COLOR_BUFFER, colorTexture );
+    camera->attach( osg::Camera::COLOR_BUFFER, colorTexture, 0, 0, false, 8, 8 );
 
     //Use renderbuffers to get a depth and stencil buffer
     //camera->attach( osg::Camera::COLOR_BUFFER, GL_RGBA );
@@ -258,13 +254,14 @@ osg::Camera* CreateStencilScene( osg::Texture2D* colorTexture, osg::Texture2D* d
     depthStencilTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
-    camera->attach( osg::Camera::DEPTH_BUFFER, depthStencilTexture );
-    camera->attach( osg::Camera::STENCIL_BUFFER, depthStencilTexture );
+    camera->attach( osg::Camera::DEPTH_BUFFER, depthStencilTexture );//, 0, 0, false, 8, 8 );
+    //camera->attach( osg::Camera::STENCIL_BUFFER, depthStencilTexture );//, 0, 0, false, 8, 8 );
 
     //Use renderbuffers to get a depth and stencil buffer
     //camera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
     //camera->attach( osg::Camera::STENCIL_BUFFER, GL_STENCIL_INDEX8_EXT  );
     camera->setClearStencil( 0 );
+    //glStencilMask(0xFFFFFFFF);
 
     //Implement pass #1
     {
@@ -299,7 +296,7 @@ osg::Camera* CreateStencilScene( osg::Texture2D* colorTexture, osg::Texture2D* d
                                osg::Stencil::REPLACE );//stencil pass/depth pass
 
         osg::ref_ptr< osg::LineWidth > linewidth = new osg::LineWidth();
-        linewidth->setWidth( 4.0 );
+        linewidth->setWidth( 10.0 );
 
         osg::ref_ptr< osg::Material > material = new osg::Material();
         material->setColorMode( osg::Material::EMISSION );
@@ -360,15 +357,6 @@ void main( int argc, char** argv )
         CreateStencilScene( colorTexture.get(), depthStencilTexture.get() );
     osg::ref_ptr< osg::Geode > saQuad =
         CreateSAQuad( screenCorners, colorTexture.get(), depthStencilTexture.get() );
-
-
-
-    osg::ref_ptr< osgGA::TrackballManipulator > trackballManipulator =
-        new osgGA::TrackballManipulator();
-    viewer.setCameraManipulator( trackballManipulator.get() );
-    trackballManipulator->setHomePosition( osg::Vec3( 0, 0, 0 ),
-                                           osg::Vec3( 0, 1, 0 ),
-                                           osg::Vec3( 0, 0, 1 ), false );
 
     root->addChild( camera.get() );
     root->addChild( saQuad.get() );
