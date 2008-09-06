@@ -80,6 +80,7 @@ ConstructionWorld::ConstructionWorld(
     mStartBlock( 0 ),
     mPluginDCS( pluginDCS ),
 #ifdef VE_SOUND
+    mSoundManager( soundManager ),
     mAmbientSound( new ves::xplorer::scenegraph::Sound(
                        "AmbientSound", pluginDCS, soundManager ) ),
 #endif
@@ -133,8 +134,8 @@ void ConstructionWorld::InitializeFramework()
 #ifdef VE_SOUND
     try
     {
-        //mAmbientSound->LoadFile( "Sounds/AmbientSound.wav" );
-        //mAmbientSound->GetSoundState()->setLooping( true );
+        mAmbientSound->LoadFile( "Sounds/AmbientSound.wav" );
+        mAmbientSound->GetSoundState()->setLooping( true );
     }
     catch( ... )
     {
@@ -142,8 +143,8 @@ void ConstructionWorld::InitializeFramework()
     }
 #endif
 
-    int numBlocks = 8;
-    int numAgents = 1;
+    int numBlocks = 16;
+    int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -163,10 +164,9 @@ void ConstructionWorld::InitializeFramework()
 
     mOccupancyMatrix[ std::make_pair(  1,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  1 ) ].first = true;
-    //mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
 
-    /*
     mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
     mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
@@ -181,7 +181,7 @@ void ConstructionWorld::InitializeFramework()
     mOccupancyMatrix[ std::make_pair(  0,  4 ) ].first = true;
     mOccupancyMatrix[ std::make_pair( -4,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -4 ) ].first = true;
-    */
+
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
 
@@ -201,6 +201,7 @@ void ConstructionWorld::InitializeFramework()
     osg::ref_ptr< bots::Block > startBlock = new bots::Block();
     mStartBlock = new bots::BlockEntity( startBlock.get(),
                                          mPluginDCS.get(),
+                                         mSoundManager,
                                          mPhysicsSimulator );
     double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
     mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
@@ -218,7 +219,7 @@ void ConstructionWorld::InitializeFramework()
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Block > block = new bots::Block();
         bots::BlockEntity* blockEntity = new bots::BlockEntity(
-            block.get(), mPluginDCS.get(), mPhysicsSimulator );
+            block.get(), mPluginDCS.get(), mSoundManager, mPhysicsSimulator );
 
         //Set physics properties for blocks
         blockEntity->InitPhysics();
@@ -258,7 +259,7 @@ void ConstructionWorld::InitializeFramework()
         agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
         //Set the sensor range for the agents
-        agentEntity->GetBlockSensor()->SetRange( gridSize * 0.25 );
+        agentEntity->GetBlockSensor()->SetRange( gridSize * 0.5 );
         agentEntity->GetObstacleSensor()->SetRange( gridSize );
         agentEntity->GetSiteSensor()->SetRange( gridSize );
 

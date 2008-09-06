@@ -37,6 +37,8 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
+#include <ves/xplorer/scenegraph/Sound.h>
+
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
@@ -58,6 +60,9 @@ const double piDivOneEighty = 0.0174532925;
 BlockEntity::BlockEntity(
     bots::Block* block,
     ves::xplorer::scenegraph::DCS* pluginDCS,
+#ifdef VE_SOUND
+    osgAL::SoundManager* soundManager,
+#endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     CADEntity( block, pluginDCS, physicsSimulator ),
@@ -66,6 +71,10 @@ BlockEntity::BlockEntity(
     mAttachColor( 0.0, 1.0, 0.0, 1.0 ),
     mNoAttachColor( 1.0, 0.0, 0.0, 1.0 ),
     mPluginDCS( pluginDCS ),
+#ifdef VE_SOUND
+    mPickUpBlockSound( new ves::xplorer::scenegraph::Sound( 
+                           "PickUpBlockSound", GetDCS(), soundManager ) ),
+#endif
     mBlockGeometry( block ),
     mConstraint( 0 ),
     mLocation( 0, 0 ),
@@ -98,6 +107,17 @@ BlockEntity::~BlockEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::Initialize()
 {
+#ifdef VE_SOUND
+    try
+    {
+        mPickUpBlockSound->LoadFile( "Sounds/PickUpBlock.wav" );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load sounds" << std::endl;
+    }
+#endif
+
     CalculateLocalPositions();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -400,6 +420,13 @@ std::map< std::pair< int, int >,
 {
     return mOccupancyMatrix;
 }
+////////////////////////////////////////////////////////////////////////////////
+#ifdef VE_SOUND
+ves::xplorer::scenegraph::Sound* const BlockEntity::GetPickUpBlockSound() const
+{
+    return mPickUpBlockSound;
+}
+#endif
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(
     unsigned int side, bots::BlockEntity* blockEntity )

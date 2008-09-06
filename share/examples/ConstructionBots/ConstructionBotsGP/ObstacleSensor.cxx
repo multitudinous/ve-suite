@@ -162,8 +162,13 @@ void ObstacleSensor::CollectInformation()
             osgUtil::LineSegmentIntersector::Intersection intersection =
                 mLineSegmentIntersector->getFirstIntersection();
             osg::Drawable* drawable = intersection.drawable.get();
-            const osg::Vec4* color = &( static_cast< osg::Vec4Array* >(
-                drawable->asGeometry()->getColorArray() )->at( 0 ) );
+            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+            const osg::Vec4* color;
+            if( tempArray )
+            {
+                color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+            }
+
             if( !mAgentEntity->mBuildMode )
             {
                 mIntersections.push_back( intersection );

@@ -137,6 +137,7 @@ void BlockSensor::CollectInformation()
     }
 
     //Reset results from last frame
+    targetDCS = NULL;
     mBlockInView = false;
     mCloseToBlock = false;
     mNormalizedBlockVector.setValue( 0.0, 0.0, 0.0 );
@@ -163,30 +164,23 @@ void BlockSensor::CollectInformation()
         osg::ref_ptr< osg::Drawable > drawable =
             mLineSegmentIntersector->getFirstIntersection().drawable;
 
-        osg::Vec4 color = static_cast< osg::Vec4Array* >(
-            drawable->asGeometry()->getColorArray() )->at( 0 );
-        if( color.length() == 2.0 )
+        osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+        const osg::Vec4* color;
+        if( tempArray )
         {
-            mBlockInView = true;
+            color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
 
-            if( !targetDCS.valid() )
+            if( color->length() == 2.0 )
             {
                 goToBlock = true;
+                mBlockInView = true;
+                
+                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                    drawable->getParent( 0 ) );
+                targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
+                    parentVisitor.GetParentNode() );
             }
-
-            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                drawable->getParent( 0 ) );
-            targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
-                parentVisitor.GetParentNode() );
         }
-        else
-        {
-            targetDCS = NULL;
-        }
-    }
-    else
-    {
-        targetDCS = NULL;
     }
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );

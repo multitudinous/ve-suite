@@ -138,6 +138,7 @@ void SiteSensor::CollectInformation()
     }
 
     //Reset results from last frame
+    targetDCS = NULL;
     mSiteInView = false;
     mCloseToSite = false;
     mNormalizedSiteVector.setValue( 0.0, 0.0, 0.0 );
@@ -164,25 +165,26 @@ void SiteSensor::CollectInformation()
         osg::ref_ptr< osg::Drawable > drawable =
             mLineSegmentIntersector->getFirstIntersection().drawable;
 
-        osg::Vec4 color = static_cast< osg::Vec4Array* >(
-            drawable->asGeometry()->getColorArray() )->at( 0 );
-        if( color.length() == 1.0 )
+        osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+        const osg::Vec4* color;
+        if( tempArray )
         {
-            mSiteInView = true;
-
-            if( !targetDCS.valid() )
+            color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+                    
+            if( color->length() == 1.0 )
             {
+                goToSite = true;
+                mSiteInView = true;
+                
                 ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
                     drawable->getParent( 0 ) );
                 targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
                     parentVisitor.GetParentNode() );
-
-                mAgentEntity->SetTargetDCS( targetDCS.get() );
-
-                goToSite = true;
             }
         }
     }
+
+    mAgentEntity->SetTargetDCS( targetDCS.get() );
 
     double* sitePosition( 0 );
     btVector3 siteVector( 0.0, 0.0, 0.0 );

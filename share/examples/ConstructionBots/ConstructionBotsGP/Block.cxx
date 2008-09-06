@@ -37,6 +37,7 @@
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/LineWidth>
+#include <osg/Material>
 #include <osg/PolygonOffset>
 
 using namespace bots;
@@ -77,7 +78,7 @@ void Block::Initialize()
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 2.0 );
-    lineStateSet->setAttribute( lineWidth.get() );
+    lineStateSet->setAttribute( lineWidth.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Vec3Array > rightLineVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > farLineVertices = new osg::Vec3Array();
@@ -138,6 +139,10 @@ void Block::Initialize()
     polyoffset->setUnits( 1.0f );
     blockStateSet->setAttributeAndModes( polyoffset.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    osg::ref_ptr< osg::Material > blockMaterial = new osg::Material();
+    blockMaterial->setDiffuse(
+        osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
+    blockStateSet->setAttribute( blockMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Vec3Array > rightBlockVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > farBlockVertices = new osg::Vec3Array();

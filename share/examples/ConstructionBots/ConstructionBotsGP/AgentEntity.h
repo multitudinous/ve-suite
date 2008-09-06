@@ -44,6 +44,17 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+    class DCS;
+}
+}
+}
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 

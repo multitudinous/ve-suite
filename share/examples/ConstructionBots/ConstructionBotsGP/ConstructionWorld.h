@@ -94,15 +94,16 @@ private:
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
+#ifdef VE_SOUND
+    osgAL::SoundManager* mSoundManager;
+    ves::xplorer::scenegraph::Sound* mAmbientSound;
+#endif
+
     bots::GridEntity* mGrid;
     bots::BlockEntity* mStartBlock;
     std::map< std::string, bots::BlockEntity* > mBlockEntities;
     std::map< std::pair< int, int >, std::pair< bool, bool > > mOccupancyMatrix;
     std::vector< bots::AgentEntity* > mAgents;
-
-#ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* mAmbientSound;
-#endif
 
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
