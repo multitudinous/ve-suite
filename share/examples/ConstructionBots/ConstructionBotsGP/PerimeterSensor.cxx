@@ -80,7 +80,7 @@ PerimeterSensor::~PerimeterSensor()
 void PerimeterSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
+        osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 0.0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -113,7 +113,7 @@ void PerimeterSensor::Initialize()
     mGeode->addDrawable( mGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.0f );
+    lineWidth->setWidth( 1.5 );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -219,13 +219,16 @@ void PerimeterSensor::CollectInformation()
             osg::Array* tempArray = currentDrawable->asGeometry()->getColorArray();
             if( tempArray )
             {
-                const osg::Vec4* color =
-                    &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+                osg::Vec4d* color =
+                    &( static_cast< osg::Vec4dArray* >( tempArray )->at( 0 ) );
 
-                if( color->length() != 1.0 )
+                if( color == &mAgentEntity->mSiteColor )
                 {
                     mAgentEntity->mBuildMode = false;
                     mAgentEntity->mPerimeterSensor->Reset();
+                    std::cout << "PerimeterSensor: " 
+                              << mAgentEntity->GetDCS()->GetName()
+                              << std::endl << std::endl;
                     return;
                 }
             }

@@ -36,12 +36,16 @@
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
+#include <osg/Texture2D>
 
 #include <osgDB/ReadFile>
 
 // --- Bullet Includes --- //
 #include <BulletCollision/CollisionShapes/btBoxShape.h>
 #include <BulletCollision/CollisionShapes/btCompoundShape.h>
+
+// --- C/C++ Libraries --- //
+#include <iostream>
 
 using namespace bots;
 
@@ -103,8 +107,24 @@ btCompoundShape* Agent::CreateCompoundShape()
 ////////////////////////////////////////////////////////////////////////////////
 void Agent::Initialize()
 {
+    osg::ref_ptr< osg::Texture2D > texture( NULL );
+    try
+    {
+        texture =
+            new osg::Texture2D( osgDB::readImageFile( "Textures/agent.jpg" ) );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load agent.jpg!" << std::endl;
+    }
+
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    if( texture.valid() )
+    {
+        stateset->setTextureAttributeAndModes(
+            0, texture.get() ,osg::StateAttribute::ON );
+    }
     setStateSet( stateset.get() );
 
     osg::ref_ptr< osg::Geometry > agent = new osg::Geometry();
@@ -162,6 +182,40 @@ void Agent::Initialize()
     agentNormals->push_back( osg::Vec3d(  0.0,  0.0, -1.0 ) );
     agent->setNormalArray( agentNormals.get() );
     agent->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
+
+    osg::ref_ptr< osg::Vec2Array > texCoord = new osg::Vec2Array;
+    //Left
+    texCoord->push_back( osg::Vec2d( 0.0, 1.0 ) );
+    texCoord->push_back( osg::Vec2d( 0.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 1.0 ) );
+    //Near
+    texCoord->push_back( osg::Vec2d( 0.0, 1.0 ) );
+    texCoord->push_back( osg::Vec2d( 0.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 1.0 ) );
+    //Right
+    texCoord->push_back( osg::Vec2d( 0.0, 1.0 ) );
+    texCoord->push_back( osg::Vec2d( 0.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 1.0 ) );
+    //Far
+    texCoord->push_back( osg::Vec2d( 0.0, 1.0 ) );
+    texCoord->push_back( osg::Vec2d( 0.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 1.0 ) );
+    //Top
+    texCoord->push_back( osg::Vec2d( 0.0, 1.0 ) );
+    texCoord->push_back( osg::Vec2d( 0.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 1.0 ) );
+    //Bottom
+    texCoord->push_back( osg::Vec2d( 0.0, 1.0 ) );
+    texCoord->push_back( osg::Vec2d( 0.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 0.0 ) );
+    texCoord->push_back( osg::Vec2d( 1.0, 1.0 ) );
+
+    agent->setTexCoordArray( 0, texCoord.get() );
 
     agent->addPrimitiveSet( new osg::DrawArrays(
         osg::PrimitiveSet::QUADS, 0, agentVertices.get()->size() ) );

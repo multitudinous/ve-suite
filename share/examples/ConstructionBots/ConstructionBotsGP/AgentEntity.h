@@ -123,6 +123,11 @@ private:
     double mMaxSpeed;
     double mBuildSpeed;
 
+    //The color of the blocks
+    osg::Vec4d mBlockColor;
+    //The color of the site
+    osg::Vec4d mSiteColor;
+
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
 

@@ -37,7 +37,6 @@
 // --- OSG Includes --- //
 #include <osg/Geometry>
 #include <osg/LineWidth>
-#include <osg/Material>
 #include <osg/PolygonOffset>
 
 using namespace bots;
@@ -139,10 +138,6 @@ void Block::Initialize()
     polyoffset->setUnits( 1.0f );
     blockStateSet->setAttributeAndModes( polyoffset.get(),
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    osg::ref_ptr< osg::Material > blockMaterial = new osg::Material();
-    blockMaterial->setDiffuse(
-        osg::Material::FRONT_AND_BACK, osg::Vec4d( 0.0, 0.0, 1.0, 1.0 ) );
-    blockStateSet->setAttribute( blockMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Vec3Array > rightBlockVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > farBlockVertices = new osg::Vec3Array();

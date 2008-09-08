@@ -166,12 +166,11 @@ void SiteSensor::CollectInformation()
             mLineSegmentIntersector->getFirstIntersection().drawable;
 
         osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-        const osg::Vec4* color;
+        const osg::Vec4d* color;
         if( tempArray )
         {
-            color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
-                    
-            if( color->length() == 1.0 )
+            color = &( static_cast< osg::Vec4dArray* >( tempArray )->at( 0 ) );
+            if( color == &mAgentEntity->mSiteColor )
             {
                 goToSite = true;
                 mSiteInView = true;

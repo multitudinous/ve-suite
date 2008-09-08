@@ -104,8 +104,8 @@ void ObstacleSensor::Initialize()
     CalculateLocalPositions();
 
     colorArray->push_back( osg::Vec4d( 1.0, 0.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4d( 0.0, 0.0, 1.0, 1.0 ) );
     colorArray->push_back( osg::Vec4d( 0.0, 1.0, 0.0, 1.0 ) );
-    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 0.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -117,7 +117,7 @@ void ObstacleSensor::Initialize()
     //mGeode->addDrawable( mDetectorGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.0f );
+    lineWidth->setWidth( 1.5f );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -311,20 +311,24 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
     if( mGeode->getNodeMask() )
     {
+        repulsiveForce.normalize();
+        targetForce.normalize();
+        mResultantForce.normalize();
+
         (*mVertexArray)[ 0 ] = (*mVertexArray)[ 1 ] =
         (*mVertexArray)[ 2 ] = (*mVertexArray)[ 3 ] =
         (*mVertexArray)[ 4 ] = (*mVertexArray)[ 5 ] = agentDCS->getPosition();
 
-        (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * 10.0;
-        (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * 10.0;
+        (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * 3.0;
+        (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * 3.0;
         (*mVertexArray)[ 1 ].z() += repulsiveForce.z();
 
-        (*mVertexArray)[ 3 ].x() += targetForce.x() * 10.0;
-        (*mVertexArray)[ 3 ].y() += targetForce.y() * 10.0;
+        (*mVertexArray)[ 3 ].x() += targetForce.x() * 3.0;
+        (*mVertexArray)[ 3 ].y() += targetForce.y() * 3.0;
         (*mVertexArray)[ 3 ].z() += targetForce.z();
 
-        (*mVertexArray)[ 5 ].x() += mResultantForce.x() * 10.0;
-        (*mVertexArray)[ 5 ].y() += mResultantForce.y() * 10.0;
+        (*mVertexArray)[ 5 ].x() += mResultantForce.x() * 3.0;
+        (*mVertexArray)[ 5 ].y() += mResultantForce.y() * 3.0;
         (*mVertexArray)[ 5 ].z() += mResultantForce.z();
 
         mGeometry->dirtyDisplayList();

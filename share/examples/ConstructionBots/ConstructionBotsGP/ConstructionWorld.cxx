@@ -145,7 +145,7 @@ void ConstructionWorld::InitializeFramework()
 #endif
 
     int numBlocks = 12;
-    int numAgents = 6;
+    int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 

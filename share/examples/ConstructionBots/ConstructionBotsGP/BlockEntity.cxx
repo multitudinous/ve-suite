@@ -67,7 +67,7 @@ BlockEntity::BlockEntity(
     :
     CADEntity( block, pluginDCS, physicsSimulator ),
     mAttached( false ),
-    mSiteColor( 0.0, 0.0, 0.0, 1.0 ),
+    mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mAttachColor( 0.0, 1.0, 0.0, 1.0 ),
     mNoAttachColor( 1.0, 0.0, 0.0, 1.0 ),
     mPluginDCS( pluginDCS ),

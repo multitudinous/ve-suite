@@ -67,6 +67,8 @@ AgentEntity::AgentEntity(
     mBuildMode( false ),
     mMaxSpeed( 3.0 ),
     mBuildSpeed( 1.0 ),
+    mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
+    mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
     mTargetDCS( 0 ),
     mConstraint( 0 ),
@@ -191,11 +193,9 @@ void AgentEntity::Build()
     }
 
     //Rotate normalized velocity vector -90 degrees
-    velocity *= 0.5;
+    velocity *= 0.6;
     position[ 0 ] +=  velocity.y();
     position[ 1 ] += -velocity.x();
-    position[ 0 ] += -velocity.x();
-    position[ 1 ] += -velocity.y();
     GetDCS()->SetTranslationArray( position );
 
     mBuildMode = false;

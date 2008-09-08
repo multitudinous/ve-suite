@@ -77,7 +77,7 @@ BlockSensor::~BlockSensor()
 void BlockSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
+        osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 0.0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -86,7 +86,7 @@ void BlockSensor::Initialize()
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4d( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -96,7 +96,7 @@ void BlockSensor::Initialize()
     mGeode->addDrawable( mGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.0f );
+    lineWidth->setWidth( 1.5 );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -165,12 +165,12 @@ void BlockSensor::CollectInformation()
             mLineSegmentIntersector->getFirstIntersection().drawable;
 
         osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-        const osg::Vec4* color;
+        const osg::Vec4d* color;
         if( tempArray )
         {
-            color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+            color = &( static_cast< osg::Vec4dArray* >( tempArray )->at( 0 ) );
 
-            if( color->length() == 2.0 )
+            if( color == &mAgentEntity->mBlockColor )
             {
                 goToBlock = true;
                 mBlockInView = true;
