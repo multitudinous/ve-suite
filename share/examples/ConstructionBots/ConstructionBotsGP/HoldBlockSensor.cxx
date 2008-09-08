@@ -68,7 +68,7 @@ HoldBlockSensor::~HoldBlockSensor()
 void HoldBlockSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -77,7 +77,7 @@ void HoldBlockSensor::Initialize()
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -134,8 +134,6 @@ void HoldBlockSensor::CollectInformation()
     if( !mHoldingBlock )
     {
         mAgentEntity->mHeldBlock = NULL;
-        mAgentEntity->mBlockSensor->DisplayGeometry( true );
-        mAgentEntity->mObstacleSensor->DisplayGeometry( true );
 
         mAgentEntity->mPerimeterSensor->Reset();
 

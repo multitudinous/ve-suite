@@ -36,6 +36,7 @@
 #include "AgentEntity.h"
 #include "PerimeterSensor.h"
 #include "HoldBlockSensor.h"
+#include "BlockEntity.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
@@ -60,11 +61,16 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
     :
     Sensor( agentEntity ),
     mObstacleDetected( false ),
+    mNumForceLines( 3 ),
+    mNumDetectors( 0 ),
     mAngleIncrement( 20 ),
     mRange( 0 ),
     mForceAttractionConstant( 1.0 ),
     mForceRepellingConstant( 1.0 ),
-    mResultantForce( 0, 0, 0 )
+    mDetectorGeometry( 0 ),
+    mDetectorVertexArray( 0 ),
+    mResultantForce( 0, 0, 0 ),
+    mIntersectorGroup( 0 )
 {
     Initialize();
 }
@@ -76,30 +82,39 @@ ObstacleSensor::~ObstacleSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::Initialize()
 {
-    mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+    mIntersectorGroup = new osgUtil::IntersectorGroup();
+    //mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
+        //osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
+    mDetectorGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
+    mDetectorVertexArray = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
+    osg::ref_ptr< osg::Vec4Array > detectorColorArray = new osg::Vec4Array();
 
-    mVertexArray->resize( 6 );
+    mNumDetectors = static_cast< int >( 360 ) / mAngleIncrement;
+    
+    mVertexArray->resize( 2 * mNumForceLines );
+    mDetectorVertexArray->resize( 2 * mNumDetectors );
+
     mGeometry->setVertexArray( mVertexArray.get() );
+    mDetectorGeometry->setVertexArray( mDetectorVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
-    colorArray->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
-    colorArray->push_back( osg::Vec4( 1.0, 1.0, 0.0, 1.0 ) );
+    CalculateLocalPositions();
+
+    colorArray->push_back( osg::Vec4d( 1.0, 0.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4d( 0.0, 1.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 0.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
-    mGeometry->addPrimitiveSet(
-        new osg::DrawArrays( osg::PrimitiveSet::LINES, 0, 2 ) );
-    mGeometry->addPrimitiveSet(
-        new osg::DrawArrays( osg::PrimitiveSet::LINES, 2, 2 ) );
-    mGeometry->addPrimitiveSet(
-        new osg::DrawArrays( osg::PrimitiveSet::LINES, 4, 2 ) );
+    detectorColorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
+    mDetectorGeometry->setColorArray( detectorColorArray.get() );
+    mDetectorGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     mGeode->addDrawable( mGeometry.get() );
+    //mGeode->addDrawable( mDetectorGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
     lineWidth->setWidth( 1.0f );
@@ -117,6 +132,31 @@ void ObstacleSensor::Initialize()
     DisplayGeometry( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::CalculateLocalPositions()
+{
+    for( unsigned int i = 0; i < mNumForceLines; ++i )
+    {
+        mGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, i * 2, 2 ) );
+    }
+
+    for( unsigned int i = 0; i < mNumDetectors; ++i )
+    {
+        double cosTheta = cos( i * mAngleIncrement * piDivOneEighty );
+        double sinTheta = sin( i * mAngleIncrement * piDivOneEighty );
+
+        (*mDetectorVertexArray)[ i * 2 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+        (*mDetectorVertexArray)[ i * 2 + 1 ] =
+            osg::Vec3d( cosTheta, sinTheta, 0.0 );
+
+        mDetectorGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, i * 2, 2 ) );
+
+        mIntersectorGroup->addIntersector( new osgUtil::LineSegmentIntersector(
+            osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 0.0,0.0,0.0 ) ) );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CollectInformation()
 {
     //Get the DCSs
@@ -131,58 +171,47 @@ void ObstacleSensor::CollectInformation()
     mIntersections.clear();
     mObstacleDetected = false;
 
-    osg::Vec3d startPoint, endPoint;
-    startPoint = agentDCS->getPosition();
-    mLineSegmentIntersector->setStart( startPoint );
-    for( double angle = 0; angle < 360; )
+    osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
+    osg::Vec3d agentPosition = agentDCS->getPosition();
+    osgUtil::IntersectorGroup::Intersectors& intersectors =
+        mIntersectorGroup->getIntersectors();
+    for( unsigned int i = 0; i < mNumDetectors; ++i )
     {
-        double range = mRange;
-        if( mAgentEntity->mBuildMode )
-        {
-            range = 1.0;
-        }
-        endPoint.set( startPoint.x() + range * cos( angle * piDivOneEighty ), 
-                      startPoint.y() + range * sin( angle * piDivOneEighty ), 
-                      startPoint.z() );
+        endPoint = (*mDetectorVertexArray)[ i * 2 + 1 ];
+        endPoint *= mRange;
+        endPoint += agentPosition;
 
+        mLineSegmentIntersector =
+            static_cast< osgUtil::LineSegmentIntersector* >(
+                intersectors.at( i ).get() );
         mLineSegmentIntersector->reset();
+        mLineSegmentIntersector->setStart( agentPosition );
         mLineSegmentIntersector->setEnd( endPoint );
+    }
 
-        osgUtil::IntersectionVisitor intersectionVisitor(
-            mLineSegmentIntersector.get() );
+    //Remove the agentDCS and the targetDCS for intersection test
+    pluginDCS->RemoveChild( agentDCS.get() );
+    pluginDCS->RemoveChild( targetDCS.get() );
+    //This is an expensive call
+    //Try to only call once by using group intersector
+    osgUtil::IntersectionVisitor intersectionVisitor(
+        mIntersectorGroup.get() );
+    pluginDCS->accept( intersectionVisitor );
+    //Add back the agentDCS and targetDCS
+    pluginDCS->AddChild( agentDCS.get() );
+    pluginDCS->AddChild( targetDCS.get() );
 
-        pluginDCS->RemoveChild( agentDCS.get() );
-        pluginDCS->RemoveChild( targetDCS.get() );
-        pluginDCS->accept( intersectionVisitor );
-        pluginDCS->AddChild( agentDCS.get() );
-        pluginDCS->AddChild( targetDCS.get() );
-
+    for( unsigned int i = 0; i < mNumDetectors; ++i )
+    {
+        mLineSegmentIntersector =
+            static_cast< osgUtil::LineSegmentIntersector* >(
+                intersectors.at( i ).get() );
         if( mLineSegmentIntersector->containsIntersections() )
         {
             osgUtil::LineSegmentIntersector::Intersection intersection =
                 mLineSegmentIntersector->getFirstIntersection();
-            osg::Drawable* drawable = intersection.drawable.get();
-            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-            const osg::Vec4* color;
-            if( tempArray )
-            {
-                color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
-            }
-
-            if( !mAgentEntity->mBuildMode )
-            {
-                mIntersections.push_back( intersection );
-            }
-            else if( color->length() != 1.0 )
-            {
-                mIntersections.push_back( intersection );
-
-                mAgentEntity->mBuildMode = false;
-                mAgentEntity->mPerimeterSensor->Reset();
-            }
+            mIntersections.push_back( intersection );
         }
-
-        angle += mAngleIncrement;
     }
 
     if( !mIntersections.empty() )

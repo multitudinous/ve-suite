@@ -80,7 +80,7 @@ BlockEntity::BlockEntity(
     mLocation( 0, 0 ),
     mLocalPositions( new osg::Vec3Array() ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-                                 osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
+                                 osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) ) )
 {
     //Initialize side attachments
     mConnectedBlocks[ 0 ] = NULL;
@@ -127,8 +127,8 @@ void BlockEntity::CalculateLocalPositions()
 
     double blockHalfWidth = 0.5;
     osg::Vec3d startPoint, endPoint;
-    startPoint.set( 0, 0, 0 );
-    endPoint.set( blockHalfWidth + 0.2, 0, 0 );
+    startPoint.set( blockHalfWidth - 0.1, 0.0, 0.0 );
+    endPoint.set( blockHalfWidth + 0.1, 0.0, 0.0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );
@@ -143,13 +143,13 @@ void BlockEntity::CalculateLocalPositions()
         y = startPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mLocalPositions)[ i * 2 ] = osg::Vec3( xNew, yNew, 0 );
+        (*mLocalPositions)[ i * 2 ] = osg::Vec3d( xNew, yNew, 0 );
 
         x = endPoint.x();
         y = endPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mLocalPositions)[ i * 2 + 1 ] = osg::Vec3( xNew, yNew, 0 );
+        (*mLocalPositions)[ i * 2 + 1 ] = osg::Vec3d( xNew, yNew, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -215,7 +215,13 @@ void BlockEntity::AttachUpdate()
     }
 
     mAttached = true;
-    ( *mOccupancyMatrix )[ mLocation ].second = true;
+    std::map< std::pair< int, int >,
+              std::pair< bool, bool > >::iterator oMatItr =
+        mOccupancyMatrix->find( mLocation );
+    if( oMatItr != mOccupancyMatrix->end() )
+    {
+        oMatItr->second.second = true;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
@@ -338,12 +344,16 @@ bool BlockEntity::IsAttached()
 ////////////////////////////////////////////////////////////////////////////////
 bool BlockEntity::PermissionToAttach( osg::Drawable* drawable )
 {
-    if( !drawable )
+    std::map< osg::Drawable*, bool >::const_iterator itr =
+        mSideStates.find( drawable );
+    if( !drawable || itr == mSideStates.end() )
     {
         return false;
     }
-
-    return mSideStates[ drawable ];
+    else
+    {
+        return itr->second;
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::ConnectionDetection()
@@ -365,42 +375,64 @@ void BlockEntity::ConnectionDetection()
             mLineSegmentIntersector.get() );
         mPluginDCS->accept( intersectionVisitor );
 
-        const osgUtil::LineSegmentIntersector::Intersections& intersections =
-            mLineSegmentIntersector->getIntersections();
-
-        osg::ref_ptr< osg::Drawable > thisDrawable =
-            intersections.begin()->drawable;
-        osg::ref_ptr< osg::Drawable > connectedDrawable =
-            intersections.rbegin()->drawable;
-
-        if( thisDrawable.get() == connectedDrawable.get() )
+        bool sideState( true );
+        osg::ref_ptr< osg::Drawable > thisDrawable( NULL );
+        if( mLineSegmentIntersector->containsIntersections() )
         {
-            mSideStates[ thisDrawable.get() ] = true;
+            const osgUtil::LineSegmentIntersector::Intersections& intersections =
+                mLineSegmentIntersector->getIntersections();
+
+            std::multiset< osgUtil::LineSegmentIntersector::Intersection >::const_iterator itr;
+            for( itr = intersections.begin(); itr != intersections.end(); ++itr )
+            {
+                osg::ref_ptr< osg::Drawable > drawable = itr->drawable;
+                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                    drawable->getParent( 0 ) );
+                osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
+                    static_cast< ves::xplorer::scenegraph::DCS* >(
+                        parentVisitor.GetParentNode() );
+
+                std::map< std::string, bots::BlockEntity* >::const_iterator bemItr =
+                    mBlockEntityMap->find( dcs->GetName() );
+                bots::BlockEntity* blockEntity( NULL );
+                if( bemItr != mBlockEntityMap->end() )
+                {
+                    blockEntity = bemItr->second;
+                }
+
+                if( blockEntity )
+                {
+                    if( blockEntity != this )
+                    {
+                        unsigned int oppositeSide = i;
+                        if( i > 1 )
+                        {
+                            oppositeSide -= 2;
+                        }
+                        else
+                        {
+                            oppositeSide += 2;
+                        }
+
+                        mBlockGeometry->SetColor( i, mSiteColor );
+                        mConnectedBlocks[ i ] = blockEntity;
+                        mConnectedBlocks[ i ]->SetBlockConnection(
+                            oppositeSide, this );
+                        mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
+                            oppositeSide, mSiteColor );
+                        sideState = false;
+                    }
+                    else
+                    {
+                        thisDrawable = drawable;
+                    }
+                }
+            }
         }
-        else
+
+        if( thisDrawable.valid() )
         {
-            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                connectedDrawable->getParent( 0 ) );
-            osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
-                static_cast< ves::xplorer::scenegraph::DCS* >(
-                    parentVisitor.GetParentNode() );
-
-            unsigned int oppositeSide = i;
-            if( i > 1 )
-            {
-                oppositeSide -= 2;
-            }
-            else
-            {
-                oppositeSide += 2;
-            }
-
-            mBlockGeometry->SetColor( i, mSiteColor );
-            mConnectedBlocks[ i ] = ( *mBlockEntityMap )[ dcs->GetName() ];
-            mConnectedBlocks[ i ]->SetBlockConnection( oppositeSide, this );
-            mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
-                oppositeSide, mSiteColor );
-            mSideStates[ thisDrawable.get() ] = false;
+            mSideStates[ thisDrawable.get() ] = sideState;
         }
     }
 }

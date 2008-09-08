@@ -77,7 +77,7 @@ BlockSensor::~BlockSensor()
 void BlockSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -86,7 +86,7 @@ void BlockSensor::Initialize()
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+    colorArray->push_back( osg::Vec4d( 1.0f, 1.0f, 1.0f, 1.0f ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -108,7 +108,7 @@ void BlockSensor::Initialize()
 
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
-    DisplayGeometry( true );
+    DisplayGeometry( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()

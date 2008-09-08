@@ -94,20 +94,20 @@ void Grid::CreateGrid(
         {
             double x =  i - halfGridSize;
             double y = -j + halfGridSize;
-            gridVertices->push_back( osg::Vec3( x,       y,       0.0f ) );
-            gridVertices->push_back( osg::Vec3( x,       y - 1.0, 0.0f ) );
-            gridVertices->push_back( osg::Vec3( x + 1.0, y - 1.0, 0.0f ) );
-            gridVertices->push_back( osg::Vec3( x + 1.0, y,       0.0f ) );
+            gridVertices->push_back( osg::Vec3d( x,       y,       0.0f ) );
+            gridVertices->push_back( osg::Vec3d( x,       y - 1.0, 0.0f ) );
+            gridVertices->push_back( osg::Vec3d( x + 1.0, y - 1.0, 0.0f ) );
+            gridVertices->push_back( osg::Vec3d( x + 1.0, y,       0.0f ) );
 
             bool occupancy =
                 (*occupancyMatrix)[ std::make_pair( x + 0.5, y - 0.5 ) ].first;
             if( occupancy )
             {
-                gridColor->push_back( osg::Vec4( 0.7f, 0.7f, 0.7f, 1.0f ) );
+                gridColor->push_back( osg::Vec4d( 0.7f, 0.7f, 0.7f, 1.0f ) );
             }
             else
             {
-                gridColor->push_back( osg::Vec4( 0.4f, 0.4f, 0.4f, 1.0f ) );
+                gridColor->push_back( osg::Vec4d( 0.4f, 0.4f, 0.4f, 1.0f ) );
             }
         }
     }
@@ -116,7 +116,7 @@ void Grid::CreateGrid(
     grid->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
     osg::ref_ptr< osg::Vec3Array > gridNormals = new osg::Vec3Array();
-    gridNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
+    gridNormals->push_back( osg::Vec3d( 0.0f, 0.0f, 1.0f ) );
     grid->setNormalArray( gridNormals.get() );
     grid->setNormalBinding( osg::Geometry::BIND_OVERALL );
 
@@ -132,62 +132,62 @@ void Grid::CreateGrid(
 
     osg::ref_ptr< osg::Vec3Array > platformVertices = new osg::Vec3Array();
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize,  0.0f ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize,  0.0f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize,  0.0f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize,  0.0f ) );
 
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize,  0.0f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize,  0.0f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize,  0.0f ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize,  0.0f ) );
 
     platformVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize,  0.0f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize,  0.0f ) );
     platformVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( halfGridSize,  halfGridSize,  0.0f ) );
+        osg::Vec3d( halfGridSize,  halfGridSize,  0.0f ) );
 
     platformVertices->push_back(
-        osg::Vec3(  halfGridSize, halfGridSize,  0.0f ) );
+        osg::Vec3d(  halfGridSize, halfGridSize,  0.0f ) );
     platformVertices->push_back(
-        osg::Vec3(  halfGridSize, halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d(  halfGridSize, halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize,  0.0f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize,  0.0f ) );
 
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3(  halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d(  halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
     platformVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     platform->setVertexArray( platformVertices.get() );
 
     osg::ref_ptr< osg::Vec4Array > platformColor = new osg::Vec4Array();
-    platformColor->push_back( osg::Vec4( 0.2f, 0.2f, 0.2f, 1.0f ) );
+    platformColor->push_back( osg::Vec4d( 0.2f, 0.2f, 0.2f, 1.0f ) );
     platform->setColorArray( platformColor.get() );
     platform->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::Vec3Array >  platformNormals = new osg::Vec3Array();
-    platformNormals->push_back( osg::Vec3( -1.0f, 0.0f, 0.0f ) );
-    platformNormals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );
-    platformNormals->push_back( osg::Vec3( 1.0f, 0.0f, 0.0f ) );
-    platformNormals->push_back( osg::Vec3( 0.0f, 1.0f, 0.0f ) );
-    platformNormals->push_back( osg::Vec3( 0.0f, 0.0f, -1.0f ) );
+    platformNormals->push_back( osg::Vec3d( -1.0f, 0.0f, 0.0f ) );
+    platformNormals->push_back( osg::Vec3d( 0.0f, -1.0f, 0.0f ) );
+    platformNormals->push_back( osg::Vec3d( 1.0f, 0.0f, 0.0f ) );
+    platformNormals->push_back( osg::Vec3d( 0.0f, 1.0f, 0.0f ) );
+    platformNormals->push_back( osg::Vec3d( 0.0f, 0.0f, -1.0f ) );
     platform->setNormalArray( platformNormals.get() );
     platform->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -207,104 +207,104 @@ void Grid::CreateGrid(
     for( int i = 0; i <= gridSize; ++i )
     {
         lineVertices->push_back(
-            osg::Vec3( -halfGridSize, -i + halfGridSize, 0.0f ) );
+            osg::Vec3d( -halfGridSize, -i + halfGridSize, 0.0f ) );
         lineVertices->push_back(
-            osg::Vec3(  halfGridSize, -i + halfGridSize, 0.0f ) );
+            osg::Vec3d(  halfGridSize, -i + halfGridSize, 0.0f ) );
 
         lineVertices->push_back(
-            osg::Vec3( i - halfGridSize,  halfGridSize, 0.0f ) );
+            osg::Vec3d( i - halfGridSize,  halfGridSize, 0.0f ) );
         lineVertices->push_back(
-            osg::Vec3( i - halfGridSize, -halfGridSize, 0.0f ) );
+            osg::Vec3d( i - halfGridSize, -halfGridSize, 0.0f ) );
     }
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize,  0.0f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize,  0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize,  0.0f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize,  0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize,  0.0f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize,  0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, halfGridSize,  0.0f ) );
+        osg::Vec3d( halfGridSize, halfGridSize,  0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( halfGridSize, halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     lineVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, -gridSize * 0.05f ) );
     lineVertices->push_back(
-        osg::Vec3( halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( halfGridSize,  halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3(  halfGridSize, halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d(  halfGridSize, halfGridSize, -gridSize * 0.05f ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, -gridSize * 0.05f ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, 0.0f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, 0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, 0.0f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, 0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, 0.0f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, 0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, halfGridSize, 0.0f ) );
+        osg::Vec3d( halfGridSize, halfGridSize, 0.0f ) );
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, halfGridSize, halfGridSize ) );
+        osg::Vec3d( halfGridSize, halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize, halfGridSize ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, halfGridSize ) );
     lineVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, halfGridSize ) );
     lineVertices->push_back(
-        osg::Vec3( halfGridSize,  halfGridSize, halfGridSize ) );
+        osg::Vec3d( halfGridSize,  halfGridSize, halfGridSize ) );
 
     lineVertices->push_back(
-        osg::Vec3(  halfGridSize, halfGridSize, halfGridSize ) );
+        osg::Vec3d(  halfGridSize, halfGridSize, halfGridSize ) );
     lineVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, halfGridSize ) );
     lines->setVertexArray( lineVertices.get() );
 
     osg::ref_ptr< osg::Vec4Array > lineColor = new osg::Vec4Array();
-    lineColor->push_back( osg::Vec4( 0.5f, 0.5f, 0.5f, 1.0f ) );
+    lineColor->push_back( osg::Vec4d( 0.5f, 0.5f, 0.5f, 1.0f ) );
     lines->setColorArray( lineColor.get() );
     lines->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::Vec3Array > lineNormals = new osg::Vec3Array();
-    lineNormals->push_back( osg::Vec3( 0.0f, 0.0f, 1.0f ) );
+    lineNormals->push_back( osg::Vec3d( 0.0f, 0.0f, 1.0f ) );
     lines->setNormalArray( lineNormals.get() );
     lines->setNormalBinding( osg::Geometry::BIND_OVERALL );
 
@@ -321,52 +321,52 @@ void Grid::CreateGrid(
 
     osg::ref_ptr< osg::Vec3Array > wallVertices = new osg::Vec3Array();
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize, halfGridSize ) );
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize,  halfGridSize, 0.0f ) );
+        osg::Vec3d( -halfGridSize,  halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, 0.0f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, halfGridSize ) );
 
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, halfGridSize ) );
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize, -halfGridSize, 0.0f ) );
+        osg::Vec3d( -halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize, 0.0f ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3(  halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d(  halfGridSize, -halfGridSize, halfGridSize ) );
 
     wallVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, halfGridSize ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, halfGridSize ) );
     wallVertices->push_back(
-        osg::Vec3( halfGridSize, -halfGridSize, 0.0f ) );
+        osg::Vec3d( halfGridSize, -halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3( halfGridSize,  halfGridSize, 0.0f ) );
+        osg::Vec3d( halfGridSize,  halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3( halfGridSize,  halfGridSize, halfGridSize ) );
+        osg::Vec3d( halfGridSize,  halfGridSize, halfGridSize ) );
 
     wallVertices->push_back(
-        osg::Vec3(  halfGridSize, halfGridSize, halfGridSize ) );
+        osg::Vec3d(  halfGridSize, halfGridSize, halfGridSize ) );
     wallVertices->push_back(
-        osg::Vec3(  halfGridSize, halfGridSize, 0.0f ) );
+        osg::Vec3d(  halfGridSize, halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, 0.0f ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, 0.0f ) );
     wallVertices->push_back(
-        osg::Vec3( -halfGridSize, halfGridSize, halfGridSize ) );
+        osg::Vec3d( -halfGridSize, halfGridSize, halfGridSize ) );
     walls->setVertexArray( wallVertices.get() );
 
     osg::ref_ptr< osg::Vec4Array > wallColor = new osg::Vec4Array();
-    wallColor->push_back( osg::Vec4( 0.3f, 0.3f, 0.3f, 0.3f ) );
+    wallColor->push_back( osg::Vec4d( 0.3f, 0.3f, 0.3f, 0.3f ) );
     walls->setColorArray( wallColor.get() );
     walls->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::Vec3Array > wallNormals = new osg::Vec3Array();
-    wallNormals->push_back( osg::Vec3( 1.0f, 0.0f, 0.0f ) );
-    wallNormals->push_back( osg::Vec3( 0.0f, 1.0f, 0.0f ) );
-    wallNormals->push_back( osg::Vec3( -1.0f, 0.0f, 0.0f ) );
-    wallNormals->push_back( osg::Vec3( 0.0f, -1.0f, 0.0f ) );
+    wallNormals->push_back( osg::Vec3d( 1.0f, 0.0f, 0.0f ) );
+    wallNormals->push_back( osg::Vec3d( 0.0f, 1.0f, 0.0f ) );
+    wallNormals->push_back( osg::Vec3d( -1.0f, 0.0f, 0.0f ) );
+    wallNormals->push_back( osg::Vec3d( 0.0f, -1.0f, 0.0f ) );
     walls->setNormalArray( wallNormals.get() );
     walls->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 

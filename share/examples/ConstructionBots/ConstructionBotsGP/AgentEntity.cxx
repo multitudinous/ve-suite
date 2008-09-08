@@ -122,22 +122,25 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         if( mSiteSensor->CloseToSite() )
         {
             mPerimeterSensor->CollectInformation();
-            if( mPerimeterSensor->Aligned() )
-            {
-                QueryBlock();
-            }
-
             if( mPerimeterSensor->PerimeterDetected() )
             {
                 FollowPerimeter();
             }
+
+            if( mPerimeterSensor->Aligned() )
+            {
+                QueryBlock();
+            }
         }
     }
-
-    mObstacleSensor->CollectInformation();
-    if( mObstacleSensor->ObstacleDetected() )
+    
+    if( !mBuildMode )
     {
-        AvoidObstacle();
+        mObstacleSensor->CollectInformation();
+        if( mObstacleSensor->ObstacleDetected() )
+        {
+            AvoidObstacle();
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +191,7 @@ void AgentEntity::Build()
     }
 
     //Rotate normalized velocity vector -90 degrees
-    velocity *= 0.6;
+    velocity *= 0.5;
     position[ 0 ] +=  velocity.y();
     position[ 1 ] += -velocity.x();
     position[ 0 ] += -velocity.x();
@@ -196,10 +199,9 @@ void AgentEntity::Build()
     GetDCS()->SetTranslationArray( position );
 
     mBuildMode = false;
-    //mPerimeterSensor->Reset();
+    mHeldBlock = NULL;
+
     mObstacleSensor->SetForceAttractionConstant( 1.0 );
-    mBlockSensor->DisplayGeometry( true );
-    mObstacleSensor->DisplayGeometry( true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -239,15 +241,19 @@ void AgentEntity::InitiateBuildMode()
 {
     mTargetDCS = NULL;
     mBuildMode = true;
-
-    mSiteSensor->DisplayGeometry( false );
-    mObstacleSensor->DisplayGeometry( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
 {
-    bots::BlockEntity* targetEntity =
-        ( *mBlockEntityMap )[ mTargetDCS->GetName() ];
+    bots::BlockEntity* targetEntity( NULL );
+    std::map< std::string, bots::BlockEntity* >::const_iterator itr =
+        mBlockEntityMap->find( mTargetDCS->GetName() );
+    if( itr == mBlockEntityMap->end() )
+    {
+        return;
+    }
+
+    targetEntity = itr->second;
     bool collision = mPhysicsRigidBody->CollisionInquiry(
         targetEntity->GetPhysicsRigidBody() );
     if( collision )
@@ -260,9 +266,6 @@ void AgentEntity::PickUpBlock()
         mTargetDCS->SetTranslationArray( position );
 
         mTargetDCS = NULL;
-
-        mBlockSensor->DisplayGeometry( false );
-        mSiteSensor->DisplayGeometry( true );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -275,7 +278,15 @@ void AgentEntity::QueryBlock()
         static_cast< ves::xplorer::scenegraph::DCS* >(
             parentVisitor.GetParentNode() );
 
-    bots::BlockEntity* blockEntity = ( *mBlockEntityMap )[ dcs->GetName() ];
+    bots::BlockEntity* blockEntity( NULL );
+    std::map< std::string, bots::BlockEntity* >::const_iterator itr =
+        mBlockEntityMap->find( dcs->GetName() );
+    if( itr == mBlockEntityMap->end() )
+    {
+        return;
+    }
+
+    blockEntity = itr->second;
     if( blockEntity->PermissionToAttach( drawable ) )
     {
         Build();

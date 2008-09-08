@@ -80,7 +80,7 @@ PerimeterSensor::~PerimeterSensor()
 void PerimeterSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -89,7 +89,7 @@ void PerimeterSensor::Initialize()
     mVertexArray->resize( 16 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -154,25 +154,25 @@ void PerimeterSensor::CalculateLocalPositions()
         y = rightStartPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 ] = osg::Vec3( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 ] = osg::Vec3d( xNew, yNew, 0 );
 
         x = rightEndPoint.x();
         y = rightEndPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 + 1 ] = osg::Vec3( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 + 1 ] = osg::Vec3d( xNew, yNew, 0 );
 
         x = leftStartPoint.x();
         y = leftStartPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 + 2 ] = osg::Vec3( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 + 2 ] = osg::Vec3d( xNew, yNew, 0 );
 
         x = leftEndPoint.x();
         y = leftEndPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 + 3 ] = osg::Vec3( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 + 3 ] = osg::Vec3d( xNew, yNew, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -216,6 +216,19 @@ void PerimeterSensor::CollectInformation()
                 mLineSegmentIntersector->getFirstIntersection() );
             osg::ref_ptr< osg::Drawable > currentDrawable =
                 mIntersections.back().drawable;
+            osg::Array* tempArray = currentDrawable->asGeometry()->getColorArray();
+            if( tempArray )
+            {
+                const osg::Vec4* color =
+                    &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+
+                if( color->length() != 1.0 )
+                {
+                    mAgentEntity->mBuildMode = false;
+                    mAgentEntity->mPerimeterSensor->Reset();
+                    return;
+                }
+            }
 
             if( mLastClockWiseDetection )
             {
@@ -238,11 +251,7 @@ void PerimeterSensor::CollectInformation()
                     ( modulusTest == 1 && drawableTest ) )
                 {
                     mAligned = true;
-                    //mPerimeterDetected = false;
                     mQueriedConnection = currentDrawable.get();
-                    //delete mLastClockWiseDetection;
-                    //mLastClockWiseDetection = NULL;
-                    //mPreviousDrawable = NULL;
                 }
             }
 

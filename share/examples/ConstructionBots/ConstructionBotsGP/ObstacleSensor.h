@@ -42,6 +42,11 @@
 
 #include <osgUtil/LineSegmentIntersector>
 
+namespace osgUtil
+{
+class IntersectorGroup;
+}
+
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -73,7 +78,12 @@ protected:
     virtual void Initialize();
 
 private:
+    void CalculateLocalPositions();
+
     bool mObstacleDetected;
+
+    unsigned int mNumForceLines;
+    unsigned int mNumDetectors;
 
     double mAngleIncrement;
     double mRange;
@@ -81,6 +91,11 @@ private:
     double mForceRepellingConstant;
 
     btVector3 mResultantForce;
+
+    osg::ref_ptr< osg::Geometry > mDetectorGeometry;
+    osg::ref_ptr< osg::Vec3Array > mDetectorVertexArray;
+
+    osg::ref_ptr< osgUtil::IntersectorGroup > mIntersectorGroup;
 
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
 

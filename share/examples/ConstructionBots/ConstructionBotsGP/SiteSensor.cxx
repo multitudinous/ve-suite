@@ -77,7 +77,7 @@ SiteSensor::~SiteSensor()
 void SiteSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
+        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
 
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
@@ -87,7 +87,7 @@ void SiteSensor::Initialize()
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    colorArray->push_back( osg::Vec4d( 0.0f, 0.0f, 0.0f, 1.0f ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 

@@ -86,20 +86,20 @@ void Block::Initialize()
     osg::ref_ptr< osg::Vec3Array > nearLineVertices = new osg::Vec3Array();
 
     //Right
-    rightLineVertices->push_back( osg::Vec3( 0.5, -0.5, 0.5 ) );
-    rightLineVertices->push_back( osg::Vec3( 0.5,  0.5, 0.5 ) );
+    rightLineVertices->push_back( osg::Vec3d( 0.5, -0.5, 0.5 ) );
+    rightLineVertices->push_back( osg::Vec3d( 0.5,  0.5, 0.5 ) );
     mDrawables[ 0 ]->setVertexArray( rightLineVertices.get() );
     //Far
-    farLineVertices->push_back( osg::Vec3(  0.5, 0.5, 0.5 ) );
-    farLineVertices->push_back( osg::Vec3( -0.5, 0.5, 0.5 ) );
+    farLineVertices->push_back( osg::Vec3d(  0.5, 0.5, 0.5 ) );
+    farLineVertices->push_back( osg::Vec3d( -0.5, 0.5, 0.5 ) );
     mDrawables[ 1 ]->setVertexArray( farLineVertices.get() );
     //Left
-    leftLineVertices->push_back( osg::Vec3( -0.5,  0.5, 0.5 ) );
-    leftLineVertices->push_back( osg::Vec3( -0.5, -0.5, 0.5 ) );
+    leftLineVertices->push_back( osg::Vec3d( -0.5,  0.5, 0.5 ) );
+    leftLineVertices->push_back( osg::Vec3d( -0.5, -0.5, 0.5 ) );
     mDrawables[ 2 ]->setVertexArray( leftLineVertices.get() );
     //Near
-    nearLineVertices->push_back( osg::Vec3( -0.5, -0.5, 0.5 ) );
-    nearLineVertices->push_back( osg::Vec3(  0.5, -0.5, 0.5 ) );
+    nearLineVertices->push_back( osg::Vec3d( -0.5, -0.5, 0.5 ) );
+    nearLineVertices->push_back( osg::Vec3d(  0.5, -0.5, 0.5 ) );
     mDrawables[ 3 ]->setVertexArray( nearLineVertices.get() );
 
     std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator lgi;
@@ -108,7 +108,7 @@ void Block::Initialize()
         lgi->second->setStateSet( lineStateSet.get() );
 
         osg::ref_ptr< osg::Vec4Array > lineColor = new osg::Vec4Array();
-        lineColor->push_back( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+        lineColor->push_back( osg::Vec4d( 0.5, 0.5, 0.5, 1.0 ) );
         lgi->second->setColorArray( lineColor.get() );
         lgi->second->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -141,7 +141,7 @@ void Block::Initialize()
         osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
     osg::ref_ptr< osg::Material > blockMaterial = new osg::Material();
     blockMaterial->setDiffuse(
-        osg::Material::FRONT_AND_BACK, osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
+        osg::Material::FRONT_AND_BACK, osg::Vec4d( 0.0, 0.0, 1.0, 1.0 ) );
     blockStateSet->setAttribute( blockMaterial.get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Vec3Array > rightBlockVertices = new osg::Vec3Array();
@@ -151,40 +151,40 @@ void Block::Initialize()
     osg::ref_ptr< osg::Vec3Array > topBlockVertices = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > bottomBlockVertices = new osg::Vec3Array();
     //Right
-    rightBlockVertices->push_back( osg::Vec3( 0.5, -0.5,  0.5 ) );
-    rightBlockVertices->push_back( osg::Vec3( 0.5, -0.5, -0.5 ) );
-    rightBlockVertices->push_back( osg::Vec3( 0.5,  0.5, -0.5 ) );
-    rightBlockVertices->push_back( osg::Vec3( 0.5,  0.5,  0.5 ) );
+    rightBlockVertices->push_back( osg::Vec3d( 0.5, -0.5,  0.5 ) );
+    rightBlockVertices->push_back( osg::Vec3d( 0.5, -0.5, -0.5 ) );
+    rightBlockVertices->push_back( osg::Vec3d( 0.5,  0.5, -0.5 ) );
+    rightBlockVertices->push_back( osg::Vec3d( 0.5,  0.5,  0.5 ) );
     mDrawables[ 4 ]->setVertexArray( rightBlockVertices.get() );
     //Far
-    farBlockVertices->push_back( osg::Vec3(  0.5, 0.5,  0.5 ) );
-    farBlockVertices->push_back( osg::Vec3(  0.5, 0.5, -0.5 ) );
-    farBlockVertices->push_back( osg::Vec3( -0.5, 0.5, -0.5 ) );
-    farBlockVertices->push_back( osg::Vec3( -0.5, 0.5,  0.5 ) );
+    farBlockVertices->push_back( osg::Vec3d(  0.5, 0.5,  0.5 ) );
+    farBlockVertices->push_back( osg::Vec3d(  0.5, 0.5, -0.5 ) );
+    farBlockVertices->push_back( osg::Vec3d( -0.5, 0.5, -0.5 ) );
+    farBlockVertices->push_back( osg::Vec3d( -0.5, 0.5,  0.5 ) );
     mDrawables[ 5 ]->setVertexArray( farBlockVertices.get() );
     //Left
-    leftBlockVertices->push_back( osg::Vec3( -0.5,  0.5,  0.5 ) );
-    leftBlockVertices->push_back( osg::Vec3( -0.5,  0.5, -0.5 ) );
-    leftBlockVertices->push_back( osg::Vec3( -0.5, -0.5, -0.5 ) );
-    leftBlockVertices->push_back( osg::Vec3( -0.5, -0.5,  0.5 ) );
+    leftBlockVertices->push_back( osg::Vec3d( -0.5,  0.5,  0.5 ) );
+    leftBlockVertices->push_back( osg::Vec3d( -0.5,  0.5, -0.5 ) );
+    leftBlockVertices->push_back( osg::Vec3d( -0.5, -0.5, -0.5 ) );
+    leftBlockVertices->push_back( osg::Vec3d( -0.5, -0.5,  0.5 ) );
     mDrawables[ 6 ]->setVertexArray( leftBlockVertices.get() );
     //Near
-    nearBlockVertices->push_back( osg::Vec3( -0.5, -0.5,  0.5 ) );
-    nearBlockVertices->push_back( osg::Vec3( -0.5, -0.5, -0.5 ) );
-    nearBlockVertices->push_back( osg::Vec3(  0.5, -0.5, -0.5 ) );
-    nearBlockVertices->push_back( osg::Vec3(  0.5, -0.5,  0.5 ) );
+    nearBlockVertices->push_back( osg::Vec3d( -0.5, -0.5,  0.5 ) );
+    nearBlockVertices->push_back( osg::Vec3d( -0.5, -0.5, -0.5 ) );
+    nearBlockVertices->push_back( osg::Vec3d(  0.5, -0.5, -0.5 ) );
+    nearBlockVertices->push_back( osg::Vec3d(  0.5, -0.5,  0.5 ) );
     mDrawables[ 7 ]->setVertexArray( nearBlockVertices.get() );
     //Top
-    topBlockVertices->push_back( osg::Vec3( -0.5,  0.5, 0.5 ) );
-    topBlockVertices->push_back( osg::Vec3( -0.5, -0.5, 0.5 ) );
-    topBlockVertices->push_back( osg::Vec3(  0.5, -0.5, 0.5 ) );
-    topBlockVertices->push_back( osg::Vec3(  0.5,  0.5, 0.5 ) );
+    topBlockVertices->push_back( osg::Vec3d( -0.5,  0.5, 0.5 ) );
+    topBlockVertices->push_back( osg::Vec3d( -0.5, -0.5, 0.5 ) );
+    topBlockVertices->push_back( osg::Vec3d(  0.5, -0.5, 0.5 ) );
+    topBlockVertices->push_back( osg::Vec3d(  0.5,  0.5, 0.5 ) );
     mDrawables[ 8 ]->setVertexArray( topBlockVertices.get() );
     //Bottom
-    bottomBlockVertices->push_back( osg::Vec3( -0.5, -0.5, -0.5 ) );
-    bottomBlockVertices->push_back( osg::Vec3( -0.5,  0.5, -0.5 ) );
-    bottomBlockVertices->push_back( osg::Vec3(  0.5,  0.5, -0.5 ) );
-    bottomBlockVertices->push_back( osg::Vec3(  0.5, -0.5, -0.5 ) );
+    bottomBlockVertices->push_back( osg::Vec3d( -0.5, -0.5, -0.5 ) );
+    bottomBlockVertices->push_back( osg::Vec3d( -0.5,  0.5, -0.5 ) );
+    bottomBlockVertices->push_back( osg::Vec3d(  0.5,  0.5, -0.5 ) );
+    bottomBlockVertices->push_back( osg::Vec3d(  0.5, -0.5, -0.5 ) );
     mDrawables[ 9 ]->setVertexArray( bottomBlockVertices.get() );
 
     osg::ref_ptr< osg::Vec3Array > rightBlockNormals = new osg::Vec3Array();
@@ -194,17 +194,17 @@ void Block::Initialize()
     osg::ref_ptr< osg::Vec3Array > topBlockNormals = new osg::Vec3Array();
     osg::ref_ptr< osg::Vec3Array > bottomBlockNormals = new osg::Vec3Array();
     //Right
-    rightBlockNormals->push_back( osg::Vec3( 1.0, 0.0, 0.0 ) );
+    rightBlockNormals->push_back( osg::Vec3d( 1.0, 0.0, 0.0 ) );
     //Far
-    farBlockNormals->push_back( osg::Vec3( 0.0, 1.0, 0.0 ) );
+    farBlockNormals->push_back( osg::Vec3d( 0.0, 1.0, 0.0 ) );
     //Left
-    leftBlockNormals->push_back( osg::Vec3( -1.0, 0.0, 0.0 ) );
+    leftBlockNormals->push_back( osg::Vec3d( -1.0, 0.0, 0.0 ) );
     //Near
-    nearBlockNormals->push_back( osg::Vec3( 0.0, -1.0, 0.0 ) );
+    nearBlockNormals->push_back( osg::Vec3d( 0.0, -1.0, 0.0 ) );
     //Top
-    topBlockNormals->push_back( osg::Vec3( 0.0, 0.0, 1.0 ) );
+    topBlockNormals->push_back( osg::Vec3d( 0.0, 0.0, 1.0 ) );
     //Bottom
-    bottomBlockNormals->push_back( osg::Vec3( 0.0, 0.0, -1.0 ) );
+    bottomBlockNormals->push_back( osg::Vec3d( 0.0, 0.0, -1.0 ) );
 
     mDrawables[ 4 ]->setNormalArray( rightBlockNormals.get() );
     mDrawables[ 5 ]->setNormalArray( farBlockNormals.get() );
@@ -219,7 +219,7 @@ void Block::Initialize()
         bgi->second->setStateSet( blockStateSet.get() );
 
         osg::ref_ptr< osg::Vec4Array > color = new osg::Vec4Array();
-        color->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+        color->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
         bgi->second->setColorArray( color.get() );
         bgi->second->setColorBinding( osg::Geometry::BIND_OVERALL );
 

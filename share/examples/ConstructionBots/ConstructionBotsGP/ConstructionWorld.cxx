@@ -135,6 +135,7 @@ void ConstructionWorld::InitializeFramework()
     try
     {
         mAmbientSound->LoadFile( "Sounds/AmbientSound.wav" );
+        //mAmbientSound->GetSoundState()->setPlay( true );
         mAmbientSound->GetSoundState()->setLooping( true );
     }
     catch( ... )
@@ -143,8 +144,8 @@ void ConstructionWorld::InitializeFramework()
     }
 #endif
 
-    int numBlocks = 16;
-    int numAgents = 3;
+    int numBlocks = 12;
+    int numAgents = 6;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
@@ -167,20 +168,15 @@ void ConstructionWorld::InitializeFramework()
     mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
 
+    mOccupancyMatrix[ std::make_pair(  1,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1, -1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  1, -1 ) ].first = true;
+
     mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
     mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -2 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  3,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0,  3 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -3,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0, -3 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  4,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0,  4 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -4,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0, -4 ) ].first = true;
 
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
@@ -194,7 +190,7 @@ void ConstructionWorld::InitializeFramework()
                                   mPhysicsSimulator );
     mGrid->SetNameAndDescriptions();
     mGrid->InitPhysics();
-    mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
+    mGrid->GetPhysicsRigidBody()->setFriction( 0.5 );
     mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
 
     //Initialize the starting block
