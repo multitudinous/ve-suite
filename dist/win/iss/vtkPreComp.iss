@@ -28,7 +28,7 @@ BackColor2=$1b84f7
 WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
 PrivilegesRequired=none
 
 [Languages]
