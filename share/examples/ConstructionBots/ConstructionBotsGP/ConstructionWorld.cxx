@@ -149,7 +149,7 @@ void ConstructionWorld::InitializeFramework()
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
 
-    int halfPosition = static_cast< int >( gridSize * 0.5f );
+    int halfPosition = static_cast< int >( gridSize * 0.5 );
     for( int j = 0; j < gridSize; ++j )
     {
         for( int i = 0; i < gridSize; ++i )
@@ -185,9 +185,8 @@ void ConstructionWorld::InitializeFramework()
     osg::ref_ptr< bots::Grid > grid = new bots::Grid();
     grid->CreateGrid( gridSize, &mOccupancyMatrix );
 
-    mGrid = new bots::GridEntity( grid.get(),
-                                  mPluginDCS.get(),
-                                  mPhysicsSimulator );
+    mGrid = new bots::GridEntity(
+        grid.get(), mPluginDCS.get(), mPhysicsSimulator );
     mGrid->SetNameAndDescriptions();
     mGrid->InitPhysics();
     mGrid->GetPhysicsRigidBody()->setFriction( 0.5 );
@@ -195,10 +194,8 @@ void ConstructionWorld::InitializeFramework()
 
     //Initialize the starting block
     osg::ref_ptr< bots::Block > startBlock = new bots::Block();
-    mStartBlock = new bots::BlockEntity( startBlock.get(),
-                                         mPluginDCS.get(),
-                                         mSoundManager,
-                                         mPhysicsSimulator );
+    mStartBlock = new bots::BlockEntity(
+        startBlock.get(), mPluginDCS.get(), mPhysicsSimulator );
     double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
     mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
     mStartBlock->InitPhysics();
@@ -215,7 +212,7 @@ void ConstructionWorld::InitializeFramework()
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Block > block = new bots::Block();
         bots::BlockEntity* blockEntity = new bots::BlockEntity(
-            block.get(), mPluginDCS.get(), mSoundManager, mPhysicsSimulator );
+            block.get(), mPluginDCS.get(), mPhysicsSimulator );
 
         //Set physics properties for blocks
         blockEntity->InitPhysics();
@@ -239,7 +236,7 @@ void ConstructionWorld::InitializeFramework()
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Agent > agent = new bots::Agent();
         bots::AgentEntity* agentEntity = new AgentEntity(
-            agent.get(), mPluginDCS.get(), mPhysicsSimulator );
+            agent.get(), mPluginDCS.get(), mSoundManager, mPhysicsSimulator );
 
         //Set physics properties for blocks
         agentEntity->InitPhysics();
@@ -255,7 +252,7 @@ void ConstructionWorld::InitializeFramework()
         agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
         //Set the sensor range for the agents
-        agentEntity->GetBlockSensor()->SetRange( gridSize * 0.5 );
+        agentEntity->GetBlockSensor()->SetRange( gridSize * 0.3 );
         agentEntity->GetObstacleSensor()->SetRange( gridSize );
         agentEntity->GetSiteSensor()->SetRange( gridSize );
 

@@ -48,6 +48,9 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
+// --- osgAL Includes --- //
+#include <osgAL/SoundState>
+
 // --- Bullet Includes --- //
 #include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h>
 #include <BulletDynamics/Dynamics/btDynamicsWorld.h>
@@ -57,10 +60,15 @@
 
 using namespace bots;
 
+const bool SHOW_SENSOR_GEOMETRY = true;
+
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::AgentEntity(
     bots::Agent* agent,
     ves::xplorer::scenegraph::DCS* pluginDCS,
+#ifdef VE_SOUND
+    osgAL::SoundManager* soundManager,
+#endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     CADEntity( agent, pluginDCS, physicsSimulator ),
@@ -70,6 +78,12 @@ AgentEntity::AgentEntity(
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
+#ifdef VE_SOUND
+    mPickUpBlockSound( new ves::xplorer::scenegraph::Sound( 
+                           "PickUpBlockSound", GetDCS(), soundManager ) ),
+    mAttachBlockSound( new ves::xplorer::scenegraph::Sound( 
+                           "AttachBlockSound", GetDCS(), soundManager ) ),
+#endif
     mTargetDCS( 0 ),
     mConstraint( 0 ),
     mAgentGeometry( agent ),
@@ -94,6 +108,20 @@ AgentEntity::~AgentEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Initialize()
 {
+#ifdef VE_SOUND
+    try
+    {
+        mPickUpBlockSound->LoadFile( "Sounds/PickUpBlock.wav" );
+        mAttachBlockSound->LoadFile( "Sounds/AttachBlock.wav" );
+    }
+    catch( ... )
+    {
+        std::cerr << "Could not load sound files!" << std::endl;
+    }
+
+    mPickUpBlockSound->GetSoundState()->setReferenceDistance( 1.0 );
+#endif
+
     mBlockSensor = bots::BlockSensorPtr(
         new bots::BlockSensor( this ) );
     mHoldBlockSensor = bots::HoldBlockSensorPtr(
@@ -108,9 +136,20 @@ void AgentEntity::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::CommunicatingBlocksAlgorithm()
 {
+    if( SHOW_SENSOR_GEOMETRY )
+    {
+        mBlockSensor->DisplayGeometry( false );
+        mObstacleSensor->DisplayGeometry( false );
+        mSiteSensor->DisplayGeometry( false );
+    }
+
     mHoldBlockSensor->CollectInformation();
     if( !mHoldBlockSensor->HoldingBlock() )
     {
+        if( SHOW_SENSOR_GEOMETRY )
+        {
+            mBlockSensor->DisplayGeometry( true );
+        }
         mBlockSensor->CollectInformation();
         if( mBlockSensor->BlockInView() &&
             mBlockSensor->CloseToBlock() )
@@ -120,6 +159,10 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
     }
     else
     {
+        if( SHOW_SENSOR_GEOMETRY )
+        {
+            mSiteSensor->DisplayGeometry( true );
+        }
         mSiteSensor->CollectInformation();
         if( mSiteSensor->CloseToSite() )
         {
@@ -138,6 +181,10 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
     
     if( !mBuildMode )
     {
+        if( SHOW_SENSOR_GEOMETRY )
+        {
+            mObstacleSensor->DisplayGeometry( true );
+        }
         mObstacleSensor->CollectInformation();
         if( mObstacleSensor->ObstacleDetected() )
         {
@@ -202,6 +249,7 @@ void AgentEntity::Build()
     mHeldBlock = NULL;
 
     mObstacleSensor->SetForceAttractionConstant( 1.0 );
+    mAttachBlockSound->PushSoundEvent( 10 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -258,7 +306,7 @@ void AgentEntity::PickUpBlock()
         targetEntity->GetPhysicsRigidBody() );
     if( collision )
     {
-        targetEntity->GetPickUpBlockSound()->PushSoundEvent( 10 );
+        mPickUpBlockSound->PushSoundEvent( 10 );
         mHeldBlock = targetEntity;
 
         double* position = mDCS->GetVETranslationArray();

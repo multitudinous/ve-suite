@@ -122,6 +122,13 @@ void Agent::Initialize()
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     if( texture.valid() )
     {
+        texture->setInternalFormat( GL_RGBA8 );
+        texture->setSourceFormat( GL_RGBA );
+        texture->setSourceType( GL_UNSIGNED_INT );
+        texture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+        texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+        texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+        texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
         stateset->setTextureAttributeAndModes(
             0, texture.get() ,osg::StateAttribute::ON );
     }
@@ -131,55 +138,55 @@ void Agent::Initialize()
 
     osg::ref_ptr< osg::Vec3Array > agentVertices = new osg::Vec3Array();
     //Left
-    agentVertices->push_back( osg::Vec3d( -0.5,  0.5,  0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5,  0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5, -0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5, -0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5,  0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5,  0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, -0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, -0.5,  0.5 ) );
     //Near
-    agentVertices->push_back( osg::Vec3d( -0.5, -0.5,  0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5, -0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5, -0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5, -0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, -0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, -0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5, -0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5, -0.5,  0.5 ) );
     //Right
-    agentVertices->push_back( osg::Vec3d( 0.5, -0.5,  0.5 ) );
-    agentVertices->push_back( osg::Vec3d( 0.5, -0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( 0.5,  0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( 0.5,  0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3( 0.5, -0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3( 0.5, -0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( 0.5,  0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( 0.5,  0.5,  0.5 ) );
     //Far
-    agentVertices->push_back( osg::Vec3d(  0.5, 0.5,  0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5, 0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5, 0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5, 0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5, 0.5,  0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5, 0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, 0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, 0.5,  0.5 ) );
     //Top
-    agentVertices->push_back( osg::Vec3d( -0.5,  0.5, 0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5, -0.5, 0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5, -0.5, 0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5,  0.5, 0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5,  0.5, 0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, -0.5, 0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5, -0.5, 0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5,  0.5, 0.5 ) );
     //Bottom
-    agentVertices->push_back( osg::Vec3d( -0.5, -0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d( -0.5,  0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5,  0.5, -0.5 ) );
-    agentVertices->push_back( osg::Vec3d(  0.5, -0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5, -0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3( -0.5,  0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5,  0.5, -0.5 ) );
+    agentVertices->push_back( osg::Vec3(  0.5, -0.5, -0.5 ) );
     agent->setVertexArray( agentVertices.get() );
 
     osg::ref_ptr< osg::Vec4Array > agentColor = new osg::Vec4Array();
-    agentColor->push_back( osg::Vec4d( 1.0, 0.0, 0.0, 1.0 ) );
+    agentColor->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
     agent->setColorArray( agentColor.get() );
     agent->setColorBinding( osg::Geometry::BIND_OVERALL );
 
     osg::ref_ptr< osg::Vec3Array > agentNormals = new osg::Vec3Array();
     //Left
-    agentNormals->push_back( osg::Vec3d( -1.0,  0.0,  0.0 ) );
+    agentNormals->push_back( osg::Vec3( -1.0,  0.0,  0.0 ) );
     //Near
-    agentNormals->push_back( osg::Vec3d(  0.0, -1.0,  0.0 ) );
+    agentNormals->push_back( osg::Vec3(  0.0, -1.0,  0.0 ) );
     //Right
-    agentNormals->push_back( osg::Vec3d(  1.0,  0.0,  0.0 ) );
+    agentNormals->push_back( osg::Vec3(  1.0,  0.0,  0.0 ) );
     //Far
-    agentNormals->push_back( osg::Vec3d(  0.0,  1.0,  0.0 ) );
+    agentNormals->push_back( osg::Vec3(  0.0,  1.0,  0.0 ) );
     //Top
-    agentNormals->push_back( osg::Vec3d(  0.0,  0.0,  1.0 ) );
+    agentNormals->push_back( osg::Vec3(  0.0,  0.0,  1.0 ) );
     //Bottom
-    agentNormals->push_back( osg::Vec3d(  0.0,  0.0, -1.0 ) );
+    agentNormals->push_back( osg::Vec3(  0.0,  0.0, -1.0 ) );
     agent->setNormalArray( agentNormals.get() );
     agent->setNormalBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 

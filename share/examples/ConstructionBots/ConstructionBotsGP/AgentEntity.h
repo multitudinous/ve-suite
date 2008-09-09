@@ -51,12 +51,24 @@ namespace xplorer
 namespace scenegraph
 {
     class DCS;
+
+#ifdef VE_SOUND
+    class Sound;
+#endif
 }
 }
 }
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
+
+// --- osgAL Includes --- //
+#ifdef VE_SOUND
+namespace osgAL
+{
+    class SoundManager;
+}
+#endif
 
 // --- Bullet Includes --- //
 class btGeneric6DofConstraint;
@@ -75,6 +87,9 @@ public:
     AgentEntity(
         bots::Agent* agent,
         ves::xplorer::scenegraph::DCS* pluginDCS,
+#ifdef VE_SOUND
+        osgAL::SoundManager* soundManager,
+#endif
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~AgentEntity();
@@ -124,12 +139,17 @@ private:
     double mBuildSpeed;
 
     //The color of the blocks
-    osg::Vec4d mBlockColor;
+    osg::Vec4 mBlockColor;
     //The color of the site
-    osg::Vec4d mSiteColor;
+    osg::Vec4 mSiteColor;
 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
+
+#ifdef VE_SOUND
+    ves::xplorer::scenegraph::Sound* mPickUpBlockSound;
+    ves::xplorer::scenegraph::Sound* mAttachBlockSound;
+#endif
 
     btGeneric6DofConstraint* mConstraint;
 

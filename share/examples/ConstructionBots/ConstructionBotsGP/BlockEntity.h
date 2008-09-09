@@ -37,21 +37,6 @@
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
-namespace ves
-{
-namespace xplorer
-{
-namespace scenegraph
-{
-    class DCS;
-
-#ifdef VE_SOUND
-    class Sound;
-#endif
-}
-}
-}
-
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
@@ -61,14 +46,6 @@ namespace osg
 {
 class Drawable;
 }
-
-// --- osgAL Includes --- //
-#ifdef VE_SOUND
-namespace osgAL
-{
-    class SoundManager;
-}
-#endif
 
 // --- Bullet Includes --- //
 class btGeneric6DofConstraint;
@@ -88,9 +65,6 @@ public:
     BlockEntity(
         bots::Block* block,
         ves::xplorer::scenegraph::DCS* pluginDCS,
-#ifdef VE_SOUND
-        osgAL::SoundManager* soundManager,
-#endif
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
     virtual ~BlockEntity();
@@ -111,10 +85,6 @@ public:
     //Get this block's occupancy matrix
     std::map< std::pair< int, int >,
               std::pair< bool, bool > >* GetOccupancyMatrix();
-    //Get the pick up block sound
-#ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* const GetPickUpBlockSound() const;
-#endif
 
     //Set a connection to this block
     void SetBlockConnection(
@@ -150,19 +120,14 @@ private:
     bool mNeighborOccupancy[ 4 ];
 
     //The color of the site
-    osg::Vec4d mSiteColor;
+    osg::Vec4 mSiteColor;
     //The color that shows valid attachments
-    osg::Vec4d mAttachColor;
+    osg::Vec4 mAttachColor;
     //The color that shows invalid attachments
-    osg::Vec4d mNoAttachColor;
+    osg::Vec4 mNoAttachColor;
 
     //A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
-
-    //
-#ifdef VE_SOUND
-    ves::xplorer::scenegraph::Sound* mPickUpBlockSound;
-#endif
 
     //This in only here to get connections when first attached to structure
     //A pointer to the block entity map

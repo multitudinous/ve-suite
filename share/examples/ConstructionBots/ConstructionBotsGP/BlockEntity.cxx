@@ -37,7 +37,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
-#include <ves/xplorer/scenegraph/Sound.h>
 
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
@@ -60,9 +59,6 @@ const double piDivOneEighty = 0.0174532925;
 BlockEntity::BlockEntity(
     bots::Block* block,
     ves::xplorer::scenegraph::DCS* pluginDCS,
-#ifdef VE_SOUND
-    osgAL::SoundManager* soundManager,
-#endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     CADEntity( block, pluginDCS, physicsSimulator ),
@@ -71,16 +67,12 @@ BlockEntity::BlockEntity(
     mAttachColor( 0.0, 1.0, 0.0, 1.0 ),
     mNoAttachColor( 1.0, 0.0, 0.0, 1.0 ),
     mPluginDCS( pluginDCS ),
-#ifdef VE_SOUND
-    mPickUpBlockSound( new ves::xplorer::scenegraph::Sound( 
-                           "PickUpBlockSound", GetDCS(), soundManager ) ),
-#endif
     mBlockGeometry( block ),
     mConstraint( 0 ),
     mLocation( 0, 0 ),
     mLocalPositions( new osg::Vec3Array() ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
-                                 osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) ) )
+                                 osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
 {
     //Initialize side attachments
     mConnectedBlocks[ 0 ] = NULL;
@@ -107,17 +99,6 @@ BlockEntity::~BlockEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::Initialize()
 {
-#ifdef VE_SOUND
-    try
-    {
-        mPickUpBlockSound->LoadFile( "Sounds/PickUpBlock.wav" );
-    }
-    catch( ... )
-    {
-        std::cerr << "Could not load sounds" << std::endl;
-    }
-#endif
-
     CalculateLocalPositions();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +107,7 @@ void BlockEntity::CalculateLocalPositions()
     mLocalPositions->resize( 8 );
 
     double blockHalfWidth = 0.5;
-    osg::Vec3d startPoint, endPoint;
+    osg::Vec3 startPoint, endPoint;
     startPoint.set( blockHalfWidth - 0.1, 0.0, 0.0 );
     endPoint.set( blockHalfWidth + 0.1, 0.0, 0.0 );
 
@@ -143,13 +124,13 @@ void BlockEntity::CalculateLocalPositions()
         y = startPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mLocalPositions)[ i * 2 ] = osg::Vec3d( xNew, yNew, 0 );
+        (*mLocalPositions)[ i * 2 ] = osg::Vec3( xNew, yNew, 0 );
 
         x = endPoint.x();
         y = endPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mLocalPositions)[ i * 2 + 1 ] = osg::Vec3d( xNew, yNew, 0 );
+        (*mLocalPositions)[ i * 2 + 1 ] = osg::Vec3( xNew, yNew, 0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -361,8 +342,8 @@ void BlockEntity::ConnectionDetection()
     osg::Vec3 blockPosition = mDCS->getPosition();
     for( unsigned int i = 0; i < 4; ++i )
     {
-        osg::Vec3d startPoint = (*mLocalPositions)[ i * 2 ];
-        osg::Vec3d endPoint = (*mLocalPositions)[ i * 2 + 1 ];
+        osg::Vec3 startPoint = (*mLocalPositions)[ i * 2 ];
+        osg::Vec3 endPoint = (*mLocalPositions)[ i * 2 + 1 ];
 
         startPoint += blockPosition;
         endPoint += blockPosition;
@@ -452,13 +433,6 @@ std::map< std::pair< int, int >,
 {
     return mOccupancyMatrix;
 }
-////////////////////////////////////////////////////////////////////////////////
-#ifdef VE_SOUND
-ves::xplorer::scenegraph::Sound* const BlockEntity::GetPickUpBlockSound() const
-{
-    return mPickUpBlockSound;
-}
-#endif
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(
     unsigned int side, bots::BlockEntity* blockEntity )

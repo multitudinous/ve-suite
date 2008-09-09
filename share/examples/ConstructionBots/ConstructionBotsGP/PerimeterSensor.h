@@ -93,6 +93,8 @@ private:
     btVector3 mResultantForce;
 
     osg::Drawable* mQueriedConnection;
+
+    osg::ref_ptr< osgUtil::IntersectorGroup > mIntersectorGroup;
     
     std::vector< osgUtil::LineSegmentIntersector::Intersection > mIntersections;
 };

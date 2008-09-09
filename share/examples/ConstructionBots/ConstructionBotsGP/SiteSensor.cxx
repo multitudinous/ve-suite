@@ -77,7 +77,7 @@ SiteSensor::~SiteSensor()
 void SiteSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
+        osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
 
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
@@ -87,7 +87,7 @@ void SiteSensor::Initialize()
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4d( 0.0f, 0.0f, 0.0f, 1.0f ) );
+    colorArray->push_back( mAgentEntity->mSiteColor );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -97,7 +97,7 @@ void SiteSensor::Initialize()
     mGeode->addDrawable( mGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.0f );
+    lineWidth->setWidth( 1.0 );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -153,9 +153,9 @@ void SiteSensor::CollectInformation()
     mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
     mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
 
+    pluginDCS->RemoveChild( agentDCS.get() );
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
-    pluginDCS->RemoveChild( agentDCS.get() );
     pluginDCS->accept( intersectionVisitor );
     pluginDCS->AddChild( agentDCS.get() );
 
@@ -166,11 +166,11 @@ void SiteSensor::CollectInformation()
             mLineSegmentIntersector->getFirstIntersection().drawable;
 
         osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-        const osg::Vec4d* color;
+        const osg::Vec4* color;
         if( tempArray )
         {
-            color = &( static_cast< osg::Vec4dArray* >( tempArray )->at( 0 ) );
-            if( color == &mAgentEntity->mSiteColor )
+            color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+            if( *color == mAgentEntity->mSiteColor )
             {
                 goToSite = true;
                 mSiteInView = true;

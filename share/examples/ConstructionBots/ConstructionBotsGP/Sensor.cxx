@@ -40,7 +40,6 @@
 #include <osg/Geometry>
 
 #include <osgUtil/LineSegmentIntersector>
-//#include <osgUtil/IntersectionVisitor>
 
 using namespace bots;
 

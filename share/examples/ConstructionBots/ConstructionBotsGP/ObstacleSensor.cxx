@@ -83,8 +83,6 @@ ObstacleSensor::~ObstacleSensor()
 void ObstacleSensor::Initialize()
 {
     mIntersectorGroup = new osgUtil::IntersectorGroup();
-    //mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        //osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mDetectorGeometry = new osg::Geometry();
@@ -103,13 +101,13 @@ void ObstacleSensor::Initialize()
 
     CalculateLocalPositions();
 
-    colorArray->push_back( osg::Vec4d( 1.0, 0.0, 0.0, 1.0 ) );
-    colorArray->push_back( osg::Vec4d( 0.0, 0.0, 1.0, 1.0 ) );
-    colorArray->push_back( osg::Vec4d( 0.0, 1.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 0.0, 0.0, 1.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
-    detectorColorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
+    detectorColorArray->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
     mDetectorGeometry->setColorArray( detectorColorArray.get() );
     mDetectorGeometry->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -117,7 +115,7 @@ void ObstacleSensor::Initialize()
     //mGeode->addDrawable( mDetectorGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.5f );
+    lineWidth->setWidth( 1.0 );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -129,7 +127,7 @@ void ObstacleSensor::Initialize()
 
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
-    DisplayGeometry( true );
+    DisplayGeometry( false );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::CalculateLocalPositions()
@@ -145,15 +143,15 @@ void ObstacleSensor::CalculateLocalPositions()
         double cosTheta = cos( i * mAngleIncrement * piDivOneEighty );
         double sinTheta = sin( i * mAngleIncrement * piDivOneEighty );
 
-        (*mDetectorVertexArray)[ i * 2 ] = osg::Vec3d( 0.0, 0.0, 0.0 );
+        (*mDetectorVertexArray)[ i * 2 ] = osg::Vec3( 0.0, 0.0, 0.0 );
         (*mDetectorVertexArray)[ i * 2 + 1 ] =
-            osg::Vec3d( cosTheta, sinTheta, 0.0 );
+            osg::Vec3( cosTheta, sinTheta, 0.0 );
 
         mDetectorGeometry->addPrimitiveSet(
             new osg::DrawArrays( osg::PrimitiveSet::LINES, i * 2, 2 ) );
 
         mIntersectorGroup->addIntersector( new osgUtil::LineSegmentIntersector(
-            osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 0.0,0.0,0.0 ) ) );
+            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -171,8 +169,8 @@ void ObstacleSensor::CollectInformation()
     mIntersections.clear();
     mObstacleDetected = false;
 
-    osg::Vec3d endPoint( 0.0, 0.0, 0.0 );
-    osg::Vec3d agentPosition = agentDCS->getPosition();
+    osg::Vec3 endPoint( 0.0, 0.0, 0.0 );
+    osg::Vec3 agentPosition = agentDCS->getPosition();
     osgUtil::IntersectorGroup::Intersectors& intersectors =
         mIntersectorGroup->getIntersectors();
     for( unsigned int i = 0; i < mNumDetectors; ++i )
@@ -194,8 +192,7 @@ void ObstacleSensor::CollectInformation()
     pluginDCS->RemoveChild( targetDCS.get() );
     //This is an expensive call
     //Try to only call once by using group intersector
-    osgUtil::IntersectionVisitor intersectionVisitor(
-        mIntersectorGroup.get() );
+    osgUtil::IntersectionVisitor intersectionVisitor( mIntersectorGroup.get() );
     pluginDCS->accept( intersectionVisitor );
     //Add back the agentDCS and targetDCS
     pluginDCS->AddChild( agentDCS.get() );
@@ -233,7 +230,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     btVector3 repulsiveForce( 0, 0, 0 );
     for( size_t i = 0; i < mIntersections.size(); ++i )
     {
-        osg::Vec3d intersect = mIntersections.at( i ).getWorldIntersectPoint();
+        osg::Vec3 intersect = mIntersections.at( i ).getWorldIntersectPoint();
         btVector3 deltaForce( intersect.x() - agentPosition[ 0 ],
                               intersect.y() - agentPosition[ 1 ], 0 );
 

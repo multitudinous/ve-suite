@@ -64,7 +64,8 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     mPreviousDrawable( 0 ),
     mRange( 0.1 ),
     mResultantForce( 0, 0, 0 ),
-    mQueriedConnection( 0 )
+    mQueriedConnection( 0 ),
+    mIntersectorGroup( 0 )
 {
     Initialize();
 }
@@ -79,8 +80,7 @@ PerimeterSensor::~PerimeterSensor()
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Initialize()
 {
-    mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3d( 0.0, 0.0, 0.0 ), osg::Vec3d( 0.0, 0.0, 0.0 ) );
+    mIntersectorGroup = new osgUtil::IntersectorGroup();
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -89,7 +89,7 @@ void PerimeterSensor::Initialize()
     mVertexArray->resize( 16 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -113,7 +113,7 @@ void PerimeterSensor::Initialize()
     mGeode->addDrawable( mGeometry.get() );
 
     osg::ref_ptr< osg::LineWidth > lineWidth = new osg::LineWidth();
-    lineWidth->setWidth( 1.5 );
+    lineWidth->setWidth( 1.0 );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
@@ -133,11 +133,11 @@ void PerimeterSensor::Initialize()
 void PerimeterSensor::CalculateLocalPositions()
 {
     double blockHalfWidth = 0.5;
-    osg::Vec3d rightStartPoint, rightEndPoint;
+    osg::Vec3 rightStartPoint, rightEndPoint;
     rightStartPoint.set( blockHalfWidth, -blockHalfWidth, 0 );
     rightEndPoint.set( blockHalfWidth + mRange, -blockHalfWidth, 0 );
 
-    osg::Vec3d leftStartPoint, leftEndPoint;
+    osg::Vec3 leftStartPoint, leftEndPoint;
     leftStartPoint.set( blockHalfWidth, blockHalfWidth, 0 );
     leftEndPoint.set( blockHalfWidth + mRange, blockHalfWidth, 0 );
 
@@ -154,25 +154,35 @@ void PerimeterSensor::CalculateLocalPositions()
         y = rightStartPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 ] = osg::Vec3d( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 ] = osg::Vec3( xNew, yNew, 0 );
 
         x = rightEndPoint.x();
         y = rightEndPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 + 1 ] = osg::Vec3d( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 + 1 ] = osg::Vec3( xNew, yNew, 0 );
 
         x = leftStartPoint.x();
         y = leftStartPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 + 2 ] = osg::Vec3d( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 + 2 ] = osg::Vec3( xNew, yNew, 0 );
 
         x = leftEndPoint.x();
         y = leftEndPoint.y();
         xNew = ( x * cosTheta ) - ( y * sinTheta );
         yNew = ( x * sinTheta ) + ( y * cosTheta );
-        (*mVertexArray)[ i * 4 + 3 ] = osg::Vec3d( xNew, yNew, 0 );
+        (*mVertexArray)[ i * 4 + 3 ] = osg::Vec3( xNew, yNew, 0 );
+
+        mGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES, i * 4, 2 ) );
+        mGeometry->addPrimitiveSet(
+            new osg::DrawArrays( osg::PrimitiveSet::LINES,  i * 4 + 2, 2 ) );
+
+        mIntersectorGroup->addIntersector( new osgUtil::LineSegmentIntersector(
+            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0,0.0,0.0 ) ) );
+        mIntersectorGroup->addIntersector( new osgUtil::LineSegmentIntersector(
+            osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0,0.0,0.0 ) ) );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +194,9 @@ void PerimeterSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
 
-    osg::Vec3d agentPosition = agentDCS->getPosition();
+    osg::Vec3 agentPosition = agentDCS->getPosition();
+    osgUtil::IntersectorGroup::Intersectors& intersectors =
+        mIntersectorGroup->getIntersectors();
 
     //Reset
     mAligned = false;
@@ -193,36 +205,46 @@ void PerimeterSensor::CollectInformation()
     bool previousSensor( false );
     for( int i = 7; i > -1; --i )
     {
-        osg::Vec3d startPoint = (*mVertexArray)[ i * 2 ];
-        osg::Vec3d endPoint = (*mVertexArray)[ i * 2 + 1 ];
+        osg::Vec3 startPoint = (*mVertexArray)[ i * 2 ];
+        osg::Vec3 endPoint = (*mVertexArray)[ i * 2 + 1 ];
 
         startPoint += agentPosition;
         endPoint += agentPosition;
 
+        mLineSegmentIntersector =
+            static_cast< osgUtil::LineSegmentIntersector* >(
+                intersectors.at( i ).get() );
         mLineSegmentIntersector->reset();
         mLineSegmentIntersector->setStart( startPoint );
         mLineSegmentIntersector->setEnd( endPoint );
+    }
 
-        osgUtil::IntersectionVisitor intersectionVisitor(
-            mLineSegmentIntersector.get() );
+    pluginDCS->RemoveChild( agentDCS.get() );
+    //This is an expensive call
+    //Try to only call once by using group intersector
+    osgUtil::IntersectionVisitor intersectionVisitor( mIntersectorGroup.get() );
+    pluginDCS->accept( intersectionVisitor );
+    pluginDCS->AddChild( agentDCS.get() );
 
-        pluginDCS->RemoveChild( agentDCS.get() );
-        pluginDCS->accept( intersectionVisitor );
-        pluginDCS->AddChild( agentDCS.get() );
-        
+    for( int i = 7; i > -1; --i )
+    {
+        mLineSegmentIntersector =
+            static_cast< osgUtil::LineSegmentIntersector* >(
+                intersectors.at( i ).get() );
         if( mLineSegmentIntersector->containsIntersections() )
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
             osg::ref_ptr< osg::Drawable > currentDrawable =
                 mIntersections.back().drawable;
-            osg::Array* tempArray = currentDrawable->asGeometry()->getColorArray();
+            osg::Array* tempArray =
+                currentDrawable->asGeometry()->getColorArray();
             if( tempArray )
             {
-                osg::Vec4d* color =
-                    &( static_cast< osg::Vec4dArray* >( tempArray )->at( 0 ) );
+                osg::Vec4* color =
+                    &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
 
-                if( color == &mAgentEntity->mSiteColor )
+                if( *color != mAgentEntity->mSiteColor )
                 {
                     mAgentEntity->mBuildMode = false;
                     mAgentEntity->mPerimeterSensor->Reset();

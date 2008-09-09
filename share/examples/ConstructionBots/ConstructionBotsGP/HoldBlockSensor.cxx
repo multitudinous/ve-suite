@@ -68,7 +68,7 @@ HoldBlockSensor::~HoldBlockSensor()
 void HoldBlockSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
-        osg::Vec3d( 0, 0, 0 ), osg::Vec3d( 0, 0, 0 ) );
+        osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) );
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -77,7 +77,7 @@ void HoldBlockSensor::Initialize()
     mVertexArray->resize( 2 );
     mGeometry->setVertexArray( mVertexArray.get() );
 
-    colorArray->push_back( osg::Vec4d( 1.0, 1.0, 1.0, 1.0 ) );
+    colorArray->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
     mGeometry->setColorArray( colorArray.get() );
     mGeometry->setColorBinding( osg::Geometry::BIND_PER_PRIMITIVE );
 
@@ -109,8 +109,8 @@ void HoldBlockSensor::CollectInformation()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
         mAgentEntity->GetDCS();
 
-    osg::Vec3d startPoint = agentDCS->getPosition();
-    osg::Vec3d endPoint = startPoint;
+    osg::Vec3 startPoint = agentDCS->getPosition();
+    osg::Vec3 endPoint = startPoint;
     endPoint.z() += mRange;
 
     //Reset results from last frame
