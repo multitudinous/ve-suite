@@ -156,7 +156,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
-    mCamera->attach( osg::Camera::COLOR_BUFFER, mColorTexture.get() );//, 0, 0, false, 4, 2 );
+    mCamera->attach( osg::Camera::COLOR_BUFFER, mColorTexture.get(), 0, 0, false, 4, 2 );
 #else
     mCamera->attach( osg::Camera::COLOR_BUFFER, mColorTexture.get() );
 #endif
@@ -168,7 +168,9 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     //Use renderbuffers to get a depth and stencil buffer
     //mCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
     //mCamera->attach( osg::Camera::STENCIL_BUFFER, GL_STENCIL_INDEX8_EXT  );
+#if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
     mCamera->setClearStencil( 0 );
+#endif
 
     //This camera has a RELATIVE_RF
     //Therefore the transform is cumulative from parents transforms
