@@ -49,7 +49,9 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- osgAL Includes --- //
+#ifdef VE_SOUND
 #include <osgAL/SoundState>
+#endif
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/ConstraintSolver/btGeneric6DofConstraint.h>
@@ -249,7 +251,9 @@ void AgentEntity::Build()
     mHeldBlock = NULL;
 
     mObstacleSensor->SetForceAttractionConstant( 1.0 );
+#ifdef VE_SOUND
     mAttachBlockSound->PushSoundEvent( 10 );
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -306,7 +310,9 @@ void AgentEntity::PickUpBlock()
         targetEntity->GetPhysicsRigidBody() );
     if( collision )
     {
+#ifdef VE_SOUND
         mPickUpBlockSound->PushSoundEvent( 10 );
+#endif
         mHeldBlock = targetEntity;
 
         double* position = mDCS->GetVETranslationArray();

@@ -235,9 +235,13 @@ void ConstructionWorld::InitializeFramework()
     {
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Agent > agent = new bots::Agent();
+#ifdef VE_SOUND
         bots::AgentEntity* agentEntity = new AgentEntity(
             agent.get(), mPluginDCS.get(), mSoundManager, mPhysicsSimulator );
-
+#else
+        bots::AgentEntity* agentEntity = new AgentEntity(
+            agent.get(), mPluginDCS.get(), mPhysicsSimulator );
+#endif
         //Set physics properties for blocks
         agentEntity->InitPhysics();
         agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );

@@ -812,6 +812,10 @@ void KeyboardMouse::SkyCam()
 ////////////////////////////////////////////////////////////////////////////////
 void KeyboardMouse::SkyCamTo()
 {
+    if( !ModelHandler::instance()->GetActiveModel() )
+    {
+        return;
+    }
     //To make this work we must:
     //1. get current state of world dcs
     //2. set dcs back to zero.

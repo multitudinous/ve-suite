@@ -113,6 +113,6 @@ void NavigateToEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObj
 
         static_cast< ves::xplorer::KeyboardMouse* >
         ( ves::xplorer::DeviceHandler::instance()->
-          GetDevice( "KeyboardMouse" ) )->SkyCamTo( );
+          GetDevice( "KeyboardMouse" ) )->SkyCamTo();
 }
 ////////////////////////////////////////////////////////////////////////////////
