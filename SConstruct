@@ -176,15 +176,26 @@ if ARGUMENTS.has_key("options_file"):
 opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
-
-vtk_options = SConsAddons.Options.VTK.VTK("vtk","5.1", True, True,
-                        ['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
+if GetPlatform() == 'win32':
+    vtk_options = fp_option.FlagPollBasedOption("vtk",
+         "vtk", "5.2", True, True)
+else:
+    vtk_options = SConsAddons.Options.StandardPackageOption("vtk",
+        "VTK library options, default : vtk_incdir=<vtk>/include/vtk-5.2 vtk_libdir=<vtk>/lib(64)/vtk-5.2", 
+        pj('vtkConfigure.h'), library=['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
                          'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
                          'vtkParallel','vtkpng','vtktiff','vtksys','vtkjpeg', 
                          'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
-                         'vtkzlib','vtkNetCDF','verdict','vtkmetaio','vtksqlite'])
+                         'vtkzlib','vtkNetCDF','vtkverdict',
+                         'vtkmetaio','vtksqlite'], 
+        symbol="main", required=True)
+    if ARGUMENTS.has_key("vtk"):
+        vtkBaseDir = ARGUMENTS["vtk"]
+        vtk_options.setInitial( {'vtk_incdir' : pj(vtkBaseDir,'include','vtk-5.2'),
+                'vtk_libdir': pj(vtkBaseDir,'lib','vtk-5.2')} )
 opts.AddOption( vtk_options )
-opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.1')
+
+#opts.Add('VtkVersion', 'Set the VTK version so that the VTK version specific include dir can be found', '5.2')
 hdf5_options = HDF5.HDF5("hdf5","1.6.5", False, True, ['hdf5','hdf5_cpp','hdf5_hl','sz'])
 opts.AddOption(hdf5_options)
 hdf4_options = HDF4.HDF4("hdf4","4.2.1", False, True, ['mfhdf','df','jpeg'])
@@ -423,6 +434,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if baseEnv['UseCVSVTKPostFeb20'] == 'yes':
       baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
+   baseEnv.AppendUnique(CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'])
 
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
