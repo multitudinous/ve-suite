@@ -235,7 +235,7 @@ opts.Add('BoostVersion', 'Set the Boost version so that the proper Boost flagpol
 opts.Add('VPRVersion', 'Set the VPR version so that the proper VPR flagpoll files can be found', '1.0.2')
 opts.Add('VPRProfile', 'If "yes", build applications with VPR profiling enabled', 'no')
 opts.Add('prefix', 'Installation prefix', '/usr/local')
-opts.Add('UseCVSVTKPostFeb20', 'If "yes", use the version of VTK with Composite Datasets', 'no')
+#opts.Add('UseCVSVTKPostFeb20', 'If "yes", use the version of VTK with Composite Datasets', 'no')
 ##opts.Add('build_test', 'Build the test programs', 'yes')
 opts.Add('StaticLibs', 'If yes then build static libraries too', 'no')
 opts.Add('MakeDist', 'If "yes", make the distribution packages as part of the build', 'no')
@@ -432,9 +432,8 @@ if not SConsAddons.Util.hasHelpFlag():
    if osgal_options.isAvailable():
       baseEnv.Append( CPPDEFINES = ['VE_SOUND'] )  
 
-   if baseEnv['UseCVSVTKPostFeb20'] == 'yes':
-      baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
-   baseEnv.AppendUnique(CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'])
+   baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
+   baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
 
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   
