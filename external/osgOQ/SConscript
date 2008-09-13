@@ -1,4 +1,4 @@
-##Builds loki
+##Builds osgOQ
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
@@ -31,8 +31,6 @@ lib.build()
 
 ### Build the osgdb plugin
 sourcesDB = sca_util.getSourcesRecursive( pj( openDir, 'src','osgdb_osgOQ') )
-#headersDB = sca_util.getHeadersRecursive( pj( openDir, 'include')  )
-#headersDB = map(lambda s: pj('include', s), headersDB)
 sourcesDB = map(lambda s: pj('src', 'osgdb_osgOQ', s), sourcesDB)
 
 libDB_env = ves_pkg.getEnv().Copy()
@@ -41,12 +39,12 @@ libDB_env.Append( CPPDEFINES  = ['OSGOQ_EXPORTS'] )
 libDB_env.Append( LIBS = ['osgOQ'] )
 libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgOQ')] )
 osg_options.apply( libDB_env )
-#if baseEnv['StaticLibs'] == "yes":
-#   libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgOQ', libDB_env,
-#                                               installPrefix = LIBDIR)
-#else:
-#   libDB = ves_pkg.createSharedLibrary('osgdb_osgOQ', libDB_env,
-#                                      installPrefix = LIBDIR)
+if baseEnv['StaticLibs'] == "yes":
+   libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgOQ', libDB_env,
+                                               installPrefix = pj(LIBDIR,'osgPlugins'))
+else:
+   libDB = ves_pkg.createSharedLibrary('osgdb_osgOQ', libDB_env,
+                                      installPrefix = pj(LIBDIR,'osgPlugins'))
    
-#libDB.addSources(sourcesDB)
-#libDB.build()
+libDB.addSources(sourcesDB)
+libDB.build()

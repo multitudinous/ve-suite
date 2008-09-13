@@ -44,10 +44,10 @@ libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgPPU')] )
 osg_options.apply( libDB_env )
 if baseEnv['StaticLibs'] == "yes":
    libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgPPU', libDB_env,
-                                               installPrefix = LIBDIR)
+                                               installPrefix = pj(LIBDIR,'osgPlugins') )
 else:
    libDB = ves_pkg.createSharedLibrary('osgdb_osgPPU', libDB_env,
-                                      installPrefix = LIBDIR)
+                                      installPrefix = pj(LIBDIR,'osgPlugins') )
    
 libDB.addSources(sourcesDB)
 libDB.build()
