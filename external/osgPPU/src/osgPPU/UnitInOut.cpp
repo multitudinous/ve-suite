@@ -264,7 +264,7 @@ namespace osgPPU
 
             // attach the texture to the fbo
             if (mTex)
-                mFBO->setAttachment(GL_COLOR_ATTACHMENT0_EXT + i, osg::FrameBufferAttachment(mTex));
+                mFBO->setAttachment(osg::Camera::BufferComponent(osg::Camera::COLOR_BUFFER0 + i), osg::FrameBufferAttachment(mTex));
             else
                 osg::notify(osg::FATAL) << "osgPPU::UnitInOut::assignOutputTexture() - " << getName() << " cannot attach output texture to FBO" << std::endl;
         }

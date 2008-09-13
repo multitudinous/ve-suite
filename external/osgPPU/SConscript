@@ -20,6 +20,8 @@ osg_options.apply( lib_env )
 
 if GetPlatform() == 'darwin':
     lib_env.Append( LINKFLAGS  = ['-framework','OpenGL'] )
+elif GetPlatform() == 'win32':
+    lib_env.Append( CPPDEFINES  = ['_USE_MATH_DEFINES'] )
 
 if baseEnv['StaticLibs'] == "yes":
    lib = ves_pkg.createStaticAndSharedLibrary('osgPPU', lib_env,
@@ -42,6 +44,10 @@ libDB_env.Append( CPPDEFINES  = ['osgdb_ppu_EXPORTS'] )
 libDB_env.Append( LIBS = ['osgPPU'] )
 libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'osgPPU')] )
 osg_options.apply( libDB_env )
+if GetPlatform() == 'win32':
+   libDB_env['no_import_lib'] = 1
+   libDB_env['WINDOWS_INSERT_MANIFEST'] = False
+
 if baseEnv['StaticLibs'] == "yes":
    libDB = ves_pkg.createStaticAndSharedLibrary('osgdb_osgPPU', libDB_env,
                                                installPrefix = pj(LIBDIR,'osgPlugins') )
