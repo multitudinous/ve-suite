@@ -516,10 +516,11 @@ if not SConsAddons.Util.hasHelpFlag():
    shareSubdirs = pj(buildDir,'share')
    lokiSubdirs = pj( buildDir, 'external', 'loki-0.1.6')
    osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
+   osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
-               shareSubdirs, osgOQSubdirs, lokiSubdirs ]
+               shareSubdirs, osgOQSubdirs, lokiSubdirs, osgPPUSubdirs ]
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':
