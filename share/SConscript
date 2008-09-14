@@ -13,6 +13,7 @@ ptConfigFile = ves_pkg.createFileBundle( pj('share','vesuite') )
 ptConfigFile.addFiles( ['ptconfigfile.txt'] )
 
 shareSubdirs = Split("""
+    glsl
     shaders
     vrj_configs
     examples

@@ -1,0 +1,10 @@
+##installs glsl files
+import os, sys, string
+pj = os.path.join
+import SConsAddons.Util as sca_util
+
+Import('ves_pkg')
+
+glslBundle = ves_pkg.createFileBundle( pj('share','vesuite','glsl') )
+glslFile = sca_util.getFilesRecursiveByExt( '.', ['.glsl'] )
+glslBundle.addFiles( glslFile )
