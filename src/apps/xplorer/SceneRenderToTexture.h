@@ -39,20 +39,23 @@
 
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-#include <osg/Array>
 
 namespace osg
 {
 class Group;
 class Camera;
-class Geode;
-class Geometry;
 class Texture2D;
+class RenderInfo;
 }
 
 namespace osgUtil
 {
 class SceneView;
+}
+
+namespace osgPPU
+{
+class Processor;
 }
 
 // --- C/C++ Libraries --- //
@@ -73,6 +76,18 @@ namespace xplorer
 /*!\namespace ves::xplorer
  *
  */
+
+/*
+struct StencilImage : public osg::Camera::DrawCallback
+{
+    StencilImage();
+
+    virtual void operator () ( osg::RenderInfo& renderInfo ) const;
+
+    osg::ref_ptr< osg::Image > _image;
+};
+*/
+
 class SceneRenderToTexture
 {
 public:
@@ -84,18 +99,15 @@ public:
     
     ///Initialize correct screen info for the texture and quad
     ///NOTE: MUST be called AFTER EnvironmentHandler::InitScene
-    void InitScene();
+    void InitScene( osg::Camera* const sceneViewCamera );
 
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
     ///\return The osg::Camera being used to render to the FBO
     osg::Camera* const GetCamera() const;
 
+    ///
     osg::Group* const GetGroup() const;
-
-    ///Return the geode being used for the screen aligned quad
-    ///\return The osg::Geode for the screen aligned quad
-    osg::Geode* const GetQuad() const;
 
     ///Return the texture that is being rendered for the desktop display
     ///\return The osg::Texture2D for the display
@@ -114,11 +126,11 @@ private:
     ///Create the camera with the appropriate settings to render to an FBO
     void InitCamera( std::pair< int, int >& screenDims );
 
-    ///Create the quad to blit the texture to
-    void InitSAQuad( std::map< std::string, double >& screenCorners );
-
     ///Create the texture of the appropriate size for the FBO to write to
     void InitTextures( std::pair< int, int >& screenDims );
+
+    ///
+    void InitProcessor( std::pair< int, int >& screenDims );
 
     ///The texture attached to the color buffer of the camera
     osg::ref_ptr< osg::Texture2D > mColorTexture;
@@ -126,16 +138,11 @@ private:
     osg::ref_ptr< osg::Texture2D > mDepthStencilTexture;
 
     ///The render to texture camera
-    osg::ref_ptr< osg::Camera > mCamera;
-    ///The geode for the quad
-    osg::ref_ptr< osg::Geode > mQuadGeode;
-    ///The geometry for the quad
-    osg::ref_ptr< osg::Geometry > mQuadGeometry;
-    ///The verts for the quad
-    osg::ref_ptr< osg::Vec3Array > mQuadVertices;
-    
+    osg::ref_ptr< osg::Camera > mCamera;    
     ///
     osg::ref_ptr< osg::Group > mRootGroup;
+    ///
+    osg::ref_ptr< osgPPU::Processor > mProcessor;
 
 };
 } //end xplorer

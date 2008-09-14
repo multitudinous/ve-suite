@@ -40,15 +40,30 @@
 // --- OSG Includes --- //
 #include <osg/Camera>
 #include <osg/Group>
-#include <osg/Geode>
-#include <osg/Geometry>
 #include <osg/ClearNode>
 #include <osg/Texture2D>
 #include <osg/FrameBufferObject>
 
 #include <osgDB/WriteFile>
+#include <osgDB/ReaderWriter>
+#include <osgDB/ReadFile>
 
 #include <osgUtil/SceneView>
+
+#include <osgPPU/Processor.h>
+#include <osgPPU/Unit.h>
+#include <osgPPU/UnitInOut.h>
+#include <osgPPU/UnitText.h>
+#include <osgPPU/UnitInResampleOut.h>
+#include <osgPPU/UnitInMipmapOut.h>
+#include <osgPPU/UnitOut.h>
+#include <osgPPU/UnitOutCapture.h>
+#include <osgPPU/UnitBypass.h>
+#include <osgPPU/UnitTexture.h>
+#include <osgPPU/UnitDepthbufferBypass.h>
+
+// --- C/C++ Libraries --- //
+#include <iostream>
 
 //jbkoch - these do not seem to be defined in osg
 #ifndef GL_DEPTH_STENCIL_EXT
@@ -66,16 +81,45 @@
 
 using namespace ves::xplorer;
 
+/*
+////////////////////////////////////////////////////////////////////////////////
+StencilImage::StencilImage()
+    :
+    _image( new osg::Image() )
+{
+    ;       
+}
+////////////////////////////////////////////////////////////////////////////////
+void StencilImage::operator () ( osg::RenderInfo& renderInfo ) const
+{
+    osg::notify( osg::NOTICE )<< "Camera callback" << std::endl;
+
+    osg::Camera* camera = renderInfo.getCurrentCamera();
+    osg::Viewport* viewport = camera ? camera->getViewport() : 0;
+
+    osg::notify( osg::NOTICE ) << "Camera callback " << camera
+                               << " " << viewport << std::endl;
+
+    if( viewport && _image.valid() )
+    {
+        _image->readPixels( int( viewport->x() ), int( viewport->y() ),
+                            int( viewport->width() ), int( viewport->height() ),
+                            GL_DEPTH_STENCIL_EXT, GL_UNSIGNED_INT_24_8_EXT );
+        osgDB::writeImageFile( *_image, "C:/TSVEG/stencil.jpg" );
+        
+        osg::notify( osg::NOTICE ) << "Taken screenshot, and written to '"
+                                   << "C:/TSVEG/stencil.jpg" << "'" << std::endl;
+    }
+}
+*/
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
     mColorTexture( 0 ),
     mDepthStencilTexture( 0 ),
     mCamera( new osg::Camera() ),
-    mQuadGeode( 0 ),
-    mQuadGeometry( 0 ),
-    mQuadVertices( 0 ),
-    mRootGroup( new osg::Group() )
+    mRootGroup( new osg::Group() ),
+    mProcessor( new osgPPU::Processor() )
 {    
     ;
 }
@@ -88,88 +132,67 @@ SceneRenderToTexture::~SceneRenderToTexture()
 void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
 {
     mColorTexture = new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     mColorTexture->setInternalFormat( GL_RGBA16F_ARB );
     mColorTexture->setTextureSize( screenDims.first, screenDims.second );
     mColorTexture->setSourceFormat( GL_RGBA );
     mColorTexture->setSourceType( GL_FLOAT );
-    mColorTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    mColorTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    mColorTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mColorTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    mColorTexture->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    mColorTexture->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    mColorTexture->setWrap(
+        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    mColorTexture->setWrap(
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
     mDepthStencilTexture = new osg::Texture2D();
     mDepthStencilTexture->setInternalFormat( GL_DEPTH24_STENCIL8_EXT );
     mDepthStencilTexture->setTextureSize( screenDims.first, screenDims.second );
     mDepthStencilTexture->setSourceFormat( GL_DEPTH_STENCIL_EXT );
     mDepthStencilTexture->setSourceType( GL_UNSIGNED_INT_24_8_EXT );
-    mDepthStencilTexture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
-    mDepthStencilTexture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
-    mDepthStencilTexture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mDepthStencilTexture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-}
-////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::InitSAQuad( std::map< std::string, double >& screenCorners )
-{
-    double xMin = screenCorners.find( "xmin" )->second * 3.2808399;
-    double xMax = screenCorners.find( "xmax" )->second * 3.2808399;
-    double yMin = screenCorners.find( "ymin" )->second * 3.2808399;
-    double yMax = screenCorners.find( "ymax" )->second * 3.2808399;
-    double zVal = screenCorners.find( "zval" )->second * 3.2808399;
-    
-    mQuadGeode = new osg::Geode();
-    mQuadGeometry = new osg::Geometry();
-
-    mQuadVertices = new osg::Vec3Array();
-    mQuadVertices->resize( 4 );
-    (*mQuadVertices)[ 0 ].set( xMin, -zVal, yMin );
-    (*mQuadVertices)[ 1 ].set( xMax, -zVal, yMin );
-    (*mQuadVertices)[ 2 ].set( xMax, -zVal, yMax );
-    (*mQuadVertices)[ 3 ].set( xMin, -zVal, yMax );
-    mQuadGeometry->setVertexArray( mQuadVertices.get() );
-    
-    osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
-    quadTexCoords->resize( 4 );
-    (*quadTexCoords)[ 0 ].set( 0, 0 );
-    (*quadTexCoords)[ 1 ].set( 1, 0 );
-    (*quadTexCoords)[ 2 ].set( 1, 1 );
-    (*quadTexCoords)[ 3 ].set( 0, 1 );
-    mQuadGeometry->setTexCoordArray( 0, quadTexCoords.get() );
-    
-    mQuadGeometry->addPrimitiveSet(
-        new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, 4 ) );
-    //mQuadGeometry->setDataVariance( osg::Object::DYNAMIC );
-    //mQuadGeometry->setSupportsDisplayList(false);
-    
-    mQuadGeode->addDrawable( mQuadGeometry.get() );
-    mQuadGeode->setCullingActive( false );
+    mDepthStencilTexture->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::NEAREST );
+    mDepthStencilTexture->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::NEAREST );
+    mDepthStencilTexture->setWrap(
+        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    mDepthStencilTexture->setWrap(
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 {
     mCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
-    mCamera->setRenderOrder( osg::Camera::POST_RENDER );
+    mCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     mCamera->setClearMask( 
-        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    mCamera->setClearColor( osg::Vec4( 1.0, 0.0, 0.0, 1.0 ) );
+        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
+    mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     mCamera->setViewport( 0, 0, screenDims.first, screenDims.second );
     
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
-    mCamera->attach( osg::Camera::COLOR_BUFFER, mColorTexture.get(), 0, 0, false, 4, 2 );
+    mCamera->attach(
+        osg::Camera::COLOR_BUFFER, mColorTexture.get(), 0, 0, false, 8, 8 );
 #else
     mCamera->attach( osg::Camera::COLOR_BUFFER, mColorTexture.get() );
 #endif
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
-    mCamera->attach( osg::Camera::DEPTH_BUFFER, mDepthStencilTexture.get() );
-    mCamera->attach( osg::Camera::STENCIL_BUFFER, mDepthStencilTexture.get() );
+    //jbkoch: In order to get the stencil buffer to work on my card/driver,
+    //jbkoch: the depth and stencil must be attached to the same texture or
+    //jbkoch: renderbuffer. I have not found a way to access the renderbuffer
+    //jbkoch: for osg::Camera so must create texture for now.
+    //mCamera->attach( osg::Camera::DEPTH_BUFFER, mDepthStencilTexture.get() );
+    //mCamera->attach( osg::Camera::STENCIL_BUFFER, mDepthStencilTexture.get() );
 
     //Use renderbuffers to get a depth and stencil buffer
-    //mCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
-    //mCamera->attach( osg::Camera::STENCIL_BUFFER, GL_STENCIL_INDEX8_EXT  );
+    mCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
+    //mCamera->attach( osg::Camera::STENCIL_BUFFER, GL_STENCIL_INDEX );
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
-    mCamera->setClearStencil( 0 );
+    //mCamera->setClearStencil( 0 );
+    //glStencilMask( 0xFFFFFFFF );
 #endif
 
     //This camera has a RELATIVE_RF
@@ -177,86 +200,16 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     mCamera->setViewMatrix( osg::Matrix::identity() );
     mCamera->setProjectionMatrix( osg::Matrix::identity() );
 
+    //There seems to be a problem with sceneView overwriting RTT camera's
+    //mask values for GL_STENCIL_BUFFER_BIT
     osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
-    clearNode->setClearMask(
-        GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
+    clearNode->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
+    //clearNode->setClearMask(
+        //GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     mCamera->addChild( clearNode.get() );
 
-}
-////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::InitScene()
-{
-    //Get state info about the screen
-    std::pair< int, int > screenDims = 
-        EnvironmentHandler::instance()->
-        GetDisplaySettings()->GetScreenResolution();
-    
-    std::map< std::string, double > screenCorners = 
-        EnvironmentHandler::instance()->
-        GetDisplaySettings()->GetScreenCornerValues();
-    
-    //Create textures, camera, and SA-quad    
-    InitTextures( screenDims );
-    InitCamera( screenDims );
-    InitSAQuad( screenCorners );
-
-    std::string vertexSource =
-    "void main() \n"
-    "{ \n"
-        "gl_Position = ftransform(); \n"
-
-        "gl_TexCoord[ 0 ].st = gl_MultiTexCoord0.st; \n"
-    "} \n";
-
-    std::string fragmentSource =
-    "uniform sampler2D colorMap; \n"
-    "uniform sampler2D depthStencilMap; \n"
-
-    "void main() \n"
-    "{ \n"
-        "vec4 color = texture2D( colorMap, gl_TexCoord[ 0 ].st ); \n"
-        "vec4 depthStencil = texture2D( depthStencilMap, gl_TexCoord[ 0 ].st ); \n"
-
-        //"depthStencil /= depthStencil.w; \n"
-
-        "gl_FragColor = color; \n"
-        //"gl_FragColor = vec4( depthStencil.x, depthStencil.y, depthStencil.z, 1.0 ); \n"
-    "} \n";
-
-    osg::ref_ptr< osg::Shader > vertexShader = new osg::Shader();
-    vertexShader->setType( osg::Shader::VERTEX );
-    vertexShader->setShaderSource( vertexSource );
-
-    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
-    fragmentShader->setType( osg::Shader::FRAGMENT );
-    fragmentShader->setShaderSource( fragmentSource );
-
-    osg::ref_ptr< osg::Program > program = new osg::Program();
-    program->addShader( vertexShader.get() );
-    program->addShader( fragmentShader.get() );
-
-    osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
-    stateset->setAttribute(
-        program.get(),
-        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
-    stateset->setTextureAttributeAndModes(
-        0, mColorTexture.get(), osg::StateAttribute::ON );
-    stateset->setTextureAttributeAndModes(
-        1, mDepthStencilTexture.get(), osg::StateAttribute::ON );
-    stateset->setMode(
-        GL_LIGHTING,
-        osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
-
-    osg::ref_ptr< osg::Uniform > colorMapUniform =
-        new osg::Uniform( "colorMap", 0 );
-    stateset->addUniform( colorMapUniform.get() );
-
-    osg::ref_ptr< osg::Uniform > depthStencilMapUniform =
-        new osg::Uniform( "depthStencilMap", 1 );
-    stateset->addUniform( depthStencilMapUniform.get() );
-
-    mQuadGeode->setStateSet( stateset.get() );
+    //ves::xplorer::StencilImage* stencilImage = new ves::xplorer::StencilImage();
+    //mCamera->setFinalDrawCallback( stencilImage );
 
     //Call this when changing images in the fbo
     //The setUpCamera does not run since the camera has the
@@ -265,6 +218,211 @@ void SceneRenderToTexture::InitScene()
     //then when the rendering occurs, a new RenderStage will be created
     //for the camera and the runCameraSetup will be called again.
     //mCamera->setRenderingCache( NULL );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
+{
+    //Get the color texture from the RTT camera
+    osg::ref_ptr< osgPPU::UnitBypass > colorBypass = new osgPPU::UnitBypass();
+    {
+        colorBypass->setName( "ColorBypass" );
+    }
+    mProcessor->addChild( colorBypass.get() );
+
+    //Render to the Frame Buffer
+    osg::ref_ptr< osgPPU::UnitOut > ppuOut = new osgPPU::UnitOut();
+    {
+        ppuOut->setName( "PipelineResult" );
+        ppuOut->setInputTextureIndexForViewportReference( -1 );
+    }
+    colorBypass->addChild( ppuOut.get() );
+
+    //This is the code for the glow pipeline
+    /*
+    osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
+        new osgDB::ReaderWriter::Options( "vertex" );
+    osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
+        new osgDB::ReaderWriter::Options( "fragment" );
+
+    //Get the color texture from the RTT camera
+    osg::ref_ptr< osgPPU::UnitBypass > colorBypass = new osgPPU::UnitBypass();
+    {
+        colorBypass->setName( "ColorBypass" );
+    }
+    mProcessor->addChild( colorBypass.get() );
+
+    //Downsample by 1/2 original size
+    float downsample = 0.5;
+    osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
+    quadScreenSize *= downsample;
+    osg::ref_ptr< osgPPU::UnitInResampleOut > colorDownSample =
+        new osgPPU::UnitInResampleOut();
+    {
+        colorDownSample->setName( "ColorDownSample" );
+        colorDownSample->setFactorX( downsample );
+        colorDownSample->setFactorY( downsample );
+    }
+    colorBypass->addChild( colorDownSample.get() );
+
+    //Perform horizontal 1D gauss convolution
+    osg::ref_ptr< osgPPU::UnitInOut > blurX = new osgPPU::UnitInOut();
+    {
+        //Set name and indicies
+        blurX->setName( "BlurHorizontal" );
+
+        osg::ref_ptr< osgPPU::Shader > gaussX = new osgPPU::Shader();
+
+        osg::ref_ptr< osg::Shader > vhShader, fhShader;
+        try
+        {
+            vhShader = osgDB::readShaderFile(
+                "share/vesuite/glsl/gauss_convolution_1Dx_vp.glsl",
+                vertexOptions.get() );
+            fhShader = osgDB::readShaderFile(
+                "share/vesuite/glsl/gauss_convolution_1Dx_fp.glsl",
+                fragmentOptions.get() );
+        }
+        catch( ...  )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
+
+        //Setup horizontal blur shaders
+        gaussX->addShader( vhShader.get() );
+        gaussX->addShader( fhShader.get() );
+        gaussX->setName( "BlurHorizontalShader" );
+
+        gaussX->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
+        gaussX->add( "WT9_0", osg::Uniform::FLOAT );
+        gaussX->add( "WT9_1", osg::Uniform::FLOAT );
+        gaussX->add( "WT9_2", osg::Uniform::FLOAT );
+        gaussX->add( "WT9_3", osg::Uniform::FLOAT );
+        gaussX->add( "WT9_4", osg::Uniform::FLOAT );
+        gaussX->add( "glowMap", osg::Uniform::SAMPLER_2D );
+
+        gaussX->set( "quadScreenSize", quadScreenSize );
+        gaussX->set( "WT9_0", static_cast< float >( 0.5 ) );
+        gaussX->set( "WT9_1", static_cast< float >( 0.4 ) );
+        gaussX->set( "WT9_2", static_cast< float >( 0.3 ) );
+        gaussX->set( "WT9_3", static_cast< float >( 0.2 ) );
+        gaussX->set( "WT9_4", static_cast< float >( 0.1 ) );
+        gaussX->set( "glowMap", 0 );
+
+        blurX->setShader( gaussX.get() );
+    }
+    colorDownSample->addChild( blurX.get() );
+
+    //Perform vertical 1D gauss convolution
+    osg::ref_ptr< osgPPU::UnitInOut > blurY = new osgPPU::UnitInOut();
+    {
+        //Set name and indicies
+        blurY->setName( "BlurVertical" );
+
+        osg::ref_ptr< osgPPU::Shader > gaussY = new osgPPU::Shader();
+
+        osg::ref_ptr< osg::Shader > vvShader, fvShader;
+        try
+        {
+            vvShader = osgDB::readShaderFile(
+                "share/vesuite/glsl/gauss_convolution_1Dy_vp.glsl",
+                vertexOptions.get() );
+            fvShader = osgDB::readShaderFile(
+                "share/vesuite/glsl/gauss_convolution_1Dy_fp.glsl",
+                fragmentOptions.get() );
+        }
+        catch( ...  )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
+
+        //Setup vertical blur shaders
+        gaussY->addShader( vvShader.get() );
+        gaussY->addShader( fvShader.get() );
+        gaussY->setName( "BlurVerticalShader" );
+
+        gaussY->add( "quadScreenSize", osg::Uniform::FLOAT_VEC2 );
+        gaussY->add( "WT9_0", osg::Uniform::FLOAT );
+        gaussY->add( "WT9_1", osg::Uniform::FLOAT );
+        gaussY->add( "WT9_2", osg::Uniform::FLOAT );
+        gaussY->add( "WT9_3", osg::Uniform::FLOAT );
+        gaussY->add( "WT9_4", osg::Uniform::FLOAT );
+        gaussY->add( "glowMap", osg::Uniform::SAMPLER_2D );
+
+        gaussY->set( "quadScreenSize", quadScreenSize );
+        gaussY->set( "WT9_0", static_cast< float >( 0.5 ) );
+        gaussY->set( "WT9_1", static_cast< float >( 0.4 ) );
+        gaussY->set( "WT9_2", static_cast< float >( 0.3 ) );
+        gaussY->set( "WT9_3", static_cast< float >( 0.2 ) );
+        gaussY->set( "WT9_4", static_cast< float >( 0.1 ) );
+        gaussY->set( "glowMap", 0 );
+
+        blurY->setShader( gaussY.get() ); 
+    }
+    blurX->addChild( blurY.get() );
+
+    //Perform final color operations and blends
+    osg::ref_ptr< osgPPU::UnitInOut > final = new osgPPU::UnitInOut();
+    {
+        //Set name and indicies
+        final->setName( "Final" );
+
+        osg::ref_ptr< osgPPU::Shader > finalShader = new osgPPU::Shader();
+
+        osg::ref_ptr< osg::Shader > vShader;
+        try
+        {
+            vShader = osgDB::readShaderFile(
+                "share/vesuite/glsl/final_fp.glsl", fragmentOptions.get() );
+        }
+        catch( ... )
+        {
+            std::cerr << "Could not load shader files!" << std::endl;
+        }
+
+        //Setup vertical blur shaders
+        finalShader->addShader( vShader.get() );
+        finalShader->setName( "FinalShader" );
+
+        finalShader->add( "glowStrength", osg::Uniform::FLOAT );
+        finalShader->add( "glowColor", osg::Uniform::FLOAT_VEC4 );
+
+        finalShader->set( "glowStrength", static_cast< float >( 4.0 ) );
+        finalShader->set(
+            "glowColor", osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+
+        final->setShader( finalShader.get() );
+        final->setInputTextureIndexForViewportReference( 0 );
+        final->setInputToUniform( colorBypass.get(), "baseMap", true );
+        final->setInputToUniform( blurY.get(), "glowMap", true );
+    }
+
+    //Render to the Frame Buffer
+    osg::ref_ptr< osgPPU::UnitOut > ppuOut = new osgPPU::UnitOut();
+    {
+        ppuOut->setName( "PipelineResult" );
+        ppuOut->setInputTextureIndexForViewportReference( -1 );
+    }
+    final->addChild( ppuOut.get() );
+    */
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
+{
+    //Get state info about the screen
+    std::pair< int, int > screenDims =  EnvironmentHandler::instance()->
+        GetDisplaySettings()->GetScreenResolution();
+    
+    //Create textures, camera, and SA-quad    
+    InitTextures( screenDims );
+    InitCamera( screenDims );
+    InitProcessor( screenDims );
+
+    //Add nodes to the scenegraph
+    sceneViewCamera->addChild( mCamera.get() );
+    sceneViewCamera->addChild( mProcessor.get() );
+    mProcessor->setCamera( mCamera.get() );
+    mProcessor->setName( "Processor" );
+    mProcessor->dirtyUnitSubgraph();
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void SceneRenderToTexture::LatePreFrameUpdate()
@@ -280,11 +438,6 @@ osg::Camera* const SceneRenderToTexture::GetCamera() const
 osg::Group* const SceneRenderToTexture::GetGroup() const
 {
     return mRootGroup.get();
-}
-////////////////////////////////////////////////////////////////////////////////
-osg::Geode* const SceneRenderToTexture::GetQuad() const
-{
-    return mQuadGeode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Texture2D* const SceneRenderToTexture::GetTexture() const
@@ -542,9 +695,9 @@ void SceneRenderToTexture::WriteImageFileForWeb(
         float scoord = 1.0/(float)(w*2);
         float tcoord = 1.0/(float)(h*2);
         fullScreenQuads.back()->addDrawable( osg::createTexturedQuadGeometry( osg::Vec3( -1.0f, -1.0f, -1.0f ),
-                                                                             osg::Vec3( 2.0f, 0.0f, 0.0f ),
-                                                                             osg::Vec3( 0.0f, 2.0f, 0.0f ),
-                                                                             0.0f, 0.0f, 1.0f, 1.0f ) );
+                                                                              osg::Vec3( 2.0f, 0.0f, 0.0f ),
+                                                                              osg::Vec3( 0.0f, 2.0f, 0.0f ),
+                                                                              0.0f, 0.0f, 1.0f, 1.0f ) );
     }
     
     //create the FBO's for ssaa for each tile

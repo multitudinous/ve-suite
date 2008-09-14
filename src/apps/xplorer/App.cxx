@@ -197,11 +197,7 @@ void App::contextInit()
     {
         vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
         new_sv->getCamera()->setName( "SV Camera" );
-        if( mRTT )
-        {
-            new_sv->getCamera()->addChild( mSceneRenderToTexture->GetQuad() );
-        }
-        else
+        if( !mRTT )
         {
             new_sv->setSceneData( getScene() );
         }
@@ -296,7 +292,7 @@ void App::SetWrapper( VjObsWrapper* input )
     m_vjobsWrapper = input;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void App::initScene( void )
+void App::initScene()
 {
     vprDEBUG( vesDBG, 0 ) << "App::initScene" << std::endl << vprDEBUG_FLUSH;
     //Initialize all the XML objects
@@ -347,9 +343,6 @@ void App::initScene( void )
     }
     EnvironmentHandler::instance()->InitScene();
     cfdQuatCamHandler::instance()->SetMasterNode( m_vjobsWrapper->IsMaster() );
-
-    //Setup the scene render to texture
-    mSceneRenderToTexture->InitScene();
     
     // create steady state visualization objects
     SteadyStateVizHandler::instance()->Initialize( std::string() );
@@ -596,8 +589,7 @@ void App::contextPreDraw( void )
             if( jccl::ConfigManager::instance()->isPendingStale() )
             {
                 vpr::Guard<vpr::Mutex> val_guard( mValueLock );
-                (*sceneViewer)->getCamera()->
-                    addChild( mSceneRenderToTexture->GetCamera() );
+                mSceneRenderToTexture->InitScene( (*sceneViewer)->getCamera() );
                 changed = true;
             }
         }
@@ -697,10 +689,11 @@ void App::draw()
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
         osg::Camera* svCamera = sv->getCamera();
+        osg::Camera* rttCamera = mSceneRenderToTexture->GetCamera();
         
-        textureCamera->setViewport( svCamera->getViewport() );
-        textureCamera->setViewMatrix( svCamera->getViewMatrix() );
-        textureCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );
+        rttCamera->setViewport( svCamera->getViewport() );
+        rttCamera->setViewMatrix( svCamera->getViewMatrix() );
+        rttCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );
     }
     */
 
