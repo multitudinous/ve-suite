@@ -177,8 +177,8 @@ opts = SConsAddons.Options.Options(files = [options_cache, 'options.custom'],
                                    args= ARGUMENTS)
 
 if GetPlatform() == 'win32':
-    vtk_options = fp_option.FlagPollBasedOption("vtk",
-         "vtk", "5.2", True, True)
+    vtk_options = fp_option.FlagPollBasedOption("VTK",
+         "VTK", "5.2", True, True)
 else:
     vtk_options = SConsAddons.Options.StandardPackageOption("vtk",
         "VTK library options, default : vtk_incdir=<vtk>/include/vtk-5.2 vtk_libdir=<vtk>/lib(64)/vtk-5.2", 
