@@ -102,7 +102,7 @@ inst_paths['lib'] = pj(inst_paths['base'], lib_env['libdir'])
 #inst_paths['flagpoll'] = pj( '#','VE_Installer','fpc')
 inst_paths['bin'] = pj(inst_paths['base'], 'bin')   
 inst_paths['include'] = pj(inst_paths['base'], 'include')   
-vtk_version_str = lib_env['VtkVersion']
+vtk_version_str = '5.2'
 
 # Build up substitution map
 submap = {
