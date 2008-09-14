@@ -1,14 +1,14 @@
-prefix=${fp_file_cwd}\..\..\OSG_2.2.0_Pre-Compile_vc8.0_SP1
+prefix=${fp_file_cwd}/../../OSG_2.6.0_Pre-Compile_vc8.0_SP1
 exec_prefix=${prefix}
-libdir=${exec_prefix}\lib
-includedir=${prefix}\include 
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
 
 Name: OpenSceneGraph
 Description: OpenSceneGraph debug pre-compiled for VES
 Provides: OpenSceneGraph OpenThreads
 Requires:
-Version: 2.2
-Libs: /libpath:"${libdir}" OpenThreadsd.lib osgd.lib osgDBd.lib osgFXd.lib osgGAd.lib osgParticled.lib osgSimd.lib osgTerraind.lib osgTextd.lib osgUtild.lib opengl32.lib glu32.lib
+Version: 2.6.0
+Libs: /libpath:"${libdir}" OpenThreadsd.lib osgd.lib osgDBd.lib osgFXd.lib osgGAd.lib osgManipulatord.lib osgParticled.lib osgShadowd.lib osgSimd.lib osgTerraind.lib osgTextd.lib osgUtild.lib osgViewerd.lib osgWidgetd.lib opengl32.lib glu32.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 
