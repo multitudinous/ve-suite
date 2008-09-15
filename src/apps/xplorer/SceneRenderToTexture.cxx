@@ -61,6 +61,9 @@
 #include <osgPPU/UnitBypass.h>
 #include <osgPPU/UnitTexture.h>
 #include <osgPPU/UnitDepthbufferBypass.h>
+#include <osgDB/ReaderWriter>
+#include <osgDB/ReadFile>
+#include <osgPPU/ShaderAttribute.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -237,8 +240,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
     }
     colorBypass->addChild( ppuOut.get() );
 
-    //This is the code for the glow pipeline
     /*
+    //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
         new osgDB::ReaderWriter::Options( "vertex" );
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
@@ -270,8 +273,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         //Set name and indicies
         blurX->setName( "BlurHorizontal" );
 
-        osg::ref_ptr< osgPPU::Shader > gaussX = new osgPPU::Shader();
-
+        osg::ref_ptr< osgPPU::ShaderAttribute > gaussX =
+            new osgPPU::ShaderAttribute();
         osg::ref_ptr< osg::Shader > vhShader, fhShader;
         try
         {
@@ -308,7 +311,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         gaussX->set( "WT9_4", static_cast< float >( 0.1 ) );
         gaussX->set( "glowMap", 0 );
 
-        blurX->setShader( gaussX.get() );
+        blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
     }
     colorDownSample->addChild( blurX.get() );
 
@@ -318,8 +321,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         //Set name and indicies
         blurY->setName( "BlurVertical" );
 
-        osg::ref_ptr< osgPPU::Shader > gaussY = new osgPPU::Shader();
-
+        osg::ref_ptr< osgPPU::ShaderAttribute > gaussY =
+            new osgPPU::ShaderAttribute();
         osg::ref_ptr< osg::Shader > vvShader, fvShader;
         try
         {
@@ -356,7 +359,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         gaussY->set( "WT9_4", static_cast< float >( 0.1 ) );
         gaussY->set( "glowMap", 0 );
 
-        blurY->setShader( gaussY.get() ); 
+        blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() ); 
     }
     blurX->addChild( blurY.get() );
 
@@ -366,8 +369,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         //Set name and indicies
         final->setName( "Final" );
 
-        osg::ref_ptr< osgPPU::Shader > finalShader = new osgPPU::Shader();
-
+        osg::ref_ptr< osgPPU::ShaderAttribute > finalShader =
+            new osgPPU::ShaderAttribute();
         osg::ref_ptr< osg::Shader > vShader;
         try
         {
@@ -390,7 +393,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         finalShader->set(
             "glowColor", osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
 
-        final->setShader( finalShader.get() );
+        final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->setInputTextureIndexForViewportReference( 0 );
         final->setInputToUniform( colorBypass.get(), "baseMap", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
