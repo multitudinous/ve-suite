@@ -118,7 +118,8 @@ void StencilImage::operator () ( osg::RenderInfo& renderInfo ) const
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
-    mColorTexture( 0 ),
+    mColorMap( 0 ),
+    mGlowMap( 0 ),
     mDepthStencilTexture( 0 ),
     mCamera( new osg::Camera() ),
     mRootGroup( new osg::Group() ),
@@ -134,20 +135,32 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
 {
-    mColorTexture = new osg::Texture2D();
+    mColorMap = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    mColorTexture->setInternalFormat( GL_RGBA16F_ARB );
-    mColorTexture->setTextureSize( screenDims.first, screenDims.second );
-    mColorTexture->setSourceFormat( GL_RGBA );
-    mColorTexture->setSourceType( GL_FLOAT );
-    mColorTexture->setFilter(
+    mColorMap->setInternalFormat( GL_RGBA8 );
+    mColorMap->setTextureSize( screenDims.first, screenDims.second );
+    mColorMap->setSourceFormat( GL_RGBA );
+    mColorMap->setSourceType( GL_UNSIGNED_INT );
+    mColorMap->setFilter(
         osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    mColorTexture->setFilter(
+    mColorMap->setFilter(
         osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    mColorTexture->setWrap(
+    mColorMap->setWrap(
         osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mColorTexture->setWrap(
+    mColorMap->setWrap(
         osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+
+    mGlowMap = new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    mGlowMap->setInternalFormat( GL_RGBA8 );
+    mGlowMap->setTextureSize( screenDims.first, screenDims.second );
+    mGlowMap->setSourceFormat( GL_RGBA );
+    mGlowMap->setSourceType( GL_UNSIGNED_INT );
+    mGlowMap->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    mGlowMap->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    //We really want REPEAT otherwise the edge gets sampled by the glow shader
+    mGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+    mGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
 
     mDepthStencilTexture = new osg::Texture2D();
     mDepthStencilTexture->setInternalFormat( GL_DEPTH24_STENCIL8_EXT );
@@ -177,9 +190,12 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
     mCamera->attach(
-        osg::Camera::COLOR_BUFFER, mColorTexture.get(), 0, 0, false, 8, 8 );
+        osg::Camera::COLOR_BUFFER0, mColorMap.get() );//, 0, 0, false, 8, 8 );
+    mCamera->attach(
+        osg::Camera::COLOR_BUFFER1, mGlowMap.get() );//, 0, 0, false, 8, 8 );
 #else
-    mCamera->attach( osg::Camera::COLOR_BUFFER, mColorTexture.get() );
+    mCamera->attach( osg::Camera::COLOR_BUFFER0, mColorMap.get() );
+    mCamera->attach( osg::Camera::COLOR_BUFFER1, mGlowMap.get() );
 #endif
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
@@ -191,7 +207,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     //mCamera->attach( osg::Camera::STENCIL_BUFFER, mDepthStencilTexture.get() );
 
     //Use renderbuffers to get a depth and stencil buffer
-    mCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
+    //mCamera->attach( osg::Camera::DEPTH_BUFFER, GL_DEPTH_COMPONENT24 );
     //mCamera->attach( osg::Camera::STENCIL_BUFFER, GL_STENCIL_INDEX );
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
     //mCamera->setClearStencil( 0 );
@@ -225,21 +241,6 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
 {
-    //Get the color texture from the RTT camera
-    osg::ref_ptr< osgPPU::UnitBypass > colorBypass = new osgPPU::UnitBypass();
-    {
-        colorBypass->setName( "ColorBypass" );
-    }
-    mProcessor->addChild( colorBypass.get() );
-
-    //Render to the Frame Buffer
-    osg::ref_ptr< osgPPU::UnitOut > ppuOut = new osgPPU::UnitOut();
-    {
-        ppuOut->setName( "PipelineResult" );
-        ppuOut->setInputTextureIndexForViewportReference( -1 );
-    }
-    colorBypass->addChild( ppuOut.get() );
-
     /*
     //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
@@ -415,7 +416,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     std::pair< int, int > screenDims =  EnvironmentHandler::instance()->
         GetDisplaySettings()->GetScreenResolution();
     
-    //Create textures, camera, and SA-quad    
+    //Create textures, camera, and SA-quad
     InitTextures( screenDims );
     InitCamera( screenDims );
     InitProcessor( screenDims );
@@ -443,9 +444,9 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
     return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture2D* const SceneRenderToTexture::GetTexture() const
+osg::Texture2D* const SceneRenderToTexture::GetColorMap() const
 {
-    return mColorTexture.get();
+    return mColorMap.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::WriteImageFileForWeb(

@@ -111,7 +111,7 @@ public:
 
     ///Return the texture that is being rendered for the desktop display
     ///\return The osg::Texture2D for the display
-    osg::Texture2D* const GetTexture() const;
+    osg::Texture2D* const GetColorMap() const;
 
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
@@ -133,7 +133,9 @@ private:
     void InitProcessor( std::pair< int, int >& screenDims );
 
     ///The texture attached to the color buffer of the camera
-    osg::ref_ptr< osg::Texture2D > mColorTexture;
+    osg::ref_ptr< osg::Texture2D > mColorMap;
+    ///
+    osg::ref_ptr< osg::Texture2D > mGlowMap;
     ///The texture attached to the depth and stencil buffer of the camera
     osg::ref_ptr< osg::Texture2D > mDepthStencilTexture;
 
