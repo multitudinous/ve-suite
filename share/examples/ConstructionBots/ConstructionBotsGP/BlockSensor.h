@@ -37,6 +37,9 @@
 // --- My Includes --- //
 #include "Sensor.h"
 
+// --- OSG Includes --- //
+#include <osg/Polytope>
+
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -46,33 +49,55 @@ namespace bots
 class BlockSensor : public Sensor
 {
 public:
+    ///
     BlockSensor( bots::AgentEntity* agentEntity );
 
+    ///
     virtual ~BlockSensor();
 
+    ///
     virtual void CollectInformation();
 
+    ///
     void Rotate();
 
+    ///
     bool BlockInView();
+
+    ///
     bool CloseToBlock();
 
+    ///
     const btVector3& GetNormalizedBlockVector();
 
+    ///
+
+
+    ///
     void SetRange( double range );
 
 protected:
+    ///
     virtual void Initialize();
 
 private:
+    ///
     bool mBlockInView;
+    ///
     bool mCloseToBlock;
 
+    ///
     double mAngle;
+    ///
     double mAngleInc;
+    ///
     double mRange;
 
+    ///
     btVector3 mNormalizedBlockVector;
+
+    ///
+    osg::Polytope mPolytope;
 
 };
 } //end bots

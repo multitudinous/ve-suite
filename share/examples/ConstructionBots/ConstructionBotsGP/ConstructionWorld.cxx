@@ -75,6 +75,8 @@ ConstructionWorld::ConstructionWorld(
 #endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
+    mBlocksLeft( 0 ),
+    mFrameCount( 1 ),
     mGrid( 0 ),
     mAgents( 0 ),
     mStartBlock( 0 ),
@@ -135,16 +137,18 @@ void ConstructionWorld::InitializeFramework()
     try
     {
         mAmbientSound->LoadFile( "Sounds/AmbientSound.wav" );
-        //mAmbientSound->GetSoundState()->setPlay( true );
-        mAmbientSound->GetSoundState()->setLooping( true );
     }
     catch( ... )
     {
         std::cerr << "Could not load AmbientSound.wav!" << std::endl;
     }
-#endif
+
+    //mAmbientSound->GetSoundState()->setPlay( true );
+    mAmbientSound->GetSoundState()->setAmbient( false );
+#endif //VE_SOUND
 
     int numBlocks = 12;
+    mBlocksLeft = numBlocks;
     int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
     int gridSize = 51;
@@ -242,6 +246,9 @@ void ConstructionWorld::InitializeFramework()
         bots::AgentEntity* agentEntity = new AgentEntity(
             agent.get(), mPluginDCS.get(), mPhysicsSimulator );
 #endif
+        //Set number of blocks left to be placed
+        agentEntity->SetBlocksLeft( &mBlocksLeft );
+
         //Set physics properties for blocks
         agentEntity->InitPhysics();
         agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
@@ -364,6 +371,17 @@ void ConstructionWorld::PreFrameUpdate()
         {
             mAgents.at( i )->CommunicatingBlocksAlgorithm();
         }
+    }
+
+    if( mBlocksLeft )
+    {
+        mFrameCount++;
+        std::cout << mBlocksLeft << std::endl;
+    }
+    else
+    {
+        std::cout << "Structure completion time: " << mFrameCount
+                  << " frames!" << std::endl;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

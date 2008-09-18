@@ -71,16 +71,19 @@ AgentEntity::AgentEntity(
 #ifdef VE_SOUND
     osgAL::SoundManager* soundManager,
 #endif
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator  )
     :
     CADEntity( agent, pluginDCS, physicsSimulator ),
     mBuildMode( false ),
+    mBlocksLeft( NULL ),
     mMaxSpeed( 3.0 ),
-    mBuildSpeed( 1.0 ),
+    mBuildSpeed( 3.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
 #ifdef VE_SOUND
+    mAgentSound( new ves::xplorer::scenegraph::Sound( 
+                    "AgentSound", GetDCS(), soundManager ) ),
     mPickUpBlockSound( new ves::xplorer::scenegraph::Sound( 
                            "PickUpBlockSound", GetDCS(), soundManager ) ),
     mAttachBlockSound( new ves::xplorer::scenegraph::Sound( 
@@ -106,6 +109,23 @@ AgentEntity::~AgentEntity()
 
         delete mConstraint;
     }
+
+#ifdef VE_SOUND
+    if( mAgentSound )
+    {
+        delete mAgentSound;
+    }
+
+    if( mPickUpBlockSound )
+    {
+        delete mPickUpBlockSound;
+    }
+
+    if( mAttachBlockSound )
+    {
+        delete mAttachBlockSound;
+    }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Initialize()
@@ -113,6 +133,7 @@ void AgentEntity::Initialize()
 #ifdef VE_SOUND
     try
     {
+        mAgentSound->LoadFile( "Sounds/Agent.wav" );
         mPickUpBlockSound->LoadFile( "Sounds/PickUpBlock.wav" );
         mAttachBlockSound->LoadFile( "Sounds/AttachBlock.wav" );
     }
@@ -121,8 +142,9 @@ void AgentEntity::Initialize()
         std::cerr << "Could not load sound files!" << std::endl;
     }
 
-    mPickUpBlockSound->GetSoundState()->setReferenceDistance( 1.0 );
-#endif
+    //mAgentSound->GetSoundState()->setPlay( true );
+    mAgentSound->GetSoundState()->setLooping( true );
+#endif //VE_SOUND
 
     mBlockSensor = bots::BlockSensorPtr(
         new bots::BlockSensor( this ) );
@@ -152,6 +174,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         {
             mBlockSensor->DisplayGeometry( true );
         }
+
         mBlockSensor->CollectInformation();
         if( mBlockSensor->BlockInView() &&
             mBlockSensor->CloseToBlock() )
@@ -165,6 +188,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         {
             mSiteSensor->DisplayGeometry( true );
         }
+
         mSiteSensor->CollectInformation();
         if( mSiteSensor->CloseToSite() )
         {
@@ -187,6 +211,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
         {
             mObstacleSensor->DisplayGeometry( true );
         }
+
         mObstacleSensor->CollectInformation();
         if( mObstacleSensor->ObstacleDetected() )
         {
@@ -254,6 +279,9 @@ void AgentEntity::Build()
 #ifdef VE_SOUND
     mAttachBlockSound->PushSoundEvent( 10 );
 #endif
+
+    //Decrement the block counter
+    --(*mBlocksLeft);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -386,6 +414,11 @@ void AgentEntity::SetBlockEntityMap(
     std::map< std::string, bots::BlockEntity* >* blockEntityMap )
 {
     mBlockEntityMap = blockEntityMap;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::SetBlocksLeft( unsigned int* blocksLeft )
+{
+    mBlocksLeft = blocksLeft;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetConstraints( int gridSize )

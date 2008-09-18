@@ -63,7 +63,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ves_xplorer_scenegraph.lib ves_xplorer.lib osgd.lib osgUtild.lib osgDBd.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib osgALd.lib oalppd.lib"
+				AdditionalDependencies="ves_xplorer_scenegraph.lib ves_xplorer.lib osgd.lib osgUtild.lib osgDBd.lib osgSimd.lib libbulletcollision_d.lib libbulletdynamics_d.lib libbulletmath_d.lib osgALd.lib oalppd.lib"
 				OutputFile="..\Plugins\GE\win32\ConstructionBotsGP_d.dll"
 				LinkIncremental="0"
 				AdditionalLibraryDirectories="&quot;$(VE_INSTALL_DIR)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OSG_HOME)\lib&quot;;&quot;$(BULLET_HOME)\out\debug8\libs&quot;;&quot;$(OSGAL_HOME)\lib&quot;"

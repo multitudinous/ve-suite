@@ -105,10 +105,20 @@ public:
     bots::PerimeterSensorPtr const GetPerimeterSensor() const;
     bots::SiteSensorPtr const GetSiteSensor() const;
 
+    ///
     void SetBlockEntityMap(
         std::map< std::string, bots::BlockEntity* >* blockEntityMap );
+
+    ///
+    void SetBlocksLeft( unsigned int* blocksLeft );
+
+    ///
     void SetConstraints( int gridSize );
+
+    ///
     void SetNameAndDescriptions( int number );
+    
+    ///
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
 
 protected:
@@ -135,6 +145,8 @@ private:
 
     bool mBuildMode;
 
+    unsigned int* mBlocksLeft;
+
     double mMaxSpeed;
     double mBuildSpeed;
 
@@ -147,6 +159,7 @@ private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
 
 #ifdef VE_SOUND
+    ves::xplorer::scenegraph::Sound* mAgentSound;
     ves::xplorer::scenegraph::Sound* mPickUpBlockSound;
     ves::xplorer::scenegraph::Sound* mAttachBlockSound;
 #endif

@@ -205,9 +205,26 @@ void ObstacleSensor::CollectInformation()
                 intersectors.at( i ).get() );
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            osgUtil::LineSegmentIntersector::Intersection intersection =
-                mLineSegmentIntersector->getFirstIntersection();
-            mIntersections.push_back( intersection );
+            mIntersections.push_back(
+                mLineSegmentIntersector->getFirstIntersection() );
+            /*
+            if( mAgentEntity->mSiteSensor->CloseToSite() )
+            {
+                osg::ref_ptr< osg::Drawable > currentDrawable =
+                    mIntersections.back().drawable;
+                osg::Array* tempArray =
+                    currentDrawable->asGeometry()->getColorArray();
+                if( tempArray )
+                {
+                    osg::Vec4* color =
+                        &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
+                    if( *color == mAgentEntity->mSiteColor )
+                    {
+                        mIntersections.pop_back();
+                    }
+                }
+            }
+            */
         }
     }
 
@@ -268,7 +285,8 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
         //Wall following algorithm
         //Set threshold to 80 instead of 90 to help with rounding corners
-        if( theta > 80.0 )
+        //80 is a good number
+        if( theta > 85.0 )
         {
             double x = repulsiveForce.x();
             double y = repulsiveForce.y();

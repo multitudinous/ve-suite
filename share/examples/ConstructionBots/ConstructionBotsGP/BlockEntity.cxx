@@ -108,8 +108,8 @@ void BlockEntity::CalculateLocalPositions()
 
     double blockHalfWidth = 0.5;
     osg::Vec3 startPoint, endPoint;
-    startPoint.set( blockHalfWidth - 0.1, 0.0, 0.0 );
-    endPoint.set( blockHalfWidth + 0.1, 0.0, 0.0 );
+    startPoint.set( blockHalfWidth - 0.5, 0.0, 0.0 );
+    endPoint.set( blockHalfWidth + 0.5, 0.0, 0.0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );

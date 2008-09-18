@@ -62,7 +62,7 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     mPerimeterDetected( false ),
     mLastClockWiseDetection( 0 ),
     mPreviousDrawable( 0 ),
-    mRange( 0.1 ),
+    mRange( 0.2 ),
     mResultantForce( 0, 0, 0 ),
     mQueriedConnection( 0 ),
     mIntersectorGroup( 0 )

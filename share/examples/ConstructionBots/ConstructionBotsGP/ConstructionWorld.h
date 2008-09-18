@@ -77,6 +77,7 @@ class AgentEntity;
 class ConstructionWorld
 {
 public:
+    ///Constructor
     ConstructionWorld(
         ves::xplorer::scenegraph::DCS* pluginDCS,
 #ifdef VE_SOUND
@@ -84,27 +85,46 @@ public:
 #endif
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
+    ///Destructor
     ~ConstructionWorld();
 
+    ///
     void PreFrameUpdate();
 
 private:
+    ///
     void InitializeFramework();
+
+    ///
     void CreateRandomPositions( int gridSize );
 
+    ///
+    unsigned int mBlocksLeft;
+    ///
+    unsigned int mFrameCount;
+
+    ///
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
 #ifdef VE_SOUND
+    ///
     osgAL::SoundManager* mSoundManager;
+    ///
     ves::xplorer::scenegraph::Sound* mAmbientSound;
 #endif
 
+    ///
     bots::GridEntity* mGrid;
+    ///
     bots::BlockEntity* mStartBlock;
+    ///
     std::map< std::string, bots::BlockEntity* > mBlockEntities;
+    ///
     std::map< std::pair< int, int >, std::pair< bool, bool > > mOccupancyMatrix;
+    ///
     std::vector< bots::AgentEntity* > mAgents;
 
+    ///
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
 };
