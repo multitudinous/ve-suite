@@ -54,6 +54,8 @@ public:
 protected:
     virtual void DefinePasses();
 
+    ///This is a copy of the stateset passed into the constructor =>
+    ///so it should have its own memory location as to not affect the original
     osg::ref_ptr< osg::StateSet > mStateSet;
 
 private:

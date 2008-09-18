@@ -237,36 +237,68 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     //then when the rendering occurs, a new RenderStage will be created
     //for the camera and the runCameraSetup will be called again.
     //mCamera->setRenderingCache( NULL );
+
+    //Setup the MRT shader to make glow work correctly
+    //Place it on the RTT camera because it's a good place to test "inheritance weirdness" lol
+    std::string fragmentSource =
+    "uniform vec4 glowColor; \n"
+
+    "void main() \n"
+    "{ \n"
+        "gl_FragData[ 0 ] = gl_Color; \n"
+        "gl_FragData[ 1 ] = glowColor; \n"
+    "} \n";
+
+    osg::ref_ptr< osg::StateSet > stateset = mCamera->getOrCreateStateSet();
+    osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+    fragmentShader->setType( osg::Shader::FRAGMENT );
+    fragmentShader->setShaderSource( fragmentSource );
+
+    osg::ref_ptr< osg::Program > program = new osg::Program();
+    program->addShader( fragmentShader.get() );
+
+    stateset->setAttributeAndModes( program.get(),
+        osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+    //Default glow color for any children that don't explicitly set it.
+    stateset->addUniform(
+        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
 {
-    /*
     //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
         new osgDB::ReaderWriter::Options( "vertex" );
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
         new osgDB::ReaderWriter::Options( "fragment" );
 
+    osg::ref_ptr< osgPPU::UnitTexture > color = new osgPPU::UnitTexture( mColorMap.get() );
+    osg::ref_ptr< osgPPU::UnitTexture > glow = new osgPPU::UnitTexture( mGlowMap.get() );
+    mProcessor->addChild( color.get() );
+    mProcessor->addChild( glow.get() );
+
+    /*
     //Get the color texture from the RTT camera
     osg::ref_ptr< osgPPU::UnitBypass > colorBypass = new osgPPU::UnitBypass();
     {
         colorBypass->setName( "ColorBypass" );
     }
     mProcessor->addChild( colorBypass.get() );
+    */
 
     //Downsample by 1/2 original size
     float downsample = 0.5;
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
     quadScreenSize *= downsample;
-    osg::ref_ptr< osgPPU::UnitInResampleOut > colorDownSample =
+    osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
         new osgPPU::UnitInResampleOut();
     {
-        colorDownSample->setName( "ColorDownSample" );
-        colorDownSample->setFactorX( downsample );
-        colorDownSample->setFactorY( downsample );
+        glowDownSample->setName( "ColorDownSample" );
+        glowDownSample->setFactorX( downsample );
+        glowDownSample->setFactorY( downsample );
     }
-    colorBypass->addChild( colorDownSample.get() );
+    glow->addChild( glowDownSample.get() );
 
     //Perform horizontal 1D gauss convolution
     osg::ref_ptr< osgPPU::UnitInOut > blurX = new osgPPU::UnitInOut();
@@ -314,7 +346,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
 
         blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
     }
-    colorDownSample->addChild( blurX.get() );
+    glowDownSample->addChild( blurX.get() );
 
     //Perform vertical 1D gauss convolution
     osg::ref_ptr< osgPPU::UnitInOut > blurY = new osgPPU::UnitInOut();
@@ -396,7 +428,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->setInputTextureIndexForViewportReference( 0 );
-        final->setInputToUniform( colorBypass.get(), "baseMap", true );
+        final->setInputToUniform( color.get(), "baseMap", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
     }
 
@@ -407,7 +439,6 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         ppuOut->setInputTextureIndexForViewportReference( -1 );
     }
     final->addChild( ppuOut.get() );
-    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
@@ -424,7 +455,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     //Add nodes to the scenegraph
     sceneViewCamera->addChild( mCamera.get() );
     sceneViewCamera->addChild( mProcessor.get() );
-    mProcessor->setCamera( mCamera.get() );
+    //mProcessor->setCamera( mCamera.get() );
     mProcessor->setName( "Processor" );
     mProcessor->dirtyUnitSubgraph();
 }

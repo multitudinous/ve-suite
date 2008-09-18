@@ -57,6 +57,13 @@ SelectTechnique::~SelectTechnique()
 ////////////////////////////////////////////////////////////////////////////////
 void SelectTechnique::DefinePasses()
 {
+    {
+        osg::Vec4 glowColor( 1.0, 0.0, 1.0, 1.0 );
+        mStateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
+
+        AddPass( mStateSet.get() );
+    }
+    /*
     //Implement pass #1
     {
         osg::ref_ptr< osg::Stencil > stencil = new osg::Stencil();
@@ -107,11 +114,13 @@ void SelectTechnique::DefinePasses()
         stateset->setAttributeAndModes( linewidth.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( material.get(),
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+            osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE |
+            osg::StateAttribute::PROTECTED );
         stateset->setAttributeAndModes( polymode.get(),
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
         AddPass( stateset.get() );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
