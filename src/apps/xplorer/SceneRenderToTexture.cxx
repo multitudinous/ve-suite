@@ -261,12 +261,14 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     "void main() \n"
     "{ \n"
         "gl_FragData[ 0 ] = gl_Color; \n"
+
+        "vec4 color = glowColor; \n"
         "if( gl_Color.a < 1.0 ) \n"
         "{ \n"
-           "glowColor.a = gl_Color.a; \n"
+           "color.a = gl_Color.a; \n"
         "} \n"
 
-        "gl_FragData[ 1 ] = glowColor; \n"
+        "gl_FragData[ 1 ] = color; \n"
         
     "} \n";
 
