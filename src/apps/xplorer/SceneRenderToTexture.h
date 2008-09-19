@@ -136,6 +136,8 @@ private:
     osg::ref_ptr< osg::Texture2D > mColorMap;
     ///
     osg::ref_ptr< osg::Texture2D > mGlowMap;
+    ///
+    osg::ref_ptr< osg::Texture2D > mGlowStencil;
     ///The texture attached to the depth and stencil buffer of the camera
     osg::ref_ptr< osg::Texture2D > mDepthStencilTexture;
 

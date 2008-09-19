@@ -120,6 +120,7 @@ SceneRenderToTexture::SceneRenderToTexture()
     :
     mColorMap( 0 ),
     mGlowMap( 0 ),
+    mGlowStencil( 0 ),
     mDepthStencilTexture( 0 ),
     mCamera( new osg::Camera() ),
     mRootGroup( new osg::Group() ),
@@ -162,6 +163,17 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
     mGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
 
+    mGlowStencil = new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    mGlowStencil->setInternalFormat( GL_RGBA8 );
+    mGlowStencil->setTextureSize( screenDims.first, screenDims.second );
+    mGlowStencil->setSourceFormat( GL_RGBA );
+    mGlowStencil->setSourceType( GL_UNSIGNED_INT );
+    mGlowStencil->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    mGlowStencil->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    mGlowStencil->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    mGlowStencil->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+
     mDepthStencilTexture = new osg::Texture2D();
     mDepthStencilTexture->setInternalFormat( GL_DEPTH24_STENCIL8_EXT );
     mDepthStencilTexture->setTextureSize( screenDims.first, screenDims.second );
@@ -183,7 +195,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     mCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
     mCamera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
-    mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
+    mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     mCamera->setViewport( 0, 0, screenDims.first, screenDims.second );
     
@@ -193,9 +205,12 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         osg::Camera::COLOR_BUFFER0, mColorMap.get() );//, 0, 0, false, 8, 8 );
     mCamera->attach(
         osg::Camera::COLOR_BUFFER1, mGlowMap.get() );//, 0, 0, false, 8, 8 );
+    mCamera->attach(
+        osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );//, 0, 0, false, 8, 8 );
 #else
     mCamera->attach( osg::Camera::COLOR_BUFFER0, mColorMap.get() );
     mCamera->attach( osg::Camera::COLOR_BUFFER1, mGlowMap.get() );
+    mCamera->attach( osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );
 #endif
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
@@ -221,11 +236,11 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 
     //There seems to be a problem with sceneView overwriting RTT camera's
     //mask values for GL_STENCIL_BUFFER_BIT
-    osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
-    clearNode->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
+    //osg::ref_ptr< osg::ClearNode > clearNode = new osg::ClearNode();
+    //clearNode->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) );
     //clearNode->setClearMask(
         //GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
-    mCamera->addChild( clearNode.get() );
+    //mCamera->addChild( clearNode.get() );
 
     //ves::xplorer::StencilImage* stencilImage = new ves::xplorer::StencilImage();
     //mCamera->setFinalDrawCallback( stencilImage );
@@ -246,7 +261,13 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     "void main() \n"
     "{ \n"
         "gl_FragData[ 0 ] = gl_Color; \n"
+        "if( gl_Color.a < 1.0 ) \n"
+        "{ \n"
+           "glowColor.a = gl_Color.a; \n"
+        "} \n"
+
         "gl_FragData[ 1 ] = glowColor; \n"
+        
     "} \n";
 
     osg::ref_ptr< osg::StateSet > stateset = mCamera->getOrCreateStateSet();
@@ -262,7 +283,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 
     //Default glow color for any children that don't explicitly set it.
     stateset->addUniform(
-        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 0.0 ) ) );
+        new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
@@ -273,10 +294,15 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
         new osgDB::ReaderWriter::Options( "fragment" );
 
-    osg::ref_ptr< osgPPU::UnitTexture > color = new osgPPU::UnitTexture( mColorMap.get() );
-    osg::ref_ptr< osgPPU::UnitTexture > glow = new osgPPU::UnitTexture( mGlowMap.get() );
+    osg::ref_ptr< osgPPU::UnitTexture > color =
+        new osgPPU::UnitTexture( mColorMap.get() );
+    osg::ref_ptr< osgPPU::UnitTexture > glow =
+        new osgPPU::UnitTexture( mGlowMap.get() );
+    osg::ref_ptr< osgPPU::UnitTexture > glowStencil =
+        new osgPPU::UnitTexture( mGlowStencil.get() );
     mProcessor->addChild( color.get() );
     mProcessor->addChild( glow.get() );
+    mProcessor->addChild( glowStencil.get() );
 
     /*
     //Get the color texture from the RTT camera
@@ -295,7 +321,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
     osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
         new osgPPU::UnitInResampleOut();
     {
-        glowDownSample->setName( "ColorDownSample" );
+        glowDownSample->setName( "GlowDownSample" );
         glowDownSample->setFactorX( downsample );
         glowDownSample->setFactorY( downsample );
     }
@@ -319,7 +345,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
                 "glsl/gauss_convolution_1Dx_fp.glsl",
                 fragmentOptions.get() );
         }
-        catch( ...  )
+        catch( ... )
         {
             std::cerr << "Could not load shader files!" << std::endl;
         }
@@ -393,7 +419,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         gaussY->set( "WT9_4", static_cast< float >( 0.1 ) );
         gaussY->set( "glowMap", 0 );
 
-        blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() ); 
+        blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
     }
     blurX->addChild( blurY.get() );
 
@@ -430,6 +456,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->setInputTextureIndexForViewportReference( 0 );
         final->setInputToUniform( color.get(), "baseMap", true );
+        final->setInputToUniform( glowStencil.get(), "stencilGlowMap", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
     }
 

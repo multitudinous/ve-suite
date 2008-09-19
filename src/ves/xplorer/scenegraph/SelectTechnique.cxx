@@ -39,6 +39,7 @@
 #include <osg/LineWidth>
 #include <osg/Material>
 #include <osg/PolygonMode>
+#include <osg/Depth>
 
 using namespace ves::xplorer::scenegraph;
 
@@ -57,11 +58,48 @@ SelectTechnique::~SelectTechnique()
 ////////////////////////////////////////////////////////////////////////////////
 void SelectTechnique::DefinePasses()
 {
+    osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
+    //Pass 1
     {
-        osg::Vec4 glowColor( 1.0, 0.0, 1.0, 1.0 );
+        mStateSet->setRenderBinDetails( -1, "RenderBin" );
+
         mStateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
 
         AddPass( mStateSet.get() );
+    }
+
+    //Pass 2
+    {
+        std::string fragmentSource =
+        "uniform vec4 glowColor; \n"
+
+        "void main() \n"
+        "{ \n"
+            "gl_FragData[ 2 ] = glowColor; \n"
+        "} \n";
+
+        osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
+
+        osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
+        fragmentShader->setType( osg::Shader::FRAGMENT );
+        fragmentShader->setShaderSource( fragmentSource );
+
+        osg::ref_ptr< osg::Program > program = new osg::Program();
+        program->addShader( fragmentShader.get() );
+
+        stateset->setAttributeAndModes( program.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        osg::ref_ptr< osg::Depth > depth = new osg::Depth();
+        depth->setFunction( osg::Depth::ALWAYS );
+        depth->setWriteMask( false );
+
+        stateset->setAttributeAndModes( depth.get(),
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+
+        stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
+
+        AddPass( stateset.get() );
     }
     /*
     //Implement pass #1

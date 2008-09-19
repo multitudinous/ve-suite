@@ -301,6 +301,8 @@ void SceneManager::_createLogo()
             "} \n";
 
         char phong_fragment[] =
+            "uniform vec4 glowColor; \n"
+
             "varying vec4 color; \n"
             "varying vec3 eyePos; \n"
             "varying vec3 lightPos; \n"
@@ -320,9 +322,10 @@ void SceneManager::_createLogo()
             "vec3 TotalDiffuse=gl_LightSource[0].diffuse.rgb*color.rgb*NDotL; \n"
             "vec3 TotalSpecular=gl_LightSource[0].specular.rgb*color.rgb*pow(RDotL,20.0); \n"
 
-            "vec3 color=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
+            "vec3 temp=TotalAmbient+TotalDiffuse+TotalSpecular; \n"
 
-            "gl_FragColor=vec4(color,1.0); \n"
+            "gl_FragData[ 0 ] = vec4( temp, 1.0 ); \n"
+            "gl_FragData[ 1 ] = glowColor; \n"
             "} \n";
 
         osg::ref_ptr< osg::StateSet > stateset = _logoNode->getOrCreateStateSet();
