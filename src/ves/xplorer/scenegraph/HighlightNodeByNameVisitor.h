@@ -61,10 +61,13 @@ class VE_SCENEGRAPH_EXPORTS HighlightNodeByNameVisitor : public osg::NodeVisitor
 public:
     ///Constructor
     ///\param node The node to be traversed
-    HighlightNodeByNameVisitor( std::string nodeName );
+    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName );
+    
+    ///Default Constructor
+    HighlightNodeByNameVisitor();
 
     ///Destructor
-    virtual ~HighlightNodeByNameVisitor();
+    virtual ~HighlightNodeByNameVisitor(){ ; }
 
     ///Apply function that gets called during the traversal
     ///\param node A parent node of the node being traversed

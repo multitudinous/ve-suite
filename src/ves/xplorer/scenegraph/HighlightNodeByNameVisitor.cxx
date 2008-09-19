@@ -36,7 +36,7 @@
 using namespace ves::xplorer::scenegraph;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( std::string nodeName )
+HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName )
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
         mNodeName( mNodeName )
