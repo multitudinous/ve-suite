@@ -313,10 +313,10 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         try
         {
             vhShader = osgDB::readShaderFile(
-                "share/vesuite/glsl/gauss_convolution_1Dx_vp.glsl",
+                "glsl/gauss_convolution_1Dx_vp.glsl",
                 vertexOptions.get() );
             fhShader = osgDB::readShaderFile(
-                "share/vesuite/glsl/gauss_convolution_1Dx_fp.glsl",
+                "glsl/gauss_convolution_1Dx_fp.glsl",
                 fragmentOptions.get() );
         }
         catch( ...  )
@@ -361,10 +361,10 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         try
         {
             vvShader = osgDB::readShaderFile(
-                "share/vesuite/glsl/gauss_convolution_1Dy_vp.glsl",
+                "glsl/gauss_convolution_1Dy_vp.glsl",
                 vertexOptions.get() );
             fvShader = osgDB::readShaderFile(
-                "share/vesuite/glsl/gauss_convolution_1Dy_fp.glsl",
+                "glsl/gauss_convolution_1Dy_fp.glsl",
                 fragmentOptions.get() );
         }
         catch( ...  )
