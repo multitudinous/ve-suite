@@ -291,6 +291,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
     float downsample = 0.5;
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
     quadScreenSize *= downsample;
+
     osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
         new osgPPU::UnitInResampleOut();
     {
@@ -408,7 +409,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         try
         {
             vShader = osgDB::readShaderFile(
-                "share/vesuite/glsl/final_fp.glsl", fragmentOptions.get() );
+                "glsl/final_fp.glsl", fragmentOptions.get() );
         }
         catch( ... )
         {
