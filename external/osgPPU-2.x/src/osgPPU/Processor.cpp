@@ -114,11 +114,11 @@ void Processor::init()
     mStateSet->setAttribute(new osg::Material(), osg::StateAttribute::ON);
 
     // disable color clamping, because we want to work on real hdr values
-    osg::ClampColor* clamp = new osg::ClampColor();
-    clamp->setClampVertexColor(GL_FALSE);
-    clamp->setClampFragmentColor(GL_FALSE);
-    clamp->setClampReadColor(GL_FALSE);
-    mStateSet->setAttribute(clamp, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+    //osg::ClampColor* clamp = new osg::ClampColor();
+    //clamp->setClampVertexColor(GL_FALSE);
+    //clamp->setClampFragmentColor(GL_FALSE);
+    //clamp->setClampReadColor(GL_FALSE);
+    //mStateSet->setAttribute(clamp, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
 
     // not dirty anymore
     mbDirty = false;
