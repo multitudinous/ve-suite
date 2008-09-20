@@ -35,87 +35,80 @@
 #include <ves/conductor/util/CORBAServiceList.h>
 
 // --- My Includes --- //
-#include "ConstructionBotsUIDialog.h"
+#include "WarrantyToolUIDialog.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/conductor/util/spinctld.h>
+
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
 // --- wxWidgets Includes --- //
+#include <wx/statline.h>
 #include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/textctrl.h>
+#include <wx/radiobox.h>
 #include <wx/stattext.h>
+#include <wx/slider.h>
+#include <wx/button.h>
 #include <wx/dialog.h>
+#include <wx/statbox.h>
+#include <wx/frame.h>
+#include <wx/textctrl.h>
+#include <wx/notebook.h>
 
-using namespace bots;
+using namespace warrantytool;
 
-BEGIN_EVENT_TABLE( ConstructionBotsUIDialog, wxDialog )
-
+BEGIN_EVENT_TABLE( WarrantyToolUIDialog, wxDialog )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog()
+WarrantyToolUIDialog::WarrantyToolUIDialog()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog(
+WarrantyToolUIDialog::WarrantyToolUIDialog( 
     wxWindow* parent,
     int id, 
     ves::conductor::util::CORBAServiceList* service )
 :
-UIDialog( static_cast< wxWindow* >( parent ),
-          id,
-          wxT( "ConstructionBots" ) )
-{
+UIDialog( parent, id, wxT( "WarrantyTool" ) )
+{    
     mServiceList = service;
 
     BuildGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::~ConstructionBotsUIDialog()
+WarrantyToolUIDialog::~WarrantyToolUIDialog()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ConstructionBotsUIDialog::TransferDataFromWindow()
+void WarrantyToolUIDialog::BuildGUI()
 {
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool ConstructionBotsUIDialog::TransferDataToWindow()
-{
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::Lock( bool l )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::BuildGUI()
-{
+    SetSizeHints( wxDefaultSize, wxDefaultSize );
+    SetFont( wxFont(
+        wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
+
+    wxBoxSizer* mainSizer;
+    mainSizer = new wxBoxSizer( wxVERTICAL );
+
+    SetSizer( mainSizer );
+    Layout();
+    mainSizer->Fit( this );
     CenterOnParent();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::ClearInstructions()
-{
-    mInstructions.clear();
-    mCommandName.clear();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::SendCommandsToXplorer()
+void WarrantyToolUIDialog::SendCommandsToXplorer()
 {
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
 
-    for( size_t i = 0; i < mInstructions.size(); ++i )
+    /*for( size_t i = 0; i < mInstructions.size(); ++i )
     {
         command->AddDataValuePair( mInstructions.at( i ) );
     }
 
-    command->SetCommandName( mCommandName );
+    command->SetCommandName( mCommandName );*/
 
     mServiceList->SendCommandStringToXplorer( command );
 }
-////////////////////////////////////////////////////////////////////////////////

@@ -31,11 +31,13 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef COIN_FUNNEL_UI_DIALOG_H
-#define COIN_FUNNEL_UI_DIALOG_H
+#ifndef WARRANTY_TOOL_UI_DIALOG_H
+#define WARRANTY_TOOL_UI_DIALOG_H
 
 // --- VE-Suite Includes --- //
 #include <ves/conductor/UIDialog.h>
+
+#include <ves/conductor/util/DualSlider.h>
 
 namespace ves
 {
@@ -43,29 +45,33 @@ namespace conductor
 {
 namespace util
 {
-    class CORBAServiceList;
+class CORBAServiceList;
+class wxSpinCtrlDbl;
 }
 }
 }
+
+// --- wxWidgets Includes --- //
+class wxRadioBox;
+class wxSlider;
+class wxSpinCtrl;
 
 // --- C/C++ Libraries --- //
 #include <vector>
 #include <string>
 
-namespace funnel
+namespace warrantytool
 {
-class CoinFunnelUIDialog : public ves::conductor::UIDialog
+class WarrantyToolUIDialog : public ves::conductor::UIDialog
 {
 public:
-    CoinFunnelUIDialog();
-    CoinFunnelUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service );
-    
-    enum COINFUNNEL_IDS
-    {
-        OK_BUTTON
-    };
+    WarrantyToolUIDialog();
+    WarrantyToolUIDialog(
+        wxWindow* parent,
+        int id,
+        ves::conductor::util::CORBAServiceList* service );
 
-    virtual ~CoinFunnelUIDialog();
+    virtual ~WarrantyToolUIDialog();
 
 protected:
 
@@ -73,15 +79,12 @@ private:
     void BuildGUI();
 
     void SendCommandsToXplorer();
-    void ClearInstructions();
 
     ves::conductor::util::CORBAServiceList* mServiceList;
-    std::string mCommandName;
-    std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
     
     DECLARE_EVENT_TABLE()
-
 };
-} //end funnel
 
-#endif //COIN_FUNNEL_UI_DIALOG_H
+} //end warrantytool
+
+#endif //WARRANTY_TOOL_UI_DIALOG_H

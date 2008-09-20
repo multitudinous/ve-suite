@@ -188,7 +188,7 @@ UIDialog( ( wxWindow* )parent, id, wxT( "CameraPlacementTool" ) )
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUIDialog::~CameraPlacementToolUIDialog()
 {
-    mServiceList->CleanUp();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 bool CameraPlacementToolUIDialog::TransferDataFromWindow()

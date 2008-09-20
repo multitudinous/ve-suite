@@ -31,91 +31,119 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// --- VE-Suite Includes --- //
-#include <ves/conductor/util/CORBAServiceList.h>
-
 // --- My Includes --- //
-#include "ConstructionBotsUIDialog.h"
+#include "WarrantyToolUI.h"
+#include "WarrantyToolUIDialog.h"
 
-// --- VE-Suite Includes --- //
-#include <ves/open/xml/DataValuePair.h>
-#include <ves/open/xml/Command.h>
+#include "Icons/camera.xpm"
 
 // --- wxWidgets Includes --- //
-#include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <wx/dialog.h>
+#include <wx/wx.h>
 
-using namespace bots;
+using namespace warrantytool;
 
-BEGIN_EVENT_TABLE( ConstructionBotsUIDialog, wxDialog )
-
-END_EVENT_TABLE()
+IMPLEMENT_DYNAMIC_CLASS( WarrantyToolUI, UIPluginBase )
 
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog()
+WarrantyToolUI::WarrantyToolUI()
+{
+    name = wxT( "WarrantyTool" );
+
+    wxImage my_img( camera_xpm );
+    icon_w = static_cast< int >( my_img.GetWidth() * 0.5f );
+    icon_h = static_cast< int >( my_img.GetHeight() * 0.5f );
+    my_icon = new wxBitmap( my_img.Scale( icon_w, icon_h ) );
+
+    n_pts = 4;
+
+    poly[ 0 ] = wxPoint( 0, 0 );
+    poly[ 1 ] = wxPoint( icon_w, 0 );
+    poly[ 2 ] = wxPoint( icon_w, icon_h );
+    poly[ 3 ] = wxPoint( 0, icon_h );
+}
+////////////////////////////////////////////////////////////////////////////////
+WarrantyToolUI::~WarrantyToolUI()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog(
-    wxWindow* parent,
-    int id, 
-    ves::conductor::util::CORBAServiceList* service )
-:
-UIDialog( static_cast< wxWindow* >( parent ),
-          id,
-          wxT( "ConstructionBots" ) )
+double WarrantyToolUI::GetVersion()
 {
-    mServiceList = service;
+    double result = 1.0;
 
-    BuildGUI();
+    return result;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::~ConstructionBotsUIDialog()
+int WarrantyToolUI::GetNumPoly()
+{
+    int result = 0;
+
+    return n_pts;
+}
+////////////////////////////////////////////////////////////////////////////////
+int WarrantyToolUI::GetNumIports()
+{
+    int result = 0;
+
+    return result;
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUI::GetIPorts( POLY &iports )
+{
+    return;
+}
+////////////////////////////////////////////////////////////////////////////////
+int WarrantyToolUI::GetNumOports()
+{
+    int result = 0;
+
+    return result;
+}
+////////////////////////////////////////////////////////////////////////////////
+void WarrantyToolUI::GetOPorts( POLY &oports )
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ConstructionBotsUIDialog::TransferDataFromWindow()
+void WarrantyToolUI::DrawIcon( wxDC* dc )
 {
-    return true;
+    dc->DrawBitmap( *my_icon, pos.x, pos.y );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ConstructionBotsUIDialog::TransferDataToWindow()
+ves::conductor::UIDialog* WarrantyToolUI::UI( wxWindow* parent )
 {
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::Lock( bool l )
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::BuildGUI()
-{
-    CenterOnParent();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::ClearInstructions()
-{
-    mInstructions.clear();
-    mCommandName.clear();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::SendCommandsToXplorer()
-{
-    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
-
-    for( size_t i = 0; i < mInstructions.size(); ++i )
+    if( dlg != NULL )
     {
-        command->AddDataValuePair( mInstructions.at( i ) );
+        return dlg;
     }
 
-    command->SetCommandName( mCommandName );
+    dlg = new WarrantyToolUIDialog( parent, -1, serviceList );
+    ConfigurePluginDialogs( dlg );
 
-    mServiceList->SendCommandStringToXplorer( command );
+    return dlg;
+}
+////////////////////////////////////////////////////////////////////////////////
+wxString WarrantyToolUI::GetConductorName()
+{         
+    wxString result = wxT( "WarrantyTool" );
+
+    return result;
+}
+////////////////////////////////////////////////////////////////////////////////
+wxString WarrantyToolUI::GetName()
+{
+    if( name.IsEmpty() )
+    {
+        name = wxT( "PleaseDefineClassName" );
+    }
+
+    return name;
+}
+////////////////////////////////////////////////////////////////////////////////
+wxString WarrantyToolUI::GetDesc()
+{
+    wxString result = wxT( "The generic tool to display warranty data." );
+
+    return result;
 }
 ////////////////////////////////////////////////////////////////////////////////

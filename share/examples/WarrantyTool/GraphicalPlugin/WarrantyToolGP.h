@@ -31,57 +31,32 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef COIN_FUNNEL_UI_DIALOG_H
-#define COIN_FUNNEL_UI_DIALOG_H
+#ifndef WARRANTY_TOOL_GP_H
+#define WARRANTY_TOOL_GP_H
 
 // --- VE-Suite Includes --- //
-#include <ves/conductor/UIDialog.h>
+#include <ves/xplorer/plugin/PluginBase.h>
 
-namespace ves
+namespace warrantytool
 {
-namespace conductor
-{
-namespace util
-{
-    class CORBAServiceList;
-}
-}
-}
-
-// --- C/C++ Libraries --- //
-#include <vector>
-#include <string>
-
-namespace funnel
-{
-class CoinFunnelUIDialog : public ves::conductor::UIDialog
+class VE_USER_PLUGIN_EXPORTS WarrantyToolGP :
+    public ves::xplorer::plugin::PluginBase
 {
 public:
-    CoinFunnelUIDialog();
-    CoinFunnelUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service );
-    
-    enum COINFUNNEL_IDS
-    {
-        OK_BUTTON
-    };
+    WarrantyToolGP();
+    virtual ~WarrantyToolGP();
 
-    virtual ~CoinFunnelUIDialog();
+    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
+    virtual void PreFrameUpdate();
+    virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
 protected:
 
 private:
-    void BuildGUI();
-
-    void SendCommandsToXplorer();
-    void ClearInstructions();
-
-    ves::conductor::util::CORBAServiceList* mServiceList;
-    std::string mCommandName;
-    std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
-    
-    DECLARE_EVENT_TABLE()
-
 };
-} //end funnel
 
-#endif //COIN_FUNNEL_UI_DIALOG_H
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
+
+} //end warrantytool
+
+#endif //WARRANTY_TOOL_GP_H

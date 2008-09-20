@@ -31,9 +31,6 @@ public:
 	{
 		ID_TEXTCTRL
 	};
-	
-	virtual bool TransferDataFromWindow();
-	virtual bool TransferDataToWindow();
 
 	void BuildPage();
 

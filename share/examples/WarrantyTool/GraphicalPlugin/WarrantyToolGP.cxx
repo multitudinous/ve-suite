@@ -31,91 +31,52 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-// --- VE-Suite Includes --- //
-#include <ves/conductor/util/CORBAServiceList.h>
-
 // --- My Includes --- //
-#include "ConstructionBotsUIDialog.h"
+#include "WarrantyToolGP.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
-// --- wxWidgets Includes --- //
-#include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/textctrl.h>
-#include <wx/stattext.h>
-#include <wx/dialog.h>
-
-using namespace bots;
-
-BEGIN_EVENT_TABLE( ConstructionBotsUIDialog, wxDialog )
-
-END_EVENT_TABLE()
+using namespace warrantytool;
 
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog()
-{
-    ;
-}
-////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::ConstructionBotsUIDialog(
-    wxWindow* parent,
-    int id, 
-    ves::conductor::util::CORBAServiceList* service )
+WarrantyToolGP::WarrantyToolGP()
 :
-UIDialog( static_cast< wxWindow* >( parent ),
-          id,
-          wxT( "ConstructionBots" ) )
+PluginBase()
 {
-    mServiceList = service;
+    //Needs to match inherited UIPluginBase class name
+    mObjectName = "WarrantyToolUI";
 
-    BuildGUI();
+    mEventHandlerMap[ "HIGHLIGHT_WARRANTY_NODE" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ConstructionBotsUIDialog::~ConstructionBotsUIDialog()
+WarrantyToolGP::~WarrantyToolGP()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ConstructionBotsUIDialog::TransferDataFromWindow()
+void WarrantyToolGP::InitializeNode(
+    ves::xplorer::scenegraph::DCS* veworldDCS )
 {
-    return true;
+    PluginBase::InitializeNode( veworldDCS );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool ConstructionBotsUIDialog::TransferDataToWindow()
-{
-    return true;
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::Lock( bool l )
+void WarrantyToolGP::PreFrameUpdate()
 {
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::BuildGUI()
+void WarrantyToolGP::SetCurrentCommand(
+    ves::open::xml::CommandPtr command )
 {
-    CenterOnParent();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::ClearInstructions()
-{
-    mInstructions.clear();
-    mCommandName.clear();
-}
-////////////////////////////////////////////////////////////////////////////////
-void ConstructionBotsUIDialog::SendCommandsToXplorer()
-{
-    ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
-
-    for( size_t i = 0; i < mInstructions.size(); ++i )
+    if( !command )
     {
-        command->AddDataValuePair( mInstructions.at( i ) );
+        return;
     }
 
-    command->SetCommandName( mCommandName );
-
-    mServiceList->SendCommandStringToXplorer( command );
+    std::string commandName = command->GetCommandName();
+    //Highlight the respective node
 }
 ////////////////////////////////////////////////////////////////////////////////

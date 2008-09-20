@@ -31,57 +31,45 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
-#ifndef COIN_FUNNEL_UI_DIALOG_H
-#define COIN_FUNNEL_UI_DIALOG_H
+#ifndef WARRANTY_TOOL_UI_H
+#define WARRANTY_TOOL_UI_H
 
 // --- VE-Suite Includes --- //
-#include <ves/conductor/UIDialog.h>
+#include <ves/conductor/UIPluginBase.h>
 
-namespace ves
+namespace warrantytool
 {
-namespace conductor
+class WarrantyToolUI : public ves::conductor::UIPluginBase
 {
-namespace util
-{
-    class CORBAServiceList;
-}
-}
-}
+    DECLARE_DYNAMIC_CLASS( WarrantyToolUI )
 
-// --- C/C++ Libraries --- //
-#include <vector>
-#include <string>
-
-namespace funnel
-{
-class CoinFunnelUIDialog : public ves::conductor::UIDialog
-{
 public:
-    CoinFunnelUIDialog();
-    CoinFunnelUIDialog( wxWindow* parent, int id, ves::conductor::util::CORBAServiceList* service );
-    
-    enum COINFUNNEL_IDS
-    {
-        OK_BUTTON
-    };
+    WarrantyToolUI();
+    virtual ~WarrantyToolUI();
 
-    virtual ~CoinFunnelUIDialog();
+    virtual double GetVersion();
+
+    virtual void DrawIcon( wxDC* dc );
+
+    virtual int GetNumPoly();
+
+    virtual ves::conductor::UIDialog* UI( wxWindow* parent );
+
+    virtual wxString GetConductorName();
+    virtual wxString GetName();
+    virtual wxString GetDesc();
+
+    virtual int GetNumIports();
+    virtual void GetIPorts( POLY& ports );
+
+    virtual int GetNumOports();
+    virtual void GetOPorts( POLY& ports );
 
 protected:
 
 private:
-    void BuildGUI();
-
-    void SendCommandsToXplorer();
-    void ClearInstructions();
-
-    ves::conductor::util::CORBAServiceList* mServiceList;
-    std::string mCommandName;
-    std::vector< ves::open::xml::DataValuePairSharedPtr > mInstructions;
-    
-    DECLARE_EVENT_TABLE()
 
 };
-} //end funnel
+} //end warrantytool
 
-#endif //COIN_FUNNEL_UI_DIALOG_H
+#endif //WARRANTY_TOOL_UI_H
