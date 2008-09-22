@@ -458,7 +458,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->setInputTextureIndexForViewportReference( 0 );
         final->setInputToUniform( color.get(), "baseMap", true );
-        final->setInputToUniform( glowStencil.get(), "stencilGlowMap", true );
+        final->setInputToUniform( glow.get(), "stencilGlowMap", true );
+        //final->setInputToUniform( glowStencil.get(), "stencilGlowMap", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
     }
 

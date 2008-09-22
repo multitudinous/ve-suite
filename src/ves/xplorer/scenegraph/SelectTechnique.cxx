@@ -68,6 +68,7 @@ void SelectTechnique::DefinePasses()
         AddPass( mStateSet.get() );
     }
 
+    /*
     //Pass 2
     {
         std::string fragmentSource =
@@ -101,6 +102,7 @@ void SelectTechnique::DefinePasses()
 
         AddPass( stateset.get() );
     }
+    */
     /*
     //Implement pass #1
     {

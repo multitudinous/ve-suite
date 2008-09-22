@@ -8,7 +8,8 @@ uniform sampler2D glowMap;
 void main()
 {
     vec4 original = texture2D( baseMap, gl_TexCoord[ 0 ].xy );
-    float stencilGlowValue = texture2D( stencilGlowMap, gl_TexCoord[ 0 ].xy ).x;
+    float inverseGlowAlpha = 0.9;
+    float stencilGlowValue = texture2D( stencilGlowMap, gl_TexCoord[ 0 ].xy ).x * inverseGlowAlpha;
     float glowValue = texture2D( glowMap, gl_TexCoord[ 0 ].xy ).x;
     vec4 glow = ( glowStrength * glowValue ) * glowColor;
     glow = ( 1.0 - stencilGlowValue ) * glow;
