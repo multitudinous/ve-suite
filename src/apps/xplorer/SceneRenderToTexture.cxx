@@ -453,7 +453,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
 
         finalShader->set( "glowStrength", static_cast< float >( 4.0 ) );
         finalShader->set(
-            "glowColor", osg::Vec4( 0.57255, 0.34118, 1.0, 1.0 ) );
+            "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
         final->setInputTextureIndexForViewportReference( 0 );

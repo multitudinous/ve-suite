@@ -2,42 +2,59 @@
 <!--Shader adapted from RenderMonkey 1.6 Examples-->
 
 <Program>
-<name>x-ray</name>
+    <name>x-ray</name>
 
-<vertexShader>
-<type>Vertex</type>
-	<shaderCode>
-		varying vec3 N;
-		varying vec3 I;
-	      varying vec4 currentColor;
+    <vertexShader>
+        <type>Vertex</type>
+        <shaderCode>
+            varying vec3 ecPosition;
+            varying vec3 normal;
 
-		void main()
-		{
-			vec4 P=gl_ModelViewMatrix*gl_Vertex;
-			I=P.xyz;
-			N=gl_NormalMatrix*gl_Normal;
-                  currentColor=gl_Color;
-			gl_Position=ftransform();
-		}
-	</shaderCode>
-</vertexShader>
+            void main()
+            {
+                ecPosition = vec3( gl_ModelViewMatrix * gl_Vertex );
+                normal = gl_NormalMatrix * gl_Normal;
+                gl_FrontColor = gl_Color;
 
-<fragmentShader>
-<type>Fragment</type>
-	<shaderCode>
-		varying vec3 N;
-		varying vec3 I;
-	      varying vec4 currentColor;	
+                gl_Position = ftransform();
+            }
+        </shaderCode>
+    </vertexShader>
 
-		void main()
-		{
-    			float opac=dot(normalize(-N),normalize(-I));
-    			opac=abs(opac);
-    			opac=1.0-pow(opac,0.8);
-   			vec4 Cs=currentColor;
-    			gl_FragColor=opac*Cs;
-		}	                 
-	</shaderCode>
-</fragmentShader>
+    <fragmentShader>
+        <type>Fragment</type>
+        <uniform>
+            <name>glowColor</name>
+            <type>Float</type>
+            <size>4</size>
+            <value>0.0</value>
+            <value>0.0</value>
+            <value>0.0</value>
+            <value>1.0</value>
+        </uniform>
+        <shaderCode>
+            uniform vec4 glowColor;
+            
+            varying vec3 ecPosition;
+            varying vec3 normal;
+
+            void main()
+            {
+                float opacity =
+                    dot( normalize( -normal ), normalize( -ecPosition ) );
+                opacity = abs( opacity );
+                opacity = 1.0 - pow( opacity, 0.8 );
+
+                gl_FragData[ 0 ] = opacity * gl_Color;
+                vec4 color = glowColor;
+                if( gl_Color.a < 1.0 )
+                {
+                    color.a = gl_Color.a;
+                }
+                
+                gl_FragData[ 1 ] = color;
+            }
+        </shaderCode>
+    </fragmentShader>
 
 </Program>

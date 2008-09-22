@@ -61,7 +61,7 @@ void SelectTechnique::DefinePasses()
     osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
     //Pass 1
     {
-        mStateSet->setRenderBinDetails( -1, "RenderBin" );
+        //mStateSet->setRenderBinDetails( -1, "RenderBin" );
 
         mStateSet->addUniform( new osg::Uniform( "glowColor", glowColor ) );
 
