@@ -39,6 +39,11 @@
 #include <ves/open/xml/DataValuePair.h>
 #include <ves/open/xml/Command.h>
 
+#include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
+#include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/CADEntity.h>
+
+using namespace ves::xplorer::scenegraph;
 using namespace warrantytool;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -61,6 +66,21 @@ void WarrantyToolGP::InitializeNode(
     ves::xplorer::scenegraph::DCS* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
+    //Load model
+    CADEntity* cadEntity = new CADEntity( "Models/test2_head_osg26.ive",
+              mDCS.get(), false, true, NULL );
+    osg::Node::DescriptionList descriptorsList;
+    descriptorsList = cadEntity->GetDCS()->getDescriptions();
+    descriptorsList.push_back( "Part" );
+    cadEntity->GetDCS()->setDescriptions( descriptorsList );
+    //Make transparent
+    ves::xplorer::scenegraph::util::MaterialInitializer 
+        material_initializer( cadEntity->GetDCS() );
+    ves::xplorer::scenegraph::util::OpacityVisitor 
+        opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
+    ves::xplorer::scenegraph::util::OpacityVisitor 
+        opVisitor1( cadEntity->GetDCS(), false, true, 0.3f );
+    //Highlight part
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
