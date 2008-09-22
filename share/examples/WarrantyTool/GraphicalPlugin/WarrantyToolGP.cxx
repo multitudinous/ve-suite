@@ -41,6 +41,8 @@
 
 #include <ves/xplorer/scenegraph/util/OpacityVisitor.h>
 #include <ves/xplorer/scenegraph/util/MaterialInitializer.h>
+#include <ves/xplorer/scenegraph/HighlightNodeByNameVisitor.h>
+
 #include <ves/xplorer/scenegraph/CADEntity.h>
 
 using namespace ves::xplorer::scenegraph;
@@ -67,8 +69,8 @@ void WarrantyToolGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
     //Load model
-    CADEntity* cadEntity = new CADEntity( "Models/test2_head_osg26.ive",
-              mDCS.get(), false, true, NULL );
+    CADEntity* cadEntity = new CADEntity( "Models/single_sleeve.ive",
+              mDCS.get(), false, false, NULL );
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = cadEntity->GetDCS()->getDescriptions();
     descriptorsList.push_back( "Part" );
@@ -81,6 +83,8 @@ void WarrantyToolGP::InitializeNode(
     ves::xplorer::scenegraph::util::OpacityVisitor 
         opVisitor1( cadEntity->GetDCS(), false, true, 0.3f );
     //Highlight part
+    ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+        highlight( cadEntity->GetDCS(), "AN220959" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()

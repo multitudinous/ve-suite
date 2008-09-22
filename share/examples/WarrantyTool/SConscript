@@ -6,15 +6,17 @@ pj = os.path.join
 Import( 'RootDir ves_pkg GetPlatform' )
 
 fileBundle = ves_pkg.createFileBundle( pj( 'share', 'vesuite', 'examples', 'WarrantyTool' ) )
-CameraPlacementToolDir = pj( RootDir, 'share', 'examples', 'WarrantyTool' )
+WarrantyToolDir = pj( RootDir, 'share', 'examples', 'WarrantyTool' )
 
 #fileBundle.addFiles( [ 'warrantytool.ves' ] )
+iveFile = sca_util.getFilesRecursiveByExt( WarrantyToolDir, [ '.ive' ] )
+fileBundle.addFiles( iveFile )
 
-CameraPlacementToolSubdirs = Split("""
+WarrantyToolSubdirs = Split("""
     GraphicalPlugin
     UserInterface
 """)
 
 ##Run SConscript files in all of these folders.
-for d in CameraPlacementToolSubdirs:
+for d in WarrantyToolSubdirs:
    SConscript( dirs = d )
