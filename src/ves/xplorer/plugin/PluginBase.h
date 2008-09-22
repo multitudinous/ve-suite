@@ -224,16 +224,20 @@ protected:
     ves::xplorer::CommandHandler* mCommandHandler;
     ///The xml model pointer for this plugin
     ves::open::xml::model::ModelPtr mXmlModel;
-
-    //Singleton pointers
+    ///Singleton pointers
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 #ifdef VE_SOUND
     osgAL::SoundManager* mSoundManager;
 #endif
 
+    ///This is the base DCS pointer that all content for a plugin
+    ///should be added to. 
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
+    ///This is the actuall parent DCS for this plugin. Typcially this is
+    ///the Executive node that all plugins are added to.
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
-
+    ///This map is populated with this pointers and with event names
+    ///so that this plugin can execute events from conductor plugins
     std::map< std::string, PluginBase* > mEventHandlerMap;
 
 private:
