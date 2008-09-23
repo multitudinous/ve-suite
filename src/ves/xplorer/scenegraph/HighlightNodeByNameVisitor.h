@@ -49,6 +49,7 @@
 
 // --- OSG Includes --- //
 #include <osg/NodeVisitor>
+#include <osg/Group>
 
 namespace ves
 {
@@ -61,7 +62,10 @@ class VE_SCENEGRAPH_EXPORTS HighlightNodeByNameVisitor : public osg::NodeVisitor
 public:
     ///Constructor
     ///\param node The node to be traversed
-    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName );
+    ///\param nodeName The name of the node to highlight
+    ///\param opaqueParent The hack to get around osg transparency issues
+    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, 
+        osg::Group* opaqueParent );
     
     ///Default Constructor
     HighlightNodeByNameVisitor();
@@ -75,6 +79,7 @@ public:
 
 private:
     std::string mNodeName;///<GUID to identify the VE-Open model
+    osg::ref_ptr< osg::Group > mOpaqueParent;
 };
 }
 }
