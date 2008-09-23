@@ -47,7 +47,7 @@
 
                 gl_FragData[ 0 ] = opacity * gl_Color;
                 vec4 color = glowColor;
-                if( gl_Color.a < 1.0 )
+                if( 1.0 &gt; gl_Color.a )
                 {
                     color.a = gl_Color.a;
                 }
