@@ -180,8 +180,7 @@ void DOMDocumentManager::Load( const std::string inputCommand )
     catch ( const XMLException& toCatch )
     {
         message = XMLString::transcode( toCatch.getMessage() );
-        std::cout << "Exception message is: \n"
-        << message << "\n";
+        std::cerr << "Exception message is: \n" << message << "\n";
         XMLString::release( &message );
         delete mParser;
         mParser = 0;
@@ -193,8 +192,7 @@ void DOMDocumentManager::Load( const std::string inputCommand )
     catch ( const DOMException& toCatch )
     {
         message = XMLString::transcode( toCatch.msg );
-        std::cout << "Exception message is: \n"
-        << message << "\n";
+        std::cerr << "Exception message is: \n" << message << "\n";
         XMLString::release( &message );
         delete mParser;
         mParser = 0;
@@ -205,9 +203,8 @@ void DOMDocumentManager::Load( const std::string inputCommand )
     }
     catch ( ... )
     {
-        std::cout << "DOMDocumentManager::Load Unexpected Exception"
-        << std::endl;
-        std::cout << inputCommand  << std::endl;
+        std::cerr << "DOMDocumentManager::Load Unexpected Exception" 
+            << std::endl << inputCommand  << std::endl;
         delete mParser;
         mParser = 0;
         delete mErrHandler;

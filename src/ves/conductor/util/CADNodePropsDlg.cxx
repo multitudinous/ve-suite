@@ -845,65 +845,68 @@ void CADNodePropertiesDlg::_addAttribute( wxCommandEvent& WXUNUSED( event ) )
                              _T( "" ),
                              _T( "VE-Attribute files (*.vea)|*.vea;" ),
                              wxOPEN | wxFILE_MUST_EXIST );
-        if( dialog.ShowModal() == wxID_OK )
+
+        if( dialog.ShowModal() != wxID_OK )
         {
-            ves::open::xml::cad::CADAttributePtr newAttribute( new CADAttribute() );
-            newAttribute->SetAttributeType( "Program" );
+            return;
+        }
+        
+        ves::open::xml::cad::CADAttributePtr newAttribute( new CADAttribute() );
+        newAttribute->SetAttributeType( "Program" );
 
-            wxFileName veaFileName( dialog.GetPath() );
-            veaFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
-            wxString veaFileNamePath( wxString( "./", wxConvUTF8 ) + veaFileName.GetFullPath() );
+        wxFileName veaFileName( dialog.GetPath() );
+        veaFileName.MakeRelativeTo( ::wxGetCwd(), wxPATH_NATIVE );
+        wxString veaFileNamePath( wxString( "./", wxConvUTF8 ) + veaFileName.GetFullPath() );
 
-            ves::open::xml::XMLReaderWriter shaderLoader;
-            shaderLoader.UseStandaloneDOMDocumentManager();
-            shaderLoader.ReadFromFile();
-            shaderLoader.ReadXMLData( ConvertUnicode( veaFileNamePath ), "Shader", "Program" );
+        ves::open::xml::XMLReaderWriter shaderLoader;
+        shaderLoader.UseStandaloneDOMDocumentManager();
+        shaderLoader.ReadFromFile();
+        shaderLoader.ReadXMLData( ConvertUnicode( veaFileNamePath ), "Shader", "Program" );
 
-            ves::open::xml::shader::ProgramPtr loadedShader;
-            if( shaderLoader.GetLoadedXMLObjects().size() > 0 )
+        ves::open::xml::shader::ProgramPtr loadedShader;
+        if( shaderLoader.GetLoadedXMLObjects().size() > 0 )
+        {
+            try
             {
-                try
+                loadedShader = boost::dynamic_pointer_cast<ves::open::xml::shader::Program>( shaderLoader.GetLoadedXMLObjects().at( 0 ) );
+                if( AttributeExists( loadedShader->GetProgramName().c_str() ) )
                 {
-                    loadedShader = boost::dynamic_pointer_cast<ves::open::xml::shader::Program>( shaderLoader.GetLoadedXMLObjects().at( 0 ) );
-                    if( AttributeExists( loadedShader->GetProgramName().c_str() ) )
-                    {
-                        wxMessageBox( _( "Attribute with this name is already loaded." ),
-                                      dialog.GetPath(), wxOK | wxICON_INFORMATION );
-                        return;
-                    }
-
-                    newAttribute->SetProgram( *loadedShader );
-                    _cadNode->AddAttribute( newAttribute );
-                    _updateAvailableAttributes();
-                    //_attributeSelection->SetSelection(_nShaders-1);
-
-                    _commandName = std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" );
-
-                    ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
-                    nodeID->SetDataType( "STRING" );
-                    nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
-                    _instructions.push_back( nodeID );
-
-                    ves::open::xml::DataValuePairPtr addAttribute( new ves::open::xml::DataValuePair() );
-                    addAttribute->SetDataType( "XMLOBJECT" );
-                    addAttribute->SetData( "Attribute", _cadNode->GetAttribute( newAttribute->GetAttributeName() ) );
-                    _instructions.push_back( addAttribute );
-
-                    _sendCommandsToXplorer();
-                }
-                catch ( ... )
-                {
-                    wxMessageBox( _( "Couldn't load shader file." ),
+                    wxMessageBox( _( "Attribute with this name is already loaded." ),
                                   dialog.GetPath(), wxOK | wxICON_INFORMATION );
                     return;
                 }
+
+                newAttribute->SetProgram( *loadedShader );
+                _cadNode->AddAttribute( newAttribute );
+                _updateAvailableAttributes();
+                //_attributeSelection->SetSelection(_nShaders-1);
+
+                _commandName = std::string( "CAD_ADD_ATTRIBUTE_TO_NODE" );
+
+                ves::open::xml::DataValuePairPtr nodeID( new ves::open::xml::DataValuePair() );
+                nodeID->SetDataType( "STRING" );
+                nodeID->SetData( std::string( "Node ID" ), _cadNode->GetID() );
+                _instructions.push_back( nodeID );
+
+                ves::open::xml::DataValuePairPtr addAttribute( new ves::open::xml::DataValuePair() );
+                addAttribute->SetDataType( "XMLOBJECT" );
+                addAttribute->SetData( "Attribute", _cadNode->GetAttribute( newAttribute->GetAttributeName() ) );
+                _instructions.push_back( addAttribute );
+
+                _sendCommandsToXplorer();
             }
-            else
+            catch ( ... )
             {
                 wxMessageBox( _( "Couldn't load shader file." ),
-                             dialog.GetPath(), wxOK | wxICON_INFORMATION );
+                              dialog.GetPath(), wxOK | wxICON_INFORMATION );
                 return;
             }
+        }
+        else
+        {
+            wxMessageBox( _( "Couldn't load shader file." ),
+                         dialog.GetPath(), wxOK | wxICON_INFORMATION );
+            return;
         }
     }
 }
