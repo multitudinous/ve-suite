@@ -256,18 +256,18 @@ opts.Add('SVN_Previous_Date', 'Previous Date to create a change log from. Should
 ##         cpu_arch_default)
 
 apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
-                                            "apr-1", "1.0", True, True, compileTest=True, headerToCheck="apr.h")
+                                            "apr-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apr.h")
 
 apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
-                                             "apr-util-1", "1.0", True, True, compileTest=True, headerToCheck="apu.h")
+                                             "apr-util-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apu.h")
 
 bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
-                                               "bullet", "0.1", True, True, compileTest=True,
+                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
                                                headerToCheck="btBulletCollisionCommon.h")
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
-                                               "1.5", True, True, compileTest=True,
+                                               "1.5", True, True, helpText=None, compileTest=True,
                                                headerToCheck="ace/ACE.h")
 if GetPlatform() != 'win32':
     boost_options = SConsAddons.Options.Boost.Boost("boost", "1.32.0",
@@ -277,7 +277,7 @@ if GetPlatform() != 'win32':
                                                 autoLink = True)
 else:
     boost_options = fp_option.FlagPollBasedOption("Boost Libraries",
-        "Boost.Filesystem", "1.33.1", True, True)
+        "Boost.Filesystem", "1.33.1", True, True, helpText=None, compileTest=True)
 
 gmtl_options = fp_option.FlagPollBasedOption("Generic Math Template Library",
                                              "gmtl", "0.5", True, True,
