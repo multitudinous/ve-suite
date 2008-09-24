@@ -1,12 +1,14 @@
+#ifndef DYNPARSER_H
+#define DYNPARSER_H
+
 #include <fstream>
 #include <iostream>
-#include <string>
-#include <utility>
 #include <sstream>
 #include <map>
 #include <vector>
-#include "AspenPlusLUT.h"
-#include "AspenIconData.h"
+#include <string>
+#include <ves/open/xml/model/Network.h>
+#include <ves/open/xml/model/System.h>
 
 class DynParser
 {
@@ -30,8 +32,34 @@ private:
 
 	std::map< std::string, std::map< std::string, BlockInfo > > BlockInfoList;
 
+    typedef struct
+	{	
+		std::string streamId;
+		int streamType;
+		std::vector< std::pair< float, float > > value;	
+	}streamXY;
+
+	streamXY xy;
+	streamXY tempXY;
+
+    std::vector< streamXY > streamCoordList;
+    std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > > > linkPoints;
+    std::map< std::string, std::map< std::string, int > > linkTypes;
+    std::map< std::string, std::map< std::string, std::string > > inLinkToModel;
+    std::map< std::string, std::map< std::string, std::string > > outLinkToModel;
+    std::map<std::string, std::map< std::string, int > >models;
+    std::map< std::string, std::pair< int, int > > streamPortIDS;
+   int redundantID;
+   std::string workingDir;
+	void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
+   void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
+
 public:
 	DynParser();
 	~DynParser();
-	void ParseFile(const char *);	
+	void ParseFile(const char *);
+    std::string CreateNetwork( void );	
+	void SetWorkingDir( std::string dir );
 };
+
+#endif
