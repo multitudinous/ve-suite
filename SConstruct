@@ -424,7 +424,7 @@ if not SConsAddons.Util.hasHelpFlag():
 
    if baseEnv['default_debug_level'] != EnvironmentBuilder.NONE:
       base_bldr.enableDebug()
-      base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DBG_DLL_RT)
+      base_bldr.setMsvcRuntime(EnvironmentBuilder. MSVC_MT_DLL_RT)
    else:
       base_bldr.enableOpt()
       base_bldr.setMsvcRuntime(EnvironmentBuilder.MSVC_MT_DLL_RT)
