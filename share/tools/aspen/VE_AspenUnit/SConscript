@@ -38,7 +38,7 @@ env.Append( CPPDEFINES = ['_AFXDLL'])
 
 env.Append( CPPPATH = [pj('#', 'src')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib')] )
-env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib','aspenplus_2004')] )
+env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib','aspenplus_2006.5')] )
 env.Append( CPPPATH = [pj('#', buildDir, 'src', 'ves', 'open')] )
 
 env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','CASIlib')])

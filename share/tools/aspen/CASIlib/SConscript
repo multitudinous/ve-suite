@@ -5,11 +5,11 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR RootDir')
 
 sources = Split("""
+   aspenplus_2006.5/happ.cxx
    CASI.cxx
    CASI_CASIObj.cxx
    CASI_Document.cxx
    CASI_VAriable.cxx
-   aspenplus_2004/happ.cxx
 """)
 
 headers = Split("""
@@ -19,7 +19,7 @@ headers = Split("""
 lib_env = ves_pkg.getEnv().Copy()
 lib_env['MSVS_USE_MFC_DIRS'] = 1
 
-lib_env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib', 'aspenplus_2004')] )
+lib_env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib', 'aspenplus_2006.5')] )
 lib_env.Append( CPPDEFINES = ['_AFXDLL'])
 lib_env.Append( CPPDEFINES = ['CASI_LIBRARY'])
 lib = ves_pkg.createSharedLibrary('CASIlib', lib_env,
