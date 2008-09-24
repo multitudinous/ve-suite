@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <cctype>
 
 #include "AspenPlusLUT.h"
 #include "AspenIconData.h"
@@ -260,10 +261,13 @@ void BKPParser::ParseFile( const char * bkpFile )
         getline(inFile, compLib);
         getline(inFile, compName);
 
+        std::string type;
 
         //remove newline
         std::stringstream tokenizer(compLibName);
-        tokenizer >> tempBlockInfo.type;
+        tokenizer >> type;
+        std::transform(type.begin(), type.end(), type.begin(), std::tolower);
+        tempBlockInfo.type = type;
 
         if(compLibName.find("Hierarchy") == std::string::npos)
 	        tempBlockInfo.hierarchical = false;
@@ -412,10 +416,10 @@ void BKPParser::ParseFile( const char * bkpFile )
             //sort the block id/type vector
             int entryIncr = 0;
             bool entryFound = false;
-            std::string iconType;
             std::string tempIcon;
             iconTokenizer >> tempIcon;
             tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
+            std::transform(tempIcon.begin(), tempIcon.end(), tempIcon.begin(), std::tolower);
             BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
             BlockInfoList[sheetIter->first][tempBlockId].scale = scale;
 
@@ -522,13 +526,13 @@ void BKPParser::ParseFile( const char * bkpFile )
             float width =
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
                 "."+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".JPG"].first;
+                ".jpg"].first;
             float height = 
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
                 "."+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".JPG"].second;
+                ".jpg"].second;
             tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"."+
-                BlockInfoList[sheetIter->first][tempBlockId].icon+".JPG"
+                BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg"
                 <<": "<<width<<" "<<height<<std::endl;
             iconLocations[sheetIter->first][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -

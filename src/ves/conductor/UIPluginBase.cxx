@@ -1136,7 +1136,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
 
     wxImage image;
     //Try to find the default aspen icons
-    std::string fullPath = "2DIcons/" + path + ".jpg";
+    std::string fullPath = "2dicons/" + path + ".jpg";
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
     aspenIconIter = aspenPlusIconMap.find( fullPath );
@@ -1148,7 +1148,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
     else
     {
         //Now see if the user has any jpgs in
-        //the 2DIcons directory for the application
+        //the 2dicons directory for the application
         std::ifstream exists( fullPath.c_str() );
         if( exists.fail() )
         {
@@ -1315,7 +1315,7 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     {
         m_iconChooser = new IconChooser( m_canvas );
     }
-    m_iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
+    m_iconChooser->AddIconsDir( wxString( "2dicons", wxConvUTF8 ) );
     //m_iconChooser->SetPlugin( tempPlugin );
     m_iconChooser->SetPlugin( this );
     //chooser->SetSize( dialogSize );

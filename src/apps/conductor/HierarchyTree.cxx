@@ -156,7 +156,7 @@ void HierarchyTree::PopulateTree( const std::string& id )
             }
 
             //Add the icon to the image list
-            fullPath = "2DIcons/" + iter->second->GetIconFilename() + ".jpg";
+            fullPath = "2dicons/" + iter->second->GetIconFilename() + ".jpg";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -209,7 +209,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             }
 
             //Add the icon to the image list
-            fullPath = "2DIcons/" + models[i]->GetIconFilename() + ".jpg";
+            fullPath = "2dicons/" + models[i]->GetIconFilename() + ".jpg";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -419,7 +419,7 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
           return;
       }
 
-      std::string fullPath = "2DIcons/" + path + ".jpg";
+      std::string fullPath = "2dicons/" + path + ".jpg";
       std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
       std::map< std::string, char** >::iterator aspenIconIter;
       aspenIconIter = aspenPlusIconMap.find( fullPath );
@@ -432,7 +432,7 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
       else
       {
           //Now see if the user has any jpgs in
-          //the 2DIcons directory for the application
+          //the 2dicons directory for the application
           std::ifstream exists( fullPath.c_str() );
           if( exists.fail() )
           {

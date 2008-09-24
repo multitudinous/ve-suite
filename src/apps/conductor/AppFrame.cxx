@@ -2484,7 +2484,7 @@ void AppFrame::OnShowIconChooser( wxCommandEvent& event )
     }
 
 	UIPluginBase* tempPlugin = static_cast< UIPluginBase* >(event.GetClientData());
-    iconChooser->AddIconsDir( wxString( "2DIcons", wxConvUTF8 ) );
+    iconChooser->AddIconsDir( wxString( "2dicons", wxConvUTF8 ) );
     iconChooser->SetPlugin( tempPlugin );
     iconChooser->Show();
 }

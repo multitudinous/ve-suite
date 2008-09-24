@@ -3,468 +3,468 @@
 #include <map>
 #include <string>
 
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_ECN_HS_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_ECN_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_ECN_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_ECN_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_FORCED_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_FORCED_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_INDUCE_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_INDUCE_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_NATURA_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Aerotran_Aerotran_NATURA_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Analyzer_Analyzer_ANALYZE2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Analyzer_Analyzer_ANALYZER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Analyzer_Analyzer_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/BatchFrac_BatchFrac_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/BatchFrac_BatchFrac_COLUMN1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/BatchFrac_BatchFrac_COLUMN2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/BatchFrac_BatchFrac_COLUMN3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/APECS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/CCD_CCD_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/CCD_CCD_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/CFuge_CFuge_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/CFuge_CFuge_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/ClChng_ClChng_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/ClChng_ClChng_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Compr_Compr_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Compr_Compr_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Compr_Compr_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Compr_Compr_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Crusher_Crusher_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Crusher_Crusher_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Crystallizer_Crystallizer_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Crystallizer_Crystallizer_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Crystallizer_Crystallizer_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Cyclone_Cyclone_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Cyclone_Cyclone_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Decanter_Decanter_V_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Decanter_Decanter_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Decanter_Decanter_H_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Distl_Distl_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Distl_Distl_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Distl_Distl_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dryer_Dryer_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dryer_Dryer_FLUIDBED.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dryer_Dryer_FLUIDBED2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dryer_Dryer_SPRAY.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/DSTWU_DSTWU_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/DSTWU_DSTWU_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/DSTWU_DSTWU_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dupl_Dupl_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dupl_Dupl_DOT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dupl_Dupl_HEAT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Dupl_Dupl_WORK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/ESP_ESP_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/ESP_ESP_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Extract_Extract_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Extract_Extract_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Extract_Extract_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Extract_Extract_POD.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FabFl_FabFl_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FabFl_FabFl_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Feedbl_Feedbl_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Feedbl_Feedbl_FEEDBL.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Filter_Filter_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Filter_Filter_PLATE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Filter_Filter_ROTARY.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash2_Flash2_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash2_Flash2_FURNACE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash2_Flash2_H_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash2_Flash2_HEATER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash2_Flash2_V_DRUM1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash2_Flash2_V_DRUM2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash3_Flash3_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash3_Flash3_FURNACE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash3_Flash3_H_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash3_Flash3_HEATER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash3_Flash3_V_DRUM1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Flash3_Flash3_V_DRUM2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_3WAY.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_DOT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_HEAT_TEE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_HEAT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_TEE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_TRIANGLE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_WORK_TEE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/FSplit_FSplit_WORK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_AIRCOOLER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_COMPR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_FURNACE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_Heater.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_PUMP.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_VALVE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_VALVE2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Heater_Heater_VALVE4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_E_HS_1CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_E_HS_1CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_E_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_E_HT_1CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_E_HT_1CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_E_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_ECN_HS_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_ECN_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_ECN_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_ECN_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_F_HS_2CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_F_HS_2CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_F_HS_4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_F_HT_2CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_F_HT_2CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_F_HT_4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_FORCED_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_FORCED_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_G_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_G_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_GEN_HS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_GEN_HT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_H_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_H_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_INDUCE_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_INDUCE_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J12_HS1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J12_HS2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J12_HT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J12_HT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J21_HS1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J21_HS2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J21_HT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_J21_HT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_K_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_NATURA_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_NATURA_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_SIMP_HS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_SIMP_HT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_X_HS_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_X_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_X_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HeatX_HeatX_X_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_E_HS_1CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_E_HS_1CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_E_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_E_HT_1CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_E_HT_1CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_E_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_F_HS_2CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_F_HS_2CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_F_HS_4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_F_HT_2CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_F_HT_2CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_F_HT_4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_G_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_G_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_GEN_HS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_GEN_HT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_H_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_H_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J12_HS1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J12_HS2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J12_HT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J12_HT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J21_HS1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J21_HS2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J21_HT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_J21_HT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_K_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_K_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_SIMP_HS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_SMP_HT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_X_HS_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_X_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_X_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hetran_Hetran_X_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Hierarchy_Hierarchy_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_E_HS_1CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_E_HS_1CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_E_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_E_HT_1CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_E_HT_1CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_E_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_F_HS_2CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_F_HS_2CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_F_HS_4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_F_HT_2CN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_F_HT_2CO.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_F_HT_4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_G_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_G_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_GEN_HS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_GEN_HT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_H_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_H_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J12_HS1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J12_HS2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J12_HT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J12_HT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J21_HS1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J21_HS2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J21_HT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_J21_HT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_K_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_K_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_SIMP_HS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_SMP_HT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_X_HS_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_X_HS_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_X_HT_1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HTRIXIST_HTRIXIST_X_HT_2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HXFlux_HXFlux_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HyCyc_HyCyc_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/HyCyc_HyCyc_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MCompr_MCompr_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MCompr_MCompr_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_ACONTLR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_AINDICTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_FCONTLR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_FINDICTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_LCONTLR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_LINDICTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE5.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE6.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE7.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_MEASURE8.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_PCONTLR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_PINDICTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_TCONTLR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Measurement_Measurement_TINDICTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_BLOCK2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_BLOCK3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_CIRC_MHX.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_COCURNT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_COUNTER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_COUNTER2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MHeatX_MHeatX_SIMP_MHX.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_3WAY.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_DOT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_HEAT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_HOPPER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_SCREW.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_TANK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_TEE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_TRIANGLE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_VALVE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mixer_Mixer_WORK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mult_Mult_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mult_Mult_DOT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mult_Mult_HEAT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Mult_Mult_WORK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_AIRCOL.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU5.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU6.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU7.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU8.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_CDU9.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_PETLYUK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_PFRAC.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_PREFLASH.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_VACUUM1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/MultiFrac_MultiFrac_VACUUM2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_ABSBR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU10.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU10F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU11.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU11F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU12.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU12F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU13.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU13F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU14.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU14F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU15.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU15F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU1F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU2F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU3F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU4F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU5.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU5F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU6.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU6F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU7.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU7F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU8.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU8F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU9.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_CDU9F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_FCC_MF1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_FCC_MF2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_FRACT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_PFRAC.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_PFRACF.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_PREFL1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_PREFL1F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_PREFL2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_PREFL2F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_STRIP.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_VACUUM1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_VACUUM1F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_VACUUM2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/PetroFrac_PetroFrac_VACUUM2F.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipe_Pipe_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipe_Pipe_D_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipe_Pipe_HI_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipe_Pipe_U_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipe_Pipe_V_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipeline_Pipeline_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipeline_Pipeline_D_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipeline_Pipeline_HI_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipeline_Pipeline_U_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pipeline_Pipeline_V_PIPE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pump_Pump_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pump_Pump_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Pump_Pump_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Qtvec_Qtvec_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Qtvec_Qtvec_DOT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_ABSBR1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_ABSBR2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_ABSBR3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_DECANT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_DECANT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_DECANT3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_FRACT1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_FRACT2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_PACKABS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_PACKCOL1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_PACKCOL2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_PACKSTR1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_PACKSTR2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_RECT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_STRIP1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RadFrac_RadFrac_STRIP2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_ABSBR2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_ABSBR3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_ABSORBER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_FRACT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_PACKABS.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_PACKCOL.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_PACKSTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_RECT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_STRIPPER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_VACUUM1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RateFrac_RateFrac_VACUUM2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RBatch_RBatch_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RBatch_RBatch_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RCSTR_RCSTR_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RCSTR_RCSTR_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/REquil_REquil_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/REquil_REquil_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/REquil_REquil_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RGibbs_RGibbs_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RGibbs_RGibbs_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RGibbs_RGibbs_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RPlug_RPlug_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RPlug_RPlug_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RPlug_RPlug_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RPlug_RPlug_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RStoic_RStoic_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RStoic_RStoic_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RStoic_RStoic_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RStoic_RStoic_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RStoic_RStoic_ICON4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RYield_RYield_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RYield_RYield_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/RYield_RYield_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SCFrac_SCFrac_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SCFrac_SCFrac_CDU1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SCFrac_SCFrac_CDU2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SCFrac_SCFrac_CDU3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SCFrac_SCFrac_VACUUM1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SCFrac_SCFrac_VACUUM2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Screen_Screen_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Screen_Screen_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Screen_Screen_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Selector_Selector_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Selector_Selector_HEAT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Selector_Selector_TRIANGLE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Selector_Selector_WORK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep2_Sep2_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep2_Sep2_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep2_Sep2_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep2_Sep2_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep_Sep_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep_Sep_ICON1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep_Sep_ICON2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Sep_Sep_ICON3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_3WAY.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_CCD.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_CFUGE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_CYCLONE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_DOT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_FILTER1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_FILTER2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_SCREEN.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_TEE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_TRIANGLE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SSplit_SSplit_VSCRUB.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SWash_SWash_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/SWash_SWash_ICON.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_CFUGE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_CSTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_EXCEL.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_FILTER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_FRACT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_H_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_HEATER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_HEATX1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_HEATX2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_PLUG.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_REACTOR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_RECT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_STRIP.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_V_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User2_User2_VALVE4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_CFUGE.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_CSTR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_FILTER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_FRACT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_H_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_HEATER.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_HEATX1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_HEATX2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_PLUG.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_REACTOR.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_RECT.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_STRIP.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_V_DRUM.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User3_User3_VALVE4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User_User_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/User_User_SMALL.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Valve_Valve_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Valve_Valve_VALVE1.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Valve_Valve_VALVE2.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Valve_Valve_VALVE3.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/Valve_Valve_VALVE4.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/VScrub_VScrub_BLOCK.xpm>
-#include <ves/conductor/xpm/AspenPlus2DIcons/VScrub_VScrub_ICON.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_ecn_hs_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_ecn_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_ecn_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_ecn_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_forced_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_forced_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_induce_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_induce_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_natura_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/aerotran_aerotran_natura_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/analyzer_analyzer_analyze2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/analyzer_analyzer_analyzer.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/analyzer_analyzer_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/batchfrac_batchfrac_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/batchfrac_batchfrac_column1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/batchfrac_batchfrac_column2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/batchfrac_batchfrac_column3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/apecs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ccd_ccd_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ccd_ccd_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/cfuge_cfuge_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/cfuge_cfuge_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/clchng_clchng_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/clchng_clchng_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/compr_compr_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/compr_compr_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/compr_compr_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/compr_compr_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/crusher_crusher_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/crusher_crusher_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/crystallizer_crystallizer_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/crystallizer_crystallizer_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/crystallizer_crystallizer_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/cyclone_cyclone_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/cyclone_cyclone_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/decanter_decanter_v_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/decanter_decanter_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/decanter_decanter_h_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/distl_distl_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/distl_distl_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/distl_distl_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dryer_dryer_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dryer_dryer_fluidbed.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dryer_dryer_fluidbed2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dryer_dryer_spray.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dstwu_dstwu_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dstwu_dstwu_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dstwu_dstwu_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dupl_dupl_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dupl_dupl_dot.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dupl_dupl_heat.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/dupl_dupl_work.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/esp_esp_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/esp_esp_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/extract_extract_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/extract_extract_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/extract_extract_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/extract_extract_pod.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fabfl_fabfl_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fabfl_fabfl_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/feedbl_feedbl_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/feedbl_feedbl_feedbl.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/filter_filter_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/filter_filter_plate.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/filter_filter_rotary.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash2_flash2_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash2_flash2_furnace.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash2_flash2_h_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash2_flash2_heater.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash2_flash2_v_drum1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash2_flash2_v_drum2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash3_flash3_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash3_flash3_furnace.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash3_flash3_h_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash3_flash3_heater.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash3_flash3_v_drum1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/flash3_flash3_v_drum2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_3way.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_dot.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_heat_tee.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_heat.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_tee.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_triangle.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_work_tee.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/fsplit_fsplit_work.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_aircooler.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_compr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_furnace.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_heater.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_pump.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_valve.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_valve2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heater_heater_valve4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_e_hs_1cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_e_hs_1co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_e_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_e_ht_1cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_e_ht_1co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_e_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_ecn_hs_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_ecn_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_ecn_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_ecn_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_f_hs_2cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_f_hs_2co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_f_hs_4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_f_ht_2cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_f_ht_2co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_f_ht_4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_forced_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_forced_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_g_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_g_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_gen_hs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_gen_ht.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_h_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_h_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_induce_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_induce_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j12_hs1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j12_hs2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j12_ht1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j12_ht2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j21_hs1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j21_hs2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j21_ht1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_j21_ht2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_k_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_natura_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_natura_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_simp_hs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_simp_ht.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_x_hs_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_x_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_x_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/heatx_heatx_x_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_e_hs_1cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_e_hs_1co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_e_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_e_ht_1cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_e_ht_1co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_e_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_f_hs_2cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_f_hs_2co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_f_hs_4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_f_ht_2cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_f_ht_2co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_f_ht_4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_g_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_g_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_gen_hs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_gen_ht.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_h_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_h_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j12_hs1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j12_hs2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j12_ht1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j12_ht2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j21_hs1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j21_hs2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j21_ht1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_j21_ht2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_k_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_k_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_simp_hs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_smp_ht.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_hs_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hetran_hetran_x_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hierarchy_hierarchy_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_e_hs_1cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_e_hs_1co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_e_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_e_ht_1cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_e_ht_1co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_e_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_f_hs_2cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_f_hs_2co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_f_hs_4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_f_ht_2cn.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_f_ht_2co.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_f_ht_4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_g_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_g_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_gen_hs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_gen_ht.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_h_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_h_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j12_hs1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j12_hs2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j12_ht1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j12_ht2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j21_hs1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j21_hs2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j21_ht1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_j21_ht2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_k_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_k_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_simp_hs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_smp_ht.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_hs_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_hs_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_ht_1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/htrixist_htrixist_x_ht_2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hxflux_hxflux_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hycyc_hycyc_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/hycyc_hycyc_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mcompr_mcompr_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mcompr_mcompr_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_acontlr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_aindictr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_fcontlr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_findictr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_lcontlr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_lindictr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure5.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure6.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure7.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_measure8.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_pcontlr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_pindictr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_tcontlr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/measurement_measurement_tindictr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_block2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_block3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_circ_mhx.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_cocurnt.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_counter.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_counter2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mheatx_mheatx_simp_mhx.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_3way.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_dot.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_heat.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_hopper.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_screw.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_tank.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_tee.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_triangle.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_valve.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mixer_mixer_work.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mult_mult_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mult_mult_dot.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mult_mult_heat.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/mult_mult_work.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_aircol.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu5.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu6.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu7.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu8.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_cdu9.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_petlyuk.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_pfrac.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_preflash.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_vacuum1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/multifrac_multifrac_vacuum2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_absbr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu10.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu10f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu11.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu11f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu12.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu12f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu13.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu13f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu14.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu14f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu15.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu15f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu1f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu2f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu3f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu4f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu5.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu5f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu6.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu6f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu7.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu7f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu8.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu8f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu9.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_cdu9f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_fcc_mf1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_fcc_mf2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_fract.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_pfrac.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_pfracf.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_prefl1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_prefl1f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_prefl2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_prefl2f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_strip.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_vacuum1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_vacuum1f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_vacuum2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/petrofrac_petrofrac_vacuum2f.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_d_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_hi_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_u_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipe_pipe_v_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_d_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_hi_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_u_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pipeline_pipeline_v_pipe.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pump_pump_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pump_pump_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/pump_pump_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/qtvec_qtvec_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/qtvec_qtvec_dot.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_absbr1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_absbr2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_absbr3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_decant1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_decant2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_decant3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_fract1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_fract2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_packabs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_packcol1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_packcol2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_packstr1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_packstr2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_rect.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_strip1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/radfrac_radfrac_strip2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_absbr2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_absbr3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_absorber.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_fract.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_packabs.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_packcol.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_packstr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_rect.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_stripper.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_vacuum1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ratefrac_ratefrac_vacuum2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rbatch_rbatch_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rbatch_rbatch_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rcstr_rcstr_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rcstr_rcstr_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/requil_requil_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/requil_requil_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/requil_requil_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rgibbs_rgibbs_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rgibbs_rgibbs_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rgibbs_rgibbs_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rplug_rplug_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rplug_rplug_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rplug_rplug_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rplug_rplug_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rstoic_rstoic_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rstoic_rstoic_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rstoic_rstoic_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rstoic_rstoic_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/rstoic_rstoic_icon4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ryield_ryield_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ryield_ryield_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ryield_ryield_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/scfrac_scfrac_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/scfrac_scfrac_cdu1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/scfrac_scfrac_cdu2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/scfrac_scfrac_cdu3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/scfrac_scfrac_vacuum1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/scfrac_scfrac_vacuum2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/screen_screen_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/screen_screen_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/screen_screen_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/selector_selector_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/selector_selector_heat.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/selector_selector_triangle.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/selector_selector_work.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep2_sep2_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep2_sep2_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep2_sep2_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep2_sep2_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep_sep_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep_sep_icon1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep_sep_icon2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/sep_sep_icon3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_3way.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_ccd.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_cfuge.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_cyclone.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_dot.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_filter1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_filter2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_screen.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_tee.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_triangle.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/ssplit_ssplit_vscrub.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/swash_swash_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/swash_swash_icon.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_cfuge.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_cstr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_excel.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_filter.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_fract.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_h_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_heater.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_heatx1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_heatx2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_plug.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_reactor.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_rect.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_strip.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_v_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user2_user2_valve4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_cfuge.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_cstr.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_filter.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_fract.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_h_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_heater.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_heatx1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_heatx2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_plug.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_reactor.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_rect.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_strip.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_v_drum.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user3_user3_valve4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user_user_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/user_user_small.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_valve1.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_valve2.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_valve3.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/valve_valve_valve4.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/vscrub_vscrub_block.xpm>
+#include <ves/conductor/xpm/AspenPlus2DIcons/vscrub_vscrub_icon.xpm>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
 #include <ves/conductor/xpm/AspenPlus2DIcons/standalone.xpm>
 
@@ -472,469 +472,469 @@ std::map< std::string, char** > GetAspenPlusIconMap()
 {
     std::map< std::string, char** > tempIconMap;
 
-    tempIconMap["2DIcons/Aerotran/Aerotran.BLOCK.jpg" ] = Aerotran_Aerotran_BLOCK;
-    tempIconMap["2DIcons/Aerotran/Aerotran.ECN-HS-1.jpg" ] = Aerotran_Aerotran_ECN_HS_1;
-    tempIconMap["2DIcons/Aerotran/Aerotran.ECN-HS-2.jpg" ] = Aerotran_Aerotran_ECN_HS_2;
-    tempIconMap["2DIcons/Aerotran/Aerotran.ECN-HT-1.jpg" ] = Aerotran_Aerotran_ECN_HT_1;
-    tempIconMap["2DIcons/Aerotran/Aerotran.ECN-HT-2.jpg" ] = Aerotran_Aerotran_ECN_HT_2;
-    tempIconMap["2DIcons/Aerotran/Aerotran.FORCED-1.jpg" ] = Aerotran_Aerotran_FORCED_1;
-    tempIconMap["2DIcons/Aerotran/Aerotran.FORCED-2.jpg" ] = Aerotran_Aerotran_FORCED_2;
-    tempIconMap["2DIcons/Aerotran/Aerotran.INDUCE-1.jpg" ] = Aerotran_Aerotran_INDUCE_1;
-    tempIconMap["2DIcons/Aerotran/Aerotran.INDUCE-2.jpg" ] = Aerotran_Aerotran_INDUCE_2;
-    tempIconMap["2DIcons/Aerotran/Aerotran.NATURA-1.jpg" ] = Aerotran_Aerotran_NATURA_1;
-    tempIconMap["2DIcons/Aerotran/Aerotran.NATURA-2.jpg" ] = Aerotran_Aerotran_NATURA_2;
-    tempIconMap["2DIcons/Analyzer/Analyzer.ANALYZE2.jpg" ] = Analyzer_Analyzer_ANALYZE2;
-    tempIconMap["2DIcons/Analyzer/Analyzer.ANALYZER.jpg" ] = Analyzer_Analyzer_ANALYZER;
-    tempIconMap["2DIcons/Analyzer/Analyzer.BLOCK.jpg" ] = Analyzer_Analyzer_BLOCK;
-    tempIconMap["2DIcons/BatchFrac/BatchFrac.BLOCK.jpg" ] = BatchFrac_BatchFrac_BLOCK;
-    tempIconMap["2DIcons/BatchFrac/BatchFrac.COLUMN1.jpg" ] = BatchFrac_BatchFrac_COLUMN1;
-    tempIconMap["2DIcons/BatchFrac/BatchFrac.COLUMN2.jpg" ] = BatchFrac_BatchFrac_COLUMN2;
-    tempIconMap["2DIcons/BatchFrac/BatchFrac.COLUMN3.jpg" ] = BatchFrac_BatchFrac_COLUMN3;
-    tempIconMap["2DIcons/APECS/APECS.BLOCK.jpg" ] = APECS;
-    tempIconMap["2DIcons/CCD/CCD.BLOCK.jpg" ] = CCD_CCD_BLOCK;
-    tempIconMap["2DIcons/CCD/CCD.ICON.jpg" ] = CCD_CCD_ICON;
-    tempIconMap["2DIcons/CFuge/CFuge.BLOCK.jpg" ] = CFuge_CFuge_BLOCK;
-    tempIconMap["2DIcons/CFuge/CFuge.ICON.jpg" ] = CFuge_CFuge_ICON;
-    tempIconMap["2DIcons/ClChng/ClChng.BLOCK.jpg" ] = ClChng_ClChng_BLOCK;
-    tempIconMap["2DIcons/ClChng/ClChng.ICON1.jpg" ] = ClChng_ClChng_ICON1;
-    tempIconMap["2DIcons/Compr/Compr.BLOCK.jpg" ] = Compr_Compr_BLOCK;
-    tempIconMap["2DIcons/Compr/Compr.ICON1.jpg" ] = Compr_Compr_ICON1;
-    tempIconMap["2DIcons/Compr/Compr.ICON2.jpg" ] = Compr_Compr_ICON2;
-    tempIconMap["2DIcons/Compr/Compr.ICON3.jpg" ] = Compr_Compr_ICON3;
-    tempIconMap["2DIcons/Crusher/Crusher.BLOCK.jpg" ] = Crusher_Crusher_BLOCK;
-    tempIconMap["2DIcons/Crusher/Crusher.ICON.jpg" ] = Crusher_Crusher_ICON;
-    tempIconMap["2DIcons/Crystallizer/Crystallizer.BLOCK.jpg" ] = Crystallizer_Crystallizer_BLOCK;
-    tempIconMap["2DIcons/Crystallizer/Crystallizer.ICON1.jpg" ] = Crystallizer_Crystallizer_ICON1;
-    tempIconMap["2DIcons/Crystallizer/Crystallizer.ICON2.jpg" ] = Crystallizer_Crystallizer_ICON2;
-    tempIconMap["2DIcons/Cyclone/Cyclone.BLOCK.jpg" ] = Cyclone_Cyclone_BLOCK;
-    tempIconMap["2DIcons/Cyclone/Cyclone.ICON.jpg" ] = Cyclone_Cyclone_ICON;
-    tempIconMap["2DIcons/Decanter/Decanter-V-DRUM.jpg" ] = Decanter_Decanter_V_DRUM;
-    tempIconMap["2DIcons/Decanter/Decanter.BLOCK.jpg" ] = Decanter_Decanter_BLOCK;
-    tempIconMap["2DIcons/Decanter/Decanter.H-DRUM.jpg" ] = Decanter_Decanter_H_DRUM;
-    tempIconMap["2DIcons/Distl/Distl.BLOCK.jpg" ] = Distl_Distl_BLOCK;
-    tempIconMap["2DIcons/Distl/Distl.ICON1.jpg" ] = Distl_Distl_ICON1;
-    tempIconMap["2DIcons/Distl/Distl.ICON2.jpg" ] = Distl_Distl_ICON2;
-    tempIconMap["2DIcons/Dryer/Dryer.BLOCK.jpg" ] = Dryer_Dryer_BLOCK;
-    tempIconMap["2DIcons/Dryer/Dryer.FLUIDBED.jpg" ] = Dryer_Dryer_FLUIDBED;
-    tempIconMap["2DIcons/Dryer/Dryer.FLUIDBED2.jpg" ] = Dryer_Dryer_FLUIDBED2;
-    tempIconMap["2DIcons/Dryer/Dryer.SPRAY.jpg" ] = Dryer_Dryer_SPRAY;
-    tempIconMap["2DIcons/DSTWU/DSTWU.BLOCK.jpg" ] = DSTWU_DSTWU_BLOCK;
-    tempIconMap["2DIcons/DSTWU/DSTWU.ICON1.jpg" ] = DSTWU_DSTWU_ICON1;
-    tempIconMap["2DIcons/DSTWU/DSTWU.ICON2.jpg" ] = DSTWU_DSTWU_ICON2;
-    tempIconMap["2DIcons/Dupl/Dupl.BLOCK.jpg" ] = Dupl_Dupl_BLOCK;
-    tempIconMap["2DIcons/Dupl/Dupl.DOT.jpg" ] = Dupl_Dupl_DOT;
-    tempIconMap["2DIcons/Dupl/Dupl.HEAT.jpg" ] = Dupl_Dupl_HEAT;
-    tempIconMap["2DIcons/Dupl/Dupl.WORK.jpg" ] = Dupl_Dupl_WORK;
-    tempIconMap["2DIcons/ESP/ESP.BLOCK.jpg" ] = ESP_ESP_BLOCK;
-    tempIconMap["2DIcons/ESP/ESP.ICON.jpg" ] = ESP_ESP_ICON;
-    tempIconMap["2DIcons/Extract/Extract.BLOCK.jpg" ] = Extract_Extract_BLOCK;
-    tempIconMap["2DIcons/Extract/Extract.ICON1.jpg" ] = Extract_Extract_ICON1;
-    tempIconMap["2DIcons/Extract/Extract.ICON2.jpg" ] = Extract_Extract_ICON2;
-    tempIconMap["2DIcons/Extract/Extract.POD.jpg" ] = Extract_Extract_POD;
-    tempIconMap["2DIcons/FabFl/FabFl.BLOCK.jpg" ] = FabFl_FabFl_BLOCK;
-    tempIconMap["2DIcons/FabFl/FabFl.ICON.jpg" ] = FabFl_FabFl_ICON;
-    tempIconMap["2DIcons/Feedbl/Feedbl.BLOCK.jpg" ] = Feedbl_Feedbl_BLOCK;
-    tempIconMap["2DIcons/Feedbl/Feedbl.FEEDBL.jpg" ] = Feedbl_Feedbl_FEEDBL;
-    tempIconMap["2DIcons/Filter/Filter.BLOCK.jpg" ] = Filter_Filter_BLOCK;
-    tempIconMap["2DIcons/Filter/Filter.PLATE.jpg" ] = Filter_Filter_PLATE;
-    tempIconMap["2DIcons/Filter/Filter.ROTARY.jpg" ] = Filter_Filter_ROTARY;
-    tempIconMap["2DIcons/Flash2/Flash2.BLOCK.jpg" ] = Flash2_Flash2_BLOCK;
-    tempIconMap["2DIcons/Flash2/Flash2.FURNACE.jpg" ] = Flash2_Flash2_FURNACE;
-    tempIconMap["2DIcons/Flash2/Flash2.H-DRUM.jpg" ] = Flash2_Flash2_H_DRUM;
-    tempIconMap["2DIcons/Flash2/Flash2.HEATER.jpg" ] = Flash2_Flash2_HEATER;
-    tempIconMap["2DIcons/Flash2/Flash2.V-DRUM1.jpg" ] = Flash2_Flash2_V_DRUM1;
-    tempIconMap["2DIcons/Flash2/Flash2.V-DRUM2.jpg" ] = Flash2_Flash2_V_DRUM2;
-    tempIconMap["2DIcons/Flash3/Flash3.BLOCK.jpg" ] = Flash3_Flash3_BLOCK;
-    tempIconMap["2DIcons/Flash3/Flash3.FURNACE.jpg" ] = Flash3_Flash3_FURNACE;
-    tempIconMap["2DIcons/Flash3/Flash3.H-DRUM.jpg" ] = Flash3_Flash3_H_DRUM;
-    tempIconMap["2DIcons/Flash3/Flash3.HEATER.jpg" ] = Flash3_Flash3_HEATER;
-    tempIconMap["2DIcons/Flash3/Flash3.V-DRUM1.jpg" ] = Flash3_Flash3_V_DRUM1;
-    tempIconMap["2DIcons/Flash3/Flash3.V-DRUM2.jpg" ] = Flash3_Flash3_V_DRUM2;
-    tempIconMap["2DIcons/FSplit/FSplit.3WAY.jpg" ] = FSplit_FSplit_3WAY;
-    tempIconMap["2DIcons/FSplit/FSplit.BLOCK.jpg" ] = FSplit_FSplit_BLOCK;
-    tempIconMap["2DIcons/FSplit/FSplit.DOT.jpg" ] = FSplit_FSplit_DOT;
-    tempIconMap["2DIcons/FSplit/FSplit.HEAT-TEE.jpg" ] = FSplit_FSplit_HEAT_TEE;
-    tempIconMap["2DIcons/FSplit/FSplit.HEAT.jpg" ] = FSplit_FSplit_HEAT;
-    tempIconMap["2DIcons/FSplit/FSplit.TEE.jpg" ] = FSplit_FSplit_TEE;
-    tempIconMap["2DIcons/FSplit/FSplit.TRIANGLE.jpg" ] = FSplit_FSplit_TRIANGLE;
-    tempIconMap["2DIcons/FSplit/FSplit.WORK-TEE.jpg" ] = FSplit_FSplit_WORK_TEE;
-    tempIconMap["2DIcons/FSplit/FSplit.WORK.jpg" ] = FSplit_FSplit_WORK;
-    tempIconMap["2DIcons/Heater/Heater.AIRCOOLER.jpg" ] = Heater_Heater_AIRCOOLER;
-    tempIconMap["2DIcons/Heater/Heater.BLOCK.jpg" ] = Heater_Heater_BLOCK;
-    tempIconMap["2DIcons/Heater/Heater.COMPR.jpg" ] = Heater_Heater_COMPR;
-    tempIconMap["2DIcons/Heater/Heater.FURNACE.jpg" ] = Heater_Heater_FURNACE;
-    tempIconMap["2DIcons/Heater/Heater.HEATER.jpg" ] = Heater_Heater_Heater;
-    tempIconMap["2DIcons/Heater/Heater.Pump.jpg" ] = Heater_Heater_PUMP;
-    tempIconMap["2DIcons/Heater/Heater.Valve.jpg" ] = Heater_Heater_VALVE;
-    tempIconMap["2DIcons/Heater/Heater.VALVE2.jpg" ] = Heater_Heater_VALVE2;
-    tempIconMap["2DIcons/Heater/Heater.VALVE4.jpg" ] = Heater_Heater_VALVE4;
-    tempIconMap["2DIcons/HeatX/HeatX.BLOCK.jpg" ] = HeatX_HeatX_BLOCK;
-    tempIconMap["2DIcons/HeatX/HeatX.E-HS-1CN.jpg" ] = HeatX_HeatX_E_HS_1CN;
-    tempIconMap["2DIcons/HeatX/HeatX.E-HS-1CO.jpg" ] = HeatX_HeatX_E_HS_1CO;
-    tempIconMap["2DIcons/HeatX/HeatX.E-HS-2.jpg" ] = HeatX_HeatX_E_HS_2;
-    tempIconMap["2DIcons/HeatX/HeatX.E-HT-1CN.jpg" ] = HeatX_HeatX_E_HT_1CN;
-    tempIconMap["2DIcons/HeatX/HeatX.E-HT-1CO.jpg" ] = HeatX_HeatX_E_HT_1CO;
-    tempIconMap["2DIcons/HeatX/HeatX.E-HT-2.jpg" ] = HeatX_HeatX_E_HT_2;
-    tempIconMap["2DIcons/HeatX/HeatX.ECN-HS-1.jpg" ] = HeatX_HeatX_ECN_HS_1;
-    tempIconMap["2DIcons/HeatX/HeatX.ECN-HS-2.jpg" ] = HeatX_HeatX_ECN_HS_2;
-    tempIconMap["2DIcons/HeatX/HeatX.ECN-HT-1.jpg" ] = HeatX_HeatX_ECN_HT_1;
-    tempIconMap["2DIcons/HeatX/HeatX.ECN-HT-2.jpg" ] = HeatX_HeatX_ECN_HT_2;
-    tempIconMap["2DIcons/HeatX/HeatX.F-HS-2CN.jpg" ] = HeatX_HeatX_F_HS_2CN;
-    tempIconMap["2DIcons/HeatX/HeatX.F-HS-2CO.jpg" ] = HeatX_HeatX_F_HS_2CO;
-    tempIconMap["2DIcons/HeatX/HeatX.F-HS-4.jpg" ] = HeatX_HeatX_F_HS_4;
-    tempIconMap["2DIcons/HeatX/HeatX.F-HT-2CN.jpg" ] = HeatX_HeatX_F_HT_2CN;
-    tempIconMap["2DIcons/HeatX/HeatX.F-HT-2CO.jpg" ] = HeatX_HeatX_F_HT_2CO;
-    tempIconMap["2DIcons/HeatX/HeatX.F-HT-4.jpg" ] = HeatX_HeatX_F_HT_4;
-    tempIconMap["2DIcons/HeatX/HeatX.FORCED-1.jpg" ] = HeatX_HeatX_FORCED_1;
-    tempIconMap["2DIcons/HeatX/HeatX.FORCED-2.jpg" ] = HeatX_HeatX_FORCED_2;
-    tempIconMap["2DIcons/HeatX/HeatX.G-HS-2.jpg" ] = HeatX_HeatX_G_HS_2;
-    tempIconMap["2DIcons/HeatX/HeatX.G-HT-2.jpg" ] = HeatX_HeatX_G_HT_2;
-    tempIconMap["2DIcons/HeatX/HeatX.GEN-HS.jpg" ] = HeatX_HeatX_GEN_HS;
-    tempIconMap["2DIcons/HeatX/HeatX.GEN-HT.jpg" ] = HeatX_HeatX_GEN_HT;
-    tempIconMap["2DIcons/HeatX/HeatX.H-HS-2.jpg" ] = HeatX_HeatX_H_HS_2;
-    tempIconMap["2DIcons/HeatX/HeatX.H-HT-2.jpg" ] = HeatX_HeatX_H_HT_2;
-    tempIconMap["2DIcons/HeatX/HeatX.INDUCE-1.jpg" ] = HeatX_HeatX_INDUCE_1;
-    tempIconMap["2DIcons/HeatX/HeatX.INDUCE-2.jpg" ] = HeatX_HeatX_INDUCE_2;
-    tempIconMap["2DIcons/HeatX/HeatX.J12-HS1.jpg" ] = HeatX_HeatX_J12_HS1;
-    tempIconMap["2DIcons/HeatX/HeatX.J12-HS2.jpg" ] = HeatX_HeatX_J12_HS2;
-    tempIconMap["2DIcons/HeatX/HeatX.J12-HT1.jpg" ] = HeatX_HeatX_J12_HT1;
-    tempIconMap["2DIcons/HeatX/HeatX.J12-HT2.jpg" ] = HeatX_HeatX_J12_HT2;
-    tempIconMap["2DIcons/HeatX/HeatX.J21-HS1.jpg" ] = HeatX_HeatX_J21_HS1;
-    tempIconMap["2DIcons/HeatX/HeatX.J21-HS2.jpg" ] = HeatX_HeatX_J21_HS2;
-    tempIconMap["2DIcons/HeatX/HeatX.J21-HT1.jpg" ] = HeatX_HeatX_J21_HT1;
-    tempIconMap["2DIcons/HeatX/HeatX.J21-HT2.jpg" ] = HeatX_HeatX_J21_HT2;
-    tempIconMap["2DIcons/HeatX/HeatX.K-HT-2.jpg" ] = HeatX_HeatX_K_HT_2;
-    tempIconMap["2DIcons/HeatX/HeatX.NATURA-1.jpg" ] = HeatX_HeatX_NATURA_1;
-    tempIconMap["2DIcons/HeatX/HeatX.NATURA-2.jpg" ] = HeatX_HeatX_NATURA_2;
-    tempIconMap["2DIcons/HeatX/HeatX.SIMP-HS.jpg" ] = HeatX_HeatX_SIMP_HS;
-    tempIconMap["2DIcons/HeatX/HeatX.SIMP-HT.jpg" ] = HeatX_HeatX_SIMP_HT;
-    tempIconMap["2DIcons/HeatX/HeatX.X-HS-1.jpg" ] = HeatX_HeatX_X_HS_1;
-    tempIconMap["2DIcons/HeatX/HeatX.X-HS-2.jpg" ] = HeatX_HeatX_X_HS_2;
-    tempIconMap["2DIcons/HeatX/HeatX.X-HT-1.jpg" ] = HeatX_HeatX_X_HT_1;
-    tempIconMap["2DIcons/HeatX/HeatX.X-HT-2.jpg" ] = HeatX_HeatX_X_HT_2;
-    tempIconMap["2DIcons/Hetran/Hetran.BLOCK.jpg" ] = Hetran_Hetran_BLOCK;
-    tempIconMap["2DIcons/Hetran/Hetran.E-HS-1CN.jpg" ] = Hetran_Hetran_E_HS_1CN;
-    tempIconMap["2DIcons/Hetran/Hetran.E-HS-1CO.jpg" ] = Hetran_Hetran_E_HS_1CO;
-    tempIconMap["2DIcons/Hetran/Hetran.E-HS-2.jpg" ] = Hetran_Hetran_E_HS_2;
-    tempIconMap["2DIcons/Hetran/Hetran.E-HT-1CN.jpg" ] = Hetran_Hetran_E_HT_1CN;
-    tempIconMap["2DIcons/Hetran/Hetran.E-HT-1CO.jpg" ] = Hetran_Hetran_E_HT_1CO;
-    tempIconMap["2DIcons/Hetran/Hetran.E-HT-2.jpg" ] = Hetran_Hetran_E_HT_2;
-    tempIconMap["2DIcons/Hetran/Hetran.F-HS-2CN.jpg" ] = Hetran_Hetran_F_HS_2CN;
-    tempIconMap["2DIcons/Hetran/Hetran.F-HS-2CO.jpg" ] = Hetran_Hetran_F_HS_2CO;
-    tempIconMap["2DIcons/Hetran/Hetran.F-HS-4.jpg" ] = Hetran_Hetran_F_HS_4;
-    tempIconMap["2DIcons/Hetran/Hetran.F-HT-2CN.jpg" ] = Hetran_Hetran_F_HT_2CN;
-    tempIconMap["2DIcons/Hetran/Hetran.F-HT-2CO.jpg" ] = Hetran_Hetran_F_HT_2CO;
-    tempIconMap["2DIcons/Hetran/Hetran.F-HT-4.jpg" ] = Hetran_Hetran_F_HT_4;
-    tempIconMap["2DIcons/Hetran/Hetran.G-HS-2.jpg" ] = Hetran_Hetran_G_HS_2;
-    tempIconMap["2DIcons/Hetran/Hetran.G-HT-2.jpg" ] = Hetran_Hetran_G_HT_2;
-    tempIconMap["2DIcons/Hetran/Hetran.GEN-HS.jpg" ] = Hetran_Hetran_GEN_HS;
-    tempIconMap["2DIcons/Hetran/Hetran.GEN-HT.jpg" ] = Hetran_Hetran_GEN_HT;
-    tempIconMap["2DIcons/Hetran/Hetran.H-HS-2.jpg" ] = Hetran_Hetran_H_HS_2;
-    tempIconMap["2DIcons/Hetran/Hetran.H-HT-2.jpg" ] = Hetran_Hetran_H_HT_2;
-    tempIconMap["2DIcons/Hetran/Hetran.J12-HS1.jpg" ] = Hetran_Hetran_J12_HS1;
-    tempIconMap["2DIcons/Hetran/Hetran.J12-HS2.jpg" ] = Hetran_Hetran_J12_HS2;
-    tempIconMap["2DIcons/Hetran/Hetran.J12-HT1.jpg" ] = Hetran_Hetran_J12_HT1;
-    tempIconMap["2DIcons/Hetran/Hetran.J12-HT2.jpg" ] = Hetran_Hetran_J12_HT2;
-    tempIconMap["2DIcons/Hetran/Hetran.J21-HS1.jpg" ] = Hetran_Hetran_J21_HS1;
-    tempIconMap["2DIcons/Hetran/Hetran.J21-HS2.jpg" ] = Hetran_Hetran_J21_HS2;
-    tempIconMap["2DIcons/Hetran/Hetran.J21-HT1.jpg" ] = Hetran_Hetran_J21_HT1;
-    tempIconMap["2DIcons/Hetran/Hetran.J21-HT2.jpg" ] = Hetran_Hetran_J21_HT2;
-    tempIconMap["2DIcons/Hetran/Hetran.K-HT-1.jpg" ] = Hetran_Hetran_K_HT_1;
-    tempIconMap["2DIcons/Hetran/Hetran.K-HT-2.jpg" ] = Hetran_Hetran_K_HT_2;
-    tempIconMap["2DIcons/Hetran/Hetran.SIMP-HS.jpg" ] = Hetran_Hetran_SIMP_HS;
-    tempIconMap["2DIcons/Hetran/Hetran.SMP-HT.jpg" ] = Hetran_Hetran_SMP_HT;
-    tempIconMap["2DIcons/Hetran/Hetran.X-HS-1.jpg" ] = Hetran_Hetran_X_HS_1;
-    tempIconMap["2DIcons/Hetran/Hetran.X-HS-2.jpg" ] = Hetran_Hetran_X_HS_2;
-    tempIconMap["2DIcons/Hetran/Hetran.X-HT-1.jpg" ] = Hetran_Hetran_X_HT_1;
-    tempIconMap["2DIcons/Hetran/Hetran.X-HT-2.jpg" ] = Hetran_Hetran_X_HT_2;
-    tempIconMap["2DIcons/Hierarchy/Hierarchy.BLOCK.jpg" ] = Hierarchy_Hierarchy_BLOCK;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.BLOCK.jpg" ] = HTRIXIST_HTRIXIST_BLOCK;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.E-HS-1CN.jpg" ] = HTRIXIST_HTRIXIST_E_HS_1CN;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.E-HS-1CO.jpg" ] = HTRIXIST_HTRIXIST_E_HS_1CO;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.E-HS-2.jpg" ] = HTRIXIST_HTRIXIST_E_HS_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.E-HT-1CN.jpg" ] = HTRIXIST_HTRIXIST_E_HT_1CN;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.E-HT-1CO.jpg" ] = HTRIXIST_HTRIXIST_E_HT_1CO;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.E-HT-2.jpg" ] = HTRIXIST_HTRIXIST_E_HT_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.F-HS-2CN.jpg" ] = HTRIXIST_HTRIXIST_F_HS_2CN;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.F-HS-2CO.jpg" ] = HTRIXIST_HTRIXIST_F_HS_2CO;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.F-HS-4.jpg" ] = HTRIXIST_HTRIXIST_F_HS_4;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.F-HT-2CN.jpg" ] = HTRIXIST_HTRIXIST_F_HT_2CN;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.F-HT-2CO.jpg" ] = HTRIXIST_HTRIXIST_F_HT_2CO;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.F-HT-4.jpg" ] = HTRIXIST_HTRIXIST_F_HT_4;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.G-HS-2.jpg" ] = HTRIXIST_HTRIXIST_G_HS_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.G-HT-2.jpg" ] = HTRIXIST_HTRIXIST_G_HT_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.GEN-HS.jpg" ] = HTRIXIST_HTRIXIST_GEN_HS;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.GEN-HT.jpg" ] = HTRIXIST_HTRIXIST_GEN_HT;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.H-HS-2.jpg" ] = HTRIXIST_HTRIXIST_H_HS_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.H-HT-2.jpg" ] = HTRIXIST_HTRIXIST_H_HT_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J12-HS1.jpg" ] = HTRIXIST_HTRIXIST_J12_HS1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J12-HS2.jpg" ] = HTRIXIST_HTRIXIST_J12_HS2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J12-HT1.jpg" ] = HTRIXIST_HTRIXIST_J12_HT1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J12-HT2.jpg" ] = HTRIXIST_HTRIXIST_J12_HT2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J21-HS1.jpg" ] = HTRIXIST_HTRIXIST_J21_HS1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J21-HS2.jpg" ] = HTRIXIST_HTRIXIST_J21_HS2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J21-HT1.jpg" ] = HTRIXIST_HTRIXIST_J21_HT1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.J21-HT2.jpg" ] = HTRIXIST_HTRIXIST_J21_HT2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.K-HT-1.jpg" ] = HTRIXIST_HTRIXIST_K_HT_1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.K-HT-2.jpg" ] = HTRIXIST_HTRIXIST_K_HT_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.SIMP-HS.jpg" ] = HTRIXIST_HTRIXIST_SIMP_HS;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.SMP-HT.jpg" ] = HTRIXIST_HTRIXIST_SMP_HT;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.X-HS-1.jpg" ] = HTRIXIST_HTRIXIST_X_HS_1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.X-HS-2.jpg" ] = HTRIXIST_HTRIXIST_X_HS_2;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.X-HT-1.jpg" ] = HTRIXIST_HTRIXIST_X_HT_1;
-    tempIconMap["2DIcons/HTRIXIST/HTRIXIST.X-HT-2.jpg" ] = HTRIXIST_HTRIXIST_X_HT_2;
-    tempIconMap["2DIcons/HXFlux/HXFlux.BLOCK.jpg" ] = HXFlux_HXFlux_BLOCK;
-    tempIconMap["2DIcons/HyCyc/HyCyc.BLOCK.jpg" ] = HyCyc_HyCyc_BLOCK;
-    tempIconMap["2DIcons/HyCyc/HyCyc.ICON.jpg" ] = HyCyc_HyCyc_ICON;
-    tempIconMap["2DIcons/MCompr/MCompr.BLOCK.jpg" ] = MCompr_MCompr_BLOCK;
-    tempIconMap["2DIcons/MCompr/MCompr.ICON1.jpg" ] = MCompr_MCompr_ICON1;
-    tempIconMap["2DIcons/Measurement/Measurement.ACONTLR.jpg" ] = Measurement_Measurement_ACONTLR;
-    tempIconMap["2DIcons/Measurement/Measurement.AINDICTR.jpg" ] = Measurement_Measurement_AINDICTR;
-    tempIconMap["2DIcons/Measurement/Measurement.BLOCK.jpg" ] = Measurement_Measurement_BLOCK;
-    tempIconMap["2DIcons/Measurement/Measurement.FCONTLR.jpg" ] = Measurement_Measurement_FCONTLR;
-    tempIconMap["2DIcons/Measurement/Measurement.FINDICTR.jpg" ] = Measurement_Measurement_FINDICTR;
-    tempIconMap["2DIcons/Measurement/Measurement.LCONTLR.jpg" ] = Measurement_Measurement_LCONTLR;
-    tempIconMap["2DIcons/Measurement/Measurement.LINDICTR.jpg" ] = Measurement_Measurement_LINDICTR;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE1.jpg" ] = Measurement_Measurement_MEASURE1;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE2.jpg" ] = Measurement_Measurement_MEASURE2;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE3.jpg" ] = Measurement_Measurement_MEASURE3;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE4.jpg" ] = Measurement_Measurement_MEASURE4;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE5.jpg" ] = Measurement_Measurement_MEASURE5;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE6.jpg" ] = Measurement_Measurement_MEASURE6;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE7.jpg" ] = Measurement_Measurement_MEASURE7;
-    tempIconMap["2DIcons/Measurement/Measurement.MEASURE8.jpg" ] = Measurement_Measurement_MEASURE8;
-    tempIconMap["2DIcons/Measurement/Measurement.PCONTLR.jpg" ] = Measurement_Measurement_PCONTLR;
-    tempIconMap["2DIcons/Measurement/Measurement.PINDICTR.jpg" ] = Measurement_Measurement_PINDICTR;
-    tempIconMap["2DIcons/Measurement/Measurement.TCONTLR.jpg" ] = Measurement_Measurement_TCONTLR;
-    tempIconMap["2DIcons/Measurement/Measurement.TINDICTR.jpg" ] = Measurement_Measurement_TINDICTR;
-    tempIconMap["2DIcons/MHeatX/MHeatX.BLOCK.jpg" ] = MHeatX_MHeatX_BLOCK;
-    tempIconMap["2DIcons/MHeatX/MHeatX.BLOCK2.jpg" ] = MHeatX_MHeatX_BLOCK2;
-    tempIconMap["2DIcons/MHeatX/MHeatX.BLOCK3.jpg" ] = MHeatX_MHeatX_BLOCK3;
-    tempIconMap["2DIcons/MHeatX/MHeatX.CIRC-MHX.jpg" ] = MHeatX_MHeatX_CIRC_MHX;
-    tempIconMap["2DIcons/MHeatX/MHeatX.COCURNT.jpg" ] = MHeatX_MHeatX_COCURNT;
-    tempIconMap["2DIcons/MHeatX/MHeatX.COUNTER.jpg" ] = MHeatX_MHeatX_COUNTER;
-    tempIconMap["2DIcons/MHeatX/MHeatX.COUNTER2.jpg" ] = MHeatX_MHeatX_COUNTER2;
-    tempIconMap["2DIcons/MHeatX/MHeatX.ICON1.jpg" ] = MHeatX_MHeatX_ICON1;
-    tempIconMap["2DIcons/MHeatX/MHeatX.SIMP-MHX.jpg" ] = MHeatX_MHeatX_SIMP_MHX;
-    tempIconMap["2DIcons/Mixer/Mixer.3WAY.jpg" ] = Mixer_Mixer_3WAY;
-    tempIconMap["2DIcons/Mixer/Mixer.BLOCK.jpg" ] = Mixer_Mixer_BLOCK;
-    tempIconMap["2DIcons/Mixer/Mixer.DOT.jpg" ] = Mixer_Mixer_DOT;
-    tempIconMap["2DIcons/Mixer/Mixer.HEAT.jpg" ] = Mixer_Mixer_HEAT;
-    tempIconMap["2DIcons/Mixer/Mixer.HOPPER.jpg" ] = Mixer_Mixer_HOPPER;
-    tempIconMap["2DIcons/Mixer/Mixer.SCREW.jpg" ] = Mixer_Mixer_SCREW;
-    tempIconMap["2DIcons/Mixer/Mixer.TANK.jpg" ] = Mixer_Mixer_TANK;
-    tempIconMap["2DIcons/Mixer/Mixer.TEE.jpg" ] = Mixer_Mixer_TEE;
-    tempIconMap["2DIcons/Mixer/Mixer.TRIANGLE.jpg" ] = Mixer_Mixer_TRIANGLE;
-    tempIconMap["2DIcons/Mixer/Mixer.Valve.jpg" ] = Mixer_Mixer_VALVE;
-    tempIconMap["2DIcons/Mixer/Mixer.WORK.jpg" ] = Mixer_Mixer_WORK;
-    tempIconMap["2DIcons/Mult/Mult.BLOCK.jpg" ] = Mult_Mult_BLOCK;
-    tempIconMap["2DIcons/Mult/Mult.DOT.jpg" ] = Mult_Mult_DOT;
-    tempIconMap["2DIcons/Mult/Mult.HEAT.jpg" ] = Mult_Mult_HEAT;
-    tempIconMap["2DIcons/Mult/Mult.WORK.jpg" ] = Mult_Mult_WORK;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.AIRCOL.jpg" ] = MultiFrac_MultiFrac_AIRCOL;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.BLOCK.jpg" ] = MultiFrac_MultiFrac_BLOCK;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU1.jpg" ] = MultiFrac_MultiFrac_CDU1;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU2.jpg" ] = MultiFrac_MultiFrac_CDU2;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU3.jpg" ] = MultiFrac_MultiFrac_CDU3;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU4.jpg" ] = MultiFrac_MultiFrac_CDU4;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU5.jpg" ] = MultiFrac_MultiFrac_CDU5;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU6.jpg" ] = MultiFrac_MultiFrac_CDU6;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU7.jpg" ] = MultiFrac_MultiFrac_CDU7;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU8.jpg" ] = MultiFrac_MultiFrac_CDU8;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.CDU9.jpg" ] = MultiFrac_MultiFrac_CDU9;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.PETLYUK.jpg" ] = MultiFrac_MultiFrac_PETLYUK;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.PFRAC.jpg" ] = MultiFrac_MultiFrac_PFRAC;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.PREFLASH.jpg" ] = MultiFrac_MultiFrac_PREFLASH;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.VACUUM1.jpg" ] = MultiFrac_MultiFrac_VACUUM1;
-    tempIconMap["2DIcons/MultiFrac/MultiFrac.VACUUM2.jpg" ] = MultiFrac_MultiFrac_VACUUM2;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.ABSBR.jpg" ] = PetroFrac_PetroFrac_ABSBR;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.BLOCK.jpg" ] = PetroFrac_PetroFrac_BLOCK;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU1.jpg" ] = PetroFrac_PetroFrac_CDU1;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU10.jpg" ] = PetroFrac_PetroFrac_CDU10;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU10F.jpg" ] = PetroFrac_PetroFrac_CDU10F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU11.jpg" ] = PetroFrac_PetroFrac_CDU11;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU11F.jpg" ] = PetroFrac_PetroFrac_CDU11F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU12.jpg" ] = PetroFrac_PetroFrac_CDU12;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU12F.jpg" ] = PetroFrac_PetroFrac_CDU12F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU13.jpg" ] = PetroFrac_PetroFrac_CDU13;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU13F.jpg" ] = PetroFrac_PetroFrac_CDU13F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU14.jpg" ] = PetroFrac_PetroFrac_CDU14;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU14F.jpg" ] = PetroFrac_PetroFrac_CDU14F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU15.jpg" ] = PetroFrac_PetroFrac_CDU15;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU15F.jpg" ] = PetroFrac_PetroFrac_CDU15F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU1F.jpg" ] = PetroFrac_PetroFrac_CDU1F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU2.jpg" ] = PetroFrac_PetroFrac_CDU2;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU2F.jpg" ] = PetroFrac_PetroFrac_CDU2F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU3.jpg" ] = PetroFrac_PetroFrac_CDU3;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU3F.jpg" ] = PetroFrac_PetroFrac_CDU3F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU4.jpg" ] = PetroFrac_PetroFrac_CDU4;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU4F.jpg" ] = PetroFrac_PetroFrac_CDU4F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU5.jpg" ] = PetroFrac_PetroFrac_CDU5;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU5F.jpg" ] = PetroFrac_PetroFrac_CDU5F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU6.jpg" ] = PetroFrac_PetroFrac_CDU6;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU6F.jpg" ] = PetroFrac_PetroFrac_CDU6F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU7.jpg" ] = PetroFrac_PetroFrac_CDU7;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU7F.jpg" ] = PetroFrac_PetroFrac_CDU7F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU8.jpg" ] = PetroFrac_PetroFrac_CDU8;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU8F.jpg" ] = PetroFrac_PetroFrac_CDU8F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU9.jpg" ] = PetroFrac_PetroFrac_CDU9;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.CDU9F.jpg" ] = PetroFrac_PetroFrac_CDU9F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.FCC-MF1.jpg" ] = PetroFrac_PetroFrac_FCC_MF1;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.FCC-MF2.jpg" ] = PetroFrac_PetroFrac_FCC_MF2;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.FRACT.jpg" ] = PetroFrac_PetroFrac_FRACT;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.PFRAC.jpg" ] = PetroFrac_PetroFrac_PFRAC;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.PFRACF.jpg" ] = PetroFrac_PetroFrac_PFRACF;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.PREFL1.jpg" ] = PetroFrac_PetroFrac_PREFL1;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.PREFL1F.jpg" ] = PetroFrac_PetroFrac_PREFL1F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.PREFL2.jpg" ] = PetroFrac_PetroFrac_PREFL2;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.PREFL2F.jpg" ] = PetroFrac_PetroFrac_PREFL2F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.STRIP.jpg" ] = PetroFrac_PetroFrac_STRIP;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.VACUUM1.jpg" ] = PetroFrac_PetroFrac_VACUUM1;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.VACUUM1F.jpg" ] = PetroFrac_PetroFrac_VACUUM1F;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.VACUUM2.jpg" ] = PetroFrac_PetroFrac_VACUUM2;
-    tempIconMap["2DIcons/PetroFrac/PetroFrac.VACUUM2F.jpg" ] = PetroFrac_PetroFrac_VACUUM2F;
-    tempIconMap["2DIcons/Pipe/Pipe.BLOCK.jpg" ] = Pipe_Pipe_BLOCK;
-    tempIconMap["2DIcons/Pipe/Pipe.D-Pipe.jpg" ] = Pipe_Pipe_D_PIPE;
-    tempIconMap["2DIcons/Pipe/Pipe.HI-Pipe.jpg" ] = Pipe_Pipe_HI_PIPE;
-    tempIconMap["2DIcons/Pipe/Pipe.U-Pipe.jpg" ] = Pipe_Pipe_U_PIPE;
-    tempIconMap["2DIcons/Pipe/Pipe.V-Pipe.jpg" ] = Pipe_Pipe_V_PIPE;
-    tempIconMap["2DIcons/Pipeline/Pipeline.BLOCK.jpg" ] = Pipeline_Pipeline_BLOCK;
-    tempIconMap["2DIcons/Pipeline/Pipeline.D-Pipe.jpg" ] = Pipeline_Pipeline_D_PIPE;
-    tempIconMap["2DIcons/Pipeline/Pipeline.HI-Pipe.jpg" ] = Pipeline_Pipeline_HI_PIPE;
-    tempIconMap["2DIcons/Pipeline/Pipeline.U-Pipe.jpg" ] = Pipeline_Pipeline_U_PIPE;
-    tempIconMap["2DIcons/Pipeline/Pipeline.V-Pipe.jpg" ] = Pipeline_Pipeline_V_PIPE;
-    tempIconMap["2DIcons/Pump/Pump.BLOCK.jpg" ] = Pump_Pump_BLOCK;
-    tempIconMap["2DIcons/Pump/Pump.ICON1.jpg" ] = Pump_Pump_ICON1;
-    tempIconMap["2DIcons/Pump/Pump.ICON2.jpg" ] = Pump_Pump_ICON2;
-    tempIconMap["2DIcons/Qtvec/Qtvec.BLOCK.jpg" ] = Qtvec_Qtvec_BLOCK;
-    tempIconMap["2DIcons/Qtvec/Qtvec.DOT.jpg" ] = Qtvec_Qtvec_DOT;
-    tempIconMap["2DIcons/RadFrac/RadFrac.ABSBR1.jpg" ] = RadFrac_RadFrac_ABSBR1;
-    tempIconMap["2DIcons/RadFrac/RadFrac.ABSBR2.jpg" ] = RadFrac_RadFrac_ABSBR2;
-    tempIconMap["2DIcons/RadFrac/RadFrac.ABSBR3.jpg" ] = RadFrac_RadFrac_ABSBR3;
-    tempIconMap["2DIcons/RadFrac/RadFrac.BLOCK.jpg" ] = RadFrac_RadFrac_BLOCK;
-    tempIconMap["2DIcons/RadFrac/RadFrac.DECANT1.jpg" ] = RadFrac_RadFrac_DECANT1;
-    tempIconMap["2DIcons/RadFrac/RadFrac.DECANT2.jpg" ] = RadFrac_RadFrac_DECANT2;
-    tempIconMap["2DIcons/RadFrac/RadFrac.DECANT3.jpg" ] = RadFrac_RadFrac_DECANT3;
-    tempIconMap["2DIcons/RadFrac/RadFrac.FRACT1.jpg" ] = RadFrac_RadFrac_FRACT1;
-    tempIconMap["2DIcons/RadFrac/RadFrac.FRACT2.jpg" ] = RadFrac_RadFrac_FRACT2;
-    tempIconMap["2DIcons/RadFrac/RadFrac.PACKABS.jpg" ] = RadFrac_RadFrac_PACKABS;
-    tempIconMap["2DIcons/RadFrac/RadFrac.PACKCOL1.jpg" ] = RadFrac_RadFrac_PACKCOL1;
-    tempIconMap["2DIcons/RadFrac/RadFrac.PACKCOL2.jpg" ] = RadFrac_RadFrac_PACKCOL2;
-    tempIconMap["2DIcons/RadFrac/RadFrac.PACKSTR1.jpg" ] = RadFrac_RadFrac_PACKSTR1;
-    tempIconMap["2DIcons/RadFrac/RadFrac.PACKSTR2.jpg" ] = RadFrac_RadFrac_PACKSTR2;
-    tempIconMap["2DIcons/RadFrac/RadFrac.RECT.jpg" ] = RadFrac_RadFrac_RECT;
-    tempIconMap["2DIcons/RadFrac/RadFrac.STRIP1.jpg" ] = RadFrac_RadFrac_STRIP1;
-    tempIconMap["2DIcons/RadFrac/RadFrac.STRIP2.jpg" ] = RadFrac_RadFrac_STRIP2;
-    tempIconMap["2DIcons/RateFrac/RateFrac.ABSBR2.jpg" ] = RateFrac_RateFrac_ABSBR2;
-    tempIconMap["2DIcons/RateFrac/RateFrac.ABSBR3.jpg" ] = RateFrac_RateFrac_ABSBR3;
-    tempIconMap["2DIcons/RateFrac/RateFrac.ABSORBER.jpg" ] = RateFrac_RateFrac_ABSORBER;
-    tempIconMap["2DIcons/RateFrac/RateFrac.BLOCK.jpg" ] = RateFrac_RateFrac_BLOCK;
-    tempIconMap["2DIcons/RateFrac/RateFrac.FRACT.jpg" ] = RateFrac_RateFrac_FRACT;
-    tempIconMap["2DIcons/RateFrac/RateFrac.PACKABS.jpg" ] = RateFrac_RateFrac_PACKABS;
-    tempIconMap["2DIcons/RateFrac/RateFrac.PACKCOL.jpg" ] = RateFrac_RateFrac_PACKCOL;
-    tempIconMap["2DIcons/RateFrac/RateFrac.PACKSTR.jpg" ] = RateFrac_RateFrac_PACKSTR;
-    tempIconMap["2DIcons/RateFrac/RateFrac.RECT.jpg" ] = RateFrac_RateFrac_RECT;
-    tempIconMap["2DIcons/RateFrac/RateFrac.STRIPPER.jpg" ] = RateFrac_RateFrac_STRIPPER;
-    tempIconMap["2DIcons/RateFrac/RateFrac.VACUUM1.jpg" ] = RateFrac_RateFrac_VACUUM1;
-    tempIconMap["2DIcons/RateFrac/RateFrac.VACUUM2.jpg" ] = RateFrac_RateFrac_VACUUM2;
-    tempIconMap["2DIcons/RBatch/RBatch.BLOCK.jpg" ] = RBatch_RBatch_BLOCK;
-    tempIconMap["2DIcons/RBatch/RBatch.ICON1.jpg" ] = RBatch_RBatch_ICON1;
-    tempIconMap["2DIcons/RCSTR/RCSTR.BLOCK.jpg" ] = RCSTR_RCSTR_BLOCK;
-    tempIconMap["2DIcons/RCSTR/RCSTR.ICON1.jpg" ] = RCSTR_RCSTR_ICON1;
-    tempIconMap["2DIcons/REquil/REquil.BLOCK.jpg" ] = REquil_REquil_BLOCK;
-    tempIconMap["2DIcons/REquil/REquil.ICON2.jpg" ] = REquil_REquil_ICON2;
-    tempIconMap["2DIcons/REquil/REquil.ICON3.jpg" ] = REquil_REquil_ICON3;
-    tempIconMap["2DIcons/RGibbs/RGibbs.BLOCK.jpg" ] = RGibbs_RGibbs_BLOCK;
-    tempIconMap["2DIcons/RGibbs/RGibbs.ICON1.jpg" ] = RGibbs_RGibbs_ICON1;
-    tempIconMap["2DIcons/RGibbs/RGibbs.ICON2.jpg" ] = RGibbs_RGibbs_ICON2;
-    tempIconMap["2DIcons/RPlug/RPlug.BLOCK.jpg" ] = RPlug_RPlug_BLOCK;
-    tempIconMap["2DIcons/RPlug/RPlug.ICON1.jpg" ] = RPlug_RPlug_ICON1;
-    tempIconMap["2DIcons/RPlug/RPlug.ICON2.jpg" ] = RPlug_RPlug_ICON2;
-    tempIconMap["2DIcons/RPlug/RPlug.ICON3.jpg" ] = RPlug_RPlug_ICON3;
-    tempIconMap["2DIcons/RStoic/RStoic.BLOCK.jpg" ] = RStoic_RStoic_BLOCK;
-    tempIconMap["2DIcons/RStoic/RStoic.ICON1.jpg" ] = RStoic_RStoic_ICON1;
-    tempIconMap["2DIcons/RStoic/RStoic.ICON2.jpg" ] = RStoic_RStoic_ICON2;
-    tempIconMap["2DIcons/RStoic/RStoic.ICON3.jpg" ] = RStoic_RStoic_ICON3;
-    tempIconMap["2DIcons/RStoic/RStoic.ICON4.jpg" ] = RStoic_RStoic_ICON4;
-    tempIconMap["2DIcons/RYield/RYield.BLOCK.jpg" ] = RYield_RYield_BLOCK;
-    tempIconMap["2DIcons/RYield/RYield.ICON2.jpg" ] = RYield_RYield_ICON2;
-    tempIconMap["2DIcons/RYield/RYield.ICON3.jpg" ] = RYield_RYield_ICON3;
-    tempIconMap["2DIcons/SCFrac/SCFrac.BLOCK.jpg" ] = SCFrac_SCFrac_BLOCK;
-    tempIconMap["2DIcons/SCFrac/SCFrac.CDU1.jpg" ] = SCFrac_SCFrac_CDU1;
-    tempIconMap["2DIcons/SCFrac/SCFrac.CDU2.jpg" ] = SCFrac_SCFrac_CDU2;
-    tempIconMap["2DIcons/SCFrac/SCFrac.CDU3.jpg" ] = SCFrac_SCFrac_CDU3;
-    tempIconMap["2DIcons/SCFrac/SCFrac.VACUUM1.jpg" ] = SCFrac_SCFrac_VACUUM1;
-    tempIconMap["2DIcons/SCFrac/SCFrac.VACUUM2.jpg" ] = SCFrac_SCFrac_VACUUM2;
-    tempIconMap["2DIcons/Screen/Screen.BLOCK.jpg" ] = Screen_Screen_BLOCK;
-    tempIconMap["2DIcons/Screen/Screen.ICON1.jpg" ] = Screen_Screen_ICON1;
-    tempIconMap["2DIcons/Screen/Screen.ICON2.jpg" ] = Screen_Screen_ICON2;
-    tempIconMap["2DIcons/Selector/Selector.BLOCK.jpg" ] = Selector_Selector_BLOCK;
-    tempIconMap["2DIcons/Selector/Selector.HEAT.jpg" ] = Selector_Selector_HEAT;
-    tempIconMap["2DIcons/Selector/Selector.TRIANGLE.jpg" ] = Selector_Selector_TRIANGLE;
-    tempIconMap["2DIcons/Selector/Selector.WORK.jpg" ] = Selector_Selector_WORK;
-    tempIconMap["2DIcons/Sep/Sep.BLOCK.jpg" ] = Sep2_Sep2_BLOCK;
-    tempIconMap["2DIcons/Sep/Sep.ICON1.jpg" ] = Sep2_Sep2_ICON1;
-    tempIconMap["2DIcons/Sep/Sep.ICON2.jpg" ] = Sep2_Sep2_ICON2;
-    tempIconMap["2DIcons/Sep/Sep.ICON3.jpg" ] = Sep2_Sep2_ICON3;
-    tempIconMap["2DIcons/Sep2/Sep2.BLOCK.jpg" ] = Sep_Sep_BLOCK;
-    tempIconMap["2DIcons/Sep2/Sep2.ICON1.jpg" ] = Sep_Sep_ICON1;
-    tempIconMap["2DIcons/Sep2/Sep2.ICON2.jpg" ] = Sep_Sep_ICON2;
-    tempIconMap["2DIcons/Sep2/Sep2.ICON3.jpg" ] = Sep_Sep_ICON3;
-    tempIconMap["2DIcons/SSplit/SSplit.3WAY.jpg" ] = SSplit_SSplit_3WAY;
-    tempIconMap["2DIcons/SSplit/SSplit.BLOCK.jpg" ] = SSplit_SSplit_BLOCK;
-    tempIconMap["2DIcons/SSplit/SSplit.CCD.jpg" ] = SSplit_SSplit_CCD;
-    tempIconMap["2DIcons/SSplit/SSplit.CFUGE.jpg" ] = SSplit_SSplit_CFUGE;
-    tempIconMap["2DIcons/SSplit/SSplit.CYCLONE.jpg" ] = SSplit_SSplit_CYCLONE;
-    tempIconMap["2DIcons/SSplit/SSplit.DOT.jpg" ] = SSplit_SSplit_DOT;
-    tempIconMap["2DIcons/SSplit/SSplit.FILTER1.jpg" ] = SSplit_SSplit_FILTER1;
-    tempIconMap["2DIcons/SSplit/SSplit.FILTER2.jpg" ] = SSplit_SSplit_FILTER2;
-    tempIconMap["2DIcons/SSplit/SSplit.Screen.jpg" ] = SSplit_SSplit_SCREEN;
-    tempIconMap["2DIcons/SSplit/SSplit.TEE.jpg" ] = SSplit_SSplit_TEE;
-    tempIconMap["2DIcons/SSplit/SSplit.TRIANGLE.jpg" ] = SSplit_SSplit_TRIANGLE;
-    tempIconMap["2DIcons/SSplit/SSplit.VScrub.jpg" ] = SSplit_SSplit_VSCRUB;
-    tempIconMap["2DIcons/SWash/SWash.BLOCK.jpg" ] = SWash_SWash_BLOCK;
-    tempIconMap["2DIcons/SWash/SWash.ICON.jpg" ] = SWash_SWash_ICON;
-    tempIconMap["2DIcons/User/User.BLOCK.jpg" ] = User_User_BLOCK;
-    tempIconMap["2DIcons/User/User.SMALL.jpg" ] = User_User_SMALL;
-    tempIconMap["2DIcons/User2/User2.BLOCK.jpg" ] = User2_User2_BLOCK;
-    tempIconMap["2DIcons/User2/User2.CFUGE.jpg" ] = User2_User2_CFUGE;
-    tempIconMap["2DIcons/User2/User2.CSTR.jpg" ] = User2_User2_CSTR;
-    tempIconMap["2DIcons/User2/User2.EXCEL.jpg" ] = User2_User2_EXCEL;
-    tempIconMap["2DIcons/User2/User2.FILTER.jpg" ] = User2_User2_FILTER;
-    tempIconMap["2DIcons/User2/User2.FRACT.jpg" ] = User2_User2_FRACT;
-    tempIconMap["2DIcons/User2/User2.H-DRUM.jpg" ] = User2_User2_H_DRUM;
-    tempIconMap["2DIcons/User2/User2.HEATER.jpg" ] = User2_User2_HEATER;
-    tempIconMap["2DIcons/User2/User2.HEATX1.jpg" ] = User2_User2_HEATX1;
-    tempIconMap["2DIcons/User2/User2.HEATX2.jpg" ] = User2_User2_HEATX2;
-    tempIconMap["2DIcons/User2/User2.PLUG.jpg" ] = User2_User2_PLUG;
-    tempIconMap["2DIcons/User2/User2.REACTOR.jpg" ] = User2_User2_REACTOR;
-    tempIconMap["2DIcons/User2/User2.RECT.jpg" ] = User2_User2_RECT;
-    tempIconMap["2DIcons/User2/User2.STRIP.jpg" ] = User2_User2_STRIP;
-    tempIconMap["2DIcons/User2/User2.V-DRUM.jpg" ] = User2_User2_V_DRUM;
-    tempIconMap["2DIcons/User2/User2.VALVE4.jpg" ] = User2_User2_VALVE4;
-    tempIconMap["2DIcons/User3/User3.BLOCK.jpg" ] = User3_User3_BLOCK;
-    tempIconMap["2DIcons/User3/User3.CFUGE.jpg" ] = User3_User3_CFUGE;
-    tempIconMap["2DIcons/User3/User3.CSTR.jpg" ] = User3_User3_CSTR;
-    tempIconMap["2DIcons/User3/User3.FILTER.jpg" ] = User3_User3_FILTER;
-    tempIconMap["2DIcons/User3/User3.FRACT.jpg" ] = User3_User3_FRACT;
-    tempIconMap["2DIcons/User3/User3.H-DRUM.jpg" ] = User3_User3_H_DRUM;
-    tempIconMap["2DIcons/User3/User3.HEATER.jpg" ] = User3_User3_HEATER;
-    tempIconMap["2DIcons/User3/User3.HEATX1.jpg" ] = User3_User3_HEATX1;
-    tempIconMap["2DIcons/User3/User3.HEATX2.jpg" ] = User3_User3_HEATX2;
-    tempIconMap["2DIcons/User3/User3.PLUG.jpg" ] = User3_User3_PLUG;
-    tempIconMap["2DIcons/User3/User3.REACTOR.jpg" ] = User3_User3_REACTOR;
-    tempIconMap["2DIcons/User3/User3.RECT.jpg" ] = User3_User3_RECT;
-    tempIconMap["2DIcons/User3/User3.STRIP.jpg" ] = User3_User3_STRIP;
-    tempIconMap["2DIcons/User3/User3.V-DRUM.jpg" ] = User3_User3_V_DRUM;
-    tempIconMap["2DIcons/User3/User3.VALVE4.jpg" ] = User3_User3_VALVE4;
-    tempIconMap["2DIcons/Valve/Valve.BLOCK.jpg" ] = Valve_Valve_BLOCK;
-    tempIconMap["2DIcons/Valve/Valve.VALVE1.jpg" ] = Valve_Valve_VALVE1;
-    tempIconMap["2DIcons/Valve/Valve.VALVE2.jpg" ] = Valve_Valve_VALVE2;
-    tempIconMap["2DIcons/Valve/Valve.VALVE3.jpg" ] = Valve_Valve_VALVE3;
-    tempIconMap["2DIcons/Valve/Valve.VALVE4.jpg" ] = Valve_Valve_VALVE4;
-    tempIconMap["2DIcons/VScrub/VScrub.BLOCK.jpg" ] = VScrub_VScrub_BLOCK;
-    tempIconMap["2DIcons/VScrub/VScrub.ICON.jpg" ] = VScrub_VScrub_ICON;
-    tempIconMap["2DIcons/aspen.jpg" ] = aspen;
-    tempIconMap["2DIcons/standalone/standalone.standalone.jpg" ] = standalone;
+    tempIconMap["2dicons/aerotran/aerotran.block.jpg" ] = aerotran_aerotran_block;
+    tempIconMap["2dicons/aerotran/aerotran.ecn-hs-1.jpg" ] = aerotran_aerotran_ecn_hs_1;
+    tempIconMap["2dicons/aerotran/aerotran.ecn-hs-2.jpg" ] = aerotran_aerotran_ecn_hs_2;
+    tempIconMap["2dicons/aerotran/aerotran.ecn-ht-1.jpg" ] = aerotran_aerotran_ecn_ht_1;
+    tempIconMap["2dicons/aerotran/aerotran.ecn-ht-2.jpg" ] = aerotran_aerotran_ecn_ht_2;
+    tempIconMap["2dicons/aerotran/aerotran.forced-1.jpg" ] = aerotran_aerotran_forced_1;
+    tempIconMap["2dicons/aerotran/aerotran.forced-2.jpg" ] = aerotran_aerotran_forced_2;
+    tempIconMap["2dicons/aerotran/aerotran.induce-1.jpg" ] = aerotran_aerotran_induce_1;
+    tempIconMap["2dicons/aerotran/aerotran.induce-2.jpg" ] = aerotran_aerotran_induce_2;
+    tempIconMap["2dicons/aerotran/aerotran.natura-1.jpg" ] = aerotran_aerotran_natura_1;
+    tempIconMap["2dicons/aerotran/aerotran.natura-2.jpg" ] = aerotran_aerotran_natura_2;
+    tempIconMap["2dicons/analyzer/analyzer.analyze2.jpg" ] = analyzer_analyzer_analyze2;
+    tempIconMap["2dicons/analyzer/analyzer.analyzer.jpg" ] = analyzer_analyzer_analyzer;
+    tempIconMap["2dicons/analyzer/analyzer.block.jpg" ] = analyzer_analyzer_block;
+    tempIconMap["2dicons/batchfrac/batchfrac.block.jpg" ] = batchfrac_batchfrac_block;
+    tempIconMap["2dicons/batchfrac/batchfrac.column1.jpg" ] = batchfrac_batchfrac_column1;
+    tempIconMap["2dicons/batchfrac/batchfrac.column2.jpg" ] = batchfrac_batchfrac_column2;
+    tempIconMap["2dicons/batchfrac/batchfrac.column3.jpg" ] = batchfrac_batchfrac_column3;
+    tempIconMap["2dicons/apecs/apecs.block.jpg" ] = apecs;
+    tempIconMap["2dicons/ccd/ccd.block.jpg" ] = ccd_ccd_block;
+    tempIconMap["2dicons/ccd/ccd.icon.jpg" ] = ccd_ccd_icon;
+    tempIconMap["2dicons/cfuge/cfuge.block.jpg" ] = cfuge_cfuge_block;
+    tempIconMap["2dicons/cfuge/cfuge.icon.jpg" ] = cfuge_cfuge_icon;
+    tempIconMap["2dicons/clchng/clchng.block.jpg" ] = clchng_clchng_block;
+    tempIconMap["2dicons/clchng/clchng.icon1.jpg" ] = clchng_clchng_icon1;
+    tempIconMap["2dicons/compr/compr.block.jpg" ] = compr_compr_block;
+    tempIconMap["2dicons/compr/compr.icon1.jpg" ] = compr_compr_icon1;
+    tempIconMap["2dicons/compr/compr.icon2.jpg" ] = compr_compr_icon2;
+    tempIconMap["2dicons/compr/compr.icon3.jpg" ] = compr_compr_icon3;
+    tempIconMap["2dicons/crusher/crusher.block.jpg" ] = crusher_crusher_block;
+    tempIconMap["2dicons/crusher/crusher.icon.jpg" ] = crusher_crusher_icon;
+    tempIconMap["2dicons/crystallizer/crystallizer.block.jpg" ] = crystallizer_crystallizer_block;
+    tempIconMap["2dicons/crystallizer/crystallizer.icon1.jpg" ] = crystallizer_crystallizer_icon1;
+    tempIconMap["2dicons/crystallizer/crystallizer.icon2.jpg" ] = crystallizer_crystallizer_icon2;
+    tempIconMap["2dicons/cyclone/cyclone.block.jpg" ] = cyclone_cyclone_block;
+    tempIconMap["2dicons/cyclone/cyclone.icon.jpg" ] = cyclone_cyclone_icon;
+    tempIconMap["2dicons/decanter/decanter-v-drum.jpg" ] = decanter_decanter_v_drum;
+    tempIconMap["2dicons/decanter/decanter.block.jpg" ] = decanter_decanter_block;
+    tempIconMap["2dicons/decanter/decanter.h-drum.jpg" ] = decanter_decanter_h_drum;
+    tempIconMap["2dicons/distl/distl.block.jpg" ] = distl_distl_block;
+    tempIconMap["2dicons/distl/distl.icon1.jpg" ] = distl_distl_icon1;
+    tempIconMap["2dicons/distl/distl.icon2.jpg" ] = distl_distl_icon2;
+    tempIconMap["2dicons/dryer/dryer.block.jpg" ] = dryer_dryer_block;
+    tempIconMap["2dicons/dryer/dryer.fluidbed.jpg" ] = dryer_dryer_fluidbed;
+    tempIconMap["2dicons/dryer/dryer.fluidbed2.jpg" ] = dryer_dryer_fluidbed2;
+    tempIconMap["2dicons/dryer/dryer.spray.jpg" ] = dryer_dryer_spray;
+    tempIconMap["2dicons/dstwu/dstwu.block.jpg" ] = dstwu_dstwu_block;
+    tempIconMap["2dicons/dstwu/dstwu.icon1.jpg" ] = dstwu_dstwu_icon1;
+    tempIconMap["2dicons/dstwu/dstwu.icon2.jpg" ] = dstwu_dstwu_icon2;
+    tempIconMap["2dicons/dupl/dupl.block.jpg" ] = dupl_dupl_block;
+    tempIconMap["2dicons/dupl/dupl.dot.jpg" ] = dupl_dupl_dot;
+    tempIconMap["2dicons/dupl/dupl.heat.jpg" ] = dupl_dupl_heat;
+    tempIconMap["2dicons/dupl/dupl.work.jpg" ] = dupl_dupl_work;
+    tempIconMap["2dicons/esp/esp.block.jpg" ] = esp_esp_block;
+    tempIconMap["2dicons/esp/esp.icon.jpg" ] = esp_esp_icon;
+    tempIconMap["2dicons/extract/extract.block.jpg" ] = extract_extract_block;
+    tempIconMap["2dicons/extract/extract.icon1.jpg" ] = extract_extract_icon1;
+    tempIconMap["2dicons/extract/extract.icon2.jpg" ] = extract_extract_icon2;
+    tempIconMap["2dicons/extract/extract.pod.jpg" ] = extract_extract_pod;
+    tempIconMap["2dicons/fabfl/fabfl.block.jpg" ] = fabfl_fabfl_block;
+    tempIconMap["2dicons/fabfl/fabfl.icon.jpg" ] = fabfl_fabfl_icon;
+    tempIconMap["2dicons/feedbl/feedbl.block.jpg" ] = feedbl_feedbl_block;
+    tempIconMap["2dicons/feedbl/feedbl.feedbl.jpg" ] = feedbl_feedbl_feedbl;
+    tempIconMap["2dicons/filter/filter.block.jpg" ] = filter_filter_block;
+    tempIconMap["2dicons/filter/filter.plate.jpg" ] = filter_filter_plate;
+    tempIconMap["2dicons/filter/filter.rotary.jpg" ] = filter_filter_rotary;
+    tempIconMap["2dicons/flash2/flash2.block.jpg" ] = flash2_flash2_block;
+    tempIconMap["2dicons/flash2/flash2.furnace.jpg" ] = flash2_flash2_furnace;
+    tempIconMap["2dicons/flash2/flash2.h-drum.jpg" ] = flash2_flash2_h_drum;
+    tempIconMap["2dicons/flash2/flash2.heater.jpg" ] = flash2_flash2_heater;
+    tempIconMap["2dicons/flash2/flash2.v-drum1.jpg" ] = flash2_flash2_v_drum1;
+    tempIconMap["2dicons/flash2/flash2.v-drum2.jpg" ] = flash2_flash2_v_drum2;
+    tempIconMap["2dicons/flash3/flash3.block.jpg" ] = flash3_flash3_block;
+    tempIconMap["2dicons/flash3/flash3.furnace.jpg" ] = flash3_flash3_furnace;
+    tempIconMap["2dicons/flash3/flash3.h-drum.jpg" ] = flash3_flash3_h_drum;
+    tempIconMap["2dicons/flash3/flash3.heater.jpg" ] = flash3_flash3_heater;
+    tempIconMap["2dicons/flash3/flash3.v-drum1.jpg" ] = flash3_flash3_v_drum1;
+    tempIconMap["2dicons/flash3/flash3.v-drum2.jpg" ] = flash3_flash3_v_drum2;
+    tempIconMap["2dicons/fsplit/fsplit.3way.jpg" ] = fsplit_fsplit_3way;
+    tempIconMap["2dicons/fsplit/fsplit.block.jpg" ] = fsplit_fsplit_block;
+    tempIconMap["2dicons/fsplit/fsplit.dot.jpg" ] = fsplit_fsplit_dot;
+    tempIconMap["2dicons/fsplit/fsplit.heat-tee.jpg" ] = fsplit_fsplit_heat_tee;
+    tempIconMap["2dicons/fsplit/fsplit.heat.jpg" ] = fsplit_fsplit_heat;
+    tempIconMap["2dicons/fsplit/fsplit.tee.jpg" ] = fsplit_fsplit_tee;
+    tempIconMap["2dicons/fsplit/fsplit.triangle.jpg" ] = fsplit_fsplit_triangle;
+    tempIconMap["2dicons/fsplit/fsplit.work-tee.jpg" ] = fsplit_fsplit_work_tee;
+    tempIconMap["2dicons/fsplit/fsplit.work.jpg" ] = fsplit_fsplit_work;
+    tempIconMap["2dicons/heater/heater.aircooler.jpg" ] = heater_heater_aircooler;
+    tempIconMap["2dicons/heater/heater.block.jpg" ] = heater_heater_block;
+    tempIconMap["2dicons/heater/heater.compr.jpg" ] = heater_heater_compr;
+    tempIconMap["2dicons/heater/heater.furnace.jpg" ] = heater_heater_furnace;
+    tempIconMap["2dicons/heater/heater.heater.jpg" ] = heater_heater_heater;
+    tempIconMap["2dicons/heater/heater.pump.jpg" ] = heater_heater_pump;
+    tempIconMap["2dicons/heater/heater.valve.jpg" ] = heater_heater_valve;
+    tempIconMap["2dicons/heater/heater.valve2.jpg" ] = heater_heater_valve2;
+    tempIconMap["2dicons/heater/heater.valve4.jpg" ] = heater_heater_valve4;
+    tempIconMap["2dicons/heatx/heatx.block.jpg" ] = heatx_heatx_block;
+    tempIconMap["2dicons/heatx/heatx.e-hs-1cn.jpg" ] = heatx_heatx_e_hs_1cn;
+    tempIconMap["2dicons/heatx/heatx.e-hs-1co.jpg" ] = heatx_heatx_e_hs_1co;
+    tempIconMap["2dicons/heatx/heatx.e-hs-2.jpg" ] = heatx_heatx_e_hs_2;
+    tempIconMap["2dicons/heatx/heatx.e-ht-1cn.jpg" ] = heatx_heatx_e_ht_1cn;
+    tempIconMap["2dicons/heatx/heatx.e-ht-1co.jpg" ] = heatx_heatx_e_ht_1co;
+    tempIconMap["2dicons/heatx/heatx.e-ht-2.jpg" ] = heatx_heatx_e_ht_2;
+    tempIconMap["2dicons/heatx/heatx.ecn-hs-1.jpg" ] = heatx_heatx_ecn_hs_1;
+    tempIconMap["2dicons/heatx/heatx.ecn-hs-2.jpg" ] = heatx_heatx_ecn_hs_2;
+    tempIconMap["2dicons/heatx/heatx.ecn-ht-1.jpg" ] = heatx_heatx_ecn_ht_1;
+    tempIconMap["2dicons/heatx/heatx.ecn-ht-2.jpg" ] = heatx_heatx_ecn_ht_2;
+    tempIconMap["2dicons/heatx/heatx.f-hs-2cn.jpg" ] = heatx_heatx_f_hs_2cn;
+    tempIconMap["2dicons/heatx/heatx.f-hs-2co.jpg" ] = heatx_heatx_f_hs_2co;
+    tempIconMap["2dicons/heatx/heatx.f-hs-4.jpg" ] = heatx_heatx_f_hs_4;
+    tempIconMap["2dicons/heatx/heatx.f-ht-2cn.jpg" ] = heatx_heatx_f_ht_2cn;
+    tempIconMap["2dicons/heatx/heatx.f-ht-2co.jpg" ] = heatx_heatx_f_ht_2co;
+    tempIconMap["2dicons/heatx/heatx.f-ht-4.jpg" ] = heatx_heatx_f_ht_4;
+    tempIconMap["2dicons/heatx/heatx.forced-1.jpg" ] = heatx_heatx_forced_1;
+    tempIconMap["2dicons/heatx/heatx.forced-2.jpg" ] = heatx_heatx_forced_2;
+    tempIconMap["2dicons/heatx/heatx.g-hs-2.jpg" ] = heatx_heatx_g_hs_2;
+    tempIconMap["2dicons/heatx/heatx.g-ht-2.jpg" ] = heatx_heatx_g_ht_2;
+    tempIconMap["2dicons/heatx/heatx.gen-hs.jpg" ] = heatx_heatx_gen_hs;
+    tempIconMap["2dicons/heatx/heatx.gen-ht.jpg" ] = heatx_heatx_gen_ht;
+    tempIconMap["2dicons/heatx/heatx.h-hs-2.jpg" ] = heatx_heatx_h_hs_2;
+    tempIconMap["2dicons/heatx/heatx.h-ht-2.jpg" ] = heatx_heatx_h_ht_2;
+    tempIconMap["2dicons/heatx/heatx.induce-1.jpg" ] = heatx_heatx_induce_1;
+    tempIconMap["2dicons/heatx/heatx.induce-2.jpg" ] = heatx_heatx_induce_2;
+    tempIconMap["2dicons/heatx/heatx.j12-hs1.jpg" ] = heatx_heatx_j12_hs1;
+    tempIconMap["2dicons/heatx/heatx.j12-hs2.jpg" ] = heatx_heatx_j12_hs2;
+    tempIconMap["2dicons/heatx/heatx.j12-ht1.jpg" ] = heatx_heatx_j12_ht1;
+    tempIconMap["2dicons/heatx/heatx.j12-ht2.jpg" ] = heatx_heatx_j12_ht2;
+    tempIconMap["2dicons/heatx/heatx.j21-hs1.jpg" ] = heatx_heatx_j21_hs1;
+    tempIconMap["2dicons/heatx/heatx.j21-hs2.jpg" ] = heatx_heatx_j21_hs2;
+    tempIconMap["2dicons/heatx/heatx.j21-ht1.jpg" ] = heatx_heatx_j21_ht1;
+    tempIconMap["2dicons/heatx/heatx.j21-ht2.jpg" ] = heatx_heatx_j21_ht2;
+    tempIconMap["2dicons/heatx/heatx.k-ht-2.jpg" ] = heatx_heatx_k_ht_2;
+    tempIconMap["2dicons/heatx/heatx.natura-1.jpg" ] = heatx_heatx_natura_1;
+    tempIconMap["2dicons/heatx/heatx.natura-2.jpg" ] = heatx_heatx_natura_2;
+    tempIconMap["2dicons/heatx/heatx.simp-hs.jpg" ] = heatx_heatx_simp_hs;
+    tempIconMap["2dicons/heatx/heatx.simp-ht.jpg" ] = heatx_heatx_simp_ht;
+    tempIconMap["2dicons/heatx/heatx.x-hs-1.jpg" ] = heatx_heatx_x_hs_1;
+    tempIconMap["2dicons/heatx/heatx.x-hs-2.jpg" ] = heatx_heatx_x_hs_2;
+    tempIconMap["2dicons/heatx/heatx.x-ht-1.jpg" ] = heatx_heatx_x_ht_1;
+    tempIconMap["2dicons/heatx/heatx.x-ht-2.jpg" ] = heatx_heatx_x_ht_2;
+    tempIconMap["2dicons/hetran/hetran.block.jpg" ] = hetran_hetran_block;
+    tempIconMap["2dicons/hetran/hetran.e-hs-1cn.jpg" ] = hetran_hetran_e_hs_1cn;
+    tempIconMap["2dicons/hetran/hetran.e-hs-1co.jpg" ] = hetran_hetran_e_hs_1co;
+    tempIconMap["2dicons/hetran/hetran.e-hs-2.jpg" ] = hetran_hetran_e_hs_2;
+    tempIconMap["2dicons/hetran/hetran.e-ht-1cn.jpg" ] = hetran_hetran_e_ht_1cn;
+    tempIconMap["2dicons/hetran/hetran.e-ht-1co.jpg" ] = hetran_hetran_e_ht_1co;
+    tempIconMap["2dicons/hetran/hetran.e-ht-2.jpg" ] = hetran_hetran_e_ht_2;
+    tempIconMap["2dicons/hetran/hetran.f-hs-2cn.jpg" ] = hetran_hetran_f_hs_2cn;
+    tempIconMap["2dicons/hetran/hetran.f-hs-2co.jpg" ] = hetran_hetran_f_hs_2co;
+    tempIconMap["2dicons/hetran/hetran.f-hs-4.jpg" ] = hetran_hetran_f_hs_4;
+    tempIconMap["2dicons/hetran/hetran.f-ht-2cn.jpg" ] = hetran_hetran_f_ht_2cn;
+    tempIconMap["2dicons/hetran/hetran.f-ht-2co.jpg" ] = hetran_hetran_f_ht_2co;
+    tempIconMap["2dicons/hetran/hetran.f-ht-4.jpg" ] = hetran_hetran_f_ht_4;
+    tempIconMap["2dicons/hetran/hetran.g-hs-2.jpg" ] = hetran_hetran_g_hs_2;
+    tempIconMap["2dicons/hetran/hetran.g-ht-2.jpg" ] = hetran_hetran_g_ht_2;
+    tempIconMap["2dicons/hetran/hetran.gen-hs.jpg" ] = hetran_hetran_gen_hs;
+    tempIconMap["2dicons/hetran/hetran.gen-ht.jpg" ] = hetran_hetran_gen_ht;
+    tempIconMap["2dicons/hetran/hetran.h-hs-2.jpg" ] = hetran_hetran_h_hs_2;
+    tempIconMap["2dicons/hetran/hetran.h-ht-2.jpg" ] = hetran_hetran_h_ht_2;
+    tempIconMap["2dicons/hetran/hetran.j12-hs1.jpg" ] = hetran_hetran_j12_hs1;
+    tempIconMap["2dicons/hetran/hetran.j12-hs2.jpg" ] = hetran_hetran_j12_hs2;
+    tempIconMap["2dicons/hetran/hetran.j12-ht1.jpg" ] = hetran_hetran_j12_ht1;
+    tempIconMap["2dicons/hetran/hetran.j12-ht2.jpg" ] = hetran_hetran_j12_ht2;
+    tempIconMap["2dicons/hetran/hetran.j21-hs1.jpg" ] = hetran_hetran_j21_hs1;
+    tempIconMap["2dicons/hetran/hetran.j21-hs2.jpg" ] = hetran_hetran_j21_hs2;
+    tempIconMap["2dicons/hetran/hetran.j21-ht1.jpg" ] = hetran_hetran_j21_ht1;
+    tempIconMap["2dicons/hetran/hetran.j21-ht2.jpg" ] = hetran_hetran_j21_ht2;
+    tempIconMap["2dicons/hetran/hetran.k-ht-1.jpg" ] = hetran_hetran_k_ht_1;
+    tempIconMap["2dicons/hetran/hetran.k-ht-2.jpg" ] = hetran_hetran_k_ht_2;
+    tempIconMap["2dicons/hetran/hetran.simp-hs.jpg" ] = hetran_hetran_simp_hs;
+    tempIconMap["2dicons/hetran/hetran.smp-ht.jpg" ] = hetran_hetran_smp_ht;
+    tempIconMap["2dicons/hetran/hetran.x-hs-1.jpg" ] = hetran_hetran_x_hs_1;
+    tempIconMap["2dicons/hetran/hetran.x-hs-2.jpg" ] = hetran_hetran_x_hs_2;
+    tempIconMap["2dicons/hetran/hetran.x-ht-1.jpg" ] = hetran_hetran_x_ht_1;
+    tempIconMap["2dicons/hetran/hetran.x-ht-2.jpg" ] = hetran_hetran_x_ht_2;
+    tempIconMap["2dicons/hierarchy/hierarchy.block.jpg" ] = hierarchy_hierarchy_block;
+    tempIconMap["2dicons/htrixist/htrixist.block.jpg" ] = htrixist_htrixist_block;
+    tempIconMap["2dicons/htrixist/htrixist.e-hs-1cn.jpg" ] = htrixist_htrixist_e_hs_1cn;
+    tempIconMap["2dicons/htrixist/htrixist.e-hs-1co.jpg" ] = htrixist_htrixist_e_hs_1co;
+    tempIconMap["2dicons/htrixist/htrixist.e-hs-2.jpg" ] = htrixist_htrixist_e_hs_2;
+    tempIconMap["2dicons/htrixist/htrixist.e-ht-1cn.jpg" ] = htrixist_htrixist_e_ht_1cn;
+    tempIconMap["2dicons/htrixist/htrixist.e-ht-1co.jpg" ] = htrixist_htrixist_e_ht_1co;
+    tempIconMap["2dicons/htrixist/htrixist.e-ht-2.jpg" ] = htrixist_htrixist_e_ht_2;
+    tempIconMap["2dicons/htrixist/htrixist.f-hs-2cn.jpg" ] = htrixist_htrixist_f_hs_2cn;
+    tempIconMap["2dicons/htrixist/htrixist.f-hs-2co.jpg" ] = htrixist_htrixist_f_hs_2co;
+    tempIconMap["2dicons/htrixist/htrixist.f-hs-4.jpg" ] = htrixist_htrixist_f_hs_4;
+    tempIconMap["2dicons/htrixist/htrixist.f-ht-2cn.jpg" ] = htrixist_htrixist_f_ht_2cn;
+    tempIconMap["2dicons/htrixist/htrixist.f-ht-2co.jpg" ] = htrixist_htrixist_f_ht_2co;
+    tempIconMap["2dicons/htrixist/htrixist.f-ht-4.jpg" ] = htrixist_htrixist_f_ht_4;
+    tempIconMap["2dicons/htrixist/htrixist.g-hs-2.jpg" ] = htrixist_htrixist_g_hs_2;
+    tempIconMap["2dicons/htrixist/htrixist.g-ht-2.jpg" ] = htrixist_htrixist_g_ht_2;
+    tempIconMap["2dicons/htrixist/htrixist.gen-hs.jpg" ] = htrixist_htrixist_gen_hs;
+    tempIconMap["2dicons/htrixist/htrixist.gen-ht.jpg" ] = htrixist_htrixist_gen_ht;
+    tempIconMap["2dicons/htrixist/htrixist.h-hs-2.jpg" ] = htrixist_htrixist_h_hs_2;
+    tempIconMap["2dicons/htrixist/htrixist.h-ht-2.jpg" ] = htrixist_htrixist_h_ht_2;
+    tempIconMap["2dicons/htrixist/htrixist.j12-hs1.jpg" ] = htrixist_htrixist_j12_hs1;
+    tempIconMap["2dicons/htrixist/htrixist.j12-hs2.jpg" ] = htrixist_htrixist_j12_hs2;
+    tempIconMap["2dicons/htrixist/htrixist.j12-ht1.jpg" ] = htrixist_htrixist_j12_ht1;
+    tempIconMap["2dicons/htrixist/htrixist.j12-ht2.jpg" ] = htrixist_htrixist_j12_ht2;
+    tempIconMap["2dicons/htrixist/htrixist.j21-hs1.jpg" ] = htrixist_htrixist_j21_hs1;
+    tempIconMap["2dicons/htrixist/htrixist.j21-hs2.jpg" ] = htrixist_htrixist_j21_hs2;
+    tempIconMap["2dicons/htrixist/htrixist.j21-ht1.jpg" ] = htrixist_htrixist_j21_ht1;
+    tempIconMap["2dicons/htrixist/htrixist.j21-ht2.jpg" ] = htrixist_htrixist_j21_ht2;
+    tempIconMap["2dicons/htrixist/htrixist.k-ht-1.jpg" ] = htrixist_htrixist_k_ht_1;
+    tempIconMap["2dicons/htrixist/htrixist.k-ht-2.jpg" ] = htrixist_htrixist_k_ht_2;
+    tempIconMap["2dicons/htrixist/htrixist.simp-hs.jpg" ] = htrixist_htrixist_simp_hs;
+    tempIconMap["2dicons/htrixist/htrixist.smp-ht.jpg" ] = htrixist_htrixist_smp_ht;
+    tempIconMap["2dicons/htrixist/htrixist.x-hs-1.jpg" ] = htrixist_htrixist_x_hs_1;
+    tempIconMap["2dicons/htrixist/htrixist.x-hs-2.jpg" ] = htrixist_htrixist_x_hs_2;
+    tempIconMap["2dicons/htrixist/htrixist.x-ht-1.jpg" ] = htrixist_htrixist_x_ht_1;
+    tempIconMap["2dicons/htrixist/htrixist.x-ht-2.jpg" ] = htrixist_htrixist_x_ht_2;
+    tempIconMap["2dicons/hxflux/hxflux.block.jpg" ] = hxflux_hxflux_block;
+    tempIconMap["2dicons/hycyc/hycyc.block.jpg" ] = hycyc_hycyc_block;
+    tempIconMap["2dicons/hycyc/hycyc.icon.jpg" ] = hycyc_hycyc_icon;
+    tempIconMap["2dicons/mcompr/mcompr.block.jpg" ] = mcompr_mcompr_block;
+    tempIconMap["2dicons/mcompr/mcompr.icon1.jpg" ] = mcompr_mcompr_icon1;
+    tempIconMap["2dicons/measurement/measurement.acontlr.jpg" ] = measurement_measurement_acontlr;
+    tempIconMap["2dicons/measurement/measurement.aindictr.jpg" ] = measurement_measurement_aindictr;
+    tempIconMap["2dicons/measurement/measurement.block.jpg" ] = measurement_measurement_block;
+    tempIconMap["2dicons/measurement/measurement.fcontlr.jpg" ] = measurement_measurement_fcontlr;
+    tempIconMap["2dicons/measurement/measurement.findictr.jpg" ] = measurement_measurement_findictr;
+    tempIconMap["2dicons/measurement/measurement.lcontlr.jpg" ] = measurement_measurement_lcontlr;
+    tempIconMap["2dicons/measurement/measurement.lindictr.jpg" ] = measurement_measurement_lindictr;
+    tempIconMap["2dicons/measurement/measurement.measure1.jpg" ] = measurement_measurement_measure1;
+    tempIconMap["2dicons/measurement/measurement.measure2.jpg" ] = measurement_measurement_measure2;
+    tempIconMap["2dicons/measurement/measurement.measure3.jpg" ] = measurement_measurement_measure3;
+    tempIconMap["2dicons/measurement/measurement.measure4.jpg" ] = measurement_measurement_measure4;
+    tempIconMap["2dicons/measurement/measurement.measure5.jpg" ] = measurement_measurement_measure5;
+    tempIconMap["2dicons/measurement/measurement.measure6.jpg" ] = measurement_measurement_measure6;
+    tempIconMap["2dicons/measurement/measurement.measure7.jpg" ] = measurement_measurement_measure7;
+    tempIconMap["2dicons/measurement/measurement.measure8.jpg" ] = measurement_measurement_measure8;
+    tempIconMap["2dicons/measurement/measurement.pcontlr.jpg" ] = measurement_measurement_pcontlr;
+    tempIconMap["2dicons/measurement/measurement.pindictr.jpg" ] = measurement_measurement_pindictr;
+    tempIconMap["2dicons/measurement/measurement.tcontlr.jpg" ] = measurement_measurement_tcontlr;
+    tempIconMap["2dicons/measurement/measurement.tindictr.jpg" ] = measurement_measurement_tindictr;
+    tempIconMap["2dicons/mheatx/mheatx.block.jpg" ] = mheatx_mheatx_block;
+    tempIconMap["2dicons/mheatx/mheatx.block2.jpg" ] = mheatx_mheatx_block2;
+    tempIconMap["2dicons/mheatx/mheatx.block3.jpg" ] = mheatx_mheatx_block3;
+    tempIconMap["2dicons/mheatx/mheatx.circ-mhx.jpg" ] = mheatx_mheatx_circ_mhx;
+    tempIconMap["2dicons/mheatx/mheatx.cocurnt.jpg" ] = mheatx_mheatx_cocurnt;
+    tempIconMap["2dicons/mheatx/mheatx.counter.jpg" ] = mheatx_mheatx_counter;
+    tempIconMap["2dicons/mheatx/mheatx.counter2.jpg" ] = mheatx_mheatx_counter2;
+    tempIconMap["2dicons/mheatx/mheatx.icon1.jpg" ] = mheatx_mheatx_icon1;
+    tempIconMap["2dicons/mheatx/mheatx.simp-mhx.jpg" ] = mheatx_mheatx_simp_mhx;
+    tempIconMap["2dicons/mixer/mixer.3way.jpg" ] = mixer_mixer_3way;
+    tempIconMap["2dicons/mixer/mixer.block.jpg" ] = mixer_mixer_block;
+    tempIconMap["2dicons/mixer/mixer.dot.jpg" ] = mixer_mixer_dot;
+    tempIconMap["2dicons/mixer/mixer.heat.jpg" ] = mixer_mixer_heat;
+    tempIconMap["2dicons/mixer/mixer.hopper.jpg" ] = mixer_mixer_hopper;
+    tempIconMap["2dicons/mixer/mixer.screw.jpg" ] = mixer_mixer_screw;
+    tempIconMap["2dicons/mixer/mixer.tank.jpg" ] = mixer_mixer_tank;
+    tempIconMap["2dicons/mixer/mixer.tee.jpg" ] = mixer_mixer_tee;
+    tempIconMap["2dicons/mixer/mixer.triangle.jpg" ] = mixer_mixer_triangle;
+    tempIconMap["2dicons/mixer/mixer.valve.jpg" ] = mixer_mixer_valve;
+    tempIconMap["2dicons/mixer/mixer.work.jpg" ] = mixer_mixer_work;
+    tempIconMap["2dicons/mult/mult.block.jpg" ] = mult_mult_block;
+    tempIconMap["2dicons/mult/mult.dot.jpg" ] = mult_mult_dot;
+    tempIconMap["2dicons/mult/mult.heat.jpg" ] = mult_mult_heat;
+    tempIconMap["2dicons/mult/mult.work.jpg" ] = mult_mult_work;
+    tempIconMap["2dicons/multifrac/multifrac.aircol.jpg" ] = multifrac_multifrac_aircol;
+    tempIconMap["2dicons/multifrac/multifrac.block.jpg" ] = multifrac_multifrac_block;
+    tempIconMap["2dicons/multifrac/multifrac.cdu1.jpg" ] = multifrac_multifrac_cdu1;
+    tempIconMap["2dicons/multifrac/multifrac.cdu2.jpg" ] = multifrac_multifrac_cdu2;
+    tempIconMap["2dicons/multifrac/multifrac.cdu3.jpg" ] = multifrac_multifrac_cdu3;
+    tempIconMap["2dicons/multifrac/multifrac.cdu4.jpg" ] = multifrac_multifrac_cdu4;
+    tempIconMap["2dicons/multifrac/multifrac.cdu5.jpg" ] = multifrac_multifrac_cdu5;
+    tempIconMap["2dicons/multifrac/multifrac.cdu6.jpg" ] = multifrac_multifrac_cdu6;
+    tempIconMap["2dicons/multifrac/multifrac.cdu7.jpg" ] = multifrac_multifrac_cdu7;
+    tempIconMap["2dicons/multifrac/multifrac.cdu8.jpg" ] = multifrac_multifrac_cdu8;
+    tempIconMap["2dicons/multifrac/multifrac.cdu9.jpg" ] = multifrac_multifrac_cdu9;
+    tempIconMap["2dicons/multifrac/multifrac.petlyuk.jpg" ] = multifrac_multifrac_petlyuk;
+    tempIconMap["2dicons/multifrac/multifrac.pfrac.jpg" ] = multifrac_multifrac_pfrac;
+    tempIconMap["2dicons/multifrac/multifrac.preflash.jpg" ] = multifrac_multifrac_preflash;
+    tempIconMap["2dicons/multifrac/multifrac.vacuum1.jpg" ] = multifrac_multifrac_vacuum1;
+    tempIconMap["2dicons/multifrac/multifrac.vacuum2.jpg" ] = multifrac_multifrac_vacuum2;
+    tempIconMap["2dicons/petrofrac/petrofrac.absbr.jpg" ] = petrofrac_petrofrac_absbr;
+    tempIconMap["2dicons/petrofrac/petrofrac.block.jpg" ] = petrofrac_petrofrac_block;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu1.jpg" ] = petrofrac_petrofrac_cdu1;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu10.jpg" ] = petrofrac_petrofrac_cdu10;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu10f.jpg" ] = petrofrac_petrofrac_cdu10f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu11.jpg" ] = petrofrac_petrofrac_cdu11;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu11f.jpg" ] = petrofrac_petrofrac_cdu11f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu12.jpg" ] = petrofrac_petrofrac_cdu12;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu12f.jpg" ] = petrofrac_petrofrac_cdu12f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu13.jpg" ] = petrofrac_petrofrac_cdu13;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu13f.jpg" ] = petrofrac_petrofrac_cdu13f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu14.jpg" ] = petrofrac_petrofrac_cdu14;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu14f.jpg" ] = petrofrac_petrofrac_cdu14f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu15.jpg" ] = petrofrac_petrofrac_cdu15;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu15f.jpg" ] = petrofrac_petrofrac_cdu15f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu1f.jpg" ] = petrofrac_petrofrac_cdu1f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu2.jpg" ] = petrofrac_petrofrac_cdu2;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu2f.jpg" ] = petrofrac_petrofrac_cdu2f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu3.jpg" ] = petrofrac_petrofrac_cdu3;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu3f.jpg" ] = petrofrac_petrofrac_cdu3f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu4.jpg" ] = petrofrac_petrofrac_cdu4;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu4f.jpg" ] = petrofrac_petrofrac_cdu4f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu5.jpg" ] = petrofrac_petrofrac_cdu5;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu5f.jpg" ] = petrofrac_petrofrac_cdu5f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu6.jpg" ] = petrofrac_petrofrac_cdu6;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu6f.jpg" ] = petrofrac_petrofrac_cdu6f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu7.jpg" ] = petrofrac_petrofrac_cdu7;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu7f.jpg" ] = petrofrac_petrofrac_cdu7f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu8.jpg" ] = petrofrac_petrofrac_cdu8;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu8f.jpg" ] = petrofrac_petrofrac_cdu8f;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu9.jpg" ] = petrofrac_petrofrac_cdu9;
+    tempIconMap["2dicons/petrofrac/petrofrac.cdu9f.jpg" ] = petrofrac_petrofrac_cdu9f;
+    tempIconMap["2dicons/petrofrac/petrofrac.fcc-mf1.jpg" ] = petrofrac_petrofrac_fcc_mf1;
+    tempIconMap["2dicons/petrofrac/petrofrac.fcc-mf2.jpg" ] = petrofrac_petrofrac_fcc_mf2;
+    tempIconMap["2dicons/petrofrac/petrofrac.fract.jpg" ] = petrofrac_petrofrac_fract;
+    tempIconMap["2dicons/petrofrac/petrofrac.pfrac.jpg" ] = petrofrac_petrofrac_pfrac;
+    tempIconMap["2dicons/petrofrac/petrofrac.pfracf.jpg" ] = petrofrac_petrofrac_pfracf;
+    tempIconMap["2dicons/petrofrac/petrofrac.prefl1.jpg" ] = petrofrac_petrofrac_prefl1;
+    tempIconMap["2dicons/petrofrac/petrofrac.prefl1f.jpg" ] = petrofrac_petrofrac_prefl1f;
+    tempIconMap["2dicons/petrofrac/petrofrac.prefl2.jpg" ] = petrofrac_petrofrac_prefl2;
+    tempIconMap["2dicons/petrofrac/petrofrac.prefl2f.jpg" ] = petrofrac_petrofrac_prefl2f;
+    tempIconMap["2dicons/petrofrac/petrofrac.strip.jpg" ] = petrofrac_petrofrac_strip;
+    tempIconMap["2dicons/petrofrac/petrofrac.vacuum1.jpg" ] = petrofrac_petrofrac_vacuum1;
+    tempIconMap["2dicons/petrofrac/petrofrac.vacuum1f.jpg" ] = petrofrac_petrofrac_vacuum1f;
+    tempIconMap["2dicons/petrofrac/petrofrac.vacuum2.jpg" ] = petrofrac_petrofrac_vacuum2;
+    tempIconMap["2dicons/petrofrac/petrofrac.vacuum2f.jpg" ] = petrofrac_petrofrac_vacuum2f;
+    tempIconMap["2dicons/pipe/pipe.block.jpg" ] = pipe_pipe_block;
+    tempIconMap["2dicons/pipe/pipe.d-pipe.jpg" ] = pipe_pipe_d_pipe;
+    tempIconMap["2dicons/pipe/pipe.hi-pipe.jpg" ] = pipe_pipe_hi_pipe;
+    tempIconMap["2dicons/pipe/pipe.u-pipe.jpg" ] = pipe_pipe_u_pipe;
+    tempIconMap["2dicons/pipe/pipe.v-pipe.jpg" ] = pipe_pipe_v_pipe;
+    tempIconMap["2dicons/pipeline/pipeline.block.jpg" ] = pipeline_pipeline_block;
+    tempIconMap["2dicons/pipeline/pipeline.d-pipe.jpg" ] = pipeline_pipeline_d_pipe;
+    tempIconMap["2dicons/pipeline/pipeline.hi-pipe.jpg" ] = pipeline_pipeline_hi_pipe;
+    tempIconMap["2dicons/pipeline/pipeline.u-pipe.jpg" ] = pipeline_pipeline_u_pipe;
+    tempIconMap["2dicons/pipeline/pipeline.v-pipe.jpg" ] = pipeline_pipeline_v_pipe;
+    tempIconMap["2dicons/pump/pump.block.jpg" ] = pump_pump_block;
+    tempIconMap["2dicons/pump/pump.icon1.jpg" ] = pump_pump_icon1;
+    tempIconMap["2dicons/pump/pump.icon2.jpg" ] = pump_pump_icon2;
+    tempIconMap["2dicons/qtvec/qtvec.block.jpg" ] = qtvec_qtvec_block;
+    tempIconMap["2dicons/qtvec/qtvec.dot.jpg" ] = qtvec_qtvec_dot;
+    tempIconMap["2dicons/radfrac/radfrac.absbr1.jpg" ] = radfrac_radfrac_absbr1;
+    tempIconMap["2dicons/radfrac/radfrac.absbr2.jpg" ] = radfrac_radfrac_absbr2;
+    tempIconMap["2dicons/radfrac/radfrac.absbr3.jpg" ] = radfrac_radfrac_absbr3;
+    tempIconMap["2dicons/radfrac/radfrac.block.jpg" ] = radfrac_radfrac_block;
+    tempIconMap["2dicons/radfrac/radfrac.decant1.jpg" ] = radfrac_radfrac_decant1;
+    tempIconMap["2dicons/radfrac/radfrac.decant2.jpg" ] = radfrac_radfrac_decant2;
+    tempIconMap["2dicons/radfrac/radfrac.decant3.jpg" ] = radfrac_radfrac_decant3;
+    tempIconMap["2dicons/radfrac/radfrac.fract1.jpg" ] = radfrac_radfrac_fract1;
+    tempIconMap["2dicons/radfrac/radfrac.fract2.jpg" ] = radfrac_radfrac_fract2;
+    tempIconMap["2dicons/radfrac/radfrac.packabs.jpg" ] = radfrac_radfrac_packabs;
+    tempIconMap["2dicons/radfrac/radfrac.packcol1.jpg" ] = radfrac_radfrac_packcol1;
+    tempIconMap["2dicons/radfrac/radfrac.packcol2.jpg" ] = radfrac_radfrac_packcol2;
+    tempIconMap["2dicons/radfrac/radfrac.packstr1.jpg" ] = radfrac_radfrac_packstr1;
+    tempIconMap["2dicons/radfrac/radfrac.packstr2.jpg" ] = radfrac_radfrac_packstr2;
+    tempIconMap["2dicons/radfrac/radfrac.rect.jpg" ] = radfrac_radfrac_rect;
+    tempIconMap["2dicons/radfrac/radfrac.strip1.jpg" ] = radfrac_radfrac_strip1;
+    tempIconMap["2dicons/radfrac/radfrac.strip2.jpg" ] = radfrac_radfrac_strip2;
+    tempIconMap["2dicons/ratefrac/ratefrac.absbr2.jpg" ] = ratefrac_ratefrac_absbr2;
+    tempIconMap["2dicons/ratefrac/ratefrac.absbr3.jpg" ] = ratefrac_ratefrac_absbr3;
+    tempIconMap["2dicons/ratefrac/ratefrac.absorber.jpg" ] = ratefrac_ratefrac_absorber;
+    tempIconMap["2dicons/ratefrac/ratefrac.block.jpg" ] = ratefrac_ratefrac_block;
+    tempIconMap["2dicons/ratefrac/ratefrac.fract.jpg" ] = ratefrac_ratefrac_fract;
+    tempIconMap["2dicons/ratefrac/ratefrac.packabs.jpg" ] = ratefrac_ratefrac_packabs;
+    tempIconMap["2dicons/ratefrac/ratefrac.packcol.jpg" ] = ratefrac_ratefrac_packcol;
+    tempIconMap["2dicons/ratefrac/ratefrac.packstr.jpg" ] = ratefrac_ratefrac_packstr;
+    tempIconMap["2dicons/ratefrac/ratefrac.rect.jpg" ] = ratefrac_ratefrac_rect;
+    tempIconMap["2dicons/ratefrac/ratefrac.stripper.jpg" ] = ratefrac_ratefrac_stripper;
+    tempIconMap["2dicons/ratefrac/ratefrac.vacuum1.jpg" ] = ratefrac_ratefrac_vacuum1;
+    tempIconMap["2dicons/ratefrac/ratefrac.vacuum2.jpg" ] = ratefrac_ratefrac_vacuum2;
+    tempIconMap["2dicons/rbatch/rbatch.block.jpg" ] = rbatch_rbatch_block;
+    tempIconMap["2dicons/rbatch/rbatch.icon1.jpg" ] = rbatch_rbatch_icon1;
+    tempIconMap["2dicons/rcstr/rcstr.block.jpg" ] = rcstr_rcstr_block;
+    tempIconMap["2dicons/rcstr/rcstr.icon1.jpg" ] = rcstr_rcstr_icon1;
+    tempIconMap["2dicons/requil/requil.block.jpg" ] = requil_requil_block;
+    tempIconMap["2dicons/requil/requil.icon2.jpg" ] = requil_requil_icon2;
+    tempIconMap["2dicons/requil/requil.icon3.jpg" ] = requil_requil_icon3;
+    tempIconMap["2dicons/rgibbs/rgibbs.block.jpg" ] = rgibbs_rgibbs_block;
+    tempIconMap["2dicons/rgibbs/rgibbs.icon1.jpg" ] = rgibbs_rgibbs_icon1;
+    tempIconMap["2dicons/rgibbs/rgibbs.icon2.jpg" ] = rgibbs_rgibbs_icon2;
+    tempIconMap["2dicons/rplug/rplug.block.jpg" ] = rplug_rplug_block;
+    tempIconMap["2dicons/rplug/rplug.icon1.jpg" ] = rplug_rplug_icon1;
+    tempIconMap["2dicons/rplug/rplug.icon2.jpg" ] = rplug_rplug_icon2;
+    tempIconMap["2dicons/rplug/rplug.icon3.jpg" ] = rplug_rplug_icon3;
+    tempIconMap["2dicons/rstoic/rstoic.block.jpg" ] = rstoic_rstoic_block;
+    tempIconMap["2dicons/rstoic/rstoic.icon1.jpg" ] = rstoic_rstoic_icon1;
+    tempIconMap["2dicons/rstoic/rstoic.icon2.jpg" ] = rstoic_rstoic_icon2;
+    tempIconMap["2dicons/rstoic/rstoic.icon3.jpg" ] = rstoic_rstoic_icon3;
+    tempIconMap["2dicons/rstoic/rstoic.icon4.jpg" ] = rstoic_rstoic_icon4;
+    tempIconMap["2dicons/ryield/ryield.block.jpg" ] = ryield_ryield_block;
+    tempIconMap["2dicons/ryield/ryield.icon2.jpg" ] = ryield_ryield_icon2;
+    tempIconMap["2dicons/ryield/ryield.icon3.jpg" ] = ryield_ryield_icon3;
+    tempIconMap["2dicons/scfrac/scfrac.block.jpg" ] = scfrac_scfrac_block;
+    tempIconMap["2dicons/scfrac/scfrac.cdu1.jpg" ] = scfrac_scfrac_cdu1;
+    tempIconMap["2dicons/scfrac/scfrac.cdu2.jpg" ] = scfrac_scfrac_cdu2;
+    tempIconMap["2dicons/scfrac/scfrac.cdu3.jpg" ] = scfrac_scfrac_cdu3;
+    tempIconMap["2dicons/scfrac/scfrac.vacuum1.jpg" ] = scfrac_scfrac_vacuum1;
+    tempIconMap["2dicons/scfrac/scfrac.vacuum2.jpg" ] = scfrac_scfrac_vacuum2;
+    tempIconMap["2dicons/screen/screen.block.jpg" ] = screen_screen_block;
+    tempIconMap["2dicons/screen/screen.icon1.jpg" ] = screen_screen_icon1;
+    tempIconMap["2dicons/screen/screen.icon2.jpg" ] = screen_screen_icon2;
+    tempIconMap["2dicons/selector/selector.block.jpg" ] = selector_selector_block;
+    tempIconMap["2dicons/selector/selector.heat.jpg" ] = selector_selector_heat;
+    tempIconMap["2dicons/selector/selector.triangle.jpg" ] = selector_selector_triangle;
+    tempIconMap["2dicons/selector/selector.work.jpg" ] = selector_selector_work;
+    tempIconMap["2dicons/sep/sep.block.jpg" ] = sep2_sep2_block;
+    tempIconMap["2dicons/sep/sep.icon1.jpg" ] = sep2_sep2_icon1;
+    tempIconMap["2dicons/sep/sep.icon2.jpg" ] = sep2_sep2_icon2;
+    tempIconMap["2dicons/sep/sep.icon3.jpg" ] = sep2_sep2_icon3;
+    tempIconMap["2dicons/sep2/sep2.block.jpg" ] = sep_sep_block;
+    tempIconMap["2dicons/sep2/sep2.icon1.jpg" ] = sep_sep_icon1;
+    tempIconMap["2dicons/sep2/sep2.icon2.jpg" ] = sep_sep_icon2;
+    tempIconMap["2dicons/sep2/sep2.icon3.jpg" ] = sep_sep_icon3;
+    tempIconMap["2dicons/ssplit/ssplit.3way.jpg" ] = ssplit_ssplit_3way;
+    tempIconMap["2dicons/ssplit/ssplit.block.jpg" ] = ssplit_ssplit_block;
+    tempIconMap["2dicons/ssplit/ssplit.ccd.jpg" ] = ssplit_ssplit_ccd;
+    tempIconMap["2dicons/ssplit/ssplit.cfuge.jpg" ] = ssplit_ssplit_cfuge;
+    tempIconMap["2dicons/ssplit/ssplit.cyclone.jpg" ] = ssplit_ssplit_cyclone;
+    tempIconMap["2dicons/ssplit/ssplit.dot.jpg" ] = ssplit_ssplit_dot;
+    tempIconMap["2dicons/ssplit/ssplit.filter1.jpg" ] = ssplit_ssplit_filter1;
+    tempIconMap["2dicons/ssplit/ssplit.filter2.jpg" ] = ssplit_ssplit_filter2;
+    tempIconMap["2dicons/ssplit/ssplit.screen.jpg" ] = ssplit_ssplit_screen;
+    tempIconMap["2dicons/ssplit/ssplit.tee.jpg" ] = ssplit_ssplit_tee;
+    tempIconMap["2dicons/ssplit/ssplit.triangle.jpg" ] = ssplit_ssplit_triangle;
+    tempIconMap["2dicons/ssplit/ssplit.vscrub.jpg" ] = ssplit_ssplit_vscrub;
+    tempIconMap["2dicons/swash/swash.block.jpg" ] = swash_swash_block;
+    tempIconMap["2dicons/swash/swash.icon.jpg" ] = swash_swash_icon;
+    tempIconMap["2dicons/user/user.block.jpg" ] = user_user_block;
+    tempIconMap["2dicons/user/user.small.jpg" ] = user_user_small;
+    tempIconMap["2dicons/user2/user2.block.jpg" ] = user2_user2_block;
+    tempIconMap["2dicons/user2/user2.cfuge.jpg" ] = user2_user2_cfuge;
+    tempIconMap["2dicons/user2/user2.cstr.jpg" ] = user2_user2_cstr;
+    tempIconMap["2dicons/user2/user2.excel.jpg" ] = user2_user2_excel;
+    tempIconMap["2dicons/user2/user2.filter.jpg" ] = user2_user2_filter;
+    tempIconMap["2dicons/user2/user2.fract.jpg" ] = user2_user2_fract;
+    tempIconMap["2dicons/user2/user2.h-drum.jpg" ] = user2_user2_h_drum;
+    tempIconMap["2dicons/user2/user2.heater.jpg" ] = user2_user2_heater;
+    tempIconMap["2dicons/user2/user2.heatx1.jpg" ] = user2_user2_heatx1;
+    tempIconMap["2dicons/user2/user2.heatx2.jpg" ] = user2_user2_heatx2;
+    tempIconMap["2dicons/user2/user2.plug.jpg" ] = user2_user2_plug;
+    tempIconMap["2dicons/user2/user2.reactor.jpg" ] = user2_user2_reactor;
+    tempIconMap["2dicons/user2/user2.rect.jpg" ] = user2_user2_rect;
+    tempIconMap["2dicons/user2/user2.strip.jpg" ] = user2_user2_strip;
+    tempIconMap["2dicons/user2/user2.v-drum.jpg" ] = user2_user2_v_drum;
+    tempIconMap["2dicons/user2/user2.valve4.jpg" ] = user2_user2_valve4;
+    tempIconMap["2dicons/user3/user3.block.jpg" ] = user3_user3_block;
+    tempIconMap["2dicons/user3/user3.cfuge.jpg" ] = user3_user3_cfuge;
+    tempIconMap["2dicons/user3/user3.cstr.jpg" ] = user3_user3_cstr;
+    tempIconMap["2dicons/user3/user3.filter.jpg" ] = user3_user3_filter;
+    tempIconMap["2dicons/user3/user3.fract.jpg" ] = user3_user3_fract;
+    tempIconMap["2dicons/user3/user3.h-drum.jpg" ] = user3_user3_h_drum;
+    tempIconMap["2dicons/user3/user3.heater.jpg" ] = user3_user3_heater;
+    tempIconMap["2dicons/user3/user3.heatx1.jpg" ] = user3_user3_heatx1;
+    tempIconMap["2dicons/user3/user3.heatx2.jpg" ] = user3_user3_heatx2;
+    tempIconMap["2dicons/user3/user3.plug.jpg" ] = user3_user3_plug;
+    tempIconMap["2dicons/user3/user3.reactor.jpg" ] = user3_user3_reactor;
+    tempIconMap["2dicons/user3/user3.rect.jpg" ] = user3_user3_rect;
+    tempIconMap["2dicons/user3/user3.strip.jpg" ] = user3_user3_strip;
+    tempIconMap["2dicons/user3/user3.v-drum.jpg" ] = user3_user3_v_drum;
+    tempIconMap["2dicons/user3/user3.valve4.jpg" ] = user3_user3_valve4;
+    tempIconMap["2dicons/valve/valve.block.jpg" ] = valve_valve_block;
+    tempIconMap["2dicons/valve/valve.valve1.jpg" ] = valve_valve_valve1;
+    tempIconMap["2dicons/valve/valve.valve2.jpg" ] = valve_valve_valve2;
+    tempIconMap["2dicons/valve/valve.valve3.jpg" ] = valve_valve_valve3;
+    tempIconMap["2dicons/valve/valve.valve4.jpg" ] = valve_valve_valve4;
+    tempIconMap["2dicons/vscrub/vscrub.block.jpg" ] = vscrub_vscrub_block;
+    tempIconMap["2dicons/vscrub/vscrub.icon.jpg" ] = vscrub_vscrub_icon;
+    tempIconMap["2dicons/aspen.jpg" ] = aspen;
+    tempIconMap["2dicons/standalone/standalone.standalone.jpg" ] = standalone;
     return tempIconMap;
 }
