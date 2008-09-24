@@ -1,0 +1,101 @@
+function OAS_RICH(position) {
+if (position == 'x21') {
+document.write ('<A HREF="http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/649126278/x21/default/empty.gif/7a4a714c436b6a61524b3841414e365a?x" target="_top"><IMG SRC="http://imagec08.247realmedia.com/RealMedia/ads/Creatives/default/empty.gif"  WIDTH=1 HEIGHT=1 ALT="" BORDER=0 BORDER="0"></A>');
+}
+if (position == 'TopLeft') {
+document.write ('<SCRIPT type="text/javascript"> \n');
+document.write ('var TFSMFlash_PRETAG="";\n');
+document.write ('var TFSMFlash_POSTTAG=""; \n');
+document.write ('var TFSMFlash_VERSION="8"; \n');
+document.write ('var TFSMFlash_WMODE="opaque"; \n');
+document.write ('var TFSMFlash_OASCLICK="http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/L18/1837774637/TopLeft/DCI/2210_Discovery.com_2Q_803792728/SCJ_PlanGreen728.html/7a4a714c436b6a61524b3841414e365a";\n');
+document.write ('var TFSMFlash_SWFCLICKVARIABLE="?clickTag="+TFSMFlash_OASCLICK+"?http://www.scjohnson.com/environment/"; \n');
+document.write ('var TFSMFlash_SWFFILE="http://imagec08.247realmedia.com/RealMedia/ads/Creatives/DCI/2210_Discovery.com_2Q_803792728/doing_728x90.swf/1222183876"+TFSMFlash_SWFCLICKVARIABLE; \n');
+document.write ('var TFSMFlash_FSCOMMAND=""; \n');
+document.write ('var TFSMFlash_IMAGEALTERNATE="http://imagec08.247realmedia.com/RealMedia/ads/Creatives/DCI/2210_Discovery.com_2Q_803792728/doing_728x90.jpg/1222183876"; \n');
+document.write ('var TFSMFlash_OASALTTEXT=""; \n');
+document.write ('var TFSMFlash_OASTARGET="_blank"; \n');
+document.write ('var TFSMFlash_OASPROTOCOL="http://"; \n');
+document.write ('var TFSMFlash_OASDIM="WIDTH=');
+document.write ("'");
+document.write ('728');
+document.write ("'");
+document.write (' HEIGHT=');
+document.write ("'");
+document.write ('90');
+document.write ("'");
+document.write ('"; \n');
+document.write ('var TFSMFlash_OASADID="OAS_RMF_TopLeft_FLASH"; \n');
+document.write ('document.write(');
+document.write ("'");
+document.write ('<scr');
+document.write ("'");
+document.write ('+');
+document.write ("'");
+document.write ('ipt src="http://imagec08.247realmedia.com/RealMedia/ads/Creatives/DCI/2210_Discovery.com_2Q_803792728/TFSMFlashWrapper204.js/1222183876"></scr');
+document.write ("'");
+document.write ('+');
+document.write ("'");
+document.write ('ipt>');
+document.write ("'");
+document.write ('); \n');
+document.write ('</SCRIPT>\n');
+document.write ('\n');
+document.write ('<NOSCRIPT>\n');
+document.write ('<A HREF="http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/L18/1837774637/TopLeft/DCI/2210_Discovery.com_2Q_803792728/SCJ_PlanGreen728.html/7a4a714c436b6a61524b3841414e365a?http://www.scjohnson.com/environment/" TARGET="_blank"><IMG SRC="http://imagec08.247realmedia.com/RealMedia/ads/Creatives/DCI/2210_Discovery.com_2Q_803792728/doing_728x90.jpg/1222183876" WIDTH=');
+document.write ("'");
+document.write ('728');
+document.write ("'");
+document.write (' HEIGHT=');
+document.write ("'");
+document.write ('90');
+document.write ("'");
+document.write (' BORDER=0 ALT=""></a>\n');
+document.write ('</NOSCRIPT>\n');
+}
+if (position == 'x29') {
+document.write ('<!-- Generated: 04/03/2008  07:01 PM EST. EW Web Code Version: 11.6.0 -->\n');
+document.write ('\n');
+document.write ('<script language="Javascript" type="text/javascript">\n');
+document.write ('<!--\n');
+document.write ('	var clickTagFramePrepend = "http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/L18/1852919185/x29/DCI/ACP2902_Treehugger_RO_804284588/TreehuggerROS160_Allliance963595.html/7a4a714c436b6a61524b3841414e365a?[ewclickthru]";		/* Please place your redirects in front of the value [ewclickthru] just as if [ewclickthru] is a standard URL (e.g. "%c[ewclickthru]") */\n');
+document.write ('\n');
+document.write ('\n');
+document.write ('\n');
+document.write ('//-->    \n');
+document.write ('</script>\n');
+document.write ('\n');
+document.write ('\n');
+document.write ('<script language="Javascript" type="text/javascript" src="http://cdn1.eyewonder.com/200125/753532/963595/wrapper.js"></script>\n');
+document.write ('\n');
+document.write ('<noscript>\n');
+document.write ('<a href="http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/L18/1852919185/x29/DCI/ACP2902_Treehugger_RO_804284588/TreehuggerROS160_Allliance963595.html/7a4a714c436b6a61524b3841414e365a?http://www.eyewonderlabs.com/ct.cfm?ewbust=0&amp;file=http://cdn1.eyewonder.com/200125/753532/963595/NOSCRIPTfailover.jpg&amp;eid=963595&amp;name=Clickthru-NOSCRIPT&amp;num=1&amp;time=0&amp;diff=0&amp;click=http://clk.atdmt.com/ANY/go/trhggacp0020000102any/direct;at.anyacp00000198;ct.1/01/" target="_blank">\n');
+document.write ('	<img width="160" height="600" src="http://cdn1.eyewonder.com/200125/753532/963595/NOSCRIPTfailover.jpg" border="0" alt="">\n');
+document.write ('</a><!-- begin ns 3rd prty impr --><div style="position:absolute;top:0x;left:0px;z-index:0">\n');
+document.write ('<img src="http://view.atdmt.com/ANY/view/trhggacp0020000102any/direct;at.anyacp00000198/01/" border="0" width="1" height="1"></div><!-- end ns 3rd prty impr -->\n');
+document.write ('\n');
+document.write ('</noscript>\n');
+document.write ('	\n');
+document.write ('\n');
+document.write ('\n');
+document.write ('<!-- _RM_EMPTY_ is to be sent from third party server -->\n');
+}
+if (position == 'x40') {
+document.write ('<!-- JavaScript Only -->\n');
+document.write ('<script language="JavaScript1.1" src="http://altfarm.mediaplex.com/ad/js/10877-64215-17981-2?mpt=484614798&mpvc=http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/L18/484614798/x40/DCI/3244_Tower_2_TH_Treeh_805229083/0912087thGenTH160x600Mediaplex.html/7a4a714c436b6a61524b3841414e365a?">\n');
+document.write ('</script>\n');
+document.write ('<noscript>\n');
+document.write ('  <a href="http://oascentral.discovery.com/RealMedia/ads/click_lx.ads/www.treehugger.com/page3.php/L18/484614798/x40/DCI/3244_Tower_2_TH_Treeh_805229083/0912087thGenTH160x600Mediaplex.html/7a4a714c436b6a61524b3841414e365a?http://altfarm.mediaplex.com/ad/ck/10877-64215-17981-2?mpt=484614798">\n');
+document.write ('    <img src="http://altfarm.mediaplex.com/ad/bn/10877-64215-17981-2?mpt=484614798"\n');
+document.write ('alt="Click Here" border="0">\n');
+document.write ('</a>\n');
+document.write ('</noscript>\n');
+document.write ('        \n');
+document.write ('<!-- _RM_EMPTY_ is to be sent from third party server -->\n');
+}
+if (position == 'x41') {
+document.write ('<SCRIPT type="text/javascript"> \n');
+document.write ('var TFSMFlash_PRETAG="";\n');
+document.write ('var TFSMFlash_POSTTAG=""; \n');
+document.write ('var TFSMFlash_VERSION="8"; \n');
+document.write

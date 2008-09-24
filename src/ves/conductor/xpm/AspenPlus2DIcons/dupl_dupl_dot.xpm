@@ -1,0 +1,19 @@
+/* XPM */
+static char *dupl_dupl_dot[] = {
+/* columns rows colors chars-per-pixel */
+"11 11 2 1",
+"  c black",
+". c #010101",
+/* pixels */
+"           ",
+"           ",
+"           ",
+"           ",
+"           ",
+"           ",
+"           ",
+"           ",
+"           ",
+"           ",
+"           "
+};

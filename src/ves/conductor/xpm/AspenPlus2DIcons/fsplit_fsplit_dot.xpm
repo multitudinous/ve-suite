@@ -1,0 +1,19 @@
+/* XPM */
+static char *fsplit_fsplit_dot[] = {
+/* columns rows colors chars-per-pixel */
+"12 12 1 1",
+"  c black",
+/* pixels */
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            ",
+"            "
+};

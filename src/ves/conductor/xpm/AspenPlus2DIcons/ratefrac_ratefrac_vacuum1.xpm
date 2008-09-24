@@ -1,0 +1,204 @@
+<html><!-- #BeginTemplate "/Templates/agriculture.dwt" --><!-- DW6 -->
+<head>
+<!-- #BeginEditable "Title" -->
+<title>Coffee Environment: Climate Conditions for Growing Coffee Beans</title>
+<!-- #EndEditable -->
+<!-- #BeginEditable "Description" -->
+<meta name="Description" content="Coffee environment information and details about the ideal climate for growing coffee beans.">
+<!-- #EndEditable -->
+<!-- #BeginEditable "Keywords" -->
+<meta name="KeyWords" content="coffee environment growing conditions environmental climate high low altitude equatorial equator subtropical beans">
+<!-- #EndEditable -->
+<script language="JavaScript">
+<!--
+
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+//-->
+</script>
+<script language="JavaScript">function fwLoadMenus() {
+  if (window.fw_menu_0) return;
+  window.fw_menu_0 = new Menu("root",166,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_0.addMenuItem("Coffee Plant Overview","location='http://www.coffeeresearch.org/agriculture/coffeeplant.htm'");
+  fw_menu_0.addMenuItem("Growing Conditions","location='http://www.coffeeresearch.org/agriculture/environment.htm'");
+  fw_menu_0.addMenuItem("Cultivars","location='http://www.coffeeresearch.org/agriculture/varietals.htm'");
+  fw_menu_0.addMenuItem("Planting","location='http://www.coffeeresearch.org/agriculture/planting.htm'");
+  fw_menu_0.addMenuItem("Germinating","location='http://www.coffeeresearch.org/agriculture/growing.htm'");
+  fw_menu_0.addMenuItem("Bean Development Movie","location='http://www.coffeeresearch.org/agriculture/beandevel.htm'");
+   fw_menu_0.hideOnMouseOut=true;
+  window.fw_menu_1 = new Menu("root",138,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_1.addMenuItem("Harvesting Overview","location='http://www.coffeeresearch.org/agriculture/harvesting.htm'");
+   fw_menu_1.hideOnMouseOut=true;
+  window.fw_menu_2 = new Menu("root",150,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_2.addMenuItem("Processing Overview","location='http://www.coffeeresearch.org/agriculture/processing.htm'");
+  fw_menu_2.addMenuItem("Processing and Flavor","location='http://www.coffeeresearch.org/agriculture/flavor.htm'");
+  fw_menu_2.addMenuItem("Drying","location='http://www.coffeeresearch.org/agriculture/drying.htm'");
+  fw_menu_2.addMenuItem("Density Sorting","location='http://www.coffeeresearch.org/agriculture/densitysort.htm'");
+  fw_menu_2.addMenuItem("Color Sorting","location='http://www.coffeeresearch.org/agriculture/colorsorting.htm'");
+   fw_menu_2.hideOnMouseOut=true;
+  window.fw_menu_3 = new Menu("root",160,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_3.addMenuItem("Soil Analysis and Levels","window.open('http://www.coffeeresearch.org/agriculture/soil.htm', '_parent');");
+  fw_menu_3.addMenuItem("Leaf Analysis","window.open('http://www.coffeeresearch.org/agriculture/leafanalysis.htm', '_parent');");
+  fw_menu_3.addMenuItem("Mineral Deficiencies","window.open('http://www.coffeeresearch.org/agriculture/mineral.htm', '_parent');");
+   fw_menu_3.hideOnMouseOut=true;
+  window.fw_menu_4 = new Menu("root",144,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_4.addMenuItem("Coffee Leaf Rust","location='http://www.coffeeresearch.org/agriculture/rust.htm'");
+  fw_menu_4.addMenuItem("Coffee Berry Disease","location='http://www.coffeeresearch.org/agriculture/cbd.htm'");
+  fw_menu_4.addMenuItem("Bacterial Blight","location='http://www.coffeeresearch.org/agriculture/bacblight.htm'");
+  fw_menu_4.addMenuItem("Nematodes","location='http://www.coffeeresearch.org/agriculture/nematodes.htm'");
+  fw_menu_4.addMenuItem("Leaf Miner","location='http://www.coffeeresearch.org/agriculture/leafminer.htm'");
+   fw_menu_4.hideOnMouseOut=true;
+
+  fw_menu_4.writeMenus();
+} // fwLoadMenus()
+
+//-->
+</script>
+<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
+<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
+<script language="JavaScript">
+<!--
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+// -->
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_nbGroup(event, grpName) { //v3.0
+  var i,img,nbArr,args=MM_nbGroup.arguments;
+  if (event == "init" && args.length > 2) {
+    if ((img = MM_findObj(args[2])) != null && !img.MM_init) {
+      img.MM_init = true; img.MM_up = args[3]; img.MM_dn = img.src;
+      if ((nbArr = document[grpName]) == null) nbArr = document[grpName] = new Array();
+      nbArr[nbArr.length] = img;
+      for (i=4; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
+        if (!img.MM_up) img.MM_up = img.src;
+        img.src = img.MM_dn = args[i+1];
+        nbArr[nbArr.length] = img;
+    } }
+  } else if (event == "over") {
+    document.MM_nbOver = nbArr = new Array();
+    for (i=1; i < args.length-1; i+=3) if ((img = MM_findObj(args[i])) != null) {
+      if (!img.MM_up) img.MM_up = img.src;
+      img.src = (img.MM_dn && args[i+2]) ? args[i+2] : args[i+1];
+      nbArr[nbArr.length] = img;
+    }
+  } else if (event == "out" ) {
+    for (i=0; i < document.MM_nbOver.length; i++) {
+      img = document.MM_nbOver[i]; img.src = (img.MM_dn) ? img.MM_dn : img.MM_up; }
+  } else if (event == "down") {
+    if ((nbArr = document[grpName]) != null)
+      for (i=0; i < nbArr.length; i++) { img=nbArr[i]; img.src = img.MM_up; img.MM_dn = 0; }
+    document[grpName] = nbArr = new Array();
+    for (i=2; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
+      if (!img.MM_up) img.MM_up = img.src;
+      img.src = img.MM_dn = args[i+1];
+      nbArr[nbArr.length] = img;
+  } }
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="MM_preloadImages('../Menus/mainfiles/main_r1_c1_f3.jpg','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f2.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f3.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f4.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f5.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f6.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f7.jpg')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="100%"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="136" height="80" valign="top"><a href="http://www.coffeeresearch.org"><img src="agriculturetitle.jpg" alt="coffee cherries" width="136" height="80" hspace="0" vspace="0" border="0"></a></td>
+          <td width="167" valign="top"><img name="agriculturemenufull_r2_c3" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3.jpg" width="167" height="80" border="0"></td>
+          <td width="100%" valign="top"> 
+            <table border="0" cellpadding="0" cellspacing="0" width="280" align="right">
+              <!-- fwtable fwsrc="maincontents2.png" fwbase="main.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="0" -->
+              <tr bgcolor="#000000"> 
+                <!-- row 1 -->
+                <td width="70"><a href="http://www.coffeeresearch.org" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f3.jpg',1);" ><img name="main_r1_c1_2" src="../Menus/mainfiles/main_r1_c1.jpg" width="70" height="21" border="0"></a></td>
+                <td width="70"><a href="http://www.coffeeresearch.org/sitemap.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f3.jpg',1);" ><img name="main_r1_c2_2" src="../Menus/mainfiles/main_r1_c2.jpg" width="70" height="21" border="0"></a></td>
+                <td width="70"><a href="../about/contactmain.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f3.jpg',1);" ><img name="main_r1_c3_2" src="../Menus/mainfiles/main_r1_c3.jpg" width="70" height="21" border="0"></a></td>
+                <td width="70"><a href="../about/overview.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f3.jpg',1);" ><img name="main_r1_c4_2" src="../Menus/mainfiles/main_r1_c4.jpg" width="70" height="21" border="0"></a></td>
+              </tr>
+              <tr> 
+                <td height="59" colspan="4" valign="top">
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td height="1"><img height="1" width="136" src="/Menus/spacer6.gif"></td>
+          <td><img height="1" width="167" src="/Menus/spacer6.gif"></td>
+          <td></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td> 
+      <table bgcolor="#336699" border="0" cellpadding="0" cellspacing="0" width="100%" height="24">
+        <!-- fwtable fwsrc="agriculturepulldowns.png" fwbase="agrimenufull.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
+        <tr bgcolor="#336699"> 
+          <td width="1" height="25"><font color="#9999FF"></font></td>
+          <!-- row 2 -->
+          <td width="124" bgcolor="#336699">&nbsp;</td>
+          <td width="470"><a href="http://www.coffeeresearch.org/agriculture/coffeeplant.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f2.jpg',1);" ><img name="agriculturemenufull_r4_c3" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c3.jpg" width="86" height="23" border="0" alt="Agriculture"></a><a href="http://www.coffeeresearch.org/coffee/history.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f3.jpg',1);" ><img name="agriculturemenufull_r4_c4" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c4.jpg" width="55" height="23" border="0" alt="Coffee"></a><a href="http://www.coffeeresearch.org/espresso/definitions.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f4.jpg',1);" ><img name="agriculturemenufull_r4_c5" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c5.jpg" width="75" height="23" border="0" alt="Espresso"></a><a href="http://www.coffeeresearch.org/science/news.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f5.jpg',1);" ><img name="agriculturemenufull_r4_c7" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c7.jpg" width="64" height="23" border="0" alt="Science"></a><a href="http://www.coffeeresearch.org/politics/overview.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f6.jpg',1);" ><img name="agriculturemenufull_r4_c8" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c8.jpg" width="60" height="23" border="0" alt="Politics"></a><a href="http://www.coffeeresearch.org/market/marketintro.htm" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f7.jpg',1);" ><img name="agriculturemenufull_r4_c9" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c9.jpg" width="55" height="23" border="0"></a></td>
+          <td width="783" valign="top">&nbsp; </td>
+        </tr>
+        <tr> 
+          <td height="1" width="1"><img height="1" width="1" src="/Menus/spacer6.gif"></td>
+          <td width="124"><img height="1" width="124" src="/Menus/spacer6.gif"></td>
+          <td width="470"><img height="1" width="457" src="/Menus/spacer6.gif"></td>
+          <td width="783"></td>
+        </tr>
+        <!--   This table was automatically created with Macromedia Fireworks 4.0   -->
+        <!--   http://www.macromedia.com   -->
+      </table>
+    </td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" height="881" bgcolor="#FFFFFF">
+  <tr> 
+    <td width="100%" valign="top" height="799"> 
+      <table cellspacing="0" cellpadding="4" width="100%">
+        <tr> 
+          <td height="718" colspan="2" valign="top"> 
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" height="703">
+              <tr> 
+                <td height="24" width="130"><img border="0" src="../Menus/spacerfortitle2.gif" width="119" height="24"></td>
+                <td width="100%" valign="top"> 
+                  <div align="left"> 
+                    <script language="JavaScript1.2">fwLoadMenus();</script>
+                  </div>
+                </td>
+              </tr>
+              <tr> 
+                <td height="661" valign="top" width="130"> 
+                  <table width="124" border="0" cellpadding="0" cellspacing="0" height="491">
+                    <tr> 
+                      <td width="114" height="491" valign="top"> 
+                        <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacin

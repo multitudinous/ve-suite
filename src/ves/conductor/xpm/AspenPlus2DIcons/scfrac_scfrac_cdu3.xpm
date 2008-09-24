@@ -1,0 +1,780 @@
+<style>
+/* -------Stocks and Weather------- */
+div.stocks-weather {position:absolute;top:127px;left:580px}
+span.mainicon {position:absolute;top:17px;_top:17px;left:210px}
+p.stocks-weather {line-height:2px}
+span.weathertitle {color:#3399cc;font-family:verdana;font-size:10pt;font-weight:bold}
+span.weathertitlekeski {color:#3399cc;font-family:verdana;font-size:9pt;font-weight:bold}
+span.weathertitlepieni {color:#3399cc;font-family:verdana;font-size:8pt;font-weight:bold}
+.weathertitle {color:#000000;font-family:verdana;font-size:10pt;font-weight:bold}
+.weathertitlesmall {color:#000000;font-family:verdana;font-size:9pt;font-weight:bold}
+td.stocks-weather_content {color:#000000; font-size:7pt; font-family:verdana; text-decoration:none; }
+div.weatherscroll {overflow:auto; font-size:7pt;font-family:verdana; width:280px; height : 218px; }
+
+div.stocks-weatherbox {background-image: url(images/stockweather_bg.jpg);width:280px; _width : 280px; height : 218px; border:1px #d3d3d3 solid;  border-top:0px;border-bottom:0px;border-right:0px;border-left:0px;}
+.stocks-weatherbox
+{ color:#000000;
+  background-color:FFFFFF;
+  scrollbar-face-color:#c6c6c6;
+  scrollbar-arrow-color:#FFFFFF;
+  scrollbar-track-color:#dddddd;
+  scrollbar-shadow-color:#c6c6c6;
+  scrollbar-highlight-color:#bbbbbb;
+  scrollbar-3dlight-color:#dddddd;
+  scrollbar-darkshadow-Color:#dddddd;
+}
+</style>
+
+<div id="weather" class="stocks-weatherbox" style="display:block">
+<span id="saa3" class="mainicon"></span>
+<table border="0" cellspacing="0" cellpadding="0" width="280">
+<tr><td colspan=5><span class="weathertitle"> &nbsp;Current Temperature</span></td></tr>
+	<tr><td width=4 rowspan=2></td>
+		<td valign=top class=stocks-weather_content colspan=2>
+		<span style="font-family:verdana, arial;font-size:7pt;"><span style="font-family:verdana, arial;color:0033cc" id=locteksti>Loading data...</span> <span id=saa22></span></span>
+		</td>
+	</tr>
+	<tr>
+		<td valign=top class=stocks-weather_content width=130>
+			<span id=saa2></span><br>
+			<span id=saa5></span>&nbsp;<span id=windat></span><span id=saa6></span><span id=saa0></span><br>
+			<span id=saa4></span>
+			<span id=saa8></span>
+		</td>
+		<td valign=middle align=center class=stocks-weather_content width=90>
+			<font size=+1 color=ec008c><B>&nbsp;<span id=saa1></span><span id=saa21></span></b></font>&nbsp;&nbsp;<span id=saa7></span>
+		</td>
+		<td valign=top align=left class=stocks-weather_content width=60 colspan=2>
+
+		</td>
+	</tr>
+	<tr>
+		<td colspan=3 height=10></td>
+	</tr>
+</table>
+
+<div id=alaosa style="display:none">
+
+<span class=stocks-weather> </span>
+<table background="" align=center cellpadding=2 width=280 border=0 cellspacing=0>
+	<tr>
+		<td background="images/3dayforecastbg.jpg" height=16 colspan=3 class=stocks-weather_content>
+			&nbsp; <B>Forecast</b> - <span style="font-size:7pt;color:707070;font-family:verdana,arial" id=mainos>Click date for detailed forecast.</span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=3 height=5></td>
+	</tr>
+	<tr>
+	
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<b  title="Click for detailed forecast"><span id=saa11 class=weathertitlekeski onClick="naytadetails1();;" onmouseover="this.style.cursor='pointer'"></span></b><br>
+		<!--day1 image-->
+		<span id=saa12></span><BR>
+		<!--day1 hi-->
+		<span id=saa9></span><br>
+		<!--day1 low-->
+		&nbsp;<span id=saa10></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day2 date-->
+		<b  title="Click for detailed forecast"><span id=saa15 class=weathertitlekeski onClick="naytadetails2();;" onmouseover="this.style.cursor='pointer'"></span></b><br>
+		<!--day2 image-->
+		<span id=saa16></span><br>
+		<!--day2 hi-->
+		<span id=saa13></span><br>
+		<!--day2 low-->
+		&nbsp;<span id=saa14></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day3 date-->
+		<b  title="Click for detailed forecast"><span id=saa19 class=weathertitlekeski onClick="naytadetails3();;" onmouseover="this.style.cursor='pointer'"></span></b><br>
+		<!--day3 image-->
+		<span id=saa20></span><br>
+		<!--day3 hi-->
+		<span id=saa17></span><br>
+		<!--day3 low-->
+		&nbsp;<span id=saa18></span>
+		</td>
+	</tr>
+</table>
+</div>
+
+</span>
+</div>
+
+
+
+        	<div id=tunneittain1 class=stocks-weatherbox style="display:none">
+
+<table border=0 cellspacing=0 cellpadding=0 width=280>
+	<tr>
+		<td colspan=2 height=2></td>
+	</tr>
+<tr><td width=200><span class=weathertitle> &nbsp;Forecast - Today</span></td><td width=60 align=right> <span class=weathertitle onClick="naytadetails1();;" onmouseover="this.style.cursor='pointer'" title="Close detailed forecast">Close</span> &nbsp; &nbsp;</tr>
+
+</table>
+
+<span class=stocks-weather> </span>
+<table background="" align=center cellpadding=2 width=280 border=0 cellspacing=0>
+	<tr>
+		<td colspan=3 height=5></td>
+	</tr>
+	<tr>
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste0 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste6></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste12></span><br>
+		<!--day1 low-->
+		<span id=ennuste18></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste1 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste7></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste13></span><br>
+		<!--day1 low-->
+		<span id=ennuste19></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste2 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste8></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste14></span><br>
+		<!--day1 low-->
+		<span id=ennuste20></span>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan=3 height=3><img src=spacer.gif height=4></td>
+	</tr>
+	<tr>
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste3 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste9></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste15></span><br>
+		<!--day1 low-->
+		<span id=ennuste21></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste4 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste10></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste16></span><br>
+		<!--day1 low-->
+		<span id=ennuste22></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste5 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste11></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste17></span><br>
+		<!--day1 low-->
+		<span id=ennuste23></span>
+		</td>
+			<tr>
+		<td colspan=3 height=3><img src=spacer.gif height=2></td>
+	</tr>
+	</tr>
+		<tr>
+		<td class=stocks-weather_content colspan=3>&nbsp;Sunrise: <span id=ennuste24></span> &nbsp; &nbsp; Sunset: <span id=ennuste25></span></td>
+
+	</tr>
+</table>
+
+</span>
+</div>
+
+
+
+        	<div id=tunneittain2 class=stocks-weatherbox style="display:none">
+
+<table border=0 cellspacing=0 cellpadding=0 width=280>
+	<tr>
+		<td colspan=2 height=2></td>
+	</tr>
+<tr><td width=200><span class=weathertitle> &nbsp;Forecast - </span><span id=saa23 class=weathertitle></span></td><td width=60 align=right> <span class=weathertitle onClick="naytadetails2();;" onmouseover="this.style.cursor='pointer'" title="Close detailed forecast">Close</span> &nbsp; &nbsp;</tr>
+
+</table>
+
+<span class=stocks-weather> </span>
+<table background="" align=center cellpadding=2 width=280 border=0 cellspacing=0>
+	<tr>
+		<td colspan=3 height=5></td>
+	</tr>
+	<tr>
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste26 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste32></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste38></span><br>
+		<!--day1 low-->
+		<span id=ennuste44></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste27 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste33></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste39></span><br>
+		<!--day1 low-->
+		<span id=ennuste45></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste28 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste34></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste40></span><br>
+		<!--day1 low-->
+		<span id=ennuste46></span>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan=3 height=3><img src=spacer.gif height=4></td>
+	</tr>
+	<tr>
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste29 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste35></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste41></span><br>
+		<!--day1 low-->
+		<span id=ennuste47></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste30 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste36></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste42></span><br>
+		<!--day1 low-->
+		<span id=ennuste48></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste31 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste37></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste43></span><br>
+		<!--day1 low-->
+		<span id=ennuste49></span>
+		</td>
+			<tr>
+		<td colspan=3 height=3><img src=spacer.gif height=2></td>
+	</tr>
+	</tr>
+		<tr>
+		<td class=stocks-weather_content colspan=3>&nbsp;Sunrise: <span id=saa25></span> &nbsp; &nbsp; Sunset: <span id=saa27></span></td>
+
+	</tr>
+</table>
+
+</span>
+</div>
+
+
+
+        	<div id=tunneittain3 class=stocks-weatherbox style="display:none">
+
+<table border=0 cellspacing=0 cellpadding=0 width=280>
+	<tr>
+		<td colspan=2 height=2></td>
+	</tr>
+<tr><td width=200><span class=weathertitle> &nbsp;Forecast - </span><span id=saa24 class=weathertitle></span></td><td width=70 align=right> <span class=weathertitle onClick="naytadetails3();;" onmouseover="this.style.cursor='pointer'" title="Close detailed forecast">Close &nbsp; &nbsp;</span></tr>
+
+</table>
+
+<span class=stocks-weather> </span>
+<table background="" align=center cellpadding=2 width=280 border=0 cellspacing=0>
+	<tr>
+		<td colspan=3 height=5></td>
+	</tr>
+	<tr>
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste50 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste56></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste62></span><br>
+		<!--day1 low-->
+		<span id=ennuste68></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste51 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste57></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste63></span><br>
+		<!--day1 low-->
+		<span id=ennuste69></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste52 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste58></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste64></span><br>
+		<!--day1 low-->
+		<span id=ennuste70></span>
+		</td>
+	</tr>
+
+
+	<tr>
+		<td colspan=3 height=3><img src=spacer.gif height=4></td>
+	</tr>
+	<tr>
+		<td align=center style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" valign=top width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste53 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste59></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste65></span><br>
+		<!--day1 low-->
+		<span id=ennuste71></span>
+		</td>
+		<td valign=top style="border-right-style: solid; border-right-color: #898989; border-right-width: 1px;" align=center width=84 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste54 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste60></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste66></span><br>
+		<!--day1 low-->
+		<span id=ennuste72></span>
+		</td>
+		<td valign=top align=center width=83 class=stocks-weather_content>
+		<!--day1 date-->
+		<span id=ennuste55 class=weathertitlepieni></span><br>
+		<!--day1 image-->
+		<span id=ennuste61></span><BR>
+		<!--day1 hi-->
+		<span id=ennuste67></span><br>
+		<!--day1 low-->
+		<span id=ennuste73></span>
+		</td>
+
+	</tr>
+		<tr>
+		<td class=stocks-weather_content colspan=3>&nbsp;Sunrise: <span id=saa26></span> &nbsp; &nbsp; Sunset: <span id=saa28></span><br>&nbsp;Forecast available up to 48 hours of current time.</td>
+
+	</tr>
+</table>
+
+</span>
+</div>
+
+
+
+
+<script language=Javascript>
+var xmlDoc = null ;
+var ennustexml = null ;
+
+var kumpiteksti = '' ;
+
+function naytadetails1()
+{
+if (kumpiteksti == ''){
+kumpiteksti = 'details';
+weather.style.display = "none";
+tunneittain1.style.display = "block";
+}else{
+kumpiteksti = '';
+weather.style.display = "block";
+tunneittain1.style.display = "none";
+}
+
+
+}
+
+function naytadetails2()
+{
+if (kumpiteksti == ''){
+kumpiteksti = 'details';
+weather.style.display = "none";
+tunneittain2.style.display = "block";
+}else{
+kumpiteksti = '';
+weather.style.display = "block";
+tunneittain2.style.display = "none";
+}
+
+
+}
+
+function naytadetails3()
+{
+if (kumpiteksti == ''){
+kumpiteksti = 'details';
+weather.style.display = "none";
+tunneittain3.style.display = "block";
+}else{
+kumpiteksti = '';
+weather.style.display = "block";
+tunneittain3.style.display = "none";
+}
+
+
+}
+
+
+
+
+if (typeof window.ActiveXObject != 'undefined' ) {
+	xmlDoc = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlDoc.onreadystatechange = naytasivu ;
+} else {
+	xmlDoc = new XMLHttpRequest();
+	xmlDoc.onload = naytasivu ;
+}
+xmlDoc.open( "GET", "Tiedot.aspx?paikka=26505&merkki=0&estacache=" +Math.random(), true );
+xmlDoc.send( null );
+
+
+if (typeof window.ActiveXObject != 'undefined' ) {
+	ennustexml = new ActiveXObject("Microsoft.XMLHTTP");
+	ennustexml.onreadystatechange = naytaennuste ;
+} else {
+	ennustexml = new XMLHttpRequest();
+	ennustexml.onload = naytaennuste ;
+}
+ennustexml.open( "GET", "ennuste.asp?paikka=26505&merkki=0&estacache=" +Math.random(), true );
+ennustexml.send( null );
+
+
+
+
+
+function naytasivu(){
+
+if ( xmlDoc.readyState != 4 ) return ;
+//alert(xmlDoc.responseText);
+	var saatilalista=xmlDoc.responseText.split("|");
+
+
+
+	// 0-7 = tuulennopeusmerkki, lampotila, saatila, saakuva, humidity, tuulisuunta, tuulinopeus, tanaanylin
+	// 8-14 = tanaanalin, ennuste1ylin, ennuste1alin, ennuste1paiva, ennuste1kuva, ennuste2ylin, ennuste2alin
+	// 15-22 = ennuste2paiva, ennuste2kuva, ennuste3ylin, ennuste3alin, ennuste3paiva, ennuste3kuva, lampotilamerkki, paikka
+
+	var x=0; 
+
+
+
+if (saatilalista[4].length < 1 ) {
+document.getElementById('locteksti').innerHTML = '';
+document.getElementById('saa22').innerHTML = saatilalista[22];
+}else{
+document.getElementById('locteksti').innerHTML = "Location:"
+alaosa.style.display = "block";
+
+		for (x=0; x<29; x++ ) 
+		{ 
+		var minne = 'saa' + x;
+
+		if (x == 3 || x == 12 || x == 16 || x == 20) {
+		         var now = new Date();
+
+		         var arVersion = navigator.appVersion.split("MSIE")
+var version = parseFloat(arVersion[1])
+
+if ((version >= 5.5) && (document.body.filters)) 
+{
+
+document.getElementById(minne).innerHTML = '<img style=\"filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=\'true\',src=\'weathericons/' + saatilalista[x] + '.png\')\"  src=\"spacer.gif\">';
+} else {
+
+		document.getElementById(minne).innerHTML = '<IMG SRC=weathericons/' + saatilalista[x] + '.png name=saakuva>';
+}
+
+
+		}else{
+		//alert(saatilalista[x]);
+		document.getElementById(minne).innerHTML = saatilalista[x];
+
+		//alert('here');
+		}
+
+		}
+}
+}
+
+
+function naytaennuste(){
+
+if ( ennustexml.readyState != 4 ) return ;
+//alert(ennustexml.responseText);
+	var ennustelista=ennustexml.responseText.split("|");
+
+
+
+	// 0-7 = tuulennopeusmerkki, lampotila, saatila, saakuva, humidity, tuulisuunta, tuulinopeus, tanaanylin
+	// 8-14 = tanaanalin, ennuste1ylin, ennuste1alin, ennuste1paiva, ennuste1kuva, ennuste2ylin, ennuste2alin
+	// 15-22 = ennuste2paiva, ennuste2kuva, ennuste3ylin, ennuste3alin, ennuste3paiva, ennuste3kuva, lampotilamerkki, paikka
+
+	var j=0; 
+
+		for (j=0; j<74; j++ ) 
+		{ 
+		var minne = 'ennuste' + j;
+
+		if (j == 6 || j == 7 || j == 8 || j == 9 || j == 10 || j == 11 || j == 32 || j == 33 || j == 34 || j == 35 || j == 36 || j == 37 || j == 56 || j == 57 || j == 58 || j == 59 || j == 60 || j == 61) {
+		         var now = new Date();
+
+		         var arVersion = navigator.appVersion.split("MSIE")
+var version = parseFloat(arVersion[1])
+
+if ((version >= 5.5) && (document.body.filters)) 
+{
+
+document.getElementById(minne).innerHTML = '<img style=\"filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(enabled=\'true\',src=\'weathericons/' + ennustelista[j] + '.png\')\"  src=\"spacer.gif\">';
+} else {
+
+		document.getElementById(minne).innerHTML = '<IMG SRC=weathericons/' + ennustelista[j] + '.png name=saakuva>';
+}
+
+
+		}else{
+		//alert(ennustelista[x]);
+		//alert(minne);
+		document.getElementById(minne).innerHTML = ennustelista[j];
+
+		//alert('here');
+		}
+
+		
+}
+}
+
+// Saapaivitys
+
+var viive = 300000; //5 min
+var Naytto = 0;
+var AikaaJaljella = 300;
+var Paivittaako = 0;
+
+Aloita();
+
+function Aloita()
+{
+VaihdaViive(300000);
+Paivitys();        
+}
+function VaihdaAika()
+{
+
+        AikaaJaljella--;
+        if (AikaaJaljella < 0)
+        {
+        	LataaTiedot();
+            return;
+        }
+       }
+function Paivitys()
+{
+        Naytto = setInterval('VaihdaAika()', 1000);
+        AikaaJaljella = viive/1000;
+        Paivittaako = 1;
+}
+function LopetaPaivitys()
+{
+        clearInterval(Naytto);
+        Naytto = 0;
+        Paivittaako = 0;
+}
+function LataaTiedot()
+{
+
+if (typeof window.ActiveXObject != 'undefined' ) {
+	xmlDoc = new ActiveXObject("Microsoft.XMLHTTP");
+	xmlDoc.onreadystatechange = naytasivu ;
+} else {
+	xmlDoc = new XMLHttpRequest();
+	xmlDoc.onload = naytasivu ;
+}
+xmlDoc.open( "GET", "tiedot.aspx?paikka=26505&merkki=0&estacache=" +Math.random(), true );
+xmlDoc.send( null );
+
+//alert('taatta');
+       var now = new Date();
+        AikaaJaljella = viive/1000;
+}
+function VaihdaViive(uusiviive)
+{
+        if (Paivittaako == 1)  {
+                LopetaPaivitys();
+                viive = uusiviive;
+                Paivitys();
+        } else {
+                viive = uusiviive;
+        }
+}
+
+
+// Ennustepaivitys
+
+var ennusteviive = 3600000; //20 min
+var ennusteNaytto = 0;
+var ennusteAikaaJaljella = 3600;
+var ennustePaivittaako = 0;
+
+ennusteAloita();
+
+function ennusteAloita()
+{
+ennusteVaihdaViive(3600000);
+ennustePaivitys();        
+}
+function ennusteVaihdaAika()
+{
+
+        ennusteAikaaJaljella--;
+        if (ennusteAikaaJaljella < 0)
+        {
+        	ennusteLataaTiedot();
+            return;
+        }
+       }
+function ennustePaivitys()
+{
+        ennusteNaytto = setInterval('ennusteVaihdaAika()', 1000);
+        ennusteAikaaJaljella = ennusteviive/1000;
+        ennustePaivittaako = 1;
+}
+function ennusteLopetaPaivitys()
+{
+        clearInterval(ennusteNaytto);
+        ennusteNaytto = 0;
+        ennustePaivittaako = 0;
+}
+function ennusteLataaTiedot()
+{
+
+if (typeof window.ActiveXObject != 'undefined' ) {
+	ennustexml = new ActiveXObject("Microsoft.XMLHTTP");
+	ennustexml.onreadystatechange = naytaennuste ;
+} else {
+	ennustexml = new XMLHttpRequest();
+	ennustexml.onload = naytaennuste ;
+}
+ennustexml.open( "GET", "ennuste.asp?paikka=26505&merkki=0&estacache=" +Math.random(), true );
+ennustexml.send( null );
+
+       var now = new Date();
+        ennusteAikaaJaljella = ennusteviive/1000;
+}
+function ennusteVaihdaViive(ennusteuusiviive)
+{
+        if (ennustePaivittaako == 1)  {
+                ennusteLopetaPaivitys();
+                ennusteviive = ennusteuusiviive;
+                ennustePaivitys();
+        } else {
+                ennusteviive = ennusteuusiviive;
+        }
+}
+
+
+
+// mainospaivitys
+
+var mainosviive = 180000; //5 min
+var mainosNaytto = 0;
+var mainosAikaaJaljella = 180;
+var mainosPaivittaako = 0;
+var mainostieto = '';
+
+mainosAloita();
+
+function mainosAloita()
+{
+mainosVaihdaViive(180000);
+mainosPaivitys();        
+}
+function mainosVaihdaAika()
+{
+
+        mainosAikaaJaljella--;
+        if (mainosAikaaJaljella < 0)
+        {
+        	mainosLataaTiedot();
+            return;
+        }
+       }
+function mainosPaivitys()
+{
+        mainosNaytto = setInterval('mainosVaihdaAika()', 1000);
+        mainosAikaaJaljella = mainosviive/1000;
+        mainosPaivittaako = 1;
+}
+function mainosLopetaPaivitys()
+{
+        clearInterval(mainosNaytto);
+        mainosNaytto = 0;
+        mainosPaivittaako = 0;
+}
+function mainosLataaTiedot()
+{
+
+		if (mainostieto == ''){
+		mainos.innerHTML = "Click date title for detailed forecast.";
+		mainostieto = 'seuraavakssaa';
+		}else{
+		mainos.innerHTML = 'Data provided by <a href=http://www.weather.com/?prod=xoap&par=1000144085 target=_blank>Weather.com</a>';
+		mainostieto = '';
+		}
+       var now = new Date();
+        mainosAikaaJaljella = mainosviive/1000;
+}
+
+function mainosVaihdaViive(mainosuusiviive)
+{
+        if (mainosPaivittaako == 1)  {
+                mainosLopetaPaivitys();
+                mainosviive = mainosuusiviive;
+                mainosPaivitys();
+        } else {
+                mainosviive = mainosuusiviive;
+        }
+}
+
+</script>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-2002583-2";
+urchinTracker();
+</script>                                                        À   ÿ%       ‘                      Å   ‹ÁÃ                  Ê   ‹A…ÀuÃ‹I+È¸«ªª*÷éÑú‹ÂÁèÂÃ                   Ï   jÿh    d¡    PƒìD¡    3ÄPD$Hd£    h    L$ÿ    D$PL$$ÇD$T    è    h    L$$QÇD$(    è    Ì   Ù      s   $   "   .   O   D   j   I      V   ¦   [   (   M°ÿ%    ‹T$B¼‹J¸3Èè    ¸    é       ”      v      Ü       u   ÿÿÿÿ    "“                                 ×      İ       `        #    Ô   ‹ÁÂ                  â   ‹D$Pè    YÂ    V                     ç   ¸UUUÃ                   ì   jÿh    d¡    PƒìV¡    3ÄPD$d£    ‹t$,‹‹Hj h    h    j Qè    ƒÄ…Àt‹@‹L$d‰    Y^ƒÄ Ã‹‹Bj h    h    j Pè    ƒÄ…ÀuÌ‹‹QPh    h    PRè    ƒÄ…Àu®°ˆD$ˆD$D$PÇD$    ÿ    ƒÄPL$Q‹Îÿ    PÇD$(    è    ƒÄL$‹ğÇD$$ÿÿÿÿÿ    ‹Æ‹L$d‰    Y^ƒÄ Ã   ø      s   0   ÷   5   Õ   =   Ÿ   d   ÷   i   Õ   q   Ÿ   ƒ   ÷   ˆ   Õ      Ÿ   ­      ³      Ä      Ò   ñ   é   œ   Mè

@@ -1,0 +1,26 @@
+/* XPM */
+static char *fsplit_fsplit_tee[] = {
+/* columns rows colors chars-per-pixel */
+"31 16 4 1",
+"  c black",
+". c #010101",
+"X c #FEFEFE",
+"o c gray100",
+/* pixels */
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"oooooooooooooooo oooooooooooooo",
+"                               "
+};

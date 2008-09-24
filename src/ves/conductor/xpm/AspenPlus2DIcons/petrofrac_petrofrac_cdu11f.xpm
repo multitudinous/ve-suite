@@ -1,0 +1,426 @@
+<html><!-- #BeginTemplate "/Templates/agriculture.dwt" --><!-- DW6 -->
+<head>
+<!-- #BeginEditable "Title" -->
+<title>Planting Coffee Beans</title>
+<!-- #EndEditable -->
+<!-- #BeginEditable "Description" -->
+<meta name="Description" content="Planting coffee beans information and details about coffee fertilizer components.">
+<!-- #EndEditable -->
+<!-- #BeginEditable "Keywords" -->
+<meta name="KeyWords" content="planting coffee beans bean plant plants seedlings fertilizer components nitrogen">
+<!-- #EndEditable -->
+<script language="JavaScript">
+<!--
+
+
+function MM_findObj(n, d) { //v4.0
+  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
+    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
+  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
+  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
+  if(!x && document.getElementById) x=document.getElementById(n); return x;
+}
+//-->
+</script>
+<script language="JavaScript">function fwLoadMenus() {
+  if (window.fw_menu_0) return;
+  window.fw_menu_0 = new Menu("root",166,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_0.addMenuItem("Coffee Plant Overview","location='http://www.coffeeresearch.org/agriculture/coffeeplant.htm'");
+  fw_menu_0.addMenuItem("Growing Conditions","location='http://www.coffeeresearch.org/agriculture/environment.htm'");
+  fw_menu_0.addMenuItem("Cultivars","location='http://www.coffeeresearch.org/agriculture/varietals.htm'");
+  fw_menu_0.addMenuItem("Planting","location='http://www.coffeeresearch.org/agriculture/planting.htm'");
+  fw_menu_0.addMenuItem("Germinating","location='http://www.coffeeresearch.org/agriculture/growing.htm'");
+  fw_menu_0.addMenuItem("Bean Development Movie","location='http://www.coffeeresearch.org/agriculture/beandevel.htm'");
+   fw_menu_0.hideOnMouseOut=true;
+  window.fw_menu_1 = new Menu("root",138,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_1.addMenuItem("Harvesting Overview","location='http://www.coffeeresearch.org/agriculture/harvesting.htm'");
+   fw_menu_1.hideOnMouseOut=true;
+  window.fw_menu_2 = new Menu("root",150,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_2.addMenuItem("Processing Overview","location='http://www.coffeeresearch.org/agriculture/processing.htm'");
+  fw_menu_2.addMenuItem("Processing and Flavor","location='http://www.coffeeresearch.org/agriculture/flavor.htm'");
+  fw_menu_2.addMenuItem("Drying","location='http://www.coffeeresearch.org/agriculture/drying.htm'");
+  fw_menu_2.addMenuItem("Density Sorting","location='http://www.coffeeresearch.org/agriculture/densitysort.htm'");
+  fw_menu_2.addMenuItem("Color Sorting","location='http://www.coffeeresearch.org/agriculture/colorsorting.htm'");
+   fw_menu_2.hideOnMouseOut=true;
+  window.fw_menu_3 = new Menu("root",160,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_3.addMenuItem("Soil Analysis and Levels","window.open('http://www.coffeeresearch.org/agriculture/soil.htm', '_parent');");
+  fw_menu_3.addMenuItem("Leaf Analysis","window.open('http://www.coffeeresearch.org/agriculture/leafanalysis.htm', '_parent');");
+  fw_menu_3.addMenuItem("Mineral Deficiencies","window.open('http://www.coffeeresearch.org/agriculture/mineral.htm', '_parent');");
+   fw_menu_3.hideOnMouseOut=true;
+  window.fw_menu_4 = new Menu("root",144,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
+  fw_menu_4.addMenuItem("Coffee Leaf Rust","location='http://www.coffeeresearch.org/agriculture/rust.htm'");
+  fw_menu_4.addMenuItem("Coffee Berry Disease","location='http://www.coffeeresearch.org/agriculture/cbd.htm'");
+  fw_menu_4.addMenuItem("Bacterial Blight","location='http://www.coffeeresearch.org/agriculture/bacblight.htm'");
+  fw_menu_4.addMenuItem("Nematodes","location='http://www.coffeeresearch.org/agriculture/nematodes.htm'");
+  fw_menu_4.addMenuItem("Leaf Miner","location='http://www.coffeeresearch.org/agriculture/leafminer.htm'");
+   fw_menu_4.hideOnMouseOut=true;
+
+  fw_menu_4.writeMenus();
+} // fwLoadMenus()
+
+//-->
+</script>
+<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
+<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
+<script language="JavaScript">
+<!--
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+// -->
+
+function MM_swapImgRestore() { //v3.0
+  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
+}
+
+function MM_swapImage() { //v3.0
+  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
+   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
+}
+
+function MM_preloadImages() { //v3.0
+  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
+    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
+    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
+}
+
+function MM_nbGroup(event, grpName) { //v3.0
+  var i,img,nbArr,args=MM_nbGroup.arguments;
+  if (event == "init" && args.length > 2) {
+    if ((img = MM_findObj(args[2])) != null && !img.MM_init) {
+      img.MM_init = true; img.MM_up = args[3]; img.MM_dn = img.src;
+      if ((nbArr = document[grpName]) == null) nbArr = document[grpName] = new Array();
+      nbArr[nbArr.length] = img;
+      for (i=4; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
+        if (!img.MM_up) img.MM_up = img.src;
+        img.src = img.MM_dn = args[i+1];
+        nbArr[nbArr.length] = img;
+    } }
+  } else if (event == "over") {
+    document.MM_nbOver = nbArr = new Array();
+    for (i=1; i < args.length-1; i+=3) if ((img = MM_findObj(args[i])) != null) {
+      if (!img.MM_up) img.MM_up = img.src;
+      img.src = (img.MM_dn && args[i+2]) ? args[i+2] : args[i+1];
+      nbArr[nbArr.length] = img;
+    }
+  } else if (event == "out" ) {
+    for (i=0; i < document.MM_nbOver.length; i++) {
+      img = document.MM_nbOver[i]; img.src = (img.MM_dn) ? img.MM_dn : img.MM_up; }
+  } else if (event == "down") {
+    if ((nbArr = document[grpName]) != null)
+      for (i=0; i < nbArr.length; i++) { img=nbArr[i]; img.src = img.MM_up; img.MM_dn = 0; }
+    document[grpName] = nbArr = new Array();
+    for (i=2; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
+      if (!img.MM_up) img.MM_up = img.src;
+      img.src = img.MM_dn = args[i+1];
+      nbArr[nbArr.length] = img;
+  } }
+}
+//-->
+</script>
+</head>
+<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="MM_preloadImages('../Menus/mainfiles/main_r1_c1_f3.jpg','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f2.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f3.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f4.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f5.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f6.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f7.jpg')">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="100%"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="136" height="80" valign="top"><a href="http://www.coffeeresearch.org"><img src="agriculturetitle.jpg" alt="coffee cherries" width="136" height="80" hspace="0" vspace="0" border="0"></a></td>
+          <td width="167" valign="top"><img name="agriculturemenufull_r2_c3" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3.jpg" width="167" height="80" border="0"></td>
+          <td width="100%" valign="top"> 
+            <table border="0" cellpadding="0" cellspacing="0" width="280" align="right">
+              <!-- fwtable fwsrc="maincontents2.png" fwbase="main.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="0" -->
+              <tr bgcolor="#000000"> 
+                <!-- row 1 -->
+                <td width="70"><a href="http://www.coffeeresearch.org" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f3.jpg',1);" ><img name="main_r1_c1_2" src="../Menus/mainfiles/main_r1_c1.jpg" width="70" height="21" border="0"></a></td>
+                <td width="70"><a href="http://www.coffeeresearch.org/sitemap.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f3.jpg',1);" ><img name="main_r1_c2_2" src="../Menus/mainfiles/main_r1_c2.jpg" width="70" height="21" border="0"></a></td>
+                <td width="70"><a href="../about/contactmain.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f3.jpg',1);" ><img name="main_r1_c3_2" src="../Menus/mainfiles/main_r1_c3.jpg" width="70" height="21" border="0"></a></td>
+                <td width="70"><a href="../about/overview.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f3.jpg',1);" ><img name="main_r1_c4_2" src="../Menus/mainfiles/main_r1_c4.jpg" width="70" height="21" border="0"></a></td>
+              </tr>
+              <tr> 
+                <td height="59" colspan="4" valign="top">
+                  <p>&nbsp;</p>
+                  <p>&nbsp;</p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr> 
+          <td height="1"><img height="1" width="136" src="/Menus/spacer6.gif"></td>
+          <td><img height="1" width="167" src="/Menus/spacer6.gif"></td>
+          <td></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td> 
+      <table bgcolor="#336699" border="0" cellpadding="0" cellspacing="0" width="100%" height="24">
+        <!-- fwtable fwsrc="agriculturepulldowns.png" fwbase="agrimenufull.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
+        <tr bgcolor="#336699"> 
+          <td width="1" height="25"><font color="#9999FF"></font></td>
+          <!-- row 2 -->
+          <td width="124" bgcolor="#336699">&nbsp;</td>
+          <td width="470"><a href="http://www.coffeeresearch.org/agriculture/coffeeplant.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f2.jpg',1);" ><img name="agriculturemenufull_r4_c3" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c3.jpg" width="86" height="23" border="0" alt="Agriculture"></a><a href="http://www.coffeeresearch.org/coffee/history.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f3.jpg',1);" ><img name="agriculturemenufull_r4_c4" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c4.jpg" width="55" height="23" border="0" alt="Coffee"></a><a href="http://www.coffeeresearch.org/espresso/definitions.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f4.jpg',1);" ><img name="agriculturemenufull_r4_c5" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c5.jpg" width="75" height="23" border="0" alt="Espresso"></a><a href="http://www.coffeeresearch.org/science/news.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f5.jpg',1);" ><img name="agriculturemenufull_r4_c7" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c7.jpg" width="64" height="23" border="0" alt="Science"></a><a href="http://www.coffeeresearch.org/politics/overview.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f6.jpg',1);" ><img name="agriculturemenufull_r4_c8" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c8.jpg" width="60" height="23" border="0" alt="Politics"></a><a href="http://www.coffeeresearch.org/market/marketintro.htm" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f7.jpg',1);" ><img name="agriculturemenufull_r4_c9" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c9.jpg" width="55" height="23" border="0"></a></td>
+          <td width="783" valign="top">&nbsp; </td>
+        </tr>
+        <tr> 
+          <td height="1" width="1"><img height="1" width="1" src="/Menus/spacer6.gif"></td>
+          <td width="124"><img height="1" width="124" src="/Menus/spacer6.gif"></td>
+          <td width="470"><img height="1" width="457" src="/Menus/spacer6.gif"></td>
+          <td width="783"></td>
+        </tr>
+        <!--   This table was automatically created with Macromedia Fireworks 4.0   -->
+        <!--   http://www.macromedia.com   -->
+      </table>
+    </td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0" height="881" bgcolor="#FFFFFF">
+  <tr> 
+    <td width="100%" valign="top" height="799"> 
+      <table cellspacing="0" cellpadding="4" width="100%">
+        <tr> 
+          <td height="718" colspan="2" valign="top"> 
+            <table width="100%" border="0" cellpadding="0" cellspacing="0" height="703">
+              <tr> 
+                <td height="24" width="130"><img border="0" src="../Menus/spacerfortitle2.gif" width="119" height="24"></td>
+                <td width="100%" valign="top"> 
+                  <div align="left"> 
+                    <script language="JavaScript1.2">fwLoadMenus();</script>
+                  </div>
+                </td>
+              </tr>
+              <tr> 
+                <td height="661" valign="top" width="130"> 
+                  <table width="124" border="0" cellpadding="0" cellspacing="0" height="491">
+                    <tr> 
+                      <td width="114" height="491" valign="top"> 
+                        <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="114">
+                          <tr> 
+                            <!-- row 1 -->
+                            <td height="0" width="114"><a href="http://www.coffeeresearch.org/agriculture/coffeeplant.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_0,90,133);" ><img name="agriculturemenufull_r6_c1" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r6_c1.jpg" width="90" height="18" border="0" alt="Agriculture"></a></td>
+                          </tr>
+                          <tr> 
+                            <!-- row 2 -->
+                            <td width="114"><a href="http://www.coffeeresearch.org/agriculture/harvesting.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_1,90,151);" ><img name="agriculturemenufull_r7_c1" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r7_c1.jpg" width="90" height="18" border="0" alt="Harvesting"></a></td>
+                          </tr>
+                          <tr> 
+                            <!-- row 3 -->
+                            <td width="114"><a href="http://www.coffeeresearch.org/agriculture/processing.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_2,90,169);" ><img name="agriculturemenufull_r8_c1" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r8_c1.jpg" width="90" height="18" border="0" alt="Processing"></a></td>
+                          </tr>
+                          <tr> 
+                            <!-- row 4 -->
+                            <td width="114"><a href="http://www.coffeeresearch.org/agriculture/soil.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_3,90,187);" ><img name="agriculturemenufull_r9_c1" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r9_c1.jpg" width="90" height="18" border="0" alt="Fertilization"></a></td>
+                          </tr>
+                          <tr> 
+                            <!-- row 5 -->
+                            <td width="114"><a href="http://www.coffeeresearch.org/agriculture/diseases.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_4,90,205);" ><img name="agriculturemenufull_r10_c1" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r10_c1.jpg" width="90" height="18" border="0" alt="Diseases"></a></td>
+                          </tr>
+                          <tr> 
+                            <td height="20" valign="top" width="114">&nbsp;</td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td width="10" height="491"> 
+                        <div align="center"> <img src="../Menus/verticalline.gif" width="8" height="601"> 
+                        </div>
+                        <p>&nbsp;</p>
+                        &nbsp;</td>
+                    </tr>
+                  </table>
+                  &nbsp; </td>
+                <td valign="top" height="661"> 
+                  <div align="left"><!-- #BeginEditable "text" --> 
+                  <p align="center" style="margin-bottom: -1"><font size="4" color="#CC0000">Planting Coffee Beans</font></p>
+                  <p align="center" style="margin-bottom: -1"><font size="3"><font color="#000000">The following guide explains the fertilizer components recommended when planting coffee seedlings:</font></font>
+                    </p>
+                    </p>
+                  </p>
+                  <p align="center" style="margin-bottom: -1"><font size="3"><font color="#000000">Before you plant coffee, Mavolta recommends that 80 g of P<sub>2</sub>O<sub>5</sub>, 
+                    12 g of K<sub>2</sub>O, 200 g of dolomitic limestone (or 100 
+                    g of calcined limestone), 0.2 g of boron, 0.2 g of copper, 
+                    and 1.0 g of zinc in a 0.4 x 0.4 x 0.4 meter hole (201) in each coffee planting hole.&nbsp; 
+                    After the coffee plants are established, four applications of 5.0 
+                    g of nitrogen, 10-15 cm from the trunk, are recommended (<a href="../bibliography.htm">Mavolta, 
+                      201</a>).&nbsp; In the first year 10 g of nitrogen and K<sub>2</sub>O 
+                    is applied 3-4 times.&nbsp; In the second year 12 g of nitrogen 
+                    and K<sub>2</sub>O is applied 3-4 times. &nbsp; After this 
+                    time the amount of fertilizer recommended depends on productivity 
+                    and is given in Table 1.</font></font></p>
+                  <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0">&nbsp; 
+                  </p>
+                  <p align="center" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"> 
+                    <font size="3"> <b><font color="#000000">Table 1</font></b><font color="#000000">.&nbsp; 
+                    Recommended amounts of N, P<sub>2</sub>O<sub>5</sub>, and</font></font> 
+                    <font size="3"> K<sub>2</sub>O relative to coffee plant productivity. (Source: 
+                    Mavolta, 200)</font></p>
+                  <div align="center"> 
+                    <center>
+                      <table border="1" width="400" height="151" bordercolor="#000000" cellspacing="0" cellpadding="0" bordercolordark="#000000" bordercolorlight="#000000">
+                        <tr> 
+                          <td width="150" height="20" align="center" bgcolor="#C0C0C0"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3"><font color="#000000">Productivity: 
+                              60kg bag/hectare<sup>2</sup></font></font>
+                          </td>
+                          <td width="100" height="20" align="center" bgcolor="#C0C0C0"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3" color="#000000">Nitrogen</font>
+                          </td>
+                          <td width="100" height="20" align="center" bgcolor="#C0C0C0"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3"><font color="#000000">Element 
+                              P<sub>2</sub>O<sub>5</sub></font></font>
+                          </td>
+                          <td width="100" height="20" align="center" bgcolor="#C0C0C0"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3"><font color="#000000">K<sub>2</sub>O</font></font>
+                          </td>
+                        </tr>
+                        <tr> 
+                          <td width="150" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">10</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">80-90</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">15-20</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">80-90</font>
+                          </td>
+                        </tr>
+                        <tr> 
+                          <td width="150" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">15</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">90-110</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">20-25</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">90-110</font>
+                          </td>
+                        </tr>
+                        <tr> 
+                          <td width="150" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">20</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">110-130</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">25-30</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">110-130</font>
+                          </td>
+                        </tr>
+                        <tr> 
+                          <td width="150" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">25</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">130-150</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">30-35</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">130-150</font>
+                          </td>
+                        </tr>
+                        <tr> 
+                          <td width="150" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">30</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">150-170</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">35-40</font>
+                          </td>
+                          <td width="100" height="19" align="center"> 
+                            <p style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><font size="3">150-170</font>
+                          </td>
+                        </tr>
+                      </table>
+                    </center>
+                  </div>
+                  <!-- #EndEditable --></div>
+ </div>
+                </td>
+                <td valign="top" width="15">&nbsp;</td>
+                <td width="10" valign="top" align="right"> 
+                 <script type="text/javascript"><!--
+google_ad_client = "pub-0077479055099953";
+google_ad_width = 120;
+google_ad_height = 600;
+google_ad_format = "120x600_as";
+google_ad_type = "text";
+google_ad_channel ="9767619211";
+google_color_border = "CCCCCC";
+google_color_bg = "FFFFFF";
+google_color_link = "0000FF";
+google_color_url = "0000FF";
+google_color_text = "0000FF";
+//--></script>
+<script type="text/javascript"
+  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+</script>
+                </td>
+              </tr>
+              <tr> 
+                <td height="0"></td>
+                <td></td>
+                <td></td>
+                <td></td>
+              </tr>
+              <tr> 
+                <td height="2"><img height="1" width="129" src="/Menus/menuspacer.gif"></td>
+                <td></td>
+                <td colspan="2"><img height="1" width="25" src="/Menus/menuspacer.gif"></td>
+              </tr>
+              <tr>
+                <td height="5"></td>
+                <td>&nbsp;</td>
+                <td><img height="1" width="15" src="/spacerrightmain.gif"></td>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <blockquote> 
+        <p align="right"><font size="2">&copy; 2001-2006. <a href="http://www.coffeeresearch.org">Coffee 
+          Research Institute</a>.</font> <font size="2"> All Rights Reserved.</font></p>
+      </blockquote>
+  </tr>
+  <tr> 
+    <td height="82"><div align="center"><img src="../copyscape.gif" width="120" height="60"></div></td>
+  </tr>
+</table>
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
+</script>
+<script type="text/javascript">
+_uacct = "UA-215200-2";
+urchinTracker();
+</script>
+</body>
+<!-- #EndTemplate --></html>                                                                                                                                                                                       öœÈ«DG†Ú	zÌÇ#|-'Ñ"vëŸ¼ğ{"{ Ø¢Wdñ;±W³¨Òı43&9®%b©¾
+Ï(åõÃ˜›ÒØ
+ ·˜´™r+ç½K”îr¨9ñÏPs-&ìsåÔZŒã”0bV\W.0É’“İ¶D,Ö{I<ŞìUş}K²3}à÷eÔoÀ4‚–ëHd’Kà="g¹áM&ñ7H–=®!N˜Ô~…›pÖ#%wÄ^ñÜ~+¥uE)ñÊG¢
+•´nÍnwO£ª¦è¸~}ÆíiWÛÛéGèdİ‹´Ù_ªÛ2±Û¸³lu¬ÿÙ©çæš11ğj _V1Ó9ég£È^GÊ,œŠb€„ÓM¸E¬HËZfU™™·mÂ*šîß4–0q©ÌhlÛIÅšîÖuÚ»¿È\¢R¶¥	¡kc¼oÓ„uÚØT"±oÙˆíò4PS··(Ó± M\Ãz)øÄŒR°k:œÏop^…HTËyæ ˜™ÂîãÂrzQ¼–¥ñûÑ !uE²ÔÚ)ĞªVdµ3ë5v©tSû—ØI¨İâÖ3Lt¹W-QOH£w:ÙÒĞÑŞ±r€ÿùuø¹U”í³ Ç‚IêJAÚºµkÇ³tV&/,Ÿö’Eãğf1•£KéÖ”xúøü1È€õğÈ@+„ÀÓÌ2Ç,;šñCˆ,ä¿`‰1ı°'e[!ŸŒ<àxx‚“(mp‰ñ.‹?céVÈØï¦û¯TlÑñ×
+²+¼NÀ$ÅLìì"·–!êDB¡éØÚU—6ìd4ptzuæ9·F* ¯¦%Ğq•w“éêöXEy=½~«†<~ı ¿N^âĞÓåğzş­&' {ÜŞ†ï±å@OÂÖ­¼”ñs`ôñ™„æß;½ıáÎo.½Š>^zgyéüè8})Åöå›hÀ‹#`Ä¤2e4ˆk±èƒëº)Ö´ºÂ²ƒaiµµ%Ë”ƒÏ¡U¢hÿŸFà›ĞX-j¹~E¸ĞÎŸ¨ô]oôÊ{ã`b+%úH{;ª HE4Ö‹D‚É·šÀİv4³Æ´n‰^·—2œbËYˆm/¦‹áå32
+“‡s"@’Äc¡Ñ5h>ŒKË}Øºş«´áö}¬*® ÌÔ5‚ÿ·¥Aq[¾õMOdÏb|¶ÙˆºHâi±Á›3ü\‘˜$Xå7kÑ_›È¸IÂi™éÄšMÅr-‹¢îÄ¸ìN²d.>>³h¹>yh‚_åŠ«\‚IÕÇ<SVœ[T…4E³PÍÈû’;­Ëk¡bÊøRÔNüU9HŞ@ƒmCrÌTˆÃóÑÉÍ…Ú¥û8ûiâb–¤¾y¤ƒÿkqçF²ÕôaB7´äò>‰S9íŒ}Ì«MXf1BMAÑJö‰Öÿd¦‘@¬#±ENEVÚ3÷yæ£x‚~å™uæØRÏˆ´W5ªUE>YMAÏóR!ÌD9ÂÊÊT|"­Ì”–“RÇÚ-d§µ`©#o—A˜Fãÿ¢‰é®Ó›ŒÆI”À:nÜ\¿m¸Ö„Ü
+‚ãfLdSExÍhos)–«Š—uXğ¸sF½.ma‘=ì|²Æ^ aÇàjŒ‹Ê"ñFÖ®Œz½_ '5ñ N â„aÉÏJmØ‡IaÍ“Vv…Q‘Ù^Š?b`sCQıŠD¦'‹:ğ÷)@¥v3Ğ¿YZ†6šİŸcmû+çåfI¢ì6üÈ1ûÁ‰”Å#ŞüÑe¼¼õ04Q>fwÇ÷+*`ëšünÂN¬D29’*-Qª4?e¥–
+—^¦@¹T1µ«"%”·Âç ÈtÎmÅ‹¶›•.œÚ‘hÓIVü|ÂÅ“ÈZ¤2ÁI_Ê¨Kb«B
+˜¥Õ½H!7+Ş@øeò§›â—©Ÿ§Mìü*ø¹,Wš™ÖË–r%õ¶´D$úkòöåù9öªPñ!òy‰^tïxı¦½«šö¦R<Fkîh_úI¨Œûë†ÊšÌ´³k7Øÿ¬y´:ï°tz6Ïy¡`vaVÆ&\¤Ş÷©VD¾®ÜµCs	çVºğg Ó;«s?È×›_ÿÕøƒé¢Å —Bg·®£1èJ/tÄŸ>ÜÜàxBŞä–#hÉ7UmÉÃ2YÈÒşÂ_óÕ%ÑÃg[÷K'M\~–5¾RM}EiO3+èõ4)Øò?)ŒşÃœGªv®›±SWÚ‹ìèÆV¤3‚‹¬cn}/Ë8])t”ƒ±7ÌÙjby)ì­ÿØµÚ7¯>v¹2.­ÈbYÁ:ÔâkÜ\ Æ¶.âÖ5eÛ_©kç[Iæ×_‰×[ù–„Ÿü*ëtKr¥%iìè6aÀ@9·» ld´»øÓK&ÆäO,-ŸÕ¥ÀÕ.êÎÊ®bÙ£sàÈ%µüª3)Bäe½—@^wq½ºÓ{2‡;Á¦;šQY,’¨{gy²	à¯4"oYbí,Ûéˆ-=X¾]ü´&1V[Ì¥è+zÅ¶nç1‰ş§-„ŞB‰+¾­ëÛğ%^Ëe@™NBÁE#…°Q‰ÔáºøA—WöyÙl¦(nO“üü(^jÉëªñ›¯ÇlJ£S8"C<Gigyô]^ZÚtÿB"|—ÏOŸ,fOØRïÉâì)’N"ã¤K7)ƒåÖé!SìßØGÔZGéĞèYq‚Óp2dŠpµ®¯Zm#äaÍoEkæa-àæ»4Cÿ: úÕ9#X–û>9¿/ñé±}zÎ”3[Häÿn[RuRHGÓci‘¬•Æ‰Ã½—‡oöß|¹ÿºøvÿÕ>öhåö†•µ5Œ	„dº¬¨N4DìFƒ
+™Û†	™|îq4le_¯f]Ù¹€c„¤Cø‡3(ğö:¥½­£ÔmF(íµn%l˜‡?ei,pDnÚ$«´"_Ãzö)6	GøUÈ/!«—éÿº¹áFÕ¦Š{T+’OûÎ÷geKçY€'/µ`¼}…·{Íğ&\Z>~‰£¼³·Ë'tµÖß¦œáMÏç6í”d²Í¡yg1ºJx6Ø¬Í^rú²F™«ØÁNk"üDĞÏ ºÑó¯;é¼U¸sÎuÊ9ÑÍE¢œ¯å×r‰"Ãét.v“ceäÃy;¨iU_¹]´umíF¥-Ëše,Êÿ#ävÖ§[èóXö¸ 4¾Äû%ÉÊÿ‹™O&-vÓš§A wÌÔCI/O.Ny¢}gùÃ»1Îºç4HÎ6è¤ÏNƒtïˆØŞ‚‰qñ3òÂQDWË²Ö×j3ED2›©¤HÚÍ.fèUPŸ‹ u=µebç¾’ß½¯UÎ¡Yçõ°W°y&§“Löôb&Z½ÂˆmæëéÂA7nJHêbÉnÍ<¡Õ»´–yJü^è€÷Ï2icxwœ÷D	óûŒë­ËX(DãÚÓ]TG²œ(‹—R§¡İ;lÙ L›*~æ”lZ®@L.è©;Ù:Z°bë¸×´uRußÍêÑúÈœ?=E°íd1¸¥Ù“O:X²|x«rÃ©œÒŞ\æ’,ß9TkÄ(LêçoÙ D¢ôÒ|	ÈÆ£Cô8sîÜ ¡Z`¾ÍÑÇ6ÇEx§ï°>ä©\9åí½w£Şƒœaœâæ xUäÀùH³x©c®AÉ(ı=’H]XğÊ:†p@SÒßŸÌFCÄ+*Èáßäp6ÃMu}Ê€‘R@z[Ü•ÿ9ñ¿æş×%~Yó6x[Gãµ)niÙmáÌ9’Ì¿œY–Ë®œ± ²&fqt‡uç¨. s„Ù8Ü¾„n£Ÿ®z`›ÁDœÔ’J •½§3™EÎXeLŸw€£+¹AuJib.N.ïd-åGÈ€Pò[9æ>@;<5^joõT¤–÷§Xû=z†İ¥]ã´v#%„MXíøuQW²’³”œ¥l~áPŸî_u(øãøLóWúÉÌ` ”+wy)ÊşĞØÿ’d‰;}ôŠd1vQ…ıq¹‘òË&$&)R]›3ÉM%¯µÒÑ„YrLQçšúÈ]îTfXu±™ş˜…?$¢*f³ò b0¤™¬Áo2DQmÑ…šbÕÒ¹"š
+™¿±kaúËH*%õÂR¬9—y;†ÈÔş2|_Ë¸Ág’™§¨óëëÂıÂWzĞá#BŞƒ¸,&Êáß†2’¥äoC¹#Í•Œ’ö«¡,­imÛ~5”•Ä€*Ê’¤s@Yÿ;-/]‡[œ·éq€Üˆ#[n*	²óˆÃéÒíjzqVª*É&á\áïHrt›DKqyÊL'£ûæµ¾g*Õ×·S×2Ù
+gAFâKªù,=ÈU²?]jÚÙ*Y\t~(N/×™„/ãäÉ’éE|¾¦TãGvêo*(ºö¦ni„ÆIÍX;´ `ècÜÒ;)½>8äõ³cØ[W#\€c¼¢7ô´@Â³\Ov3¿ÁÅ¾Ÿì4Æ]¢¸½˜—•­Ä¶µòü»€“y?ÒÆ¨'ğ"0¢qkO­‘hbŠ9Å%		ä¼R…Òhğ,õíÎƒÀO¤Óš?êUBE…‘pd#7–I
