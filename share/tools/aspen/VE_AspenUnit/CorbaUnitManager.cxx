@@ -23,7 +23,7 @@ CorbaUnitManager::CorbaUnitManager(CVE_AspenUnitDlg * dialog)
 }
 CorbaUnitManager::~CorbaUnitManager()
 {
-
+    XMLPlatformUtils::Terminate();
 }
 void CorbaUnitManager::SetComputerNameUnitNameAndPort( CString dir, CString name, CString port, CString uname )
 {
