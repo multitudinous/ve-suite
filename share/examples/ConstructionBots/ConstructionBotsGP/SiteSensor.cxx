@@ -132,9 +132,6 @@ void SiteSensor::CollectInformation()
     else
     {
         Rotate();
-        (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
-        (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
-        (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
     }
 
     //Reset results from last frame
@@ -164,13 +161,12 @@ void SiteSensor::CollectInformation()
     {
         osg::ref_ptr< osg::Drawable > drawable =
             mLineSegmentIntersector->getFirstIntersection().drawable;
-
         osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-        const osg::Vec4* color;
         if( tempArray )
         {
-            color = &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
-            if( *color == mAgentEntity->mSiteColor )
+            const osg::Vec4& color =
+                static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+            if( color == mAgentEntity->mSiteColor )
             {
                 goToSite = true;
                 mSiteInView = true;
@@ -185,11 +181,10 @@ void SiteSensor::CollectInformation()
 
     mAgentEntity->SetTargetDCS( targetDCS.get() );
 
-    double* sitePosition( 0 );
     btVector3 siteVector( 0.0, 0.0, 0.0 );
     if( targetDCS.valid() )
     {
-        sitePosition = targetDCS->GetVETranslationArray();
+        double* sitePosition = targetDCS->GetVETranslationArray();
         siteVector.setValue(
             sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
@@ -198,12 +193,10 @@ void SiteSensor::CollectInformation()
             mCloseToSite = true;
 
             double normalizeDistance = siteVector.length() / 3.0;
-            //std::cout << normalizeDistance << std::endl;
 
             double forceAttractionConstant = 1 - 4.0 * log( normalizeDistance );
             mAgentEntity->mObstacleSensor->SetForceAttractionConstant(
                 forceAttractionConstant );
-            //std::cout << forceAttractionConstant << std::endl;
         }
     }
 
@@ -219,21 +212,30 @@ void SiteSensor::CollectInformation()
 void SiteSensor::Rotate()
 {
     mAngle += mAngleInc;
+    (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
+    (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
+    (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool SiteSensor::SiteInView()
+const bool SiteSensor::SiteInView() const
 {
     return mSiteInView;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool SiteSensor::CloseToSite()
+const bool SiteSensor::CloseToSite() const
 {
     return mCloseToSite;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const btVector3& SiteSensor::GetNormalizedSiteVector()
+const btVector3& SiteSensor::GetNormalizedSiteVector() const
 {
     return mNormalizedSiteVector;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SiteSensor::ResetAngle()
+{
+    mAngle = 90 * ( rand() % 4 );
+    mAngle = osg::DegreesToRadians( mAngle );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::SetRange( double range )

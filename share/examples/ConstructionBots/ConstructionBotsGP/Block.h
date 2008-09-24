@@ -50,24 +50,33 @@ namespace bots
 class Block : public osg::Geode
 {
 public:
+    ///Default Constructor
     Block();
 
+    ///Constructor
     Block( const Block& block,
            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///Register node with OSG
     META_Node( bots, Block );
 
+    ///Set the color of a drawable for this block geode
     void SetColor( unsigned int drawable, const osg::Vec4& color );
 
 protected:
+    ///Destructor
     virtual ~Block();
 
 private:
+    ///Initialize this block geode
     void Initialize();
 
-    /*    1
+    ///The drawables of this block geode
+    /*    
+          1
         2 B 0
-          3    */
+          3
+    */
     std::map< unsigned int, osg::ref_ptr< osg::Geometry > > mDrawables;
 
 };

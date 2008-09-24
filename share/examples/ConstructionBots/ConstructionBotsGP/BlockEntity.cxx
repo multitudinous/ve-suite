@@ -74,12 +74,6 @@ BlockEntity::BlockEntity(
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
                                  osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 0 ) ) )
 {
-    //Initialize side attachments
-    mConnectedBlocks[ 0 ] = NULL;
-    mConnectedBlocks[ 1 ] = NULL;
-    mConnectedBlocks[ 2 ] = NULL;
-    mConnectedBlocks[ 3 ] = NULL;
-
     Initialize();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +93,37 @@ BlockEntity::~BlockEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::Initialize()
 {
+    //Initialize side attachments
+    mConnectedBlocks[ 0 ] = NULL;
+    mConnectedBlocks[ 1 ] = NULL;
+    mConnectedBlocks[ 2 ] = NULL;
+    mConnectedBlocks[ 3 ] = NULL;
+
     CalculateLocalPositions();
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockEntity::InitializeStartBlock()
+{
+    //Update the connected blocks for this and neighbors
+    ConnectionDetection();
+
+    //Change the block color
+    for( int i = 4; i < 10; ++i )
+    {
+        mBlockGeometry->SetColor( i, mSiteColor );
+    }
+
+    //Update the occupancy matrix with the new attachment
+    std::map< std::pair< int, int >,
+              std::pair< bool, bool > >::iterator oMatItr =
+        mOccupancyMatrix->find( mLocation );
+    if( oMatItr != mOccupancyMatrix->end() )
+    {
+        oMatItr->second.second = true;
+    }
+
+    //The attachment was successful
+    mAttached = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::CalculateLocalPositions()
@@ -108,8 +132,8 @@ void BlockEntity::CalculateLocalPositions()
 
     double blockHalfWidth = 0.5;
     osg::Vec3 startPoint, endPoint;
-    startPoint.set( blockHalfWidth - 0.5, 0.0, 0.0 );
-    endPoint.set( blockHalfWidth + 0.5, 0.0, 0.0 );
+    startPoint.set( blockHalfWidth - 0.25, 0.0, 0.0 );
+    endPoint.set( blockHalfWidth + 0.25, 0.0, 0.0 );
 
     //Rotate vector about point( 0, 0, 0 ) by theta
     //x' = x * cos( theta ) - y * sin( theta );
@@ -134,7 +158,7 @@ void BlockEntity::CalculateLocalPositions()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::AttachUpdate()
+const bool BlockEntity::AttachUpdate()
 {
     //Update the connected blocks for this and neighbors
     ConnectionDetection();
@@ -178,31 +202,39 @@ void BlockEntity::AttachUpdate()
             //Get a copy of the occupancy from neighbor
             SetOccupancyMatrix( itr->second->GetOccupancyMatrix() );
 
+            //Make physics mesh static
+            GetPhysicsRigidBody()->StaticConcaveShape();
+            
+            //Self align w/ blocks
+            double* alignedPosition = mDCS->GetVETranslationArray();
+            alignedPosition[ 0 ] = mLocation.first;
+            alignedPosition[ 1 ] = mLocation.second;
+            mDCS->SetTranslationArray( alignedPosition );
+
+            //Change the block color
+            for( int i = 4; i < 10; ++i )
+            {
+                mBlockGeometry->SetColor( i, mSiteColor );
+            }
+
+            //Update the occupancy matrix with the new attachment
+            std::map< std::pair< int, int >,
+                      std::pair< bool, bool > >::iterator oMatItr =
+                mOccupancyMatrix->find( mLocation );
+            if( oMatItr != mOccupancyMatrix->end() )
+            {
+                oMatItr->second.second = true;
+            }
+
+            //The attachment was successful
+            mAttached = true;
+
             break;
         }
     }
 
-    //Self align w/ blocks
-    GetPhysicsRigidBody()->StaticConcaveShape();
-    double* alignedPosition = GetDCS()->GetVETranslationArray();
-    alignedPosition[ 0 ] = mLocation.first;
-    alignedPosition[ 1 ] = mLocation.second;
-    GetDCS()->SetTranslationArray( alignedPosition );
-
-    //Change the block color
-    for( int i = 4; i < 10; ++i )
-    {
-        mBlockGeometry->SetColor( i, mSiteColor );
-    }
-
-    mAttached = true;
-    std::map< std::pair< int, int >,
-              std::pair< bool, bool > >::iterator oMatItr =
-        mOccupancyMatrix->find( mLocation );
-    if( oMatItr != mOccupancyMatrix->end() )
-    {
-        oMatItr->second.second = true;
-    }
+    //Return if the attachment was successful or not
+    return mAttached;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
@@ -318,12 +350,12 @@ void BlockEntity::UpdateSideStates()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool BlockEntity::IsAttached()
+const bool BlockEntity::IsAttached() const
 {
     return mAttached;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool BlockEntity::PermissionToAttach( osg::Drawable* drawable )
+const bool BlockEntity::PermissionToAttach( osg::Drawable* drawable ) const
 {
     std::map< osg::Drawable*, bool >::const_iterator itr =
         mSideStates.find( drawable );
@@ -360,8 +392,8 @@ void BlockEntity::ConnectionDetection()
         osg::ref_ptr< osg::Drawable > thisDrawable( NULL );
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            const osgUtil::LineSegmentIntersector::Intersections& intersections =
-                mLineSegmentIntersector->getIntersections();
+            const osgUtil::LineSegmentIntersector::Intersections&
+                intersections = mLineSegmentIntersector->getIntersections();
 
             std::multiset< osgUtil::LineSegmentIntersector::Intersection >::const_iterator itr;
             for( itr = intersections.begin(); itr != intersections.end(); ++itr )
@@ -373,8 +405,8 @@ void BlockEntity::ConnectionDetection()
                     static_cast< ves::xplorer::scenegraph::DCS* >(
                         parentVisitor.GetParentNode() );
 
-                std::map< std::string, bots::BlockEntity* >::const_iterator bemItr =
-                    mBlockEntityMap->find( dcs->GetName() );
+                std::map< std::string, bots::BlockEntity* >::const_iterator
+                    bemItr = mBlockEntityMap->find( dcs->GetName() );
                 bots::BlockEntity* blockEntity( NULL );
                 if( bemItr != mBlockEntityMap->end() )
                 {
@@ -418,20 +450,20 @@ void BlockEntity::ConnectionDetection()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bots::Block* BlockEntity::GetBlockGeometry()
+bots::Block* const BlockEntity::GetBlockGeometry() const
 {
     return mBlockGeometry.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-const std::pair< int, int >& BlockEntity::GetLocation()
+const std::pair< int, int >& BlockEntity::GetLocation() const
 {
     return mLocation;
 }
 ////////////////////////////////////////////////////////////////////////////////
 std::map< std::pair< int, int >,
-          std::pair< bool, bool > >* BlockEntity::GetOccupancyMatrix()
+          std::pair< bool, bool > >& BlockEntity::GetOccupancyMatrix() const
 {
-    return mOccupancyMatrix;
+    return *mOccupancyMatrix;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(
@@ -441,9 +473,9 @@ void BlockEntity::SetBlockConnection(
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockEntityMap(
-    std::map< std::string, bots::BlockEntity* >* blockEntityMap )
+    std::map< std::string, bots::BlockEntity* >& blockEntityMap )
 {
-    mBlockEntityMap = blockEntityMap;
+    mBlockEntityMap = &blockEntityMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetConstraints( int gridSize )
@@ -497,22 +529,22 @@ void BlockEntity::SetNameAndDescriptions( int number )
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetOccupancyMatrix(
     std::map< std::pair< int, int >,
-              std::pair< bool, bool > >* occupancyMatrix )
+              std::pair< bool, bool > >& occupancyMatrix )
 {
-    mOccupancyMatrix = occupancyMatrix;
+    mOccupancyMatrix = &occupancyMatrix;
 
     //Store the neighbors occupation
     mNeighborOccupancy[ 0 ] =
-        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first + 1,
-                                               mLocation.second ) ].first;
+        (*mOccupancyMatrix)[ std::make_pair( mLocation.first + 1,
+                                             mLocation.second ) ].first;
     mNeighborOccupancy[ 1 ] =
-        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first,
-                                               mLocation.second + 1 ) ].first;
+        (*mOccupancyMatrix)[ std::make_pair( mLocation.first,
+                                             mLocation.second + 1 ) ].first;
     mNeighborOccupancy[ 2 ] =
-        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first - 1,
-                                               mLocation.second ) ].first;
+        (*mOccupancyMatrix)[ std::make_pair( mLocation.first - 1,
+                                             mLocation.second ) ].first;
     mNeighborOccupancy[ 3 ] =
-        ( *mOccupancyMatrix )[ std::make_pair( mLocation.first,
-                                               mLocation.second - 1 ) ].first;
+        (*mOccupancyMatrix)[ std::make_pair( mLocation.first,
+                                             mLocation.second - 1 ) ].first;
 }
 ////////////////////////////////////////////////////////////////////////////////

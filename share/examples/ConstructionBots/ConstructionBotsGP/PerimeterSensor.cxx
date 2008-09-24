@@ -33,6 +33,7 @@
 
 // --- My Includes --- //
 #include "PerimeterSensor.h"
+#include "SiteSensor.h"
 #include "AgentEntity.h"
 #include "BlockEntity.h"
 
@@ -76,6 +77,11 @@ PerimeterSensor::~PerimeterSensor()
     {
         delete mLastClockWiseDetection;
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool PerimeterSensor::Aligned() const
+{
+    return mAligned;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Initialize()
@@ -248,9 +254,7 @@ void PerimeterSensor::CollectInformation()
                 {
                     mAgentEntity->mBuildMode = false;
                     mAgentEntity->mPerimeterSensor->Reset();
-                    std::cout << "PerimeterSensor: " 
-                              << mAgentEntity->GetDCS()->GetName()
-                              << std::endl << std::endl;
+
                     return;
                 }
             }
@@ -313,16 +317,6 @@ void PerimeterSensor::CollectInformation()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PerimeterSensor::Reset()
-{
-    delete mLastClockWiseDetection;
-    mLastClockWiseDetection = NULL;
-    mPreviousDrawable = NULL;
-
-    mPerimeterDetected = false;
-    mAligned = false;
-}
-////////////////////////////////////////////////////////////////////////////////
 const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 {
     //Calculate the total resultant force
@@ -352,23 +346,35 @@ const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
     return mResultantForce;
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Drawable* PerimeterSensor::GetQueriedConnection()
+osg::Drawable* const PerimeterSensor::GetQueriedConnection() const
 {
     return mQueriedConnection;
+}
+////////////////////////////////////////////////////////////////////////////////
+const double& PerimeterSensor::GetRange() const
+{
+    return mRange;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool PerimeterSensor::PerimeterDetected() const
+{
+    return mPerimeterDetected;
+}
+////////////////////////////////////////////////////////////////////////////////
+void PerimeterSensor::Reset()
+{
+    delete mLastClockWiseDetection;
+    mLastClockWiseDetection = NULL;
+    mPreviousDrawable = NULL;
+
+    mPerimeterDetected = false;
+    mAligned = false;
+
+    mAgentEntity->mSiteSensor->ResetAngle();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::SetRange( double range )
 {
     mRange = range;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool PerimeterSensor::Aligned()
-{
-    return mAligned;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool PerimeterSensor::PerimeterDetected()
-{
-    return mPerimeterDetected;
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -88,43 +88,48 @@ public:
     ///Destructor
     ~ConstructionWorld();
 
-    ///
+    ///Perform the preframe update
     void PreFrameUpdate();
 
 private:
-    ///
+    ///Initialize the construction world framework
     void InitializeFramework();
 
-    ///
+    ///Randomize where the blocks and agents are placed in the environment
     void CreateRandomPositions( int gridSize );
 
-    ///
+    ///The number of blocks left to build the structure
     unsigned int mBlocksLeft;
-    ///
+
+    ///The number of frames processed to complete this simulation
     unsigned int mFrameCount;
 
-    ///
+    ///A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
 
 #ifdef VE_SOUND
-    ///
+    ///A pointer to the sound manager for this plugin
     osgAL::SoundManager* mSoundManager;
-    ///
+    ///The ambient sound played for this simulation
     ves::xplorer::scenegraph::Sound* mAmbientSound;
 #endif
 
-    ///
+    ///The grid entity for this construction world
     bots::GridEntity* mGrid;
-    ///
+
+    ///The start block to initiate the structure building
     bots::BlockEntity* mStartBlock;
-    ///
+
+    ///The block entities used to build the structure
     std::map< std::string, bots::BlockEntity* > mBlockEntities;
-    ///
-    std::map< std::pair< int, int >, std::pair< bool, bool > > mOccupancyMatrix;
-    ///
+
+    ///The agents which build the structure
     std::vector< bots::AgentEntity* > mAgents;
 
-    ///
+    ///The occupancy matrix containing the shape desired to be built
+    std::map< std::pair< int, int >, std::pair< bool, bool > > mOccupancyMatrix;
+
+    ///A pointer to the physics simulator for this plugin
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
 
 };

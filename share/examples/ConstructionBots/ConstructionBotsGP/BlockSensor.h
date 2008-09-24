@@ -37,9 +37,6 @@
 // --- My Includes --- //
 #include "Sensor.h"
 
-// --- OSG Includes --- //
-#include <osg/Polytope>
-
 // --- Bullet Includes --- //
 #include <LinearMath/btVector3.h>
 
@@ -49,55 +46,51 @@ namespace bots
 class BlockSensor : public Sensor
 {
 public:
-    ///
+    ///Constructor
     BlockSensor( bots::AgentEntity* agentEntity );
 
-    ///
+    ///Destructor
     virtual ~BlockSensor();
 
-    ///
+    ///Collect information from the environment
     virtual void CollectInformation();
 
-    ///
+    ///Rotate the block sensor
     void Rotate();
 
-    ///
-    bool BlockInView();
+    ///Returns if a block is currently in view
+    const bool BlockInView() const;
 
-    ///
-    bool CloseToBlock();
+    ///Returns if the agent entity is close to the block in view
+    const bool CloseToBlock() const;
 
-    ///
-    const btVector3& GetNormalizedBlockVector();
+    ///Get the normalized vector to the block in view
+    const btVector3& GetNormalizedBlockVector() const;
 
-    ///
-
-
-    ///
+    ///Set the range for this sensor
     void SetRange( double range );
 
 protected:
-    ///
+    ///Initialize this block sensor
     virtual void Initialize();
 
 private:
-    ///
+    ///Tells if a block is in view of this sensor
     bool mBlockInView;
-    ///
+    ///Tells if the agent entity is close to the block in view
     bool mCloseToBlock;
 
-    ///
+    ///The angle of this sensor
     double mAngle;
-    ///
+
+    ///The angle increment of this sensor
     double mAngleInc;
-    ///
+
+    ///The range of this sensor
     double mRange;
 
-    ///
+    ///The normalized vector from this agent entity to the block in view
     btVector3 mNormalizedBlockVector;
-
-    ///
-    osg::Polytope mPolytope;
 
 };
 } //end bots

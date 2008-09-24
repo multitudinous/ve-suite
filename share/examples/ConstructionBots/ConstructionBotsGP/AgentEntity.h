@@ -50,10 +50,10 @@ namespace xplorer
 {
 namespace scenegraph
 {
-    class DCS;
+class DCS;
 
 #ifdef VE_SOUND
-    class Sound;
+class Sound;
 #endif
 }
 }
@@ -84,6 +84,7 @@ class BlockEntity;
 class AgentEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
+    ///Constructor
     AgentEntity(
         bots::Agent* agent,
         ves::xplorer::scenegraph::DCS* pluginDCS,
@@ -92,92 +93,155 @@ public:
 #endif
         ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
 
+    ///Destructor
     virtual ~AgentEntity();
 
+    ///The communicating blocks algorithm
     void CommunicatingBlocksAlgorithm();
 
+    ///Get the plugin DCS
     ves::xplorer::scenegraph::DCS* const GetPluginDCS() const;
+
+    ///Get the target DCS
     ves::xplorer::scenegraph::DCS* const GetTargetDCS() const;
 
+    ///Get the block sensor
     bots::BlockSensorPtr const GetBlockSensor() const;
+
+    ///Get the hold block sensor
     bots::HoldBlockSensorPtr const GetHoldBlockSensor() const;
+
+    ///Get the obstacle sensor
     bots::ObstacleSensorPtr const GetObstacleSensor() const;
+
+    ///Get the perimeter sensor
     bots::PerimeterSensorPtr const GetPerimeterSensor() const;
+
+    ///Get the site sensor
     bots::SiteSensorPtr const GetSiteSensor() const;
 
-    ///
+    ///Set the block entity map
     void SetBlockEntityMap(
-        std::map< std::string, bots::BlockEntity* >* blockEntityMap );
+        std::map< std::string, bots::BlockEntity* >& blockEntityMap );
 
-    ///
-    void SetBlocksLeft( unsigned int* blocksLeft );
+    ///Set the total number of blocks needed to complete the structure
+    void SetBlocksLeft( unsigned int& blocksLeft );
 
-    ///
+    ///Set the constraints for the physics mesh
     void SetConstraints( int gridSize );
 
-    ///
+    ///Set the name and descriptions for this CADEntity
     void SetNameAndDescriptions( int number );
     
-    ///
+    ///Set the target DCS
     void SetTargetDCS( ves::xplorer::scenegraph::DCS* targetDCS );
 
 protected:
 
 private:
-    //Give sensors easy access to AgentEntity
+    ///Make BlockSensor class a friend
     friend class BlockSensor;
+
+    ///Make HoldBlockSensor class a friend
     friend class HoldBlockSensor;
+
+    ///Make ObstacleSensor class a friend
     friend class ObstacleSensor;
+
+    ///Make PerimeterSensor class a friend
     friend class PerimeterSensor;
+
+    ///Make SiteSensor class a friend
     friend class SiteSensor;
     
+    ///Initialize this agent entity
     void Initialize();
 
-    //The agent behaviors
+    ///Performs the avoid obstacle behavior
     void AvoidObstacle();
+
+    ///Performs the build behavior
     void Build();
+
+    ///Performs the follow perimeter behavior
     void FollowPerimeter();
+
+    ///Performs the go to block behavior
     void GoToBlock();
+
+    ///Performs the go to site behavior
     void GoToSite();
+
+    ///Prepare this agent entity for building
     void InitiateBuildMode();
+
+    ///Performs the pick up block behavior
     void PickUpBlock();
+
+    ///Query a block for permission to attach
     void QueryBlock();
 
+    ///Tells if this agent entity is currently building
     bool mBuildMode;
 
+    ///The number of blocks left to complete the structure
     unsigned int* mBlocksLeft;
 
+    ///The max speed at which this agent travels
     double mMaxSpeed;
+
+    ///The speed used while building
     double mBuildSpeed;
 
-    //The color of the blocks
+    ///The color of the blocks
     osg::Vec4 mBlockColor;
-    //The color of the site
+
+    ///The color of the site
     osg::Vec4 mSiteColor;
 
+    ///A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
+
+    ///A pointer to the target DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mTargetDCS;
 
 #ifdef VE_SOUND
+    ///The sound played for this agent
     ves::xplorer::scenegraph::Sound* mAgentSound;
+
+    ///The sound played when a block is successfully picked up
     ves::xplorer::scenegraph::Sound* mPickUpBlockSound;
+
+    ///The sound played when a block is successfully attached to the structure
     ves::xplorer::scenegraph::Sound* mAttachBlockSound;
 #endif
 
+    ///The constraints on the physics mesh
     btGeneric6DofConstraint* mConstraint;
 
+    ///The geometry of this agent entity
     osg::ref_ptr< bots::Agent > mAgentGeometry;
 
-    //The agent sensors
+    ///The block sensor
     bots::BlockSensorPtr mBlockSensor;
+
+    ///The hold block sensor
     bots::HoldBlockSensorPtr mHoldBlockSensor;
+
+    ///The obstacle sensor
     bots::ObstacleSensorPtr mObstacleSensor;
+
+    ///The perimeter sensor
     bots::PerimeterSensorPtr mPerimeterSensor;
+
+    ///The site sensor
     bots::SiteSensorPtr mSiteSensor;
 
-    //This in only here to test for collisions and for site interaction
-    std::map< std::string, bots::BlockEntity* >* mBlockEntityMap;
+    ///A pointer to the block entity map
+    ///This in only here to test for collisions and for site interaction
+    const std::map< std::string, bots::BlockEntity* >* mBlockEntityMap;
 
+    ///A pointer to the held block entity
     bots::BlockEntity* mHeldBlock;
 
 };

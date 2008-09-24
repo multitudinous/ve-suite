@@ -76,18 +76,18 @@ AgentEntity::AgentEntity(
     CADEntity( agent, pluginDCS, physicsSimulator ),
     mBuildMode( false ),
     mBlocksLeft( NULL ),
-    mMaxSpeed( 3.0 ),
-    mBuildSpeed( 3.0 ),
+    mMaxSpeed( 1.0 ),
+    mBuildSpeed( 1.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
 #ifdef VE_SOUND
     mAgentSound( new ves::xplorer::scenegraph::Sound( 
-                    "AgentSound", GetDCS(), soundManager ) ),
+                    "AgentSound", mDCS.get(), soundManager ) ),
     mPickUpBlockSound( new ves::xplorer::scenegraph::Sound( 
-                           "PickUpBlockSound", GetDCS(), soundManager ) ),
+                           "PickUpBlockSound", mDCS.get(), soundManager ) ),
     mAttachBlockSound( new ves::xplorer::scenegraph::Sound( 
-                           "AttachBlockSound", GetDCS(), soundManager ) ),
+                           "AttachBlockSound", mDCS.get(), soundManager ) ),
 #endif
     mTargetDCS( 0 ),
     mConstraint( 0 ),
@@ -244,43 +244,61 @@ void AgentEntity::AvoidObstacle()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
+    //Get the velocity before mPhysicsRigidBody is destroyed
     btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
-    velocity.normalize();
+
+    //Grab mHeldBlock's DCS
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > heldBlockDCS =
+        mHeldBlock->GetDCS();
 
     //Get the block close to the attach site
-    double* position = GetDCS()->GetVETranslationArray();
-    mHeldBlock->GetDCS()->SetTranslationArray( position );
+    double* position = mDCS->GetVETranslationArray();
+    heldBlockDCS->SetTranslationArray( position );
     position[ 2 ] += 1.0;
-    GetDCS()->SetTranslationArray( position );
+    mDCS->SetTranslationArray( position );
 
-    mHeldBlock->AttachUpdate();
-    position = mHeldBlock->GetDCS()->GetVETranslationArray();
-
-    std::map< std::string, bots::BlockEntity* >::const_iterator itr;
-    itr = ( *mBlockEntityMap ).begin();
-    for( itr; itr != ( *mBlockEntityMap ).end(); ++itr )
+    //If the attachment was successful
+    if( mHeldBlock->AttachUpdate() )
     {
-        if( itr->second->IsAttached() )
+        std::map< std::string, bots::BlockEntity* >::const_iterator itr;
+        itr = (*mBlockEntityMap).begin();
+        for( itr; itr != ( *mBlockEntityMap ).end(); ++itr )
         {
-            itr->second->UpdateSideStates();
+            if( itr->second->IsAttached() )
+            {
+                itr->second->UpdateSideStates();
+            }
         }
     }
+    //If the attachment was not successful, return
+    else
+    {
+        heldBlockDCS->SetTranslationArray( position );
+        position[ 2 ] -= 1.0;
+        mDCS->SetTranslationArray( position );
 
-    //Rotate normalized velocity vector -90 degrees
+        return;
+    }
+
+    //Rotate normalized velocity vector -90 degrees and set agent position
+    velocity.normalize();
     velocity *= 0.6;
+    position = heldBlockDCS->GetVETranslationArray();
     position[ 0 ] +=  velocity.y();
     position[ 1 ] += -velocity.x();
-    GetDCS()->SetTranslationArray( position );
+    mDCS->SetTranslationArray( position );
 
+    //Reset some variables
     mBuildMode = false;
     mHeldBlock = NULL;
-
     mObstacleSensor->SetForceAttractionConstant( 1.0 );
+
+    //Push sound event to cue user for successful attachment
 #ifdef VE_SOUND
     mAttachBlockSound->PushSoundEvent( 10 );
 #endif
 
-    //Decrement the block counter
+    //Decrement the block counter after successful attachment
     --(*mBlocksLeft);
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -411,14 +429,14 @@ ves::xplorer::scenegraph::DCS* const AgentEntity::GetTargetDCS() const
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetBlockEntityMap(
-    std::map< std::string, bots::BlockEntity* >* blockEntityMap )
+    std::map< std::string, bots::BlockEntity* >& blockEntityMap )
 {
-    mBlockEntityMap = blockEntityMap;
+    mBlockEntityMap = &blockEntityMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::SetBlocksLeft( unsigned int* blocksLeft )
+void AgentEntity::SetBlocksLeft( unsigned int& blocksLeft )
 {
-    mBlocksLeft = blocksLeft;
+    mBlocksLeft = &blocksLeft;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetConstraints( int gridSize )

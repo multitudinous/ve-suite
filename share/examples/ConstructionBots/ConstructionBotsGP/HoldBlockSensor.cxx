@@ -134,17 +134,12 @@ void HoldBlockSensor::CollectInformation()
     if( !mHoldingBlock )
     {
         mAgentEntity->mHeldBlock = NULL;
-
         mAgentEntity->mPerimeterSensor->Reset();
-
-        if( mAgentEntity->mBuildMode )
-        {
-            mAgentEntity->mBuildMode = false;
-        }
+        mAgentEntity->mBuildMode = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool HoldBlockSensor::HoldingBlock()
+const bool HoldBlockSensor::HoldingBlock() const
 {
     return mHoldingBlock;
 }

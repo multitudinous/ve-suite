@@ -45,20 +45,27 @@ namespace bots
 class Grid : public osg::Geode
 {
 public:
+    ///Default Constructor
     Grid();
+
+    ///Constructor
     Grid( const Grid& grid,
           const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///Register node with OSG
     META_Node( bots, Grid );
 
+    ///Create this grid geode
     void CreateGrid(
         int gridSize, std::map< std::pair< int, int >,
-                                std::pair< bool, bool > >* occupancyMatrix );
+                                std::pair< bool, bool > >& occupancyMatrix );
 
 protected:
+    ///Destructor
     virtual ~Grid();
 
 private:
+    ///Initialize this grid geode
     void Initialize();
 
 };

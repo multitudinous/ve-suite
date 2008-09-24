@@ -43,20 +43,27 @@ namespace bots
 class HoldBlockSensor : public Sensor
 {
 public:
+    ///Constructor
     HoldBlockSensor( bots::AgentEntity* agentEntity );
 
+    ///Destructor
     virtual ~HoldBlockSensor();
 
+    ///Collect information from the environment
     virtual void CollectInformation();
 
-    bool HoldingBlock();
+    ///Returns if the agent entity is holding a block
+    const bool HoldingBlock() const;
 
 protected:
+    ///Initialize this hold block sensor
     virtual void Initialize();
 
 private:
+    ///Tells if the agent entity is holding a block
     bool mHoldingBlock;
 
+    ///The range of this hold block sensor
     double mRange;
 
 };

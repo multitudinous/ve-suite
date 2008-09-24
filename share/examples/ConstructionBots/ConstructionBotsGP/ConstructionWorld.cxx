@@ -147,7 +147,7 @@ void ConstructionWorld::InitializeFramework()
     mAmbientSound->GetSoundState()->setAmbient( false );
 #endif //VE_SOUND
 
-    int numBlocks = 12;
+    int numBlocks = 24;
     mBlocksLeft = numBlocks;
     int numAgents = 3;
     //Ensure that the grid size is odd for centrality purposes
@@ -182,16 +182,31 @@ void ConstructionWorld::InitializeFramework()
     mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
     mOccupancyMatrix[ std::make_pair(  0, -2 ) ].first = true;
 
+    mOccupancyMatrix[ std::make_pair(  1,  2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1,  2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -1, -2 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  1, -2 ) ].first = true;
+
+    mOccupancyMatrix[ std::make_pair(  2,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -2,  1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -2, -1 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  2, -1 ) ].first = true;
+
+    mOccupancyMatrix[ std::make_pair(  3,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0,  3 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair( -3,  0 ) ].first = true;
+    mOccupancyMatrix[ std::make_pair(  0, -3 ) ].first = true;
+
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
 
     //Initialize the grid
     osg::ref_ptr< bots::Grid > grid = new bots::Grid();
-    grid->CreateGrid( gridSize, &mOccupancyMatrix );
+    grid->CreateGrid( gridSize, mOccupancyMatrix );
 
     mGrid = new bots::GridEntity(
         grid.get(), mPluginDCS.get(), mPhysicsSimulator );
-    mGrid->SetNameAndDescriptions();
+    //mGrid->SetNameAndDescriptions();
     mGrid->InitPhysics();
     mGrid->GetPhysicsRigidBody()->setFriction( 0.5 );
     mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
@@ -205,9 +220,10 @@ void ConstructionWorld::InitializeFramework()
     mStartBlock->InitPhysics();
     mStartBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
     mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
-    mStartBlock->SetBlockEntityMap( &mBlockEntities );
+    mStartBlock->SetBlockEntityMap( mBlockEntities );
     mStartBlock->SetNameAndDescriptions( 0 );
-    mStartBlock->SetOccupancyMatrix( &mOccupancyMatrix );
+    mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );
+    mStartBlock->InitializeStartBlock();
     mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
 
     //Initialize the blocks
@@ -222,7 +238,7 @@ void ConstructionWorld::InitializeFramework()
         blockEntity->InitPhysics();
         blockEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
 
-        blockEntity->SetBlockEntityMap( &mBlockEntities );
+        blockEntity->SetBlockEntityMap( mBlockEntities );
 
         //Set D6 constraint for blocks
         blockEntity->SetConstraints( gridSize );
@@ -247,14 +263,14 @@ void ConstructionWorld::InitializeFramework()
             agent.get(), mPluginDCS.get(), mPhysicsSimulator );
 #endif
         //Set number of blocks left to be placed
-        agentEntity->SetBlocksLeft( &mBlocksLeft );
+        agentEntity->SetBlocksLeft( mBlocksLeft );
 
         //Set physics properties for blocks
         agentEntity->InitPhysics();
         agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
         agentEntity->GetPhysicsRigidBody()->UserDefinedShape(
             agent->CreateCompoundShape() );
-        agentEntity->SetBlockEntityMap( &mBlockEntities );
+        agentEntity->SetBlockEntityMap( mBlockEntities );
 
         //Set D6 constraint for agents
         agentEntity->SetConstraints( gridSize );
@@ -264,8 +280,8 @@ void ConstructionWorld::InitializeFramework()
 
         //Set the sensor range for the agents
         agentEntity->GetBlockSensor()->SetRange( gridSize * 0.3 );
-        agentEntity->GetObstacleSensor()->SetRange( gridSize );
-        agentEntity->GetSiteSensor()->SetRange( gridSize );
+        agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * gridSize );
+        agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * gridSize );
 
         //Set name and descriptions for blocks
         agentEntity->SetNameAndDescriptions( i );
@@ -332,10 +348,10 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
             {
                 posNegTwo = -1;
             }
-                                                      //Subtract block width
+                                                      //Subtract some amount
                                                       //to keep blocks off walls
-            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 1.0 );
-            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 1.0 );
+            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 2.0 );
+            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 2.0 );
 
             for( size_t j = 0; j < positions.size(); ++j )
             {
@@ -376,7 +392,6 @@ void ConstructionWorld::PreFrameUpdate()
     if( mBlocksLeft )
     {
         mFrameCount++;
-        std::cout << mBlocksLeft << std::endl;
     }
     else
     {

@@ -65,6 +65,7 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
     mNumDetectors( 0 ),
     mAngleIncrement( 20 ),
     mRange( 0 ),
+    mForceLineLength( 5.0 ),
     mForceAttractionConstant( 1.0 ),
     mForceRepellingConstant( 1.0 ),
     mDetectorGeometry( 0 ),
@@ -189,14 +190,20 @@ void ObstacleSensor::CollectInformation()
 
     //Remove the agentDCS and the targetDCS for intersection test
     pluginDCS->RemoveChild( agentDCS.get() );
-    pluginDCS->RemoveChild( targetDCS.get() );
+    if( targetDCS.valid() )
+    {
+        pluginDCS->RemoveChild( targetDCS.get() );
+    }
     //This is an expensive call
     //Try to only call once by using group intersector
     osgUtil::IntersectionVisitor intersectionVisitor( mIntersectorGroup.get() );
     pluginDCS->accept( intersectionVisitor );
     //Add back the agentDCS and targetDCS
     pluginDCS->AddChild( agentDCS.get() );
-    pluginDCS->AddChild( targetDCS.get() );
+    if( targetDCS.valid() )
+    {
+        pluginDCS->AddChild( targetDCS.get() );
+    }
 
     for( unsigned int i = 0; i < mNumDetectors; ++i )
     {
@@ -286,7 +293,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         //Wall following algorithm
         //Set threshold to 80 instead of 90 to help with rounding corners
         //80 is a good number
-        if( theta > 85.0 )
+        if( theta > 80.0 )
         {
             double x = repulsiveForce.x();
             double y = repulsiveForce.y();
@@ -334,16 +341,16 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         (*mVertexArray)[ 2 ] = (*mVertexArray)[ 3 ] =
         (*mVertexArray)[ 4 ] = (*mVertexArray)[ 5 ] = agentDCS->getPosition();
 
-        (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * 3.0;
-        (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * 3.0;
+        (*mVertexArray)[ 1 ].x() += repulsiveForce.x() * mForceLineLength;
+        (*mVertexArray)[ 1 ].y() += repulsiveForce.y() * mForceLineLength;
         (*mVertexArray)[ 1 ].z() += repulsiveForce.z();
 
-        (*mVertexArray)[ 3 ].x() += targetForce.x() * 3.0;
-        (*mVertexArray)[ 3 ].y() += targetForce.y() * 3.0;
+        (*mVertexArray)[ 3 ].x() += targetForce.x() * mForceLineLength;
+        (*mVertexArray)[ 3 ].y() += targetForce.y() * mForceLineLength;
         (*mVertexArray)[ 3 ].z() += targetForce.z();
 
-        (*mVertexArray)[ 5 ].x() += mResultantForce.x() * 3.0;
-        (*mVertexArray)[ 5 ].y() += mResultantForce.y() * 3.0;
+        (*mVertexArray)[ 5 ].x() += mResultantForce.x() * mForceLineLength;
+        (*mVertexArray)[ 5 ].y() += mResultantForce.y() * mForceLineLength;
         (*mVertexArray)[ 5 ].z() += mResultantForce.z();
 
         mGeometry->dirtyDisplayList();
@@ -351,6 +358,11 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     }
 
     return mResultantForce;
+}
+////////////////////////////////////////////////////////////////////////////////
+const bool ObstacleSensor::ObstacleDetected() const
+{
+    return mObstacleDetected;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )
@@ -372,10 +384,5 @@ void ObstacleSensor::SetForceRepellingConstant( double forceRepellingConstant )
 void ObstacleSensor::SetRange( double range )
 {
     mRange = range;
-}
-////////////////////////////////////////////////////////////////////////////////
-bool ObstacleSensor::ObstacleDetected()
-{
-    return mObstacleDetected;
 }
 ////////////////////////////////////////////////////////////////////////////////

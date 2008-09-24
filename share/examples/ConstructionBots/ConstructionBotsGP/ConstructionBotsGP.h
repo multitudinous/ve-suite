@@ -47,16 +47,27 @@ class VE_USER_PLUGIN_EXPORTS ConstructionBotsGP
     public ves::xplorer::plugin::PluginBase
 {
 public:
+    ///Constructor
     ConstructionBotsGP();
+
+    ///Destructor
     virtual ~ConstructionBotsGP();
+
+    ///Initialize the scenegraph node for this plugin
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
+
+    ///Perform the preframe update
     virtual void PreFrameUpdate();
+
+    ///Set the current command
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 
 protected:
+    ///Update the parameters
     void UpdateParams();
 
 private:
+    ///The construction framework
     bots::ConstructionWorldPtr mConstructionWorld;
 
 };

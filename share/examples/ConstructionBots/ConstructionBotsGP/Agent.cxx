@@ -70,7 +70,7 @@ Agent::~Agent()
 
 }
 ////////////////////////////////////////////////////////////////////////////////
-btCompoundShape* Agent::CreateCompoundShape()
+btCompoundShape* const Agent::CreateCompoundShape() const
 {
     btScalar boxHalfWidth = 0.5;
     btScalar holderHalfThickness = 0.02;
@@ -125,10 +125,14 @@ void Agent::Initialize()
         texture->setInternalFormat( GL_RGBA8 );
         texture->setSourceFormat( GL_RGBA );
         texture->setSourceType( GL_UNSIGNED_INT );
-        texture->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-        texture->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-        texture->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-        texture->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+        texture->setFilter(
+            osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+        texture->setFilter(
+            osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+        texture->setWrap(
+            osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+        texture->setWrap(
+            osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
         stateset->setTextureAttributeAndModes(
             0, texture.get() ,osg::StateAttribute::ON );
     }

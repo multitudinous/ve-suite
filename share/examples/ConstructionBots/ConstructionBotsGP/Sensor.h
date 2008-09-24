@@ -57,22 +57,35 @@ class AgentEntity;
 class Sensor
 {
 public:
+    ///Constructor
     Sensor( bots::AgentEntity* agentEntity );
+
+    ///Destructor
     virtual ~Sensor();
 
+    ///Collect information from the environment
     virtual void CollectInformation() = 0;
 
+    ///Display the geometry for this sensor
     virtual void DisplayGeometry( bool onOff );
 
 protected:
+    ///Initialize this sensor
     virtual void Initialize() = 0;
 
+    ///A pointer to the agent entity that this sensor belongs to
     bots::AgentEntity* mAgentEntity;
 
+    ///The geode which contains the geometry of this sensor
     osg::ref_ptr< osg::Geode > mGeode;
+
+    ///The geometry of this sensor
     osg::ref_ptr< osg::Geometry > mGeometry;
+
+    ///Contains the vertices of the geometry for this sensor
     osg::ref_ptr< osg::Vec3Array > mVertexArray;
 
+    ///A line segment intersector to perform polygon intersection tests
     osg::ref_ptr< osgUtil::LineSegmentIntersector > mLineSegmentIntersector;
 
 };

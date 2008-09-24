@@ -45,19 +45,25 @@ namespace bots
 class Agent : public osg::Geode
 {
 public:
+    ///Default Constructor
     Agent();
 
+    ///Constructor
     Agent( const Agent& agent,
            const osg::CopyOp& copyop = osg::CopyOp::SHALLOW_COPY );
 
+    ///Register node with OSG
     META_Node( bots, Agent );
 
-    btCompoundShape* CreateCompoundShape();
+    ///A custom shape to hold blocks on top the agent
+    btCompoundShape* const CreateCompoundShape() const;
 
 protected:
+    ///Destructor
     virtual ~Agent();
 
 private:
+    ///Initialize this agent geode
     void Initialize();
 
 };

@@ -46,32 +46,54 @@ namespace bots
 class SiteSensor : public Sensor
 {
 public:
+    ///Constructor
     SiteSensor( bots::AgentEntity* agentEntity );
 
+    ///Destructor
     virtual ~SiteSensor();
 
+    ///Collect information from the environment
     virtual void CollectInformation();
 
+    ///Rotate the site sensor
     void Rotate();
 
-    bool SiteInView();
-    bool CloseToSite();
+    ///Returns if the site is currently in view
+    const bool SiteInView() const;
 
-    const btVector3& GetNormalizedSiteVector();
+    ///Returns if the agent entity is close to the site
+    const bool CloseToSite() const;
 
+    ///Get the normalized vector to the site
+    const btVector3& GetNormalizedSiteVector() const;
+
+    ///Reset the angle of this site sensor
+    void ResetAngle();
+
+    ///Set the range for this sensor
     void SetRange( double range );
 
 protected:
+    ///Initialize this site sensor
     virtual void Initialize();
 
 private:
+    ///Tells if the site is in view of this sensor
     bool mSiteInView;
+
+    ///Tells if the agent entity is close to the site
     bool mCloseToSite;
 
+    ///The angle of this sensor
     double mAngle;
+
+    ///The angle increment of this sensor
     double mAngleInc;
+
+    ///The range of this sensor
     double mRange;
 
+    ///The normalized vector from this agent entity to the site
     btVector3 mNormalizedSiteVector;
 
 };

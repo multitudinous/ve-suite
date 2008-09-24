@@ -41,16 +41,11 @@
 
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
-// --- vrJuggler Includes --- //
-#include <gmtl/Xforms.h>
-#include <gmtl/Matrix.h>
-
 // --- OSG Includes --- //
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osg/LineWidth>
 
-#include <osgUtil/PlaneIntersector>
 #include <osgUtil/IntersectionVisitor>
 #include <osgUtil/LineSegmentIntersector>
 
@@ -69,8 +64,7 @@ BlockSensor::BlockSensor( bots::AgentEntity* agentEntity )
     mAngle( 0 ), 
     mAngleInc( 0.1 ),
     mRange( 0 ),
-    mNormalizedBlockVector( 0, 0, 0 ),
-    mPolytope()
+    mNormalizedBlockVector( 0, 0, 0 )
 {
     Initialize();
 }
@@ -115,11 +109,6 @@ void BlockSensor::Initialize()
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
     DisplayGeometry( false );
-
-    mPolytope.add( osg::Plane(  1.0,  0.0, 0.0, 0.0 ) );
-    mPolytope.add( osg::Plane( -1.0,  0.0, 0.0, 0.0 ) );
-    mPolytope.add( osg::Plane(  0.0,  1.0, 0.0, 0.0 ) );
-    mPolytope.add( osg::Plane(  0.0, -1.0, 0.0, 0.0 ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
@@ -134,24 +123,6 @@ void BlockSensor::CollectInformation()
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
 
-    double agentX, agentY, agentZ;
-    agentX = (*mVertexArray)[ 0 ].x();
-    agentY = (*mVertexArray)[ 0 ].y();
-    agentZ = (*mVertexArray)[ 0 ].z();
-
-    osg::Polytope::PlaneList& planeList = mPolytope.getPlaneList();
-    planeList.at( 0 ).set(
-        osg::Vec3( 1.0, 0.0, 0.0 ), osg::Vec3( agentX - mRange, 0.0, 0.0 ) );
-    planeList.at( 1 ).set(
-        osg::Vec3( -1.0, 0.0, 0.0 ), osg::Vec3( agentX + mRange, 0.0, 0.0 ) );
-    planeList.at( 2 ).set(
-        osg::Vec3( 0.0, 1.0, 0.0 ), osg::Vec3( 0.0, agentY - mRange, 0.0 ) );
-    planeList.at( 3 ).set(
-        osg::Vec3( 0.0, -1.0, 0.0 ), osg::Vec3( 0.0, agentY + mRange, 0.0 ) );
-
-    osg::ref_ptr< osgUtil::PlaneIntersector > planeIntersector =
-        new osgUtil::PlaneIntersector( osg::Plane( osg::Vec3( 0.0, 0.0, 1.0 ), osg::Vec3( 0.0, 0.0, agentZ ) ), mPolytope );
-
     if( targetDCS.valid() )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
@@ -160,9 +131,6 @@ void BlockSensor::CollectInformation()
     else
     {
         Rotate();
-        (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
-        (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
-        (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
     }
 
     //Reset results from last frame
@@ -177,93 +145,82 @@ void BlockSensor::CollectInformation()
         mGeometry->dirtyBound();
     }
 
+    mLineSegmentIntersector->reset();
+    mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
+    mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
+
     pluginDCS->RemoveChild( agentDCS.get() );
     osgUtil::IntersectionVisitor intersectionVisitor(
-        planeIntersector.get() );
+        mLineSegmentIntersector.get() );
     pluginDCS->accept( intersectionVisitor );
     pluginDCS->AddChild( agentDCS.get() );
 
     bool goToBlock( false );
-    //Maximum vector a hit could ever be away from the agent
-    osg::Vec3 blockAgentVector( mRange, 0.0, 0.0 );
-    if( planeIntersector->containsIntersections() )
+    if( mLineSegmentIntersector->containsIntersections() )
     {
-        osgUtil::PlaneIntersector::Intersections& intersections =
-            planeIntersector->getIntersections();
-        for( size_t i = 0; i < intersections.size(); ++i )
+        osg::ref_ptr< osg::Drawable > drawable =
+            mLineSegmentIntersector->getFirstIntersection().drawable;
+        osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+        if( tempArray )
         {
-            mLineSegmentIntersector->reset();
-            osg::ref_ptr< osg::Drawable > drawable =
-                intersections.at( i ).drawable;
-            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-            const osg::Vec4* color;
-            if( tempArray )
+            const osg::Vec4& color =
+                static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+            if( color == mAgentEntity->mBlockColor )
             {
-                color =
-                    &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
-                if( *color == mAgentEntity->mBlockColor )
-                {   
-                    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                        drawable->getParent( 0 ) );
-                    ves::xplorer::scenegraph::DCS* tempTargetDCS =
-                        static_cast< ves::xplorer::scenegraph::DCS* >(
-                            parentVisitor.GetParentNode() );
-
-                    osg::Vec3 tempBlockAgentVector =
-                        tempTargetDCS->getPosition();
-                    tempBlockAgentVector -= (*mVertexArray)[ 0 ];
-                    if( tempBlockAgentVector.length() < blockAgentVector.length() )
-                    {
-                        //mLineSegmentIntersector->reset();
-                        //mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
-                        //mLineSegmentIntersector->setEnd( tempBlockAgentVector );
-                        blockAgentVector = tempBlockAgentVector;
-                        targetDCS = tempTargetDCS;
-                    }
-                }
+                goToBlock = true;
+                mBlockInView = true;
+                
+                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                    drawable->getParent( 0 ) );
+                targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
+                    parentVisitor.GetParentNode() );
             }
         }
     }
-    
+
+    mAgentEntity->SetTargetDCS( targetDCS.get() );
+
+    btVector3 blockVector( 0.0, 0.0, 0.0 );
     if( targetDCS.valid() )
     {
-        goToBlock = true;
-        mBlockInView = true;
-        if( blockAgentVector.length() <= 1.5 )
+        double* blockPosition = targetDCS->GetVETranslationArray();
+        blockVector.setValue(
+            blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
+            blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
+        if( blockVector.length() <= 1.5 )
         {
             mCloseToBlock = true;
         }
-
-        blockAgentVector.normalize();
-        mNormalizedBlockVector.setValue(
-            blockAgentVector.x(), blockAgentVector.y(), blockAgentVector.z() );
     }
+
+    mNormalizedBlockVector = blockVector.normalize();
 
     if( goToBlock )
     {
         mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
             mNormalizedBlockVector * mAgentEntity->mMaxSpeed );
     }
-
-    mAgentEntity->SetTargetDCS( targetDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate()
 {
     mAngle += mAngleInc;
+    (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
+    (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
+    (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool BlockSensor::BlockInView()
+const bool BlockSensor::BlockInView() const
 {
     return mBlockInView;
 }
 ////////////////////////////////////////////////////////////////////////////////
-bool BlockSensor::CloseToBlock()
+const bool BlockSensor::CloseToBlock() const
 {
     return mCloseToBlock;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const btVector3& BlockSensor::GetNormalizedBlockVector()
+const btVector3& BlockSensor::GetNormalizedBlockVector() const
 {
     return mNormalizedBlockVector;
 }
