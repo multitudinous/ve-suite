@@ -1,204 +1,245 @@
-<html><!-- #BeginTemplate "/Templates/agriculture.dwt" --><!-- DW6 -->
-<head>
-<!-- #BeginEditable "Title" -->
-<title>Coffee Environment: Climate Conditions for Growing Coffee Beans</title>
-<!-- #EndEditable -->
-<!-- #BeginEditable "Description" -->
-<meta name="Description" content="Coffee environment information and details about the ideal climate for growing coffee beans.">
-<!-- #EndEditable -->
-<!-- #BeginEditable "Keywords" -->
-<meta name="KeyWords" content="coffee environment growing conditions environmental climate high low altitude equatorial equator subtropical beans">
-<!-- #EndEditable -->
-<script language="JavaScript">
-<!--
-
-
-function MM_findObj(n, d) { //v4.0
-  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
-    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
-  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
-  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
-  if(!x && document.getElementById) x=document.getElementById(n); return x;
-}
-//-->
-</script>
-<script language="JavaScript">function fwLoadMenus() {
-  if (window.fw_menu_0) return;
-  window.fw_menu_0 = new Menu("root",166,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_0.addMenuItem("Coffee Plant Overview","location='http://www.coffeeresearch.org/agriculture/coffeeplant.htm'");
-  fw_menu_0.addMenuItem("Growing Conditions","location='http://www.coffeeresearch.org/agriculture/environment.htm'");
-  fw_menu_0.addMenuItem("Cultivars","location='http://www.coffeeresearch.org/agriculture/varietals.htm'");
-  fw_menu_0.addMenuItem("Planting","location='http://www.coffeeresearch.org/agriculture/planting.htm'");
-  fw_menu_0.addMenuItem("Germinating","location='http://www.coffeeresearch.org/agriculture/growing.htm'");
-  fw_menu_0.addMenuItem("Bean Development Movie","location='http://www.coffeeresearch.org/agriculture/beandevel.htm'");
-   fw_menu_0.hideOnMouseOut=true;
-  window.fw_menu_1 = new Menu("root",138,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_1.addMenuItem("Harvesting Overview","location='http://www.coffeeresearch.org/agriculture/harvesting.htm'");
-   fw_menu_1.hideOnMouseOut=true;
-  window.fw_menu_2 = new Menu("root",150,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_2.addMenuItem("Processing Overview","location='http://www.coffeeresearch.org/agriculture/processing.htm'");
-  fw_menu_2.addMenuItem("Processing and Flavor","location='http://www.coffeeresearch.org/agriculture/flavor.htm'");
-  fw_menu_2.addMenuItem("Drying","location='http://www.coffeeresearch.org/agriculture/drying.htm'");
-  fw_menu_2.addMenuItem("Density Sorting","location='http://www.coffeeresearch.org/agriculture/densitysort.htm'");
-  fw_menu_2.addMenuItem("Color Sorting","location='http://www.coffeeresearch.org/agriculture/colorsorting.htm'");
-   fw_menu_2.hideOnMouseOut=true;
-  window.fw_menu_3 = new Menu("root",160,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_3.addMenuItem("Soil Analysis and Levels","window.open('http://www.coffeeresearch.org/agriculture/soil.htm', '_parent');");
-  fw_menu_3.addMenuItem("Leaf Analysis","window.open('http://www.coffeeresearch.org/agriculture/leafanalysis.htm', '_parent');");
-  fw_menu_3.addMenuItem("Mineral Deficiencies","window.open('http://www.coffeeresearch.org/agriculture/mineral.htm', '_parent');");
-   fw_menu_3.hideOnMouseOut=true;
-  window.fw_menu_4 = new Menu("root",144,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_4.addMenuItem("Coffee Leaf Rust","location='http://www.coffeeresearch.org/agriculture/rust.htm'");
-  fw_menu_4.addMenuItem("Coffee Berry Disease","location='http://www.coffeeresearch.org/agriculture/cbd.htm'");
-  fw_menu_4.addMenuItem("Bacterial Blight","location='http://www.coffeeresearch.org/agriculture/bacblight.htm'");
-  fw_menu_4.addMenuItem("Nematodes","location='http://www.coffeeresearch.org/agriculture/nematodes.htm'");
-  fw_menu_4.addMenuItem("Leaf Miner","location='http://www.coffeeresearch.org/agriculture/leafminer.htm'");
-   fw_menu_4.hideOnMouseOut=true;
-
-  fw_menu_4.writeMenus();
-} // fwLoadMenus()
-
-//-->
-</script>
-<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
-<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
-<script language="JavaScript">
-<!--
-<!--
-function MM_reloadPage(init) {  //reloads the window if Nav4 resized
-  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
-    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
-  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
-}
-MM_reloadPage(true);
-// -->
-
-function MM_swapImgRestore() { //v3.0
-  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
-}
-
-function MM_swapImage() { //v3.0
-  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
-   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
-}
-
-function MM_preloadImages() { //v3.0
-  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
-    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
-    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
-}
-
-function MM_nbGroup(event, grpName) { //v3.0
-  var i,img,nbArr,args=MM_nbGroup.arguments;
-  if (event == "init" && args.length > 2) {
-    if ((img = MM_findObj(args[2])) != null && !img.MM_init) {
-      img.MM_init = true; img.MM_up = args[3]; img.MM_dn = img.src;
-      if ((nbArr = document[grpName]) == null) nbArr = document[grpName] = new Array();
-      nbArr[nbArr.length] = img;
-      for (i=4; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
-        if (!img.MM_up) img.MM_up = img.src;
-        img.src = img.MM_dn = args[i+1];
-        nbArr[nbArr.length] = img;
-    } }
-  } else if (event == "over") {
-    document.MM_nbOver = nbArr = new Array();
-    for (i=1; i < args.length-1; i+=3) if ((img = MM_findObj(args[i])) != null) {
-      if (!img.MM_up) img.MM_up = img.src;
-      img.src = (img.MM_dn && args[i+2]) ? args[i+2] : args[i+1];
-      nbArr[nbArr.length] = img;
-    }
-  } else if (event == "out" ) {
-    for (i=0; i < document.MM_nbOver.length; i++) {
-      img = document.MM_nbOver[i]; img.src = (img.MM_dn) ? img.MM_dn : img.MM_up; }
-  } else if (event == "down") {
-    if ((nbArr = document[grpName]) != null)
-      for (i=0; i < nbArr.length; i++) { img=nbArr[i]; img.src = img.MM_up; img.MM_dn = 0; }
-    document[grpName] = nbArr = new Array();
-    for (i=2; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
-      if (!img.MM_up) img.MM_up = img.src;
-      img.src = img.MM_dn = args[i+1];
-      nbArr[nbArr.length] = img;
-  } }
-}
-//-->
-</script>
-</head>
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="MM_preloadImages('../Menus/mainfiles/main_r1_c1_f3.jpg','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f2.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f3.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f4.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f5.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f6.jpg','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f7.jpg')">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
-    <td width="100%"> 
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr> 
-          <td width="136" height="80" valign="top"><a href="http://www.coffeeresearch.org"><img src="agriculturetitle.jpg" alt="coffee cherries" width="136" height="80" hspace="0" vspace="0" border="0"></a></td>
-          <td width="167" valign="top"><img name="agriculturemenufull_r2_c3" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3.jpg" width="167" height="80" border="0"></td>
-          <td width="100%" valign="top"> 
-            <table border="0" cellpadding="0" cellspacing="0" width="280" align="right">
-              <!-- fwtable fwsrc="maincontents2.png" fwbase="main.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="0" -->
-              <tr bgcolor="#000000"> 
-                <!-- row 1 -->
-                <td width="70"><a href="http://www.coffeeresearch.org" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f3.jpg',1);" ><img name="main_r1_c1_2" src="../Menus/mainfiles/main_r1_c1.jpg" width="70" height="21" border="0"></a></td>
-                <td width="70"><a href="http://www.coffeeresearch.org/sitemap.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f3.jpg',1);" ><img name="main_r1_c2_2" src="../Menus/mainfiles/main_r1_c2.jpg" width="70" height="21" border="0"></a></td>
-                <td width="70"><a href="../about/contactmain.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f3.jpg',1);" ><img name="main_r1_c3_2" src="../Menus/mainfiles/main_r1_c3.jpg" width="70" height="21" border="0"></a></td>
-                <td width="70"><a href="../about/overview.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f3.jpg',1);" ><img name="main_r1_c4_2" src="../Menus/mainfiles/main_r1_c4.jpg" width="70" height="21" border="0"></a></td>
-              </tr>
-              <tr> 
-                <td height="59" colspan="4" valign="top">
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr> 
-          <td height="1"><img height="1" width="136" src="/Menus/spacer6.gif"></td>
-          <td><img height="1" width="167" src="/Menus/spacer6.gif"></td>
-          <td></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr> 
-    <td> 
-      <table bgcolor="#336699" border="0" cellpadding="0" cellspacing="0" width="100%" height="24">
-        <!-- fwtable fwsrc="agriculturepulldowns.png" fwbase="agrimenufull.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
-        <tr bgcolor="#336699"> 
-          <td width="1" height="25"><font color="#9999FF"></font></td>
-          <!-- row 2 -->
-          <td width="124" bgcolor="#336699">&nbsp;</td>
-          <td width="470"><a href="http://www.coffeeresearch.org/agriculture/coffeeplant.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f2.jpg',1);" ><img name="agriculturemenufull_r4_c3" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c3.jpg" width="86" height="23" border="0" alt="Agriculture"></a><a href="http://www.coffeeresearch.org/coffee/history.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f3.jpg',1);" ><img name="agriculturemenufull_r4_c4" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c4.jpg" width="55" height="23" border="0" alt="Coffee"></a><a href="http://www.coffeeresearch.org/espresso/definitions.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f4.jpg',1);" ><img name="agriculturemenufull_r4_c5" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c5.jpg" width="75" height="23" border="0" alt="Espresso"></a><a href="http://www.coffeeresearch.org/science/news.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f5.jpg',1);" ><img name="agriculturemenufull_r4_c7" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c7.jpg" width="64" height="23" border="0" alt="Science"></a><a href="http://www.coffeeresearch.org/politics/overview.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f6.jpg',1);" ><img name="agriculturemenufull_r4_c8" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c8.jpg" width="60" height="23" border="0" alt="Politics"></a><a href="http://www.coffeeresearch.org/market/marketintro.htm" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('agriculturemenufull_r2_c3','','../Menus/agriculturemenufullcontents/agriculturemenufull_r2_c3_f7.jpg',1);" ><img name="agriculturemenufull_r4_c9" src="../Menus/agriculturemenufullcontents/agriculturemenufull_r4_c9.jpg" width="55" height="23" border="0"></a></td>
-          <td width="783" valign="top">&nbsp; </td>
-        </tr>
-        <tr> 
-          <td height="1" width="1"><img height="1" width="1" src="/Menus/spacer6.gif"></td>
-          <td width="124"><img height="1" width="124" src="/Menus/spacer6.gif"></td>
-          <td width="470"><img height="1" width="457" src="/Menus/spacer6.gif"></td>
-          <td width="783"></td>
-        </tr>
-        <!--   This table was automatically created with Macromedia Fireworks 4.0   -->
-        <!--   http://www.macromedia.com   -->
-      </table>
-    </td>
-  </tr>
-</table>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" height="881" bgcolor="#FFFFFF">
-  <tr> 
-    <td width="100%" valign="top" height="799"> 
-      <table cellspacing="0" cellpadding="4" width="100%">
-        <tr> 
-          <td height="718" colspan="2" valign="top"> 
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" height="703">
-              <tr> 
-                <td height="24" width="130"><img border="0" src="../Menus/spacerfortitle2.gif" width="119" height="24"></td>
-                <td width="100%" valign="top"> 
-                  <div align="left"> 
-                    <script language="JavaScript1.2">fwLoadMenus();</script>
-                  </div>
-                </td>
-              </tr>
-              <tr> 
-                <td height="661" valign="top" width="130"> 
-                  <table width="124" border="0" cellpadding="0" cellspacing="0" height="491">
-                    <tr> 
-                      <td width="114" height="491" valign="top"> 
-                        <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacin
+/* XPM */
+static char *ratefrac_ratefrac_vacuum1[] = {
+/* columns rows colors chars-per-pixel */
+"83 166 73 1",
+"  c #000000",
+". c #262624",
+"X c #272823",
+"o c #282723",
+"O c #282824",
+"+ c #2A2928",
+"@ c #3B3B36",
+"# c #3C3C38",
+"$ c #4A4A44",
+"% c #57574E",
+"& c #57594E",
+"* c #58584E",
+"= c #575851",
+"- c #585752",
+"; c #585951",
+": c #636357",
+"> c #64645A",
+", c #6F6F63",
+"< c #717165",
+"1 c #737369",
+"2 c #7B7C6E",
+"3 c #7C7C70",
+"4 c #858677",
+"5 c #858679",
+"6 c #878879",
+"7 c #888679",
+"8 c #8D8E7E",
+"9 c #8D8E80",
+"0 c #8F9081",
+"q c #908E81",
+"w c #939485",
+"e c #979886",
+"r c #979889",
+"t c #989989",
+"y c #9FA08E",
+"u c #9FA090",
+"i c #A0A18F",
+"p c #A0A191",
+"a c #A7A898",
+"s c #A8A996",
+"d c #A9AA98",
+"f c #AFB09E",
+"g c #B0B19E",
+"h c #B1B2A0",
+"j c #B7B8A5",
+"k c #B8B9A5",
+"l c #B9B9A8",
+"z c #BFC0AC",
+"x c #C1C1AD",
+"c c #C4C4B2",
+"v c #C7C8B6",
+"b c #C7C8BA",
+"n c #C8C7B3",
+"m c #C9C7B9",
+"M c #C9C8B4",
+"N c #CFCEBA",
+"B c #D0CEBA",
+"V c #D1D0BC",
+"C c #D6D5C1",
+"Z c #D8D7C2",
+"A c #DCDBC6",
+"S c #DDDCC8",
+"D c #E1DFD1",
+"F c #E2E1CC",
+"G c #E3E2D1",
+"H c #E8E7D2",
+"J c #EAEAD2",
+"K c #EEEDD8",
+"L c #F4F3DC",
+"P c #F9F7EA",
+"I c #F9F8E1",
+"U c #FAF8EB",
+"Y c #FEFEFE",
+/* pixels */
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXooOOOoYUYYYYYYYYYYYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXXXXOOX$$$$$$$OOOOXXoYYYYYYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY..@$$$$$$*&*****$$$$$$#X+YYYYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXX@$$;&&;;*>>>>>>>****&&$$@o.YYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYoX@$$*&>>>>>>2323332>>>>>>&-$$#o.YYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYUYYYYYoo$$$&*>>1222237777777233321>>;-$$$X.YYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX#$$&*>><3224478888888877772221>>&;$$@.YYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX@$;%::<337760888uuiiiii888846532<>>&&$@XYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX@$&;><,366600uuuissddfsdiiii006452,<>&;$#oYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX@$&&><<35600uuuddsgggggggdddiuu9955211>;;$#XYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY.#$&&:<<3549rudddjhgxxxxxxxgggddaut9752<<>;;$@XYUY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY+@$=&><<3590rudahhzzxnnMMMMMxxxghddut9552<1>;*$@XYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX@$;>,<3559rudjhlzzmnnNBBBnMMMxxkfhdut0672<<>;$@XYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY.@$=&><3559rudjfjzbmNNNVVAABBBBMMzkfjdut0773<>&*$@XY",
+"YYYYYYYYYYYYYYYYYYYYYYYYY YYYYY.@$=><1359uuafgzzmNNZAFAFFFAAAABBmzkhhdut972<1>;$@XY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYY YYY.@@$=><,359ruafkzMCNZZSFFHJJFFAVVVNvzkfdut842<<>*$@@X",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYY YY+@#$*>1,240tudgzzMVVVFFHKLLLHHFSZVNNxkgsi8072<,>=$@@X",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYY Yo#$;>1<240tudfgzMBVVFFFJLLILLGFASZVBMxkgdsr952<<,-$@X",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYY +@$;><<240tudjkzMBFVFFJJLIIILKHFSCVBnxggsir972<<>=$@ ",
+"YYYYYYY                        @$=><,240tudhkzMVFVVFJJLIILKHFAZZVNxkgsii072<<>=$@X ",
+"YYYYYYY YYYYYYYYYYYYYYYYYYYYY  #$=><<259tudfkznBVVFFHKLLILKHFAVZBMxlgdit04211>*$#O ",
+"YYYYYYY YYYYYYYYYYYYYYYYYYYY Y @$=>1<259tudhzxMBVAFFJJLLILKHFAZZBMxlggit072<<>&$@X ",
+"YYYYYYY YYYYYYYYYYYYYYYYYYY YY @$=>,<259tudhjzMBAVAFHKLIILKHFAZVBMxkgdit872<<>*$#X ",
+"YYYYYYY YYYYY YYYYYYYYYYYYY YY @$=><<259tudhjzMBVVAFHKLIILKHFSZZBMxzgdit872<<>*$#O ",
+"YYYYYYY YYYYY  YYYYYYYYYYY YYY @$;>1<359yisgkxMBAVSFJJLLILKHFSZZBMxlhditq73<<>&$#X ",
+"YYYYY%=&--YY Y YYYYYYYYYY YYYY @$;>1<3598isgkxMBVASFJJLLILKHFSZZBMxlhdptq73<<>*$#X ",
+"YYYY--559-- YYYYYYYYYYYYYYYYYY #$;><<259yisgkzMBAVSFJLLLILKHFAZZBnxkhditq73<<>&$#X ",
+"YYY=59dda9 -YYYYYYYYYYYYYYYYYY @$;><<259yisgkzMBVASFJLLLILKHFAZVBnnkhdpt973<<>;$#O ",
+"YY=5aabbm f9&YYYYYYYYYYYYYYYYY @$=><<259yydgkxnBVVAFFJLLILKHFAZZBnxkhdit973,1>;$#X ",
+"YY&5abDD ma7&YYYYYYYYYYYYYYYYY @$;><<2598udgkxMBAVAFJJLLILKHFFVZBnxkhdit9731,>&$#X ",
+"Y=7dmFD GDmd4;YYYYYYYYYYYYYYYY @$=><<259yydgkxMVVAAFJKLIILJHFAZZBnckhdit973,<>;$#X ",
+"Y=7dmGU PGmd7*YYYYYYYYYYYYYYYY @$;><<248esdgkxMVAVAFHLLIILKHFAVZBnckhdit973,<>;$@X ",
+"Y&7abD UDGba9-YYYYYYYYYYYYYYYY @$;><<259tudhkzvVAVFFJJLLILLJFAZZVMxlhdut072<<>*$#O ",
+"YY&5a DDGma5-YYYYYYYYYYYYYYYYY @$;><<240tudhkzMVVASFJLLLILKHFAZZNMxlhdut072<<>*$#X ",
+"YY-9 abvmdf5=YYYYYYYYYYYYYYYYY @$;><<259tudhkzMBVVAFFJLLLLKHFAZVNMxlhdut042<<>;$#X ",
+"YYY 95ddd49-YYYYYYYYYYYYYYYYYY @$-><<259tudhkzMBAVAFJJLLILKHFAZZVMclhdut042<<>*$#X ",
+"YY Y&=445==UYYYYYYYYYYYYYYYYYY @$-><<379yudgkzMVAVFFJKLIILKHFAZZNMxlhdut0421<>&$#X ",
+"Y YYY-%%==YYYYYYYYYYYYYYYYYYYY @$-><<279tudgkzMVVAAFHLLIILKHFAZZNMxkhdut042<<>&$@X ",
+" YYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<279tysgkzMBAVAFHJLIILKJFAVZBnckhdur972<<>;$#X ",
+"YYYYYYY YYYYYYYYYYYYYYYYYYYYYY @$;>1<279tusgkzMBVVAFJJLIILKJFAZZBnckhdur953<<>;$#O ",
+"YYYYYYY YYYYYYYYYYYYYYYYYYYYYY #$;><<259tudgzzMVAVFFJJLIILKHFSZZBMxkhdut952<<>;$#X ",
+"YYYYYYY YYYYYYYYYYYYYYYYYYYYYY @$&><<259tudgjzMNVAFFJJLLILKHFSZZBMckhsut952<<>;$#X ",
+"YYYYYYY                        #$;><<259tudfkzMVVVVFJJLLILKHFSVZBMxkhdit952<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY #$;><<259tudjkzMNAVFFJJLLILKHFAZZBMckhdit052<<>&$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259yudgjzMBVVHFHJLIILKHFAVZBMxlhdit052<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259yudgkzMBFVFFHJLIILKHFSZZBmxlhdut042<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259eydgzzMBFVVFHKLIILKHFSZZBMxlhdit062<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<258tydggzMBVVFFHKLIILKHFSZZBMxlhdpt862<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<360tudgzzMNVZSFJJLLILKHFAZVBMxlhditq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<360tudgjzMNVZSFHJLLILKHFAZZBMxlhditq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudgjzvVZZSFJKLIILKHFAZZVnxlhditq73<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259yudgjzMVZZSFHLLIILKHFAVZVnxlhditq73<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudgkzMBVFFFHJLLILKHFAZZVnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259eydgkzMBVVVFHJLLILKHFAZZVnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259eysgkzMBFVFFJKLIILKHFAVZNnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259yysgzzMBAVVFHLLIILKHFAZZNnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259rudhkzMBVASFHJLLLLLJFAVZBMxljdutq63<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<269rudhkzMVAVSFJKLLILKJFAZZBMxlgdutq73<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tudhjzMBVASFJJLILLKHFAZZBMxlhdutq62<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tudhjzMBAVAFJLLLILKHFAZZBMzkgdut0421<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>,1359tudhlxMBVAAFJJLLILKHFAZZBMxlhdut073<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1,359tudhkxMBVVAFJLLLILKHFAZVBMxlhdut072<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;,,<259tudhzzMBAVFFFJLLILKHFAZZBnckhdut972<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>,<359tudhjzMVVAAFJJLLILKJFAZZBnckhdut043<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259yudgzxMBVFFFHKLIILKHFSZZBnckhditq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$&><<259yusggzMBVVVFJLLIILKHFSZZBnxkhdptq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259eysgzzMBAVFFHJLIILKHFSZVBMxkhditq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259eysgkzMBVAVFJJLIILKHFSZZBMxlhditq73<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;,<<259eudjgzMBAVFFHKLIILKHFAZZBMxlhdit872<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<250tusgzzMBVASFHKLLILKHFSVZBMxlhditq72<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tusgkzMBVASFHJLIILKHFSZVBMxlhditq43<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<260tudgkzMBAVSFHJLIILKHFSZZBMxlhdptq43<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<360tidgkxMBVAAFJJLLILKHFSZZBMxkjdut043<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<360tidfkxMBVVAFJJLLILKHFSZZBMxkfdut043<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tydgkzMBAVFFJLLLILKHFAZZBMckhdut062,<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=>1<259yidgkzMVVAAFJLLLILKHFAZVBMxkhdut0621<>;$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<2698ssggxMNVFFFFJLLILKHFAZZBMxlhdut972<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259yisgkxMVVVVFJJLLILKHFFVZBMxlhdut972<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<2598ssgkxNNAVFFJKLLILJHFAZZBnxlhdut9721<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259yisgkxNVVAVFJLLIILKHFAVZBnclfdut972<<>&$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259rudhlzvVAVFFJJLLILLJFAZZBnxkhdit952<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$-><<250rudhlzMVVASFJJLLILKHFAZZBMckhdut952<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259rudhkzMBAVAFJJLLLLKHFAVZBMckhdit952<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tudhkzMBVVAFJJLLILKHFAZZBMxkhdit973<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>,1359yudgkzMVAVFFJKLIILKHFAZZBMxlhdut972<<>*$#+ ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1,359tudgkzMVVAFFHLLIILKHFAZZBmxlhdit072<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;,,<259tysgkzMBAVVFHJLIILKJFAVZBMxlhditq72<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>,<359tusgkzMBVVFFJKLIILKJFAZZBMxlhdpt872<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudgzzMVVASFJJLLILKHFSCCBMxlhditq731<>*$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tusgjzMNAVSFJLLLILKHFSCCBnxlhditq731<>;$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<240tudgjzMVVAFFFJLLILKHFSCCVnxlhdit873,<:*$#+ ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<250tudjkzMNVVAFJJLLILKGFSCCVnxlhdit8731<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<269tusgkzMBVVFFHKLIILKHFACCVnxlhditq73<<>*$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tysgkzMBFVFFHJLIILKHFSCCVnxlhditq73<<:*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=>1<260tusgkzMBFVVFHKLIILKHFSZZNnxlhditq73<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY #$=><<250tusgzzMBVVFFHKLIILKHFSZZNnxlhditq73<<>;$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudfjznBVVSFJJLLILKHFAZVVMxljdut862<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259tudhzzMNVASFHJLLILKHFAZZBMxlhdut062<<>;$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<269tudhjzMBAZSFJKLIILKHFAZZBMzlhdut042<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<269tudhkzMBVZSFHLLIILKHFAVZBMzlhdut042<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudhkzMBVFFFJJLLILKHFSZZBMxlhdut0431<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=>1<259tudhkzMBVVVFHJLLILKHFSZVBMxlhdut042<<>*$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tudhkznBAVFFJKLIILKHFACCBMxlhdur062<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tudjzzMBVAVFHLLIILKHFACZBnckhdur042<<>;$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259yufgzzMBAVFFFLLLLLLJFAZZBMxkhdut953<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259yysggzMBVASFJKLLLLKJFAZZBMckhsut952<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259eydgkzMBVASFJJLILLKJFAVZBnxkhdit953<<>&$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259eydgkzMBAVSFJLLLILKHFAZZBMckhdit052<<>=$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259eudggxMBVVAFJJLLILKHFAZZBnxlhdit052<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259eudgzxMVVAAFJLLLILKHFAZZBmxlhdit863<<>;$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudggzMBAAFFFJLLILKJFAZZBMxlhdpt062<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudjzzMBVVAFJJLLILKJFAZVBMxlhdpt862<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<269tudhgzMBVVAFJJLIILKHDACCBMxlhditq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<260tudfzzMVFVAFHLLIILKHFACCBMxlhditq73<<>-$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<240tudhkzMBVVAFHKLIILKHFAZCVnxlhditq73<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<240tudhjzMBVAAFJJLIILKHFACCVnxlhditq73<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259tudhkzMBAVFFHJLIILKHFAZZVnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<259tudhlzMBVASFHKLLILKHFAZCVnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<269tudhkzvVSVSFHJLIILKHFACZNnxlhdit873<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259tudjkzMVVVSFHKLIILKHFACCNnxlhdit873<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<359yisgkxMBAVAFJJLLILKHFACZBMxkjdutq63<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<3598isgkxMBVAAFJJLLILKHFACCBMxkfdutq73<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<269yisgkzMBAVFFJLLLILKHFACCBMckhdutq42<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<359yisgkzMBVAAFFLLLILKHFACCBMxkhdut0631<>&$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259yydgkxnBVFFFJJLLILKHFSCCBMxlhdut072<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=>1<2598ydgkxnBVVVFJJLLILKHFSCCBMxlfdut073<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<248yudgkxNVAVFFJKLLILKHFACCBnxlhdut972<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<248yysjkxMVVAVFJLLIILKHFSCCBnclhdut072<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudgzzMBVVSFHJLLILKHFAVVBMxlhdptq73<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<379tudgjzMBVASFJJLLILKHFAVABMxlhditq73<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><1259tudgjzcNVASFHKLIILLHHVAZBMxkhditq73<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259yudgzzMVAVSFJLLIILKHFFZZBMxkhditq73<<>;$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<279tysgzzMBVZSFJJLILLKHFVVFBMckhdit973,1>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$&><<279tysggzMBZZSFJJLLILKHFFZZBMxkhdpt9731,>&$#+ ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$-><<279yydgzzMBZZSFJJLLILKHFFVVBnclhdit953,<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$-><<259yydggzMBVZSFJJLLILKJFFVABnxlhdit973,<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;>1<250tudfkzMBAVVFJKLIILKHFAZZBMxlhdit872<<>*$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$->1<259tudhkzMBVVFFHLLIILKHFAZZBMxkhdpt873<<>*$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<259tudhkzMBAVFFHJLIILKHFAZZBMxkhdptq42<<>*$#O ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$-><<259tudhjzMBVAAFJJLIILKJFAZVBnxkhdptq42<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$->1<279tudhkzMNVASFHKLLILKHFAZZNNxkhdut0621<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$-><<260tudhkzMVAVAFHKLLILKHFFZZNMxkhdut042<<>*$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$;><<240tudhkzvVVASFHKLIILKHFAVZNmxlhdur042<<>&$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY #$->1<240tudjkzMVAVAFJKLIILJHFAZZNmclhdur072<1>*$@X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYY @$=><<259yyfgjznBVVFFFJLLLLJHFAZZVMxlhdutq42<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYU @$->,1359tysgkznBAVSFJJLLLLKJFAZVNmxlhdptq72<<>;$#X ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX@$->1<269tydgkznBAVAJJJLLLILLHFAZCNmzkhdpt952<<>;$@ ",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX@$;><,369tydgkznBVVAAFJLLLLLJFAFZZVmzkhduu952<1>;$@.",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYo@$$-,<<358tudfzznVVVFFJJLLLHHFAVZBvxlhdpr973<,>-$$@X",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYo@$$;;<<359tudfkznVVCAAFFJHHFFAAZZBbzlhapr9531,>-$$@X",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYo@$-,<<360tufjkkzNBCCAFAFFFAAAZZBbzllhdur953<1;-$#XY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY.@$&><<3600tudfkknnnCVVVFAFZZVZMMzllhapr9953,,,-$#XY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY.X$$&><<259rrudhkkxxMNVZZZCVZnMxxljhaurw972<1:%$$XXY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY.@$&:><<360rrudhkkxxxmMmnnnnxxxklhauur952<<>>%$@oYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX#$&>><<270ttuujfklkxzxxzzxkkkgjaurr953<<>>&$@XYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYX#$&>><<540ttuiihggkllkjkkgggiuurr959,<>>;$@XYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY+X@$=>><<5509ttpppuhhhhhhhiiiprt905511>>&$@XXYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXX$$=>><<24798ttttuppuiuutttt99753,1>>&$$XXYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXX$$;>><<,274qq80rttrtrrqq88753,<1>>;$$+XYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYO+$$&&>:>11247740q0qq9957773,,,;,;-$$XoYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYoX@$$&&>>><<<<<44446461<<<1>>>-;$$#.+YYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXX@$$&;>>>>>><<<<1<1>>>>>>;-$$@ooYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY+XX$$;=&&*&>>>>>>>=;;;--$$++oYYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXXX$$$$$$;;*;-;-$$$$$$..+YYYYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYUXXXOXXX$$$$$$$XXXXoo.YYYYYYYYYYYYYYYY",
+"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYXXoOXXXYYYYYYYYYYYYYYYYYYYYYYY"
+};

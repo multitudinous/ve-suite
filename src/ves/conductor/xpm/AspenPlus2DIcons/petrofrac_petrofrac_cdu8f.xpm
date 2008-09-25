@@ -1,437 +1,245 @@
-<html><!-- #BeginTemplate "/Templates/coffee.dwt" --><!-- DW6 -->
-<head>
-<!-- #BeginEditable "doctitle" -->
-<title>Growing Coffee Beans at Home</title>
-<!-- #EndEditable -->
-<!-- #BeginEditable "Description" -->
-<meta name="Description" content="Home growing coffee beans instructions and information about planting, harvesting, preparing, and germinating.">
-<!-- #EndEditable -->
-<!-- #BeginEditable "KeyWords" -->
-<meta name="KeyWords" content="home growing coffee beans plants cherries germinating germination seeds seed planting preparing harvesting">
-<!-- #EndEditable -->
-
-<script language="JavaScript">
-<!--
-
-
-function MM_findObj(n, d) { //v4.0
-  var p,i,x;  if(!d) d=document; if((p=n.indexOf("?"))>0&&parent.frames.length) {
-    d=parent.frames[n.substring(p+1)].document; n=n.substring(0,p);}
-  if(!(x=d[n])&&d.all) x=d.all[n]; for (i=0;!x&&i<d.forms.length;i++) x=d.forms[i][n];
-  for(i=0;!x&&d.layers&&i<d.layers.length;i++) x=MM_findObj(n,d.layers[i].document);
-  if(!x && document.getElementById) x=document.getElementById(n); return x;
-}
-//-->
-</script>
-<script language="JavaScript">function fwLoadMenus() {
-  if (window.fw_menu_0) return;
-  window.fw_menu_0 = new Menu("root",159,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_0.addMenuItem("History Overview","window.open('http://www.coffeeresearch.org/coffee/history.htm', '_parent');");
-  fw_menu_0.addMenuItem("Books on Coffee History","window.open('http://www.coffeeresearch.org/coffee/bookhistory.htm', '_parent');");
-   fw_menu_0.hideOnMouseOut=true;
-  window.fw_menu_1 = new Menu("root",110,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_1.addMenuItem("Overview","window.open('http://www.coffeeresearch.org/coffee/coffeeplant.htm', '_parent');");
-  fw_menu_1.addMenuItem("Home Growing","window.open('http://www.coffeeresearch.org/coffee/homegrowing.htm', '_parent');");
-   fw_menu_1.hideOnMouseOut=true;
-  window.fw_menu_2 = new Menu("root",208,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_2.addMenuItem("Coffee Origins Overview and Map","window.open('http://www.coffeeresearch.org/coffee/originsmap.htm', '_parent');");
-  fw_menu_2.addMenuItem("North America","window.open('http://www.coffeeresearch.org/coffee/hawaii.htm', '_parent');");
-  fw_menu_2.addMenuItem("Mexico and Central America","window.open('http://www.coffeeresearch.org/coffee/mexicoca.htm', '_parent');");
-  fw_menu_2.addMenuItem("South America","window.open('http://www.coffeeresearch.org/coffee/southamerica.htm', '_parent');");
-  fw_menu_2.addMenuItem("Carribbean","window.open('http://www.coffeeresearch.org/coffee/carribean.htm', '_parent');");
-  fw_menu_2.addMenuItem("Yemen","window.open('http://www.coffeeresearch.org/coffee/yemen.htm', '_parent');");
-  fw_menu_2.addMenuItem("East Africa","window.open('http://www.coffeeresearch.org/coffee/eastafrica.htm', '_parent');");
-  fw_menu_2.addMenuItem("India","window.open('http://www.coffeeresearch.org/coffee/india.htm', '_parent');");
-  fw_menu_2.addMenuItem("Oceana","window.open('http://www.coffeeresearch.org/coffee/oceana.htm', '_parent');");
-   fw_menu_2.hideOnMouseOut=true;
-  window.fw_menu_3 = new Menu("root",77,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_3.addMenuItem("Roasting","window.open('http://www.coffeeresearch.org/coffee/roasting.htm', '_parent');");
-  fw_menu_3.addMenuItem("Grinding","window.open('http://www.coffeeresearch.org/coffee/grinding.htm', '_parent');");
-  fw_menu_3.addMenuItem("Brewing","window.open('http://www.coffeeresearch.org/coffee/brewing.htm', '_parent');");
-   fw_menu_3.hideOnMouseOut=true;
-  window.fw_menu_4 = new Menu("root",174,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_4.addMenuItem("Cupping Overview","location='http://www.coffeeresearch.org/coffee/cupping.htm'");
-  fw_menu_4.addMenuItem("Cupping Form and Terms","window.open('http://www.coffeeresearch.org/coffee/cuppingform.htm', '_parent');");
-  fw_menu_4.addMenuItem("Cupping Room Conditions","window.open('http://www.coffeeresearch.org/coffee/cuppingroom.htm', '_parent');");
-   fw_menu_4.hideOnMouseOut=true;
-  window.fw_menu_5 = new Menu("root",154,19,"Arial, Helvetica, sans-serif",12,"#ffffff","#ffffff","#999999","#336699");
-  fw_menu_5.addMenuItem("Buying Overview","window.open('http://www.coffeeresearch.org/coffee/buying.htm', '_parent');");
-  fw_menu_5.addMenuItem("Classification Overview","window.open('http://www.coffeeresearch.org/coffee/classification.htm', '_parent');");
-  fw_menu_5.addMenuItem("SCAA Classification","window.open('http://www.coffeeresearch.org/coffee/scaaclass.htm', '_parent');");
-  fw_menu_5.addMenuItem("Brazilian Classification","window.open('http://www.coffeeresearch.org/coffee/brazilclass.htm', '_parent');");
-  fw_menu_5.addMenuItem("Screen Sizing","window.open('http://www.coffeeresearch.org/coffee/screen.htm', '_parent');");
-  fw_menu_5.addMenuItem("Defect Pictures","window.open('http://www.coffeeresearch.org/coffee/defects.htm', '_parent');");
-   fw_menu_5.hideOnMouseOut=true;
-
-  fw_menu_5.writeMenus();
-} // fwLoadMenus()
-
-//-->
-</script>
-<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
-<script language="JavaScript1.2" src="../Menus/fw_menu.js"></script>
-<script language="JavaScript">
-<!--
-<!--
-function MM_reloadPage(init) {  //reloads the window if Nav4 resized
-  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
-    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
-  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
-}
-MM_reloadPage(true);
-// -->
-
-function MM_swapImgRestore() { //v3.0
-  var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
-}
-
-function MM_swapImage() { //v3.0
-  var i,j=0,x,a=MM_swapImage.arguments; document.MM_sr=new Array; for(i=0;i<(a.length-2);i+=3)
-   if ((x=MM_findObj(a[i]))!=null){document.MM_sr[j++]=x; if(!x.oSrc) x.oSrc=x.src; x.src=a[i+2];}
-}
-
-function MM_preloadImages() { //v3.0
-  var d=document; if(d.images){ if(!d.MM_p) d.MM_p=new Array();
-    var i,j=d.MM_p.length,a=MM_preloadImages.arguments; for(i=0; i<a.length; i++)
-    if (a[i].indexOf("#")!=0){ d.MM_p[j]=new Image; d.MM_p[j++].src=a[i];}}
-}
-
-function MM_nbGroup(event, grpName) { //v3.0
-  var i,img,nbArr,args=MM_nbGroup.arguments;
-  if (event == "init" && args.length > 2) {
-    if ((img = MM_findObj(args[2])) != null && !img.MM_init) {
-      img.MM_init = true; img.MM_up = args[3]; img.MM_dn = img.src;
-      if ((nbArr = document[grpName]) == null) nbArr = document[grpName] = new Array();
-      nbArr[nbArr.length] = img;
-      for (i=4; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
-        if (!img.MM_up) img.MM_up = img.src;
-        img.src = img.MM_dn = args[i+1];
-        nbArr[nbArr.length] = img;
-    } }
-  } else if (event == "over") {
-    document.MM_nbOver = nbArr = new Array();
-    for (i=1; i < args.length-1; i+=3) if ((img = MM_findObj(args[i])) != null) {
-      if (!img.MM_up) img.MM_up = img.src;
-      img.src = (img.MM_dn && args[i+2]) ? args[i+2] : args[i+1];
-      nbArr[nbArr.length] = img;
-    }
-  } else if (event == "out" ) {
-    for (i=0; i < document.MM_nbOver.length; i++) {
-      img = document.MM_nbOver[i]; img.src = (img.MM_dn) ? img.MM_dn : img.MM_up; }
-  } else if (event == "down") {
-    if ((nbArr = document[grpName]) != null)
-      for (i=0; i < nbArr.length; i++) { img=nbArr[i]; img.src = img.MM_up; img.MM_dn = 0; }
-    document[grpName] = nbArr = new Array();
-    for (i=2; i < args.length-1; i+=2) if ((img = MM_findObj(args[i])) != null) {
-      if (!img.MM_up) img.MM_up = img.src;
-      img.src = img.MM_dn = args[i+1];
-      nbArr[nbArr.length] = img;
-  } }
-}
-//-->
-</script>
-</head>
-<body bgcolor="#FFFFFF" text="#000000" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="MM_preloadImages('../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f2.jpg','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f3.jpg','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f4.jpg','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f5.jpg','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f6.jpg','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f7.jpg','../Menus/mainfiles/main_r1_c1_f3.jpg','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg','../Menus/mainfiles/main_r1_c4_f2.jpg')">
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-  <tr> 
-    <td width="100%"> 
-      <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr> 
-          <td width="136" height="80" valign="top"><a href="http://www.coffeeresearch.org"><img src="coffeetitle.jpg" alt="coffee beans" width="136" height="80" hspace="0" vspace="0" border="0"></a></td>
-          <td width="167" valign="top"><a href="history.htm"><img src="../Menus/coffeemenufullcontents/coffeemenufull_r2_c3.jpg" alt="coffee history" name="coffeemenufull_r2_c3" width="167" height="80" border="0"></a></td>
-          <td width="100%" valign="top"> 
-            <table border="0" cellpadding="0" cellspacing="0" width="280" align="right">
-              <!-- fwtable fwsrc="maincontents2.png" fwbase="main.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="0" -->
-              <tr bgcolor="#000000"> 
-                <!-- row 1 -->
-                <td width="70"><a href="http://www.coffeeresearch.org" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f2.jpg','../Menus/mainfiles/main_r1_c1_f4.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c1_2','../Menus/mainfiles/main_r1_c1_f3.jpg',1);" ><img src="../Menus/mainfiles/main_r1_c1.jpg" alt="coffee home" name="main_r1_c1_2" width="70" height="21" border="0"></a></td>
-                <td width="70"><a href="http://www.coffeeresearch.org/sitemap.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f2.jpg','../Menus/mainfiles/main_r1_c2_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c2_2','../Menus/mainfiles/main_r1_c2_f3.jpg',1);" ><img src="../Menus/mainfiles/main_r1_c2.jpg" alt="coffee research sitemap" name="main_r1_c2_2" width="70" height="21" border="0"></a></td>
-                <td width="70"><a href="../about/contactmain.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f2.jpg','../Menus/mainfiles/main_r1_c3_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c3_2','../Menus/mainfiles/main_r1_c3_f3.jpg',1);" ><img name="main_r1_c3_2" src="../Menus/mainfiles/main_r1_c3.jpg" width="70" height="21" border="0"></a></td>
-                <td width="70"><a href="../about/overview.htm" onMouseOut="MM_nbGroup('out');"  onMouseOver="MM_nbGroup('over','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f2.jpg','../Menus/mainfiles/main_r1_c4_f3.jpg',1);"  onClick="MM_nbGroup('down','navbar1','main_r1_c4_2','../Menus/mainfiles/main_r1_c4_f3.jpg',1);" ><img src="../Menus/mainfiles/main_r1_c4.jpg" alt="about coffeeresearch.org" name="main_r1_c4_2" width="70" height="21" border="0"></a></td>
-              </tr>
-              <tr> 
-                <td height="59" colspan="4" valign="top">
-                  <p>&nbsp;</p>
-                  <p>&nbsp;</p>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr> 
-          <td height="1"><img height="1" width="136" src="/Menus/spacer6.gif"></td>
-          <td><img height="1" width="167" src="/Menus/spacer6.gif"></td>
-          <td></td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr> 
-    <td> 
-      <table bgcolor="#336699" border="0" cellpadding="0" cellspacing="0" width="100%" height="24">
-        <!-- fwtable fwsrc="agriculturepulldowns.png" fwbase="agrimenufull.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
-        <tr bgcolor="#336699"> 
-          <td width="1" height="25"><font color="#9999FF"></font></td>
-          <!-- row 2 -->
-          <td width="124" bgcolor="#336699">&nbsp;</td>
-          <td width="470"><a href="http://www.coffeeresearch.org/agriculture/coffeeplant.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('coffeemenufull_r2_c3','','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f2.jpg',1);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r4_c3.jpg" alt="agriculture" name="coffeemenufull_r4_c3" width="86" height="23" border="0"></a><a href="http://www.coffeeresearch.org/coffee/history.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('coffeemenufull_r2_c3','','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f3.jpg',1);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r4_c4.jpg" alt="coffee history" name="coffeemenufull_r4_c4_2" width="55" height="23" border="0"></a><a href="http://www.coffeeresearch.org/espresso/definitions.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('coffeemenufull_r2_c3','','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f4.jpg',1);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r4_c5.jpg" alt="espresso" name="coffeemenufull_r4_c5_2" width="75" height="23" border="0"></a><a href="http://www.coffeeresearch.org/science/news.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('coffeemenufull_r2_c3','','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f5.jpg',1);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r4_c7.jpg" alt="coffee science" name="coffeemenufull_r4_c7" width="64" height="23" border="0"></a><a href="http://www.coffeeresearch.org/politics/overview.htm" target="_parent" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('coffeemenufull_r2_c3','','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f6.jpg',1);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r4_c8.jpg" alt="coffee politics" name="coffeemenufull_r4_c8_2" width="60" height="23" border="0"></a><a href="http://www.coffeeresearch.org/market/marketintro.htm" onMouseOut="MM_swapImgRestore()"  onMouseOver="MM_swapImage('coffeemenufull_r2_c3','','../Menus/coffeemenufullcontents/coffeemenufull_r2_c3_f7.jpg',1);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r4_c9.jpg" alt="coffee market" name="coffeemenufull_r4_c9_2" width="55" height="23" border="0"></a></td>
-          <td width="783" valign="top">&nbsp; </td>
-        </tr>
-        <tr> 
-          <td height="1" width="1"><img height="1" width="1" src="/Menus/spacer6.gif"></td>
-          <td width="124"><img height="1" width="124" src="/Menus/spacer6.gif"></td>
-          <td width="470"><img height="1" width="457" src="/Menus/spacer6.gif"></td>
-          <td width="783"></td>
-        </tr>
-        <!--   This table was automatically created with Macromedia Fireworks 4.0   -->
-        <!--   http://www.macromedia.com   -->
-      </table>
-    </td>
-  </tr>
-</table>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" height="881" bgcolor="#FFFFFF">
-  <tr> 
-    <td width="100%" valign="top" height="799"> 
-      <table cellspacing="0" cellpadding="4" width="100%">
-        <tr> 
-          <td height="718" colspan="2" valign="top"> 
-            <table width="100%" border="0" cellpadding="0" cellspacing="0" height="703" bgcolor="#FFFFFF">
-              <tr> 
-                <td height="24" width="129"><img border="0" src="../Menus/spacerfortitle2.gif" width="119" height="24"></td>
-                <td valign="top" colspan="4"> 
-                  <div align="left"> 
-                    <script language="JavaScript1.2">fwLoadMenus();</script>
-                  </div>
-                </td>
-              </tr>
-              <tr> 
-                <td height="677" valign="top" width="129"> 
-                  <table width="124" border="0" cellpadding="0" cellspacing="0" height="491">
-                    <tr> 
-                      <td width="114" height="491" valign="top"> 
-                        <table bgcolor="#ffffff" border="0" cellpadding="0" cellspacing="0" width="114">
-                          <tr> 
-                            <!-- row 1 -->
-                            <td height="0" width="114"><a href="http://www.coffeeresearch.org/coffee/history.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_0,93,133);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r6_c1.jpg" alt="coffee history" name="coffeemenufull_r6_c1" width="92" height="18" border="0"></a></td>
-                          </tr>
-                          <tr> 
-                            <!-- row 2 -->
-                            <td width="114"><a href="http://www.coffeeresearch.org/coffee/coffeeplant.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_1,93,151);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r7_c1.jpg" alt="coffee plant" name="coffeemenufull_r7_c1" width="92" height="18" border="0"></a></td>
-                          </tr>
-                          <tr> 
-                            <!-- row 3 -->
-                            <td width="114"><a href="http://www.coffeeresearch.org/coffee/originsmap.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_2,92,169);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r8_c1.jpg" alt="coffee origins" name="coffeemenufull_r8_c1" width="92" height="18" border="0"></a></td>
-                          </tr>
-                          <tr> 
-                            <!-- row 4 -->
-                            <td width="114"><a href="http://www.coffeeresearch.org/coffee/roasting.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_3,93,187);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r9_c1.jpg" alt="coffee brewing" name="coffeemenufull_r9_c1" width="92" height="18" border="0"></a></td>
-                          </tr>
-                          <tr> 
-                            <!-- row 5 -->
-                            <td width="114"><a href="http://www.coffeeresearch.org/coffee/cupping.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_4,93,205);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r10_c1.jpg" alt="coffee cupping" name="coffeemenufull_r10_c1" width="92" height="18" border="0"></a></td>
-                          </tr>
-                          <tr> 
-                            <td height="20" valign="top" width="114"><a href="http://www.coffeeresearch.org/coffee/buying.htm" onMouseOut="FW_startTimeout();"  onMouseOver="window.FW_showMenu(window.fw_menu_5,92,223);" ><img src="../Menus/coffeemenufullcontents/coffeemenufull_r11_c1.jpg" alt="coffee bean buying" name="coffeemenufull_r11_c1" width="92" height="18" border="0"></a></td>
-                          </tr>
-                        </table>
-                      </td>
-                      <td width="10" height="491"> 
-                        <div align="center"> <img src="../Menus/verticalline.gif" width="8" height="601"> 
-                        </div>
-                        <p>&nbsp;</p>
-                        &nbsp;</td>
-                    </tr>
-                  </table>
-                  &nbsp; </td>
-                <td width="1202" valign="top"> 
-                    <!-- #BeginEditable "text" --> 
-										<div style="float: right; margin: 5px 5px 5px 5px;"><script type="text/javascript"><!--
-google_ad_client = "pub-0077479055099953";
-google_ad_width = 250;
-google_ad_height = 250;
-google_ad_format = "250x250_as";
-google_ad_type = "text";
-google_ad_channel ="0277258975";
-google_color_border = "CCCCCC";
-google_color_bg = "FFFFFF";
-google_color_link = "0000FF";
-google_color_url = "0000FF";
-google_color_text = "0000FF";
-//--></script>
-<script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-</script>
-</div>
-                    <p align="center"><font size="3"><img src="../Pictures/germinating.jpg" align="left" width="287" height="218"></font><font size="4" color="#CC0000">Growing 
-                      Coffee Beans at Home</font></p>
-                    <p><font size="3">
-                    Growing 
-                      coffee plants at home is a rewarding experience that will 
-                      help you learn and appreciate the work involved in producing 
-                       
-                      coffee.&nbsp; It is a very easy plant to take 
-                      care of and is a great conversation piece, especially during 
-                      flowering or cherry development.</font></p>
-                    <p><font size="3">When home growing coffee beans, you should start with a freshly 
-                      picked coffee cherry. But unless you are in a producing 
-                      country, however, this may not be possible and you can skip to 
-                      section 2.</font></p>
-                    <p><font size="3"><b><font color="#CC0000">Harvesting Coffee and Preparing the Coffee Seeds </font></b></font></p>
-                    <p><font size="3">Ripe coffee cherries should be harvested and picked 
-                      from trees with a high production and without any disease 
-                      or other affliction.&nbsp; Pulp the cherry by hand, wash 
-                    with water, and ferment in a small container until 
-                      the pulp falls off.&nbsp; This can be determined 
-                      simply by rubbing the coffee bean in you hands during the 
-                    fermentation process.&nbsp; Wash again 
-                      with fresh water.&nbsp; Any coffee beans that float at any 
-                      stage of washing should be discarded.&nbsp; The coffee beans must 
-                      then be dried to about 20% moisture content on mesh screen 
-                      in open and dry air, but not in direct sunlight.&nbsp; After 
-                      pulping, a coffee will have between 60-70% moisture content 
-                      so you can determine the appropriate stopping point simply 
-                      by weighing the beans.&nbsp; Otherwise, you can bite 
-                      the bean open to ensure that it is dry on the outside and 
-                      slightly soft and moist on the inside.&nbsp; Alternatively, 
-                      a pulped coffee bean can be used immediately for planting and in 
-                      some areas this is considered advantageous.</font></p>
-                    <p><font size="3"><b><font color="#CC0000">Germinating Coffee Beans </font></b></font></p>
-                    <p><font size="3">If coffee cherries are not readily available, 
-                      green coffee can be purchased from a <a href="http://www.coffeeresearch.org/links/green.htm">green coffee supplier</a>, but 
-                      it is essential that the bean is of a recent crop and recent 
-                      shipment.&nbsp; I would recommend ordering green coffee 
-                      from <a href="http://www.sweetmarias.com">Sweet Maria's</a> 
-                      and asking for the most recent crop.&nbsp; Sweet Maria's also provides <a href="http://www.sweetmarias.com/growingcoffeeathome.html">tips</a> for growing coffeea arabica at home. </font></p>
-                    <p><font size="3">The potential 
-                      for germination will continue for almost four months, but 
-                      after this time the germination rate is several fold less 
-                      and germination time is significantly longer.&nbsp; Fresh 
-                      seeds should germinate in 2.5 months, but old seeds can 
-                      take as long as 6 months. Coffee in pergamino is even better. 
-                      If this is available plant the coffee face down in the pergamino.</font></p>
-                    <p><font size="3">It is advisable to pre-germinate the seeds.&nbsp; 
-                      First soak the coffee seeds in water for 24 hours.&nbsp; Then sow 
-                      the seeds in damp sand or wet vermiculite in which the excess 
-                      water has been drained.&nbsp; Otherwise, you can place the 
-                    seeds between moist coffee sacks, which should be watered 
-                    twice a day and drained well.</font></p>
-                    <p><font size="3">Once the coffee seed germinates, very carefully 
-                      remove it from the sand, vermiculite, or burlap bags.&nbsp; 
-                      Make a&nbsp; hole about 1.25 cm deep in a 
-                      friable loam soil with a high humus content.&nbsp; Rotted 
-                      manure, bone meal, and dried blood can also be added.&nbsp; 
-                      If this type of soil is not readily available try a light 
-                      weight and porous soil.&nbsp; Place the seed flat side down 
-                      in the hole and sprinkle soil over the hole.&nbsp; Do 
-                      not press the soil down firmly.&nbsp; Placing a 1/2 inch 
-                      of mulched grass on top will help preserve moisture, but 
-                      should be removed when the seed has fully germinated.</font></p>
-                    <p><font size="3">The seeds should be watered daily.&nbsp; 
-                      Too much water or too little water will kill the seed.&nbsp; 
-                      The soil should remain well drained, but moist at all times.</font></p>
-                    <p><font size="3">After germination, the coffee plant should either 
-                      be left alone or carefully removed and planted in a soil 
-                      with a low pH (acidic) and high nitrogen content.&nbsp; The soil 
-                      should be porous.&nbsp; Therefore, course sand or basalt 
-                      gravel dust can be added.&nbsp; Manure can also be added.&nbsp; 
-                      A fertilizer that is appropriate for orchids can be used 
-                      sparingly for the coffee plant to maintain mineral levels 
-                      and a low pH.</font></p>
-                    <p><font size="3"><b><font color="#CC0000">Coffee Plant Care </font></b></font></p>
-                    <p><font size="3">The coffee plant thrives under artificial plant 
-                      lighting indoors.&nbsp; The outside temperature in countries 
-                      outside the Tropic belt is too volatile and too cold to 
-                      allow the tree to develop.&nbsp;Water the 
-                      tree twice per week in what is called a full watering and a 
-                      half watering.&nbsp; In a half watering, simply add some 
-                      water to the soil and allow it to drain.&nbsp; In a full 
-                      watering, add water, allow it to drain, and then add water 
-                      with fertilizer and allow it to drain.&nbsp; The key is 
-                      to keep the soil most, but well drained.</font></p>
-                    <p><font size="3">After two or three years flowering and possibly 
-                      cherries can be expected, but do not expect high-quality 
-                      coffee unless you are at a high altitude and are monitoring 
-                      the conditions of the artificial microclimate carefully.&nbsp; 
-                      For more coffee growing details please see the rest of the agriculture 
-                      section.&nbsp; In theory, it is feasible to grow a high-quality 
-                      coffee at home under the right conditions.</font></p>
-                    <p><font size="3">To spur flowering, wait until the beginning 
-                      of winter and significantly reduce watering for 2-3 months.&nbsp; 
-                      When Spring begins water the plant well, which should shock 
-                      it into producing flowers.&nbsp; From this point forward, 
-                      water well and regularly.&nbsp; Arabica coffee is self-fertilizing 
-                      so you will not need to worry about pollinating.</font></p>
-                    <p><font size="3">Once the cherries mature you can harvest, 
-                      pulp, ferment, dry, roast, and drink the coffee.</font></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><b><font size="3" color="#000000">Related
-                    Articl</font><font size="3">es</font></b></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><a href="../agriculture/growing.htm">Growing 
-                      Coffee</a></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><a href="../agriculture/coffeeplant.htm">Coffee 
-                      Plant</a></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><a href="../agriculture/environment.htm">Environmental 
-                      Conditions for Growing Coffee</a></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><a href="../agriculture/harvesting.htm">Harvesting 
-                      Coffee</a></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><a href="../agriculture/processing.htm">Processing 
-                      Coffee</a></p>
-                    <p align="left" style="word-spacing: 0; margin-top: 0; margin-bottom: 0"><a href="../agriculture/drying.htm">Coffee 
-                      Drying</a></p>
-                    <p>&nbsp;</p>
-                    <!-- #EndEditable --></div> <div style="float: center; margin: 5px 5px 5px 5px;">
-
-<script type="text/javascript"><!--
-google_ad_client = "pub-0077479055099953";
-google_ad_width = 728;
-google_ad_height = 90;
-google_ad_format = "728x90_as";
-google_ad_type = "text";
-google_ad_channel ="4931514715";
-google_color_border = "FFFFFF";
-google_color_bg = "FFFFFF";
-google_color_link = "0000FF";
-google_color_url = "0000CC";
-google_color_text = "0000CC";
-//--></script>
-                      <script type="text/javascript"
-  src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                    </script>
-                  </div></td>
-                <td width="16"></td>
-                <td valign="top" colspan="2" align="right" bgcolor="#FFFFFF"> 
-                </td>
-              </tr>
-              <tr> 
-                <td height="0" width="129"></td>
-                <td width="1202"></td>
-                <td width="16"></td>
-                <td width="1"></td>
-                <td width="21"></td>
-              </tr>
-              <tr> 
-                <td height="2" width="129"><img height="1" width="129" src="/Menus/menuspacer.gif"></td>
-                <td width="1202"></td>
-                <td width="16"></td>
-                <td width="1"></td>
-                <td width="21"><img height="1" width="21" src="/Menus/menuspacer.gif"></td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-      <blockquote> 
-        <p align="right"><font size="2">&copy; 2001-2006. <a href="http://www.coffeeresearch.org">Coffee 
-          Research Institute</a>.</font> <font size="2"> All Rights Reserved.</font></p>
-      </blockquote>
-  </tr>
-  <tr> 
-    <td height="82"><div align="center"><img src="../copyscape.gif" width="120" height="60"></div></td>
-  </tr>
-</table>
-<script src="http://www.google-analytics.com/urchin.js" type="text/javascript">
-</script>
-<script type="text/javascript">
-_uacct = "UA-215200-2";
-urchinTracker();
-</script>
-</body><!-- #EndTemplate -->                                                                                                                                    ator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,std::map<std::basic_string<char,std::char_traits<char>,std::allocator<char> >,std::vector<std::pair<float,float>,std::allocator<std::pair<float,float> > >,std::less<std::basic_string<char,std::char_traits<char>,std::allocator<char> > >,std::allocator<std::pair<std::basic_string<char,std::char_traits<char>,std::allocator<char> > const ,std::vector<std::pair<float,float>,std::allocator<std::pair<float,float> > > > > > >
+/* XPM */
+static char *petrofrac_petrofrac_cdu8f[] = {
+/* columns rows colors chars-per-pixel */
+"184 136 103 2",
+"   c #000000",
+".  c #272725",
+"X  c #272823",
+"o  c #282725",
+"O  c #282824",
+"+  c #282828",
+"@  c #3B3B36",
+"#  c #3B3B38",
+"$  c #4A4A43",
+"%  c #4A4A48",
+"&  c #57594E",
+"*  c #58594E",
+"=  c #575851",
+"-  c #585951",
+";  c #64645C",
+":  c #646560",
+">  c #686560",
+",  c #6F7165",
+"<  c #6F7068",
+"1  c #707065",
+"2  c #717268",
+"3  c #7B7C6E",
+"4  c #7C7C70",
+"5  c #7D7C78",
+"6  c #858676",
+"7  c #858679",
+"8  c #86887A",
+"9  c #888679",
+"0  c #8D8E7E",
+"q  c #908E7F",
+"w  c #868580",
+"e  c #8D8E81",
+"r  c #8E9081",
+"t  c #97978C",
+"y  c #979886",
+"u  c #96988A",
+"i  c #989986",
+"p  c #98988A",
+"a  c #979890",
+"s  c #989791",
+"d  c #999990",
+"f  c #9EA18E",
+"g  c #9FA090",
+"h  c #A19F91",
+"j  c #A0A08E",
+"k  c #A0A091",
+"l  c #A0A098",
+"z  c #A8A997",
+"x  c #A9A99B",
+"c  c #B1B29E",
+"v  c #A8A9A1",
+"b  c #B1B2A0",
+"n  c #B4B4AA",
+"m  c #B7B8A5",
+"M  c #B7B8AA",
+"N  c #B9B7AB",
+"B  c #B8B9A6",
+"V  c #B8B9AA",
+"C  c #B7B8B0",
+"Z  c #B8B9B0",
+"A  c #C1BFB0",
+"S  c #C1C1AD",
+"D  c #C2C2B2",
+"F  c #C7C7BB",
+"G  c #C6C8B4",
+"H  c #C7C8B8",
+"J  c #C8C7B3",
+"K  c #C9C7B8",
+"L  c #C9C8B4",
+"P  c #CDCDBB",
+"I  c #CED0BB",
+"U  c #D0CEBA",
+"Y  c #D1D0BC",
+"T  c #CDCDC2",
+"R  c #D0CEC1",
+"E  c #D6D6C1",
+"W  c #D6D8C3",
+"Q  c #D8D6C2",
+"!  c #DCDBC6",
+"~  c #DCDBCA",
+"^  c #DCDBD1",
+"/  c #E1E1CB",
+"(  c #E5E4D2",
+")  c #E5E5DA",
+"_  c #E6E8D2",
+"`  c #E8E6D2",
+"'  c #E8E6DA",
+"]  c #EBEBD3",
+"[  c #EDEDD8",
+"{  c #F0EED7",
+"}  c #F4F4DC",
+"|  c #F9F9DF",
+" . c #ECECE0",
+".. c #F6F7E6",
+"X. c #F6F6EB",
+"o. c #F7F8E3",
+"O. c #F6F8E9",
+"+. c #F8F7E2",
+"@. c #F9F6E9",
+"#. c #F9F9E1",
+"$. c #FEFDE9",
+"%. c #FEFDF1",
+"&. c #FEFEFE",
+/* pixels */
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ # # # @ @ @ &.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ # # @ @ @ $ $ $ $ $ $ $ # # @ @ @ @ &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.+ # @ $ $ $ $ $ $ ; ; ; ; ; ; ; $ $ $ $ $ $ @ @ X &.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.. @ @ $ $ $ ; ; ; ; ; 1 1 1 1 1 1 1 ; ; ; ; ; $ $ $ @ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ @ $ $ * ; ; 1 1 1 1 3 9 9 9 9 9 9 9 3 1 1 1 1 ; ; - $ $ @ @ . &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.o @ $ $ - ; ; 1 1 3 8 8 7 8 p p p i i p p 8 9 8 8 3 1 1 ; ; & $ $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ $ $ ; ; 1 1 3 7 8 e p p p j j j h h h j p p p r 6 8 3 1 1 ; ; $ $ @ + &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ $ $ ; ; 2 3 8 7 p p p k k j b c c b b c c j j j p i p 6 8 3 1 ; ; $ $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.o @ $ $ ; ; 2 3 9 r p p k j b b b B A B B m m B b c b h f i p r 9 3 1 ; ; $ $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.o @ $ * ; ; 2 5 8 r p k k b b B V B B A J G G S B B B B b b f j p r 9 3 1 ; ; * $ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.o @ $ * ; 1 3 7 e p j j c B V S L L L L Y Y W L G L L J B V c j k p q 8 3 2 ; * $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.o @ $ * ; 1 3 9 e p j j b B B L L U ! Y ! ! ! ! Q ! Y P L L B B b j j p e 8 3 2 ; * $ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.o @ $ * ; 1 3 8 r p j b B S L L Y ! ! ! ! ] ] _ / ! ! Y Y L L S B b j p e 8 3 1 ; * $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.X @ $ * ; 1 3 7 r p j b B S L U Y ! / ] ] { { { _ _ / ! Q Y L S B b j p e 7 3 1 ; * $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.                                    + @ $ - ; 1 3 8 r p j b B S L U Q Y / / ` { } #.} ] ] / ! Q Q U L A V b j p e 9 3 1 ; & $ @ . &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  . @ $ - ; 1 4 8 e t j b V S L U Y / / ` { { | #.| } ] ] / ! Q Y L A V b j p e 9 3 1 ; & $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.  @ $ - ; 1 3 8 e i f c B S L Y W ! / _ { } | | } [ ] ! ! Q Y L S B b g u e 8 3 , ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.  @ $ - ; 1 3 8 e i f c B S L Y Y ! / ` { } | #.} [ _ ! ! Q Y L S B b j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 8 e i f c B S L Y Y ! / ` ] } | #.} [ ] / ! Q U L S B c j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: ; ; &.      &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e f j c B S L U ! ! / ] ] } | | } [ _ / ! Q U L S B b j u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; ; t t t ; ;     &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e u g c B S L U Q ! ] / { } | | } [ ` / ! Q U L S B b f p e 7 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; t y M M V t   ; &.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 6 e u j c B S L U Y ! ! ] { } | | } [ ` / ! Y U J S B b j u e 7 3 1 ; * $ @ X                                                                                                                                                                               &.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.; u M ~ ~ ~   p ; &.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j c B S L U ! ! / ` { } | | } [ _ / ! Q Y L S V b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: t M ~ ~ @.  ^ M u ; &.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 8 e p j c B S J U Y ! / ` { } | | } [ ] / ~ Q Y L S B b j p e 8 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: u V ~ @.  $.^ V t : &.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 3 8 e p j b B S J Y Y / / ] ] } | | } [ ` / ! Q Y L S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: u V ~   X.~ ~ V t : &.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 3 6 e p j b V S L Y ! ! / ] ] } | #.} [ ` / ! Q Y L S B b j p e 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.  &.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: d   ~ ^ ^ B p ; %.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e u g b B S J Y Y / / ] ] } | | } [ ` / ! Q Y L S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.  &.&.&.&.&.%.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.:   d M V N p t > &.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e i g b B S L Y Y ! / ] ] } | | } [ ` ! ~ Q Y L S B c f u e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: ; 8 d H ~ ) @.) ~ T n 7 ; ; &.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; ; u t u ; ; &.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j c B S L Y Y / / _ { } #.#.} [ ` / ~ Q Y L S B c j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  $ : 8 j b L ~ ` ..@.#.) ~ F n h w : $ ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.: ; ; %.&.%.%.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 8 e p j b B S L Y Y / / ] { } | | } [ ` ! ! Y U L S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 8 k b H ~ ` #.$.#.` ! J b k 8 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; , 3 8 e p j b B S L Y Y ! / _ ] } #.#.} [ ` / ! Q Y L S B b j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 7 k c J ! ` ..$.| ` ! J v k 8 : $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e u g b B S L Y Y ! / ] ] } | #.} [ ` / ! Q Y L S B b k p e 8 3 2 ; * $ @ X                                                                                                                                                             ; 7 d c L ! ] #.$.+.` ! F b k 9 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e u g b B S L I Q ! / _ ] } | | } [ ` / ! Y P L S B b j i e 7 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 8 k b J ! ` O.$.#._ ~ K b k 7 ; %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e i g b B S L P Y ! / ] ] } | | } [ ` / ! ! I L S B c j u e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    w l b F ~ ' o.$.X.' ~ K n l 7 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.                                      # $ - ; 1 3 8 e t j c B S L U Q ! / ] ] } | | } [ ` / ! Q Y L S B b j t e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  :       T ) ' X.$.@.[ ^ K n l         ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j b B S L U Q ! / ] { } | | } [ ] / ! Q Y L S V b j p e 8 3 1 ; & $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : w g v                       w > %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 8 e p j c B S L U Y ! / ] { } | | } [ ` / ! Q Y L S B b j t e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 8 l m F ~ ' @.$.@.` / K b d 7 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 2 3 8 e p j b B S L U ! ! / ` ] } | #.} [ ` / ! Q Y L S B c j p e 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 8 k b G ! ] | $.#.` ~ K m k 7 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ * ; 1 3 8 e i g b B S L U ! ! / ` { } | | } [ ` / ! Y U J S M c j p e 7 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 8 g c G Q ] #.$.| ' ~ L b j 9 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ * ; 1 4 8 r i g b B S L U Y ! / ` ] } | | } [ ` / ! Q I L S B b j p e 7 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 9 g b G ~ / | $.#.` ~ L m d 9 ; %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 6 r u g c B S G Y W / / _ { } | #.} [ ` / ! Y Y L S B b g i e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.  ; 7 g b L ~ / #.$.#.` ! J b k 7 : %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 r u f b B S J U ! Y / _ { } | #.} [ ` / ! Q Y L S B b g i e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    w d m K ~ ] | $.#.` ~ L b k 7 : $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ * ; 1 4 8 r p k b B S G U Y / / ` ] } | | } [ ` ! ~ Q U L S B b g p r 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  :   z b F / ' #.$.#.` ! H n l w :     ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 8 r p k b B S G U ! Y / ] { } | #.} [ ` / ~ Q U L S B c k i r 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : w         ` @.$.@.` ~ H         %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.  @ $ * ; 1 3 8 r i k c B S L U Q ! ] ] ] } | #.} [ ` / ! Q Y G S B b g i 0 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 7 k b H ~               M k 6 ; %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.  @ $ * ; 1 3 6 0 i g c B S L U Y ! ! ] ] } | | } [ ` / ! Y Y J S B c g u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 7 k b L ^ ' @.$.$.' ^ H n k 6 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    # $ - ; 1 3 6 0 f j c B S J U ! ! / ` { } | #.} { ` / ! ! Y G S V b g i e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 7 k b L ~ ` $.$.o.` ~ H b d 8 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.                                      @ $ * ; 1 3 0 0 q j c B S J U Y ! / ` { } | #.} { ] / ! Y U G S V b k i 0 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 7 k c G ~ ` | $.} ] ! G b g 8 ; %   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    @ $ - ; 1 3 9 q p j b B S L Y Y / / ] ] } | | } [ ` / ! ! Y L S B b g i r 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 7 d b L ~ ] | $.#.] ! J c j 7 ; $   ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.  @ $ - ; 1 4 8 e p j b V S L Y ! ! / ] ] } | #.} [ ` / ! Y Y L S B b g i e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.$ ; 7 j c K ~ ` | | | ] ~ H b d 7 ; $ ",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.%.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.  @ $ - ; 1 4 7 e p j b B S L Y Y / / ] ] } | | } [ ` / ! Q Y L S V b j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.$ 6 9 j b K / / +.` ~ K b d 8 ; $ &.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.  @ $ - ; 1 3 7 0 p j b B S L Y Y ! / ] ] } | | } [ ` / ! Y Y L S V c j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.$ ; 8 8 h H F L K F k 7 7 : % &.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.: ; ; &.      &.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 8 e p j c B S L Y Y / / _ { } #.#.} [ ` / ~ Q Y J S B b j p e 8 3 2 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.; w 7 7 w 7 : &.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; ; t t t ; ;     &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 8 e p j b B S L Y Y / / ] { } | #.} [ ` ! ! Y Y L S B b j t e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; t u V V V t   : &.&.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 3 7 e p f b B S L Y Y ! / _ ] } | | } [ ` / ! Q Y L S B b j i e 8 3 1 ; * $ @ O                                                                                                                   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; t M ~ ~ ~   a ; &.%.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 7 e u g b B S L Y Y ! / ] ] } | #.} [ ` / ! Q Y L S V b j u e 7 3 1 ; & $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; u V ~ ^ @.  ^ N d : &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e p f b B S L I Q ! / _ ] } | | } [ ] / ! Q Y L S M c g p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; u V / X.  @./ V t ; %.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 7 e p j b B S L U Y ! / ] { } | | } [ ` / ! Y U L S B c j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; u Z ^   @.~ / N a ; &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 8 e p j b B S L U Q ! / _ ] } | | } [ ` / ! Q P J S B b g i 0 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; p   ^ ~ ^ N t : &.&.&.%.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 7 e p j c B S L U Q ! / ] { } | #.} [ ] / ! Q Y L S B b j u e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.%.%.&.&.%.&.  &.%.&.&.&.&.%.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.;   p V M N p a ; &.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j b V S L U Y ! / ] ] } | #.} [ ` / ! Q Y L S B b j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ 3 3 y x T ~ [ O.[ ~ T z u 3 5 @ &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; ; a u t ; : %.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e p j b B S L U ! ! / ` { } | | } [ ` / ! Q Y L S B b g p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ ; 3 y x B I ! [ | o.o.[ ! P B x t 5 :   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.; : ; &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e u j b V S J U ! ! / ` { } | | } [ ` / ! Y U L S B c f p e 7 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p x m P ~ [ | $.o.[ ! U B x u 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e p f c B S J U Y ! / ` ] } | #.} [ ` / ! Q U J S V b j u e 7 3 1 ; & $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p x V U ~ [ | $.| [ ! P B x u 5 ; @   &.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e i f c B S L Y Y ! / _ { } | | } [ ` / ! Q Y L S B b j p e 8 3 1 ; * $ @ O                                                                                               ; 3 u x V Y ! [ +.$...[ ! U N x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e i f c B S L Y W ! / _ { } | #.} [ ` / ! Q Y L S B b j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    4 t x V R ~ [ @.$...{ ^ R N x s 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 3 8 e i f c B S L Y ! / / ` ] } | | } [ ` / ! Q Y L S B c g i e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  :       V T )  .X.$.X. .^ Q Z x s         &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.                                      # $ * ; 1 4 8 e f j c B S L Y Y Y / ] { } | | } [ ` ! ~ Q Y L S B b j u e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 4 p v                           5 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 8 e u g c B S L Y Q ! ] ] ] } | #.} [ / ( ~ Q Y L S B b j p e 8 3 2 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 3 p x V Y ! } #.$.#.{ ~ Y N x p 5 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 6 e p j c B S L U Y ! ! ] ] } | #.} [ ` ! ! Y Y L S B b j t e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 5 p x V Y ! { | $.| [ ! P V x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j c B S L U ! ! / ` { } | | } [ ` / ! Q Y L S B c f u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p x V U ! [ | $.| [ / U V x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j c B S J U Y ! / ` { } | #.} [ ` / ! Q Y J S V b j u 0 7 3 1 ; & $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 3 p x B Y ! [ | $.| [ ! U B x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j b B S L U Y ! ! ] ] } | | } [ ` / ! Y U L S B b g p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p z V U ! [ | $.#.[ ! P B x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j b V S J Y ! ! ] ] { } | | } [ ` / ! Q I L S B b j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 3 p z B U ~ [ | $...{ ! U V x i 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 6 e u j b B S L Y Y ! / ] ] } | | } [ ` / ! Q Y L S B c f u e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 3 p x V U ! } #.$.+.[ ! U V x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e u f b B S L Y Y ! / / { } | #.} } ` / ! Q Y L S B b j u 0 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    4 t x N T ! [ #.$.$.[ ^ P N x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j c B S L Y ! / / _ { } #.#.} [ ` / ! Q Y L S B b j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ;       Z E ^  .O.%.X. .^ R Z x d         &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p j b B S L Y Y ! / ] { } | | } [ ` / ! Y Y J S B b j t e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  > 5 t x                           5 : @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e u f b B S L Y Y ! / _ ] } | | } [ ` / ! Q U L S B c j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  > 3 d x N P ~ [ #.$.$.[ ~ R N x p 5 ; #   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 8 e u g b B S L Y Y ! / ` { } | #.} [ ` / / Y U L S V b j u 0 7 3 1 ; & $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 t x N P ! [ o.$.+.[ ! U V x p 5 ; #   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.  @ $ - ; 1 3 7 e u j b V S J U Q ! / ` ] } | | } [ ` / ! Y Y L S B b g u e 7 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p x B P ! [ | $.| ] ! I m z u 5 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.  @ $ - ; 1 3 7 e p f c B S L U Y ! / ` { } | #.} [ ` / ~ Q Y L S B b f u e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p x B P ! [ | $.#.[ ! I m z t 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    @ $ - ; 1 3 8 e u k b B S L U Q ! / _ ] } | #.} [ ` / ! Q Y L S B c j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : 4 p x B U ~ [ | $.#.{ ! I m z u 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.                                      # $ - ; 1 3 8 e p j b B S L U Q ! / ] { } | | } [ ` / ! Y Y L S B b j p e 8 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ ; 3 p x B U ! [ o.| #.{ ~ I M x u 5 ; # &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.    @ $ - ; 1 3 8 e p j b B S L U Q ! / ] { } | | } [ ` / ! Q Y L S B b g u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ > 5 y x x P ~ [ o.[ ! I x x t 5 ; @ &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.  # $ - ; 1 3 8 e p j c B S G Y Y ! / ` { } | | } [ ` / ! Q Y L S B b g i e 7 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ ; 3 x x x x z x x 3 ; @ &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.  # $ * ; 1 3 8 e i g b B S J Y ! ! / ` { } | | } [ ` / ! Q Y L S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.%.%.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 4 8 r i g b B S L I Y ! / ` ] } | #.} } ` / ! Y Y L S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.; ; ; &.      &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e u g b V S L Y W / / _ { } | #.} [ ` / ! Q Y L S B b j p e 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; ; t t t : ;   &.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e i g b B S L U ! Y / _ { } | | } [ ` ! ! Q Y L S B b j p e 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: t p m M M t   : &.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e i g c B S L U Y / / ` ] } | | } [ ` / ~ E U L S B b j p 0 7 3 1 ; * $ @ O                                                 &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; t N ~ ~ ^   t ; %.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 r i g b B S G U ! Y / ] { } | #.} [ ` / ~ E U L S B b g u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; t N ~ ~ $.  ^ V u ; &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 r u g c B S L U Q ! ] ] ] } | | } [ ` / ! E U J S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.; t M ~ @.  @.~ V a ; &.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 6 0 i g c B S L U Y ! ! ] ] } | #.} [ ` / ! Q U L S B c j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.: s C ~   $./ ~ V t ; &.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 4 6 0 f j c B S L U ! ! / / { } | #.} [ ` / ! E U L S B b j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.> s   ^ ~ ~ V p ; &.&.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 3 6 0 i j c B S J U Y ! / ] { } | | } [ ` / ! E P L S B b j t e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.;   s N V V p p ; &.%.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 9 q p j b B S L U Q ! / ] ] } | | } [ ` / ! Y U L S B b j p e 7 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.%.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  : ; t t p ; ; &.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 8 q p j b V S L Y Y ! / ] { } | | } [ ` / ! ! P L S B b j u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.@ ; t x x x x x x v a ; # %.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.; ; ; %.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 8 e p j b B S L Y ! ! / ] ] } | | } [ ` / ! ! Y J S B b j p e 7 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.&.&.@ ; 3 p x x U ! [ @.[ ! P x x p 5 ; # &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 6 e p j c B S L Y Y ! / ] ] } | | } [ ] / ! Y U L S V b j p e 7 3 1 ; & $ @ X   &.&.&.&.&.&.&.&.&.&.%.&.  @ ; 3 p x V U ! [ ..+.@.[ / P N x h 4 :   &.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 4 8 e p j b B S L Y ! / / _ { } #.| } [ ` / ! Y U L S B b j p e 7 3 1 ; * $ @ X                             ; 3 u x B P ! [ #.$.#.[ ! U B z i 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 8 e p j b B S L Y Y ! / ] [ } | #.} [ ` / ! ! Y L S B c j p e 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  ; 5 u x V P ! [ | $.| ] ! U B z i 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 7 e u f b B S L Y Y ! / _ ] } | | } [ ` / ! Y P G S B b j p e 7 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.  : 4 u x V U ! [ | $.| [ ! U B x i 4 > @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.                                      @ $ - ; 1 4 7 e u g b B S L Y Y ! / ` ] } | | } [ ` / ! ! I L S B b j p e 7 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.  ; 5 u x V P ! [ | $.| [ ! U B x i 4 > @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 7 e p f b B S J U Q ! / _ ] } | #.} [ ` / ! Y Y L S B b j p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.    5 p x V W ~ [ | $.| [ ! P V x p 5 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e p j b B S G U Y ! / ] { } | #.} [ ` / ! Q Y L S B b g p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  :       V T ~ } $.$...[ ~ R A x u         &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ - ; 1 4 8 e p j b B S L U Q ! / _ ] } | | } [ ` / ~ Q U L S B b g i r 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 5 d x                           3 : @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.          &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  # $ * ; 1 4 7 e p j b B S L U Q ! / ] { } | #.} [ ` / ~ Q U L S B c g i r 8 3 2 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  ; 3 p x M T ^  .X.%.X. .^ T Z x p 5 : @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.  X.X.v   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 7 e p j b V S L U Y ! / ] ] } | | } [ ` / ! Y Y G S B b g i 0 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 3 t x V Y ~ [ @.$.@.[ ~ T M x u 3 : @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.  O.O.v   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 8 e p j b B S L U ! ! / ` { } | | } [ ` / ! Q Y G S B c g u e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  ; 3 t x V P ~ [ #.$.#.[ / I B x p 5 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.  O.O.v   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 7 e p j b B S L U ! ! / ` { } | | } { ` / ! Y Y J S V b g i e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 5 t x V P / [ #.$.| ] ! P V x p 4 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.  ; i g d     &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 7 e p f c B S L U Y ! / ` ] } | #.} { ` / ! ! Y G S V b k i 0 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.    3 t x M T ~ [ @.$.#.[ ~ E V x t 5 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.    : 8 i f i 3 ;     &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e i f c B S L Y Y ! / _ { } #.#.} [ ` / ! Y Y L S B b j p e 9 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  :       A T ^  .@.%.X. .^ T Z x p         &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.    - ; 3 r i f i 6 2 ; =     &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 8 e i f c B S L Y Y ! / ] { } | | } [ ` ^ ! ! Y L S B b j p r 9 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 5 d v                           5 : #   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.    - * ; 1 8 r i f i 0 3 1 ; - -     &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 4 8 e i f c B S L Y ! ! / _ ] } | | } [ ` / ! E U L S B c j p e 9 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 5 t x M P ~ [ O.$.@.[ ~ E M x t 3 ; #   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"    5 r j b D R / [ o.o.{ / I S n d e 4 =   + &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e f j c B S L Y Y ! / ` { } | #.} [ ` / ! E U L S B b j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 5 p x M I / [ o.$.#.[ ~ P B x p 5 ; #   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 5 e g b S Y / [ o.o.{ / I S b j r 5 - @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 4 8 e u g c B S L Y ! ! / ` ] } | | } [ ` / ! E U L S B b j p e 8 3 1 ; * $ @ O   &.&.&.&.&.&.&.&.&.&.&.&.  : 3 p x B I ! [ @.$.| [ ! U B x p 3 : @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 3 e g b S Y / [ #.o.] / Y S b g r 3 - #   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 6 e u g c B S L Y Y ! / ` { } | #.} [ ` / ! E U L S B b j t e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.  : 3 p x B P ! [ #.$.| [ ! I B x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 5 0 g b S I / { #.#.{ / Y S b k r 3 - @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ - ; 1 3 8 e p f c B S L U ! ! / ` ] } | #.} [ ` / ! Q U L S B c f p e 8 3 1 ; * $ @ X   &.&.&.&.&.&.&.&.&.&.&.&.  ; 5 u x V I / [ #.$.#.{ ! I B x p 3 ; @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  = 3 e g b S I / [ | | ] / I S b j r 5 - @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.  @ $ * ; 1 3 8 e p j c B S L U Y ! / ] [ } | | } [ ` / ! E U L S V b j p e 7 3 1 ; * $ @ .   &.&.&.&.&.&.&.&.&.&.&.&.# @ ; 3 u x V P ~ [ @.O.#.] ~ I V x p 5 : # &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 4 r g c S I / { #.#.{ / Y S b k e 3 = @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.O @ $ - ; 1 3 8 0 p j b V S J Y Y / / ` { } | | | } ] ` / ~ Q U L A B c j p r 6 3 1 ; - $ @   &.&.&.&.&.&.&.&.&.&.&.&.&.%.&.@ ; 4 a z T ^ ' X.' ^ T x t 3 ; @ &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 4 r g c S I ! [ #.#.] / Y S b j e 5 = @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.O # $ - ; 1 3 8 0 p j b B S J Y Y ! ! / ` { } | } [ ] / ! Q Y U L A A c j p e 6 3 1 ; - $ @ O &.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 5 r g b S I / [ | | { / Y S b j e 3 - @                                         O @ $ * ; 1 3 8 0 p f b B S L Y Y / / ] ] ] [ [ ] ] / ~ Q I L S B b f p e 9 3 1 ; * $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.%.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 5 r g c S U / [ | | { / I S c j e 3 - @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.O # $ * ; 1 3 8 e p g c B S L G I Y Y / / ] ] _ / ! ! Q U L L S B b j p e 9 3 1 ; * $ @ O &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  = 3 e f c S Y / [ +.| [ / Y S c j r 5 = @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ $ = ; 1 3 8 r p k k c B B G G I Q Q Q ! Q ! Q Q Q U L G B V b j j p e 9 3 1 ; * $ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  = 5 e f c S U / [ +.| [ / U S b j e 3 = @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X $ $ ; ; 2 3 9 r p k g b B B S G J J J Q Y Q L J L J S M m b j j p e 9 3 1 ; ; $ $ X &.%.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 5 e g b S Y / [ #.| [ / Y A n g r 5 - @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.O @ $ $ ; ; 1 3 8 r p k j b b B B B L L G L L L L B B V b c f j p r 8 3 1 ; ; $ $ @ . &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"  - 5 r k b D T ) [ @.@.[ / T Z n g e 5 = @   &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.+ # $ $ ; ; 1 3 8 r p p j f b b c V B B B B B V b b c f f i p 0 7 3 1 ; ; $ $ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"                                              &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ $ $ ; ; 1 3 7 7 e p p d j j m b b c c b b g g j p i p 6 8 3 1 ; ; $ $ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ $ $ ; ; , 1 3 7 6 e p p t k j j f f g g u f p e 6 6 3 1 1 ; ; $ $ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.&.X @ $ $ * ; ; 1 , 3 7 7 7 7 t p p y u u i 7 7 7 8 3 1 1 ; ; * $ $ @ X &.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ @ $ $ * ; ; 1 1 1 1 1 7 7 7 8 7 6 6 , , , , 1 ; ; * $ $ @ @ X &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.X @ @ $ $ $ ; ; ; ; ; , < 2 , , , , ; ; ; ; ; $ $ $ @ @ + &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ @ $ $ $ $ $ $ ; : ; ; ; ; ; $ $ $ $ $ $ @ @ + &.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.%.&.@ @ @ @ @ @ $ $ $ $ $ $ $ @ @ @ @ @ @ &.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.",
+"&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.@ @ @ @ @ @ @ %.&.&.&.&.%.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&.&."
+};
