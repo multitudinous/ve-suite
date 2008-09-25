@@ -8,7 +8,7 @@ Description: OpenSceneGraph debug pre-compiled for VES
 Provides: OpenSceneGraph OpenThreads
 Requires:
 Version: 2.6.0
-Libs: /libpath:"${libdir}" OpenThreadsd.lib osgd.lib osgDBd.lib osgFXd.lib osgGAd.lib osgManipulatord.lib osgParticled.lib osgShadowd.lib osgSimd.lib osgTerraind.lib osgTextd.lib osgUtild.lib osgViewerd.lib osgWidgetd.lib opengl32.lib glu32.lib
+Libs: /libpath:"${libdir}" OpenThreads.lib osg.lib osgDB.lib osgFX.lib osgGA.lib osgManipulator.lib osgParticle.lib osgShadow.lib osgSim.lib osgTerrain.lib osgText.lib osgUtil.lib osgViewer.lib osgWidget.lib opengl32.lib glu32.lib
 Cflags: /I"${includedir}"
 Arch: noarch
 
