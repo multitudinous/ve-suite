@@ -77,7 +77,7 @@ AgentEntity::AgentEntity(
     mBuildMode( false ),
     mBlocksLeft( NULL ),
     mMaxSpeed( 4.0 ),
-    mBuildSpeed( 1.0 ),
+    mBuildSpeed( 2.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
@@ -281,6 +281,7 @@ void AgentEntity::Build()
         heldBlockDCS->SetTranslationArray( position );
         position[ 2 ] -= 1.0;
         mDCS->SetTranslationArray( position );
+        mHeldBlock->Reset();
 
         return;
     }
@@ -296,8 +297,9 @@ void AgentEntity::Build()
     //Reset some variables
     mBuildMode = false;
     mHeldBlock = NULL;
+    mTargetDCS = NULL;
     mPerimeterSensor->Reset();
-    //mObstacleSensor->SetForceAttractionConstant( 1.0 );
+    mObstacleSensor->SetForceAttractionConstant( 1.0 );
 
     //Push sound event to cue user for successful attachment
 #ifdef VE_SOUND

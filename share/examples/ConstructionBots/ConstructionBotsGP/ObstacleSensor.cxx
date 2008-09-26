@@ -40,7 +40,6 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
-
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //

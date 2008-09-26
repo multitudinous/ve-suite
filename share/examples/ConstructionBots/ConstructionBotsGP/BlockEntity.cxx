@@ -473,6 +473,9 @@ void BlockEntity::Reset()
     mConnectedBlocks[ 2 ] = NULL;
     mConnectedBlocks[ 3 ] = NULL;
 
+    //Reset block attachment bool
+    mAttached = false;
+
     //Reset neighbor occupancy
     mNeighborOccupancy[ 0 ] = false;
     mNeighborOccupancy[ 1 ] = false;

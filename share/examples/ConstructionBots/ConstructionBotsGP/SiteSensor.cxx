@@ -34,6 +34,7 @@
 // --- My Includes --- //
 #include "SiteSensor.h"
 #include "AgentEntity.h"
+#include "PerimeterSensor.h"
 #include "ObstacleSensor.h"
 
 // --- VE-Suite Includes --- //
@@ -132,7 +133,7 @@ void SiteSensor::CollectInformation()
     }
 
     //Reset results from last frame
-    targetDCS = NULL;
+    //targetDCS = NULL;
     mSiteInView = false;
     mCloseToSite = false;
     mNormalizedSiteVector.setValue( 0.0, 0.0, 0.0 );
@@ -185,10 +186,16 @@ void SiteSensor::CollectInformation()
         siteVector.setValue(
             sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
+        //Use 2.0 > sqrt( 2 ) + mPerimeterSensor->Range( 0.2 ) = 1.614
         if( siteVector.length() <= 2.0 )
         {
             mCloseToSite = true;
         }
+
+        double forceAttractionConstant =
+            1.0 + ( 8.0 / pow( siteVector.length(), 2 ) );
+        mAgentEntity->mObstacleSensor->SetForceAttractionConstant(
+            forceAttractionConstant );
     }
 
     mNormalizedSiteVector = siteVector.normalize();

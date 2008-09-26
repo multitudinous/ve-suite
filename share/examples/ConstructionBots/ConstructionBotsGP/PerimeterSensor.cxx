@@ -38,6 +38,7 @@
 #include "BlockEntity.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
@@ -240,6 +241,12 @@ void PerimeterSensor::CollectInformation()
                 mLineSegmentIntersector->getFirstIntersection() );
             osg::Drawable* currentDrawable =
                 mIntersections.back().drawable.get();
+            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                    currentDrawable->getParent( 0 ) );
+            ves::xplorer::scenegraph::DCS* dcs =
+                static_cast< ves::xplorer::scenegraph::DCS* >(
+                    parentVisitor.GetParentNode() );
+            mAgentEntity->mTargetDCS = dcs;
             osg::Array* tempArray =
                 currentDrawable->asGeometry()->getColorArray();
             if( tempArray )
@@ -249,7 +256,7 @@ void PerimeterSensor::CollectInformation()
                 if( color != mAgentEntity->mSiteColor )
                 {
                     mAgentEntity->mBuildMode = false;
-                    mAgentEntity->SetTargetDCS( NULL );
+                    mAgentEntity->mTargetDCS = NULL;
                     mAgentEntity->mSiteSensor->ResetAngle();
                     Reset();
 
