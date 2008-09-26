@@ -121,7 +121,7 @@ private:
 
     void PushBackCollision( PhysicsRigidBody* physicsRigidBody, btVector3 location );
 
-    void SetMassProps();
+    void SetMassProps( bool dynamic = true );
 
     bool mStoreCollisions;///<Store bodies currently in collision with this body, yes or no
 

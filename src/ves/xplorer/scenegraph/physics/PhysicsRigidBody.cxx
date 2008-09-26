@@ -130,20 +130,26 @@ bool PhysicsRigidBody::CollisionInquiry( PhysicsRigidBody* physicsRigidBody )
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PhysicsRigidBody::SetMassProps()
+void PhysicsRigidBody::SetMassProps( bool dynamic )
 {
     if( m_collisionShape )
     {
         //btRigidBody* is dynamic if and only if mass is non zero, otherwise static
-        bool dynamic = ( mMass != 0.0f );
+        if( dynamic )
+        {
+            dynamic = ( mMass != 0.0f );
+        }
 
-        btVector3 localInertia( 0, 0, 0 );
+        btVector3 localInertia( 0.0, 0.0, 0.0 );
         if( dynamic )
         {
             m_collisionShape->calculateLocalInertia( mMass, localInertia );
+            setMassProps( mMass, localInertia );
         }
-
-        setMassProps( mMass, localInertia );
+        else
+        {
+            setMassProps( 0.0, localInertia );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -259,7 +265,7 @@ void PhysicsRigidBody::StaticConcaveShape()
 
     m_collisionShape = new btBvhTriangleMeshShape( mOSGToBullet->GetTriangleMesh(), false );
 
-    SetMass( 0 );
+    SetMassProps( false );
 
     mPhysicsSimulator->GetDynamicsWorld()->addRigidBody( this );
 }
