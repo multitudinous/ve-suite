@@ -114,16 +114,13 @@ void BlockSensor::Initialize()
 void BlockSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
-        mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
-        mAgentEntity->GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
 
-    if( targetDCS.valid() )
+    if( targetDCS )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
         (*mVertexArray)[ 1 ].z() = (*mVertexArray)[ 0 ].z();
@@ -149,17 +146,17 @@ void BlockSensor::CollectInformation()
     mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
     mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
 
-    pluginDCS->RemoveChild( agentDCS.get() );
+    pluginDCS->RemoveChild( agentDCS );
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
     pluginDCS->accept( intersectionVisitor );
-    pluginDCS->AddChild( agentDCS.get() );
+    pluginDCS->AddChild( agentDCS );
 
     bool goToBlock( false );
     if( mLineSegmentIntersector->containsIntersections() )
     {
-        osg::ref_ptr< osg::Drawable > drawable =
-            mLineSegmentIntersector->getFirstIntersection().drawable;
+        osg::Drawable* drawable =
+            mLineSegmentIntersector->getFirstIntersection().drawable.get();
         osg::Array* tempArray = drawable->asGeometry()->getColorArray();
         if( tempArray )
         {
@@ -178,15 +175,16 @@ void BlockSensor::CollectInformation()
         }
     }
 
-    mAgentEntity->SetTargetDCS( targetDCS.get() );
+    mAgentEntity->SetTargetDCS( targetDCS );
 
     btVector3 blockVector( 0.0, 0.0, 0.0 );
-    if( targetDCS.valid() )
+    if( targetDCS )
     {
         double* blockPosition = targetDCS->GetVETranslationArray();
         blockVector.setValue(
             blockPosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             blockPosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
+        //Use 1.5 > sqrt( 2 ) = 1.4
         if( blockVector.length() <= 1.5 )
         {
             mCloseToBlock = true;

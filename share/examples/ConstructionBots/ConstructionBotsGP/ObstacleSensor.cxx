@@ -39,6 +39,8 @@
 #include "BlockEntity.h"
 
 // --- VE-Suite Includes --- //
+#include <ves/xplorer/scenegraph/FindParentsVisitor.h>
+
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
@@ -159,12 +161,9 @@ void ObstacleSensor::CalculateLocalPositions()
 void ObstacleSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
-        mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
-        mAgentEntity->GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
 
     //Reset results from last frame
     mIntersections.clear();
@@ -189,21 +188,12 @@ void ObstacleSensor::CollectInformation()
     }
 
     //Remove the agentDCS and the targetDCS for intersection test
-    pluginDCS->RemoveChild( agentDCS.get() );
-    if( targetDCS.valid() )
-    {
-        pluginDCS->RemoveChild( targetDCS.get() );
-    }
-    //This is an expensive call
-    //Try to only call once by using group intersector
+    pluginDCS->RemoveChild( agentDCS );
+    //This is an expensive call; Try to only call once using group intersector
     osgUtil::IntersectionVisitor intersectionVisitor( mIntersectorGroup.get() );
     pluginDCS->accept( intersectionVisitor );
     //Add back the agentDCS and targetDCS
-    pluginDCS->AddChild( agentDCS.get() );
-    if( targetDCS.valid() )
-    {
-        pluginDCS->AddChild( targetDCS.get() );
-    }
+    pluginDCS->AddChild( agentDCS );
 
     for( unsigned int i = 0; i < mNumDetectors; ++i )
     {
@@ -214,24 +204,19 @@ void ObstacleSensor::CollectInformation()
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
-            /*
-            if( mAgentEntity->mSiteSensor->CloseToSite() )
+            if( targetDCS )
             {
-                osg::ref_ptr< osg::Drawable > currentDrawable =
-                    mIntersections.back().drawable;
-                osg::Array* tempArray =
-                    currentDrawable->asGeometry()->getColorArray();
-                if( tempArray )
+                osg::Drawable* drawable = mIntersections.back().drawable.get();
+                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                    drawable->getParent( 0 ) );
+                ves::xplorer::scenegraph::DCS* dcs =
+                    static_cast< ves::xplorer::scenegraph::DCS* >(
+                        parentVisitor.GetParentNode() );
+                if( dcs == targetDCS )
                 {
-                    osg::Vec4* color =
-                        &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
-                    if( *color == mAgentEntity->mSiteColor )
-                    {
-                        mIntersections.pop_back();
-                    }
+                    mIntersections.pop_back();
                 }
             }
-            */
         }
     }
 
@@ -243,10 +228,8 @@ void ObstacleSensor::CollectInformation()
 ////////////////////////////////////////////////////////////////////////////////
 const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
-        mAgentEntity->GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
@@ -267,7 +250,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
     //Calculate the target force
     btVector3 targetForce( 0.0, 0.0, 0.0 );
-    if( targetDCS.valid() )
+    if( targetDCS )
     {
         double* targetPosition = targetDCS->GetVETranslationArray();
         targetForce.setValue( targetPosition[ 0 ] - agentPosition[ 0 ],

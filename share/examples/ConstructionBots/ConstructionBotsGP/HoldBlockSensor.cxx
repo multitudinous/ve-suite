@@ -104,10 +104,8 @@ void HoldBlockSensor::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void HoldBlockSensor::CollectInformation()
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
-        mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
 
     osg::Vec3 startPoint = agentDCS->getPosition();
     osg::Vec3 endPoint = startPoint;
@@ -122,20 +120,19 @@ void HoldBlockSensor::CollectInformation()
 
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
-    pluginDCS->RemoveChild( agentDCS.get() );
+    pluginDCS->RemoveChild( agentDCS );
     pluginDCS->accept( intersectionVisitor );
-    pluginDCS->AddChild( agentDCS.get() );
+    pluginDCS->AddChild( agentDCS );
 
     if( mLineSegmentIntersector->containsIntersections() )
     {
         mHoldingBlock = true;
     }
-
-    if( !mHoldingBlock )
+    else
     {
+        mAgentEntity->mBuildMode = false;
         mAgentEntity->mHeldBlock = NULL;
         mAgentEntity->mPerimeterSensor->Reset();
-        mAgentEntity->mBuildMode = false;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

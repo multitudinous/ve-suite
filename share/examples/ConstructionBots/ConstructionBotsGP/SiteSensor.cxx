@@ -115,16 +115,13 @@ void SiteSensor::Initialize()
 void SiteSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
-        mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > targetDCS =
-        mAgentEntity->GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
 
-    if( targetDCS.valid() )
+    if( targetDCS )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
         (*mVertexArray)[ 1 ].z() = (*mVertexArray)[ 0 ].z();
@@ -150,17 +147,17 @@ void SiteSensor::CollectInformation()
     mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
     mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
 
-    pluginDCS->RemoveChild( agentDCS.get() );
+    pluginDCS->RemoveChild( agentDCS );
     osgUtil::IntersectionVisitor intersectionVisitor(
         mLineSegmentIntersector.get() );
     pluginDCS->accept( intersectionVisitor );
-    pluginDCS->AddChild( agentDCS.get() );
+    pluginDCS->AddChild( agentDCS );
 
     bool goToSite( false );
     if( mLineSegmentIntersector->containsIntersections() )
     {
-        osg::ref_ptr< osg::Drawable > drawable =
-            mLineSegmentIntersector->getFirstIntersection().drawable;
+        osg::Drawable* drawable =
+            mLineSegmentIntersector->getFirstIntersection().drawable.get();
         osg::Array* tempArray = drawable->asGeometry()->getColorArray();
         if( tempArray )
         {
@@ -179,24 +176,18 @@ void SiteSensor::CollectInformation()
         }
     }
 
-    mAgentEntity->SetTargetDCS( targetDCS.get() );
+    mAgentEntity->SetTargetDCS( targetDCS );
 
     btVector3 siteVector( 0.0, 0.0, 0.0 );
-    if( targetDCS.valid() )
+    if( targetDCS )
     {
         double* sitePosition = targetDCS->GetVETranslationArray();
         siteVector.setValue(
             sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
-        if( siteVector.length() <= 3.0 )
+        if( siteVector.length() <= 2.0 )
         {
             mCloseToSite = true;
-
-            double normalizeDistance = siteVector.length() / 3.0;
-
-            double forceAttractionConstant = 1 - 4.0 * log( normalizeDistance );
-            mAgentEntity->mObstacleSensor->SetForceAttractionConstant(
-                forceAttractionConstant );
         }
     }
 

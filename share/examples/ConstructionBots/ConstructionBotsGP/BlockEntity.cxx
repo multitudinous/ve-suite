@@ -99,31 +99,16 @@ void BlockEntity::Initialize()
     mConnectedBlocks[ 2 ] = NULL;
     mConnectedBlocks[ 3 ] = NULL;
 
+    //Initialize neighbor occupancy
+    mNeighborOccupancy[ 0 ] = false;
+    mNeighborOccupancy[ 1 ] = false;
+    mNeighborOccupancy[ 2 ] = false;
+    mNeighborOccupancy[ 3 ] = false;
+
+    //Initialize the side states
+    mSideStates.clear();
+
     CalculateLocalPositions();
-}
-////////////////////////////////////////////////////////////////////////////////
-void BlockEntity::InitializeStartBlock()
-{
-    //Update the connected blocks for this and neighbors
-    ConnectionDetection();
-
-    //Change the block color
-    for( int i = 4; i < 10; ++i )
-    {
-        mBlockGeometry->SetColor( i, mSiteColor );
-    }
-
-    //Update the occupancy matrix with the new attachment
-    std::map< std::pair< int, int >,
-              std::pair< bool, bool > >::iterator oMatItr =
-        mOccupancyMatrix->find( mLocation );
-    if( oMatItr != mOccupancyMatrix->end() )
-    {
-        oMatItr->second.second = true;
-    }
-
-    //The attachment was successful
-    mAttached = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::CalculateLocalPositions()
@@ -158,15 +143,22 @@ void BlockEntity::CalculateLocalPositions()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockEntity::AttachUpdate()
+const bool BlockEntity::AttachUpdate( bool isStartBlock )
 {
     //Update the connected blocks for this and neighbors
     ConnectionDetection();
 
+    //Start block already has occupancy matrix and location set
+    if( isStartBlock )
+    {
+        //The attachment was successful
+        mAttached = true;
+    }
+
     //Get coordinates and occupancy matrix from neighbors
-    std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
-    itr = mConnectedBlocks.begin();
-    for( itr = mConnectedBlocks.begin(); itr != mConnectedBlocks.end(); ++itr )
+    std::map< unsigned int, bots::BlockEntity* >::const_iterator itr =
+        mConnectedBlocks.begin();
+    for( itr; itr != mConnectedBlocks.end(); ++itr )
     {
         if( itr->second )
         {
@@ -202,34 +194,45 @@ const bool BlockEntity::AttachUpdate()
             //Get a copy of the occupancy from neighbor
             SetOccupancyMatrix( itr->second->GetOccupancyMatrix() );
 
-            //Make physics mesh static
-            GetPhysicsRigidBody()->StaticConcaveShape();
-            
-            //Self align w/ blocks
-            double* alignedPosition = mDCS->GetVETranslationArray();
-            alignedPosition[ 0 ] = mLocation.first;
-            alignedPosition[ 1 ] = mLocation.second;
-            mDCS->SetTranslationArray( alignedPosition );
-
-            //Change the block color
-            for( int i = 4; i < 10; ++i )
-            {
-                mBlockGeometry->SetColor( i, mSiteColor );
-            }
-
-            //Update the occupancy matrix with the new attachment
-            std::map< std::pair< int, int >,
-                      std::pair< bool, bool > >::iterator oMatItr =
-                mOccupancyMatrix->find( mLocation );
-            if( oMatItr != mOccupancyMatrix->end() )
-            {
-                oMatItr->second.second = true;
-            }
-
             //The attachment was successful
             mAttached = true;
 
             break;
+        }
+    }
+
+    //If attachment was successful
+    if( mAttached )
+    {
+        //Make physics mesh static
+        GetPhysicsRigidBody()->StaticConcaveShape();
+        
+        //Self align w/ blocks
+        double* alignedPosition = mDCS->GetVETranslationArray();
+        alignedPosition[ 0 ] = mLocation.first;
+        alignedPosition[ 1 ] = mLocation.second;
+        alignedPosition[ 2 ] = 0.5;
+        mDCS->SetTranslationArray( alignedPosition );
+
+        //Change the block color
+        for( int i = 4; i < 10; ++i )
+        {
+            mBlockGeometry->SetColor( i, mSiteColor );
+        }
+
+        //Update the occupancy matrix with the new attachment
+        std::map< std::pair< int, int >, std::pair< bool, bool > >::iterator
+            oMatItr = mOccupancyMatrix->find( mLocation );
+        if( oMatItr != mOccupancyMatrix->end() )
+        {
+            oMatItr->second.second = true;
+        }
+
+        //Need to update the side states if "this" is the start block
+        if( isStartBlock )
+        {
+            //Update the side states
+            UpdateSideStates();
         }
     }
 
@@ -394,9 +397,9 @@ void BlockEntity::ConnectionDetection()
         {
             const osgUtil::LineSegmentIntersector::Intersections&
                 intersections = mLineSegmentIntersector->getIntersections();
-
-            std::multiset< osgUtil::LineSegmentIntersector::Intersection >::const_iterator itr;
-            for( itr = intersections.begin(); itr != intersections.end(); ++itr )
+            std::multiset< osgUtil::LineSegmentIntersector::Intersection >::
+                const_iterator itr = intersections.begin();
+            for( itr; itr != intersections.end(); ++itr )
             {
                 osg::ref_ptr< osg::Drawable > drawable = itr->drawable;
                 ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
@@ -405,16 +408,12 @@ void BlockEntity::ConnectionDetection()
                     static_cast< ves::xplorer::scenegraph::DCS* >(
                         parentVisitor.GetParentNode() );
 
+                bots::BlockEntity* blockEntity( NULL );
                 std::map< std::string, bots::BlockEntity* >::const_iterator
                     bemItr = mBlockEntityMap->find( dcs->GetName() );
-                bots::BlockEntity* blockEntity( NULL );
                 if( bemItr != mBlockEntityMap->end() )
                 {
                     blockEntity = bemItr->second;
-                }
-
-                if( blockEntity )
-                {
                     if( blockEntity != this )
                     {
                         unsigned int oppositeSide = i;
@@ -464,6 +463,45 @@ std::map< std::pair< int, int >,
           std::pair< bool, bool > >& BlockEntity::GetOccupancyMatrix() const
 {
     return *mOccupancyMatrix;
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockEntity::Reset()
+{
+    //Reset side attachments
+    mConnectedBlocks[ 0 ] = NULL;
+    mConnectedBlocks[ 1 ] = NULL;
+    mConnectedBlocks[ 2 ] = NULL;
+    mConnectedBlocks[ 3 ] = NULL;
+
+    //Reset neighbor occupancy
+    mNeighborOccupancy[ 0 ] = false;
+    mNeighborOccupancy[ 1 ] = false;
+    mNeighborOccupancy[ 2 ] = false;
+    mNeighborOccupancy[ 3 ] = false;
+
+    //Reset the occupancy matrix
+    mOccupancyMatrix = NULL;
+
+    //Reset the side states
+    mSideStates.clear();
+
+    //Reset the stored position information
+    mLocation.first = mLocation.second = 0;
+
+    //Reset the colors of the block geometry lines
+    for( size_t i = 0; i < 4; ++i )
+    {
+        mBlockGeometry->SetColor( i, mBlockGeometry->GetLineColor() );
+    }
+
+    //Reset the colors of the block geometry
+    for( size_t i = 4; i < 10; ++i )
+    {
+        mBlockGeometry->SetColor( i, mBlockGeometry->GetBlockColor() );
+    }
+
+    //Make the physics mesh dynamic again
+    GetPhysicsRigidBody()->BoundingBoxShape();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(

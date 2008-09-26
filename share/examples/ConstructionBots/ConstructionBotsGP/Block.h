@@ -60,6 +60,12 @@ public:
     ///Register node with OSG
     META_Node( bots, Block );
 
+    ///Returns the color of this block geode's lines
+    const osg::Vec4& GetLineColor() const;
+
+    ///Returns the color of this block geode
+    const osg::Vec4& GetBlockColor() const;
+
     ///Set the color of a drawable for this block geode
     void SetColor( unsigned int drawable, const osg::Vec4& color );
 
@@ -70,6 +76,12 @@ protected:
 private:
     ///Initialize this block geode
     void Initialize();
+
+    ///The color of this block geode's lines
+    osg::Vec4 mLineColor;
+
+    ///The color of this block geode
+    osg::Vec4 mBlockColor;
 
     ///The drawables of this block geode
     /*    

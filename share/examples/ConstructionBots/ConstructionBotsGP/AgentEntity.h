@@ -120,6 +120,9 @@ public:
     ///Get the site sensor
     bots::SiteSensorPtr const GetSiteSensor() const;
 
+    ///Reset the agent to its initialized state
+    void Reset();
+
     ///Set the block entity map
     void SetBlockEntityMap(
         std::map< std::string, bots::BlockEntity* >& blockEntityMap );
@@ -171,9 +174,6 @@ private:
 
     ///Performs the go to site behavior
     void GoToSite();
-
-    ///Prepare this agent entity for building
-    void InitiateBuildMode();
 
     ///Performs the pick up block behavior
     void PickUpBlock();

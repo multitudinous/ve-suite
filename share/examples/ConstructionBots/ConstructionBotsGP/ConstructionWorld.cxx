@@ -63,9 +63,12 @@
 
 // --- C/C++ Libraries --- //
 #include <iostream>
+#include <iomanip>
 #include <ctime>
 
 using namespace bots;
+
+const bool RUN_CONTINUOUS_SIMULATIONS = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionWorld::ConstructionWorld(
@@ -77,8 +80,11 @@ ConstructionWorld::ConstructionWorld(
     :
     mBlocksLeft( 0 ),
     mFrameCount( 1 ),
+    mGridSize( 0 ),
+    mNumBlocks( 0 ),
+    mNumAgents( 0 ),
     mGrid( 0 ),
-    mAgents( 0 ),
+    mAgentEntities( 0 ),
     mStartBlock( 0 ),
     mPluginDCS( pluginDCS ),
 #ifdef VE_SOUND
@@ -86,7 +92,8 @@ ConstructionWorld::ConstructionWorld(
     mAmbientSound( new ves::xplorer::scenegraph::Sound(
                        "AmbientSound", pluginDCS, soundManager ) ),
 #endif
-    mPhysicsSimulator( physicsSimulator )
+    mPhysicsSimulator( physicsSimulator ),
+    mSimulationData( "Data\\simulation.dat", std::ios::out )
 {
     //Initialize the construction bot framework
     InitializeFramework();
@@ -95,17 +102,20 @@ ConstructionWorld::ConstructionWorld(
 ConstructionWorld::~ConstructionWorld()
 {
 #ifdef VE_SOUND
+    //Delete the sounds
     if( mAmbientSound )
     {
         delete mAmbientSound;
     }
 #endif
 
+    //Delete the grid entity
     if( mGrid )
     {
         delete mGrid;
     }
 
+    //Delete the block entitites
     //mStartBlock gets deleted here as well
     for( std::map< std::string, bots::BlockEntity* >::iterator itr =
          mBlockEntities.begin(); itr != mBlockEntities.end(); ++itr )
@@ -116,16 +126,21 @@ ConstructionWorld::~ConstructionWorld()
         }
     }
 
-    for( size_t i = 0; i < mAgents.size(); ++i )
+    //Delete the AgentEntities
+    for( size_t i = 0; i < mAgentEntities.size(); ++i )
     {
-        if( mAgents.at( i ) )
+        if( mAgentEntities.at( i ) )
         {
-            delete mAgents.at( i );
+            delete mAgentEntities.at( i );
         }
     }
 
+    //Clear the containers
     mBlockEntities.clear();
-    mAgents.clear();
+    mAgentEntities.clear();
+
+    //Close the simulation data file
+    mSimulationData.close();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::InitializeFramework()
@@ -147,87 +162,101 @@ void ConstructionWorld::InitializeFramework()
     mAmbientSound->GetSoundState()->setAmbient( false );
 #endif //VE_SOUND
 
-    int numBlocks = 24;
-    mBlocksLeft = numBlocks;
-    int numAgents = 3;
-    //Ensure that the grid size is odd for centrality purposes
-    int gridSize = 51;
-
-    int halfPosition = static_cast< int >( gridSize * 0.5 );
-    for( int j = 0; j < gridSize; ++j )
-    {
-        for( int i = 0; i < gridSize; ++i )
-        {
-            int x =  i - halfPosition;
-            int y = -j + halfPosition;
-            mOccupancyMatrix[ std::make_pair( x, y ) ] =
-                std::make_pair( false, false );
-        }
-    }
-
-    mOccupancyMatrix[ std::make_pair(  0,  0 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  1,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  1,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1, -1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  1, -1 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0, -2 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  1,  2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1,  2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -1, -2 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  1, -2 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  2,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -2,  1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -2, -1 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  2, -1 ) ].first = true;
-
-    mOccupancyMatrix[ std::make_pair(  3,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0,  3 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair( -3,  0 ) ].first = true;
-    mOccupancyMatrix[ std::make_pair(  0, -3 ) ].first = true;
-
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
 
-    //Initialize the grid
-    osg::ref_ptr< bots::Grid > grid = new bots::Grid();
-    grid->CreateGrid( gridSize, mOccupancyMatrix );
+    //Ensure that the grid size is odd for centrality purposes
+    mGridSize = 51;
 
-    mGrid = new bots::GridEntity(
-        grid.get(), mPluginDCS.get(), mPhysicsSimulator );
-    //mGrid->SetNameAndDescriptions();
-    mGrid->InitPhysics();
-    mGrid->GetPhysicsRigidBody()->setFriction( 0.5 );
-    mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
+    //Initialize the occupancy matrix
+    {
+        int halfPosition = static_cast< int >( mGridSize * 0.5 );
+        for( int j = 0; j < mGridSize; ++j )
+        {
+            for( int i = 0; i < mGridSize; ++i )
+            {
+                int x =  i - halfPosition;
+                int y = -j + halfPosition;
+                mOccupancyMatrix[ std::make_pair( x, y ) ] =
+                    std::make_pair( false, false );
+            }
+        }
+
+        //Program the desired structure into the occupancy matrix
+        mOccupancyMatrix[ std::make_pair(  0,  0 ) ].first = true;
+
+        mOccupancyMatrix[ std::make_pair(  1,  0 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  0,  1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -1,  0 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  0, -1 ) ].first = true;
+
+        mOccupancyMatrix[ std::make_pair(  1,  1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -1,  1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -1, -1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  1, -1 ) ].first = true;
+
+        mOccupancyMatrix[ std::make_pair(  2,  0 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  0,  2 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -2,  0 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  0, -2 ) ].first = true;
+
+        mOccupancyMatrix[ std::make_pair(  1,  2 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -1,  2 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -1, -2 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  1, -2 ) ].first = true;
+
+        mOccupancyMatrix[ std::make_pair(  2,  1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -2,  1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -2, -1 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  2, -1 ) ].first = true;
+
+        mOccupancyMatrix[ std::make_pair(  3,  0 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  0,  3 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair( -3,  0 ) ].first = true;
+        mOccupancyMatrix[ std::make_pair(  0, -3 ) ].first = true;
+    }
+
+    //Initialize the grid
+    {
+        osg::ref_ptr< bots::Grid > grid = new bots::Grid();
+        grid->CreateGrid( mGridSize, mOccupancyMatrix );
+        mGrid = new bots::GridEntity(
+            grid.get(), mPluginDCS.get(), mPhysicsSimulator );
+        mGrid->SetNameAndDescriptions();
+        mGrid->InitPhysics();
+        mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
+        mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
+    }
 
     //Initialize the starting block
-    osg::ref_ptr< bots::Block > startBlock = new bots::Block();
-    mStartBlock = new bots::BlockEntity(
-        startBlock.get(), mPluginDCS.get(), mPhysicsSimulator );
-    double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
-    mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
-    mStartBlock->InitPhysics();
-    mStartBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
-    mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
-    mStartBlock->SetBlockEntityMap( mBlockEntities );
-    mStartBlock->SetNameAndDescriptions( 0 );
-    mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );
-    mStartBlock->InitializeStartBlock();
-    mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
+    {
+        //Need to check this interaction for memory leaks
+        osg::ref_ptr< bots::Block > startBlock = new bots::Block();
+        mStartBlock = new bots::BlockEntity(
+            startBlock.get(), mPluginDCS.get(), mPhysicsSimulator );
+
+        //Set physics properties for start block
+        mStartBlock->InitPhysics();
+        mStartBlock->GetPhysicsRigidBody()->setFriction( 1.0 );
+        mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
+
+        //Set D6 constraint for start block
+        mStartBlock->SetConstraints( mGridSize );
+
+        //Give the start block access to the BlockEntity map
+        mStartBlock->SetBlockEntityMap( mBlockEntities );
+
+        //Set name and descriptions for start block
+        mStartBlock->SetNameAndDescriptions( 0 );
+
+        //Add start block to the BlockEntity map
+        mBlockEntities[ mStartBlock->GetDCS()->GetName() ] = mStartBlock;
+    }
 
     //Initialize the blocks
-    for( int i = 0; i < numBlocks; ++i )
+    mNumBlocks = 24;
+    mBlocksLeft = mNumBlocks;
+    for( int i = 0; i < mNumBlocks; ++i )
     {
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Block > block = new bots::Block();
@@ -238,20 +267,22 @@ void ConstructionWorld::InitializeFramework()
         blockEntity->InitPhysics();
         blockEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
 
-        blockEntity->SetBlockEntityMap( mBlockEntities );
-
         //Set D6 constraint for blocks
-        blockEntity->SetConstraints( gridSize );
+        blockEntity->SetConstraints( mGridSize );
+
+        //Give block entities access to the BlockEntity map
+        blockEntity->SetBlockEntityMap( mBlockEntities );
 
         //Set name and descriptions for blocks
         blockEntity->SetNameAndDescriptions( i + 1 );
 
-        //Set up map to blocks
+        //Add block to the BlockEntity map
         mBlockEntities[ blockEntity->GetDCS()->GetName() ] = blockEntity;
     }
 
     //Initialize the agents
-    for( int i = 0; i < numAgents; ++i )
+    mNumAgents = 4;
+    for( int i = 0; i < mNumAgents; ++i )
     {
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Agent > agent = new bots::Agent();
@@ -273,43 +304,47 @@ void ConstructionWorld::InitializeFramework()
         agentEntity->SetBlockEntityMap( mBlockEntities );
 
         //Set D6 constraint for agents
-        agentEntity->SetConstraints( gridSize );
+        agentEntity->SetConstraints( mGridSize );
 
         //Store collisions for the agents
         agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
         //Set the sensor range for the agents
-        agentEntity->GetBlockSensor()->SetRange( gridSize * 0.3 );
-        agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * gridSize );
-        agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * gridSize );
+        agentEntity->GetBlockSensor()->SetRange( mGridSize * 0.3 );
+        agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * mGridSize );
+        agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * mGridSize );
 
         //Set name and descriptions for blocks
         agentEntity->SetNameAndDescriptions( i );
 
-        mAgents.push_back( agentEntity );
+        mAgentEntities.push_back( agentEntity );
     }
 
     //Create random positions for the objects in the framework
-    CreateRandomPositions( gridSize );
+    CreateRandomPositions( mGridSize );
 
-    //mStartBlock acts as the first block of the structure so we must attach it
-    mStartBlock->AttachUpdate();
-    mStartBlock->UpdateSideStates();
+    //Kick off simulation by attaching the start block after positions are set
+    {
+        double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
+        mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
+        mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );
+        mStartBlock->AttachUpdate( true );
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionWorld::CreateRandomPositions( int gridSize )
+void ConstructionWorld::CreateRandomPositions( int mGridSize )
 {
     std::vector< ves::xplorer::scenegraph::CADEntity* > entities;
     std::map< std::string, bots::BlockEntity* >::iterator itr =
-        mBlockEntities.begin(); itr++;
+        mBlockEntities.begin(); ++itr;
     for( itr; itr != mBlockEntities.end(); ++itr )
     {
         entities.push_back( itr->second );
     }
 
-    for( size_t i = 0; i < mAgents.size(); ++i )
+    for( size_t i = 0; i < mAgentEntities.size(); ++i )
     {
-        entities.push_back( mAgents.at( i ) );
+        entities.push_back( mAgentEntities.at( i ) );
     }
 
     bool needsNewPosition( false );
@@ -350,13 +385,13 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
             }
                                                       //Subtract some amount
                                                       //to keep blocks off walls
-            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 2.0 );
-            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( gridSize ) ) - 2.0 );
+            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( mGridSize ) ) - 2.0 );
+            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( mGridSize ) ) - 2.0 );
 
             for( size_t j = 0; j < positions.size(); ++j )
             {
-                if( ( fabs( randOne ) < ( gridSize * 0.2 ) &&
-                      fabs( randTwo ) < ( gridSize * 0.2 ) ) )
+                if( ( fabs( randOne ) < ( mGridSize * 0.2 ) &&
+                      fabs( randTwo ) < ( mGridSize * 0.2 ) ) )
                 {
                     needsNewPosition = true;
                 }
@@ -379,13 +414,19 @@ void ConstructionWorld::CreateRandomPositions( int gridSize )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+void ConstructionWorld::WriteSimulationDataToFile()
+{
+    mSimulationData << std::setiosflags( std::ios::left )
+                    << mFrameCount << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::PreFrameUpdate()
 {
     if( !mPhysicsSimulator->GetIdle() )
     {
-        for( size_t i = 0; i < mAgents.size(); ++i )
+        for( size_t i = 0; i < mAgentEntities.size(); ++i )
         {
-            mAgents.at( i )->CommunicatingBlocksAlgorithm();
+            mAgentEntities.at( i )->CommunicatingBlocksAlgorithm();
         }
     }
 
@@ -395,8 +436,59 @@ void ConstructionWorld::PreFrameUpdate()
     }
     else
     {
-        std::cout << "Structure completion time: " << mFrameCount
-                  << " frames!" << std::endl;
+        //Write simulation data to file
+        WriteSimulationDataToFile();
+
+        //Reset the simulation
+        ResetSimulation();
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ConstructionWorld::ResetSimulation()
+{
+    //Reset the simulation time and block counter
+    mFrameCount = 1;
+    mBlocksLeft = mNumBlocks;
+    if( !RUN_CONTINUOUS_SIMULATIONS )
+    {
+        return;
+    }
+
+    //Reset the occupancy matrix
+    std::map< std::pair< int, int >, std::pair< bool, bool > >::iterator
+        occMatItr = mOccupancyMatrix.begin();
+    for( occMatItr; occMatItr != mOccupancyMatrix.end(); ++occMatItr )
+    {
+        occMatItr->second.second = false;
+    }
+
+    //Reset the grid
+    //Nothing needed to reset grid at this time
+
+    //Reset the blocks
+    std::map< std::string, bots::BlockEntity* >::iterator blockIter =
+        mBlockEntities.begin();
+    for( blockIter; blockIter != mBlockEntities.end(); ++blockIter )
+    {
+        blockIter->second->Reset();
+    }
+
+    //Reset the agents
+    for( size_t i = 0; i < mAgentEntities.size(); ++i )
+    {
+        mAgentEntities.at( i )->Reset();
+    }
+
+    //Create random positions for the objects in the framework
+    CreateRandomPositions( mGridSize );
+
+    //Kick off simulation by attaching the start block after positions are set
+    {
+        double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
+        mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
+        mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
+        mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );
+        mStartBlock->AttachUpdate( true );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -72,7 +72,7 @@ public:
     virtual ~BlockEntity();
 
     ///Update with the structure on attachment
-    const bool AttachUpdate();
+    const bool AttachUpdate( bool isStartBlock = false );
 
     ///Get this block's geometry
     bots::Block* const GetBlockGeometry() const;
@@ -84,14 +84,14 @@ public:
     std::map< std::pair< int, int >,
               std::pair< bool, bool > >& GetOccupancyMatrix() const;
 
-    ///Special initialize function for the start block
-    void InitializeStartBlock();
-
     ///Return if this block is attached to the structure
     const bool IsAttached() const;
 
     ///Return if a block can be attached to a side of this block
     const bool PermissionToAttach( osg::Drawable* drawable ) const;
+
+    ///Reset the block to its initialized state
+    void Reset();
 
     ///Set a connection to this block
     void SetBlockConnection(

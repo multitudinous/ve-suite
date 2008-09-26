@@ -44,6 +44,10 @@ using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
 Block::Block()
+    :
+    osg::Geode(),
+    mLineColor( 0.5, 0.5, 0.5, 1.0 ),
+    mBlockColor( 1.0, 1.0, 1.0, 1.0 )
 {
     Initialize();
 }
@@ -108,7 +112,7 @@ void Block::Initialize()
         lgi->second->setStateSet( lineStateSet.get() );
 
         osg::ref_ptr< osg::Vec4Array > lineColor = new osg::Vec4Array();
-        lineColor->push_back( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+        lineColor->push_back( mLineColor );
         lgi->second->setColorArray( lineColor.get() );
         lgi->second->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -216,7 +220,7 @@ void Block::Initialize()
         bgi->second->setStateSet( blockStateSet.get() );
 
         osg::ref_ptr< osg::Vec4Array > color = new osg::Vec4Array();
-        color->push_back( osg::Vec4( 1.0, 1.0, 1.0, 1.0 ) );
+        color->push_back( mBlockColor );
         bgi->second->setColorArray( color.get() );
         bgi->second->setColorBinding( osg::Geometry::BIND_OVERALL );
 
@@ -227,6 +231,16 @@ void Block::Initialize()
 
         addDrawable( bgi->second.get() );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Vec4& Block::GetLineColor() const
+{
+    return mLineColor;
+}
+////////////////////////////////////////////////////////////////////////////////
+const osg::Vec4& Block::GetBlockColor() const
+{
+    return mBlockColor;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Block::SetColor( unsigned int drawable, const osg::Vec4& color )

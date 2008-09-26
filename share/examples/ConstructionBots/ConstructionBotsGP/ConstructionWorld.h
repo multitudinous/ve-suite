@@ -66,6 +66,7 @@ namespace osgAL
 #include <map>
 #include <vector>
 #include <string>
+#include <fstream>
 
 namespace bots
 {
@@ -91,6 +92,9 @@ public:
     ///Perform the preframe update
     void PreFrameUpdate();
 
+    ///Reset the simulation
+    void ResetSimulation();
+
 private:
     ///Initialize the construction world framework
     void InitializeFramework();
@@ -98,11 +102,22 @@ private:
     ///Randomize where the blocks and agents are placed in the environment
     void CreateRandomPositions( int gridSize );
 
+    void WriteSimulationDataToFile();
+
     ///The number of blocks left to build the structure
     unsigned int mBlocksLeft;
 
     ///The number of frames processed to complete this simulation
     unsigned int mFrameCount;
+
+    ///The size of the construction framework grid plane
+    double mGridSize;
+
+    ///The number of construction blocks for the simulation
+    double mNumBlocks;
+
+    ///The number of construction agents for the simulation
+    double mNumAgents;
 
     ///A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
@@ -124,13 +139,16 @@ private:
     std::map< std::string, bots::BlockEntity* > mBlockEntities;
 
     ///The agents which build the structure
-    std::vector< bots::AgentEntity* > mAgents;
+    std::vector< bots::AgentEntity* > mAgentEntities;
 
     ///The occupancy matrix containing the shape desired to be built
     std::map< std::pair< int, int >, std::pair< bool, bool > > mOccupancyMatrix;
 
     ///A pointer to the physics simulator for this plugin
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
+
+    ///A file to write simulation data to
+    std::ofstream mSimulationData;
 
 };
 } //end bots

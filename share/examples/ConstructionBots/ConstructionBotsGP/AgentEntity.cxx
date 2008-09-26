@@ -76,7 +76,7 @@ AgentEntity::AgentEntity(
     CADEntity( agent, pluginDCS, physicsSimulator ),
     mBuildMode( false ),
     mBlocksLeft( NULL ),
-    mMaxSpeed( 1.0 ),
+    mMaxSpeed( 4.0 ),
     mBuildSpeed( 1.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
@@ -244,12 +244,17 @@ void AgentEntity::AvoidObstacle()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Build()
 {
-    //Get the velocity before mPhysicsRigidBody is destroyed
-    btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
+    if( !mHeldBlock )
+    {
+        return;
+    }
 
     //Grab mHeldBlock's DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > heldBlockDCS =
         mHeldBlock->GetDCS();
+
+    //Get the velocity before mPhysicsRigidBody is destroyed
+    btVector3 velocity = mPhysicsRigidBody->getLinearVelocity();
 
     //Get the block close to the attach site
     double* position = mDCS->GetVETranslationArray();
@@ -291,7 +296,8 @@ void AgentEntity::Build()
     //Reset some variables
     mBuildMode = false;
     mHeldBlock = NULL;
-    mObstacleSensor->SetForceAttractionConstant( 1.0 );
+    mPerimeterSensor->Reset();
+    //mObstacleSensor->SetForceAttractionConstant( 1.0 );
 
     //Push sound event to cue user for successful attachment
 #ifdef VE_SOUND
@@ -333,12 +339,6 @@ void AgentEntity::GoToSite()
     linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
     mPhysicsRigidBody->setLinearVelocity( linearVelocity );
-}
-////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::InitiateBuildMode()
-{
-    mTargetDCS = NULL;
-    mBuildMode = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
@@ -416,6 +416,12 @@ bots::PerimeterSensorPtr const AgentEntity::GetPerimeterSensor() const
 bots::SiteSensorPtr const AgentEntity::GetSiteSensor() const
 {
     return mSiteSensor;
+}
+////////////////////////////////////////////////////////////////////////////////
+void AgentEntity::Reset()
+{
+    //Currently nothing needs to be reset for agents
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* const AgentEntity::GetPluginDCS() const

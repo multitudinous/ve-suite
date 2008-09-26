@@ -195,10 +195,8 @@ void PerimeterSensor::CalculateLocalPositions()
 void PerimeterSensor::CollectInformation()
 {
     //Get the DCSs
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > pluginDCS =
-        mAgentEntity->GetPluginDCS();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > agentDCS =
-        mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
 
     osg::Vec3 agentPosition = agentDCS->getPosition();
     osgUtil::IntersectorGroup::Intersectors& intersectors =
@@ -225,12 +223,11 @@ void PerimeterSensor::CollectInformation()
         mLineSegmentIntersector->setEnd( endPoint );
     }
 
-    pluginDCS->RemoveChild( agentDCS.get() );
-    //This is an expensive call
-    //Try to only call once by using group intersector
+    pluginDCS->RemoveChild( agentDCS );
+    //This is an expensive call; Try to only call once using group intersector
     osgUtil::IntersectionVisitor intersectionVisitor( mIntersectorGroup.get() );
     pluginDCS->accept( intersectionVisitor );
-    pluginDCS->AddChild( agentDCS.get() );
+    pluginDCS->AddChild( agentDCS );
 
     for( int i = 7; i > -1; --i )
     {
@@ -241,20 +238,23 @@ void PerimeterSensor::CollectInformation()
         {
             mIntersections.push_back(
                 mLineSegmentIntersector->getFirstIntersection() );
-            osg::ref_ptr< osg::Drawable > currentDrawable =
-                mIntersections.back().drawable;
+            osg::Drawable* currentDrawable =
+                mIntersections.back().drawable.get();
             osg::Array* tempArray =
                 currentDrawable->asGeometry()->getColorArray();
             if( tempArray )
             {
-                osg::Vec4* color =
-                    &( static_cast< osg::Vec4Array* >( tempArray )->at( 0 ) );
-
-                if( *color != mAgentEntity->mSiteColor )
+                osg::Vec4& color =
+                    static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+                if( color != mAgentEntity->mSiteColor )
                 {
                     mAgentEntity->mBuildMode = false;
-                    mAgentEntity->mPerimeterSensor->Reset();
+                    mAgentEntity->SetTargetDCS( NULL );
+                    mAgentEntity->mSiteSensor->ResetAngle();
+                    Reset();
 
+                    std::cout << agentDCS->getName() << std::endl;
+                    
                     return;
                 }
             }
@@ -280,7 +280,7 @@ void PerimeterSensor::CollectInformation()
                     ( modulusTest == 1 && drawableTest ) )
                 {
                     mAligned = true;
-                    mQueriedConnection = currentDrawable.get();
+                    mQueriedConnection = currentDrawable;
                 }
             }
 
@@ -312,7 +312,7 @@ void PerimeterSensor::CollectInformation()
         mPerimeterDetected = !mIntersections.empty();
         if( mPerimeterDetected )
         {
-            mAgentEntity->InitiateBuildMode();
+            mAgentEntity->mBuildMode = true;
         }
     }
 }
@@ -363,14 +363,15 @@ const bool PerimeterSensor::PerimeterDetected() const
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::Reset()
 {
-    delete mLastClockWiseDetection;
+    if( mLastClockWiseDetection )
+    {
+        delete mLastClockWiseDetection;
+    }
     mLastClockWiseDetection = NULL;
     mPreviousDrawable = NULL;
 
     mPerimeterDetected = false;
     mAligned = false;
-
-    mAgentEntity->mSiteSensor->ResetAngle();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::SetRange( double range )
