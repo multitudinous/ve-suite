@@ -81,10 +81,13 @@ void WarrantyToolGP::InitializeNode(
     ves::xplorer::scenegraph::util::OpacityVisitor 
         opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
     ves::xplorer::scenegraph::util::OpacityVisitor 
-        opVisitor1( cadEntity->GetDCS(), false, true, 0.3f );
+        opVisitor1( cadEntity->GetDCS(), false, true, 0.4f );
     //Highlight part
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
         highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );
+
+    ves::xplorer::scenegraph::util::OpacityVisitor 
+        opVisitor2( cadEntity->GetDCS(), false, true, 0.4f );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
@@ -92,15 +95,35 @@ void WarrantyToolGP::PreFrameUpdate()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolGP::SetCurrentCommand(
-    ves::open::xml::CommandPtr command )
+void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
 {
     if( !command )
     {
         return;
     }
+    const std::string commandName = command->GetCommandName();
 
-    std::string commandName = command->GetCommandName();
-    //Highlight the respective node
+    //Before anything else remove the glow if there is glow
+    
+    if( commandName == "reset" )
+    {
+        //Make everything opaque
+        //ves::xplorer::scenegraph::util::OpacityVisitor 
+        //    opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
+    }
+    else if( commandName == "glow part" )
+    {
+        //Highlight the respective node
+        //Make a user specified part glow
+        //ves::xplorer::scenegraph::util::OpacityVisitor 
+        //    opVisitor1( cadEntity->GetDCS(), false, true, 0.4f );
+        //Highlight part
+        //ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+        //    highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );
+    }
+    else if( commandName == "add glow part" )
+    {
+        //Add another part that glows
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////

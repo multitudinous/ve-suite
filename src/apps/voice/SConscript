@@ -1,10 +1,11 @@
+##Build voice engine
 import os, sys, string
 pj = os.path.join
 
-Import('baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options')
+Import('baseEnv buildDir RootDir vrjuggler_options tao_options xerces_options ves_pkg')
 Import('wxwidgets_options')
 
-env = baseEnv.Copy()
+env = ves_pkg.getEnv().Copy()
 
 tao_options.apply(env)
 xerces_options.apply(env)
@@ -36,8 +37,10 @@ env.AppendUnique( CPPPATH = [pj('#', 'external', 'cxxtest-3.10.1'),
                   CPPDEFINES = ['LOKI_ENABLE_FUNCTION',
                                 'LOKI_FUNCTOR_IS_NOT_A_SMALLOBJECT'])
 
+app = ves_pkg.createProgram('JuliusSpeechNavigator' + env["PROGSUFFIX"], env, 'bin')
+app.addSources( srcs )
+#app.addHeaders( headers )
+app.build()
 
-app = env.Program('JuliusSpeechNavigator', srcs)
-
-prefix = env.Dictionary()['prefix']
-env.Alias('install', env.Install(pj(prefix, 'bin'), app))
+#prefix = env.Dictionary()['prefix']
+#env.Alias('install', env.Install(pj(prefix, 'bin'), app))
