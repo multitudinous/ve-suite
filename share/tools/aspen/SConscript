@@ -10,7 +10,6 @@ if GetPlatform() == 'win32':
    aspenSubdirs += Split("""    
       CASILib
       VE_AspenUnit
-      DynamicsUnit
    """)
 
 
