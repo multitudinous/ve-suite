@@ -76,7 +76,7 @@ public:
 protected:
 
 private:
-    void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event );
+    void GetTextInput( wxCommandEvent& event );
 
     void BuildGUI();
 
