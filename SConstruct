@@ -217,7 +217,7 @@ if GetPlatform() == 'win32':
 else:
    xerces_options = SConsAddons.Options.StandardPackageOption("xercesc",
       "Xerces-C library options, default : xercesc_incdir=<xercesc>/include xercesc_libdir=<xercesc>/lib(64)", 
-      pj('xercesc','util','XercesVersion.hpp'), 'xerces-c', symbol="main", required=True)
+      pj('xercesc','util','XercesVersion.hpp'), library=['xerces-c'], symbol="main", required=True)
    
 opts.AddOption( xerces_options )
 wxwidgets_options = None
