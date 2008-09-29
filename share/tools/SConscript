@@ -2,7 +2,7 @@
 #import os
 #pj = os.path.join
 
-Import( 'GetPlatform' )
+Import( 'GetPlatform baseEnv ves_pkg' )
 
 toolsSubdirs = Split("""
     builder
