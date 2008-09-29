@@ -9,6 +9,7 @@
 #include <string>
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/System.h>
+#include <AspenPlusInterface.h>
 
 class DynParser
 {
@@ -49,10 +50,10 @@ private:
     std::map< std::string, std::map< std::string, std::string > > outLinkToModel;
     std::map<std::string, std::map< std::string, int > >models;
     std::map< std::string, std::pair< int, int > > streamPortIDS;
-   int redundantID;
-   std::string workingDir;
-	void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
-   void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
+    int redundantID;
+    std::string workingDir;
+    void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
+    void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
 
 public:
 	DynParser();
@@ -60,6 +61,11 @@ public:
 	void ParseFile(const char *);
     std::string CreateNetwork( void );	
 	void SetWorkingDir( std::string dir );
+    void OpenFile(const char * file);
+    void CloseFile( );
+    void SaveFile( );
+    void SaveAs(const char * filename);
+    AspenPlusInterface::AspenPlusInterface * dyndoc;
 };
 
 #endif

@@ -114,12 +114,12 @@ void Body_Unit_i::HideDynamics()
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::CloseDynamics()
 {
-	//dyn->closeFile();
+	dyn->CloseFile();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SaveDynamics()
 {
-	//dyn->saveFile();
+	dyn->SaveFile();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::StepSim()
@@ -151,6 +151,7 @@ void Body_Unit_i::StartCalc (
   // Add your implementation here
 	//executive_->SetModuleMessage(cur_id_,"Simulation running...\n");
 	//dyn->dynamicsdoc->runSolver(false);
+	dyn->dyndoc->RunSolver();
 	DynamicsLog->SetSel(-1, -1);
 	DynamicsLog->ReplaceSel("Simulation Complete\r\n");
 	//executive_->SetModuleMessage(cur_id_,"Simulation completed.\n");
@@ -407,7 +408,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		{
 			//SaveDynamics();
 	        //dyn->saveAs(( mWorkingDir + mFilename + ".apw" ).c_str());
-	        //dyn->saveAs(( mWorkingDir + mFilename + ".dynf" ).c_str());
+	        dyn->SaveAs(( mWorkingDir + mFilename + ".dynf" ).c_str());
 		    DynamicsLog->SetSel(-1, -1);
 		    DynamicsLog->ReplaceSel("saved.\r\n");
 		}
@@ -521,8 +522,8 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 		//Display->SetWindowText( ( mWorkingDir + filename ).c_str());
 		Display->SetWindowText( ( filename ).c_str());
         //go through dyn parsing procedure
-		//dyn->openFile(filename.c_str());
-		dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
+		dyn->OpenFile(filename.c_str());
+		//dyn->ParseFile((mWorkingDir + filename + ".dynf" ).c_str());
         mFilename = filename;
 		firsttime=false;
 	}
@@ -570,7 +571,7 @@ char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 	DynamicsLog->ReplaceSel("saving...\r\n");
 	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
 	mFilename = filename;
-    //dyn->saveAs(( mWorkingDir + mFilename + ".apw" ).c_str());
+    dyn->SaveAs(( mWorkingDir + mFilename + ".dynf" ).c_str());
 	//dyn->saveAs(( mWorkingDir + mFilename + ".dynf" ).c_str());
 	DynamicsLog->SetSel(-1, -1);
 	DynamicsLog->ReplaceSel("saved.\r\n");

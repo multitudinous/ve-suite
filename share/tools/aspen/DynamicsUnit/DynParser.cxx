@@ -16,6 +16,7 @@
 #include <cctype>
 #include <cmath>
 
+///////////////////////////////////////////////////////////////////////////////
 DynParser::DynParser()
 {
     try
@@ -40,16 +41,65 @@ DynParser::DynParser()
     ves::open::xml::XMLObjectFactory::Instance()->
     RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
     
+    dyndoc = new AspenPlusInterface::AspenPlusInterface();
     workingDir = "";
     redundantID = 0;
-
 }
 
+///////////////////////////////////////////////////////////////////////////////
 DynParser::~DynParser()
 {
     XMLPlatformUtils::Terminate();
 }
 
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::OpenFile(const char * file)
+{
+    std::string fileName(file);
+    std::string dynfExt(".dynf");
+    ParseFile( ( workingDir + fileName + dynfExt ).c_str());	
+    CString filename = file;
+    dyndoc->Open( ( workingDir + fileName + dynfExt ).c_str());
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::CloseFile( )
+{
+    dyndoc->Close();
+    dyndoc->Quit();
+    xCoords.clear();
+    yCoords.clear();
+    BlockInfoList.clear();
+    xy.streamId.clear();
+    xy.streamType = NULL;
+    xy.value.clear();
+    tempXY.streamId.clear();
+    tempXY.streamType =  NULL;
+    tempXY.value.clear();
+    streamCoordList.clear();
+    //streamIds.clear();
+    inLinkToModel.clear();
+    outLinkToModel.clear();
+    linkPoints.clear();
+    linkTypes.clear();
+    models.clear();
+    iconLocations.clear();
+    streamPortIDS.clear();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::SaveFile()
+{
+    dyndoc->Save();
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::SaveAs(const char * filename)
+{
+    dyndoc->SaveAs(filename);
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void DynParser::ParseFile(const char * dynFile)
 {	
 	std::ifstream inFile( dynFile );
