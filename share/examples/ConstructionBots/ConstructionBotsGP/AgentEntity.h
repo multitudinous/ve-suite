@@ -128,7 +128,7 @@ public:
         std::map< std::string, bots::BlockEntity* >& blockEntityMap );
 
     ///Set the total number of blocks needed to complete the structure
-    void SetBlocksLeft( unsigned int& blocksLeft );
+    void SetNumBlocksLeft( unsigned int& blocksLeft );
 
     ///Set the constraints for the physics mesh
     void SetConstraints( int gridSize );
@@ -185,7 +185,7 @@ private:
     bool mBuildMode;
 
     ///The number of blocks left to complete the structure
-    unsigned int* mBlocksLeft;
+    unsigned int* mNumBlocksLeft;
 
     ///The max speed at which this agent travels
     double mMaxSpeed;

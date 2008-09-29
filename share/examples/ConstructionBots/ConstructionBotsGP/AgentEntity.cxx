@@ -75,7 +75,7 @@ AgentEntity::AgentEntity(
     :
     CADEntity( agent, pluginDCS, physicsSimulator ),
     mBuildMode( false ),
-    mBlocksLeft( NULL ),
+    mNumBlocksLeft( NULL ),
     mMaxSpeed( 4.0 ),
     mBuildSpeed( 2.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
@@ -307,7 +307,7 @@ void AgentEntity::Build()
 #endif
 
     //Decrement the block counter after successful attachment
-    --(*mBlocksLeft);
+    --(*mNumBlocksLeft);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::FollowPerimeter()
@@ -442,9 +442,9 @@ void AgentEntity::SetBlockEntityMap(
     mBlockEntityMap = &blockEntityMap;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void AgentEntity::SetBlocksLeft( unsigned int& blocksLeft )
+void AgentEntity::SetNumBlocksLeft( unsigned int& blocksLeft )
 {
-    mBlocksLeft = &blocksLeft;
+    mNumBlocksLeft = &blocksLeft;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::SetConstraints( int gridSize )

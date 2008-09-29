@@ -78,11 +78,16 @@ ConstructionWorld::ConstructionWorld(
 #endif
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
-    mBlocksLeft( 0 ),
     mFrameCount( 1 ),
+    mNumSimulations( 5 ),
+    mNumSimulationsLeft( mNumSimulations ),
+    mNumBlocks( 24 ),
+    mNumBlocksLeft( mNumBlocks ),
+    mNumAgents( 1 ),
+    mDeltaAgents( 1 ),
+    mBlockSensorRange( 10.0 ),
+    mDeltaBlockSensorRange( 10.0 ),
     mGridSize( 0 ),
-    mNumBlocks( 0 ),
-    mNumAgents( 0 ),
     mGrid( 0 ),
     mAgentEntities( 0 ),
     mStartBlock( 0 ),
@@ -95,6 +100,18 @@ ConstructionWorld::ConstructionWorld(
     mPhysicsSimulator( physicsSimulator ),
     mSimulationData( "Data\\simulation.dat", std::ios::out )
 {
+    //Write out initial framework setup
+    mSimulationData
+        << std::setiosflags( std::ios::left )
+        << "BlockSensorRange = " << mBlockSensorRange
+        << std::endl
+        << std::setiosflags( std::ios::left )
+        << "NumAgents = " << mNumAgents
+        << std::endl
+        << std::setiosflags( std::ios::left )
+        << "NumBlocks = " << mNumBlocks
+        << std::endl;
+
     //Initialize the construction bot framework
     InitializeFramework();
 }
@@ -254,9 +271,7 @@ void ConstructionWorld::InitializeFramework()
     }
 
     //Initialize the blocks
-    mNumBlocks = 24;
-    mBlocksLeft = mNumBlocks;
-    for( int i = 0; i < mNumBlocks; ++i )
+    for( unsigned int i = 0; i < mNumBlocks; ++i )
     {
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Block > block = new bots::Block();
@@ -281,8 +296,7 @@ void ConstructionWorld::InitializeFramework()
     }
 
     //Initialize the agents
-    mNumAgents = 4;
-    for( int i = 0; i < mNumAgents; ++i )
+    for( unsigned int i = 0; i < mNumAgents; ++i )
     {
         //Need to check this interaction for memory leaks
         osg::ref_ptr< bots::Agent > agent = new bots::Agent();
@@ -294,7 +308,7 @@ void ConstructionWorld::InitializeFramework()
             agent.get(), mPluginDCS.get(), mPhysicsSimulator );
 #endif
         //Set number of blocks left to be placed
-        agentEntity->SetBlocksLeft( mBlocksLeft );
+        agentEntity->SetNumBlocksLeft( mNumBlocksLeft );
 
         //Set physics properties for blocks
         agentEntity->InitPhysics();
@@ -310,7 +324,7 @@ void ConstructionWorld::InitializeFramework()
         agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
 
         //Set the sensor range for the agents
-        agentEntity->GetBlockSensor()->SetRange( mGridSize * 0.3 );
+        agentEntity->GetBlockSensor()->SetRange( mBlockSensorRange );
         agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * mGridSize );
         agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * mGridSize );
 
@@ -414,12 +428,6 @@ void ConstructionWorld::CreateRandomPositions( int mGridSize )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionWorld::WriteSimulationDataToFile()
-{
-    mSimulationData << std::setiosflags( std::ios::left )
-                    << mFrameCount << std::endl;
-}
-////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::PreFrameUpdate()
 {
     if( !mPhysicsSimulator->GetIdle() )
@@ -430,15 +438,20 @@ void ConstructionWorld::PreFrameUpdate()
         }
     }
 
-    if( mBlocksLeft )
+    if( mNumBlocksLeft )
     {
         mFrameCount++;
     }
     else
     {
-        //Write simulation data to file
-        WriteSimulationDataToFile();
-
+        if( !RUN_CONTINUOUS_SIMULATIONS )
+        {
+            return;
+        }
+    
+        //Decrement the simulation count
+        --mNumSimulationsLeft;
+        
         //Reset the simulation
         ResetSimulation();
     }
@@ -446,12 +459,47 @@ void ConstructionWorld::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::ResetSimulation()
 {
+    //Write simulation data to file
+    mSimulationData
+        << std::setiosflags( std::ios::left )
+        << "Simulation" << mNumSimulations - mNumSimulationsLeft << " = "
+        << mFrameCount << std::endl;
+
     //Reset the simulation time and block counter
     mFrameCount = 1;
-    mBlocksLeft = mNumBlocks;
-    if( !RUN_CONTINUOUS_SIMULATIONS )
+    mNumBlocksLeft = mNumBlocks;
+
+    if( !mNumSimulationsLeft )
     {
-        return;
+        mNumSimulationsLeft = mNumSimulations;
+
+        if( mBlockSensorRange < 70.0 )
+        {
+            mBlockSensorRange += mDeltaBlockSensorRange;
+
+            //Set the sensor range for the agents
+            for( size_t i = 0; i < mAgentEntities.size(); ++i )
+            {
+                mAgentEntities.at( i )->GetBlockSensor()->SetRange(
+                    mBlockSensorRange );
+            }
+
+            mSimulationData << std::endl
+                << std::setiosflags( std::ios::left )
+                << "BlockSensorRange = " << mBlockSensorRange
+                << std::endl
+                << std::setiosflags( std::ios::left )
+                << "NumAgents = " << mNumAgents
+                << std::endl
+                << std::setiosflags( std::ios::left )
+                << "NumBlocks = " << mNumBlocks
+                << std::endl;
+        }
+        else
+        {
+            std::cout << "Done!" << std::endl;
+            exit( 0 );
+        }
     }
 
     //Reset the occupancy matrix

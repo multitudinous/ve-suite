@@ -36,6 +36,7 @@
 #include "SiteSensor.h"
 #include "AgentEntity.h"
 #include "BlockEntity.h"
+#include "ObstacleSensor.h"
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/scenegraph/FindParentsVisitor.h>
@@ -259,6 +260,8 @@ void PerimeterSensor::CollectInformation()
                     mAgentEntity->mTargetDCS = NULL;
                     mAgentEntity->mSiteSensor->ResetAngle();
                     Reset();
+                    mAgentEntity->mObstacleSensor->SetForceAttractionConstant(
+                        1.0 );
 
                     std::cout << agentDCS->getName() << std::endl;
                     

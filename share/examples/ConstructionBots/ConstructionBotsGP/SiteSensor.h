@@ -56,7 +56,7 @@ public:
     virtual void CollectInformation();
 
     ///Rotate the site sensor
-    void Rotate();
+    void Rotate( bool leftover = false );
 
     ///Returns if the site is currently in view
     const bool SiteInView() const;
@@ -89,6 +89,15 @@ private:
 
     ///The angle increment of this sensor
     double mAngleInc;
+
+    ///The angle this site sensor rotates through each frame
+    double mAnglePerFrame;
+
+    ///The amount of angle leftover from equal subdivisions of mAnglePerFrame
+    double mAngleLeftover;
+
+    ///The number of rotations - 1 needed per frame to get mAnglePerFrame
+    unsigned int mRotationsPerFrame;
 
     ///The range of this sensor
     double mRange;

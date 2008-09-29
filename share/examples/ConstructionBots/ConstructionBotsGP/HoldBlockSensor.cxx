@@ -133,6 +133,7 @@ void HoldBlockSensor::CollectInformation()
         mAgentEntity->mBuildMode = false;
         mAgentEntity->mHeldBlock = NULL;
         mAgentEntity->mPerimeterSensor->Reset();
+        mAgentEntity->mObstacleSensor->SetForceAttractionConstant( 1.0 );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -270,6 +270,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
             theta = acos( targetForce.dot( currentForce ) /
                 ( targetForceLength * currentForceLength ) );
             theta *= oneEightyDivPI;
+            theta = fabs( theta );
         }
 
         //Wall following algorithm

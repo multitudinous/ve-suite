@@ -49,6 +49,7 @@
 #include <osg/LineWidth>
 
 #include <osgUtil/IntersectionVisitor>
+#include <osgUtil/LineSegmentIntersector>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -62,8 +63,11 @@ SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mSiteInView( false ),
     mCloseToSite( false ),
-    mAngle( 0.0 ), 
-    mAngleInc( 0.1 ),
+    mAngle( 0.0 ),
+    mAngleInc( 0.0 ),
+    mAnglePerFrame( 0.5 ),
+    mAngleLeftover( 0.0 ),
+    mRotationsPerFrame( 0.0 ),
     mRange( 0.0 ),
     mNormalizedSiteVector( 0.0, 0.0, 0.0 )
 {
@@ -79,7 +83,6 @@ void SiteSensor::Initialize()
 {
     mLineSegmentIntersector = new osgUtil::LineSegmentIntersector(
         osg::Vec3( 0.0, 0.0, 0.0 ), osg::Vec3( 0.0, 0.0, 0.0 ) );
-
     mGeode = new osg::Geode();
     mGeometry = new osg::Geometry();
     mVertexArray = new osg::Vec3Array();
@@ -111,6 +114,18 @@ void SiteSensor::Initialize()
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
     DisplayGeometry( false );
+
+    //Calculate the min angle needed to hit the site at max length for gridSize
+    unsigned int gridSize = 51;
+    //Assumes site is at the center of the grid
+    double maxLength = sqrt( 2.0 ) * 0.5 * gridSize;
+    double maxLengthOfBlock = sqrt( 2.0 );
+    mAngleInc = acos( 1.0 - ( pow( maxLengthOfBlock, 2.0 ) /
+                            ( 2.0 * pow( maxLength, 2.0 ) ) ) );
+
+    double rotationsPerFrame = mAnglePerFrame / mAngleInc;
+    mRotationsPerFrame = static_cast< unsigned int >( rotationsPerFrame );
+    mAngleLeftover = mAngleInc * ( rotationsPerFrame - mRotationsPerFrame );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::CollectInformation()
@@ -122,21 +137,23 @@ void SiteSensor::CollectInformation()
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
 
+    bool checkTargetLine( false );
     if( targetDCS )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
         (*mVertexArray)[ 1 ].z() = (*mVertexArray)[ 0 ].z();
+        checkTargetLine = true;
     }
     else
     {
-        Rotate();
+        Rotate( true );
     }
 
     //Reset results from last frame
     //targetDCS = NULL;
+    bool tempLastSiteInView( mSiteInView );
     mSiteInView = false;
     mCloseToSite = false;
-    mNormalizedSiteVector.setValue( 0.0, 0.0, 0.0 );
 
     if( mGeode->getNodeMask() )
     {
@@ -144,38 +161,69 @@ void SiteSensor::CollectInformation()
         mGeometry->dirtyBound();
     }
 
-    mLineSegmentIntersector->reset();
-    mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
-    mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
-
     pluginDCS->RemoveChild( agentDCS );
-    osgUtil::IntersectionVisitor intersectionVisitor(
-        mLineSegmentIntersector.get() );
-    pluginDCS->accept( intersectionVisitor );
-    pluginDCS->AddChild( agentDCS );
 
-    bool goToSite( false );
-    if( mLineSegmentIntersector->containsIntersections() )
+    int rotations( 0 );
+    bool firstTimeThrough( true );
+    do
     {
-        osg::Drawable* drawable =
-            mLineSegmentIntersector->getFirstIntersection().drawable.get();
-        osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-        if( tempArray )
+        if( !firstTimeThrough )
         {
-            const osg::Vec4& color =
-                static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
-            if( color == mAgentEntity->mSiteColor )
+            if( checkTargetLine )
             {
-                goToSite = true;
-                mSiteInView = true;
-                
-                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                    drawable->getParent( 0 ) );
-                targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
-                    parentVisitor.GetParentNode() );
+                Rotate( true );
+                checkTargetLine = false;
+            }
+            else
+            {
+                Rotate();
+                ++rotations;
             }
         }
+        else
+        {
+            firstTimeThrough = false;
+        }
+
+        mLineSegmentIntersector->reset();
+        mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
+        mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
+
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            mLineSegmentIntersector.get() );
+        pluginDCS->accept( intersectionVisitor );
+
+        if( mLineSegmentIntersector->containsIntersections() )
+        {
+            osg::Drawable* drawable =
+                mLineSegmentIntersector->getFirstIntersection().drawable.get();
+            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+            if( tempArray )
+            {
+                const osg::Vec4& color =
+                    static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+                if( color == mAgentEntity->mSiteColor )
+                {
+                    mSiteInView = true;
+                    
+                    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                        drawable->getParent( 0 ) );
+                    targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
+                        parentVisitor.GetParentNode() );
+
+                    break;
+                }
+            }
+        }
+
+        if( targetDCS )
+        {
+            break;
+        }
     }
+    while( rotations < static_cast< int >( mRotationsPerFrame ) );
+
+    pluginDCS->AddChild( agentDCS );
 
     mAgentEntity->SetTargetDCS( targetDCS );
 
@@ -198,18 +246,30 @@ void SiteSensor::CollectInformation()
             forceAttractionConstant );
     }
 
-    mNormalizedSiteVector = siteVector.normalize();
+    mNormalizedSiteVector.setValue( 0.0, 0.0, 0.0 );
+    if( siteVector.length() != 0.0 )
+    {
+        mNormalizedSiteVector = siteVector.normalize();
+    }
 
-    if( goToSite )
+    if( tempLastSiteInView == false && tempLastSiteInView != mSiteInView  )
     {
         mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
             mNormalizedSiteVector * mAgentEntity->mMaxSpeed );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SiteSensor::Rotate()
+void SiteSensor::Rotate( bool leftover )
 {
-    mAngle += mAngleInc;
+    if( !leftover )
+    {
+        mAngle += mAngleInc;
+    }
+    else
+    {
+        mAngle += mAngleLeftover;
+    }
+
     (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
     (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
     (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );

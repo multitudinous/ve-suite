@@ -56,7 +56,7 @@ public:
     virtual void CollectInformation();
 
     ///Rotate the block sensor
-    void Rotate();
+    void Rotate( bool leftover = false );
 
     ///Returns if a block is currently in view
     const bool BlockInView() const;
@@ -75,18 +75,27 @@ protected:
     virtual void Initialize();
 
 private:
-    ///Tells if a block is in view of this sensor
+    ///Tells if a block is in view of this block sensor
     bool mBlockInView;
     ///Tells if the agent entity is close to the block in view
     bool mCloseToBlock;
 
-    ///The angle of this sensor
+    ///The angle of this block sensor
     double mAngle;
 
-    ///The angle increment of this sensor
+    ///The angle increment of this block sensor
     double mAngleInc;
 
-    ///The range of this sensor
+    ///The angle this block sensor rotates through each frame
+    double mAnglePerFrame;
+
+    ///The amount of angle leftover from equal subdivisions of mAnglePerFrame
+    double mAngleLeftover;
+
+    ///The number of rotations - 1 needed per frame to get mAnglePerFrame
+    unsigned int mRotationsPerFrame;
+
+    ///The range of this block sensor
     double mRange;
 
     ///The normalized vector from this agent entity to the block in view

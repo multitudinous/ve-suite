@@ -61,10 +61,13 @@ BlockSensor::BlockSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mBlockInView( false ),
     mCloseToBlock( false ),
-    mAngle( 0 ), 
-    mAngleInc( 0.1 ),
-    mRange( 0 ),
-    mNormalizedBlockVector( 0, 0, 0 )
+    mAngle( 0.0 ),
+    mAngleInc( 0.0 ),
+    mAnglePerFrame( 0.5 ),
+    mAngleLeftover( 0.0 ),
+    mRotationsPerFrame( 0.0 ),
+    mRange( 0.0 ),
+    mNormalizedBlockVector( 0.0, 0.0, 0.0 )
 {
     Initialize();
 }
@@ -109,6 +112,17 @@ void BlockSensor::Initialize()
     mAgentEntity->GetPluginDCS()->addChild( mGeode.get() );
 
     DisplayGeometry( false );
+
+    //Calculate the min angle needed to hit a block at max length for gridSize
+    unsigned int gridSize = 51;
+    double maxLength = sqrt( 2.0 ) * gridSize;
+    double maxLengthOfBlock = sqrt( 2.0 );
+    mAngleInc = acos( 1.0 - ( pow( maxLengthOfBlock, 2.0 ) /
+                            ( 2.0 * pow( maxLength, 2.0 ) ) ) );
+
+    double rotationsPerFrame = mAnglePerFrame / mAngleInc;
+    mRotationsPerFrame = static_cast< unsigned int >( rotationsPerFrame );
+    mAngleLeftover = mAngleInc * ( rotationsPerFrame - mRotationsPerFrame );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::CollectInformation()
@@ -120,21 +134,23 @@ void BlockSensor::CollectInformation()
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
 
+    bool checkTargetLine( false );
     if( targetDCS )
     {
         (*mVertexArray)[ 1 ] = targetDCS->getPosition();
         (*mVertexArray)[ 1 ].z() = (*mVertexArray)[ 0 ].z();
+        checkTargetLine = true;
     }
     else
     {
-        Rotate();
+        Rotate( true );
     }
 
     //Reset results from last frame
     targetDCS = NULL;
+    bool tempLastBlockInView( mBlockInView );
     mBlockInView = false;
     mCloseToBlock = false;
-    mNormalizedBlockVector.setValue( 0.0, 0.0, 0.0 );
 
     if( mGeode->getNodeMask() )
     {
@@ -142,38 +158,64 @@ void BlockSensor::CollectInformation()
         mGeometry->dirtyBound();
     }
 
-    mLineSegmentIntersector->reset();
-    mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
-    mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
-
     pluginDCS->RemoveChild( agentDCS );
-    osgUtil::IntersectionVisitor intersectionVisitor(
-        mLineSegmentIntersector.get() );
-    pluginDCS->accept( intersectionVisitor );
-    pluginDCS->AddChild( agentDCS );
 
-    bool goToBlock( false );
-    if( mLineSegmentIntersector->containsIntersections() )
+    int rotations( 0 );
+    bool firstTimeThrough( true );
+    do
     {
-        osg::Drawable* drawable =
-            mLineSegmentIntersector->getFirstIntersection().drawable.get();
-        osg::Array* tempArray = drawable->asGeometry()->getColorArray();
-        if( tempArray )
+        if( !firstTimeThrough )
         {
-            const osg::Vec4& color =
-                static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
-            if( color == mAgentEntity->mBlockColor )
+            if( checkTargetLine )
             {
-                goToBlock = true;
-                mBlockInView = true;
-                
-                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                    drawable->getParent( 0 ) );
-                targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
-                    parentVisitor.GetParentNode() );
+                Rotate( true );
+                checkTargetLine = false;
+            }
+            else
+            {
+                Rotate();
+                ++rotations;
+            }
+        }
+        else
+        {
+            firstTimeThrough = false;
+        }
+
+        mLineSegmentIntersector->reset();
+        mLineSegmentIntersector->setStart( (*mVertexArray)[ 0 ] );
+        mLineSegmentIntersector->setEnd( (*mVertexArray)[ 1 ] );
+
+        osgUtil::IntersectionVisitor intersectionVisitor(
+            mLineSegmentIntersector.get() );
+        pluginDCS->accept( intersectionVisitor );
+        
+        if( mLineSegmentIntersector->containsIntersections() )
+        {
+            osg::Drawable* drawable =
+                mLineSegmentIntersector->getFirstIntersection().drawable.get();
+            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+            if( tempArray )
+            {
+                const osg::Vec4& color =
+                    static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+                if( color == mAgentEntity->mBlockColor )
+                {
+                    mBlockInView = true;
+                    
+                    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                        drawable->getParent( 0 ) );
+                    targetDCS = static_cast< ves::xplorer::scenegraph::DCS* >(
+                        parentVisitor.GetParentNode() );
+
+                    break;
+                }
             }
         }
     }
+    while( rotations < static_cast< int >( mRotationsPerFrame ) );
+
+    pluginDCS->AddChild( agentDCS );
 
     mAgentEntity->SetTargetDCS( targetDCS );
 
@@ -191,18 +233,30 @@ void BlockSensor::CollectInformation()
         }
     }
 
-    mNormalizedBlockVector = blockVector.normalize();
+    mNormalizedBlockVector.setValue( 0.0, 0.0, 0.0 );
+    if( blockVector.length() != 0.0 )
+    {
+        mNormalizedBlockVector = blockVector.normalize();
+    }
 
-    if( goToBlock )
+    if( tempLastBlockInView == false && tempLastBlockInView != mBlockInView )
     {
         mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
             mNormalizedBlockVector * mAgentEntity->mMaxSpeed );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void BlockSensor::Rotate()
+void BlockSensor::Rotate( bool leftover )
 {
-    mAngle += mAngleInc;
+    if( !leftover )
+    {
+        mAngle += mAngleInc;
+    }
+    else
+    {
+        mAngle += mAngleLeftover;
+    }
+
     (*mVertexArray)[ 1 ] = (*mVertexArray)[ 0 ];
     (*mVertexArray)[ 1 ].x() += mRange * cos( mAngle );
     (*mVertexArray)[ 1 ].y() += mRange * sin( mAngle );
