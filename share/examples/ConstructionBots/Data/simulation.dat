@@ -1,0 +1,3 @@
+BlockSensorRange = 10
+NumAgents = 1
+NumBlocks = 24
