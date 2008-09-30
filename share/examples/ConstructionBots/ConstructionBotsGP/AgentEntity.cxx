@@ -62,7 +62,7 @@
 
 using namespace bots;
 
-const bool SHOW_SENSOR_GEOMETRY = false;
+const bool SHOW_SENSOR_GEOMETRY = true;
 
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::AgentEntity(
@@ -373,6 +373,7 @@ void AgentEntity::PickUpBlock()
         mTargetDCS->SetTranslationArray( position );
 
         mTargetDCS = NULL;
+        mObstacleSensor->Reset();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

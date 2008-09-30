@@ -506,6 +506,10 @@ void BlockEntity::Reset()
 
     //Make the physics mesh dynamic again
     GetPhysicsRigidBody()->BoundingBoxShape();
+
+    //Reset the linear velocity to zero
+    btVector3 zeroVelocity( 0.0, 0.0, 0.0 );
+    GetPhysicsRigidBody()->setLinearVelocity( zeroVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::SetBlockConnection(

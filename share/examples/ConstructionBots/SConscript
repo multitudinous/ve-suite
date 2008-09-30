@@ -15,6 +15,7 @@ wavFile = sca_util.getFilesRecursiveByExt( ConstructionBotsDemoDir, [ '.wav' ] )
 fileBundle.addFiles( iveFile )
 fileBundle.addFiles( jpgFile )
 fileBundle.addFiles( wavFile )
+fileBundle.addFiles( [ 'Data/simulation.dat' ] )
 fileBundle.addFiles( [ 'constructionbots.ves' ] )
 
 ConstructionBotsSubdirs = Split("""

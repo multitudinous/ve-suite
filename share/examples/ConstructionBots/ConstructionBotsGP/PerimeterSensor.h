@@ -99,6 +99,8 @@ private:
     */
     void CalculateLocalPositions();
 
+    const bool CollisionTest();
+
     ///Tells if the agent entity is aligned with a block in the structure
     bool mAligned;
 

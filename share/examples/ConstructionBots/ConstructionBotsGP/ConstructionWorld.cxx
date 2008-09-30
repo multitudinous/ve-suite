@@ -410,11 +410,11 @@ void ConstructionWorld::CreateRandomPositions( int mGridSize )
                 {
                     needsNewPosition = true;
                 }
-                else if( ( randOne > ( positions.at( j ).first - 1.0 ) &&
-                           randOne < ( positions.at( j ).first + 1.0 ) )
+                else if( ( randOne > ( positions.at( j ).first - 1.1 ) &&
+                           randOne < ( positions.at( j ).first + 1.1 ) )
                            &&
-                         ( randTwo > ( positions.at( j ).second - 1.0 ) &&
-                           randTwo < ( positions.at( j ).second + 1.0 ) ) )
+                         ( randTwo > ( positions.at( j ).second - 1.1 ) &&
+                           randTwo < ( positions.at( j ).second + 1.1 ) ) )
                 {
                     needsNewPosition = true;
                 }

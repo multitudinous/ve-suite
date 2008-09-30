@@ -194,8 +194,39 @@ void PerimeterSensor::CalculateLocalPositions()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
+const bool PerimeterSensor::CollisionTest()
+{
+    bool collision( false );
+    std::map< std::string, bots::BlockEntity* >::const_iterator
+        itr = mAgentEntity->mBlockEntityMap->find(
+            mAgentEntity->GetTargetDCS()->GetName() );
+    if( itr != mAgentEntity->mBlockEntityMap->end() )
+    {
+        collision = mAgentEntity->GetPhysicsRigidBody()->CollisionInquiry(
+            itr->second->GetPhysicsRigidBody() );
+        if( collision )
+        {
+            mAgentEntity->mBuildMode = false;
+            mAgentEntity->SetTargetDCS( NULL );
+            mAgentEntity->mSiteSensor->Reset();
+            mAgentEntity->mObstacleSensor->Reset();
+
+            std::cout << "Collision: " << mAgentEntity->GetDCS()->getName()
+                      << std::endl;
+        }
+    }
+
+    return collision;
+}
+////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::CollectInformation()
 {
+    //Test for collision with the target DCS
+    if( CollisionTest() )
+    {
+        return;
+    }
+
     //Get the DCSs
     ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
     ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
@@ -247,7 +278,7 @@ void PerimeterSensor::CollectInformation()
             ves::xplorer::scenegraph::DCS* dcs =
                 static_cast< ves::xplorer::scenegraph::DCS* >(
                     parentVisitor.GetParentNode() );
-            mAgentEntity->mTargetDCS = dcs;
+            mAgentEntity->SetTargetDCS( dcs );
             osg::Array* tempArray =
                 currentDrawable->asGeometry()->getColorArray();
             if( tempArray )
@@ -257,7 +288,7 @@ void PerimeterSensor::CollectInformation()
                 if( color != mAgentEntity->mSiteColor )
                 {
                     mAgentEntity->mBuildMode = false;
-                    mAgentEntity->mTargetDCS = NULL;
+                    mAgentEntity->SetTargetDCS( NULL );
                     mAgentEntity->mSiteSensor->Reset();
                     Reset();
                     mAgentEntity->mObstacleSensor->Reset();
