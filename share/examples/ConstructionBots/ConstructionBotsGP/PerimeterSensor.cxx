@@ -258,10 +258,9 @@ void PerimeterSensor::CollectInformation()
                 {
                     mAgentEntity->mBuildMode = false;
                     mAgentEntity->mTargetDCS = NULL;
-                    mAgentEntity->mSiteSensor->ResetAngle();
+                    mAgentEntity->mSiteSensor->Reset();
                     Reset();
-                    mAgentEntity->mObstacleSensor->SetForceAttractionConstant(
-                        1.0 );
+                    mAgentEntity->mObstacleSensor->Reset();
 
                     std::cout << agentDCS->getName() << std::endl;
                     

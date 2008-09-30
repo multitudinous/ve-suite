@@ -213,6 +213,7 @@ const bool BlockEntity::AttachUpdate( bool isStartBlock )
         alignedPosition[ 1 ] = mLocation.second;
         alignedPosition[ 2 ] = 0.5;
         mDCS->SetTranslationArray( alignedPosition );
+        mDCS->setAttitude( osg::Quat( 0.0, 0.0, 0.0, 1.0 ) );
 
         //Change the block color
         for( int i = 4; i < 10; ++i )

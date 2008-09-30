@@ -55,6 +55,9 @@ public:
     ///Returns if the agent entity is holding a block
     const bool HoldingBlock() const;
 
+    ///Reset this hold block sensor
+    virtual void Reset();
+
 protected:
     ///Initialize this hold block sensor
     virtual void Initialize();

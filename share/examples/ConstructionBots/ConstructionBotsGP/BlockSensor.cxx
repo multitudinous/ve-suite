@@ -63,7 +63,7 @@ BlockSensor::BlockSensor( bots::AgentEntity* agentEntity )
     mCloseToBlock( false ),
     mAngle( 0.0 ),
     mAngleInc( 0.0 ),
-    mAnglePerFrame( 0.5 ),
+    mAnglePerFrame( 0.2 ),
     mAngleLeftover( 0.0 ),
     mRotationsPerFrame( 0.0 ),
     mRange( 0.0 ),
@@ -148,7 +148,6 @@ void BlockSensor::CollectInformation()
 
     //Reset results from last frame
     targetDCS = NULL;
-    bool tempLastBlockInView( mBlockInView );
     mBlockInView = false;
     mCloseToBlock = false;
 
@@ -238,12 +237,6 @@ void BlockSensor::CollectInformation()
     {
         mNormalizedBlockVector = blockVector.normalize();
     }
-
-    if( tempLastBlockInView == false && tempLastBlockInView != mBlockInView )
-    {
-        mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
-            mNormalizedBlockVector * mAgentEntity->mMaxSpeed );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::Rotate( bool leftover )
@@ -275,6 +268,14 @@ const bool BlockSensor::CloseToBlock() const
 const btVector3& BlockSensor::GetNormalizedBlockVector() const
 {
     return mNormalizedBlockVector;
+}
+////////////////////////////////////////////////////////////////////////////////
+void BlockSensor::Reset()
+{
+    mAngle = 90 * ( rand() % 4 );
+    mAngle = osg::DegreesToRadians( mAngle );
+
+    mBlockInView = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void BlockSensor::SetRange( double range )

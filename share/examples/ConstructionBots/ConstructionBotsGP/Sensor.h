@@ -73,6 +73,9 @@ protected:
     ///Initialize this sensor
     virtual void Initialize() = 0;
 
+    ///Reset this sensor
+    virtual void Reset() = 0;
+
     ///A pointer to the agent entity that this sensor belongs to
     bots::AgentEntity* mAgentEntity;
 

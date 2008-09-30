@@ -67,8 +67,8 @@ public:
     ///Get the normalized vector to the site
     const btVector3& GetNormalizedSiteVector() const;
 
-    ///Reset the angle of this site sensor
-    void ResetAngle();
+    ///Reset this site sensor
+    virtual void Reset();
 
     ///Set the range for this sensor
     void SetRange( double range );

@@ -65,7 +65,7 @@ SiteSensor::SiteSensor( bots::AgentEntity* agentEntity )
     mCloseToSite( false ),
     mAngle( 0.0 ),
     mAngleInc( 0.0 ),
-    mAnglePerFrame( 0.5 ),
+    mAnglePerFrame( 0.2 ),
     mAngleLeftover( 0.0 ),
     mRotationsPerFrame( 0.0 ),
     mRange( 0.0 ),
@@ -151,7 +151,6 @@ void SiteSensor::CollectInformation()
 
     //Reset results from last frame
     //targetDCS = NULL;
-    bool tempLastSiteInView( mSiteInView );
     mSiteInView = false;
     mCloseToSite = false;
 
@@ -235,7 +234,7 @@ void SiteSensor::CollectInformation()
             sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
         //Use 2.0 > sqrt( 2 ) + mPerimeterSensor->Range( 0.2 ) = 1.614
-        if( siteVector.length() <= 2.0 )
+        if( siteVector.length() <= 1.614 )
         {
             mCloseToSite = true;
         }
@@ -250,12 +249,6 @@ void SiteSensor::CollectInformation()
     if( siteVector.length() != 0.0 )
     {
         mNormalizedSiteVector = siteVector.normalize();
-    }
-
-    if( tempLastSiteInView == false && tempLastSiteInView != mSiteInView  )
-    {
-        mAgentEntity->GetPhysicsRigidBody()->setLinearVelocity(
-            mNormalizedSiteVector * mAgentEntity->mMaxSpeed );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -290,10 +283,12 @@ const btVector3& SiteSensor::GetNormalizedSiteVector() const
     return mNormalizedSiteVector;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SiteSensor::ResetAngle()
+void SiteSensor::Reset()
 {
     mAngle = 90 * ( rand() % 4 );
     mAngle = osg::DegreesToRadians( mAngle );
+
+    mSiteInView = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SiteSensor::SetRange( double range )

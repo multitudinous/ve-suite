@@ -170,10 +170,10 @@ private:
     void FollowPerimeter();
 
     ///Performs the go to block behavior
-    void GoToBlock();
+    //void GoToBlock();
 
     ///Performs the go to site behavior
-    void GoToSite();
+    //void GoToSite();
 
     ///Performs the pick up block behavior
     void PickUpBlock();
@@ -190,8 +190,11 @@ private:
     ///The max speed at which this agent travels
     double mMaxSpeed;
 
-    ///The speed used while building
-    double mBuildSpeed;
+    ///The speed used while building around the perimeter
+    double mPerimeterSpeed;
+
+    ///The speed used while close to the site
+    double mCloseToSiteSpeed;
 
     ///The color of the blocks
     osg::Vec4 mBlockColor;

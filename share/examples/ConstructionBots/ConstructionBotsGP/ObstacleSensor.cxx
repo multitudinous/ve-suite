@@ -62,17 +62,18 @@ ObstacleSensor::ObstacleSensor( bots::AgentEntity* agentEntity )
     :
     Sensor( agentEntity ),
     mObstacleDetected( false ),
+    mWallFollowMode( false ),
     mNumForceLines( 3 ),
     mNumDetectors( 0 ),
-    mAngleIncrement( 20 ),
-    mRange( 0 ),
+    mAngleIncrement( 20.0 ),
+    mRange( 0.0 ),
     mForceLineLength( 5.0 ),
     mForceAttractionConstant( 1.0 ),
     mForceRepellingConstant( 1.0 ),
-    mDetectorGeometry( 0 ),
-    mDetectorVertexArray( 0 ),
-    mResultantForce( 0, 0, 0 ),
-    mIntersectorGroup( 0 )
+    mDetectorGeometry( NULL ),
+    mDetectorVertexArray( NULL ),
+    mResultantForce( 0.0, 0.0, 0.0 ),
+    mIntersectorGroup( NULL )
 {
     Initialize();
 }
@@ -227,21 +228,24 @@ void ObstacleSensor::CollectInformation()
 ////////////////////////////////////////////////////////////////////////////////
 const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 {
+    //Get the DCSs
     ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
     ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
 
     double* agentPosition = agentDCS->GetVETranslationArray();
 
     //Get the repulsive force
-    btVector3 repulsiveForce( 0, 0, 0 );
+    btVector3 repulsiveForce( 0.0, 0.0, 0.0 );
     for( size_t i = 0; i < mIntersections.size(); ++i )
     {
         osg::Vec3 intersect = mIntersections.at( i ).getWorldIntersectPoint();
         btVector3 deltaForce( intersect.x() - agentPosition[ 0 ],
-                              intersect.y() - agentPosition[ 1 ], 0 );
+                              intersect.y() - agentPosition[ 1 ], 0.0 );
 
         double variables = mForceRepellingConstant / deltaForce.length2();
+        //Normalize
         deltaForce /= deltaForce.length();
+        //Multiply by force repelling constants
         deltaForce *= variables;
 
         repulsiveForce -= deltaForce;
@@ -254,41 +258,6 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
         double* targetPosition = targetDCS->GetVETranslationArray();
         targetForce.setValue( targetPosition[ 0 ] - agentPosition[ 0 ],
                               targetPosition[ 1 ] - agentPosition[ 1 ], 0.0 );
-
-        //Code to find angle between two vectors sharing origin
-        //Dot product rule
-        //A . B = |A||B|cos( theta )
-        //theta = acos[ ( A . B ) / |A||B| ]
-        btVector3 currentForce =
-            mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
-
-        double theta( 0 );
-        double targetForceLength = targetForce.length();
-        double currentForceLength = currentForce.length();
-        if( targetForceLength != 0.0 && currentForceLength != 0.0 )
-        {
-            theta = acos( targetForce.dot( currentForce ) /
-                ( targetForceLength * currentForceLength ) );
-            theta *= oneEightyDivPI;
-            theta = fabs( theta );
-        }
-
-        //Wall following algorithm
-        //Set threshold to 80 instead of 90 to help with rounding corners
-        //80 is a good number
-        if( theta > 80.0 )
-        {
-            double x = repulsiveForce.x();
-            double y = repulsiveForce.y();
-
-            double cosTheta = cos( 145.0 * piDivOneEighty );
-            double sinTheta = sin( 145.0 * piDivOneEighty );
-
-            double xNew = ( x * cosTheta ) - ( y * sinTheta );
-            double yNew = ( x * sinTheta ) + ( y * cosTheta );
-
-            targetForce.setValue( xNew, yNew, 0.0 );
-        }
     }
     else
     {
@@ -299,16 +268,65 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 
     if( targetForce.length() != 0.0 )
     {
+        //Normalize
         targetForce /= targetForce.length();
+        //Multiply by the force attraction constants
         targetForce *= mForceAttractionConstant;
     }
 
-    //Calculate the total force
-    btVector3 totalForce( 0, 0, 0 );
-    totalForce += repulsiveForce;
-    totalForce += targetForce;
+    const btVector3* currentForce( NULL );
+    if( !mWallFollowMode )
+    {
+        btVector3 totalForce( repulsiveForce );
+        totalForce += targetForce;
 
-    mResultantForce = totalForce;
+        currentForce = &totalForce;
+    }
+    else
+    {
+        currentForce =
+            &mAgentEntity->GetPhysicsRigidBody()->getLinearVelocity();
+    }
+
+    //Code to find angle between two vectors sharing origin
+    //Dot product rule
+    //A . B = |A||B|cos( theta )
+    //theta = acos[ ( A . B ) / |A||B| ]
+    double theta( 0.0 );
+    btScalar currentForceLength = currentForce->length();
+    btScalar targetForceLength = targetForce.length();
+    if( targetForceLength != 0.0 && currentForceLength != 0.0 )
+    {
+        double AdotBdivAB = currentForce->dot( targetForce ) /
+                            ( currentForceLength * targetForceLength );
+        theta = acos( AdotBdivAB );
+        theta *= oneEightyDivPI;        
+    }
+
+    //Wall following algorithm
+    if( theta > 90.0 )
+    {
+        double x = repulsiveForce.x();
+        double y = repulsiveForce.y();
+
+        double cosTheta = cos( 145.0 * piDivOneEighty );
+        double sinTheta = sin( 145.0 * piDivOneEighty );
+
+        double xNew = ( x * cosTheta ) - ( y * sinTheta );
+        double yNew = ( x * sinTheta ) + ( y * cosTheta );
+
+        targetForce.setValue( xNew, yNew, 0.0 );
+
+        mWallFollowMode = true;
+    }
+    else
+    {
+        mWallFollowMode = false;
+    }
+
+    mResultantForce = repulsiveForce;
+    mResultantForce += targetForce;
+
     if( mResultantForce.length() != 0.0 )
     {
         mResultantForce = mResultantForce.normalize();
@@ -318,7 +336,6 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     {
         repulsiveForce.normalize();
         targetForce.normalize();
-        mResultantForce.normalize();
 
         (*mVertexArray)[ 0 ] = (*mVertexArray)[ 1 ] =
         (*mVertexArray)[ 2 ] = (*mVertexArray)[ 3 ] =
@@ -346,6 +363,15 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
 const bool ObstacleSensor::ObstacleDetected() const
 {
     return mObstacleDetected;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ObstacleSensor::Reset()
+{
+    mObstacleDetected = false;
+    mWallFollowMode = false;
+
+    mForceAttractionConstant = 1.0;
+    mForceRepellingConstant = 1.0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ObstacleSensor::SetAngleIncrement( double angleIncrement )

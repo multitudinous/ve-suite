@@ -67,7 +67,10 @@ public:
     ///Get the normalized vector to the block in view
     const btVector3& GetNormalizedBlockVector() const;
 
-    ///Set the range for this sensor
+    ///Reset this block sensor
+    virtual void Reset();
+
+    ///Set the range for this block sensor
     void SetRange( double range );
 
 protected:

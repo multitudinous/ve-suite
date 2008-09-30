@@ -35,7 +35,6 @@
 #include "HoldBlockSensor.h"
 #include "AgentEntity.h"
 #include "PerimeterSensor.h"
-#include "BlockSensor.h"
 #include "ObstacleSensor.h"
 
 // --- OSG Includes --- //
@@ -55,7 +54,7 @@ HoldBlockSensor::HoldBlockSensor( bots::AgentEntity* agentEntity )
     :
     Sensor( agentEntity ),
     mHoldingBlock( false ),
-    mRange( 0.6 )
+    mRange( 1.6 )
 {
     Initialize();
 }
@@ -133,12 +132,17 @@ void HoldBlockSensor::CollectInformation()
         mAgentEntity->mBuildMode = false;
         mAgentEntity->mHeldBlock = NULL;
         mAgentEntity->mPerimeterSensor->Reset();
-        mAgentEntity->mObstacleSensor->SetForceAttractionConstant( 1.0 );
+        mAgentEntity->mObstacleSensor->Reset();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 const bool HoldBlockSensor::HoldingBlock() const
 {
     return mHoldingBlock;
+}
+////////////////////////////////////////////////////////////////////////////////
+void HoldBlockSensor::Reset()
+{
+    mHoldingBlock = false;
 }
 ////////////////////////////////////////////////////////////////////////////////

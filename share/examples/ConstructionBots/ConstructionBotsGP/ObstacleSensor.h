@@ -74,6 +74,9 @@ public:
     ///Returns is an obstacle has been detected by this obstacle sensor
     const bool ObstacleDetected() const;
 
+    ///Reset this obstacle sensor
+    virtual void Reset();
+
     ///Set the angle increment for this obstacle sensor
     void SetAngleIncrement( double angleIncrement );
 
@@ -96,6 +99,9 @@ private:
 
     ///Tells if an obstacle has been detected by this obstacle sensor
     bool mObstacleDetected;
+
+    ///Tells if this obstacle sensor is in wall follwing mode
+    bool mWallFollowMode;
 
     ///The number of force lines for this obstacle sensor
     unsigned int mNumForceLines;

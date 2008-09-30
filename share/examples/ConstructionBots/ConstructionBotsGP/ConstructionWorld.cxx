@@ -325,9 +325,10 @@ void ConstructionWorld::InitializeFramework()
 
         //Set the sensor range for the agents
         agentEntity->GetBlockSensor()->SetRange( mBlockSensorRange );
-        agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * mGridSize );
         agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * mGridSize );
-
+        agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * mGridSize );
+        agentEntity->Reset();
+        
         //Set name and descriptions for blocks
         agentEntity->SetNameAndDescriptions( i );
 
@@ -339,7 +340,7 @@ void ConstructionWorld::InitializeFramework()
 
     //Kick off simulation by attaching the start block after positions are set
     {
-        double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
+        double startBlockPosition[ 3 ] = { 0.0, 0.0, 0.5 };
         mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
         mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );
         mStartBlock->AttachUpdate( true );
@@ -397,21 +398,21 @@ void ConstructionWorld::CreateRandomPositions( int mGridSize )
             {
                 posNegTwo = -1;
             }
-                                                      //Subtract some amount
-                                                      //to keep blocks off walls
-            randOne = posNegOne * ( 0.5 * ( 1 + rand() % ( mGridSize ) ) - 2.0 );
-            randTwo = posNegTwo * ( 0.5 * ( 1 + rand() % ( mGridSize ) ) - 2.0 );
+            
+            //Subtract 4.0 to keep blocks off walls and allow agents an escape
+            randOne = posNegOne * ( 0.5 * ( rand() % ( mGridSize + 1 ) ) - 4.0 );
+            randTwo = posNegTwo * ( 0.5 * ( rand() % ( mGridSize + 1 ) ) - 4.0 );
 
             for( size_t j = 0; j < positions.size(); ++j )
             {
-                if( ( fabs( randOne ) < ( mGridSize * 0.2 ) &&
-                      fabs( randTwo ) < ( mGridSize * 0.2 ) ) )
+                if( ( fabs( randOne ) < ( mGridSize * 0.1 ) &&
+                      fabs( randTwo ) < ( mGridSize * 0.1 ) ) )
                 {
                     needsNewPosition = true;
                 }
                 else if( ( randOne > ( positions.at( j ).first - 1.0 ) &&
                            randOne < ( positions.at( j ).first + 1.0 ) )
-                           ||
+                           &&
                          ( randTwo > ( positions.at( j ).second - 1.0 ) &&
                            randTwo < ( positions.at( j ).second + 1.0 ) ) )
                 {
@@ -532,7 +533,7 @@ void ConstructionWorld::ResetSimulation()
 
     //Kick off simulation by attaching the start block after positions are set
     {
-        double startBlockPosition[ 3 ] = { 0, 0, 0.5 };
+        double startBlockPosition[ 3 ] = { 0.0, 0.0, 0.5 };
         mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
         mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
         mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );

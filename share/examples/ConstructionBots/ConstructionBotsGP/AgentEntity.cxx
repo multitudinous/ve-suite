@@ -62,7 +62,7 @@
 
 using namespace bots;
 
-const bool SHOW_SENSOR_GEOMETRY = true;
+const bool SHOW_SENSOR_GEOMETRY = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::AgentEntity(
@@ -77,7 +77,8 @@ AgentEntity::AgentEntity(
     mBuildMode( false ),
     mNumBlocksLeft( NULL ),
     mMaxSpeed( 4.0 ),
-    mBuildSpeed( 2.0 ),
+    mPerimeterSpeed( 2.0 ),
+    mCloseToSiteSpeed( 1.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
     mPluginDCS( pluginDCS ),
@@ -227,7 +228,7 @@ void AgentEntity::AvoidObstacle()
     if( mHoldBlockSensor->HoldingBlock() &&
         mSiteSensor->CloseToSite() )
     {
-        speed = &mBuildSpeed;
+        speed = &mCloseToSiteSpeed;
     }
     else
     {
@@ -299,11 +300,11 @@ void AgentEntity::Build()
     mHeldBlock = NULL;
     mTargetDCS = NULL;
     mPerimeterSensor->Reset();
-    mObstacleSensor->SetForceAttractionConstant( 1.0 );
+    mObstacleSensor->Reset();
 
     //Push sound event to cue user for successful attachment
 #ifdef VE_SOUND
-    mAttachBlockSound->PushSoundEvent( 10 );
+    //mAttachBlockSound->PushSoundEvent( 10 );
 #endif
 
     //Decrement the block counter after successful attachment
@@ -314,13 +315,14 @@ void AgentEntity::FollowPerimeter()
 {
     //Get normalized resultant force vector and multiply by speed
     btVector3 linearVelocity =
-        mPerimeterSensor->GetNormalizedResultantForceVector() * mBuildSpeed;
+        mPerimeterSensor->GetNormalizedResultantForceVector() * mPerimeterSpeed;
     //Keep gravity in velocity
     linearVelocity.setZ( mPhysicsRigidBody->getLinearVelocity().getZ() );
 
     mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void AgentEntity::GoToBlock()
 {
     //Get normalized block vector and multiply by speed
@@ -331,7 +333,9 @@ void AgentEntity::GoToBlock()
 
     mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
+/*
 void AgentEntity::GoToSite()
 {
     //Get normalized site vector and multiply by speed
@@ -342,6 +346,7 @@ void AgentEntity::GoToSite()
 
     mPhysicsRigidBody->setLinearVelocity( linearVelocity );
 }
+*/
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::PickUpBlock()
 {
@@ -359,7 +364,7 @@ void AgentEntity::PickUpBlock()
     if( collision )
     {
 #ifdef VE_SOUND
-        mPickUpBlockSound->PushSoundEvent( 10 );
+        //mPickUpBlockSound->PushSoundEvent( 10 );
 #endif
         mHeldBlock = targetEntity;
 
@@ -422,8 +427,11 @@ bots::SiteSensorPtr const AgentEntity::GetSiteSensor() const
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::Reset()
 {
-    //Currently nothing needs to be reset for agents
-    ;
+    mBlockSensor->Reset();
+    mHoldBlockSensor->Reset();
+    mObstacleSensor->Reset();
+    mPerimeterSensor->Reset();
+    mSiteSensor->Reset();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* const AgentEntity::GetPluginDCS() const
