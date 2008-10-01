@@ -42,6 +42,8 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsSimulator.h>
 
 // --- OSG Includes --- //
+#include <osg/Geometry>
+
 #include <osgUtil/IntersectionVisitor>
 
 // --- Bullet Includes --- //
@@ -252,7 +254,7 @@ void BlockEntity::UpdateSideStates()
         if( !itr->second )
         {
             itrSS->second = mNeighborOccupancy[ itr->first ];
-            if( itrSS->second == false )
+            if( !itrSS->second )
             {
                 mBlockGeometry->SetColor( itr->first, mSiteColor );
             }
@@ -403,42 +405,50 @@ void BlockEntity::ConnectionDetection()
                 const_iterator itr = intersections.begin();
             for( itr; itr != intersections.end(); ++itr )
             {
-                osg::ref_ptr< osg::Drawable > drawable = itr->drawable;
-                ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                    drawable->getParent( 0 ) );
-                osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
-                    static_cast< ves::xplorer::scenegraph::DCS* >(
-                        parentVisitor.GetParentNode() );
-
-                bots::BlockEntity* blockEntity( NULL );
-                std::map< std::string, bots::BlockEntity* >::const_iterator
-                    bemItr = mBlockEntityMap->find( dcs->GetName() );
-                if( bemItr != mBlockEntityMap->end() )
+                osg::Drawable* const drawable = itr->drawable.get();
+                const osg::Vec4Array* const tempArray =
+                    static_cast< const osg::Vec4Array* >(
+                        drawable->asGeometry()->getColorArray() );
+                if( tempArray )
                 {
-                    blockEntity = bemItr->second;
-                    if( blockEntity != this )
-                    {
-                        unsigned int oppositeSide = i;
-                        if( i > 1 )
-                        {
-                            oppositeSide -= 2;
-                        }
-                        else
-                        {
-                            oppositeSide += 2;
-                        }
+                    const osg::Vec4& color = tempArray->at( 0 );
+                    ves::xplorer::scenegraph::FindParentsVisitor
+                        parentVisitor( drawable->getParent( 0 ) );
+                    ves::xplorer::scenegraph::DCS* const dcs =
+                        static_cast< ves::xplorer::scenegraph::DCS* >(
+                            parentVisitor.GetParentNode() );
 
-                        mBlockGeometry->SetColor( i, mSiteColor );
-                        mConnectedBlocks[ i ] = blockEntity;
-                        mConnectedBlocks[ i ]->SetBlockConnection(
-                            oppositeSide, this );
-                        mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
-                            oppositeSide, mSiteColor );
-                        sideState = false;
-                    }
-                    else
+                    bots::BlockEntity* blockEntity( NULL );
+                    std::map< std::string, bots::BlockEntity* >::
+                        const_iterator bemItr =
+                            mBlockEntityMap->find( dcs->GetName() );
+                    if( bemItr != mBlockEntityMap->end() )
                     {
-                        thisDrawable = drawable;
+                        blockEntity = bemItr->second;
+                        if( blockEntity == this )
+                        {
+                            thisDrawable = drawable;
+                        }
+                        else if( color == mSiteColor )
+                        {
+                            unsigned int oppositeSide = i;
+                            if( i > 1 )
+                            {
+                                oppositeSide -= 2;
+                            }
+                            else
+                            {
+                                oppositeSide += 2;
+                            }
+
+                            mBlockGeometry->SetColor( i, mSiteColor );
+                            mConnectedBlocks[ i ] = blockEntity;
+                            mConnectedBlocks[ i ]->SetBlockConnection(
+                                oppositeSide, this );
+                            mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
+                                oppositeSide, mSiteColor );
+                            sideState = false;
+                        }
                     }
                 }
             }

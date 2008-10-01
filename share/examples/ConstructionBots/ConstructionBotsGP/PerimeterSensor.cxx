@@ -269,12 +269,12 @@ void PerimeterSensor::CollectInformation()
             const osgUtil::LineSegmentIntersector::Intersection& intersection =
                 mLineSegmentIntersector->getFirstIntersection();
             osg::Drawable* const currentDrawable = intersection.drawable.get();
-            const osg::Array* const tempArray =
-                currentDrawable->asGeometry()->getColorArray();
+            const osg::Vec4Array* const tempArray =
+                static_cast< const osg::Vec4Array* >(
+                    currentDrawable->asGeometry()->getColorArray() );
             if( tempArray )
             {
-                const osg::Vec4& color =
-                    static_cast< const osg::Vec4Array* >( tempArray )->at( 0 );
+                const osg::Vec4& color = tempArray->at( 0 );
                 if( color == mAgentEntity->mSiteColor )
                 {        
                     mIntersections.push_back( intersection );

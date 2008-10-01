@@ -1,4 +1,4 @@
 GridSize = 51
 NumBlocks = 24
-NumAgents = 4
+NumAgents = 3
 BlockSensorRange = 10

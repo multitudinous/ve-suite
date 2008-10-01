@@ -194,13 +194,14 @@ void BlockSensor::CollectInformation()
         
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            osg::Drawable* drawable =
+            osg::Drawable* const drawable =
                 mLineSegmentIntersector->getFirstIntersection().drawable.get();
-            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+            const osg::Vec4Array* const tempArray =
+                static_cast< const osg::Vec4Array* >(
+                    drawable->asGeometry()->getColorArray() );
             if( tempArray )
             {
-                const osg::Vec4& color =
-                    static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+                const osg::Vec4& color = tempArray->at( 0 );
                 if( color == mAgentEntity->mBlockColor )
                 {
                     mBlockInView = true;

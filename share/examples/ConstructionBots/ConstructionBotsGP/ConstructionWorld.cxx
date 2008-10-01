@@ -83,7 +83,7 @@ ConstructionWorld::ConstructionWorld(
     mNumSimulationsLeft( mNumSimulations ),
     mNumBlocks( 24 ),
     mNumBlocksLeft( mNumBlocks ),
-    mNumAgents( 8 ),
+    mNumAgents( 3 ),
     mDeltaAgents( 1 ),
     mBlockSensorRange( 10.0 ),
     mDeltaBlockSensorRange( 10.0 ),

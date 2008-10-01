@@ -197,13 +197,14 @@ void SiteSensor::CollectInformation()
 
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            osg::Drawable* drawable =
+            osg::Drawable* const drawable =
                 mLineSegmentIntersector->getFirstIntersection().drawable.get();
-            osg::Array* tempArray = drawable->asGeometry()->getColorArray();
+            const osg::Vec4Array* const tempArray =
+                static_cast< const osg::Vec4Array* >(
+                    drawable->asGeometry()->getColorArray() );
             if( tempArray )
             {
-                const osg::Vec4& color =
-                    static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
+                const osg::Vec4& color = tempArray->at( 0 );
                 if( color == mAgentEntity->mSiteColor )
                 {
                     mSiteInView = true;
@@ -232,7 +233,7 @@ void SiteSensor::CollectInformation()
     btVector3 siteVector( 0.0, 0.0, 0.0 );
     if( targetDCS )
     {
-        double* sitePosition = targetDCS->GetVETranslationArray();
+        double* const sitePosition = targetDCS->GetVETranslationArray();
         siteVector.setValue(
             sitePosition[ 0 ] - (*mVertexArray)[ 0 ].x(),
             sitePosition[ 1 ] - (*mVertexArray)[ 0 ].y(), 0.0 );
