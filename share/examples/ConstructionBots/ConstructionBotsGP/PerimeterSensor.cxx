@@ -209,6 +209,7 @@ const bool PerimeterSensor::CollisionTest()
             mAgentEntity->mBuildMode = false;
             mAgentEntity->SetTargetDCS( NULL );
             mAgentEntity->mSiteSensor->Reset();
+            Reset();
             mAgentEntity->mObstacleSensor->Reset();
 
             std::cout << "Collision: " << mAgentEntity->GetDCS()->getName()
@@ -221,12 +222,6 @@ const bool PerimeterSensor::CollisionTest()
 ////////////////////////////////////////////////////////////////////////////////
 void PerimeterSensor::CollectInformation()
 {
-    //Test for collision with the target DCS
-    if( CollisionTest() )
-    {
-        return;
-    }
-
     //Get the DCSs
     ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
     ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
@@ -354,6 +349,12 @@ void PerimeterSensor::CollectInformation()
         {
             mAgentEntity->mBuildMode = true;
         }
+    }
+
+    //Test for collision with the target DCS
+    if( CollisionTest() )
+    {
+        return;
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

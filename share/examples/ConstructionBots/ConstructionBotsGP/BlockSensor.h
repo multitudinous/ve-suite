@@ -80,6 +80,7 @@ protected:
 private:
     ///Tells if a block is in view of this block sensor
     bool mBlockInView;
+
     ///Tells if the agent entity is close to the block in view
     bool mCloseToBlock;
 

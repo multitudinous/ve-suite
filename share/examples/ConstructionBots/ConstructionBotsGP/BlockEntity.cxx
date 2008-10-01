@@ -266,11 +266,12 @@ void BlockEntity::UpdateSideStates()
                     mLocalPositions->at( itr->first * 2 + 1 );
                 tempVector.normalize();
                 std::pair< int, int > location;
-                std::pair< int, int > posNinety( -tempVector.y(),
-                                                  tempVector.x() );
-                std::pair< int, int > negNinety(  tempVector.y(),
-                                                 -tempVector.x() );
-
+                std::pair< int, int > posNinety(
+                    static_cast< int >( -tempVector.y() ),
+                    static_cast< int >(  tempVector.x() ) );
+                std::pair< int, int > negNinety(
+                    static_cast< int >(  tempVector.y() ),
+                    static_cast< int >( -tempVector.x() ) );
                 //Go in positive direction first
                 bool emptyOccupance( false );
                 location = mLocation;
@@ -375,7 +376,7 @@ const bool BlockEntity::PermissionToAttach( osg::Drawable* drawable ) const
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::ConnectionDetection()
 {
-    osg::Vec3 blockPosition = mDCS->getPosition();
+    const osg::Vec3d& blockPosition = mDCS->getPosition();
     for( unsigned int i = 0; i < 4; ++i )
     {
         osg::Vec3 startPoint = (*mLocalPositions)[ i * 2 ];

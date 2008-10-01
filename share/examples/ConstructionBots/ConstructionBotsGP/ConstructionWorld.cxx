@@ -79,18 +79,19 @@ ConstructionWorld::ConstructionWorld(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     mFrameCount( 1 ),
-    mNumSimulations( 5 ),
+    mNumSimulations( 10 ),
     mNumSimulationsLeft( mNumSimulations ),
     mNumBlocks( 24 ),
     mNumBlocksLeft( mNumBlocks ),
-    mNumAgents( 1 ),
+    mNumAgents( 4 ),
     mDeltaAgents( 1 ),
     mBlockSensorRange( 10.0 ),
     mDeltaBlockSensorRange( 10.0 ),
-    mGridSize( 0 ),
-    mGrid( 0 ),
-    mAgentEntities( 0 ),
-    mStartBlock( 0 ),
+    // --- Ensure that the grid size is odd for centrality purposes --- //
+    mGridSize( 51 ),
+    mGrid( NULL ),
+    mAgentEntities(),
+    mStartBlock( NULL ),
     mPluginDCS( pluginDCS ),
 #ifdef VE_SOUND
     mSoundManager( soundManager ),
@@ -98,20 +99,8 @@ ConstructionWorld::ConstructionWorld(
                        "AmbientSound", pluginDCS, soundManager ) ),
 #endif
     mPhysicsSimulator( physicsSimulator ),
-    mSimulationData( "Data\\simulation.dat", std::ios::out )
+    mSimulationData( "Data/simulation.dat", std::ios::out )
 {
-    //Write out initial framework setup
-    mSimulationData
-        << std::setiosflags( std::ios::left )
-        << "BlockSensorRange = " << mBlockSensorRange
-        << std::endl
-        << std::setiosflags( std::ios::left )
-        << "NumAgents = " << mNumAgents
-        << std::endl
-        << std::setiosflags( std::ios::left )
-        << "NumBlocks = " << mNumBlocks
-        << std::endl;
-
     //Initialize the construction bot framework
     InitializeFramework();
 }
@@ -162,8 +151,30 @@ ConstructionWorld::~ConstructionWorld()
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::InitializeFramework()
 {
+    //If mGridSize is not odd, exit the program
+    if( !( mGridSize % 2 ) )
+    {
+        std::cout << "Make sure that the grid size is odd!!!" << std::endl;
+        exit( 0 );
+    }
+
     //Seed the random number generator
     srand( time( 0 ) );
+
+    //Write out initial framework setup
+    mSimulationData
+        << std::setiosflags( std::ios::left )
+        << "GridSize = " << mGridSize
+        << std::endl
+        << std::setiosflags( std::ios::left )
+        << "NumBlocks = " << mNumBlocks
+        << std::endl
+        << std::setiosflags( std::ios::left )
+        << "NumAgents = " << mNumAgents
+        << std::endl
+        << std::setiosflags( std::ios::left )
+        << "BlockSensorRange = " << mBlockSensorRange
+        << std::endl;
 
 #ifdef VE_SOUND
     try
@@ -182,18 +193,15 @@ void ConstructionWorld::InitializeFramework()
     //Tell PhysicsSimulator to store collision information
     mPhysicsSimulator->SetCollisionInformation( true );
 
-    //Ensure that the grid size is odd for centrality purposes
-    mGridSize = 51;
-
     //Initialize the occupancy matrix
     {
         int halfPosition = static_cast< int >( mGridSize * 0.5 );
-        for( int j = 0; j < mGridSize; ++j )
+        for( unsigned int j = 0; j < mGridSize; ++j )
         {
-            for( int i = 0; i < mGridSize; ++i )
+            for( unsigned int i = 0; i < mGridSize; ++i )
             {
-                int x =  i - halfPosition;
-                int y = -j + halfPosition;
+                int x = -halfPosition + i;
+                int y =  halfPosition - j;
                 mOccupancyMatrix[ std::make_pair( x, y ) ] =
                     std::make_pair( false, false );
             }
@@ -336,7 +344,7 @@ void ConstructionWorld::InitializeFramework()
     }
 
     //Create random positions for the objects in the framework
-    CreateRandomPositions( mGridSize );
+    CreateRandomPositions();
 
     //Kick off simulation by attaching the start block after positions are set
     {
@@ -347,7 +355,7 @@ void ConstructionWorld::InitializeFramework()
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ConstructionWorld::CreateRandomPositions( int mGridSize )
+void ConstructionWorld::CreateRandomPositions()
 {
     std::vector< ves::xplorer::scenegraph::CADEntity* > entities;
     std::map< std::string, bots::BlockEntity* >::iterator itr =
@@ -381,20 +389,20 @@ void ConstructionWorld::CreateRandomPositions( int mGridSize )
             posNegOne = rand() % 2;
             posNegTwo = rand() % 2;
 
-            if( posNegOne == 0 )
+            if( !posNegOne )
             {
                 posNegOne = 1;
             }
-            else if( posNegOne == 1 )
+            else
             {
                 posNegOne = -1;
             }
 
-            if( posNegTwo == 0 )
+            if( !posNegTwo )
             {
                 posNegTwo = 1;
             }
-            else if( posNegTwo == 1 )
+            else
             {
                 posNegTwo = -1;
             }
@@ -463,7 +471,7 @@ void ConstructionWorld::ResetSimulation()
     //Write simulation data to file
     mSimulationData
         << std::setiosflags( std::ios::left )
-        << "Simulation" << mNumSimulations - mNumSimulationsLeft << " = "
+        << "Simulation " << mNumSimulations - mNumSimulationsLeft << " = "
         << mFrameCount << std::endl;
 
     //Reset the simulation time and block counter
@@ -487,13 +495,16 @@ void ConstructionWorld::ResetSimulation()
 
             mSimulationData << std::endl
                 << std::setiosflags( std::ios::left )
-                << "BlockSensorRange = " << mBlockSensorRange
+                << "GridSize = " << mGridSize
+                << std::endl
+                << std::setiosflags( std::ios::left )
+                << "NumBlocks = " << mNumBlocks
                 << std::endl
                 << std::setiosflags( std::ios::left )
                 << "NumAgents = " << mNumAgents
                 << std::endl
                 << std::setiosflags( std::ios::left )
-                << "NumBlocks = " << mNumBlocks
+                << "BlockSensorRange = " << mBlockSensorRange
                 << std::endl;
         }
         else
@@ -529,7 +540,7 @@ void ConstructionWorld::ResetSimulation()
     }
 
     //Create random positions for the objects in the framework
-    CreateRandomPositions( mGridSize );
+    CreateRandomPositions();
 
     //Kick off simulation by attaching the start block after positions are set
     {

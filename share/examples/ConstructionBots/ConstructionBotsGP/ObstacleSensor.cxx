@@ -94,7 +94,7 @@ void ObstacleSensor::Initialize()
     osg::ref_ptr< osg::Vec4Array > colorArray = new osg::Vec4Array();
     osg::ref_ptr< osg::Vec4Array > detectorColorArray = new osg::Vec4Array();
 
-    mNumDetectors = static_cast< int >( 360 ) / mAngleIncrement;
+    mNumDetectors = static_cast< int >( 360.0 / mAngleIncrement );
     
     mVertexArray->resize( 2 * mNumForceLines );
     mDetectorVertexArray->resize( 2 * mNumDetectors );

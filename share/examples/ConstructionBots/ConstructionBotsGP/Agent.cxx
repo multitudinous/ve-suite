@@ -74,7 +74,7 @@ btCompoundShape* const Agent::CreateCompoundShape() const
 {
     btScalar boxHalfWidth = 0.5;
     btScalar holderHalfThickness = 0.05;
-    btScalar offset = boxHalfWidth + 2.0 * holderHalfThickness;
+    btScalar offset = boxHalfWidth + 1.1 * holderHalfThickness;
 
     //This memory should be handled by
     //ves/xplorer/scenegraph/physics/PhysicsRigidBody

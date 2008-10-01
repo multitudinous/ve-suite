@@ -100,7 +100,7 @@ private:
     void InitializeFramework();
 
     ///Randomize where the blocks and agents are placed in the environment
-    void CreateRandomPositions( int gridSize );
+    void CreateRandomPositions();
 
     ///The number of frames processed to complete this simulation
     unsigned int mFrameCount;
@@ -123,14 +123,14 @@ private:
     ///The number of agents to increment by after each block sensor range trial
     unsigned int mDeltaAgents;
 
+    ///The size of the construction framework grid plane
+    unsigned int mGridSize;
+
     ///The initial length of the block sensor range
     double mBlockSensorRange;
 
     ///The delta length added to the block sensor range after a simulation set
     double mDeltaBlockSensorRange;
-
-    ///The size of the construction framework grid plane
-    double mGridSize;
 
     ///A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;
