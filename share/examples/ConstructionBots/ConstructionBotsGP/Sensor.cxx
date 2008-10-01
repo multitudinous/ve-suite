@@ -47,10 +47,10 @@ using namespace bots;
 Sensor::Sensor( bots::AgentEntity* agentEntity )
     :
     mAgentEntity( agentEntity ),
-    mGeode( 0 ),
-    mGeometry( 0 ),
-    mVertexArray( 0 ),
-    mLineSegmentIntersector( 0 )
+    mGeode( NULL ),
+    mGeometry( NULL ),
+    mVertexArray( NULL ),
+    mLineSegmentIntersector( NULL )
 {
     ;
 }

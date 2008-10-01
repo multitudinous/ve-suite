@@ -79,15 +79,15 @@ btCompoundShape* const Agent::CreateCompoundShape() const
     //This memory should be handled by
     //ves/xplorer/scenegraph/physics/PhysicsRigidBody
     btCompoundShape* compoundShape = new btCompoundShape();
-    btBoxShape* mainBox = new btBoxShape(
+    btBoxShape* const mainBox = new btBoxShape(
         btVector3( boxHalfWidth, boxHalfWidth, boxHalfWidth ) );
-    btBoxShape* leftHolderBox = new btBoxShape(
+    btBoxShape* const leftHolderBox = new btBoxShape(
         btVector3( holderHalfThickness, boxHalfWidth, holderHalfThickness ) );
-    btBoxShape* nearHolderBox = new btBoxShape(
+    btBoxShape* const nearHolderBox = new btBoxShape(
         btVector3( boxHalfWidth, holderHalfThickness, holderHalfThickness ) );
-    btBoxShape* rightHolderBox = new btBoxShape(
+    btBoxShape* const rightHolderBox = new btBoxShape(
         btVector3( holderHalfThickness, boxHalfWidth, holderHalfThickness ) );
-    btBoxShape* farHolderBox = new btBoxShape(
+    btBoxShape* const farHolderBox = new btBoxShape(
         btVector3( boxHalfWidth, holderHalfThickness, holderHalfThickness ) );
 
     btTransform transform;

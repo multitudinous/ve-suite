@@ -83,7 +83,7 @@ ConstructionWorld::ConstructionWorld(
     mNumSimulationsLeft( mNumSimulations ),
     mNumBlocks( 24 ),
     mNumBlocksLeft( mNumBlocks ),
-    mNumAgents( 4 ),
+    mNumAgents( 8 ),
     mDeltaAgents( 1 ),
     mBlockSensorRange( 10.0 ),
     mDeltaBlockSensorRange( 10.0 ),
@@ -249,7 +249,7 @@ void ConstructionWorld::InitializeFramework()
             grid.get(), mPluginDCS.get(), mPhysicsSimulator );
         mGrid->SetNameAndDescriptions();
         mGrid->InitPhysics();
-        mGrid->GetPhysicsRigidBody()->setFriction( 0.0 );
+        mGrid->GetPhysicsRigidBody()->setFriction( 1.0 );
         mGrid->GetPhysicsRigidBody()->StaticConcaveShape();
     }
 
@@ -408,8 +408,8 @@ void ConstructionWorld::CreateRandomPositions()
             }
             
             //Subtract 4.0 to keep blocks off walls and allow agents an escape
-            randOne = posNegOne * ( 0.5 * ( rand() % ( mGridSize + 1 ) ) - 4.0 );
-            randTwo = posNegTwo * ( 0.5 * ( rand() % ( mGridSize + 1 ) ) - 4.0 );
+            randOne = posNegOne * ( 0.5 * ( rand() % ( mGridSize + 1 ) ) - 5.0 );
+            randTwo = posNegTwo * ( 0.5 * ( rand() % ( mGridSize + 1 ) ) - 5.0 );
 
             for( size_t j = 0; j < positions.size(); ++j )
             {
@@ -544,7 +544,7 @@ void ConstructionWorld::ResetSimulation()
 
     //Kick off simulation by attaching the start block after positions are set
     {
-        double startBlockPosition[ 3 ] = { 0.0, 0.0, 0.5 };
+        double startBlockPosition[ 3 ] = { 0.0, 0.0, 0.50 };
         mStartBlock->GetDCS()->SetTranslationArray( startBlockPosition );
         mStartBlock->GetPhysicsRigidBody()->StaticConcaveShape();
         mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );

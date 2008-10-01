@@ -63,12 +63,12 @@ PerimeterSensor::PerimeterSensor( bots::AgentEntity* agentEntity )
     Sensor( agentEntity ),
     mAligned( false ),
     mPerimeterDetected( false ),
-    mLastClockWiseDetection( 0 ),
-    mPreviousDrawable( 0 ),
+    mLastClockWiseDetection( NULL ),
+    mPreviousDrawable( NULL ),
     mRange( 0.2 ),
-    mResultantForce( 0, 0, 0 ),
-    mQueriedConnection( 0 ),
-    mIntersectorGroup( 0 )
+    mResultantForce( 0.0, 0.0, 0.0 ),
+    mQueriedConnection( NULL ),
+    mIntersectorGroup( NULL )
 {
     Initialize();
 }
@@ -223,11 +223,13 @@ const bool PerimeterSensor::CollisionTest()
 void PerimeterSensor::CollectInformation()
 {
     //Get the DCSs
-    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
-    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* const pluginDCS =
+        mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* const agentDCS =
+        mAgentEntity->GetDCS();
 
-    osg::Vec3 agentPosition = agentDCS->getPosition();
-    osgUtil::IntersectorGroup::Intersectors& intersectors =
+    const osg::Vec3d& agentPosition = agentDCS->getPosition();
+    const osgUtil::IntersectorGroup::Intersectors& intersectors =
         mIntersectorGroup->getIntersectors();
 
     //Reset
@@ -264,23 +266,32 @@ void PerimeterSensor::CollectInformation()
                 intersectors.at( i ).get() );
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            mIntersections.push_back(
-                mLineSegmentIntersector->getFirstIntersection() );
-            osg::Drawable* currentDrawable =
-                mIntersections.back().drawable.get();
-            ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
-                    currentDrawable->getParent( 0 ) );
-            ves::xplorer::scenegraph::DCS* dcs =
-                static_cast< ves::xplorer::scenegraph::DCS* >(
-                    parentVisitor.GetParentNode() );
-            mAgentEntity->SetTargetDCS( dcs );
-            osg::Array* tempArray =
+            const osgUtil::LineSegmentIntersector::Intersection& intersection =
+                mLineSegmentIntersector->getFirstIntersection();
+            osg::Drawable* const currentDrawable = intersection.drawable.get();
+            const osg::Array* const tempArray =
                 currentDrawable->asGeometry()->getColorArray();
             if( tempArray )
             {
-                osg::Vec4& color =
-                    static_cast< osg::Vec4Array* >( tempArray )->at( 0 );
-                if( color != mAgentEntity->mSiteColor )
+                const osg::Vec4& color =
+                    static_cast< const osg::Vec4Array* >( tempArray )->at( 0 );
+                if( color == mAgentEntity->mSiteColor )
+                {        
+                    mIntersections.push_back( intersection );
+                    ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
+                        currentDrawable->getParent( 0 ) );
+                    ves::xplorer::scenegraph::DCS* const dcs =
+                        static_cast< ves::xplorer::scenegraph::DCS* >(
+                            parentVisitor.GetParentNode() );
+                    mAgentEntity->SetTargetDCS( dcs );
+
+                    if( !mPerimeterDetected )
+                    {
+                        mPerimeterDetected = true;
+                        mAgentEntity->mBuildMode = true;
+                    }
+                }
+                else
                 {
                     mAgentEntity->mBuildMode = false;
                     mAgentEntity->SetTargetDCS( NULL );
@@ -289,7 +300,7 @@ void PerimeterSensor::CollectInformation()
                     mAgentEntity->mObstacleSensor->Reset();
 
                     std::cout << agentDCS->getName() << std::endl;
-                    
+
                     return;
                 }
             }
@@ -342,15 +353,6 @@ void PerimeterSensor::CollectInformation()
         }
     }
 
-    if( !mPerimeterDetected )
-    {
-        mPerimeterDetected = !mIntersections.empty();
-        if( mPerimeterDetected )
-        {
-            mAgentEntity->mBuildMode = true;
-        }
-    }
-
     //Test for collision with the target DCS
     if( CollisionTest() )
     {
@@ -361,9 +363,9 @@ void PerimeterSensor::CollectInformation()
 const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 {
     //Calculate the total resultant force
-    osg::Vec3* startPoint =
+    const osg::Vec3* const startPoint =
         &mVertexArray->at( *mLastClockWiseDetection * 2 );
-    osg::Vec3* endPoint =
+    const osg::Vec3* const endPoint =
         &mVertexArray->at( *mLastClockWiseDetection * 2 + 1 );
 
     double x = endPoint->x() - startPoint->x();

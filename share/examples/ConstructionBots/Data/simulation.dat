@@ -1,3 +1,4 @@
-BlockSensorRange = 10
-NumAgents = 1
+GridSize = 51
 NumBlocks = 24
+NumAgents = 4
+BlockSensorRange = 10

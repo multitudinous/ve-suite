@@ -131,9 +131,12 @@ void SiteSensor::Initialize()
 void SiteSensor::CollectInformation()
 {
     //Get the DCSs
-    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
-    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
-    ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* const pluginDCS =
+        mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* const agentDCS =
+        mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* targetDCS =
+        mAgentEntity->GetTargetDCS();
 
     (*mVertexArray)[ 0 ] = agentDCS->getPosition();
 

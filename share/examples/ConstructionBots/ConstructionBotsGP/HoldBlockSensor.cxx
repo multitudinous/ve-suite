@@ -102,8 +102,10 @@ void HoldBlockSensor::Initialize()
 ////////////////////////////////////////////////////////////////////////////////
 void HoldBlockSensor::CollectInformation()
 {
-    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
-    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* const pluginDCS =
+        mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* const agentDCS =
+        mAgentEntity->GetDCS();
 
     osg::Vec3 startPoint = agentDCS->getPosition();
     osg::Vec3 endPoint = startPoint;

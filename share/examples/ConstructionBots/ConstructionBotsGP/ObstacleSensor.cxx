@@ -161,9 +161,12 @@ void ObstacleSensor::CalculateLocalPositions()
 void ObstacleSensor::CollectInformation()
 {
     //Get the DCSs
-    ves::xplorer::scenegraph::DCS* pluginDCS = mAgentEntity->GetPluginDCS();
-    ves::xplorer::scenegraph::DCS* agentDCS = mAgentEntity->GetDCS();
-    ves::xplorer::scenegraph::DCS* targetDCS = mAgentEntity->GetTargetDCS();
+    ves::xplorer::scenegraph::DCS* const pluginDCS =
+        mAgentEntity->GetPluginDCS();
+    ves::xplorer::scenegraph::DCS* const agentDCS =
+        mAgentEntity->GetDCS();
+    ves::xplorer::scenegraph::DCS* targetDCS =
+        mAgentEntity->GetTargetDCS();
 
     //Reset results from last frame
     mIntersections.clear();
@@ -304,7 +307,7 @@ const btVector3& ObstacleSensor::GetNormalizedResultantForceVector()
     }
 
     //Wall following algorithm
-    if( theta > 90.0 )
+    if( theta > 90.0 && !mAgentEntity->mBuildMode )
     {
         double x = repulsiveForce.x();
         double y = repulsiveForce.y();

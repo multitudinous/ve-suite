@@ -90,10 +90,10 @@ AgentEntity::AgentEntity(
     mAttachBlockSound( new ves::xplorer::scenegraph::Sound( 
                            "AttachBlockSound", mDCS.get(), soundManager ) ),
 #endif
-    mTargetDCS( 0 ),
-    mConstraint( 0 ),
+    mTargetDCS( NULL ),
+    mConstraint( NULL ),
     mAgentGeometry( agent ),
-    mHeldBlock( 0 )
+    mHeldBlock( NULL )
 {
     Initialize();
 }
@@ -224,7 +224,7 @@ void AgentEntity::CommunicatingBlocksAlgorithm()
 void AgentEntity::AvoidObstacle()
 {
     //Get normalized resultant force vector and multiply by speed
-    double* speed( 0 );
+    double* speed( NULL );
     if( mHoldBlockSensor->HoldingBlock() &&
         mSiteSensor->CloseToSite() )
     {
@@ -379,10 +379,10 @@ void AgentEntity::PickUpBlock()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::QueryBlock()
 {
-    osg::Drawable* drawable = mPerimeterSensor->GetQueriedConnection();
+    osg::Drawable* const drawable = mPerimeterSensor->GetQueriedConnection();
     ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
         drawable->getParent( 0 ) );
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs =
+    ves::xplorer::scenegraph::DCS* const dcs =
         static_cast< ves::xplorer::scenegraph::DCS* >(
             parentVisitor.GetParentNode() );
 
@@ -486,8 +486,8 @@ void AgentEntity::SetConstraints( int gridSize )
 
     //Remove rotation from agents
     //Range should be small or singularities will 'explode' the constraint
-    mConstraint->setAngularLowerLimit( btVector3( 0, 0, 0 ) );
-    mConstraint->setAngularUpperLimit( btVector3( 0, 0, 0 ) );
+    mConstraint->setAngularLowerLimit( btVector3( 0.0, 0.0, 0.0 ) );
+    mConstraint->setAngularUpperLimit( btVector3( 0.0, 0.0, 0.0 ) );
 
     mPhysicsSimulator->GetDynamicsWorld()->addConstraint( mConstraint );
 }

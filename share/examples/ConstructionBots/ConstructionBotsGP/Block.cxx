@@ -245,14 +245,16 @@ const osg::Vec4& Block::GetBlockColor() const
 ////////////////////////////////////////////////////////////////////////////////
 void Block::SetColor( unsigned int drawable, const osg::Vec4& color )
 {
-    osg::ref_ptr< osg::Vec4Array > colorArray =
-        static_cast< osg::Vec4Array* >(
-            mDrawables[ drawable ]->asGeometry()->getColorArray() );
+    std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator
+        itr = mDrawables.find( drawable );
 
-    if( colorArray.valid() )
+    if( itr != mDrawables.end() )
     {
-        colorArray->at( 0 ) = color;
-        mDrawables[ drawable ]->dirtyDisplayList();
+        osg::Vec4& oldColor =
+            static_cast< osg::Vec4Array* >(
+                itr->second->asGeometry()->getColorArray() )->at( 0 );
+        oldColor = color;
+        itr->second->dirtyDisplayList();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

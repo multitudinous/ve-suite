@@ -68,7 +68,7 @@ BlockEntity::BlockEntity(
     mNoAttachColor( 1.0, 0.0, 0.0, 1.0 ),
     mPluginDCS( pluginDCS ),
     mBlockGeometry( block ),
-    mConstraint( 0 ),
+    mConstraint( NULL ),
     mLocation( 0, 0 ),
     mLocalPositions( new osg::Vec3Array() ),
     mLineSegmentIntersector( new osgUtil::LineSegmentIntersector(
@@ -208,7 +208,7 @@ const bool BlockEntity::AttachUpdate( bool isStartBlock )
         GetPhysicsRigidBody()->StaticConcaveShape();
         
         //Self align w/ blocks
-        double* alignedPosition = mDCS->GetVETranslationArray();
+        double* const alignedPosition = mDCS->GetVETranslationArray();
         alignedPosition[ 0 ] = mLocation.first;
         alignedPosition[ 1 ] = mLocation.second;
         alignedPosition[ 2 ] = 0.5;
