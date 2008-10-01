@@ -254,7 +254,6 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     //mCamera->setRenderingCache( NULL );
 
     //Setup the MRT shader to make glow work correctly
-    //Place it on the RTT camera because it's a good place to test "inheritance weirdness" lol
     std::string fragmentSource =
     "uniform vec4 glowColor; \n"
 
@@ -306,14 +305,15 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
     mProcessor->addChild( glow.get() );
     mProcessor->addChild( glowStencil.get() );
 
-    /*
-    //Get the color texture from the RTT camera
-    osg::ref_ptr< osgPPU::UnitBypass > colorBypass = new osgPPU::UnitBypass();
+    //Supersample the color texture by 2x the original size
+    osg::ref_ptr< osgPPU::UnitInResampleOut > colorSuperSample =
+        new osgPPU::UnitInResampleOut();
     {
-        colorBypass->setName( "ColorBypass" );
+        colorSuperSample->setName( "ColorSuperSample" );
+        colorSuperSample->setFactorX( 2.0 );
+        colorSuperSample->setFactorY( 2.0 );
     }
-    mProcessor->addChild( colorBypass.get() );
-    */
+    color->addChild( colorSuperSample.get() );
 
     //Downsample by 1/2 original size
     float downsample = 0.5;
@@ -456,8 +456,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
             "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        final->setInputTextureIndexForViewportReference( 0 );
-        final->setInputToUniform( color.get(), "baseMap", true );
+        final->setViewport( mCamera->getViewport() );
+        final->setInputToUniform( colorSuperSample.get(), "baseMap", true );
         final->setInputToUniform( glow.get(), "stencilGlowMap", true );
         //final->setInputToUniform( glowStencil.get(), "stencilGlowMap", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
@@ -477,7 +477,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     //Get state info about the screen
     std::pair< int, int > screenDims =  EnvironmentHandler::instance()->
         GetDisplaySettings()->GetScreenResolution();
-    
+
     //Create textures, camera, and SA-quad
     InitTextures( screenDims );
     InitCamera( screenDims );
