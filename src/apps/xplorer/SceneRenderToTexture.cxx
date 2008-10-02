@@ -463,7 +463,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
         final->setInputToUniform( glow.get(), "stencilGlowMap", true );
         //final->setInputToUniform( glowStencil.get(), "junk", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
-        final->setInputTextureIndexForViewportReference( 0 );
+        final->setInputTextureIndexForViewportReference( -1 );
+        final->setViewport( sceneViewCamera->getViewport() );
    }
 
     //Render to the Frame Buffer
@@ -471,10 +472,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
-        //ppuOut->setViewport( sceneViewCamera->getViewport() );
+        ppuOut->setViewport( sceneViewCamera->getViewport() );
     }
-    //final->setViewport( mCamera->getViewport() );
-    //final->setViewport( sceneViewCamera->getViewport() );
     final->addChild( ppuOut.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
