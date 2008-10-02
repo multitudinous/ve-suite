@@ -245,7 +245,7 @@ const bool BlockEntity::AttachUpdate( bool isStartBlock )
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
 {
-    std::map< osg::Drawable*, bool >::iterator itrSS;
+    std::map< osg::ref_ptr< osg::Drawable >, bool >::iterator itrSS;
     std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
     for( itrSS = mSideStates.begin(), itr = mConnectedBlocks.begin();
          itrSS != mSideStates.end(), itr != mConnectedBlocks.end();
@@ -364,7 +364,7 @@ const bool BlockEntity::IsAttached() const
 ////////////////////////////////////////////////////////////////////////////////
 const bool BlockEntity::PermissionToAttach( osg::Drawable* drawable ) const
 {
-    std::map< osg::Drawable*, bool >::const_iterator itr =
+    std::map< osg::ref_ptr< osg::Drawable >, bool >::const_iterator itr =
         mSideStates.find( drawable );
     if( !drawable || itr == mSideStates.end() )
     {
@@ -395,10 +395,10 @@ void BlockEntity::ConnectionDetection()
             mLineSegmentIntersector.get() );
         mPluginDCS->accept( intersectionVisitor );
 
-        bool sideState( true );
-        osg::ref_ptr< osg::Drawable > thisDrawable( NULL );
         if( mLineSegmentIntersector->containsIntersections() )
         {
+            bool hitSite( false );
+            osg::Drawable* thisDrawable( NULL );
             const osgUtil::LineSegmentIntersector::Intersections&
                 intersections = mLineSegmentIntersector->getIntersections();
             std::multiset< osgUtil::LineSegmentIntersector::Intersection >::
@@ -425,11 +425,7 @@ void BlockEntity::ConnectionDetection()
                     if( bemItr != mBlockEntityMap->end() )
                     {
                         blockEntity = bemItr->second;
-                        if( blockEntity == this )
-                        {
-                            thisDrawable = drawable;
-                        }
-                        else if( color == mSiteColor )
+                        if( color == mSiteColor )
                         {
                             unsigned int oppositeSide = i;
                             if( i > 1 )
@@ -447,16 +443,34 @@ void BlockEntity::ConnectionDetection()
                                 oppositeSide, this );
                             mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
                                 oppositeSide, mSiteColor );
-                            sideState = false;
+                            
+                            hitSite = true;
+                        }
+                        else if( blockEntity == this )
+                        {
+                            thisDrawable = drawable;
                         }
                     }
                 }
             }
-        }
 
-        if( thisDrawable.valid() )
-        {
-            mSideStates[ thisDrawable.get() ] = sideState;
+            if( thisDrawable )
+            {
+                if( !hitSite )
+                {
+                    mSideStates[ thisDrawable ] = true;
+                }
+                else
+                {
+                    mSideStates[ thisDrawable ] = false;
+                }
+            }
+            else
+            {
+                std::cout << GetDCS()->getName()
+                          << ": void ConnectionDetection() - "
+                          << "Error!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+            }
         }
     }
 }

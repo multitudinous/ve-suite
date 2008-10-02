@@ -168,7 +168,7 @@ private:
               std::pair< bool, bool > >* mOccupancyMatrix;
 
     ///A map of the side states
-    std::map< osg::Drawable*, bool > mSideStates;
+    std::map< osg::ref_ptr< osg::Drawable >, bool > mSideStates;
 
     ///Are blocks attached to sides or not
     ///This map stores the physical connections to this block

@@ -83,10 +83,10 @@ ConstructionWorld::ConstructionWorld(
     mNumSimulationsLeft( mNumSimulations ),
     mNumBlocks( 24 ),
     mNumBlocksLeft( mNumBlocks ),
-    mNumAgents( 3 ),
+    mNumAgents( 2 ),
     mDeltaAgents( 1 ),
     mBlockSensorRange( 10.0 ),
-    mDeltaBlockSensorRange( 10.0 ),
+    mDeltaBlockSensorRange( 2.0 ),
     // --- Ensure that the grid size is odd for centrality purposes --- //
     mGridSize( 51 ),
     mGrid( NULL ),
@@ -482,7 +482,7 @@ void ConstructionWorld::ResetSimulation()
     {
         mNumSimulationsLeft = mNumSimulations;
 
-        if( mBlockSensorRange < 70.0 )
+        if( mBlockSensorRange < 72.0 )
         {
             mBlockSensorRange += mDeltaBlockSensorRange;
 
