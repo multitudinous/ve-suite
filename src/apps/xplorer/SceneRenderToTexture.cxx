@@ -124,7 +124,8 @@ SceneRenderToTexture::SceneRenderToTexture()
     mDepthStencilTexture( 0 ),
     mCamera( new osg::Camera() ),
     mRootGroup( new osg::Group() ),
-    mProcessor( new osgPPU::Processor() )
+    mProcessor( new osgPPU::Processor() ),
+    mScaleFactor( 1 )
 {    
     ;
 }
@@ -139,7 +140,7 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mColorMap = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     mColorMap->setInternalFormat( GL_RGBA8 );
-    mColorMap->setTextureSize( screenDims.first, screenDims.second );
+    mColorMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
     mColorMap->setSourceFormat( GL_RGBA );
     mColorMap->setSourceType( GL_UNSIGNED_INT );
     mColorMap->setFilter(
@@ -154,7 +155,7 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mGlowMap = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     mGlowMap->setInternalFormat( GL_RGBA8 );
-    mGlowMap->setTextureSize( screenDims.first, screenDims.second );
+    mGlowMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
     mGlowMap->setSourceFormat( GL_RGBA );
     mGlowMap->setSourceType( GL_UNSIGNED_INT );
     mGlowMap->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
@@ -163,7 +164,7 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
     mGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
 
-    mGlowStencil = new osg::Texture2D();
+    /*mGlowStencil = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     mGlowStencil->setInternalFormat( GL_RGBA8 );
     mGlowStencil->setTextureSize( screenDims.first, screenDims.second );
@@ -172,11 +173,11 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mGlowStencil->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
     mGlowStencil->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     mGlowStencil->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mGlowStencil->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    mGlowStencil->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );*/
 
-    mDepthStencilTexture = new osg::Texture2D();
+    /*mDepthStencilTexture = new osg::Texture2D();
     mDepthStencilTexture->setInternalFormat( GL_DEPTH24_STENCIL8_EXT );
-    mDepthStencilTexture->setTextureSize( screenDims.first, screenDims.second );
+    mDepthStencilTexture->setTextureSize( screenDims.first*mScaleFactor, screenDims.second *mScaleFactor);
     mDepthStencilTexture->setSourceFormat( GL_DEPTH_STENCIL_EXT );
     mDepthStencilTexture->setSourceType( GL_UNSIGNED_INT_24_8_EXT );
     mDepthStencilTexture->setFilter(
@@ -186,7 +187,7 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mDepthStencilTexture->setWrap(
         osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     mDepthStencilTexture->setWrap(
-        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
@@ -197,7 +198,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
     mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
     mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-    mCamera->setViewport( 0, 0, screenDims.first, screenDims.second );
+    mCamera->setViewport( 0, 0, screenDims.first*mScaleFactor, screenDims.second*mScaleFactor);
     
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
@@ -205,12 +206,12 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         osg::Camera::COLOR_BUFFER0, mColorMap.get() );//, 0, 0, false, 8, 8 );
     mCamera->attach(
         osg::Camera::COLOR_BUFFER1, mGlowMap.get() );//, 0, 0, false, 8, 8 );
-    mCamera->attach(
-        osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );//, 0, 0, false, 8, 8 );
+    //mCamera->attach(
+    //    osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );//, 0, 0, false, 8, 8 );
 #else
     mCamera->attach( osg::Camera::COLOR_BUFFER0, mColorMap.get() );
     mCamera->attach( osg::Camera::COLOR_BUFFER1, mGlowMap.get() );
-    mCamera->attach( osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );
+    //mCamera->attach( osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );
 #endif
 
     //Use an interleaved depth/stencil texture to get a depth and stencil buffer
@@ -287,7 +288,8 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
+void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims, 
+    osg::Camera* const sceneViewCamera )
 {
     //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
@@ -303,17 +305,17 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
         new osgPPU::UnitTexture( mGlowStencil.get() );
     mProcessor->addChild( color.get() );
     mProcessor->addChild( glow.get() );
-    mProcessor->addChild( glowStencil.get() );
+    //mProcessor->addChild( glowStencil.get() );
 
     //Supersample the color texture by 2x the original size
-    osg::ref_ptr< osgPPU::UnitInResampleOut > colorSuperSample =
+    /*osg::ref_ptr< osgPPU::UnitInResampleOut > colorSuperSample =
         new osgPPU::UnitInResampleOut();
     {
         colorSuperSample->setName( "ColorSuperSample" );
         colorSuperSample->setFactorX( 2.0 );
         colorSuperSample->setFactorY( 2.0 );
     }
-    color->addChild( colorSuperSample.get() );
+    color->addChild( colorSuperSample.get() );*/
 
     //Downsample by 1/2 original size
     float downsample = 0.5;
@@ -456,19 +458,23 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims )
             "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        final->setViewport( mCamera->getViewport() );
-        final->setInputToUniform( colorSuperSample.get(), "baseMap", true );
+        //final->setInputToUniform( colorSuperSample.get(), "baseMap", true );
+        final->setInputToUniform( color.get(), "baseMap", true );
         final->setInputToUniform( glow.get(), "stencilGlowMap", true );
-        //final->setInputToUniform( glowStencil.get(), "stencilGlowMap", true );
+        //final->setInputToUniform( glowStencil.get(), "junk", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
-    }
+        final->setInputTextureIndexForViewportReference( 0 );
+   }
 
     //Render to the Frame Buffer
     osg::ref_ptr< osgPPU::UnitOut > ppuOut = new osgPPU::UnitOut();
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
+        //ppuOut->setViewport( sceneViewCamera->getViewport() );
     }
+    //final->setViewport( mCamera->getViewport() );
+    //final->setViewport( sceneViewCamera->getViewport() );
     final->addChild( ppuOut.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -481,7 +487,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     //Create textures, camera, and SA-quad
     InitTextures( screenDims );
     InitCamera( screenDims );
-    InitProcessor( screenDims );
+    InitProcessor( screenDims, sceneViewCamera );
 
     //Add nodes to the scenegraph
     sceneViewCamera->addChild( mCamera.get() );

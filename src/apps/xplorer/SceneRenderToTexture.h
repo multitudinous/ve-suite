@@ -130,7 +130,8 @@ private:
     void InitTextures( std::pair< int, int >& screenDims );
 
     ///
-    void InitProcessor( std::pair< int, int >& screenDims );
+    void InitProcessor( std::pair< int, int >& screenDims, 
+        osg::Camera* const sceneViewCamera );
 
     ///The texture attached to the color buffer of the camera
     osg::ref_ptr< osg::Texture2D > mColorMap;
@@ -147,6 +148,8 @@ private:
     osg::ref_ptr< osg::Group > mRootGroup;
     ///
     osg::ref_ptr< osgPPU::Processor > mProcessor;
+    
+    int mScaleFactor;
 
 };
 } //end xplorer
