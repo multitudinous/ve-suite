@@ -307,24 +307,14 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
     mProcessor->addChild( glow.get() );
     //mProcessor->addChild( glowStencil.get() );
 
-    //Supersample the color texture by 2x the original size
-    /*osg::ref_ptr< osgPPU::UnitInResampleOut > colorSuperSample =
-        new osgPPU::UnitInResampleOut();
-    {
-        colorSuperSample->setName( "ColorSuperSample" );
-        colorSuperSample->setFactorX( 2.0 );
-        colorSuperSample->setFactorY( 2.0 );
-    }
-    color->addChild( colorSuperSample.get() );*/
-
     //Downsample by 1/2 original size
-    float downsample = 0.5;
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
-    quadScreenSize *= downsample;
-
     osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
         new osgPPU::UnitInResampleOut();
     {
+        float downsample = 0.5;
+        quadScreenSize *= downsample;
+        
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->setFactorX( downsample );
         glowDownSample->setFactorY( downsample );
