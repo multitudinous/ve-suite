@@ -36,7 +36,16 @@
 
 // --- VE-Suite Includes --- //
 #include <ves/xplorer/plugin/PluginBase.h>
-
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+    class CADEntity;
+}
+}
+}
 namespace warrantytool
 {
 class VE_USER_PLUGIN_EXPORTS WarrantyToolGP :
@@ -53,6 +62,7 @@ public:
 protected:
 
 private:
+    ves::xplorer::scenegraph::CADEntity* cadEntity;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )

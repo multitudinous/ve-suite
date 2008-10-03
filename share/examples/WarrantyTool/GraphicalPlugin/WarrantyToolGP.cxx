@@ -69,7 +69,7 @@ void WarrantyToolGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
     //Load model
-    CADEntity* cadEntity = new CADEntity( "Models/test2_head_osg26.ive",
+    cadEntity = new CADEntity( "Models/test2_head_osg26.ive",
               mDCS.get(), false, false, NULL );
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = cadEntity->GetDCS()->getDescriptions();
@@ -86,8 +86,10 @@ void WarrantyToolGP::InitializeNode(
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
         highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );
 
-    ves::xplorer::scenegraph::util::OpacityVisitor 
-        opVisitor2( cadEntity->GetDCS(), false, true, 0.4f );
+    //ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+    //    highlight2( cadEntity->GetDCS(), "AN220959", mDCS.get(), false );
+    //ves::xplorer::scenegraph::util::OpacityVisitor 
+    //    opVisitor2( cadEntity->GetDCS(), false, true, 1.0f );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::PreFrameUpdate()
@@ -108,8 +110,8 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     if( commandName == "reset" )
     {
         //Make everything opaque
-        //ves::xplorer::scenegraph::util::OpacityVisitor 
-        //    opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
+        ves::xplorer::scenegraph::util::OpacityVisitor 
+            opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
     }
     else if( commandName == "glow part" )
     {
