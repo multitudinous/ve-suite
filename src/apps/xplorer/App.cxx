@@ -104,11 +104,9 @@ using namespace ves::xplorer::network;
 ////////////////////////////////////////////////////////////////////////////////
 App::App( int argc, char* argv[] )
 #if __VJ_version >= 2003000
-    :
-    vrj::osg::App( vrj::Kernel::instance() ),
+    : vrj::osg::App( vrj::Kernel::instance() ),
 #else
-    :
-    vrj::OsgApp( vrj::Kernel::instance() ),
+    : vrj::OsgApp( vrj::Kernel::instance() ),
 #endif
     readyToWriteWebImage( false ),
     writingWebImageNow( false ),
@@ -584,7 +582,7 @@ void App::contextPreDraw( void )
     if( mRTT )
     {
         static bool changed = false;
-        if( !changed )
+        if( !changed && (_frameNumber > 30) )
         {
             if( jccl::ConfigManager::instance()->isPendingStale() )
             {
@@ -703,6 +701,7 @@ void App::draw()
     // osgUtil::SceneView::update() is in vrj::OsgApp::update().
     //profile the cull call
     {
+        //vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
         //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
         //sv->inheritCullSettings(*(sv->getCamera()));
@@ -710,6 +709,7 @@ void App::draw()
     }
     //profile the draw call
     {
+        //vpr::Guard<vpr::Mutex> val_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
         sv->draw();
     }
