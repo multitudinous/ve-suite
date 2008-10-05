@@ -347,7 +347,8 @@ void CADEntityHelper::LoadFile( const std::string& filename,
                            osgUtil::Optimizer::REMOVE_REDUNDANT_NODES |
                            osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES |
                            osgUtil::Optimizer::COMBINE_ADJACENT_LODS |
-                           osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
+                           //This one can cause problems with opacity settings
+                           //osgUtil::Optimizer::SHARE_DUPLICATE_STATE |
                            osgUtil::Optimizer::MERGE_GEOMETRY |
                            osgUtil::Optimizer::CHECK_GEOMETRY |
                            osgUtil::Optimizer::SPATIALIZE_GROUPS |
@@ -371,6 +372,13 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         osgOQ::OcclusionQueryNonFlatVisitor oqv;
         //Specify the vertex count threshold for performing 
         // occlusion query tests.
+        //Settings others use are:
+        //Fairly lax culling
+        //occlusionThreshold = 5000
+        //visibilityThreshold = 250
+        //Fairly aggressive culling
+        //occlusionThreshold = 2500
+        //visibilityThreshold = 500
         // If the child geometry has less than the specified number
         //   of vertices, don't perform occlusion query testing (it's
         //   an occluder). Otherwise, perform occlusion query testing
@@ -384,7 +392,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         //   visible pixels is greater than this value, render the
         //   child geometry. Otherwise, don't render and continue to
         //   test for visibility in future frames.
-        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 500 );
+        osgOQ::VisibilityThresholdVisitor visibilityThresholdVisitor( 250 );
         tempGroup->accept( visibilityThresholdVisitor );
 
         m_cadNode = tempGroup.get();
