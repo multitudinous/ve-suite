@@ -463,10 +463,3 @@ Simulation 8 = 5771
 Simulation 9 = 6714
 Simulation 10 = 5674
 
-GridSize = 51
-NumBlocks = 24
-NumAgents = 3
-BlockSensorRange = 72
-Simulation 1 = 6240
-Simulation 2 = 6142
-Simulation 3 = 6945
