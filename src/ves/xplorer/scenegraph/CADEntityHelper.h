@@ -179,7 +179,7 @@ private:
 #elif _OPENSG
 #endif
     ///The current state of two sided lighting for the node
-    bool m_twoSidedLighting;
+    bool mIsSTLFile;
 
 };
 }

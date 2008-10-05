@@ -64,11 +64,12 @@ public:
     virtual void apply( osg::Geode& node );
     virtual void apply( osg::Group& node );
     
-    //setup the blending and renderbin details for a stateset
-    //based on transparency
+    ///setup the blending and renderbin details for a stateset
+    ///based on transparency
     ///\param stateset The stateset to modify
-    void SetupBlendingForStateSet( osg::StateSet* stateset);
-    
+    void SetupBlendingForStateSet( osg::StateSet* stateset );
+    ///Function used when BlendColor is set on a geode
+    void SetupSTLBlendingForStateSet( osg::StateSet* stateset );
 
 private:
     bool transparent;

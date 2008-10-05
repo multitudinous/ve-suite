@@ -294,7 +294,7 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
         
         m_cadHandler->GetAssembly( newAssembly->GetID() )->ToggleDisplay( newAssembly->GetVisibility() );
         //Set a default material on nodes that have no initial material
-        ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
+        //ves::xplorer::scenegraph::util::MaterialInitializer material_initializer( m_cadHandler->GetAssembly( newAssembly->GetID() ) );
         vprDEBUG( vesDBG, 1 ) << "|\t---Set Assembly Opacity---" << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\t\t" << newAssembly->GetOpacity() << std::endl << vprDEBUG_FLUSH;
         m_cadHandler->UpdateOpacity( newAssembly->GetID(), newAssembly->GetOpacity(), true );
@@ -363,8 +363,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 << std::endl << vprDEBUG_FLUSH;
 
             //Set a default material on nodes that have no initial material
-            ves::xplorer::scenegraph::util::MaterialInitializer 
-                material_initializer( partNode->GetDCS() );
+            //ves::xplorer::scenegraph::util::MaterialInitializer 
+            //    material_initializer( partNode->GetDCS() );
             vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Opacity---" 
                 << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 

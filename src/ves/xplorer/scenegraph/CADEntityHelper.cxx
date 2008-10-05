@@ -64,6 +64,7 @@
 #include <osg/LOD>
 #include <osg/ShadeModel>
 #include <osg/LightModel>
+#include <osg/BlendColor>
 
 #include <osgUtil/SmoothingVisitor>
 #include <osgUtil/Optimizer>
@@ -99,7 +100,7 @@ using namespace ves::xplorer::scenegraph;
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper()
 {
-    m_twoSidedLighting = false;
+    mIsSTLFile = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 CADEntityHelper::CADEntityHelper( const CADEntityHelper& input )
@@ -223,7 +224,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
     if( strstr( filename.c_str(), ".stl" ) ||
             strstr( filename.c_str(), ".stla" ) )
     {
-        m_twoSidedLighting = true;
+        mIsSTLFile = true;
     }
 
     osg::ref_ptr< osg::Node > tempCADNode;
@@ -330,13 +331,20 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         return;
     }
 
-    if( m_twoSidedLighting )
+    if( mIsSTLFile )
     {
         osg::ref_ptr< osg::LightModel > lightModel;
         lightModel = new osg::LightModel;
         lightModel->setTwoSided( true );
         tempCADNode->getOrCreateStateSet()->setAttributeAndModes(
-            lightModel.get(), osg::StateAttribute::ON );
+            lightModel.get(), 
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        
+        osg::ref_ptr< osg::BlendColor > bc = new osg::BlendColor();
+        bc->setConstantColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        tempCADNode->getOrCreateStateSet()->setAttributeAndModes( 
+            bc.get(), 
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );        
     }
 
     //Run the optimizer to improve performance

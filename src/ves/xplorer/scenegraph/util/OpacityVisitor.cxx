@@ -41,6 +41,7 @@
 #include <osg/TexEnv>
 #include <osg/Array>
 #include <osg/BlendFunc>
+#include <osg/BlendColor>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -74,12 +75,12 @@ void OpacityVisitor::apply( osg::Geode& node )
     {
         geode_material->setAlpha( osg::Material::FRONT_AND_BACK, m_alpha );
         geode_stateset->setAttribute( geode_material.get(), 
-            osg::StateAttribute::ON );
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         //The stateset only needs set at the part level in VE-Suite.
         //The alpha an material information can be set at the higher level
         //because otherwise the renderbins end up being nested and cause odd
         //problems.
-        //SetupBlendingForStateSet( geode_stateset.get() );
+        SetupBlendingForStateSet( geode_stateset.get() );
     }
 
     for( size_t i = 0; i < node.getNumDrawables(); i++ )
@@ -104,7 +105,7 @@ void OpacityVisitor::apply( osg::Geode& node )
         //The alpha an material information can be set at the higher level
         //because otherwise the renderbins end up being nested and cause odd
         //problems.
-        //SetupBlendingForStateSet( drawable_stateset.get() );
+        SetupBlendingForStateSet( drawable_stateset.get() );
         if( mStoreState )
         {
             //The first time we come through here store the original state
@@ -159,12 +160,12 @@ void OpacityVisitor::apply( osg::Geode& node )
                 drawable_material->setAlpha( 
                     osg::Material::FRONT_AND_BACK, m_alpha );
                 drawable_stateset->setAttribute( drawable_material.get(), 
-                                                osg::StateAttribute::ON );
+                                                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
             }
         }            
 
         //This sets the gl blend mode for the textures on geometry so
-        //that when transparency is needed tyhe texture renders properly
+        //that when transparency is needed the texture renders properly
         for( size_t k = 0; k < drawable_tal.size(); k++ )
         {
             osg::ref_ptr< osg::TexEnv > texenv = 
@@ -178,14 +179,25 @@ void OpacityVisitor::apply( osg::Geode& node )
 
             texenv->setMode( osg::TexEnv::MODULATE );
             drawable_stateset->setTextureAttribute( k, texenv.get(), 
-                osg::StateAttribute::ON );
+                osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
+    }
+    
+    osg::ref_ptr< osg::BlendColor > bc = 
+        static_cast< osg::BlendColor* >( geode_stateset->
+            getAttribute( osg::StateAttribute::BLENDCOLOR ) );
+    if(  bc.valid() )
+    {
+        bc->setConstantColor( osg::Vec4( 1.0f, 1.0f, 1.0f, m_alpha ) );
+        geode_stateset->setAttribute( bc.get(), 
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+        SetupSTLBlendingForStateSet( geode_stateset.get() );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Group& node )
 {
-    osg::Node::DescriptionList descriptorsList;
+    /*osg::Node::DescriptionList descriptorsList;
     descriptorsList = node.getDescriptions();
     bool isPart = false;
     //Find if the node is an assembly
@@ -196,10 +208,10 @@ void OpacityVisitor::apply( osg::Group& node )
             isPart = true;
             break;
         }
-    }
+    }*/
 
     ///Only process if it is a part
-    if( isPart )
+    //if( isPart )
     {
         osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
         osg::ref_ptr< osg::Material > material = 
@@ -217,21 +229,43 @@ void OpacityVisitor::apply( osg::Group& node )
     osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////
-void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset)
+void OpacityVisitor::SetupBlendingForStateSet( osg::StateSet* stateset )
 {
-    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc;
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
     bf->setFunction( osg::BlendFunc::SRC_ALPHA, 
         osg::BlendFunc::ONE_MINUS_SRC_ALPHA );
-    stateset->setMode( GL_BLEND, osg::StateAttribute::ON );
-    stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
 
     if( transparent )
     {
         stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+        stateset->setNestRenderBins( false );
     }   
     else
     {
         stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+        stateset->setNestRenderBins( true );
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
+void OpacityVisitor::SetupSTLBlendingForStateSet( osg::StateSet* stateset )
+{
+    osg::ref_ptr< osg::BlendFunc > bf = new osg::BlendFunc();
+    bf->setFunction( osg::BlendFunc::CONSTANT_COLOR, 
+                    osg::BlendFunc::ONE_MINUS_CONSTANT_ALPHA );
+    stateset->setMode( GL_BLEND, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    stateset->setAttributeAndModes( bf.get(), osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
+    
+    if( transparent )
+    {
+        stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+        stateset->setNestRenderBins( false );
+    }   
+    else
+    {
+        stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+        stateset->setNestRenderBins( true );
     }
 }
 
