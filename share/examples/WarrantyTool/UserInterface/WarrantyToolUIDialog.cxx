@@ -63,6 +63,10 @@ END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::WarrantyToolUIDialog()
+    :
+    UIDialog(),
+    mPartNumberEntry( 0 ),
+    mServiceList( 0 )
 {
     ;
 }
@@ -71,17 +75,22 @@ WarrantyToolUIDialog::WarrantyToolUIDialog(
     wxWindow* parent,
     int id, 
     ves::conductor::util::CORBAServiceList* service )
-:
-UIDialog( parent, id, wxT( "WarrantyTool" ) )
+    :
+    UIDialog( parent, id, wxT( "WarrantyTool" ) ),
+    mPartNumberEntry( 0 ),
+    mServiceList( service )
 {    
-    mServiceList = service;
-
     BuildGUI();
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUIDialog::~WarrantyToolUIDialog()
 {
-    ;
+    Disconnect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    Disconnect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    Disconnect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
+            wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolUIDialog::BuildGUI()
@@ -109,35 +118,47 @@ void WarrantyToolUIDialog::BuildGUI()
     // add text input for axes
     //wxBoxSizer* axesTextBS = new wxBoxSizer( wxHORIZONTAL );
     //dataSetSBSizer->Add( axesTextBS, 0, wxGROW );
-    wxTextCtrl* xAxisEntry = new wxTextCtrl( this, wxID_ANY,//ID_DATA_UPDATE_AXES,
+    mPartNumberEntry = new wxTextCtrl( this, wxID_ANY,//ID_DATA_UPDATE_AXES,
                                 _( "X Axis" ), wxDefaultPosition,
                                 wxDefaultSize, wxHSCROLL | wxTE_PROCESS_ENTER );
-    projectionEffectOpacitySizer->Add( xAxisEntry, 1, wxALL, 5 );
+    projectionEffectOpacitySizer->Add( mPartNumberEntry, 1, wxALL, 5 );
     //xAxisEntry->Raise();
     
-    /*wxStdDialogButtonSizer* stdDialogButtonSizer;
-    wxButton* stdDialogButtonSizerOK;
-    wxButton* stdDialogButtonSizerCancel;
-    stdDialogButtonSizer = new wxStdDialogButtonSizer();
+    //Put the buttons on
+    //wxStdDialogButtonSizer* stdDialogButtonSizer;
+    //stdDialogButtonSizer = new wxStdDialogButtonSizer();
+    //stdDialogButtonSizer->Realize();
+    wxBoxSizer* buttonSizer;
+    buttonSizer = new wxBoxSizer( wxHORIZONTAL );
     //Ok
-    stdDialogButtonSizerOK = new wxButton( this, wxID_OK );
-    stdDialogButtonSizer->AddButton( stdDialogButtonSizerOK );
+    wxButton* stdDialogButtonOK;
+    stdDialogButtonOK = new wxButton( this, wxID_OK );
+    buttonSizer->Add( stdDialogButtonOK, 0, wxALL, 5 );
     //Cancel
-    stdDialogButtonSizerCancel = new wxButton( this, wxID_CANCEL );
-    stdDialogButtonSizer->AddButton( stdDialogButtonSizerCancel );
+    wxButton* stdDialogButtonCancel;
+    stdDialogButtonCancel = new wxButton( this, wxID_CANCEL );
+    buttonSizer->Add( stdDialogButtonCancel, 0, wxALL, 5 );
+    //Reset
+    wxButton* stdDialogButtonReset;
+    stdDialogButtonReset = new wxButton( this, GLOW_RESET, _("Reset") );
+    buttonSizer->Add( stdDialogButtonReset, 0, wxALL, 5 );
     //Clear
-    stdDialogButtonClear = new wxButton( this, wxID_CANCEL );
-    stdDialogButtonSizer->AddButton( stdDialogButtonSizerCancel );
+    wxButton* stdDialogButtonClear;
+    stdDialogButtonReset = new wxButton( this, GLOW_CLEAR, _("Clear") );
+    buttonSizer->Add( stdDialogButtonClear, 0, wxALL, 5 );
     //Add
-    stdDialogButtonAdd = new wxButton( this, wxID_CANCEL );
-    stdDialogButtonSizer->AddButton( stdDialogButtonSizerCancel );
+    wxButton* stdDialogButtonAdd;
+    stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
+    buttonSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
 
-    stdDialogButtonSizer->Realize();
-    mainSizer->Add( stdDialogButtonSizer, 0, wxALL | wxEXPAND, 5 );*/ 
+    mainSizer->Add( buttonSizer, 0, wxALL | wxEXPAND, 5 );
     
-    this->Connect( wxID_ANY, 
-                    wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ), 
-                    NULL, this );
+    Connect( GLOW_RESET, wxEVT_COMMAND_BUTTON_CLICKED,
+        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    Connect( GLOW_CLEAR, wxEVT_COMMAND_BUTTON_CLICKED,
+        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
+    Connect( GLOW_ADD, wxEVT_COMMAND_BUTTON_CLICKED,
+        wxCommandEventHandler( WarrantyToolUIDialog::GetTextInput ) );
     ///////////////////////////////////////////////////////////
 
     SetSizer( mainSizer );
@@ -160,19 +181,29 @@ void WarrantyToolUIDialog::SendCommandsToXplorer()
     mServiceList->SendCommandStringToXplorer( command );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& WXUNUSED( event ) )
+void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
 {
-    //If add is pushed then send the name to add
-    std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
-    
     ves::open::xml::DataValuePairSharedPtr cameraGeometryOnOffDVP(
-                                                                  new ves::open::xml::DataValuePair() );
-    unsigned int geom = 1;
-    cameraGeometryOnOffDVP->SetData( "cameraGeometryOnOff", geom );
+        new ves::open::xml::DataValuePair() );
+
+    if( event.GetId() == GLOW_RESET )
+    {
+        //Clear glow and make opaque
+        cameraGeometryOnOffDVP->SetData( "RESET", "RESET" );
+    }
+    else if( event.GetId() == GLOW_CLEAR )
+    {
+        //Clear all the glow
+        cameraGeometryOnOffDVP->SetData( "CLEAR", "CLEAR" );
+    }
+    else if( event.GetId() == GLOW_ADD )
+    {
+        //If add is pushed then send the name to add
+        cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
+    }
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( cameraGeometryOnOffDVP );
+    std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";
     command->SetCommandName( mCommandName );
-    
-    //If clear is sent then send clear command
-    //If enter is pushed then set part number
+    mServiceList->SendCommandStringToXplorer( command );
 }

@@ -56,7 +56,7 @@ PluginBase()
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
 
-    mEventHandlerMap[ "HIGHLIGHT_WARRANTY_NODE" ] = this;
+    mEventHandlerMap[ "CAMERA_GEOMETRY_ON_OFF" ] = this;
 }
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::~WarrantyToolGP()
@@ -69,22 +69,22 @@ void WarrantyToolGP::InitializeNode(
 {
     PluginBase::InitializeNode( veworldDCS );
     //Load model
-    cadEntity = new CADEntity( "Models/test2_head_osg26.ive",
+    /*cadEntity = new CADEntity( "Models/test2_head_osg26-share.ive",
               mDCS.get(), false, false, NULL );
     osg::Node::DescriptionList descriptorsList;
     descriptorsList = cadEntity->GetDCS()->getDescriptions();
     descriptorsList.push_back( "Part" );
-    cadEntity->GetDCS()->setDescriptions( descriptorsList );
+    cadEntity->GetDCS()->setDescriptions( descriptorsList );*/
     //Make transparent
     //ves::xplorer::scenegraph::util::MaterialInitializer 
     //    material_initializer( cadEntity->GetDCS() );
-    ves::xplorer::scenegraph::util::OpacityVisitor 
+   /* ves::xplorer::scenegraph::util::OpacityVisitor 
         opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
     ves::xplorer::scenegraph::util::OpacityVisitor 
         opVisitor1( cadEntity->GetDCS(), false, true, 0.4f );
     //Highlight part
     ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );
+        highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );*/
 
     //ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
     //    highlight2( cadEntity->GetDCS(), "AN220959", mDCS.get(), false );
@@ -104,28 +104,31 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
         return;
     }
     const std::string commandName = command->GetCommandName();
-
+    ves::open::xml::DataValuePairPtr dvp = command->GetDataValuePair( 0 );
     //Before anything else remove the glow if there is glow
     
-    if( commandName == "reset" )
+    if( dvp->GetDataName() == "RESET" )
     {
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight2( mDCS.get(), "", mDCS.get(), false );
         //Make everything opaque
         ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor( cadEntity->GetDCS(), true, true, 1.0f );
+            opVisitor( mDCS.get(), false, true, 1.0f );
     }
-    else if( commandName == "glow part" )
+    else if( dvp->GetDataName() == "ADD" )
     {
         //Highlight the respective node
         //Make a user specified part glow
-        //ves::xplorer::scenegraph::util::OpacityVisitor 
-        //    opVisitor1( cadEntity->GetDCS(), false, true, 0.4f );
+        ves::xplorer::scenegraph::util::OpacityVisitor 
+            opVisitor1( mDCS.get(), false, true, 0.4f );
         //Highlight part
-        //ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-        //    highlight( cadEntity->GetDCS(), "AN220959", mDCS.get() );
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight( mDCS.get(), dvp->GetDataString(), mDCS.get() );
     }
-    else if( commandName == "add glow part" )
+    else if( dvp->GetDataName() == "CLEAR" )
     {
-        //Add another part that glows
+        ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
+            highlight2( mDCS.get(), "", mDCS.get(), false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

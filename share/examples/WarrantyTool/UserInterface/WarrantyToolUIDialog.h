@@ -55,6 +55,7 @@ class wxSpinCtrlDbl;
 class wxRadioBox;
 class wxSlider;
 class wxSpinCtrl;
+class wxTextCtrl;
 
 // --- C/C++ Libraries --- //
 #include <vector>
@@ -73,6 +74,13 @@ public:
 
     virtual ~WarrantyToolUIDialog();
 
+    enum
+    {
+        GLOW_RESET,
+        GLOW_CLEAR,
+        GLOW_ADD,
+    };
+
 protected:
 
 private:
@@ -83,6 +91,8 @@ private:
     void SendCommandsToXplorer();
 
     ves::conductor::util::CORBAServiceList* mServiceList;
+    
+    wxTextCtrl* mPartNumberEntry;
     
     DECLARE_EVENT_TABLE()
 };
