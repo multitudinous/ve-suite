@@ -331,12 +331,17 @@ void ModelCADHandler::UpdateOpacity( std::string nodeID, float opacity, bool sto
             ves::xplorer::scenegraph::util::OpacityVisitor
             opacity_visitor( m_partList[nodeID]->GetDCS(), storeState, transparent, opacity );
         }
+        else
+        {
+            vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID 
+                << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
+                << std::endl << vprDEBUG_FLUSH;        }
     }
     catch ( ... )
     {
-        vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found!!!"
-            << std::endl
-            << vprDEBUG_FLUSH;
+        vprDEBUG( vesDBG, 1 ) << "|\t CADNode not found : " << nodeID
+            << std::endl << vprDEBUG_FLUSH;
         vprDEBUG( vesDBG, 1 ) << "|\tModelCADHandler::UpdateOpacity()---"
             << std::endl << vprDEBUG_FLUSH;
     }
