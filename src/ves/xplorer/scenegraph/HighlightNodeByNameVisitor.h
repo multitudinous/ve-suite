@@ -65,7 +65,7 @@ public:
     ///\param nodeName The name of the node to highlight
     ///\param opaqueParent The hack to get around osg transparency issues
     HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, 
-        osg::Group* opaqueParent );
+        osg::Group* opaqueParent, bool addGlow = true );
     
     ///Default Constructor
     HighlightNodeByNameVisitor();
@@ -78,8 +78,12 @@ public:
     virtual void apply( osg::Node& node );
 
 private:
-    std::string mNodeName;///<GUID to identify the VE-Open model
+    ///The name of the node to highlight
+    std::string mNodeName;
+    ///Fond node
     osg::ref_ptr< osg::Group > mOpaqueParent;
+    ///Add the glow to parts, if false then remove all glow
+    bool mAddGlow;
 };
 }
 }

@@ -40,11 +40,12 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, osg::Group* opaqueParent )
+HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, osg::Group* opaqueParent, bool addGlow )
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
         mNodeName( nodeName ),
-        mOpaqueParent( opaqueParent )
+        mOpaqueParent( opaqueParent ),
+        mAddGlow( addGlow )
 {
     node->accept( *this );
 }
@@ -59,23 +60,36 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
     std::string name = node.getName();
     bool foundNode = false;
     //std::cout << name.compare( 0, mNodeName.size(), mNodeName ) << std::endl;
-    if( !name.compare( 0, mNodeName.size(), mNodeName ) )
+    if( mAddGlow )
     {
-    std::cout << " changing parts " << name << " " << mNodeName.size() << " " << mNodeName << std::endl;
-        foundNode = true;
+        if( !name.compare( 0, mNodeName.size(), mNodeName ) )
+        {
+            std::cout << " changing parts " << name << " " << mNodeName.size() << " " << mNodeName << std::endl;
+            foundNode = true;
+            osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
+            //geode_stateset->setRenderBinDetails( 0, "RenderBin" );
+            //osg::ref_ptr< osg::StateSet > newState = new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
+            //node.setStateSet( newState.get() );
+            //Now highlight the node
+            ves::xplorer::scenegraph::util::OpacityVisitor 
+                opVisitor( &node, false, false, 1.0f );
+            //geode_stateset->setRenderBinDetails( 0, "RenderBin" );
+            //newState->setNestRenderBins( false );
+            //Add shader code to have code highlighted
+            osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
+            geode_stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
+            osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
+        }
+    }
+    else
+    {
         osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
-        //geode_stateset->setRenderBinDetails( 0, "RenderBin" );
-        osg::ref_ptr< osg::StateSet > newState = new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
-        node.setStateSet( newState.get() );
-        //Now highlight the node
-        ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor( &node, false, false, 1.0f );
-        newState->setRenderBinDetails( 0, "RenderBin" );
-        newState->setNestRenderBins( false );
-        //Add shader code to have code highlighted
-        osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
-        newState->addUniform( new osg::Uniform( "glowColor", glowColor ) );
-        //mOpaqueParent->addChild( &node );
+        osg::StateSet::UniformList uniList = geode_stateset->getUniformList();
+        if( uniList.size() )
+        {
+            geode_stateset->removeUniform( "glowColor" );
+            std::cout << uniList.size() << std::endl;
+        }
     }
 
     //If we did not find an id and therefore a parent then keep going up
