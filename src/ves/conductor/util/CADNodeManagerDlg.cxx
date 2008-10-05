@@ -206,8 +206,8 @@ void CADNodeManagerDlg::_buildDialog()
     cadTreePropSizer->Add( treeSizer, 1, wxALIGN_CENTER | wxEXPAND );
     _geometryTree->Raise();
 
-    buttonRowSizer->Add( _saveButton, 0, wxALIGN_CENTER );
-    buttonRowSizer->Add( _quitButton, 0, wxALIGN_CENTER );
+    buttonRowSizer->Add( _saveButton, 0, wxALIGN_CENTER | wxALL, 5 );
+    buttonRowSizer->Add( _quitButton, 0, wxALIGN_CENTER | wxALL, 5 );
 
     //mainSizer->Add(treeSizer, 1, wxALIGN_CENTER|wxEXPAND);
     mainSizer->Add( cadTreePropSizer, 1, wxALIGN_CENTER | wxEXPAND );
