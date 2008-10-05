@@ -41,6 +41,8 @@ UIDialog API
 #include <wx/dialog.h>
 #include <wx/string.h>
 
+#include <string>
+
 class wxWindow;
 
 #include <ves/VEConfig.h>
@@ -77,6 +79,15 @@ public:
     ///Provide the managing UIPluginBase pointer to this dialog
     void SetUIPluginBase( UIPluginBase* pluginBase );
 protected:
+    ///Convert unicode text to a std string
+    ///\param data Unicode wx string
+    ///\return The std::string
+    std::string ConvertUnicode( const wxChar* data )
+    {
+        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        return tempStr;
+    }
+    
     UIPluginBase* mUIPluginBase;
     util::CORBAServiceList* mCORBAService;
     bool lock ;
