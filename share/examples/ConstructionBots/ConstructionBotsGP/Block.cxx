@@ -40,6 +40,9 @@
 #include <osg/LineWidth>
 #include <osg/PolygonOffset>
 
+// --- C/C++ Libraries --- //
+#include <iostream>
+
 using namespace bots;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -243,11 +246,26 @@ const osg::Vec4& Block::GetBlockColor() const
     return mBlockColor;
 }
 ////////////////////////////////////////////////////////////////////////////////
+const osg::Geometry* const Block::GetDrawable( unsigned int position ) const
+{
+    std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator
+        itr = mDrawables.find( position );
+    if( itr != mDrawables.end() )
+    {
+        return itr->second.get();
+    }
+    else
+    {
+        std::cout << "Warning Block::GetDrawable, bad position requested!"
+                  << std::endl;
+        return NULL;
+    }
+}
+////////////////////////////////////////////////////////////////////////////////
 void Block::SetColor( unsigned int drawable, const osg::Vec4& color )
 {
     std::map< unsigned int, osg::ref_ptr< osg::Geometry > >::const_iterator
         itr = mDrawables.find( drawable );
-
     if( itr != mDrawables.end() )
     {
         osg::Vec4& oldColor =

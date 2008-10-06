@@ -245,13 +245,13 @@ const bool BlockEntity::AttachUpdate( bool isStartBlock )
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
 {
-    std::map< osg::ref_ptr< osg::Drawable >, bool >::iterator itrSS;
+    std::map< const osg::Drawable* const, bool >::iterator itrSS;
     std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
     for( itrSS = mSideStates.begin(), itr = mConnectedBlocks.begin();
          itrSS != mSideStates.end(), itr != mConnectedBlocks.end();
          ++itrSS, ++itr )
     {
-        if( !itr->second )
+        if( !itr->second && this->GetDCS()->getName() == "Block0" )
         {
             itrSS->second = mNeighborOccupancy[ itr->first ];
             if( !itrSS->second )
@@ -364,7 +364,7 @@ const bool BlockEntity::IsAttached() const
 ////////////////////////////////////////////////////////////////////////////////
 const bool BlockEntity::PermissionToAttach( osg::Drawable* drawable ) const
 {
-    std::map< osg::ref_ptr< osg::Drawable >, bool >::const_iterator itr =
+    std::map< const osg::Drawable* const, bool >::const_iterator itr =
         mSideStates.find( drawable );
     if( !drawable || itr == mSideStates.end() )
     {
@@ -395,10 +395,9 @@ void BlockEntity::ConnectionDetection()
             mLineSegmentIntersector.get() );
         mPluginDCS->accept( intersectionVisitor );
 
+        mSideStates[ mBlockGeometry->GetDrawable( i + 4 ) ] = false;
         if( mLineSegmentIntersector->containsIntersections() )
         {
-            bool hitSite( false );
-            osg::Drawable* thisDrawable( NULL );
             const osgUtil::LineSegmentIntersector::Intersections&
                 intersections = mLineSegmentIntersector->getIntersections();
             std::multiset< osgUtil::LineSegmentIntersector::Intersection >::
@@ -422,7 +421,8 @@ void BlockEntity::ConnectionDetection()
                     std::map< std::string, bots::BlockEntity* >::
                         const_iterator bemItr =
                             mBlockEntityMap->find( dcs->GetName() );
-                    if( bemItr != mBlockEntityMap->end() )
+                    if( bemItr != mBlockEntityMap->end() &&
+                        bemItr->second != this )
                     {
                         blockEntity = bemItr->second;
                         if( color == mSiteColor )
@@ -438,38 +438,14 @@ void BlockEntity::ConnectionDetection()
                             }
 
                             mBlockGeometry->SetColor( i, mSiteColor );
-                            mConnectedBlocks[ i ] = blockEntity;
-                            mConnectedBlocks[ i ]->SetBlockConnection(
+                            blockEntity->SetBlockConnection(
                                 oppositeSide, this );
-                            mConnectedBlocks[ i ]->GetBlockGeometry()->SetColor(
+                            blockEntity->GetBlockGeometry()->SetColor(
                                 oppositeSide, mSiteColor );
-                            
-                            hitSite = true;
-                        }
-                        else if( blockEntity == this )
-                        {
-                            thisDrawable = drawable;
+                            mConnectedBlocks[ i ] = blockEntity;
                         }
                     }
                 }
-            }
-
-            if( thisDrawable )
-            {
-                if( !hitSite )
-                {
-                    mSideStates[ thisDrawable ] = true;
-                }
-                else
-                {
-                    mSideStates[ thisDrawable ] = false;
-                }
-            }
-            else
-            {
-                std::cout << GetDCS()->getName()
-                          << ": void ConnectionDetection() - "
-                          << "Error!!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
             }
         }
     }

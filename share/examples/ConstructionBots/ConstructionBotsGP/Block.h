@@ -66,6 +66,9 @@ public:
     ///Returns the color of this block geode
     const osg::Vec4& GetBlockColor() const;
 
+    ///Return the requested drawable of this block geode
+    const osg::Geometry* const GetDrawable( unsigned int position ) const;
+
     ///Set the color of a drawable for this block geode
     void SetColor( unsigned int drawable, const osg::Vec4& color );
 
