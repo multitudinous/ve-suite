@@ -268,8 +268,7 @@ void PerimeterSensor::CollectInformation()
         {
             const osgUtil::LineSegmentIntersector::Intersection& intersection =
                 mLineSegmentIntersector->getFirstIntersection();
-            osg::ref_ptr< osg::Drawable > currentDrawable =
-                intersection.drawable;
+            osg::Drawable* const currentDrawable = intersection.drawable.get();
             const osg::Vec4Array* const tempArray =
                 static_cast< const osg::Vec4Array* >(
                     currentDrawable->asGeometry()->getColorArray() );
@@ -413,6 +412,7 @@ void PerimeterSensor::Reset()
     }
     mLastClockWiseDetection = NULL;
     mPreviousDrawable = NULL;
+    mQueriedConnection = NULL;
 
     mPerimeterDetected = false;
     mAligned = false;

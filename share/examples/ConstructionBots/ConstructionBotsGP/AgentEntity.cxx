@@ -379,8 +379,7 @@ void AgentEntity::PickUpBlock()
 ////////////////////////////////////////////////////////////////////////////////
 void AgentEntity::QueryBlock()
 {
-    osg::ref_ptr< osg::Drawable > drawable =
-        mPerimeterSensor->GetQueriedConnection();
+    osg::Drawable* const drawable = mPerimeterSensor->GetQueriedConnection();
     ves::xplorer::scenegraph::FindParentsVisitor parentVisitor(
         drawable->getParent( 0 ) );
     ves::xplorer::scenegraph::DCS* const dcs =
@@ -396,7 +395,7 @@ void AgentEntity::QueryBlock()
     }
 
     blockEntity = itr->second;
-    if( blockEntity->PermissionToAttach( drawable.get() ) )
+    if( blockEntity->PermissionToAttach( drawable ) )
     {
         Build();
     }
