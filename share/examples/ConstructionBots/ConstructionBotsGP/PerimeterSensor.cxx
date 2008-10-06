@@ -268,7 +268,8 @@ void PerimeterSensor::CollectInformation()
         {
             const osgUtil::LineSegmentIntersector::Intersection& intersection =
                 mLineSegmentIntersector->getFirstIntersection();
-            osg::Drawable* const currentDrawable = intersection.drawable.get();
+            osg::ref_ptr< osg::Drawable > currentDrawable =
+                intersection.drawable;
             const osg::Vec4Array* const tempArray =
                 static_cast< const osg::Vec4Array* >(
                     currentDrawable->asGeometry()->getColorArray() );
@@ -391,7 +392,7 @@ const btVector3& PerimeterSensor::GetNormalizedResultantForceVector()
 ////////////////////////////////////////////////////////////////////////////////
 osg::Drawable* const PerimeterSensor::GetQueriedConnection() const
 {
-    return mQueriedConnection;
+    return mQueriedConnection.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 const double& PerimeterSensor::GetRange() const

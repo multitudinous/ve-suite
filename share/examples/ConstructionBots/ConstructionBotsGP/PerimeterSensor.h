@@ -120,7 +120,7 @@ private:
     btVector3 mResultantForce;
 
     ///The drawable of the block that has been queried for connection
-    osg::Drawable* mQueriedConnection;
+    osg::ref_ptr< osg::Drawable > mQueriedConnection;
 
     ///Contains the line segment intersectors for this perimeter sensor
     osg::ref_ptr< osgUtil::IntersectorGroup > mIntersectorGroup;
