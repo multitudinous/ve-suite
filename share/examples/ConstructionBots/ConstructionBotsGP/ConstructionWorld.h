@@ -102,6 +102,9 @@ private:
     ///Calculate maximum useful length of the block sensor range for mGridSize
     void CalculateMaxBlockSensorRange();
 
+    ///Create an agent entity
+    void CreateAgentEntity();
+
     ///Randomize where the blocks and agents are placed in the environment
     void CreateRandomPositions();
 
@@ -122,6 +125,9 @@ private:
 
     ///The number of construction agents for the simulation
     unsigned int mNumAgents;
+
+    ///The maximum number of agents for this simulation
+    unsigned int mMaxNumAgents;
 
     ///The number of agents to increment by after each block sensor range trial
     unsigned int mDeltaAgents;

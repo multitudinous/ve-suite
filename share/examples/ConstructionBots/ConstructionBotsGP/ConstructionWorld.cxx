@@ -82,13 +82,14 @@ ConstructionWorld::ConstructionWorld(
     ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
     :
     mFrameCount( 1 ),
-    mNumSimulations( 10 ),
+    mNumSimulations( 1 ),
     mNumSimulationsLeft( mNumSimulations ),
-    mNumBlocks( 24 ),
+    mNumBlocks( 2 ),
     mNumBlocksLeft( mNumBlocks ),
-    mNumAgents( 5 ),
+    mNumAgents( 1 ),
+    mMaxNumAgents( 3 ),
     mDeltaAgents( 1 ),
-    mBlockSensorRange( 10.0 ),
+    mBlockSensorRange( 70.0 ),
     mMaxBlockSensorRange( 0.0 ),
     mDeltaBlockSensorRange( 2.0 ),
     // --- Ensure that the grid size is odd for centrality purposes --- //
@@ -310,41 +311,7 @@ void ConstructionWorld::InitializeFramework()
     //Initialize the agents
     for( unsigned int i = 0; i < mNumAgents; ++i )
     {
-        //Need to check this interaction for memory leaks
-        osg::ref_ptr< bots::Agent > agent = new bots::Agent();
-#ifdef VE_SOUND
-        bots::AgentEntity* agentEntity = new AgentEntity(
-            agent.get(), mPluginDCS.get(), mSoundManager, mPhysicsSimulator );
-#else
-        bots::AgentEntity* agentEntity = new AgentEntity(
-            agent.get(), mPluginDCS.get(), mPhysicsSimulator );
-#endif
-        //Set number of blocks left to be placed
-        agentEntity->SetNumBlocksLeft( mNumBlocksLeft );
-
-        //Set physics properties for blocks
-        agentEntity->InitPhysics();
-        agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
-        agentEntity->GetPhysicsRigidBody()->UserDefinedShape(
-            agent->CreateCompoundShape() );
-        agentEntity->SetBlockEntityMap( mBlockEntities );
-
-        //Set D6 constraint for agents
-        agentEntity->SetConstraints( mGridSize );
-
-        //Store collisions for the agents
-        agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
-
-        //Set the sensor range for the agents
-        agentEntity->GetBlockSensor()->SetRange( mBlockSensorRange );
-        agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * mGridSize );
-        agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * mGridSize );
-        agentEntity->Reset();
-        
-        //Set name and descriptions for blocks
-        agentEntity->SetNameAndDescriptions( i );
-
-        mAgentEntities.push_back( agentEntity );
+        CreateAgentEntity();
     }
 
     //Create random positions for the objects in the framework
@@ -368,23 +335,62 @@ void ConstructionWorld::CalculateMaxBlockSensorRange()
     a1 = sqrt( 2.0 * pow( 0.5, 2 ) );
     b1 = sqrt( 2.0 * pow( mGridSize * 0.5, 2 ) );
     c1 = sqrt( pow( a1, 2 ) + pow( b1, 2 ) );
-    std::cout << c1 << std::endl;
+    //std::cout << c1 << std::endl;
 
     double alpha( 0.0 ), beta( 0.0 ), theta( 0.0 );
     alpha = asin( a1 / c1 );
     alpha *= oneEightyDivPI;
     beta = 135.0 - alpha;
     theta = 180.0 - beta;
-    std::cout << theta << std::endl;
+    //std::cout << theta << std::endl;
 
     double a2( 0.0 ), b2( 0.0 ), c2( 0.0 );
     a2 = ( mGridSize * 0.5 ) - 0.5;
     c2 = a2 / sin( theta * piDivOneEighty );
-    std::cout << c2 << std::endl;
+    //std::cout << c2 << std::endl;
 
     mMaxBlockSensorRange = c1 + c2 - ( 2.0 * a1 );
     mMaxBlockSensorRange = ceil( mMaxBlockSensorRange );
-    std::cout << mMaxBlockSensorRange << std::endl;
+    //std::cout << mMaxBlockSensorRange << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////
+void ConstructionWorld::CreateAgentEntity()
+{
+    //Need to check this interaction for memory leaks
+    osg::ref_ptr< bots::Agent > agent = new bots::Agent();
+#ifdef VE_SOUND
+    bots::AgentEntity* agentEntity = new AgentEntity(
+        agent.get(), mPluginDCS.get(), mSoundManager, mPhysicsSimulator );
+#else
+    bots::AgentEntity* agentEntity = new AgentEntity(
+        agent.get(), mPluginDCS.get(), mPhysicsSimulator );
+#endif
+    //Set number of blocks left to be placed
+    agentEntity->SetNumBlocksLeft( mNumBlocksLeft );
+
+    //Set physics properties for blocks
+    agentEntity->InitPhysics();
+    agentEntity->GetPhysicsRigidBody()->setFriction( 1.0 );
+    agentEntity->GetPhysicsRigidBody()->UserDefinedShape(
+        agent->CreateCompoundShape() );
+    agentEntity->SetBlockEntityMap( mBlockEntities );
+
+    //Set D6 constraint for agents
+    agentEntity->SetConstraints( mGridSize );
+
+    //Store collisions for the agents
+    agentEntity->GetPhysicsRigidBody()->SetStoreCollisions( true );
+
+    //Set the sensor range for the agents
+    agentEntity->GetBlockSensor()->SetRange( mBlockSensorRange );
+    agentEntity->GetSiteSensor()->SetRange( sqrt( 2.0 ) * 0.5 * mGridSize );
+    agentEntity->GetObstacleSensor()->SetRange( sqrt( 2.0 ) * mGridSize );
+    agentEntity->Reset();
+
+    mAgentEntities.push_back( agentEntity );
+
+    //Set name and descriptions for blocks
+    agentEntity->SetNameAndDescriptions( mAgentEntities.size() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::CreateRandomPositions()
@@ -501,10 +507,8 @@ void ConstructionWorld::PreFrameUpdate()
 void ConstructionWorld::ResetSimulation()
 {
     //Write simulation data to file
-    mSimulationData
-        << std::setiosflags( std::ios::left )
-        << "Simulation " << mNumSimulations - mNumSimulationsLeft << " = "
-        << mFrameCount << std::endl;
+    mSimulationData << std::setiosflags( std::ios::left )
+                    << mFrameCount << "\t";
 
     //Reset the simulation time and block counter
     mFrameCount = 1;
@@ -525,23 +529,38 @@ void ConstructionWorld::ResetSimulation()
                     mBlockSensorRange );
             }
 
-            mSimulationData << std::endl
-                << std::setiosflags( std::ios::left )
-                << "GridSize = " << mGridSize
-                << std::endl
-                << std::setiosflags( std::ios::left )
-                << "NumBlocks = " << mNumBlocks
-                << std::endl
-                << std::setiosflags( std::ios::left )
-                << "NumAgents = " << mNumAgents
-                << std::endl
+            mSimulationData
                 << std::setiosflags( std::ios::left )
                 << "BlockSensorRange = " << mBlockSensorRange
                 << std::endl;
         }
         else
         {
-            
+            if( mNumAgents < mMaxNumAgents )
+            {
+                mNumAgents += mDeltaAgents;
+                CreateAgentEntity();
+
+                mSimulationData
+                    << std::setiosflags( std::ios::left )
+                    << std::endl << std::endl
+                    << "GridSize = " << mGridSize
+                    << std::endl
+                    << std::setiosflags( std::ios::left )
+                    << "NumBlocks = " << mNumBlocks
+                    << std::endl
+                    << std::setiosflags( std::ios::left )
+                    << "NumAgents = " << mNumAgents
+                    << std::endl
+                    << std::setiosflags( std::ios::left )
+                    << "BlockSensorRange = " << mBlockSensorRange
+                    << std::endl;
+            }
+            else
+            {
+                std::cout << "Done!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
+                exit( 0 );
+            }
         }
     }
 
