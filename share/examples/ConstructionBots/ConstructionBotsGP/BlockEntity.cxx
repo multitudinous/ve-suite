@@ -251,7 +251,7 @@ void BlockEntity::UpdateSideStates()
          itrSS != mSideStates.end(), itr != mConnectedBlocks.end();
          ++itrSS, ++itr )
     {
-        if( !itr->second && this->GetDCS()->getName() == "Block0" )
+        if( !itr->second )
         {
             itrSS->second = mNeighborOccupancy[ itr->first ];
             if( !itrSS->second )
