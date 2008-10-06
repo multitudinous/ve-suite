@@ -99,6 +99,9 @@ private:
     ///Initialize the construction world framework
     void InitializeFramework();
 
+    ///Calculate maximum useful length of the block sensor range for mGridSize
+    void CalculateMaxBlockSensorRange();
+
     ///Randomize where the blocks and agents are placed in the environment
     void CreateRandomPositions();
 
@@ -128,6 +131,9 @@ private:
 
     ///The initial length of the block sensor range
     double mBlockSensorRange;
+
+    ///The maximum useful length of the block sensor range for mGridSize
+    double mMaxBlockSensorRange;
 
     ///The delta length added to the block sensor range after a simulation set
     double mDeltaBlockSensorRange;

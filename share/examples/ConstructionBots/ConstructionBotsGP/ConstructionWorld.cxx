@@ -70,6 +70,9 @@ using namespace bots;
 
 const bool RUN_CONTINUOUS_SIMULATIONS = true;
 
+const double piDivOneEighty = 0.0174532925;
+const double oneEightyDivPI = 57.2957795;
+
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionWorld::ConstructionWorld(
     ves::xplorer::scenegraph::DCS* pluginDCS,
@@ -83,9 +86,10 @@ ConstructionWorld::ConstructionWorld(
     mNumSimulationsLeft( mNumSimulations ),
     mNumBlocks( 24 ),
     mNumBlocksLeft( mNumBlocks ),
-    mNumAgents( 2 ),
+    mNumAgents( 5 ),
     mDeltaAgents( 1 ),
     mBlockSensorRange( 10.0 ),
+    mMaxBlockSensorRange( 0.0 ),
     mDeltaBlockSensorRange( 2.0 ),
     // --- Ensure that the grid size is odd for centrality purposes --- //
     mGridSize( 51 ),
@@ -346,6 +350,9 @@ void ConstructionWorld::InitializeFramework()
     //Create random positions for the objects in the framework
     CreateRandomPositions();
 
+    //Calculate maximum useful length of the block sensor range for mGridSize
+    CalculateMaxBlockSensorRange();
+
     //Kick off simulation by attaching the start block after positions are set
     {
         double startBlockPosition[ 3 ] = { 0.0, 0.0, 0.5 };
@@ -353,6 +360,31 @@ void ConstructionWorld::InitializeFramework()
         mStartBlock->SetOccupancyMatrix( mOccupancyMatrix );
         mStartBlock->AttachUpdate( true );
     }
+}
+////////////////////////////////////////////////////////////////////////////////
+void ConstructionWorld::CalculateMaxBlockSensorRange()
+{
+    double a1( 0.0 ), b1( 0.0 ), c1( 0.0 );
+    a1 = sqrt( 2.0 * pow( 0.5, 2 ) );
+    b1 = sqrt( 2.0 * pow( mGridSize * 0.5, 2 ) );
+    c1 = sqrt( pow( a1, 2 ) + pow( b1, 2 ) );
+    std::cout << c1 << std::endl;
+
+    double alpha( 0.0 ), beta( 0.0 ), theta( 0.0 );
+    alpha = asin( a1 / c1 );
+    alpha *= oneEightyDivPI;
+    beta = 135.0 - alpha;
+    theta = 180.0 - beta;
+    std::cout << theta << std::endl;
+
+    double a2( 0.0 ), b2( 0.0 ), c2( 0.0 );
+    a2 = ( mGridSize * 0.5 ) - 0.5;
+    c2 = a2 / sin( theta * piDivOneEighty );
+    std::cout << c2 << std::endl;
+
+    mMaxBlockSensorRange = c1 + c2 - ( 2.0 * a1 );
+    mMaxBlockSensorRange = ceil( mMaxBlockSensorRange );
+    std::cout << mMaxBlockSensorRange << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ConstructionWorld::CreateRandomPositions()
@@ -482,7 +514,7 @@ void ConstructionWorld::ResetSimulation()
     {
         mNumSimulationsLeft = mNumSimulations;
 
-        if( mBlockSensorRange < 72.0 )
+        if( mBlockSensorRange < mMaxBlockSensorRange )
         {
             mBlockSensorRange += mDeltaBlockSensorRange;
 
@@ -509,8 +541,7 @@ void ConstructionWorld::ResetSimulation()
         }
         else
         {
-            std::cout << "Done!" << std::endl;
-            exit( 0 );
+            
         }
     }
 
