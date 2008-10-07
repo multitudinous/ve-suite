@@ -580,4 +580,5 @@ std::map< std::string, std::pair< unsigned int, unsigned int > > GetAspenIconDat
     mAspenIconData["valve_valve_icon1.png"] = std::pair< unsigned int, unsigned int >(61, 24 );
     mAspenIconData["vscrub.block.jpg"] = std::pair< unsigned int, unsigned int >(61, 61 );
     mAspenIconData["vscrub.icon.jpg"] = std::pair< unsigned int, unsigned int >(61, 63 );
+    return mAspenIconData;
 }
