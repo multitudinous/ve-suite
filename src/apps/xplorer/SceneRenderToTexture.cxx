@@ -65,6 +65,8 @@
 #include <osgDB/ReadFile>
 #include <osgPPU/ShaderAttribute.h>
 
+#include <vrj/Draw/OGL/GlWindow.h>
+
 // --- C/C++ Libraries --- //
 #include <iostream>
 
@@ -475,50 +477,39 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
 void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 {
     //Get state info about the screen
-    //std::pair< int, int > screenDims =  EnvironmentHandler::instance()->
-    //    GetDisplaySettings()->GetScreenResolution();
-
-    /*static bool changed = false;
-    //if desktop mode and if osg 2.5.4 or later
-    //if reset screen resolution is called or if first time through
-    if( jccl::ConfigManager::instance()->isPendingStale() ) //&& !changed )
+    int originX, originY, width, height;
+    vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
+        getDisplay()->getOriginAndSize( originX, originY, width, height );
+    size_t numViewports = vrj::GlDrawManager::instance()->currentUserData()->
+        getGlWindow()->getDisplay()->getNumViewports();
+    float xOrigin, yOrigin, widthRatio, heightRatio;
+    float maxWidth, maxHeight;
+    maxWidth = 0;
+    maxHeight = 0;
+    for( size_t i = 0; i < numViewports; ++i )
     {
-        //Handle setting up the render to texture
-        //displaymanager->getActivedisplays()
-        const std::vector< vrj::DisplayPtr > activeDisplays = vrj::DisplayManager::instance()->getActiveDisplays();
-        for( size_t i = 0; i < activeDisplays.size(); ++i )
+        vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
+            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+        viewport->getOriginAndSize( xOrigin, yOrigin, widthRatio, heightRatio );
+        if( maxWidth < widthRatio )
         {
-            //get origin and size of display
-            int originX;
-            int originY;
-            int width; 
-            int height;
-            activeDisplays.at( i )->getOriginAndSize ( originX, originY, width, height);
-            //display->getViewports()
-            std::vector< vrj::Viewport* >::size_type numViewports = activeDisplays.at( i )->getNumViewports();
-            for( size_t j = 0; j < numViewports; ++j )
-            {
-                //vieport if active and surface viewport
-                vrj::Viewport* vp = activeDisplays.at( i )->getViewport( j );
-                if( vp->isActive() && vp->isSurface() )
-                {
-                    float xOrigin;
-                    float yOrigin;
-                    float vpWidth;
-                    float vpHeight;
-                    //get origin and size of the vieport
-                    vp->getOriginAndSize( xOrigin, yOrigin, vpWidth, vpHeight);
-                    //now create texture with viewport info
-                    //create quad
-                    //place quad in propoer location to be inline with dispaly
-                    //and for corners to match position on the display
-                }
-            }
+            maxWidth = widthRatio;
         }
-        changed = true;
-    }*/  
+        
+        if( maxHeight < heightRatio )
+        {
+            maxHeight = heightRatio;
+        }
+    }
+    width *= maxWidth;
+    height *= maxHeight;
     
-    std::pair< int, int > screenDims = std::make_pair< int, int >( 1024, 1024 );//width, height );
+    std::cout << "|\tRTT Texture Size - Width = " 
+        << width << " - Height = " << height << std::endl;
+
+    //Setup cameras, textures, and everything else for rtt
+    std::pair< int, int > screenDims = 
+        std::make_pair< int, int >( width, height );
     *mCameraMap = new osg::Camera();
     *mProcessor = new osgPPU::Processor();
     
