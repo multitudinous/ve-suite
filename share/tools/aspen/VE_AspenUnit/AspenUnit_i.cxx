@@ -75,7 +75,7 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name,
     AspenLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");
-    //mQueryCommandNames.insert( "openSimulation");
+    mQueryCommandNames.insert( "openSimulation");
     mQueryCommandNames.insert( "runNetwork");
 	mQueryCommandNames.insert( "reinitNetwork");
 	mQueryCommandNames.insert( "reinitBlock");
@@ -365,11 +365,11 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleGetNetwork( cmd );
 		return returnValue;
 	}
-	//else if(cmdname=="openSimulation")
-	//{
-	//	returnValue = handleOpenSimulation(cmd);
-	//	return returnValue;
-	//}
+	else if(cmdname=="openSimulation")
+	{
+		returnValue = handleOpenSimulation(cmd);
+		return returnValue;
+	}
 	else if (cmdname=="runNetwork")
 	{
 		StartCalc();
@@ -562,17 +562,17 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	return CORBA::string_dup(network.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-//char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
-//{
-//    CEdit *Display;
-//    Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
+char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
+{
+    CEdit *Display;
+    Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
 
 	//this command has no params
-//	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
-//	Display->SetWindowText(filename.c_str());
-//	bkp->openFile(filename.c_str());
-//	return CORBA::string_dup("Simulation Opened.");
-//}
+	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+	Display->SetWindowText(filename.c_str());
+	bkp->openFile(filename.c_str());
+	return CORBA::string_dup("Simulation Opened.");
+}
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
