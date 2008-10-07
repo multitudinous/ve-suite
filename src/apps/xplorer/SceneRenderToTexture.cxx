@@ -138,7 +138,7 @@ SceneRenderToTexture::~SceneRenderToTexture()
 void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
 {
     *mColorMap = new osg::Texture2D();
-    osg::ref_ptr< osg::Texture2D > tempColorMap = *mColorMap;
+    osg::ref_ptr< osg::Texture2D > tempColorMap = (*mColorMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     tempColorMap->setInternalFormat( GL_RGBA8 );
     tempColorMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
@@ -154,7 +154,7 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
         osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
     *mGlowMap = new osg::Texture2D();
-    osg::ref_ptr< osg::Texture2D > tempGlowMap = *mGlowMap;
+    osg::ref_ptr< osg::Texture2D > tempGlowMap = (*mGlowMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     tempGlowMap->setInternalFormat( GL_RGBA8 );
     tempGlowMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
@@ -422,7 +422,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
 
     //Perform final color operations and blends
     (*mFinalMap) = new osgPPU::UnitInOut();
-    osg::ref_ptr< osgPPU::UnitInOut > final = (*mFinalMap);
+    osg::ref_ptr< osgPPU::UnitInOut > final = (*mFinalMap).get();
     {
         //Set name and indicies
         final->setName( "Final" );
@@ -463,7 +463,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
 
     //Render to the Frame Buffer
     (*mQuadOut) = new osgPPU::UnitOut();
-    osg::ref_ptr< osgPPU::UnitOut > ppuOut = (*mQuadOut);
+    osg::ref_ptr< osgPPU::UnitOut > ppuOut = (*mQuadOut).get();
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
@@ -518,7 +518,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
         changed = true;
     }*/  
     
-    std::pair< int, int > screenDims = std::make_pair< int, int >( 2048, 2048 );//width, height );
+    std::pair< int, int > screenDims = std::make_pair< int, int >( 1024, 1024 );//width, height );
     *mCameraMap = new osg::Camera();
     *mProcessor = new osgPPU::Processor();
     
@@ -548,7 +548,7 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneV
     
     osg::Camera* svCamera = sv->getCamera();    
     (*mFinalMap)->setViewport( svCamera->getViewport() );
-    (*mQuadOut)->setViewport( svCamera->getViewport() ); 
+    (*mQuadOut)->setViewport( svCamera->getViewport() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void SceneRenderToTexture::LatePreFrameUpdate()
