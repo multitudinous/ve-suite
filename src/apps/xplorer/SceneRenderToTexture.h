@@ -40,6 +40,8 @@
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
 
+#include <vrj/Draw/OGL/GlContextData.h>
+
 namespace osg
 {
 class Group;
@@ -56,6 +58,8 @@ class SceneView;
 namespace osgPPU
 {
 class Processor;
+class UnitOut;
+class UnitInOut;
 }
 
 // --- C/C++ Libraries --- //
@@ -104,14 +108,14 @@ public:
     ///Return the camera being used to render the ves scenegraph 
     ///to texture. This is the root node for the scenegraph
     ///\return The osg::Camera being used to render to the FBO
-    osg::Camera* const GetCamera() const;
+    osg::Camera* const GetCamera();
 
     ///
     osg::Group* const GetGroup() const;
 
     ///Return the texture that is being rendered for the desktop display
     ///\return The osg::Texture2D for the display
-    osg::Texture2D* const GetColorMap() const;
+    osg::Texture2D* const GetColorMap();
 
     ///Take a high resolution screen capture of the render window for SceneView
     ///\param root The osg::Group to be rendered
@@ -119,6 +123,8 @@ public:
     ///\param filename The file name to be used for the screen capture
     void WriteImageFileForWeb(
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
+    ///Update the projection and viewport information for the rtt's cameras
+    void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv );
 
 protected:
 
@@ -132,25 +138,32 @@ private:
     ///
     void InitProcessor( std::pair< int, int >& screenDims, 
         osg::Camera* const sceneViewCamera );
-
-    ///The texture attached to the color buffer of the camera
-    osg::ref_ptr< osg::Texture2D > mColorMap;
-    ///
-    osg::ref_ptr< osg::Texture2D > mGlowMap;
-    ///
-    osg::ref_ptr< osg::Texture2D > mGlowStencil;
-    ///The texture attached to the depth and stencil buffer of the camera
-    osg::ref_ptr< osg::Texture2D > mDepthStencilTexture;
-
-    ///The render to texture camera
-    osg::ref_ptr< osg::Camera > mCamera;    
-    ///
-    osg::ref_ptr< osg::Group > mRootGroup;
-    ///
-    osg::ref_ptr< osgPPU::Processor > mProcessor;
     
+    ///The root group that everything gets added to
+    osg::ref_ptr< osg::Group > mRootGroup;
+    ///Set the number of super samples
     int mScaleFactor;
-
+    ///Let the object know all cameras are configured
+    vrj::GlContextData< bool > mCamerasConfigured;
+    ///The render to texture camera
+    ///A context locked map to hold cameras
+    vrj::GlContextData< osg::ref_ptr< osg::Camera > > mCameraMap;
+    ///The texture attached to the color buffer of the camera
+    ///A context locked map to hold textures
+    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mColorMap;
+    ///A context locked map to hold textures
+    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mGlowMap;
+    ///A context locked map to hold textures
+    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mGlowStencil;
+    ///The texture attached to the depth and stencil buffer of the camera
+    ///A context locked map to hold textures
+    vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mDepthStencilTexture;
+    ///A context locked map to hold osgPPU Processors
+    vrj::GlContextData< osg::ref_ptr< osgPPU::Processor > > mProcessor;
+    ///A osgPPU 
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mFinalMap;
+    ///A osgPPU 
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
 };
 } //end xplorer
 } //end ves

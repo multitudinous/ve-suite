@@ -118,13 +118,13 @@ void StencilImage::operator () ( osg::RenderInfo& renderInfo ) const
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
-    mColorMap( 0 ),
-    mGlowMap( 0 ),
-    mGlowStencil( 0 ),
-    mDepthStencilTexture( 0 ),
-    mCamera( new osg::Camera() ),
+    //mColorMap( 0 ),
+    //mGlowMap( 0 ),
+    //mGlowStencil( 0 ),
+    //mDepthStencilTexture( 0 ),
+    //mCamera( new osg::Camera() ),
     mRootGroup( new osg::Group() ),
-    mProcessor( new osgPPU::Processor() ),
+    //mProcessor( new osgPPU::Processor() ),
     mScaleFactor( 1 )
 {    
     ;
@@ -137,32 +137,34 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
 {
-    mColorMap = new osg::Texture2D();
+    *mColorMap = new osg::Texture2D();
+    osg::ref_ptr< osg::Texture2D > tempColorMap = *mColorMap;
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    mColorMap->setInternalFormat( GL_RGBA8 );
-    mColorMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
-    mColorMap->setSourceFormat( GL_RGBA );
-    mColorMap->setSourceType( GL_UNSIGNED_INT );
-    mColorMap->setFilter(
+    tempColorMap->setInternalFormat( GL_RGBA8 );
+    tempColorMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
+    tempColorMap->setSourceFormat( GL_RGBA );
+    tempColorMap->setSourceType( GL_UNSIGNED_INT );
+    tempColorMap->setFilter(
         osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    mColorMap->setFilter(
+    tempColorMap->setFilter(
         osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    mColorMap->setWrap(
+    tempColorMap->setWrap(
         osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mColorMap->setWrap(
+    tempColorMap->setWrap(
         osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
-    mGlowMap = new osg::Texture2D();
+    *mGlowMap = new osg::Texture2D();
+    osg::ref_ptr< osg::Texture2D > tempGlowMap = *mGlowMap;
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    mGlowMap->setInternalFormat( GL_RGBA8 );
-    mGlowMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
-    mGlowMap->setSourceFormat( GL_RGBA );
-    mGlowMap->setSourceType( GL_UNSIGNED_INT );
-    mGlowMap->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    mGlowMap->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    tempGlowMap->setInternalFormat( GL_RGBA8 );
+    tempGlowMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
+    tempGlowMap->setSourceFormat( GL_RGBA );
+    tempGlowMap->setSourceType( GL_UNSIGNED_INT );
+    tempGlowMap->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    tempGlowMap->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     //We really want REPEAT otherwise the edge gets sampled by the glow shader
-    mGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
-    mGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
+    tempGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
+    tempGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
 
     /*mGlowStencil = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
@@ -192,25 +194,26 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 {
-    mCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
-    mCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
-    mCamera->setClearMask( 
+    osg::ref_ptr< osg::Camera > tempCamera = (*mCameraMap).get();
+    tempCamera->setReferenceFrame( osg::Camera::RELATIVE_RF );
+    tempCamera->setRenderOrder( osg::Camera::PRE_RENDER, 0 );
+    tempCamera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
-    mCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
-    mCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-    mCamera->setViewport( 0, 0, screenDims.first*mScaleFactor, screenDims.second*mScaleFactor);
+    tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
+    tempCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
+    tempCamera->setViewport( 0, 0, screenDims.first*mScaleFactor, screenDims.second*mScaleFactor);
     
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
-    mCamera->attach(
-        osg::Camera::COLOR_BUFFER0, mColorMap.get() );//, 0, 0, false, 8, 8 );
-    mCamera->attach(
-        osg::Camera::COLOR_BUFFER1, mGlowMap.get() );//, 0, 0, false, 8, 8 );
+    tempCamera->attach(
+        osg::Camera::COLOR_BUFFER0, (*mColorMap).get() );//, 0, 0, false, 8, 8 );
+    tempCamera->attach(
+        osg::Camera::COLOR_BUFFER1, (*mGlowMap).get() );//, 0, 0, false, 8, 8 );
     //mCamera->attach(
     //    osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );//, 0, 0, false, 8, 8 );
 #else
-    mCamera->attach( osg::Camera::COLOR_BUFFER0, mColorMap.get() );
-    mCamera->attach( osg::Camera::COLOR_BUFFER1, mGlowMap.get() );
+    tempCamera->attach( osg::Camera::COLOR_BUFFER0, (*mColorMap).get() );
+    tempCamera->attach( osg::Camera::COLOR_BUFFER1, (*mGlowMap).get() );
     //mCamera->attach( osg::Camera::COLOR_BUFFER2, mGlowStencil.get() );
 #endif
 
@@ -232,8 +235,8 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
 
     //This camera has a RELATIVE_RF
     //Therefore the transform is cumulative from parents transforms
-    mCamera->setViewMatrix( osg::Matrix::identity() );
-    mCamera->setProjectionMatrix( osg::Matrix::identity() );
+    tempCamera->setViewMatrix( osg::Matrix::identity() );
+    tempCamera->setProjectionMatrix( osg::Matrix::identity() );
 
     //There seems to be a problem with sceneView overwriting RTT camera's
     //mask values for GL_STENCIL_BUFFER_BIT
@@ -272,7 +275,7 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         
     "} \n";
 
-    osg::ref_ptr< osg::StateSet > stateset = mCamera->getOrCreateStateSet();
+    osg::ref_ptr< osg::StateSet > stateset = tempCamera->getOrCreateStateSet();
     osg::ref_ptr< osg::Shader > fragmentShader = new osg::Shader();
     fragmentShader->setType( osg::Shader::FRAGMENT );
     fragmentShader->setShaderSource( fragmentSource );
@@ -298,13 +301,13 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
         new osgDB::ReaderWriter::Options( "fragment" );
 
     osg::ref_ptr< osgPPU::UnitTexture > color =
-        new osgPPU::UnitTexture( mColorMap.get() );
+        new osgPPU::UnitTexture( (*mColorMap).get() );
     osg::ref_ptr< osgPPU::UnitTexture > glow =
-        new osgPPU::UnitTexture( mGlowMap.get() );
+        new osgPPU::UnitTexture( (*mGlowMap).get() );
     osg::ref_ptr< osgPPU::UnitTexture > glowStencil =
-        new osgPPU::UnitTexture( mGlowStencil.get() );
-    mProcessor->addChild( color.get() );
-    mProcessor->addChild( glow.get() );
+        new osgPPU::UnitTexture( (*mGlowStencil).get() );
+    (*mProcessor)->addChild( color.get() );
+    (*mProcessor)->addChild( glow.get() );
     //mProcessor->addChild( glowStencil.get() );
 
     //Downsample by 1/2 original size
@@ -418,7 +421,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
     blurX->addChild( blurY.get() );
 
     //Perform final color operations and blends
-    osg::ref_ptr< osgPPU::UnitInOut > final = new osgPPU::UnitInOut();
+    (*mFinalMap) = new osgPPU::UnitInOut();
+    osg::ref_ptr< osgPPU::UnitInOut > final = (*mFinalMap);
     {
         //Set name and indicies
         final->setName( "Final" );
@@ -458,7 +462,8 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
    }
 
     //Render to the Frame Buffer
-    osg::ref_ptr< osgPPU::UnitOut > ppuOut = new osgPPU::UnitOut();
+    (*mQuadOut) = new osgPPU::UnitOut();
+    osg::ref_ptr< osgPPU::UnitOut > ppuOut = (*mQuadOut);
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
@@ -470,20 +475,80 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
 void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 {
     //Get state info about the screen
-    std::pair< int, int > screenDims =  EnvironmentHandler::instance()->
-        GetDisplaySettings()->GetScreenResolution();
+    //std::pair< int, int > screenDims =  EnvironmentHandler::instance()->
+    //    GetDisplaySettings()->GetScreenResolution();
 
+    /*static bool changed = false;
+    //if desktop mode and if osg 2.5.4 or later
+    //if reset screen resolution is called or if first time through
+    if( jccl::ConfigManager::instance()->isPendingStale() ) //&& !changed )
+    {
+        //Handle setting up the render to texture
+        //displaymanager->getActivedisplays()
+        const std::vector< vrj::DisplayPtr > activeDisplays = vrj::DisplayManager::instance()->getActiveDisplays();
+        for( size_t i = 0; i < activeDisplays.size(); ++i )
+        {
+            //get origin and size of display
+            int originX;
+            int originY;
+            int width; 
+            int height;
+            activeDisplays.at( i )->getOriginAndSize ( originX, originY, width, height);
+            //display->getViewports()
+            std::vector< vrj::Viewport* >::size_type numViewports = activeDisplays.at( i )->getNumViewports();
+            for( size_t j = 0; j < numViewports; ++j )
+            {
+                //vieport if active and surface viewport
+                vrj::Viewport* vp = activeDisplays.at( i )->getViewport( j );
+                if( vp->isActive() && vp->isSurface() )
+                {
+                    float xOrigin;
+                    float yOrigin;
+                    float vpWidth;
+                    float vpHeight;
+                    //get origin and size of the vieport
+                    vp->getOriginAndSize( xOrigin, yOrigin, vpWidth, vpHeight);
+                    //now create texture with viewport info
+                    //create quad
+                    //place quad in propoer location to be inline with dispaly
+                    //and for corners to match position on the display
+                }
+            }
+        }
+        changed = true;
+    }*/  
+    
+    std::pair< int, int > screenDims = std::make_pair< int, int >( 2048, 2048 );//width, height );
+    *mCameraMap = new osg::Camera();
+    *mProcessor = new osgPPU::Processor();
+    
     //Create textures, camera, and SA-quad
     InitTextures( screenDims );
     InitCamera( screenDims );
     InitProcessor( screenDims, sceneViewCamera );
 
     //Add nodes to the scenegraph
-    sceneViewCamera->addChild( mCamera.get() );
-    sceneViewCamera->addChild( mProcessor.get() );
-    //mProcessor->setCamera( mCamera.get() );
-    mProcessor->setName( "Processor" );
-    mProcessor->dirtyUnitSubgraph();
+    (*mCameraMap)->addChild( mRootGroup.get() );
+    sceneViewCamera->addChild( (*mCameraMap).get() );
+    sceneViewCamera->addChild( (*mProcessor).get() );
+
+    //(*mProcessor)->setCamera( sceneViewCamera );
+    (*mProcessor)->setName( "Processor" );
+    (*mProcessor)->dirtyUnitSubgraph();
+    
+    *mCamerasConfigured = true;
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv )
+{
+    if( !(*mCamerasConfigured) )
+    {
+        return;
+    }
+    
+    osg::Camera* svCamera = sv->getCamera();    
+    (*mFinalMap)->setViewport( svCamera->getViewport() );
+    (*mQuadOut)->setViewport( svCamera->getViewport() ); 
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void SceneRenderToTexture::LatePreFrameUpdate()
@@ -491,9 +556,9 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     ;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-osg::Camera* const SceneRenderToTexture::GetCamera() const
+osg::Camera* const SceneRenderToTexture::GetCamera()
 {
-    return mCamera.get();
+    return (*mCameraMap).get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Group* const SceneRenderToTexture::GetGroup() const
@@ -501,9 +566,9 @@ osg::Group* const SceneRenderToTexture::GetGroup() const
     return mRootGroup.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-osg::Texture2D* const SceneRenderToTexture::GetColorMap() const
+osg::Texture2D* const SceneRenderToTexture::GetColorMap()
 {
-    return mColorMap.get();
+    return (*mColorMap).get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::WriteImageFileForWeb(

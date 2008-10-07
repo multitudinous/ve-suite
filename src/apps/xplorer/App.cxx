@@ -303,12 +303,12 @@ void App::initScene()
     std::cout << "| ***************************************************************** |" << std::endl;
     m_vjobsWrapper->InitCluster();
     // define the rootNode, worldDCS, and lighting
-    if( mRTT )
+    /*if( mRTT )
     {
         ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
             mSceneRenderToTexture->GetCamera() );
     }
-    else
+    else*/
     {
         ves::xplorer::scenegraph::SceneManager::instance()->SetRootNode(
             mSceneRenderToTexture->GetGroup() );
@@ -499,45 +499,6 @@ void App::latePreFrame( void )
     _frameNumber += 1;
     mProfileCounter += 1;
     
-    /*static bool changed = false;
-    //if desktop mode and if osg 2.5.4 or later
-    //if reset screen resolution is called or if first time through
-    if( jccl::ConfigManager::instance()->isPendingStale() && !changed )
-    {
-        //Handle setting up the render to texture
-        //displaymanager->getActivedisplays()
-        const std::vector< vrj::DisplayPtr > activeDisplays = vrj::DisplayManager::instance()->getActiveDisplays();
-        for( size_t i = 0; i < activeDisplays.size(); ++i )
-        {
-            //get origin and size of display
-            int originX;
-            int originY;
-            int width; 
-            int height;
-            activeDisplays.at( i )->getOriginAndSize ( originX, originY, width, height);
-            //display->getViewports()
-            std::vector< vrj::Viewport* >::size_type numViewports = activeDisplays.at( i )->getNumViewports();
-            for( size_t j = 0; j < numViewports; ++j )
-            {
-                //vieport if active and surface viewport
-                vrj::Viewport* vp = activeDisplays.at( i )->getViewport( j );
-                if( vp->isActive() && vp->isSurface() )
-                {
-                    float xOrigin;
-                    float yOrigin;
-                    float vpWidth;
-                    float vpHeight;
-                    //get origin and size of the vieport
-                    vp->getOriginAndSize( xOrigin, yOrigin, vpWidth, vpHeight);
-                    //now create texture with viewport info
-                    //create quad
-                    //place quad in propoer location to be inline with dispaly
-                    //and for corners to match position on the display
-                }
-            }
-        }
-        changed = true;
-    }*/
     vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
 }
@@ -582,7 +543,7 @@ void App::contextPreDraw( void )
     if( mRTT )
     {
         static bool changed = false;
-        if( !changed && (_frameNumber > 30) )
+        if( !changed && (_frameNumber > 10) )
         {
             if( jccl::ConfigManager::instance()->isPendingStale() )
             {
@@ -683,17 +644,10 @@ void App::draw()
     sv->setViewMatrix( *( osg_proj_xform_mat.get() ) );
 
     //setup the render to texture camera
-    /*
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
-        osg::Camera* svCamera = sv->getCamera();
-        osg::Camera* rttCamera = mSceneRenderToTexture->GetCamera();
-        
-        rttCamera->setViewport( svCamera->getViewport() );
-        rttCamera->setViewMatrix( svCamera->getViewMatrix() );
-        rttCamera->setProjectionMatrix( svCamera->getProjectionMatrix() );
+        mSceneRenderToTexture->UpdateRTTProjectionAndViewportMatrix( sv.get() );
     }
-    */
 
     //Draw the scene
     // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
