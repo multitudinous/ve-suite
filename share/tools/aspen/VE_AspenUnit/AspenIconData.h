@@ -42,6 +42,9 @@ std::map< std::string, std::pair< unsigned int, unsigned int > > GetAspenIconDat
     mAspenIconData["crystallizer.block.jpg"] = std::pair< unsigned int, unsigned int >(67, 61 );
     mAspenIconData["crystallizer.icon1.jpg"] = std::pair< unsigned int, unsigned int >(84, 74 );
     mAspenIconData["crystallizer.icon2.jpg"] = std::pair< unsigned int, unsigned int >(47, 58 );
+    mAspenIconData["apecs.png"] = std::pair< unsigned int, unsigned int >(61, 61 );
+    mAspenIconData["aspen.png"] = std::pair< unsigned int, unsigned int >(64, 64 );
+    mAspenIconData["dynamics.png"] = std::pair< unsigned int, unsigned int >(64, 64 );
     mAspenIconData["cyclone.block.jpg"] = std::pair< unsigned int, unsigned int >(61, 61 );
     mAspenIconData["cyclone.icon.jpg"] = std::pair< unsigned int, unsigned int >(59, 63 );
     mAspenIconData["dead_time_dead_time_icon1.png"] = std::pair< unsigned int, unsigned int >(90, 90 );
