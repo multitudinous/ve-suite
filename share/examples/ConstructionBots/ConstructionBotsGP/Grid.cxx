@@ -95,15 +95,22 @@ void Grid::CreateGrid(
             gridVertices->push_back( osg::Vec3( x + 1.0, y - 1.0, 0.0 ) );
             gridVertices->push_back( osg::Vec3( x + 1.0, y,       0.0 ) );
 
-            bool occupancy =
-                occupancyMatrix[ std::make_pair( x + 0.5, y - 0.5 ) ].first;
-            if( occupancy )
+            std::pair< int, int > location = std::make_pair(
+                static_cast< int >( x + 0.5 ), static_cast< int >( y - 0.5 ) );
+            std::map< std::pair< int, int >, std::pair< bool, bool > >::
+                const_iterator itr = occupancyMatrix.find( location );
+            if( itr != occupancyMatrix.end() )
             {
-                gridColor->push_back( osg::Vec4( 0.7, 0.7, 0.7, 1.0 ) );
-            }
-            else
-            {
-                gridColor->push_back( osg::Vec4( 0.4, 0.4, 0.4, 1.0 ) );
+                bool occupancy = itr->second.first;
+
+                if( occupancy )
+                {
+                    gridColor->push_back( osg::Vec4( 0.7, 0.7, 0.7, 1.0 ) );
+                }
+                else
+                {
+                    gridColor->push_back( osg::Vec4( 0.4, 0.4, 0.4, 1.0 ) );
+                }
             }
         }
     }
