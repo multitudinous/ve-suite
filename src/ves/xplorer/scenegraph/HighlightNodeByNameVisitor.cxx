@@ -40,11 +40,10 @@ using namespace ves::xplorer::scenegraph;
 using namespace ves::xplorer::scenegraph::util;
 
 ////////////////////////////////////////////////////////////////////////////////
-HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, osg::Group* opaqueParent, bool addGlow )
+HighlightNodeByNameVisitor::HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow )
         :
         NodeVisitor( TRAVERSE_ALL_CHILDREN ),
         mNodeName( nodeName ),
-        mOpaqueParent( opaqueParent ),
         mAddGlow( addGlow )
 {
     node->accept( *this );

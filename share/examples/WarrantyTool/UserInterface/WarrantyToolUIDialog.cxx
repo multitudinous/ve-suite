@@ -190,17 +190,22 @@ void WarrantyToolUIDialog::GetTextInput( wxCommandEvent& event )
     {
         //Clear glow and make opaque
         cameraGeometryOnOffDVP->SetData( "RESET", "RESET" );
+        mPartNumberList.clear();
     }
     else if( event.GetId() == GLOW_CLEAR )
     {
         //Clear all the glow
         cameraGeometryOnOffDVP->SetData( "CLEAR", "CLEAR" );
+        mPartNumberList.clear();
     }
     else if( event.GetId() == GLOW_ADD )
     {
         //If add is pushed then send the name to add
+        mPartNumberList.push_back( 
+            ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
         cameraGeometryOnOffDVP->SetData( "ADD", ConvertUnicode( mPartNumberEntry->GetValue().c_str() ) );
     }
+
     ves::open::xml::CommandPtr command( new ves::open::xml::Command() ); 
     command->AddDataValuePair( cameraGeometryOnOffDVP );
     std::string mCommandName = "CAMERA_GEOMETRY_ON_OFF";

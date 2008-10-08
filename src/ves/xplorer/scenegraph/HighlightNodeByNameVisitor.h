@@ -64,8 +64,7 @@ public:
     ///\param node The node to be traversed
     ///\param nodeName The name of the node to highlight
     ///\param opaqueParent The hack to get around osg transparency issues
-    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, 
-        osg::Group* opaqueParent, bool addGlow = true );
+    HighlightNodeByNameVisitor( osg::Node* node, std::string nodeName, bool addGlow = true );
     
     ///Default Constructor
     HighlightNodeByNameVisitor();

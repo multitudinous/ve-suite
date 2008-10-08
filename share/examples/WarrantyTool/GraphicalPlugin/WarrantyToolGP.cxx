@@ -51,7 +51,8 @@ using namespace warrantytool;
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolGP::WarrantyToolGP()
 :
-PluginBase()
+PluginBase(),
+mAddingParts( false )
 {
     //Needs to match inherited UIPluginBase class name
     mObjectName = "WarrantyToolUI";
@@ -110,25 +111,30 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     if( dvp->GetDataName() == "RESET" )
     {
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( mDCS.get(), "", mDCS.get(), false );
+            highlight2( mDCS.get(), "", false );
         //Make everything opaque
         ves::xplorer::scenegraph::util::OpacityVisitor 
             opVisitor( mDCS.get(), false, true, 1.0f );
+        mAddingParts = false;
     }
     else if( dvp->GetDataName() == "ADD" )
     {
         //Highlight the respective node
         //Make a user specified part glow
-        ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor1( mDCS.get(), false, true, 0.4f );
+        if( !mAddingParts )
+        {
+            ves::xplorer::scenegraph::util::OpacityVisitor 
+                opVisitor1( mDCS.get(), false, true, 0.3f );
+            mAddingParts = true;
+        }
         //Highlight part
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight( mDCS.get(), dvp->GetDataString(), mDCS.get() );
+            highlight( mDCS.get(), dvp->GetDataString() );
     }
     else if( dvp->GetDataName() == "CLEAR" )
     {
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
-            highlight2( mDCS.get(), "", mDCS.get(), false );
+            highlight2( mDCS.get(), "", false );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////

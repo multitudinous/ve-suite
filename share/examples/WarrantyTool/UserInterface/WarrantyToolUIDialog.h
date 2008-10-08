@@ -94,6 +94,7 @@ private:
     
     wxTextCtrl* mPartNumberEntry;
     
+    std::vector< std::string > mPartNumberList;
     DECLARE_EVENT_TABLE()
 };
 

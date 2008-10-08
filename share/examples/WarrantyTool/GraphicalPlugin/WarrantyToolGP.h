@@ -63,6 +63,7 @@ protected:
 
 private:
     ves::xplorer::scenegraph::CADEntity* cadEntity;
+    bool mAddingParts;
 };
 
 CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( WarrantyToolGP )
