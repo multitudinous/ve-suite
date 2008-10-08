@@ -114,7 +114,7 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
             highlight2( mDCS.get(), "", false );
         //Make everything opaque
         ves::xplorer::scenegraph::util::OpacityVisitor 
-            opVisitor( mDCS.get(), false, true, 1.0f );
+            opVisitor( mDCS.get(), false, false, 1.0f );
         mAddingParts = false;
     }
     else if( dvp->GetDataName() == "ADD" )
@@ -133,6 +133,9 @@ void WarrantyToolGP::SetCurrentCommand( ves::open::xml::CommandPtr command )
     }
     else if( dvp->GetDataName() == "CLEAR" )
     {
+        ves::xplorer::scenegraph::util::OpacityVisitor 
+            opVisitor1( mDCS.get(), false, true, 0.3f );
+
         ves::xplorer::scenegraph::HighlightNodeByNameVisitor 
             highlight2( mDCS.get(), "", false );
     }

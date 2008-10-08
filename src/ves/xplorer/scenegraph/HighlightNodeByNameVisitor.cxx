@@ -58,22 +58,20 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
 {
     std::string name = node.getName();
     bool foundNode = false;
-    //std::cout << name.compare( 0, mNodeName.size(), mNodeName ) << std::endl;
+
     if( mAddGlow )
     {
         if( !name.compare( 0, mNodeName.size(), mNodeName ) )
         {
-            std::cout << " changing parts " << name << " " << mNodeName.size() << " " << mNodeName << std::endl;
+            std::cout << " changing parts " << name << " " 
+                << mNodeName.size() << " " << mNodeName << std::endl;
             foundNode = true;
             osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
-            //geode_stateset->setRenderBinDetails( 0, "RenderBin" );
-            //osg::ref_ptr< osg::StateSet > newState = new osg::StateSet( *(geode_stateset.get()), osg::CopyOp::DEEP_COPY_ALL );
-            //node.setStateSet( newState.get() );
+
             //Now highlight the node
             ves::xplorer::scenegraph::util::OpacityVisitor 
                 opVisitor( &node, false, false, 1.0f );
-            //geode_stateset->setRenderBinDetails( 0, "RenderBin" );
-            //newState->setNestRenderBins( false );
+
             //Add shader code to have code highlighted
             osg::Vec4 glowColor( 1.0, 0.0, 0.0, 1.0 );
             geode_stateset->addUniform( new osg::Uniform( "glowColor", glowColor ) );
