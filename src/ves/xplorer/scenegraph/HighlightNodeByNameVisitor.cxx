@@ -85,7 +85,7 @@ void HighlightNodeByNameVisitor::apply( osg::Node& node )
         if( uniList.size() )
         {
             geode_stateset->removeUniform( "glowColor" );
-            std::cout << uniList.size() << std::endl;
+            //std::cout << uniList.size() << std::endl;
         }
     }
 
