@@ -1,5 +1,5 @@
 /* XPM */
-static char * dynamics_xpm[] = {
+static char * dynamics[] = {
 "64 64 193 2",
 "  	c None",
 ". 	c #FFFFFF",

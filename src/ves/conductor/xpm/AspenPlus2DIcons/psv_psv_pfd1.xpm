@@ -1,5 +1,5 @@
 /* XPM */
-static char *psv_psv_pfd_[] = {
+static char *psv_psv_pfd1[] = {
 /* columns rows colors chars-per-pixel */
 "98 99 23 1",
 "  c #282824",
