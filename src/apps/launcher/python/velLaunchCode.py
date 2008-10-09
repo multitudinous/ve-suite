@@ -104,10 +104,10 @@ class Launch:
             self.inputSource = None
             self.outputDestination = None
         ##Set debug suffix.
-        if self.settings["RunDebugPrograms"]:
-            self.debugSuffix = "_d"
-        else:
-            self.debugSuffix = ""
+        #if self.settings["RunDebugPrograms"]:
+        #    self.debugSuffix = "_d"
+        #else:
+        self.debugSuffix = ""
         ##Set Windows suffix.
         ##our installs do not support debug and release so there is not need for this
 	#self.windowsSuffix = self.debugSuffix + ".exe"
@@ -271,12 +271,12 @@ class Launch:
         cluster -- List of slaves in the cluster.
         clusterMaster -- The master of the cluster."""
         ##Kill any screen savers.
-        try:
-            subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
-                              "s", "reset", "s", "off"])
-        except OSError:
-            print "OS can not find \"xset\" command on your environment."
-            #sys.exit(2)
+        #try:
+        #    subprocess.Popen(["xset", "-display", ":0.0", "-dpms",
+        #                      "s", "reset", "s", "off"])
+        #except OSError:
+        #    print "OS can not find \"xset\" command on your environment."
+        #    sys.exit(2)
         
         ##Name Server section
         if self.settings["NameServer"]:
@@ -447,6 +447,12 @@ class Launch:
         elif windows:
             exe += self.windowsSuffix
         ##Construct the call
+        #support for vrj 3.0
+        #if computerType.lower() == "master":
+        #    s = [exe, "--vrjmaster %s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg() ]
+        #elif computerType.lower() == "slave":
+        #    s = [exe, "--vrjslave -ORBInitRef", self.ServiceArg() ]
+
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
             s += ["-VESCluster"]
@@ -512,8 +518,8 @@ class Launch:
             self.clusterScript += "%s -C $1 << EOF\n" % ssh_cmd
             self.clusterScript += "/bin/csh\n"
             ##Turn off comp's screen saver
-            self.clusterScript += "xset -display :0.0" + \
-                                  " -dpms s reset s off\n"
+            #self.clusterScript += "xset -display :0.0" + \
+            #                      " -dpms s reset s off\n"
             if self.settings["EnableVSync"]:
                 self.clusterScript += 'setenv __GL_SYNC_TO_VBLANK "1"\n'
             self.WriteToClusterScript("PYTHONPATH")
