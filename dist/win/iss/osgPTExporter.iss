@@ -6,8 +6,8 @@
 #define MyAppVerName "osgPTExporter"
 #define MyAppPublisher "Virtural Engineering Research Group"
 #define MyAppURL "www.vesuite.org"
-#define VEVERSION "0.9.2"
-#define SVNVERSION "11477"
+#define VEVERSION "1.0.0"
+#define SVNVERSION "11607"
 #define VEHOME "D:\devEnv\VES"
 #define OSGHOME "D:\devEnv\VES-Deps_1.1\prebuiltInstalls\OSG_2.6.0_Pre-Compile_vc8.0_SP1"
 #define OSGPTEXPORTERHOME "D:\devEnv\VES-Deps_1.1\source\skewmatrix\osgPT\trunk\OSGExport"
@@ -77,6 +77,7 @@ Source: {#OSGHOME}\bin\osgPlugins-2.6.0\osgdb_rgb.dll; DestDir: {app}; Component
 Source: {#OSGHOME}\bin\osgPlugins-2.6.0\osgdb_tiff.dll; DestDir: {app}; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGPTEXPORTERHOME}\exp_isu_osg.dll; DestDir: {app}\vcplugin; Components: ; Flags: overwritereadonly ignoreversion
 Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.RTI; DestDir: {app}\vcplugin; Components: ; Flags: overwritereadonly ignoreversion
+Source: {#OSGPTEXPORTERHOME}\EXP_ISU_OSG.HLP; DestDir: {app}\vcplugin; Components: ; Flags: overwritereadonly ignoreversion
 
 [Icons]
 ;Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\VE_icon.ico
