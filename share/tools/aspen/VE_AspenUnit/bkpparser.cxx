@@ -420,6 +420,15 @@ void BKPParser::ParseFile( const char * bkpFile )
             iconTokenizer >> tempIcon;
             tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
             std::transform(tempIcon.begin(), tempIcon.end(), tempIcon.begin(), std::tolower);
+
+            //replace - with _
+            size_t found = tempIcon.find("-");
+            while( found != std::string::npos )
+            {
+                tempIcon.replace(found, 1, "_");
+                found = tempIcon.find("-");
+            }
+
             BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
             BlockInfoList[sheetIter->first][tempBlockId].scale = scale;
 
@@ -1305,7 +1314,7 @@ std::string BKPParser::CreateNetwork( void )
         tempModel->SetVendorName( "ASPENUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
-            +"/"+BlockInfoList["_main_sheet"][blockIter->first].type+"."
+            +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
             +BlockInfoList["_main_sheet"][blockIter->first].icon);
         tempModel->
             SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].
@@ -1448,7 +1457,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->SetVendorName( "ASPENUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
-            "/" + BlockInfoList[networkName][blockIter->first].type+"." +
+            "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
             BlockInfoList[networkName][blockIter->first].icon );
         tempModel->
             SetIconRotation(

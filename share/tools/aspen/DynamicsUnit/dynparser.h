@@ -58,13 +58,15 @@ private:
 public:
 	DynParser();
 	~DynParser();
-	void ParseFile(const char *);
+	void ParseFile( const char * file);
     std::string CreateNetwork( void );	
 	void SetWorkingDir( std::string dir );
-    void OpenFile(const char * file);
+    void OpenFile( const char * file );
     void CloseFile( );
     void SaveFile( );
-    void SaveAs(const char * filename);
+    void SaveAs( const char * filename );
+    void SetVisibility( bool show );
+    void ReinitDynamics();
     AspenPlusInterface::AspenPlusInterface * dyndoc;
 };
 

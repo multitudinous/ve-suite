@@ -100,6 +100,18 @@ void DynParser::SaveAs(const char * filename)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+void DynParser::SetVisibility(bool show)
+{
+    dyndoc->SetVisibility(show);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::ReinitDynamics()
+{
+	dyndoc->ResetSimulation();
+}
+
+///////////////////////////////////////////////////////////////////////////////
 void DynParser::ParseFile(const char * dynFile)
 {	
 	std::ifstream inFile( dynFile );
@@ -372,6 +384,15 @@ void DynParser::ParseFile(const char * dynFile)
             iconTokenizer >> tempIcon;
             tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
             std::transform(tempIcon.begin(), tempIcon.end(), tempIcon.begin(), std::tolower);
+
+            //replace - with _
+            size_t found = tempIcon.find("-");
+            while( found != std::string::npos )
+            {
+                tempIcon.replace(found, 1, "_");
+                found = tempIcon.find("-");
+            }
+
             BlockInfoList[sheetIter->first][tempBlockId].icon = tempIcon;
             BlockInfoList[sheetIter->first][tempBlockId].scale = scale;
 
@@ -1075,7 +1096,7 @@ std::string DynParser::CreateNetwork( void )
         tempModel->SetVendorName( "DYNAMICSUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
-            +"/"+BlockInfoList["_main_sheet"][blockIter->first].type+"."
+            +"_"+BlockInfoList["_main_sheet"][blockIter->first].type+"_"
             +BlockInfoList["_main_sheet"][blockIter->first].icon);
         tempModel->
             SetIconRotation(BlockInfoList["_main_sheet"][blockIter->first].
@@ -1228,7 +1249,7 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         tempModel->SetVendorName( "DYNAMICSUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
-            "/" + BlockInfoList[networkName][blockIter->first].type+"." +
+            "_" + BlockInfoList[networkName][blockIter->first].type+"_" +
             BlockInfoList[networkName][blockIter->first].icon );
         tempModel->
             SetIconRotation(
@@ -1315,187 +1336,43 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*void DynParser::CreateNetworkInformation( std::string networkData )
-{
-    // strip the new line characters
-    StripCharacters( networkData, "\n" );
-    // strip the <cr>
-    StripCharacters( networkData, "\r" );
-
-    //Obtain network chunk
-    size_t networkBegin = networkData.find( std::string( "? SETUP MAIN ?" ) );
-    size_t networkEnd = networkData.find( std::string( "GRAPHICS_BACKUP" ) );
-    std::string network;
-    network.append( networkData, networkBegin, (networkEnd - networkBegin) );
-
-    size_t tagBegin = 0;
-    size_t tagEnd = 0;
-
-    // create the maps and network connectivity
-    std::string blockName;
-    std::string hierName = "_main_sheet";
-    std::string discard;
-    //find first entry either ? or / or ;
-    do
-    {
-        //grab the first of all 3 types of indicators
-        size_t semi = network.find("\;", tagEnd);
-        size_t slash = network.find("\\", tagEnd);
-        size_t question = network.find("\?", tagEnd);
-
-        //check which one is first and go from there
-        if (semi < slash && semi < question)
-        {
-            tagBegin = semi;
-            tagEnd = network.find("\;", tagBegin + 1) + 1;
-        }
-        else if (slash < semi && slash < question)
-        {
-            tagBegin = slash;
-            tagEnd = network.find("\\", tagBegin + 1) + 1;
-        }
-        else if (question < slash && question < semi)
-        {
-            tagBegin = question;
-            tagEnd = network.find("\?", tagBegin + 1) + 1;
-        }
-
-        std::string blockData;
-        if ( tagBegin != std::string::npos && tagEnd != std::string::npos )
-        {
-            blockData.append( network, tagBegin, (tagEnd - tagBegin) );
-            tagBegin = tagEnd + 1;
-            if(blockData.find(std::string("BLOCK HIERARCHY")) !=
-                std::string::npos )
-            {
-                StripCharacters( blockData, "?" );
-                StripCharacters( blockData, "\"" );
-                std::stringstream networkToks(blockData);
-                while(networkToks >> hierName);
-            }
-            else if(blockData.find(std::string("BLOCK BLKID")) !=
-                std::string::npos )
-            {
-                std::stringstream networkToks(blockData);
-                std::stringstream tempTokens(networkToks.str());
-                //networkToks.str().clear();
-                int toksCounter = 0;
-                while (tempTokens >> discard)
-                toksCounter++;
-
-                std::vector< std::string >  vectorTokens;
-                for ( size_t i = 0; i < toksCounter; ++i )
-                {
-                    std::string token;
-                    networkToks >> token;
-                    vectorTokens.push_back( token );
-                }
-
-                // Now parse the vector of tokens...
-                for ( size_t i = 0; i < vectorTokens.size(); ++i )
-                {
-                    // This is the block names
-                    if ( ( vectorTokens.at( i ) == std::string( "=" ) ) &&
-                        ( vectorTokens.at( i - 1 ) == std::string( "BLKID" ) ))
-                    {
-                        blockName = vectorTokens.at( ++i );
-                        StripCharacters( blockName, "\"" );
-                        models[hierName][blockName] = redundantID++;
-                    }
-                    // this are the input links/streams that connect to 
-                    //this particular block
-                    else if ( (vectorTokens.at( i ) == std::string ( "=" )) &&
-                        (vectorTokens.at( i - 1 ) == std::string( "IN" )) )
-                    {
-                        std::string tempStrem = vectorTokens.at( i+=2 );
-                        StripCharacters( tempStrem, "\"" );
-
-                        inLinkToModel[hierName][ tempStrem ] = blockName;
-                        ++i;
-
-                        while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
-                        {
-                            tempStrem = vectorTokens.at( ++i );
-                            StripCharacters( tempStrem, "\"" );
-
-                            inLinkToModel[hierName][ tempStrem ] = blockName;
-                            ++i;
-                        }
-                    }
-                    // this are the output links/streams that connect to
-                    //this particular block
-                    else if ( (vectorTokens.at( i ) == std::string ( "=" )) &&
-                        (vectorTokens.at( i - 1 ) == std::string( "OUT" )) )
-                    {
-                        std::string tempStrem = vectorTokens.at( i+=2 );
-                        StripCharacters( tempStrem, "\"" );
-
-                        outLinkToModel[hierName][ tempStrem ] = blockName;					   
-                        ++i;
-
-                        while ( vectorTokens.at( i+1 ) != std::string( ")" ) )
-                        {
-                            tempStrem = vectorTokens.at( ++i );
-                            StripCharacters( tempStrem, "\"" );
-                            outLinkToModel[hierName][ tempStrem ] = blockName;
-                            ++i;
-                        }             
-                    }
-                }
-            }
-            else if(blockData.find(std::string("CONNECT BLKID")) !=
-                std::string::npos )
-            {
-                StripCharacters( blockData, "\\" );
-                std::stringstream networkToks(blockData);
-                std::string token;
-
-                //discard "CONNECT" "BLKID" "=" & "name"
-                for( size_t i = 0; i < 4; i++)
-                {
-                    networkToks >> token;
-                }
-
-                //populate vector with remaining tokens
-                std::vector< std::string >  vectorTokens;
-                while(networkToks >> token)
-                vectorTokens.push_back( token );
-
-                for ( size_t i = 0; i < vectorTokens.size(); ++i )
-                {
-                    // this are the input links/streams that connect to
-                    //this particular block
-                    if ( ( vectorTokens.at( i ) == std::string ( "=" ) ) &&
-                        ( vectorTokens.at( i - 1 ) == std::string( "IN" ) ) )
-                    {
-                        if(vectorTokens.at( i+2 ).find("\"") == std::string::npos)
-                        {
-                            inLinkToModel[hierName][vectorTokens.at( i+=2 )] =
-                                blockName;
-                            ++i;
-                        }
-                    }
-                    // this are the output links/streams that connect to
-                    //this particular block
-                    else if ( ( vectorTokens.at( i ) == std::string ( "=" ) )
-                        && (vectorTokens.at( i - 1 ) == std::string( "OUT" )) )
-                    {
-                        if(vectorTokens.at( i+2 ).find("\"") ==
-                            std::string::npos )
-                        {
-                            outLinkToModel[hierName][vectorTokens.at( i+=2 )]
-                            = blockName;
-                            ++i;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    while( tagBegin < network.size() - 1 );
-}*/
-///////////////////////////////////////////////////////////////////////////////
 void DynParser::SetWorkingDir( std::string dir )
 {
     workingDir = dir;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+//BLOCKS
+/*std::string DynParser::GetInputModuleParams(std::string modname)
+{
+    //CASI::CASIObj cur_block =
+    //    aspendoc->getBlockByName( CString( modname.c_str( ) ) );
+    
+    ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
+    std::vector<std::string> paramList;
+    //input variables;
+    params->SetCommandName((modname+"InputParams").c_str());
+
+    int numOfVars = cur_block.getNumberOfInputVars();
+    for(int i = 0; i < numOfVars; i++)
+    {
+        paramList.push_back( (char*)LPCTSTR(cur_block.getInputVarName(i)) );
+    }
+
+    ves::open::xml::DataValuePairPtr
+        inpParams( new ves::open::xml::DataValuePair() );
+    inpParams->SetData("params",paramList);
+    params->AddDataValuePair( inpParams );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
+        nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, 
+    std::string >( params, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status="returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    return status;
+}
+*/
