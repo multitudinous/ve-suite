@@ -102,12 +102,17 @@ var
 InstallDir : string;
 begin
   Result := 'MyDefaultInstallDir';
-  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans','cwd', InstallDir) then
-  begin
+  //Check for polytrans first
+  if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\PolyTrans','cwd', InstallDir) then begin
     // Successfully read the value.
     Result := InstallDir;
+  end else begin
+    // Check for nurgaf now
+    if RegQueryStringValue(HKEY_LOCAL_MACHINE, 'SOFTWARE\Okino Computer Graphics, Inc.\NuGraf','cwd', InstallDir) then begin
+      // Successfully read the value.
+      Result := InstallDir;
+    end;
   end;
-
 end;
 [UninstallDelete]
 Name: {app}\vcplugin\exp_isu_osg.ini; Type: files; Components: 
