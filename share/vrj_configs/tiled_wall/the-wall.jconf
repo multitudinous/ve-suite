@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/tsveg_dev/VE_Suite/the-wall.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <cluster_manager name="ClusterManagerConfiguration0" version="3">
+         <plugin>ApplicationDataManager</plugin>
+         <plugin>RIMPlugin</plugin>
+         <cluster_node>ClusterNode0</cluster_node>
+         <cluster_node>ClusterNode0</cluster_node>
+         <use_software_swap_lock>false</use_software_swap_lock>
+      </cluster_manager>
+      <cluster_node name="ClusterNode0" version="1">
+         <display_system>
+            <display_system name="display_system 0" version="3">
+               <number_of_pipes>0</number_of_pipes>
+               <use_swap_group>false</use_swap_group>
+            </display_system>
+         </display_system>
+         <listen_port>0</listen_port>
+         <host_name>the-wall.ameslab.iastate.edu</host_name>
+      </cluster_node>
+   </elements>
+</configuration>
+
