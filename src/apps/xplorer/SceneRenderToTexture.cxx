@@ -66,6 +66,7 @@
 #include <osgPPU/ShaderAttribute.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -488,8 +489,13 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     maxHeight = 0;
     for( size_t i = 0; i < numViewports; ++i )
     {
+#if __VJ_version >= 2003000
+        vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
+            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+#else
         vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
             currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+#endif
         viewport->getOriginAndSize( xOrigin, yOrigin, widthRatio, heightRatio );
         if( maxWidth < widthRatio )
         {
