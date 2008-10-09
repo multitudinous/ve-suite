@@ -156,7 +156,7 @@ void HierarchyTree::PopulateTree( const std::string& id )
             }
 
             //Add the icon to the image list
-            fullPath = "2dicons/" + iter->second->GetIconFilename() + ".jpg";
+            fullPath = iter->second->GetIconFilename() + ".xpm";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -209,7 +209,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             }
 
             //Add the icon to the image list
-            fullPath = "2dicons/" + models[i]->GetIconFilename() + ".jpg";
+            fullPath = models[i]->GetIconFilename() + ".xpm";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -419,7 +419,7 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
           return;
       }
 
-      std::string fullPath = "2dicons/" + path + ".jpg";
+      std::string fullPath = path + ".xpm";
       std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
       std::map< std::string, char** >::iterator aspenIconIter;
       aspenIconIter = aspenPlusIconMap.find( fullPath );

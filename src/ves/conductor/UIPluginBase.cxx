@@ -1136,7 +1136,7 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
 
     wxImage image;
     //Try to find the default aspen icons
-    std::string fullPath = "2dicons/" + path + ".jpg";
+    std::string fullPath = path + ".xpm";
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
     aspenIconIter = aspenPlusIconMap.find( fullPath );
