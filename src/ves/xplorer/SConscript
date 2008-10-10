@@ -91,12 +91,12 @@ bulletVersion = bullet_options.getVersion()
 lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
 
-lib_env.Append(CPPPATH = [pj(RootDir,'external','osgOQ','include')])
+#lib_env.Append(CPPPATH = [pj(RootDir,'external','osgOQ','include')])
 lib_env.Append(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
 
-lib_env.Append(LIBS = ['osgOQ'])
+#lib_env.Append(LIBS = ['osgOQ'])
 lib_env.Append(LIBS = ['osgEphemeris'])
-lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
+#lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 if GetPlatform() == 'win32':
