@@ -534,14 +534,16 @@ void BKPParser::ParseFile( const char * bkpFile )
 			
             float width =
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
-                "."+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".jpg"].first;
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
+                ".xpm"].first;
             float height = 
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
-                "."+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".jpg"].second;
-            tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"."+
-                BlockInfoList[sheetIter->first][tempBlockId].icon+".jpg"
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
+                ".xpm"].second;
+            tester4<<BlockInfoList[sheetIter->first][tempBlockId].type+"_"+
+                BlockInfoList[sheetIter->first][tempBlockId].icon+".xpm"
                 <<": "<<width<<" "<<height<<std::endl;
             iconLocations[sheetIter->first][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -

@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "dynparser.h"
 #include "AspenPlusLUT.h"
+#include "AspenDynamicsLUT.h"
 #include "AspenIconData.h"
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/DataValuePair.h>
@@ -120,16 +121,18 @@ void DynParser::ParseFile(const char * dynFile)
 
     std::string temp;
 
-    //Open file streams	
-
+    //Open icon headers create maps	
     std::map< std::pair< std::string, std::string >,
-        std::vector< double > > lutMap;
+        std::vector< double > > plusLutMap;
+    std::map< std::pair< std::string, std::string >,
+        std::vector< double > > dynLutMap;
     std::map< std::pair< std::string, std::string >,
         std::vector< double > >::iterator lutMapIter;
     std::vector< double > lutVector;
     lutVector.resize( 6 );
+    plusLutMap = GetAspenPlusLUT();
+    dynLutMap = GetAspenDynamicsLUT();
 
-    lutMap = GetAspenPlusLUT();
     std::string discard;
 
     std::map< std::string, std::pair< unsigned int, unsigned int > > imageData;
@@ -405,8 +408,10 @@ void DynParser::ParseFile(const char * dynFile)
             std::pair< std::string, std::string >
                 blockKey( BlockInfoList[sheetIter->first][tempBlockId].type,
                 BlockInfoList[sheetIter->first][tempBlockId].icon );
-            lutMapIter = lutMap.find( blockKey );
-            if( lutMapIter != lutMap.end() )
+            
+            lutMapIter = dynLutMap.find( blockKey );
+            //check dynamics header
+            if( lutMapIter != dynLutMap.end() )
             {
                 lutVector = lutMapIter->second;
                 left = lutVector[ 0 ];
@@ -416,10 +421,24 @@ void DynParser::ParseFile(const char * dynFile)
             }
             else
             {
-                left = 0;
-                right = 0;
-                top = 0;
-                bottom = 0;
+                lutMapIter = plusLutMap.find( blockKey );
+                //check aspen plus header
+                if( lutMapIter != plusLutMap.end() )
+                {
+                    lutVector = lutMapIter->second;
+                    left = lutVector[ 0 ];
+                    right = lutVector[ 1 ];
+                    top = lutVector[ 2 ];
+                    bottom = lutVector[ 3 ];
+                }
+                //if not found
+                else
+                {
+                    left = 0;
+                    right = 0;
+                    top = 0;
+                    bottom = 0;
+                }
             }
 
             float iconWidth = right - left;
@@ -498,12 +517,14 @@ void DynParser::ParseFile(const char * dynFile)
 			
             float width =
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
-                "."+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".jpg"].first;
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
+                ".xpm"].first;
             float height = 
                 imageData[BlockInfoList[sheetIter->first][tempBlockId].type+
-                "."+BlockInfoList[sheetIter->first][tempBlockId].icon+
-                ".jpg"].second;
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].type+
+                "_"+BlockInfoList[sheetIter->first][tempBlockId].icon+
+                ".xpm"].second;
             iconLocations[sheetIter->first][ tempBlockId ] =
                 std::pair< float, float >( scaledXCoords -
                 ( width * widthOffset * 
