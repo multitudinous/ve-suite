@@ -2,12 +2,12 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="/tsveg_dev/VE_Suite/the-wall.jconf" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <cluster_manager name="ClusterManagerConfig" version="2">
+      <cluster_manager name="ClusterManagerConfig" version="3">
          <plugin>ApplicationDataManager</plugin>
          <plugin>RIMPlugin</plugin>
          <cluster_node>the-wall</cluster_node>
          <cluster_node>the-wall2</cluster_node>
-         <cluster_node>the-wall3</cluster_node>
+         <use_software_swap_lock>false</use_software_swap_lock>
       </cluster_manager>
    </elements>
 </configuration>
