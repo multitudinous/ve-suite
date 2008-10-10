@@ -449,9 +449,12 @@ class Launch:
         ##Construct the call
         #support for vrj 3.0
         #if computerType.lower() == "master":
-        #    s = [exe, "--vrjmaster %s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg() ]
+        #    s = [exe, "--vrjmaster", "%s" %self.settings["JconfPath"], "-ORBInitRef", self.ServiceArg() ]
         #elif computerType.lower() == "slave":
-        #    s = [exe, "--vrjslave -ORBInitRef", self.ServiceArg() ]
+        #    s = [exe, "--vrjslave", "-ORBInitRef", self.ServiceArg() ]
+        #else:
+            # running in desktop mode or have an error in cluster mode
+        #    s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
 
         s = [exe, "-ORBInitRef", self.ServiceArg(), "%s" %self.settings["JconfPath"]]
         if self.settings["XplorerType"] == "OSG-VEPC": ##OSG VEPC selection
@@ -568,6 +571,7 @@ class Launch:
 ##            self.clusterScript += "%s\n" %(command)
         else:
             self.clusterScript += "ERROR: OS not supported."
+        #print self.clusterScript
 
 
     def ExecuteClusterScriptUnix(self, nodeName,
@@ -575,9 +579,11 @@ class Launch:
         """Executes the ClusterScript for nodeName on Unix."""
         if unix:
             if gethostname().split('.')[0] == nodeName.split('.')[0]:
-                s = self.XplorerCall()
+                s = self.XplorerCall( nodeStatus )
+                print "ExecuteClusterScriptUnix"
+                print s
                 try:
-                    subprocess.Popen( s ) #self.XplorerCall())
+                    subprocess.Popen( s )
                 except OSError:
                     exe = "ves_xplorer"
                     print "Xplorer Call Error, \"%s\" not found on your environment."
@@ -830,7 +836,10 @@ class Launch:
             ##Append OSG_FILE_PATH
             self.EnvAppend("OSG_FILE_PATH", [os.path.join(VELAUNCHER_DIR, "..", "share", "vesuite")], ':')
             ##Set name of library path
-            libraryPath = "LD_LIBRARY_PATH"
+            if darwinPlatform:
+                libraryPath = "DYLD_LIBRARY_PATH"
+            else:
+                libraryPath = "LD_LIBRARY_PATH"
             ##Update the library path
             libList= [os.path.join(VELAUNCHER_DIR),
                       os.path.join(VELAUNCHER_DIR, '..', "lib")]
@@ -843,7 +852,7 @@ class Launch:
                        os.path.join(VELAUNCHER_DIR, '..', "lib")]
             # for mac add the app bundle directories to the path
             if darwinPlatform:
-                pathList= [exeConductorPrefix, exeXplorerPrefix]
+                pathList += [exeConductorPrefix, exeXplorerPrefix]
             ##print "sysPath[0]: %s" % os.path.realpath(os.path.abspath(sys.executable))
             ##Outdated paths.
             ##pathList += [os.path.join(VELAUNCHER_DIR, "bin"),
