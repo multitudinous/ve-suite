@@ -33,16 +33,16 @@ env.Append(LIBPATH = [  pj('#', buildDir, 'src','ves','xplorer','scenegraph'),
 if env['VPRProfile'] == 'no':
    env.Append( CPPDEFINES = ['DISABLE_VPR_PROFILE'] )
 env.Append( CPPDEFINES = [ GetSVNVersion( srcDir ) ] )
-env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
-env.Append(CPPPATH = [pj('#','external','osgPPU-2.x','include')])
+#env.Append(CPPPATH = [pj('#','external','osgOQ','include')])
+env.Append(CPPPATH = [pj('#','external','osgPPU','include')])
 env.Append(CPPPATH = [pj('#','external','osgEphemeris','include')])
 if GetPlatform() == 'darwin':
     env.Append( CPPDEFINES  = ['_DARWIN'] )
-env.Append(LIBS = ['osgOQ'])
+#env.Append(LIBS = ['osgOQ'])
 env.Append(LIBS = ['osgPPU'])
 env.Append(LIBS = ['osgEphemeris'])
-env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
-env.Append(LIBPATH = [pj('#',buildDir,'external','osgPPU-2.x')])
+#env.Append(LIBPATH = [pj('#',buildDir,'external','osgOQ')])
+env.Append(LIBPATH = [pj('#',buildDir,'external','osgPPU')])
 env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
 vtk_options.apply( env )
