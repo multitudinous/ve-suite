@@ -354,6 +354,11 @@ void BlockEntity::UpdateSideStates()
                 }
             }
         }
+        else
+        {
+            itrSS->second = false;
+            mBlockGeometry->SetColor( itr->first, mSiteColor );
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -437,12 +442,9 @@ void BlockEntity::ConnectionDetection()
                                 oppositeSide += 2;
                             }
 
-                            mBlockGeometry->SetColor( i, mSiteColor );
+                            mConnectedBlocks[ i ] = blockEntity;
                             blockEntity->SetBlockConnection(
                                 oppositeSide, this );
-                            blockEntity->GetBlockGeometry()->SetColor(
-                                oppositeSide, mSiteColor );
-                            mConnectedBlocks[ i ] = blockEntity;
                         }
                     }
                 }

@@ -95,8 +95,9 @@ void Grid::CreateGrid(
             gridVertices->push_back( osg::Vec3( x + 1.0, y - 1.0, 0.0 ) );
             gridVertices->push_back( osg::Vec3( x + 1.0, y,       0.0 ) );
 
-            std::pair< int, int > location = std::make_pair(
-                static_cast< int >( x + 0.5 ), static_cast< int >( y - 0.5 ) );
+            std::pair< int, int > location =
+                std::make_pair( static_cast< int >( ceil( x ) ),
+                                static_cast< int >( floor( y ) ) );
             std::map< std::pair< int, int >, std::pair< bool, bool > >::
                 const_iterator itr = occupancyMatrix.find( location );
             if( itr != occupancyMatrix.end() )

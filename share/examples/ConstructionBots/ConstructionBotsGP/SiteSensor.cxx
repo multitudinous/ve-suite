@@ -242,6 +242,10 @@ void SiteSensor::CollectInformation()
         {
             mCloseToSite = true;
         }
+        else
+        {
+            mAgentEntity->mBuildMode = false;
+        }
 
         double forceAttractionConstant =
             1.0 + ( 8.0 / pow( siteVector.length(), 2 ) );

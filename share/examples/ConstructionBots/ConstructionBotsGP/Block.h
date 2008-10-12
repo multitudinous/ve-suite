@@ -87,10 +87,10 @@ private:
     osg::Vec4 mBlockColor;
 
     ///The drawables of this block geode
-    /*    
-          1
-        2 B 0
-          3
+    /*  Lines   Sides
+          1       5
+        2 B 0   6 B 4
+          3       7
     */
     std::map< unsigned int, osg::ref_ptr< osg::Geometry > > mDrawables;
 
