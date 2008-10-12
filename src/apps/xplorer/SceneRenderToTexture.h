@@ -125,6 +125,8 @@ public:
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
     ///Update the projection and viewport information for the rtt's cameras
     void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv );
+    ///Run the UpdateVisitor on all of the osgPPU units and processors
+    void UpdateProcessorAndUnits();
 
 protected:
 

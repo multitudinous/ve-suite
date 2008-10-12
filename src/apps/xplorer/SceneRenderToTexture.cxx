@@ -49,6 +49,7 @@
 #include <osgDB/ReadFile>
 
 #include <osgUtil/SceneView>
+#include <osgUtil/UpdateVisitor>
 
 #include <osgPPU/Processor.h>
 #include <osgPPU/Unit.h>
@@ -497,6 +498,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
             currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
 #endif
         viewport->getOriginAndSize( xOrigin, yOrigin, widthRatio, heightRatio );
+
         if( maxWidth < widthRatio )
         {
             maxWidth = widthRatio;
@@ -531,6 +533,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
 
     //(*mProcessor)->setCamera( sceneViewCamera );
     (*mProcessor)->setName( "Processor" );
+    (*mProcessor)->useHDR( false );
     (*mProcessor)->dirtyUnitSubgraph();
     
     *mCamerasConfigured = true;
@@ -546,6 +549,17 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneV
     osg::Camera* svCamera = sv->getCamera();    
     (*mFinalMap)->setViewport( svCamera->getViewport() );
     (*mQuadOut)->setViewport( svCamera->getViewport() );
+}
+////////////////////////////////////////////////////////////////////////////////
+void SceneRenderToTexture::UpdateProcessorAndUnits()
+{
+    if( !(*mCamerasConfigured) )
+    {
+        return;
+    }
+
+    osg::ref_ptr< osgUtil::UpdateVisitor > update = new osgUtil::UpdateVisitor();
+    (*mProcessor)->accept( *(update.get()) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 /*void SceneRenderToTexture::LatePreFrameUpdate()

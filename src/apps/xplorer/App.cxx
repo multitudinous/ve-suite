@@ -552,6 +552,7 @@ void App::contextPreDraw( void )
                 changed = true;
             }
         }
+        mSceneRenderToTexture->UpdateProcessorAndUnits();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
