@@ -531,6 +531,7 @@ void ConstructionWorld::ResetSimulation()
 
             mSimulationData
                 << std::setiosflags( std::ios::left )
+                << std::endl
                 << "BlockSensorRange = " << mBlockSensorRange
                 << std::endl;
         }
