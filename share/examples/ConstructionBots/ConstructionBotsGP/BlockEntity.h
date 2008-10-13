@@ -88,7 +88,7 @@ public:
     const bool IsAttached() const;
 
     ///Return if a block can be attached to a side of this block
-    const bool PermissionToAttach( osg::Drawable* drawable ) const;
+    const bool PermissionToAttach( const osg::Drawable* drawable ) const;
 
     ///Reset the block to its initialized state
     void Reset();
@@ -168,7 +168,7 @@ private:
               std::pair< bool, bool > >* mOccupancyMatrix;
 
     ///A map of the side states
-    std::map< const osg::Drawable* const, bool > mSideStates;
+    std::map< const osg::Drawable*, bool > mSideStates;
 
     ///Are blocks attached to sides or not
     ///This map stores the physical connections to this block

@@ -245,7 +245,7 @@ const bool BlockEntity::AttachUpdate( bool isStartBlock )
 ////////////////////////////////////////////////////////////////////////////////
 void BlockEntity::UpdateSideStates()
 {
-    std::map< const osg::Drawable* const, bool >::iterator itrSS;
+    std::map< const osg::Drawable*, bool >::iterator itrSS;
     std::map< unsigned int, bots::BlockEntity* >::const_iterator itr;
     for( itrSS = mSideStates.begin(), itr = mConnectedBlocks.begin();
          itrSS != mSideStates.end(), itr != mConnectedBlocks.end();
@@ -367,9 +367,10 @@ const bool BlockEntity::IsAttached() const
     return mAttached;
 }
 ////////////////////////////////////////////////////////////////////////////////
-const bool BlockEntity::PermissionToAttach( osg::Drawable* drawable ) const
+const bool BlockEntity::PermissionToAttach(
+    const osg::Drawable* drawable ) const
 {
-    std::map< const osg::Drawable* const, bool >::const_iterator itr =
+    std::map< const osg::Drawable*, bool >::const_iterator itr =
         mSideStates.find( drawable );
     if( !drawable || itr == mSideStates.end() )
     {
@@ -442,7 +443,19 @@ void BlockEntity::ConnectionDetection()
                                 oppositeSide += 2;
                             }
 
-                            mConnectedBlocks[ i ] = blockEntity;
+                            std::map< unsigned int, bots::BlockEntity* >::
+                                iterator itr = mConnectedBlocks.find( i );
+                            if( itr != mConnectedBlocks.end() )
+                            {
+                                itr->second = blockEntity;
+                            }
+                            else
+                            {
+                                std::cout
+                                    << "Should never get here:"
+                                    << "ConnectionDetection()"
+                                    << std::endl;
+                            }
                             blockEntity->SetBlockConnection(
                                 oppositeSide, this );
                         }
