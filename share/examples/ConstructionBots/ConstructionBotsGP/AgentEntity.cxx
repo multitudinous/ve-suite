@@ -77,7 +77,7 @@ AgentEntity::AgentEntity(
     mBuildMode( false ),
     mNumBlocksLeft( NULL ),
     mMaxSpeed( 4.0 ),
-    mPerimeterSpeed( 4.0 ),
+    mPerimeterSpeed( 2.0 ),
     mCloseToSiteSpeed( 1.0 ),
     mBlockColor( 1.0, 1.0, 1.0, 1.0 ),
     mSiteColor( 0.2, 0.2, 0.2, 1.0 ),
