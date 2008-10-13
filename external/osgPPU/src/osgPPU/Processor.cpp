@@ -57,6 +57,7 @@ Processor::Processor()
     // set some variables
     mbDirty = true;
     mbDirtyUnitGraph = true;
+    mUseHDR = true;
 
     // first we have to create a render bin which will hold the units
     // of the subgraph.
@@ -117,11 +118,14 @@ void Processor::init()
     mStateSet->setAttribute(new osg::Material(), osg::StateAttribute::ON);
 
     // disable color clamping, because we want to work on real hdr values
-    osg::ClampColor* clamp = new osg::ClampColor();
-    clamp->setClampVertexColor(GL_FALSE);
-    clamp->setClampFragmentColor(GL_FALSE);
-    clamp->setClampReadColor(GL_FALSE);
-    mStateSet->setAttribute(clamp, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+    if( mUseHDR )
+    {
+        osg::ClampColor* clamp = new osg::ClampColor();
+        clamp->setClampVertexColor(GL_FALSE);
+        clamp->setClampFragmentColor(GL_FALSE);
+        clamp->setClampReadColor(GL_FALSE);
+        mStateSet->setAttribute(clamp, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+    }
 
     // not dirty anymore
     mbDirty = false;
