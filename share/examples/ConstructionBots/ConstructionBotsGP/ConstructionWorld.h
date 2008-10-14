@@ -135,14 +135,17 @@ private:
     ///The size of the construction framework grid plane
     unsigned int mGridSize;
 
-    ///The initial length of the block sensor range
-    double mBlockSensorRange;
+    ///The minimum length of the block sensor range
+    double mMinBlockSensorRange;
 
     ///The maximum useful length of the block sensor range for mGridSize
     double mMaxBlockSensorRange;
 
     ///The delta length added to the block sensor range after a simulation set
     double mDeltaBlockSensorRange;
+
+    ///The length of the block sensor range
+    double mBlockSensorRange;
 
     ///A pointer to the plugin DCS
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mPluginDCS;

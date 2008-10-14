@@ -89,9 +89,11 @@ ConstructionWorld::ConstructionWorld(
     mNumAgents( 1 ),
     mMaxNumAgents( 24 ),
     mDeltaAgents( 1 ),
-    mBlockSensorRange( 10.0 ),
+    mMinBlockSensorRange( 10.0 ),
+    // --- This gets calculated later based off the grid size --- //
     mMaxBlockSensorRange( 0.0 ),
     mDeltaBlockSensorRange( 2.0 ),
+    mBlockSensorRange( mMinBlockSensorRange ),
     // --- Ensure that the grid size is odd for centrality purposes --- //
     mGridSize( 51 ),
     mGrid( NULL ),
@@ -537,6 +539,7 @@ void ConstructionWorld::ResetSimulation()
         }
         else
         {
+            mBlockSensorRange = mMinBlockSensorRange;
             if( mNumAgents < mMaxNumAgents )
             {
                 mNumAgents += mDeltaAgents;
