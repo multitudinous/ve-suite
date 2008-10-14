@@ -106,7 +106,7 @@ ConstructionWorld::ConstructionWorld(
                        "AmbientSound", pluginDCS, soundManager ) ),
 #endif
     mPhysicsSimulator( physicsSimulator ),
-    mSimulationData( "Data/simulation.dat", std::ios::out )
+    mSimulationData( "Data/simulation.dat", std::ios::out | std::ios::app )
 {
     //Initialize the construction bot framework
     InitializeFramework();
@@ -169,19 +169,22 @@ void ConstructionWorld::InitializeFramework()
     srand( time( 0 ) );
 
     //Write out initial framework setup
-    mSimulationData
-        << std::setiosflags( std::ios::left )
-        << "GridSize = " << mGridSize
-        << std::endl
-        << std::setiosflags( std::ios::left )
-        << "NumBlocks = " << mNumBlocks
-        << std::endl
-        << std::setiosflags( std::ios::left )
-        << "NumAgents = " << mNumAgents
-        << std::endl
-        << std::setiosflags( std::ios::left )
-        << "BlockSensorRange = " << mBlockSensorRange
-        << std::endl;
+    if( mBlockSensorRange == mMinBlockSensorRange )
+    {
+        mSimulationData
+            << std::setiosflags( std::ios::left )
+            << "GridSize = " << mGridSize
+            << std::endl
+            << std::setiosflags( std::ios::left )
+            << "NumBlocks = " << mNumBlocks
+            << std::endl
+            << std::setiosflags( std::ios::left )
+            << "NumAgents = " << mNumAgents
+            << std::endl
+            << std::setiosflags( std::ios::left )
+            << "BlockSensorRange = " << mBlockSensorRange
+            << std::endl;
+    }
 
 #ifdef VE_SOUND
     try
