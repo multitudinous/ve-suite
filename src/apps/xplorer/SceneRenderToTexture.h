@@ -37,10 +37,11 @@
 // --- VE-Suite Includes --- //
 #include "SceneRenderToTexturePtr.h"
 
+// ---  VR Juggler Includes --- //
+#include <vrj/Draw/OGL/GlContextData.h>
+
 // --- OSG Includes --- //
 #include <osg/ref_ptr>
-
-#include <vrj/Draw/OGL/GlContextData.h>
 
 namespace osg
 {
@@ -123,8 +124,10 @@ public:
     ///\param filename The file name to be used for the screen capture
     void WriteImageFileForWeb(
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
+
     ///Update the projection and viewport information for the rtt's cameras
     void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv );
+
     ///Run the UpdateVisitor on all of the osgPPU units and processors
     void UpdateProcessorAndUnits();
 
@@ -143,29 +146,37 @@ private:
     
     ///The root group that everything gets added to
     osg::ref_ptr< osg::Group > mRootGroup;
+
     ///Set the number of super samples
     int mScaleFactor;
+
     ///Let the object know all cameras are configured
     vrj::GlContextData< bool > mCamerasConfigured;
+
     ///The render to texture camera
     ///A context locked map to hold cameras
     vrj::GlContextData< osg::ref_ptr< osg::Camera > > mCameraMap;
+
     ///The texture attached to the color buffer of the camera
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mColorMap;
+
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mGlowMap;
+
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mGlowStencil;
+
     ///The texture attached to the depth and stencil buffer of the camera
     ///A context locked map to hold textures
     vrj::GlContextData< osg::ref_ptr< osg::Texture2D > > mDepthStencilTexture;
+
     ///A context locked map to hold osgPPU Processors
     vrj::GlContextData< osg::ref_ptr< osgPPU::Processor > > mProcessor;
-    ///A osgPPU 
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mFinalMap;
-    ///A osgPPU 
+
+    ///The final output of the osgPPU pipeline
     vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
+
 };
 } //end xplorer
 } //end ves

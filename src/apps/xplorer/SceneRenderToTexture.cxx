@@ -37,6 +37,10 @@
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/environment/cfdDisplaySettings.h>
 
+// ---  VR Juggler Includes --- //
+#include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlDrawManager.h>
+
 // --- OSG Includes --- //
 #include <osg/Camera>
 #include <osg/Group>
@@ -61,13 +65,11 @@
 #include <osgPPU/UnitOutCapture.h>
 #include <osgPPU/UnitBypass.h>
 #include <osgPPU/UnitTexture.h>
+#include <osgPPU/UnitCameraAttachmentBypass.h>
 #include <osgPPU/UnitDepthbufferBypass.h>
 #include <osgDB/ReaderWriter>
 #include <osgDB/ReadFile>
 #include <osgPPU/ShaderAttribute.h>
-
-#include <vrj/Draw/OGL/GlWindow.h>
-#include <vrj/Draw/OGL/GlDrawManager.h>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -122,13 +124,7 @@ void StencilImage::operator () ( osg::RenderInfo& renderInfo ) const
 ////////////////////////////////////////////////////////////////////////////////
 SceneRenderToTexture::SceneRenderToTexture()
     :
-    //mColorMap( 0 ),
-    //mGlowMap( 0 ),
-    //mGlowStencil( 0 ),
-    //mDepthStencilTexture( 0 ),
-    //mCamera( new osg::Camera() ),
     mRootGroup( new osg::Group() ),
-    //mProcessor( new osgPPU::Processor() ),
     mScaleFactor( 1 )
 {    
     ;
@@ -145,7 +141,8 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     osg::ref_ptr< osg::Texture2D > tempColorMap = (*mColorMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     tempColorMap->setInternalFormat( GL_RGBA8 );
-    tempColorMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
+    tempColorMap->setTextureSize(
+        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     tempColorMap->setSourceFormat( GL_RGBA );
     tempColorMap->setSourceType( GL_UNSIGNED_INT );
     tempColorMap->setFilter(
@@ -161,29 +158,39 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     osg::ref_ptr< osg::Texture2D > tempGlowMap = (*mGlowMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     tempGlowMap->setInternalFormat( GL_RGBA8 );
-    tempGlowMap->setTextureSize( screenDims.first*mScaleFactor, screenDims.second*mScaleFactor );
+    tempGlowMap->setTextureSize(
+        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     tempGlowMap->setSourceFormat( GL_RGBA );
     tempGlowMap->setSourceType( GL_UNSIGNED_INT );
-    tempGlowMap->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    tempGlowMap->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    tempGlowMap->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    tempGlowMap->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
     //We really want REPEAT otherwise the edge gets sampled by the glow shader
     tempGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
     tempGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
 
-    /*mGlowStencil = new osg::Texture2D();
+    /*
+    mGlowStencil = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     mGlowStencil->setInternalFormat( GL_RGBA8 );
-    mGlowStencil->setTextureSize( screenDims.first, screenDims.second );
+    mGlowStencil->setTextureSize(
+        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     mGlowStencil->setSourceFormat( GL_RGBA );
     mGlowStencil->setSourceType( GL_UNSIGNED_INT );
-    mGlowStencil->setFilter( osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
-    mGlowStencil->setFilter( osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
-    mGlowStencil->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
-    mGlowStencil->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );*/
+    mGlowStencil->setFilter(
+        osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    mGlowStencil->setFilter(
+        osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    mGlowStencil->setWrap(
+        osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    mGlowStencil->setWrap(
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
 
-    /*mDepthStencilTexture = new osg::Texture2D();
+    mDepthStencilTexture = new osg::Texture2D();
     mDepthStencilTexture->setInternalFormat( GL_DEPTH24_STENCIL8_EXT );
-    mDepthStencilTexture->setTextureSize( screenDims.first*mScaleFactor, screenDims.second *mScaleFactor);
+    mDepthStencilTexture->setTextureSize(
+        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     mDepthStencilTexture->setSourceFormat( GL_DEPTH_STENCIL_EXT );
     mDepthStencilTexture->setSourceType( GL_UNSIGNED_INT_24_8_EXT );
     mDepthStencilTexture->setFilter(
@@ -193,7 +200,8 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     mDepthStencilTexture->setWrap(
         osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     mDepthStencilTexture->setWrap(
-        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );*/
+        osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
@@ -204,8 +212,10 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
     tempCamera->setClearMask( 
         GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );// | GL_STENCIL_BUFFER_BIT );
     tempCamera->setClearColor( osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) );
-    tempCamera->setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
-    tempCamera->setViewport( 0, 0, screenDims.first*mScaleFactor, screenDims.second*mScaleFactor);
+    tempCamera->setRenderTargetImplementation(
+        osg::Camera::FRAME_BUFFER_OBJECT );
+    tempCamera->setViewport( 0, 0,
+        screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     
     //Attach a texture and use it as the render target
 #if ( ( OSG_VERSION_MAJOR >= 2 ) && ( OSG_VERSION_MINOR >= 6 ) && ( OSG_VERSION_PATCH >= 0 ) )
@@ -295,8 +305,8 @@ void SceneRenderToTexture::InitCamera( std::pair< int, int >& screenDims )
         new osg::Uniform( "glowColor", osg::Vec4( 0.0, 0.0, 0.0, 1.0 ) ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims, 
-    osg::Camera* const sceneViewCamera )
+void SceneRenderToTexture::InitProcessor(
+    std::pair< int, int >& screenDims, osg::Camera* const sceneViewCamera )
 {
     //This is the code for the glow pipeline
     osg::ref_ptr< osgDB::ReaderWriter::Options > vertexOptions =
@@ -304,15 +314,25 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
     osg::ref_ptr< osgDB::ReaderWriter::Options > fragmentOptions =
         new osgDB::ReaderWriter::Options( "fragment" );
 
-    osg::ref_ptr< osgPPU::UnitTexture > color =
-        new osgPPU::UnitTexture( (*mColorMap).get() );
-    osg::ref_ptr< osgPPU::UnitTexture > glow =
-        new osgPPU::UnitTexture( (*mGlowMap).get() );
-    osg::ref_ptr< osgPPU::UnitTexture > glowStencil =
-        new osgPPU::UnitTexture( (*mGlowStencil).get() );
-    (*mProcessor)->addChild( color.get() );
-    (*mProcessor)->addChild( glow.get() );
-    //mProcessor->addChild( glowStencil.get() );
+    //COLOR_BUFFER0 bypass
+    osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > colorBuffer0 =
+        new osgPPU::UnitCameraAttachmentBypass();
+    {
+        colorBuffer0->setName( "ColorBuffer0Bypass" );
+        colorBuffer0->setBufferComponent( osg::Camera::COLOR_BUFFER0 );
+        
+    }
+    (*mProcessor)->addChild( colorBuffer0.get() );
+
+    //COLOR_BUFFER1 bypass
+    osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > colorBuffer1 =
+        new osgPPU::UnitCameraAttachmentBypass();
+    {
+        colorBuffer1->setName( "ColorBuffer1Bypass" );
+        colorBuffer1->setBufferComponent( osg::Camera::COLOR_BUFFER1 );
+        
+    }
+    (*mProcessor)->addChild( colorBuffer1.get() );
 
     //Downsample by 1/2 original size
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
@@ -326,7 +346,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
         glowDownSample->setFactorX( downsample );
         glowDownSample->setFactorY( downsample );
     }
-    glow->addChild( glowDownSample.get() );
+    colorBuffer1->addChild( glowDownSample.get() );
 
     //Perform horizontal 1D gauss convolution
     osg::ref_ptr< osgPPU::UnitInOut > blurX = new osgPPU::UnitInOut();
@@ -425,8 +445,7 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
     blurX->addChild( blurY.get() );
 
     //Perform final color operations and blends
-    (*mFinalMap) = new osgPPU::UnitInOut();
-    osg::ref_ptr< osgPPU::UnitInOut > final = (*mFinalMap).get();
+    osg::ref_ptr< osgPPU::UnitInOut > final = new osgPPU::UnitInOut();
     {
         //Set name and indicies
         final->setName( "Final" );
@@ -456,22 +475,18 @@ void SceneRenderToTexture::InitProcessor( std::pair< int, int >& screenDims,
             "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        //final->setInputToUniform( colorSuperSample.get(), "baseMap", true );
-        final->setInputToUniform( color.get(), "baseMap", true );
-        final->setInputToUniform( glow.get(), "stencilGlowMap", true );
-        //final->setInputToUniform( glowStencil.get(), "junk", true );
+        final->setInputToUniform( colorBuffer0.get(), "baseMap", true );
+        final->setInputToUniform( colorBuffer1.get(), "stencilGlowMap", true );
         final->setInputToUniform( blurY.get(), "glowMap", true );
         final->setInputTextureIndexForViewportReference( -1 );
-        final->setViewport( sceneViewCamera->getViewport() );
    }
 
     //Render to the Frame Buffer
-    (*mQuadOut) = new osgPPU::UnitOut();
+    *mQuadOut = new osgPPU::UnitOut();
     osg::ref_ptr< osgPPU::UnitOut > ppuOut = (*mQuadOut).get();
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
-        ppuOut->setViewport( sceneViewCamera->getViewport() );
     }
     final->addChild( ppuOut.get() );
 }
@@ -531,7 +546,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     sceneViewCamera->addChild( (*mCameraMap).get() );
     sceneViewCamera->addChild( (*mProcessor).get() );
 
-    //(*mProcessor)->setCamera( sceneViewCamera );
+    (*mProcessor)->setCamera( (*mCameraMap).get() );
     (*mProcessor)->setName( "Processor" );
     (*mProcessor)->useHDR( false );
     (*mProcessor)->dirtyUnitSubgraph();
@@ -539,7 +554,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     *mCamerasConfigured = true;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv )
+void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
+    osgUtil::SceneView* sv )
 {
     if( !(*mCamerasConfigured) )
     {
@@ -547,7 +563,6 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneV
     }
     
     osg::Camera* svCamera = sv->getCamera();    
-    (*mFinalMap)->setViewport( svCamera->getViewport() );
     (*mQuadOut)->setViewport( svCamera->getViewport() );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -558,14 +573,10 @@ void SceneRenderToTexture::UpdateProcessorAndUnits()
         return;
     }
 
-    osg::ref_ptr< osgUtil::UpdateVisitor > update = new osgUtil::UpdateVisitor();
+    osg::ref_ptr< osgUtil::UpdateVisitor > update =
+        new osgUtil::UpdateVisitor();
     (*mProcessor)->accept( *(update.get()) );
 }
-////////////////////////////////////////////////////////////////////////////////
-/*void SceneRenderToTexture::LatePreFrameUpdate()
-{
-    ;
-}*/
 ////////////////////////////////////////////////////////////////////////////////
 osg::Camera* const SceneRenderToTexture::GetCamera()
 {
@@ -585,27 +596,36 @@ osg::Texture2D* const SceneRenderToTexture::GetColorMap()
 void SceneRenderToTexture::WriteImageFileForWeb(
     osg::Group* root, osgUtil::SceneView* sv, std::string& filename )
 {
-    /* while(runWebImageSaveThread)
-     {
-     vpr::System::msleep( 500 );  // half-second delay
-     if(readyToWriteWebImage)
-     {
-     readyToWriteWebImage=false;
-     writingWebImageNow = true;
-     //let's try saving the image with Corona
-     corona::Image* frameCap=corona::CreateImage(webImageWidth, webImageHeight, corona::PF_R8G8B8, (void*)webImagePixelArray);
-     frameCap=corona::FlipImage(frameCap, corona::CA_X);
-     if(!corona::SaveImage("../../public_html/PowerPlant/VE/dump.png", corona::FF_PNG, frameCap))
-     std::cout << "error saving image!" << std::endl;
-     else 
-     std::cout << "Image saved successfully.!" << std::endl;
-     delete frameCap;
-     delete [] webImagePixelArray;                             //delete our array
-     std::cout << "All done!" << std::endl;
-     writingWebImageNow = false;
-     }
-     }*/
-    
+    /*
+    while( runWebImageSaveThread )
+    {
+        vpr::System::msleep( 500 );  // half-second delay
+        if( readyToWriteWebImage )
+        {
+            readyToWriteWebImage = false;
+            writingWebImageNow = true;
+            //let's try saving the image with Corona
+            corona::Image* frameCap = corona::CreateImage(
+                webImageWidth, webImageHeight,
+                corona::PF_R8G8B8, (void*)webImagePixelArray );
+            frameCap = corona::FlipImage( frameCap, corona::CA_X );
+            if( !corona::SaveImage( "../../public_html/PowerPlant/VE/dump.png",
+                                    corona::FF_PNG, frameCap ) )
+            {
+                std::cout << "error saving image!" << std::endl;
+            }
+            else
+            {
+                std::cout << "Image saved successfully.!" << std::endl;
+            }
+            delete frameCap;
+            delete [] webImagePixelArray;                 //delete our array
+            std::cout << "All done!" << std::endl;
+            writingWebImageNow = false;
+        }
+    }
+    */
+
     ///Setup all the images for rendering
     osg::ref_ptr< osg::Image > shot = new osg::Image();
     std::vector< osg::ref_ptr< osg::Image > > imageList;
@@ -637,8 +657,8 @@ void SceneRenderToTexture::WriteImageFileForWeb(
     //get exactly the view the user sees at the moment:
     //Get the current frustum from the current sceneView-camera
     double frustum[6] = {0, 0, 0, 0, 0, 0};
-    oldcamera->getProjectionMatrixAsFrustum( frustum[0], frustum[1],
-                                            frustum[2], frustum[3], frustum[4], frustum[5] );
+    oldcamera->getProjectionMatrixAsFrustum(
+        frustum[0], frustum[1], frustum[2], frustum[3], frustum[4], frustum[5] );
     //Create 4 cameras whose frustums tile the original camera frustum
     double tileFrustum[6] = {0, 0, 0, 0, 0, 0};
     //z values don't change
