@@ -337,7 +337,7 @@ void CameraPlacementToolGP::InitializeResources()
     {
         osg::ref_ptr< osg::Texture2D > cameraViewTexture = new osg::Texture2D();
         cameraViewTexture->setInternalFormat( GL_RGB16F_ARB );
-        cameraViewTexture->setTextureSize( 512, 512 );
+        cameraViewTexture->setTextureSize( 1024, 1024 );
         cameraViewTexture->setSourceFormat( GL_RGBA );
         cameraViewTexture->setSourceType( GL_FLOAT );
         cameraViewTexture->setFilter( osg::Texture2D::MIN_FILTER,
@@ -356,7 +356,7 @@ void CameraPlacementToolGP::InitializeResources()
     {
         osg::ref_ptr< osg::Texture2D > depthTexture = new osg::Texture2D();
         depthTexture->setInternalFormat( GL_RGB16F_ARB );
-        depthTexture->setTextureSize( 512, 512 );
+        depthTexture->setTextureSize( 1024, 1024 );
         depthTexture->setSourceFormat( GL_RGBA );
         depthTexture->setSourceType( GL_FLOAT );
         depthTexture->setFilter( osg::Texture2D::MIN_FILTER,

@@ -188,25 +188,18 @@ void CameraEntity::Initialize()
     //Initialize this
     setRenderOrder( osg::Camera::PRE_RENDER );
     setClearMask( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    setClearColor( osg::Vec4( 0.0, 1.0, 0.0, 1.0 ) );
-    setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
+    setClearColor( osg::Vec4( 0.5, 0.5, 0.5, 1.0 ) );
+    //setComputeNearFarMode( osg::Camera::DO_NOT_COMPUTE_NEAR_FAR );
     setRenderTargetImplementation( osg::Camera::FRAME_BUFFER_OBJECT );
     setReferenceFrame( osg::Camera::ABSOLUTE_RF );
-    setViewport( 0, 0, 512, 512 );
-
-    //Set the internal format for the first render target
-    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
-            GL_DEPTH_COMPONENT24 );
-    //Set the internal format for the second render target
-    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 + 1 ),
-            GL_DEPTH_COMPONENT24 );
+    setViewport( 0, 0, 1024, 1024 );
 
     //Attach the camera view texture and use it as the first render target
     attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 ),
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
             < osg::Texture2D, osg::ref_ptr >( "CameraViewTexture" ) ).get() );
     //Attach the depth texture and use it as the second render target
-    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER0 + 1 ),
+    attach( osg::Camera::BufferComponent( osg::Camera::COLOR_BUFFER1 ),
             ( ves::xplorer::scenegraph::ResourceManager::instance()->get
             < osg::Texture2D, osg::ref_ptr >( "DepthTexture" ) ).get() );
 
@@ -253,7 +246,7 @@ void CameraEntity::Initialize()
     //Initialize mDepthOfFieldTechnique
     mDepthOfFieldTechnique = new cpt::DepthOfFieldTechnique();
     mDepthOfFieldTechnique->GetTextureDimensionsUniform()->set(
-        static_cast< int >( 512 ), static_cast< int >( 512 ) );
+        static_cast< int >( 1024 ), static_cast< int >( 1024 ) );
     mDepthOfFieldTechnique->GetMaxCircleOfConfusionUniform()->set(
         static_cast< float >( 6.0 ) );
     mCameraViewQuadDCS->AddTechnique( "DepthOfField", mDepthOfFieldTechnique );
@@ -351,7 +344,7 @@ void CameraEntity::CustomKeyboardMouseSelection(
 
         if( !intersector->containsIntersections() )
         {
-            mDistanceText->setText( std::string( "" ) );
+            mDistanceText->setText( "" );
 
             return;
         }
@@ -399,11 +392,11 @@ void CameraEntity::CustomKeyboardMouseSelection(
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::CreateCameraNode()
 {
-    mCameraNode = osgDB::readNodeFile( std::string( "Models/camera.ive" ) );
+    mCameraNode = osgDB::readNodeFile( "Models/camera.ive" );
     
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
     //Set bin number to 11 so camera does not occlude geometry from scene
-    stateset->setRenderBinDetails( 11, std::string( "RenderBin" ) );
+    stateset->setRenderBinDetails( 11, "RenderBin" );
     stateset->setAttribute(
         ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "CameraProgram" ) ).get(),
@@ -441,7 +434,7 @@ void CameraEntity::CreateViewFrustumGeode()
     mFrustumGeode->addDrawable( mFrustumGeometry.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 0, std::string( "RenderBin" ) );
+    stateset->setRenderBinDetails( 0, "RenderBin" );
     stateset->setMode(
         GL_LIGHTING,
         osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED );
@@ -469,7 +462,7 @@ void CameraEntity::CreateHitQuadGeode()
     mHitQuadGeode->addDrawable( mHitQuadGeometry.get() );
 
     osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet();
-    stateset->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
+    stateset->setRenderBinDetails( 10, "DepthSortedBin" );
     stateset->setAttribute(
         ( mResourceManager->get
         < osg::Program, osg::ref_ptr >( "HitQuadProgram" ) ).get(),
@@ -521,7 +514,7 @@ void CameraEntity::CreateCameraViewQuad()
     mDistanceText->setAlignment( osgText::Text::LEFT_TOP );
     mDistanceText->setPosition( osg::Vec3(  0, 1, 0 ) );
     mDistanceText->setColor( osg::Vec4( 1, 1, 1, 1 ) );
-    mDistanceText->setText( std::string( "Distance: " ) );
+    mDistanceText->setText( "" );
     mCameraViewQuadGeode->addDrawable( mDistanceText.get() );
 
     mCameraViewQuadDCS->addChild( mCameraViewQuadGeode.get() );
@@ -639,11 +632,11 @@ void CameraEntity::DisplayProjectionEffect( bool onOff )
 {
     if( onOff )
     {
-        mPluginDCS->SetTechnique( std::string( "Projection" ) );
+        mPluginDCS->SetTechnique( "Projection" );
     }
     else
     {
-        mPluginDCS->SetTechnique( std::string( "Default" ) );
+        mPluginDCS->SetTechnique( "Default" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -651,11 +644,11 @@ void CameraEntity::DisplayDepthOfFieldEffect( bool onOff )
 {
     if( onOff )
     {
-        mCameraViewQuadDCS->SetTechnique( std::string( "DepthOfField" ) );
+        mCameraViewQuadDCS->SetTechnique( "DepthOfField" );
     }
     else
     {
-        mCameraViewQuadDCS->SetTechnique( std::string( "Default" ) );
+        mCameraViewQuadDCS->SetTechnique( "Default" );
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -696,10 +689,10 @@ void CameraEntity::SetNamesAndDescriptions()
     descriptorsList.push_back( "" );
 
     mCameraDCS->setDescriptions( descriptorsList );
-    mCameraDCS->setName( std::string( "CameraDCS" ) );
+    mCameraDCS->setName( "CameraDCS" );
 
     mCameraViewQuadDCS->setDescriptions( descriptorsList );
-    mCameraViewQuadDCS->setName( std::string( "CameraViewQuadDCS" ) );
+    mCameraViewQuadDCS->setName( "CameraViewQuadDCS" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraEntity::SetProjectionEffectOpacity( double value )
