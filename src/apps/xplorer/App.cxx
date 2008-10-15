@@ -576,7 +576,7 @@ void App::draw()
     glMatrixMode( GL_PROJECTION );
     glPushMatrix();
 
-    osg::ref_ptr<osgUtil::SceneView> sv;
+    osg::ref_ptr< osgUtil::SceneView > sv;
     sv = ( *sceneViewer );  // Get context specific scene viewer
     vprASSERT( sv.get() != NULL );
 
@@ -589,7 +589,7 @@ void App::draw()
     vrj::opengl::UserData* user_data = gl_manager->currentUserData();
 #else
     vrj::GlDrawManager* gl_manager =
-        dynamic_cast<vrj::GlDrawManager*>( this->getDrawManager() );
+        dynamic_cast< vrj::GlDrawManager* >( this->getDrawManager() );
     vprASSERT( gl_manager != NULL );
     vrj::GlUserData* user_data = gl_manager->currentUserData();
 #endif
@@ -619,32 +619,30 @@ void App::draw()
     vrj::Projection* project = user_data->getProjection();
 #endif
     vrj::Frustum frustum = project->getFrustum();
-    sv->setProjectionMatrixAsFrustum( frustum[vrj::Frustum::VJ_LEFT],
-                                      frustum[vrj::Frustum::VJ_RIGHT],
-                                      frustum[vrj::Frustum::VJ_BOTTOM],
-                                      frustum[vrj::Frustum::VJ_TOP],
-                                      frustum[vrj::Frustum::VJ_NEAR],
-                                      frustum[vrj::Frustum::VJ_FAR] );
+    sv->setProjectionMatrixAsFrustum(
+        frustum[ vrj::Frustum::VJ_LEFT ],   frustum[ vrj::Frustum::VJ_RIGHT ],
+        frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
+        frustum[ vrj::Frustum::VJ_NEAR ],   frustum[ vrj::Frustum::VJ_FAR ] );
 
     //Allow trackball to grab frustum values to calculate FOVy
-    EnvironmentHandler::instance()->SetFrustumValues( frustum[vrj::Frustum::VJ_LEFT],
-                                                      frustum[vrj::Frustum::VJ_RIGHT],
-                                                      frustum[vrj::Frustum::VJ_TOP],
-                                                      frustum[vrj::Frustum::VJ_BOTTOM],
-                                                      frustum[vrj::Frustum::VJ_NEAR],
-                                                      frustum[vrj::Frustum::VJ_FAR] );
+    EnvironmentHandler::instance()->SetFrustumValues(
+        frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
+        frustum[ vrj::Frustum::VJ_TOP ],  frustum[ vrj::Frustum::VJ_BOTTOM ],
+        frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
 
-    // Copy the view matrix
+    //Copy the view matrix
     gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-    gmtl::postMult( _vjMatrixLeft, gmtl::makeRot<gmtl::Matrix44f>(
-                        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
-    //copy the matrix
-    osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
-    osg_proj_xform_mat->set( _vjMatrixLeft.mData );
-    sv->setViewMatrix( *( osg_proj_xform_mat.get() ) );
+    gmtl::postMult(
+        _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
+            gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
 
-    //setup the render to texture camera
+    //Copy the matrix
+    osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
+    osg_proj_xform_mat->set( _vjMatrixLeft.mData );
+    sv->setViewMatrix( *(osg_proj_xform_mat.get()) );
+
+    //Setup the render to texture camera
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
         mSceneRenderToTexture->UpdateRTTProjectionAndViewportMatrix( sv.get() );
@@ -659,7 +657,7 @@ void App::draw()
         //vpr::Guard<vpr::Mutex> sv_guard( mValueLock );
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->cull", 20 );
         //Not sure if it should be used - came from osgViewer::Renderer::cull/draw
-        //sv->inheritCullSettings(*(sv->getCamera()));
+        //sv->inheritCullSettings( *(sv->getCamera()) );
         sv->cull();
     }
     //profile the draw call
@@ -668,11 +666,13 @@ void App::draw()
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
         sv->draw();
     }
-    ///Screen capture code
+
+    //Screen capture code
     if( captureNextFrameForWeb )
     {
         vpr::Guard<vpr::Mutex> val_guard( mValueLock );
-        mSceneRenderToTexture->WriteImageFileForWeb( getScene(), sv.get(), m_filename);
+        mSceneRenderToTexture->WriteImageFileForWeb(
+            getScene(), sv.get(), m_filename );
         captureNextFrameForWeb = false;
     }
 

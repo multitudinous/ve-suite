@@ -140,11 +140,11 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     *mColorMap = new osg::Texture2D();
     osg::ref_ptr< osg::Texture2D > tempColorMap = (*mColorMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    tempColorMap->setInternalFormat( GL_RGBA8 );
+    tempColorMap->setInternalFormat( GL_RGBA16F_ARB );
     tempColorMap->setTextureSize(
         screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     tempColorMap->setSourceFormat( GL_RGBA );
-    tempColorMap->setSourceType( GL_UNSIGNED_INT );
+    tempColorMap->setSourceType( GL_FLOAT );
     tempColorMap->setFilter(
         osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
     tempColorMap->setFilter(
@@ -157,11 +157,11 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     *mGlowMap = new osg::Texture2D();
     osg::ref_ptr< osg::Texture2D > tempGlowMap = (*mGlowMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
-    tempGlowMap->setInternalFormat( GL_RGBA8 );
+    tempGlowMap->setInternalFormat( GL_RGBA16F_ARB );
     tempGlowMap->setTextureSize(
         screenDims.first * mScaleFactor, screenDims.second * mScaleFactor );
     tempGlowMap->setSourceFormat( GL_RGBA );
-    tempGlowMap->setSourceType( GL_UNSIGNED_INT );
+    tempGlowMap->setSourceType( GL_FLOAT );
     tempGlowMap->setFilter(
         osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
     tempGlowMap->setFilter(
@@ -562,7 +562,7 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
         return;
     }
     
-    osg::Camera* svCamera = sv->getCamera();    
+    osg::Camera* svCamera = sv->getCamera();
     (*mQuadOut)->setViewport( svCamera->getViewport() );
 }
 ////////////////////////////////////////////////////////////////////////////////
