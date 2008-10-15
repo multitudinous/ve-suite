@@ -565,6 +565,10 @@ void ConstructionWorld::ResetSimulation()
             }
             else
             {
+                mSimulationData
+                    << std::setiosflags( std::ios::left )
+                    << "Simulation Complete"
+                    << std::endl;
                 std::cout << "Done!!!!!!!!!!!!!!!!!!!!!!!!!" << std::endl;
                 exit( 0 );
             }
