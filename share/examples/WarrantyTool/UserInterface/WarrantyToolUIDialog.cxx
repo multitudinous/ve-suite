@@ -144,7 +144,7 @@ void WarrantyToolUIDialog::BuildGUI()
     buttonSizer->Add( stdDialogButtonReset, 0, wxALL, 5 );
     //Clear
     wxButton* stdDialogButtonClear;
-    stdDialogButtonReset = new wxButton( this, GLOW_CLEAR, _("Clear") );
+    stdDialogButtonClear = new wxButton( this, GLOW_CLEAR, _("Clear") );
     buttonSizer->Add( stdDialogButtonClear, 0, wxALL, 5 );
     //Add
     wxButton* stdDialogButtonAdd;
