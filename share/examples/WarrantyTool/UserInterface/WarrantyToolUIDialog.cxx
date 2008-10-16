@@ -99,15 +99,15 @@ void WarrantyToolUIDialog::BuildGUI()
     SetFont( wxFont(
         wxNORMAL_FONT->GetPointSize(), 70, 90, 90, false, wxEmptyString ) );
 
-    wxBoxSizer* mainSizer;
+    wxBoxSizer* mainSizer = 0;
     mainSizer = new wxBoxSizer( wxVERTICAL );
 
     ///////////////////////////////////////////////////////////
-    wxBoxSizer* projectionEffectOpacitySizer;
+    wxBoxSizer* projectionEffectOpacitySizer = 0;
     projectionEffectOpacitySizer = new wxBoxSizer( wxVERTICAL );
     mainSizer->Add( projectionEffectOpacitySizer, 1, wxGROW );
 
-    wxStaticText* projectionEffectOpacityText;
+    wxStaticText* projectionEffectOpacityText = 0;
     projectionEffectOpacityText = new wxStaticText(
             this, wxID_ANY, wxT( "Part Number" ),
             wxDefaultPosition, wxDefaultSize, 0 );
@@ -128,28 +128,38 @@ void WarrantyToolUIDialog::BuildGUI()
     //wxStdDialogButtonSizer* stdDialogButtonSizer;
     //stdDialogButtonSizer = new wxStdDialogButtonSizer();
     //stdDialogButtonSizer->Realize();
-    wxBoxSizer* buttonSizer;
+    wxBoxSizer* buttonSizer = 0;
     buttonSizer = new wxBoxSizer( wxHORIZONTAL );
     //Ok
-    wxButton* stdDialogButtonOK;
-    stdDialogButtonOK = new wxButton( this, wxID_OK );
-    buttonSizer->Add( stdDialogButtonOK, 0, wxALL, 5 );
+    {
+        wxButton* stdDialogButtonOK = 0;
+        stdDialogButtonOK = new wxButton( this, wxID_OK );
+        buttonSizer->Add( stdDialogButtonOK, 0, wxALL, 5 );
+    }
     //Cancel
-    wxButton* stdDialogButtonCancel;
-    stdDialogButtonCancel = new wxButton( this, wxID_CANCEL );
-    buttonSizer->Add( stdDialogButtonCancel, 0, wxALL, 5 );
+    {
+        wxButton* stdDialogButtonCancel = 0;
+        stdDialogButtonCancel = new wxButton( this, wxID_CANCEL );
+        buttonSizer->Add( stdDialogButtonCancel, 0, wxALL, 5 );
+    }
     //Reset
-    wxButton* stdDialogButtonReset;
-    stdDialogButtonReset = new wxButton( this, GLOW_RESET, _("Reset") );
-    buttonSizer->Add( stdDialogButtonReset, 0, wxALL, 5 );
+    {
+        wxButton* stdDialogButtonReset = 0;
+        stdDialogButtonReset = new wxButton( this, GLOW_RESET, _("Reset") );
+        buttonSizer->Add( stdDialogButtonReset, 0, wxALL, 5 );
+    }
     //Clear
-    wxButton* stdDialogButtonClear;
-    stdDialogButtonClear = new wxButton( this, GLOW_CLEAR, _("Clear") );
-    buttonSizer->Add( stdDialogButtonClear, 0, wxALL, 5 );
+    {
+        wxButton* stdDialogButtonClear = 0;
+        stdDialogButtonClear = new wxButton( this, GLOW_CLEAR, _("Clear") );
+        buttonSizer->Add( stdDialogButtonClear, 0, wxALL, 5 );
+    }
     //Add
-    wxButton* stdDialogButtonAdd;
-    stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
-    buttonSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
+    {
+        wxButton* stdDialogButtonAdd = 0;
+        stdDialogButtonAdd = new wxButton( this, GLOW_ADD, _("Add") );
+        buttonSizer->Add( stdDialogButtonAdd, 0, wxALL, 5 );
+    }
 
     mainSizer->Add( buttonSizer, 0, wxALL | wxEXPAND, 5 );
     
