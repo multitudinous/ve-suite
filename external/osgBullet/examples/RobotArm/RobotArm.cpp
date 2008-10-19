@@ -1,0 +1,687 @@
+//
+// Copyright (c) 2008 Blue Newt Software LLC and Skew Matrix Software LLC.
+// All rights reserved.
+//
+
+
+#include <osgDB/WriteFile>
+#include <osgViewer/Viewer>
+#include <osgGA/TrackballManipulator>
+#include <osg/ShapeDrawable>
+#include <osg/Geode>
+#include <osg/PolygonMode>
+#include <osg/PolygonOffset>
+
+#include <osgBullet/CollisionShape.h>
+#include <osgBullet/MotionState.h>
+#include <osgBullet/CollisionShapes.h>
+#include <osgBullet/RigidBody.h>
+#include <osgBullet/RigidBodyAnimation.h>
+#include <osgBullet/Utils.h>
+#include <btBulletDynamicsCommon.h>
+#include <BulletColladaConverter/ColladaConverter.h>
+
+#include <iostream>
+#include <osg/io_utils>
+
+
+class DebugBullet
+{
+public:
+    DebugBullet()
+    {
+        _root = new osg::Group;
+
+        osg::StateSet* state = _root->getOrCreateStateSet();
+        osg::PolygonMode* pm = new osg::PolygonMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
+        state->setAttributeAndModes( pm );
+        osg::PolygonOffset* po = new osg::PolygonOffset( -1, -1 );
+        state->setAttributeAndModes( po );
+        state->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
+    }
+    ~DebugBullet()
+    {
+    }
+
+    unsigned int addDynamic( osg::MatrixTransform* mt )
+    {
+        _root->addChild( mt );
+        return _root->getNumChildren() - 1;
+    }
+    unsigned int addStatic( osg::Node* node )
+    {
+        osg::MatrixTransform* mt = new osg::MatrixTransform;
+        mt->addChild( node );
+        _root->addChild( mt );
+        return _root->getNumChildren() - 1;
+    }
+    void setTransform( unsigned int idx, const osg::Matrix& m )
+    {
+        osg::MatrixTransform* mt = dynamic_cast< osg::MatrixTransform* >( _root->getChild( idx ) );
+        mt->setMatrix( m );
+    }
+    osg::Node* getRoot() const
+    {
+        return _root.get();
+    }
+
+protected:
+    osg::ref_ptr< osg::Group > _root;
+};
+DebugBullet _debugBullet;
+
+
+
+btCompoundShape* _artShape;
+
+struct Joint
+{
+    Joint()
+      : _angle( 0. ),
+        _delta( .15 ),
+        _axis( 0., -1., 0. ),
+        _btChildIdx( -1 ),
+        _idx( -1 ),
+        _dependent( NULL )
+    {}
+
+    void operator++() { set( _angle + _delta ); }
+    void operator--() { set( _angle - _delta ); }
+    void set( float angle )
+    {
+        if (!_mt.valid())
+        {
+            osg::notify( osg::WARN ) << "Joint has invalid MatrixTransform." << std::endl;
+            return;
+        }
+
+        _angle = angle;
+
+        osg::Matrix get = osg::Matrix::translate( -_limbOSGOffset );
+        osg::Matrix m = osg::Matrix::rotate( _angle, _axis );
+        osg::Matrix put = osg::Matrix::translate( _limbOSGOffset );
+        _mt->setMatrix( get * m * put );
+
+        osg::Matrix l2w = osg::computeLocalToWorld( _l2wNodePath );
+        get = osg::Matrix::translate( _limbBTOffset );
+        osg::Matrix btm = get * m * put * l2w;
+        if (_btChildIdx >= 0)
+            _artShape->getChildList()[ _btChildIdx ].m_transform
+                = osgBullet::asBtTransform( btm );
+
+        if (_idx >= 0)
+            _debugBullet.setTransform( _idx, btm );
+
+        if( _dependent != NULL )
+            // Update the subordinate joint's world transform, because it
+            // depends on out world transform.
+            _dependent->set( _dependent->_angle );
+
+        _artShape->recalculateLocalAabb();
+    }
+
+    void setMatrixTransform( osg::MatrixTransform* mt )
+    {
+        _mt = mt;
+    }
+
+    void setBtChildIdx( int idx )
+    {
+        _btChildIdx = idx;
+    }
+
+    void setDebugIdx( unsigned int idx )
+    {
+        _idx = (int)( idx );
+    }
+
+
+    float _angle;
+    float _delta;
+    osg::Vec3 _axis;
+    osg::NodePath _l2wNodePath;
+    osg::ref_ptr< osg::MatrixTransform > _mt;
+    int _btChildIdx;
+
+    osg::Vec3 _limbOSGOffset;
+    osg::Vec3 _limbBTOffset;
+
+    int _idx;
+
+    Joint* _dependent;
+};
+
+Joint _joint0, _joint1;
+
+
+class ArmManipulator : public osgGA::GUIEventHandler
+{
+public:
+    ArmManipulator( btDynamicsWorld* dynamicsWorld ) : _dynamicsWorld( dynamicsWorld ) {}
+
+    bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& )
+    {
+        const unsigned int mod = ea.getModKeyMask();
+        const bool j1 = ( (mod&osgGA::GUIEventAdapter::MODKEY_LEFT_CTRL) ||
+            (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_CTRL) );
+        const bool j0 = ( !j1 || ( (mod&osgGA::GUIEventAdapter::MODKEY_LEFT_ALT) ||
+            (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_ALT) ) );
+
+        switch( ea.getEventType() )
+        {
+            case osgGA::GUIEventAdapter::KEYUP:
+            {
+                if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Left)
+                {
+                    if (j0)
+                        ++_joint0;
+                    if (j1)
+                        ++_joint1;
+                    return true;
+                }
+                else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Right)
+                {
+                    if (j0)
+                        --_joint0;
+                    if (j1)
+                        --_joint1;
+                    return true;
+                }
+                else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Home)
+                {
+                    _joint0.set( 0. );
+                    _joint1.set( 0. );
+                    return true;
+                }
+                else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_End)
+                {
+                    _joint0.set( .9 );
+                    _joint1.set( .9 );
+                    return true;
+                }
+                else if (ea.getKey()==osgGA::GUIEventAdapter::KEY_Space)
+                {
+                    ColladaConverter* cc = new ColladaConverter( _dynamicsWorld );
+                    cc->save( "debug.dae" );
+                }
+                return false;
+            }
+
+            default:
+            break;
+        }
+        return false;
+    }
+
+protected:
+    btDynamicsWorld* _dynamicsWorld;
+};
+
+
+
+osg::MatrixTransform* createOSGBox( osg::Vec3 size )
+{
+    osg::Box * box = new osg::Box();
+
+    box->setHalfLengths( size );
+
+    osg::ShapeDrawable * shape = new osg::ShapeDrawable( box );
+
+    osg::Geode * geode = new osg::Geode();
+    geode->addDrawable( shape );
+
+    osg::MatrixTransform * transform = new osg::MatrixTransform();
+    transform->addChild( geode );
+
+    return( transform );
+}
+
+btRigidBody * createBTBox( osg::MatrixTransform * box,
+                           btVector3 center )
+{
+    btCollisionShape* collision = osgBullet::btBoxCollisionShapeFromOSG( box );
+
+    btTransform groundTransform;
+    groundTransform.setIdentity();
+    groundTransform.setOrigin( center );
+
+    osgBullet::MotionState * motion = new osgBullet::MotionState();
+    motion->setMatrixTransform( box );
+    motion->setWorldTransform( groundTransform );
+
+    btScalar mass( 0.0 );
+    btVector3 inertia( 0, 0, 0 );
+    btRigidBody::btRigidBodyConstructionInfo rb( mass, motion, collision, inertia );
+    btRigidBody * body = new btRigidBody( rb );
+
+    return( body );
+}
+
+btDynamicsWorld* initPhysics()
+{
+    btDefaultCollisionConfiguration * collisionConfiguration = new btDefaultCollisionConfiguration();
+    btCollisionDispatcher * dispatcher = new btCollisionDispatcher( collisionConfiguration );
+    btConstraintSolver * solver = new btSequentialImpulseConstraintSolver;
+
+    btVector3 worldAabbMin( -10000, -10000, -10000 );
+    btVector3 worldAabbMax( 10000, 10000, 10000 );
+    btBroadphaseInterface * inter = new btAxisSweep3( worldAabbMin, worldAabbMax, 1000 );
+
+    btDynamicsWorld * dynamicsWorld = new btDiscreteDynamicsWorld( dispatcher, inter, solver, collisionConfiguration );
+
+    dynamicsWorld->setGravity( btVector3( 0, 0, -10 ) );
+
+    return( dynamicsWorld );
+}
+
+
+// Creates a Bullet collision shape from an osg::Shape.
+class BulletShapeVisitor : public osg::ConstShapeVisitor
+{
+public:
+    BulletShapeVisitor() : _shape( NULL ) {}
+    virtual ~BulletShapeVisitor() {}
+
+    virtual void apply( const osg::Shape& s )
+    {
+        osg::notify( osg::ALWAYS ) << "Unknown shape." << std::endl;
+    }
+    virtual void apply( const osg::Sphere& s )
+    {
+        osg::notify( osg::ALWAYS ) << "Found Sphere." << std::endl;
+
+        osg::Vec3 c = s.getCenter();
+        float radius = s.getRadius();
+
+        btSphereShape* collision = new btSphereShape( radius );
+        btTransform xform;
+        xform.setIdentity();
+        xform.setOrigin( osgBullet::asBtVector3( c ) );
+
+        _shape = new btCompoundShape;
+        _shape->addChildShape( xform, collision );
+    }
+    virtual void apply( const osg::Box& s )
+    {
+        osg::notify( osg::ALWAYS ) << "Found Box." << std::endl;
+
+        osg::Vec3 c = s.getCenter();
+        osg::Vec3 sizes = s.getHalfLengths();
+
+        btBoxShape* collision = new btBoxShape( btVector3( sizes.x(), sizes.y(), sizes.z() ) );
+        btTransform xform;
+        xform.setIdentity();
+        xform.setOrigin( osgBullet::asBtVector3( c ) );
+
+        _shape = new btCompoundShape;
+        _shape->addChildShape( xform, collision );
+    }
+    virtual void apply( const osg::Cylinder& s )
+    {
+        osg::notify( osg::ALWAYS ) << "Found Cylinder." << std::endl;
+
+        osg::Vec3 c = s.getCenter();
+        float radius = s.getRadius();
+        float height = s.getHeight();
+
+        btCylinderShape* collision = new btCylinderShapeZ( btVector3( radius, 0., height * .5 ) );
+        btTransform xform;
+        xform.setIdentity();
+        //xform.setOrigin( osgBullet::asBtVector3( c ) );
+
+        _shape = new btCompoundShape;
+        _shape->addChildShape( xform, collision );
+    }
+
+    btCompoundShape* _shape;
+};
+
+// Creates an osg::NodePath. The child-most node id in
+// element zero, and the root node is at the end of the vector.
+class CreateNodePath : public osg::NodeVisitor
+{
+public:
+    CreateNodePath( osg::Node* root )
+      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_PARENTS ),
+        _root( root )
+    {}
+
+    void apply( osg::Node& node )
+    {
+        osg::notify( osg::ALWAYS ) << " CNP: " << node.getName() << std::endl;
+        _p.push_back( &node );
+        if (&node != _root.get())
+            traverse( node );
+    }
+
+    osg::NodePath getNodePath() const
+    {
+        osg::notify( osg::ALWAYS ) << " CNP: retrieving" << std::endl;
+        return _p;
+    }
+
+    void clear()
+    {
+        _p.clear();
+    }
+
+protected:
+    osg::ref_ptr< osg::Node > _root;
+    osg::NodePath _p;
+};
+
+class ArticulationVisitor : public osg::NodeVisitor
+{
+public:
+    ArticulationVisitor( btDynamicsWorld* dynamicsWorld )
+      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+        _first( true ),
+        _dynamicsWorld( dynamicsWorld ),
+        _shape( NULL )
+    {}
+
+    void apply( osg::Group& node )
+    {
+        osg::notify( osg::ALWAYS ) << "Found Group." << std::endl;
+
+        _cnp = new CreateNodePath( &node );
+        _shape = new btCompoundShape;
+
+        traverse( node );
+
+        btCollisionShape* cs = accumulateChildCollisionShapes( node );
+
+        osg::BoundingBox bb = accumulateChildBB( node );
+        btTransform xform =
+            osgBullet::asBtTransform( osg::Matrix::translate( bb.center() ) );
+        _shape->addChildShape( xform, cs );
+        int idx = _shape->getNumChildShapes();
+        osg::notify( osg::ALWAYS ) << "  Total children " << idx << std::endl;
+
+        // Debug rep of box base.
+        osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( cs );
+        _debugBullet.addStatic( debugNode );
+    }
+
+    void apply( osg::MatrixTransform& node )
+    {
+        osg::notify( osg::ALWAYS ) << "Found MatrixTransform." << std::endl;
+
+        Joint* j;
+        if (_first)
+        {
+            _first = false;
+            j = &_joint0;
+            j->_dependent = &_joint1;
+            osg::notify( osg::ALWAYS ) << " using j0 " << std::endl;
+        }
+        else
+        {
+            j = &_joint1;
+            osg::notify( osg::ALWAYS ) << " using j1 " << std::endl;
+        }
+        j->setMatrixTransform( &node );
+        osg::notify( osg::ALWAYS ) << std::hex << _joint0._mt.get() << " " << _joint1._mt.get() << std::dec << std::endl;
+
+        node.accept( *_cnp );
+        j->_l2wNodePath = _cnp->getNodePath();
+        j->_l2wNodePath.erase( j->_l2wNodePath.begin() );
+        _cnp->clear();
+
+        traverse( node );
+
+        // Get the BB of non-Transform children
+        osg::BoundingBox bb = accumulateChildBB( node );
+
+        // Compute the offset to the origin of both the OSG Geometry as well as the Bullet collision shape.
+        j->_limbOSGOffset = osg::Vec3( bb.center()[ 0 ], bb.center()[ 1 ], bb._min[ 2 ] );
+        j->_limbBTOffset = osg::Vec3( 0., 0., bb.center()[ 2 ] - bb._min[ 2 ] );
+
+        // Create a collision shape for non-Transform children.
+        btCollisionShape* cs = accumulateChildCollisionShapes( node );
+
+        btTransform xform;
+        xform.setIdentity();
+
+        _shape->addChildShape( xform, cs );
+        int idx = _shape->getNumChildShapes() - 1;
+        j->setBtChildIdx( idx );
+
+        // Debug rep of box base.
+        osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( cs );
+        unsigned int child = _debugBullet.addStatic( debugNode );
+        j->setDebugIdx( child );
+    }
+
+    void apply( osg::Geode& node )
+    {
+        osg::notify( osg::ALWAYS ) << "Found Geode." << std::endl;
+        unsigned int idx;
+        for ( idx=0; idx < node.getNumDrawables(); idx++ )
+        {
+            osg::Drawable* draw = node.getDrawable( idx );
+            osg::Shape* shape = draw->getShape();
+            if (shape)
+            {
+                BulletShapeVisitor bsv;
+                shape->accept( bsv );
+                if (bsv._shape)
+                {
+                    osgBullet::CollisionShape* collision = new osgBullet::CollisionShape( bsv._shape );
+                    node.setUserData( collision );
+                }
+            }
+        }
+        traverse( node );
+    }
+
+    btCompoundShape* getArticulationShape()
+    {
+        btTransform t; t.setIdentity();
+        localCreateRigidBody( 0., t, _shape );
+
+        return _shape;
+    }
+
+protected:
+    bool _first;
+    btDynamicsWorld* _dynamicsWorld;
+    osg::ref_ptr< CreateNodePath > _cnp;
+
+    btCompoundShape* _shape;
+
+    btCollisionShape* accumulateChildCollisionShapes( osg::Group& node )
+    {
+        btCompoundShape* cs = new btCompoundShape;
+
+        unsigned int idx;
+        for ( idx=0; idx < node.getNumChildren(); idx++ )
+        {
+            osg::Node* child = node.getChild( idx );
+            if ( dynamic_cast< osg::MatrixTransform* >( child ) )
+                continue;
+            osgBullet::CollisionShape* bcs = dynamic_cast< osgBullet::CollisionShape* >( child->getUserData() );
+            if (!bcs)
+                continue;
+
+            btTransform xform;
+            xform.setIdentity();
+            cs->addChildShape( xform, bcs->getCollisionShape() );
+        }
+
+        return cs;
+    }
+
+    osg::BoundingBox accumulateChildBB( osg::Group& node )
+    {
+        osg::BoundingBox bb;
+
+        unsigned int idx;
+        for ( idx=0; idx < node.getNumChildren(); idx++ )
+        {
+            osg::Node* child = node.getChild( idx );
+            if ( dynamic_cast< osg::MatrixTransform* >( child ) )
+                continue;
+            bb.expandBy( child->getBound() );
+        }
+
+        return bb;
+    }
+
+	btRigidBody* localCreateRigidBody( btScalar mass, const btTransform& startTransform,
+        btCollisionShape* shape )
+	{
+		btVector3 localInertia( 0, 0, 0 );
+		const bool isDynamic = (mass != 0.f);
+		if (isDynamic)
+			shape->calculateLocalInertia( mass, localInertia );
+
+        btDefaultMotionState* myMotionState = new btDefaultMotionState( startTransform );
+		btRigidBody::btRigidBodyConstructionInfo rbInfo( mass, myMotionState, shape, localInertia );
+		btRigidBody* body = new btRigidBody( rbInfo );
+        if (!isDynamic)
+            body->setCollisionFlags( body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+        body->setActivationState( DISABLE_DEACTIVATION );
+
+		_dynamicsWorld->addRigidBody(body);
+
+		return body;
+	}
+};
+
+osg::Group*
+createArm()
+{
+    osg::ref_ptr< osg::Group > grp = new osg::Group;
+    grp->setName( "Arm root Group node" );
+
+    osg::Box* box = new osg::Box( osg::Vec3( 0., 0., 0. ), 1., 1., 2. );
+    osg::ShapeDrawable* shape = new osg::ShapeDrawable( box );
+    osg::Geode* geode = new osg::Geode();
+    geode->setName( "Box Geode" );
+    geode->addDrawable( shape );
+    grp->addChild( geode );
+
+    osg::Cylinder* cyl = new osg::Cylinder( osg::Vec3( 0., 0., 2. ), .35, 2. );
+    shape = new osg::ShapeDrawable( cyl );
+    geode = new osg::Geode();
+    geode->setName( "First segment Geode" );
+    geode->addDrawable( shape );
+    osg::MatrixTransform* mt0 = new osg::MatrixTransform;
+    mt0->setName( "First segment MatrixTransform" );
+    mt0->setDataVariance( osg::Object::DYNAMIC );
+    mt0->addChild( geode );
+    grp->addChild( mt0 );
+
+    cyl = new osg::Cylinder( osg::Vec3( 0., 0., 4. ), .25, 2. );
+    shape = new osg::ShapeDrawable( cyl );
+    geode = new osg::Geode();
+    geode->setName( "Second segment Geode" );
+    geode->addDrawable( shape );
+    osg::MatrixTransform* mt1 = new osg::MatrixTransform;
+    mt1->setName( "Second segment MatrixTransform" );
+    mt1->setDataVariance( osg::Object::DYNAMIC );
+    mt1->addChild( geode );
+    mt0->addChild( mt1 );
+
+    return( grp.release() );
+}
+
+
+osg::MatrixTransform*
+createBall( btDynamicsWorld* dynamicsWorld )
+{
+    osg::Sphere* sp = new osg::Sphere( osg::Vec3( 0., 0., 0. ), 1. );
+    osg::ShapeDrawable* shape = new osg::ShapeDrawable( sp );
+    osg::Geode* geode = new osg::Geode();
+    geode->addDrawable( shape );
+    osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform;
+    mt->addChild( geode );
+
+    BulletShapeVisitor bsv;
+    sp->accept( bsv );
+    btCollisionShape* collision = bsv._shape;
+
+    osgBullet::MotionState * motion = new osgBullet::MotionState;
+    motion->setMatrixTransform( mt.get() );
+
+    // Debug OSG rep of bullet shape.
+    osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( collision );
+    mt->addChild( debugNode );
+
+    // Debug rep of the sphere
+    _debugBullet.addDynamic( mt.get() );
+
+    btTransform bodyTransform;
+    bodyTransform.setIdentity();
+    bodyTransform.setOrigin( btVector3( -10, 0, 10 ) );
+    motion->setWorldTransform( bodyTransform );
+
+    btScalar mass( 1. );
+    btVector3 inertia;
+    collision->calculateLocalInertia( mass, inertia );
+    btRigidBody::btRigidBodyConstructionInfo rbinfo( mass, motion, collision, inertia );
+    btRigidBody * body = new btRigidBody( rbinfo );
+    body->setLinearVelocity( btVector3( 2, -.1, 0 ) );
+    body->setActivationState( DISABLE_DEACTIVATION );
+    dynamicsWorld->addRigidBody( body );
+
+    return( mt.release() );
+}
+
+
+int
+main( int argc,
+      char * argv[] )
+{
+    osg::ArgumentParser arguments( &argc, argv );
+
+    btDynamicsWorld* dynamicsWorld = initPhysics();
+
+    osg::ref_ptr< osg::Group > root = new osg::Group;
+    root->addChild( _debugBullet.getRoot() );
+
+    osg::ref_ptr< osg::Group > arm = createArm();
+    osgDB::writeNodeFile( *arm, "arm.osg" );
+    root->addChild( arm.get() );
+    root->addChild( createBall( dynamicsWorld ) );
+
+    ArticulationVisitor av( dynamicsWorld );
+    arm->accept( av );
+    _artShape = av.getArticulationShape();
+    osg::notify( osg::ALWAYS ) << "Finished ArticulationVisitor." << std::endl;
+
+
+
+    float thin = .01;
+    osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
+    root->addChild( ground );
+    btRigidBody* groundBody = createBTBox( ground, btVector3( 0, 0, -1 ) );
+    dynamicsWorld->addRigidBody( groundBody );
+
+    // Debug rep of the ground
+    _debugBullet.addDynamic( ground );
+
+    osgViewer::Viewer viewer;
+    osgGA::TrackballManipulator * tb = new osgGA::TrackballManipulator();
+    tb->setHomePosition( osg::Vec3( 9, -21, 8 ),
+                        osg::Vec3( 0, 0, 0 ),
+                        osg::Vec3( 0, 0, 1 ) );
+    viewer.setCameraManipulator( tb );
+    viewer.addEventHandler( new ArmManipulator( dynamicsWorld ) );
+    viewer.setSceneData( root.get() );
+
+    double currSimTime = viewer.getFrameStamp()->getSimulationTime();
+    double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
+    viewer.realize();
+    while( !viewer.done() )
+    {
+        currSimTime = viewer.getFrameStamp()->getSimulationTime();
+        dynamicsWorld->stepSimulation( currSimTime - prevSimTime );
+        prevSimTime = currSimTime;
+        viewer.frame();
+    }
+
+    return( 0 );
+}
+

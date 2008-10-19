@@ -1,0 +1,45 @@
+HandNode: 4 7 1.5 -0.0678256 -0 -0.678256 0.731689 .5 1
+Model: USMC23_4024.ASM.ive
+
+# drawer
+Node: USMC23_4019.ASM
+DAE: USMC23_4019.ASM.0.dae
+# drawer support?
+Node: USMC23_4006.ASM
+DAE: USMC23_4006.ASM.1.dae
+# other drawers in this stack, and their labels
+# Hm, currently config file and code doesn't handle instancing, so let's just do the label...
+View: LABEL_D1.PRT
+
+# various support structures
+Node: USMC23_4142.PRT
+DAE: USMC23_4142.PRT.1.dae
+Node: USMC23_4143.PRT
+DAE: USMC23_4143.PRT.1.dae
+Node: USMC23_4115.PRT
+DAE: USMC23_4115.PRT.1.dae
+Node: USMC23_4006.ASM
+DAE: USMC23_4006.ASM.1.dae
+Node: USMC23_4142.PRT
+DAE: USMC23_4142.PRT.1.dae
+Node: USMC23_4158-1.PRT
+DAE: USMC23_4158-1.PRT.1.dae
+Node: USMC23_4158.PRT
+DAE: USMC23_4158.PRT.1.dae
+Node: USMC23_4159.PRT
+DAE: USMC23_4159.PRT.1.dae
+# Node: USMC23_4159.PRT #2
+# DAE: USMC23_4159.PRT.1.dae
+Node: USMC23_3175.PRT
+DAE: USMC23_3175.PRT.1.dae
+Node: USMC23_3175.PRT
+DAE: USMC23_3175.PRT.1.dae
+
+# the vice
+View: USMC23_5133.ASM
+View: USMC23_5134.PRT
+
+# other draw addemblies
+View: USMC23_4020.ASM.ive
+View: USMC23_4021.ASM.ive
+View: USMC23_4022.ASM.ive

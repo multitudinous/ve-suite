@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1">
+    <asset>
+        <contributor>
+            <authoring_tool>Bullet Physics SDK 270 Snapshot(BulletColladaConverter) http://bulletphysics.com</authoring_tool>
+        </contributor>
+        <created>2008-02-12T15:28:54.891550</created>
+        <modified>2008-02-12T15:28:54.891550</modified>
+        <up_axis>Y_UP</up_axis>
+    </asset>
+    <library_physics_scenes>
+        <physics_scene id="Scene-Physics" name="MyPhysicsScene">
+            <instance_physics_model url="#Bullet-PhysicsModel">
+                <instance_rigid_body body="BulletUnnamed-0-RigidBody" target="#BulletUnnamed-0">
+                    <technique_common>
+                        <angular_velocity>0 0 0</angular_velocity>
+                        <velocity>0 0 0</velocity>
+                    </technique_common>
+                </instance_rigid_body>
+            </instance_physics_model>
+            <technique_common>
+                <gravity>0 0 -9.8</gravity>
+            </technique_common>
+        </physics_scene>
+    </library_physics_scenes>
+    <library_visual_scenes>
+        <visual_scene id="Scene" name="MyScene">
+            <node id="BulletUnnamed-0" name="BulletUnnamed-0">
+                <translate>1.16667 0.03125 4.74397</translate>
+                <rotate>1 0 0 0</rotate>
+                <instance_geometry url="#BulletUnnamed-0-Geometry">
+                    <bind_material>
+                        <technique_common/>
+                    </bind_material>
+                </instance_geometry>
+            </node>
+        </visual_scene>
+    </library_visual_scenes>
+    <library_geometries>
+        <geometry id="BulletUnnamed-0-Geometry" name="BulletUnnamed-0-Geometry">
+            <mesh>
+                <source id="BulletUnnamed-0-Geometry-position">
+                    <float_array id="BulletUnnamed-0-Geometry-position-array" count="99">2.33333 0 0 0 0 0 2.33333 0.0625 0 0 0 0 0 0.0625 0 2.33333 0.0625 0 2.33333 0.0625 9.48794 0 0.0625 9.48794 2.33333 0 9.48794 0 0.0625 9.48794 0 0 9.48794 2.33333 0 9.48794 0 0 9.48794 0 0 0 2.33333 0 9.48794 0 0 0 2.33333 0 0 2.33333 0 9.48794 2.33333 0 9.48794 2.33333 0 0 2.33333 0.0625 9.48794 2.33333 0 0 2.33333 0.0625 0 2.33333 0.0625 9.48794 2.33333 0.0625 9.48794 2.33333 0.0625 0 0 0.0625 9.48794 2.33333 0.0625 0 0 0.0625 0 0 0.0625 9.48794 0 0.0625 9.48794 0 0.0625 0 0 0 9.48794</float_array>
+                    <technique_common>
+                        <accessor count="33" source="#BulletUnnamed-0-Geometry-position-array" stride="3">
+                            <param name="X" type="float"/>
+                            <param name="Y" type="float"/>
+                            <param name="Z" type="float"/>
+                        </accessor>
+                    </technique_common>
+                </source>
+                <vertices id="BulletUnnamed-0-Geometry-vertex">
+                    <input semantic="POSITION" source="#BulletUnnamed-0-Geometry-position"/>
+                </vertices>
+                <triangles count="11">
+                    <input offset="0" semantic="VERTEX" source="#BulletUnnamed-0-Geometry-vertex"/>
+                    <p>0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32</p>
+                </triangles>
+            </mesh>
+        </geometry>
+    </library_geometries>
+    <library_physics_materials name="Bullet-PhysicsMaterials">
+        <physics_material id="BulletUnnamed-0-PhysicsMaterial" name="BulletUnnamed-0-PhysicsMaterial">
+            <technique_common>
+                <dynamic_friction>0.5</dynamic_friction>
+                <restitution>0</restitution>
+                <static_friction>0.5</static_friction>
+            </technique_common>
+        </physics_material>
+    </library_physics_materials>
+    <library_physics_models>
+        <physics_model id="Bullet-PhysicsModel" name="Bullet-PhysicsModel">
+            <rigid_body sid="BulletUnnamed-0-RigidBody" name="BulletUnnamed-0-RigidBody">
+                <technique_common>
+                    <dynamic>false</dynamic>
+                    <mass>0</mass>
+                    <inertia>0 0 0</inertia>
+                    <instance_physics_material url="#BulletUnnamed-0-PhysicsMaterial"/>
+                    <shape>
+                        <instance_geometry url="#BulletUnnamed-0-Geometry"/>
+                        <translate>-1.16667 -0.03125 -4.74397</translate>
+                        <rotate>1 0 0 0</rotate>
+                    </shape>
+                </technique_common>
+            </rigid_body>
+        </physics_model>
+    </library_physics_models>
+    <scene>
+        <instance_physics_scene url="#Scene-Physics"/>
+        <instance_visual_scene url="#Scene"/>
+    </scene>
+</COLLADA>
