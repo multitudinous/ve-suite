@@ -11,44 +11,86 @@
   <para>Example:</para>
 
   <para><code> set VTK_HOME=C:/"Documents and
-  Settings"/user/Desktop/vtk</code></para>
+  Settings"/user/Desktop/vtk</code><emphasis role="bold"></emphasis></para>
 
-  <para><emphasis role="bold">Important variables for UNIX/Linux platforms
-  only:</emphasis></para>
-
-  <para><code>SCENE_GRAPH</code> Always set to OSG. Defines which scene graph to
-  build for VE-Xplorer.</para>
-
-  <para><code>TAO_BUILD</code> Always set to TRUE. In the future this flag can be
-  used to support other CORBA ORBs as well.</para>
-
-  <para><code>CLUSTER_APP</code> Set to TRUE if VE-Xplorer will be used on a
-  graphics cluster.</para>
+  <para></para>
 
   <para><emphasis role="bold">Important variables include:</emphasis></para>
 
-  <para><code> VE_SUITE_HOME</code> The location of the top level VE_Suite
-  directory.</para>
+  <para><emphasis></emphasis></para>
 
-  <para><code> VJ_BASE_DIR</code> The location of VR Juggler.</para>
+  <itemizedlist>
+    <listitem>
+      <para><emphasis role="bold"><code>VE_SUITE_HOME</code></emphasis> The
+      location of the top level VE_Suite directory.</para>
+    </listitem>
 
-  <para><code> VJ_DEPS_DIR</code> The location of VR Juggler
-  dependencies.</para>
+    <listitem>
+      <para><emphasis role="bold"><code>VJ_BASE_DIR</code></emphasis> The
+      location of VR Juggler.</para>
+    </listitem>
 
-  <para><code> VTK_HOME</code> Visualization ToolKit (VTK) directory.</para>
+    <listitem>
+      <para><emphasis role="bold"><code>VJ_DEPS_DIR</code></emphasis> The
+      location of VR Juggler dependencies.</para>
+    </listitem>
 
-  <para><code> WX_HOME</code> The wxWidgets install.</para>
+    <listitem>
+      <para><emphasis role="bold"><code>VTK_HOME</code></emphasis> Visualization ToolKit (VTK)
+      directory.</para>
+    </listitem>
 
-  <para><code> XERCESCROOT</code> The location of the xerces build.</para>
+    <listitem>
+      <para><emphasis role="bold"><code>WX_HOME</code></emphasis> The
+      wxWidgets install.</para>
+    </listitem>
 
-  <para><code> WX_ROOT</code> The location of wxWidgets install (should be
-  same as <code>WX_HOME</code>).</para>
+    <listitem>
+      <para><emphasis role="bold"><code>XERCESCROOT</code> </emphasis>The
+      location of the xerces build.</para>
+    </listitem>
 
-  <para><code> OSGHOME</code> The location of OpenSceneGraph (if OSG version
-  is built).</para>
+    <listitem>
+      <para><emphasis role="bold"><code>WX_ROOT</code></emphasis> The location of wxWidgets install (should be
+      same as <emphasis role="bold"><code>WX_HOME</code></emphasis>).</para>
+    </listitem>
 
-  <para><code> ACE_HOME</code> The location of the ACE_wrappers
-  directory.</para>
+    <listitem>
+      <para><emphasis role="bold"><code>OSGHOME</code></emphasis> The location
+      of OpenSceneGraph (if OSG version is built).</para>
+    </listitem>
 
-  <para><code> TAO_HOME</code> TAO location within ACE/TAO.</para>
+    <listitem>
+      <para><emphasis role="bold"><code>ACE_HOME</code></emphasis> The location of the ACE_wrappers
+      directory.</para>
+    </listitem>
+
+    <listitem>
+      <para><emphasis role="bold"><code>TAO_HOME</code></emphasis> TAO location within
+      ACE/TAO.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para><code></code></para>
+
+  <para><emphasis role="bold">Important variables for UNIX/Linux platforms only:</emphasis></para>
+
+  <para><code></code></para>
+
+  <itemizedlist>
+    <listitem>
+      <para><emphasis role="bold"><code>SCENE_GRAPH</code></emphasis> Always set to OSG. Defines which scene
+      graph to build for VE-Xplorer.</para>
+    </listitem>
+
+    <listitem>
+      <para><emphasis role="bold"><code>TAO_BUILD</code></emphasis> Always set to TRUE. In the
+      future this flag can be used to support other CORBA ORBs as well.</para>
+    </listitem>
+
+    <listitem>
+      <para><emphasis role="bold"><code>CLUSTER_APP</code></emphasis> Set to
+      TRUE if VE-Xplorer will be used on a graphics cluster.</para>
+    </listitem>
+  </itemizedlist>
 </chapter>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="Docbook_Information">
+  <title>Docbook Information</title>
+
+  <para>This documentation was created using Docbook and the XML editor
+  XMLmind. To use XMLmind:</para>
+
+  <orderedlist>
+    <listitem>
+      <para>If Java is already installed on your system, download and install
+      the standard edition of XMLmind free of charge at <ulink
+      url="http://www.xmlmind.com/xmleditor/download.shtml">here</ulink>. If
+      you do not have Java, you can download the standard edition bundled with
+      Java.</para>
+    </listitem>
+
+    <listitem>
+      <para>Start XMLmind.</para>
+    </listitem>
+
+    <listitem>
+      <para>Choose File--&gt;New.</para>
+    </listitem>
+  </orderedlist>
+
+  <para>The VE-Suite documentation was created as a modular document separated
+  by chapter. To create a new chapter, choose "Chapter (part of modular
+  document)" from the "New" menu.</para>
+
+  <para>User guides and online help for XMLmind can be found <ulink
+  url="http://www.xmlmind.com/xmleditor/documentation.shtml">here</ulink>.</para>
+
+  <para>The following Docbook manuals are also available online free of
+  charge:</para>
+
+  <para><ulink
+  url="http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html">http://www.oreilly.com/catalog/docbook/chapter/book/docbook.html</ulink></para>
+
+  <para><ulink
+  url="http://www.sagehill.net/docbookxsl/">http://www.sagehill.net/docbookxsl/</ulink></para>
+
+  <para>See Chapter 6, Code Guidelines--&gt;Section 15, Documentation for
+  Docbook coding guidelines specific to this document.</para>
+</chapter>

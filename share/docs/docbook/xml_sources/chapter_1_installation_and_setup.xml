@@ -45,7 +45,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/windowsinstall.jpg" />
+        <imagedata fileref="../newveimages/Launcher3a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -95,8 +95,8 @@
 
     <para>VE-Launcher automatically determines VE-Suite's directory from the
     current working directory. Moving the Launcher out of VE-Suite's directory
-    or starting it from a different directory will pass the wrong value to
-    VE-Suite, causing errors.</para>
+    or starting it from a different directory <emphasis role="bold">will pass
+    the wrong value</emphasis> to VE-Suite, causing errors.</para>
 
     <para>The Dependencies directory is the only variable you need to set
     manually. The first time you start VE-Launcher, you will be asked to find
@@ -105,7 +105,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/runtimeenv1.jpg" />
+        <imagedata fileref="../newveimages/Launcher4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -151,8 +151,8 @@
       <listitem>
         <para><emphasis role="bold">--user or --global:</emphasis> Sets the
         installations to either user-only or all-users. If neither argument is
-        passed, all-users is chosen if you have root access; other user-only
-        is chosen.</para>
+        passed, all-users is chosen if you have root access; otherwise only
+        the current user (user-only)is chosen.</para>
       </listitem>
 
       <listitem>

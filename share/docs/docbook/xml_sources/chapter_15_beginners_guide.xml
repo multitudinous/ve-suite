@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="VESuite_Beginners_Guide">
+  <title>VESuite Beginners Guide</title>
+
+  <section>
+    <title>(Or: How I survived the Install...s)</title>
+
+    <para>As a preface, I came to work on VESuite with only a minimal
+    understanding of command line, Linux, and other build/compile information
+    that you may already know and consider standard knowledge. These notes are
+    just a list of things that I have found useful and may not be relevant for
+    everyone.</para>
+
+    <para>There are four programs that have to be built and installed to run
+    VESuite. Consult the install chapter for the current version requirements.
+    In order of install they are:</para>
+
+    <orderedlist>
+      <listitem>
+        <para><ulink url="http://www.vrjuggler.org/download.php">VRJuggler</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.openscenegraph.org/projects/osg/wiki/Downloads">OpenSceneGraph</ulink> (OSG)</para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://download.dre.vanderbilt.edu/">Ace+Tao</ulink></para>
+      </listitem>
+
+      <listitem>
+        <para><ulink url="http://www.vtk.org/get-software.php">VTK</ulink></para>
+      </listitem>
+    </orderedlist>
+
+    <para>I am making the assumption that you are installing onto a Unix-based
+    OS, and that your system already has the program CMAKE, if it does not,
+    then <ulink url="http://www.cmake.org/HTML/Download.html">CMAKE</ulink> is install #0.</para>
+
+    <para>For those of us with no experience compiling code written by someone
+    else, or just no experience compiling code period...this is not easy. It
+    can be very difficult, and if you're doing it right, occasionally
+    boring.</para>
+
+    <para>That said, my first three rules for compiling these programs
+    are:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>Read the README file</para>
+      </listitem>
+
+      <listitem>
+        <para>Read the README file</para>
+      </listitem>
+
+      <listitem>
+        <para>No, really, READ that README file</para>
+      </listitem>
+    </orderedlist>
+
+    <para>I know it sounds silly now, especially to people who might have some
+    coding background already, but the README files really are invaluable in
+    this process. I'm not saying you have to read every single section. As you
+    get used to the format, you won't need to, but README files are a must.
+    Most of these programs have dependencies (other programs they need to be
+    able to run) that have to be installed before the target program itself.
+    There are other methods of finding these dependencies, google, for
+    example, but the necessary information should be in the README (ok, also
+    sometimes INSTALL).</para>
+
+    <para>When you're downloading raw code files for Unix, they'll generally
+    be in the .tar format. A TAR file has to be unpacked after it is
+    downloaded, I have been referencing the instructions in the VRJuggler
+    <ulink url="http://developer.vrjuggler.org/docs/vrjuggler/2.2/getting.started.guide/getting.started.guide.html#d0e63">tutorial</ulink> “Getting Started”. There is a section
+    on TAR files that lists several different possible commands for the
+    command line invocation. The two most common commands are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>gunzip filename.tar.gz</para>
+
+        <para>tar -xvf filename.tar</para>
+      </listitem>
+
+      <listitem>
+        <para>bunzip2 filename.tar.bz2</para>
+
+        <para>tar -xvf filename.tar</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>You'll probably be asked (by the bosses) to download into a source
+    folder but actually install the program into a separate folder. There is a
+    special command that is appended to the compile command that will do
+    this.</para>
+
+    <para>“--prefix=/directory/to/save/to”</para>
+
+    <para>The basic compile command itself may be slightly different for
+    various programs.</para>
+
+    <para>Speaking of command line, if you've never worked with that before
+    all of this will be horribly confusing. You might want to start by opening
+    a Terminal (the command line “box” in linux) and just practice navigating
+    around your file system. It also is not a sin to have a visual
+    representation of the file structure open for reference. There are many
+    command line inputs, you can look up a full dictionary yourself, but the
+    basics are:</para>
+
+    <itemizedlist>
+      <listitem>
+        <para>ls - show directories</para>
+      </listitem>
+
+      <listitem>
+        <para>cd – go to</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>i.e. cd .. (go to parent directory)</para>
+          </listitem>
+
+          <listitem>
+            <para>or cd directoryname (go to directory)</para>
+          </listitem>
+
+          <listitem>
+            <para>Note you can only go to a directory that is an immediate
+            parent or child if you don't know the file path (this is where
+            "ls" comes in handy)</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>mv – change directory name</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>i.e. mv originalname newname</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>pwd – print what directory you're in</para>
+      </listitem>
+
+      <listitem>
+        <para>rmdir – remove directory</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>i.e. rmdir mystuff</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>mkdir – make direcotory</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>i.e. mkdir mystuff</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+
+    <para>So you've downloaded and unpacked a TAR file and found the
+    dependencies, how do you know which ones are already on your system? Use
+    the command “rpm -qa | grep -i [package]” where package is the program
+    name you are looking for. All of that angriness has a meaning, I'm sure
+    I'll learn it someday, but for now, having access to that command is
+    enough to function.</para>
+
+    <para>When you encounter a dependency you don't have (generally listed in
+    those wonderful README files you've been reading...right?), you will have
+    to go download, unpack, and install it. It's the same process as for the
+    big programs.</para>
+
+    <para>I follow these general steps when installing:</para>
+
+    <orderedlist>
+      <listitem>
+        <para>READ</para>
+      </listitem>
+
+      <listitem>
+        <para>THE</para>
+      </listitem>
+
+      <listitem>
+        <para>README</para>
+      </listitem>
+
+      <listitem>
+        <para>figure out the text to put into command line that will configure
+        the program</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>(I write this down separately and keep it for reference so
+            when I screw up and have to ask someone I don't have to search the
+            terminal to find what I typed)</para>
+          </listitem>
+
+          <listitem>
+            <para>The command usually looks like “ ./configure
+            --prefix=/path/to/folder --other_commands”</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>troubleshoot the configuration till it works</para>
+      </listitem>
+
+      <listitem>
+        <para>“make” the file</para>
+      </listitem>
+
+      <listitem>
+        <para>“install” the file</para>
+      </listitem>
+    </orderedlist>
+
+    <para>The make and install commands may vary, again, see the
+    README.</para>
+
+    <para>Many installs involve CMAKE, which has its own set of steps.</para>
+
+    <orderedlist>
+      <listitem>
+        <para>go to the code directory</para>
+      </listitem>
+
+      <listitem>
+        <para>create a child file</para>
+      </listitem>
+
+      <listitem>
+        <para>go in to that child file and type "ccmake ../" to compile the
+        file</para>
+      </listitem>
+
+      <listitem>
+        <para>then "make"</para>
+      </listitem>
+
+      <listitem>
+        <para>and finally "make install"</para>
+      </listitem>
+    </orderedlist>
+
+    <para>Some downloads are not available in the simple
+    download-a-compressed-file format. Occasionally you will have to download
+    code from an SVN server. And since you will be using SVN when you code in
+    VESuite, it's good to read about it. There is a continuously updated <ulink
+    url="http://svnbook.red-bean.com/">online book</ulink> that is useful for this.</para>
+  </section>
+</chapter>

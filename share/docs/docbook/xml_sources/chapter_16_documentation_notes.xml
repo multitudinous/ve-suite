@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="Documentation Notes">
+  <title>Documentation Notes </title>
+
+  <section>
+    <title>Ground rules</title>
+
+    <para></para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Line length should be limited to 80 characters</para>
+      </listitem>
+
+      <listitem>
+        <para>Do not use TAB to structure code, use 3-4 spaces for each
+        indentation</para>
+      </listitem>
+
+      <listitem>
+        <para>Always have one empty line before a comment</para>
+      </listitem>
+
+      <listitem>
+        <para>Always keep methods in the same order in the header and
+        implementation files</para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The commenting style below is designed to allow for automatic
+    generation of documentation using doxygen, while also maintaining
+    readability. There are different places in code that comments can appear
+    and for each there is a different style. Every method in the header (.h)
+    file must have at least a brief comment, detailed comments are optional
+    (both are described below) these will appear in the doxygen generated HTML
+    files. Documentation in the implementation (.cxx/.cpp) file is primarily
+    for human comprehension.</para>
+
+    <para></para>
+
+    <itemizedlist>
+      <listitem>
+        <para>Brief Comments</para>
+
+        <para>Brief comments are a single line and are not separated by
+        whitespace from the code they describe, but are separated by
+        whitespace if they appear before a detailed comment. For clarity, keep
+        the brief descriptive comment that is written in the header file above
+        each method in the implementation file as well.</para>
+
+        <para>//!A Brief Comment about this code</para>
+
+        <para>code-code-code-code-code</para>
+
+        <para></para>
+
+        <para>//!A Brief Comment above a detailed comment</para>
+
+        <para></para>
+
+        <para>/////////////////////////////////////////////////////////////////////////</para>
+      </listitem>
+
+      <listitem>
+        <para>Detailed Comments</para>
+
+        <para>Detailed comments are more than a single line and are separated
+        by whitespace above and below.</para>
+
+        <para>//!The method's brief comment</para>
+
+        <para></para>
+
+        <para>////////////////////////////////////////////////////////////////////////////////</para>
+
+        <para>/// Detailed comments refer to code below them</para>
+
+        <para>/// may include parameter declarations</para>
+
+        <para>/// may also include lists</para>
+
+        <para>/// ended with more slashes</para>
+
+        <para>////////////////////////////////////////////////////////////////////////////////</para>
+
+        <para></para>
+
+        <para>code-code-code-code-code</para>
+      </listitem>
+
+      <listitem>
+        <para>Inner-method Comments</para>
+
+        <para>Inner-method comments are any non-code text within a method
+        implementation. Since style dictates that code should not be
+        implemented within the header (.h) file, Inner-method commenting
+        should only appear in the .cpp/.cxx etc files.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Brief Inner-method</para>
+
+            <para>As with brief comments, Brief Inner-method comments should
+            have a line of whitespace before and no whitespace separating them
+            from the code they refer to.</para>
+
+            <para></para>
+
+            <para>//Brief Inner-method comment, only a single line</para>
+
+            <para>code-code-code-code-code</para>
+          </listitem>
+
+          <listitem>
+            <para>Detailed Inner-method</para>
+
+            <para>As with detailed comments Detailed Inner-method comments
+            should have leading and trailing lines of whitespace.</para>
+
+            <para>code-code-code-code-code</para>
+
+            <para></para>
+
+            <para>/****************************************************************************//*</para>
+
+            <para>* Detailed Inner-method comment, always multiple
+            lines</para>
+
+            <para>* no requirements regarding content</para>
+
+            <para>* also separated by whitespace</para>
+
+            <para>*******************************************************************************/</para>
+
+            <para></para>
+
+            <para>code-code-code-code-code</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Documentation Commands</para>
+
+        <para>Documentation commands are generally preceeded with an \ or @
+        and give doxygen extra information about that particular comment or
+        line. For this format, commands will only appear in detailed comments.
+        There is a complete listing of these commands at the doxygen <ulink
+        url="http://www.stack.nl/~dimitri/doxygen/commands.html">website</ulink>.
+        Some of the commonly used ones are:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>\param --starts a description of a function parameter</para>
+          </listitem>
+
+          <listitem>
+            <para>\return --starts a return value description for a
+            function</para>
+          </listitem>
+
+          <listitem>
+            <para>\class &lt;name&gt; --indicates a comment block contains
+            documentation for a class of "name"</para>
+          </listitem>
+
+          <listitem>
+            <para>\exception &lt;exception-name&gt; --starts a description for
+            a named exception</para>
+          </listitem>
+
+          <listitem>
+            <para>\warning --starts a paragraph where one or more warning
+            messages may be entered</para>
+          </listitem>
+
+          <listitem>
+            <para>\bug --starts a paragraph where one or more bugs may be
+            described</para>
+          </listitem>
+
+          <listitem>
+            <para>\arg --simple one line description of an argument</para>
+          </listitem>
+
+          <listitem>
+            <para>\defgroup &lt;name&gt; (group title) --indicates that a
+            comment block contains documentation for a group of classes,
+            files, or namespaces.</para>
+          </listitem>
+
+          <listitem>
+            <para>\ingroup(&lt;groupname&gt;[&lt;groupname&gt;&lt;groupname&gt;])
+            --if the command is place in the comment block of a class, file,
+            or namespace, then it will be added to the group or groups
+            identified by "groupname"</para>
+          </listitem>
+
+          <listitem>
+            <para>\addtogroup &lt;name&gt; [(title)] --defines a group just
+            like \defgroup but in contrast to that command, using the same
+            "name" more than once will not result in a warning, but will cause
+            merged documentation and the first title found in any of the
+            commands. The title is optional, so this command can be used to
+            add a number of entities to an existing group using @{ and
+            @}</para>
+          </listitem>
+
+          <listitem>
+            <para>\weakgroup &lt;name&gt; [(title)] --can be used exactly like
+            \addtogroup but has a lower priority when it comes to resolving
+            grouping definitions</para>
+          </listitem>
+
+          <listitem>
+            <para>\b &lt;word&gt; --displays the word using a bold font</para>
+          </listitem>
+
+          <listitem>
+            <para>\c &lt;word&gt; --displays the word using a typewriter
+            font</para>
+          </listitem>
+
+          <listitem>
+            <para>\e &lt;word&gt; --displays the word in italics</para>
+          </listitem>
+
+          <listitem>
+            <para>\p &lt;word&gt; --displays the word using a typewriter
+            font</para>
+          </listitem>
+
+          <listitem>
+            <para>\code --starts a block of code. It is interpreted as C/C++
+            code.</para>
+          </listitem>
+
+          <listitem>
+            <para>\endcode --ends a block of code</para>
+          </listitem>
+
+          <listitem>
+            <para>\&amp;, \$,\#,\&lt;,\&gt;,\%,\@,\\ --escape characters to
+            display &amp;,$,#,&lt;,&gt;,%,@,and \ respectvely.</para>
+          </listitem>
+        </itemizedlist>
+      </listitem>
+    </itemizedlist>
+  </section>
+</chapter>

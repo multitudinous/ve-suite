@@ -20,6 +20,20 @@
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
   is used for management of the virtual environment. (version 2.0.1+)</para>
 
+  <para></para>
+
+  <para>The dependencies are best installed in the following order:</para>
+
+  <para>1. CMake</para>
+
+  <para>2. VRJuggler</para>
+
+  <para>3. OpenSceneGraph</para>
+
+  <para>4. VTK</para>
+
+  <para></para>
+
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
   dependencies zip file</ulink></para>
@@ -59,7 +73,7 @@
   SDK</ulink> is needed for Juggler's java-based VRJconfig program.</para>
 
   <para><ulink url="http://www.wxwidgets.org/">wxWidgets</ulink> is used to
-  compile and run the gui. (Click "download" on the left side menu to get to
+  compile and run the GUI. (Click "download" on the left side menu to get to
   the files.) (version 2.6.2+)</para>
 
   <para><ulink
@@ -144,7 +158,7 @@
 
       <listitem>
         <para>On Linux platforms the dependency directory structure will be
-        assumed to be include, bin, lib, and share as is the cast for most
+        assumed to be include, bin, lib, and share as is the case for most
         libraries when the install target is used on a build system.</para>
       </listitem>
     </orderedlist>
@@ -154,8 +168,8 @@
     <title>Building Dependencies on Windows</title>
 
     <para>It is best to read the specific installation/build instructions for
-    each dependency before attempting to build. The information provided is
-    for specific details to allow VE-Suite to build/run correctly.</para>
+    each dependency before attempting to build. The information provided
+    includes specific details to allow VE-Suite to build/run correctly.</para>
 
     <para>VE-Suite and its dependencies are currently built and tested using
     Visual Studio 8.0(2005).</para>

@@ -4,24 +4,39 @@
 
   <para>VE-Suite contains three programs you can run: the Naming Service,
   which allows you to connect to VE-CE; VE-Conductor, which provides the
-  controls; and VE-Xplorer, which displays the scene. All three can be
-  launched from VE-Launcher. The final step is connecting VE-Conductor to the
-  naming server. This lets you process and manipulate the chosen
-  dataset.</para>
+  controls; and VE-Xplorer, which displays the scene.</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>Naming Service, which allows you to connect to VE-CE</para>
+    </listitem>
+
+    <listitem>
+      <para>VE-Conductor, which provides the controls</para>
+    </listitem>
+
+    <listitem>
+      <para>VE-Xplorer, which displays the scene</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>All three can be launched from VE-Launcher. The final step is
+  connecting VE-Conductor to the naming server. This lets you process and
+  manipulate the chosen dataset.</para>
 
   <section id="starting_vesuite">
     <title>Starting VE-Suite</title>
 
     <para>VE-Launcher is the gateway to VE-Suite. To open VE-Launcher, Windows
     users should double-click the VE-Suite desktop icon or velauncher.exe in
-    the VE_Suite folder. Unix/Linux users should go into the VE_Suite folder
-    and enter:</para>
+    the VE_Suite/bin folder. Unix/Linux users should navigate by terminal into
+    the VE_Suite folder and enter:</para>
 
     <para><code> python velauncher.py</code></para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/startingvesuite1.jpg" />
+        <imagedata fileref="../newveimages/Example1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -36,52 +51,57 @@
 
     <para>If you want to learn more about how to use VE-Launcher, read the
     <olink>VE-Launcher section</olink> of this guide.</para>
-    
+
     <section id="command_line_xplorer">
       <title>Xplorer from the Command Line</title>
-      
-      <para>Users who want to customize how they start up Xplorer can launch it
-      from the command line as well. The Xplorer command is set up as
+
+      <para>Users who want to customize how they start up Xplorer can launch
+      it from the command line as well. The Xplorer command is set up as
       follows:</para>
-      
-      <code><emphasis role="bold">(1)</emphasis>project_tao_osg_vep
-      <emphasis role="bold">(2)</emphasis>-ORBInitRef
-      NameService=corbaloc:iiop:localhost:1239/NameService
-      <emphasis role="bold">(3)</emphasis>/home/users/mgroves/VE_Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf
+
+      <code><emphasis role="bold">(1)</emphasis>project_tao_osg_vep <emphasis
+      role="bold">(2)</emphasis>-ORBInitRef
+      NameService=corbaloc:iiop:localhost:1239/NameService <emphasis
+      role="bold">(3)</emphasis>/home/users/mgroves/VE_Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf
       <emphasis role="bold">(4)</emphasis>-VESDesktop 1280 1024</code>
-      
+
       <orderedlist>
         <listitem>
           <para><emphasis role="bold">project_...:</emphasis> Executable call.
-	  The name may vary, depending on how VE-Suite was built.</para>
+          The name may vary, depending on how VE-Suite was built.</para>
         </listitem>
+
         <listitem>
-          <para><emphasis role="bold">CORBA Arguments:</emphasis>
-	  Xplorer accepts any CORBA arguments passed to it.</para>
+          <para><emphasis role="bold">CORBA Arguments:</emphasis> Xplorer
+          accepts any CORBA arguments passed to it.</para>
         </listitem>
+
         <listitem>
           <para><emphasis role="bold">Juggler configuration files:</emphasis>
-	  If a file is passed to Xplorer, it's read as a Juggler configuration
-	  file.</para>
+          If a file is passed to Xplorer, it's read as a Juggler configuration
+          file.</para>
         </listitem>
+
         <listitem>
-          <para><emphasis role="bold">Xplorer flags:</emphasis> Xplorer has two
-	  flags you can set for it:</para>
-	  <itemizedlist>
-	    <listitem>
-	      <para><emphasis role="bold">-VESDesktop [height] [width]:</emphasis>
-	      Runs Xplorer in desktop mode. [height] &amp; [width] are the dimensions
-	      of the screen.</para>
-	    </listitem>
-	    <listitem>
-	      <para><emphasis role="bold">-VESCluster [master computer name]:</emphasis>
-	      Runs Xplorer in cluster mode. [master computer name] should be the 
-          computer name of the master in the graphics cluster.</para>
-	    </listitem>
-	  </itemizedlist>
+          <para><emphasis role="bold">Xplorer flags:</emphasis> Xplorer has
+          two flags you can set for it:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para><emphasis role="bold">-VESDesktop [height]
+              [width]:</emphasis> Runs Xplorer in desktop mode. [height] &amp;
+              [width] are the dimensions of the screen.</para>
+            </listitem>
+
+            <listitem>
+              <para><emphasis role="bold">-VESCluster [master computer
+              name]:</emphasis> Runs Xplorer in cluster mode. [master computer
+              name] should be the computer name of the master in the graphics
+              cluster.</para>
+            </listitem>
+          </itemizedlist>
         </listitem>
       </orderedlist>
-
     </section>
   </section>
 
@@ -100,7 +120,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/loadingdata1.jpg" />
+        <imagedata fileref="../newveimages/Running1a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -111,7 +131,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/loadingdata2.jpg" />
+        <imagedata fileref="../newveimages/Running2a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -120,7 +140,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/loadingdata3.jpg" />
+        <imagedata fileref="../newveimages/Running3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -135,7 +155,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/loadingdata4.jpg" />
+        <imagedata fileref="../newveimages/Running4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -153,33 +173,36 @@
     and drag down in the VE-Xplorer window to pull back the camera; continue
     doing so until you can see the scene.</para>
   </section>
-  
+
   <section id="geometry-indepth">
     <title>Geometry In-Depth</title>
+
     <para>VE-Suite can not only load multiple geometry objects, but it can
     transform, shade, and texture them as well.</para>
-    
+
     <section id="loading_geometry">
       <title>Loading Objects and Assemblies</title>
+
       <para>VE-Suite can load multiple geometry objects. To do so, just keep
-      adding CAD file nodes, just like you did with the single CAD file.</para>
-      
+      adding CAD file nodes, just like you did with the single CAD
+      file.</para>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../veimages/loadingdata2.jpg" />
+          <imagedata fileref="../newveimages/Running5b.jpg" />
         </imageobject>
       </mediaobject>
-      
+
       <para>If you want to load multiple instances of the same object, you
       could Load its CAD File multiple times, but that wastes memory. It's
-      better to load it into the scene once, then clone the other instances from
-      it to save memory. Right-click on the object to clone and select
+      better to load it into the scene once, then clone the other instances
+      from it to save memory. Right-click on the object to clone and select
       <guibutton>Clone Node...</guibutton>.</para>
-      
+
       <para>You can also create a new assembly to group geometry objects in.
-      Right-click the assembly you want to create your new assembly in,
-      then select Add Node-&gt;Create Assembly.</para>
-      
+      Right-click the assembly you want to create your new assembly in, then
+      select Add Node-&gt;Create New Assembly.</para>
+
       <para>If you want to populate an assembly fast, you can load the entire
       geometry object tree from another project. First, open the geometry tree
       you want to move, then select Save from the File menu to save it as a
@@ -187,152 +210,161 @@
       right-click the assembly you want to move it to, then select Add
       Node-&gt;Load VEG File.</para>
     </section>
-    
+
     <section id="transforming_geometry">
       <title>Transforming Geometric Objects</title>
-      
+
       <para>Geometric objects can be moved, rotated, and scaled in the scene
-      by using the Transformation dialog. Open the CADTree Manager, right-click
-      the object you want to transform, and select Properties from the pulldown
-      menu that appears. This will bring up the CAD Properties window. The
-      Transformation dialog is its first tag.</para>
-      
+      by using the Transformation dialog. Open the CADTree Manager,
+      right-click the object you want to transform, and select Properties from
+      the pulldown menu that appears. This will bring up the CAD Properties
+      window. The Transformation dialog is its first tag.</para>
+
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../veimages/visualizationsetup2.jpg" />
+          <imagedata fileref="../newveimages/Running6.jpg" />
         </imageobject>
       </mediaobject>
-      
+
       <para>As you edit the Transform properties, the scene will be updated in
       real-time. Once you're happy with the object's size and placement, click
       OK.</para>
-      
-      <para>You can also edit an assembly's Transform properties. An assembly's
-      Transformations affect its members as well; see the Assembly section for
-      more information.</para>
+
+      <para>You can also edit an assembly's Transform properties. An
+      assembly's Transformations affect its members as well; see the Assembly
+      section for more information.</para>
     </section>
-        
+
     <section id="toggling_geometry">
-      <title>Togging Geometric Objects</title>
-      <para>You can toggle the visibility of geometric objects ON and OFF.
-      To do so, right-click the object in the CADtree Manager and select
-      Toggle Node-&gt;On or Off.</para>
+      <title>Toggling Geometric Objects</title>
+
+      <para>You can toggle the visibility of geometric objects ON and OFF. To
+      do so, right-click the object in the CADtree Manager and select Toggle
+      Node-&gt;On or Off.</para>
     </section>
-    
+
     <section id="materials_shaders">
       <title>Materials &amp; Shaders</title>
+
       <para>You can apply custom materials and shaders to geometric objects.
       Right-click the object and select <guibutton>Properties</guibutton>.
-      When the CAD Properties window appears, select the Attributes tag. Choose
-      whether you want a Material or a Shader, then click
+      When the CAD Properties window appears, select the Attributes tag.
+      Choose whether you want a Material or a Shader, then click
       <guibutton>Add</guibutton>.</para>
-      
+
       <para>If you chose a Material, you'll be asked to name it. Once it's in
       the list, you can apply it to the object by left-clicking it. To change
       a material's properties, right-click its name; a menu will appear, with
       options to change its lighting, shininess, opacity, and how the lighting
       and material are applied to the object.</para>
-      
-      <mediaobject>
-        <imageobject>
-          <imagedata fileref="../veimages/material.jpg" />
-        </imageobject>
-      </mediaobject>
-
-      <para>If you chose a Shader, you'll be asked to load one. (Example shaders
-      can be found in the shaders directory.) You can apply it by left-clicking
-      its name.</para>
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../veimages/shading.jpg" />
+          <imagedata fileref="../newveimages/Running7abase.jpg" />
         </imageobject>
       </mediaobject>
-      
-      <para>You can't apply a material &amp; and a shader to an object at the same
-      time. If you want to remove the material or shader from your object, click
-      <guibutton>Restore Defaults</guibutton>. Finally, if you want to remove
-      the material/shader from the Available Attributes list, select its name
-      and click <guibutton>Remove...</guibutton>.</para>
+
+      <para>If you chose a Shader, you'll be asked to load one. (Example
+      shaders can be found in the shaders directory.) You can apply it by
+      left-clicking its name.</para>
+
+      <mediaobject>
+        <imageobject>
+          <imagedata fileref="../newveimages/Running7bbase.jpg" />
+        </imageobject>
+      </mediaobject>
+
+      <para>You can't apply a material and a shader to an object at the same
+      time. If you want to remove the material or shader from your object,
+      click <guibutton>Restore Defaults</guibutton>. Finally, if you want to
+      remove the material/shader from the Available Attributes list, select
+      its name and click <guibutton>Remove...</guibutton>.</para>
     </section>
 
     <section id="geometry_colors">
       <title>Coloring Geometric Objects</title>
-      
-      <para>The geometry's color is determined by its Material attribute;
-      to change it, open the geometry's Properties, go to the Attributes tab,
-      and right-click the Material attribute you want to change.</para>
-      
+
+      <para>The geometry's color is determined by its Material attribute; to
+      change it, open the geometry's Properties, go to the Attributes tab, and
+      right-click the Material attribute you want to change.</para>
+
       <para>On Windows, the color dialog box looks like this:</para>
-      
+
       <mediaobject>
         <imageobject>
           <imagedata fileref="../veimages/colorwheel1.jpg" />
         </imageobject>
       </mediaobject>
-      
+
       <para>You can select one of the basic colors in the upper-left corner,
-      or you can use the color map and luminosity slider on the right side
-      of the dialogue to make your own color. Your chosen color will appear
-      in the Color|Solid preview below.</para>
-      
-      <para>If you make your own color, be sure to check the luminosity slider.
-      Your color will appear black or white if it's set too low or high.</para>
-      
+      or you can use the color map and luminosity slider on the right side of
+      the dialogue to make your own color. Your chosen color will appear in
+      the Color|Solid preview below.</para>
+
+      <para>If you make your own color, be sure to check the luminosity
+      slider. Your color will appear black or white if it's set too low or
+      high.</para>
+
       <mediaobject>
         <imageobject>
           <imagedata fileref="../veimages/colorwheel2.jpg" />
         </imageobject>
       </mediaobject>
-      
-      <para>Click OK when you have your new color. Don't bother adding it to
-      your Custom Colors; they'll be forgotten once the dialog's closed.</para>
-      
-      <para>On non-Windows systems, the color dialog box looks like this:</para>
-      
+
+      <para>Click OK when you have your new color. <emphasis role="bold">Don't
+      bother adding it to your Custom Colors</emphasis>; they'll be forgotten
+      once the dialog's closed.</para>
+
+      <para>On non-Windows systems, the color dialog box looks like
+      this:</para>
+
       <mediaobject>
         <imageobject>
           <imagedata fileref="../veimages/colorwheel3.jpg" />
         </imageobject>
       </mediaobject>
-      
+
       <para>Here, you can select a color from the Palette, or use the color
       ring and triangle to make a custom color. The bar below the color ring
       shows the old color on the left and the new color on the right.</para>
-      
+
       <para>To make a custom color, choose its hue by clicking in the color
       ring, then choose its saturation and value by clicking in the color
       triangle. Click OK when you have your new color.</para>
     </section>
-    
+
     <section id="using assemblies">
       <title>Using Assemblies</title>
-      
-      <para>Assemblies group geometric objects together so you can modify all of
-      them at once. An assembly's properties are passed to its members. Here's
-      how modifying an assembly's properties changes its members:</para>
+
+      <para>Assemblies group geometric objects together so you can modify all
+      of them at once. An assembly's properties are passed to its members.
+      Here's how modifying an assembly's properties will change its
+      members:</para>
+
       <itemizedlist>
         <listitem>
           <para><emphasis role="bold">Transformation:</emphasis> Member
-	  translations are relative to their assembly's axes, not the world's
-	  axes. Member scalings are relative to their assembly's scalings
-	  (Ex: If you double the scale of a member whose assembly is already
-	  double-scaled, the member will be scaled 4x original size.) Assembly
-	  rotations are around the assembly's origin point, not members' origin
-	  points.</para>
+          translations are relative to their assembly's axes, not the world's
+          axes. Member scalings are relative to their assembly's scalings (Ex:
+          If you double the scale of a member whose assembly is already
+          double-scaled, the member will be scaled 4x original size.) Assembly
+          rotations are around the assembly's origin point, not members'
+          origin points.</para>
         </listitem>
+
         <listitem>
           <para><emphasis role="bold">Materials &amp; Shaders:</emphasis>
-	  Materials &amp; shaders applied to assemblies are applied to its
-	  members. If a member is assigned a material or shader as well, the
-	  member's material or shader overrides its assembly's material or
-	  shader.</para>
+          Materials &amp; shaders applied to assemblies are applied to its
+          members. If a member is assigned a material or shader as well, the
+          member's material or shader overrides its assembly's material or
+          shader.</para>
         </listitem>
+
         <listitem>
           <para><emphasis role="bold">Toggle Node:</emphasis> Toggling an
-	  assembly OFF hides all of its members. Toggling an assembly ON shows
-	  any members who are toggled ON. If a member is toggled OFF, toggling
-	  its assembly ON will not reveal that member.</para>
+          assembly OFF hides all of its members. Toggling an assembly ON shows
+          any members who are toggled ON. If a member is toggled OFF, toggling
+          its assembly ON will not reveal that member.</para>
         </listitem>
       </itemizedlist>
 
@@ -348,8 +380,8 @@
     <title>Navigation</title>
 
     <para>There are two ways to manipulate VE-Suite's view using just the
-    mouse: dragging in the Xplorer window itself or using the Navigation
-    Pane. You can also use a RemotePoint RF wand to navigate VE-Suite.</para>
+    mouse: dragging in the Xplorer window itself or using the Navigation Pane.
+    You can also use a RemotePoint RF wand to navigate VE-Suite.</para>
 
     <section id="xplorerwindow">
       <title>Xplorer Window</title>
@@ -375,16 +407,16 @@
       <para>The mouse wheel button handles the other translations. Hold it
       down to drag the scene left, right, up, or down across the
       screen.</para>
-      
+
       <para><emphasis role="bold">Note:</emphasis> You may notice some trouble
       returning to your original orientation after rotating the scene. That's
       because the mouse controls rotate around an arbitrary axis; it lets you
       rotate in all three dimensions, but as a tradeoff, it's harder to return
       to a previous orientation.</para>
-      
+
       <para>If you want to return to a standard orientation, use the
       <guibutton>Reset</guibutton> and <guibutton>Frame All</guibutton>
-      commands under the VE-Xplorer->Display submenu.</para>
+      commands under the VE-Xplorer-&gt;Display submenu.</para>
     </section>
 
     <section id="navigation_pane">
@@ -395,7 +427,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../veimages/navigation2.jpg" />
+          <imagedata fileref="../newveimages/Running9.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -403,7 +435,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../veimages/navigation3.jpg" />
+          <imagedata fileref="../newveimages/Running10.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -434,22 +466,35 @@
           <para><guibutton>Reset Nav Position</guibutton> resets the camera to
           its initial position.</para>
         </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Lower Limit <emphasis>sets whether or
+          not movement in the z-direction can be
+          negative.</emphasis></emphasis></para>
+        </listitem>
+
+        <listitem>
+          <para><emphasis role="bold">Store Start Position <emphasis>allows
+          you to store an initial position for the
+          model.</emphasis></emphasis></para>
+        </listitem>
       </itemizedlist>
     </section>
-    
+
     <section id="wand_navigation">
       <title>RemotePoint Wand</title>
-      
-      <para>With the proper Juggler configuration, the Remotepoint RF wand
-      can be used to navigate VE-Suite. Once the wand's set up, holding Up
-      will move the camera in the direction the wand's pointing. Holding the
-      Left Shoulder button will rotate the camera to its left.</para>
-      
+
+      <para>With the proper Juggler configuration, the Remotepoint RF wand can
+      be used to navigate VE-Suite. Once the wand is set up, holding Up will
+      move the camera in the direction the wand's pointing. Holding the Left
+      Shoulder button and pointing to the left will rotate the camera to its
+      left.</para>
+
       <mediaobject>
         <imageobject>
           <imagedata fileref="../veimages/remotediagram.jpg" />
         </imageobject>
-      </mediaobject>      
+      </mediaobject>
     </section>
   </section>
 
@@ -461,57 +506,59 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/viewLocations.jpg" />
+        <imagedata fileref="../newveimages/Running11.jpg" />
       </imageobject>
     </mediaobject>
 
     <para>The Viewpoints Pane starts without any viewpoints. As you add them
-    to the pane, they will appear in the pulldown menu. From there, just select
-    one to return to that viewpoint.</para>
+    to the pane, they will appear in the pulldown menu. From there, just
+    select one to return to that viewpoint.</para>
 
     <para>To add a viewpoint, position the camera just like you want it in the
-    viewpoint, then click Add <guibutton>New View Pt</guibutton>. The viewpoint
-    will be added to the pulldown menu.</para>
-    
-    <para>You can delete view points by clicking the <guibutton>Delete</guibutton>
-    button and selecting which viewpoint you want to remove.</para>
+    viewpoint, then click <emphasis role="bold">Add
+    Location<emphasis><guibutton>.</guibutton></emphasis></emphasis> The
+    viewpoint will be added to the pulldown menu.</para>
+
+    <para>You can delete view points by clicking the <emphasis
+    role="bold"><guibutton>Delete</guibutton> Location(s)</emphasis> button
+    and selecting which viewpoint you want to remove.</para>
 
     <para>Once you add a viewpoint, the "stored_viewpts_flythroughs.vel" file
     in your working directory is updated. It is automatically updated whenever
     you add or delete a viewpoint. You can restore your saved viewpoints later
-    by clicking the <guibutton>Load View Location File</guibutton> button.</para>
+    by clicking the <guibutton>Load</guibutton> button.</para>
 
     <para>To move to a viewpoint, select it from the pulldown menu below
     <guibutton>Move to a View Point</guibutton>. The camera will fly to that
-    viewpoint at the speed set under the <guibutton>Movement Speed
-    Control</guibutton>.</para>
-    
-    <para>You can also cycle the viewpoints through a flythrough. Click on the
-    <guibutton>Start Active Flythrough</guibutton> button to begin a flythrough
-    between each viewpoint in successive order. The flythrough will start at the
-    first viewpoint, then hit each successive viewpoint, going at the speed
-    specified by the <guibutton>Movement Speed Control</guibutton>. When it
-    reaches the last viewpoint, it will go back to the first one and repeat the
-    flythrough. To stop the flythrough at any time, click the <guibutton>Stop
-    Flythrough</guibutton> button.</para>
+    viewpoint at the speed set in the speed
+    scroller<guibutton></guibutton>.</para>
 
+    <para>You can also cycle the viewpoints through a flythrough. Click on the
+    <guibutton>Start</guibutton> button below <emphasis role="bold">Automate
+    Flythrough</emphasis> to begin a flythrough between each viewpoint in
+    successive order. The flythrough will start at the first viewpoint, then
+    hit each successive viewpoint, going at the speed specified by the speed
+    scroller<guibutton></guibutton>. When it reaches the last viewpoint, it
+    will go back to the first one and repeat the flythrough. To stop the
+    flythrough at any time, click the <guibutton>Stop</guibutton>
+    button.</para>
   </section>
-  
+
   <section id="xplorer_displays">
     <title>Xplorer Displays</title>
-    
-    <para>You can display a FPS (Frames Per Second) counter and a
-    coordinate compass in the VE-Xplorer window.</para>
-    
+
+    <para>You can display a FPS (Frames Per Second) counter and a coordinate
+    compass in the VE-Xplorer window.</para>
+
     <para>To display the FPS counter, select VE-Xplorer-&gt;Display-&gt;Frame
     Rate under the VE-Conductor menus. Xplorer will display the FPS in the
     lower-right corner of its window.</para>
-    
+
     <para>To display the coordinate compass, select
-    VE-Xplorer-&gt;Display-&gt;Coord System. Xplorer will display the coordinate
-    compass in the upper-left corner of its window.</para>
+    VE-Xplorer-&gt;Display-&gt;Coord System. Xplorer will display the
+    coordinate compass in the upper-left corner of its window.</para>
   </section>
-  
+
   <section id="quitting_vesuite">
     <title>Quitting VE-Suite</title>
 

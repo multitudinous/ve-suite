@@ -3,8 +3,8 @@
   <title>Building VE-Suite</title>
 
   <para>Before attempting to build VE-Suite, be sure to build/install the
-  dependencies (see Chapter 8, Dependencies) and set the environment (see
-  Chapter 9, Setting the Environment).</para>
+  dependencies (see Chapter 8, Dependencies) and set the environment variables
+  (see Chapter 9, Setting the Environment).</para>
 
   <section id="unix_build_instructions">
     <title>UNIX/Linux Build Instructions</title>
@@ -23,11 +23,6 @@
 
     <orderedlist>
       <listitem>
-        <para>tao_pf_dbg - OpenGL Performer based application supporting
-        released features.</para>
-      </listitem>
-
-      <listitem>
         <para>tao_osg_dbg - OpenSceneGraph based application supporting
         released features.</para>
       </listitem>
@@ -42,10 +37,6 @@
     configurations:</para>
 
     <orderedlist>
-      <listitem>
-        <para>tao_pf_cluster_dbg</para>
-      </listitem>
-
       <listitem>
         <para>tao_osg_cluster_dbg</para>
       </listitem>
@@ -68,7 +59,7 @@
     <section id="building_vesuite_section">
       <title>Building VE-Suite</title>
 
-      <para> Set the environment variables (see Chapter 9, Setting the
+      <para>Set the environment variables (see Chapter 9, Setting the
       Environment) and launch a session of Visual Studio with the VE-Suite
       project loaded, run the batch file:</para>
 
@@ -77,11 +68,6 @@
       <para>Supported base configurations available:</para>
 
       <orderedlist>
-        <listitem>
-          <para>tao_pf_dbg - OpenGL Performer based application supporting
-          released features</para>
-        </listitem>
-
         <listitem>
           <para>tao_osg_dbg - OpenSceneGraph based application supporting
           released features</para>
@@ -97,10 +83,6 @@
       configurations:</para>
 
       <orderedlist>
-        <listitem>
-          <para>tao_pf_cluster_dbg</para>
-        </listitem>
-
         <listitem>
           <para>tao_osg_cluster_dbg</para>
         </listitem>
@@ -137,58 +119,58 @@
       gui.</para>
     </section>
   </section>
-  
+
   <section id="standalone_cd">
     <title>Running VE-Suite from a CD</title>
-    
+
     <para>You can build a working version of VE-Suite you can run from a CD by
     following these instructions:</para>
-    
+
     <orderedlist>
       <listitem>
-        <para>Create a folder to hold the CD's contents. We'll call this
-	the "CD folder".</para>
+        <para>Create a folder to hold the CD's contents. We'll call this the
+        "CD folder".</para>
       </listitem>
 
       <listitem>
-        <para>Build VE-Suite and its dependencies. Make sure you
-        build them without library or header files; these optional files will
-	make VE-Suite too large to fit on a CD. Once they're built, copy them
-	to the CD folder.</para>
+        <para>Build VE-Suite and its dependencies. Make sure you build them
+        without library or header files; these optional files will make
+        VE-Suite too large to fit on a CD. Once they're built, copy them to
+        the CD folder.</para>
       </listitem>
-      
+
       <listitem>
         <para>Add the autorun.inf and VE_icon.ico files (found in the
-	VE_Installer/installer/StandAloneCDreate directory) to the CD
-	folder. (<emphasis role="bold">NOTE:</emphasis> Make sure the path to
-	VE-Launcher listed in autorun.inf matches the path in your version of
-	VE_Suite.)</para>
+        VE_Installer/installer/StandAloneCDreate directory) to the CD folder.
+        (<emphasis role="bold">NOTE:</emphasis> Make sure the path to
+        VE-Launcher listed in autorun.inf matches the path in your version of
+        VE_Suite.)</para>
       </listitem>
 
       <listitem>
         <para>Add the models you want to include on the CD to the CD folder.
-	We recommend putting them in VE_Suite.1.0.3/share/exampleDatasets
-	with the sample datasets.</para>
+        We recommend putting them in VE_Suite.1.0.3/share/exampleDatasets with
+        the sample datasets.</para>
       </listitem>
-      
+
       <listitem>
         <para>Write the contents of the CD folder to the CD.</para>
       </listitem>
     </orderedlist>
-    
+
     <para><emphasis role="bold">Reminders:</emphasis></para>
-    
+
     <itemizedlist>
       <listitem>
-        <para>Make sure the contents of the CD folder will fit on the CD before
-	you write it.</para>
+        <para>Make sure the contents of the CD folder will fit on the CD
+        before you write it.</para>
       </listitem>
-      
+
       <listitem>
-        <para>While running VE-Suite from a CD, make sure the
-	dependencies directories and the working directory are located on
-	the CD, otherwise the program won't run properly. Also, you can only
-	use .ves (model) files located on the CD itself.</para>
+        <para>While running VE-Suite from a CD, make sure the dependencies
+        directories and the working directory are located on the CD, otherwise
+        the program won't run properly. Also, you can only use .ves (model)
+        files located on the CD itself.</para>
       </listitem>
     </itemizedlist>
   </section>

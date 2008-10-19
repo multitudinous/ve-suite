@@ -25,7 +25,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/visualizationsetup1.jpg" />
+        <imagedata fileref="../newveimages/Visualization1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -36,7 +36,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/visualizationsetup2.jpg" />
+        <imagedata fileref="../newveimages/Visualization2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -57,13 +57,13 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/visualizationsetup3.jpg" />
+        <imagedata fileref="../newveimages/Visualization3base.jpg" />
       </imageobject>
     </mediaobject>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/visualizationsetup4.jpg" />
+        <imagedata fileref="../newveimages/Visualization4a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -93,7 +93,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/datasettransform.jpg" />
+        <imagedata fileref="../newveimages/Visualization5.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -141,7 +141,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/scalarplanes3.jpg" />
+        <imagedata fileref="../newveimages/Visualization8.jpg" />
       </imageobject>
     </mediaobject>
 

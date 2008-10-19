@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<chapter id="Using_Doxygen">
+  <title>Using Doxygen</title>
+
+  <section>
+    <title>Download/Install</title>
+
+    <para>The best information to be had regarding downloading and installing
+    doxygen can be had at their <ulink url="http://www.stack.nl/~dimitri/doxygen/install.html">website</ulink>
+    </para>
+  </section>
+
+  <section>
+    <title>Generate Documentation</title>
+
+    <para>***For the time being, this applies only to linux builds*** In your
+    OS terminal, navigate to the file within VE Suite named doxygen which will
+    contain all its doxygen files. The initial part of the filepath will
+    depend on your install, but the end of it will be: &lt;VeSuite
+    filename&gt;/share/docs/doxygen. To make sure that the configuration file
+    exists, type "doxygen -g", then type "doxygen Doxyfile", this will
+    generate documentation using the default settings. If you wish to create a
+    differently named file to contain documentation settings, this can be
+    accomplished with "doxygen -g &lt;filename&gt;" and "doxygen
+    &lt;filename&gt;". For the default in VE Suite, it is Doxyfile. </para>
+
+    <para>Open the "html" folder inside doxygen. Find the "index.html" file.
+    You can click on it to open it in a browser and (if you've run "doxygen
+    Doxyfile") it will display a hierarchy of documentation for all your
+    generated files.</para>
+
+    <para>To edit the settings for the type of documentation that will be
+    created when doxygen is run, read through the Doxyfile. Each variable is
+    commented, and you can edit the values given to those variables in the
+    Doxyfile.</para>
+  </section>
+
+  <section>
+    <title>Web references</title>
+
+    <para>This <ulink url="http://www.stack.nl/~dimitri/doxygen/starting.html">website</ulink> contains a more detailed explanation for creating the configuration file
+    (Doxyfile) and running doxygen:
+    </para>
+  </section>
+</chapter>

@@ -5,108 +5,181 @@
   <section id="launcher_intro">
     <title>Introduction</title>
 
-    <para>VE-Launcher is a quick, easy way to launch any
-    configuration of VE-Suite. It helps you save your configuration, choose
-    which programs to run, and launch them without entering text commands.
-    Even with all of the options and configurations available, choosing the
-    one you need can still take some work. Here, we explain how to use the
-    Launcher and provide an example of setting it up.</para>
+    <para>VE-Launcher is a quick, easy way to launch any configuration of
+    VE-Suite. It helps you save your configuration, choose which programs to
+    run, and launch them without entering text commands. Even with all of the
+    options and configurations available, choosing the one you need can still
+    take some work. Here, we explain how to use the Launcher and provide an
+    example setup.</para>
   </section>
-  
+
   <section id="starting_launcher">
     <title>Starting the Launcher</title>
-    
-    <para>On the Windows install, VE-Launcher is an executable. Double-click on it
-    to start.</para>
-    
-    <para>On the Unix-based install, VE-Launcher is a python program. Go into
-    VE-Suite's /bin directory and run velauncher.py. From the command line, you can
-    enter the /bin directory and type "python velauncher.py" to run it.</para>
 
-    <para>On the development versions for both Windows &amp; Unix-based, VE-Launcher is
-    a python program, just like on the Unix-based install. Run it in the same way as
-    on the Unix-based install. In dev mode, VE-Launcher doesn't require you to set
-    dependencies &amp; it looks for stereo desktop config files in their build location,
-    not their install location.</para>
-    
-    <para><emphasis role="bold">Preset Environmental Variables:</emphasis> Certain values,
-    such as the VPR_DEBUG_LEVEL, can be automatically passed into VE-Launcher from the
-    environment on start. If they are set in the environment, they'll overwrite the
-    values saved from last time. These variables include:</para>
+    <para>On the Windows install, VE-Launcher is an executable. Double-click
+    on it to start.</para>
+
+    <para>On the Unix-based install, VE-Launcher is a python program. Go into
+    VE-Suite's /bin directory and run velauncher.py. Specifically, from the
+    command line, you can enter the /bin directory and type "python
+    velauncher.py" to run th launcher.</para>
+
+    <para>On both Windows &amp; Unix-based development versions VE-Launcher is
+    a python program, just like on the Unix-based install. Run it in the same
+    way as the Unix-based install. In dev mode, VE-Launcher doesn't require
+    you to set dependencies &amp; it looks for stereo desktop config files in
+    their build location, not their install location.</para>
+
+    <para><emphasis role="bold">Preset Environmental Variables:</emphasis>
+    Certain values, such as the VPR_DEBUG_LEVEL, can be automatically passed
+    into VE-Launcher from the environment on start. If they are set in the
+    environment, they'll overwrite the values saved from last time. These
+    variables include:</para>
+
     <itemizedlist>
       <listitem>
         <para>VE_DEPS_DIR (Dependencies Directory - Windows only)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is the base directory in which the VE-Suite
+            dependencies installer places the associated files during a
+            Windows install.</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>VJ_BASE_DIR (VR Juggler Directory - Unix only)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is the base directory in which VRJuggler is installed
+            during a Unix install.</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>VE_WORKING_DIR (Working Directory)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is the location of a desired application</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>TAO_MACHINE (TAO Machine)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is the computer in which the VE-CE is being run. In
+            desktop mode this is set to the local machine(and cannot connect
+            to another computer). In other modes (i.e. cluster mode), the
+            TAO_MACHINE is run on a single computer and the other nodes
+            communicate with this computer.</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>TAO_PORT (TAO Port)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is the port number on the TAO_Machine though which the
+            communication is being passed.</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>OSGNOTIFYLEVEL (OSG Debug Level)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is a numeric value which assigns how much debug output
+            is displayed for OpenSceneGraph (the scene grapth that VE_Xplorer
+            uses).</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>VPR_DEBUG_ENABLE (VPR Debug)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is a YES/NO value which assigns how much debug output
+            is displayed for VR Juggler.</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
+
       <listitem>
         <para>VPR_DEBUG_NFY_LEVEL (VPR Debug Level)</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>This is a YES/NO value which assigns how much debug output
+            is displayed for VR Juggler</para>
+          </listitem>
+        </itemizedlist>
       </listitem>
     </itemizedlist>
   </section>
 
   <section id="setup_launcher">
     <title>Setting the Launcher's Dependencies</title>
-    
+
     <para>Before you can run VE-Suite, you have to point VE-Launcher to its
-    dependencies. How you do this depends on whether
-    you're running VE-Suite on a Windows or a Unix-based system. Pointing to the dependencies
-    is bypassed completely in Dev mode; VE-Launcher assumes you already have the environmental
-    variables set.</para>
-    
-    <para><emphasis role="bold">Windows:</emphasis> VE-Launcher needs to find the
-    VE-Suite Dependencies directory you installed along with VE-Suite. The first time
-    you start it, the Launcher will ask you to choose the Dependencies directory for it.
-    This should be named VE_Suite.#.#_Dependencies. If you need to change your
-    Dependencies directory later, you can do so from the Options->Choose Dependencies
+    dependencies. How you do this depends on whether you're running VE-Suite
+    on a Windows or a Unix-based system. Pointing to the dependencies is
+    bypassed completely in Dev mode; VE-Launcher assumes you already have the
+    environmental variables set.</para>
+
+    <para><emphasis role="bold">Windows:</emphasis> VE-Launcher needs to find
+    the VE-Suite Dependencies directory you installed along with VE-Suite. The
+    first time you start it, the Launcher will ask you to choose the
+    Dependencies directory for it. This should be named
+    VE_Suite.#.#_Dependencies. If you need to change your Dependencies
+    directory later, you can do so from the Options-&gt;Choose Dependencies
     menu in VE-Launcher.</para>
-    
+
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherbasics1.jpg" />
+        <imagedata fileref="../newveimages/Launcher4.jpg" />
       </imageobject>
     </mediaobject>
 
-    <para><emphasis role="bold">Unix:</emphasis> VE-Launcher supports dependencies spread
-    across multiple directories. The first time you start it, the Launcher will ask you
-    to choose its Dependencies' directories. Add each dependency's directory to the list.</para>
-    
-    <para>The only exception is VR-Juggler's dependency directory. Since it sets multiple
-    variables, you need to choose that separately from the other dependencies.</para>
-    
-    <para>If you need to change your dependencies
-    later, you can do so from the Options->Choose Dependencies menu in VE-Launcher.</para>
+    <para><emphasis role="bold">Unix:</emphasis> VE-Launcher supports
+    dependencies spread across multiple directories. The first time you start
+    it, the Launcher will ask you to choose its Dependencies' directories. Add
+    each dependency's directory to the list.</para>
+
+    <para>The only exception is VR-Juggler's dependency directory. Since it
+    sets multiple variables, you need to choose that separately from the other
+    dependencies.</para>
+
+    <para>If you need to change your dependencies later, you can do so from
+    the Options-&gt;Choose Dependencies menu in VE-Launcher.</para>
 
     <mediaobject>
       <imageobject>
         <imagedata fileref="../veimages/launcherbasics2.jpg" />
       </imageobject>
     </mediaobject>
-    
-    <para><emphasis role="bold">Dev Mode:</emphasis> VE-Launcher doesn't require
-    dependencies in Dev mode; it assumes you've already set the necessary environmental
-    variables.</para>
-    
+
+    <para><emphasis role="bold">Dev Mode:</emphasis> VE-Launcher doesn't
+    require dependencies in Dev mode; it assumes you've already set the
+    necessary environmental variables.</para>
+
     <para>Once you've selected the dependencies, you will be brought to
     VE-Launcher's main window.</para>
   </section>
-  
+
   <section id="launcher_basics">
     <title>The Basics</title>
 
@@ -116,14 +189,15 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherbasics3.jpg" />
+        <imagedata fileref="../newveimages/Example1.jpg" />
       </imageobject>
     </mediaobject>
 
     <itemizedlist>
       <listitem>
-        <para>Working Directory: Input the directory with the files
-        you want to load.</para>
+        <para>Working Directory: Can either type in the directory with the
+        files you want to load, or browse the file system with the
+        button.</para>
       </listitem>
 
       <listitem>
@@ -158,14 +232,14 @@
           </listitem>
 
           <listitem>
-            <para>Shell mode lets the user work in a new shell
-            with the VE-Suite environment set up. If you choose to launch in
-            Shell mode, it will ask you whether you want to set up this shell
-            for VE-Builder. If you do, it will add the VE-Builder directory
-            you choose to the path. On Windows, launching Shell creates the
-            shell in a window; simply close it to exit. On Unix, launching
-            Shell makes the shell a child of your current terminal; type in
-            "exit" to return to your original shell.</para>
+            <para>Shell mode lets the user work in a new shell with the
+            VE-Suite environment set up. If you choose to launch in Shell
+            mode, it will ask you whether you want to set up this shell for
+            VE-Builder. If you do, it will add the VE-Builder directory you
+            choose to the path. On Windows, launching Shell creates the shell
+            in a window; simply close it to exit. On Unix, launching Shell
+            makes the shell a child of your current terminal; type in "exit"
+            to return to your original shell.</para>
           </listitem>
 
           <listitem>
@@ -183,8 +257,9 @@
 
   <section id="launcher_menus">
     <title>Launcher Menus</title>
-    <para>The launcher's main window has a menu bar with
-    the following menus:</para>
+
+    <para>The launcher's main window has a menu bar with the following
+    menus:</para>
 
     <itemizedlist>
       <listitem>
@@ -202,12 +277,26 @@
           </listitem>
 
           <listitem>
+            <para><emphasis role="bold">Preferences: <emphasis>Allows the user
+            to set a defalut working directory rather than use the directory
+            that was in use during the last
+            session.</emphasis></emphasis></para>
+
+            <para><mediaobject>
+      <imageobject>
+        <imagedata fileref="../newveimages/Preferences1.jpg" />
+      </imageobject>
+    </mediaobject></para>
+          </listitem>
+
+          <listitem>
             <para><emphasis role="bold">Close File:</emphasis> Remove any .ves
             or script shell files from the launch.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Quit:</emphasis> Quit VE-Launcher.</para>
+            <para><emphasis role="bold">Quit:</emphasis> Quit
+            VE-Launcher.</para>
           </listitem>
         </itemizedlist>
       </listitem>
@@ -218,9 +307,17 @@
         <itemizedlist>
           <listitem>
             <para><emphasis role="bold">Load:</emphasis> Load a
-            previously-saved VE-Launcher configuration. VE-Launcher configurations
-            store info such as Mode settings, Xplorer configurations, and
-            cluster settings.</para>
+            previously-saved VE-Launcher configuration. VE-Launcher
+            configurations store info such as Mode settings, Xplorer
+            configurations, and cluster settings.</para>
+
+            <para>    
+              <mediaobject>
+                  <imageobject>
+                    <imagedata fileref="../newveimages/LoadConfiguration.jpg" />
+                  </imageobject>
+               </mediaobject> 
+            </para>
           </listitem>
 
           <listitem>
@@ -236,12 +333,6 @@
       </listitem>
     </itemizedlist>
 
-    <mediaobject>
-      <imageobject>
-        <imagedata fileref="../veimages/launcherbasics4.jpg" />
-      </imageobject>
-    </mediaobject>
-
     <itemizedlist>
       <listitem>
         <para>Options menu:</para>
@@ -249,41 +340,25 @@
         <itemizedlist>
           <listitem>
             <para><emphasis role="bold">Choose Dependencies:</emphasis> Change
-            the Dependencies.</para>
+            the location of Dependencies based on where the user has installed
+            them.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Choose Builder Folder:</emphasis> Change
-            the Builder directory. (Windows only)</para>
+            <para><emphasis role="bold">Choose Builder Folder:</emphasis>
+            Change the Builder directory. (Windows only)</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Debug Settings:</emphasis> Sets the
-            debug levels for VE-Launcher and VE-Suite. From here, you can set
-            VPR and OSG debug levels. You can also choose to debug the launch
-            and run the Debug build of VE-Suite.</para>
-            
-            <para>You can chooose to debug the launch by selecting
-            <code>Debug Launch</code>. If you do so, VE-Suite prints the
-            environment variables set for
-            launch in a separate window and writes VE-Suite's output to the
-            'debug.txt' file in VE-Launcher's directory. If you're running a
-            cluster on Windows, it also forces the cluster program consoles
-            to stay open if they encounter errors.</para>
+            <para><emphasis role="bold">Set Debug Levels: <emphasis>Display
+            the varying amounts of debug output for VRJuggler and
+            OpenSceneGraph.</emphasis></emphasis></para>
 
-            <para>On Windows, you can choose to run the Debug build of VE-Suite
-            instead of the Opt build by selecting <code>Run VE-Suite, Debug
-            Build</code>. The Debug build is larger, but prints
-            more information to the command line.</para>
-          </listitem>
-
-          <listitem>
-            <para><emphasis role="bold">Debug Launch:</emphasis> If checked,
-            VE-Suite prints the environment variables set for launch in a separate
-            window and writes VE-Suite's output to the 'debug.txt' file in VE-Launcher's
-            directory. If you're running a cluster on
-            Windows, it also forces the cluster program consoles to stay open
-            if they encounter errors.</para>
+            <para><mediaobject>
+      <imageobject>
+        <imagedata fileref="../newveimages/DebugSettings.jpg" />
+      </imageobject>
+    </mediaobject></para>
           </listitem>
 
           <listitem>
@@ -294,11 +369,16 @@
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">Cluster Wait Times:</emphasis> Customize
-            the time VE-Suite waits between starting the master node and its
-            slaves, and the time VE-Suite waits between starting slaves.</para>
+            <para><emphasis role="bold">Cluster Wait Times:</emphasis>
+            Customize the time VE-Suite waits between starting the master node
+            and its slaves, and the time VE-Suite waits between starting
+            individual slaves.</para>
           </listitem>
         </itemizedlist>
+      </listitem>
+
+      <listitem>
+        <para>Help menu:</para>
       </listitem>
     </itemizedlist>
   </section>
@@ -308,17 +388,17 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launchermodesettings1.jpg" />
+        <imagedata fileref="../newveimages/CustomModeSettings1.jpg" />
       </imageobject>
     </mediaobject>
 
     <para>You use the Mode Settings window to view and change settings. The
     Desktop, Tablet, and Computation modes only let you view their settings;
     Visualization mode lets you change the Xplorer Mode and cluster computers;
-    Custom mode lets you change every setting. Choices
-    are faded out if you can't change them, or if changing them wouldn't do
-    anything. (For example, you can't choose which Xplorer Mode to run if
-    you're not running Xplorer.)</para>
+    Custom mode lets you change every setting. Choices are faded out if you
+    can't change them, or if changing them wouldn't do anything. (For example,
+    you can't choose which Xplorer Mode to run if you're not running
+    Xplorer.)</para>
 
     <para>Options you can set include:</para>
 
@@ -342,8 +422,8 @@
 
       <listitem>
         <para>Which mode to run Xplorer in. You can choose between non-cluster
-        mode (single computer) or cluster mode. This radio list is disabled
-        if you aren't launching Xplorer.</para>
+        mode (single computer) or cluster mode. This radio list is disabled if
+        you aren't launching Xplorer.</para>
       </listitem>
     </itemizedlist>
 
@@ -351,15 +431,15 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launchermodesettings2.jpg" />
+        <imagedata fileref="../newveimages/XplorerConfigurations.jpg" />
       </imageobject>
     </mediaobject>
 
-    <para>VE-Suite has multiple configuration files available. To help
-    you keep track of them, VE-Launcher lets you to keep a list of configuration
+    <para>VE-Suite has multiple configuration files available. To help you
+    keep track of them, VE-Launcher lets you keep a list of configuration
     files you use. Here you can add, rename, and delete list entries. The path
-    to the currently selected entry is listed below, so you can tell which name
-    stands for which file.</para>
+    to the currently selected entry is listed below, so you can tell which
+    name stands for which file.</para>
 
     <para>When you add a new configuration to the list, its initial name is
     its file name. You'll want to rename it to something more
@@ -369,9 +449,9 @@
   <section id="launcher_unix_clusters">
     <title>UNIX Clusters</title>
 
-    <para>VE-Launcher can run VE-Suite across a cluster from one computer.
-    To use the cluster functions of VE-Launcher on Unix, your cluster
-    must satisfy these requirements:</para>
+    <para>VE-Launcher can run VE-Suite across a cluster from one computer. To
+    use the cluster functions of VE-Launcher on Unix, your cluster must
+    satisfy these requirements:</para>
 
     <orderedlist>
       <listitem>
@@ -413,9 +493,9 @@
       </listitem>
 
       <listitem>
-        <para>Set your settings and select the Cluster Xplorer mode.
-        The <guibutton>Cluster Settings</guibutton> button will
-        then be enabled.</para>
+        <para>Set your settings and select the Cluster Xplorer mode. The
+        <guibutton>Cluster Settings</guibutton> button will then be
+        enabled.</para>
 
         <mediaobject>
           <imageobject>
@@ -425,14 +505,14 @@
       </listitem>
 
       <listitem>
-        <para>Click <guibutton>Cluster Settings</guibutton>. A window
-        will pop up showing the master and slaves listed. Put the master's
-        name in, then add each slave's name to the list. Click
+        <para>Click <guibutton>Cluster Settings</guibutton>. A window will pop
+        up showing the master and slaves listed. Put the master's name in,
+        then add each slave's name to the list. Click
         <guibutton>OK</guibutton> when you're done.</para>
 
         <para>You can also pass extra variables to the cluster computers.
-        Click on the <guibutton>Pass Extra Vars</guibutton> and list the
-        extra variables you want to pass.</para>
+        Click on the <guibutton>Pass Extra Vars</guibutton> and list the extra
+        variables you want to pass.</para>
 
         <para>Click <guibutton>OK</guibutton> when you're done.</para>
 
@@ -460,11 +540,11 @@
   <section id="launcher_windows_clusters">
     <title>Windows Clusters</title>
 
-    <para>VE-Launcher can start VE-Suite across a Windows
-    cluster through <ulink
+    <para>VE-Launcher can start VE-Suite across a Windows cluster through
+    <ulink
     url="http://www.sysinternals.com/Utilities/PsExec.html">PsExec</ulink>.</para>
 
-    <para>To use the cluster functions of VE-Launcher on Unix, your cluster
+    <para>To use the cluster functions of VE-Launcher on Windows, your cluster
     must satisfy these requirements:</para>
 
     <orderedlist>
@@ -484,19 +564,19 @@
 
     <orderedlist>
       <listitem>
-        <para>If you're running NameServer and Conductor on a certain computer,
-        open VE-Launcher from that computer. (VE-Launcher runs NameServer and
-        Conductor from the current computer.)</para>
+        <para>If you're running NameServer and Conductor on a certain
+        computer, open VE-Launcher from that computer. (VE-Launcher runs
+        NameServer and Conductor from the current computer.)</para>
       </listitem>
 
       <listitem>
-        <para>Set your settings and select the Cluster Xplorer mode.
-        The <guibutton>Cluster Settings</guibutton> button will
-        then be enabled.</para>
+        <para>Set your settings and select the Cluster Xplorer mode. The
+        <guibutton>Cluster Settings</guibutton> button will then be
+        enabled.</para>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="../veimages/windowscluster1.jpg" />
+            <imagedata fileref="../newveimages/windowscluster1.jpg" />
           </imageobject>
         </mediaobject>
       </listitem>
@@ -513,16 +593,16 @@
         setup. If you pass your username, you will have to manually enter your
         password in each Psexec window as it launches; VE-Launcher doesn't
         send passwords for security reasons.</para>
-        
+
         <para>You can also pass extra variables to the cluster computers.
-        Click on the <guibutton>Pass Extra Vars</guibutton> and list the
-        extra variables you want to pass.</para>
+        Click on the <guibutton>Pass Extra Vars</guibutton> and list the extra
+        variables you want to pass.</para>
 
         <para>Click <guibutton>OK</guibutton> when you're done.</para>
 
         <mediaobject>
           <imageobject>
-            <imagedata fileref="../veimages/windowscluster2.jpg" />
+            <imagedata fileref="../newveimages/windowscluster2.jpg" />
           </imageobject>
         </mediaobject>
       </listitem>
@@ -550,19 +630,19 @@
 
   <section id="launcher_command_line">
     <title>VE-Launcher Command Line Arguments</title>
-    
+
     <para>Once VE-Launcher is set up, you can quickly start up VE-Suite by
     passing arguments from the command line. Some arguments pass values to
     VE-Launcher, others bypass VE-Launcher completely and auto-launch
     VE-Suite. (Arguments that auto-launch VE-Suite use the previously-saved
     settings for any fields they don't change.)</para>
-    
+
     <itemizedlist>
       <listitem>
         <para><emphasis role="bold">(file):</emphasis> Passes a .ves file or
-        shell script named (file) to VE-Launcher. Auto-launches
-        VE-Suite if Auto-Launch Passed Files has been selected in VE-Launcher,
-        else it starts VE-Launcher with the file loaded.</para>
+        shell script named (file) to VE-Launcher. Auto-launches VE-Suite if
+        Auto-Launch Passed Files has been selected in VE-Launcher, else it
+        starts VE-Launcher with the file loaded.</para>
       </listitem>
 
       <listitem>
@@ -571,40 +651,45 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-g (config), --config=(config):</emphasis>
-        Loads the VE-Launcher configuration named (config).</para>
+        <para><emphasis role="bold">-g &lt;config&gt;,
+        --config=&lt;config&gt;:</emphasis> Loads the VE-Launcher
+        configuration named &lt;config&gt;.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-d, --dev:</emphasis> Starts VE-Launcher in
-        Development mode.</para>
+        <para><emphasis role="bold">-d, --dev:</emphasis> Starts VE-Launcher
+        in Development mode.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-w (dir), --dir=(dir):</emphasis>
-        Auto-launches VE-Suite with the working directory set to (dir).</para>
+        <para><emphasis role="bold">-w &lt;dir&gt;,
+        --dir=&lt;dir&gt;:</emphasis> Auto-launches VE-Suite with the working
+        directory set to &lt;dir&gt;.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-t (name), --taomachine=(name):</emphasis>
-        Auto-launches VE-Suite with TAOMACHINE set to (name).</para>
+        <para><emphasis role="bold">-t &lt;name&gt;,
+        --taomachine=&lt;name&gt;:</emphasis> Auto-launches VE-Suite with
+        TAOMACHINE set to &lt;name&gt;.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-p (port), --port=(port):</emphasis>
-        Auto-launches VE-Suite with PORT set to (port).</para>
+        <para><emphasis role="bold">-p &lt;port&gt;,
+        --port=&lt;port&gt;:</emphasis> Auto-launches VE-Suite with PORT set
+        to &lt;port&gt;.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-j (file), --jconf=(file):</emphasis>
-        Auto-launches VE-Suite using (file) as VE-Xplorer's Juggler
-        configuration.</para>
+        <para><emphasis role="bold">-j &lt;file&gt;,
+        --jconf=&lt;file&gt;:</emphasis> Auto-launches VE-Suite using
+        &lt;file&gt; as VE-Xplorer's Juggler configuration.</para>
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">-l (boolean), --cluster=(boolean):</emphasis>
-        If (boolean)==True, auto-launches VE-Suite in cluster mode. If
-        (boolean)==False, auto-launches VE-Suite in non-cluster mode.</para>
+        <para><emphasis role="bold">-l &lt;boolean&gt;,
+        --cluster=&lt;boolean&gt;:</emphasis> If &lt;boolean&gt;==True,
+        auto-launches VE-Suite in cluster mode. If &lt;boolean&gt;==False,
+        auto-launches VE-Suite in non-cluster mode.</para>
       </listitem>
 
       <listitem>
@@ -613,52 +698,53 @@
       </listitem>
 
       <listitem>
-        <para><emphasis role="bold">Program Arguments:</emphasis> Program arguments
-        set certain parts of VE-Suite to run. They auto-launch VE-Suite, running the
-        programs specified. Note that only the programs specified in the arguments are
-        run; if you just pass '-x -n', for example, only Xplorer and the
-        Comp. Engine will run, even if the default settings usually run
-        Conductor as well.</para>
-        
+        <para><emphasis role="bold">Program Arguments:</emphasis> Program
+        arguments set certain parts of VE-Suite to run. They auto-launch
+        VE-Suite, running the programs specified. Note that only the programs
+        specified in the arguments are run; if you just pass '-x -n', for
+        example, only Xplorer and the Comp. Engine will run, even if the
+        default settings usually run Conductor as well.</para>
+
         <para>The program arguments are:</para>
+
         <itemizedlist>
           <listitem>
-            <para><emphasis role="bold">-n, --nameserver:</emphasis>
-            Runs the Computational Engine.</para>
+            <para><emphasis role="bold">-n, --nameserver:</emphasis> Runs the
+            Computational Engine.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">-c, --conductor:</emphasis>
-            Runs VE-Conductor.</para>
+            <para><emphasis role="bold">-c, --conductor:</emphasis> Runs
+            VE-Conductor.</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">-x, --xplorer</emphasis>
-            Runs VE-Xplorer</para>
+            <para><emphasis role="bold">-x, --xplorer</emphasis> Runs
+            VE-Xplorer</para>
           </listitem>
 
           <listitem>
-            <para><emphasis role="bold">-s, --shell:</emphasis>
-            Runs a shell with VE-Suite's environment set.</para>
+            <para><emphasis role="bold">-s, --shell:</emphasis> Runs a shell
+            with VE-Suite's environment set.</para>
           </listitem>
         </itemizedlist>
       </listitem>
     </itemizedlist>
-    
   </section>
-    
+
   <section id="launcher_example">
     <title>Example</title>
 
     <para>John Doe wants to set up VE-Suite to look at a virtual power plant
-    design. He needs to set it in Visualization mode, using the VR Juggler
-    configuration "standalone". It also has to connect to computer kiwi on port 1239.</para>
+    design. He needs to start it in Visualization mode, using the VR Juggler
+    configuration "standalone". It also has to connect to computer kiwi on
+    port 1239.</para>
 
     <para>When he starts VE-Launcher, he sees this:</para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample1.jpg" />
+        <imagedata fileref="../newveimages/Example1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -668,7 +754,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample2.jpg" />
+        <imagedata fileref="../newveimages/Example2.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -680,7 +766,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample3.jpg" />
+        <imagedata fileref="../newveimages/Example3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -689,7 +775,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample4.jpg" />
+        <imagedata fileref="../newveimages/Example4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -699,18 +785,18 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample5.jpg" />
+        <imagedata fileref="../newveimages/Example5.jpg" />
       </imageobject>
     </mediaobject>
 
     <para>Visualization mode sets most of the options, and the Non-Cluster
     Xplorer mode is already selected. That leaves changing the Xplorer
-    configuration. However, the configuration he needs isn't on the
-    list yet. John clicks <guibutton>Edit Configuration List</guibutton>.</para>
+    configuration. However, the configuration he needs isn't on the list yet.
+    John clicks <guibutton>Edit Configuration List</guibutton>.</para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample6.jpg" />
+        <imagedata fileref="../newveimages/Example6.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -718,16 +804,17 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample7.jpg" />
+        <imagedata fileref="../newveimages/Example7.jpg" />
       </imageobject>
     </mediaobject>
 
-    <para>It is automatically added to the list as standalone. John renames it
-    "Plant Design" so he can remember which project it is for.</para>
+    <para>It is automatically added to the list with the name "standalone".
+    John renames it "Plant Design" so he can remember which project it is
+    for.</para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../veimages/launcherexample8.jpg" />
+        <imagedata fileref="../newveimages/Example8.jpg" />
       </imageobject>
     </mediaobject>
 
