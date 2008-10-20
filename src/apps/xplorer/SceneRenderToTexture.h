@@ -61,6 +61,8 @@ namespace osgPPU
 class Processor;
 class UnitOut;
 class UnitInOut;
+class UnitInResampleOut;
+class UnitCameraAttachmentBypass;
 }
 
 // --- C/C++ Libraries --- //
@@ -111,7 +113,8 @@ public:
     ///\return The osg::Camera being used to render to the FBO
     osg::Camera* const GetCamera();
 
-    ///
+    ///Get the root node for all children in the scene to be added to
+    ///\return The root osg::Group node
     osg::Group* const GetGroup() const;
 
     ///Return the texture that is being rendered for the desktop display
@@ -126,9 +129,11 @@ public:
         osg::Group* root, osgUtil::SceneView* sv, std::string& filename );
 
     ///Update the projection and viewport information for the rtt's cameras
+    ///NOTE: Must have an active context to call
     void UpdateRTTProjectionAndViewportMatrix( osgUtil::SceneView* sv );
 
     ///Run the UpdateVisitor on all of the osgPPU units and processors
+    ///NOTE: Must have an active context to call
     void UpdateProcessorAndUnits();
 
 protected:
@@ -176,7 +181,8 @@ private:
 
     ///The final output of the osgPPU pipeline
     vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
-
+    
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mfinal;
 };
 } //end xplorer
 } //end ves

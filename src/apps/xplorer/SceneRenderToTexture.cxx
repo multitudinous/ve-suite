@@ -320,24 +320,25 @@ void SceneRenderToTexture::InitProcessor(
     {
         colorBuffer0->setName( "ColorBuffer0Bypass" );
         colorBuffer0->setBufferComponent( osg::Camera::COLOR_BUFFER0 );
-        
+        //colorBuffer0->setInputTextureIndexForViewportReference( -1 );
+
     }
     (*mProcessor)->addChild( colorBuffer0.get() );
 
     //COLOR_BUFFER1 bypass
     osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > colorBuffer1 =
-        new osgPPU::UnitCameraAttachmentBypass();
+         new osgPPU::UnitCameraAttachmentBypass();
     {
         colorBuffer1->setName( "ColorBuffer1Bypass" );
         colorBuffer1->setBufferComponent( osg::Camera::COLOR_BUFFER1 );
-        
+        //colorBuffer1->setInputTextureIndexForViewportReference( -1 );
     }
     (*mProcessor)->addChild( colorBuffer1.get() );
 
     //Downsample by 1/2 original size
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
     osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
-        new osgPPU::UnitInResampleOut();
+         new osgPPU::UnitInResampleOut();
     {
         float downsample = 0.5;
         quadScreenSize *= downsample;
@@ -345,6 +346,7 @@ void SceneRenderToTexture::InitProcessor(
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->setFactorX( downsample );
         glowDownSample->setFactorY( downsample );
+        //glowDownSample->setInputTextureIndexForViewportReference( 0 );
     }
     colorBuffer1->addChild( glowDownSample.get() );
 
@@ -393,6 +395,7 @@ void SceneRenderToTexture::InitProcessor(
         gaussX->set( "glowMap", 0 );
 
         blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
+        blurX->setInputTextureIndexForViewportReference( -1 );
     }
     glowDownSample->addChild( blurX.get() );
 
@@ -441,11 +444,13 @@ void SceneRenderToTexture::InitProcessor(
         gaussY->set( "glowMap", 0 );
 
         blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
+        blurY->setInputTextureIndexForViewportReference(-1 );
     }
     blurX->addChild( blurY.get() );
 
     //Perform final color operations and blends
-    osg::ref_ptr< osgPPU::UnitInOut > final = new osgPPU::UnitInOut();
+    *mfinal = new osgPPU::UnitInOut();
+    osg::ref_ptr< osgPPU::UnitInOut > final = (*mfinal).get();
     {
         //Set name and indicies
         final->setName( "Final" );
@@ -475,9 +480,11 @@ void SceneRenderToTexture::InitProcessor(
             "glowColor", osg::Vec4( 0.57255, 1.0, 0.34118, 1.0 ) );
 
         final->getOrCreateStateSet()->setAttributeAndModes( finalShader.get() );
-        final->setInputToUniform( colorBuffer0.get(), "baseMap", true );
-        final->setInputToUniform( colorBuffer1.get(), "stencilGlowMap", true );
-        final->setInputToUniform( blurY.get(), "glowMap", true );
+        bool addedCorrectly = false;
+        addedCorrectly = final->setInputToUniform( colorBuffer0.get(), "baseMap", true );
+        //addedCorrectly = final->setInputToUniform( colorBuffer1.get(), "stencilGlowMap", true );
+        //std::cout << " added " << addedCorrectly << std::endl;
+        addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
         final->setInputTextureIndexForViewportReference( -1 );
    }
 
@@ -563,7 +570,11 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
     }
     
     osg::Camera* svCamera = sv->getCamera();
+
     (*mQuadOut)->setViewport( svCamera->getViewport() );
+    (*mQuadOut)->dirty();
+    (*mfinal)->setViewport( svCamera->getViewport() );
+    (*mfinal)->dirty();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::UpdateProcessorAndUnits()
@@ -573,6 +584,7 @@ void SceneRenderToTexture::UpdateProcessorAndUnits()
         return;
     }
 
+    (*mProcessor)->dirtyUnitSubgraph();
     osg::ref_ptr< osgUtil::UpdateVisitor > update =
         new osgUtil::UpdateVisitor();
     (*mProcessor)->accept( *(update.get()) );
