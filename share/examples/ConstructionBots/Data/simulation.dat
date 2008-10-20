@@ -1,4 +1,12 @@
 GridSize = 51
 NumBlocks = 24
-NumAgents = 3
+NumAgents = 1
+BlockSensorRange = 12
+GridSize = 51
+NumBlocks = 24
+NumAgents = 1
+BlockSensorRange = 10
+GridSize = 51
+NumBlocks = 24
+NumAgents = 1
 BlockSensorRange = 10
