@@ -4,7 +4,7 @@
 <chapter id="Using_Doxygen">
   <title>Using Doxygen</title>
 
-  <section>
+  <section id="using_doxygen_download_install">
     <title>Download/Install</title>
 
     <para>The best information regarding downloading and installing doxygen
@@ -12,7 +12,7 @@
     url="http://www.stack.nl/~dimitri/doxygen/install.html">here</ulink></para>
   </section>
 
-  <section>
+  <section id="using_doxygen_generate_documentation">
     <title>Generate Documentation</title>
 
     <para>***For the time being, this applies only to linux builds*** In your
@@ -37,7 +37,7 @@
     Doxyfile.</para>
   </section>
 
-  <section>
+  <section id="using_doxygen_web_references">
     <title>Web references</title>
 
     <para>This website contains a more detailed explanation for creating the

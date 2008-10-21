@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter id="Documentation Notes">
+<chapter id="documentation_notes">
   <title>Documentation Notes</title>
 
-  <section>
+  <section id="documentation_notes_ground_rules">
     <title>Ground rules</title>
 
     <itemizedlist>

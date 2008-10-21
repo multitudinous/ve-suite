@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
-<chapter>
+<chapter id="chapter_6_code_guidelines">
   <title>Code Guidelines</title>
 
-  <section>
+  <section id="code_guidelines_introduction">
     <title>Introduction</title>
 
     <para>There is an inherent trade-off between robust, readable code and
@@ -13,7 +13,7 @@
     performance.</para>
   </section>
 
-  <section>
+  <section id="code_guidelines_names">
     <title>Names</title>
 
     <para>This section contains general rules that apply to class, variable,
@@ -67,7 +67,7 @@
     it disambiguates between instance variables and local or global variables.
     It also disambiguates between member functions and other functions.</para>
 
-    <section>
+    <section id="code_guidelines_class_names">
       <title>Class Names</title>
 
       <para>Class names are nouns and usually start with "cfd" and follow the
@@ -80,7 +80,7 @@
       publicly accessible classes in the global namespace.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_function_names">
       <title>Function Names</title>
 
       <para>Function names are verbs (e.g., SetRasterFontRange), start with a
@@ -92,7 +92,7 @@
       derived class member function virtual as well to avoid confusion.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_variable_names">
       <title>Variable names</title>
 
       <para>Variable names are nouns and should begin with a lower case
@@ -115,7 +115,7 @@
     </section>
   </section>
 
-  <section>
+  <section id="code_guidelines_classes">
     <title>Classes</title>
 
     <para>Only one public class is allowed per file. Every class name, macro,
@@ -147,7 +147,7 @@
     also declare their destructors as virtual.</para>
   </section>
 
-  <section>
+  <section id="code_guidelines_functions">
     <title>Functions</title>
 
     <para>Always declare a function return type. Never allow the compiler to
@@ -167,7 +167,7 @@
     If the local function could be generalized consider making or adding it to
     a small utility library.</para>
 
-    <section>
+    <section id="code_guidelines_function_arguments">
       <title>Function Arguments</title>
 
       <para>Function argument names are nouns and should begin with a lower
@@ -195,7 +195,7 @@
     </section>
   </section>
 
-  <section>
+  <section id="code_guidelines_variables">
     <title>Variables</title>
 
     <para><emphasis role="bold">Always</emphasis> initialize member variables
@@ -213,7 +213,7 @@
     include the unit the variable represents as a suffix.</para>
   </section>
 
-  <section>
+  <section id="code_guidelines_namespace">
     <title>Namespace</title>
 
     <para>Never place a 'using' statement at global scope in a header file.
@@ -232,7 +232,7 @@
     std;</emphasis>.</para>
   </section>
 
-  <section>
+  <section id="code_guidelines_headers">
     <title>Headers</title>
 
     <para>Header files are for declarations only. It is difficult to read and
@@ -284,10 +284,10 @@
     compilers.</para>
   </section>
 
-  <section>
+  <section id="code_guidelines_logic_style">
     <title>Logic Style</title>
 
-    <section>
+    <section id="code_guidelines_const">
       <title>Const</title>
 
       <para>Use const on any member function that does not change any data. It
@@ -331,7 +331,7 @@
       <para>}</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_include_organization">
       <title>#include organization</title>
 
       <para>Place all #include statements at the start of the file following
@@ -342,7 +342,7 @@
       third party and then system includes.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_conditionals">
       <title>Conditionals</title>
 
       <para>Never use the shorthand ?/: conditional syntax, which inhibits
@@ -390,7 +390,7 @@
       <para>//if( tmp_value == 0 ) return;</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_type_casting">
       <title>Type Casting</title>
 
       <para>Always use the C++-style static_cast syntax rather than C-style
@@ -409,7 +409,7 @@
       <para>}</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_assertions">
       <title>Assertions</title>
 
       <para>Place assertions before code segments that would fail
@@ -433,7 +433,7 @@
       <para>...</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_switch_statements">
       <title>Switch Statements</title>
 
       <para>Wrap each case section with curly braces.</para>
@@ -447,13 +447,13 @@
       statement.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_goto_statements">
       <title>goto Statements</title>
 
       <para>Never use goto statements or labels.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_globals_and_statics">
       <title>Globals and Statics</title>
 
       <para>Never use global variables. Consider using a singleton design
@@ -463,7 +463,7 @@
       pointer in a singleton object.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_preprocessor_macros">
       <title>Preprocessor Macros</title>
 
       <para>Overuse of the C Preprocessor can inhibit debugging. Avoid using
@@ -502,7 +502,7 @@
       <para>}</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_compiler_and_linker_warnings">
       <title>Compiler and Linker Warnings</title>
 
       <para>All code should compile cleanly at the maximum warning level. This
@@ -522,7 +522,7 @@
       warnings under any conditions.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_array_indexing">
       <title>Array Indexing</title>
 
       <para>Single-character variable names can easily be mistaken for numbers
@@ -536,7 +536,7 @@
       <para><code> array[ 2 ] = 0.0;</code></para>
     </section>
 
-    <section>
+    <section id="code_guidelines_parens">
       <title>Parens () with Keywords and Function Policy</title>
 
       <para>Do not put parens next to keywords. Put a space between keywords
@@ -572,10 +572,10 @@
     </section>
   </section>
 
-  <section>
+  <section id="code_guidelines_comment_format">
     <title>Comment Format</title>
 
-    <section>
+    <section id="code_guidelines_braces">
       <title>Braces</title>
 
       <para>Use braces for all if, while, switch, case, for, and do statements
@@ -601,7 +601,7 @@
       lock</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_text_formatting">
       <title>Text Formatting</title>
 
       <para>Limit lines to 80 characters.</para>
@@ -619,7 +619,7 @@
       Notes</ulink>.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_comments">
       <title>Comments</title>
 
       <para>Comments must tell "why", not "what is happening." At every point
@@ -631,13 +631,13 @@
       each source file.</para>
     </section>
 
-    <section>
+    <section id="code_guidelines_docbook_documentation">
       <title>Docbook Documentation</title>
 
       <para>The following sections provide guidelines for editing the VE-Suite
       documentation using Docbook.</para>
 
-      <section>
+      <section id="code_guidelines_gui_buttons">
         <title>GUI Buttons</title>
 
         <para>When referring to GUI buttons, use the Docbook "guibutton" tag,
@@ -652,7 +652,7 @@
         VE-Launcher and start VE-Suite.</para>
       </section>
 
-      <section>
+      <section id="code_guidelines_notes">
         <title>Notes</title>
 
         <para>When including an important note that you want to draw users'
@@ -666,7 +666,7 @@
         <para><emphasis role="bold">NOTE:</emphasis></para>
       </section>
 
-      <section>
+      <section id="code_guidelines_referring_to_vesuite_versions">
         <title>Referring to VE-Suite Versions</title>
 
         <para>When referring to a general version of VE-Suite or any

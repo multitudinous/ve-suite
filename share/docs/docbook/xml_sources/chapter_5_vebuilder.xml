@@ -282,7 +282,7 @@
     your preprocessed data.</para>
   </section>
 
-  <section>
+  <section id="specifying_cutting_planes">
     <title>Specifying Cutting Planes in a .txt File</title>
 
     <para>If you want to extract cutting planes, you can specify the planes in

@@ -4,7 +4,7 @@
 <chapter id="VESuite_Beginners_Guide">
   <title>VE-Suite Beginner's Guide</title>
 
-  <section>
+  <section id="vesuite_beginners_guide_getting_started">
     <title>Getting started</title>
 
     <para>There are four programs that have to be built and installed to run
