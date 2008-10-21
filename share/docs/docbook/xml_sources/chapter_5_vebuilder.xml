@@ -17,7 +17,7 @@
     <para><link linkend="importing_from_fluent">Importing from Fluent
     (.avs)</link></para>
 
-    <para><link linkend="creating_preprocess_data">Creating Preprocessed
+    <para><link linkend="creating_preprocessed_data">Creating Preprocessed
     Data</link></para>
 
     <para><link linkend="creating_texture_based_datasets">Creating
@@ -32,18 +32,17 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Shell launch.jpg" />
+        <imagedata fileref="../veimages/Shell launch.jpg" />
       </imageobject>
     </mediaobject>
 
-    <para><guibutton></guibutton>A shell with the VE-Builder environment will
-    be shown. If you want to change the VE-Builder directory, choose Change
-    Builder Folder from under the Options menu and select the VE_BuilderTolls
-    directory.</para>
+    <para>A shell with the VE-Builder environment will be shown. If you want
+    to change the VE-Builder directory, choose Change Builder Folder from
+    under the Options menu and select the VE_BuilderTolls directory.</para>
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Builder2.jpg" />
+        <imagedata fileref="../veimages/Builder2.jpg" />
       </imageobject>
     </mediaobject>
   </section>
@@ -63,8 +62,6 @@
 
     <para><code> -o &lt;full path to the output directory&gt; -w file COMMAND
     FOR THE NAME OF THE OUTPUT FILE</code></para>
-
-    <para></para>
 
     <para>To see loaderToVtkd's options, type in:</para>
 
@@ -142,8 +139,6 @@
       <para><code> STARUSR=/your_directory/star.usr // a *.usr file is
       required</code></para>
 
-      <para></para>
-
       <para>Change these lines to their respective scalars.</para>
 
       <para><code> VECTORNAME=Velocity // the columns of the *.usr file must
@@ -157,8 +152,6 @@
 
       <para><code> SCALARNAME=scalar3 // the columns of the *.usr file must be
       labeled</code></para>
-
-      <para></para>
 
       <para><code> SCALEINDEX=1 // optional: uses integer indices defined in
       translateToVtk.cpp to set scale factor </code></para>
@@ -221,8 +214,8 @@
       path to the output directory] -w file COMMAND TO SET FILE IN COMMAND
       LINE OR STAR.PARAM FILE</code></para>
 
-      <para><emphasis role="bold"></emphasis>After the code executes, it will
-      dump a .vtu file of the data in the directory you specified.</para>
+      <para>After the code executes, it will dump a .vtu file of the data in
+      the directory you specified.</para>
     </section>
   </section>
 
@@ -246,11 +239,11 @@
     environment much like CFD datasets. However, the FEA data is primarily
     displayed as a surface on the object(s) of interest.</para>
 
-    <para>To display FEA data from a FEA dataset, select the Polydata icon and
-    select the desired scalar for the FEA data.</para>
+    <para>To display FEA data from an FEA dataset, select the Polydata icon
+    and select the desired scalar for the FEA data.</para>
   </section>
 
-  <section id="creating_preprocess_data">
+  <section id="creating_preprocessed_data">
     <title>Creating Preprocessed Data</title>
 
     <para>You will need a .vtu file to create preprocessed data. Start a
@@ -259,9 +252,7 @@
     that there is a directory called POST_DATA in the .vtu file's directory.
     If there is not, create one. Once it's ready, type in:</para>
 
-    <para>
-      <code>preprocessor</code>
-    </para>
+    <para><code>preprocessor</code></para>
 
     <para>The first prompt will ask for a filename. Type in the .vtu's
     filename. The second prompt will ask for a directory to dump the data
@@ -269,29 +260,29 @@
     data in. The program will then ask you what you want to process. Your
     choices include:</para>
 
-    <para>
-      <itemizedlist>
-        <listitem>
-          <para>Decompose Octrees:</para>
-        </listitem>
+    <itemizedlist>
+      <listitem>
+        <para>Decompose Octrees:</para>
+      </listitem>
 
-        <listitem>
-          <para>Extract Surfaces:</para>
-        </listitem>
+      <listitem>
+        <para>Extract Surfaces:</para>
+      </listitem>
 
-        <listitem>
-          <para>Extract Isosurfaces:</para>
-        </listitem>
+      <listitem>
+        <para>Extract Isosurfaces:</para>
+      </listitem>
 
-        <listitem>
-          <para>Extract Cutting Planes:</para>
-        </listitem>
-      </itemizedlist>
-    </para>
+      <listitem>
+        <para>Extract Cutting Planes:</para>
+      </listitem>
+    </itemizedlist>
 
     <para>Once you finish making your choices, it will execute and produce
     your preprocessed data.</para>
+  </section>
 
+  <section>
     <title>Specifying Cutting Planes in a .txt File</title>
 
     <para>If you want to extract cutting planes, you can specify the planes in
@@ -299,32 +290,20 @@
     .txt file in the same directory as the .vtu file and write your cutting
     planes in it using this format:</para>
 
-    <para>
-      <code>1 //Number of x cuts</code>
-    </para>
+    <para><code>1 //Number of x cuts</code></para>
 
-    <para>
-      <code>0.0 //X cuts</code>
-    </para>
+    <para><code>0.0 //X cuts</code></para>
 
-    <para>
-      <code>1 //Number of y cuts</code>
-    </para>
+    <para><code>1 //Number of y cuts</code></para>
 
-    <para>
-      <code>0.0 //Y cuts</code>
-    </para>
+    <para><code>0.0 //Y cuts</code></para>
 
-    <para>
-      <code>4 //Number of z cuts</code>
-    </para>
+    <para><code>4 //Number of z cuts</code></para>
 
-    <para>
-      <code>3.26 3.39 3.42 3.73 //Z cuts</code>
-    </para>
+    <para><code>3.26 3.39 3.42 3.73 //Z cuts</code></para>
 
     <para>Then, when you run preprocessor, enter (1)Yes to Extract cutting
-    planes. It will ask you how to set the number of cuts. Select (2)Specify
+    planes. You will be asked how to set the number of cuts. Select (2)Specify
     text file, then enter the name of your .txt file. Preprocessor will pull
     the values for the cutting planes from it.</para>
   </section>
@@ -342,7 +321,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Builder3base.jpg" />
+        <imagedata fileref="../veimages/Builder3base.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -433,7 +412,7 @@
     -o /home/users/mcdoe/LTN/3D_Jets_Test/jets_vti -x 32 -y 64 -z 32
     /home/users/mcdoe/LTN/3D_Jets_Test/Jets_Data </code></para>
 
-    <para>Which should then be executed as follows:</para>
+    <para>which should then be executed as follows:</para>
 
     <para><code> mpirun –np 2 ./ </code></para>
   </section>
@@ -514,8 +493,8 @@
             <para><emphasis role="bold">NOTE:</emphasis> Although it is
             necessary to use vertex data rather than cell data, using vertex
             data might return an error. To solve this problem, copy the
-            previous command line and add the register number, e.g. "enter
-            oper, getv, te, 5,"</para>
+            previous command line and add the register number (e.g., "enter
+            oper, getv, te, 5,")</para>
           </listitem>
 
           <listitem>

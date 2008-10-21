@@ -2,12 +2,12 @@
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
 "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <chapter>
-  <title>replace_for_ch_6</title>
+  <title>Code Guidelines</title>
 
   <section>
     <title>Introduction</title>
 
-    <para>There’s an inherent trade-off between robust, readable code and
+    <para>There is an inherent trade-off between robust, readable code and
     optimum performance. These coding conventions are designed to maximize
     code robustness and readability, possibly at the expense of optimal
     performance.</para>
@@ -31,8 +31,8 @@
     role="bold">DumpDataToFile</emphasis> are much more descriptive than
     <emphasis role="bold">ErrorCheck</emphasis> or <emphasis
     role="bold">DataFile</emphasis>. In the second case one may need to check
-    the implementation of the function to be comfortable know what exactly it
-    means.</para>
+    the implementation of the function to be confident in knowing exactly what
+    it means.</para>
 
     <para>When the name includes a natural abbreviation such as OpenGL, keep
     the abbreviation and capitalize the abbreviated letters. Never create new
@@ -73,11 +73,11 @@
       <para>Class names are nouns and usually start with "cfd" and follow the
       CamelCase convention.</para>
 
-      <para>Class names should reflect what it is. Do not tag the derived type
-      onto the class. It should be able to stand on its own or be properly
-      reflected in the namespace it resides. All classes should be declared
-      (and defined) within an appropriate namespace. Never place publicly
-      accessible classes in the global namespace.</para>
+      <para>A class name should reflect what the class is. Do not tag the
+      derived type onto the class. It should be able to stand on its own or be
+      properly reflected in the namespace it resides. All classes should be
+      declared (and defined) within an appropriate namespace. Never place
+      publicly accessible classes in the global namespace.</para>
     </section>
 
     <section>
@@ -96,13 +96,13 @@
       <title>Variable names</title>
 
       <para>Variable names are nouns and should begin with a lower case
-      character with multiple words separated by an '_'(underscore). Variables
-      should be declared where they are first used.yaa</para>
+      character with multiple words separated by an '_' (underscore).
+      Variables should be declared where they are first used.</para>
 
-      <para>Member variable names should use the prefix ‘m’ (lower-case m). An
+      <para>Member variable names should use the prefix 'm' (lower-case m). An
       upper-case letter should follow the prefix. An example of a valid member
       variable name is <emphasis role="bold">mViewMatrix</emphasis>. If it is
-      a static variable then use the prefix 's'(lower-case s).</para>
+      a static variable then use the prefix 's' (lower-case s).</para>
 
       <para>Never use single character variable names. A lower-case I variable
       (<emphasis role="bold">i</emphasis>) is often mistaken for the numeral
@@ -131,10 +131,10 @@
     source (.cxx) files. Never place source code in header files, which
     prevents other developers from easily finding the source code.</para>
 
-    <para>Don’t nest classes within other classes. It’s difficult to move a
+    <para>Do not nest classes within other classes. It is difficult to move a
     nested class out of the owning class at a future date because all code
     using the fully qualified nested class name must be fixed. Nesting classes
-    also makes them harder to locate.</para>
+    also causes them to be more difficult to locate.</para>
 
     <para>Each class must support a copy constructor and an operator=() member
     function.</para>
@@ -164,8 +164,8 @@
     <para>If a class implementation needs a local function, include that
     function in the class declaration as protected or private. Avoid declaring
     the function locally in the implementation, which limits code reusability.
-    If the local function could be generalized consider making or adding it
-    tow a small utility library.</para>
+    If the local function could be generalized consider making or adding it to
+    a small utility library.</para>
 
     <section>
       <title>Function Arguments</title>
@@ -175,12 +175,12 @@
       use two words to describe the argument. Ex: <emphasis
       role="bold">tmpValue</emphasis>.</para>
 
-      <para>Always declare function arguments as const if the function doesn’t
-      change their value.</para>
+      <para>Always declare function arguments as const if the function does
+      not change their value.</para>
 
-      <para>If a function doesn’t take arguments, place the left and right
+      <para>If a function does not take arguments, place the left and right
       parenthesis adjacent to each other in both the function declaration and
-      definition. Don’t use the keyword void to indicate that there are no
+      definition. Do not use the keyword void to indicate that there are no
       parameters.</para>
 
       <para>Always name a parameter. For example:</para>
@@ -189,7 +189,7 @@
 
       <para>void SetFoo( int tmpValue )</para>
 
-      <para>// Don’t use this:</para>
+      <para>// Do not use this:</para>
 
       <para>//void SetFoo( int )</para>
     </section>
@@ -269,13 +269,13 @@
     Contours.h in the ves namespace in the Framework subdirectory of the
     Conductor module</para>
 
-    <para>#ifdef VES_CONDUCTOR_FRAMEWORK_CONTOURS_H</para>
+    <para><code>#ifdef VES_CONDUCTOR_FRAMEWORK_CONTOURS_H</code></para>
 
-    <para>#define VES_CONDUCTOR_FRAMEWORK_CONTOURS_H</para>
+    <para><code>#define VES_CONDUCTOR_FRAMEWORK_CONTOURS_H</code></para>
 
-    <para>...</para>
+    <para><code>...</code></para>
 
-    <para>#endif // VES_CONDUCTOR_FRAMEWORK_CONTOURS_H</para>
+    <para><code>#endif // VES_CONDUCTOR_FRAMEWORK_CONTOURS_H</code></para>
 
     <para>Comment the end of every <code>#endif</code>, as shown above. Nested
     <code>#ifdef</code> can be difficult to follow.</para>
@@ -319,7 +319,7 @@
       <para>}</para>
 
       <para>When following the above statements, do not pass plain old data
-      types (POD) like float, int, or double by reference...just mark them
+      types (POD) like float, int, or double by reference. Just mark them
       const.</para>
 
       <para>void printDouble( const double myDouble )</para>
@@ -395,7 +395,7 @@
 
       <para>Always use the C++-style static_cast syntax rather than C-style
       type casting. This improves robustness by forcing you to place
-      parenthesis around the source data. Example:</para>
+      parentheses around the source data. Example:</para>
 
       <para>void Resize( int canvasWidth, int canvasHeight )</para>
 
@@ -518,7 +518,7 @@
 
       <para>Compilers generate different warnings for 32- versus 64-bit
       compilations and debuggable versus optimized compilations. Test all
-      compilation configurations to ensure your code doesn’t introduce new
+      compilation configurations to ensure your code does not introduce new
       warnings under any conditions.</para>
     </section>
 
@@ -614,8 +614,9 @@
       code.</para>
 
       <para>For specific details on writing doxygen-compliant and standardized
-      comments, see Chapter 11 on <link
-      linkend="Documentation Notes">Documentation Notes</link>.</para>
+      comments, see Chapter 16, <ulink
+      url="chapter_16_documentation_notes.xml">Documentation
+      Notes</ulink>.</para>
     </section>
 
     <section>
@@ -624,7 +625,7 @@
       <para>Comments must tell "why", not "what is happening." At every point
       where you had a choice of what to do, place a comment describing which
       choice you made and why. Comments need to be formatted for compatibility
-      with doxygen, see Chapter 11 for further detail.</para>
+      with doxygen. See Chapter 11 for further detail.</para>
 
       <para>Use a standard copyright/disclaimer comment block at the top of
       each source file.</para>
@@ -635,8 +636,6 @@
 
       <para>The following sections provide guidelines for editing the VE-Suite
       documentation using Docbook.</para>
-
-      <para></para>
 
       <section>
         <title>GUI Buttons</title>
@@ -649,8 +648,8 @@
 
         <para>to yield this:</para>
 
-        <para>Click <guibutton>Launch VE-Suite</guibutton> to close VE-Launcher and start
-        VE-Suite.</para>
+        <para>Click <guibutton>Launch VE-Suite</guibutton> to close
+        VE-Launcher and start VE-Suite.</para>
       </section>
 
       <section>

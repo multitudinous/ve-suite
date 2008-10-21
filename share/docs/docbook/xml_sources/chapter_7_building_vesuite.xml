@@ -102,10 +102,10 @@
       example, change the working directory to
       $(VE_SUITE_HOME)VE_TestSuite).</para>
 
-      <para>You will also need to pass in your VR juggler config files as
+      <para>You will also need to pass in your VR Juggler config files as
       command arguments on the configuration properties tab. With the two
       projects still open, right-click on the VE_Xplorer project file, and
-      select properties. For simulation mode, you add the following to your
+      select properties. For simulation mode, add the following to your
       command arguments section:</para>
 
       <para><code> $(VJ_BASE_DIR)sharevrjugglerdataconfigFiles sim.base.jconf
@@ -128,14 +128,14 @@
 
     <orderedlist>
       <listitem>
-        <para>Create a folder to hold the CD's contents. We'll call this the
+        <para>Create a folder to hold the CD's contents. We will call this the
         "CD folder".</para>
       </listitem>
 
       <listitem>
         <para>Build VE-Suite and its dependencies. Make sure you build them
         without library or header files; these optional files will make
-        VE-Suite too large to fit on a CD. Once they're built, copy them to
+        VE-Suite too large to fit on a CD. Once they are built, copy them to
         the CD folder.</para>
       </listitem>
 
@@ -169,7 +169,7 @@
       <listitem>
         <para>While running VE-Suite from a CD, make sure the dependencies
         directories and the working directory are located on the CD, otherwise
-        the program won't run properly. Also, you can only use .ves (model)
+        the program will not run properly. Also, you can only use .ves (model)
         files located on the CD itself.</para>
       </listitem>
     </itemizedlist>

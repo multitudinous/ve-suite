@@ -2,9 +2,7 @@
 <chapter id="Running_VE_Suite">
   <title>Running VE-Suite</title>
 
-  <para>VE-Suite contains three programs you can run: the Naming Service,
-  which allows you to connect to VE-CE; VE-Conductor, which provides the
-  controls; and VE-Xplorer, which displays the scene.</para>
+  <para>VE-Suite contains three programs you can run: </para>
 
   <itemizedlist>
     <listitem>
@@ -36,7 +34,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Example1.jpg" />
+        <imagedata fileref="../veimages/Example1.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -44,13 +42,14 @@
     for the Dependencies folder (see Chapter 1.3, Setting the Runtime
     Environment) before being shown the main window.</para>
 
-    <para>Launcher has some advanced commands, but we can ignore them for now.
-    Make sure Desktop mode is selected and click
+    <para>Launcher has some advanced commands, but they can be ignored for
+    now. Make sure Desktop mode is selected and click
     <guibutton>Launch</guibutton>. VE-Launcher will launch the Naming Service,
     VE-Conductor, and VE-Xplorer in Desktop mode.</para>
 
     <para>If you want to learn more about how to use VE-Launcher, read the
-    <olink>VE-Launcher section</olink> of this guide.</para>
+    <ulink url="chapter_2_launcher.xml"><olink>VE-Launcher
+    section</olink></ulink> of this guide.</para>
 
     <section id="command_line_xplorer">
       <title>Xplorer from the Command Line</title>
@@ -59,11 +58,11 @@
       it from the command line as well. The Xplorer command is set up as
       follows:</para>
 
-      <code><emphasis role="bold">(1)</emphasis>project_tao_osg_vep <emphasis
-      role="bold">(2)</emphasis>-ORBInitRef
-      NameService=corbaloc:iiop:localhost:1239/NameService <emphasis
-      role="bold">(3)</emphasis>/home/users/mgroves/VE_Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf
-      <emphasis role="bold">(4)</emphasis>-VESDesktop 1280 1024</code>
+      <literallayout><emphasis role="bold">(1)</emphasis>project_tao_osg_vep <emphasis
+          role="bold">(2)</emphasis>-ORBInitRef NameService=corbaloc:iiop:localhost:1239/NameService <emphasis
+          role="bold">
+(3)</emphasis>/home/users/mgroves/VE_Suite1.0.3/RHEL_4/share/stereo_desktop/desktop.jconf <emphasis
+          role="bold">(4)</emphasis>-VESDesktop 1280 1024</literallayout>
 
       <orderedlist>
         <listitem>
@@ -108,11 +107,11 @@
   <section id="loading_data_and_connecting">
     <title>Loading Data and Connecting</title>
 
-    <para>VE-Suite loads objects through plugins. Here we will show you how to
-    load a geometry file through a plugin; other data files may be loaded in
-    the same manner.</para>
+    <para>VE-Suite loads objects through plugins. This section describes how
+    to load a geometry file through a plugin; other data files may be loaded
+    in the same manner.</para>
 
-    <para>You set up plugins through the "Available Objects" window on the
+    <para>Plugins are set up through the "Available Objects" window on the
     right side of the screen. To create a new plugin, double-click the red
     "Available Modules" folder, then double-click "DefaultPlugin". A gray box
     will appear. Right-click on this box to access the plugin's menu. Select
@@ -120,7 +119,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Running1a.jpg" />
+        <imagedata fileref="../veimages/Running1a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -131,7 +130,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Running2a.jpg" />
+        <imagedata fileref="../veimages/Running2a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -140,7 +139,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Running3.jpg" />
+        <imagedata fileref="../veimages/Running3.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -155,7 +154,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Running4.jpg" />
+        <imagedata fileref="../veimages/Running4.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -189,12 +188,12 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../newveimages/Running5b.jpg" />
+          <imagedata fileref="../veimages/Running5b.jpg" />
         </imageobject>
       </mediaobject>
 
       <para>If you want to load multiple instances of the same object, you
-      could Load its CAD File multiple times, but that wastes memory. It's
+      could Load its CAD File multiple times, but that wastes memory. It is
       better to load it into the scene once, then clone the other instances
       from it to save memory. Right-click on the object to clone and select
       <guibutton>Clone Node...</guibutton>.</para>
@@ -203,11 +202,11 @@
       Right-click the assembly you want to create your new assembly in, then
       select Add Node-&gt;Create New Assembly.</para>
 
-      <para>If you want to populate an assembly fast, you can load the entire
-      geometry object tree from another project. First, open the geometry tree
-      you want to move, then select Save from the File menu to save it as a
-      .veg file. Next, open the geometry tree you want to move it to,
-      right-click the assembly you want to move it to, then select Add
+      <para>If you want to populate an assembly quickly, you can load the
+      entire geometry object tree from another project. First, open the
+      geometry tree you want to move, then select Save from the File menu to
+      save it as a .veg file. Next, open the geometry tree you want to move it
+      to, right-click the assembly you want to move it to, then select Add
       Node-&gt;Load VEG File.</para>
     </section>
 
@@ -222,13 +221,13 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../newveimages/Running6.jpg" />
+          <imagedata fileref="../veimages/Running6.jpg" />
         </imageobject>
       </mediaobject>
 
       <para>As you edit the Transform properties, the scene will be updated in
-      real-time. Once you're happy with the object's size and placement, click
-      OK.</para>
+      real-time. Once you are happy with the object's size and placement,
+      click OK.</para>
 
       <para>You can also edit an assembly's Transform properties. An
       assembly's Transformations affect its members as well; see the Assembly
@@ -238,7 +237,7 @@
     <section id="toggling_geometry">
       <title>Toggling Geometric Objects</title>
 
-      <para>You can toggle the visibility of geometric objects ON and OFF. To
+      <para>You can toggle the visibility of geometric objects On and Off. To
       do so, right-click the object in the CADtree Manager and select Toggle
       Node-&gt;On or Off.</para>
     </section>
@@ -252,7 +251,7 @@
       Choose whether you want a Material or a Shader, then click
       <guibutton>Add</guibutton>.</para>
 
-      <para>If you chose a Material, you'll be asked to name it. Once it's in
+      <para>If you chose a Material, you'll be asked to name it. Once it is in
       the list, you can apply it to the object by left-clicking it. To change
       a material's properties, right-click its name; a menu will appear, with
       options to change its lighting, shininess, opacity, and how the lighting
@@ -260,7 +259,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../newveimages/Running7abase.jpg" />
+          <imagedata fileref="../veimages/Running7abase.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -270,7 +269,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../newveimages/Running7bbase.jpg" />
+          <imagedata fileref="../veimages/Running7bbase.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -302,7 +301,7 @@
       the Color|Solid preview below.</para>
 
       <para>If you make your own color, be sure to check the luminosity
-      slider. Your color will appear black or white if it's set too low or
+      slider. Your color will appear black or white if it is set too low or
       high.</para>
 
       <mediaobject>
@@ -311,9 +310,9 @@
         </imageobject>
       </mediaobject>
 
-      <para>Click OK when you have your new color. <emphasis role="bold">Don't
-      bother adding it to your Custom Colors</emphasis>; they'll be forgotten
-      once the dialog's closed.</para>
+      <para>Click OK when you have your new color. <emphasis role="bold">You
+      do not need to add it to your Custom Colors</emphasis>; they will be
+      forgotten once the dialog is closed.</para>
 
       <para>On non-Windows systems, the color dialog box looks like
       this:</para>
@@ -330,31 +329,32 @@
 
       <para>To make a custom color, choose its hue by clicking in the color
       ring, then choose its saturation and value by clicking in the color
-      triangle. Click OK when you have your new color.</para>
+      triangle. Click <guibutton>OK</guibutton> when you have your new
+      color.</para>
     </section>
 
-    <section id="using assemblies">
+    <section id="using_assemblies">
       <title>Using Assemblies</title>
 
       <para>Assemblies group geometric objects together so you can modify all
       of them at once. An assembly's properties are passed to its members.
-      Here's how modifying an assembly's properties will change its
+      Here is how modifying an assembly's properties will change its
       members:</para>
 
       <itemizedlist>
         <listitem>
           <para><emphasis role="bold">Transformation:</emphasis> Member
           translations are relative to their assembly's axes, not the world's
-          axes. Member scalings are relative to their assembly's scalings (Ex:
-          If you double the scale of a member whose assembly is already
-          double-scaled, the member will be scaled 4x original size.) Assembly
-          rotations are around the assembly's origin point, not members'
-          origin points.</para>
+          axes. Member scalings are relative to their assembly's scalings (For
+          example, if you double the scale of a member whose assembly is
+          already double-scaled, the member will be scaled to four times the
+          original size.) Assemblies rotate around the assembly's origin
+          point, not members' origin points.</para>
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Materials &amp; Shaders:</emphasis>
-          Materials &amp; shaders applied to assemblies are applied to its
+          <para><emphasis role="bold">Materials and Shaders:</emphasis>
+          Materials and shaders applied to assemblies are applied to its
           members. If a member is assigned a material or shader as well, the
           member's material or shader overrides its assembly's material or
           shader.</para>
@@ -411,8 +411,8 @@
       <para><emphasis role="bold">Note:</emphasis> You may notice some trouble
       returning to your original orientation after rotating the scene. That's
       because the mouse controls rotate around an arbitrary axis; it lets you
-      rotate in all three dimensions, but as a tradeoff, it's harder to return
-      to a previous orientation.</para>
+      rotate in all three dimensions, but it is harder to return to a previous
+      orientation.</para>
 
       <para>If you want to return to a standard orientation, use the
       <guibutton>Reset</guibutton> and <guibutton>Frame All</guibutton>
@@ -427,7 +427,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../newveimages/Running9.jpg" />
+          <imagedata fileref="../veimages/Running9.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -435,7 +435,7 @@
 
       <mediaobject>
         <imageobject>
-          <imagedata fileref="../newveimages/Running10.jpg" />
+          <imagedata fileref="../veimages/Running10.jpg" />
         </imageobject>
       </mediaobject>
 
@@ -486,7 +486,7 @@
 
       <para>With the proper Juggler configuration, the Remotepoint RF wand can
       be used to navigate VE-Suite. Once the wand is set up, holding Up will
-      move the camera in the direction the wand's pointing. Holding the Left
+      move the camera in the direction the wand is pointing. Holding the Left
       Shoulder button and pointing to the left will rotate the camera to its
       left.</para>
 
@@ -506,7 +506,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Running11.jpg" />
+        <imagedata fileref="../veimages/Running11.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -514,7 +514,7 @@
     to the pane, they will appear in the pulldown menu. From there, just
     select one to return to that viewpoint.</para>
 
-    <para>To add a viewpoint, position the camera just like you want it in the
+    <para>To add a viewpoint, position the camera the way you want it in the
     viewpoint, then click <emphasis role="bold">Add
     Location<emphasis><guibutton>.</guibutton></emphasis></emphasis> The
     viewpoint will be added to the pulldown menu.</para>
@@ -530,18 +530,16 @@
 
     <para>To move to a viewpoint, select it from the pulldown menu below
     <guibutton>Move to a View Point</guibutton>. The camera will fly to that
-    viewpoint at the speed set in the speed
-    scroller<guibutton></guibutton>.</para>
+    viewpoint at the speed set in the speed scroller.</para>
 
     <para>You can also cycle the viewpoints through a flythrough. Click on the
     <guibutton>Start</guibutton> button below <emphasis role="bold">Automate
     Flythrough</emphasis> to begin a flythrough between each viewpoint in
     successive order. The flythrough will start at the first viewpoint, then
     hit each successive viewpoint, going at the speed specified by the speed
-    scroller<guibutton></guibutton>. When it reaches the last viewpoint, it
-    will go back to the first one and repeat the flythrough. To stop the
-    flythrough at any time, click the <guibutton>Stop</guibutton>
-    button.</para>
+    scroller. When it reaches the last viewpoint, it will go back to the first
+    one and repeat the flythrough. To stop the flythrough at any time, click
+    the <guibutton>Stop</guibutton> button.</para>
   </section>
 
   <section id="xplorer_displays">

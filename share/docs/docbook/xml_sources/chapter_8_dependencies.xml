@@ -2,7 +2,7 @@
 <chapter id="Dependencies">
   <title>Dependencies</title>
 
-  <para>The following is a list of links for the VE-Suite dependencies .
+  <para>The following is a list of links for the VE-Suite dependencies.
   Dependencies can be downloaded and built by the user from the following
   links or the pre-compiled binaries can be installed from the download
   page.</para>
@@ -20,8 +20,6 @@
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler</ulink>
   is used for management of the virtual environment. (version 2.0.1+)</para>
 
-  <para></para>
-
   <para>The dependencies are best installed in the following order:</para>
 
   <para>1. CMake</para>
@@ -32,18 +30,14 @@
 
   <para>4. VTK</para>
 
-  <para></para>
-
   <para><ulink
   url="http://sourceforge.net/project/showfiles.php?group_id=8041">VRJuggler
   dependencies zip file</ulink></para>
 
-  <para>VRJuggler has its own set of dependencies, if you are building it
-  yourself. They are:</para>
+  <para>VRJuggler has its own set of dependencies if you are building it
+  yourself:</para>
 
   <itemizedlist>
-    <?dbfo label-width="0.25in"?>
-
     <listitem>
       <para>GMTL 0.4.12+</para>
     </listitem>
@@ -104,10 +98,10 @@
 
   <para>Windows: VE-Launcher requires these <ulink
   url="https://sourceforge.net/project/showfiles.php?group_id=78018">Win32
-  extensions</ulink> if you're running it in Python for Windows.</para>
+  extensions</ulink> if you are running it in Python for Windows.</para>
 
   <para>VE-Launcher requires <ulink
-  url="http://wxpython.org/">wxPython</ulink> 2.6.3.3 if you're running it in
+  url="http://wxpython.org/">wxPython</ulink> 2.6.3.3 if you are running it in
   Python.</para>
 
   <section id="development_dependencies_guidelines">
@@ -115,8 +109,8 @@
 
     <para>To avoid dependencies problems during development, we have provided
     guidelines for using dependencies with VE-Suite. These are the guidelines
-    the main VE-Suite development group follows; we suggest you do so as
-    well.</para>
+    the main VE-Suite development group follows and are provided as
+    suggestions for other users.</para>
 
     <para><emphasis role="bold">Windows:</emphasis></para>
 

@@ -11,13 +11,9 @@
   <para>Example:</para>
 
   <para><code> set VTK_HOME=C:/"Documents and
-  Settings"/user/Desktop/vtk</code><emphasis role="bold"></emphasis></para>
-
-  <para></para>
+  Settings"/user/Desktop/vtk</code></para>
 
   <para><emphasis role="bold">Important variables include:</emphasis></para>
-
-  <para><emphasis></emphasis></para>
 
   <itemizedlist>
     <listitem>
@@ -36,8 +32,8 @@
     </listitem>
 
     <listitem>
-      <para><emphasis role="bold"><code>VTK_HOME</code></emphasis> Visualization ToolKit (VTK)
-      directory.</para>
+      <para><emphasis role="bold"><code>VTK_HOME</code></emphasis>
+      Visualization ToolKit (VTK) directory.</para>
     </listitem>
 
     <listitem>
@@ -51,8 +47,9 @@
     </listitem>
 
     <listitem>
-      <para><emphasis role="bold"><code>WX_ROOT</code></emphasis> The location of wxWidgets install (should be
-      same as <emphasis role="bold"><code>WX_HOME</code></emphasis>).</para>
+      <para><emphasis role="bold"><code>WX_ROOT</code></emphasis> The location
+      of wxWidgets install (should be same as <emphasis
+      role="bold"><code>WX_HOME</code></emphasis>).</para>
     </listitem>
 
     <listitem>
@@ -61,31 +58,29 @@
     </listitem>
 
     <listitem>
-      <para><emphasis role="bold"><code>ACE_HOME</code></emphasis> The location of the ACE_wrappers
-      directory.</para>
+      <para><emphasis role="bold"><code>ACE_HOME</code></emphasis> The
+      location of the ACE_wrappers directory.</para>
     </listitem>
 
     <listitem>
-      <para><emphasis role="bold"><code>TAO_HOME</code></emphasis> TAO location within
-      ACE/TAO.</para>
+      <para><emphasis role="bold"><code>TAO_HOME</code></emphasis> TAO
+      location within ACE/TAO.</para>
     </listitem>
   </itemizedlist>
 
-  <para><code></code></para>
-
-  <para><emphasis role="bold">Important variables for UNIX/Linux platforms only:</emphasis></para>
-
-  <para><code></code></para>
+  <para><emphasis role="bold">Important variables for UNIX/Linux platforms
+  only:</emphasis></para>
 
   <itemizedlist>
     <listitem>
-      <para><emphasis role="bold"><code>SCENE_GRAPH</code></emphasis> Always set to OSG. Defines which scene
-      graph to build for VE-Xplorer.</para>
+      <para><emphasis role="bold"><code>SCENE_GRAPH</code></emphasis> Always
+      set to OSG. Defines which scene graph to build for VE-Xplorer.</para>
     </listitem>
 
     <listitem>
-      <para><emphasis role="bold"><code>TAO_BUILD</code></emphasis> Always set to TRUE. In the
-      future this flag can be used to support other CORBA ORBs as well.</para>
+      <para><emphasis role="bold"><code>TAO_BUILD</code></emphasis> Always set
+      to TRUE. In the future this flag can be used to support other CORBA ORBs
+      as well.</para>
     </listitem>
 
     <listitem>

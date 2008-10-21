@@ -45,7 +45,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Launcher3a.jpg" />
+        <imagedata fileref="../veimages/Launcher3a.jpg" />
       </imageobject>
     </mediaobject>
 
@@ -105,7 +105,7 @@
 
     <mediaobject>
       <imageobject>
-        <imagedata fileref="../newveimages/Launcher4.jpg" />
+        <imagedata fileref="../veimages/Launcher4.jpg" />
       </imageobject>
     </mediaobject>
 

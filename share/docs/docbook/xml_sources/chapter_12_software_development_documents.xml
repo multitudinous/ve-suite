@@ -6,7 +6,7 @@
   new computer simulation tools that are capable of modeling advanced,
   next-generation power plants. As part of this effort, Reaction Engineering
   International, Iowa State University, and Carnegie Mellon University have
-  begun development of a virtual engineering-based computational framework to
+  begun developing a virtual engineering-based computational framework to
   facilitate these demanding modeling efforts.</para>
 
   <para>This new, open source framework provides significant features and
@@ -63,43 +63,43 @@
   <para>Additional details about VE-Suite are available in:</para>
 
   <para>Swensen, D.A., Maguire, M., Yang, C., and Bockelie, M.J.,
-  “Computational Frameworks for Practical, Engineering Applications,”
+  "Computational Frameworks for Practical, Engineering Applications,"
   presented at the SIAM Computational Sciences and Engineering Conference
   2005, Orlando, Florida, USA, February 12-15, 2005.</para>
 
   <para>Bockelie, M., Swensen, D.A., Denison, M.K., Maguire, M., Yang, C.,
-  Chen, Z., Sadler, B., Senior, C.L., Sarofim, A.F. “A Computational Workbench
-  Environment for Virtual Power Plant Simulation”, Contract DE-FC26-00NT41047,
+  Chen, Z., Sadler, B., Senior, C.L., Sarofim, A.F. "A Computational Workbench
+  Environment for Virtual Power Plant Simulation", Contract DE-FC26-00NT41047,
   Final Report, December, 2004.</para>
 
-  <para>Huang, G., Bryden, K. M., and McCorkle, D. S., “Interactive Design
-  using CFD and Virtual Engineering,” In the Proceedings of the 10th
+  <para>Huang, G., Bryden, K. M., and McCorkle, D. S., "Interactive Design
+  using CFD and Virtual Engineering," In the Proceedings of the 10th
   AIAA/ISSMO Multidisciplinary Analysis and Optimization Conference,
   AIAA-2004-4364, September 2004.</para>
 
   <para>Bryden, K. M., Ashlock, D. A., Corns, S. M.. Graph based evolutionary
   algorithms. submitted to the IEEE Trans Evol Comput.</para>
 
-  <para>Bryden, K. M., and McCorkle, D. S., “Virtual Engineering,” in
+  <para>Bryden, K. M., and McCorkle, D. S., "Virtual Engineering," in
   preparation to submit to the Journal of Computing and Information Science in
-  Engineering,.</para>
+  Engineering.</para>
 
-  <para>Bryden, K. M. and McCorkle, D. S., “VE-Suite: A Foundation for
+  <para>Bryden, K. M. and McCorkle, D. S., "VE-Suite: A Foundation for
   Building Virtual Engineering Models of High Performance, Low Emission Power
-  Plants,” 29th International Technical Conference on Coal Utilization &amp;
+  Plants," 29th International Technical Conference on Coal Utilization &amp;
   Fuel Systems, Clearwater, Florida, 38-46 (2004).</para>
 
-  <para>McCorkle, D. S., Bryden, K. M., and Kirstukas, S. J.., “Building a
-  Foundation for Power Plant Virtual Engineering,” 28th International
+  <para>McCorkle, D. S., Bryden, K. M., and Kirstukas, S. J.., "Building a
+  Foundation for Power Plant Virtual Engineering," 28th International
   Technical Conference on Coal Utilization &amp; Fuel Systems, Clearwater,
   Florida, 63-71 (2003).</para>
 
-  <para>McCorkle, D. S., Bryden, K. M., and Ashlock, D. A., “Planned
-  Tournament Selection,” Intelligent Engineering Systems Through Artificial
+  <para>McCorkle, D. S., Bryden, K. M., and Ashlock, D. A., "Planned
+  Tournament Selection," Intelligent Engineering Systems Through Artificial
   Neural Networks - Proceedings of the Artificial Neural Networks in
   Engineering Conference, 13: pp 385-390 (2003).</para>
 
-  <para>McCorkle, D. S., Bryden, K. M., and Swensen, D. A., “Using Virtual
-  Engineering Tools to Reduce NOx Emissions,” in the Proceedings of ASME Power
+  <para>McCorkle, D. S., Bryden, K. M., and Swensen, D. A., "Using Virtual
+  Engineering Tools to Reduce NOx Emissions," in the Proceedings of ASME Power
   2004, POWER2004-52021, pp 441-446, March 2004.</para>
 </chapter>
