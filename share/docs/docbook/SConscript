@@ -76,7 +76,7 @@ xmlResolveBuilder = Builder(action = xmlAction, single_source = True,
                             suffix = ".tmp", chdir = relativeDir)
 								
 #Convert an XML source file Unix or Linux:
-foAction = '%s %s ${TARGET.abspath} %s %s %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "fop.extensions 1", "--stringparam", "alignment start", FO_XSL)
+foAction = '%s %s ${TARGET.abspath} %s %s %s %s %s %s %s ${SOURCE.abspath}' % (xslt_cmd, "--output", "--stringparam", "fop.extensions 1", "--stringparam", "alignment start", "--stringparam", "draft.mode no", FO_XSL)
 foBuilder = Builder(action = foAction, single_source = True, suffix = ".fo",
                     chdir = relativeDir)
 
