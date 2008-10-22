@@ -1,7 +1,7 @@
 Type=OleDll
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\WINDOWS\SysWow64\stdole2.tlb#OLE Automation
-Reference=*\G{B6644490-14DC-11D3-82C4-00104B468DE2}#1.0#0#..\..\..\..\..\Program Files (x86)\AspenTech\Aspen Dynamics 2006.5\Bin\aspendynamics.tlb#Aspen Dynamics 21.0 Type Library
-Class=AspenDynamicsQueryLib; .\AspenDynamicsQueryLib.cls
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\..\..\WINDOWS\SysWow64\stdole2.tlb#OLE Automation
+Reference=*\G{B6644490-14DC-11D3-82C4-00104B468DE2}#1.0#0#..\..\..\..\..\..\..\Program Files (x86)\AspenTech\Aspen Dynamics 2006.5\Bin\aspendynamics.tlb#Aspen Dynamics 21.0 Type Library
+Class=AspenDynamicsQueryLib; AspenDynamicsQueryLib.cls
 Startup="(None)"
 ExeName32="AspenDyanmicsQueryVB.dll"
 Path32="..\AspenPlusInterface"
