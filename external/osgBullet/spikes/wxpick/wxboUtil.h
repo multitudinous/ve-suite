@@ -36,6 +36,8 @@ public:
     virtual void apply( osg::Node & node );
     virtual void apply( osg::Group & group );
 private:
+    void PopulateTreeControlWithNodeVisitor::addChildren( osg::Group& group );
+
     wxTreeCtrl *    tree_;
     bool recurse_;
     unsigned int proc_;

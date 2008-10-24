@@ -91,7 +91,6 @@ TextureBasedVizHandler::TextureBasedVizHandler()
 {
     _animationDelay = 0.0001f;
     _appTime = 0.0;
-    _paramFile = '\0';
     _activeVolumeVizNode = 0;
     _activeTM = 0;
     _parent = 0;
@@ -123,11 +122,6 @@ TextureBasedVizHandler::TextureBasedVizHandler()
 ///////////////////////////////////////////////
 TextureBasedVizHandler::~TextureBasedVizHandler( void )
 {
-    if( !_paramFile.empty() )
-    {
-        _paramFile.clear();
-    }
-
     if( _currentBBox )
     {
         delete [] _currentBBox;
@@ -354,24 +348,33 @@ void TextureBasedVizHandler::PlayTransientVisualization()
 ////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::UpdateTransientDuration( double duration )
 {
-    if( _activeTM )
+    if( !_activeTM )
     {
-        if( _svvh )
-        {
-            ///duration calculation
-            unsigned int nTimesteps = _activeTM->numberOfFields();
-            _animationDelay = duration / (( double )nTimesteps );
-            cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>( _svvh->GetActiveShader() );
-            if( sShader )
-            {
-                sShader->SetDelayTime( _animationDelay );
-            }
-        }
+        return;
+    }
+    
+    if( !_svvh )
+    {
+        return;
+    }
+
+    ///duration calculation
+    unsigned int nTimesteps = _activeTM->numberOfFields();
+    _animationDelay = duration / (( double )nTimesteps );
+    cfdScalarShaderManager* sShader = dynamic_cast<cfdScalarShaderManager*>( _svvh->GetActiveShader() );
+    if( sShader )
+    {
+        sShader->SetDelayTime( _animationDelay );
     }
 }
 /////////////////////////////////////////////////////////////////////////////////
 void TextureBasedVizHandler::StepTransientVisualization( std::string direction )
 {
+    if( !_activeTM )
+    {
+        return;
+    }
+
     try
     {
         StopTransientVisualization();
@@ -485,6 +488,11 @@ void TextureBasedVizHandler::_updateVisualization()
 ///////////////////////////////////////////
 void TextureBasedVizHandler::_updateGraph()
 {
+    if( !ModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+    {
+        return;
+    }
+
     SetParentNode( static_cast< ves::xplorer::scenegraph::Group* >(
                     ModelHandler::instance()->GetActiveModel()->
                     GetActiveDataSet()->GetSwitchNode()->GetChild( 1 ) ) );
@@ -594,11 +602,6 @@ void TextureBasedVizHandler::PreFrameUpdate()
     }
     _updateShaders();
 
-}
-///////////////////////////////////////////////////////////////////
-void TextureBasedVizHandler::SetParameterFile( std::string paramFile )
-{
-    _paramFile = paramFile;
 }
 //////////////////////////////////////////////////////////
 cfdPBufferManager* TextureBasedVizHandler::GetPBuffer()

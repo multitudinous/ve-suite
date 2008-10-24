@@ -109,8 +109,6 @@ public:
     void PreFrameUpdate( void );
     ///Update the frame number of the transient animation
     void UpdateTransientFrame();
-    //void CleanUp( void );
-    void SetParameterFile( std::string paramFile );
     void SetWorldDCS( ves::xplorer::scenegraph::DCS* dcs );
     void SetParentNode( ves::xplorer::scenegraph::Group* parent );
     void SetActiveTextureDataSet( ves::xplorer::volume::cfdTextureDataSet* tdset );
@@ -210,7 +208,6 @@ protected:
 
     double _appTime;
     double _animationDelay;
-    std::string _paramFile;
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
     ves::xplorer::volume::cfdTextureDataSet* _activeTDSet;
     ves::xplorer::volume::cfdTextureManager* _activeTM;

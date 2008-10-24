@@ -20,6 +20,10 @@
 #include <wxboUtil.h>
 #include <wxboTreeControl.h>
 
+#ifdef _WIN32
+#define random rand
+#endif
+
 void randomTree( wxTreeCtrl * tree,
                  unsigned int nn = 1000 )
 {

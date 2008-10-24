@@ -1,4 +1,5 @@
 #include <wxboUtil.h>
+#include <osg/notify>
 
 namespace isu {
 
@@ -6,13 +7,8 @@ void PopulateTreeControlWithNodeVisitor::apply( osg::Node & node )
 {
     if( activeGroup_ == wxTreeItemId( NULL ) )
     {
-        activeGroup_ = isu::setTreeRoot( tree_, &node );
+        isu::setTreeRoot( tree_, &node );
     }
-    else
-    {
-        activeChild_ = isu::addTreeItem( tree_, activeGroup_, &node );
-    }
-    if( recurse_ ) traverse( node );
 }
 
 void PopulateTreeControlWithNodeVisitor::apply( osg::Group & group )
@@ -21,14 +17,28 @@ void PopulateTreeControlWithNodeVisitor::apply( osg::Group & group )
     if( activeGroup_ == wxTreeItemId( NULL ) )
     {
         activeGroup_ = isu::setTreeRoot( tree_, &group );
+        if( recurse_ )
+            addChildren( group );
     }
     else
     {
-        activeGroup_ = isu::addTreeItem( tree_, activeGroup_, &group );
+        if( !recurse_ )
+            osg::notify( osg::ALWAYS ) << "Not recursing? How could that be..." << std::endl;
+        addChildren( group );
     }
-
-    if( recurse_ ) traverse( group );
 }
+void PopulateTreeControlWithNodeVisitor::addChildren( osg::Group& group )
+{
+    wxTreeItemId parent( activeGroup_ );
+    unsigned int idx;
+    for( idx=0; idx<group.getNumChildren(); idx++ )
+    {
+        osg::Node* node = group.getChild( idx );
+        activeGroup_ = isu::addTreeItem( tree_, parent, node );
+        node->accept( *this );
+    }
+}
+
 
 #if 0
 else
