@@ -340,11 +340,19 @@ void CADEntityHelper::LoadFile( const std::string& filename,
             lightModel.get(), 
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         
-        osg::ref_ptr< osg::BlendColor > bc = new osg::BlendColor();
+       /* osg::ref_ptr< osg::BlendColor > bc = new osg::BlendColor();
         bc->setConstantColor( osg::Vec4( 1.0f, 1.0f, 1.0f, 1.0f ) );
         tempCADNode->getOrCreateStateSet()->setAttributeAndModes( 
             bc.get(), 
-            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );        
+            osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );*/
+        
+        /*osg::ref_ptr< osg::StateSet > stateset = tempCADNode->getOrCreateStateSet();
+        
+        osg::ref_ptr< osg::Material > material = new osg::Material();
+        material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
+        material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
+        stateset->setAttribute( material.get(), osg::StateAttribute::ON );*/
+        
     }
 
     //Run the optimizer to improve performance
@@ -394,7 +402,7 @@ void CADEntityHelper::LoadFile( const std::string& filename,
         oqv.setOccluderThreshold( 2500 );
         tempGroup->accept( oqv );
         //Setup the number frames to skip
-        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 3 );
+        osgOQ::QueryFrameCountVisitor queryFrameVisitor( 2 );
         tempGroup->accept( queryFrameVisitor );
         // If the occlusion query test indicates that the number of
         //   visible pixels is greater than this value, render the

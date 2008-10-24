@@ -182,7 +182,7 @@ void OpacityVisitor::apply( osg::Geode& node )
                 osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         }
     }
-    
+    /*
     osg::ref_ptr< osg::BlendColor > bc = 
         static_cast< osg::BlendColor* >( geode_stateset->
             getAttribute( osg::StateAttribute::BLENDCOLOR ) );
@@ -193,6 +193,7 @@ void OpacityVisitor::apply( osg::Geode& node )
             osg::StateAttribute::ON | osg::StateAttribute::PROTECTED );
         SetupSTLBlendingForStateSet( geode_stateset.get() );
     }
+    */
 }
 ////////////////////////////////////////////////////////////////////////////////
 void OpacityVisitor::apply( osg::Group& node )
