@@ -6,57 +6,89 @@ $!SETSTYLEBASE FACTORY
 $!GLOBALLINKING 
   LINKCOLORMAPS = YES
 $!GLOBALCOLORMAP  1
-  CONTOURCOLORMAP = TWOCOLOR
+  CONTOURCOLORMAP = SMRAINBOW
 $!COLORMAPCONTROL 1 RESETTOFACTORY
 $!GLOBALCOLORMAP  1
-  TWOCOLOR
+  SMRAINBOW
     {
     CONTROLPOINT 1
       {
       COLORMAPFRACTION = 0
       LEADRGB
         {
-        R = 255
+        R = 0
         G = 0
-        B = 0
+        B = 255
         }
       TRAILRGB
         {
-        R = 255
+        R = 0
         G = 0
-        B = 0
+        B = 255
         }
       }
     CONTROLPOINT 2
       {
-      COLORMAPFRACTION = 0.5
+      COLORMAPFRACTION = 0.25
       LEADRGB
         {
-        R = 128
-        G = 0
-        B = 128
+        R = 0
+        G = 255
+        B = 255
         }
       TRAILRGB
         {
-        R = 128
-        G = 0
-        B = 128
+        R = 0
+        G = 255
+        B = 255
         }
       }
     CONTROLPOINT 3
       {
-      COLORMAPFRACTION = 1
+      COLORMAPFRACTION = 0.5
       LEADRGB
         {
         R = 0
-        G = 0
-        B = 255
+        G = 255
+        B = 0
         }
       TRAILRGB
         {
         R = 0
+        G = 255
+        B = 0
+        }
+      }
+    CONTROLPOINT 4
+      {
+      COLORMAPFRACTION = 0.75
+      LEADRGB
+        {
+        R = 255
+        G = 255
+        B = 0
+        }
+      TRAILRGB
+        {
+        R = 255
+        G = 255
+        B = 0
+        }
+      }
+    CONTROLPOINT 5
+      {
+      COLORMAPFRACTION = 1
+      LEADRGB
+        {
+        R = 255
         G = 0
-        B = 255
+        B = 0
+        }
+      TRAILRGB
+        {
+        R = 255
+        G = 0
+        B = 0
         }
       }
     }
@@ -903,6 +935,8 @@ $!FRAMENAME  = 'Frame 001'
 $!ACTIVEFIELDMAPS  =  [1]
 $!GLOBALTIME 
   SOLUTIONTIME = 0
+$!GLOBALEDGE 
+  MINCREASEANGLE = 0
 $!GLOBALRGB 
   REDCHANNELVAR = 3
   GREENCHANNELVAR = 3
@@ -913,15 +947,29 @@ $!GLOBALRGB
     {
     SHOW = YES
     HEIGHT = 100
+    XYPOS
+      {
+      X = 60
+      }
     }
 $!GLOBALCONTOUR  1
   VAR = 3
   DEFNUMLEVELS = 13
+  LABELS
+    {
+    LABELWITHVALUE = NO
+    }
   LEGEND
     {
     XYPOS
       {
       X = 95
+      Y = 95
+      }
+    BOX
+      {
+      BOXTYPE = NONE
+      MARGIN = 0
       }
     LABELINCREMENT = 2711
     }
@@ -938,7 +986,6 @@ $!GLOBALCONTOUR  1
       CMIN = 0
       CMAX = 27108.6
       }
-    USEFASTAPPROXCONTINUOUSFLOOD = YES
     }
 $!CONTOURLEVELS NEW
   CONTOURGROUP = 1
@@ -1081,21 +1128,46 @@ $!CONTOURLEVELS NEW
 24000
 26000
 $!GLOBALCONTOUR  5
+  VAR = 3
+  DEFNUMLEVELS = 13
   LEGEND
     {
     XYPOS
       {
       X = 95
       }
+    LABELINCREMENT = 2722
+    }
+  COLORCUTOFF
+    {
+    RANGEMIN = 6806.075
+    RANGEMAX = 20418.225
     }
   COLORMAPFILTER
     {
     CONTINUOUSCOLOR
       {
       CMIN = 0
-      CMAX = 1
+      CMAX = 27224.3
       }
     }
+$!CONTOURLEVELS NEW
+  CONTOURGROUP = 5
+  RAWDATA
+13
+2000
+4000
+6000
+8000
+10000
+12000
+14000
+16000
+18000
+20000
+22000
+24000
+26000
 $!GLOBALCONTOUR  6
   LEGEND
     {
@@ -1190,12 +1262,14 @@ $!GLOBALSCATTER
 $!FIELDMAP  [1]
   MESH
     {
-    COLOR = BLACK
+    COLOR = MULTI
+    LINETHICKNESS = 0.2
     }
   CONTOUR
     {
-    CONTOURTYPE = AVERAGECELL
-    COLOR = BLACK
+    CONTOURTYPE = BOTHLINESANDFLOOD
+    COLOR = CUSTOM2
+    LINEPATTERN = DASHED
     USELIGHTINGEFFECT = YES
     }
   VECTOR
@@ -1215,7 +1289,7 @@ $!FIELDMAP  [1]
     SHOW = YES
     EDGETYPE = BORDERSANDCREASES
     COLOR = BLACK
-    LINETHICKNESS = 0.1
+    LINETHICKNESS = 0.2
     }
   POINTS
     {
@@ -1237,6 +1311,7 @@ $!FIELDMAP  [1]
   EFFECTS
     {
     LIGHTINGEFFECT = GOURAUD
+    USETRANSLUCENCY = NO
     }
 $!THREEDAXIS 
   XDETAIL
@@ -1253,44 +1328,94 @@ $!THREEDAXIS
     }
 $!VIEW FIT
 $!THREEDAXIS 
-  AXISMODE = XYDEPENDENT
+  AXISMODE = INDEPENDENT
   XYDEPXTOYRATIO = 1
   DEPXTOYRATIO = 1
   DEPXTOZRATIO = 589.317391304
+  GRIDAREA
+    {
+    DRAWBORDER = YES
+    FILLCOLOR = CUSTOM1
+    }
+  FRAMEAXIS
+    {
+    SHOW = NO
+    }
 $!THREEDAXIS 
   XDETAIL
     {
-    SHOWAXIS = NO
-    RANGEMIN = 7
-    RANGEMAX = 73
+    RANGEMIN = 10
+    RANGEMAX = 70
     GRSPACING = 20
+    GRIDLINES
+      {
+      COLOR = CUSTOM2
+      }
+    MINORGRIDLINES
+      {
+      COLOR = CUSTOM2
+      LINEPATTERN = SOLID
+      }
     AXISLINE
       {
+      SHOWOPPOSITEEDGE = YES
+      COLOR = CUSTOM2
+      LINETHICKNESS = 0.2
       EDGE = 2
       }
     }
 $!THREEDAXIS 
   YDETAIL
     {
-    SHOWAXIS = NO
-    RANGEMIN = -0.15000000000000013
-    RANGEMAX = 25.149999999999999
+    RANGEMIN = 0
+    RANGEMAX = 24
     GRSPACING = 10
+    GRIDLINES
+      {
+      COLOR = CUSTOM2
+      }
+    MINORGRIDLINES
+      {
+      COLOR = CUSTOM2
+      LINEPATTERN = SOLID
+      }
     AXISLINE
       {
-      EDGE = 3
+      SHOWOPPOSITEEDGE = YES
+      COLOR = CUSTOM2
+      LINETHICKNESS = 0.2
+      EDGE = 1
       }
     }
 $!THREEDAXIS 
   ZDETAIL
     {
-    SHOWAXIS = NO
-    RANGEMIN = -1355.4300000000001
-    RANGEMAX = 28464.029999999999
+    RANGEMIN = 0
+    RANGEMAX = 30000
     GRSPACING = 10000
+    TICKS
+      {
+      SHOWONOPPOSITEEDGE = YES
+      }
+    TICKLABEL
+      {
+      SHOWONOPPOSITEEDGE = YES
+      }
+    GRIDLINES
+      {
+      COLOR = CUSTOM2
+      }
+    MINORGRIDLINES
+      {
+      COLOR = CUSTOM2
+      LINEPATTERN = SOLID
+      }
     AXISLINE
       {
-      EDGE = 2
+      SHOWOPPOSITEEDGE = YES
+      COLOR = CUSTOM2
+      LINETHICKNESS = 0.2
+      EDGE = 1
       }
     }
 $!ISOSURFACEATTRIBUTES  1
@@ -1359,9 +1484,9 @@ $!ISOSURFACEATTRIBUTES  5
   OBEYSOURCEZONEBLANKING = NO
   DEFINITIONCONTOURGROUP = 5
   ISOSURFACESELECTION = ONESPECIFICVALUE
-  ISOVALUE1 = 6777.15
-  ISOVALUE2 = 13554.3
-  ISOVALUE3 = 20331.45
+  ISOVALUE1 = 6806.075
+  ISOVALUE2 = 13612.15
+  ISOVALUE3 = 20418.225
   MARCHINGCUBEALGORITHM = CLASSICPLUS
   CONTOUR
     {
@@ -1555,15 +1680,15 @@ $!GLOBALTHREED
   PERFORMEXTRA3DSORTING = YES
   AXISSCALEFACT
     {
-    X = 1
-    Y = 1
-    Z = 0.001696878481367537
+    X = 1.1
+    Y = 1.054166666666667
+    Z = 0.001686666666666667
     }
   ROTATEORIGIN
     {
-    X = 40
-    Y = 12.5
-    Z = 13554.3
+    X = 38.92147117296221
+    Y = 13.25056405878408
+    Z = 15000
     }
   LIGHTSOURCE
     {
@@ -1574,7 +1699,7 @@ $!GLOBALTHREED
       Z = 0.9591663046625438
       }
     INTENSITY = 75
-    BACKGROUNDLIGHT = 35
+    BACKGROUNDLIGHT = 40
     SPECULARINTENSITY = 40
     SPECULARSHININESS = 60
     FORCEPANELEDFOR3DCELLFLOOD = NO
@@ -1584,16 +1709,17 @@ $!GLOBALTHREED
   VECTORLIFTFRACTION = 0.7
   NEARPLANEFRACTION = 0.1
 $!THREEDVIEW 
-  PSIANGLE = 78.7496
-  THETAANGLE = -141.985
-  ALPHAANGLE = -2.09425
+  DRAWINPERSPECTIVE = YES
+  PSIANGLE = 81.1631
+  THETAANGLE = 118.208
+  ALPHAANGLE = 0.52877
   VIEWERPOSITION
     {
-    X = 300.5602976361674
-    Y = 345.82202586931
-    Z = 63206.95333284806
+    X = -375.41477140058
+    Y = 244.5264751366326
+    Z = 60403.71081699604
     }
-  VIEWWIDTH = 71.0412
+  FIELDOFVIEW = 10
 $!FIELDLAYERS 
   SHOWMESH = NO
   SHOWCONTOUR = YES
