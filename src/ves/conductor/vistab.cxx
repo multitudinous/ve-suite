@@ -512,7 +512,7 @@ void Vistab::_onIsosurface( wxCommandEvent& WXUNUSED( event ) )
                                       SYMBOL_ISOSURFACES_SIZE,
                                       SYMBOL_ISOSURFACES_STYLE );
 
-        isosurface->SetActiveScalar( _activeScalarName );
+        //isosurface->SetActiveScalar( _activeScalarName );
     }
 
     isosurface->SetSize( this->GetRect() );

@@ -112,10 +112,6 @@ public:
     ///\param scalarNames all the scalars in this dataset
     void SetAvailableScalars( wxArrayString scalarNames );
 
-    ///Set the active scalar
-    ///\param activeScalarName The active scalar name
-    void SetActiveScalar( std::string activeScalarName );
-
     /// Retrieves bitmap resources
     wxBitmap GetBitmapResource( const wxString& name );
 
@@ -127,9 +123,6 @@ public:
 
     /// Retrieves active scalar range
     void SetScalarRange( std::string, std::vector<double> );
-
-    /// Initialize scalar data
-    void InitializeScalarData( std::string activeScalarName );
 
     void SetScalarList( std::map<std::string, std::vector<double> > colorScalarRanges );
 
@@ -166,9 +159,6 @@ protected:
     ///wxEVT_COMMAND_TEXT_UPDATED event handler for ID_SPINNER
     void UpdateSlider( wxCommandEvent& event );
 
-    double tempSliderScalar;///temporary value updated by slider
-    double tempSpinnerScalar;///temporary value updated by spinctrl
-    std::string tempScalarName;///contains current scalar name
     double _minValue;
     double _maxValue;
 

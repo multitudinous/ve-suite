@@ -129,11 +129,6 @@ void Isosurfaces::CreateControls()
     wxStaticBoxSizer* itemStaticBoxSizer3 = new wxStaticBoxSizer( itemStaticBoxSizer3Static, wxVERTICAL );
     itemBoxSizer2->Add( itemStaticBoxSizer3, 0, wxGROW | wxALL, 5 );
 
-
-    //_useNearestPreComputedCheckBox = new wxCheckBox( itemDialog1, PRECOMPUTED_ISO_CHK, _T( "Use Nearest Precomputed Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
-    //_useNearestPreComputedCheckBox->SetValue( false );
-    //itemStaticBoxSizer3->Add( _useNearestPreComputedCheckBox, 0, wxGROW | wxALL, 5 );
-
     wxStaticText* itemStaticText6 = new wxStaticText( itemDialog1, wxID_STATIC, _T( "Isosurface" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemStaticBoxSizer3->Add( itemStaticText6, 0, wxALIGN_LEFT | wxALL | wxADJUST_MINSIZE, 5 );
 
@@ -159,11 +154,6 @@ void Isosurfaces::CreateControls()
 
     wxButton* _closeButton = new wxButton( itemDialog1, wxID_OK, _T( "Close" ), wxDefaultPosition, wxDefaultSize, 0 );
     itemBoxSizer8->Add( _closeButton, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5 );
-}
-///////////////////////////////////////////////////////////
-void Isosurfaces::SetActiveScalar( std::string activeScalar )
-{
-    _activeScalar = activeScalar;
 }
 ////////////////////////////////////////////////////////////////
 void Isosurfaces::SetAvailableScalars( wxArrayString scalarNames )
@@ -192,9 +182,10 @@ void Isosurfaces::SetScalarRange( std::string activeScalar, std::vector<double> 
         _isoSpinner->Enable( true );
     }
 
-    if( tempScalarName.compare( _activeScalar ) )
+    if( _activeScalar.compare( activeScalar ) )
     {
-        tempScalarName = _activeScalar;
+        _activeScalar = activeScalar;
+        _colorByScalarName = _activeScalar;
         _isoSpinner->SetRange( _scalarRange.at( 0 ), _scalarRange.at( 1 ) );
         _isoSpinner->SetValue( _scalarRange.at( 0 ) );
         _isoSurfaceSlider->SetValue( 0 );
@@ -229,6 +220,7 @@ void Isosurfaces::_onPrecomputedIsosurface( wxCommandEvent& WXUNUSED( event ) )
 /////////////////////////////////////////////////////////////
 void Isosurfaces::_onIsosurfacePlane( wxCommandEvent& WXUNUSED( event ) )
 {
+    double tempSliderScalar = 0;
     tempSliderScalar = _scalarRange.at( 0 ) + ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) / 100 * _isoSurfaceSlider->GetValue();
     _isoSpinner->SetValue( tempSliderScalar );
 }
@@ -243,7 +235,7 @@ void Isosurfaces::_onAddIsosurface( wxCommandEvent& WXUNUSED( event ) )
     newCommand->AddDataValuePair( isosurfaceValue );
 
     ves::open::xml::DataValuePairPtr colorByScalar( new ves::open::xml::DataValuePair() );
-    colorByScalar->SetData( "Color By Scalar", _activeScalar );
+    colorByScalar->SetData( "Color By Scalar", _colorByScalarName );
     newCommand->AddDataValuePair( colorByScalar );
 
     ves::open::xml::DataValuePairPtr minValue( new ves::open::xml::DataValuePair() );
@@ -312,14 +304,15 @@ void Isosurfaces::_onAdvanced( wxCommandEvent& WXUNUSED( event ) )
     {
         _minValue = advancediso->GetMinScalarValue();
         _maxValue = advancediso->GetMaxScalarValue();
-        _activeScalar = advancediso->GetScalarName();
+        _colorByScalarName = advancediso->GetScalarName();
     }
 }
 //////////////////////////////////////////////////////
 void Isosurfaces::_onSpinner( wxScrollEvent& WXUNUSED( event ) )
 {
-    tempSpinnerScalar = (( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
-    _isoSurfaceSlider->SetValue( tempSpinnerScalar );
+    double spinnerValue = 0;
+    spinnerValue = (( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
+    _isoSurfaceSlider->SetValue( spinnerValue );
 }
 //////////////////////////////////////////////////////
 void Isosurfaces::UpdateSlider( wxCommandEvent& event )
@@ -329,16 +322,6 @@ void Isosurfaces::UpdateSlider( wxCommandEvent& event )
     spinnerValue = (( _isoSpinner->GetValue() - _scalarRange.at( 0 ) ) / ( _scalarRange.at( 1 ) - _scalarRange.at( 0 ) ) * 100 );
 
     _isoSurfaceSlider->SetValue( spinnerValue );
-}
-//////////////////////////////////////////////////////
-void Isosurfaces::InitializeScalarData( std::string activeScalar )
-{
-    if( tempScalarName.compare( _activeScalar ) )
-    {
-        tempScalarName = _activeScalar;
-        _isoSpinner->SetValue( _scalarRange.at( 0 ) );
-        _isoSurfaceSlider->SetValue( 0 );
-    }
 }
 ////////////////////////////////////////////////////////////
 void Isosurfaces::SetScalarList( std::map<std::string, std::vector<double> > colorScalarRanges )
