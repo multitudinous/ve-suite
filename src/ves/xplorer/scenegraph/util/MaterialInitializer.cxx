@@ -36,6 +36,7 @@
 #include <osg/Geode>
 #include <osg/Group>
 #include <osg/Material>
+#include <osg/Geometry>
 
 // --- C/C++ Libraries --- //
 #include <iostream>
@@ -45,9 +46,20 @@ using namespace ves::xplorer::scenegraph::util;
 ////////////////////////////////////////////////////////////////////////////////
 MaterialInitializer::MaterialInitializer( osg::Node* osg_node )
         :
-        NodeVisitor( TRAVERSE_ALL_CHILDREN )
+        NodeVisitor( TRAVERSE_ALL_CHILDREN ),
+        mFileHasMaterial( false )
 {
     osg_node->accept( *this );
+    //std::cout << " has material " << mFileHasMaterial << std::endl;
+    if( !mFileHasMaterial )
+    {
+        osg::ref_ptr< osg::StateSet > stateset = osg_node->getOrCreateStateSet();
+        osg::ref_ptr< osg::Material > material;
+        material = new osg::Material();
+        material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
+        material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
+        stateset->setAttribute( material.get(), osg::StateAttribute::ON );        
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 MaterialInitializer::~MaterialInitializer()
@@ -55,19 +67,77 @@ MaterialInitializer::~MaterialInitializer()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void MaterialInitializer::apply( osg::Group& node )
+void MaterialInitializer::apply( osg::Geode& node )
 {
-    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
-    osg::ref_ptr< osg::Material > material = static_cast< osg::Material* >( stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
-
-    if( material.valid() )
+    osg::ref_ptr< osg::StateSet > geode_stateset = node.getOrCreateStateSet();
+    osg::ref_ptr< osg::Material > geode_material = 
+    static_cast< osg::Material* >( geode_stateset->
+                                  getAttribute( osg::StateAttribute::MATERIAL ) );
+    
+    if( geode_material.valid() )
     {
+        mFileHasMaterial = true;
         return;
     }
+    
+    for( size_t i = 0; i < node.getNumDrawables(); i++ )
+    {
+        //Stateset for the drawable
+        osg::ref_ptr< osg::StateSet > drawable_stateset = 
+            node.getDrawable( i )->getOrCreateStateSet();
+        //Material from the stateset
+        osg::ref_ptr< osg::Material > drawable_material = 
+            static_cast< osg::Material* >( 
+            drawable_stateset->getAttribute( osg::StateAttribute::MATERIAL ) );
 
-    material = new osg::Material();
-    material->setAmbient( osg::Material::FRONT_AND_BACK, osg::Vec4( 0.56862f, 0.56842f, 0.56842f, 1.0f ) );
-    material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
-    stateset->setAttribute( material.get(), osg::StateAttribute::ON );
+        //Colors for the stateset
+        osg::ref_ptr< osg::Vec4Array > color_array = 
+            static_cast< osg::Vec4Array* >( node.getDrawable( i )->
+            asGeometry()->getColorArray() );
+        //Texture for the stateset
+        osg::StateSet::TextureAttributeList drawable_tal = 
+            drawable_stateset->getTextureAttributeList();
+
+        if( color_array.valid() )
+        {
+            for( size_t j = 0; j < color_array->size(); j++ )
+            {
+                mFileHasMaterial = true;
+                return;
+            }
+        }
+        
+        if( drawable_material.valid() )
+        {
+            mFileHasMaterial = true;
+            return;
+        }            
+        
+        //This sets the gl blend mode for the textures on geometry so
+        //that when transparency is needed the texture renders properly
+        for( size_t k = 0; k < drawable_tal.size(); k++ )
+        {
+            mFileHasMaterial = true;
+            return;
+        }
+    }
+
+    osg::NodeVisitor::traverse( node );
 }
 ////////////////////////////////////////////////////////////////////////////////
+void MaterialInitializer::apply( osg::Node& node )
+{
+    osg::ref_ptr< osg::StateSet > stateset = node.getOrCreateStateSet();
+    osg::ref_ptr< osg::Material > material = 
+    static_cast< osg::Material* >( stateset->
+                                  getAttribute( osg::StateAttribute::MATERIAL ) );
+    
+    if( material.valid() )
+    {
+        mFileHasMaterial = true;
+        return;
+    }
+    
+    osg::NodeVisitor::traverse( node );
+}
+////////////////////////////////////////////////////////////////////////

@@ -57,9 +57,13 @@ public:
     MaterialInitializer( osg::Node* osg_node );
     virtual ~MaterialInitializer();
 
-    virtual void apply( osg::Group& node );
+    virtual void apply( osg::Node& node );
+    virtual void apply( osg::Geode& node );
+
+    bool FileHasMaterial();
 
 private:
+    bool mFileHasMaterial;
 
 };
 }

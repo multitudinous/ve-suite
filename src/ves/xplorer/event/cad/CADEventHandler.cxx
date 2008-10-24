@@ -363,8 +363,8 @@ void CADEventHandler::_addNodeToNode( std::string parentID,
                 << std::endl << vprDEBUG_FLUSH;
 
             //Set a default material on nodes that have no initial material
-            //ves::xplorer::scenegraph::util::MaterialInitializer 
-            //    material_initializer( partNode->GetDCS() );
+            ves::xplorer::scenegraph::util::MaterialInitializer 
+                material_initializer( partNode->GetDCS() );
             vprDEBUG( vesDBG, 1 ) << "|\t---Set Part Opacity---" 
                 << std::endl << vprDEBUG_FLUSH;
             vprDEBUG( vesDBG, 1 ) << "|\t\tOpacity Value = " 
