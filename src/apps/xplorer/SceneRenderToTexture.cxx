@@ -125,7 +125,7 @@ void StencilImage::operator () ( osg::RenderInfo& renderInfo ) const
 SceneRenderToTexture::SceneRenderToTexture()
     :
     mRootGroup( new osg::Group() ),
-    mScaleFactor( 1 )
+    mScaleFactor( 2 )
 {    
     ;
 }
@@ -320,7 +320,7 @@ void SceneRenderToTexture::InitProcessor(
     {
         colorBuffer0->setName( "ColorBuffer0Bypass" );
         colorBuffer0->setBufferComponent( osg::Camera::COLOR_BUFFER0 );
-        //colorBuffer0->setInputTextureIndexForViewportReference( -1 );
+        colorBuffer0->setInputTextureIndexForViewportReference( 0 );
 
     }
     (*mProcessor)->addChild( colorBuffer0.get() );
@@ -331,7 +331,7 @@ void SceneRenderToTexture::InitProcessor(
     {
         colorBuffer1->setName( "ColorBuffer1Bypass" );
         colorBuffer1->setBufferComponent( osg::Camera::COLOR_BUFFER1 );
-        //colorBuffer1->setInputTextureIndexForViewportReference( -1 );
+        colorBuffer1->setInputTextureIndexForViewportReference( 0 );
     }
     (*mProcessor)->addChild( colorBuffer1.get() );
 
@@ -395,7 +395,7 @@ void SceneRenderToTexture::InitProcessor(
         gaussX->set( "glowMap", 0 );
 
         blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
-        blurX->setInputTextureIndexForViewportReference( -1 );
+        blurX->setInputTextureIndexForViewportReference( 0 );
     }
     glowDownSample->addChild( blurX.get() );
 
@@ -444,7 +444,7 @@ void SceneRenderToTexture::InitProcessor(
         gaussY->set( "glowMap", 0 );
 
         blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
-        blurY->setInputTextureIndexForViewportReference(-1 );
+        blurY->setInputTextureIndexForViewportReference( 0 );
     }
     blurX->addChild( blurY.get() );
 
@@ -486,6 +486,7 @@ void SceneRenderToTexture::InitProcessor(
         //std::cout << " added " << addedCorrectly << std::endl;
         addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
         final->setInputTextureIndexForViewportReference( -1 );
+        final->setViewport( sceneViewCamera->getViewport() );
    }
 
     //Render to the Frame Buffer
@@ -494,6 +495,7 @@ void SceneRenderToTexture::InitProcessor(
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
+        ppuOut->setViewport( sceneViewCamera->getViewport() );
     }
     final->addChild( ppuOut.get() );
 }

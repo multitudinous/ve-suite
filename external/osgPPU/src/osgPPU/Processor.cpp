@@ -97,9 +97,9 @@ void Processor::init()
     //mStateSet->setBinNumber(100);
 
     // setup default state set modes
-    mStateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
-    mStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
-    mStateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::OVERRIDE);
+    mStateSet->setMode(GL_LIGHTING, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED);
+    mStateSet->setMode(GL_CULL_FACE, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED);
+    mStateSet->setMode(GL_DEPTH_TEST, osg::StateAttribute::OFF | osg::StateAttribute::PROTECTED);
 
     // setup default blending functions
     mStateSet->setMode(GL_BLEND, osg::StateAttribute::OFF);
@@ -110,7 +110,7 @@ void Processor::init()
     // we shouldn't write to the depth buffer
     osg::Depth* ds = new osg::Depth();
     ds->setWriteMask(false);
-    mStateSet->setAttribute(ds, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+    mStateSet->setAttribute(ds, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED);
 
     // the processor is of fixed function pipeline, however the childs (units) might not
     mStateSet->setAttribute(new osg::Program(), osg::StateAttribute::ON);
@@ -124,11 +124,13 @@ void Processor::init()
         clamp->setClampVertexColor(GL_FALSE);
         clamp->setClampFragmentColor(GL_FALSE);
         clamp->setClampReadColor(GL_FALSE);
-        mStateSet->setAttribute(clamp, osg::StateAttribute::ON | osg::StateAttribute::OVERRIDE);
+        mStateSet->setAttribute(clamp, osg::StateAttribute::ON | osg::StateAttribute::PROTECTED);
     }
 
     // not dirty anymore
     mbDirty = false;
+    
+    this->setCullingActive( false );
 }
 
 
