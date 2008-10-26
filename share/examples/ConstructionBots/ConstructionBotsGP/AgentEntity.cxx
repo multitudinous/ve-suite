@@ -62,7 +62,7 @@
 
 using namespace bots;
 
-const bool SHOW_SENSOR_GEOMETRY = true;
+const bool SHOW_SENSOR_GEOMETRY = false;
 
 ////////////////////////////////////////////////////////////////////////////////
 AgentEntity::AgentEntity(
