@@ -75,7 +75,7 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name,
     DynamicsLog = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT1));
 
     mQueryCommandNames.insert( "getNetwork");
-    //mQueryCommandNames.insert( "openSimulation");
+    mQueryCommandNames.insert( "openSimulation");
     mQueryCommandNames.insert( "runNetwork");
 	mQueryCommandNames.insert( "reinitNetwork");
 	mQueryCommandNames.insert( "reinitBlock");
@@ -85,6 +85,7 @@ Body_Unit_i::Body_Unit_i( /*Body::Executive_ptr exec,*/ std::string name,
     mQueryCommandNames.insert( "closeSimulation");
     mQueryCommandNames.insert( "saveSimulation");
     mQueryCommandNames.insert( "saveAsSimulation");
+    mQueryCommandNames.insert( "getModuleParamList");
     mQueryCommandNames.insert( "getInputModuleParamList");
     mQueryCommandNames.insert( "getInputModuleProperties");
     mQueryCommandNames.insert( "getOutputModuleParamList");
@@ -104,12 +105,12 @@ Body_Unit_i::~Body_Unit_i( void )
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::ShowDynamics()
 {
-	//dyn->showDynamics(true);
+	dyn->SetVisibility(true);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::HideDynamics()
 {
-	//dyn->showDynamics(false);
+	dyn->SetVisibility(false);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::CloseDynamics()
@@ -129,15 +130,15 @@ void Body_Unit_i::StepSim()
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::ReinitializeDynamics()
 {
-    //try
-    //{
-	//    dyn->ReinitDynamics();
-    //}
-    //catch(...)
-    //{
-	//DynamicsLog->SetSel(-1, -1);
-	//DynamicsLog->ReplaceSel("Reinitialize Failed.\r\n");
-   // }
+    try
+    {
+	    dyn->ReinitDynamics();
+    }
+    catch(...)
+    {
+	    DynamicsLog->SetSel(-1, -1);
+	    DynamicsLog->ReplaceSel("Reinitialize Failed.\r\n");
+    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::StartCalc (
@@ -366,11 +367,11 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleGetNetwork( cmd );
 		return returnValue;
 	}
-	//else if(cmdname=="openSimulation")
-	//{
-	//	returnValue = handleOpenSimulation(cmd);
-	//	return returnValue;
-	//}
+	else if(cmdname=="openSimulation")
+	{
+		returnValue = handleOpenSimulation(cmd);
+		return returnValue;
+	}
 	else if (cmdname=="runNetwork")
 	{
 		StartCalc();
@@ -434,7 +435,16 @@ char * Body_Unit_i::Query ( const char * query_str
 		ReinitializeBlock(cmd);
 		return CORBA::string_dup( "Block reinitialized." );
 	}
-
+    
+    //Blocks
+	else if (cmdname=="getModuleParamList")
+	{
+		//executive_->SetModuleMessage(cur_id_,"Querying inputs...\n");
+		returnValue = handleGetModuleParamList(cmd);
+		//executive_->SetModuleMessage(cur_id_,"Querying completed.\n");
+		return returnValue;
+	}
+/*
 	//Blocks
 	else if (cmdname=="getInputModuleParamList")
 	{
@@ -486,7 +496,7 @@ char * Body_Unit_i::Query ( const char * query_str
 		returnValue = handleGetStreamOutputModuleProperties(cmd);
 		return returnValue;
 	}
-
+*/
 	//Params
 	else if (cmdname=="setParam")
 	{
@@ -495,6 +505,7 @@ char * Body_Unit_i::Query ( const char * query_str
 	}
 	else
 		return CORBA::string_dup("NULL");
+
 }
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
@@ -553,17 +564,17 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	return CORBA::string_dup(network.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-//char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
-//{
-//    CEdit *Display;
-//    Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
+char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
+{
+    CEdit *Display;
+    Display = reinterpret_cast<CEdit *>(theDialog->GetDlgItem(IDC_EDIT2));
 
 	//this command has no params
-//	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
-//	Display->SetWindowText(filename.c_str());
-//	dyn->openFile(filename.c_str());
-//	return CORBA::string_dup("Simulation Opened.");
-//}
+	std::string filename = cmd->GetDataValuePair(1)->GetDataString();
+	Display->SetWindowText(filename.c_str());
+	dyn->OpenFile(filename.c_str());
+	return CORBA::string_dup("Simulation Opened.");
+}
 ////////////////////////////////////////////////////////////////////////////////
 char* Body_Unit_i::handleSaveAs(ves::open::xml::CommandPtr cmd)
 {
@@ -596,7 +607,7 @@ void Body_Unit_i::ReinitializeBlock(ves::open::xml::CommandPtr cmd)
 	//dyn->ReinitBlock(modname);
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
+/*char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname;
@@ -621,9 +632,36 @@ char* Body_Unit_i::handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd)
     //output.close();  
 
 	return CORBA::string_dup(netPak.c_str());
+}*/
+////////////////////////////////////////////////////////////////////////////////
+char* Body_Unit_i::handleGetModuleParamList(ves::open::xml::CommandPtr cmd)
+{
+	size_t num = cmd->GetNumberOfDataValuePairs();
+	std::string modname;
+	unsigned int modId;
+
+	for( size_t i=0; i < num; i++)
+	{
+		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
+		
+		if (curPair->GetDataName()=="ModuleName")
+			modname=curPair->GetDataString();
+		else if (curPair->GetDataName()=="ModuleId")
+			curPair->GetData(modId);
+	}
+
+	//There shouldn't be two intances of an Dynamics framework. so discard the moduleId
+	//the returned string will be a well formated XML within "vecommand" element
+	std::string netPak = dyn->GetModuleParams(modname);
+
+    //std::ofstream output("inputList.txt");
+    //output<<netPak;
+    //output.close();  
+
+	return CORBA::string_dup(netPak.c_str());
 }
 ////////////////////////////////////////////////////////////////////////////////
-char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
+/*char* Body_Unit_i::handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd)
 {
 	size_t num = cmd->GetNumberOfDataValuePairs();
 	std::string modname,paramName;
@@ -771,7 +809,7 @@ char* Body_Unit_i::handleGetStreamOutputModuleProperties(ves::open::xml::Command
 	std::string netPak;// = dyn->GetStreamOutputModuleParamProperties(modname, paramName);
 	return CORBA::string_dup(netPak.c_str());
 
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void Body_Unit_i::SetParams (CORBA::Long id,
     const char * param)
@@ -822,12 +860,6 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 		else if (curPair->GetDataName()=="ParamValue")
 			paramValue=curPair->GetDataString();
 	}
-	
-	//CASI::CASIObj cur_block = dyn->Dynamicsdoc->getBlockByName(modname.c_str());
-	//CASI::Variable tempvar = cur_block.getInputVarByName(paramName.c_str());
-	//CASI::Variable cur_var = dyn->Dynamicsdoc->getVarByNodePath(tempvar.getNodePath());
-	CString newValue;
-	newValue = paramValue.c_str();
-	//bool success = cur_var.setValue(newValue);
+	dyn->SetValue( modname, paramName, paramValue );
 }
 ////////////////////////////////////////////////////////////////////////////////

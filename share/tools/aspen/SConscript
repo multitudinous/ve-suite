@@ -9,7 +9,9 @@ aspenSubdirs = Split("""
 if GetPlatform() == 'win32':
    aspenSubdirs += Split("""    
       CASILib
+      AspenPlusInterface
       VE_AspenUnit
+      DynamicsUnit
    """)
 
 

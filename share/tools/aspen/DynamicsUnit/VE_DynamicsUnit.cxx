@@ -51,6 +51,7 @@ BOOL CVE_DynamicsUnitApp::InitInstance()
         return FALSE;
         // End of your addition.
     }
+    AfxOleInit();
     AfxEnableControlContainer();
 
 	SetRegistryKey(_T("Dynamics Unit"));

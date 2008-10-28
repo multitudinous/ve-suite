@@ -1,6 +1,9 @@
 #pragma warning (disable: 4786)
 
 #include "AspenPlusInterface.h"
+#include <fstream>
+#include <comutil.h>
+#include <string>
 
 #ifdef YANGDEBUG
 extern FILE* test;
@@ -8,13 +11,17 @@ extern FILE* test;
 namespace AspenPlusInterface
 {
 
+///////////////////////////////////////////////////////////////////////////////
+//Constructor
 	AspenPlusInterface::AspenPlusInterface()
 	{
 		simOpened = false;
-		//ihRoot=NULL;
-		hAPsim=NULL;
+		ADApplication = NULL;
+		ADDocument = NULL;
 	}
 
+///////////////////////////////////////////////////////////////////////////////
+//Deconstructor
 	AspenPlusInterface::~AspenPlusInterface()
 	{
 	}
@@ -25,12 +32,14 @@ namespace AspenPlusInterface
 	//}
 	//File operating functions
 
-    void AspenPlusInterface::Open(CString filename) //Open an Aspen Document
+///////////////////////////////////////////////////////////////////////////////
+//Open an Aspen Document
+    void AspenPlusInterface::Open(CString filename)
 	{
         if (simOpened)
               Close();
         
-        hAPsim = AspenCustomModelerLibrary::IAspenModelerPtr( "AD Application" );
+        ADApplication = AspenDynamicsLibrary::IAspenModelerPtr( "AD Application" );
         
         VARIANT strVar;
 		::VariantInit(&strVar);
@@ -38,22 +47,75 @@ namespace AspenPlusInterface
         BSTR bstr = filename.AllocSysString();
         strVar.bstrVal = bstr;
 
-	    APDocument = hAPsim->OpenDocument(strVar);
+	    ADDocument = ADApplication->OpenDocument(strVar);
+        std::ofstream output("type.txt");
+        /*_variant_t temp = ADDocument->GetFlowsheet();
+        VARIANT temp2 = temp.GetVARIANT();
+        VARIANT temp3;
+        ::VariantInit(&temp3);
+        temp3 = temp.GetVARIANT();
+        output << temp.vt<<" "<<temp2.vt<<" "<<temp3.vt<<std::endl; 
+        
+        _bstr_t bstr_t(temp.bstrVal);
+        std::string str(bstr_t);
+
+        output<<str<<std::endl;
+        output<<VARENUM::VT_BSTR<<std::endl;
+        output<<VARENUM::<<std::endl;
+        output<<str<<std::endl;
+        output<<str<<std::endl;
+        output<<str<<std::endl;
+        */
         //needs error handling
+
+        //ADProperties = ADDocument->Properties();
+        
+        //output<<ADProperties->GetComponentListNames().vt;
+        
+        //ADResults = ADDocument->Results;
+        //output<<ADResults->GetResult(2).vt;
+
+        VARIANT strName;
+	    ::VariantInit(&strName);
+        strName.vt = VT_BSTR;
+        CString temp = "GASIFIER";
+        BSTR bstr2 = temp.AllocSysString();
+        strName.bstrVal = bstr2;
+
+        //ADProperties = ADDocument->Properties();
+        //AspenDynamicsLibrary::IAspenModelerComponentListPtr ADCompList = ADProperties->ComponentList(strName);
+
+        //output<<ADCompList->GetComponents().vt<<std::endl;
+        //output<<ADCompList->GetName().vt<<std::endl;
+        output.close();
 
 	    VARIANT cv;
 		::VariantInit(&cv);
 	    cv.vt=VT_BOOL;                      //Type is BOOL
         cv.boolVal=VARIANT_TRUE;      //value is True (VARIANT_TRUE)
-    	
-	    hAPsim->PutVisible(cv);
 
+	    ADApplication->PutVisible(cv);
         ::VariantClear(&strVar);
         ::VariantClear(&cv);
         //needs error handling
 
 		simOpened = true;
-
+        BSTR bstrDesc;
+        
+        try
+        {
+            //Initialize COM
+            CoInitialize(NULL);
+            //Create an instance of the VB lib
+            AspenDynamicsQueryLib.
+                CreateInstance(__uuidof(ADQueryVB::AspenDynamicsQueryLib));
+            //Connect the VB lib to the currently opened aspen simulation
+            AspenDynamicsQueryLib->ConnectToDynamics( &bstr );
+        }
+        catch(_com_error &e)
+        {
+            bstrDesc = e.Description();
+        }
 /*		
 
         //the default constructor sets auto release of memory so there is no 
@@ -104,8 +166,34 @@ namespace AspenPlusInterface
 #endif
 */        
 	}
-	
-	void AspenPlusInterface::Close() //Close the file, clear up 
+
+///////////////////////////////////////////////////////////////////////////////
+    SAFEARRAY * AspenPlusInterface::GetVariableList( CString itemName )
+    {
+        //Convert itemname to BSTR due to requiremens of VB
+        BSTR iName = itemName.AllocSysString();
+        
+        //Get the list of variables
+        SAFEARRAY * list = AspenDynamicsQueryLib->GetVariableList( &iName );
+        return list;
+    }
+
+///////////////////////////////////////////////////////////////////////////////
+    void AspenPlusInterface::SetVariableValue( CString itemName,
+        CString variableName, CString value  )
+    {
+        //Convert CStrings to BSTR due to requirements of VB
+        BSTR iName = itemName.AllocSysString();
+        BSTR vName = variableName.AllocSysString();
+        BSTR v = value.AllocSysString();
+
+        //Set the value
+        AspenDynamicsQueryLib->SetVariableValue( &iName, &vName, &v );
+    }
+
+///////////////////////////////////////////////////////////////////////////////
+//Close the file, clear up 
+	void AspenPlusInterface::Close()
 	{
 		if (simOpened)
 		{
@@ -115,7 +203,7 @@ namespace AspenPlusInterface
             //reserved.boolVal=VARIANT_TRUE;
             reserved.boolVal=VARIANT_FALSE;
 
-			hAPsim->CloseDocument(reserved);
+			ADApplication->CloseDocument(reserved);
             //delete ihRoot;
             //delete hAPsim;
 			//ihRoot = NULL;
@@ -125,36 +213,53 @@ namespace AspenPlusInterface
             ::VariantClear(&reserved);
 		}
 	}
-	
-    void AspenPlusInterface::Quit() //Close the file, clear up 
+
+///////////////////////////////////////////////////////////////////////////////
+//Close the file, clear up
+    void AspenPlusInterface::Quit() 
 	{
-        hAPsim->Quit();
+		if (simOpened)
+        {
+            ADApplication->Quit();
+        }
     }
 
-	void AspenPlusInterface::Save() //Save the document back;
+///////////////////////////////////////////////////////////////////////////////
+//Save the document back;
+	void AspenPlusInterface::Save()
 	{
-		hAPsim->SaveDocument();
-	}
-	
-	void AspenPlusInterface::SaveAs(CString filename) //save this as another document
-	{		
-		VARIANTARG overwrite;
-		::VariantInit(&overwrite);
-        overwrite.vt=VT_BOOL;
-        overwrite.boolVal=VARIANT_TRUE;
-
-        VARIANT strVar;
-		::VariantInit(&strVar);
-        strVar.vt = VT_BSTR;
-        BSTR bstr = filename.AllocSysString();
-        strVar.bstrVal = bstr;
-
-		hAPsim->SaveDocumentAs(strVar, overwrite);
-		::VariantClear(&overwrite);	
-		::VariantClear(&strVar);	
+		if (simOpened)
+        {
+		    ADApplication->SaveDocument();
+        }
 	}
 
-	void AspenPlusInterface::ShowAspen(bool status)
+///////////////////////////////////////////////////////////////////////////////
+//save this as another document
+	void AspenPlusInterface::SaveAs(CString filename)
+	{	
+		if (simOpened)
+        {	
+		    VARIANTARG overwrite;
+		    ::VariantInit(&overwrite);
+            overwrite.vt=VT_BOOL;
+            overwrite.boolVal=VARIANT_TRUE;
+
+            VARIANT strVar;
+		    ::VariantInit(&strVar);
+            strVar.vt = VT_BSTR;
+            BSTR bstr = filename.AllocSysString();
+            strVar.bstrVal = bstr;
+
+		    ADApplication->SaveDocumentAs(strVar, overwrite);
+		    ::VariantClear(&overwrite);	
+		    ::VariantClear(&strVar);
+        }
+	}
+
+///////////////////////////////////////////////////////////////////////////////
+//hide/show dynamics application
+	void AspenPlusInterface::SetVisibility(bool status)
 	{
 		if (simOpened)
         {
@@ -167,21 +272,35 @@ namespace AspenPlusInterface
             }
             else if (status == false)
             {
-                cv.boolVal=VARIANT_TRUE;
+                cv.boolVal=VARIANT_FALSE;
             }
             
-            hAPsim->PutVisible(cv);
+            ADApplication->PutVisible(cv);
+		    ::VariantClear(&cv);
         }
 	}
 
+///////////////////////////////////////////////////////////////////////////////
+//run the simulation
 	void AspenPlusInterface::RunSolver( )
 	{
-		VARIANTARG flag;
-		::VariantInit(&flag);
-        flag.vt=VT_BOOL;
-        flag.boolVal=VARIANT_TRUE;
+		if (simOpened)
+        {
+		    VARIANTARG flag;
+		    ::VariantInit(&flag);
+            flag.vt=VT_BOOL;
+            flag.boolVal=VARIANT_TRUE;
 
-        APDocument->Run(flag);
+            ADDocument->Run(flag);
+		    ::VariantClear(&flag);	
+        }
+	}
+
+///////////////////////////////////////////////////////////////////////////////
+//return the current simulation to the default values 
+	void AspenPlusInterface::ResetSimulation( )
+    {
+        ADDocument->Reset( );
 	}
 
     /*
@@ -424,26 +543,10 @@ namespace AspenPlusInterface
 	}
 		
 		//simulation control fucntions
-		
-	void AspenPlusInterface::initializeSolver() //Initializes the current solution to its initial state. May purge the current results form the problem.
-	{
-		//hAPsim->Reinit();
-        
-		VARIANT name;
-        ::VariantInit(&name);
+*/		
 
-        VARIANT enumer;
-        ::VariantInit(&enumer);
-        enumer.vt = VT_I4;
-        enumer.lVal = IAP_REINIT_SIMULATION;
-        
-		IHAPEngine engine;
-		engine = hAPsim->GetEngine();
-        engine.Reinit( enumer, name  );
-        ::VariantClear( &enumer );
-	}
 
-    void AspenPlusInterface::reinitializeBlock( CString block ) //Initializes the current solution to its initial state. May purge the current results form the problem.
+ /*   void AspenPlusInterface::reinitializeBlock( CString block ) //Initializes the current solution to its initial state. May purge the current results form the problem.
 	{
 		//hAPsim->Reinit();
         

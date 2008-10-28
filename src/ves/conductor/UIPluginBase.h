@@ -107,6 +107,7 @@ public:
         SHOW_ASPEN_NAME,
         QUERY_INPUTS,
         QUERY_OUTPUTS,
+        QUERY_DYNAMICS,
         REINIT_BLOCK,
         SHOW_ICON_CHOOSER,
         GEOMETRY,
@@ -280,6 +281,7 @@ public:
     // EPRI TAG
     void OnShowFinancial( wxCommandEvent& event );
     void OnShowAspenName( wxCommandEvent& event );
+    void OnQueryDynamics( wxCommandEvent& event );
     void OnQueryInputs( wxCommandEvent& event );
     void OnQueryOutputs( wxCommandEvent& event );
     void OnSetInput( wxCommandEvent& event );

@@ -48,6 +48,7 @@
 
 #include <ves/conductor/util/OrbThread.h>
 #include <ves/conductor/util/ParamsDlg.h>
+#include <ves/conductor/util/AspenDynamicsDialog.h>
 #include <ves/conductor/util/SoundsPane.h>
 
 // EPRI TAG
@@ -103,6 +104,7 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( USER_DIALOG, UIPluginBase::OnShowUserDialog )
     EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
     EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
+    EVT_MENU( QUERY_DYNAMICS, UIPluginBase::OnQueryDynamics )
     EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
     EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
     EVT_MENU( REINIT_BLOCK, UIPluginBase::OnReinitBlocks )
@@ -219,6 +221,8 @@ UIPluginBase::UIPluginBase() :
     aspen_menu->Enable( QUERY_INPUTS, true );
     aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
     aspen_menu->Enable( QUERY_OUTPUTS, true );
+    aspen_menu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
+    aspen_menu->Enable( QUERY_DYNAMICS, true );
     aspen_menu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
     aspen_menu->Enable( REINIT_BLOCK, true );
     mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
@@ -1393,6 +1397,61 @@ void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )
     //if it is submit launch request
     //if(results->IsSubmit())
     // this->OnQueryInputModuleProperties(temp_vector2, compName);
+}
+////////////////////////////////////////////////////////////////////////////////
+void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
+{
+    UIPLUGIN_CHECKID( event )
+    std::string compName = GetVEModel()->GetModelName();
+    //compName = "Data.Blocks." + compName;
+
+    //generate hierarchical name if necessary
+    ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
+    //while( parentTraverser != NULL )
+    //while( parentTraverser->GetParentModel() != NULL )
+    //{
+        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+        //compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+    //    parentTraverser = parentTraverser->GetParentModel();
+    //}
+
+    ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
+    returnState->SetCommandName( "getModuleParamList" );
+    ves::open::xml::DataValuePairPtr data( new ves::open::xml::DataValuePair() );
+    data->SetData( std::string( "ModuleName" ), compName );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+
+    ves::open::xml::XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+
+    //Get results
+    std::string nw_str = serviceList->Query( status );
+    wxString title( compName.c_str(), wxConvUTF8 );
+    AspenDynamicsDialog* params = new AspenDynamicsDialog( m_canvas );
+    ves::open::xml::XMLReaderWriter networkReader;
+    networkReader.UseStandaloneDOMDocumentManager();
+    networkReader.ReadFromString();
+    networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+    ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
+    
+    int numdvps = cmd->GetNumberOfDataValuePairs();
+    for( size_t i = 0; i < numdvps; i++ )
+    {
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        params->SetData( temp_vector[0].c_str(), temp_vector[1].c_str(),
+            temp_vector[2].c_str(), temp_vector[3].c_str() );
+    }
+    params->UpdateSizes();
+    params->ShowModal();
+    params->Destroy();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnQueryOutputs( wxCommandEvent& event )

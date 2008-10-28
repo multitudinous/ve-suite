@@ -40,13 +40,13 @@ Attribute VB_Exposed = True
         
         'loop over variables and add to 2d array (safearray)
         For Each i In ADVariables
-            ADDispatch.Application.Msg ("Test GASIFIER-" & testString & "-Block " & i.Name & " uses Model " & i.TypeName & " " & i.Spec & " " & i.Value & " " & i.Description & " " & i.Units & " " & i.Tag & ".")
+            'ADDispatch.Application.Msg ("Test GASIFIER-" & testString & "-Block " & i.Name & " uses Model " & i.TypeName & " " & i.Spec & " " & i.Value & " " & i.Description & " " & i.Units & " " & i.Tag & ".")
             results(count, 1) = i.Name
-            results(count, 2) = i.TypeName
-            results(count, 3) = i.Spec
-            results(count, 4) = i.Value
-            results(count, 5) = i.Description
-            results(count, 6) = i.Units
+            results(count, 2) = i.Description
+            results(count, 3) = i.Value
+            results(count, 4) = i.Units
+            results(count, 5) = i.TypeName
+            results(count, 6) = i.Spec
             results(count, 7) = i.Tag
             count = count + 1
         Next

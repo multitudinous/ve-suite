@@ -131,7 +131,7 @@ public:
       ::Error::EUnknown
     ));
   
-  virtual
+    virtual
 	  void SetParams (CORBA::Long id,
       const char * param
     )
@@ -212,14 +212,15 @@ public:
   char* handleGetNetwork(ves::open::xml::CommandPtr cmd);
   char* handleOpenSimulation(ves::open::xml::CommandPtr cmd);
   char* handleSaveAs(ves::open::xml::CommandPtr cmd);
-  char* handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd);
-  char* handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd);
-  char* handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd);
-  char* handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd);
-  char* handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd);
-  char* handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd);
-  char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
-  char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
+  char* handleGetModuleParamList(ves::open::xml::CommandPtr cmd);
+  //char* handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd);
+  //char* handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd);
+  //char* handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd);
+  //char* handleGetOutputModuleProperties(ves::open::xml::CommandPtr cmd);
+  //char* handleGetStreamInputModuleParamList(ves::open::xml::CommandPtr cmd);
+  //char* handleGetStreamInputModuleProperties(ves::open::xml::CommandPtr cmd);
+  //char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
+  //char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
   void SetParam(ves::open::xml::CommandPtr cmd);
 };
 

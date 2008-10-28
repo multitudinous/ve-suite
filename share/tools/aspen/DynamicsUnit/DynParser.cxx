@@ -1364,26 +1364,89 @@ void DynParser::SetWorkingDir( std::string dir )
 
 ///////////////////////////////////////////////////////////////////////////////
 //BLOCKS
-/*std::string DynParser::GetInputModuleParams(std::string modname)
+std::string DynParser::GetModuleParams(std::string modname)
 {
-    //CASI::CASIObj cur_block =
-    //    aspendoc->getBlockByName( CString( modname.c_str( ) ) );
-    
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
-    std::vector<std::string> paramList;
     //input variables;
     params->SetCommandName((modname+"InputParams").c_str());
 
-    int numOfVars = cur_block.getNumberOfInputVars();
-    for(int i = 0; i < numOfVars; i++)
-    {
-        paramList.push_back( (char*)LPCTSTR(cur_block.getInputVarName(i)) );
-    }
+    SAFEARRAY * variables = dyndoc->GetVariableList( modname.c_str() );
+    long lb;
+    SafeArrayGetLBound( variables, 1, &lb );
+    long ub;
+    SafeArrayGetUBound( variables, 1, &ub );
+    VARIANT* temp;
+    long pos[2];
+    SafeArrayLock( variables );
 
-    ves::open::xml::DataValuePairPtr
-        inpParams( new ves::open::xml::DataValuePair() );
-    inpParams->SetData("params",paramList);
-    params->AddDataValuePair( inpParams );
+    for(int i = lb; i < ub; i++)
+    {
+        std::vector<std::string> paramList;
+        
+        //variable name
+        pos[0] = i;
+        pos[1] = 1;
+        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
+        
+        CString cname = temp->bstrVal;
+        if( cname.IsEmpty() != true)
+        {
+            char * ccname = cname.GetBuffer();
+            paramList.push_back( ccname );
+        }
+        else
+        {
+            paramList.push_back( " " );
+        }
+
+        //description
+        pos[1] = 2;
+        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
+        CString cdesc = temp->bstrVal;
+        if( cdesc.IsEmpty() != true)
+        {
+            char * ccdesc = cdesc.GetBuffer();
+            paramList.push_back( ccdesc );
+        }
+        else
+        {
+            paramList.push_back( " " );
+        }
+
+        //value
+        pos[1] = 3;
+        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
+        CString cvalue = temp->bstrVal;
+        if( cvalue.IsEmpty() != true)
+        {
+            char * ccvalue = cvalue.GetBuffer();
+            paramList.push_back( ccvalue );
+        }
+        else
+        {
+            paramList.push_back( " " );
+        }
+
+        //units of measure
+        pos[1] = 4;
+        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
+        CString cunits = temp->bstrVal;
+        if( cunits.IsEmpty() != true)
+        {
+            char * ccunits = cunits.GetBuffer();
+            paramList.push_back( ccunits );
+        }
+        else
+        {
+            paramList.push_back( " " );
+        }
+
+        //add list to DVP
+        ves::open::xml::DataValuePairPtr
+            inpParams( new ves::open::xml::DataValuePair() );
+        inpParams->SetData("params",paramList);
+        params->AddDataValuePair( inpParams );
+    }
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
@@ -1396,4 +1459,11 @@ void DynParser::SetWorkingDir( std::string dir )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     return status;
 }
-*/
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::SetValue( std::string modname, std::string paramname,
+                         std::string value )
+{
+    dyndoc->SetVariableValue( modname.c_str(), paramname.c_str(),
+        value.c_str()  );
+}

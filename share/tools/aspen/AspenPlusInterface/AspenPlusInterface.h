@@ -21,7 +21,9 @@
 #    define ASPENPLUSINTERFACE_EXPORTS   __declspec(dllimport)
 #  endif // DASI_EXPORTS
 
-#import "aspencustommodeler.tlb"
+//#import "aspencustommodeler.tlb"
+#import "aspendynamics.tlb"
+#import "ADQueryVB.dll"
 
 namespace AspenPlusInterface
 {
@@ -159,13 +161,21 @@ namespace AspenPlusInterface
 		void Quit();
 		void Save(); //Save the document back;
 		void SaveAs(CString filename); //save this as another document
-		void ShowAspen(bool status);
+		void SetVisibility( bool status );
         void RunSolver( );
+        void ResetSimulation( );
+        SAFEARRAY * GetVariableList( CString itemName );
+        void SetVariableValue( CString itemName, CString variableName,
+            CString Value );
+
 
         private:
 		bool simOpened;
-        AspenCustomModelerLibrary::IAspenModelerPtr hAPsim;
-        AspenCustomModelerLibrary::IAspenModelerDocumentPtr APDocument;
+        AspenDynamicsLibrary::IAspenModelerPtr ADApplication;
+        AspenDynamicsLibrary::IAspenModelerDocumentPtr ADDocument;
+        AspenDynamicsLibrary::IAspenModelerPhysicalPropertiesPtr ADProperties;
+        AspenDynamicsLibrary::IAspenModelerResultsPtr ADResults;
+        ADQueryVB::_AspenDynamicsQueryLibPtr AspenDynamicsQueryLib;
 		
 		/*//Block, Stream and variable access functions
 		int getNumOfBlocks(); //get number of blocks in this document
