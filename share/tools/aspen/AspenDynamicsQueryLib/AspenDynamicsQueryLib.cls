@@ -68,7 +68,8 @@ Attribute VB_Exposed = True
         'actually grabs a list of variables even through the list is one
         'still have to loop
         For Each i In ADVariable
-            i.Value = CStr(variableValue)
+            i.Value = CSng(variableValue)
+            'i.Value = CStr(variableValue)
         Next
         
         'Needs error checking

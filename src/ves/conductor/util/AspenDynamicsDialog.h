@@ -1,20 +1,19 @@
 #ifndef __ASPENDYNAMICSDIALOG_h__
 #define __ASPENDYNAMICSDIALOG_h__
 
-#ifdef __BORLANDC__
-	#pragma hdrstop
-#endif
+#include <ves/conductor/util/CORBAServiceList.h>
+#include <ves/open/xml/Command.h>
+#include <ves/open/xml/XMLReaderWriter.h>
+#include <ves/open/xml/DataValuePair.h>
+#include <ves/VEConfig.h>
 
-#ifndef WX_PRECOMP
-	#include <wx/wx.h>
-	#include <wx/dialog.h>
-#else
-	#include <wx/wxprec.h>
-#endif
-
+#include <wx/wx.h>
+#include <wx/dialog.h>
 #include <wx/button.h>
 #include <wx/grid.h>
 #include <wx/sizer.h>
+
+#include <vector>
 
 #undef AspenDynamicsDialog_STYLE
 #define AspenDynamicsDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
@@ -37,6 +36,11 @@ class AspenDynamicsDialog : public wxDialog
         void SetData( wxString name = wxT(""), wxString description = wxT(""),
             wxString value = wxT(""), wxString units = wxT("") );
         void UpdateSizes();
+        void SetComponentName( wxString name );
+        void SetServiceList(
+            ves::conductor::util::CORBAServiceList * serviceList );
+        wxString CompName;
+        ves::conductor::util::CORBAServiceList * ServiceList;
 	
 	private:
 		wxButton *CancelButton;
@@ -44,6 +48,7 @@ class AspenDynamicsDialog : public wxDialog
 		wxBoxSizer *WxBoxSizer1;
 		wxGrid *WxGrid;
 		wxFlexGridSizer *WxFlexGridSizer;
+        std::vector< int > rowsChanged;
 		
 	private:
 		enum
@@ -57,6 +62,7 @@ class AspenDynamicsDialog : public wxDialog
 	private:
 		void OnClose(wxCloseEvent& event);
 		void CreateGUIControls();
+        void WxGridCellChange(wxGridEvent& event);
 };
 
 #endif

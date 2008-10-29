@@ -1432,7 +1432,6 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
     //Get results
     std::string nw_str = serviceList->Query( status );
     wxString title( compName.c_str(), wxConvUTF8 );
-    AspenDynamicsDialog* params = new AspenDynamicsDialog( m_canvas );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
     networkReader.ReadFromString();
@@ -1440,6 +1439,9 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
     
+    AspenDynamicsDialog* params = new AspenDynamicsDialog( m_canvas );
+    params->SetComponentName( compName.c_str() );
+    params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )
     {

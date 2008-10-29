@@ -852,14 +852,12 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 
 	for( size_t i=0; i < num; i++)
 	{
-		ves::open::xml::DataValuePairPtr curPair= cmd->GetDataValuePair(i);
-		if (curPair->GetDataName()=="ModuleName")
-			modname=curPair->GetDataString();
-		else if (curPair->GetDataName()=="ParamName")
-			paramName=curPair->GetDataString();
-		else if (curPair->GetDataName()=="ParamValue")
-			paramValue=curPair->GetDataString();
+        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
+        std::vector< std::string > temp_vector;
+        pair->GetData( temp_vector );
+        dyn->SetValue( temp_vector[0].c_str(), temp_vector[1].c_str(),
+            temp_vector[2].c_str() );
 	}
-	dyn->SetValue( modname, paramName, paramValue );
+	
 }
 ////////////////////////////////////////////////////////////////////////////////

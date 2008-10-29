@@ -1389,6 +1389,11 @@ std::string DynParser::GetModuleParams(std::string modname)
         SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
         
         CString cname = temp->bstrVal;
+        
+        //remove Block entry - necessary to get current variable name for setting
+        cname = cname.Right( cname.GetLength() - cname.FindOneOf(_T(".")) - 1 );
+
+
         if( cname.IsEmpty() != true)
         {
             char * ccname = cname.GetBuffer();
