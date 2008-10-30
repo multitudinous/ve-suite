@@ -51,9 +51,9 @@ void AspenDynamicsDialog::CreateGUIControls()
 	GetSizer()->SetSizeHints(this);
 	Center();
 	
-	WxGrid->SetColLabelValue( 0, wxString("Description") );
-	WxGrid->SetColLabelValue( 1, wxString("Value") );
-	WxGrid->SetColLabelValue( 2, wxString("Units") );
+	WxGrid->SetColLabelValue( 0, _("Description") );
+	WxGrid->SetColLabelValue( 1, _("Value") );
+	WxGrid->SetColLabelValue( 2, _("Units") );
 
     //this should be done dynamically
     WxGrid->SetRowLabelSize( 500 );
@@ -92,15 +92,15 @@ void AspenDynamicsDialog::SetButtonClick(wxCommandEvent& event)
         std::vector<std::string> paramList;
         
         //component name
-        paramList.push_back( CompName.c_str() );
+        paramList.push_back( ConvertUnicode( CompName.c_str() ) );
 
         //variable name
         wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
-        paramList.push_back( varName.c_str() );
+        paramList.push_back( ConvertUnicode( varName.c_str() ) );
 
         //value
         wxString value = WxGrid->GetCellValue( rowsChanged[i], 1 );
-        paramList.push_back( value.c_str() );
+        paramList.push_back( ConvertUnicode( value.c_str() ) );
 
         //add list to DVP
         ves::open::xml::DataValuePairPtr
@@ -120,7 +120,7 @@ void AspenDynamicsDialog::SetButtonClick(wxCommandEvent& event)
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     ServiceList->Query( status );
 
-    wxMessageDialog popup( this, "Data has been sent to Aspen Dynamics");
+    wxMessageDialog popup( this, _("Data has been sent to Aspen Dynamics") );
     popup.ShowModal(); 
 }
 

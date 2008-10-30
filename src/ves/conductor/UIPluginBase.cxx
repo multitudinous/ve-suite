@@ -1440,7 +1440,7 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
     ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
     
     AspenDynamicsDialog* params = new AspenDynamicsDialog( m_canvas );
-    params->SetComponentName( compName.c_str() );
+    params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
     for( size_t i = 0; i < numdvps; i++ )
@@ -1448,8 +1448,8 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
         ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( i );
         std::vector< std::string > temp_vector;
         pair->GetData( temp_vector );
-        params->SetData( temp_vector[0].c_str(), temp_vector[1].c_str(),
-            temp_vector[2].c_str(), temp_vector[3].c_str() );
+        params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
+            wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
     }
     params->UpdateSizes();
     params->ShowModal();
