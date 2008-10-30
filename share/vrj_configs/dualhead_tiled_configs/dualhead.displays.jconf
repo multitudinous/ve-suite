@@ -69,7 +69,7 @@
                <origin>0.0</origin>
                <size>0.5</size>
                <size>1.0</size>
-               <view>Right Eye</view>
+               <view>Left Eye</view>
                <lower_left_corner>0.1</lower_left_corner>
                <lower_left_corner>0.1524</lower_left_corner>
                <lower_left_corner>-1.8288</lower_left_corner>
