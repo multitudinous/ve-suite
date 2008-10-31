@@ -1431,6 +1431,9 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
 
     //Get results
     std::string nw_str = serviceList->Query( status );
+    std::ofstream packet("packet.txt");
+    packet<<nw_str;
+    packet.close();
     wxString title( compName.c_str(), wxConvUTF8 );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
@@ -1438,7 +1441,6 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
-    
     AspenDynamicsDialog* params = new AspenDynamicsDialog( m_canvas );
     params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
@@ -1450,6 +1452,7 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
         pair->GetData( temp_vector );
         params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ), wxString( temp_vector[1].c_str(), wxConvUTF8 ),
             wxString( temp_vector[2].c_str(), wxConvUTF8 ), wxString( temp_vector[3].c_str(), wxConvUTF8 ) );
+        //params->SetData( wxString( temp_vector[0].c_str(), wxConvUTF8 ) );
     }
     params->UpdateSizes();
     params->ShowModal();

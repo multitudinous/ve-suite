@@ -1370,20 +1370,25 @@ std::string DynParser::GetModuleParams(std::string modname)
     //input variables;
     params->SetCommandName((modname+"InputParams").c_str());
 
-    SAFEARRAY * variables = dyndoc->GetVariableList( modname.c_str() );
-    long lb;
-    SafeArrayGetLBound( variables, 1, &lb );
-    long ub;
-    SafeArrayGetUBound( variables, 1, &ub );
-    VARIANT* temp;
-    long pos[2];
-    SafeArrayLock( variables );
+    //SAFEARRAY * variables = dyndoc->GetVariableList( modname.c_str() );
+    //long lb;
+    //SafeArrayGetLBound( variables, 1, &lb );
+    //long ub;
+    //SafeArrayGetUBound( variables, 1, &ub );
+    //VARIANT* temp;
+    //long pos[2];
+    //SafeArrayLock( variables );
 
-    for(int i = lb; i < ub; i++)
+    std::vector< std::vector < std::string > > variables =
+    //std::vector < std::string > variables =
+        dyndoc->GetVariableList( modname.c_str() );
+
+    //for(int i = lb; i < ub; i++)
+    for(int i = 0; i < variables.size(); i++)
     {
         std::vector<std::string> paramList;
         
-        //variable name
+       /* //variable name
         pos[0] = i;
         pos[1] = 1;
         SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
@@ -1444,8 +1449,24 @@ std::string DynParser::GetModuleParams(std::string modname)
         else
         {
             paramList.push_back( " " );
+        }*/
+        for( int j = 0; j < 4; j++ )
+        {
+            std::string temp = variables[i][j];
+            if( !temp.empty() )
+            //if( !variables[i].empty() )
+            {
+                paramList.push_back(temp.c_str());
+            //    CString cname = variables[i].c_str();
+                //remove Block entry - necessary to get current variable name for setting
+        //cname = cname.Right( cname.GetLength() - cname.FindOneOf(_T(".")) - 1 );
+       // paramList.push_back(cname.GetBuffer());
+            }
+            else
+            {
+                paramList.push_back(" ");
+            }
         }
-
         //add list to DVP
         ves::open::xml::DataValuePairPtr
             inpParams( new ves::open::xml::DataValuePair() );

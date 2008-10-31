@@ -164,7 +164,9 @@ namespace AspenPlusInterface
 		void SetVisibility( bool status );
         void RunSolver( );
         void ResetSimulation( );
-        SAFEARRAY * GetVariableList( CString itemName );
+        //SAFEARRAY * GetVariableList( CString itemName );
+        std::vector< std::vector< std::string > > GetVariableList( CString itemName );
+        //std::vector< std::string > GetVariableList( CString itemName );
         void SetVariableValue( CString itemName, CString variableName,
             CString Value );
 

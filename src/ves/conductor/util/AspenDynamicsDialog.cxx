@@ -168,6 +168,14 @@ void AspenDynamicsDialog::SetData( wxString name, wxString description,
 	WxGrid->SetCellValue( index, 2, units );
 }
 
+// SetData
+//void AspenDynamicsDialog::SetData( wxString name )
+//{
+//	WxGrid->AppendRows( 1 );
+//    int index = WxGrid->GetNumberRows() - 1;
+//	WxGrid->SetRowLabelValue( index, name );
+//}
+
 //Update the grid size to match data size
 void AspenDynamicsDialog::UpdateSizes()
 {
