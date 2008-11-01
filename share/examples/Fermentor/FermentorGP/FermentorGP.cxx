@@ -99,8 +99,19 @@ VEFermentorGraphicalPlugin::VEFermentorGraphicalPlugin()
 ////////////////////////////////////////////////////////////////////////////////
 VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
 {
+    if( !mSceneManager )
+    {
+        return;
+    }
+
     osg::ref_ptr< osg::Group > rootNode =
         mSceneManager->GetRootNode();
+
+    if( !rootNode.valid() )
+    {
+        return;
+    }
+    
     rootNode->removeChild( _roomGeometry.get() );
 
     for( std::map< int, osg::ref_ptr< display::DigitalGauge > >::iterator
