@@ -91,6 +91,9 @@ public:
    /* Explicitly add a resource. */
    void add( const std::string& resourceName, boost::any& value );
 
+    /* Explicitly remove a resource. */
+    bool remove( const std::string& resourceName );
+        
 protected:
    template<typename T, template< typename > class Container >
    Container<T> createResource( const std::string& resourceName)
@@ -104,7 +107,6 @@ private:
     ResourceManager();
 
     ///Destructor
-    ///Never gets called, don't implement
     ~ResourceManager();
 
     vprSingletonHeader( ResourceManager );

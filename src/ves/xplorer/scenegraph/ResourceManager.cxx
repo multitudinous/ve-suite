@@ -38,7 +38,7 @@ namespace xplorer
 {
 namespace scenegraph
 {
-vprSingletonImpLifetime( ResourceManager, 100 );
+vprSingletonImpLifetime( ResourceManager, 14 );
 
 ResourceManager::ResourceManager()
 {
@@ -47,7 +47,18 @@ ResourceManager::ResourceManager()
 ////////////////////////////////////////////////////////////////////////////////
 ResourceManager::~ResourceManager()
 {
-;
+    for( ResourceMapIterator iter = mResourceMap.begin(); iter != mResourceMap.end();)
+    {
+        mResourceMap.erase( iter++ );
+    }/*
+    try
+    {
+        mResourceMap.clear();
+    }
+    catch(...)
+    {
+        ;
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void ResourceManager::add(const std::string& resourceName, boost::any& resourceValue)
@@ -55,7 +66,18 @@ void ResourceManager::add(const std::string& resourceName, boost::any& resourceV
    ResourcePair resource_pair(resourceName, resourceValue);
    mResourceMap.insert(resource_pair);
 }
-
+////////////////////////////////////////////////////////////////////////////////
+bool ResourceManager::remove(const std::string& resourceName )
+{
+    ResourceMapIterator iter = mResourceMap.find( resourceName );
+    if( iter != mResourceMap.end() )
+    {
+        mResourceMap.erase( iter );
+        return true;
+    }
+    return false;
+}
+        
 } // end scenegraph
 } // end xplorer
 } // end ves
