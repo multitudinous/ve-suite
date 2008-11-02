@@ -183,7 +183,8 @@ ACE_THROW_SPEC((
         tempCfdModel = ModelHandler::instance()->GetModel( i );
         if (( CORBA::Long )tempCfdModel->GetID() == modelID )
         {
-            std::cout << "Found model: " << modelID << std::endl;
+            vprDEBUG( vesDBG, 1 ) << "|\tFound model: " 
+                << modelID << std::endl << vprDEBUG_FLUSH;
             break;
         }
         tempCfdModel = 0;
@@ -192,13 +193,15 @@ ACE_THROW_SPEC((
     // if we didn't find it then...
     if( tempCfdModel == 0 )
     {
-        std::cout << "Didn't find model: " << modelID << std::endl;
+        vprDEBUG( vesDBG, 0 ) << "|\tDid not find model: " 
+            << modelID << std::endl << vprDEBUG_FLUSH;
         return tempModel._retn();
     }
 
     // now lets pass the model back
     CORBA::ULong numDatasets = tempCfdModel->GetNumberOfCfdDataSets();
-    vprDEBUG( vesDBG, 0 ) << " numDatasets = " << numDatasets << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG( vesDBG, 0 ) << "|\tnumDatasets = " 
+        << numDatasets << std::endl << vprDEBUG_FLUSH;
     if( numDatasets > 0 )
     {
         //tempModel->dataVector = VjObs::Datasets( numDatasets );
@@ -224,20 +227,20 @@ ACE_THROW_SPEC((
             tempModel->dataVector[ j ].vectornames.length( totalNumberOfVectors );
         }
         vprDEBUG( vesDBG, 0 )
-        << " totalNumberOfScalars: " << totalNumberOfScalars
-        << std::endl << vprDEBUG_FLUSH;
+            << " totalNumberOfScalars: " << totalNumberOfScalars
+            << std::endl << vprDEBUG_FLUSH;
 
         vprDEBUG( vesDBG, 0 )
-        << " totalNumberOfVectors: " << totalNumberOfVectors
-        << std::endl << vprDEBUG_FLUSH;
+            << " totalNumberOfVectors: " << totalNumberOfVectors
+            << std::endl << vprDEBUG_FLUSH;
 
         for( CORBA::ULong j = 0; j < numDatasets; j++ )
         {
             tempModel->dataVector[ j ].datasetname = CORBA::string_dup(
                                                          tempCfdModel->GetCfdDataSet( j )->GetFileName().c_str() );
             vprDEBUG( vesDBG, 1 ) << " dataset_name:   "
-            << tempModel->dataVector[ j ].datasetname.in()
-            << std::endl << vprDEBUG_FLUSH;
+                << tempModel->dataVector[ j ].datasetname.in()
+                << std::endl << vprDEBUG_FLUSH;
 
             tempModel->datasettypes[ j ] = tempCfdModel->GetCfdDataSet( j )->GetType();
 
@@ -333,13 +336,13 @@ void VjObs_i::CreateDatasetInfo( void )
 
         _models = new VjObs::Models( numberOfModels );
         _models->length( numberOfModels );
-        vprDEBUG( vesDBG, 0 ) << " Number of Models = " << numberOfModels
+        vprDEBUG( vesDBG, 0 ) << "|\tNumber of Models = " << numberOfModels
         << std::endl << vprDEBUG_FLUSH;
         for( CORBA::ULong i = 0; i < numberOfModels; i++ )
         {
             Model* temp = ModelHandler::instance()->GetModel( i );
             CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
-            vprDEBUG( vesDBG, 0 ) << " numDatasets = " << numDatasets
+            vprDEBUG( vesDBG, 0 ) << "|\tnumDatasets = " << numDatasets
             << std::endl << vprDEBUG_FLUSH;
             if( numDatasets > 0 )
             {
@@ -418,7 +421,7 @@ void VjObs_i::CreateDatasetInfo( void )
                     {
                         ( *_models )[ i ].dataVector[ j ].vectornames[ k ] = CORBA::string_dup(
                                                                                  temp->GetCfdDataSet( j )->GetVectorName( k ).c_str() );
-                        vprDEBUG( vesDBG, 1 ) << "\tvec_name : "
+                        vprDEBUG( vesDBG, 1 ) << "|\tvec_name : "
                         << ( *_models )[ i ].dataVector[ j ].vectornames[ k ].in()
                         << std::endl << vprDEBUG_FLUSH;
                     }
@@ -426,7 +429,7 @@ void VjObs_i::CreateDatasetInfo( void )
             }
             CORBA::ULong numGeoArrays = temp->GetNumberOfGeomDataSets();
             vprDEBUG( vesDBG, 0 )
-            << " Number of geometries to be transfered to the client: "
+            << "|\tNumber of geometries to be transfered to the client: "
             << numGeoArrays
             << std::endl << vprDEBUG_FLUSH;
 
@@ -437,7 +440,7 @@ void VjObs_i::CreateDatasetInfo( void )
                 for( CORBA::ULong j = 0; j < numGeoArrays; j++ )
                 {
                     vprDEBUG( vesDBG, 0 )
-                    << " Geometry file ( "
+                    << "|\tGeometry file ( "
                     << j << " ) = " << temp->GetGeomDataSet( j )->GetFilename()
                     << std::endl << vprDEBUG_FLUSH;
                     ( *_models )[ i ].geometrynames[ j ] = CORBA::string_dup(
@@ -447,7 +450,7 @@ void VjObs_i::CreateDatasetInfo( void )
         }
     }
 
-    vprDEBUG( vprDBG_ALL, 1 ) << "\tleaving VjObs_i::CreateDatasetInfo()"
+    vprDEBUG( vprDBG_ALL, 1 ) << "|\tleaving VjObs_i::CreateDatasetInfo()"
     << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -609,7 +612,7 @@ void VjObs_i::GetCfdStateVariables( void )
     {
         this->mStates->clusterXMLCommands.erase();
     }
-#ifdef _OSG
+
     if( TextureBasedVizHandler::instance()->GetActiveTextureManager() )
     {
         this->mStates->clusterFrameNumber = TextureBasedVizHandler::instance()->GetActiveTextureManager()->GetCurrentFrame();
@@ -619,7 +622,6 @@ void VjObs_i::GetCfdStateVariables( void )
     {
         this->mStates->clusterFrameNumber = 0;
     }
-#endif
 }
 
 void VjObs_i::GetUpdateClusterStateVariables( void )
@@ -669,13 +671,11 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
         ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SetMat( matrix );
 
         time_since_start = this->mStates->clusterTime_since_start;
-#ifdef _OSG
         if( TextureBasedVizHandler::instance()->GetActiveTextureManager() )
         {
             //std::cout<<"Updating slaves with frame :"<<this->mStates->clusterFrameNumber<<std::endl;
             TextureBasedVizHandler::instance()->GetActiveTextureManager()->SetCurrentFrame( this->mStates->clusterFrameNumber );
         }
-#endif
     }
 }
 
