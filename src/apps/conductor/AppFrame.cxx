@@ -936,10 +936,13 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
     int answer = 0;
     do
     {
+        //Set this here so that after correcting for not replacing the file name
+        //we can exit the do while loop
+        answer = 0;
         wxTextEntryDialog newDataSetName( this,
-                                          _( "Enter the prefix for *.ves filename:" ),
-                                          _( "Save VES file as..." ),
-                                          _( "network" ), wxOK | wxCANCEL );
+            _( "Enter the prefix for *.ves filename:" ),
+            _( "Save VES file as..." ),
+            _( "network" ), wxOK | wxCANCEL );
 
         if( newDataSetName.ShowModal() == wxID_OK )
         {
@@ -954,12 +957,13 @@ void AppFrame::SaveAs( wxCommandEvent& WXUNUSED( event ) )
 
         if( vesFileName.FileExists() )
         {
-            wxString tempMessage = _( "Do you want to replace " ) + vesFileName.GetFullName() + _( "?" );
+            wxString tempMessage = _( "Do you want to replace " ) + 
+                vesFileName.GetFullName() + _( "?" );
             wxMessageDialog promptDlg( this,
-                                       tempMessage,
-                                       _( "Overwrite File Warning" ),
-                                       wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
-                                       wxDefaultPosition );
+                tempMessage,
+                _( "Overwrite File Warning" ),
+                wxYES_NO | wxNO_DEFAULT | wxICON_QUESTION,
+                wxDefaultPosition );
             answer = promptDlg.ShowModal();
         }
     }
