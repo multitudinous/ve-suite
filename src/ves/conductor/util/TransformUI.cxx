@@ -242,8 +242,8 @@ void TransformUI::UpdateTransform( wxSpinEvent& WXUNUSED( event ) )
         tempX = _xScaleCtrl->GetValue();
         tempY = _yScaleCtrl->GetValue();
         tempZ = _zScaleCtrl->GetValue();
+        
         temp.clear();
-
         temp.push_back( _xRotationCtrl->GetValue() );
         temp.push_back( _yRotationCtrl->GetValue() );
         temp.push_back( _zRotationCtrl->GetValue() );

@@ -42,11 +42,9 @@
 #include <ves/xplorer/scenegraph/physics/PhysicsRigidBody.h>
 
 // --- OSG Includes --- //
-#ifdef _OSG
 #include <osg/Vec3d>
 #include <osg/MatrixTransform>
-#elif _OPENSG
-#endif
+#include <osg/Quat>
 
 // --- VR Juggler Includes --- //
 #include <gmtl/Coord.h>
@@ -215,12 +213,15 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
 
     osg::Matrixd rotateMat;
 
-    rotateMat.makeRotate( osg::DegreesToRadians( rotArray[2] ), roll,
+    /*rotateMat.makeRotate( osg::DegreesToRadians( rotArray[2] ), roll,
                           osg::DegreesToRadians( rotArray[1] ), pitch,
-                          osg::DegreesToRadians( rotArray[0] ), yaw );
-
+                          osg::DegreesToRadians( rotArray[0] ), yaw );*/
+    rotateMat.makeRotate( osg::DegreesToRadians( rotArray[0] ), yaw,
+                         osg::DegreesToRadians( rotArray[1] ), pitch,
+                         osg::DegreesToRadians( rotArray[2] ), roll );
+    
     osg::Quat quat;
-    rotateMat.get( quat );
+    quat = rotateMat.getRotate();
     setAttitude( quat );
     setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
 #elif _OPENSG
