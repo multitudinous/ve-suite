@@ -58,7 +58,8 @@ using namespace funnel;
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelWorld::CoinFunnelWorld(
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
     ,
     osgAL::SoundManager* soundManager
@@ -74,7 +75,8 @@ mFunnelEntity( 0 ),
 mMarbleEntity( 0 ),
 mRailingEntity( 0 ),
 mSlideEntity( 0 ),
-mWaterEntity( 0 )
+mWaterEntity( 0 ),
+mResourceManager( resourceManager )
 {
     Initialize();
 }
@@ -115,7 +117,8 @@ void CoinFunnelWorld::Initialize()
 
     mFunnelEntity = new funnel::FunnelEntity( "Models/IVEs/funnel_physics.ive",
                                               mPluginDCS.get(),
-                                              mPhysicsSimulator );
+                                              mPhysicsSimulator,
+                                              mResourceManager );
     mFunnelEntity->SetNameAndDescriptions( "funnel_physics" );
     mFunnelEntity->InitPhysics();
     mFunnelEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -125,7 +128,8 @@ void CoinFunnelWorld::Initialize()
 
     mMarbleEntity = new funnel::MarbleEntity( "Models/IVEs/marble_physics.ive",
                                               mPluginDCS.get(),
-                                              mPhysicsSimulator
+                                             mPhysicsSimulator,
+                                             mResourceManager
 #ifdef VE_SOUND
                                               ,
                                               mSoundManager
@@ -144,7 +148,8 @@ void CoinFunnelWorld::Initialize()
     mRailingEntity =
         new funnel::RailingEntity( "Models/IVEs/railing_physics.ive",
                                    mPluginDCS.get(),
-                                   mPhysicsSimulator );
+                                  mPhysicsSimulator,
+                                  mResourceManager );
     mRailingEntity->SetNameAndDescriptions( "railing_physics" );
     mRailingEntity->InitPhysics();
     mRailingEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -154,7 +159,8 @@ void CoinFunnelWorld::Initialize()
 
     mSlideEntity = new funnel::SlideEntity( "Models/IVEs/slide_physics.ive",
                                             mPluginDCS.get(),
-                                            mPhysicsSimulator );
+                                           mPhysicsSimulator,
+                                           mResourceManager );
     mSlideEntity->SetNameAndDescriptions( "slide_physics" );
     mSlideEntity->InitPhysics();
     mSlideEntity->GetPhysicsRigidBody()->SetMass( 0.0 );
@@ -163,7 +169,8 @@ void CoinFunnelWorld::Initialize()
     mSlideEntity->GetPhysicsRigidBody()->StaticConcaveShape();
 
     mWaterEntity = new funnel::WaterEntity( "Models/IVEs/water.ive",
-                                            mPluginDCS.get()
+                                            mPluginDCS.get(),
+                                            mResourceManager
 #ifdef VE_SOUND
                                             ,
                                             mSoundManager
@@ -198,9 +205,6 @@ void CoinFunnelWorld::PreFrameUpdate()
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelWorld::CreateRoom( float width )
 {
-    ves::xplorer::scenegraph::ResourceManager* resourceManager =
-        ves::xplorer::scenegraph::ResourceManager::instance();
-
     osg::ref_ptr< osg::Geode > roomGeode = new osg::Geode();
     mPluginDCS->addChild( roomGeode.get() );
 
@@ -214,11 +218,11 @@ void CoinFunnelWorld::CreateRoom( float width )
 
     roomStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     roomStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "RoomProgram" ) ).get(), osg::StateAttribute::ON );
 
     roomStateSet->setTextureAttributeAndModes( 1,
-        ( resourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
+        ( mResourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
         ( "CubeMap" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > envMapUniform =

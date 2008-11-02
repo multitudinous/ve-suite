@@ -50,6 +50,17 @@ namespace scenegraph
 }
 #endif
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+class ResourceManager;
+}
+}
+}
+
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
 namespace osgAL
@@ -67,7 +78,8 @@ class WaterEntity : public ves::xplorer::scenegraph::CADEntity
 {
 public:
     WaterEntity( std::string geomFile,
-                 ves::xplorer::scenegraph::DCS* pluginDCS
+                ves::xplorer::scenegraph::DCS* pluginDCS,
+                ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
                  ,
                  osgAL::SoundManager* soundManager
@@ -86,7 +98,7 @@ private:
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* mWaterSound;
 #endif
-
+    ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 };
 }
 

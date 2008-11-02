@@ -66,7 +66,29 @@ PluginBase()
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelGP::~CoinFunnelGP()
 {
-    ;
+    if( !mResourceManager )
+    {
+        return;
+    }
+    mResourceManager->remove( "NoiseVolume" );
+
+    mResourceManager->remove( "CubeMap" );
+
+    mResourceManager->remove( "Rainbow" );
+
+    mResourceManager->remove( "RoomProgram" );
+
+    mResourceManager->remove( "FunnelProgram" );
+
+    mResourceManager->remove( "MarbleProgram" );
+
+    mResourceManager->remove( "CatsEyeProgram" );
+
+    mResourceManager->remove( "RailingProgram" );
+
+    mResourceManager->remove( "SlideProgram" );
+
+    mResourceManager->remove( "WaterProgram" );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
@@ -77,7 +99,8 @@ void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 
     mCoinFunnelWorld = funnel::CoinFunnelWorldPtr(
         new funnel::CoinFunnelWorld( mDCS.get(),
-                                     mPhysicsSimulator
+                                     mPhysicsSimulator,
+                                     mResourceManager
 #ifdef VE_SOUND
                                      ,
                                      mSoundManager
@@ -116,7 +139,7 @@ void CoinFunnelGP::InitializeResources()
         osgDB::readImageFile( "Textures/NoiseVolume.dds" ) );
 
     boost::any noiseVal = noiseVolumeTexture;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "NoiseVolume" ), noiseVal );
 
     //Texture Unit 1
@@ -157,7 +180,7 @@ void CoinFunnelGP::InitializeResources()
             "Textures/CubeMaps/NvidiaLobby/nvlobby_new_negative_z.tga" ) );
 
     boost::any cubeMapVal = textureCubeMap;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "CubeMap" ), cubeMapVal );
 
     //Texture Unit 2
@@ -170,7 +193,7 @@ void CoinFunnelGP::InitializeResources()
         osgDB::readImageFile( "Textures/Rainbow.tga" ) );
 
     boost::any rainbowVal = rainbowTexture;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "Rainbow" ), rainbowVal );
 
 
@@ -203,7 +226,7 @@ void CoinFunnelGP::InitializeResources()
     roomProgram->addShader( roomVertexShader.get() );
     roomProgram->addShader( roomFragmentShader.get() );
     boost::any roomVal = roomProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "RoomProgram" ), roomVal );
 
     //Initialize funnel program
@@ -312,7 +335,7 @@ void CoinFunnelGP::InitializeResources()
     funnelProgram->addShader( funnelVertexShader.get() );
     funnelProgram->addShader( funnelFragmentShader.get() );
     boost::any funnelVal = funnelProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "FunnelProgram" ), funnelVal );
 
     //Initialize marble program
@@ -390,7 +413,7 @@ void CoinFunnelGP::InitializeResources()
     marbleProgram->addShader( marbleVertexShader.get() );
     marbleProgram->addShader( marbleFragmentShader.get() );
     boost::any marbleVal = marbleProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "MarbleProgram" ), marbleVal );
 
     //Initialize cats eye program
@@ -444,7 +467,7 @@ void CoinFunnelGP::InitializeResources()
     catsEyeProgram->addShader( catsEyeVertexShader.get() );
     catsEyeProgram->addShader( catsEyeFragmentShader.get() );
     boost::any catsEyeVal = catsEyeProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "CatsEyeProgram" ), catsEyeVal );
 
     //Initialize railing program
@@ -503,7 +526,7 @@ void CoinFunnelGP::InitializeResources()
     railingEyeProgram->addShader( railingVertexShader.get() );
     railingEyeProgram->addShader( railingFragmentShader.get() );
     boost::any railingVal = railingEyeProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "RailingProgram" ), railingVal );
 
     //Initialize slide program
@@ -574,7 +597,7 @@ void CoinFunnelGP::InitializeResources()
     slideProgram->addShader( slideVertexShader.get() );
     slideProgram->addShader( slideFragmentShader.get() );
     boost::any slideVal = slideProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "SlideProgram" ), slideVal );
 
     //Initialize water program
@@ -650,7 +673,7 @@ void CoinFunnelGP::InitializeResources()
     waterProgram->addShader( waterVertexShader.get() );
     waterProgram->addShader( waterFragmentShader.get() );
     boost::any waterVal = waterProgram;
-    ves::xplorer::scenegraph::ResourceManager::instance()->add(
+    mResourceManager->add(
         std::string( "WaterProgram" ), waterVal );
 }
 ////////////////////////////////////////////////////////////////////////////////

@@ -49,6 +49,16 @@ namespace scenegraph
 }
 }
 #endif
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+class ResourceManager;
+}
+}
+}
 
 // --- osgAL Includes --- //
 #ifdef VE_SOUND
@@ -68,7 +78,8 @@ class MarbleEntity : public ves::xplorer::scenegraph::CADEntity
 public:
     MarbleEntity( std::string geomFile,
                   ves::xplorer::scenegraph::DCS* pluginDCS,
-                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+                  ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+                  ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
                   ,
                   osgAL::SoundManager* soundManager
@@ -95,6 +106,8 @@ private:
     ves::xplorer::scenegraph::Sound* mMarbleOnMetal;
     ves::xplorer::scenegraph::Sound* mMarbleOnMarble;
 #endif
+
+    ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 };
 } //end funnel
 

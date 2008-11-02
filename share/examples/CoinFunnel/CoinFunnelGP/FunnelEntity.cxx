@@ -49,9 +49,11 @@ using namespace funnel;
 FunnelEntity::FunnelEntity(
     std::string geomFile,
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager )
 :
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+mResourceManager( resourceManager )
 {
     Initialize();
 }
@@ -63,9 +65,6 @@ FunnelEntity::~FunnelEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void FunnelEntity::Initialize()
 {
-    ves::xplorer::scenegraph::ResourceManager* resourceManager =
-        ves::xplorer::scenegraph::ResourceManager::instance();
-
     osg::ref_ptr< osg::Group > baseGroup = new osg::Group();
     osg::ref_ptr< osg::Group > columnGroup = new osg::Group();
     osg::ref_ptr< osg::Node > base =
@@ -93,20 +92,20 @@ void FunnelEntity::Initialize()
 
     baseStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     baseStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "FunnelProgram" ) ).get(), osg::StateAttribute::ON );
 
     columnStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     columnStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "FunnelProgram" ) ).get(), osg::StateAttribute::ON );
 
     baseStateSet->setTextureAttributeAndModes( 0,
-        ( resourceManager->get< osg::Texture3D, osg::ref_ptr >
+        ( mResourceManager->get< osg::Texture3D, osg::ref_ptr >
         ( "NoiseVolume" ) ).get(), osg::StateAttribute::ON );
 
     columnStateSet->setTextureAttributeAndModes( 0,
-        ( resourceManager->get< osg::Texture3D, osg::ref_ptr >
+        ( mResourceManager->get< osg::Texture3D, osg::ref_ptr >
         ( "NoiseVolume" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > baseScaleUniform = new osg::Uniform(

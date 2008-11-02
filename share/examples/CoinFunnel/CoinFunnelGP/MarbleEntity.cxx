@@ -53,14 +53,16 @@ using namespace funnel;
 MarbleEntity::MarbleEntity(
     std::string geomFile,
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
     ,
     osgAL::SoundManager* soundManager
 #endif
     )
 :
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+mResourceManager( resourceManager )
 #ifdef VE_SOUND
 ,
 mMarbleOnWood( new ves::xplorer::scenegraph::Sound(
@@ -85,9 +87,6 @@ MarbleEntity::~MarbleEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void MarbleEntity::Initialize()
 {
-    ves::xplorer::scenegraph::ResourceManager* resourceManager =
-        ves::xplorer::scenegraph::ResourceManager::instance();
-
     osg::ref_ptr< osg::Node > catsEyeNode =
         osgDB::readNodeFile( "Models/IVEs/marble.ive" );
     GetDCS()->addChild( catsEyeNode.get() );
@@ -120,20 +119,20 @@ void MarbleEntity::Initialize()
     marbleStateSet->setMode( GL_BLEND, osg::StateAttribute::ON );
     marbleStateSet->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     marbleStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "MarbleProgram" ) ).get(), osg::StateAttribute::ON );
 
     catsEyeStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     catsEyeStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "CatsEyeProgram" ) ).get(), osg::StateAttribute::ON );
 
     marbleStateSet->setTextureAttributeAndModes( 1,
-        ( resourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
+        ( mResourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
         ( "CubeMap" ) ).get(), osg::StateAttribute::ON );
 
     marbleStateSet->setTextureAttributeAndModes( 2,
-        ( resourceManager->get< osg::Texture2D, osg::ref_ptr >
+        ( mResourceManager->get< osg::Texture2D, osg::ref_ptr >
         ( "Rainbow" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > environmentUniform =

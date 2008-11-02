@@ -57,14 +57,16 @@ using namespace funnel;
 
 ////////////////////////////////////////////////////////////////////////////////
 WaterEntity::WaterEntity( std::string geomFile,
-                          ves::xplorer::scenegraph::DCS* pluginDCS
+                          ves::xplorer::scenegraph::DCS* pluginDCS,
+                          ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
                           ,
                           osgAL::SoundManager* soundManager
 #endif
                           )
 :
-CADEntity( geomFile, pluginDCS )
+CADEntity( geomFile, pluginDCS ),
+mResourceManager( resourceManager )
 #ifdef VE_SOUND
 ,
 mWaterSound( new ves::xplorer::scenegraph::Sound(
@@ -83,9 +85,6 @@ WaterEntity::~WaterEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void WaterEntity::Initialize()
 {
-    ves::xplorer::scenegraph::ResourceManager* resourceManager =
-        ves::xplorer::scenegraph::ResourceManager::instance();
-
 #ifdef VE_SOUND
     try
     {
@@ -103,7 +102,7 @@ void WaterEntity::Initialize()
     waterStateSet->setMode( GL_BLEND, osg::StateAttribute::ON );
     waterStateSet->setRenderBinDetails( 10, std::string( "DepthSortedBin" ) );
     waterStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "WaterProgram" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::BlendFunc > blendFunc = new osg::BlendFunc();
@@ -111,11 +110,11 @@ void WaterEntity::Initialize()
     waterStateSet->setAttribute( blendFunc.get(), osg::StateAttribute::ON );
 
     waterStateSet->setTextureAttributeAndModes( 0,
-        ( resourceManager->get< osg::Texture3D, osg::ref_ptr >
+        ( mResourceManager->get< osg::Texture3D, osg::ref_ptr >
         ( "NoiseVolume" ) ).get(), osg::StateAttribute::ON );
 
     waterStateSet->setTextureAttributeAndModes( 1,
-        ( resourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
+        ( mResourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
         ( "CubeMap" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > noiseUniform =

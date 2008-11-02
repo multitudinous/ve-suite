@@ -49,9 +49,11 @@ using namespace funnel;
 RailingEntity::RailingEntity(
     std::string geomFile,
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager )
 :
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+mResourceManager( resourceManager )
 {
     Initialize();
 }
@@ -63,9 +65,6 @@ RailingEntity::~RailingEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void RailingEntity::Initialize()
 {
-    ves::xplorer::scenegraph::ResourceManager* resourceManager =
-        ves::xplorer::scenegraph::ResourceManager::instance();
-
     osg::ref_ptr< osg::Node > railingNode =
         osgDB::readNodeFile( "Models/IVEs/railing.ive" );
     GetDCS()->addChild( railingNode.get() );
@@ -74,11 +73,11 @@ void RailingEntity::Initialize()
 
     railingStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     railingStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "RailingProgram" ) ).get(), osg::StateAttribute::ON );
 
     railingStateSet->setTextureAttributeAndModes( 1,
-        ( resourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
+        ( mResourceManager->get< osg::TextureCubeMap, osg::ref_ptr >
         ( "CubeMap" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > environmentUniform =

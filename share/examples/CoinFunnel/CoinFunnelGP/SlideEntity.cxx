@@ -49,9 +49,11 @@ using namespace funnel;
 SlideEntity::SlideEntity(
     std::string geomFile,
     ves::xplorer::scenegraph::DCS* pluginDCS,
-    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator )
+    ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+    ves::xplorer::scenegraph::ResourceManager* resourceManager )
 :
-CADEntity( geomFile, pluginDCS, false, false, physicsSimulator )
+CADEntity( geomFile, pluginDCS, false, false, physicsSimulator ),
+mResourceManager( resourceManager )
 {
     Initialize();
 }
@@ -63,9 +65,6 @@ SlideEntity::~SlideEntity()
 ////////////////////////////////////////////////////////////////////////////////
 void SlideEntity::Initialize()
 {
-    ves::xplorer::scenegraph::ResourceManager* resourceManager =
-        ves::xplorer::scenegraph::ResourceManager::instance();
-
     osg::ref_ptr< osg::Node > slideNode =
         osgDB::readNodeFile( "Models/IVEs/slide.ive" );
     GetDCS()->addChild( slideNode.get() );
@@ -74,11 +73,11 @@ void SlideEntity::Initialize()
 
     slideStateSet->setRenderBinDetails( 0, std::string( "RenderBin" ) );
     slideStateSet->setAttribute(
-        ( resourceManager->get< osg::Program, osg::ref_ptr >
+        ( mResourceManager->get< osg::Program, osg::ref_ptr >
         ( "SlideProgram" ) ).get(), osg::StateAttribute::ON );
 
     slideStateSet->setTextureAttributeAndModes( 0,
-        ( resourceManager->get< osg::Texture3D, osg::ref_ptr >
+        ( mResourceManager->get< osg::Texture3D, osg::ref_ptr >
         ( "NoiseVolume" ) ).get(), osg::StateAttribute::ON );
 
     osg::ref_ptr< osg::Uniform > noiseUniform = new osg::Uniform( "Noise", 0 );

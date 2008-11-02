@@ -47,6 +47,7 @@ namespace scenegraph
     class DCS;
     class CADEntity;
     class PhysicsSimulator;
+    class ResourceManager;
 }
 }
 }
@@ -75,7 +76,8 @@ class CoinFunnelWorld
 public:
     CoinFunnelWorld(
         ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator
+        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+        ves::xplorer::scenegraph::ResourceManager* resourceManager
 #ifdef VE_SOUND
         ,
         osgAL::SoundManager* soundManager
@@ -94,6 +96,7 @@ private:
     void CreateRoom( float width );
 
     ves::xplorer::scenegraph::PhysicsSimulator* mPhysicsSimulator;
+    ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 
 #ifdef VE_SOUND
     osgAL::SoundManager* mSoundManager;

@@ -40,6 +40,17 @@
 // --- C/C++ Libraries --- //
 #include <string>
 
+namespace ves
+{
+namespace xplorer
+{
+namespace scenegraph
+{
+class ResourceManager;
+}
+}
+}
+
 namespace funnel
 {
 class SlideEntity : public ves::xplorer::scenegraph::CADEntity
@@ -48,7 +59,8 @@ public:
     SlideEntity(
         std::string geomFile,
         ves::xplorer::scenegraph::DCS* pluginDCS,
-        ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator );
+                ves::xplorer::scenegraph::PhysicsSimulator* physicsSimulator,
+                ves::xplorer::scenegraph::ResourceManager* resourceManager );
 
     virtual ~SlideEntity();
 
@@ -58,6 +70,7 @@ protected:
 
 private:
     void Initialize();
+    ves::xplorer::scenegraph::ResourceManager* mResourceManager;
 
 };
 } //end funnel
