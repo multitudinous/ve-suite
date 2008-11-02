@@ -78,9 +78,12 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
     try
     {
         CommandPtr command( boost::dynamic_pointer_cast<ves::open::xml::Command>( xmlObject ) );
-        DataValuePairPtr opacityValue = command->GetDataValuePair( "Opacity Value" );
-        DataValuePairPtr transparentFlag = command->GetDataValuePair( "Transparent Value" );
-        DataValuePairPtr nodeID = command->GetDataValuePair( "Node ID" );
+        DataValuePairPtr opacityValue = 
+            command->GetDataValuePair( "Opacity Value" );
+        DataValuePairPtr transparentFlag = 
+            command->GetDataValuePair( "Transparent Value" );
+        DataValuePairPtr nodeID = 
+            command->GetDataValuePair( "Node ID" );
         std::string id;
         nodeID->GetData( id );
 
@@ -94,9 +97,17 @@ void CADSetOpacityEventHandler::_operateOnNode( XMLObjectPtr xmlObject )
         {
             ves::xplorer::scenegraph::CADEntity* temp = 
                 m_cadHandler->GetPart( id );
-            unsigned int flag;
-            transparentFlag->GetData( flag );
-            temp->SetTransparencyFlag( flag );
+            if( temp )
+            {
+                unsigned int flag;
+                transparentFlag->GetData( flag );
+                temp->SetTransparencyFlag( flag );
+            }
+            else
+            {
+                std::cout << "Cannot set transparency flag on a group." 
+                    << std::endl;
+            }
         }
     }
     catch ( ... )
