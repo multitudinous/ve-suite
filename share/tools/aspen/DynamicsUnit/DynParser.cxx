@@ -1382,7 +1382,10 @@ std::string DynParser::GetModuleParams(std::string modname)
     std::vector< std::vector < std::string > > variables =
     //std::vector < std::string > variables =
         dyndoc->GetVariableList( modname.c_str() );
-
+    //std::ofstream names("names.txt");
+    //std::ofstream desc("desc.txt");
+    //std::ofstream value("value.txt");
+    //std::ofstream units("units.txt");
     //for(int i = lb; i < ub; i++)
     for(int i = 0; i < variables.size(); i++)
     {
@@ -1450,29 +1453,34 @@ std::string DynParser::GetModuleParams(std::string modname)
         {
             paramList.push_back( " " );
         }*/
-        for( int j = 0; j < 4; j++ )
-        {
-            std::string temp = variables[i][j];
-            if( !temp.empty() )
-            //if( !variables[i].empty() )
-            {
-                paramList.push_back(temp.c_str());
-            //    CString cname = variables[i].c_str();
-                //remove Block entry - necessary to get current variable name for setting
-        //cname = cname.Right( cname.GetLength() - cname.FindOneOf(_T(".")) - 1 );
-       // paramList.push_back(cname.GetBuffer());
-            }
-            else
-            {
-                paramList.push_back(" ");
-            }
-        }
+
+        //name
+        int remove = variables[i][0].find_first_of(".") + 1;
+        std::string tempName = variables[i][0].substr( remove,
+            variables[i][0].size() );
+        paramList.push_back( tempName.c_str() );
+        //names<<variables[i][0].c_str()<<std::endl;
+        //description
+        paramList.push_back( variables[i][1].c_str() );
+        //desc<<variables[i][1].c_str()<<std::endl;
+        //value
+        paramList.push_back( variables[i][2].c_str() );
+        //value<<variables[i][2].c_str()<<std::endl;
+        //units
+        paramList.push_back( variables[i][3].c_str() );
+        //units<<variables[i][3].c_str()<<std::endl;
+        
         //add list to DVP
         ves::open::xml::DataValuePairPtr
             inpParams( new ves::open::xml::DataValuePair() );
         inpParams->SetData("params",paramList);
         params->AddDataValuePair( inpParams );
     }
+
+    //names.close();
+    //desc.close();
+    //value.close();
+    //units.close();
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;

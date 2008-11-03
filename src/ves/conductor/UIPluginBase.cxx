@@ -1431,9 +1431,9 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
 
     //Get results
     std::string nw_str = serviceList->Query( status );
-    std::ofstream packet("packet.txt");
-    packet<<nw_str;
-    packet.close();
+    //std::ofstream packet("packet.txt");
+    //packet<<nw_str;
+    //packet.close();
     wxString title( compName.c_str(), wxConvUTF8 );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
