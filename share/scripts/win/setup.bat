@@ -1,44 +1,20 @@
 REM Edit this file to reflect your local environment for VE_Suite
+set FLAGPOLL_PATH=C:\dev\ves_deps\fpc_deps_files\release
 
-set VE_SUITE_HOME=C:\devEnv\VE_Suite_1.0
-set VE_INSTALL_DIR=C:\devEnv\VE_Suite_1.0
+set VE_SUITE_HOME=C:\dev\VE_Suite
+set VE_INSTALL_DIR=C:\dev\VE_Suite\install-release
 
-REM set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0-svn\vrjuggler-2.0.3-win32-vc80
-set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
-set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\VRJuggler2.0.3-1
-REM set VJ_BASE_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80
-REM set VJ_DEPS_DIR=C:\devEnv\VES.1.0-Deps\vrjuggler-2.0.1-win32-vc80-deps
-REM set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk-5.0.0_Install_vc8
-set VTK_HOME=C:\devEnv\VES.1.0-Deps\vtk_cvs\vtk_vc80_install
-REM set WX_HOME=C:\WxWidgets_2.8.0_Pre-Compile_vc8.0
-REM set WX_HOME=C:\WxWidgets_2.8.0_Pre-Compile_vc8.0
-set WX_HOME=C:\devEnv\VES.1.0-deps\wxWidgets-2.8.3
-set WX_ROOT=C:\devEnv\VES.1.0-Deps\wxWidgets-2.8.3
-set JAVA_HOME=C:\j2sdk1.4.2_06
-set ACE_ROOT=C:\devEnv\VES.1.0-Deps\ACE_wrappers
-REM set ACE_ROOT=C:\ACETAO_5.5.1_Pre-Compile_vc8.0
+set VJ_BASE_DIR=C:\dev\ves_deps\VRJuggler_Pre-Compile_2.2_SP1
+set VTK_HOME=C:\dev\ves_deps\vtk-5.2.0-install
+set WX_HOME=C:\dev\ves_deps\WxWidgets_2.8.7_Pre-Compile_vc8.0_SP1
+set ACE_ROOT=C:\dev\ves_deps\ACETAO_5.6.6_Pre-Compile_vc8.0_SP1
 set TAO_ROOT=%ACE_ROOT%\TAO
-set XERCESCROOT=C:\devEnv\VES.1.0-Deps\xerces-c-src_2_7_0
-set BULLET_HOME=C:\devEnv\VES.1.0-Deps\bullet_svn
-REM set BULLET_HOME=C:\Bullet_Pre-Compile_2.42
-REM set OSGHOME=C:\OSG_1.2_Pre-Compile_vc8.0
-REM PRODUCER_HOME=%OSGHOME%
-REM OPENTHREADS_HOME=%OSGHOME%
-set OSGHOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenSceneGraph
-set PRODUCER_HOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\Producer
-set OPENTHREADS_HOME=C:\devEnv\VES.1.0-Deps\OSG_OP_OT-1.2\OpenThreads
-set DEMETER_HOME=C:\devEnv\demeter-3.21
-set APR_HOME=C:\devEnv\VES.1.0-Deps\apr
-set APR_UTIL_HOME=C:\devEnv\VES.1.0-Deps\apr-util
-set APR_ICONV_HOME=C:\devEnv\VES.1.0-Deps\apr-iconv
-set COIN_HOME=C:\devEnv\VES.1.0-Deps\Coin-2.4.5
-set TAO_MACHINE=localhost
-REM set TAO_MACHINE=costello.vrac.iastate.edu
-REM set TAO_MACHINE=keymaker.vrac.iastate.edu
-set VEXMASTER=costello
-set TAO_PORT=1239
-set SNX_BASE_DIR=%VJ_BASE_DIR%
-set UPX_PATH=%VE_SUITE_HOME%\external\FreezePython\upx301w
+set XERCESCROOT=C:\dev\ves_deps\Xerces-c_2.7_Pre-Compile
+set BULLET_HOME=C:\dev\ves_deps\Bullet_Pre-Compile_2.64
+set OSGHOME=C:\dev\ves_deps\OpenSceneGraph-2.6.1\install-win32
+set APR_HOME=C:\dev\ves_deps\apr-vc8\apr
+set APR_UTIL_HOME=C:\dev\ves_deps\apr-vc8\apr-util
+set APR_ICONV_HOME=C:\dev\ves_deps\apr-vc8\apr-iconv
 
 set OPENAL_LIB_DIR=C:\devEnv\VES.1.0-Deps\openal\OpenAL-Windows\OpenAL32\Debug
 REM NOTE: On Windows the juggler location must point to a Windows
@@ -63,33 +39,18 @@ set NO_RTRC_PLUGIN=TRUE
 set PFNFYLEVEL=0
 set OSG_THREAD_SAFE_REF_UNREF=1
 
-REM Juggler dependencies
-set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
-set VJ_CFG_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
-set NSPR_ROOT=%VJ_DEPS_DIR%
 
-set OMNIORB_CONFIG=%VE_SUITE_HOME%\VE_Installer\omniORB4.cfg
-set OMNINAMES_LOGDIR=%VE_SUITE_HOME%\VE_Installer
-
-REM Python build environment variables
-set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
-
-set Path=%VJ_BASE_DIR%\lib;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%Path%
-set Path=%VE_SUITE_HOME%\bin;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll;%Path%
+set Path=%VJ_BASE_DIR%\lib;%Path%
+set Path=%VE_INSTALL_DIR%\bin;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll;%Path%
 set Path=%ACE_ROOT%\bin;%ACE_ROOT%\lib;%XERCESCROOT%\Build\Win32\VC7.1\Debug;%Path%
 set Path=%XERCESCROOT%\Build\Win32\VC7.1\Release;%Path%
 set Path=%TAO_ROOT%\orbsvcs\Naming_Service;%Path%
-set Path=%VE_SUITE_HOME%\bin\win32;%UPX_PATH%;%Path%
-set Path=%OSGHOME%\bin\win32;%PRODUCER_HOME%\bin\win32;%OPENTHREADS_HOME%\bin\win32;%VE_SUITE_HOME%\lib\win32;%Path%
-set Path=%DEMETER_HOME%\bin;%Path%
-set Path=%COIN_HOME%\bin;%Path%
-set Path=%APR_HOME%\Debug;%Path%
-set Path=%APR_UTIL_HOME%\Debug;%Path%
-set Path=%APR_ICONV_HOME%\Debug;%Path%
+set Path=%VE_SUITE_HOME%\bin\win32;%Path%
+set Path=%OSGHOME%\bin;%VE_INSTALL_DIR%\lib;%Path%
 set Path=%APR_HOME%\Release;%Path%
 set Path=%APR_UTIL_HOME%\Release;%Path%
 set Path=%APR_ICONV_HOME%\Release;%Path%
-set Path=%OPENAL_LIB_DIR%;%PATH%
+set Path=%Path%;C:\dev\ves_deps\svn-win32-1.5.0\bin
+set Path=%Path%;C:\dev\VE_Suite\external\FreezePython\upx301w
 
-
-call %VE_SUITE_HOME%\VE_Installer\defineSVNVersion.bat
+call %VE_SUITE_HOME%\share\scripts\win\defineSVNVersion.bat
