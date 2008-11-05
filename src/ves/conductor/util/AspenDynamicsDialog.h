@@ -67,7 +67,6 @@ class AspenDynamicsDialog : public wxDialog
 		void SetButtonClick(wxCommandEvent& event);
         void SetData( wxString name = wxT(""), wxString description = wxT(""),
             wxString value = wxT(""), wxString units = wxT("") );
-        //void SetData( wxString name = wxT("") );
         void UpdateSizes();
         void SetComponentName( wxString name );
         void SetServiceList(
@@ -88,6 +87,7 @@ class AspenDynamicsDialog : public wxDialog
             std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
             return tempStr;
         }
+        wxString prefix;
     
     
 	private:

@@ -128,6 +128,8 @@ void AspenDynamicsDialog::SetButtonClick(wxCommandEvent& event)
 
         //variable name
         wxString varName = WxGrid->GetRowLabelValue( rowsChanged[i] );
+        //reinsert the prefix
+        varName = prefix.Append( varName.c_str() );
         paramList.push_back( ConvertUnicode( varName.c_str() ) );
 
         //value
@@ -160,21 +162,21 @@ void AspenDynamicsDialog::SetButtonClick(wxCommandEvent& event)
 void AspenDynamicsDialog::SetData( wxString name, wxString description,
                                      wxString value, wxString units )
 {
+    //add a new row
 	WxGrid->AppendRows( 1 );
     int index = WxGrid->GetNumberRows() - 1;
-	WxGrid->SetRowLabelValue( index, name );
+
+    //remove the name of the block from the variable name
+    int remove = name.Find(".");
+    prefix = name.SubString( 0, remove );
+    name = name.SubString( remove + 1,name.Length() );
+    
+    //insert all data
+    WxGrid->SetRowLabelValue( index, name );
 	WxGrid->SetCellValue( index, 0, description );
 	WxGrid->SetCellValue( index, 1, value );
 	WxGrid->SetCellValue( index, 2, units );
 }
-
-// SetData
-//void AspenDynamicsDialog::SetData( wxString name )
-//{
-//	WxGrid->AppendRows( 1 );
-//    int index = WxGrid->GetNumberRows() - 1;
-//	WxGrid->SetRowLabelValue( index, name );
-//}
 
 //Update the grid size to match data size
 void AspenDynamicsDialog::UpdateSizes()

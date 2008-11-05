@@ -423,9 +423,11 @@ namespace AspenPlusInterface
         pDispVariables->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispidItem);
         ::VariantInit(&index);
         index.vt = VT_BSTR;
-
+        //index.vt = VT_I4;
         // get variable list
         index.bstrVal = variableName.AllocSysString();
+        //index.lVal = 1;
+
         params.cArgs = 1;
         params.rgvarg = &index;
         ::VariantInit(&result);
@@ -435,6 +437,7 @@ namespace AspenPlusInterface
         // get variable value
         szName = OLESTR("Value");
         pDispVariable->GetIDsOfNames(IID_NULL, &szName, 1, ::GetUserDefaultLCID(), &dispid);
+        index.vt = VT_BSTR;
         index.bstrVal = value.AllocSysString();
         params.cArgs = 1;
         params.rgvarg = &index;

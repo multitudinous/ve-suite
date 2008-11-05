@@ -1370,105 +1370,24 @@ std::string DynParser::GetModuleParams(std::string modname)
     //input variables;
     params->SetCommandName((modname+"InputParams").c_str());
 
-    //SAFEARRAY * variables = dyndoc->GetVariableList( modname.c_str() );
-    //long lb;
-    //SafeArrayGetLBound( variables, 1, &lb );
-    //long ub;
-    //SafeArrayGetUBound( variables, 1, &ub );
-    //VARIANT* temp;
-    //long pos[2];
-    //SafeArrayLock( variables );
-
     std::vector< std::vector < std::string > > variables =
-    //std::vector < std::string > variables =
         dyndoc->GetVariableList( modname.c_str() );
-    //std::ofstream names("names.txt");
-    //std::ofstream desc("desc.txt");
-    //std::ofstream value("value.txt");
-    //std::ofstream units("units.txt");
-    //for(int i = lb; i < ub; i++)
+
     for(int i = 0; i < variables.size(); i++)
     {
         std::vector<std::string> paramList;
-        
-       /* //variable name
-        pos[0] = i;
-        pos[1] = 1;
-        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
-        
-        CString cname = temp->bstrVal;
-        
-        //remove Block entry - necessary to get current variable name for setting
-        cname = cname.Right( cname.GetLength() - cname.FindOneOf(_T(".")) - 1 );
-
-
-        if( cname.IsEmpty() != true)
-        {
-            char * ccname = cname.GetBuffer();
-            paramList.push_back( ccname );
-        }
-        else
-        {
-            paramList.push_back( " " );
-        }
-
-        //description
-        pos[1] = 2;
-        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
-        CString cdesc = temp->bstrVal;
-        if( cdesc.IsEmpty() != true)
-        {
-            char * ccdesc = cdesc.GetBuffer();
-            paramList.push_back( ccdesc );
-        }
-        else
-        {
-            paramList.push_back( " " );
-        }
-
-        //value
-        pos[1] = 3;
-        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
-        CString cvalue = temp->bstrVal;
-        if( cvalue.IsEmpty() != true)
-        {
-            char * ccvalue = cvalue.GetBuffer();
-            paramList.push_back( ccvalue );
-        }
-        else
-        {
-            paramList.push_back( " " );
-        }
-
-        //units of measure
-        pos[1] = 4;
-        SafeArrayPtrOfIndex(variables, pos, (void**)&temp);
-        CString cunits = temp->bstrVal;
-        if( cunits.IsEmpty() != true)
-        {
-            char * ccunits = cunits.GetBuffer();
-            paramList.push_back( ccunits );
-        }
-        else
-        {
-            paramList.push_back( " " );
-        }*/
 
         //name
-        int remove = variables[i][0].find_first_of(".") + 1;
-        std::string tempName = variables[i][0].substr( remove,
-            variables[i][0].size() );
-        paramList.push_back( tempName.c_str() );
-        //names<<variables[i][0].c_str()<<std::endl;
+        paramList.push_back( variables[i][0].c_str() );
+
         //description
         paramList.push_back( variables[i][1].c_str() );
-        //desc<<variables[i][1].c_str()<<std::endl;
+
         //value
         paramList.push_back( variables[i][2].c_str() );
-        //value<<variables[i][2].c_str()<<std::endl;
+
         //units
         paramList.push_back( variables[i][3].c_str() );
-        //units<<variables[i][3].c_str()<<std::endl;
         
         //add list to DVP
         ves::open::xml::DataValuePairPtr
@@ -1476,11 +1395,6 @@ std::string DynParser::GetModuleParams(std::string modname)
         inpParams->SetData("params",paramList);
         params->AddDataValuePair( inpParams );
     }
-
-    //names.close();
-    //desc.close();
-    //value.close();
-    //units.close();
 
     std::vector< std::pair< ves::open::xml::XMLObjectPtr, std::string > >
         nodes;
