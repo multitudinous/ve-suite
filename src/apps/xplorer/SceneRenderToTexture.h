@@ -49,6 +49,7 @@ class Group;
 class Camera;
 class Texture2D;
 class RenderInfo;
+class Geode;
 }
 
 namespace osgUtil
@@ -136,6 +137,8 @@ public:
     ///NOTE: Must have an active context to call
     void UpdateProcessorAndUnits();
 
+    osg::Geode* createFullScreenTexturedQuad( std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
+
 protected:
 
 private:
@@ -183,6 +186,12 @@ private:
     vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
     
     vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mfinal;
+    
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mcolorBuffer0;
+    
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mcolorBuffer1;
+
+    int mAdjustedScreenRes;
 };
 } //end xplorer
 } //end ves

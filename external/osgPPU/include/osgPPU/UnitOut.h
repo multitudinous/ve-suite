@@ -23,6 +23,7 @@
 //-------------------------------------------------------------------------
 #include <osgPPU/Export.h>
 #include <osgPPU/Unit.h>
+#include <osg/Array>
 
 namespace osgPPU
 {
@@ -45,6 +46,9 @@ namespace osgPPU
             //! Initialze the default Processoring unit
             virtual void init();
             
+            //void CreateVESQuad( double xMin, double xMax, double yMin, double yMax, double zVal );
+            void CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords );
+
         protected:
             //! Notice about end of rendering
             virtual void noticeFinishRendering(osg::RenderInfo &renderInfo, const osg::Drawable*) {}
