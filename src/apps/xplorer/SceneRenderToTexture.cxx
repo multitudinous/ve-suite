@@ -318,33 +318,32 @@ void SceneRenderToTexture::InitProcessor(
         new osgDB::ReaderWriter::Options( "fragment" );
 
     //COLOR_BUFFER0 bypass
-    *mcolorBuffer0 = new osgPPU::UnitCameraAttachmentBypass();
+    *mColorBuffer0 = new osgPPU::UnitCameraAttachmentBypass();
     osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > colorBuffer0 =
-        (*mcolorBuffer0).get();
+        (*mColorBuffer0).get();
     {
         colorBuffer0->setName( "ColorBuffer0Bypass" );
         colorBuffer0->setBufferComponent( osg::Camera::COLOR_BUFFER0 );
-        colorBuffer0->setInputTextureIndexForViewportReference( 0 );
-        //colorBuffer0->setViewport( sceneViewCamera->getViewport() );
+        colorBuffer0->setInputTextureIndexForViewportReference( -1 );
     }
     (*mProcessor)->addChild( colorBuffer0.get() );
 
     //COLOR_BUFFER1 bypass
-    *mcolorBuffer1 = new osgPPU::UnitCameraAttachmentBypass();
+    *mColorBuffer1 = new osgPPU::UnitCameraAttachmentBypass();
     osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > colorBuffer1 =
-         (*mcolorBuffer1).get();
+         (*mColorBuffer1).get();
     {
         colorBuffer1->setName( "ColorBuffer1Bypass" );
         colorBuffer1->setBufferComponent( osg::Camera::COLOR_BUFFER1 );
-        colorBuffer1->setInputTextureIndexForViewportReference( 0 );
-        //colorBuffer1->setViewport( sceneViewCamera->getViewport() );
+        colorBuffer1->setInputTextureIndexForViewportReference( -1 );
     }
     (*mProcessor)->addChild( colorBuffer1.get() );
 
     //Downsample by 1/2 original size
     osg::Vec2 quadScreenSize( screenDims.first, screenDims.second );
+    *mGlowDownSample = new osgPPU::UnitInResampleOut();
     osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
-         new osgPPU::UnitInResampleOut();
+        new osgPPU::UnitInResampleOut();
     {
         float downsample = 0.5;
         quadScreenSize *= downsample;
@@ -352,11 +351,12 @@ void SceneRenderToTexture::InitProcessor(
         glowDownSample->setName( "GlowDownSample" );
         glowDownSample->setFactorX( downsample );
         glowDownSample->setFactorY( downsample );
-        //glowDownSample->setInputTextureIndexForViewportReference( 0 );
+        glowDownSample->setInputTextureIndexForViewportReference( -1 );
     }
     colorBuffer1->addChild( glowDownSample.get() );
 
     //Perform horizontal 1D gauss convolution
+    *mBlurX = new osgPPU::UnitInOut();
     osg::ref_ptr< osgPPU::UnitInOut > blurX = new osgPPU::UnitInOut();
     {
         //Set name and indicies
@@ -401,11 +401,12 @@ void SceneRenderToTexture::InitProcessor(
         gaussX->set( "glowMap", 0 );
 
         blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
-        blurX->setInputTextureIndexForViewportReference( 0 );
+        blurX->setInputTextureIndexForViewportReference( -1 );
     }
     glowDownSample->addChild( blurX.get() );
 
     //Perform vertical 1D gauss convolution
+    *mBlurY = new osgPPU::UnitInOut();
     osg::ref_ptr< osgPPU::UnitInOut > blurY = new osgPPU::UnitInOut();
     {
         //Set name and indicies
@@ -450,13 +451,13 @@ void SceneRenderToTexture::InitProcessor(
         gaussY->set( "glowMap", 0 );
 
         blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
-        blurY->setInputTextureIndexForViewportReference( 0 );
+        blurY->setInputTextureIndexForViewportReference( -1 );
     }
     blurX->addChild( blurY.get() );
 
     //Perform final color operations and blends
-    *mfinal = new osgPPU::UnitInOut();
-    osg::ref_ptr< osgPPU::UnitInOut > final = (*mfinal).get();
+    *mFinal = new osgPPU::UnitInOut();
+    osg::ref_ptr< osgPPU::UnitInOut > final = (*mFinal).get();
     {
         //Set name and indicies
         final->setName( "Final" );
@@ -492,7 +493,6 @@ void SceneRenderToTexture::InitProcessor(
         //std::cout << " added " << addedCorrectly << std::endl;
         addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
         final->setInputTextureIndexForViewportReference( -1 );
-        final->setViewport( sceneViewCamera->getViewport() );
    }
 
     //Render to the Frame Buffer
@@ -501,10 +501,8 @@ void SceneRenderToTexture::InitProcessor(
     {
         ppuOut->setName( "PipelineResult" );
         ppuOut->setInputTextureIndexForViewportReference( -1 );
-        ppuOut->setViewport( sceneViewCamera->getViewport() );
     }
     final->addChild( ppuOut.get() );
-    //colorBuffer0->addChild( ppuOut.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
@@ -562,7 +560,7 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     //Create textures, camera, and SA-quad
     InitTextures( screenDimsNew );
     InitCamera( screenDims );
-    InitProcessor( screenDims, sceneViewCamera );
+    InitProcessor( screenDimsNew, sceneViewCamera );
 
     //Add nodes to the scenegraph
     (*mCameraMap)->addChild( mRootGroup.get() );
@@ -589,8 +587,8 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
     
     //(*mProcessor)->dirtyUnitSubgraph();
     osg::Camera* svCamera = sv->getCamera();
-    
     osg::Viewport* tempViewport = svCamera->getViewport();
+
     (*mCameraMap)->setViewport( tempViewport );
     //(*mCameraMap)->setViewMatrix( svCamera->getViewMatrix() );
     //(*mCameraMap)->setProjectionMatrix( svCamera->getProjectionMatrix() );
@@ -607,14 +605,20 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
     std::cout << " rtt view matrix " << temp << std::endl;*/
     
 
-    (*mcolorBuffer0)->setViewport( tempViewport );
-    (*mcolorBuffer0)->dirty();
-    (*mcolorBuffer1)->setViewport( tempViewport );
-    (*mcolorBuffer1)->dirty();
-    (*mfinal)->setViewport( tempViewport );
-    (*mfinal)->dirty();
+    (*mColorBuffer0)->setViewport( tempViewport );
+    //(*mColorBuffer0)->dirty();
+    (*mColorBuffer1)->setViewport( tempViewport );
+    //(*mColorBuffer1)->dirty();
+    (*mGlowDownSample)->setViewport( tempViewport );
+    //(*mGlowDownSample)->dirty();
+    (*mBlurX)->setViewport( tempViewport );
+    //(*mBlurX)->dirty();
+    (*mBlurY)->setViewport( tempViewport );
+    //(*mBlurY)->dirty();
+    (*mFinal)->setViewport( tempViewport );
+    //(*mFinal)->dirty();
     (*mQuadOut)->setViewport( tempViewport );
-    (*mQuadOut)->dirty();
+    //(*mQuadOut)->dirty();
     
     //UpdateProcessorAndUnits();
 }

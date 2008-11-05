@@ -182,14 +182,20 @@ private:
     ///A context locked map to hold osgPPU Processors
     vrj::GlContextData< osg::ref_ptr< osgPPU::Processor > > mProcessor;
 
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mColorBuffer0;
+    
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mColorBuffer1;
+
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInResampleOut > > mGlowDownSample;
+
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mBlurX;
+
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mBlurY;
+
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mFinal;
+
     ///The final output of the osgPPU pipeline
     vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
-    
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitInOut > > mfinal;
-    
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mcolorBuffer0;
-    
-    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitCameraAttachmentBypass > > mcolorBuffer1;
 
     int mAdjustedScreenRes;
 };
