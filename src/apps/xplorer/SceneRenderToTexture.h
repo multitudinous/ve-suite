@@ -64,6 +64,7 @@ class UnitOut;
 class UnitInOut;
 class UnitInResampleOut;
 class UnitCameraAttachmentBypass;
+class UnitTexture;
 }
 
 // --- C/C++ Libraries --- //
@@ -196,6 +197,10 @@ private:
 
     ///The final output of the osgPPU pipeline
     vrj::GlContextData< osg::ref_ptr< osgPPU::UnitOut > > mQuadOut;
+    
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitTexture > > mcolor;
+    vrj::GlContextData< osg::ref_ptr< osgPPU::UnitTexture > > mglow;
+    
 
     int mAdjustedScreenRes;
 };

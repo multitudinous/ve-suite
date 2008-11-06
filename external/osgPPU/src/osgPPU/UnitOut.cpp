@@ -53,26 +53,14 @@ namespace osgPPU
 
     void UnitOut::CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords )
     {
-        //osg::Geode* mQuadGeode = new osg::Geode();
         osg::Geometry* quadGeom = new osg::Geometry();
-
         quadGeom->setVertexArray( quadVerts );
-        //size_t numViewports = quadVerts->size() * 0.25;
-        //std::cout << numViewports << std::endl;
-        //for( size_t i = 0; i < numViewports; ++i )
-        {
-            quadGeom->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, quadVerts->size() ) );
-            osg::ref_ptr< osg::Vec2Array > quadTexCoords = new osg::Vec2Array();
-            quadTexCoords->resize( 4 );
-            (*quadTexCoords)[ 0 ].set( (*texCoords)[0][0], (*texCoords)[0][1] );
-            (*quadTexCoords)[ 1 ].set( (*texCoords)[1][0], (*texCoords)[1][1] );
-            (*quadTexCoords)[ 2 ].set( (*texCoords)[2][0], (*texCoords)[2][1] );
-            (*quadTexCoords)[ 3 ].set( (*texCoords)[3][0], (*texCoords)[3][1] );
-            //quadGeom->setTexCoordArray( 0, quadTexCoords.get() );
-        }
+        quadGeom->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, quadVerts->size() ) );
         quadGeom->setTexCoordArray( 0, texCoords );
+        quadGeom->setStateSet(new osg::StateSet());
+        quadGeom->setUseDisplayList(false);
+        quadGeom->setColorBinding(osg::Geometry::BIND_OFF);
 
-        
         mGeode->setCullingActive( false );
         
         mDrawable = quadGeom;

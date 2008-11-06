@@ -82,7 +82,7 @@ namespace osgPPU
                 noticeChangeInput();
 
                 // the viewport should be retrieved from the input texture
-                setInputTextureIndexForViewportReference(0);
+                //setInputTextureIndexForViewportReference(0);
                 mOutputTex = mInputTex;
             }
         }else
