@@ -1012,7 +1012,12 @@ osg::Geode* SceneRenderToTexture::createFullScreenTexturedQuad( std::pair< int, 
         (*quadTexCoords)[ 3 + (i*4) ].set( xOrigin, yOrigin+heightRatio );
         //std::cout << xOrigin << " "<<  yOrigin << " " << widthRatio << " " << heightRatio << std::endl;
         ///Get the quad coords
+#if __VJ_version >= 2003000
+        vrj::SurfaceViewportPtr tempView = boost::dynamic_pointer_cast< SurfaceViewport >( viewport );
+#else
         vrj::SurfaceViewport* tempView = dynamic_cast< vrj::SurfaceViewport* >( viewport );
+#endif
+
         tempView->getCorners( ll, lr, ur, ul );
         (*mQuadVertices)[ 0 + (i*4) ].set( ll[ 0 ] * m2ft, -ll[ 2 ] * m2ft, ll[ 1 ] * m2ft );
         (*mQuadVertices)[ 1 + (i*4) ].set( lr[ 0 ] * m2ft, -lr[ 2 ] * m2ft, lr[ 1 ] * m2ft );
