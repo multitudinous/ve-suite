@@ -167,7 +167,7 @@ void AspenDynamicsDialog::SetData( wxString name, wxString description,
     int index = WxGrid->GetNumberRows() - 1;
 
     //remove the name of the block from the variable name
-    int remove = name.Find(".");
+    int remove = name.Find( wxT( ".") );
     prefix = name.SubString( 0, remove );
     name = name.SubString( remove + 1,name.Length() );
     
