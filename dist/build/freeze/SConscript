@@ -24,18 +24,11 @@ srcs = Split("""
 installerDir = pj('src', 'apps', 'launcher')
 installerbaseDir = pj(RootDir, installerDir)
 
-#installerDistDir = pj('installer')
-installerDistDir = pj(buildDir,'installer')
-installerDistbaseDir = pj(RootDir, installerDistDir)
-if not os.path.exists(installerDistbaseDir):
-   os.mkdir(installerDistbaseDir)
-
 velauncherCodeDir = pj(RootDir,'src','apps','launcher')
 velauncherLibDir = pj(velauncherCodeDir,'python')
 velauncherDistDir = pj(RootDir,buildDir,'dist','build','freeze')
 
 installerImages = pj(RootDir,'dist','installerImages')
-
 
 basePyinstallerDir = pj(RootDir,'external','FreezePython','pyinstaller-1.3')
 makespec_py = pj(basePyinstallerDir, 'Makespec.py')
@@ -43,8 +36,6 @@ build_py = pj(basePyinstallerDir, 'Build.py')
 
 makespecSrc = map(lambda s: pj(installerbaseDir, "%s.py" %(s)), srcs)
 makespecTarget = map(lambda s: "%s.spec" %(s), srcs)
-
-freezeSrc = map(lambda s: pj(installerDistbaseDir, "%s.spec" %(s)), srcs)
 
 if sca_util.GetPlatform() == "win32":
     freezeTarget = map(lambda s: "%s.exe" %(s), srcs)
@@ -62,7 +53,7 @@ launcherBundle = ves_pkg.createFileBundle( 'bin' )
 
 if sca_util.GetPlatform() == "win32":
     makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\Ve_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
-    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = installerDistDir)
+    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = velauncherDistDir)
     
     freezeAction = '%s ${SOURCE.abspath} %s\\velauncher.spec' % (build_cmd, velauncherDistDir)
     freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
@@ -76,7 +67,7 @@ if sca_util.GetPlatform() == "win32":
 
 else:
     makespecAction = '%s --onefile --out=%s --path=%s ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir)
-    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = installerDistDir)
+    makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = velauncherDistDir)
 
     freezeAction = '%s ${SOURCE.abspath} %s/velauncher.spec' % (build_cmd, velauncherDistDir)
     freezeBuilder = Builder(action = freezeAction, single_source = True, suffix = "", chdir = velauncherCodeDir)
