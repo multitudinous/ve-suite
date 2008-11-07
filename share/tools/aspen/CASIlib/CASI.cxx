@@ -28,23 +28,23 @@ namespace CASI
 	}
 
 
-	void readTree(IHapp hAPsim)
+    void readTree(Happ::IHappPtr hAPsim)
 	{
-		IHNodeCol ihcol;
-		IHNode ihRoot;
+        Happ::IHNodeColPtr ihcol;
+		Happ::IHNodePtr ihRoot;
 
-		ihRoot = hAPsim.GetTree();
-	    ihcol = ihRoot.GetElements();
+		ihRoot = hAPsim->GetTree();
+	    ihcol = ihRoot->GetElements();
 		
 		readBranch(ihRoot);
 
 	}
 
-	void readBranch(IHNode& root)
+	void readBranch(Happ::IHNodePtr root)
 	{
 		static int level=0;
-		IHNode cnode;
-		IHNodeCol ihcol;
+		Happ::IHNodePtr cnode;
+		Happ::IHNodeColPtr  ihcol;
 		VARIANTARG arg[5];
 	
 		int i, j, d, total, ind;
@@ -66,19 +66,19 @@ namespace CASI
 			for (i=0; i<5; i++) 
 				::VariantInit(&arg[i]);
 			
-			d = root.GetDimension();
-			vt =root.GetValueType();
+			d = root->GetDimension();
+			vt =root->GetValueType();
 
 			if (d>0&&vt<=0) //has offsprings
 			{
-				ihcol = root.GetElements();
+				ihcol = root->GetElements();
 		
-				d = ihcol.GetDimension(); //d is not suppose to > 5 a
+				d = ihcol->GetDimension(); //d is not suppose to > 5 a
 				rc = new long[d];
 				total=0;
 				for (i=0; i<d; i++) //for each dimention
 				{
-					rc[i] = ihcol.GetRowCount(i);
+					rc[i] = ihcol->GetRowCount(i);
 					total+=rc[i];
 				}
 
@@ -92,9 +92,9 @@ namespace CASI
 						V_INT(&arg[j])=ind%rc[j];
 						ind = ind/rc[j];
 					}
-					cnode = ihcol.GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+					cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
 			
-					nodepath = cnode.GetName(force);
+                    nodepath = cnode->GetName(force).GetBSTR();
 #ifdef YANGDEBUG
 					for (int li=0; li<level; li++)
 						fprintf(test, "\t");
@@ -115,11 +115,11 @@ namespace CASI
 		level--;
 	} //end of readBranch
 
-	IHNode nodeNav(IHNode& root, CString NodePath)
+	Happ::IHNodePtr nodeNav(Happ::IHNodePtr root, CString NodePath)
 	{
 	//	int i, j;
 		int len;
-		IHNode cnode;
+		Happ::IHNodePtr cnode;
 		int dotPos;
 	//	char* sbuf;
 		
@@ -135,32 +135,34 @@ namespace CASI
 			if (dotPos==-1)
 			{
 				curPath=NodeName;
-				cnode = cnode.FindNode(curPath);
-				if (cnode.m_lpDispatch==NULL)
+                cnode = cnode->FindNode(curPath.AllocSysString());
+				//if (cnode->m_lpDispatch==NULL)
+				if ( cnode==NULL )
 					return cnode;
 				break;
 			}
 			else
 				curPath=NodeName.Left(dotPos);
 			NodeName=NodeName.Right(len-dotPos-1);
-			cnode = cnode.FindNode(curPath);
-			if (cnode.m_lpDispatch==NULL)
+            cnode = cnode->FindNode(curPath.AllocSysString());
+			//if (cnode->->m_lpDispatch==NULL)
+			if (cnode == NULL)
 					return cnode;
 		} while (len>0);
 
 		return cnode;
 	}
 
-	void readStreamsAndBlocks(IHNode& ihRoot, std::vector<CASIObj> &blocks, std::vector<CASIObj> &streams)
+	void readStreamsAndBlocks(Happ::IHNodePtr ihRoot, std::vector<CASIObj> &blocks, std::vector<CASIObj> &streams)
 	{
-		IHNode streamRoot;
+		Happ::IHNodePtr streamRoot;
 	
 		std::vector<CString> blockName;
 		std::vector<CString> streamName;
 
 		streamRoot=nodeNav(ihRoot, "Data.Streams");
 
-		IHNode blockRoot;
+		Happ::IHNodePtr blockRoot;
 
 		blockRoot=nodeNav(ihRoot, "Data.Blocks");
 		
@@ -199,56 +201,58 @@ namespace CASI
 		
 	}
 
-	int getChildNum(IHNode &root)
+	int getChildNum(Happ::IHNodePtr root)
 	{
-		IHNodeCol ihcol;
+		Happ::IHNodeColPtr  ihcol;
 		int d, i, total;
 		int rc;
 
 		total = 0;
-		if (root.m_lpDispatch==NULL)
+		//if (root->m_lpDispatch==NULL)
+		if ( root == NULL )
 			return 0;
-		d = root.GetDimension();
+		d = root->GetDimension();
 		if (d>0)
 		{
-			ihcol=root.GetElements();
+			ihcol=root->GetElements();
 			//total = ihcol.GetCount();
 
 			for (i=0; i<d; i++)
 			{
-				rc = ihcol.GetRowCount(i);
+				rc = ihcol->GetRowCount(i);
 				total+=rc;
 			}
 		}
 		return total;
 	}
 	
-	void getChildNames(IHNode &root, std::vector<CString>& results)
+	void getChildNames(Happ::IHNodePtr root, std::vector<CString>& results)
 	{
-		IHNodeCol ihcol;
+		Happ::IHNodeColPtr  ihcol;
 		int d, i, total;
 		int ind, j;
 		long* rc;
 		VARIANTARG arg[5];
 		CString cnodename;
-		IHNode cnode;
+		Happ::IHNodePtr cnode;
 		VARIANTARG force;
 
 		results.clear();
-		if (root.m_lpDispatch==NULL)
+		//if (root->m_lpDispatch==NULL)
+		if ( root == NULL )
 			return;
 		
 		for (i=0; i<5; i++) 
 			::VariantInit(&arg[i]);
 		::VariantInit(&force);
 
-		ihcol=root.GetElements();
-		d = ihcol.GetDimension(); 
+		ihcol=root->GetElements();
+		d = ihcol->GetDimension(); 
 
 		rc = new long[d];
 		total=0;
 		for (i=0; i<d; i++) //for each dimention
-		{	rc[i] = ihcol.GetRowCount(i);
+		{	rc[i] = ihcol->GetRowCount(i);
 			total+=rc[i];
 		}
 		
@@ -262,8 +266,8 @@ namespace CASI
 				ind = ind/rc[j];
 			}
 
-			cnode = ihcol.GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
-			cnodename = cnode.GetName(force);
+			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+            cnodename = cnode->GetName(force).GetBSTR();
 			results.push_back(cnodename);
 		}
 		

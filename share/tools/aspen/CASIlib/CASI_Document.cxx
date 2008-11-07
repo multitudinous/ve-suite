@@ -19,9 +19,9 @@ namespace CASI
 	{
 	}
 
-	IHNode CASIDocument::getRoot()
+    Happ::IHNodePtr CASIDocument::getRoot()
 	{
-		return *ihRoot;
+		return ihRoot;
 	}
 	//File operating functions
 	void CASIDocument::open(CString filename) //Open an Aspen Document
@@ -32,12 +32,14 @@ namespace CASI
         //the default constructor sets auto release of memory so there is no 
         //need to delete this mmeory later. ReleaseDispatch must be called to
         //make this happen.
-		hAPsim = new IHapp(); 
-		BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document"));
-		if (!bSuccess) 
+        hAPsim = new Happ::IHappPtr(_T("apwn.document")); 
+		//BOOL bSuccess = hAPsim->CreateDispatch(_T("apwn.document"));
+		//if (!bSuccess)
+        if( hAPsim == NULL )
         {
             //clean up
-            hAPsim->ReleaseDispatch();
+            //hAPsim->ReleaseDispatch();
+            hAPsim->Release();
             delete hAPsim;
             hAPsim = NULL;
 
@@ -56,15 +58,16 @@ namespace CASI
         
         hAPsim->InitFromArchive2(&bstr, args[0], args[1], args[2], args[3], args[4], args[5]);
 		
-		hAPsim->SetVisible(TRUE);
+        hAPsim->PutVisible(VARIANT_TRUE);//->SetVisible(TRUE);
 
 		nodePath=_T("");
 
         //the default constructor sets auto release of memory so there is no 
         //need to delete this mmeory later. ReleaseDispatch must be called to
         //make this happen.
-		ihRoot = new IHNode();
-		(*ihRoot) = hAPsim->GetTree();
+       // ihRoot = new Happ::IHNodePtr();
+		//(*ihRoot) = hAPsim->GetTree();
+		ihRoot = hAPsim->GetTree();
 
 		simOpened = true;
 
@@ -89,8 +92,10 @@ namespace CASI
             reserved.boolVal=VARIANT_TRUE;
 
 			hAPsim->Close(reserved);
-			ihRoot->ReleaseDispatch();
-            hAPsim->ReleaseDispatch();
+			//ihRoot->ReleaseDispatch();
+            ihRoot->Release();
+            //hAPsim->ReleaseDispatch();
+            hAPsim->Release();
             delete ihRoot;
             delete hAPsim;
 			ihRoot = NULL;
@@ -120,8 +125,12 @@ namespace CASI
 
 	void CASIDocument::showAspen(bool status)
 	{
+        VARIANT_BOOL conv = status;
 		if (simOpened)
-				hAPsim->SetVisible(status);
+        {
+			//hAPsim->SetVisible(status);
+		    hAPsim->PutVisible(conv);
+        }
 	}
 	//Block, Stream and variable access functions
 	int CASIDocument::getNumOfBlocks() //get number of blocks in this document
@@ -133,9 +142,9 @@ namespace CASI
 
 		//blocknodepath.Insert(slength,".Blocks");
 			
-		IHNode node;
+		Happ::IHNodePtr node;
 
-		node=nodeNav(*ihRoot,  blocknodepath);
+		node=nodeNav(ihRoot,  blocknodepath);
 
 		return getChildNum(node);
 	}
@@ -149,9 +158,9 @@ namespace CASI
 
 		//blocknodepath.Insert(slength,".Streams");
 			
-		IHNode node;
+		Happ::IHNodePtr node;
 		
-		node=nodeNav(*ihRoot,  blocknodepath);
+		node=nodeNav(ihRoot,  blocknodepath);
 
 		return getChildNum(node);
 	}
@@ -201,7 +210,7 @@ namespace CASI
 		slength = blockNodePath.GetLength();
 		blockNodePath.Insert(slength,siPortName);
 
-		CASIObj result = CASIObj(*ihRoot, blockNodePath, BLOCK);
+		CASIObj result = CASIObj(ihRoot, blockNodePath, BLOCK);
 
 		return result;
 	}
@@ -216,7 +225,7 @@ namespace CASI
 		slength = blockNodePath.GetLength();
 		blockNodePath.Insert(slength,doPortName);
 
-		CASIObj result(*ihRoot, blockNodePath, BLOCK);
+		CASIObj result(ihRoot, blockNodePath, BLOCK);
 		
 		return result;
 	}
@@ -232,12 +241,12 @@ namespace CASI
 		blockPortPath.Insert(slength,siPortName);
 
 
-		Variable portVar(*ihRoot, blockPortPath);
+		Variable portVar(ihRoot, blockPortPath);
 
 		Variable streamVar = portVar.getChild(streamIndex);
 
 		if (!streamVar.valid())
-			return CASIObj(*ihRoot, "", STREAM);
+			return CASIObj(ihRoot, "", STREAM);
 		
 		CString streamName = streamVar.getName(); //It cut the last part out, which is the stream name;
 		CString streamNodePath = nodePath;
@@ -247,7 +256,7 @@ namespace CASI
 		slength = streamNodePath.GetLength();
 		streamNodePath.Insert(slength,streamName);
 
-		CASIObj result(*ihRoot, streamNodePath, STREAM);
+		CASIObj result(ihRoot, streamNodePath, STREAM);
 
 		return result;
 	}
@@ -262,12 +271,12 @@ namespace CASI
 		slength = blockPortPath.GetLength();
 		blockPortPath.Insert(slength,doPortName);
 
-		Variable portVar(*ihRoot, blockPortPath);
+		Variable portVar(ihRoot, blockPortPath);
 
 		Variable streamVar = portVar.getChild(streamIndex);
 
 		if (!streamVar.valid())
-			return CASIObj(*ihRoot, "", STREAM);
+			return CASIObj(ihRoot, "", STREAM);
 		
 		CString streamName = streamVar.getName(); //It cut the last part out, which is the stream name;
 		CString streamNodePath = nodePath;
@@ -277,7 +286,7 @@ namespace CASI
 		slength = streamNodePath.GetLength();
 		streamNodePath.Insert(slength,streamName);
 
-		CASIObj result(*ihRoot, streamNodePath, STREAM);
+		CASIObj result(ihRoot, streamNodePath, STREAM);
 
 		return result;
 	}
@@ -291,7 +300,7 @@ namespace CASI
 		//slength = blockNodePath.GetLength();
 		blockNodePath.Insert(slength,blockName);
 
-		CASIObj result(*ihRoot, blockNodePath, BLOCK);
+		CASIObj result(ihRoot, blockNodePath, BLOCK);
 		return result;
 	}
 	
@@ -303,11 +312,11 @@ namespace CASI
 		blocknodepath=nodePath;
 
 		blocknodepath.Insert(slength,".Blocks");
-		Variable blocks(*ihRoot, blocknodepath);
+		Variable blocks(ihRoot, blocknodepath);
 
 		Variable blocki=blocks.getChild(index);
 
-		CASIObj result(*ihRoot,blocki.getNodePath(), BLOCK);
+		CASIObj result(ihRoot,blocki.getNodePath(), BLOCK);
 		return result;
 	}
 
@@ -320,7 +329,7 @@ namespace CASI
 		//slength = streamNodePath.GetLength();
 		streamNodePath.Insert(slength,streamName);
 
-		CASIObj result(*ihRoot, streamNodePath, STREAM);
+		CASIObj result(ihRoot, streamNodePath, STREAM);
 		return result;
 	}
 
@@ -332,17 +341,17 @@ namespace CASI
 		streamnodepath=nodePath;
 
 		streamnodepath.Insert(slength,".Streams");
-		Variable streams(*ihRoot, streamnodepath);
+		Variable streams(ihRoot, streamnodepath);
 
 		Variable streami = streams.getChild(index);
 
-		CASIObj result(*ihRoot, streami.getNodePath(), STREAM);
+		CASIObj result(ihRoot, streami.getNodePath(), STREAM);
 		return result;
 	}
 
 	Variable CASIDocument::getVarByNodePath(CString path) //get a viable pointer by the node path in the variable expoloer
 	{
-		Variable result(*ihRoot, path);
+		Variable result(ihRoot, path);
 
 		return result;
 	}
@@ -355,9 +364,9 @@ namespace CASI
 		if ((iter=aliasMapping.find(alias))!=aliasMapping.end())
 			varnodepath= iter->second;
 		else 
-			return Variable(*ihRoot, "");
+			return Variable(ihRoot, "");
 
-		Variable result(*ihRoot, varnodepath);		
+		Variable result(ihRoot, varnodepath);		
 		return result;
 	}
 		
@@ -373,11 +382,11 @@ namespace CASI
         VARIANT enumer;
         ::VariantInit(&enumer);
         enumer.vt = VT_I4;
-        enumer.lVal = IAP_REINIT_SIMULATION;
+        enumer.lVal = Happ::IAP_REINIT_SIMULATION;
         
-		IHAPEngine engine;
+        Happ::IHAPEnginePtr engine;
 		engine = hAPsim->GetEngine();
-        engine.Reinit( enumer, name  );
+        engine->Reinit( enumer, name  );
         ::VariantClear( &enumer );
 	}
 
@@ -393,11 +402,11 @@ namespace CASI
         VARIANT enumer;
         ::VariantInit(&enumer);
         enumer.vt = VT_I4;
-        enumer.lVal = IAP_REINIT_BLOCK;
+        enumer.lVal = Happ::IAP_REINIT_BLOCK;
         
-		IHAPEngine engine;
+		Happ::IHAPEnginePtr engine;
 		engine = hAPsim->GetEngine();
-        engine.Reinit( enumer, name  );
+        engine->Reinit( enumer, name  );
 
         ::VariantClear( &name );
         ::VariantClear( &enumer );
@@ -431,9 +440,9 @@ namespace CASI
 
 	void CASIDocument::step()
 	{
-		IHAPEngine engine;
+		Happ::IHAPEnginePtr engine;
 		engine = hAPsim->GetEngine();
-		engine.Step();
+		engine->Step();
 	}
 
 	void CASIDocument::CreateDummyDesignSpec()
@@ -449,28 +458,28 @@ namespace CASI
 
 		designspecpath.Insert(slength,".Flowsheeting Options.Design-Spec");
 			
-		IHNode node;
+		Happ::IHNodePtr node;
 		
-		node=nodeNav(*ihRoot,  designspecpath);
+		node=nodeNav(ihRoot,  designspecpath);
 
 		//Now inserting a dummy node
 		CString dummy="DUMMY";
 		BSTR bstr = dummy.AllocSysString();
-		node.NewChild(&bstr);
+		node->NewChild(&bstr);
 		::SysFreeString( bstr );
 		
 		slength = designspecpath.GetLength();
 		designspecpath.Insert(slength,".DUMMY.Input.FVN_VARIABLE");
-		node=nodeNav(*ihRoot,  designspecpath);
+		node=nodeNav(ihRoot,  designspecpath);
 
-		IHNodeCol ihcol = node.GetElements();
-		int d = ihcol.GetDimension(); //d is not suppose to > 5 a
+		Happ::IHNodeColPtr ihcol = node->GetElements();
+		int d = ihcol->GetDimension(); //d is not suppose to > 5 a
 		long *rc = new long[d];
 		int i, j, ind, total=0;
 		VARIANTARG arg[5];
 		VARIANT val, force;
 		CString nodename;
-		IHNode cnode;
+		Happ::IHNodePtr cnode;
 
 		VARIANT val1, val2;
 		
@@ -481,14 +490,14 @@ namespace CASI
 		//stringToVariant("", val2);
 		val2.vt=VT_INT;
 		V_INT(&val2)=0;
-		cnode=ihcol.GetItem(val2,val2, val2, val2 , val2);
-		cnode=ihcol.GetItem(val1,val2, val2, val2 , val2);
-		cnode=ihcol.GetLabelNode(0,0,&val1);
-		long k = ihcol.GetCount();
+		cnode=ihcol->GetItem(val2,val2, val2, val2 , val2);
+		cnode=ihcol->GetItem(val1,val2, val2, val2 , val2);
+		cnode=ihcol->GetLabelNode(0,0,&val1);
+		long k = ihcol->GetCount();
 		
 		for (i=0; i<d; i++) //for each dimention
 		{
-			rc[i] = ihcol.GetRowCount(i);
+			rc[i] = ihcol->GetRowCount(i);
 			total+=rc[i];
 		}
 
@@ -502,9 +511,9 @@ namespace CASI
 				V_INT(&arg[j])=ind%rc[j];
 				ind = ind/rc[j];
 			}
-			cnode = ihcol.GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+			cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
 			
-			nodename = cnode.GetName(force);
+            nodename = cnode->GetName(force).GetBSTR();
 		}
 		
         ::VariantClear( &val1 );

@@ -4,7 +4,7 @@
 
 namespace CASI
 {
-	Variable::Variable(IHNode root, CString nodepath, VARTYPE nodeType)
+    Variable::Variable(Happ::IHNodePtr root, CString nodepath, VARTYPE nodeType)
 		:ihRoot(root), nodePath(nodepath), nodeType(nodeType), aliasName("")
 	{
 		
@@ -47,7 +47,7 @@ namespace CASI
 
 	int Variable::getNumChild() //how many child this node have
 	{
-		IHNode root;
+		Happ::IHNodePtr root;
 
 		root = nodeNav(ihRoot, nodePath);
 		return getChildNum(root);
@@ -56,8 +56,8 @@ namespace CASI
 	Variable Variable::getChild(int ind) //return a pointer to the indexed child
 	{
 		
-		IHNodeCol ihcol;
-		IHNode root, cnode;
+		Happ::IHNodeColPtr ihcol;
+		Happ::IHNodePtr root, cnode;
 		int d, i, j;
 		long* rc;
 		VARIANTARG arg[5];
@@ -66,7 +66,8 @@ namespace CASI
 		CString cnodepath;
 
 		root = nodeNav(ihRoot, nodePath);
-		if (root.m_lpDispatch==NULL)
+		//if (root.m_lpDispatch==NULL)
+		if (root==NULL)
 			return Variable(ihRoot, _T(""));
 		
 
@@ -74,14 +75,14 @@ namespace CASI
 			::VariantInit(&arg[i]);
 		::VariantInit(&force);
 
-		ihcol=root.GetElements();
+		ihcol=root->GetElements();
 
-		d = ihcol.GetDimension(); 
+		d = ihcol->GetDimension(); 
 		
 		rc = new long[d];
 		
 		for (i=0; i<d; i++) //for each dimention
-			rc[i] = ihcol.GetRowCount(i);
+			rc[i] = ihcol->GetRowCount(i);
 		
 		for (j=0; j<d; j++)
 		{
@@ -90,9 +91,9 @@ namespace CASI
 			index = index/rc[j];
 		}
 
-		cnode = ihcol.GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
+		cnode = ihcol->GetItem(arg[0], arg[1], arg[2], arg[3], arg[4]);
 		
-		cnodepath = cnode.GetName(force);
+        cnodepath = cnode->GetName(force).GetBSTR();
 		cnodepath.Insert(0,_T("."));
 		cnodepath.Insert(0,LPCTSTR(nodePath));
 		
@@ -105,11 +106,12 @@ namespace CASI
 		
 	CString Variable::getValue() //The string display in the value entry box;
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
 		
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 
 		VARIANT val;
@@ -118,12 +120,12 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		//val=node.GetValue(force);
+		//val=node->GetValue(force);
 		
-		//val=node.GetAttributeValue(HAP_VALUE, force);
-		if (node.GetHasAttribute(HAP_VALUE))
+		//val=node->GetAttributeValue(HAP_VALUE, force);
+		if (node->GetHasAttribute(Happ::HAP_VALUE))
 		{
-			val=node.GetAttributeValue(HAP_VALUE, force);
+			val=node->GetAttributeValue(Happ::HAP_VALUE, force);
 			return variantToString(val);	
 		}
 
@@ -134,11 +136,12 @@ namespace CASI
 	
 	CString Variable::getPhysicalQuantity() //The string display in the PhysicalQuantity box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
 		
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 
 		VARIANT val;
@@ -147,9 +150,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 		
-		if (node.GetHasAttribute(HAP_UNITROW))
+        if (node->GetHasAttribute(Happ::HAP_UNITROW))
 		{
-			val=node.GetAttributeValue(HAP_UNITROW, force);
+			val=node->GetAttributeValue(Happ::HAP_UNITROW, force);
 			return variantToString(val);	
 		}
 
@@ -158,11 +161,12 @@ namespace CASI
 	
 	CString Variable::getUnitOfMeasure() //The string displayed in the Unit of Measure box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
 		
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 
 		VARIANT val;
@@ -171,9 +175,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 		
-		if (node.GetHasAttribute(HAP_UNITCOL))
+		if (node->GetHasAttribute(Happ::HAP_UNITCOL))
 		{
-			val=node.GetAttributeValue(HAP_UNITCOL, force);
+			val=node->GetAttributeValue(Happ::HAP_UNITCOL, force);
 			return variantToString(val);	
 		}
 
@@ -182,10 +186,11 @@ namespace CASI
 	
 	CString Variable::getBasis() //The string displayed in the Basis box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -193,9 +198,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 		
-		if (node.GetHasAttribute(HAP_BASIS))
+		if (node->GetHasAttribute(Happ::HAP_BASIS))
 		{
-			val=node.GetAttributeValue(HAP_BASIS, force);
+			val=node->GetAttributeValue(Happ::HAP_BASIS, force);
 			return variantToString(val);	
 		}
 
@@ -204,10 +209,11 @@ namespace CASI
 	
 	CString Variable::getOptionList() //The string displayed in the Option List Box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -215,9 +221,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_OPTIONLIST))
+		if (node->GetHasAttribute(Happ::HAP_OPTIONLIST))
 		{
-			val=node.GetAttributeValue(HAP_OPTIONLIST, force);
+			val=node->GetAttributeValue(Happ::HAP_OPTIONLIST, force);
 			return variantToString(val);
 		}
 
@@ -231,10 +237,11 @@ namespace CASI
 	
 	CString Variable::getRecordType() //The string displayed in the Record Type Box;
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -242,9 +249,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_RECORDTYPE))
+		if (node->GetHasAttribute(Happ::HAP_RECORDTYPE))
 		{
-			val=node.GetAttributeValue(HAP_RECORDTYPE, force);
+			val=node->GetAttributeValue(Happ::HAP_RECORDTYPE, force);
 			return variantToString(val);	
 		}
 
@@ -254,10 +261,11 @@ namespace CASI
 
     long Variable::getDimension()
     {
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T(0);
 		VARIANT val;
 		VARIANTARG force;
@@ -265,21 +273,22 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		//if (node.GetHasAttribute(HAP_RECORDTYPE))
+		//if (node->GetHasAttribute(HAP_RECORDTYPE))
 		//{
-		//	val=node.GetAttributeValue(HAP_RECORDTYPE, force);
+		//	val=node->GetAttributeValue(HAP_RECORDTYPE, force);
 		//	return variantToString(val);	
 		//}
 		//return CString("NOATTR");
-        return node.GetDimension();
+        return node->GetDimension();
     }
 
 	CString Variable::isOutput() //The string in the Output Box, 1 means true, 0 means false
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -287,9 +296,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_OUTVAR))
+		if (node->GetHasAttribute(Happ::HAP_OUTVAR))
 		{
-			val=node.GetAttributeValue(HAP_OUTVAR, force);
+			val=node->GetAttributeValue(Happ::HAP_OUTVAR, force);
 			return variantToString(val);
 			
 		}
@@ -301,10 +310,11 @@ namespace CASI
 
 	CString Variable::isEnterable() //The string in the Enterable Box, 1 means true, 0 means false
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -312,9 +322,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 		
-		if (node.GetHasAttribute(HAP_ENTERABLE))
+		if (node->GetHasAttribute(Happ::HAP_ENTERABLE))
 		{
-			val=node.GetAttributeValue(HAP_ENTERABLE, force);
+			val=node->GetAttributeValue(Happ::HAP_ENTERABLE, force);
 			return variantToString(val);
 		}
 
@@ -324,10 +334,11 @@ namespace CASI
 
 	CString Variable::hasChild() //The string in the HasChild Box, 1 means true, 0 means false
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -335,9 +346,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_HASCHILDREN))
+		if (node->GetHasAttribute(Happ::HAP_HASCHILDREN))
 		{
-			val=node.GetAttributeValue(HAP_HASCHILDREN, force);
+			val=node->GetAttributeValue(Happ::HAP_HASCHILDREN, force);
 			return variantToString(val);
 		}
 
@@ -347,10 +358,11 @@ namespace CASI
 
 	CString Variable::upLimit() //the up Limit of the value
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -358,9 +370,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_UPPERLIMIT))
+		if (node->GetHasAttribute(Happ::HAP_UPPERLIMIT))
 		{
-			val=node.GetAttributeValue(HAP_UPPERLIMIT, force);
+			val=node->GetAttributeValue(Happ::HAP_UPPERLIMIT, force);
 			return variantToString(val);	
 		}
 
@@ -369,10 +381,11 @@ namespace CASI
 	
 	CString Variable::lowerLimit() //the lower limit of the value
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -380,9 +393,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_LOWERLIMIT))
+		if (node->GetHasAttribute(Happ::HAP_LOWERLIMIT))
 		{
-			val=node.GetAttributeValue(HAP_LOWERLIMIT, force);
+			val=node->GetAttributeValue(Happ::HAP_LOWERLIMIT, force);
 			return variantToString(val);	
 		}
 
@@ -391,10 +404,11 @@ namespace CASI
 	
 	CString Variable::getDefaultValue() //the default value
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -402,9 +416,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_VALUEDEFAULT))
+		if (node->GetHasAttribute(Happ::HAP_VALUEDEFAULT))
 		{
-			val=node.GetAttributeValue(HAP_VALUEDEFAULT, force);
+			val=node->GetAttributeValue(Happ::HAP_VALUEDEFAULT, force);
 			return variantToString(val);	
 		}
 
@@ -414,10 +428,11 @@ namespace CASI
 	
 	CString Variable::getPrompt() //the prompt box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -425,9 +440,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_PROMPT))
+		if (node->GetHasAttribute(Happ::HAP_PROMPT))
 		{
-			val=node.GetAttributeValue(HAP_PROMPT, force);
+			val=node->GetAttributeValue(Happ::HAP_PROMPT, force);
 			return variantToString(val);	
 		}
 
@@ -437,10 +452,11 @@ namespace CASI
 	
 	CString Variable::getCompletionStatus() //the completion status box, deliminated by \n, the string leading with& is the first one
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -448,9 +464,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_COMPSTATUS))
+		if (node->GetHasAttribute(Happ::HAP_COMPSTATUS))
 		{
-			val=node.GetAttributeValue(HAP_COMPSTATUS, force);
+			val=node->GetAttributeValue(Happ::HAP_COMPSTATUS, force);
 			return variantToString(val);	
 		}
 
@@ -459,10 +475,11 @@ namespace CASI
 	
 	CString Variable::getInorOut() //the In or Out box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -470,9 +487,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_INOUT))
+		if (node->GetHasAttribute(Happ::HAP_INOUT))
 		{
-			val=node.GetAttributeValue(HAP_INOUT, force);
+			val=node->GetAttributeValue(Happ::HAP_INOUT, force);
 			return variantToString(val);	
 		}
 
@@ -481,10 +498,11 @@ namespace CASI
 
 	CString Variable::getGender() //the Gender box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -492,9 +510,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_PORTSEX))
+		if (node->GetHasAttribute(Happ::HAP_PORTSEX))
 		{
-			val=node.GetAttributeValue(HAP_PORTSEX, force);
+			val=node->GetAttributeValue(Happ::HAP_PORTSEX, force);
 			return variantToString(val);	
 		}
 
@@ -504,10 +522,11 @@ namespace CASI
 	
 	CString Variable::getMultiport() //the multiport box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		if (node==NULL)
+		//if (node->m_lpDispatch==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -515,9 +534,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_MULTIPORT))
+		if (node->GetHasAttribute(Happ::HAP_MULTIPORT))
 		{
-			val=node.GetAttributeValue(HAP_MULTIPORT, force);
+			val=node->GetAttributeValue(Happ::HAP_MULTIPORT, force);
 			return variantToString(val);	
 		}
 
@@ -526,10 +545,11 @@ namespace CASI
 
 	CString Variable::getPortType() //the port type box
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -537,9 +557,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(HAP_PORTTYPE))
+		if (node->GetHasAttribute(Happ::HAP_PORTTYPE))
 		{
-			val=node.GetAttributeValue(HAP_PORTTYPE, force);
+			val=node->GetAttributeValue(Happ::HAP_PORTTYPE, force);
 			return variantToString(val);	
 		}
 
@@ -555,10 +575,11 @@ namespace CASI
 	
 	bool Variable::setValue(CString value) //The value field is writable. And at least in GUI, set value could fail;
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return false;
 		VARIANT val;
 		VARIANTARG force;
@@ -566,20 +587,22 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 		
-		val= node.GetAttributeValue(HAP_VALUE, force); //so the val will have the correct type for this variant;
+		val= node->GetAttributeValue(Happ::HAP_VALUE, force); //so the val will have the correct type for this variant;
 		stringToVariant(value, val);
 
-		node.SetAttributeValue(HAP_VALUE, force, val);
+		//node->SetAttributeValue(Happ::HAP_VALUE, force, val);
+		node->PutAttributeValue(Happ::HAP_VALUE, force, val);
 				
 		return true;
 	}
 
 	int Variable::getValues(CString* values)
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return false;
 		VARIANT val;
 		VARIANTARG force;
@@ -592,10 +615,11 @@ namespace CASI
 
 	CString Variable::getVVVV(int index)
 	{
-		IHNode node;
+		Happ::IHNodePtr node;
 
 		node=nodeNav(ihRoot,  nodePath);
-		if (node.m_lpDispatch==NULL)
+		//if (node->m_lpDispatch==NULL)
+		if (node==NULL)
 			return _T("NOATTR");
 		VARIANT val;
 		VARIANTARG force;
@@ -603,9 +627,9 @@ namespace CASI
 		::VariantInit(&val);
 		::VariantInit(&force);
 
-		if (node.GetHasAttribute(index))
+		if (node->GetHasAttribute(index))
 		{
-			val=node.GetAttributeValue(index, force);
+			val=node->GetAttributeValue(index, force);
 			return variantToString(val);	
 		}
 

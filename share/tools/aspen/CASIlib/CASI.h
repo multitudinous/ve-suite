@@ -1,11 +1,31 @@
 #ifndef CASI_H
 #define CASI_H
 
-#include <happ.h>
+//#include <happ.h>
+
+#ifndef _AFXDLL
+#define _AFXDLL
+#endif
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+#define VC_EXTRALEAN		// Exclude rarely-used stuff from Windows headers
+
+#include <afxwin.h>         // MFC core and standard components
+#include <afxext.h>         // MFC extensions
+#include <afxdisp.h>        // MFC Automation classes
+#include <afxdtctl.h>		// MFC support for Internet Explorer 4 Common Controls
+#ifndef _AFX_NO_AFXCMN_SUPPORT
+#include <afxcmn.h>			// MFC support for Windows Common Controls
+#endif // _AFX_NO_AFXCMN_SUPPORT
 
 #include <set>
 #include <vector>
 #include <map>
+
+#import "happ.tlb"
 
 #  ifdef CASI_LIBRARY
 #    define CASI_EXPORTS   __declspec(dllexport)
@@ -38,39 +58,72 @@ namespace CASI
 		public:
 
 		Variable(): nodePath(""), aliasName(""), nodeType(VARIABLE) {};
-		Variable(IHNode root, CString nodePath, VARTYPE nodeType=VARIABLE);
-		VARTYPE getNodeType(); //Block Node and Stream Node get special treatment
+        Variable(Happ::IHNodePtr root, CString nodePath, VARTYPE nodeType=VARIABLE);
+        
+        //Block Node and Stream Node get special treatment
+		VARTYPE getNodeType();
+        //the Full Path to the node
+		CString getNodePath();
+        //the variable name user associated with
+		CString getAliasName();
+        //the variable explorer name of the variable, which is the lastpart of the full path
+		CString getName();
+        //how many child this node have
+		int getNumChild();
+        //return a pointer to the indexed child
+		Variable getChild(int index);
+		 //The string display in the value entry box;
+		CString getValue();
+        //The string display in the PhysicalQuantity box
+		CString getPhysicalQuantity();
+        //The string displayed in the Unit of Measure box
+		CString getUnitOfMeasure();
+         //The string displayed in the Basis box
+		CString getBasis();
+         //The string displayed in the Option List Box
+  		CString getOptionList();
+        //The string displayed in the Option Box, deliminate by /n for each option
+		CString getOptions();
+        //The string displayed in the Record Type Box;
+		CString getRecordType();
 
-		CString getNodePath();//the Full Path to the node
-
-		CString getAliasName(); //the variable name user associated with
-
-		CString getName(); //the variable explorer name of the variable, which is the lastpart of the full path
-
-		int getNumChild(); //how many child this node have
-
-		Variable getChild(int index); //return a pointer to the indexed child
-		
-		CString getValue(); //The string display in the value entry box;
-		CString getPhysicalQuantity(); //The string display in the PhysicalQuantity box
-		CString getUnitOfMeasure(); //The string displayed in the Unit of Measure box
-		CString getBasis(); //The string displayed in the Basis box
-		CString getOptionList(); //The string displayed in the Option List Box
-		CString getOptions(); //The string displayed in the Option Box, deliminate by /n for each option
-		CString getRecordType(); //The string displayed in the Record Type Box;
 		long getDimension();
-        CString isOutput(); //The string in the Output Box, 1 means true, 0 means false
-		CString isEnterable(); //The string in the Enterable Box, 1 means true, 0 means false
-		CString hasChild(); //The string in the HasChild Box, 1 means true, 0 means false
-		CString upLimit(); //the up Limit of the value
-		CString lowerLimit(); //the lower limit of the value
-		CString getDefaultValue(); //the default value
-		CString getPrompt(); //the prompt box
-		CString getCompletionStatus(); //the completion status box, deliminated by \n, the string leading with& is the first one
-		CString getInorOut(); //the In or Out box
-		CString getGender(); //the Gender box
-		CString getMultiport(); //the multiport box
-		CString getPortType(); //the port type box
+ 
+        //The string in the Output Box, 1 means true, 0 means false
+        CString isOutput();
+ 
+        //The string in the Enterable Box, 1 means true, 0 means false
+		CString isEnterable();
+ 
+        //The string in the HasChild Box, 1 means true, 0 means false
+		CString hasChild();
+ 
+        //the up Limit of the value
+		CString upLimit();
+ 
+        //the lower limit of the value
+		CString lowerLimit();
+ 
+        //the default value
+		CString getDefaultValue();
+ 
+        //the prompt box
+		CString getPrompt();
+
+        //the completion status box, deliminated by \n, the string leading with& is the first one
+		CString getCompletionStatus(); 
+ 
+        //the In or Out box
+		CString getInorOut();
+ 
+        //the Gender box
+		CString getGender();
+ 
+        //the multiport box
+		CString getMultiport();
+ 
+        //the port type box
+		CString getPortType();
 
 		void setAliasName(CString aliasname); //the variable name user associated with
 		bool setValue(CString val); //The value field is writable. And at least in GUI, set value could fail;
@@ -83,7 +136,7 @@ namespace CASI
 		CString nodePath;
 		CString aliasName;
 		VARTYPE nodeType;
-		IHNode ihRoot;
+        Happ::IHNodePtr ihRoot;
 	};
 
 
@@ -91,7 +144,7 @@ namespace CASI
 	{
 	public:
 		CASIObj():Variable() {};
-		CASIObj(IHNode root, CString nodepath, VARTYPE nodetype);
+		CASIObj(Happ::IHNodePtr root, CString nodepath, VARTYPE nodetype);
 		CString getInputVarName(int index); //get a varaible name in the input category by index
         int getNumberOfInputVars( );
 		CString getOutputVarName(int index); //get a varaible name in the output category by index
@@ -142,7 +195,7 @@ namespace CASI
 		~CASIDocument();
 	
 		//Interfacing function
-		IHNode getRoot();
+		Happ::IHNodePtr getRoot();
 		//File operating functions
 		void open(CString filename); //Open an Aspen Document
 		void close(); //Close the file, clear up 
@@ -186,8 +239,8 @@ namespace CASI
 	
 		private:
 
-		IHNode* ihRoot;
-		IHapp* hAPsim;
+		Happ::IHNodePtr ihRoot;
+		Happ::IHappPtr hAPsim;
 		CString nodePath;
 		std::vector<CASIObj> blocks;
 		std::vector<CASIObj> streams;
@@ -202,18 +255,18 @@ namespace CASI
 	};
 
 	//Utility functions:
-	IHNode nodeNav(IHNode& root, CString NodeName); //navigation
-	int getChildNum(IHNode &root);
-	void getChildNames(IHNode &root, std::vector<CString>& results);
+	Happ::IHNodePtr nodeNav(Happ::IHNodePtr root, CString NodeName); //navigation
+	int getChildNum(Happ::IHNodePtr root);
+	void getChildNames(Happ::IHNodePtr root, std::vector<CString>& results);
 
 	::CString variantToString(VARIANTARG& var);
 
 	void stringToVariant(CString val, VARIANTARG& var);
 
-	void readTree(IHapp& hAPsim);
+    void readTree(Happ::IHappPtr hAPsim);
 
-	void readBranch(IHNode& root);
+	void readBranch(Happ::IHNodePtr root);
 
-	void readStreamsAndBlocks(IHNode& root, std::vector<CASIObj> &blocks, std::vector<CASIObj> &streams);
+	void readStreamsAndBlocks(Happ::IHNodePtr root, std::vector<CASIObj> &blocks, std::vector<CASIObj> &streams);
 }
 #endif
