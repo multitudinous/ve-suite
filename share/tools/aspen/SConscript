@@ -9,11 +9,9 @@ aspenSubdirs = Split("""
 if GetPlatform() == 'win32':
    aspenSubdirs += Split("""    
       CASILib
-      VE_AspenUnit
+      AspenPlusInterface
+      AspenUnit
    """)
-#      AspenPlusInterface
-#      DynamicsUnit
-
 
 ##Run SConscript files in all of those folders.
 for d in aspenSubdirs:
