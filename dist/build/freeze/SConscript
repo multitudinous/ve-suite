@@ -51,11 +51,6 @@ if sca_util.GetPlatform() == "win32":
 else:
     freezeTarget = map(lambda s: "%s" %(s), srcs)
 
-print "####################################"
-print "# Freezing Launcher Code...        #"
-print "# Please wait... it takes a minute #"
-print "####################################\n"
-
 make_cmd = "python " + makespec_py
 
 build_cmd = "python "
