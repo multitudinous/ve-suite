@@ -32,7 +32,7 @@ if not os.path.exists(installerDistbaseDir):
 
 velauncherCodeDir = pj(RootDir,'src','apps','launcher')
 velauncherLibDir = pj(velauncherCodeDir,'python')
-velauncherDistDir = pj(RootDir,buildDir,'installer')
+velauncherDistDir = pj(RootDir,buildDir,'dist','build','freeze')
 
 installerImages = pj(RootDir,'dist','installerImages')
 
@@ -63,6 +63,8 @@ build_cmd = "python "
 config_cmd = pj(basePyinstallerDir,'Configure.py')
 os.popen("python " + config_cmd)
 
+launcherBundle = ves_pkg.createFileBundle( 'bin' )
+
 if sca_util.GetPlatform() == "win32":
     makespecAction = '%s --onefile --out=%s --path=%s --icon=%s\\Ve_icon.ico --upx ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir, installerImages)
     makespecBuilder = Builder(action = makespecAction, single_source = True, suffix = ".spec", chdir = installerDistDir)
@@ -75,6 +77,7 @@ if sca_util.GetPlatform() == "win32":
     env.freeze(target = freezeTarget, source = build_py)
 
     Depends('velauncher.exe', 'velauncher.spec')
+    launcherBundle.addFiles( freezeTarget )
 
 else:
     makespecAction = '%s --onefile --out=%s --path=%s ${SOURCE.abspath}' % (make_cmd, velauncherDistDir, velauncherLibDir)
@@ -88,3 +91,4 @@ else:
     env.freeze(target = freezeTarget, source = build_py)
     
     Depends('velauncher', 'velauncher.spec')
+    launcherBundle.addFiles( freezeTarget )
