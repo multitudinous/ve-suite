@@ -126,7 +126,7 @@ Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\wxmsw28_adv_vc_custom.dll; De
 Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\wxmsw28_gl_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\wxmsw28_core_vc_custom.dll; DestDir: {app}\lib; Components: wxwidgets; Flags: ignoreversion
 Source: {#DEPENDSINSTALLHOME}\{#WXHOME}\lib\vc_dll\wxbase28_vc_custom.dll; DestDir: {app}\lib; Flags: ignoreversion; Components: wxwidgets
-Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
+;Source: {#DEPENDSINSTALLHOME}\{#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\bin; Components: acetao
 
 ; osgAL includes
 Source: {#DEPENDSINSTALLHOME}\{#OSGALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs skipifsourcedoesntexist
