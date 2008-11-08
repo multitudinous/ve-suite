@@ -14,7 +14,6 @@
 #include <string>
 
 
-struct btDefaultMotionState;
 class btDynamicsWorld;
 class btRigidBody;
 class btCompoundShape;

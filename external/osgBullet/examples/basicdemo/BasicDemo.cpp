@@ -71,18 +71,13 @@ osg::MatrixTransform * createOSGBox( osg::Vec3 size )
 }
 
 btRigidBody * createBTBox( osg::MatrixTransform * box,
-                           btVector3 center )
+                          osg::Vec3 center )
 {
     btCollisionShape * collision = osgBullet::btBoxCollisionShapeFromOSG( box );
 
-    btTransform groundTransform;
-
-    groundTransform.setIdentity();
-    groundTransform.setOrigin( center );
-
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( box );
-    motion->setWorldTransform( groundTransform );
+    motion->setTransform( box );
+    motion->setParentTransform( osg::Matrix::translate( center ) );
 
     btScalar mass( 0.0 );
     btVector3 inertia( 0, 0, 0 );
@@ -179,7 +174,7 @@ osg::MatrixTransform * createModel( btDynamicsWorld * dynamicsWorld )
 
     /*  OSGBULLET CODE */
     osgBullet::MotionState * motion = new osgBullet::MotionState;
-    motion->setMatrixTransform( node.get() );
+    motion->setTransform( node.get() );
     btCollisionShape * collision = osgBullet::btConvexTriMeshCollisionShapeFromOSG( node.get() );
     // Create an OSG representation of the Bullet shape and attach it.
     // This is mainly for debugging.
@@ -244,27 +239,27 @@ int main( int argc,
     float thin = .01;
     ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
     root->addChild( ground );
-    groundBody = createBTBox( ground, btVector3( 0, 0, -10 ) );
+    groundBody = createBTBox( ground, osg::Vec3( 0, 0, -10 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
     ground = createOSGBox( osg::Vec3( 10, thin, 5 ) );
     root->addChild( ground );
-    groundBody = createBTBox( ground, btVector3( 0, 10, -5 ) );
+    groundBody = createBTBox( ground, osg::Vec3( 0, 10, -5 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
     ground = createOSGBox( osg::Vec3( 10, thin, 5 ) );
     root->addChild( ground );
-    groundBody = createBTBox( ground, btVector3( 0, -10, -5 ) );
+    groundBody = createBTBox( ground, osg::Vec3( 0, -10, -5 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
     ground = createOSGBox( osg::Vec3( thin, 10, 5 ) );
     root->addChild( ground );
-    groundBody = createBTBox( ground, btVector3( 10, 0, -5 ) );
+    groundBody = createBTBox( ground, osg::Vec3( 10, 0, -5 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
     ground = createOSGBox( osg::Vec3( thin, 10, 5 ) );
     root->addChild( ground );
-    groundBody = createBTBox( ground, btVector3( -10, 0, -5 ) );
+    groundBody = createBTBox( ground, osg::Vec3( -10, 0, -5 ) );
     dynamicsWorld->addRigidBody( groundBody );
     /* END: Create environment boxes */
 
@@ -276,7 +271,7 @@ int main( int argc,
     root->addChild( box );
 
     /* Bullet Code */
-    btRigidBody * boxBody = createBTBox( box, btVector3( -9, -3, -9 ) );
+    btRigidBody * boxBody = createBTBox( box, osg::Vec3( -9, -3, -9 ) );
     boxBody->setCollisionFlags( boxBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
     boxBody->setActivationState( DISABLE_DEACTIVATION );
     dynamicsWorld->addRigidBody( boxBody );

@@ -237,17 +237,13 @@ osg::MatrixTransform* createOSGBox( osg::Vec3 size )
 }
 
 btRigidBody * createBTBox( osg::MatrixTransform * box,
-                           btVector3 center )
+                          osg::Vec3 center )
 {
     btCollisionShape* collision = osgBullet::btBoxCollisionShapeFromOSG( box );
 
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin( center );
-
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( box );
-    motion->setWorldTransform( groundTransform );
+    motion->setTransform( box );
+    motion->setParentTransform( osg::Matrix::translate( center ) );
 
     btScalar mass( 0.0 );
     btVector3 inertia( 0, 0, 0 );
@@ -603,7 +599,7 @@ createBall( btDynamicsWorld* dynamicsWorld )
     btCollisionShape* collision = bsv._shape;
 
     osgBullet::MotionState * motion = new osgBullet::MotionState;
-    motion->setMatrixTransform( mt.get() );
+    motion->setTransform( mt.get() );
 
     // Debug OSG rep of bullet shape.
     osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( collision );
@@ -656,7 +652,7 @@ main( int argc,
     float thin = .01;
     osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
     root->addChild( ground );
-    btRigidBody* groundBody = createBTBox( ground, btVector3( 0, 0, -1 ) );
+    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -1 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
     // Debug rep of the ground

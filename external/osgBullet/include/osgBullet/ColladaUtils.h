@@ -15,7 +15,7 @@ namespace osgBullet
 
 class DebugBullet;
 
-bool OSGBULLET_EXPORT loadDae( osg::Node* node, const osg::NodePath& np, const std::string& daeName,
+bool OSGBULLET_EXPORT loadDae( osg::Transform* node, const osg::NodePath& np, const std::string& daeName,
     btDynamicsWorld* dw, osgBullet::DebugBullet* dbgB=NULL );
 
 }

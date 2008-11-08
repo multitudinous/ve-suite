@@ -26,7 +26,7 @@
     <library_visual_scenes>
         <visual_scene id="Scene" name="MyScene">
             <node id="BulletUnnamed-0" name="BulletUnnamed-0">
-                <translate>-3.31625 1.48161 0.0753584</translate>
+                <translate>0 0 0</translate>
                 <rotate>1 0 0 0</rotate>
                 <instance_geometry url="#BulletUnnamed-0-Geometry">
                     <bind_material>
@@ -83,7 +83,7 @@
                         <box>
                             <half_extents>3.37219 1.56115 0.128813</half_extents>
                         </box>
-                        <translate>-0.0323405 0.030609 0.00660376</translate>
+                        <translate>-0.0323408 0.030609 0.00660376</translate>
                         <rotate>1 0 0 0</rotate>
                     </shape>
                 </technique_common>

@@ -6,6 +6,9 @@
 #include <osg/MatrixTransform>
 #include <osg/PolygonMode>
 #include <osg/PolygonOffset>
+#include <osg/Notify>
+
+#include <osgBullet/AbsoluteModelTransform.h>
 
 
 namespace osgBullet
@@ -27,25 +30,32 @@ DebugBullet::~DebugBullet()
 }
 
 unsigned int
-DebugBullet::addDynamic( osg::MatrixTransform* mt )
+DebugBullet::addDynamic( osg::Transform* tr )
 {
-    _root->addChild( mt );
+    _root->addChild( tr );
     return _root->getNumChildren() - 1;
 }
 unsigned int
 DebugBullet::addStatic( osg::Node* node )
 {
-    osg::MatrixTransform* mt = new osg::MatrixTransform;
-    mt->addChild( node );
-    _root->addChild( mt );
+    _root->addChild( node );
     return _root->getNumChildren() - 1;
 }
 
 void
 DebugBullet::setTransform( unsigned int idx, const osg::Matrix& m )
 {
-    osg::MatrixTransform* mt = dynamic_cast< osg::MatrixTransform* >( _root->getChild( idx ) );
-    mt->setMatrix( m );
+    osg::Node* node( _root->getChild( idx ) );
+
+    osg::MatrixTransform* mt( NULL );
+    osgBullet::AbsoluteModelTransform* amt( NULL );
+    if( mt = dynamic_cast< osg::MatrixTransform* >( node ) )
+        mt->setMatrix( m );
+    else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( node ) )
+        amt->setMatrix( m );
+    else
+        osg::notify( osg::WARN ) << "DebugBullet: Unable to setTransform for index " << idx <<
+        " with class name " << node->className() << std::endl;
 }
 
 osg::Node*

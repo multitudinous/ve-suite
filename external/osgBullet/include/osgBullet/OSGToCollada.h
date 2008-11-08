@@ -50,7 +50,7 @@ public:
 protected:
     btDynamicsWorld* initPhysics();
     btRigidBody* createRigidBody( btScalar mass,
-        btCollisionShape* shape, btVector3 centerOfMass, osg::MatrixTransform* mt );
+        btCollisionShape* shape, const osg::Vec3& centerOfMass, osg::Node* node );
 
 
     btRigidBody* _rigidBody;

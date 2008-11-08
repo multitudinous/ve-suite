@@ -22,6 +22,7 @@
 #include <osgBullet/MotionState.h>
 #include <osgBullet/CollisionShapes.h>
 #include <osgBullet/RigidBody.h>
+#include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/OSGToCollada.h>
 #include <osgBullet/ColladaUtils.h>
 #include <osgBullet/DebugBullet.h>
@@ -51,7 +52,7 @@ btDynamicsWorld* initPhysics()
 class DaeLoader : public osgGA::GUIEventHandler
 {
 public:
-    DaeLoader( osg::Node* n, const std::string& baseName, btDynamicsWorld* dw )
+    DaeLoader( osg::Transform* n, const std::string& baseName, btDynamicsWorld* dw )
       : _n( n ),
         _baseName( baseName ),
         _dw( dw )
@@ -71,15 +72,21 @@ public:
                 if( (key<'0') || (key>'9') )
                     return false;
 
+                osg::Matrix initialTrans;
+                osgBullet::AbsoluteModelTransform* amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( _n.get() );
+                if( amt != NULL ) {
+                    initialTrans = amt->getMatrix();
+                    amt->setMatrix( osg::Matrix::identity() );
+                }
+
                 osgBullet::RigidBody* rb = dynamic_cast< osgBullet::RigidBody* >( _n->getUserData() );
                 if( rb != NULL )
                 {
                     osg::notify( osg::ALWAYS ) << "*** Removing rigid body" << std::endl;
                     btRigidBody* brb = rb->getRigidBody();
                     osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( brb->getMotionState() );
-                    _debugBullet.remove( motion->getDebugMatrixTransform() );
+                    _debugBullet.remove( motion->getDebugTransform() );
                     _dw->removeRigidBody( brb );
-                    motion->getMatrixTransform()->setMatrix( osg::Matrix::identity() );
                 }
 
                 char keych[2] = { key, 0 };
@@ -87,11 +94,9 @@ public:
                 std::string daeName( baseName + ".dae" );
 
                 osg::NodePath np;
+                np.push_back( new osg::MatrixTransform( initialTrans ) );
                 if( !( osgBullet::loadDae( _n.get(), np, daeName, _dw, &_debugBullet ) ) )
                     return false;
-
-                if( !_n->asTransform() )
-                    _n = _n->getParent( 0 );
 
                 return true;
             }
@@ -102,8 +107,7 @@ public:
     }
 
 protected:
-    osg::ref_ptr< osg::Node > _n;
-    osg::ref_ptr< osg::MatrixTransform > _mt;
+    osg::ref_ptr< osg::Transform > _n;
     std::string _baseName;
     btDynamicsWorld* _dw;
 
@@ -169,6 +173,10 @@ int main( int argc,
     osg::notify( osg::ALWAYS ) << "colladaread: Loaded model from " << fileName << std::endl;
     osg::notify( osg::ALWAYS ) << "Press the '0' key to load " << baseName << "0.dae (for example)." << std::endl;
 
+    osg::ref_ptr< osgBullet::AbsoluteModelTransform > model =
+        new osgBullet::AbsoluteModelTransform;
+    model->addChild( load.get() );
+
 
 
     btDynamicsWorld* dynamicsWorld = initPhysics();
@@ -177,10 +185,10 @@ int main( int argc,
 
     osgGA::TrackballManipulator* tb = new osgGA::TrackballManipulator();
     viewer.setCameraManipulator( tb );
-    viewer.addEventHandler( new DaeLoader( load.get(), baseName, dynamicsWorld ) );
+    viewer.addEventHandler( new DaeLoader( model.get(), baseName, dynamicsWorld ) );
 
     osg::ref_ptr<osg::Group> root = new osg::Group();
-    root->addChild( load.get() );
+    root->addChild( model.get() );
     root->addChild( _debugBullet.getRoot() );
 
 

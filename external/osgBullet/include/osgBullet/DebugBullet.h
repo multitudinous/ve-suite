@@ -11,11 +11,15 @@
 namespace osg {
     class Node;
     class Group;
-    class MatrixTransform;
+    class Transform;
 }
 
 namespace osgBullet
 {
+
+
+class AbsoluteModelTransform;
+
 
 class OSGBULLET_EXPORT DebugBullet
 {
@@ -23,7 +27,7 @@ public:
     DebugBullet();
     ~DebugBullet();
 
-    unsigned int addDynamic( osg::MatrixTransform* mt );
+    unsigned int addDynamic( osg::Transform* mt );
     unsigned int addStatic( osg::Node* node );
 
     void setTransform( unsigned int idx, const osg::Matrix& m );

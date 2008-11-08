@@ -1,6 +1,13 @@
+//
+// Copyright (c) 2008 Blue Newt Software LLC and Skew Matrix Software LLC.
+// All rights reserved.
+//
+
+
 #ifndef _WXSIMPLEVIEWERWX_H_
 #define _WXSIMPLEVIEWERWX_H_
 
+#include <wx/cmdline.h>
 #include <wx/defs.h>
 #include <wx/app.h>
 #include <wx/cursor.h>
@@ -9,7 +16,7 @@
 #include <osgViewer/Viewer>
 #include <string>
 
-#include <pickui.h>
+#include <osgWxTree/PickHandler.h>
 
 class GraphicsWindowWX;
 
@@ -106,7 +113,14 @@ class wxOsgApp
     : public wxApp
 {
 public:
-    bool OnInit();
+    virtual bool OnInit();
+    virtual void OnInitCmdLine( wxCmdLineParser& parser );
+    virtual bool OnCmdLineParsed( wxCmdLineParser& parser );
+private:
+    bool flat_mode_;
+    std::vector< std::string > files_;
 };
+
+DECLARE_APP( wxOsgApp )
 
 #endif // _WXSIMPLEVIEWERWX_H_

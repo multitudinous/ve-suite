@@ -11,15 +11,13 @@
 #include <osgGA/TrackballManipulator>
 #include <osg/ShapeDrawable>
 #include <osg/Geode>
-#include <osg/PolygonMode>
-#include <osg/PolygonOffset>
 
 #include <btBulletDynamicsCommon.h>
-
 
 #include <osg/io_utils>
 #include <iostream>
 
+#include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/MotionState.h>
 #include <osgBullet/CollisionShapes.h>
 #include <osgBullet/RigidBody.h>
@@ -48,7 +46,7 @@ btDynamicsWorld* initPhysics()
     return( dynamicsWorld );
 }
 
-osg::MatrixTransform* createOSGBox( osg::Vec3 size )
+osg::Transform* createOSGBox( osg::Vec3 size )
 {
     osg::Box* box = new osg::Box();
     box->setHalfLengths( size );
@@ -67,19 +65,19 @@ osg::MatrixTransform* createOSGBox( osg::Vec3 size )
 osg::Node*
 createGround( float w, float h, const osg::Vec3& center )
 {
-    osg::MatrixTransform* ground = createOSGBox( osg::Vec3( w, h, .01 ));
+    osg::Transform* ground = createOSGBox( osg::Vec3( w, h, .01 ) );
 
     osgBullet::OSGToCollada converter( ground, BOX_SHAPE_PROXYTYPE, 0.f );
 
     btRigidBody* body = converter.getRigidBody();
 
-    // OSGToCollada counts on FLATTEN_STATIC_TRANSFORMS to transform all
+    // OSGToCollada flattens transformation to transform all
     // verts, but that doesn't work with ShapeDrawables, so we must
     // transform the box explicitly.
-    btTransform transform; transform.setIdentity();
-    transform.setOrigin( osgBullet::asBtVector3( center ) );
-    body->getMotionState()->setWorldTransform( transform );
-    body->setWorldTransform( transform );
+    osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( body->getMotionState() );
+    osg::Matrix m( osg::Matrix::translate( center ) );
+    motion->setParentTransform( m );
+    body->setWorldTransform( osgBullet::asBtTransform( m ) );
 
     ground->setUserData( new osgBullet::RigidBody( body ) );
 
@@ -235,26 +233,17 @@ int main( int argc,
 
 
 
-    osg::ref_ptr< osg::MatrixTransform > loadedModel;
+    osg::ref_ptr< osg::Node > model = osgDB::readNodeFiles( arguments );
+    if( !model )
     {
-        osg::Node* load = osgDB::readNodeFiles( arguments );
-        if( !load )
-        {
-            osg::notify( osg::FATAL ) << "Can't load input file(s)." << std::endl;
-            return 1;
-        }
-        loadedModel = dynamic_cast< osg::MatrixTransform* >( load );
-        if( !loadedModel.valid() )
-        {
-            loadedModel = new osg::MatrixTransform;
-            loadedModel->addChild( load );
-        }
+        osg::notify( osg::FATAL ) << "Can't load input file(s)." << std::endl;
+        return 1;
     }
     osg::notify( osg::INFO ) << "osgbpp: Loaded model(s)." << std::endl;
 
 
     osgBullet::OSGToCollada converter( 
-        loadedModel.get(),
+        model.get(),
         shapeType,
         mass,
         outputFileName,
@@ -264,22 +253,43 @@ int main( int argc,
         axis );
     osg::notify( osg::INFO ) << "osgbpp: Completed Collada conversion." << std::endl;
 
+    // TBD we can deallocate 'model' here, but don't want to deallocate 'converter' yet...
 
     if (!display)
         return 0;
 
 
-    // Add visual rep og Bullet Collision shape.
+    osg::ref_ptr< osgBullet::AbsoluteModelTransform > loadedModel( new osgBullet::AbsoluteModelTransform );
+    {
+        osg::Node* load = osgDB::readNodeFiles( arguments );
+        if( !load )
+        {
+            osg::notify( osg::FATAL ) << "Can't load input file(s)." << std::endl;
+            return 1;
+        }
+        loadedModel->addChild( load );
+        if( mass != 0)
+            loadedModel->setDataVariance( osg::Object::DYNAMIC );
+    }
+    osg::notify( osg::INFO ) << "osgbpp: Reloaded model(s) for display." << std::endl;
+
     btRigidBody* rb = converter.getRigidBody();
+    osgBullet::MotionState* motion = new osgBullet::MotionState;
+    motion->setTransform( loadedModel );
+    osg::BoundingSphere bs = loadedModel->getBound();
+
+    // Add visual rep of Bullet Collision shape.
     osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
     if( visNode != NULL )
     {
-        osg::MatrixTransform* dmt = new osg::MatrixTransform;
+        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
         dmt->addChild( visNode );
-        osgBullet::MotionState* motion = dynamic_cast< osgBullet::MotionState* >( rb->getMotionState() );
-        motion->setDebugMatrixTransform( dmt );
+        motion->setDebugTransform( dmt );
         _debugBullet.addDynamic( dmt );
     }
+
+    motion->setCenterOfMass( bs.center() );
+    rb->setMotionState( motion );
 
 
     osgViewer::Viewer viewer( arguments );
@@ -293,12 +303,7 @@ int main( int argc,
 
 
     btDynamicsWorld* dynamicsWorld = initPhysics();
-    dynamicsWorld->addRigidBody( converter.getRigidBody() );
-    // TBD still need to test loading the .dae
-    // cc->load( "foo.dae" );
-    // btRigidBody *rb = cc->getRigidBody( 0 );
-    // std::cout << "rb grav: "
-    //           << rb->getGravity()[ 2 ] << std::endl;
+    dynamicsWorld->addRigidBody( rb );
 
     // Compute a reasonable ground plane size based on the bounding sphere radius.
     float dim = loadedModel->getBound()._radius * 1.5;

@@ -65,7 +65,7 @@ osg::MatrixTransform * createOSGBox( osg::Vec3 size )
     return( transform );
 }
 
-osg::MatrixTransform * createOffOriginOSGBox( osg::Vec3 size )
+osg::MatrixTransform* createOffOriginOSGBox( osg::Vec3 size )
 {
     const osg::Vec3 dim( size * 2 );
 
@@ -126,17 +126,13 @@ osg::MatrixTransform * createOffOriginOSGBox( osg::Vec3 size )
 }
 
 btRigidBody * createBTBox( osg::MatrixTransform * box,
-                           btVector3 center )
+                          osg::Vec3 center )
 {
     btCollisionShape * collision = osgBullet::btBoxCollisionShapeFromOSG( box );
 
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin( center );
-
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( box );
-    motion->setWorldTransform( groundTransform );
+    motion->setTransform( box );
+    motion->setParentTransform( osg::Matrix::translate( center ) );
 
     btScalar mass( 0. );
     btVector3 inertia( 0, 0, 0 );
@@ -171,39 +167,18 @@ void createTarget( osg::Group * root,
 
 /*  OSGBULLET CODE */
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( target );
+    motion->setTransform( target );
+    motion->setCenterOfMass( osg::Vec3( 1, 1, 1 ) );
 
-    btCollisionShape * collision = osgBullet::btConvexTriMeshCollisionShapeFromOSG( target );
-    btTransform trans;
-    trans.setIdentity();
-    trans.setOrigin( btVector3( -1, -1, -1 ) );
-    btCompoundShape * masterShape = new btCompoundShape();
-    masterShape->addChildShape( trans, collision );
-    motion->m_centerOfMassOffset = trans;
-
-    // Create an OSG representation of the Bullet shape and attach it.
-    // This is mainly for debugging.
-    osg::Node * g = osgBullet::osgNodeFromBtCollisionShape( masterShape );
-    if( g != NULL )
-    {
-        target->addChild( g );
-
-        // Set debug node state.
-        osg::StateSet* state = g->getOrCreateStateSet();
-        osg::PolygonMode* pm = new osg::PolygonMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
-        state->setAttributeAndModes( pm );
-        osg::PolygonOffset* po = new osg::PolygonOffset( -1, -1 );
-        state->setAttributeAndModes( po );
-        state->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    }
+    btCollisionShape* collision = osgBullet::btBoxCollisionShapeFromOSG( target );
 
     btScalar mass( 1.0 );
     btVector3 inertia;
-    masterShape->calculateLocalInertia( mass, inertia );
-    btRigidBody::btRigidBodyConstructionInfo rbinfo( mass, motion, masterShape, inertia );
-    btRigidBody * body = new btRigidBody( rbinfo );
+    collision->calculateLocalInertia( mass, inertia );
+    btRigidBody::btRigidBodyConstructionInfo rbinfo( mass, motion, collision, inertia );
+    btRigidBody* body = new btRigidBody( rbinfo );
     body->setLinearVelocity( btVector3( 1, 0, 0 ) );
-    body->setAngularVelocity( btVector3( 1, 0, 0 ) );
+    body->setAngularVelocity( btVector3( 1.5, 0, .25 ) );
     dynamicsWorld->addRigidBody( body );
 }
 
@@ -222,7 +197,7 @@ int main( int argc,
     // Make the ground plane
     osg::MatrixTransform * ground = createOSGBox( osg::Vec3( 10, 10, .01 ) );
     root->addChild( ground );
-    btRigidBody * groundBody = createBTBox( ground, btVector3( 0, 0, -10 ) );
+    btRigidBody * groundBody = createBTBox( ground, osg::Vec3( 0, 0, -10 ) );
     dynamicsWorld->addRigidBody( groundBody );
 
 
@@ -236,7 +211,7 @@ int main( int argc,
     root->addChild( box );
 
     //   Animated box, bullet code
-    btRigidBody * boxBody = createBTBox( box, btVector3( -9, -3, -9 ) );
+    btRigidBody * boxBody = createBTBox( box, osg::Vec3( -9, -3, -9 ) );
     boxBody->setCollisionFlags( boxBody->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
     boxBody->setActivationState( DISABLE_DEACTIVATION );
     dynamicsWorld->addRigidBody( boxBody );

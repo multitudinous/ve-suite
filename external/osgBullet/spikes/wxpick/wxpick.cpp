@@ -1,6 +1,11 @@
-#include <iostream>
+//
+// Copyright (c) 2008 Blue Newt Software LLC and Skew Matrix Software LLC.
+// All rights reserved.
+//
+
 
 #include <wx/wx.h>
+#include <wx/cmdline.h>
 #include <wx/image.h>
 #include <wx/menu.h>
 #include <wx/statusbr.h>
@@ -8,6 +13,7 @@
 #include <wx/splitter.h>
 
 #include <osgViewer/ViewerEventHandlers>
+
 #include <osg/NodeVisitor>
 #include <osg/Geode>
 #include <osg/Group>
@@ -17,26 +23,29 @@
 #include <osgDB/ReadFile>
 
 #include <wxpick.h>
-#include <wxboUtil.h>
-#include <wxboTreeControl.h>
+#include <osgWxTree/TreeControl.h>
+#include <osgWxTree/Utils.h>
+
+#include <iostream>
 
 #ifdef _WIN32
 #define random rand
 #endif
 
+
 void randomTree( wxTreeCtrl * tree,
                  unsigned int nn = 1000 )
 {
-    wxTreeItemId activeGroup_ = isu::setTreeRoot( tree, new osg::Group );
+    wxTreeItemId activeGroup_ = osgWxTree::setTreeRoot( tree, new osg::Group );
     for( unsigned int ii = nn; ii > 0; ii-- )
     {
         if( random() / float( RAND_MAX ) < .999 )
         {
-            isu::addTreeItem( tree, activeGroup_, new osg::Geode );
+            osgWxTree::addTreeItem( tree, activeGroup_, new osg::Geode );
         }
         else
         {
-            activeGroup_ = isu::addTreeItem( tree, activeGroup_, new osg::Group );
+            activeGroup_ = osgWxTree::addTreeItem( tree, activeGroup_, new osg::Group );
         }
     }
 }
@@ -44,11 +53,28 @@ void randomTree( wxTreeCtrl * tree,
 // `Main program' equivalent, creating windows and returning main app frame
 bool wxOsgApp::OnInit()
 {
-    if( argc < 2 )
+    // copy wxargs to form we can use with osg
+    std::vector< std::string > arguments;
+    char *argarray[ 100 ];
+    for( int ii=0; ii<argc; ii++ )
     {
-        std::cout << wxString( argv[ 0 ] ).mb_str() << ": requires filename argument." << std::endl;
+        std::string argument = std::string( wxString( argv[ ii ] ).mb_str() );
+        arguments.push_back( argument );
+    }
+    for( unsigned int ii = 0; ii < arguments.size(); ++ii )
+    {
+        argarray[ ii ] = const_cast< char* >( arguments[ ii ].c_str() );
+    }
+    int argcount = arguments.size();
+    
+    // parse arguments
+    if( argcount < 2 )
+    {
+        std::cout << arguments[ 0 ] << ": requires filename argument." << std::endl;
         return( false );
     }
+    osg::ArgumentParser argparser(&argcount,argarray);
+    flat_mode_ = argparser.read( "--flat" );
 
     int width = 800;
     int height = 600;
@@ -69,7 +95,7 @@ bool wxOsgApp::OnInit()
     // wxSplitterWindow * treepropsplit = new wxSplitterWindow( tree_panel, wxID_ANY );
     // treepropsplit->Show( true );
 
-    isu::TreeControl * tree = new isu::TreeControl( tree_panel, wxID_ANY, wxDefaultPosition, wxSize(300, height),
+    osgWxTree::TreeControl * tree = new osgWxTree::TreeControl( tree_panel, wxID_ANY, wxDefaultPosition, wxSize(300, height),
        wxTR_DEFAULT_STYLE | wxTR_HAS_BUTTONS | wxTR_ROW_LINES | wxTR_SINGLE );
     tree->Show( true );
 
@@ -99,36 +125,65 @@ bool wxOsgApp::OnInit()
 
     // load the scene.
     wxString fname( argv[ 1 ] );
-    osg::ref_ptr< osg::Node > loadedModel = osgDB::readNodeFile( std::string( fname.mb_str() ) );
-    if( !loadedModel )
-    {
-        std::cout << argv[ 0 ] << ": No data loaded." << std::endl;
-        return( false );
-    }
+    osg::ref_ptr< osg::Group > root = new osg::Group; 
+    osg::ref_ptr< osg::Node > loadedModel = osgDB::readNodeFiles( argparser );
+    if ( loadedModel.valid() ) root->addChild( loadedModel.get() );
 
     // construct the viewer
     osgViewer::Viewer * viewer = new osgViewer::Viewer;
     viewer->getCamera()->setGraphicsContext( gw );
     viewer->getCamera()->setViewport( 0, 0, width, height );
     viewer->addEventHandler( new osgViewer::StatsHandler );
-    viewer->addEventHandler( new isu::BulletWXPickHandler( tree ) );
+    viewer->addEventHandler( new osgWxTree::PickHandler( tree ) );
     viewer->setThreadingModel( osgViewer::Viewer::SingleThreaded );
 
-#if 1
-    // create a full tree or
-    isu::PopulateTreeControlWithNodeVisitor pt( tree, true );
-    loadedModel->accept( pt );
-#else
-    // create a flattened tree
-    isu::setTreeToFlatGroup( tree, dynamic_cast< osg::Group * >( loadedModel.get() ) );
+    // populate the ui control
+    if ( !flat_mode_ )
+    {
+        // create a full tree or
+        osgWxTree::PopulateTreeControlWithNodeVisitor pt( tree, true );
+        root->accept( pt );
+    }
+    else
+    {
+        // create a flattened tree
+        osgWxTree::setTreeToFlatGroup( tree, root.get() );
+    }
 
-#endif
-    viewer->setSceneData( loadedModel.get() );
+    viewer->setSceneData( root.get() );
     viewer->setCameraManipulator( new osgGA::TrackballManipulator );
     frame->SetViewer( viewer );
     frame->Show( true );
 
     return( true );
+}
+
+static const wxCmdLineEntryDesc cmdlinedesc [] =
+{
+     { wxCMD_LINE_SWITCH, wxT("h"), wxT("help"), wxT("displays help on the command line parameters"),
+          wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+     { wxCMD_LINE_SWITCH, wxT("F"), wxT("flat"), wxT("enables flat browser view") },
+     { wxCMD_LINE_NONE }
+};
+
+void wxOsgApp::OnInitCmdLine( wxCmdLineParser& parser )
+{
+    parser.SetDesc( cmdlinedesc );
+    parser.SetSwitchChars ( wxT("-") );
+}
+
+bool wxOsgApp::OnCmdLineParsed( wxCmdLineParser& parser )
+{
+    // known args
+    flat_mode_ = parser.Found( wxT("F") );
+    
+    // all others
+    for ( unsigned int unnamedidx = 0; unnamedidx < parser.GetParamCount(); unnamedidx++ )
+    {
+        std::string file( parser.GetParam( unnamedidx ).mb_str() );
+        files_.push_back( file );
+    }
+    return true;
 }
 
 IMPLEMENT_APP( wxOsgApp )

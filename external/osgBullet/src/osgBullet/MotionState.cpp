@@ -6,9 +6,10 @@
  */
 
 #include <osgBullet/MotionState.h>
+
 #include <osg/MatrixTransform>
-#include <osg/PositionAttitudeTransform>
-#include <osgSim/DOFTransform>
+
+#include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/Utils.h>
 
 #include <osg/Notify>
@@ -17,87 +18,144 @@
 
 using namespace osgBullet;
 
-MotionState::MotionState( const btTransform & startTrans, const btTransform & centerOfMassOffset )
+MotionState::MotionState( const osg::Matrix& parentTransform,
+                         const osg::Vec3& centerOfMass )
+  : _parentTransform( parentTransform ),
+    _com( centerOfMass )
 {
-    _matrixTransform = NULL;
+    _transform.setIdentity();
 }
 
-void MotionState::setWorldTransform( const btTransform& trans )
+void
+MotionState::setWorldTransform(const btTransform& worldTrans)
 {
-    //osg::notify( osg::ALWAYS ) << "incoming trans " <<
-    //    osgBullet::asOsgMatrix( trans ) << std::endl;
-    btDefaultMotionState::setWorldTransform( trans );
+    _transform = worldTrans;
+    osg::Matrix dt = osgBullet::asOsgMatrix( _transform );
 
-    osg::Matrix dm( osgBullet::asOsgMatrix( m_graphicsWorldTrans ) );
-    osg::Matrix m(
-        osg::Matrix::translate( -_centerOfMass ) *
-        dm *
-        _invL2w
-        );
-    if( _matrixTransform.valid() )
-    {
-        _matrixTransform->setMatrix( m );
-        //osg::notify( osg::ALWAYS ) << "swt:" << m << std::endl;
-    }
+    osg::Matrix invCom = osg::Matrix::translate( -_com );
+    osg::Matrix t = invCom * dt;
+
+    if( _mt.valid() )
+        _mt->setMatrix( t );
+    else if( _amt.valid() )
+        _amt->setMatrix( t );
+
     if( _debugMT.valid() )
-    {
-        _debugMT->setMatrix( dm );
-        //osg::notify( osg::ALWAYS ) << "dswt:" << dm << std::endl;
-    }
+        _debugMT->setMatrix( dt );
+    else if( _debugAMT.valid() )
+        _debugAMT->setMatrix( dt );
 }
 void
-MotionState::setInverseParentWorldTransform( const osg::Matrix& invL2w )
+MotionState::getWorldTransform(btTransform& worldTrans ) const
 {
-    _invL2w = invL2w;
+    worldTrans = _transform;
 }
 
-DOFMotionState::DOFMotionState( const btTransform & startTrans, const btTransform & centerOfMassOffset )
+
+void
+MotionState::setTransform( osg::Transform* transform )
 {
-    _dofTransform = NULL;
+    osg::MatrixTransform* mt( NULL );
+    osgBullet::AbsoluteModelTransform* amt( NULL );
+    if( mt = dynamic_cast< osg::MatrixTransform* >( transform ) )
+        _mt = mt;
+    else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
+        _amt = amt;
+    else
+        osg::notify( osg::WARN ) << "MotionState: Unsupported transform type: " << transform->className() << std::endl;
 }
 
-void DOFMotionState::setWorldTransform( const btTransform & centerOfMassWorldTrans )
+osg::Transform*
+MotionState::getTransform()
 {
-    btDefaultMotionState::setWorldTransform( centerOfMassWorldTrans );
-
-    if( _dofTransform == NULL )
-        return;
-
-    btQuaternion const & btRot = m_graphicsWorldTrans.getRotation();
-    osg::Quat osgRot( btRot.getX(), btRot.getY(), btRot.getZ(), btRot.getW() );
-
-    btVector3 const & btTrans = m_graphicsWorldTrans.getOrigin();
-    osg::Vec3f osgTrans( btTrans.getX(), btTrans.getY(), btTrans.getZ() );
-
-    osg::Matrix mat;
-    mat.setTrans( osgTrans );
-    mat.setRotate( osgRot );
-
-    _dofTransform->setPutMatrix( mat );
+    if( _mt.valid() )
+        return( _mt.get() );
+    else if( _amt.valid() )
+        return( _amt.get() );
+    else
+        return NULL;
 }
 
-PATMotionState::PATMotionState( const btTransform & startTrans, const btTransform & centerOfMassOffset )
+const osg::Transform*
+MotionState::getTransform() const
 {
-    _patTransform = NULL;
+    if( _mt.valid() )
+        return( _mt.get() );
+    else if( _amt.valid() )
+        return( _amt.get() );
+    else
+        return NULL;
 }
 
-void PATMotionState::setWorldTransform( const btTransform & centerOfMassWorldTrans )
+
+void
+MotionState::setDebugTransform( osg::Transform* transform )
 {
-    btDefaultMotionState::setWorldTransform( centerOfMassWorldTrans );
+    osg::MatrixTransform* mt( NULL );
+    osgBullet::AbsoluteModelTransform* amt( NULL );
+    if( mt = dynamic_cast< osg::MatrixTransform* >( transform ) )
+        _debugMT = mt;
+    else if( amt = dynamic_cast< osgBullet::AbsoluteModelTransform* >( transform ) )
+        _debugAMT = amt;
+    else
+        osg::notify( osg::WARN ) << "MotionState: Unsupported transform type: " << transform->className() << std::endl;
+}
 
-    if( _patTransform == NULL )
-        return;
+osg::Transform*
+MotionState::getDebugTransform()
+{
+    if( _debugMT.valid() )
+        return( _debugMT.get() );
+    else if( _debugAMT.valid() )
+        return( _debugAMT.get() );
+    else
+        return NULL;
+}
 
-    btQuaternion const & btRot = m_graphicsWorldTrans.getRotation();
-    osg::Quat osgRot( btRot.getX(), btRot.getY(), btRot.getZ(), btRot.getW() );
+const osg::Transform*
+MotionState::getDebugTransform() const
+{
+    if( _debugMT.valid() )
+        return( _debugMT.get() );
+    else if( _debugAMT.valid() )
+        return( _debugAMT.get() );
+    else
+        return NULL;
+}
 
-    btVector3 const & btTrans = m_graphicsWorldTrans.getOrigin();
-    osg::Vec3f osgTrans( btTrans.getX(), btTrans.getY(), btTrans.getZ() );
 
-    osg::Matrix mat;
-    mat.setTrans( osgTrans );
-    mat.setRotate( osgRot );
+void
+MotionState::setParentTransform( const osg::Matrix m )
+{
+    _parentTransform = m;
+    resetTransform();
+}
 
-    //_patTransform->setPutMatrix( mat );
+osg::Matrix
+MotionState::getParentTransform() const
+{
+    return( _parentTransform );
+}
+
+
+void
+MotionState::setCenterOfMass( const osg::Vec3& com )
+{
+    _com = com;
+    resetTransform();
+}
+
+osg::Vec3
+MotionState::getCenterOfMass() const
+{
+    return( _com );
+}
+
+
+void
+MotionState::resetTransform()
+{
+    osg::Matrix comM = osg::Matrix::translate( _com );
+    setWorldTransform( osgBullet::asBtTransform( comM * _parentTransform ) );
 }
 

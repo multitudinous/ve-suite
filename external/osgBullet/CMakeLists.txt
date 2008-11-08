@@ -29,16 +29,15 @@ INCLUDE_DIRECTORIES(
     ${COLLADA_INCLUDE_DIR}
     ${OSG_INCLUDE_DIRS}
     ${wxWidgets_INCLUDE_DIRS}
-    ${BULLET_INCLUDE_DIR} ${BULLET_EXTRAS_INCLUDE_DIR}
+    ${BULLET_INCLUDE_DIR}
+    ${BULLET_EXTRAS_INCLUDE_DIR}
 )
 LINK_DIRECTORIES( ${OSG_LIBRARIES_DIR} )
 
-ADD_SUBDIRECTORY( src/osgBullet )
-
 OPTION( BUILD_APPLICATIONS "Enable to build applications" ON )
 IF( BUILD_APPLICATIONS )
-    ADD_SUBDIRECTORY( applications/handpreprocess )
     ADD_SUBDIRECTORY( applications/osgbpp )
+    ADD_SUBDIRECTORY( applications/handpreprocess )
 ENDIF( BUILD_APPLICATIONS )
 
 OPTION( BUILD_EXAMPLES "Enable to build example code" ON )
@@ -46,8 +45,11 @@ IF( BUILD_EXAMPLES )
     ADD_SUBDIRECTORY( examples )
 ENDIF( BUILD_EXAMPLES )
 
-OPTION( BUILD_SPIKES "Enable to build one-off test code" OFF )
+OPTION( BUILD_SPIKES "Enable to build one-off test code" ON )
 IF( BUILD_SPIKES )
     ADD_SUBDIRECTORY( spikes/wxhello )
     ADD_SUBDIRECTORY( spikes/wxpick )
 ENDIF( BUILD_SPIKES )
+
+ADD_SUBDIRECTORY( src/osgBullet )
+ADD_SUBDIRECTORY( src/osgWxTree )

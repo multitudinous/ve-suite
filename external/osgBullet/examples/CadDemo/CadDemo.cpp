@@ -14,6 +14,8 @@
 #include <osgBullet/CollisionShape.h>
 #include <osgBullet/MotionState.h>
 #include <osgBullet/CollisionShapes.h>
+#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/OSGToCollada.h>
 #include <osgBullet/HandNode.h>
 #include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
@@ -51,79 +53,6 @@ btDynamicsWorld* initPhysics()
     return( dynamicsWorld );
 }
 
-#if 0
-bool loadDae( osg::Node* node, std::string daeName, btDynamicsWorld* dw, const osg::NodePath& np )
-{
-    osg::NodePath::const_iterator it;
-    for( it=np.begin(); it!=np.end(); it++ )
-        osg::notify( osg::ALWAYS ) << (*it)->className() << ", ";
-    osg::notify( osg::ALWAYS ) << std::endl;
-
-    std::string fullDaeName( osgDB::findDataFile( daeName ) );
-    if( fullDaeName.empty() )
-    {
-        osg::notify( osg::FATAL ) << "Can't find DAE file: " << daeName << std::endl;
-        osg::notify( osg::FATAL ) << "See scripts/mkdae.bat for info on creating DAE files using osgbpp." << std::endl;
-        return false;
-    }
-    osg::notify( osg::ALWAYS ) << "Attempting to load DAE file: " << fullDaeName << std::endl;
-
-    osg::Matrix l2w = osg::computeLocalToWorld( np );
-    osg::notify( osg::ALWAYS ) << "loadDae " << l2w << std::endl;
-    osg::Matrix invL2w = osg::Matrix::inverse( l2w );
-
-    osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform;
-    osg::Group* parent = node->getParent( 0 );
-    mt->addChild( node );
-    parent->removeChild( node );
-    parent->addChild( mt.get() );
-
-    btDynamicsWorld* lw = initPhysics();
-    ColladaConverter* cc = new ColladaConverter( lw );
-    cc->load( fullDaeName.c_str() );
-    btRigidBody* rb = cc->getRigidBody( 0 );
-    cc->reset();
-    lw->removeRigidBody( rb );
-    delete cc;
-    delete lw;
-
-    btTransform com; com.setIdentity();
-    osg::BoundingSphere bs = node->getBound();
-    com.setOrigin( osgBullet::asBtVector3( -( bs._center ) ) );
-    osg::notify( osg::ALWAYS ) << "COM: " << -( bs._center ) << std::endl;
-
-    osgBullet::MotionState* motion = new osgBullet::MotionState;
-    motion->setMatrixTransform( mt.get() );
-    motion->setInverseParentWorldTransform( invL2w );
-    //motion->m_centerOfMassOffset = com;
-    dw->addRigidBody( rb );
-    osg::notify( osg::ALWAYS ) << "rb grav: " << osgBullet::asOsgVec3( rb->getGravity() ) << std::endl;
-
-    // Add visual rep og Bullet Collision shape.
-    osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
-    if( visNode != NULL )
-    {
-        osg::notify( osg::ALWAYS ) << "Adding vis node" << std::endl;
-        osg::MatrixTransform* dmt = new osg::MatrixTransform;
-        dmt->addChild( visNode );
-        motion->setDebugMatrixTransform( dmt );
-        _debugBullet.addDynamic( dmt );
-
-        // Set debug node state.
-        osg::StateSet* state = visNode->getOrCreateStateSet();
-        osg::PolygonMode* pm = new osg::PolygonMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
-        state->setAttributeAndModes( pm );
-        osg::PolygonOffset* po = new osg::PolygonOffset( -1, -1 );
-        state->setAttributeAndModes( po );
-        state->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    }
-
-    motion->setWorldTransform( osgBullet::asBtTransform( l2w ) );
-    rb->setMotionState( motion );
-
-    return true;
-}
-#endif
 
 
 class HandManipulator : public osgGA::GUIEventHandler
@@ -320,24 +249,24 @@ public:
       : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
         _name( name )
     {}
-    osg::ref_ptr< osg::Node > _node;
-    osg::NodePath _np;
+
+    typedef std::pair< osg::Node*, osg::NodePath > NodeAndPath;
+    typedef std::vector< NodeAndPath > NodeAndPathList;
+    NodeAndPathList _napl;
 
     void reset()
     {
-        _node = NULL;
-        _np.clear();
+        _napl.clear();
     }
 
     void apply( osg::Node& node )
     {
         if( node.getName() == _name )
         {
-            _node = &node;
-            _np = getNodePath();
+            NodeAndPath nap( &node, getNodePath() );
+            _napl.push_back( nap );
         }
-        else
-            traverse( node );
+        traverse( node );
     }
 
 protected:
@@ -411,11 +340,10 @@ public:
                 istr >> dae;
                 _nodeDaeMap[ node ] = dae;
             }
-            else if( key == std::string( "View:" ) )
+            else if( key == std::string( "CreateDAE:" ) )
             {
-                std::string name;
-                istr >> name;
-                _viewNodeList.push_back( name );
+                istr >> node;
+                _nodeCreateList.push_back( node );
             }
             else
                 osg::notify( osg::WARN ) << "ConfigReaderWriter: Unknown key: " << key << std::endl;
@@ -453,8 +381,8 @@ public:
 
     typedef std::map< std::string, std::string > NodeDaeMap;
     NodeDaeMap _nodeDaeMap;
-    typedef std::vector< std::string > ViewNodeList;
-    ViewNodeList _viewNodeList;
+    typedef std::vector< std::string > NodeCreateList;
+    NodeCreateList _nodeCreateList;
 
 protected:
     ~ConfigReaderWriter() {}
@@ -480,18 +408,12 @@ osg::MatrixTransform* createOSGBox( osg::Vec3 size )
     return( transform );
 }
 
-btRigidBody * createBTBox( osg::MatrixTransform * box,
-                           btVector3 center )
+btRigidBody * createBTBox( osg::MatrixTransform* box,
+                          osg::Vec3 center )
 {
     btCollisionShape* collision = osgBullet::btBoxCollisionShapeFromOSG( box );
 
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin( center );
-
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( box );
-    motion->setWorldTransform( groundTransform );
 
     btScalar mass( 0.0 );
     btVector3 inertia( 0, 0, 0 );
@@ -503,9 +425,13 @@ btRigidBody * createBTBox( osg::MatrixTransform * box,
     {
         osg::MatrixTransform* dmt = new osg::MatrixTransform;
         dmt->addChild( dbgGround );
-        motion->setDebugMatrixTransform( dmt );
+        motion->setDebugTransform( dmt );
         _debugBullet.addDynamic( dmt );
     }
+    motion->setTransform( box );
+    osg::Matrix groundTransform( osg::Matrix::translate( center ) );
+    motion->setParentTransform( groundTransform );
+    body->setMotionState( motion );
 
     return( body );
 }
@@ -523,7 +449,7 @@ main( int argc,
 
     btDynamicsWorld* bulletWorld = initPhysics();
     osg::Group* root = new osg::Group;
-    //root->addChild( _debugBullet.getRoot() );
+    root->addChild( _debugBullet.getRoot() );
 
 
     ConfigReaderWriter* crw = new ConfigReaderWriter( bulletWorld );
@@ -552,29 +478,70 @@ main( int argc,
     {
         FindNamedNode fnn( itr->first );
         orient->accept( fnn );
-        osgBullet::loadDae( fnn._node.get(), fnn._np, itr->second, bulletWorld, &_debugBullet );
+        osg::notify( osg::ALWAYS ) << "Adding " << fnn._napl.size() << " Instances of " << itr->first << std::endl;
+
+        unsigned int idx;
+        for( idx=0; idx<fnn._napl.size(); idx++ )
+        {
+            FindNamedNode::NodeAndPath& nap( fnn._napl[ idx ] );
+            osg::Node* subgraph = nap.first;
+            osg::NodePath& np = nap.second;
+            osgBullet::AbsoluteModelTransform* amt = new osgBullet::AbsoluteModelTransform;
+            osg::Group* parent = subgraph->getParent( 0 );
+            parent->addChild( amt );
+            amt->addChild( subgraph );
+            parent->removeChild( subgraph );
+            osgBullet::loadDae( amt, np, itr->second, bulletWorld, &_debugBullet );
+        }
     }
-    /*
-    ConfigReaderWriter::ViewNodeList::const_iterator vitr;
-    for( vitr = crw->_viewNodeList.begin(); vitr != crw->_viewNodeList.end(); vitr++ )
+
+    osg::notify( osg::ALWAYS ) << "Must create physics data..." << std::endl;
+    ConfigReaderWriter::NodeCreateList::const_iterator vitr;
+    for( vitr = crw->_nodeCreateList.begin(); vitr != crw->_nodeCreateList.end(); vitr++ )
     {
-        osg::notify( osg::ALWAYS ) << "Viewing: " << *vitr << std::endl;
+        osg::notify( osg::ALWAYS ) << "  Creatin physics data for: " << *vitr << std::endl;
         FindNamedNode fnn( *vitr );
         orient->accept( fnn );
-        osg::Matrix m = osg::computeLocalToWorld( fnn._np );
-        osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform( m );
-        mt->addChild( fnn._node.get() );
-#ifdef DIRTY_HACK
-        root->addChild( mt.get() );
-#endif
+        osg::Node* subgraph = fnn._napl[ 0 ].first;
+        osg::NodePath& np = fnn._napl[ 0 ].second;
+
+        osgBullet::OSGToCollada converter( 
+            subgraph, BOX_SHAPE_PROXYTYPE, 1.0, "", 1.0, false );
+
+        osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform();
+        amt->setDataVariance( osg::Object::DYNAMIC );
+        amt->addChild( subgraph );
+        osg::Group* parent = subgraph->getParent( 0 );
+        parent->addChild( amt );
+        parent->removeChild( subgraph );
+
+        btRigidBody* rb = converter.getRigidBody();
+        osgBullet::MotionState* motion = new osgBullet::MotionState;
+        motion->setTransform( amt.get() );
+        osg::BoundingSphere bs = subgraph->getBound();
+
+        // Add visual rep of Bullet Collision shape.
+        osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
+        if( visNode != NULL )
+        {
+            osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
+            dmt->addChild( visNode );
+            motion->setDebugTransform( dmt );
+            _debugBullet.addDynamic( dmt );
+        }
+
+        osg::Matrix m = osg::computeLocalToWorld( np );
+        motion->setParentTransform( m );
+        motion->setCenterOfMass( bs.center() );
+        rb->setMotionState( motion );
+        bulletWorld->addRigidBody( rb );
     }
-    */
 
 
     float thin = .1;
     osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
     root->addChild( ground );
-    btRigidBody* groundBody = createBTBox( ground, btVector3( 0, 0, -thin ) );
+    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -thin ) );
     bulletWorld->addRigidBody( groundBody );
 
 
@@ -601,64 +568,3 @@ main( int argc,
     return( 0 );
 }
 
-
-
-
-#if 0
-
-class DynamicRigidBodyTransform : public osg::MatrixTransform
-{
-public:
-    DynamicRigidBodyTransform();
-    DynamicRigidBodyTransform( const DynamicRigidBodyTransform& drbt, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
-    ~DynamicRigidBodyTransform();
-    META_Node( osgBullet, DynamicRigidBodyTransform );
-
-    void parentTransformChange( const osg::NodePath& np );
-    const osg::Matrix& getParentTransform() const;
-
-    virtual osg::BoundingSphere computeBound() const;
-
-protected:
-    osg::Matrix _l2w;
-    osg::Matrix _invL2w;
-};
-
-DynamicRigidBodyTransform::DynamicRigidBodyTransform()
-{
-}
-
-DynamicRigidBodyTransform::DynamicRigidBodyTransform( const DynamicRigidBodyTransform& drbt, const osg::CopyOp& copyop )
-{
-    osg::notify( osg::WARN ) << "DynamicRigidBodyTransform: copy constructor not yet implemented." << std::endl;
-}
-
-DynamicRigidBodyTransform::~DynamicRigidBodyTransform()
-{
-}
-
-void
-DynamicRigidBodyTransform::parentTransformChange( const osg::NodePath& np )
-{
-    osg::Matrix& l2w = osg::computeLocalToWorld( np );
-    _l2w = l2w;
-    _invL2w = osg::Matrix::inverse( l2w );
-}
-
-const osg::Matrix&
-DynamicRigidBodyTransform::getParentTransform() const
-{
-    return _l2w;
-}
-
-osg::BoundingSphere
-DynamicRigidBodyTransform::computeBound() const
-{
-    DynamicRigidBodyTransform* nonConstThis = const_cast< DynamicRigidBodyTransform* >( this );
-    nonConstThis->_matrix.postMult( _invL2w );
-
-    osg::BoundingSphere bs = osg::MatrixTransform::computeBound();
-    return bs;
-}
-
-#endif

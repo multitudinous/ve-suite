@@ -6,15 +6,14 @@
 #include <BulletColladaConverter/ColladaConverter.h>
 #include "osgBullet/MotionState.h"
 #include "osgBullet/Utils.h"
+#include "osgBullet/AbsoluteModelTransform.h"
 
 #include <osg/NodeVisitor>
 #include <osg/MatrixTransform>
 #include <osg/PositionAttitudeTransform>
-#include <osg/PolygonMode>
-#include <osg/PolygonOffset>
 #include <osg/ComputeBoundsVisitor>
 #include <osgUtil/Simplifier>
-#include <osgUtil/Optimizer>
+#include <osgUtil/TransformAttributeFunctor>
 #include <osg/io_utils>
 
 using namespace osgBullet;
@@ -40,7 +39,7 @@ public:
 
     void apply( osg::Node& node )
     {
-        osg::notify( osg::ALWAYS ) << "Node" << std::endl;
+        osg::notify( osg::DEBUG_INFO ) << "Node" << std::endl;
 
         // If this is the _nodeName-specified subgraph root, toggle _process to off after calling traverse()
         bool clearProcess( false );
@@ -73,7 +72,7 @@ public:
 
     void apply( osg::Geode& node )
     {
-        osg::notify( osg::ALWAYS ) << "Geode" << std::endl;
+        osg::notify( osg::DEBUG_INFO ) << "Geode" << std::endl;
 
         // We're at a Geode. Regardless of _overall, we will process it.
         bool found( true );
@@ -96,7 +95,7 @@ public:
 protected:
     void createAndAddShape( osg::Node& node )
     {
-        osg::notify( osg::ALWAYS ) << "In createAndAddShape" << std::endl;
+        osg::notify( osg::DEBUG_INFO ) << "In createAndAddShape" << std::endl;
 
         btCollisionShape* child = createShape( node );
         if (child)
@@ -108,7 +107,7 @@ protected:
     }
     btCollisionShape* createShape( osg::Node& node )
     {
-        osg::notify( osg::ALWAYS ) << "In createShape" << std::endl;
+        osg::notify( osg::DEBUG_INFO ) << "In createShape" << std::endl;
 
         btCollisionShape* collision( NULL );
         osg::Vec3 center;
@@ -173,31 +172,55 @@ protected:
     btCollisionShape* _shape;
 };
 
-class TransformWatning : public osg::NodeVisitor
+class FlattenStaticTransforms : public osg::NodeVisitor
 {
 public:
-    TransformWatning()
-      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
-        _warn( false )
-    {
-    }
+    FlattenStaticTransforms()
+      : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN )
+    {}
 
     void apply( osg::Transform& node )
     {
-        osg::Matrix m;
-        bool result( node.computeLocalToWorldMatrix( m, NULL ) );
-        if ( !result )
-            osg::notify( osg::WARN ) << "OSGToCollada: computeLocalToWorldMatrix() failed." << std::endl;
-        if( !_warn && !( m.isIdentity() ) )
-        {
-            osg::notify( osg::WARN ) << "OSGToCollada: Non-identity transform encountered." << std::endl;
-            _warn = true;
-        }
+        osg::notify( osg::WARN ) << "OSGToCollada: Warning: Non-MatrixTransform encountered: (" <<
+            node.className() << ") " << node.getName() << std::endl;
         traverse( node );
+    }
+    void apply( osg::MatrixTransform& node )
+    {
+        traverse( node );
+        node.setMatrix( osg::Matrix::identity() );
+    }
+    void apply( osg::PositionAttitudeTransform& node )
+    {
+        traverse( node );
+        node.setPosition(osg::Vec3(0.0f,0.0f,0.0f));
+        node.setAttitude(osg::Quat());
+        node.setPivotPoint(osg::Vec3(0.0f,0.0f,0.0f));
+    }
+
+    void apply( osg::Geode& node )
+    {
+        osg::Matrix l2w = osg::computeLocalToWorld( getNodePath() );
+        unsigned int idx;
+        for( idx=0; idx<node.getNumDrawables(); idx++ )
+            flattenDrawable( node.getDrawable( idx ), l2w );
     }
 
 protected:
-    bool _warn;
+    void flattenDrawable( osg::Drawable* drawable, const osg::Matrix& matrix )
+    {
+        if (drawable)
+        {
+            osg::BoundingBox bb0 = drawable->getBound();
+            osgUtil::TransformAttributeFunctor tf(matrix);
+            drawable->accept(tf);
+            drawable->dirtyBound();
+            drawable->dirtyDisplayList();
+            osg::BoundingBox bb1 = drawable->getBound();
+
+            return;
+        }
+    }
 };
 
 
@@ -211,12 +234,21 @@ OSGToCollada::OSGToCollada(
         const std::string& nodeName,
         const AXIS axis )
 {
+    // Bullet collision shapes must be centered on the origin for correct
+    // center of mass behavior. (TBD: In the future, we could allow the
+    // calling app to specify a center of mass, then we would translate
+    // to that pount instead of to the origin.)
+    // Translate this subgraph so it is centered on the origin.
     osg::BoundingSphere bs = sg->getBound();
     osg::Matrix m( osg::Matrix::translate( -bs.center() ) );
     osg::ref_ptr< osg::MatrixTransform > root = new osg::MatrixTransform( m );
     root->setDataVariance( osg::Object::STATIC );
+    root->setName( "CenterOfMassOffset" );
     root->addChild( sg );
 
+    // Run the simplifier, if requested. Note we might develop a new
+    // polygon decimator in the future, as the simplifier isn't really
+    // cutting the mustard for us.
     if ( simplifyPercent != 1.f )
     {
         osg::notify( osg::INFO ) << "OSGToCollada: Running Simplifier." << std::endl;
@@ -229,16 +261,9 @@ OSGToCollada::OSGToCollada(
     // OSG local to world matrix during traversal.
     // NOTE: Must remove loaded ProxyNodes in order to allow
     //   static transforms to be flattened.
-    osg::notify( osg::INFO ) << "OSGToCollada: Running Optimizer." << std::endl;
-    osgUtil::Optimizer optimize;
-    optimize.optimize( root.get(),
-        osgUtil::Optimizer::FLATTEN_STATIC_TRANSFORMS |
-        osgUtil::Optimizer::REMOVE_LOADED_PROXY_NODES );
-
-    // Warn if any non-identity transforms are present.
-    osg::notify( osg::INFO ) << "OSGToCollada: Checking for non-identity transforms." << std::endl;
-    TransformWatning tw;
-    root->accept( tw );
+    osg::notify( osg::INFO ) << "OSGToCollada: Flattening transforms." << std::endl;
+    FlattenStaticTransforms fst;
+    root->accept( fst );
 
 
     osg::notify( osg::INFO ) << "OSGToCollada: ProcessSceneGraph." << std::endl;
@@ -246,14 +271,13 @@ OSGToCollada::OSGToCollada(
     root->accept( psg );
 
     _rigidBody = createRigidBody( mass, psg.getShape(),
-        osgBullet::asBtVector3( bs.center() ),
-        dynamic_cast< osg::MatrixTransform* >( sg ) );
+        bs.center(), sg );
 
 
     if (!_rigidBody)
         osg::notify( osg::FATAL ) << "OSGToCollada: Unable to create physics data." << std::endl;
     else if (outputFileName.empty())
-        osg::notify( osg::WARN ) << "OSGToCollada: no output file name." << std::endl;
+        osg::notify( osg::INFO ) << "OSGToCollada: No output file name, not writing DAE." << std::endl;
     else
     {
         btDynamicsWorld* dynamicsWorld = initPhysics();
@@ -291,9 +315,9 @@ OSGToCollada::initPhysics()
 
 btRigidBody*
 OSGToCollada::createRigidBody( btScalar mass,
-    btCollisionShape* shape, btVector3 centerOfMass, osg::MatrixTransform* mt )
+                              btCollisionShape* shape, const osg::Vec3& centerOfMass, osg::Node* node )
 {
-    if( (shape == NULL) || (mt == NULL) )
+    if( (shape == NULL) || (node == NULL) )
         return NULL;
 
     btTransform startTransform; startTransform.setIdentity();
@@ -303,20 +327,14 @@ OSGToCollada::createRigidBody( btScalar mass,
 	if (isDynamic)
 		shape->calculateLocalInertia( mass, localInertia );
 
-    osgBullet::MotionState* motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( mt );
-    motion->setInverseParentWorldTransform( osg::Matrix::identity() );
-
-    btTransform com; com.setIdentity();
-    com.setOrigin( centerOfMass );
-    motion->_centerOfMass = osgBullet::asOsgVec3( centerOfMass );
-
-    motion->setWorldTransform( com * startTransform );
-
-    osg::notify( osg::INFO ) << "OSGToCollada: world transform: " <<
-        osgBullet::asOsgVec3( startTransform.getOrigin() ) <<
-        ", COM: " << osgBullet::asOsgVec3( centerOfMass ) <<
-        std::endl;
+    osgBullet::MotionState* motion( NULL );
+    osg::Transform* trans = dynamic_cast< osg::Transform* >( node );
+    if( trans != NULL )
+    {
+        motion = new osgBullet::MotionState();
+        motion->setTransform( trans );
+        motion->setCenterOfMass( centerOfMass );
+    }
 
     btRigidBody::btRigidBodyConstructionInfo rbInfo( mass, motion, shape, localInertia );
     rbInfo.m_friction = btScalar( 1. );

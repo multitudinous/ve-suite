@@ -10,6 +10,7 @@ SET( LIB_NAME osgBullet )
 
 SET( HEADER_PATH ${PROJECT_SOURCE_DIR}/include/${LIB_NAME} )
 SET( LIB_PUBLIC_HEADERS
+    ${HEADER_PATH}/AbsoluteModelTransform.h
     ${HEADER_PATH}/BoundingCone.h
     ${HEADER_PATH}/BoundingCylinder.h
     ${HEADER_PATH}/ColladaUtils.h
@@ -30,6 +31,7 @@ SET( LIB_PUBLIC_HEADERS
 SN_ADD_SHARED_LIBRARY( ${LIB_NAME}
     ${OPENSCENEGRAPH_USER_DEFINED_DYNAMIC_OR_STATIC}
     ${LIB_PUBLIC_HEADERS}
+    AbsoluteModelTransform.cpp
     BoundingCone.cpp
     BoundingCylinder.cpp
     ColladaUtils.cpp

@@ -13,6 +13,8 @@
 #include <osgBullet/CollisionShape.h>
 #include <osgBullet/MotionState.h>
 #include <osgBullet/CollisionShapes.h>
+#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/DebugBullet.h>
 #include <osgBullet/HandNode.h>
 #include <osgBullet/Utils.h>
 
@@ -230,50 +232,7 @@ public:
 };
 
 
-class DebugBullet
-{
-public:
-    DebugBullet()
-    {
-        _root = new osg::Group;
-
-        osg::StateSet* state = _root->getOrCreateStateSet();
-        osg::PolygonMode* pm = new osg::PolygonMode( osg::PolygonMode::FRONT_AND_BACK, osg::PolygonMode::LINE );
-        state->setAttributeAndModes( pm );
-        osg::PolygonOffset* po = new osg::PolygonOffset( -1, -1 );
-        state->setAttributeAndModes( po );
-        state->setMode( GL_LIGHTING, osg::StateAttribute::OFF );
-    }
-    ~DebugBullet()
-    {
-    }
-
-    unsigned int addDynamic( osg::MatrixTransform* mt )
-    {
-        _root->addChild( mt );
-        return _root->getNumChildren() - 1;
-    }
-    unsigned int addStatic( osg::Node* node )
-    {
-        osg::MatrixTransform* mt = new osg::MatrixTransform;
-        mt->addChild( node );
-        _root->addChild( mt );
-        return _root->getNumChildren() - 1;
-    }
-    void setTransform( unsigned int idx, const osg::Matrix& m )
-    {
-        osg::MatrixTransform* mt = dynamic_cast< osg::MatrixTransform* >( _root->getChild( idx ) );
-        mt->setMatrix( m );
-    }
-    osg::Node* getRoot() const
-    {
-        return _root.get();
-    }
-
-protected:
-    osg::ref_ptr< osg::Group > _root;
-};
-DebugBullet _debugBullet;
+osgBullet::DebugBullet _debugBullet;
 
 
 osg::MatrixTransform* createOSGBox( osg::Vec3 size )
@@ -293,55 +252,59 @@ osg::MatrixTransform* createOSGBox( osg::Vec3 size )
     return( transform );
 }
 
-btRigidBody * createBTBox( osg::MatrixTransform * box,
-                           btVector3 center )
+btRigidBody * createBTBox( osg::MatrixTransform* box,
+                          osg::Vec3 center )
 {
     btCollisionShape* collision = osgBullet::btBoxCollisionShapeFromOSG( box );
 
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin( center );
-
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( box );
-    motion->setWorldTransform( groundTransform );
 
     btScalar mass( 0.0 );
     btVector3 inertia( 0, 0, 0 );
     btRigidBody::btRigidBodyConstructionInfo rb( mass, motion, collision, inertia );
     btRigidBody * body = new btRigidBody( rb );
 
+    osg::Node* dbgGround = osgBullet::osgNodeFromBtCollisionShape( collision );
+    if( dbgGround )
+    {
+        osg::MatrixTransform* dmt = new osg::MatrixTransform;
+        dmt->addChild( dbgGround );
+        motion->setDebugTransform( dmt );
+        _debugBullet.addDynamic( dmt );
+    }
+    motion->setTransform( box );
+    osg::Matrix groundTransform( osg::Matrix::translate( center ) );
+    motion->setParentTransform( groundTransform );
+    body->setMotionState( motion );
+
     return( body );
 }
 
-osg::MatrixTransform*
+osg::Transform*
 createBall( btDynamicsWorld* dynamicsWorld )
 {
     osg::Sphere* sp = new osg::Sphere( osg::Vec3( 0., 0., 0. ), 1. );
     osg::ShapeDrawable* shape = new osg::ShapeDrawable( sp );
     osg::Geode* geode = new osg::Geode();
     geode->addDrawable( shape );
-    osg::ref_ptr< osg::MatrixTransform > mt = new osg::MatrixTransform;
-    mt->addChild( geode );
+    osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform;
+    amt->addChild( geode );
 
     BulletShapeVisitor bsv;
     sp->accept( bsv );
     btCollisionShape* collision = bsv._shape;
 
-    osgBullet::MotionState * motion = new osgBullet::MotionState;
-    motion->setMatrixTransform( mt.get() );
+    osgBullet::MotionState* motion = new osgBullet::MotionState;
+    motion->setTransform( amt.get() );
 
     // Debug OSG rep of bullet shape.
     osg::Node* debugNode = osgBullet::osgNodeFromBtCollisionShape( collision );
-    mt->addChild( debugNode );
+    amt->addChild( debugNode );
 
     // Debug rep of the sphere
-    _debugBullet.addDynamic( mt.get() );
+    _debugBullet.addDynamic( amt.get() );
 
-    btTransform bodyTransform;
-    bodyTransform.setIdentity();
-    bodyTransform.setOrigin( btVector3( -10, 0, 10 ) );
-    motion->setWorldTransform( bodyTransform );
+    motion->setParentTransform( osg::Matrix::translate( osg::Vec3( -10, 0, 10 ) ) );
 
     btScalar mass( 1. );
     btVector3 inertia;
@@ -352,7 +315,7 @@ createBall( btDynamicsWorld* dynamicsWorld )
     body->setActivationState( DISABLE_DEACTIVATION );
     dynamicsWorld->addRigidBody( body );
 
-    return( mt.release() );
+    return( amt.release() );
 }
 
 btDynamicsWorld* initPhysics()
@@ -389,7 +352,7 @@ main( int argc,
     float thin = .01;
     osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
     root->addChild( ground );
-    btRigidBody* groundBody = createBTBox( ground, btVector3( 0, 0, -1 ) );
+    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -1 ) );
     bulletWorld->addRigidBody( groundBody );
 
     osg::ref_ptr< osgBullet::HandNode > hn = new osgBullet::HandNode(

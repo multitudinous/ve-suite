@@ -46,11 +46,9 @@ btRigidBody * createBTStaticObject( osg::MatrixTransform * xform )
     btCollisionShape * collision = osgBullet::btTriMeshCollisionShapeFromOSG( xform );
     btTransform groundTransform;
 
-    groundTransform.setIdentity();
-
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( xform );
-    motion->setWorldTransform( groundTransform );
+    motion->setTransform( xform );
+    motion->setParentTransform( osg::Matrix::identity() );
 
     btScalar mass( 0.0 );
     btVector3 inertia( 0, 0, 0 );
@@ -80,13 +78,10 @@ void createMarble( osg::Group * root,
 
     btCollisionShape * collision = osgBullet::btSphereCollisionShapeFromOSG( xform );
 
-    btTransform transform;
-    transform.setIdentity();
-    transform.setOrigin( btVector3( 4.85, 2.5, 5.75 ) );
 
     osgBullet::MotionState * motion = new osgBullet::MotionState();
-    motion->setMatrixTransform( xform );
-    motion->setWorldTransform( transform );
+    motion->setTransform( xform );
+    motion->setParentTransform( osg::Matrix::translate( 4.85, 2.5, 5.75 ) );
 
     btScalar mass( 1.0 );
     btVector3 inertia;

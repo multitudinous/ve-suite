@@ -14,6 +14,7 @@
 #include <osgBullet/CollisionShape.h>
 #include <osgBullet/MotionState.h>
 #include <osgBullet/CollisionShapes.h>
+#include <osgBullet/AbsoluteModelTransform.h>
 #include <osgBullet/HandNode.h>
 #include <osgBullet/DebugBullet.h>
 #include <osgBullet/ColladaUtils.h>
@@ -29,6 +30,7 @@
 #include <sstream>
 #include <osg/io_utils>
 
+//#define NO_PHYSICS
 
 osg::Node*
 makeScene()
@@ -36,10 +38,11 @@ makeScene()
     osg::Group* root = new osg::Group;
 
     osg::Matrix m(
-        osg::Matrix::translate( osg::Vec3( 1, 0, -1 ) ) *
-        osg::Matrix::rotate( .75, osg::Vec3( .707, .707, 0 ) )
+        osg::Matrix::translate( osg::Vec3( 1, 1, 0 ) ) *
+        osg::Matrix::rotate( .7, osg::Vec3( .707, .707, 0 ) )
         );
-    osg::MatrixTransform* mt = new osg::MatrixTransform( /*m*/ );
+    osg::MatrixTransform* mt = new osg::MatrixTransform( m );
+    mt->setName( "CubeParentTransform" );
     mt->addChild( osgDB::readNodeFile( "offcube.osg" ) );
     root->addChild( mt );
 
@@ -259,123 +262,6 @@ protected:
 };
 
 
-// This class can read and write itself to a file. Long-term,
-// we might want something like this in an osgPlugin form.
-class ConfigReaderWriter : public osg::Referenced
-{
-public:
-    ConfigReaderWriter( btDynamicsWorld* dw )
-      : _dw( dw )
-    {}
-
-    bool read( const std::string& fileName )
-    {
-        std::string inFile( osgDB::findDataFile( fileName ) );
-        std::ifstream in( inFile.c_str() );
-        if( !in.good() )
-        {
-            osg::notify( osg::FATAL ) << "CondigReaderWriter::read: Can't open " << fileName << std::endl;
-            return false;
-        }
-
-        std::string node, dae;
-        char bufCh[ 1024 ];
-        in.getline( bufCh, 1024 );
-        std::string buf( bufCh );
-        while( !in.eof() )
-        {
-            osg::notify( osg::DEBUG_INFO ) << "Data: " << buf << std::endl;
-            int spacePos( buf.find_first_of( " " ) );
-            std::string key = buf.substr( 0, spacePos );
-            osg::notify( osg::DEBUG_INFO ) << spacePos << " KEY " << key << std::endl;
-            if( (spacePos == std::string::npos) ||
-                (key == std::string( "#" )) )
-            {
-                in.getline( bufCh, 1024 );
-                buf = std::string( bufCh );
-                continue;
-            }
-            std::istringstream istr( buf.substr( spacePos ) );
-            if( key == std::string( "HandNode:" ) )
-            {
-                osg::Vec3 pos;
-                osg::Quat quat;
-                float length;
-                bool right;
-                istr >> pos >> quat >> length >> right;
-                if( !_hn.valid() )
-                {
-                    osg::notify( osg::DEBUG_INFO ) << "  New HandNode " << length << " " << right << std::endl;
-                    _hn = new osgBullet::HandNode( _dw,
-                        (right ? osgBullet::HandNode::RIGHT : osgBullet::HandNode::LEFT), length );
-                }
-                _hn->setPosition( pos );
-                _hn->setAttitude( quat );
-            }
-            else if( key == std::string( "Model:" ) )
-            {
-                istr >> _model;
-            }
-            else if( key == std::string( "Node:" ) )
-            {
-                istr >> node;
-            }
-            else if( key == std::string( "DAE:" ) )
-            {
-                istr >> dae;
-                _nodeDaeMap[ node ] = dae;
-            }
-            else if( key == std::string( "View:" ) )
-            {
-                std::string name;
-                istr >> name;
-                _viewNodeList.push_back( name );
-            }
-            else
-                osg::notify( osg::WARN ) << "ConfigReaderWriter: Unknown key: " << key << std::endl;
-
-            in.getline( bufCh, 1024 );
-            buf = std::string( bufCh );
-        }
-
-        return true;
-    }
-    bool write( const std::string& fileName )
-    {
-        std::ofstream out( fileName.c_str() );
-        if( !out.good() )
-        {
-            osg::notify( osg::FATAL ) << "CondigReaderWriter::write: Can't open " << fileName << std::endl;
-            return false;
-        }
-        out << "HandNode: " << _hn->getPosition() << " " <<
-            _hn->getAttitude() << " " <<
-            _hn->getHandLength() << " " <<
-            (_hn->getHandedness() == osgBullet::HandNode::RIGHT) << std::endl;
-        out << "Model: " << _model << std::endl;
-        NodeDaeMap::const_iterator itr;
-        for( itr = _nodeDaeMap.begin(); itr != _nodeDaeMap.end(); itr++ )
-        {
-            out << "Node: " << itr->first << std::endl;
-            out << "DAE: " << itr->second << std::endl;
-        }
-        return true;
-    }
-
-    osg::ref_ptr< osgBullet::HandNode > _hn;
-    std::string _model;
-
-    typedef std::map< std::string, std::string > NodeDaeMap;
-    NodeDaeMap _nodeDaeMap;
-    typedef std::vector< std::string > ViewNodeList;
-    ViewNodeList _viewNodeList;
-
-protected:
-    ~ConfigReaderWriter() {}
-
-    btDynamicsWorld* _dw;
-};
-
 
 osg::MatrixTransform* createOSGBox( osg::Vec3 size )
 {
@@ -394,14 +280,10 @@ osg::MatrixTransform* createOSGBox( osg::Vec3 size )
     return( transform );
 }
 
-btRigidBody * createBTBox( osg::MatrixTransform * box,
-                           btVector3 center )
+btRigidBody * createBTBox( osg::MatrixTransform* box,
+                          osg::Vec3 center )
 {
     btCollisionShape* collision = osgBullet::btBoxCollisionShapeFromOSG( box );
-
-    btTransform groundTransform;
-    groundTransform.setIdentity();
-    groundTransform.setOrigin( center );
 
     osgBullet::MotionState * motion = new osgBullet::MotionState();
 
@@ -415,11 +297,12 @@ btRigidBody * createBTBox( osg::MatrixTransform * box,
     {
         osg::MatrixTransform* dmt = new osg::MatrixTransform;
         dmt->addChild( dbgGround );
-        motion->setDebugMatrixTransform( dmt );
+        motion->setDebugTransform( dmt );
         _debugBullet.addDynamic( dmt );
     }
-    motion->setMatrixTransform( box );
-    motion->setWorldTransform( groundTransform );
+    motion->setTransform( box );
+    osg::Matrix groundTransform( osg::Matrix::translate( center ) );
+    motion->setParentTransform( groundTransform );
     body->setMotionState( motion );
 
     return( body );
@@ -450,15 +333,26 @@ main( int argc,
     root->addChild( orient.get() );
 
 
+    // Find node of interest, insert AMT above it,
+    // and load DAE for it.
     FindNamedNode fnn( "OffOriginCube" );
     orient->accept( fnn );
-    osgBullet::loadDae( fnn._node.get(), fnn._np, "offCube0.dae", bulletWorld, &_debugBullet );
+    osgBullet::AbsoluteModelTransform* amt = new osgBullet::AbsoluteModelTransform;
+    osg::Group* parent = fnn._node->getParent( 0 );
+    parent->addChild( amt );
+    amt->addChild( fnn._node.get() );
+    parent->removeChild( fnn._node.get() );
+    osgBullet::loadDae( amt, fnn._np, "offCube0.dae", bulletWorld, &_debugBullet );
+#ifdef NO_PHYSICS
+    amt->setReferenceFrame( osg::Transform::RELATIVE_RF );
+    amt->setMatrix( osg::Matrix::identity() );
+#endif
 
 
     float thin = .1;
     osg::MatrixTransform* ground = createOSGBox( osg::Vec3( 10, 10, thin ) );
     root->addChild( ground );
-    btRigidBody* groundBody = createBTBox( ground, btVector3( 0, 0, -3.-thin ) );
+    btRigidBody* groundBody = createBTBox( ground, osg::Vec3( 0, 0, -3.-thin ) );
     bulletWorld->addRigidBody( groundBody );
 
 
@@ -475,11 +369,12 @@ main( int argc,
     double currSimTime = viewer.getFrameStamp()->getSimulationTime();
     double prevSimTime = viewer.getFrameStamp()->getSimulationTime();
     viewer.realize();
-    int count( 4 );
-    while( /*count-- &&*/ !viewer.done() )
+    while( !viewer.done() )
     {
         currSimTime = viewer.getFrameStamp()->getSimulationTime();
+#ifndef NO_PHYSICS
         bulletWorld->stepSimulation( currSimTime - prevSimTime );
+#endif
         prevSimTime = currSimTime;
         viewer.frame();
     }
@@ -487,64 +382,3 @@ main( int argc,
     return( 0 );
 }
 
-
-
-
-#if 0
-
-class DynamicRigidBodyTransform : public osg::MatrixTransform
-{
-public:
-    DynamicRigidBodyTransform();
-    DynamicRigidBodyTransform( const DynamicRigidBodyTransform& drbt, const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY );
-    ~DynamicRigidBodyTransform();
-    META_Node( osgBullet, DynamicRigidBodyTransform );
-
-    void parentTransformChange( const osg::NodePath& np );
-    const osg::Matrix& getParentTransform() const;
-
-    virtual osg::BoundingSphere computeBound() const;
-
-protected:
-    osg::Matrix _l2w;
-    osg::Matrix _invL2w;
-};
-
-DynamicRigidBodyTransform::DynamicRigidBodyTransform()
-{
-}
-
-DynamicRigidBodyTransform::DynamicRigidBodyTransform( const DynamicRigidBodyTransform& drbt, const osg::CopyOp& copyop )
-{
-    osg::notify( osg::WARN ) << "DynamicRigidBodyTransform: copy constructor not yet implemented." << std::endl;
-}
-
-DynamicRigidBodyTransform::~DynamicRigidBodyTransform()
-{
-}
-
-void
-DynamicRigidBodyTransform::parentTransformChange( const osg::NodePath& np )
-{
-    osg::Matrix& l2w = osg::computeLocalToWorld( np );
-    _l2w = l2w;
-    _invL2w = osg::Matrix::inverse( l2w );
-}
-
-const osg::Matrix&
-DynamicRigidBodyTransform::getParentTransform() const
-{
-    return _l2w;
-}
-
-osg::BoundingSphere
-DynamicRigidBodyTransform::computeBound() const
-{
-    DynamicRigidBodyTransform* nonConstThis = const_cast< DynamicRigidBodyTransform* >( this );
-    nonConstThis->_matrix.postMult( _invL2w );
-
-    osg::BoundingSphere bs = osg::MatrixTransform::computeBound();
-    return bs;
-}
-
-#endif
