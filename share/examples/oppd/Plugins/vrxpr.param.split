@@ -1,0 +1,197 @@
+27
+8                    // Object type 8: data set
+   1.0 1.0 1.0            // Scale values
+   0 0 0             // Translation values
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./2scl.vtk  // data set name
+   ./JUNK      // precomputed data slice directory
+   ./JUNK      // precomputed surface directory
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/walls.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/floor.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray1.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray2.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray3.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray4.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray5.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray6.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/cabletray7.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/compressors.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/blue_pipes.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/white_pipes.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   1.0 1.0 1.0                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/tanks.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/rooms.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/pumps.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/lights.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/ducts.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   3.28 3.28 3.28                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/sprinkler.ive           // Geometry file name sprinkler_new.flt
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray1.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray2.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray3.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray4.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray5.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray6.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_cabletray7.ive           // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                             // transparency toggle (1=make geom transparent when visualizations are active)
+   0                             // color flag (and 3 color values if flag = 1)
+   100 100 100                    // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 90 0                       // Rotation values for geometry file
+   ./Plugins/Current_Demo/red_compressors.ive           // Geometry file name
+12
+0.8
+0.0
+
+
+
+

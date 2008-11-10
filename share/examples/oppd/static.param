@@ -1,0 +1,12 @@
+2                    // the number of objects to follow
+0                    // OPTIONAL world DCS settings
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   0 0 0            // Rotation values (Z-X-Y format)
+8                    // Object type 8: data set
+   2.54 2.54 2.54             // Scale values
+   -20 0 0             // Translation values
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./2scl.vtk  // data set name
+   ./JUNK      // precomputed data slice directory
+   ./JUNK      // precomputed surface directory
