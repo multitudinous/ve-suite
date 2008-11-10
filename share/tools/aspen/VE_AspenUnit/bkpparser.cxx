@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include <gdiplus.h>
-#include "bkpparser.h"
+#include "BKPParser.h"
 #include <iostream>
 #include <fstream>
 #include <algorithm>
@@ -42,9 +42,11 @@ void BKPParser::openFile(const char * file)
     std::string fileName(file);
     std::string bkpExt(".bkp");
     std::string apwExt(".apw");
-    ParseFile( ( workingDir + fileName + bkpExt ).c_str());	
+    ParseFile( ( workingDir + fileName + bkpExt ).c_str());
+    //ParseFile( ( fileName + bkpExt ).c_str());
     CString filename = file;
     aspendoc->open( ( workingDir + fileName + apwExt ).c_str());
+    //aspendoc->open( ( fileName + apwExt ).c_str());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void BKPParser::closeFile()

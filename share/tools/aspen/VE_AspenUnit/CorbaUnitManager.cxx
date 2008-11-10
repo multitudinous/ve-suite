@@ -61,7 +61,6 @@ void CorbaUnitManager::RunORB()
 
     //initialize OLE
     CoInitialize(NULL);
-    //BKPParser* parser = new BKPParser();
 
     int argc = 5;
     char** argv;
@@ -220,8 +219,15 @@ BKPParser * CorbaUnitManager::CreateParser( void )
 //void CorbaUnitManager::CreateParser( void )
 {
 	return new BKPParser();
-	//unit_i->bkp = new BKPParser();
 }
+
+/////////////////////////////////////////////////////////////
+//DynParser * CorbaUnitManager::CreateParser( void )
+//void CorbaUnitManager::CreateParser( void )
+//{
+//	return new DynParser();
+//}
+
 /////////////////////////////////////////////////////////////
 bool CorbaUnitManager::CleanUp( void )
 {

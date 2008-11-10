@@ -6,19 +6,26 @@ Import('baseEnv ves_pkg LIBDIR xerces_options tao_options RootDir buildDir GetPl
 
 srcs = Split("""
    AspenUnit_i.cxx
-   bkpparser.cxx
+   BKPParser.cxx
+   DynParser.cxx
    CorbaUnitManager.cxx
    VE_AspenUnit.cxx
    VE_AspenUnitDlg.cxx
+   AspenPlusLUT.cxx
+   AspenDynamicsLUT.cxx
+   AspenIconData.cxx
 """)
 
 headers = Split("""
    AspenUnit_i.h
-   bkpparser.h
+   BKPParser.h
+   DynParser.h
    CorbaUnitManager.h
    VE_AspenUnit.h
    VE_AspenUnitDlg.h
    AspenPlusLUT.h
+   AspenDynamicsLUT.h
+   AspenIconData.h
 """)
 
 env = ves_pkg.getEnv().Copy()
@@ -39,13 +46,16 @@ env.Append( CPPDEFINES = ['_AFXDLL'])
 env.Append( CPPPATH = [pj('#', 'src')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib')] )
 env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','CASIlib','aspenplus_2006.5')] )
+env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','AspenPlusInterface')] )
 env.Append( CPPPATH = [pj('#', buildDir, 'src', 'ves', 'open')] )
 
 env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','CASIlib')])
+env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','AspenPlusInterface')])
 env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open')])
 env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
 env.Append(LIBS = ['CASIlib'])
+env.Append(LIBS = ['AspenPlusInterface'])
 env.Append(LIBS = ['ves_open_module'])
 env.Append(LIBS = ['ves_open_xml'])
 env.Append(LIBS = ['ves_open_xml'])

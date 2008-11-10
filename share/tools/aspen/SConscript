@@ -10,7 +10,7 @@ if GetPlatform() == 'win32':
    aspenSubdirs += Split("""    
       CASILib
       AspenPlusInterface
-      AspenUnit
+      VE_AspenUnit
    """)
 
 ##Run SConscript files in all of those folders.

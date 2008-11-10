@@ -30,7 +30,8 @@
 
 #ifndef MODULEI_H_
 #define MODULEI_H_
-#include "bkpparser.h"
+#include "BKPParser.h"
+#include "DynParser.h"
 #include <ves/open/moduleS.h>
 #include <ves/open/xml/CommandPtr.h>
 #include "VE_AspenUnit.h"
@@ -43,9 +44,8 @@ class  Body_Unit_i : public virtual POA_Body::Unit
 {
 public:
     // Constructor 
-    Body_Unit_i (/*Body::Executive_ptr exec,*/ std::string name, 
-                 /*BKPParser* parser,*/ CVE_AspenUnitDlg * dialog, 
-                 CorbaUnitManager * parent, std::string dir );
+    Body_Unit_i (std::string name, CVE_AspenUnitDlg * dialog,
+        CorbaUnitManager * parent, std::string dir );
     //Body_Unit_i() {};
     //Destructor 
     virtual ~Body_Unit_i (void);
@@ -65,17 +65,18 @@ protected:
     CEdit * AspenLog;
     std::set< std::string > mQueryCommandNames;
     std::string mWorkingDir;
-    std::string mFilename;
+    std::string mFileName;
 
 public:
     BKPParser* bkp;
+    DynParser* dyn;
   
-  void ShowAspen ();  
-  void HideAspen ();  
-  void CloseAspen ();
-  void ReinitializeAspen();
-  void SaveAspen ();
-  void StepSim ();
+  void ShowAspen( );  
+  void HideAspen( );  
+  void CloseAspen( );
+  void ReinitializeAspen( );
+  void SaveAspen( std::string filename );
+  void StepSim( );
   
   virtual
   void StartCalc (
@@ -212,6 +213,7 @@ public:
   char* handleGetNetwork(ves::open::xml::CommandPtr cmd);
   char* handleOpenSimulation(ves::open::xml::CommandPtr cmd);
   char* handleSaveAs(ves::open::xml::CommandPtr cmd);
+  char* handleGetModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetInputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetInputModuleProperties(ves::open::xml::CommandPtr cmd);
   char* handleGetOutputModuleParamList(ves::open::xml::CommandPtr cmd);
@@ -221,6 +223,9 @@ public:
   char* handleGetStreamOutputModuleParamList(ves::open::xml::CommandPtr cmd);
   char* handleGetStreamOutputModuleProperties(ves::open::xml::CommandPtr cmd);
   void SetParam(ves::open::xml::CommandPtr cmd);
+
+private:
+  bool bkpFlag;
 };
 
 
