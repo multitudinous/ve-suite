@@ -109,40 +109,42 @@ PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
 void cfdVEPluginLoader::ScanAndLoad( void )
 {
     //Look for custom plugin path
-    std::string path( "Plugins/GE/" );
     std::string modelPath;
     vpr::System::getenv( std::string( "CFDHOSTTYPE" ), modelPath );
+    std::string path( "Plugins/GE/" );
     std::string libDir = path + modelPath;
 
-    //std::string modelPath;
-    /*std::string vesuitePath;
+    //Get the path for the plugins loaded for vesuite
+    std::string vesuitePath;
     bool vesuiteHomeDefined = false;
-    //status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
-    if(vpr::System::getenv( std::string("VE_SUITE_HOME"), vesuitePath ).success())
+    if( vpr::System::getenv( std::string("XPLORER_PLUGINS_DIR"), vesuitePath ) )
     {
-       vprDEBUG(vesDBG,0) << "Searching VE_SUITE_HOME for Default Plugin" 
+       vprDEBUG(vesDBG,0) << "|\tSearching XPLORER_PLUGINS_DIR for Default Plugin" 
                             << std::endl 
                             << vprDEBUG_FLUSH;
        //Look for VE-Suite default plugin path
-       path.assign("/bin/");
-       vesuiteHomeDefined = true;
+        try
+        {
+            boost::filesystem::path vesuiteDirPath( 
+                vesuitePath, boost::filesystem::no_check );
+            if( boost::filesystem::is_directory( vesuiteDirPath ) )
+            {
+                vesuiteHomeDefined = true;
+            }
+        }
+        catch( const std::exception& ex )
+        {
+            vprDEBUG( vesDBG, 1 ) << ex.what()
+                << std::endl
+                << vprDEBUG_FLUSH;
+        }        
     }
-    else if(vpr::System::getenv( std::string("VE_INSTALL_DIR"), vesuitePath ).success())
-    {
-       vprDEBUG(vesDBG,0) << "Searching VE_INSTALL_DIR for Default Plugin" 
-                            << std::endl 
-                            << vprDEBUG_FLUSH;
-       //Look for VE-Suite default plugin path
-       path.assign("/bin/");
-       vesuiteHomeDefined = false;
-    }*/
 
-    const std::string nameCheck( "native" );
+    //const std::string nameCheck( "native" );
     bool customPlugins = false;
     try
     {
         boost::filesystem::path dir_path( libDir, boost::filesystem::no_check );
-        //boost::filesystem::path vesuiteDirPath( vesuiteLibDir, boost::filesystem::no_check );
         if( boost::filesystem::is_directory( dir_path ) )
         {
             customPlugins = true;
@@ -167,19 +169,22 @@ void cfdVEPluginLoader::ScanAndLoad( void )
             << vprDEBUG_FLUSH;
     }
 
-    // Load the default plugin
-    /*std::string vesuiteLibDir = vesuitePath + path + libDir;
-    vpr::LibraryFinder finder(vesuiteLibDir, DSO_SUFFIX);
-
-    vpr::LibraryFinder::LibraryList defaultLibs = finder.getLibraries();
-    vprDEBUG(vesDBG,1)  << " Number of libs : " 
-                         << libs.size() 
-                         << " " << DSO_SUFFIX << std::endl 
-                         << vprDEBUG_FLUSH;
-    for(size_t i = 0; i < defaultLibs.size(); ++i )
+    if( vesuiteHomeDefined )
     {
-       libs.push_back( defaultLibs.at( i ) );
-    }*/
+        vpr::LibraryFinder finder( vesuitePath, DSO_SUFFIX );
+        vpr::LibraryFinder::LibraryList defaultLibs = finder.getLibraries();
+
+        defaultLibs = finder.getLibraries();
+        vprDEBUG( vesDBG, 1 )  << "|\tNumber of VE-Suite libs : "
+            << libs.size()
+            << " " << DSO_SUFFIX << std::endl
+            << vprDEBUG_FLUSH;
+        // Load the default plugin
+         for(size_t i = 0; i < defaultLibs.size(); ++i )
+         {
+             libs.push_back( defaultLibs.at( i ) );
+         }
+    }
 
     for( size_t i = 0; i < libs.size(); ++i )
     {
@@ -226,11 +231,10 @@ void cfdVEPluginLoader::LoadPlugins( void )
 //////////////////////////////////////////////////////////////////
 PluginBase* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
 {
-    //std::cout << " CreateNewPlugin plugin " << input << std::endl;
     void*( *creator )();
     PluginBase* test_obj( NULL );
 
-    // No, *this* is the weirdest cast I have ever written.
+    //This came from vpr test code
     creator = ( void * ( * )() ) libs[ input ]->findSymbol( std::string( "CreateVEPlugin" ) );
     if( NULL != creator )
     {

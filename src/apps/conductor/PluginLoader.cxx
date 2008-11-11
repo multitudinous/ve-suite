@@ -87,10 +87,32 @@ PluginLoader::~PluginLoader()
 ////////////////////////////////////////////////////////////////////////////////
 bool PluginLoader::LoadPlugins( wxString lib_dir )
 {
+    wxString pluginsDirStr;
+    ::wxGetEnv( wxString( "CONDUCTOR_PLUGINS_DIR", wxConvUTF8 ), &pluginsDirStr );
+    wxDir pluginsDir( pluginsDirStr );
+    if( !wxDir::Exists( pluginsDirStr ) )
+    {
+        // deal with the error here - wxDir would already log an error
+        // message explaining the exact reason of the failure
+        //return FALSE;
+    }
+    
+    if( !pluginsDir.IsOpened() )
+    {
+        // Dispaly error
+        wxString msg( _( "Directory " ) + pluginsDir.GetName() +
+                     _( " is present but cannot be opened." ) );
+        wxMessageBox( msg, _( "Plugin Loader Failure" ),
+                     wxOK | wxICON_INFORMATION );
+        // deal with the error here - wxDir would already log an error
+        // message explaining the exact reason of the failure
+        //return FALSE;
+    }
+    
     // Load the default plugin no matter what
     wxString hostType;
     ::wxGetEnv( wxString( "CFDHOSTTYPE", wxConvUTF8 ), &hostType );
-
+    
     //Load default plugin into vectors
     plugins.push_back( new DefaultPlugin() );
     plugin_cls.push_back( 0 );
@@ -124,6 +146,7 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         return FALSE;
     }
 
+    //Load custom app plugins 
     wxString filename;
     bool cont = dir.GetFirst( &filename, ext, wxDIR_FILES );
     while( cont )
@@ -147,6 +170,29 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         cont = dir.GetNext( &filename );
     }
 
+    //Load default plugins for VE-Suite
+    cont = pluginsDir.GetFirst( &filename, ext, wxDIR_FILES );
+    while( cont )
+    {
+        //std::cout << "try Loaded " << ConvertUnicode( ext.c_str() ) << " "
+        //    << ConvertUnicode( filename.c_str() ) << std::endl;
+        
+        wxFileName  libname( pluginsDirStr, filename );
+        wxString libn = pluginsDirStr + _( "/" ) + libname.GetName();
+        
+        wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
+        if( lib )
+        {
+            wxLogDebug( _( "Loaded [ %s ]\n" ), filename.c_str() );
+            //std::cout << "Loaded " << ConvertUnicode( libn.c_str() )
+            //    << std::endl;
+            mPluginLibs.push_back( lib );
+            mPluginNames.push_back( libn );
+        }
+        
+        cont = pluginsDir.GetNext( &filename );
+    }
+    
     RegisterPlugins();
 
     return TRUE;
