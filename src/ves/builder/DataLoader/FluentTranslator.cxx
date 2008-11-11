@@ -148,6 +148,21 @@ void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* d
     vtkDataArray* yComp = cData->GetArray( "Y_VELOCITY" );
     vtkDataArray* zComp = cData->GetArray( "Z_VELOCITY" );
 
+    if( !xComp )
+    {
+        std::cout << "No X_VELOCITY scalar in FLUENT data." << std::endl;
+    }
+
+    if( !yComp )
+    {
+        std::cout << "No Y_VELOCITY scalar in FLUENT data." << std::endl;
+    }
+
+    if( !zComp )
+    {
+        std::cout << "No Z_VELOCITY scalar in FLUENT data." << std::endl;
+    }
+
     vtkDoubleArray* velocityVec = vtkDoubleArray::New();
     velocityVec->SetNumberOfComponents( 3 );
     velocityVec->SetName( "Velocity" );
@@ -155,9 +170,21 @@ void FluentTranslator::FluentTranslateCbk::CreateVectorFromScalar( vtkDataSet* d
     vtkIdType size = xComp->GetSize();
     for( vtkIdType i = 0; i < size; ++i )
     {
-        vec[ 0 ] = xComp->GetTuple1( i );
-        vec[ 1 ] = yComp->GetTuple1( i );
-        vec[ 2 ] = zComp->GetTuple1( i );
+        if( xComp )
+        {
+            vec[ 0 ] = xComp->GetTuple1( i );            
+        }
+        
+        if( yComp )
+        {
+            vec[ 1 ] = yComp->GetTuple1( i );            
+        }
+        
+        if( zComp )
+        {
+            vec[ 2 ] = zComp->GetTuple1( i );            
+        }
+
         velocityVec->InsertNextTupleValue( vec );
     }
     cData->AddArray( velocityVec );
