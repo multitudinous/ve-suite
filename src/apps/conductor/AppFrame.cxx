@@ -862,8 +862,10 @@ void AppFrame::ZoomIn( wxCommandEvent& WXUNUSED( event ) )
     network->GetUserScale()->second += 0.1;
 
     std::pair< int, int > networkSize = network->GetNetworkSize( );
-    networkSize.first *= static_cast< int >( network->GetUserScale()->first );
-    networkSize.second *= static_cast< int >( network->GetUserScale()->second );
+    networkSize.first *= network->GetUserScale()->first;
+    networkSize.second *= network->GetUserScale()->second;
+    //networkSize.first *= static_cast< int >( network->GetUserScale()->first );
+    //networkSize.second *= static_cast< int >( network->GetUserScale()->second );
 
     //int xpos, ypos;
     //canvas->GetViewStart( &xpos, &ypos );
@@ -891,8 +893,10 @@ void AppFrame::ZoomOut( wxCommandEvent& WXUNUSED( event ) )
     network->GetUserScale()->second -= 0.1;
     
     std::pair< int, int > networkSize = network->GetNetworkSize( );
-    networkSize.first *= static_cast< int >( network->GetUserScale()->first );
-    networkSize.second *= static_cast< int >( network->GetUserScale()->second );
+    networkSize.first *= network->GetUserScale()->first;
+    networkSize.second *= network->GetUserScale()->second;
+    //networkSize.first *= static_cast< int >( network->GetUserScale()->first );
+    //networkSize.second *= static_cast< int >( network->GetUserScale()->second );
 
     //int xpos, ypos;
     //canvas->GetViewStart( &xpos, &ypos );
