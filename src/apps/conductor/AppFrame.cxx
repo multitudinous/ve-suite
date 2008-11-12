@@ -1089,8 +1089,7 @@ void AppFrame::Open( wxCommandEvent& WXUNUSED( event ) )
         std::string bkpFilename;
         bkpPtr->GetData( bkpFilename );
         OpenSimulation( wxString( bkpFilename.c_str(), wxConvUTF8 ) );
-    }
-    */
+    }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SetRecentFile( wxFileName vesFileName )
@@ -1276,18 +1275,25 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Opening Simulation...\n" );
     wxFileName bkpFileName;
-    wxTextEntryDialog newDataSetName( this,
-                                      wxString( "Enter the prefix for *.bkp filename:", wxConvUTF8 ),
-                                      wxString( "Open BKP Filename", wxConvUTF8 ),
-                                      wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
+    wxString bkpext = "Aspen Plus ASCII files (*.bkp)|*.bkp";
+    wxString apwext = "Aspen Plus Binary files (*.apw)|*.apw";
+    wxString dynext = "Aspen Dynamics files (*.dynf)|*.dynf";
+    wxFileDialog fd( this, wxT("Choose a file"), wxT(""), wxT(""),
+        wxT( bkpext + "|" + apwext + "|" + dynext), wxOPEN );
+    //wxTextEntryDialog newDataSetName( this,
+    //wxString( "Enter the prefix for *.bkp filename:", wxConvUTF8 ),
+    //wxString( "Open BKP Filename", wxConvUTF8 ),
+    //wxString( "", wxConvUTF8 ), wxOK | wxCANCEL );
 
-    if( newDataSetName.ShowModal() != wxID_OK )
+    //if( newDataSetName.ShowModal() != wxID_OK )
+    if( fd.ShowModal() != wxID_OK )
     {
         return;
     }
 
     bkpFileName.ClearExt();
-    bkpFileName.SetName( newDataSetName.GetValue() );
+    //bkpFileName.SetName( newDataSetName.GetValue() );
+    bkpFileName.SetName( fd.GetFilename() );
     //bkpFileName.SetExt( wxString( "bkp", wxConvUTF8 ) );
 
     CommandPtr returnState ( new Command() );
