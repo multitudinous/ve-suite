@@ -102,8 +102,9 @@ bool PluginLoader::LoadPlugins( wxString lib_dir )
         // Dispaly error
         wxString msg( _( "Directory " ) + pluginsDir.GetName() +
                      _( " is present but cannot be opened." ) );
-        wxMessageBox( msg, _( "Plugin Loader Failure" ),
-                     wxOK | wxICON_INFORMATION );
+        //wxMessageBox( msg, _( "Plugin Loader Failure" ),
+        //             wxOK | wxICON_INFORMATION );
+        wxLogDebug( _( "Loading error [%s]\n" ), msg.c_str() );
         // deal with the error here - wxDir would already log an error
         // message explaining the exact reason of the failure
         //return FALSE;
