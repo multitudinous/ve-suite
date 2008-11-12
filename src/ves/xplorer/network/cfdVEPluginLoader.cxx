@@ -108,39 +108,35 @@ PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
 //////////////////////////////////////////////////////////////////
 void cfdVEPluginLoader::ScanAndLoad( void )
 {
+    //Get the path for the plugins loaded for vesuite
+    std::string vesuitePath;
+    bool vesuiteHomeDefined = false;
+    vpr::System::getenv( std::string("XPLORER_PLUGINS_DIR"), vesuitePath );
+    vprDEBUG(vesDBG,0) << "|\tSearching XPLORER_PLUGINS_DIR for VES Plugins." 
+        << std::endl 
+        << vprDEBUG_FLUSH;
+    //Look for VE-Suite default plugin path
+    try
+    {
+        boost::filesystem::path vesuiteDirPath( 
+            vesuitePath, boost::filesystem::no_check );
+        if( boost::filesystem::is_directory( vesuiteDirPath ) )
+        {
+            vesuiteHomeDefined = true;
+        }
+    }
+    catch( const std::exception& ex )
+    {
+        vprDEBUG( vesDBG, 1 ) << ex.what()
+            << std::endl
+            << vprDEBUG_FLUSH;
+    }        
+
     //Look for custom plugin path
     std::string modelPath;
     vpr::System::getenv( std::string( "CFDHOSTTYPE" ), modelPath );
     std::string path( "Plugins/GE/" );
     std::string libDir = path + modelPath;
-
-    //Get the path for the plugins loaded for vesuite
-    std::string vesuitePath;
-    bool vesuiteHomeDefined = false;
-    if( vpr::System::getenv( std::string("XPLORER_PLUGINS_DIR"), vesuitePath ) )
-    {
-       vprDEBUG(vesDBG,0) << "|\tSearching XPLORER_PLUGINS_DIR for Default Plugin" 
-                            << std::endl 
-                            << vprDEBUG_FLUSH;
-       //Look for VE-Suite default plugin path
-        try
-        {
-            boost::filesystem::path vesuiteDirPath( 
-                vesuitePath, boost::filesystem::no_check );
-            if( boost::filesystem::is_directory( vesuiteDirPath ) )
-            {
-                vesuiteHomeDefined = true;
-            }
-        }
-        catch( const std::exception& ex )
-        {
-            vprDEBUG( vesDBG, 1 ) << ex.what()
-                << std::endl
-                << vprDEBUG_FLUSH;
-        }        
-    }
-
-    //const std::string nameCheck( "native" );
     bool customPlugins = false;
     try
     {
@@ -169,6 +165,7 @@ void cfdVEPluginLoader::ScanAndLoad( void )
             << vprDEBUG_FLUSH;
     }
 
+    //Load ves default plugins
     if( vesuiteHomeDefined )
     {
         vpr::LibraryFinder finder( vesuitePath, DSO_SUFFIX );

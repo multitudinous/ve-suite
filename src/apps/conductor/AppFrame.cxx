@@ -1275,11 +1275,12 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
     Log( "Opening Simulation...\n" );
     wxFileName bkpFileName;
-    wxString bkpext = "Aspen Plus ASCII files (*.bkp)|*.bkp";
-    wxString apwext = "Aspen Plus Binary files (*.apw)|*.apw";
-    wxString dynext = "Aspen Dynamics files (*.dynf)|*.dynf";
-    wxFileDialog fd( this, wxT("Choose a file"), wxT(""), wxT(""),
-        wxT( bkpext + "|" + apwext + "|" + dynext), wxOPEN );
+    wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
+    wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
+    wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
+    wxString extText = bkpext + _("|") + apwext + _("|") + dynext;
+    wxFileDialog fd( this, wxT("Choose a file"), wxT(""), wxT(""), 
+        extText, wxOPEN );
     //wxTextEntryDialog newDataSetName( this,
     //wxString( "Enter the prefix for *.bkp filename:", wxConvUTF8 ),
     //wxString( "Open BKP Filename", wxConvUTF8 ),
