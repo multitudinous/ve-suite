@@ -58,7 +58,7 @@ namespace conductor
 {
 namespace util
 {
-class VE_CONDUCTOR_UTILS_EXPORTS APVarDialog : public wxDialog
+class APVarDialog : public wxDialog
 {
 public:
     APVarDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "APVarDialog" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = APVarDialog_STYLE );

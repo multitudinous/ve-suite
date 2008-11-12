@@ -36,14 +36,15 @@
 #include <ves/conductor/UIPluginBase.h>
 
 #include <wx/event.h>
-#define edge_size 10
+
 
 namespace ves
 {
 namespace conductor
 {
-class VE_GUIPLUGINS_EXPORTS APPlugin : public UIPluginBase
+class APPlugin : public UIPluginBase
 {
+    DECLARE_DYNAMIC_CLASS( APPlugin )
 public:
     enum PLUGIN_ENUMS
     {
@@ -53,7 +54,6 @@ public:
         QUERY_OUTPUTS,
         REINIT_BLOCK
     };
-protected:
     ///Defualt constructor
     APPlugin();
     virtual ~APPlugin();
@@ -63,8 +63,8 @@ public:
     void OnQueryOutputs( wxCommandEvent& event );
     void OnReinitBlocks( wxCommandEvent& event );
         
-    DECLARE_DYNAMIC_CLASS( APPlugin )
-    DECLARE_EVENT_TABLE()
+
+    //DECLARE_EVENT_TABLE()
 };
 }
 }

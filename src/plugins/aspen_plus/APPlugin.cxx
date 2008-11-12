@@ -46,20 +46,24 @@
 
 #include <wx/msgdlg.h>
 #include <wx/image.h>
+#include <wx/scrolwin.h>
+#include <wx/window.h>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-BEGIN_EVENT_TABLE( APPlugin, wxEvtHandler )
+#define edge_size 10
+
+/*BEGIN_EVENT_TABLE( APPlugin, wxEvtHandler )
     EVT_MENU( SHOW_ASPEN_NAME, APPlugin::OnShowAspenName )
     EVT_MENU( QUERY_INPUTS, APPlugin::OnQueryInputs )
     EVT_MENU( QUERY_OUTPUTS, APPlugin::OnQueryOutputs )
     EVT_MENU( REINIT_BLOCK, APPlugin::OnReinitBlocks )
-END_EVENT_TABLE()
+END_EVENT_TABLE()*/
 
-IMPLEMENT_DYNAMIC_CLASS( APPlugin, wxEvtHandler )
+IMPLEMENT_DYNAMIC_CLASS( APPlugin, UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 APPlugin::APPlugin() :
@@ -107,7 +111,7 @@ void  APPlugin::OnShowAspenName( wxCommandEvent& event )
     wxString title;
     title << wxT( "Aspen Name" );
     wxString desc( veModel->GetModelName().c_str(), wxConvUTF8 );
-    wxMessageDialog( m_canvas, desc, title ).ShowModal();
+    //wxMessageDialog( m_canvas, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //void  APPlugin::OnShowIconChooser( wxCommandEvent& event )

@@ -30,8 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "ADPlugin.h"
 #include "ADVarDialog.h"
+
+#include "ADPlugin.h"
+
 
 #include <ves/conductor/xpm/square.xpm>
 
@@ -43,11 +45,13 @@ using namespace ves::open::xml;
 using namespace ves::conductor;
 using namespace ves::conductor::util;
 
-BEGIN_EVENT_TABLE( ADPlugin, wxEvtHandler )
-    EVT_MENU( QUERY_DYNAMICS, UIPluginBase::OnQueryDynamics )
-END_EVENT_TABLE()
+#define edge_size 10
 
-IMPLEMENT_DYNAMIC_CLASS( ADPlugin, wxEvtHandler )
+/*BEGIN_EVENT_TABLE( ADPlugin, wxEvtHandler )
+    EVT_MENU( QUERY_DYNAMICS, UIPluginBase::OnQueryDynamics )
+END_EVENT_TABLE()*/
+
+IMPLEMENT_DYNAMIC_CLASS( ADPlugin, UIPluginBase )
 
 /////////////////////////////////////////////////////////////////////////////
 ADPlugin::ADPlugin() :
@@ -83,7 +87,7 @@ ADPlugin::~ADPlugin()
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void  ADPlugin::OnShowAspenName( wxCommandEvent& event )
+/*void  ADPlugin::OnShowAspenName( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     ves::open::xml::model::ModelPtr veModel = GetVEModel();
@@ -91,7 +95,7 @@ void  ADPlugin::OnShowAspenName( wxCommandEvent& event )
     title << wxT( "Aspen Name" );
     wxString desc( veModel->GetModelName().c_str(), wxConvUTF8 );
     wxMessageDialog( m_canvas, desc, title ).ShowModal();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 //void  ADPlugin::OnShowIconChooser( wxCommandEvent& event )
 //{
@@ -113,7 +117,7 @@ void  ADPlugin::OnShowAspenName( wxCommandEvent& event )
 //}
 
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
+/*void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     std::string compName = GetVEModel()->GetModelName();
@@ -171,4 +175,4 @@ void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
     params->UpdateSizes();
     params->ShowModal();
     params->Destroy();
-}
+}*/
