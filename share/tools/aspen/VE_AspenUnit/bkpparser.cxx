@@ -1389,7 +1389,7 @@ std::string BKPParser::CreateNetwork( void )
         }
 
         //recursively parse subsystems of each block
-        if( tempModel->GetIconFilename().find("Hierarchy") !=
+        if( tempModel->GetIconFilename().find("hierarchy") !=
             std::string::npos )
         ParseSubSystem( tempModel, blockIter->first );
 
