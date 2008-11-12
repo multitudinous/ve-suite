@@ -56,6 +56,7 @@ public:
 protected:
     ///Defualt constructor
     APPlugin();
+    virtual ~APPlugin();
 public:
     void OnShowAspenName( wxCommandEvent& event );
     void OnQueryInputs( wxCommandEvent& event );

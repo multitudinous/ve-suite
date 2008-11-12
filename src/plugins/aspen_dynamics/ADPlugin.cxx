@@ -33,6 +33,11 @@
 #include "ADPlugin.h"
 #include "ADVarDialog.h"
 
+#include <ves/conductor/xpm/square.xpm>
+
+#include <ves/open/xml/model/Model.h>
+//#include <ves/open/xml/model/Model.h>
+
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
 using namespace ves::conductor;
@@ -71,11 +76,11 @@ ADPlugin::ADPlugin() :
     mPopMenu->Enable( SHOW_ASPEN_NAME, true );
     mPopMenu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
     mPopMenu->Enable( QUERY_DYNAMICS, true );
-
+}
 ////////////////////////////////////////////////////////////////////////////////
-//ADPlugin::~ADPlugin()
-//{
-//}
+ADPlugin::~ADPlugin()
+{
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void  ADPlugin::OnShowAspenName( wxCommandEvent& event )

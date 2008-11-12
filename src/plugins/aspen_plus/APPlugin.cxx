@@ -30,8 +30,22 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
+#include <ves/conductor/util/CORBAServiceList.h>
+
 #include "APPlugin.h"
-#include "ADVarDialog.h"
+#include "APVarDialog.h"
+
+#include <ves/conductor/xpm/square.xpm>
+#include <ves/conductor/util/ParamsDlg.h>
+
+#include <ves/open/xml/model/Model.h>
+
+#include <ves/open/xml/XMLReaderWriter.h>
+
+#include <wx/menu.h>
+
+#include <wx/msgdlg.h>
+#include <wx/image.h>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
@@ -81,9 +95,9 @@ APPlugin::APPlugin() :
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-//APPlugin::~APPlugin()
-//{
-//}
+APPlugin::~APPlugin()
+{
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 void  APPlugin::OnShowAspenName( wxCommandEvent& event )
@@ -150,7 +164,7 @@ void  APPlugin::OnQueryInputs( wxCommandEvent& event )
     wxString title( compName.c_str(), wxConvUTF8 );
     //TextResultDialog * results = new TextResultDialog(this, title);
     //QueryInputsDlg * results = new QueryInputsDlg(this);
-    ADVarDialog* params = new ADVarDialog( m_canvas );
+    APVarDialog* params = new APVarDialog( m_canvas );
     //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();

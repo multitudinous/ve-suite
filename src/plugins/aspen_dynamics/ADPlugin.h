@@ -54,6 +54,7 @@ public:
 protected:
     ///Defualt constructor
     ADPlugin();
+    virtual ~ADPlugin();
 public:
     void OnShowAspenName( wxCommandEvent& event );
     void OnQueryDynamics( wxCommandEvent& event );

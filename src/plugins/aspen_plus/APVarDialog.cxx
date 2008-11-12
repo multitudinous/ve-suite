@@ -30,7 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
-#include <ves/conductor/util/APVarDialog.h>
+#include "APVarDialog.h"
 
 #include <wx/msgdlg.h>
 #include <wx/progdlg.h>
