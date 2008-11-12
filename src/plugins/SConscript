@@ -1,0 +1,9 @@
+##Build Default Plugins
+openSubdirs = Split("""
+    aspen_dynamics
+    aspen_plus
+""")
+
+##Run SConscript files in all of those folders.
+for d in openSubdirs:
+   SConscript( dirs = d )
