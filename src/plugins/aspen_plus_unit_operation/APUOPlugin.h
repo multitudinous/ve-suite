@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef APPLUGIN_H
-#define APPLUGIN_H
+#ifndef APUOPLUGIN_H
+#define APUOPLUGIN_H
 
 #include <ves/conductor/UIPluginBase.h>
 
@@ -42,21 +42,27 @@ namespace ves
 {
 namespace conductor
 {
-class APPlugin : public UIPluginBase
+class APUOPlugin : public UIPluginBase
 {
-    DECLARE_DYNAMIC_CLASS( APPlugin )
+    DECLARE_DYNAMIC_CLASS( APUOPlugin )
 public:
     enum PLUGIN_ENUMS
     {
-        OPEN_SIM = 3600
+        SHOW_ASPEN_NAME = 3600,
+        QUERY_INPUTS,
+        QUERY_OUTPUTS,
+        REINIT_BLOCK
     };
     ///Defualt constructor
-    APPlugin();
-    virtual ~APPlugin();
+    APUOPlugin();
+    virtual ~APUOPlugin();
 public:
+    void OnShowAspenName( wxCommandEvent& event );
+    void OnQueryInputs( wxCommandEvent& event );
+    void OnQueryOutputs( wxCommandEvent& event );
+    void OnReinitBlocks( wxCommandEvent& event );
     wxString GetConductorName();
-    void OnOpen( wxCommandEvent& event );       
-
+    
     DECLARE_EVENT_TABLE()
 };
 }

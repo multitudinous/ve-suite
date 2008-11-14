@@ -47,16 +47,16 @@ class ADPlugin : public UIPluginBase
 public:
     enum PLUGIN_ENUMS
     {
-        BEGIN_MENU_ID = 3600, //this ids and the END_MENU_ID are used for
-        SHOW_ASPEN_NAME,
-        QUERY_DYNAMICS
+        OPEN_SIM = 3600
     };
     ///Defualt constructor
     ADPlugin();
     virtual ~ADPlugin();
 public:
-    /*void OnShowAspenName( wxCommandEvent& event );
-    void OnQueryDynamics( wxCommandEvent& event );*/
+    wxString GetConductorName();
+    void OnOpen( wxCommandEvent& event );
+    
+    DECLARE_EVENT_TABLE()
 };
 }
 }

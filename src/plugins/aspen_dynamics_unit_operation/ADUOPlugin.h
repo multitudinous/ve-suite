@@ -30,33 +30,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef APPLUGIN_H
-#define APPLUGIN_H
+#ifndef ADUOPLUGIN_H
+#define ADUOPLUGIN_H
 
 #include <ves/conductor/UIPluginBase.h>
 
 #include <wx/event.h>
 
-
 namespace ves
 {
 namespace conductor
 {
-class APPlugin : public UIPluginBase
+class ADUOPlugin : public UIPluginBase
 {
-    DECLARE_DYNAMIC_CLASS( APPlugin )
+    DECLARE_DYNAMIC_CLASS( ADUOPlugin )
 public:
     enum PLUGIN_ENUMS
     {
-        OPEN_SIM = 3600
+        BEGIN_MENU_ID = 3600, //this ids and the END_MENU_ID are used for
+        SHOW_ASPEN_NAME,
+        QUERY_DYNAMICS
     };
     ///Defualt constructor
-    APPlugin();
-    virtual ~APPlugin();
+    ADUOPlugin();
+    virtual ~ADUOPlugin();
 public:
+    void OnShowAspenName( wxCommandEvent& event );
+    void OnQueryDynamics( wxCommandEvent& event );
     wxString GetConductorName();
-    void OnOpen( wxCommandEvent& event );       
-
+    
     DECLARE_EVENT_TABLE()
 };
 }
