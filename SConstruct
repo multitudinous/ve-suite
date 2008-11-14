@@ -182,12 +182,12 @@ if GetPlatform() == 'win32':
 else:
     vtk_options = SConsAddons.Options.StandardPackageOption("vtk",
         "VTK library options, default : vtk_incdir=<vtk>/include/vtk-5.2 vtk_libdir=<vtk>/lib(64)/vtk-5.2", 
-        pj('vtkConfigure.h'), library=[['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
+        pj('vtkConfigure.h'), library=['vtkImaging','vtkGraphics','vtkCommon','vtkHybrid',
                          'vtkIO','vtkexpat','vtkFiltering','vtkRendering', 
                          'vtkParallel','vtkpng','vtktiff','vtksys','vtkjpeg', 
                          'vtkexoIIc','vtkftgl','vtkfreetype','vtkDICOMParser', 
                          'vtkzlib','vtkNetCDF','vtkverdict',
-                         'vtkmetaio','vtksqlite']], 
+                         'vtkmetaio','vtksqlite'], 
         symbol="main", required=True)
     if ARGUMENTS.has_key("vtk"):
         vtkBaseDir = ARGUMENTS["vtk"]
@@ -299,7 +299,7 @@ vrjuggler_options = SConsAddons.Options.VRJuggler.VRJ.VRJ("VR Juggler", "2.0.2")
 
 osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, True, 
                                               None, 
-                                              True, headerToCheck=None)
+                                              compileTest=True, headerToCheck="osgAL/SoundNode")
 
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
