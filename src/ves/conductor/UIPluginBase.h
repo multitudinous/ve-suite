@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * Date modified: $Date$
+ * Date modified: $Date$f
  * Version:       $Rev$
  * Author:        $Author$
  * Id:            $Id$
@@ -39,6 +39,7 @@ UIPluginBase API
 *
 */
 #include <ves/VEConfig.h>
+#include <ves/conductor/Canvas.h>
 #include <ves/open/xml/model/Port.h>
 #include <ves/open/xml/model/ModelPtr.h>
 #include <ves/open/xml/CommandPtr.h>
@@ -91,6 +92,7 @@ class FinancialDialog;
 class SummaryResultDialog;
 class Vistab;
 class IconChooser;
+//class Canvas;
 
 class VE_GUIPLUGINS_EXPORTS UIPluginBase : public wxEvtHandler
 {
@@ -393,7 +395,7 @@ protected:
     std::map< std::string, wxImage > defaultIconMap;
 
     ///The pointer to the canvas scrolled window
-    wxScrolledWindow* m_canvas;
+    Canvas* m_canvas;
     ///The network event handler
     wxEvtHandler* m_network;
     ///The sound pane

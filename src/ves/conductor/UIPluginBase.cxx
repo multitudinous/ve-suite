@@ -341,7 +341,7 @@ UIPluginBase::~UIPluginBase()
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetCanvas( wxScrolledWindow* canvas )
 {
-    m_canvas = canvas;
+    m_canvas = dynamic_cast< Canvas * >(canvas);
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetNetwork( wxEvtHandler* network )
