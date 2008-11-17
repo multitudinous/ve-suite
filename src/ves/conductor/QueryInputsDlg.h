@@ -33,10 +33,6 @@
 #ifndef QUERYINPUTSDLG_H
 #define QUERYINPUTSDLG_H
 
-//#ifdef __BORLANDC__
-// #pragma hdrstop
-//#endif
-
 #include <wx/dialog.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
