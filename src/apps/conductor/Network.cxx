@@ -42,7 +42,6 @@
 #include <ves/conductor/util/ParamsDlg.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
-#include "AppFrame.h"
 #include "Canvas.h"
 
 #include <ves/open/xml/model/Link.h>
