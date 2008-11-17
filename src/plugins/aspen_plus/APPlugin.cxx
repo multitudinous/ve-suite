@@ -35,6 +35,7 @@
 
 #include "APPlugin.h"
 
+#include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/XMLReaderWriter.h>
@@ -106,7 +107,7 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         return;
     }
 
-   /* wxFileName bkpFileName;
+    wxFileName bkpFileName;
     bkpFileName.ClearExt();
     bkpFileName.SetName( fd.GetFilename() );
 
@@ -163,12 +164,12 @@ void APPlugin::OnOpen( wxCommandEvent& event )
         UserPreferencesDataBuffer::instance()->
         SetCommand( "Aspen_Plus_Preferences", aspenBKPFile );
         ///Submit job to xplorer
-        wxCommandEvent event;
-        SubmitToServer( event );
-		AspenSimOpen = true;
+        //wxCommandEvent event;
+        //SubmitToServer( event );
+		//AspenSimOpen = true;
     //}
     //else
     //{
     //    Log( "Simulation is already open.\n" );
-    //}*/
+    //}
 }
