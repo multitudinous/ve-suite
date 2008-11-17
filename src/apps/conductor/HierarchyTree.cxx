@@ -31,8 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include "Network.h"
-#include "Canvas.h"
+#include <ves/conductor/Network.h>
+#include <ves/conductor/Canvas.h>
 #include "HierarchyTree.h"
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/AspenPlus2DIcons.h>

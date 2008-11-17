@@ -32,11 +32,12 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
 #include "AppFrame.h"
-#include "Canvas.h"
-#include "Network.h"
 #include "HierarchyTree.h"
 #include "Avail_Modules.h"
 #include "PluginLoader.h"
+
+#include <ves/conductor/Canvas.h>
+#include <ves/conductor/Network.h>
 #include <ves/conductor/StringParse.h>
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>

@@ -57,6 +57,8 @@
 #include <ves/conductor/FindDialog.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
+#include <ves/conductor/Network.h>
+#include <ves/conductor/Canvas.h>
 
 #include "ConductorApp.h"
 #include "UserPreferences.h"
@@ -67,8 +69,6 @@
 #include "NavigationPane.h"
 #include "Splitter.h"
 #include "ViewLocPane.h"
-#include "Network.h"
-#include "Canvas.h"
 #include "MainToolBar.h"
 #include "ExportMenu.h"
 #include "EphemerisDialog.h"

@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include "Network.h"
+#include <ves/conductor/Network.h>
 
 #include <ves/conductor/PortDialog.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
@@ -42,7 +42,7 @@
 #include <ves/conductor/util/ParamsDlg.h>
 #include <ves/conductor/DefaultPlugin/DefaultPlugin.h>
 
-#include "Canvas.h"
+#include <ves/conductor/Canvas.h>
 
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Point.h>

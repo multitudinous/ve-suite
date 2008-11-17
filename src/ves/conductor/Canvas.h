@@ -44,6 +44,7 @@ Canvas API
 #include <wx/textdlg.h>
 #include <wx/menu.h>
 #include <wx/dcclient.h>
+#include <ves/VEConfig.h>
 
 #include <vector>
 #include <map>
@@ -51,7 +52,7 @@ Canvas API
 class AppFrame;
 class Network;
 
-class Canvas : public wxScrolledWindow
+class VE_GUIPLUGINS_EXPORTS Canvas : public wxScrolledWindow
 {
 public:
     enum CANVAS_ENUMS

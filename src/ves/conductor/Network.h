@@ -54,12 +54,13 @@ Network API
 #include <map>
 #include <iostream>
 #include <wx/dcclient.h>
+#include <ves/VEConfig.h>
 
 class wxProgressDialog;
 class AppFrame;
 class Canvas;
 
-class Network : public wxEvtHandler
+class VE_GUIPLUGINS_EXPORTS Network : public wxEvtHandler
 {
 public:
     Network( wxWindow* parent );
