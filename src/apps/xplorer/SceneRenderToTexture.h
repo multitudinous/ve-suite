@@ -140,6 +140,7 @@ public:
 
     osg::Geode* createFullScreenTexturedQuad( std::pair< int, int > screenDims, osg::Texture2D* colorTexture );
 
+    osg::Texture2D* CreateFBOTexture( std::pair< int, int >& screenDims, float scale = 1.0f );
 protected:
 
 private:

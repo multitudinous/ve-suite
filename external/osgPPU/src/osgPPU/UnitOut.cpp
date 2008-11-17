@@ -60,7 +60,7 @@ namespace osgPPU
         quadGeom->setStateSet(new osg::StateSet());
         quadGeom->setUseDisplayList(false);
         quadGeom->setColorBinding(osg::Geometry::BIND_OFF);
-
+        //quadGeom->setDrawCallback(new Unit::DrawCallback(this));
         mGeode->setCullingActive( false );
         
         mDrawable = quadGeom;

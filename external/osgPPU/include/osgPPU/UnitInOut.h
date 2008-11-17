@@ -32,6 +32,8 @@
 #define OSGPPU_3D_SLICE_NUMBER "osgppu_ZSliceNumber"
 #define OSGPPU_3D_SLICE_INDEX "osgppu_ZSliceIndex"
 
+#include <osg/Array>
+
 namespace osgPPU
 {
     //! Compute output texture based on the assigned shaders and input data
@@ -57,6 +59,8 @@ namespace osgPPU
             //! Initialze the default Processoring unit
             virtual void init();
             
+            void CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords );
+
             /**
             * Get framebuffer object used by this ppu. 
             **/

@@ -30,6 +30,8 @@
 #include <osg/Geometry>
 #include <math.h>
 
+#include <iostream>
+
 namespace osgPPU
 {
 
@@ -571,6 +573,7 @@ void Unit::dirty()
 //--------------------------------------------------------------------------
 void Unit::DrawCallback::drawImplementation (osg::RenderInfo& ri, const osg::Drawable* dr) const
 {
+std::cout << " draw " << getName() << std::endl;
     // only if parent is valid
     if (_parent->getActive())
     {   

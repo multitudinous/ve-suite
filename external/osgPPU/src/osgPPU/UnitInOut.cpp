@@ -204,10 +204,11 @@ namespace osgPPU
         Unit::init();
 
         // setup a geode and the drawable as childs of this unit
-        mDrawable = createTexturedQuadDrawable();
-        mGeode->removeDrawables(0, mGeode->getNumDrawables());
-        mGeode->addDrawable(mDrawable.get());
-
+        //mDrawable = createTexturedQuadDrawable();
+        //mGeode->removeDrawables(0, mGeode->getNumDrawables());
+        //mGeode->addDrawable(mDrawable.get());
+        
+        
         // setup unfiroms
         if (mOutputType == TEXTURE_CUBEMAP)
         {
@@ -247,6 +248,22 @@ namespace osgPPU
         assignFBO();
     }
 
+    void UnitInOut::CreateVESQuad( osg::Vec3Array* quadVerts, osg::Vec2Array* texCoords )
+    {
+        osg::Geometry* quadGeom = new osg::Geometry();
+        quadGeom->setVertexArray( quadVerts );
+        quadGeom->addPrimitiveSet( new osg::DrawArrays( osg::PrimitiveSet::QUADS, 0, quadVerts->size() ) );
+        quadGeom->setTexCoordArray( 0, texCoords );
+        quadGeom->setStateSet(new osg::StateSet());
+        quadGeom->setUseDisplayList(false);
+        quadGeom->setColorBinding(osg::Geometry::BIND_OFF);
+        
+        mGeode->setCullingActive( false );
+        
+        mDrawable = quadGeom;
+        mGeode->addDrawable( mDrawable.get() );        
+    }
+    
     //------------------------------------------------------------------------------
     void UnitInOut::setInputBypass(int index)
     {

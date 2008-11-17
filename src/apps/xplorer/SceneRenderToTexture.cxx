@@ -140,7 +140,8 @@ SceneRenderToTexture::~SceneRenderToTexture()
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
 {
-    *mColorMap = new osg::Texture2D();
+    *mColorMap = CreateFBOTexture( screenDims );
+    /*
     osg::ref_ptr< osg::Texture2D > tempColorMap = (*mColorMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     tempColorMap->setInternalFormat( GL_RGBA16F_ARB );
@@ -156,8 +157,10 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
         osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
     tempColorMap->setWrap(
         osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
-
-    *mGlowMap = new osg::Texture2D();
+     */
+     
+    *mGlowMap = CreateFBOTexture( screenDims );
+    /*
     osg::ref_ptr< osg::Texture2D > tempGlowMap = (*mGlowMap).get();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
     tempGlowMap->setInternalFormat( GL_RGBA16F_ARB );
@@ -172,7 +175,7 @@ void SceneRenderToTexture::InitTextures( std::pair< int, int >& screenDims )
     //We really want REPEAT otherwise the edge gets sampled by the glow shader
     tempGlowMap->setWrap( osg::Texture2D::WRAP_S, osg::Texture2D::REPEAT );
     tempGlowMap->setWrap( osg::Texture2D::WRAP_T, osg::Texture2D::REPEAT );
-
+     */
     /*
     mGlowStencil = new osg::Texture2D();
     //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
@@ -363,7 +366,7 @@ void SceneRenderToTexture::InitProcessor(
     osg::ref_ptr< osgPPU::UnitInResampleOut > glowDownSample =
         new osgPPU::UnitInResampleOut();
     {
-        float downsample = 0.5;
+        float downsample = 1.0;
         quadScreenSize *= downsample;
         
         glowDownSample->setName( "GlowDownSample" );
@@ -372,7 +375,7 @@ void SceneRenderToTexture::InitProcessor(
         glowDownSample->setInputTextureIndexForViewportReference( -1 );
         //glowDownSample->setViewport( sceneViewCamera->getViewport() );
     }
-     colorBuffer1->addChild( glowDownSample.get() );
+    //colorBuffer1->addChild( glowDownSample.get() );
 
     //Perform horizontal 1D gauss convolution
     *mBlurX = new osgPPU::UnitInOut();
@@ -420,10 +423,12 @@ void SceneRenderToTexture::InitProcessor(
         gaussX->set( "glowMap", 0 );
 
         blurX->getOrCreateStateSet()->setAttributeAndModes( gaussX.get() );
+        blurX->setOutputTexture( CreateFBOTexture( screenDims ) );
         blurX->setInputTextureIndexForViewportReference( -1 );
         //blurX->setViewport( sceneViewCamera->getViewport() );
     }
-    glowDownSample->addChild( blurX.get() );
+    //glowDownSample->addChild( blurX.get() );
+    //colorBuffer1->addChild( blurX.get() );
 
     //Perform vertical 1D gauss convolution
     *mBlurY = new osgPPU::UnitInOut();
@@ -471,7 +476,9 @@ void SceneRenderToTexture::InitProcessor(
         gaussY->set( "glowMap", 0 );
 
         blurY->getOrCreateStateSet()->setAttributeAndModes( gaussY.get() );
+        blurY->setOutputTexture( CreateFBOTexture( screenDims ) );
         blurY->setInputTextureIndexForViewportReference( -1 );
+
         //blurY->setViewport( sceneViewCamera->getViewport() );
     }
     blurX->addChild( blurY.get() );
@@ -513,7 +520,9 @@ void SceneRenderToTexture::InitProcessor(
         addedCorrectly = final->setInputToUniform(  colorBuffer0.get(), "baseMap", true );
         //addedCorrectly = final->setInputToUniform( colorBuffer1.get(), "stencilGlowMap", true );
         //std::cout << " added " << addedCorrectly << std::endl;
-        addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
+        //addedCorrectly = final->setInputToUniform( blurY.get(), "glowMap", true );
+        final->setOutputTexture( CreateFBOTexture( screenDims ) );
+
         final->setInputTextureIndexForViewportReference( -1 );
         //final->setViewport( sceneViewCamera->getViewport() );
    }
@@ -553,8 +562,8 @@ void SceneRenderToTexture::InitScene( osg::Camera* const sceneViewCamera )
     
     //Create textures, camera, and SA-quad
     InitTextures( screenDimsNew );
-    InitCamera( screenDimsView );
-    InitProcessor( screenDimsView, sceneViewCamera );
+    InitCamera( screenDimsNew );
+    InitProcessor( screenDimsNew, sceneViewCamera );
 
     //Add nodes to the scenegraph
     (*mCameraMap)->addChild( mRootGroup.get() );
@@ -587,10 +596,12 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
     (*mColorBuffer0)->setViewport( tempViewport );
     (*mColorBuffer1)->setViewport( tempViewport );
     (*mGlowDownSample)->setViewport( tempViewport );
-    (*mBlurX)->setViewport( tempViewport );
-    (*mBlurY)->setViewport( tempViewport );
     (*mFinal)->setViewport( tempViewport );
     (*mQuadOut)->setViewport( tempViewport );
+    //tempViewport->width() *= 0.5;
+    //tempViewport->height() *= 0.5;
+    (*mBlurX)->setViewport( tempViewport );
+    (*mBlurY)->setViewport( tempViewport );
     //(*mglow)->setViewport( tempViewport );
     //(*mcolor)->setViewport( tempViewport );
     
@@ -603,8 +614,8 @@ void SceneRenderToTexture::UpdateRTTProjectionAndViewportMatrix(
     (*mBlurX)->dirty();
     (*mBlurY)->dirty();
     (*mFinal)->dirty();
-    (*mQuadOut)->dirty();
-    UpdateProcessorAndUnits();*/
+    (*mQuadOut)->dirty();*/
+    //UpdateProcessorAndUnits();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneRenderToTexture::UpdateProcessorAndUnits()
@@ -981,11 +992,6 @@ osg::Geode* SceneRenderToTexture::createFullScreenTexturedQuad( std::pair< int, 
 {
     size_t numViewports = vrj::GlDrawManager::instance()->currentUserData()->
         getGlWindow()->getDisplay()->getNumViewports();
-
-    gmtl::Point3f ll;
-    gmtl::Point3f lr;
-    gmtl::Point3f ur;
-    gmtl::Point3f ul;
     
     osg::ref_ptr< osg::Vec3Array > mQuadVertices = new osg::Vec3Array();
     mQuadVertices->resize( numViewports * 4 );
@@ -994,26 +1000,28 @@ osg::Geode* SceneRenderToTexture::createFullScreenTexturedQuad( std::pair< int, 
     quadTexCoords->resize( numViewports * 4 );
     
     float xOrigin, yOrigin, widthRatio, heightRatio;
+    gmtl::Point3f ll, lr, ur, ul;
     float m2ft = 3.2808399;
+
     for( size_t i = 0; i < numViewports; ++i )
     {
 #if __VJ_version >= 2003000
         vrj::ViewportPtr viewport = vrj::GlDrawManager::instance()->
-        currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
 #else
         vrj::Viewport* viewport = vrj::GlDrawManager::instance()->
-        currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
+            currentUserData()->getGlWindow()->getDisplay()->getViewport( i );
 #endif
         ///Get the texture coordinates for the quades
         viewport->getOriginAndSize( xOrigin, yOrigin, widthRatio, heightRatio );
-        (*quadTexCoords)[ 0 + (i*4) ].set( xOrigin, yOrigin );
-        (*quadTexCoords)[ 1 + (i*4) ].set( xOrigin+widthRatio, yOrigin );
-        (*quadTexCoords)[ 2 + (i*4) ].set( xOrigin+widthRatio, yOrigin+heightRatio );
-        (*quadTexCoords)[ 3 + (i*4) ].set( xOrigin, yOrigin+heightRatio );
-        //std::cout << xOrigin << " "<<  yOrigin << " " << widthRatio << " " << heightRatio << std::endl;
+        (*quadTexCoords)[ 0 + (i*4) ].set( xOrigin,             yOrigin );
+        (*quadTexCoords)[ 1 + (i*4) ].set( xOrigin+widthRatio,  yOrigin );
+        (*quadTexCoords)[ 2 + (i*4) ].set( xOrigin+widthRatio,  yOrigin+heightRatio );
+        (*quadTexCoords)[ 3 + (i*4) ].set( xOrigin,             yOrigin+heightRatio );
+
         ///Get the quad coords
 #if __VJ_version >= 2003000
-        vrj::SurfaceViewportPtr tempView = boost::dynamic_pointer_cast< SurfaceViewport >( viewport );
+        vrj::SurfaceViewportPtr tempView = boost::dynamic_pointer_cast< vrj::SurfaceViewport >( viewport );
 #else
         vrj::SurfaceViewport* tempView = dynamic_cast< vrj::SurfaceViewport* >( viewport );
 #endif
@@ -1026,6 +1034,10 @@ osg::Geode* SceneRenderToTexture::createFullScreenTexturedQuad( std::pair< int, 
     }
     
     (*mQuadOut).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
+    (*mBlurX).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
+    (*mBlurY).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
+    (*mFinal).get()->CreateVESQuad( mQuadVertices.get(), quadTexCoords.get() );
+
     /*osg::Geode* mQuadGeode = new osg::Geode();
     osg::ref_ptr< osg::Geometry > mQuadGeometry = new osg::Geometry();
 
@@ -1061,4 +1073,24 @@ osg::Geode* SceneRenderToTexture::createFullScreenTexturedQuad( std::pair< int, 
     
     return mQuadGeode;*/
     return 0;
+}
+////////////////////////////////////////////////////////////////////////////////
+osg::Texture2D* SceneRenderToTexture::CreateFBOTexture( std::pair< int, int >& screenDims, float scale )
+{
+    osg::Texture2D* tempColorMap =  new osg::Texture2D();
+    //GL_RGBA8/GL_UNSIGNED_INT - GL_RGBA16F_ARB/GL_FLOAT 
+    tempColorMap->setInternalFormat( GL_RGBA16F_ARB );
+    tempColorMap->setTextureSize(
+        screenDims.first * mScaleFactor * scale , screenDims.second * mScaleFactor * scale );
+    tempColorMap->setSourceFormat( GL_RGBA );
+    tempColorMap->setSourceType( GL_FLOAT );
+    tempColorMap->setFilter(
+                            osg::Texture2D::MIN_FILTER, osg::Texture2D::LINEAR );
+    tempColorMap->setFilter(
+                            osg::Texture2D::MAG_FILTER, osg::Texture2D::LINEAR );
+    tempColorMap->setWrap(
+                          osg::Texture2D::WRAP_S, osg::Texture2D::CLAMP_TO_EDGE );
+    tempColorMap->setWrap(
+                          osg::Texture2D::WRAP_T, osg::Texture2D::CLAMP_TO_EDGE );
+    return tempColorMap;
 }
