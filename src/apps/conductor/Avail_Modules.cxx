@@ -80,6 +80,7 @@ Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoi
     SetItemFont( rootId, *wxITALIC_FONT );
     pl_loader = new PluginLoader();
     LoadModules();
+    ExpandAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Avail_Modules::~Avail_Modules()

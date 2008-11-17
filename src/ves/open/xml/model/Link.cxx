@@ -45,7 +45,7 @@ using namespace ves::open::xml::model;
 Link::Link()
         : XMLObject()
 {
-    mLinkName = "noName";
+    mLinkName = "NameHere";
     mType = -9999;
     mModuleInfo.first = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
     mModuleInfo.second = DataValuePairPtr( new DataValuePair( "FLOAT" ) );
