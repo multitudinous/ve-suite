@@ -51,12 +51,12 @@ namespace ves
 {
 namespace conductor
 {
+class Network;
+class Canvas;
 class UIPluginBase;
 }
 }
 
-class Network;
-class Canvas;
 class PluginLoader;
 
 class HierarchyTree : public wxTreeCtrl
@@ -80,14 +80,14 @@ public:
 
     ///Populate the tree
     ///\param id The top level system id to use for this tree to populate
-    void PopulateTree( const std::string& id );
+    void PopulateTree( );//const std::string& id );
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList( int size = 16 );
     void AddtoImageList( wxBitmap );
     ///Set the network to work with
     ///\param nw Network to work with
-    void SetCanvas( Canvas *can )
+    void SetCanvas( ves::conductor::Canvas *can )
     {
         m_canvas = can;
     }
@@ -117,7 +117,7 @@ protected:
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
     wxTreeItemId m_currentLevelId;
-    Canvas* m_canvas;
+    ves::conductor::Canvas* m_canvas;
     wxImageList *images;
     std::map< std::string, wxImage > defaultIconMap;
 

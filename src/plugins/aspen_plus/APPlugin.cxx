@@ -31,13 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-//#include <apps/conductor/Network.h>
 
 #include "APPlugin.h"
 
-#include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
+#include <ves/conductor/UserPreferencesDataBuffer.h>
+#include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #include <wx/menu.h>
@@ -130,6 +131,22 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //Get results
     std::string nw_str = serviceList->Query( status );
 
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    std::vector< std::pair< std::string, std::string > > dataToObtain;
+    std::vector< std::pair< std::string, std::string > >::iterator dataIter;
+    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
+    networkWriter.ReadXMLData( nw_str, dataToObtain );
+    std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkWriter.GetLoadedXMLObjects();
+    ves::open::xml::model::SystemPtr tempSystem;
+
+    tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+    GetVEModel()->SetSubSystem( tempSystem );
+    XMLDataBufferEngine::instance()->ParseSystem( tempSystem );
+
     // If there is nothing on the CE
     if( nw_str.compare("BKPDNE") == 0 )
     {
@@ -147,7 +164,13 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //if( network->modules.empty() )
     //{
         //network->Load( nw_str, true );
-        m_canvas->PopulateNetworks( nw_str );
+        m_canvas->AddSubNetworks( );
+    std::ofstream netdump ("netdump.txt");
+    netdump << nw_str;
+    netdump.close();
+
+        event.SetId( UPDATE_HIER_TREE );
+        ::wxPostEvent( m_canvas, event );
 
         //create hierarchy page
         //hierarchyTree->PopulateTree( 

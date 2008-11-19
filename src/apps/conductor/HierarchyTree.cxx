@@ -114,10 +114,12 @@ void HierarchyTree::AddtoImageList( wxBitmap icon )
     images->Add( icon );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HierarchyTree::PopulateTree( const std::string& id )
+void HierarchyTree::PopulateTree( )//const std::string& id )
 {
     ///Reset Tree
     Clear();
+
+    std::string& id = XMLDataBufferEngine::instance()->GetTopSystemId();
 
     ves::open::xml::model::SystemPtr tempSys = 
         XMLDataBufferEngine::instance()->GetXMLSystemDataObject( id );
@@ -183,6 +185,7 @@ void HierarchyTree::PopulateTree( const std::string& id )
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
                                    std::vector< ves::open::xml::model::ModelPtr > models, std::string id )

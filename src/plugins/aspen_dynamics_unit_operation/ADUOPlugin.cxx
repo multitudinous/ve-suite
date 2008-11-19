@@ -86,7 +86,7 @@ ADUOPlugin::~ADUOPlugin()
 ////////////////////////////////////////////////////////////////////////////////
 wxString ADUOPlugin::GetConductorName()
 {
-    return wxString( "Aspen_Dynamics_ADUnit", wxConvUTF8 );
+    return wxString( "Aspen_Dynamics_ADUnitOp", wxConvUTF8 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )

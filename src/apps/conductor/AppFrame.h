@@ -47,6 +47,8 @@ namespace ves
 namespace conductor
 {
 class IconChooser;
+class Network;
+class Canvas;
 namespace util
 {
 class CADNodeManagerDlg;
@@ -56,8 +58,6 @@ class CORBAServiceList;
 }
 
 class Splitter;
-class Network;
-class Canvas;
 class ViewLocPane;
 class MainToolBar;
 class Avail_Modules;
@@ -200,7 +200,9 @@ public:
         EXPORT_MENU_OPT,
         //change working dir
         CHANGE_WORKING_DIRECTORY,
-        TIMER_ID
+        TIMER_ID,
+        //for updating hierarchy tree
+        UPDATE_HIER_TREE = 9999
     };
 
     ///Process the close event
@@ -232,7 +234,7 @@ public:
     Avail_Modules* av_modules;
     HierarchyTree* hierarchyTree;
     wxNotebook* side_pane;
-    Canvas* canvas;
+    ves::conductor::Canvas* canvas;
 	ves::conductor::IconChooser* iconChooser;
 
     wxMenu* file_menu;
@@ -399,6 +401,7 @@ protected:
     void OnMakeIntoHierarchy( wxCommandEvent& event );
     void OnChangeIcon(wxCommandEvent& event );
     void OnShowIconChooser(wxCommandEvent& event );
+    void UpdateHierarchyTree( wxCommandEvent& event );
 
 private:
     void ExitXplorer();

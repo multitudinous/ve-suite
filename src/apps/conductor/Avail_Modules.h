@@ -44,7 +44,6 @@ Avail_Modules API
 #include <wx/treectrl.h>
 
 class AppFrame;
-class Canvas;
 class PluginLoader;
 
 namespace ves
@@ -52,6 +51,7 @@ namespace ves
 namespace conductor
 {
 class UIPluginBase;
+class Canvas;
 }
 }
 
@@ -94,7 +94,7 @@ public:
     {
         frame = frm;
     };
-    void SetCanvas( Canvas *can )
+    void SetCanvas( ves::conductor::Canvas *can )
     {
         canvas = can;
     };
@@ -117,7 +117,7 @@ protected:
     wxTreeItemId rootId;
     wxTreeItemId selection;
     AppFrame * frame;
-    Canvas* canvas;
+    ves::conductor::Canvas* canvas;
 
     DECLARE_EVENT_TABLE();
 

@@ -102,7 +102,7 @@ APUOPlugin::~APUOPlugin()
 ////////////////////////////////////////////////////////////////////////////////
 wxString APUOPlugin::GetConductorName()
 {
-    return wxString( "Aspen_Plus_APUnit", wxConvUTF8 );
+    return wxString( "Aspen_Plus_APUnitOp", wxConvUTF8 );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )

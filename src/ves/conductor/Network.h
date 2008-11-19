@@ -38,6 +38,7 @@ Network API
 /*!\class Network
 *
 */
+#include <ves/VEConfig.h>
 #include <ves/conductor/UIPluginBase.h>
 #include <ves/conductor/util/Link.h>
 #include <ves/conductor/util/Tag.h>
@@ -56,8 +57,13 @@ Network API
 #include <wx/dcclient.h>
 #include <ves/VEConfig.h>
 
-class wxProgressDialog;
 class AppFrame;
+class wxProgressDialog;
+
+namespace ves
+{
+namespace conductor
+{
 class Canvas;
 
 class VE_GUIPLUGINS_EXPORTS Network : public wxEvtHandler
@@ -103,6 +109,7 @@ public:
     ///\param parent The parent canvas for this network
     void LoadSystem( ves::open::xml::model::SystemPtr system, Canvas* parent );
     void SetSystem( ves::open::xml::model::SystemPtr system );
+    //add defaultplugin to newly created network system
     void CreateSystem( Canvas* parent, unsigned int id );
     ///Acessors
     std::pair< double, double >* GetUserScale( void );
@@ -244,5 +251,7 @@ private:
 
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
+}
+}
 
 #endif //VES_APPS_CONDUCTOR_NETWORK_H

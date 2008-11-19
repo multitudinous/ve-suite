@@ -39,6 +39,7 @@ Canvas API
 *
 */
 
+#include <ves/VEConfig.h>
 #include <wx/event.h>
 #include <wx/scrolwin.h>
 #include <wx/textdlg.h>
@@ -50,6 +51,11 @@ Canvas API
 #include <map>
 
 class AppFrame;
+
+namespace ves
+{
+namespace conductor
+{
 class Network;
 
 class VE_GUIPLUGINS_EXPORTS Canvas : public wxScrolledWindow
@@ -81,6 +87,8 @@ public:
     ///Populate canvas with network string
     ///Note: Must call Canvas::New( bool ) before calling this function
     void PopulateNetworks( std::string xmlNetwork, bool clearXplorer = true );
+    ///used to add new subnetworks to a plugin
+    void AddSubNetworks( );
     ///Net design canvas
     void New( bool promptClearXplorer );
     ///Get the correct size for sub dialogs
@@ -135,5 +143,7 @@ private:
     
     DECLARE_EVENT_TABLE() // no semicolon needed
 };
+}
+}
 
 #endif /// VES_APP_CANVAS_H

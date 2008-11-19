@@ -47,7 +47,8 @@ class ADPlugin : public UIPluginBase
 public:
     enum PLUGIN_ENUMS
     {
-        OPEN_SIM = 3600
+        OPEN_SIM = 3600,
+        UPDATE_HIER_TREE = 9999
     };
     ///Defualt constructor
     ADPlugin();

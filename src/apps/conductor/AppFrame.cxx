@@ -197,6 +197,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( UIPluginBase::MAKE_HIER, AppFrame::OnMakeIntoHierarchy )
     EVT_MENU( UIPluginBase::SET_UI_PLUGIN_NAME, AppFrame::SetTreeItemName )
 	EVT_MENU( UIPluginBase::SHOW_ICON_CHOOSER, AppFrame::OnShowIconChooser )
+	EVT_MENU( UPDATE_HIER_TREE, AppFrame::UpdateHierarchyTree )
     EVT_WINDOW_CREATE(AppFrame::OnChildCreate) 
 	EVT_BUTTON( IconChooser::OK, AppFrame::OnChangeIcon )
     EVT_UPDATE_UI( Canvas::UPDATE_NETWORK_DATA, AppFrame::LoadNewNetwork )
@@ -308,8 +309,8 @@ AppFrame::AppFrame( wxWindow * parent, wxWindowID id, const wxString& title )
     }
     
     //create hierarchy page
-    hierarchyTree->PopulateTree( 
-        XMLDataBufferEngine::instance()->GetTopSystemId() );
+    hierarchyTree->PopulateTree(); 
+    //XMLDataBufferEngine::instance()->GetTopSystemId() );
                                  
     //Process command line args to see if ves file needs to be loaded
     ProcessCommandLineArgs();
@@ -1237,8 +1238,8 @@ void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED( event ) )
     canvas->PopulateNetworks( nw_str, false );
 
     //create hierarchy page
-    hierarchyTree->PopulateTree( 
-        XMLDataBufferEngine::instance()->GetTopSystemId() );
+    hierarchyTree->PopulateTree( );
+    //XMLDataBufferEngine::instance()->GetTopSystemId() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
@@ -1263,8 +1264,8 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
         canvas->PopulateNetworks( nw_str );
 
         //create hierarchy page
-        hierarchyTree->PopulateTree( 
-            XMLDataBufferEngine::instance()->GetTopSystemId() );
+        hierarchyTree->PopulateTree(); 
+        //XMLDataBufferEngine::instance()->GetTopSystemId() );
         ///Submit job to xplorer
         wxCommandEvent event;
         SubmitToServer( event );
@@ -1334,14 +1335,14 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
 
     Network * network = canvas->GetActiveNetwork();
 
-    if( network->modules.empty() )
-    {
+    //if( network->modules.empty() )
+    //{
         //network->Load( nw_str, true );
         canvas->PopulateNetworks( nw_str );
 
         //create hierarchy page
-        hierarchyTree->PopulateTree( 
-            XMLDataBufferEngine::instance()->GetTopSystemId() );
+        hierarchyTree->PopulateTree();
+        //XMLDataBufferEngine::instance()->GetTopSystemId() );
 
         Log( "Simulation Opened.\n" );
         ///
@@ -1357,11 +1358,11 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
         wxCommandEvent event;
         SubmitToServer( event );
 		AspenSimOpen = true;
-    }
-    else
-    {
-        Log( "Simulation is already open.\n" );
-    }
+    //}
+    //else
+    //{
+    //    Log( "Simulation is already open.\n" );
+    //}
 }
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenSimulation( wxString simName )
@@ -2326,8 +2327,8 @@ void AppFrame::ProcessCommandLineArgs( void )
     //network->Load( ConvertUnicode( fname.c_str() ), true );
     canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
     //create hierarchy page
-    hierarchyTree->PopulateTree( 
-        XMLDataBufferEngine::instance()->GetTopSystemId() );
+    hierarchyTree->PopulateTree(); 
+    //XMLDataBufferEngine::instance()->GetTopSystemId() );
     // we submit after load to give ce and ge the new network
     SubmitToServer( event );
 }
@@ -2580,8 +2581,8 @@ void AppFrame::LoadNewNetwork( wxUpdateUIEvent& WXUNUSED( event )  )
         canvas->PopulateNetworks( ConvertUnicode( fname.c_str() ) );
         
         //create hierarchy page
-        hierarchyTree->PopulateTree(
-            XMLDataBufferEngine::instance()->GetTopSystemId() );
+        hierarchyTree->PopulateTree();
+        //XMLDataBufferEngine::instance()->GetTopSystemId() );
 
         ///This code will be moved in the future. It is Aspen specific code.
         CommandPtr aspenBKPFile = UserPreferencesDataBuffer::instance()->
@@ -2628,3 +2629,7 @@ void AppFrame::OnKeyPress( wxKeyEvent &event )
     }
 }
 ///////////////////////////////////////////////////////////////////////////////
+void AppFrame::UpdateHierarchyTree( wxCommandEvent& event )
+{
+    hierarchyTree->PopulateTree();
+}

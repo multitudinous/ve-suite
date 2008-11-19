@@ -31,7 +31,7 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-#include "Canvas.h"
+#include <ves/conductor/Canvas.h>
 #include <ves/open/xml/model/Link.h>
 #include <ves/open/xml/model/Model.h>
 #include <ves/open/xml/model/Network.h>
@@ -45,7 +45,7 @@
 #include <ves/open/xml/XMLReaderWriter.h>
 #include <ves/conductor/IconChooser.h>
 
-#include "Network.h"
+#include <ves/conductor/Network.h>
 #include <ves/open/xml/model/Tag.h>
 #include <ves/open/xml/model/TagPtr.h>
 
@@ -226,6 +226,34 @@ void Canvas::PopulateNetworks( std::string xmlNetwork, bool clearXplorer )
 
     CORBAServiceList::instance()->SendCommandStringToXplorer( tempCommand );
     
+    //Finally tell the canvas to redraw
+    Refresh( true );
+}
+///////////////////////////////////////////////////////////////////////////////
+void Canvas::AddSubNetworks( )
+{
+    //load
+    //XMLDataBufferEngine::instance()->LoadVESData( xmlNetwork );
+
+    //get the map count
+    const std::map< std::string, model::SystemPtr> systems =
+        XMLDataBufferEngine::instance()->GetXMLSystemDataMap();
+
+    // iterate through the systems
+    for( std::map< std::string, model::SystemPtr>::const_iterator
+            iter = systems.begin(); iter != systems.end(); iter++ )
+    {
+        if( networks.find( iter->first ) == networks.end() )
+        {
+            Network* tempNetwork = new Network( this );
+            tempNetwork->LoadSystem( iter->second, this );
+            networks[iter->first] = tempNetwork;
+            tempNetwork->SetNetworkID( iter->first );
+        }
+    }
+    
+    //SetActiveNetwork( XMLDataBufferEngine::instance()->GetTopSystemId() );
+
     //Finally tell the canvas to redraw
     Refresh( true );
 }
