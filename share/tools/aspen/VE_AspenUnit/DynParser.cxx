@@ -1197,7 +1197,7 @@ std::string DynParser::CreateNetwork( void )
         veSystem->AddModel(tempModel);
     }
 
-    ves::open::xml::model::SystemPtr
+    /*ves::open::xml::model::SystemPtr
         topSystem( new ves::open::xml::model::System() );
     ves::open::xml::model::ModelPtr
         topModel( new ves::open::xml::model::Model() );
@@ -1213,9 +1213,11 @@ std::string DynParser::CreateNetwork( void )
     topModel->SetSubSystem( veSystem );
     topSystem->AddModel( topModel );
     nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
-        ( topSystem, "veSystem" ) );
+        ( topSystem, "veSystem" ) );*/
+    nodes.push_back( std::pair< ves::open::xml::XMLObjectPtr, std::string >
+        ( veSystem, "veSystem" ) );
 
-    ves::open::xml::model::NetworkPtr
+    /*ves::open::xml::model::NetworkPtr
         topNetwork( new ves::open::xml::model::Network() );
     // create default state info section
     topNetwork->GetDataValuePair( -1 )->SetData( "m_xUserScale", 1.0 );
@@ -1228,7 +1230,7 @@ std::string DynParser::CreateNetwork( void )
         SetData( "nUnitX", static_cast< long int >( 200 ) );
     topNetwork->GetDataValuePair( -1 )->
         SetData( "nUnitY", static_cast< long int >( 200 ) );
-    topSystem->AddNetwork(topNetwork);
+    topSystem->AddNetwork(topNetwork);*/
 
     //std::string fileName( "network.txt" );
     //ves::open::xml::XMLReaderWriter networkWriter;
