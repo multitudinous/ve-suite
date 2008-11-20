@@ -49,6 +49,7 @@ Canvas API
 
 #include <vector>
 #include <map>
+#include <string>
 
 class AppFrame;
 

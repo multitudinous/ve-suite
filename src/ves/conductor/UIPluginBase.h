@@ -366,12 +366,12 @@ protected:
     std::vector< wxString > v_desc;
     std::vector< wxString > v_value;
 
-    std::map<std::string, long *>                      _int;
-    std::map<std::string, double *>                    _double;
-    std::map<std::string, std::string *>               _string;
-    std::map<std::string, std::vector<long> * >        _int1D;
-    std::map<std::string, std::vector<double> * >      _double1D;
-    std::map<std::string, std::vector<std::string> * > _string1D;
+    std::map<std::string, long* >                     _int;
+    std::map<std::string, double* >                   _double;
+    std::map<std::string, std::string* >              _string;
+    std::map<std::string, std::vector<long>* >        _int1D;
+    std::map<std::string, std::vector<double>* >      _double1D;
+    std::map<std::string, std::vector<std::string>* > _string1D;
 
     wxBitmap* my_icon;
     int icon_w, icon_h;

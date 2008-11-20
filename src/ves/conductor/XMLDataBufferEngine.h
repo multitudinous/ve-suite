@@ -96,12 +96,12 @@ public:
     ///New
     void NewVESData( bool promptClearXplorer );
     ///Get data
-    ves::open::xml::model::NetworkPtr
-        GetXMLNetworkDataObject( std::string dataNumber );
+    //ves::open::xml::model::NetworkPtr
+    //    GetXMLNetworkDataObject( std::string dataNumber );
     ///Get top level models only
-    ves::open::xml::model::ModelPtr GetXMLModelDataObject( std::string dataNumber );
+    //ves::open::xml::model::ModelPtr GetXMLModelDataObject( std::string dataNumber );
     ///Get data
-    std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
+    //std::vector< std::string > GetNetworkModelVector( std::string dataNumber );
     ///Get the map of all systems
     const std::map< std::string, ves::open::xml::model::SystemPtr >
         GetXMLSystemDataMap();

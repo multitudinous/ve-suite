@@ -396,28 +396,28 @@ void XMLDataBufferEngine::NewVESData( bool promptClearXplorer )
     topId = tempSystem->GetID();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::model::NetworkPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
+/*ves::open::xml::model::NetworkPtr XMLDataBufferEngine::GetXMLNetworkDataObject(
     std::string dataNumber )
 {
     return m_networkMap[ dataNumber ];
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
-ves::open::xml::model::ModelPtr XMLDataBufferEngine::GetXMLModelDataObject(
+/*ves::open::xml::model::ModelPtr XMLDataBufferEngine::GetXMLModelDataObject(
     std::string dataNumber )
 {
     return m_modelMap[ dataNumber ];
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 ves::open::xml::UserPtr XMLDataBufferEngine::GetXMLUserDataObject( std::string dataNumber )
 {
     return m_userMap[ dataNumber ];
 }
 ////////////////////////////////////////////////////////////////////////////////
-std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector(
+/*std::vector< std::string > XMLDataBufferEngine::GetNetworkModelVector(
     std::string dataNumber )
 {
     return m_networkModelMap[ dataNumber ];
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 std::string XMLDataBufferEngine::GetTopSystemId( )
 {

@@ -119,7 +119,7 @@ void HierarchyTree::PopulateTree( )//const std::string& id )
     ///Reset Tree
     Clear();
 
-    std::string& id = XMLDataBufferEngine::instance()->GetTopSystemId();
+    std::string id = XMLDataBufferEngine::instance()->GetTopSystemId();
 
     ves::open::xml::model::SystemPtr tempSys = 
         XMLDataBufferEngine::instance()->GetXMLSystemDataObject( id );
