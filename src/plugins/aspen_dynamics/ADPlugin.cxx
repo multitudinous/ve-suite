@@ -31,12 +31,14 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/conductor/util/CORBAServiceList.h>
-//#include <apps/conductor/Network.h>
 
 #include "ADPlugin.h"
 
+#include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/xpm/AspenPlus2DIcons/dynamics.xpm>
+#include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/open/xml/model/Model.h>
+#include <ves/open/xml/model/System.h>
 #include <ves/open/xml/XMLReaderWriter.h>
 
 #include <wx/menu.h>
@@ -46,6 +48,8 @@
 #include <wx/window.h>
 #include <wx/filedlg.h>
 #include <wx/filename.h>
+
+#include <fstream>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
@@ -99,5 +103,91 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     wxString extText = dynext;
     wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
         extText, wxOPEN );
-    fd.ShowModal();
+
+    if( fd.ShowModal() != wxID_OK )
+    {
+        return;
+    }
+
+    wxFileName dynFileName;
+    dynFileName.ClearExt();
+    dynFileName.SetName( fd.GetFilename() );
+
+    CommandPtr returnState ( new Command() );
+    returnState->SetCommandName( "getNetwork" );
+    DataValuePairPtr data( new DataValuePair() );
+    data->SetData( "NetworkQuery", "getNetwork" );
+    returnState->AddDataValuePair( data );
+
+    data = DataValuePairPtr( new DataValuePair() );
+    data->SetData( "DYNFileName",  ConvertUnicode( dynFileName.GetFullName().c_str() ) );
+    returnState->AddDataValuePair( data );
+
+    std::vector< std::pair< XMLObjectPtr, std::string > > nodes;
+    nodes.push_back( std::pair< XMLObjectPtr, std::string >( returnState, "vecommand" ) );
+    XMLReaderWriter commandWriter;
+    std::string status = "returnString";
+    commandWriter.UseStandaloneDOMDocumentManager();
+    commandWriter.WriteXMLDocument( nodes, status, "Command" );
+    //Get results
+    std::string nw_str = serviceList->Query( status );
+
+    ves::open::xml::XMLReaderWriter networkWriter;
+    networkWriter.UseStandaloneDOMDocumentManager();
+    networkWriter.ReadFromString();
+    std::vector< std::pair< std::string, std::string > > dataToObtain;
+    std::vector< std::pair< std::string, std::string > >::iterator dataIter;
+    dataToObtain.push_back( std::make_pair( "Model", "veSystem" ) );
+    networkWriter.ReadXMLData( nw_str, dataToObtain );
+    std::vector< ves::open::xml::XMLObjectPtr >::iterator objectIter;
+    std::vector< ves::open::xml::XMLObjectPtr > objectVector =
+        networkWriter.GetLoadedXMLObjects();
+    ves::open::xml::model::SystemPtr tempSystem;
+
+    tempSystem = boost::dynamic_pointer_cast<ves::open::xml::model::System>( objectVector.at( 0 ) );
+    GetVEModel()->SetSubSystem( tempSystem );
+    XMLDataBufferEngine::instance()->ParseSystem( tempSystem );
+
+    // If there is nothing on the CE
+    if( nw_str.compare("DYNDNE") == 0 )
+    {
+        return;
+    }    
+
+    Network * network = m_canvas->GetActiveNetwork();
+
+    //if( network->modules.empty() )
+    //{
+        //network->Load( nw_str, true );
+        m_canvas->AddSubNetworks( );
+    std::ofstream netdump ("netdump.txt");
+    netdump << nw_str;
+    netdump.close();
+
+        event.SetId( UPDATE_HIER_TREE );
+        ::wxPostEvent( m_canvas, event );
+
+        //create hierarchy page
+        //hierarchyTree->PopulateTree( 
+        //    XMLDataBufferEngine::instance()->GetTopSystemId() );
+
+        //Log( "Simulation Opened.\n" );
+        ///
+        CommandPtr aspenDynFile( new Command() );
+        aspenDynFile->SetCommandName( "Aspen_Dynamics_Preferences" );
+        data = DataValuePairPtr( new DataValuePair() );
+        data->SetData( "DYNFileName",
+                       ConvertUnicode( dynFileName.GetFullName().c_str() ) );
+        aspenDynFile->AddDataValuePair( data );
+        UserPreferencesDataBuffer::instance()->
+        SetCommand( "Aspen_Dynamics_Preferences", aspenDynFile );
+        ///Submit job to xplorer
+        //wxCommandEvent event;
+        //SubmitToServer( event );
+		//AspenSimOpen = true;
+    //}
+    //else
+    //{
+    //    Log( "Simulation is already open.\n" );
+    //}
 }
