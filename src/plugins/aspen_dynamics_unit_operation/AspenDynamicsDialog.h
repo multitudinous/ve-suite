@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef __ADVARDIALOG_h__
-#define __ADVARDIALOG_h__
+#ifndef __ASPENDYNAMICSDIALOG_h__
+#define __ASPENDYNAMICSDIALOG_h__
 
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/xml/Command.h>
@@ -47,22 +47,22 @@
 
 #include <vector>
 
-#undef ADVarDialog_STYLE
-#define ADVarDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
+#undef AspenDynamicsDialog_STYLE
+#define AspenDynamicsDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
 
-class ADVarDialog : public wxDialog
+class AspenDynamicsDialog : public wxDialog
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		ADVarDialog(wxWindow *parent, wxWindowID id = 1,
-            const wxString &title = wxT("ADVarDialog"),
+		AspenDynamicsDialog(wxWindow *parent, wxWindowID id = 1,
+            const wxString &title = wxT("AspenDynamicsDialog"),
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
-            long style = ADVarDialog_STYLE);
+            long style = AspenDynamicsDialog_STYLE);
 
-		virtual ~ADVarDialog();
+		virtual ~AspenDynamicsDialog();
 		void CancelButtonClick(wxCommandEvent& event);
 		void SetButtonClick(wxCommandEvent& event);
         void SetData( wxString name = wxT(""), wxString description = wxT(""),

@@ -30,26 +30,26 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#include "ADUOVarDialog.h"
+#include "AspenDynamicsDialog.h"
 
-BEGIN_EVENT_TABLE(ADUOVarDialog,wxDialog)
-	EVT_CLOSE(ADUOVarDialog::OnClose)
-	EVT_BUTTON(ID_CANCELBUTTON,ADUOVarDialog::CancelButtonClick)
-	EVT_BUTTON(ID_SETBUTTON,ADUOVarDialog::SetButtonClick)
-    EVT_GRID_CELL_CHANGE(ADUOVarDialog::WxGridCellChange)
+BEGIN_EVENT_TABLE(AspenDynamicsDialog,wxDialog)
+	EVT_CLOSE(AspenDynamicsDialog::OnClose)
+	EVT_BUTTON(ID_CANCELBUTTON,AspenDynamicsDialog::CancelButtonClick)
+	EVT_BUTTON(ID_SETBUTTON,AspenDynamicsDialog::SetButtonClick)
+    EVT_GRID_CELL_CHANGE(AspenDynamicsDialog::WxGridCellChange)
 END_EVENT_TABLE()
 
-ADUOVarDialog::ADUOVarDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
+AspenDynamicsDialog::AspenDynamicsDialog(wxWindow *parent, wxWindowID id, const wxString &title, const wxPoint &position, const wxSize& size, long style)
 : wxDialog(parent, id, title, position, size, style)
 {
 	CreateGUIControls();
 }
 
-ADUOVarDialog::~ADUOVarDialog()
+AspenDynamicsDialog::~AspenDynamicsDialog()
 {
 } 
 
-void ADUOVarDialog::CreateGUIControls()
+void AspenDynamicsDialog::CreateGUIControls()
 {
 	WxFlexGridSizer = new wxFlexGridSizer(0, 1, 0, 0);
 	this->SetSizer(WxFlexGridSizer);
@@ -75,7 +75,7 @@ void ADUOVarDialog::CreateGUIControls()
 	CancelButton->SetFont(wxFont(12, wxSWISS, wxNORMAL,wxNORMAL, false, wxT("Tahoma")));
 	WxBoxSizer1->Add(CancelButton,0,wxALIGN_CENTER | wxALL,5);
 
-	SetTitle(wxT("ADUOVarDialog"));
+	SetTitle(wxT("AspenDynamicsDialog"));
 	SetIcon(wxNullIcon);
 	
 	GetSizer()->Layout();
@@ -100,19 +100,19 @@ void ADUOVarDialog::CreateGUIControls()
 }
 
 //for closing
-void ADUOVarDialog::OnClose(wxCloseEvent& /*event*/)
+void AspenDynamicsDialog::OnClose(wxCloseEvent& /*event*/)
 {
 	this->Destroy();
 }
 
 //CancelButtonClick
-void ADUOVarDialog::CancelButtonClick(wxCommandEvent& event)
+void AspenDynamicsDialog::CancelButtonClick(wxCommandEvent& event)
 {
     this->Destroy();
 }
 
 // SetButtonClick
-void ADUOVarDialog::SetButtonClick(wxCommandEvent& event)
+void AspenDynamicsDialog::SetButtonClick(wxCommandEvent& event)
 {  
     ves::open::xml::CommandPtr params( new ves::open::xml::Command() );
     //input variables;
@@ -159,7 +159,7 @@ void ADUOVarDialog::SetButtonClick(wxCommandEvent& event)
 }
 
 // SetData
-void ADUOVarDialog::SetData( wxString name, wxString description,
+void AspenDynamicsDialog::SetData( wxString name, wxString description,
                                      wxString value, wxString units )
 {
     //add a new row
@@ -179,25 +179,25 @@ void ADUOVarDialog::SetData( wxString name, wxString description,
 }
 
 //Update the grid size to match data size
-void ADUOVarDialog::UpdateSizes()
+void AspenDynamicsDialog::UpdateSizes()
 {
 	WxGrid->AutoSize();
     WxGrid->SetRowLabelAlignment( wxALIGN_LEFT, wxALIGN_CENTRE );
 }
 
 //WxGridCellChange
-void ADUOVarDialog::WxGridCellChange(wxGridEvent& event)
+void AspenDynamicsDialog::WxGridCellChange(wxGridEvent& event)
 {
 	rowsChanged.push_back( event.GetRow() );
 }
 
 //WxGridCellChange
-void ADUOVarDialog::SetComponentName( wxString name )
+void AspenDynamicsDialog::SetComponentName( wxString name )
 {
 	CompName = name;
 }
 
-void ADUOVarDialog::SetServiceList(
+void AspenDynamicsDialog::SetServiceList(
     ves::conductor::util::CORBAServiceList * serviceList )
 {
     this->ServiceList = serviceList;
