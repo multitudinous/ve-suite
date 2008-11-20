@@ -30,30 +30,30 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
-#include <ves/conductor/util/ParamsDlg.h>
+#include "APUOVarDialog.h"
 
 #include <wx/msgdlg.h>
 #include <wx/progdlg.h>
 
-using namespace ves::conductor::util;
+using namespace ves::conductor;
 
-BEGIN_EVENT_TABLE( ParamsDlg, wxDialog )
-    //EVT_CLOSE( ParamsDlg::OnClose )
-    EVT_BUTTON( ID_SETBUTTON, ParamsDlg::SetButtonClick )
-    EVT_TREE_SEL_CHANGED( ID_PARAMCHOICE, ParamsDlg::ParamChoiceSelected )
+BEGIN_EVENT_TABLE( APUOVarDialog, wxDialog )
+    //EVT_CLOSE( APUOVarDialog::OnClose )
+    EVT_BUTTON( ID_SETBUTTON, APUOVarDialog::SetButtonClick )
+    EVT_TREE_SEL_CHANGED( ID_PARAMCHOICE, APUOVarDialog::ParamChoiceSelected )
 END_EVENT_TABLE()
 
-ParamsDlg::ParamsDlg(
+APUOVarDialog::APUOVarDialog(
     wxWindow *parent, wxWindowID id, const wxString &title,
     const wxPoint &position, const wxSize& size, long style )
         : wxDialog( parent, id, title, position, size, style )
 {
     CreateGUIControls();
 }
-ParamsDlg::~ParamsDlg()
+APUOVarDialog::~APUOVarDialog()
 {}
 
-void ParamsDlg::CreateGUIControls()
+void APUOVarDialog::CreateGUIControls()
 {
     SetTitle( wxT( "ParamsDialog" ) );
     SetIcon( wxNullIcon );
@@ -286,13 +286,13 @@ void ParamsDlg::CreateGUIControls()
     IsBlock = true;
 }
 
-/*void ParamsDlg::OnClose( wxCloseEvent& event )
+/*void APUOVarDialog::OnClose( wxCloseEvent& event )
 {
     Destroy();
 }*/
 
 //ParamChoiceSelected
-void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
+void APUOVarDialog::ParamChoiceSelected( wxTreeEvent& event )
 {
     //get selection
     wxTreeItemId selection = ParamChoice->GetSelection();
@@ -511,7 +511,7 @@ void ParamsDlg::ParamChoiceSelected( wxTreeEvent& event )
 }
 
 //SetButtonClick
-void ParamsDlg::SetButtonClick( wxCommandEvent& event )
+void APUOVarDialog::SetButtonClick( wxCommandEvent& event )
 {
     std::string compName = ConvertUnicode( CompName.c_str() );
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
@@ -556,7 +556,7 @@ void ParamsDlg::SetButtonClick( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
     serviceList->Query( status );
 }
-void ParamsDlg::AppendList( const char * input )
+void APUOVarDialog::AppendList( const char * input )
 {
     std::string inputName( input );
     if( inputName.find(".") == std::string::npos )
@@ -578,23 +578,23 @@ void ParamsDlg::AppendList( const char * input )
             wxString( subName.c_str(), wxConvUTF8 ) );
     }
 }
-void ParamsDlg::SetCompName( const char * name )
+void APUOVarDialog::SetCompName( const char * name )
 {
     this->CompName = wxString( name, wxConvUTF8 );
 }
 
-void ParamsDlg::SetServiceList(
+void APUOVarDialog::SetServiceList(
     ves::conductor::util::CORBAServiceList * serviceList )
 {
     this->serviceList = serviceList;
 }
 
-void ParamsDlg::SetDialogType( const char * type )
+void APUOVarDialog::SetDialogType( const char * type )
 {
     this->DialogType = wxString( type, wxConvUTF8 );
 }
 
-void ParamsDlg::SetIsBlock( bool isBlock )
+void APUOVarDialog::SetIsBlock( bool isBlock )
 {
     IsBlock = isBlock;
 }

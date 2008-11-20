@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
-#ifndef __ASPENDYNAMICSDIALOG_h__
-#define __ASPENDYNAMICSDIALOG_h__
+#ifndef ADUOVARDIALOG_H
+#define ADUOVARDIALOG_H
 
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/xml/Command.h>
@@ -47,22 +47,26 @@
 
 #include <vector>
 
-#undef AspenDynamicsDialog_STYLE
-#define AspenDynamicsDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
+#undef ADUOVarDialog_STYLE
+#define ADUOVarDialog_STYLE wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxTHICK_FRAME | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxMAXIMIZE_BOX | wxCLOSE_BOX
 
-class AspenDynamicsDialog : public wxDialog
+namespace ves
+{
+namespace conductor
+{
+class ADUOVarDialog : public wxDialog
 {
 	private:
 		DECLARE_EVENT_TABLE();
 		
 	public:
-		AspenDynamicsDialog(wxWindow *parent, wxWindowID id = 1,
-            const wxString &title = wxT("AspenDynamicsDialog"),
+		ADUOVarDialog(wxWindow *parent, wxWindowID id = 1,
+            const wxString &title = wxT("ADUOVarDialog"),
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize,
-            long style = AspenDynamicsDialog_STYLE);
+            long style = ADUOVarDialog_STYLE);
 
-		virtual ~AspenDynamicsDialog();
+		virtual ~ADUOVarDialog();
 		void CancelButtonClick(wxCommandEvent& event);
 		void SetButtonClick(wxCommandEvent& event);
         void SetData( wxString name = wxT(""), wxString description = wxT(""),
@@ -104,5 +108,6 @@ class AspenDynamicsDialog : public wxDialog
 		void CreateGUIControls();
         void WxGridCellChange(wxGridEvent& event);
 };
-
+}
+}
 #endif

@@ -37,7 +37,6 @@
 
 #include <wx/event.h>
 
-
 namespace ves
 {
 namespace conductor

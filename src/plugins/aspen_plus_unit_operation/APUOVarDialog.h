@@ -30,8 +30,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.rb END do not edit this line> **************/
-#ifndef PARAMSDLG_H
-#define PARAMSDLG_H
+#ifndef APUOVARDIALOG_H
+#define APUOVARDIALOG_H
 
 #include <ves/conductor/util/CORBAServiceList.h>
 #include <ves/open/xml/Command.h>
@@ -49,20 +49,18 @@
 #include <wx/treectrl.h>
 #include <wx/stattext.h>
 
-#undef ParamsDlg_STYLE
-#define ParamsDlg_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
+#undef APUOVarDialog_STYLE
+#define APUOVarDialog_STYLE wxCAPTION | wxSYSTEM_MENU | wxSTAY_ON_TOP | wxDIALOG_NO_PARENT | wxMINIMIZE_BOX | wxCLOSE_BOX
 
 namespace ves
 {
 namespace conductor
 {
-namespace util
-{
-class VE_CONDUCTOR_UTILS_EXPORTS ParamsDlg : public wxDialog
+class APUOVarDialog : public wxDialog
 {
 public:
-    ParamsDlg( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "ParamsDialog" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = ParamsDlg_STYLE );
-	virtual ~ParamsDlg();
+    APUOVarDialog( wxWindow *parent, wxWindowID id = 1, const wxString &title = wxT( "ParamsDialog" ), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = APUOVarDialog_STYLE );
+	virtual ~APUOVarDialog();
 
     enum
     {
@@ -215,7 +213,6 @@ private:
 
     DECLARE_EVENT_TABLE();
 };
-}
 }
 }
 #endif
