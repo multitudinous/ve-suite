@@ -86,15 +86,32 @@ HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
         wxTreeCtrl( parent, id, pos, size, style ),
         m_canvas( 0 )
 {
-    images = new wxImageList( 32, 32, TRUE );
+    iconsize = 16;
+    images = new wxImageList( iconsize, iconsize, TRUE );
     AssignImageList( images );
-    AddtoImageList( wxIcon( icon3_xpm ) );
-    AddtoImageList( wxIcon( icon4_xpm ) );
-    AddtoImageList( wxIcon( icon5_xpm ) );
-    m_rootId = AddRoot( wxT( "Top Sheet" ), 0, -1, NULL );
+
+    wxIcon icons[5];
+    icons[0] = wxIcon( icon1_xpm );
+    icons[1] = wxIcon( icon2_xpm );
+    icons[2] = wxIcon( icon3_xpm );
+    icons[3] = wxIcon( icon4_xpm );
+    icons[4] = wxIcon( icon5_xpm );
+    AddtoImageList( wxBitmap( wxBitmap( icons[0] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[1] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[2] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[3] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[4] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+
+    m_rootId = AddRoot( wxT( "Top Sheet" ), 2, -1, NULL );
+    //m_rootId = AddRoot( wxT( "Top Sheet" ), 0, -1, NULL );
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
-    SetItemImage( m_rootId, 2, wxTreeItemIcon_Expanded );
+    SetItemImage( m_rootId, 4, wxTreeItemIcon_Expanded );
     SetItemFont( m_rootId, *wxITALIC_FONT );
 
     //Default Icons
@@ -162,18 +179,24 @@ void HierarchyTree::PopulateTree( )//const std::string& id )
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
+                //AddtoImageList( wxBitmap( wxBitmap(
+                //aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
                 AddtoImageList( wxBitmap( wxBitmap(
-                                              aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
+                    aspenIconIter->second ).ConvertToImage().Rescale( iconsize, iconsize ) ) );
             }
             else
             {
-                AddtoImageList( wxIcon( square_xpm ) );
+                //AddtoImageList( wxIcon( square_xpm ) );
+                wxIcon square ( square_xpm );
+                AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+                    Rescale( iconsize, iconsize ) ) );
             }
 
             wxTreeItemId leaf = AppendItem( m_rootId,
                                             wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
                                             images->GetImageCount() - 1 , -1, modData );
             SetItemImage( leaf, images->GetImageCount() - 1 );
+            SetItemBold( leaf );
 
             if( iter->second->GetSubSystem() )
             {
@@ -216,18 +239,25 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
+                //AddtoImageList( wxBitmap( wxBitmap(
+                //aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
                 AddtoImageList( wxBitmap( wxBitmap(
-                                              aspenIconIter->second ).ConvertToImage().Rescale( 32, 32 ) ) );
+                    aspenIconIter->second ).ConvertToImage().Rescale( iconsize, iconsize ) ) );
             }
             else
             {
-                AddtoImageList( wxIcon( square_xpm ) );
+                //AddtoImageList( wxIcon( square_xpm ) );
+                wxIcon square ( square_xpm );
+                AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+                    Rescale( iconsize, iconsize ) ) );
             }
 
             wxTreeItemId leaf = AppendItem( parentLeaf,
-                                            wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ),
-                                            images->GetImageCount() - 1 , -1, modData );
+                wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ),
+                images->GetImageCount() - 1 , -1, modData );
+
             SetItemImage( leaf, images->GetImageCount() - 1 );
+            SetItemBold( leaf );
 
             if( models[i]->GetSubSystem() )
             {
@@ -242,11 +272,24 @@ void HierarchyTree::Clear()
 {
     DeleteAllItems();
     images->RemoveAll();
-    AddtoImageList( wxIcon( icon3_xpm ) );
-    AddtoImageList( wxIcon( icon4_xpm ) );
-    AddtoImageList( wxIcon( icon5_xpm ) );
-    m_rootId = AddRoot( wxT( "Top Sheet" ), 0, 1, NULL );
-    SetItemImage( m_rootId, 2, wxTreeItemIcon_Expanded );
+    wxIcon icons[5];
+    icons[0] = wxIcon( icon1_xpm );
+    icons[1] = wxIcon( icon2_xpm );
+    icons[2] = wxIcon( icon3_xpm );
+    icons[3] = wxIcon( icon4_xpm );
+    icons[4] = wxIcon( icon5_xpm );
+    AddtoImageList( wxBitmap( wxBitmap( icons[0] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[1] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[2] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[3] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    AddtoImageList( wxBitmap( wxBitmap( icons[4] ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
+    m_rootId = AddRoot( wxT( "Top Sheet" ), 2, -1, NULL );
+    SetItemImage( m_rootId, 4, wxTreeItemIcon_Expanded );
     SetItemFont( m_rootId, *wxITALIC_FONT );
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
@@ -356,12 +399,16 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
     modData->modId = cur_module->GetID();
     modData->modName = ConvertUnicode( cur_module->GetName() );
     modData->systemId = m_canvas->GetActiveNetworkID( );
-    AddtoImageList( wxBitmap( square_xpm ) );
+    //AddtoImageList( wxBitmap( square_xpm ) );
+    wxIcon square ( square_xpm );
+    AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+        Rescale( iconsize, iconsize ) ) );
 
     wxTreeItemId leaf = AppendItem( m_currentLevelId, 
         wxString( cur_module->GetName().c_str(), wxConvUTF8 ), 
                 -1 , -1, modData );
     SetItemImage( leaf, images->GetImageCount() - 1 );
+    SetItemBold( leaf );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::RemoveFromTree( unsigned int id )
@@ -387,11 +434,15 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
         modData->modName = "DefaultPlugin";
         modData->systemId = m_canvas->GetActiveNetworkID( );
         
-        AddtoImageList( wxBitmap( square_xpm ) );
+        //AddtoImageList( wxBitmap( square_xpm ) );
+        wxIcon square ( square_xpm );
+        AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+            Rescale( iconsize, iconsize ) ) );
         wxTreeItemId leaf = AppendItem( selected, 
             _( "DefaultPlugin" ), -1 , -1, modData );
         SetItemImage( leaf, images->GetImageCount() - 1 );
         SelectItem( leaf );
+        SetItemBold( leaf );
         Refresh();
     }
 }
@@ -417,8 +468,10 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
       std::map< std::string, wxImage >::iterator iter = defaultIconMap.find( path );
       if( iter != defaultIconMap.end() )
       {
+          //AddtoImageList( wxBitmap( wxBitmap( 
+          //    iter->second ).ConvertToImage().Rescale(32, 32)));
           AddtoImageList( wxBitmap( wxBitmap( 
-              iter->second ).ConvertToImage().Rescale(32, 32)));
+              iter->second ).ConvertToImage().Rescale(iconsize, iconsize)));
           SetItemImage(selected, images->GetImageCount()-1);
           return;
       }
@@ -429,8 +482,10 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
       aspenIconIter = aspenPlusIconMap.find( fullPath );
       if( aspenIconIter != aspenPlusIconMap.end() )
       {
+         //AddtoImageList( wxBitmap( wxBitmap( 
+         //   aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
          AddtoImageList( wxBitmap( wxBitmap( 
-            aspenIconIter->second ).ConvertToImage().Rescale(32, 32)));
+            aspenIconIter->second ).ConvertToImage().Rescale(iconsize, iconsize)));
           SetItemImage(selected, images->GetImageCount()-1);
       }
       else
@@ -445,7 +500,8 @@ void HierarchyTree::ChangeLeafIcon( unsigned int id, std::string path )
 		  wxImage image;
           image.LoadFile( wxString( fullPath.c_str(), wxConvUTF8 ),
              wxBITMAP_TYPE_JPEG );
-          AddtoImageList( wxBitmap( wxBitmap( image ).ConvertToImage().Rescale(32, 32)));
+          //AddtoImageList( wxBitmap( wxBitmap( image ).ConvertToImage().Rescale(32, 32)));
+          AddtoImageList( wxBitmap( wxBitmap( image ).ConvertToImage().Rescale(iconsize, iconsize)));
           SetItemImage(selected, images->GetImageCount()-1);
       }
       return;

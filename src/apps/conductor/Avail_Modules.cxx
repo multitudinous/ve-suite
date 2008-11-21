@@ -76,7 +76,8 @@ Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoi
     int image1 = TreeCtrlIcon_Folder;
     int image2 = TreeCtrlIcon_FolderSelected;
     CreateImageList();
-    rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
+    //rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
+    rootId = AddRoot( wxT( "Available Modules" ), image1, -1, NULL );
     SetItemImage( rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
     SetItemFont( rootId, *wxITALIC_FONT );
     pl_loader = new PluginLoader();

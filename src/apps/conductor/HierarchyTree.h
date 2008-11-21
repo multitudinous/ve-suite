@@ -127,6 +127,8 @@ protected:
         return tempStr;
     }
 
+    int iconsize;
+
     DECLARE_EVENT_TABLE();
 };
 
