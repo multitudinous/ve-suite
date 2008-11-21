@@ -1,4 +1,5 @@
 ##Builds osgBullet
+#!python
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
@@ -22,6 +23,8 @@ lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
 
 osg_options.apply( lib_env )
 #bullet_options.apply( lib_env )
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
 
 if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1
