@@ -391,6 +391,7 @@ void HierarchyTree::AppendToTree( unsigned int parentID, unsigned int id )
         wxTreeItemId leaf = AppendItem( selected, 
             _( "DefaultPlugin" ), -1 , -1, modData );
         SetItemImage( leaf, images->GetImageCount() - 1 );
+        SelectItem( leaf );
         Refresh();
     }
 }
