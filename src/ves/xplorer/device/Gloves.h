@@ -59,6 +59,8 @@ Gloves API
 #include <gmtl/Matrix.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
+#include <gadget/Type/AnalogInterface.h>
+
 
 // --- OSG Includes --- //
 #include <osg/Geometry>
@@ -186,6 +188,7 @@ private:
 
     gadget::PositionInterface wand; ///<VRJuggler's wand positional interface
     gadget::PositionInterface head; ///<VRJuggler's head positional interface
+    gadget::PositionInterface mRightHandPos;
 
     gmtl::Matrix44d vjHeadMat; ///<Contains current head position matrix
 
@@ -224,6 +227,31 @@ private:
     
     osg::ref_ptr< osgBullet::HandNode > mLeftHand;
     osg::ref_ptr< osgBullet::HandNode > mRightHand;
+
+    gadget::AnalogInterface      mRightThumbMCP;
+    gadget::AnalogInterface      mRightThumbPIP;
+
+    gadget::AnalogInterface      mRightThumbIndexAbduction;
+
+    gadget::AnalogInterface      mRightIndexMCP;
+    gadget::AnalogInterface      mRightIndexPIP;
+
+    gadget::AnalogInterface      mRightIndexMiddleAbduction;
+
+    gadget::AnalogInterface      mRightMiddleMCP;
+    gadget::AnalogInterface      mRightMiddlePIP;
+
+    gadget::AnalogInterface      mRightMiddleRingAbduction;
+
+    gadget::AnalogInterface      mRightRingMCP;
+    gadget::AnalogInterface      mRightRingPIP;
+
+    gadget::AnalogInterface      mRightRingPinkyAbduction;
+
+    gadget::AnalogInterface      mRightPinkyMCP;
+    gadget::AnalogInterface      mRightPinkyPIP;
+
+
 };
 }
 }
