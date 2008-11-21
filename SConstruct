@@ -530,13 +530,12 @@ if not SConsAddons.Util.hasHelpFlag():
    #osgOQSubdirs = pj( buildDir, 'external', 'osgOQ')
    osgPPUSubdirs = pj( buildDir, 'external', 'osgPPU')
    osgEphemerisSubdirs = pj( buildDir, 'external', 'osgEphemeris')
-   #osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
-   #bullet = pj( buildDir, 'external', 'bullet-2.72')
+   osgBulletSubdirs = pj( buildDir, 'external', 'osgBullet')
+   bullet = pj( buildDir, 'external', 'bullet-2.72')
    
    ves_dirs = [vesSubdirs, distSubdirs, osgEphemerisSubdirs,
                shareSubdirs, lokiSubdirs, 
-		osgPPUSubdirs ]
-		#osgBulletSubdirs, bullet ]
+               osgPPUSubdirs, osgBulletSubdirs, bullet ]
 
    #build applications in test/ directory
    if baseEnv[ 'buildTests' ] == 'yes':

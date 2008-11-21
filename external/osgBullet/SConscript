@@ -24,8 +24,8 @@ osg_options.apply( lib_env )
 #bullet_options.apply( lib_env )
 
 if GetPlatform() == 'win32':
-   libDB_env['no_import_lib'] = 1
-   libDB_env['WINDOWS_INSERT_MANIFEST'] = False
+   lib_env['no_import_lib'] = 1
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
 
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('osgBullet', lib_env,
