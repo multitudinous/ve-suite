@@ -1,5 +1,6 @@
 ###############################################################
 ##Builds bullet
+#!python
 import os, sys, string
 pj = os.path.join
 import SConsAddons.Util as sca_util
@@ -14,6 +15,8 @@ sources = map(lambda s: pj('src', s), sources)
 lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append( CPPPATH = [pj(openDir, 'src' )] )
 #lib_env.Append( CPPDEFINES  = ['OSGPPU_LIBRARY','osgPPU_EXPORTS'] )
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
 
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('bullet', lib_env,
@@ -41,6 +44,8 @@ libDB_env.Append( CPPPATH = [pj(openDir, 'src' )] )
 libDB_env.Append( LIBS = ['bullet','XML','COLLADA_DOM'] )
 libDB_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
 #osg_options.apply( libDB_env )
+if GetPlatform() == 'linux':
+    libDB_env.Append( CXXFLAGS=['-fPIC'])
 
 if GetPlatform() == 'win32':
    libDB_env['no_import_lib'] = 1
@@ -69,6 +74,8 @@ lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4' )]
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','LibXML','include' )] )
 lib_env.Append( LIBS = ['XML'] )
 lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
 
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('COLLADA_DOM', lib_env,
@@ -92,6 +99,8 @@ lib_env = ves_pkg.getEnv().Copy()
 #lib_env.Append( CPPPATH = [pj(openDir, 'Extras','COLLADA_DOM','include','1.4' )] )
 lib_env.Append( CPPPATH = [pj(openDir, 'Extras','LibXML','include' )] )
 #lib_env.Append( CPPDEFINES  = ['LIBXML_MODULES_ENABLED'] )
+if GetPlatform() == 'linux':
+    lib_env.Append( CXXFLAGS=['-fPIC'])
 
 #if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('XML', lib_env,
