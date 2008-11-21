@@ -171,6 +171,10 @@ int main( int argc, char* argv[] )
     {
         std::cerr << "VE-Xplorer Init: Caught unknown exception." << std::endl
             << e.what() << std::endl;
+        for( int i = 1; i < argc; ++i )    // Configure the kernel
+        {
+            std::cerr << "argv[ " << i << " ] = " << argv[ i ] << std::endl;
+        }
     }
 
     return 0;
