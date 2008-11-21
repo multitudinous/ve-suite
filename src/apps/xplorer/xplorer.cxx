@@ -163,13 +163,14 @@ int main( int argc, char* argv[] )
         << " port number specified in the VES script.      " << std::endl
         << " Please start the nameserver with -> VES -nserv . " << std::endl;
     }
-    catch ( CORBA::Exception& )
+    catch( CORBA::Exception& )
     {
         std::cerr << "Caught CORBA::Exception." << std::endl;
     }
-    catch ( ... )
+    catch( std::exception& e )
     {
-        std::cerr << "Caught unknown exception." << std::endl;
+        std::cerr << "VE-Xplorer Init: Caught unknown exception." << std::endl
+            << e.what() << std::endl;
     }
 
     return 0;
