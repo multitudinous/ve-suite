@@ -38,6 +38,7 @@
 #include <ves/xplorer/device/KeyboardMouse.h>
 #include <ves/xplorer/device/Wand.h>
 #include <ves/xplorer/device/Tablet.h>
+#include <ves/xplorer/device/Gloves.h>
 
 #include <ves/xplorer/event/EventHandler.h>
 #include <ves/xplorer/event/device/DeviceEH.h>
@@ -78,6 +79,9 @@ DeviceHandler::DeviceHandler()
         new ves::xplorer::Wand();
     mDevices[ "KeyboardMouse" ] =
         new ves::xplorer::KeyboardMouse();
+
+    //mDevices[ "Gloves" ] =
+    //    new ves::xplorer::Gloves();
 
     //Set properties in Devices
     std::map< const std::string, ves::xplorer::Device* >::const_iterator itr;
@@ -202,6 +206,8 @@ void DeviceHandler::ProcessDeviceEvents()
 
     //Always do this by default
     mDevices.find( "Tablet" )->second->UpdateNavigation();
+    //Always do this by default
+    //mDevices.find( "Gloves" )->second->UpdateNavigation();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DeviceHandler::ResetCenterPoint()
