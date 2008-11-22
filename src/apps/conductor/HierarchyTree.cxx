@@ -112,7 +112,7 @@ HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
     SetItemImage( m_rootId, 4, wxTreeItemIcon_Expanded );
-    SetItemFont( m_rootId, *wxITALIC_FONT );
+    SetItemFont( m_rootId, *wxNORMAL_FONT );
 
     //Default Icons
     defaultIconMap[ "contour.xpm" ] = wxImage( contour_xpm );
@@ -196,6 +196,7 @@ void HierarchyTree::PopulateTree( )//const std::string& id )
                                             wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
                                             images->GetImageCount() - 1 , -1, modData );
             SetItemImage( leaf, images->GetImageCount() - 1 );
+            SetItemFont( leaf, *wxNORMAL_FONT );
             SetItemBold( leaf );
 
             if( iter->second->GetSubSystem() )
@@ -290,7 +291,7 @@ void HierarchyTree::Clear()
         Rescale( iconsize, iconsize ) ) );
     m_rootId = AddRoot( wxT( "Top Sheet" ), 2, -1, NULL );
     SetItemImage( m_rootId, 4, wxTreeItemIcon_Expanded );
-    SetItemFont( m_rootId, *wxITALIC_FONT );
+    SetItemFont( m_rootId, *wxNORMAL_FONT );
     m_currentLevelId = m_rootId;
     m_selection = m_rootId;
 }

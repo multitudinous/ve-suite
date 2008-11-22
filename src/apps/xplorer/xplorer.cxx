@@ -76,7 +76,7 @@ int main( int argc, char* argv[] )
         CORBA::Object_var naming_context_object =
             orb->resolve_initial_references( "NameService" );
         CORBA::String_var sior1( orb->object_to_string( naming_context_object.in() ) );
-        std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
+        //std::cout << "|\tIOR of the server side : " << std::endl << sior1 << std::endl;
         CosNaming::NamingContext_var naming_context = CosNaming::NamingContext::_narrow( naming_context_object.in() );
 
         //Here is the code to set up the server
@@ -154,27 +154,32 @@ int main( int argc, char* argv[] )
         //appWrapper->m_thread->new_thread->join();
         delete appWrapper;
     }
-    catch ( CORBA::SystemException& )
+    catch ( CORBA::SystemException& ex )
     {
         std::cerr << "Caught CORBA::SystemException." << std::endl
-        << " The nameserver is probably not started yet or " << std::endl
-        << " the computer name and port number passed into " << std::endl
-        << " VE-Xplorer do not match the computer name and " << std::endl
-        << " port number specified in the VES script.      " << std::endl
-        << " Please start the nameserver with -> VES -nserv . " << std::endl;
+            << ex._info().c_str() << std::endl 
+            << " The nameserver is probably not started yet or " << std::endl
+            << " the computer name and port number passed into " << std::endl
+            << " VE-Xplorer do not match the computer name and " << std::endl
+            << " port number specified in the launcher.      " << std::endl;
     }
-    catch( CORBA::Exception& )
+    catch( CORBA::Exception& ex )
     {
-        std::cerr << "Caught CORBA::Exception." << std::endl;
+        std::cerr << "Caught CORBA::Exception." << std::endl
+            << ex._info().c_str() << std::endl ;
     }
     catch( std::exception& e )
     {
         std::cerr << "VE-Xplorer Init: Caught unknown exception." << std::endl
             << e.what() << std::endl;
-        for( int i = 1; i < argc; ++i )    // Configure the kernel
+        for( int i = 1; i < argc; ++i )
         {
             std::cerr << "argv[ " << i << " ] = " << argv[ i ] << std::endl;
         }
+        std::cerr << "NOTE: If you are running VE-Suite from the " << std::endl
+            << "launcher and are receiving this error be sure " << std::endl
+            << "that you are using the --dev flag for "
+            << "development work." << std::endl;
     }
 
     return 0;

@@ -188,34 +188,22 @@ void DCS::SetTranslationArray( std::vector< double > transArray )
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetQuat( osg::Quat quat )
 {
-#ifdef _OSG
     setAttitude( quat );
-#elif _OPENSG
-#endif
-
     UpdatePhysicsTransform();
 }
 ////////////////////////////////////////////////////////////////////////////////
 osg::Quat DCS::GetQuat( )
 {
-#ifdef _OSG
     return getAttitude( );
-#elif _OPENSG
-#endif
 }
 ////////////////////////////////////////////////////////////////////////////////
 void DCS::SetRotationArray( std::vector< double > rotArray )
 {
-#ifdef _OSG
     osg::Vec3d pitch( 1, 0, 0 );
     osg::Vec3d roll( 0, 1, 0 );
     osg::Vec3d yaw( 0, 0, 1 );
 
     osg::Matrixd rotateMat;
-
-    /*rotateMat.makeRotate( osg::DegreesToRadians( rotArray[2] ), roll,
-                          osg::DegreesToRadians( rotArray[1] ), pitch,
-                          osg::DegreesToRadians( rotArray[0] ), yaw );*/
     rotateMat.makeRotate( osg::DegreesToRadians( rotArray[0] ), yaw,
                          osg::DegreesToRadians( rotArray[1] ), pitch,
                          osg::DegreesToRadians( rotArray[2] ), roll );
@@ -224,8 +212,6 @@ void DCS::SetRotationArray( std::vector< double > rotArray )
     quat = rotateMat.getRotate();
     setAttitude( quat );
     setPivotPoint( osg::Vec3d( 0, 0, 0 ) );
-#elif _OPENSG
-#endif
 
     UpdatePhysicsTransform();
 }

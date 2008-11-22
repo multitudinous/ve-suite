@@ -56,7 +56,7 @@ OneDStringArray::~OneDStringArray()
 {
     ;
 }
-///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 OneDStringArray::OneDStringArray( const OneDStringArray& input )
         : XMLObject( input )
 {
@@ -64,7 +64,7 @@ OneDStringArray::OneDStringArray( const OneDStringArray& input )
     mArray = input.mArray;
     mMinIndex = input.mMinIndex;
 }
-/////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input )
 {
     if( this != &input )
@@ -77,21 +77,20 @@ OneDStringArray& OneDStringArray::operator=( const OneDStringArray& input )
     }
     return *this;
 }
-/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void OneDStringArray::AddElementToArray( const std::string& value )
 {
     mArray.push_back( value );
     mNElements = static_cast< unsigned int >( mArray.size() );
 }
-/////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 void OneDStringArray::SetArray( std::vector< std::string > input )
 {
     mArray.clear();
     mArray = input;
     mNElements = static_cast< unsigned int >( mArray.size() );
-    ;
 }
-//////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::string OneDStringArray::GetElement( unsigned int index )
 {
     try
@@ -105,7 +104,7 @@ std::string OneDStringArray::GetElement( unsigned int index )
         return 0;
     }
 }
-///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 std::vector< std::string > OneDStringArray::GetArray( void )
 {
     return mArray;

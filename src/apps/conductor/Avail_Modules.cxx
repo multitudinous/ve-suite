@@ -79,10 +79,9 @@ Avail_Modules::Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoi
     //rootId = AddRoot( wxT( "Available Modules" ), image1, image2, NULL );
     rootId = AddRoot( wxT( "Available Modules" ), image1, -1, NULL );
     SetItemImage( rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
-    SetItemFont( rootId, *wxITALIC_FONT );
+    SetItemFont( rootId, *wxNORMAL_FONT );
     pl_loader = new PluginLoader();
     LoadModules();
-    ExpandAll();
 }
 ////////////////////////////////////////////////////////////////////////////////
 Avail_Modules::~Avail_Modules()
@@ -121,7 +120,7 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
             {
                 id = AppendItem( lastid, lnames[i], image1, image2, NULL );
                 SetItemImage( id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
-                SetItemFont( id, *wxITALIC_FONT );
+                SetItemFont( id, *wxNORMAL_FONT );
                 break;
             }
 
@@ -133,6 +132,7 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
     }
 
     id = AppendItem( id, lnames[i], image3, image4,  new ReiTreeItemData( plugin, clsi ) );
+    SetItemFont( id, *wxNORMAL_FONT );
     SetItemBold( id );
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -287,6 +287,7 @@ bool Avail_Modules::LoadModules()
         
         AddModule( plugin, clsi );
     }
+    ExpandAll();
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////
