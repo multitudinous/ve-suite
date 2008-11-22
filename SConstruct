@@ -262,9 +262,10 @@ apr_options = fp_option.FlagPollBasedOption("Apache Portable Runtime",
 apu_options = fp_option.FlagPollBasedOption("Apache Portable Runtime Utils",
                                              "apr-util-1", "1.0", True, True, helpText=None, compileTest=True, headerToCheck="apu.h")
 
-bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
-                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
-                                               headerToCheck="btBulletCollisionCommon.h")
+#bullet_options = fp_option.FlagPollBasedOption("Bullet Physics SDK",
+#                                               "bullet", "0.1", True, True, helpText=None, compileTest=True,
+#                                               headerToCheck="btBulletCollisionCommon.h")
+bulletVersion = (int(2), int(72))
 
 tao_options = fp_option.FlagPollBasedOption("ACE TAO libraries",
                      "ACE TAO_Valuetype TAO_CosNaming TAO_Svc_Utils TAO_IORTable TAO_Messaging TAO_PortableServer TAO_BiDirGIOP TAO_AnyTypeCode TAO",
@@ -303,7 +304,7 @@ osgal_options = fp_option.FlagPollBasedOption("osgAL", "osgAL", "0.6.1", False, 
 
 opts.AddOption( apr_options )
 opts.AddOption( apu_options )
-opts.AddOption( bullet_options )
+#opts.AddOption( bullet_options )
 opts.AddOption( tao_options )
 opts.AddOption( boost_options )
 opts.AddOption( gmtl_options )
@@ -319,7 +320,9 @@ Export('opts', 'vtk_options', 'osg_options',
          'hdf4_options',
          'VE_SUITE_VERSION',
          'apr_options', 'apu_options',
-         'bullet_options', 'tao_options',
+         #'bullet_options', 
+         'bulletVersion',
+         'tao_options',
          'vrjuggler_options', 'boost_options',
          'gmtl_options', 'vpr_options',
          'gadgeteer_options', 'osgal_options')
@@ -435,6 +438,10 @@ if not SConsAddons.Util.hasHelpFlag():
 
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_POST_FEB20'] )
    baseEnv.AppendUnique( CPPDEFINES = ['VTK_STREAMS_FWD_ONLY'] )
+   baseEnv.AppendUnique( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
+                  'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
+   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+   baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
 
    baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
    ## load environment of the shell that scons is launched from   

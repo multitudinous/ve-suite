@@ -6,7 +6,7 @@ pj = os.path.join
 
 host_type = distutils.util.get_platform()
 
-Import('GetPlatform RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options bullet_options osg_options xerces_options')
+Import('GetPlatform RootDir ves_pkg buildDir GetPlatform vtk_options vrjuggler_options boost_options osg_options xerces_options')
 
 srcs = Split("""
    NetworkTwoGP.cxx
@@ -35,7 +35,6 @@ osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
 boost_options.apply( lib_env )
-bullet_options.apply( lib_env )
 
 lib = ves_pkg.createLoadableModule( 'NetworkTwoGP', lib_env,
     installPrefix = pj( 'share', 'vesuite', 'examples', 'SimpleNetwork', 'Plugins', 'GE', host_type ) ) 
