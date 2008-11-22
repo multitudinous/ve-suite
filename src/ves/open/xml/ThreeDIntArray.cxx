@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <iostream>
-#include <cstdlib>
 
 #include <ves/open/xml/ThreeDIntArray.h>
 #include <ves/open/xml/TwoDIntArray.h>

@@ -32,7 +32,6 @@
  *************** <auto-copyright.rb END do not edit this line> ***************/
 
 #include <iostream>
-#include <cstdlib>
 
 #include <ves/open/xml/model/Point.h>
 XERCES_CPP_NAMESPACE_USE
