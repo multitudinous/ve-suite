@@ -51,11 +51,53 @@
 
 // --- Bullet Includes --- //
 #include <BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h>
+#include <btBulletDynamicsCommon.h>
+
+#include <osgBullet/CollisionShape.h>
+#include <osgBullet/CollisionShapes.h>
+#include <osgBullet/MotionState.h>
+#include <osgBullet/AbsoluteModelTransform.h>
+#include <osgBullet/OSGToCollada.h>
+#include <osgBullet/DebugBullet.h>
+#include <osgBullet/ColladaUtils.h>
+#include <osgBullet/Utils.h>
 
 // --- C/C++ Libraries --- //
 #include <cassert>
 
 using namespace ves::xplorer::scenegraph;
+
+class FindNamedNode : public osg::NodeVisitor
+{
+public:
+    FindNamedNode( std::string name )
+    : osg::NodeVisitor( osg::NodeVisitor::TRAVERSE_ALL_CHILDREN ),
+    _name( name )
+    {}
+    
+    typedef std::pair< osg::Node*, osg::NodePath > NodeAndPath;
+    typedef std::vector< NodeAndPath > NodeAndPathList;
+    NodeAndPathList _napl;
+    
+    void reset()
+    {
+        _napl.clear();
+    }
+    
+    void apply( osg::Node& node )
+    {
+        if( node.getName() == _name )
+        {
+            NodeAndPath nap( &node, getNodePath() );
+            _napl.push_back( nap );
+        }
+        traverse( node );
+    }
+    
+protected:
+    std::string _name;
+};
+
 
 ////////////////////////////////////////////////////////////////////////////////
 CADEntity::CADEntity( std::string geomFile,
@@ -147,6 +189,44 @@ void CADEntity::InitPhysics()
                                  mDCS.get(), mPhysicsSimulator );
         mDCS->SetPhysicsRigidBody( mPhysicsRigidBody );
     }
+    
+    return;
+
+    FindNamedNode fnn( "" );
+    mDCS->accept( fnn );
+    osg::Node* subgraph = fnn._napl[ 0 ].first;
+    osg::NodePath& np = fnn._napl[ 0 ].second;
+
+    osgBullet::OSGToCollada converter( 
+        subgraph, BOX_SHAPE_PROXYTYPE, 1.0, "", 1.0, false );
+
+    osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform();
+    amt->setDataVariance( osg::Object::DYNAMIC );
+    amt->addChild( subgraph );
+    osg::Group* parent = subgraph->getParent( 0 );
+    parent->addChild( amt.get() );
+    parent->removeChild( subgraph );
+
+    btRigidBody* rb = converter.getRigidBody();
+    osgBullet::MotionState* motion = new osgBullet::MotionState;
+    motion->setTransform( amt.get() );
+    osg::BoundingSphere bs = subgraph->getBound();
+
+    // Add visual rep of Bullet Collision shape.
+    /*osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
+    if( visNode != NULL )
+    {
+        osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
+        dmt->addChild( visNode );
+        motion->setDebugTransform( dmt );
+        _debugBullet.addDynamic( dmt );
+    }*/
+
+    osg::Matrix m = osg::computeLocalToWorld( np );
+    motion->setParentTransform( m );
+    motion->setCenterOfMass( bs.center() );
+    rb->setMotionState( motion );
+    //bulletWorld->addRigidBody( rb );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::CADEntityHelper* CADEntity::GetNode()
