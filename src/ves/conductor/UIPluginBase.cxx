@@ -697,7 +697,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
 
     {
         ///Set the 1d string data
-        std::map<std::string, std::vector<std::string> * >::iterator itervs;
+        std::map<std::string, std::vector<std::string>* >::iterator itervs;
         for( itervs = _string1D.begin(); itervs != _string1D.end(); itervs++ )
         {
                 CommandPtr tempCommand = CommandPtr( new Command() );
@@ -712,7 +712,7 @@ ModelPtr UIPluginBase::GetVEModel( void )
 	{
         ///Set the 2d string data
 		std::map<std::string, 
-			std::vector<std::vector<std::string>> * >::iterator iterv2s;
+			std::vector< std::vector<std::string> >* >::iterator iterv2s;
         for( iterv2s = _string2D.begin(); iterv2s != _string2D.end(); iterv2s++ )
 		{
 			std::string temp2d( iterv2s->first );
@@ -821,14 +821,14 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
                 std::string dataName = tempData->GetDataName();
                 std::string dataType = tempData->GetDataType();
                 // to grab the data from the maps properly
-                std::map<std::string, long *>::iterator iteri;
-                std::map<std::string, double *>::iterator iterd;
-                std::map<std::string, std::string *>::iterator iters;
-                std::map<std::string, std::vector<long> * >::iterator itervi;
-                std::map<std::string, std::vector<double> * >::iterator itervd;
-                std::map<std::string, std::vector<std::string> * >::iterator itervs;
+                std::map<std::string, long* >::iterator iteri;
+                std::map<std::string, double* >::iterator iterd;
+                std::map<std::string, std::string* >::iterator iters;
+                std::map<std::string, std::vector<long>* >::iterator itervi;
+                std::map<std::string, std::vector<double>* >::iterator itervd;
+                std::map<std::string, std::vector<std::string>* >::iterator itervs;
 				std::map<std::string, 
-					std::vector<std::vector<std::string>> * >::iterator iterv2s;
+					std::vector< std::vector<std::string> >* >::iterator iterv2s;
 
                 if( std::string( "FLOAT" ) == dataType )
                 {
@@ -934,38 +934,38 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, long *var )
+void UIPluginBase::RegistVar( std::string vname, long* var )
 {
     _int[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, double *var )
+void UIPluginBase::RegistVar( std::string vname, double* var )
 {
     _double[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, std::string *var )
+void UIPluginBase::RegistVar( std::string vname, std::string* var )
 {
     _string[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, std::vector<long> *var )
+void UIPluginBase::RegistVar( std::string vname, std::vector<long>* var )
 {
     _int1D[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, std::vector<double> *var )
+void UIPluginBase::RegistVar( std::string vname, std::vector<double>* var )
 {
     _double1D[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void UIPluginBase::RegistVar( std::string vname, std::vector<std::string> *var )
+void UIPluginBase::RegistVar( std::string vname, std::vector<std::string>* var )
 {
     _string1D[vname] = var;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::RegistVar( std::string vname, 
-							 std::vector<std::vector<std::string>> *var )
+							 std::vector< std::vector<std::string> >* var )
 {
     _string2D[vname] = var;
 }
