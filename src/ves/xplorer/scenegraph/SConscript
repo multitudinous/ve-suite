@@ -4,7 +4,7 @@ import SConsAddons.Util as sca_util
 pj = os.path.join
 
 Import('baseEnv ves_pkg LIBDIR osg_options vtk_options RootDir buildDir xerces_options GetPlatform')
-Import('gmtl_options bullet_options vpr_options gadgeteer_options vrjuggler_options osgal_options')
+Import('gmtl_options vpr_options gadgeteer_options vrjuggler_options osgal_options')
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','scenegraph') )
 sources = sca_util.getSourcesRecursive( srcDir )
@@ -14,15 +14,17 @@ headers = sca_util.getHeadersRecursive( srcDir )
 
 lib_env = ves_pkg.getEnv().Copy()
 
-lib_env.Append(CPPPATH = [pj('#','external','include')])
-lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_util'])
+lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
+                          pj('#','external','bullet-2.72','Extras'),
+                          pj('#','external','bullet-2.72','src')])
+lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_util','bullet','osgBullet'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
-                          pj('#', buildDir, 'src', 'ves', 'xplorer','util')])
-                          #pj('#',buildDir,'external','osgOQ')])
+                          pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
+                          pj('#', buildDir,'external','bullet-2.72'),
+                          pj('#', buildDir,'external','osgBullet')])
 
 gmtl_options.apply( lib_env )
-bullet_options.apply( lib_env )
 vpr_options.apply( lib_env )
 gadgeteer_options.apply( lib_env )
 vrjuggler_options.apply( lib_env )
@@ -32,7 +34,8 @@ xerces_options.apply( lib_env )
 if osgal_options.isAvailable():
    osgal_options.apply( lib_env )
 
-bulletVersion = bullet_options.getVersion()
+bulletVersion = (int(2), int(72))
+
 lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
    
