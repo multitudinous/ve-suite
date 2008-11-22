@@ -86,7 +86,7 @@ vtk_options.apply( lib_env )
 osg_options.apply( lib_env )
 xerces_options.apply( lib_env )
 
-bulletVersion = bullet_options.getVersion()
+bulletVersion = (int(2), int(72))
 lib_env.Append( CPPDEFINES = ['BULLET_MAJOR_VERSION=%i' %bulletVersion[ 0 ],
                   'BULLET_MINOR_VERSION=%i' %bulletVersion[ 1 ] ] )  
 
@@ -95,14 +95,13 @@ lib_env.Append(CPPPATH = [pj(RootDir,'external','osgEphemeris','include')])
 lib_env.Append(LIBS = ['osgEphemeris'])
 lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgEphemeris')])
 
-bullet_options.apply( lib_env )
 # New Physics work
 #lib_env.Append( CPPDEFINES = ['GLOVE_WORK] )
-#lib_env.Append(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
+lib_env.Append(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
 #lib_env.Append(LIBS = ['osgBullet'])
 #lib_env.Append(LIBPATH = [pj('#',buildDir,'external','osgBullet')])
 
-#lib_env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
+lib_env.Append(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
 #lib_env.Append(LIBS = ['bullet'])
 #lib_env.Append(LIBPATH = [pj('#',buildDir,'external','bullet-2.72')])
 #libBulletColladaConverter.a libCOLLADA_DOM.a libXML.a libbullet.a

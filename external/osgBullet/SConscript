@@ -22,7 +22,7 @@ lib_env.Append( LIBS = ['bullet','XML','COLLADA_DOM','BulletColladaConverter'] )
 lib_env.Append( LIBPATH = [pj('#', buildDir,'external', 'bullet-2.72')] )
 
 osg_options.apply( lib_env )
-#bullet_options.apply( lib_env )
+
 if GetPlatform() == 'linux':
     lib_env.Append( CXXFLAGS=['-fPIC'])
 
@@ -30,12 +30,8 @@ if GetPlatform() == 'win32':
    lib_env['no_import_lib'] = 1
    lib_env['WINDOWS_INSERT_MANIFEST'] = False
 
-#if baseEnv['StaticLibs'] == "yes":
 lib = ves_pkg.createStaticLibrary('osgBullet', lib_env,
                                                installPrefix = LIBDIR)
-#else:
-#   lib = ves_pkg.createSharedLibrary('osgBullet', lib_env,
-#                                      installPrefix = LIBDIR)
    
 lib.addSources(sources)
 #lib.addHeaders(headers, pj('..') )
