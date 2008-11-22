@@ -316,13 +316,13 @@ protected:
                         std::vector< wxString >& tagNames,
                         std::vector< wxString >& values );
 
-    void RegistVar( std::string vname, long *var );
-    void RegistVar( std::string vname, double *var );
-    void RegistVar( std::string vname, std::string *var );
-    void RegistVar( std::string vname, std::vector<long> *var );
-    void RegistVar( std::string vname, std::vector<double> *var );
-    void RegistVar( std::string vname, std::vector<std::string> *var );
-	void RegistVar( std::string vname, std::vector<std::vector<std::string>> *var );
+    void RegistVar( std::string vname, long* var );
+    void RegistVar( std::string vname, double* var );
+    void RegistVar( std::string vname, std::string* var );
+    void RegistVar( std::string vname, std::vector< long >* var );
+    void RegistVar( std::string vname, std::vector< double >* var );
+    void RegistVar( std::string vname, std::vector< std::string >* var );
+	void RegistVar( std::string vname, std::vector< std::vector<std::string> >* var );
 
     ///Check the active id against the plugin id
     bool CheckID();
@@ -373,7 +373,7 @@ protected:
     std::map<std::string, std::vector<long>* >        _int1D;
     std::map<std::string, std::vector<double>* >      _double1D;
     std::map<std::string, std::vector<std::string>* > _string1D;
-	std::map<std::string, std::vector<std::vector<std::string>> * > _string2D;
+	std::map<std::string, std::vector< std::vector<std::string> >* > _string2D;
 
     wxBitmap* my_icon;
     int icon_w, icon_h;
