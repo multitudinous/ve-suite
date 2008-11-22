@@ -60,8 +60,6 @@
 // --- C/C++ Libraries --- //
 #include <iostream>
 
-#include <osgBullet/HandNode.h>
-
 using namespace gmtl;
 using namespace gadget;
 using namespace ves::xplorer;

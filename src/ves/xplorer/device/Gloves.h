@@ -65,6 +65,8 @@ Gloves API
 // --- OSG Includes --- //
 #include <osg/Geometry>
 
+#include <osgBullet/HandNode.h>
+
 #include <osgUtil/IntersectVisitor>
 
 namespace ves
@@ -86,11 +88,6 @@ class Vec4d;
 class Vec3d;
 class MatrixTransform;
 class LineSegment;
-}
-
-namespace osgBullet
-{
-class HandNode;
 }
 
 namespace ves
