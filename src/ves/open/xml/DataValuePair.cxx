@@ -41,6 +41,7 @@
 #include <ves/open/xml/TwoDIntArray.h>
 #include <ves/open/xml/ThreeDIntArray.h>
 #include <ves/open/xml/OneDStringArray.h>
+#include <ves/open/xml/TwoDStringArray.h>
 #include <ves/open/xml/XMLObjectFactory.h>
 
 #include <iostream>
@@ -443,6 +444,19 @@ void DataValuePair::SetData( const std::string& dataName, const std::vector< std
     SetData( dataName, oneDString );
 }
 ////////////////////////////////////////////////////////////
+void DataValuePair::SetData( const std::string& dataName, 
+							 const std::vector< std::vector< 
+							 std::string > >& data )
+{
+    mDataName = dataName;
+    SetDataType( std::string( "XMLOBJECT" ) );
+
+    TwoDStringArrayPtr twoDString( new TwoDStringArray() );
+
+    twoDString->SetArray( data );
+    SetData( dataName, twoDString );
+}
+////////////////////////////////////////////////////////////
 void DataValuePair::SetData( const std::string& dataName, double data )
 {
     mDataName = dataName;
@@ -533,6 +547,20 @@ void DataValuePair::GetData( std::vector< std::string >& data )
     if( mVeXMLObject->GetObjectType() == "OneDStringArray" )
     {
         OneDStringArrayPtr tempPtr = boost::static_pointer_cast<OneDStringArray>( mVeXMLObject );
+        data = tempPtr->GetArray();
+    }
+    else
+    {
+        std::cerr << " ERROR : This DataValuePair does not contain the data you request " << std::endl;
+    }
+}
+///////////////////////////////////////////////////////////////////////////////
+void DataValuePair::GetData( std::vector< std::vector< std::string > >& data )
+{
+    if( mVeXMLObject->GetObjectType() == "TwoDStringArray" )
+    {
+        TwoDStringArrayPtr tempPtr = 
+			boost::static_pointer_cast<TwoDStringArray>( mVeXMLObject );
         data = tempPtr->GetArray();
     }
     else

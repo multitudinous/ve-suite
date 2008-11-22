@@ -143,6 +143,9 @@ public:
     ///\param dataName Name of the data being passed in
     ///\param data Data value being passed in. Can be a broad range of data types
     void SetData( const std::string& dataName, const std::vector< std::string >& data );
+	///\param dataName Name of the data being passed in
+    ///\param data Data value being passed in. Can be a broad range of data types
+	void SetData( const std::string& dataName, const std::vector< std::vector< std::string > >& data );
 
     ///Double arrays
     ///Helper functions to set data easily
@@ -187,6 +190,9 @@ public:
     ///Helper functions to get data easily
     ///\param data Name of the data being passed in
     void GetData( std::vector< std::string >& data );
+	///Helper functions to get data easily
+    ///\param data Name of the data being passed in
+	void GetData( std::vector< std::vector< std::string > >& data );
 
     ///Double arrays
     ///Helper functions to get data easily
