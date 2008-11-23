@@ -11,6 +11,7 @@ xplorerSubdirs = Split("""
     scenegraph
     volume
     util
+    DefaultGraphicalPlugin
 """)
 
 
@@ -31,11 +32,11 @@ event_header_srcs = sca_util.getHeadersRecursive( srcDir )
 sources += map(lambda s: pj('event', s), event_plugin_srcs)
 headers += map(lambda s: pj('event', s), event_header_srcs)
 
-srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','DefaultGraphicalPlugin') )
-plugin_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
-plugin_header_srcs = sca_util.getHeadersRecursive( srcDir )
-sources += map(lambda s: pj('DefaultGraphicalPlugin', s), plugin_plugin_srcs)
-headers += map(lambda s: pj('DefaultGraphicalPlugin', s), plugin_header_srcs)
+#srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','DefaultGraphicalPlugin') )
+#plugin_plugin_srcs = sca_util.getSourcesRecursive( srcDir )
+#plugin_header_srcs = sca_util.getHeadersRecursive( srcDir )
+#sources += map(lambda s: pj('DefaultGraphicalPlugin', s), plugin_plugin_srcs)
+#headers += map(lambda s: pj('DefaultGraphicalPlugin', s), plugin_header_srcs)
 
 srcDir = os.path.abspath( pj(RootDir, 'src', 'ves', 'xplorer','device') )
 device_plugin_srcs = sca_util.getSourcesRecursive( srcDir )

@@ -40,13 +40,11 @@ DefaultGraphicalPlugin API
 *
 */
 #include <ves/xplorer/plugin/PluginBase.h>
+#include <ves/VEConfig.h>
 
 #include <ves/xplorer/scenegraph/DCS.h>
 
-#ifdef _OSG
 #include <osg/ref_ptr>
-#elif _PERFORMER
-#endif
 
 namespace ves
 {
@@ -65,7 +63,7 @@ namespace xplorer
 {
 namespace DefaultGraphicalPlugin
 {
-class VE_XPLORER_NETWORK_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::PluginBase
+class VE_USER_PLUGIN_EXPORTS DefaultGraphicalPlugin : public ves::xplorer::plugin::PluginBase
 {
 public:
     DefaultGraphicalPlugin( void );
@@ -74,10 +72,10 @@ public:
     virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
 private:
 };
+CREATE_VES_XPLORER_PLUGIN_ENTRY_POINT( DefaultGraphicalPlugin )
 }
 }
 }
-//VE_GRAPHICALPLUGIN_CLASS( DefaultGraphicalPlugin );
 
 #endif // DEFAULT_GRAPHICAL_PLUGIN_H
 

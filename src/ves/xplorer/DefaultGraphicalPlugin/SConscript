@@ -1,8 +1,12 @@
 ##Builds DefaultGraphicalPlugin<tag>
 import os, sys, string
 pj = os.path.join
+import SConsAddons.Util as sca_util
+import distutils.util
+from SConsAddons.EnvironmentBuilder import EnvironmentBuilder
 
 Import('baseEnv ves_pkg LIBDIR buildDir vtk_options osg_options xerces_options GetPlatform')
+Import('gmtl_options vrjuggler_options osgal_options')
 
 sources = Split("""
     DefaultGraphicalPlugin.cxx
@@ -13,34 +17,29 @@ headers = Split("""
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
-lib_env.Append(LIBS = ['VE_SceneGraph',
-                   'VE_XplorerLib',
-                   'GraphicalPlugin',
-                   'VE_TextureBasedLib',
-                   'VE_UtilLib', 'VE_XML'])
-lib_env.Append(LIBPATH = [pj('#', buildDir, 'VE_Xplorer','SceneGraph'),
-                        pj('#', buildDir, 'VE_Xplorer','XplorerHandlers'),
-                        pj('#', buildDir, 'VE_Xplorer','Utilities'),
-                        pj('#', buildDir, 'VE_Xplorer','TextureBased'),
-                        pj('#', buildDir, 'VE_Xplorer','GraphicalPlugin'),
-                        pj('#', buildDir, 'VE_Open','XML'),
-                        pj('#', buildDir, 'VE_Open','XML','Model'),
-                        pj('#', buildDir, 'VE_Open','XML','CAD'),
-                        pj('#', buildDir, 'VE_Open','XML','Shader')])
-lib_env.ParseConfig('flagpoll vrjuggler --atleast-version=%s --libs --cflags'%lib_env['VRJugglerVersion'])
-lib_env.ParseConfig('flagpoll Boost.Filesystem --atleast-version=%s --libs --cflags'%lib_env['BoostVersion'])
-vtk_options.apply( lib_env )
+lib_env.Append( LIBS = [ 'ves_xplorer',
+                         'ves_xplorer_scenegraph' ] )
+lib_env.Append( LIBPATH = [ pj('#', buildDir, 'src','ves','xplorer'),
+		            pj('#', buildDir, 'src','ves','xplorer','scenegraph') ] )
+lib_env.Append( CPPDEFINES = [ 'VE_USER_PLUGIN_LIBRARY' ] )
+
+gmtl_options.apply( lib_env )
+vrjuggler_options.apply( lib_env )
 osg_options.apply( lib_env )
+if osgal_options.isAvailable():
+   osgal_options.apply( lib_env )
 xerces_options.apply( lib_env )
+vtk_options.apply( lib_env )
 
-if GetPlatform() == 'darwin':
-   lib_env['SHLINKFLAGS'] = '$LINKFLAGS -bundle -flat_namespace -undefined suppress'
-   lib_env['SHLIBSUFFIX'] = '.dylib'
+if GetPlatform() == 'win32':
+   lib_env['no_import_lib'] = 1
+   #lib_env['SHLINKFLAGS'] = '$LINKFLAGS /dll /MANIFEST:NO'
+   lib_env['WINDOWS_INSERT_MANIFEST'] = False
+   #if lib_env['default_debug_level'] != EnvironmentBuilder.NONE:
+   #   lib_env['PDB'] = True
 
-lib = ves_pkg.createSharedLibrary('DefaultGraphicalPlugin',
-                                                        lib_env,
-                                                        installPrefix = pj('share','vesuite','examples','simple','Plugins','GE','RHEL_4_i686'))
-##  RHEL_4_i686 
-lib.addSources(sources)
-lib.addHeaders(headers,  pj( 'VE_Xplorer', 'DefaultGraphicalPlugin'))
+lib = ves_pkg.createLoadableModule( 'DefaultGraphicalPlugin', lib_env,
+    installPrefix = pj( 'lib', 'xplorer', 'plugins' ) )  
+
+lib.addSources( sources )
 lib.build()

@@ -40,7 +40,7 @@
 #include <ves/xplorer/CommandHandler.h>
 #include <ves/xplorer/EnvironmentHandler.h>
 #include <ves/xplorer/Model.h>
-#include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
+//#include <ves/xplorer/DefaultGraphicalPlugin/DefaultGraphicalPlugin.h>
 #include <ves/xplorer/network/NetworkSystemView.h>
 
 #include <ves/open/xml/XMLObject.h>
@@ -605,17 +605,18 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             // if a new module is on the id map but not on the plugins map
             // create it...
             PluginBase* temp = 
-                dynamic_cast< ves::xplorer::plugin::PluginBase* >( 
+                static_cast< ves::xplorer::plugin::PluginBase* >( 
                 mAvailableModules->GetLoader()->CreateObject( 
                 model->GetModelName() ) );
 
             if( temp == 0 )
             {
                 //load the default plugin
-                temp = new ves::xplorer::DefaultGraphicalPlugin::
-                    DefaultGraphicalPlugin();
-                //dynamic_cast< PluginBase* >( av_modules->GetLoader()->
-                    //CreateObject( "DefaultGraphicalPlugin" ) );
+                //temp = new ves::xplorer::DefaultGraphicalPlugin::
+                //    DefaultGraphicalPlugin();
+                temp = static_cast< ves::xplorer::plugin::PluginBase* >( 
+                    mAvailableModules->GetLoader()->
+                    CreateObject( "DefaultPlugin" ) );
             }
             
             mPluginsMap[ modelID ] = temp;

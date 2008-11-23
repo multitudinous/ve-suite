@@ -92,6 +92,8 @@ PluginBase* cfdVEPluginLoader::CreateObject( std::string _objname )
         if( iter->second->GetName() == _objname )
         {
             selectPlugin = iter->first;
+            vprDEBUG( vesDBG, 1 )  << "|\tCreating plugin " 
+                << _objname << std::endl << vprDEBUG_FLUSH;
             break;
         }
     }
