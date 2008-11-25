@@ -94,7 +94,7 @@ APUOPlugin::APUOPlugin() :
     aspen_menu->Enable( QUERY_OUTPUTS, true );
     aspen_menu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
     aspen_menu->Enable( REINIT_BLOCK, true );
-    mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    mPopMenu->Insert( 0, ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
     mPopMenu->Enable( ASPEN_MENU, true );
 }

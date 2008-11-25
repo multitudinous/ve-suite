@@ -78,7 +78,7 @@ ADUOPlugin::ADUOPlugin() :
     aspen_menu->Enable( SHOW_ASPEN_NAME, true );
     aspen_menu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
     aspen_menu->Enable( QUERY_DYNAMICS, true );
-    mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    mPopMenu->Insert( 0, ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
     mPopMenu->Enable( ASPEN_MENU, true );
 }

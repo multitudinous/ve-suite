@@ -116,7 +116,7 @@ ADPlugin::ADPlugin() :
     aspen_menu->Enable( SAVE_SIMULATION, true );
     aspen_menu->Append( SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
     aspen_menu->Enable( SAVEAS_SIMULATION, true );
-    mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+    mPopMenu->Insert( 0, ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
     mPopMenu->Enable( ASPEN_MENU, true );
 }
