@@ -401,14 +401,14 @@ void HierarchyTree::AddtoTree( UIPluginBase* cur_module )
     modData->modName = ConvertUnicode( cur_module->GetName() );
     modData->systemId = m_canvas->GetActiveNetworkID( );
     //AddtoImageList( wxBitmap( square_xpm ) );
-    wxIcon square ( square_xpm );
-    AddtoImageList( wxBitmap( wxBitmap( square ).ConvertToImage().
+    //wxIcon icon ( cur_module->GetIconImage() );
+    AddtoImageList( wxBitmap( cur_module->GetIconImage()->ConvertToImage().
         Rescale( iconsize, iconsize ) ) );
 
     wxTreeItemId leaf = AppendItem( m_currentLevelId, 
         wxString( cur_module->GetName().c_str(), wxConvUTF8 ), 
-                -1 , -1, modData );
-    SetItemImage( leaf, images->GetImageCount() - 1 );
+                images->GetImageCount() - 1, -1, modData );
+    //SetItemImage( leaf, images->GetImageCount() - 1 );
     SetItemBold( leaf );
 }
 ////////////////////////////////////////////////////////////////////////////////

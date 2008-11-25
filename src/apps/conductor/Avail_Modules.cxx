@@ -119,7 +119,8 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
             if( !id )
             {
                 id = AppendItem( lastid, lnames[i], image1, image2, NULL );
-                SetItemImage( id, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded );
+                SetItemImage( id, TreeCtrlIcon_FolderOpened,
+                    wxTreeItemIcon_Expanded );
                 SetItemFont( id, *wxNORMAL_FONT );
                 break;
             }
@@ -131,7 +132,12 @@ void Avail_Modules::AddModule( UIPluginBase* plugin, wxClassInfo* clsi )
         }
     }
 
-    id = AppendItem( id, lnames[i], image3, image4,  new ReiTreeItemData( plugin, clsi ) );
+    images->Add( wxBitmap( plugin->GetIconImage()->ConvertToImage().
+        Rescale( 16, 16 ) ) );
+    //id = AppendItem( id, lnames[i], image3, image4,
+    //    new ReiTreeItemData( plugin, clsi ) );
+    id = AppendItem( id, lnames[i], images->GetImageCount() - 1, -1,
+        new ReiTreeItemData( plugin, clsi ) );
     SetItemFont( id, *wxNORMAL_FONT );
     SetItemBold( id );
 }
@@ -245,7 +251,7 @@ void Avail_Modules::CreateImageList( int size )
         m_imageSize = size;
 
     // Make an image list containing small icons
-    wxImageList *images = new wxImageList( size, size, TRUE );
+    images = new wxImageList( size, size, TRUE );
 
     // should correspond to TreeCtrlIcon_xxx enum
     wxBusyCursor wait;

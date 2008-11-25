@@ -118,6 +118,7 @@ protected:
     wxTreeItemId selection;
     AppFrame * frame;
     ves::conductor::Canvas* canvas;
+    wxImageList *images;
 
     DECLARE_EVENT_TABLE();
 

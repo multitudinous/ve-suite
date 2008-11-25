@@ -1235,6 +1235,11 @@ void UIPluginBase::SetImageIcon( std::string path, float rotation, int mirror, f
     poly[3] = wxPoint( 0, icon_h - 1 );
 }
 ////////////////////////////////////////////////////////////////////////////////
+wxBitmap* UIPluginBase::GetIconImage( )
+{
+    return my_icon;
+}
+////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnDClick( wxMouseEvent &event )
 {
     // This function opens a plugins dialog when double clicked on the design canvas

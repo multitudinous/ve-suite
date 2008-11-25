@@ -310,6 +310,7 @@ public:
     ///other xplorer events
     void SendActiveId();
     void SetAsHierarchy( );
+    wxBitmap* GetIconImage( );
 
 protected:
     void GetDataTables( ves::open::xml::CommandPtr inputCommand,
