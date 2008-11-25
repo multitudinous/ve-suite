@@ -47,7 +47,7 @@ class APPlugin : public UIPluginBase
 public:
     enum PLUGIN_ENUMS
     {
-        OPEN_SIM = 3600,
+        OPEN_SIM = 3700,
         SHOW_ASPEN_SIMULATION,
         HIDE_ASPEN_SIMULATION,
         CLOSE_ASPEN_SIMULATION,
