@@ -146,13 +146,15 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
 
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    ////while( parentTraverser != NULL )
-    //while( parentTraverser->GetParentModel() != NULL )
-    //{
-        ////compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-    //    compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-    //    parentTraverser = parentTraverser->GetParentModel();
-    //}
+    if( parentTraverser != NULL )
+    {
+        while( parentTraverser->GetParentModel() != NULL )
+        {
+            //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+            compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+            parentTraverser = parentTraverser->GetParentModel();
+        }
+    }
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getInputModuleParamList" );
@@ -217,13 +219,15 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
 
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    ////while( parentTraverser != NULL )
-    //while( parentTraverser->GetParentModel() != NULL )
-    //{
-      //  //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-      //  compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-      //  parentTraverser = parentTraverser->GetParentModel();
-    //}
+    if( parentTraverser != NULL )
+    {
+        while( parentTraverser->GetParentModel() != NULL )
+        {
+            //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+            compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+            parentTraverser = parentTraverser->GetParentModel();
+        }
+    }
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getOutputModuleParamList" );
