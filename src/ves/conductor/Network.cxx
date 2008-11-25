@@ -1874,7 +1874,7 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
     {
         model::ModelSharedPtr model = system->GetModel( j );
 
-        wxClassInfo* cls = wxClassInfo::FindClass( wxString( model->GetModelName().c_str(), wxConvUTF8 ) );
+        wxClassInfo* cls = wxClassInfo::FindClass( model->GetPluginName().c_str());
         // If the class has not had a custom module been created
         UIPluginBase* tempPlugin = 0;
         if( cls == 0 )

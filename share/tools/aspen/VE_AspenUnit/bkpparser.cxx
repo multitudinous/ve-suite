@@ -1315,6 +1315,7 @@ std::string BKPParser::CreateNetwork( void )
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
         tempModel->SetModelName( blockIter->first );
+        tempModel->SetPluginName( "APUOPlugin" );
         tempModel->SetVendorName( "ASPENUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
@@ -1460,6 +1461,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
         tempModel->SetModelName( blockIter->first );
+        tempModel->SetPluginName( "APUOPlugin" );
         tempModel->SetVendorName( "ASPENUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +

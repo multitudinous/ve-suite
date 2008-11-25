@@ -88,6 +88,10 @@ public:
     ///\param name name of the model
     void SetModelName( const std::string& name );
 
+    ///Set the plugin name
+    ///\param name name of the plugin
+    void SetPluginName( const std::string& name );
+
     ///Set the unique model id
     ///\param id id of the model
     vesDEPRECATED( void SetModelID( unsigned int id ) );
@@ -103,6 +107,10 @@ public:
     ///Get the model name
     ///\return The model name
     const std::string& GetModelName( void );
+
+    ///Get the plugin name
+    ///\return The plugin name
+    const std::string& GetPluginName( void );
 
     ///Get the model id
     ///\return The model ID used my third party solver
@@ -314,6 +322,7 @@ protected:
 private:
     ///raw datatypes of Model that are specified in the verg_model.xsd file
     std::string     mModelName;///<The name of the model.
+    std::string     mPluginName;///<The name of the plugin.
     unsigned int    mUniqueModelID;///<The unique model id.
     std::string     mIconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
 

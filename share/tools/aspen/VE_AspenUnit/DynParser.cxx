@@ -1115,6 +1115,7 @@ std::string DynParser::CreateNetwork( void )
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
         tempModel->SetModelName( blockIter->first );
+        tempModel->SetPluginName( "ADUOPlugin" );
         tempModel->SetVendorName( "DYNAMICSUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
@@ -1270,6 +1271,7 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
         tempModel->SetModelName( blockIter->first );
+        tempModel->SetPluginName( "ADUOPlugin" );
         tempModel->SetVendorName( "DYNAMICSUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
@@ -1311,6 +1313,7 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
                 tempPort->SetModelName( streamIter->first );
+                tempPort->SetModelName( "ADUnitOp" );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
 
                 tempPort->GetPortLocation()->

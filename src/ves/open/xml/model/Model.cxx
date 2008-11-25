@@ -85,6 +85,7 @@ Model::Model( const Model& input )
         : XMLObject( input )
 {
     mModelName = input.mModelName;
+    mPluginName = input.mPluginName;
     mUniqueModelID = input.mUniqueModelID;
     mIconFileName = input.mIconFileName;
     mVendorUnit = input.mVendorUnit;
@@ -147,6 +148,7 @@ Model& Model::operator=( const Model& input )
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
         mModelName = input.mModelName;
+        mPluginName = input.mPluginName;
         mUniqueModelID = input.mUniqueModelID;
         mIconFileName = input.mIconFileName;
         mVendorUnit = input.mVendorUnit;
@@ -229,6 +231,11 @@ void Model::SetModelName( const std::string& name )
     mModelName = name;
 }
 ////////////////////////////////////////////////////////////////////////////////
+void Model::SetPluginName( const std::string& name )
+{
+    mPluginName = name;
+}
+////////////////////////////////////////////////////////////////////////////////
 void Model::SetModelID( unsigned int id )
 {
     mUniqueModelID = id;
@@ -274,6 +281,19 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         else
         {
             GetAttribute( currentElement, "name", mModelName );
+        }
+    }
+
+    {
+        dataValueStringName = GetSubElement( currentElement, "pluginname", 0 );
+        if( dataValueStringName )
+        {
+            GetDataFromElement( dataValueStringName, mPluginName );
+            dataValueStringName = 0;
+        }
+        else
+        {
+            GetAttribute( currentElement, "pluginname", mPluginName );
         }
     }
 
@@ -459,6 +479,11 @@ void Model::SetObjectFromXMLData( DOMNode* element )
 const std::string& Model::GetModelName( void )
 {
     return mModelName;
+}
+////////////////////////////////////////////////////////////
+const std::string& Model::GetPluginName( void )
+{
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////
 unsigned int Model::GetModelID( void )
@@ -744,6 +769,7 @@ void Model::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd    
     SetAttribute( "name", mModelName );
+    SetAttribute( "pluginname", mPluginName );
     SetAttribute( "id", mUuid );
 
     if( mVendorUnit.empty() )
