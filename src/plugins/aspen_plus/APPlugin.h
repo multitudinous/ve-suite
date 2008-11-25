@@ -48,6 +48,15 @@ public:
     enum PLUGIN_ENUMS
     {
         OPEN_SIM = 3600,
+        SHOW_ASPEN_SIMULATION,
+        HIDE_ASPEN_SIMULATION,
+        CLOSE_ASPEN_SIMULATION,
+        RUN_ASPEN_NETWORK,
+	    REINITIALIZE_ASPEN_SIMULATION,
+        STEP_ASPEN_NETWORK,
+        CONDUCTOR_FIND,
+        SAVE_SIMULATION,
+        SAVEAS_SIMULATION,
         UPDATE_HIER_TREE = 9999
     };
     ///Defualt constructor
@@ -55,7 +64,18 @@ public:
     virtual ~APPlugin();
 public:
     wxString GetConductorName();
-    void OnOpen( wxCommandEvent& event );       
+protected:
+    void OnOpen( wxCommandEvent& event );
+    void ShowAspenSimulation( wxCommandEvent& event );
+    void HideAspenSimulation( wxCommandEvent& event );
+    void CloseAspenSimulation( void );
+    void RunAspenNetwork( wxCommandEvent& event );
+    void ReinitializeAspenSimulation( wxCommandEvent& event );
+    void StepAspenNetwork( wxCommandEvent& event );
+    void FindBlocks( wxCommandEvent& event );
+    void SaveSimulation( wxCommandEvent& event );
+    void SaveAsSimulation( wxCommandEvent& event );
+    void OnCloseAspenSimulation( wxCommandEvent& event );
 
     DECLARE_EVENT_TABLE()
 };

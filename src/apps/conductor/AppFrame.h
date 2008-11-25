@@ -119,17 +119,17 @@ public:
         v21ID_SUBMIT,
         v21ID_LOAD,
         QUERY_FROM_SERVER,
-        QUERY_NETWORK,
-        RUN_ASPEN_NETWORK,
-        STEP_ASPEN_NETWORK,
-        ASPEN_CONNECTION_MENU,
-        SHOW_ASPEN_SIMULATION,
-        HIDE_ASPEN_SIMULATION,
-        CLOSE_ASPEN_SIMULATION,
-		REINITIALIZE_ASPEN_SIMULATION,
-        CONDUCTOR_FIND,
-        SAVE_SIMULATION,
-        SAVEAS_SIMULATION,
+        //QUERY_NETWORK,
+        //RUN_ASPEN_NETWORK,
+        //STEP_ASPEN_NETWORK,
+        //ASPEN_CONNECTION_MENU,
+        //SHOW_ASPEN_SIMULATION,
+        //HIDE_ASPEN_SIMULATION,
+        //CLOSE_ASPEN_SIMULATION,
+		//REINITIALIZE_ASPEN_SIMULATION,
+        //CONDUCTOR_FIND,
+        //SAVE_SIMULATION,
+        //SAVEAS_SIMULATION,
         v21ID_DISCONNECT,
         v21ID_DISCONNECT_VE,
         v21ID_UNDO,
@@ -317,16 +317,16 @@ protected:
     void OpenSimulation( wxString simName );
 
     void QueryFromServer( wxCommandEvent& event );
-    void QueryNetwork( wxCommandEvent& event );
-    void RunAspenNetwork( wxCommandEvent& event );
-    void StepAspenNetwork( wxCommandEvent& event );
-    void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-	void ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
-    void SaveSimulation( wxCommandEvent& WXUNUSED( event ) );
-    void SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) );
+    //void QueryNetwork( wxCommandEvent& event );
+    //void RunAspenNetwork( wxCommandEvent& event );
+    //void StepAspenNetwork( wxCommandEvent& event );
+    //void ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    //void HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    //void OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+	//void ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) );
+    //void FindBlocks( wxCommandEvent& WXUNUSED( event ) );
+    //void SaveSimulation( wxCommandEvent& WXUNUSED( event ) );
+    //void SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) );
     void StartCalc( wxCommandEvent &event );
     void StopCalc( wxCommandEvent &event );
     void PauseCalc( wxCommandEvent &event );

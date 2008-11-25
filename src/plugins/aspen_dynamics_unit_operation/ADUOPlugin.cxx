@@ -38,7 +38,6 @@
 #include <ves/conductor/xpm/square.xpm>
 
 #include <ves/open/xml/model/Model.h>
-//#include <ves/open/xml/model/Model.h>
 
 using namespace ves::open::xml::model;
 using namespace ves::open::xml;
@@ -49,7 +48,7 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( ADUOPlugin, UIPluginBase )
     EVT_MENU( SHOW_ASPEN_NAME, ADUOPlugin::OnShowAspenName )
-    //EVT_MENU( QUERY_DYNAMICS, ADUOPlugin::OnQueryDynamics )
+    EVT_MENU( QUERY_DYNAMICS, ADUOPlugin::OnQueryDynamics )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( ADUOPlugin, UIPluginBase )
@@ -74,10 +73,14 @@ ADUOPlugin::ADUOPlugin() :
     poly[3] = wxPoint( 0, icon_h - 1 );
 
     //Aspen Menu
-    mPopMenu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    mPopMenu->Enable( SHOW_ASPEN_NAME, true );
-    mPopMenu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
-    mPopMenu->Enable( QUERY_DYNAMICS, true );
+    wxMenu * aspen_menu = new wxMenu();
+    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
+    aspen_menu->Append( QUERY_DYNAMICS, _( "Query Dynamics" ) );
+    aspen_menu->Enable( QUERY_DYNAMICS, true );
+    mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+                     _( "Used in conjunction with Aspen" ) );
+    mPopMenu->Enable( ASPEN_MENU, true );
 }
 ////////////////////////////////////////////////////////////////////////////////
 ADUOPlugin::~ADUOPlugin()
@@ -119,7 +122,7 @@ void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )
 //}
 
 ////////////////////////////////////////////////////////////////////////////////
-/*void  UIPluginBase::OnQueryDynamics( wxCommandEvent& event )
+void  ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     std::string compName = GetVEModel()->GetModelName();
@@ -161,7 +164,7 @@ void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )
     networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
     std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
     ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
-    ADVarDialog* params = new ADVarDialog( m_canvas );
+    ADUOVarDialog* params = new ADUOVarDialog( m_canvas );
     params->SetComponentName( wxString( compName.c_str(), wxConvUTF8 ) );
     params->SetServiceList( serviceList );
     int numdvps = cmd->GetNumberOfDataValuePairs();
@@ -177,4 +180,4 @@ void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )
     params->UpdateSizes();
     params->ShowModal();
     params->Destroy();
-}*/
+}

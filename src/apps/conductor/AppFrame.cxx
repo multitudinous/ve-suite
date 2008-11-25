@@ -54,7 +54,7 @@
 #include <ves/conductor/TexTable.h>
 #include <ves/conductor/GlobalParamDialog.h>
 #include <ves/conductor/SummaryResultDialog.h>
-#include <ves/conductor/FindDialog.h>
+//#include <ves/conductor/FindDialog.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/Network.h>
@@ -178,16 +178,16 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     EVT_MENU( XPLORER_EXIT, AppFrame::OnExitXplorer )
     EVT_MENU( JUGGLER_STEREO, AppFrame::JugglerSettings )
     EVT_MENU( JUGGLER_MONO, AppFrame::JugglerSettings )
-    EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
-    EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
-    EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
-    EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
-    EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
-    EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
-    EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
-    EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::OnCloseAspenSimulation )
-	EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, AppFrame::ReinitializeAspenSimulation )
-    EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
+    //EVT_MENU( QUERY_NETWORK, AppFrame::QueryNetwork )
+    //EVT_MENU( SAVE_SIMULATION, AppFrame::SaveSimulation )
+    //EVT_MENU( SAVEAS_SIMULATION, AppFrame::SaveAsSimulation )
+    //EVT_MENU( RUN_ASPEN_NETWORK, AppFrame::RunAspenNetwork )
+    //EVT_MENU( STEP_ASPEN_NETWORK, AppFrame::StepAspenNetwork )
+    //EVT_MENU( SHOW_ASPEN_SIMULATION, AppFrame::ShowAspenSimulation )
+    //EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
+    //EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::OnCloseAspenSimulation )
+	//EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, AppFrame::ReinitializeAspenSimulation )
+    //EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
     EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
@@ -343,10 +343,10 @@ AppFrame::~AppFrame()
     }
     //serviceList->DisconnectFromXplorer();
 
-	if(AspenSimOpen)
-	{
-		CloseAspenSimulation();
-	}
+	//if(AspenSimOpen)
+	//{
+	//	CloseAspenSimulation();
+	//}
 
     //Store settings to wxConfig to be written out
     StoreFrameSize( GetRect() );
@@ -711,7 +711,7 @@ void AppFrame::CreateMenu()
     con_menu->Append( v21ID_LOAD, _( "&Load Job\tCtrl+L" ) );
 
     //con_menu->Append(QUERY_FROM_SERVER, _("&Query\tCtrl+U"));
-    wxMenu * aspenMenu = new wxMenu();
+    /*wxMenu * aspenMenu = new wxMenu();
     aspenMenu->Append( QUERY_NETWORK, _( "Open Simulation" ) );
     aspenMenu->Append( SHOW_ASPEN_SIMULATION, _( "Show Simulation" ) );
     aspenMenu->Append( HIDE_ASPEN_SIMULATION, _( "Hide Simulation" ) );
@@ -723,7 +723,7 @@ void AppFrame::CreateMenu()
     aspenMenu->Append( SAVE_SIMULATION, _( "Save Simulation" ) );
     aspenMenu->Append( SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
     con_menu->Append( ASPEN_CONNECTION_MENU,   _( "Aspen" ), aspenMenu, _( "Aspen connection" ) );
-
+*/
     //file_menu->Append( OPEN_RECENT_CONNECTION_MENU, _("Open recent file"), aspenMenu, _("NOTHING") );
 
 
@@ -1274,7 +1274,7 @@ void AppFrame::QueryFromServer( wxCommandEvent& WXUNUSED( event ) )
     {
         Log( "No ves network available\n" );
     }
-}
+}/*
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -1363,7 +1363,7 @@ void AppFrame::QueryNetwork( wxCommandEvent& WXUNUSED( event ) )
     //{
     //    Log( "Simulation is already open.\n" );
     //}
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::OpenSimulation( wxString simName )
 {
@@ -1390,7 +1390,7 @@ void AppFrame::OpenSimulation( wxString simName )
     std::string nw_str = serviceList->Query( status );
     Log( nw_str.c_str() );
 	AspenSimOpen = true;
-}
+}/*
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -1671,14 +1671,14 @@ void AppFrame::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
     aspenAPWFile->AddDataValuePair( data );
     UserPreferencesDataBuffer::instance()->
     SetCommand( "Aspen_Plus_Preferences", aspenAPWFile );
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////
 void AppFrame::NewCanvas( wxCommandEvent& WXUNUSED( event ) )
 {
-	if(AspenSimOpen)
-	{
-		CloseAspenSimulation();
-	}
+	//if(AspenSimOpen)
+	//{
+	//	CloseAspenSimulation();
+	//}
 	newCanvas = true;
     fname.Clear();
 

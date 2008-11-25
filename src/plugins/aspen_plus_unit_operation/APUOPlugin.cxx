@@ -59,8 +59,8 @@ using namespace ves::conductor::util;
 
 BEGIN_EVENT_TABLE( APUOPlugin, UIPluginBase )
     EVT_MENU( SHOW_ASPEN_NAME, APUOPlugin::OnShowAspenName )
-    //EVT_MENU( QUERY_INPUTS, APUOPlugin::OnQueryInputs )
-    //EVT_MENU( QUERY_OUTPUTS, APUOPlugin::OnQueryOutputs )
+    EVT_MENU( QUERY_INPUTS, APUOPlugin::OnQueryInputs )
+    EVT_MENU( QUERY_OUTPUTS, APUOPlugin::OnQueryOutputs )
 END_EVENT_TABLE()
 
 IMPLEMENT_DYNAMIC_CLASS( APUOPlugin, UIPluginBase )
@@ -85,14 +85,18 @@ APUOPlugin::APUOPlugin() :
     poly[3] = wxPoint( 0, icon_h - 1 );
 
     //Aspen Menu
-    mPopMenu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
-    mPopMenu->Enable( SHOW_ASPEN_NAME, true );
-    mPopMenu->Append( QUERY_INPUTS, _( "Query Inputs" ) );
-    mPopMenu->Enable( QUERY_INPUTS, true );
-    mPopMenu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
-    mPopMenu->Enable( QUERY_OUTPUTS, true );
-    mPopMenu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
-    mPopMenu->Enable( REINIT_BLOCK, true );
+    wxMenu * aspen_menu = new wxMenu();
+    aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
+    aspen_menu->Enable( SHOW_ASPEN_NAME, true );
+    aspen_menu->Append( QUERY_INPUTS, _( "Query Inputs" ) );
+    aspen_menu->Enable( QUERY_INPUTS, true );
+    aspen_menu->Append( QUERY_OUTPUTS, _( "Query Outputs" ) );
+    aspen_menu->Enable( QUERY_OUTPUTS, true );
+    aspen_menu->Append( REINIT_BLOCK, _( "Reinitialize" ) );
+    aspen_menu->Enable( REINIT_BLOCK, true );
+    mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
+                     _( "Used in conjunction with Aspen" ) );
+    mPopMenu->Enable( ASPEN_MENU, true );
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -112,6 +116,7 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
     wxString title;
     title << wxT( "Aspen Name" );
     wxString desc( veModel->GetModelName().c_str(), wxConvUTF8 );
+    wxMessageDialog( m_canvas, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
 //void  APUOPlugin::OnShowIconChooser( wxCommandEvent& event )
@@ -133,7 +138,7 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
 //    ::wxPostEvent( m_canvas->GetParent(), event );
 //}
 ////////////////////////////////////////////////////////////////////////////////
-/*void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
+void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     std::string compName = GetVEModel()->GetModelName();
@@ -141,13 +146,13 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
 
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    //while( parentTraverser != NULL )
-    while( parentTraverser->GetParentModel() != NULL )
-    {
-        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-        compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-        parentTraverser = parentTraverser->GetParentModel();
-    }
+    ////while( parentTraverser != NULL )
+    //while( parentTraverser->GetParentModel() != NULL )
+    //{
+        ////compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+    //    compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+    //    parentTraverser = parentTraverser->GetParentModel();
+    //}
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getInputModuleParamList" );
@@ -168,7 +173,7 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
     wxString title( compName.c_str(), wxConvUTF8 );
     //TextResultDialog * results = new TextResultDialog(this, title);
     //QueryInputsDlg * results = new QueryInputsDlg(this);
-    APVarDialog* params = new APVarDialog( m_canvas );
+    APUOVarDialog* params = new APUOVarDialog( m_canvas );
     //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
@@ -212,13 +217,13 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
 
     //generate hierarchical name if necessary
     ves::open::xml::model::ModelPtr parentTraverser = parentModel.lock();
-    //while( parentTraverser != NULL )
-    while( parentTraverser->GetParentModel() != NULL )
-    {
-        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-        compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
-        parentTraverser = parentTraverser->GetParentModel();
-    }
+    ////while( parentTraverser != NULL )
+    //while( parentTraverser->GetParentModel() != NULL )
+    //{
+      //  //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
+      //  compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+      //  parentTraverser = parentTraverser->GetParentModel();
+    //}
 
     ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
     returnState->SetCommandName( "getOutputModuleParamList" );
@@ -238,7 +243,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     std::string nw_str = serviceList->Query( status );
     wxString title( compName.c_str(), wxConvUTF8 );
     //QueryInputsDlg * results = new QueryInputsDlg(this);
-    ParamsDlg * params = new ParamsDlg( m_canvas );
+    APUOVarDialog * params = new APUOVarDialog( m_canvas );
     //params->SetPosition( wxPoint(dialogSize.x, dialogSize.y) );
     ves::open::xml::XMLReaderWriter networkReader;
     networkReader.UseStandaloneDOMDocumentManager();
@@ -265,7 +270,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
     // this->OnQueryOutputModuleProperties(temp_vector2, compName);
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  APUOPlugin::OnReinitBlocks( wxCommandEvent& event )
+/*void  APUOPlugin::OnReinitBlocks( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     std::string compName = GetVEModel()->GetModelName();

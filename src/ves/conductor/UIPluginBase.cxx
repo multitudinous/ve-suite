@@ -103,11 +103,11 @@ BEGIN_EVENT_TABLE( UIPluginBase, wxEvtHandler )
     EVT_MENU( SHOW_DESC, UIPluginBase::OnShowDesc )
     EVT_MENU( USER_DIALOG, UIPluginBase::OnShowUserDialog )
     EVT_MENU( SHOW_FINANCIAL, UIPluginBase::OnShowFinancial ) /* EPRI TAG */
-    EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
-    EVT_MENU( QUERY_DYNAMICS, UIPluginBase::OnQueryDynamics )
-    EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
-    EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
-    EVT_MENU( REINIT_BLOCK, UIPluginBase::OnReinitBlocks )
+    //EVT_MENU( SHOW_ASPEN_NAME, UIPluginBase::OnShowAspenName )
+    //EVT_MENU( QUERY_DYNAMICS, UIPluginBase::OnQueryDynamics )
+    //EVT_MENU( QUERY_INPUTS, UIPluginBase::OnQueryInputs )
+    //EVT_MENU( QUERY_OUTPUTS, UIPluginBase::OnQueryOutputs )
+    //EVT_MENU( REINIT_BLOCK, UIPluginBase::OnReinitBlocks )
     EVT_MENU( SHOW_ICON_CHOOSER, UIPluginBase::OnShowIconChooser )
     EVT_MENU( GEOMETRY, UIPluginBase::OnGeometry )
     EVT_MENU( NAVTO, UIPluginBase::OnNavigateTo )
@@ -213,6 +213,7 @@ UIPluginBase::UIPluginBase() :
                     _( "Used to toggle plugin" ) );
     mPopMenu->Enable( PLUGIN_TOGGLE_MENU, true );
 
+    /*
     //Aspen Menu
     wxMenu * aspen_menu = new wxMenu();
     aspen_menu->Append( SHOW_ASPEN_NAME, _( "Aspen Name" ) );
@@ -228,6 +229,8 @@ UIPluginBase::UIPluginBase() :
     mPopMenu->Append( ASPEN_MENU,   _( "Aspen" ), aspen_menu,
                      _( "Used in conjunction with Aspen" ) );
     mPopMenu->Enable( ASPEN_MENU, true );
+    */
+
     //Port Menu
     wxMenu * port_menu = new wxMenu();
     port_menu->Append( ADD_INPUT_PORT, _( "Add Input Port" ) );
@@ -1333,7 +1336,7 @@ void  UIPluginBase::OnShowFinancial( wxCommandEvent& WXUNUSED( event ) )
     FinancialData();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnShowAspenName( wxCommandEvent& event )
+/*void  UIPluginBase::OnShowAspenName( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     ves::open::xml::model::ModelPtr veModel = GetVEModel();
@@ -1341,7 +1344,7 @@ void  UIPluginBase::OnShowAspenName( wxCommandEvent& event )
     title << wxT( "Aspen Name" );
     wxString desc( veModel->GetModelName().c_str(), wxConvUTF8 );
     wxMessageDialog( m_canvas, desc, title ).ShowModal();
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
 {
@@ -1362,7 +1365,7 @@ void  UIPluginBase::OnShowIconChooser( wxCommandEvent& event )
     ::wxPostEvent( m_canvas->GetParent(), event );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )
+/*void  UIPluginBase::OnQueryInputs( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
     std::string compName = GetVEModel()->GetModelName();
@@ -1584,7 +1587,7 @@ void  UIPluginBase::OnReinitBlocks( wxCommandEvent& event )
 
     //Get results
     serviceList->Query( status );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::OnShowDesc( wxCommandEvent& event )
 {
