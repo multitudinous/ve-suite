@@ -78,6 +78,7 @@ IMPLEMENT_DYNAMIC_CLASS( APPlugin, UIPluginBase )
 APPlugin::APPlugin() :
     UIPluginBase()
 {
+    iconFilename = "aspen";
     name = wxString( "AspenPlus", wxConvUTF8 );
 
     wxImage my_img( aspen );

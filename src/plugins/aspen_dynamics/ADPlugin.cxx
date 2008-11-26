@@ -80,6 +80,7 @@ IMPLEMENT_DYNAMIC_CLASS( ADPlugin, UIPluginBase )
 ADPlugin::ADPlugin() :
     UIPluginBase()
 {
+    iconFilename = "dynamics";
     name = wxString( "AspenDynamics", wxConvUTF8 );
 
     wxImage my_img( dynamics );
