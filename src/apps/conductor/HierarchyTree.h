@@ -45,18 +45,16 @@ HierarchyTree API
 #include <wx/imaglist.h>
 #include <wx/treectrl.h>
 
-#include <fstream>
-
+//Forward declaration of classes
 namespace ves
 {
-namespace conductor
-{
-class Network;
-class Canvas;
-class UIPluginBase;
+    namespace conductor
+    {
+        class Network;
+        class Canvas;
+        class UIPluginBase;
+    }
 }
-}
-
 class PluginLoader;
 
 class HierarchyTree : public wxTreeCtrl
@@ -68,8 +66,11 @@ public:
     {
         ;
     }
+
     ///Normal constructor
-    HierarchyTree( wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style );
+    HierarchyTree( wxWindow *parent, const wxWindowID id, const wxPoint& pos,
+        const wxSize& size, long style );
+
     ///Destructor
     virtual ~HierarchyTree();
 
@@ -80,58 +81,102 @@ public:
 
     ///Populate the tree
     ///\param id The top level system id to use for this tree to populate
-    void PopulateTree( );//const std::string& id );
+    void PopulateTree( );
+
     ///Create image list of size
     ///\param size Size of images
     void CreateImageList( int size = 16 );
+
+    ///Add image to list
+    ///\param wxBitmap image to be added
     void AddtoImageList( wxBitmap );
+
     ///Set the network to work with
     ///\param nw Network to work with
     void SetCanvas( ves::conductor::Canvas *can )
     {
         m_canvas = can;
     }
-    //add a module to the tree
+    
+    ///add a module to the tree
     void AddtoTree( ves::conductor::UIPluginBase *cur_module );
+
+    ///remove a module to the tree
     void RemoveFromTree( unsigned int id );
+    
+    ///used with making hierarchy blocks to add a defautl block to new level 
     void AppendToTree( unsigned int parentID, unsigned int id );
+    
+    ///change the item
     void SetTreeItemName( unsigned int id, wxString name );
+
+    ///utility functions used to locate an item either for removal or appending
     wxTreeItemId SearchTree( wxTreeItemId root, int id );
+
+    ///change the item's image - for use with icon chooser
 	void ChangeLeafIcon( unsigned int id, std::string path );
+
     ///Clear the hierarchy tree
     ///This is called by default by PopulateTree
     void Clear();
 
 protected:
+    
     ///The size of the images
     int m_imageSize;
-    void PopulateLevel( wxTreeItemId parentLeaf,
-                        std::vector< ves::open::xml::model::ModelPtr > models, std::string id );
+    
+    ///single click selection
     void OnSelChanged( wxTreeEvent& event );
+    
+    //when expanding
     void OnExpanded( wxTreeEvent& event );
+    
+    //right clicking
     void OnRightClick( wxTreeEvent& event );
+    
+    //double clicking
     void OnDoubleClick( wxTreeEvent& event );
+    
+    ///used to select the plugin
     void SelectNetworkPlugin( wxTreeItemId treeId );
+    
+    ///post right click menu events up to plugin.
     void ProcessRightClickMenuEvents( wxCommandEvent& event );
 
+    ///tree ids
     wxTreeItemId m_rootId;
     wxTreeItemId m_selection;
     wxTreeItemId m_currentLevelId;
+    
+    ///a pointer to the main canvas
     ves::conductor::Canvas* m_canvas;
+    
+    ///the list of images
     wxImageList *images;
+    
+    ///the default lookup
     std::map< std::string, wxImage > defaultIconMap;
 
+    ///utility unicode conversion method
     std::string ConvertUnicode( const wxChar* data )
     {
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        std::string tempStr( static_cast< const char* >
+            ( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }
 
+    ///the size to rescale of the images in the list
     int iconsize;
+
+    ///used for recursively populating sub systems
+    void PopulateLevel( wxTreeItemId parentLeaf,
+        std::vector< ves::open::xml::model::ModelPtr > models,
+        std::string id );
 
     DECLARE_EVENT_TABLE();
 };
 
+///class for storing information regarding modules
 class ModuleData : public wxTreeItemData
 {
 public:
