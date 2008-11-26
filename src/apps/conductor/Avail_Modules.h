@@ -43,28 +43,32 @@ Avail_Modules API
 #include <wx/imaglist.h>
 #include <wx/treectrl.h>
 
-class AppFrame;
-class PluginLoader;
-
+//Forward declaration of classes
 namespace ves
 {
-namespace conductor
-{
-class UIPluginBase;
-class Canvas;
+    namespace conductor
+    {
+        class UIPluginBase;
+        class Canvas;
+    }
 }
-}
+class AppFrame;
+class PluginLoader;
 
 class Avail_Modules : public wxTreeCtrl
 {
 public:
+
     ///Default constructor
     Avail_Modules()
     {
         ;
     }
+    
     ///Normal constructor
-    Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size, long style );
+    Avail_Modules( wxWindow *parent, const wxWindowID id, const wxPoint& pos,
+        const wxSize& size, long style );
+    
     ///Destructor
     virtual ~Avail_Modules();
 
@@ -80,44 +84,81 @@ public:
         Module_Add,
         TREE_CTRL = 1000
     };
-
-    bool LoadModules(); //Load all the modules from the dlls
+    
+    ///Load all the modules from the dlls
+    bool LoadModules(); 
+    
+    ///right click event
     void OnItemRightClick( wxTreeEvent& event );
+
+    ///single click event
     void OnSelChanged( wxTreeEvent& event );
+
+    ///right click menu
     void ShowMenu( wxTreeItemId id, const wxPoint &pt );
+
+    ///Create image list of size
+    ///\param size Size of images
     void CreateImageList( int size = 16 );
+    
     void AddModule( ves::conductor::UIPluginBase* plugin, wxClassInfo* clsi );
+    
+    ///module description
     void ShowDesc( wxCommandEvent& event );
+    
+    ///help menu
     void ShowHelp( wxCommandEvent& event );
+    
+    ///Creates new module and adds it to the canvas and hierarchy tree
     void Instantiate( wxTreeEvent& event );
+    
+    ///Set the frame to work with
+    ///\param frm frame to work with    
     void SetFrame( AppFrame *frm )
     {
         frame = frm;
     };
+
+    ///Set the canvas to work with
+    ///\param can canvas to work with    
     void SetCanvas( ves::conductor::Canvas *can )
     {
         canvas = can;
     };
+    
     ///Get the new plugin tree after reseting it
     void ResetPluginTree( void );
 
 protected:
 
+    ///parse out the location and name for an item
     void getLeveledName( wxString name, std::vector<wxString> & lnames );
 
+    ///utility unicode conversion method
     std::string ConvertUnicode( const wxChar* data )
     {
-        std::string tempStr( static_cast< const char* >( wxConvCurrent->cWX2MB( data ) ) );
+        std::string tempStr( static_cast< const char* >
+            ( wxConvCurrent->cWX2MB( data ) ) );
         return tempStr;
     }    
 
+    ///the size to rescale of the images in the list
     int m_imageSize;
+
+    ///used to load custom plug-ins
     PluginLoader* pl_loader;
 
+    ///tree ids
     wxTreeItemId rootId;
     wxTreeItemId selection;
+
+    ///a pointer to the main frame
     AppFrame * frame;
+
+    ///a pointer to the main canvas
     ves::conductor::Canvas* canvas;
+
+    ///the list of images
     wxImageList *images;
 
     DECLARE_EVENT_TABLE();
@@ -125,6 +166,7 @@ protected:
 
 };
 
+///class for storing information regarding modules
 class ReiTreeItemData : public wxTreeItemData
 {
 public:
@@ -136,7 +178,6 @@ public:
         plugin = pl;
         pl_clsi = clsi;
     };
-
 };
 
 #endif
