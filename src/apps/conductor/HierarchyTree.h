@@ -50,7 +50,6 @@ namespace ves
 {
     namespace conductor
     {
-        class Network;
         class Canvas;
         class UIPluginBase;
     }
@@ -91,8 +90,8 @@ public:
     ///\param wxBitmap image to be added
     void AddtoImageList( wxBitmap );
 
-    ///Set the network to work with
-    ///\param nw Network to work with
+    ///Set the canvas to work with
+    ///\param can canvas to work with
     void SetCanvas( ves::conductor::Canvas *can )
     {
         m_canvas = can;
