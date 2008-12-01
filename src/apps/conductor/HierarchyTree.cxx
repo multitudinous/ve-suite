@@ -150,30 +150,37 @@ void HierarchyTree::PopulateTree( )
     std::map< std::string, char** > aspenPlusIconMap = GetAspenPlusIconMap();
     std::map< std::string, char** >::iterator aspenIconIter;
     std::string fullPath;
-    std::map< std::string, ves::open::xml::model::ModelPtr > alphaTree;
+    //std::map< std::string, ves::open::xml::model::ModelPtr > alphaTree;
 
     //alphabetize tree
+    //for( std::vector< ves::open::xml::model::ModelPtr >::iterator
+    //    iter = topLevelModels.begin(); iter != topLevelModels.end(); ++iter )
+    //{
+    //    ves::open::xml::model::ModelPtr tempModel = (*iter);
+    //    alphaTree[ tempModel->GetModelName() ] = tempModel;
+    //}
+
+    //loop over models and add them to the tree
+    //for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
+    //    iter = alphaTree.begin(); iter != alphaTree.end(); ++iter )
     for( std::vector< ves::open::xml::model::ModelPtr >::iterator
         iter = topLevelModels.begin(); iter != topLevelModels.end(); ++iter )
     {
-        ves::open::xml::model::ModelPtr tempModel = (*iter);
-        alphaTree[ tempModel->GetModelName() ] = tempModel;
-    }
-
-    //loop over models and add them to the tree
-    for( std::map< std::string, ves::open::xml::model::ModelPtr >::iterator
-        iter = alphaTree.begin(); iter != alphaTree.end(); ++iter )
-    {
-        if( iter->second->GetIconHiddenFlag() == 0 )
+        //if( iter->second->GetIconHiddenFlag() == 0 )
+        if( (*iter)->GetIconHiddenFlag() == 0 )
         {
             //generate module data
             ModuleData* modData = new ModuleData();
-            modData->modId = iter->second->GetModelID();
-            modData->modName = iter->second->GetModelName();
+            //modData->modId = iter->second->GetModelID();
+            //modData->modName = iter->second->GetModelName();
+            modData->modId = (*iter)->GetModelID();
+            modData->modName = (*iter)->GetModelName();
             modData->systemId = id;
-            if( iter->second->GetSubSystem() )
+            //if( iter->second->GetSubSystem() )
+            if( (*iter)->GetSubSystem() )
             {
-                modData->subSystemId = iter->second->GetSubSystem()->GetID();
+                //modData->subSystemId = iter->second->GetSubSystem()->GetID();
+                modData->subSystemId = (*iter)->GetSubSystem()->GetID();
             }
             else
             {
@@ -181,7 +188,8 @@ void HierarchyTree::PopulateTree( )
             }
 
             //Add the icon to the image list
-            fullPath = iter->second->GetIconFilename() + ".xpm";
+            //fullPath = iter->second->GetIconFilename() + ".xpm";
+            fullPath = (*iter)->GetIconFilename() + ".xpm";
             aspenIconIter = aspenPlusIconMap.find( fullPath );
             if( aspenIconIter != aspenPlusIconMap.end() )
             {
@@ -196,17 +204,23 @@ void HierarchyTree::PopulateTree( )
             }
 
             //Add the new model to the tree
+            //wxTreeItemId leaf = AppendItem( m_rootId, 
+            //    wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
+            //    images->GetImageCount() - 1 , -1, modData );
             wxTreeItemId leaf = AppendItem( m_rootId, 
-                wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
+                wxString( (*iter)->GetModelName().c_str(), wxConvUTF8 ),
                 images->GetImageCount() - 1 , -1, modData );
             SetItemFont( leaf, *wxNORMAL_FONT );
             //SetItemBold( leaf );
 
             //if there are subsystems parse those
-            if( iter->second->GetSubSystem() )
+            //if( iter->second->GetSubSystem() )
+            if( (*iter)->GetSubSystem() )
             {
-                PopulateLevel( leaf, iter->second->GetSubSystem()->GetModels(),
-                               iter->second->GetSubSystem()->GetID() );
+                //PopulateLevel( leaf, iter->second->GetSubSystem()->GetModels(),
+                //    iter->second->GetSubSystem()->GetID() );
+                PopulateLevel( leaf, (*iter)->GetSubSystem()->GetModels(),
+                    (*iter)->GetSubSystem()->GetID() );
             }
         }
     }
