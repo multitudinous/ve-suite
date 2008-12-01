@@ -17,7 +17,7 @@ lib_env = ves_pkg.getEnv().Copy()
 lib_env.Append(CPPPATH = [pj('#','external','osgBullet','include'),
                           pj('#','external','bullet-2.72','Extras'),
                           pj('#','external','bullet-2.72','src')])
-lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_util','bullet','osgBullet','BulletColladaConverter'])
+lib_env.Append(LIBS = ['ves_open_xml','ves_xplorer_util','bullet','osgBullet','BulletColladaConverter','COLLADA_DOM','XML'])
 
 lib_env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml'),
                           pj('#', buildDir, 'src', 'ves', 'xplorer','util'),
