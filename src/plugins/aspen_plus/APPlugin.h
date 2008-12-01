@@ -54,7 +54,6 @@ public:
         RUN_ASPEN_NETWORK,
 	    REINITIALIZE_ASPEN_SIMULATION,
         STEP_ASPEN_NETWORK,
-        CONDUCTOR_FIND,
         SAVE_SIMULATION,
         SAVEAS_SIMULATION,
         UPDATE_HIER_TREE = 9999
@@ -72,7 +71,6 @@ protected:
     void RunAspenNetwork( wxCommandEvent& event );
     void ReinitializeAspenSimulation( wxCommandEvent& event );
     void StepAspenNetwork( wxCommandEvent& event );
-    void FindBlocks( wxCommandEvent& event );
     void SaveSimulation( wxCommandEvent& event );
     void SaveAsSimulation( wxCommandEvent& event );
     void OnCloseAspenSimulation( wxCommandEvent& event );

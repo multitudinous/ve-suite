@@ -37,7 +37,6 @@
 #include <ves/conductor/xpm/AspenPlus2DIcons/aspen.xpm>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
-#include <ves/conductor/FindDialog.h>
 #include <ves/conductor/Network.h>
 #include <ves/conductor/Module.h>
 #include <ves/open/xml/model/Model.h>
@@ -67,7 +66,6 @@ BEGIN_EVENT_TABLE( APPlugin, UIPluginBase )
     EVT_MENU( RUN_ASPEN_NETWORK, APPlugin::RunAspenNetwork )
     EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, APPlugin::ReinitializeAspenSimulation )
     EVT_MENU( STEP_ASPEN_NETWORK, APPlugin::StepAspenNetwork )
-    EVT_MENU( CONDUCTOR_FIND, APPlugin::FindBlocks )
     EVT_MENU( SAVE_SIMULATION, APPlugin::SaveSimulation )
     EVT_MENU( SAVEAS_SIMULATION, APPlugin::SaveAsSimulation )
 END_EVENT_TABLE()
@@ -109,8 +107,6 @@ APPlugin::APPlugin() :
 	aspen_menu->Enable( REINITIALIZE_ASPEN_SIMULATION, true );
     aspen_menu->Append( STEP_ASPEN_NETWORK, _( "Step" ) );
     aspen_menu->Enable( STEP_ASPEN_NETWORK, true );
-    aspen_menu->Append( CONDUCTOR_FIND, _( "Find" ) );
-    aspen_menu->Enable( CONDUCTOR_FIND, true );
     aspen_menu->Append( SAVE_SIMULATION, _( "Save Simulation" ) );
     aspen_menu->Enable( SAVE_SIMULATION, true );
     aspen_menu->Append( SAVEAS_SIMULATION, _( "SaveAs Simulation" ) );
@@ -366,87 +362,6 @@ void APPlugin::StepAspenNetwork( wxCommandEvent& event )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     serviceList->Query( status );
-}
-////////////////////////////////////////////////////////////////////////////////
-void APPlugin::FindBlocks( wxCommandEvent& event )
-{
-    UIPLUGIN_CHECKID( event )
-    Network* network = m_canvas->GetActiveNetwork();
-
-    FindDialog fd( m_canvas );
-
-    std::vector< std::string > moduleNames;
-    std::vector< unsigned int > moduleIDs;
-
-    //Find for modules
-    //alphabetize map
-    std::map< std::string, unsigned int > alphaMap;
-    for( std::map<int, Module>::iterator iter = network->modules.begin();
-        iter != network->modules.end(); ++iter )
-    {
-        if( iter->second.GetPlugin()->GetNameFlag() )
-        {
-            alphaMap[ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() )]
-                = iter->second.GetPlugin()->GetVEModel()->GetModelID();
-        }
-    }
-
-    for( std::map< std::string, unsigned int >::iterator
-            iter = alphaMap.begin(); iter != alphaMap.end(); ++iter )
-    {
-        moduleNames.push_back( iter->first );
-        moduleIDs.push_back( iter->second );
-    }
-
-    std::vector< std::string > streamNames;
-    std::vector< int > streamIDs;
-
-    //Find for streams
-    //alphabetize map
-    //std::map< std::string, std::string > alphaMapStreams;
-    std::map< std::string, int > alphaMapStreams;
-    for( int i = 0; i < network->links.size(); i++ )
-    {
-        //alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
-        //    = network->links[i].GetUUID();
-        alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
-            = i;
-    }
-
-    for( std::map< std::string, int >::iterator
-            iter = alphaMapStreams.begin(); iter != alphaMapStreams.end(); ++iter )
-    {
-        streamNames.push_back( iter->first );
-        streamIDs.push_back( iter->second );
-    }
-
-    fd.SetStreamList( streamNames );
-    fd.SetModuleList( moduleNames );
-    fd.ShowModal();
-
-    std::pair< int, int > selectedModulePos = fd.GetSelectedModulePos();
-
-    //highlight and center block
-    if( selectedModulePos.first != wxNOT_FOUND ||
-        selectedModulePos.second != wxNOT_FOUND )
-    {
-        std::string selectModuleName = "Find Failed!";
-        if( selectedModulePos.first == 0)
-        {
-            network->
-                HighlightCenter( moduleIDs[selectedModulePos.second] );
-            selectModuleName = "\nFind Block: " +
-                std::string( fd.GetSelectedModule() ) + "\n";
-        }
-        else
-        {
-            network->
-                HighlightCenterLink( streamIDs[selectedModulePos.second] );
-            selectModuleName = "\nFind Link: " +
-                std::string( fd.GetSelectedModule() ) + "\n";
-        }
-        //Log( selectModuleName.c_str() );
-    }
 }
 ////////////////////////////////////////////////////////////////////////////////
 void APPlugin::SaveSimulation( wxCommandEvent& event )

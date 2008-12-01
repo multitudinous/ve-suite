@@ -54,7 +54,7 @@
 #include <ves/conductor/TexTable.h>
 #include <ves/conductor/GlobalParamDialog.h>
 #include <ves/conductor/SummaryResultDialog.h>
-//#include <ves/conductor/FindDialog.h>
+#include <ves/conductor/FindDialog.h>
 #include <ves/conductor/UserPreferencesDataBuffer.h>
 #include <ves/conductor/XMLDataBufferEngine.h>
 #include <ves/conductor/Network.h>
@@ -187,7 +187,7 @@ BEGIN_EVENT_TABLE( AppFrame, wxFrame )
     //EVT_MENU( HIDE_ASPEN_SIMULATION, AppFrame::HideAspenSimulation )
     //EVT_MENU( CLOSE_ASPEN_SIMULATION, AppFrame::OnCloseAspenSimulation )
 	//EVT_MENU( REINITIALIZE_ASPEN_SIMULATION, AppFrame::ReinitializeAspenSimulation )
-    //EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
+    EVT_MENU( CONDUCTOR_FIND, AppFrame::FindBlocks )
     EVT_MENU( CHANGE_XPLORER_VIEW_NETWORK, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_CAD, AppFrame::ChangeXplorerViewSettings )
     EVT_MENU( CHANGE_XPLORER_VIEW_LOGO, AppFrame::ChangeXplorerViewSettings )
@@ -756,6 +756,7 @@ void AppFrame::CreateMenu()
     //edit_menu->AppendSeparator();
     edit_menu->Append( v21ID_ZOOMIN, _( "Zoom &In" ) );
     edit_menu->Append( v21ID_ZOOMOUT, _( "Zoom &Out" ) );
+    edit_menu->Append( CONDUCTOR_FIND, _( "Find" ) );
     //This is needed because on windows the scale must be 1 for the
     //wxAutoBufferedPaintDC to work properly
 //#ifdef WIN32
@@ -1518,7 +1519,7 @@ void AppFrame::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     commandWriter.WriteXMLDocument( nodes, status, "Command" );
 
     serviceList->Query( status );
-}
+}*/
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 {
@@ -1531,18 +1532,22 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 
     //Find for modules
     //alphabetize map
-    std::map< std::string, unsigned int > alphaMap;
+    //std::map< std::string, unsigned int > alphaMap;
+    std::multimap< std::string, unsigned int > alphaMap;
     for( std::map<int, Module>::iterator iter = network->modules.begin();
         iter != network->modules.end(); ++iter )
     {
         if( iter->second.GetPlugin()->GetNameFlag() )
         {
-            alphaMap[ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() )]
-                = iter->second.GetPlugin()->GetVEModel()->GetModelID();
+            //alphaMap[ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() )]
+            //    = iter->second.GetPlugin()->GetVEModel()->GetModelID();
+            alphaMap.insert( std::pair<std::string, unsigned int>
+                ( ConvertUnicode( iter->second.GetPlugin()->GetName().c_str() ),
+               iter->second.GetPlugin()->GetVEModel()->GetModelID() ) );
         }
     }
 
-    for( std::map< std::string, unsigned int >::iterator
+    for( std::multimap< std::string, unsigned int >::iterator
             iter = alphaMap.begin(); iter != alphaMap.end(); ++iter )
     {
         moduleNames.push_back( iter->first );
@@ -1554,17 +1559,18 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
 
     //Find for streams
     //alphabetize map
-    //std::map< std::string, std::string > alphaMapStreams;
-    std::map< std::string, int > alphaMapStreams;
+    ////std::map< std::string, std::string > alphaMapStreams;
+    //std::map< std::string, int > alphaMapStreams;
+    std::multimap< std::string, int > alphaMapStreams;
     for( int i = 0; i < network->links.size(); i++ )
     {
-        //alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
-        //    = network->links[i].GetUUID();
-        alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
-            = i;
+        ////alphaMapStreams[ConvertUnicode( network->links[i].GetName().c_str() )]
+        ////    = network->links[i].GetUUID();
+        alphaMapStreams.insert(std::pair< std::string, int >
+            ( ConvertUnicode( network->links[i].GetName().c_str() ), i ) );
     }
 
-    for( std::map< std::string, int >::iterator
+    for( std::multimap< std::string, int >::iterator
             iter = alphaMapStreams.begin(); iter != alphaMapStreams.end(); ++iter )
     {
         streamNames.push_back( iter->first );
@@ -1581,24 +1587,24 @@ void AppFrame::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     if( selectedModulePos.first != wxNOT_FOUND ||
         selectedModulePos.second != wxNOT_FOUND )
     {
-        std::string selectModuleName = "Find Failed!";
+        //std::string selectModuleName = "Find Failed!";
         if( selectedModulePos.first == 0)
         {
             network->
                 HighlightCenter( moduleIDs[selectedModulePos.second] );
-            selectModuleName = "\nFind Block: " +
-                std::string( fd.GetSelectedModule() ) + "\n";
+            //selectModuleName = "\nFind Block: " +
+            //    std::string( fd.GetSelectedModule() ) + "\n";
         }
         else
         {
             network->
                 HighlightCenterLink( streamIDs[selectedModulePos.second] );
-            selectModuleName = "\nFind Link: " +
-                std::string( fd.GetSelectedModule() ) + "\n";
+            //selectModuleName = "\nFind Link: " +
+            //    std::string( fd.GetSelectedModule() ) + "\n";
         }
-        Log( selectModuleName.c_str() );
+        //Log( selectModuleName.c_str() );
     }
-}
+}/*
 ////////////////////////////////////////////////////////////////////////////////
 void AppFrame::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
 {
