@@ -132,6 +132,7 @@ wxString APPlugin::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 void APPlugin::OnOpen( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     wxString bkpext( "Aspen Plus ASCII files (*.bkp)|*.bkp", wxConvUTF8);
     wxString apwext( "Aspen Plus Binary files (*.apw)|*.apw", wxConvUTF8);
     wxString extText = bkpext + _("|") + apwext;
@@ -232,8 +233,9 @@ void APPlugin::OnOpen( wxCommandEvent& event )
     //}
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::ShowAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Show Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "showSimulation" );
@@ -253,8 +255,9 @@ void APPlugin::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     //Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::HideAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Hide Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "hideSimulation" );
@@ -296,13 +299,15 @@ void APPlugin::CloseAspenSimulation( void )
 	//AspenSimOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::OnCloseAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     CloseAspenSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::RunAspenNetwork( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "runNetwork" );
@@ -321,8 +326,9 @@ void APPlugin::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     serviceList->Query( status );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void APPlugin::ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::ReinitializeAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
 	//Log( "Reinitialize Simulation.\n" );
 	CommandPtr returnState( new Command() );
     returnState->SetCommandName( "reinitNetwork" );
@@ -341,8 +347,9 @@ void APPlugin::ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::StepAspenNetwork( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "stepNetwork" );
@@ -361,8 +368,9 @@ void APPlugin::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::FindBlocks( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     Network* network = m_canvas->GetActiveNetwork();
 
     FindDialog fd( m_canvas );
@@ -441,8 +449,9 @@ void APPlugin::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::SaveSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Saving Simulation...\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveSimulation" );
@@ -464,8 +473,9 @@ void APPlugin::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
     //Log( "Simulation Saved.\n" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void APPlugin::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
+void APPlugin::SaveAsSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     wxFileName saveFileName;
     wxTextEntryDialog newDataSetName( m_canvas,
                                       wxString( "Enter filename (.apw):", wxConvUTF8 ),

@@ -134,6 +134,7 @@ wxString ADPlugin::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 void ADPlugin::OnOpen( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     wxString dynext( "Aspen Dynamics files (*.dynf)|*.dynf", wxConvUTF8);
     wxString extText = dynext;
     wxFileDialog fd( m_canvas, wxT("Choose a file"), wxT(""), wxT(""), 
@@ -226,8 +227,9 @@ void ADPlugin::OnOpen( wxCommandEvent& event )
     //    Log( "Simulation is already open.\n" );
     //}
 }////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::ShowAspenSimulation( wxCommandEvent& event  )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Show Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "showSimulation" );
@@ -247,8 +249,9 @@ void ADPlugin::ShowAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     //Log( nw_str.c_str() );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::HideAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::HideAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Hide Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "hideSimulation" );
@@ -290,13 +293,15 @@ void ADPlugin::CloseAspenSimulation( void )
 	//AspenSimOpen = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::OnCloseAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::OnCloseAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     CloseAspenSimulation();
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::RunAspenNetwork( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "runNetwork" );
@@ -315,8 +320,9 @@ void ADPlugin::RunAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     serviceList->Query( status );
 }
 ///////////////////////////////////////////////////////////////////////////////
-void ADPlugin::ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::ReinitializeAspenSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
 	//Log( "Reinitialize Simulation.\n" );
 	CommandPtr returnState( new Command() );
     returnState->SetCommandName( "reinitNetwork" );
@@ -335,8 +341,9 @@ void ADPlugin::ReinitializeAspenSimulation( wxCommandEvent& WXUNUSED( event ) )
     serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::StepAspenNetwork( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Run Simulation.\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "stepNetwork" );
@@ -355,8 +362,9 @@ void ADPlugin::StepAspenNetwork( wxCommandEvent& WXUNUSED( event ) )
     serviceList->Query( status );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::FindBlocks( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     Network* network = m_canvas->GetActiveNetwork();
 
     FindDialog fd( m_canvas );
@@ -435,8 +443,9 @@ void ADPlugin::FindBlocks( wxCommandEvent& WXUNUSED( event ) )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::SaveSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     //Log( "Saving Simulation...\n" );
     CommandPtr returnState( new Command() );
     returnState->SetCommandName( "saveSimulation" );
@@ -458,8 +467,9 @@ void ADPlugin::SaveSimulation( wxCommandEvent& WXUNUSED( event ) )
     //Log( "Simulation Saved.\n" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void ADPlugin::SaveAsSimulation( wxCommandEvent& WXUNUSED( event ) )
+void ADPlugin::SaveAsSimulation( wxCommandEvent& event )
 {
+    UIPLUGIN_CHECKID( event )
     wxFileName saveFileName;
     wxTextEntryDialog newDataSetName( m_canvas,
                                       wxString( "Enter filename (.apw):", wxConvUTF8 ),
