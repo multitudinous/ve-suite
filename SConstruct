@@ -213,7 +213,7 @@ else:
 opts.AddOption( osg_options )
 if GetPlatform() == 'win32':
    xerces_options = fp_option.FlagPollBasedOption("xerces",
-         "xerces-c", "2.7", True, True)
+         "xerces-c", "2.7", True, True, compileTest=True)
 else:
    xerces_options = SConsAddons.Options.StandardPackageOption("xercesc",
       "Xerces-C library options, default : xercesc_incdir=<xercesc>/include xercesc_libdir=<xercesc>/lib(64)", 
