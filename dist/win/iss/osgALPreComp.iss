@@ -9,7 +9,7 @@
 #define LIBVORBISHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test\libvorbis-1.2.0\libvorbis-1.2.0"
 #define OPENALHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test"
 #define OSGALHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test\osgal"
-
+#define ALUTSRCINSTALL "C:\Documents and Settings\mccdo\Desktop\osgAL_Test\freealut-1.1.0-bin\freealut-1.1.0-bin"
 [Setup]
 AppName={#MyAppName}
 AppVerName=osgAL_{#OSGALVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -48,6 +48,7 @@ Source: {#LIBOGGHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion 
 Source: {#LIBVORBISHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 Source: {#OPENALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 Source: {#OSGALHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
+Source: {#ALUTSRCINSTALL}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 ; libs
 ;Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBOGGHOME}\win32\Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
@@ -60,6 +61,7 @@ Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.lib; DestDir: {app}\
 Source: {#OPENALHOME}\libs\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ;Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#ALUTSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls
 ;Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBOGGHOME}\win32\Dynamic_Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
@@ -71,5 +73,6 @@ Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Release\*.dll; DestDir: {app}\l
 Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ;Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#ALUTSRCINSTALL}\lib\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgAL.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgAL.fpc; Languages: ; Flags: ignoreversion
