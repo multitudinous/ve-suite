@@ -2,12 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define WXVERSION "2.8.7"
+#define WXVERSION "2.8.9"
 #define MyAppName "WxWidgets Pre-Compile"
 #define MyAppVerName "WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "Virtual Engineering Research Group, Iowa State University"
 #define MyAppURL "www.vesuite.org"
-
+#define WXSRCINSTALL "C:\dev\ves_deps\wxWidgets-2.8.9"
 [Setup]
 AppName=WxWidgets Pre-Compile
 AppVerName=WxWidgets_{#WXVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -29,7 +29,7 @@ BackColor2=$1b84f7
 WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
 AppVersion={#WXVERSION}_{#VEVERSION}
 PrivilegesRequired=none
 
@@ -37,12 +37,11 @@ PrivilegesRequired=none
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#WXHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#WXHOME}\lib\vc_dll\*.dll; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#WXHOME}\lib\vc_dll\*.lib; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#WXSRCINSTALL}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#WXSRCINSTALL}\lib\vc_dll\*.dll; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#WXSRCINSTALL}\lib\vc_dll\*.lib; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: {#WXHOME}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
-
-[Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Source: {#WXSRCINSTALL}\lib\vc_dll\*.h; DestDir: {app}\lib\vc_dll\; Flags: ignoreversion recursesubdirs createallsubdirs
+;FPC file integration
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\wxWidgets.fpc.in; DestDir: {app}\lib\vc_dll\flagpoll; DestName: wxWidgets.fpc; Languages: ; Flags: ignoreversion
