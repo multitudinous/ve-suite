@@ -16,7 +16,7 @@
 #define MSREDISTRIBUTABLE "C:\dev\ves_deps\vcredist_x86.exe"
 ; Directory names for all VES dependencies
 #define ACETAOHOME "ACETAO_5.6.6_Pre-Compile_vc8.0_SP1"
-#define VTKHOME "vtk-5.2.0-install"
+#define VTKHOME "VTK_5.2.0"
 #define OSGHOME "OSG_2.6.1_Pre-Compile_vc8.0_SP1"
 #define WXHOME "WxWidgets_2.8.7_Pre-Compile_vc8.0_SP1"
 #define XERCESHOME "Xerces-c_2.7_Pre-Compile"

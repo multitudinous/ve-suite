@@ -1,4 +1,4 @@
-prefix=${fp_file_cwd}/../../VTK_5.2.0
+prefix=${fp_file_cwd}/../..
 exec_prefix=${prefix}
 libdir=${exec_prefix}/lib/vtk-5.2
 includedir=${prefix}/include/vtk-5.2

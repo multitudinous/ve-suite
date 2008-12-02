@@ -6,7 +6,7 @@
 #define MyAppVerName "VTK_{#VTKVERSION}_Pre-Compile_vc{#MSVCVERSION} "
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-
+#define VTKSRCHOME "C:\dev\ves_deps\vtk-5.2.0-install"
 [Setup]
 AppName={#MyAppName}
 AppVerName=VTK_{#VTKVERSION}_Pre-Compile_vc{#MSVCVERSION}
@@ -35,10 +35,9 @@ PrivilegesRequired=none
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\lib\*; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#DEPENDSINSTALLHOME}\{#VTKHOME}\bin\*; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VTKSRCHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VTKSRCHOME}\lib\*lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#VTKSRCHOME}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-
-[Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+;FPC file integration
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\VTK.fpc.in; DestDir: {app}\lib\flagpoll; DestName: VTK.fpc; Languages: ; Flags: ignoreversion
