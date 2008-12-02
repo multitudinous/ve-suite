@@ -35,6 +35,7 @@ WizardImageBackColor=clWhite
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
+RestartIfNeededByRun=false
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
@@ -53,7 +54,9 @@ Source: {#OSGSRCHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recurs
 Source: {#OSG3RDPARTY}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSG3RDPARTY}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#OSG3RDPARTY}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
-;coin
+;Coin libraries
 Source: {#COINHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#COINHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#COINHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+;FPC file integration
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\OSG.fpc.in; DestDir: {app}\lib\flagpoll; DestName: OSG.fpc; Languages: ; Flags: ignoreversion

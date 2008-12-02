@@ -5,10 +5,10 @@
 #define MyAppVerName "osgAL_{#OSGALVERSION} Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-#define LIBOGGHOME "C:\TSVEG\Dependencies\libogg-1.1.3"
-#define LIBVORBISHOME "C:\TSVEG\Dependencies\libvorbis-1.2.0"
-#define OPENALHOME "C:\Program Files\OpenAL 1.1 SDK"
-#define OSGALHOME "C:\TSVEG\Dependencies\osgal-0.6.1"
+#define LIBOGGHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test\libvorbis-1.2.0\ogg"
+#define LIBVORBISHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test\libvorbis-1.2.0\libvorbis-1.2.0"
+#define OPENALHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test"
+#define OSGALHOME "C:\Documents and Settings\mccdo\Desktop\osgAL_Test\osgal"
 
 [Setup]
 AppName={#MyAppName}
@@ -22,7 +22,7 @@ DefaultGroupName={#MyAppName}
 OutputBaseFilename=osgAL_{#OSGALVERSION}-precompile_{#MSVCVERSION}
 Compression=lzma
 SolidCompression=true
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
 WindowVisible=true
 WizardImageFile={#VEDEVHOME}\dist\installerImages\velauncher_banner.bmp
 BackColor=$a16502
@@ -35,6 +35,9 @@ SetupIconFile={#VEDEVHOME}\dist\installerImages\ve_icon.ico
 EnableDirDoesntExistWarning=true
 PrivilegesRequired=none
 RestartIfNeededByRun=false
+UsePreviousGroup=true
+AppendDefaultGroupName=true
+TimeStampsInUTC=true
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
@@ -46,28 +49,27 @@ Source: {#LIBVORBISHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversi
 Source: {#OPENALHOME}\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 Source: {#OSGALHOME}\include\*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs
 ; libs
-Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBOGGHOME}\win32\Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OPENALHOME}\libs\win32\*.lib; DestDir: {app}\lib; Flags: ignoreversion
-Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+;Source: {#OPENALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#OSGALHOME}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 ; dlls
-Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+;Source: {#LIBOGGHOME}\win32\Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#LIBOGGHOME}\win32\Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+;Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\Vorbis_Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+;Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisEnc_Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+;Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Debug\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#LIBVORBISHOME}\win32\VorbisFile_Dynamic_Release\*.dll; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\bin; Flags: ignoreversion
+;Source: {#OPENALHOME}\lib\*.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#OSGALHOME}\bin\*.dll; DestDir: {app}\bin; Flags: ignoreversion
-
-[Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+;FPC file integration
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\osgAL.fpc.in; DestDir: {app}\lib\flagpoll; DestName: osgAL.fpc; Languages: ; Flags: ignoreversion
