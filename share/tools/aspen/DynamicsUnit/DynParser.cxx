@@ -113,6 +113,50 @@ void DynParser::ReinitDynamics()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
+/*void DynParser::NewParseFile(const char * dynFile)
+{
+	std::ifstream inFile( dynFile );
+    currentLevelName = "_main_sheet";
+
+    //Global
+    ReadHeader( inFile );
+    ReadEncrypted( inFile );
+    ReadSystemData( inFile );
+    ReadSystemData( inFile );
+    
+    //acquire all relevant flow sheet info
+    bool flowsheet_entry = true;
+    while( flowsheet_entry )
+    {
+        ReadFlowsheetComponents( inFile );
+        flowsheet_entry = false;
+
+        //loop over all levels
+        for( int i = 0; i < levelCount; i++ )
+        {
+            ReadConstraints( inFile );
+            ReadSystemData( inFile );
+            ReadGraphicsInformation( inFile );
+            
+            //is there a new flow sheet entry to account for
+            if( flowsheet_entry )
+            {
+                break;
+            }
+        }
+    }
+
+    //Global
+    ////ReadComponentList();
+    //ReadPropeties( inFile );
+    //ReadOptions( inFile );
+    //ReadOptimization( inFile );
+    //ReadEstimation( inFile );
+    //ReadHomotrophy( inFile );
+    //ReadOnlineLinks( inFile );
+    //ReadSnapshot( inFile );
+}*/
+///////////////////////////////////////////////////////////////////////////////
 void DynParser::ParseFile(const char * dynFile)
 {	
 	std::ifstream inFile( dynFile );
@@ -1415,3 +1459,582 @@ void DynParser::SetValue( std::string modname, std::string paramname,
     dyndoc->SetVariableValue( modname.c_str(), paramname.c_str(),
         value.c_str()  );
 }
+
+///////////////////////////////////////////////////////////////////////////////
+/*void DynParser::ReadEncrypted( std::ifstream file )
+{
+    //version
+    std::string version;
+    std::getline( file, version  );
+
+    //libraries
+    std::string libs;
+    std::getline( file, libs );
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::ReadEncrypted( std::ifstream file )
+{
+    std::vector< std::string > entry;
+    std::string temp;
+
+    while( true )
+    {
+        std::streampos temppos = file.tellg();
+        //!ENCRYPTED!
+        std::getline( file, temp );
+        //size of encrypted data is also available at end of line
+
+        //make sure it is an encrypted packet
+        if(temp.compare( 0, 10, "!ENCRYPTED!", 0, 10)
+        {
+            //move file pointer back
+            file.seekg(temppos);
+
+            //exit loop
+            break;
+        }
+
+        //DATA
+        std::getline( file, temp );
+        entry.push_back( temp );
+        
+        //!END ENCRYPTED!
+        std::getline( file, temp );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::ReadSystemData( std::ifstream file )
+{
+    std::string entry;
+    std::string temp;
+    while( temp.compare(0, 6, "EndText", 0, 6) != 0 )
+    {
+        std::getline( file, temp );
+
+        //throw out comments
+        if( temp.compare( 0, 1, "//", 0, 1 ) != 0 )
+        {
+            entry.append( temp );
+        }
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::ReadFlowsheetComponents( std::ifstream file )
+{
+    std::string temp;
+    while( true )
+    {
+        std::streampos temppos = file.tellg();
+        std::getline( file, temp );
+        
+        //if you have reached constraint entry
+        if( temp.compare( 0, 9, "CONSTRAINTS", 0, 9 ) == 0 )
+        {
+            //move file pointer back
+            file.seekg(temppos);
+
+            break;
+        }
+
+        BlockInfo tempBlockInfo;
+        tempBlockInfo.hierarchical = false;
+        tempBlockInfo.iconHidden = 0;
+
+        //handle hierachy entry
+        if( temp.compare( 0, 10, "  HIERARCHY", 0, 10 ) == 0 )
+        {
+            tempBlockInfo.id =
+                temp.substr( temp.find("HIERARCHY") + 10, temp.size() );
+            tempBlockInfo.hierarchical = true;
+            tempBlockInfo.type = "hierarchy";
+            BlockInfoList[currentLevelName][tempBlockInfo.id] = tempBlockInfo;
+            models[currentLevelName][tempBlockInfo.id] = redundantID++;
+            
+            //set the current level to the hierarchy block
+            //or append it to the current level value
+            if( currentLevelName.compare( 0, 10, "_main_sheet", 0, 10 ) == 0 )
+            {
+                currentLevelName = tempBlockInfo.id
+            }
+            else
+            {
+                currentLevelName = currentLevelName + "." + tempBlockInfo.id;
+            }
+        }
+        
+        //streams
+        //check last 7 characters for "Stream;"
+        else if( temp.compare( temp.size() - 8, temp.size() - 1, "Stream;", 0, 6 ) == 0 )
+        {
+            ;
+        }
+
+        //ports
+        else if( temp.compare(0, 8, "  Connect", 0, 8) == 0 )
+        {
+            //get the stream name
+            std::string temp_stream =
+                temp.substr( temp.find("with") + 5, temp.size() - 1 );
+        
+            //reset tokenizer
+            std::stringstream portTokenizer(temp);
+            while( portTokenizer >> portToken )
+            {
+                if( portToken.find( "." ) != std::string::npos )
+                {
+                    int  period_pos = portToken.find_first_of(".");
+                    std::string inputOutput =
+                        portToken.substr(period_pos, portToken.size() - 1);
+
+                    std::string blockName = portToken.substr( 0, period_pos + 1 );
+                    
+                    if(inputOutput.find("In_") != std::string::npos )
+                    {
+                        inLinkToModel[currentLevelName][temp_stream] = blockName;
+                    }
+                    else if (inputOutput.find("Out_") != std::string::npos )
+                    {                    
+                        outLinkToModel[currentLevelName][temp_stream] = blockName;
+                    }
+                }
+            }
+        }
+        
+        //skip FLOWSHEET entry
+        else if( temp.compare( 0, 8, "FLOWSHEET", 0, 8 ) == 0 )
+        {
+            ;
+        }
+        
+        //handle block entries
+        else
+        {
+            std::stringstream tokenizer(temp);
+            std::string tempHolder;
+		    std::string blockname;
+		    std::string as;
+		    std::string type;
+
+            //the blocks name
+            temp >> blockname;
+            temp >> as;
+
+            //the blocks type in lower case
+		    tokenizer >> tempHolder;
+		    type = tempHolder.substr( 0, tempHolder.size() - 1);
+            std::transform(type.begin(), type.end(), type.begin(), std::tolower);
+
+            tempBlockInfo.id = blockname;
+            tempBlockInfo.hierarchical = false;
+            tempBlockInfo.type = type;
+            BlockInfoList[currentLevel][tempBlockInfo.id] = tempBlockInfo;
+            models[currentLevel][tempBlockInfo.id] = redundantID++;
+        }
+
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::ReadConstraints( std::ifstream file )
+{
+    std::string entry;
+    std::string temp;
+    while( temp.compare(0, 2, "END", 0, 2) != 0 )
+    {
+        std::getline( file, temp );
+        entry.append( temp );
+    }
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::ReadGraphicsInformation( std::ifstream file )
+{
+    std::string temp;
+
+    //locate the beginning of graphics info
+    while( temp.compare(0, 12, "  ActiveTasks", 0, 12) != 0 )
+    {
+        std::getline( file, temp );
+    }
+    
+    //# of PFS Objects
+    while( temp.compare(0, 15, "# of PFS Objects", 0, 15) != 0 )
+    {
+        std::getline( file, temp );
+    }
+
+    std::getline( file, temp ); //"SIZE" entry
+
+    while( true )
+    {
+        std::getline( file, temp );
+
+        if( temp.compare( 0, 5, "LEGEND", 0, 5) == 0 ||
+            temp.compare( 0, 7, "VIEWPORT", 0, 7) == 0 )
+        {
+            break;
+        }
+
+        //BLOCKS
+        else if( temp.compare( 0, 4, "BLOCK", 0, 4 ) == 0 )
+        {
+            //block id
+            std::getline(inFile, id);
+
+            //version
+            std::getline(inFile, version);
+            
+            //icon
+            std::getline(inFile, icon);
+
+            //flag
+            std::getline(inFile, flag);
+
+            //section
+            std::getline(inFile, section);
+
+            //at
+            std::getline(inFile, at);
+            
+            //optional entries
+            std::getline(inFile, temp);
+            //check for the optional line "Parent"
+            if(temp.compare(0, 6, "Parent", 0, 6)== 0)
+            {
+                parent = temp;
+                std::getline(inFile, parentAttrib);
+                std::getline(inFile, labelAt);
+            }
+            else
+            {
+                //label at
+                labelAt = temp;
+            }
+            std::getline(inFile, temp);
+            //check for the optional line "Annotation"
+            if(temp.compare(0, 10, "Annotation", 0, 10)== 0)
+            {
+                annotation = temp;
+                std::getline(inFile, scaleMod);
+            }
+            else
+            {
+                scaleMod = temp;
+            }            
+            
+            //icon info
+            std::string tempIcon;
+            std::stringstream iconTokenizer(icon);
+            iconTokenizer >> discard;
+            iconTokenizer >> tempIcon;
+            tempIcon = tempIcon.substr(1, tempIcon.size() - 2);
+            std::transform(tempIcon.begin(), tempIcon.end(), tempIcon.begin(), std::tolower);
+            //replace - with _
+            size_t found = tempIcon.find("-");
+            while( found != std::string::npos )
+            {
+                tempIcon.replace(found, 1, "_");
+                found = tempIcon.find("-");
+            }
+
+            //scale and modifier
+            float scale;
+            int modifier;
+            std::stringstream scaleTokenizer(scaleMod);
+            scaleTokenizer >> discard; //discard "scale" string
+            scaleTokenizer >> scale;   //grab scale
+            scaleTokenizer >> discard; //discard "modifier" string
+            scaleTokenizer >> modifier;//grab modifier
+
+            //block id	
+            std::stringstream idTokenizer(id);
+            idTokenizer >> discard;
+            std::string tempBlockId; 
+            idTokenizer >> tempBlockId;
+
+            BlockInfo tempBlockInfo_2;
+            //sort the block id/type vector
+            int entryIncr = 0;
+            bool entryFound = false;
+            std::string iconType;
+
+            BlockInfoList[currentLevelName][tempBlockId].icon = tempIcon;
+            BlockInfoList[currentLevelName][tempBlockId].scale = scale;
+
+            //ASPEN DYNAMICS ICON OFFSET
+            float left = 0, right = 0, bottom = 0, top = 0; //coords
+            float widthOffset = 0;
+            float heightOffset = 0;
+            output<<BlockInfoList[currentLevelName][tempBlockId].type+" "+
+                BlockInfoList[currentLevelName][tempBlockId].icon<<std::endl;
+            std::pair< std::string, std::string >
+                blockKey( BlockInfoList[currentLevelName][tempBlockId].type,
+                BlockInfoList[currentLevelName][tempBlockId].icon );
+                
+            lutMapIter = dynLutMap.find( blockKey );
+            //check dynamics header
+            if( lutMapIter != dynLutMap.end() )
+            {
+                lutVector = lutMapIter->second;
+                left = lutVector[ 0 ];
+                right = lutVector[ 1 ];
+                top = lutVector[ 2 ];
+                bottom = lutVector[ 3 ];
+            }
+            else
+            {
+                lutMapIter = plusLutMap.find( blockKey );
+                //check aspen plus header
+                if( lutMapIter != plusLutMap.end() )
+                {
+                    lutVector = lutMapIter->second;
+                    left = lutVector[ 0 ];
+                    right = lutVector[ 1 ];
+                    top = lutVector[ 2 ];
+                    bottom = lutVector[ 3 ];
+                }
+                //if not found
+                else
+                {
+                    left = 0;
+                    right = 0;
+                    top = 0;
+                    bottom = 0;
+                }
+            }
+
+            float iconWidth = right - left;
+            float iconHeight = top - bottom;
+
+            //MODIFIER
+            if(modifier == 0)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 0.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 0;
+                widthOffset = abs(left/iconWidth);
+                heightOffset = abs(top/iconHeight);
+            }
+            else if(modifier == 1)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 0.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 1;
+                widthOffset = abs(right/iconWidth);
+                heightOffset = abs(top/iconHeight);
+            }
+            else if(modifier == 2)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 0.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 2;
+                widthOffset = abs(left/iconWidth);
+                heightOffset = abs(bottom/iconHeight);
+            }
+            else if(modifier == 3)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 90.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 0;
+                widthOffset = abs(top/iconWidth);
+                heightOffset = abs(right/iconHeight);
+            }
+            else if(modifier == 4)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 270.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 0;
+                widthOffset = abs(bottom/iconWidth);
+                heightOffset = abs(left/iconHeight);
+            }
+            else if(modifier == 5)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 180.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 0;
+                widthOffset = abs(right/iconWidth);
+                heightOffset = abs(bottom/iconHeight);
+            }
+            else if(modifier == 6)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 270.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 2;
+                widthOffset = abs(top/iconWidth);
+                heightOffset = abs(left/iconHeight);
+            }
+            else if(modifier == 7)
+            {
+                BlockInfoList[currentLevelName][tempBlockId].rotation = 270.0f;
+                BlockInfoList[currentLevelName][tempBlockId].mirror = 1;
+                widthOffset = abs(bottom/iconWidth);
+                heightOffset = abs(right/iconHeight);
+            }
+
+            //parse location to create coordinates for blocks		
+            std::stringstream atTokenizer(at);
+            atTokenizer >> discard;
+            float xcoord, ycoord;
+            atTokenizer >> xcoord;
+            atTokenizer >> ycoord;
+            xCoords.push_back(xcoord);
+            yCoords.push_back(ycoord);
+
+            //scaled up for icon spacing
+            float scaledXCoords = xCoords.back() * 100;
+            //invert Y axis - flowsheets are inverted
+            float scaledYCoords = -yCoords.back() * 100;
+    		
+            float width =
+                imageData[BlockInfoList[currentLevelName][tempBlockId].type+
+                "_"+BlockInfoList[currentLevelName][tempBlockId].type+
+                "_"+BlockInfoList[currentLevelName][tempBlockId].icon+
+                ".xpm"].first;
+            float height = 
+                imageData[BlockInfoList[currentLevelName][tempBlockId].type+
+                "_"+BlockInfoList[currentLevelName][tempBlockId].type+
+                "_"+BlockInfoList[currentLevelName][tempBlockId].icon+
+                ".xpm"].second;
+            iconLocations[currentLevelName][ tempBlockId ] =
+                std::pair< float, float >( scaledXCoords -
+                ( width * widthOffset * 
+                BlockInfoList[currentLevelName][tempBlockId].scale),
+                scaledYCoords - ( height * heightOffset * 
+                BlockInfoList[currentLevelName][tempBlockId].scale) );
+        }
+        //STREAMS
+        else if( temp.compare( 0, 4, "STREAM", 0, 4 ) == 0 )
+        {
+            std::string streamId;
+            std::string streamVersion;
+            std::string streamFlag;
+            std::string streamType;
+
+            getline( inFile, streamId );
+            getline( inFile, streamVersion );
+            getline( inFile, streamFlag );
+            getline( inFile, streamType );
+
+            //Look for Stream type - needed for version 13.2
+            while( streamType.compare( 0, 4, "TYPE", 0 , 4) != 0 )
+                getline( inFile, streamType );
+            getline(inFile, temp);
+            routeCount = 0;
+            routeOne=false;
+            newStream = true;
+                
+            //Look for Routes
+            while( temp.compare( 0, 6, "STREAM", 0, 6 )!= 0 &&
+                temp.compare( 0, 8, "VIEWPORT", 0, 8 )!= 0 &&
+                temp.compare( 0, 6, "LEGEND", 0, 6 )!= 0 &&
+                routeCount < 3 &&
+                streamId.find( "#" ) == std::string::npos )
+            {
+                //look for ROUTE heading
+                if( temp.compare( 0, 5, "ROUTE", 0, 5 ) == 0 )
+                {
+                    getline( inFile, temp );
+                    routeCount++;
+                }
+                //grab data
+                else if( temp.compare( 0, 2, "r ", 0, 2) == 0 )
+                {
+                    while( temp.compare( 0, 5, "ROUTE", 0, 5) != 0 &&
+                        temp.compare( 0, 2, "$ ", 0, 2)!= 0 &&
+                        temp.compare( 0, 2, "At", 0, 2)!= 0 &&
+                        temp.compare( 0, 5, "Label" ) != 0)
+                    {
+                        //seems you only need first 2 routes
+                        if( routeCount == 1 || routeCount == 2 )
+                        {
+                            std::stringstream streamTokenizer( temp );
+                            streamTokenizer >> tempR;
+                            streamTokenizer >> tempR2;
+                            streamTokenizer >> tempCoords.first;
+                            streamTokenizer >> tempCoords.second;
+
+                            if( routeCount == 1 )
+                            {
+                                xy.value.push_back( tempCoords );
+                                routeOne = true;
+                            }
+                            if( routeCount == 2 )
+                            {
+                                tempXY.value.push_back( tempCoords );
+                            }
+                        }
+                        else
+                        {
+                            std::cout << "ERROR: "<<
+                                routeCount << std::endl;
+                        }
+                        getline( inFile, temp );
+                    }
+                }
+                else 
+                {
+                    getline( inFile, temp );
+                }
+            }
+            //put 2nd route entry data ahead of first in vector
+            int tempCount = 0;
+            while( tempCount < (int)tempXY.value.size( ) )
+            {
+                xy.value.insert( xy.value.begin(),
+                    tempXY.value[tempCount] );
+                tempCount++;
+            }
+            
+            std::stringstream idTokenizer( streamId );
+            idTokenizer >> discard;
+            idTokenizer >> xy.streamId;
+            
+            std::stringstream typeTokenizer( streamType );
+            typeTokenizer >> discard;
+            typeTokenizer >> xy.streamType;
+
+            //add one streams values to vector 
+            streamCoordList.push_back( xy );
+            
+	        linkTypes[currentLevelName][xy.streamId] = ( xy.streamType );
+            //Create map of stream names to points
+            for ( size_t k = 0; k < xy.value.size( ); ++k )
+            {
+                //scaled up for icon spacing
+                float scaledX = xy.value.at( k ).first * 100;
+                //invert Y axis - flowsheets are inverted
+                float scaledY = -xy.value.at( k ).second * 100;
+                if(scaledX < minX)
+                    minX = scaledX;
+                if(scaledY < minY)
+                    minY = scaledY;
+                tester2<<" x: "<<scaledX<<" y: "<<scaledY;
+                linkPoints[currentLevelName][xy.streamId].push_back(
+                    std::pair< float, float >( scaledX, scaledY ) );	
+            }
+            // add converted points for wx
+            //empty temporary vector
+            xy.value.erase(xy.value.begin(),xy.value.end() );
+            //empty temporary vector
+            tempXY.value.erase(tempXY.value.begin( ),tempXY.value.end( ) );
+        }
+    }
+    
+    //locate the end of graphics info
+    while( temp.compare(0, 7, "ENDTEXT;", 0, 7) != 0 )
+    {
+        std::getline( file, temp );
+    }
+    //throw out "END"
+    std::getline( file, temp );
+    //throw out empty line
+    std::getline( file, temp );
+
+
+    //move level name up
+    if( currentLevelName.find( "." ) == std::string::npos )
+    {
+        currentLevelName = "_main_sheet";
+    }
+    else
+    {
+        std::string temp_name;
+        temp_name = currentLevelName.substr( 0, compLevelName.find_last_of( "." ) -1 );
+        currentLevelName = temp_name;
+    }
+}*/
