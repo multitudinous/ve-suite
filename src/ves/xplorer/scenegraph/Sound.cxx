@@ -139,7 +139,7 @@ void Sound::LoadFile( const std::string fileName )
     m_soundState->setSoundCone( 0.0, 360.0, 1.0 );
     m_soundState->setReferenceDistance( 5 );
     m_soundState->setRolloffFactor( 4 );
-    m_soundState->setPlay( true );
+    m_soundState->setPlay( false );
     m_soundState->setLooping( false );
 
     //Allocate a hardware soundsource to this soundstate( priority 10 )
@@ -154,11 +154,12 @@ void Sound::LoadFile( const std::string fileName )
 void Sound::PushSoundEvent( int priority )
 {
     osg::ref_ptr< osgAL::SoundState > temp = 
-        new osgAL::SoundState( "temp", m_soundManager );
-    temp->setSample( m_sample.get() );
-    temp->setPosition( m_soundState->getPosition() );
-    temp->setSoundCone( 0.0, 360.0, 1.0 );
-    temp->setReferenceDistance( 5 );
+        //new osgAL::SoundState( "temp", m_soundManager );
+        new osgAL::SoundState( *m_soundState.get() );
+    //temp->setSample( m_sample.get() );
+    //temp->setPosition( m_soundState->getPosition() );
+    //temp->setSoundCone( 0.0, 360.0, 1.0 );
+    //temp->setReferenceDistance( 5 );
     temp->setPlay( true );
     temp->setLooping( false );
 
