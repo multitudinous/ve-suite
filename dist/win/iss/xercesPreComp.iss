@@ -2,12 +2,12 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #include <vesenv.iss>
-#define XERCESVERSION "2.7"
+#define XERCESVERSION "2.8"
 #define MyAppName "Xerces-c Pre-Compile"
 #define MyAppVerName "Xerces-c_{#XERCESVERSION}  Pre-Compile_vc{#MSVCVERSION}"
 #define MyAppPublisher "VERG"
 #define MyAppURL "www.vesuite.org"
-
+#define XERCESSRCINSTALL "C:\dev\ves_deps\xerces-c_2_8_0-x86-windows-vc_8_0"
 [Setup]
 AppName={#MyAppName}
 AppVerName=Xerces-c_{#XERCESVERSION} Pre-Compile_vc{#MSVCVERSION}
@@ -17,7 +17,7 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\Xerces-c_{#XERCESVERSION}_Pre-Compile
 DefaultGroupName={#MyAppName}
-AllowNoIcons=true
+AllowNoIcons=false
 OutputBaseFilename=xerces-c_PreCompile_{#XERCESVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
@@ -29,19 +29,23 @@ BackColor2=$1b84f7
 WizardImageBackColor=clWhite
 WizardSmallImageFile={#VEDEVHOME}\dist\installerImages\ve_icon.bmp
 WizardImageStretch=false
-OutputDir={#DEPENDSINSTALLHOME}
+OutputDir={#INSTALLERINSTALLLOCATION}
+PrivilegesRequired=none
 
 
 [Languages]
 Name: english; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#XERCESHOME}\Build\Win32\VC7.1\*.dll; DestDir: {app}\Build\Win32\VC7.1\; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#XERCESHOME}\Build\Win32\VC7.1\*.lib; DestDir: {app}\Build\Win32\VC7.1\; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\src; Flags: ignoreversion recursesubdirs createallsubdirs
-Source: {#XERCESHOME}\src\*.c; DestDir: {app}\src; Flags: ignoreversion recursesubdirs createallsubdirs
-
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-
-[Icons]
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+;Data for source build
+;Source: {#XERCESHOME}\Build\Win32\VC7.1\*.dll; DestDir: {app}\Build\Win32\VC7.1\; Flags: ignoreversion recursesubdirs createallsubdirs
+;Source: {#XERCESHOME}\Build\Win32\VC7.1\*.lib; DestDir: {app}\Build\Win32\VC7.1\; Flags: ignoreversion recursesubdirs createallsubdirs
+;Source: {#XERCESHOME}\src\*.h*; DestDir: {app}\src; Flags: ignoreversion recursesubdirs createallsubdirs
+;Source: {#XERCESHOME}\src\*.c; DestDir: {app}\src; Flags: ignoreversion recursesubdirs createallsubdirs
+;Data for binary download
+Source: {#XERCESSRCINSTALL}\bin\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#XERCESSRCINSTALL}\lib\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#XERCESSRCINSTALL}\include\*.h*; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#XERCESSRCINSTALL}\include\*.c; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+;FPC file integration
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\xerces.fpc.in; DestDir: {app}\lib\flagpoll; DestName: xerces.fpc; Languages: ; Flags: ignoreversion

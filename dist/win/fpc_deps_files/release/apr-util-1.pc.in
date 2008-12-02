@@ -1,10 +1,13 @@
-prefix=${fp_file_cwd}\..\..\apr-vc8\apr-util
+prefix=${fp_file_cwd}\..\..
 exec_prefix=${prefix}
-libdir=${exec_prefix}\Release
+libdir=${exec_prefix}\lib
 includedir=${prefix}\include
 
 Name: APR Utils
 Description: Companion library for APR
-Version: 1.2.8
+Provides: apr-util-1
+Requires:
+Version: 1.3
 Libs: /libpath:"${libdir}" libaprutil-1.lib
 Cflags: /I"${includedir}"
+Arch: noarch

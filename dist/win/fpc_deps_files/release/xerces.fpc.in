@@ -1,7 +1,7 @@
-prefix=${fp_file_cwd}/../../Xerces-c_2.7_Pre-Compile/
+prefix=${fp_file_cwd}/../..
 exec_prefix=${prefix}
-libdir=${exec_prefix}/Build/Win32/VC7.1/Release
-includedir=${prefix}/src 
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include 
 
 Name: xerces-c
 Description: xerces-c release pre-compiled for VES
