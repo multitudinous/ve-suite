@@ -1,0 +1,23 @@
+##Builds a multitude of utilities
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv RootDir ves_pkg LIBDIR GetPlatform buildDir osg_options')
+
+srcs = Split("""
+   PrimitiveSetInstanced.cpp
+   Vectors.cpp
+""")
+
+
+env = ves_pkg.getEnv().Copy()
+#env = baseEnv.Copy()
+osg_options.apply( env )
+
+multiblock = ves_pkg.createProgram('vectorTest' + env["PROGSUFFIX"], env, 'bin')
+#prog = ves_pkg.createProgram('ves_xplorer' + env["PROGSUFFIX"], env, 'bin',
+#    True,resources,pj( RootDir, 'src', 'apps', 'xplorer','Info.plist'),
+#    pj( RootDir, 'dist', 'darwin', 'PkgInfo'))
+
+multiblock.addSources( srcs )
+multiblock.build()
