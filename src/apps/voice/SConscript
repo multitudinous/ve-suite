@@ -9,7 +9,6 @@ env = ves_pkg.getEnv().Copy()
 
 tao_options.apply(env)
 xerces_options.apply(env)
-wxwidgets_options.apply(env)
 
 srcs = Split("""
    JuliusMain.cxx
