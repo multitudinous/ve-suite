@@ -1,4 +1,4 @@
-prefix=${fp_file_cwd}\..\..\ACETAO_5.5_Pre-Compile_vc8.0_SP1
+prefix=${fp_file_cwd}\..\..
 exec_prefix=${prefix}
 libdir=${exec_prefix}\lib
 includedir=${prefix}
