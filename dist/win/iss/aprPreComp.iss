@@ -20,8 +20,8 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\apr_{#APRVERSION}_Pre-Compile
-DefaultGroupName={#MyAppName}
-AllowNoIcons=false
+DefaultGroupName={#VESGROUPNAME}
+AllowNoIcons=true
 OutputBaseFilename=apr_PreCompile_{#APRVERSION}
 SetupIconFile={#VEDEVHOME}\dist\installerImages\Ve_icon.ico
 Compression=lzma
@@ -43,10 +43,15 @@ Name: english; MessagesFile: compiler:Default.isl
 [Files]
 Source: {#APRINSTALL}\apr-util\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#APRINSTALL}\apr-util\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr-iconv\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
+Source: {#APRINSTALL}\apr-iconv\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#APRINSTALL}\apr\Release\*.dll; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#APRINSTALL}\apr\Release\*.lib; DestDir: {app}\lib; Flags: ignoreversion
 Source: {#APRINSTALL}\apr\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: {#APRINSTALL}\apr-util\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: {#APRINSTALL}\apr-iconv\include\*.h; DestDir: {app}\include; Flags: ignoreversion recursesubdirs createallsubdirs
 ;FPC file integration
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-1.fpc; Languages: ; Flags: ignoreversion
 Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\apr-util-1.pc.in; DestDir: {app}\lib\flagpoll; DestName: apr-util-1.fpc; Languages: ; Flags: ignoreversion
+;[Icons]
+;Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Languages:
