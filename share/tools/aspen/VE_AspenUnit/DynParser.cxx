@@ -59,7 +59,8 @@ void DynParser::OpenFile(const char * file)
 {
     std::string fileName(file);
     std::string dynfExt(".dynf");
-    ParseFile( ( workingDir + fileName + dynfExt ).c_str());	
+    ParseFile( ( workingDir + fileName + dynfExt ).c_str());
+    //NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
     CString filename = file;
     dyndoc->Open( ( workingDir + fileName + dynfExt ).c_str());
 }
@@ -118,6 +119,7 @@ void DynParser::ReinitDynamics()
 {
 	std::ifstream inFile( dynFile );
     currentLevelName = "_main_sheet";
+    levelCount = 1;
 
     //Global
     ReadHeader( inFile );
@@ -127,7 +129,7 @@ void DynParser::ReinitDynamics()
     
     //acquire all relevant flow sheet info
     bool flowsheet_entry = true;
-    while( flowsheet_entry )
+    while( flowsheet_entry )//flowsheet_entry )
     {
         ReadFlowsheetComponents( inFile );
         flowsheet_entry = false;
@@ -140,12 +142,16 @@ void DynParser::ReinitDynamics()
             ReadGraphicsInformation( inFile );
             
             //is there a new flow sheet entry to account for
+            flowsheet_entry = PeekFlowsheet( inFile );
             if( flowsheet_entry )
             {
                 break;
             }
         }
     }
+
+    //modify the locations to account for the 2 different coord systems
+    NormalizeForWX();
 
     //Global
     ////ReadComponentList();
@@ -1568,6 +1574,7 @@ void DynParser::ReadFlowsheetComponents( std::ifstream file )
             {
                 currentLevelName = currentLevelName + "." + tempBlockInfo.id;
             }
+            levelCount++;
         }
         
         //streams
@@ -1686,43 +1693,43 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
         else if( temp.compare( 0, 4, "BLOCK", 0, 4 ) == 0 )
         {
             //block id
-            std::getline(inFile, id);
+            std::getline(file, id);
 
             //version
-            std::getline(inFile, version);
+            std::getline(file, version);
             
             //icon
-            std::getline(inFile, icon);
+            std::getline(file, icon);
 
             //flag
-            std::getline(inFile, flag);
+            std::getline(file, flag);
 
             //section
-            std::getline(inFile, section);
+            std::getline(file, section);
 
             //at
-            std::getline(inFile, at);
+            std::getline(file, at);
             
             //optional entries
-            std::getline(inFile, temp);
+            std::getline(file, temp);
             //check for the optional line "Parent"
             if(temp.compare(0, 6, "Parent", 0, 6)== 0)
             {
                 parent = temp;
-                std::getline(inFile, parentAttrib);
-                std::getline(inFile, labelAt);
+                std::getline(file, parentAttrib);
+                std::getline(file, labelAt);
             }
             else
             {
                 //label at
                 labelAt = temp;
             }
-            std::getline(inFile, temp);
+            std::getline(file, temp);
             //check for the optional line "Annotation"
             if(temp.compare(0, 10, "Annotation", 0, 10)== 0)
             {
                 annotation = temp;
-                std::getline(inFile, scaleMod);
+                std::getline(file, scaleMod);
             }
             else
             {
@@ -1910,15 +1917,15 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
             std::string streamFlag;
             std::string streamType;
 
-            getline( inFile, streamId );
-            getline( inFile, streamVersion );
-            getline( inFile, streamFlag );
-            getline( inFile, streamType );
+            getline( file, streamId );
+            getline( file, streamVersion );
+            getline( file, streamFlag );
+            getline( file, streamType );
 
             //Look for Stream type - needed for version 13.2
             while( streamType.compare( 0, 4, "TYPE", 0 , 4) != 0 )
-                getline( inFile, streamType );
-            getline(inFile, temp);
+                getline( file, streamType );
+            getline(file, temp);
             routeCount = 0;
             routeOne=false;
             newStream = true;
@@ -1933,7 +1940,7 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
                 //look for ROUTE heading
                 if( temp.compare( 0, 5, "ROUTE", 0, 5 ) == 0 )
                 {
-                    getline( inFile, temp );
+                    getline( file, temp );
                     routeCount++;
                 }
                 //grab data
@@ -1968,12 +1975,12 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
                             std::cout << "ERROR: "<<
                                 routeCount << std::endl;
                         }
-                        getline( inFile, temp );
+                        getline( file, temp );
                     }
                 }
                 else 
                 {
-                    getline( inFile, temp );
+                    getline( file, temp );
                 }
             }
             //put 2nd route entry data ahead of first in vector
@@ -2041,5 +2048,64 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
         std::string temp_name;
         temp_name = currentLevelName.substr( 0, compLevelName.find_last_of( "." ) -1 );
         currentLevelName = temp_name;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+void DynParser::NormalizeForWX()
+{
+    //NORMALIZE FOR WX
+    float normX = minX;
+    float normY = minY;
+
+    //blocks
+    for(iter = iconLocations[sheetIter->first].begin( );
+        iter != iconLocations[sheetIter->first].end( );
+        iter++)
+    {
+        iconLocations[sheetIter->first][ iter->first ].first =
+            iconLocations[sheetIter->first][iter->first].first - normX;
+        iconLocations[sheetIter->first][iter->first].second =
+            iconLocations[sheetIter->first][iter->first].second - normY;
+    }
+
+    //streams
+    std::map< std::string, std::vector< std::pair< float, float > > >::
+        iterator iter2;
+    for( iter2 = linkPoints[sheetIter->first].begin( );
+        iter2 != linkPoints[sheetIter->first].end( );
+        iter2++)
+    {
+        for( int element = 0;
+            element <
+            (int)linkPoints[sheetIter->first][ iter2->first ].size();
+            element++)
+        {
+            linkPoints[sheetIter->first][ iter2->first ][element].first =
+                linkPoints[sheetIter->first][ iter2->first ][element].
+                first - normX;
+            linkPoints[sheetIter->first][ iter2->first ][element].second =
+                linkPoints[sheetIter->first][ iter2->first ][element].
+                second - normY;
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+bool DynParser::PeekFlowsheet( std::ifstream file )
+{
+    std::string temp;
+    while( temp.empty() )
+    {
+        std::getline( file, temp );
+    }
+
+    if( temp.compare(0, 9, "CONSTRAINTS", 0, 9 ) == 0 )
+    {
+        return false;
+    }
+    else
+    {
+        return true;
     }
 }*/

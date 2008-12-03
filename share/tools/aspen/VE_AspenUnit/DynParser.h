@@ -43,7 +43,8 @@ private:
 	streamXY xy;
 	streamXY tempXY;
 
-    std::string currentLevelName;
+    //std::string currentLevelName;
+    //int levelCount;
 
     std::vector< streamXY > streamCoordList;
     std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > > > linkPoints;
@@ -56,6 +57,16 @@ private:
     std::string workingDir;
     void CreateNetworkLinks( ves::open::xml::model::NetworkPtr subNetwork, std::string hierName );
     void ParseSubSystem(ves::open::xml::model::ModelPtr model, std::string networkName);
+
+    //void NewParseFile(const char * dynFile);
+    //void ReadHeader( std::ifstream inFile );
+    //void ReadEncrypted( std::ifstream inFile );
+    //void ReadSystemData( std::ifstream inFile );
+    //void ReadFlowsheetComponents( std::ifstream inFile );
+    //void ReadConstraints( std::ifstream inFile );
+    //void ReadGraphicsInformation( std::ifstream inFile );
+    //bool PeekFlowsheet( std::ifstream file );
+    //void NormalizeForWX();
 
 public:
 	DynParser();
