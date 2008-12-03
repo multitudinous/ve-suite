@@ -50,7 +50,7 @@ env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','AspenPlusInterface')] 
 env.Append( CPPPATH = [pj('#', buildDir, 'src', 'ves', 'open')] )
 
 env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','CASIlib')])
-env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','AspenPlusInterface')])
+env.Append(LIBPATH = [pj('#', buildDir, 'share','tools','aspen','AspenDynamicsInterface')])
 env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open')])
 env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
