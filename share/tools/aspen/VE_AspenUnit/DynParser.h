@@ -43,6 +43,8 @@ private:
 	streamXY xy;
 	streamXY tempXY;
 
+    std::string currentLevelName;
+
     std::vector< streamXY > streamCoordList;
     std::map< std::string, std::map< std::string, std::vector< std::pair< float, float > > > > linkPoints;
     std::map< std::string, std::map< std::string, int > > linkTypes;
