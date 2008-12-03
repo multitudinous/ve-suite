@@ -53,83 +53,83 @@ Source: {#ACETAOSRCHOME}\TAO\*.cpp; DestDir: {app}\TAO; Attribs: readonly; Flags
 ; Source: {#ACETAOHOME}\TAO\orbsvcs\Naming_Service\Naming_Service_d.exe; DestDir: {app}\TAO\orbsvcs\Naming_Service\
 
 
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Valuetype.pc.in; {app}\lib\flagpoll; DestName: TAO_Valuetype.pc; Languages: ; Flags: ignoreversion   
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Utils.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                            TAO_Utils.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_TypeCodeFactory.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_TypeCodeFactory.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Svc_Utils.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_Svc_Utils.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Strategies.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_Strategies.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTScheduler.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_RTScheduler.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTPortableServer.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_RTPortableServer.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEvent.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                          TAO_RTEvent.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEventLogAdmin_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_RTEventLogAdmin_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEventLogAdmin_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_RTEventLogAdmin_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PI_Server.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_PI_Server.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PI.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                               TAO_PI.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                                  TAO.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_ObjRefTemplate.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_ObjRefTemplate.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Messaging.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_Messaging.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IORTable.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                         TAO_IORTable.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IORManip.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                         TAO_IORManip.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IORInterceptor.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_IORInterceptor.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_ImR_Client.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_ImR_Client.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IFR_Client.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_IFR_Client.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FT_ServerORB.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_FT_ServerORB.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FT_ClientORB.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_FT_ClientORB.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_ETCL.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                             TAO_ETCL.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_EndpointPolicy.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_EndpointPolicy.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DynamicInterface.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_DynamicInterface.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsNotifyLogAdmin_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:            TAO_DsNotifyLogAdmin_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsNotifyLogAdmin.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_DsNotifyLogAdmin.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsLogAdmin_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_DsLogAdmin_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsLogAdmin_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_DsLogAdmin_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsLogAdmin.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_DsLogAdmin.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsEventLogAdmin.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_DsEventLogAdmin.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DiffServPolicy.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_DiffServPolicy.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CSD_ThreadPool.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CSD_ThreadPool.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTrading_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_CosTrading_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTrading_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_CosTrading_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTrading.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_CosTrading.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosProperty_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_CosProperty_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosProperty_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_CosProperty_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosProperty.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_CosProperty.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNotification_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_CosNotification_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNotification_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_CosNotification_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNaming.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_CosNaming.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosLoadBalancing.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_CosLoadBalancing.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosEvent_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_CosEvent_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosEvent_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_CosEvent_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosEvent.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                         TAO_CosEvent.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosConcurrency.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CosConcurrency.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_BiDirGIOP.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_BiDirGIOP.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_SSL.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                              ACE_SSL.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_RMCast.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                           ACE_RMCast.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                                  ACE.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_SmartProxies.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_SmartProxies.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEvent_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_RTEvent_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEvent_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_RTEvent_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEventLogAdmin.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_RTEventLogAdmin.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTCORBA.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                          TAO_RTCORBA.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PortableServer.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_PortableServer.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PortableGroup.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_PortableGroup.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FTORB_Utils.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_FTORB_Utils.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FaultTolerance.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_FaultTolerance.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DynamicAny.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_DynamicAny.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsNotifyLogAdmin_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:            TAO_DsNotifyLogAdmin_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsEventLogAdmin_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_DsEventLogAdmin_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsEventLogAdmin_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_DsEventLogAdmin_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CSD_Framework.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_CSD_Framework.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTime.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                          TAO_CosTime.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNotification.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_CosNotification.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNaming_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CosNaming_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNaming_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CosNaming_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosLifeCycle.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_CosLifeCycle.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosConcurrency_Skel.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:              TAO_CosConcurrency_Skel.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosConcurrency_Serv.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:              TAO_CosConcurrency_Serv.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Compression.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_Compression.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CodecFactory.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_CodecFactory.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_AnyTypeCode.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_AnyTypeCode.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\Kokyu.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                                Kokyu.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACEXML.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                               ACEXML.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACEXML_Parser.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        ACEXML_Parser.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_TMCast.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                           ACE_TMCast.pc
-Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_HTBP.pc.in; {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                             ACE_HTBP.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Valuetype.pc.in; DestDir: {app}\lib\flagpoll; DestName: TAO_Valuetype.pc; Languages: ; Flags: ignoreversion   
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Utils.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                            TAO_Utils.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_TypeCodeFactory.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_TypeCodeFactory.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Svc_Utils.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_Svc_Utils.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Strategies.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_Strategies.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTScheduler.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_RTScheduler.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTPortableServer.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_RTPortableServer.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEvent.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                          TAO_RTEvent.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEventLogAdmin_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_RTEventLogAdmin_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEventLogAdmin_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_RTEventLogAdmin_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PI_Server.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_PI_Server.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PI.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                               TAO_PI.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                                  TAO.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_ObjRefTemplate.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_ObjRefTemplate.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Messaging.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_Messaging.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IORTable.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                         TAO_IORTable.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IORManip.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                         TAO_IORManip.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IORInterceptor.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_IORInterceptor.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_ImR_Client.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_ImR_Client.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_IFR_Client.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_IFR_Client.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FT_ServerORB.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_FT_ServerORB.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FT_ClientORB.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_FT_ClientORB.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_ETCL.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                             TAO_ETCL.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_EndpointPolicy.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_EndpointPolicy.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DynamicInterface.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_DynamicInterface.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsNotifyLogAdmin_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:            TAO_DsNotifyLogAdmin_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsNotifyLogAdmin.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_DsNotifyLogAdmin.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsLogAdmin_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_DsLogAdmin_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsLogAdmin_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_DsLogAdmin_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsLogAdmin.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_DsLogAdmin.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsEventLogAdmin.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_DsEventLogAdmin.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DiffServPolicy.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_DiffServPolicy.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CSD_ThreadPool.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CSD_ThreadPool.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTrading_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_CosTrading_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTrading_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_CosTrading_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTrading.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_CosTrading.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosProperty_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_CosProperty_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosProperty_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_CosProperty_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosProperty.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_CosProperty.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNotification_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_CosNotification_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNotification_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_CosNotification_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNaming.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_CosNaming.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosLoadBalancing.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                 TAO_CosLoadBalancing.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosEvent_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_CosEvent_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosEvent_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_CosEvent_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosEvent.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                         TAO_CosEvent.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosConcurrency.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CosConcurrency.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_BiDirGIOP.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        TAO_BiDirGIOP.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_SSL.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                              ACE_SSL.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_RMCast.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                           ACE_RMCast.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                                  ACE.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_SmartProxies.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_SmartProxies.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEvent_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_RTEvent_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEvent_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_RTEvent_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTEventLogAdmin.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_RTEventLogAdmin.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_RTCORBA.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                          TAO_RTCORBA.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PortableServer.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_PortableServer.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_PortableGroup.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_PortableGroup.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FTORB_Utils.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_FTORB_Utils.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_FaultTolerance.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_FaultTolerance.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DynamicAny.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                       TAO_DynamicAny.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsNotifyLogAdmin_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:            TAO_DsNotifyLogAdmin_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsEventLogAdmin_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_DsEventLogAdmin_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_DsEventLogAdmin_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:             TAO_DsEventLogAdmin_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CSD_Framework.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                    TAO_CSD_Framework.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosTime.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                          TAO_CosTime.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNotification.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                  TAO_CosNotification.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNaming_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CosNaming_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosNaming_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                   TAO_CosNaming_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosLifeCycle.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_CosLifeCycle.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosConcurrency_Skel.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:              TAO_CosConcurrency_Skel.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CosConcurrency_Serv.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:              TAO_CosConcurrency_Serv.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_Compression.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_Compression.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_CodecFactory.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                     TAO_CodecFactory.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\TAO_AnyTypeCode.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                      TAO_AnyTypeCode.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\Kokyu.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                                Kokyu.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACEXML.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                               ACEXML.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACEXML_Parser.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                        ACEXML_Parser.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_TMCast.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                           ACE_TMCast.pc
+Source: {#VEDEVHOME}\dist\win\fpc_deps_files\release\ACE_HTBP.pc.in; DestDir: {app}\lib\flagpoll; Languages: ; Flags: ignoreversion; DestName:                             ACE_HTBP.pc
