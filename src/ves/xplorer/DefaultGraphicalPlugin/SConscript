@@ -39,7 +39,7 @@ if GetPlatform() == 'win32':
    #   lib_env['PDB'] = True
 
 lib = ves_pkg.createLoadableModule( 'DefaultGraphicalPlugin', lib_env,
-    installPrefix = pj( 'lib', 'xplorer', 'plugins' ) )  
+    installPrefix = pj( LIBDIR, 'xplorer', 'plugins' ) )  
 
 lib.addSources( sources )
 lib.build()

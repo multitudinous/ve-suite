@@ -7,7 +7,7 @@ pj = os.path.join
 host_type = distutils.util.get_platform()
 
 Import( 'baseEnv ves_pkg buildDir RootDir vpr_options wxwidgets_options' )
-Import( 'tao_options xerces_options GetPlatform' )
+Import( 'tao_options xerces_options GetPlatform LIBDIR' )
 openDir = os.path.abspath( pj( RootDir, 'src', 'plugins', 'aspen_dynamics' ) )
 sources = sca_util.getSourcesRecursive( openDir )
 headers = sca_util.getHeadersRecursive( openDir )
@@ -29,7 +29,7 @@ if GetPlatform() == 'win32':
    lib_env['WINDOWS_INSERT_MANIFEST'] = False
 
 lib = ves_pkg.createLoadableModule( 'AspenDynamicsUI', lib_env,
-    installPrefix = pj( 'lib', 'conductor', 'plugins' ) )
+    installPrefix = pj( LIBDIR, 'conductor', 'plugins' ) )
    
 lib.addSources( sources )
 lib.build()
