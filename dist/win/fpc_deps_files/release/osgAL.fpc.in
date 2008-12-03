@@ -9,6 +9,6 @@ Provides: osgAL OpenAL libvorbis libogg
 Requires: OpenSceneGraph OpenThreads
 Version: 0.6.1
 Libs: /libpath:"${libdir}" osgAL.lib oalpp.lib OpenAL32.lib EFX-Util.lib alut.lib vorbis.lib vorbisenc.lib vorbisfile.lib ogg.lib
-Cflags: -I"${includedir}"
+Cflags: /I"${includedir}" /I"${includedir}/AL"
 Arch: noarch
 
