@@ -9,7 +9,7 @@
 #include <string>
 #include <ves/open/xml/model/Network.h>
 #include <ves/open/xml/model/System.h>
-#include <AspenPlusInterface.h>
+#include <AspenDynamicsInterface.h>
 
 class DynParser
 {
@@ -82,7 +82,7 @@ public:
     void ReinitDynamics();
     std::string GetModuleParams(std::string modname);
     void SetValue( std::string modname, std::string paramname, std::string value );
-    AspenPlusInterface::AspenPlusInterface * dyndoc;
+    AspenDynamicsInterface::AspenDynamicsInterface * dyndoc;
 };
 
 #endif

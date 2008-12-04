@@ -55,7 +55,7 @@ env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open')])
 env.Append(LIBPATH = [pj('#', buildDir, 'src', 'ves', 'open','xml')])
 
 env.Append(LIBS = ['CASIlib'])
-env.Append(LIBS = ['AspenPlusInterface'])
+env.Append(LIBS = ['AspenDynamicsInterface'])
 env.Append(LIBS = ['ves_open_module'])
 env.Append(LIBS = ['ves_open_xml'])
 env.Append(LIBS = ['ves_open_xml'])

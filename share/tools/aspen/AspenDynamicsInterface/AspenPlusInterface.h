@@ -1,7 +1,5 @@
-#ifndef DASI_H
-#define DASI_H
-
-//#include <aspendynamics.h>
+#ifndef ASPENDYNAMICSINTERFACE_H
+#define ASPENDYNAMICSINTERFACE_H
 
 #include <set>
 #include <vector>
@@ -15,15 +13,15 @@
 #include <afxcmn.h>			// MFC support for Windows Common Controls
 
 
-#  ifdef ASPENPLUSINTERFACE_LIBRARY
-#    define ASPENPLUSINTERFACE_EXPORTS   __declspec(dllexport)
+#  ifdef ASPENDYNAMICSINTERFACE_LIBRARY
+#    define ASPENDYNAMICSINTERFACE_EXPORTS   __declspec(dllexport)
 #  else
-#    define ASPENPLUSINTERFACE_EXPORTS   __declspec(dllimport)
+#    define ASPENDYNAMICSINTERFACE_EXPORTS   __declspec(dllimport)
 #  endif // DASI_EXPORTS
 
 #import "aspendynamics.tlb"
 
-namespace AspenPlusInterface
+namespace AspenDynamicsInterface
 {
 
 ///////////////////////////////////////////////////////////////////////
@@ -144,12 +142,12 @@ namespace AspenPlusInterface
 		//std::map< CString, std::vector< CString > > blockOutputsWithSubs;
 	};
 		*/
-	class ASPENPLUSINTERFACE_EXPORTS AspenPlusInterface
+	class ASPENDYNAMICSINTERFACE_EXPORTS AspenDynamicsInterface
 	{
 	
 		public:
-		AspenPlusInterface();
-		~AspenPlusInterface();
+		AspenDynamicsInterface();
+		~AspenDynamicsInterface();
 	
 		//Interfacing function
 		//IHNode getRoot();

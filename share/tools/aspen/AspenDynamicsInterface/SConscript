@@ -5,23 +5,19 @@ pj = os.path.join
 Import('baseEnv ves_pkg LIBDIR RootDir')
 
 sources = Split("""
-   AspenPlusInterface.cxx
+   AspenDynamicsInterface.cxx
 """)
-#   DASI_VAriable.cxx
-#   DASI_DASIObj.cxx
-#   DASI.cxx
 
 headers = Split("""
-   AspenPlusInterface.h
+   AspenDynamicsInterface.h
 """)
 
 lib_env = ves_pkg.getEnv().Copy()
 lib_env['MSVS_USE_MFC_DIRS'] = 1
 
-lib_env.Append( CPPPATH = [pj('#', 'share', 'tools', 'aspen','DASIlib', 'aspendyn_2006.5')] )
 lib_env.Append( CPPDEFINES = ['_AFXDLL'])
-lib_env.Append( CPPDEFINES = ['ASPENPLUSINTERFACE_LIBRARY'])
-lib = ves_pkg.createSharedLibrary('AspenPlusInterface', lib_env,
+lib_env.Append( CPPDEFINES = ['ASPENDYNAMICSINTERFACE_LIBRARY'])
+lib = ves_pkg.createSharedLibrary('AspenDynamicsInterface', lib_env,
                                                installPrefix = LIBDIR)
 lib.addSources(sources)
 lib.addHeaders(headers, pj('ves'))

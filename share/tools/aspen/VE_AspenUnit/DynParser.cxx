@@ -43,7 +43,7 @@ DynParser::DynParser()
     ves::open::xml::XMLObjectFactory::Instance()->
     RegisterObjectCreator( "CAD",new ves::open::xml::cad::CADCreator() );
     
-    dyndoc = new AspenPlusInterface::AspenPlusInterface();
+    dyndoc = new AspenDynamicsInterface::AspenDynamicsInterface();
     workingDir = "";
     redundantID = 0;
 }

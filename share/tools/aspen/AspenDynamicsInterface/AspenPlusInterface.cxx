@@ -1,6 +1,6 @@
 #pragma warning (disable: 4786)
 
-#include "AspenPlusInterface.h"
+#include "AspenDynamicsInterface.h"
 #include <fstream>
 #include <comutil.h>
 #include <string>
@@ -8,12 +8,12 @@
 #ifdef YANGDEBUG
 extern FILE* test;
 #endif
-namespace AspenPlusInterface
+namespace AspenDynamicsInterface
 {
 
 ///////////////////////////////////////////////////////////////////////////////
 //Constructor
-	AspenPlusInterface::AspenPlusInterface()
+	AspenDynamicsInterface::AspenDynamicsInterface()
 	{
 		simOpened = false;
 		ADApplication = NULL;
@@ -22,7 +22,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //Deconstructor
-	AspenPlusInterface::~AspenPlusInterface()
+	AspenDynamicsInterface::~AspenDynamicsInterface()
 	{
 	}
 
@@ -34,7 +34,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //Open an Aspen Document
-    void AspenPlusInterface::Open(CString filename)
+    void AspenDynamicsInterface::Open(CString filename)
 	{
         if (simOpened)
               Close();
@@ -168,8 +168,8 @@ namespace AspenPlusInterface
 	}
 
 ///////////////////////////////////////////////////////////////////////////////
-    //SAFEARRAY * AspenPlusInterface::GetVariableList( CString itemName )
-    std::vector< std::vector< std::string > > AspenPlusInterface::GetVariableList( CString itemName )
+    //SAFEARRAY * AspenDynamicsInterface::GetVariableList( CString itemName )
+    std::vector< std::vector< std::string > > AspenDynamicsInterface::GetVariableList( CString itemName )
     //std::vector< std::string > AspenPlusInterface::GetVariableList( CString itemName )
     {
         //Convert itemname to BSTR due to requiremens of VB
@@ -363,7 +363,7 @@ namespace AspenPlusInterface
     }
 
 ///////////////////////////////////////////////////////////////////////////////
-    void AspenPlusInterface::SetVariableValue( CString itemName,
+    void AspenDynamicsInterface::SetVariableValue( CString itemName,
         CString variableName, CString value  )
     {
         //Convert CStrings to BSTR due to requirements of VB
@@ -447,7 +447,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //Close the file, clear up 
-	void AspenPlusInterface::Close()
+	void AspenDynamicsInterface::Close()
 	{
 		if (simOpened)
 		{
@@ -470,7 +470,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //Close the file, clear up
-    void AspenPlusInterface::Quit() 
+    void AspenDynamicsInterface::Quit() 
 	{
 		if (simOpened)
         {
@@ -480,7 +480,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //Save the document back;
-	void AspenPlusInterface::Save()
+	void AspenDynamicsInterface::Save()
 	{
 		if (simOpened)
         {
@@ -490,7 +490,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //save this as another document
-	void AspenPlusInterface::SaveAs(CString filename)
+	void AspenDynamicsInterface::SaveAs(CString filename)
 	{	
 		if (simOpened)
         {	
@@ -513,7 +513,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //hide/show dynamics application
-	void AspenPlusInterface::SetVisibility(bool status)
+	void AspenDynamicsInterface::SetVisibility(bool status)
 	{
 		if (simOpened)
         {
@@ -536,7 +536,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //run the simulation
-	void AspenPlusInterface::RunSolver( )
+	void AspenDynamicsInterface::RunSolver( )
 	{
 		if (simOpened)
         {
@@ -552,7 +552,7 @@ namespace AspenPlusInterface
 
 ///////////////////////////////////////////////////////////////////////////////
 //return the current simulation to the default values 
-	void AspenPlusInterface::ResetSimulation( )
+	void AspenDynamicsInterface::ResetSimulation( )
     {
         ADDocument->Reset( );
 	}
