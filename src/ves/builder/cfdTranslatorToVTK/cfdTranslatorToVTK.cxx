@@ -268,8 +268,9 @@ bool cfdTranslatorToVTK::_writeToVTK( unsigned int fileNum )
     }
     else
     {
-        std::cout << "Invalid output vtk dataset!!!" << std::endl;
-        std::cout << "cfdTranslatorToVTK::_writeToVTK" << std::endl;
+        std::cerr 
+            << "|\tcfdTranslatorToVTK::_writeToVTK : Invalid output vtk dataset" 
+            << std::endl;
         return false;
     }
 }
@@ -282,8 +283,9 @@ vtkDataObject* cfdTranslatorToVTK::GetVTKFile( unsigned int fileNum )
     }
     else
     {
-        std::cout << "Invalid output vtk dataset!!!" << std::endl;
-        std::cout << "cfdTranslatorToVTK::GetVTKFile" << std::endl;
+        std::cerr 
+            << "|\tcfdTranslatorToVTK::GetVTKFile : Invalid output vtk dataset." 
+            << std::endl;
         return 0;
     }
 }

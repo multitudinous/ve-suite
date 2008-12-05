@@ -1016,7 +1016,7 @@ void UIPluginBase::ViewInputVariables( void )
 
         //Get inputs
         std::string nw_str = serviceList->Query( status );
-        if( nw_str.empty() )
+        if( nw_str.empty() || !nw_str.compare( "NULL") )
         {
             return;
         }
@@ -1030,12 +1030,17 @@ void UIPluginBase::ViewInputVariables( void )
         networkReader.ReadFromString();
         //serviceList->GetMessageLog()->SetMessage(nw_str.c_str());
         networkReader.ReadXMLData( nw_str, "Command", "vecommand" );
-        std::vector< ves::open::xml::XMLObjectPtr > objectVector = networkReader.GetLoadedXMLObjects();
+        std::vector< ves::open::xml::XMLObjectPtr > objectVector = 
+            networkReader.GetLoadedXMLObjects();
         //std::ostringstream output;
         //output << objectVector.size()<<std::endl;
         //serviceList->GetMessageLog()->SetMessage(output.str().c_str());
-        ves::open::xml::CommandPtr cmd = boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
-        ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+        if( objectVector.size() > 0 )
+        {
+            ves::open::xml::CommandPtr cmd = 
+                boost::dynamic_pointer_cast<Command>( objectVector.at( 0 ) );
+            ves::open::xml::DataValuePairPtr pair = cmd->GetDataValuePair( 0 );
+        }
         /*std::vector< std::string > temp_vector;
         pair->GetData(temp_vector);
 

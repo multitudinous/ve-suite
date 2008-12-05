@@ -31,6 +31,8 @@
  *
  *************** <auto-copyright.rb END do not edit this line> ***************/
 #include <ves/builder/DataLoader/FluentTranslator.h>
+#include <ves/xplorer/util/fileIO.h>
+
 #include <vtkDataSet.h>
 #include <vtkDataObject.h>
 #include <vtkFLUENTReader.h>
@@ -82,6 +84,20 @@ void FluentTranslator::FluentTranslateCbk::Translate( vtkDataObject*& outputData
     {
         return;
     }
+    
+    //check and see if data file is present with cas file
+    std::string casFile = FluentToVTK->GetFile( 0 );
+    size_t period = casFile.rfind( "." );
+    ///remove extension
+    std::string casFileMinusExtension( casFile, 0, period );
+    casFileMinusExtension.append( ".dat" );
+    if( !ves::xplorer::util::fileIO::isFileReadable( casFileMinusExtension ) )
+    {
+        std::cerr << "FLUENT dat file is not present with cas file." 
+            << std::endl;
+        return;
+    }
+    //now convert cas and dat file
     vtkFLUENTReader* reader = vtkFLUENTReader::New();
     reader->SetFileName( FluentToVTK->GetFile( 0 ).c_str() );
     reader->Update();

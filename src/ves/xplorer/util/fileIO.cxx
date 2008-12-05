@@ -43,13 +43,13 @@
 namespace fs = boost::filesystem;
 
 using namespace ves::xplorer::util;
-
+////////////////////////////////////////////////////////////////////////////////
 fileIO::fileIO( )
 {}
-
+////////////////////////////////////////////////////////////////////////////////
 fileIO::~fileIO( )
 {}
-
+////////////////////////////////////////////////////////////////////////////////
 int fileIO::isFileReadable( const std::string filename )
 {
     std::ifstream fileIn( filename.c_str(), std::ios::in );
@@ -60,7 +60,7 @@ int fileIO::isFileReadable( const std::string filename )
     fileIn.close();
     return 1;
 }
-
+////////////////////////////////////////////////////////////////////////////////
 int fileIO::isFileWritable( std::string filename )
 {
     // This will not compile due to a bug in vapor.  Uncomment this when the
