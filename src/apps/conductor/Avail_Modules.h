@@ -85,9 +85,6 @@ public:
         TREE_CTRL = 1000
     };
     
-    ///Load all the modules from the dlls
-    bool LoadModules(); 
-    
     ///right click event
     void OnItemRightClick( wxTreeEvent& event );
 
@@ -130,6 +127,8 @@ public:
     void ResetPluginTree( void );
 
 protected:
+    ///Load all the modules from the dlls
+    bool LoadModules(); 
 
     ///parse out the location and name for an item
     void getLeveledName( wxString name, std::vector<wxString> & lnames );
