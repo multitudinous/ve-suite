@@ -128,13 +128,14 @@ public:
         PLUGIN_TOGGLE_ALL_ON,
         PLUGIN_TOGGLE_PLUGIN_ON,
         MAKE_HIER,
-        END_MENU_ID,
         DIALOG_PLUGIN_UPDATE,
         PLUGIN_TOGGLE_MENU,
         ASPEN_MENU,
         ASPEN_ICON,
         ICON_MENU,
-        SET_ACTIVE_PLUGIN
+        SET_ACTIVE_PLUGIN,
+
+        END_MENU_ID
     };
 protected:
     ///Defualt constructor
