@@ -73,8 +73,8 @@ BEGIN_EVENT_TABLE( HierarchyTree, wxTreeCtrl )
     EVT_TREE_ITEM_EXPANDING( TREE_CTRL, HierarchyTree::OnExpanded )
     EVT_TREE_ITEM_ACTIVATED( TREE_CTRL, HierarchyTree::OnDoubleClick )
     EVT_TREE_ITEM_RIGHT_CLICK( TREE_CTRL, HierarchyTree::OnRightClick )
-    EVT_MENU_RANGE( UIPluginBase::BEGIN_MENU_ID, UIPluginBase::END_MENU_ID,
-        HierarchyTree::ProcessRightClickMenuEvents )
+    //EVT_MENU_RANGE( UIPluginBase::BEGIN_MENU_ID, UIPluginBase::END_MENU_ID,
+    //    HierarchyTree::ProcessRightClickMenuEvents )
 END_EVENT_TABLE()
 
 HierarchyTree::HierarchyTree( wxWindow *parent, const wxWindowID id,
@@ -368,7 +368,7 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
     m_canvas->SetActiveNetwork( tempModData->systemId );
 
     //create popup menu
-    wxMenu* popupMenu = m_canvas->GetActiveNetwork()->
+    /*wxMenu* popupMenu = m_canvas->GetActiveNetwork()->
         modules[tempModData->modId].GetPlugin()->GetPopupMenu();
     popupMenu->SetTitle( this->GetItemText( selected ) );
     m_canvas->GetActiveNetwork()->modules[tempModData->modId].
@@ -376,7 +376,7 @@ void HierarchyTree::OnRightClick( wxTreeEvent& event )
 
     m_selection = selected;
     m_currentLevelId = GetItemParent( selected );
-    PopupMenu( popupMenu );
+    PopupMenu( popupMenu );*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 void HierarchyTree::OnDoubleClick( wxTreeEvent& event )
