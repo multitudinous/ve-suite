@@ -54,7 +54,7 @@ using namespace ves::builder::cfdTranslatorToVTK;
 //////////////////////
 DataLoader::DataLoader()
 {
-    inputDataName =  '\0';
+    //inputDataName =  '\0';
     activeLoader = 0;
     // load up the translator map
     // AVS
