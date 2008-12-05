@@ -74,6 +74,8 @@ BOOL CVE_AspenUnitDlg::OnInitDialog()
 
 	// TODO: Add extra initialization here	
 	initialized = false;
+    commManager = 0;
+    unitObject = 0;
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
