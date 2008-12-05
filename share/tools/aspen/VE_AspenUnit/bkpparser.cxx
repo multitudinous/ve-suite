@@ -292,7 +292,7 @@ void BKPParser::ParseFile( const char * bkpFile )
             tokenizer >> compID;  //remove newline
             size_t  pos = compID.find_last_of(".");
             std::string temp = compID.substr(0, pos);
-            tempBlockInfo.id = compID.substr(pos+1, compID.size());
+            tempBlockInfo.id = compID.substr(pos+1, compID.size() - pos );
             BlockInfoList[temp][tempBlockInfo.id] = tempBlockInfo;
         }
         count++;
@@ -1539,7 +1539,7 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         }
 
         //recursively parse subsystems of each block
-        if( tempModel->GetIconFilename().find("Hierarchy") !=
+        if( tempModel->GetIconFilename().find("hierarchy") !=
             std::string::npos )
         {
             ParseSubSystem( tempModel, networkName + "." + blockIter->first );
