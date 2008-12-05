@@ -226,6 +226,7 @@ public:
 
 private:
   bool bkpFlag;
+  bool dynFlag;
 };
 
 

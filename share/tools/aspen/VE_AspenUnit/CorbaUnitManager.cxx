@@ -193,7 +193,7 @@ void CorbaUnitManager::DestroyORB( void )
     }
     
     unit_i->CloseAspen();
-    Sleep(5000);
+    //Sleep(5000);
     
     CleanUp();
 }

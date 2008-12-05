@@ -93,6 +93,9 @@ Body_Unit_i::Body_Unit_i( std::string name, CVE_AspenUnitDlg * dialog,
     mQueryCommandNames.insert( "getStreamOutputModuleParamList");
     mQueryCommandNames.insert( "getStreamOutputModuleProperties");
     mQueryCommandNames.insert( "setParam");
+
+    dynFlag = false;
+    bkpFlag = false;
 }
 ////////////////////////////////////////////////////////////////////////////////
 // Implementation skeleton destructor
@@ -102,7 +105,8 @@ Body_Unit_i::~Body_Unit_i( void )
     {
         delete bkp;
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
         delete dyn;
     }
@@ -114,7 +118,8 @@ void Body_Unit_i::ShowAspen()
     {
 	    bkp->showAspen( true );
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
         dyn->SetVisibility( true );
     }
@@ -126,7 +131,8 @@ void Body_Unit_i::HideAspen()
     {
         bkp->showAspen(false);
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
         dyn->SetVisibility(false);
     }
@@ -138,7 +144,8 @@ void Body_Unit_i::CloseAspen()
     {
 	    bkp->closeFile();
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
 	    dyn->CloseFile();
     }
@@ -151,7 +158,8 @@ void Body_Unit_i::SaveAspen( std::string filename)
         bkp->saveAs(( mWorkingDir + filename + ".apw" ).c_str());
         bkp->saveAs(( mWorkingDir + filename + ".bkp" ).c_str());
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
 	    dyn->SaveAs(( mWorkingDir + filename + ".dynf" ).c_str());
     }
@@ -163,7 +171,8 @@ void Body_Unit_i::StepSim()
     {
 	    bkp->step();
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
 	    //dyn->Step();
     }
@@ -177,7 +186,8 @@ void Body_Unit_i::ReinitializeAspen()
         {
 	        bkp->ReinitAspen();
         }
-        else if( !bkpFlag )
+        
+        if( dynFlag )
         {
 	        dyn->ReinitDynamics();
         }
@@ -201,7 +211,8 @@ void Body_Unit_i::StartCalc (
     {
         bkp->aspendoc->runSolver( false );
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
 	    dyn->dyndoc->RunSolver( );
     }
@@ -569,6 +580,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     if( extension.find( "bkp" ) != std::string::npos )
     {
         bkpFlag = true;
+        dynFlag = false;
         filename.resize( filename.size() - 4 );
         bkp = new BKPParser();
 	    bkp->SetWorkingDir( mWorkingDir );
@@ -576,6 +588,7 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
     else if( extension.find( "dynf" ) != std::string::npos )
     {
         bkpFlag = false;
+        dynFlag = true;
         filename.resize( filename.size() - 5 );
         dyn = new DynParser();
 	    dyn->SetWorkingDir( mWorkingDir );
@@ -586,16 +599,16 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	    if (firsttime)
 	    {
             //make sure bkp file exists
-	        std::ifstream bkpFlag( ( mWorkingDir + filename + ".bkp" ).c_str(),
+	        std::ifstream bkpFile( ( mWorkingDir + filename + ".bkp" ).c_str(),
                 std::ios::binary);
-	        if( !bkpFlag.is_open() )
+	        if( !bkpFile.is_open() )
             {
                 //no bkp file
 		        AspenLog->SetSel(-1, -1);
 		        AspenLog->ReplaceSel("BKP File Does NOT exist.\r\n");
 	            return CORBA::string_dup( "BKPDNE" );
             }
-            bkpFlag.close();
+            bkpFile.close();
 
             //make sure apw file exists
             std::ifstream apwFile( ( mWorkingDir + filename + ".apw" ).c_str(),
@@ -631,7 +644,8 @@ char* Body_Unit_i::handleGetNetwork(ves::open::xml::CommandPtr cmd)
 	    }
 	    return CORBA::string_dup( network.c_str() );
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
         if (firsttime)
 	    {
@@ -684,7 +698,8 @@ char* Body_Unit_i::handleOpenSimulation(ves::open::xml::CommandPtr cmd)
     {
 	    bkp->openFile(filename.c_str());
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
 	    dyn->OpenFile(filename.c_str());
     }
@@ -1018,7 +1033,8 @@ void Body_Unit_i::SetParam (ves::open::xml::CommandPtr cmd)
 	    newValue = paramValue.c_str();
 	    bool success = cur_var.setValue(newValue);
     }
-    else if( !bkpFlag )
+    
+    if( dynFlag )
     {
 	    for( size_t i = 0; i < num; i++)
 	    {
