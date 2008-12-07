@@ -441,7 +441,7 @@ void KeyboardMouse::ProcessNavigationEvents()
         ves::xplorer::DeviceHandler::instance()->GetActiveDCS();
     ves::xplorer::scenegraph::DCS* activeSwitchNode =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+            GetWorldDCS();
 
     osg::ref_ptr< ves::xplorer::scenegraph::LocalToWorldTransform >
         localToWorldTransform;
@@ -561,10 +561,10 @@ void KeyboardMouse::FrameAll()
     //Grab the current switch node's matrix from SceneManager
     //We want to manipulate the translation of the matrix until
     //all geometry is framed within the current viewing frustum
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
-    gmtl::Matrix44d matrix = activeSwitchDCS->GetMat();
+            GetWorldDCS();
+    gmtl::Matrix44d matrix = worldDCS->GetMat();
 
     //////////////////////////////////////////////////////////////////////
     //Now we need to find the center of the viewing frustum in osg coordinates
@@ -627,10 +627,12 @@ void KeyboardMouse::FrameAll()
     //we need to offset my the bounding sphere center
     //////////////////////////////////////////////////////////////////////
     //Move active switch node to (0, 0, 0) and then compute the bounding sphere
-    double position[ 3 ] = { 0, 0, 0 };
-    activeSwitchDCS->SetTranslationArray( position );
-    osg::BoundingSphere bs = activeSwitchDCS->computeBound();
-
+    //double position[ 3 ] = { 0, 0, 0 };
+    //activeSwitchDCS->SetTranslationArray( position );
+    osg::BoundingSphere bs = 
+        ves::xplorer::scenegraph::SceneManager::instance()->
+        GetActiveSwitchNode()->computeBound();
+    
     //Bring the center of the geometry to the vj head position
     matrix.mData[ 12 ] -= bs.center().x();
     matrix.mData[ 13 ] -= bs.center().y();
@@ -663,10 +665,11 @@ void KeyboardMouse::FrameAll()
     matrix.mData[ 14 ] += frustumCenterVector[ 2 ];
 
     //Set the current switch node's matrix w/ the new "frame all" transform 
-    activeSwitchDCS->SetMat( matrix );
+    worldDCS->SetMat( matrix );
 
     //Get the new center of the bounding sphere
-    bs = activeSwitchDCS->computeBound();
+    bs = ves::xplorer::scenegraph::SceneManager::instance()->
+        GetActiveSwitchNode()->computeBound();
     //Set the center point of rotation to the new center of the bounding sphere
     mCenterPoint->set( bs.center().x(), bs.center().y(), bs.center().z() );
 }
@@ -976,52 +979,24 @@ void KeyboardMouse::NavKeyboard()
         //keystrokes for skycam mode
         case gadget::KEY_UP:
         {
-            //Grab the current matrix
-            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-            //    ves::xplorer::scenegraph::SceneManager::instance()->
-            //    GetActiveSwitchNode();
-            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
-            
-            //Zoom45( bs.radius() / 100 );
             Zoom45( 0.05 );
             ProcessNavigationEvents();
             break;
         }
         case gadget::KEY_DOWN: 
         {
-            //Grab the current matrix
-            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-            //    ves::xplorer::scenegraph::SceneManager::instance()->
-            //    GetActiveSwitchNode();
-            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
-            
-            //Zoom45( -bs.radius() / 100 );
             Zoom45( -0.05 );
             ProcessNavigationEvents();
             break;
         }
         case gadget::KEY_LEFT:
         {
-            //Grab the current matrix
-            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-            //    ves::xplorer::scenegraph::SceneManager::instance()->
-            //    GetActiveSwitchNode();
-            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
-            
-            //Pan( bs.radius() / 100, 0 );
             Pan( 0.05, 0 );
             ProcessNavigationEvents();
             break;
         }
         case gadget::KEY_RIGHT:
         {
-            //Grab the current matrix
-            //osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
-            //    ves::xplorer::scenegraph::SceneManager::instance()->
-            //    GetActiveSwitchNode();
-            //osg::BoundingSphere bs = activeSwitchDCS->computeBound();
-            
-            //Pan( - bs.radius() / 100, 0 );
             Pan( -0.05, 0 );
             ProcessNavigationEvents();
             break;
@@ -1128,7 +1103,7 @@ void KeyboardMouse::ResetTransforms()
     gmtl::Matrix44d matrix;
     gmtl::identity( matrix );
     ves::xplorer::scenegraph::SceneManager::instance()->
-        GetActiveSwitchNode()->SetMat( matrix );
+        GetWorldDCS()->SetMat( matrix );
     
     ves::xplorer::scenegraph::SceneManager::instance()->
         GetWorldDCS()->SetQuat( *mResetAxis );

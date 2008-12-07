@@ -467,7 +467,7 @@ void ModelHandler::InitScene( void )
             _modelList.at( j )->GetCfdDataSet( i )->LoadData();
             _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
             if( _modelList.at( j )->GetCfdDataSet( i )->GetParent() == _modelList.at( j )->GetCfdDataSet( i ) )
-                ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+                ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
                 AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
         }
     }

@@ -104,11 +104,10 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
         return;
     }
 
-    //this->naming_context = CosNaming::NamingContext::_duplicate(
-    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
+    //This should be used. Not sure why it is not being used
     _masterNode = new ves::xplorer::scenegraph::Group();
     _masterNode->SetName( "cfdExecutive_Node" );
-    ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
+    ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
         AddChild( this->_masterNode.get() );
 
     mAvailableModules = new cfdVEAvailModules();
@@ -291,7 +290,7 @@ void cfdExecutive::GetNetwork( void )
     //Construct map of systems
     //Loop over all systems and get all models on the map
     ParseSystem( tempSystem, true, 
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
     //create network system view
     netSystemView = new NetworkSystemView( veNetwork );

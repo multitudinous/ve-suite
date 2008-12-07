@@ -109,9 +109,9 @@ void SeedPointActivateEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
             std::string datasetname;
             activeDataset->GetData( datasetname );
             //check to see if the seed points exist
-            if( !ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->SearchChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
+            if( !ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->SearchChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() ) )
             {
-                ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
+                ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->addChild( ves::xplorer::EnvironmentHandler::instance()->GetSeedPointsDCS() );
             }
 
             //this seems to be a bad sequence of calls but we need to set the

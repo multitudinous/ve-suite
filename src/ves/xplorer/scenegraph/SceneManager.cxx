@@ -99,12 +99,12 @@ SceneManager::SceneManager()
         m_veText( 0 ),
         m_suiteText( 0 )
 {
-    _param.erase();
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::Initialize( std::string param )
 {
-    _param = param;
+    ;
 }
 ////////////////////////////////////////////////////////////////////////////////
 SceneManager::~SceneManager()
@@ -151,6 +151,10 @@ void SceneManager::InitScene()
         "|  1. Initializing.................................... SceneManager |" 
         << std::endl;
 
+    //mModelRoot = new osg::Group();
+    mModelRoot = new ves::xplorer::scenegraph::DCS();
+    mModelRoot->setName( "Model Root Node" );
+
     //mRootNode = new ves::xplorer::scenegraph::Group();
     mRootNode->setName( "Root Node" );
     mRootNode->setThreadSafeRefUnref( true );
@@ -194,20 +198,15 @@ void SceneManager::InitScene()
     //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
 #endif
 
-    _logoSwitch->AddChild( worldDCS.get() );
+    _logoSwitch->AddChild( mModelRoot.get() );
     _logoSwitch->AddChild( _logoNode.get() );
     _logoSwitch->AddChild( networkDCS.get() );
 
-    ///World DCS
-    m_matrixStore[ 0 ] = gmtl::Matrix44d();
-    ///Logo DCS
-    m_matrixStore[ 1 ] = gmtl::Matrix44d();
-    ///Network DCS
-    m_matrixStore[ 2 ] = gmtl::Matrix44d();
-    
     mRootNode->addChild( m_clrNode.get() );
     m_clrNode->addChild( _logoSwitch.get() );
-
+    //Add the worlddcs here because the nav matrix is pulled out
+    //App.cxx and applied to the view matrix
+    mRootNode->addChild( worldDCS.get() );
     ///Try to load the osgPT Polytans plugin to load all
     ///supported PolyTrans file types
 #ifdef _DEBUG
@@ -231,6 +230,11 @@ void SceneManager::SetRootNode( osg::Group* rootNode )
 osg::Group* SceneManager::GetRootNode()
 {
     return mRootNode.get();
+}
+////////////////////////////////////////////////////////////////////////////////
+ves::xplorer::scenegraph::DCS* SceneManager::GetModelRoot()
+{
+    return mModelRoot.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 ves::xplorer::scenegraph::DCS* SceneManager::GetWorldDCS()

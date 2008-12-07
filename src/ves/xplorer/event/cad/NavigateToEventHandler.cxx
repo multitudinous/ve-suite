@@ -103,16 +103,12 @@ void NavigateToEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xmlObj
     {
         return;
     }
+
     std::string viewData;
     activeModelDVP->GetData( viewData );
-    //ves::xplorer::scenegraph::util::TogglePluginVisitor( 
-    //    SceneManager::instance()->GetWorldDCS(), true, viewData );
-    
-       // ves::xplorer::scenegraph::DCS* transform =
-       //     m_cadHandler->GetAssembly( nodeID->GetDataString() );
 
-        static_cast< ves::xplorer::KeyboardMouse* >
+    static_cast< ves::xplorer::KeyboardMouse* >
         ( ves::xplorer::DeviceHandler::instance()->
-          GetDevice( "KeyboardMouse" ) )->SkyCamTo();
+        GetDevice( "KeyboardMouse" ) )->SkyCamTo();
 }
 ////////////////////////////////////////////////////////////////////////////////

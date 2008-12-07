@@ -236,8 +236,8 @@ void DeviceHandler::SetDeviceMode( const std::string& deviceMode )
 
     if( mDeviceMode == "World Navigation" )
     {
-        mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
-                         GetActiveSwitchNode();
+        mActiveDCS = 
+            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
     }
     else if( mDeviceMode == "Object Navigation" )
     {

@@ -82,6 +82,7 @@
 // --- VR Juggler Includes --- //
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
+#include <gmtl/Misc/MatrixConvert.h>
 
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
@@ -154,6 +155,10 @@ App::App( int argc, char* argv[] )
     
     mSceneRenderToTexture = 
         SceneRenderToTexturePtr( new SceneRenderToTexture() );
+    
+    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+    mZUp = gmtl::makeRot< gmtl::Matrix44f >( 
+        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) );
 }
 ////////////////////////////////////////////////////////////////////////////////
 App::~App()
@@ -498,7 +503,8 @@ void App::latePreFrame( void )
     ///Increment framenumber now that we are done using it everywhere
     _frameNumber += 1;
     mProfileCounter += 1;
-    
+    ///Grab nav data
+    mNavPosition = gmtl::convertTo< float >( ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->GetMat() );
     vprDEBUG( vesDBG, 3 ) << "|App::End latePreFrame" 
         << std::endl << vprDEBUG_FLUSH;
 }
@@ -539,6 +545,7 @@ void App::postFrame()
 ///so setting variables should not be done here
 void App::contextPreDraw( void )
 {
+    //std::cout << "----------contextPreDraw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::contextPreDraw", 20 );
     if( mRTT )
     {
@@ -560,6 +567,7 @@ void App::contextPreDraw( void )
 ///so setting variables should not be done here
 void App::draw()
 {
+    //std::cout << "----------Draw-----------" << std::endl;
     VPR_PROFILE_GUARD_HISTORY( "App::draw", 20 );
     glClear( GL_DEPTH_BUFFER_BIT );
 
@@ -623,7 +631,7 @@ void App::draw()
         frustum[ vrj::Frustum::VJ_LEFT ],   frustum[ vrj::Frustum::VJ_RIGHT ],
         frustum[ vrj::Frustum::VJ_BOTTOM ], frustum[ vrj::Frustum::VJ_TOP ],
         frustum[ vrj::Frustum::VJ_NEAR ],   frustum[ vrj::Frustum::VJ_FAR ] );
-
+                                      
     //Allow trackball to grab frustum values to calculate FOVy
     EnvironmentHandler::instance()->SetFrustumValues(
         frustum[ vrj::Frustum::VJ_LEFT ], frustum[ vrj::Frustum::VJ_RIGHT ],
@@ -631,11 +639,14 @@ void App::draw()
         frustum[ vrj::Frustum::VJ_NEAR ], frustum[ vrj::Frustum::VJ_FAR ] );
 
     //Copy the view matrix
-    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
     gmtl::Matrix44f _vjMatrixLeft( project->getViewMatrix() );
-    gmtl::postMult(
-        _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
-            gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
+    //gmtl::postMult(
+    //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
+    //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
+    
+    
+    
+    _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
 
     //Copy the matrix
     osg::ref_ptr< osg::RefMatrix > osg_proj_xform_mat = new osg::RefMatrix();
@@ -646,7 +657,7 @@ void App::draw()
     {
         VPR_PROFILE_GUARD_HISTORY( "App::draw RTT Camera", 20 );
         mSceneRenderToTexture->UpdateRTTProjectionAndViewportMatrix( sv.get() );
-    }
+    }    
 
     //Draw the scene
     // NOTE: It is not safe to call osgUtil::SceneView::update() here; it
@@ -666,7 +677,7 @@ void App::draw()
         VPR_PROFILE_GUARD_HISTORY( "App::draw sv->draw", 20 );
         sv->draw();
     }
-
+    
     //Screen capture code
     if( captureNextFrameForWeb )
     {

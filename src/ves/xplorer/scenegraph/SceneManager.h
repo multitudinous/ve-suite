@@ -97,6 +97,9 @@ public:
     ///Return the active switch node of the scenegraph
     ves::xplorer::scenegraph::DCS* GetActiveSwitchNode();
 
+    ///Return the model root node of the scenegraph
+    ves::xplorer::scenegraph::DCS* GetModelRoot();
+
     ///Return the active switch node of the scenegraph
     //osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
 
@@ -137,18 +140,23 @@ private:
     SceneManager();
 
     ///Destructor
-    ///Never gets called, don't implement
     ~SceneManager();
 
     vprSingletonHeader( SceneManager );
 
-    std::string _param;///<
-    osg::ref_ptr< osg::Group > mRootNode;///<The root node of our scenegraph
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _logoNode;///<The node which contains our logo
-    osg::ref_ptr< ves::xplorer::scenegraph::Switch > _logoSwitch;///<Node to switch between the logo and the worldDCS
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;///<Node to control navigation
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;///<Node to hold a network view of the system under investigation
-
+    ///The root node of our scenegraph
+    osg::ref_ptr< osg::Group > mRootNode;
+    ///The root model node of our scenegraph
+    //osg::ref_ptr< osg::Group > mModelRoot;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelRoot;
+    ///The node which contains our logo
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _logoNode;
+    ///Node to switch between the logo and the worldDCS
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > _logoSwitch;
+    ///Node to control navigation
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
+    ///Node to hold a network view of the system under investigation
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* m_sound;
 #endif
@@ -164,8 +172,6 @@ private:
     osg::ref_ptr< osg::ClearNode > m_clrNode;
     ///FrameStamp to control sequence nodes and other osg animations
     osg::ref_ptr< osg::FrameStamp > mFrameStamp;
-    ///Map to store state information about each dcs
-    std::map< int, gmtl::Matrix44d > m_matrixStore;
 
 protected:
     ///Create the model for the logo

@@ -155,7 +155,7 @@ void HeadsUpDisplay::LatePreFrame()
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
-        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+        ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
 
     if( activeDCS != worldDCS )
     {

@@ -278,7 +278,7 @@ void EnvironmentHandler::InitScene()
     //
     std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
     _teacher = new cfdTeacher( std::string( "STORED_FILES" ),
-                                     ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
+                                     ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot() );
 
     if (( desktopWidth > 0 ) && ( desktopHeight > 0 ) )
     {
@@ -426,7 +426,7 @@ osgEphemeris::EphemerisModel* EnvironmentHandler::GetEphemerisModel( bool create
     {
         m_ephemerisModel = new osgEphemeris::EphemerisModel();
         osg::ref_ptr<osg::Group> worldDCS =
-            ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS();
+            ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
 
         /*if(worldDCS->getBound().valid())
         {

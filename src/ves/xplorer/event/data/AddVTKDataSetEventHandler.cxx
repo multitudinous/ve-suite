@@ -245,8 +245,6 @@ void AddVTKDataSetEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
                 lastDataAdded->SetArrow( ves::xplorer::ModelHandler::instance()->GetArrow() );
                 if( lastDataAdded->GetParent() == lastDataAdded )
                 {
-                    //ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS()->
-                    //AddChild( lastDataAdded->GetDCS() );
                     _activeModel->GetDCS()->AddChild( lastDataAdded->GetDCS() );
                     _activeModel->SetActiveDataSet( 0 );
                 }

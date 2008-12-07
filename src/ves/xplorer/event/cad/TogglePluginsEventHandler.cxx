@@ -104,6 +104,6 @@ void TogglePluginsEventHandler::Execute( const ves::open::xml::XMLObjectPtr& xml
     std::string viewData;
     activeModelDVP->GetData( viewData );
     ves::xplorer::scenegraph::util::TogglePluginVisitor( 
-        SceneManager::instance()->GetWorldDCS(), true, viewData );
+        SceneManager::instance()->GetModelRoot(), true, viewData );
 }
 ////////////////////////////////////////////////////////////////////////////////
