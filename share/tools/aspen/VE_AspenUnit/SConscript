@@ -35,9 +35,7 @@ env['MSVS_USE_MFC_DIRS'] = 1
 env.Clone(WINDOWS_INSERT_DEF = 1)
 env.Append( CPPDEFINES = ['WIN32'])
 env.Append( CPPDEFINES = ['_WINDOWS'])
-#env.Append( CPPDEFINES = ['YANGDEBUG'])
 env.Append( CPPDEFINES = ['_AFXDLL'])
-#env.Append( CPPDEFINES = ['WIN32 _WINDOWS _MBCS'])
 
 #env.Append( CPPFLAGS = ['/Gy'])
 #env.Append( CPPFLAGS = ['/GS'])
