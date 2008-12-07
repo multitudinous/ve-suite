@@ -295,7 +295,7 @@ void DeviceHandler::SetSelectedDCS( ves::xplorer::scenegraph::DCS* selectedDCS )
 void DeviceHandler::UnselectObjects()
 {
     mActiveDCS = ves::xplorer::scenegraph::SceneManager::instance()->
-        GetActiveSwitchNode();
+        GetWorldDCS();
 
     if( mSelectedDCS.valid() )
     {

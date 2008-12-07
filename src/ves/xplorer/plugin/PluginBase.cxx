@@ -107,7 +107,7 @@ PluginBase::~PluginBase()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void PluginBase::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+void PluginBase::InitializeNode( osg::Group* veworldDCS )
 {
     mDCS = new ves::xplorer::scenegraph::DCS();
     mDCS->SetName( "PluginBase" );
@@ -118,13 +118,13 @@ void PluginBase::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
 void PluginBase::AddSelfToSG()
 {
     mOnSceneGraph = true;
-    mWorldDCS->AddChild( mDCS.get() );
+    mWorldDCS->addChild( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::RemoveSelfFromSG()
 {
     mOnSceneGraph = false;
-    mWorldDCS->RemoveChild( mDCS.get() );
+    mWorldDCS->removeChild( mDCS.get() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void PluginBase::GetDataFromUnit()

@@ -66,12 +66,12 @@ using namespace ves::xplorer::scenegraph;
 #endif
 
 ////////////////////////////////////////////////////////////////////////////////
-cfdTeacher::cfdTeacher( std::string specifiedDir, ves::xplorer::scenegraph::DCS* worldDCS )
+cfdTeacher::cfdTeacher( std::string specifiedDir, osg::Group* worldDCS )
         :
         m_currentScene( 0 ),
         directory( specifiedDir ),
         dcs( new ves::xplorer::scenegraph::DCS() ),
-        _worldDCS( worldDCS )
+        mModelRoot( worldDCS )
 {
     vprDEBUG( vesDBG, 1 ) << "|\tStored Scenes directory : \"" << this->directory
         << "\"" << std::endl << vprDEBUG_FLUSH;
@@ -80,7 +80,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, ves::xplorer::scenegraph::DCS*
     // We use a node specifically for teacher to keep book keeping on loaded 
     // scenes a little bit easier
     dcs->SetName( "Teacher Node" );
-     _worldDCS->AddChild( this->dcs.get() );
+    mModelRoot->addChild( dcs.get() );
     //Get ive, osg, and pfb filenames
     pfbFileNames = ves::xplorer::util::fileIO::GetFilesInDirectory( directory, ".pfb" );
     std::vector< std::string > tempFilenames;
@@ -184,7 +184,7 @@ void cfdTeacher::RecordScene()
         << std::endl << vprDEBUG_FLUSH;
 
     // store the world DCS matrix..
-    if( _worldDCS.valid() )
+    if( mModelRoot.valid() )
     {
         //gmtl::Matrix44d m = this->_worldDCS->GetMat();
 
@@ -196,7 +196,7 @@ void cfdTeacher::RecordScene()
         //this->_worldDCS->SetMat( I );
         //ves::xplorer::scenegraph::Clone* graphToWrite = new ves::xplorer::scenegraph::Clone(_worldDCS.get());
 
-        writePFBFile( this->_worldDCS.get(), pfb_filename );
+        writePFBFile( mModelRoot.get(), pfb_filename );
 
         //delete graphToWrite;
         //graphToWrite = 0;

@@ -143,15 +143,15 @@ void SwitchXplorerViewEventHandler::Execute( const ves::open::xml::XMLObjectPtr&
     }
 
     ves::xplorer::DeviceHandler::instance()->SetActiveDCS(
-        ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode() );
+        ves::xplorer::scenegraph::SceneManager::instance()->GetWorldDCS() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SwitchXplorerViewEventHandler::UpdateNetworkView( const ves::open::xml::CommandPtr& cmd )
 {
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > tempDCS = SceneManager::instance()->GetNetworkDCS();
-    if (tempDCS->GetNumChildren() > 0)
+    osg::ref_ptr< osg::Group > tempDCS = SceneManager::instance()->GetNetworkDCS();
+    if (tempDCS->getNumChildren() > 0)
     {
-        tempDCS->removeChildren( 0, tempDCS->GetNumChildren() );
+        tempDCS->removeChildren( 0, tempDCS->getNumChildren() );
     }
 
     DataValuePairPtr dvp = cmd->GetDataValuePair("SUBNET_ID");

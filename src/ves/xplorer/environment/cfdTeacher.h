@@ -79,7 +79,7 @@ class VE_XPLORER_EXPORTS cfdTeacher : public GlobalBase
 {
 public:
     ///Constructor
-    cfdTeacher( std::string, ves::xplorer::scenegraph::DCS* );
+    cfdTeacher( std::string, osg::Group* );
 
     ///Destructor
     virtual ~cfdTeacher();
@@ -114,7 +114,7 @@ public:
 
 private:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > dcs;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _worldDCS;
+    osg::ref_ptr< osg::Group > mModelRoot;
     ves::xplorer::scenegraph::CADEntityHelper* m_currentScene;
     ///Sorted file filenames for stored scenes
     std::vector<std::string> pfbFileNames;

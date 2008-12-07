@@ -789,7 +789,7 @@ void KeyboardMouse::SkyCam()
     //Grab the current matrix
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeSwitchDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->
-            GetActiveSwitchNode();
+            GetWorldDCS();
 
     osg::BoundingSphere bs = activeSwitchDCS->computeBound();
 

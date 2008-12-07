@@ -104,7 +104,7 @@ public:
     ///Pass in the scene graph node that this plugin should be adding
     ///data to.
     ///\param veworldDCS The DCS that his plugin will add data to
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
+    virtual void InitializeNode( osg::Group* veworldDCS );
     
     ///This gets called every frame no matter what
     //Allows graphical plugins access to scenegraph
@@ -235,7 +235,7 @@ protected:
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > mDCS;
     ///This is the actuall parent DCS for this plugin. Typcially this is
     ///the Executive node that all plugins are added to.
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mWorldDCS;
+    osg::ref_ptr< osg::Group > mWorldDCS;
     ///This map is populated with this pointers and with event names
     ///so that this plugin can execute events from conductor plugins
     std::map< std::string, PluginBase* > mEventHandlerMap;

@@ -152,9 +152,9 @@ void HeadsUpDisplay::LatePreFrame()
         return;
     }
 
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > activeDCS =
+    osg::ref_ptr< osg::Group > activeDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->GetActiveSwitchNode();
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS =
+    osg::ref_ptr< osg::Group > worldDCS =
         ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot();
 
     if( activeDCS != worldDCS )
@@ -177,7 +177,8 @@ void HeadsUpDisplay::LatePreFrame()
 
     if( mGeometryWCS->GetDCS()->getNodeMask() != 0 )
     {
-        osg::Quat temp = worldDCS->getAttitude();
+        osg::Quat temp = ves::xplorer::scenegraph::SceneManager::instance()->
+            GetWorldDCS()->getAttitude();
         osg::Quat quat( temp.x(), temp.z(), -temp.y(), temp.w() );
 
         mGeometryWCS->GetDCS()->setAttitude( quat );

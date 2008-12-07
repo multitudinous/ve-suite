@@ -185,7 +185,7 @@ private:
     ///Recusive function to find all sub-systems
     void ParseSystem( ves::open::xml::model::SystemPtr system, 
         bool getResults = false, 
-        ves::xplorer::scenegraph::DCS* parentNode = 0 );
+        osg::Group* parentNode = 0 );
     ///Loading the Available Modules
     cfdVEAvailModules* mAvailableModules;
     ///The raw xml network data from ce

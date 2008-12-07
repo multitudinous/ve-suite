@@ -92,13 +92,13 @@ public:
     ves::xplorer::scenegraph::DCS* GetWorldDCS();
 
     ///Return the network DCS of the scenegraph
-    ves::xplorer::scenegraph::DCS* GetNetworkDCS();
+    osg::Group* GetNetworkDCS();
 
     ///Return the active switch node of the scenegraph
-    ves::xplorer::scenegraph::DCS* GetActiveSwitchNode();
+    osg::Group* GetActiveSwitchNode();
 
     ///Return the model root node of the scenegraph
-    ves::xplorer::scenegraph::DCS* GetModelRoot();
+    osg::Group* GetModelRoot();
 
     ///Return the active switch node of the scenegraph
     //osgOQ::OcclusionQueryContext* GetOcclusionQueryContext();
@@ -147,16 +147,18 @@ private:
     ///The root node of our scenegraph
     osg::ref_ptr< osg::Group > mRootNode;
     ///The root model node of our scenegraph
-    //osg::ref_ptr< osg::Group > mModelRoot;
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelRoot;
+    osg::ref_ptr< osg::Group > mModelRoot;
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > mModelRoot;
     ///The node which contains our logo
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > _logoNode;
+    osg::ref_ptr< ves::xplorer::scenegraph::DCS > mLogoNode;
     ///Node to switch between the logo and the worldDCS
-    osg::ref_ptr< ves::xplorer::scenegraph::Switch > _logoSwitch;
+    osg::ref_ptr< ves::xplorer::scenegraph::Switch > mLogoSwitch;
     ///Node to control navigation
     osg::ref_ptr< ves::xplorer::scenegraph::DCS > worldDCS;
     ///Node to hold a network view of the system under investigation
-    osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;
+    //osg::ref_ptr< ves::xplorer::scenegraph::DCS > networkDCS;
+    osg::ref_ptr< osg::Group > mNetworkDCS;
+
 #ifdef VE_SOUND
     ves::xplorer::scenegraph::Sound* m_sound;
 #endif

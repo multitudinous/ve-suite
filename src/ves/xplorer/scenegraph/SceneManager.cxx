@@ -151,8 +151,8 @@ void SceneManager::InitScene()
         "|  1. Initializing.................................... SceneManager |" 
         << std::endl;
 
-    //mModelRoot = new osg::Group();
-    mModelRoot = new ves::xplorer::scenegraph::DCS();
+    mModelRoot = new osg::Group();
+    //mModelRoot = new ves::xplorer::scenegraph::DCS();
     mModelRoot->setName( "Model Root Node" );
 
     //mRootNode = new ves::xplorer::scenegraph::Group();
@@ -182,8 +182,8 @@ void SceneManager::InitScene()
     worldDCS = new ves::xplorer::scenegraph::DCS();
     worldDCS->SetName( "World DCS" );
 
-    networkDCS  = new ves::xplorer::scenegraph::DCS();
-    networkDCS->SetName( "Network DCS" );
+    mNetworkDCS  = new osg::Group();
+    mNetworkDCS->setName( "Network DCS" );
 
     m_clrNode = new osg::ClearNode();
     m_clrNode->setRequiresClear( true );
@@ -194,16 +194,16 @@ void SceneManager::InitScene()
     _createLogo();
 
 #ifdef VE_SOUND
-    //m_sound = new ves::xplorer::scenegraph::Sound( _logoNode.get() );
+    //m_sound = new ves::xplorer::scenegraph::Sound( mLogoNode.get() );
     //m_sound->LoadFile( "C:/TSVEG/Dependencies/osgal-0.6.1/data/bee.wav" );
 #endif
 
-    _logoSwitch->AddChild( mModelRoot.get() );
-    _logoSwitch->AddChild( _logoNode.get() );
-    _logoSwitch->AddChild( networkDCS.get() );
+    mLogoSwitch->addChild( mModelRoot.get() );
+    mLogoSwitch->addChild( mLogoNode.get() );
+    mLogoSwitch->addChild( mNetworkDCS.get() );
 
     mRootNode->addChild( m_clrNode.get() );
-    m_clrNode->addChild( _logoSwitch.get() );
+    m_clrNode->addChild( mLogoSwitch.get() );
     //Add the worlddcs here because the nav matrix is pulled out
     //App.cxx and applied to the view matrix
     mRootNode->addChild( worldDCS.get() );
@@ -232,7 +232,7 @@ osg::Group* SceneManager::GetRootNode()
     return mRootNode.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* SceneManager::GetModelRoot()
+osg::Group* SceneManager::GetModelRoot()
 {
     return mModelRoot.get();
 }
@@ -242,9 +242,9 @@ ves::xplorer::scenegraph::DCS* SceneManager::GetWorldDCS()
     return worldDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* SceneManager::GetNetworkDCS()
+osg::Group* SceneManager::GetNetworkDCS()
 {
-    return networkDCS.get();
+    return mNetworkDCS.get();
 }
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::ViewLogo( bool trueFalse )
@@ -261,32 +261,32 @@ void SceneManager::ViewLogo( bool trueFalse )
 ////////////////////////////////////////////////////////////////////////////////
 void SceneManager::_createLogo()
 {
-    if( !_logoSwitch )
+    if( !mLogoSwitch )
     {
-        _logoSwitch = new ves::xplorer::scenegraph::Switch();
+        mLogoSwitch = new ves::xplorer::scenegraph::Switch();
     }
 
-    if( !_logoNode.valid() )
+    if( !mLogoNode.valid() )
     {
         double translation[ 3 ] = { -1.7, 4.6, 3.1 };
         osg::Quat quat( -1.0, osg::Vec3( 0, 0, 1 ) );
         double scale[ 3 ] = { 0.0065, 0.0065, 0.0065 };
 
-        _logoNode = new ves::xplorer::scenegraph::DCS();
-        _logoNode->SetTranslationArray( translation );
-        _logoNode->SetQuat( quat );
-        _logoNode->SetScaleArray( scale );
+        mLogoNode = new ves::xplorer::scenegraph::DCS();
+        mLogoNode->SetTranslationArray( translation );
+        mLogoNode->SetQuat( quat );
+        mLogoNode->SetScaleArray( scale );
 
         //m_blueArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    BlueArrow(), _logoNode.get(), true, false );
+        //    BlueArrow(), mLogoNode.get(), true, false );
         //m_greyArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    GreyArrow(), _logoNode.get(), true, false );
+        //    GreyArrow(), mLogoNode.get(), true, false );
         //m_orangeArrow = new ves::xplorer::scenegraph::CADEntity( 
-        //    OrangeArrow(), _logoNode.get(), true, false );
+        //    OrangeArrow(), mLogoNode.get(), true, false );
         m_veText = new ves::xplorer::scenegraph::CADEntity( 
-            VE(), _logoNode.get(), true, false );
+            VE(), mLogoNode.get(), true, false );
         m_suiteText = new ves::xplorer::scenegraph::CADEntity( 
-            Suite(), _logoNode.get(), true, false );
+            Suite(), mLogoNode.get(), true, false );
 
         char phong_vertex[] =
             "varying vec4 color; \n"
@@ -332,7 +332,7 @@ void SceneManager::_createLogo()
             "gl_FragData[ 1 ] = glowColor; \n"
             "} \n";
 
-        osg::ref_ptr< osg::StateSet > stateset = _logoNode->getOrCreateStateSet();
+        osg::ref_ptr< osg::StateSet > stateset = mLogoNode->getOrCreateStateSet();
         osg::ref_ptr< osg::Program > program = new osg::Program;
 
         osg::ref_ptr< osg::Shader > vertex_shader = new osg::Shader( osg::Shader::VERTEX, phong_vertex );
@@ -348,7 +348,7 @@ void SceneManager::_createLogo()
 void SceneManager::SetActiveSwitchNode( int activeNode )
 {
     //GetActiveSwitchNode()->GetMat();
-    _logoSwitch->SetVal( activeNode );
+    mLogoSwitch->SetVal( activeNode );
     ///Now reset the dcs back to its former position so that the nav
     ///information is defined on a per node basis.
 }
@@ -358,15 +358,15 @@ void SceneManager::PreFrameUpdate()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-ves::xplorer::scenegraph::DCS* SceneManager::GetActiveSwitchNode()
+osg::Group* SceneManager::GetActiveSwitchNode()
 {
-    osg::Switch::ValueList boolList = _logoSwitch->getValueList();
+    osg::Switch::ValueList boolList = mLogoSwitch->getValueList();
 
     for( size_t i = 0; i < boolList.size(); ++i )
     {
         if( boolList.at( i ) )
         {
-            return dynamic_cast< ves::xplorer::scenegraph::DCS* >( _logoSwitch->getChild( i ) );
+            return static_cast< osg::Group* >( mLogoSwitch->getChild( i ) );
         }
     }
 }

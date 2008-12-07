@@ -98,7 +98,7 @@ NetworkSystemView::~NetworkSystemView( void )
 {
     ves::xplorer::scenegraph::SceneManager::instance()->GetNetworkDCS()->
         removeChildren( 0, ves::xplorer::scenegraph::SceneManager::instance()->
-        GetNetworkDCS()->GetNumChildren() );
+        GetNetworkDCS()->getNumChildren() );
 }
 ////////////////////////////////////////////////////////////////////////////////
 NetworkSystemView& NetworkSystemView::operator=( const NetworkSystemView& input )

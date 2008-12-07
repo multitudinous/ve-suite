@@ -108,7 +108,7 @@ void cfdExecutive::Initialize( CosNaming::NamingContext* inputNameContext,
     _masterNode = new ves::xplorer::scenegraph::Group();
     _masterNode->SetName( "cfdExecutive_Node" );
     ves::xplorer::scenegraph::SceneManager::instance()->GetModelRoot()->
-        AddChild( this->_masterNode.get() );
+        addChild( this->_masterNode.get() );
 
     mAvailableModules = new cfdVEAvailModules();
 
@@ -577,7 +577,7 @@ void cfdExecutive::DeleteNetworkSystemView()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system, 
-    bool getResults, ves::xplorer::scenegraph::DCS* parentNode )
+    bool getResults, osg::Group* parentNode )
 {
     //add the system to the map
     mIDToSystem[ system->GetID() ] = system;
