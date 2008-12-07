@@ -11,11 +11,25 @@ class HandManipulator : public osgGA::GUIEventHandler
 {
 public:
     HandManipulator( osgBullet::HandNode* hn )
-        : _hand( hn ),
-        _mode( osgBullet::HandNode::FINGER_0_TRANSLATE ) {}
+      : _hand( hn ),
+        _mode( osgBullet::HandNode::FINGER_0_TRANSLATE ),
+        _h( 0.f ),
+        _p( 0.f ),
+        _r( 0.f )
+    {
+    }
 
     bool handle( const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& )
     {
+        const unsigned int mod = ea.getModKeyMask();
+        const bool ctrl = ( (mod&osgGA::GUIEventAdapter::MODKEY_LEFT_CTRL) ||
+            (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_CTRL) );
+        const bool shift = ( (mod&osgGA::GUIEventAdapter::MODKEY_LEFT_SHIFT) ||
+            (mod&osgGA::GUIEventAdapter::MODKEY_RIGHT_SHIFT) );
+
+        const unsigned int buttonMask( ea.getButtonMask() );
+        const bool ourLeft( (ctrl || shift) && (buttonMask == osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON) );
+
         switch( ea.getEventType() )
         {
             case osgGA::GUIEventAdapter::KEYUP:
@@ -103,6 +117,78 @@ public:
                 if (k1) _hand->setArticulation( _mode + 10, _hand->getArticulation( _mode+10 ) + delta );
                 return true;
             }
+            case osgGA::GUIEventAdapter::PUSH:
+            {
+                if( !ourLeft )
+                    return false;
+
+                _lastX = ea.getXnormalized();
+                _lastY = ea.getYnormalized();
+                return true;
+            }
+            case osgGA::GUIEventAdapter::DRAG:
+            {
+                if( !ourLeft )
+                    return false;
+
+                if( ctrl )
+                {
+                    // X = Heading
+                    // Y = Pitch
+                    _h += ( _lastX - ea.getXnormalized() ) * 2.;
+                    _p += ( _lastY - ea.getYnormalized() ) * 2.;
+                }
+                else if( shift )
+                {
+                    // X = Roll
+                    _r += ( _lastX - ea.getXnormalized() ) * 2.;
+                }
+                _lastX = ea.getXnormalized();
+                _lastY = ea.getYnormalized();
+
+#if 1
+                // We now have h, p, and r angles. Build a Quat to affect these rotatiions.
+                // We do this by creating a Matrix that contains correctly-oriented x, y, and
+                // z axes. Then we create the Quat from the Matrix.
+                //
+                // First, create x, y, and z axes that represent the h, p, and r angles.
+                //   Rotate x and y axes by the heading.
+                osg::Vec3 z( 0., 0., 1. );
+                osg::Quat qHeading( _h, z );
+                osg::Vec3 x = qHeading * osg::Vec3( 1., 0., 0. );
+                osg::Vec3 y = qHeading * osg::Vec3( 0., 1., 0. );
+                //   Rotate z and y axes by the pitch.
+                osg::Quat qPitch( _p, x );
+                y = qPitch * y;
+                z = qPitch * z;
+                //   Rotate x and z axes by the roll.
+                osg::Quat qRoll( _r, y );
+                x = qRoll * x;
+                z = qRoll * z;
+                // Use x, y, and z axes to create an orientation matrix.
+                osg::Matrix m( x[0], x[1], x[2], 0.,
+                    y[0], y[1], y[2], 0.,
+                    z[0], z[1], z[2], 0.,
+                    0., 0., 0., 1. );
+                
+                osg::Quat q;
+                q.set( m );
+#else
+     osg::Vec3d pitch( 1, 0, 0 );
+     osg::Vec3d roll( 0, 1, 0 );
+     osg::Vec3d yaw( 0, 0, 1 );
+
+     osg::Matrixd rotateMat;
+     rotateMat.makeRotate( _h, yaw,
+                          _p, pitch,
+                          _r, roll );
+
+     osg::Quat q;
+     q = rotateMat.getRotate();
+#endif
+                _hand->setAttitude( q );
+                return true;
+            }
             default:
             break;
         }
@@ -112,6 +198,9 @@ public:
 protected:
     osg::ref_ptr< osgBullet::HandNode > _hand;
     osgBullet::HandNode::Articulation _mode;
+    float _lastX, _lastY;
+    float _h, _p, _r;
+    osg::Vec3 _x, _y, _z;
 };
 
 

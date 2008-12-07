@@ -345,6 +345,11 @@ public:
                 istr >> node;
                 _nodeCreateList.push_back( node );
             }
+            else if( key == std::string( "CreateDAE-tm:" ) )
+            {
+                istr >> node;
+                _nodeCreateTMList.push_back( node );
+            }
             else
                 osg::notify( osg::WARN ) << "ConfigReaderWriter: Unknown key: " << key << std::endl;
 
@@ -383,6 +388,7 @@ public:
     NodeDaeMap _nodeDaeMap;
     typedef std::vector< std::string > NodeCreateList;
     NodeCreateList _nodeCreateList;
+    NodeCreateList _nodeCreateTMList;
 
 protected:
     ~ConfigReaderWriter() {}
@@ -499,7 +505,7 @@ main( int argc,
     ConfigReaderWriter::NodeCreateList::const_iterator vitr;
     for( vitr = crw->_nodeCreateList.begin(); vitr != crw->_nodeCreateList.end(); vitr++ )
     {
-        osg::notify( osg::ALWAYS ) << "  Creatin physics data for: " << *vitr << std::endl;
+        osg::notify( osg::ALWAYS ) << "  Creating physics data for: " << *vitr << std::endl;
         FindNamedNode fnn( *vitr );
         orient->accept( fnn );
         osg::Node* subgraph = fnn._napl[ 0 ].first;
@@ -512,7 +518,48 @@ main( int argc,
         amt->setDataVariance( osg::Object::DYNAMIC );
         amt->addChild( subgraph );
         osg::Group* parent = subgraph->getParent( 0 );
-        parent->addChild( amt );
+        parent->addChild( amt.get() );
+        parent->removeChild( subgraph );
+
+        btRigidBody* rb = converter.getRigidBody();
+        osgBullet::MotionState* motion = new osgBullet::MotionState;
+        motion->setTransform( amt.get() );
+        osg::BoundingSphere bs = subgraph->getBound();
+
+        // Add visual rep of Bullet Collision shape.
+        osg::Node* visNode = osgBullet::osgNodeFromBtCollisionShape( rb->getCollisionShape() );
+        if( visNode != NULL )
+        {
+            osgBullet::AbsoluteModelTransform* dmt = new osgBullet::AbsoluteModelTransform;
+            dmt->addChild( visNode );
+            motion->setDebugTransform( dmt );
+            _debugBullet.addDynamic( dmt );
+        }
+
+        osg::Matrix m = osg::computeLocalToWorld( np );
+        motion->setParentTransform( m );
+        motion->setCenterOfMass( bs.center() );
+        rb->setMotionState( motion );
+        bulletWorld->addRigidBody( rb );
+    }
+
+    osg::notify( osg::ALWAYS ) << "Must create TM physics data..." << std::endl;
+    for( vitr = crw->_nodeCreateTMList.begin(); vitr != crw->_nodeCreateTMList.end(); vitr++ )
+    {
+        osg::notify( osg::ALWAYS ) << "  Creating TM physics data for: " << *vitr << std::endl;
+        FindNamedNode fnn( *vitr );
+        orient->accept( fnn );
+        osg::Node* subgraph = fnn._napl[ 0 ].first;
+        osg::NodePath& np = fnn._napl[ 0 ].second;
+
+        osgBullet::OSGToCollada converter( 
+            subgraph, TRIANGLE_MESH_SHAPE_PROXYTYPE, 1.0, "", 1.0, false );
+
+        osg::ref_ptr< osgBullet::AbsoluteModelTransform > amt = new osgBullet::AbsoluteModelTransform();
+        amt->setDataVariance( osg::Object::DYNAMIC );
+        amt->addChild( subgraph );
+        osg::Group* parent = subgraph->getParent( 0 );
+        parent->addChild( amt.get() );
         parent->removeChild( subgraph );
 
         btRigidBody* rb = converter.getRigidBody();

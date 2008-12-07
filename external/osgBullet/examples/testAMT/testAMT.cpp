@@ -50,7 +50,7 @@ main( int argc,
 
     osgViewer::Viewer viewer;
     viewer.setUpViewOnSingleScreen( 0 );
-    viewer.setSceneData( root );
+    viewer.setSceneData( root.get() );
 
     return( viewer.run() );
 }

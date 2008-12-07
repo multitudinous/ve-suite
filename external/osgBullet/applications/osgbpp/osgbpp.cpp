@@ -92,22 +92,24 @@ int main( int argc,
     arguments.getApplicationUsage()->setApplicationName( arguments.getApplicationName() );
     arguments.getApplicationUsage()->setDescription( arguments.getApplicationName() + " creates physics data for model files and stores that data to COLLADA files." );
     arguments.getApplicationUsage()->setCommandLineUsage( arguments.getApplicationName() + " [options] filename ..." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--box",          "Creates a box collision shape." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--sphere",       "Creates a sphere collision shape." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--cylinder",     "Creates a cylinder collision shape." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--axis <x>",     "Specify the cylinder axis, \"X\", \"Y\", or \"Z\". Default is \"Z\"." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--triMesh",      "Default. Creates a tri mesh collision shape." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--simplify <n>", "Runs the osgUtil::Simplifier on the scene graph before generating the Bullet collition shape. <n> should be in the range 0.0 < n < 1.0." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--overall",      "Creates a single collision shape for the entire input scene graph (or named node; see --name), rather than a collision shape per Geode (the default)" );
-    arguments.getApplicationUsage()->addCommandLineOption( "--name <name>",  "Interprets the scene graph from the first occurance of the names node. If not specified, the entire scene graph is processed." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--mass <n>",     "Specify the desired rigid body mass value. Default is 1.0." );
-    arguments.getApplicationUsage()->addCommandLineOption( "-o <name.dae>",  "Output file name. If not present, the output file name is derived from the input file name by replacing the extension with \".dae\"." );
-    arguments.getApplicationUsage()->addCommandLineOption( "--display",      "Disable displaying the loaded model (just convert)." );
 
-    unsigned int helpType = 0;
-    if ( (helpType = arguments.readHelpType()) )
+    arguments.getApplicationUsage()->addCommandLineOption( "--box", "Creates a box collision shape." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--sphere", "Creates a sphere collision shape." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--cylinder", "Creates a cylinder collision shape." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--axis <x>", "This argument is ignored if --cylinder is not specified. Use this option to specify the cylinder axis X, Y, or Z. Default is Z." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--triMesh", "This is the default. It creates a tri mesh collision shape." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--simplify <n>", "Runs the osgUtil::Simplifier on the scene graph before generating the Bullet collision shape. <n> is the target simplification percentage, and is usually in the range 0.0 to 1.0." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--overall", "Creates a single collision shape for the entire input scene graph or named subgraph (see --name), rather than a collision shape per Geode, which is the default." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--name <name>", "Interprets the scene graph from the first occurence of the named node. If not specified, the entire scene graph is processed." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--mass <n>", "Specifies the desired rigid body mass value. The default is 1.0." );
+    arguments.getApplicationUsage()->addCommandLineOption( "-o <name.dae>", "Output file name. If not present, the output file name is derived from the input file name by replacing the extension with .dae." );
+    arguments.getApplicationUsage()->addCommandLineOption( "--display", "Opens a window and displays a physics simulation of the rigid body. Use for debugging only." );
+    arguments.getApplicationUsage()->addCommandLineOption( "-h or --help", "Displays help text and command line documentation." );
+
+
+    if( arguments.read( "-h" ) || arguments.read( "--help" ) )
     {
-        arguments.getApplicationUsage()->write( osg::notify( osg::ALWAYS ), helpType );
+        arguments.getApplicationUsage()->write( osg::notify( osg::ALWAYS ), osg::ApplicationUsage::COMMAND_LINE_OPTION );
         return 1;
     }
 
@@ -275,7 +277,7 @@ int main( int argc,
 
     btRigidBody* rb = converter.getRigidBody();
     osgBullet::MotionState* motion = new osgBullet::MotionState;
-    motion->setTransform( loadedModel );
+    motion->setTransform( loadedModel.get() );
     osg::BoundingSphere bs = loadedModel->getBound();
 
     // Add visual rep of Bullet Collision shape.

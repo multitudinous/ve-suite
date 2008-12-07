@@ -43,7 +43,7 @@ public:
 
     virtual void traverse( osg::NodeVisitor& nv );
 
-    virtual osg::BoundingSphere computeBound() const;
+    virtual osg::BoundingSphere HandNode::computeBound() const;
 
     virtual bool computeLocalToWorldMatrix( osg::Matrix& matrix, osg::NodeVisitor* nv ) const;
     virtual bool computeWorldToLocalMatrix( osg::Matrix& matrix, osg::NodeVisitor* nv ) const;
