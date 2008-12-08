@@ -643,9 +643,7 @@ void App::draw()
     //gmtl::postMult(
     //    _vjMatrixLeft, gmtl::makeRot< gmtl::Matrix44f >(
     //        gmtl::AxisAnglef( gmtl::Math::deg2Rad( -90.0f ), x_axis ) ) );
-    
-    
-    
+
     _vjMatrixLeft = _vjMatrixLeft * mZUp * mNavPosition;
 
     //Copy the matrix

@@ -265,7 +265,6 @@ void DCS::SetScaleArray( double* scale )
 ////////////////////////////////////////////////////////////////////////////////
 gmtl::Matrix44d DCS::GetMat()
 {
-#ifdef _OSG
     osg::Matrixd scaleMat = osg::Matrixd::scale( getScale() );
     osg::Matrixd translationMat = osg::Matrixd::translate( getPosition() );
     osg::Matrixd inverseTranslationMat = osg::Matrixd::translate( -getPosition()[0],
@@ -288,11 +287,6 @@ gmtl::Matrix44d DCS::GetMat()
         std::cout << "Invalid matrix!" << std::endl;
         std::cout << "DCS::GetMat()" << std::endl;
     }
-#elif _OPENSG
-    //GetVjMatrix
-    cerr << " ERROR: DCS::GetMat is NOT implemented " << endl;
-    exit( 1 );
-#endif
 
     return _vjMatrix;
 }
