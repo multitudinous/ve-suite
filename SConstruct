@@ -396,7 +396,6 @@ base_bldr = EnvironmentBuilder()
 ## Add debug options in for vesuite from SConsAddons 
 base_bldr.addOptions( opts )
 
-baseEnv = base_bldr.buildEnvironment()
 baseEnv = base_bldr.buildEnvironment(ENV = os.environ)
 # add in once we are using 0.98
 # baseEnv.Decider('MD5-timestamp')
@@ -443,12 +442,25 @@ if not SConsAddons.Util.hasHelpFlag():
    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','osgBullet','include')])
    baseEnv.AppendUnique(CPPPATH = [pj(RootDir,'external','bullet-2.72','src')])
 
-   baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
-   ## load environment of the shell that scons is launched from   
-   ##possible additional flags
    baseEnv.AppendUnique( CPPPATH = [pj(RootDir,'src'),pj(RootDir,buildDir,'src')] )
    baseEnv.AppendUnique( CPPDEFINES = ['_OSG','VTK44'] )
+
+   if GetPlatform() == 'darwin':
+      baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
+      baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
+      baseEnv['LDMODULESUFFIX'] = '.bundle'
+      #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
+
+   #setup default libraries and defines
+   #baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
+   #baseEnv.Append( LIBS = ['loki.0.1.6'] )
+   #baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
+
    if GetPlatform() == 'win32':
+      baseEnv[ 'MSVS']['VERSION' ] = 8.0
+      baseEnv[ 'MSVS_USE_MFC_DIRS' ] = 1
+      ms = Tool('msvc')
+      ms( baseEnv )
       baseEnv.AppendUnique( CPPDEFINES = ['WIN32_LEAN_AND_MEAN'] )
       #baseEnv.AppendUnique( CXXFLAGS = ['/wd4005'] )
       # for more information on WIN32_LEAN_AND_MEAN see:
@@ -464,17 +476,7 @@ if not SConsAddons.Util.hasHelpFlag():
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIB'].split(os.pathsep) ) 
       #baseEnv.AppendUnique( LIBPATH = os.environ['LIBPATH'].split(os.pathsep) ) 
 
-
-   if GetPlatform() == 'darwin':
-      baseEnv.AppendUnique( CPPDEFINES = ['_DARWIN'] )
-      baseEnv.AppendUnique( LINKFLAGS = ['-Wl,-bind_at_load'] )
-      baseEnv['LDMODULESUFFIX'] = '.bundle'
-      #baseEnv['LDMODULEFLAGS'] = '$LDMODULEFLAGS -bundle -flat_namespace -undefined suppress'
-
-   #setup default libraries and defines
-   #baseEnv.Append( CPPPATH = [pj(RootDir,'external', 'loki-0.1.6', 'include')] )
-   #baseEnv.Append( LIBS = ['loki.0.1.6'] )
-   #baseEnv.Append( LIBPATH = [pj(RootDir, buildDir,'external', 'loki-0.1.6')] )
+   baseEnv = base_bldr.applyToEnvironment( baseEnv.Copy() )
 
    # Apply boost include path to whole build
    tmpBoostEnv = base_bldr.buildEnvironment()
