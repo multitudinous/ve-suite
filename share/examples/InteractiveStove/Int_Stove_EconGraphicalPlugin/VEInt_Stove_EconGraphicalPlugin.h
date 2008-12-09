@@ -47,7 +47,7 @@ public:
    VEInt_Stove_EconGraphicalPlugin( void );
    ~VEInt_Stove_EconGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::DCS* );
+   virtual void InitializeNode( osg::Group* );
 private:
 };
 

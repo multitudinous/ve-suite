@@ -50,7 +50,7 @@ public:
    VEAverageAirTempGraphicalPlugin( void );
    ~VEAverageAirTempGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+   virtual void InitializeNode( osg::Group* );
 private:
 };
 extern "C"

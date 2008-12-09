@@ -66,7 +66,7 @@ HyperLabGP::~HyperLabGP()
     ;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void HyperLabGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+void HyperLabGP::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 

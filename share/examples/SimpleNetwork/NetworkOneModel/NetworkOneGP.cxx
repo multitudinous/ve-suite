@@ -16,7 +16,7 @@ NetworkOneGP::~NetworkOneGP()
 }
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkOneGP
-::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+::InitializeNode( osg::Group* veworldDCS )
 {
 	PluginBase::InitializeNode( veworldDCS );
 }

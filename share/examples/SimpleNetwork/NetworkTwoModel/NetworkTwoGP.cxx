@@ -16,7 +16,7 @@ NetworkTwoGP::~NetworkTwoGP()
 }
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkTwoGP
-::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+::InitializeNode( osg::Group* veworldDCS )
 {
 	PluginBase::InitializeNode( veworldDCS );
 }

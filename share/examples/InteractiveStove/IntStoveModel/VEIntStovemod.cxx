@@ -166,36 +166,36 @@ VEIntStovemod::~VEIntStovemod( void )
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VEIntStovemod::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+void VEIntStovemod::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
     baffleOne = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleOne->GetNode()->ToggleDisplay( false );
 
     baffleTwo = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleTwo->GetNode()->ToggleDisplay( false );
 
     baffleThree = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleThree->GetNode()->ToggleDisplay( false );
 
     baffleFour = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleFour->GetNode()->ToggleDisplay( false );
 
     baffleFive = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleFive->GetNode()->ToggleDisplay( false );
 
     baffleSix = new ves::xplorer::scenegraph::CADEntity(
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleSix->GetNode()->ToggleDisplay( false );
 
     baffleSeven = new ves::xplorer::scenegraph::CADEntity( 
-		"baffle_new2.stl",veworldDCS );
+		"baffle_new2.stl", mDCS.get() );
     baffleSeven->GetNode()->ToggleDisplay( false );
 }
 ///////////////////////////////////////////////////////////////////////////////

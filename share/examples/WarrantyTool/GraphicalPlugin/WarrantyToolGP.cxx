@@ -66,7 +66,7 @@ WarrantyToolGP::~WarrantyToolGP()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void WarrantyToolGP::InitializeNode(
-    ves::xplorer::scenegraph::DCS* veworldDCS )
+    osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
     //Load model

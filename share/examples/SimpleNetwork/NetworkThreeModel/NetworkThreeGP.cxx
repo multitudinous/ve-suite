@@ -16,7 +16,7 @@ NetworkThreeGP::~NetworkThreeGP()
 }
 ///////////////////////////////////////////////////////////////////////////////
 void NetworkThreeGP
-::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+::InitializeNode( osg::Group* veworldDCS )
 {
 	PluginBase::InitializeNode( veworldDCS );
 }

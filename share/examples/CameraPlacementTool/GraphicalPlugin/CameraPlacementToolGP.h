@@ -72,7 +72,7 @@ public:
         MAX_CIRCLE_OF_CONFUSION,
     };
 
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
+    virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate();
     virtual void SetCurrentCommand( ves::open::xml::CommandPtr command );
 

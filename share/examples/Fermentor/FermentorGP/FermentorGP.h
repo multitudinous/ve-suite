@@ -65,7 +65,7 @@ public:
     VEFermentorGraphicalPlugin();
     virtual ~VEFermentorGraphicalPlugin();
 
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS );
+    virtual void InitializeNode( osg::Group* veworldDCS );
     virtual void PreFrameUpdate(); 
     virtual void ProcessOnSubmitJob();
        

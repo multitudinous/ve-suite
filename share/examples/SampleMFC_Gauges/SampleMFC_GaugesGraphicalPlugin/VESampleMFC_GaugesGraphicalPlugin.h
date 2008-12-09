@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_SampleMFC_GaugesGraphicalPlugin_H
 #define VE_SampleMFC_GaugesGraphicalPlugin_H
@@ -55,7 +53,7 @@ public:
    VESampleMFC_GaugesGraphicalPlugin( void );
    ~VESampleMFC_GaugesGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+   virtual void InitializeNode( \osg::Group* );
    virtual void CreateCustomVizFeature( int input );
 private:
    VE_Xplorer::cfdDigitalAnalogGauge* gauge;

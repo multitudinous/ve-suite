@@ -47,10 +47,9 @@ class VEOPPDmod: public VE_Xplorer::cfdVEBaseClass
 
    public:
       VEOPPDmod( void );
-      //VEOPPDmod( cfdDCS* );
-      ~VEOPPDmod( void );
+      virtual ~VEOPPDmod( void );
 
-      virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+      virtual void InitializeNode( osg::Group* );
       virtual void CreateCustomVizFeature( int );
    private:
       VE_SceneGraph::cfdGeode* _geode;

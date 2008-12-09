@@ -74,7 +74,7 @@ VEInt_Stove_EconGraphicalPlugin::~VEInt_Stove_EconGraphicalPlugin( void )
    //   delete [] _param;
 }
 
-void VEInt_Stove_EconGraphicalPlugin::InitializeNode( DCS* veworldDCS )
+void VEInt_Stove_EconGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];

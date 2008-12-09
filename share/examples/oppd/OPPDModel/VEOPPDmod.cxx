@@ -82,7 +82,7 @@ VEOPPDmod::~VEOPPDmod( void )
       delete _geode;
 }
 
-void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
+void VEOPPDmod::InitializeNode( osg::Group* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    _param.assign( "./Plugins/vrxpr.param.split");

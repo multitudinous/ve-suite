@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VEGLCanvasSampleAppGraphicalPlugin.h"
@@ -81,7 +79,7 @@ VEGLCanvasSampleAppGraphicalPlugin::~VEGLCanvasSampleAppGraphicalPlugin( void )
       delete _geode;
 }
 
-void VEGLCanvasSampleAppGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
+void VEGLCanvasSampleAppGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    //_param.assign( "./VEGLCanvasSampleAppGraphicalPlugin.param");

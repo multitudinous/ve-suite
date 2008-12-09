@@ -77,7 +77,7 @@ VEAdiabaticFlameTempGraphicalPlugin::~VEAdiabaticFlameTempGraphicalPlugin( void 
       _param.clear();
 }
 
-void VEAdiabaticFlameTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
+void VEAdiabaticFlameTempGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
    std::cout<<"Initializing NODE!!!!!!!!!!!!!!"<<std::endl;
    cfdVEBaseClass::InitializeNode( veworldDCS );

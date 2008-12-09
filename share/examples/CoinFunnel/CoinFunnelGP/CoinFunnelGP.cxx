@@ -91,7 +91,7 @@ CoinFunnelGP::~CoinFunnelGP()
     mResourceManager->remove( "WaterProgram" );
 }
 ////////////////////////////////////////////////////////////////////////////////
-void CoinFunnelGP::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+void CoinFunnelGP::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 

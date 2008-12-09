@@ -78,7 +78,7 @@ VESampleMFC_GaugesGraphicalPlugin::~VESampleMFC_GaugesGraphicalPlugin( void )
       _param.clear();
 }
 
-void VESampleMFC_GaugesGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
+void VESampleMFC_GaugesGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
    int gauge_type = 1;
    cfdVEBaseClass::InitializeNode( veworldDCS );

@@ -9,7 +9,7 @@ public:
 	NetworkThreeGP();
 	virtual ~NetworkThreeGP();
 
-	virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
+	virtual void InitializeNode( osg::Group* );
     virtual void CreateCustomVizFeature( int );
     virtual void SetCurrentCommand(ves::open::xml::CommandPtr command);
     virtual void PreFrameUpdate( void );

@@ -125,7 +125,7 @@ VEFermentorGraphicalPlugin::~VEFermentorGraphicalPlugin()
     delete shader;
 }
 ////////////////////////////////////////////////////////////////////////////////
-void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* veworldDCS )
+void VEFermentorGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 
@@ -153,7 +153,7 @@ void VEFermentorGraphicalPlugin::InitializeNode( ves::xplorer::scenegraph::DCS* 
     fermentorGroup->addChild( transform_tank.get() );
 
     double trans[ 3 ] = { 0.8, 13.5, 0.15 };
-    veworldDCS->SetTranslationArray( trans );
+    mDCS->SetTranslationArray( trans );
 
     _roomGeometry->setMatrix( osg::Matrix::scale( 3.28, 3.28, 3.28 ) *
                               osg::Matrix::translate( -4.5, 0.0, -3.4 ) *

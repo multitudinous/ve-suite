@@ -123,7 +123,7 @@ CameraPlacementToolGP::~CameraPlacementToolGP()
 }
 ////////////////////////////////////////////////////////////////////////////////
 void CameraPlacementToolGP::InitializeNode(
-    ves::xplorer::scenegraph::DCS* veworldDCS )
+    osg::Group* veworldDCS )
 {
     PluginBase::InitializeNode( veworldDCS );
 

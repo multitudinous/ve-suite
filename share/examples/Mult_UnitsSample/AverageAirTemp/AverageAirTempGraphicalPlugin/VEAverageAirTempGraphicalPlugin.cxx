@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VEAverageAirTempGraphicalPlugin.h"
@@ -77,7 +75,7 @@ VEAverageAirTempGraphicalPlugin::~VEAverageAirTempGraphicalPlugin( void )
       _param.clear();
 }
 
-void VEAverageAirTempGraphicalPlugin::InitializeNode( cfdDCS* veworldDCS )
+void VEAverageAirTempGraphicalPlugin::InitializeNode( osg::Group* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    _param.assign( "./Plugins/nogeom.param" );

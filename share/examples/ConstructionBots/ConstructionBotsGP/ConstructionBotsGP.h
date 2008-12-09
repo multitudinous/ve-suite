@@ -54,7 +54,7 @@ public:
     virtual ~ConstructionBotsGP();
 
     ///Initialize the scenegraph node for this plugin
-    virtual void InitializeNode( ves::xplorer::scenegraph::DCS* );
+    virtual void InitializeNode( osg::Group* );
 
     ///Perform the preframe update
     virtual void PreFrameUpdate();

@@ -29,8 +29,6 @@
  * Id:            $Id$
  * -----------------------------------------------------------------
  *
- * -----------------------------------------------------------------
- *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef VE_GLCanvasSampleAppGraphicalPlugin_H
 #define VE_GLCanvasSampleAppGraphicalPlugin_H
@@ -50,7 +48,7 @@ public:
    VEGLCanvasSampleAppGraphicalPlugin( void );
    ~VEGLCanvasSampleAppGraphicalPlugin( void );
 
-   virtual void InitializeNode( VE_SceneGraph::cfdDCS* ); 
+   virtual void InitializeNode( osg::Group* ); 
    virtual void CreateCustomVizFeature( int  );
 
 private:
