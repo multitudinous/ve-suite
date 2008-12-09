@@ -293,7 +293,10 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         }
         else
         {
-            GetAttribute( currentElement, "pluginname", mPluginName );
+            //This is a new addition so some ves files may not have a plugin
+            //name specified to use. Therefore use the previous method
+            //which was the model name.
+            mPluginName = mModelName;
         }
     }
 
