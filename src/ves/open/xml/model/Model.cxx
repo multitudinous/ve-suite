@@ -285,13 +285,9 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 
     {
-        dataValueStringName = GetSubElement( currentElement, "pluginname", 0 );
-        if( dataValueStringName )
-        {
-            GetDataFromElement( dataValueStringName, mPluginName );
-            dataValueStringName = 0;
-        }
-        else
+        GetAttribute( currentElement, "pluginname", mPluginName );
+
+        if( mPluginName.empty() )
         {
             //This is a new addition so some ves files may not have a plugin
             //name specified to use. Therefore use the previous method
@@ -772,6 +768,11 @@ void Model::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd    
     SetAttribute( "name", mModelName );
+
+    if( mPluginName.empty() )
+    {
+        mPluginName = mModelName;
+    }
     SetAttribute( "pluginname", mPluginName );
     SetAttribute( "id", mUuid );
 
