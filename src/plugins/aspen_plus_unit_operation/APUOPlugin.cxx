@@ -69,7 +69,8 @@ IMPLEMENT_DYNAMIC_CLASS( APUOPlugin, UIPluginBase )
 APUOPlugin::APUOPlugin() :
     UIPluginBase()
 {
-    name = wxString( "AspenPlusUO", wxConvUTF8 );
+    mPluginName = wxString( "AspenPlusUO", wxConvUTF8 );
+    //GetVEModel()->SetPluginType( "APUOPlugin" );
 
     wxImage my_img( square_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() );//*0.30f );
@@ -115,7 +116,7 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
     ves::open::xml::model::ModelPtr veModel = GetVEModel();
     wxString title;
     title << wxT( "Aspen Name" );
-    wxString desc( veModel->GetModelName().c_str(), wxConvUTF8 );
+    wxString desc( veModel->GetPluginName().c_str(), wxConvUTF8 );
     wxMessageDialog( m_canvas, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -141,7 +142,7 @@ void  APUOPlugin::OnShowAspenName( wxCommandEvent& event )
 void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    std::string compName = GetVEModel()->GetModelName();
+    std::string compName = GetVEModel()->GetPluginName();
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
@@ -151,7 +152,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
         while( parentTraverser->GetParentModel() != NULL )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-            compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+            compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
             parentTraverser = parentTraverser->GetParentModel();
         }
     }
@@ -214,7 +215,7 @@ void  APUOPlugin::OnQueryInputs( wxCommandEvent& event )
 void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    std::string compName = GetVEModel()->GetModelName();
+    std::string compName = GetVEModel()->GetPluginName();
     compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary
@@ -224,7 +225,7 @@ void  APUOPlugin::OnQueryOutputs( wxCommandEvent& event )
         while( parentTraverser->GetParentModel() != NULL )
         {
             //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-            compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+            compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
             parentTraverser = parentTraverser->GetParentModel();
         }
     }

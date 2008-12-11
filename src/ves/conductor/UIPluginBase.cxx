@@ -161,7 +161,7 @@ UIPluginBase::UIPluginBase() :
 {
     pos = wxPoint( 0, 0 ); //default position
 
-    name = wxString( "DefaultPlugin", wxConvUTF8 );
+    mPluginName = wxString( "DefaultPlugin", wxConvUTF8 );
 
     wxImage my_img( square_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() );//*0.30f );
@@ -359,7 +359,7 @@ void UIPluginBase::SetID( int id )
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetName( wxString pluginName )
 {
-    name = pluginName;
+    mPluginName = pluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void UIPluginBase::SetPos( wxPoint pt )
@@ -532,8 +532,8 @@ void UIPluginBase::DrawName( wxDC* dc )
     x = x / n_pts;
     y = y / n_pts;
 
-    dc->GetTextExtent( name, &w, &h );
-    dc->DrawText( name, int( x - w / 2 + xoff ), pos.y + int( y * 2.1 ) );
+    dc->GetTextExtent( mPluginName, &w, &h );
+    dc->DrawText( mPluginName, int( x - w / 2 + xoff ), pos.y + int( y * 2.1 ) );
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -585,12 +585,12 @@ wxString UIPluginBase::GetConductorName()
 /////////////////////////////////////////////////////////////////////////////
 wxString UIPluginBase::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxString( "PleaseDefineClassName", wxConvUTF8 );
+        mPluginName = wxString( "PleaseDefineClassName", wxConvUTF8 );
     }
 
-    return name;
+    return mPluginName;
 }
 /////////////////////////////////////////////////////////////////////////////
 wxString UIPluginBase::GetHelp()
@@ -618,12 +618,12 @@ bool UIPluginBase::Has3Ddata()
 ////////////////////////////////////////////////////////////////////////////////
 ModelPtr UIPluginBase::GetVEModel( void )
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxString( "PleaseDefineClassName", wxConvUTF8 );
+        mPluginName = wxString( "PleaseDefineClassName", wxConvUTF8 );
     }
 
-    m_veModel->SetModelName( ConvertUnicode( name.c_str() ) );
+    m_veModel->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
     m_veModel->SetModelID( id );
     m_veModel->SetIconFilename( iconFilename );
     m_veModel->GetIconLocation()->SetPoint( std::pair< unsigned int, unsigned int >( pos.x, pos.y ) );
@@ -801,7 +801,7 @@ void UIPluginBase::SetVEModel( ves::open::xml::model::ModelWeakPtr tempModel )
     m_veModel = tempModel.lock();
 
     //veModel->SetObjectFromXMLData( modelElement );
-    name = wxString( m_veModel->GetModelName().c_str(), wxConvUTF8 );
+    mPluginName = wxString( m_veModel->GetPluginName().c_str(), wxConvUTF8 );
     id = m_veModel->GetModelID();
     parentModel = m_veModel->GetParentModel();
     std::string tempFilename = m_veModel->GetIconFilename();
@@ -1000,7 +1000,7 @@ void UIPluginBase::ViewInputVariables( void )
         ///The code below is not robust so...
         return;
         ///Query for the inputs
-        std::string compName = GetVEModel()->GetModelName();
+        std::string compName = GetVEModel()->GetPluginName();
 
         ves::open::xml::CommandPtr returnState( new ves::open::xml::Command() );
         returnState->SetCommandName( "getInputModuleParamList" );
@@ -1144,11 +1144,11 @@ void UIPluginBase::SetPluginNameDialog( void )
     wxTextEntryDialog newPluginName( 0,
                                      _( "Enter the name for your UI plugin:" ),
                                      _( "Set UI Plugin Name..." ),
-                                     name, wxOK | wxCANCEL );
+                                     mPluginName, wxOK | wxCANCEL );
 
     if( newPluginName.ShowModal() == wxID_OK )
     {
-        name = newPluginName.GetValue();
+        mPluginName = newPluginName.GetValue();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -1756,7 +1756,7 @@ void UIPluginBase::OnVisualization( wxCommandEvent& event )
     {
         vistab = new Vistab( activeCORBAModel, m_canvas,
                              SYMBOL_VISTAB_IDNAME,
-                             wxString( activeXMLModel->GetModelName().c_str(), wxConvUTF8 ),
+                             wxString( activeXMLModel->GetPluginName().c_str(), wxConvUTF8 ),
                              SYMBOL_VISTAB_POSITION,
                              SYMBOL_VISTAB_SIZE,
                              SYMBOL_VISTAB_STYLE );
@@ -1849,7 +1849,7 @@ void UIPluginBase::OnSetUIPluginName( wxCommandEvent& event )
     
     //pass event up to hierarchy tree
     event.SetClientData( &id );
-    event.SetString( name );
+    event.SetString( mPluginName );
     ::wxPostEvent( m_canvas, event );
 
     m_canvas->Refresh( true );
@@ -1894,7 +1894,7 @@ void UIPluginBase::OnMRightDown( wxMouseEvent& event )
     m_canvas->Refresh( true );
 
     SendActiveId();
-    wxString menuName = name + wxString( " Menu", wxConvUTF8 );
+    wxString menuName = mPluginName + wxString( " Menu", wxConvUTF8 );
     mPopMenu->SetTitle( menuName );
 
     m_canvas->PopupMenu( mPopMenu, event.GetPosition() );
@@ -2157,7 +2157,7 @@ void UIPluginBase::AddPort( wxCommandEvent& event )
     ves::open::xml::model::PortPtr port = m_veModel->GetPort( -1 );
     port->SetPortLocation( tempLoc );
     //either input or output
-    port->SetModelName( ConvertUnicode( name.c_str() ) );
+    port->SetPluginName( ConvertUnicode( mPluginName.c_str() ) );
     //add the port to the model
     //add the port to the internal plugin structure
     if( event.GetId() == UIPluginBase::ADD_INPUT_PORT )

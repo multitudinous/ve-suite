@@ -146,7 +146,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
             }
 
             //set the blocks name
-            loadedModel->setName( model->GetModelName() );
+            loadedModel->setName( model->GetPluginName() );
             //normalize the normals so that lighting works better
             loadedModel->getOrCreateStateSet()->setMode( GL_NORMALIZE, 
                 osg::StateAttribute::ON );
@@ -234,7 +234,7 @@ osg::ref_ptr< osg::Group > NetworkSystemView::DrawNetwork( std::string netId )
                 ((bounds5.xMax()-bounds5.xMin())/2), 0, xyPair.second + 
                 ((bounds5.zMax()-bounds5.zMin())/2));
             mModelTrans->setPosition( centerTrans );
-            mModelTrans->setName( model->GetModelName() );
+            mModelTrans->setName( model->GetPluginName() );
             loadedModels->addChild( mModelTrans.get() );
         }
     }

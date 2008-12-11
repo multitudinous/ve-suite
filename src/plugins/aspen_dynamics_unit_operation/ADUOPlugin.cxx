@@ -57,7 +57,8 @@ IMPLEMENT_DYNAMIC_CLASS( ADUOPlugin, UIPluginBase )
 ADUOPlugin::ADUOPlugin() :
     UIPluginBase()
 {
-    name = wxString( "AspenDynamicsUO", wxConvUTF8 );
+    mPluginName = wxString( "AspenDynamicsUO", wxConvUTF8 );
+    //GetVEModel()->SetPluginType( "ADUOPlugin" );
 
     wxImage my_img( square_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() );//*0.30f );
@@ -98,7 +99,7 @@ void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )
     ves::open::xml::model::ModelPtr veModel = GetVEModel();
     wxString title;
     title << wxT( "Aspen Name" );
-    wxString desc( veModel->GetModelName().c_str(), wxConvUTF8 );
+    wxString desc( veModel->GetPluginName().c_str(), wxConvUTF8 );
     wxMessageDialog( m_canvas, desc, title ).ShowModal();
 }
 ////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +126,7 @@ void  ADUOPlugin::OnShowAspenName( wxCommandEvent& event )
 void  ADUOPlugin::OnQueryDynamics( wxCommandEvent& event )
 {
     UIPLUGIN_CHECKID( event )
-    std::string compName = GetVEModel()->GetModelName();
+    std::string compName = GetVEModel()->GetPluginName();
     //compName = "Data.Blocks." + compName;
 
     //generate hierarchical name if necessary

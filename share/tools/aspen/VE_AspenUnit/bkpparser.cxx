@@ -1314,8 +1314,8 @@ std::string BKPParser::CreateNetwork( void )
         ves::open::xml::model::ModelPtr
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
-        tempModel->SetModelName( blockIter->first );
-        tempModel->SetPluginName( "APUOPlugin" );
+        tempModel->SetPluginName( blockIter->first );
+        tempModel->SetPluginType( "APUOPlugin" );
         tempModel->SetVendorName( "ASPENUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
@@ -1354,13 +1354,13 @@ std::string BKPParser::CreateNetwork( void )
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
                 tempPort->
                     GetPortLocation()->SetPoint( std::pair< double, double >
-                    ( (linkPoints["_main_sheet"][tempPort->GetModelName()][0].
+                    ( (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
                     first - minX ), 
-                    (linkPoints["_main_sheet"][tempPort->GetModelName()][0].
+                    (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
                     second - minY ) ) );
             }
         }
@@ -1376,16 +1376,16 @@ std::string BKPParser::CreateNetwork( void )
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].second );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
                     std::pair< double, double >( (
                     linkPoints["_main_sheet"][tempPort->
-                    GetModelName()][linkPoints["_main_sheet"][tempPort->
-                    GetModelName()].size()-1].first - minX ),
+                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
+                    GetPluginName()].size()-1].first - minX ),
                     (linkPoints["_main_sheet"][tempPort->
-                    GetModelName()][linkPoints["_main_sheet"][tempPort->
-                    GetModelName()].size()-1].second - minY ) ) );
+                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
+                    GetPluginName()].size()-1].second - minY ) ) );
             }
         }
 
@@ -1460,8 +1460,8 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         ves::open::xml::model::ModelPtr
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
-        tempModel->SetModelName( blockIter->first );
-        tempModel->SetPluginName( "APUOPlugin" );
+        tempModel->SetPluginName( blockIter->first );
+        tempModel->SetPluginType( "APUOPlugin" );
         tempModel->SetVendorName( "ASPENUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
@@ -1502,14 +1502,14 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
 
                 tempPort->GetPortLocation()->
                     SetPoint( std::pair< double, double >
-                    ( ( linkPoints[networkName][tempPort->GetModelName()][0].
+                    ( ( linkPoints[networkName][tempPort->GetPluginName()][0].
                     first - minX ),
-                    (linkPoints[networkName][tempPort->GetModelName()][0].
+                    (linkPoints[networkName][tempPort->GetPluginName()][0].
                     second - minY ) ) );
             }
         }
@@ -1525,16 +1525,16 @@ void BKPParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].second );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
                     std::pair< double, double >( (
                     linkPoints[networkName][tempPort->
-                    GetModelName()][linkPoints[networkName][tempPort->
-                    GetModelName()].size()-1].first - minX ),
+                    GetPluginName()][linkPoints[networkName][tempPort->
+                    GetPluginName()].size()-1].first - minX ),
                     (linkPoints[networkName][tempPort->
-                    GetModelName()][linkPoints[networkName][tempPort->
-                    GetModelName()].size()-1].second - minY ) ) );
+                    GetPluginName()][linkPoints[networkName][tempPort->
+                    GetPluginName()].size()-1].second - minY ) ) );
             }
         }
 

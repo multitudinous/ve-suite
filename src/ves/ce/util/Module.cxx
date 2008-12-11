@@ -276,7 +276,7 @@ void Module::SetVEModel( model::ModelPtr mod )
 {
    veModel = mod;
    //Set the name of this module
-   _name = veModel->GetModelName();
+   _name = veModel->GetPluginName();
    // _id is set in the constructor
    _id = veModel->GetModelID();
    _need_execute = 1;

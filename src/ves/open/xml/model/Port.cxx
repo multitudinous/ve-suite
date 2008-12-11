@@ -46,7 +46,7 @@ Port::Port( )
         : XMLObject( )
 {
     mPortNumber = 0;
-    //mModelName = '\0';
+    //mPluginName = '\0';
     //mDataFlow = '\0';
     mPortLocation = PointPtr( new Point() );
     SetObjectType( "Port" );
@@ -69,7 +69,7 @@ Port::Port( const Port& input )
     }
 
     mPortNumber = input.mPortNumber;
-    mModelName = input.mModelName;
+    mPluginName = input.mPluginName;
     mDataFlow = input.mDataFlow;
     mPortLocation = PointPtr( new Point( *( input.mPortLocation ) ) );
 }
@@ -88,7 +88,7 @@ Port& Port::operator=( const Port& input )
         }
 
         mPortNumber = input.mPortNumber;
-        mModelName = input.mModelName;
+        mPluginName = input.mPluginName;
         mDataFlow = input.mDataFlow;
         mPortType = input.mPortType;
         *mPortLocation = *( input.mPortLocation );
@@ -101,9 +101,9 @@ void Port::SetPortNumber( unsigned int number )
     mPortNumber = number;
 }
 /////////////////////////////////////////////////////
-void Port::SetModelName( const std::string& name )
+void Port::SetPluginName( const std::string& name )
 {
-    mModelName = name;
+    mPluginName = name;
 }
 ///////////////////////////////////////////////
 void Port::SetDataFlowDirection( const std::string& direction )
@@ -131,7 +131,7 @@ void Port::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd
     SetSubElement( "number", mPortNumber );
-    SetSubElement( "name", mModelName );
+    SetSubElement( "name", mPluginName );
     SetSubElement( "dataFlow", mDataFlow );
     SetSubElement<ves::open::xml::XMLObjectPtr>( "portLocation", mPortLocation );
     SetSubElement( "portType", mPortType );
@@ -143,9 +143,9 @@ unsigned int Port::GetPortNumber( void )
     return mPortNumber;
 }
 //////////////////////////////////////////
-const std::string& Port::GetModelName( void )
+const std::string& Port::GetPluginName( void )
 {
-    return mModelName;
+    return mPluginName;
 }
 //////////////////////////////////////////
 const std::string& Port::GetDataFlowDirection( void )
@@ -191,7 +191,7 @@ void Port::SetObjectFromXMLData( DOMNode* element )
     // for model name
     {
         dataValueStringName = GetSubElement( currentElement, "name", 0 );
-        GetDataFromElement( dataValueStringName, mModelName );
+        GetDataFromElement( dataValueStringName, mPluginName );
     }
     // for data flow
     {

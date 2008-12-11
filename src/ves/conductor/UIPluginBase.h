@@ -353,7 +353,7 @@ protected:
     ves::open::xml::model::ModelPtr m_veModel;
     ves::open::xml::model::ModelWeakPtr parentModel;
     ///Name seen by the user and rendered on the canvas
-    wxString name;
+    wxString mPluginName;
 
     //That's the for default implementation of the DrawIcon. Not part of the general interface
     wxPoint* poly; //The outline polygon points list;

@@ -77,7 +77,8 @@ APPlugin::APPlugin() :
     UIPluginBase()
 {
     iconFilename = "aspen";
-    name = wxString( "AspenPlus", wxConvUTF8 );
+    mPluginName = wxString( "AspenPlus", wxConvUTF8 );
+    //GetVEModel()->SetPluginType( "ADPlugin" );
 
     wxImage my_img( aspen );
     icon_w = static_cast< int >( my_img.GetWidth() );//*0.30f );

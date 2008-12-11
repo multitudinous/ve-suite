@@ -9,7 +9,7 @@ IMPLEMENT_DYNAMIC_CLASS(NetworkOne, UIPluginBase)
 /////////////////////////////////////////////////////////////////////////////
 NetworkOne::NetworkOne()
 {
-	name = wxT("NetworkOne");
+	mPluginName = wxT("NetworkOne");
 	
 	RegistVar("mTextOne", &mTextOne);
 

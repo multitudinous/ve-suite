@@ -47,7 +47,7 @@ IMPLEMENT_DYNAMIC_CLASS( CoinFunnelUI, UIPluginBase )
 ////////////////////////////////////////////////////////////////////////////////
 CoinFunnelUI::CoinFunnelUI()
 {
-    name = wxT( "CoinFunnel" );
+    mPluginName = wxT( "CoinFunnel" );
 
     wxImage my_img( CoinFunnel_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() );
@@ -132,12 +132,12 @@ wxString CoinFunnelUI::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString CoinFunnelUI::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxT( "PleaseDefineClassName" );
+        mPluginName = wxT( "PleaseDefineClassName" );
     }
 
-    return name;
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString CoinFunnelUI::GetDesc()

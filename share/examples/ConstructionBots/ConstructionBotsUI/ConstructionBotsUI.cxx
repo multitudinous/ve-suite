@@ -50,7 +50,7 @@ IMPLEMENT_DYNAMIC_CLASS( ConstructionBotsUI, UIPluginBase )
 ////////////////////////////////////////////////////////////////////////////////
 ConstructionBotsUI::ConstructionBotsUI()
 {
-    name = wxT( "ConstructionBots" );
+    mPluginName = wxT( "ConstructionBots" );
 
     wxImage my_img( ConstructionBots_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() );
@@ -135,12 +135,12 @@ wxString ConstructionBotsUI::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString ConstructionBotsUI::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxT( "PleaseDefineClassName" );
+        mPluginName = wxT( "PleaseDefineClassName" );
     }
 
-    return name;
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString ConstructionBotsUI::GetDesc()

@@ -84,8 +84,8 @@ Model::~Model()
 Model::Model( const Model& input )
         : XMLObject( input )
 {
-    mModelName = input.mModelName;
     mPluginName = input.mPluginName;
+    mPluginType = input.mPluginType;
     mUniqueModelID = input.mUniqueModelID;
     mIconFileName = input.mIconFileName;
     mVendorUnit = input.mVendorUnit;
@@ -147,8 +147,8 @@ Model& Model::operator=( const Model& input )
     {
         //biv-- make sure to call the parent =
         XMLObject::operator =( input );
-        mModelName = input.mModelName;
         mPluginName = input.mPluginName;
+        mPluginType = input.mPluginType;
         mUniqueModelID = input.mUniqueModelID;
         mIconFileName = input.mIconFileName;
         mVendorUnit = input.mVendorUnit;
@@ -209,7 +209,7 @@ Model& Model::operator=( const Model& input )
 ////////////////////////////////////////////////////////////////////////////////
 /*std::ostream& operator<<( std::ostream& os, const Model& model )
 {
-    os << "Model Name = " << model.mModelName << std::endl
+    os << "Model Name = " << model.mPluginName << std::endl
         << "The Unit Name = " << model->mVendorUnit << std::endl
         << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
         << "GUID = " << model->mUuid << std::endl
@@ -226,14 +226,14 @@ Model& Model::operator=( const Model& input )
     return os;
 }*/
 ////////////////////////////////////////////////////////////////////////////////
-void Model::SetModelName( const std::string& name )
-{
-    mModelName = name;
-}
-////////////////////////////////////////////////////////////////////////////////
 void Model::SetPluginName( const std::string& name )
 {
     mPluginName = name;
+}
+////////////////////////////////////////////////////////////////////////////////
+void Model::SetPluginType( const std::string& type )
+{
+    mPluginType = type;
 }
 ////////////////////////////////////////////////////////////////////////////////
 void Model::SetModelID( unsigned int id )
@@ -275,24 +275,24 @@ void Model::SetObjectFromXMLData( DOMNode* element )
         dataValueStringName = GetSubElement( currentElement, "name", 0 );
         if( dataValueStringName )
         {
-            GetDataFromElement( dataValueStringName, mModelName );
+            GetDataFromElement( dataValueStringName, mPluginName );
             dataValueStringName = 0;
         }
         else
         {
-            GetAttribute( currentElement, "name", mModelName );
+            GetAttribute( currentElement, "name", mPluginName );
         }
     }
 
     {
-        GetAttribute( currentElement, "pluginname", mPluginName );
+        GetAttribute( currentElement, "plugintype", mPluginType );
 
-        if( mPluginName.empty() )
+        if( mPluginType.empty() )
         {
             //This is a new addition so some ves files may not have a plugin
             //name specified to use. Therefore use the previous method
             //which was the model name.
-            mPluginName = mModelName;
+            mPluginType = mPluginName;
         }
     }
 
@@ -475,14 +475,14 @@ void Model::SetObjectFromXMLData( DOMNode* element )
     }
 }
 ////////////////////////////////////////////////////////////
-const std::string& Model::GetModelName( void )
-{
-    return mModelName;
-}
-////////////////////////////////////////////////////////////
 const std::string& Model::GetPluginName( void )
 {
     return mPluginName;
+}
+////////////////////////////////////////////////////////////
+const std::string& Model::GetPluginType( void )
+{
+    return mPluginType;
 }
 ////////////////////////////////////////////////////////////
 unsigned int Model::GetModelID( void )
@@ -767,22 +767,22 @@ void Model::RemoveInformationPacket( const std::string& name )
 void Model::_updateVEElement( const std::string& input )
 {
     // write all the elements according to verg_model.xsd    
-    SetAttribute( "name", mModelName );
+    SetAttribute( "name", mPluginName );
 
-    if( mPluginName.empty() )
+    if( mPluginType.empty() )
     {
-        mPluginName = mModelName;
+        mPluginType = mPluginName;
     }
-    SetAttribute( "pluginname", mPluginName );
+    SetAttribute( "plugintype", mPluginType );
     SetAttribute( "id", mUuid );
 
     if( mVendorUnit.empty() )
     {
-        mVendorUnit = mModelName;
+        mVendorUnit = mPluginName;
     }
 
     SetAttribute( "vendorUnit", mVendorUnit );
-    //SetSubElement( "name", mModelName );
+    //SetSubElement( "name", mPluginName );
     std::ostringstream dirStringStream;
     dirStringStream << mUniqueModelID;
     SetAttribute( "ID", dirStringStream.str() );

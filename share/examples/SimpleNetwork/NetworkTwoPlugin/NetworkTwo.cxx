@@ -9,7 +9,7 @@ IMPLEMENT_DYNAMIC_CLASS(NetworkTwo, UIPluginBase)
 /////////////////////////////////////////////////////////////////////////////
 NetworkTwo::NetworkTwo()
 {
-	name = wxT("NetworkTwo");
+	mPluginName = wxT("NetworkTwo");
 	
 	RegistVar("mTextTwo", &mTextTwo);
 

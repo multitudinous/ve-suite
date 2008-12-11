@@ -157,10 +157,10 @@ void HierarchyTree::PopulateTree( )
         iter = topLevelModels.begin(); iter != topLevelModels.end(); ++iter )
     {
         ves::open::xml::model::ModelPtr tempModel = (*iter);
-        //alphaTree[ tempModel->GetModelName() ] = tempModel;
+        //alphaTree[ tempModel->GetPluginName() ] = tempModel;
         alphaTree.insert(
             std::pair< std::string, ves::open::xml::model::ModelPtr >
-            ( tempModel->GetModelName(), tempModel ));
+            ( tempModel->GetPluginName(), tempModel ));
     }
 
     //loop over models and add them to the tree
@@ -172,7 +172,7 @@ void HierarchyTree::PopulateTree( )
             //generate module data
             ModuleData* modData = new ModuleData();
             modData->modId = iter->second->GetModelID();
-            modData->modName = iter->second->GetModelName();
+            modData->modName = iter->second->GetPluginName();
             modData->systemId = id;
             if( iter->second->GetSubSystem() )
             {
@@ -200,7 +200,7 @@ void HierarchyTree::PopulateTree( )
 
             //Add the new model to the tree
             wxTreeItemId leaf = AppendItem( m_rootId, 
-                wxString( iter->second->GetModelName().c_str(), wxConvUTF8 ),
+                wxString( iter->second->GetPluginName().c_str(), wxConvUTF8 ),
                 images->GetImageCount() - 1 , -1, modData );
             SetItemFont( leaf, *wxNORMAL_FONT );
             //SetItemBold( leaf );
@@ -236,7 +236,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
             //generate module data
             ModuleData* modData = new ModuleData();
             modData->modId = models[i]->GetModelID();
-            modData->modName = models[i]->GetModelName();
+            modData->modName = models[i]->GetPluginName();
             modData->systemId = id;
             if( models[i]->GetSubSystem() )
             {
@@ -264,7 +264,7 @@ void HierarchyTree::PopulateLevel( wxTreeItemId parentLeaf,
 
             //add the new item to the list
             wxTreeItemId leaf = AppendItem( parentLeaf,
-                wxString( models[i]->GetModelName().c_str(), wxConvUTF8 ),
+                wxString( models[i]->GetPluginName().c_str(), wxConvUTF8 ),
                 images->GetImageCount() - 1 , -1, modData );
             //SetItemBold( leaf );
 

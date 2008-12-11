@@ -103,7 +103,7 @@ int Network::parse( std::string xmlNetwork )
     for( size_t i = 0; i < models.size(); ++i )
     {
         add_module( models.at( i )->GetModelID(),
-                    models.at( i )->GetModelName() );
+                    models.at( i )->GetPluginName() );
         GetModule( i )->SetVEModel( models.at( i ) );
     }
 

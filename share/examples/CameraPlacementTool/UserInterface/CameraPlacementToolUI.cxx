@@ -47,7 +47,7 @@ IMPLEMENT_DYNAMIC_CLASS( CameraPlacementToolUI, UIPluginBase )
 ////////////////////////////////////////////////////////////////////////////////
 CameraPlacementToolUI::CameraPlacementToolUI()
 {
-    name = wxT( "CameraPlacementTool" );
+    mPluginName = wxT( "CameraPlacementTool" );
 
     wxImage my_img( camera_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() * 0.5f );
@@ -132,12 +132,12 @@ wxString CameraPlacementToolUI::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString CameraPlacementToolUI::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxT( "PleaseDefineClassName" );
+        mPluginName = wxT( "PleaseDefineClassName" );
     }
 
-    return name;
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString CameraPlacementToolUI::GetDesc()

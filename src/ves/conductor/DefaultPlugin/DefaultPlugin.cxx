@@ -63,14 +63,14 @@ DefaultPlugin::DefaultPlugin()
     //RegistVar("height", &height );
 
     dlg = 0;
-    name = _( "DefaultPlugin" );
+    mPluginName = _( "DefaultPlugin" );
 //#define TESTPORT
 #ifdef TESTPORT
     VE_Model::Port* Aport = new VE_Model::Port();
     VE_Model::Point * Aportloc = new VE_Model::Point();
     Aportloc->SetPoint( std::pair<unsigned int, unsigned int> ( 0, icon_h / 3 ) );
     Aport->SetDataFlowDirection( "INPUT" );
-    Aport->SetModelName( "DefaultPlugin" );
+    Aport->SetPluginName( "DefaultPlugin" );
     Aport->SetPortNumber( 0 );
     Aport->SetPortType( "MPMICEGRID" );
     Aport->SetPortLocation( Aportloc );
@@ -80,7 +80,7 @@ DefaultPlugin::DefaultPlugin()
     VE_Model::Point * Bportloc = new VE_Model::Point();
     Bportloc->SetPoint( std::pair<unsigned int, unsigned int> ( 0, icon_h*2 / 3 ) );
     Bport->SetDataFlowDirection( "INPUT" );
-    Bport->SetModelName( "DefaultPlugin" );
+    Bport->SetPluginName( "DefaultPlugin" );
     Bport->SetPortNumber( 1 );
     Bport->SetPortType( "TOMCAT" );
     Bport->SetPortLocation( Bportloc );
@@ -90,7 +90,7 @@ DefaultPlugin::DefaultPlugin()
     VE_Model::Point * Cportloc = new VE_Model::Point();
     Cportloc->SetPoint( std::pair<unsigned int, unsigned int> ( icon_w, icon_h / 3 ) );
     Cport->SetDataFlowDirection( "OUTPUT" );
-    Cport->SetModelName( "DefaultPlugin" );
+    Cport->SetPluginName( "DefaultPlugin" );
     Cport->SetPortNumber( 0 );
     Cport->SetPortType( "MPMICEGRID" );
     Cport->SetPortLocation( Cportloc );
@@ -100,7 +100,7 @@ DefaultPlugin::DefaultPlugin()
     VE_Model::Point * Dportloc = new VE_Model::Point();
     Dportloc->SetPoint( std::pair<unsigned int, unsigned int> ( icon_w, icon_h*2 / 3 ) );
     Dport->SetDataFlowDirection( "OUTUT" );
-    Dport->SetModelName( "DefaultPlugin" );
+    Dport->SetPluginName( "DefaultPlugin" );
     Dport->SetPortNumber( 1 );
     Dport->SetPortType( "TOMCAT" );
     Dport->SetPortLocation( Dportloc );

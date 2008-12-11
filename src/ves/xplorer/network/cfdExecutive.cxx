@@ -592,7 +592,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
         //Initialize model maps
         model::ModelPtr model = tempModels.at( i );
         std::string modelID = model->GetID();
-        _id_map[ modelID ] = model->GetModelName();
+        _id_map[ modelID ] = model->GetPluginName();
 
         //flag for parent models to not have submodel results loaded
         bool parentResultsFailed = !getResults;
@@ -606,7 +606,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             PluginBase* temp = 
                 static_cast< ves::xplorer::plugin::PluginBase* >( 
                 mAvailableModules->GetLoader()->CreateObject( 
-                model->GetModelName() ) );
+                model->GetPluginName() ) );
 
             if( temp == 0 )
             {
@@ -660,7 +660,7 @@ void cfdExecutive::ParseSystem( ves::open::xml::model::SystemPtr system,
             returnState->AddDataValuePair( data );
             
             data = DataValuePairPtr( new DataValuePair() );
-            data->SetData( "moduleName", model->GetModelName() );
+            data->SetData( "moduleName", model->GetPluginName() );
             returnState->AddDataValuePair( data );
             
             //This needs to pass in the uuid not the fake id

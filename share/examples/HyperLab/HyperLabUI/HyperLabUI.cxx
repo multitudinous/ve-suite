@@ -47,7 +47,7 @@ HyperLabUI::HyperLabUI()
 {
     RegistVar( "portNumber", &portNumber );
 
-    name = _("HyperLab");
+    mPluginName = _("HyperLab");
 
     wxImage my_img( _("Icons/hyper.xpm") );
     icon_w = static_cast< int >( my_img.GetWidth() );
@@ -132,12 +132,12 @@ wxString HyperLabUI::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString HyperLabUI::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = _("PleaseDefineClassName");
+        mPluginName = _("PleaseDefineClassName");
     }
 
-    return name;
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString HyperLabUI::GetDesc()

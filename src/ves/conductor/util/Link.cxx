@@ -484,8 +484,8 @@ void Link::OnQueryStreamInputs( wxCommandEvent& event )
     //while( parentTraverser != NULL )
     while( parentTraverser->GetParentModel() != NULL )
     {
-        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-        compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+        //compName = parentTraverser->GetPluginName() +".Data.Blocks." + compName;
+        compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
         parentTraverser = parentTraverser->GetParentModel();
     }
 
@@ -550,8 +550,8 @@ void Link::OnQueryStreamOutputs( wxCommandEvent& event )
     //while( parentTraverser != NULL )
     while( parentTraverser->GetParentModel() != NULL )
     {
-        //compName = parentTraverser->GetModelName() +".Data.Blocks." + compName;
-        compName = "Data.Blocks." + parentTraverser->GetModelName() + "." + compName;
+        //compName = parentTraverser->GetPluginName() +".Data.Blocks." + compName;
+        compName = "Data.Blocks." + parentTraverser->GetPluginName() + "." + compName;
         parentTraverser = parentTraverser->GetParentModel();
     }
 

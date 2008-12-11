@@ -47,7 +47,7 @@ IMPLEMENT_DYNAMIC_CLASS( WarrantyToolUI, UIPluginBase )
 ////////////////////////////////////////////////////////////////////////////////
 WarrantyToolUI::WarrantyToolUI()
 {
-    name = wxT( "WarrantyTool" );
+    mPluginName = wxT( "WarrantyTool" );
 
     wxImage my_img( camera_xpm );
     icon_w = static_cast< int >( my_img.GetWidth() * 0.5f );
@@ -132,12 +132,12 @@ wxString WarrantyToolUI::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString WarrantyToolUI::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxT( "PleaseDefineClassName" );
+        mPluginName = wxT( "PleaseDefineClassName" );
     }
 
-    return name;
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString WarrantyToolUI::GetDesc()

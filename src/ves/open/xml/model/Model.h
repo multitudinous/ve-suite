@@ -84,13 +84,13 @@ public:
     ///equal operator
     Model& operator= ( const Model& );
 
-    ///Set the model name
-    ///\param name name of the model
-    void SetModelName( const std::string& name );
-
     ///Set the plugin name
     ///\param name name of the plugin
     void SetPluginName( const std::string& name );
+
+    ///Set the plugin type
+    ///\param type type of the plugin
+    void SetPluginType( const std::string& type );
 
     ///Set the unique model id
     ///\param id id of the model
@@ -104,13 +104,13 @@ public:
     ///\param xmlInput The input XML data.
     virtual void SetObjectFromXMLData( XERCES_CPP_NAMESPACE_QUALIFIER DOMNode* xmlInput );
 
-    ///Get the model name
-    ///\return The model name
-    const std::string& GetModelName( void );
-
     ///Get the plugin name
     ///\return The plugin name
     const std::string& GetPluginName( void );
+
+    ///Get the plugin type
+    ///\return The plugin type
+    const std::string& GetPluginType( void );
 
     ///Get the model id
     ///\return The model ID used my third party solver
@@ -286,7 +286,7 @@ public:
     friend std::ostream& operator<<( std::ostream& os, const ModelPtr model )
     {
         os << "***********(ves::open::xml::model::Model)***********" << std::endl
-            << "Model Name = " << model->mModelName << std::endl
+            << "Model Name = " << model->mPluginName << std::endl
             << "The Unit Name = " << model->mVendorUnit << std::endl
             << "Unique Model ID (old) = " << model->mUniqueModelID << std::endl
             << "GUID = " << model->mUuid << std::endl
@@ -321,8 +321,8 @@ protected:
 
 private:
     ///raw datatypes of Model that are specified in the verg_model.xsd file
-    std::string     mModelName;///<The name of the model.
     std::string     mPluginName;///<The name of the plugin.
+    std::string     mPluginType;///<The type of the plugin.
     unsigned int    mUniqueModelID;///<The unique model id.
     std::string     mIconFileName;///<The filename for the icon if any at all. Can possibly use an which would be compiled at runtime.
 

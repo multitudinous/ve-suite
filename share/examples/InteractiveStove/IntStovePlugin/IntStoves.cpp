@@ -48,7 +48,7 @@ IMPLEMENT_DYNAMIC_CLASS( IntStoves, UIPluginBase )
 ////////////////////////////////////////////////////////////////////////////////
 IntStoves::IntStoves()
 {
-    name = wxT( "IntStoves" );
+    mPluginName = wxT( "IntStoves" );
 
     numbaffles = 0;
     RegistVar( "numbaffles", &numbaffles );
@@ -148,12 +148,12 @@ ves::conductor::UIDialog* IntStoves::UI( wxWindow* parent )
 ////////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetName()
 {
-    if( name.IsEmpty() )
+    if( mPluginName.IsEmpty() )
     {
-        name = wxT( "PleaseDefineClassName" );
+        mPluginName = wxT( "PleaseDefineClassName" );
     }
 
-    return name;
+    return mPluginName;
 }
 ////////////////////////////////////////////////////////////////////////////////
 wxString IntStoves::GetDesc()

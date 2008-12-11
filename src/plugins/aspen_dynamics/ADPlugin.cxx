@@ -79,7 +79,8 @@ ADPlugin::ADPlugin() :
     UIPluginBase()
 {
     iconFilename = "dynamics";
-    name = wxString( "AspenDynamics", wxConvUTF8 );
+    mPluginName = wxString( "AspenDynamics", wxConvUTF8 );
+    //GetVEModel()->SetPluginType( "ADPlugin" );
 
     wxImage my_img( dynamics );
     icon_w = static_cast< int >( my_img.GetWidth() );//*0.30f );

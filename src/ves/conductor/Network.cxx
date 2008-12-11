@@ -1873,8 +1873,8 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
     for( size_t j = 0; j < modelCount; j++ )
     {
         model::ModelSharedPtr model = system->GetModel( j );
-        wxString tempPluginName( model->GetPluginName().c_str(), wxConvUTF8 );
-        wxClassInfo* cls = wxClassInfo::FindClass( tempPluginName );
+        wxString tempPluginType( model->GetPluginType().c_str(), wxConvUTF8 );
+        wxClassInfo* cls = wxClassInfo::FindClass( tempPluginType );
         // If the class has not had a custom module been created
         UIPluginBase* tempPlugin = 0;
         if( cls == 0 )
@@ -1890,10 +1890,10 @@ void Network::LoadSystem( model::SystemPtr system, Canvas* parent )
         tempPlugin->SetDCScale( &userScale );
         ///Add event handler for the plugins
 //        PushEventHandler( tempPlugin );
-        tempPlugin->SetName( wxString( model->GetModelName().c_str(), wxConvUTF8 ) );
+        tempPlugin->SetName( wxString( model->GetPluginName().c_str(), wxConvUTF8 ) );
         tempPlugin->SetCORBAService( CORBAServiceList::instance() );
         tempPlugin->SetDialogSize( parent->GetAppropriateSubDialogSize() );
-        if(  model->GetModelName() != "DefaultPlugin" )
+        if(  model->GetPluginName() != "DefaultPlugin" )
         {
             tempPlugin->SetImageIcon( model->GetIconFilename(),
                                       model->GetIconRotation(),

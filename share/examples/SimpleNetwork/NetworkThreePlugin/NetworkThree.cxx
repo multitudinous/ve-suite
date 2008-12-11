@@ -9,7 +9,7 @@ IMPLEMENT_DYNAMIC_CLASS(NetworkThree, UIPluginBase)
 /////////////////////////////////////////////////////////////////////////////
 NetworkThree::NetworkThree()
 {
-	name = wxT("NetworkThree");
+	mPluginName = wxT("NetworkThree");
 	
 	RegistVar("mTextThree", &mTextThree);
 

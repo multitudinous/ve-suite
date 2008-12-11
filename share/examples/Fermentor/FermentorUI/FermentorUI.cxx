@@ -59,7 +59,7 @@ FermentorUI::FermentorUI()
     RegistVar( "rot_speed", &rot_speed );
     RegistVar( "sim_speed", &sim_speed );
 
-    name = wxString( _( "Fermentor" ) );
+    mPluginName = wxString( _( "Fermentor" ) );
 
     wxImage my_img( _( "Icons/fermentor.jpg" ) );
     icon_w = static_cast< int >( my_img.GetWidth() * 0.1 );
@@ -162,7 +162,7 @@ wxString FermentorUI::GetConductorName()
 ////////////////////////////////////////////////////////////////////////////////
 wxString FermentorUI::GetName()
 {
-    return name;
+    return mPluginName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
