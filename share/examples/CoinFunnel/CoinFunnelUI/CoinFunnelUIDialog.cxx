@@ -59,7 +59,7 @@ CoinFunnelUIDialog::CoinFunnelUIDialog(
     int id,
     ves::conductor::util::CORBAServiceList* service )
 :
-UIDialog( ( wxWindow* )parent, id, wxT( "CoinFunnel" ) )
+UIDialog( parent, id, wxT( "CoinFunnel" ) )
 {
     mServiceList = service;
 
