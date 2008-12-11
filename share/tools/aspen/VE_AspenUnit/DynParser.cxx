@@ -13,7 +13,6 @@
 #include <ves/open/xml/cad/CADCreator.h>
 #include <cctype>
 #include <cmath>
-
 #include "AspenPlusLUT.h"
 #include "AspenDynamicsLUT.h"
 #include "AspenIconData.h"
@@ -59,10 +58,11 @@ void DynParser::OpenFile(const char * file)
 {
     std::string fileName(file);
     std::string dynfExt(".dynf");
-    ParseFile( ( workingDir + fileName + dynfExt ).c_str());
-    //NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
+    //ParseFile( ( workingDir + fileName + dynfExt ).c_str());
+    NewParseFile( ( workingDir + fileName + dynfExt ).c_str());
     CString filename = file;
-    dyndoc->Open( ( workingDir + fileName + dynfExt ).c_str());
+    //dyndoc->Open( ( workingDir + fileName + dynfExt ).c_str());
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -115,31 +115,41 @@ void DynParser::ReinitDynamics()
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-/*void DynParser::NewParseFile(const char * dynFile)
+void DynParser::NewParseFile(const char * dynFile)
 {
 	std::ifstream inFile( dynFile );
     currentLevelName = "_main_sheet";
     levelCount = 1;
+    int i = 0;
 
     //Global
     ReadHeader( inFile );
+    FindNextEntry( inFile );
     ReadEncrypted( inFile );
+    FindNextEntry( inFile );
     ReadSystemData( inFile );
+    FindNextEntry( inFile );
     ReadSystemData( inFile );
+    FindNextEntry( inFile );
     
     //acquire all relevant flow sheet info
     bool flowsheet_entry = true;
     while( flowsheet_entry )//flowsheet_entry )
     {
         ReadFlowsheetComponents( inFile );
+        FindNextEntry( inFile );
         flowsheet_entry = false;
 
         //loop over all levels
-        for( int i = 0; i < levelCount; i++ )
+        while(  i < levelCount )
         {
             ReadConstraints( inFile );
+            FindNextEntry( inFile );
             ReadSystemData( inFile );
+            FindNextEntry( inFile );
             ReadGraphicsInformation( inFile );
+            FindNextEntry( inFile );
+            i++;
             
             //is there a new flow sheet entry to account for
             flowsheet_entry = PeekFlowsheet( inFile );
@@ -151,7 +161,7 @@ void DynParser::ReinitDynamics()
     }
 
     //modify the locations to account for the 2 different coord systems
-    NormalizeForWX();
+    //NormalizeForWX();
 
     //Global
     ////ReadComponentList();
@@ -162,7 +172,7 @@ void DynParser::ReinitDynamics()
     //ReadHomotrophy( inFile );
     //ReadOnlineLinks( inFile );
     //ReadSnapshot( inFile );
-}*/
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 void DynParser::ParseFile(const char * dynFile)
@@ -226,7 +236,7 @@ void DynParser::ParseFile(const char * dynFile)
 
         std::getline(inFile, temp);
 
-        if(type.find("Hierarchy") == std::string::npos)
+        if(type.find("hierarchy") == std::string::npos)
 	        tempBlockInfo.hierarchical = false;
         else
 	        tempBlockInfo.hierarchical = true;
@@ -613,7 +623,7 @@ void DynParser::ParseFile(const char * dynFile)
         //Gather stream information
         std::string streamId, streamVersion, streamFlag, streamType;
         std::string coordinates, tempR, tempR2;
-        bool newStream = true, routeOne = false;;
+        bool newStream = true, routeOne = false;
         std::pair< float, float > tempCoords;
         int routeCount = 0;
         std::ofstream tester2 ("tester2.txt"); 
@@ -1165,8 +1175,8 @@ std::string DynParser::CreateNetwork( void )
         ves::open::xml::model::ModelPtr
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
-        tempModel->SetModelName( blockIter->first );
-        tempModel->SetPluginName( "ADUOPlugin" );
+        tempModel->SetPluginName( blockIter->first );
+        tempModel->SetPluginType( "ADUOPlugin" );
         tempModel->SetVendorName( "DYNAMICSUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList["_main_sheet"][blockIter->first].type
@@ -1205,13 +1215,13 @@ std::string DynParser::CreateNetwork( void )
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
                 tempPort->
                     GetPortLocation()->SetPoint( std::pair< double, double >
-                    ( (linkPoints["_main_sheet"][tempPort->GetModelName()][0].
+                    ( (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
                     first - minX ), 
-                    (linkPoints["_main_sheet"][tempPort->GetModelName()][0].
+                    (linkPoints["_main_sheet"][tempPort->GetPluginName()][0].
                     second - minY ) ) );
             }
         }
@@ -1227,21 +1237,21 @@ std::string DynParser::CreateNetwork( void )
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].second );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
                     std::pair< double, double >( (
                     linkPoints["_main_sheet"][tempPort->
-                    GetModelName()][linkPoints["_main_sheet"][tempPort->
-                    GetModelName()].size()-1].first - minX ),
+                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
+                    GetPluginName()].size()-1].first - minX ),
                     (linkPoints["_main_sheet"][tempPort->
-                    GetModelName()][linkPoints["_main_sheet"][tempPort->
-                    GetModelName()].size()-1].second - minY ) ) );
+                    GetPluginName()][linkPoints["_main_sheet"][tempPort->
+                    GetPluginName()].size()-1].second - minY ) ) );
             }
         }
 
         //recursively parse subsystems of each block
-        if( tempModel->GetIconFilename().find("Hierarchy") !=
+        if( tempModel->GetIconFilename().find("hierarchy") !=
             std::string::npos )
         ParseSubSystem( tempModel, blockIter->first );
 
@@ -1321,8 +1331,8 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
         ves::open::xml::model::ModelPtr
             tempModel( new ves::open::xml::model::Model() );
         tempModel->SetModelID( blockIter->second );
-        tempModel->SetModelName( blockIter->first );
-        tempModel->SetPluginName( "ADUOPlugin" );
+        tempModel->SetPluginName( blockIter->first );
+        tempModel->SetPluginType( "ADUOPlugin" );
         tempModel->SetVendorName( "DYNAMICSUNIT" );
         tempModel->
             SetIconFilename(BlockInfoList[networkName][blockIter->first].type +
@@ -1363,15 +1373,14 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // inputs are to ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].first );
-                tempPort->SetModelName( streamIter->first );
-                tempPort->SetModelName( "ADUnitOp" );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "input" ) );
 
                 tempPort->GetPortLocation()->
                     SetPoint( std::pair< double, double >
-                    ( ( linkPoints[networkName][tempPort->GetModelName()][0].
+                    ( ( linkPoints[networkName][tempPort->GetPluginName()][0].
                     first - minX ),
-                    (linkPoints[networkName][tempPort->GetModelName()][0].
+                    (linkPoints[networkName][tempPort->GetPluginName()][0].
                     second - minY ) ) );
             }
         }
@@ -1387,21 +1396,21 @@ void DynParser::ParseSubSystem( ves::open::xml::model::ModelPtr model,
                 // outputs are from ports
                 tempPort->
                     SetPortNumber( streamPortIDS[ streamIter->first ].second );
-                tempPort->SetModelName( streamIter->first );
+                tempPort->SetPluginName( streamIter->first );
                 tempPort->SetDataFlowDirection( std::string( "output" ) );
                 tempPort->GetPortLocation()->SetPoint(
                     std::pair< double, double >( (
                     linkPoints[networkName][tempPort->
-                    GetModelName()][linkPoints[networkName][tempPort->
-                    GetModelName()].size()-1].first - minX ),
+                    GetPluginName()][linkPoints[networkName][tempPort->
+                    GetPluginName()].size()-1].first - minX ),
                     (linkPoints[networkName][tempPort->
-                    GetModelName()][linkPoints[networkName][tempPort->
-                    GetModelName()].size()-1].second - minY ) ) );
+                    GetPluginName()][linkPoints[networkName][tempPort->
+                    GetPluginName()].size()-1].second - minY ) ) );
             }
         }
 
         //recursively parse subsystems of each block
-        if( tempModel->GetIconFilename().find("Hierarchy") !=
+        if( tempModel->GetIconFilename().find("hierarchy") !=
             std::string::npos )
         {
             ParseSubSystem( tempModel, networkName + "." + blockIter->first );
@@ -1472,7 +1481,7 @@ void DynParser::SetValue( std::string modname, std::string paramname,
     dyndoc->SetVariableValue( modname.c_str(), paramname.c_str(),
         value.c_str()  );
 }///////////////////////////////////////////////////////////////////////////////
-/*void DynParser::ReadEncrypted( std::ifstream file )
+void DynParser::ReadHeader( std::ifstream &file )
 {
     //version
     std::string version;
@@ -1484,7 +1493,7 @@ void DynParser::SetValue( std::string modname, std::string paramname,
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadEncrypted( std::ifstream file )
+void DynParser::ReadEncrypted( std::ifstream &file )
 {
     std::vector< std::string > entry;
     std::string temp;
@@ -1497,7 +1506,7 @@ void DynParser::ReadEncrypted( std::ifstream file )
         //size of encrypted data is also available at end of line
 
         //make sure it is an encrypted packet
-        if(temp.compare( 0, 10, "!ENCRYPTED!", 0, 10)
+        if( temp.compare( 0, 10, "!ENCRYPTED!", 0, 10 ) )
         {
             //move file pointer back
             file.seekg(temppos);
@@ -1516,7 +1525,7 @@ void DynParser::ReadEncrypted( std::ifstream file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadSystemData( std::ifstream file )
+void DynParser::ReadSystemData( std::ifstream &file )
 {
     std::string entry;
     std::string temp;
@@ -1533,16 +1542,26 @@ void DynParser::ReadSystemData( std::ifstream file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadFlowsheetComponents( std::ifstream file )
+void DynParser::ReadFlowsheetComponents( std::ifstream &file )
 {
     std::string temp;
+    
+    //Check for "flowsheet" entry
+    std::streampos temppos = file.tellg();
+    std::getline( file, temp );
+    if( temp.compare( "FLOWSHEET" ) != 0 )
+    {
+        file.seekg(temppos);
+    }
+
     while( true )
     {
         std::streampos temppos = file.tellg();
         std::getline( file, temp );
         
         //if you have reached constraint entry
-        if( temp.compare( 0, 9, "CONSTRAINTS", 0, 9 ) == 0 )
+        if( temp.compare( 0, 9, "CONSTRAINTS", 0, 9 ) == 0 ||
+            temp.empty() )
         {
             //move file pointer back
             file.seekg(temppos);
@@ -1568,7 +1587,7 @@ void DynParser::ReadFlowsheetComponents( std::ifstream file )
             //or append it to the current level value
             if( currentLevelName.compare( 0, 10, "_main_sheet", 0, 10 ) == 0 )
             {
-                currentLevelName = tempBlockInfo.id
+                currentLevelName = tempBlockInfo.id;
             }
             else
             {
@@ -1576,10 +1595,10 @@ void DynParser::ReadFlowsheetComponents( std::ifstream file )
             }
             levelCount++;
         }
-        
+       
         //streams
         //check last 7 characters for "Stream;"
-        else if( temp.compare( temp.size() - 8, temp.size() - 1, "Stream;", 0, 6 ) == 0 )
+        else if( temp.compare( temp.size() - 7, 7, "Stream;", 0, 7 ) == 0 )
         {
             ;
         }
@@ -1588,20 +1607,22 @@ void DynParser::ReadFlowsheetComponents( std::ifstream file )
         else if( temp.compare(0, 8, "  Connect", 0, 8) == 0 )
         {
             //get the stream name
+            int streamStart = temp.find("with") + 5;
             std::string temp_stream =
-                temp.substr( temp.find("with") + 5, temp.size() - 1 );
+                temp.substr( streamStart, temp.size() - streamStart - 1 );
         
             //reset tokenizer
             std::stringstream portTokenizer(temp);
+            std::string portToken;
             while( portTokenizer >> portToken )
             {
                 if( portToken.find( "." ) != std::string::npos )
                 {
                     int  period_pos = portToken.find_first_of(".");
                     std::string inputOutput =
-                        portToken.substr(period_pos, portToken.size() - 1);
+                        portToken.substr(period_pos+1, portToken.size() - 1);
 
-                    std::string blockName = portToken.substr( 0, period_pos + 1 );
+                    std::string blockName = portToken.substr( 0, period_pos );
                     
                     if(inputOutput.find("In_") != std::string::npos )
                     {
@@ -1624,32 +1645,67 @@ void DynParser::ReadFlowsheetComponents( std::ifstream file )
         //handle block entries
         else
         {
-            std::stringstream tokenizer(temp);
-            std::string tempHolder;
-		    std::string blockname;
-		    std::string as;
-		    std::string type;
+            //for some reason there are 2 types of entries for blocks
+            //Ex. "Blocks("test") as PetroFrac;"
+            //or  ""test" as Mult;"
+            //not sure why and with no docs probably will never know
+            if( temp.compare(0, 7, "Blocks(", 0, 7) == 0 )
+            {        std::stringstream tokenizer(temp);
+                std::string blockname;
+                std::string tempHolder;
+                std::string as;
+                std::string type;
 
-            //the blocks name
-            temp >> blockname;
-            temp >> as;
+                tokenizer >> tempHolder;
+                int  startpos = tempHolder.find_first_of("\"");
+                int  endpos = tempHolder.find_last_of("\"");
+                blockname = tempHolder.substr( startpos +1,
+                    endpos - startpos - 1 ); 
+                
+                tokenizer >> as;
+                tokenizer >> tempHolder;
 
-            //the blocks type in lower case
-		    tokenizer >> tempHolder;
-		    type = tempHolder.substr( 0, tempHolder.size() - 1);
-            std::transform(type.begin(), type.end(), type.begin(), std::tolower);
+                type = tempHolder.substr( 0, tempHolder.size() - 1);
+                std::transform(type.begin(), type.end(), type.begin(),
+                    std::tolower);
+                tempBlockInfo.id = blockname;
+                tempBlockInfo.hierarchical = false;
+                tempBlockInfo.type = type;
+                BlockInfoList[currentLevelName][tempBlockInfo.id] =
+                    tempBlockInfo;
+                models[currentLevelName][tempBlockInfo.id] = redundantID++;
+            }
+            else
+            {
+                std::stringstream tokenizer(temp);
+                std::string tempHolder;
+		        std::string blockname;
+		        std::string as;
+		        std::string type;
 
-            tempBlockInfo.id = blockname;
-            tempBlockInfo.hierarchical = false;
-            tempBlockInfo.type = type;
-            BlockInfoList[currentLevel][tempBlockInfo.id] = tempBlockInfo;
-            models[currentLevel][tempBlockInfo.id] = redundantID++;
+                //the blocks name
+                tokenizer >> blockname;
+                tokenizer >> as;
+
+                //the blocks type in lower case
+		        tokenizer >> tempHolder;
+		        type = tempHolder.substr( 0, tempHolder.size() - 1);
+                std::transform(type.begin(), type.end(), type.begin(),
+                    std::tolower);
+
+                tempBlockInfo.id = blockname;
+                tempBlockInfo.hierarchical = false;
+                tempBlockInfo.type = type;
+                BlockInfoList[currentLevelName][tempBlockInfo.id] =
+                    tempBlockInfo;
+                models[currentLevelName][tempBlockInfo.id] = redundantID++;
+            }
         }
-
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadConstraints( std::ifstream file )
+void DynParser::ReadConstraints( std::ifstream &file )
 {
     std::string entry;
     std::string temp;
@@ -1661,9 +1717,38 @@ void DynParser::ReadConstraints( std::ifstream file )
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-void DynParser::ReadGraphicsInformation( std::ifstream file )
+void DynParser::ReadGraphicsInformation( std::ifstream &file )
 {
-    std::string temp;
+    std::map< std::pair< std::string, std::string >,
+        std::vector< double > > plusLutMap;
+    std::map< std::pair< std::string, std::string >,
+        std::vector< double > > dynLutMap;
+    std::map< std::pair< std::string, std::string >,
+        std::vector< double > >::iterator lutMapIter;
+    std::vector< double > lutVector;
+    std::map< std::string, std::pair< unsigned int, unsigned int > > imageData;
+
+    imageData = GetAspenIconData();
+    lutVector.resize( 6 );
+    plusLutMap = GetAspenPlusLUT();
+    dynLutMap = GetAspenDynamicsLUT();
+
+    std::string temp,
+        id,
+        version,
+        icon,
+        flag,
+        section,
+        at,
+        labelAt,
+        scaleMod,
+        annotation,
+        parent,
+        parentAttrib,
+        discard;
+
+    float minX = 10000;
+    float minY = 10000;
 
     //locate the beginning of graphics info
     while( temp.compare(0, 12, "  ActiveTasks", 0, 12) != 0 )
@@ -1690,7 +1775,7 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
         }
 
         //BLOCKS
-        else if( temp.compare( 0, 4, "BLOCK", 0, 4 ) == 0 )
+        else if( temp.compare( 0, 5, "BLOCK", 0, 5 ) == 0 )
         {
             //block id
             std::getline(file, id);
@@ -1779,8 +1864,6 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
             float left = 0, right = 0, bottom = 0, top = 0; //coords
             float widthOffset = 0;
             float heightOffset = 0;
-            output<<BlockInfoList[currentLevelName][tempBlockId].type+" "+
-                BlockInfoList[currentLevelName][tempBlockId].icon<<std::endl;
             std::pair< std::string, std::string >
                 blockKey( BlockInfoList[currentLevelName][tempBlockId].type,
                 BlockInfoList[currentLevelName][tempBlockId].icon );
@@ -1908,14 +1991,30 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
                 BlockInfoList[currentLevelName][tempBlockId].scale),
                 scaledYCoords - ( height * heightOffset * 
                 BlockInfoList[currentLevelName][tempBlockId].scale) );
+                    
+            float currentX =
+                iconLocations[currentLevelName][tempBlockId].first;
+            float currentY =
+                iconLocations[currentLevelName][tempBlockId].second;
+
+            if(currentX < minX)
+                minX = currentX;
+            if(currentY < minY)
+                minY = currentY;
         }
         //STREAMS
-        else if( temp.compare( 0, 4, "STREAM", 0, 4 ) == 0 )
+        else if( temp.compare( 0, 5, "STREAM", 0, 5 ) == 0 )
         {
-            std::string streamId;
-            std::string streamVersion;
-            std::string streamFlag;
-            std::string streamType;
+            std::string coordinates, 
+                tempR, 
+                tempR2;
+
+            std::pair< float, float > tempCoords;
+
+            std::string streamId,
+                streamVersion,
+                streamFlag,
+                streamType;
 
             getline( file, streamId );
             getline( file, streamVersion );
@@ -1926,9 +2025,9 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
             while( streamType.compare( 0, 4, "TYPE", 0 , 4) != 0 )
                 getline( file, streamType );
             getline(file, temp);
-            routeCount = 0;
-            routeOne=false;
-            newStream = true;
+            int routeCount = 0;
+            bool routeOne=false;
+            bool newStream = true;
                 
             //Look for Routes
             while( temp.compare( 0, 6, "STREAM", 0, 6 )!= 0 &&
@@ -2015,7 +2114,6 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
                     minX = scaledX;
                 if(scaledY < minY)
                     minY = scaledY;
-                tester2<<" x: "<<scaledX<<" y: "<<scaledY;
                 linkPoints[currentLevelName][xy.streamId].push_back(
                     std::pair< float, float >( scaledX, scaledY ) );	
             }
@@ -2037,6 +2135,42 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
     //throw out empty line
     std::getline( file, temp );
 
+    //NORMALIZE FOR WX
+    float normX = minX;
+    float normY = minY;
+
+    //blocks
+    std::map< std::string, std::pair< float, float > >::iterator iter;
+    for(iter = iconLocations[currentLevelName].begin( );
+        iter != iconLocations[currentLevelName].end( );
+        iter++)
+    {
+        iconLocations[currentLevelName][ iter->first ].first =
+            iconLocations[currentLevelName][iter->first].first - normX;
+        iconLocations[currentLevelName][iter->first].second =
+            iconLocations[currentLevelName][iter->first].second - normY;
+    }
+
+    //streams
+    std::map< std::string, std::vector< std::pair< float, float > > >::
+        iterator iter2;
+    for( iter2 = linkPoints[currentLevelName].begin( );
+        iter2 != linkPoints[currentLevelName].end( );
+        iter2++)
+    {
+        for( int element = 0;
+            element <
+            (int)linkPoints[currentLevelName][ iter2->first ].size();
+            element++)
+        {
+            linkPoints[currentLevelName][ iter2->first ][element].first =
+                linkPoints[currentLevelName][ iter2->first ][element].
+                first - normX;
+            linkPoints[currentLevelName][ iter2->first ][element].second =
+                linkPoints[currentLevelName][ iter2->first ][element].
+                second - normY;
+        }
+    }
 
     //move level name up
     if( currentLevelName.find( "." ) == std::string::npos )
@@ -2046,61 +2180,35 @@ void DynParser::ReadGraphicsInformation( std::ifstream file )
     else
     {
         std::string temp_name;
-        temp_name = currentLevelName.substr( 0, compLevelName.find_last_of( "." ) -1 );
+        temp_name = currentLevelName.substr( 0, currentLevelName.find_last_of( "." ) );// -1 );
         currentLevelName = temp_name;
     }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-void DynParser::NormalizeForWX()
-{
-    //NORMALIZE FOR WX
-    float normX = minX;
-    float normY = minY;
-
-    //blocks
-    for(iter = iconLocations[sheetIter->first].begin( );
-        iter != iconLocations[sheetIter->first].end( );
-        iter++)
-    {
-        iconLocations[sheetIter->first][ iter->first ].first =
-            iconLocations[sheetIter->first][iter->first].first - normX;
-        iconLocations[sheetIter->first][iter->first].second =
-            iconLocations[sheetIter->first][iter->first].second - normY;
-    }
-
-    //streams
-    std::map< std::string, std::vector< std::pair< float, float > > >::
-        iterator iter2;
-    for( iter2 = linkPoints[sheetIter->first].begin( );
-        iter2 != linkPoints[sheetIter->first].end( );
-        iter2++)
-    {
-        for( int element = 0;
-            element <
-            (int)linkPoints[sheetIter->first][ iter2->first ].size();
-            element++)
-        {
-            linkPoints[sheetIter->first][ iter2->first ][element].first =
-                linkPoints[sheetIter->first][ iter2->first ][element].
-                first - normX;
-            linkPoints[sheetIter->first][ iter2->first ][element].second =
-                linkPoints[sheetIter->first][ iter2->first ][element].
-                second - normY;
-        }
-    }
-}
+//void DynParser::NormalizeForWX()
+//{
+//}
 
 ////////////////////////////////////////////////////////////////////////////////
-bool DynParser::PeekFlowsheet( std::ifstream file )
+bool DynParser::PeekFlowsheet( std::ifstream &file )
 {
     std::string temp;
-    while( temp.empty() )
-    {
-        std::getline( file, temp );
-    }
+    //while( temp.empty() )
+    //{
+    //    std::getline( file, temp );
+    //}
 
-    if( temp.compare(0, 9, "CONSTRAINTS", 0, 9 ) == 0 )
+    std::streampos temppos = file.tellg();
+    std::getline( file, temp );
+    file.seekg(temppos);
+
+    //if( temp.compare(0, 9, "CONSTRAINTS", 0, 9 ) == 0 )
+    //{
+    //    return false;
+    //}
+
+    if( temp.compare(0, 10, "Properties", 0, 10 ) == 0 )
     {
         return false;
     }
@@ -2108,4 +2216,17 @@ bool DynParser::PeekFlowsheet( std::ifstream file )
     {
         return true;
     }
-}*/
+}
+
+///////////////////////////////////////////////////////////////////////////////
+void DynParser::FindNextEntry( std::ifstream &file )
+{
+    std::string temp;
+    std::streampos temppos;
+    while( temp.empty() )
+    {
+        temppos = file.tellg();
+        std::getline( file, temp );
+    }
+    file.seekg(temppos);
+}
